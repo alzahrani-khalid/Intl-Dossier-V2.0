@@ -1,14 +1,19 @@
-import { KanbanAssignment } from '@/hooks/useEngagementKanban'
+import type { ReactElement } from 'react'
+
+import type { KanbanAssignment } from '@/hooks/useEngagementKanban'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Clock, FileText } from 'lucide-react'
+
 interface KanbanTaskCardProps {
   assignment: KanbanAssignment
 }
 
-export function KanbanTaskCard({ assignment }: KanbanTaskCardProps) {
-  const getSLAStatus = () => {
-    if (!assignment.current_stage_sla_deadline) return null
+type SlaStatus = 'overdue' | 'urgent' | 'warning' | 'normal'
+
+export function KanbanTaskCard({ assignment }: KanbanTaskCardProps): ReactElement {
+  const getSLAStatus = (): SlaStatus | null => {
+    if (assignment.current_stage_sla_deadline == null) return null
 
     const deadline = new Date(assignment.current_stage_sla_deadline)
     const now = new Date()
@@ -21,15 +26,14 @@ export function KanbanTaskCard({ assignment }: KanbanTaskCardProps) {
   }
 
   const slaStatus = getSLAStatus()
-  const slaColors: Record<string, string> = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanTaskCard
-    overdue: 'text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-950',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanTaskCard
-    urgent: 'text-orange-600 bg-orange-50 dark:text-orange-400 dark:bg-orange-950',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanTaskCard
-    warning: 'text-yellow-600 bg-yellow-50 dark:text-yellow-400 dark:bg-yellow-950',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KanbanTaskCard
-    normal: 'text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950',
+  // Phase 52: text colors use Tailwind @theme semantic utilities; soft fills use
+  // CSS token variables because index.css exposes --danger-soft/--warn-soft/--ok-soft
+  // but does not expose --color-*-soft utilities.
+  const slaColors: Record<SlaStatus, string> = {
+    overdue: 'text-danger bg-[var(--danger-soft)]',
+    urgent: 'text-warn bg-[var(--warn-soft)]',
+    warning: 'text-warn bg-[var(--warn-soft)]',
+    normal: 'text-ok bg-[var(--ok-soft)]',
   }
 
   const priorityVariants: Record<string, 'destructive' | 'default' | 'secondary'> = {
@@ -53,7 +57,7 @@ export function KanbanTaskCard({ assignment }: KanbanTaskCardProps) {
       {/* Priority Badge */}
       <div className="flex items-center gap-2">
         <Badge
-          variant={priorityVariants[assignment.priority] || 'default'}
+          variant={priorityVariants[assignment.priority] ?? 'default'}
           className="text-xs capitalize"
         >
           {assignment.priority}
@@ -65,21 +69,21 @@ export function KanbanTaskCard({ assignment }: KanbanTaskCardProps) {
 
       {/* Footer: Assignee and SLA */}
       <div className="flex items-center justify-between gap-2 pt-2 border-t">
-        {assignment.assignee && (
+        {assignment.assignee != null && (
           <div className="flex items-center gap-2">
             <Avatar className="h-6 w-6">
               <AvatarImage src={assignment.assignee.avatar_url} />
               <AvatarFallback className="text-xs">
-                {assignment.assignee.full_name?.charAt(0) || 'S'}
+                {assignment.assignee.full_name?.charAt(0) ?? 'S'}
               </AvatarFallback>
             </Avatar>
             <span className="text-xs truncate max-w-[120px]">
-              {assignment.assignee.full_name || 'Staff Member'}
+              {assignment.assignee.full_name ?? 'Staff Member'}
             </span>
           </div>
         )}
 
-        {slaStatus && (
+        {slaStatus !== null && (
           <div
             className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium ${slaColors[slaStatus]}`}
           >
