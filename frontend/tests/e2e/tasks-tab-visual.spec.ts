@@ -8,7 +8,7 @@ const matrix = [
 ] as const
 
 const SEEDED_ENGAGEMENT_ID =
-  process.env.PHASE_52_FIXTURE_ENGAGEMENT_ID ?? 'phase-52-fixture-engagement'
+  process.env.PHASE_52_FIXTURE_ENGAGEMENT_ID ?? '00000000-0000-0052-0000-000000000001'
 
 test.describe('Phase 52: Tasks tab Kanban visual regression', () => {
   for (const { dir, viewport } of matrix) {

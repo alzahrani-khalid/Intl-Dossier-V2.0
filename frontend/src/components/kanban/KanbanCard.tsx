@@ -34,6 +34,7 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
   return (
     <div
       data-active-drag-card={isActiveDragCard ? 'true' : undefined}
+      data-card-id={id}
       ref={setNodeRef}
       style={style}
       {...listeners}
