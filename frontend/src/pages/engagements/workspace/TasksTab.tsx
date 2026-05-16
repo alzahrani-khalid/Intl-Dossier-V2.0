@@ -1,14 +1,13 @@
 /**
  * TasksTab — Inline kanban board for engagement workspace
  * Replaces the dialog-based EngagementKanbanDialog with an embedded board.
- * Desktop: horizontal columns with drag-and-drop via kibo-ui/kanban.
+ * Desktop: horizontal columns with drag-and-drop via the shared Kanban primitive.
  * Mobile: stacked collapsible sections with "Move to" dropdown.
  */
 
 import { type ReactElement, useMemo, useState, useCallback } from 'react'
 import { useParams } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import type { DragEndEvent } from '@dnd-kit/core'
 import { useDirection } from '@/hooks/useDirection'
 import {
   useEngagementKanban,
@@ -22,27 +21,16 @@ import {
   KanbanHeader,
   KanbanCards,
   KanbanCard,
-} from '@/components/kibo-ui/kanban'
+  type DragEndEvent,
+} from '@/components/kanban'
 import { KanbanTaskCard } from '@/components/assignments/KanbanTaskCard'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
+import { cn } from '@/lib/utils'
 import { Plus, ChevronDown, ChevronUp, ArrowDownUp, ClipboardList } from 'lucide-react'
 
 const VISIBLE_STAGES: WorkflowStage[] = ['todo', 'in_progress', 'review', 'done']
-
-const STAGE_COLORS: Record<WorkflowStage, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TasksTab
-  todo: 'bg-slate-100 dark:bg-slate-800',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TasksTab
-  in_progress: 'bg-blue-50 dark:bg-blue-950',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TasksTab
-  review: 'bg-amber-50 dark:bg-amber-950',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TasksTab
-  done: 'bg-emerald-50 dark:bg-emerald-950',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TasksTab
-  cancelled: 'bg-red-50 dark:bg-red-950',
-}
 
 export default function TasksTab(): ReactElement {
   const { engagementId } = useParams({
@@ -62,7 +50,7 @@ export default function TasksTab(): ReactElement {
     return cancelledCount > 0 ? [...VISIBLE_STAGES, 'cancelled'] : VISIBLE_STAGES
   }, [columns])
 
-  // Transform columns to kibo-ui format
+  // Transform columns to shared Kanban primitive format
   const kanbanColumns = useMemo(
     () =>
       activeStages.map((stage) => ({
@@ -72,7 +60,7 @@ export default function TasksTab(): ReactElement {
     [activeStages, tAssign],
   )
 
-  // Transform assignments to kibo-ui data format
+  // Transform assignments to shared Kanban primitive data format
   const kanbanData = useMemo(() => {
     if (!columns) return []
     const items: Array<{ id: string; name: string; column: string }> = []
@@ -199,7 +187,8 @@ export default function TasksTab(): ReactElement {
               <KanbanBoard
                 key={column.id}
                 id={column.id}
-                className={`bg-muted/30 border-muted min-w-[280px]`}
+                isCancelled={column.id === 'cancelled'}
+                className="min-w-[280px]"
               >
                 <KanbanHeader className="bg-muted/50 font-semibold text-sm px-4 py-3 border-b">
                   <div className="flex items-center justify-between">
@@ -218,7 +207,7 @@ export default function TasksTab(): ReactElement {
                         id={assignment.id}
                         name={assignment.name}
                         column={assignment.column}
-                        className="bg-background hover:shadow-md transition-shadow border-border"
+                        className="bg-background hover:bg-surface-raised hover:border-line-soft transition-all"
                       >
                         {fullAssignment != null && <KanbanTaskCard assignment={fullAssignment} />}
                       </KanbanCard>
@@ -281,7 +270,12 @@ function MobileStageSection({
   }, [])
 
   return (
-    <div className={`rounded-lg border ${STAGE_COLORS[stage]} overflow-hidden`}>
+    <div
+      className={cn(
+        'rounded-lg border bg-muted/30 border-muted overflow-hidden',
+        stage === 'cancelled' && 'border-danger/30',
+      )}
+    >
       <button
         type="button"
         onClick={toggleExpanded}
