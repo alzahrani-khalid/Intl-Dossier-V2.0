@@ -156,3 +156,15 @@ audit-screenshots/
 !frontend/tests/e2e/**/*-snapshots/**/*.png
 # Exception: docs/rtl-icons fixtures (QA-04 evidence, regenerable via `pnpm docs:rtl-icons`)
 !docs/rtl-icons/*.png
+
+# Local Superset CLI / agent runtime artifacts
+host-service.js
+pty-daemon.js
+terminal-host.js
+skills-lock.json
+.impeccable/
+.claude/scheduled_tasks.lock
+
+# Python bytecode in local skill scripts
+__pycache__/
+*.pyc
