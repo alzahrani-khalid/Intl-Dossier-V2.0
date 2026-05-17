@@ -172,7 +172,7 @@ Plans:
 
 **Wave 1**
 
-- [ ] 55-01-PLAN.md — Pre-merge verification, merge PR creation + green, --no-ff merge, signed phase-55-base tag (Wave 1)
+- [x] 55-01-PLAN.md — Pre-merge verification, merge PR creation + green, --no-ff merge, signed phase-55-base tag (Wave 1) — **SHIPPED 2026-05-17**: merge commit `3f763ddc`, phase-55-base SSH-signed, remote DesignV2 deleted
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
@@ -260,7 +260,7 @@ Plans:
 | 44-46 | v6.1 | 14/14 | Shipped | 2026-05-08 |
 | 47-49 | v6.2 | 17/17 | Shipped | 2026-05-12 |
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
-| 55 | v6.4 | 0/4 | Planned | — |
+| 55 | v6.4 | 1/4 | In Progress | — |
 | 56 | v6.4 | 0/0 | Not started | — |
 | 57 | v6.4 | 0/0 | Not started | — |
 | 58 | v6.4 | 0/0 | Not started | — |
@@ -270,4 +270,4 @@ Plans:
 
 ---
 
-_Roadmap last updated: 2026-05-17 — Phase 55 plans created (4 plans across 4 sequential waves; D-15 clean causality chain)._
+_Roadmap last updated: 2026-05-17 — Phase 55 Plan 01 complete (DesignV2 merged to main via --no-ff; phase-55-base signed; MERGE-01 satisfied). Plans 02-04 remain._
