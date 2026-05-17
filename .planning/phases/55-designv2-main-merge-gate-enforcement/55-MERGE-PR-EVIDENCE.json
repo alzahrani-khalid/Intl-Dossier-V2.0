@@ -1,0 +1,219 @@
+{
+  "closedAt": "2026-05-17T10:40:58Z",
+  "mergeCommit": { "oid": "3f763ddc17fd496ac5ab3f289221a8b70a4a3416" },
+  "mergeStateStatus": "UNKNOWN",
+  "number": 13,
+  "state": "MERGED",
+  "statusCheckRollup": [
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:17:36Z",
+      "conclusion": "FAILURE",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045805/job/76389053341",
+      "name": "E2E (shard 1/2)",
+      "startedAt": "2026-05-17T10:14:45Z",
+      "status": "COMPLETED",
+      "workflowName": "E2E Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:14:56Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045806/job/76389053267",
+      "name": "Repo Policy (Secrets/Artifacts)",
+      "startedAt": "2026-05-17T10:14:45Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:17:46Z",
+      "conclusion": "FAILURE",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045805/job/76389053340",
+      "name": "E2E (shard 2/2)",
+      "startedAt": "2026-05-17T10:14:45Z",
+      "status": "COMPLETED",
+      "workflowName": "E2E Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:35:02Z",
+      "conclusion": "CANCELLED",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045805/job/76389053338",
+      "name": "QA Sweep (axe / responsive / keyboard / focus-outline)",
+      "startedAt": "2026-05-17T10:14:46Z",
+      "status": "COMPLETED",
+      "workflowName": "E2E Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:15:19Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045806/job/76389053277",
+      "name": "Security Scan",
+      "startedAt": "2026-05-17T10:14:45Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:23:04Z",
+      "conclusion": "FAILURE",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045805/job/76389053343",
+      "name": "Visual Regression (Phase 46)",
+      "startedAt": "2026-05-17T10:14:46Z",
+      "status": "COMPLETED",
+      "workflowName": "E2E Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:16:48Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045806/job/76389063416",
+      "name": "Lint",
+      "startedAt": "2026-05-17T10:14:57Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:17:16Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045806/job/76389063425",
+      "name": "type-check",
+      "startedAt": "2026-05-17T10:14:58Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:18:22Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045805/job/76389217636",
+      "name": "Merge Playwright reports",
+      "startedAt": "2026-05-17T10:17:48Z",
+      "status": "COMPLETED",
+      "workflowName": "E2E Tests"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:17:51Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045806/job/76389063410",
+      "name": "Tests (frontend)",
+      "startedAt": "2026-05-17T10:14:57Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:15:47Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045806/job/76389063405",
+      "name": "Tests (backend)",
+      "startedAt": "2026-05-17T10:14:58Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:15:59Z",
+      "conclusion": "FAILURE",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045806/job/76389063406",
+      "name": "Tests (integration)",
+      "startedAt": "2026-05-17T10:14:58Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:17:15Z",
+      "conclusion": "FAILURE",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045806/job/76389063408",
+      "name": "E2E Tests",
+      "startedAt": "2026-05-17T10:14:58Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:18:19Z",
+      "conclusion": "FAILURE",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045806/job/76389188481",
+      "name": "RTL + Responsive Tests",
+      "startedAt": "2026-05-17T10:17:18Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:18:19Z",
+      "conclusion": "FAILURE",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045806/job/76389188485",
+      "name": "Accessibility Tests (RTL + WCAG AA)",
+      "startedAt": "2026-05-17T10:17:18Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:18:28Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045806/job/76389188484",
+      "name": "Bundle Size Check (size-limit)",
+      "startedAt": "2026-05-17T10:17:18Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:18:27Z",
+      "conclusion": "CANCELLED",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045806/job/76389222253",
+      "name": "Build (backend)",
+      "startedAt": "2026-05-17T10:17:53Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:18:20Z",
+      "conclusion": "FAILURE",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045806/job/76389222246",
+      "name": "Build (frontend)",
+      "startedAt": "2026-05-17T10:17:52Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:18:27Z",
+      "conclusion": "SKIPPED",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045806/job/76389256727",
+      "name": "Lighthouse CI",
+      "startedAt": "2026-05-17T10:18:27Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:18:27Z",
+      "conclusion": "SKIPPED",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25988045806/job/76389256611",
+      "name": "Docker Build",
+      "startedAt": "2026-05-17T10:18:27Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-05-17T10:15:13Z",
+      "conclusion": "FAILURE",
+      "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/runs/76389074693",
+      "name": "Trivy",
+      "startedAt": "2026-05-17T10:15:09Z",
+      "status": "COMPLETED",
+      "workflowName": ""
+    }
+  ]
+}
