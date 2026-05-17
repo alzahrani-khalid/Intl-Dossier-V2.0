@@ -10,11 +10,12 @@ Unified intelligence management for diplomatic operations — every relationship
 
 ## Current State
 
-**Shipped:** v6.2 Type-Check, Lint & Bundle Reset (2026-05-12) — Phases 47-49 complete. Frontend (1580) + backend (498) TS errors → 0 with zero `@ts-ignore` / `@ts-expect-error` added; frontend (723) + backend (4) lint problems → 0; `no-restricted-imports` aligned with CLAUDE.md primitive cascade; Aceternity references purged; Initial-route bundle ceiling 517 → 450 KB with `React.lazy()` route splits and heroui/sentry/dnd sub-vendor decomposition; `type-check`, `Lint`, and `Bundle Size Check (size-limit)` restored as PR-blocking branch-protection contexts on `main`. Audit: passed.
+**Shipped:** v6.3 Carryover Sweep & v7.0 Prep (2026-05-17) — Phases 50-54 complete (28 plans, 20/20 requirements satisfied). Test infrastructure repaired (`vi.mock("react-i18next")` factory + 4 wizard tests green + setup docs); design-token compliance gate live at `error` severity workspace-wide (50 Tier-A swaps, 271 Tier-C suppressed, smoke PR #12 BLOCKED via D-09 fold); HeroUI v3 Kanban migration shipped (shared `@dnd-kit/core` primitive, kibo-ui + tunnel-rat purged, KANBAN-02 satisfied-by-deletion); React vendor ceiling 349 → 285 KB gz; `phase-47/48/49-base` re-issued annotated + SSH-signed (origin SHAs match local); CLAUDE.md Node note `22.13.0+`; Intelligence Engine schema groundwork applied to staging via Supabase MCP (`intelligence_event` + `intelligence_digest` + polymorphic junction + `signal_source_type` enum + regenerated TS types byte-identical across workspaces). Audit: passed.
 
 <details>
 <summary>Shipped milestones</summary>
 
+- v6.3 Carryover Sweep & v7.0 Prep (2026-05-17): Test infra repaired, design-token compliance gate live (D-05 selectors at `error`, 50 Tier-A swaps + 271 Tier-C suppressed), HeroUI v3 Kanban migration (shared `@dnd-kit/core` primitive, kibo-ui + tunnel-rat purged), React vendor 349 → 285 KB, phase-base tags annotated + SSH-signed, Intelligence Engine schema groundwork (`intelligence_event` + `intelligence_digest` + polymorphic junction + `signal_source_type` enum) — see `.planning/milestones/v6.3-ROADMAP.md` and `.planning/milestones/v6.3-MILESTONE-AUDIT.md`
 - v6.2 Type-Check, Lint & Bundle Reset (2026-05-12): TS errors 2078 → 0, lint problems 727 → 0, Aceternity purge + primitive cascade inversion, Initial-route ceiling 517 → 450 KB with 3 `React.lazy()` conversions, three PR-blocking gates restored on `main` — see `.planning/milestones/v6.2-ROADMAP.md` and `.planning/milestones/v6.2-MILESTONE-AUDIT.md`
 - v6.1 Hardening & Reconciliation (2026-05-08): v6.0 verification backfill, archive sync, size-limit CI gate repair, WR-02..WR-06 closure, Storybook deferral ADR, intelligence digest schema/seed closure, VIP ISO projection, and visual baseline regeneration for Phases 38/40/41
 - v6.0 Design System Adoption (2026-05-06): OKLCH token engine (4 directions × mode × hue × density), Tweaks drawer, self-hosted typography stack, new shell chrome, signature visual primitives, verbatim dashboard, kanban + calendar reskin, 7 list pages, 720px dossier drawer, 5 remaining pages reskinned, hard cross-phase QA gate (axe + responsive + keyboard + focus-outline) — see `.planning/milestones/v6.0-ROADMAP.md` and `.planning/milestones/v6.0-MILESTONE-AUDIT.md`
@@ -26,29 +27,21 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-## Current Milestone: v6.3 Carryover Sweep & v7.0 Prep
+## Next Milestone Goals
 
-**Goal:** Close v6.2 carryover debt, harden test/design gates, and lay v7.0 Intelligence Engine schema groundwork — clean runway before feature work.
+The v7.0 Intelligence Engine seed (`.planning/seeds/v7.0-intelligence-engine.md`) is unblocked. v6.3 shipped the schema groundwork (INTEL-01..05): `intelligence_event` + new `intelligence_digest` + polymorphic `intelligence_event_dossiers` junction + `signal_source_type` enum + regenerated TS types byte-identical across workspaces. v7.0 builds the API + UI + ingestion + alerting on top.
 
-**Target features:**
+**Carryover tech debt from v6.3** (queue for v6.4 quick-tasks or fold into v7.0 scope):
 
-- HeroUI v3 Kanban migration: `TasksTab.tsx` + `EngagementKanbanDialog.tsx` migrate to HeroUI v3 Kanban + `@dnd-kit/core`; remove `@/components/kibo-ui/kanban` + dep
-- Design-token compliance gate: ESLint rule banning raw hex + Tailwind color literals in `frontend/src/`; fix all violations (`WorldMapVisualization.tsx:193`, `PositionEditor.tsx`); PR-blocking CI context
-- Test infrastructure hardening: Fix `frontend/tests/setup.ts:6` `vi.mock("react-i18next")` factory (add `initReactI18next`); audit other module-eval failures; vitest setup review; restore 4 wizard tests
-- Bundle micro-tightening + tag provenance: React vendor ceiling 349 → ~285 KB (D-03 min rule); re-tag `phase-47/48/49-base` with `-a -s`; CLAUDE.md Node note `20.19.0+` → `22.13.0+`
-- Intelligence Engine schema groundwork: `intelligence_signal` + `intelligence_digest` tables, source enum, polymorphic dossier linking, RLS, FKs, indexes — schema-only, no API, no UI
-
-The v7.0 Intelligence Engine seed (`.planning/seeds/v7.0-intelligence-engine.md`) is unblocked but deferred until v6.3 ships its schema groundwork.
-
-**Carryover tech debt from v6.2** (queue for next milestone or quick-tasks):
-
-- `useStakeholderInteractionMutations` shim retained (1 of 20) — type at source when underlying implementation lands
-- `TasksTab.tsx` + `EngagementKanbanDialog.tsx` still import `@/components/kibo-ui/kanban` — HeroUI v3 Kanban + @dnd-kit refactor deferred until HeroUI v3 stabilizes
-- ~~React vendor ceiling 349 KB vs measured 279.91 KB — tighten to ~285 KB per D-03 min rule~~ — **closed by Phase 53** (BUNDLE-05, ceiling now 285 KB, measured 279.42 kB)
-- ~~CLAUDE.md Node note `Node.js 20.19.0+` → `22.13.0+` to match `package.json` engines~~ — **closed by Phase 53** (BUNDLE-07, both L84 + L483 now `Node.js 22.13.0+`)
-- Pre-existing design-rule violations: `WorldMapVisualization.tsx:193` raw hex `#3B82F6`; `PositionEditor.tsx` `text-blue-600` / `text-red-{600,800}` literals — queue for design-compliance sweep
-- 4 wizard tests fail at module evaluation — `frontend/tests/setup.ts:6` `vi.mock("react-i18next")` factory omits `initReactI18next`
-- ~~`phase-47/48/49-base` lightweight tags — re-tag with `-a -s` for `git tag -v` provenance~~ — **closed by Phase 53** (BUNDLE-06, all 3 now annotated + SSH-signed locally; `git push --force origin phase-NN-base` ×3 deferred to human operator per D-26)
+- DesignV2 → main merge sequence (then push triggers v6.3 enforcement on main contexts)
+- 271 Tier-C design-token suppressions / 2336 AST nodes — cleanup waves staged as TBD-design-token-tier-c-cleanup-wave-N
+- 5 Phase 52 PASS-WITH-DEVIATION deviations (D-19..D-23): mobile touch DnD scope-out, Phase 39 `kanban-*.spec.ts` regression follow-up, LTR/RTL visual baseline byte-distinction, live tasks-tab Playwright run with host operator
+- Phase 53 SUMMARY/VERIFICATION cosmetic wording refresh (`PASS-WITH-DEFERRAL` → `PASS`, `verified-local-only` → `verified` — origin SHAs already match local)
+- `TweaksDrawer.test.tsx:6-8` stale comment about TEST-01 mock factory (documentation drift)
+- `51-VALIDATION.md` frontmatter `status: draft` → `passed` polish
+- bad-design-token.tsx + bad-vi-mock.ts positive-failure CI assertion gap
+- D-54-04-RLS-AUDIT-PRE-EXISTING-FAIL: pre-existing `countries` row in `sensitiveTables` (Phase 03/04 vintage)
+- `useStakeholderInteractionMutations` shim (1 of 20 retained from v6.2) — type at source when underlying implementation lands
 
 ## Requirements
 
@@ -129,9 +122,21 @@ The v7.0 Intelligence Engine seed (`.planning/seeds/v7.0-intelligence-engine.md`
 - ✓ `Bundle Size Check (size-limit)` restored as PR-blocking branch-protection context (verbatim casing); 2 smoke PRs verified `BLOCKED` — v6.2 Phase 49 (BUNDLE-03)
 - ✓ Vendor super-chunk audited; heroui/sentry/dnd sub-vendor decomposition with documented ceilings — v6.2 Phase 49 (BUNDLE-04)
 
+- ✓ `vi.mock("react-i18next")` factory uses `vi.importActual` + spread so module-eval succeeds for all consumers; 4 wizard tests green; setup contracts documented in frontend + backend test-setup docs — v6.3 Phase 50 (TEST-01..04)
+- ✓ ESLint D-05 selectors at `error` severity workspace-wide ban raw hex + Tailwind palette literals in `frontend/src/`; 50 Tier-A files swapped to tokens; 271 Tier-C suppressed per-Literal; PR-blocking via D-09 fold into Phase 48 `Lint` context — v6.3 Phase 51 (DESIGN-01..04)
+- ✓ HeroUI v3 Kanban migration: shared `frontend/src/components/kanban/*` primitive on `@dnd-kit/core`; TasksTab migrated; `EngagementKanbanDialog` + `EngagementDossierPage` deleted (KANBAN-02 satisfied-by-deletion); `kibo-ui` + `tunnel-rat` purged; EN+AR baselines committed — v6.3 Phase 52 (KANBAN-01..04)
+- ✓ React vendor ceiling 349 → 285 KB gz (measured 279.42 kB) per D-03 min rule — v6.3 Phase 53 (BUNDLE-05)
+- ✓ `phase-47/48/49-base` re-issued annotated + SSH-signed; `git tag -v` exits 0 with `Good "git" signature`; origin SHAs match local — v6.3 Phase 53 (BUNDLE-06)
+- ✓ CLAUDE.md Node engine note aligned to `Node.js 22.13.0+` at L84 + L483 to match `package.json` engines — v6.3 Phase 53 (BUNDLE-07)
+- ✓ `intelligence_event` table + indexes + tenant-scoped RLS on staging via Supabase MCP — v6.3 Phase 54 (INTEL-01)
+- ✓ New `intelligence_digest` table on staging (prior Phase-45 dashboard table renamed to `dashboard_digest` to free the canonical name) + indexes + RLS — v6.3 Phase 54 (INTEL-02)
+- ✓ `intelligence_event_dossiers` polymorphic junction with 7-value `dossier_type` CHECK + EXISTS-via-parent RLS + CASCADE — v6.3 Phase 54 (INTEL-03)
+- ✓ `signal_source_type` enum (`publication`, `feed`, `human_entered`, `ai_generated`) applied to `intelligence_event.source_type` — v6.3 Phase 54 (INTEL-04)
+- ✓ `database.types.ts` regenerated; byte-identical across backend + frontend workspaces; dual `pnpm type-check` exit 0; `rls-audit.test.ts` sensitiveTables extended — v6.3 Phase 54 (INTEL-05)
+
 ### Active
 
-(v6.3 requirements defined via `/gsd-new-milestone`. See `.planning/REQUIREMENTS.md` for REQ-ID list.)
+(v7.0 requirements to be defined via `/gsd:new-milestone` — Intelligence Engine API + UI + ingestion + alerting on top of v6.3 schema groundwork.)
 
 ### Out of Scope
 
@@ -161,50 +166,59 @@ The v7.0 Intelligence Engine seed (`.planning/seeds/v7.0-intelligence-engine.md`
 
 ## Key Decisions
 
-| Decision                              | Rationale                                                                                                                                                                 | Outcome       |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| Full stack scope                      | Backend and frontend both need quality pass                                                                                                                               | ✓ Good        |
-| Quality before features               | Fragile foundation makes new features risky                                                                                                                               | ✓ Good        |
-| No new features in this milestone     | Keeps scope focused on hardening                                                                                                                                          | ✓ Good        |
-| Supabase-first auth                   | Unified auth strategy, JWT as fallback                                                                                                                                    | ✓ Good        |
-| Domain repository pattern             | Consistent data flow, zero raw fetch                                                                                                                                      | ✓ Good        |
-| useDirection() over prop drilling     | Centralized RTL, no per-component dir=                                                                                                                                    | ✓ Good        |
-| size-limit as hard CI gate            | Bundle budget enforced, Lighthouse advisory                                                                                                                               | ✓ Good        |
-| ESLint strict rules deferred          | 4500+ violations too large for this milestone                                                                                                                             | ⚠️ Revisit    |
-| rtl-friendly at warn level            | Error-level no-restricted-syntax covers it                                                                                                                                | ⚠️ Revisit    |
-| Lifecycle guides, not gates           | Diplomatic work is non-linear; skip/revert OK                                                                                                                             | ✓ Good        |
-| Hub-and-spoke architecture            | Matches how diplomatic staff actually work                                                                                                                                | ✓ Good        |
-| DossierShell shared layout            | Consistent UX across all 8 dossier types                                                                                                                                  | ✓ Good        |
-| Feature absorption over deletion      | Redirect old routes, absorb into context                                                                                                                                  | ✓ Good        |
-| Elected Officials via persons         | Query persons with subtype filter, no new table                                                                                                                           | ✓ Good        |
-| Kibo-UI KanbanProvider                | Better DX than raw @dnd-kit/core for kanban                                                                                                                               | ✓ Good        |
-| Supabase Realtime for dashboard       | 1s debounce on tasks+transitions tables                                                                                                                                   | ✓ Good        |
-| BullMQ for async notification         | Decouple dispatch from triggering action                                                                                                                                  | ✓ Good        |
-| Resend for transactional email        | Simple API, bilingual HTML templates                                                                                                                                      | ✓ Good        |
-| nginx + certbot over Caddy            | Existing config, lower migration risk                                                                                                                                     | ✓ Good        |
-| VAPID push with soft-ask pattern      | Better UX than cold browser permission dialog                                                                                                                             | ✓ Good        |
-| Playwright POM + CI sharding          | Maintainable E2E with parallelized CI runs                                                                                                                                | ✓ Good        |
-| Plans 20-02–05 deferred to corp       | Corporate infra migration pending                                                                                                                                         | — Pending     |
-| OKLCH token engine over HSL           | Better perceptual uniformity for accent math; clean dark/light flips per direction                                                                                        | ✓ Good (v6.0) |
-| HeroUI v3 + Tailwind v4 `@theme`      | Single token bridge instead of per-component overrides; semantic mapping accent→primary                                                                                   | ✓ Good (v6.0) |
-| Self-hosted fonts via @fontsource     | Zero CDN traffic + offline-friendly + bundled by Vite                                                                                                                     | ✓ Good (v6.0) |
-| Replace v5 themes (no coexistence)    | Strategy (i) — clean cut over coexistence; eliminates token cascade conflicts                                                                                             | ✓ Good (v6.0) |
-| FOUC bootstrap byte-mirror invariant  | Inline synchronous bootstrap.js paints first-frame tokens; literal palette must byte-match `tokens/directions.ts`                                                         | ✓ Good (v6.0) |
-| Phase 43 as cross-phase QA gate       | Final phase enforces lint + axe + responsive + keyboard + focus-outline across all v6.0 routes — not per-phase                                                            | ✓ Good (v6.0) |
-| Playwright globalSetup + storageState | Replaces brittle per-test login helper; eliminates Class D login-form bleed-through across qa-sweep specs                                                                 | ✓ Good (v6.0) |
-| `.touch-44` utility + 7 call-sites    | Single CSS class with logical `min-inline-size`/`min-block-size`; applied to existing components without refactoring                                                      | ✓ Good (v6.0) |
-| 6 phases ship without VERIFICATION.md | Phase 43 cross-phase sweep covered them indirectly; Phase 44 backfilled explicit verification                                                                             | ✓ Closed      |
-| Visual baselines deferred to operator | Phase 46 regenerated and committed baselines on a seeded dev machine with human review and CI replay                                                                      | ✓ Closed      |
-| Phase-base git tags as diff anchors   | `phase-47/48/49-base` lightweight tags replace unreliable `git merge-base main HEAD` for net-new-suppression audits                                                       | ✓ Good (v6.2) |
-| Deletion-first TS6133/TS6196 fix      | TS6133 unused declarations resolved by deletion or real fix; never silenced with `@ts-ignore` / `@ts-expect-error`                                                        | ✓ Good (v6.2) |
-| `@ts-nocheck` on Supabase codegen     | Auto-generated `database.types.ts` + `contact-directory.types.ts` allowlisted via top-of-file `@ts-nocheck` in EXCEPTIONS ledger — D-11 alternative to `tsconfig` exclude | ✓ Good (v6.2) |
-| Typed-at-source over consumer cast    | Tighten underlying domain hook return types to retire 19 of 20 typed shims; cast at destructure boundary deprecated                                                       | ✓ Good (v6.2) |
-| Root `eslint.config.mjs` only         | Deleted `frontend/eslint.config.js` shadow; workspace lint scripts pinned to root with `--max-warnings 0`                                                                 | ✓ Good (v6.2) |
-| Invert `no-restricted-imports`        | Bans Aceternity + Kibo UI per CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom); rule messages no longer recommend a banned library                                | ✓ Good (v6.2) |
-| Honest Total-JS ceiling 2.45 MB       | D-02 escalation: 1.8 MB unattainable inside Phase 49 scope; lock at measured + slack with documented paper trail rather than aspirational ceiling                         | ✓ Good (v6.2) |
-| manualChunks ordering                 | Scoped-package rules placed BEFORE `id.includes("react")` substring rule to prevent @heroui/@dnd-kit/@radix-ui mis-classification into react-vendor                       | ✓ Good (v6.2) |
-| Sub-vendor decomposition              | heroui-vendor / sentry-vendor / dnd-vendor split with `===1` strict assertions in `assert-size-limit-matches.mjs`                                                         | ✓ Good (v6.2) |
-| size-limit native exit IS the gate    | BUNDLE-03 enforcement uses `size-limit` fail-on-exceed; no custom delta calculator                                                                                        | ✓ Good (v6.2) |
+| Decision                                                   | Rationale                                                                                                                                                                  | Outcome       |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| Full stack scope                                           | Backend and frontend both need quality pass                                                                                                                                | ✓ Good        |
+| Quality before features                                    | Fragile foundation makes new features risky                                                                                                                                | ✓ Good        |
+| No new features in this milestone                          | Keeps scope focused on hardening                                                                                                                                           | ✓ Good        |
+| Supabase-first auth                                        | Unified auth strategy, JWT as fallback                                                                                                                                     | ✓ Good        |
+| Domain repository pattern                                  | Consistent data flow, zero raw fetch                                                                                                                                       | ✓ Good        |
+| useDirection() over prop drilling                          | Centralized RTL, no per-component dir=                                                                                                                                     | ✓ Good        |
+| size-limit as hard CI gate                                 | Bundle budget enforced, Lighthouse advisory                                                                                                                                | ✓ Good        |
+| ESLint strict rules deferred                               | 4500+ violations too large for this milestone                                                                                                                              | ⚠️ Revisit    |
+| rtl-friendly at warn level                                 | Error-level no-restricted-syntax covers it                                                                                                                                 | ⚠️ Revisit    |
+| Lifecycle guides, not gates                                | Diplomatic work is non-linear; skip/revert OK                                                                                                                              | ✓ Good        |
+| Hub-and-spoke architecture                                 | Matches how diplomatic staff actually work                                                                                                                                 | ✓ Good        |
+| DossierShell shared layout                                 | Consistent UX across all 8 dossier types                                                                                                                                   | ✓ Good        |
+| Feature absorption over deletion                           | Redirect old routes, absorb into context                                                                                                                                   | ✓ Good        |
+| Elected Officials via persons                              | Query persons with subtype filter, no new table                                                                                                                            | ✓ Good        |
+| Kibo-UI KanbanProvider                                     | Better DX than raw @dnd-kit/core for kanban                                                                                                                                | ✓ Good        |
+| Supabase Realtime for dashboard                            | 1s debounce on tasks+transitions tables                                                                                                                                    | ✓ Good        |
+| BullMQ for async notification                              | Decouple dispatch from triggering action                                                                                                                                   | ✓ Good        |
+| Resend for transactional email                             | Simple API, bilingual HTML templates                                                                                                                                       | ✓ Good        |
+| nginx + certbot over Caddy                                 | Existing config, lower migration risk                                                                                                                                      | ✓ Good        |
+| VAPID push with soft-ask pattern                           | Better UX than cold browser permission dialog                                                                                                                              | ✓ Good        |
+| Playwright POM + CI sharding                               | Maintainable E2E with parallelized CI runs                                                                                                                                 | ✓ Good        |
+| Plans 20-02–05 deferred to corp                            | Corporate infra migration pending                                                                                                                                          | — Pending     |
+| OKLCH token engine over HSL                                | Better perceptual uniformity for accent math; clean dark/light flips per direction                                                                                         | ✓ Good (v6.0) |
+| HeroUI v3 + Tailwind v4 `@theme`                           | Single token bridge instead of per-component overrides; semantic mapping accent→primary                                                                                    | ✓ Good (v6.0) |
+| Self-hosted fonts via @fontsource                          | Zero CDN traffic + offline-friendly + bundled by Vite                                                                                                                      | ✓ Good (v6.0) |
+| Replace v5 themes (no coexistence)                         | Strategy (i) — clean cut over coexistence; eliminates token cascade conflicts                                                                                              | ✓ Good (v6.0) |
+| FOUC bootstrap byte-mirror invariant                       | Inline synchronous bootstrap.js paints first-frame tokens; literal palette must byte-match `tokens/directions.ts`                                                          | ✓ Good (v6.0) |
+| Phase 43 as cross-phase QA gate                            | Final phase enforces lint + axe + responsive + keyboard + focus-outline across all v6.0 routes — not per-phase                                                             | ✓ Good (v6.0) |
+| Playwright globalSetup + storageState                      | Replaces brittle per-test login helper; eliminates Class D login-form bleed-through across qa-sweep specs                                                                  | ✓ Good (v6.0) |
+| `.touch-44` utility + 7 call-sites                         | Single CSS class with logical `min-inline-size`/`min-block-size`; applied to existing components without refactoring                                                       | ✓ Good (v6.0) |
+| 6 phases ship without VERIFICATION.md                      | Phase 43 cross-phase sweep covered them indirectly; Phase 44 backfilled explicit verification                                                                              | ✓ Closed      |
+| Visual baselines deferred to operator                      | Phase 46 regenerated and committed baselines on a seeded dev machine with human review and CI replay                                                                       | ✓ Closed      |
+| Phase-base git tags as diff anchors                        | `phase-47/48/49-base` lightweight tags replace unreliable `git merge-base main HEAD` for net-new-suppression audits                                                        | ✓ Good (v6.2) |
+| Deletion-first TS6133/TS6196 fix                           | TS6133 unused declarations resolved by deletion or real fix; never silenced with `@ts-ignore` / `@ts-expect-error`                                                         | ✓ Good (v6.2) |
+| `@ts-nocheck` on Supabase codegen                          | Auto-generated `database.types.ts` + `contact-directory.types.ts` allowlisted via top-of-file `@ts-nocheck` in EXCEPTIONS ledger — D-11 alternative to `tsconfig` exclude  | ✓ Good (v6.2) |
+| Typed-at-source over consumer cast                         | Tighten underlying domain hook return types to retire 19 of 20 typed shims; cast at destructure boundary deprecated                                                        | ✓ Good (v6.2) |
+| Root `eslint.config.mjs` only                              | Deleted `frontend/eslint.config.js` shadow; workspace lint scripts pinned to root with `--max-warnings 0`                                                                  | ✓ Good (v6.2) |
+| Invert `no-restricted-imports`                             | Bans Aceternity + Kibo UI per CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom); rule messages no longer recommend a banned library                                 | ✓ Good (v6.2) |
+| Honest Total-JS ceiling 2.45 MB                            | D-02 escalation: 1.8 MB unattainable inside Phase 49 scope; lock at measured + slack with documented paper trail rather than aspirational ceiling                          | ✓ Good (v6.2) |
+| manualChunks ordering                                      | Scoped-package rules placed BEFORE `id.includes("react")` substring rule to prevent @heroui/@dnd-kit/@radix-ui mis-classification into react-vendor                        | ✓ Good (v6.2) |
+| Sub-vendor decomposition                                   | heroui-vendor / sentry-vendor / dnd-vendor split with `===1` strict assertions in `assert-size-limit-matches.mjs`                                                          | ✓ Good (v6.2) |
+| size-limit native exit IS the gate                         | BUNDLE-03 enforcement uses `size-limit` fail-on-exceed; no custom delta calculator                                                                                         | ✓ Good (v6.2) |
+| `vi.importActual` + spread for react-i18next               | TEST-01: factory preserves `initReactI18next` + all real exports so module-eval succeeds for every consumer; eliminates the `vi.mock` factory-omits-real-export trap       | ✓ Good (v6.3) |
+| Tier-A swap + Tier-C suppress for DESIGN-03                | 50 named-anchor files swapped to tokens; 271 Tier-C suppressed per-Literal with traceable `eslint-disable-next-line` annotations — cleanup waves staged for v6.4           | ✓ Good (v6.3) |
+| D-09 fold into existing `Lint` context                     | DESIGN-04: no new branch-protection PUT; smoke PR #12 captured `Lint=FAILURE` + `mergeStateStatus=BLOCKED` against `main`                                                  | ✓ Good (v6.3) |
+| KANBAN-02 satisfied-by-deletion                            | D-20: `EngagementKanbanDialog` + `EngagementDossierPage` deleted as dead code; route now redirect-only to workspace TasksTab; shared `@dnd-kit/core` primitive covers both | ✓ Good (v6.3) |
+| Rename Phase-45 `intelligence_digest` → `dashboard_digest` | Frees the canonical name for the v7.0 Intelligence Engine surface; lockstep frontend hook/test/widget rename in 54-01                                                      | ✓ Good (v6.3) |
+| `intelligence_event` (not `intelligence_signal`)           | Avoids collision with existing curated `intelligence_signals` plural table; renamed from spec                                                                              | ✓ Good (v6.3) |
+| Polymorphic junction over per-type FKs                     | `intelligence_event_dossiers` with 7-value `dossier_type` CHECK + EXISTS-via-parent RLS scales without N table-pair joins for AI correlation                               | ✓ Good (v6.3) |
+| Annotated + SSH-signed phase-base tags                     | BUNDLE-06: `git tag -v` provenance via `~/.ssh/allowed_signers`; origin SHAs match local objects post-audit verification                                                   | ✓ Good (v6.3) |
+| Migrations via Supabase MCP, not local CLI                 | D-15: applied to staging (`zkrcjzdemdmwhearhfgg`) via `apply_migration` — keeps environments authoritative and reproducible                                                | ✓ Good (v6.3) |
 
 ## Evolution
 
@@ -227,4 +241,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-05-16 — Phase 53 (bundle-tightening-tag-provenance) complete: BUNDLE-05/06/07 verified; React vendor ceiling 349 → 285 KB; phase-47/48/49-base tags signed; CLAUDE.md Node aligned. One sub-step deferred to human (D-26: force-push 3 tags to origin). Phase 54 (intelligence-engine-schema) is the last v6.3 phase._
+_Last updated: 2026-05-17 — v6.3 milestone complete (Phases 50-54, 28 plans, 20/20 requirements satisfied)._
