@@ -62,6 +62,58 @@ jobs:
       - name: Run linting
         run: pnpm run lint
 
+  design-token-check:
+    name: Design Token Check
+    runs-on: ubuntu-latest
+    needs: [repo-policy]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Assert design-token fixture fails lint (positive-failure)
+        shell: bash
+        run: |
+          set -e
+          ! pnpm exec eslint -c eslint.config.mjs --max-warnings 0 \
+            tools/eslint-fixtures/bad-design-token.tsx
+
+  i18next-factory-check:
+    name: react-i18next Factory Check
+    runs-on: ubuntu-latest
+    needs: [repo-policy]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Assert vi.mock fixture fails lint (positive-failure)
+        shell: bash
+        run: |
+          set -e
+          ! pnpm exec eslint -c eslint.config.mjs --max-warnings 0 \
+            tools/eslint-fixtures/bad-vi-mock.ts
+
   type-check:
     name: type-check
     runs-on: ubuntu-latest
