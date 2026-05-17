@@ -62,7 +62,7 @@ export function TemplateCard({
 }: TemplateCardProps) {
   const { t } = useTranslation('entity-templates')
   const { isRTL } = useDirection()
-// Get icon component
+  // Get icon component
   const IconComponent = ICON_MAP[template.icon] || FileText
 
   // Get localized name and description
@@ -136,6 +136,7 @@ export function TemplateCard({
             onClick={handleFavoriteClick}
           >
             <Star
+              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TemplateCard */
               className={cn('h-4 w-4', template.is_favorite && 'fill-yellow-400 text-yellow-400')}
             />
             <span className="sr-only">
@@ -171,6 +172,7 @@ export function TemplateCard({
       {template.is_recent && !template.is_favorite && (
         <div
           className={cn(
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TemplateCard */
             'absolute -top-1 rounded-full bg-blue-500 px-1.5 py-0.5 text-xs text-white',
             isRTL ? '-start-1' : '-end-1',
           )}

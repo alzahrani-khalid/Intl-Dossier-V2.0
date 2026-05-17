@@ -75,7 +75,7 @@ const ENTITY_ICONS: Record<string, typeof FileText> = {
 function EntityLinkSuggestions({ ticketId, onLinkClick, className }: EntityLinkSuggestionsProps) {
   const { t, i18n } = useTranslation('entity-linking')
   const { isRTL } = useDirection()
-const queryClient = useQueryClient()
+  const queryClient = useQueryClient()
   const [isGenerating, setIsGenerating] = useState(false)
 
   // Fetch proposals
@@ -204,8 +204,11 @@ const queryClient = useQueryClient()
   }
 
   const getConfidenceColor = (score: number) => {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkSuggestions
     if (score >= 90) return 'bg-green-500'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkSuggestions
     if (score >= 70) return 'bg-yellow-500'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkSuggestions
     return 'bg-orange-500'
   }
 
@@ -395,6 +398,7 @@ function ProposalCard({
           <Button
             variant="ghost"
             size="icon"
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkSuggestions
             className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-100"
             onClick={onApprove}
             disabled={isApproving || isRejecting}
@@ -408,6 +412,7 @@ function ProposalCard({
           <Button
             variant="ghost"
             size="icon"
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkSuggestions
             className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-100"
             onClick={onReject}
             disabled={isApproving || isRejecting}

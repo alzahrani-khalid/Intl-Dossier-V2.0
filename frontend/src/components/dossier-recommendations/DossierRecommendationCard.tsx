@@ -113,10 +113,13 @@ function SimilarityBadge({ score }: { score: number }) {
             variant="outline"
             className={cn(
               'text-xs font-medium gap-1',
+              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
               'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/50 dark:to-purple-950/50',
+              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
               'border-blue-200 dark:border-blue-800',
             )}
           >
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */}
             <Sparkles className="h-3 w-3 text-amber-500" />
             <span className={getSimilarityColor(score)}>{formatSimilarity(score)}</span>
           </Badge>
@@ -131,7 +134,7 @@ function SimilarityBadge({ score }: { score: number }) {
 
 function PriorityIndicator({ priority }: { priority: number }) {
   const { isRTL } = useDirection()
-const label = PRIORITY_LABELS[priority]
+  const label = PRIORITY_LABELS[priority]
 
   return (
     <Badge
@@ -139,10 +142,13 @@ const label = PRIORITY_LABELS[priority]
       className={cn(
         'text-xs',
         priority >= 4 &&
+          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
           'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 border-orange-200',
         priority === 3 &&
+          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
           'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 border-yellow-200',
         priority <= 2 &&
+          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
           'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400 border-gray-200',
       )}
     >
@@ -322,6 +328,7 @@ export function DossierRecommendationCard({
         className={cn(
           'relative overflow-hidden transition-all duration-200',
           'hover:shadow-md',
+          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
           recommendation.priority >= 4 && 'border-orange-200 dark:border-orange-800',
           !isActionable && 'opacity-60',
           className,
@@ -331,9 +338,13 @@ export function DossierRecommendationCard({
         <div
           className={cn(
             'absolute top-0 start-0 h-full w-1',
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
             recommendation.priority >= 5 && 'bg-red-500',
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
             recommendation.priority === 4 && 'bg-orange-500',
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
             recommendation.priority === 3 && 'bg-yellow-500',
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
             recommendation.priority <= 2 && 'bg-gray-400',
           )}
         />
@@ -345,9 +356,11 @@ export function DossierRecommendationCard({
               <div
                 className={cn(
                   'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg',
+                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
                   'bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/40 dark:to-purple-900/40',
                 )}
               >
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */}
                 <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div className="min-w-0 flex-1">

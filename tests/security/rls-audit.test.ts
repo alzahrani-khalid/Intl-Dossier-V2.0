@@ -76,6 +76,10 @@ describe('RLS Audit: All Public Tables', () => {
       'tasks',
       'commitments',
       'intelligence_signals',
+      // Phase 54 additions:
+      'intelligence_event',
+      'intelligence_digest',
+      'dashboard_digest',
     ]
 
     for (const table of sensitiveTables) {

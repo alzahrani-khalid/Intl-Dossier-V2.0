@@ -189,7 +189,7 @@ function DetailedMode({
             <span>{t('tasks.sla.progress')}</span>
             <span>{Math.round(status.percentElapsed)}%</span>
           </div>
-          <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
             <div
               className={cn('h-full transition-all duration-500', getStatusColors(status.status))}
               style={{ width: `${Math.min(status.percentElapsed, 100)}%` }}
@@ -233,19 +233,19 @@ function getStatusIcon(status: string) {
 function getStatusColors(status: string): string {
   switch (status) {
     case 'safe':
-      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100'
+      return 'bg-success/10 text-success dark:bg-success dark:text-success'
     case 'approaching':
-      return 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-100'
+      return 'bg-warning/10 text-warning dark:bg-warning dark:text-warning'
     case 'warning':
-      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100'
+      return 'bg-warning/10 text-warning dark:bg-warning dark:text-warning'
     case 'breached':
-      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100'
+      return 'bg-danger/10 text-danger dark:bg-danger dark:text-danger'
     case 'completed_on_time':
-      return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
+      return 'bg-info/10 text-info dark:bg-info dark:text-info'
     case 'completed_late':
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100'
+      return 'bg-muted text-foreground dark:bg-muted dark:text-muted-foreground'
     default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100'
+      return 'bg-muted text-foreground dark:bg-muted dark:text-muted-foreground'
   }
 }
 
@@ -255,18 +255,18 @@ function getStatusColors(status: string): string {
 function getStatusBorderColors(status: string): string {
   switch (status) {
     case 'safe':
-      return 'border-green-300 dark:border-green-700'
+      return 'border-success/30 dark:border-success'
     case 'approaching':
-      return 'border-amber-300 dark:border-amber-700'
+      return 'border-warning/30 dark:border-warning'
     case 'warning':
-      return 'border-yellow-300 dark:border-yellow-700'
+      return 'border-warning/30 dark:border-warning'
     case 'breached':
-      return 'border-red-300 dark:border-red-700'
+      return 'border-danger/30 dark:border-danger'
     case 'completed_on_time':
-      return 'border-blue-300 dark:border-blue-700'
+      return 'border-info/30 dark:border-info'
     case 'completed_late':
-      return 'border-gray-300 dark:border-gray-700'
+      return 'border-line dark:border-line'
     default:
-      return 'border-gray-300 dark:border-gray-700'
+      return 'border-line dark:border-line'
   }
 }

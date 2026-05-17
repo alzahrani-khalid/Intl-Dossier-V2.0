@@ -74,7 +74,7 @@ export function LinkCard({
 }: LinkCardProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const [isEditing, setIsEditing] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
   const [notesValue, setNotesValue] = useState(link.notes || '')
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
@@ -109,7 +109,7 @@ const [isEditing, setIsEditing] = useState(false)
           'transition-all duration-200',
 
           // Deleted state styling
-          isDeleted && 'opacity-60 bg-slate-50 dark:bg-slate-900',
+          isDeleted && 'opacity-60 bg-muted dark:bg-muted',
 
           // Hover effects (desktop only)
           !isDeleted && 'hover:shadow-md',
@@ -139,7 +139,7 @@ const [isEditing, setIsEditing] = useState(false)
                 'min-h-11 min-w-11', // 44px minimum touch target
                 'touch-manipulation', // Optimize for touch
                 'cursor-grab active:cursor-grabbing',
-                'text-slate-400 hover:text-slate-600',
+                'text-muted-foreground hover:text-muted-foreground',
                 'transition-colors duration-200',
                 '-my-2', // Compensate for card padding
 
@@ -174,7 +174,7 @@ const [isEditing, setIsEditing] = useState(false)
               <LinkTypeBadge linkType={link.link_type} size="sm" />
               <p
                 className={cn(
-                  'text-xs sm:text-sm text-slate-500 dark:text-slate-400',
+                  'text-xs sm:text-sm text-muted-foreground dark:text-muted-foreground',
                   'text-start',
                 )}
               >
@@ -218,7 +218,7 @@ const [isEditing, setIsEditing] = useState(false)
                     className={cn(
                       'min-h-11 min-w-11', // 44px touch target
                       'touch-manipulation',
-                      'text-red-600 hover:text-red-700 hover:bg-red-50',
+                      'text-danger hover:text-danger hover:bg-danger/10',
                     )}
                     onClick={() => setShowDeleteDialog(true)}
                     aria-label={t('entityLinks.deleteLink')}
@@ -237,7 +237,7 @@ const [isEditing, setIsEditing] = useState(false)
                 className={cn(
                   'min-h-11 px-3 sm:px-4', // 44px height touch target
                   'touch-manipulation',
-                  'text-blue-600 border-blue-300 hover:bg-blue-50',
+                  'text-info border-info/30 hover:bg-info/10',
                 )}
                 onClick={() => onRestore(link.id)}
                 aria-label={t('entityLinks.restoreLink')}
@@ -272,7 +272,7 @@ const [isEditing, setIsEditing] = useState(false)
                 <div
                   className={cn(
                     'flex items-center justify-between gap-2',
-                    'text-xs text-slate-500',
+                    'text-xs text-muted-foreground',
                     isRTL && 'flex-row-reverse',
                   )}
                 >
@@ -313,7 +313,7 @@ const [isEditing, setIsEditing] = useState(false)
             ) : (
               <p
                 className={cn(
-                  'text-sm text-slate-600 dark:text-slate-300',
+                  'text-sm text-muted-foreground dark:text-muted-foreground',
                   'whitespace-pre-wrap',
                   'text-start',
                   isRTL && 'text-end',
@@ -342,7 +342,7 @@ const [isEditing, setIsEditing] = useState(false)
               {t('common.cancel')}
             </AlertDialogCancel>
             <AlertDialogAction
-              className=" touch-manipulation bg-red-600 hover:bg-red-700"
+              className=" touch-manipulation bg-danger hover:bg-danger"
               onClick={handleDelete}
             >
               {t('common.delete')}

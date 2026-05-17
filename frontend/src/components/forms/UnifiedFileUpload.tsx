@@ -181,19 +181,19 @@ function FileItem({ uploadedFile, onRemove, disabled }: FileItemProps) {
       className={cn(
         'relative flex items-center gap-3',
         'p-3 sm:p-4',
-        'bg-white dark:bg-gray-800',
-        'border border-gray-200 dark:border-gray-700',
+        'bg-white dark:bg-muted',
+        'border border-line dark:border-line',
         'rounded-lg',
         'shadow-sm',
         uploadedFile.status === 'error' &&
-          'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-950/30',
-        uploadedFile.status === 'success' && 'border-green-300 dark:border-green-700',
+          'border-danger/30 dark:border-danger bg-danger/10 dark:bg-danger/30',
+        uploadedFile.status === 'success' && 'border-success/30 dark:border-success',
       )}
     >
       {/* Preview or Icon */}
       <div className="shrink-0">
         {uploadedFile.preview ? (
-          <div className="h-12 w-12 rounded overflow-hidden bg-gray-100 dark:bg-gray-700">
+          <div className="h-12 w-12 rounded overflow-hidden bg-muted dark:bg-muted">
             <img
               src={uploadedFile.preview}
               alt={uploadedFile.file.name}
@@ -201,18 +201,18 @@ function FileItem({ uploadedFile, onRemove, disabled }: FileItemProps) {
             />
           </div>
         ) : (
-          <div className="flex h-12 w-12 items-center justify-center rounded bg-gray-100 dark:bg-gray-700">
-            <IconComponent className="h-6 w-6 text-gray-500 dark:text-gray-400" />
+          <div className="flex h-12 w-12 items-center justify-center rounded bg-muted dark:bg-muted">
+            <IconComponent className="h-6 w-6 text-muted-foreground dark:text-muted-foreground" />
           </div>
         )}
       </div>
 
       {/* File info */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+        <p className="text-sm font-medium text-foreground dark:text-muted-foreground truncate">
           {uploadedFile.file.name}
         </p>
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-muted-foreground dark:text-muted-foreground">
           {formatFileSize(uploadedFile.file.size)}
         </p>
 
@@ -225,7 +225,7 @@ function FileItem({ uploadedFile, onRemove, disabled }: FileItemProps) {
 
         {/* Error message */}
         {uploadedFile.status === 'error' && uploadedFile.error && (
-          <p className="mt-1 text-xs text-red-600 dark:text-red-400">{uploadedFile.error}</p>
+          <p className="mt-1 text-xs text-danger dark:text-danger">{uploadedFile.error}</p>
         )}
       </div>
 
@@ -234,8 +234,8 @@ function FileItem({ uploadedFile, onRemove, disabled }: FileItemProps) {
         {uploadedFile.status === 'uploading' && (
           <Loader2 className="h-5 w-5 text-primary-500 animate-spin" />
         )}
-        {uploadedFile.status === 'success' && <CheckCircle2 className="h-5 w-5 text-green-500" />}
-        {uploadedFile.status === 'error' && <AlertCircle className="h-5 w-5 text-red-500" />}
+        {uploadedFile.status === 'success' && <CheckCircle2 className="h-5 w-5 text-success" />}
+        {uploadedFile.status === 'error' && <AlertCircle className="h-5 w-5 text-danger" />}
       </div>
 
       {/* Remove button */}
@@ -247,8 +247,8 @@ function FileItem({ uploadedFile, onRemove, disabled }: FileItemProps) {
         disabled={disabled || uploadedFile.status === 'uploading'}
         className={cn(
           'h-8 w-8 shrink-0',
-          'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300',
-          'hover:bg-gray-100 dark:hover:bg-gray-700',
+          'text-muted-foreground hover:text-muted-foreground dark:hover:text-muted-foreground',
+          'hover:bg-muted dark:hover:bg-muted',
         )}
         aria-label={t('forms.remove_file')}
       >
@@ -450,10 +450,10 @@ export function UnifiedFileUpload({
     <div className={cn('space-y-3', className)}>
       {/* Label */}
       {label && (
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 sm:text-base">
+        <label className="block text-sm font-medium text-muted-foreground dark:text-muted-foreground sm:text-base">
           {label}
           {required && (
-            <span className="ms-1 text-red-500" aria-label={t('common:validation.required')}>
+            <span className="ms-1 text-danger" aria-label={t('common:validation.required')}>
               *
             </span>
           )}
@@ -469,18 +469,18 @@ export function UnifiedFileUpload({
           'transition-all duration-200',
           'cursor-pointer',
           // Default state
-          !isDragActive && !displayError && 'border-gray-300 dark:border-gray-600',
+          !isDragActive && !displayError && 'border-line dark:border-line',
           // Drag states
-          isDragAccept && 'border-green-400 bg-green-50 dark:bg-green-950/20',
-          isDragReject && 'border-red-400 bg-red-50 dark:bg-red-950/20',
+          isDragAccept && 'border-success bg-success/10 dark:bg-success/20',
+          isDragReject && 'border-danger bg-danger/10 dark:bg-danger/20',
           isDragActive &&
             !isDragAccept &&
             !isDragReject &&
             'border-primary-400 bg-primary-50 dark:bg-primary-950/20',
           // Error state
-          displayError && 'border-red-300 dark:border-red-700',
+          displayError && 'border-danger/30 dark:border-danger',
           // Hover state
-          !disabled && 'hover:border-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800/50',
+          !disabled && 'hover:border-primary-400 hover:bg-muted dark:hover:bg-muted/50',
           // Disabled state
           disabled && 'opacity-50 cursor-not-allowed',
           // Size variants
@@ -499,23 +499,23 @@ export function UnifiedFileUpload({
             transition={{ duration: 0.2 }}
             className={cn(
               'mb-3 p-3 rounded-full',
-              'bg-gray-100 dark:bg-gray-800',
-              isDragAccept && 'bg-green-100 dark:bg-green-900',
-              isDragReject && 'bg-red-100 dark:bg-red-900',
+              'bg-muted dark:bg-muted',
+              isDragAccept && 'bg-success/10 dark:bg-success',
+              isDragReject && 'bg-danger/10 dark:bg-danger',
             )}
           >
             <Upload
               className={cn(
                 'h-6 w-6',
-                isDragAccept && 'text-green-600 dark:text-green-400',
-                isDragReject && 'text-red-600 dark:text-red-400',
-                !isDragActive && 'text-gray-500 dark:text-gray-400',
+                isDragAccept && 'text-success dark:text-success',
+                isDragReject && 'text-danger dark:text-danger',
+                !isDragActive && 'text-muted-foreground dark:text-muted-foreground',
               )}
             />
           </m.div>
 
           {/* Text */}
-          <p className="text-sm font-medium text-gray-700 dark:text-gray-300 sm:text-base">
+          <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground sm:text-base">
             {isDragActive
               ? isDragReject
                 ? t('common:forms.drop_rejected')
@@ -525,7 +525,7 @@ export function UnifiedFileUpload({
 
           {/* Constraints info */}
           {!compact && (
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            <p className="mt-1 text-xs text-muted-foreground dark:text-muted-foreground">
               {t('common:forms.file_constraints', {
                 maxSize: formatFileSize(mergedConfig.maxFileSize || 0),
                 maxFiles: mergedConfig.maxFiles,
@@ -559,7 +559,7 @@ export function UnifiedFileUpload({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400"
+            className="flex items-center gap-2 text-sm text-danger dark:text-danger"
           >
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{displayError}</span>
@@ -571,7 +571,7 @@ export function UnifiedFileUpload({
       {showFileList && hasFiles && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <span className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
               {t('common:forms.files_selected', { count: files.length })}
             </span>
             {files.length > 1 && onClear && (
@@ -602,7 +602,9 @@ export function UnifiedFileUpload({
       )}
 
       {/* Help text */}
-      {helpText && <p className="text-sm text-gray-600 dark:text-gray-400">{helpText}</p>}
+      {helpText && (
+        <p className="text-sm text-muted-foreground dark:text-muted-foreground">{helpText}</p>
+      )}
     </div>
   )
 }
@@ -614,7 +616,9 @@ export function UnifiedFileUpload({
 /**
  * Pre-configured UnifiedFileUpload for documents
  */
-export function DocumentUpload(props: Omit<UnifiedFileUploadProps, 'config'> & { maxFiles?: number }) {
+export function DocumentUpload(
+  props: Omit<UnifiedFileUploadProps, 'config'> & { maxFiles?: number },
+) {
   const { maxFiles = 5, ...rest } = props
 
   return (

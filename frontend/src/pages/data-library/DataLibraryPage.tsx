@@ -256,9 +256,11 @@ export function DataLibraryPage() {
       <Card className="mb-6">
         <CardContent className="p-6">
           <div
+            /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DataLibraryPage */
             className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
               dragActive ? 'border-primary bg-primary/5' : 'border-gray-300'
             }`}
+            /* eslint-enable no-restricted-syntax */
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
@@ -288,6 +290,7 @@ export function DataLibraryPage() {
           {Object.keys(uploadProgress).length > 0 && (
             <div className="mt-4 space-y-2">
               {Object.entries(uploadProgress).map(([id, progress]) => (
+                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DataLibraryPage
                 <div key={id} className="flex items-center gap-4 p-3 bg-gray-50 rounded">
                   <FileText className="h-5 w-5 text-muted-foreground" />
                   <div className="flex-1">
@@ -302,6 +305,7 @@ export function DataLibraryPage() {
                     </div>
                     <Progress value={progress.progress} className="h-2" />
                     {progress.error && (
+                      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DataLibraryPage
                       <p className="text-xs text-red-600 mt-1">{progress.error}</p>
                     )}
                   </div>
@@ -412,6 +416,7 @@ export function DataLibraryPage() {
                     <Button size="sm" variant="ghost">
                       <Download className="h-4 w-4" />
                     </Button>
+                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DataLibraryPage */}
                     <Button size="sm" variant="ghost" className="text-red-600">
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -440,6 +445,7 @@ export function DataLibraryPage() {
                     {item.tags.map((tag, i) => (
                       <span
                         key={i}
+                        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DataLibraryPage
                         className="inline-flex items-center px-2 py-0.5 bg-gray-100 rounded text-xs"
                       >
                         {tag}

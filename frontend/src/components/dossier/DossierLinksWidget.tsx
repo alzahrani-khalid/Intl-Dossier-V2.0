@@ -106,10 +106,15 @@ export interface DossierLinksWidgetProps {
 // ============================================================================
 
 const INHERITANCE_SOURCE_CONFIG: Record<InheritanceSource, { icon: string; color: string }> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierLinksWidget
   direct: { icon: 'link', color: 'text-blue-600 dark:text-blue-400' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierLinksWidget
   engagement: { icon: 'calendar', color: 'text-purple-600 dark:text-purple-400' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierLinksWidget
   after_action: { icon: 'clipboard', color: 'text-amber-600 dark:text-amber-400' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierLinksWidget
   position: { icon: 'briefcase', color: 'text-green-600 dark:text-green-400' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierLinksWidget
   mou: { icon: 'file-text', color: 'text-indigo-600 dark:text-indigo-400' },
 }
 
@@ -260,7 +265,7 @@ export function DossierLinksWidget({
 }: DossierLinksWidgetProps) {
   const { t } = useTranslation('dossier-context')
   const { isRTL } = useDirection()
-// State
+  // State
   const [isExpanded, setIsExpanded] = useState(false)
   const [isAddingDossier, setIsAddingDossier] = useState(false)
   const [linkToRemove, setLinkToRemove] = useState<WorkItemDossierLink | null>(null)

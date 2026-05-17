@@ -236,7 +236,8 @@ export function GeographicVisualizationPage() {
                             <span
                               className={
                                 country.recentEngagements > 0
-                                  ? 'text-green-600 font-medium'
+                                  ? /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#GeographicVisualizationPage */
+                                    'text-green-600 font-medium'
                                   : 'text-muted-foreground'
                               }
                             >
@@ -247,7 +248,8 @@ export function GeographicVisualizationPage() {
                             <span
                               className={
                                 country.upcomingEngagements > 0
-                                  ? 'text-blue-600 font-medium'
+                                  ? /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#GeographicVisualizationPage */
+                                    'text-blue-600 font-medium'
                                   : 'text-muted-foreground'
                               }
                             >

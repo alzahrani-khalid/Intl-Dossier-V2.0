@@ -57,10 +57,7 @@ import { CommentList } from '@/components/comments'
 import type { ForumDossier } from '@/lib/dossier-type-guards'
 import { useDirection } from '@/hooks/useDirection'
 import { ForumSessionCreator } from '@/components/engagements/ForumSessionCreator'
-import {
-  useCreateForumSession,
-  useForumSessions,
-} from '@/domains/engagements/hooks/useLifecycle'
+import { useCreateForumSession, useForumSessions } from '@/domains/engagements/hooks/useLifecycle'
 import type { ForumSessionCreateRequest } from '@/types/lifecycle.types'
 import { ENGAGEMENT_STATUS_LABELS } from '@/types/engagement.types'
 
@@ -197,6 +194,7 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
               {/* Quick Stats Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div className="bg-muted/50 rounded-lg p-4 text-center">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDossierDetail */}
                   <Building2 className="h-6 w-6 mx-auto mb-2 text-blue-500" />
                   <p className="text-2xl font-bold">
                     {dossier.extension?.member_organizations?.length || 0}
@@ -206,6 +204,7 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
                   </p>
                 </div>
                 <div className="bg-muted/50 rounded-lg p-4 text-center">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDossierDetail */}
                   <CalendarDays className="h-6 w-6 mx-auto mb-2 text-green-500" />
                   <p className="text-2xl font-bold">
                     {dossier.extension?.meeting_frequency ? 1 : 0}
@@ -215,6 +214,7 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
                   </p>
                 </div>
                 <div className="bg-muted/50 rounded-lg p-4 text-center">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDossierDetail */}
                   <Target className="h-6 w-6 mx-auto mb-2 text-orange-500" />
                   <p className="text-2xl font-bold">
                     {dossier.extension?.deliverables?.length || 0}
@@ -224,6 +224,7 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
                   </p>
                 </div>
                 <div className="bg-muted/50 rounded-lg p-4 text-center">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDossierDetail */}
                   <FileText className="h-6 w-6 mx-auto mb-2 text-purple-500" />
                   <p className="text-2xl font-bold">
                     {dossier.extension?.forum_type === 'working_group' ? 1 : 0}
@@ -249,7 +250,12 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
 
           {/* Schedule / Sessions Tab */}
           {activeTab === 'schedule' && (
-            <div id="schedule-panel" role="tabpanel" aria-labelledby="schedule-tab" className="space-y-6">
+            <div
+              id="schedule-panel"
+              role="tabpanel"
+              aria-labelledby="schedule-tab"
+              className="space-y-6"
+            >
               {/* New Session button + ForumSessionCreator */}
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-start">
@@ -276,15 +282,15 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
                       <Card className="hover:shadow-md transition-shadow cursor-pointer">
                         <CardContent className="p-4 space-y-2">
                           <h4 className="text-sm font-semibold text-start line-clamp-2">
-                            {isRTL
-                              ? (session.name_ar ?? session.name_en)
-                              : session.name_en}
+                            {isRTL ? (session.name_ar ?? session.name_en) : session.name_en}
                           </h4>
                           <div className="flex items-center gap-2 flex-wrap">
                             <Badge variant="outline" className="text-xs">
                               {isRTL
-                                ? ENGAGEMENT_STATUS_LABELS[session.engagement_status]?.ar ?? session.engagement_status
-                                : ENGAGEMENT_STATUS_LABELS[session.engagement_status]?.en ?? session.engagement_status}
+                                ? (ENGAGEMENT_STATUS_LABELS[session.engagement_status]?.ar ??
+                                  session.engagement_status)
+                                : (ENGAGEMENT_STATUS_LABELS[session.engagement_status]?.en ??
+                                  session.engagement_status)}
                             </Badge>
                             {session.start_date != null && (
                               <span className="text-xs text-muted-foreground">

@@ -141,7 +141,8 @@ function TimelineEntry({ entry, isLast, formatDateTime }: TimelineEntryProps) {
   const newStatusColors =
     entry.new_status && STATUS_COLORS[entry.new_status]
       ? STATUS_COLORS[entry.new_status]
-      : { bg: 'bg-gray-100', text: 'text-gray-500', border: 'border-gray-300' }
+      : // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StatusTimeline
+        { bg: 'bg-gray-100', text: 'text-gray-500', border: 'border-gray-300' }
 
   return (
     <div className="flex gap-3">

@@ -82,23 +82,23 @@ function getSeverityStyles(severity: ErrorSeverity) {
   switch (severity) {
     case 'error':
       return {
-        container: 'bg-red-50 border-red-200 dark:bg-red-950/30 dark:border-red-800',
-        text: 'text-red-700 dark:text-red-400',
-        icon: 'text-red-500',
+        container: 'bg-danger/10 border-danger/30 dark:bg-danger/30 dark:border-danger',
+        text: 'text-danger dark:text-danger',
+        icon: 'text-danger',
         IconComponent: AlertCircle,
       }
     case 'warning':
       return {
-        container: 'bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800',
-        text: 'text-amber-700 dark:text-amber-400',
-        icon: 'text-amber-500',
+        container: 'bg-warning/10 border-warning/30 dark:bg-warning/30 dark:border-warning',
+        text: 'text-warning dark:text-warning',
+        icon: 'text-warning',
         IconComponent: AlertTriangle,
       }
     case 'info':
       return {
-        container: 'bg-blue-50 border-blue-200 dark:bg-blue-950/30 dark:border-blue-800',
-        text: 'text-blue-700 dark:text-blue-400',
-        icon: 'text-blue-500',
+        container: 'bg-info/10 border-info/30 dark:bg-info/30 dark:border-info',
+        text: 'text-info dark:text-info',
+        icon: 'text-info',
         IconComponent: Info,
       }
   }
@@ -117,7 +117,12 @@ function getErrorMessage(error: FieldError | string | undefined): string | undef
 /**
  * Inline error display for individual form fields
  */
-export function InlineError({ error, severity = 'error', showIcon = true, className }: InlineErrorProps) {
+export function InlineError({
+  error,
+  severity = 'error',
+  showIcon = true,
+  className,
+}: InlineErrorProps) {
   const message = getErrorMessage(error)
 
   if (!message) return null
@@ -169,7 +174,7 @@ export function ErrorWithSuggestion({
   recoveryAction,
   className,
 }: ErrorWithSuggestionProps) {
-const message = getErrorMessage(error)
+  const message = getErrorMessage(error)
 
   if (!message) return null
 
@@ -186,9 +191,7 @@ const message = getErrorMessage(error)
         className={cn('overflow-hidden', className)}
         role="alert"
       >
-        <div
-          className={cn('rounded-lg border p-3 mt-2', styles.container)}
-        >
+        <div className={cn('rounded-lg border p-3 mt-2', styles.container)}>
           {/* Error message */}
           <div className={cn('flex items-start gap-2', styles.text)}>
             <IconComponent className={cn('h-4 w-4 mt-0.5 shrink-0', styles.icon)} />
@@ -198,8 +201,10 @@ const message = getErrorMessage(error)
           {/* Suggestion */}
           {suggestion && (
             <div className="flex items-start gap-2 mt-2 ps-6">
-              <Lightbulb className="h-4 w-4 mt-0.5 shrink-0 text-amber-500" />
-              <span className="text-sm text-gray-600 dark:text-gray-400">{suggestion}</span>
+              <Lightbulb className="h-4 w-4 mt-0.5 shrink-0 text-warning" />
+              <span className="text-sm text-muted-foreground dark:text-muted-foreground">
+                {suggestion}
+              </span>
             </div>
           )}
 
@@ -255,17 +260,17 @@ export function ErrorSummary({
         transition={{ duration: 0.2 }}
         className={cn(
           'rounded-lg border',
-          'bg-red-50 border-red-200 dark:bg-red-950/30 dark:border-red-800',
+          'bg-danger/10 border-danger/30 dark:bg-danger/30 dark:border-danger',
           className,
         )}
         role="alert"
         aria-live="assertive"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-red-200 dark:border-red-800">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-danger/30 dark:border-danger">
           <div className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5 text-red-500" />
-            <span className="font-medium text-red-700 dark:text-red-400">
+            <AlertCircle className="h-5 w-5 text-danger" />
+            <span className="font-medium text-danger dark:text-danger">
               {title || t('form_errors', { count: errorCount })}
             </span>
           </div>
@@ -276,7 +281,7 @@ export function ErrorSummary({
               variant="ghost"
               size="icon"
               onClick={onDismiss}
-              className="h-6 w-6 text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/50"
+              className="h-6 w-6 text-danger hover:text-danger hover:bg-danger/10 dark:hover:bg-danger/50"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -284,7 +289,7 @@ export function ErrorSummary({
         </div>
 
         {/* Error list */}
-        <ul className="divide-y divide-red-200 dark:divide-red-800">
+        <ul className="divide-y divide-danger/30 dark:divide-danger/30">
           {errors.map((error, index) => {
             const styles = getSeverityStyles(error.severity || 'error')
             const IconComponent = styles.IconComponent
@@ -299,7 +304,7 @@ export function ErrorSummary({
                   'px-4 py-2',
                   error.field &&
                     onFieldClick &&
-                    'cursor-pointer hover:bg-red-100 dark:hover:bg-red-900/30',
+                    'cursor-pointer hover:bg-danger/10 dark:hover:bg-danger/30',
                 )}
                 onClick={error.field && onFieldClick ? () => onFieldClick(error.field!) : undefined}
               >
@@ -311,13 +316,13 @@ export function ErrorSummary({
                       {error.message}
                     </p>
                     {error.suggestion && (
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                      <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-0.5">
                         {error.suggestion}
                       </p>
                     )}
                   </div>
                   {error.field && onFieldClick && (
-                    <ChevronRight className={cn('h-4 w-4 text-red-400', isRTL && 'rotate-180')} />
+                    <ChevronRight className={cn('h-4 w-4 text-danger', isRTL && 'rotate-180')} />
                   )}
                 </div>
               </m.li>
@@ -327,7 +332,7 @@ export function ErrorSummary({
 
         {/* Summary footer */}
         {(errorCount > 0 || warningCount > 0) && (
-          <div className="px-4 py-2 text-xs text-gray-600 dark:text-gray-400 border-t border-red-200 dark:border-red-800">
+          <div className="px-4 py-2 text-xs text-muted-foreground dark:text-muted-foreground border-t border-danger/30 dark:border-danger">
             {errorCount > 0 && t('error_count', { count: errorCount })}
             {errorCount > 0 && warningCount > 0 && ', '}
             {warningCount > 0 && t('warning_count', { count: warningCount })}

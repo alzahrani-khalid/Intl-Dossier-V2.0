@@ -212,12 +212,19 @@ export interface DossierRecommendationUpdateParams {
  */
 export function getReasonColor(reason: DossierRecommendationReason): string {
   const colors: Record<DossierRecommendationReason, string> = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
     similar_content: 'text-blue-600 dark:text-blue-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
     shared_relationships: 'text-purple-600 dark:text-purple-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
     topic_overlap: 'text-green-600 dark:text-green-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
     recent_activity: 'text-orange-600 dark:text-orange-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
     collaboration_history: 'text-indigo-600 dark:text-indigo-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
     geographic_proximity: 'text-teal-600 dark:text-teal-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
     strategic_alignment: 'text-amber-600 dark:text-amber-400',
   }
   return colors[reason]
@@ -228,12 +235,19 @@ export function getReasonColor(reason: DossierRecommendationReason): string {
  */
 export function getReasonBgColor(reason: DossierRecommendationReason): string {
   const colors: Record<DossierRecommendationReason, string> = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
     similar_content: 'bg-blue-100 dark:bg-blue-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
     shared_relationships: 'bg-purple-100 dark:bg-purple-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
     topic_overlap: 'bg-green-100 dark:bg-green-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
     recent_activity: 'bg-orange-100 dark:bg-orange-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
     collaboration_history: 'bg-indigo-100 dark:bg-indigo-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
     geographic_proximity: 'bg-teal-100 dark:bg-teal-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
     strategic_alignment: 'bg-amber-100 dark:bg-amber-900/30',
   }
   return colors[reason]
@@ -243,9 +257,13 @@ export function getReasonBgColor(reason: DossierRecommendationReason): string {
  * Get display color for similarity score
  */
 export function getSimilarityColor(score: number): string {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
   if (score >= 0.9) return 'text-green-600 dark:text-green-400'
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
   if (score >= 0.8) return 'text-blue-600 dark:text-blue-400'
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
   if (score >= 0.7) return 'text-yellow-600 dark:text-yellow-400'
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
   return 'text-gray-600 dark:text-gray-400'
 }
 

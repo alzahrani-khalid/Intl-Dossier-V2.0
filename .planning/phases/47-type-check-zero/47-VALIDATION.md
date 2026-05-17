@@ -1,9 +1,9 @@
 ---
 phase: 47
 slug: type-check-zero
-status: draft
+status: approved
 nyquist_compliant: true
-wave_0_complete: false
+wave_0_complete: true
 created: 2026-05-08
 ---
 

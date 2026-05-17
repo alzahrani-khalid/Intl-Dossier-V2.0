@@ -29,9 +29,13 @@ export function MyAssignmentsPage() {
 
   const getPriorityColor = (priority: string): string => {
     const colors = {
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MyAssignments
       urgent: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MyAssignments
       high: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MyAssignments
       normal: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MyAssignments
       low: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
     }
     return colors[priority as keyof typeof colors] || colors.normal
@@ -72,26 +76,32 @@ export function MyAssignmentsPage() {
           </CardContent>
         </Card>
 
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MyAssignments */}
         <Card className="border-yellow-200 dark:border-yellow-800">
           <CardHeader className="pb-3">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MyAssignments */}
             <CardTitle className="text-sm font-medium text-yellow-700 dark:text-yellow-300">
               At Risk (75%+ SLA)
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MyAssignments */}
             <div className="text-2xl font-bold text-yellow-700 dark:text-yellow-300">
               {isLoading ? '...' : data?.summary.at_risk_count || 0}
             </div>
           </CardContent>
         </Card>
 
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MyAssignments */}
         <Card className="border-red-200 dark:border-red-800">
           <CardHeader className="pb-3">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MyAssignments */}
             <CardTitle className="text-sm font-medium text-red-700 dark:text-red-300">
               SLA Breached
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MyAssignments */}
             <div className="text-2xl font-bold text-red-700 dark:text-red-300">
               {isLoading ? '...' : data?.summary.breached_count || 0}
             </div>
@@ -135,6 +145,7 @@ export function MyAssignmentsPage() {
                   <div className="text-end">
                     <div className="flex items-center justify-end gap-2">
                       <Clock
+                        /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MyAssignments */
                         className={`size-4 ${
                           assignment.time_remaining_seconds < 0
                             ? 'text-red-500'
@@ -142,8 +153,10 @@ export function MyAssignmentsPage() {
                               ? 'text-yellow-500'
                               : 'text-green-500'
                         }`}
+                        /* eslint-enable no-restricted-syntax */
                       />
                       <span
+                        /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MyAssignments */
                         className={`font-semibold ${
                           assignment.time_remaining_seconds < 0
                             ? 'text-red-500'
@@ -151,6 +164,7 @@ export function MyAssignmentsPage() {
                               ? 'text-yellow-500'
                               : 'text-green-500'
                         }`}
+                        /* eslint-enable no-restricted-syntax */
                       >
                         {formatTimeRemaining(assignment.time_remaining_seconds)}
                       </span>
@@ -166,6 +180,7 @@ export function MyAssignmentsPage() {
         ) : (
           <Card>
             <CardContent className="p-6 text-center text-muted-foreground">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MyAssignments */}
               <CheckCircle2 className="mx-auto mb-2 size-12 text-green-500" />
               <p>No active assignments</p>
             </CardContent>

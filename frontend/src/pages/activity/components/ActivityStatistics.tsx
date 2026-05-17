@@ -26,29 +26,33 @@ export function ActivityStatistics({ followingCount, className }: ActivityStatis
       key: 'followingCount',
       icon: Users,
       value: followingCount,
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityStatistics
       color: 'text-blue-600',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityStatistics
       bgColor: 'bg-blue-100 dark:bg-blue-900/30',
     },
     {
       key: 'activityToday',
       icon: Calendar,
       value: '—', // Could be connected to real data
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityStatistics
       color: 'text-green-600',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityStatistics
       bgColor: 'bg-green-100 dark:bg-green-900/30',
     },
     {
       key: 'activityWeek',
       icon: CalendarDays,
       value: '—', // Could be connected to real data
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityStatistics
       color: 'text-purple-600',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityStatistics
       bgColor: 'bg-purple-100 dark:bg-purple-900/30',
     },
   ]
 
   return (
-    <div
-      className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4', className)}
-    >
+    <div className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4', className)}>
       {stats.map((stat) => {
         const Icon = stat.icon
         return (

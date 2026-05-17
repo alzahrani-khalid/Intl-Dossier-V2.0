@@ -97,7 +97,7 @@ export function SavedViewsManager({
 }: SavedViewsManagerProps) {
   const { t } = useTranslation('view-preferences')
   const { isRTL } = useDirection()
-// Dialog states
+  // Dialog states
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -225,9 +225,7 @@ export function SavedViewsManager({
   }, [currentView, currentViewConfig, onUpdateView])
 
   return (
-    <div
-      className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3"
-    >
+    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
       {/* Quick pinned views */}
       {pinnedViews.length > 0 && (
         <div className="flex flex-wrap gap-1.5 sm:gap-2">
@@ -344,7 +342,9 @@ export function SavedViewsManager({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
                         <span className="text-sm font-medium truncate">{view.name}</span>
+                        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedViewsManager */}
                         {view.is_default && <Star className="h-3 w-3 text-amber-500 shrink-0" />}
+                        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedViewsManager */}
                         {view.is_pinned && <Pin className="h-3 w-3 text-blue-500 shrink-0" />}
                       </div>
                       {view.description && (
@@ -389,6 +389,7 @@ export function SavedViewsManager({
                       }
                     >
                       {view.is_default ? (
+                        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedViewsManager
                         <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
                       ) : (
                         <StarOff className="h-3.5 w-3.5" />
@@ -484,6 +485,7 @@ export function SavedViewsManager({
                   type="checkbox"
                   checked={setAsDefault}
                   onChange={(e) => setSetAsDefault(e.target.checked)}
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedViewsManager
                   className="h-4 w-4 rounded border-gray-300"
                 />
                 <span className="text-sm">{t('setAsDefault', 'Set as default')}</span>
@@ -493,6 +495,7 @@ export function SavedViewsManager({
                   type="checkbox"
                   checked={pinView}
                   onChange={(e) => setPinView(e.target.checked)}
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedViewsManager
                   className="h-4 w-4 rounded border-gray-300"
                 />
                 <span className="text-sm">{t('pinToQuickAccess', 'Pin to quick access')}</span>
@@ -556,6 +559,7 @@ export function SavedViewsManager({
                   type="checkbox"
                   checked={setAsDefault}
                   onChange={(e) => setSetAsDefault(e.target.checked)}
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedViewsManager
                   className="h-4 w-4 rounded border-gray-300"
                 />
                 <span className="text-sm">{t('setAsDefault', 'Set as default')}</span>
@@ -565,6 +569,7 @@ export function SavedViewsManager({
                   type="checkbox"
                   checked={pinView}
                   onChange={(e) => setPinView(e.target.checked)}
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedViewsManager
                   className="h-4 w-4 rounded border-gray-300"
                 />
                 <span className="text-sm">{t('pinToQuickAccess', 'Pin to quick access')}</span>

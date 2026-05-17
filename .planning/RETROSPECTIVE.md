@@ -216,25 +216,152 @@ _A living document updated after each milestone. Lessons feed forward into futur
 
 ---
 
+## Milestone: v6.2 — Type-Check, Lint & Bundle Reset
+
+**Shipped:** 2026-05-12
+**Phases:** 3 (47-49) | **Plans:** 17 | **Timeline:** 5 days (2026-05-08 → 2026-05-13)
+**Audit:** passed (re-audit confirmed 2026-05-13 after paperwork closure)
+
+### What Was Built
+
+- Frontend `pnpm type-check` 1580 → 0 errors via deletion-first (60 type files, 102 dead exports across 39 service/lib files) and typed-at-source (19 of 20 shims retired by tightening underlying domain hook return types)
+- Backend `pnpm type-check` 498 → 0 errors via systemic patterns: ParsedQs argument narrowing (`String(req.query.foo ?? '')`), TS7030 return-path discipline (`return res.status(...).json(...)` on every branch), and allowlisted Supabase codegen (`@ts-nocheck` ledgered in EXCEPTIONS.md, not `tsconfig` exclude)
+- Frontend lint 723 problems → 0; backend lint 4 → 0; 0 net-new `eslint-disable` directives phase-wide
+- Deleted `frontend/eslint.config.js` shadow config; inverted `no-restricted-imports` to ban Aceternity + Kibo UI per CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom); 3 orphan Aceternity wrappers removed; workspace lint scripts pinned to root with `--max-warnings 0`
+- Bundle Initial-route ceiling 517 → 450 KB; static-prim 64 → 12 KB; manualChunks ordering fix (scoped-package rules before `id.includes("react")` substring rule); heroui/sentry/dnd sub-vendor decomposition with `===1` strict assertions in `assert-size-limit-matches.mjs`; 3 audit-identified ≥30 KB gz components converted to `React.lazy()` / dynamic-import
+- `type-check`, `Lint`, and `Bundle Size Check (size-limit)` restored as PR-blocking branch-protection contexts on `main` with `enforce_admins=true` preserved; 6 smoke PRs proved `mergeStateStatus=BLOCKED`
+
+### What Worked
+
+- **Phase-base git tags as suppression-diff anchors** (`phase-47-base`, `phase-48-base`, `phase-49-base`) replaced unreliable `git merge-base main HEAD` for D-01 net-new-suppression audits — stable reference point across long-running phases
+- **Mechanical AST-aware deletion via reusable Python scripts** drove TS6133/TS6196 cluster fixes in single atomic commits per cluster (types → components → hooks → domains → pages → services), with D-04 four-globbed-grep verification on every cross-file deletion
+- **Cascade strategy** — clearing one cluster (`src/types/*` 1580 → 1191) unblocked downstream clusters because consumer-side errors went away when source-level unused declarations were deleted; total frontend dropped 1580 → 15 by Plan 47-10 with only one residual cluster left for 47-11
+- **Branch-protection PUT mechanics** (read-then-merge-then-write via `gh api`) established in Phase 47 reused verbatim in Phases 48 + 49 — three CI gates added consistently with `enforce_admins=true` preserved
+- **D-02 honest ceiling escalation** — Plan 49-01 surfaced that the 1.8 MB Total JS proposal was unattainable inside Phase 49 scope; locked at measured 2.45 MB with documented paper trail instead of shipping an aspirational ceiling
+- **Smoke PR-as-evidence** — 2 smoke PRs per CI gate (frontend + backend lint, initial-JS + sub-vendor for bundle) proved BLOCKING behavior on real branch protection, closed `--delete-branch` after evidence captured
+
+### What Was Inefficient
+
+- **Plan 47-01 + 47-02 only delivered the baseline** — the actual 1580 → 0 + 498 → 0 work spread across 9 more plans (47-04..47-11). Pre-execution scoping under-estimated the cluster decomposition needed; future type-check phases should plan cluster-by-cluster from the start
+- **`manualChunks` substring rule mis-classification** was only surfaced in Plan 49-01 audit, not in Phase 49 plan-phase research. The `id.includes("react")` rule swept @heroui/@dnd-kit/@radix-ui into react-vendor; ordering fix forced a TanStack vendor ceiling re-baseline 51 → 63 KB. Pre-execution audit pass on `vite.config.ts` chunk rules would have caught this
+- **D-02 1.8 MB Total JS target was aspirational** — landed too early in Phase 49 plan-phase before measurement; escalation cost Plan 01 cycles; future bundle phases should measure-first then propose-ceiling, not the reverse
+- **Smoke PR trip-wire substitution required twice** — Plan 49-03 PR-A (umbrella `d3` package not installed; sub-packages only) and PR-B (dnd-vendor headroom too narrow); both required ad-hoc substitution. Pre-flight measurement of trip-wire mass against ceiling slack would have caught the mismatch
+- **Wave-3 executor commit `4fd65d60` edited orchestrator-owned STATE/ROADMAP/REQUIREMENTS fields** — values were correct, but process boundary violation required Deviation #4 documentation in 48-03-SUMMARY.md
+
+### Patterns Established
+
+- **Phase-base git tag as diff anchor** for net-new-suppression / net-new-eslint-disable audits — reusable across any phase that needs a stable diff window
+- **D-01 net-new-suppression audit** (`git diff <phase-base>..HEAD -- <workspace>/src | grep -E "^\\+.*@ts-(ignore|expect-error)" | wc -l → 0`) — applied consistently in 47/48/49 with phase-wide reconciliation in the final CI-gate plan
+- **EXCEPTIONS.md ledger pattern** — retained suppressions documented inline with reason + issue/follow-up reference; per-phase ledger seeded in baseline plan, sealed in final-confirm plan
+- **Typed-at-source migration** — tighten underlying domain hook return types so consumer sees real type without cast; deprecates "stub then narrow with `as unknown as ShimType` at the destructure boundary" pattern from 47-06/47-08
+- **Root flat-config as single source of truth** with workspace scripts pinned via CWD fix (`cd .. && eslint -c eslint.config.mjs`) so flat-config basePath resolves correctly; turbo.json globalDependencies includes the root config
+- **`size-limit` native fail-on-exceed IS the enforcement** — no custom delta calculator; per-chunk ceilings are binding; slack between measured and ceiling is documented absorption budget
+- **Branch-protection context casing must be verbatim** — `Bundle Size Check (size-limit)` matches `ci.yml:271` `name:` field exactly; case mismatch silently fails the required-context check
+
+### Key Lessons
+
+1. **Cluster-decompose pre-execution, not mid-phase** — Phase 47's 11 plans emerged from execution discovery; future high-error-count type-check phases should ship a cluster-decomposition audit alongside RESEARCH.md
+2. **Audit chunk-routing rules before writing budget proposals** — substring-matching rules (`id.includes("react")`) silently mis-classify scoped packages; the order of `if` branches in `manualChunks` is load-bearing
+3. **Measure-then-propose for bundle ceilings** — aspirational ceilings (1.8 MB Total JS, 200 KB Initial) burn plan cycles when measured reality is 2.45 MB and 450 KB; honest baselines with documented slack ship faster
+4. **Pre-flight trip-wire mass against ceiling slack** — smoke PRs need mass > slack to BLOCK; check before opening the PR or substitute mid-flight (Phase 49 hit this twice)
+5. **Branch-protection PUT mechanics are reusable** — the read-then-merge-then-write `gh api` pattern from Phase 47 transferred verbatim to Phases 48 and 49; codify this as a CI-gate-restoration sub-recipe
+6. **Process-boundary respect** — executor commits should not edit orchestrator-owned planning fields even when values are correct; surface for orchestrator merge instead
+
+### Cost Observations
+
+- Plans: 17 (47: 11 + 48: 3 + 49: 3) — Phase 47 cluster-decomposition drove most of the count
+- Commits: 146 across 5 days
+- Files changed: 840 (+26,094 / -105,035); large delete reflects type-check unused-export purge across `src/types/*`, `src/services/*`, `src/lib/*`
+- Notable: Mechanical deletion via reusable Python scripts handled the long tail of unused declarations at near-zero per-deletion cost; D-04 four-globbed-grep verification kept the deletion rate safe
+- Re-audit needed after paperwork closure: prior 2026-05-13T06:34:55Z audit returned `gaps_found` (paperwork-only); closed by commits c54c2291 / 148d9a68 / c7df4b56 / c37c1901; final audit at 2026-05-13T11:00:00Z returned `passed`
+
+---
+
+## Milestone: v6.3 — Carryover Sweep & v7.0 Prep
+
+**Shipped:** 2026-05-17
+**Phases:** 5 (50-54) | **Plans:** 28 | **Timeline:** 4 days (2026-05-13 → 2026-05-16)
+**Audit:** passed (re-audit 2026-05-16T21:00:00Z after quick-task 260516-s3j paperwork closure; 3rd audit pass)
+
+### What Was Built
+
+- Test infrastructure repaired: `frontend/tests/setup.ts:46-58` `vi.mock("react-i18next")` factory now uses `vi.importActual` + spread so `initReactI18next` + every real export passes through unchanged; 4 wizard tests pass green; `50-TEST-AUDIT.md` (506 lines) + `frontend/docs/test-setup.md` + `backend/docs/test-setup.md` document the canonical pattern
+- Design-token compliance gate live: ESLint D-05 selectors at `error` severity workspace-wide ban raw hex (`#[0-9a-fA-F]{3,8}`) + Tailwind palette literals (`text-blue-*`, `bg-red-*`, etc.) in `frontend/src/`; 50 Tier-A named-anchor files swapped to tokens (`WorldMapVisualization.tsx:193`, `PositionEditor.tsx`, et al.); 271 Tier-C files / 2336 AST nodes suppressed per-Literal with `eslint-disable-next-line` annotations (D-14); smoke PR #12 captured `Lint=FAILURE` + `mergeStateStatus=BLOCKED` via D-09 fold into Phase 48 `Lint` required context
+- HeroUI v3 Kanban migration shipped: shared `frontend/src/components/kanban/*` primitive on `@dnd-kit/core` with pointer + keyboard sensors + native `DragOverlay`; TasksTab.tsx migrated to shared primitive; `EngagementKanbanDialog.tsx` + `EngagementDossierPage.tsx` deleted as dead code (KANBAN-02 satisfied-by-deletion D-20); `@/components/kibo-ui/` directory + `tunnel-rat` dependency purged from repo + lockfile; `no-restricted-imports` + `check-deleted-components.sh` CI gate enforce absence; 4 EN+AR visual baselines committed
+- Bundle micro-tightening + tag provenance: React vendor ceiling lowered 349 → 285 KB gz (measured 279.42 kB + ~5 kB slack documented in `frontend/docs/bundle-budget.md`); `phase-47-base` / `phase-48-base` / `phase-49-base` re-issued annotated + SSH-signed (`git tag -v` exits 0 with `Good "git" signature`); origin force-push effectively resolved — `git ls-remote --tags origin` confirms annotated peeled SHAs identical to local objects; CLAUDE.md Node engine note aligned to `Node.js 22.13.0+` at L84 + L483 to match `package.json` engines.node `">=22.13.0"`
+- Intelligence Engine schema groundwork applied to staging via Supabase MCP: `intelligence_event` table (renamed from spec `intelligence_signal` to avoid collision with curated `intelligence_signals` plural); new `intelligence_digest` table (prior Phase-45 dashboard table renamed to `dashboard_digest` in lockstep frontend/hook/test/widget rename); `intelligence_event_dossiers` polymorphic junction with 7-value `dossier_type` CHECK + EXISTS-via-parent RLS + CASCADE; `signal_source_type` enum (`publication`, `feed`, `human_entered`, `ai_generated`); `database.types.ts` regenerated byte-identical across backend + frontend workspaces; dual `pnpm type-check` exit 0; `rls-audit.test.ts` sensitiveTables extended
+
+### What Worked
+
+- **Three-audit-pass loop with paperwork-only closure** — initial audit 2026-05-16T17:00Z reported `gaps_found` (3 missing VERIFICATION.md, 11 stale traceability rows, KANBAN-02 text drift, eslint-ban timeout flake); quick-task 260516-s3j executed the 4 §A–§D recommendations; re-audit confirmed `passed`. Audit-driven closure surfaces real gaps that human review misses
+- **Satisfied-by-deletion as a first-class verification outcome** — KANBAN-02 closed by deleting `EngagementKanbanDialog.tsx` + `EngagementDossierPage.tsx` rather than building a parallel migration. D-20 documented the reasoning; check-deleted-components.sh CI gate enforces it. Deletion is cheaper than migration when the surface is dead
+- **Tier-A swap + Tier-C suppress split for design-token cleanup** — 50 named-anchor files (visible, user-facing) swapped to tokens immediately; 271 Tier-C files (test fixtures, dev-only) suppressed per-Literal with traceable annotations and staged as TBD-design-token-tier-c-cleanup-wave-N. Lets the gate ship at `error` without blocking on long-tail file count
+- **D-09 fold into existing required context** — no new branch-protection PUT; smoke PR #12 captured `Lint=FAILURE` + BLOCKED via the existing Phase 48 `Lint` context. Reusing an existing CI gate avoids branch-protection churn
+- **Quick-task as audit-closure mechanism** — 260516-rcm (TEST-02 palette drift) and 260516-s3j (4 §A–§D items) closed audit gaps via lightweight tasks rather than reopening phases. Keeps milestone-close paperwork honest without phase ceremony
+- **Rename-then-create for `intelligence_digest`** — renaming Phase-45's dashboard surface to `dashboard_digest` first, then creating the new Intelligence Engine table under the canonical name, kept consumer code coherent across the cutover (lockstep frontend hook/test/widget rename in 54-01)
+- **Polymorphic junction + 7-value CHECK** — `intelligence_event_dossiers` with `dossier_type` CHECK matching the canonical 7 types scales without N table-pair joins for multi-dossier AI correlation; EXISTS-via-parent RLS reuses existing per-type policies
+
+### What Was Inefficient
+
+- **VERIFICATION.md files written after-the-fact** — 3 of 5 phases (50, 51, 52) shipped without VERIFICATION.md until quick-task 260516-s3j backfilled them. Phase-completion ceremony should produce VERIFICATION.md inline, not after the audit catches its absence
+- **REQUIREMENTS.md traceability table drift** — 11 of 20 rows showed stale `Pending` after the phases were verified; the table only got refreshed when the audit ran. Traceability rows should flip to `Verified` at phase-completion, not at milestone-audit
+- **KANBAN-02 text drift** — the requirement description still said "migrated" after Phase 52 D-20 settled on satisfied-by-deletion; the audit caught it. Requirement-text needs to flip with the deviation decision
+- **`eslint-ban.test.ts` 20s timeout flake** — cold pnpm spawn budget on CI exceeded the default; raising to 60s closed it but only after the audit surfaced the flake. Meta-tests that exec pnpm need generous timeouts from day one
+- **D-26 origin force-push as "deferred to human"** — annotated + signed tags shipped locally but origin force-push paperwork lingered as `verified-local-only` until re-audit ls-remote confirmed origin SHAs match. Cosmetic SUMMARY/VERIFICATION wording refresh still on v6.4 list
+- **Phase 51 four-stage cleanup** — Tier-A named-anchor (51-02) + Tier-A mechanical (51-03) + Tier-C suppress + severity flip (51-04) ran as four plans when the AST-aware machinery existed by Plan 02. Future design-token gates can fold mechanical sweep + suppression into a single plan once the rule is at `warn`
+- **VALIDATION.md frontmatter polish lag** — Phase 51 still reads `status: draft` (nyquist_compliant:true is correct); only caught at re-audit. Lifecycle frontmatter should track lifecycle, not lag it
+
+### Patterns Established
+
+- **Audit-driven quick-task closure** — when milestone audit returns `gaps_found` with paperwork-only items, spawn a focused quick-task that executes the §A..§N recommendations atomically. Keeps milestone-close honest without phase ceremony
+- **Satisfied-by-deletion as REQ closure outcome** — when a requirement's target surface is dead code, delete + redirect + CI-gate-the-deletion rather than migrate. Document the decision in a phase-level deviation (D-20 precedent)
+- **Tier-A / Tier-C split for codebase-wide cleanup gates** — swap named anchors immediately, suppress long-tail per-Literal with traceable annotations, stage cleanup waves. Gate ships at `error` on day one
+- **D-09 fold into existing required context** — when adding a new lint/check that the existing CI job already runs, don't add a new branch-protection context; the existing context will fail if the new rule fails. Avoids PUT mechanics churn
+- **Lockstep rename across schema + frontend layer** — when renaming a database surface, rename the migration + the consumer hook + the test fixtures + the widget identifier in a single Wave plan (54-01 precedent)
+- **Polymorphic junction + ENUM/CHECK for many-to-many across dossier types** — `intelligence_event_dossiers` with 7-value `dossier_type` CHECK + EXISTS-via-parent RLS is the canonical pattern; reuses per-type RLS without N table-pair joins
+- **Migration via Supabase MCP `apply_migration`, not local CLI** — D-15: keeps staging authoritative and reproducible across orchestrators
+
+### Key Lessons
+
+1. **VERIFICATION.md is part of phase completion, not audit prep** — three phases shipped without it; future phase-close should produce VERIFICATION.md inline, before the orchestrator advances state
+2. **REQUIREMENTS.md traceability rows should flip at phase-complete, not milestone-audit** — 11 stale `Pending` rows is a process-boundary failure mode. Tooling should auto-flip when phase status flips
+3. **Requirement-text follows deviation decisions** — when a phase settles on satisfied-by-deletion (or any non-default closure), update the REQ description to match within the same phase
+4. **Meta-tests that exec pnpm need generous timeouts** — 20s was too tight for cold spawn; 60s is the new default for `eslint-ban.test.ts`-style meta-tests
+5. **Audit `git ls-remote` before declaring "deferred to human"** — origin SHAs may already match local objects after a prior push; verify before scheduling human paperwork
+6. **Schema-only milestones are valid** — INTEL-01..05 shipped no API + no UI but unblocked v7.0 feature work without scope creep. Foundations earn their own milestone slot
+7. **Polymorphic junctions beat per-type FKs for cross-dossier work** — `intelligence_event_dossiers` with 7-value CHECK scales for AI correlation without N joins
+
+### Cost Observations
+
+- Plans: 28 (50: 10 + 51: 4 + 52: 5 + 53: 3 + 54: 4) — Phase 50 cluster-decomposition still drove the long tail (mirrors v6.2 Phase 47 pattern); Phase 54 stayed tight at 4 wave plans
+- Commits: 166 across 4 days
+- Files changed: 551 (+44,816 / -13,606); insertions skew toward `database.types.ts` regen (~15k lines) + Tier-C suppression annotations
+- Audit iterations: 3 passes (initial gaps_found → post-260516-rcm gaps_found → post-260516-s3j passed). Quick-task-driven closure is cheaper than reopening phases
+- Notable: Quick-tasks 260516-rcm + 260516-s3j closed audit gaps in <1 day combined; meta-test timeout raise + frontmatter refresh + traceability table refresh + KANBAN-02 text amendment in a single atomic task
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
 
-| Milestone | Phases | Plans | Timeline | Key Change                                                                        |
-| --------- | ------ | ----- | -------- | --------------------------------------------------------------------------------- |
-| v2.0      | 7      | 29    | 185 days | First milestone — established GSD workflow, verification reports, milestone audit |
-| v3.0      | 6      | 28    | 9 days   | Worktree parallelism, 20x velocity boost, established shell/absorption patterns   |
-| v6.0      | 11     | 121   | 18 days  | Token-first architecture, gap-closure-as-plan, CI-anchored qa-sweep gate          |
-| v6.1      | 3      | 14    | 2 days   | Hardening bridge milestone, audit-open close gate, visual operator replay         |
+| Milestone | Phases | Plans | Timeline | Key Change                                                                                                       |
+| --------- | ------ | ----- | -------- | ---------------------------------------------------------------------------------------------------------------- |
+| v2.0      | 7      | 29    | 185 days | First milestone — established GSD workflow, verification reports, milestone audit                                |
+| v3.0      | 6      | 28    | 9 days   | Worktree parallelism, 20x velocity boost, established shell/absorption patterns                                  |
+| v6.0      | 11     | 121   | 18 days  | Token-first architecture, gap-closure-as-plan, CI-anchored qa-sweep gate                                         |
+| v6.1      | 3      | 14    | 2 days   | Hardening bridge milestone, audit-open close gate, visual operator replay                                        |
+| v6.2      | 3      | 17    | 5 days   | Quality-gate reset, phase-base git-tag diff anchors, typed-at-source over shims, 3 PR-blocking CI gates restored |
 
 ### Cumulative Quality
 
-| Milestone | Quality Gates                                                                                                        | Tech Debt Items                                                                                                                                                          | Requirements Met |
-| --------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------- |
-| v2.0      | 5 (ESLint, Prettier, Knip, size-limit, pre-commit)                                                                   | 12                                                                                                                                                                       | 29/29            |
-| v3.0      | Same 5 + VERIFICATION.md per phase                                                                                   | +5 (v3.0)                                                                                                                                                                | 45/45            |
-| v6.0      | Same + qa-sweep CI (axe, responsive, kbd, focus) + eslint-plugin-rtl-friendly + size-limit signature-visuals budgets | +9 deferred (DIGEST-SOURCE-COMPROMISE, VIP-PERSON-ISO-JOIN, SLA-BAD-RESERVED, DASH-VISUAL-BLOCKED/REVIEW, DASH-COMPONENTS-DEAD, JSON-key-uniqueness, WR-03 SR shadowing) | 52/52            |
-| v6.1      | Same + focused visual replay for deferred dashboard/list/drawer baselines                                            | 10 acknowledged open artifacts at close (historical/stale items plus missing v6.1 audit)                                                                                 | 25/25            |
+| Milestone | Quality Gates                                                                                                        | Tech Debt Items                                                                                                                                                                                                                                                                                          | Requirements Met |
+| --------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| v2.0      | 5 (ESLint, Prettier, Knip, size-limit, pre-commit)                                                                   | 12                                                                                                                                                                                                                                                                                                       | 29/29            |
+| v3.0      | Same 5 + VERIFICATION.md per phase                                                                                   | +5 (v3.0)                                                                                                                                                                                                                                                                                                | 45/45            |
+| v6.0      | Same + qa-sweep CI (axe, responsive, kbd, focus) + eslint-plugin-rtl-friendly + size-limit signature-visuals budgets | +9 deferred (DIGEST-SOURCE-COMPROMISE, VIP-PERSON-ISO-JOIN, SLA-BAD-RESERVED, DASH-VISUAL-BLOCKED/REVIEW, DASH-COMPONENTS-DEAD, JSON-key-uniqueness, WR-03 SR shadowing)                                                                                                                                 | 52/52            |
+| v6.1      | Same + focused visual replay for deferred dashboard/list/drawer baselines                                            | 10 acknowledged open artifacts at close (historical/stale items plus missing v6.1 audit)                                                                                                                                                                                                                 | 25/25            |
+| v6.2      | Same + type-check + Lint + Bundle Size Check (size-limit) restored as PR-blocking branch-protection contexts on main | Tech debt at close: 1 retained shim (`useStakeholderInteractionMutations`), 2 kibo-ui kanban imports (HeroUI v3 deferred), React vendor ceiling loose, Node version note drift, pre-existing design-rule violations queued for sweep, 4 wizard-test setup bug (pre-existing), lightweight tag provenance | 12/12            |
 
 ### Top Lessons (Verified Across Milestones)
 
@@ -244,3 +371,6 @@ _A living document updated after each milestone. Lessons feed forward into futur
 4. ROADMAP / STATE metadata drifts without automation — three milestones in a row had stale progress tables (v2.0, v3.0, v6.0)
 5. Velocity compounds on established patterns — v3.0 was 20x faster than v2.0; v6.0 sustained that rate across 4x the plan count by leaning on prior infrastructure
 6. **CI-anchored gates beat human gates** (new in v6.0) — automated sweeps catch what human review forgets and run on every PR
+7. **Phase-base git tags as suppression-diff anchors** (new in v6.2) — replace unreliable `git merge-base main HEAD`; stable across long-running phases; reusable for net-new-suppression / net-new-eslint-disable audits
+8. **Measure-then-propose for bundle ceilings** (new in v6.2) — aspirational ceilings burn plan cycles; honest baselines with documented slack ship faster
+9. **Branch-protection PUT mechanics are a reusable sub-recipe** (new in v6.2) — read-then-merge-then-write `gh api` pattern transferred verbatim across 3 CI gates in 5 days

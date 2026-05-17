@@ -348,7 +348,7 @@ export function ContactCreate() {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-start">
-              <AlertTriangle className="h-5 w-5 text-yellow-600" />
+              <AlertTriangle className="h-5 w-5 text-warning" />
               {t('contactDirectory.duplicates.dialog_title')}
             </DialogTitle>
             <DialogDescription className="text-start">
@@ -369,7 +369,7 @@ export function ContactCreate() {
                         </p>
                       )}
                     </div>
-                    <div className="text-sm font-medium text-yellow-600">
+                    <div className="text-sm font-medium text-warning">
                       {dup.match_score}% {t('contactDirectory.duplicates.match')}
                     </div>
                   </div>
@@ -377,7 +377,7 @@ export function ContactCreate() {
                     {dup.match_reasons.map((reason) => (
                       <span
                         key={reason}
-                        className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800"
+                        className="px-2 py-1 text-xs rounded-full bg-warning/10 text-warning"
                       >
                         {t(`contactDirectory.duplicates.reasons.${reason}`)}
                       </span>
@@ -417,7 +417,7 @@ export function ContactCreate() {
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-start">
-              <AlertTriangle className="h-5 w-5 text-yellow-600" />
+              <AlertTriangle className="h-5 w-5 text-warning" />
               {t('contactDirectory.duplicates.dialog_title')} ({batchDuplicates.size}{' '}
               {t('contactDirectory.documentExtraction.contacts_found')})
             </DialogTitle>
@@ -432,7 +432,7 @@ export function ContactCreate() {
               if (!contact) return null
 
               return (
-                <Card key={contactId} className="border-yellow-200">
+                <Card key={contactId} className="border-warning/30">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-base text-start">{contact.full_name}</CardTitle>
                     {contact.organization_id && (
@@ -443,7 +443,7 @@ export function ContactCreate() {
                   </CardHeader>
                   <CardContent className="space-y-2">
                     {duplicates.map((dup) => (
-                      <Card key={dup.contact_id} className="p-3 bg-yellow-50">
+                      <Card key={dup.contact_id} className="p-3 bg-warning/10">
                         <div className="space-y-2">
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex-1">
@@ -454,7 +454,7 @@ export function ContactCreate() {
                                 </p>
                               )}
                             </div>
-                            <div className="text-sm font-medium text-yellow-600">
+                            <div className="text-sm font-medium text-warning">
                               {dup.match_score}% {t('contactDirectory.duplicates.match')}
                             </div>
                           </div>
@@ -462,7 +462,7 @@ export function ContactCreate() {
                             {dup.match_reasons.map((reason) => (
                               <span
                                 key={reason}
-                                className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800"
+                                className="px-2 py-1 text-xs rounded-full bg-warning/10 text-warning"
                               >
                                 {t(`contactDirectory.duplicates.reasons.${reason}`)}
                               </span>

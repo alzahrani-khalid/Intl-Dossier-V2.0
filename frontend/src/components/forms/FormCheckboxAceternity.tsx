@@ -33,7 +33,7 @@ export function FormCheckboxAceternity({
 }: FormCheckboxAceternityProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const [isHovered, setIsHovered] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
 
   const containerClasses = cn(
@@ -53,6 +53,7 @@ const [isHovered, setIsHovered] = useState(false)
     // Responsive text
     'text-sm sm:text-base',
     // Color
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormCheckboxAceternity
     'text-gray-700 dark:text-gray-300',
     // Disabled state
     disabled && 'cursor-not-allowed',
@@ -99,6 +100,7 @@ const [isHovered, setIsHovered] = useState(false)
         <label htmlFor={name} className={labelClasses}>
           {label}
           {required && (
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormCheckboxAceternity
             <span className="text-red-500 ms-1" aria-label={t('validation.required')}>
               *
             </span>
@@ -111,6 +113,7 @@ const [isHovered, setIsHovered] = useState(false)
         <m.p
           id={`${name}-help`}
           className={cn(
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormCheckboxAceternity */
             'text-sm text-gray-600 dark:text-gray-400 text-start',
             isRTL ? 'me-8' : 'ms-8', // Indent to align with checkbox
           )}
@@ -128,6 +131,7 @@ const [isHovered, setIsHovered] = useState(false)
           <m.p
             id={`${name}-error`}
             className={cn(
+              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormCheckboxAceternity */
               'text-sm text-red-600 dark:text-red-400 text-start',
               isRTL ? 'me-8' : 'ms-8', // Indent to align with checkbox
             )}

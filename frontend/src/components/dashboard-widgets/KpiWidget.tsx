@@ -83,13 +83,17 @@ function TrendIndicator({
   const TrendIcon = direction === 'up' ? TrendingUp : direction === 'down' ? TrendingDown : Minus
 
   const trendColors = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KpiWidget
     up: 'text-green-600 dark:text-green-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KpiWidget
     down: 'text-red-600 dark:text-red-400',
     neutral: 'text-muted-foreground',
   }
 
   const bgColors = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KpiWidget
     up: 'bg-green-100 dark:bg-green-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KpiWidget
     down: 'bg-red-100 dark:bg-red-900/30',
     neutral: 'bg-muted',
   }
@@ -144,7 +148,7 @@ function TargetProgress({
 export function KpiWidget({ config, data, isLoading }: KpiWidgetProps) {
   const { t } = useTranslation('dashboard-widgets')
   const { isRTL } = useDirection()
-const {
+  const {
     settings: { metric, showTrend, showSparkline, comparisonPeriod },
   } = config
 

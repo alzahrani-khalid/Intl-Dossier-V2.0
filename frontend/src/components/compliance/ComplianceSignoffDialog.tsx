@@ -135,6 +135,7 @@ export function ComplianceSignoffDialog({
         type="submit"
         form="compliance-signoff-form"
         disabled={signoffMutation.isPending}
+        /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ComplianceSignoffDialog */
         className={`min-h-11 w-full sm:w-auto ${
           selectedAction === 'approve'
             ? 'bg-green-600 hover:bg-green-700'
@@ -142,6 +143,7 @@ export function ComplianceSignoffDialog({
               ? 'bg-red-600 hover:bg-red-700'
               : ''
         }`}
+        /* eslint-enable no-restricted-syntax */
       >
         {signoffMutation.isPending && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
         {t('signoff.confirm')}

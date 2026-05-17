@@ -58,11 +58,10 @@ describe('useCountryAutoFill', () => {
 
   it('auto-fills empty form fields when reference match found', () => {
     const mockMatch = {
-      code: 'SA',
-      code3: 'SAU',
-      name_en: 'Saudi Arabia',
-      name_ar: 'المملكة العربية السعودية',
+      cca2: 'SA',
+      cca3: 'SAU',
       region: 'Asia',
+      capital: ['Riyadh'],
     }
 
     vi.mocked(useQuery).mockReturnValue({
@@ -76,16 +75,16 @@ describe('useCountryAutoFill', () => {
 
     expect(form.setValue).toHaveBeenCalledWith('iso_code_2', 'SA')
     expect(form.setValue).toHaveBeenCalledWith('iso_code_3', 'SAU')
-    expect(form.setValue).toHaveBeenCalledWith('region', 'Asia')
+    expect(form.setValue).toHaveBeenCalledWith('region', 'asia')
+    expect(form.setValue).toHaveBeenCalledWith('capital_en', 'Riyadh')
   })
 
   it('does not overwrite user-entered values', () => {
     const mockMatch = {
-      code: 'SA',
-      code3: 'SAU',
-      name_en: 'Saudi Arabia',
-      name_ar: 'المملكة العربية السعودية',
+      cca2: 'SA',
+      cca3: 'SAU',
       region: 'Asia',
+      capital: ['Riyadh'],
     }
 
     vi.mocked(useQuery).mockReturnValue({
@@ -103,7 +102,7 @@ describe('useCountryAutoFill', () => {
 
     // Should NOT overwrite user-entered iso_code_2 or region
     expect(form.setValue).not.toHaveBeenCalledWith('iso_code_2', 'SA')
-    expect(form.setValue).not.toHaveBeenCalledWith('region', 'Asia')
+    expect(form.setValue).not.toHaveBeenCalledWith('region', 'asia')
     // Should fill empty iso_code_3
     expect(form.setValue).toHaveBeenCalledWith('iso_code_3', 'SAU')
   })

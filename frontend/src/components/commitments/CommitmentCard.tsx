@@ -73,7 +73,7 @@ export function CommitmentCard({
   const { t, i18n } = useTranslation('commitments')
   const navigate = useNavigate()
   const { isRTL } = useDirection()
-const [showCancelDialog, setShowCancelDialog] = useState(false)
+  const [showCancelDialog, setShowCancelDialog] = useState(false)
   const [cancelReason, setCancelReason] = useState('')
   const [showUploadDialog, setShowUploadDialog] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
@@ -148,11 +148,13 @@ const [showCancelDialog, setShowCancelDialog] = useState(false)
   return (
     <>
       <Card
+        /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentCard */
         className={`
           hover:shadow-md transition-shadow duration-200 cursor-pointer
           ${overdue ? 'border-red-300 dark:border-red-800' : ''}
           ${commitment.status === 'completed' ? 'opacity-75' : ''}
         `}
+        /* eslint-enable no-restricted-syntax */
         onClick={handleCardClick}
       >
         <CardHeader className={compact ? 'pb-2 pt-3 px-3' : 'pb-3'}>
@@ -231,6 +233,7 @@ const [showCancelDialog, setShowCancelDialog] = useState(false)
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
+                      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentCard
                       className="text-red-600 focus:text-red-600"
                       onClick={(e) => {
                         e.stopPropagation()
@@ -259,9 +262,11 @@ const [showCancelDialog, setShowCancelDialog] = useState(false)
           <div className="flex flex-wrap items-center gap-2 sm:gap-4">
             {/* Due Date with overdue indicator */}
             <div
+              /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentCard */
               className={`flex items-center gap-1.5 text-sm ${
                 overdue ? 'text-red-600 dark:text-red-400 font-medium' : 'text-muted-foreground'
               }`}
+              /* eslint-enable no-restricted-syntax */
             >
               {overdue ? (
                 <AlertTriangle className="size-4 shrink-0" />
@@ -291,6 +296,7 @@ const [showCancelDialog, setShowCancelDialog] = useState(false)
             {commitment.proof_url && (
               <Badge
                 variant="secondary"
+                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentCard
                 className="text-xs text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-900/20"
               >
                 <CheckCircle className="size-3 me-1" />
@@ -336,6 +342,7 @@ const [showCancelDialog, setShowCancelDialog] = useState(false)
             <AlertDialogAction
               onClick={handleCancelConfirm}
               disabled={!cancelReason.trim() || cancelMutation.isPending}
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentCard
               className="min-h-11 bg-red-600 hover:bg-red-700 text-white"
             >
               {cancelMutation.isPending ? t('list.loading') : t('actions.delete')}

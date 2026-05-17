@@ -362,9 +362,9 @@ function WebhookCard({
 
   const statusColor = webhook.is_active
     ? webhook.auto_disabled_at
-      ? 'bg-yellow-500'
-      : 'bg-green-500'
-    : 'bg-gray-400'
+      ? 'bg-warning'
+      : 'bg-success'
+    : 'bg-muted'
 
   const statusText = webhook.is_active
     ? webhook.auto_disabled_at
@@ -414,11 +414,11 @@ function WebhookCard({
         {/* Stats */}
         <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4">
           <div className="flex items-center gap-1">
-            <CheckCircle className="h-3.5 w-3.5 text-green-500" />
+            <CheckCircle className="h-3.5 w-3.5 text-success" />
             <span>{webhook.success_count}</span>
           </div>
           <div className="flex items-center gap-1">
-            <XCircle className="h-3.5 w-3.5 text-red-500" />
+            <XCircle className="h-3.5 w-3.5 text-danger" />
             <span>{webhook.failure_count}</span>
           </div>
           {webhook.last_triggered_at && (
@@ -431,7 +431,7 @@ function WebhookCard({
 
         {/* Auto-disabled warning */}
         {webhook.auto_disabled_at && (
-          <div className="flex items-center gap-2 text-xs text-yellow-600 bg-yellow-50 dark:bg-yellow-950 px-2 py-1.5 rounded mb-4">
+          <div className="flex items-center gap-2 text-xs text-warning bg-warning/10 dark:bg-warning px-2 py-1.5 rounded mb-4">
             <AlertCircle className="h-3.5 w-3.5 shrink-0" />
             <span>{t('messages.autoDisabledWarning')}</span>
           </div>
@@ -910,11 +910,11 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
   const getStatusIcon = (status: WebhookDeliveryStatus) => {
     switch (status) {
       case 'delivered':
-        return <CheckCircle className="h-4 w-4 text-green-500" />
+        return <CheckCircle className="h-4 w-4 text-success" />
       case 'failed':
-        return <XCircle className="h-4 w-4 text-red-500" />
+        return <XCircle className="h-4 w-4 text-danger" />
       case 'retrying':
-        return <RefreshCw className="h-4 w-4 text-yellow-500" />
+        return <RefreshCw className="h-4 w-4 text-warning" />
       default:
         return <Clock className="h-4 w-4 text-muted-foreground" />
     }
@@ -936,13 +936,13 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
               <div className="text-xs text-muted-foreground">{t('statistics.totalDeliveries')}</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{stats.successful_deliveries}</div>
+              <div className="text-2xl font-bold text-success">{stats.successful_deliveries}</div>
               <div className="text-xs text-muted-foreground">
                 {t('statistics.successfulDeliveries')}
               </div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-red-600">{stats.failed_deliveries}</div>
+              <div className="text-2xl font-bold text-danger">{stats.failed_deliveries}</div>
               <div className="text-xs text-muted-foreground">
                 {t('statistics.failedDeliveries')}
               </div>
@@ -1013,7 +1013,7 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
                     </div>
                   </div>
                   {delivery.error_message && (
-                    <div className="mt-2 text-xs text-red-500 bg-red-50 dark:bg-red-950 p-2 rounded">
+                    <div className="mt-2 text-xs text-danger bg-danger/10 dark:bg-danger p-2 rounded">
                       {delivery.error_message}
                     </div>
                   )}

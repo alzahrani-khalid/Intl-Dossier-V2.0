@@ -82,8 +82,11 @@ const getEventColor = (eventType: string): string => {
  */
 const getPriorityColor = (priority: string): string => {
   const colorMap: Record<string, string> = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedVerticalTimelineCard
     high: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedVerticalTimelineCard
     medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedVerticalTimelineCard
     low: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
   }
   return colorMap[priority] || colorMap.low!
@@ -94,10 +97,15 @@ const getPriorityColor = (priority: string): string => {
  */
 const getStatusColor = (status: string): string => {
   const colorMap: Record<string, string> = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedVerticalTimelineCard
     planned: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedVerticalTimelineCard
     ongoing: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedVerticalTimelineCard
     completed: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedVerticalTimelineCard
     cancelled: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedVerticalTimelineCard
     postponed: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
   }
   return colorMap[status] || colorMap.planned!
@@ -160,7 +168,7 @@ export function EnhancedVerticalTimelineCard({
   const { t, i18n } = useTranslation('dossier')
   const navigate = useNavigate()
   const { isRTL } = useDirection()
-const [isActive, setIsActive] = useState(false)
+  const [isActive, setIsActive] = useState(false)
   const id = useId()
   const ref = useRef<HTMLDivElement>(null)
 
@@ -219,9 +227,7 @@ const [isActive, setIsActive] = useState(false)
       {/* Modal Content */}
       <AnimatePresence>
         {isActive && (
-          <div
-            className="fixed inset-0 grid place-items-center z-[101] p-4"
-          >
+          <div className="fixed inset-0 grid place-items-center z-[101] p-4">
             {/* Close Button */}
             <m.button
               key={`button-${event.id}-${id}`}
@@ -229,6 +235,7 @@ const [isActive, setIsActive] = useState(false)
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0, transition: { duration: 0.05 } }}
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedVerticalTimelineCard
               className="flex absolute top-4 end-4 items-center justify-center bg-white dark:bg-neutral-900 rounded-full h-10 w-10 shadow-lg z-[102] hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
               onClick={() => setIsActive(false)}
               aria-label={t('common.close')}
@@ -240,6 +247,7 @@ const [isActive, setIsActive] = useState(false)
             <m.div
               layoutId={`card-${event.id}-${id}`}
               ref={ref}
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedVerticalTimelineCard
               className="w-full max-w-3xl h-full md:h-fit md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden shadow-2xl"
             >
               {/* Event Icon Header */}
@@ -260,6 +268,7 @@ const [isActive, setIsActive] = useState(false)
                 <div className="p-4 sm:p-6 border-b border-border">
                   <m.h3
                     layoutId={`title-${event.id}-${id}`}
+                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedVerticalTimelineCard
                     className="font-bold text-neutral-700 dark:text-neutral-200 text-xl sm:text-2xl mb-3 text-start"
                   >
                     {title}
@@ -309,6 +318,7 @@ const [isActive, setIsActive] = useState(false)
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
+                      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedVerticalTimelineCard
                       className="text-neutral-600 dark:text-neutral-400 text-sm sm:text-base text-start whitespace-pre-wrap leading-relaxed"
                     >
                       {description}

@@ -9,7 +9,9 @@
 - ✅ **v5.0 Dossier Creation UX** — Phases 26-32 (shipped 2026-04-18) — [archive](milestones/v5.0-ROADMAP.md)
 - ✅ **v6.0 Design System Adoption** — Phases 33-43 (shipped 2026-05-06) — [archive](milestones/v6.0-ROADMAP.md)
 - ✅ **v6.1 Hardening & Reconciliation** — Phases 44-46 (shipped 2026-05-08) — [archive](milestones/v6.1-ROADMAP.md)
-- ⏳ **v6.2 Type-Check, Lint & Bundle Reset** — Phases 47-49 (planning, opened 2026-05-08)
+- ✅ **v6.2 Type-Check, Lint & Bundle Reset** — Phases 47-49 (shipped 2026-05-12) — [archive](milestones/v6.2-ROADMAP.md)
+- ✅ **v6.3 Carryover Sweep & v7.0 Prep** — Phases 50-54 (shipped 2026-05-17) — [archive](milestones/v6.3-ROADMAP.md)
+- 🚧 **v6.4 Stabilization & Carryover Sweep** — Phases 55-59 (in progress)
 
 ## Phases
 
@@ -115,100 +117,157 @@ Full details: [v6.1-ROADMAP.md](milestones/v6.1-ROADMAP.md)
 
 </details>
 
-## v6.2 Type-Check, Lint & Bundle Reset
+<details>
+<summary>✅ v6.2 Type-Check, Lint & Bundle Reset (Phases 47-49) — SHIPPED 2026-05-12</summary>
 
-**Goal:** Restore code-quality gates and bundle budget on `main` before v7.0 Intelligence Engine work begins.
+- [x] Phase 47: Type-Check Zero (11/11 plans) — frontend 1580 + backend 498 TS errors → 0 via deletion-first + typed-at-source; `type-check` restored as PR-blocking CI gate; 19 of 20 shims retired
+- [x] Phase 48: Lint & Config Alignment (3/3 plans) — frontend 723 + backend 4 lint problems → 0; root `eslint.config.mjs` single source of truth; Aceternity references purged; `no-restricted-imports` inverted per CLAUDE.md primitive cascade; `Lint` restored as PR-blocking CI gate
+- [x] Phase 49: Bundle Budget Reset (3/3 plans) — Initial-route ceiling 517 → 450 KB; static-prim 64 → 12 KB; manualChunks ordering fix; heroui/sentry/dnd sub-vendor decomposition; 3 audit-driven `React.lazy()` conversions; `Bundle Size Check (size-limit)` restored as PR-blocking CI gate
 
-**Source measurements (2026-05-08, `main`):** frontend 1580 TS errors / backend 498 TS errors / frontend 723 lint problems (52 errors + 671 warnings) / backend 4 lint problems (3 errors + 1 warning) / frontend Total JS 2.42 MB gzip vs 2.43 MB symbolic ceiling. Detail: `.planning/notes/v6.2-rationale.md`.
+Full details: [v6.2-ROADMAP.md](milestones/v6.2-ROADMAP.md)
 
-**Coverage:** 12/12 v6.2 requirements mapped (TYPE-01..04, LINT-06..09, BUNDLE-01..04).
+</details>
 
-### Phases (summary)
+<details>
+<summary>✅ v6.3 Carryover Sweep & v7.0 Prep (Phases 50-54) — SHIPPED 2026-05-17</summary>
 
-- [x] **Phase 47: Type-Check Zero** — Drive frontend + backend `pnpm type-check` to zero and restore type-check as a PR-blocking CI gate (completed 2026-05-09)
-- [ ] **Phase 48: Lint & Config Alignment** — Drive frontend + backend `pnpm lint` to zero, purge Aceternity references from `frontend/eslint.config.js`, align `no-restricted-imports` with the CLAUDE.md primitive cascade, restore lint as a PR-blocking CI gate
-- [ ] **Phase 49: Bundle Budget Reset** — Lower `frontend/.size-limit.json` Total JS ceiling to a real budget (≤500 KB initial-route gzip proposal), route-split heavy chunks via `React.lazy()`, audit the vendor super-chunk, restore `size-limit` as a PR-blocking CI gate
+- [x] Phase 50: Test Infrastructure Repair (10/10 plans) — `vi.mock("react-i18next")` factory uses `vi.importActual` + spread; 4 wizard tests green; `50-TEST-AUDIT.md` + test-setup docs published
+- [x] Phase 51: Design-Token Compliance Gate (4/4 plans) — ESLint D-05 bans raw hex + Tailwind palette literals at `error` workspace-wide; 50 Tier-A files swapped to tokens; 271 Tier-C suppressed per-Literal; smoke PR #12 BLOCKED via D-09 fold into Phase 48 `Lint` context
+- [x] Phase 52: HeroUI v3 Kanban Migration (5/5 plans) — shared `@dnd-kit/core` primitive; TasksTab migrated; `EngagementKanbanDialog` + `EngagementDossierPage` deleted (KANBAN-02 satisfied-by-deletion D-20); kibo-ui + tunnel-rat purged; 4 EN+AR baselines committed (PASS-WITH-DEVIATION — D-19..D-23 documented)
+- [x] Phase 53: Bundle Tightening + Tag Provenance (3/3 plans) — React vendor ceiling 349 → 285 KB gz (measured 279.42 kB); `phase-47/48/49-base` annotated + SSH-signed (`git tag -v` Good); CLAUDE.md Node note `22.13.0+`
+- [x] Phase 54: Intelligence Engine Schema Groundwork (4/4 plans) — `intelligence_event` + new `intelligence_digest` (prior renamed `dashboard_digest`) + polymorphic junction + `signal_source_type` enum + regenerated TS types byte-identical across workspaces; schema-only — no API, no UI
 
-### Phase Details
+Full details: [v6.3-ROADMAP.md](milestones/v6.3-ROADMAP.md)
 
-#### Phase 47: Type-Check Zero
+</details>
 
-**Goal:** Frontend and backend `pnpm type-check` exit 0 on a clean clone, with type-check restored as a PR-blocking CI gate so a single regression cannot reach `main`.
+<details open>
+<summary>🚧 v6.4 Stabilization & Carryover Sweep (Phases 55-59) — IN PROGRESS</summary>
 
-**Depends on:** Nothing inside v6.2 (first phase). Operates directly on the v6.1 baseline.
+- [ ] **Phase 55: DesignV2 → Main Merge & Gate Enforcement** — Land DesignV2 onto `main` with all v6.3 quality gates intact and verify enforcement on post-merge `main` PR contexts (MERGE-01, MERGE-02)
+- [ ] **Phase 56: RLS Closure & Last Typed-Shim Retirement** — Clear the pre-existing `countries` row from `sensitiveTables` (D-54-04) and type `useStakeholderInteractionMutations` at source (RLS-01, TYPE-05)
+- [ ] **Phase 57: Phase 52 Deviation Closure (D-19..D-23)** — Resolve mobile touch DnD scope, kanban regression follow-up, LTR/RTL visual baseline byte-distinction, and live tasks-tab Playwright run (DEVIATE-01..04)
+- [ ] **Phase 58: Tier-C Design-Token Suppression Full Clear** — Eliminate all 271 `gsd-design-token-tier-c-allow` suppressions (2336 AST nodes) via wave-staged token swaps and remove the waiver from `eslint.config.mjs` (TOKEN-01, TOKEN-02)
+- [ ] **Phase 59: Cosmetic + CI Gap Closure** — Refresh Phase 53 SUMMARY/VERIFICATION wording, fix `TweaksDrawer.test.tsx` comment drift, polish `51-VALIDATION.md` frontmatter, and wire `bad-design-token.tsx` + `bad-vi-mock.ts` positive-failure CI assertions (POLISH-01..04)
 
-**Entry condition (must be answered before plan-phase):**
+</details>
 
-- Open research question Q1 (`.planning/research/questions.md`) must be resolved: confirm whether `pnpm type-check` runs on PRs and `main` builds today, and if so why it does not block. The answer determines whether Phase 47 must wire a new CI job (TYPE-03) or only repair an existing one. Inspect `.github/workflows/*.yml`, `turbo.json`, root `package.json` scripts, `.husky/`, and the last green CI run on `main` for the type-check exit code. Capture the answer in `.planning/research/Q1-ci-gate-status.md` (or equivalent) and reference it from the Phase 47 plan-phase output.
+## Phase Details
 
-**Requirements:** TYPE-01, TYPE-02, TYPE-03, TYPE-04
+### Phase 55: DesignV2 → Main Merge & Gate Enforcement
 
+**Goal**: DesignV2 lands on `main` and all v6.3 quality gates (type-check, Lint, Bundle Size Check, design-token D-05, react-i18next factory) enforce on every `main` PR context
+**Depends on**: Nothing (first phase of v6.4; blocker for 56-59)
+**Requirements**: MERGE-01, MERGE-02
 **Success Criteria** (what must be TRUE):
 
-1. `pnpm --filter frontend type-check` exits 0 on a clean clone of `main` (1580 TS errors → 0). Resolution is by deletion of unused declarations / real type fixes, never by adding `// @ts-ignore` or `// @ts-expect-error` to mask errors.
-2. `pnpm --filter backend type-check` exits 0 on a clean clone of `main` (498 TS errors → 0), under the same suppression-free rule.
-3. The type-check job runs as a PR-blocking CI gate on both frontend and backend; a PR introducing a single TS error in either workspace fails the merge check on `main`.
-4. Net new `@ts-ignore` / `@ts-expect-error` suppressions added during v6.2 are zero outside documented exceptions; any retained suppression carries an inline reason and an issue/follow-up reference.
+1. `git log main --oneline` shows DesignV2 history merged into `main` with no manual cherry-picks
+2. `pnpm type-check`, `pnpm lint`, and `Bundle Size Check (size-limit)` all exit 0 on the post-merge `main` HEAD
+3. A smoke PR opened against `main` introducing an intentional violation (raw hex, palette literal, or vi.mock factory regression) returns `mergeStateStatus=BLOCKED` from `gh pr view --json`
+4. The four v6.3-introduced gate contexts (`type-check`, `Lint`, `Bundle Size Check (size-limit)`, plus the D-09 folded design-token rule inside `Lint`) appear as required contexts on `main` branch protection — UPGRADED per Phase 55 D-13: 8 explicit required contexts (the original 6 + `Design Token Check` + `react-i18next Factory Check`), reversing the v6.3 D-09 fold-into-Lint for failure-attribution clarity
 
-**Plans:** 11/11 plans complete
+**Plans:** 4 plans (sequential waves 1→4 per D-15 clean causality chain)
 
-- [x] 47-01-frontend-type-fix-PLAN.md — Drive frontend type-check from 1580 to 0 errors (TYPE-01, TYPE-04 frontend half)
-- [x] 47-02-backend-type-fix-PLAN.md — Drive backend type-check from 498 to 0 errors (TYPE-02, TYPE-04 backend half)
-- [x] 47-03-ci-gate-and-branch-protection-PLAN.md — Split type-check into dedicated CI job, set branch protection on main, smoke-test (TYPE-03, TYPE-04 phase reconciliation)
+Plans:
 
-#### Phase 48: Lint & Config Alignment
+**Wave 1**
 
-**Goal:** Frontend and backend `pnpm lint` exit 0, the ESLint config matches the CLAUDE.md primitive cascade with zero Aceternity references, and lint is restored as a PR-blocking CI gate.
+- [ ] 55-01-PLAN.md — Pre-merge verification, merge PR creation + green, --no-ff merge, signed phase-55-base tag (Wave 1)
 
-**Depends on:** Phase 47 (type-check zero). Sequencing rationale: lint fixes touch many of the same files as type-check fixes; running on a typed baseline avoids re-doing the same edits twice and prevents lint changes from masking type errors.
+**Wave 2** _(blocked on Wave 1 completion)_
 
-**Requirements:** LINT-06, LINT-07, LINT-08, LINT-09
+- [ ] 55-02-PLAN.md — Add 2 new CI jobs (Design Token Check + react-i18next Factory Check) to ci.yml via separate PR onto main (Wave 2)
 
+**Wave 3** _(blocked on Wave 2 completion)_
+
+- [ ] 55-03-PLAN.md — Update main branch protection to require 8 contexts (round-trip JSON; preserve enforce_admins / no-force-push / no-deletions) (Wave 3)
+
+**Wave 4** _(blocked on Wave 3 completion)_
+
+- [ ] 55-04-PLAN.md — Smoke PR with 4 planted violations, evidence capture (JSON + PNG), cleanup via `gh pr close --delete-branch` (Wave 4)
+
+### Phase 56: RLS Closure & Last Typed-Shim Retirement
+
+**Goal**: `rls-audit.test.ts` passes for `countries` without an acknowledged-fail entry, and the final v6.2-era typed shim is removed in favour of source-typed return shapes
+**Depends on**: Phase 55
+**Requirements**: RLS-01, TYPE-05
 **Success Criteria** (what must be TRUE):
 
-1. `pnpm --filter frontend lint` exits 0 on a clean clone of `main` (52 errors + 671 warnings → 0). Warnings are either fixed at the call site or the rule is downgraded with a written rationale recorded in `frontend/eslint.config.js`.
-2. `pnpm --filter backend lint` exits 0 on a clean clone of `main` (3 errors + 1 warning → 0).
-3. `frontend/eslint.config.js` contains zero references to Aceternity (`3d-card`, `bento-grid`, `floating-navbar`, `link-preview`); `no-restricted-imports` is aligned with the CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom) and rule messages no longer recommend a banned library.
-4. The lint job runs as a PR-blocking CI gate on both frontend and backend; a PR introducing a single lint error in either workspace fails the merge check on `main`.
+1. `rls-audit.test.ts` exits 0 with `countries` present in the projection but absent from any acknowledged-pre-existing-fail list
+2. `grep -r "useStakeholderInteractionMutations" frontend/src` shows zero `as` casts or typed-shim wrappers at consumer sites
+3. The underlying `useStakeholderInteractionMutations` hook declares an explicit, non-`any`, non-`Promise.resolve({ success: true })` return type that consumers consume directly
+4. `pnpm type-check` exits 0 across both workspaces with the shim removed
 
-**Plans:** TBD
+**Plans**: TBD
 
-#### Phase 49: Bundle Budget Reset
+### Phase 57: Phase 52 Deviation Closure (D-19..D-23)
 
-**Goal:** The `frontend/.size-limit.json` ceiling reflects a real, defensible budget; the initial route loads under it; and `size-limit` is restored as a PR-blocking CI gate.
-
-**Depends on:** Phase 48 (lint zero, primitive cascade aligned). Sequencing rationale: bundle work introduces `React.lazy()` route splits and vendor-chunk changes; doing it on a typed and linted baseline ensures every code-mod is enforced by the same gates that will catch regressions on PRs.
-
-**Requirements:** BUNDLE-01, BUNDLE-02, BUNDLE-03, BUNDLE-04
-
+**Goal**: All five Phase 52 PASS-WITH-DEVIATION carryovers (D-19..D-23, excluding the already-closed D-20) reach a verified resolution recorded against the original deviation rows
+**Depends on**: Phase 55
+**Requirements**: DEVIATE-01, DEVIATE-02, DEVIATE-03, DEVIATE-04
 **Success Criteria** (what must be TRUE):
 
-1. `frontend/.size-limit.json` Total JS ceiling is lowered from 2.43 MB to a real budget (≤500 KB initial-route gzip proposal); the chosen value is documented as the enforced budget, not aspirational.
-2. The initial route loads under the new ceiling on a clean `pnpm --filter frontend size-limit` run; heavy chunks are route-split via `React.lazy()` based on the Phase 49 audit, and the existing E2E suite still passes against the new lazy boundaries.
-3. The vendor super-chunk is audited; every chunk > 100 KB has a documented rationale recorded in `.size-limit.json` comments or a sibling note (e.g. `frontend/docs/bundle-budget.md`).
-4. `size-limit` runs as a PR-blocking CI gate; a PR that adds ≥1 KB to any measured chunk is rejected on `main`.
+1. Mobile touch DnD on the shared `@dnd-kit/core` kanban primitive either works on a 768×1024 device (touch sensor wired) or has an explicit ADR scoping it out with a mobile read-only fallback in place (D-19)
+2. The Phase 39 `kanban-*.spec.ts` Playwright specs run green against the shared `@dnd-kit/core` primitive in CI (D-21)
+3. Re-running the kanban EN+AR visual baseline diff produces byte-distinct snapshots between LTR and RTL (no false byte-identity) (D-22)
+4. The live tasks-tab Playwright run executes on seeded staging data with a host operator and the artifact (run log, screenshots, summary) lands in the phase folder (D-23)
 
-**Plans:** TBD
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 58: Tier-C Design-Token Suppression Full Clear
+
+**Goal**: Every `// gsd-design-token-tier-c-allow` suppression in `frontend/src/` is replaced with a real token reference, and the waiver token is removed from `eslint.config.mjs` so `pnpm lint` stays at 0 without it
+**Depends on**: Phase 55
+**Requirements**: TOKEN-01, TOKEN-02
+**Success Criteria** (what must be TRUE):
+
+1. `grep -r "gsd-design-token-tier-c-allow" frontend/src` returns zero matches across all 271 originally-suppressed files / 2336 AST nodes
+2. `eslint.config.mjs` no longer references the Tier-C waiver token in any rule config, allowlist, or comment-marker exception
+3. `pnpm lint` exits 0 workspace-wide with the waiver removed and the D-05 selectors at `error` severity
+4. Wave PRs are organized by surface (forms, tables, charts, drawers, dossier rail) so each wave is independently reviewable and revertable
+
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 59: Cosmetic + CI Gap Closure
+
+**Goal**: Stale v6.3 paperwork is refreshed, documentation drift is corrected, and the bad-design-token + bad-vi-mock fixtures fail CI loudly when their expected lint/test errors stop firing
+**Depends on**: Phase 55
+**Requirements**: POLISH-01, POLISH-02, POLISH-03, POLISH-04
+**Success Criteria** (what must be TRUE):
+
+1. `53-03-SUMMARY.md` reads `PASS` (not `PASS-WITH-DEFERRAL`) and `53-VERIFICATION.md` records BUNDLE-06 as `verified` (not `verified-local-only`)
+2. `TweaksDrawer.test.tsx:6-8` no longer references the (false) claim that the global setup omits `initReactI18next`
+3. `51-VALIDATION.md` frontmatter reads `status: passed` with `nyquist_compliant: true` preserved
+4. The CI pipeline contains an explicit step that asserts `bad-design-token.tsx` produces an ESLint error and `bad-vi-mock.ts` produces a test failure; CI breaks if either fixture stops failing as expected
+
+**Plans**: TBD
 
 ## Progress
 
 <!-- gsd:progress:start -->
 
-| Phase | Milestone | Plans Complete | Status      | Completed  |
-| ----- | --------- | -------------- | ----------- | ---------- |
-| 1-7   | v2.0      | —              | Shipped     | 2026-03-28 |
-| 8-13  | v3.0      | —              | Shipped     | 2026-04-06 |
-| 14-23 | v4.0      | —              | Shipped     | 2026-04-09 |
-| 24-25 | v4.1      | —              | Shipped     | 2026-04-12 |
-| 26-32 | v5.0      | —              | Shipped     | 2026-04-18 |
-| 33-43 | v6.0      | —              | Shipped     | 2026-05-06 |
-| 44-46 | v6.1      | 14/14          | Shipped     | 2026-05-08 |
-| 47    | v6.2      | 11/11          | Complete    | 2026-05-09 |
-| 48    | v6.2      | 0/0            | Not started | -          |
-| 49    | v6.2      | 0/0            | Not started | -          |
+<!-- prettier-ignore -->
+| Phase | Milestone | Plans Complete | Status | Completed |
+| ----- | --------- | -------------- | ------ | --------- |
+| 1-7 | v2.0 | — | Shipped | 2026-03-28 |
+| 8-13 | v3.0 | — | Shipped | 2026-04-06 |
+| 14-23 | v4.0 | — | Shipped | 2026-04-09 |
+| 24-25 | v4.1 | — | Shipped | 2026-04-12 |
+| 26-32 | v5.0 | — | Shipped | 2026-04-18 |
+| 33-43 | v6.0 | — | Shipped | 2026-05-06 |
+| 44-46 | v6.1 | 14/14 | Shipped | 2026-05-08 |
+| 47-49 | v6.2 | 17/17 | Shipped | 2026-05-12 |
+| 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
+| 55 | v6.4 | 0/4 | Planned | — |
+| 56 | v6.4 | 0/0 | Not started | — |
+| 57 | v6.4 | 0/0 | Not started | — |
+| 58 | v6.4 | 0/0 | Not started | — |
+| 59 | v6.4 | 0/0 | Not started | — |
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-05-08 — v6.2 Type-Check, Lint & Bundle Reset opened (phases 47-49)_
+_Roadmap last updated: 2026-05-17 — Phase 55 plans created (4 plans across 4 sequential waves; D-15 clean causality chain)._

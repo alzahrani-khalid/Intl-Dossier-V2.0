@@ -34,7 +34,7 @@ interface MeetingMinutesCardProps {
 export function MeetingMinutesCard({ minutes, onClick, className }: MeetingMinutesCardProps) {
   const { t } = useTranslation('meeting-minutes')
   const { isRTL } = useDirection()
-const statusColors = STATUS_COLORS[minutes.status as MeetingMinutesStatus] || STATUS_COLORS.draft
+  const statusColors = STATUS_COLORS[minutes.status as MeetingMinutesStatus] || STATUS_COLORS.draft
 
   const handleClick = () => {
     onClick?.(minutes)
@@ -98,6 +98,7 @@ const statusColors = STATUS_COLORS[minutes.status as MeetingMinutesStatus] || ST
           {/* Location or Virtual */}
           {minutes.is_virtual ? (
             <div className="flex items-center gap-1.5">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MeetingMinutesCard */}
               <Video className="h-4 w-4 shrink-0 text-blue-500" />
               <span>{t('fields.isVirtual')}</span>
             </div>
@@ -129,6 +130,7 @@ const statusColors = STATUS_COLORS[minutes.status as MeetingMinutesStatus] || ST
 
           {/* AI Summary indicator */}
           {minutes.ai_summary_en && (
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MeetingMinutesCard
             <div className="flex items-center gap-1.5 text-purple-600 dark:text-purple-400">
               <Sparkles className="h-4 w-4 shrink-0" />
               <span className="text-xs">{t('ai.title')}</span>

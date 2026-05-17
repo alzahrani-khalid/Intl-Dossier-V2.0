@@ -302,9 +302,13 @@ export interface RecommendationStats {
  */
 export function getUrgencyColor(urgency: RecommendationUrgency): string {
   const colors: Record<RecommendationUrgency, string> = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     low: 'text-blue-600 dark:text-blue-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     normal: 'text-gray-600 dark:text-gray-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     high: 'text-orange-600 dark:text-orange-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     critical: 'text-red-600 dark:text-red-400',
   }
   return colors[urgency]
@@ -315,9 +319,13 @@ export function getUrgencyColor(urgency: RecommendationUrgency): string {
  */
 export function getUrgencyBgColor(urgency: RecommendationUrgency): string {
   const colors: Record<RecommendationUrgency, string> = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     low: 'bg-blue-100 dark:bg-blue-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     normal: 'bg-gray-100 dark:bg-gray-800',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     high: 'bg-orange-100 dark:bg-orange-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     critical: 'bg-red-100 dark:bg-red-900/30',
   }
   return colors[urgency]
@@ -328,12 +336,19 @@ export function getUrgencyBgColor(urgency: RecommendationUrgency): string {
  */
 export function getRecommendationTypeBgColor(type: RecommendationType): string {
   const colors: Record<RecommendationType, string> = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     proactive_outreach: 'bg-blue-100 dark:bg-blue-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     follow_up: 'bg-indigo-100 dark:bg-indigo-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     commitment_reminder: 'bg-amber-100 dark:bg-amber-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     relationship_maintenance: 'bg-green-100 dark:bg-green-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     strategic_opportunity: 'bg-purple-100 dark:bg-purple-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     risk_mitigation: 'bg-red-100 dark:bg-red-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     reciprocity_balance: 'bg-teal-100 dark:bg-teal-900/30',
   }
   return colors[type]
@@ -344,11 +359,17 @@ export function getRecommendationTypeBgColor(type: RecommendationType): string {
  */
 export function getStatusColor(status: RecommendationStatus): string {
   const colors: Record<RecommendationStatus, string> = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     viewed: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     accepted: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     dismissed: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     expired: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#engagement-recommendation.types
     superseded: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
   }
   return colors[status]

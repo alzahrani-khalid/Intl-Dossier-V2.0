@@ -623,6 +623,7 @@ function AISettingsPage() {
       <Card className="mt-6">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ai-settings */}
             <CheckCircle2 className="h-5 w-5 text-green-500" />
             {t('settings.status', 'Configuration Status')}
           </CardTitle>

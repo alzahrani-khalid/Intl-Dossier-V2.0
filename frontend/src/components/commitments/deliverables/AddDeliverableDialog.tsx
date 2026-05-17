@@ -87,12 +87,19 @@ const TYPE_ICONS: Record<CommitmentDeliverableType, typeof FileText> = {
 
 // Color mapping for deliverable types
 const TYPE_COLORS: Record<CommitmentDeliverableType, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AddDeliverableDialog
   milestone: 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AddDeliverableDialog
   document: 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AddDeliverableDialog
   meeting: 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AddDeliverableDialog
   review: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AddDeliverableDialog
   follow_up: 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AddDeliverableDialog
   report: 'bg-cyan-100 text-cyan-600 dark:bg-cyan-900/30 dark:text-cyan-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AddDeliverableDialog
   custom: 'bg-gray-100 text-gray-600 dark:bg-gray-900/30 dark:text-gray-400',
 }
 
@@ -125,7 +132,7 @@ export function AddDeliverableDialog({
 }: AddDeliverableDialogProps) {
   const { t } = useTranslation('commitment-deliverables')
   const { isRTL } = useDirection()
-const createMutation = useCreateDeliverable()
+  const createMutation = useCreateDeliverable()
   const updateMutation = useUpdateDeliverable()
 
   const isEditing = !!editDeliverable

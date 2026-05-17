@@ -22,8 +22,11 @@ interface AgingBucket {
 }
 
 const agingBuckets: AgingBucket[] = [
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AgingFilter
   { value: '0-2', label: '0-2 days', barColor: 'bg-green-500' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AgingFilter
   { value: '3-6', label: '3-6 days', barColor: 'bg-yellow-500' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AgingFilter
   { value: '7+', label: '7+ days', barColor: 'bg-red-500' },
 ]
 

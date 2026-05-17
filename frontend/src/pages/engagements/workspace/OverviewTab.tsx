@@ -14,16 +14,12 @@ import type { ReactElement } from 'react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams, Link } from '@tanstack/react-router'
-import {
-  Activity,
-  Calendar,
-  CheckCircle2,
-  Clock,
-  Plus,
-  Users,
-} from 'lucide-react'
+import { Activity, Calendar, CheckCircle2, Clock, Plus, Users } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
-import { useEngagement, useEngagementParticipants } from '@/domains/engagements/hooks/useEngagements'
+import {
+  useEngagement,
+  useEngagementParticipants,
+} from '@/domains/engagements/hooks/useEngagements'
 import { useEngagementKanban } from '@/domains/engagements/hooks/useEngagementKanban'
 import { useLifecycleHistory } from '@/domains/engagements/hooks/useLifecycle'
 import { LIFECYCLE_STAGE_LABELS } from '@/types/lifecycle.types'
@@ -46,9 +42,7 @@ function computeDaysInStage(transitions: LifecycleTransition[] | undefined): num
   )
   const lastTransition = sorted[0]
   if (lastTransition == null) return 0
-  return Math.floor(
-    (Date.now() - new Date(lastTransition.transitioned_at).getTime()) / 86_400_000,
-  )
+  return Math.floor((Date.now() - new Date(lastTransition.transitioned_at).getTime()) / 86_400_000)
 }
 
 function formatDate(dateStr: string | undefined | null, locale: string): string {
@@ -78,10 +72,7 @@ function formatRelativeDate(dateStr: string, locale: string): string {
   }
 }
 
-function getParticipantDisplayName(
-  participant: EngagementParticipant,
-  isRTL: boolean,
-): string {
+function getParticipantDisplayName(participant: EngagementParticipant, isRTL: boolean): string {
   if (participant.dossier != null) {
     return isRTL
       ? (participant.dossier.name_ar ?? participant.dossier.name_en)
@@ -118,8 +109,7 @@ export default function OverviewTab(): ReactElement {
   const { data: participantsData, isLoading: participantsLoading } =
     useEngagementParticipants(engagementId)
   const { stats, isLoading: kanbanLoading } = useEngagementKanban(engagementId)
-  const { data: lifecycleHistory, isLoading: historyLoading } =
-    useLifecycleHistory(engagementId)
+  const { data: lifecycleHistory, isLoading: historyLoading } = useLifecycleHistory(engagementId)
 
   const engagement = profile?.engagement
   const participants: EngagementParticipant[] = useMemo(() => {
@@ -128,18 +118,12 @@ export default function OverviewTab(): ReactElement {
     return raw.data ?? []
   }, [participantsData])
 
-  const daysInStage = useMemo(
-    () => computeDaysInStage(lifecycleHistory),
-    [lifecycleHistory],
-  )
+  const daysInStage = useMemo(() => computeDaysInStage(lifecycleHistory), [lifecycleHistory])
 
   const recentTransitions = useMemo(() => {
     if (lifecycleHistory == null) return []
     return [...lifecycleHistory]
-      .sort(
-        (a, b) =>
-          new Date(b.transitioned_at).getTime() - new Date(a.transitioned_at).getTime(),
-      )
+      .sort((a, b) => new Date(b.transitioned_at).getTime() - new Date(a.transitioned_at).getTime())
       .slice(0, 5)
   }, [lifecycleHistory])
 
@@ -163,9 +147,7 @@ export default function OverviewTab(): ReactElement {
               <Activity className="size-5 text-primary" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm text-muted-foreground">
-                {t('overview.currentStage')}
-              </p>
+              <p className="text-sm text-muted-foreground">{t('overview.currentStage')}</p>
               {isLoading ? (
                 <Skeleton className="mt-1 h-6 w-24" />
               ) : (
@@ -178,13 +160,13 @@ export default function OverviewTab(): ReactElement {
         {/* Days in Stage */}
         <Card>
           <CardContent className="flex items-center gap-3 p-4">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OverviewTab */}
             <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-orange-500/10">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OverviewTab */}
               <Clock className="size-5 text-orange-600 dark:text-orange-400" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm text-muted-foreground">
-                {t('overview.daysInStage')}
-              </p>
+              <p className="text-sm text-muted-foreground">{t('overview.daysInStage')}</p>
               {isLoading ? (
                 <Skeleton className="mt-1 h-6 w-12" />
               ) : (
@@ -197,13 +179,13 @@ export default function OverviewTab(): ReactElement {
         {/* Task Progress */}
         <Card>
           <CardContent className="flex items-center gap-3 p-4">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OverviewTab */}
             <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-green-500/10">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OverviewTab */}
               <CheckCircle2 className="size-5 text-green-600 dark:text-green-400" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm text-muted-foreground">
-                {t('overview.taskProgress')}
-              </p>
+              <p className="text-sm text-muted-foreground">{t('overview.taskProgress')}</p>
               {kanbanLoading ? (
                 <Skeleton className="mt-1 h-6 w-16" />
               ) : (
@@ -221,13 +203,13 @@ export default function OverviewTab(): ReactElement {
         {/* Deadline */}
         <Card>
           <CardContent className="flex items-center gap-3 p-4">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OverviewTab */}
             <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-blue-500/10">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OverviewTab */}
               <Calendar className="size-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm text-muted-foreground">
-                {t('overview.deadline')}
-              </p>
+              <p className="text-sm text-muted-foreground">{t('overview.deadline')}</p>
               {profileLoading ? (
                 <Skeleton className="mt-1 h-6 w-28" />
               ) : (
@@ -269,10 +251,7 @@ export default function OverviewTab(): ReactElement {
               participants.map((participant) => {
                 const name = getParticipantDisplayName(participant, isRTL)
                 return (
-                  <div
-                    key={participant.id}
-                    className="flex items-center gap-3 min-h-11"
-                  >
+                  <div key={participant.id} className="flex items-center gap-3 min-h-11">
                     <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium">
                       {getInitials(name)}
                     </div>
@@ -311,25 +290,17 @@ export default function OverviewTab(): ReactElement {
               </p>
             ) : (
               recentTransitions.map((transition) => {
-                const stageLabels =
-                  LIFECYCLE_STAGE_LABELS[transition.to_stage as LifecycleStage]
+                const stageLabels = LIFECYCLE_STAGE_LABELS[transition.to_stage as LifecycleStage]
                 const stageLabel = isRTL ? stageLabels?.ar : stageLabels?.en
                 return (
-                  <div
-                    key={transition.id}
-                    className={cn(
-                      'border-s-2 border-primary/30 ps-3 py-1',
-                    )}
-                  >
+                  <div key={transition.id} className={cn('border-s-2 border-primary/30 ps-3 py-1')}>
                     <p className="text-sm">
                       <span className="font-medium">
                         {transition.user_name ?? (isRTL ? 'النظام' : 'System')}
-                      </span>
-                      {' '}
+                      </span>{' '}
                       <span className="text-muted-foreground">
                         {isRTL ? 'انتقل إلى' : 'transitioned to'}
-                      </span>
-                      {' '}
+                      </span>{' '}
                       <span className="font-medium">{stageLabel}</span>
                     </p>
                     <p className="text-xs text-muted-foreground">
@@ -351,9 +322,7 @@ export default function OverviewTab(): ReactElement {
       {/* Quick Actions */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-xl font-semibold">
-            {t('overview.quickActions')}
-          </CardTitle>
+          <CardTitle className="text-xl font-semibold">{t('overview.quickActions')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
@@ -361,10 +330,7 @@ export default function OverviewTab(): ReactElement {
               {t('actions.transitionStage')}
             </Button>
             <Button variant="outline" className="min-h-11 min-w-11" asChild>
-              <Link
-                to="/engagements/$engagementId/after-action"
-                params={{ engagementId }}
-              >
+              <Link to="/engagements/$engagementId/after-action" params={{ engagementId }}>
                 {t('actions.logAfterAction')}
               </Link>
             </Button>

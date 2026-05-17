@@ -61,7 +61,7 @@ export function VersionComparison({
 }: VersionComparisonProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const [fromVersion, setFromVersion] = useState<number | undefined>(defaultFromVersion)
+  const [fromVersion, setFromVersion] = useState<number | undefined>(defaultFromVersion)
   const [toVersion, setToVersion] = useState<number | undefined>(defaultToVersion)
 
   // Fetch version comparison data
@@ -128,7 +128,7 @@ const [fromVersion, setFromVersion] = useState<number | undefined>(defaultFromVe
             return (
               <span
                 key={index}
-                className="rounded bg-green-100 px-0.5 text-green-900"
+                className="rounded bg-success/10 px-0.5 text-success"
                 aria-label={t('positions.versionComparison.added')}
               >
                 {item.text}
@@ -140,7 +140,7 @@ const [fromVersion, setFromVersion] = useState<number | undefined>(defaultFromVe
             return (
               <span
                 key={index}
-                className="rounded bg-red-100 px-0.5 text-red-900 line-through"
+                className="rounded bg-danger/10 px-0.5 text-danger line-through"
                 aria-label={t('positions.versionComparison.removed')}
               >
                 {item.text}
@@ -149,7 +149,7 @@ const [fromVersion, setFromVersion] = useState<number | undefined>(defaultFromVe
           }
 
           return (
-            <span key={index} className="text-gray-700">
+            <span key={index} className="text-muted-foreground">
               {item.text}
             </span>
           )
@@ -297,16 +297,16 @@ const [fromVersion, setFromVersion] = useState<number | undefined>(defaultFromVe
                     </h3>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <span className="inline-flex items-center gap-1">
-                        <span className="size-3 rounded border border-green-300 bg-green-100" />
+                        <span className="size-3 rounded border border-success/30 bg-success/10" />
                         {t('positions.versionComparison.added')}
                       </span>
                       <span className="inline-flex items-center gap-1">
-                        <span className="size-3 rounded border border-red-300 bg-red-100" />
+                        <span className="size-3 rounded border border-danger/30 bg-danger/10" />
                         {t('positions.versionComparison.removed')}
                       </span>
                     </div>
                   </div>
-                  <div className="min-h-[200px] rounded-md border bg-gray-50 p-4">
+                  <div className="min-h-[200px] rounded-md border bg-muted p-4">
                     {versionDiff.english_diff.length > 0 ? (
                       renderDiffText(versionDiff.english_diff, false)
                     ) : (
@@ -322,11 +322,11 @@ const [fromVersion, setFromVersion] = useState<number | undefined>(defaultFromVe
                   <div className="mb-3 flex items-center justify-end gap-2">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <span className="inline-flex items-center gap-1">
-                        <span className="size-3 rounded border border-red-300 bg-red-100" />
+                        <span className="size-3 rounded border border-danger/30 bg-danger/10" />
                         {t('positions.versionComparison.removed')}
                       </span>
                       <span className="inline-flex items-center gap-1">
-                        <span className="size-3 rounded border border-green-300 bg-green-100" />
+                        <span className="size-3 rounded border border-success/30 bg-success/10" />
                         {t('positions.versionComparison.added')}
                       </span>
                     </div>
@@ -334,7 +334,7 @@ const [fromVersion, setFromVersion] = useState<number | undefined>(defaultFromVe
                       {t('positions.versionComparison.arabicVersion')}
                     </h3>
                   </div>
-                  <div className="min-h-[200px] rounded-md border bg-gray-50 p-4" dir="rtl">
+                  <div className="min-h-[200px] rounded-md border bg-muted p-4" dir="rtl">
                     {versionDiff.arabic_diff.length > 0 ? (
                       renderDiffText(versionDiff.arabic_diff, true)
                     ) : (
@@ -379,12 +379,10 @@ const [fromVersion, setFromVersion] = useState<number | undefined>(defaultFromVe
                             {t(`positions.fields.${field}`, field)}
                           </TableCell>
                           <TableCell className={cn(isRTL && 'text-end')}>
-                            <span className="text-red-600">{renderMetadataValue(change.old)}</span>
+                            <span className="text-danger">{renderMetadataValue(change.old)}</span>
                           </TableCell>
                           <TableCell className={cn(isRTL && 'text-end')}>
-                            <span className="text-green-600">
-                              {renderMetadataValue(change.new)}
-                            </span>
+                            <span className="text-success">{renderMetadataValue(change.new)}</span>
                           </TableCell>
                         </TableRow>
                       ))}

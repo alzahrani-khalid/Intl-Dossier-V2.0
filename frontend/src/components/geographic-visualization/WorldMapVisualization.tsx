@@ -9,9 +9,12 @@
  * - Interactive tooltips and click handlers
  */
 
-import { useMemo, useState, useCallback } from 'react'
+import { useMemo, useState, useCallback, Suspense, lazy } from 'react'
 import { useTranslation } from 'react-i18next'
-import WorldMap from '@/components/ui/world-map'
+import { GlobeSpinner } from '@/components/signature-visuals'
+// Phase 49 D-06: WorldMap pulls in dotted-map (~112 KB gz). Lazy-loaded so
+// it only enters the chunk graph when geographic visualization actually renders.
+const WorldMap = lazy(() => import('@/components/ui/world-map'))
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -50,7 +53,7 @@ export function WorldMapVisualization({
 }: WorldMapVisualizationProps) {
   const { t } = useTranslation('geographic-visualization')
   const { isRTL } = useDirection()
-const [selectedCountry, setSelectedCountry] = useState<CountryEngagementMetrics | null>(null)
+  const [selectedCountry, setSelectedCountry] = useState<CountryEngagementMetrics | null>(null)
 
   const { countries, connections, summary, isLoading, error, filters } =
     useGeographicVisualization(initialFilters)
@@ -171,15 +174,29 @@ const [selectedCountry, setSelectedCountry] = useState<CountryEngagementMetrics 
               </div>
             </div>
           ) : (
-            <WorldMap
-              dots={dots}
-              markers={markers}
-              lineColor="#3B82F6"
-              theme="light"
-              showLabels={countries.length < 20}
-              animateConnections={connections.length < 50}
-              className="h-full"
-            />
+            <Suspense
+              fallback={
+                <div
+                  className="flex items-center justify-center h-full"
+                  style={{
+                    border: '1px solid var(--line)',
+                    borderRadius: 'var(--radius)',
+                  }}
+                >
+                  <GlobeSpinner size={24} />
+                </div>
+              }
+            >
+              <WorldMap
+                dots={dots}
+                markers={markers}
+                lineColor="var(--accent)"
+                theme="light"
+                showLabels={countries.length < 20}
+                animateConnections={connections.length < 50}
+                className="h-full"
+              />
+            </Suspense>
           )}
 
           {/* Legend */}

@@ -31,7 +31,7 @@ export function DelegationCard({
 }: DelegationCardProps) {
   const { t } = useTranslation('delegation')
   const { isRTL } = useDirection()
-const dateLocale = isRTL ? ar : enUS
+  const dateLocale = isRTL ? ar : enUS
 
   // Calculate status and expiry info
   const now = new Date()
@@ -76,9 +76,11 @@ const dateLocale = isRTL ? ar : enUS
 
   return (
     <Card
+      /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationCard */
       className={`transition-all ${isRevoked || isExpired ? 'opacity-60' : ''} ${
         isExpiringSoon ? 'border-yellow-500/50' : ''
       }`}
+      /* eslint-enable no-restricted-syntax */
     >
       <CardHeader className="pb-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -105,6 +107,7 @@ const dateLocale = isRTL ? ar : enUS
             <Badge variant={status.variant} className="min-h-6">
               {status.label}
             </Badge>
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationCard */}
             {isExpiringSoon && !isRevoked && <AlertTriangle className="h-4 w-4 text-yellow-500" />}
           </div>
         </div>
@@ -128,6 +131,7 @@ const dateLocale = isRTL ? ar : enUS
         {/* Expiry indicator */}
         {!isRevoked && (
           <div
+            /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationCard */
             className={`flex items-center gap-2 text-sm ${
               isExpired
                 ? 'text-destructive'
@@ -135,6 +139,7 @@ const dateLocale = isRTL ? ar : enUS
                   ? 'text-yellow-600 dark:text-yellow-500'
                   : 'text-muted-foreground'
             }`}
+            /* eslint-enable no-restricted-syntax */
           >
             <Clock className="h-4 w-4 flex-shrink-0" />
             <span>{getExpiryText()}</span>

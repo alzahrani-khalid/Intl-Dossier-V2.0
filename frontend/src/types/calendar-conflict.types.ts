@@ -267,23 +267,35 @@ export const SEVERITY_COLORS: Record<
   { bg: string; text: string; border: string }
 > = {
   critical: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
     bg: 'bg-red-100 dark:bg-red-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
     text: 'text-red-700 dark:text-red-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
     border: 'border-red-200 dark:border-red-800',
   },
   high: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
     bg: 'bg-orange-100 dark:bg-orange-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
     text: 'text-orange-700 dark:text-orange-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
     border: 'border-orange-200 dark:border-orange-800',
   },
   medium: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
     bg: 'bg-yellow-100 dark:bg-yellow-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
     text: 'text-yellow-700 dark:text-yellow-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
     border: 'border-yellow-200 dark:border-yellow-800',
   },
   low: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
     bg: 'bg-blue-100 dark:bg-blue-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
     text: 'text-blue-700 dark:text-blue-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
     border: 'border-blue-200 dark:border-blue-800',
   },
 }

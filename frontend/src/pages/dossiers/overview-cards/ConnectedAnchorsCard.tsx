@@ -24,17 +24,17 @@ const MAX_ANCHORS = 5
 function getTypeIcon(type: DossierType): React.ReactNode {
   switch (type) {
     case 'country':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConnectedAnchorsCard
       return <Flag className="h-4 w-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
     case 'organization':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConnectedAnchorsCard
       return <Building2 className="h-4 w-4 text-green-600 dark:text-green-400 flex-shrink-0" />
     default:
       return <Building2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />
   }
 }
 
-export function ConnectedAnchorsCard({
-  dossierId,
-}: ConnectedAnchorsCardProps): React.ReactElement {
+export function ConnectedAnchorsCard({ dossierId }: ConnectedAnchorsCardProps): React.ReactElement {
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
 

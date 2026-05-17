@@ -235,7 +235,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
             className="gap-1"
             onClick={() => markAllAs('available')}
           >
-            <Check className="h-3 w-3 text-green-600" />
+            <Check className="h-3 w-3 text-success" />
             {t('responses.available')}
           </Button>
           <Button
@@ -245,7 +245,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
             className="gap-1"
             onClick={() => markAllAs('unavailable')}
           >
-            <X className="h-3 w-3 text-red-600" />
+            <X className="h-3 w-3 text-danger" />
             {t('responses.unavailable')}
           </Button>
           <Button
@@ -255,7 +255,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
             className="gap-1"
             onClick={() => markAllAs('maybe')}
           >
-            <HelpCircle className="h-3 w-3 text-yellow-600" />
+            <HelpCircle className="h-3 w-3 text-warning" />
             {t('responses.maybe')}
           </Button>
         </div>
@@ -303,7 +303,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <span className="flex items-center gap-0.5 text-green-600">
+                          <span className="flex items-center gap-0.5 text-success">
                             <Check className="h-3 w-3" />
                             {slot.available_count}
                           </span>
@@ -317,7 +317,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <span className="flex items-center gap-0.5 text-yellow-600">
+                          <span className="flex items-center gap-0.5 text-warning">
                             <HelpCircle className="h-3 w-3" />
                             {slot.maybe_count}
                           </span>
@@ -331,7 +331,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <span className="flex items-center gap-0.5 text-red-600">
+                          <span className="flex items-center gap-0.5 text-danger">
                             <X className="h-3 w-3" />
                             {slot.unavailable_count}
                           </span>
@@ -352,7 +352,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                         size="icon"
                         className={cn(
                           'h-9 w-9 sm:h-10 sm:w-10',
-                          vote?.response === 'available' && 'bg-green-600 hover:bg-green-700',
+                          vote?.response === 'available' && 'bg-success hover:bg-success',
                         )}
                         onClick={() => handleVoteChange(slot.id, 'available')}
                       >
@@ -364,7 +364,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                         size="icon"
                         className={cn(
                           'h-9 w-9 sm:h-10 sm:w-10',
-                          vote?.response === 'maybe' && 'bg-yellow-600 hover:bg-yellow-700',
+                          vote?.response === 'maybe' && 'bg-warning hover:bg-warning',
                         )}
                         onClick={() => handleVoteChange(slot.id, 'maybe')}
                       >
@@ -376,7 +376,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                         size="icon"
                         className={cn(
                           'h-9 w-9 sm:h-10 sm:w-10',
-                          vote?.response === 'unavailable' && 'bg-red-600 hover:bg-red-700',
+                          vote?.response === 'unavailable' && 'bg-danger hover:bg-danger',
                         )}
                         onClick={() => handleVoteChange(slot.id, 'unavailable')}
                       >
@@ -408,9 +408,9 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
       {canVote && (
         <div className="flex items-center justify-between flex-wrap gap-4 pt-4 border-t">
           <div className="text-sm text-muted-foreground">
-            <span className="text-green-600">{voteCounts.available}</span>{' '}
-            {t('responses.available')} / <span className="text-yellow-600">{voteCounts.maybe}</span>{' '}
-            {t('responses.maybe')} / <span className="text-red-600">{voteCounts.unavailable}</span>{' '}
+            <span className="text-success">{voteCounts.available}</span> {t('responses.available')}{' '}
+            / <span className="text-warning">{voteCounts.maybe}</span> {t('responses.maybe')} /{' '}
+            <span className="text-danger">{voteCounts.unavailable}</span>{' '}
             {t('responses.unavailable')}
           </div>
           <Button

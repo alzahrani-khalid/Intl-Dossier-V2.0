@@ -121,6 +121,7 @@ export function LinkList({
   if (sortedLinks.length === 0) {
     return (
       <div className={cn('text-center py-8 sm:py-12', className)}>
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LinkList */}
         <p className="text-sm sm:text-base text-slate-500">
           {showDeleted ? t('entityLinks.noDeletedLinks') : t('entityLinks.noLinks')}
         </p>
@@ -165,6 +166,7 @@ export function LinkList({
       {enableReorder && !showDeleted && sortedLinks.length > 1 && (
         <p
           className={cn(
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LinkList */
             'text-xs text-slate-500 text-center',
             'mt-2',
             'hidden sm:block', // Only show on desktop

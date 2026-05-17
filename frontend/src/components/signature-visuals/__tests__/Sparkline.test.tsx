@@ -94,19 +94,24 @@ describe('Sparkline — math + rendering', (): void => {
   })
 
   it('applies custom stroke to polyline and circle', (): void => {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#Sparkline.test
     const { container } = render(<Sparkline data={[1, 2, 3, 4, 5]} stroke="#ff0000" />)
     const polyline = container.querySelector('polyline')!
     const circle = container.querySelector('circle')!
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#Sparkline.test
     expect(polyline.getAttribute('stroke')).toBe('#ff0000')
     // Circle fill matches stroke color so the dot reads as a terminator.
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#Sparkline.test
     expect(circle.getAttribute('fill')).toBe('#ff0000')
   })
 
   it('passes className through to the root svg', (): void => {
     const { container } = render(
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#Sparkline.test
       <Sparkline data={[1, 2, 3]} className="text-emerald-500" />,
     )
     const svg = container.querySelector('svg')!
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#Sparkline.test
     expect(svg.getAttribute('class')).toContain('text-emerald-500')
   })
 

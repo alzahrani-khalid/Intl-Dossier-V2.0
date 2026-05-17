@@ -57,7 +57,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
 
   return (
     <div
-      className="flex flex-wrap gap-1 border-b border-gray-200 p-2"
+      className="flex flex-wrap gap-1 border-b border-line p-2"
       role="toolbar"
       aria-label={t('editor.toolbar')}
     >
@@ -67,7 +67,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
         size="sm"
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={disabled || !editor.can().chain().focus().toggleBold().run()}
-        className={cn(editor.isActive('bold') && 'bg-gray-100')}
+        className={cn(editor.isActive('bold') && 'bg-muted')}
         aria-label={t('editor.bold')}
         aria-pressed={editor.isActive('bold')}
       >
@@ -79,7 +79,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
         size="sm"
         onClick={() => editor.chain().focus().toggleItalic().run()}
         disabled={disabled || !editor.can().chain().focus().toggleItalic().run()}
-        className={cn(editor.isActive('italic') && 'bg-gray-100')}
+        className={cn(editor.isActive('italic') && 'bg-muted')}
         aria-label={t('editor.italic')}
         aria-pressed={editor.isActive('italic')}
       >
@@ -92,7 +92,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
         size="sm"
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         disabled={disabled}
-        className={cn(editor.isActive('heading', { level: 2 }) && 'bg-gray-100')}
+        className={cn(editor.isActive('heading', { level: 2 }) && 'bg-muted')}
         aria-label={t('editor.heading2')}
         aria-pressed={editor.isActive('heading', { level: 2 })}
       >
@@ -104,7 +104,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
         size="sm"
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
         disabled={disabled}
-        className={cn(editor.isActive('heading', { level: 3 }) && 'bg-gray-100')}
+        className={cn(editor.isActive('heading', { level: 3 }) && 'bg-muted')}
         aria-label={t('editor.heading3')}
         aria-pressed={editor.isActive('heading', { level: 3 })}
       >
@@ -117,7 +117,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
         size="sm"
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         disabled={disabled}
-        className={cn(editor.isActive('bulletList') && 'bg-gray-100')}
+        className={cn(editor.isActive('bulletList') && 'bg-muted')}
         aria-label={t('editor.bulletList')}
         aria-pressed={editor.isActive('bulletList')}
       >
@@ -129,7 +129,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
         size="sm"
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         disabled={disabled}
-        className={cn(editor.isActive('orderedList') && 'bg-gray-100')}
+        className={cn(editor.isActive('orderedList') && 'bg-muted')}
         aria-label={t('editor.orderedList')}
         aria-pressed={editor.isActive('orderedList')}
       >
@@ -142,7 +142,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
         size="sm"
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         disabled={disabled}
-        className={cn(editor.isActive('blockquote') && 'bg-gray-100')}
+        className={cn(editor.isActive('blockquote') && 'bg-muted')}
         aria-label={t('editor.quote')}
         aria-pressed={editor.isActive('blockquote')}
       >
@@ -208,7 +208,7 @@ export function PositionEditor({
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-blue-600 underline',
+          class: 'text-accent underline',
         },
       }),
     ],
@@ -234,7 +234,7 @@ export function PositionEditor({
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-blue-600 underline',
+          class: 'text-accent underline',
         },
       }),
     ],
@@ -407,9 +407,9 @@ export function PositionEditor({
 
       {/* Error message */}
       {error && (
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-danger/30 bg-danger/10">
           <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-red-800">
+            <div className="flex items-center gap-2 text-danger">
               <AlertCircle className="size-4" />
               <span>{error}</span>
             </div>
@@ -438,15 +438,15 @@ export function PositionEditor({
                 }}
                 readOnly={readOnly}
                 className={cn(
-                  'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
-                  readOnly && 'bg-gray-100 cursor-not-allowed',
+                  'w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-accent',
+                  readOnly && 'bg-muted cursor-not-allowed',
                 )}
                 aria-label={t('editor.titleEnglish')}
               />
             </div>
             <div>
               <Label>{t('editor.content')}</Label>
-              <div className="overflow-hidden rounded-md border border-gray-300" dir="ltr">
+              <div className="overflow-hidden rounded-md border border-input" dir="ltr">
                 <EditorMenuBar editor={editorEn} disabled={readOnly} />
                 <div
                   ref={enScrollRef}
@@ -483,8 +483,8 @@ export function PositionEditor({
                 }}
                 readOnly={readOnly}
                 className={cn(
-                  'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
-                  readOnly && 'bg-gray-100 cursor-not-allowed',
+                  'w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-accent',
+                  readOnly && 'bg-muted cursor-not-allowed',
                 )}
                 dir="rtl"
                 aria-label={t('editor.titleArabic')}
@@ -492,7 +492,7 @@ export function PositionEditor({
             </div>
             <div>
               <Label>{t('editor.content')}</Label>
-              <div className="overflow-hidden rounded-md border border-gray-300" dir="rtl">
+              <div className="overflow-hidden rounded-md border border-input" dir="rtl">
                 <EditorMenuBar editor={editorAr} disabled={readOnly} />
                 <div
                   ref={arScrollRef}
@@ -528,7 +528,7 @@ export function PositionEditor({
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <AlertCircle className="size-5 text-red-600" />
+              <AlertCircle className="size-5 text-danger" />
               {t('editor.conflictTitle')}
             </DialogTitle>
             <DialogDescription>
@@ -552,3 +552,7 @@ export function PositionEditor({
     </div>
   )
 }
+
+// Default export added for React.lazy() compatibility (Phase 49 D-06).
+// Named export `PositionEditor` is preserved for direct imports.
+export default PositionEditor

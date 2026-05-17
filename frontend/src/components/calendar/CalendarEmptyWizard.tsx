@@ -68,7 +68,9 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     titleKey: 'wizard.templates.stakeholderMeeting.title',
     descriptionKey: 'wizard.templates.stakeholderMeeting.description',
     icon: Users,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
     color: 'text-blue-600 dark:text-blue-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
     bgColor: 'bg-blue-100 dark:bg-blue-900/30',
     defaults: {
       entry_type: 'internal_meeting',
@@ -84,7 +86,9 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     titleKey: 'wizard.templates.deadlineReminder.title',
     descriptionKey: 'wizard.templates.deadlineReminder.description',
     icon: Flag,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
     color: 'text-red-600 dark:text-red-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
     bgColor: 'bg-red-100 dark:bg-red-900/30',
     defaults: {
       entry_type: 'deadline',
@@ -101,7 +105,9 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     titleKey: 'wizard.templates.forumEvent.title',
     descriptionKey: 'wizard.templates.forumEvent.description',
     icon: Globe,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
     color: 'text-purple-600 dark:text-purple-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
     bgColor: 'bg-purple-100 dark:bg-purple-900/30',
     defaults: {
       entry_type: 'main_event',
@@ -117,7 +123,9 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     titleKey: 'wizard.templates.trainingSession.title',
     descriptionKey: 'wizard.templates.trainingSession.description',
     icon: GraduationCap,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
     color: 'text-green-600 dark:text-green-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
     bgColor: 'bg-green-100 dark:bg-green-900/30',
     defaults: {
       entry_type: 'training',
@@ -133,7 +141,9 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     titleKey: 'wizard.templates.reviewMeeting.title',
     descriptionKey: 'wizard.templates.reviewMeeting.description',
     icon: FileCheck,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
     color: 'text-amber-600 dark:text-amber-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
     bgColor: 'bg-amber-100 dark:bg-amber-900/30',
     defaults: {
       entry_type: 'review',
@@ -149,7 +159,9 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     titleKey: 'wizard.templates.bilateralMeeting.title',
     descriptionKey: 'wizard.templates.bilateralMeeting.description',
     icon: Briefcase,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
     color: 'text-indigo-600 dark:text-indigo-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
     bgColor: 'bg-indigo-100 dark:bg-indigo-900/30',
     defaults: {
       entry_type: 'internal_meeting',

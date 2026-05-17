@@ -71,7 +71,7 @@ interface DeliverableCardProps {
 export function DeliverableCard({ deliverable, commitmentId, onEdit }: DeliverableCardProps) {
   const { t, i18n } = useTranslation('commitment-deliverables')
   const { isRTL } = useDirection()
-const updateStatusMutation = useUpdateDeliverableStatus()
+  const updateStatusMutation = useUpdateDeliverableStatus()
   const deleteMutation = useDeleteDeliverable()
 
   const [isDeleting, setIsDeleting] = useState(false)
@@ -143,7 +143,9 @@ const updateStatusMutation = useUpdateDeliverableStatus()
       <Card
         className={cn(
           'transition-colors',
+          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DeliverableCard */
           isCompleted && 'bg-green-50/50 dark:bg-green-900/10',
+          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DeliverableCard */
           isOverdue && 'border-red-200 dark:border-red-800',
         )}
       >
@@ -194,12 +196,14 @@ const updateStatusMutation = useUpdateDeliverableStatus()
               <div
                 className={cn(
                   'flex items-center gap-1 text-xs mb-2',
+                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DeliverableCard */
                   isOverdue ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground',
                 )}
               >
                 {isOverdue ? (
                   <AlertTriangle className="h-3 w-3" />
                 ) : isCompleted ? (
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DeliverableCard
                   <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
                 ) : (
                   <Calendar className="h-3 w-3" />

@@ -214,6 +214,7 @@ export function AvailabilityPollCreator({
             id="meeting_title_en"
             {...register('meeting_title_en', { required: true })}
             placeholder={t('form.meetingTitlePlaceholder')}
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AvailabilityPollCreator */
             className={errors.meeting_title_en ? 'border-red-500' : ''}
           />
         </div>

@@ -88,7 +88,7 @@ export function MergeDialog({
 }: MergeDialogProps) {
   const { t } = useTranslation('duplicate-detection')
   const { isRTL } = useDirection()
-// State for which entity is primary
+  // State for which entity is primary
   const [primaryEntityId, setPrimaryEntityId] = useState<string>('')
   const [fieldResolutions, setFieldResolutions] = useState<Record<string, 'primary' | 'duplicate'>>(
     {},
@@ -436,6 +436,7 @@ export function MergeDialog({
 
                     {fieldComparisons.filter((f) => f.is_different).length === 0 && (
                       <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MergeDialog */}
                         <CheckCircle2 className="h-4 w-4 text-green-500" />
                         {t('no_conflicts', 'No field conflicts to resolve')}
                       </div>

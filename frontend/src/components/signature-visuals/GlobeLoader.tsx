@@ -66,7 +66,6 @@ export function GlobeLoader({
         .scale(size * 0.4)
         .translate([0, 0])
         .clipAngle(90)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const path = d3.geoPath(projection as any)
 
       const createPath = (attrs: Record<string, string>): SVGPathElement => {
@@ -86,7 +85,6 @@ export function GlobeLoader({
         opacity: '0.45',
       })
       const grat = createPath({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         d: path(graticule as any) ?? '',
         fill: 'none',
         stroke: 'var(--ink)',
@@ -94,7 +92,6 @@ export function GlobeLoader({
         opacity: '0.25',
       })
       const land = createPath({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         d: path(countries as any) ?? '',
         fill: 'var(--ink)',
         opacity: '0.75',
@@ -105,9 +102,7 @@ export function GlobeLoader({
         // D-14: full-stop — paint once at λ=0, φ=tilt, then return without rAF.
         projection.rotate([0, tilt])
         sphere.setAttribute('d', path({ type: 'Sphere' } as never) ?? '')
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         grat.setAttribute('d', path(graticule as any) ?? '')
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         land.setAttribute('d', path(countries as any) ?? '')
         return
       }
@@ -117,12 +112,10 @@ export function GlobeLoader({
         if (cancelled) return
         // Handoff formula (loader.jsx line 66):
         //   lambda = ((now - start) / 1000) * speed % 360 - 180
-        const lambda = (((now - start) / 1000) * speed) % 360 - 180
+        const lambda = ((((now - start) / 1000) * speed) % 360) - 180
         projection.rotate([lambda, tilt])
         sphere.setAttribute('d', path({ type: 'Sphere' } as never) ?? '')
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         grat.setAttribute('d', path(graticule as any) ?? '')
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         land.setAttribute('d', path(countries as any) ?? '')
         raf = requestAnimationFrame(tick)
       }

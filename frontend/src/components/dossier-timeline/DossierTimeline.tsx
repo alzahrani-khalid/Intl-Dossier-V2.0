@@ -44,7 +44,7 @@ export function DossierTimeline({
 }: DossierTimelineProps) {
   const { t, i18n } = useTranslation('dossiers')
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
 
   // Parse active filter into array (supports comma-separated values)
   const selectedFilters = activeFilter ? activeFilter.split(',') : []
@@ -129,27 +129,37 @@ const navigate = useNavigate()
     switch (type) {
       // Engagement events - Blue (primary activity)
       case 'engagement':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
         return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
 
       // Calendar entry types - Each with unique, vibrant color
       case 'internal_meeting':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
         return 'bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200'
       case 'deadline':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
         return 'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200'
       case 'reminder':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
         return 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200'
       case 'holiday':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
         return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200'
       case 'training':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
         return 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200'
       case 'review':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
         return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
       case 'forum':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
         return 'bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-900 dark:text-fuchsia-200'
       case 'other':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
         return 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-200'
 
       default:
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
         return 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-200'
     }
   }
@@ -284,13 +294,16 @@ const navigate = useNavigate()
 
       {/* Active Filter Display */}
       {selectedFilters.length > 0 && (
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
         <div className="flex flex-wrap items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-900/20">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline */}
           <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
             {t('timeline.activeFilter', 'Filtered by')}:
           </span>
           {selectedFilters.map((filter) => (
             <Badge
               key={filter}
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
               className="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100"
               aria-label={`${t('timeline.filter')}: ${t(`timeline.types.${filter}`)}`}
             >
@@ -299,6 +312,7 @@ const navigate = useNavigate()
           ))}
           <button
             onClick={handleClearFilter}
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
             className="ms-auto flex items-center gap-1 rounded-md px-2 py-1 text-sm font-medium text-blue-700 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-blue-200 dark:hover:bg-blue-800"
             aria-label={t('timeline.clearFilter', 'Clear all filters')}
           >

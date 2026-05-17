@@ -29,7 +29,7 @@ interface DocumentExtractorProps {
 export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorProps) {
   const { t } = useTranslation('contacts')
   const { isRTL } = useDirection()
-const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [documentSourceId, setDocumentSourceId] = useState<string | null>(null)
   const [extractedContacts, setExtractedContacts] = useState<ExtractedContact[]>([])
   const [processingComplete, setProcessingComplete] = useState(false)
@@ -265,6 +265,7 @@ const [selectedFile, setSelectedFile] = useState<File | null>(null)
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-start flex items-center gap-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DocumentExtractor */}
                 <CheckCircle2 className="h-5 w-5 text-green-600" />
                 {t('contactDirectory.documentExtraction.extraction_complete')}
               </CardTitle>

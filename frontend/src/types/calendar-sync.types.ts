@@ -298,6 +298,7 @@ export const CALENDAR_PROVIDERS: Record<
   google_calendar: {
     name: 'Google Calendar',
     icon: 'google',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-sync.types
     color: '#4285F4',
     supportsOAuth: true,
     scopes: [
@@ -308,6 +309,7 @@ export const CALENDAR_PROVIDERS: Record<
   outlook: {
     name: 'Microsoft Outlook',
     icon: 'microsoft',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-sync.types
     color: '#0078D4',
     supportsOAuth: true,
     scopes: ['Calendars.ReadWrite', 'offline_access'],
@@ -315,6 +317,7 @@ export const CALENDAR_PROVIDERS: Record<
   exchange: {
     name: 'Microsoft Exchange',
     icon: 'microsoft',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-sync.types
     color: '#0078D4',
     supportsOAuth: true,
     scopes: ['Calendars.ReadWrite', 'offline_access'],
@@ -322,6 +325,7 @@ export const CALENDAR_PROVIDERS: Record<
   ical_feed: {
     name: 'iCal Feed',
     icon: 'calendar',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-sync.types
     color: '#6B7280',
     supportsOAuth: false,
     scopes: [],

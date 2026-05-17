@@ -65,14 +65,23 @@ const entityIcons: Record<EntityType, React.ComponentType<{ className?: string }
 
 /** Map entity types to colors */
 const entityColors: Record<EntityType, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
   dossier: 'text-slate-500 dark:text-slate-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
   country: 'text-blue-500 dark:text-blue-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
   organization: 'text-purple-500 dark:text-purple-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
   person: 'text-green-500 dark:text-green-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
   engagement: 'text-amber-500 dark:text-amber-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
   position: 'text-teal-500 dark:text-teal-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
   forum: 'text-indigo-500 dark:text-indigo-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
   working_group: 'text-pink-500 dark:text-pink-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
   topic: 'text-orange-500 dark:text-orange-400',
 }
 
@@ -133,6 +142,7 @@ function QuickNavItem({
               <span className="truncate flex-1">{truncatedName}</span>
               {isPinned && (
                 <Star
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
                   className="h-3 w-3 shrink-0 text-amber-500 fill-amber-500"
                   aria-label={t('quickNav.pinned', 'Pinned')}
                 />
@@ -211,7 +221,7 @@ export function QuickNavigationMenu({
   const isExpanded = isExpandedProp ?? sidebarCtx.state === 'expanded'
   const { t } = useTranslation('common')
   const { isRTL } = useDirection()
-// State for collapsible sections
+  // State for collapsible sections
   const [isPinnedOpen, setIsPinnedOpen] = useState(true)
   const [isRecentOpen, setIsRecentOpen] = useState(true)
 
@@ -291,6 +301,7 @@ export function QuickNavigationMenu({
               )}
             >
               <span className="flex items-center gap-1.5">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu */}
                 <Star className="h-3.5 w-3.5 text-amber-500" />
                 {t('quickNav.pinned', 'Pinned')}
                 <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded-full">

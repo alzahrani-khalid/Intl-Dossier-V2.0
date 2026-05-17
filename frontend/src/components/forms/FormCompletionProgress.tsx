@@ -53,22 +53,22 @@ function ProgressBar({ percentage, variant = 'overall', className }: ProgressBar
   // Color based on percentage and variant
   const getBarColor = () => {
     if (variant === 'required') {
-      if (percentage === 100) return 'bg-emerald-500'
-      if (percentage >= 75) return 'bg-amber-500'
-      return 'bg-red-500'
+      if (percentage === 100) return 'bg-success'
+      if (percentage >= 75) return 'bg-warning'
+      return 'bg-danger'
     }
     // Overall
-    if (percentage === 100) return 'bg-emerald-500'
-    if (percentage >= 75) return 'bg-emerald-400'
-    if (percentage >= 50) return 'bg-amber-500'
-    if (percentage >= 25) return 'bg-amber-400'
-    return 'bg-gray-400'
+    if (percentage === 100) return 'bg-success'
+    if (percentage >= 75) return 'bg-success'
+    if (percentage >= 50) return 'bg-warning'
+    if (percentage >= 25) return 'bg-warning'
+    return 'bg-muted'
   }
 
   return (
     <div
       className={cn(
-        'relative w-full h-2 sm:h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden',
+        'relative w-full h-2 sm:h-3 bg-muted dark:bg-muted rounded-full overflow-hidden',
         className,
       )}
     >
@@ -98,12 +98,14 @@ function StatItem({ icon, label, completed, total, colorClass }: StatItemProps) 
       <div className={cn('flex-shrink-0', colorClass)}>{icon}</div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</span>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
+          <span className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
+            {label}
+          </span>
+          <span className="text-sm text-muted-foreground dark:text-muted-foreground">
             {completed}/{total}
           </span>
         </div>
-        <div className="mt-1 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className="mt-1 h-1.5 bg-muted dark:bg-muted rounded-full overflow-hidden">
           <m.div
             className={cn('h-full rounded-full', colorClass.replace('text-', 'bg-'))}
             initial={{ width: 0 }}
@@ -164,15 +166,15 @@ export function FormCompletionProgress({
   // Status icon
   const getStatusIcon = () => {
     if (canSubmit) {
-      return <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+      return <CheckCircle2 className="w-5 h-5 text-success" />
     }
     if (fieldsWithErrors.length > 0) {
-      return <AlertCircle className="w-5 h-5 text-red-500" />
+      return <AlertCircle className="w-5 h-5 text-danger" />
     }
     if (emptyRequiredFields.length > 0) {
-      return <AlertTriangle className="w-5 h-5 text-amber-500" />
+      return <AlertTriangle className="w-5 h-5 text-warning" />
     }
-    return <CircleDot className="w-5 h-5 text-blue-500" />
+    return <CircleDot className="w-5 h-5 text-info" />
   }
 
   // Minimal variant
@@ -180,7 +182,7 @@ export function FormCompletionProgress({
     return (
       <div className={cn('flex items-center gap-2', className)}>
         {getStatusIcon()}
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <span className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
           {overallPercentage}%
         </span>
       </div>
@@ -190,14 +192,12 @@ export function FormCompletionProgress({
   // Compact variant
   if (variant === 'compact') {
     return (
-      <div
-        className={cn('flex items-center gap-3 sm:gap-4', className)}
-      >
+      <div className={cn('flex items-center gap-3 sm:gap-4', className)}>
         {getStatusIcon()}
         <div className="flex-1">
           <ProgressBar percentage={requiredPercentage} variant="required" />
         </div>
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 flex-shrink-0">
+        <span className="text-sm font-medium text-muted-foreground dark:text-muted-foreground flex-shrink-0">
           {requiredPercentage}%
         </span>
       </div>
@@ -209,8 +209,8 @@ export function FormCompletionProgress({
     <m.div
       className={cn(
         'rounded-xl',
-        'bg-white dark:bg-gray-800',
-        'border border-gray-200 dark:border-gray-700',
+        'bg-white dark:bg-muted',
+        'border border-line dark:border-line',
         'shadow-sm',
         'overflow-hidden',
         className,
@@ -225,11 +225,11 @@ export function FormCompletionProgress({
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             {getStatusIcon()}
-            <span className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">
+            <span className="font-medium text-foreground dark:text-white text-sm sm:text-base">
               {getStatusMessage()}
             </span>
           </div>
-          <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+          <span className="text-lg sm:text-xl font-bold text-foreground dark:text-white">
             {overallPercentage}%
           </span>
         </div>
@@ -238,7 +238,7 @@ export function FormCompletionProgress({
         <ProgressBar percentage={overallPercentage} />
 
         {/* Field Count Summary */}
-        <div className="mt-3 flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-gray-500 dark:text-gray-400">
+        <div className="mt-3 flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-muted-foreground dark:text-muted-foreground">
           <span>
             {t('progress.fieldsCompleted', {
               completed: completedFields,
@@ -250,8 +250,8 @@ export function FormCompletionProgress({
               className={cn(
                 'px-2 py-0.5 rounded-full text-xs font-medium',
                 requiredPercentage === 100
-                  ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                  : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+                  ? 'bg-success/10 text-success dark:bg-success/30 dark:text-success'
+                  : 'bg-danger/10 text-danger dark:bg-danger/30 dark:text-danger',
               )}
             >
               {t('progress.requiredStatus', {
@@ -273,10 +273,10 @@ export function FormCompletionProgress({
             className={cn(
               'w-full px-4 py-2 sm:px-5 sm:py-3',
               'flex items-center justify-between',
-              'bg-gray-50 dark:bg-gray-900/50',
-              'border-t border-gray-200 dark:border-gray-700',
-              'text-sm text-gray-600 dark:text-gray-400',
-              'hover:bg-gray-100 dark:hover:bg-gray-800/50',
+              'bg-muted dark:bg-muted/50',
+              'border-t border-line dark:border-line',
+              'text-sm text-muted-foreground dark:text-muted-foreground',
+              'hover:bg-muted dark:hover:bg-muted/50',
               'transition-colors duration-200',
             )}
           >
@@ -293,7 +293,7 @@ export function FormCompletionProgress({
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="px-4 pb-4 sm:px-5 sm:pb-5 space-y-3 sm:space-y-4 bg-gray-50 dark:bg-gray-900/50"
+              className="px-4 pb-4 sm:px-5 sm:pb-5 space-y-3 sm:space-y-4 bg-muted dark:bg-muted/50"
             >
               {/* Required Fields */}
               {requiredFields > 0 && (
@@ -302,7 +302,7 @@ export function FormCompletionProgress({
                   label={t('importance.required')}
                   completed={completedRequiredFields}
                   total={requiredFields}
-                  colorClass="text-red-500"
+                  colorClass="text-danger"
                 />
               )}
 
@@ -313,7 +313,7 @@ export function FormCompletionProgress({
                   label={t('importance.recommended')}
                   completed={completedRecommendedFields}
                   total={recommendedFields}
-                  colorClass="text-amber-500"
+                  colorClass="text-warning"
                 />
               )}
 
@@ -324,7 +324,7 @@ export function FormCompletionProgress({
                   label={t('importance.optional')}
                   completed={completedOptionalFields}
                   total={optionalFields}
-                  colorClass="text-gray-500"
+                  colorClass="text-muted-foreground"
                 />
               )}
             </m.div>
@@ -334,11 +334,11 @@ export function FormCompletionProgress({
 
       {/* Warnings Section */}
       {showWarnings && (emptyRequiredFields.length > 0 || fieldsWithErrors.length > 0) && (
-        <div className="px-4 pb-4 sm:px-5 sm:pb-5 space-y-2 border-t border-gray-200 dark:border-gray-700 bg-amber-50/50 dark:bg-amber-900/10">
+        <div className="px-4 pb-4 sm:px-5 sm:pb-5 space-y-2 border-t border-line dark:border-line bg-warning/50 dark:bg-warning/10">
           <div className="pt-3 sm:pt-4">
             {/* Empty Required Fields Warning */}
             {emptyRequiredFields.length > 0 && (
-              <div className="flex items-start gap-2 text-sm text-amber-700 dark:text-amber-400">
+              <div className="flex items-start gap-2 text-sm text-warning dark:text-warning">
                 <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                 <span>
                   {t('progress.emptyRequiredWarning', {
@@ -350,7 +350,7 @@ export function FormCompletionProgress({
 
             {/* Fields with Errors Warning */}
             {fieldsWithErrors.length > 0 && (
-              <div className="flex items-start gap-2 text-sm text-red-700 dark:text-red-400 mt-2">
+              <div className="flex items-start gap-2 text-sm text-danger dark:text-danger mt-2">
                 <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                 <span>
                   {t('progress.errorsWarning', {

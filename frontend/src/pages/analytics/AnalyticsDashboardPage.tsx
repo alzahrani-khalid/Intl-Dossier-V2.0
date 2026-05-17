@@ -342,8 +342,8 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
               key={alert.type}
               variant={alert.type === 'critical' ? 'destructive' : 'default'}
               className={cn(
-                alert.type === 'warning' && 'border-amber-500/50 bg-amber-50 dark:bg-amber-900/20',
-                alert.type === 'info' && 'border-blue-500/50 bg-blue-50 dark:bg-blue-900/20',
+                alert.type === 'warning' && 'border-warning/50 bg-warning/10 dark:bg-warning/20',
+                alert.type === 'info' && 'border-info/50 bg-info/10 dark:bg-info/20',
               )}
             >
               <AlertTriangle className="h-4 w-4" />
@@ -393,11 +393,11 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
       {summary && (summary.criticalAlerts > 0 || summary.overdueItems > 0) && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
           {summary.criticalAlerts > 0 && (
-            <Card className="border-red-500/30 bg-red-50 dark:bg-red-900/20">
+            <Card className="border-danger/30 bg-danger/10 dark:bg-danger/20">
               <CardContent className="p-4 flex items-center gap-3">
-                <AlertTriangle className="h-8 w-8 text-red-500" />
+                <AlertTriangle className="h-8 w-8 text-danger" />
                 <div>
-                  <p className="text-2xl font-bold text-red-600 dark:text-red-400">
+                  <p className="text-2xl font-bold text-danger dark:text-danger">
                     {summary.criticalAlerts}
                   </p>
                   <p className="text-sm text-muted-foreground">{t('summary.criticalAlerts')}</p>
@@ -406,11 +406,11 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
             </Card>
           )}
           {summary.overdueItems > 0 && (
-            <Card className="border-amber-500/30 bg-amber-50 dark:bg-amber-900/20">
+            <Card className="border-warning/30 bg-warning/10 dark:bg-warning/20">
               <CardContent className="p-4 flex items-center gap-3">
-                <Clock className="h-8 w-8 text-amber-500" />
+                <Clock className="h-8 w-8 text-warning" />
                 <div>
-                  <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">
+                  <p className="text-2xl font-bold text-warning dark:text-warning">
                     {summary.overdueItems}
                   </p>
                   <p className="text-sm text-muted-foreground">{t('summary.overdueItems')}</p>
@@ -419,11 +419,11 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
             </Card>
           )}
           {summary.relationshipsNeedingAttention > 0 && (
-            <Card className="border-blue-500/30 bg-blue-50 dark:bg-blue-900/20">
+            <Card className="border-info/30 bg-info/10 dark:bg-info/20">
               <CardContent className="p-4 flex items-center gap-3">
-                <TrendingUp className="h-8 w-8 text-blue-500" />
+                <TrendingUp className="h-8 w-8 text-info" />
                 <div>
-                  <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                  <p className="text-2xl font-bold text-info dark:text-info">
                     {summary.relationshipsNeedingAttention}
                   </p>
                   <p className="text-sm text-muted-foreground">{t('summary.needsAttention')}</p>

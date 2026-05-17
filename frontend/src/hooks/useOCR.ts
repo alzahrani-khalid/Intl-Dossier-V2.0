@@ -102,10 +102,13 @@ export function getConfidenceColor(confidence: number): string {
   const level = getConfidenceLevel(confidence)
   switch (level) {
     case 'high':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useOCR
       return 'bg-green-100 text-green-800 border-green-300'
     case 'medium':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useOCR
       return 'bg-yellow-100 text-yellow-800 border-yellow-300'
     case 'low':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useOCR
       return 'bg-red-100 text-red-800 border-red-300'
   }
 }

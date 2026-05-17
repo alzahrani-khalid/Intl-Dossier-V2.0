@@ -24,7 +24,7 @@
     "test:e2e": "turbo run test:e2e",
     "test:e2e:ci": "playwright test --project=chromium-en --project=chromium-ar-smoke",
     "test:e2e:sc": "playwright test tests/e2e/token-engine-sc --project=chromium-en --no-deps",
-    "lint": "turbo run lint",
+    "lint": "node scripts/lint.mjs",
     "typecheck": "turbo run type-check",
     "prepare": "husky",
     "db:setup": "pnpm run db:migrate && pnpm run db:seed",

@@ -76,7 +76,7 @@ export function ScenarioCard({
 }: ScenarioCardProps) {
   const { t } = useTranslation('scenario-sandbox')
   const { isRTL } = useDirection()
-const locale = isRTL ? ar : enUS
+  const locale = isRTL ? ar : enUS
 
   const title = isRTL ? scenario.title_ar : scenario.title_en
   const description = isRTL ? scenario.description_ar : scenario.description_en
@@ -165,12 +165,14 @@ const locale = isRTL ? ar : enUS
             <span>{scenario.variable_count || 0}</span>
           </div>
           {positiveOutcomes > 0 && (
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ScenarioCard
             <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
               <TrendingUp className="h-4 w-4" />
               <span>{positiveOutcomes}</span>
             </div>
           )}
           {negativeOutcomes > 0 && (
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ScenarioCard
             <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400">
               <TrendingDown className="h-4 w-4" />
               <span>{negativeOutcomes}</span>

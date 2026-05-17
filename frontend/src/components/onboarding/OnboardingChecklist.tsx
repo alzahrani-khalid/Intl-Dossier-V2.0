@@ -129,7 +129,7 @@ function ChecklistItem({
         className={cn(
           'flex items-center gap-2 sm:gap-3 w-full p-2 sm:p-3 rounded-lg transition-all',
           'text-start',
-          isCompleted && 'bg-green-50 dark:bg-green-950/30',
+          isCompleted && 'bg-success/10 dark:bg-success/30',
           isSkipped && 'bg-muted/50 opacity-60',
           isLocked && 'opacity-50 cursor-not-allowed',
           !isCompleted && !isSkipped && !isLocked && 'hover:bg-muted/50 cursor-pointer',
@@ -139,7 +139,7 @@ function ChecklistItem({
         <div
           className={cn(
             'flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center',
-            isCompleted && 'bg-green-500 text-white',
+            isCompleted && 'bg-success text-white',
             isSkipped && 'bg-muted text-muted-foreground',
             isLocked && 'bg-muted text-muted-foreground',
             !isCompleted && !isSkipped && !isLocked && 'bg-primary/10 text-primary',
@@ -161,7 +161,7 @@ function ChecklistItem({
           <p
             className={cn(
               'text-xs sm:text-sm font-medium truncate',
-              isCompleted && 'text-green-700 dark:text-green-400 line-through',
+              isCompleted && 'text-success dark:text-success line-through',
               isSkipped && 'text-muted-foreground line-through',
             )}
           >
@@ -186,7 +186,7 @@ function ChecklistItem({
       animate={{ opacity: 1, y: 0 }}
       className={cn(
         'group relative rounded-lg border p-3 sm:p-4 transition-all',
-        isCompleted && 'border-green-300 bg-green-50 dark:bg-green-950/30 dark:border-green-800',
+        isCompleted && 'border-success/30 bg-success/10 dark:bg-success/30 dark:border-success',
         isSkipped && 'border-muted bg-muted/30 opacity-60',
         isLocked && 'border-muted bg-muted/10 opacity-50',
         !isCompleted &&
@@ -201,7 +201,7 @@ function ChecklistItem({
         <div
           className={cn(
             'flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center',
-            isCompleted && 'bg-green-500 text-white',
+            isCompleted && 'bg-success text-white',
             isSkipped && 'bg-muted text-muted-foreground',
             isLocked && 'bg-muted text-muted-foreground',
             !isCompleted && !isSkipped && !isLocked && 'bg-primary/10 text-primary',
@@ -223,7 +223,7 @@ function ChecklistItem({
               <h4
                 className={cn(
                   'text-sm sm:text-base font-semibold',
-                  isCompleted && 'text-green-700 dark:text-green-400',
+                  isCompleted && 'text-success dark:text-success',
                   isSkipped && 'text-muted-foreground',
                 )}
               >
@@ -258,7 +258,7 @@ function ChecklistItem({
             )}
 
             {isCompleted && (
-              <span className="text-[10px] sm:text-xs text-green-600 dark:text-green-400">
+              <span className="text-[10px] sm:text-xs text-success dark:text-success">
                 {t('checklist.completed')}
               </span>
             )}
@@ -415,10 +415,10 @@ export function OnboardingChecklist({
           className,
         )}
       >
-        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
-          <Check className="w-8 h-8 sm:w-10 sm:h-10 text-green-600 dark:text-green-400" />
+        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-success/10 dark:bg-success/30 flex items-center justify-center mb-4">
+          <Check className="w-8 h-8 sm:w-10 sm:h-10 text-success dark:text-success" />
         </div>
-        <h3 className="text-lg sm:text-xl font-semibold text-green-700 dark:text-green-400">
+        <h3 className="text-lg sm:text-xl font-semibold text-success dark:text-success">
           {t('checklist.allComplete')}
         </h3>
         <p className="text-sm text-muted-foreground mt-2 max-w-xs">

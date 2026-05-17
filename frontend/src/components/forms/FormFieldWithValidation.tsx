@@ -95,7 +95,7 @@ export function FormFieldWithValidation({
 }: FormFieldWithValidationProps) {
   const { t } = useTranslation(['validation', 'common'])
   const { isRTL } = useDirection()
-const uniqueId = useId()
+  const uniqueId = useId()
 
   // Local state
   const [value, setValue] = useState<string>('')
@@ -198,22 +198,22 @@ const uniqueId = useId()
     (shouldShowValidation || isValidating) && (isRTL ? 'ps-12' : 'pe-12'),
     // Borders and colors based on validation state
     shouldShowValidation && !displayResult?.isValid
-      ? 'border-red-500 dark:border-red-400'
+      ? 'border-danger dark:border-danger'
       : shouldShowValidation && displayResult?.severity === 'warning'
-        ? 'border-amber-500 dark:border-amber-400'
+        ? 'border-warning dark:border-warning'
         : shouldShowValidation && displayResult?.isValid
-          ? 'border-emerald-500 dark:border-emerald-400'
-          : 'border-input dark:border-gray-600',
+          ? 'border-success dark:border-success'
+          : 'border-input dark:border-line',
     'border rounded-lg',
     // Focus states
     'focus:ring-2 focus:border-transparent',
     shouldShowValidation && !displayResult?.isValid
-      ? 'focus:ring-red-500'
+      ? 'focus:ring-danger/30'
       : shouldShowValidation && displayResult?.severity === 'warning'
-        ? 'focus:ring-amber-500'
+        ? 'focus:ring-warning/30'
         : 'focus:ring-primary-500',
     // Dark mode
-    'dark:bg-gray-700 dark:text-white',
+    'dark:bg-muted dark:text-white',
     // Disabled state
     'disabled:opacity-50 disabled:cursor-not-allowed',
     // Transitions
@@ -223,11 +223,11 @@ const uniqueId = useId()
   const aceternityClasses = cn(
     inputBaseClasses,
     // Aceternity enhancements
-    'bg-white dark:bg-zinc-800',
+    'bg-white dark:bg-muted',
     'shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)]',
     isFocused &&
       'shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.2),_0px_1px_0px_0px_rgba(25,28,33,0.04),_0px_0px_0px_2px_rgba(var(--primary),0.3)]',
-    isFocused && 'bg-gray-50 dark:bg-zinc-700',
+    isFocused && 'bg-muted dark:bg-muted',
   )
 
   const inputClasses = variant === 'aceternity' ? aceternityClasses : inputBaseClasses
@@ -241,8 +241,8 @@ const uniqueId = useId()
           className={cn(
             'block font-medium text-start',
             'text-sm sm:text-base',
-            'text-gray-700 dark:text-gray-300',
-            shouldShowValidation && !displayResult?.isValid && 'text-red-700 dark:text-red-400',
+            'text-muted-foreground dark:text-muted-foreground',
+            shouldShowValidation && !displayResult?.isValid && 'text-danger dark:text-danger',
           )}
           initial={{ opacity: 0, y: -5 }}
           animate={{ opacity: 1, y: 0 }}
@@ -250,7 +250,7 @@ const uniqueId = useId()
         >
           {label}
           {required && (
-            <span className="text-red-500 ms-1" aria-label={t('common:validation.required')}>
+            <span className="text-danger ms-1" aria-label={t('common:validation.required')}>
               *
             </span>
           )}
@@ -269,7 +269,7 @@ const uniqueId = useId()
           <m.div
             className={cn(
               'absolute top-1/2 -translate-y-1/2',
-              'text-gray-400',
+              'text-muted-foreground',
               isRTL ? 'end-3' : 'start-3',
             )}
             initial={{ opacity: 0, scale: 0.8 }}
@@ -343,7 +343,7 @@ const uniqueId = useId()
           <m.p
             id={helpId}
             key="help-text"
-            className="text-sm text-gray-600 dark:text-gray-400 text-start"
+            className="text-sm text-muted-foreground dark:text-muted-foreground text-start"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

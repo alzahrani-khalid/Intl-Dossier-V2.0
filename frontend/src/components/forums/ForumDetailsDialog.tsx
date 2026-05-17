@@ -80,7 +80,7 @@ export function ForumDetailsDialog({
   const { t } = useTranslation('forums')
   const { user } = useAuth()
   const { isRTL } = useDirection()
-// Check if user has edit permissions (admin or manager roles)
+  // Check if user has edit permissions (admin or manager roles)
   const canEdit = user?.role === 'admin' || user?.role === 'manager'
 
   const handleEdit = () => {
@@ -225,14 +225,19 @@ export function ForumDetailsDialog({
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'scheduled':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDetailsDialog
         return 'bg-blue-100 text-blue-800'
       case 'ongoing':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDetailsDialog
         return 'bg-green-100 text-green-800'
       case 'completed':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDetailsDialog
         return 'bg-gray-100 text-gray-800'
       case 'cancelled':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDetailsDialog
         return 'bg-red-100 text-red-800'
       default:
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDetailsDialog
         return 'bg-gray-100 text-gray-800'
     }
   }

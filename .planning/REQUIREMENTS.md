@@ -1,72 +1,84 @@
-# Requirements — Milestone v6.2 Type-Check, Lint & Bundle Reset
+# Requirements — Milestone v6.4 Stabilization & Carryover Sweep
 
-**Goal:** Restore code-quality gates and bundle budget on `main` before v7.0 Intelligence Engine work begins.
+**Goal:** Close v6.3 carryover debt and merge DesignV2 → main so v7.0 Intelligence Engine starts on stable ground with all quality gates enforced on `main`.
 
-**Source measurements (2026-05-08):**
-
-- Frontend `pnpm type-check`: 1580 TS errors (TS6133 unused declarations + TS6196 unused exported types)
-- Backend `pnpm type-check`: 498 TS errors (same shape)
-- Frontend `pnpm lint`: 723 problems (52 errors + 671 warnings)
-- Backend `pnpm lint`: 4 problems (3 errors + 1 warning)
-- Frontend `pnpm size-limit` Total JS: 2.42 MB gzipped vs 2.43 MB ceiling (raised to mask drift; v2.0 target was 200 KB)
-- `frontend/eslint.config.js` references Aceternity (`3d-card`, `bento-grid`, `floating-navbar`, `link-preview`) in `no-restricted-imports` — contradicts CLAUDE.md primitive cascade
-
-Detail: `.planning/notes/v6.2-rationale.md`.
-
-## Active Requirements
-
-### Type-check (TYPE)
-
-- [ ] **TYPE-01** — Frontend `pnpm type-check` exits 0 on a clean clone (1580 errors → 0). Suppression escape hatches (`@ts-ignore`, `@ts-expect-error`) must not be used to mask errors; deletions or real fixes only.
-- [ ] **TYPE-02** — Backend `pnpm type-check` exits 0 on a clean clone (498 errors → 0). Same suppression rule as TYPE-01.
-- [ ] **TYPE-03** — Type-check job runs as a PR-blocking CI gate on both frontend and backend; a PR introducing a single TS error cannot merge to `main`.
-- [ ] **TYPE-04** — Any retained `@ts-ignore` / `@ts-expect-error` suppression is documented inline with a reason and an issue or follow-up reference; net new suppressions added during v6.2 are zero outside documented exceptions.
-
-### Lint (LINT, continued from v6.1)
-
-- [ ] **LINT-06** — Frontend `pnpm lint` exits 0 on a clean clone (52 errors + 671 warnings → 0). Warnings either fixed at the call site or the rule is downgraded with a written rationale recorded in `eslint.config.js`.
-- [ ] **LINT-07** — Backend `pnpm lint` exits 0 on a clean clone (3 errors + 1 warning → 0).
-- [ ] **LINT-08** — `frontend/eslint.config.js` removes all Aceternity references (`3d-card`, `bento-grid`, `floating-navbar`, `link-preview`); `no-restricted-imports` is aligned with the CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom). Rule messages no longer recommend a banned library.
-- [ ] **LINT-09** — Lint job runs as a PR-blocking CI gate on both frontend and backend; a PR introducing a single lint error cannot merge to `main`.
-
-### Bundle (BUNDLE)
-
-- [ ] **BUNDLE-01** — `frontend/.size-limit.json` Total JS ceiling is lowered from 2.43 MB to ≤500 KB initial-route gzip; the value is documented as the real budget, not aspirational.
-- [ ] **BUNDLE-02** — The initial route loads under the new BUNDLE-01 budget; heavy chunks are route-split via `React.lazy()` based on the Phase 49 audit.
-- [ ] **BUNDLE-03** — `size-limit` runs as a PR-blocking CI gate; a PR that adds ≥1 KB to any measured chunk is rejected.
-- [ ] **BUNDLE-04** — Vendor super-chunk audited; every chunk > 100 KB has documented rationale recorded in `.size-limit.json` comments or a sibling note (e.g. `frontend/docs/bundle-budget.md`).
-
-## Out of Scope
-
-- Intelligence Engine (signals model, structured digest, briefings beyond one-shot, alerting, multi-dossier AI correlation) — captured as seed `v7.0-intelligence-engine.md`. Trigger: v6.2 ships.
-- Visual deviation closeouts for Phase 38/39/41 PASS-WITH-DEVIATION items — separate concern, not blocking v7.0; revisit when needed.
-- Storybook adoption — ADR-006 stands; existing Vitest + Playwright coverage is acceptable until primitive count > 15.
-- New features of any kind — v6.2 is a quality-gate reset milestone only.
-
-## Future (deferred)
-
-- Strict TypeScript options beyond default `strict` (e.g. `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`) — revisit after TYPE-01..04 land and developer ergonomics are observed for at least one milestone.
-- Stylelint and a11y CI gates — revisit when the design system is touched again.
-
-## Traceability
-
-| REQ-ID    | Phase    | Status      |
-| --------- | -------- | ----------- |
-| TYPE-01   | Phase 47 | Not started |
-| TYPE-02   | Phase 47 | Not started |
-| TYPE-03   | Phase 47 | Not started |
-| TYPE-04   | Phase 47 | Not started |
-| LINT-06   | Phase 48 | Not started |
-| LINT-07   | Phase 48 | Not started |
-| LINT-08   | Phase 48 | Not started |
-| LINT-09   | Phase 48 | Not started |
-| BUNDLE-01 | Phase 49 | Not started |
-| BUNDLE-02 | Phase 49 | Not started |
-| BUNDLE-03 | Phase 49 | Not started |
-| BUNDLE-04 | Phase 49 | Not started |
-
-_Phase column filled by the roadmapper after roadmap approval (2026-05-08)._
+**Source:** `.planning/notes/v6.4-milestone-shape.md` (from `/gsd:explore` 2026-05-17) · `.planning/milestones/v6.3-MILESTONE-AUDIT.md` §7 · `.planning/PROJECT.md` "Next Milestone Goals"
 
 ---
 
-_Last updated: 2026-05-08 — v6.2 roadmap approved; traceability mapped to Phases 47-49_
+## Active (v6.4)
+
+### Merge — DesignV2 → main gate enforcement
+
+- [ ] **MERGE-01**: DesignV2 branch merged to `main` with all v6.3 quality gates green (type-check, Lint, Bundle Size Check (size-limit), design-token D-05 selectors, `react-i18next` factory)
+- [ ] **MERGE-02**: v6.3 enforcement verified live on `main` PR contexts post-merge (smoke PR captures `mergeStateStatus=BLOCKED` on intentional violation against a required context fold-in)
+
+### Security / RLS
+
+- [ ] **RLS-01**: D-54-04 closed — `countries` removed from `sensitiveTables` projection in `rls-audit.test.ts`; test passes for `countries` without acknowledged-fail entry (pre-existing Phase 03/04 vintage row resolved)
+
+### Type correctness (continues TYPE-04 from v6.2)
+
+- [ ] **TYPE-05**: `useStakeholderInteractionMutations` shim removed; consumers typed at source against underlying domain hook return shape — last v6.2 typed-shim holdover retired per "typed-at-source over consumer cast" decision
+
+### Phase 52 deviation closure (D-19..D-23)
+
+- [ ] **DEVIATE-01**: D-19 mobile touch DnD — scope decision documented and implementation landed (touch sensor on shared `@dnd-kit/core` primitive, OR explicit scope-out ADR with mobile read-only fallback)
+- [ ] **DEVIATE-02**: D-21 Phase 39 `kanban-*.spec.ts` regression follow-up — specs green against shared `@dnd-kit/core` primitive
+- [ ] **DEVIATE-03**: D-22 LTR/RTL visual baseline byte-distinction — EN vs AR baselines verified distinct (not byte-identical); per-direction snapshot integrity restored for kanban surfaces
+- [ ] **DEVIATE-04**: D-23 live tasks-tab Playwright run executed with host operator on seeded data; results committed to phase artifact
+
+### Design token cleanup (Tier-C full clear)
+
+- [ ] **TOKEN-01**: Zero `// gsd-design-token-tier-c-allow` suppressions remaining — full clear of 271 suppressions / 2336 AST nodes via token swaps, wave-staged by surface (forms, tables, charts, drawers, dossier rail)
+- [ ] **TOKEN-02**: `pnpm lint` exits 0 without the Tier-C waiver token present in `eslint.config.mjs` (waiver removed from config; lint clean without it)
+
+### Cosmetic + CI gap closure
+
+- [ ] **POLISH-01**: Phase 53 SUMMARY/VERIFICATION wording refreshed — `53-03-SUMMARY.md` `PASS-WITH-DEFERRAL` → `PASS`; `53-VERIFICATION.md` BUNDLE-06 `verified-local-only` → `verified` (origin SHAs already match local)
+- [ ] **POLISH-02**: `TweaksDrawer.test.tsx:6-8` stale TEST-01 mock-factory comment removed (documentation drift)
+- [ ] **POLISH-03**: `51-VALIDATION.md` frontmatter `status: draft` → `passed` (`nyquist_compliant: true` already correct)
+- [ ] **POLISH-04**: `bad-design-token.tsx` + `bad-vi-mock.ts` positive-failure CI assertions wired — CI breaks if either fixture stops producing its expected lint/test failure
+
+---
+
+## Future Requirements (deferred to later milestones)
+
+- 271 Tier-C suppressions originally staged as `TBD-design-token-tier-c-cleanup-wave-N` across multiple milestones — **folded entirely into v6.4 TOKEN-01** per full-clear scope decision
+
+---
+
+## Out of Scope (v6.4)
+
+- **v7.0 Intelligence Engine API + UI + ingestion + alerting** — gated by v6.4 ship; v7.0 seed (`.planning/seeds/v7.0-intelligence-engine.md`) unblocked once v6.4 ships. v6.3 INTEL-01..05 already shipped the schema groundwork.
+- **Net-new design tokens or direction variants** — Tier-C cleanup is mechanical swaps to existing tokens, not token-system extension
+- **New E2E specs beyond what D-22 / D-23 explicitly require** — keep e2e surface stable while closing deviations
+- **D-20 (KANBAN-02 satisfied-by-deletion)** — already closed in v6.3 (Phase 52); not re-tracked
+
+---
+
+## Traceability
+
+| Requirement | Phase    | Status  |
+| ----------- | -------- | ------- |
+| MERGE-01    | Phase 55 | Pending |
+| MERGE-02    | Phase 55 | Pending |
+| RLS-01      | Phase 56 | Pending |
+| TYPE-05     | Phase 56 | Pending |
+| DEVIATE-01  | Phase 57 | Pending |
+| DEVIATE-02  | Phase 57 | Pending |
+| DEVIATE-03  | Phase 57 | Pending |
+| DEVIATE-04  | Phase 57 | Pending |
+| TOKEN-01    | Phase 58 | Pending |
+| TOKEN-02    | Phase 58 | Pending |
+| POLISH-01   | Phase 59 | Pending |
+| POLISH-02   | Phase 59 | Pending |
+| POLISH-03   | Phase 59 | Pending |
+| POLISH-04   | Phase 59 | Pending |
+
+**Coverage:** 14/14 v6.4 requirements mapped to exactly one phase. No orphans.
+
+---
+
+_Created: 2026-05-17 — v6.4 milestone definition via `/gsd:new-milestone` (research skipped; scope sourced from `/gsd:explore` shape note)._
+_Updated: 2026-05-17 — Traceability table populated by `gsd-roadmapper` (Phases 55-59)._

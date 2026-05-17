@@ -20,9 +20,7 @@ const REGION_MAP: Record<string, string> = {
   Antarctic: 'antarctic',
 }
 
-async function fetchCountryReference(
-  name: string,
-): Promise<RestCountryResult | undefined> {
+async function fetchCountryReference(name: string): Promise<RestCountryResult | undefined> {
   const res = await fetch(
     `https://restcountries.com/v3.1/name/${encodeURIComponent(name)}?fields=cca2,cca3,region,capital`,
   )
@@ -36,10 +34,7 @@ async function fetchCountryReference(
  * Auto-fills country form fields from REST Countries API when name_en >= 3 characters.
  * Only fills fields that are still empty -- never overwrites user edits.
  */
-export function useCountryAutoFill(
-  nameEn: string,
-  form: UseFormReturn<CountryFormData>,
-): void {
+export function useCountryAutoFill(nameEn: string, form: UseFormReturn<CountryFormData>): void {
   const { data: match } = useQuery({
     queryKey: ['country-reference', nameEn],
     queryFn: () => fetchCountryReference(nameEn),
@@ -52,13 +47,13 @@ export function useCountryAutoFill(
 
     const current = form.getValues()
 
-    if (current.iso_code_2 === '' && match.cca2 !== '') {
+    if (current.iso_code_2 === '' && match.cca2 != null && match.cca2 !== '') {
       form.setValue('iso_code_2', match.cca2)
     }
-    if (current.iso_code_3 === '' && match.cca3 !== '') {
+    if (current.iso_code_3 === '' && match.cca3 != null && match.cca3 !== '') {
       form.setValue('iso_code_3', match.cca3)
     }
-    if (current.region === '' && match.region !== '') {
+    if (current.region === '' && match.region != null && match.region !== '') {
       const mapped = REGION_MAP[match.region] ?? ''
       if (mapped !== '') {
         form.setValue('region', mapped)

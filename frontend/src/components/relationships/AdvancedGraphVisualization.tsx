@@ -285,7 +285,7 @@ const AdvancedDossierNode = memo(
     selected?: boolean
   }) => {
     const { isRTL } = useDirection()
-const name = isRTL ? data.name_ar : data.name_en
+    const name = isRTL ? data.name_ar : data.name_en
 
     const baseSize = 40
     const connectionBonus = Math.min((data.connectionCount || 0) * 2, 30)
@@ -307,6 +307,7 @@ const name = isRTL ? data.name_ar : data.name_en
           'relative flex items-center justify-center transition-all duration-200',
           data.isFocused && 'ring-4 ring-primary ring-offset-2',
           data.isCenter && 'ring-2 ring-primary',
+          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdvancedGraphVisualization */
           data.isOnPath && 'ring-4 ring-amber-400 ring-offset-2',
           selected && 'ring-2 ring-primary/50',
         )}
@@ -728,9 +729,7 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
           <div
             className={cn(
               'p-2 rounded-lg text-xs',
-              pathResult.found
-                ? 'bg-success/5 text-success'
-                : 'bg-warning/5 text-warning',
+              pathResult.found ? 'bg-success/5 text-success' : 'bg-warning/5 text-warning',
             )}
           >
             {pathResult.found ? (
@@ -967,12 +966,14 @@ function ExportPanel({ reactFlowRef }: ExportPanelProps) {
 
         if (format === 'png') {
           dataUrl = await toPng(flowElement, {
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdvancedGraphVisualization
             backgroundColor: '#ffffff',
             quality: 1,
             pixelRatio: 2,
           })
         } else {
           dataUrl = await toSvg(flowElement, {
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdvancedGraphVisualization
             backgroundColor: '#ffffff',
           })
         }
@@ -1329,7 +1330,9 @@ function AdvancedGraphVisualizationInner({
           animated: isConnectedToFocused || isOnPath,
           label: showEdgeLabels ? edge.relationship_type.replace(/_/g, ' ') : undefined,
           style: {
-            stroke: isOnPath ? 'var(--heroui-warning)' : EDGE_COLORS[edge.relationship_type] || graphDefaultColor,
+            stroke: isOnPath
+              ? 'var(--heroui-warning)'
+              : EDGE_COLORS[edge.relationship_type] || graphDefaultColor,
             strokeWidth: isOnPath ? 4 : isConnectedToFocused ? 3 : 2,
             opacity: dimmed && !isOnPath ? 0.2 : 1,
           },
@@ -1342,7 +1345,9 @@ function AdvancedGraphVisualizationInner({
             type: MarkerType.ArrowClosed,
             width: 15,
             height: 15,
-            color: isOnPath ? 'var(--heroui-warning)' : EDGE_COLORS[edge.relationship_type] || graphDefaultColor,
+            color: isOnPath
+              ? 'var(--heroui-warning)'
+              : EDGE_COLORS[edge.relationship_type] || graphDefaultColor,
           },
         }
       })
@@ -1439,432 +1444,435 @@ function AdvancedGraphVisualizationInner({
   // ============================================
 
   return (
-    <LtrIsolate className="relative w-full rounded-lg border bg-background overflow-hidden" style={{ height }}>
-    <div
-      ref={reactFlowRef}
-      className="h-full w-full"
+    <LtrIsolate
+      className="relative w-full rounded-lg border bg-background overflow-hidden"
+      style={{ height }}
     >
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onNodeClick={handleNodeClick}
-        onPaneClick={handleBackgroundClick}
-        nodeTypes={advancedNodeTypes}
-        connectionMode={ConnectionMode.Loose}
-        fitView
-        attributionPosition={isRTL ? 'bottom-left' : 'bottom-right'}
-        minZoom={0.1}
-        maxZoom={2}
-      >
-        <Background variant={BackgroundVariant.Dots} gap={16} size={1} />
-
-        {showMiniMap && (
-          <MiniMap
-            position={isRTL ? 'bottom-left' : 'bottom-right'}
-            nodeColor={(node) =>
-              NODE_COLORS[node.data?.type as keyof typeof NODE_COLORS] || graphDefaultColor
-            }
-            nodeBorderRadius={8}
-            maskColor="rgba(0, 0, 0, 0.1)"
-            className="!bottom-20 sm:!bottom-4"
-          />
-        )}
-
-        {/* Layout & Controls Panel */}
-        <Panel
-          position={isRTL ? 'top-left' : 'top-right'}
-          className="flex flex-col gap-2 max-w-[280px]"
+      <div ref={reactFlowRef} className="h-full w-full">
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onNodeClick={handleNodeClick}
+          onPaneClick={handleBackgroundClick}
+          nodeTypes={advancedNodeTypes}
+          connectionMode={ConnectionMode.Loose}
+          fitView
+          attributionPosition={isRTL ? 'bottom-left' : 'bottom-right'}
+          minZoom={0.1}
+          maxZoom={2}
         >
-          {/* Layout Selector */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm">
-            <div className="text-xs font-semibold mb-2 flex items-center gap-2">
-              <GitBranch className="h-3.5 w-3.5" />
-              {t('layout.title', 'Layout')}
-            </div>
-            <Select value={layout} onValueChange={(v) => setLayout(v as LayoutType)}>
-              <SelectTrigger className="h-8 text-xs">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="circular" className="text-xs">
-                  <div className="flex items-center gap-2">
-                    <Circle className="h-3 w-3" />
-                    {t('layout.circular', 'Circular')}
-                  </div>
-                </SelectItem>
-                <SelectItem value="clustered" className="text-xs">
-                  <div className="flex items-center gap-2">
-                    <Layers className="h-3 w-3" />
-                    {t('layout.clustered', 'Clustered')}
-                  </div>
-                </SelectItem>
-                <SelectItem value="hierarchical" className="text-xs">
-                  <div className="flex items-center gap-2">
-                    <Network className="h-3 w-3" />
-                    {t('layout.hierarchical', 'Hierarchical')}
-                  </div>
-                </SelectItem>
-                <SelectItem value="radial" className="text-xs">
-                  <div className="flex items-center gap-2">
-                    <Activity className="h-3 w-3" />
-                    {t('layout.radial', 'Radial')}
-                  </div>
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <Background variant={BackgroundVariant.Dots} gap={16} size={1} />
 
-          {/* Filters */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm">
-            <div className="text-xs font-semibold mb-2 flex items-center gap-2">
-              <Filter className="h-3.5 w-3.5" />
-              {t('filters', 'Filters')}
-            </div>
+          {showMiniMap && (
+            <MiniMap
+              position={isRTL ? 'bottom-left' : 'bottom-right'}
+              nodeColor={(node) =>
+                NODE_COLORS[node.data?.type as keyof typeof NODE_COLORS] || graphDefaultColor
+              }
+              nodeBorderRadius={8}
+              maskColor="rgba(0, 0, 0, 0.1)"
+              className="!bottom-20 sm:!bottom-4"
+            />
+          )}
 
-            <div className="space-y-2">
-              <Select value={selectedNodeType} onValueChange={setSelectedNodeType}>
+          {/* Layout & Controls Panel */}
+          <Panel
+            position={isRTL ? 'top-left' : 'top-right'}
+            className="flex flex-col gap-2 max-w-[280px]"
+          >
+            {/* Layout Selector */}
+            <div className="bg-background/95 p-3 rounded-lg border shadow-sm">
+              <div className="text-xs font-semibold mb-2 flex items-center gap-2">
+                <GitBranch className="h-3.5 w-3.5" />
+                {t('layout.title', 'Layout')}
+              </div>
+              <Select value={layout} onValueChange={(v) => setLayout(v as LayoutType)}>
                 <SelectTrigger className="h-8 text-xs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {nodeTypes.map((type) => (
-                    <SelectItem key={type} value={type} className="text-xs">
-                      {type === 'all' ? t('allTypes', 'All Types') : t(`type.${type}`, type)}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="circular" className="text-xs">
+                    <div className="flex items-center gap-2">
+                      <Circle className="h-3 w-3" />
+                      {t('layout.circular', 'Circular')}
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="clustered" className="text-xs">
+                    <div className="flex items-center gap-2">
+                      <Layers className="h-3 w-3" />
+                      {t('layout.clustered', 'Clustered')}
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="hierarchical" className="text-xs">
+                    <div className="flex items-center gap-2">
+                      <Network className="h-3 w-3" />
+                      {t('layout.hierarchical', 'Hierarchical')}
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="radial" className="text-xs">
+                    <div className="flex items-center gap-2">
+                      <Activity className="h-3 w-3" />
+                      {t('layout.radial', 'Radial')}
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
-
-              <Select value={selectedRelationshipType} onValueChange={setSelectedRelationshipType}>
-                <SelectTrigger className="h-8 text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {relationshipTypes.map((type) => (
-                    <SelectItem key={type} value={type} className="text-xs">
-                      {type === 'all'
-                        ? t('allRelationships', 'All Relationships')
-                        : t(`relationship.${type}`, type.replace(/_/g, ' '))}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {/* N-Degree Filter Slider */}
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <Label className="text-xs">{t('degreeFilter', 'Max Degrees')}</Label>
-                  <Badge variant="secondary" className="text-[10px] h-5">
-                    {maxDegreeFilter}°
-                  </Badge>
-                </div>
-                <Slider
-                  value={[maxDegreeFilter]}
-                  onValueChange={([v]) => setMaxDegreeFilter(v ?? 5)}
-                  min={1}
-                  max={maxAvailableDegree}
-                  step={1}
-                  className="w-full"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Cluster Controls */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm">
-            <div className="text-xs font-semibold mb-2 flex items-center justify-between">
-              <span className="flex items-center gap-2">
-                <Layers className="h-3.5 w-3.5" />
-                {t('clusters', 'Clusters')}
-              </span>
-              <div className="flex gap-1">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        onClick={collapseAllClusters}
-                      >
-                        <Shrink className="h-3 w-3" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom">
-                      {t('collapseAll', 'Collapse All')}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6"
-                        onClick={expandAllClusters}
-                      >
-                        <Expand className="h-3 w-3" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom">{t('expandAll', 'Expand All')}</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
             </div>
 
-            <div className="space-y-1 max-h-[150px] overflow-y-auto">
-              {Object.entries(clusters).map(([type, cluster]) => (
-                <button
-                  key={type}
-                  className="flex items-center justify-between w-full text-xs py-1 px-2 rounded hover:bg-muted transition-colors"
-                  onClick={() => toggleCluster(type)}
+            {/* Filters */}
+            <div className="bg-background/95 p-3 rounded-lg border shadow-sm">
+              <div className="text-xs font-semibold mb-2 flex items-center gap-2">
+                <Filter className="h-3.5 w-3.5" />
+                {t('filters', 'Filters')}
+              </div>
+
+              <div className="space-y-2">
+                <Select value={selectedNodeType} onValueChange={setSelectedNodeType}>
+                  <SelectTrigger className="h-8 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {nodeTypes.map((type) => (
+                      <SelectItem key={type} value={type} className="text-xs">
+                        {type === 'all' ? t('allTypes', 'All Types') : t(`type.${type}`, type)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={selectedRelationshipType}
+                  onValueChange={setSelectedRelationshipType}
                 >
-                  <span className="flex items-center gap-2">
-                    <div
-                      className="h-2.5 w-2.5 rounded-full"
-                      style={{
-                        backgroundColor: NODE_COLORS[type] || graphDefaultColor,
-                      }}
-                    />
-                    <span className="capitalize">{t(`type.${type}`, type)}</span>
-                    <Badge variant="secondary" className="text-[10px] h-4 px-1">
-                      {cluster.count}
+                  <SelectTrigger className="h-8 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {relationshipTypes.map((type) => (
+                      <SelectItem key={type} value={type} className="text-xs">
+                        {type === 'all'
+                          ? t('allRelationships', 'All Relationships')
+                          : t(`relationship.${type}`, type.replace(/_/g, ' '))}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* N-Degree Filter Slider */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-xs">{t('degreeFilter', 'Max Degrees')}</Label>
+                    <Badge variant="secondary" className="text-[10px] h-5">
+                      {maxDegreeFilter}°
                     </Badge>
-                  </span>
-                  {cluster.collapsed ? (
-                    <ChevronRight className="h-3 w-3" />
-                  ) : (
-                    <ChevronDown className="h-3 w-3" />
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Advanced Features Toggle */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm space-y-2">
-            <div className="text-xs font-semibold mb-2">{t('advanced.title', 'Advanced')}</div>
-
-            <div className="flex items-center justify-between">
-              <Label className="text-xs flex items-center gap-2">
-                <Route className="h-3 w-3" />
-                {t('pathFinding.toggle', 'Path Finding')}
-              </Label>
-              <Switch checked={showPathPanel} onCheckedChange={setShowPathPanel} />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <Label className="text-xs flex items-center gap-2">
-                <Clock className="h-3 w-3" />
-                {t('timeAnimation.toggle', 'Timeline')}
-              </Label>
-              <Switch checked={showTimePanel} onCheckedChange={setShowTimePanel} />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <Label className="text-xs flex items-center gap-2">
-                <Star className="h-3 w-3" />
-                {t('influence.toggle', 'Influence')}
-              </Label>
-              <Switch checked={showInfluence} onCheckedChange={setShowInfluence} />
-            </div>
-          </div>
-
-          {/* Stats */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm text-xs text-muted-foreground">
-            {filteredNodes.length} {t('nodesShown', 'nodes')} · {filteredEdges.length}{' '}
-            {t('edgesShown', 'edges')}
-            {highlightedPath.length > 0 && (
-              <span className="text-warning ms-2">· {t('pathActive', 'Path highlighted')}</span>
-            )}
-          </div>
-        </Panel>
-
-        {/* Path Finding Panel */}
-        <AnimatePresence>
-          {showPathPanel && (
-            <Panel position={isRTL ? 'top-right' : 'top-left'} className="w-64">
-              <m.div
-                initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: isRTL ? 20 : -20 }}
-              >
-                <PathFindingPanel
-                  nodes={rawNodes}
-                  edges={rawEdges}
-                  onPathFound={handlePathFound}
-                  onClearPath={handleClearPath}
-                />
-              </m.div>
-            </Panel>
-          )}
-        </AnimatePresence>
-
-        {/* Time Animation Panel */}
-        <AnimatePresence>
-          {showTimePanel && (
-            <Panel position={isRTL ? 'bottom-right' : 'bottom-left'} className="w-72 mb-16">
-              <m.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-              >
-                <TimeAnimationPanel edges={rawEdges} onTimeChange={handleTimeChange} />
-              </m.div>
-            </Panel>
-          )}
-        </AnimatePresence>
-
-        {/* Zoom & View Controls */}
-        <Panel
-          position={isRTL ? 'bottom-right' : 'bottom-left'}
-          className={cn('flex gap-2', showTimePanel && 'mb-72')}
-        >
-          <div className="bg-background/95 p-2 rounded-lg border shadow-sm flex gap-1">
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-8 w-8"
-              onClick={() => zoomIn()}
-              title={t('zoomIn', 'Zoom In')}
-            >
-              <ZoomIn className="h-4 w-4" />
-            </Button>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-8 w-8"
-              onClick={() => zoomOut()}
-              title={t('zoomOut', 'Zoom Out')}
-            >
-              <ZoomOut className="h-4 w-4" />
-            </Button>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-8 w-8"
-              onClick={() => fitView()}
-              title={t('fitView', 'Fit View')}
-            >
-              <Maximize2 className="h-4 w-4" />
-            </Button>
-          </div>
-
-          {/* Export Controls */}
-          <div className="bg-background/95 p-2 rounded-lg border shadow-sm">
-            <ExportPanel reactFlowRef={reactFlowRef} />
-          </div>
-
-          {/* Settings Popover */}
-          <Popover open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-            <PopoverTrigger asChild>
-              <Button size="icon" variant="outline" className="h-8 w-8 bg-background/95">
-                <Settings2 className="h-4 w-4" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent side={isRTL ? 'left' : 'right'} className="w-64" align="start">
-              <div className="space-y-4">
-                <h4 className="font-medium text-sm">{t('settings.title', 'Display Settings')}</h4>
-
-                {/* Show Labels */}
-                <div className="flex items-center justify-between">
-                  <Label className="text-sm flex items-center gap-2">
-                    {showLabels ? (
-                      <Eye className="h-3.5 w-3.5" />
-                    ) : (
-                      <EyeOff className="h-3.5 w-3.5" />
-                    )}
-                    {t('settings.showLabels', 'Show Labels')}
-                  </Label>
-                  <Switch checked={showLabels} onCheckedChange={setShowLabels} />
-                </div>
-
-                {/* Show Edge Labels */}
-                <div className="flex items-center justify-between">
-                  <Label className="text-sm">{t('settings.showEdgeLabels', 'Edge Labels')}</Label>
-                  <Switch checked={showEdgeLabels} onCheckedChange={setShowEdgeLabels} />
-                </div>
-
-                {/* Highlight Connections */}
-                <div className="flex items-center justify-between">
-                  <Label className="text-sm flex items-center gap-2">
-                    <Focus className="h-3.5 w-3.5" />
-                    {t('settings.highlightConnections', 'Focus Mode')}
-                  </Label>
-                  <Switch
-                    checked={highlightConnections}
-                    onCheckedChange={setHighlightConnections}
-                  />
-                </div>
-
-                {/* Node Size */}
-                <div className="space-y-2">
-                  <Label className="text-sm">{t('settings.nodeSize', 'Node Size')}</Label>
+                  </div>
                   <Slider
-                    value={[nodeSizeMultiplier]}
-                    onValueChange={([v]) => setNodeSizeMultiplier(v ?? 1)}
-                    min={0.5}
-                    max={2}
-                    step={0.1}
+                    value={[maxDegreeFilter]}
+                    onValueChange={([v]) => setMaxDegreeFilter(v ?? 5)}
+                    min={1}
+                    max={maxAvailableDegree}
+                    step={1}
                     className="w-full"
                   />
                 </div>
               </div>
-            </PopoverContent>
-          </Popover>
-        </Panel>
+            </div>
 
-        {/* Legend */}
-        <Panel
-          position={isRTL ? 'top-right' : 'top-left'}
-          className={cn(
-            'bg-background/95 p-3 rounded-lg border shadow-sm',
-            (showPathPanel || showTimePanel) && 'hidden sm:block',
-          )}
-        >
-          <div className="text-xs font-semibold mb-2">{t('legend', 'Legend')}</div>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-            {Object.entries(NODE_COLORS)
-              .slice(0, 6)
-              .map(([type, color]) => (
-                <div key={type} className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full" style={{ backgroundColor: color }} />
-                  <span className="capitalize">{t(`type.${type}`, type)}</span>
+            {/* Cluster Controls */}
+            <div className="bg-background/95 p-3 rounded-lg border shadow-sm">
+              <div className="text-xs font-semibold mb-2 flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                  <Layers className="h-3.5 w-3.5" />
+                  {t('clusters', 'Clusters')}
+                </span>
+                <div className="flex gap-1">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6"
+                          onClick={collapseAllClusters}
+                        >
+                          <Shrink className="h-3 w-3" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">
+                        {t('collapseAll', 'Collapse All')}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6"
+                          onClick={expandAllClusters}
+                        >
+                          <Expand className="h-3 w-3" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">{t('expandAll', 'Expand All')}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
-              ))}
-          </div>
+              </div>
 
-          {highlightedPath.length > 0 && (
-            <div className="mt-3 pt-2 border-t">
-              <div className="flex items-center gap-2 text-xs text-warning">
-                <Route className="h-3 w-3" />
-                {t('pathHighlighted', 'Path highlighted')}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-5 text-xs px-1"
-                  onClick={handleClearPath}
+              <div className="space-y-1 max-h-[150px] overflow-y-auto">
+                {Object.entries(clusters).map(([type, cluster]) => (
+                  <button
+                    key={type}
+                    className="flex items-center justify-between w-full text-xs py-1 px-2 rounded hover:bg-muted transition-colors"
+                    onClick={() => toggleCluster(type)}
+                  >
+                    <span className="flex items-center gap-2">
+                      <div
+                        className="h-2.5 w-2.5 rounded-full"
+                        style={{
+                          backgroundColor: NODE_COLORS[type] || graphDefaultColor,
+                        }}
+                      />
+                      <span className="capitalize">{t(`type.${type}`, type)}</span>
+                      <Badge variant="secondary" className="text-[10px] h-4 px-1">
+                        {cluster.count}
+                      </Badge>
+                    </span>
+                    {cluster.collapsed ? (
+                      <ChevronRight className="h-3 w-3" />
+                    ) : (
+                      <ChevronDown className="h-3 w-3" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Advanced Features Toggle */}
+            <div className="bg-background/95 p-3 rounded-lg border shadow-sm space-y-2">
+              <div className="text-xs font-semibold mb-2">{t('advanced.title', 'Advanced')}</div>
+
+              <div className="flex items-center justify-between">
+                <Label className="text-xs flex items-center gap-2">
+                  <Route className="h-3 w-3" />
+                  {t('pathFinding.toggle', 'Path Finding')}
+                </Label>
+                <Switch checked={showPathPanel} onCheckedChange={setShowPathPanel} />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <Label className="text-xs flex items-center gap-2">
+                  <Clock className="h-3 w-3" />
+                  {t('timeAnimation.toggle', 'Timeline')}
+                </Label>
+                <Switch checked={showTimePanel} onCheckedChange={setShowTimePanel} />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <Label className="text-xs flex items-center gap-2">
+                  <Star className="h-3 w-3" />
+                  {t('influence.toggle', 'Influence')}
+                </Label>
+                <Switch checked={showInfluence} onCheckedChange={setShowInfluence} />
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div className="bg-background/95 p-3 rounded-lg border shadow-sm text-xs text-muted-foreground">
+              {filteredNodes.length} {t('nodesShown', 'nodes')} · {filteredEdges.length}{' '}
+              {t('edgesShown', 'edges')}
+              {highlightedPath.length > 0 && (
+                <span className="text-warning ms-2">· {t('pathActive', 'Path highlighted')}</span>
+              )}
+            </div>
+          </Panel>
+
+          {/* Path Finding Panel */}
+          <AnimatePresence>
+            {showPathPanel && (
+              <Panel position={isRTL ? 'top-right' : 'top-left'} className="w-64">
+                <m.div
+                  initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: isRTL ? 20 : -20 }}
                 >
-                  <X className="h-3 w-3" />
-                </Button>
-              </div>
-            </div>
-          )}
+                  <PathFindingPanel
+                    nodes={rawNodes}
+                    edges={rawEdges}
+                    onPathFound={handlePathFound}
+                    onClearPath={handleClearPath}
+                  />
+                </m.div>
+              </Panel>
+            )}
+          </AnimatePresence>
 
-          {focusedNodeId && !highlightedPath.length && (
-            <div className="mt-3 pt-2 border-t">
-              <div className="text-xs text-muted-foreground flex items-center gap-2">
-                <Focus className="h-3 w-3" />
-                {t('focusedNode', 'Click background to clear focus')}
-              </div>
+          {/* Time Animation Panel */}
+          <AnimatePresence>
+            {showTimePanel && (
+              <Panel position={isRTL ? 'bottom-right' : 'bottom-left'} className="w-72 mb-16">
+                <m.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                >
+                  <TimeAnimationPanel edges={rawEdges} onTimeChange={handleTimeChange} />
+                </m.div>
+              </Panel>
+            )}
+          </AnimatePresence>
+
+          {/* Zoom & View Controls */}
+          <Panel
+            position={isRTL ? 'bottom-right' : 'bottom-left'}
+            className={cn('flex gap-2', showTimePanel && 'mb-72')}
+          >
+            <div className="bg-background/95 p-2 rounded-lg border shadow-sm flex gap-1">
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8"
+                onClick={() => zoomIn()}
+                title={t('zoomIn', 'Zoom In')}
+              >
+                <ZoomIn className="h-4 w-4" />
+              </Button>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8"
+                onClick={() => zoomOut()}
+                title={t('zoomOut', 'Zoom Out')}
+              >
+                <ZoomOut className="h-4 w-4" />
+              </Button>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8"
+                onClick={() => fitView()}
+                title={t('fitView', 'Fit View')}
+              >
+                <Maximize2 className="h-4 w-4" />
+              </Button>
             </div>
-          )}
-        </Panel>
-      </ReactFlow>
-    </div>
+
+            {/* Export Controls */}
+            <div className="bg-background/95 p-2 rounded-lg border shadow-sm">
+              <ExportPanel reactFlowRef={reactFlowRef} />
+            </div>
+
+            {/* Settings Popover */}
+            <Popover open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+              <PopoverTrigger asChild>
+                <Button size="icon" variant="outline" className="h-8 w-8 bg-background/95">
+                  <Settings2 className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent side={isRTL ? 'left' : 'right'} className="w-64" align="start">
+                <div className="space-y-4">
+                  <h4 className="font-medium text-sm">{t('settings.title', 'Display Settings')}</h4>
+
+                  {/* Show Labels */}
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm flex items-center gap-2">
+                      {showLabels ? (
+                        <Eye className="h-3.5 w-3.5" />
+                      ) : (
+                        <EyeOff className="h-3.5 w-3.5" />
+                      )}
+                      {t('settings.showLabels', 'Show Labels')}
+                    </Label>
+                    <Switch checked={showLabels} onCheckedChange={setShowLabels} />
+                  </div>
+
+                  {/* Show Edge Labels */}
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm">{t('settings.showEdgeLabels', 'Edge Labels')}</Label>
+                    <Switch checked={showEdgeLabels} onCheckedChange={setShowEdgeLabels} />
+                  </div>
+
+                  {/* Highlight Connections */}
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm flex items-center gap-2">
+                      <Focus className="h-3.5 w-3.5" />
+                      {t('settings.highlightConnections', 'Focus Mode')}
+                    </Label>
+                    <Switch
+                      checked={highlightConnections}
+                      onCheckedChange={setHighlightConnections}
+                    />
+                  </div>
+
+                  {/* Node Size */}
+                  <div className="space-y-2">
+                    <Label className="text-sm">{t('settings.nodeSize', 'Node Size')}</Label>
+                    <Slider
+                      value={[nodeSizeMultiplier]}
+                      onValueChange={([v]) => setNodeSizeMultiplier(v ?? 1)}
+                      min={0.5}
+                      max={2}
+                      step={0.1}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </Panel>
+
+          {/* Legend */}
+          <Panel
+            position={isRTL ? 'top-right' : 'top-left'}
+            className={cn(
+              'bg-background/95 p-3 rounded-lg border shadow-sm',
+              (showPathPanel || showTimePanel) && 'hidden sm:block',
+            )}
+          >
+            <div className="text-xs font-semibold mb-2">{t('legend', 'Legend')}</div>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+              {Object.entries(NODE_COLORS)
+                .slice(0, 6)
+                .map(([type, color]) => (
+                  <div key={type} className="flex items-center gap-2">
+                    <div className="h-3 w-3 rounded-full" style={{ backgroundColor: color }} />
+                    <span className="capitalize">{t(`type.${type}`, type)}</span>
+                  </div>
+                ))}
+            </div>
+
+            {highlightedPath.length > 0 && (
+              <div className="mt-3 pt-2 border-t">
+                <div className="flex items-center gap-2 text-xs text-warning">
+                  <Route className="h-3 w-3" />
+                  {t('pathHighlighted', 'Path highlighted')}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-5 text-xs px-1"
+                    onClick={handleClearPath}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {focusedNodeId && !highlightedPath.length && (
+              <div className="mt-3 pt-2 border-t">
+                <div className="text-xs text-muted-foreground flex items-center gap-2">
+                  <Focus className="h-3 w-3" />
+                  {t('focusedNode', 'Click background to clear focus')}
+                </div>
+              </div>
+            )}
+          </Panel>
+        </ReactFlow>
+      </div>
     </LtrIsolate>
   )
 }

@@ -351,7 +351,7 @@ export const SmartInput = forwardRef<HTMLInputElement, SmartInputProps>(
   ) => {
     const { t } = useTranslation(['validation', 'common'])
     const { isRTL } = useDirection()
-const uniqueId = useId()
+    const uniqueId = useId()
 
     // Local state for uncontrolled usage
     const [internalValue, setInternalValue] = useState<string>((defaultValue as string) || '')
@@ -467,13 +467,13 @@ const uniqueId = useId()
       !Icon && 'px-4',
       // Borders and colors
       error
-        ? 'border-red-500 dark:border-red-400 focus:ring-red-500'
-        : 'border-input dark:border-gray-600 focus:ring-primary-500',
+        ? 'border-danger dark:border-danger focus:ring-danger/30'
+        : 'border-input dark:border-line focus:ring-primary-500',
       'border rounded-lg',
       // Focus states
       'focus:ring-2 focus:border-transparent focus:outline-none',
       // Dark mode
-      'bg-white dark:bg-gray-700 dark:text-white',
+      'bg-white dark:bg-muted dark:text-white',
       // Disabled state
       'disabled:opacity-50 disabled:cursor-not-allowed',
       // Transitions
@@ -485,11 +485,11 @@ const uniqueId = useId()
     const aceternityClasses = cn(
       inputBaseClasses,
       // Aceternity enhancements
-      'bg-white dark:bg-zinc-800',
+      'bg-white dark:bg-muted',
       'shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)]',
       isFocused &&
         'shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.2),_0px_1px_0px_0px_rgba(25,28,33,0.04),_0px_0px_0px_2px_rgba(var(--primary),0.3)]',
-      isFocused && 'bg-gray-50 dark:bg-zinc-700',
+      isFocused && 'bg-muted dark:bg-muted',
     )
 
     const inputClasses = variant === 'aceternity' ? aceternityClasses : inputBaseClasses
@@ -509,8 +509,8 @@ const uniqueId = useId()
             className={cn(
               'block font-medium text-start',
               'text-sm sm:text-base',
-              'text-gray-700 dark:text-gray-300',
-              error && 'text-red-700 dark:text-red-400',
+              'text-muted-foreground dark:text-muted-foreground',
+              error && 'text-danger dark:text-danger',
             )}
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
@@ -518,7 +518,7 @@ const uniqueId = useId()
           >
             {label}
             {required && (
-              <span className="text-red-500 ms-1" aria-label={t('common:validation.required')}>
+              <span className="text-danger ms-1" aria-label={t('common:validation.required')}>
                 *
               </span>
             )}
@@ -532,7 +532,7 @@ const uniqueId = useId()
             <m.div
               className={cn(
                 'absolute top-1/2 -translate-y-1/2',
-                'text-gray-400 dark:text-gray-500',
+                'text-muted-foreground dark:text-muted-foreground',
                 'pointer-events-none',
                 isRTL ? 'end-3' : 'start-3',
               )}
@@ -573,7 +573,7 @@ const uniqueId = useId()
             <m.p
               id={helpId}
               key="help-text"
-              className="text-sm text-gray-600 dark:text-gray-400 text-start"
+              className="text-sm text-muted-foreground dark:text-muted-foreground text-start"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -588,7 +588,7 @@ const uniqueId = useId()
             <m.p
               id={errorId}
               key="error"
-              className="text-sm text-red-600 dark:text-red-400 text-start"
+              className="text-sm text-danger dark:text-danger text-start"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}

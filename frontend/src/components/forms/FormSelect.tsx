@@ -30,9 +30,11 @@ export function FormSelect({
   return (
     <div className="space-y-1">
       {/* Label */}
+      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormSelect */}
       <label htmlFor={name} className="block text-sm font-medium text-gray-700 dark:text-gray-300">
         {label}
         {required && (
+          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormSelect
           <span className="text-red-500 ms-1" aria-label={t('validation.required')}>
             *
           </span>
@@ -44,6 +46,7 @@ export function FormSelect({
         <select
           id={name}
           {...(register ? register(name) : {})}
+          /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormSelect */
           className={`
  w-full px-4 py-2 pe-10
  appearance-none
@@ -54,6 +57,7 @@ export function FormSelect({
  disabled:opacity-50 disabled:cursor-not-allowed
  transition-colors
  `}
+          /* eslint-enable no-restricted-syntax */
           aria-invalid={!!error}
           aria-describedby={error ? `${name}-error` : helpText ? `${name}-help` : undefined}
           {...rest}
@@ -70,12 +74,15 @@ export function FormSelect({
           ))}
         </select>
         <ChevronDown
+          /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormSelect */
           className={`absolute ${isRTL ? 'start-3' : 'end-3'} top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none`}
+          /* eslint-enable no-restricted-syntax */
         />
       </div>
 
       {/* Help text */}
       {helpText && !error && (
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormSelect
         <p id={`${name}-help`} className="text-sm text-gray-600 dark:text-gray-400">
           {helpText}
         </p>
@@ -83,6 +90,7 @@ export function FormSelect({
 
       {/* Error message */}
       {error && (
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormSelect
         <p id={`${name}-error`} className="text-sm text-red-600 dark:text-red-400">
           {t(error.message || 'validation.required')}
         </p>

@@ -9,8 +9,8 @@ vi.mock('@/design-system/hooks', () => ({
   useReducedMotion: (): boolean => false,
 }))
 
-vi.mock('../ensureWorld', () => {
-  const d3 = require('d3-geo') as typeof import('d3-geo')
+vi.mock('../ensureWorld', async () => {
+  const d3 = await vi.importActual<typeof import('d3-geo')>('d3-geo')
   return {
     ensureWorld: vi.fn().mockResolvedValue({
       countries: { type: 'FeatureCollection', features: [] },
@@ -43,9 +43,12 @@ describe('GlobeLoader — mount, unmount, progressive paint', (): void => {
     const cancelSpy = vi.spyOn(window, 'cancelAnimationFrame')
     const { GlobeLoader } = await import('../GlobeLoader')
     const { unmount } = render(<GlobeLoader />)
-    await waitFor((): void => {
-      expect(cancelSpy).not.toHaveBeenCalledWith(0)
-    }, { timeout: 100 }).catch((): void => {})
+    await waitFor(
+      (): void => {
+        expect(cancelSpy).not.toHaveBeenCalledWith(0)
+      },
+      { timeout: 100 },
+    ).catch((): void => {})
     unmount()
     // After unmount, cancelAnimationFrame should have been invoked at least
     // once (cleanup path). Microtasks from ensureWorld may race; wait briefly.

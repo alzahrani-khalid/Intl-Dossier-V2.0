@@ -251,12 +251,16 @@ export function ProgressiveFormDemoPage() {
   const getGroupIcon = (iconName?: string) => {
     switch (iconName) {
       case 'user':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProgressiveFormDemoPage
         return <User className="w-5 h-5 text-blue-500" />
       case 'phone':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProgressiveFormDemoPage
         return <Phone className="w-5 h-5 text-green-500" />
       case 'file':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProgressiveFormDemoPage
         return <FileText className="w-5 h-5 text-purple-500" />
       case 'settings':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProgressiveFormDemoPage
         return <Bell className="w-5 h-5 text-amber-500" />
       default:
         return null
@@ -315,6 +319,7 @@ export function ProgressiveFormDemoPage() {
               checked={!!value}
               onCheckedChange={(checked) => handleFieldChange(fieldName, checked)}
             />
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProgressiveFormDemoPage */}
             <Label htmlFor={fieldName} className="text-sm text-gray-600 dark:text-gray-400">
               {t(`demo.fields.${fieldName}Help`)}
             </Label>
@@ -336,6 +341,7 @@ export function ProgressiveFormDemoPage() {
             {getFieldIcon(fieldName) && (
               <div
                 className={cn(
+                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProgressiveFormDemoPage */
                   'absolute top-1/2 -translate-y-1/2 text-gray-400',
                   isRTL ? 'end-3' : 'start-3',
                 )}
@@ -384,12 +390,15 @@ export function ProgressiveFormDemoPage() {
                   {showOptional ? (
                     <Eye className="w-5 h-5 text-primary-500" />
                   ) : (
+                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProgressiveFormDemoPage
                     <EyeOff className="w-5 h-5 text-gray-400" />
                   )}
                   <div>
+                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProgressiveFormDemoPage */}
                     <p className="font-medium text-gray-900 dark:text-white text-start">
                       {showOptional ? t('toggle.hideOptional') : t('toggle.showOptional')}
                     </p>
+                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProgressiveFormDemoPage */}
                     <p className="text-sm text-gray-500 dark:text-gray-400 text-start">
                       {t('toggle.optionalFieldsCount', {
                         count: formConfig.fields.filter(
@@ -510,27 +519,32 @@ export function ProgressiveFormDemoPage() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between text-sm">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProgressiveFormDemoPage */}
                   <span className="text-gray-500 dark:text-gray-400">
                     {isRTL ? 'إجمالي الحقول' : 'Total Fields'}
                   </span>
                   <span className="font-medium">{formConfig.fields.length}</span>
                 </div>
                 <div className="flex justify-between text-sm">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProgressiveFormDemoPage */}
                   <span className="text-gray-500 dark:text-gray-400">
                     {isRTL ? 'الحقول المرئية' : 'Visible Fields'}
                   </span>
                   <span className="font-medium">{completionState.totalFields}</span>
                 </div>
                 <div className="flex justify-between text-sm">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProgressiveFormDemoPage */}
                   <span className="text-gray-500 dark:text-gray-400">
                     {isRTL ? 'المجموعات' : 'Groups'}
                   </span>
                   <span className="font-medium">{formConfig.groups?.length || 0}</span>
                 </div>
                 <div className="flex justify-between text-sm">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProgressiveFormDemoPage */}
                   <span className="text-gray-500 dark:text-gray-400">
                     {isRTL ? 'الحقول المطلوبة' : 'Required Fields'}
                   </span>
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ProgressiveFormDemoPage */}
                   <span className="font-medium text-red-600 dark:text-red-400">
                     {completionState.requiredFields}
                   </span>

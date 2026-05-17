@@ -50,8 +50,11 @@ const OPERATION_CONFIG: Record<
   AuditOperation,
   { icon: typeof Plus; color: string; bgColor: string }
 > = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AuditLogTable
   INSERT: { icon: Plus, color: 'text-green-600', bgColor: 'bg-green-100 dark:bg-green-900/30' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AuditLogTable
   UPDATE: { icon: Edit3, color: 'text-blue-600', bgColor: 'bg-blue-100 dark:bg-blue-900/30' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AuditLogTable
   DELETE: { icon: Trash2, color: 'text-red-600', bgColor: 'bg-red-100 dark:bg-red-900/30' },
 }
 
@@ -82,7 +85,7 @@ export function AuditLogTable({
 }: AuditLogTableProps) {
   const { t } = useTranslation('audit-logs')
   const { isRTL } = useDirection()
-const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
 
   const toggleExpand = useCallback((id: string, e: React.MouseEvent) => {
     e.stopPropagation()
@@ -345,10 +348,12 @@ const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
                                   {field}
                                 </div>
                                 {log.operation === 'INSERT' ? (
+                                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AuditLogTable
                                   <div className="bg-green-50 dark:bg-green-900/20 rounded px-2 py-1 text-sm text-green-800 dark:text-green-200 break-all">
                                     {JSON.stringify(newValue)}
                                   </div>
                                 ) : log.operation === 'DELETE' ? (
+                                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AuditLogTable
                                   <div className="bg-red-50 dark:bg-red-900/20 rounded px-2 py-1 text-sm text-red-800 dark:text-red-200 break-all">
                                     {JSON.stringify(oldValue)}
                                   </div>
@@ -358,6 +363,7 @@ const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
                                       <span className="text-xs text-muted-foreground min-w-[40px]">
                                         {t('detail.old_value')}:
                                       </span>
+                                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AuditLogTable */}
                                       <span className="bg-red-50 dark:bg-red-900/20 rounded px-1.5 py-0.5 text-xs text-red-800 dark:text-red-200 break-all">
                                         {JSON.stringify(oldValue)}
                                       </span>
@@ -366,6 +372,7 @@ const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
                                       <span className="text-xs text-muted-foreground min-w-[40px]">
                                         {t('detail.new_value')}:
                                       </span>
+                                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AuditLogTable */}
                                       <span className="bg-green-50 dark:bg-green-900/20 rounded px-1.5 py-0.5 text-xs text-green-800 dark:text-green-200 break-all">
                                         {JSON.stringify(newValue)}
                                       </span>

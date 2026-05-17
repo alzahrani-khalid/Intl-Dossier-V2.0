@@ -218,12 +218,16 @@ export function BulkActionConfirmDialog({
 
       case 'delete':
         return (
+          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionConfirmDialog
           <div className="flex items-start gap-3 p-3 bg-red-50 dark:bg-red-950 rounded-md mt-4">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionConfirmDialog */}
             <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
             <div className="space-y-1">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionConfirmDialog */}
               <p className="text-sm text-red-800 dark:text-red-200">
                 {t('confirmation.delete.warning')}
               </p>
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionConfirmDialog */}
               <p className="text-xs text-red-600 dark:text-red-400">
                 {t('confirmation.delete.permanentWarning')}
               </p>
@@ -233,7 +237,9 @@ export function BulkActionConfirmDialog({
 
       case 'archive':
         return (
+          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionConfirmDialog
           <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-md mt-4">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionConfirmDialog */}
             <p className="text-sm text-blue-800 dark:text-blue-200">
               {t('confirmation.archive.note')}
             </p>
@@ -284,6 +290,7 @@ export function BulkActionConfirmDialog({
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={isProcessing}
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionConfirmDialog */
             className={cn(action.isDestructive && 'bg-red-600 hover:bg-red-700 focus:ring-red-600')}
           >
             {isProcessing ? (

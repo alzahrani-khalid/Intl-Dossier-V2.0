@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
 
 describe('SharedBasicInfoStep', () => {
-  it('should be importable as a named export', () => {
-    const mod = require('../steps/SharedBasicInfoStep')
+  it('should be importable as a named export', async () => {
+    const mod = await import('../SharedBasicInfoStep')
     expect(mod.SharedBasicInfoStep).toBeDefined()
     expect(typeof mod.SharedBasicInfoStep).toBe('function')
   })

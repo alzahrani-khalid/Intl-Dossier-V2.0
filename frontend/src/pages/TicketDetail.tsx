@@ -27,12 +27,18 @@ const STEWARD_PLUS_ROLES = ['steward', 'admin', 'coordinator', 'system']
 
 const statusVariants: Record<string, string> = {
   draft: 'bg-muted text-muted-foreground',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TicketDetail
   submitted: 'bg-blue-500/15 text-blue-700 dark:text-blue-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TicketDetail
   triaged: 'bg-purple-500/15 text-purple-700 dark:text-purple-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TicketDetail
   assigned: 'bg-yellow-500/15 text-yellow-700 dark:text-yellow-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TicketDetail
   in_progress: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-400',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TicketDetail
   converted: 'bg-green-500/15 text-green-700 dark:text-green-400',
   closed: 'bg-muted text-muted-foreground',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TicketDetail
   merged: 'bg-orange-500/15 text-orange-700 dark:text-orange-400',
 }
 
@@ -314,6 +320,7 @@ export function TicketDetail() {
                     <Button
                       onClick={() => setConvertDialogOpen(true)}
                       disabled={convertMutation.isPending}
+                      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TicketDetail
                       className="bg-green-600 hover:bg-green-700 text-white"
                     >
                       {t('ticketDetail.convert', 'Convert to Artifact')}

@@ -772,6 +772,7 @@ function LayoutCard({
           className="h-8 w-8"
         >
           {layout.is_default ? (
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#preview-layouts
             <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
           ) : (
             <StarOff className="h-4 w-4" />

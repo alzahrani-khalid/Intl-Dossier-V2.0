@@ -7,5 +7,7 @@ describe('DossierShell', () => {
   it.todo('renders children in main content area')
   it.todo('persists sidebar open/closed state in localStorage')
   it.todo('shows mobile Relationships trigger below lg')
-  it.todo('uses RTL logical properties -- no ml-/mr-/pl-/pr-')
+  it.todo(
+    'uses RTL logical properties (ms-/me-/ps-/pe-) instead of physical margin/padding directions',
+  )
 })

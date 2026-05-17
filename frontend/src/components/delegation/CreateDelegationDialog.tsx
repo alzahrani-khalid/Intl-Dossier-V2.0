@@ -68,7 +68,7 @@ export function CreateDelegationDialog({
   const { t } = useTranslation('delegation')
   const { toast } = useToast()
   const { isRTL } = useDirection()
-const dateLocale = isRTL ? ar : enUS
+  const dateLocale = isRTL ? ar : enUS
 
   type FormState = {
     selectedGranteeId: string
@@ -173,9 +173,7 @@ const dateLocale = isRTL ? ar : enUS
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto"
-      >
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <UserPlus className={`h-5 w-5 ${isRTL ? 'ms-0 me-2' : 'me-0 ms-0'}`} />
@@ -216,6 +214,7 @@ const dateLocale = isRTL ? ar : enUS
                 </div>
               ) : validation ? (
                 validation.valid ? (
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CreateDelegationDialog
                   <div className="flex items-center gap-2 text-sm text-green-600">
                     <CheckCircle2 className="h-4 w-4" />
                     {t('validation.valid')}

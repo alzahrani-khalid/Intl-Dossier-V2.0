@@ -45,7 +45,7 @@ export function UndoToast({
 }: UndoToastProps) {
   const { t } = useTranslation('bulk-actions')
   const { isRTL } = useDirection()
-const [remainingTime, setRemainingTime] = useState(undoTtl)
+  const [remainingTime, setRemainingTime] = useState(undoTtl)
   const [isUndoing, setIsUndoing] = useState(false)
 
   // Calculate progress percentage
@@ -109,10 +109,13 @@ const [remainingTime, setRemainingTime] = useState(undoTtl)
       role="alert"
       aria-live="polite"
     >
+      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#UndoToast */}
       <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg shadow-lg overflow-hidden">
         {/* Progress bar */}
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#UndoToast */}
         <div className="h-1 bg-gray-700 dark:bg-gray-300">
           <div
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#UndoToast
             className="h-full bg-blue-500 transition-all duration-100 ease-linear"
             style={{
               width: `${progressPercent}%`,
@@ -131,6 +134,7 @@ const [remainingTime, setRemainingTime] = useState(undoTtl)
                 count: itemCount,
               })}
             </p>
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#UndoToast */}
             <p className="text-xs text-gray-400 dark:text-gray-600">
               {t('undo.timeRemaining', { seconds: remainingSeconds })}
             </p>
@@ -143,6 +147,7 @@ const [remainingTime, setRemainingTime] = useState(undoTtl)
               size="sm"
               onClick={handleUndo}
               disabled={isUndoing}
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#UndoToast
               className="h-8 px-3 bg-white dark:bg-gray-900 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
             >
               {isUndoing ? (
@@ -163,6 +168,7 @@ const [remainingTime, setRemainingTime] = useState(undoTtl)
               size="icon"
               onClick={onDismiss}
               disabled={isUndoing}
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#UndoToast
               className="h-8 w-8 text-gray-400 hover:text-white dark:text-gray-600 dark:hover:text-gray-900"
               aria-label={t('accessibility.closeDialog')}
             >

@@ -54,7 +54,7 @@ export function AIExtractionButton({
 }: AIExtractionButtonProps) {
   const { t, i18n } = useTranslation()
   const { isRTL } = useDirection()
-const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const [language, setLanguage] = useState<'en' | 'ar'>(i18n.language as 'en' | 'ar')
   const [mode, setMode] = useState<ExtractionMode>('auto')
@@ -297,8 +297,11 @@ const [open, setOpen] = useState(false)
               )}
 
               {status === 'completed' && (
+                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AIExtractionButton
                 <Alert className="border-green-500">
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AIExtractionButton */}
                   <CheckCircle className="size-4 text-green-500" />
+                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AIExtractionButton */}
                   <AlertDescription className="text-green-700">
                     {t('afterActions.ai.completed')}
                   </AlertDescription>

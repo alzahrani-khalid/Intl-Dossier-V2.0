@@ -151,6 +151,12 @@ export class InteractionNoteService {
       type?: InteractionType
     } = {},
   ): Promise<InteractionNote[]> {
+    if (options.type && !INTERACTION_TYPES.includes(options.type)) {
+      throw new Error(
+        `Invalid type: ${options.type}. Must be one of: ${INTERACTION_TYPES.join(', ')}`,
+      )
+    }
+
     let query = this.supabase
       .from('cd_interaction_notes')
       .select('*')
@@ -167,11 +173,6 @@ export class InteractionNoteService {
 
     // Filter by type if provided
     if (options.type) {
-      if (!INTERACTION_TYPES.includes(options.type)) {
-        throw new Error(
-          `Invalid type: ${options.type}. Must be one of: ${INTERACTION_TYPES.join(', ')}`,
-        )
-      }
       query = query.eq('type', options.type)
     }
 
@@ -203,6 +204,14 @@ export class InteractionNoteService {
     sortBy?: 'date' | 'created_at'
     sortOrder?: 'asc' | 'desc'
   }): Promise<InteractionNote[]> {
+    if (searchParams.types && searchParams.types.length > 0) {
+      for (const type of searchParams.types) {
+        if (!INTERACTION_TYPES.includes(type)) {
+          throw new Error(`Invalid type: ${type}. Must be one of: ${INTERACTION_TYPES.join(', ')}`)
+        }
+      }
+    }
+
     let queryBuilder = this.supabase.from('cd_interaction_notes').select('*')
 
     // Full-text search on details field
@@ -224,12 +233,6 @@ export class InteractionNoteService {
 
     // Filter by types (multiple)
     if (searchParams.types && searchParams.types.length > 0) {
-      // Validate all types
-      for (const type of searchParams.types) {
-        if (!INTERACTION_TYPES.includes(type)) {
-          throw new Error(`Invalid type: ${type}. Must be one of: ${INTERACTION_TYPES.join(', ')}`)
-        }
-      }
       queryBuilder = queryBuilder.in('type', searchParams.types)
     }
 

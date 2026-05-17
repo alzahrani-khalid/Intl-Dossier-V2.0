@@ -55,8 +55,11 @@ const OPERATION_CONFIG: Record<
   AuditOperation,
   { icon: typeof Plus; label_en: string; label_ar: string; color: string }
 > = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AuditLogFilters
   INSERT: { icon: Plus, label_en: 'Created', label_ar: 'إنشاء', color: 'text-green-600' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AuditLogFilters
   UPDATE: { icon: Edit3, label_en: 'Updated', label_ar: 'تحديث', color: 'text-blue-600' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AuditLogFilters
   DELETE: { icon: Trash2, label_en: 'Deleted', label_ar: 'حذف', color: 'text-red-600' },
 }
 

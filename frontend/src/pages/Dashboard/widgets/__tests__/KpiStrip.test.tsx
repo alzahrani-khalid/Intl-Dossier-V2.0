@@ -22,6 +22,7 @@ const mockStats: DashboardStats = {
   sla_at_risk: 3,
   upcoming_week: 5,
 }
+const MINUS_SIGN = '\u2212'
 
 function asResult(
   over: Partial<UseQueryResult<DashboardStats, Error>>,
@@ -50,7 +51,7 @@ describe('KpiStrip', (): void => {
     const { container } = renderKpi()
     expect(container.querySelectorAll('.kpi')).toHaveLength(4)
     const values = screen.getAllByTestId('kpi-value').map((n): string | null => n.textContent)
-    expect(values).toEqual(['12', '8', '3', '5'])
+    expect(values).toEqual(['12+2', `8${MINUS_SIGN}4`, '3+2', '5+1'])
   })
 
   it('third card carries kpi-accent class (var(--accent) top-bar)', (): void => {
@@ -81,10 +82,10 @@ describe('KpiStrip', (): void => {
       asResult({ data: mockStats, isLoading: false, isError: false }),
     )
     const { container } = renderKpi()
-    const isolated = container.querySelectorAll('[data-testid="kpi-value"]')
-    expect(isolated).toHaveLength(4)
-    isolated.forEach((node): void => {
-      expect(node.getAttribute('dir')).toBe('ltr')
+    const values = container.querySelectorAll('[data-testid="kpi-value"]')
+    expect(values).toHaveLength(4)
+    values.forEach((node): void => {
+      expect(node.firstElementChild?.getAttribute('dir')).toBe('ltr')
     })
   })
 

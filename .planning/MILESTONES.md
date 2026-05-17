@@ -1,5 +1,74 @@
 # Milestones
 
+## v6.3 Carryover Sweep & v7.0 Prep (Shipped: 2026-05-17)
+
+**Delivered:** Closed v6.2 carryover debt, hardened test and design-token gates, executed the HeroUI v3 Kanban migration, tightened the React vendor budget, re-issued v6.2 phase-base tags as annotated + SSH-signed, and laid the v7.0 Intelligence Engine schema groundwork — `intelligence_event` + `intelligence_digest` + polymorphic `intelligence_event_dossiers` junction + `signal_source_type` enum, with regenerated TS types byte-identical across workspaces. Schema only; no API, no UI.
+
+**Phases completed:** 5 phases (50-54), 28 plans
+**Commits:** 166 | **Files changed:** 551 | **Lines:** +44,816 / -13,606
+**Timeline:** 4 days (2026-05-13 → 2026-05-16)
+**Audit:** `.planning/milestones/v6.3-MILESTONE-AUDIT.md` (status: passed; re-audit confirmed 2026-05-16 after quick-task 260516-s3j paperwork closure)
+**Integration check:** `.planning/milestones/v6.3-INTEGRATION-CHECK.md` (9/9 cross-phase wiring intact)
+**Requirements:** 20/20 satisfied (TEST-01..04, DESIGN-01..04, KANBAN-01..04, BUNDLE-05..07, INTEL-01..05)
+
+**Key accomplishments:**
+
+- Test infrastructure repaired: `vi.mock("react-i18next")` factory now uses `vi.importActual` + spread so `initReactI18next` and other real exports pass through; 4 wizard tests pass green; `50-TEST-AUDIT.md` + `frontend/docs/test-setup.md` + `backend/docs/test-setup.md` document the contract; 1229 passed / 25 todo / 4 skipped on `pnpm --filter intake-frontend test --run`
+- Design-token compliance gate live: ESLint D-05 selectors at `error` severity workspace-wide ban raw hex + Tailwind palette literals in `frontend/src/`; 50 Tier-A files swapped to tokens (`WorldMapVisualization.tsx:193`, `PositionEditor.tsx`, et al.); 271 Tier-C files / 2336 AST nodes suppressed per-Literal with `eslint-disable-next-line` annotations (D-14); smoke PR #12 captured `Lint=FAILURE` + `mergeStateStatus=BLOCKED` via D-09 fold into Phase 48 `Lint` required context
+- HeroUI v3 Kanban migration complete: shared `frontend/src/components/kanban/*` primitive on `@dnd-kit/core` with pointer + keyboard sensors + native `DragOverlay`; TasksTab.tsx consumer migrated; `EngagementKanbanDialog.tsx` + `EngagementDossierPage.tsx` deleted as dead code (KANBAN-02 satisfied-by-deletion D-20); `kibo-ui` directory + `tunnel-rat` dep purged; `no-restricted-imports` + `check-deleted-components.sh` enforce absence; 4 EN+AR visual baselines committed
+- React vendor ceiling lowered 349 → 285 KB gz in `.size-limit.json` per D-03 min rule (measured 279.42 kB + ~5 kB slack); `phase-47/48/49-base` re-issued annotated + SSH-signed (`git tag -v` exits 0 with `Good "git" signature`); origin force-push effectively resolved — `git ls-remote --tags origin` confirms annotated peeled SHAs identical to local objects; CLAUDE.md Node note aligned to `Node.js 22.13.0+` at L84 + L483 to match `package.json` engines.node `">=22.13.0"`
+- Intelligence Engine schema groundwork applied to staging via Supabase MCP: `intelligence_event` + new `intelligence_digest` (prior dashboard table renamed to `dashboard_digest` to free the canonical name) + `intelligence_event_dossiers` polymorphic junction with 7-value `dossier_type` CHECK + `signal_source_type` enum (`publication`, `feed`, `human_entered`, `ai_generated`); RLS policies tenant-scoped via `organization_id`; `database.types.ts` regenerated and byte-identical across backend + frontend workspaces; dual `pnpm type-check` exits 0
+- All v6.2 carryover debt closed: React vendor ceiling tightened, CLAUDE.md Node note aligned, phase-base tags annotated + signed, HeroUI v3 Kanban migration shipped, design-token compliance gate live
+
+**Tech debt (see audit for details):**
+
+- 271 Tier-C design-token suppressions (per-Literal `eslint-disable-next-line`) — cleanup waves staged for v6.4 as TBD-design-token-tier-c-cleanup-wave-N
+- 5 Phase 52 PASS-WITH-DEVIATION deviations (D-19..D-23) catalogued in 52-SUMMARY.md: mobile touch DnD scope-out (D-19), Phase 39 kanban-\*.spec.ts regression follow-up (D-21), LTR/RTL visual baseline byte-distinction (D-22), live tasks-tab Playwright run (D-23)
+- Phase 53 SUMMARY/VERIFICATION wording stale post-origin-match: `53-03-SUMMARY.md` `PASS-WITH-DEFERRAL` → `PASS` and `53-VERIFICATION.md` BUNDLE-06 `verified-local-only` → `verified` refresh deferred (cosmetic)
+- `TweaksDrawer.test.tsx:6-8` stale comment about TEST-01 mock factory (documentation drift, no functional break)
+- `51-VALIDATION.md` frontmatter `status: draft` → `passed` polish (nyquist_compliant:true is correct)
+- bad-design-token.tsx + bad-vi-mock.ts positive-failure CI assertion gap (functional ban verified independently)
+- D-54-04-RLS-AUDIT-PRE-EXISTING-FAIL: pre-existing `countries` row in `sensitiveTables` (Phase 03/04 vintage); Phase 54 entries correct by inspection
+- INTEL-01..05 API endpoints + ingestion pipeline + alerting + multi-dossier AI correlation deferred to v7.0 (Intelligence Engine feature work, depends on schema now satisfied)
+- DesignV2 → main merge sequence still outstanding (then push triggers v6.3 enforcement on main contexts)
+
+**Archive:** `.planning/milestones/v6.3-ROADMAP.md` · `.planning/milestones/v6.3-REQUIREMENTS.md` · `.planning/milestones/v6.3-MILESTONE-AUDIT.md` · `.planning/milestones/v6.3-INTEGRATION-CHECK.md`
+
+---
+
+## v6.2 Type-Check, Lint & Bundle Reset (Shipped: 2026-05-12)
+
+**Delivered:** Restored code-quality gates and bundle budget on `main` before v7.0 Intelligence Engine work. Drove frontend (1580) + backend (498) TS errors to zero with no `@ts-ignore` / `@ts-expect-error` escape hatches; cleared frontend (52 err + 671 warn) + backend (3 err + 1 warn) lint to zero; aligned `no-restricted-imports` with the CLAUDE.md primitive cascade and purged Aceternity references; lowered Initial-route ceiling 517 → 450 KB with `React.lazy()` route splits and split heroui/sentry/dnd sub-vendor chunks; restored `type-check`, `Lint`, and `Bundle Size Check (size-limit)` as PR-blocking branch-protection contexts on `main`.
+
+**Phases completed:** 3 phases (47-49), 17 plans
+**Commits:** 146 | **Files changed:** 840 | **Lines:** +26,094 / -105,035 (large delete reflects type-check unused-export purge)
+**Timeline:** 5 days (2026-05-08 → 2026-05-13)
+**Audit:** `.planning/milestones/v6.2-MILESTONE-AUDIT.md` (status: passed; re-audit confirmed 2026-05-13 after paperwork closure)
+**Requirements:** 12/12 satisfied (TYPE-01..04, LINT-06..09, BUNDLE-01..04)
+
+**Key accomplishments:**
+
+- Frontend `pnpm type-check` 1580 → 0 errors via deletion-first + typed-at-source (60 type files cleaned; 102 dead exports across 39 service/lib files; 19 of 20 shims retired by typing underlying domain hooks)
+- Backend `pnpm type-check` 498 → 0 errors via ParsedQs narrowing, TS7030 return-path discipline, and allowlisted Supabase codegen (`@ts-nocheck` ledgered, not `tsconfig` exclude)
+- Frontend lint 723 problems → 0 and backend lint 4 → 0 with `--max-warnings 0`; 0 net-new `eslint-disable` directives phase-wide
+- Deleted `frontend/eslint.config.js` shadow; inverted `no-restricted-imports` to ban Aceternity + Kibo UI per CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom); 3 orphan Aceternity wrappers removed
+- Bundle budget reset: Initial 517 → 450 KB, static-prim 64 → 12 KB; manualChunks ordering fix prevents @heroui/@dnd-kit/@radix-ui mis-classification; sub-vendor decomposition (heroui-vendor / sentry-vendor / dnd-vendor); 3 audit-identified ≥30 KB gz components converted to `React.lazy()` / dynamic-import
+- `type-check`, `Lint`, and `Bundle Size Check (size-limit)` restored as PR-blocking branch-protection contexts on `main` with `enforce_admins=true` preserved and 6 smoke PRs verifying `mergeStateStatus=BLOCKED`
+
+**Tech debt (see audit for details):**
+
+- 1 of 20 typed shims retained: `useStakeholderInteractionMutations` (underlying hook still returns `Promise.resolve({ success: true })` until real implementation lands)
+- `TasksTab.tsx` + `EngagementKanbanDialog.tsx` still import `@/components/kibo-ui/kanban`; HeroUI v3 Kanban + @dnd-kit refactor deferred
+- React vendor ceiling 349 KB vs measured 279.91 KB — tighten to ~285 KB per D-03 min rule as micro-task
+- CLAUDE.md Node note still reads `Node.js 20.19.0+` while `package.json` engines pin moved to `22.13.0+` — chore commit
+- Pre-existing design-rule violations preserved out of Phase 49 scope: `WorldMapVisualization.tsx:193` raw hex `#3B82F6`; `PositionEditor.tsx` Tailwind color literals — queue for design-compliance sweep
+- 4 wizard tests fail at module-evaluation time — pre-existing `vi.mock("react-i18next")` factory in `frontend/tests/setup.ts:6` omits `initReactI18next`; not introduced by Phase 48
+- `phase-47-base` / `phase-48-base` / `phase-49-base` lightweight tags; recommend re-tagging with `-a -s` in next milestone for `git tag -v` provenance
+
+**Archive:** `.planning/milestones/v6.2-ROADMAP.md` · `.planning/milestones/v6.2-REQUIREMENTS.md` · `.planning/milestones/v6.2-MILESTONE-AUDIT.md`
+
+---
+
 ## v6.1 Hardening & Reconciliation (Shipped: 2026-05-08)
 
 **Delivered:** v6.0 debt closure: verification/archive reconciliation, repaired bundle-budget enforcement, schema and staging seed closure, and regenerated visual baselines for the deferred dashboard/list/drawer surfaces.

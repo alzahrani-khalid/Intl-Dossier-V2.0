@@ -154,18 +154,18 @@ function DraftBanner<T extends Record<string, unknown>>({
       transition={{ duration: 0.3 }}
       className={cn(
         'flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between',
-        'bg-amber-50 dark:bg-amber-950/30',
-        'border border-amber-200 dark:border-amber-800',
+        'bg-warning/10 dark:bg-warning/30',
+        'border border-warning/30 dark:border-warning',
         'rounded-lg',
       )}
     >
       <div className="flex items-center gap-3">
-        <RotateCcw className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+        <RotateCcw className="h-5 w-5 text-warning dark:text-warning" />
         <div>
-          <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
+          <p className="text-sm font-medium text-warning dark:text-warning">
             {t('forms.draft_found')}
           </p>
-          <p className="text-xs text-amber-600 dark:text-amber-400">
+          <p className="text-xs text-warning dark:text-warning">
             {t('forms.saved_time_ago', { time: timeAgo })} ({draft.progress}% {t('forms.complete')})
           </p>
         </div>
@@ -186,7 +186,7 @@ function DraftBanner<T extends Record<string, unknown>>({
           type="button"
           size="sm"
           onClick={onRestore}
-          className="flex-1 sm:flex-none bg-amber-600 hover:bg-amber-700 text-white"
+          className="flex-1 sm:flex-none bg-warning hover:bg-warning text-white"
         >
           <RotateCcw className="h-4 w-4 me-1" />
           {t('forms.restore_draft')}
@@ -206,14 +206,16 @@ interface ProgressIndicatorProps {
   isRTL: boolean
 }
 
-function ProgressIndicator({ progress}: ProgressIndicatorProps) {
+function ProgressIndicator({ progress }: ProgressIndicatorProps) {
   const { t } = useTranslation('common')
 
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between text-sm">
-        <span className="text-gray-600 dark:text-gray-400">{t('forms.progress_label')}</span>
-        <span className="font-medium text-gray-900 dark:text-gray-100">
+        <span className="text-muted-foreground dark:text-muted-foreground">
+          {t('forms.progress_label')}
+        </span>
+        <span className="font-medium text-foreground dark:text-muted-foreground">
           {progress.completedFields} / {progress.totalFields} {t('forms.fields')}
         </span>
       </div>
@@ -221,7 +223,7 @@ function ProgressIndicator({ progress}: ProgressIndicatorProps) {
       <Progress value={progress.percentage} className="h-2" />
 
       {progress.estimatedMinutesRemaining > 0 && (
-        <p className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+        <p className="flex items-center gap-1 text-xs text-muted-foreground dark:text-muted-foreground">
           <Clock className="h-3 w-3" />
           {t('forms.time_remaining', { minutes: progress.estimatedMinutesRemaining })}
         </p>
@@ -244,7 +246,7 @@ function SaveStatusIndicator({ status }: SaveStatusIndicatorProps) {
 
   if (status.error) {
     return (
-      <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
+      <div className="flex items-center gap-2 text-danger dark:text-danger">
         <AlertCircle className="h-4 w-4" />
         <span className="text-xs">{t('forms.save_error')}</span>
       </div>
@@ -253,7 +255,7 @@ function SaveStatusIndicator({ status }: SaveStatusIndicatorProps) {
 
   if (status.isSaving) {
     return (
-      <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+      <div className="flex items-center gap-2 text-muted-foreground dark:text-muted-foreground">
         <Loader2 className="h-4 w-4 animate-spin" />
         <span className="text-xs">{t('forms.saving')}</span>
       </div>
@@ -262,7 +264,7 @@ function SaveStatusIndicator({ status }: SaveStatusIndicatorProps) {
 
   if (status.hasUnsavedChanges) {
     return (
-      <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+      <div className="flex items-center gap-2 text-warning dark:text-warning">
         <Save className="h-4 w-4" />
         <span className="text-xs">{t('forms.unsaved_changes')}</span>
       </div>
@@ -272,7 +274,7 @@ function SaveStatusIndicator({ status }: SaveStatusIndicatorProps) {
   if (status.lastSavedAt) {
     const savedDate = new Date(status.lastSavedAt)
     return (
-      <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
+      <div className="flex items-center gap-2 text-success dark:text-success">
         <CheckCircle2 className="h-4 w-4" />
         <span className="text-xs">
           {t('forms.saved_at', {
@@ -307,7 +309,7 @@ export function AutoSaveFormWrapper<T extends Record<string, unknown>>({
 }: AutoSaveFormWrapperProps<T>) {
   const { t } = useTranslation('common')
   const { isRTL } = useDirection()
-// Auto-save hook
+  // Auto-save hook
   const autoSave = useAutoSaveForm<T>({
     formKey,
     requiredFields,
@@ -421,10 +423,7 @@ export function AutoSaveFormWrapper<T extends Record<string, unknown>>({
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel onClick={handleLeaveCancel}>{t('forms.stay')}</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleLeaveConfirm}
-                className="bg-red-600 hover:bg-red-700"
-              >
+              <AlertDialogAction onClick={handleLeaveConfirm} className="bg-danger hover:bg-danger">
                 {t('forms.leave_anyway')}
               </AlertDialogAction>
             </AlertDialogFooter>

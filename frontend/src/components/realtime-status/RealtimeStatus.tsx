@@ -23,14 +23,19 @@ export function RealtimeStatus() {
   const getStatusIcon = () => {
     switch (connectionStatus) {
       case 'connected':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RealtimeStatus
         return <Wifi className="size-4 text-green-500" />
       case 'disconnected':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RealtimeStatus
         return <WifiOff className="size-4 text-gray-500" />
       case 'reconnecting':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RealtimeStatus
         return <RefreshCw className="size-4 animate-spin text-yellow-500" />
       case 'error':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RealtimeStatus
         return <AlertCircle className="size-4 text-red-500" />
       default:
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RealtimeStatus
         return <WifiOff className="size-4 text-gray-500" />
     }
   }
@@ -71,6 +76,7 @@ export function RealtimeStatus() {
   }
 
   return (
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RealtimeStatus
     <div className="fixed bottom-4 start-4 z-50 flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-800">
       <Badge variant={getStatusVariant()} className="gap-1">
         {getStatusIcon()}

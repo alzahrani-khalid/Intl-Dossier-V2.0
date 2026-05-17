@@ -398,9 +398,13 @@ export const IMPACT_LEVEL_LABELS: Record<ImpactLevel, { en: string; ar: string }
  */
 export function getStatusColor(status: ScenarioStatus): string {
   const colors: Record<ScenarioStatus, string> = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
     draft: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
     active: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
     completed: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
     archived: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
   }
   return colors[status]
@@ -411,10 +415,15 @@ export function getStatusColor(status: ScenarioStatus): string {
  */
 export function getImpactLevelColor(level: ImpactLevel): string {
   const colors: Record<ImpactLevel, string> = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
     minimal: 'text-gray-500 dark:text-gray-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
     low: 'text-blue-500 dark:text-blue-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
     moderate: 'text-yellow-500 dark:text-yellow-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
     high: 'text-orange-500 dark:text-orange-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
     critical: 'text-red-500 dark:text-red-400',
   }
   return colors[level]
@@ -424,11 +433,17 @@ export function getImpactLevelColor(level: ImpactLevel): string {
  * Get probability color based on score
  */
 export function getProbabilityColor(score: number | null): string {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
   if (score === null) return 'text-gray-400'
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
   if (score >= 80) return 'text-green-500 dark:text-green-400'
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
   if (score >= 60) return 'text-lime-500 dark:text-lime-400'
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
   if (score >= 40) return 'text-yellow-500 dark:text-yellow-400'
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
   if (score >= 20) return 'text-orange-500 dark:text-orange-400'
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
   return 'text-red-500 dark:text-red-400'
 }
 

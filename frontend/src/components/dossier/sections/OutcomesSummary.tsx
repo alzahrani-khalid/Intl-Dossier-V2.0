@@ -49,7 +49,7 @@ interface OutcomesSummaryProps {
 export function OutcomesSummary({ dossierId }: OutcomesSummaryProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const dateLocale = isRTL ? arSA : enUS
+  const dateLocale = isRTL ? arSA : enUS
 
   // Fetch after-action records with decisions, commitments, and risks
   const { data: afterActionData, isLoading } = useQuery({
@@ -91,9 +91,13 @@ const dateLocale = isRTL ? arSA : enUS
   // Get severity/priority badge color
   const getSeverityBadge = (severity: string) => {
     const colors: Record<string, string> = {
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomesSummary
       critical: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomesSummary
       high: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomesSummary
       medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomesSummary
       low: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
     }
     return colors[severity] || colors.medium
@@ -111,9 +115,7 @@ const dateLocale = isRTL ? arSA : enUS
   // Show empty state
   if (!hasOutcomes) {
     return (
-      <div
-        className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-      >
+      <div className="flex flex-col items-center justify-center py-8 sm:py-12 text-center">
         <div className="mb-4 sm:mb-6">
           <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
             <CheckCircle2 className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
@@ -226,6 +228,7 @@ const dateLocale = isRTL ? arSA : enUS
       {risks.length > 0 && (
         <div>
           <div className="flex items-center gap-2 mb-3">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomesSummary */}
             <AlertTriangle className="h-5 w-5 text-amber-500" />
             <h3 className="font-semibold text-base">
               {t('sections.engagement.risks', 'Identified Risks')} ({risks.length})
@@ -233,6 +236,7 @@ const dateLocale = isRTL ? arSA : enUS
           </div>
           <div className="space-y-3">
             {risks.map((risk) => (
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomesSummary
               <Card key={risk.id} className="border-amber-200 dark:border-amber-800">
                 <CardContent className="p-3 sm:p-4">
                   <div className="flex items-start justify-between gap-2 mb-2">

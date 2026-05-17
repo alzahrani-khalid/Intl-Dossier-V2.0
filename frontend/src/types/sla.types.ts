@@ -234,7 +234,9 @@ export const SLA_STATUS_CONFIG: Record<SLAEscalationStatus, SLAStatusConfig> = {
     status: 'pending',
     label: 'Pending',
     labelAr: 'معلق',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     color: 'text-gray-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     bgColor: 'bg-gray-100',
     icon: 'clock',
   },
@@ -242,7 +244,9 @@ export const SLA_STATUS_CONFIG: Record<SLAEscalationStatus, SLAStatusConfig> = {
     status: 'triggered',
     label: 'Triggered',
     labelAr: 'مُفعّل',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     color: 'text-red-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     bgColor: 'bg-red-100',
     icon: 'alert-triangle',
   },
@@ -250,7 +254,9 @@ export const SLA_STATUS_CONFIG: Record<SLAEscalationStatus, SLAStatusConfig> = {
     status: 'acknowledged',
     label: 'Acknowledged',
     labelAr: 'تم الإقرار',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     color: 'text-yellow-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     bgColor: 'bg-yellow-100',
     icon: 'eye',
   },
@@ -258,7 +264,9 @@ export const SLA_STATUS_CONFIG: Record<SLAEscalationStatus, SLAStatusConfig> = {
     status: 'resolved',
     label: 'Resolved',
     labelAr: 'تم الحل',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     color: 'text-green-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     bgColor: 'bg-green-100',
     icon: 'check-circle',
   },
@@ -266,7 +274,9 @@ export const SLA_STATUS_CONFIG: Record<SLAEscalationStatus, SLAStatusConfig> = {
     status: 'dismissed',
     label: 'Dismissed',
     labelAr: 'مرفوض',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     color: 'text-gray-400',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     bgColor: 'bg-gray-50',
     icon: 'x-circle',
   },
@@ -291,7 +301,9 @@ export const COMPLIANCE_THRESHOLDS: ComplianceThreshold[] = [
     max: 100,
     label: 'Excellent',
     labelAr: 'ممتاز',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     color: 'text-green-700',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     bgColor: 'bg-green-100',
   },
   {
@@ -299,7 +311,9 @@ export const COMPLIANCE_THRESHOLDS: ComplianceThreshold[] = [
     max: 94.99,
     label: 'Good',
     labelAr: 'جيد',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     color: 'text-blue-700',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     bgColor: 'bg-blue-100',
   },
   {
@@ -307,7 +321,9 @@ export const COMPLIANCE_THRESHOLDS: ComplianceThreshold[] = [
     max: 84.99,
     label: 'Fair',
     labelAr: 'مقبول',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     color: 'text-yellow-700',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     bgColor: 'bg-yellow-100',
   },
   {
@@ -315,7 +331,9 @@ export const COMPLIANCE_THRESHOLDS: ComplianceThreshold[] = [
     max: 69.99,
     label: 'Poor',
     labelAr: 'ضعيف',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     color: 'text-orange-700',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     bgColor: 'bg-orange-100',
   },
   {
@@ -323,7 +341,9 @@ export const COMPLIANCE_THRESHOLDS: ComplianceThreshold[] = [
     max: 49.99,
     label: 'Critical',
     labelAr: 'حرج',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     color: 'text-red-700',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
     bgColor: 'bg-red-100',
   },
 ]
@@ -366,9 +386,14 @@ export function formatSLADurationAr(minutes: number): string {
 }
 
 export function getSLAProgressColor(progressPct: number): string {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
   if (progressPct >= 100) return 'bg-red-500'
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
   if (progressPct >= 90) return 'bg-red-400'
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
   if (progressPct >= 75) return 'bg-yellow-500'
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
   if (progressPct >= 50) return 'bg-yellow-400'
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
   return 'bg-green-500'
 }

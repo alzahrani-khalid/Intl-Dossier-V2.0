@@ -54,7 +54,7 @@ export function DossierSearchFilters({
   className,
 }: DossierSearchFiltersProps) {
   const { t } = useTranslation('dossier-search')
-// Handle type filter change
+  // Handle type filter change
   const handleTypeChange = (value: string) => {
     if (value === 'all') {
       onChange({ ...filters, types: 'all' })
@@ -93,14 +93,13 @@ export function DossierSearchFilters({
   const TypeIcon = typeIcons[currentTypeValue!]
 
   return (
-    <div
-      className={cn('flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap', className)}
-    >
+    <div className={cn('flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap', className)}>
       {/* Type Filter Dropdown */}
       <div className="flex items-center gap-2">
         <Select value={currentTypeValue} onValueChange={handleTypeChange} disabled={disabled}>
           <SelectTrigger className="w-full sm:w-48">
             <div className="flex items-center gap-2">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
               <TypeIcon className="size-4 text-gray-500" />
               <SelectValue placeholder={t('filters.allTypes')} />
             </div>
@@ -108,6 +107,7 @@ export function DossierSearchFilters({
           <SelectContent>
             <SelectItem value="all">
               <div className="flex items-center gap-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
                 <Filter className="size-4 text-gray-500" />
                 <span>{t('filters.allTypes')}</span>
                 {typeCounts?.all !== undefined && (
@@ -119,6 +119,7 @@ export function DossierSearchFilters({
             </SelectItem>
             <SelectItem value="country">
               <div className="flex items-center gap-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
                 <Globe className="size-4 text-blue-500" />
                 <span>{t('types.country')}</span>
                 {typeCounts?.country !== undefined && (
@@ -130,6 +131,7 @@ export function DossierSearchFilters({
             </SelectItem>
             <SelectItem value="organization">
               <div className="flex items-center gap-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
                 <Building2 className="size-4 text-purple-500" />
                 <span>{t('types.organization')}</span>
                 {typeCounts?.organization !== undefined && (
@@ -141,6 +143,7 @@ export function DossierSearchFilters({
             </SelectItem>
             <SelectItem value="forum">
               <div className="flex items-center gap-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
                 <Users className="size-4 text-cyan-500" />
                 <span>{t('types.forum')}</span>
                 {typeCounts?.forum !== undefined && (
@@ -152,6 +155,7 @@ export function DossierSearchFilters({
             </SelectItem>
             <SelectItem value="engagement">
               <div className="flex items-center gap-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
                 <Briefcase className="size-4 text-green-500" />
                 <span>{t('types.engagement')}</span>
                 {typeCounts?.engagement !== undefined && (
@@ -163,6 +167,7 @@ export function DossierSearchFilters({
             </SelectItem>
             <SelectItem value="topic">
               <div className="flex items-center gap-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
                 <Target className="size-4 text-pink-500" />
                 <span>{t('types.topic')}</span>
                 {typeCounts?.topic !== undefined && (
@@ -174,6 +179,7 @@ export function DossierSearchFilters({
             </SelectItem>
             <SelectItem value="working_group">
               <div className="flex items-center gap-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
                 <BookOpen className="size-4 text-amber-500" />
                 <span>{t('types.working_group')}</span>
                 {typeCounts?.working_group !== undefined && (
@@ -185,6 +191,7 @@ export function DossierSearchFilters({
             </SelectItem>
             <SelectItem value="person">
               <div className="flex items-center gap-2">
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
                 <User className="size-4 text-teal-500" />
                 <span>{t('types.person')}</span>
                 {typeCounts?.person !== undefined && (
@@ -219,6 +226,7 @@ export function DossierSearchFilters({
           onCheckedChange={handleMyDossiersToggle}
           disabled={disabled}
         />
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
         <span className="text-sm text-gray-700 dark:text-gray-300">{t('filters.myDossiers')}</span>
       </label>
 
@@ -229,7 +237,9 @@ export function DossierSearchFilters({
           disabled={disabled}
           className={cn(
             'inline-flex items-center gap-1 rounded-md px-2 py-1 text-sm',
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */
             'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */
             'dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100',
             'transition-colors',
             disabled && 'cursor-not-allowed opacity-50',

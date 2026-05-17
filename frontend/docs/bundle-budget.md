@@ -1,0 +1,38 @@
+# Frontend bundle budget
+
+Last audited: 2026-05-12 (Plan 02 close)
+Audit artifact: `.planning/phases/49-bundle-budget-reset/49-BUNDLE-AUDIT.md`
+
+This document records the rationale for every chunk over 100 KB gzipped in
+the production build. Sibling to `frontend/.size-limit.json` per Phase 49 D-09.
+
+## Ceilings
+
+| Chunk                | gz size   | Ceiling | Rationale                                                                                                                                                                                                                                                                                                                                                                       | Last audited |
+| -------------------- | --------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| Initial JS (`app-*`) | 412.06 kB | 450 kB  | Entry route — TanStack Router shell + provider tree + i18n init. The chunk is dominated by i18n JSON namespace eager imports (~150 kB across 60+ files); the remaining mass is React Router scaffolding and the protected-route layout. Plan 02 D-06 lazy() boundaries below cut growth here as additional consumers are deferred.                                              | 2026-05-12   |
+| React vendor         | 279.42 kB | 285 kB  | react + react-dom + scheduler. Phase 53 applied Phase 49 D-03 verbatim (`min(current, measured + 5 kB)`) after Phase 49 deferred the lowering to keep its Plan-02 diff surgical. Headroom 5 kB ≈ 1.8% slack absorbs React minor-version drift; a tighter ceiling (e.g. 284 kB) would trip on legitimate minor upgrades. | 2026-05-16   |
+| TanStack vendor      | 57.19 kB  | 63 kB   | @tanstack/react-router + react-query + react-table + react-virtual. Ceiling raised from 51 kB → 63 kB (measured 57.19 + 5) after Plan 02 ordering fix returned `@tanstack/react-*` paths to this chunk (previously leaking into react-vendor). Honest re-baseline per D-03; not a silent raise — paper trail in `49-02-SUMMARY.md`.                                             | 2026-05-12   |
+| HeroUI vendor        | 3.55 kB   | 9 kB    | Primary primitive cascade per CLAUDE.md §Component Library Strategy. Eager because most routes render a HeroUI primitive on first paint. Cache-isolated so HeroUI minor upgrades do not cache-bust other vendors. Smaller than audit prediction (9.35 kB) because Rollup tree-shook ~6 kB after the ordering fix exposed the chunk boundary correctly.                          | 2026-05-12   |
+| Sentry vendor        | 3.93 kB   | 9 kB    | @sentry/react error tracking. Init is requestIdleCallback-deferred at `main.tsx:24`, so this chunk is non-blocking despite the size. Cache-isolated so a Sentry upgrade does not cache-bust other vendors. Smaller than audit prediction (15.56 kB) because the Sentry build-time integration tree-shakes most of the runtime modules.                                          | 2026-05-12   |
+| DnD vendor           | 16.55 kB  | 22 kB   | @dnd-kit/core + @dnd-kit/sortable + @dnd-kit/utilities — only loaded on kanban + reorder routes; separate chunk avoids cache-busting the initial path on dnd-kit minor upgrades. Smaller than audit prediction (28.45 kB) because the previous mis-classification into react-vendor was over-counting transitive deps.                                                          | 2026-05-12   |
+| Total JS             | 2.42 MB   | 2.45 MB | Sum of all `dist/assets/*.js` gzipped. Locked at 2.45 MB per D-02 escalation (see audit `## Escalation (D-02)` block) — the 1.8 MB target was unattainable inside Phase 49 scope because D-06 lazy() and D-07 manualChunks decomposition reshape chunks but do not reduce on-disk Total. Computed ceiling = max(2.45 MB, sum-of-per-chunk-ceilings × 1.05) — Total dominates.   | 2026-05-12   |
+
+## Residual vendor chunk
+
+Per D-08: after the D-07 named sub-vendors split off, anything remaining in
+`vendor-*` that is ≥10 kB gz gets a row below with an explanation of why it
+stays in the catch-all bucket.
+
+Residual `vendor-*.js` measured at **593.35 kB gz** (post-Plan-02). Above the
+100 kB threshold, so per-dep documentation is required.
+
+| Dep                                     | gz size (leaf-sum) | Reason for staying in `vendor`                                                                                                                                                                                                                                                                      |
+| --------------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| exceljs                                 | ~256 kB            | Single consumer (`useExportData.ts`). Plan 02 D-06 dynamically imports it inside the xlsx export branch, so it never enters the initial graph. No own chunk because no manualChunks branch matched (intentional — the dynamic import handles deferral; an extra branch would just rename the file). |
+| dotted-map                              | ~112 kB            | Single consumer (`world-map.tsx`). Plan 02 D-06 lazy-imports the consumer; same rationale as exceljs above.                                                                                                                                                                                         |
+| `@tiptap/*` + `prosemirror-*`           | ~140 kB combined   | Single consumer (`PositionEditor.tsx`). Plan 02 D-06 lazy-imports the consumer; same rationale.                                                                                                                                                                                                     |
+| proj4                                   | ~76 kB             | Geospatial transform helper used alongside the d3-geo stack; logically lives near `signature-visuals-d3` but is currently grouped here because it has no `d3-` prefix and no `@scope/` namespace to match in the manualChunks arrow.                                                                |
+| date-fns                                | ~58 kB             | Imported via the wildcard `import * as dateFns` pattern in 2+ utility files; tree-shaking is incomplete. Candidate for refactor to `date-fns/<fn>` named imports in a future phase (non-Plan-49 scope).                                                                                             |
+| css-utils (clsx + tailwind-merge + cva) | ~37 kB             | Used everywhere across the app; correctly grouped in vendor — splitting these would create a chunk-graph cycle because every other chunk imports `cn()`.                                                                                                                                            |
+| `@floating-ui/*`                        | ~16 kB             | Transitive dep of HeroUI. Could move into `heroui-vendor` if the manualChunks arrow widens its rule, but currently routes here because no scope match exists.                                                                                                                                       |

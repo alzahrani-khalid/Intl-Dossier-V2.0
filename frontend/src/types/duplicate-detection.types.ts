@@ -314,12 +314,16 @@ export interface MergeResponse {
 export function getConfidenceLevelColor(level: ConfidenceLevel): string {
   switch (level) {
     case 'high':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#duplicate-detection.types
       return 'text-red-600 bg-red-100'
     case 'medium':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#duplicate-detection.types
       return 'text-yellow-600 bg-yellow-100'
     case 'low':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#duplicate-detection.types
       return 'text-blue-600 bg-blue-100'
     default:
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#duplicate-detection.types
       return 'text-gray-600 bg-gray-100'
   }
 }

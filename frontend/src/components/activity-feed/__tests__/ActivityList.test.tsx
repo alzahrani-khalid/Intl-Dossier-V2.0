@@ -48,11 +48,10 @@ vi.mock('react-i18next', () => ({
   }): React.ReactElement => {
     // Minimal renderer: emit each slot component with its placeholder value.
     const entityNode = components?.entity
-      ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        ({ ...components.entity, props: { ...components.entity.props, children: values?.entity } })
+      ? { ...components.entity, props: { ...components.entity.props, children: values?.entity } }
       : null
     const whereNode = components?.where
-      ? ({ ...components.where, props: { ...components.where.props, children: values?.where } })
+      ? { ...components.where, props: { ...components.where.props, children: values?.where } }
       : null
     return (
       <>

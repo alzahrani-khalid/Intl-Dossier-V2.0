@@ -350,18 +350,27 @@ export const RESPONSE_COLORS: Record<
   { bg: string; text: string; border: string }
 > = {
   available: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
     bg: 'bg-green-100 dark:bg-green-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
     text: 'text-green-700 dark:text-green-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
     border: 'border-green-200 dark:border-green-800',
   },
   unavailable: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
     bg: 'bg-red-100 dark:bg-red-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
     text: 'text-red-700 dark:text-red-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
     border: 'border-red-200 dark:border-red-800',
   },
   maybe: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
     bg: 'bg-yellow-100 dark:bg-yellow-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
     text: 'text-yellow-700 dark:text-yellow-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
     border: 'border-yellow-200 dark:border-yellow-800',
   },
 }
@@ -370,28 +379,43 @@ export const RESPONSE_COLORS: Record<
 export const POLL_STATUS_COLORS: Record<PollStatus, { bg: string; text: string; border: string }> =
   {
     draft: {
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
       bg: 'bg-gray-100 dark:bg-gray-800/30',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
       text: 'text-gray-700 dark:text-gray-300',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
       border: 'border-gray-200 dark:border-gray-700',
     },
     active: {
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
       bg: 'bg-blue-100 dark:bg-blue-900/30',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
       text: 'text-blue-700 dark:text-blue-300',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
       border: 'border-blue-200 dark:border-blue-800',
     },
     closed: {
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
       bg: 'bg-purple-100 dark:bg-purple-900/30',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
       text: 'text-purple-700 dark:text-purple-300',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
       border: 'border-purple-200 dark:border-purple-800',
     },
     scheduled: {
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
       bg: 'bg-green-100 dark:bg-green-900/30',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
       text: 'text-green-700 dark:text-green-300',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
       border: 'border-green-200 dark:border-green-800',
     },
     cancelled: {
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
       bg: 'bg-red-100 dark:bg-red-900/30',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
       text: 'text-red-700 dark:text-red-300',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
       border: 'border-red-200 dark:border-red-800',
     },
   }

@@ -26,11 +26,17 @@ import {
 import { useDirection } from '@/hooks/useDirection'
 
 const eventTypeColors: Record<string, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsPage
   meeting: 'bg-blue-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsPage
   conference: 'bg-purple-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsPage
   workshop: 'bg-green-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsPage
   training: 'bg-yellow-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsPage
   ceremony: 'bg-pink-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsPage
   other: 'bg-gray-500',
 }
 
@@ -117,6 +123,7 @@ function ListView({ events, isRTL, t }: ListViewProps) {
       header: t('events.eventType'),
       cell: (event: Event) => (
         <span
+          /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsPage */
           className={`
 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
 ${event.type === 'meeting' ? 'bg-blue-100 text-blue-800' : ''}
@@ -126,6 +133,7 @@ ${event.type === 'training' ? 'bg-yellow-100 text-yellow-800' : ''}
 ${event.type === 'ceremony' ? 'bg-pink-100 text-pink-800' : ''}
 ${event.type === 'other' ? 'bg-gray-100 text-gray-800' : ''}
 `}
+          /* eslint-enable no-restricted-syntax */
         >
           {t(`events.types.${event.type}`)}
         </span>
@@ -151,6 +159,7 @@ ${event.type === 'other' ? 'bg-gray-100 text-gray-800' : ''}
         <div className="text-sm">
           {event.is_virtual ? (
             <div className="flex items-center gap-1">
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsPage */}
               <Video className="h-4 w-4 text-blue-500" />
               <span>{t('events.virtual')}</span>
             </div>
@@ -198,6 +207,7 @@ ${event.type === 'other' ? 'bg-gray-100 text-gray-800' : ''}
       header: t('events.status'),
       cell: (event: Event) => (
         <span
+          /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsPage */
           className={`
 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
 ${event.status === 'draft' ? 'bg-gray-100 text-gray-800' : ''}
@@ -206,6 +216,7 @@ ${event.status === 'ongoing' ? 'bg-green-100 text-green-800' : ''}
 ${event.status === 'completed' ? 'bg-gray-100 text-gray-800' : ''}
 ${event.status === 'cancelled' ? 'bg-red-100 text-red-800' : ''}
 `}
+          /* eslint-enable no-restricted-syntax */
         >
           {t(`events.statuses.${event.status}`)}
         </span>

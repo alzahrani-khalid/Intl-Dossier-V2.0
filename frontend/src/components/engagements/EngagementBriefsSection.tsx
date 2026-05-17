@@ -71,7 +71,7 @@ interface EngagementBriefsSectionProps {
 export function EngagementBriefsSection({ engagementId }: EngagementBriefsSectionProps) {
   const { t } = useTranslation('engagement-briefs')
   const { isRTL } = useDirection()
-const [activeTab, setActiveTab] = useState('briefs')
+  const [activeTab, setActiveTab] = useState('briefs')
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = useState(false)
   const [generateLanguage, setGenerateLanguage] = useState<'en' | 'ar'>('en')
   const [customPrompt, setCustomPrompt] = useState('')
@@ -114,12 +114,16 @@ const [activeTab, setActiveTab] = useState('briefs')
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementBriefsSection
         return 'bg-green-500/10 text-green-600 border-green-200'
       case 'generating':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementBriefsSection
         return 'bg-blue-500/10 text-blue-600 border-blue-200'
       case 'failed':
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementBriefsSection
         return 'bg-red-500/10 text-red-600 border-red-200'
       default:
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementBriefsSection
         return 'bg-gray-500/10 text-gray-600 border-gray-200'
     }
   }

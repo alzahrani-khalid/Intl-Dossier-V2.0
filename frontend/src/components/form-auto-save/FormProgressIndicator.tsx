@@ -71,6 +71,7 @@ export function FormProgressIndicator({
         {/* Progress percentage */}
         <div className="flex items-center gap-2">
           {isComplete ? (
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormProgressIndicator */
             <CheckCircle2 className={cn(classes.icon, 'text-green-500')} />
           ) : (
             <Circle className={cn(classes.icon, 'text-muted-foreground')} />
@@ -97,6 +98,7 @@ export function FormProgressIndicator({
 
         {/* Complete indicator */}
         {isComplete && (
+          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormProgressIndicator
           <span className={cn(classes.text, 'text-green-600 font-medium')}>
             {t('progress.complete')}
           </span>

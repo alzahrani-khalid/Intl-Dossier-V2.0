@@ -345,7 +345,8 @@
       "todo": "To Do",
       "in_progress": "In Progress",
       "review": "Review",
-      "done": "Done"
+      "done": "Done",
+      "cancelled": "Cancelled"
     },
     "column_count": "{{count}} tasks",
     "current_assignment": "Current Assignment",

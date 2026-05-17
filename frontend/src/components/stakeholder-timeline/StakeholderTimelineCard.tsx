@@ -65,28 +65,46 @@ const eventIcons: Record<string, React.ElementType> = {
 
 // Color mapping for event types
 const eventColors: Record<string, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   email: 'bg-blue-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   meeting: 'bg-purple-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   phone_call: 'bg-cyan-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   document_exchange: 'bg-orange-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   comment: 'bg-gray-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   message: 'bg-indigo-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   visit: 'bg-green-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   conference: 'bg-violet-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   workshop: 'bg-teal-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   negotiation: 'bg-amber-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   calendar: 'bg-blue-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   interaction: 'bg-purple-500',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   document: 'bg-orange-500',
 }
 
 // Sentiment colors
 const sentimentColors: Record<string, { bg: string; text: string }> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   positive: { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-700 dark:text-green-400' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   neutral: { bg: 'bg-gray-100 dark:bg-gray-800', text: 'text-gray-700 dark:text-gray-400' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   negative: { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-700 dark:text-red-400' },
   mixed: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
     bg: 'bg-yellow-100 dark:bg-yellow-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
     text: 'text-yellow-700 dark:text-yellow-400',
   },
 }
@@ -102,12 +120,18 @@ function AnnotationBadge({
   onClick?: () => void
 }) {
   const { isRTL } = useDirection()
-const colorMap: Record<string, string> = {
+  const colorMap: Record<string, string> = {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
     blue: 'bg-blue-100 text-blue-700 border-blue-200',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
     green: 'bg-green-100 text-green-700 border-green-200',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
     yellow: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
     red: 'bg-red-100 text-red-700 border-red-200',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
     purple: 'bg-purple-100 text-purple-700 border-purple-200',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
     orange: 'bg-orange-100 text-orange-700 border-orange-200',
   }
 
@@ -156,6 +180,7 @@ export function StakeholderTimelineCard({
   const eventType =
     (event.metadata?.interaction_type as string) || event.source_table || 'interaction'
   const Icon = eventIcons[eventType] || Activity
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderTimelineCard
   const bgColor = eventColors[eventType] || 'bg-gray-500'
 
   // Format date

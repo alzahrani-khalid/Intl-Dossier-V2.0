@@ -69,11 +69,11 @@ function CompletionRing({
 
   // Color based on percentage
   const getColor = () => {
-    if (percentage === 100) return 'text-emerald-500'
-    if (percentage >= 75) return 'text-emerald-400'
-    if (percentage >= 50) return 'text-amber-500'
-    if (percentage >= 25) return 'text-amber-400'
-    return 'text-gray-400'
+    if (percentage === 100) return 'text-success'
+    if (percentage >= 75) return 'text-success'
+    if (percentage >= 50) return 'text-warning'
+    if (percentage >= 25) return 'text-warning'
+    return 'text-muted-foreground'
   }
 
   return (
@@ -90,7 +90,7 @@ function CompletionRing({
           stroke="currentColor"
           strokeWidth={strokeWidth}
           fill="none"
-          className="text-gray-200 dark:text-gray-700"
+          className="text-muted-foreground dark:text-muted-foreground"
         />
         {/* Progress circle */}
         <m.circle
@@ -110,7 +110,7 @@ function CompletionRing({
           }}
         />
       </svg>
-      <span className="absolute text-xs font-medium text-gray-600 dark:text-gray-300">
+      <span className="absolute text-xs font-medium text-muted-foreground dark:text-muted-foreground">
         {percentage}%
       </span>
     </div>
@@ -142,20 +142,20 @@ function GroupHeader({
 }: GroupHeaderProps) {
   const { t } = useTranslation('progressive-form')
   const { isRTL } = useDirection()
-return (
+  return (
     <div className="flex items-center gap-3 flex-wrap">
       {/* Icon */}
       <div className="flex-shrink-0">
-        {icon || <Folder className="w-5 h-5 text-gray-400 dark:text-gray-500" />}
+        {icon || <Folder className="w-5 h-5 text-muted-foreground dark:text-muted-foreground" />}
       </div>
 
       {/* Title and Description */}
       <div className="flex-1 min-w-0">
-        <h3 className="font-semibold text-gray-900 dark:text-white text-start text-sm sm:text-base">
+        <h3 className="font-semibold text-foreground dark:text-white text-start text-sm sm:text-base">
           {title}
         </h3>
         {description && (
-          <p className="text-sm text-gray-500 dark:text-gray-400 text-start mt-0.5 truncate">
+          <p className="text-sm text-muted-foreground dark:text-muted-foreground text-start mt-0.5 truncate">
             {description}
           </p>
         )}
@@ -165,7 +165,7 @@ return (
       <div className="flex items-center gap-2 flex-shrink-0">
         {/* Field count */}
         {fieldCount !== undefined && completedCount !== undefined && (
-          <span className="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">
+          <span className="text-xs text-muted-foreground dark:text-muted-foreground hidden sm:block">
             {t('group.fieldCount', { completed: completedCount, total: fieldCount })}
           </span>
         )}
@@ -175,7 +175,7 @@ return (
           <m.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="flex items-center text-red-500"
+            className="flex items-center text-danger"
           >
             <AlertCircle className="w-5 h-5" />
           </m.div>
@@ -186,7 +186,7 @@ return (
           <m.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="flex items-center text-emerald-500"
+            className="flex items-center text-success"
           >
             <CheckCircle2 className="w-5 h-5" />
           </m.div>
@@ -203,7 +203,7 @@ return (
             transition={{ duration: 0.2 }}
             className="flex-shrink-0"
           >
-            <ChevronDown className="w-5 h-5 text-gray-400" />
+            <ChevronDown className="w-5 h-5 text-muted-foreground" />
           </m.div>
         )}
       </div>
@@ -229,20 +229,19 @@ export function FormFieldGroup({
   className,
   children,
 }: FormFieldGroupProps) {
-
   // Container styling
   const containerClasses = cn(
     // Base styles
     'rounded-xl',
-    'bg-gray-50 dark:bg-gray-900/50',
+    'bg-muted dark:bg-muted/50',
     // Border
-    'border border-gray-200 dark:border-gray-700',
+    'border border-line dark:border-line',
     // Transition
     'transition-all duration-200',
     // Error state
-    hasErrors && 'border-red-300 dark:border-red-700 bg-red-50/50 dark:bg-red-900/20',
+    hasErrors && 'border-danger/30 dark:border-danger bg-danger/50 dark:bg-danger/20',
     // Complete state
-    completionPercentage === 100 && !hasErrors && 'border-emerald-300 dark:border-emerald-700',
+    completionPercentage === 100 && !hasErrors && 'border-success/30 dark:border-success',
     className,
   )
 
@@ -250,7 +249,7 @@ export function FormFieldGroup({
   const headerClasses = cn(
     'flex items-center w-full p-4 sm:p-5',
     'text-start',
-    collapsible && 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800/50 rounded-xl',
+    collapsible && 'cursor-pointer hover:bg-muted dark:hover:bg-muted/50 rounded-xl',
     collapsible && 'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
   )
 

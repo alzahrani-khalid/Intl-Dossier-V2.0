@@ -53,19 +53,19 @@ const animations = {
 
 const severityStyles = {
   error: {
-    ring: 'ring-2 ring-red-500/50 dark:ring-red-400/50',
-    border: 'border-red-500 dark:border-red-400',
-    bg: 'bg-red-50/50 dark:bg-red-950/20',
+    ring: 'ring-2 ring-danger/50 dark:ring-danger/50',
+    border: 'border-danger dark:border-danger',
+    bg: 'bg-danger/50 dark:bg-danger/20',
   },
   warning: {
-    ring: 'ring-2 ring-amber-500/50 dark:ring-amber-400/50',
-    border: 'border-amber-500 dark:border-amber-400',
-    bg: 'bg-amber-50/50 dark:bg-amber-950/20',
+    ring: 'ring-2 ring-warning/50 dark:ring-warning/50',
+    border: 'border-warning dark:border-warning',
+    bg: 'bg-warning/50 dark:bg-warning/20',
   },
   info: {
-    ring: 'ring-2 ring-blue-500/50 dark:ring-blue-400/50',
-    border: 'border-blue-500 dark:border-blue-400',
-    bg: 'bg-blue-50/50 dark:bg-blue-950/20',
+    ring: 'ring-2 ring-info/50 dark:ring-info/50',
+    border: 'border-info dark:border-info',
+    bg: 'bg-info/50 dark:bg-info/20',
   },
 }
 

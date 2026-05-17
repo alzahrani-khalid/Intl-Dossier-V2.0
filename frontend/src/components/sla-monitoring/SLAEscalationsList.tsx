@@ -76,7 +76,7 @@ export function SLAEscalationsList({
 }: SLAEscalationsListProps) {
   const { t } = useTranslation('sla')
   const { isRTL } = useDirection()
-const [statusFilter, setStatusFilter] = useState<SLAEscalationStatus | 'all'>('all')
+  const [statusFilter, setStatusFilter] = useState<SLAEscalationStatus | 'all'>('all')
   const [resolveDialogOpen, setResolveDialogOpen] = useState(false)
   const [selectedEscalation, setSelectedEscalation] = useState<SLAEscalation | null>(null)
   const [resolveNotes, setResolveNotes] = useState('')
@@ -129,6 +129,7 @@ const [statusFilter, setStatusFilter] = useState<SLAEscalationStatus | 'all'>('a
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <CardTitle className="flex items-center gap-2">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAEscalationsList */}
             <AlertTriangle className="h-5 w-5 text-red-500" />
             {t('escalations.title')}
           </CardTitle>
@@ -156,7 +157,9 @@ const [statusFilter, setStatusFilter] = useState<SLAEscalationStatus | 'all'>('a
                   key={escalation.id}
                   className={cn(
                     'border rounded-lg p-4',
+                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAEscalationsList */
                     escalation.status === 'triggered' && 'border-red-300 bg-red-50',
+                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAEscalationsList */
                     escalation.status === 'acknowledged' && 'border-yellow-300 bg-yellow-50',
                   )}
                 >
@@ -288,6 +291,7 @@ const [statusFilter, setStatusFilter] = useState<SLAEscalationStatus | 'all'>('a
           </ScrollArea>
         ) : (
           <div className="h-32 flex flex-col items-center justify-center text-muted-foreground">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAEscalationsList */}
             <CheckCircle className="h-8 w-8 mb-2 text-green-500" />
             <p>{t('escalations.noEscalations')}</p>
           </div>

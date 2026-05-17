@@ -19,8 +19,8 @@ vi.mock('react-i18next', () => ({
   }),
 }))
 
-vi.mock('@/hooks/useIntelligenceDigest', () => ({
-  useIntelligenceDigest: vi.fn(),
+vi.mock('@/hooks/useDashboardDigest', () => ({
+  useDashboardDigest: vi.fn(),
 }))
 
 vi.mock('@/components/signature-visuals', () => ({
@@ -29,7 +29,7 @@ vi.mock('@/components/signature-visuals', () => ({
   ),
 }))
 
-import { useIntelligenceDigest } from '@/hooks/useIntelligenceDigest'
+import { useDashboardDigest } from '@/hooks/useDashboardDigest'
 import { Digest } from '../Digest'
 
 interface MockDigestRow {
@@ -58,7 +58,7 @@ function makeDigestRows(count: number): MockDigestRow[] {
   }))
 }
 
-function mockReturn(overrides: Partial<ReturnType<typeof useIntelligenceDigest>> = {}): unknown {
+function mockReturn(overrides: Partial<ReturnType<typeof useDashboardDigest>> = {}): unknown {
   return {
     data: makeDigestRows(2),
     isLoading: false,
@@ -69,12 +69,12 @@ function mockReturn(overrides: Partial<ReturnType<typeof useIntelligenceDigest>>
 }
 
 beforeEach(() => {
-  vi.mocked(useIntelligenceDigest).mockReset()
+  vi.mocked(useDashboardDigest).mockReset()
 })
 
 describe('Digest widget', () => {
   it('renders digest rows with tag, headline, and publication source', () => {
-    vi.mocked(useIntelligenceDigest).mockReturnValue(mockReturn() as never)
+    vi.mocked(useDashboardDigest).mockReturnValue(mockReturn() as never)
     const { container } = render(<Digest />)
 
     const rows = container.querySelectorAll('.digest-row, .digest-item')
@@ -87,14 +87,14 @@ describe('Digest widget', () => {
   })
 
   it('shows empty state when no digest rows', () => {
-    vi.mocked(useIntelligenceDigest).mockReturnValue(mockReturn({ data: [] }) as never)
+    vi.mocked(useDashboardDigest).mockReturnValue(mockReturn({ data: [] }) as never)
     render(<Digest />)
     expect(screen.getByText('digest.empty.heading')).toBeDefined()
     expect(screen.getByText('digest.empty.body')).toBeDefined()
   })
 
   it('renders widget skeleton while loading', () => {
-    vi.mocked(useIntelligenceDigest).mockReturnValue(
+    vi.mocked(useDashboardDigest).mockReturnValue(
       mockReturn({ data: [], isLoading: true }) as never,
     )
     const { container } = render(<Digest />)
@@ -102,7 +102,7 @@ describe('Digest widget', () => {
   })
 
   it('renders error state when hook returns error', () => {
-    vi.mocked(useIntelligenceDigest).mockReturnValue(
+    vi.mocked(useDashboardDigest).mockReturnValue(
       mockReturn({ data: [], error: new Error('boom') }) as never,
     )
     render(<Digest />)
@@ -113,7 +113,7 @@ describe('Digest widget', () => {
     const refetch = vi
       .fn()
       .mockImplementation(() => new Promise((resolve) => setTimeout(() => resolve(undefined), 50)))
-    vi.mocked(useIntelligenceDigest).mockReturnValue(mockReturn({ refetch }) as never)
+    vi.mocked(useDashboardDigest).mockReturnValue(mockReturn({ refetch }) as never)
 
     render(<Digest />)
     const refreshBtn = screen.getByRole('button', { name: /refresh/i })
@@ -141,7 +141,7 @@ describe('Digest widget', () => {
   })
 
   it('uses RTL-safe logical classes only', () => {
-    vi.mocked(useIntelligenceDigest).mockReturnValue(mockReturn() as never)
+    vi.mocked(useDashboardDigest).mockReturnValue(mockReturn() as never)
     const { container } = render(<Digest />)
     const html = container.innerHTML
     expect(html).not.toMatch(/\bml-\d/)
@@ -152,10 +152,10 @@ describe('Digest widget', () => {
     expect(html).not.toMatch(/\btext-right\b/)
   })
 
-  it('keeps the production source path on intelligence digest publications', () => {
+  it('keeps the production source path on dashboard digest publications', () => {
     const files = [
       readFileSync('src/pages/Dashboard/widgets/Digest.tsx', 'utf8'),
-      readFileSync('src/hooks/useIntelligenceDigest.ts', 'utf8'),
+      readFileSync('src/hooks/useDashboardDigest.ts', 'utf8'),
     ].join('\n')
 
     expect(files).not.toMatch(/actor_name/)

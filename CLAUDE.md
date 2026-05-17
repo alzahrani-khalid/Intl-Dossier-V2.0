@@ -81,7 +81,7 @@ Before declaring any UI task complete:
 ## Core Tech Stack
 
 - **Frontend**: React 19+, TypeScript 5.0+ (strict mode), TanStack Router/Query v5, Tailwind CSS v4, IntelDossier Design System (`frontend/design-system/inteldossier_handoff_design/`), i18next, React Flow (network graphs)
-- **Backend**: Node.js 18+ LTS, Supabase (PostgreSQL 15+, Auth, RLS, Realtime, Storage), Redis 7.x
+- **Backend**: Node.js 22.13.0+, Supabase (PostgreSQL 15+, Auth, RLS, Realtime, Storage), Redis 7.x
 - **Database**: PostgreSQL 15+ with pgvector, pg_trgm, pg_tsvector extensions
 - **AI/ML**: AnythingLLM (self-hosted), vector embeddings (1536 dimensions)
 - **Additional**: @dnd-kit/core (drag-and-drop), Vite (build tool)
@@ -418,6 +418,32 @@ When testing the application using browser automation tools (Chrome MCP, Playwri
 
 For local development, set these in `.env.test` (not committed to git).
 
+### Tag signing setup
+
+Phase 53 (BUNDLE-06) introduced SSH-signed phase-base tags so `git tag -v <name>` succeeds for `phase-47-base`, `phase-48-base`, `phase-49-base`, and every `phase-NN-base` tag created from Phase 54 onward.
+
+The signing config is user-local (`~/.gitconfig` and `~/.ssh/allowed_signers`) and is NOT committed to the repo. Run these three commands once per machine to enable signing:
+
+```bash
+git config --global gpg.format ssh
+git config --global user.signingkey ~/.ssh/<your-github-enrolled-key>.pub
+git config --global gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers
+```
+
+Then create `~/.ssh/allowed_signers` (chmod 600) with one line per signer:
+
+```
+alzahrani.khalid@gmail.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA<rest-of-pubkey-blob>
+```
+
+The first field is the email used by `git config user.email`; the rest is the literal contents of the corresponding `~/.ssh/id_*.pub`. Verify with:
+
+```bash
+git tag -v phase-49-base   # MUST exit 0 and print "Good \"git\" signature"
+```
+
+For GitHub's "Verified" tag badge to appear, the SSH key must be enrolled on github.com as a **Signing Key** (separate enrollment from Authentication Keys). Local `git tag -v` works against `allowed_signers` regardless of the GitHub enrollment.
+
 ## Browser Automation
 
 Use `agent-browser` for web automation. Run `agent-browser --help` for all commands.
@@ -454,7 +480,7 @@ A diplomatic dossier management system for tracking countries, organizations, fo
 
 ## Technology Stack
 
-- **Runtime**: Node.js 20.19.0+, pnpm 10.29.1+ (monorepo via Turbo)
+- **Runtime**: Node.js 22.13.0+, pnpm 10.29.1+ (monorepo via Turbo)
 - **Languages**: TypeScript 5.5+ (backend) / 5.9+ (frontend) strict mode, SQL, Bash
 - **Testing**: Vitest (unit/integration), Playwright (E2E), @testing-library/react, axe-core (a11y)
 

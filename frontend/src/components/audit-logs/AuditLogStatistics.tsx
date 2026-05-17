@@ -29,8 +29,11 @@ const OPERATION_ICONS: Record<string, typeof Plus> = {
 }
 
 const OPERATION_COLORS: Record<string, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AuditLogStatistics
   INSERT: 'text-green-600 bg-green-100 dark:bg-green-900/30',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AuditLogStatistics
   UPDATE: 'text-blue-600 bg-blue-100 dark:bg-blue-900/30',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AuditLogStatistics
   DELETE: 'text-red-600 bg-red-100 dark:bg-red-900/30',
 }
 
@@ -147,6 +150,7 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
           <div className="grid grid-cols-3 gap-3">
             {(statistics.by_operation ?? []).map((item) => {
               const Icon = OPERATION_ICONS[item.operation] || Database
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AuditLogStatistics
               const colorClass = OPERATION_COLORS[item.operation] || 'text-gray-600 bg-gray-100'
 
               return (

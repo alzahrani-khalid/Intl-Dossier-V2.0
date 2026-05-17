@@ -7,7 +7,7 @@
  * cancelled→chip-danger.
  */
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { renderWithProviders as render, screen } from '@tests/utils/render'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import {
   createMemoryHistory,
@@ -20,34 +20,39 @@ import {
 import type { ReactElement } from 'react'
 
 // Per-file react-i18next mock (project pattern — global mock is feature-scoped).
-vi.mock('react-i18next', () => ({
-  useTranslation: (): {
-    i18n: { language: string }
-    t: (k: string, opts?: Record<string, unknown>) => string
-  } => ({
-    i18n: { language: 'en' },
-    t: (k: string, opts?: Record<string, unknown>): string => {
-      // Translate explicit forum keys first (they override defaultValue).
-      if (k === 'forums:status.active') return 'Active'
-      if (k === 'forums:status.cancelled') return 'Cancelled'
-      if (k === 'forums:title') return 'Forums'
-      if (k === 'forums:subtitle') return 'Multi-party conferences'
-      if (k === 'forums:empty.title') return 'No forums yet'
-      if (k === 'forums:empty.description') return 'Forum dossiers will appear here.'
-      // Fall back to defaultValue for unknown keys.
-      if (
-        opts !== undefined &&
-        typeof opts === 'object' &&
-        'defaultValue' in opts &&
-        typeof opts.defaultValue === 'string'
-      ) {
-        return opts.defaultValue
-      }
-      return k
-    },
-  }),
-  Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
-}))
+vi.mock('react-i18next', async () => {
+  const actual = await vi.importActual<typeof import('react-i18next')>('react-i18next')
+
+  return {
+    ...actual,
+    useTranslation: (): {
+      i18n: { language: string; changeLanguage: () => Promise<void> }
+      t: (k: string, opts?: Record<string, unknown>) => string
+    } => ({
+      i18n: { language: 'en', changeLanguage: vi.fn().mockResolvedValue(undefined) },
+      t: (k: string, opts?: Record<string, unknown>): string => {
+        // Translate explicit forum keys first (they override defaultValue).
+        if (k === 'forums:status.active') return 'Active'
+        if (k === 'forums:status.cancelled') return 'Cancelled'
+        if (k === 'forums:pageTitle') return 'Forums'
+        if (k === 'forums:pageSubtitle') return 'Multi-party conferences'
+        if (k === 'forums:empty.title') return 'No forums yet'
+        if (k === 'forums:empty.description') return 'Forum dossiers will appear here.'
+        // Fall back to defaultValue for unknown keys.
+        if (
+          opts !== undefined &&
+          typeof opts === 'object' &&
+          'defaultValue' in opts &&
+          typeof opts.defaultValue === 'string'
+        ) {
+          return opts.defaultValue
+        }
+        return k
+      },
+    }),
+    Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
+  }
+})
 
 // Mock useDirection — LTR for these tests.
 vi.mock('@/hooks/useDirection', () => ({
@@ -74,7 +79,10 @@ const mockForums = [
 
 vi.mock('@/hooks/useForums', () => ({
   useForums: (): {
-    data: { data: typeof mockForums; pagination: { page: number; limit: number; total: number; totalPages: number } }
+    data: {
+      data: typeof mockForums
+      pagination: { page: number; limit: number; total: number; totalPages: number }
+    }
     isLoading: boolean
     isError: boolean
   } => ({
@@ -99,9 +107,11 @@ async function renderRoute(): Promise<ReactElement> {
     getParentRoute: () => rootRoute,
     path: '/_protected/dossiers/forums/',
     component: (Route.options as { component: () => ReactElement }).component,
-    validateSearch: (Route.options as {
-      validateSearch: (s: Record<string, unknown>) => unknown
-    }).validateSearch,
+    validateSearch: (
+      Route.options as {
+        validateSearch: (s: Record<string, unknown>) => unknown
+      }
+    ).validateSearch,
   })
 
   const router = createRouter({

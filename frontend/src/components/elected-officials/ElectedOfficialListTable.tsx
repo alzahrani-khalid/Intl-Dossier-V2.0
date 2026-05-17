@@ -263,6 +263,7 @@ export function ElectedOfficialListTable(): ReactElement {
                   <TableCell className="text-start">{item.district_en ?? '-'}</TableCell>
                   <TableCell>
                     {item.is_current_term === true ? (
+                      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ElectedOfficialListTable
                       <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 rounded-full px-2 py-0.5 text-xs">
                         {t('termStatus.current')}
                       </Badge>
@@ -305,6 +306,7 @@ export function ElectedOfficialListTable(): ReactElement {
                   )}
                 </div>
                 {item.is_current_term === true ? (
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ElectedOfficialListTable
                   <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 rounded-full px-2 py-0.5 text-xs flex-shrink-0">
                     {t('termStatus.current')}
                   </Badge>

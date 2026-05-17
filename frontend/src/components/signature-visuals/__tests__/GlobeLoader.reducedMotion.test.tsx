@@ -15,8 +15,8 @@ vi.mock('@/design-system/hooks', () => ({
 type RotateCall = [number, number]
 const rotateCalls: RotateCall[] = []
 
-vi.mock('../ensureWorld', () => {
-  const d3Real = require('d3-geo') as typeof import('d3-geo')
+vi.mock('../ensureWorld', async () => {
+  const d3Real = await vi.importActual<typeof import('d3-geo')>('d3-geo')
   const shim: typeof import('d3-geo') = {
     ...d3Real,
     geoOrthographic: (): ReturnType<typeof d3Real.geoOrthographic> => {
@@ -55,16 +55,17 @@ describe('GlobeLoader — reduced-motion gate (D-14)', (): void => {
     // itself reads from useReducedMotion (mocked true above); this stub is
     // defensive so the CSS media-query assertion path can also resolve.
     window.matchMedia = vi.fn().mockImplementation(
-      (query: string): MediaQueryList => ({
-        matches: /prefers-reduced-motion/.test(query),
-        media: query,
-        onchange: null,
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-      }) as unknown as MediaQueryList,
+      (query: string): MediaQueryList =>
+        ({
+          matches: /prefers-reduced-motion/.test(query),
+          media: query,
+          onchange: null,
+          addEventListener: vi.fn(),
+          removeEventListener: vi.fn(),
+          dispatchEvent: vi.fn(),
+          addListener: vi.fn(),
+          removeListener: vi.fn(),
+        }) as unknown as MediaQueryList,
     ) as typeof window.matchMedia
   })
   afterEach((): void => {

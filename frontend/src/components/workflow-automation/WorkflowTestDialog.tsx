@@ -33,7 +33,7 @@ interface WorkflowTestDialogProps {
 export function WorkflowTestDialog({ rule, open, onOpenChange }: WorkflowTestDialogProps) {
   const { t } = useTranslation('workflow-automation')
   const { isRTL } = useDirection()
-const [entityId, setEntityId] = useState('')
+  const [entityId, setEntityId] = useState('')
   const [dryRun, setDryRun] = useState(true)
   const [testResult, setTestResult] = useState<WorkflowTestResponse['data'] | null>(null)
 
@@ -123,8 +123,10 @@ const [entityId, setEntityId] = useState('')
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   {testResult.conditions_matched ? (
+                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowTestDialog
                     <CheckCircle2 className="h-5 w-5 text-green-600" />
                   ) : (
+                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowTestDialog
                     <XCircle className="h-5 w-5 text-red-600" />
                   )}
                   {t('test.results')}
@@ -150,8 +152,10 @@ const [entityId, setEntityId] = useState('')
                       >
                         <div className="flex items-center gap-2">
                           {detail.matched ? (
+                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowTestDialog
                             <CheckCircle2 className="h-4 w-4 text-green-600" />
                           ) : (
+                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowTestDialog
                             <XCircle className="h-4 w-4 text-red-600" />
                           )}
                           <span className="font-mono">{detail.field}</span>

@@ -374,6 +374,7 @@ function AfterActionDetailPage(): React.ReactNode {
                   <div className="pt-2">
                     <div className="flex items-start gap-2">
                       {action.completed ? (
+                        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#$afterActionId
                         <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
                       ) : (
                         <div className="h-5 w-5 rounded-full border-2 border-muted-foreground mt-0.5" />

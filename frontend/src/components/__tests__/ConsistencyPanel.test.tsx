@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { ConsistencyPanel } from '../consistency-panel/ConsistencyPanel'
-import '../../../i18n'
+import '../../i18n'
 
 // Mock data
 const mockConsistencyCheck = {
@@ -99,7 +99,7 @@ describe('ConsistencyPanel', () => {
 
     expect(screen.getByText(/Contradiction/i)).toBeInTheDocument()
     expect(screen.getByText(/Ambiguity/i)).toBeInTheDocument()
-    expect(screen.getByText(/Overlap/i)).toBeInTheDocument()
+    expect(screen.getAllByText(/Overlap/i).length).toBeGreaterThan(0)
   })
 
   it('expands conflict details when clicked', () => {
@@ -211,7 +211,7 @@ describe('ConsistencyPanel', () => {
     render(<ConsistencyPanel consistencyCheck={mockConsistencyCheck} />)
 
     // Check that some date/time is displayed (format may vary by locale)
-    expect(screen.getByText(/Oct|10/i)).toBeInTheDocument()
+    expect(screen.getByText(/Oct 1, 2025/i)).toBeInTheDocument()
   })
 
   it('displays all action buttons when conflict is expanded', () => {

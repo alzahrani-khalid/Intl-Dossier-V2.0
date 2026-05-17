@@ -47,32 +47,47 @@ function getEventColor(type: EventType) {
   switch (type) {
     case 'meeting':
       return {
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
         bg: 'bg-blue-100 dark:bg-blue-900/30',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
         text: 'text-blue-600 dark:text-blue-400',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
         badge: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
       }
     case 'deadline':
       return {
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
         bg: 'bg-red-100 dark:bg-red-900/30',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
         text: 'text-red-600 dark:text-red-400',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
         badge: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
       }
     case 'follow-up':
       return {
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
         bg: 'bg-amber-100 dark:bg-amber-900/30',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
         text: 'text-amber-600 dark:text-amber-400',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
         badge: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300',
       }
     case 'engagement':
       return {
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
         bg: 'bg-green-100 dark:bg-green-900/30',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
         text: 'text-green-600 dark:text-green-400',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
         badge: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
       }
     case 'mou-renewal':
       return {
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
         bg: 'bg-purple-100 dark:bg-purple-900/30',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
         text: 'text-purple-600 dark:text-purple-400',
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
         badge: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300',
       }
     default:
@@ -180,7 +195,7 @@ function EventItem({ event, locale, isRTL }: { event: EventData; locale: string;
 export function EventsWidget({ config, data, isLoading }: EventsWidgetProps) {
   const { t } = useTranslation('dashboard-widgets')
   const { isRTL } = useDirection()
-const locale = isRTL ? 'ar-SA' : 'en-US'
+  const locale = isRTL ? 'ar-SA' : 'en-US'
 
   const { settings } = config
 

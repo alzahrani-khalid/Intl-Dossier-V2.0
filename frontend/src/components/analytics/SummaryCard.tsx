@@ -28,7 +28,7 @@ export function SummaryCard({
   className,
 }: SummaryCardProps) {
   const { isRTL } = useDirection()
-const formatValue = (val: number | string) => {
+  const formatValue = (val: number | string) => {
     if (typeof val === 'string') return val
     switch (format) {
       case 'percentage':
@@ -48,16 +48,18 @@ const formatValue = (val: number | string) => {
   }
 
   const getTrendColor = () => {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SummaryCard
     if (change === undefined || change === null) return 'text-gray-500'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SummaryCard
     if (change > 1) return 'text-emerald-600 dark:text-emerald-400'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SummaryCard
     if (change < -1) return 'text-red-600 dark:text-red-400'
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SummaryCard
     return 'text-gray-500 dark:text-gray-400'
   }
 
   return (
-    <div
-      className={cn('rounded-lg border bg-card p-4 sm:p-6', 'flex flex-col gap-2', className)}
-    >
+    <div className={cn('rounded-lg border bg-card p-4 sm:p-6', 'flex flex-col gap-2', className)}>
       <div className="flex items-center justify-between">
         <span className="text-sm text-muted-foreground">{title}</span>
         {icon && <span className="text-muted-foreground">{icon}</span>}

@@ -57,7 +57,9 @@ const categoryIcons: Record<NotificationCategory, React.ElementType> = {
 
 // Priority colors
 const priorityColors: Record<string, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationPreviewTimeline
   urgent: 'border-s-red-600 bg-red-50 dark:bg-red-950/20',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationPreviewTimeline
   high: 'border-s-orange-500 bg-orange-50 dark:bg-orange-950/20',
   normal: 'border-s-blue-500 bg-card',
   low: 'border-s-gray-400 bg-card',
@@ -65,13 +67,21 @@ const priorityColors: Record<string, string> = {
 
 // Category colors
 const categoryColors: Record<NotificationCategory, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationPreviewTimeline
   assignments: 'text-blue-600 bg-blue-100 dark:bg-blue-900/30',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationPreviewTimeline
   intake: 'text-purple-600 bg-purple-100 dark:bg-purple-900/30',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationPreviewTimeline
   calendar: 'text-green-600 bg-green-100 dark:bg-green-900/30',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationPreviewTimeline
   signals: 'text-red-600 bg-red-100 dark:bg-red-900/30',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationPreviewTimeline
   mentions: 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationPreviewTimeline
   deadlines: 'text-orange-600 bg-orange-100 dark:bg-orange-900/30',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationPreviewTimeline
   system: 'text-gray-600 bg-gray-100 dark:bg-gray-900/30',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationPreviewTimeline
   workflow: 'text-teal-600 bg-teal-100 dark:bg-teal-900/30',
 }
 
@@ -177,7 +187,7 @@ export function NotificationPreviewTimeline({
 }: NotificationPreviewTimelineProps) {
   const { t } = useTranslation('notification-center')
   const { isRTL } = useDirection()
-// Current step: 0 = timeline preview, 1 = preferences setup
+  // Current step: 0 = timeline preview, 1 = preferences setup
   const [currentStep, setCurrentStep] = useState(0)
   const [isAnimating, setIsAnimating] = useState(true)
   const [activeNotificationIndex, setActiveNotificationIndex] = useState(0)
@@ -309,6 +319,7 @@ export function NotificationPreviewTimeline({
               </Badge>
             )}
             {notification.priority === 'high' && (
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationPreviewTimeline
               <Badge variant="outline" className="text-xs border-orange-500 text-orange-600">
                 {t('priority.high')}
               </Badge>

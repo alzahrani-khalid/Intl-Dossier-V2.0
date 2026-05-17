@@ -67,10 +67,15 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
   // Get importance badge variant
   const getImportanceBadge = (level?: number) => {
     const variants: Record<number, { label: string; className: string }> = {
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ElectedOfficialProfile
       1: { label: t('importance.regular'), className: 'bg-gray-100 text-gray-800' },
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ElectedOfficialProfile
       2: { label: t('importance.important'), className: 'bg-blue-100 text-blue-800' },
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ElectedOfficialProfile
       3: { label: t('importance.key'), className: 'bg-yellow-100 text-yellow-800' },
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ElectedOfficialProfile
       4: { label: t('importance.vip'), className: 'bg-purple-100 text-purple-800' },
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ElectedOfficialProfile
       5: { label: t('importance.critical'), className: 'bg-red-100 text-red-800' },
     }
     return variants[level || 2] || variants[2]
@@ -96,6 +101,7 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
 
             <div className="flex flex-wrap justify-center sm:justify-start gap-2">
               {extension.is_current_term && (
+                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ElectedOfficialProfile
                 <Badge variant="default" className="bg-green-500">
                   {t('status.currentTerm')}
                 </Badge>

@@ -23,11 +23,9 @@ interface SLAOverviewCardsProps {
 export function SLAOverviewCards({ data, isLoading, className }: SLAOverviewCardsProps) {
   const { t } = useTranslation('sla')
   const { isRTL } = useDirection()
-if (isLoading) {
+  if (isLoading) {
     return (
-      <div
-        className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4', className)}
-      >
+      <div className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4', className)}>
         {[0, 1, 2, 3].map((n) => (
           <Card key={n}>
             <CardHeader className="pb-2">
@@ -67,7 +65,7 @@ if (isLoading) {
     {
       title: t('overview.complianceRate'),
       value: `${data.compliance_rate}%`,
-      icon: <CheckCircle className="h-5 w-5 text-green-500" />,
+      icon: <CheckCircle className="h-5 w-5 text-success" />,
       trend: complianceTrend,
       subtitle: complianceThreshold.label,
       subtitleColor: complianceThreshold.color,
@@ -76,32 +74,30 @@ if (isLoading) {
     {
       title: t('overview.totalItems'),
       value: data.total_items.toLocaleString(isRTL ? 'ar-SA' : 'en-US'),
-      icon: <Clock className="h-5 w-5 text-blue-500" />,
+      icon: <Clock className="h-5 w-5 text-info" />,
       subtitle: t('overview.processed'),
       subtitleColor: 'text-muted-foreground',
     },
     {
       title: t('overview.atRisk'),
       value: data.at_risk_count.toLocaleString(isRTL ? 'ar-SA' : 'en-US'),
-      icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
+      icon: <AlertTriangle className="h-5 w-5 text-warning" />,
       subtitle: t('overview.approachingDeadline'),
-      subtitleColor: data.at_risk_count > 0 ? 'text-yellow-600' : 'text-muted-foreground',
-      bgColor: data.at_risk_count > 0 ? 'bg-yellow-50' : undefined,
+      subtitleColor: data.at_risk_count > 0 ? 'text-warning' : 'text-muted-foreground',
+      bgColor: data.at_risk_count > 0 ? 'bg-warning/10' : undefined,
     },
     {
       title: t('overview.breached'),
       value: data.breached_count.toLocaleString(isRTL ? 'ar-SA' : 'en-US'),
-      icon: <XCircle className="h-5 w-5 text-red-500" />,
+      icon: <XCircle className="h-5 w-5 text-danger" />,
       subtitle: t('overview.requiresAttention'),
-      subtitleColor: data.breached_count > 0 ? 'text-red-600' : 'text-muted-foreground',
-      bgColor: data.breached_count > 0 ? 'bg-red-50' : undefined,
+      subtitleColor: data.breached_count > 0 ? 'text-danger' : 'text-muted-foreground',
+      bgColor: data.breached_count > 0 ? 'bg-danger/10' : undefined,
     },
   ]
 
   return (
-    <div
-      className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4', className)}
-    >
+    <div className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4', className)}>
       {cards.map((card) => (
         <Card key={card.title} className={cn('transition-colors', card.bgColor)}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -117,7 +113,7 @@ if (isLoading) {
                 <div
                   className={cn(
                     'flex items-center text-xs font-medium',
-                    card.trend >= 0 ? 'text-green-600' : 'text-red-600',
+                    card.trend >= 0 ? 'text-success' : 'text-danger',
                   )}
                 >
                   {card.trend >= 0 ? (
@@ -151,13 +147,13 @@ if (isLoading) {
             </div>
             <div className="flex-1 flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full bg-green-500" />
+                <div className="h-3 w-3 rounded-full bg-success" />
                 <span className="text-sm">
                   {t('overview.met')}: {data.met_count}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full bg-red-500" />
+                <div className="h-3 w-3 rounded-full bg-danger" />
                 <span className="text-sm">
                   {t('overview.breachedLabel')}: {data.breached_count}
                 </span>

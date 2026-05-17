@@ -89,7 +89,7 @@ export function RegisterPage() {
                 className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium"
               >
                 Full Name{' '}
-                <span className="text-red-500" aria-label="required">
+                <span className="text-danger" aria-label="required">
                   *
                 </span>
               </label>
@@ -106,7 +106,7 @@ export function RegisterPage() {
               {errors.name && (
                 <p
                   id="name-error"
-                  className="font-text mt-1 text-sm text-red-600 dark:text-red-400"
+                  className="font-text mt-1 text-sm text-danger dark:text-danger"
                   role="alert"
                 >
                   {errors.name.message}
@@ -120,7 +120,7 @@ export function RegisterPage() {
                 className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium"
               >
                 Email{' '}
-                <span className="text-red-500" aria-label="required">
+                <span className="text-danger" aria-label="required">
                   *
                 </span>
               </label>
@@ -137,7 +137,7 @@ export function RegisterPage() {
               {errors.email && (
                 <p
                   id="email-error"
-                  className="font-text mt-1 text-sm text-red-600 dark:text-red-400"
+                  className="font-text mt-1 text-sm text-danger dark:text-danger"
                   role="alert"
                 >
                   {errors.email.message}
@@ -151,7 +151,7 @@ export function RegisterPage() {
                 className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium"
               >
                 Password{' '}
-                <span className="text-red-500" aria-label="required">
+                <span className="text-danger" aria-label="required">
                   *
                 </span>
               </label>
@@ -167,7 +167,7 @@ export function RegisterPage() {
               {errors.password && (
                 <p
                   id="password-error"
-                  className="font-text mt-1 text-sm text-red-600 dark:text-red-400"
+                  className="font-text mt-1 text-sm text-danger dark:text-danger"
                   role="alert"
                 >
                   {errors.password.message}
@@ -181,7 +181,7 @@ export function RegisterPage() {
                 className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium"
               >
                 Confirm Password{' '}
-                <span className="text-red-500" aria-label="required">
+                <span className="text-danger" aria-label="required">
                   *
                 </span>
               </label>
@@ -197,7 +197,7 @@ export function RegisterPage() {
               {errors.confirmPassword && (
                 <p
                   id="confirmPassword-error"
-                  className="font-text mt-1 text-sm text-red-600 dark:text-red-400"
+                  className="font-text mt-1 text-sm text-danger dark:text-danger"
                   role="alert"
                 >
                   {errors.confirmPassword.message}

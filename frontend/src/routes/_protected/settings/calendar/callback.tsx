@@ -101,9 +101,7 @@ function CalendarOAuthCallback() {
   }, [search, completeOAuth, navigate])
 
   return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 flex items-center justify-center min-h-[60vh]"
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 flex items-center justify-center min-h-[60vh]">
       <Card className="w-full max-w-md">
         <CardContent className="p-6 text-center space-y-4">
           {status === 'loading' && (
@@ -116,7 +114,9 @@ function CalendarOAuthCallback() {
 
           {status === 'success' && (
             <>
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#callback */}
               <CheckCircle className="h-12 w-12 mx-auto text-green-500" />
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#callback */}
               <h2 className="text-xl font-semibold text-green-600">{t('oauth.success')}</h2>
               <p className="text-muted-foreground">{t('oauth.redirecting')}</p>
             </>

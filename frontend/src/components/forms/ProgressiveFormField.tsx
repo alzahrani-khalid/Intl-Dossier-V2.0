@@ -55,17 +55,17 @@ function ImportanceBadge({ importance, className }: ImportanceBadgeProps) {
   const badgeConfig = {
     required: {
       label: t('importance.required'),
-      className: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+      className: 'bg-danger/10 text-danger dark:bg-danger/30 dark:text-danger',
       icon: <AlertCircle className="w-3 h-3" />,
     },
     recommended: {
       label: t('importance.recommended'),
-      className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+      className: 'bg-warning/10 text-warning dark:bg-warning/30 dark:text-warning',
       icon: <CircleDot className="w-3 h-3" />,
     },
     optional: {
       label: t('importance.optional'),
-      className: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+      className: 'bg-muted text-muted-foreground dark:bg-muted dark:text-muted-foreground',
       icon: <Info className="w-3 h-3" />,
     },
   }
@@ -99,31 +99,31 @@ function StatusIndicator({ status, importance, className }: StatusIndicatorProps
     empty: {
       icon:
         importance === 'required' ? (
-          <div className="w-4 h-4 rounded-full border-2 border-red-400 dark:border-red-500" />
+          <div className="w-4 h-4 rounded-full border-2 border-danger dark:border-danger" />
         ) : (
-          <div className="w-4 h-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+          <div className="w-4 h-4 rounded-full border-2 border-line dark:border-line" />
         ),
       label: t('status.empty'),
-      color: importance === 'required' ? 'text-red-500' : 'text-gray-400',
+      color: importance === 'required' ? 'text-danger' : 'text-muted-foreground',
     },
     partial: {
       icon: (
-        <div className="w-4 h-4 rounded-full border-2 border-amber-400 bg-amber-100 dark:border-amber-500 dark:bg-amber-900/30">
-          <div className="w-1/2 h-full bg-amber-400 rounded-s-full" />
+        <div className="w-4 h-4 rounded-full border-2 border-warning bg-warning/10 dark:border-warning dark:bg-warning/30">
+          <div className="w-1/2 h-full bg-warning rounded-s-full" />
         </div>
       ),
       label: t('status.partial'),
-      color: 'text-amber-500',
+      color: 'text-warning',
     },
     complete: {
-      icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />,
+      icon: <CheckCircle2 className="w-4 h-4 text-success" />,
       label: t('status.complete'),
-      color: 'text-emerald-500',
+      color: 'text-success',
     },
     error: {
-      icon: <AlertCircle className="w-4 h-4 text-red-500" />,
+      icon: <AlertCircle className="w-4 h-4 text-danger" />,
       label: t('status.error'),
-      color: 'text-red-500',
+      color: 'text-danger',
     },
   }
 
@@ -191,7 +191,7 @@ export function ProgressiveFormField({
     // Error state
     currentStatus === 'error' && 'border-s-4 border-s-red-500 dark:border-s-red-400',
     // Background
-    'bg-white dark:bg-gray-800',
+    'bg-white dark:bg-muted',
     // Shadow for elevation
     'shadow-sm',
     // Hover effect
@@ -215,13 +215,13 @@ export function ProgressiveFormField({
             className={cn(
               'block font-medium text-start',
               'text-sm sm:text-base',
-              'text-gray-700 dark:text-gray-300',
-              currentStatus === 'error' && 'text-red-700 dark:text-red-400',
+              'text-muted-foreground dark:text-muted-foreground',
+              currentStatus === 'error' && 'text-danger dark:text-danger',
             )}
           >
             {label}
             {importance === 'required' && (
-              <span className="text-red-500 ms-1" aria-label={t('common:validation.required')}>
+              <span className="text-danger ms-1" aria-label={t('common:validation.required')}>
                 *
               </span>
             )}
@@ -247,7 +247,7 @@ export function ProgressiveFormField({
           <m.p
             key="error"
             id={errorId}
-            className="mt-2 text-sm text-red-600 dark:text-red-400 text-start flex items-center gap-1"
+            className="mt-2 text-sm text-danger dark:text-danger text-start flex items-center gap-1"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -261,7 +261,7 @@ export function ProgressiveFormField({
           <m.p
             key="help"
             id={helpId}
-            className="mt-2 text-sm text-gray-500 dark:text-gray-400 text-start"
+            className="mt-2 text-sm text-muted-foreground dark:text-muted-foreground text-start"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

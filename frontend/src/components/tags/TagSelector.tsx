@@ -301,6 +301,7 @@ export function TagSelector({
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
+                                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TagSelector */}
                                   <Sparkles className="size-3 text-amber-500" />
                                 </TooltipTrigger>
                                 <TooltipContent>
@@ -353,6 +354,7 @@ export function TagSelector({
       {/* Suggestions quick actions */}
       {showSuggestions && !disabled && filteredSuggestions.length > 0 && (
         <div className="flex items-center gap-2 pt-1">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TagSelector */}
           <Sparkles className="size-3 text-amber-500" />
           <span className="text-xs text-muted-foreground">{t('suggestions.title')}:</span>
           <div className="flex flex-wrap gap-1">

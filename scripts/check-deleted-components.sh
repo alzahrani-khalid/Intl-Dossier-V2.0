@@ -111,4 +111,37 @@ if [ -f frontend/src/components/calendar/shared-week-list.css ] && [ -f frontend
   fi
 fi
 
+# Phase 52 KANBAN-03: kibo-ui kanban directory must remain deleted post-Plan-04
+if [ -d "frontend/src/components/kibo-ui/kanban" ]; then
+  echo "FAIL: frontend/src/components/kibo-ui/kanban/ re-introduced (banned per Phase 52 D-18)" >&2
+  FAIL=1
+fi
+
+# ============================================================================
+# Phase 52 Plan 05 dead-code sweep — EngagementKanbanDialog + EngagementDossierPage
+# Route /dossiers/engagements/$id is redirect-only; KANBAN-02 satisfied by TasksTab.
+# ============================================================================
+PHASE_52_PATTERNS=(
+  "from.*components/assignments/EngagementKanbanDialog"
+  "from.*pages/dossiers/EngagementDossierPage"
+)
+PHASE_52_DELETED_FILES=(
+  "frontend/src/components/assignments/EngagementKanbanDialog.tsx"
+  "frontend/src/pages/dossiers/EngagementDossierPage.tsx"
+)
+for p in "${PHASE_52_PATTERNS[@]}"; do
+  MATCH=$(grep -rn --include="*.ts" --include="*.tsx" -E "$p" frontend/src 2>/dev/null || true)
+  if [ -n "$MATCH" ]; then
+    echo "FAIL: Phase-52 deleted import pattern reappeared: $p" >&2
+    echo "$MATCH" >&2
+    FAIL=1
+  fi
+done
+for f in "${PHASE_52_DELETED_FILES[@]}"; do
+  if [ -f "$f" ]; then
+    echo "FAIL: Phase-52 deleted file reappeared: $f" >&2
+    FAIL=1
+  fi
+done
+
 exit "$FAIL"

@@ -36,16 +36,20 @@ const severities: Risk['severity'][] = ['low', 'medium', 'high', 'critical']
 const likelihoods: Risk['likelihood'][] = ['unlikely', 'possible', 'likely', 'certain']
 
 const severityColors = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RiskList
   low: 'bg-green-500 hover:bg-green-500/80 text-white',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RiskList
   medium: 'bg-amber-500 hover:bg-amber-500/80 text-white',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RiskList
   high: 'bg-orange-600 hover:bg-orange-600/80 text-white',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RiskList
   critical: 'bg-red-600 hover:bg-red-600/80 text-white',
 }
 
 export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const addRisk = () => {
+  const addRisk = () => {
     onChange([
       ...risks,
       {

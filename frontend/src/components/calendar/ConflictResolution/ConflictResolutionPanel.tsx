@@ -73,7 +73,7 @@ export function ConflictResolutionPanel({
 }: ConflictResolutionPanelProps) {
   const { t } = useTranslation('calendar')
   const { isRTL } = useDirection()
-if (isLoading) {
+  if (isLoading) {
     return (
       <Card className={cn('p-4', className)}>
         <div className="flex items-center gap-2 animate-pulse">
@@ -127,6 +127,7 @@ if (isLoading) {
               </Badge>
             )}
             {conflicts.severity_summary.high > 0 && (
+              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionPanel
               <Badge className="bg-orange-500 text-xs">
                 {conflicts.severity_summary.high} {t('conflicts.severity.high')}
               </Badge>

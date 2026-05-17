@@ -94,23 +94,20 @@ function StatusIndicator({ status, className }: StatusIndicatorProps) {
 
   switch (status) {
     case 'complete':
-      return <CheckCircle2 className={cn(iconClasses, 'text-green-500')} />
+      return <CheckCircle2 className={cn(iconClasses, 'text-success')} />
     case 'error':
-      return <AlertCircle className={cn(iconClasses, 'text-red-500')} />
+      return <AlertCircle className={cn(iconClasses, 'text-danger')} />
     case 'incomplete':
       return (
         <div
-          className={cn(
-            'h-4 w-4 rounded-full border-2 border-gray-300 dark:border-gray-600',
-            className,
-          )}
+          className={cn('h-4 w-4 rounded-full border-2 border-line dark:border-line', className)}
         />
       )
     case 'optional':
       return (
         <div
           className={cn(
-            'h-4 w-4 rounded-full border-2 border-dashed border-gray-300 dark:border-gray-600',
+            'h-4 w-4 rounded-full border-2 border-dashed border-line dark:border-line',
             className,
           )}
         />
@@ -133,8 +130,8 @@ function ProgressBadge({ completed, total }: ProgressBadgeProps) {
       className={cn(
         'inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full',
         isComplete
-          ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-          : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+          ? 'bg-success/10 text-success dark:bg-success/30 dark:text-success'
+          : 'bg-muted text-muted-foreground dark:bg-muted dark:text-muted-foreground',
       )}
     >
       {completed}/{total}
@@ -192,10 +189,10 @@ export function FormSection({
         id={id}
         className={cn(
           'rounded-lg',
-          'border border-gray-200 dark:border-gray-700',
-          'bg-white dark:bg-gray-800/50',
+          'border border-line dark:border-line',
+          'bg-white dark:bg-muted/50',
           'transition-all duration-200',
-          error && 'border-red-300 dark:border-red-700',
+          error && 'border-danger/30 dark:border-danger',
           className,
         )}
         aria-labelledby={id ? `${id}-heading` : undefined}
@@ -206,9 +203,9 @@ export function FormSection({
             type="button"
             className={cn(
               'flex items-center gap-3 px-4 py-3 sm:px-6 sm:py-4 w-full text-start',
-              'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50',
+              'cursor-pointer hover:bg-muted dark:hover:bg-muted/50',
               !isExpanded && 'border-b-0',
-              isExpanded && 'border-b border-gray-200 dark:border-gray-700',
+              isExpanded && 'border-b border-line dark:border-line',
             )}
             onClick={toggleExpanded}
             aria-expanded={isExpanded}
@@ -216,30 +213,36 @@ export function FormSection({
             <m.div
               animate={{ rotate: isExpanded ? 90 : 0 }}
               transition={{ duration: 0.2 }}
-              className="shrink-0 text-gray-400"
+              className="shrink-0 text-muted-foreground"
             >
               <ChevronRight className="h-5 w-5" />
             </m.div>
 
             {effectiveStatus && <StatusIndicator status={effectiveStatus} />}
-            {icon && <div className="shrink-0 text-gray-500 dark:text-gray-400">{icon}</div>}
+            {icon && (
+              <div className="shrink-0 text-muted-foreground dark:text-muted-foreground">
+                {icon}
+              </div>
+            )}
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <HeadingTag
                   id={id ? `${id}-heading` : undefined}
-                  className="text-base font-semibold text-gray-900 dark:text-gray-100 sm:text-lg"
+                  className="text-base font-semibold text-foreground dark:text-muted-foreground sm:text-lg"
                 >
                   {title}
                 </HeadingTag>
                 {required && (
-                  <span className="text-red-500 text-sm" aria-label={t('validation.required')}>
+                  <span className="text-danger text-sm" aria-label={t('validation.required')}>
                     *
                   </span>
                 )}
               </div>
               {description && (
-                <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">{description}</p>
+                <p className="mt-0.5 text-sm text-muted-foreground dark:text-muted-foreground">
+                  {description}
+                </p>
               )}
             </div>
 
@@ -248,7 +251,7 @@ export function FormSection({
             <m.div
               animate={{ rotate: isExpanded ? 180 : 0 }}
               transition={{ duration: 0.2 }}
-              className="shrink-0 text-gray-400 hidden sm:block"
+              className="shrink-0 text-muted-foreground hidden sm:block"
             >
               <ChevronDown className="h-5 w-5" />
             </m.div>
@@ -258,22 +261,26 @@ export function FormSection({
             className={cn(
               'flex items-center gap-3 px-4 py-3 sm:px-6 sm:py-4',
               !isExpanded && 'border-b-0',
-              isExpanded && 'border-b border-gray-200 dark:border-gray-700',
+              isExpanded && 'border-b border-line dark:border-line',
             )}
           >
             {effectiveStatus && <StatusIndicator status={effectiveStatus} />}
-            {icon && <div className="shrink-0 text-gray-500 dark:text-gray-400">{icon}</div>}
+            {icon && (
+              <div className="shrink-0 text-muted-foreground dark:text-muted-foreground">
+                {icon}
+              </div>
+            )}
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <HeadingTag
                   id={id ? `${id}-heading` : undefined}
-                  className="text-base font-semibold text-gray-900 dark:text-gray-100 sm:text-lg"
+                  className="text-base font-semibold text-foreground dark:text-muted-foreground sm:text-lg"
                 >
                   {title}
                 </HeadingTag>
                 {required && (
-                  <span className="text-red-500 text-sm" aria-label={t('validation.required')}>
+                  <span className="text-danger text-sm" aria-label={t('validation.required')}>
                     *
                   </span>
                 )}
@@ -282,7 +289,7 @@ export function FormSection({
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-5 w-5 p-0">
-                          <Info className="h-4 w-4 text-gray-400" />
+                          <Info className="h-4 w-4 text-muted-foreground" />
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>
@@ -293,7 +300,9 @@ export function FormSection({
                 )}
               </div>
               {description && (
-                <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">{description}</p>
+                <p className="mt-0.5 text-sm text-muted-foreground dark:text-muted-foreground">
+                  {description}
+                </p>
               )}
             </div>
 
@@ -323,9 +332,9 @@ export function FormSection({
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="px-4 py-3 sm:px-6 border-t border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30"
+              className="px-4 py-3 sm:px-6 border-t border-danger/30 dark:border-danger bg-danger/10 dark:bg-danger/30"
             >
-              <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
+              <div className="flex items-center gap-2 text-sm text-danger dark:text-danger">
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 <span>{error}</span>
               </div>

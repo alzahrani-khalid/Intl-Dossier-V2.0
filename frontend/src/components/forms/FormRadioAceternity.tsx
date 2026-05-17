@@ -44,7 +44,7 @@ export function FormRadioAceternity({
 }: FormRadioAceternityProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const [hoveredOption, setHoveredOption] = useState<string | null>(null)
+  const [hoveredOption, setHoveredOption] = useState<string | null>(null)
 
   const radioGroupClasses = cn(
     // Base layout
@@ -71,8 +71,8 @@ const [hoveredOption, setHoveredOption] = useState<string | null>(null)
     cn(
       radioItemContainerClasses,
       // Aceternity enhancements
-      'border border-gray-200 dark:border-gray-700',
-      'hover:bg-gray-50 dark:hover:bg-zinc-800',
+      'border border-line dark:border-line',
+      'hover:bg-muted dark:hover:bg-muted',
       hoveredOption === optionValue && 'shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1)]',
       value === optionValue && 'border-primary-500 bg-primary-50/50 dark:bg-primary-900/10',
     )
@@ -84,7 +84,7 @@ const [hoveredOption, setHoveredOption] = useState<string | null>(null)
         className={cn(
           'block font-medium text-start',
           'text-sm sm:text-base',
-          'text-gray-700 dark:text-gray-300',
+          'text-muted-foreground dark:text-muted-foreground',
         )}
         initial={{ opacity: 0, y: -5 }}
         animate={{ opacity: 1, y: 0 }}
@@ -92,7 +92,7 @@ const [hoveredOption, setHoveredOption] = useState<string | null>(null)
       >
         {label}
         {required && (
-          <span className="text-red-500 ms-1" aria-label={t('validation.required')}>
+          <span className="text-danger ms-1" aria-label={t('validation.required')}>
             *
           </span>
         )}
@@ -136,14 +136,14 @@ const [hoveredOption, setHoveredOption] = useState<string | null>(null)
                 className={cn(
                   'cursor-pointer text-start',
                   'text-sm sm:text-base',
-                  'text-gray-700 dark:text-gray-300',
+                  'text-muted-foreground dark:text-muted-foreground',
                   disabled && 'cursor-not-allowed',
                 )}
               >
                 {option.label}
               </Label>
               {option.description && (
-                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 text-start">
+                <p className="text-xs sm:text-sm text-muted-foreground dark:text-muted-foreground mt-1 text-start">
                   {option.description}
                 </p>
               )}
@@ -156,7 +156,7 @@ const [hoveredOption, setHoveredOption] = useState<string | null>(null)
       {helpText && !error && (
         <m.p
           id={`${name}-help`}
-          className="text-sm text-gray-600 dark:text-gray-400 text-start"
+          className="text-sm text-muted-foreground dark:text-muted-foreground text-start"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.2, delay: 0.15 }}
@@ -170,7 +170,7 @@ const [hoveredOption, setHoveredOption] = useState<string | null>(null)
         {error && (
           <m.p
             id={`${name}-error`}
-            className="text-sm text-red-600 dark:text-red-400 text-start"
+            className="text-sm text-danger dark:text-danger text-start"
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -5 }}

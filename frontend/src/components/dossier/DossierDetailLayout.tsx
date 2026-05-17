@@ -210,11 +210,13 @@ export function DossierDetailLayout({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div
+                    /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierDetailLayout */
                     className={`flex items-center justify-center h-6 w-6 rounded-full ${
                       isConnected
                         ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'
                         : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
                     }`}
+                    /* eslint-enable no-restricted-syntax */
                   >
                     {isConnected ? (
                       <Wifi className="h-3.5 w-3.5" />

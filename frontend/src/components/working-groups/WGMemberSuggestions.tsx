@@ -100,8 +100,8 @@ export function WGMemberSuggestions({
   onMembersAdded,
   className,
 }: WGMemberSuggestionsProps) {
-const { isRTL } = useDirection()
-// State
+  const { isRTL } = useDirection()
+  // State
   const [selectedMembers, setSelectedMembers] = useState<Map<string, SelectedMember>>(new Map())
   const [currentStep, setCurrentStep] = useState<'select' | 'assign-roles' | 'review'>('select')
   const [activeTab, setActiveTab] = useState<'all' | 'organizations' | 'persons'>('all')
@@ -541,6 +541,7 @@ function SuggestionCard({
         <div
           className={cn(
             'h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0',
+            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WGMemberSuggestions */
             isOrg ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600',
           )}
         >
@@ -676,6 +677,7 @@ function RoleAssignmentStep({
                   <div
                     className={cn(
                       'h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0',
+                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WGMemberSuggestions */
                       isOrg ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600',
                     )}
                   >
@@ -839,6 +841,7 @@ function ReviewStep({
                   <div
                     className={cn(
                       'h-8 w-8 rounded-full flex items-center justify-center',
+                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WGMemberSuggestions */
                       isOrg ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600',
                     )}
                   >

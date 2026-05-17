@@ -101,7 +101,7 @@ BEGIN
   DELETE FROM engagements        WHERE id::text         LIKE 'b0000002-%';
   DELETE FROM activities         WHERE id::text         LIKE 'b0000002-%';
   -- engagement_dossiers + forums cascade from dossiers (ON DELETE CASCADE)
-  DELETE FROM intelligence_digest WHERE id::text LIKE 'b0000010-%';
+  DELETE FROM dashboard_digest WHERE id::text LIKE 'b0000010-%';
   DELETE FROM engagement_participants WHERE id::text LIKE 'b0000012-%' OR participant_dossier_id::text LIKE 'b0000011-%';
   DELETE FROM persons WHERE id::text LIKE 'b0000011-%';
   DELETE FROM dossiers WHERE id::text LIKE 'b0000011-%';
@@ -337,9 +337,9 @@ BEGIN
       'تم جدولة زيارة وفد BPS الإندونيسي — مؤكدة من المضيف.', NOW() - INTERVAL '20 hours', true, 'team');
 
   -- ============================================================================
-  -- 12. INTELLIGENCE_DIGEST — feeds Digest widget with publication source labels
+  -- 12. DASHBOARD_DIGEST — feeds Digest widget with publication source labels
   -- ============================================================================
-  INSERT INTO intelligence_digest
+  INSERT INTO dashboard_digest
     (id, organization_id, headline_en, headline_ar, summary_en, summary_ar,
      source_publication, occurred_at, dossier_id, created_by, created_at)
   VALUES
@@ -364,5 +364,5 @@ BEGIN
      'يمنح هذا البند لوحة التحكم مصدر منشور رابع مزروع.',
      'OECD Statistics Directorate', NOW() - INTERVAL '8 hours', v_d_oecd, v_user_id, NOW() - INTERVAL '8 hours');
 
-  RAISE NOTICE 'Seed 060 complete: 8+3+3+1 dossiers, 1 VIP participant, 3 engagement_dossiers, 4 forums, 6 tasks, 6 assignments, 8 commitments, 5 calendar_entries, 2 intake_tickets, 8 activity_stream, 4 intelligence_digest.';
+  RAISE NOTICE 'Seed 060 complete: 8+3+3+1 dossiers, 1 VIP participant, 3 engagement_dossiers, 4 forums, 6 tasks, 6 assignments, 8 commitments, 5 calendar_entries, 2 intake_tickets, 8 activity_stream, 4 dashboard_digest.';
 END $$;

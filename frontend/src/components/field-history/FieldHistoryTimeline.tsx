@@ -183,16 +183,14 @@ const FieldHistoryEntryCard = memo(function FieldHistoryEntryCard({
     <div
       className={cn(
         'relative border-s-4 ps-4 pb-4',
-        entry.rolled_back_at
-          ? 'border-gray-300 opacity-60'
-          : config.color.replace('text-', 'border-'),
+        entry.rolled_back_at ? 'border-line opacity-60' : config.color.replace('text-', 'border-'),
       )}
     >
       {/* Timeline dot */}
       <div
         className={cn(
           'absolute -start-2.5 top-0 h-5 w-5 rounded-full flex items-center justify-center',
-          entry.rolled_back_at ? 'bg-gray-200' : config.bgColor,
+          entry.rolled_back_at ? 'bg-muted' : config.bgColor,
         )}
       >
         <Icon className="h-3 w-3" />
@@ -248,8 +246,8 @@ const FieldHistoryEntryCard = memo(function FieldHistoryEntryCard({
               {/* Value comparison */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                 {/* Old value */}
-                <div className="p-2 rounded-md bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800">
-                  <div className="text-xs text-red-600 dark:text-red-400 mb-1 flex items-center gap-1">
+                <div className="p-2 rounded-md bg-danger/10 dark:bg-danger/20 border border-danger/30 dark:border-danger">
+                  <div className="text-xs text-danger dark:text-danger mb-1 flex items-center gap-1">
                     <X className="h-3 w-3" />
                     {t('entry.oldValue')}
                   </div>
@@ -259,8 +257,8 @@ const FieldHistoryEntryCard = memo(function FieldHistoryEntryCard({
                 </div>
 
                 {/* New value */}
-                <div className="p-2 rounded-md bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800">
-                  <div className="text-xs text-green-600 dark:text-green-400 mb-1 flex items-center gap-1">
+                <div className="p-2 rounded-md bg-success/10 dark:bg-success/20 border border-success/30 dark:border-success">
+                  <div className="text-xs text-success dark:text-success mb-1 flex items-center gap-1">
                     <Check className="h-3 w-3" />
                     {t('entry.newValue')}
                   </div>
@@ -284,7 +282,7 @@ const FieldHistoryEntryCard = memo(function FieldHistoryEntryCard({
 
                 {/* Rollback status or button */}
                 {entry.rolled_back_at ? (
-                  <div className="flex items-center gap-1 text-amber-600">
+                  <div className="flex items-center gap-1 text-warning">
                     <AlertCircle className="h-3 w-3" />
                     {t('entry.rolledBackAt', {
                       date: getRelativeTime(entry.rolled_back_at, isRTL),
@@ -432,8 +430,8 @@ const RollbackConfirmDialog = memo(function RollbackConfirmDialog({
                   {formatValue(entry.new_value, isRTL)}
                 </div>
               </div>
-              <div className="p-2 rounded-md bg-green-50 dark:bg-green-950/20">
-                <div className="text-xs text-green-600 dark:text-green-400 mb-1">
+              <div className="p-2 rounded-md bg-success/10 dark:bg-success/20">
+                <div className="text-xs text-success dark:text-success mb-1">
                   {t('rollback.restoreTo')}
                 </div>
                 <div className="text-sm font-mono truncate">
@@ -475,8 +473,8 @@ const TimelineSkeleton = memo(function TimelineSkeleton() {
   return (
     <div className="space-y-4">
       {[0, 1, 2].map((n) => (
-        <div key={n} className="relative border-s-4 border-gray-200 ps-4 pb-4">
-          <div className="absolute -start-2.5 top-0 h-5 w-5 rounded-full bg-gray-200" />
+        <div key={n} className="relative border-s-4 border-line ps-4 pb-4">
+          <div className="absolute -start-2.5 top-0 h-5 w-5 rounded-full bg-muted" />
           <Card className="ms-2">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between gap-2">
@@ -509,7 +507,7 @@ export const FieldHistoryTimeline = memo(function FieldHistoryTimeline({
 }: FieldHistoryTimelineProps) {
   const { t } = useTranslation('field-history')
   const { isRTL } = useDirection()
-// View mode state
+  // View mode state
   const [viewMode, setViewMode] = useState<'timeline' | 'grouped'>('timeline')
   const [selectedFieldName, setSelectedFieldName] = useState<string | undefined>(initialFieldName)
   const [expandedEntryId, setExpandedEntryId] = useState<string | null>(null)

@@ -16,8 +16,8 @@ vi.mock('@/design-system/hooks', () => ({
 type RotateCall = [number, number]
 const rotateCalls: RotateCall[] = []
 
-vi.mock('../ensureWorld', () => {
-  const d3Real = require('d3-geo') as typeof import('d3-geo')
+vi.mock('../ensureWorld', async () => {
+  const d3Real = await vi.importActual<typeof import('d3-geo')>('d3-geo')
   // Build a shim d3 namespace whose `geoOrthographic` returns a projection
   // that records rotate([λ, φ]) invocations but otherwise behaves normally.
   const shim: typeof import('d3-geo') = {

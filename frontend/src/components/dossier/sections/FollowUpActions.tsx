@@ -35,7 +35,7 @@ interface FollowUpActionsProps {
 export function FollowUpActions({ dossierId }: FollowUpActionsProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const dateLocale = isRTL ? arSA : enUS
+  const dateLocale = isRTL ? arSA : enUS
 
   // Fetch follow-up actions from work_items linked to this dossier
   const { data: workItems = [], isLoading: isLoadingWorkItems } = useQuery({
@@ -132,9 +132,13 @@ const dateLocale = isRTL ? arSA : enUS
   // Get priority badge color
   const getPriorityBadge = (priority?: string) => {
     const colors: Record<string, string> = {
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FollowUpActions
       urgent: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FollowUpActions
       high: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FollowUpActions
       medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FollowUpActions
       low: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
     }
     return colors[priority || 'medium'] || colors.medium
@@ -152,9 +156,7 @@ const dateLocale = isRTL ? arSA : enUS
   // Show empty state
   if (allActions.length === 0) {
     return (
-      <div
-        className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
-      >
+      <div className="flex flex-col items-center justify-center py-8 sm:py-12 text-center">
         <div className="mb-4 sm:mb-6">
           <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
             <ListTodo className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
@@ -184,6 +186,7 @@ const dateLocale = isRTL ? arSA : enUS
             <div className="flex items-start gap-3">
               <div className="pt-0.5">
                 {action.completed ? (
+                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FollowUpActions
                   <CheckSquare className="h-5 w-5 text-green-600" />
                 ) : (
                   <Circle className="h-5 w-5 text-muted-foreground" />

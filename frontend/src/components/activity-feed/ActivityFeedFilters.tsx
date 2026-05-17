@@ -85,58 +85,77 @@ const ENTITY_TYPE_CONFIG: Record<
   ActivityEntityType,
   { icon: typeof Globe; label_en: string; label_ar: string; color: string }
 > = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
   country: { icon: Globe, label_en: 'Country', label_ar: 'دولة', color: 'text-blue-600' },
   organization: {
     icon: Building2,
     label_en: 'Organization',
     label_ar: 'منظمة',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-purple-600',
   },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
   person: { icon: UserRound, label_en: 'Person', label_ar: 'شخص', color: 'text-green-600' },
   engagement: {
     icon: Handshake,
     label_en: 'Engagement',
     label_ar: 'ارتباط',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-orange-600',
   },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
   forum: { icon: Users, label_en: 'Forum', label_ar: 'منتدى', color: 'text-cyan-600' },
   working_group: {
     icon: Briefcase,
     label_en: 'Working Group',
     label_ar: 'مجموعة عمل',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-indigo-600',
   },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
   theme: { icon: Palette, label_en: 'Theme', label_ar: 'موضوع', color: 'text-pink-600' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
   mou: { icon: FileText, label_en: 'MoU', label_ar: 'مذكرة تفاهم', color: 'text-amber-600' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
   document: { icon: FileText, label_en: 'Document', label_ar: 'وثيقة', color: 'text-gray-600' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
   event: { icon: CalendarDays, label_en: 'Event', label_ar: 'حدث', color: 'text-red-600' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
   contact: { icon: Phone, label_en: 'Contact', label_ar: 'جهة اتصال', color: 'text-teal-600' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
   task: { icon: CheckSquare, label_en: 'Task', label_ar: 'مهمة', color: 'text-yellow-600' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
   brief: { icon: BookOpen, label_en: 'Brief', label_ar: 'موجز', color: 'text-violet-600' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
   commitment: { icon: Target, label_en: 'Commitment', label_ar: 'التزام', color: 'text-rose-600' },
   deliverable: {
     icon: Package,
     label_en: 'Deliverable',
     label_ar: 'مخرج',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-emerald-600',
   },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
   position: { icon: MapPin, label_en: 'Position', label_ar: 'موقف', color: 'text-sky-600' },
   relationship: {
     icon: Link,
     label_en: 'Relationship',
     label_ar: 'علاقة',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-fuchsia-600',
   },
   intelligence: {
     icon: Brain,
     label_en: 'Intelligence',
     label_ar: 'استخبارات',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-slate-600',
   },
   intake_ticket: {
     icon: Ticket,
     label_en: 'Intake Ticket',
     label_ar: 'تذكرة',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-lime-600',
   },
 }
@@ -149,105 +168,135 @@ const ACTION_TYPE_CONFIG: Record<
     icon: Plus,
     label_en: 'Create',
     label_ar: 'إنشاء',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-green-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     bgColor: 'bg-green-100',
   },
   update: {
     icon: Edit3,
     label_en: 'Update',
     label_ar: 'تحديث',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-blue-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     bgColor: 'bg-blue-100',
   },
   delete: {
     icon: Trash2,
     label_en: 'Delete',
     label_ar: 'حذف',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-red-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     bgColor: 'bg-red-100',
   },
   comment: {
     icon: MessageSquare,
     label_en: 'Comment',
     label_ar: 'تعليق',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-purple-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     bgColor: 'bg-purple-100',
   },
   status_change: {
     icon: GitBranch,
     label_en: 'Status Change',
     label_ar: 'تغيير الحالة',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-yellow-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     bgColor: 'bg-yellow-100',
   },
   upload: {
     icon: Upload,
     label_en: 'Upload',
     label_ar: 'رفع',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-indigo-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     bgColor: 'bg-indigo-100',
   },
   download: {
     icon: Download,
     label_en: 'Download',
     label_ar: 'تحميل',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-gray-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     bgColor: 'bg-gray-100',
   },
   view: {
     icon: Eye,
     label_en: 'View',
     label_ar: 'عرض',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-teal-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     bgColor: 'bg-teal-100',
   },
   share: {
     icon: Share2,
     label_en: 'Share',
     label_ar: 'مشاركة',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-pink-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     bgColor: 'bg-pink-100',
   },
   assign: {
     icon: UserPlus,
     label_en: 'Assign',
     label_ar: 'تعيين',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-orange-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     bgColor: 'bg-orange-100',
   },
   mention: {
     icon: AtSign,
     label_en: 'Mention',
     label_ar: 'إشارة',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-cyan-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     bgColor: 'bg-cyan-100',
   },
   approval: {
     icon: CheckCircle,
     label_en: 'Approval',
     label_ar: 'موافقة',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-emerald-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     bgColor: 'bg-emerald-100',
   },
   rejection: {
     icon: XCircle,
     label_en: 'Rejection',
     label_ar: 'رفض',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-rose-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     bgColor: 'bg-rose-100',
   },
   archive: {
     icon: Archive,
     label_en: 'Archive',
     label_ar: 'أرشفة',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-slate-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     bgColor: 'bg-slate-100',
   },
   restore: {
     icon: RotateCcw,
     label_en: 'Restore',
     label_ar: 'استعادة',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     color: 'text-violet-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActivityFeedFilters
     bgColor: 'bg-violet-100',
   },
 }
@@ -282,8 +331,8 @@ export function ActivityFeedFilters({
   showSearch = true,
   className,
 }: ActivityFiltersProps) {
-const { isRTL } = useDirection()
-const [searchValue, setSearchValue] = useState(filters.search || '')
+  const { isRTL } = useDirection()
+  const [searchValue, setSearchValue] = useState(filters.search || '')
   const [datePreset, setDatePreset] = useState<DateRangePreset>('last_30_days')
   const [showCustomDates, setShowCustomDates] = useState(false)
 

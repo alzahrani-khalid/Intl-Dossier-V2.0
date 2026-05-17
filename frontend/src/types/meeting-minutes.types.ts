@@ -429,97 +429,142 @@ export const STATUS_COLORS: Record<
   { bg: string; text: string; border: string }
 > = {
   draft: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-gray-50 dark:bg-gray-900/20',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-gray-700 dark:text-gray-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     border: 'border-gray-200 dark:border-gray-800',
   },
   in_progress: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-blue-50 dark:bg-blue-900/20',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-blue-700 dark:text-blue-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     border: 'border-blue-200 dark:border-blue-800',
   },
   review: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-yellow-50 dark:bg-yellow-900/20',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-yellow-700 dark:text-yellow-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     border: 'border-yellow-200 dark:border-yellow-800',
   },
   approved: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-green-50 dark:bg-green-900/20',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-green-700 dark:text-green-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     border: 'border-green-200 dark:border-green-800',
   },
   archived: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-slate-50 dark:bg-slate-900/20',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-slate-700 dark:text-slate-300',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     border: 'border-slate-200 dark:border-slate-800',
   },
 }
 
 export const PRIORITY_COLORS: Record<ActionItemPriority, { bg: string; text: string }> = {
   low: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-green-100 dark:bg-green-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-green-700 dark:text-green-300',
   },
   medium: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-yellow-100 dark:bg-yellow-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-yellow-700 dark:text-yellow-300',
   },
   high: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-orange-100 dark:bg-orange-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-orange-700 dark:text-orange-300',
   },
   urgent: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-red-100 dark:bg-red-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-red-700 dark:text-red-300',
   },
 }
 
 export const ACTION_ITEM_STATUS_COLORS: Record<ActionItemStatus, { bg: string; text: string }> = {
   pending: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-gray-100 dark:bg-gray-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-gray-700 dark:text-gray-300',
   },
   in_progress: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-blue-100 dark:bg-blue-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-blue-700 dark:text-blue-300',
   },
   completed: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-green-100 dark:bg-green-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-green-700 dark:text-green-300',
   },
   cancelled: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-red-100 dark:bg-red-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-red-700 dark:text-red-300',
   },
   deferred: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-purple-100 dark:bg-purple-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-purple-700 dark:text-purple-300',
   },
 }
 
 export const ATTENDANCE_STATUS_COLORS: Record<AttendanceStatus, { bg: string; text: string }> = {
   present: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-green-100 dark:bg-green-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-green-700 dark:text-green-300',
   },
   absent: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-red-100 dark:bg-red-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-red-700 dark:text-red-300',
   },
   excused: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-yellow-100 dark:bg-yellow-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-yellow-700 dark:text-yellow-300',
   },
   late: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-orange-100 dark:bg-orange-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-orange-700 dark:text-orange-300',
   },
   left_early: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-purple-100 dark:bg-purple-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-purple-700 dark:text-purple-300',
   },
   remote: {
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     bg: 'bg-blue-100 dark:bg-blue-900/30',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes.types
     text: 'text-blue-700 dark:text-blue-300',
   },
 }

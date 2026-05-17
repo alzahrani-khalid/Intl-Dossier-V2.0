@@ -98,24 +98,43 @@ const ENTITY_TYPE_ICONS: Record<ActivityEntityType, typeof Globe> = {
 }
 
 const ENTITY_TYPE_COLORS: Record<ActivityEntityType, string> = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   country: 'text-blue-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   organization: 'text-purple-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   person: 'text-green-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   engagement: 'text-orange-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   forum: 'text-cyan-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   working_group: 'text-indigo-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   theme: 'text-pink-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   mou: 'text-amber-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   document: 'text-gray-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   event: 'text-red-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   contact: 'text-teal-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   task: 'text-yellow-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   brief: 'text-violet-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   commitment: 'text-rose-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   deliverable: 'text-emerald-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   position: 'text-sky-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   relationship: 'text-fuchsia-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   intelligence: 'text-slate-600',
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   intake_ticket: 'text-lime-600',
 }
 
@@ -123,43 +142,64 @@ const ACTION_TYPE_CONFIG: Record<
   ActivityActionType,
   { icon: typeof Plus; color: string; bgColor: string }
 > = {
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   create: { icon: Plus, color: 'text-green-600', bgColor: 'bg-green-100 dark:bg-green-900/30' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   update: { icon: Edit3, color: 'text-blue-600', bgColor: 'bg-blue-100 dark:bg-blue-900/30' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   delete: { icon: Trash2, color: 'text-red-600', bgColor: 'bg-red-100 dark:bg-red-900/30' },
   comment: {
     icon: MessageSquare,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
     color: 'text-purple-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
     bgColor: 'bg-purple-100 dark:bg-purple-900/30',
   },
   status_change: {
     icon: GitBranch,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
     color: 'text-yellow-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
     bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
   },
   upload: {
     icon: Upload,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
     color: 'text-indigo-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
     bgColor: 'bg-indigo-100 dark:bg-indigo-900/30',
   },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   download: { icon: Download, color: 'text-gray-600', bgColor: 'bg-gray-100 dark:bg-gray-900/30' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   view: { icon: Eye, color: 'text-teal-600', bgColor: 'bg-teal-100 dark:bg-teal-900/30' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   share: { icon: Share2, color: 'text-pink-600', bgColor: 'bg-pink-100 dark:bg-pink-900/30' },
   assign: {
     icon: UserPlus,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
     color: 'text-orange-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
     bgColor: 'bg-orange-100 dark:bg-orange-900/30',
   },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   mention: { icon: AtSign, color: 'text-cyan-600', bgColor: 'bg-cyan-100 dark:bg-cyan-900/30' },
   approval: {
     icon: CheckCircle,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
     color: 'text-emerald-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
     bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
   },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   rejection: { icon: XCircle, color: 'text-rose-600', bgColor: 'bg-rose-100 dark:bg-rose-900/30' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
   archive: { icon: Archive, color: 'text-slate-600', bgColor: 'bg-slate-100 dark:bg-slate-900/30' },
   restore: {
     icon: RotateCcw,
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
     color: 'text-violet-600',
+    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed
     bgColor: 'bg-violet-100 dark:bg-violet-900/30',
   },
 }
@@ -235,6 +275,7 @@ function ActivityItemComponent({
       tabIndex={0}
       className={cn(
         'flex gap-3 p-4 hover:bg-muted/50 transition-colors cursor-pointer border-b last:border-b-0',
+        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedActivityFeed */
         activity.isNew && 'bg-yellow-50 dark:bg-yellow-900/10 animate-pulse',
       )}
       onClick={handleEntityClick}
@@ -380,8 +421,8 @@ export function EnhancedActivityFeed({
   emptyMessage,
   onActivityClick,
 }: ActivityFeedProps) {
-const { isRTL } = useDirection()
-const loadMoreRef = useRef<HTMLDivElement>(null)
+  const { isRTL } = useDirection()
+  const loadMoreRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(loadMoreRef as React.RefObject<HTMLElement>)
 
   // Hooks

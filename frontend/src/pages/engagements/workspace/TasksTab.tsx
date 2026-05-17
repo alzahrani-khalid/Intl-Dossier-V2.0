@@ -1,14 +1,13 @@
 /**
  * TasksTab — Inline kanban board for engagement workspace
  * Replaces the dialog-based EngagementKanbanDialog with an embedded board.
- * Desktop: horizontal columns with drag-and-drop via kibo-ui/kanban.
+ * Desktop: horizontal columns with drag-and-drop via the shared Kanban primitive.
  * Mobile: stacked collapsible sections with "Move to" dropdown.
  */
 
 import { type ReactElement, useMemo, useState, useCallback } from 'react'
 import { useParams } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import type { DragEndEvent } from '@dnd-kit/core'
 import { useDirection } from '@/hooks/useDirection'
 import {
   useEngagementKanban,
@@ -22,28 +21,16 @@ import {
   KanbanHeader,
   KanbanCards,
   KanbanCard,
-} from '@/components/kibo-ui/kanban'
+  type DragEndEvent,
+} from '@/components/kanban'
 import { KanbanTaskCard } from '@/components/assignments/KanbanTaskCard'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import {
-  Plus,
-  ChevronDown,
-  ChevronUp,
-  ArrowDownUp,
-  ClipboardList,
-} from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Plus, ChevronDown, ChevronUp, ArrowDownUp, ClipboardList } from 'lucide-react'
 
 const VISIBLE_STAGES: WorkflowStage[] = ['todo', 'in_progress', 'review', 'done']
-
-const STAGE_COLORS: Record<WorkflowStage, string> = {
-  todo: 'bg-slate-100 dark:bg-slate-800',
-  in_progress: 'bg-blue-50 dark:bg-blue-950',
-  review: 'bg-amber-50 dark:bg-amber-950',
-  done: 'bg-emerald-50 dark:bg-emerald-950',
-  cancelled: 'bg-red-50 dark:bg-red-950',
-}
 
 export default function TasksTab(): ReactElement {
   const { engagementId } = useParams({
@@ -54,10 +41,7 @@ export default function TasksTab(): ReactElement {
   const { isRTL } = useDirection()
   const [sortBy, setSortBy] = useState<SortOption>('created_at')
 
-  const { columns, stats, handleDragEnd, isLoading } = useEngagementKanban(
-    engagementId,
-    sortBy,
-  )
+  const { columns, stats, handleDragEnd, isLoading } = useEngagementKanban(engagementId, sortBy)
 
   // Determine which stages to show (include cancelled only if non-empty)
   const activeStages = useMemo((): WorkflowStage[] => {
@@ -66,7 +50,7 @@ export default function TasksTab(): ReactElement {
     return cancelledCount > 0 ? [...VISIBLE_STAGES, 'cancelled'] : VISIBLE_STAGES
   }, [columns])
 
-  // Transform columns to kibo-ui format
+  // Transform columns to shared Kanban primitive format
   const kanbanColumns = useMemo(
     () =>
       activeStages.map((stage) => ({
@@ -76,7 +60,7 @@ export default function TasksTab(): ReactElement {
     [activeStages, tAssign],
   )
 
-  // Transform assignments to kibo-ui data format
+  // Transform assignments to shared Kanban primitive data format
   const kanbanData = useMemo(() => {
     if (!columns) return []
     const items: Array<{ id: string; name: string; column: string }> = []
@@ -110,13 +94,7 @@ export default function TasksTab(): ReactElement {
       const item = kanbanData.find((a) => a.id === assignmentId)
       if (!item) return
 
-      const validStages: WorkflowStage[] = [
-        'todo',
-        'in_progress',
-        'review',
-        'done',
-        'cancelled',
-      ]
+      const validStages: WorkflowStage[] = ['todo', 'in_progress', 'review', 'done', 'cancelled']
       const newStage = over.id as WorkflowStage
       if (validStages.includes(newStage) && item.column !== newStage) {
         handleDragEnd(assignmentId, newStage)
@@ -125,8 +103,7 @@ export default function TasksTab(): ReactElement {
     [kanbanData, handleDragEnd],
   )
 
-  const isEmpty =
-    !isLoading && (stats.total === 0 || !columns)
+  const isEmpty = !isLoading && (stats.total === 0 || !columns)
 
   // Loading state
   if (isLoading) {
@@ -145,9 +122,7 @@ export default function TasksTab(): ReactElement {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4">
         <ClipboardList className="h-12 w-12 text-muted-foreground/40 mb-4" />
-        <h3 className="text-lg font-semibold text-foreground mb-1">
-          {t('empty.tasks.heading')}
-        </h3>
+        <h3 className="text-lg font-semibold text-foreground mb-1">{t('empty.tasks.heading')}</h3>
         <p className="text-sm text-muted-foreground text-center max-w-sm mb-4">
           {t('empty.tasks.body')}
         </p>
@@ -199,20 +174,21 @@ export default function TasksTab(): ReactElement {
         </div>
       </div>
 
-      {/* Desktop Kanban Board (md+) */}
-      <div className="hidden md:block">
-        <div className="overflow-x-auto scrollbar-thin pb-2">
+      {/* Desktop Kanban Board (lg+) — 5 cols only fit cleanly ≥1024px */}
+      <div className="hidden lg:block">
+        <div className="pb-2">
           <KanbanProvider
             columns={kanbanColumns}
             data={kanbanData}
             onDragEnd={onKanbanDragEnd}
-            className="min-w-[1000px] pb-2 gap-3"
+            className="pb-2 gap-2 grid-cols-5"
           >
             {(column) => (
               <KanbanBoard
                 key={column.id}
                 id={column.id}
-                className={`bg-muted/30 border-muted min-w-[280px]`}
+                isCancelled={column.id === 'cancelled'}
+                className="min-w-0"
               >
                 <KanbanHeader className="bg-muted/50 font-semibold text-sm px-4 py-3 border-b">
                   <div className="flex items-center justify-between">
@@ -231,11 +207,9 @@ export default function TasksTab(): ReactElement {
                         id={assignment.id}
                         name={assignment.name}
                         column={assignment.column}
-                        className="bg-background hover:shadow-md transition-shadow border-border"
+                        className="bg-background hover:bg-surface-raised hover:border-line-soft transition-all"
                       >
-                        {fullAssignment != null && (
-                          <KanbanTaskCard assignment={fullAssignment} />
-                        )}
+                        {fullAssignment != null && <KanbanTaskCard assignment={fullAssignment} />}
                       </KanbanCard>
                     )
                   }}
@@ -246,8 +220,8 @@ export default function TasksTab(): ReactElement {
         </div>
       </div>
 
-      {/* Mobile Stacked View (< md) */}
-      <div className="block md:hidden space-y-3">
+      {/* Mobile Stacked View (< lg) */}
+      <div className="block lg:hidden space-y-3">
         {activeStages.map((stage) => (
           <MobileStageSection
             key={stage}
@@ -289,9 +263,7 @@ function MobileStageSection({
   onMoveToStage: (assignmentId: string, newStage: WorkflowStage) => void
 }): ReactElement {
   const { t: tAssign } = useTranslation('assignments')
-  const [expanded, setExpanded] = useState(
-    stage === 'todo' || stage === 'in_progress',
-  )
+  const [expanded, setExpanded] = useState(stage === 'todo' || stage === 'in_progress')
 
   const toggleExpanded = useCallback((): void => {
     setExpanded((prev) => !prev)
@@ -299,7 +271,11 @@ function MobileStageSection({
 
   return (
     <div
-      className={`rounded-lg border ${STAGE_COLORS[stage]} overflow-hidden`}
+      data-mobile-stage={stage}
+      className={cn(
+        'rounded-lg border bg-muted/30 border-muted overflow-hidden',
+        stage === 'cancelled' && 'border-danger/30',
+      )}
     >
       <button
         type="button"
@@ -328,10 +304,7 @@ function MobileStageSection({
             </p>
           ) : (
             assignments.map((assignment) => (
-              <div
-                key={assignment.id}
-                className="rounded-md border bg-card p-3 space-y-2"
-              >
+              <div key={assignment.id} className="rounded-md border bg-card p-3 space-y-2">
                 <KanbanTaskCard assignment={assignment} />
 
                 {/* Move to dropdown */}

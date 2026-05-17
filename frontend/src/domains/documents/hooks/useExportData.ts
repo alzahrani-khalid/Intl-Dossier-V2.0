@@ -14,7 +14,9 @@
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import * as ExcelJS from 'exceljs'
+// exceljs (~256 kB gz) is dynamically imported inside the xlsx branches below
+// per Phase 49 D-06 — keeps the heavy dep off the initial bundle and only
+// loaded when a user actually exports to xlsx format.
 import * as DocumentsRepo from '../repositories/documents.repository'
 import type {
   ExportRequest,
@@ -390,6 +392,8 @@ export function useExportData(options: UseExportDataOptions = {}): UseExportData
 
         // Handle XLSX conversion if needed
         if (request.format === 'xlsx' && result.content) {
+          // Dynamic import keeps exceljs out of the initial bundle (Phase 49 D-06)
+          const ExcelJS = await import('exceljs')
           const workbook = new ExcelJS.Workbook()
           const worksheet = workbook.addWorksheet(request.entityType)
 
@@ -514,6 +518,8 @@ export function useExportData(options: UseExportDataOptions = {}): UseExportData
         const language = request.language || (i18n.language === 'ar' ? 'ar' : 'en')
 
         if (request.format === 'xlsx') {
+          // Dynamic import keeps exceljs out of the initial bundle (Phase 49 D-06)
+          const ExcelJS = await import('exceljs')
           const workbook = new ExcelJS.Workbook()
           const worksheet = workbook.addWorksheet(request.entityType)
 

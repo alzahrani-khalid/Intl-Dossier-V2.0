@@ -108,10 +108,12 @@ function RecommendationsHeader({
 }) {
   const { t } = useTranslation('dossier-recommendations')
   const { isRTL } = useDirection()
-return (
+  return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
+        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationsPanel */}
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationsPanel */}
           <Sparkles className="h-4 w-4 text-amber-600 dark:text-amber-400" />
         </div>
         <div>
@@ -213,6 +215,7 @@ export function DossierRecommendationsPanel({
       {isLoading ? (
         <LoadingSkeleton />
       ) : error ? (
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationsPanel
         <div className="py-4 text-center text-sm text-red-500">{t('errorLoading')}</div>
       ) : !hasRecommendations ? (
         <EmptyState onRefresh={handleRefresh} />
@@ -331,6 +334,7 @@ export function DossierRecommendationsPanel({
       ) : hasRecommendations ? (
         <>
           <div className="flex items-center gap-2 mb-2">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationsPanel */}
             <Sparkles className="h-4 w-4 text-amber-500" />
             <span className="text-xs font-medium">{t('relatedDossiers')}</span>
             <Badge variant="secondary" className="text-xs">

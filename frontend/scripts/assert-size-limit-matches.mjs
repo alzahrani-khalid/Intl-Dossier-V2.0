@@ -43,6 +43,9 @@ const expectedMatchCounts = new Map([
   ['Initial JS (entry point)', 1],
   ['React vendor', 1],
   ['TanStack vendor', 1],
+  ['HeroUI vendor', 1],
+  ['Sentry vendor', 1],
+  ['DnD vendor', 1],
   ['signature-visuals/d3-geospatial', 1],
   ['signature-visuals/static-primitives', 1],
 ])

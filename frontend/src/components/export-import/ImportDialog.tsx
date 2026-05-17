@@ -194,8 +194,8 @@ export function ImportDialog({
                 <input {...getInputProps()} />
                 <div className="flex flex-col items-center gap-3">
                   <div className="flex gap-2">
-                    <FileSpreadsheet className="h-10 w-10 text-green-500" />
-                    <FileText className="h-10 w-10 text-blue-500" />
+                    <FileSpreadsheet className="h-10 w-10 text-success" />
+                    <FileText className="h-10 w-10 text-info" />
                   </div>
                   <div>
                     <p className="text-lg font-medium">{t('import.dropzone.title')}</p>
@@ -248,7 +248,7 @@ export function ImportDialog({
             <div className="space-y-6">
               {/* File Info */}
               <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                <FileSpreadsheet className="h-8 w-8 text-green-500" />
+                <FileSpreadsheet className="h-8 w-8 text-success" />
                 <div className="flex-1 min-w-0">
                   <p className="font-medium truncate">{validationResult.fileInfo?.name}</p>
                   <p className="text-sm text-muted-foreground">
@@ -386,9 +386,9 @@ export function ImportDialog({
           {step === 'complete' && importResponse && (
             <div className="flex flex-col items-center justify-center py-8 space-y-4">
               {importResponse.success ? (
-                <CheckCircle2 className="h-12 w-12 text-green-500" />
+                <CheckCircle2 className="h-12 w-12 text-success" />
               ) : (
-                <AlertCircle className="h-12 w-12 text-yellow-500" />
+                <AlertCircle className="h-12 w-12 text-warning" />
               )}
               <div className="text-center space-y-2">
                 <p className="font-medium text-lg">
@@ -407,13 +407,13 @@ export function ImportDialog({
                 </p>
               </div>
               <div className="grid grid-cols-3 gap-4 w-full max-w-sm mt-4">
-                <div className="text-center p-3 rounded-lg bg-green-50 dark:bg-green-900/20">
-                  <p className="text-2xl font-bold text-green-600">{importResponse.createdCount}</p>
-                  <p className="text-xs text-green-700">Created</p>
+                <div className="text-center p-3 rounded-lg bg-success/10 dark:bg-success/20">
+                  <p className="text-2xl font-bold text-success">{importResponse.createdCount}</p>
+                  <p className="text-xs text-success">Created</p>
                 </div>
-                <div className="text-center p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20">
-                  <p className="text-2xl font-bold text-blue-600">{importResponse.updatedCount}</p>
-                  <p className="text-xs text-blue-700">Updated</p>
+                <div className="text-center p-3 rounded-lg bg-info/10 dark:bg-info/20">
+                  <p className="text-2xl font-bold text-info">{importResponse.updatedCount}</p>
+                  <p className="text-xs text-info">Updated</p>
                 </div>
                 <div className="text-center p-3 rounded-lg bg-muted">
                   <p className="text-2xl font-bold text-muted-foreground">

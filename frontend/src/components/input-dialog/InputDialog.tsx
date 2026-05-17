@@ -124,10 +124,12 @@ export function InputDialog({
                 onChange={(e) => setValue(e.target.value)}
                 placeholder={placeholder}
                 onKeyDown={handleKeyDown}
+                /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#InputDialog */
                 className={error ? 'border-red-500' : ''}
                 disabled={isLoading}
                 autoFocus
               />
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#InputDialog */}
               {error && <p className="text-sm text-red-500">{error}</p>}
             </div>
           )}
@@ -139,11 +141,13 @@ export function InputDialog({
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 placeholder={placeholder}
+                /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#InputDialog */
                 className={error ? 'border-red-500' : ''}
                 disabled={isLoading}
                 rows={4}
                 autoFocus
               />
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#InputDialog */}
               {error && <p className="text-sm text-red-500">{error}</p>}
             </div>
           )}
@@ -151,6 +155,7 @@ export function InputDialog({
           {inputType === 'select' && (
             <div className="space-y-2">
               <Select value={value} onValueChange={setValue} disabled={isLoading}>
+                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#InputDialog */}
                 <SelectTrigger className={error ? 'border-red-500' : ''}>
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
@@ -162,6 +167,7 @@ export function InputDialog({
                   ))}
                 </SelectContent>
               </Select>
+              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#InputDialog */}
               {error && <p className="text-sm text-red-500">{error}</p>}
             </div>
           )}

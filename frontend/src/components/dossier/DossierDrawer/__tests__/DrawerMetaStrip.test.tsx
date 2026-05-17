@@ -9,7 +9,7 @@
  *   5. last touched: same-day → today key; 1 day → yesterday key; N>=2 → relative key
  *   6. container has class "drawer-meta"
  */
-import { render, cleanup, screen } from '@testing-library/react'
+import { render, cleanup } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 let currentLang = 'en'

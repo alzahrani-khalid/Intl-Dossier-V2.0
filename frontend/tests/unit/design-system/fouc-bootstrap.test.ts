@@ -35,14 +35,15 @@ const BOOTSTRAP_PATH = resolve(__dirname, '../../../public/bootstrap.js')
 
 /** Extract one palette object block from the bootstrap source. */
 const extractPalette = (source: string, dir: Direction, mode: Mode): BootstrapPalette => {
-  // Match: <dir>: { ... <mode>: { bg: '#...', surface: '#...', surfaceRaised: '#...', ink: '#...', line: '#...' }
+  // Match compact bootstrap objects while tolerating extra first-paint fields
+  // between the canonical fields this guard compares.
   const pattern = new RegExp(
-    `${dir}\\s*:\\s*\\{[\\s\\S]*?${mode}\\s*:\\s*\\{\\s*` +
-      `bg\\s*:\\s*'([^']+)'\\s*,\\s*` +
-      `surface\\s*:\\s*'([^']+)'\\s*,\\s*` +
-      `surfaceRaised\\s*:\\s*'([^']+)'\\s*,\\s*` +
-      `ink\\s*:\\s*'([^']+)'\\s*,\\s*` +
-      `line\\s*:\\s*'([^']+)'`,
+    `${dir}\\s*:\\s*\\{[\\s\\S]*?${mode}\\s*:\\s*\\{[\\s\\S]*?` +
+      `\\bbg\\s*:\\s*'([^']+)'[\\s\\S]*?` +
+      `\\bsurface\\s*:\\s*'([^']+)'[\\s\\S]*?` +
+      `\\bsurfaceRaised\\s*:\\s*'([^']+)'[\\s\\S]*?` +
+      `\\bink\\s*:\\s*'([^']+)'[\\s\\S]*?` +
+      `\\bline\\s*:\\s*'([^']+)'`,
   )
   const match = source.match(pattern)
   if (!match) {
@@ -78,7 +79,7 @@ describe('FOUC bootstrap palette drift guard', () => {
   )
 
   it('writes --accent + --accent-fg from hue', () => {
-    expect(source).toMatch(/--accent['"]\s*,\s*'oklch\(58% 0\.14 ' \+ hue/)
-    expect(source).toMatch(/--accent-fg['"]\s*,\s*'oklch\(99% 0\.01 ' \+ hue/)
+    expect(source).toMatch(/--accent['"]\s*,\s*'oklch\(58% 0\.14 ' \+ h/)
+    expect(source).toMatch(/--accent-fg['"]\s*,\s*'oklch\(100% 0 0\)'/)
   })
 })

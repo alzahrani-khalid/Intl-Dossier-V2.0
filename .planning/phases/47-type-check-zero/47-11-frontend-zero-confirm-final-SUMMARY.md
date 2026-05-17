@@ -64,6 +64,7 @@ decisions:
   - '47-EXCEPTIONS.md `## Frontend final histogram` populated with the empty-histogram state (tsc exits 0 with no errors) plus a Cumulative D-01 / D-04 verification subsection.'
   - 'Generated files preserved: head -1 frontend/src/types/database.types.ts | grep -c "@ts-nocheck" → 1; head -3 frontend/src/routeTree.gen.ts | grep -c "@ts-nocheck" → 1.'
   - 'Shim retirement strategy: rather than mass-removing all 20 shims and breaking consumers (the underlying hooks did NOT all already match the shim shape — 47-08 only stripped bare ReturnType<typeof useMutation> annotations), this plan migrated the underlying stub hooks to return the rich state objects the consumers expect. Net effect: same type-safety improvement at the consumer destructure, but the underlying hook is now self-documenting about what its API surface is supposed to be.'
+requirements-completed: [TYPE-01]
 metrics:
   duration: ~1.5 hours wall-clock (3 commits)
   tasks_completed: 1

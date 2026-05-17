@@ -40,7 +40,7 @@ interface DuplicateCandidatesListProps {
 export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCandidatesListProps) {
   const { t } = useTranslation('duplicate-detection')
   const { isRTL } = useDirection()
-// Filters state
+  // Filters state
   const [entityType, setEntityType] = useState<DuplicateEntityType | 'all'>('all')
   const [confidenceLevel, setConfidenceLevel] = useState<ConfidenceLevel | 'all'>('all')
   const [page, setPage] = useState(0)
@@ -186,6 +186,7 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
 
       {/* Scan Result */}
       {scanMutation.isSuccess && scanMutation.data && (
+        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateCandidatesList
         <div className="rounded-lg border bg-green-50 p-4 text-green-800">
           {t('scan_complete', 'Scan complete.')} {scanMutation.data.candidates_found}{' '}
           {t('new_candidates_found', 'new candidates found.')}

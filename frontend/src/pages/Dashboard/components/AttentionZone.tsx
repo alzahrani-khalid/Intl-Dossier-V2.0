@@ -78,6 +78,7 @@ export function AttentionZone({
         {Array.from({ length: 3 }, (_, i) => (
           <Skeleton
             key={i}
+            /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AttentionZone */
             className={`h-16 rounded-[var(--radius-sm)] ${
               i === 0
                 ? 'border border-destructive/20'
@@ -85,6 +86,7 @@ export function AttentionZone({
                   ? 'border border-warning/20'
                   : 'border border-yellow-500/20'
             }`}
+            /* eslint-enable no-restricted-syntax */
           />
         ))}
       </div>

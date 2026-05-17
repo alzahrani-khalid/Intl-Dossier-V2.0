@@ -90,6 +90,7 @@ const defaultFormData: TagFormData = {
   name_en: '',
   name_ar: '',
   parent_id: null,
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TagHierarchyManager
   color: '#3B82F6',
   icon: 'tag',
   description_en: '',

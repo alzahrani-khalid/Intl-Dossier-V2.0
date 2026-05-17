@@ -65,11 +65,17 @@ const annotationTypes: Array<{
  * Color options
  */
 const colorOptions: Array<{ color: AnnotationColor; class: string }> = [
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineAnnotationDialog
   { color: 'blue', class: 'bg-blue-500' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineAnnotationDialog
   { color: 'green', class: 'bg-green-500' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineAnnotationDialog
   { color: 'yellow', class: 'bg-yellow-500' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineAnnotationDialog
   { color: 'red', class: 'bg-red-500' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineAnnotationDialog
   { color: 'purple', class: 'bg-purple-500' },
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineAnnotationDialog
   { color: 'orange', class: 'bg-orange-500' },
 ]
 
@@ -120,7 +126,7 @@ export function TimelineAnnotationDialog({
 }: TimelineAnnotationDialogProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const isEditing = !!annotation
+  const isEditing = !!annotation
 
   // Form state
   const [type, setType] = useState<AnnotationType>(annotation?.type || 'note')
@@ -345,6 +351,7 @@ export function TimelineAnnotationBadge({
   const { isRTL } = useDirection()
   const TypeIcon = annotationTypes.find((t) => t.type === annotation.type)?.icon || MessageSquare
 
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineAnnotationDialog
   const colorClass = colorOptions.find((c) => c.color === annotation.color)?.class || 'bg-blue-500'
 
   return (

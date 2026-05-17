@@ -144,7 +144,7 @@ export function AdvancedSearchFilters({
           <button
             type="button"
             onClick={() => dispatch({ type: 'SET_QUERY', payload: '' })}
-            className="absolute end-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+            className="absolute end-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-muted dark:hover:bg-muted"
             aria-label={t('search.clear')}
           >
             <X className="h-4 w-4" />
@@ -174,7 +174,7 @@ export function AdvancedSearchFilters({
 
       {/* Entity Types */}
       <div className="space-y-3">
-        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <h3 className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
           {t('entityTypes.label')}
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -192,7 +192,7 @@ export function AdvancedSearchFilters({
                   'flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-all min-h-10',
                   isSelected
                     ? 'bg-primary text-primary-foreground border-primary'
-                    : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-primary',
+                    : 'bg-muted dark:bg-muted border-line dark:border-line hover:border-primary',
                 )}
               >
                 <IconComponent className="h-4 w-4" />
@@ -247,7 +247,7 @@ export function AdvancedSearchFilters({
 
           {/* Status Filter */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <h3 className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
               {t('status.title')}
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -262,7 +262,7 @@ export function AdvancedSearchFilters({
                       'px-3 py-1.5 rounded-full border text-sm transition-all min-h-8',
                       isSelected
                         ? 'bg-primary text-primary-foreground border-primary'
-                        : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-primary',
+                        : 'bg-muted dark:bg-muted border-line dark:border-line hover:border-primary',
                     )}
                   >
                     {option.label}
@@ -285,7 +285,7 @@ export function AdvancedSearchFilters({
             </span>
             <label
               htmlFor="include-archived"
-              className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
+              className="text-sm text-muted-foreground dark:text-muted-foreground cursor-pointer"
             >
               {t('options.includeArchived')}
             </label>
@@ -293,7 +293,7 @@ export function AdvancedSearchFilters({
 
           {/* Sorting */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <h3 className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
               {t('sorting.title')}
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -311,7 +311,7 @@ export function AdvancedSearchFilters({
                     'px-3 py-1.5 rounded-full border text-sm transition-all min-h-8',
                     state.sortBy === sortOption
                       ? 'bg-primary text-primary-foreground border-primary'
-                      : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-primary',
+                      : 'bg-muted dark:bg-muted border-line dark:border-line hover:border-primary',
                   )}
                 >
                   {t(`sorting.${sortOption === 'title' ? 'title_sort' : sortOption}`)}
@@ -328,7 +328,7 @@ export function AdvancedSearchFilters({
                     },
                   })
                 }
-                className="px-3 py-1.5 rounded-full border text-sm bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-primary transition-all min-h-8"
+                className="px-3 py-1.5 rounded-full border text-sm bg-muted dark:bg-muted border-line dark:border-line hover:border-primary transition-all min-h-8"
               >
                 {state.sortOrder === 'asc' ? t('sorting.ascending') : t('sorting.descending')}
               </button>

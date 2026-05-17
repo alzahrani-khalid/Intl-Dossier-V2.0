@@ -315,15 +315,25 @@ export interface TagAnalyticsResponse {
  * Default tag colors for quick selection
  */
 export const TAG_COLOR_PALETTE = [
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
   '#EF4444', // Red
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
   '#F59E0B', // Amber
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
   '#10B981', // Emerald
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
   '#3B82F6', // Blue
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
   '#8B5CF6', // Violet
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
   '#EC4899', // Pink
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
   '#06B6D4', // Cyan
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
   '#84CC16', // Lime
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
   '#F97316', // Orange
+  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
   '#6366F1', // Indigo
 ] as const
 

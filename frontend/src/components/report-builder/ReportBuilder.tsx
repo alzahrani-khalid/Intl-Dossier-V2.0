@@ -247,6 +247,7 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
 
         <div className="flex items-center gap-2 flex-wrap">
           {isDirty && (
+            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ReportBuilder
             <Badge variant="outline" className="text-yellow-600 border-yellow-600">
               {t('common:unsaved')}
             </Badge>

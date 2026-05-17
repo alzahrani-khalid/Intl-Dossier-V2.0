@@ -48,7 +48,7 @@ export function AISuggestionPanel({
 }: AISuggestionPanelProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const [suggestionsEnabled, setSuggestionsEnabled] = useState(false)
+  const [suggestionsEnabled, setSuggestionsEnabled] = useState(false)
   const [suggestionStartTime, setSuggestionStartTime] = useState<number | null>(null)
 
   const analytics = useAISuggestionAnalytics(intakeId)
@@ -128,6 +128,7 @@ const [suggestionsEnabled, setSuggestionsEnabled] = useState(false)
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-start">
+            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AISuggestionPanel */}
             <Sparkles className={`h-5 w-5 text-purple-500 ${isRTL ? 'ms-2' : 'me-2'}`} />
             {t('entityLinks.aiSuggestions.title', 'AI-Powered Suggestions')}
           </CardTitle>
@@ -159,7 +160,9 @@ const [suggestionsEnabled, setSuggestionsEnabled] = useState(false)
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-start">
             <RefreshCw
+              /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AISuggestionPanel */
               className={`h-5 w-5 animate-spin text-purple-500 ${isRTL ? 'ms-2' : 'me-2'}`}
+              /* eslint-enable no-restricted-syntax */
             />
             {t('entityLinks.aiSuggestions.loading', 'Analyzing intake content...')}
           </CardTitle>
@@ -269,6 +272,7 @@ const [suggestionsEnabled, setSuggestionsEnabled] = useState(false)
     <Card className="w-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-start">
+          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AISuggestionPanel */}
           <CheckCircle2 className={`h-5 w-5 text-green-500 ${isRTL ? 'ms-2' : 'me-2'}`} />
           {t('entityLinks.aiSuggestions.resultsTitle', 'AI Suggestions')}
         </CardTitle>

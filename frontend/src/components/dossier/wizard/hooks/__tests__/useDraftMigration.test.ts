@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
+import { migrateLegacyDraft } from '../useDraftMigration'
 
 describe('migrateLegacyDraft', () => {
   beforeEach(() => {
@@ -6,7 +7,6 @@ describe('migrateLegacyDraft', () => {
   })
 
   it('should migrate old draft to per-type key when type field exists', () => {
-    const { migrateLegacyDraft } = require('../useDraftMigration')
     localStorage.setItem(
       'dossier-create-draft',
       JSON.stringify({
@@ -21,7 +21,6 @@ describe('migrateLegacyDraft', () => {
   })
 
   it('should NOT migrate when type field is missing', () => {
-    const { migrateLegacyDraft } = require('../useDraftMigration')
     localStorage.setItem(
       'dossier-create-draft',
       JSON.stringify({
@@ -34,7 +33,6 @@ describe('migrateLegacyDraft', () => {
   })
 
   it('should NOT overwrite existing per-type draft', () => {
-    const { migrateLegacyDraft } = require('../useDraftMigration')
     localStorage.setItem('dossier-create-country', JSON.stringify({ name_en: 'Existing' }))
     localStorage.setItem(
       'dossier-create-draft',
@@ -49,7 +47,6 @@ describe('migrateLegacyDraft', () => {
   })
 
   it('should remove type field from migrated data', () => {
-    const { migrateLegacyDraft } = require('../useDraftMigration')
     localStorage.setItem(
       'dossier-create-draft',
       JSON.stringify({
@@ -64,7 +61,6 @@ describe('migrateLegacyDraft', () => {
   })
 
   it('should silently handle invalid JSON', () => {
-    const { migrateLegacyDraft } = require('../useDraftMigration')
     localStorage.setItem('dossier-create-draft', 'not-json')
     expect(() => migrateLegacyDraft()).not.toThrow()
   })

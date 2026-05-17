@@ -327,12 +327,16 @@ export function mapColumnKeyToStatus(
 export function getSourceBadgeColors(source: WorkSource): string {
   switch (source) {
     case 'task':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#column-definitions
       return 'border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-300'
     case 'commitment':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#column-definitions
       return 'border-purple-300 dark:border-purple-700 text-purple-700 dark:text-purple-300'
     case 'intake':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#column-definitions
       return 'border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-300'
     default:
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#column-definitions
       return 'border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'
   }
 }
@@ -343,14 +347,19 @@ export function getSourceBadgeColors(source: WorkSource): string {
 export function getPriorityColor(priority: string): string {
   switch (priority) {
     case 'urgent':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#column-definitions
       return 'bg-red-500'
     case 'high':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#column-definitions
       return 'bg-orange-500'
     case 'medium':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#column-definitions
       return 'bg-yellow-500'
     case 'low':
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#column-definitions
       return 'bg-slate-400'
     default:
+      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#column-definitions
       return 'bg-slate-300'
   }
 }

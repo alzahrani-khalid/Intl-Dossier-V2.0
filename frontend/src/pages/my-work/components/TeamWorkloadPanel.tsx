@@ -84,6 +84,7 @@ export function TeamWorkloadPanel({
                   key={member.user_id}
                   className={cn(
                     'w-48 shrink-0 transition-all hover:shadow-md',
+                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TeamWorkloadPanel */
                     hasOverdue && 'border-red-200 dark:border-red-800',
                     onMemberClick && 'cursor-pointer',
                     selectedMemberId === member.user_id && 'ring-2 ring-primary ring-offset-2',
@@ -103,6 +104,7 @@ export function TeamWorkloadPanel({
                           {member.user_email.split('@')[0]}
                         </p>
                         {hasOverdue && (
+                          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TeamWorkloadPanel
                           <div className="flex items-center gap-1 text-xs text-red-600 dark:text-red-400">
                             <AlertTriangle className="h-3 w-3" />
                             <span>
@@ -128,9 +130,11 @@ export function TeamWorkloadPanel({
                         value={workloadPct}
                         className={cn(
                           'h-1.5',
+                          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TeamWorkloadPanel */
                           workloadPct > 80 && 'bg-red-100 [&>div]:bg-red-500',
                           workloadPct > 60 &&
                             workloadPct <= 80 &&
+                            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TeamWorkloadPanel */
                             'bg-orange-100 [&>div]:bg-orange-500',
                         )}
                       />
@@ -145,10 +149,13 @@ export function TeamWorkloadPanel({
                           className={cn(
                             'font-medium',
                             member.on_time_rate_30d >= 80
-                              ? 'text-green-600 dark:text-green-400'
+                              ? /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TeamWorkloadPanel */
+                                'text-green-600 dark:text-green-400'
                               : member.on_time_rate_30d >= 60
-                                ? 'text-yellow-600 dark:text-yellow-400'
-                                : 'text-red-600 dark:text-red-400',
+                                ? /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TeamWorkloadPanel */
+                                  'text-yellow-600 dark:text-yellow-400'
+                                : /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TeamWorkloadPanel */
+                                  'text-red-600 dark:text-red-400',
                           )}
                         >
                           {member.on_time_rate_30d}%

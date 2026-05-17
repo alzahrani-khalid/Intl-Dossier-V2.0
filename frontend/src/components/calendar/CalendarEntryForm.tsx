@@ -643,7 +643,9 @@ export function CalendarEntryForm({
                                 </AvatarFallback>
                               </Avatar>
                             ) : (
+                              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEntryForm
                               <div className="h-6 w-6 rounded-full bg-teal-100 dark:bg-teal-900 flex items-center justify-center">
+                                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEntryForm */}
                                 <Users className="h-3 w-3 text-teal-800 dark:text-teal-300" />
                               </div>
                             )}
@@ -688,7 +690,9 @@ export function CalendarEntryForm({
                           disabled={isSelected}
                         >
                           <div className="flex items-center gap-2 flex-1">
+                            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEntryForm */}
                             <div className="h-6 w-6 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
+                              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEntryForm */}
                               <Building2 className="h-3 w-3 text-purple-800 dark:text-purple-300" />
                             </div>
                             <span className="text-sm">{displayName}</span>
