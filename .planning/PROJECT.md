@@ -27,11 +27,25 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-## Next Milestone Goals
+## Current Milestone: v6.4 Stabilization & Carryover Sweep
 
-The v7.0 Intelligence Engine seed (`.planning/seeds/v7.0-intelligence-engine.md`) is unblocked. v6.3 shipped the schema groundwork (INTEL-01..05): `intelligence_event` + new `intelligence_digest` + polymorphic `intelligence_event_dossiers` junction + `signal_source_type` enum + regenerated TS types byte-identical across workspaces. v7.0 builds the API + UI + ingestion + alerting on top.
+**Goal:** Close v6.3 carryover debt and merge DesignV2 → main so v7.0 Intelligence Engine starts on stable ground with all quality gates enforced on `main`.
 
-**Carryover tech debt from v6.3** (queue for v6.4 quick-tasks or fold into v7.0 scope):
+**Target features:**
+
+- DesignV2 → main merge + gate enforcement verification on `main` PR contexts
+- D-54-04 RLS pre-existing fail closure (`countries` row in `sensitiveTables`) + `useStakeholderInteractionMutations` shim typed at source
+- D-19..D-23 Phase 52 deviation closure (mobile touch DnD scope, kanban regression follow-up, LTR/RTL visual baseline byte-distinction, live tasks-tab Playwright)
+- Tier-C design-token suppression cleanup — **full clear** (271 suppressions / 2336 AST nodes, wave-staged)
+- Cosmetic + CI gap closure (Phase 53 wording refresh, TweaksDrawer comment, 51-VALIDATION frontmatter, bad-design-token/bad-vi-mock positive-failure CI assertion)
+
+**Phase shape (proposed):** 55 (DesignV2 merge) → 56 (RLS + shim) → 57 (D-19..D-23) → 58 (Tier-C full clear) → 59 (cosmetic + CI gap). Estimated 14-18 plans.
+
+**Out of scope:** v7.0 Intelligence Engine (gated by v6.4 ship); net-new design tokens or direction variants; new e2e specs beyond D-22.
+
+**Next milestone after v6.4:** v7.0 Intelligence Engine seed (`.planning/seeds/v7.0-intelligence-engine.md`) unblocked once v6.4 ships. v6.3 INTEL-01..05 shipped the schema groundwork (`intelligence_event` + `intelligence_digest` + polymorphic junction + `signal_source_type` enum + byte-identical TS types); v7.0 builds API + UI + ingestion + alerting on top.
+
+**Carryover tech debt from v6.3** (folded into v6.4 phases above):
 
 - DesignV2 → main merge sequence (then push triggers v6.3 enforcement on main contexts)
 - 271 Tier-C design-token suppressions / 2336 AST nodes — cleanup waves staged as TBD-design-token-tier-c-cleanup-wave-N
@@ -136,7 +150,7 @@ The v7.0 Intelligence Engine seed (`.planning/seeds/v7.0-intelligence-engine.md`
 
 ### Active
 
-(v7.0 requirements to be defined via `/gsd:new-milestone` — Intelligence Engine API + UI + ingestion + alerting on top of v6.3 schema groundwork.)
+(v6.4 requirements to be defined via `/gsd:new-milestone` — DesignV2→main merge, RLS+shim closure, D-19..D-23 deviation closure, Tier-C full clear, cosmetic + CI gap closure.)
 
 ### Out of Scope
 
@@ -241,4 +255,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-05-17 — v6.3 milestone complete (Phases 50-54, 28 plans, 20/20 requirements satisfied)._
+_Last updated: 2026-05-17 — v6.4 Stabilization & Carryover Sweep milestone started (Phases 55-59 planned)._

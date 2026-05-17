@@ -1,17 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v6.3
-milestone_name: Carryover Sweep & v7.0 Prep
-status: shipped
-stopped_at: Milestone archived (v6.3 complete; ready for /gsd:new-milestone)
-last_updated: 2026-05-17T00:00:00.000Z
-last_activity: 2026-05-17 -- v6.3 milestone archived (Phases 50-54, 28 plans, 20/20 requirements satisfied)
+milestone: v6.4
+milestone_name: Stabilization & Carryover Sweep
+status: planning
+last_updated: '2026-05-17T07:38:00.755Z'
+last_activity: 2026-05-17
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 28
-  completed_plans: 28
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -25,11 +24,10 @@ See: .planning/PROJECT.md (updated 2026-05-17 after v6.3 milestone)
 
 ## Current Position
 
-Milestone: v6.3 (shipped 2026-05-17)
-Phase: 54 (final phase complete)
+Phase: Not started (defining requirements)
 Plan: —
-Status: Milestone archived
-Last activity: 2026-05-17 — `/gsd:complete-milestone v6.3` archived ROADMAP + REQUIREMENTS + audit + integration check to `.planning/milestones/`; tagged `v6.3`
+Status: Defining requirements
+Last activity: 2026-05-17 — Milestone v6.4 started
 
 ## Shipped This Milestone
 
