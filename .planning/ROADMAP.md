@@ -180,7 +180,7 @@ Plans:
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
-- [ ] 55-03-PLAN.md — Update main branch protection to require 8 contexts (round-trip JSON; preserve enforce_admins / no-force-push / no-deletions) (Wave 3)
+- [x] 55-03-PLAN.md — Update main branch protection to require 8 contexts (round-trip JSON; preserve enforce_admins / no-force-push / no-deletions) (Wave 3) — **SHIPPED 2026-05-17**: `gh api -X PUT` round-trip applied; live state confirmed 8 required contexts (6 original + `Design Token Check` + `react-i18next Factory Check`); all security invariants preserved (enforce_admins=true, allow_force_pushes=false, allow_deletions=false, block_creations=false, strict=true); protection-before.json + protection-after.json committed per D-16 audit trail; MERGE-02 still partial (smoke proof = Plan 04)
 
 **Wave 4** _(blocked on Wave 3 completion)_
 
@@ -260,7 +260,7 @@ Plans:
 | 44-46 | v6.1 | 14/14 | Shipped | 2026-05-08 |
 | 47-49 | v6.2 | 17/17 | Shipped | 2026-05-12 |
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
-| 55 | v6.4 | 2/4 | In Progress | — |
+| 55 | v6.4 | 3/4 | In Progress | — |
 | 56 | v6.4 | 0/0 | Not started | — |
 | 57 | v6.4 | 0/0 | Not started | — |
 | 58 | v6.4 | 0/0 | Not started | — |
@@ -270,4 +270,4 @@ Plans:
 
 ---
 
-_Roadmap last updated: 2026-05-17 — Phase 55 Plan 02 complete (2 new CI gate jobs landed on main via PR #15; both green on post-merge main HEAD; MERGE-02 partial). Plans 03-04 remain._
+_Roadmap last updated: 2026-05-17 — Phase 55 Plan 03 complete (main branch protection now requires 8 contexts via `gh api -X PUT` round-trip; all security-critical fields preserved; protection-before.json + protection-after.json committed as D-16 audit trail; MERGE-02 still partial). Plan 04 (smoke PR) remains._

@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v6.4
 milestone_name: Stabilization & Carryover Sweep
-status: executing
-last_updated: '2026-05-17T12:35:00.000Z'
-last_activity: 2026-05-17 -- Phase 55 Plan 02 complete — 2 CI gate jobs added (MERGE-02 partial)
+status: completed
+last_updated: '2026-05-17T12:47:00.000Z'
+last_activity: '2026-05-17 -- Phase 55 Plan 03 complete — main branch protection at 8 required contexts (was 6) via gh api -X PUT round-trip; `Design Token Check` + `react-i18next Factory Check` now required; all security invariants (enforce_admins=true, allow_force_pushes=false, allow_deletions=false, block_creations=false, strict=true) preserved verbatim; protection-before.json + protection-after.json committed as audit trail per D-16; MERGE-02 still PARTIAL — Plan 04 (smoke PR captures mergeStateStatus=BLOCKED) is the final proof step'
 progress:
-  total_phases: 1
-  completed_phases: 0
-  total_plans: 4
-  completed_plans: 2
-  percent: 50
+  total_phases: 9
+  completed_phases: 8
+  total_plans: 47
+  completed_plans: 47
+  percent: 89
 ---
 
 # Project State
@@ -25,9 +25,9 @@ See: .planning/PROJECT.md (updated 2026-05-17 after v6.3 milestone)
 ## Current Position
 
 Phase: 55 — DesignV2 → Main Merge & Gate Enforcement
-Plan: 03 (Wave 3 — branch protection round-trip: add 2 new contexts to required_status_checks)
-Status: Plan 02 of 4 complete; Plan 03 unblocked
-Last activity: 2026-05-17 -- Phase 55 Plan 02 complete — 2 new CI gate jobs landed on main via PR #15 (merge commit 9e4471e3); both `Design Token Check` + `react-i18next Factory Check` verified green on post-merge main HEAD CI run 25990939105; MERGE-02 partial (preparation half satisfied; Plan 03 wires into required-contexts, Plan 04 proves via smoke PR)
+Plan: 04 (Wave 4 — smoke PR with planted multi-context violations; capture mergeStateStatus=BLOCKED)
+Status: Plan 03 of 4 complete; Plan 04 unblocked
+Last activity: 2026-05-17 -- Phase 55 Plan 03 complete — main branch protection now requires exactly 8 status check contexts (was 6): the original 6 (`type-check`, `Security Scan`, `Lint`, `Bundle Size Check (size-limit)`, `Tests (frontend)`, `Tests (backend)`) PLUS the 2 new (`Design Token Check`, `react-i18next Factory Check`). PUT round-trip via `gh api` per D-16; all security-critical fields (`enforce_admins=true`, `allow_force_pushes=false`, `allow_deletions=false`, `block_creations=false`, `strict=true`, `required_pull_request_reviews=null`, `restrictions=null`) preserved verbatim. `protection-before.json` + `protection-after.json` committed as D-16 audit trail. MERGE-02 still PARTIAL — Plan 04 (smoke PR) is the final proof step that flips MERGE-02 complete.
 
 ## v6.4 Phase Plan
 
