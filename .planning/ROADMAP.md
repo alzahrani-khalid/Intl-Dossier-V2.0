@@ -170,9 +170,20 @@ Full details: [v6.3-ROADMAP.md](milestones/v6.3-ROADMAP.md)
 
 Plans:
 
+**Wave 1**
+
 - [ ] 55-01-PLAN.md — Pre-merge verification, merge PR creation + green, --no-ff merge, signed phase-55-base tag (Wave 1)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
 - [ ] 55-02-PLAN.md — Add 2 new CI jobs (Design Token Check + react-i18next Factory Check) to ci.yml via separate PR onto main (Wave 2)
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
 - [ ] 55-03-PLAN.md — Update main branch protection to require 8 contexts (round-trip JSON; preserve enforce_admins / no-force-push / no-deletions) (Wave 3)
+
+**Wave 4** _(blocked on Wave 3 completion)_
+
 - [ ] 55-04-PLAN.md — Smoke PR with 4 planted violations, evidence capture (JSON + PNG), cleanup via `gh pr close --delete-branch` (Wave 4)
 
 ### Phase 56: RLS Closure & Last Typed-Shim Retirement
