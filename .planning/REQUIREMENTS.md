@@ -11,7 +11,7 @@
 ### Merge — DesignV2 → main gate enforcement
 
 - [x] **MERGE-01**: DesignV2 branch merged to `main` with all v6.3 quality gates green (type-check, Lint, Bundle Size Check (size-limit), design-token D-05 selectors, `react-i18next` factory) — Phase 55 Plan 01 (2026-05-17): merge commit `3f763ddc17fd496ac5ab3f289221a8b70a4a3416`, phase-55-base SSH-signed, all 6 required CI contexts SUCCESS on PR #13
-- [ ] **MERGE-02**: v6.3 enforcement verified live on `main` PR contexts post-merge (smoke PR captures `mergeStateStatus=BLOCKED` on intentional violation against a required context fold-in)
+- [ ] **MERGE-02**: v6.3 enforcement verified live on `main` PR contexts post-merge (smoke PR captures `mergeStateStatus=BLOCKED` on intentional violation against a required context fold-in) — Phase 55 Plan 02 (2026-05-17): **preparation half complete** — 2 new CI jobs (`Design Token Check` + `react-i18next Factory Check`) landed on main via PR #15 (merge commit `9e4471e3`) and verified green on post-merge main HEAD CI run 25990939105. Full satisfaction requires Plan 55-03 (round-trip branch protection to require the 2 new contexts) + Plan 55-04 (smoke PR with planted violations captures `mergeStateStatus=BLOCKED`).
 
 ### Security / RLS
 
@@ -59,22 +59,22 @@
 
 ## Traceability
 
-| Requirement | Phase    | Status                           |
-| ----------- | -------- | -------------------------------- |
-| MERGE-01    | Phase 55 | ✓ Complete (2026-05-17, Plan 01) |
-| MERGE-02    | Phase 55 | Pending                          |
-| RLS-01      | Phase 56 | Pending                          |
-| TYPE-05     | Phase 56 | Pending                          |
-| DEVIATE-01  | Phase 57 | Pending                          |
-| DEVIATE-02  | Phase 57 | Pending                          |
-| DEVIATE-03  | Phase 57 | Pending                          |
-| DEVIATE-04  | Phase 57 | Pending                          |
-| TOKEN-01    | Phase 58 | Pending                          |
-| TOKEN-02    | Phase 58 | Pending                          |
-| POLISH-01   | Phase 59 | Pending                          |
-| POLISH-02   | Phase 59 | Pending                          |
-| POLISH-03   | Phase 59 | Pending                          |
-| POLISH-04   | Phase 59 | Pending                          |
+| Requirement | Phase    | Status                                            |
+| ----------- | -------- | ------------------------------------------------- |
+| MERGE-01    | Phase 55 | ✓ Complete (2026-05-17, Plan 01)                  |
+| MERGE-02    | Phase 55 | Partial (Plan 02 prep done; awaits Plans 03 + 04) |
+| RLS-01      | Phase 56 | Pending                                           |
+| TYPE-05     | Phase 56 | Pending                                           |
+| DEVIATE-01  | Phase 57 | Pending                                           |
+| DEVIATE-02  | Phase 57 | Pending                                           |
+| DEVIATE-03  | Phase 57 | Pending                                           |
+| DEVIATE-04  | Phase 57 | Pending                                           |
+| TOKEN-01    | Phase 58 | Pending                                           |
+| TOKEN-02    | Phase 58 | Pending                                           |
+| POLISH-01   | Phase 59 | Pending                                           |
+| POLISH-02   | Phase 59 | Pending                                           |
+| POLISH-03   | Phase 59 | Pending                                           |
+| POLISH-04   | Phase 59 | Pending                                           |
 
 **Coverage:** 14/14 v6.4 requirements mapped to exactly one phase. No orphans.
 

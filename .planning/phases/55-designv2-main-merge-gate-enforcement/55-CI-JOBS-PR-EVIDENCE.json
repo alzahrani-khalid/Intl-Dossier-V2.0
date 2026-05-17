@@ -1,0 +1,1261 @@
+{
+  "pr": {
+    "mergeCommit": {
+      "oid": "9e4471e358a54789e040ebb7dec8ae9438495a3d"
+    },
+    "mergeStateStatus": "UNKNOWN",
+    "number": 15,
+    "state": "MERGED",
+    "statusCheckRollup": [
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:08:36Z",
+        "conclusion": "FAILURE",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097557/job/76391875885",
+        "name": "E2E (shard 1/2)",
+        "startedAt": "2026-05-17T11:05:46Z",
+        "status": "COMPLETED",
+        "workflowName": "E2E Tests"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:05:52Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76391875808",
+        "name": "Repo Policy (Secrets/Artifacts)",
+        "startedAt": "2026-05-17T11:05:45Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:08:42Z",
+        "conclusion": "FAILURE",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097557/job/76391875853",
+        "name": "E2E (shard 2/2)",
+        "startedAt": "2026-05-17T11:05:46Z",
+        "status": "COMPLETED",
+        "workflowName": "E2E Tests"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:26:02Z",
+        "conclusion": "CANCELLED",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097557/job/76391875878",
+        "name": "QA Sweep (axe / responsive / keyboard / focus-outline)",
+        "startedAt": "2026-05-17T11:05:46Z",
+        "status": "COMPLETED",
+        "workflowName": "E2E Tests"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:06:17Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76391875809",
+        "name": "Security Scan",
+        "startedAt": "2026-05-17T11:05:45Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:14:03Z",
+        "conclusion": "FAILURE",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097557/job/76391875856",
+        "name": "Visual Regression (Phase 46)",
+        "startedAt": "2026-05-17T11:05:46Z",
+        "status": "COMPLETED",
+        "workflowName": "E2E Tests"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:07:43Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76391885275",
+        "name": "Lint",
+        "startedAt": "2026-05-17T11:05:54Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:06:41Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76391885265",
+        "name": "Design Token Check",
+        "startedAt": "2026-05-17T11:05:55Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:09:31Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097557/job/76392033623",
+        "name": "Merge Playwright reports",
+        "startedAt": "2026-05-17T11:08:44Z",
+        "status": "COMPLETED",
+        "workflowName": "E2E Tests"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:06:36Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76391885285",
+        "name": "react-i18next Factory Check",
+        "startedAt": "2026-05-17T11:05:54Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:07:51Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76391885264",
+        "name": "type-check",
+        "startedAt": "2026-05-17T11:05:54Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:08:51Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76391885303",
+        "name": "Tests (frontend)",
+        "startedAt": "2026-05-17T11:05:54Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:06:33Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76391885286",
+        "name": "Tests (backend)",
+        "startedAt": "2026-05-17T11:05:56Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:06:51Z",
+        "conclusion": "FAILURE",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76391885297",
+        "name": "Tests (integration)",
+        "startedAt": "2026-05-17T11:05:55Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:08:17Z",
+        "conclusion": "FAILURE",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76391885282",
+        "name": "E2E Tests",
+        "startedAt": "2026-05-17T11:05:54Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:08:51Z",
+        "conclusion": "FAILURE",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76391989071",
+        "name": "RTL + Responsive Tests",
+        "startedAt": "2026-05-17T11:07:54Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:09:02Z",
+        "conclusion": "FAILURE",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76391989072",
+        "name": "Accessibility Tests (RTL + WCAG AA)",
+        "startedAt": "2026-05-17T11:07:54Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:09:02Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76391989075",
+        "name": "Bundle Size Check (size-limit)",
+        "startedAt": "2026-05-17T11:07:53Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:09:23Z",
+        "conclusion": "CANCELLED",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76392041332",
+        "name": "Build (backend)",
+        "startedAt": "2026-05-17T11:08:53Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:09:20Z",
+        "conclusion": "FAILURE",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76392041331",
+        "name": "Build (frontend)",
+        "startedAt": "2026-05-17T11:08:53Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:09:23Z",
+        "conclusion": "SKIPPED",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76392070379",
+        "name": "Lighthouse CI",
+        "startedAt": "2026-05-17T11:09:23Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:09:23Z",
+        "conclusion": "SKIPPED",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25989097559/job/76392070329",
+        "name": "Docker Build",
+        "startedAt": "2026-05-17T11:09:23Z",
+        "status": "COMPLETED",
+        "workflowName": "CI"
+      },
+      {
+        "__typename": "CheckRun",
+        "completedAt": "2026-05-17T11:06:09Z",
+        "conclusion": "SUCCESS",
+        "detailsUrl": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/runs/76391897153",
+        "name": "Trivy",
+        "startedAt": "2026-05-17T11:06:07Z",
+        "status": "COMPLETED",
+        "workflowName": ""
+      }
+    ]
+  },
+  "main_run_id": 25990939105,
+  "main_run_head_sha": "9e4471e358a54789e040ebb7dec8ae9438495a3d",
+  "main_run_jobs": {
+    "total_count": 10,
+    "jobs": [
+      {
+        "id": 76396832814,
+        "run_id": 25990939105,
+        "workflow_name": "CI",
+        "head_branch": "main",
+        "run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOP2-u6s8AAAARyZsoLg",
+        "head_sha": "9e4471e358a54789e040ebb7dec8ae9438495a3d",
+        "url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/jobs/76396832814",
+        "html_url": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105/job/76396832814",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-05-17T12:32:15Z",
+        "started_at": "2026-05-17T12:32:16Z",
+        "completed_at": "2026-05-17T12:32:41Z",
+        "name": "Security Scan",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-05-17T12:32:17Z",
+            "completed_at": "2026-05-17T12:32:24Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-05-17T12:32:24Z",
+            "completed_at": "2026-05-17T12:32:29Z"
+          },
+          {
+            "name": "Run Trivy vulnerability scanner",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-05-17T12:32:29Z",
+            "completed_at": "2026-05-17T12:32:37Z"
+          },
+          {
+            "name": "Upload Trivy results to GitHub Security tab",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 4,
+            "started_at": "2026-05-17T12:32:37Z",
+            "completed_at": "2026-05-17T12:32:39Z"
+          },
+          {
+            "name": "Post Upload Trivy results to GitHub Security tab",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-05-17T12:32:39Z",
+            "completed_at": "2026-05-17T12:32:39Z"
+          },
+          {
+            "name": "Post Run Trivy vulnerability scanner",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-05-17T12:32:39Z",
+            "completed_at": "2026-05-17T12:32:39Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-05-17T12:32:39Z",
+            "completed_at": "2026-05-17T12:32:39Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-05-17T12:32:40Z",
+            "completed_at": "2026-05-17T12:32:40Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/check-runs/76396832814",
+        "labels": ["ubuntu-latest"],
+        "runner_id": 1000001008,
+        "runner_name": "GitHub Actions 1000001008",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 76396832822,
+        "run_id": 25990939105,
+        "workflow_name": "CI",
+        "head_branch": "main",
+        "run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOP2-u6s8AAAARyZsoNg",
+        "head_sha": "9e4471e358a54789e040ebb7dec8ae9438495a3d",
+        "url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/jobs/76396832822",
+        "html_url": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105/job/76396832822",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-05-17T12:32:15Z",
+        "started_at": "2026-05-17T12:32:16Z",
+        "completed_at": "2026-05-17T12:32:24Z",
+        "name": "Repo Policy (Secrets/Artifacts)",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-05-17T12:32:17Z",
+            "completed_at": "2026-05-17T12:32:17Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-05-17T12:32:17Z",
+            "completed_at": "2026-05-17T12:32:22Z"
+          },
+          {
+            "name": "Block committed env files and build artifacts",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-05-17T12:32:22Z",
+            "completed_at": "2026-05-17T12:32:22Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-05-17T12:32:22Z",
+            "completed_at": "2026-05-17T12:32:23Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-05-17T12:32:23Z",
+            "completed_at": "2026-05-17T12:32:23Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/check-runs/76396832822",
+        "labels": ["ubuntu-latest"],
+        "runner_id": 1000001009,
+        "runner_name": "GitHub Actions 1000001009",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 76396843261,
+        "run_id": 25990939105,
+        "workflow_name": "CI",
+        "head_branch": "main",
+        "run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOP2-u6s8AAAARyZtQ_Q",
+        "head_sha": "9e4471e358a54789e040ebb7dec8ae9438495a3d",
+        "url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/jobs/76396843261",
+        "html_url": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105/job/76396843261",
+        "status": "in_progress",
+        "conclusion": null,
+        "created_at": "2026-05-17T12:32:24Z",
+        "started_at": "2026-05-17T12:32:25Z",
+        "completed_at": null,
+        "name": "Tests (frontend)",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-05-17T12:32:26Z",
+            "completed_at": "2026-05-17T12:32:27Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-05-17T12:32:27Z",
+            "completed_at": "2026-05-17T12:32:31Z"
+          },
+          {
+            "name": "Setup pnpm",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-05-17T12:32:31Z",
+            "completed_at": "2026-05-17T12:32:32Z"
+          },
+          {
+            "name": "Setup Node.js",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-05-17T12:32:32Z",
+            "completed_at": "2026-05-17T12:32:45Z"
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-05-17T12:32:45Z",
+            "completed_at": "2026-05-17T12:32:51Z"
+          },
+          {
+            "name": "Run frontend tests",
+            "status": "in_progress",
+            "conclusion": null,
+            "number": 6,
+            "started_at": "2026-05-17T12:32:51Z",
+            "completed_at": null
+          },
+          {
+            "name": "Post Setup Node.js",
+            "status": "pending",
+            "conclusion": null,
+            "number": 10,
+            "started_at": null,
+            "completed_at": null
+          },
+          {
+            "name": "Post Setup pnpm",
+            "status": "pending",
+            "conclusion": null,
+            "number": 11,
+            "started_at": null,
+            "completed_at": null
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "pending",
+            "conclusion": null,
+            "number": 12,
+            "started_at": null,
+            "completed_at": null
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/check-runs/76396843261",
+        "labels": ["ubuntu-latest"],
+        "runner_id": 1000001012,
+        "runner_name": "GitHub Actions 1000001012",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 76396843270,
+        "run_id": 25990939105,
+        "workflow_name": "CI",
+        "head_branch": "main",
+        "run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOP2-u6s8AAAARyZtRBg",
+        "head_sha": "9e4471e358a54789e040ebb7dec8ae9438495a3d",
+        "url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/jobs/76396843270",
+        "html_url": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105/job/76396843270",
+        "status": "in_progress",
+        "conclusion": null,
+        "created_at": "2026-05-17T12:32:24Z",
+        "started_at": "2026-05-17T12:32:26Z",
+        "completed_at": null,
+        "name": "type-check",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-05-17T12:32:27Z",
+            "completed_at": "2026-05-17T12:32:28Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-05-17T12:32:28Z",
+            "completed_at": "2026-05-17T12:32:33Z"
+          },
+          {
+            "name": "Setup pnpm",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-05-17T12:32:33Z",
+            "completed_at": "2026-05-17T12:32:34Z"
+          },
+          {
+            "name": "Setup Node.js",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-05-17T12:32:34Z",
+            "completed_at": "2026-05-17T12:32:49Z"
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-05-17T12:32:49Z",
+            "completed_at": "2026-05-17T12:32:56Z"
+          },
+          {
+            "name": "Type-check frontend",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-05-17T12:32:56Z",
+            "completed_at": "2026-05-17T12:33:51Z"
+          },
+          {
+            "name": "Type-check backend",
+            "status": "in_progress",
+            "conclusion": null,
+            "number": 7,
+            "started_at": "2026-05-17T12:33:51Z",
+            "completed_at": null
+          },
+          {
+            "name": "Post Setup Node.js",
+            "status": "pending",
+            "conclusion": null,
+            "number": 12,
+            "started_at": null,
+            "completed_at": null
+          },
+          {
+            "name": "Post Setup pnpm",
+            "status": "pending",
+            "conclusion": null,
+            "number": 13,
+            "started_at": null,
+            "completed_at": null
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "pending",
+            "conclusion": null,
+            "number": 14,
+            "started_at": null,
+            "completed_at": null
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/check-runs/76396843270",
+        "labels": ["ubuntu-latest"],
+        "runner_id": 1000001014,
+        "runner_name": "GitHub Actions 1000001014",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 76396843272,
+        "run_id": 25990939105,
+        "workflow_name": "CI",
+        "head_branch": "main",
+        "run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOP2-u6s8AAAARyZtRCA",
+        "head_sha": "9e4471e358a54789e040ebb7dec8ae9438495a3d",
+        "url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/jobs/76396843272",
+        "html_url": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105/job/76396843272",
+        "status": "in_progress",
+        "conclusion": null,
+        "created_at": "2026-05-17T12:32:24Z",
+        "started_at": "2026-05-17T12:32:26Z",
+        "completed_at": null,
+        "name": "Lint",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-05-17T12:32:27Z",
+            "completed_at": "2026-05-17T12:32:28Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-05-17T12:32:28Z",
+            "completed_at": "2026-05-17T12:32:33Z"
+          },
+          {
+            "name": "Setup pnpm",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-05-17T12:32:33Z",
+            "completed_at": "2026-05-17T12:32:34Z"
+          },
+          {
+            "name": "Setup Node.js",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-05-17T12:32:34Z",
+            "completed_at": "2026-05-17T12:32:51Z"
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-05-17T12:32:51Z",
+            "completed_at": "2026-05-17T12:32:58Z"
+          },
+          {
+            "name": "Run linting",
+            "status": "in_progress",
+            "conclusion": null,
+            "number": 6,
+            "started_at": "2026-05-17T12:32:58Z",
+            "completed_at": null
+          },
+          {
+            "name": "Post Setup Node.js",
+            "status": "pending",
+            "conclusion": null,
+            "number": 10,
+            "started_at": null,
+            "completed_at": null
+          },
+          {
+            "name": "Post Setup pnpm",
+            "status": "pending",
+            "conclusion": null,
+            "number": 11,
+            "started_at": null,
+            "completed_at": null
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "pending",
+            "conclusion": null,
+            "number": 12,
+            "started_at": null,
+            "completed_at": null
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/check-runs/76396843272",
+        "labels": ["ubuntu-latest"],
+        "runner_id": 1000001013,
+        "runner_name": "GitHub Actions 1000001013",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 76396843279,
+        "run_id": 25990939105,
+        "workflow_name": "CI",
+        "head_branch": "main",
+        "run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOP2-u6s8AAAARyZtRDw",
+        "head_sha": "9e4471e358a54789e040ebb7dec8ae9438495a3d",
+        "url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/jobs/76396843279",
+        "html_url": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105/job/76396843279",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-05-17T12:32:24Z",
+        "started_at": "2026-05-17T12:32:26Z",
+        "completed_at": "2026-05-17T12:32:59Z",
+        "name": "Tests (backend)",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-05-17T12:32:26Z",
+            "completed_at": "2026-05-17T12:32:28Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-05-17T12:32:28Z",
+            "completed_at": "2026-05-17T12:32:32Z"
+          },
+          {
+            "name": "Setup pnpm",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-05-17T12:32:32Z",
+            "completed_at": "2026-05-17T12:32:33Z"
+          },
+          {
+            "name": "Setup Node.js",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-05-17T12:32:33Z",
+            "completed_at": "2026-05-17T12:32:47Z"
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-05-17T12:32:47Z",
+            "completed_at": "2026-05-17T12:32:54Z"
+          },
+          {
+            "name": "Run backend tests",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-05-17T12:32:54Z",
+            "completed_at": "2026-05-17T12:32:57Z"
+          },
+          {
+            "name": "Post Setup Node.js",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-05-17T12:32:57Z",
+            "completed_at": "2026-05-17T12:32:57Z"
+          },
+          {
+            "name": "Post Setup pnpm",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11,
+            "started_at": "2026-05-17T12:32:57Z",
+            "completed_at": "2026-05-17T12:32:57Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12,
+            "started_at": "2026-05-17T12:32:57Z",
+            "completed_at": "2026-05-17T12:32:57Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13,
+            "started_at": "2026-05-17T12:32:57Z",
+            "completed_at": "2026-05-17T12:32:58Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/check-runs/76396843279",
+        "labels": ["ubuntu-latest"],
+        "runner_id": 1000001018,
+        "runner_name": "GitHub Actions 1000001018",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 76396843290,
+        "run_id": 25990939105,
+        "workflow_name": "CI",
+        "head_branch": "main",
+        "run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOP2-u6s8AAAARyZtRGg",
+        "head_sha": "9e4471e358a54789e040ebb7dec8ae9438495a3d",
+        "url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/jobs/76396843290",
+        "html_url": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105/job/76396843290",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-05-17T12:32:24Z",
+        "started_at": "2026-05-17T12:32:25Z",
+        "completed_at": "2026-05-17T12:33:07Z",
+        "name": "react-i18next Factory Check",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-05-17T12:32:26Z",
+            "completed_at": "2026-05-17T12:32:27Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-05-17T12:32:27Z",
+            "completed_at": "2026-05-17T12:32:31Z"
+          },
+          {
+            "name": "Setup pnpm",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-05-17T12:32:31Z",
+            "completed_at": "2026-05-17T12:32:32Z"
+          },
+          {
+            "name": "Setup Node.js",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-05-17T12:32:32Z",
+            "completed_at": "2026-05-17T12:32:44Z"
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-05-17T12:32:44Z",
+            "completed_at": "2026-05-17T12:32:51Z"
+          },
+          {
+            "name": "Assert vi.mock fixture fails lint (positive-failure)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-05-17T12:32:51Z",
+            "completed_at": "2026-05-17T12:33:05Z"
+          },
+          {
+            "name": "Post Setup Node.js",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-05-17T12:33:05Z",
+            "completed_at": "2026-05-17T12:33:05Z"
+          },
+          {
+            "name": "Post Setup pnpm",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11,
+            "started_at": "2026-05-17T12:33:05Z",
+            "completed_at": "2026-05-17T12:33:05Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12,
+            "started_at": "2026-05-17T12:33:05Z",
+            "completed_at": "2026-05-17T12:33:05Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13,
+            "started_at": "2026-05-17T12:33:05Z",
+            "completed_at": "2026-05-17T12:33:05Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/check-runs/76396843290",
+        "labels": ["ubuntu-latest"],
+        "runner_id": 1000001017,
+        "runner_name": "GitHub Actions 1000001017",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 76396843295,
+        "run_id": 25990939105,
+        "workflow_name": "CI",
+        "head_branch": "main",
+        "run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOP2-u6s8AAAARyZtRHw",
+        "head_sha": "9e4471e358a54789e040ebb7dec8ae9438495a3d",
+        "url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/jobs/76396843295",
+        "html_url": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105/job/76396843295",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-05-17T12:32:24Z",
+        "started_at": "2026-05-17T12:32:26Z",
+        "completed_at": "2026-05-17T12:33:24Z",
+        "name": "Tests (integration)",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-05-17T12:32:26Z",
+            "completed_at": "2026-05-17T12:32:28Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-05-17T12:32:28Z",
+            "completed_at": "2026-05-17T12:32:32Z"
+          },
+          {
+            "name": "Setup pnpm",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-05-17T12:32:32Z",
+            "completed_at": "2026-05-17T12:32:34Z"
+          },
+          {
+            "name": "Setup Node.js",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-05-17T12:32:34Z",
+            "completed_at": "2026-05-17T12:32:47Z"
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-05-17T12:32:47Z",
+            "completed_at": "2026-05-17T12:32:54Z"
+          },
+          {
+            "name": "Run backend integration tests",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 6,
+            "started_at": "2026-05-17T12:32:54Z",
+            "completed_at": "2026-05-17T12:33:22Z"
+          },
+          {
+            "name": "Post Setup Node.js",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 10,
+            "started_at": "2026-05-17T12:33:22Z",
+            "completed_at": "2026-05-17T12:33:22Z"
+          },
+          {
+            "name": "Post Setup pnpm",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11,
+            "started_at": "2026-05-17T12:33:22Z",
+            "completed_at": "2026-05-17T12:33:22Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12,
+            "started_at": "2026-05-17T12:33:22Z",
+            "completed_at": "2026-05-17T12:33:22Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13,
+            "started_at": "2026-05-17T12:33:22Z",
+            "completed_at": "2026-05-17T12:33:22Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/check-runs/76396843295",
+        "labels": ["ubuntu-latest"],
+        "runner_id": 1000001015,
+        "runner_name": "GitHub Actions 1000001015",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 76396843299,
+        "run_id": 25990939105,
+        "workflow_name": "CI",
+        "head_branch": "main",
+        "run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOP2-u6s8AAAARyZtRIw",
+        "head_sha": "9e4471e358a54789e040ebb7dec8ae9438495a3d",
+        "url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/jobs/76396843299",
+        "html_url": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105/job/76396843299",
+        "status": "in_progress",
+        "conclusion": null,
+        "created_at": "2026-05-17T12:32:24Z",
+        "started_at": "2026-05-17T12:32:26Z",
+        "completed_at": null,
+        "name": "E2E Tests",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-05-17T12:32:27Z",
+            "completed_at": "2026-05-17T12:32:29Z"
+          },
+          {
+            "name": "Initialize containers",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-05-17T12:32:29Z",
+            "completed_at": "2026-05-17T12:32:47Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-05-17T12:32:47Z",
+            "completed_at": "2026-05-17T12:32:52Z"
+          },
+          {
+            "name": "Setup pnpm",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-05-17T12:32:52Z",
+            "completed_at": "2026-05-17T12:32:53Z"
+          },
+          {
+            "name": "Setup Node.js",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-05-17T12:32:53Z",
+            "completed_at": "2026-05-17T12:33:09Z"
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-05-17T12:33:09Z",
+            "completed_at": "2026-05-17T12:33:16Z"
+          },
+          {
+            "name": "Install Playwright Browsers",
+            "status": "in_progress",
+            "conclusion": null,
+            "number": 7,
+            "started_at": "2026-05-17T12:33:16Z",
+            "completed_at": null
+          },
+          {
+            "name": "Run E2E tests",
+            "status": "pending",
+            "conclusion": null,
+            "number": 8,
+            "started_at": null,
+            "completed_at": null
+          },
+          {
+            "name": "Upload Playwright report",
+            "status": "pending",
+            "conclusion": null,
+            "number": 9,
+            "started_at": null,
+            "completed_at": null
+          },
+          {
+            "name": "Post Setup Node.js",
+            "status": "pending",
+            "conclusion": null,
+            "number": 15,
+            "started_at": null,
+            "completed_at": null
+          },
+          {
+            "name": "Post Setup pnpm",
+            "status": "pending",
+            "conclusion": null,
+            "number": 16,
+            "started_at": null,
+            "completed_at": null
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "pending",
+            "conclusion": null,
+            "number": 17,
+            "started_at": null,
+            "completed_at": null
+          },
+          {
+            "name": "Stop containers",
+            "status": "pending",
+            "conclusion": null,
+            "number": 18,
+            "started_at": null,
+            "completed_at": null
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/check-runs/76396843299",
+        "labels": ["ubuntu-latest"],
+        "runner_id": 1000001019,
+        "runner_name": "GitHub Actions 1000001019",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      },
+      {
+        "id": 76396843301,
+        "run_id": 25990939105,
+        "workflow_name": "CI",
+        "head_branch": "main",
+        "run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOP2-u6s8AAAARyZtRJQ",
+        "head_sha": "9e4471e358a54789e040ebb7dec8ae9438495a3d",
+        "url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/actions/jobs/76396843301",
+        "html_url": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0/actions/runs/25990939105/job/76396843301",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-05-17T12:32:24Z",
+        "started_at": "2026-05-17T12:32:25Z",
+        "completed_at": "2026-05-17T12:33:06Z",
+        "name": "Design Token Check",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-05-17T12:32:26Z",
+            "completed_at": "2026-05-17T12:32:27Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-05-17T12:32:27Z",
+            "completed_at": "2026-05-17T12:32:31Z"
+          },
+          {
+            "name": "Setup pnpm",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-05-17T12:32:31Z",
+            "completed_at": "2026-05-17T12:32:32Z"
+          },
+          {
+            "name": "Setup Node.js",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-05-17T12:32:32Z",
+            "completed_at": "2026-05-17T12:32:43Z"
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-05-17T12:32:43Z",
+            "completed_at": "2026-05-17T12:32:50Z"
+          },
+          {
+            "name": "Assert design-token fixture fails lint (positive-failure)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-05-17T12:32:50Z",
+            "completed_at": "2026-05-17T12:33:04Z"
+          },
+          {
+            "name": "Post Setup Node.js",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-05-17T12:33:04Z",
+            "completed_at": "2026-05-17T12:33:04Z"
+          },
+          {
+            "name": "Post Setup pnpm",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11,
+            "started_at": "2026-05-17T12:33:04Z",
+            "completed_at": "2026-05-17T12:33:04Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12,
+            "started_at": "2026-05-17T12:33:04Z",
+            "completed_at": "2026-05-17T12:33:05Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 13,
+            "started_at": "2026-05-17T12:33:05Z",
+            "completed_at": "2026-05-17T12:33:05Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/alzahrani-khalid/Intl-Dossier-V2.0/check-runs/76396843301",
+        "labels": ["ubuntu-latest"],
+        "runner_id": 1000001016,
+        "runner_name": "GitHub Actions 1000001016",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      }
+    ]
+  }
+}

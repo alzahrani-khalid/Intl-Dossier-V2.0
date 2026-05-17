@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v6.4
 milestone_name: Stabilization & Carryover Sweep
 status: executing
-last_updated: '2026-05-17T10:50:00.000Z'
-last_activity: 2026-05-17 -- Phase 55 Plan 01 complete — DesignV2 merged to main (MERGE-01 satisfied)
+last_updated: '2026-05-17T12:35:00.000Z'
+last_activity: 2026-05-17 -- Phase 55 Plan 02 complete — 2 CI gate jobs added (MERGE-02 partial)
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 4
-  completed_plans: 1
-  percent: 25
+  completed_plans: 2
+  percent: 50
 ---
 
 # Project State
@@ -25,9 +25,9 @@ See: .planning/PROJECT.md (updated 2026-05-17 after v6.3 milestone)
 ## Current Position
 
 Phase: 55 — DesignV2 → Main Merge & Gate Enforcement
-Plan: 02 (Wave 2 — add 2 new CI jobs to ci.yml via separate PR onto main)
-Status: Plan 01 of 4 complete; Plan 02 unblocked
-Last activity: 2026-05-17 -- Phase 55 Plan 01 complete — DesignV2 merged to main via --no-ff merge commit 3f763ddc; phase-55-base SSH-signed tag pushed; remote DesignV2 deleted; MERGE-01 satisfied
+Plan: 03 (Wave 3 — branch protection round-trip: add 2 new contexts to required_status_checks)
+Status: Plan 02 of 4 complete; Plan 03 unblocked
+Last activity: 2026-05-17 -- Phase 55 Plan 02 complete — 2 new CI gate jobs landed on main via PR #15 (merge commit 9e4471e3); both `Design Token Check` + `react-i18next Factory Check` verified green on post-merge main HEAD CI run 25990939105; MERGE-02 partial (preparation half satisfied; Plan 03 wires into required-contexts, Plan 04 proves via smoke PR)
 
 ## v6.4 Phase Plan
 

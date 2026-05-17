@@ -176,7 +176,7 @@ Plans:
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
-- [ ] 55-02-PLAN.md — Add 2 new CI jobs (Design Token Check + react-i18next Factory Check) to ci.yml via separate PR onto main (Wave 2)
+- [x] 55-02-PLAN.md — Add 2 new CI jobs (Design Token Check + react-i18next Factory Check) to ci.yml via separate PR onto main (Wave 2) — **SHIPPED 2026-05-17**: PR #15 merged as `9e4471e3`; both new jobs verified green on post-merge main HEAD CI run 25990939105; MERGE-02 partial (preparation half)
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
@@ -260,7 +260,7 @@ Plans:
 | 44-46 | v6.1 | 14/14 | Shipped | 2026-05-08 |
 | 47-49 | v6.2 | 17/17 | Shipped | 2026-05-12 |
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
-| 55 | v6.4 | 1/4 | In Progress | — |
+| 55 | v6.4 | 2/4 | In Progress | — |
 | 56 | v6.4 | 0/0 | Not started | — |
 | 57 | v6.4 | 0/0 | Not started | — |
 | 58 | v6.4 | 0/0 | Not started | — |
@@ -270,4 +270,4 @@ Plans:
 
 ---
 
-_Roadmap last updated: 2026-05-17 — Phase 55 Plan 01 complete (DesignV2 merged to main via --no-ff; phase-55-base signed; MERGE-01 satisfied). Plans 02-04 remain._
+_Roadmap last updated: 2026-05-17 — Phase 55 Plan 02 complete (2 new CI gate jobs landed on main via PR #15; both green on post-merge main HEAD; MERGE-02 partial). Plans 03-04 remain._
