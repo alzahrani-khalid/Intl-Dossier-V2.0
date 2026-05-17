@@ -59,12 +59,26 @@
 
 ## Traceability
 
-(Populated by `gsd-roadmapper` — phases will reference REQ-IDs.)
+| Requirement | Phase    | Status  |
+| ----------- | -------- | ------- |
+| MERGE-01    | Phase 55 | Pending |
+| MERGE-02    | Phase 55 | Pending |
+| RLS-01      | Phase 56 | Pending |
+| TYPE-05     | Phase 56 | Pending |
+| DEVIATE-01  | Phase 57 | Pending |
+| DEVIATE-02  | Phase 57 | Pending |
+| DEVIATE-03  | Phase 57 | Pending |
+| DEVIATE-04  | Phase 57 | Pending |
+| TOKEN-01    | Phase 58 | Pending |
+| TOKEN-02    | Phase 58 | Pending |
+| POLISH-01   | Phase 59 | Pending |
+| POLISH-02   | Phase 59 | Pending |
+| POLISH-03   | Phase 59 | Pending |
+| POLISH-04   | Phase 59 | Pending |
 
-| Phase | Requirements |
-| ----- | ------------ |
-| TBD   | TBD          |
+**Coverage:** 14/14 v6.4 requirements mapped to exactly one phase. No orphans.
 
 ---
 
 _Created: 2026-05-17 — v6.4 milestone definition via `/gsd:new-milestone` (research skipped; scope sourced from `/gsd:explore` shape note)._
+_Updated: 2026-05-17 — Traceability table populated by `gsd-roadmapper` (Phases 55-59)._

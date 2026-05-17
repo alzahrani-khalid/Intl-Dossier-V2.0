@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v6.4
 milestone_name: Stabilization & Carryover Sweep
 status: planning
-last_updated: '2026-05-17T07:38:00.755Z'
+last_updated: '2026-05-17T08:00:00.000Z'
 last_activity: 2026-05-17
 progress:
-  total_phases: 0
+  total_phases: 5
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -20,16 +20,28 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-17 after v6.3 milestone)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Planning next milestone (v7.0 Intelligence Engine)
+**Current focus:** v6.4 Stabilization & Carryover Sweep — close v6.3 carryover debt and merge DesignV2 → main so v7.0 starts on stable ground with all quality gates enforced on `main`
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 55 (next) — DesignV2 → Main Merge & Gate Enforcement
 Plan: —
-Status: Defining requirements
-Last activity: 2026-05-17 — Milestone v6.4 started
+Status: Roadmap drafted; awaiting `/gsd:plan-phase 55`
+Last activity: 2026-05-17 — v6.4 roadmap created (Phases 55-59 mapped to 14 REQ-IDs, 100% coverage)
 
-## Shipped This Milestone
+## v6.4 Phase Plan
+
+| Phase | Theme                                                    | Reqs               | Dependency                 |
+| ----- | -------------------------------------------------------- | ------------------ | -------------------------- |
+| 55    | DesignV2 → main merge + gate enforcement verification    | MERGE-01, MERGE-02 | none (first; blocks 56-59) |
+| 56    | RLS pre-existing fail + last typed-shim retired          | RLS-01, TYPE-05    | 55 (parallel with 57)      |
+| 57    | Phase 52 deviation closure (D-19..D-23)                  | DEVIATE-01..04     | 55 (parallel with 56)      |
+| 58    | Tier-C design-token suppression full clear (wave-staged) | TOKEN-01, TOKEN-02 | 55                         |
+| 59    | Cosmetic + CI gap closure                                | POLISH-01..04      | 55 (folds anywhere after)  |
+
+Coverage: 14/14 v6.4 requirements mapped (no orphans).
+
+## Shipped Previously (v6.3)
 
 - Phase 50: Test Infrastructure Repair (10/10 plans) — TEST-01..04 verified
 - Phase 51: Design-Token Compliance Gate (4/4 plans) — DESIGN-01..04 verified (DESIGN-03 with documented Tier-C deferral)
@@ -42,24 +54,26 @@ Last activity: 2026-05-17 — Milestone v6.4 started
 
 ## Next Action
 
-Start v7.0 Intelligence Engine planning:
+Plan the first phase:
 
 ```
-/clear
-/gsd:new-milestone
+/gsd:plan-phase 55
 ```
 
-The v7.0 seed at `.planning/seeds/v7.0-intelligence-engine.md` is unblocked (schema groundwork shipped this milestone). Scope to define: API endpoints, ingestion pipeline, signal triage UI, digest pipeline, alerting channels, multi-dossier AI correlation, analytic graph queries.
+Phase 55 is the blocker for 56-59 — the DesignV2 → main merge must complete and v6.3 gates must enforce on `main` PR contexts before downstream work merges. Phases 56 and 57 can run in parallel after 55 lands.
 
-## Carryover Tech Debt to v6.4 (or fold into v7.0)
+## Carryover Tech Debt Status
 
-See `.planning/PROJECT.md` "Next Milestone Goals" section and `.planning/milestones/v6.3-MILESTONE-AUDIT.md` §7 for full enumeration. High-level:
+All known v6.3 carryover items are now folded into v6.4 phases:
 
-- DesignV2 → main merge sequence (then push triggers v6.3 enforcement on main contexts)
-- 271 Tier-C design-token cleanup waves (`TBD-design-token-tier-c-cleanup-wave-N`)
-- 5 Phase 52 deviations (D-19..D-23): mobile DnD scope-out, Phase 39 kanban regression follow-up, LTR/RTL byte-distinction, live Playwright run
-- Phase 53 SUMMARY/VERIFICATION cosmetic wording refresh (origin SHAs already match local)
-- Documentation polish (TweaksDrawer comment, 51-VALIDATION frontmatter)
-- bad-design-token.tsx + bad-vi-mock.ts positive-failure CI assertion gap
-- D-54-04-RLS-AUDIT-PRE-EXISTING-FAIL (countries row in sensitiveTables, Phase 03/04 vintage)
-- `useStakeholderInteractionMutations` shim (1 of 20 retained from v6.2)
+- DesignV2 → main merge sequence → Phase 55 (MERGE-01, MERGE-02)
+- 271 Tier-C design-token suppressions / 2336 AST nodes → Phase 58 (TOKEN-01, TOKEN-02) — **full clear** scope (waves staged within the phase)
+- 5 Phase 52 deviations (D-19..D-23) → Phase 57 (DEVIATE-01..04); D-20 already closed in v6.3
+- Phase 53 SUMMARY/VERIFICATION cosmetic wording refresh → Phase 59 (POLISH-01)
+- `TweaksDrawer.test.tsx:6-8` comment drift → Phase 59 (POLISH-02)
+- `51-VALIDATION.md` frontmatter polish → Phase 59 (POLISH-03)
+- bad-design-token.tsx + bad-vi-mock.ts positive-failure CI assertion → Phase 59 (POLISH-04)
+- D-54-04-RLS-AUDIT-PRE-EXISTING-FAIL → Phase 56 (RLS-01)
+- `useStakeholderInteractionMutations` shim (last of 20 v6.2 holdovers) → Phase 56 (TYPE-05)
+
+Nothing carries beyond v6.4 except v7.0 feature work (Intelligence Engine API + UI + ingestion + alerting + multi-dossier AI correlation), which is gated by v6.4 ship per the milestone scope decision (2026-05-17 `/gsd:explore`).
