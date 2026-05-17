@@ -164,9 +164,16 @@ Full details: [v6.3-ROADMAP.md](milestones/v6.3-ROADMAP.md)
 1. `git log main --oneline` shows DesignV2 history merged into `main` with no manual cherry-picks
 2. `pnpm type-check`, `pnpm lint`, and `Bundle Size Check (size-limit)` all exit 0 on the post-merge `main` HEAD
 3. A smoke PR opened against `main` introducing an intentional violation (raw hex, palette literal, or vi.mock factory regression) returns `mergeStateStatus=BLOCKED` from `gh pr view --json`
-4. The four v6.3-introduced gate contexts (`type-check`, `Lint`, `Bundle Size Check (size-limit)`, plus the D-09 folded design-token rule inside `Lint`) appear as required contexts on `main` branch protection
+4. The four v6.3-introduced gate contexts (`type-check`, `Lint`, `Bundle Size Check (size-limit)`, plus the D-09 folded design-token rule inside `Lint`) appear as required contexts on `main` branch protection — UPGRADED per Phase 55 D-13: 8 explicit required contexts (the original 6 + `Design Token Check` + `react-i18next Factory Check`), reversing the v6.3 D-09 fold-into-Lint for failure-attribution clarity
 
-**Plans**: TBD
+**Plans:** 4 plans (sequential waves 1→4 per D-15 clean causality chain)
+
+Plans:
+
+- [ ] 55-01-PLAN.md — Pre-merge verification, merge PR creation + green, --no-ff merge, signed phase-55-base tag (Wave 1)
+- [ ] 55-02-PLAN.md — Add 2 new CI jobs (Design Token Check + react-i18next Factory Check) to ci.yml via separate PR onto main (Wave 2)
+- [ ] 55-03-PLAN.md — Update main branch protection to require 8 contexts (round-trip JSON; preserve enforce_admins / no-force-push / no-deletions) (Wave 3)
+- [ ] 55-04-PLAN.md — Smoke PR with 4 planted violations, evidence capture (JSON + PNG), cleanup via `gh pr close --delete-branch` (Wave 4)
 
 ### Phase 56: RLS Closure & Last Typed-Shim Retirement
 
@@ -242,7 +249,7 @@ Full details: [v6.3-ROADMAP.md](milestones/v6.3-ROADMAP.md)
 | 44-46 | v6.1 | 14/14 | Shipped | 2026-05-08 |
 | 47-49 | v6.2 | 17/17 | Shipped | 2026-05-12 |
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
-| 55 | v6.4 | 0/0 | Not started | — |
+| 55 | v6.4 | 0/4 | Planned | — |
 | 56 | v6.4 | 0/0 | Not started | — |
 | 57 | v6.4 | 0/0 | Not started | — |
 | 58 | v6.4 | 0/0 | Not started | — |
@@ -252,4 +259,4 @@ Full details: [v6.3-ROADMAP.md](milestones/v6.3-ROADMAP.md)
 
 ---
 
-_Roadmap last updated: 2026-05-17 — v6.4 Stabilization & Carryover Sweep started (Phases 55-59 planned; 14 requirements mapped 100%)._
+_Roadmap last updated: 2026-05-17 — Phase 55 plans created (4 plans across 4 sequential waves; D-15 clean causality chain)._
