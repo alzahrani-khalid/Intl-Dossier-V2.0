@@ -198,7 +198,10 @@ Plans:
 3. The underlying `useStakeholderInteractionMutations` hook declares an explicit, non-`any`, non-`Promise.resolve({ success: true })` return type that consumers consume directly
 4. `pnpm type-check` exits 0 across both workspaces with the shim removed
 
-**Plans**: TBD
+**Plans**: 2 plans
+
+- [ ] 56-01-PLAN.md — RLS-01: split rls-audit.test.ts into sensitiveTables + globalReferenceTables tiers; reconcile staging public.countries policies via dated migration (Supabase MCP apply); fold REQUIREMENTS.md L18 wording fix (Wave 1)
+- [ ] 56-02-PLAN.md — TYPE-05: retype useStakeholderInteractionMutations at source (UseStakeholderInteractionMutationsReturn); delete deprecated re-export shim; remove consumer cast + local shim interface; add Vitest hook tests; issue annotated SSH-signed phase-56-base tag (Wave 1)
 
 ### Phase 57: Phase 52 Deviation Closure (D-19..D-23)
 
