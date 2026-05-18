@@ -24,7 +24,10 @@ test.describe('Phase 52: Tasks tab Kanban keyboard parity', () => {
       page,
     }): Promise<void> => {
       if (viewport.width < 1024) {
-        test.skip(true, 'Keyboard DnD targets desktop only; mobile uses the "Move to" select')
+        test.skip(
+          true,
+          'Mobile DnD scope-out per docs/adr/0001-mobile-dnd-scope-out.md — TasksTab mobile branch uses the <select> Move to picker; touch DnD is not exercised on TasksTab (KanbanProvider TouchSensor remains wired for future consumers)',
+        )
       }
 
       await page.addInitScript((d: string): void => {
