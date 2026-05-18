@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v6.4
 milestone_name: Stabilization & Carryover Sweep
-status: executing
-last_updated: 2026-05-18T10:48:13.677Z
-last_activity: 2026-05-18 -- Phase 56 complete
+status: verifying
+last_updated: '2026-05-18T11:32:54.332Z'
+last_activity: 2026-05-18 -- Phase 56 complete; `phase-56-base` signed and pushed
 progress:
-  total_phases: 10
+  total_phases: 11
   completed_phases: 10
-  total_plans: 50
+  total_plans: 49
   completed_plans: 50
-  percent: 100
+  percent: 91
 ---
 
 # Project State
@@ -24,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-05-17 after v6.3 milestone)
 
 ## Current Position
 
-Phase: 56 — RLS Closure & Last Typed-Shim Retirement — **COMPLETE (2/2 plans)**
-Plan: — (none active; Phase 57 next)
-Status: Ready to verify Phase 56, then execute Phase 57
-Last activity: 2026-05-18 -- Phase 56 complete; `phase-56-base` signed and pushed
+Phase: 57 — Phase 52 Deviation Closure (D-19..D-23) — **CONTEXT GATHERED**
+Plan: — (none active; ready for `/gsd:plan-phase 57`)
+Status: Ready to plan Phase 57 (D-19 scope-out ADR, D-21 WorkBoard migration, D-22 ?lng URL fix, D-23 live Playwright run)
+Last activity: 2026-05-18 -- Phase 57 context captured (commit 8d1e5dcb); 22 decisions locked across 4 deviations
 
 ## v6.4 Phase Plan
 
