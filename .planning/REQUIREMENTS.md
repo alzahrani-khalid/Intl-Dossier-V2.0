@@ -15,7 +15,7 @@
 
 ### Security / RLS
 
-- [ ] **RLS-01**: D-54-04 closed — `countries` removed from `sensitiveTables` projection in `rls-audit.test.ts`; test passes for `countries` without acknowledged-fail entry (pre-existing Phase 03/04 vintage row resolved)
+- [ ] **RLS-01**: D-54-04 closed — `countries` moved from `sensitiveTables` to `globalReferenceTables` projection in `rls-audit.test.ts` (authenticated-read + role-gated writes tier); test passes for `countries` without acknowledged-fail entry (pre-existing Phase 03/04 vintage row resolved)
 
 ### Type correctness (continues TYPE-04 from v6.2)
 
