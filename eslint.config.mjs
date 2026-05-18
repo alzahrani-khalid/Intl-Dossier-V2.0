@@ -310,6 +310,62 @@ export default tseslint.config(
     },
   },
 
+  // ── Phase 57 D-22 / D-57-14: ban addInitScript(i18nextLng) anti-pattern ────
+  // Writing localStorage.i18nextLng in a Playwright addInitScript does NOT flip
+  // the language pre-render because frontend/src/i18n/index.ts reads
+  // `id.locale`, not `i18nextLng`. Visual specs must use the URL ?lng= query
+  // param so the i18next querystring detector (now first in detection.order)
+  // fires before React mounts, producing byte-distinct LTR vs RTL snapshots.
+  // Legacy specs that intentionally write `i18nextLng` (e.g. backward-compat
+  // tests of the bootstrap migration) are excluded by name below and tracked
+  // in 57-03-SUMMARY.md.
+  {
+    files: ['frontend/tests/e2e/**/*.{ts,tsx}'],
+    ignores: [
+      // Excluded per Plan 57-03 Task 2 Step 5: these specs predate the
+      // querystring detector and write `i18nextLng` directly. Closing each is
+      // out of scope for Plan 57-03 (files_modified frontmatter restricts the
+      // plan to kanban-visual.spec.ts + tasks-tab-visual.spec.ts). Folded into
+      // a follow-up sweep once Plan 57-02 baseline regen lands.
+      'frontend/tests/e2e/_phase52-mid-drag-capture.spec.ts',
+      'frontend/tests/e2e/calendar-a11y.spec.ts',
+      'frontend/tests/e2e/calendar-visual.spec.ts',
+      'frontend/tests/e2e/dossier-rtl-complete.spec.ts',
+      'frontend/tests/e2e/dossier-rtl-mobile.spec.ts',
+      'frontend/tests/e2e/kanban-a11y.spec.ts',
+      'frontend/tests/e2e/tasks-tab-a11y.spec.ts',
+      'frontend/tests/e2e/tasks-tab-dnd.spec.ts',
+      'frontend/tests/e2e/tasks-tab-keyboard.spec.ts',
+    ],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "CallExpression[callee.property.name='addInitScript']:has(Literal[value=/i18nextLng/])",
+          message:
+            "addInitScript() with 'i18nextLng' is banned in e2e specs — it does not flip the language pre-render because frontend/src/i18n/index.ts:462 reads 'id.locale', not 'i18nextLng'. Use page.goto(url + '?lng=ar') with the querystring detector (frontend/src/i18n/index.ts:460) instead. See .planning/phases/57-phase-52-deviation-closure-d-19-d-23/57-CONTEXT.md D-57-11.",
+        },
+      ],
+    },
+  },
+
+  // ── addInitScript(i18nextLng) regression fixture: prove the ban fires ────
+  {
+    files: ['tools/eslint-fixtures/bad-i18n-init.spec.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "CallExpression[callee.property.name='addInitScript']:has(Literal[value=/i18nextLng/])",
+          message:
+            "addInitScript() with 'i18nextLng' is banned in e2e specs — it does not flip the language pre-render because frontend/src/i18n/index.ts:462 reads 'id.locale', not 'i18nextLng'. Use page.goto(url + '?lng=ar') with the querystring detector (frontend/src/i18n/index.ts:460) instead. See .planning/phases/57-phase-52-deviation-closure-d-19-d-23/57-CONTEXT.md D-57-11.",
+        },
+      ],
+    },
+  },
+
   // ── Backend override ──────────────────────────────────────────────
   // Backend was never linted with these strict rules. They are disabled
   // here and tracked for incremental adoption in Phase 2+.
