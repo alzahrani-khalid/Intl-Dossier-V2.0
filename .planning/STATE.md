@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v6.4
 milestone_name: Stabilization & Carryover Sweep
-status: phase-complete
-last_updated: '2026-05-18T06:35:00.000Z'
-last_activity: '2026-05-18 -- Phase 55 COMPLETE (4/4 plans) — MERGE-01 + MERGE-02 satisfied. Plan 04 captured `mergeStateStatus = BLOCKED` on smoke PR #18 with 2 required contexts at FAILURE (`Lint` + `type-check`); evidence committed via PR #19 merge `ec9caffb`; smoke PR closed `--delete-branch` per D-12; remote `smoke/phase-55-merge-02` + `docs/phase-55-smoke-evidence` branches deleted; 8 required contexts now active on `main` protection. Notable finding documented: the 2 new positive-failure CI jobs (`Design Token Check` + `react-i18next Factory Check`) are fixture-scoped (POLISH-04 implications captured in 55-04-SUMMARY).'
+status: phase-verified
+last_updated: '2026-05-18T07:00:00.000Z'
+last_activity: '2026-05-18 -- Phase 55 VERIFIED via /gsd:verify-work — UAT 8/8 passed (claude-autonomous mode, all scriptable infra checks). SECURITY 14/14 threats closed, VALIDATION nyquist_compliant=true, traceability MERGE-01 + MERGE-02 COMPLETE. Phase 55 fully signed off; v6.4 progress 1/5. Phases 56 and 57 unblocked (both depend only on 55) and may proceed in parallel. Next: /gsd:plan-phase 56 (RLS-01 + TYPE-05 — RLS countries-row clear + last typed-shim retire).'
 progress:
   total_phases: 9
   completed_phases: 9
@@ -24,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-05-17 after v6.3 milestone)
 
 ## Current Position
 
-Phase: 55 — DesignV2 → Main Merge & Gate Enforcement — **COMPLETE (4/4 plans)**
-Plan: — (none active; next phase 56 or 57 may begin)
-Status: Phase 55 complete; MERGE-01 + MERGE-02 satisfied; ready for `/gsd:verify-work 55`
-Last activity: 2026-05-18 -- Phase 55 Plan 04 complete — smoke PR #18 against `main` captured `mergeStateStatus = BLOCKED` (uppercase, GraphQL path per Pitfall 11) with 2 required contexts at FAILURE (`Lint` + `type-check`); 4 planted violations targeting 4 required contexts produced 2 confirmed FAILUREs (sufficient for BLOCKED with margin); evidence JSON + PNG committed to `main` via PR #19 (merge `ec9caffb1fd3584d046e5c783e4a24247d6341a7`) BEFORE smoke PR was closed (Pitfall 10 sequencing); PR #18 closed with `gh pr close --delete-branch` per D-12; both `smoke/phase-55-merge-02` and `docs/phase-55-smoke-evidence` branches deleted (remote 404 confirmed). Notable finding documented: the 2 new positive-failure CI jobs (`Design Token Check` + `react-i18next Factory Check`) are fixture-scoped — they lint the canonical bad fixtures only, not arbitrary application code (POLISH-04 / TOKEN-01 implications captured). MERGE-02 traceability flipped from PARTIAL → COMPLETE.
+Phase: 55 — DesignV2 → Main Merge & Gate Enforcement — **VERIFIED (4/4 plans)**
+Plan: — (none active; Phase 56 next)
+Status: Phase 55 VERIFIED via `/gsd:verify-work 55` — UAT 8/8 pass, SECURITY 14/14 closed, VALIDATION nyquist=true, MERGE-01 + MERGE-02 satisfied. Ready for `/gsd:plan-phase 56`.
+Last activity: 2026-05-18 -- Phase 55 verification accepted. UAT recorded 8/8 PASS (claude-autonomous mode, all scriptable infra checks: merge --no-ff with 2 parents, phase-55-base SSH-signed tag, all 5 phase-base tags reachable on origin/main, DesignV2 remote branch deleted, 2 new CI jobs live in main ci.yml, branch protection enforces 8 required contexts, security invariants preserved (enforce_admins=true, no force push, no delete), smoke PR #18 BLOCKED proof + cleanup complete). Phases 56 and 57 unblocked and parallelizable.
 
 ## v6.4 Phase Plan
 
