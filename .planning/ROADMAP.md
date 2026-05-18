@@ -215,14 +215,14 @@ Plans:
 3. Re-running the kanban EN+AR visual baseline diff produces byte-distinct snapshots between LTR and RTL (no false byte-identity) (D-22)
 4. The live tasks-tab Playwright run executes on seeded staging data with a host operator and the artifact (run log, screenshots, summary) lands in the phase folder (D-23)
 
-**Plans:** 4 plans (waves 1→3 per D-57-21 verification sequencing: D-19 → D-22 → D-21 → D-23)
+**Plans:** 2/4 plans executed
 
 Plans:
 
 **Wave 1**
 
-- [ ] 57-01-PLAN.md — D-19 mobile DnD scope-out (ADRs + mobile <select> assertion)
-- [ ] 57-03-PLAN.md — D-22 ?lng URL-param fix + hash-comparison meta-test + ESLint guard
+- [x] 57-01-PLAN.md — D-19 mobile DnD scope-out (ADRs + mobile <select> assertion)
+- [x] 57-03-PLAN.md — D-22 ?lng URL-param fix + hash-comparison meta-test + ESLint guard
 
 **Wave 2**
 
@@ -281,7 +281,7 @@ Plans:
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
 | 55 | v6.4 | 4/4 | Complete | 2026-05-18 |
 | 56 | v6.4 | 2/2 | Complete | 2026-05-18 |
-| 57 | v6.4 | 0/0 | Not started | — |
+| 57 | v6.4 | 2/4 | In Progress|  |
 | 58 | v6.4 | 0/0 | Not started | — |
 | 59 | v6.4 | 0/0 | Not started | — |
 
