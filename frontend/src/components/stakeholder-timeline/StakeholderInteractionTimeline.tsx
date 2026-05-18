@@ -43,7 +43,7 @@ import {
   useStakeholderTimeline,
   useStakeholderInteractionMutations,
   getAvailableInteractionTypes,
-} from '@/hooks/useStakeholderTimeline'
+} from '@/domains/misc'
 import { StakeholderTimelineFilters } from './StakeholderTimelineFilters'
 import { StakeholderTimelineCard } from './StakeholderTimelineCard'
 import { StakeholderInteractionDialog } from './StakeholderInteractionDialog'
@@ -56,18 +56,6 @@ import type {
   CreateAnnotationRequest,
 } from '@/types/stakeholder-interaction.types'
 import { useDirection } from '@/hooks/useDirection'
-
-// Stub useStakeholderInteractionMutations is internally still a stub returning
-// `Promise.resolve({ success: true })` from each mutation; this shim narrows the
-// return shape to the typed contract until the real implementation lands. The
-// other shim (StakeholderTimelineShim) became redundant in 47-08 once the
-// underlying useStakeholderTimeline hook returns the rich state object.
-interface StakeholderInteractionMutationsShim {
-  createInteraction: (req: CreateInteractionRequest) => Promise<unknown>
-  isCreating: boolean
-  createAnnotation: (req: CreateAnnotationRequest) => Promise<unknown>
-  isAnnotating: boolean
-}
 
 /**
  * Loading skeleton for timeline
@@ -272,10 +260,8 @@ export function StakeholderInteractionTimeline({
     isLoadingStats,
   } = useStakeholderTimeline(stakeholderId)
 
-  // Stub useStakeholderInteractionMutations takes 0 args; the (stakeholderType,
-  // stakeholderId) intent is preserved as void above for clarity.
   const { createInteraction, isCreating, createAnnotation, isAnnotating } =
-    useStakeholderInteractionMutations() as unknown as StakeholderInteractionMutationsShim
+    useStakeholderInteractionMutations()
 
   // Handlers
   const handleSearch = useCallback(
