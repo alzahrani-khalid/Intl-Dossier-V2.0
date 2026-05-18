@@ -145,7 +145,7 @@ Full details: [v6.3-ROADMAP.md](milestones/v6.3-ROADMAP.md)
 <summary>🚧 v6.4 Stabilization & Carryover Sweep (Phases 55-59) — IN PROGRESS</summary>
 
 - [x] **Phase 55: DesignV2 → Main Merge & Gate Enforcement** — Land DesignV2 onto `main` with all v6.3 quality gates intact and verify enforcement on post-merge `main` PR contexts (MERGE-01, MERGE-02) — **COMPLETE 2026-05-18** (4/4 plans)
-- [ ] **Phase 56: RLS Closure & Last Typed-Shim Retirement** — Clear the pre-existing `countries` row from `sensitiveTables` (D-54-04) and type `useStakeholderInteractionMutations` at source (RLS-01, TYPE-05)
+- [x] **Phase 56: RLS Closure & Last Typed-Shim Retirement** — Clear the pre-existing `countries` row from `sensitiveTables` (D-54-04) and type `useStakeholderInteractionMutations` at source (RLS-01, TYPE-05) — **COMPLETE 2026-05-18** (2/2 plans; `phase-56-base` SSH-signed)
 - [ ] **Phase 57: Phase 52 Deviation Closure (D-19..D-23)** — Resolve mobile touch DnD scope, kanban regression follow-up, LTR/RTL visual baseline byte-distinction, and live tasks-tab Playwright run (DEVIATE-01..04)
 - [ ] **Phase 58: Tier-C Design-Token Suppression Full Clear** — Eliminate all 271 `gsd-design-token-tier-c-allow` suppressions (2336 AST nodes) via wave-staged token swaps and remove the waiver from `eslint.config.mjs` (TOKEN-01, TOKEN-02)
 - [ ] **Phase 59: Cosmetic + CI Gap Closure** — Refresh Phase 53 SUMMARY/VERIFICATION wording, fix `TweaksDrawer.test.tsx` comment drift, polish `51-VALIDATION.md` frontmatter, and wire `bad-design-token.tsx` + `bad-vi-mock.ts` positive-failure CI assertions (POLISH-01..04)
@@ -196,12 +196,12 @@ Plans:
 1. `rls-audit.test.ts` exits 0 with `countries` present in the projection but absent from any acknowledged-pre-existing-fail list
 2. `grep -r "useStakeholderInteractionMutations" frontend/src` shows zero `as` casts or typed-shim wrappers at consumer sites
 3. The underlying `useStakeholderInteractionMutations` hook declares an explicit, non-`any`, non-`Promise.resolve({ success: true })` return type that consumers consume directly
-4. `pnpm type-check` exits 0 across both workspaces with the shim removed
+4. `pnpm typecheck` exits 0 across both workspaces with the shim removed
 
 **Plans**: 2 plans
 
-- [ ] 56-01-PLAN.md — RLS-01: split rls-audit.test.ts into sensitiveTables + globalReferenceTables tiers; reconcile staging public.countries policies via dated migration (Supabase MCP apply); fold REQUIREMENTS.md L18 wording fix (Wave 1)
-- [ ] 56-02-PLAN.md — TYPE-05: retype useStakeholderInteractionMutations at source (UseStakeholderInteractionMutationsReturn); delete deprecated re-export shim; remove consumer cast + local shim interface; add Vitest hook tests; issue annotated SSH-signed phase-56-base tag (Wave 1)
+- [x] 56-01-PLAN.md — RLS-01: split rls-audit.test.ts into sensitiveTables + globalReferenceTables tiers; reconcile staging public.countries policies via dated migration (Supabase MCP apply); fold REQUIREMENTS.md L18 wording fix (Wave 1)
+- [x] 56-02-PLAN.md — TYPE-05: retype useStakeholderInteractionMutations at source (UseStakeholderInteractionMutationsReturn); delete deprecated re-export shim; remove consumer cast + local shim interface; add Vitest hook tests; issue annotated SSH-signed phase-56-base tag (Wave 1)
 
 ### Phase 57: Phase 52 Deviation Closure (D-19..D-23)
 
@@ -264,7 +264,7 @@ Plans:
 | 47-49 | v6.2 | 17/17 | Shipped | 2026-05-12 |
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
 | 55 | v6.4 | 4/4 | Complete | 2026-05-18 |
-| 56 | v6.4 | 0/0 | Not started | — |
+| 56 | v6.4 | 2/2 | Complete | 2026-05-18 |
 | 57 | v6.4 | 0/0 | Not started | — |
 | 58 | v6.4 | 0/0 | Not started | — |
 | 59 | v6.4 | 0/0 | Not started | — |
@@ -273,4 +273,4 @@ Plans:
 
 ---
 
-_Roadmap last updated: 2026-05-18 — Phase 55 COMPLETE (4/4 plans). Plan 04 captured `mergeStateStatus=BLOCKED` on smoke PR #18 (uppercase, GraphQL); evidence committed to main via PR #19; smoke PR closed `--delete-branch` per D-12; MERGE-02 satisfied. 8-context gate live on `main`. Recommended next: `/gsd:verify-work 55` then Phase 56 or 57 (parallel-eligible)._
+_Roadmap last updated: 2026-05-18 — Phase 56 COMPLETE (2/2 plans). Plan 01 closed RLS-01 by splitting RLS audit reference tiers and applying the staging countries policy reconciliation migration. Plan 02 closed TYPE-05 by moving the stakeholder interaction mutation typing to the source hook, deleting the deprecated consumer shim, adding focused Vitest coverage, and signing/pushing `phase-56-base`. Recommended next: `/gsd:verify-work 56` then Phase 57._
