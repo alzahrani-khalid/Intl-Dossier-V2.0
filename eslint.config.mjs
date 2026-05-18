@@ -152,6 +152,11 @@ export default tseslint.config(
               message:
                 'Banned by CLAUDE.md primitive cascade. Use HeroUI v3 → Radix → custom. If no primitive fits, ask before installing.',
             },
+            {
+              group: ['@dnd-kit/core', '@dnd-kit/core/*'],
+              message:
+                'Direct @dnd-kit/core imports are banned outside frontend/src/components/kanban/*. Use the shared primitive (KanbanProvider, KanbanBoard, KanbanCards, KanbanCard) from @/components/kanban instead. See 57-CONTEXT.md D-57-08 and docs/adr/0001-mobile-dnd-scope-out.md.',
+            },
           ],
         },
       ],
@@ -303,6 +308,48 @@ export default tseslint.config(
               group: ['@/components/kibo-ui/*'],
               message:
                 'Banned by CLAUDE.md primitive cascade. Use HeroUI v3 → Radix → custom. If no primitive fits, ask before installing.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  // ── Phase 57 D-21 / D-57-08: @dnd-kit/core direct-import carve-outs ────
+  // The frontend `no-restricted-imports` block above bans direct @dnd-kit/core
+  // imports to force consumers through the shared @/components/kanban
+  // primitive. The shared primitive itself MUST import @dnd-kit/core — that
+  // is the entire point. Existing non-kanban DnD consumers (report-builder,
+  // dashboard-widgets, briefing-books) use @dnd-kit/core for unrelated
+  // drag-and-drop surfaces (field lists, widget grids, briefing sections) and
+  // are out of Plan 57-02 migration scope; they get an explicit carve-out so
+  // the new rule does not regress workspace lint until each consumer is
+  // either migrated or refactored in a follow-up phase.
+  {
+    files: [
+      'frontend/src/components/kanban/**/*.{ts,tsx}',
+      'frontend/src/components/report-builder/**/*.{ts,tsx}',
+      'frontend/src/components/dashboard-widgets/**/*.{ts,tsx}',
+      'frontend/src/components/briefing-books/**/*.{ts,tsx}',
+      'frontend/src/types/dashboard-widget.types.ts',
+    ],
+    rules: {
+      'no-restricted-imports': 'off',
+    },
+  },
+
+  // ── @dnd-kit/core direct-import regression fixture: prove the ban fires ────
+  {
+    files: ['tools/eslint-fixtures/bad-direct-dndkit-import.tsx'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@dnd-kit/core', '@dnd-kit/core/*'],
+              message:
+                'Direct @dnd-kit/core imports are banned outside frontend/src/components/kanban/*. Use the shared primitive (KanbanProvider, KanbanBoard, KanbanCards, KanbanCard) from @/components/kanban instead. See 57-CONTEXT.md D-57-08 and docs/adr/0001-mobile-dnd-scope-out.md.',
             },
           ],
         },
