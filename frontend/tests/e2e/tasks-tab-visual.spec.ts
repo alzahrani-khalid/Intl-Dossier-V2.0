@@ -15,15 +15,13 @@ test.describe('Phase 52: Tasks tab Kanban visual regression', () => {
     test(`tasks-tab ${dir} @ ${viewport.width}x${viewport.height}`, async ({
       page,
     }): Promise<void> => {
-      await page.addInitScript((d: string): void => {
-        localStorage.setItem('i18nextLng', d === 'rtl' ? 'ar' : 'en')
-      }, dir)
+      const lng = dir === 'rtl' ? 'ar' : 'en'
       await page.setViewportSize(viewport)
       await page.addStyleTag({
         content:
           '*, *::before, *::after { animation-duration: 0s !important; transition-duration: 0s !important; }',
       })
-      await page.goto(`/engagements/${SEEDED_ENGAGEMENT_ID}`)
+      await page.goto(`/engagements/${SEEDED_ENGAGEMENT_ID}?lng=${lng}`)
       await page.waitForLoadState('networkidle')
 
       // Engagement workspace defaults to Overview tab; click Tasks tab to surface the kanban.
