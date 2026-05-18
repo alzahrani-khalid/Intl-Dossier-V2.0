@@ -215,8 +215,24 @@ Plans:
 3. Re-running the kanban EN+AR visual baseline diff produces byte-distinct snapshots between LTR and RTL (no false byte-identity) (D-22)
 4. The live tasks-tab Playwright run executes on seeded staging data with a host operator and the artifact (run log, screenshots, summary) lands in the phase folder (D-23)
 
-**Plans**: TBD
-**UI hint**: yes
+**Plans:** 4 plans (waves 1→3 per D-57-21 verification sequencing: D-19 → D-22 → D-21 → D-23)
+
+Plans:
+
+**Wave 1**
+
+- [ ] 57-01-PLAN.md — D-19 mobile DnD scope-out (ADRs + mobile <select> assertion)
+- [ ] 57-03-PLAN.md — D-22 ?lng URL-param fix + hash-comparison meta-test + ESLint guard
+
+**Wave 2**
+
+- [ ] 57-02-PLAN.md — D-21 WorkBoard migration to shared @/components/kanban + ESLint guard + baseline regen
+
+**Wave 3**
+
+- [ ] 57-04-PLAN.md — D-23 live tasks-tab Playwright run + 52-VERIFICATION.md cross-phase update + phase-57-base signed tag
+
+**UI hint**: yes (no new UI; surface-swap migration preserves existing styling)
 
 ### Phase 58: Tier-C Design-Token Suppression Full Clear
 
