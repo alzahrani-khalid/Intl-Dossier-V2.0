@@ -144,7 +144,7 @@ Full details: [v6.3-ROADMAP.md](milestones/v6.3-ROADMAP.md)
 <details open>
 <summary>🚧 v6.4 Stabilization & Carryover Sweep (Phases 55-59) — IN PROGRESS</summary>
 
-- [ ] **Phase 55: DesignV2 → Main Merge & Gate Enforcement** — Land DesignV2 onto `main` with all v6.3 quality gates intact and verify enforcement on post-merge `main` PR contexts (MERGE-01, MERGE-02)
+- [x] **Phase 55: DesignV2 → Main Merge & Gate Enforcement** — Land DesignV2 onto `main` with all v6.3 quality gates intact and verify enforcement on post-merge `main` PR contexts (MERGE-01, MERGE-02) — **COMPLETE 2026-05-18** (4/4 plans)
 - [ ] **Phase 56: RLS Closure & Last Typed-Shim Retirement** — Clear the pre-existing `countries` row from `sensitiveTables` (D-54-04) and type `useStakeholderInteractionMutations` at source (RLS-01, TYPE-05)
 - [ ] **Phase 57: Phase 52 Deviation Closure (D-19..D-23)** — Resolve mobile touch DnD scope, kanban regression follow-up, LTR/RTL visual baseline byte-distinction, and live tasks-tab Playwright run (DEVIATE-01..04)
 - [ ] **Phase 58: Tier-C Design-Token Suppression Full Clear** — Eliminate all 271 `gsd-design-token-tier-c-allow` suppressions (2336 AST nodes) via wave-staged token swaps and remove the waiver from `eslint.config.mjs` (TOKEN-01, TOKEN-02)
@@ -184,7 +184,7 @@ Plans:
 
 **Wave 4** _(blocked on Wave 3 completion)_
 
-- [ ] 55-04-PLAN.md — Smoke PR with 4 planted violations, evidence capture (JSON + PNG), cleanup via `gh pr close --delete-branch` (Wave 4)
+- [x] 55-04-PLAN.md — Smoke PR with 4 planted violations, evidence capture (JSON + PNG), cleanup via `gh pr close --delete-branch` (Wave 4) — **SHIPPED 2026-05-18**: PR #18 captured `mergeStateStatus=BLOCKED` (uppercase, GraphQL) with 2 required contexts at FAILURE (`Lint` + `type-check`); evidence committed to main via PR #19 (merge `ec9caffb`) BEFORE smoke PR closed (Pitfall 10); PR #18 closed `--delete-branch` per D-12; remote `smoke/phase-55-merge-02` + `docs/phase-55-smoke-evidence` branches deleted. MERGE-02 satisfied; Phase 55 complete (4/4 plans).
 
 ### Phase 56: RLS Closure & Last Typed-Shim Retirement
 
@@ -260,7 +260,7 @@ Plans:
 | 44-46 | v6.1 | 14/14 | Shipped | 2026-05-08 |
 | 47-49 | v6.2 | 17/17 | Shipped | 2026-05-12 |
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
-| 55 | v6.4 | 3/4 | In Progress | — |
+| 55 | v6.4 | 4/4 | Complete | 2026-05-18 |
 | 56 | v6.4 | 0/0 | Not started | — |
 | 57 | v6.4 | 0/0 | Not started | — |
 | 58 | v6.4 | 0/0 | Not started | — |
@@ -270,4 +270,4 @@ Plans:
 
 ---
 
-_Roadmap last updated: 2026-05-17 — Phase 55 Plan 03 complete (main branch protection now requires 8 contexts via `gh api -X PUT` round-trip; all security-critical fields preserved; protection-before.json + protection-after.json committed as D-16 audit trail; MERGE-02 still partial). Plan 04 (smoke PR) remains._
+_Roadmap last updated: 2026-05-18 — Phase 55 COMPLETE (4/4 plans). Plan 04 captured `mergeStateStatus=BLOCKED` on smoke PR #18 (uppercase, GraphQL); evidence committed to main via PR #19; smoke PR closed `--delete-branch` per D-12; MERGE-02 satisfied. 8-context gate live on `main`. Recommended next: `/gsd:verify-work 55` then Phase 56 or 57 (parallel-eligible)._
