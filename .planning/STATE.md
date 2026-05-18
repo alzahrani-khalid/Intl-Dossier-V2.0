@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v6.4
 milestone_name: Stabilization & Carryover Sweep
-status: completed
-last_updated: '2026-05-17T12:47:00.000Z'
-last_activity: '2026-05-17 -- Phase 55 Plan 03 complete — main branch protection at 8 required contexts (was 6) via gh api -X PUT round-trip; `Design Token Check` + `react-i18next Factory Check` now required; all security invariants (enforce_admins=true, allow_force_pushes=false, allow_deletions=false, block_creations=false, strict=true) preserved verbatim; protection-before.json + protection-after.json committed as audit trail per D-16; MERGE-02 still PARTIAL — Plan 04 (smoke PR captures mergeStateStatus=BLOCKED) is the final proof step'
+status: phase-complete
+last_updated: '2026-05-18T06:35:00.000Z'
+last_activity: '2026-05-18 -- Phase 55 COMPLETE (4/4 plans) — MERGE-01 + MERGE-02 satisfied. Plan 04 captured `mergeStateStatus = BLOCKED` on smoke PR #18 with 2 required contexts at FAILURE (`Lint` + `type-check`); evidence committed via PR #19 merge `ec9caffb`; smoke PR closed `--delete-branch` per D-12; remote `smoke/phase-55-merge-02` + `docs/phase-55-smoke-evidence` branches deleted; 8 required contexts now active on `main` protection. Notable finding documented: the 2 new positive-failure CI jobs (`Design Token Check` + `react-i18next Factory Check`) are fixture-scoped (POLISH-04 implications captured in 55-04-SUMMARY).'
 progress:
   total_phases: 9
-  completed_phases: 8
-  total_plans: 47
-  completed_plans: 47
-  percent: 89
+  completed_phases: 9
+  total_plans: 48
+  completed_plans: 48
+  percent: 100
 ---
 
 # Project State
@@ -24,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-05-17 after v6.3 milestone)
 
 ## Current Position
 
-Phase: 55 — DesignV2 → Main Merge & Gate Enforcement
-Plan: 04 (Wave 4 — smoke PR with planted multi-context violations; capture mergeStateStatus=BLOCKED)
-Status: Plan 03 of 4 complete; Plan 04 unblocked
-Last activity: 2026-05-17 -- Phase 55 Plan 03 complete — main branch protection now requires exactly 8 status check contexts (was 6): the original 6 (`type-check`, `Security Scan`, `Lint`, `Bundle Size Check (size-limit)`, `Tests (frontend)`, `Tests (backend)`) PLUS the 2 new (`Design Token Check`, `react-i18next Factory Check`). PUT round-trip via `gh api` per D-16; all security-critical fields (`enforce_admins=true`, `allow_force_pushes=false`, `allow_deletions=false`, `block_creations=false`, `strict=true`, `required_pull_request_reviews=null`, `restrictions=null`) preserved verbatim. `protection-before.json` + `protection-after.json` committed as D-16 audit trail. MERGE-02 still PARTIAL — Plan 04 (smoke PR) is the final proof step that flips MERGE-02 complete.
+Phase: 55 — DesignV2 → Main Merge & Gate Enforcement — **COMPLETE (4/4 plans)**
+Plan: — (none active; next phase 56 or 57 may begin)
+Status: Phase 55 complete; MERGE-01 + MERGE-02 satisfied; ready for `/gsd:verify-work 55`
+Last activity: 2026-05-18 -- Phase 55 Plan 04 complete — smoke PR #18 against `main` captured `mergeStateStatus = BLOCKED` (uppercase, GraphQL path per Pitfall 11) with 2 required contexts at FAILURE (`Lint` + `type-check`); 4 planted violations targeting 4 required contexts produced 2 confirmed FAILUREs (sufficient for BLOCKED with margin); evidence JSON + PNG committed to `main` via PR #19 (merge `ec9caffb1fd3584d046e5c783e4a24247d6341a7`) BEFORE smoke PR was closed (Pitfall 10 sequencing); PR #18 closed with `gh pr close --delete-branch` per D-12; both `smoke/phase-55-merge-02` and `docs/phase-55-smoke-evidence` branches deleted (remote 404 confirmed). Notable finding documented: the 2 new positive-failure CI jobs (`Design Token Check` + `react-i18next Factory Check`) are fixture-scoped — they lint the canonical bad fixtures only, not arbitrary application code (POLISH-04 / TOKEN-01 implications captured). MERGE-02 traceability flipped from PARTIAL → COMPLETE.
 
 ## v6.4 Phase Plan
 
@@ -54,13 +54,21 @@ Coverage: 14/14 v6.4 requirements mapped (no orphans).
 
 ## Next Action
 
-Plan the first phase:
+Phase 55 is COMPLETE. Recommended next steps:
 
 ```
-/gsd:plan-phase 55
+/gsd:verify-work 55
 ```
 
-Phase 55 is the blocker for 56-59 — the DesignV2 → main merge must complete and v6.3 gates must enforce on `main` PR contexts before downstream work merges. Phases 56 and 57 can run in parallel after 55 lands.
+Then plan the next phase. Phases 56 and 57 are unblocked (both depend only on Phase 55) and may proceed in parallel:
+
+```
+/gsd:plan-phase 56   # RLS-01 + TYPE-05
+# or
+/gsd:plan-phase 57   # DEVIATE-01..04 (Phase 52 deviation closure)
+```
+
+Phase 58 (TOKEN-01 + TOKEN-02 — Tier-C suppression full clear) and Phase 59 (POLISH-01..04 — cosmetic + CI gap closure) also unblocked.
 
 ## Carryover Tech Debt Status
 

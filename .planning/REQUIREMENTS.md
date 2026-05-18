@@ -11,7 +11,7 @@
 ### Merge — DesignV2 → main gate enforcement
 
 - [x] **MERGE-01**: DesignV2 branch merged to `main` with all v6.3 quality gates green (type-check, Lint, Bundle Size Check (size-limit), design-token D-05 selectors, `react-i18next` factory) — Phase 55 Plan 01 (2026-05-17): merge commit `3f763ddc17fd496ac5ab3f289221a8b70a4a3416`, phase-55-base SSH-signed, all 6 required CI contexts SUCCESS on PR #13
-- [ ] **MERGE-02**: v6.3 enforcement verified live on `main` PR contexts post-merge (smoke PR captures `mergeStateStatus=BLOCKED` on intentional violation against a required context fold-in) — Phase 55 Plans 02 + 03 (2026-05-17): **preparation half complete** — Plan 02 landed 2 new CI jobs (`Design Token Check` + `react-i18next Factory Check`) on main via PR #15 (merge commit `9e4471e3`); Plan 03 round-tripped `main` branch protection from 6 → 8 required contexts via `gh api -X PUT` with all security invariants preserved (`enforce_admins=true`, `allow_force_pushes=false`, `allow_deletions=false`, `block_creations=false`, `strict=true`) and committed `protection-before.json` + `protection-after.json` as D-16 audit trail. Full satisfaction requires Plan 55-04 (smoke PR with planted violations captures `mergeStateStatus=BLOCKED`).
+- [x] **MERGE-02**: v6.3 enforcement verified live on `main` PR contexts post-merge (smoke PR captures `mergeStateStatus=BLOCKED` on intentional violation against a required context fold-in) — Phase 55 Plans 02 + 03 + 04 (2026-05-17 / 2026-05-18): **COMPLETE** — Plan 02 landed 2 new CI jobs (`Design Token Check` + `react-i18next Factory Check`) on main via PR #15 (merge commit `9e4471e3`); Plan 03 round-tripped `main` branch protection from 6 → 8 required contexts via `gh api -X PUT` with all security invariants preserved (`enforce_admins=true`, `allow_force_pushes=false`, `allow_deletions=false`, `block_creations=false`, `strict=true`) and committed `protection-before.json` + `protection-after.json` as D-16 audit trail. Plan 04 opened smoke PR #18 with 4 simultaneous planted violations (raw hex + bad-design-token import + type error + bundle bloat + bad-vi-mock import) → `gh pr view --json mergeStateStatus` returned uppercase `"BLOCKED"` (GraphQL path per Pitfall 11) with 2 required contexts at FAILURE (`Lint` + `type-check`) — sufficient for BLOCKED with margin; evidence (`55-SMOKE-PR-EVIDENCE.json` + `55-SMOKE-PR-EVIDENCE.png`) committed to main via PR #19 (merge `ec9caffb`) BEFORE smoke PR closed (Pitfall 10); PR #18 closed `--delete-branch` per D-12 (remote `smoke/phase-55-merge-02` 404 confirmed). See `.planning/phases/55-designv2-main-merge-gate-enforcement/55-04-SUMMARY.md` for full per-context behavior matrix and the Notable Finding on fixture-scoped positive-failure jobs.
 
 ### Security / RLS
 
@@ -59,22 +59,22 @@
 
 ## Traceability
 
-| Requirement | Phase    | Status                                                                                            |
-| ----------- | -------- | ------------------------------------------------------------------------------------------------- |
-| MERGE-01    | Phase 55 | ✓ Complete (2026-05-17, Plan 01)                                                                  |
-| MERGE-02    | Phase 55 | Partial (Plans 02 + 03 prep done — protection at 8 required contexts; awaits Plan 04 smoke proof) |
-| RLS-01      | Phase 56 | Pending                                                                                           |
-| TYPE-05     | Phase 56 | Pending                                                                                           |
-| DEVIATE-01  | Phase 57 | Pending                                                                                           |
-| DEVIATE-02  | Phase 57 | Pending                                                                                           |
-| DEVIATE-03  | Phase 57 | Pending                                                                                           |
-| DEVIATE-04  | Phase 57 | Pending                                                                                           |
-| TOKEN-01    | Phase 58 | Pending                                                                                           |
-| TOKEN-02    | Phase 58 | Pending                                                                                           |
-| POLISH-01   | Phase 59 | Pending                                                                                           |
-| POLISH-02   | Phase 59 | Pending                                                                                           |
-| POLISH-03   | Phase 59 | Pending                                                                                           |
-| POLISH-04   | Phase 59 | Pending                                                                                           |
+| Requirement | Phase    | Status                                                                                                              |
+| ----------- | -------- | ------------------------------------------------------------------------------------------------------------------- |
+| MERGE-01    | Phase 55 | ✓ Complete (2026-05-17, Plan 01)                                                                                    |
+| MERGE-02    | Phase 55 | ✓ Complete (2026-05-18, Plans 02 + 03 + 04 combined — smoke PR #18 BLOCKED proof captured; PR #19 evidence on main) |
+| RLS-01      | Phase 56 | Pending                                                                                                             |
+| TYPE-05     | Phase 56 | Pending                                                                                                             |
+| DEVIATE-01  | Phase 57 | Pending                                                                                                             |
+| DEVIATE-02  | Phase 57 | Pending                                                                                                             |
+| DEVIATE-03  | Phase 57 | Pending                                                                                                             |
+| DEVIATE-04  | Phase 57 | Pending                                                                                                             |
+| TOKEN-01    | Phase 58 | Pending                                                                                                             |
+| TOKEN-02    | Phase 58 | Pending                                                                                                             |
+| POLISH-01   | Phase 59 | Pending                                                                                                             |
+| POLISH-02   | Phase 59 | Pending                                                                                                             |
+| POLISH-03   | Phase 59 | Pending                                                                                                             |
+| POLISH-04   | Phase 59 | Pending                                                                                                             |
 
 **Coverage:** 14/14 v6.4 requirements mapped to exactly one phase. No orphans.
 
@@ -82,3 +82,4 @@
 
 _Created: 2026-05-17 — v6.4 milestone definition via `/gsd:new-milestone` (research skipped; scope sourced from `/gsd:explore` shape note)._
 _Updated: 2026-05-17 — Traceability table populated by `gsd-roadmapper` (Phases 55-59)._
+_Updated: 2026-05-18 — Phase 55 complete: MERGE-01 + MERGE-02 both checked off; traceability updated. 12/14 v6.4 requirements still pending across Phases 56-59._
