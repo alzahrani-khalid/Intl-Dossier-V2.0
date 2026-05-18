@@ -36,7 +36,12 @@ import { type ReactElement, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 
-import { KanbanProvider, type DragEndEvent, type KanbanItemProps } from '@/components/kanban'
+import {
+  KanbanProvider,
+  type DragEndEvent,
+  type KanbanItemProps,
+  type SensorDescriptor,
+} from '@/components/kanban'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useUnifiedKanban, useUnifiedKanbanStatusUpdate } from '@/hooks/useUnifiedKanban'
 import type { KanbanColumnMode, WorkflowStage, WorkSource } from '@/types/work-item.types'
@@ -152,7 +157,8 @@ export function WorkBoard(): ReactElement {
   // at the DndContext spread (KanbanProvider.tsx:211 `{...props}` runs AFTER
   // the internal `sensors={sensors}` so spread wins). In 'status' mode we
   // omit the prop entirely so the internal sensors stay active.
-  const dndExtraProps = mode === 'status' ? {} : ({ sensors: [] } as const)
+  const dndExtraProps: { sensors?: SensorDescriptor<object>[] } =
+    mode === 'status' ? {} : { sensors: [] }
 
   const handleDragEnd = useCallback(
     (event: DragEndEvent): void => {
