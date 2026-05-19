@@ -20,10 +20,16 @@ test.describe('Phase 39: Kanban visual regression', () => {
       await page.waitForLoadState('networkidle')
       await page.evaluate((): Promise<FontFaceSet> => document.fonts.ready)
 
-      await expect(page).toHaveScreenshot(`kanban-${dir}-${viewport.width}.png`, {
-        maxDiffPixelRatio: 0.01,
-        fullPage: true,
-      })
+      // Phase 57 D-21: scope to the .workboard-page region. Pre-DesignV2 the
+      // page rendered standalone; post Phase 55 the IntelDossier shell wraps
+      // every route and contributes a "Replay onboarding tour" button + a
+      // notifications status pulse + sidebar avatar that flicker between
+      // renders, fail the 1% diff tolerance under parallel-worker load, and
+      // aren't the WorkBoard primitive's visual contract.
+      await expect(page.locator('.workboard-page')).toHaveScreenshot(
+        `kanban-${dir}-${viewport.width}.png`,
+        { maxDiffPixelRatio: 0.01 },
+      )
     })
   }
 })
