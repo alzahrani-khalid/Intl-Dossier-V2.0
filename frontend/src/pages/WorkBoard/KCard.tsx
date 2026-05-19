@@ -14,7 +14,7 @@
  * injection APIs are referenced anywhere in this file (acceptance grep).
  */
 
-import { type KeyboardEvent, type ReactElement } from 'react'
+import { type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { format, isToday } from 'date-fns'
 
@@ -105,21 +105,17 @@ export function KCard({ item, onItemClick, dndEnabled = false }: KCardProps): Re
     onItemClick(item)
   }
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLElement>): void => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      onItemClick(item)
-    }
-  }
-
+  // Phase 57 D-21: KCard is presentational inside the shared @/components/kanban
+  // primitive. Outer <KanbanCard> already owns role="button" + tabIndex (from
+  // dnd-kit's useSortable.attributes) + keyboard reorder. Adding role="button"
+  // here would nest interactive controls (axe rule `nested-interactive`,
+  // serious). Click handler stays — dnd-kit's MouseSensor activationConstraint
+  // distance:8 releases pure clicks so onItemClick still routes to detail.
   return (
     <article
       className={cn('kcard', item.is_overdue && 'overdue', isDone && 'done')}
-      role="button"
-      tabIndex={0}
       aria-label={title}
       onClick={handleClick}
-      onKeyDown={handleKeyDown}
       style={{ cursor: dndEnabled ? 'grab' : 'pointer' }}
     >
       <div className="kcard-top">
