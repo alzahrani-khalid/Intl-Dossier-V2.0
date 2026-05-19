@@ -215,7 +215,7 @@ Plans:
 3. Re-running the kanban EN+AR visual baseline diff produces byte-distinct snapshots between LTR and RTL (no false byte-identity) (D-22)
 4. The live tasks-tab Playwright run executes on seeded staging data with a host operator and the artifact (run log, screenshots, summary) lands in the phase folder (D-23)
 
-**Plans:** 2/4 plans executed
+**Plans:** 3/4 plans executed
 
 Plans:
 
@@ -226,7 +226,7 @@ Plans:
 
 **Wave 2**
 
-- [ ] 57-02-PLAN.md — D-21 WorkBoard migration to shared @/components/kanban + ESLint guard + baseline regen
+- [x] 57-02-PLAN.md — D-21 WorkBoard migration to shared @/components/kanban + ESLint guard + baseline regen
 
 **Wave 3**
 
@@ -281,7 +281,7 @@ Plans:
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
 | 55 | v6.4 | 4/4 | Complete | 2026-05-18 |
 | 56 | v6.4 | 2/2 | Complete | 2026-05-18 |
-| 57 | v6.4 | 2/4 | In Progress|  |
+| 57 | v6.4 | 3/4 | In Progress|  |
 | 58 | v6.4 | 0/0 | Not started | — |
 | 59 | v6.4 | 0/0 | Not started | — |
 
