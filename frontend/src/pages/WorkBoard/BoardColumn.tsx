@@ -24,7 +24,7 @@
 import { type ReactElement, useId } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { KanbanCards, KanbanCard, type KanbanItemProps } from '@/components/kanban'
+import { KanbanCards, KanbanCard, useDroppable, type KanbanItemProps } from '@/components/kanban'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import { toArDigits } from '@/lib/i18n/toArDigits'
 import type { WorkflowStage } from '@/types/work-item.types'
@@ -47,9 +47,20 @@ export function BoardColumn(props: BoardColumnProps): ReactElement {
   const { t, i18n } = useTranslation('unified-kanban')
   const lang = i18n.language
   const titleId = useId()
+  // D-21: column is the droppable target for cross-column DnD. Plays the same
+  // role KanbanBoard does inside the shared primitive — but we keep `<section
+  // class="col">` to honor the Phase 39 selector contract (kanban-render /
+  // kanban-rtl / kanban-responsive depend on `section.col`).
+  const { setNodeRef } = useDroppable({ id: stage })
 
   return (
-    <section role="region" aria-labelledby={titleId} className="col">
+    <section
+      role="region"
+      aria-labelledby={titleId}
+      className="col"
+      ref={setNodeRef}
+      data-droppable-id={stage}
+    >
       <header className="col-head">
         <h3 id={titleId}>{title}</h3>
         <LtrIsolate>

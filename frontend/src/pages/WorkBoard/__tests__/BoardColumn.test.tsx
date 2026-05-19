@@ -58,6 +58,11 @@ vi.mock('@/components/kanban', () => ({
   KanbanCard: ({ children, id }: { children: ReactNode; id: string }): ReactElement => (
     <div data-testid={`kanban-card-${id}`}>{children}</div>
   ),
+  // D-21 BoardColumn now uses useDroppable on the column section. Stub it so
+  // the component renders without a DndContext in the test environment.
+  useDroppable: (): { setNodeRef: (node: HTMLElement | null) => void } => ({
+    setNodeRef: () => undefined,
+  }),
 }))
 
 // ── KCard mock — keep test surface deterministic (unused in this rewrite

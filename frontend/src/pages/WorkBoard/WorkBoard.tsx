@@ -170,8 +170,13 @@ export function WorkBoard(): ReactElement {
       const item = visibleItems.find((it) => it.id === String(activeId))
       if (!item) return
 
-      // Resolve target stage: prefer over.data.current.stage, fall back to over.id
-      // (which is the column id under KanbanProvider) or a 'col-<stage>' heuristic.
+      // Resolve target stage. Under closestCenter collision detection the
+      // `over` target may be the column-section (useDroppable id=stage) OR a
+      // sibling card sortable (id=cardUuid). D-21 (#3072): WorkBoard's
+      // onDragEnd must handle BOTH:
+      //  1. over.data.current.stage — if a future consumer attaches stage data
+      //  2. over.id matches a STAGE — when dropped on empty column area
+      //  3. over.id is a card uuid — resolve to that card's workflow_stage
       type OverData = { stage?: WorkflowStage } | undefined
       const overData = (over.data?.current as OverData) ?? undefined
       let targetStage: WorkflowStage | undefined = overData?.stage
@@ -180,6 +185,13 @@ export function WorkBoard(): ReactElement {
         const stripped = overIdStr.startsWith('col-') ? overIdStr.slice(4) : overIdStr
         if ((STAGES as string[]).includes(stripped)) {
           targetStage = stripped as WorkflowStage
+        } else {
+          // Sibling-card path: closestCenter often lands on a card in the
+          // target column rather than the column-droppable itself.
+          const overCard = visibleItems.find((it) => it.id === overIdStr)
+          if (overCard !== undefined) {
+            targetStage = overCard.workflow_stage as WorkflowStage
+          }
         }
       }
       if (targetStage === undefined || targetStage === item.workflow_stage) return
