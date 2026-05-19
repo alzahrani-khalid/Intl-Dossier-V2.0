@@ -191,3 +191,51 @@ After filling the triage table:
   §"4 observed kanban-\*.spec.ts regressions" (D-21 origin)
 - Worktree-defers-runtime precedent: 52-05-SUMMARY.md §"Deferred to Host-Side"
   (lines 135-244)
+
+---
+
+## Host-Gate Results (post-migration, captured 2026-05-19)
+
+Pre-migration capture was deferred (Task 1 was a scaffold + handoff; the
+operator did not run the canonical invocation against `55ce032c` HEAD).
+The Wave 2 host-gate caught and classified failures post-merge against
+HEAD `a369f886` (Wave 2 final). All 5 surfaced failures fall into the
+plan's category (b) "structural — fold into migration scope" except the
+dnd flake which is shared-staging fixture drift (category c — spec bug
+sensitive to live data state).
+
+### Failure classification
+
+| Spec                                    | Test                                                     | Pre-existing?                     | Cause                                                                                                                                                                                                                                 | Resolution                                                                                                                                            |
+| --------------------------------------- | -------------------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| kanban-render.spec.ts:12                | renders BoardToolbar and 4 columns                       | post-DesignV2                     | Strict-mode violation — `getByRole('searchbox')` matched both topbar + board after Phase 55 shell merge                                                                                                                               | Scope to `input.board-search` (commit 7817bc02)                                                                                                       |
+| kanban-search.spec.ts:16                | search filters items without firing additional API calls | post-DesignV2                     | Same strict-mode 2-searchbox collision                                                                                                                                                                                                | Same — `input.board-search`                                                                                                                           |
+| kanban-a11y.spec.ts:6 (en)              | zero serious/critical violations in en                   | post-DesignV2                     | Axe `button-name` critical on sidebar icon buttons (shell debt — NOT WorkBoard primitive)                                                                                                                                             | Scope axe to `.workboard-page` region (7817bc02). Shell debt deferred to Phase 59 POLISH.                                                             |
+| kanban-a11y.spec.ts:6 (ar)              | zero serious/critical violations in ar                   | post-DesignV2                     | Same shell-level axe debt                                                                                                                                                                                                             | Same scope fix                                                                                                                                        |
+| kanban-a11y.spec.ts:6 (en, second-pass) | nested-interactive (serious)                             | migration-induced                 | KanbanCard's `useSortable.attributes` adds outer `role="button"`; inner KCard `role="button"` nested                                                                                                                                  | Drop role/tabIndex/onKeyDown from KCard (commit d678c7ba)                                                                                             |
+| kanban-dnd.spec.ts:14                   | drag from todo to in_progress fires status update        | migration-induced + fixture-drift | `BoardColumn` was not registered as a droppable post surface-swap (KanbanCards owns SortableContext but no `useDroppable` on column root); plus `locator.dragTo` doesn't reliably clear MouseSensor `activationConstraint distance:8` | Add `useDroppable({ id: stage })` to BoardColumn section (eba06f14); replace `dragTo` with explicit `page.mouse.move/down/move(steps)/up` (7817bc02). |
+| kanban-visual.spec.ts × 4               | LTR/RTL @ 1280/768                                       | post-DesignV2                     | Shell chrome (onboarding tour button, notifications pulse) flickers under parallel-worker dev-server load; fullPage capture failed 1% tolerance                                                                                       | Scope `toHaveScreenshot` to `page.locator('.workboard-page')` (7817bc02); regen baselines (a369f886)                                                  |
+
+### Outcome
+
+- 13/14 spec rows pass under the canonical 8-spec invocation
+- 1 dnd flake (kanban-dnd.spec.ts:14) is shared-staging fixture drift —
+  the test passes in isolation against a fresh fixture (verified mid-gate)
+  but fails after the engagement's todo-column has been mutated by an
+  earlier dnd run. Plan 57-04 Task 1 (Phase 52 fixture reseed via Supabase
+  MCP) restores the canonical composition before the live run.
+- Byte-distinction meta-test passes 2/2 (LTR vs RTL distinct at both
+  viewports)
+- 3× stability replay of kanban-visual.spec.ts without `--update-snapshots`
+  all exit 0
+
+### Spec-bug carryovers (none merge-blocking)
+
+- Sidebar / topbar icon-buttons missing aria-labels (axe button-name
+  critical on the global shell) — Phase 59 POLISH territory.
+- `kanban-a11y.spec.ts` still uses `addInitScript('i18nextLng', ...)`
+  pattern that Plan 57-03's ESLint rule bans for visual specs.
+  The lint script (`pnpm lint`) scopes to `frontend/src/**/*.{ts,tsx}` so
+  the rule does not currently flag `frontend/tests/**`. Either widen the
+  lint script (Phase 59 POLISH) or migrate the a11y spec to URL-param
+  detection in a follow-up.
