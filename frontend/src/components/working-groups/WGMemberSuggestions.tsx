@@ -541,8 +541,7 @@ function SuggestionCard({
         <div
           className={cn(
             'h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0',
-            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WGMemberSuggestions */
-            isOrg ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600',
+            isOrg ? 'bg-info/10 text-info' : 'bg-accent/10 text-accent',
           )}
         >
           {isOrg ? <Building2 className="h-5 w-5" /> : <UserCircle className="h-5 w-5" />}
@@ -677,8 +676,7 @@ function RoleAssignmentStep({
                   <div
                     className={cn(
                       'h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0',
-                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WGMemberSuggestions */
-                      isOrg ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600',
+                      isOrg ? 'bg-info/10 text-info' : 'bg-accent/10 text-accent',
                     )}
                   >
                     {isOrg ? <Building2 className="h-5 w-5" /> : <UserCircle className="h-5 w-5" />}
@@ -841,8 +839,7 @@ function ReviewStep({
                   <div
                     className={cn(
                       'h-8 w-8 rounded-full flex items-center justify-center',
-                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WGMemberSuggestions */
-                      isOrg ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600',
+                      isOrg ? 'bg-info/10 text-info' : 'bg-accent/10 text-accent',
                     )}
                   >
                     {isOrg ? <Building2 className="h-4 w-4" /> : <UserCircle className="h-4 w-4" />}
