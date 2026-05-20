@@ -292,14 +292,12 @@ export const EntityComparisonSelector = memo(function EntityComparisonSelector({
 
             {/* Selection status */}
             {selectedIds.length > 0 && selectedIds.length < minSelections && (
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityComparisonSelector
-              <p className="text-sm text-amber-600 dark:text-amber-400">
+              <p className="text-sm text-warning">
                 {t('selector.minRequired', { min: minSelections })}
               </p>
             )}
             {selectedIds.length >= maxSelections && (
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityComparisonSelector
-              <p className="text-sm text-amber-600 dark:text-amber-400">
+              <p className="text-sm text-warning">
                 {t('selector.maxReached', { max: maxSelections })}
               </p>
             )}
