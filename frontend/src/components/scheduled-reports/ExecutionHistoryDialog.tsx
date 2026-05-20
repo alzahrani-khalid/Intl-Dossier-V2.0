@@ -40,13 +40,12 @@ export function ExecutionHistoryDialog({
   const getStatusIcon = (status: ReportExecution['status']) => {
     switch (status) {
       case 'completed':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExecutionHistoryDialog
-        return <CheckCircle2 className="h-5 w-5 text-green-500" />
+        return <CheckCircle2 className="h-5 w-5 text-success" />
       case 'failed':
         return <XCircle className="h-5 w-5 text-destructive" />
       case 'running':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExecutionHistoryDialog
-        return <Clock className="h-5 w-5 text-blue-500 animate-pulse" />
+        // D-58-03-01: blue-500 → text-info (running-state informational icon, not a link/CTA)
+        return <Clock className="h-5 w-5 text-info animate-pulse" />
       case 'pending':
         return <Clock className="h-5 w-5 text-muted-foreground" />
       default:
@@ -118,8 +117,7 @@ export function ExecutionHistoryDialog({
                   {/* Stats */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2 border-t">
                     <div className="flex items-center gap-2">
-                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExecutionHistoryDialog */}
-                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <CheckCircle2 className="h-4 w-4 text-success" />
                       <div>
                         <p className="text-xs text-muted-foreground">{t('history.successful')}</p>
                         <p className="font-medium">{execution.successful_deliveries}</p>
@@ -159,8 +157,7 @@ export function ExecutionHistoryDialog({
 
                   {/* Conditions Result */}
                   {execution.conditions_met === false && (
-                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExecutionHistoryDialog
-                    <div className="bg-amber-500/10 text-amber-700 dark:text-amber-400 text-sm p-2 rounded">
+                    <div className="bg-warning/10 text-warning border border-warning/30 text-sm p-2 rounded">
                       Conditions not met - delivery skipped
                     </div>
                   )}
