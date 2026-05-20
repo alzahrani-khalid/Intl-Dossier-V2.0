@@ -114,24 +114,23 @@ const annotationTypes: Array<{
 ]
 
 // Color options
+// D-58-03-05: 6-color user-selectable annotation palette mapped onto design-system
+// semantic tokens (5 status tokens + 1 opacity-step on warning for orange).
+// Wave-1 D-58-01-02 / Wave-2 EXTRA-02 precedent: when a 6-color palette exceeds
+// the 5-status-token vocabulary, use opacity steps on the closest-sibling token.
+// purple → accent (Wave-2 WGMemberSuggestions); orange → warning/80 (between yellow/danger).
 const colorOptions: Array<{
   color: AnnotationColor
   class: string
   label_en: string
   label_ar: string
 }> = [
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderAnnotationDialog
-  { color: 'blue', class: 'bg-blue-500', label_en: 'Blue', label_ar: 'أزرق' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderAnnotationDialog
-  { color: 'green', class: 'bg-green-500', label_en: 'Green', label_ar: 'أخضر' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderAnnotationDialog
-  { color: 'yellow', class: 'bg-yellow-500', label_en: 'Yellow', label_ar: 'أصفر' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderAnnotationDialog
-  { color: 'red', class: 'bg-red-500', label_en: 'Red', label_ar: 'أحمر' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderAnnotationDialog
-  { color: 'purple', class: 'bg-purple-500', label_en: 'Purple', label_ar: 'بنفسجي' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderAnnotationDialog
-  { color: 'orange', class: 'bg-orange-500', label_en: 'Orange', label_ar: 'برتقالي' },
+  { color: 'blue', class: 'bg-info', label_en: 'Blue', label_ar: 'أزرق' },
+  { color: 'green', class: 'bg-success', label_en: 'Green', label_ar: 'أخضر' },
+  { color: 'yellow', class: 'bg-warning', label_en: 'Yellow', label_ar: 'أصفر' },
+  { color: 'red', class: 'bg-danger', label_en: 'Red', label_ar: 'أحمر' },
+  { color: 'purple', class: 'bg-accent', label_en: 'Purple', label_ar: 'بنفسجي' },
+  { color: 'orange', class: 'bg-warning/80', label_en: 'Orange', label_ar: 'برتقالي' },
 ]
 
 // Visibility options
