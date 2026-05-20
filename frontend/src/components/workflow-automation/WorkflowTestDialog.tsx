@@ -123,11 +123,9 @@ export function WorkflowTestDialog({ rule, open, onOpenChange }: WorkflowTestDia
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   {testResult.conditions_matched ? (
-                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowTestDialog
-                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                    <CheckCircle2 className="h-5 w-5 text-success" />
                   ) : (
-                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowTestDialog
-                    <XCircle className="h-5 w-5 text-red-600" />
+                    <XCircle className="h-5 w-5 text-danger" />
                   )}
                   {t('test.results')}
                 </CardTitle>
@@ -152,11 +150,9 @@ export function WorkflowTestDialog({ rule, open, onOpenChange }: WorkflowTestDia
                       >
                         <div className="flex items-center gap-2">
                           {detail.matched ? (
-                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowTestDialog
-                            <CheckCircle2 className="h-4 w-4 text-green-600" />
+                            <CheckCircle2 className="h-4 w-4 text-success" />
                           ) : (
-                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowTestDialog
-                            <XCircle className="h-4 w-4 text-red-600" />
+                            <XCircle className="h-4 w-4 text-danger" />
                           )}
                           <span className="font-mono">{detail.field}</span>
                         </div>
