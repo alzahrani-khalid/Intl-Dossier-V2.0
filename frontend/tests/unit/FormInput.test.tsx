@@ -108,7 +108,7 @@ describe('FormInput', () => {
     render(<FormInput {...defaultProps} error={error} />)
 
     const input = screen.getByRole('textbox')
-    expect(input).toHaveClass('border-red-500')
+    expect(input).toHaveClass('border-danger')
     expect(input).toHaveAttribute('aria-invalid', 'true')
   })
 
@@ -116,7 +116,7 @@ describe('FormInput', () => {
     render(<FormInput {...defaultProps} />)
 
     const input = screen.getByRole('textbox')
-    expect(input).toHaveClass('border-gray-300')
+    expect(input).toHaveClass('border-line')
     expect(input).toHaveAttribute('aria-invalid', 'false')
   })
 

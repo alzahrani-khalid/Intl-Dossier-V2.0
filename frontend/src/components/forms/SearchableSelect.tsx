@@ -385,15 +385,13 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
       'w-full justify-between text-start font-normal',
       'min-h-11 sm:min-h-10 md:min-h-12', // Touch-friendly height
       'px-4 py-2',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SearchableSelect
-      error ? 'border-red-500 dark:border-red-400' : 'border-input dark:border-gray-600',
+      error ? 'border-danger' : 'border-line',
       disabled && 'opacity-50 cursor-not-allowed',
     )
 
     const aceternityTriggerClasses = cn(
       triggerBaseClasses,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SearchableSelect
-      'bg-white dark:bg-zinc-800',
+      'bg-background',
       'shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)]',
       open &&
         'shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.2),_0px_1px_0px_0px_rgba(25,28,33,0.04),_0px_0px_0px_2px_rgba(var(--primary),0.3)]',
@@ -410,10 +408,8 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
             className={cn(
               'block font-medium text-start',
               'text-sm sm:text-base',
-              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SearchableSelect */
-              'text-gray-700 dark:text-gray-300',
-              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SearchableSelect */
-              error && 'text-red-700 dark:text-red-400',
+              'text-ink',
+              error && 'text-danger',
             )}
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
@@ -421,8 +417,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
           >
             {label}
             {required && (
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SearchableSelect
-              <span className="text-red-500 ms-1" aria-label={t('common:validation.required')}>
+              <span className="text-danger ms-1" aria-label={t('common:validation.required')}>
                 *
               </span>
             )}
@@ -546,8 +541,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
             <m.p
               id={helpId}
               key="help-text"
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SearchableSelect
-              className="text-sm text-gray-600 dark:text-gray-400 text-start"
+              className="text-sm text-ink-mute text-start"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -562,8 +556,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
             <m.p
               id={errorId}
               key="error"
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SearchableSelect
-              className="text-sm text-red-600 dark:text-red-400 text-start"
+              className="text-sm text-danger text-start"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}

@@ -53,8 +53,7 @@ export function FormCheckboxAceternity({
     // Responsive text
     'text-sm sm:text-base',
     // Color
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormCheckboxAceternity
-    'text-gray-700 dark:text-gray-300',
+    'text-ink',
     // Disabled state
     disabled && 'cursor-not-allowed',
   )
@@ -100,8 +99,7 @@ export function FormCheckboxAceternity({
         <label htmlFor={name} className={labelClasses}>
           {label}
           {required && (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormCheckboxAceternity
-            <span className="text-red-500 ms-1" aria-label={t('validation.required')}>
+            <span className="text-danger ms-1" aria-label={t('validation.required')}>
               *
             </span>
           )}
@@ -113,8 +111,7 @@ export function FormCheckboxAceternity({
         <m.p
           id={`${name}-help`}
           className={cn(
-            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormCheckboxAceternity */
-            'text-sm text-gray-600 dark:text-gray-400 text-start',
+            'text-sm text-ink-mute text-start',
             isRTL ? 'me-8' : 'ms-8', // Indent to align with checkbox
           )}
           initial={{ opacity: 0 }}
@@ -131,8 +128,7 @@ export function FormCheckboxAceternity({
           <m.p
             id={`${name}-error`}
             className={cn(
-              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FormCheckboxAceternity */
-              'text-sm text-red-600 dark:text-red-400 text-start',
+              'text-sm text-danger text-start',
               isRTL ? 'me-8' : 'ms-8', // Indent to align with checkbox
             )}
             initial={{ opacity: 0, y: -5 }}

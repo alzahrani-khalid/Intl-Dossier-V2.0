@@ -54,19 +54,11 @@ function getPresetIcon(iconName: string): React.ElementType {
 function getColorClasses(theme?: string): string {
   const colors: Record<string, string> = {
     default: 'bg-muted/50 hover:bg-muted border-border',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FilterPresetsSection
-    blue: 'bg-blue-50 hover:bg-blue-100 border-blue-200 dark:bg-blue-950/30 dark:hover:bg-blue-950/50 dark:border-blue-900',
-    green:
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FilterPresetsSection
-      'bg-green-50 hover:bg-green-100 border-green-200 dark:bg-green-950/30 dark:hover:bg-green-950/50 dark:border-green-900',
-    amber:
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FilterPresetsSection
-      'bg-amber-50 hover:bg-amber-100 border-amber-200 dark:bg-amber-950/30 dark:hover:bg-amber-950/50 dark:border-amber-900',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FilterPresetsSection
-    red: 'bg-red-50 hover:bg-red-100 border-red-200 dark:bg-red-950/30 dark:hover:bg-red-950/50 dark:border-red-900',
-    purple:
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FilterPresetsSection
-      'bg-purple-50 hover:bg-purple-100 border-purple-200 dark:bg-purple-950/30 dark:hover:bg-purple-950/50 dark:border-purple-900',
+    blue: 'bg-info/10 hover:bg-info/20 border-info/30',
+    green: 'bg-success/10 hover:bg-success/20 border-success/30',
+    amber: 'bg-warning/10 hover:bg-warning/20 border-warning/30',
+    red: 'bg-danger/10 hover:bg-danger/20 border-danger/30',
+    purple: 'bg-primary/10 hover:bg-primary/20 border-primary/30',
   }
   return colors[theme || 'default'] || colors.default!
 }
@@ -77,16 +69,11 @@ function getColorClasses(theme?: string): string {
 function getIconColorClasses(theme?: string): string {
   const colors: Record<string, string> = {
     default: 'text-muted-foreground',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FilterPresetsSection
-    blue: 'text-blue-600 dark:text-blue-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FilterPresetsSection
-    green: 'text-green-600 dark:text-green-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FilterPresetsSection
-    amber: 'text-amber-600 dark:text-amber-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FilterPresetsSection
-    red: 'text-red-600 dark:text-red-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FilterPresetsSection
-    purple: 'text-purple-600 dark:text-purple-400',
+    blue: 'text-info',
+    green: 'text-success',
+    amber: 'text-warning',
+    red: 'text-danger',
+    purple: 'text-accent',
   }
   return colors[theme || 'default'] || colors.default!
 }

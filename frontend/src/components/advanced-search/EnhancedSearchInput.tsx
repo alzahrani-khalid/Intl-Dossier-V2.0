@@ -77,10 +77,7 @@ function HighlightedText({ text, query }: { text: string; query: string }) {
       {parts.map((part) => (
         <span
           key={`${part.text}-${part.isMatch}`}
-          className={cn(
-            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedSearchInput */
-            part.isMatch && 'bg-yellow-200 dark:bg-yellow-800 font-medium rounded px-0.5',
-          )}
+          className={cn(part.isMatch && 'bg-warning/20 font-medium rounded px-0.5')}
         >
           {part.text}
         </span>
@@ -119,24 +116,18 @@ function SuggestionItem({ suggestion, query, isSelected, onClick, isRTL }: Sugge
       onClick={onClick}
       className={cn(
         'w-full flex items-center gap-3 px-3 py-2.5 text-start transition-colors min-h-11',
-        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedSearchInput */
-        'hover:bg-gray-100 dark:hover:bg-gray-800',
-        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedSearchInput */
-        isSelected && 'bg-gray-100 dark:bg-gray-800',
+        'hover:bg-muted',
+        isSelected && 'bg-muted',
       )}
     >
       <SuggestionIcon
         type={suggestionType}
         className={cn(
           'flex-shrink-0',
-          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedSearchInput */
-          suggestionType === 'history' && 'text-gray-400',
-          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedSearchInput */
-          suggestionType === 'popular' && 'text-orange-500',
-          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedSearchInput */
-          suggestionType === 'tag' && 'text-blue-500',
-          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EnhancedSearchInput */
-          suggestionType === 'title' && 'text-green-500',
+          suggestionType === 'history' && 'text-ink-faint',
+          suggestionType === 'popular' && 'text-warning',
+          suggestionType === 'tag' && 'text-info',
+          suggestionType === 'title' && 'text-success',
         )}
       />
 

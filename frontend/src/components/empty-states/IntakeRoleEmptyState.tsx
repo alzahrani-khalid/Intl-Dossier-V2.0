@@ -231,8 +231,7 @@ function RequesterContent({
     <div className="w-full max-w-2xl space-y-4 sm:space-y-6">
       {/* Examples Header */}
       <div className="flex items-center gap-2 justify-center">
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntakeRoleEmptyState */}
-        <Sparkles className="w-4 h-4 text-amber-500" />
+        <Sparkles className="w-4 h-4 text-warning" />
         <span className="text-sm font-medium text-muted-foreground">
           {t('empty-states:intake.requester.examplesTitle')}
         </span>
