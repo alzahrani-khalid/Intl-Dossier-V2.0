@@ -35,15 +35,14 @@ interface RiskListProps {
 const severities: Risk['severity'][] = ['low', 'medium', 'high', 'critical']
 const likelihoods: Risk['likelihood'][] = ['unlikely', 'possible', 'likely', 'certain']
 
+// 4-tier severity collapse onto 3 status tokens: high uses danger/80 opacity step
+// to remain distinguishable from critical/danger while sharing the "alarm" family.
+// (Same pattern as Wave-1 NotificationPreviewTimeline opacity-step palette.)
 const severityColors = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RiskList
-  low: 'bg-green-500 hover:bg-green-500/80 text-white',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RiskList
-  medium: 'bg-amber-500 hover:bg-amber-500/80 text-white',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RiskList
-  high: 'bg-orange-600 hover:bg-orange-600/80 text-white',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RiskList
-  critical: 'bg-red-600 hover:bg-red-600/80 text-white',
+  low: 'bg-success hover:bg-success/80 text-success-foreground',
+  medium: 'bg-warning hover:bg-warning/80 text-warning-foreground',
+  high: 'bg-danger/80 hover:bg-danger/70 text-danger-foreground',
+  critical: 'bg-danger hover:bg-danger/80 text-danger-foreground',
 }
 
 export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
@@ -94,10 +93,10 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
           key={index}
           className={cn(
             'border-s-4',
-            risk.severity === 'low' && 'border-s-green-500',
-            risk.severity === 'medium' && 'border-s-amber-500',
-            risk.severity === 'high' && 'border-s-orange-600',
-            risk.severity === 'critical' && 'border-s-red-600',
+            risk.severity === 'low' && 'border-s-success',
+            risk.severity === 'medium' && 'border-s-warning',
+            risk.severity === 'high' && 'border-s-danger/80',
+            risk.severity === 'critical' && 'border-s-danger',
           )}
         >
           <CardHeader>
