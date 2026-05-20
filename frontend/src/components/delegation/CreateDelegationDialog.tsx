@@ -214,8 +214,7 @@ export function CreateDelegationDialog({
                 </div>
               ) : validation ? (
                 validation.valid ? (
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CreateDelegationDialog
-                  <div className="flex items-center gap-2 text-sm text-green-600">
+                  <div className="flex items-center gap-2 text-sm text-success">
                     <CheckCircle2 className="h-4 w-4" />
                     {t('validation.valid')}
                   </div>
