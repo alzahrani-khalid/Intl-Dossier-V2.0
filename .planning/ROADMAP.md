@@ -246,7 +246,7 @@ Plans:
 3. `pnpm lint` exits 0 workspace-wide with the waiver removed and the D-05 selectors at `error` severity
 4. Wave PRs are organized by surface (forms, tables, charts, drawers, dossier rail) so each wave is independently reviewable and revertable
 
-**Plans**: TBD
+**Plans**: 10 (Wave 0 manifest + Waves 1–7 across 6 surfaces; Waves 0–2 shipped; Waves 3–7 planned 2026-05-20)
 **UI hint**: yes
 
 ### Phase 59: Cosmetic + CI Gap Closure
@@ -282,7 +282,7 @@ Plans:
 | 55 | v6.4 | 4/4 | Complete | 2026-05-18 |
 | 56 | v6.4 | 2/2 | Complete | 2026-05-18 |
 | 57 | v6.4 | 3/4 | In Progress|  |
-| 58 | v6.4 | 0/0 | Not started | — |
+| 58 | v6.4 | 3/10 | In Progress|  |
 | 59 | v6.4 | 0/0 | Not started | — |
 
 <!-- gsd:progress:end -->
