@@ -57,16 +57,11 @@ interface EntityComparisonTableProps {
  * Difference type badge colors
  */
 const DIFFERENCE_COLORS: Record<FieldDifferenceType, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityComparisonTable
-  same: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityComparisonTable
-  different: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityComparisonTable
-  added: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityComparisonTable
-  removed: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityComparisonTable
-  modified: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
+  same: 'bg-success/10 text-success',
+  different: 'bg-danger/10 text-danger',
+  added: 'bg-info/10 text-info',
+  removed: 'bg-warning/10 text-warning',
+  modified: 'bg-accent/10 text-accent',
 }
 
 /**
@@ -183,10 +178,7 @@ const FieldRow = memo(function FieldRow({
           key={entities[index]?.id || index}
           className={cn(
             'p-2 sm:p-3 text-sm max-w-[150px] sm:max-w-[250px]',
-            field.differenceType !== 'same' &&
-              value !== field.values[0] &&
-              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityComparisonTable */
-              'bg-amber-50/50 dark:bg-amber-950/20',
+            field.differenceType !== 'same' && value !== field.values[0] && 'bg-warning/10',
           )}
         >
           <div className="truncate" title={formatValue(value, isRTL)}>
@@ -225,30 +217,22 @@ const ComparisonSummary = memo(function ComparisonSummary({
               {t('summary.totalFields')}
             </div>
           </div>
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityComparisonTable */}
-          <div className="text-center p-2 sm:p-3 rounded-lg bg-green-50 dark:bg-green-950/30">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityComparisonTable */}
-            <div className="text-lg sm:text-2xl font-bold text-green-600 dark:text-green-400">
-              {summary.sameFields}
-            </div>
+          <div className="text-center p-2 sm:p-3 rounded-lg bg-success/10">
+            <div className="text-lg sm:text-2xl font-bold text-success">{summary.sameFields}</div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('summary.sameFields')}
             </div>
           </div>
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityComparisonTable */}
-          <div className="text-center p-2 sm:p-3 rounded-lg bg-red-50 dark:bg-red-950/30">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityComparisonTable */}
-            <div className="text-lg sm:text-2xl font-bold text-red-600 dark:text-red-400">
+          <div className="text-center p-2 sm:p-3 rounded-lg bg-danger/10">
+            <div className="text-lg sm:text-2xl font-bold text-danger">
               {summary.differentFields}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('summary.differentFields')}
             </div>
           </div>
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityComparisonTable */}
-          <div className="text-center p-2 sm:p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityComparisonTable */}
-            <div className="text-lg sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
+          <div className="text-center p-2 sm:p-3 rounded-lg bg-info/10">
+            <div className="text-lg sm:text-2xl font-bold text-info">
               {summary.similarityPercentage}%
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
@@ -431,8 +415,7 @@ export const EntityComparisonTable = memo(function EntityComparisonTable({
           <ComparisonSummary comparisonResult={comparisonResult} />
           <ViewModeToggle viewMode={viewMode} onViewModeChange={onViewModeChange} />
           <div className="text-center py-8 sm:py-12 border rounded-lg bg-muted/30">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityComparisonTable */}
-            <Check className="h-12 w-12 mx-auto text-green-500 mb-4" />
+            <Check className="h-12 w-12 mx-auto text-success mb-4" />
             <h4 className="font-medium text-sm sm:text-base">{t('table.empty.title')}</h4>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">
               All fields are identical across selected entities
