@@ -225,20 +225,16 @@ export function ForumDetailsDialog({
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'scheduled':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDetailsDialog
-        return 'bg-blue-100 text-blue-800'
+        // D-58-03-02: blue-100/800 → bg-info/10 text-info (scheduled-state informational badge)
+        return 'bg-info/10 text-info'
       case 'ongoing':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDetailsDialog
-        return 'bg-green-100 text-green-800'
+        return 'bg-success/10 text-success'
       case 'completed':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDetailsDialog
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-muted text-ink-mute'
       case 'cancelled':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDetailsDialog
-        return 'bg-red-100 text-red-800'
+        return 'bg-danger/10 text-danger'
       default:
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDetailsDialog
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-muted text-ink-mute'
     }
   }
 
