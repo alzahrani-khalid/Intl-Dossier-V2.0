@@ -193,9 +193,8 @@ export function EscalationDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <ArrowUp
-              /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EscalationDialog */
-              className={`h-5 w-5 sm:h-6 sm:w-6 text-orange-600 ${isRTL ? 'rotate-180' : ''}`}
-              /* eslint-enable no-restricted-syntax */
+              // D-58-03-EXTRA: orange-600 → text-warning (escalation indicator, not low-confidence — Wave-2 D-58-02-EXTRA-03 semantic-context precedent)
+              className={`h-5 w-5 sm:h-6 sm:w-6 text-warning ${isRTL ? 'rotate-180' : ''}`}
             />
             {t('waitingQueue.escalation.escalateAssignment', 'Escalate Assignment')}
           </DialogTitle>
