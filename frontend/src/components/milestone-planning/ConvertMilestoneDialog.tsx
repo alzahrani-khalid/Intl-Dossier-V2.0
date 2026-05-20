@@ -34,26 +34,22 @@ const eventTypes = [
   {
     value: 'calendar',
     icon: Calendar,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConvertMilestoneDialog
-    color: 'text-blue-600 dark:text-blue-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConvertMilestoneDialog
-    bgColor: 'bg-blue-100 dark:bg-blue-900/30',
+    // D-58-03-03: blue-600 → text-info (calendar event-type icon, informational; not a link/CTA)
+    color: 'text-info',
+    bgColor: 'bg-info/10',
   },
   {
     value: 'commitment',
     icon: FileCheck2,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConvertMilestoneDialog
-    color: 'text-green-600 dark:text-green-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConvertMilestoneDialog
-    bgColor: 'bg-green-100 dark:bg-green-900/30',
+    color: 'text-success',
+    bgColor: 'bg-success/10',
   },
   {
     value: 'decision',
     icon: ClipboardList,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConvertMilestoneDialog
-    color: 'text-purple-600 dark:text-purple-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConvertMilestoneDialog
-    bgColor: 'bg-purple-100 dark:bg-purple-900/30',
+    // D-58-03-04: purple-600 → text-accent (Wave-2 WGMemberSuggestions precedent — accent is closest semantic fit for purple)
+    color: 'text-accent',
+    bgColor: 'bg-accent/10',
   },
 ]
 
