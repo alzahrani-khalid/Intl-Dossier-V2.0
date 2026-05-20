@@ -343,31 +343,19 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
 
       case 'delete':
         return (
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog
-          <div className="flex items-start gap-3 p-3 bg-red-50 dark:bg-red-950 rounded-md">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */}
-            <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+          <div className="flex items-start gap-3 p-3 bg-danger/10 border border-danger/30 rounded-md">
+            <AlertTriangle className="h-5 w-5 text-danger shrink-0 mt-0.5" />
             <div className="space-y-1">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */}
-              <p className="text-sm text-red-800 dark:text-red-200">
-                {t('confirmation.delete.warning')}
-              </p>
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */}
-              <p className="text-xs text-red-600 dark:text-red-400">
-                {t('confirmation.delete.permanentWarning')}
-              </p>
+              <p className="text-sm text-danger">{t('confirmation.delete.warning')}</p>
+              <p className="text-xs text-danger">{t('confirmation.delete.permanentWarning')}</p>
             </div>
           </div>
         )
 
       case 'archive':
         return (
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog
-          <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-md">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */}
-            <p className="text-sm text-blue-800 dark:text-blue-200">
-              {t('confirmation.archive.note')}
-            </p>
+          <div className="p-3 bg-info/10 border border-info/30 rounded-md">
+            <p className="text-sm text-info">{t('confirmation.archive.note')}</p>
           </div>
         )
 
@@ -546,33 +534,18 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                                   variant="secondary"
                                   className={cn(
                                     'text-xs shrink-0',
-                                    item.status === 'completed' &&
-                                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */
-                                      'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-                                    item.status === 'in_progress' &&
-                                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */
-                                      'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-                                    item.status === 'pending' &&
-                                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */
-                                      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-                                    item.status === 'cancelled' &&
-                                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */
-                                      'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
-                                    item.status === 'draft' &&
-                                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */
-                                      'bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-200',
-                                    item.status === 'review' &&
-                                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */
-                                      'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-                                    item.status === 'approved' &&
-                                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */
-                                      'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
-                                    item.status === 'rejected' &&
-                                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */
-                                      'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-                                    item.status === 'archived' &&
-                                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */
-                                      'bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200',
+                                    // D-58-03-09: 9-status badge palette using canonical statusColors token vocabulary;
+                                    // emerald (approved) → success/20 (sibling opacity step per Wave-1 D-58-01-02);
+                                    // slate/neutral/gray → bg-muted (collapsed onto single neutral token).
+                                    item.status === 'completed' && 'bg-success/10 text-success',
+                                    item.status === 'in_progress' && 'bg-primary/10 text-primary',
+                                    item.status === 'pending' && 'bg-warning/10 text-warning',
+                                    item.status === 'cancelled' && 'bg-muted text-ink-mute',
+                                    item.status === 'draft' && 'bg-muted text-ink-mute',
+                                    item.status === 'review' && 'bg-accent/10 text-accent',
+                                    item.status === 'approved' && 'bg-success/20 text-success',
+                                    item.status === 'rejected' && 'bg-danger/10 text-danger',
+                                    item.status === 'archived' && 'bg-muted text-ink-mute',
                                   )}
                                 >
                                   {t(`status.${item.status}`, { defaultValue: item.status })}
@@ -583,18 +556,12 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                                   variant="outline"
                                   className={cn(
                                     'text-xs shrink-0',
-                                    item.priority === 'urgent' &&
-                                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */
-                                      'border-red-500 text-red-600 dark:border-red-400 dark:text-red-400',
-                                    item.priority === 'high' &&
-                                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */
-                                      'border-orange-500 text-orange-600 dark:border-orange-400 dark:text-orange-400',
-                                    item.priority === 'medium' &&
-                                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */
-                                      'border-yellow-500 text-yellow-600 dark:border-yellow-400 dark:text-yellow-400',
-                                    item.priority === 'low' &&
-                                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */
-                                      'border-green-500 text-green-600 dark:border-green-400 dark:text-green-400',
+                                    // D-58-03-10: 4-tier priority palette; orange (high) → warning/80 sibling
+                                    // opacity step per Wave-2 RiskList precedent (4-on-3 token vocabulary).
+                                    item.priority === 'urgent' && 'border-danger text-danger',
+                                    item.priority === 'high' && 'border-warning/80 text-warning',
+                                    item.priority === 'medium' && 'border-warning text-warning',
+                                    item.priority === 'low' && 'border-success text-success',
                                   )}
                                 >
                                   {t(`priority.${item.priority}`, { defaultValue: item.priority })}
@@ -626,12 +593,9 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
 
         {/* Warning if no items included */}
         {includedCount === 0 && (
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog
-          <div className="flex items-center gap-2 p-2 bg-yellow-50 dark:bg-yellow-950 rounded-md mt-2">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */}
-            <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400 shrink-0" />
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */}
-            <p className="text-xs text-yellow-800 dark:text-yellow-200">
+          <div className="flex items-center gap-2 p-2 bg-warning/10 border border-warning/30 rounded-md mt-2">
+            <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
+            <p className="text-xs text-warning">
               {t('preview.noItemsWarning', {
                 defaultValue: 'No items selected. Please include at least one item.',
               })}
@@ -646,8 +610,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={isProcessing || includedCount === 0}
-            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionPreviewDialog */
-            className={cn(action.isDestructive && 'bg-red-600 hover:bg-red-700 focus:ring-red-600')}
+            className={cn(action.isDestructive && 'bg-danger hover:bg-danger/90 focus:ring-danger')}
           >
             {isProcessing ? (
               <>
