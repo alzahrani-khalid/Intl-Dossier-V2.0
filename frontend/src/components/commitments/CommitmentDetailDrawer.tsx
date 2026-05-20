@@ -213,11 +213,9 @@ export function CommitmentDetailDrawer({
                           {t('form.dueDate')}
                         </p>
                         <div
-                          /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentDetailDrawer */
                           className={`flex items-center gap-1.5 text-sm ${
-                            overdue ? 'text-red-600 dark:text-red-400 font-medium' : ''
+                            overdue ? 'text-danger font-medium' : ''
                           }`}
-                          /* eslint-enable no-restricted-syntax */
                         >
                           {overdue ? (
                             <AlertTriangle className="size-4" />
@@ -301,10 +299,8 @@ export function CommitmentDetailDrawer({
 
                       {commitment.proof_url ? (
                         <div className="flex flex-col gap-2">
-                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentDetailDrawer */}
-                          <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentDetailDrawer */}
-                            <CheckCircle className="size-5 text-green-600 dark:text-green-400" />
+                          <div className="flex items-center gap-2 p-3 bg-success/10 border border-success/30 rounded-lg">
+                            <CheckCircle className="size-5 text-success" />
                             <div className="flex-1">
                               <p className="text-sm font-medium text-start">
                                 {t('evidence.uploadSuccess')}
@@ -335,10 +331,8 @@ export function CommitmentDetailDrawer({
                         </div>
                       ) : commitment.proof_required ? (
                         <div className="flex flex-col gap-2">
-                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentDetailDrawer */}
-                          <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-                            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentDetailDrawer */}
-                            <AlertTriangle className="size-5 text-yellow-600 dark:text-yellow-400" />
+                          <div className="flex items-center gap-2 p-3 bg-warning/10 border border-warning/30 rounded-lg">
+                            <AlertTriangle className="size-5 text-warning" />
                             <p className="text-sm text-start">
                               {t('form.proofRequiredDescription')}
                             </p>
