@@ -336,8 +336,7 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
                       onClick={(e) => handleRowClick(e, item)}
                       className={cn(
                         'cursor-pointer',
-                        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SelectableDataTable */
-                        isSelected && 'bg-blue-50 dark:bg-blue-950',
+                        isSelected && 'bg-primary/10',
                         onRowClick && 'hover:bg-muted/50',
                         rowClassName?.(item, isSelected),
                       )}
@@ -385,8 +384,7 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
             {t('selection.selected', { count: selectedCount })} / {data.length}
           </span>
           {maxReached && (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SelectableDataTable
-            <span className="text-xs text-orange-600 dark:text-orange-400">
+            <span className="text-xs text-warning">
               {t('selection.maxReachedDescription', { max: MAX_BULK_SELECTION })}
             </span>
           )}
@@ -400,8 +398,7 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
             <span className="font-medium text-foreground">{selectedCount}</span>
             <span>{t('selection.selected', { count: selectedCount })}</span>
             {maxReached && (
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SelectableDataTable
-              <span className="text-xs text-orange-600 dark:text-orange-400">
+              <span className="text-xs text-warning">
                 ({t('selection.maxReachedDescription', { max: MAX_BULK_SELECTION })})
               </span>
             )}
