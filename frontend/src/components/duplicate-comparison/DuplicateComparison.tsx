@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { AlertTriangle, CheckCircle2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
@@ -126,7 +127,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
   if (!candidates || candidates.length === 0) {
     return (
       <div className="py-8 text-center">
-        <div className="mb-4 text-6xl">✓</div>
+        <CheckCircle2 className="mx-auto mb-4 h-12 w-12 text-success" aria-hidden="true" />
         <p className="text-lg text-ink-mute">
           {t('duplicates.noDuplicates', 'No potential duplicates detected')}
         </p>
@@ -146,7 +147,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
       {highConfidence.length > 0 && (
         <div className="rounded-lg border border-danger/30 bg-danger/10 p-4">
           <div className="mb-2 flex items-center gap-2">
-            <span className="text-xl text-danger">⚠️</span>
+            <AlertTriangle className="h-5 w-5 text-danger" aria-hidden="true" />
             <h3 className="font-semibold text-danger">
               {t('duplicates.highConfidenceWarning', 'High Confidence Duplicates Detected')}
             </h3>
@@ -203,7 +204,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
 
       {/* Merge Dialog */}
       {selectedCandidate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-surface shadow-xl">
             <div className="p-6">
               <h2 className="mb-4 text-2xl font-bold text-ink">

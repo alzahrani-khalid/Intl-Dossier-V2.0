@@ -63,16 +63,18 @@ const priorityColors: Record<string, string> = {
   low: 'border-s-line bg-surface',
 }
 
-// Category colors
+// Category colors — opacity steps differentiate categories that share a token family
+// (mentions vs deadlines on warning, workflow vs calendar on success). Icons provide
+// the primary semantic cue; color reinforces the grouping.
 const categoryColors: Record<NotificationCategory, string> = {
   assignments: 'text-info bg-info/10',
-  intake: 'text-accent bg-primary/10',
+  intake: 'text-accent bg-accent/10',
   calendar: 'text-success bg-success/10',
   signals: 'text-danger bg-danger/10',
-  mentions: 'text-warning bg-warning/10',
+  mentions: 'text-warning bg-warning/20',
   deadlines: 'text-warning bg-warning/10',
   system: 'text-ink-mute bg-muted',
-  workflow: 'text-success bg-success/10',
+  workflow: 'text-success bg-success/20',
 }
 
 // Sample notifications for the timeline preview
