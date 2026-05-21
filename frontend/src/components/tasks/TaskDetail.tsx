@@ -40,6 +40,7 @@ import { useUpdateTask } from '@/hooks/useTasks'
 import { DossierLinksWidget } from '@/components/dossier'
 import { useTaskContributors, useRemoveContributor } from '@/hooks/useContributors'
 import { useDirection } from '@/hooks/useDirection'
+import { getPriorityBadgeClass, getStatusBadgeClass } from '@/lib/semantic-colors'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 
@@ -69,36 +70,6 @@ export function TaskDetail({
   const [isAddContributorOpen, setIsAddContributorOpen] = useState(false)
   const { data: contributors = [], isLoading: isLoadingContributors } = useTaskContributors(task.id)
   const removeContributor = useRemoveContributor(task.id)
-
-  const getPriorityColor = (priority: string): string => {
-    const colors = {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskDetail
-      urgent: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskDetail
-      high: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskDetail
-      medium: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskDetail
-      low: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
-    }
-    return colors[priority as keyof typeof colors] || colors.medium
-  }
-
-  const getStatusColor = (status: string): string => {
-    const colors = {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskDetail
-      pending: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskDetail
-      in_progress: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskDetail
-      review: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskDetail
-      completed: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskDetail
-      cancelled: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-    }
-    return colors[status as keyof typeof colors] || colors.pending
-  }
 
   const isCompleted = task.status === 'completed' || task.status === 'cancelled'
 
@@ -135,10 +106,10 @@ export function TaskDetail({
 
         {/* Status Badges */}
         <div className="flex flex-wrap gap-2">
-          <Badge className={getPriorityColor(task.priority)}>
+          <Badge className={getPriorityBadgeClass(task.priority)}>
             {t(`priority.${task.priority}`, task.priority)}
           </Badge>
-          <Badge className={getStatusColor(task.status)}>
+          <Badge className={getStatusBadgeClass(task.status)}>
             {t(`status.${task.status}`, task.status)}
           </Badge>
           <Badge variant="outline">
