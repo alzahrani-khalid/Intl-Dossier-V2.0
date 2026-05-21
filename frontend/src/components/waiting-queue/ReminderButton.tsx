@@ -199,10 +199,8 @@ export function ReminderButton({
         </>
       ) : showSuccess ? (
         <>
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ReminderButton */}
-          <CheckCircle2 className="h-4 w-4 text-green-600" />
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ReminderButton */}
-          <span className="hidden sm:inline text-green-600">
+          <CheckCircle2 className="h-4 w-4 text-success" />
+          <span className="hidden sm:inline text-success">
             {t('waitingQueue.reminder.button.sent', 'Sent!')}
           </span>
         </>
