@@ -135,8 +135,7 @@ export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) 
                 variant={mfaEnabled ? 'default' : 'outline'}
                 className={cn(
                   mfaEnabled
-                    ? /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SecuritySettingsSection */
-                      'bg-green-100 text-green-800 hover:bg-green-100'
+                    ? 'bg-success/10 text-success hover:bg-success/10'
                     : 'text-muted-foreground',
                 )}
               >
@@ -152,21 +151,15 @@ export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) 
           </SettingsItem>
 
           {mfaEnabled && (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SecuritySettingsSection
-            <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800">
+            <Card className="border-warning/20 bg-warning/5 dark:bg-warning/20 dark:border-warning/70">
               <CardContent className="p-4">
                 <div className="flex items-start gap-3">
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SecuritySettingsSection */}
-                  <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                  <AlertCircle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
                   <div className="text-sm">
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SecuritySettingsSection */}
-                    <p className="font-medium text-amber-800 dark:text-amber-200 mb-1">
+                    <p className="font-medium text-warning mb-1">
                       {t('security.mfaSetupRequired')}
                     </p>
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SecuritySettingsSection */}
-                    <p className="text-amber-700 dark:text-amber-300">
-                      {t('security.mfaSetupInstructions')}
-                    </p>
+                    <p className="text-warning">{t('security.mfaSetupInstructions')}</p>
                     <Button size="sm" className="mt-3" variant="outline">
                       <Key className="h-4 w-4 me-2" />
                       {t('security.setupTwoFactor')}
@@ -275,11 +268,9 @@ export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) 
 
             {/* Success message */}
             {passwordSuccess && (
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SecuritySettingsSection
-              <Card className="border-green-500/50 bg-green-50 dark:bg-green-950/20 max-w-md">
+              <Card className="border-success/50 bg-success/5 dark:bg-success/20 max-w-md">
                 <CardContent className="p-3">
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SecuritySettingsSection */}
-                  <div className="flex items-center gap-2 text-green-700 dark:text-green-400 text-sm">
+                  <div className="flex items-center gap-2 text-success text-sm">
                     <CheckCircle2 className="h-4 w-4 shrink-0" />
                     <span>{t('security.passwordChanged')}</span>
                   </div>
