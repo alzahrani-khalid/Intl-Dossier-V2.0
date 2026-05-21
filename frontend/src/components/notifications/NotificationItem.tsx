@@ -50,31 +50,21 @@ const categoryIcons: Record<NotificationCategory, React.ElementType> = {
 }
 
 const priorityColors: Record<NotificationPriority, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationItem
-  urgent: 'border-s-red-600 bg-red-50 dark:bg-red-950/20',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationItem
-  high: 'border-s-orange-500 bg-orange-50 dark:bg-orange-950/20',
-  normal: 'border-s-blue-500 bg-card',
-  low: 'border-s-gray-400 bg-card',
+  urgent: 'border-s-danger bg-danger/5 dark:bg-danger/20',
+  high: 'border-s-warning bg-warning/5 dark:bg-warning/20',
+  normal: 'border-s-accent bg-card',
+  low: 'border-s-muted bg-card',
 }
 
 const categoryColors: Record<NotificationCategory, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationItem
-  assignments: 'text-blue-600 bg-blue-100 dark:bg-blue-900/30',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationItem
-  intake: 'text-purple-600 bg-purple-100 dark:bg-purple-900/30',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationItem
-  calendar: 'text-green-600 bg-green-100 dark:bg-green-900/30',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationItem
-  signals: 'text-red-600 bg-red-100 dark:bg-red-900/30',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationItem
-  mentions: 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationItem
-  deadlines: 'text-orange-600 bg-orange-100 dark:bg-orange-900/30',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationItem
-  system: 'text-gray-600 bg-gray-100 dark:bg-gray-900/30',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationItem
-  workflow: 'text-teal-600 bg-teal-100 dark:bg-teal-900/30',
+  assignments: 'text-accent bg-accent/10 dark:bg-accent/30',
+  intake: 'text-secondary bg-secondary/10 dark:bg-secondary/30',
+  calendar: 'text-success bg-success/10 dark:bg-success/30',
+  signals: 'text-danger bg-danger/10 dark:bg-danger/30',
+  mentions: 'text-warning bg-warning/10 dark:bg-warning/30',
+  deadlines: 'text-warning bg-warning/10 dark:bg-warning/30',
+  system: 'text-muted-foreground bg-muted/10 dark:bg-muted/30',
+  workflow: 'text-info bg-info/10 dark:bg-info/30',
 }
 
 export function NotificationItem({
@@ -200,14 +190,12 @@ export function NotificationItem({
         <div className="flex items-center gap-2 mt-2">
           <span className="text-xs text-muted-foreground">{timeAgo}</span>
           {notification.priority === 'urgent' && (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationItem
-            <span className="text-xs font-medium text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-0.5 rounded">
+            <span className="text-xs font-medium text-danger bg-danger/10 dark:bg-danger/30 px-2 py-0.5 rounded">
               {t('priority.urgent')}
             </span>
           )}
           {notification.priority === 'high' && (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NotificationItem
-            <span className="text-xs font-medium text-orange-600 bg-orange-100 dark:bg-orange-900/30 px-2 py-0.5 rounded">
+            <span className="text-xs font-medium text-warning bg-warning/10 dark:bg-warning/30 px-2 py-0.5 rounded">
               {t('priority.high')}
             </span>
           )}
