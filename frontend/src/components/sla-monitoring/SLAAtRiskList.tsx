@@ -70,17 +70,12 @@ export function SLAAtRiskList({
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'urgent':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList
-        return 'bg-red-100 text-red-700 border-red-200'
+        return 'bg-danger/10 text-danger border-danger/20'
       case 'high':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList
-        return 'bg-orange-100 text-orange-700 border-orange-200'
       case 'medium':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList
-        return 'bg-yellow-100 text-yellow-700 border-yellow-200'
+        return 'bg-warning/10 text-warning border-warning/20'
       default:
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList
-        return 'bg-gray-100 text-gray-700 border-gray-200'
+        return 'bg-muted text-muted-foreground border-line'
     }
   }
 
@@ -96,8 +91,7 @@ export function SLAAtRiskList({
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div>
           <CardTitle className="flex items-center gap-2">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList */}
-            <AlertTriangle className="h-5 w-5 text-yellow-500" />
+            <AlertTriangle className="h-5 w-5 text-warning" />
             {t('atRisk.title')}
           </CardTitle>
           <CardDescription>{t('atRisk.description')}</CardDescription>
@@ -123,8 +117,7 @@ export function SLAAtRiskList({
                     key={item.entity_id}
                     className={cn(
                       'border rounded-lg p-4 transition-colors cursor-pointer hover:bg-muted/50',
-                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList */
-                      isBreached && 'border-red-300 bg-red-50',
+                      isBreached && 'border-danger/30 bg-danger/10',
                     )}
                     onClick={() => onItemClick?.(item)}
                   >
@@ -146,8 +139,7 @@ export function SLAAtRiskList({
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">{t('atRisk.slaProgress')}</span>
-                        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList */}
-                        <span className={cn('font-medium', isBreached && 'text-red-600')}>
+                        <span className={cn('font-medium', isBreached && 'text-danger')}>
                           {item.progress_pct}%
                         </span>
                       </div>
@@ -177,8 +169,7 @@ export function SLAAtRiskList({
           </ScrollArea>
         ) : (
           <div className="h-32 flex flex-col items-center justify-center text-muted-foreground">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAAtRiskList */}
-            <AlertTriangle className="h-8 w-8 mb-2 text-green-500" />
+            <AlertTriangle className="h-8 w-8 mb-2 text-success" />
             <p>{t('atRisk.noItemsAtRisk')}</p>
           </div>
         )}
