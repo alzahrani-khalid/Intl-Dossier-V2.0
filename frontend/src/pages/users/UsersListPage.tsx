@@ -332,8 +332,7 @@ export function UsersListPage() {
                     <div className="flex flex-row items-center gap-2">
                       {user.mfa_enabled && (
                         <span title={t('userProfile.mfaEnabled')}>
-                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#UsersListPage */}
-                          <CheckCircle className="h-3 w-3 text-green-600" />
+                          <CheckCircle className="h-3 w-3 text-success" />
                         </span>
                       )}
                       {user.username}
@@ -387,8 +386,7 @@ export function UsersListPage() {
                   <CardTitle className="text-base flex flex-row items-center gap-2">
                     {user.mfa_enabled && (
                       <span title={t('userProfile.mfaEnabled')}>
-                        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#UsersListPage */}
-                        <CheckCircle className="h-3 w-3 text-green-600" />
+                        <CheckCircle className="h-3 w-3 text-success" />
                       </span>
                     )}
                     {user.full_name}
