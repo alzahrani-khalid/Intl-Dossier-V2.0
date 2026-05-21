@@ -204,14 +204,11 @@ export function CommitmentsHelpPage() {
                   {isRTL ? 'أنواع المالكين' : 'Owner Types'}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage */}
-                  <Card className="border-blue-200 dark:border-blue-800">
+                  <Card className="border-accent/20 dark:border-accent/70">
                     <CardContent className="pt-6">
                       <div className="flex items-start gap-3">
-                        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage */}
-                        <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage */}
-                          <Users className="size-5 text-blue-600 dark:text-blue-400" />
+                        <div className="w-10 h-10 rounded-lg bg-accent/10 dark:bg-accent/30 flex items-center justify-center">
+                          <Users className="size-5 text-accent" />
                         </div>
                         <div className="flex-1">
                           <h4 className="font-semibold text-start">
@@ -229,14 +226,11 @@ export function CommitmentsHelpPage() {
                       </div>
                     </CardContent>
                   </Card>
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage */}
-                  <Card className="border-purple-200 dark:border-purple-800">
+                  <Card className="border-secondary/30 dark:border-secondary/70">
                     <CardContent className="pt-6">
                       <div className="flex items-start gap-3">
-                        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage */}
-                        <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
-                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage */}
-                          <Users className="size-5 text-purple-600 dark:text-purple-400" />
+                        <div className="w-10 h-10 rounded-lg bg-secondary/30 dark:bg-secondary/50 flex items-center justify-center">
+                          <Users className="size-5 text-secondary-foreground" />
                         </div>
                         <div className="flex-1">
                           <h4 className="font-semibold text-start">
@@ -275,8 +269,7 @@ export function CommitmentsHelpPage() {
                 <AccordionItem value="create">
                   <AccordionTrigger className="text-start">
                     <span className="flex items-center gap-2">
-                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage */}
-                      <Edit className="size-4 text-green-600" />
+                      <Edit className="size-4 text-success" />
                       {isRTL ? 'إنشاء التزام جديد' : 'Create a New Commitment'}
                     </span>
                   </AccordionTrigger>
@@ -323,8 +316,7 @@ export function CommitmentsHelpPage() {
                 <AccordionItem value="edit">
                   <AccordionTrigger className="text-start">
                     <span className="flex items-center gap-2">
-                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage */}
-                      <Edit className="size-4 text-blue-600" />
+                      <Edit className="size-4 text-accent" />
                       {isRTL ? 'تعديل التزام' : 'Edit a Commitment'}
                     </span>
                   </AccordionTrigger>
@@ -359,8 +351,7 @@ export function CommitmentsHelpPage() {
                 <AccordionItem value="status">
                   <AccordionTrigger className="text-start">
                     <span className="flex items-center gap-2">
-                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage */}
-                      <CheckCircle2 className="size-4 text-emerald-600" />
+                      <CheckCircle2 className="size-4 text-success" />
                       {isRTL ? 'تحديث الحالة بسرعة' : 'Quick Status Update'}
                     </span>
                   </AccordionTrigger>
@@ -390,11 +381,9 @@ export function CommitmentsHelpPage() {
                         {isRTL ? 'سيتم التحديث فورًا!' : 'Update happens immediately!'}
                       </li>
                     </ol>
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage */}
-                    <Card className="bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800">
+                    <Card className="bg-warning/5 dark:bg-warning/20 border-warning/20 dark:border-warning/70">
                       <CardContent className="pt-4">
-                        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage */}
-                        <p className="text-sm text-amber-800 dark:text-amber-200 text-start">
+                        <p className="text-sm text-warning text-start">
                           <strong>{isRTL ? 'ملاحظة:' : 'Note:'}</strong>{' '}
                           {isRTL
                             ? 'لا يمكن إرجاع الحالة من "مكتمل" إلى "معلق" إلا للمسؤولين'
@@ -409,8 +398,7 @@ export function CommitmentsHelpPage() {
                 <AccordionItem value="delete">
                   <AccordionTrigger className="text-start">
                     <span className="flex items-center gap-2">
-                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage */}
-                      <Trash2 className="size-4 text-red-600" />
+                      <Trash2 className="size-4 text-danger" />
                       {isRTL ? 'إلغاء أو حذف التزام' : 'Cancel or Delete a Commitment'}
                     </span>
                   </AccordionTrigger>
@@ -739,20 +727,17 @@ function StatusBadge({ status, isRTL }: { status: string; isRTL: boolean }) {
     pending: {
       label: 'Pending',
       arLabel: 'معلق',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage
-      className: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',
+      className: 'bg-muted text-ink-mute dark:bg-muted/30',
     },
     in_progress: {
       label: 'In Progress',
       arLabel: 'قيد التنفيذ',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage
-      className: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+      className: 'bg-accent/10 text-accent dark:bg-accent/30',
     },
     completed: {
       label: 'Completed',
       arLabel: 'مكتمل',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage
-      className: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+      className: 'bg-success/10 text-success dark:bg-success/30',
     },
   }
 
@@ -785,14 +770,10 @@ function FilterOptionCard({
 
 function FormatBadge({ format, color }: { format: string; color: string }) {
   const colorClasses: Record<string, string> = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage
-    red: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage
-    green: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage
-    blue: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentsHelpPage
-    indigo: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
+    red: 'bg-danger/10 text-danger dark:bg-danger/30',
+    green: 'bg-success/10 text-success dark:bg-success/30',
+    blue: 'bg-accent/10 text-accent dark:bg-accent/30',
+    indigo: 'bg-secondary/30 text-secondary-foreground dark:bg-secondary/50',
   }
 
   return (
