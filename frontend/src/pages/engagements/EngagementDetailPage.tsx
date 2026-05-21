@@ -118,26 +118,19 @@ function EngagementDetailPage() {
   const getStatusColor = (status: EngagementStatus) => {
     switch (status) {
       case 'completed':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-green-500/10 text-green-600 border-green-200'
+        return 'bg-success/10 text-success border-success/20'
       case 'in_progress':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-blue-500/10 text-blue-600 border-blue-200'
+        return 'bg-accent/10 text-accent border-accent/20'
       case 'confirmed':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-emerald-500/10 text-emerald-600 border-emerald-200'
+        return 'bg-success/15 text-success border-success/30'
       case 'planned':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-yellow-500/10 text-yellow-600 border-yellow-200'
+        return 'bg-warning/10 text-warning/80 border-warning/20'
       case 'postponed':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-orange-500/10 text-orange-600 border-orange-200'
+        return 'bg-warning/10 text-warning border-warning/20'
       case 'cancelled':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-red-500/10 text-red-600 border-red-200'
+        return 'bg-danger/10 text-danger border-danger/20'
       default:
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-gray-500/10 text-gray-600 border-gray-200'
+        return 'bg-muted text-ink-mute border-border'
     }
   }
 
@@ -145,23 +138,17 @@ function EngagementDetailPage() {
   const getAgendaStatusColor = (status: AgendaItemStatus) => {
     switch (status) {
       case 'completed':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-green-500/10 text-green-600 border-green-200'
+        return 'bg-success/10 text-success border-success/20'
       case 'in_progress':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-blue-500/10 text-blue-600 border-blue-200'
+        return 'bg-accent/10 text-accent border-accent/20'
       case 'planned':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-gray-500/10 text-gray-600 border-gray-200'
+        return 'bg-muted text-ink-mute border-border'
       case 'skipped':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-orange-500/10 text-orange-600 border-orange-200'
+        return 'bg-warning/10 text-warning border-warning/20'
       case 'postponed':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-yellow-500/10 text-yellow-600 border-yellow-200'
+        return 'bg-warning/10 text-warning/80 border-warning/20'
       default:
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-gray-500/10 text-gray-600 border-gray-200'
+        return 'bg-muted text-ink-mute border-border'
     }
   }
 
@@ -169,26 +156,19 @@ function EngagementDetailPage() {
   const getAttendanceColor = (status: AttendanceStatus) => {
     switch (status) {
       case 'attended':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-green-500/10 text-green-600'
+        return 'bg-success/10 text-success'
       case 'confirmed':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-emerald-500/10 text-emerald-600'
+        return 'bg-success/15 text-success'
       case 'expected':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-blue-500/10 text-blue-600'
+        return 'bg-accent/10 text-accent'
       case 'tentative':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-yellow-500/10 text-yellow-600'
+        return 'bg-warning/10 text-warning'
       case 'no_show':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-red-500/10 text-red-600'
+        return 'bg-danger/10 text-danger'
       case 'cancelled':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-gray-500/10 text-gray-600'
+        return 'bg-muted text-ink-mute'
       default:
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementDetailPage
-        return 'bg-gray-500/10 text-gray-600'
+        return 'bg-muted text-ink-mute'
     }
   }
 
