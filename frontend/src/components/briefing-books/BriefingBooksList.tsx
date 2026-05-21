@@ -68,14 +68,10 @@ const statusConfig: Record<
   { icon: typeof CheckCircle; color: string; bgColor: string }
 > = {
   draft: { icon: Clock, color: 'text-muted-foreground', bgColor: 'bg-muted' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BriefingBooksList
-  generating: { icon: Loader2, color: 'text-blue-500', bgColor: 'bg-blue-50' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BriefingBooksList
-  ready: { icon: CheckCircle, color: 'text-green-500', bgColor: 'bg-green-50' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BriefingBooksList
-  expired: { icon: AlertTriangle, color: 'text-yellow-500', bgColor: 'bg-yellow-50' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BriefingBooksList
-  failed: { icon: XCircle, color: 'text-red-500', bgColor: 'bg-red-50' },
+  generating: { icon: Loader2, color: 'text-accent', bgColor: 'bg-accent/5' },
+  ready: { icon: CheckCircle, color: 'text-success', bgColor: 'bg-success/5' },
+  expired: { icon: AlertTriangle, color: 'text-warning', bgColor: 'bg-warning/5' },
+  failed: { icon: XCircle, color: 'text-danger', bgColor: 'bg-danger/5' },
 }
 
 export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
@@ -335,8 +331,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
 
                 {/* Error message for failed books */}
                 {book.status === 'failed' && book.errorMessage && (
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BriefingBooksList
-                  <div className="mt-3 p-3 bg-red-50 rounded-lg text-sm text-red-600">
+                  <div className="mt-3 p-3 bg-danger/5 rounded-lg text-sm text-danger">
                     {book.errorMessage}
                   </div>
                 )}
