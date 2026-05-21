@@ -165,15 +165,13 @@ export function ScenarioCard({
             <span>{scenario.variable_count || 0}</span>
           </div>
           {positiveOutcomes > 0 && (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ScenarioCard
-            <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
+            <div className="flex items-center gap-1.5 text-success">
               <TrendingUp className="h-4 w-4" />
               <span>{positiveOutcomes}</span>
             </div>
           )}
           {negativeOutcomes > 0 && (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ScenarioCard
-            <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400">
+            <div className="flex items-center gap-1.5 text-danger">
               <TrendingDown className="h-4 w-4" />
               <span>{negativeOutcomes}</span>
             </div>
