@@ -22,14 +22,10 @@ import { useDirection } from '@/hooks/useDirection'
 
 function ConfidenceIndicator({ level, t }: { level: string; t: (key: string) => string }) {
   const configs = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligencePage
-    low: { color: 'text-gray-600', bgColor: 'bg-gray-100', icon: '25%' },
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligencePage
-    medium: { color: 'text-yellow-600', bgColor: 'bg-yellow-100', icon: '50%' },
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligencePage
-    high: { color: 'text-blue-600', bgColor: 'bg-blue-100', icon: '75%' },
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligencePage
-    verified: { color: 'text-green-600', bgColor: 'bg-green-100', icon: '100%' },
+    low: { color: 'text-ink-mute', bgColor: 'bg-muted', icon: '25%' },
+    medium: { color: 'text-warning', bgColor: 'bg-warning/10', icon: '50%' },
+    high: { color: 'text-accent', bgColor: 'bg-accent/10', icon: '75%' },
+    verified: { color: 'text-success', bgColor: 'bg-success/10', icon: '100%' },
   }
   const config = configs[level as keyof typeof configs]
 
@@ -51,14 +47,10 @@ function ClassificationBadge({
   t: (key: string) => string
 }) {
   const configs = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligencePage
-    public: { color: 'text-green-800', bgColor: 'bg-green-100' },
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligencePage
-    internal: { color: 'text-blue-800', bgColor: 'bg-blue-100' },
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligencePage
-    confidential: { color: 'text-orange-800', bgColor: 'bg-orange-100' },
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligencePage
-    restricted: { color: 'text-red-800', bgColor: 'bg-red-100' },
+    public: { color: 'text-success', bgColor: 'bg-success/10' },
+    internal: { color: 'text-accent', bgColor: 'bg-accent/10' },
+    confidential: { color: 'text-warning', bgColor: 'bg-warning/10' },
+    restricted: { color: 'text-danger', bgColor: 'bg-danger/10' },
   }
   const config = configs[classification as keyof typeof configs]
 
@@ -83,11 +75,7 @@ function AnalysisTypeBadges({ types, t }: { types: string[]; t: (key: string) =>
   return (
     <div className="flex flex-wrap gap-1">
       {types?.map((type, i) => (
-        <span
-          key={i}
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligencePage
-          className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 rounded text-xs"
-        >
+        <span key={i} className="inline-flex items-center gap-1 px-2 py-1 bg-muted rounded text-xs">
           {typeIcons[type as keyof typeof typeIcons]}
           {t(`intelligence.analysisTypes.${type}`)}
         </span>
@@ -335,15 +323,13 @@ export function IntelligencePage() {
         return (
           <div className="space-y-1">
             <span
-              /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligencePage */
               className={`
  inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
- ${report.status === 'draft' ? 'bg-gray-100 text-gray-800' : ''}
- ${report.status === 'review' ? 'bg-yellow-100 text-yellow-800' : ''}
- ${report.status === 'approved' ? 'bg-blue-100 text-blue-800' : ''}
- ${report.status === 'published' ? 'bg-green-100 text-green-800' : ''}
+ ${report.status === 'draft' ? 'bg-muted text-ink-mute' : ''}
+ ${report.status === 'review' ? 'bg-warning/10 text-warning' : ''}
+ ${report.status === 'approved' ? 'bg-accent/10 text-accent' : ''}
+ ${report.status === 'published' ? 'bg-success/10 text-success' : ''}
  `}
-              /* eslint-enable no-restricted-syntax */
             >
               {t(`intelligence.statuses.${report.status}`)}
             </span>
@@ -422,8 +408,7 @@ export function IntelligencePage() {
             <CardTitle className="text-sm font-medium">
               {t('intelligence.verifiedReports')}
             </CardTitle>
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligencePage */}
-            <Shield className="h-4 w-4 text-green-600" />
+            <Shield className="h-4 w-4 text-success" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -434,8 +419,7 @@ export function IntelligencePage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('intelligence.pendingReview')}</CardTitle>
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligencePage */}
-            <AlertTriangle className="h-4 w-4 text-yellow-600" />
+            <AlertTriangle className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -446,8 +430,7 @@ export function IntelligencePage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('intelligence.published')}</CardTitle>
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligencePage */}
-            <Target className="h-4 w-4 text-blue-600" />
+            <Target className="h-4 w-4 text-accent" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
