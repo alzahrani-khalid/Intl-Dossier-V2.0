@@ -90,11 +90,9 @@ export function TermHistory({ dossier }: TermHistoryProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               {extension.is_current_term ? (
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TermHistory
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
+                <CheckCircle2 className="h-5 w-5 text-success" />
               ) : (
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TermHistory
-                <Circle className="h-5 w-5 text-gray-400" />
+                <Circle className="h-5 w-5 text-muted-foreground" />
               )}
               <span className="font-medium">
                 {extension.is_current_term
