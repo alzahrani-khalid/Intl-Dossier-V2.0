@@ -32,24 +32,21 @@ export function AgingIndicator({ days, className = '' }: AgingIndicatorProps) {
       return {
         level: 'ok',
         variant: 'default' as const,
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AgingIndicator
-        color: 'bg-blue-100 text-blue-800 border-blue-200',
+        color: 'bg-accent/10 text-accent border-accent/20',
         label: t('waitingQueue.aging.ok', 'Recent'),
       }
     } else if (days <= 6) {
       return {
         level: 'warning',
         variant: 'secondary' as const,
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AgingIndicator
-        color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+        color: 'bg-warning/10 text-warning border-warning/20',
         label: t('waitingQueue.aging.warning', 'Needs Attention'),
       }
     } else {
       return {
         level: 'danger',
         variant: 'destructive' as const,
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AgingIndicator
-        color: 'bg-red-100 text-red-800 border-red-200',
+        color: 'bg-danger/10 text-danger border-danger/20',
         label: t('waitingQueue.aging.danger', 'Overdue'),
       }
     }
