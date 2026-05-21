@@ -63,20 +63,18 @@ const annotationTypes: Array<{
 
 /**
  * Color options
+ *
+ * D-58-03-05: 6-color user-selectable annotation palette mapped onto design-system
+ * semantic tokens (5 status tokens + 1 opacity-step on warning for orange).
+ * purple → accent (Wave-2 WGMemberSuggestions); orange → warning/80 (sibling).
  */
 const colorOptions: Array<{ color: AnnotationColor; class: string }> = [
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineAnnotationDialog
-  { color: 'blue', class: 'bg-blue-500' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineAnnotationDialog
-  { color: 'green', class: 'bg-green-500' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineAnnotationDialog
-  { color: 'yellow', class: 'bg-yellow-500' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineAnnotationDialog
-  { color: 'red', class: 'bg-red-500' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineAnnotationDialog
-  { color: 'purple', class: 'bg-purple-500' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineAnnotationDialog
-  { color: 'orange', class: 'bg-orange-500' },
+  { color: 'blue', class: 'bg-info' },
+  { color: 'green', class: 'bg-success' },
+  { color: 'yellow', class: 'bg-warning' },
+  { color: 'red', class: 'bg-danger' },
+  { color: 'purple', class: 'bg-accent' },
+  { color: 'orange', class: 'bg-warning/80' },
 ]
 
 /**
@@ -351,8 +349,7 @@ export function TimelineAnnotationBadge({
   const { isRTL } = useDirection()
   const TypeIcon = annotationTypes.find((t) => t.type === annotation.type)?.icon || MessageSquare
 
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineAnnotationDialog
-  const colorClass = colorOptions.find((c) => c.color === annotation.color)?.class || 'bg-blue-500'
+  const colorClass = colorOptions.find((c) => c.color === annotation.color)?.class || 'bg-info'
 
   return (
     <Badge
