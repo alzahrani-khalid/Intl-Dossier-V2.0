@@ -138,8 +138,7 @@ export function ToolResultCard({
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             ) : (
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ToolResultCard
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="h-4 w-4 text-success" />
             )}
             <Icon className="h-4 w-4 text-muted-foreground" />
             <span className="text-xs text-muted-foreground">
