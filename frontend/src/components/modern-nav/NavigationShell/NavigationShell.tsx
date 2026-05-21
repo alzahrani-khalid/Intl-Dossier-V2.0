@@ -238,10 +238,9 @@ export function NavigationShell({
           'rounded-e-[12px]',
         )}
         style={{
-          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#NavigationShell */
-          backgroundColor: '#f7f9fa',
+          backgroundColor: 'var(--bg)',
           backgroundImage:
-            'linear-gradient(rgba(247, 249, 250, 0.85), rgba(247, 249, 250, 0.85)), url(/white-texture.jpg)',
+            'linear-gradient(color-mix(in oklch, var(--bg) 85%, transparent), color-mix(in oklch, var(--bg) 85%, transparent)), url(/white-texture.jpg)',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
