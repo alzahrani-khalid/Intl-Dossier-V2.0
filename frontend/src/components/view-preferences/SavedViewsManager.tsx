@@ -342,10 +342,8 @@ export function SavedViewsManager({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
                         <span className="text-sm font-medium truncate">{view.name}</span>
-                        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedViewsManager */}
-                        {view.is_default && <Star className="h-3 w-3 text-amber-500 shrink-0" />}
-                        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedViewsManager */}
-                        {view.is_pinned && <Pin className="h-3 w-3 text-blue-500 shrink-0" />}
+                        {view.is_default && <Star className="h-3 w-3 text-warning shrink-0" />}
+                        {view.is_pinned && <Pin className="h-3 w-3 text-accent shrink-0" />}
                       </div>
                       {view.description && (
                         <p className="text-xs text-muted-foreground truncate mt-0.5">
@@ -389,8 +387,7 @@ export function SavedViewsManager({
                       }
                     >
                       {view.is_default ? (
-                        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedViewsManager
-                        <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+                        <Star className="h-3.5 w-3.5 fill-warning text-warning" />
                       ) : (
                         <StarOff className="h-3.5 w-3.5" />
                       )}
@@ -485,8 +482,7 @@ export function SavedViewsManager({
                   type="checkbox"
                   checked={setAsDefault}
                   onChange={(e) => setSetAsDefault(e.target.checked)}
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedViewsManager
-                  className="h-4 w-4 rounded border-gray-300"
+                  className="h-4 w-4 rounded border-line"
                 />
                 <span className="text-sm">{t('setAsDefault', 'Set as default')}</span>
               </label>
@@ -495,8 +491,7 @@ export function SavedViewsManager({
                   type="checkbox"
                   checked={pinView}
                   onChange={(e) => setPinView(e.target.checked)}
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedViewsManager
-                  className="h-4 w-4 rounded border-gray-300"
+                  className="h-4 w-4 rounded border-line"
                 />
                 <span className="text-sm">{t('pinToQuickAccess', 'Pin to quick access')}</span>
               </label>
@@ -559,8 +554,7 @@ export function SavedViewsManager({
                   type="checkbox"
                   checked={setAsDefault}
                   onChange={(e) => setSetAsDefault(e.target.checked)}
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedViewsManager
-                  className="h-4 w-4 rounded border-gray-300"
+                  className="h-4 w-4 rounded border-line"
                 />
                 <span className="text-sm">{t('setAsDefault', 'Set as default')}</span>
               </label>
@@ -569,8 +563,7 @@ export function SavedViewsManager({
                   type="checkbox"
                   checked={pinView}
                   onChange={(e) => setPinView(e.target.checked)}
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedViewsManager
-                  className="h-4 w-4 rounded border-gray-300"
+                  className="h-4 w-4 rounded border-line"
                 />
                 <span className="text-sm">{t('pinToQuickAccess', 'Pin to quick access')}</span>
               </label>
