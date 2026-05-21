@@ -224,8 +224,7 @@ export function ActionItemsList({
 
                         {/* AI Extracted */}
                         {item.ai_extracted && (
-                          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActionItemsList
-                          <span className="flex items-center gap-1 text-xs text-purple-600 dark:text-purple-400">
+                          <span className="flex items-center gap-1 text-xs text-secondary">
                             <Sparkles className="h-3 w-3" />
                             {item.ai_confidence
                               ? t('actionItems.aiConfidence', {
@@ -237,8 +236,7 @@ export function ActionItemsList({
 
                         {/* Linked to Commitment */}
                         {item.linked_commitment_id && (
-                          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActionItemsList
-                          <span className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400">
+                          <span className="flex items-center gap-1 text-xs text-accent">
                             <Link2 className="h-3 w-3" />
                             {t('actionItems.linkedCommitment')}
                           </span>
@@ -246,8 +244,7 @@ export function ActionItemsList({
 
                         {/* Linked to Task */}
                         {item.linked_task_id && (
-                          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ActionItemsList
-                          <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                          <span className="flex items-center gap-1 text-xs text-success">
                             <Link2 className="h-3 w-3" />
                             {t('actionItems.linkedTask')}
                           </span>
