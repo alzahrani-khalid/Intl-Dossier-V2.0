@@ -109,8 +109,7 @@ function SyncStatusBadge({ status }: { status: string }) {
     string,
     { variant: 'default' | 'secondary' | 'destructive' | 'outline'; className: string }
   > = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarSyncSettings
-    active: { variant: 'default', className: 'bg-green-500 hover:bg-green-600' },
+    active: { variant: 'default', className: 'bg-success hover:bg-success/90' },
     pending: { variant: 'secondary', className: '' },
     paused: { variant: 'outline', className: '' },
     error: { variant: 'destructive', className: '' },
@@ -333,9 +332,9 @@ function ConnectionCard({
                       <div className="flex items-center gap-3">
                         <div
                           className="h-3 w-3 rounded-full"
-                          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarSyncSettings */
-                          style={{ backgroundColor: calendar.color || '#3B82F6' }}
+                          style={{ backgroundColor: calendar.color || 'var(--accent)' }}
                         />
+                        {/* calendar.color is a per-calendar user choice; var(--accent) is the live theme fallback */}
                         <div>
                           <p className="text-sm font-medium">{calendar.name}</p>
                           {calendar.is_primary && (
@@ -454,16 +453,20 @@ function ICalFeedDialog({ open, onOpenChange, onAdd, isAdding }: ICalFeedDialogP
   const { t } = useTranslation('calendar-sync')
   const [feedUrl, setFeedUrl] = useState('')
   const [feedName, setFeedName] = useState('')
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarSyncSettings
-  const [color, setColor] = useState('#3B82F6')
+  // Native <input type="color"> requires a hex; read live --accent CSS token
+  // at render so the picker swatch matches the active design theme.
+  const accentHex =
+    typeof window !== 'undefined'
+      ? getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()
+      : ''
+  const [color, setColor] = useState(accentHex)
 
   const handleSubmit = () => {
     if (feedUrl && feedName) {
       onAdd({ feed_url: feedUrl, feed_name: feedName, color })
       setFeedUrl('')
       setFeedName('')
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarSyncSettings
-      setColor('#3B82F6')
+      setColor(accentHex)
       onOpenChange(false)
     }
   }
