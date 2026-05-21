@@ -81,189 +81,139 @@ export type LegislationRelationshipType =
 // STATUS CONFIGURATION
 // =============================================
 
+// D-58-06-A-01: Lookup table palette swapped to semantic tokens.
+// D-07 collision: proposed=accent (blue), pending_vote=secondary (purple).
+// Multiple states collapse onto sibling semantics by design — the 7-token
+// engine deliberately reduces 12 source hues to 4 semantic families:
+//   muted   ← gray, slate, stone, neutral (draft, superseded, expired, withdrawn)
+//   accent  ← blue (proposed) [D-07]
+//   warning ← yellow, orange (under_review, in_committee — sibling opacity step)
+//   secondary ← purple (pending_vote) [D-07]
+//   success ← teal, green, emerald (passed, enacted, implemented — sibling opacity step)
+//   destructive ← red (repealed)
 export const STATUS_COLORS: Record<
   LegislationStatus,
   { bg: string; text: string; border: string }
 > = {
   draft: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-gray-50 dark:bg-gray-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-gray-700 dark:text-gray-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-gray-200 dark:border-gray-700',
+    bg: 'bg-muted/5 dark:bg-muted/20',
+    text: 'text-muted-foreground',
+    border: 'border-muted/20 dark:border-muted/70',
   },
   proposed: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-blue-50 dark:bg-blue-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-blue-700 dark:text-blue-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-blue-200 dark:border-blue-700',
+    bg: 'bg-accent/5 dark:bg-accent/20',
+    text: 'text-accent',
+    border: 'border-accent/20 dark:border-accent/70',
   },
   under_review: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-yellow-700 dark:text-yellow-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-yellow-200 dark:border-yellow-700',
+    bg: 'bg-warning/5 dark:bg-warning/20',
+    text: 'text-warning',
+    border: 'border-warning/20 dark:border-warning/70',
   },
   in_committee: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-orange-50 dark:bg-orange-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-orange-700 dark:text-orange-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-orange-200 dark:border-orange-700',
+    bg: 'bg-warning/10 dark:bg-warning/30',
+    text: 'text-warning',
+    border: 'border-warning/30 dark:border-warning/60',
   },
   pending_vote: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-purple-50 dark:bg-purple-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-purple-700 dark:text-purple-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-purple-200 dark:border-purple-700',
+    bg: 'bg-secondary/5 dark:bg-secondary/20',
+    text: 'text-secondary-foreground',
+    border: 'border-secondary/20 dark:border-secondary/70',
   },
   passed: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-teal-50 dark:bg-teal-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-teal-700 dark:text-teal-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-teal-200 dark:border-teal-700',
+    bg: 'bg-success/5 dark:bg-success/20',
+    text: 'text-success',
+    border: 'border-success/20 dark:border-success/70',
   },
   enacted: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-green-50 dark:bg-green-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-green-700 dark:text-green-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-green-200 dark:border-green-700',
+    bg: 'bg-success/10 dark:bg-success/30',
+    text: 'text-success',
+    border: 'border-success/30 dark:border-success/60',
   },
   implemented: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-emerald-50 dark:bg-emerald-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-emerald-700 dark:text-emerald-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-emerald-200 dark:border-emerald-700',
+    bg: 'bg-success/20 dark:bg-success/40',
+    text: 'text-success',
+    border: 'border-success/40 dark:border-success/60',
   },
   superseded: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-slate-50 dark:bg-slate-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-slate-700 dark:text-slate-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-slate-200 dark:border-slate-700',
+    bg: 'bg-muted/5 dark:bg-muted/20',
+    text: 'text-muted-foreground',
+    border: 'border-muted/20 dark:border-muted/70',
   },
   repealed: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-red-50 dark:bg-red-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-red-700 dark:text-red-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-red-200 dark:border-red-700',
+    bg: 'bg-destructive/5 dark:bg-destructive/20',
+    text: 'text-destructive',
+    border: 'border-destructive/20 dark:border-destructive/70',
   },
   expired: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-stone-50 dark:bg-stone-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-stone-700 dark:text-stone-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-stone-200 dark:border-stone-700',
+    bg: 'bg-muted/5 dark:bg-muted/20',
+    text: 'text-muted-foreground',
+    border: 'border-muted/20 dark:border-muted/70',
   },
   withdrawn: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-neutral-50 dark:bg-neutral-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-neutral-700 dark:text-neutral-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-neutral-200 dark:border-neutral-700',
+    bg: 'bg-muted/5 dark:bg-muted/20',
+    text: 'text-muted-foreground',
+    border: 'border-muted/20 dark:border-muted/70',
   },
 }
 
+// D-58-06-A-01: PRIORITY palette → success (low) / warning (med) / warning-step (high) / destructive (critical).
 export const PRIORITY_COLORS: Record<
   LegislationPriority,
   { bg: string; text: string; border: string }
 > = {
   low: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-green-50 dark:bg-green-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-green-700 dark:text-green-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-green-200 dark:border-green-700',
+    bg: 'bg-success/5 dark:bg-success/20',
+    text: 'text-success',
+    border: 'border-success/20 dark:border-success/70',
   },
   medium: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-yellow-700 dark:text-yellow-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-yellow-200 dark:border-yellow-700',
+    bg: 'bg-warning/5 dark:bg-warning/20',
+    text: 'text-warning',
+    border: 'border-warning/20 dark:border-warning/70',
   },
   high: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-orange-50 dark:bg-orange-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-orange-700 dark:text-orange-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-orange-200 dark:border-orange-700',
+    bg: 'bg-warning/10 dark:bg-warning/30',
+    text: 'text-warning',
+    border: 'border-warning/30 dark:border-warning/60',
   },
   critical: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-red-50 dark:bg-red-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-red-700 dark:text-red-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-red-200 dark:border-red-700',
+    bg: 'bg-destructive/5 dark:bg-destructive/20',
+    text: 'text-destructive',
+    border: 'border-destructive/20 dark:border-destructive/70',
   },
 }
 
+// D-58-06-A-01: IMPACT palette → muted (minimal) / success (low) / warning (med) /
+// warning-step (high) / destructive (transformational).
 export const IMPACT_COLORS: Record<
   LegislationImpactLevel,
   { bg: string; text: string; border: string }
 > = {
   minimal: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-gray-50 dark:bg-gray-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-gray-700 dark:text-gray-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-gray-200 dark:border-gray-700',
+    bg: 'bg-muted/5 dark:bg-muted/20',
+    text: 'text-muted-foreground',
+    border: 'border-muted/20 dark:border-muted/70',
   },
   low: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-green-50 dark:bg-green-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-green-700 dark:text-green-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-green-200 dark:border-green-700',
+    bg: 'bg-success/5 dark:bg-success/20',
+    text: 'text-success',
+    border: 'border-success/20 dark:border-success/70',
   },
   medium: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-yellow-700 dark:text-yellow-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-yellow-200 dark:border-yellow-700',
+    bg: 'bg-warning/5 dark:bg-warning/20',
+    text: 'text-warning',
+    border: 'border-warning/20 dark:border-warning/70',
   },
   high: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-orange-50 dark:bg-orange-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-orange-700 dark:text-orange-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-orange-200 dark:border-orange-700',
+    bg: 'bg-warning/10 dark:bg-warning/30',
+    text: 'text-warning',
+    border: 'border-warning/30 dark:border-warning/60',
   },
   transformational: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    bg: 'bg-red-50 dark:bg-red-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    text: 'text-red-700 dark:text-red-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#legislation.types
-    border: 'border-red-200 dark:border-red-700',
+    bg: 'bg-destructive/5 dark:bg-destructive/20',
+    text: 'text-destructive',
+    border: 'border-destructive/20 dark:border-destructive/70',
   },
 }
 
