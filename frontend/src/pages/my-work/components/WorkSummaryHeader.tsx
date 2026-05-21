@@ -32,8 +32,7 @@ export function WorkSummaryHeader({
       label: t('stats.totalActive', 'Total Active'),
       value: summary?.total_active || 0,
       icon: ListTodo,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkSummaryHeader
-      color: 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/30',
+      color: 'text-accent bg-accent/10 dark:bg-accent/30',
       filter: undefined, // No filter for "all active"
     },
     {
@@ -41,8 +40,7 @@ export function WorkSummaryHeader({
       label: t('stats.overdue', 'Overdue'),
       value: summary?.overdue_count || 0,
       icon: AlertTriangle,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkSummaryHeader
-      color: 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/30',
+      color: 'text-danger bg-danger/10 dark:bg-danger/30',
       filter: 'overdue',
     },
     {
@@ -50,8 +48,7 @@ export function WorkSummaryHeader({
       label: t('stats.dueToday', 'Due Today'),
       value: summary?.due_today || 0,
       icon: Calendar,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkSummaryHeader
-      color: 'text-orange-600 bg-orange-100 dark:text-orange-400 dark:bg-orange-900/30',
+      color: 'text-warning bg-warning/10 dark:bg-warning/30',
       filter: 'due-today',
     },
     {
@@ -59,8 +56,7 @@ export function WorkSummaryHeader({
       label: t('stats.dueThisWeek', 'Due This Week'),
       value: summary?.due_this_week || 0,
       icon: CalendarDays,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkSummaryHeader
-      color: 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/30',
+      color: 'text-success bg-success/10 dark:bg-success/30',
       filter: 'due-week',
     },
   ]
