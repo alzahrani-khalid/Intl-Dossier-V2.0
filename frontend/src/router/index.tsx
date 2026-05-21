@@ -11,12 +11,8 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4 sm:p-8">
       <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-center shadow-xl sm:p-8">
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#index-router */}
-        <div className="mb-4 inline-flex size-16 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30 sm:mb-6 sm:size-20">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#index-router */}
-          <span className="text-3xl font-bold text-amber-600 dark:text-amber-400 sm:text-4xl">
-            404
-          </span>
+        <div className="mb-4 inline-flex size-16 items-center justify-center rounded-full bg-warning/10 dark:bg-warning/30 sm:mb-6 sm:size-20">
+          <span className="text-3xl font-bold text-warning sm:text-4xl">404</span>
         </div>
 
         <h1 className="text-xl font-semibold text-foreground sm:text-2xl md:text-3xl">
