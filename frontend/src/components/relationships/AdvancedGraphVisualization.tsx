@@ -307,8 +307,7 @@ const AdvancedDossierNode = memo(
           'relative flex items-center justify-center transition-all duration-200',
           data.isFocused && 'ring-4 ring-primary ring-offset-2',
           data.isCenter && 'ring-2 ring-primary',
-          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdvancedGraphVisualization */
-          data.isOnPath && 'ring-4 ring-amber-400 ring-offset-2',
+          data.isOnPath && 'ring-4 ring-warning ring-offset-2',
           selected && 'ring-2 ring-primary/50',
         )}
         style={{ width: size, height: size }}
@@ -966,15 +965,13 @@ function ExportPanel({ reactFlowRef }: ExportPanelProps) {
 
         if (format === 'png') {
           dataUrl = await toPng(flowElement, {
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdvancedGraphVisualization
-            backgroundColor: '#ffffff',
+            backgroundColor: 'var(--heroui-background)',
             quality: 1,
             pixelRatio: 2,
           })
         } else {
           dataUrl = await toSvg(flowElement, {
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdvancedGraphVisualization
-            backgroundColor: '#ffffff',
+            backgroundColor: 'var(--heroui-background)',
           })
         }
 
