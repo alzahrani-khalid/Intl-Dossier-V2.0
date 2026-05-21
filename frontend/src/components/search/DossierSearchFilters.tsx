@@ -99,16 +99,14 @@ export function DossierSearchFilters({
         <Select value={currentTypeValue} onValueChange={handleTypeChange} disabled={disabled}>
           <SelectTrigger className="w-full sm:w-48">
             <div className="flex items-center gap-2">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
-              <TypeIcon className="size-4 text-gray-500" />
+              <TypeIcon className="size-4 text-muted-foreground" />
               <SelectValue placeholder={t('filters.allTypes')} />
             </div>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">
               <div className="flex items-center gap-2">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
-                <Filter className="size-4 text-gray-500" />
+                <Filter className="size-4 text-muted-foreground" />
                 <span>{t('filters.allTypes')}</span>
                 {typeCounts?.all !== undefined && (
                   <Badge variant="secondary" className="ms-auto text-xs">
@@ -119,8 +117,7 @@ export function DossierSearchFilters({
             </SelectItem>
             <SelectItem value="country">
               <div className="flex items-center gap-2">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
-                <Globe className="size-4 text-blue-500" />
+                <Globe className="size-4 text-accent" />
                 <span>{t('types.country')}</span>
                 {typeCounts?.country !== undefined && (
                   <Badge variant="secondary" className="ms-auto text-xs">
@@ -131,8 +128,7 @@ export function DossierSearchFilters({
             </SelectItem>
             <SelectItem value="organization">
               <div className="flex items-center gap-2">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
-                <Building2 className="size-4 text-purple-500" />
+                <Building2 className="size-4 text-secondary" />
                 <span>{t('types.organization')}</span>
                 {typeCounts?.organization !== undefined && (
                   <Badge variant="secondary" className="ms-auto text-xs">
@@ -143,8 +139,7 @@ export function DossierSearchFilters({
             </SelectItem>
             <SelectItem value="forum">
               <div className="flex items-center gap-2">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
-                <Users className="size-4 text-cyan-500" />
+                <Users className="size-4 text-info" />
                 <span>{t('types.forum')}</span>
                 {typeCounts?.forum !== undefined && (
                   <Badge variant="secondary" className="ms-auto text-xs">
@@ -155,8 +150,7 @@ export function DossierSearchFilters({
             </SelectItem>
             <SelectItem value="engagement">
               <div className="flex items-center gap-2">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
-                <Briefcase className="size-4 text-green-500" />
+                <Briefcase className="size-4 text-success" />
                 <span>{t('types.engagement')}</span>
                 {typeCounts?.engagement !== undefined && (
                   <Badge variant="secondary" className="ms-auto text-xs">
@@ -167,8 +161,7 @@ export function DossierSearchFilters({
             </SelectItem>
             <SelectItem value="topic">
               <div className="flex items-center gap-2">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
-                <Target className="size-4 text-pink-500" />
+                <Target className="size-4 text-secondary" />
                 <span>{t('types.topic')}</span>
                 {typeCounts?.topic !== undefined && (
                   <Badge variant="secondary" className="ms-auto text-xs">
@@ -179,8 +172,7 @@ export function DossierSearchFilters({
             </SelectItem>
             <SelectItem value="working_group">
               <div className="flex items-center gap-2">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
-                <BookOpen className="size-4 text-amber-500" />
+                <BookOpen className="size-4 text-warning" />
                 <span>{t('types.working_group')}</span>
                 {typeCounts?.working_group !== undefined && (
                   <Badge variant="secondary" className="ms-auto text-xs">
@@ -191,8 +183,7 @@ export function DossierSearchFilters({
             </SelectItem>
             <SelectItem value="person">
               <div className="flex items-center gap-2">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
-                <User className="size-4 text-teal-500" />
+                <User className="size-4 text-info" />
                 <span>{t('types.person')}</span>
                 {typeCounts?.person !== undefined && (
                   <Badge variant="secondary" className="ms-auto text-xs">
@@ -226,8 +217,7 @@ export function DossierSearchFilters({
           onCheckedChange={handleMyDossiersToggle}
           disabled={disabled}
         />
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */}
-        <span className="text-sm text-gray-700 dark:text-gray-300">{t('filters.myDossiers')}</span>
+        <span className="text-sm text-foreground">{t('filters.myDossiers')}</span>
       </label>
 
       {/* Clear Filters */}
@@ -237,10 +227,7 @@ export function DossierSearchFilters({
           disabled={disabled}
           className={cn(
             'inline-flex items-center gap-1 rounded-md px-2 py-1 text-sm',
-            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */
-            'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
-            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierSearchFilters */
-            'dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100',
+            'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
             'transition-colors',
             disabled && 'cursor-not-allowed opacity-50',
           )}
