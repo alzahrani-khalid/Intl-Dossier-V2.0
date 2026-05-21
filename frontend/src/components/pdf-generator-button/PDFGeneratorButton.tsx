@@ -162,8 +162,7 @@ export function PDFGeneratorButton({
           <DialogTitle className="flex items-center gap-2">
             <FileText className="size-5" />
             {t('afterActions.pdf.title')}
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PDFGeneratorButton */}
-            {isConfidential && <Shield className="size-4 text-amber-500" />}
+            {isConfidential && <Shield className="size-4 text-warning" />}
           </DialogTitle>
           <DialogDescription>{t('afterActions.pdf.description')}</DialogDescription>
         </DialogHeader>
@@ -171,12 +170,9 @@ export function PDFGeneratorButton({
         <div className="space-y-4 py-4">
           {/* Confidential Warning */}
           {isConfidential && status === 'idle' && (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PDFGeneratorButton
-            <Alert className="border-amber-500">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PDFGeneratorButton */}
-              <Shield className="size-4 text-amber-500" />
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PDFGeneratorButton */}
-              <AlertDescription className="text-amber-700">
+            <Alert className="border-warning">
+              <Shield className="size-4 text-warning" />
+              <AlertDescription className="text-warning">
                 {t('afterActions.pdf.confidentialWarning')}
               </AlertDescription>
             </Alert>
@@ -230,12 +226,9 @@ export function PDFGeneratorButton({
           )}
 
           {status === 'completed' && pdfUrl && (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PDFGeneratorButton
-            <Alert className="border-green-500">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PDFGeneratorButton */}
-              <CheckCircle className="size-4 text-green-500" />
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PDFGeneratorButton */}
-              <AlertDescription className="text-green-700">
+            <Alert className="border-success">
+              <CheckCircle className="size-4 text-success" />
+              <AlertDescription className="text-success">
                 <div className="space-y-2">
                   <p>{t('afterActions.pdf.completed')}</p>
                   <p className="text-xs text-muted-foreground">{getTimeRemaining()}</p>
