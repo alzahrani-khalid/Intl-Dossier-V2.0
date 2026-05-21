@@ -72,10 +72,8 @@ function StatCard({ title, value, icon, trend, description, className }: StatCar
         <p className="text-xs text-muted-foreground truncate">{title}</p>
         <div className="flex items-center gap-1.5">
           <p className="text-lg font-bold">{value}</p>
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel */}
-          {trend === 'up' && <TrendingUp className="h-3.5 w-3.5 text-green-500" />}
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel */}
-          {trend === 'down' && <TrendingUp className="h-3.5 w-3.5 text-red-500 rotate-180" />}
+          {trend === 'up' && <TrendingUp className="h-3.5 w-3.5 text-success" />}
+          {trend === 'down' && <TrendingUp className="h-3.5 w-3.5 text-danger rotate-180" />}
         </div>
         {description && <p className="text-xs text-muted-foreground">{description}</p>}
       </div>
@@ -102,20 +100,13 @@ function TypeDistribution({ data }: TypeDistributionProps) {
     .slice(0, 4)
 
   const colors = [
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
-    'bg-blue-500',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
-    'bg-amber-500',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
-    'bg-green-500',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
-    'bg-purple-500',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
-    'bg-red-500',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
-    'bg-teal-500',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
-    'bg-orange-500',
+    'bg-accent',
+    'bg-warning',
+    'bg-success',
+    'bg-secondary',
+    'bg-danger',
+    'bg-info',
+    'bg-warning',
   ]
 
   return (
@@ -192,8 +183,7 @@ export function RecommendationsPanel({
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel */}
-            <Sparkles className="h-5 w-5 text-amber-500" />
+            <Sparkles className="h-5 w-5 text-warning" />
             <CardTitle className="text-base sm:text-lg">{t('panelTitle')}</CardTitle>
           </div>
           <div className="flex items-center gap-1">
@@ -239,30 +229,25 @@ export function RecommendationsPanel({
                 <StatCard
                   title={t('pendingRecommendations')}
                   value={stats?.total_pending || 0}
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
-                  icon={<Clock className="h-5 w-5 text-amber-500" />}
+                  icon={<Clock className="h-5 w-5 text-warning" />}
                 />
                 <StatCard
                   title={t('criticalUrgency')}
                   value={stats?.critical_urgency_count || 0}
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
-                  icon={<AlertTriangle className="h-5 w-5 text-red-500" />}
+                  icon={<AlertTriangle className="h-5 w-5 text-danger" />}
                   className={
-                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel */
-                    stats?.critical_urgency_count ? 'border-red-200 dark:border-red-900' : ''
+                    stats?.critical_urgency_count ? 'border-danger/20 dark:border-danger/70' : ''
                   }
                 />
                 <StatCard
                   title={t('acceptanceRate')}
                   value={`${Math.round(stats?.acceptance_rate || 0)}%`}
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
-                  icon={<CheckCircle className="h-5 w-5 text-green-500" />}
+                  icon={<CheckCircle className="h-5 w-5 text-success" />}
                 />
                 <StatCard
                   title={t('avgConfidence')}
                   value={formatConfidence(stats?.average_confidence || 0)}
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsPanel
-                  icon={<Sparkles className="h-5 w-5 text-purple-500" />}
+                  icon={<Sparkles className="h-5 w-5 text-secondary-foreground" />}
                 />
               </>
             )}
