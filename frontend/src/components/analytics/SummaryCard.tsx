@@ -48,14 +48,10 @@ export function SummaryCard({
   }
 
   const getTrendColor = () => {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SummaryCard
-    if (change === undefined || change === null) return 'text-gray-500'
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SummaryCard
-    if (change > 1) return 'text-emerald-600 dark:text-emerald-400'
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SummaryCard
-    if (change < -1) return 'text-red-600 dark:text-red-400'
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SummaryCard
-    return 'text-gray-500 dark:text-gray-400'
+    if (change === undefined || change === null) return 'text-muted-foreground'
+    if (change > 1) return 'text-success'
+    if (change < -1) return 'text-danger'
+    return 'text-muted-foreground'
   }
 
   return (
