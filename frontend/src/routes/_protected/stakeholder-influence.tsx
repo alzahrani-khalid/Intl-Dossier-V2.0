@@ -272,8 +272,7 @@ function StakeholderInfluencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence */}
-              <Users className="h-5 w-5 text-blue-600" />
+              <Users className="h-5 w-5 text-accent" />
               <div>
                 <p className="text-xs text-muted-foreground">{t('stakeholders', 'Stakeholders')}</p>
                 <p className="text-xl font-bold">
@@ -290,8 +289,7 @@ function StakeholderInfluencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence */}
-              <GitBranch className="h-5 w-5 text-purple-600" />
+              <GitBranch className="h-5 w-5 text-secondary" />
               <div>
                 <p className="text-xs text-muted-foreground">
                   {t('relationships', 'Relationships')}
@@ -310,8 +308,7 @@ function StakeholderInfluencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence */}
-              <TrendingUp className="h-5 w-5 text-amber-600" />
+              <TrendingUp className="h-5 w-5 text-warning" />
               <div>
                 <p className="text-xs text-muted-foreground">
                   {t('key_influencers', 'Key Influencers')}
@@ -330,8 +327,7 @@ function StakeholderInfluencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence */}
-              <BarChart3 className="h-5 w-5 text-green-600" />
+              <BarChart3 className="h-5 w-5 text-success" />
               <div>
                 <p className="text-xs text-muted-foreground">{t('avg_influence', 'Avg Score')}</p>
                 <p className="text-xl font-bold">
