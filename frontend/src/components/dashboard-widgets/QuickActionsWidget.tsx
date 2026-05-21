@@ -53,8 +53,7 @@ export const DEFAULT_QUICK_ACTIONS: QuickAction[] = [
     icon: 'FolderPlus',
     action: 'create-dossier',
     route: '/dossiers/new',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickActionsWidget
-    color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
+    color: 'bg-accent/10 dark:bg-accent/30 text-accent',
   },
   {
     id: 'create-task',
@@ -63,8 +62,7 @@ export const DEFAULT_QUICK_ACTIONS: QuickAction[] = [
     icon: 'ListTodo',
     action: 'create-task',
     route: '/my-work?action=create-task',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickActionsWidget
-    color: 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400',
+    color: 'bg-success/10 dark:bg-success/30 text-success',
   },
   {
     id: 'create-intake',
@@ -73,8 +71,7 @@ export const DEFAULT_QUICK_ACTIONS: QuickAction[] = [
     icon: 'Inbox',
     action: 'create-intake',
     route: '/intake/new',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickActionsWidget
-    color: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400',
+    color: 'bg-secondary/10 dark:bg-secondary/30 text-secondary-foreground',
   },
   {
     id: 'search',
@@ -82,8 +79,7 @@ export const DEFAULT_QUICK_ACTIONS: QuickAction[] = [
     labelAr: 'بحث',
     icon: 'Search',
     action: 'open-search',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickActionsWidget
-    color: 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400',
+    color: 'bg-warning/10 dark:bg-warning/30 text-warning',
   },
   {
     id: 'view-calendar',
@@ -92,8 +88,7 @@ export const DEFAULT_QUICK_ACTIONS: QuickAction[] = [
     icon: 'Calendar',
     action: 'navigate',
     route: '/calendar',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickActionsWidget
-    color: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
+    color: 'bg-danger/10 dark:bg-danger/30 text-danger',
   },
   {
     id: 'view-reports',
@@ -102,8 +97,7 @@ export const DEFAULT_QUICK_ACTIONS: QuickAction[] = [
     icon: 'BarChart2',
     action: 'navigate',
     route: '/reports',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickActionsWidget
-    color: 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400',
+    color: 'bg-info/10 dark:bg-info/30 text-info',
   },
 ]
 
