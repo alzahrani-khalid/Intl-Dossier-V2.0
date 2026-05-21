@@ -229,55 +229,49 @@ export interface SLAStatusConfig {
   icon: string
 }
 
+// D-58-06-A-05: STATUS_CONFIG palette → muted (pending, dismissed) /
+// destructive (triggered) / warning (acknowledged) / success (resolved).
+// No D-07 collision. dismissed uses muted-foreground/60 to indicate
+// dismissed-as-inactive vs pending-as-awaiting.
 export const SLA_STATUS_CONFIG: Record<SLAEscalationStatus, SLAStatusConfig> = {
   pending: {
     status: 'pending',
     label: 'Pending',
     labelAr: 'معلق',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    color: 'text-gray-600',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    bgColor: 'bg-gray-100',
+    color: 'text-muted-foreground',
+    bgColor: 'bg-muted/10',
     icon: 'clock',
   },
   triggered: {
     status: 'triggered',
     label: 'Triggered',
     labelAr: 'مُفعّل',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    color: 'text-red-600',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    bgColor: 'bg-red-100',
+    color: 'text-destructive',
+    bgColor: 'bg-destructive/10',
     icon: 'alert-triangle',
   },
   acknowledged: {
     status: 'acknowledged',
     label: 'Acknowledged',
     labelAr: 'تم الإقرار',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    color: 'text-yellow-600',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    bgColor: 'bg-yellow-100',
+    color: 'text-warning',
+    bgColor: 'bg-warning/10',
     icon: 'eye',
   },
   resolved: {
     status: 'resolved',
     label: 'Resolved',
     labelAr: 'تم الحل',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    color: 'text-green-600',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    bgColor: 'bg-green-100',
+    color: 'text-success',
+    bgColor: 'bg-success/10',
     icon: 'check-circle',
   },
   dismissed: {
     status: 'dismissed',
     label: 'Dismissed',
     labelAr: 'مرفوض',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    color: 'text-gray-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    bgColor: 'bg-gray-50',
+    color: 'text-muted-foreground/60',
+    bgColor: 'bg-muted/5',
     icon: 'x-circle',
   },
 }
@@ -295,56 +289,49 @@ export interface ComplianceThreshold {
   bgColor: string
 }
 
+// D-58-06-A-05: COMPLIANCE_THRESHOLDS palette — 5-step compliance gradient.
+// success (excellent) / accent (good) / warning (fair) / warning-step (poor) /
+// destructive (critical). No D-07 collision (no purple).
 export const COMPLIANCE_THRESHOLDS: ComplianceThreshold[] = [
   {
     min: 95,
     max: 100,
     label: 'Excellent',
     labelAr: 'ممتاز',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    color: 'text-green-700',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    bgColor: 'bg-green-100',
+    color: 'text-success',
+    bgColor: 'bg-success/10',
   },
   {
     min: 85,
     max: 94.99,
     label: 'Good',
     labelAr: 'جيد',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    color: 'text-blue-700',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    bgColor: 'bg-blue-100',
+    color: 'text-accent',
+    bgColor: 'bg-accent/10',
   },
   {
     min: 70,
     max: 84.99,
     label: 'Fair',
     labelAr: 'مقبول',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    color: 'text-yellow-700',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    bgColor: 'bg-yellow-100',
+    color: 'text-warning',
+    bgColor: 'bg-warning/10',
   },
   {
     min: 50,
     max: 69.99,
     label: 'Poor',
     labelAr: 'ضعيف',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    color: 'text-orange-700',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    bgColor: 'bg-orange-100',
+    color: 'text-warning',
+    bgColor: 'bg-warning/20',
   },
   {
     min: 0,
     max: 49.99,
     label: 'Critical',
     labelAr: 'حرج',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    color: 'text-red-700',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-    bgColor: 'bg-red-100',
+    color: 'text-destructive',
+    bgColor: 'bg-destructive/10',
   },
 ]
 
@@ -385,15 +372,12 @@ export function formatSLADurationAr(minutes: number): string {
   return remainingHours > 0 ? `${days} يوم ${remainingHours} ساعة` : `${days} يوم`
 }
 
+// D-58-06-A-05: progress-bar gradient — 5-step destructive→warning→success
+// using opacity-step on canonical tokens (matches Wave-5 SLACountdown precedent).
 export function getSLAProgressColor(progressPct: number): string {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-  if (progressPct >= 100) return 'bg-red-500'
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-  if (progressPct >= 90) return 'bg-red-400'
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-  if (progressPct >= 75) return 'bg-yellow-500'
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-  if (progressPct >= 50) return 'bg-yellow-400'
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sla.types
-  return 'bg-green-500'
+  if (progressPct >= 100) return 'bg-destructive'
+  if (progressPct >= 90) return 'bg-destructive/80'
+  if (progressPct >= 75) return 'bg-warning'
+  if (progressPct >= 50) return 'bg-warning/80'
+  return 'bg-success'
 }
