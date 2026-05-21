@@ -88,17 +88,17 @@ export function OutcomesSummary({ dossierId }: OutcomesSummaryProps) {
   const { decisions = [], commitments = [], risks = [] } = afterActionData || {}
   const hasOutcomes = decisions.length > 0 || commitments.length > 0 || risks.length > 0
 
-  // Get severity/priority badge color
+  // Get severity/priority badge color.
+  //
+  // D-58-04-21: 4-tier severity palette — critical/red→destructive,
+  // high/orange→warning/20 (opacity sibling per Wave-3 D-58-03-10),
+  // medium/yellow→warning, low/green→success.
   const getSeverityBadge = (severity: string) => {
     const colors: Record<string, string> = {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomesSummary
-      critical: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomesSummary
-      high: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomesSummary
-      medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomesSummary
-      low: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+      critical: 'bg-destructive/10 text-destructive',
+      high: 'bg-warning/20 text-warning',
+      medium: 'bg-warning/10 text-warning',
+      low: 'bg-success/10 text-success',
     }
     return colors[severity] || colors.medium
   }
@@ -228,16 +228,14 @@ export function OutcomesSummary({ dossierId }: OutcomesSummaryProps) {
       {risks.length > 0 && (
         <div>
           <div className="flex items-center gap-2 mb-3">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomesSummary */}
-            <AlertTriangle className="h-5 w-5 text-amber-500" />
+            <AlertTriangle className="h-5 w-5 text-warning" />
             <h3 className="font-semibold text-base">
               {t('sections.engagement.risks', 'Identified Risks')} ({risks.length})
             </h3>
           </div>
           <div className="space-y-3">
             {risks.map((risk) => (
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OutcomesSummary
-              <Card key={risk.id} className="border-amber-200 dark:border-amber-800">
+              <Card key={risk.id} className="border-warning/30">
                 <CardContent className="p-3 sm:p-4">
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <p className="text-sm sm:text-base text-start flex-1">{risk.description}</p>
