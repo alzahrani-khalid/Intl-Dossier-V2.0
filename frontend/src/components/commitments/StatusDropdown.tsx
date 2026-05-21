@@ -69,8 +69,7 @@ export function StatusDropdown({
     return (
       <Badge
         variant="secondary"
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StatusDropdown
-        className="bg-gray-100 text-gray-500 border flex items-center gap-1 text-xs"
+        className="bg-muted text-ink-mute border flex items-center gap-1 text-xs"
       >
         <Clock className="size-3.5" />
         <span>{t('status.loading', 'Loading...')}</span>
