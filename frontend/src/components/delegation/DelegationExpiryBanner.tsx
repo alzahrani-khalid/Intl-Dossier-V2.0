@@ -36,24 +36,18 @@ export function DelegationExpiryBanner({ className }: DelegationExpiryBannerProp
   return (
     <Alert
       variant="default"
-      /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationExpiryBanner */
-      className={`border-yellow-500/50 bg-yellow-50/50 dark:bg-yellow-950/20 ${className}`}
-      /* eslint-enable no-restricted-syntax */
+      className={`border-warning/50 bg-warning/5 dark:bg-warning/20 ${className}`}
     >
-      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationExpiryBanner */}
-      <AlertTriangle className="h-4 w-4 text-yellow-600" />
-      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationExpiryBanner */}
-      <AlertTitle className="flex items-center gap-2 text-yellow-800 dark:text-yellow-400">
+      <AlertTriangle className="h-4 w-4 text-warning" />
+      <AlertTitle className="flex items-center gap-2 text-warning">
         <Clock className="h-4 w-4" />
         {t('notification.expiringTitle')}
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationExpiryBanner */}
-        <Badge variant="outline" className="ms-2 text-yellow-700 border-yellow-600">
+        <Badge variant="outline" className="ms-2 text-warning border-warning">
           {count}
         </Badge>
       </AlertTitle>
       <AlertDescription className="mt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationExpiryBanner */}
-        <span className="text-yellow-700 dark:text-yellow-300">
+        <span className="text-warning">
           {count === 1
             ? t('notification.expiringDescriptionSingle')
             : t('notification.expiringDescription', { count })}
@@ -63,11 +57,9 @@ export function DelegationExpiryBanner({ className }: DelegationExpiryBannerProp
             variant="outline"
             size="sm"
             asChild
-            /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationExpiryBanner */
-            className={`min-h-9 border-yellow-600/50 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 ${
+            className={`min-h-9 border-warning/50 hover:bg-warning/10 dark:hover:bg-warning/30 ${
               isRTL ? 'flex-row-reverse' : ''
             }`}
-            /* eslint-enable no-restricted-syntax */
           >
             <Link to="/delegations">
               {t('notification.viewAll')}
@@ -78,8 +70,7 @@ export function DelegationExpiryBanner({ className }: DelegationExpiryBannerProp
             variant="ghost"
             size="icon"
             onClick={() => setIsDismissed(true)}
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationExpiryBanner
-            className="h-8 w-8 text-yellow-700 hover:text-yellow-800 hover:bg-yellow-100 dark:hover:bg-yellow-900/30"
+            className="h-8 w-8 text-warning hover:text-warning hover:bg-warning/10 dark:hover:bg-warning/30"
             aria-label={t('notification.dismiss')}
           >
             <X className="h-4 w-4" />
