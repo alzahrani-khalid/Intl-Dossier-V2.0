@@ -30,6 +30,7 @@ import {
   HelpCircle,
 } from 'lucide-react'
 import { DossierTypeGuide } from './DossierTypeGuide'
+import { getDossierTypeTextClass } from '@/lib/semantic-colors'
 import type { DossierType } from '@/services/dossier-api'
 
 interface DossierTypeSelectorProps {
@@ -43,60 +44,25 @@ interface DossierTypeSelectorProps {
 interface DossierTypeOption {
   type: DossierType
   icon: React.ComponentType<{ className?: string }>
-  colorClass: string
   descriptionKey: string
 }
 
+/**
+ * D-58-04-02: per-type icon color now derives from the canonical
+ * dossierTypeColors map in `frontend/src/lib/semantic-colors.ts` via
+ * `getDossierTypeTextClass(type)`. Replaces the inline per-row Tailwind
+ * palette literals (Phase-58 Wave-4 swap). D-07 blue+purple collision rule is
+ * already encoded in the canonical map (country→primary, organization→
+ * secondary, topic→destructive, etc.).
+ */
 const dossierTypeOptions: DossierTypeOption[] = [
-  {
-    type: 'country',
-    icon: Globe,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeSelector
-    colorClass: 'text-blue-600 dark:text-blue-400',
-    descriptionKey: 'typeDescription.country',
-  },
-  {
-    type: 'organization',
-    icon: Building2,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeSelector
-    colorClass: 'text-purple-600 dark:text-purple-400',
-    descriptionKey: 'typeDescription.organization',
-  },
-  {
-    type: 'person',
-    icon: User,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeSelector
-    colorClass: 'text-teal-600 dark:text-teal-400',
-    descriptionKey: 'typeDescription.person',
-  },
-  {
-    type: 'engagement',
-    icon: Calendar,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeSelector
-    colorClass: 'text-orange-600 dark:text-orange-400',
-    descriptionKey: 'typeDescription.engagement',
-  },
-  {
-    type: 'forum',
-    icon: Users,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeSelector
-    colorClass: 'text-green-600 dark:text-green-400',
-    descriptionKey: 'typeDescription.forum',
-  },
-  {
-    type: 'working_group',
-    icon: Briefcase,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeSelector
-    colorClass: 'text-indigo-600 dark:text-indigo-400',
-    descriptionKey: 'typeDescription.working_group',
-  },
-  {
-    type: 'topic',
-    icon: Target,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeSelector
-    colorClass: 'text-pink-600 dark:text-pink-400',
-    descriptionKey: 'typeDescription.topic',
-  },
+  { type: 'country', icon: Globe, descriptionKey: 'typeDescription.country' },
+  { type: 'organization', icon: Building2, descriptionKey: 'typeDescription.organization' },
+  { type: 'person', icon: User, descriptionKey: 'typeDescription.person' },
+  { type: 'engagement', icon: Calendar, descriptionKey: 'typeDescription.engagement' },
+  { type: 'forum', icon: Users, descriptionKey: 'typeDescription.forum' },
+  { type: 'working_group', icon: Briefcase, descriptionKey: 'typeDescription.working_group' },
+  { type: 'topic', icon: Target, descriptionKey: 'typeDescription.topic' },
 ]
 
 export function DossierTypeSelector({
@@ -189,7 +155,9 @@ export function DossierTypeSelector({
                   isSelected && 'bg-primary/10',
                 )}
               >
-                <Icon className={cn('h-6 w-6 sm:h-7 sm:w-7', option.colorClass)} />
+                <Icon
+                  className={cn('h-6 w-6 sm:h-7 sm:w-7', getDossierTypeTextClass(option.type))}
+                />
               </div>
 
               {/* Type name */}
