@@ -241,77 +241,58 @@ export function isValidStatusTransition(from: CommitmentStatus, to: CommitmentSt
 /**
  * Status color mapping for UI
  */
+// D-58-06-A-07: STATUS palette → warning (pending) / accent (in_progress) /
+// success (completed) / muted (cancelled) / destructive (overdue). No D-07
+// collision (no purple).
 export const STATUS_COLORS: Record<CommitmentStatus, { bg: string; text: string; border: string }> =
   {
     pending: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-      bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-      text: 'text-yellow-700 dark:text-yellow-300',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-      border: 'border-yellow-200 dark:border-yellow-800',
+      bg: 'bg-warning/5 dark:bg-warning/20',
+      text: 'text-warning',
+      border: 'border-warning/20 dark:border-warning/80',
     },
     in_progress: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-      bg: 'bg-blue-50 dark:bg-blue-900/20',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-      text: 'text-blue-700 dark:text-blue-300',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-      border: 'border-blue-200 dark:border-blue-800',
+      bg: 'bg-accent/5 dark:bg-accent/20',
+      text: 'text-accent',
+      border: 'border-accent/20 dark:border-accent/80',
     },
     completed: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-      bg: 'bg-green-50 dark:bg-green-900/20',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-      text: 'text-green-700 dark:text-green-300',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-      border: 'border-green-200 dark:border-green-800',
+      bg: 'bg-success/5 dark:bg-success/20',
+      text: 'text-success',
+      border: 'border-success/20 dark:border-success/80',
     },
     cancelled: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-      bg: 'bg-gray-50 dark:bg-gray-900/20',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-      text: 'text-gray-700 dark:text-gray-300',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-      border: 'border-gray-200 dark:border-gray-800',
+      bg: 'bg-muted/5 dark:bg-muted/20',
+      text: 'text-muted-foreground',
+      border: 'border-muted/20 dark:border-muted/80',
     },
     overdue: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-      bg: 'bg-red-50 dark:bg-red-900/20',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-      text: 'text-red-700 dark:text-red-300',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-      border: 'border-red-200 dark:border-red-800',
+      bg: 'bg-destructive/5 dark:bg-destructive/20',
+      text: 'text-destructive',
+      border: 'border-destructive/20 dark:border-destructive/80',
     },
   }
 
 /**
  * Priority color mapping for UI
  */
+// D-58-06-A-07: PRIORITY palette → success / warning / warning-step / destructive.
 export const PRIORITY_COLORS: Record<CommitmentPriority, { bg: string; text: string }> = {
   low: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-    bg: 'bg-green-100 dark:bg-green-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-    text: 'text-green-700 dark:text-green-300',
+    bg: 'bg-success/10 dark:bg-success/30',
+    text: 'text-success',
   },
   medium: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-    bg: 'bg-yellow-100 dark:bg-yellow-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-    text: 'text-yellow-700 dark:text-yellow-300',
+    bg: 'bg-warning/10 dark:bg-warning/30',
+    text: 'text-warning',
   },
   high: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-    bg: 'bg-orange-100 dark:bg-orange-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-    text: 'text-orange-700 dark:text-orange-300',
+    bg: 'bg-warning/20 dark:bg-warning/40',
+    text: 'text-warning',
   },
   urgent: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-    bg: 'bg-red-100 dark:bg-red-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment.types
-    text: 'text-red-700 dark:text-red-300',
+    bg: 'bg-destructive/10 dark:bg-destructive/30',
+    text: 'text-destructive',
   },
 }
 
