@@ -114,17 +114,13 @@ export function EngagementBriefsSection({ engagementId }: EngagementBriefsSectio
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementBriefsSection
-        return 'bg-green-500/10 text-green-600 border-green-200'
+        return 'bg-success/10 text-success border-success/20'
       case 'generating':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementBriefsSection
-        return 'bg-blue-500/10 text-blue-600 border-blue-200'
+        return 'bg-accent/10 text-accent border-accent/20'
       case 'failed':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementBriefsSection
-        return 'bg-red-500/10 text-red-600 border-red-200'
+        return 'bg-danger/10 text-danger border-danger/20'
       default:
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementBriefsSection
-        return 'bg-gray-500/10 text-gray-600 border-gray-200'
+        return 'bg-muted text-ink-mute border-muted'
     }
   }
 
