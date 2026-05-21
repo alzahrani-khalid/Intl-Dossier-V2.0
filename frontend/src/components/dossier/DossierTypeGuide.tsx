@@ -82,80 +82,62 @@ function getTypeIcon(type: DossierType, className?: string) {
 
 /**
  * Get type-specific color classes
+ *
+ * D-58-04-01 (D-07 blue+purple collision rule): canonical mapping aligned to
+ * `dossierTypeColors` in `frontend/src/lib/semantic-colors.ts`. Each branch maps
+ * to a single semantic family (primary, secondary=accent-soft, success, warning,
+ * destructive, accent, muted) using `/10` bg + `/30` border opacity steps.
+ * Token tokens are mode-invariant, so no dark: variants are needed (D-09).
  */
 function getTypeColors(type: DossierType): { bg: string; text: string; border: string } {
   switch (type) {
     case 'country':
       return {
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        bg: 'bg-blue-50 dark:bg-blue-950',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        text: 'text-blue-600 dark:text-blue-400',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        border: 'border-blue-200 dark:border-blue-800',
+        bg: 'bg-primary/10',
+        text: 'text-primary',
+        border: 'border-primary/30',
       }
     case 'organization':
       return {
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        bg: 'bg-purple-50 dark:bg-purple-950',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        text: 'text-purple-600 dark:text-purple-400',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        border: 'border-purple-200 dark:border-purple-800',
+        bg: 'bg-secondary',
+        text: 'text-secondary-foreground',
+        border: 'border-secondary',
       }
     case 'forum':
       return {
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        bg: 'bg-green-50 dark:bg-green-950',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        text: 'text-green-600 dark:text-green-400',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        border: 'border-green-200 dark:border-green-800',
+        bg: 'bg-success/10',
+        text: 'text-success',
+        border: 'border-success/30',
       }
     case 'engagement':
       return {
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        bg: 'bg-orange-50 dark:bg-orange-950',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        text: 'text-orange-600 dark:text-orange-400',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        border: 'border-orange-200 dark:border-orange-800',
+        bg: 'bg-warning/10',
+        text: 'text-warning',
+        border: 'border-warning/30',
       }
     case 'topic':
       return {
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        bg: 'bg-pink-50 dark:bg-pink-950',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        text: 'text-pink-600 dark:text-pink-400',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        border: 'border-pink-200 dark:border-pink-800',
+        bg: 'bg-destructive/10',
+        text: 'text-destructive',
+        border: 'border-destructive/30',
       }
     case 'working_group':
       return {
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        bg: 'bg-indigo-50 dark:bg-indigo-950',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        text: 'text-indigo-600 dark:text-indigo-400',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        border: 'border-indigo-200 dark:border-indigo-800',
+        bg: 'bg-accent',
+        text: 'text-accent-foreground',
+        border: 'border-accent',
       }
     case 'person':
       return {
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        bg: 'bg-teal-50 dark:bg-teal-950',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        text: 'text-teal-600 dark:text-teal-400',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        border: 'border-teal-200 dark:border-teal-800',
+        bg: 'bg-muted',
+        text: 'text-muted-foreground',
+        border: 'border-muted',
       }
     default:
       return {
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        bg: 'bg-gray-50 dark:bg-gray-950',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        text: 'text-gray-600 dark:text-gray-400',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide
-        border: 'border-gray-200 dark:border-gray-800',
+        bg: 'bg-muted',
+        text: 'text-muted-foreground',
+        border: 'border-muted',
       }
   }
 }
@@ -242,8 +224,7 @@ function GuideContent({
       {Array.isArray(examples) && examples.length > 0 && (
         <div className="space-y-1.5">
           <div className="flex items-center gap-2 text-sm font-medium">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide */}
-            <Check className="h-4 w-4 text-green-500" />
+            <Check className="h-4 w-4 text-success" />
             <span>{isRTL ? 'أمثلة' : 'Examples'}</span>
           </div>
           <div className="flex flex-wrap gap-1.5 ps-6">
@@ -279,8 +260,7 @@ function GuideContent({
         <>
           <Separator />
           <div className="space-y-1.5">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTypeGuide */}
-            <div className="flex items-center gap-2 text-sm font-medium text-amber-600 dark:text-amber-400">
+            <div className="flex items-center gap-2 text-sm font-medium text-warning">
               <X className="h-4 w-4" />
               <span>{isRTL ? 'لا تستخدم لـ' : 'Not For'}</span>
             </div>
