@@ -546,11 +546,9 @@ function MetricCard({ title, value, icon: Icon, trend, isLoading }: MetricCardPr
           <div className="flex items-center gap-2">
             {trend &&
               (trend === 'up' ? (
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ai-usage
-                <TrendingUp className="h-4 w-4 text-green-500" />
+                <TrendingUp className="h-4 w-4 text-success" />
               ) : (
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ai-usage
-                <TrendingDown className="h-4 w-4 text-red-500" />
+                <TrendingDown className="h-4 w-4 text-danger" />
               ))}
             <div className="p-2 rounded-full bg-primary/10">
               <Icon className="h-5 w-5 text-primary" />
