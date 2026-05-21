@@ -200,8 +200,7 @@ function ScenarioSandboxPage() {
         <Card>
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox */}
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent dark:bg-accent/30">
                 <Variable className="h-5 w-5" />
               </div>
               <div>
@@ -214,8 +213,7 @@ function ScenarioSandboxPage() {
         <Card>
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox */}
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-success/10 text-success dark:bg-success/30">
                 <TrendingUp className="h-5 w-5" />
               </div>
               <div>
@@ -228,8 +226,7 @@ function ScenarioSandboxPage() {
         <Card>
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox */}
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-ink-muted dark:bg-muted/30">
                 <TrendingDown className="h-5 w-5" />
               </div>
               <div>
