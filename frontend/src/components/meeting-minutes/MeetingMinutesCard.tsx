@@ -98,8 +98,7 @@ export function MeetingMinutesCard({ minutes, onClick, className }: MeetingMinut
           {/* Location or Virtual */}
           {minutes.is_virtual ? (
             <div className="flex items-center gap-1.5">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MeetingMinutesCard */}
-              <Video className="h-4 w-4 shrink-0 text-blue-500" />
+              <Video className="h-4 w-4 shrink-0 text-accent" />
               <span>{t('fields.isVirtual')}</span>
             </div>
           ) : minutes.location_en ? (
@@ -130,8 +129,7 @@ export function MeetingMinutesCard({ minutes, onClick, className }: MeetingMinut
 
           {/* AI Summary indicator */}
           {minutes.ai_summary_en && (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MeetingMinutesCard
-            <div className="flex items-center gap-1.5 text-purple-600 dark:text-purple-400">
+            <div className="flex items-center gap-1.5 text-secondary">
               <Sparkles className="h-4 w-4 shrink-0" />
               <span className="text-xs">{t('ai.title')}</span>
             </div>
