@@ -97,6 +97,7 @@ import { useDirection } from '@/hooks/useDirection'
 import { useRecentNavigation } from '@/hooks/useRecentNavigation'
 import { createNavigationGroups, type NavigationItem } from '@/components/layout/navigation-config'
 import { useResponsive } from '@/hooks/useResponsive'
+import { getDossierTypeBadgeClass, getActivityTypeBadgeClass } from '@/lib/semantic-colors'
 
 interface CommandPaletteProps {
   /** Additional class names */
@@ -183,40 +184,14 @@ const workTypeLabels: Record<string, { en: string; ar: string }> = {
   document: { en: 'Document', ar: '\u0648\u062B\u064A\u0642\u0629' },
 }
 
-// Badge colors for dossier types
-const dossierTypeBadgeColors: Record<string, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-  country: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-  organization: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-  person: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-  engagement: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-  forum: 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-  working_group: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-  topic: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-  elected_official: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-}
+// Badge colors for dossier types — use shared semantic helper.
+// `getDossierTypeBadgeClass(type)` returns the bg+text token pair.
 
-// Badge colors for work item types
-const workTypeBadgeColors: Record<string, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-  position: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-  task: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-  commitment: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-  intake: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-  mou: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-  document: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400',
+// Badge colors for work item types — use shared semantic activity-type helper.
+// `getActivityTypeBadgeClass(type)` covers task/commitment/intake/position/document.
+// `mou` is outside the helper's vocabulary; map it inline to `danger` (red → danger).
+const workTypeBadgeOverrides: Record<string, string> = {
+  mou: 'bg-destructive/10 text-destructive',
 }
 
 // Context-aware route patterns for suggestions
@@ -942,16 +917,14 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
   // Get dossier badge info
   const getDossierBadge = (type: string): { label: string | undefined; color: string } => {
     const label = isRTL ? dossierTypeLabels[type]?.ar : dossierTypeLabels[type]?.en
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-    const color = dossierTypeBadgeColors[type] || 'bg-gray-100 text-gray-700'
+    const color = getDossierTypeBadgeClass(type)
     return { label, color }
   }
 
   // Get work item badge info
   const getWorkItemBadge = (type: string): { label: string | undefined; color: string } => {
     const label = isRTL ? workTypeLabels[type]?.ar : workTypeLabels[type]?.en
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-    const color = workTypeBadgeColors[type] || 'bg-gray-100 text-gray-700'
+    const color = workTypeBadgeOverrides[type] ?? getActivityTypeBadgeClass(type)
     return { label, color }
   }
 
@@ -1051,14 +1024,12 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                           }}
                           className="flex items-center gap-3"
                         >
-                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette */}
-                          <Sparkles className="size-3 shrink-0 text-amber-500" />
+                          <Sparkles className="size-3 shrink-0 text-warning" />
                           <SuggestionIcon className="size-4 shrink-0" />
                           <span className="flex-1">{suggestion.label}</span>
                           <Badge
                             variant="secondary"
-                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-                            className="shrink-0 text-xs bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                            className="shrink-0 text-xs bg-warning/10 dark:bg-warning/30 text-warning"
                           >
                             {t('contextSuggestions.suggested', 'Suggested')}
                           </Badge>
@@ -1093,8 +1064,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                         </div>
                         <Badge
                           variant="secondary"
-                          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette
-                          className="shrink-0 text-xs bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                          className="shrink-0 text-xs bg-muted text-muted-foreground"
                         >
                           {item.type === 'dossier'
                             ? tQs('typeDossier', 'Dossier')
@@ -1168,7 +1138,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                           {item.dossierType != null && (
                             <Badge
                               variant="secondary"
-                              className={`shrink-0 text-xs ${dossierTypeBadgeColors[item.dossierType as DossierType] || ''}`}
+                              className={`shrink-0 text-xs ${getDossierTypeBadgeClass(item.dossierType)}`}
                             >
                               {isRTL
                                 ? dossierTypeLabels[item.dossierType as DossierType]?.ar
@@ -1199,8 +1169,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                           }}
                           className="flex items-center gap-3"
                         >
-                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette */}
-                          <PlusCircle className="size-3 shrink-0 text-green-500" />
+                          <PlusCircle className="size-3 shrink-0 text-success" />
                           <CreateIcon className="size-4 shrink-0" />
                           <span className="flex-1">{action.label}</span>
                           {action.shortcut != null && (
@@ -1408,8 +1377,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                           }}
                           className="flex items-center gap-3"
                         >
-                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommandPalette */}
-                          <PlusCircle className="size-3 shrink-0 text-green-500" />
+                          <PlusCircle className="size-3 shrink-0 text-success" />
                           <CreateIcon className="size-4 shrink-0" />
                           <span className="flex-1">{action.label}</span>
                           {action.shortcut != null && (
