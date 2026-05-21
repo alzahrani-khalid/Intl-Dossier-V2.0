@@ -23,20 +23,15 @@ export function RealtimeStatus() {
   const getStatusIcon = () => {
     switch (connectionStatus) {
       case 'connected':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RealtimeStatus
-        return <Wifi className="size-4 text-green-500" />
+        return <Wifi className="size-4 text-success" />
       case 'disconnected':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RealtimeStatus
-        return <WifiOff className="size-4 text-gray-500" />
+        return <WifiOff className="size-4 text-muted-foreground" />
       case 'reconnecting':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RealtimeStatus
-        return <RefreshCw className="size-4 animate-spin text-yellow-500" />
+        return <RefreshCw className="size-4 animate-spin text-warning" />
       case 'error':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RealtimeStatus
-        return <AlertCircle className="size-4 text-red-500" />
+        return <AlertCircle className="size-4 text-danger" />
       default:
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RealtimeStatus
-        return <WifiOff className="size-4 text-gray-500" />
+        return <WifiOff className="size-4 text-muted-foreground" />
     }
   }
 
@@ -76,8 +71,7 @@ export function RealtimeStatus() {
   }
 
   return (
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RealtimeStatus
-    <div className="fixed bottom-4 start-4 z-50 flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+    <div className="fixed bottom-4 start-4 z-50 flex items-center gap-2 rounded-lg border border-line bg-surface p-3 shadow-lg">
       <Badge variant={getStatusVariant()} className="gap-1">
         {getStatusIcon()}
         <span>{getStatusText()}</span>
