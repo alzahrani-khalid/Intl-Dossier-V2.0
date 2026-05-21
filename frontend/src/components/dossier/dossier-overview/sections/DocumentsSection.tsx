@@ -60,17 +60,18 @@ function DocumentCard({ document, isRTL }: { document: DossierDocument; isRTL: b
   const { t } = useTranslation('dossier-overview')
   const Icon = getDocumentTypeIcon(document.document_type)
 
+  // D-58-04-18: 5-status doc palette mapped onto canonical statusColors family.
+  //   draft     (yellow) → warning
+  //   active    (green)  → success
+  //   approved  (blue)   → primary
+  //   archived  (gray)   → muted
+  //   template  (purple) → secondary (D-07 collision)
   const statusColors: Record<string, string> = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DocumentsSection
-    draft: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DocumentsSection
-    active: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DocumentsSection
-    approved: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DocumentsSection
-    archived: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DocumentsSection
-    template: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+    draft: 'bg-warning/10 text-warning',
+    active: 'bg-success/10 text-success',
+    approved: 'bg-primary/10 text-primary',
+    archived: 'bg-muted text-muted-foreground',
+    template: 'bg-secondary text-secondary-foreground',
   }
 
   return (
