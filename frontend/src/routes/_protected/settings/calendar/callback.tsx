@@ -114,10 +114,8 @@ function CalendarOAuthCallback() {
 
           {status === 'success' && (
             <>
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#callback */}
-              <CheckCircle className="h-12 w-12 mx-auto text-green-500" />
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#callback */}
-              <h2 className="text-xl font-semibold text-green-600">{t('oauth.success')}</h2>
+              <CheckCircle className="h-12 w-12 mx-auto text-success" />
+              <h2 className="text-xl font-semibold text-success">{t('oauth.success')}</h2>
               <p className="text-muted-foreground">{t('oauth.redirecting')}</p>
             </>
           )}
