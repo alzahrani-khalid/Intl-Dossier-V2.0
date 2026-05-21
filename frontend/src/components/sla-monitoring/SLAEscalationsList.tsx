@@ -129,8 +129,7 @@ export function SLAEscalationsList({
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <CardTitle className="flex items-center gap-2">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAEscalationsList */}
-            <AlertTriangle className="h-5 w-5 text-red-500" />
+            <AlertTriangle className="h-5 w-5 text-danger" />
             {t('escalations.title')}
           </CardTitle>
           <CardDescription>{t('escalations.description')}</CardDescription>
@@ -157,10 +156,8 @@ export function SLAEscalationsList({
                   key={escalation.id}
                   className={cn(
                     'border rounded-lg p-4',
-                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAEscalationsList */
-                    escalation.status === 'triggered' && 'border-red-300 bg-red-50',
-                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAEscalationsList */
-                    escalation.status === 'acknowledged' && 'border-yellow-300 bg-yellow-50',
+                    escalation.status === 'triggered' && 'border-danger/30 bg-danger/10',
+                    escalation.status === 'acknowledged' && 'border-warning/30 bg-warning/10',
                   )}
                 >
                   <div className="flex items-start justify-between gap-4 mb-3">
@@ -291,8 +288,7 @@ export function SLAEscalationsList({
           </ScrollArea>
         ) : (
           <div className="h-32 flex flex-col items-center justify-center text-muted-foreground">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAEscalationsList */}
-            <CheckCircle className="h-8 w-8 mb-2 text-green-500" />
+            <CheckCircle className="h-8 w-8 mb-2 text-success" />
             <p>{t('escalations.noEscalations')}</p>
           </div>
         )}
