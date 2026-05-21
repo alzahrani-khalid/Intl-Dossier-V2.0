@@ -51,7 +51,10 @@ interface MilestonePlannerEmptyStateProps {
   onConvertToEvent: (milestoneId: string, eventType: string) => Promise<void>
 }
 
-// Quick add templates
+// Quick add templates.
+// D-07 collision mirrors MilestoneCard: engagement=accent (blue),
+// document_due=secondary (purple); policy_deadline & renewal collapse to warning;
+// follow_up=info (cyan); relationship_review=success.
 const quickAddTemplates: Array<{
   type: MilestoneType
   icon: typeof Users
@@ -60,38 +63,32 @@ const quickAddTemplates: Array<{
   {
     type: 'engagement',
     icon: Users,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState
-    color: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
+    color: 'bg-accent/10 text-accent dark:bg-accent/30',
   },
   {
     type: 'policy_deadline',
     icon: FileText,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState
-    color: 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400',
+    color: 'bg-warning/10 text-warning dark:bg-warning/30',
   },
   {
     type: 'relationship_review',
     icon: RefreshCw,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState
-    color: 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400',
+    color: 'bg-success/10 text-success dark:bg-success/30',
   },
   {
     type: 'document_due',
     icon: FileCheck,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState
-    color: 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400',
+    color: 'bg-secondary/10 text-secondary dark:bg-secondary/30',
   },
   {
     type: 'follow_up',
     icon: ArrowRight,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState
-    color: 'bg-cyan-100 text-cyan-600 dark:bg-cyan-900/30 dark:text-cyan-400',
+    color: 'bg-info/10 text-info dark:bg-info/30',
   },
   {
     type: 'renewal',
     icon: RotateCcw,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState
-    color: 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400',
+    color: 'bg-warning/10 text-warning dark:bg-warning/30',
   },
 ]
 
@@ -214,8 +211,7 @@ export function MilestonePlannerEmptyState({
 
           {/* Hint */}
           <div className="flex items-start gap-2 bg-muted/50 rounded-lg p-3 sm:p-4 max-w-md mb-8">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
-            <Lightbulb className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+            <Lightbulb className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
             <p className="text-xs sm:text-sm text-muted-foreground text-start">
               {t('emptyState.hint')}
             </p>
@@ -279,10 +275,8 @@ export function MilestonePlannerEmptyState({
             </Card>
             <Card className="p-3 sm:p-4">
               <div className="flex items-center gap-2">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
-                  <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 dark:text-blue-400" />
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-accent/10 dark:bg-accent/30 flex items-center justify-center">
+                  <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-accent" />
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">{t('stats.upcoming')}</p>
@@ -292,10 +286,8 @@ export function MilestonePlannerEmptyState({
             </Card>
             <Card className="p-3 sm:p-4">
               <div className="flex items-center gap-2">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
-                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 dark:text-amber-400" />
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-warning/10 dark:bg-warning/30 flex items-center justify-center">
+                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-warning" />
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">{t('stats.thisWeek')}</p>
@@ -305,15 +297,12 @@ export function MilestonePlannerEmptyState({
             </Card>
             <Card className="p-3 sm:p-4">
               <div className="flex items-center gap-2">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
-                  <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-red-600 dark:text-red-400" />
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-destructive/10 dark:bg-destructive/30 flex items-center justify-center">
+                  <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-destructive" />
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">{t('stats.overdue')}</p>
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonePlannerEmptyState */}
-                  <p className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400">
+                  <p className="text-lg sm:text-xl font-semibold text-destructive">
                     {stats.overdue}
                   </p>
                 </div>
