@@ -421,38 +421,34 @@ export const METRIC_LABELS: { [key: string]: { en: string; ar: string } } & Reco
   weak_relationships: { en: 'Weak Relations', ar: 'علاقات ضعيفة' },
 }
 
-/**
- * Node colors for visualization based on influence tier
- */
+// D-58-06-A-20: NODE colors for D3 visualization — raw hex collapsed to
+// CSS var() refs. D-07 collision (blue + purple):
+//   key_influencer (purple) → --color-secondary
+//   high_influence (blue)   → --color-accent
+//   moderate_influence (teal) → --heroui-success
+//   low_influence (gray-500) → --color-muted-foreground
+//   peripheral (gray-400)    → color-mix lighter muted-foreground
 export const NODE_COLORS: Record<InfluenceTier, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence.types
-  key_influencer: '#9333ea', // purple-600
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence.types
-  high_influence: '#2563eb', // blue-600
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence.types
-  moderate_influence: '#0d9488', // teal-600
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence.types
-  low_influence: '#6b7280', // gray-500
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence.types
-  peripheral: '#9ca3af', // gray-400
+  key_influencer: 'var(--color-secondary)',
+  high_influence: 'var(--color-accent)',
+  moderate_influence: 'var(--heroui-success)',
+  low_influence: 'var(--color-muted-foreground)',
+  peripheral: 'color-mix(in oklch, var(--color-muted-foreground) 60%, transparent)',
 }
 
-/**
- * Edge colors for visualization based on relationship health
- */
+// D-58-06-A-20: edge-health gradient — 6-step raw hex → CSS var() refs.
+// D3 requires raw color strings, so within-family disambiguation uses
+// color-mix(in oklch) for sibling steps.
 export function getEdgeColor(healthScore: number | null): string {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence.types
-  if (healthScore === null) return '#d1d5db' // gray-300
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence.types
-  if (healthScore >= 80) return '#22c55e' // green-500
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence.types
-  if (healthScore >= 60) return '#84cc16' // lime-500
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence.types
-  if (healthScore >= 40) return '#eab308' // yellow-500
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence.types
-  if (healthScore >= 20) return '#f97316' // orange-500
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#stakeholder-influence.types
-  return '#ef4444' // red-500
+  if (healthScore === null)
+    return 'color-mix(in oklch, var(--color-muted-foreground) 60%, transparent)'
+  if (healthScore >= 80) return 'var(--heroui-success)'
+  if (healthScore >= 60)
+    return 'color-mix(in oklch, var(--heroui-success) 70%, var(--heroui-warning) 30%)'
+  if (healthScore >= 40) return 'var(--heroui-warning)'
+  if (healthScore >= 20)
+    return 'color-mix(in oklch, var(--heroui-warning) 50%, var(--heroui-danger) 50%)'
+  return 'var(--heroui-danger)'
 }
 
 /**
