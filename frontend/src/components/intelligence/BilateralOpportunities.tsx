@@ -78,8 +78,7 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BilateralOpportunities */}
-              <Handshake className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <Handshake className="h-5 w-5 text-accent" />
               <CardTitle className="text-base sm:text-lg">
                 {t('intelligence.types.bilateral', 'Bilateral Opportunities')}
               </CardTitle>
@@ -95,8 +94,7 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
         </CardHeader>
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BilateralOpportunities */}
-            <Globe className="mx-auto h-12 w-12 mb-3 text-gray-400" />
+            <Globe className="mx-auto h-12 w-12 mb-3 text-ink-mute" />
             <p className="text-sm">
               {t('intelligence.noBilateralData', 'No bilateral intelligence available')}
             </p>
@@ -112,8 +110,7 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BilateralOpportunities */}
-              <Handshake className="h-5 w-5 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+              <Handshake className="h-5 w-5 flex-shrink-0 text-accent" />
               <CardTitle className="text-base sm:text-lg truncate">
                 {t('intelligence.types.bilateral', 'Bilateral Opportunities')}
               </CardTitle>
@@ -137,8 +134,7 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
         {/* Metadata Row */}
         <div className="flex flex-wrap items-center gap-2 text-xs">
           {isStale && (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BilateralOpportunities
-            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+            <Badge variant="outline" className="bg-warning/5 text-warning border-warning/20">
               {t('intelligence.stale', 'Stale Data')}
             </Badge>
           )}
@@ -179,16 +175,14 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
         {latestReport?.metrics && Object.keys(latestReport.metrics).length > 0 && (
           <div>
             <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BilateralOpportunities */}
-              <Sparkles className="h-4 w-4 text-yellow-600" />
+              <Sparkles className="h-4 w-4 text-warning" />
               {t('intelligence.keyOpportunities', 'Key Opportunities')}
             </h4>
             <div className="grid grid-cols-2 gap-3">
               {Object.entries(latestReport.metrics).map(([key, value]) => (
                 <div key={key} className="bg-muted/50 rounded-lg p-3">
                   <div className="flex items-center gap-2 mb-1">
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BilateralOpportunities */}
-                    <Handshake className="h-4 w-4 text-blue-600" />
+                    <Handshake className="h-4 w-4 text-accent" />
                     <span className="text-xs font-medium text-muted-foreground capitalize">
                       {key.replace(/_/g, ' ')}
                     </span>
