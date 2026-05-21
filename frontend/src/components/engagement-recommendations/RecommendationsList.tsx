@@ -202,8 +202,7 @@ export function RecommendationsList({
       {(showFilters || showGenerateButton) && (
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RecommendationsList */}
-            <Sparkles className="h-5 w-5 text-amber-500" />
+            <Sparkles className="h-5 w-5 text-warning" />
             <h2 className="text-lg font-semibold">{t('title')}</h2>
             {isFetching && !isLoading && (
               <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
