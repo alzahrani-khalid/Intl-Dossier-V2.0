@@ -344,79 +344,56 @@ export interface AutoScheduleResponse {
 // CONSTANTS
 // =============================================================================
 
-/** Response type colors for UI */
+// D-58-06-A-06: RESPONSE palette → success / destructive / warning. No D-07.
 export const RESPONSE_COLORS: Record<
   PollResponseType,
   { bg: string; text: string; border: string }
 > = {
   available: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-    bg: 'bg-green-100 dark:bg-green-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-    text: 'text-green-700 dark:text-green-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-    border: 'border-green-200 dark:border-green-800',
+    bg: 'bg-success/10 dark:bg-success/30',
+    text: 'text-success',
+    border: 'border-success/20 dark:border-success/80',
   },
   unavailable: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-    bg: 'bg-red-100 dark:bg-red-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-    text: 'text-red-700 dark:text-red-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-    border: 'border-red-200 dark:border-red-800',
+    bg: 'bg-destructive/10 dark:bg-destructive/30',
+    text: 'text-destructive',
+    border: 'border-destructive/20 dark:border-destructive/80',
   },
   maybe: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-    bg: 'bg-yellow-100 dark:bg-yellow-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-    text: 'text-yellow-700 dark:text-yellow-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-    border: 'border-yellow-200 dark:border-yellow-800',
+    bg: 'bg-warning/10 dark:bg-warning/30',
+    text: 'text-warning',
+    border: 'border-warning/20 dark:border-warning/80',
   },
 }
 
-/** Poll status colors for UI */
+// D-58-06-A-06: POLL_STATUS palette — D-07 collision (blue + purple):
+//   active=accent (blue), closed=secondary (purple).
 export const POLL_STATUS_COLORS: Record<PollStatus, { bg: string; text: string; border: string }> =
   {
     draft: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-      bg: 'bg-gray-100 dark:bg-gray-800/30',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-      text: 'text-gray-700 dark:text-gray-300',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-      border: 'border-gray-200 dark:border-gray-700',
+      bg: 'bg-muted/10 dark:bg-muted/30',
+      text: 'text-muted-foreground',
+      border: 'border-muted/20 dark:border-muted/70',
     },
     active: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-      bg: 'bg-blue-100 dark:bg-blue-900/30',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-      text: 'text-blue-700 dark:text-blue-300',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-      border: 'border-blue-200 dark:border-blue-800',
+      bg: 'bg-accent/10 dark:bg-accent/30',
+      text: 'text-accent',
+      border: 'border-accent/20 dark:border-accent/80',
     },
     closed: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-      bg: 'bg-purple-100 dark:bg-purple-900/30',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-      text: 'text-purple-700 dark:text-purple-300',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-      border: 'border-purple-200 dark:border-purple-800',
+      bg: 'bg-secondary/10 dark:bg-secondary/30',
+      text: 'text-secondary-foreground',
+      border: 'border-secondary/20 dark:border-secondary/80',
     },
     scheduled: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-      bg: 'bg-green-100 dark:bg-green-900/30',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-      text: 'text-green-700 dark:text-green-300',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-      border: 'border-green-200 dark:border-green-800',
+      bg: 'bg-success/10 dark:bg-success/30',
+      text: 'text-success',
+      border: 'border-success/20 dark:border-success/80',
     },
     cancelled: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-      bg: 'bg-red-100 dark:bg-red-900/30',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-      text: 'text-red-700 dark:text-red-300',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#availability-polling.types
-      border: 'border-red-200 dark:border-red-800',
+      bg: 'bg-destructive/10 dark:bg-destructive/30',
+      text: 'text-destructive',
+      border: 'border-destructive/20 dark:border-destructive/80',
     },
   }
 
