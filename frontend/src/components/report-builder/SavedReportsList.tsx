@@ -206,8 +206,7 @@ export function SavedReportsList({
                             {isRTL ? report.nameAr || report.name : report.name}
                           </h4>
                           {report.isFavorite && (
-                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SavedReportsList
-                            <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 flex-shrink-0" />
+                            <Star className="h-4 w-4 text-warning fill-warning flex-shrink-0" />
                           )}
                         </div>
 
