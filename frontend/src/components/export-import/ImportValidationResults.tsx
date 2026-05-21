@@ -42,14 +42,10 @@ interface ImportValidationResultsProps {
 }
 
 const STATUS_ICONS: Record<string, React.ReactNode> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
-  valid: <CheckCircle2 className="h-4 w-4 text-green-500" />,
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
-  invalid: <XCircle className="h-4 w-4 text-red-500" />,
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
-  warning: <AlertTriangle className="h-4 w-4 text-yellow-500" />,
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
-  conflict: <AlertCircle className="h-4 w-4 text-blue-500" />,
+  valid: <CheckCircle2 className="h-4 w-4 text-success" />,
+  invalid: <XCircle className="h-4 w-4 text-danger" />,
+  warning: <AlertTriangle className="h-4 w-4 text-warning" />,
+  conflict: <AlertCircle className="h-4 w-4 text-accent" />,
   pending: <AlertCircle className="h-4 w-4 text-muted-foreground" />,
 }
 
@@ -59,17 +55,14 @@ const STATUS_BADGES: Record<
 > = {
   valid: {
     variant: 'default',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
-    className: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+    className: 'bg-success/10 text-success dark:bg-success/30',
   },
   invalid: { variant: 'destructive' },
   warning: {
     variant: 'secondary',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
-    className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+    className: 'bg-warning/10 text-warning dark:bg-warning/30',
   },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
-  conflict: { variant: 'outline', className: 'border-blue-500 text-blue-600 dark:text-blue-400' },
+  conflict: { variant: 'outline', className: 'border-accent text-accent' },
   pending: { variant: 'secondary' },
 }
 
@@ -139,41 +132,24 @@ export function ImportValidationResults({
             {t('import.validation.summary.totalRows')}
           </div>
         </div>
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
-        <div className="rounded-lg border p-3 bg-green-50 dark:bg-green-900/20">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
-          <div className="text-2xl font-bold text-green-600">{result.validRows}</div>
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
-          <div className="text-xs text-green-700 dark:text-green-400">
-            {t('import.validation.summary.validRows')}
-          </div>
+        <div className="rounded-lg border p-3 bg-success/5 dark:bg-success/20">
+          <div className="text-2xl font-bold text-success">{result.validRows}</div>
+          <div className="text-xs text-success">{t('import.validation.summary.validRows')}</div>
         </div>
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
-        <div className="rounded-lg border p-3 bg-red-50 dark:bg-red-900/20">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
-          <div className="text-2xl font-bold text-red-600">{result.invalidRows}</div>
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
-          <div className="text-xs text-red-700 dark:text-red-400">
-            {t('import.validation.summary.invalidRows')}
-          </div>
+        <div className="rounded-lg border p-3 bg-danger/5 dark:bg-danger/20">
+          <div className="text-2xl font-bold text-danger">{result.invalidRows}</div>
+          <div className="text-xs text-danger">{t('import.validation.summary.invalidRows')}</div>
         </div>
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
-        <div className="rounded-lg border p-3 bg-yellow-50 dark:bg-yellow-900/20">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
-          <div className="text-2xl font-bold text-yellow-600">{result.warningRows}</div>
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
-          <div className="text-xs text-yellow-700 dark:text-yellow-400">
-            {t('import.validation.summary.warningRows')}
-          </div>
+        <div className="rounded-lg border p-3 bg-warning/5 dark:bg-warning/20">
+          <div className="text-2xl font-bold text-warning">{result.warningRows}</div>
+          <div className="text-xs text-warning">{t('import.validation.summary.warningRows')}</div>
         </div>
       </div>
 
       {/* Missing Columns Warning */}
       {result.missingRequiredColumns && result.missingRequiredColumns.length > 0 && (
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
-        <div className="rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 p-4">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
-          <div className="flex items-center gap-2 text-red-700 dark:text-red-400">
+        <div className="rounded-lg border border-danger/20 bg-danger/5 dark:bg-danger/20 p-4">
+          <div className="flex items-center gap-2 text-danger">
             <XCircle className="h-5 w-5" />
             <span className="font-medium">
               {t('import.error.missingColumns', {
@@ -186,10 +162,8 @@ export function ImportValidationResults({
 
       {/* Unmapped Columns Info */}
       {result.unmappedColumns && result.unmappedColumns.length > 0 && (
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
-        <div className="rounded-lg border border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20 p-4">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */}
-          <div className="flex items-center gap-2 text-yellow-700 dark:text-yellow-400">
+        <div className="rounded-lg border border-warning/20 bg-warning/5 dark:bg-warning/20 p-4">
+          <div className="flex items-center gap-2 text-warning">
             <AlertTriangle className="h-5 w-5" />
             <span>Unmapped columns will be ignored: {result.unmappedColumns.join(', ')}</span>
           </div>
@@ -267,12 +241,9 @@ export function ImportValidationResults({
               <TableRow
                 key={row.row}
                 className={cn(
-                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */
-                  row.status === 'invalid' && 'bg-red-50/50 dark:bg-red-900/10',
-                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */
-                  row.status === 'warning' && 'bg-yellow-50/50 dark:bg-yellow-900/10',
-                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */
-                  row.status === 'conflict' && 'bg-blue-50/50 dark:bg-blue-900/10',
+                  row.status === 'invalid' && 'bg-danger/5 dark:bg-danger/20',
+                  row.status === 'warning' && 'bg-warning/5 dark:bg-warning/20',
+                  row.status === 'conflict' && 'bg-accent/5 dark:bg-accent/20',
                 )}
               >
                 <TableCell className="font-medium">#{row.row}</TableCell>
@@ -302,11 +273,7 @@ export function ImportValidationResults({
                                   </span>{' '}
                                   <span
                                     className={
-                                      error.severity === 'error'
-                                        ? /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */
-                                          'text-red-600'
-                                        : /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */
-                                          'text-yellow-600'
+                                      error.severity === 'error' ? 'text-danger' : 'text-warning'
                                     }
                                   >
                                     {getErrorMessage(error)}
@@ -328,8 +295,7 @@ export function ImportValidationResults({
                       )}
                     </div>
                   ) : row.status === 'conflict' ? (
-                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults
-                    <div className="text-sm text-blue-600">
+                    <div className="text-sm text-accent">
                       {t('errors.conflict_detected')}
                       {row.existingId && (
                         <span className="text-muted-foreground ms-2">
@@ -382,11 +348,8 @@ export function ImportValidationResults({
       <div
         className={cn(
           'rounded-lg p-4 text-center',
-          result.invalidRows === 0 &&
-            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */
-            'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400',
-          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ImportValidationResults */
-          result.invalidRows > 0 && 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400',
+          result.invalidRows === 0 && 'bg-success/5 dark:bg-success/20 text-success',
+          result.invalidRows > 0 && 'bg-danger/5 dark:bg-danger/20 text-danger',
         )}
       >
         {result.invalidRows === 0 ? (
