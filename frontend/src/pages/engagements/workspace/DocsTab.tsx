@@ -35,14 +35,11 @@ import { Skeleton } from '@/components/ui/skeleton'
 function getStatusVariant(status: string): string {
   switch (status) {
     case 'completed':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DocsTab
-      return 'bg-green-500/10 text-green-600 border-green-200 dark:text-green-400 dark:border-green-800'
+      return 'bg-success/10 text-success border-success/20 dark:border-success/70'
     case 'generating':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DocsTab
-      return 'bg-blue-500/10 text-blue-600 border-blue-200 dark:text-blue-400 dark:border-blue-800'
+      return 'bg-accent/10 text-accent border-accent/20 dark:border-accent/70'
     case 'failed':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DocsTab
-      return 'bg-red-500/10 text-red-600 border-red-200 dark:text-red-400 dark:border-red-800'
+      return 'bg-danger/10 text-danger border-danger/20 dark:border-danger/70'
     default:
       return 'bg-muted text-muted-foreground border-border'
   }
