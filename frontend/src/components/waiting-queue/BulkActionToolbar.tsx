@@ -40,19 +40,16 @@ export function BulkActionToolbar({
 
   return (
     <div
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionToolbar
-      className="sticky top-0 z-10 flex flex-col gap-2 p-4 bg-blue-50 border-b border-blue-200 dark:bg-blue-950 dark:border-blue-800 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+      className="sticky top-0 z-10 flex flex-col gap-2 p-4 bg-accent/5 border-b border-accent/20 dark:bg-accent/20 dark:border-accent/70 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
       role="toolbar"
       aria-label={t('waitingQueue.bulkActions.toolbar')}
     >
       {/* Selection Count */}
       <div className="flex items-center gap-2">
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionToolbar */}
-        <span className="text-sm font-medium text-blue-900 dark:text-blue-100 sm:text-base">
+        <span className="text-sm font-medium text-accent sm:text-base">
           {t('waitingQueue.bulkActions.selectedCount', { count: selectedCount })}
         </span>
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionToolbar */}
-        <span className="text-xs text-blue-700 dark:text-blue-300 sm:text-sm">
+        <span className="text-xs text-accent sm:text-sm">
           {t('waitingQueue.bulkActions.maxItems', { max: 100 })}
         </span>
       </div>
@@ -84,8 +81,7 @@ export function BulkActionToolbar({
 
       {/* Warning for max items */}
       {selectedCount >= 100 && (
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionToolbar
-        <div className="text-xs text-orange-600 dark:text-orange-400 sm:text-sm">
+        <div className="text-xs text-warning sm:text-sm">
           {t('waitingQueue.bulkActions.maxReached')}
         </div>
       )}
