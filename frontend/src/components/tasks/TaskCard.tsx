@@ -13,6 +13,7 @@ import { Badge } from '../ui/badge'
 import { SLAIndicator } from './SLAIndicator'
 import type { Database } from '../../../../backend/src/types/database.types'
 import { useDirection } from '@/hooks/useDirection'
+import { getPriorityBadgeClass, getStatusBadgeClass } from '@/lib/semantic-colors'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 
@@ -33,35 +34,6 @@ export function TaskCard({
 }: TaskCardProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-  const getPriorityColor = (priority: string): string => {
-    const colors = {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskCard
-      urgent: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskCard
-      high: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskCard
-      medium: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskCard
-      low: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
-    }
-    return colors[priority as keyof typeof colors] || colors.medium
-  }
-
-  const getStatusColor = (status: string): string => {
-    const colors = {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskCard
-      pending: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskCard
-      in_progress: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskCard
-      review: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskCard
-      completed: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TaskCard
-      cancelled: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-    }
-    return colors[status as keyof typeof colors] || colors.pending
-  }
 
   const isCompleted = task.status === 'completed' || task.status === 'cancelled'
 
@@ -74,10 +46,10 @@ export function TaskCard({
         {/* Header: Badges and Metadata */}
         <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
           <div className="flex flex-wrap gap-2">
-            <Badge className={getPriorityColor(task.priority)}>
+            <Badge className={getPriorityBadgeClass(task.priority)}>
               {t(`priority.${task.priority}`, task.priority)}
             </Badge>
-            <Badge className={getStatusColor(task.status)}>
+            <Badge className={getStatusBadgeClass(task.status)}>
               {t(`status.${task.status}`, task.status)}
             </Badge>
             {showWorkItem && task.work_item_type && (
