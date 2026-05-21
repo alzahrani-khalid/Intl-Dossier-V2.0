@@ -98,10 +98,8 @@ function MyApprovalsPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="p-4">
           <div className="flex items-center gap-4">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#index-approvals */}
-            <div className="p-3 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#index-approvals */}
-              <Clock className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
+            <div className="p-3 bg-warning/10 dark:bg-warning/30 rounded-lg">
+              <Clock className="h-6 w-6 text-warning" />
             </div>
             <div>
               <p className="text-2xl font-bold">{positions?.length || 0}</p>
@@ -114,10 +112,8 @@ function MyApprovalsPage() {
 
         <Card className="p-4">
           <div className="flex items-center gap-4">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#index-approvals */}
-            <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#index-approvals */}
-              <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
+            <div className="p-3 bg-success/10 dark:bg-success/30 rounded-lg">
+              <CheckCircle className="h-6 w-6 text-success" />
             </div>
             <div>
               <p className="text-2xl font-bold">0</p>
@@ -130,10 +126,8 @@ function MyApprovalsPage() {
 
         <Card className="p-4">
           <div className="flex items-center gap-4">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#index-approvals */}
-            <div className="p-3 bg-red-100 dark:bg-red-900 rounded-lg">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#index-approvals */}
-              <XCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+            <div className="p-3 bg-danger/10 dark:bg-danger/30 rounded-lg">
+              <XCircle className="h-6 w-6 text-danger" />
             </div>
             <div>
               <p className="text-2xl font-bold">0</p>
