@@ -150,8 +150,7 @@ export function SLAPolicyForm({
                   id="name"
                   {...register('name', { required: true })}
                   placeholder={t('policies.namePlaceholder')}
-                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAPolicyForm */
-                  className={errors.name ? 'border-red-500' : ''}
+                  className={errors.name ? 'border-danger' : ''}
                 />
               </div>
               <div className="space-y-2">
@@ -287,8 +286,7 @@ export function SLAPolicyForm({
                     valueAsNumber: true,
                     min: 1,
                   })}
-                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAPolicyForm */
-                  className={errors.acknowledgment_target ? 'border-red-500' : ''}
+                  className={errors.acknowledgment_target ? 'border-danger' : ''}
                 />
                 <p className="text-xs text-muted-foreground">
                   {t('policies.acknowledgmentTargetHelp')}
@@ -307,8 +305,7 @@ export function SLAPolicyForm({
                     valueAsNumber: true,
                     min: 1,
                   })}
-                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAPolicyForm */
-                  className={errors.resolution_target ? 'border-red-500' : ''}
+                  className={errors.resolution_target ? 'border-danger' : ''}
                 />
                 <p className="text-xs text-muted-foreground">
                   {t('policies.resolutionTargetHelp')}
@@ -422,8 +419,7 @@ export function SLAPolicyForm({
                         size="icon"
                         onClick={() => handleRemoveEscalationLevel(index)}
                       >
-                        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAPolicyForm */}
-                        <Trash2 className="h-4 w-4 text-red-500" />
+                        <Trash2 className="h-4 w-4 text-danger" />
                       </Button>
                     </div>
                   ))}
