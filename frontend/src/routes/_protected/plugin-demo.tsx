@@ -147,11 +147,9 @@ function PluginDemoPage() {
           <CardContent>
             <div className="flex items-center gap-2">
               {isInitialized ? (
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#plugin-demo
-                <CheckCircle className="h-5 w-5 text-green-500" />
+                <CheckCircle className="h-5 w-5 text-success" />
               ) : (
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#plugin-demo
-                <XCircle className="h-5 w-5 text-red-500" />
+                <XCircle className="h-5 w-5 text-danger" />
               )}
               <span className="text-lg font-semibold">
                 {isInitialized
@@ -320,8 +318,7 @@ function PluginDemoPage() {
                             </TableCell>
                             <TableCell>
                               {field.required ? (
-                                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#plugin-demo
-                                <CheckCircle className="h-4 w-4 text-green-500" />
+                                <CheckCircle className="h-4 w-4 text-success" />
                               ) : (
                                 <span className="text-muted-foreground">-</span>
                               )}
@@ -381,8 +378,7 @@ function PluginDemoPage() {
                         {isRTL ? 'قبل الإنشاء' : 'Before Create'}
                       </h4>
                       {selectedPlugin.validation?.beforeCreate ? (
-                        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#plugin-demo
-                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <CheckCircle className="h-5 w-5 text-success" />
                       ) : (
                         <XCircle className="h-5 w-5 text-muted-foreground" />
                       )}
@@ -392,8 +388,7 @@ function PluginDemoPage() {
                         {isRTL ? 'قبل التحديث' : 'Before Update'}
                       </h4>
                       {selectedPlugin.validation?.beforeUpdate ? (
-                        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#plugin-demo
-                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <CheckCircle className="h-5 w-5 text-success" />
                       ) : (
                         <XCircle className="h-5 w-5 text-muted-foreground" />
                       )}
@@ -401,8 +396,7 @@ function PluginDemoPage() {
                     <div className="p-4 rounded-lg border">
                       <h4 className="font-medium mb-2">{isRTL ? 'قبل الحذف' : 'Before Delete'}</h4>
                       {selectedPlugin.validation?.beforeDelete ? (
-                        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#plugin-demo
-                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <CheckCircle className="h-5 w-5 text-success" />
                       ) : (
                         <XCircle className="h-5 w-5 text-muted-foreground" />
                       )}
