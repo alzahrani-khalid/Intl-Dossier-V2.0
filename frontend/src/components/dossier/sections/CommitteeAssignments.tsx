@@ -25,17 +25,19 @@ export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {
   const committees = extension.committee_assignments || []
 
   // Get role icon
+  //
+  // D-58-04-12: 3-role committee icon palette mapped onto semantic tokens.
+  //   chair      (yellow) → warning  (positional/protocol weight)
+  //   vice_chair (blue)   → primary
+  //   member     (gray)   → muted-foreground
   const getRoleIcon = (role: string) => {
     switch (role) {
       case 'chair':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitteeAssignments
-        return <Crown className="h-4 w-4 text-yellow-500" />
+        return <Crown className="h-4 w-4 text-warning" />
       case 'vice_chair':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitteeAssignments
-        return <UserCheck className="h-4 w-4 text-blue-500" />
+        return <UserCheck className="h-4 w-4 text-primary" />
       default:
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitteeAssignments
-        return <User className="h-4 w-4 text-gray-500" />
+        return <User className="h-4 w-4 text-muted-foreground" />
     }
   }
 
@@ -73,8 +75,7 @@ export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {
         {activeCommittees.length > 0 && (
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitteeAssignments */}
-              <span className="h-2 w-2 rounded-full bg-green-500"></span>
+              <span className="h-2 w-2 rounded-full bg-success"></span>
               {t('sections.electedOfficial.activeCommittees')}
             </h3>
 
@@ -105,8 +106,7 @@ export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {
         {inactiveCommittees.length > 0 && (
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitteeAssignments */}
-              <span className="h-2 w-2 rounded-full bg-gray-400"></span>
+              <span className="h-2 w-2 rounded-full bg-muted-foreground"></span>
               {t('sections.electedOfficial.pastCommittees')}
             </h3>
 
@@ -144,8 +144,7 @@ export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {
             </div>
             {activeCommittees.some((c) => c.role === 'chair') && (
               <div className="flex items-center gap-2">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitteeAssignments */}
-                <Crown className="h-4 w-4 text-yellow-500" />
+                <Crown className="h-4 w-4 text-warning" />
                 <span>
                   {t('sections.electedOfficial.chairPositions', {
                     count: activeCommittees.filter((c) => c.role === 'chair').length,
