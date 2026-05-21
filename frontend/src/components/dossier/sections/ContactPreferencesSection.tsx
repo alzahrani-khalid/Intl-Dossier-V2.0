@@ -24,23 +24,25 @@ export function ContactPreferencesSection({ dossier }: ContactPreferencesSection
   const preferences = extension.contact_preferences
 
   // Get channel icon
+  //
+  // D-58-04-13: 4-channel contact palette mapped onto semantic tokens.
+  //   email         (blue)   → primary
+  //   phone         (green)  → success
+  //   in_person     (purple) → accent  (D-07 collision: standalone purple → brand accent)
+  //   formal_letter (orange) → warning
+  //   default       (gray)   → muted-foreground
   const getChannelIcon = (channel?: string) => {
     switch (channel) {
       case 'email':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection
-        return <Mail className="h-5 w-5 text-blue-500" />
+        return <Mail className="h-5 w-5 text-primary" />
       case 'phone':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection
-        return <Phone className="h-5 w-5 text-green-500" />
+        return <Phone className="h-5 w-5 text-success" />
       case 'in_person':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection
-        return <Users className="h-5 w-5 text-purple-500" />
+        return <Users className="h-5 w-5 text-accent" />
       case 'formal_letter':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection
-        return <FileText className="h-5 w-5 text-orange-500" />
+        return <FileText className="h-5 w-5 text-warning" />
       default:
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection
-        return <Mail className="h-5 w-5 text-gray-500" />
+        return <Mail className="h-5 w-5 text-muted-foreground" />
     }
   }
 
@@ -110,8 +112,7 @@ export function ContactPreferencesSection({ dossier }: ContactPreferencesSection
           {preferences?.best_time && (
             <div className="p-4 rounded-lg bg-muted/50">
               <div className="flex items-center gap-3 mb-2">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection */}
-                <Clock className="h-5 w-5 text-indigo-500" />
+                <Clock className="h-5 w-5 text-accent" />
                 <span className="text-sm font-medium text-muted-foreground">
                   {t('sections.electedOfficial.bestTime')}
                 </span>
@@ -129,8 +130,7 @@ export function ContactPreferencesSection({ dossier }: ContactPreferencesSection
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               {t('sections.electedOfficial.schedulingNotes')}
             </h3>
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection */}
-            <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900">
+            <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
               <p className="text-sm leading-relaxed">{schedulingNotes}</p>
             </div>
           </div>
@@ -142,8 +142,7 @@ export function ContactPreferencesSection({ dossier }: ContactPreferencesSection
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               {t('sections.electedOfficial.protocolNotes')}
             </h3>
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ContactPreferencesSection */}
-            <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900">
+            <div className="p-3 rounded-lg bg-warning/10 border border-warning/30">
               <p className="text-sm leading-relaxed">{protocolNotes}</p>
             </div>
           </div>
