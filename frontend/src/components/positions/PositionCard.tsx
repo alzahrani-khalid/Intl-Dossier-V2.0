@@ -78,18 +78,15 @@ export const PositionCard: React.FC<PositionCardProps> = ({
     const config = {
       primary: {
         label: 'Primary',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PositionCard
-        className: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+        className: 'bg-accent/10 text-accent dark:bg-accent/30',
       },
       related: {
         label: 'Related',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PositionCard
-        className: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
+        className: 'bg-muted/10 text-muted-foreground dark:bg-muted/30',
       },
       reference: {
         label: 'Reference',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PositionCard
-        className: 'bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+        className: 'bg-muted/5 text-muted-foreground dark:bg-muted/20',
       },
     }
 
