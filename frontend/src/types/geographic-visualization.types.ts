@@ -265,36 +265,30 @@ export const COUNTRY_COORDINATES: Record<string, GeoCoordinates> = {
 // Intensity Calculation Helpers
 // ============================================================================
 
-/**
- * Get color for intensity level
- */
+// D-58-06-A-17: INTENSITY heatmap — 5-step single-hue gradient (originally
+// gray → blue-300 → blue-500 → blue-700 → blue-900). Maps to muted + accent
+// using color-mix() for opacity steps that work with raw CSS values (D3/map
+// libraries require raw color strings, not Tailwind classes).
 export const INTENSITY_COLORS: Record<EngagementIntensity, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
-  none: '#E5E7EB', // gray-200
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
-  low: '#93C5FD', // blue-300
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
-  medium: '#3B82F6', // blue-500
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
-  high: '#1D4ED8', // blue-700
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
-  very_high: '#1E3A8A', // blue-900
+  none: 'var(--color-muted)',
+  low: 'color-mix(in oklch, var(--color-accent) 30%, transparent)',
+  medium: 'var(--color-accent)',
+  high: 'color-mix(in oklch, var(--color-accent) 80%, black 20%)',
+  very_high: 'color-mix(in oklch, var(--color-accent) 60%, black 40%)',
 }
 
-/**
- * Get region colors for map
- */
+// D-58-06-A-17: REGION palette — 5 continents mapped to semantic CSS vars.
+// D-07 collision (blue + violet + pink as semantic siblings):
+//   asia (blue)    → --color-accent
+//   europe (violet) → --color-secondary
+//   oceania (pink)  → color-mix darker secondary [D-07 sibling step via mix]
+// africa (amber) → warning. americas (emerald) → success.
 export const REGION_COLORS: Record<CountryRegion, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
-  africa: '#F59E0B', // amber-500
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
-  americas: '#10B981', // emerald-500
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
-  asia: '#3B82F6', // blue-500
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
-  europe: '#8B5CF6', // violet-500
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#geographic-visualization.types
-  oceania: '#EC4899', // pink-500
+  africa: 'var(--heroui-warning)',
+  americas: 'var(--heroui-success)',
+  asia: 'var(--color-accent)',
+  europe: 'var(--color-secondary)',
+  oceania: 'color-mix(in oklch, var(--color-secondary) 70%, black 30%)',
 }
 
 // ============================================================================
