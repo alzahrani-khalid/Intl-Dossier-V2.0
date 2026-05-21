@@ -104,21 +104,17 @@ function ApiErrorFallback({
       <div className="text-center max-w-md">
         <div className="flex justify-center mb-4">
           {isNetworkError ? (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApiErrorBoundary
-            <WifiOff className="h-12 w-12 text-orange-500" />
+            <WifiOff className="h-12 w-12 text-warning" />
           ) : (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApiErrorBoundary
-            <AlertCircle className="h-12 w-12 text-red-500" />
+            <AlertCircle className="h-12 w-12 text-danger" />
           )}
         </div>
 
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApiErrorBoundary */}
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+        <h3 className="text-lg font-semibold text-ink mb-2">
           {isNetworkError ? 'Connection Error' : 'API Error'}
         </h3>
 
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApiErrorBoundary */}
-        <p className="text-gray-600 dark:text-gray-400 mb-4">
+        <p className="text-ink-mute mb-4">
           {isNetworkError
             ? 'Unable to connect to the server. Please check your internet connection.'
             : 'Something went wrong while processing your request.'}
@@ -140,12 +136,10 @@ function ApiErrorFallback({
 
         {process.env.NODE_ENV === 'development' && error && (
           <details className="mt-4 text-start">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApiErrorBoundary */}
-            <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
+            <summary className="cursor-pointer text-sm text-ink-mute hover:text-ink">
               Error Details
             </summary>
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ApiErrorBoundary */}
-            <pre className="mt-2 p-2 bg-gray-100 dark:bg-gray-700 rounded text-xs overflow-auto">
+            <pre className="mt-2 p-2 bg-muted/10 dark:bg-muted/30 rounded text-xs overflow-auto">
               {error.message}
             </pre>
           </details>
