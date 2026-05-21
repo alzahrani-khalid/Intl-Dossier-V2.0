@@ -19,32 +19,27 @@ import { useDirection } from '@/hooks/useDirection'
 const LINK_TYPE_CONFIG = {
   primary: {
     variant: 'default' as const,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LinkTypeBadge
-    colorClass: 'bg-blue-600 hover:bg-blue-700 text-white',
+    colorClass: 'bg-accent hover:bg-accent/90 text-accent-foreground',
     icon: '⭐',
   },
   related: {
     variant: 'secondary' as const,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LinkTypeBadge
-    colorClass: 'bg-slate-600 hover:bg-slate-700 text-white',
+    colorClass: 'bg-muted hover:bg-muted/90 text-ink',
     icon: '🔗',
   },
   requested: {
     variant: 'outline' as const,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LinkTypeBadge
-    colorClass: 'bg-purple-100 hover:bg-purple-200 text-purple-800 border-purple-300',
+    colorClass: 'bg-secondary hover:bg-secondary/80 text-secondary-foreground border-secondary',
     icon: '📋',
   },
   mentioned: {
     variant: 'outline' as const,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LinkTypeBadge
-    colorClass: 'bg-amber-100 hover:bg-amber-200 text-amber-800 border-amber-300',
+    colorClass: 'bg-warning/10 hover:bg-warning/20 text-warning border-warning/30',
     icon: '💬',
   },
   assigned_to: {
     variant: 'outline' as const,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LinkTypeBadge
-    colorClass: 'bg-green-100 hover:bg-green-200 text-green-800 border-green-300',
+    colorClass: 'bg-success/10 hover:bg-success/20 text-success border-success/30',
     icon: '👤',
   },
 } as const
