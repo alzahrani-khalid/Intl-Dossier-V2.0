@@ -297,12 +297,9 @@ export function AIExtractionButton({
               )}
 
               {status === 'completed' && (
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AIExtractionButton
-                <Alert className="border-green-500">
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AIExtractionButton */}
-                  <CheckCircle className="size-4 text-green-500" />
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AIExtractionButton */}
-                  <AlertDescription className="text-green-700">
+                <Alert className="border-success">
+                  <CheckCircle className="size-4 text-success" />
+                  <AlertDescription className="text-success">
                     {t('afterActions.ai.completed')}
                   </AlertDescription>
                 </Alert>
