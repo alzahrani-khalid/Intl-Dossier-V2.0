@@ -192,15 +192,13 @@ export function AIFieldAssist({
                 />
                 <p className="text-xs text-muted-foreground">
                   {description.length < 10 ? (
-                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AIFieldAssist
-                    <span className="text-amber-600 dark:text-amber-400">
+                    <span className="text-warning">
                       {isRTL
                         ? `أدخل ${10 - description.length} حرف إضافي على الأقل`
                         : `Enter at least ${10 - description.length} more characters`}
                     </span>
                   ) : (
-                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AIFieldAssist
-                    <span className="text-green-600 dark:text-green-400">
+                    <span className="text-success">
                       {isRTL ? 'جاهز للتوليد' : 'Ready to generate'}
                     </span>
                   )}
@@ -269,13 +267,11 @@ export function AIFieldAssist({
                 >
                   <div className="flex items-center justify-between gap-2">
                     <h4 className="font-medium text-sm flex items-center gap-2">
-                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AIFieldAssist */}
-                      <Check className="h-4 w-4 text-green-600" />
+                      <Check className="h-4 w-4 text-success" />
                       {isRTL ? 'الحقول المولدة:' : 'Generated Fields:'}
                     </h4>
                     {hasApplied && (
-                      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AIFieldAssist
-                      <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
+                      <Badge variant="secondary" className="text-xs bg-success/10 text-success">
                         {isRTL ? 'تم التطبيق' : 'Applied'}
                       </Badge>
                     )}
