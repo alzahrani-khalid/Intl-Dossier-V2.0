@@ -64,12 +64,10 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
       {/* Header Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="space-y-1">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierPositionsTab */}
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          <h2 className="text-lg font-semibold text-foreground">
             {t('positions:dossier_tab.title')}
           </h2>
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierPositionsTab */}
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-muted-foreground">
             {t('positions:dossier_tab.subtitle', { count: totalCount })}
           </p>
         </div>
@@ -83,8 +81,7 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
       </div>
 
       {/* Search and Filters */}
-      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierPositionsTab */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+      <div className="bg-card rounded-lg border border-border p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Search Input */}
           <div className="lg:col-span-2">
@@ -157,12 +154,10 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
       {/* Positions List */}
       {error ? (
         <div
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierPositionsTab
-          className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center"
+          className="bg-danger/5 dark:bg-danger/20 border border-danger/20 dark:border-danger/70 rounded-lg p-6 text-center"
           role="alert"
         >
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierPositionsTab */}
-          <p className="text-sm text-red-700 dark:text-red-300">
+          <p className="text-sm text-danger">
             {error instanceof Error ? error.message : t('positions:dossier_tab.error_loading')}
           </p>
         </div>
