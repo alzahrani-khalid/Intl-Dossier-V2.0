@@ -193,8 +193,7 @@ export function AfterActionForm({
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               {t('afterActions.form.title')}
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AfterActionForm-after-action-form */}
-              {formData.is_confidential && <Shield className="size-5 text-amber-500" />}
+              {formData.is_confidential && <Shield className="size-5 text-warning" />}
             </CardTitle>
             {!readOnly && <AIExtractionButton onExtract={handleAIExtraction as any} />}
           </div>
@@ -246,18 +245,14 @@ export function AfterActionForm({
               htmlFor="confidential"
               className="flex cursor-pointer items-center gap-2 text-sm font-normal"
             >
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AfterActionForm-after-action-form */}
-              {formData.is_confidential && <Shield className="size-4 text-amber-500" />}
+              {formData.is_confidential && <Shield className="size-4 text-warning" />}
               {t('afterActions.form.confidential')}
             </Label>
           </div>
           {formData.is_confidential && (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AfterActionForm-after-action-form
-            <Alert className="border-amber-500">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AfterActionForm-after-action-form */}
-              <Shield className="size-4 text-amber-500" />
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AfterActionForm-after-action-form */}
-              <AlertDescription className="text-amber-700">
+            <Alert className="border-warning">
+              <Shield className="size-4 text-warning" />
+              <AlertDescription className="text-warning">
                 {t('afterActions.form.confidentialWarning')}
               </AlertDescription>
             </Alert>
