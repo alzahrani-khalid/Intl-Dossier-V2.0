@@ -212,6 +212,8 @@ export function ChatDock({ onCitationClick, className }: ChatDockProps) {
       <Button
         onClick={toggleOpen}
         size="lg"
+        aria-label={isOpen ? t('close', 'Close') : t('open', 'Open AI Assistant')}
+        aria-expanded={isOpen}
         className={cn(
           'h-14 w-14 rounded-full shadow-lg',
           'transition-all duration-300',

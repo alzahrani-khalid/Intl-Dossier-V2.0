@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { AlertTriangle, Bot } from 'lucide-react'
 import { useTriageSuggestions, useApplyTriage } from '@/hooks/useIntakeApi'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -101,15 +102,14 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
     )
   }
 
+  // D-58-02-01: confidence-tier mapping — low collapses to danger (skeptical-of-AI
+  // semantics), medium → warning, high → success, unknown → ink-faint. Preserves
+  // the three-tier visual distinction. See 58-02-PLAN.md.
   const getConfidenceColor = (score?: number): string => {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-    if (!score) return 'text-gray-500'
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-    if (score >= 0.8) return 'text-green-600'
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-    if (score >= 0.6) return 'text-yellow-600'
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-    return 'text-orange-600'
+    if (!score) return 'text-ink-faint'
+    if (score >= 0.8) return 'text-success'
+    if (score >= 0.6) return 'text-warning'
+    return 'text-danger'
   }
 
   const getConfidenceLabel = (score?: number): string => {
@@ -122,10 +122,8 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
   if (isLoading) {
     return (
       <div className="py-8 text-center">
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-        <div className="inline-block size-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-        <p className="mt-4 text-gray-600 dark:text-gray-400">
+        <div className="inline-block size-8 animate-spin rounded-full border-b-2 border-primary"></div>
+        <p className="mt-4 text-ink-mute">
           {t('triage.loadingSuggestions', 'Analyzing ticket...')}
         </p>
       </div>
@@ -136,18 +134,15 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
     return (
       <div className="space-y-4">
         {!aiAvailable && (
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-          <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-900/20">
+          <div className="rounded-lg border border-warning/30 bg-warning/10 p-4">
             <div className="mb-2 flex items-center gap-2">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-              <span className="text-xl text-yellow-600 dark:text-yellow-400">⚠️</span>
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-              <h3 className="font-semibold text-yellow-800 dark:text-yellow-300">
+              {/* D-58-02-02: ⚠️ emoji replaced with AlertTriangle lucide icon (CLAUDE.md no-emoji rule). */}
+              <AlertTriangle className="h-5 w-5 text-warning" aria-hidden="true" />
+              <h3 className="font-semibold text-warning">
                 {t('triage.aiUnavailable', 'AI Triage Temporarily Unavailable')}
               </h3>
             </div>
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-            <p className="text-sm text-yellow-700 dark:text-yellow-400">
+            <p className="text-sm text-warning">
               {t(
                 'triage.aiUnavailableMessage',
                 'AI triage suggestions are currently unavailable. Please perform manual triage or try again later.',
@@ -157,17 +152,14 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
         )}
 
         {/* Fallback to manual triage */}
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-        <div className="rounded-lg bg-gray-50 p-6 dark:bg-gray-900">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-          <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+        <div className="rounded-lg bg-muted p-6">
+          <h3 className="mb-4 text-lg font-semibold text-ink">
             {t('triage.manualTriage', 'Manual Triage')}
           </h3>
 
           <div className="space-y-4">
             <div>
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-ink">
                 {t('triage.sensitivity', 'Sensitivity Level')}
               </label>
               <select
@@ -175,8 +167,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 onChange={(e) =>
                   setOverrideValues({ ...overrideValues, suggested_sensitivity: e.target.value })
                 }
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="w-full rounded-md border-line bg-surface text-ink"
               >
                 <option value="">{t('common.select', 'Select...')}</option>
                 <option value="public">{t('triage.sensitivityLevels.public', 'Public')}</option>
@@ -191,8 +182,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
             </div>
 
             <div>
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-ink">
                 {t('triage.urgency', 'Urgency')}
               </label>
               <select
@@ -200,8 +190,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 onChange={(e) =>
                   setOverrideValues({ ...overrideValues, suggested_urgency: e.target.value })
                 }
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="w-full rounded-md border-line bg-surface text-ink"
               >
                 <option value="">{t('common.select', 'Select...')}</option>
                 <option value="low">{t('queue.urgency.low', 'Low')}</option>
@@ -212,8 +201,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
             </div>
 
             <div>
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-ink">
                 {t('triage.assignedUnit', 'Assigned Unit')}
               </label>
               <input
@@ -223,14 +211,12 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                   setOverrideValues({ ...overrideValues, suggested_unit: e.target.value })
                 }
                 placeholder={t('triage.assignedUnitPlaceholder', 'Enter unit name')}
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="w-full rounded-md border-line bg-surface text-ink"
               />
             </div>
 
             <div>
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-ink">
                 {t('triage.reason', 'Reason')}
               </label>
               <textarea
@@ -238,16 +224,14 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 onChange={(e) => setOverrideReason(e.target.value)}
                 placeholder={t('triage.reasonPlaceholder', 'Explain your triage decision')}
                 rows={3}
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="w-full rounded-md border-line bg-surface text-ink"
               />
             </div>
 
             <button
               onClick={handleApplyOverride}
               disabled={applyTriageMutation.isPending || !overrideReason.trim()}
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-              className="w-full rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {applyTriageMutation.isPending
                 ? t('triage.applying', 'Applying...')
@@ -262,29 +246,24 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
   return (
     <div className="space-y-6">
       {/* AI Status Banner */}
-      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-      <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
+      <div className="rounded-lg border border-info/30 bg-info/10 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-            <span className="text-xl text-blue-600 dark:text-blue-400">🤖</span>
+            {/* CLAUDE.md no-emoji rule: 🤖 replaced with Bot lucide icon. */}
+            <Bot className="h-5 w-5 text-info" aria-hidden="true" />
             <div>
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-              <h3 className="font-semibold text-blue-800 dark:text-blue-300">
+              <h3 className="font-semibold text-info">
                 {t('triage.aiSuggestions', 'AI-Powered Suggestions')}
               </h3>
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-              <p className="text-sm text-blue-600 dark:text-blue-400">
+              <p className="text-sm text-info">
                 {t('triage.modelInfo', 'Model')}: {suggestions.modelInfo?.name || 'Unknown'}
               </p>
             </div>
           </div>
           <div
-            /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */
             className={`rounded-full px-3 py-1 text-sm font-semibold ${getConfidenceColor(
               suggestions.confidenceScores?.type,
-            )} bg-white dark:bg-gray-800`}
-            /* eslint-enable no-restricted-syntax */
+            )} bg-surface`}
           >
             {getConfidenceLabel(suggestions.confidenceScores?.type)}
           </div>
@@ -296,70 +275,52 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
         <div className="space-y-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {suggestions.requestType && (
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-              <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <div className="rounded-lg bg-muted p-4">
+                <label className="mb-1 block text-sm font-medium text-ink">
                   {t('triage.requestType', 'Request Type')}
                 </label>
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-                <p className="font-semibold text-gray-900 dark:text-white">
+                <p className="font-semibold text-ink">
                   {t(`intake.form.requestType.options.${suggestions.requestType}`)}
                 </p>
               </div>
             )}
 
             {suggestions.sensitivity && (
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-              <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <div className="rounded-lg bg-muted p-4">
+                <label className="mb-1 block text-sm font-medium text-ink">
                   {t('triage.sensitivity', 'Sensitivity')}
                 </label>
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-                <p className="font-semibold capitalize text-gray-900 dark:text-white">
-                  {suggestions.sensitivity}
-                </p>
+                <p className="font-semibold capitalize text-ink">{suggestions.sensitivity}</p>
               </div>
             )}
 
             {suggestions.urgency && (
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-              <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <div className="rounded-lg bg-muted p-4">
+                <label className="mb-1 block text-sm font-medium text-ink">
                   {t('triage.urgency', 'Urgency')}
                 </label>
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-                <p className="font-semibold text-gray-900 dark:text-white">
+                <p className="font-semibold text-ink">
                   {t(`queue.urgency.${suggestions.urgency}`)}
                 </p>
               </div>
             )}
 
             {suggestions.suggestedUnit && (
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-              <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <div className="rounded-lg bg-muted p-4">
+                <label className="mb-1 block text-sm font-medium text-ink">
                   {t('triage.assignedUnit', 'Assigned Unit')}
                 </label>
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-                <p className="font-semibold text-gray-900 dark:text-white">
-                  {suggestions.suggestedUnit}
-                </p>
+                <p className="font-semibold text-ink">{suggestions.suggestedUnit}</p>
               </div>
             )}
           </div>
 
           {/* Action Buttons */}
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-          <div className="flex gap-3 border-t border-gray-200 pt-4 dark:border-gray-700">
+          <div className="flex gap-3 border-t border-line pt-4">
             <button
               onClick={handleAcceptSuggestions}
               disabled={applyTriageMutation.isPending}
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-              className="flex-1 rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700 disabled:opacity-50"
+              className="flex-1 rounded-md bg-success px-4 py-2 text-success-foreground hover:bg-success/90 disabled:opacity-50"
             >
               {applyTriageMutation.isPending
                 ? t('triage.applying', 'Applying...')
@@ -377,8 +338,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                   confidence_score: suggestions.confidenceScores?.type,
                 })
               }}
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-              className="flex-1 rounded-md bg-yellow-600 px-4 py-2 text-white hover:bg-yellow-700"
+              className="flex-1 rounded-md bg-warning px-4 py-2 text-warning-foreground hover:bg-warning/90"
             >
               {t('triage.override', 'Override')}
             </button>
@@ -386,15 +346,13 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
         </div>
       ) : (
         <div className="space-y-4">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-lg font-semibold text-ink">
             {t('triage.overrideTitle', 'Override AI Suggestions')}
           </h3>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-ink">
                 {t('triage.sensitivity', 'Sensitivity Level')}
               </label>
               <select
@@ -402,8 +360,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 onChange={(e) =>
                   setOverrideValues({ ...overrideValues, suggested_sensitivity: e.target.value })
                 }
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="w-full rounded-md border-line bg-surface text-ink"
               >
                 <option value="public">{t('triage.sensitivityLevels.public', 'Public')}</option>
                 <option value="internal">
@@ -417,8 +374,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
             </div>
 
             <div>
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-ink">
                 {t('triage.urgency', 'Urgency')}
               </label>
               <select
@@ -426,8 +382,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 onChange={(e) =>
                   setOverrideValues({ ...overrideValues, suggested_urgency: e.target.value })
                 }
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="w-full rounded-md border-line bg-surface text-ink"
               >
                 <option value="low">{t('queue.urgency.low', 'Low')}</option>
                 <option value="medium">{t('queue.urgency.medium', 'Medium')}</option>
@@ -437,8 +392,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
             </div>
 
             <div className="md:col-span-2">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-ink">
                 {t('triage.assignedUnit', 'Assigned Unit')}
               </label>
               <input
@@ -447,14 +401,12 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 onChange={(e) =>
                   setOverrideValues({ ...overrideValues, suggested_unit: e.target.value })
                 }
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="w-full rounded-md border-line bg-surface text-ink"
               />
             </div>
 
             <div className="md:col-span-2">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-ink">
                 {t('triage.overrideReason', 'Reason for Override')} *
               </label>
               <textarea
@@ -465,19 +417,16 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                   'Explain why you are overriding the AI suggestions',
                 )}
                 rows={3}
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="w-full rounded-md border-line bg-surface text-ink"
               />
             </div>
           </div>
 
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel */}
-          <div className="flex gap-3 border-t border-gray-200 pt-4 dark:border-gray-700">
+          <div className="flex gap-3 border-t border-line pt-4">
             <button
               onClick={handleApplyOverride}
               disabled={applyTriageMutation.isPending || !overrideReason.trim()}
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-              className="flex-1 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
+              className="flex-1 rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
             >
               {applyTriageMutation.isPending
                 ? t('triage.applying', 'Applying...')
@@ -489,8 +438,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 setOverrideValues({})
                 setOverrideReason('')
               }}
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TriagePanel
-              className="rounded-md border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+              className="rounded-md border border-line px-4 py-2 text-ink hover:bg-muted"
             >
               {t('common.cancel', 'Cancel')}
             </button>

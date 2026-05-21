@@ -411,26 +411,19 @@ function ActionableTipsSection({
 
       {/* Show filter removal button if filters are active */}
       {hasFilters && onClearFilters && (
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligentSearchSuggestions
-        <div className="flex items-center gap-3 p-3 rounded-lg border bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligentSearchSuggestions */}
-          <Filter className="h-5 w-5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+        <div className="flex items-center gap-3 p-3 rounded-lg border bg-warning/10 border-warning/30">
+          <Filter className="h-5 w-5 text-warning flex-shrink-0" />
           <div className="flex-1">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligentSearchSuggestions */}
-            <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+            <p className="text-sm font-medium text-warning">
               {t('noResults.filtersActive', { count: activeFiltersCount })}
             </p>
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligentSearchSuggestions */}
-            <p className="text-xs text-amber-600 dark:text-amber-400">
-              {t('noResults.tryRemovingFilters')}
-            </p>
+            <p className="text-xs text-warning">{t('noResults.tryRemovingFilters')}</p>
           </div>
           <Button
             variant="outline"
             size="sm"
             onClick={onClearFilters}
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IntelligentSearchSuggestions
-            className="min-h-9 border-amber-300 text-amber-700 hover:bg-amber-100 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/30"
+            className="min-h-9 border-warning/30 text-warning hover:bg-warning/20"
           >
             <X className="h-4 w-4 me-1" />
             {t('noResults.clearFilters')}

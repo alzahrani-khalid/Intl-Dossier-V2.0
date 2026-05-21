@@ -66,11 +66,9 @@ export function AutoSaveIndicator({ status, className, compact = false }: AutoSa
     },
     saved: {
       icon: Check,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AutoSaveIndicator
-      iconClass: 'text-green-500',
+      iconClass: 'text-success',
       text: compact ? t('indicator.saved') : t('indicator.savedTime', { time: lastSavedText }),
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AutoSaveIndicator
-      containerClass: 'text-green-600 dark:text-green-400',
+      containerClass: 'text-success',
     },
     unsaved: {
       icon: Cloud,
@@ -80,11 +78,9 @@ export function AutoSaveIndicator({ status, className, compact = false }: AutoSa
     },
     error: {
       icon: AlertCircle,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AutoSaveIndicator
-      iconClass: 'text-red-500',
+      iconClass: 'text-danger',
       text: compact ? t('indicator.error') : t('indicator.errorDetail'),
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AutoSaveIndicator
-      containerClass: 'text-red-600 dark:text-red-400',
+      containerClass: 'text-danger',
     },
     unavailable: {
       icon: CloudOff,

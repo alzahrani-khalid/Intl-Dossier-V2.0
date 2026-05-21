@@ -186,8 +186,7 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
 
       {/* Scan Result */}
       {scanMutation.isSuccess && scanMutation.data && (
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DuplicateCandidatesList
-        <div className="rounded-lg border bg-green-50 p-4 text-green-800">
+        <div className="rounded-lg border border-success/30 bg-success/10 p-4 text-success">
           {t('scan_complete', 'Scan complete.')} {scanMutation.data.candidates_found}{' '}
           {t('new_candidates_found', 'new candidates found.')}
         </div>

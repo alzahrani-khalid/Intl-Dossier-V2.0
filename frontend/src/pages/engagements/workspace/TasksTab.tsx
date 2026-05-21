@@ -135,7 +135,11 @@ export default function TasksTab(): ReactElement {
   }
 
   return (
-    <div className="space-y-4 p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      className="space-y-4 p-4 sm:p-6"
+      dir={isRTL ? 'rtl' : 'ltr'}
+      data-testid="tasks-tab-region"
+    >
       {/* Stats bar */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
@@ -143,7 +147,11 @@ export default function TasksTab(): ReactElement {
             {stats.total} {t('tabs.tasks').toLowerCase()}
           </span>
           <div className="flex items-center gap-2 min-w-[120px]">
-            <Progress value={stats.progressPercentage} className="h-2 flex-1" />
+            <Progress
+              value={stats.progressPercentage}
+              className="h-2 flex-1"
+              aria-label={t('overview.taskProgress')}
+            />
             <span className="text-xs font-medium text-muted-foreground">
               {stats.progressPercentage}%
             </span>

@@ -15,11 +15,11 @@
 
 ### Security / RLS
 
-- [ ] **RLS-01**: D-54-04 closed — `countries` removed from `sensitiveTables` projection in `rls-audit.test.ts`; test passes for `countries` without acknowledged-fail entry (pre-existing Phase 03/04 vintage row resolved)
+- [x] **RLS-01**: D-54-04 closed — `countries` moved from `sensitiveTables` to `globalReferenceTables` projection in `rls-audit.test.ts` (authenticated-read + role-gated writes tier); test passes for `countries` without acknowledged-fail entry (pre-existing Phase 03/04 vintage row resolved) — Phase 56 Plan 01 (2026-05-18): split audit tiers, applied staging reconciliation migration, and reran `tests/security/rls-audit.test.ts` green
 
 ### Type correctness (continues TYPE-04 from v6.2)
 
-- [ ] **TYPE-05**: `useStakeholderInteractionMutations` shim removed; consumers typed at source against underlying domain hook return shape — last v6.2 typed-shim holdover retired per "typed-at-source over consumer cast" decision
+- [x] **TYPE-05**: `useStakeholderInteractionMutations` shim removed; consumers typed at source against underlying domain hook return shape — last v6.2 typed-shim holdover retired per "typed-at-source over consumer cast" decision — Phase 56 Plan 02 (2026-05-18): `UseStakeholderInteractionMutationsReturn` exported from source hook, deprecated consumer shim deleted, focused Vitest coverage added, and `phase-56-base` SSH-signed
 
 ### Phase 52 deviation closure (D-19..D-23)
 
@@ -63,8 +63,8 @@
 | ----------- | -------- | ------------------------------------------------------------------------------------------------------------------- |
 | MERGE-01    | Phase 55 | ✓ Complete (2026-05-17, Plan 01)                                                                                    |
 | MERGE-02    | Phase 55 | ✓ Complete (2026-05-18, Plans 02 + 03 + 04 combined — smoke PR #18 BLOCKED proof captured; PR #19 evidence on main) |
-| RLS-01      | Phase 56 | Pending                                                                                                             |
-| TYPE-05     | Phase 56 | Pending                                                                                                             |
+| RLS-01      | Phase 56 | ✓ Complete (2026-05-18, Plan 01 — RLS audit tiers split; staging countries policies reconciled)                     |
+| TYPE-05     | Phase 56 | ✓ Complete (2026-05-18, Plan 02 — source-typed return shape; consumer shim retired; phase-56-base signed)           |
 | DEVIATE-01  | Phase 57 | Pending                                                                                                             |
 | DEVIATE-02  | Phase 57 | Pending                                                                                                             |
 | DEVIATE-03  | Phase 57 | Pending                                                                                                             |
@@ -82,4 +82,4 @@
 
 _Created: 2026-05-17 — v6.4 milestone definition via `/gsd:new-milestone` (research skipped; scope sourced from `/gsd:explore` shape note)._
 _Updated: 2026-05-17 — Traceability table populated by `gsd-roadmapper` (Phases 55-59)._
-_Updated: 2026-05-18 — Phase 55 complete: MERGE-01 + MERGE-02 both checked off; traceability updated. 12/14 v6.4 requirements still pending across Phases 56-59._
+_Updated: 2026-05-18 — Phase 56 complete: RLS-01 + TYPE-05 both checked off; traceability updated. 10/14 v6.4 requirements still pending across Phases 57-59._

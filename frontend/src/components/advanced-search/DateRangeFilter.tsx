@@ -76,10 +76,7 @@ export function DateRangeFilter({ value, onChange, className }: DateRangeFilterP
 
   return (
     <div className={cn('flex flex-col gap-2', className)}>
-      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DateRangeFilter */}
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-        {t('dateRange.title')}
-      </label>
+      <label className="text-sm font-medium text-ink-mute">{t('dateRange.title')}</label>
 
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
@@ -99,8 +96,7 @@ export function DateRangeFilter({ value, onChange, className }: DateRangeFilterP
                     e.stopPropagation()
                     handleClear()
                   }}
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DateRangeFilter
-                  className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+                  className="p-1 rounded-full hover:bg-muted"
                   aria-label={t('dateRange.clear')}
                 >
                   <X className="h-3 w-3" />
@@ -149,10 +145,7 @@ export function DateRangeFilter({ value, onChange, className }: DateRangeFilterP
                         onClick={() => handlePresetClick(preset)}
                         className={cn(
                           'w-full text-start px-3 py-2 rounded-md text-sm transition-colors min-h-10',
-                          isSelected
-                            ? 'bg-primary text-primary-foreground'
-                            : /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DateRangeFilter */
-                              'hover:bg-gray-100 dark:hover:bg-gray-800',
+                          isSelected ? 'bg-primary text-primary-foreground' : 'hover:bg-muted',
                         )}
                       >
                         {label}
@@ -165,8 +158,7 @@ export function DateRangeFilter({ value, onChange, className }: DateRangeFilterP
               {mode === 'custom' && (
                 <div className="flex flex-col gap-3 mt-3">
                   <div>
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DateRangeFilter */}
-                    <label className="text-xs font-medium text-gray-500 mb-1 block">
+                    <label className="text-xs font-medium text-ink-mute mb-1 block">
                       {t('dateRange.from')}
                     </label>
                     <CalendarComponent
@@ -177,8 +169,7 @@ export function DateRangeFilter({ value, onChange, className }: DateRangeFilterP
                     />
                   </div>
                   <div>
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DateRangeFilter */}
-                    <label className="text-xs font-medium text-gray-500 mb-1 block">
+                    <label className="text-xs font-medium text-ink-mute mb-1 block">
                       {t('dateRange.to')}
                     </label>
                     <CalendarComponent

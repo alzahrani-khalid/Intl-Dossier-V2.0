@@ -110,8 +110,7 @@ function FilterOption({ option, isSelected, onClick, isRTL, isLoading }: FilterO
       onClick={onClick}
       className={cn(
         'w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors min-h-10',
-        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdaptiveFilters */
-        'text-start hover:bg-gray-100 dark:hover:bg-gray-800',
+        'text-start hover:bg-muted',
         isSelected && 'bg-primary/10 text-primary',
       )}
       disabled={option.count === 0}
@@ -169,11 +168,7 @@ function FilterSection({
   return (
     <Collapsible defaultOpen={activeCount > 0}>
       <CollapsibleTrigger asChild>
-        <Button
-          variant="ghost"
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdaptiveFilters
-          className="w-full justify-between px-3 min-h-11 hover:bg-gray-100 dark:hover:bg-gray-800"
-        >
+        <Button variant="ghost" className="w-full justify-between px-3 min-h-11 hover:bg-muted">
           <span className="flex items-center gap-2">
             {icon}
             <span className="font-medium">{title}</span>

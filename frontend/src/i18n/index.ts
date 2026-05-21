@@ -457,7 +457,8 @@ i18n
     },
 
     detection: {
-      order: ['localStorage', 'cookie', 'htmlTag', 'navigator'],
+      // 'querystring' first so Playwright visual specs can flip language via ?lng=ar at first paint (Phase 57 D-22 fix)
+      order: ['querystring', 'localStorage', 'cookie', 'htmlTag', 'navigator'],
       caches: ['localStorage', 'cookie'],
       lookupLocalStorage: 'id.locale',
       lookupCookie: 'id.locale',

@@ -2,8 +2,16 @@
  * Phase 39 Plan 02 — BoardColumn widget (BOARD-01 column shell).
  *
  * Renders one kanban column: header (title + mono digit count + per-column add
- * button) over a list of KCards. When dndEnabled, the kcard list is wrapped in
- * a SortableContext so 39-04 can wire DnD without touching this file.
+ * button) over a list of KCards.
+ *
+ * Phase 57 D-21 / D-57-07: BoardColumn now consumes KanbanCards + KanbanCard
+ * from the shared @/components/kanban primitive instead of importing
+ * @dnd-kit/sortable directly. KanbanCards owns the SortableContext + per-card
+ * useSortable wiring + data-card-id attribute; KCard becomes the visual child
+ * inside KanbanCard's children slot (kcard / overdue / done styles preserved
+ * via board.css). The section.col + .col-head + .col-empty markup stays
+ * identical so the Phase 39 kanban-render / kanban-rtl / kanban-responsive
+ * Playwright selectors continue to resolve.
  *
  * RTL-correct via:
  *  - LtrIsolate around the mono count digit
@@ -13,15 +21,17 @@
  * XSS mitigation (T-39-02-XSS): React JSX escapes `title`. No raw-HTML APIs.
  */
 
-import { type ReactElement, type ReactNode, useId } from 'react'
+import { type ReactElement, useId } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
+import { KanbanCards, KanbanCard, useDroppable, type KanbanItemProps } from '@/components/kanban'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import { toArDigits } from '@/lib/i18n/toArDigits'
 import type { WorkflowStage } from '@/types/work-item.types'
 
 import { KCard, type KCardItem } from './KCard'
+
+type WorkBoardKanbanItem = KCardItem & KanbanItemProps
 
 export interface BoardColumnProps {
   title: string
@@ -37,23 +47,20 @@ export function BoardColumn(props: BoardColumnProps): ReactElement {
   const { t, i18n } = useTranslation('unified-kanban')
   const lang = i18n.language
   const titleId = useId()
-  const ids = items.map((it) => it.id)
-
-  const list: ReactNode = (
-    <>
-      {items.map((it) => (
-        <KCard key={it.id} item={it} onItemClick={onItemClick} dndEnabled={dndEnabled} />
-      ))}
-      {items.length === 0 ? (
-        <div className="col-empty" aria-live="polite">
-          {t('emptyColumn', { defaultValue: 'No items' })}
-        </div>
-      ) : null}
-    </>
-  )
+  // D-21: column is the droppable target for cross-column DnD. Plays the same
+  // role KanbanBoard does inside the shared primitive — but we keep `<section
+  // class="col">` to honor the Phase 39 selector contract (kanban-render /
+  // kanban-rtl / kanban-responsive depend on `section.col`).
+  const { setNodeRef } = useDroppable({ id: stage })
 
   return (
-    <section role="region" aria-labelledby={titleId} className="col">
+    <section
+      role="region"
+      aria-labelledby={titleId}
+      className="col"
+      ref={setNodeRef}
+      data-droppable-id={stage}
+    >
       <header className="col-head">
         <h3 id={titleId}>{title}</h3>
         <LtrIsolate>
@@ -68,15 +75,22 @@ export function BoardColumn(props: BoardColumnProps): ReactElement {
           +
         </button>
       </header>
-      <div className="col-body">
-        {dndEnabled ? (
-          <SortableContext items={ids} strategy={verticalListSortingStrategy}>
-            {list}
-          </SortableContext>
-        ) : (
-          list
+      <KanbanCards<WorkBoardKanbanItem> id={stage} className="col-body">
+        {(item): ReactElement => (
+          <KanbanCard<WorkBoardKanbanItem>
+            key={item.id}
+            {...item}
+            className="!gap-0 !rounded-none !border-0 !bg-transparent !p-0 hover:!bg-transparent"
+          >
+            <KCard item={item} onItemClick={onItemClick} dndEnabled={dndEnabled} />
+          </KanbanCard>
         )}
-      </div>
+      </KanbanCards>
+      {items.length === 0 ? (
+        <div className="col-empty" aria-live="polite">
+          {t('emptyColumn', { defaultValue: 'No items' })}
+        </div>
+      ) : null}
     </section>
   )
 }
