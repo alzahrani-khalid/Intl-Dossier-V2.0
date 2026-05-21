@@ -49,20 +49,13 @@ const TYPE_ICONS: Record<CommitmentDeliverableType, typeof FileText> = {
 
 // Color mapping for deliverable types
 const TYPE_COLORS: Record<CommitmentDeliverableType, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentDeliverablesEmptyState
-  milestone: 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentDeliverablesEmptyState
-  document: 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentDeliverablesEmptyState
-  meeting: 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentDeliverablesEmptyState
-  review: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentDeliverablesEmptyState
-  follow_up: 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentDeliverablesEmptyState
-  report: 'bg-cyan-100 text-cyan-600 dark:bg-cyan-900/30 dark:text-cyan-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentDeliverablesEmptyState
-  custom: 'bg-gray-100 text-gray-600 dark:bg-gray-900/30 dark:text-gray-400',
+  milestone: 'bg-secondary text-secondary-foreground dark:bg-secondary/30',
+  document: 'bg-secondary text-secondary-foreground dark:bg-secondary/30',
+  meeting: 'bg-success/10 text-success dark:bg-success/30',
+  review: 'bg-accent/10 text-accent dark:bg-accent/30',
+  follow_up: 'bg-warning/10 text-warning dark:bg-warning/30',
+  report: 'bg-info/10 text-info dark:bg-info/30',
+  custom: 'bg-muted text-ink-mute dark:bg-muted/30',
 }
 
 interface CommitmentDeliverablesEmptyStateProps {
@@ -143,8 +136,7 @@ export function CommitmentDeliverablesEmptyState({
 
         {/* Hint */}
         <div className="flex items-start gap-2 bg-muted/50 rounded-lg p-3 max-w-md mb-6">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CommitmentDeliverablesEmptyState */}
-          <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+          <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5 text-warning flex-shrink-0 mt-0.5" />
           <p className="text-xs sm:text-sm text-muted-foreground text-start">
             {t('emptyState.hint')}
           </p>
