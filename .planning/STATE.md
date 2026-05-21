@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v6.4
 milestone_name: Stabilization & Carryover Sweep
 status: executing
-last_updated: '2026-05-21T10:25:00.000Z'
-last_activity: 2026-05-21 -- Phase 58 Wave-4 dossier-rail token swap complete (25 files, 238 annotations cleared; Task 4 push/PR/merge deferred to operator)
+last_updated: '2026-05-21T12:32:21.756Z'
+last_activity: 2026-05-21 -- Phase 58 execution started
 progress:
-  total_phases: 10
-  completed_phases: 9
-  total_plans: 54
-  completed_plans: 52
-  percent: 90
+  total_phases: 12
+  completed_phases: 11
+  total_plans: 70
+  completed_plans: 60
+  percent: 86
 ---
 
 # Project State
@@ -24,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-05-17 after v6.3 milestone)
 
 ## Current Position
 
-Phase: 58 (tier-c-design-token-suppression-full-clear) — EXECUTING (Wave-4 implementation complete; merge deferred)
-Plan: 5 of 7 (next: 58-05 wave-5-charts-residue; Wave-4 implementation complete locally, merge deferred)
-Status: Executing Phase 58 — Wave-4 done locally (25 files / 238 annotations cleared), Task 4 push/PR/merge deferred to operator
-Last activity: 2026-05-21 -- Phase 58 Wave-4 dossier-rail token swap complete (Tasks 1-3); Task 4 push/PR/merge deferred per orchestrator
+Phase: 58 (tier-c-design-token-suppression-full-clear) — EXECUTING
+Plan: 1 of 7
+Status: Executing Phase 58
+Last activity: 2026-05-21 -- Phase 58 execution started
 
 ## v6.4 Phase Plan
 
