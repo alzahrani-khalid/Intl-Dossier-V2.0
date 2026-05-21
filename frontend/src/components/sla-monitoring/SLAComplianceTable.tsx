@@ -109,15 +109,13 @@ export function SLAComplianceTable({
                           {row.total_items.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
                         </TableCell>
                         <TableCell className="text-center">
-                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAComplianceTable */}
-                          <span className="flex items-center justify-center gap-1 text-green-600">
+                          <span className="flex items-center justify-center gap-1 text-success">
                             <CheckCircle className="h-4 w-4" />
                             {row.met_count.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
                           </span>
                         </TableCell>
                         <TableCell className="text-center">
-                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAComplianceTable */}
-                          <span className="flex items-center justify-center gap-1 text-red-600">
+                          <span className="flex items-center justify-center gap-1 text-danger">
                             <XCircle className="h-4 w-4" />
                             {row.breached_count.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
                           </span>
@@ -191,8 +189,7 @@ export function SLAComplianceTable({
                         </TableCell>
                         <TableCell className="text-center">
                           {row.currently_at_risk > 0 ? (
-                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SLAComplianceTable
-                            <span className="flex items-center justify-center gap-1 text-yellow-600">
+                            <span className="flex items-center justify-center gap-1 text-warning">
                               <AlertTriangle className="h-4 w-4" />
                               {row.currently_at_risk}
                             </span>
