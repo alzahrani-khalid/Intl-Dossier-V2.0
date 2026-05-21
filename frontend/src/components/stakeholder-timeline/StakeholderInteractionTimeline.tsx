@@ -154,22 +154,19 @@ function StatsOverviewCard({
       label: t('stats.total_interactions'),
       value: stats.total_interactions,
       icon: Activity,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderInteractionTimeline
-      color: 'text-blue-500',
+      color: 'text-accent',
     },
     {
       label: t('stats.key_moments'),
       value: stats.key_moments_count,
       icon: TrendingUp,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderInteractionTimeline
-      color: 'text-green-500',
+      color: 'text-success',
     },
     {
       label: t('stats.most_common'),
       value: stats.most_common_type ? t(`types.${stats.most_common_type}`) : '-',
       icon: MessageSquare,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderInteractionTimeline
-      color: 'text-purple-500',
+      color: 'text-secondary',
     },
     {
       label: t('stats.last_interaction'),
@@ -177,8 +174,7 @@ function StatsOverviewCard({
         ? new Date(stats.last_interaction_date).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')
         : '-',
       icon: Clock,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderInteractionTimeline
-      color: 'text-orange-500',
+      color: 'text-warning',
     },
   ]
 
