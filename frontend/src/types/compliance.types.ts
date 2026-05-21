@@ -544,114 +544,85 @@ export const SEVERITY_LABELS: Record<ComplianceSeverity, { en: string; ar: strin
 /**
  * Color mappings for severity levels
  */
+// D-58-06-A-03: SEVERITY palette → accent (info=blue) / warning (yellow) /
+// warning-step (critical=orange, sibling) / destructive (blocking=red).
+// No D-07 collision (no purple). icon-* drops the -500 suffix to the base
+// semantic token (no opacity needed at icon scale).
 export const SEVERITY_COLORS: Record<
   ComplianceSeverity,
   { bg: string; text: string; border: string; icon: string }
 > = {
   info: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    bg: 'bg-blue-50 dark:bg-blue-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    text: 'text-blue-700 dark:text-blue-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    border: 'border-blue-200 dark:border-blue-800',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    icon: 'text-blue-500',
+    bg: 'bg-accent/5 dark:bg-accent/20',
+    text: 'text-accent',
+    border: 'border-accent/20 dark:border-accent/80',
+    icon: 'text-accent',
   },
   warning: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    text: 'text-yellow-700 dark:text-yellow-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    border: 'border-yellow-200 dark:border-yellow-800',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    icon: 'text-yellow-500',
+    bg: 'bg-warning/5 dark:bg-warning/20',
+    text: 'text-warning',
+    border: 'border-warning/20 dark:border-warning/80',
+    icon: 'text-warning',
   },
   critical: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    bg: 'bg-orange-50 dark:bg-orange-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    text: 'text-orange-700 dark:text-orange-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    border: 'border-orange-200 dark:border-orange-800',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    icon: 'text-orange-500',
+    bg: 'bg-warning/10 dark:bg-warning/30',
+    text: 'text-warning',
+    border: 'border-warning/30 dark:border-warning/60',
+    icon: 'text-warning',
   },
   blocking: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    bg: 'bg-red-50 dark:bg-red-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    text: 'text-red-700 dark:text-red-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    border: 'border-red-200 dark:border-red-800',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    icon: 'text-red-500',
+    bg: 'bg-destructive/5 dark:bg-destructive/20',
+    text: 'text-destructive',
+    border: 'border-destructive/20 dark:border-destructive/80',
+    icon: 'text-destructive',
   },
 }
 
 /**
  * Color mappings for violation status
  */
+// D-58-06-A-03: VIOLATION_STATUS palette — D-07 collision (blue + purple):
+//   acknowledged=accent (blue), waived=secondary (purple).
+//   green appears twice (signed_off, resolved) — both collapse to success
+//   (same final-state semantic).
 export const VIOLATION_STATUS_COLORS: Record<
   ViolationStatus,
   { bg: string; text: string; border: string }
 > = {
   pending: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    text: 'text-yellow-700 dark:text-yellow-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    border: 'border-yellow-200 dark:border-yellow-800',
+    bg: 'bg-warning/5 dark:bg-warning/20',
+    text: 'text-warning',
+    border: 'border-warning/20 dark:border-warning/80',
   },
   acknowledged: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    bg: 'bg-blue-50 dark:bg-blue-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    text: 'text-blue-700 dark:text-blue-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    border: 'border-blue-200 dark:border-blue-800',
+    bg: 'bg-accent/5 dark:bg-accent/20',
+    text: 'text-accent',
+    border: 'border-accent/20 dark:border-accent/80',
   },
   signed_off: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    bg: 'bg-green-50 dark:bg-green-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    text: 'text-green-700 dark:text-green-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    border: 'border-green-200 dark:border-green-800',
+    bg: 'bg-success/5 dark:bg-success/20',
+    text: 'text-success',
+    border: 'border-success/20 dark:border-success/80',
   },
   waived: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    bg: 'bg-purple-50 dark:bg-purple-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    text: 'text-purple-700 dark:text-purple-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    border: 'border-purple-200 dark:border-purple-800',
+    bg: 'bg-secondary/5 dark:bg-secondary/20',
+    text: 'text-secondary-foreground',
+    border: 'border-secondary/20 dark:border-secondary/80',
   },
   resolved: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    bg: 'bg-green-50 dark:bg-green-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    text: 'text-green-700 dark:text-green-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    border: 'border-green-200 dark:border-green-800',
+    bg: 'bg-success/5 dark:bg-success/20',
+    text: 'text-success',
+    border: 'border-success/20 dark:border-success/80',
   },
   escalated: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    bg: 'bg-red-50 dark:bg-red-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    text: 'text-red-700 dark:text-red-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    border: 'border-red-200 dark:border-red-800',
+    bg: 'bg-destructive/5 dark:bg-destructive/20',
+    text: 'text-destructive',
+    border: 'border-destructive/20 dark:border-destructive/80',
   },
   expired: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    bg: 'bg-gray-50 dark:bg-gray-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    text: 'text-gray-700 dark:text-gray-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#compliance.types
-    border: 'border-gray-200 dark:border-gray-800',
+    bg: 'bg-muted/5 dark:bg-muted/20',
+    text: 'text-muted-foreground',
+    border: 'border-muted/20 dark:border-muted/80',
   },
 }
 
