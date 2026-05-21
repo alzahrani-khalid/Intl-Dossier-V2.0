@@ -35,20 +35,17 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
   const sourceConfig: Record<WorkSource, { icon: LucideIcon; color: string; label: string }> = {
     commitment: {
       icon: FileCheck,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemCard
-      color: 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/30',
+      color: 'text-success bg-success/10 dark:bg-success/30',
       label: t('source.commitment', 'Commitment'),
     },
     task: {
       icon: ListChecks,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemCard
-      color: 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/30',
+      color: 'text-accent bg-accent/10 dark:bg-accent/30',
       label: t('source.task', 'Task'),
     },
     intake: {
       icon: Inbox,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemCard
-      color: 'text-purple-600 bg-purple-100 dark:text-purple-400 dark:bg-purple-900/30',
+      color: 'text-secondary-foreground bg-secondary/30 dark:bg-secondary/50',
       label: t('source.intake', 'Intake'),
     },
   }
@@ -56,18 +53,15 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
   // Tracking type badge
   const trackingTypeConfig: Record<TrackingType, { color: string; label: string }> = {
     delivery: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemCard
-      color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+      color: 'bg-accent/10 text-accent dark:bg-accent/30',
       label: t('trackingType.delivery', 'Delivery'),
     },
     follow_up: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemCard
-      color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
+      color: 'bg-secondary/30 text-secondary-foreground dark:bg-secondary/50',
       label: t('trackingType.followUp', 'Follow-up'),
     },
     sla: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemCard
-      color: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
+      color: 'bg-warning/10 text-warning dark:bg-warning/30',
       label: t('trackingType.sla', 'SLA'),
     },
   }
@@ -75,28 +69,23 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
   // Priority badge
   const priorityConfig: Record<string, { color: string; label: string }> = {
     low: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemCard
-      color: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
+      color: 'bg-muted text-ink-mute dark:bg-muted/30',
       label: t('priority.low', 'Low'),
     },
     medium: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemCard
-      color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+      color: 'bg-warning/10 text-warning/80 dark:bg-warning/30',
       label: t('priority.medium', 'Medium'),
     },
     high: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemCard
-      color: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
+      color: 'bg-warning/10 text-warning dark:bg-warning/30',
       label: t('priority.high', 'High'),
     },
     critical: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemCard
-      color: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+      color: 'bg-danger/10 text-danger dark:bg-danger/30',
       label: t('priority.critical', 'Critical'),
     },
     urgent: {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemCard
-      color: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+      color: 'bg-danger/10 text-danger dark:bg-danger/30',
       label: t('priority.urgent', 'Urgent'),
     },
   }
@@ -154,8 +143,7 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
       <Card
         className={cn(
           'transition-colors hover:bg-accent/50 cursor-pointer border-border/60',
-          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemCard */
-          item.is_overdue && 'border-red-300 dark:border-red-800',
+          item.is_overdue && 'border-danger/30 dark:border-danger/70',
         )}
       >
         <CardContent className="px-3 py-2 sm:px-4 sm:py-2.5">
@@ -208,8 +196,7 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
                     className={cn(
                       'text-[11px] leading-none px-1.5 py-0 gap-0.5',
                       deadlineInfo.urgent &&
-                        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkItemCard */
-                        'border-orange-300 text-orange-700 dark:border-orange-700 dark:text-orange-400',
+                        'border-warning/30 text-warning dark:border-warning/70',
                     )}
                   >
                     <Calendar className="h-3 w-3" />
