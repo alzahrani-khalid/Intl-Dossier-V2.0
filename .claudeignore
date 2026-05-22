@@ -37,4 +37,22 @@ monitoring/
 docker/data/
 docker/logs/
 
+# AI Layer additions
+**/.turbo/
+**/dist/
+**/build/
+**/.next/
+**/*.log
 
+# Compiled prototype artifacts
+frontend/design-system/inteldossier_handoff_design/handoff/
+
+# Self-improving hook state (per-machine, not source)
+.claude/claude-md-review.md
+.claude/.claude-md-review-state
+
+# Agent worktrees double the file count for greps
+.claude/worktrees/
+
+# Huge machine-generated lockfile
+pnpm-lock.yaml
