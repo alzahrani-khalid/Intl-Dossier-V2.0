@@ -6,8 +6,14 @@
  * `{ contextType, columnMode, sourceFilter }` (per RESEARCH Confirmation #2 — overrides
  * CONTEXT.md wording of `{ context, mode, sources }`).
  *
+ * Phase 57 D-21 / D-57-06 / D-57-07: WorkBoard now consumes the shared
+ * @/components/kanban primitive (KanbanProvider + KanbanCards + KanbanCard)
+ * instead of importing @dnd-kit/core directly. Surface-swap, not absorb:
+ * BoardColumn / BoardToolbar / KCard / board.css all preserved.
+ *
  * Decisions enforced here:
- *  - D-03: DnD enabled only when columnMode === 'status'. Sensors empty otherwise.
+ *  - D-03: DnD enabled only when columnMode === 'status'. Sensors empty otherwise
+ *    (passed via KanbanProvider `sensors={[]}` override of the primitive's defaults).
  *  - D-05: contextType: 'personal', sourceFilter: ['commitment','task']
  *  - D-06: 'By dossier' / 'By owner' visual stubs in the toolbar — never reach this page state.
  *  - D-07: Search filters client-side over the ALREADY-LOADED items (no `searchQuery` prop
@@ -29,17 +35,13 @@
 import { type ReactElement, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
-import {
-  DndContext,
-  KeyboardSensor,
-  MouseSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from '@dnd-kit/core'
-import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 
+import {
+  KanbanProvider,
+  type DragEndEvent,
+  type KanbanItemProps,
+  type SensorDescriptor,
+} from '@/components/kanban'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useUnifiedKanban, useUnifiedKanbanStatusUpdate } from '@/hooks/useUnifiedKanban'
 import type { KanbanColumnMode, WorkflowStage, WorkSource } from '@/types/work-item.types'
@@ -60,6 +62,8 @@ const STAGE_TO_STATUS: Record<WorkflowStage, string> = {
   done: 'completed',
   cancelled: 'cancelled',
 }
+
+type WorkBoardKanbanItem = KCardItem & KanbanItemProps
 
 function isCancelled(item: KCardItem): boolean {
   return item.workflow_stage === 'cancelled' || item.status === 'cancelled'
@@ -128,17 +132,33 @@ export function WorkBoard(): ReactElement {
     return empty
   }, [filtered])
 
-  // D-03 sensor stack — empty when not 'status' so cards are visually present but un-draggable.
-  const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 8 } })
-  const touchSensor = useSensor(TouchSensor, {
-    activationConstraint: { delay: 200, tolerance: 5 },
-  })
-  const keyboardSensor = useSensor(KeyboardSensor, {
-    coordinateGetter: sortableKeyboardCoordinates,
-  })
-  const activeSensors = useSensors(mouseSensor, touchSensor, keyboardSensor)
-  const emptySensors = useSensors()
-  const dndSensors = mode === 'status' ? activeSensors : emptySensors
+  // Project filtered items into the shared primitive's KanbanItemProps shape.
+  // `column` is the workflow_stage so KanbanCards can filter per-column.
+  const kanbanItems = useMemo<WorkBoardKanbanItem[]>(
+    () =>
+      filtered.map((it) => ({
+        ...it,
+        name: it.title,
+        column: (it.workflow_stage ?? 'todo') as string,
+      })),
+    [filtered],
+  )
+
+  // Column descriptors for KanbanProvider — id maps to workflow_stage so
+  // kanban-dnd.spec.ts can target `[data-droppable-id="<stage>"]`.
+  const columnDescriptors = useMemo(
+    () => STAGES.map((stage) => ({ id: stage, name: t(`columns.${stage}`) })),
+    [t],
+  )
+
+  // D-03 sensor gating — when mode !== 'status' the cards are visually present
+  // but un-draggable. KanbanProvider wires its own MouseSensor/TouchSensor/
+  // KeyboardSensor internally; passing `sensors={[]}` overrides the defaults
+  // at the DndContext spread (KanbanProvider.tsx:211 `{...props}` runs AFTER
+  // the internal `sensors={sensors}` so spread wins). In 'status' mode we
+  // omit the prop entirely so the internal sensors stay active.
+  const dndExtraProps: { sensors?: SensorDescriptor<object>[] } =
+    mode === 'status' ? {} : { sensors: [] }
 
   const handleDragEnd = useCallback(
     (event: DragEndEvent): void => {
@@ -150,7 +170,13 @@ export function WorkBoard(): ReactElement {
       const item = visibleItems.find((it) => it.id === String(activeId))
       if (!item) return
 
-      // Resolve target stage: prefer over.data.current.stage, fall back to id heuristic.
+      // Resolve target stage. Under closestCenter collision detection the
+      // `over` target may be the column-section (useDroppable id=stage) OR a
+      // sibling card sortable (id=cardUuid). D-21 (#3072): WorkBoard's
+      // onDragEnd must handle BOTH:
+      //  1. over.data.current.stage — if a future consumer attaches stage data
+      //  2. over.id matches a STAGE — when dropped on empty column area
+      //  3. over.id is a card uuid — resolve to that card's workflow_stage
       type OverData = { stage?: WorkflowStage } | undefined
       const overData = (over.data?.current as OverData) ?? undefined
       let targetStage: WorkflowStage | undefined = overData?.stage
@@ -159,6 +185,13 @@ export function WorkBoard(): ReactElement {
         const stripped = overIdStr.startsWith('col-') ? overIdStr.slice(4) : overIdStr
         if ((STAGES as string[]).includes(stripped)) {
           targetStage = stripped as WorkflowStage
+        } else {
+          // Sibling-card path: closestCenter often lands on a card in the
+          // target column rather than the column-droppable itself.
+          const overCard = visibleItems.find((it) => it.id === overIdStr)
+          if (overCard !== undefined) {
+            targetStage = overCard.workflow_stage as WorkflowStage
+          }
         }
       }
       if (targetStage === undefined || targetStage === item.workflow_stage) return
@@ -236,31 +269,37 @@ export function WorkBoard(): ReactElement {
   }
 
   return (
-    <DndContext sensors={dndSensors} onDragEnd={handleDragEnd}>
-      <div className="workboard-page" dir={isRTL ? 'rtl' : 'ltr'}>
-        <h1 className="sr-only">{t('title', { defaultValue: 'Work Board' })}</h1>
-        <BoardToolbar
-          mode={mode}
-          searchQuery={searchQuery}
-          overdueCount={overdueCount}
-          onModeChange={setMode}
-          onSearchChange={setSearchQuery}
-          onNewItem={handleNewItem}
-        />
-        <div className="board-columns">
-          {STAGES.map((stage) => (
+    <div className="workboard-page" dir={isRTL ? 'rtl' : 'ltr'}>
+      <h1 className="sr-only">{t('title', { defaultValue: 'Work Board' })}</h1>
+      <BoardToolbar
+        mode={mode}
+        searchQuery={searchQuery}
+        overdueCount={overdueCount}
+        onModeChange={setMode}
+        onSearchChange={setSearchQuery}
+        onNewItem={handleNewItem}
+      />
+      <div className="board-columns">
+        <KanbanProvider<WorkBoardKanbanItem, { id: WorkflowStage; name: string }>
+          columns={columnDescriptors}
+          data={kanbanItems}
+          onDragEnd={handleDragEnd}
+          className="contents"
+          {...dndExtraProps}
+        >
+          {(column) => (
             <BoardColumn
-              key={stage}
-              title={t(`columns.${stage}`)}
-              stage={stage}
-              items={byStage[stage]}
+              key={column.id}
+              title={column.name}
+              stage={column.id}
+              items={byStage[column.id]}
               dndEnabled={mode === 'status'}
               onItemClick={handleItemClick}
               onAddItem={handleAddItem}
             />
-          ))}
-        </div>
+          )}
+        </KanbanProvider>
       </div>
-    </DndContext>
+    </div>
   )
 }

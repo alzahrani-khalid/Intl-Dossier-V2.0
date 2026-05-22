@@ -209,62 +209,58 @@ export interface DossierRecommendationUpdateParams {
 
 /**
  * Get display color for recommendation reason
+ * D-58-06-A-12: D-07 collision (blue + purple + indigo) collapsed; text-* drops
+ * dark variant per D-09. Within-family text collapses (purple+indigo, green+teal,
+ * orange+amber) are acceptable because the paired bg in getReasonBgColor
+ * differentiates each reason at the surface level via opacity steps.
  */
 export function getReasonColor(reason: DossierRecommendationReason): string {
   const colors: Record<DossierRecommendationReason, string> = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-    similar_content: 'text-blue-600 dark:text-blue-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-    shared_relationships: 'text-purple-600 dark:text-purple-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-    topic_overlap: 'text-green-600 dark:text-green-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-    recent_activity: 'text-orange-600 dark:text-orange-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-    collaboration_history: 'text-indigo-600 dark:text-indigo-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-    geographic_proximity: 'text-teal-600 dark:text-teal-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-    strategic_alignment: 'text-amber-600 dark:text-amber-400',
+    similar_content: 'text-accent',
+    shared_relationships: 'text-secondary-foreground',
+    topic_overlap: 'text-success',
+    recent_activity: 'text-warning',
+    collaboration_history: 'text-secondary-foreground',
+    geographic_proximity: 'text-success',
+    strategic_alignment: 'text-warning',
   }
   return colors[reason]
 }
 
 /**
  * Get background color for recommendation reason
+ * D-58-06-A-12: same D-07 collision as getReasonColor. bg-* uses opacity-step
+ * pairs to disambiguate within-family siblings:
+ *   shared_relationships (purple) → secondary/10
+ *   collaboration_history (indigo) → secondary/20  [D-07 sibling step]
+ *   topic_overlap (green)         → success/10
+ *   geographic_proximity (teal)   → success/20    [sibling step]
+ *   strategic_alignment (amber)   → warning/10
+ *   recent_activity (orange)      → warning/20    [sibling step]
  */
 export function getReasonBgColor(reason: DossierRecommendationReason): string {
   const colors: Record<DossierRecommendationReason, string> = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-    similar_content: 'bg-blue-100 dark:bg-blue-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-    shared_relationships: 'bg-purple-100 dark:bg-purple-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-    topic_overlap: 'bg-green-100 dark:bg-green-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-    recent_activity: 'bg-orange-100 dark:bg-orange-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-    collaboration_history: 'bg-indigo-100 dark:bg-indigo-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-    geographic_proximity: 'bg-teal-100 dark:bg-teal-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-    strategic_alignment: 'bg-amber-100 dark:bg-amber-900/30',
+    similar_content: 'bg-accent/10 dark:bg-accent/30',
+    shared_relationships: 'bg-secondary/10 dark:bg-secondary/30',
+    topic_overlap: 'bg-success/10 dark:bg-success/30',
+    recent_activity: 'bg-warning/20 dark:bg-warning/40',
+    collaboration_history: 'bg-secondary/20 dark:bg-secondary/40',
+    geographic_proximity: 'bg-success/20 dark:bg-success/40',
+    strategic_alignment: 'bg-warning/10 dark:bg-warning/30',
   }
   return colors[reason]
 }
 
 /**
  * Get display color for similarity score
+ * D-58-06-A-12: 4-tier gradient success → accent → warning → muted.
+ * No D-07 (no purple). text-* drops dark variant per D-09.
  */
 export function getSimilarityColor(score: number): string {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-  if (score >= 0.9) return 'text-green-600 dark:text-green-400'
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-  if (score >= 0.8) return 'text-blue-600 dark:text-blue-400'
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-  if (score >= 0.7) return 'text-yellow-600 dark:text-yellow-400'
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#dossier-recommendation.types
-  return 'text-gray-600 dark:text-gray-400'
+  if (score >= 0.9) return 'text-success'
+  if (score >= 0.8) return 'text-accent'
+  if (score >= 0.7) return 'text-warning'
+  return 'text-muted-foreground'
 }
 
 /**

@@ -163,18 +163,14 @@ function AdminApprovalsPage() {
       />
 
       {/* Warning Banner */}
-      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#approvals-admin */}
-      <Card className="p-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20">
+      <Card className="p-4 border-warning/50 bg-warning/5 dark:bg-warning/20">
         <div className="flex items-start gap-3">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#approvals-admin */}
-          <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
+          <AlertCircle className="h-5 w-5 text-warning mt-0.5" />
           <div>
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#approvals-admin */}
-            <p className="font-medium text-yellow-800 dark:text-yellow-200">
+            <p className="font-medium text-warning">
               {t('admin.approvals.warning', 'Admin Privileges Active')}
             </p>
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#approvals-admin */}
-            <p className="text-sm text-yellow-700 dark:text-yellow-300">
+            <p className="text-sm text-warning">
               {t(
                 'admin.approvals.warningText',
                 'All reassignments are logged and require a reason for audit trail compliance.',

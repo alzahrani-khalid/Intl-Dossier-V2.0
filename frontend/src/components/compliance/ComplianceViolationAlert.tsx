@@ -180,8 +180,7 @@ export function ComplianceViolationAlert({
                 {violation.rule?.requires_signoff && (
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <FileCheck className="h-4 w-4" />
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ComplianceViolationAlert */}
-                    <span className="font-medium text-orange-600 dark:text-orange-400">
+                    <span className="font-medium text-warning">
                       {t('violations.requiresSignoff')}
                     </span>
                   </div>
@@ -230,10 +229,8 @@ export function ComplianceViolationAlert({
                 (isRTL
                   ? violation.rule.remediation_instructions_ar
                   : violation.rule.remediation_instructions_en) && (
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ComplianceViolationAlert
-                  <div className="rounded-md bg-blue-50 dark:bg-blue-900/20 p-3 border border-blue-200 dark:border-blue-800">
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ComplianceViolationAlert */}
-                    <p className="text-sm text-blue-700 dark:text-blue-300">
+                  <div className="rounded-md bg-accent/5 dark:bg-accent/20 p-3 border border-accent/20 dark:border-accent/70">
+                    <p className="text-sm text-accent">
                       {isRTL
                         ? violation.rule.remediation_instructions_ar
                         : violation.rule.remediation_instructions_en}

@@ -282,18 +282,19 @@ export const SCOPE_TYPE_CONFIG: ScopeTypeConfig[] = [
   },
 ]
 
+// D-58-06-A-16: SENSITIVITY palette — text-only 4-tier gradient:
+// success (low) / warning (medium) / warning (high, collapse — text doesn't
+// support opacity-step within same family) / destructive (critical).
+// No D-07 (no purple). orange+yellow both collapse to text-warning because
+// text-{sem}/X opacity is not a Tailwind utility.
 export const SENSITIVITY_LEVEL_CONFIG: {
   value: FieldSensitivityLevel
   label_en: string
   label_ar: string
   color: string
 }[] = [
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permission.types
-  { value: 'low', label_en: 'Low', label_ar: 'منخفض', color: 'text-green-600' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permission.types
-  { value: 'medium', label_en: 'Medium', label_ar: 'متوسط', color: 'text-yellow-600' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permission.types
-  { value: 'high', label_en: 'High', label_ar: 'عالي', color: 'text-orange-600' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permission.types
-  { value: 'critical', label_en: 'Critical', label_ar: 'حرج', color: 'text-red-600' },
+  { value: 'low', label_en: 'Low', label_ar: 'منخفض', color: 'text-success' },
+  { value: 'medium', label_en: 'Medium', label_ar: 'متوسط', color: 'text-warning' },
+  { value: 'high', label_en: 'High', label_ar: 'عالي', color: 'text-warning' },
+  { value: 'critical', label_en: 'Critical', label_ar: 'حرج', color: 'text-destructive' },
 ]

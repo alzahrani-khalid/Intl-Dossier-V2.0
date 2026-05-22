@@ -193,45 +193,39 @@ export interface ChangeTypeConfig {
   icon: string
 }
 
+// D-58-06-A-15: CHANGE_TYPE palette → success (create) / accent (update) /
+// destructive (delete) / warning (rollback). No D-07 (no purple).
 export const CHANGE_TYPE_CONFIG: Record<ChangeType, ChangeTypeConfig> = {
   create: {
     type: 'create',
     label_en: 'Created',
     label_ar: 'تم الإنشاء',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
-    color: 'text-green-600',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
-    bgColor: 'bg-green-100 dark:bg-green-900/30',
+    color: 'text-success',
+    bgColor: 'bg-success/10 dark:bg-success/30',
     icon: 'Plus',
   },
   update: {
     type: 'update',
     label_en: 'Updated',
     label_ar: 'تم التحديث',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
-    color: 'text-blue-600',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
-    bgColor: 'bg-blue-100 dark:bg-blue-900/30',
+    color: 'text-accent',
+    bgColor: 'bg-accent/10 dark:bg-accent/30',
     icon: 'Edit3',
   },
   delete: {
     type: 'delete',
     label_en: 'Deleted',
     label_ar: 'تم الحذف',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
-    color: 'text-red-600',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
-    bgColor: 'bg-red-100 dark:bg-red-900/30',
+    color: 'text-destructive',
+    bgColor: 'bg-destructive/10 dark:bg-destructive/30',
     icon: 'Trash2',
   },
   rollback: {
     type: 'rollback',
     label_en: 'Rolled Back',
     label_ar: 'تم الاستعادة',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
-    color: 'text-amber-600',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
-    bgColor: 'bg-amber-100 dark:bg-amber-900/30',
+    color: 'text-warning',
+    bgColor: 'bg-warning/10 dark:bg-warning/30',
     icon: 'RotateCcw',
   },
 }
@@ -243,34 +237,34 @@ export interface FieldCategoryConfig {
   color: string
 }
 
+// D-58-06-A-15: FIELD_CATEGORY palette — text-only (no bg). D-07 collision
+// (purple + indigo) collapsed onto secondary-foreground (text doesn't
+// support opacity-step disambiguation). gray-400 (metadata) preserves
+// softer emphasis via muted-foreground/60.
 export const FIELD_CATEGORY_CONFIG: Record<FieldCategory, FieldCategoryConfig> = {
   base: {
     category: 'base',
     label_en: 'Core Fields',
     label_ar: 'الحقول الأساسية',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
-    color: 'text-gray-600',
+    color: 'text-muted-foreground',
   },
   extension: {
     category: 'extension',
     label_en: 'Extended Fields',
     label_ar: 'الحقول الموسعة',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
-    color: 'text-purple-600',
+    color: 'text-secondary-foreground',
   },
   metadata: {
     category: 'metadata',
     label_en: 'Metadata',
     label_ar: 'البيانات الوصفية',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
-    color: 'text-gray-400',
+    color: 'text-muted-foreground/60',
   },
   relationship: {
     category: 'relationship',
     label_en: 'Relationships',
     label_ar: 'العلاقات',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-history.types
-    color: 'text-indigo-600',
+    color: 'text-secondary-foreground',
   },
 }
 

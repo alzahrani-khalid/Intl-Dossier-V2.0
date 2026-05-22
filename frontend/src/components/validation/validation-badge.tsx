@@ -58,8 +58,7 @@ export function ValidationBadge({
 
   const getIcon = () => {
     if (isValid) {
-      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#validation-badge */
-      return <CheckCircle2 className={cn(iconSizes[size], 'text-green-600')} />
+      return <CheckCircle2 className={cn(iconSizes[size], 'text-success')} />
     }
     if (errors.length > 0) {
       return <AlertCircle className={cn(iconSizes[size], 'text-destructive')} />

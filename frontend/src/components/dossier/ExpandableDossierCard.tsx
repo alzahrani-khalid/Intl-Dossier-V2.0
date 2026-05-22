@@ -131,54 +131,53 @@ function CountryFlag({
 }
 
 /**
- * Get type-specific gradient background
+ * Get type-specific gradient background.
+ *
+ * D-58-04-08: per-type gradients aligned to the canonical dossierTypeColors
+ * map in semantic-colors.ts. Each branch returns Tailwind `from-...`/`via-...`/
+ * `to-...` triplet using a single semantic token at descending opacity steps so
+ * the card retains a directional sweep without relying on raw palette hexes.
+ * D-07 collision: organization/topic resolve to secondary (accent-soft) per
+ * the canonical purple-family mapping.
  */
 function getTypeGradient(type: DossierType): string {
   switch (type) {
     case 'country':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
-      return 'from-blue-500/90 via-blue-600/80 to-blue-700/70'
+      return 'from-primary/90 via-primary/80 to-primary/70'
     case 'organization':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
-      return 'from-purple-500/90 via-purple-600/80 to-purple-700/70'
+      return 'from-secondary via-secondary to-secondary'
     case 'forum':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
-      return 'from-green-500/90 via-green-600/80 to-green-700/70'
+      return 'from-success/90 via-success/80 to-success/70'
     case 'engagement':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
-      return 'from-orange-500/90 via-orange-600/80 to-orange-700/70'
+      return 'from-warning/90 via-warning/80 to-warning/70'
     case 'topic':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
-      return 'from-pink-500/90 via-pink-600/80 to-pink-700/70'
+      return 'from-destructive/90 via-destructive/80 to-destructive/70'
     case 'working_group':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
-      return 'from-indigo-500/90 via-indigo-600/80 to-indigo-700/70'
+      return 'from-accent/90 via-accent/80 to-accent/70'
     case 'person':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
-      return 'from-teal-500/90 via-teal-600/80 to-teal-700/70'
+      return 'from-muted via-muted to-muted'
     default:
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
-      return 'from-gray-500/90 via-gray-600/80 to-gray-700/70'
+      return 'from-muted via-muted to-muted'
   }
 }
 
 /**
  * Get status badge color
+ *
+ * D-58-04-09: 3-tier status mapped onto semantic tokens (active→success,
+ * inactive→warning, archived→muted). Text inherits the foreground tokens
+ * defined alongside each color in @theme.
  */
 function getStatusColor(status: DossierStatus): string {
   switch (status) {
     case 'active':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
-      return 'bg-green-500/90 text-white'
+      return 'bg-success/90 text-success-foreground'
     case 'inactive':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
-      return 'bg-yellow-500/90 text-white'
+      return 'bg-warning/90 text-warning-foreground'
     case 'archived':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
-      return 'bg-gray-500/90 text-white'
+      return 'bg-muted text-muted-foreground'
     default:
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
-      return 'bg-gray-500/90 text-white'
+      return 'bg-muted text-muted-foreground'
   }
 }
 
@@ -355,8 +354,7 @@ export function ExpandableDossierCard({
               <m.div
                 ref={ref}
                 layoutId={`card-${dossier.id}-${id}`}
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard
-                className="w-full max-w-2xl h-full md:h-fit md:max-h-[90vh] flex flex-col bg-white dark:bg-neutral-900 rounded-3xl overflow-hidden shadow-2xl"
+                className="w-full max-w-2xl h-full md:h-fit md:max-h-[90vh] flex flex-col bg-card rounded-3xl overflow-hidden shadow-2xl"
               >
                 {/* Close Button */}
                 <m.button
@@ -368,20 +366,17 @@ export function ExpandableDossierCard({
                   className={cn(
                     'absolute top-4 z-10',
                     'flex items-center justify-center',
-                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard */
-                    'bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm',
+                    'bg-card/90 backdrop-blur-sm',
                     'rounded-full h-8 w-8 sm:h-10 sm:w-10',
                     'shadow-lg',
-                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard */
-                    'hover:bg-white dark:hover:bg-neutral-800',
+                    'hover:bg-card',
                     'transition-colors duration-200',
                     isRTL ? 'start-4' : 'end-4',
                   )}
                   onClick={onDeactivate}
                   aria-label={t('action.close')}
                 >
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ExpandableDossierCard */}
-                  <X className="h-4 w-4 sm:h-5 sm:w-5 text-neutral-700 dark:text-neutral-200" />
+                  <X className="h-4 w-4 sm:h-5 sm:w-5 text-foreground" />
                 </m.button>
 
                 {/* Header Image/Map */}

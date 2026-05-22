@@ -343,12 +343,9 @@ export function TourOverlay() {
 
                 {/* Hint */}
                 {currentStep.hint && (
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TourOverlay
-                  <div className="flex items-start gap-2 p-2.5 sm:p-3 rounded-xl bg-amber-50 border border-amber-100 mb-3 sm:mb-4">
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TourOverlay */}
-                    <HelpCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TourOverlay */}
-                    <p className="text-xs sm:text-sm text-amber-800 text-start">
+                  <div className="flex items-start gap-2 p-2.5 sm:p-3 rounded-xl bg-warning/5 border border-warning/20 mb-3 sm:mb-4">
+                    <HelpCircle className="w-4 h-4 text-warning mt-0.5 flex-shrink-0" />
+                    <p className="text-xs sm:text-sm text-warning text-start">
                       {t(currentStep.hint)}
                     </p>
                   </div>

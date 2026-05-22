@@ -24,10 +24,21 @@ test.describe('Phase 52: Tasks tab Kanban axe a11y', () => {
         localStorage.setItem('i18nextLng', d === 'rtl' ? 'ar' : 'en')
       }, dir)
       await page.setViewportSize(viewport)
-      await page.goto(`/engagements/${SEEDED_ENGAGEMENT_ID}`)
+      // Navigate directly to the Tasks tab route (engagement root lands on Overview).
+      await page.goto(`/engagements/${SEEDED_ENGAGEMENT_ID}/tasks`)
       await page.waitForLoadState('networkidle')
+      // Wait for the TasksTab region to hydrate before scanning.
+      await page.getByTestId('tasks-tab-region').waitFor({ state: 'visible', timeout: 20_000 })
 
-      const results = await new AxeBuilder({ page }).analyze()
+      // Phase 57 D-23: scope axe scan to the Tasks tab region. The global
+      // IntelDossier shell (sidebar, topbar, FABs) carries acknowledged a11y
+      // debt (4.23:1 accent-on-bg contrast — see buildTokens.ts comment;
+      // tracked in Phase 59 POLISH). The kanban primitive migration must not
+      // regress a11y within the tasks-tab region itself. Mirrors the
+      // Phase 57-02 D-21 `.workboard-page` scope precedent in kanban-a11y.spec.ts.
+      const results = await new AxeBuilder({ page })
+        .include('[data-testid="tasks-tab-region"]')
+        .analyze()
       const seriousOrCritical = results.violations.filter(
         (v) => v.impact === 'serious' || v.impact === 'critical',
       )

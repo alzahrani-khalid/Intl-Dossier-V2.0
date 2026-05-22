@@ -170,10 +170,12 @@ export function RelationshipGraph({
         nodeMap.set(rel.source_dossier.id, true)
       }
 
-      // Create edge with custom component
-      // Default color since relationship_strength doesn't exist in new schema
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#RelationshipGraph
-      const edgeColor = '#3b82f6' // Default blue color
+      // Create edge with custom component.
+      // D-58-04-24: default React-Flow edge color resolves to the accent
+      // (brand-hue) CSS variable so the graph stays direction/mode invariant.
+      // React Flow requires raw color strings (not Tailwind classes), so we use
+      // a var() reference into the OKLCH token engine.
+      const edgeColor = 'var(--accent)'
 
       edges.push({
         id: `${rel.source_dossier_id}-${rel.target_dossier_id}-${rel.relationship_type}`,

@@ -127,8 +127,7 @@ export function ConflictResolutionPanel({
               </Badge>
             )}
             {conflicts.severity_summary.high > 0 && (
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionPanel
-              <Badge className="bg-orange-500 text-xs">
+              <Badge className="bg-warning text-xs">
                 {conflicts.severity_summary.high} {t('conflicts.severity.high')}
               </Badge>
             )}

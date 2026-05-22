@@ -117,10 +117,7 @@ export function BulkActionsToolbar<T extends BulkSelectableItem = BulkSelectable
     <div
       className={cn(
         'sticky top-0 z-10 flex flex-col gap-2 p-3 sm:p-4',
-        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar */
-        'bg-blue-50 border-b border-blue-200',
-        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar */
-        'dark:bg-blue-950 dark:border-blue-800',
+        'bg-info/10 border-b border-info/30',
         'sm:flex-row sm:items-center sm:justify-between sm:gap-4',
         className,
       )}
@@ -129,16 +126,12 @@ export function BulkActionsToolbar<T extends BulkSelectableItem = BulkSelectable
     >
       {/* Selection Info */}
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar */}
-        <span className="text-sm font-medium text-blue-900 dark:text-blue-100 sm:text-base">
+        <span className="text-sm font-medium text-info sm:text-base">
           {t('selection.selected', { count: selectedCount })} {entityLabel}
         </span>
 
         {maxReached && (
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar
-          <span className="text-xs text-orange-600 dark:text-orange-400 sm:text-sm">
-            {t('selection.maxReached')}
-          </span>
+          <span className="text-xs text-warning sm:text-sm">{t('selection.maxReached')}</span>
         )}
 
         {onSelectAll && !maxReached && (
@@ -147,8 +140,7 @@ export function BulkActionsToolbar<T extends BulkSelectableItem = BulkSelectable
             size="sm"
             onClick={onSelectAll}
             disabled={disabled || isProcessing}
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar
-            className="h-auto p-0 text-blue-600 dark:text-blue-400"
+            className="h-auto p-0 text-info"
           >
             {t('selection.selectAll')}
           </Button>
@@ -167,8 +159,7 @@ export function BulkActionsToolbar<T extends BulkSelectableItem = BulkSelectable
             size="sm"
             className={cn(
               'h-10 min-w-10 px-3 text-sm sm:h-11 sm:px-4',
-              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar */
-              action.isDestructive && 'hover:bg-red-600 hover:text-white',
+              action.isDestructive && 'hover:bg-danger hover:text-danger-foreground',
             )}
             aria-label={t(`actions.${action.id.replace(/-/g, '')}`)}
           >
@@ -202,11 +193,7 @@ export function BulkActionsToolbar<T extends BulkSelectableItem = BulkSelectable
                   <DropdownMenuItem
                     onClick={() => onActionClick(action)}
                     disabled={disabled || isProcessing}
-                    className={cn(
-                      'gap-2',
-                      /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar */
-                      action.isDestructive && 'text-red-600 dark:text-red-400 focus:text-red-600',
-                    )}
+                    className={cn('gap-2', action.isDestructive && 'text-danger focus:text-danger')}
                   >
                     {ACTION_ICONS[action.id] || <MoreHorizontal className="h-4 w-4" />}
                     <span>{t(`actions.${action.id.replace(/-/g, '')}`)}</span>
@@ -223,8 +210,7 @@ export function BulkActionsToolbar<T extends BulkSelectableItem = BulkSelectable
           variant="ghost"
           size="sm"
           disabled={isProcessing}
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionsToolbar
-          className="h-10 min-w-10 px-3 sm:h-11 sm:px-4 text-gray-600 dark:text-gray-400"
+          className="h-10 min-w-10 px-3 sm:h-11 sm:px-4 text-ink-mute"
           aria-label={t('selection.clearSelection')}
         >
           <X className="h-4 w-4" />

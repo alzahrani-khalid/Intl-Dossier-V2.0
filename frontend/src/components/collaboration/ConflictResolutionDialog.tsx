@@ -57,13 +57,13 @@ const STRATEGY_ICONS = {
   manual_merge: Combine,
 }
 
+// D-58-03-07: 3-way conflict strategy palette mapped onto info/success/accent tokens.
+// use_server (blue) → info (informational/incoming), keep_local (green) → success (your work),
+// manual_merge (purple) → accent (Wave-2 WGMemberSuggestions precedent).
 const STRATEGY_COLORS = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog
-  use_server: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog
-  keep_local: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog
-  manual_merge: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+  use_server: 'bg-info/10 text-info',
+  keep_local: 'bg-success/10 text-success',
+  manual_merge: 'bg-accent/10 text-accent',
 }
 
 /**
@@ -83,15 +83,10 @@ const FieldDiff = memo(function FieldDiff({
     <div className="rounded-lg border bg-muted/30 p-3">
       <p className="text-sm font-medium mb-2">{formatFieldName(field)}</p>
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-2 items-center text-sm">
-        {/* Your changes */}
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
-        <div className="rounded bg-green-50 dark:bg-green-900/20 p-2 border border-green-200 dark:border-green-800">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
-          <p className="text-xs text-green-600 dark:text-green-400 mb-1 font-medium">
-            {t('yourChanges')}
-          </p>
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
-          <p className="text-green-800 dark:text-green-200 break-words">
+        {/* Your changes — D-58-03-08: 3-way diff palette per plan: your-changes (added/local) → success */}
+        <div className="rounded bg-success/10 p-2 border border-success/30">
+          <p className="text-xs text-success mb-1 font-medium">{t('yourChanges')}</p>
+          <p className="text-success break-words">
             {localStr || <span className="italic text-muted-foreground">{t('empty')}</span>}
           </p>
         </div>
@@ -101,15 +96,10 @@ const FieldDiff = memo(function FieldDiff({
           <ArrowRight className={cn('h-5 w-5 text-muted-foreground', isRTL && 'rotate-180')} />
         </div>
 
-        {/* Server state */}
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
-        <div className="rounded bg-blue-50 dark:bg-blue-900/20 p-2 border border-blue-200 dark:border-blue-800">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
-          <p className="text-xs text-blue-600 dark:text-blue-400 mb-1 font-medium">
-            {t('serverState')}
-          </p>
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
-          <p className="text-blue-800 dark:text-blue-200 break-words">
+        {/* Server state — D-58-03-08: server-state (incoming/info) → info */}
+        <div className="rounded bg-info/10 p-2 border border-info/30">
+          <p className="text-xs text-info mb-1 font-medium">{t('serverState')}</p>
+          <p className="text-info break-words">
             {serverStr || <span className="italic text-muted-foreground">{t('empty')}</span>}
           </p>
         </div>
@@ -202,8 +192,7 @@ export function ConflictResolutionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
         <DialogHeader>
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
-          <DialogTitle className="flex items-center gap-2 text-amber-600 dark:text-amber-500">
+          <DialogTitle className="flex items-center gap-2 text-warning">
             <FileWarning className="h-5 w-5" />
             {t('conflictDetected')}
           </DialogTitle>
@@ -220,8 +209,7 @@ export function ConflictResolutionDialog({
         <ScrollArea className="flex-1 max-h-[300px] pe-4">
           <div className="space-y-3">
             <h4 className="text-sm font-medium flex items-center gap-2">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
-              <AlertTriangle className="h-4 w-4 text-amber-500" />
+              <AlertTriangle className="h-4 w-4 text-warning" />
               {t('conflictingFields', { count: summary.changes.length })}
             </h4>
 
@@ -286,23 +274,17 @@ export function ConflictBanner({
     <div
       className={cn(
         'flex items-center justify-between gap-3 px-4 py-3 rounded-lg',
-        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */
-        'bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800',
-        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */
-        'text-amber-800 dark:text-amber-200',
+        'bg-warning/10 border border-warning/30',
+        'text-warning',
         className,
       )}
       role="alert"
     >
       <div className="flex items-center gap-2">
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
-        <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-500 shrink-0" />
+        <AlertTriangle className="h-5 w-5 text-warning shrink-0" />
         <div>
           <p className="text-sm font-medium">{t('conflictDetected')}</p>
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog */}
-          <p className="text-xs text-amber-600 dark:text-amber-400">
-            {t('conflictBannerDescription')}
-          </p>
+          <p className="text-xs text-warning">{t('conflictBannerDescription')}</p>
         </div>
       </div>
 
@@ -310,8 +292,7 @@ export function ConflictBanner({
         variant="outline"
         size="sm"
         onClick={onResolve}
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConflictResolutionDialog
-        className="shrink-0 border-amber-300 text-amber-700 hover:bg-amber-100 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/40"
+        className="shrink-0 border-warning/30 text-warning hover:bg-warning/10"
       >
         {t('resolveNow')}
       </Button>

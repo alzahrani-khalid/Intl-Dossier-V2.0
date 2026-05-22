@@ -231,16 +231,8 @@ export function EntityLinkManager({
         )}
       >
         <div className={cn('flex items-center gap-2', isRTL && 'flex-row-reverse')}>
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkManager */}
-          <LinkIcon className="h-5 w-5 sm:h-6 sm:w-6 text-slate-600 dark:text-slate-400" />
-          <h2
-            className={cn(
-              'text-lg sm:text-xl font-semibold',
-              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkManager */
-              'text-slate-900 dark:text-slate-100',
-              'text-start',
-            )}
-          >
+          <LinkIcon className="h-5 w-5 sm:h-6 sm:w-6 text-ink-mute" />
+          <h2 className={cn('text-lg sm:text-xl font-semibold', 'text-ink', 'text-start')}>
             {t('entityLinks.title')}
           </h2>
         </div>
@@ -294,8 +286,7 @@ export function EntityLinkManager({
             <Trash
               className={cn(
                 'h-4 w-4',
-                /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkManager */
-                deletedLinks.length > 0 && 'text-red-600',
+                deletedLinks.length > 0 && 'text-danger',
                 isRTL ? 'ms-2' : 'me-2',
               )}
             />
@@ -310,16 +301,14 @@ export function EntityLinkManager({
           {/* Loading state */}
           {isLoading && (
             <div className="flex items-center justify-center py-8 sm:py-12">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkManager */}
-              <div className="animate-pulse text-slate-400">{t('common.loading')}</div>
+              <div className="animate-pulse text-ink-mute">{t('common.loading')}</div>
             </div>
           )}
 
           {/* Error state */}
           {error && (
             <div className="text-center py-8 sm:py-12">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkManager */}
-              <p className="text-sm sm:text-base text-red-600">{t('entityLinks.loadError')}</p>
+              <p className="text-sm sm:text-base text-danger">{t('entityLinks.loadError')}</p>
             </div>
           )}
 
@@ -341,16 +330,14 @@ export function EntityLinkManager({
           {/* Loading state */}
           {isLoading && (
             <div className="flex items-center justify-center py-8 sm:py-12">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkManager */}
-              <div className="animate-pulse text-slate-400">{t('common.loading')}</div>
+              <div className="animate-pulse text-ink-mute">{t('common.loading')}</div>
             </div>
           )}
 
           {/* Error state */}
           {error && (
             <div className="text-center py-8 sm:py-12">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkManager */}
-              <p className="text-sm sm:text-base text-red-600">{t('entityLinks.loadError')}</p>
+              <p className="text-sm sm:text-base text-danger">{t('entityLinks.loadError')}</p>
             </div>
           )}
 

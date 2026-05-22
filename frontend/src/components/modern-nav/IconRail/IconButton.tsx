@@ -100,8 +100,7 @@ export function IconButton({
         <TooltipContent
           side={isRTL ? 'left' : 'right'}
           sideOffset={8}
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#IconButton
-          className="bg-gray-900 text-white border-gray-800"
+          className="bg-foreground text-background border-foreground/80"
         >
           <p className="text-sm font-medium">{tooltip}</p>
         </TooltipContent>

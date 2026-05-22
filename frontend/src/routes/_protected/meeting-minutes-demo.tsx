@@ -248,8 +248,7 @@ function MeetingMinutesDemo() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes-demo */}
-              <Users className="h-8 w-8 text-blue-500" />
+              <Users className="h-8 w-8 text-accent" />
               <div>
                 <p className="text-2xl font-bold">{attendees.length}</p>
                 <p className="text-xs text-muted-foreground">{t('stats.attendees')}</p>
@@ -261,8 +260,7 @@ function MeetingMinutesDemo() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes-demo */}
-              <CheckSquare className="h-8 w-8 text-green-500" />
+              <CheckSquare className="h-8 w-8 text-success" />
               <div>
                 <p className="text-2xl font-bold">{actionItems.length}</p>
                 <p className="text-xs text-muted-foreground">{t('stats.actionItems')}</p>
@@ -274,8 +272,7 @@ function MeetingMinutesDemo() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes-demo */}
-              <Sparkles className="h-8 w-8 text-purple-500" />
+              <Sparkles className="h-8 w-8 text-secondary" />
               <div>
                 <p className="text-2xl font-bold">
                   {actionItems.filter((i) => i.ai_extracted).length}
@@ -289,8 +286,7 @@ function MeetingMinutesDemo() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes-demo */}
-              <Mic className="h-8 w-8 text-orange-500" />
+              <Mic className="h-8 w-8 text-warning" />
               <div>
                 <p className="text-2xl font-bold">0</p>
                 <p className="text-xs text-muted-foreground">{t('stats.voiceMemos')}</p>
@@ -372,8 +368,7 @@ function MeetingMinutesDemo() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#meeting-minutes-demo */}
-                <Sparkles className="h-5 w-5 text-purple-500" />
+                <Sparkles className="h-5 w-5 text-secondary" />
                 {t('ai.title')}
               </CardTitle>
             </CardHeader>

@@ -300,17 +300,11 @@ export function WordAssistantPage() {
         </div>
         <div className="flex items-center gap-2">
           <div
-            /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WordAssistantPage */
             className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
-              isConnected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+              isConnected ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'
             }`}
-            /* eslint-enable no-restricted-syntax */
           >
-            <div
-              /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WordAssistantPage */
-              className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-600' : 'bg-red-600'}`}
-              /* eslint-enable no-restricted-syntax */
-            />
+            <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-success' : 'bg-danger'}`} />
             {isConnected ? t('wordAssistant.connected') : t('wordAssistant.disconnected')}
           </div>
           <Button variant="outline" size="sm" onClick={() => setMessages([])}>

@@ -90,8 +90,8 @@ const defaultFormData: TagFormData = {
   name_en: '',
   name_ar: '',
   parent_id: null,
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TagHierarchyManager
-  color: '#3B82F6',
+  // D-58-06-A-21: matches TAG_COLOR_PALETTE[3] (was #3B82F6, the Blue swatch → accent token)
+  color: 'var(--color-accent)',
   icon: 'tag',
   description_en: '',
   description_ar: '',

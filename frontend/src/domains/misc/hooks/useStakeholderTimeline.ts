@@ -10,8 +10,11 @@ import {
   getTimelineCategories,
 } from '../repositories/misc.repository'
 import type {
+  CreateAnnotationRequest,
+  CreateInteractionRequest,
   StakeholderTimelineEvent,
   StakeholderTimelineFilters,
+  TimelineAnnotation,
 } from '@/types/stakeholder-interaction.types'
 
 export const timelineKeys = {
@@ -41,6 +44,17 @@ export interface StakeholderTimelineState {
   setFilters: (filters: StakeholderTimelineFilters) => void
   stats: StakeholderTimelineStats | null
   isLoadingStats: boolean
+}
+
+/**
+ * Return contract for `useStakeholderInteractionMutations` (D-56-07).
+ * Co-located here to match the `StakeholderTimelineState` precedent.
+ */
+export interface UseStakeholderInteractionMutationsReturn {
+  createInteraction: (req: CreateInteractionRequest) => Promise<StakeholderTimelineEvent>
+  isCreating: boolean
+  createAnnotation: (req: CreateAnnotationRequest) => Promise<TimelineAnnotation>
+  isAnnotating: boolean
 }
 
 const EMPTY_FILTERS: StakeholderTimelineFilters = {}
@@ -90,29 +104,38 @@ export function useTimelineCategories() {
   })
 }
 
-/* Stub exports – removed during refactoring, still imported by components */
+/* Typed stub mutations (D-56-05..D-56-10). Return shape: UseStakeholderInteractionMutationsReturn. Bodies throw 'not implemented' until the real stakeholder-interactions backend lands; consumers compile cleanly against the typed contract. */
 
-export function useStakeholderInteractionMutations() {
+export function useStakeholderInteractionMutations(): UseStakeholderInteractionMutationsReturn {
   const queryClient = useQueryClient()
-  const addInteraction = useMutation({
-    mutationFn: (_data: Record<string, unknown>) => Promise.resolve({ success: true }),
+  const createInteractionMutation = useMutation<
+    StakeholderTimelineEvent,
+    Error,
+    CreateInteractionRequest
+  >({
+    mutationFn: (_req) => {
+      // prettier-ignore
+      throw new Error('useStakeholderInteractionMutations: not implemented — wire to real backend in future stakeholder-interactions feature phase')
+    },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: timelineKeys.all })
     },
   })
-  const updateInteraction = useMutation({
-    mutationFn: (_data: Record<string, unknown>) => Promise.resolve({ success: true }),
+  const createAnnotationMutation = useMutation<TimelineAnnotation, Error, CreateAnnotationRequest>({
+    mutationFn: (_req) => {
+      // prettier-ignore
+      throw new Error('useStakeholderInteractionMutations: not implemented — wire to real backend in future stakeholder-interactions feature phase')
+    },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: timelineKeys.all })
     },
   })
-  const deleteInteraction = useMutation({
-    mutationFn: (_id: string) => Promise.resolve({ success: true }),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: timelineKeys.all })
-    },
-  })
-  return { addInteraction, updateInteraction, deleteInteraction }
+  return {
+    createInteraction: createInteractionMutation.mutateAsync,
+    isCreating: createInteractionMutation.isPending,
+    createAnnotation: createAnnotationMutation.mutateAsync,
+    isAnnotating: createAnnotationMutation.isPending,
+  }
 }
 
 export function getAvailableInteractionTypes(): string[] {

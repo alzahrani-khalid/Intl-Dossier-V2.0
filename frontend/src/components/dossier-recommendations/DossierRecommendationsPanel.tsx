@@ -111,10 +111,10 @@ function RecommendationsHeader({
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationsPanel */}
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationsPanel */}
-          <Sparkles className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+        {/* D-58-04-07: AI-recommendations glyph — amber+orange gradient
+            collapses to bg-warning/10; Sparkles icon → text-warning. */}
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-warning/10">
+          <Sparkles className="h-4 w-4 text-warning" />
         </div>
         <div>
           <h3 className="text-sm font-semibold">{t('title')}</h3>
@@ -215,8 +215,7 @@ export function DossierRecommendationsPanel({
       {isLoading ? (
         <LoadingSkeleton />
       ) : error ? (
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationsPanel
-        <div className="py-4 text-center text-sm text-red-500">{t('errorLoading')}</div>
+        <div className="py-4 text-center text-sm text-destructive">{t('errorLoading')}</div>
       ) : !hasRecommendations ? (
         <EmptyState onRefresh={handleRefresh} />
       ) : (
@@ -334,8 +333,7 @@ export function DossierRecommendationsPanel({
       ) : hasRecommendations ? (
         <>
           <div className="flex items-center gap-2 mb-2">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationsPanel */}
-            <Sparkles className="h-4 w-4 text-amber-500" />
+            <Sparkles className="h-4 w-4 text-warning" />
             <span className="text-xs font-medium">{t('relatedDossiers')}</span>
             <Badge variant="secondary" className="text-xs">
               {recommendations.length}

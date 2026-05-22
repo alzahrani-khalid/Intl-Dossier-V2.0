@@ -78,8 +78,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SecurityAssessment */}
-              <Shield className="h-5 w-5 text-red-600 dark:text-red-400" />
+              <Shield className="h-5 w-5 text-danger" />
               <CardTitle className="text-base sm:text-lg">
                 {t('intelligence.types.security', 'Security Assessment')}
               </CardTitle>
@@ -95,8 +94,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
         </CardHeader>
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SecurityAssessment */}
-            <ShieldAlert className="mx-auto h-12 w-12 mb-3 text-gray-400" />
+            <ShieldAlert className="mx-auto h-12 w-12 mb-3 text-ink-mute" />
             <p className="text-sm">
               {t('intelligence.noSecurityData', 'No security intelligence available')}
             </p>
@@ -112,8 +110,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SecurityAssessment */}
-              <Shield className="h-5 w-5 flex-shrink-0 text-red-600 dark:text-red-400" />
+              <Shield className="h-5 w-5 flex-shrink-0 text-danger" />
               <CardTitle className="text-base sm:text-lg truncate">
                 {t('intelligence.types.security', 'Security Assessment')}
               </CardTitle>
@@ -142,8 +139,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
             </Badge>
           )}
           {!isStale && (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SecurityAssessment
-            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+            <Badge variant="outline" className="bg-success/5 text-success border-success/20">
               {t('intelligence.current', 'Current')}
             </Badge>
           )}
@@ -190,8 +186,7 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
               {Object.entries(latestReport.metrics).map(([key, value]) => (
                 <div key={key} className="bg-muted/50 rounded-lg p-3">
                   <div className="flex items-center gap-2 mb-1">
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SecurityAssessment */}
-                    <Shield className="h-4 w-4 text-red-600" />
+                    <Shield className="h-4 w-4 text-danger" />
                     <span className="text-xs font-medium text-muted-foreground capitalize">
                       {key.replace(/_/g, ' ')}
                     </span>

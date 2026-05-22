@@ -68,10 +68,8 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     titleKey: 'wizard.templates.stakeholderMeeting.title',
     descriptionKey: 'wizard.templates.stakeholderMeeting.description',
     icon: Users,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
-    color: 'text-blue-600 dark:text-blue-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
-    bgColor: 'bg-blue-100 dark:bg-blue-900/30',
+    color: 'text-accent',
+    bgColor: 'bg-accent/10 dark:bg-accent/30',
     defaults: {
       entry_type: 'internal_meeting',
       duration_minutes: 60,
@@ -86,10 +84,8 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     titleKey: 'wizard.templates.deadlineReminder.title',
     descriptionKey: 'wizard.templates.deadlineReminder.description',
     icon: Flag,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
-    color: 'text-red-600 dark:text-red-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
-    bgColor: 'bg-red-100 dark:bg-red-900/30',
+    color: 'text-danger',
+    bgColor: 'bg-danger/10 dark:bg-danger/30',
     defaults: {
       entry_type: 'deadline',
       duration_minutes: 0,
@@ -105,10 +101,8 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     titleKey: 'wizard.templates.forumEvent.title',
     descriptionKey: 'wizard.templates.forumEvent.description',
     icon: Globe,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
-    color: 'text-purple-600 dark:text-purple-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
-    bgColor: 'bg-purple-100 dark:bg-purple-900/30',
+    color: 'text-secondary-foreground',
+    bgColor: 'bg-secondary dark:bg-secondary/30',
     defaults: {
       entry_type: 'main_event',
       duration_minutes: 480, // 8 hours
@@ -123,10 +117,8 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     titleKey: 'wizard.templates.trainingSession.title',
     descriptionKey: 'wizard.templates.trainingSession.description',
     icon: GraduationCap,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
-    color: 'text-green-600 dark:text-green-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
-    bgColor: 'bg-green-100 dark:bg-green-900/30',
+    color: 'text-success',
+    bgColor: 'bg-success/10 dark:bg-success/30',
     defaults: {
       entry_type: 'training',
       duration_minutes: 120,
@@ -141,10 +133,8 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     titleKey: 'wizard.templates.reviewMeeting.title',
     descriptionKey: 'wizard.templates.reviewMeeting.description',
     icon: FileCheck,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
-    color: 'text-amber-600 dark:text-amber-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
-    bgColor: 'bg-amber-100 dark:bg-amber-900/30',
+    color: 'text-warning',
+    bgColor: 'bg-warning/10 dark:bg-warning/30',
     defaults: {
       entry_type: 'review',
       duration_minutes: 90,
@@ -159,10 +149,8 @@ const EVENT_TEMPLATES: EventTemplate[] = [
     titleKey: 'wizard.templates.bilateralMeeting.title',
     descriptionKey: 'wizard.templates.bilateralMeeting.description',
     icon: Briefcase,
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
-    color: 'text-indigo-600 dark:text-indigo-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEmptyWizard
-    bgColor: 'bg-indigo-100 dark:bg-indigo-900/30',
+    color: 'text-secondary-foreground',
+    bgColor: 'bg-secondary dark:bg-secondary/30',
     defaults: {
       entry_type: 'internal_meeting',
       duration_minutes: 45,

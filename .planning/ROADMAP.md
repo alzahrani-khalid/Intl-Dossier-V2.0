@@ -263,7 +263,7 @@ Plans:
 | 55 | v6.4 | 4/4 | Complete | 2026-05-18 |
 | 56 | v6.4 | 0/0 | Not started | — |
 | 57 | v6.4 | 0/0 | Not started | — |
-| 58 | v6.4 | 0/0 | Not started | — |
+| 58 | v6.4 | 4/7 | Wave-4 implementation complete; merge deferred | — |
 | 59 | v6.4 | 0/0 | Not started | — |
 
 <!-- gsd:progress:end -->

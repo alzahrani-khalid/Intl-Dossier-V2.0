@@ -100,17 +100,13 @@ function PersonsListPage() {
   const getImportanceColor = (level: ImportanceLevel) => {
     switch (level) {
       case 5:
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PersonsListPage
-        return 'bg-red-500/10 text-red-600 border-red-200'
+        return 'bg-danger/10 text-danger border-danger/20'
       case 4:
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PersonsListPage
-        return 'bg-orange-500/10 text-orange-600 border-orange-200'
+        return 'bg-warning/10 text-warning border-warning/20'
       case 3:
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PersonsListPage
-        return 'bg-yellow-500/10 text-yellow-600 border-yellow-200'
+        return 'bg-warning/5 text-warning/80 border-warning/10'
       case 2:
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PersonsListPage
-        return 'bg-blue-500/10 text-blue-600 border-blue-200'
+        return 'bg-accent/10 text-accent border-accent/20'
       default:
         return 'bg-muted text-muted-foreground border'
     }

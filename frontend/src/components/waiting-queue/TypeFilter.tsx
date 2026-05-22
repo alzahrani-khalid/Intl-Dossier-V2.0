@@ -24,14 +24,10 @@ interface WorkItemType {
 }
 
 const workItemTypes: WorkItemType[] = [
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TypeFilter
-  { value: 'dossier', label: 'Dossier', Icon: Folder, color: 'text-blue-600' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TypeFilter
-  { value: 'ticket', label: 'Ticket', Icon: Ticket, color: 'text-purple-600' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TypeFilter
-  { value: 'position', label: 'Position', Icon: User, color: 'text-green-600' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TypeFilter
-  { value: 'task', label: 'Task', Icon: CheckSquare, color: 'text-orange-600' },
+  { value: 'dossier', label: 'Dossier', Icon: Folder, color: 'text-accent' },
+  { value: 'ticket', label: 'Ticket', Icon: Ticket, color: 'text-secondary-foreground' },
+  { value: 'position', label: 'Position', Icon: User, color: 'text-success' },
+  { value: 'task', label: 'Task', Icon: CheckSquare, color: 'text-warning' },
 ]
 
 const EMPTY_VALUE: ('dossier' | 'ticket' | 'position' | 'task')[] = []

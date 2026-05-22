@@ -194,8 +194,11 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
               {/* Quick Stats Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div className="bg-muted/50 rounded-lg p-4 text-center">
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDossierDetail */}
-                  <Building2 className="h-6 w-6 mx-auto mb-2 text-blue-500" />
+                  {/* D-58-04-15: 4-stat-card palette mapped onto semantic tokens.
+                      members/blue→primary, schedule/green→success,
+                      deliverables/orange→warning, decisions/purple→accent
+                      (D-07 collision). */}
+                  <Building2 className="h-6 w-6 mx-auto mb-2 text-primary" />
                   <p className="text-2xl font-bold">
                     {dossier.extension?.member_organizations?.length || 0}
                   </p>
@@ -204,8 +207,7 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
                   </p>
                 </div>
                 <div className="bg-muted/50 rounded-lg p-4 text-center">
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDossierDetail */}
-                  <CalendarDays className="h-6 w-6 mx-auto mb-2 text-green-500" />
+                  <CalendarDays className="h-6 w-6 mx-auto mb-2 text-success" />
                   <p className="text-2xl font-bold">
                     {dossier.extension?.meeting_frequency ? 1 : 0}
                   </p>
@@ -214,8 +216,7 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
                   </p>
                 </div>
                 <div className="bg-muted/50 rounded-lg p-4 text-center">
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDossierDetail */}
-                  <Target className="h-6 w-6 mx-auto mb-2 text-orange-500" />
+                  <Target className="h-6 w-6 mx-auto mb-2 text-warning" />
                   <p className="text-2xl font-bold">
                     {dossier.extension?.deliverables?.length || 0}
                   </p>
@@ -224,8 +225,7 @@ export function ForumDossierDetail({ dossier, initialTab }: ForumDossierDetailPr
                   </p>
                 </div>
                 <div className="bg-muted/50 rounded-lg p-4 text-center">
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ForumDossierDetail */}
-                  <FileText className="h-6 w-6 mx-auto mb-2 text-purple-500" />
+                  <FileText className="h-6 w-6 mx-auto mb-2 text-accent" />
                   <p className="text-2xl font-bold">
                     {dossier.extension?.forum_type === 'working_group' ? 1 : 0}
                   </p>

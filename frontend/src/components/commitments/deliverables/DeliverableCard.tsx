@@ -143,10 +143,8 @@ export function DeliverableCard({ deliverable, commitmentId, onEdit }: Deliverab
       <Card
         className={cn(
           'transition-colors',
-          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DeliverableCard */
-          isCompleted && 'bg-green-50/50 dark:bg-green-900/10',
-          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DeliverableCard */
-          isOverdue && 'border-red-200 dark:border-red-800',
+          isCompleted && 'bg-success/5 dark:bg-success/20',
+          isOverdue && 'border-danger/20 dark:border-danger/70',
         )}
       >
         <CardContent className="p-3 sm:p-4">
@@ -196,15 +194,13 @@ export function DeliverableCard({ deliverable, commitmentId, onEdit }: Deliverab
               <div
                 className={cn(
                   'flex items-center gap-1 text-xs mb-2',
-                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DeliverableCard */
-                  isOverdue ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground',
+                  isOverdue ? 'text-danger' : 'text-muted-foreground',
                 )}
               >
                 {isOverdue ? (
                   <AlertTriangle className="h-3 w-3" />
                 ) : isCompleted ? (
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DeliverableCard
-                  <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
+                  <Check className="h-3 w-3 text-success" />
                 ) : (
                   <Calendar className="h-3 w-3" />
                 )}

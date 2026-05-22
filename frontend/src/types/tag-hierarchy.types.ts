@@ -311,30 +311,24 @@ export interface TagAnalyticsResponse {
 // Helper Constants
 // ============================================================================
 
-/**
- * Default tag colors for quick selection
- */
+// D-58-06-A-21: TAG_COLOR_PALETTE — user-selectable swatches. 10 raw hex
+// collapsed to CSS var() refs with color-mix(in oklch) for within-family
+// disambiguation. D-07 collision (blue + violet + pink + indigo collapsed
+// onto accent + secondary + secondary-mix steps).
+//
+// Tags stored in DB reference these palette indices, so the user-visible
+// color set stays 10 distinct visual values backed by semantic tokens.
 export const TAG_COLOR_PALETTE = [
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
-  '#EF4444', // Red
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
-  '#F59E0B', // Amber
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
-  '#10B981', // Emerald
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
-  '#3B82F6', // Blue
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
-  '#8B5CF6', // Violet
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
-  '#EC4899', // Pink
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
-  '#06B6D4', // Cyan
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
-  '#84CC16', // Lime
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
-  '#F97316', // Orange
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#tag-hierarchy.types
-  '#6366F1', // Indigo
+  'var(--heroui-danger)', // Red (was #EF4444)
+  'var(--heroui-warning)', // Amber (was #F59E0B)
+  'var(--heroui-success)', // Emerald (was #10B981)
+  'var(--color-accent)', // Blue (was #3B82F6)
+  'var(--color-secondary)', // Violet (was #8B5CF6) [D-07]
+  'color-mix(in oklch, var(--color-secondary) 70%, var(--heroui-danger) 30%)', // Pink (was #EC4899)
+  'var(--color-info)', // Cyan (was #06B6D4)
+  'color-mix(in oklch, var(--heroui-success) 60%, var(--heroui-warning) 40%)', // Lime (was #84CC16)
+  'color-mix(in oklch, var(--heroui-warning) 50%, var(--heroui-danger) 50%)', // Orange (was #F97316)
+  'color-mix(in oklch, var(--color-secondary) 60%, var(--color-accent) 40%)', // Indigo (was #6366F1) [D-07]
 ] as const
 
 /**

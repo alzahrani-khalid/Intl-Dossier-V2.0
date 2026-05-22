@@ -204,12 +204,9 @@ function EntityLinkSuggestions({ ticketId, onLinkClick, className }: EntityLinkS
   }
 
   const getConfidenceColor = (score: number) => {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkSuggestions
-    if (score >= 90) return 'bg-green-500'
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkSuggestions
-    if (score >= 70) return 'bg-yellow-500'
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkSuggestions
-    return 'bg-orange-500'
+    if (score >= 90) return 'bg-success'
+    if (score >= 70) return 'bg-warning'
+    return 'bg-warning'
   }
 
   const getConfidenceLabel = (score: number) => {
@@ -398,8 +395,7 @@ function ProposalCard({
           <Button
             variant="ghost"
             size="icon"
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkSuggestions
-            className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-100"
+            className="h-8 w-8 text-success hover:text-success hover:bg-success/10"
             onClick={onApprove}
             disabled={isApproving || isRejecting}
           >
@@ -412,8 +408,7 @@ function ProposalCard({
           <Button
             variant="ghost"
             size="icon"
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EntityLinkSuggestions
-            className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-100"
+            className="h-8 w-8 text-danger hover:text-danger hover:bg-danger/10"
             onClick={onReject}
             disabled={isApproving || isRejecting}
           >

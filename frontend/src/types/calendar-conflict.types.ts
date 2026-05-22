@@ -262,40 +262,31 @@ export interface ConflictsListResponse {
 /**
  * Severity badge color mapping
  */
+// D-58-06-A-10: SEVERITY palette → destructive (critical) / warning-step (high) /
+// warning (medium) / accent (low). No D-07 collision. Sibling pair high (orange)
+// → warning/20 vs medium (yellow) → warning/10.
 export const SEVERITY_COLORS: Record<
   ConflictSeverity,
   { bg: string; text: string; border: string }
 > = {
   critical: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
-    bg: 'bg-red-100 dark:bg-red-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
-    text: 'text-red-700 dark:text-red-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
-    border: 'border-red-200 dark:border-red-800',
+    bg: 'bg-destructive/10 dark:bg-destructive/30',
+    text: 'text-destructive',
+    border: 'border-destructive/20 dark:border-destructive/80',
   },
   high: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
-    bg: 'bg-orange-100 dark:bg-orange-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
-    text: 'text-orange-700 dark:text-orange-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
-    border: 'border-orange-200 dark:border-orange-800',
+    bg: 'bg-warning/20 dark:bg-warning/40',
+    text: 'text-warning',
+    border: 'border-warning/30 dark:border-warning/60',
   },
   medium: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
-    bg: 'bg-yellow-100 dark:bg-yellow-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
-    text: 'text-yellow-700 dark:text-yellow-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
-    border: 'border-yellow-200 dark:border-yellow-800',
+    bg: 'bg-warning/10 dark:bg-warning/30',
+    text: 'text-warning',
+    border: 'border-warning/20 dark:border-warning/80',
   },
   low: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
-    bg: 'bg-blue-100 dark:bg-blue-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
-    text: 'text-blue-700 dark:text-blue-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-conflict.types
-    border: 'border-blue-200 dark:border-blue-800',
+    bg: 'bg-accent/10 dark:bg-accent/30',
+    text: 'text-accent',
+    border: 'border-accent/20 dark:border-accent/80',
   },
 }

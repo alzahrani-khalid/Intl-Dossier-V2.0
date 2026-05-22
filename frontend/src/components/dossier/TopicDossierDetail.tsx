@@ -48,10 +48,13 @@ function PolicyOverview({ dossier }: { dossier: TopicDossierDetailProps['dossier
     <Card>
       <CardContent className="p-4 sm:p-6 space-y-4">
         <div className="flex items-center gap-3">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-          <div className="p-2 rounded-lg bg-pink-500/10">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-            <Target className="h-5 w-5 text-pink-600 dark:text-pink-400" />
+          {/* D-58-04-16: Topic-themed icons mapped onto canonical dossierTypeColors
+              for `topic` (destructive family per semantic-colors.ts) for the
+              hero/policy badge; informational sections use primary, document
+              sections use success, taxonomy/subtopics use secondary (D-07
+              collision: purple-family → accent-soft). */}
+          <div className="p-2 rounded-lg bg-destructive/10">
+            <Target className="h-5 w-5 text-destructive" />
           </div>
           <div className="flex-1">
             <h3 className="font-semibold text-base sm:text-lg text-start">
@@ -121,10 +124,8 @@ function RelatedDossiers({ dossierId }: { dossierId: string }) {
       <Card>
         <CardContent className="p-4 sm:p-6 space-y-3">
           <div className="flex items-center gap-3 mb-4">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-            <div className="p-2 rounded-lg bg-blue-500/10">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-              <Network className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Network className="h-5 w-5 text-primary" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-base sm:text-lg text-start">
@@ -145,10 +146,8 @@ function RelatedDossiers({ dossierId }: { dossierId: string }) {
       <Card>
         <CardContent className="p-4 sm:p-6">
           <div className="flex items-center gap-3 mb-4">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-            <div className="p-2 rounded-lg bg-blue-500/10">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-              <Network className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Network className="h-5 w-5 text-primary" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-base sm:text-lg text-start">
@@ -171,10 +170,8 @@ function RelatedDossiers({ dossierId }: { dossierId: string }) {
     <Card>
       <CardContent className="p-4 sm:p-6">
         <div className="flex items-center gap-3 mb-4">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-          <div className="p-2 rounded-lg bg-blue-500/10">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-            <Network className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+          <div className="p-2 rounded-lg bg-primary/10">
+            <Network className="h-5 w-5 text-primary" />
           </div>
           <div className="flex-1">
             <h3 className="font-semibold text-base sm:text-lg text-start">
@@ -242,10 +239,8 @@ function KeyDocuments({ dossierId }: { dossierId: string }) {
       <Card>
         <CardContent className="p-4 sm:p-6 space-y-3">
           <div className="flex items-center gap-3 mb-4">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-            <div className="p-2 rounded-lg bg-green-500/10">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-              <FileText className="h-5 w-5 text-green-600 dark:text-green-400" />
+            <div className="p-2 rounded-lg bg-success/10">
+              <FileText className="h-5 w-5 text-success" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-base sm:text-lg text-start">
@@ -266,10 +261,8 @@ function KeyDocuments({ dossierId }: { dossierId: string }) {
       <Card>
         <CardContent className="p-4 sm:p-6">
           <div className="flex items-center gap-3 mb-4">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-            <div className="p-2 rounded-lg bg-green-500/10">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-              <FileText className="h-5 w-5 text-green-600 dark:text-green-400" />
+            <div className="p-2 rounded-lg bg-success/10">
+              <FileText className="h-5 w-5 text-success" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-base sm:text-lg text-start">
@@ -292,10 +285,8 @@ function KeyDocuments({ dossierId }: { dossierId: string }) {
     <Card>
       <CardContent className="p-4 sm:p-6">
         <div className="flex items-center gap-3 mb-4">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-          <div className="p-2 rounded-lg bg-green-500/10">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-            <FileText className="h-5 w-5 text-green-600 dark:text-green-400" />
+          <div className="p-2 rounded-lg bg-success/10">
+            <FileText className="h-5 w-5 text-success" />
           </div>
           <div className="flex-1">
             <h3 className="font-semibold text-base sm:text-lg text-start">
@@ -368,10 +359,8 @@ function Subtopics({ dossierId }: { dossierId: string }) {
       <Card>
         <CardContent className="p-4 sm:p-6 space-y-3">
           <div className="flex items-center gap-3 mb-4">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-            <div className="p-2 rounded-lg bg-purple-500/10">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-              <FolderTree className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+            <div className="p-2 rounded-lg bg-secondary">
+              <FolderTree className="h-5 w-5 text-secondary-foreground" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-base sm:text-lg text-start">
@@ -392,10 +381,8 @@ function Subtopics({ dossierId }: { dossierId: string }) {
       <Card>
         <CardContent className="p-4 sm:p-6">
           <div className="flex items-center gap-3 mb-4">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-            <div className="p-2 rounded-lg bg-purple-500/10">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-              <FolderTree className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+            <div className="p-2 rounded-lg bg-secondary">
+              <FolderTree className="h-5 w-5 text-secondary-foreground" />
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-base sm:text-lg text-start">
@@ -418,10 +405,8 @@ function Subtopics({ dossierId }: { dossierId: string }) {
     <Card>
       <CardContent className="p-4 sm:p-6">
         <div className="flex items-center gap-3 mb-4">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-          <div className="p-2 rounded-lg bg-purple-500/10">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-            <FolderTree className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+          <div className="p-2 rounded-lg bg-secondary">
+            <FolderTree className="h-5 w-5 text-secondary-foreground" />
           </div>
           <div className="flex-1">
             <h3 className="font-semibold text-base sm:text-lg text-start">
@@ -446,8 +431,7 @@ function Subtopics({ dossierId }: { dossierId: string }) {
                 className="block p-3 sm:p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TopicDossierDetail */}
-                  <FolderTree className="h-5 w-5 text-purple-500 shrink-0" />
+                  <FolderTree className="h-5 w-5 text-secondary-foreground shrink-0" />
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-medium truncate">{displayName}</h4>
                     {displayDescription && (

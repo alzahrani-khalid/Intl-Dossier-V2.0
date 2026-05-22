@@ -37,24 +37,26 @@ export function StaffDirectory({ dossier }: StaffDirectoryProps) {
     return labels[role]?.[isRTL ? 'ar' : 'en'] || role
   }
 
-  // Get role variant for badge styling
+  // Get role variant for badge styling.
+  //
+  // D-58-04-23: 5-role staff palette mapped onto semantic tokens.
+  //   chief_of_staff (purple) → secondary (D-07 collision)
+  //   scheduler      (blue)   → primary
+  //   policy_advisor (green)  → success
+  //   press_secretary(orange) → warning/20 sibling
+  //   other / default(gray)   → muted
   const getRoleVariant = (role: string) => {
     switch (role) {
       case 'chief_of_staff':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StaffDirectory
-        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+        return 'bg-secondary text-secondary-foreground'
       case 'scheduler':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StaffDirectory
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+        return 'bg-primary/10 text-primary'
       case 'policy_advisor':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StaffDirectory
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+        return 'bg-success/10 text-success'
       case 'press_secretary':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StaffDirectory
-        return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
+        return 'bg-warning/20 text-warning'
       default:
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StaffDirectory
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200'
+        return 'bg-muted text-muted-foreground'
     }
   }
 

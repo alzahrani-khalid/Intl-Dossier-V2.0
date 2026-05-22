@@ -56,7 +56,7 @@ export function WorkflowRuleCard({
   return (
     <Card
       className={`group transition-all hover:shadow-md ${
-        rule.is_active ? 'border-s-4 border-s-green-500' : 'opacity-60'
+        rule.is_active ? 'border-s-4 border-s-success' : 'opacity-60'
       }`}
     >
       <CardHeader className="pb-2">
@@ -65,8 +65,7 @@ export function WorkflowRuleCard({
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="font-semibold text-base truncate">{name}</h3>
               {rule.is_active ? (
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WorkflowRuleCard
-                <Badge variant="default" className="bg-green-500">
+                <Badge variant="default" className="bg-success">
                   {t('filters.active')}
                 </Badge>
               ) : (

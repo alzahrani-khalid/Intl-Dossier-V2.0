@@ -13,7 +13,10 @@ test.describe('Phase 39: Kanban render', () => {
     await page.goto('/kanban')
     await page.waitForLoadState('networkidle')
 
-    await expect(page.getByRole('searchbox')).toBeVisible()
+    // Phase 57 D-21: scope to the board-local searchbox. The global IntelDossier
+    // topbar (rendered by _protected layout post-DesignV2 / Phase 55) also
+    // contributes a searchbox; both must be addressable, so we scope by class.
+    await expect(page.locator('input.board-search')).toBeVisible()
 
     const columns = page.locator('section.col')
     await expect(columns).toHaveCount(4)

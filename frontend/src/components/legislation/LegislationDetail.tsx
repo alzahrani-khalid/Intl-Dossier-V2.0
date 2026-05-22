@@ -344,12 +344,10 @@ function CommentPeriodCard({ endDate }: { endDate: string }) {
   )
 
   return (
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LegislationDetail
-    <Card className="border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20">
+    <Card className="border-warning/20 dark:border-warning/70 bg-warning/5 dark:bg-warning/20">
       <CardContent className="p-4">
         <p className="text-sm text-muted-foreground text-start">{t('commentPeriod.title')}</p>
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LegislationDetail */}
-        <p className="text-lg font-semibold text-amber-700 dark:text-amber-300 text-start">
+        <p className="text-lg font-semibold text-warning text-start">
           {t('commentPeriod.daysRemaining', { count: daysRemaining })}
         </p>
       </CardContent>
@@ -655,8 +653,7 @@ function DeadlinesTab({
             key={deadline.id}
             className={cn(
               deadline.is_completed && 'opacity-60',
-              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LegislationDetail */
-              isOverdue && 'border-red-300 dark:border-red-700',
+              isOverdue && 'border-destructive/20 dark:border-destructive/70',
             )}
           >
             <CardContent className="p-4">
@@ -700,10 +697,8 @@ function DeadlinesTab({
                     <p
                       className={cn(
                         'text-sm',
-                        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LegislationDetail */
-                        isOverdue && 'text-red-600 dark:text-red-400',
-                        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#LegislationDetail */
-                        isToday && 'text-amber-600 dark:text-amber-400',
+                        isOverdue && 'text-destructive',
+                        isToday && 'text-warning',
                         !isOverdue && !isToday && 'text-muted-foreground',
                       )}
                     >

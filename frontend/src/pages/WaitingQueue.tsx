@@ -278,14 +278,9 @@ function WaitingQueuePageInner() {
     const since = new Date(assignedAt)
     const daysInReview = Math.floor((now.getTime() - since.getTime()) / (1000 * 60 * 60 * 24))
 
-    if (daysInReview >= 7)
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue
-      return { color: 'text-red-600', severity: 'critical', days: daysInReview }
-    if (daysInReview >= 3)
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue
-      return { color: 'text-orange-600', severity: 'warning', days: daysInReview }
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue
-    return { color: 'text-yellow-600', severity: 'normal', days: daysInReview }
+    if (daysInReview >= 7) return { color: 'text-danger', severity: 'critical', days: daysInReview }
+    if (daysInReview >= 3) return { color: 'text-warning', severity: 'warning', days: daysInReview }
+    return { color: 'text-warning/70', severity: 'normal', days: daysInReview }
   }
 
   const getTypeIcon = (type: string) => {
@@ -421,25 +416,20 @@ function WaitingQueuePageInner() {
 
       {/* Bulk Job Progress Indicator */}
       {bulkJobId && bulkJobStatus && (
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue
-        <div className="border-b border-border bg-blue-50 dark:bg-blue-950">
+        <div className="border-b border-border bg-accent/5 dark:bg-accent/20">
           <div className="container mx-auto px-4 py-3 sm:px-6 lg:px-8">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue */}
-              <Loader2 className="size-4 animate-spin text-blue-600" />
+              <Loader2 className="size-4 animate-spin text-accent" />
               <div className="flex-1">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue */}
-                <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                <p className="text-sm font-medium text-accent">
                   {t('waitingQueue.bulkActions.sending')}
                 </p>
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue */}
-                <p className="text-xs text-blue-700 dark:text-blue-300">
+                <p className="text-xs text-accent">
                   {bulkJobStatus.processed_items} / {bulkJobStatus.total_items}{' '}
                   {t('waitingQueue.bulkActions.completed')}
                 </p>
               </div>
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue */}
-              <div className="text-sm text-blue-900 dark:text-blue-100">
+              <div className="text-sm text-accent">
                 {Math.round((bulkJobStatus.processed_items / bulkJobStatus.total_items) * 100)}%
               </div>
             </div>
@@ -573,22 +563,15 @@ function WaitingQueuePageInner() {
 
                                   {/* Engagement Info */}
                                   {engagement && (
-                                    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue
-                                    <div className="flex items-center gap-2 rounded-md bg-blue-50 px-3 py-1.5 text-sm dark:bg-blue-950">
-                                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue */}
-                                      <UserCheck className="size-4 text-blue-600 dark:text-blue-400" />
-                                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue */}
-                                      <span className="font-medium text-blue-900 dark:text-blue-100">
+                                    <div className="flex items-center gap-2 rounded-md bg-accent/5 px-3 py-1.5 text-sm dark:bg-accent/20">
+                                      <UserCheck className="size-4 text-accent" />
+                                      <span className="font-medium text-accent">
                                         {engagement.title}
                                       </span>
                                       {engagement.dossiers && (
                                         <>
-                                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue */}
-                                          <span className="text-blue-600 dark:text-blue-400">
-                                            •
-                                          </span>
-                                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue */}
-                                          <span className="text-xs text-blue-700 dark:text-blue-300">
+                                          <span className="text-accent">•</span>
+                                          <span className="text-xs text-accent">
                                             {isRTL
                                               ? engagement.dossiers.name_ar
                                               : engagement.dossiers.name_en}
@@ -741,22 +724,15 @@ function WaitingQueuePageInner() {
 
                                       {/* Engagement Info */}
                                       {engagement && (
-                                        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue
-                                        <div className="flex items-center gap-2 rounded-md bg-blue-50 px-3 py-1.5 text-sm dark:bg-blue-950">
-                                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue */}
-                                          <UserCheck className="size-4 text-blue-600 dark:text-blue-400" />
-                                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue */}
-                                          <span className="font-medium text-blue-900 dark:text-blue-100">
+                                        <div className="flex items-center gap-2 rounded-md bg-accent/5 px-3 py-1.5 text-sm dark:bg-accent/20">
+                                          <UserCheck className="size-4 text-accent" />
+                                          <span className="font-medium text-accent">
                                             {engagement.title}
                                           </span>
                                           {engagement.dossiers && (
                                             <>
-                                              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue */}
-                                              <span className="text-blue-600 dark:text-blue-400">
-                                                •
-                                              </span>
-                                              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WaitingQueue */}
-                                              <span className="text-xs text-blue-700 dark:text-blue-300">
+                                              <span className="text-accent">•</span>
+                                              <span className="text-xs text-accent">
                                                 {isRTL
                                                   ? engagement.dossiers.name_ar
                                                   : engagement.dossiers.name_en}

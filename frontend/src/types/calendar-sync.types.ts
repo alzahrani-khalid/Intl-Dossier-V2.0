@@ -295,11 +295,14 @@ export const CALENDAR_PROVIDERS: Record<
     scopes: string[]
   }
 > = {
+  // D-58-06-A-11: brand-hex swatches collapsed to semantic CSS vars. Original
+  // brand colors (Google #4285F4, Microsoft #0078D4) all map to accent — the
+  // brand identity is communicated by the `icon` field (`google`/`microsoft`),
+  // not the swatch. iCal gray → muted-foreground.
   google_calendar: {
     name: 'Google Calendar',
     icon: 'google',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-sync.types
-    color: '#4285F4',
+    color: 'var(--color-accent)',
     supportsOAuth: true,
     scopes: [
       'https://www.googleapis.com/auth/calendar',
@@ -309,24 +312,21 @@ export const CALENDAR_PROVIDERS: Record<
   outlook: {
     name: 'Microsoft Outlook',
     icon: 'microsoft',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-sync.types
-    color: '#0078D4',
+    color: 'var(--color-accent)',
     supportsOAuth: true,
     scopes: ['Calendars.ReadWrite', 'offline_access'],
   },
   exchange: {
     name: 'Microsoft Exchange',
     icon: 'microsoft',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-sync.types
-    color: '#0078D4',
+    color: 'var(--color-accent)',
     supportsOAuth: true,
     scopes: ['Calendars.ReadWrite', 'offline_access'],
   },
   ical_feed: {
     name: 'iCal Feed',
     icon: 'calendar',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#calendar-sync.types
-    color: '#6B7280',
+    color: 'var(--color-muted-foreground)',
     supportsOAuth: false,
     scopes: [],
   },

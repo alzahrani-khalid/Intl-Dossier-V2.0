@@ -96,10 +96,8 @@ export function SampleDataBanner({
         {/* Main banner row */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3 sm:p-4">
           <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SampleDataBanner */}
-            <div className="flex-shrink-0 p-1.5 rounded-full bg-amber-100 dark:bg-amber-900/50">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SampleDataBanner */}
-              <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 dark:text-amber-400" />
+            <div className="flex-shrink-0 p-1.5 rounded-full bg-warning/10 dark:bg-warning/30">
+              <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 text-warning" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-medium text-sm sm:text-base text-foreground">

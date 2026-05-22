@@ -266,7 +266,7 @@ describe('TaskCard Component', () => {
 
       const priorityBadge = screen.getByText(/high/i)
       expect(priorityBadge).toBeInTheDocument()
-      expect(priorityBadge).toHaveClass(/orange/) // High priority = orange
+      expect(priorityBadge).toHaveClass(/warning/) // High priority = warning (Phase 58 Tier-C token swap)
     })
 
     it('should display status badge with correct color', () => {
@@ -274,7 +274,7 @@ describe('TaskCard Component', () => {
 
       const statusBadge = screen.getByText(/in progress/i)
       expect(statusBadge).toBeInTheDocument()
-      expect(statusBadge).toHaveClass(/blue/) // In progress = blue
+      expect(statusBadge).toHaveClass(/primary/) // In progress = primary/accent (Phase 58 Tier-C token swap)
     })
 
     it('should display work item type badge when showWorkItem=true', () => {

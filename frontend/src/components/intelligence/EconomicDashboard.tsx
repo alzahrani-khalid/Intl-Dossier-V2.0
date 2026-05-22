@@ -79,8 +79,7 @@ export function EconomicDashboard({ reports, dossierId }: EconomicDashboardProps
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EconomicDashboard */}
-              <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+              <DollarSign className="h-5 w-5 text-success" />
               <CardTitle className="text-base sm:text-lg">
                 {t('intelligence.types.economic', 'Economic Intelligence')}
               </CardTitle>
@@ -96,8 +95,7 @@ export function EconomicDashboard({ reports, dossierId }: EconomicDashboardProps
         </CardHeader>
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EconomicDashboard */}
-            <BarChart3 className="mx-auto h-12 w-12 mb-3 text-gray-400" />
+            <BarChart3 className="mx-auto h-12 w-12 mb-3 text-ink-mute" />
             <p className="text-sm">
               {t('intelligence.noEconomicData', 'No economic intelligence available')}
             </p>
@@ -113,8 +111,7 @@ export function EconomicDashboard({ reports, dossierId }: EconomicDashboardProps
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EconomicDashboard */}
-              <DollarSign className="h-5 w-5 flex-shrink-0 text-emerald-600 dark:text-emerald-400" />
+              <DollarSign className="h-5 w-5 flex-shrink-0 text-success" />
               <CardTitle className="text-base sm:text-lg truncate">
                 {t('intelligence.types.economic', 'Economic Intelligence')}
               </CardTitle>
@@ -138,8 +135,7 @@ export function EconomicDashboard({ reports, dossierId }: EconomicDashboardProps
         {/* Metadata Row */}
         <div className="flex flex-wrap items-center gap-2 text-xs">
           {isStale && (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EconomicDashboard
-            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+            <Badge variant="outline" className="bg-warning/5 text-warning border-warning/20">
               {t('intelligence.stale', 'Stale Data')}
             </Badge>
           )}
@@ -186,8 +182,7 @@ export function EconomicDashboard({ reports, dossierId }: EconomicDashboardProps
               {Object.entries(latestReport.metrics).map(([key, value]) => (
                 <div key={key} className="bg-muted/50 rounded-lg p-3">
                   <div className="flex items-center gap-2 mb-1">
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EconomicDashboard */}
-                    <DollarSign className="h-4 w-4 text-emerald-600" />
+                    <DollarSign className="h-4 w-4 text-success" />
                     <span className="text-xs font-medium text-muted-foreground capitalize">
                       {key.replace(/_/g, ' ')}
                     </span>

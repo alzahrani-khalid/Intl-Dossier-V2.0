@@ -10,7 +10,12 @@ test.describe('Phase 39: Kanban axe a11y', () => {
       await page.goto('/kanban')
       await page.waitForLoadState('networkidle')
 
-      const results = await new AxeBuilder({ page }).analyze()
+      // Phase 57 D-21: scope axe scan to the WorkBoard region. Pre-DesignV2 this
+      // spec ran on a layout that didn't render the IntelDossier shell; post
+      // Phase 55 the shell is global and carries its own a11y debt (sidebar
+      // icon-buttons, etc.) tracked separately in Phase 59 POLISH. The
+      // WorkBoard primitive migration must not regress kanban-region a11y.
+      const results = await new AxeBuilder({ page }).include('.workboard-page').analyze()
       const seriousOrCritical = results.violations.filter(
         (v) => v.impact === 'serious' || v.impact === 'critical',
       )

@@ -5,6 +5,11 @@
  * the cancelled-stage filter, the client-side search filter (over EN + AR fields),
  * the overdue-count derivation, the conditional DnD sensors, and the drag-end
  * mutation wiring per D-03/D-07/D-08.
+ *
+ * Phase 57 D-21 / D-57-06: mock surface flipped from `@dnd-kit/core` to
+ * `@/components/kanban` after WorkBoard migrated to the shared primitive.
+ * The KanbanProvider mock captures `sensors` (D-03 gating) and `onDragEnd`
+ * (mutation wiring) at the boundary.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -43,45 +48,77 @@ vi.mock('@/hooks/useUnifiedKanban', () => ({
   useUnifiedKanbanRealtime: () => undefined,
 }))
 
-// ── DnD-kit core mock — capture sensors + onDragEnd at the boundary ───────
-let lastDndSensors: unknown[] = []
-let lastDragEndHandler: ((e: unknown) => void) | undefined
+// ── Shared @/components/kanban primitive mock — capture sensors + onDragEnd
+//    + the per-column render-prop output at the migration boundary ──────────
+type ColumnDescriptor = { id: string; name: string }
 
-vi.mock('@dnd-kit/core', () => {
-  const useSensor = (sensor: unknown, opts?: unknown): { sensor: unknown; opts: unknown } => ({
-    sensor,
-    opts,
-  })
-  const useSensors = (...sensors: unknown[]): unknown[] => sensors
-  return {
-    DndContext: ({
-      children,
-      sensors,
-      onDragEnd,
-    }: {
-      children: ReactNode
-      sensors: unknown[]
-      onDragEnd: (e: unknown) => void
-    }): ReactElement => {
-      lastDndSensors = sensors
-      lastDragEndHandler = onDragEnd
-      return <div data-testid="dnd-ctx">{children}</div>
-    },
-    MouseSensor: { name: 'MouseSensor' },
-    TouchSensor: { name: 'TouchSensor' },
-    KeyboardSensor: { name: 'KeyboardSensor' },
-    useSensor,
-    useSensors,
-  }
-})
+let lastKanbanProviderProps: {
+  sensors?: unknown[]
+  onDragEnd?: (e: unknown) => void
+  columns?: ColumnDescriptor[]
+  data?: Array<Record<string, unknown>>
+} = {}
 
-vi.mock('@dnd-kit/sortable', () => ({
-  SortableContext: ({ children }: { children: ReactNode }): ReactElement => <>{children}</>,
-  verticalListSortingStrategy: { name: 'vertical' },
-  sortableKeyboardCoordinates: () => ({ x: 0, y: 0 }),
+vi.mock('@/components/kanban', () => ({
+  KanbanProvider: ({
+    children,
+    sensors,
+    onDragEnd,
+    columns,
+    data,
+  }: {
+    children: (column: ColumnDescriptor) => ReactNode
+    sensors?: unknown[]
+    onDragEnd: (e: unknown) => void
+    columns: ColumnDescriptor[]
+    data: Array<Record<string, unknown>>
+  }): ReactElement => {
+    lastKanbanProviderProps = { sensors, onDragEnd, columns, data }
+    return (
+      <div
+        data-testid="kanban-provider"
+        data-sensors-mode={sensors === undefined ? 'default' : 'overridden'}
+      >
+        {columns.map((column) => (
+          <div key={column.id} data-testid={`kanban-column-${column.id}`}>
+            {children(column)}
+          </div>
+        ))}
+      </div>
+    )
+  },
+  KanbanBoard: ({ children, id }: { children: ReactNode; id: string }): ReactElement => (
+    <div data-testid={`kanban-board-${id}`} data-droppable-id={id}>
+      {children}
+    </div>
+  ),
+  KanbanCards: ({
+    children,
+    id,
+  }: {
+    children: (item: Record<string, unknown>) => ReactNode
+    id: string
+  }): ReactElement => (
+    <div data-testid={`kanban-cards-${id}`}>
+      {(lastKanbanProviderProps.data ?? [])
+        .filter((item) => item.column === id)
+        .map((item) => (
+          <div key={String(item.id)}>{children(item)}</div>
+        ))}
+    </div>
+  ),
+  KanbanCard: ({ children, id }: { children: ReactNode; id: string }): ReactElement => (
+    <div data-testid={`kanban-card-${id}`} data-card-id={id}>
+      {children}
+    </div>
+  ),
 }))
 
 // ── BoardColumn / BoardToolbar / KCard light mocks ────────────────────────
+// BoardColumn is mocked but the WorkBoard's render-prop callback drives it
+// via the KanbanProvider mock above. The mock signature mirrors the real
+// BoardColumn props so the tests' add/click assertions still target the
+// stage attribute correctly.
 vi.mock('../BoardColumn', () => ({
   BoardColumn: ({
     title,
@@ -329,8 +366,7 @@ beforeEach(() => {
   navigateMock.mockReset()
   mutateMock.mockReset()
   mockUseUnifiedKanban.mockReset()
-  lastDndSensors = []
-  lastDragEndHandler = undefined
+  lastKanbanProviderProps = {}
 })
 
 async function importFresh(): Promise<typeof import('../WorkBoard')> {
@@ -390,23 +426,33 @@ describe('WorkBoard', () => {
     expect(screen.getByTestId('toolbar').getAttribute('data-overdue')).toBe('2')
   })
 
-  it('sensors include MouseSensor (and TouchSensor + KeyboardSensor) when columnMode==="status"', async () => {
+  it('passes sensors=undefined (KanbanProvider internal sensors active) when columnMode==="status"', async () => {
     mockUseUnifiedKanban.mockReturnValue({ items: [], isLoading: false })
     const { WorkBoard } = await importFresh()
     render(<WorkBoard />)
-    // Default mode is 'status' → 3 sensors
-    expect(lastDndSensors.length).toBe(3)
-    // First sensor is MouseSensor
-    const first = lastDndSensors[0] as { sensor: { name: string } }
-    expect(first.sensor.name).toBe('MouseSensor')
+    // D-03: in 'status' mode, no `sensors` prop is forwarded so the
+    // shared KanbanProvider's internal MouseSensor/TouchSensor/KeyboardSensor
+    // remain active. The marker attribute on the mocked provider reflects
+    // the prop-presence (default vs overridden).
+    expect(lastKanbanProviderProps.sensors).toBeUndefined()
+    expect(screen.getByTestId('kanban-provider').getAttribute('data-sensors-mode')).toBe('default')
+  })
+
+  it('passes columns descriptor with the 4 expected stages to KanbanProvider', async () => {
+    mockUseUnifiedKanban.mockReturnValue({ items: [], isLoading: false })
+    const { WorkBoard } = await importFresh()
+    render(<WorkBoard />)
+    expect(lastKanbanProviderProps.columns).toBeTruthy()
+    const ids = (lastKanbanProviderProps.columns ?? []).map((c) => c.id)
+    expect(ids).toEqual(['todo', 'in_progress', 'review', 'done'])
   })
 
   it('handleDragEnd fires the status update mutation when dropped on a different column', async () => {
     mockUseUnifiedKanban.mockReturnValue({ items: makeBoardItems(), isLoading: false })
     const { WorkBoard } = await importFresh()
     render(<WorkBoard />)
-    expect(typeof lastDragEndHandler).toBe('function')
-    lastDragEndHandler!({
+    expect(typeof lastKanbanProviderProps.onDragEnd).toBe('function')
+    lastKanbanProviderProps.onDragEnd!({
       active: { id: 't1', data: { current: { source: 'task' } } },
       over: { id: 'col-in_progress', data: { current: { stage: 'in_progress' } } },
     })

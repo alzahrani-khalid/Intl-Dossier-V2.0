@@ -1,0 +1,11 @@
+
+Running 4 tests using 4 workers
+
+  ✓  1 [chromium] › tests/e2e/tasks-tab-visual.spec.ts:15:5 › Phase 52: Tasks tab Kanban visual regression › tasks-tab ltr @ 768x1024 (3.9s)
+  ✓  4 [chromium] › tests/e2e/tasks-tab-visual.spec.ts:15:5 › Phase 52: Tasks tab Kanban visual regression › tasks-tab ltr @ 1280x800 (4.1s)
+/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend/tests/e2e/tasks-tab-visual.spec.ts-snapshots/tasks-tab-rtl-768-chromium-darwin.png is re-generated, writing actual.
+  ✓  3 [chromium] › tests/e2e/tasks-tab-visual.spec.ts:15:5 › Phase 52: Tasks tab Kanban visual regression › tasks-tab rtl @ 768x1024 (4.2s)
+/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend/tests/e2e/tasks-tab-visual.spec.ts-snapshots/tasks-tab-rtl-1280-chromium-darwin.png is re-generated, writing actual.
+  ✓  2 [chromium] › tests/e2e/tasks-tab-visual.spec.ts:15:5 › Phase 52: Tasks tab Kanban visual regression › tasks-tab rtl @ 1280x800 (4.7s)
+
+  4 passed (7.7s)

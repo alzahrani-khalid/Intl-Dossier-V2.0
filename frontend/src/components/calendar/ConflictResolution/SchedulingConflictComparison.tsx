@@ -189,8 +189,7 @@ export function SchedulingConflictComparison({
               </Badge>
             )}
             {conflicts.severity_summary.high > 0 && (
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SchedulingConflictComparison
-              <Badge className="bg-orange-500 text-white text-xs px-2">
+              <Badge className="bg-warning text-warning-foreground text-xs px-2">
                 {conflicts.severity_summary.high}
               </Badge>
             )}
@@ -366,16 +365,11 @@ function ParticipantAvailabilityBadge({
 }: ParticipantAvailabilityBadgeProps) {
   const statusColors = {
     available:
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SchedulingConflictComparison
-      'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SchedulingConflictComparison
-    busy: 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800',
+      'bg-success/10 text-success border-success/20 dark:bg-success/30 dark:border-success/70',
+    busy: 'bg-danger/10 text-danger border-danger/20 dark:bg-danger/30 dark:border-danger/70',
     tentative:
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SchedulingConflictComparison
-      'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800',
-    unknown:
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SchedulingConflictComparison
-      'bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-900/30 dark:text-gray-300 dark:border-gray-800',
+      'bg-warning/10 text-warning border-warning/20 dark:bg-warning/30 dark:border-warning/70',
+    unknown: 'bg-muted text-ink-mute border-muted dark:bg-muted/30 dark:border-muted/70',
   }
 
   const status = participant.is_conflicting ? 'busy' : participant.availability_status || 'unknown'
@@ -412,8 +406,7 @@ function ParticipantAvailabilityBadge({
                 )}
               </p>
             ) : (
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#SchedulingConflictComparison
-              <p className="text-green-600">{t('conflictComparison.participantAvailable')}</p>
+              <p className="text-success">{t('conflictComparison.participantAvailable')}</p>
             )}
           </div>
         </TooltipContent>

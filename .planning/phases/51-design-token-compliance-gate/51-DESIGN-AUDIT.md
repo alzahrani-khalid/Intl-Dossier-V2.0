@@ -640,3 +640,46 @@ Plan 51-04 populates row slugs from the Tier-C Disposition Table. Slugs are base
 Five Tier-C `eslint-disable-next-line no-restricted-syntax` directives in `frontend/src/pages/engagements/workspace/TasksTab.tsx` (formerly the `STAGE_COLORS` palette literals) were resolved by deletion-of-need per Phase 52 D-05. The `STAGE_COLORS` map was dropped entirely; the new shared kanban primitive (`frontend/src/components/kanban/KanbanBoard.tsx`) ships flat surfaces (`bg-muted/30 border-muted`) across all stages with a `border-danger/30` ring on the cancelled column (D-07). Resolved in commit `6f20264c` and documented in `52-03-SUMMARY.md`.
 
 Four Tier-C `eslint-disable-next-line no-restricted-syntax` directives in `frontend/src/components/assignments/KanbanTaskCard.tsx` (formerly the SLA-state palette literals) were resolved by token swap per Phase 52 D-13 narrow-blast-radius clause. Replaced the red/orange/yellow/emerald Tailwind palette literals with semantic SLA-state token classes (`text-danger`, `text-warn`, `text-ok`) plus soft CSS-token backgrounds (`bg-[var(--danger-soft)]`, `bg-[var(--warn-soft)]`, `bg-[var(--ok-soft)]`). KanbanTaskCard's only consumers are TasksTab and EngagementKanbanDialog; no rippling. Resolved in commit `445c3574` and documented in `52-03-SUMMARY.md`.
+
+## Phase 58 Closure
+
+Closure date: 2026-05-22. Final SHA range below; the canonical post-merge commit is recorded on the `phase-58-base` annotated SSH-signed tag (see `git tag -v phase-58-base` post-merge).
+
+### Reconciliation table
+
+| wave      |   files | annotations_cleared | nodes_swapped | regen_targets_updated                                                                                           | commit_sha_range   |
+| --------- | ------: | ------------------: | ------------: | --------------------------------------------------------------------------------------------------------------- | ------------------ |
+| 0         |       1 |                   0 |             0 | (none — manifest only)                                                                                          | ffe894a8           |
+| 1         |      17 |                 119 |           119 | after-actions-page-visual, tailwind-remap-visual                                                                | 144bf880..0e22c777 |
+| 2         |      15 |                 137 |           137 | list-pages-visual, tailwind-remap-visual                                                                        | a5c14094..5ff9070a |
+| 3         |      18 |                 138 |           138 | dossier-drawer-visual, calendar-visual, kanban-visual, tasks-page-visual                                        | dea6bf73..8555b186 |
+| 4         |      25 |                 238 |           238 | dossier-drawer-visual (re-affirm), dashboard-visual                                                             | 43248743..dd92c71a |
+| 5         |      14 |                  91 |            85 | dashboard-visual (re-affirm), dashboard-widgets-visual                                                          | a0f51608..54e59e66 |
+| 6         |     178 |                1501 |          1384 | activity-page-visual, briefs-page-visual, list-pages-visual (re-affirm), settings-page-visual, tasks-tab-visual | 3cdd172b..2ed758a9 |
+| **Total** | **268** |            **2224** |      **2101** | (all distinct specs above)                                                                                      | ffe894a8..2ed758a9 |
+
+\*Wave 0 row's "files" column shows 1 documentary artifact (the manifest itself); no source-file modifications.
+
+### Reconciliation note (deltas vs original target)
+
+Original counts: 271 files (51-DESIGN-AUDIT.md row count) / 2336 AST Literal nodes (51-VERIFICATION D-12) / 2227 disable lines (live-grep at phase-57-base).
+
+- **3-file delta (268 vs 271):** the 3 files swept by Phases 52/57 pre-Phase-58 (`pages/engagements/workspace/TasksTab.tsx`, `components/assignments/KanbanTaskCard.tsx`, `components/kanban/KanbanBoard.tsx`) are documented in the "Resolved during Phase 52 migration" section above and in 58-RESEARCH.md §Summary. The Phase 58 sweep total of 268 files matches `268 = 271 − 3`.
+- **235-node delta (2101 vs 2336):** the gap between summed nodes and the original AST Literal node count reflects multi-Literal-per-line collapse — where a single source line contained 2-3 palette literals (e.g., `bg-X-100 text-X-700 border-X-300`), the Wave-6 sub-bucket-A lookup tables in particular consolidated bg/text/border triples into single semantic-token entries per category row. The manifest's `multi_literal_line == yes` flag tracked these cases per row.
+- **3-annotation delta (2224 vs 2227):** small counting variance from the per-commit annotation tally; within bounds of the 91-line reconciliation noted in 51-VERIFICATION D-12.
+
+### Deferred-tier-c → cleared mapping
+
+Every TBD `follow_up_phase` placeholder in the Tier-C Disposition Table above (e.g., "purple/violet/fuchsia/pink/indigo → TBD (likely chart-token cleanup wave)") is hereby resolved to **Phase 58** per CONTEXT D-06 and D-07:
+
+- purple/violet/fuchsia/pink/indigo family → mapped to `secondary` (under D-07 collision when a file uses both blue AND purple for different semantic roles) OR `accent` (when no blue collision exists)
+- 27 D-07 collision files documented across waves 1–6 with mappings in their commit messages
+- All deferred-tier-c placeholders cleared; no `follow_up_phase: TBD` rows remain unresolved post-Phase-58
+
+### Criterion #2 N/A documentation (CONTEXT D-13)
+
+Success Criterion #2 (`eslint.config.mjs` waiver token removal) was satisfied **by absence** at phase-57-base. The ROADMAP §Phase-58 paraphrase referenced a marker `gsd-design-token-tier-c-allow` that never existed in code; the actual marker is the per-line annotation `// eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C:` which Phase 58 removed across 268 files. `grep -E 'tier-c|Tier-C|design-token-tier' eslint.config.mjs` returns zero structural matches at phase-58-base. The Tier-B carve-out at `eslint.config.mjs:247-270` remains byte-identical to phase-57-base per Phase 51 D-03/D-13 + v6.4 OOS clause.
+
+### Cross-link
+
+See `.planning/phases/58-tier-c-design-token-suppression-full-clear/58-VERIFICATION.md` for the post-execution Phase 58 verification artifact (produced by `/gsd:verify-work 58`).

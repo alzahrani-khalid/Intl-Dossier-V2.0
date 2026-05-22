@@ -22,14 +22,10 @@ interface Priority {
 }
 
 const priorities: Priority[] = [
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PriorityFilter
-  { value: 'low', label: 'Low', dotColor: 'bg-gray-500' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PriorityFilter
-  { value: 'medium', label: 'Medium', dotColor: 'bg-blue-500' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PriorityFilter
-  { value: 'high', label: 'High', dotColor: 'bg-orange-500' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PriorityFilter
-  { value: 'urgent', label: 'Urgent', dotColor: 'bg-red-500' },
+  { value: 'low', label: 'Low', dotColor: 'bg-muted' },
+  { value: 'medium', label: 'Medium', dotColor: 'bg-accent' },
+  { value: 'high', label: 'High', dotColor: 'bg-warning' },
+  { value: 'urgent', label: 'Urgent', dotColor: 'bg-danger' },
 ]
 
 export function PriorityFilter({ value = [], onChange, disabled = false }: PriorityFilterProps) {

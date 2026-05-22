@@ -92,16 +92,21 @@ function SparkleParticle({
         ease: 'easeInOut',
       }}
     >
-      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonesCelebration */}
-      <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-400" />
+      <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-warning" />
     </m.div>
   )
 }
 
 // Firework burst component
 function FireworkBurst({ x, y, delay }: { x: number; y: number; delay: number }) {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonesCelebration
-  const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD']
+  const colors = [
+    'var(--heroui-danger)',
+    'var(--heroui-success)',
+    'var(--heroui-accent)',
+    'var(--heroui-warning)',
+    'var(--color-secondary)',
+    'var(--heroui-info)',
+  ]
 
   return (
     <m.div
@@ -141,8 +146,7 @@ function FireworkBurst({ x, y, delay }: { x: number; y: number; delay: number })
 function CheckmarkAnimation() {
   return (
     <m.div
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonesCelebration
-      className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-green-500 flex items-center justify-center"
+      className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-success flex items-center justify-center"
       initial={{ scale: 0 }}
       animate={{ scale: [0, 1.2, 1] }}
       transition={{ duration: 0.5, times: [0, 0.6, 1] }}
@@ -162,8 +166,15 @@ function CheckmarkAnimation() {
  * Generate confetti particles
  */
 function ConfettiAnimation() {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonesCelebration
-  const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#FF9FF3']
+  const colors = [
+    'var(--heroui-danger)',
+    'var(--heroui-success)',
+    'var(--heroui-accent)',
+    'var(--heroui-warning)',
+    'var(--color-secondary)',
+    'var(--heroui-info)',
+    'var(--heroui-primary)',
+  ]
   const particles = Array.from({ length: 50 }, (_, n) => ({
     id: n,
     delay: Math.random() * 1,
@@ -306,16 +317,12 @@ export function MilestonesCelebration({
                 className={cn(
                   'w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center',
                   celebration.percentage === 100
-                    ? /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonesCelebration */
-                      'bg-gradient-to-br from-yellow-400 to-orange-500'
+                    ? 'bg-gradient-to-br from-warning to-warning'
                     : celebration.percentage >= 75
-                      ? /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonesCelebration */
-                        'bg-gradient-to-br from-purple-500 to-pink-500'
+                      ? 'bg-gradient-to-br from-secondary to-secondary'
                       : celebration.percentage >= 50
-                        ? /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonesCelebration */
-                          'bg-gradient-to-br from-blue-500 to-cyan-500'
-                        : /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestonesCelebration */
-                          'bg-gradient-to-br from-green-400 to-emerald-500',
+                        ? 'bg-gradient-to-br from-accent to-info'
+                        : 'bg-gradient-to-br from-success to-success',
                 )}
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}

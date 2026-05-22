@@ -63,26 +63,22 @@ const entityIcons: Record<EntityType, React.ComponentType<{ className?: string }
   topic: MessageSquare,
 }
 
-/** Map entity types to colors */
+/**
+ * Map entity types to semantic text-color tokens.
+ * D-07 collision: country/forum (blue/indigo) → accent; organization/working_group
+ * (purple/pink) → secondary; person/position (green/teal) → success;
+ * engagement/topic (amber/orange) → warning. Token-collapse acceptable.
+ */
 const entityColors: Record<EntityType, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
-  dossier: 'text-slate-500 dark:text-slate-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
-  country: 'text-blue-500 dark:text-blue-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
-  organization: 'text-purple-500 dark:text-purple-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
-  person: 'text-green-500 dark:text-green-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
-  engagement: 'text-amber-500 dark:text-amber-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
-  position: 'text-teal-500 dark:text-teal-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
-  forum: 'text-indigo-500 dark:text-indigo-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
-  working_group: 'text-pink-500 dark:text-pink-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
-  topic: 'text-orange-500 dark:text-orange-400',
+  dossier: 'text-muted-foreground',
+  country: 'text-accent',
+  organization: 'text-secondary',
+  person: 'text-success',
+  engagement: 'text-warning',
+  position: 'text-success',
+  forum: 'text-accent',
+  working_group: 'text-secondary',
+  topic: 'text-warning',
 }
 
 interface QuickNavItemProps {
@@ -142,8 +138,7 @@ function QuickNavItem({
               <span className="truncate flex-1">{truncatedName}</span>
               {isPinned && (
                 <Star
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu
-                  className="h-3 w-3 shrink-0 text-amber-500 fill-amber-500"
+                  className="h-3 w-3 shrink-0 text-warning fill-warning"
                   aria-label={t('quickNav.pinned', 'Pinned')}
                 />
               )}
@@ -301,8 +296,7 @@ export function QuickNavigationMenu({
               )}
             >
               <span className="flex items-center gap-1.5">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#QuickNavigationMenu */}
-                <Star className="h-3.5 w-3.5 text-amber-500" />
+                <Star className="h-3.5 w-3.5 text-warning" />
                 {t('quickNav.pinned', 'Pinned')}
                 <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded-full">
                   {pinned.length}

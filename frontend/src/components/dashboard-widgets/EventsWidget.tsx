@@ -47,48 +47,33 @@ function getEventColor(type: EventType) {
   switch (type) {
     case 'meeting':
       return {
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
-        bg: 'bg-blue-100 dark:bg-blue-900/30',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
-        text: 'text-blue-600 dark:text-blue-400',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
-        badge: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
+        bg: 'bg-accent/10 dark:bg-accent/30',
+        text: 'text-accent',
+        badge: 'bg-accent/10 text-accent dark:bg-accent/90',
       }
     case 'deadline':
       return {
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
-        bg: 'bg-red-100 dark:bg-red-900/30',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
-        text: 'text-red-600 dark:text-red-400',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
-        badge: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
+        bg: 'bg-danger/10 dark:bg-danger/30',
+        text: 'text-danger',
+        badge: 'bg-danger/10 text-danger dark:bg-danger/90',
       }
     case 'follow-up':
       return {
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
-        bg: 'bg-amber-100 dark:bg-amber-900/30',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
-        text: 'text-amber-600 dark:text-amber-400',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
-        badge: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300',
+        bg: 'bg-warning/10 dark:bg-warning/30',
+        text: 'text-warning',
+        badge: 'bg-warning/10 text-warning dark:bg-warning/90',
       }
     case 'engagement':
       return {
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
-        bg: 'bg-green-100 dark:bg-green-900/30',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
-        text: 'text-green-600 dark:text-green-400',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
-        badge: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
+        bg: 'bg-success/10 dark:bg-success/30',
+        text: 'text-success',
+        badge: 'bg-success/10 text-success dark:bg-success/90',
       }
     case 'mou-renewal':
       return {
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
-        bg: 'bg-purple-100 dark:bg-purple-900/30',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
-        text: 'text-purple-600 dark:text-purple-400',
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EventsWidget
-        badge: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300',
+        bg: 'bg-secondary/10 dark:bg-secondary/30',
+        text: 'text-secondary-foreground',
+        badge: 'bg-secondary/10 text-secondary-foreground dark:bg-secondary/90',
       }
     default:
       return {

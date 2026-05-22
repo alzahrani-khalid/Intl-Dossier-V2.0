@@ -247,9 +247,8 @@ export function BotIntegrationsSettings() {
             {/* Hash */}
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div className="flex items-center gap-3">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BotIntegrationsSettings */}
-                <div className="p-2 bg-[#4A154B] rounded-lg">
-                  <Hash className="h-6 w-6 text-white" />
+                <div className="p-2 bg-secondary rounded-lg">
+                  <Hash className="h-6 w-6 text-secondary-foreground" />
                 </div>
                 <div>
                   <h3 className="font-medium">{t('platforms.slack')}</h3>
@@ -271,9 +270,8 @@ export function BotIntegrationsSettings() {
             {/* Teams */}
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div className="flex items-center gap-3">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BotIntegrationsSettings */}
-                <div className="p-2 bg-[#5558AF] rounded-lg">
-                  <MessageSquare className="h-6 w-6 text-white" />
+                <div className="p-2 bg-accent rounded-lg">
+                  <MessageSquare className="h-6 w-6 text-accent-foreground" />
                 </div>
                 <div>
                   <h3 className="font-medium">{t('platforms.teams')}</h3>
@@ -367,8 +365,8 @@ function BotLinkCard({
   const { isRTL } = useDirection()
 
   const PlatformIcon = link.platform === 'slack' ? Hash : MessageSquare
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BotIntegrationsSettings
-  const platformColor = link.platform === 'slack' ? '#4A154B' : '#5558AF'
+  const platformColor =
+    link.platform === 'slack' ? 'var(--color-secondary)' : 'var(--heroui-accent)'
 
   return (
     <div className="border rounded-lg p-4 space-y-4">

@@ -310,21 +310,21 @@ export interface MergeResponse {
 
 /**
  * Get confidence level color
+ * D-58-06-A-13: 4-tier confidence palette: destructive (high — strong match
+ * = urgent review) / warning (medium) / accent (low) / muted (default).
+ * No D-07 (no purple). Source had no dark variants — output stays
+ * single-class per D-10.
  */
 export function getConfidenceLevelColor(level: ConfidenceLevel): string {
   switch (level) {
     case 'high':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#duplicate-detection.types
-      return 'text-red-600 bg-red-100'
+      return 'text-destructive bg-destructive/10'
     case 'medium':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#duplicate-detection.types
-      return 'text-yellow-600 bg-yellow-100'
+      return 'text-warning bg-warning/10'
     case 'low':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#duplicate-detection.types
-      return 'text-blue-600 bg-blue-100'
+      return 'text-accent bg-accent/10'
     default:
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#duplicate-detection.types
-      return 'text-gray-600 bg-gray-100'
+      return 'text-muted-foreground bg-muted/10'
   }
 }
 

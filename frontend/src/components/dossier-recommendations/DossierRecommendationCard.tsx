@@ -113,14 +113,13 @@ function SimilarityBadge({ score }: { score: number }) {
             variant="outline"
             className={cn(
               'text-xs font-medium gap-1',
-              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
-              'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/50 dark:to-purple-950/50',
-              /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
-              'border-blue-200 dark:border-blue-800',
+              // D-58-04-03: AI-similarity badge — blue+purple gradient collapses to
+              // single accent-soft tint per D-07 collision rule; border uses primary/30.
+              'bg-secondary',
+              'border-primary/30',
             )}
           >
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */}
-            <Sparkles className="h-3 w-3 text-amber-500" />
+            <Sparkles className="h-3 w-3 text-warning" />
             <span className={getSimilarityColor(score)}>{formatSimilarity(score)}</span>
           </Badge>
         </TooltipTrigger>
@@ -141,15 +140,14 @@ function PriorityIndicator({ priority }: { priority: number }) {
       variant="outline"
       className={cn(
         'text-xs',
-        priority >= 4 &&
-          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
-          'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 border-orange-200',
-        priority === 3 &&
-          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
-          'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 border-yellow-200',
-        priority <= 2 &&
-          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
-          'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400 border-gray-200',
+        // D-58-04-04: 4-tier priority palette mapped onto status tokens with
+        // opacity-step siblings (Wave-3 D-58-03-10 precedent).
+        //   priority>=4 (high)   → warning/80 (orange-family → warning sibling)
+        //   priority===3 (med)   → warning
+        //   priority<=2 (low)    → muted
+        priority >= 4 && 'bg-warning/10 text-warning border-warning/30',
+        priority === 3 && 'bg-warning/20 text-warning border-warning/30',
+        priority <= 2 && 'bg-muted text-muted-foreground border-muted',
       )}
     >
       {isRTL ? label?.ar : label?.en}
@@ -328,8 +326,7 @@ export function DossierRecommendationCard({
         className={cn(
           'relative overflow-hidden transition-all duration-200',
           'hover:shadow-md',
-          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
-          recommendation.priority >= 4 && 'border-orange-200 dark:border-orange-800',
+          recommendation.priority >= 4 && 'border-warning/30',
           !isActionable && 'opacity-60',
           className,
         )}
@@ -338,14 +335,11 @@ export function DossierRecommendationCard({
         <div
           className={cn(
             'absolute top-0 start-0 h-full w-1',
-            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
-            recommendation.priority >= 5 && 'bg-red-500',
-            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
-            recommendation.priority === 4 && 'bg-orange-500',
-            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
-            recommendation.priority === 3 && 'bg-yellow-500',
-            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
-            recommendation.priority <= 2 && 'bg-gray-400',
+            // D-58-04-05: priority strip — danger (5) / warning (4) / warning/80 (3) / muted (≤2).
+            recommendation.priority >= 5 && 'bg-destructive',
+            recommendation.priority === 4 && 'bg-warning',
+            recommendation.priority === 3 && 'bg-warning/80',
+            recommendation.priority <= 2 && 'bg-muted-foreground',
           )}
         />
 
@@ -356,12 +350,12 @@ export function DossierRecommendationCard({
               <div
                 className={cn(
                   'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg',
-                  /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */
-                  'bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/40 dark:to-purple-900/40',
+                  // D-58-04-06: AI recommendation glyph — blue+purple gradient collapses
+                  // to bg-secondary (accent-soft) per D-07 collision rule.
+                  'bg-secondary',
                 )}
               >
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierRecommendationCard */}
-                <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <Icon className="h-5 w-5 text-primary" />
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="text-sm font-semibold leading-tight line-clamp-2 sm:text-base">

@@ -12,6 +12,7 @@ import { useDossierOverview } from '@/hooks/useDossierOverview'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Link } from '@tanstack/react-router'
 import { getDossierRouteSegment } from '@/lib/dossier-routes'
+import { getDossierTypeTextClass } from '@/lib/semantic-colors'
 import { Flag, Building2, ChevronLeft } from 'lucide-react'
 import type { DossierType } from '@/services/dossier-api'
 
@@ -24,11 +25,11 @@ const MAX_ANCHORS = 5
 function getTypeIcon(type: DossierType): React.ReactNode {
   switch (type) {
     case 'country':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConnectedAnchorsCard
-      return <Flag className="h-4 w-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+      return <Flag className={`h-4 w-4 flex-shrink-0 ${getDossierTypeTextClass('country')}`} />
     case 'organization':
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ConnectedAnchorsCard
-      return <Building2 className="h-4 w-4 text-green-600 dark:text-green-400 flex-shrink-0" />
+      return (
+        <Building2 className={`h-4 w-4 flex-shrink-0 ${getDossierTypeTextClass('organization')}`} />
+      )
     default:
       return <Building2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />
   }

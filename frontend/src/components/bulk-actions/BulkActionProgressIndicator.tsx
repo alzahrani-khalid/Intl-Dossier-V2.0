@@ -33,34 +33,23 @@ export interface BulkActionProgressIndicatorProps {
  */
 const STATUS_ICONS: Record<BulkActionStatus, React.ReactNode> = {
   idle: null,
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionProgressIndicator
-  pending: <Loader2 className="h-5 w-5 animate-spin text-blue-600" />,
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionProgressIndicator
-  processing: <Loader2 className="h-5 w-5 animate-spin text-blue-600" />,
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionProgressIndicator
-  completed: <CheckCircle2 className="h-5 w-5 text-green-600" />,
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionProgressIndicator
-  failed: <XCircle className="h-5 w-5 text-red-600" />,
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionProgressIndicator
-  cancelled: <AlertCircle className="h-5 w-5 text-orange-600" />,
+  pending: <Loader2 className="h-5 w-5 animate-spin text-info" />,
+  processing: <Loader2 className="h-5 w-5 animate-spin text-info" />,
+  completed: <CheckCircle2 className="h-5 w-5 text-success" />,
+  failed: <XCircle className="h-5 w-5 text-danger" />,
+  cancelled: <AlertCircle className="h-5 w-5 text-warning" />,
 }
 
 /**
  * Status color mapping for progress bar
  */
 const STATUS_COLORS: Record<BulkActionStatus, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionProgressIndicator
-  idle: 'bg-gray-200',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionProgressIndicator
-  pending: 'bg-blue-600',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionProgressIndicator
-  processing: 'bg-blue-600',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionProgressIndicator
-  completed: 'bg-green-600',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionProgressIndicator
-  failed: 'bg-red-600',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionProgressIndicator
-  cancelled: 'bg-orange-600',
+  idle: 'bg-muted',
+  pending: 'bg-info',
+  processing: 'bg-info',
+  completed: 'bg-success',
+  failed: 'bg-danger',
+  cancelled: 'bg-warning',
 }
 
 /**
@@ -98,12 +87,7 @@ export function BulkActionProgressIndicator({
 
   return (
     <div
-      className={cn(
-        /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionProgressIndicator */
-        'p-4 bg-white dark:bg-gray-900 rounded-lg border shadow-sm',
-        'space-y-3',
-        className,
-      )}
+      className={cn('p-4 bg-surface rounded-lg border shadow-sm', 'space-y-3', className)}
       role="progressbar"
       aria-valuenow={progress}
       aria-valuemin={0}
@@ -115,8 +99,7 @@ export function BulkActionProgressIndicator({
         <div className="flex items-center gap-3">
           {STATUS_ICONS[status]}
           <div>
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BulkActionProgressIndicator */}
-            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            <h4 className="text-sm font-medium text-ink">
               {isProcessing ? t('progress.title') : t(`progress.${status}`)}
             </h4>
             <p className="text-xs text-muted-foreground">

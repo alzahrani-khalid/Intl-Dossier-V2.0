@@ -26,7 +26,9 @@ test.describe('Phase 39: Kanban client-side search', () => {
     await page.waitForLoadState('networkidle')
     const baselineCalls = unifiedKanbanCalls
 
-    const search = page.getByRole('searchbox')
+    // Phase 57 D-21: scope to the board-local searchbox; topbar searchbox also
+    // present post-DesignV2 (Phase 55 layout merge).
+    const search = page.locator('input.board-search')
     await search.fill('Acme')
     // Allow any (incorrect) debounced fetch to settle before counting.
     await page.waitForTimeout(500)

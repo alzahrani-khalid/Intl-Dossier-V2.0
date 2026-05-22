@@ -76,11 +76,9 @@ export function DelegationCard({
 
   return (
     <Card
-      /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationCard */
       className={`transition-all ${isRevoked || isExpired ? 'opacity-60' : ''} ${
-        isExpiringSoon ? 'border-yellow-500/50' : ''
+        isExpiringSoon ? 'border-warning/50' : ''
       }`}
-      /* eslint-enable no-restricted-syntax */
     >
       <CardHeader className="pb-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -107,8 +105,7 @@ export function DelegationCard({
             <Badge variant={status.variant} className="min-h-6">
               {status.label}
             </Badge>
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationCard */}
-            {isExpiringSoon && !isRevoked && <AlertTriangle className="h-4 w-4 text-yellow-500" />}
+            {isExpiringSoon && !isRevoked && <AlertTriangle className="h-4 w-4 text-warning" />}
           </div>
         </div>
       </CardHeader>
@@ -131,15 +128,13 @@ export function DelegationCard({
         {/* Expiry indicator */}
         {!isRevoked && (
           <div
-            /* eslint-disable no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DelegationCard */
             className={`flex items-center gap-2 text-sm ${
               isExpired
                 ? 'text-destructive'
                 : isExpiringSoon
-                  ? 'text-yellow-600 dark:text-yellow-500'
+                  ? 'text-warning'
                   : 'text-muted-foreground'
             }`}
-            /* eslint-enable no-restricted-syntax */
           >
             <Clock className="h-4 w-4 flex-shrink-0" />
             <span>{getExpiryText()}</span>

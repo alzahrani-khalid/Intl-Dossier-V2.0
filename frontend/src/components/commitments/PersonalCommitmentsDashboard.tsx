@@ -71,10 +71,8 @@ export function PersonalCommitmentsDashboard() {
   if (userLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PersonalCommitmentsDashboard */}
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PersonalCommitmentsDashboard */}
-        <span className="ms-3 text-gray-600">{t('list.loading')}</span>
+        <Loader2 className="h-8 w-8 animate-spin text-ink-mute" />
+        <span className="ms-3 text-ink-mute">{t('list.loading')}</span>
       </div>
     )
   }
@@ -89,8 +87,7 @@ export function PersonalCommitmentsDashboard() {
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start mb-2">
           {t('pageTitle')}
         </h1>
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PersonalCommitmentsDashboard */}
-        <p className="text-sm sm:text-base text-gray-600 text-start">{t('subtitle')}</p>
+        <p className="text-sm sm:text-base text-ink-mute text-start">{t('subtitle')}</p>
       </div>
 
       {/* Quick Stats */}
@@ -107,8 +104,7 @@ export function PersonalCommitmentsDashboard() {
         <Card>
           <CardHeader className="pb-3">
             <CardDescription className="text-start">{t('status.overdue')}</CardDescription>
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PersonalCommitmentsDashboard */}
-            <CardTitle className="text-2xl sm:text-3xl text-red-600 text-start">
+            <CardTitle className="text-2xl sm:text-3xl text-danger text-start">
               {stats?.overdue ?? 0}
             </CardTitle>
           </CardHeader>
@@ -117,8 +113,7 @@ export function PersonalCommitmentsDashboard() {
         <Card>
           <CardHeader className="pb-3">
             <CardDescription className="text-start">{t('status.completed')}</CardDescription>
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#PersonalCommitmentsDashboard */}
-            <CardTitle className="text-2xl sm:text-3xl text-green-600 text-start">
+            <CardTitle className="text-2xl sm:text-3xl text-success text-start">
               {stats?.completed ?? 0}
             </CardTitle>
           </CardHeader>

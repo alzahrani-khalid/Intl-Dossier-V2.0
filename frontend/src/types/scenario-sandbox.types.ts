@@ -395,56 +395,50 @@ export const IMPACT_LEVEL_LABELS: Record<ImpactLevel, { en: string; ar: string }
 
 /**
  * Get status color class
+ * D-58-06-A-19: muted (draft) / accent (active) / success (completed) /
+ * warning (archived). No D-07 (no purple).
  */
 export function getStatusColor(status: ScenarioStatus): string {
   const colors: Record<ScenarioStatus, string> = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
-    draft: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
-    active: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
-    completed: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
-    archived: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+    draft: 'bg-muted/10 text-muted-foreground dark:bg-muted/30',
+    active: 'bg-accent/10 text-accent dark:bg-accent/30',
+    completed: 'bg-success/10 text-success dark:bg-success/30',
+    archived: 'bg-warning/10 text-warning dark:bg-warning/30',
   }
   return colors[status]
 }
 
 /**
  * Get impact level color
+ * D-58-06-A-19: 5-tier ladder muted → accent → warning → warning(collapse) →
+ * destructive. orange + yellow both collapse to text-warning (text doesn't
+ * support opacity-step). No D-07.
  */
 export function getImpactLevelColor(level: ImpactLevel): string {
   const colors: Record<ImpactLevel, string> = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
-    minimal: 'text-gray-500 dark:text-gray-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
-    low: 'text-blue-500 dark:text-blue-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
-    moderate: 'text-yellow-500 dark:text-yellow-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
-    high: 'text-orange-500 dark:text-orange-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
-    critical: 'text-red-500 dark:text-red-400',
+    minimal: 'text-muted-foreground',
+    low: 'text-accent',
+    moderate: 'text-warning',
+    high: 'text-warning',
+    critical: 'text-destructive',
   }
   return colors[level]
 }
 
 /**
  * Get probability color based on score
+ * D-58-06-A-19: 6-tier probability ladder — null=muted/60 / >=80=success /
+ * >=60=success (collapse: green+lime) / >=40=warning / >=20=warning (collapse:
+ * yellow+orange) / else=destructive. text-{sem}/X opacity isn't a Tailwind
+ * utility, so within-family text collapses are accepted.
  */
 export function getProbabilityColor(score: number | null): string {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
-  if (score === null) return 'text-gray-400'
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
-  if (score >= 80) return 'text-green-500 dark:text-green-400'
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
-  if (score >= 60) return 'text-lime-500 dark:text-lime-400'
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
-  if (score >= 40) return 'text-yellow-500 dark:text-yellow-400'
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
-  if (score >= 20) return 'text-orange-500 dark:text-orange-400'
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#scenario-sandbox.types
-  return 'text-red-500 dark:text-red-400'
+  if (score === null) return 'text-muted-foreground/60'
+  if (score >= 80) return 'text-success'
+  if (score >= 60) return 'text-success'
+  if (score >= 40) return 'text-warning'
+  if (score >= 20) return 'text-warning'
+  return 'text-destructive'
 }
 
 /**

@@ -160,10 +160,8 @@ export default function OverviewTab(): ReactElement {
         {/* Days in Stage */}
         <Card>
           <CardContent className="flex items-center gap-3 p-4">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OverviewTab */}
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-orange-500/10">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OverviewTab */}
-              <Clock className="size-5 text-orange-600 dark:text-orange-400" />
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-warning/10">
+              <Clock className="size-5 text-warning" />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-sm text-muted-foreground">{t('overview.daysInStage')}</p>
@@ -179,10 +177,8 @@ export default function OverviewTab(): ReactElement {
         {/* Task Progress */}
         <Card>
           <CardContent className="flex items-center gap-3 p-4">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OverviewTab */}
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-green-500/10">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OverviewTab */}
-              <CheckCircle2 className="size-5 text-green-600 dark:text-green-400" />
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-success/10">
+              <CheckCircle2 className="size-5 text-success" />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-sm text-muted-foreground">{t('overview.taskProgress')}</p>
@@ -203,10 +199,8 @@ export default function OverviewTab(): ReactElement {
         {/* Deadline */}
         <Card>
           <CardContent className="flex items-center gap-3 p-4">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OverviewTab */}
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-blue-500/10">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#OverviewTab */}
-              <Calendar className="size-5 text-blue-600 dark:text-blue-400" />
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent/10">
+              <Calendar className="size-5 text-accent" />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-sm text-muted-foreground">{t('overview.deadline')}</p>

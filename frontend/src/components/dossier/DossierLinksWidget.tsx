@@ -105,17 +105,21 @@ export interface DossierLinksWidgetProps {
 // Inheritance Source Config
 // ============================================================================
 
+// D-58-04-14: 5-inheritance-source palette mapped onto semantic tokens
+// (D-07 collision rule applied: purple→accent for engagement, indigo→accent
+// for mou). 5 distinct sources on 5 distinct families — no opacity siblings
+// needed.
+//   direct       (blue)   → primary
+//   engagement   (purple) → accent     (D-07 collision)
+//   after_action (amber)  → warning
+//   position     (green)  → success
+//   mou          (indigo) → accent     (purple-family alt → brand accent)
 const INHERITANCE_SOURCE_CONFIG: Record<InheritanceSource, { icon: string; color: string }> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierLinksWidget
-  direct: { icon: 'link', color: 'text-blue-600 dark:text-blue-400' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierLinksWidget
-  engagement: { icon: 'calendar', color: 'text-purple-600 dark:text-purple-400' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierLinksWidget
-  after_action: { icon: 'clipboard', color: 'text-amber-600 dark:text-amber-400' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierLinksWidget
-  position: { icon: 'briefcase', color: 'text-green-600 dark:text-green-400' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierLinksWidget
-  mou: { icon: 'file-text', color: 'text-indigo-600 dark:text-indigo-400' },
+  direct: { icon: 'link', color: 'text-primary' },
+  engagement: { icon: 'calendar', color: 'text-accent' },
+  after_action: { icon: 'clipboard', color: 'text-warning' },
+  position: { icon: 'briefcase', color: 'text-success' },
+  mou: { icon: 'file-text', color: 'text-accent' },
 }
 
 // ============================================================================

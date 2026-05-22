@@ -129,14 +129,11 @@ export function VersionHistoryViewer({
   const getDiffColor = (kind: DiffKind) => {
     switch (kind) {
       case 'N':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#VersionHistoryViewer
-        return 'text-green-600 bg-green-50'
+        return 'text-success bg-success/10'
       case 'D':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#VersionHistoryViewer
-        return 'text-red-600 bg-red-50'
+        return 'text-danger bg-danger/10'
       case 'E':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#VersionHistoryViewer
-        return 'text-yellow-600 bg-yellow-50'
+        return 'text-warning bg-warning/10'
       default:
         return ''
     }
@@ -205,24 +202,20 @@ export function VersionHistoryViewer({
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       {change.kind !== 'N' && (
                         <div>
-                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#VersionHistoryViewer */}
-                          <p className="mb-1 font-semibold text-red-600">
+                          <p className="mb-1 font-semibold text-danger">
                             {t('afterActions.versions.before')}:
                           </p>
-                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#VersionHistoryViewer */}
-                          <pre className="overflow-x-auto rounded bg-red-50 p-2 text-xs">
+                          <pre className="overflow-x-auto rounded bg-danger/10 p-2 text-xs">
                             {renderDiffValue(change.lhs)}
                           </pre>
                         </div>
                       )}
                       {change.kind !== 'D' && (
                         <div>
-                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#VersionHistoryViewer */}
-                          <p className="mb-1 font-semibold text-green-600">
+                          <p className="mb-1 font-semibold text-success">
                             {t('afterActions.versions.after')}:
                           </p>
-                          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#VersionHistoryViewer */}
-                          <pre className="overflow-x-auto rounded bg-green-50 p-2 text-xs">
+                          <pre className="overflow-x-auto rounded bg-success/10 p-2 text-xs">
                             {renderDiffValue(change.rhs)}
                           </pre>
                         </div>

@@ -129,17 +129,18 @@ export function FollowUpActions({ dossierId }: FollowUpActionsProps) {
 
   const isLoading = isLoadingWorkItems || isLoadingAfterAction
 
-  // Get priority badge color
+  // Get priority badge color.
+  //
+  // D-58-04-20: 4-tier priority palette mapped onto semantic tokens.
+  // Matches canonical priorityColors in semantic-colors.ts (urgent→destructive,
+  // high→warning, medium→primary, low→muted). Orange/high uses warning/20
+  // sibling per Wave-3 D-58-03-10 opacity-step precedent.
   const getPriorityBadge = (priority?: string) => {
     const colors: Record<string, string> = {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FollowUpActions
-      urgent: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FollowUpActions
-      high: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FollowUpActions
-      medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FollowUpActions
-      low: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+      urgent: 'bg-destructive/10 text-destructive',
+      high: 'bg-warning/20 text-warning',
+      medium: 'bg-warning/10 text-warning',
+      low: 'bg-success/10 text-success',
     }
     return colors[priority || 'medium'] || colors.medium
   }
@@ -186,8 +187,7 @@ export function FollowUpActions({ dossierId }: FollowUpActionsProps) {
             <div className="flex items-start gap-3">
               <div className="pt-0.5">
                 {action.completed ? (
-                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#FollowUpActions
-                  <CheckSquare className="h-5 w-5 text-green-600" />
+                  <CheckSquare className="h-5 w-5 text-success" />
                 ) : (
                   <Circle className="h-5 w-5 text-muted-foreground" />
                 )}

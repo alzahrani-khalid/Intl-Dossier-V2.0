@@ -75,10 +75,8 @@ const STATUS_CONFIG: Record<
   { icon: React.ElementType; color: string; bg: string }
 > = {
   draft: { icon: FileText, color: 'text-muted-foreground', bg: 'bg-muted' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WhatIfScenarioPanel
-  analyzing: { icon: Loader2, color: 'text-blue-600', bg: 'bg-blue-100 dark:bg-blue-900/30' },
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WhatIfScenarioPanel
-  ready: { icon: CheckCircle2, color: 'text-green-600', bg: 'bg-green-100 dark:bg-green-900/30' },
+  analyzing: { icon: Loader2, color: 'text-accent', bg: 'bg-accent/10 dark:bg-accent/30' },
+  ready: { icon: CheckCircle2, color: 'text-success', bg: 'bg-success/10 dark:bg-success/30' },
   applied: { icon: CheckCircle2, color: 'text-primary', bg: 'bg-primary/10' },
   discarded: { icon: XCircle, color: 'text-muted-foreground', bg: 'bg-muted' },
 }
@@ -125,15 +123,13 @@ export function WhatIfScenarioPanel({
     if (diff > 0) {
       return {
         icon: TrendingDown,
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WhatIfScenarioPanel
-        color: 'text-green-600 dark:text-green-400',
+        color: 'text-success',
         label: t('scenarios.conflictsReduced', { count: diff }),
       }
     } else if (diff < 0) {
       return {
         icon: TrendingUp,
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WhatIfScenarioPanel
-        color: 'text-red-600 dark:text-red-400',
+        color: 'text-danger',
         label: t('scenarios.conflictsIncreased', { count: Math.abs(diff) }),
       }
     }
@@ -397,8 +393,7 @@ export function WhatIfScenarioPanel({
                         {scenario.status === 'applied' && (
                           <Badge
                             variant="secondary"
-                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#WhatIfScenarioPanel
-                            className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+                            className="bg-success/10 text-success dark:bg-success/30"
                           >
                             <CheckCircle2 className="h-3 w-3 me-1" />
                             {t('scenarios.applied')}

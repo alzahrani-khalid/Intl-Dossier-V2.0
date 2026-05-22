@@ -18,10 +18,8 @@ export const Route = createFileRoute('/_protected/tasks/$id')({
   errorComponent: ({ error }) => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4">
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#$id */}
-        <h1 className="text-2xl font-bold text-red-600">Error Loading Task</h1>
-        {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#$id */}
-        <p className="text-gray-600">{error.message}</p>
+        <h1 className="text-2xl font-bold text-danger">Error Loading Task</h1>
+        <p className="text-ink-muted">{error.message}</p>
       </div>
     )
   },

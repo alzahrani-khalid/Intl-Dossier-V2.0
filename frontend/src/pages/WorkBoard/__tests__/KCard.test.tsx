@@ -185,8 +185,12 @@ describe('KCard', () => {
   })
 
   it('exposes article via accessible name (aria-label of title)', () => {
+    // Phase 57 D-21: KCard is now presentational; outer <KanbanCard> from the
+    // shared primitive owns role="button" (via useSortable.attributes) so KCard
+    // does not nest interactive controls (axe `nested-interactive`). The
+    // accessible name remains on the article via aria-label.
     render(<KCard item={makeItem()} onItemClick={vi.fn()} />)
-    const article = screen.getByRole('button', { name: 'Hello World' })
+    const article = screen.getByLabelText('Hello World')
     expect(article.tagName).toBe('ARTICLE')
   })
 

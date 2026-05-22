@@ -44,21 +44,23 @@ function getEventTypeIcon(type: CalendarEventType) {
 
 /**
  * Get event type color
+ *
+ * D-58-04-17: 6-event-type palette mapped onto canonical semantic tokens.
+ *   meeting    (blue)   → primary
+ *   deadline   (red)    → destructive
+ *   milestone  (green)  → success
+ *   reminder   (yellow) → warning
+ *   engagement (purple) → secondary  (D-07 collision rule)
+ *   review     (cyan)   → info
  */
 function getEventTypeColor(type: CalendarEventType) {
   const colors: Record<CalendarEventType, string> = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEventsSection
-    meeting: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEventsSection
-    deadline: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEventsSection
-    milestone: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEventsSection
-    reminder: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEventsSection
-    engagement: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#CalendarEventsSection
-    review: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200',
+    meeting: 'bg-primary/10 text-primary',
+    deadline: 'bg-destructive/10 text-destructive',
+    milestone: 'bg-success/10 text-success',
+    reminder: 'bg-warning/10 text-warning',
+    engagement: 'bg-secondary text-secondary-foreground',
+    review: 'bg-info/10 text-info',
   }
   return colors[type] || colors.meeting
 }

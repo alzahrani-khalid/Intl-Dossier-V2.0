@@ -232,8 +232,7 @@ export function EscalationDashboard() {
                   className={cn(
                     'flex items-center gap-1',
                     trend.direction === 'up' && 'text-destructive',
-                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EscalationDashboard */
-                    trend.direction === 'down' && 'text-green-600',
+                    trend.direction === 'down' && 'text-success',
                   )}
                 >
                   {trend.direction === 'up' ? '↑' : trend.direction === 'down' ? '↓' : '→'}
@@ -401,10 +400,8 @@ export function EscalationDashboard() {
                           assignee.escalation_rate > 20 && 'bg-destructive/20 text-destructive',
                           assignee.escalation_rate <= 20 &&
                             assignee.escalation_rate > 10 &&
-                            /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EscalationDashboard */
-                            'bg-yellow-500/20 text-yellow-700',
-                          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EscalationDashboard */
-                          assignee.escalation_rate <= 10 && 'bg-green-500/20 text-green-700',
+                            'bg-warning/20 text-warning',
+                          assignee.escalation_rate <= 10 && 'bg-success/20 text-success',
                         )}
                       >
                         {assignee.escalation_rate.toFixed(1)}%

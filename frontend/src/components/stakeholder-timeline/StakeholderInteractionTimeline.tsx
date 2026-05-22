@@ -43,7 +43,7 @@ import {
   useStakeholderTimeline,
   useStakeholderInteractionMutations,
   getAvailableInteractionTypes,
-} from '@/hooks/useStakeholderTimeline'
+} from '@/domains/misc'
 import { StakeholderTimelineFilters } from './StakeholderTimelineFilters'
 import { StakeholderTimelineCard } from './StakeholderTimelineCard'
 import { StakeholderInteractionDialog } from './StakeholderInteractionDialog'
@@ -56,18 +56,6 @@ import type {
   CreateAnnotationRequest,
 } from '@/types/stakeholder-interaction.types'
 import { useDirection } from '@/hooks/useDirection'
-
-// Stub useStakeholderInteractionMutations is internally still a stub returning
-// `Promise.resolve({ success: true })` from each mutation; this shim narrows the
-// return shape to the typed contract until the real implementation lands. The
-// other shim (StakeholderTimelineShim) became redundant in 47-08 once the
-// underlying useStakeholderTimeline hook returns the rich state object.
-interface StakeholderInteractionMutationsShim {
-  createInteraction: (req: CreateInteractionRequest) => Promise<unknown>
-  isCreating: boolean
-  createAnnotation: (req: CreateAnnotationRequest) => Promise<unknown>
-  isAnnotating: boolean
-}
 
 /**
  * Loading skeleton for timeline
@@ -166,22 +154,19 @@ function StatsOverviewCard({
       label: t('stats.total_interactions'),
       value: stats.total_interactions,
       icon: Activity,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderInteractionTimeline
-      color: 'text-blue-500',
+      color: 'text-accent',
     },
     {
       label: t('stats.key_moments'),
       value: stats.key_moments_count,
       icon: TrendingUp,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderInteractionTimeline
-      color: 'text-green-500',
+      color: 'text-success',
     },
     {
       label: t('stats.most_common'),
       value: stats.most_common_type ? t(`types.${stats.most_common_type}`) : '-',
       icon: MessageSquare,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderInteractionTimeline
-      color: 'text-purple-500',
+      color: 'text-secondary',
     },
     {
       label: t('stats.last_interaction'),
@@ -189,8 +174,7 @@ function StatsOverviewCard({
         ? new Date(stats.last_interaction_date).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')
         : '-',
       icon: Clock,
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#StakeholderInteractionTimeline
-      color: 'text-orange-500',
+      color: 'text-warning',
     },
   ]
 
@@ -272,10 +256,8 @@ export function StakeholderInteractionTimeline({
     isLoadingStats,
   } = useStakeholderTimeline(stakeholderId)
 
-  // Stub useStakeholderInteractionMutations takes 0 args; the (stakeholderType,
-  // stakeholderId) intent is preserved as void above for clarity.
   const { createInteraction, isCreating, createAnnotation, isAnnotating } =
-    useStakeholderInteractionMutations() as unknown as StakeholderInteractionMutationsShim
+    useStakeholderInteractionMutations()
 
   // Handlers
   const handleSearch = useCallback(

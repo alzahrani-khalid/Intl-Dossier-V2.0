@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v6.4
 milestone_name: Stabilization & Carryover Sweep
-status: phase-verified
-last_updated: '2026-05-18T07:00:00.000Z'
-last_activity: '2026-05-18 -- Phase 55 VERIFIED via /gsd:verify-work — UAT 8/8 passed (claude-autonomous mode, all scriptable infra checks). SECURITY 14/14 threats closed, VALIDATION nyquist_compliant=true, traceability MERGE-01 + MERGE-02 COMPLETE. Phase 55 fully signed off; v6.4 progress 1/5. Phases 56 and 57 unblocked (both depend only on 55) and may proceed in parallel. Next: /gsd:plan-phase 56 (RLS-01 + TYPE-05 — RLS countries-row clear + last typed-shim retire).'
+status: executing
+last_updated: '2026-05-21T12:32:21.756Z'
+last_activity: 2026-05-21 -- Phase 58 execution started
 progress:
-  total_phases: 9
-  completed_phases: 9
-  total_plans: 48
-  completed_plans: 48
-  percent: 100
+  total_phases: 12
+  completed_phases: 11
+  total_plans: 70
+  completed_plans: 60
+  percent: 86
 ---
 
 # Project State
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-17 after v6.3 milestone)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** v6.4 Stabilization & Carryover Sweep — close v6.3 carryover debt and merge DesignV2 → main so v7.0 starts on stable ground with all quality gates enforced on `main`
+**Current focus:** Phase 58 — tier-c-design-token-suppression-full-clear
 
 ## Current Position
 
-Phase: 55 — DesignV2 → Main Merge & Gate Enforcement — **VERIFIED (4/4 plans)**
-Plan: — (none active; Phase 56 next)
-Status: Phase 55 VERIFIED via `/gsd:verify-work 55` — UAT 8/8 pass, SECURITY 14/14 closed, VALIDATION nyquist=true, MERGE-01 + MERGE-02 satisfied. Ready for `/gsd:plan-phase 56`.
-Last activity: 2026-05-18 -- Phase 55 verification accepted. UAT recorded 8/8 PASS (claude-autonomous mode, all scriptable infra checks: merge --no-ff with 2 parents, phase-55-base SSH-signed tag, all 5 phase-base tags reachable on origin/main, DesignV2 remote branch deleted, 2 new CI jobs live in main ci.yml, branch protection enforces 8 required contexts, security invariants preserved (enforce_admins=true, no force push, no delete), smoke PR #18 BLOCKED proof + cleanup complete). Phases 56 and 57 unblocked and parallelizable.
+Phase: 58 (tier-c-design-token-suppression-full-clear) — EXECUTING
+Plan: 1 of 7
+Status: Executing Phase 58
+Last activity: 2026-05-21 -- Phase 58 execution started
 
 ## v6.4 Phase Plan
 
@@ -64,7 +64,9 @@ Then plan the next phase. Phases 56 and 57 are unblocked (both depend only on Ph
 
 ```
 /gsd:plan-phase 56   # RLS-01 + TYPE-05
+
 # or
+
 /gsd:plan-phase 57   # DEVIATE-01..04 (Phase 52 deviation closure)
 ```
 

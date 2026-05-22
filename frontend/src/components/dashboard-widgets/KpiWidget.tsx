@@ -83,18 +83,14 @@ function TrendIndicator({
   const TrendIcon = direction === 'up' ? TrendingUp : direction === 'down' ? TrendingDown : Minus
 
   const trendColors = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KpiWidget
-    up: 'text-green-600 dark:text-green-400',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KpiWidget
-    down: 'text-red-600 dark:text-red-400',
+    up: 'text-success',
+    down: 'text-danger',
     neutral: 'text-muted-foreground',
   }
 
   const bgColors = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KpiWidget
-    up: 'bg-green-100 dark:bg-green-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#KpiWidget
-    down: 'bg-red-100 dark:bg-red-900/30',
+    up: 'bg-success/10 dark:bg-success/30',
+    down: 'bg-danger/10 dark:bg-danger/30',
     neutral: 'bg-muted',
   }
 

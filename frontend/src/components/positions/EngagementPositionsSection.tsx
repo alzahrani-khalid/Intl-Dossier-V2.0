@@ -91,12 +91,10 @@ export function EngagementPositionsSection({ engagementId }: EngagementPositions
           <TabsContent value="attached" className="mt-6">
             {attachedError ? (
               <div
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementPositionsSection
-                className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-center"
+                className="bg-danger/5 dark:bg-danger/20 border border-danger/20 dark:border-danger/70 rounded-lg p-4 text-center"
                 role="alert"
               >
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementPositionsSection */}
-                <p className="text-sm text-red-700 dark:text-red-300">
+                <p className="text-sm text-danger">
                   {attachedError instanceof Error
                     ? attachedError.message
                     : t('positions:engagement_section.error_loading_attached')}
@@ -119,12 +117,10 @@ export function EngagementPositionsSection({ engagementId }: EngagementPositions
           <TabsContent value="suggestions" className="mt-6">
             {suggestionsError ? (
               <div
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementPositionsSection
-                className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-center"
+                className="bg-danger/5 dark:bg-danger/20 border border-danger/20 dark:border-danger/70 rounded-lg p-4 text-center"
                 role="alert"
               >
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementPositionsSection */}
-                <p className="text-sm text-red-700 dark:text-red-300">
+                <p className="text-sm text-danger">
                   {suggestionsError instanceof Error
                     ? suggestionsError.message
                     : t('positions:engagement_section.error_loading_suggestions')}
@@ -139,10 +135,8 @@ export function EngagementPositionsSection({ engagementId }: EngagementPositions
           <TabsContent value="briefing" className="mt-6">
             {attachedCount === 0 ? (
               <div className="text-center py-12">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementPositionsSection */}
-                <FileText className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EngagementPositionsSection */}
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <p className="text-sm text-muted-foreground">
                   {t('positions:engagement_section.no_positions_for_briefing')}
                 </p>
                 <Button

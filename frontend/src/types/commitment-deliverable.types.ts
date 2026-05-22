@@ -137,8 +137,8 @@ export const DELIVERABLE_TEMPLATES: DeliverableTemplate[] = [
     default_weight: 2,
     suggested_days_offset: -14, // 2 weeks before due date
     icon: 'ClipboardCheck',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    color: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
+    // D-58-06-A-04: blue (initial-review) → accent
+    color: 'bg-accent/10 text-accent dark:bg-accent/30',
   },
   {
     id: 'draft-document',
@@ -150,8 +150,8 @@ export const DELIVERABLE_TEMPLATES: DeliverableTemplate[] = [
     default_weight: 3,
     suggested_days_offset: -10, // 10 days before due date
     icon: 'FileText',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    color: 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400',
+    // D-58-06-A-04: purple (draft-document) → secondary [D-07 collision]
+    color: 'bg-secondary/10 text-secondary-foreground dark:bg-secondary/30',
   },
   {
     id: 'stakeholder-meeting',
@@ -163,8 +163,8 @@ export const DELIVERABLE_TEMPLATES: DeliverableTemplate[] = [
     default_weight: 2,
     suggested_days_offset: -7, // 1 week before due date
     icon: 'Users',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    color: 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400',
+    // D-58-06-A-04: green (stakeholder-meeting) → success
+    color: 'bg-success/10 text-success dark:bg-success/30',
   },
   {
     id: 'final-review',
@@ -176,8 +176,8 @@ export const DELIVERABLE_TEMPLATES: DeliverableTemplate[] = [
     default_weight: 2,
     suggested_days_offset: -3, // 3 days before due date
     icon: 'CheckCircle',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    color: 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400',
+    // D-58-06-A-04: orange (final-review) → warning-step (deeper than amber follow-up)
+    color: 'bg-warning/20 text-warning dark:bg-warning/40',
   },
   {
     id: 'submission',
@@ -189,8 +189,8 @@ export const DELIVERABLE_TEMPLATES: DeliverableTemplate[] = [
     default_weight: 3,
     suggested_days_offset: 0, // On due date
     icon: 'Send',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    color: 'bg-cyan-100 text-cyan-600 dark:bg-cyan-900/30 dark:text-cyan-400',
+    // D-58-06-A-04: cyan (submission) → info
+    color: 'bg-info/10 text-info dark:bg-info/30',
   },
   {
     id: 'follow-up',
@@ -202,8 +202,8 @@ export const DELIVERABLE_TEMPLATES: DeliverableTemplate[] = [
     default_weight: 1,
     suggested_days_offset: 7, // 1 week after due date
     icon: 'ArrowRight',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    color: 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400',
+    // D-58-06-A-04: amber (follow-up) → warning (base, lighter than final-review)
+    color: 'bg-warning/10 text-warning dark:bg-warning/30',
   },
 ]
 
@@ -257,100 +257,82 @@ export const TEMPLATE_SETS: DeliverableTemplateSet[] = [
 /**
  * Status color mapping for UI
  */
+// D-58-06-A-04: STATUS palette → muted (not_started, cancelled) / accent
+// (in_progress) / success (completed) / destructive (blocked). cancelled
+// preserves softer text-muted-foreground/60 to indicate inactive vs other muted.
 export const DELIVERABLE_STATUS_COLORS: Record<
   CommitmentDeliverableStatus,
   { bg: string; text: string; border: string }
 > = {
   not_started: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    bg: 'bg-gray-50 dark:bg-gray-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    text: 'text-gray-700 dark:text-gray-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    border: 'border-gray-200 dark:border-gray-800',
+    bg: 'bg-muted/5 dark:bg-muted/20',
+    text: 'text-muted-foreground',
+    border: 'border-muted/20 dark:border-muted/80',
   },
   in_progress: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    bg: 'bg-blue-50 dark:bg-blue-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    text: 'text-blue-700 dark:text-blue-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    border: 'border-blue-200 dark:border-blue-800',
+    bg: 'bg-accent/5 dark:bg-accent/20',
+    text: 'text-accent',
+    border: 'border-accent/20 dark:border-accent/80',
   },
   completed: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    bg: 'bg-green-50 dark:bg-green-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    text: 'text-green-700 dark:text-green-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    border: 'border-green-200 dark:border-green-800',
+    bg: 'bg-success/5 dark:bg-success/20',
+    text: 'text-success',
+    border: 'border-success/20 dark:border-success/80',
   },
   blocked: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    bg: 'bg-red-50 dark:bg-red-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    text: 'text-red-700 dark:text-red-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    border: 'border-red-200 dark:border-red-800',
+    bg: 'bg-destructive/5 dark:bg-destructive/20',
+    text: 'text-destructive',
+    border: 'border-destructive/20 dark:border-destructive/80',
   },
   cancelled: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    bg: 'bg-gray-50 dark:bg-gray-900/20',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    text: 'text-gray-500 dark:text-gray-500',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    border: 'border-gray-200 dark:border-gray-800',
+    bg: 'bg-muted/5 dark:bg-muted/20',
+    text: 'text-muted-foreground/60',
+    border: 'border-muted/20 dark:border-muted/80',
   },
 }
 
 /**
  * Type color mapping for UI
  */
+// D-58-06-A-04: TYPE palette — D-07 collision (blue + purple + indigo as siblings):
+//   review (blue)         → accent
+//   milestone (indigo)    → secondary (sibling step /20 to disambiguate from document)
+//   document (purple)     → secondary (base /10)
+//   meeting (green)       → success
+//   follow_up (amber)     → warning
+//   report (cyan)         → info
+//   custom (gray)         → muted
 export const DELIVERABLE_TYPE_COLORS: Record<
   CommitmentDeliverableType,
   { bg: string; text: string }
 > = {
   milestone: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    bg: 'bg-indigo-100 dark:bg-indigo-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    text: 'text-indigo-700 dark:text-indigo-300',
+    bg: 'bg-secondary/20 dark:bg-secondary/40',
+    text: 'text-secondary-foreground',
   },
   document: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    bg: 'bg-purple-100 dark:bg-purple-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    text: 'text-purple-700 dark:text-purple-300',
+    bg: 'bg-secondary/10 dark:bg-secondary/30',
+    text: 'text-secondary-foreground',
   },
   meeting: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    bg: 'bg-green-100 dark:bg-green-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    text: 'text-green-700 dark:text-green-300',
+    bg: 'bg-success/10 dark:bg-success/30',
+    text: 'text-success',
   },
   review: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    bg: 'bg-blue-100 dark:bg-blue-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    text: 'text-blue-700 dark:text-blue-300',
+    bg: 'bg-accent/10 dark:bg-accent/30',
+    text: 'text-accent',
   },
   follow_up: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    bg: 'bg-amber-100 dark:bg-amber-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    text: 'text-amber-700 dark:text-amber-300',
+    bg: 'bg-warning/10 dark:bg-warning/30',
+    text: 'text-warning',
   },
   report: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    bg: 'bg-cyan-100 dark:bg-cyan-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    text: 'text-cyan-700 dark:text-cyan-300',
+    bg: 'bg-info/10 dark:bg-info/30',
+    text: 'text-info',
   },
   custom: {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    bg: 'bg-gray-100 dark:bg-gray-900/30',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#commitment-deliverable.types
-    text: 'text-gray-700 dark:text-gray-300',
+    bg: 'bg-muted/10 dark:bg-muted/30',
+    text: 'text-muted-foreground',
   },
 }
 

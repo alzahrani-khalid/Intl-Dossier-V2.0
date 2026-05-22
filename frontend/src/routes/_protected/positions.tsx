@@ -138,8 +138,7 @@ export function PositionsLibraryPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#positions */}
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+              <div className="text-2xl font-bold text-success">
                 {stats.byStatus?.published || 0}
               </div>
             </CardContent>
@@ -151,10 +150,7 @@ export function PositionsLibraryPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#positions */}
-              <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-                {stats.byStatus?.review || 0}
-              </div>
+              <div className="text-2xl font-bold text-warning">{stats.byStatus?.review || 0}</div>
             </CardContent>
           </Card>
           <Card>
@@ -164,10 +160,7 @@ export function PositionsLibraryPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#positions */}
-              <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">
-                {stats.byStatus?.draft || 0}
-              </div>
+              <div className="text-2xl font-bold text-ink-muted">{stats.byStatus?.draft || 0}</div>
             </CardContent>
           </Card>
         </div>
@@ -295,12 +288,10 @@ export function PositionsLibraryPage() {
         {/* Positions List */}
         {error ? (
           <div
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#positions
-            className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center"
+            className="bg-danger/5 dark:bg-danger/20 border border-danger/20 dark:border-danger/70 rounded-lg p-6 text-center"
             role="alert"
           >
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#positions */}
-            <p className="text-sm text-red-700 dark:text-red-300">
+            <p className="text-sm text-danger">
               {error instanceof Error ? error.message : t('positions:library.error_loading')}
             </p>
           </div>

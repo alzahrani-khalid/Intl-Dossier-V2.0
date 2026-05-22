@@ -124,43 +124,41 @@ export function DossierTimeline({
     }
   }
 
-  // Get badge color based on event type with distinct, vibrant colors
+  // Get badge color based on event type.
+  //
+  // D-58-04-10 (9-on-7-token palette): timeline shows 9 distinct event types
+  // but the token palette has only 7 status families. Mapping per D-07 collision
+  // rule + Wave-3 D-58-03-09 collapse-onto-canonical precedent:
+  //   engagement       (blue)    → primary
+  //   internal_meeting (violet)  → secondary  (purple-family per D-07)
+  //   deadline         (rose)    → destructive
+  //   reminder         (amber)   → warning
+  //   holiday          (emerald) → success
+  //   training         (cyan)    → info
+  //   review           (orange)  → warning/80 (opacity sibling of reminder per D-58-03-EXTRA-01)
+  //   forum            (fuchsia) → accent     (purple-family alt → brand accent)
+  //   other / default  (slate)   → muted
   const getEventBadgeClass = (type: string): string => {
     switch (type) {
-      // Engagement events - Blue (primary activity)
       case 'engagement':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-
-      // Calendar entry types - Each with unique, vibrant color
+        return 'bg-primary/10 text-primary'
       case 'internal_meeting':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
-        return 'bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200'
+        return 'bg-secondary text-secondary-foreground'
       case 'deadline':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
-        return 'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200'
+        return 'bg-destructive/10 text-destructive'
       case 'reminder':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
-        return 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200'
+        return 'bg-warning/10 text-warning'
       case 'holiday':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
-        return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200'
+        return 'bg-success/10 text-success'
       case 'training':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
-        return 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200'
+        return 'bg-info/10 text-info'
       case 'review':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
-        return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
+        return 'bg-warning/20 text-warning'
       case 'forum':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
-        return 'bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-900 dark:text-fuchsia-200'
+        return 'bg-accent text-accent-foreground'
       case 'other':
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
-        return 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-200'
-
       default:
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
-        return 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-200'
+        return 'bg-muted text-muted-foreground'
     }
   }
 
@@ -292,19 +290,18 @@ export function DossierTimeline({
         </Popover>
       </div>
 
-      {/* Active Filter Display */}
+      {/* Active Filter Display
+          D-58-04-11: active-filter banner is informational (Wave-3 D-58-02-EXTRA-03
+          context-discrimination: informational icon family → primary tint). */}
       {selectedFilters.length > 0 && (
-        // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
-        <div className="flex flex-wrap items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-900/20">
-          {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline */}
-          <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+        <div className="flex flex-wrap items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 p-3">
+          <span className="text-sm font-medium text-primary">
             {t('timeline.activeFilter', 'Filtered by')}:
           </span>
           {selectedFilters.map((filter) => (
             <Badge
               key={filter}
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
-              className="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100"
+              className="bg-primary/10 text-primary"
               aria-label={`${t('timeline.filter')}: ${t(`timeline.types.${filter}`)}`}
             >
               {t(`timeline.types.${filter}`)}
@@ -312,8 +309,7 @@ export function DossierTimeline({
           ))}
           <button
             onClick={handleClearFilter}
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#DossierTimeline
-            className="ms-auto flex items-center gap-1 rounded-md px-2 py-1 text-sm font-medium text-blue-700 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-blue-200 dark:hover:bg-blue-800"
+            className="ms-auto flex items-center gap-1 rounded-md px-2 py-1 text-sm font-medium text-primary hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary"
             aria-label={t('timeline.clearFilter', 'Clear all filters')}
           >
             <X className="size-4" />

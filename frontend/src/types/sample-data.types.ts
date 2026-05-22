@@ -69,38 +69,28 @@ export interface RemoveSampleDataResponse {
   message_ar: string
 }
 
-// Color mapping for templates
+// D-58-06-A-18: 3 template-color lookups (templateColors, templateIconColors,
+// templateBannerColors). Same 4-color palette across all three. D-07 collision
+// (blue + purple): blue → accent, purple → secondary. emerald → success,
+// red → destructive.
 export const templateColors: Record<string, string> = {
-  emerald:
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sample-data.types
-    'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800',
+  emerald: 'bg-success/10 text-success border-success/20 dark:bg-success/30 dark:border-success/80',
   purple:
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sample-data.types
-    'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sample-data.types
-  red: 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sample-data.types
-  blue: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800',
+    'bg-secondary/10 text-secondary-foreground border-secondary/20 dark:bg-secondary/30 dark:border-secondary/80',
+  red: 'bg-destructive/10 text-destructive border-destructive/20 dark:bg-destructive/30 dark:border-destructive/80',
+  blue: 'bg-accent/10 text-accent border-accent/20 dark:bg-accent/30 dark:border-accent/80',
 }
 
 export const templateIconColors: Record<string, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sample-data.types
-  emerald: 'text-emerald-600 dark:text-emerald-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sample-data.types
-  purple: 'text-purple-600 dark:text-purple-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sample-data.types
-  red: 'text-red-600 dark:text-red-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sample-data.types
-  blue: 'text-blue-600 dark:text-blue-400',
+  emerald: 'text-success',
+  purple: 'text-secondary-foreground',
+  red: 'text-destructive',
+  blue: 'text-accent',
 }
 
 export const templateBannerColors: Record<string, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sample-data.types
-  emerald: 'bg-emerald-50 border-emerald-200 dark:bg-emerald-950/50 dark:border-emerald-800',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sample-data.types
-  purple: 'bg-purple-50 border-purple-200 dark:bg-purple-950/50 dark:border-purple-800',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sample-data.types
-  red: 'bg-red-50 border-red-200 dark:bg-red-950/50 dark:border-red-800',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#sample-data.types
-  blue: 'bg-blue-50 border-blue-200 dark:bg-blue-950/50 dark:border-blue-800',
+  emerald: 'bg-success/5 border-success/20 dark:bg-success/30 dark:border-success/80',
+  purple: 'bg-secondary/5 border-secondary/20 dark:bg-secondary/30 dark:border-secondary/80',
+  red: 'bg-destructive/5 border-destructive/20 dark:bg-destructive/30 dark:border-destructive/80',
+  blue: 'bg-accent/5 border-accent/20 dark:bg-accent/30 dark:border-accent/80',
 }

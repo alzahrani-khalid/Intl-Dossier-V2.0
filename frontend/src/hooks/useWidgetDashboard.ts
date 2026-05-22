@@ -321,8 +321,15 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
                 statusCounts.review ?? 0,
                 statusCounts.completed ?? 0,
               ],
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useWidgetDashboard
-              backgroundColor: ['#f59e0b', '#3b82f6', '#8b5cf6', '#10b981'],
+              // Phase 58-W6 (D-05/D-07): chart bg uses CSS variable refs
+              // (raw color strings required by chart lib, mirrors graphNodeColors
+              // pattern in lib/semantic-colors.ts).
+              backgroundColor: [
+                'var(--color-warning)',
+                'var(--color-accent)',
+                'var(--color-secondary)',
+                'var(--color-success)',
+              ],
             },
           ],
           total,
@@ -355,8 +362,11 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
                 sourceCounts.commitment ?? 0,
                 sourceCounts.intake ?? 0,
               ],
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useWidgetDashboard
-              backgroundColor: ['#10b981', '#3b82f6', '#8b5cf6'],
+              backgroundColor: [
+                'var(--color-success)',
+                'var(--color-accent)',
+                'var(--color-secondary)',
+              ],
             },
           ],
           total,
@@ -395,8 +405,7 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
             {
               label: 'Completed',
               data: reorderedCounts,
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useWidgetDashboard
-              borderColor: '#10b981',
+              borderColor: 'var(--color-success)',
             },
           ],
         }
@@ -427,8 +436,7 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
             {
               label: 'Intake Tickets',
               data: Object.values(dayMap),
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useWidgetDashboard
-              borderColor: '#8b5cf6',
+              borderColor: 'var(--color-secondary)',
             },
           ],
         }
@@ -444,22 +452,14 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
         const labels = Object.keys(typeCounts)
         const values = Object.values(typeCounts)
         const colors = [
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useWidgetDashboard
-          '#3b82f6',
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useWidgetDashboard
-          '#10b981',
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useWidgetDashboard
-          '#f59e0b',
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useWidgetDashboard
-          '#ef4444',
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useWidgetDashboard
-          '#8b5cf6',
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useWidgetDashboard
-          '#ec4899',
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useWidgetDashboard
-          '#06b6d4',
-          // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useWidgetDashboard
-          '#84cc16',
+          'var(--color-accent)',
+          'var(--color-success)',
+          'var(--color-warning)',
+          'var(--color-danger)',
+          'var(--color-secondary)',
+          'var(--color-secondary)',
+          'var(--color-info)',
+          'var(--color-success)',
         ]
 
         return {
@@ -506,8 +506,12 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
                 priorityCounts.high!,
                 priorityCounts.urgent!,
               ],
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useWidgetDashboard
-              backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#dc2626'],
+              backgroundColor: [
+                'var(--color-success)',
+                'var(--color-warning)',
+                'var(--color-danger)',
+                'var(--color-danger)',
+              ],
             },
           ],
           total,
@@ -542,8 +546,7 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
             {
               label: 'Open Items',
               data: sorted.map((a) => a.count),
-              // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#useWidgetDashboard
-              backgroundColor: '#3b82f6',
+              backgroundColor: 'var(--color-accent)',
             },
           ],
         }

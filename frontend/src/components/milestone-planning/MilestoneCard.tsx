@@ -61,46 +61,34 @@ const typeIcons: Record<MilestoneType, typeof Users> = {
   custom: Flag,
 }
 
-// Color mapping for milestone types
+// Color mapping for milestone types.
+// D-07 collision: engagement=accent (blue), document_due=secondary (purple);
+// policy_deadline & renewal both → warning; relationship_review → success;
+// follow_up → info (cyan); custom → muted. Token-collapse acceptable.
 const typeColors: Record<MilestoneType, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
-  engagement: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
-  policy_deadline: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
-  relationship_review: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
-  document_due: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
-  follow_up: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
-  renewal: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
-  custom: 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400',
+  engagement: 'bg-accent/10 text-accent dark:bg-accent/30',
+  policy_deadline: 'bg-warning/10 text-warning dark:bg-warning/30',
+  relationship_review: 'bg-success/10 text-success dark:bg-success/30',
+  document_due: 'bg-secondary/10 text-secondary dark:bg-secondary/30',
+  follow_up: 'bg-info/10 text-info dark:bg-info/30',
+  renewal: 'bg-warning/10 text-warning dark:bg-warning/30',
+  custom: 'bg-muted text-muted-foreground',
 }
 
 // Priority colors
 const priorityColors: Record<TimelinePriority, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
-  high: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
-  medium: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
-  low: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  high: 'bg-destructive/10 text-destructive dark:bg-destructive/30',
+  medium: 'bg-warning/10 text-warning dark:bg-warning/30',
+  low: 'bg-success/10 text-success dark:bg-success/30',
 }
 
-// Status colors
+// Status colors (postponed visually collapses to warning alongside in_progress)
 const statusColors = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
-  planned: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
-  in_progress: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
-  completed: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
-  postponed: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard
-  cancelled: 'bg-gray-100 text-gray-500 dark:bg-gray-900/30 dark:text-gray-400',
+  planned: 'bg-accent/10 text-accent dark:bg-accent/30',
+  in_progress: 'bg-warning/10 text-warning dark:bg-warning/30',
+  completed: 'bg-success/10 text-success dark:bg-success/30',
+  postponed: 'bg-warning/10 text-warning dark:bg-warning/30',
+  cancelled: 'bg-muted text-muted-foreground',
 }
 
 function getDaysUntil(targetDate: string): number {
@@ -176,8 +164,7 @@ export function MilestoneCard({
       <Card
         className={cn(
           'transition-all duration-200 hover:shadow-md',
-          /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard */
-          isOverdue && 'border-red-300 dark:border-red-700',
+          isOverdue && 'border-destructive/20 dark:border-destructive/70',
           milestone.status === 'completed' && 'opacity-75',
         )}
       >
@@ -277,10 +264,8 @@ export function MilestoneCard({
                 <span
                   className={cn(
                     'font-medium',
-                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard */
-                    isOverdue && 'text-red-600 dark:text-red-400',
-                    /* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#MilestoneCard */
-                    isDueToday && 'text-amber-600 dark:text-amber-400',
+                    isOverdue && 'text-destructive',
+                    isDueToday && 'text-warning',
                   )}
                 >
                   {getDueText()}

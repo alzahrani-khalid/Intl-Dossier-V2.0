@@ -59,8 +59,7 @@ export function HelpPage() {
         : 'Create and track dossier obligations',
       icon: Target,
       href: '/help/commitments',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#HelpPage
-      color: 'bg-blue-500',
+      color: 'bg-accent',
       badge: isRTL ? 'جديد' : 'New',
     },
     {
@@ -69,8 +68,7 @@ export function HelpPage() {
       description: isRTL ? 'إدارة ملفات الدول والمنظمات' : 'Manage country & organization files',
       icon: FileText,
       href: '/help/dossiers',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#HelpPage
-      color: 'bg-emerald-500',
+      color: 'bg-success',
       comingSoon: true,
     },
     {
@@ -79,8 +77,7 @@ export function HelpPage() {
       description: isRTL ? 'إدارة المهام وسير العمل' : 'Manage assignments and workflows',
       icon: ListTodo,
       href: '/help/tasks',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#HelpPage
-      color: 'bg-orange-500',
+      color: 'bg-warning',
       comingSoon: true,
     },
     {
@@ -89,8 +86,7 @@ export function HelpPage() {
       description: isRTL ? 'جدولة وتتبع الأحداث' : 'Schedule and track events',
       icon: Calendar,
       href: '/help/calendar',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#HelpPage
-      color: 'bg-purple-500',
+      color: 'bg-secondary',
       comingSoon: true,
     },
     {
@@ -99,8 +95,7 @@ export function HelpPage() {
       description: isRTL ? 'إدارة جهات الاتصال الخارجية' : 'Manage external contacts',
       icon: Users,
       href: '/help/contacts',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#HelpPage
-      color: 'bg-pink-500',
+      color: 'bg-secondary/70',
       comingSoon: true,
     },
     {
@@ -109,8 +104,7 @@ export function HelpPage() {
       description: isRTL ? 'عرض التقارير والإحصائيات' : 'View reports and statistics',
       icon: LayoutDashboard,
       href: '/help/analytics',
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#HelpPage
-      color: 'bg-cyan-500',
+      color: 'bg-info',
       comingSoon: true,
     },
   ]
@@ -284,10 +278,8 @@ export function HelpPage() {
               <Card className="border-2 hover:border-primary/50 transition-colors">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#HelpPage */}
-                    <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900 flex items-center justify-center shrink-0">
-                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#HelpPage */}
-                      <Mail className="size-6 text-blue-600 dark:text-blue-400" />
+                    <div className="w-12 h-12 rounded-xl bg-accent/10 dark:bg-accent/30 flex items-center justify-center shrink-0">
+                      <Mail className="size-6 text-accent" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-start">
@@ -309,10 +301,8 @@ export function HelpPage() {
               <Card className="border-2 hover:border-primary/50 transition-colors">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#HelpPage */}
-                    <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900 flex items-center justify-center shrink-0">
-                      {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#HelpPage */}
-                      <Phone className="size-6 text-green-600 dark:text-green-400" />
+                    <div className="w-12 h-12 rounded-xl bg-success/10 dark:bg-success/30 flex items-center justify-center shrink-0">
+                      <Phone className="size-6 text-success" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-start">

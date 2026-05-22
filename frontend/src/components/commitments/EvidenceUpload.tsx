@@ -40,15 +40,11 @@ export interface EvidenceUploadProps {
 
 // File type icons mapping
 const fileTypeIcons: Record<string, React.ReactNode> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EvidenceUpload
-  'application/pdf': <FileText className="size-6 text-red-500" />,
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EvidenceUpload
-  'image/jpeg': <Image className="size-6 text-blue-500" />,
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EvidenceUpload
-  'image/png': <Image className="size-6 text-blue-500" />,
+  'application/pdf': <FileText className="size-6 text-danger" />,
+  'image/jpeg': <Image className="size-6 text-accent" />,
+  'image/png': <Image className="size-6 text-accent" />,
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document': (
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EvidenceUpload
-    <File className="size-6 text-blue-700" />
+    <File className="size-6 text-accent" />
   ),
 }
 
@@ -294,8 +290,7 @@ export function EvidenceUpload({
           {/* File info */}
           <div className="flex items-start gap-3">
             <div className="shrink-0">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EvidenceUpload */}
-              {fileTypeIcons[selectedFile.type] || <File className="size-6 text-gray-500" />}
+              {fileTypeIcons[selectedFile.type] || <File className="size-6 text-ink-mute" />}
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-medium text-sm truncate text-start">{selectedFile.name}</p>
@@ -329,8 +324,7 @@ export function EvidenceUpload({
 
           {/* Success indicator */}
           {uploadProgress === 100 && !uploadMutation.isPending && (
-            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#EvidenceUpload
-            <div className="mt-4 flex items-center justify-center gap-2 text-green-600">
+            <div className="mt-4 flex items-center justify-center gap-2 text-success">
               <CheckCircle className="size-5" />
               <span className="text-sm font-medium">{t('evidence.uploadSuccess')}</span>
             </div>

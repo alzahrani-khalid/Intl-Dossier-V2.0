@@ -64,19 +64,21 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
     return labels[type]?.[isRTL ? 'ar' : 'en'] || type
   }
 
-  // Get importance badge variant
+  // Get importance badge variant.
+  //
+  // D-58-04-19: 5-tier importance palette mapped onto semantic tokens.
+  //   1 regular   (gray)   → muted
+  //   2 important (blue)   → primary
+  //   3 key       (yellow) → warning
+  //   4 vip       (purple) → secondary (D-07 collision)
+  //   5 critical  (red)    → destructive
   const getImportanceBadge = (level?: number) => {
     const variants: Record<number, { label: string; className: string }> = {
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ElectedOfficialProfile
-      1: { label: t('importance.regular'), className: 'bg-gray-100 text-gray-800' },
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ElectedOfficialProfile
-      2: { label: t('importance.important'), className: 'bg-blue-100 text-blue-800' },
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ElectedOfficialProfile
-      3: { label: t('importance.key'), className: 'bg-yellow-100 text-yellow-800' },
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ElectedOfficialProfile
-      4: { label: t('importance.vip'), className: 'bg-purple-100 text-purple-800' },
-      // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ElectedOfficialProfile
-      5: { label: t('importance.critical'), className: 'bg-red-100 text-red-800' },
+      1: { label: t('importance.regular'), className: 'bg-muted text-muted-foreground' },
+      2: { label: t('importance.important'), className: 'bg-primary/10 text-primary' },
+      3: { label: t('importance.key'), className: 'bg-warning/10 text-warning' },
+      4: { label: t('importance.vip'), className: 'bg-secondary text-secondary-foreground' },
+      5: { label: t('importance.critical'), className: 'bg-destructive/10 text-destructive' },
     }
     return variants[level || 2] || variants[2]
   }
@@ -101,8 +103,7 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
 
             <div className="flex flex-wrap justify-center sm:justify-start gap-2">
               {extension.is_current_term && (
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#ElectedOfficialProfile
-                <Badge variant="default" className="bg-green-500">
+                <Badge variant="default" className="bg-success text-success-foreground">
                   {t('status.currentTerm')}
                 </Badge>
               )}

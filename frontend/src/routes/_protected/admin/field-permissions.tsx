@@ -215,8 +215,7 @@ function FieldPermissionsPage() {
   // Get sensitivity color
   const getSensitivityColor = (level: FieldSensitivityLevel) => {
     const config = SENSITIVITY_LEVEL_CONFIG.find((c) => c.value === level)
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions
-    return config?.color || 'text-gray-600'
+    return config?.color || 'text-ink-muted'
   }
 
   return (
@@ -258,10 +257,8 @@ function FieldPermissionsPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions */}
-              <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions */}
-                <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
+              <div className="p-2 bg-success/10 dark:bg-success/30 rounded-lg">
+                <CheckCircle2 className="h-5 w-5 text-success" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.activePermissions}</p>
@@ -274,10 +271,8 @@ function FieldPermissionsPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions */}
-              <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions */}
-                <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <div className="p-2 bg-accent/10 dark:bg-accent/30 rounded-lg">
+                <Users className="h-5 w-5 text-accent" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.rolePermissions}</p>
@@ -290,10 +285,8 @@ function FieldPermissionsPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions */}
-              <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions */}
-                <User className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+              <div className="p-2 bg-secondary/10 dark:bg-secondary/30 rounded-lg">
+                <User className="h-5 w-5 text-secondary" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.userPermissions}</p>
@@ -306,10 +299,8 @@ function FieldPermissionsPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions */}
-              <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
-                {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions */}
-                <Lock className="h-5 w-5 text-red-600 dark:text-red-400" />
+              <div className="p-2 bg-danger/10 dark:bg-danger/30 rounded-lg">
+                <Lock className="h-5 w-5 text-danger" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.restrictedFields}</p>
@@ -457,20 +448,16 @@ function FieldPermissionsPage() {
                         </TableCell>
                         <TableCell className="text-center">
                           {permission.can_view ? (
-                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions
-                            <Eye className="h-4 w-4 text-green-600 mx-auto" />
+                            <Eye className="h-4 w-4 text-success mx-auto" />
                           ) : (
-                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions
-                            <EyeOff className="h-4 w-4 text-red-600 mx-auto" />
+                            <EyeOff className="h-4 w-4 text-danger mx-auto" />
                           )}
                         </TableCell>
                         <TableCell className="text-center">
                           {permission.can_edit ? (
-                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions
-                            <Edit3 className="h-4 w-4 text-green-600 mx-auto" />
+                            <Edit3 className="h-4 w-4 text-success mx-auto" />
                           ) : (
-                            // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions
-                            <Lock className="h-4 w-4 text-red-600 mx-auto" />
+                            <Lock className="h-4 w-4 text-danger mx-auto" />
                           )}
                         </TableCell>
                         <TableCell>
@@ -576,20 +563,16 @@ function FieldPermissionsPage() {
                               </TableCell>
                               <TableCell>
                                 {field.default_visible ? (
-                                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions
-                                  <Eye className="h-4 w-4 text-green-600" />
+                                  <Eye className="h-4 w-4 text-success" />
                                 ) : (
-                                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions
-                                  <EyeOff className="h-4 w-4 text-red-600" />
+                                  <EyeOff className="h-4 w-4 text-danger" />
                                 )}
                               </TableCell>
                               <TableCell>
                                 {field.default_editable ? (
-                                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions
-                                  <Edit3 className="h-4 w-4 text-green-600" />
+                                  <Edit3 className="h-4 w-4 text-success" />
                                 ) : (
-                                  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#field-permissions
-                                  <Lock className="h-4 w-4 text-red-600" />
+                                  <Lock className="h-4 w-4 text-danger" />
                                 )}
                               </TableCell>
                             </TableRow>

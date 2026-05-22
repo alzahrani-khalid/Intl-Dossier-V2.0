@@ -163,33 +163,37 @@ export interface TemplateCardProps {
 
 /**
  * Get color class from template
+ * D-58-06-A-14: 13 raw color names collapsed onto 6 semantic families.
+ * Within-family disambiguation uses bg opacity-step pairs (text stays
+ * single-class because text-{sem}/X opacity isn't a Tailwind utility).
+ * D-07 collision (blue + purple + indigo + violet + pink):
+ *   blue                  → accent (base)
+ *   purple                → secondary/10
+ *   violet                → secondary/20 [D-07 sibling step]
+ *   indigo                → secondary/30 [D-07 sibling step]
+ *   pink                  → secondary/40 [D-07 sibling step]
+ * Other family collapses:
+ *   green, emerald, teal  → success at /10, /20, /30
+ *   amber, orange         → warning at /10, /20
+ *   red                   → destructive
+ *   cyan                  → info
+ *   dark variants preserved on bg-* with alpha bump (D-08); dark text-*
+ *   dropped (D-09).
  */
 export function getColorClass(template: EntityTemplate): string {
   const colorMap: Record<string, string> = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#entity-template.types
-    blue: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#entity-template.types
-    green: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#entity-template.types
-    purple: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#entity-template.types
-    amber: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#entity-template.types
-    red: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#entity-template.types
-    cyan: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#entity-template.types
-    indigo: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#entity-template.types
-    orange: 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#entity-template.types
-    pink: 'bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#entity-template.types
-    violet: 'bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#entity-template.types
-    emerald: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#entity-template.types
-    teal: 'bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300',
+    blue: 'bg-accent/10 text-accent dark:bg-accent/30',
+    green: 'bg-success/10 text-success dark:bg-success/30',
+    purple: 'bg-secondary/10 text-secondary-foreground dark:bg-secondary/30',
+    amber: 'bg-warning/10 text-warning dark:bg-warning/30',
+    red: 'bg-destructive/10 text-destructive dark:bg-destructive/30',
+    cyan: 'bg-info/10 text-info dark:bg-info/30',
+    indigo: 'bg-secondary/30 text-secondary-foreground dark:bg-secondary/50',
+    orange: 'bg-warning/20 text-warning dark:bg-warning/40',
+    pink: 'bg-secondary/40 text-secondary-foreground dark:bg-secondary/60',
+    violet: 'bg-secondary/20 text-secondary-foreground dark:bg-secondary/40',
+    emerald: 'bg-success/20 text-success dark:bg-success/40',
+    teal: 'bg-success/30 text-success dark:bg-success/50',
   }
 
   return (colorMap[template.color] || colorMap.blue)!

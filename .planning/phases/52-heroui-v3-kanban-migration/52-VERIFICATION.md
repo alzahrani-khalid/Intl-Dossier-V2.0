@@ -1,34 +1,71 @@
 ---
 phase: 52-heroui-v3-kanban-migration
 verified: 2026-05-16T00:00:00Z
-status: passed_with_deviation
-score: 4/4 must-haves verified (2 with documented deferrals)
+verified_at_phase_57: 2026-05-19T08:53:05Z
+status: passed
+score: 4/4 must-haves verified (all 5 acknowledged deviations now resolved — D-19/21/22/23 closed in Phase 57; D-20 closed in v6.3 by deletion; D-52-08 closed in-phase by timeout bump)
 overrides_applied: 0
 re_verification:
-  previous_status: none
-  previous_score: n/a
-  gaps_closed: []
+  previous_status: passed_with_deviation
+  previous_score: 4/4 must-haves verified (2 with documented deferrals)
+  gaps_closed: [D-19, D-21, D-22, D-23]
   gaps_remaining: []
   regressions: []
 deviations_acknowledged:
   - id: D-19-MOBILE-TOUCH-DND-SCOPE-OUT
     summary: 'TasksTab mobile branch (`<lg`) uses a `<select>`-based "Move to" picker instead of DnD. The 768×1024 cells of `tasks-tab-dnd.spec.ts` and `tasks-tab-keyboard.spec.ts` are `test.skip()`. Visual + a11y coverage still extend to mobile.'
     impact: 'No goal regression — KANBAN-01 requires DnD on the desktop primary surface; mobile is read-mostly per CLAUDE.md responsive rules.'
+    resolution:
+      resolved_in_phase: 57-phase-52-deviation-closure-d-19-d-23
+      resolved_in_plan: 57-01
+      commit_sha: 748518d5
+      resolved_date: Tue 18 May
+      resolution_summary: 'Closed by ADR docs/adr/0001-mobile-dnd-scope-out.md + mobile <select> Move-to-picker assertion in tasks-tab-dnd.spec.ts (D-19).'
   - id: D-20-ENGAGEMENT-KANBAN-DIALOG-DELETED
     summary: 'KANBAN-02 ("EngagementKanbanDialog migrated with same behavior parity") satisfied by deletion rather than migration. `EngagementKanbanDialog.tsx` + `EngagementDossierPage.tsx` were deleted in Plan 52-05 close-out after verification that the route `/dossiers/engagements/$id` is a pure `redirect` to `/engagements/$engagementId/overview` (workspace TasksTab) — the dialog never reached production. 4 dialog specs + 4 orphan modal-trigger specs deleted. `scripts/check-deleted-components.sh` extended to enforce. REQUIREMENTS.md L12 amended in quick-task 260516-s3j to reflect satisfied-by-deletion.'
     impact: 'Net code-debt reduction. Shared `@dnd-kit/core` primitive is consumed once by the workspace TasksTab; that path covers both "engagement-scoped Kanban" use cases. No user-facing surface lost.'
+    resolution:
+      resolved_in_phase: v6.3 (52-04 close-out)
+      resolved_in_plan: 52-04
+      commit_sha: f0246c39
+      resolved_date: Fri 16 May
+      resolution_summary: 'Closed by satisfied-by-deletion path (EngagementKanbanDialog + EngagementDossierPage removed) + scripts/check-deleted-components.sh CI gate (D-20).'
   - id: D-21-PHASE-39-REGRESSION-DEFERRED
     summary: '8 of the 12 originally-listed regression specs target `/kanban` (Phase 39 WorkBoard primitive) — different fixture, different route. Their state (4 failures observed during 52-05 anchor run) belongs to a Phase 39 follow-up, not Phase 52.'
     impact: 'No blocker. Tracked in audit §7 v6.4 carryover as "Phase 39 kanban-*.spec.ts regression follow-up (out-of-scope deferral)."'
+    resolution:
+      resolved_in_phase: 57-phase-52-deviation-closure-d-19-d-23
+      resolved_in_plan: 57-02
+      commit_sha: e92ae6f4
+      resolved_date: Sun 18 May
+      resolution_summary: 'Closed by WorkBoard migration to shared @/components/kanban primitive + ESLint @dnd-kit/core ban guard + 4 regenerated /kanban visual baselines + Phase 39 spec region-scope to .workboard-page (D-21).'
   - id: D-22-LTR-RTL-BYTE-IDENTITY
     summary: '`addInitScript` on `localStorage.i18nextLng` does not flip language pre-render. The 4 committed PNG baselines are correct geometry but byte-identical between LTR and RTL variants. Fix path: switch to `?lng=ar` URL param or render-after-language-load gate.'
     impact: 'No KANBAN-04 regression — the baselines ARE committed and Playwright `--list` enumerates cleanly. The byte-identity is a separate quality issue inherited to v6.4 (audit §7 + 53-DISCUSSION-LOG D-22 entry).'
+    resolution:
+      resolved_in_phase: 57-phase-52-deviation-closure-d-19-d-23
+      resolved_in_plan: 57-03
+      commit_sha: 3fd723ae
+      resolved_date: Sun 18 May
+      resolution_summary: 'Closed by ?lng URL-param render-after-language-load fix in visual specs + querystring i18n detector + vitest hash-comparison meta-test asserting LTR/RTL byte-distinct baselines + ESLint ban on addInitScript(i18nextLng) anti-pattern (D-22).'
   - id: D-23-LIVE-PLAYWRIGHT-DEFERRED
     summary: 'The four `tasks-tab-*.spec.ts` files (visual, a11y, dnd, keyboard) enumerate cleanly (30 tests across 12 files including the 8 Phase 39 anchor specs). Live run requires dev server + Doppler-managed `.env.test` + seeded staging fixture (52-FIXTURE.md). Compile-time + type-check + enumeration all pass.'
     impact: 'No regression — static verification (compile + type + enumerate) green. Live execution deferred to host operator with seeded staging per audit §7 v6.4 carryover.'
+    resolution:
+      resolved_in_phase: 57-phase-52-deviation-closure-d-19-d-23
+      resolved_in_plan: 57-04
+      commit_sha: ff0a3ac0
+      resolved_date: Tue 19 May
+      resolution_summary: 'Closed by canonical live tasks-tab Playwright run on seeded staging Phase 52 fixture engagement (17 enumerated, 8 passed, 9 expected-skipped, 0 unexpected failures) + artifact package in phase folder (log + 4 screenshots + summary) + 2 surfaced product a11y fixes (ChatDock FAB aria-label, TasksTab Progress aria-label) + spec-bug fixes (a11y region scope, RTL tasks-count regex) (D-23).'
   - id: D-52-08-ESLINT-BAN-TIMEOUT
     summary: 'Meta-test `frontend/src/components/kanban/__tests__/eslint-ban.test.ts` times out under the 20s vitest budget when spawning `pnpm exec eslint` from a cold cache. The functional behavior of the `no-restricted-imports` ban is verified independently by direct invocation against `tools/eslint-fixtures/bad-kibo-ui-import.tsx`.'
     impact: 'Addressed by quick-task 260516-s3j Task 5: timeout raised 20_000 → 60_000 ms. Spawn-based assertion retained for now; rewrite to import-time grep deferred unless flake recurs.'
+    resolution:
+      resolved_in_phase: v6.3 (quick-task 260516-s3j)
+      resolved_in_plan: quick-task 260516-s3j Task 5
+      commit_sha: (in-quick-task)
+      resolved_date: Fri 16 May
+      resolution_summary: 'Closed by raising vitest timeout 20_000 → 60_000 ms; spawn-based assertion retained (D-52-08).'
 ---
 
 # Phase 52: HeroUI v3 Kanban Migration — Verification Report

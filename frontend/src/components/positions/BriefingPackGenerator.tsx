@@ -191,14 +191,9 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
         {/* Completed */}
         {status === 'completed' && fileUrl && (
           <div className="space-y-4">
-            {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BriefingPackGenerator */}
-            <div className="flex flex-col items-center gap-2 rounded-lg border border-green-500 bg-green-50 p-6 dark:bg-green-950">
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BriefingPackGenerator */}
-              <CheckCircle className="h-12 w-12 text-green-600 dark:text-green-400" />
-              {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#BriefingPackGenerator */}
-              <p className="font-medium text-green-900 dark:text-green-100">
-                {t('positions.briefing.completed')}
-              </p>
+            <div className="flex flex-col items-center gap-2 rounded-lg border border-success bg-success/5 p-6 dark:bg-success/20">
+              <CheckCircle className="h-12 w-12 text-success" />
+              <p className="font-medium text-success">{t('positions.briefing.completed')}</p>
             </div>
 
             <Button onClick={handleDownload} className="w-full">

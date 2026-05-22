@@ -66,15 +66,11 @@ const entityIcons: Record<SearchableEntityType, React.ComponentType<{ className?
 
 // Status badge colors
 const statusColors: Record<string, string> = {
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdvancedSearchPage
-  active: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+  active: 'bg-success/10 text-success dark:bg-success/30',
   inactive: 'bg-muted text-muted-foreground',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdvancedSearchPage
-  archived: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdvancedSearchPage
-  draft: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-  // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdvancedSearchPage
-  published: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+  archived: 'bg-warning/10 text-warning dark:bg-warning/30',
+  draft: 'bg-accent/10 text-accent dark:bg-accent/30',
+  published: 'bg-secondary/30 text-secondary-foreground dark:bg-secondary/50',
 }
 
 export function AdvancedSearchPage() {
@@ -304,13 +300,10 @@ export function AdvancedSearchPage() {
 
               {/* Warnings */}
               {searchMutation.data?.warnings && searchMutation.data.warnings.length > 0 && (
-                // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdvancedSearchPage
-                <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                <div className="mt-4 p-3 bg-warning/5 dark:bg-warning/20 border border-warning/20 dark:border-warning/70 rounded-lg">
                   <div className="flex items-start gap-2">
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdvancedSearchPage */}
-                    <AlertCircle className="h-4 w-4 text-yellow-600 shrink-0 mt-0.5" />
-                    {/* eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#AdvancedSearchPage */}
-                    <div className="text-sm text-yellow-800 dark:text-yellow-200">
+                    <AlertCircle className="h-4 w-4 text-warning shrink-0 mt-0.5" />
+                    <div className="text-sm text-warning">
                       {searchMutation.data.warnings.map((warning) => (
                         <p key={warning}>{warning}</p>
                       ))}

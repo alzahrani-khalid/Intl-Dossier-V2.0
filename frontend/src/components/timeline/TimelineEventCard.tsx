@@ -68,12 +68,9 @@ const getEventIcon = (eventType: string): React.ElementType => {
  */
 const getPriorityColor = (priority: string): string => {
   const colorMap: Record<string, string> = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineEventCard
-    high: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineEventCard
-    medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineEventCard
-    low: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+    high: 'bg-danger/10 text-danger dark:bg-danger/30',
+    medium: 'bg-warning/10 text-warning dark:bg-warning/30',
+    low: 'bg-accent/10 text-accent dark:bg-accent/30',
   }
   return colorMap[priority] || colorMap.low!
 }
@@ -83,16 +80,11 @@ const getPriorityColor = (priority: string): string => {
  */
 const getStatusColor = (status: string): string => {
   const colorMap: Record<string, string> = {
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineEventCard
-    planned: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineEventCard
-    ongoing: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineEventCard
-    completed: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineEventCard
-    cancelled: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-    // eslint-disable-next-line no-restricted-syntax -- Phase 51 Tier-C: see 51-DESIGN-AUDIT.md#TimelineEventCard
-    postponed: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
+    planned: 'bg-muted text-muted-foreground dark:bg-muted',
+    ongoing: 'bg-accent/10 text-accent dark:bg-accent/30',
+    completed: 'bg-success/10 text-success dark:bg-success/30',
+    cancelled: 'bg-danger/10 text-danger dark:bg-danger/30',
+    postponed: 'bg-warning/10 text-warning dark:bg-warning/30',
   }
   return colorMap[status] || colorMap.planned!
 }
