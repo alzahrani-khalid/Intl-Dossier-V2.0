@@ -168,3 +168,8 @@ skills-lock.json
 # Python bytecode in local skill scripts
 __pycache__/
 *.pyc
+
+# Self-improving Stop hook state — per-machine, never committed
+.claude/claude-md-review.md
+.claude/.claude-md-review-state
+
