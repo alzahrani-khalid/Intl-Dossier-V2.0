@@ -147,7 +147,7 @@ Full details: [v6.3-ROADMAP.md](milestones/v6.3-ROADMAP.md)
 - [x] **Phase 55: DesignV2 → Main Merge & Gate Enforcement** — Land DesignV2 onto `main` with all v6.3 quality gates intact and verify enforcement on post-merge `main` PR contexts (MERGE-01, MERGE-02) — **COMPLETE 2026-05-18** (4/4 plans)
 - [ ] **Phase 56: RLS Closure & Last Typed-Shim Retirement** — Clear the pre-existing `countries` row from `sensitiveTables` (D-54-04) and type `useStakeholderInteractionMutations` at source (RLS-01, TYPE-05)
 - [ ] **Phase 57: Phase 52 Deviation Closure (D-19..D-23)** — Resolve mobile touch DnD scope, kanban regression follow-up, LTR/RTL visual baseline byte-distinction, and live tasks-tab Playwright run (DEVIATE-01..04)
-- [ ] **Phase 58: Tier-C Design-Token Suppression Full Clear** — Eliminate all 271 `gsd-design-token-tier-c-allow` suppressions (2336 AST nodes) via wave-staged token swaps and remove the waiver from `eslint.config.mjs` (TOKEN-01, TOKEN-02)
+- [x] **Phase 58: Tier-C Design-Token Suppression Full Clear** — Eliminate all 271 `gsd-design-token-tier-c-allow` suppressions (2336 AST nodes) via wave-staged token swaps and remove the waiver from `eslint.config.mjs` (TOKEN-01, TOKEN-02) — **COMPLETE 2026-05-22** (7/7 plans; merge `aed43b97`; `phase-58-base` signed tag)
 - [ ] **Phase 59: Cosmetic + CI Gap Closure** — Refresh Phase 53 SUMMARY/VERIFICATION wording, fix `TweaksDrawer.test.tsx` comment drift, polish `51-VALIDATION.md` frontmatter, and wire `bad-design-token.tsx` + `bad-vi-mock.ts` positive-failure CI assertions (POLISH-01..04)
 
 </details>

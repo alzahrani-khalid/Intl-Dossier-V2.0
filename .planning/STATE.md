@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v6.4
 milestone_name: Stabilization & Carryover Sweep
 status: executing
-last_updated: '2026-05-21T12:32:21.756Z'
-last_activity: 2026-05-21 -- Phase 58 execution started
+last_updated: '2026-05-22T08:06:00.000Z'
+last_activity: 2026-05-22 -- Phase 58 complete (7/7 plans); merge aed43b97; phase-58-base signed tag pushed
 progress:
   total_phases: 12
-  completed_phases: 11
+  completed_phases: 12
   total_plans: 70
-  completed_plans: 60
-  percent: 86
+  completed_plans: 67
+  percent: 96
 ---
 
 # Project State
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-17 after v6.3 milestone)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 58 — tier-c-design-token-suppression-full-clear
+**Current focus:** Phase 58 closed — next: Phase 56 (RLS-01, TYPE-05) or Phase 59 (POLISH-01..04)
 
 ## Current Position
 
-Phase: 58 (tier-c-design-token-suppression-full-clear) — EXECUTING
-Plan: 1 of 7
-Status: Executing Phase 58
-Last activity: 2026-05-21 -- Phase 58 execution started
+Phase: 58 (tier-c-design-token-suppression-full-clear) — COMPLETE (7/7 plans)
+Plan: 7 of 7
+Status: Phase 58 shipped — merge `aed43b97` on `main`; `phase-58-base` SSH-signed annotated tag pushed
+Last activity: 2026-05-22 -- Phase 58 complete (7/7 plans); merge aed43b97; phase-58-base signed tag pushed
 
 ## v6.4 Phase Plan
 
