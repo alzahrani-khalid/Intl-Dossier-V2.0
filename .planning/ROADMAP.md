@@ -242,7 +242,13 @@ Plans:
 3. `51-VALIDATION.md` frontmatter reads `status: passed` with `nyquist_compliant: true` preserved
 4. The CI pipeline contains an explicit step that asserts `bad-design-token.tsx` produces an ESLint error and `bad-vi-mock.ts` produces a test failure; CI breaks if either fixture stops failing as expected
 
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+
+- [ ] 59-01-PLAN.md — POLISH-02/03/04: TweaksDrawer comment delete, 51-VALIDATION status flip, eslint fixture flip-test + criterion reconciliation
+- [ ] 59-02-PLAN.md — POLISH-01: gated Phase 53 PASS/verified flip behind origin-tag verification (force-push contingency)
+- [ ] 59-03-PLAN.md — Closure: single PR for all four POLISH items + SSH-signed phase-59-base tag
 
 ## Progress
 
