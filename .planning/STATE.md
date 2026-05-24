@@ -90,6 +90,7 @@ Nothing carries beyond v6.4 except v7.0 feature work (Intelligence Engine API + 
 
 ## Quick Tasks Completed
 
-| Date       | Quick ID   | Task                                          | Status   | Branch                             |
-| ---------- | ---------- | --------------------------------------------- | -------- | ---------------------------------- |
-| 2026-05-24 | 260524-szl | Dependency & security upgrades (P0 + W1 + W2) | complete | chore/dependency-security-upgrades |
+| Date       | Quick ID   | Task                                                                              | Status   | Branch                             |
+| ---------- | ---------- | --------------------------------------------------------------------------------- | -------- | ---------------------------------- |
+| 2026-05-24 | 260524-szl | Dependency & security upgrades (P0 + W1 + W2)                                     | complete | chore/dependency-security-upgrades |
+| 2026-05-24 | 260524-ttg | Node floor 22.13.0 → 22.22.0 (posthog-node@5.35.1 engine fix; unblocks PR #26 CI) | complete | chore/dependency-security-upgrades |
