@@ -246,8 +246,13 @@ Plans:
 
 Plans:
 
+**Wave 1**
+
 - [ ] 59-01-PLAN.md — POLISH-02/03/04: TweaksDrawer comment delete, 51-VALIDATION status flip, eslint fixture flip-test + criterion reconciliation
 - [ ] 59-02-PLAN.md — POLISH-01: gated Phase 53 PASS/verified flip behind origin-tag verification (force-push contingency)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
 - [ ] 59-03-PLAN.md — Closure: single PR for all four POLISH items + SSH-signed phase-59-base tag
 
 ## Progress
