@@ -1,7 +1,7 @@
 ---
 phase: 51
 slug: design-token-compliance-gate
-status: draft
+status: passed
 nyquist_compliant: true
 wave_0_complete: true
 created: 2026-05-15
