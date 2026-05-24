@@ -35,10 +35,10 @@
 
 ### Cosmetic + CI gap closure
 
-- [ ] **POLISH-01**: Phase 53 SUMMARY/VERIFICATION wording refreshed — `53-03-SUMMARY.md` `PASS-WITH-DEFERRAL` → `PASS`; `53-VERIFICATION.md` BUNDLE-06 `verified-local-only` → `verified` (origin SHAs already match local)
-- [ ] **POLISH-02**: `TweaksDrawer.test.tsx:6-8` stale TEST-01 mock-factory comment removed (documentation drift)
-- [ ] **POLISH-03**: `51-VALIDATION.md` frontmatter `status: draft` → `passed` (`nyquist_compliant: true` already correct)
-- [ ] **POLISH-04**: `bad-design-token.tsx` + `bad-vi-mock.ts` positive-failure CI assertions wired — CI breaks if either fixture stops producing its expected lint/ESLint failure
+- [x] **POLISH-01**: Phase 53 SUMMARY/VERIFICATION wording refreshed — `53-03-SUMMARY.md` `PASS-WITH-DEFERRAL` → `PASS`; `53-VERIFICATION.md` BUNDLE-06 `verified-local-only` → `verified` (origin tag objects + SHAs verified against local signed tags)
+- [x] **POLISH-02**: `TweaksDrawer.test.tsx:6-8` stale TEST-01 mock-factory comment removed (documentation drift)
+- [x] **POLISH-03**: `51-VALIDATION.md` frontmatter `status: draft` → `passed` (`nyquist_compliant: true` already correct)
+- [x] **POLISH-04**: `bad-design-token.tsx` + `bad-vi-mock.ts` positive-failure CI assertions wired — CI breaks if either fixture stops producing its expected lint/ESLint failure
 
 ---
 
@@ -71,10 +71,10 @@
 | DEVIATE-04  | Phase 57 | Pending                                                                                                             |
 | TOKEN-01    | Phase 58 | Pending                                                                                                             |
 | TOKEN-02    | Phase 58 | Pending                                                                                                             |
-| POLISH-01   | Phase 59 | Pending                                                                                                             |
-| POLISH-02   | Phase 59 | Pending                                                                                                             |
-| POLISH-03   | Phase 59 | Pending                                                                                                             |
-| POLISH-04   | Phase 59 | Pending                                                                                                             |
+| POLISH-01   | Phase 59 | ✓ Complete (2026-05-24, Plan 59-02 — origin tag objects + signatures verified; Phase 53 PASS/verified)              |
+| POLISH-02   | Phase 59 | ✓ Complete (2026-05-24, Plan 59-01 — TweaksDrawer stale comment removed)                                            |
+| POLISH-03   | Phase 59 | ✓ Complete (2026-05-24, Plan 59-01 — 51-VALIDATION frontmatter marked passed)                                       |
+| POLISH-04   | Phase 59 | ✓ Complete (2026-05-24, Plan 59-01 — positive-failure ESLint fixtures flip-tested; wording reconciled to linting)   |
 
 **Coverage:** 14/14 v6.4 requirements mapped to exactly one phase. No orphans.
 
