@@ -38,7 +38,7 @@
 - [ ] **POLISH-01**: Phase 53 SUMMARY/VERIFICATION wording refreshed — `53-03-SUMMARY.md` `PASS-WITH-DEFERRAL` → `PASS`; `53-VERIFICATION.md` BUNDLE-06 `verified-local-only` → `verified` (origin SHAs already match local)
 - [ ] **POLISH-02**: `TweaksDrawer.test.tsx:6-8` stale TEST-01 mock-factory comment removed (documentation drift)
 - [ ] **POLISH-03**: `51-VALIDATION.md` frontmatter `status: draft` → `passed` (`nyquist_compliant: true` already correct)
-- [ ] **POLISH-04**: `bad-design-token.tsx` + `bad-vi-mock.ts` positive-failure CI assertions wired — CI breaks if either fixture stops producing its expected lint/test failure
+- [ ] **POLISH-04**: `bad-design-token.tsx` + `bad-vi-mock.ts` positive-failure CI assertions wired — CI breaks if either fixture stops producing its expected lint/ESLint failure
 
 ---
 

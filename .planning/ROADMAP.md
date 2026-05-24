@@ -240,7 +240,7 @@ Plans:
 1. `53-03-SUMMARY.md` reads `PASS` (not `PASS-WITH-DEFERRAL`) and `53-VERIFICATION.md` records BUNDLE-06 as `verified` (not `verified-local-only`)
 2. `TweaksDrawer.test.tsx:6-8` no longer references the (false) claim that the global setup omits `initReactI18next`
 3. `51-VALIDATION.md` frontmatter reads `status: passed` with `nyquist_compliant: true` preserved
-4. The CI pipeline contains an explicit step that asserts `bad-design-token.tsx` produces an ESLint error and `bad-vi-mock.ts` produces a test failure; CI breaks if either fixture stops failing as expected
+4. The CI pipeline contains an explicit step that asserts `bad-design-token.tsx` produces an ESLint error and `bad-vi-mock.ts` produces an ESLint error / lint failure; CI breaks if either fixture stops failing as expected
 
 **Plans**: 3 plans
 
