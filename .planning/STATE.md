@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v6.4
 milestone_name: Stabilization & Carryover Sweep
-status: executing
-last_updated: '2026-05-22T08:06:00.000Z'
+status: Phase 58 shipped — merge `aed43b97` on `main`; `phase-58-base` SSH-signed annotated tag pushed
+last_updated: '2026-05-24T19:00:35.491Z'
 last_activity: 2026-05-22 -- Phase 58 complete (7/7 plans); merge aed43b97; phase-58-base signed tag pushed
 progress:
-  total_phases: 12
-  completed_phases: 12
+  total_phases: 13
+  completed_phases: 11
   total_plans: 70
-  completed_plans: 67
-  percent: 96
+  completed_plans: 61
+  percent: 85
 ---
 
 # Project State
