@@ -5,7 +5,7 @@
   "private": true,
   "packageManager": "pnpm@10.29.1+sha512.48dae233635a645768a3028d19545cacc1688639eeb1f3734e42d6d6b971afbf22aa1ac9af52a173d9c3a20c15857cfa400f19994d79a2f626fcc73fccda9bbc",
   "engines": {
-    "node": ">=22.13.0",
+    "node": ">=22.22.0",
     "pnpm": ">=10.0.0",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm"
@@ -68,41 +68,48 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.60.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.9.1",
     "@vitejs/plugin-react": "^5.2.0",
-    "@vitest/ui": "^4.1.2",
+    "@vitest/ui": "^4.1.7",
     "axe-playwright": "^2.2.2",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-check-file": "^3.3.1",
     "eslint-plugin-prettier": "^5.5.5",
-    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "eslint-plugin-rtl-friendly": "^0.5.1",
     "eslint-plugin-unused-imports": "^4.4.1",
     "husky": "^9.1.7",
-    "jsdom": "^29.0.1",
-    "knip": "^6.0.6",
+    "jsdom": "^29.1.1",
+    "knip": "^6.14.2",
     "lint-staged": "^16.4.0",
-    "nanoid": "5.1.7",
-    "playwright": "^1.58.2",
-    "prettier": "^3.8.1",
-    "turbo": "^2.8.20",
+    "nanoid": "5.1.11",
+    "playwright": "^1.60.0",
+    "prettier": "^3.8.3",
+    "turbo": "^2.9.14",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.57.2",
-    "vitest": "^4.1.2"
+    "typescript-eslint": "^8.59.4",
+    "vitest": "^4.1.7"
   },
   "dependencies": {
-    "react": "^19.2.4",
+    "react": "^19.2.6",
     "web-push": "3.6.7"
   },
   "pnpm": {
     "overrides": {
-      "sharp": "^0.34.5"
+      "sharp": "^0.34.5",
+      "protobufjs@7": "^7.5.6",
+      "fast-uri@3": "^3.1.2",
+      "rollup@4": "^4.59.0",
+      "minimatch@3": "^3.1.4",
+      "picomatch@2": "^2.3.2",
+      "path-to-regexp@8": "^8.4.0",
+      "path-to-regexp@0": "0.1.13"
     },
     "peerDependencyRules": {
       "allowedVersions": {
