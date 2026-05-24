@@ -1,13 +1,5 @@
 /**
  * TweaksDrawer live tests (THEME-01, Plan 34-04).
- *
- * NOTE ON MOCKING:
- * The project's global `tests/setup.ts` stubs `react-i18next` with a translation
- * lookup table that doesn't include `tweaks.*` keys and omits `initReactI18next`,
- * `I18nextProvider`, and `Trans`. That stub is fine for most tests, but here we
- * need the real `t()` to resolve our EN/AR strings so we can assert rendered
- * labels. The `vi.mock(..., async (importOriginal) => ...)` call below restores
- * the full `react-i18next` surface for this test file only.
  */
 
 import { beforeEach, describe, expect, it, vi } from 'vitest'
