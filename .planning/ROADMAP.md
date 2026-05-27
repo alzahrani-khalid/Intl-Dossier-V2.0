@@ -148,7 +148,7 @@ Full details: [v6.3-ROADMAP.md](milestones/v6.3-ROADMAP.md)
 - [ ] **Phase 56: RLS Closure & Last Typed-Shim Retirement** — Clear the pre-existing `countries` row from `sensitiveTables` (D-54-04) and type `useStakeholderInteractionMutations` at source (RLS-01, TYPE-05)
 - [ ] **Phase 57: Phase 52 Deviation Closure (D-19..D-23)** — Resolve mobile touch DnD scope, kanban regression follow-up, LTR/RTL visual baseline byte-distinction, and live tasks-tab Playwright run (DEVIATE-01..04)
 - [x] **Phase 58: Tier-C Design-Token Suppression Full Clear** — Eliminate all 271 `gsd-design-token-tier-c-allow` suppressions (2336 AST nodes) via wave-staged token swaps and remove the waiver from `eslint.config.mjs` (TOKEN-01, TOKEN-02) — **COMPLETE 2026-05-22** (7/7 plans; merge `aed43b97`; `phase-58-base` signed tag)
-- [ ] **Phase 59: Cosmetic + CI Gap Closure** — POLISH-01..04 closed locally; single-PR merge and signed `phase-59-base` tag gate pending (2/3 plans)
+- [x] **Phase 59: Cosmetic + CI Gap Closure** — POLISH-01..04 shipped via PR #27 merge `d3e7f8e`; `phase-59-base` SSH-signed tag on merge SHA (3/3 plans) — **COMPLETE 2026-05-27**
 
 </details>
 
@@ -251,9 +251,9 @@ Plans:
 - [x] 59-01-PLAN.md — POLISH-02/03/04: TweaksDrawer comment delete, 51-VALIDATION status flip, eslint fixture flip-test + criterion reconciliation
 - [x] 59-02-PLAN.md — POLISH-01: gated Phase 53 PASS/verified flip behind origin-tag verification (force-push contingency)
 
-**Wave 2** _(PR merge + signed tag gate pending)_
+**Wave 2**
 
-- [ ] 59-03-PLAN.md — Closure: single PR for all four POLISH items + SSH-signed phase-59-base tag (human-gated protected-main merge and post-merge tag still pending)
+- [x] 59-03-PLAN.md — Closure: PR #27 merged (`d3e7f8e`), 8 required contexts green, SSH-signed `phase-59-base` tag on merge SHA — **SHIPPED 2026-05-27**
 
 ## Progress
 
@@ -275,7 +275,7 @@ Plans:
 | 56 | v6.4 | 0/0 | Not started | — |
 | 57 | v6.4 | 0/0 | Not started | — |
 | 58 | v6.4 | 4/7 | Wave-4 implementation complete; merge deferred | — |
-| 59 | v6.4 | 2/3 | In Progress | — |
+| 59 | v6.4 | 3/3 | Complete | 2026-05-27 |
 
 <!-- gsd:progress:end -->
 
