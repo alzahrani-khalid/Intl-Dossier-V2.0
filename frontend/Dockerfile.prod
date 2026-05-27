@@ -7,8 +7,9 @@
 FROM node:22-alpine AS deps
 WORKDIR /app
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Install pnpm (pinned to match the repo's packageManager; pnpm@latest moved to
+# v11 which hard-fails on ignored native build scripts via ERR_PNPM_IGNORED_BUILDS)
+RUN corepack enable && corepack prepare pnpm@10.29.1 --activate
 
 # Copy package files
 COPY package.json pnpm-lock.yaml* ./
@@ -20,8 +21,9 @@ RUN pnpm install --no-frozen-lockfile
 FROM node:22-alpine AS builder
 WORKDIR /app
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Install pnpm (pinned to match the repo's packageManager; pnpm@latest moved to
+# v11 which hard-fails on ignored native build scripts via ERR_PNPM_IGNORED_BUILDS)
+RUN corepack enable && corepack prepare pnpm@10.29.1 --activate
 
 # Copy dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
