@@ -29,8 +29,9 @@ RUN apk add --no-cache \
     vips-dev \
     libc6-compat
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Install pnpm (pinned to match the repo's packageManager; pnpm@latest moved to
+# v11 which hard-fails on ignored native build scripts via ERR_PNPM_IGNORED_BUILDS)
+RUN corepack enable && corepack prepare pnpm@10.29.1 --activate
 
 # Copy package files
 COPY package.json pnpm-lock.yaml* ./
