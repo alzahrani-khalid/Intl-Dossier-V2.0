@@ -160,8 +160,13 @@ export default defineConfig({
             if (id.includes('@tanstack')) {
               return 'tanstack-vendor'
             }
-            // React core - rarely changes, cache well
-            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
+            // React runtime ONLY. A broad `react` substring also swept app-level
+            // react-* packages (react-i18next, react-hook-form, …) into react-vendor;
+            // those depend on motion/radix/heroui chunks which depend back on react,
+            // forming a chunk cycle → "Cannot read properties of undefined (reading
+            // 'useLayoutEffect')" white-screen in the production bundle. Match only the
+            // real react runtime so react-* packages fall through to their own chunks.
+            if (/[\\/]node_modules[\\/](react|react-dom|scheduler|react-is)[\\/]/.test(id)) {
               return 'react-vendor'
             }
             // Framer Motion - animation library
