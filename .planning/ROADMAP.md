@@ -148,7 +148,7 @@ Full details: [v6.3-ROADMAP.md](milestones/v6.3-ROADMAP.md)
 - [ ] **Phase 56: RLS Closure & Last Typed-Shim Retirement** — Clear the pre-existing `countries` row from `sensitiveTables` (D-54-04) and type `useStakeholderInteractionMutations` at source (RLS-01, TYPE-05)
 - [ ] **Phase 57: Phase 52 Deviation Closure (D-19..D-23)** — Resolve mobile touch DnD scope, kanban regression follow-up, LTR/RTL visual baseline byte-distinction, and live tasks-tab Playwright run (DEVIATE-01..04)
 - [x] **Phase 58: Tier-C Design-Token Suppression Full Clear** — Eliminate all 271 `gsd-design-token-tier-c-allow` suppressions (2336 AST nodes) via wave-staged token swaps and remove the waiver from `eslint.config.mjs` (TOKEN-01, TOKEN-02) — **COMPLETE 2026-05-22** (7/7 plans; merge `aed43b97`; `phase-58-base` signed tag)
-- [ ] **Phase 59: Cosmetic + CI Gap Closure** — Refresh Phase 53 SUMMARY/VERIFICATION wording, fix `TweaksDrawer.test.tsx` comment drift, polish `51-VALIDATION.md` frontmatter, and wire `bad-design-token.tsx` + `bad-vi-mock.ts` positive-failure CI assertions (POLISH-01..04)
+- [ ] **Phase 59: Cosmetic + CI Gap Closure** — POLISH-01..04 closed locally; single-PR merge and signed `phase-59-base` tag gate pending (2/3 plans)
 
 </details>
 
@@ -240,9 +240,20 @@ Plans:
 1. `53-03-SUMMARY.md` reads `PASS` (not `PASS-WITH-DEFERRAL`) and `53-VERIFICATION.md` records BUNDLE-06 as `verified` (not `verified-local-only`)
 2. `TweaksDrawer.test.tsx:6-8` no longer references the (false) claim that the global setup omits `initReactI18next`
 3. `51-VALIDATION.md` frontmatter reads `status: passed` with `nyquist_compliant: true` preserved
-4. The CI pipeline contains an explicit step that asserts `bad-design-token.tsx` produces an ESLint error and `bad-vi-mock.ts` produces a test failure; CI breaks if either fixture stops failing as expected
+4. The CI pipeline contains an explicit step that asserts `bad-design-token.tsx` produces an ESLint error and `bad-vi-mock.ts` produces an ESLint error / lint failure; CI breaks if either fixture stops failing as expected
 
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+
+**Wave 1**
+
+- [x] 59-01-PLAN.md — POLISH-02/03/04: TweaksDrawer comment delete, 51-VALIDATION status flip, eslint fixture flip-test + criterion reconciliation
+- [x] 59-02-PLAN.md — POLISH-01: gated Phase 53 PASS/verified flip behind origin-tag verification (force-push contingency)
+
+**Wave 2** _(PR merge + signed tag gate pending)_
+
+- [ ] 59-03-PLAN.md — Closure: single PR for all four POLISH items + SSH-signed phase-59-base tag (human-gated protected-main merge and post-merge tag still pending)
 
 ## Progress
 
@@ -264,7 +275,7 @@ Plans:
 | 56 | v6.4 | 0/0 | Not started | — |
 | 57 | v6.4 | 0/0 | Not started | — |
 | 58 | v6.4 | 4/7 | Wave-4 implementation complete; merge deferred | — |
-| 59 | v6.4 | 0/0 | Not started | — |
+| 59 | v6.4 | 2/3 | In Progress | — |
 
 <!-- gsd:progress:end -->
 

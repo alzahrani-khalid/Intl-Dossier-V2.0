@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v6.4
 milestone_name: Stabilization & Carryover Sweep
 status: executing
-last_updated: '2026-05-22T08:06:00.000Z'
-last_activity: 2026-05-22 -- Phase 58 complete (7/7 plans); merge aed43b97; phase-58-base signed tag pushed
+last_updated: '2026-05-24T19:56:11Z'
+last_activity: 2026-05-24 -- Phase 59 Wave 1 complete; 59-03 PR merge/tag gate pending
 progress:
-  total_phases: 12
-  completed_phases: 12
-  total_plans: 70
-  completed_plans: 67
-  percent: 96
+  total_phases: 13
+  completed_phases: 11
+  total_plans: 73
+  completed_plans: 63
+  percent: 86
 ---
 
 # Project State
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-17 after v6.3 milestone)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 58 closed — next: Phase 56 (RLS-01, TYPE-05) or Phase 59 (POLISH-01..04)
+**Current focus:** Phase 59 — cosmetic-ci-gap-closure
 
 ## Current Position
 
-Phase: 58 (tier-c-design-token-suppression-full-clear) — COMPLETE (7/7 plans)
-Plan: 7 of 7
-Status: Phase 58 shipped — merge `aed43b97` on `main`; `phase-58-base` SSH-signed annotated tag pushed
-Last activity: 2026-05-22 -- Phase 58 complete (7/7 plans); merge aed43b97; phase-58-base signed tag pushed
+Phase: 59 (cosmetic-ci-gap-closure) — EXECUTING
+Plan: 3 of 3
+Status: POLISH-01..04 closed locally; awaiting protected-main PR merge and signed phase-59-base tag
+Last activity: 2026-05-24 -- Phase 59 Wave 1 complete; 59-03 human gate pending
 
 ## v6.4 Phase Plan
 
@@ -54,23 +54,12 @@ Coverage: 14/14 v6.4 requirements mapped (no orphans).
 
 ## Next Action
 
-Phase 55 is COMPLETE. Recommended next steps:
+Phase 59 Plan 59-03 is at the blocking closeout gate:
 
-```
-/gsd:verify-work 55
-```
-
-Then plan the next phase. Phases 56 and 57 are unblocked (both depend only on Phase 55) and may proceed in parallel:
-
-```
-/gsd:plan-phase 56   # RLS-01 + TYPE-05
-
-# or
-
-/gsd:plan-phase 57   # DEVIATE-01..04 (Phase 52 deviation closure)
-```
-
-Phase 58 (TOKEN-01 + TOKEN-02 — Tier-C suppression full clear) and Phase 59 (POLISH-01..04 — cosmetic + CI gap closure) also unblocked.
+1. Open one PR from `phase-59/cosmetic-ci-gap-closure` carrying POLISH-01..04.
+2. Wait for all 8 required protected-main contexts to pass, then merge without admin bypass, force-push, or `--no-verify`.
+3. After merge, create, push, and verify the annotated SSH-signed `phase-59-base` tag.
+4. Record `59-03-SUMMARY.md` with the PR URL, merge SHA, CI context evidence, and tag verification.
 
 ## Carryover Tech Debt Status
 
@@ -79,10 +68,10 @@ All known v6.3 carryover items are now folded into v6.4 phases:
 - DesignV2 → main merge sequence → Phase 55 (MERGE-01, MERGE-02)
 - 271 Tier-C design-token suppressions / 2336 AST nodes → Phase 58 (TOKEN-01, TOKEN-02) — **full clear** scope (waves staged within the phase)
 - 5 Phase 52 deviations (D-19..D-23) → Phase 57 (DEVIATE-01..04); D-20 already closed in v6.3
-- Phase 53 SUMMARY/VERIFICATION cosmetic wording refresh → Phase 59 (POLISH-01)
-- `TweaksDrawer.test.tsx:6-8` comment drift → Phase 59 (POLISH-02)
-- `51-VALIDATION.md` frontmatter polish → Phase 59 (POLISH-03)
-- bad-design-token.tsx + bad-vi-mock.ts positive-failure CI assertion → Phase 59 (POLISH-04)
+- Phase 53 SUMMARY/VERIFICATION cosmetic wording refresh → Phase 59 (POLISH-01) — CLOSED 2026-05-24 (Plan 59-02)
+- `TweaksDrawer.test.tsx:6-8` comment drift → Phase 59 (POLISH-02) — CLOSED 2026-05-24 (Plan 59-01)
+- `51-VALIDATION.md` frontmatter polish → Phase 59 (POLISH-03) — CLOSED 2026-05-24 (Plan 59-01)
+- bad-design-token.tsx + bad-vi-mock.ts positive-failure CI assertion → Phase 59 (POLISH-04) — CLOSED 2026-05-24 (Plan 59-01)
 - D-54-04-RLS-AUDIT-PRE-EXISTING-FAIL → Phase 56 (RLS-01)
 - `useStakeholderInteractionMutations` shim (last of 20 v6.2 holdovers) → Phase 56 (TYPE-05)
 
