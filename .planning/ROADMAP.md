@@ -11,7 +11,7 @@
 - ✅ **v6.1 Hardening & Reconciliation** — Phases 44-46 (shipped 2026-05-08) — [archive](milestones/v6.1-ROADMAP.md)
 - ✅ **v6.2 Type-Check, Lint & Bundle Reset** — Phases 47-49 (shipped 2026-05-12) — [archive](milestones/v6.2-ROADMAP.md)
 - ✅ **v6.3 Carryover Sweep & v7.0 Prep** — Phases 50-54 (shipped 2026-05-17) — [archive](milestones/v6.3-ROADMAP.md)
-- 🚧 **v6.4 Stabilization & Carryover Sweep** — Phases 55-59 (in progress)
+- 🚧 **v6.4 Stabilization & Carryover Sweep** — Phases 55-59 (all phases complete; awaiting audit/close)
 
 ## Phases
 
@@ -142,11 +142,11 @@ Full details: [v6.3-ROADMAP.md](milestones/v6.3-ROADMAP.md)
 </details>
 
 <details open>
-<summary>🚧 v6.4 Stabilization & Carryover Sweep (Phases 55-59) — IN PROGRESS</summary>
+<summary>🚧 v6.4 Stabilization & Carryover Sweep (Phases 55-59) — ALL PHASES COMPLETE (awaiting audit/close)</summary>
 
 - [x] **Phase 55: DesignV2 → Main Merge & Gate Enforcement** — Land DesignV2 onto `main` with all v6.3 quality gates intact and verify enforcement on post-merge `main` PR contexts (MERGE-01, MERGE-02) — **COMPLETE 2026-05-18** (4/4 plans)
-- [ ] **Phase 56: RLS Closure & Last Typed-Shim Retirement** — Clear the pre-existing `countries` row from `sensitiveTables` (D-54-04) and type `useStakeholderInteractionMutations` at source (RLS-01, TYPE-05)
-- [ ] **Phase 57: Phase 52 Deviation Closure (D-19..D-23)** — Resolve mobile touch DnD scope, kanban regression follow-up, LTR/RTL visual baseline byte-distinction, and live tasks-tab Playwright run (DEVIATE-01..04)
+- [x] **Phase 56: RLS Closure & Last Typed-Shim Retirement** — Clear the pre-existing `countries` row from `sensitiveTables` (D-54-04) and type `useStakeholderInteractionMutations` at source (RLS-01, TYPE-05) — **COMPLETE 2026-05-18** (2/2 plans)
+- [x] **Phase 57: Phase 52 Deviation Closure (D-19..D-23)** — Resolve mobile touch DnD scope, kanban regression follow-up, LTR/RTL visual baseline byte-distinction, and live tasks-tab Playwright run (DEVIATE-01..04) — **COMPLETE 2026-05-19** (4/4 plans; D-23 live-run 8 passed / 9 expected-skip / 0 failed; 57-04 summary = 57-LIVE-RUN-SUMMARY.md)
 - [x] **Phase 58: Tier-C Design-Token Suppression Full Clear** — Eliminate all 271 `gsd-design-token-tier-c-allow` suppressions (2336 AST nodes) via wave-staged token swaps and remove the waiver from `eslint.config.mjs` (TOKEN-01, TOKEN-02) — **COMPLETE 2026-05-22** (7/7 plans; merge `aed43b97`; `phase-58-base` signed tag)
 - [x] **Phase 59: Cosmetic + CI Gap Closure** — POLISH-01..04 shipped via PR #27 merge `d3e7f8e`; `phase-59-base` SSH-signed tag on merge SHA (3/3 plans) — **COMPLETE 2026-05-27**
 
@@ -198,7 +198,7 @@ Plans:
 3. The underlying `useStakeholderInteractionMutations` hook declares an explicit, non-`any`, non-`Promise.resolve({ success: true })` return type that consumers consume directly
 4. `pnpm type-check` exits 0 across both workspaces with the shim removed
 
-**Plans**: TBD
+**Plans**: 2 plans (complete 2026-05-18)
 
 ### Phase 57: Phase 52 Deviation Closure (D-19..D-23)
 
@@ -212,7 +212,7 @@ Plans:
 3. Re-running the kanban EN+AR visual baseline diff produces byte-distinct snapshots between LTR and RTL (no false byte-identity) (D-22)
 4. The live tasks-tab Playwright run executes on seeded staging data with a host operator and the artifact (run log, screenshots, summary) lands in the phase folder (D-23)
 
-**Plans**: TBD
+**Plans**: 4 plans (complete 2026-05-19)
 **UI hint**: yes
 
 ### Phase 58: Tier-C Design-Token Suppression Full Clear
@@ -227,7 +227,7 @@ Plans:
 3. `pnpm lint` exits 0 workspace-wide with the waiver removed and the D-05 selectors at `error` severity
 4. Wave PRs are organized by surface (forms, tables, charts, drawers, dossier rail) so each wave is independently reviewable and revertable
 
-**Plans**: TBD
+**Plans**: 7 plans (wave 0 + waves 1-6; complete 2026-05-22)
 **UI hint**: yes
 
 ### Phase 59: Cosmetic + CI Gap Closure
@@ -272,13 +272,13 @@ Plans:
 | 47-49 | v6.2 | 17/17 | Shipped | 2026-05-12 |
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
 | 55 | v6.4 | 4/4 | Complete | 2026-05-18 |
-| 56 | v6.4 | 0/0 | Not started | — |
-| 57 | v6.4 | 0/0 | Not started | — |
-| 58 | v6.4 | 4/7 | Wave-4 implementation complete; merge deferred | — |
+| 56 | v6.4 | 2/2 | Complete | 2026-05-18 |
+| 57 | v6.4 | 4/4 | Complete | 2026-05-19 |
+| 58 | v6.4 | 7/7 | Complete | 2026-05-22 |
 | 59 | v6.4 | 3/3 | Complete | 2026-05-27 |
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-05-18 — Phase 55 COMPLETE (4/4 plans). Plan 04 captured `mergeStateStatus=BLOCKED` on smoke PR #18 (uppercase, GraphQL); evidence committed to main via PR #19; smoke PR closed `--delete-branch` per D-12; MERGE-02 satisfied. 8-context gate live on `main`. Recommended next: `/gsd:verify-work 55` then Phase 56 or 57 (parallel-eligible)._
+_Roadmap last updated: 2026-05-27 — v6.4 reconciled to disk truth: Phase 56 (2026-05-18) & 57 (2026-05-19) ticks restored and the Phase 58 progress row corrected to 7/7 (2026-05-22) after a worktree "main-wins" restore had regressed them. All 5 v6.4 phases (55-59) complete. Recommended next: `/gsd:audit-milestone` → `/gsd:complete-milestone`._
