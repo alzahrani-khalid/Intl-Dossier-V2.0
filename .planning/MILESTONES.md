@@ -19,7 +19,7 @@
 - **Phase 58 — Tier-C design-token suppression full clear:** all 271 `gsd-design-token-tier-c-allow` suppressions (2336 AST nodes) eliminated across 6 surface-staged waves; waiver token removed from `eslint.config.mjs`; `pnpm lint` stays 0 with D-05 selectors at `error`; merge `aed43b97`, `phase-58-base` signed.
 - **Phase 59 — Cosmetic + CI gap closure:** Phase 53 SUMMARY/VERIFICATION wording refreshed to `PASS`/`verified`; `TweaksDrawer.test.tsx` + `51-VALIDATION.md` documentation drift corrected; `bad-design-token.tsx` + `bad-vi-mock.ts` wired as positive-failure CI jobs that break CI if either fixture stops failing (PR #27, `d3e7f8e`).
 
-**Tech debt at close (6 items, 0 functional blockers):** missing VERIFICATION.md for Phases 55-58 (satisfaction established via audit ground-truth + the integration checker running the actual gates); Nyquist VALIDATION paperwork lags implementation (1 compliant / 1 draft / 3 missing); `phase-59-base` signed locally but not yet pushed to origin; `57-LIVE-RUN-SUMMARY.md` non-standard filename + Phase 58 superseded stub PLANs 58-07..10; RLS-01 test env-gated on `SUPABASE_*` CI secrets. Full detail: `.planning/milestones/v6.4-MILESTONE-AUDIT.md`.
+**Tech debt at close (5 open items, 0 functional blockers; the audit's 6th — `phase-59-base` on origin — was resolved during close):** missing VERIFICATION.md for Phases 55-58 (satisfaction established via audit ground-truth + the integration checker running the actual gates); Nyquist VALIDATION paperwork lags implementation (1 compliant / 1 draft / 3 missing); `57-LIVE-RUN-SUMMARY.md` non-standard filename + Phase 58 superseded stub PLANs 58-07..10; RLS-01 test env-gated on `SUPABASE_*` CI secrets. Full detail: `.planning/milestones/v6.4-MILESTONE-AUDIT.md`.
 
 ---
 

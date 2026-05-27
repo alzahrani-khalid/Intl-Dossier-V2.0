@@ -33,7 +33,7 @@ Tag: `v6.4`. DesignV2 now lives on `main` with 8 enforced quality-gate contexts;
 v6.4 is closed. Recommended next steps:
 
 1. **Start next milestone:** `/clear` then `/gsd:new-milestone` (v7.0 Intelligence Engine — seed at `.planning/seeds/v7.0-intelligence-engine.md`).
-2. **Provenance housekeeping:** `git push origin phase-59-base` (signed locally on `d3e7f8e`, not yet on origin; verify with `git tag -v phase-59-base`).
+2. **Provenance (no action needed):** `phase-59-base` is SSH-signed and already on origin (`29efc676` matches local) — the audit's "not on origin" note was stale, verified at close.
 3. **Optional Nyquist backfill:** `/gsd:validate-phase 56|57|58|59` to clear the discovery-only validation paperwork (non-blocking).
 
 ## Deferred Items
@@ -63,7 +63,7 @@ The 11 quick tasks are incomplete tracking artifacts from prior milestones (v4.x
 
 1. Missing VERIFICATION.md for Phases 55-58 (satisfaction established via audit ground-truth + integration checker running the actual gates).
 2. Nyquist VALIDATION paperwork lags implementation: 1 compliant (55) / 1 draft (58) / 3 missing (56/57/59).
-3. `phase-59-base` SSH-signed locally but not yet pushed to origin.
+3. `phase-59-base` SSH-signed and confirmed on origin (`29efc676`) — the audit's "not on origin" note was stale.
 4. `57-LIVE-RUN-SUMMARY.md` non-standard filename; Phase 58 superseded stub PLANs 58-07..10.
 5. RLS-01 test env-gated on `SUPABASE_*` CI secrets — confirm `Tests (backend)` injects them.
 6. REQUIREMENTS.md traceability was reconciled to 14/14 during close (originally stale at audit time).
