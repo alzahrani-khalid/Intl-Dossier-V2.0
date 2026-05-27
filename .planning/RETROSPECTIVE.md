@@ -341,6 +341,66 @@ _A living document updated after each milestone. Lessons feed forward into futur
 
 ---
 
+## Milestone: v6.4 — Stabilization & Carryover Sweep
+
+**Shipped:** 2026-05-27
+**Phases:** 5 (55-59) | **Plans:** 20 | **Timeline:** ~10 days (2026-05-17 → 2026-05-27)
+**Audit:** tech_debt (functionally complete; integration 14/14 wired, 0 blockers; 6 documentation/process-debt items)
+
+### What Was Built
+
+- DesignV2 → main merge + gate enforcement: DesignV2 (233 unique commits) merged via `--no-ff` (`3f763ddc`, PR #13); `main` branch protection round-tripped 6 → 8 required CI contexts (added `Design Token Check` + `react-i18next Factory Check`, reversing the v6.3 D-09 fold for failure attribution); smoke PR #18 planted 4 simultaneous violations and proved `mergeStateStatus=BLOCKED` (GraphQL uppercase); evidence committed via PR #19 (`ec9caffb`) before the smoke PR closed `--delete-branch` (Pitfall 10); `phase-55-base` SSH-signed
+- RLS closure + last typed-shim retirement: D-54-04 closed by moving `countries` from `sensitiveTables` to a new `globalReferenceTables` audit tier (authenticated-read + role-gated writes) with a staging policy reconciliation migration; `UseStakeholderInteractionMutationsReturn` exported from the source hook and the deprecated consumer shim deleted — the last of the 20 v6.2-era typed shims; `phase-56-base` SSH-signed
+- Phase 52 deviation closure (D-19..D-23): mobile touch DnD scoped out via ADR `docs/adr/0001-mobile-dnd-scope-out.md` + a mobile `<select>` "Move to" read-only fallback in `TasksTab.tsx`; `@dnd-kit/core` confined to the shared `@/components/kanban` primitive with an ESLint ban + `eslint-ban-dndkit.test.ts` + positive-failure fixture; kanban + tasks-tab LTR/RTL baselines proven md5-distinct at 768 & 1280 (`?lng` URL-param fix + 3-layer guard against the `addInitScript(i18nextLng)` anti-pattern); live tasks-tab Playwright run on seeded staging — 17 enumerated / 8 passed / 9 expected-skip / 0 fail + 4 screenshots
+- Tier-C design-token suppression full clear: all 271 `gsd-design-token-tier-c-allow` suppressions / 2336 AST nodes eliminated across 6 surface-staged waves (forms, tables, charts, drawers, dossier rail); waiver token removed from `eslint.config.mjs`; `pnpm exec eslint --max-warnings 0 'frontend/src/**'` exits 0 with D-05 selectors at `error`; merge `aed43b97`; `phase-58-base` signed
+- Cosmetic + CI gap closure: `53-03-SUMMARY.md` `PASS-WITH-DEFERRAL` → `PASS` and `53-VERIFICATION.md` BUNDLE-06 `verified-local-only` → `verified` (gated behind live origin-tag object + peeled-commit + SSH-signature verification); `TweaksDrawer.test.tsx:6-8` stale comment + `51-VALIDATION.md` frontmatter corrected; `bad-design-token.tsx` + `bad-vi-mock.ts` wired as dedicated positive-failure CI jobs that break the build if either fixture stops failing, kept outside every `pnpm lint` glob so they can't poison the main `Lint` context; PR #27 (`d3e7f8e`); `phase-59-base` SSH-signed on merge SHA
+
+### What Worked
+
+- **8 explicit contexts over the D-09 fold** — reversing v6.3's fold-into-Lint gives per-gate failure attribution: a reviewer sees exactly which gate failed instead of a composite red. Worth the branch-protection PUT
+- **Smoke PR with planted violations as live gate proof** — PR #18 with 4 simultaneous violations is a stronger MERGE-02 proof than asserting config; it exercises the real CI + branch-protection path and captures `BLOCKED` from GraphQL
+- **Evidence-before-cleanup ordering (Pitfall 10)** — committing smoke-PR evidence to main via a separate PR #19 BEFORE closing the smoke PR `--delete-branch` keeps the proof durable after the source branch is gone
+- **RLS tiering over blanket sensitivity** — splitting `globalReferenceTables` (authenticated-read + role-gated writes) from `sensitiveTables` models reality: `countries` is reference data. Resolves a Phase 03/04-vintage fail without weakening the audit
+- **Scope-out ADR + read-only fallback for mobile DnD** — a documented ADR + a `<select>` "Move to" picker is a cleaner D-19 closure than a half-working touch sensor; desktop DnD stays supported and mobile still moves cards
+- **Surface-staged Tier-C waves** — organizing the 271-suppression clear by surface made each wave independently reviewable and revertable, exactly as the success criterion required
+- **Positive-failure fixtures outside lint globs** — dedicated jobs assert the guards still fire, but the fixtures can't contaminate the main `Lint` context; CI breaks loudly if a guard silently stops working
+
+### What Was Inefficient
+
+- **VERIFICATION.md absence repeated from v6.3** — 4 of 5 phases (55/56/57/58) shipped without VERIFICATION.md; only Phase 59 produced one. The exact lesson flagged in the v6.3 retrospective recurred; satisfaction had to be re-established at audit time via ground-truth + the integration checker running the actual gates
+- **Traceability drift recurred** — DEVIATE-01..04 + TOKEN-01/02 (6 rows) sat at `[ ]`/Pending from 2026-05-18 despite Phases 57/58 completing; reconciled only at the milestone audit. Same process-boundary failure as v6.3's 11 stale rows
+- **Worktree "main-wins" restore regressed completion edits** — Phase 58's merges triggered a quick.md worktree restore that clobbered the 05-18/05-19 ROADMAP ticks + the Phase 58 progress row, dropping the GSD bar to 88% via superseded stub PLANs; required a disk-truth reconciliation pass on 2026-05-27
+- **Phase 58 superseded stub PLANs** — numbered PLANs 58-07..58-10 linger alongside the real 7 wave plans (58-00..58-06), inflating disk plan-counts and confusing the progress computation (and the milestone-complete CLI's stat scrape)
+- **Nyquist VALIDATION paperwork lagged again** — 58-VALIDATION.md is a draft stub (`nyquist_compliant: false`) despite the Tier-C clear being verifiably complete; 56/57/59 have none
+- **Non-standard artifact name** — `57-LIVE-RUN-SUMMARY.md` breaks the `NN-NN-SUMMARY.md` convention; minor, but it complicated the milestone-complete CLI's accomplishment scrape (which also reported cross-milestone 13/73/112 stats and required hand-correction)
+
+### Patterns Established
+
+- **8 explicit required CI contexts for failure attribution** — when multiple distinct checks share a runner, prefer separate required contexts over a composite when reviewers need to know _which_ gate failed (reverses the v6.3 D-09 fold-into-Lint by design)
+- **Smoke PR with N planted violations as gate-enforcement proof** — the canonical way to prove a required-context gate is live: open a PR that violates it, capture `mergeStateStatus=BLOCKED`, commit evidence via a separate PR before deleting the smoke branch
+- **RLS audit tiers (`globalReferenceTables` vs `sensitiveTables`)** — model reference data separately from sensitive data; resolves pre-existing fails without weakening the audit
+- **Scope-out ADR + degraded-but-functional fallback** — close a deviation by documenting the scope-out AND shipping a fallback, not by leaving a gap
+- **Surface-staged cleanup waves** — partition a codebase-wide mechanical change by UI surface so each wave is independently reviewable/revertable
+- **Positive-failure CI fixtures kept outside production lint globs** — assert guards still fire via dedicated jobs on fixtures that can't contaminate the real lint context
+
+### Key Lessons
+
+1. **VERIFICATION.md absence is now a 2-milestone pattern (v6.3 + v6.4)** — flagging it in a retrospective didn't fix it. Phase-completion tooling must emit VERIFICATION.md, or the orchestrator must block state-advance without it. A lesson restated is a lesson unlearned
+2. **Traceability + validation frontmatter must flip at phase-complete, not milestone-audit** — second milestone running with stale `[ ]` rows reconciled only at audit. This is a tooling gap, not a discipline gap
+3. **The worktree "main-wins" restore is a completion-edit hazard** — when phase merges run through a worktree restore, doc edits can regress silently; trust disk truth (PLAN/SUMMARY + git log + signed tags) over the GSD bar when signals disagree
+4. **Superseded stub PLANs should be deleted, not left** — 58-07..10 inflate disk counts and confuse both progress computation and the milestone-complete stat/accomplishment scrape
+5. **`tech_debt` is a legitimate distinct close verdict** — functionally complete with paperwork residue is neither `passed` nor `gaps_found`; acknowledging + documenting it beats forcing a false `passed` or blocking the close
+6. **A long-lived design branch can merge cleanly** — DesignV2's 233 commits merged `--no-ff` without cherry-picks; phase-base tags + signed provenance kept it auditable
+
+### Cost Observations
+
+- Plans: 20 (55: 4 + 56: 2 + 57: 4 + 58: 7 + 59: 3) — tightest milestone since v6.1; no cluster-decomposition long tail
+- Commits: 17 first-parent (+ the DesignV2 merge bringing 233 branch commits onto main)
+- Files changed: 427 (+28,588 / -8,158) — insertions skew toward DesignV2 merge content + Tier-C token swaps across 271 files
+- Notable: the milestone-complete CLI mis-scraped cross-milestone accomplishments and reported 13/73/112 stats (it globs every phase dir still in `.planning/phases/`); MILESTONES.md + the ROADMAP archive were hand-corrected to v6.4-scoped truth during close
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -352,6 +412,8 @@ _A living document updated after each milestone. Lessons feed forward into futur
 | v6.0      | 11     | 121   | 18 days  | Token-first architecture, gap-closure-as-plan, CI-anchored qa-sweep gate                                         |
 | v6.1      | 3      | 14    | 2 days   | Hardening bridge milestone, audit-open close gate, visual operator replay                                        |
 | v6.2      | 3      | 17    | 5 days   | Quality-gate reset, phase-base git-tag diff anchors, typed-at-source over shims, 3 PR-blocking CI gates restored |
+| v6.3      | 5      | 28    | 4 days   | Schema-only milestone valid, audit-driven quick-task closure, satisfied-by-deletion, Tier-A/Tier-C split         |
+| v6.4      | 5      | 20    | 10 days  | DesignV2→main merge, 8 explicit CI contexts (reversed D-09 fold), tech_debt as a distinct close verdict          |
 
 ### Cumulative Quality
 
@@ -362,6 +424,8 @@ _A living document updated after each milestone. Lessons feed forward into futur
 | v6.0      | Same + qa-sweep CI (axe, responsive, kbd, focus) + eslint-plugin-rtl-friendly + size-limit signature-visuals budgets | +9 deferred (DIGEST-SOURCE-COMPROMISE, VIP-PERSON-ISO-JOIN, SLA-BAD-RESERVED, DASH-VISUAL-BLOCKED/REVIEW, DASH-COMPONENTS-DEAD, JSON-key-uniqueness, WR-03 SR shadowing)                                                                                                                                 | 52/52            |
 | v6.1      | Same + focused visual replay for deferred dashboard/list/drawer baselines                                            | 10 acknowledged open artifacts at close (historical/stale items plus missing v6.1 audit)                                                                                                                                                                                                                 | 25/25            |
 | v6.2      | Same + type-check + Lint + Bundle Size Check (size-limit) restored as PR-blocking branch-protection contexts on main | Tech debt at close: 1 retained shim (`useStakeholderInteractionMutations`), 2 kibo-ui kanban imports (HeroUI v3 deferred), React vendor ceiling loose, Node version note drift, pre-existing design-rule violations queued for sweep, 4 wizard-test setup bug (pre-existing), lightweight tag provenance | 12/12            |
+| v6.3      | Same + Design Token Check (D-05 at `error`) + react-i18next Factory Check (folded into Lint via D-09)                | Tech debt at close: 271 Tier-C suppressions, 5 Phase 52 deviations (D-19..D-23), cosmetic wording, `useStakeholderInteractionMutations` shim, `countries` RLS pre-existing fail — all folded into v6.4                                                                                                   | 20/20            |
+| v6.4      | Same + Design Token Check + react-i18next Factory Check promoted to 2 standalone required contexts (8 total on main) | Tech debt at close: 6 documentation/process items (missing VERIFICATION.md 55-58, Nyquist paperwork lag, `phase-59-base` not on origin, non-standard summary name + stub PLANs, RLS env-gated secrets) — 0 functional blockers                                                                           | 14/14            |
 
 ### Top Lessons (Verified Across Milestones)
 
@@ -374,3 +438,4 @@ _A living document updated after each milestone. Lessons feed forward into futur
 7. **Phase-base git tags as suppression-diff anchors** (new in v6.2) — replace unreliable `git merge-base main HEAD`; stable across long-running phases; reusable for net-new-suppression / net-new-eslint-disable audits
 8. **Measure-then-propose for bundle ceilings** (new in v6.2) — aspirational ceilings burn plan cycles; honest baselines with documented slack ship faster
 9. **Branch-protection PUT mechanics are a reusable sub-recipe** (new in v6.2) — read-then-merge-then-write `gh api` pattern transferred verbatim across 3 CI gates in 5 days
+10. **A retrospective lesson not enforced by tooling recurs** (v6.3 → v6.4) — VERIFICATION.md absence and traceability drift were both flagged in v6.3 and both repeated in v6.4; discipline-dependent lessons don't stick, they must be enforced by tooling (phase-close emits VERIFICATION.md; traceability/validation frontmatter auto-flips at phase-complete)
