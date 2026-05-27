@@ -10,11 +10,12 @@ Unified intelligence management for diplomatic operations — every relationship
 
 ## Current State
 
-**Shipped:** v6.3 Carryover Sweep & v7.0 Prep (2026-05-17) — Phases 50-54 complete (28 plans, 20/20 requirements satisfied). Test infrastructure repaired (`vi.mock("react-i18next")` factory + 4 wizard tests green + setup docs); design-token compliance gate live at `error` severity workspace-wide (50 Tier-A swaps, 271 Tier-C suppressed, smoke PR #12 BLOCKED via D-09 fold); HeroUI v3 Kanban migration shipped (shared `@dnd-kit/core` primitive, kibo-ui + tunnel-rat purged, KANBAN-02 satisfied-by-deletion); React vendor ceiling 349 → 285 KB gz; `phase-47/48/49-base` re-issued annotated + SSH-signed (origin SHAs match local); CLAUDE.md Node note `22.13.0+`; Intelligence Engine schema groundwork applied to staging via Supabase MCP (`intelligence_event` + `intelligence_digest` + polymorphic junction + `signal_source_type` enum + regenerated TS types byte-identical across workspaces). Audit: passed.
+**Shipped:** v6.4 Stabilization & Carryover Sweep (2026-05-27) — Phases 55-59 complete (20 plans, 14/14 requirements satisfied). DesignV2 merged to `main` (`3f763ddc`) with all v6.3 quality gates intact; `main` branch protection upgraded to 8 required CI contexts and proven live via a planted-violation smoke PR (#18 → `BLOCKED`); the pre-existing `countries` RLS audit fail closed (moved to a `globalReferenceTables` tier); the last v6.2-era typed shim (`useStakeholderInteractionMutations`) retired at source; all 5 Phase 52 deviations (D-19..D-23) closed (mobile-DnD scope-out ADR + `<select>` fallback, `@dnd-kit/core` ESLint ban + regression test, LTR/RTL baselines md5-distinct, live tasks-tab Playwright run); the Tier-C design-token backlog fully cleared (271 suppressions / 2336 AST nodes → 0, waiver removed from `eslint.config.mjs`); cosmetic + CI paperwork reconciled with positive-failure fixtures. Audit: tech_debt (functionally complete; 6 documentation/process-debt items, 0 functional blockers). v7.0 Intelligence Engine now unblocked.
 
 <details>
 <summary>Shipped milestones</summary>
 
+- v6.4 Stabilization & Carryover Sweep (2026-05-27): DesignV2 merged to `main` + 8-context branch protection (smoke-proven `BLOCKED`), `countries` RLS fail closed, last typed shim retired, all 5 Phase 52 deviations closed, Tier-C design-token backlog fully cleared (271 → 0), cosmetic + CI paperwork reconciled — see `.planning/milestones/v6.4-ROADMAP.md` and `.planning/milestones/v6.4-MILESTONE-AUDIT.md`
 - v6.3 Carryover Sweep & v7.0 Prep (2026-05-17): Test infra repaired, design-token compliance gate live (D-05 selectors at `error`, 50 Tier-A swaps + 271 Tier-C suppressed), HeroUI v3 Kanban migration (shared `@dnd-kit/core` primitive, kibo-ui + tunnel-rat purged), React vendor 349 → 285 KB, phase-base tags annotated + SSH-signed, Intelligence Engine schema groundwork (`intelligence_event` + `intelligence_digest` + polymorphic junction + `signal_source_type` enum) — see `.planning/milestones/v6.3-ROADMAP.md` and `.planning/milestones/v6.3-MILESTONE-AUDIT.md`
 - v6.2 Type-Check, Lint & Bundle Reset (2026-05-12): TS errors 2078 → 0, lint problems 727 → 0, Aceternity purge + primitive cascade inversion, Initial-route ceiling 517 → 450 KB with 3 `React.lazy()` conversions, three PR-blocking gates restored on `main` — see `.planning/milestones/v6.2-ROADMAP.md` and `.planning/milestones/v6.2-MILESTONE-AUDIT.md`
 - v6.1 Hardening & Reconciliation (2026-05-08): v6.0 verification backfill, archive sync, size-limit CI gate repair, WR-02..WR-06 closure, Storybook deferral ADR, intelligence digest schema/seed closure, VIP ISO projection, and visual baseline regeneration for Phases 38/40/41
@@ -27,35 +28,11 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-## Current Milestone: v6.4 Stabilization & Carryover Sweep
+## Next Milestone: v7.0 Intelligence Engine (planned)
 
-**Goal:** Close v6.3 carryover debt and merge DesignV2 → main so v7.0 Intelligence Engine starts on stable ground with all quality gates enforced on `main`.
+**Unblocked by v6.4.** v6.3 INTEL-01..05 shipped the schema groundwork — `intelligence_event` + `intelligence_digest` + polymorphic `intelligence_event_dossiers` junction + `signal_source_type` enum + byte-identical regenerated TS types. v7.0 builds the API + UI + ingestion + alerting + multi-dossier AI correlation on top. Seed: `.planning/seeds/v7.0-intelligence-engine.md`. Define scope via `/gsd:new-milestone`.
 
-**Target features:**
-
-- DesignV2 → main merge + gate enforcement verification on `main` PR contexts
-- D-54-04 RLS pre-existing fail closure (`countries` row in `sensitiveTables`) + `useStakeholderInteractionMutations` shim typed at source
-- D-19..D-23 Phase 52 deviation closure (mobile touch DnD scope, kanban regression follow-up, LTR/RTL visual baseline byte-distinction, live tasks-tab Playwright)
-- Tier-C design-token suppression cleanup — **full clear** (271 suppressions / 2336 AST nodes, wave-staged)
-- Cosmetic + CI gap closure (Phase 53 wording refresh, TweaksDrawer comment, 51-VALIDATION frontmatter, bad-design-token/bad-vi-mock positive-failure CI assertion)
-
-**Phase shape (proposed):** 55 (DesignV2 merge) → 56 (RLS + shim) → 57 (D-19..D-23) → 58 (Tier-C full clear) → 59 (cosmetic + CI gap). Estimated 14-18 plans.
-
-**Out of scope:** v7.0 Intelligence Engine (gated by v6.4 ship); net-new design tokens or direction variants; new e2e specs beyond D-22.
-
-**Next milestone after v6.4:** v7.0 Intelligence Engine seed (`.planning/seeds/v7.0-intelligence-engine.md`) unblocked once v6.4 ships. v6.3 INTEL-01..05 shipped the schema groundwork (`intelligence_event` + `intelligence_digest` + polymorphic junction + `signal_source_type` enum + byte-identical TS types); v7.0 builds API + UI + ingestion + alerting on top.
-
-**Carryover tech debt from v6.3** (folded into v6.4 phases above):
-
-- DesignV2 → main merge sequence (then push triggers v6.3 enforcement on main contexts)
-- 271 Tier-C design-token suppressions / 2336 AST nodes — cleanup waves staged as TBD-design-token-tier-c-cleanup-wave-N
-- 5 Phase 52 PASS-WITH-DEVIATION deviations (D-19..D-23): mobile touch DnD scope-out, Phase 39 `kanban-*.spec.ts` regression follow-up, LTR/RTL visual baseline byte-distinction, live tasks-tab Playwright run with host operator
-- Phase 53 SUMMARY/VERIFICATION cosmetic wording refresh (`PASS-WITH-DEFERRAL` → `PASS`, `verified-local-only` → `verified` — origin SHAs already match local)
-- `TweaksDrawer.test.tsx:6-8` stale comment about TEST-01 mock factory (documentation drift)
-- `51-VALIDATION.md` frontmatter `status: draft` → `passed` polish
-- bad-design-token.tsx + bad-vi-mock.ts positive-failure CI assertion gap
-- D-54-04-RLS-AUDIT-PRE-EXISTING-FAIL: pre-existing `countries` row in `sensitiveTables` (Phase 03/04 vintage)
-- `useStakeholderInteractionMutations` shim (1 of 20 retained from v6.2) — type at source when underlying implementation lands
+**Held out of scope for v7.0+:** net-new design tokens or direction variants; mobile native app (cancelled, code in git history); OAuth/social login; real-time chat; video content support.
 
 ## Requirements
 
@@ -148,9 +125,15 @@ Unified intelligence management for diplomatic operations — every relationship
 - ✓ `signal_source_type` enum (`publication`, `feed`, `human_entered`, `ai_generated`) applied to `intelligence_event.source_type` — v6.3 Phase 54 (INTEL-04)
 - ✓ `database.types.ts` regenerated; byte-identical across backend + frontend workspaces; dual `pnpm type-check` exit 0; `rls-audit.test.ts` sensitiveTables extended — v6.3 Phase 54 (INTEL-05)
 
+- ✓ DesignV2 merged to `main` with all v6.3 quality gates intact; `main` branch protection at 8 required CI contexts (smoke PR #18 `BLOCKED` proof) — v6.4 Phase 55 (MERGE-01, MERGE-02)
+- ✓ `countries` RLS pre-existing fail closed (`globalReferenceTables` tier); last v6.2-era typed shim (`useStakeholderInteractionMutations`) retired at source — v6.4 Phase 56 (RLS-01, TYPE-05)
+- ✓ All 5 Phase 52 deviations closed: mobile-DnD scope-out ADR + `<select>` fallback, `@dnd-kit/core` ESLint ban + regression test, LTR/RTL baselines md5-distinct, live tasks-tab Playwright run — v6.4 Phase 57 (DEVIATE-01..04)
+- ✓ Tier-C design-token suppression full clear: 271 suppressions / 2336 AST nodes → 0, waiver removed from `eslint.config.mjs`, lint stays 0 at `error` severity — v6.4 Phase 58 (TOKEN-01, TOKEN-02)
+- ✓ Cosmetic + CI gap closure: Phase 53 wording refreshed, doc drift corrected, bad-design-token + bad-vi-mock wired as positive-failure CI jobs — v6.4 Phase 59 (POLISH-01..04)
+
 ### Active
 
-(v6.4 requirements to be defined via `/gsd:new-milestone` — DesignV2→main merge, RLS+shim closure, D-19..D-23 deviation closure, Tier-C full clear, cosmetic + CI gap closure.)
+(v6.4 shipped 2026-05-27. The next milestone is v7.0 Intelligence Engine — define requirements via `/gsd:new-milestone`. Seed: `.planning/seeds/v7.0-intelligence-engine.md`.)
 
 ### Out of Scope
 
@@ -233,6 +216,11 @@ Unified intelligence management for diplomatic operations — every relationship
 | Polymorphic junction over per-type FKs                     | `intelligence_event_dossiers` with 7-value `dossier_type` CHECK + EXISTS-via-parent RLS scales without N table-pair joins for AI correlation                               | ✓ Good (v6.3) |
 | Annotated + SSH-signed phase-base tags                     | BUNDLE-06: `git tag -v` provenance via `~/.ssh/allowed_signers`; origin SHAs match local objects post-audit verification                                                   | ✓ Good (v6.3) |
 | Migrations via Supabase MCP, not local CLI                 | D-15: applied to staging (`zkrcjzdemdmwhearhfgg`) via `apply_migration` — keeps environments authoritative and reproducible                                                | ✓ Good (v6.3) |
+| Reverse the v6.3 D-09 fold (8 explicit `main` contexts)    | Per-gate failure attribution beats a composite `Lint` context; `Design Token Check` + `react-i18next Factory Check` split out as their own required contexts               | ✓ Good (v6.4) |
+| `countries` → `globalReferenceTables` RLS tier             | Authenticated-read + role-gated writes resolves the Phase 03/04 pre-existing fail without weakening the sensitive-table audit                                              | ✓ Good (v6.4) |
+| Mobile DnD scope-out (ADR + `<select>` fallback)           | Keeps the shared kanban primitive simple; desktop DnD is the supported path, mobile gets a read-only "Move to" picker (D-19)                                               | ✓ Good (v6.4) |
+| Tier-C cleared as mechanical token swaps                   | Wave-staged by surface for independent review/revert; not a token-system extension                                                                                         | ✓ Good (v6.4) |
+| Positive-failure CI fixtures outside lint globs            | `bad-design-token`/`bad-vi-mock` jobs fail if the guards stop firing, yet can't break the main `Lint` context                                                              | ✓ Good (v6.4) |
 
 ## Evolution
 
@@ -255,4 +243,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-05-17 — v6.4 Stabilization & Carryover Sweep milestone started (Phases 55-59 planned)._
+_Last updated: 2026-05-27 — v6.4 Stabilization & Carryover Sweep shipped (Phases 55-59; 14/14 requirements). v7.0 Intelligence Engine is the next milestone._
