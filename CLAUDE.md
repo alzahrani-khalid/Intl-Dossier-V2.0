@@ -290,6 +290,27 @@ t('columns.todo') // Workflow stage for display
 | `source`        | ENUM        | `commitment`, `task`, `intake`                     |
 | `tracking_type` | ENUM        | `delivery`, `follow_up`, `sla`                     |
 
+### Source-Specific Column Carve-Outs (verified against the DB — do NOT "normalize")
+
+The unified glossary above governs the **unified work-item layer**. Some source
+tables legitimately use their own columns and lifecycles that diverge from it.
+These are intentional and verified against the live schema — do **not** rename
+them to match the glossary (renaming breaks inserts; the forms correctly mirror
+the DB):
+
+- **Intake tickets** (`intake_tickets`) use their own `status` lifecycle
+  (`draft`, `submitted`, `triaged`, `assigned`, `in_progress`, `converted`,
+  `closed`, `merged`) and a distinct `urgency` enum (`low`, `medium`, `high`,
+  `critical`) — `critical` is correct here; it is the `urgency_level` enum, NOT
+  the work-item `priority` (which uses `urgent`).
+- **Commitments** (`aa_commitments`) use `due_date` and `owner_type` /
+  `owner_user_id` / `owner_contact_id` (not `deadline` / `assignee_id`).
+- **Tasks** (`tasks`) use `sla_deadline` (not `deadline`) and `workflow_stage`
+  (`todo`, `in_progress`, `review`, `done`, `cancelled`).
+
+When building cross-source work-item queries, map these columns at the query
+layer rather than renaming the underlying tables.
+
 ## Dossier-Centric Development Patterns (MANDATORY)
 
 The system is built around **dossiers** as the central organizing concept. All features should connect to dossiers.

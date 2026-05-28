@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v6.4
 milestone_name: Stabilization & Carryover Sweep
 status: Awaiting next milestone
-last_updated: '2026-05-27T13:50:00Z'
-last_activity: 2026-05-27 — Milestone v6.4 shipped and archived
+last_updated: '2026-05-29T00:00:00Z'
+last_activity: 2026-05-29 — Quick task 260529-1s8 (data-entry bug fixes) on fix/data-entry-bugs
 progress:
   total_phases: 5
   completed_phases: 5
@@ -27,6 +27,18 @@ See: .planning/PROJECT.md (updated 2026-05-27 after v6.4 milestone)
 Milestone v6.4 Stabilization & Carryover Sweep: **SHIPPED 2026-05-27** (Phases 55-59, 20 plans, 14/14 requirements satisfied).
 Archived: `.planning/milestones/v6.4-ROADMAP.md` · `v6.4-REQUIREMENTS.md` · `v6.4-MILESTONE-AUDIT.md` (status: tech_debt — functionally complete; integration 14/14 wired, 0 functional blockers).
 Tag: `v6.4`. DesignV2 now lives on `main` with 8 enforced quality-gate contexts; v7.0 Intelligence Engine unblocked.
+
+## Quick Tasks Completed
+
+| #          | Description                                           | Date       | Commit              | Directory                                                                   |
+| ---------- | ----------------------------------------------------- | ---------- | ------------------- | --------------------------------------------------------------------------- |
+| 260529-1s8 | Data-entry bug fixes (forms, validation, write paths) | 2026-05-29 | fix/data-entry-bugs | [260529-1s8-data-entry-bug-fixes](./quick/260529-1s8-data-entry-bug-fixes/) |
+
+> On branch `fix/data-entry-bugs` (6 commits, not yet merged). Fixes broken
+> dossier/forum/working-group/engagement + intake submit paths, validation-message
+> i18n leaks, required-field gaps, and silent-failure write handlers; `dossiers-create`
+> edge fn redeployed to staging. Security sweep, `dossiers-update` rewrite, and
+> DB-schema migrations deferred to the next checkpoint.
 
 ## Next Action
 
