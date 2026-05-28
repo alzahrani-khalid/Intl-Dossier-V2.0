@@ -62,7 +62,24 @@ export const useCreateTicket = () => {
         type_specific_fields: data.typeSpecificFields,
         attachments: data.attachments,
       }
-      return createTicketApi(payload) as Promise<TicketResponse>
+      // The Edge Function returns the snake_case DB row; map it to the camelCase
+      // TicketResponse contract so callers (e.g. the success dialog) can read
+      // `ticketNumber` instead of getting `undefined`.
+      const raw = (await createTicketApi(payload)) as Record<string, unknown>
+      return {
+        id: String(raw.id ?? ''),
+        ticketNumber: String(raw.ticket_number ?? raw.ticketNumber ?? ''),
+        requestType: (raw.request_type ?? raw.requestType) as TicketResponse['requestType'],
+        title: String(raw.title ?? ''),
+        titleAr: (raw.title_ar ?? raw.titleAr) as TicketResponse['titleAr'],
+        status: (raw.status ?? 'submitted') as TicketResponse['status'],
+        priority: (raw.priority ?? 'medium') as TicketResponse['priority'],
+        assignedTo: (raw.assigned_to ?? raw.assignedTo) as TicketResponse['assignedTo'],
+        assignedUnit: (raw.assigned_unit ?? raw.assignedUnit) as TicketResponse['assignedUnit'],
+        slaStatus: (raw.sla_status ?? raw.slaStatus) as TicketResponse['slaStatus'],
+        createdAt: String(raw.created_at ?? raw.createdAt ?? ''),
+        updatedAt: String(raw.updated_at ?? raw.updatedAt ?? ''),
+      }
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() })
