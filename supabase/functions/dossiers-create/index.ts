@@ -21,13 +21,14 @@ type DossierType = (typeof VALID_DOSSIER_TYPES)[number];
 const TYPES_WITH_REQUIRED_EXTENSION: Partial<Record<DossierType, string[]>> = {
   country: ['iso_code_2', 'iso_code_3'],
   organization: ['org_type'],
-  engagement: ['engagement_type', 'engagement_category'],
+  engagement: ['engagement_type', 'engagement_category', 'start_date', 'end_date'],
 };
 
 interface DossierCreateRequest {
   name_en: string;
   name_ar: string;
   type: DossierType;
+  abbreviation?: string;
   description_en?: string;
   description_ar?: string;
   status?: 'active' | 'inactive' | 'archived';
@@ -130,6 +131,9 @@ serve(async (req) => {
     if (!body.name_ar || body.name_ar.length > 200) {
       validationErrors.push('name_ar is required and must be <= 200 characters');
     }
+    if (body.abbreviation && body.abbreviation.length > 20) {
+      validationErrors.push('abbreviation must be <= 20 characters');
+    }
     if (!VALID_DOSSIER_TYPES.includes(body.type as DossierType)) {
       validationErrors.push(`type must be one of: ${VALID_DOSSIER_TYPES.join(', ')}`);
     }
@@ -208,6 +212,7 @@ serve(async (req) => {
         name_en: body.name_en.trim(),
         name_ar: body.name_ar.trim(),
         type: body.type,
+        abbreviation: body.abbreviation?.trim() || null,
         description_en: body.description_en || null,
         description_ar: body.description_ar || null,
         status: body.status || 'active',
@@ -292,7 +297,7 @@ serve(async (req) => {
         country: 'countries',
         organization: 'organizations',
         forum: 'forums',
-        engagement: 'engagements',
+        engagement: 'engagement_dossiers',
         topic: 'topics',
         working_group: 'working_groups',
         person: 'persons',
