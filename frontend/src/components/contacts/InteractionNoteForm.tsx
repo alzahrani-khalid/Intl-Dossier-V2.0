@@ -62,15 +62,12 @@ interface InteractionNoteFormProps {
  */
 const formSchema = z.object({
   date: z.date({
-    error: 'Date is required',
+    error: 'validation:dateRequired',
   }),
   type: z.enum(['meeting', 'email', 'call', 'conference', 'other'], {
-    error: 'Type is required',
+    error: 'validation:typeRequired',
   }),
-  details: z
-    .string()
-    .min(10, 'Details must be at least 10 characters')
-    .max(5000, 'Details cannot exceed 5000 characters'),
+  details: z.string().min(10, 'validation:detailsMin').max(5000, 'validation:detailsMax'),
   attendees: z.array(z.string()).optional(),
 })
 
@@ -87,7 +84,7 @@ export function InteractionNoteForm({
 }: InteractionNoteFormProps) {
   const { t } = useTranslation('contacts')
   const { isRTL } = useDirection()
-const createNoteMutation = useCreateNote()
+  const createNoteMutation = useCreateNote()
   const uploadAttachmentMutation = useUploadAttachment()
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
@@ -190,9 +187,7 @@ const createNoteMutation = useCreateNote()
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="max-w-2xl max-h-[90vh] overflow-y-auto px-4 sm:px-6"
-      >
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto px-4 sm:px-6">
         <DialogHeader>
           <DialogTitle className="text-lg sm:text-xl">
             {note

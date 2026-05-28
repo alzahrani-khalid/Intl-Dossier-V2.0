@@ -51,9 +51,9 @@ import { useDirection } from '@/hooks/useDirection'
 
 // Validation schema
 const taskQuickFormSchema = z.object({
-  title: z.string().min(1, 'validation.titleRequired').max(200, 'validation.titleMaxLength'),
+  title: z.string().min(1, 'validation:titleRequired').max(200, 'validation:titleMaxLength'),
   description: z.string().optional(),
-  assignee_id: z.string().min(1, 'validation.assigneeRequired'),
+  assignee_id: z.string().min(1, 'validation:assigneeRequired'),
   priority: z.enum(['low', 'medium', 'high', 'urgent'] as const),
   sla_deadline: z.date().optional().nullable(),
 })
@@ -81,7 +81,7 @@ export function TaskQuickForm({
 }: TaskQuickFormProps) {
   const { t } = useTranslation(['work-creation', 'dossier-context'])
   const { isRTL } = useDirection()
-const queryClient = useQueryClient()
+  const queryClient = useQueryClient()
 
   // State for user-selected dossier when no context is available (US4)
   const [userSelectedDossiers, setUserSelectedDossiers] = useState<SelectedDossier[]>([])
@@ -211,10 +211,7 @@ const queryClient = useQueryClient()
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {/* T042/US4: Dossier context display or selector */}
         {/* Show badge when dossier is provided from props or context */}
         {selectedDossier && (

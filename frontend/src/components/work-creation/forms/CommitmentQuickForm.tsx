@@ -50,10 +50,10 @@ import { useDirection } from '@/hooks/useDirection'
 
 // Validation schema
 const commitmentQuickFormSchema = z.object({
-  title: z.string().min(1, 'validation.titleRequired').max(200, 'validation.titleMaxLength'),
-  description: z.string().min(1, 'validation.descriptionRequired'),
+  title: z.string().min(1, 'validation:titleRequired').max(200, 'validation:titleMaxLength'),
+  description: z.string().min(1, 'validation:descriptionRequired'),
   due_date: z.date({
-    error: 'validation.dueDateRequired',
+    error: 'validation:dueDateRequired',
   }),
   priority: z.enum(['low', 'medium', 'high', 'urgent'] as const),
   owner_type: z.enum(['internal', 'external'] as const),
@@ -79,7 +79,7 @@ export function CommitmentQuickForm({
 }: CommitmentQuickFormProps) {
   const { t } = useTranslation(['work-creation', 'commitments', 'dossier-context'])
   const { isRTL } = useDirection()
-// State for user-selected dossier when no context is available (US4)
+  // State for user-selected dossier when no context is available (US4)
   const [userSelectedDossiers, setUserSelectedDossiers] = useState<SelectedDossier[]>([])
   const [dossierError, setDossierError] = useState<string>('')
 
@@ -200,10 +200,7 @@ export function CommitmentQuickForm({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {/* T042/US4: Dossier context display or selector */}
         {/* Show badge when dossier is provided from props or context */}
         {selectedDossier && (

@@ -44,9 +44,9 @@ import type { Database } from '../../../../backend/src/types/database.types'
 type Task = Database['public']['Tables']['tasks']['Row']
 
 const editTaskSchema = z.object({
-  title: z.string().min(1, 'validation.titleRequired').max(200, 'validation.titleMaxLength'),
+  title: z.string().min(1, 'validation:titleRequired').max(200, 'validation:titleMaxLength'),
   description: z.string().optional(),
-  assignee_id: z.string().min(1, 'validation.assigneeRequired'),
+  assignee_id: z.string().min(1, 'validation:assigneeRequired'),
   priority: z.enum(['low', 'medium', 'high', 'urgent'] as const),
   workflow_stage: z.enum(['todo', 'in_progress', 'review', 'done', 'cancelled'] as const),
   sla_deadline: z.date().optional().nullable(),
@@ -222,10 +222,16 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="low">{t('priority.low', 'Low')}</SelectItem>
-                      <SelectItem value="medium">{t('priority.medium', 'Medium')}</SelectItem>
-                      <SelectItem value="high">{t('priority.high', 'High')}</SelectItem>
-                      <SelectItem value="urgent">{t('priority.urgent', 'Urgent')}</SelectItem>
+                      <SelectItem value="low">{t('unified-kanban:priority.low', 'Low')}</SelectItem>
+                      <SelectItem value="medium">
+                        {t('unified-kanban:priority.medium', 'Medium')}
+                      </SelectItem>
+                      <SelectItem value="high">
+                        {t('unified-kanban:priority.high', 'High')}
+                      </SelectItem>
+                      <SelectItem value="urgent">
+                        {t('unified-kanban:priority.urgent', 'Urgent')}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -246,14 +252,20 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="todo">{t('workflow_stage.todo', 'To Do')}</SelectItem>
-                      <SelectItem value="in_progress">
-                        {t('workflow_stage.in_progress', 'In Progress')}
+                      <SelectItem value="todo">
+                        {t('unified-kanban:columns.todo', 'To Do')}
                       </SelectItem>
-                      <SelectItem value="review">{t('workflow_stage.review', 'Review')}</SelectItem>
-                      <SelectItem value="done">{t('workflow_stage.done', 'Done')}</SelectItem>
+                      <SelectItem value="in_progress">
+                        {t('unified-kanban:columns.in_progress', 'In Progress')}
+                      </SelectItem>
+                      <SelectItem value="review">
+                        {t('unified-kanban:columns.review', 'Review')}
+                      </SelectItem>
+                      <SelectItem value="done">
+                        {t('unified-kanban:columns.done', 'Done')}
+                      </SelectItem>
                       <SelectItem value="cancelled">
-                        {t('workflow_stage.cancelled', 'Cancelled')}
+                        {t('unified-kanban:columns.cancelled', 'Cancelled')}
                       </SelectItem>
                     </SelectContent>
                   </Select>

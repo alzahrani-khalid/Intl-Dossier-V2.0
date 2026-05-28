@@ -1,4 +1,15 @@
 {
+  "titleRequired": "Title is required",
+  "titleMaxLength": "Title must be 200 characters or fewer",
+  "descriptionRequired": "Description is required",
+  "assigneeRequired": "Assignee is required",
+  "dateRequired": "Date is required",
+  "typeRequired": "Type is required",
+  "detailsMin": "Details must be at least 10 characters",
+  "detailsMax": "Details cannot exceed 5000 characters",
+  "dueDateRequired": "Due date is required",
+  "isoCode2": "Enter a 2-letter ISO code",
+  "isoCode3": "Enter a 3-letter ISO code",
   "required": "This field is required",
   "required.suggestion": "Please enter a value to continue",
 

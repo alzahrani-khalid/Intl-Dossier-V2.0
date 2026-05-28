@@ -1,4 +1,15 @@
 {
+  "titleRequired": "العنوان مطلوب",
+  "titleMaxLength": "يجب ألا يتجاوز العنوان 200 حرف",
+  "descriptionRequired": "الوصف مطلوب",
+  "assigneeRequired": "المكلَّف مطلوب",
+  "dateRequired": "التاريخ مطلوب",
+  "typeRequired": "النوع مطلوب",
+  "detailsMin": "يجب أن تكون التفاصيل 10 أحرف على الأقل",
+  "detailsMax": "يجب ألا تتجاوز التفاصيل 5000 حرف",
+  "dueDateRequired": "تاريخ الاستحقاق مطلوب",
+  "isoCode2": "أدخل رمز ISO من حرفين",
+  "isoCode3": "أدخل رمز ISO من ثلاثة أحرف",
   "required": "هذا الحقل مطلوب",
   "required.suggestion": "يرجى إدخال قيمة للمتابعة",
 
