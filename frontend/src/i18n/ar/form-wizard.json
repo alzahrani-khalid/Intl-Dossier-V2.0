@@ -161,7 +161,8 @@
       "active": "نشط",
       "inactive": "غير نشط",
       "pending": "قيد الانتظار",
-      "suspended": "معلق"
+      "suspended": "معلق",
+      "disbanded": "منحلة"
     },
     "established_date_label": "تاريخ التأسيس",
     "mandate_en_label": "التفويض (بالإنجليزية)",

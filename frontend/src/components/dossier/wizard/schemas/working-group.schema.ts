@@ -2,7 +2,7 @@ import * as z from 'zod'
 import { baseDossierSchema } from './base.schema'
 
 const workingGroupFields = z.object({
-  wg_status: z.enum(['active', 'inactive', 'pending', 'suspended']).optional(),
+  wg_status: z.enum(['active', 'suspended', 'disbanded']).optional(),
   established_date: z.string().optional().or(z.literal('')),
   mandate_en: z.string().optional(),
   mandate_ar: z.string().optional(),

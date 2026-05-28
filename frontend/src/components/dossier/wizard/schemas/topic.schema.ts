@@ -2,9 +2,9 @@ import * as z from 'zod'
 import { baseDossierSchema } from './base.schema'
 
 const topicFields = z.object({
-  theme_category: z
-    .enum(['policy', 'technical', 'strategic', 'operational'])
-    .optional(),
+  theme_category: z.enum(['policy', 'technical', 'strategic', 'operational'], {
+    message: 'validation:required',
+  }),
 })
 
 export const topicSchema = baseDossierSchema.merge(topicFields)

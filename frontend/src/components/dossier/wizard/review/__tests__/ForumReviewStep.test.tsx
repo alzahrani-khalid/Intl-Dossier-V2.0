@@ -54,7 +54,6 @@ function createMockForm(values: Partial<ForumFormData>): UseFormReturn<ForumForm
       status: 'active',
       sensitivity_level: 1,
       tags: [],
-      forum_type: '',
       organizing_body_id: '',
       ...values,
     }),
@@ -90,13 +89,6 @@ describe('ForumReviewStep', () => {
     const editButton = screen.getByLabelText('edit-form-wizard:review.forum_details')
     fireEvent.click(editButton)
     expect(onEditStep).toHaveBeenCalledWith(1)
-  })
-
-  it('translates forum_type value through the forum_types i18n key', () => {
-    const form = createMockForm({ forum_type: 'summit' })
-    render(<ForumReviewStep form={form} onEditStep={vi.fn()} />)
-
-    expect(screen.getByText('form-wizard:forum.forum_types.summit')).toBeTruthy()
   })
 
   it('displays organizing_body_id value when set', () => {

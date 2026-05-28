@@ -21,7 +21,7 @@ const countryDefaults: CountryFormData = {
 
 const organizationDefaults: OrganizationFormData = {
   ...baseDefaults,
-  org_type: undefined,
+  org_type: '' as OrganizationFormData['org_type'],
   org_code: '',
   website: '',
   headquarters_en: '',
@@ -31,7 +31,7 @@ const organizationDefaults: OrganizationFormData = {
 
 const topicDefaults: TopicFormData = {
   ...baseDefaults,
-  theme_category: undefined,
+  theme_category: '' as TopicFormData['theme_category'],
 }
 
 // Phase 32 D-21, D-23: identity defaults shared by both person + elected-official wizards.
@@ -90,7 +90,6 @@ const electedOfficialDefaults: PersonFormData = {
 
 const forumDefaults: ForumFormData = {
   ...baseDefaults,
-  forum_type: '',
   organizing_body_id: '',
 }
 

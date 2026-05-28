@@ -28,7 +28,6 @@ export const forumWizardConfig: WizardConfig<ForumFormData> = {
     },
   ],
   filterExtensionData: (data: ForumFormData) => ({
-    forum_type: data.forum_type !== '' ? data.forum_type : undefined,
     organizing_body: data.organizing_body_id !== '' ? data.organizing_body_id : undefined,
   }),
 }
