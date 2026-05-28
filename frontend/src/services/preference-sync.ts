@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import { STALE_TIME } from '@/lib/query-tiers'
 import { supabase } from '../lib/supabase'
 import { COLUMNS } from '../lib/query-columns'
@@ -85,9 +86,10 @@ export function usePreferenceSync(userId?: string) {
         .single()
 
       if (error) {
-        console.error('Error syncing preferences:', error)
-        // Don't throw - preferences are saved locally
-        return preferences
+        // Local save already succeeded above; surface the remote failure so
+        // callers' onError handlers fire and the UI does not show false success.
+        toast.warning('Preferences saved locally but could not sync to server.')
+        throw error
       }
 
       return {

@@ -94,8 +94,12 @@ export default function PushOptInBanner({
         title: t('toast.denied'),
         variant: 'destructive',
       })
-      // Persist dismissal since user blocked notifications
-      await persistDismissal()
+      // Persist dismissal since user blocked notifications; error already toasted inside
+      try {
+        await persistDismissal()
+      } catch {
+        // persistDismissal already showed the error toast — nothing more to do
+      }
       setIsHidden(true)
     } else {
       toast({
@@ -106,23 +110,23 @@ export default function PushOptInBanner({
   }, [isSupported, subscribe, toast, t])
 
   const persistDismissal = async (): Promise<void> => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (user == null) return
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (user == null) return
 
-      await supabase
-        .from('user_preferences')
-        .upsert(
-          {
-            user_id: user.id,
-            push_prompt_dismissed_at: new Date().toISOString(),
-          },
-          { onConflict: 'user_id' },
-        )
-    } catch {
-      console.error('Failed to persist push dismissal')
+    const { error } = await supabase
+      .from('user_preferences')
+      .update({ push_prompt_dismissed_at: new Date().toISOString() })
+      .eq('user_id', user.id)
+
+    if (error != null) {
+      toast({
+        title: t('toast.dismissSyncFailed'),
+        variant: 'destructive',
+      })
+      // Re-throw so callers (handleDismiss, handleEnable) are aware
+      throw error
     }
   }
 
@@ -130,8 +134,13 @@ export default function PushOptInBanner({
     setIsDismissLoading(true)
     setIsHidden(true)
 
-    await persistDismissal()
-    setIsDismissLoading(false)
+    try {
+      await persistDismissal()
+    } catch {
+      // persistDismissal already showed the error toast — nothing more to do
+    } finally {
+      setIsDismissLoading(false)
+    }
   }, [])
 
   // Visibility conditions (ALL must be true to show)
@@ -159,12 +168,8 @@ export default function PushOptInBanner({
         <Bell className="h-5 w-5 text-primary-600 shrink-0" aria-hidden="true" />
 
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-foreground">
-            {t('softAsk.headline')}
-          </p>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {t('softAsk.body')}
-          </p>
+          <p className="text-sm font-semibold text-foreground">{t('softAsk.headline')}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{t('softAsk.body')}</p>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
@@ -183,7 +188,11 @@ export default function PushOptInBanner({
             onClick={() => void handleDismiss()}
             disabled={isDismissLoading}
             className="text-xs text-muted-foreground hover:text-foreground min-h-11 min-w-11 px-2 transition-colors"
-            aria-label={isRTL ? '\u0627\u063a\u0644\u0627\u0642 \u0637\u0644\u0628 \u0627\u0644\u0627\u0634\u0639\u0627\u0631\u0627\u062a' : 'Dismiss notification prompt'}
+            aria-label={
+              isRTL
+                ? '\u0627\u063a\u0644\u0627\u0642 \u0637\u0644\u0628 \u0627\u0644\u0627\u0634\u0639\u0627\u0631\u0627\u062a'
+                : 'Dismiss notification prompt'
+            }
             data-testid="push-dismiss-btn"
           >
             {t('softAsk.dismiss')}
