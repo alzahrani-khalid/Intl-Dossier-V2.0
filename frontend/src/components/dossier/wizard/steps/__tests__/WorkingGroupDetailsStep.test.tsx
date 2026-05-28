@@ -98,14 +98,13 @@ describe('WorkingGroupDetailsStep', () => {
     useDirectionMock.mockReturnValue({ direction: 'ltr', isRTL: false })
   })
 
-  it('renders all 4 status options via i18n keys', () => {
+  it('renders all 3 status options via i18n keys', () => {
     const form = createMockForm()
     render(<WorkingGroupDetailsStep form={form} />)
 
     expect(screen.getByTestId('select-item-active')).toBeTruthy()
-    expect(screen.getByTestId('select-item-inactive')).toBeTruthy()
-    expect(screen.getByTestId('select-item-pending')).toBeTruthy()
     expect(screen.getByTestId('select-item-suspended')).toBeTruthy()
+    expect(screen.getByTestId('select-item-disbanded')).toBeTruthy()
   })
 
   it('renders DossierPicker filtered to organization', () => {
