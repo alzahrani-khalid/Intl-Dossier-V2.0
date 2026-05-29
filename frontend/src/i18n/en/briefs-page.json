@@ -20,6 +20,8 @@
   },
   "error": {
     "list": "Could not load briefs. Try refreshing the page.",
-    "generation": "Brief generation failed. Try again or contact support."
+    "generation": "Brief generation failed. Try again or contact support.",
+    "fetch": "Could not open this brief. Try again or contact support.",
+    "dismiss": "Dismiss"
   }
 }
