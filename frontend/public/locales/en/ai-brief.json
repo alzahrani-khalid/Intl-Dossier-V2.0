@@ -77,6 +77,7 @@
     "backgroundPlaceholder": "Enter background information...",
     "recommendations": "Recommendations",
     "recommendationsPlaceholder": "Enter your recommendations...",
-    "submit": "Submit Brief"
+    "submit": "Submit Brief",
+    "notAvailable": "Saving a manual brief isn't available yet — your text has not been saved."
   }
 }
