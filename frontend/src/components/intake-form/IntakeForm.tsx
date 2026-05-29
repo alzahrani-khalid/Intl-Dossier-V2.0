@@ -183,7 +183,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                 </label>
                 <select
                   {...register('requestType')}
-                  className="flex h-12 w-full items-center rounded-field border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
+                  className="flex h-12 w-full items-center rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
                 >
                   <option value="">{t('form.requestType.placeholder')}</option>
                   <option value="engagement">{t('form.requestType.options.engagement')}</option>
@@ -270,7 +270,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                 </label>
                 <select
                   {...register('urgency')}
-                  className="flex h-12 w-full items-center rounded-field border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
+                  className="flex h-12 w-full items-center rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
                 >
                   <option value="">{t('form.urgency.placeholder')}</option>
                   <option value="low">{t('form.urgency.options.low')}</option>
