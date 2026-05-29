@@ -110,13 +110,8 @@ export function CreateDossierHub(): JSX.Element {
           const Icon = getTypeIcon(type)
           const href = `/dossiers/${getDossierRouteSegment(type)}/create`
           return (
-            <Link
-              key={type}
-              to={href}
-              className="min-h-11 block"
-              data-testid={`hub-card-${type}`}
-            >
-              <Card className="cursor-pointer h-full transition-all duration-300 hover:shadow-lg focus-within:ring-2 focus-within:ring-primary">
+            <Link key={type} to={href} className="min-h-11 block" data-testid={`hub-card-${type}`}>
+              <Card className="cursor-pointer h-full transition-all duration-300 hover:border-primary focus-within:ring-2 focus-within:ring-primary">
                 <CardContent className="flex flex-col items-start gap-3 p-4 sm:p-6">
                   <Icon className="h-6 w-6 sm:h-8 sm:w-8 text-primary" aria-hidden="true" />
                   <h2 className="text-base sm:text-lg font-semibold text-start">
