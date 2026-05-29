@@ -79,6 +79,7 @@
   },
   "actions": {
     "submit": "تقديم الطلب",
+    "submitRequest": "تقديم الطلب",
     "cancel": "إلغاء",
     "saveDraft": "حفظ كمسودة",
     "reset": "إعادة تعيين النموذج",

@@ -436,7 +436,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                       {t('actions.submitting')}
                     </span>
                   ) : (
-                    t('actions.submit')
+                    t('actions.submitRequest', 'Submit request')
                   )}
                 </Button>
               </div>

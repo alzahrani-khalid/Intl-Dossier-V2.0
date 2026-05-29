@@ -334,7 +334,7 @@ export function IntakeQuickForm({
                 {t('form.creating', 'Creating...')}
               </>
             ) : (
-              t('form.createIntake', 'Submit Request')
+              t('intake:actions.submitRequest', 'Submit request')
             )}
           </Button>
         </div>

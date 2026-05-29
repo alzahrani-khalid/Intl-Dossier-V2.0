@@ -79,6 +79,7 @@
   },
   "actions": {
     "submit": "Submit Request",
+    "submitRequest": "Submit request",
     "cancel": "Cancel",
     "saveDraft": "Save as Draft",
     "reset": "Reset Form",
