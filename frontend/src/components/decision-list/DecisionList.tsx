@@ -7,9 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Trash2, Plus, CalendarIcon } from 'lucide-react'
+import { Plus, CalendarIcon } from 'lucide-react'
 import { formatDayFirst } from '@/lib/format-date'
 import { cn } from '@/lib/utils'
+import { ConfirmRemoveButton } from '@/components/ui/confirm-remove-button'
 
 export interface Decision {
   id?: string
@@ -89,14 +90,13 @@ export function DecisionList({ decisions, onChange, readOnly = false }: Decision
                   </Badge>
                 )}
                 {!readOnly && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeDecision(index)}
-                  >
-                    <Trash2 className="size-4 text-destructive" />
-                  </Button>
+                  <ConfirmRemoveButton
+                    onConfirm={() => removeDecision(index)}
+                    title={t('afterActions.decisions.delete')}
+                    description={t('afterActions.decisions.deleteConfirm')}
+                    confirmLabel={t('common.delete')}
+                    cancelLabel={t('common.cancel')}
+                  />
                 )}
               </div>
             </div>

@@ -12,9 +12,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Trash2, Plus, AlertTriangle } from 'lucide-react'
+import { Plus, AlertTriangle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { ConfirmRemoveButton } from '@/components/ui/confirm-remove-button'
 
 export interface Risk {
   id?: string
@@ -122,9 +123,13 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
                   </Badge>
                 )}
                 {!readOnly && (
-                  <Button type="button" variant="ghost" size="sm" onClick={() => removeRisk(index)}>
-                    <Trash2 className="size-4 text-destructive" />
-                  </Button>
+                  <ConfirmRemoveButton
+                    onConfirm={() => removeRisk(index)}
+                    title={t('afterActions.risks.delete')}
+                    description={t('afterActions.risks.deleteConfirm')}
+                    confirmLabel={t('common.delete')}
+                    cancelLabel={t('common.cancel')}
+                  />
                 )}
               </div>
             </div>

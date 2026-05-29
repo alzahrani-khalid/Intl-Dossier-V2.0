@@ -7,10 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Trash2, Plus, CalendarIcon, ListTodo } from 'lucide-react'
+import { Plus, CalendarIcon, ListTodo } from 'lucide-react'
 import { formatDayFirst } from '@/lib/format-date'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { ConfirmRemoveButton } from '@/components/ui/confirm-remove-button'
 
 export interface FollowUpAction {
   id?: string
@@ -81,14 +82,13 @@ export function FollowUpList({ followUpActions, onChange, readOnly = false }: Fo
                 {t('afterActions.followUps.item', { number: index + 1 })}
               </CardTitle>
               {!readOnly && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => removeFollowUp(index)}
-                >
-                  <Trash2 className="size-4 text-destructive" />
-                </Button>
+                <ConfirmRemoveButton
+                  onConfirm={() => removeFollowUp(index)}
+                  title={t('afterActions.followUps.delete')}
+                  description={t('afterActions.followUps.deleteConfirm')}
+                  confirmLabel={t('common.delete')}
+                  cancelLabel={t('common.cancel')}
+                />
               )}
             </div>
           </CardHeader>

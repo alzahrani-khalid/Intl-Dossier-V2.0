@@ -15,10 +15,11 @@ import {
 } from '@/components/ui/select'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Trash2, Plus, CalendarIcon, User, Mail } from 'lucide-react'
+import { Plus, CalendarIcon, User, Mail } from 'lucide-react'
 import { formatDayFirst } from '@/lib/format-date'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { ConfirmRemoveButton } from '@/components/ui/confirm-remove-button'
 
 export interface Commitment {
   id?: string
@@ -133,14 +134,13 @@ export function CommitmentEditor({
                   </Badge>
                 )}
                 {!readOnly && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeCommitment(index)}
-                  >
-                    <Trash2 className="size-4 text-destructive" />
-                  </Button>
+                  <ConfirmRemoveButton
+                    onConfirm={() => removeCommitment(index)}
+                    title={t('afterActions.commitments.delete')}
+                    description={t('afterActions.commitments.deleteConfirm')}
+                    confirmLabel={t('common.delete')}
+                    cancelLabel={t('common.cancel')}
+                  />
                 )}
               </div>
             </div>
