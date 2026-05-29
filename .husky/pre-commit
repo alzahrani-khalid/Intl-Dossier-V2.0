@@ -3,6 +3,18 @@
 # Run lint-staged for ESLint + Prettier on staged files
 npx lint-staged
 
+# Skip the full-project build + knip for docs-only commits under .planning/
+# (planning artifacts never affect TypeScript/Vite output). Any staged file
+# outside .planning/ runs the full checks as before.
+# NB: uses `grep -v` + emptiness test, not `grep -qv` — the latter's exit code
+# is unreliable here (BSD grep -q can short-circuit before scanning all lines).
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+outside=$(printf '%s\n' "$staged" | grep -v '^\.planning/')
+if [ -n "$staged" ] && [ -z "$outside" ]; then
+  echo "pre-commit: .planning/-only change — skipping pnpm build + knip"
+  exit 0
+fi
+
 # Run full-project checks (cannot be scoped to staged files)
 # Build verifies TypeScript compilation via Vite/esbuild (strict tsc deferred to Phase 2)
 pnpm build
