@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { supabase } from '../lib/supabase'
-import { Inbox, Clock, AlertCircle, CheckCircle2, Plus, X, ListFilter } from 'lucide-react'
+import { Inbox, Clock, AlertCircle, CheckCircle2, Plus, X, ListFilter, Bot } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
@@ -492,8 +492,9 @@ export function IntakeQueuePage() {
                         {/* AI Suggestion */}
                         {ticket.ai_suggestion && (
                           <div className="mt-2 rounded-lg border border-primary/20 bg-primary/5 p-3">
-                            <p className="mb-1 text-sm font-medium text-foreground">
-                              🤖 {t('intake.aiSuggestion', 'AI Suggestion')}
+                            <p className="mb-1 flex items-center gap-1.5 text-sm font-medium text-foreground">
+                              <Bot className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                              {t('intake.aiSuggestion', 'AI Suggestion')}
                             </p>
                             <p className="text-xs text-muted-foreground">
                               {ticket.ai_suggestion.classification} (

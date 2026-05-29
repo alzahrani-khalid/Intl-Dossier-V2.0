@@ -1,4 +1,6 @@
+import type { ElementType } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { File, FileText, FileSpreadsheet, Image, Paperclip } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 // Types based on API spec for positions attachments
@@ -157,12 +159,14 @@ export function formatFileSize(bytes: number): string {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`
 }
 
-// Helper to get file icon based on MIME type
-export function getFileIcon(mimeType: string): string {
-  if (mimeType === 'application/pdf') return '📄'
+// Helper to get the lucide file icon component based on MIME type
+export function getFileIcon(mimeType: string): ElementType {
+  if (mimeType === 'application/pdf') return FileText
   if (mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    return '📝'
-  if (mimeType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') return '📊'
-  if (mimeType.startsWith('image/')) return '🖼️'
-  return '📎'
+    return FileText
+  if (mimeType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    return FileSpreadsheet
+  if (mimeType.startsWith('image/')) return Image
+  if (mimeType.startsWith('text/')) return File
+  return Paperclip
 }

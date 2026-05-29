@@ -265,7 +265,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
       <div className="rounded-lg border border-info/30 bg-info/10 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {/* CLAUDE.md no-emoji rule: 🤖 replaced with Bot lucide icon. */}
+            {/* CLAUDE.md no-emoji rule: robot emoji replaced with Bot lucide icon. */}
             <Bot className="h-5 w-5 text-info" aria-hidden="true" />
             <div>
               <h3 className="font-semibold text-info">
