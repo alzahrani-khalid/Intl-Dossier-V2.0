@@ -183,7 +183,9 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                 </label>
                 <select
                   {...register('requestType')}
-                  className="flex h-12 w-full items-center rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
+                  aria-invalid={!!errors.requestType}
+                  aria-describedby={errors.requestType ? 'requestType-error' : undefined}
+                  className="flex h-12 w-full items-center rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-destructive sm:text-sm"
                 >
                   <option value="">{t('form.requestType.placeholder')}</option>
                   <option value="engagement">{t('form.requestType.options.engagement')}</option>
@@ -192,7 +194,9 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                   <option value="foresight">{t('form.requestType.options.foresight')}</option>
                 </select>
                 {errors.requestType && (
-                  <p className="mt-1 text-sm text-destructive">{errors.requestType.message}</p>
+                  <p id="requestType-error" className="mt-1 text-sm text-destructive">
+                    {errors.requestType.message}
+                  </p>
                 )}
               </div>
 
@@ -206,9 +210,14 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                   type="text"
                   {...register('title')}
                   placeholder={t('form.title.placeholder')}
+                  aria-invalid={!!errors.title}
+                  aria-describedby={errors.title ? 'title-error' : undefined}
+                  className="aria-[invalid=true]:border-destructive"
                 />
                 {errors.title && (
-                  <p className="mt-1 text-sm text-destructive">{errors.title.message}</p>
+                  <p id="title-error" className="mt-1 text-sm text-destructive">
+                    {errors.title.message}
+                  </p>
                 )}
               </div>
 
@@ -223,9 +232,14 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                   {...register('titleAr')}
                   placeholder={t('form.titleAr.placeholder')}
                   dir="rtl"
+                  aria-invalid={!!errors.titleAr}
+                  aria-describedby={errors.titleAr ? 'titleAr-error' : undefined}
+                  className="aria-[invalid=true]:border-destructive"
                 />
                 {errors.titleAr && (
-                  <p className="mt-1 text-sm text-destructive">{errors.titleAr.message}</p>
+                  <p id="titleAr-error" className="mt-1 text-sm text-destructive">
+                    {errors.titleAr.message}
+                  </p>
                 )}
               </div>
 
@@ -239,9 +253,14 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                   {...register('description')}
                   placeholder={t('form.description.placeholder')}
                   rows={5}
+                  aria-invalid={!!errors.description}
+                  aria-describedby={errors.description ? 'description-error' : undefined}
+                  className="aria-[invalid=true]:border-destructive"
                 />
                 {errors.description && (
-                  <p className="mt-1 text-sm text-destructive">{errors.description.message}</p>
+                  <p id="description-error" className="mt-1 text-sm text-destructive">
+                    {errors.description.message}
+                  </p>
                 )}
               </div>
 
@@ -256,9 +275,14 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                   placeholder={t('form.descriptionAr.placeholder')}
                   rows={5}
                   dir="rtl"
+                  aria-invalid={!!errors.descriptionAr}
+                  aria-describedby={errors.descriptionAr ? 'descriptionAr-error' : undefined}
+                  className="aria-[invalid=true]:border-destructive"
                 />
                 {errors.descriptionAr && (
-                  <p className="mt-1 text-sm text-destructive">{errors.descriptionAr.message}</p>
+                  <p id="descriptionAr-error" className="mt-1 text-sm text-destructive">
+                    {errors.descriptionAr.message}
+                  </p>
                 )}
               </div>
 
@@ -270,7 +294,9 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                 </label>
                 <select
                   {...register('urgency')}
-                  className="flex h-12 w-full items-center rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
+                  aria-invalid={!!errors.urgency}
+                  aria-describedby={errors.urgency ? 'urgency-error' : undefined}
+                  className="flex h-12 w-full items-center rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-destructive sm:text-sm"
                 >
                   <option value="">{t('form.urgency.placeholder')}</option>
                   <option value="low">{t('form.urgency.options.low')}</option>
@@ -279,7 +305,9 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                   <option value="critical">{t('form.urgency.options.critical')}</option>
                 </select>
                 {errors.urgency && (
-                  <p className="mt-1 text-sm text-destructive">{errors.urgency.message}</p>
+                  <p id="urgency-error" className="mt-1 text-sm text-destructive">
+                    {errors.urgency.message}
+                  </p>
                 )}
               </div>
 
