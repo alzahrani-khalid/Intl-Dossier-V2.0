@@ -33,11 +33,13 @@ vi.mock('@/hooks/useToast', () => ({
   useToast: (): { toast: typeof mockToast } => ({ toast: mockToast }),
 }))
 
-// Mock supabase
+// Mock supabase — the fetch path uses select().eq().maybeSingle(); the dismiss
+// path uses update().eq(). Give each its own `.eq` mock so they don't collide.
 const mockMaybeSingle = vi.fn()
-const mockEq = vi.fn(() => ({ maybeSingle: mockMaybeSingle }))
-const mockSelect = vi.fn(() => ({ eq: mockEq }))
-const mockUpsert = vi.fn().mockResolvedValue({ error: null })
+const mockSelectEq = vi.fn(() => ({ maybeSingle: mockMaybeSingle }))
+const mockSelect = vi.fn(() => ({ eq: mockSelectEq }))
+const mockUpdateEq = vi.fn().mockResolvedValue({ error: null })
+const mockUpdate = vi.fn(() => ({ eq: mockUpdateEq }))
 
 vi.mock('@/lib/supabase', () => ({
   supabase: {
@@ -50,7 +52,7 @@ vi.mock('@/lib/supabase', () => ({
       if (table === 'user_preferences') {
         return {
           select: mockSelect,
-          upsert: mockUpsert,
+          update: mockUpdate,
         }
       }
       return {}
@@ -151,13 +153,12 @@ describe('PushOptInBanner', () => {
 
     await user.click(screen.getByTestId('push-dismiss-btn'))
 
-    expect(mockUpsert).toHaveBeenCalledWith(
+    expect(mockUpdate).toHaveBeenCalledWith(
       expect.objectContaining({
-        user_id: 'test-user-id',
         push_prompt_dismissed_at: expect.any(String),
       }),
-      expect.objectContaining({ onConflict: 'user_id' }),
     )
+    expect(mockUpdateEq).toHaveBeenCalledWith('user_id', 'test-user-id')
   })
 
   it('does NOT render when browser does not support push', async () => {
