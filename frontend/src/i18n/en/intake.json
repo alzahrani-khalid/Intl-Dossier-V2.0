@@ -255,5 +255,9 @@
       "max_attempts": "Maximum attempts reached. Please wait before trying again.",
       "network_error": "Network error. Please check your connection and try again."
     }
+  },
+  "triage": {
+    "overrideReasonLabel": "Reason for Override *",
+    "overrideReasonRequired": "Please provide a reason for the override"
   }
 }
