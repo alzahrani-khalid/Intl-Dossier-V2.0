@@ -407,26 +407,28 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                 >
                   {t('actions.reset')}
                 </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setValue('requestType', 'engagement')
-                    setValue('title', 'New Partnership with ExampleCorp')
-                    setValue('titleAr', 'شراكة جديدة مع شركة المثال')
-                    setValue(
-                      'description',
-                      'Initial discussion for a strategic partnership with ExampleCorp to expand our market reach in the new region. This involves exploring potential joint ventures and co-marketing opportunities.',
-                    )
-                    setValue(
-                      'descriptionAr',
-                      'مناقشة أولية لشراكة استراتيجية مع شركة المثال لتوسيع نطاق وصولنا إلى السوق في المنطقة الجديدة. يتضمن ذلك استكشاف المشاريع المشتركة المحتملة وفرص التسويق المشترك.',
-                    )
-                    setValue('urgency', 'high')
-                  }}
-                >
-                  {t('actions.fillMock')}
-                </Button>
+                {import.meta.env.DEV && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setValue('requestType', 'engagement')
+                      setValue('title', 'New Partnership with ExampleCorp')
+                      setValue('titleAr', 'شراكة جديدة مع شركة المثال')
+                      setValue(
+                        'description',
+                        'Initial discussion for a strategic partnership with ExampleCorp to expand our market reach in the new region. This involves exploring potential joint ventures and co-marketing opportunities.',
+                      )
+                      setValue(
+                        'descriptionAr',
+                        'مناقشة أولية لشراكة استراتيجية مع شركة المثال لتوسيع نطاق وصولنا إلى السوق في المنطقة الجديدة. يتضمن ذلك استكشاف المشاريع المشتركة المحتملة وفرص التسويق المشترك.',
+                      )
+                      setValue('urgency', 'high')
+                    }}
+                  >
+                    {t('actions.fillMock')}
+                  </Button>
+                )}
                 <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">
