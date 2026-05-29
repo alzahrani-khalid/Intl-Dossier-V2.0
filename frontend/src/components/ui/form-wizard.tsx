@@ -119,6 +119,7 @@ function StepIndicator({
       type="button"
       onClick={onClick}
       disabled={!canNavigate}
+      aria-disabled={!canNavigate}
       className={cn(
         'flex items-center gap-2 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm whitespace-nowrap min-h-11 transition-all flex-1 justify-center',
         isActive && 'bg-primary text-primary-foreground shadow-md',
@@ -180,7 +181,7 @@ export function FormWizard({
 }: FormWizardProps) {
   const { t } = useTranslation(namespace)
   const { isRTL } = useDirection()
-const [isValidating, setIsValidating] = React.useState(false)
+  const [isValidating, setIsValidating] = React.useState(false)
 
   const totalSteps = steps.length
   const isFirstStep = currentStep === 0
