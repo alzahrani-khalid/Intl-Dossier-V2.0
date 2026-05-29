@@ -225,7 +225,12 @@ export function BriefGenerationPanel({
 
         {/* Streaming Content Preview with shimmer effect */}
         {isGenerating && (
-          <div className="bg-muted/50 rounded-lg p-4 max-h-64 overflow-y-auto border">
+          <div
+            role="status"
+            aria-live="polite"
+            aria-label={t('streamingPreview', 'Brief generation progress')}
+            className="bg-muted/50 rounded-lg p-4 max-h-64 overflow-y-auto border"
+          >
             {streamingContent ? (
               <pre className="text-sm whitespace-pre-wrap font-sans leading-relaxed">
                 {streamingContent}

@@ -1,5 +1,6 @@
 {
   "title": "Generate AI Brief",
+  "streamingPreview": "Brief generation progress",
   "description": "Generate a comprehensive brief using AI analysis",
   "generate": "Generate Brief",
   "generating": "Generating...",
