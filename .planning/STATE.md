@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v6.4
 milestone_name: Stabilization & Carryover Sweep
 status: Awaiting next milestone
-last_updated: '2026-05-29T00:15:00Z'
-last_activity: 2026-05-29 — Quick task 260529-4af (PushOptInBanner test fix for PR 32) on fix/data-entry-bugs
+last_updated: '2026-05-29T00:53:22Z'
+last_activity: 2026-05-29 — PR #32 (data-entry bug fixes + PushOptInBanner test) merged to main; fix/data-entry-bugs branch deleted
 progress:
   total_phases: 5
   completed_phases: 5
@@ -30,12 +30,12 @@ Tag: `v6.4`. DesignV2 now lives on `main` with 8 enforced quality-gate contexts;
 
 ## Quick Tasks Completed
 
-| #          | Description                                                     | Date       | Commit              | Directory                                                                                                           |
-| ---------- | --------------------------------------------------------------- | ---------- | ------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| 260529-1s8 | Data-entry bug fixes (forms, validation, write paths)           | 2026-05-29 | fix/data-entry-bugs | [260529-1s8-data-entry-bug-fixes](./quick/260529-1s8-data-entry-bug-fixes/)                                         |
-| 260529-4af | Align PushOptInBanner test w/ update-based dismissal (PR 32 CI) | 2026-05-29 | cae43867            | [260529-4af-align-pushoptinbanner-test-with-update-b](./quick/260529-4af-align-pushoptinbanner-test-with-update-b/) |
+| #          | Description                                                     | Date       | Commit            | Directory                                                                                                           |
+| ---------- | --------------------------------------------------------------- | ---------- | ----------------- | ------------------------------------------------------------------------------------------------------------------- |
+| 260529-1s8 | Data-entry bug fixes (forms, validation, write paths)           | 2026-05-29 | e01a3de0 (PR #32) | [260529-1s8-data-entry-bug-fixes](./quick/260529-1s8-data-entry-bug-fixes/)                                         |
+| 260529-4af | Align PushOptInBanner test w/ update-based dismissal (PR 32 CI) | 2026-05-29 | cae43867          | [260529-4af-align-pushoptinbanner-test-with-update-b](./quick/260529-4af-align-pushoptinbanner-test-with-update-b/) |
 
-> On branch `fix/data-entry-bugs` (6 commits, not yet merged). Fixes broken
+> PR #32 (`fix/data-entry-bugs`, 6 commits) **merged to `main` 2026-05-29** (merge commit `e01a3de0`); branch deleted. Fixed broken
 > dossier/forum/working-group/engagement + intake submit paths, validation-message
 > i18n leaks, required-field gaps, and silent-failure write handlers; `dossiers-create`
 > edge fn redeployed to staging. Security sweep, `dossiers-update` rewrite, and
