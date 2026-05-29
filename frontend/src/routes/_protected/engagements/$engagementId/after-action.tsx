@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft, AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
 import { useDirection } from '@/hooks/useDirection'
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard'
 
 export const Route = createFileRoute('/_protected/engagements/$engagementId/after-action')({
   component: AfterActionFormPage,
@@ -22,6 +23,9 @@ function AfterActionFormPage(): React.ReactNode {
   const { isRTL } = useDirection()
   const navigate = useNavigate()
   const [conflict, setConflict] = useState<ConflictError | null>(null)
+  const [formDirty, setFormDirty] = useState(false)
+
+  useUnsavedChangesGuard(formDirty)
 
   const { data: engagement, isLoading: loadingEngagement } = useEngagement(engagementId)
   const createAfterAction = useCreateAfterAction()
@@ -57,6 +61,7 @@ function AfterActionFormPage(): React.ReactNode {
         ...data,
       })
 
+      setFormDirty(false)
       toast.success(t('afterActions.draftSaved'))
       navigate({
         to: '/after-actions/$afterActionId' as any,
@@ -127,6 +132,7 @@ function AfterActionFormPage(): React.ReactNode {
             engagementId={engagementId}
             dossierId={(engagement as any).dossier_id ?? engagement.id}
             onSave={handleSaveDraft}
+            onDirtyChange={setFormDirty}
           />
         </CardContent>
       </Card>

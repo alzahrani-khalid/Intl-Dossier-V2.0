@@ -49,6 +49,8 @@ interface AfterActionFormProps {
   canPublish?: boolean
   availableUsers?: Array<{ id: string; name: string }>
   className?: string
+  /** Notified whenever the form's unsaved-changes (dirty) state changes. */
+  onDirtyChange?: (dirty: boolean) => void
 }
 
 export function AfterActionForm({
@@ -61,6 +63,7 @@ export function AfterActionForm({
   canPublish = false,
   availableUsers = [],
   className,
+  onDirtyChange,
 }: AfterActionFormProps) {
   const { t } = useTranslation()
   // Form state
@@ -99,6 +102,30 @@ export function AfterActionForm({
     if (!initialData) return
     setIsDirty(true)
   }, [formData, initialData])
+
+  // Surface an unsaved-changes signal to the parent. Unlike the edit-mode
+  // `isDirty` above (which gates the save button), this reflects whether the
+  // form currently holds any user-entered content, so create-mode pages can
+  // warn before navigation/unload.
+  useEffect(() => {
+    if (!onDirtyChange) return
+    const hasContent =
+      attendeesInput.trim().length > 0 ||
+      (formData.notes ?? '').trim().length > 0 ||
+      formData.decisions.length > 0 ||
+      formData.commitments.length > 0 ||
+      formData.risks.length > 0 ||
+      formData.follow_ups.length > 0
+    onDirtyChange(hasContent)
+  }, [
+    attendeesInput,
+    formData.notes,
+    formData.decisions,
+    formData.commitments,
+    formData.risks,
+    formData.follow_ups,
+    onDirtyChange,
+  ])
 
   const handleSaveDraft = async () => {
     setSaving(true)

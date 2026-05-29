@@ -52,6 +52,17 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard'
 
 import { useBriefingBooks, useBriefingBookTemplates } from '@/hooks/useBriefingBooks'
 import { useDossiers } from '@/hooks/useDossiers'
@@ -131,7 +142,7 @@ function SortableSectionItem({
 export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilderProps) {
   const { t } = useTranslation('briefing-books')
   const { isRTL } = useDirection()
-// Hooks
+  // Hooks
   const { createBriefingBook, isGenerating, progress } = useBriefingBooks({
     onCreateSuccess: () => {
       onSuccess?.()
@@ -398,6 +409,39 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
       },
     })
   }, [config, dateRange, createBriefingBook])
+
+  // Unsaved-changes tracking. The config starts with defaults, so "dirty" means
+  // the user has meaningfully customised it: picked entities/topics, or typed a
+  // title, description, or branding text.
+  const isDirty = useMemo<boolean>(() => {
+    return (
+      (config.entities?.length ?? 0) > 0 ||
+      (config.topics?.length ?? 0) > 0 ||
+      (config.title_en ?? '').length > 0 ||
+      (config.title_ar ?? '').length > 0 ||
+      (config.description_en ?? '').length > 0 ||
+      (config.description_ar ?? '').length > 0 ||
+      (config.headerText ?? '').length > 0 ||
+      (config.footerText ?? '').length > 0
+    )
+  }, [config])
+
+  useUnsavedChangesGuard(isDirty && !isGenerating)
+
+  const [showDiscardDialog, setShowDiscardDialog] = useState(false)
+
+  const handleCancel = useCallback((): void => {
+    if (isDirty) {
+      setShowDiscardDialog(true)
+      return
+    }
+    onCancel?.()
+  }, [isDirty, onCancel])
+
+  const confirmDiscard = useCallback((): void => {
+    setShowDiscardDialog(false)
+    onCancel?.()
+  }, [onCancel])
 
   // Navigation
   const currentStepIndex = STEPS.indexOf(currentStep)
@@ -1060,7 +1104,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
       <div className="flex flex-col-reverse sm:flex-row justify-between gap-3 pt-4 border-t">
         <div className="flex gap-2">
           {onCancel && (
-            <Button variant="ghost" onClick={onCancel} className="min-h-[44px]">
+            <Button variant="ghost" onClick={handleCancel} className="min-h-[44px]">
               {t('actions.cancel')}
             </Button>
           )}
@@ -1111,6 +1155,30 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
           )}
         </div>
       </div>
+
+      <AlertDialog open={showDiscardDialog} onOpenChange={setShowDiscardDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t('builder.discard.title', { defaultValue: 'Discard changes?' })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('builder.discard.description', {
+                defaultValue:
+                  'Your briefing book configuration has unsaved changes. Leaving now will discard them.',
+              })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>
+              {t('builder.discard.keepEditing', { defaultValue: 'Keep editing' })}
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDiscard}>
+              {t('builder.discard.confirm', { defaultValue: 'Discard' })}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
