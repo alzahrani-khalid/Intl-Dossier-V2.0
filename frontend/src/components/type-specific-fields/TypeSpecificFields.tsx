@@ -201,7 +201,9 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           onChange={(e) => handleFieldChange('actionType', e.target.value)}
           className="w-full rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
         >
-          <option value="">Select action type...</option>
+          <option value="">
+            {t('typeSpecific.mou_action.actionType.placeholder', 'Select action type...')}
+          </option>
           <option value="review">{t('typeSpecific.mou_action.actionType.options.review')}</option>
           <option value="amendment">
             {t('typeSpecific.mou_action.actionType.options.amendment')}
@@ -260,7 +262,9 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           onChange={(e) => handleFieldChange('timeHorizon', e.target.value)}
           className="w-full rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
         >
-          <option value="">Select time horizon...</option>
+          <option value="">
+            {t('typeSpecific.foresight.timeHorizon.placeholder', 'Select time horizon...')}
+          </option>
           <option value="short">{t('typeSpecific.foresight.timeHorizon.options.short')}</option>
           <option value="medium">{t('typeSpecific.foresight.timeHorizon.options.medium')}</option>
           <option value="long">{t('typeSpecific.foresight.timeHorizon.options.long')}</option>

@@ -62,7 +62,11 @@
       "maxTotal": "الحد الأقصى للحجم الإجمالي: 100 ميجابايت",
       "supportedFormats": "الصيغ المدعومة: PDF، DOCX، XLSX، PNG، JPG",
       "unavailable": "رفع المرفقات غير متاح بعد.",
-      "uploading": "جارٍ الرفع…"
+      "uploading": "جارٍ الرفع…",
+      "maxFilesAllowed": "الحد الأقصى {{count}} ملفات مسموح بها",
+      "fileCount_one": "ملف {{count}}",
+      "fileCount_other": "{{count}} ملفات",
+      "totalSize": "الإجمالي: {{used}} / {{max}}"
     }
   },
   "slaPreview": {
@@ -156,7 +160,8 @@
           "amendment": "تعديل",
           "renewal": "تجديد",
           "termination": "إنهاء"
-        }
+        },
+        "placeholder": "اختر نوع الإجراء..."
       },
       "deadline": {
         "label": "الموعد النهائي",
@@ -174,7 +179,8 @@
           "short": "قصير الأجل (1-3 سنوات)",
           "medium": "متوسط الأجل (3-5 سنوات)",
           "long": "طويل الأجل (5+ سنوات)"
-        }
+        },
+        "placeholder": "اختر الأفق الزمني..."
       },
       "stakeholders": {
         "label": "أصحاب المصلحة الرئيسيون",

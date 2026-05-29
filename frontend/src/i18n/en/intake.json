@@ -62,7 +62,11 @@
       "maxTotal": "Maximum total size: 100MB",
       "supportedFormats": "Supported formats: PDF, DOCX, XLSX, PNG, JPG",
       "unavailable": "Attachment upload is not yet available.",
-      "uploading": "Uploading…"
+      "uploading": "Uploading…",
+      "maxFilesAllowed": "Maximum {{count}} files allowed",
+      "fileCount_one": "{{count}} file",
+      "fileCount_other": "{{count}} files",
+      "totalSize": "Total: {{used}} / {{max}}"
     }
   },
   "slaPreview": {
@@ -156,7 +160,8 @@
           "amendment": "Amendment",
           "renewal": "Renewal",
           "termination": "Termination"
-        }
+        },
+        "placeholder": "Select action type..."
       },
       "deadline": {
         "label": "Deadline",
@@ -174,7 +179,8 @@
           "short": "Short-term (1-3 years)",
           "medium": "Medium-term (3-5 years)",
           "long": "Long-term (5+ years)"
-        }
+        },
+        "placeholder": "Select time horizon..."
       },
       "stakeholders": {
         "label": "Key Stakeholders",

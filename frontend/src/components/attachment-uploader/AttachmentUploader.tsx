@@ -82,7 +82,10 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
 
     // Check max files
     if (files.length >= maxFiles) {
-      return `Maximum ${maxFiles} files allowed`
+      return t('form.attachments.maxFilesAllowed', {
+        count: maxFiles,
+        defaultValue: 'Maximum {{count}} files allowed',
+      })
     }
 
     return null
@@ -374,10 +377,18 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
           {/* Total Size */}
           <div className="flex justify-between pt-2 text-xs text-muted-foreground">
             <span>
-              {files.length} {files.length === 1 ? 'file' : 'files'}
+              {t('form.attachments.fileCount', {
+                count: files.length,
+                defaultValue_one: '{{count}} file',
+                defaultValue_other: '{{count}} files',
+              })}
             </span>
             <span>
-              Total: {formatFileSize(getTotalSize())} / {formatFileSize(maxTotalSize)}
+              {t('form.attachments.totalSize', {
+                used: formatFileSize(getTotalSize()),
+                max: formatFileSize(maxTotalSize),
+                defaultValue: 'Total: {{used}} / {{max}}',
+              })}
             </span>
           </div>
         </div>
