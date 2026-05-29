@@ -592,7 +592,9 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
 
                 {filteredDossiers.length === 0 && (
                   <p className="text-center text-muted-foreground py-8">
-                    {searchQuery ? 'No matching entities found' : 'No entities available'}
+                    {searchQuery
+                      ? t('builder.noMatchingEntities', 'No matching entities found')
+                      : t('builder.noEntitiesAvailable', 'No entities available')}
                   </p>
                 )}
               </div>
@@ -988,7 +990,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                 {/* Entities preview */}
                 <Separator />
                 <div className="space-y-2">
-                  <p className="text-sm font-medium">Entities:</p>
+                  <p className="text-sm font-medium">{t('builder.entitiesLabel', 'Entities:')}</p>
                   <div className="flex flex-wrap gap-2">
                     {config.entities?.map((entity) => {
                       const Icon = entityIcons[entity.type] || Globe
@@ -1004,7 +1006,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
 
                 {/* Sections preview */}
                 <div className="space-y-2">
-                  <p className="text-sm font-medium">Sections:</p>
+                  <p className="text-sm font-medium">{t('builder.sectionsLabel', 'Sections:')}</p>
                   <ol className="list-decimal list-inside text-sm text-muted-foreground">
                     {enabledSections
                       .sort((a, b) => a.order - b.order)

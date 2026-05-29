@@ -3,23 +3,43 @@
   "subtitle": "قم بتجميع مواد الإحاطة المخصصة للاجتماعات والسفر",
   "newBriefingBook": "كتاب إحاطة جديد",
   "myBriefingBooks": "كتب الإحاطة الخاصة بي",
-  "templates": "القوالب",
+  "templates": {
+    "title": "القوالب",
+    "subtitle": "وفر الوقت مع القوالب المُعدة مسبقاً",
+    "useTemplate": "استخدام القالب",
+    "saveAsTemplate": "حفظ كقالب",
+    "defaultTemplates": {
+      "executive": {
+        "name": "إحاطة تنفيذية",
+        "description": "نظرة عامة عالية المستوى مع جهات الاتصال الرئيسية والتعاملات الأخيرة"
+      },
+      "comprehensive": {
+        "name": "تقرير شامل",
+        "description": "ملف كامل مع جميع الأقسام والمستندات"
+      },
+      "quickReference": {
+        "name": "مرجع سريع",
+        "description": "تنسيق مدمج مع المعلومات الأساسية فقط"
+      },
+      "travelBrief": {
+        "name": "إحاطة السفر",
+        "description": "جهات الاتصال الرئيسية والمواقف والالتزامات القادمة"
+      }
+    }
+  },
   "recentBooks": "الكتب الأخيرة",
-
   "builder": {
     "title": "إنشاء كتاب الإحاطة",
     "step1": "اختيار الجهات",
     "step2": "تكوين الأقسام",
     "step3": "ضبط الخيارات",
     "step4": "المراجعة والإنشاء",
-
     "configuration": {
       "title": "عنوان كتاب الإحاطة",
       "titlePlaceholder": "أدخل عنوان كتاب الإحاطة",
       "description": "الوصف (اختياري)",
       "descriptionPlaceholder": "الغرض من كتاب الإحاطة هذا"
     },
-
     "entities": {
       "title": "اختيار الجهات",
       "subtitle": "اختر الدول أو المنظمات أو المنتديات أو المواضيع لتضمينها",
@@ -35,7 +55,6 @@
       "selectAll": "تحديد الكل",
       "clearAll": "مسح الكل"
     },
-
     "dateRange": {
       "title": "النطاق الزمني",
       "subtitle": "تصفية المحتوى حسب النطاق الزمني",
@@ -49,14 +68,12 @@
         "custom": "نطاق مخصص"
       }
     },
-
     "topics": {
       "title": "المواضيع",
       "subtitle": "تصفية المحتوى حسب فئات المواضيع",
       "selectAll": "تحديد الكل",
       "clearAll": "مسح الكل"
     },
-
     "sections": {
       "title": "الأقسام",
       "subtitle": "تكوين الأقسام المراد تضمينها",
@@ -80,7 +97,6 @@
       "addCustom": "إضافة قسم مخصص",
       "customContent": "المحتوى المخصص"
     },
-
     "options": {
       "title": "خيارات التصدير",
       "format": {
@@ -125,7 +141,6 @@
         "footerPlaceholder": "نص تذييل مخصص (اختياري)"
       }
     },
-
     "review": {
       "title": "المراجعة والإنشاء",
       "summary": "الملخص",
@@ -143,9 +158,12 @@
       "coverPage": "صفحة الغلاف",
       "executiveSummary": "الملخص التنفيذي",
       "bilingualContent": "محتوى ثنائي اللغة"
-    }
+    },
+    "entitiesLabel": "الكيانات:",
+    "sectionsLabel": "الأقسام:",
+    "noMatchingEntities": "لا توجد كيانات مطابقة",
+    "noEntitiesAvailable": "لا توجد كيانات متاحة"
   },
-
   "generation": {
     "title": "جاري إنشاء كتاب الإحاطة",
     "subtitle": "قد يستغرق هذا بضع دقائق حسب المحتوى",
@@ -164,7 +182,6 @@
     "cancel": "إلغاء",
     "cancelConfirm": "هل أنت متأكد أنك تريد إلغاء الإنشاء؟"
   },
-
   "preview": {
     "title": "معاينة",
     "download": "تنزيل",
@@ -176,7 +193,6 @@
     "fitPage": "ملاءمة الصفحة",
     "print": "طباعة"
   },
-
   "list": {
     "title": "كتب الإحاطة الخاصة بي",
     "empty": "لا توجد كتب إحاطة بعد",
@@ -209,34 +225,10 @@
       "ready": "جاهز",
       "generating": "جاري الإنشاء",
       "failed": "فشل"
-    }
+    },
+    "pageCount_one": "صفحة {{count}}",
+    "pageCount_other": "{{count}} صفحات"
   },
-
-  "templates": {
-    "title": "القوالب",
-    "subtitle": "وفر الوقت مع القوالب المُعدة مسبقاً",
-    "useTemplate": "استخدام القالب",
-    "saveAsTemplate": "حفظ كقالب",
-    "defaultTemplates": {
-      "executive": {
-        "name": "إحاطة تنفيذية",
-        "description": "نظرة عامة عالية المستوى مع جهات الاتصال الرئيسية والتعاملات الأخيرة"
-      },
-      "comprehensive": {
-        "name": "تقرير شامل",
-        "description": "ملف كامل مع جميع الأقسام والمستندات"
-      },
-      "quickReference": {
-        "name": "مرجع سريع",
-        "description": "تنسيق مدمج مع المعلومات الأساسية فقط"
-      },
-      "travelBrief": {
-        "name": "إحاطة السفر",
-        "description": "جهات الاتصال الرئيسية والمواقف والالتزامات القادمة"
-      }
-    }
-  },
-
   "topics": {
     "statistics": "الإحصاءات",
     "economy": "الاقتصاد",
@@ -249,7 +241,6 @@
     "cooperation": "التعاون الدولي",
     "other": "أخرى"
   },
-
   "actions": {
     "generate": "إنشاء كتاب الإحاطة",
     "generating": "جاري الإنشاء...",
@@ -263,7 +254,6 @@
     "duplicate": "تكرار",
     "share": "مشاركة"
   },
-
   "success": {
     "created": "تم إنشاء كتاب الإحاطة بنجاح",
     "generated": "تم إنشاء كتاب الإحاطة بنجاح",
@@ -271,7 +261,6 @@
     "deleted": "تم حذف كتاب الإحاطة",
     "templateSaved": "تم حفظ القالب بنجاح"
   },
-
   "errors": {
     "noEntities": "يرجى تحديد جهة واحدة على الأقل",
     "noSections": "يرجى تفعيل قسم واحد على الأقل",
@@ -281,11 +270,11 @@
     "loadFailed": "فشل في تحميل كتب الإحاطة",
     "templateSaveFailed": "فشل في حفظ القالب"
   },
-
   "confirmDelete": {
     "title": "حذف كتاب الإحاطة",
     "message": "هل أنت متأكد أنك تريد حذف كتاب الإحاطة هذا؟ لا يمكن التراجع عن هذا الإجراء.",
     "confirm": "حذف",
-    "cancel": "إلغاء"
+    "cancel": "إلغاء",
+    "deleting": "جارٍ الحذف…"
   }
 }
