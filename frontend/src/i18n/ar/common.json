@@ -525,7 +525,8 @@
       "info": "الصيغ المدعومة: TXT, PDF, DOCX (الحد الأقصى 10 ميجابايت)",
       "invalidFileType": "نوع ملف غير صالح. يتم دعم ملفات TXT و PDF و DOCX فقط",
       "fileTooLarge": "الملف كبير جداً. الحد الأقصى للحجم 10 ميجابايت",
-      "extractionFailed": "فشل استخراج البيانات من المستند"
+      "extractionFailed": "فشل استخراج البيانات من المستند",
+      "extractionSummary": "تمت إضافة {{added}}، وتم تخطي {{skipped}} مكرر"
     },
     "decisions": {
       "title": "القرارات",

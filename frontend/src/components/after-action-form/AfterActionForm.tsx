@@ -16,6 +16,7 @@ import { RiskList, type Risk } from '../risk-list/RiskList'
 import { FollowUpList } from '../follow-up-list/FollowUpList'
 import { AttachmentUploader } from '../attachment-uploader/AttachmentUploader'
 import { AIExtractionButton } from '../ai-extraction-button/AIExtractionButton'
+import { useToast } from '@/hooks/useToast'
 
 interface FollowUpAction {
   id?: string
@@ -66,6 +67,7 @@ export function AfterActionForm({
   onDirtyChange,
 }: AfterActionFormProps) {
   const { t } = useTranslation()
+  const { toast } = useToast()
   // Form state
   const [formData, setFormData] = useState<AfterActionFormData>({
     engagement_id: engagementId,
@@ -168,29 +170,77 @@ export function AfterActionForm({
     }
   }
 
+  // Stable identity for an extracted/existing row: prefer its id, otherwise a
+  // normalized (lowercased, whitespace-collapsed) description so re-extractions
+  // of the same source do not duplicate semantically identical rows.
+  const rowKey = (row: { id?: string; description?: string }): string => {
+    if (row.id != null && row.id !== '') return `id:${row.id}`
+    return `desc:${(row.description ?? '').trim().toLowerCase().replace(/\s+/g, ' ')}`
+  }
+
+  // Append only rows whose key is not already present (in existing rows or
+  // earlier in this same batch). Returns the merged list plus add/skip counts.
+  const mergeUnique = <T extends { id?: string; description?: string }>(
+    existing: T[],
+    incoming: T[],
+  ): { merged: T[]; added: number; skipped: number } => {
+    const seen = new Set(existing.map(rowKey))
+    const merged = [...existing]
+    let added = 0
+    let skipped = 0
+    for (const row of incoming) {
+      const key = rowKey(row)
+      if (seen.has(key)) {
+        skipped += 1
+        continue
+      }
+      seen.add(key)
+      merged.push(row)
+      added += 1
+    }
+    return { merged, added, skipped }
+  }
+
   const handleAIExtraction = (extractedData: {
     decisions?: Decision[]
     commitments?: Commitment[]
     risks?: Risk[]
     follow_ups?: FollowUpAction[]
-  }) => {
-    // Merge extracted data with existing form data
-    setFormData((prev) => ({
-      ...prev,
-      decisions: [
-        ...prev.decisions,
-        ...(extractedData.decisions?.filter((d) => (d.ai_confidence || 0) >= 0.5) || []),
-      ],
-      commitments: [
-        ...prev.commitments,
-        ...(extractedData.commitments?.filter((c) => (c.ai_confidence || 0) >= 0.5) || []),
-      ],
-      risks: [
-        ...prev.risks,
-        ...(extractedData.risks?.filter((r) => (r.ai_confidence || 0) >= 0.5) || []),
-      ],
-      follow_ups: [...prev.follow_ups, ...(extractedData.follow_ups || [])],
-    }))
+  }): void => {
+    const newDecisions = extractedData.decisions?.filter((d) => (d.ai_confidence || 0) >= 0.5) ?? []
+    const newCommitments =
+      extractedData.commitments?.filter((c) => (c.ai_confidence || 0) >= 0.5) ?? []
+    const newRisks = extractedData.risks?.filter((r) => (r.ai_confidence || 0) >= 0.5) ?? []
+    const newFollowUps = extractedData.follow_ups ?? []
+
+    let totalAdded = 0
+    let totalSkipped = 0
+
+    setFormData((prev) => {
+      const decisions = mergeUnique(prev.decisions, newDecisions)
+      const commitments = mergeUnique(prev.commitments, newCommitments)
+      const risks = mergeUnique(prev.risks, newRisks)
+      const followUps = mergeUnique(prev.follow_ups, newFollowUps)
+
+      totalAdded = decisions.added + commitments.added + risks.added + followUps.added
+      totalSkipped = decisions.skipped + commitments.skipped + risks.skipped + followUps.skipped
+
+      return {
+        ...prev,
+        decisions: decisions.merged,
+        commitments: commitments.merged,
+        risks: risks.merged,
+        follow_ups: followUps.merged,
+      }
+    })
+
+    toast({
+      title: t('afterActions.ai.extractionSummary', {
+        added: totalAdded,
+        skipped: totalSkipped,
+      }),
+      variant: totalAdded > 0 ? 'success' : 'default',
+    })
   }
 
   const isFormValid = () => {
