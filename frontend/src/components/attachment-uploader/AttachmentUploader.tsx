@@ -5,7 +5,6 @@ import { useUploadAttachment, useDeleteAttachment } from '@/hooks/useIntakeApi'
 interface AttachmentFile {
   id: string
   file: File
-  progress: number
   status: 'uploading' | 'success' | 'error'
   error?: string
   uploadedId?: string
@@ -42,12 +41,8 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
   const [dragActive, setDragActive] = useState(false)
   const [validationError, setValidationError] = useState<string | null>(null)
 
-  // The hook accepts `Record<string, unknown>` and apiPost JSON-stringifies
-  // the body. JSON.stringify on a FormData yields `{}`, so the file payload
-  // never reaches the server. We pass the FormData here for parity with the
-  // intended multipart contract; fixing the upload pipeline (multipart-aware
-  // fetch path) is tracked as a separate bug — do not codify FormData as
-  // the param type.
+  // Real multipart upload wiring is not built yet — tracked as a backend
+  // follow-up: .planning/todos/260530-followup-intake-attachment-upload.md
   const uploadMutation = useUploadAttachment() as unknown as {
     mutateAsync: (data: Record<string, unknown>) => Promise<{ id: string }>
   }
@@ -94,53 +89,37 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
   }
 
   // Upload file
-  const uploadFile = async (attachmentFile: AttachmentFile) => {
+  const uploadFile = async (attachmentFile: AttachmentFile): Promise<void> => {
     try {
       setFiles((prev) =>
-        prev.map((f) =>
-          f.id === attachmentFile.id ? { ...f, status: 'uploading', progress: 0 } : f,
-        ),
+        prev.map((f) => (f.id === attachmentFile.id ? { ...f, status: 'uploading' } : f)),
       )
 
       const formData = new FormData()
       formData.append('file', attachmentFile.file)
 
-      // Simulate progress for better UX
-      const progressInterval = setInterval(() => {
-        setFiles((prev) =>
-          prev.map((f) =>
-            f.id === attachmentFile.id && f.progress < 90 ? { ...f, progress: f.progress + 10 } : f,
-          ),
-        )
-      }, 200)
-
-      // FormData is passed positionally to match the multipart contract once
-      // the upload pipeline is fixed; the cast is intentional (see hook shim
-      // comment above).
       const result = await uploadMutation.mutateAsync(
         formData as unknown as Record<string, unknown>,
       )
 
-      clearInterval(progressInterval)
-
+      // Only mark success when the mutation genuinely resolves with a real id.
       setFiles((prev) =>
         prev.map((f) =>
-          f.id === attachmentFile.id
-            ? { ...f, status: 'success', progress: 100, uploadedId: result.id }
-            : f,
+          f.id === attachmentFile.id ? { ...f, status: 'success', uploadedId: result.id } : f,
         ),
       )
 
       // Update parent component with new attachment ID
       onChange([...attachmentIds, result.id])
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : t('error.message')
       setFiles((prev) =>
         prev.map((f) =>
           f.id === attachmentFile.id
             ? {
                 ...f,
                 status: 'error',
-                error: error.message || t('error.message'),
+                error: message,
               }
             : f,
         ),
@@ -167,7 +146,6 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
       const attachmentFile: AttachmentFile = {
         id: `${Date.now()}-${Math.random()}`,
         file,
-        progress: 0,
         status: 'uploading',
       }
 
@@ -356,7 +334,8 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {formatFileSize(attachmentFile.file.size)}
-                      {attachmentFile.status === 'uploading' && ` - ${attachmentFile.progress}%`}
+                      {attachmentFile.status === 'uploading' &&
+                        ` - ${t('form.attachments.uploading', 'Uploading…')}`}
                     </p>
                     {attachmentFile.error && (
                       <p className="mt-1 text-xs text-destructive">{attachmentFile.error}</p>
@@ -364,14 +343,11 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
                   </div>
                 </div>
 
-                {/* Progress Bar */}
+                {/* Indeterminate "uploading" bar - no fabricated percentage */}
                 {attachmentFile.status === 'uploading' && (
                   <div className="mt-2">
-                    <div className="h-1.5 w-full rounded-full bg-muted">
-                      <div
-                        className="h-1.5 rounded-full bg-primary transition-all duration-300"
-                        style={{ width: `${attachmentFile.progress}%` }}
-                      />
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                      <div className="h-1.5 w-1/3 animate-pulse rounded-full bg-primary" />
                     </div>
                   </div>
                 )}
