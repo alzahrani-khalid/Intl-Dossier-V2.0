@@ -145,7 +145,9 @@ export function useCreateForum() {
         })
 
         if (extError) {
-          console.error('Error creating forum extension:', extError)
+          // Rollback dossier creation to avoid orphaned dossier row
+          await supabase.from('dossiers').delete().eq('id', dossier.id)
+          throw new Error(extError.message)
         }
       }
 

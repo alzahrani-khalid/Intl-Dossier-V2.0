@@ -161,7 +161,8 @@
       "active": "Active",
       "inactive": "Inactive",
       "pending": "Pending",
-      "suspended": "Suspended"
+      "suspended": "Suspended",
+      "disbanded": "Disbanded"
     },
     "established_date_label": "Established date",
     "mandate_en_label": "Mandate (English)",

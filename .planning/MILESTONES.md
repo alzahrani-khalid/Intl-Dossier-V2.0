@@ -1,5 +1,28 @@
 # Milestones
 
+## v6.4 Stabilization & Carryover Sweep (Shipped: 2026-05-27)
+
+**Delivered:** Landed DesignV2 onto `main` with all v6.3 quality gates intact, upgraded branch protection to 8 enforced CI contexts, and closed every v6.3 carryover debt item — the RLS pre-existing fail, the last typed shim, all 5 Phase 52 deviations, and the full 271-suppression Tier-C design-token backlog — then reconciled the remaining cosmetic + CI paperwork. `main` is now a stable, fully-gated runway for the v7.0 Intelligence Engine.
+
+**Phases completed:** 5 phases (55-59), 20 plans
+**Commits:** 17 first-parent (+ DesignV2 merge history) | **Files changed:** 427 | **Lines:** +28,588 / -8,158 (v6.3..HEAD, incl. DesignV2 merge content)
+**Timeline:** ~10 days (2026-05-17 → 2026-05-27)
+**Audit:** `.planning/milestones/v6.4-MILESTONE-AUDIT.md` (status: tech_debt — functionally complete; integration 14/14 wired, 0 blockers; 6 documentation/process-debt items, 0 functional blockers)
+**Requirements:** 14/14 satisfied (MERGE-01..02, RLS-01, TYPE-05, DEVIATE-01..04, TOKEN-01..02, POLISH-01..04)
+**Known deferred items at close:** 12 (1 stale debug session + 11 prior-milestone quick tasks — see STATE.md Deferred Items)
+
+**Key accomplishments:**
+
+- **Phase 55 — DesignV2 → main merge & gate enforcement:** DesignV2 (233 unique commits) merged to `main` via `--no-ff` (`3f763ddc`); branch protection upgraded 6 → 8 required CI contexts (added `Design Token Check` + `react-i18next Factory Check`, reversing the v6.3 D-09 fold for failure-attribution clarity); smoke PR #18 proved `mergeStateStatus=BLOCKED` on 4 planted violations; `phase-55-base` SSH-signed.
+- **Phase 56 — RLS closure & last typed-shim retirement:** D-54-04 closed — `countries` moved from `sensitiveTables` to a new `globalReferenceTables` audit tier with staging policy reconciliation; the final v6.2-era typed shim (`useStakeholderInteractionMutations`) retired by typing the domain hook at source; `phase-56-base` SSH-signed.
+- **Phase 57 — Phase 52 deviation closure (D-19..D-23):** mobile touch-DnD scoped out via ADR 0001 + a mobile `<select>` "Move to" fallback; `@dnd-kit/core` confined to the shared kanban primitive with an ESLint ban + regression test; LTR/RTL visual baselines proven md5-distinct at 768 & 1280; live tasks-tab Playwright run on seeded staging (8 pass / 9 expected-skip / 0 fail).
+- **Phase 58 — Tier-C design-token suppression full clear:** all 271 `gsd-design-token-tier-c-allow` suppressions (2336 AST nodes) eliminated across 6 surface-staged waves; waiver token removed from `eslint.config.mjs`; `pnpm lint` stays 0 with D-05 selectors at `error`; merge `aed43b97`, `phase-58-base` signed.
+- **Phase 59 — Cosmetic + CI gap closure:** Phase 53 SUMMARY/VERIFICATION wording refreshed to `PASS`/`verified`; `TweaksDrawer.test.tsx` + `51-VALIDATION.md` documentation drift corrected; `bad-design-token.tsx` + `bad-vi-mock.ts` wired as positive-failure CI jobs that break CI if either fixture stops failing (PR #27, `d3e7f8e`).
+
+**Tech debt at close (5 open items, 0 functional blockers; the audit's 6th — `phase-59-base` on origin — was resolved during close):** missing VERIFICATION.md for Phases 55-58 (satisfaction established via audit ground-truth + the integration checker running the actual gates); Nyquist VALIDATION paperwork lags implementation (1 compliant / 1 draft / 3 missing); `57-LIVE-RUN-SUMMARY.md` non-standard filename + Phase 58 superseded stub PLANs 58-07..10; RLS-01 test env-gated on `SUPABASE_*` CI secrets. Full detail: `.planning/milestones/v6.4-MILESTONE-AUDIT.md`.
+
+---
+
 ## v6.3 Carryover Sweep & v7.0 Prep (Shipped: 2026-05-17)
 
 **Delivered:** Closed v6.2 carryover debt, hardened test and design-token gates, executed the HeroUI v3 Kanban migration, tightened the React vendor budget, re-issued v6.2 phase-base tags as annotated + SSH-signed, and laid the v7.0 Intelligence Engine schema groundwork — `intelligence_event` + `intelligence_digest` + polymorphic `intelligence_event_dossiers` junction + `signal_source_type` enum, with regenerated TS types byte-identical across workspaces. Schema only; no API, no UI.

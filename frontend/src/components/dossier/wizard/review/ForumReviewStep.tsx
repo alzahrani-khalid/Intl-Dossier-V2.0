@@ -24,11 +24,6 @@ export function ForumReviewStep({ form, onEditStep }: ForumReviewStepProps): Rea
   // CRITICAL: use watch() not getValues() so data is always live after edits
   const values = form.watch()
 
-  const forumTypeDisplay =
-    values.forum_type !== undefined && values.forum_type !== ''
-      ? t(`form-wizard:forum.forum_types.${values.forum_type}`)
-      : undefined
-
   // Truncate description for review display (mirrors OrganizationReviewStep)
   const descriptionDisplay =
     values.description_en !== undefined && values.description_en !== ''
@@ -48,10 +43,7 @@ export function ForumReviewStep({ form, onEditStep }: ForumReviewStepProps): Rea
   return (
     <FormWizardStep stepId="review" className="space-y-4">
       {/* Basic Info section */}
-      <ReviewSection
-        title={t('form-wizard:review.basic_info')}
-        onEdit={(): void => onEditStep(0)}
-      >
+      <ReviewSection title={t('form-wizard:review.basic_info')} onEdit={(): void => onEditStep(0)}>
         <ReviewField label={t('dossier:form.nameEn', 'Name (English)')} value={values.name_en} />
         <ReviewField label={t('dossier:form.nameAr', 'Name (Arabic)')} value={values.name_ar} />
         <ReviewField
@@ -69,10 +61,6 @@ export function ForumReviewStep({ form, onEditStep }: ForumReviewStepProps): Rea
         title={t('form-wizard:review.forum_details')}
         onEdit={(): void => onEditStep(1)}
       >
-        <ReviewField
-          label={t('form-wizard:forum.forum_type_label')}
-          value={forumTypeDisplay}
-        />
         <ReviewField
           label={t('form-wizard:forum.organizing_body_label')}
           value={organizingBodyDisplay}

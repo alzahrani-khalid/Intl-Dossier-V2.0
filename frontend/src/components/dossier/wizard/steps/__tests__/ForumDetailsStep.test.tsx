@@ -66,25 +66,12 @@ function createMockForm(): UseFormReturn<ForumFormData> {
 }
 
 describe('ForumDetailsStep', () => {
-  it('renders forum_type label and organizing body label', () => {
+  it('renders organizing body label and help', () => {
     const form = createMockForm()
     render(<ForumDetailsStep form={form} />)
 
-    expect(screen.getByText('form-wizard:forum.forum_type_label')).toBeTruthy()
     expect(screen.getByText('form-wizard:forum.organizing_body_label')).toBeTruthy()
     expect(screen.getByText('form-wizard:forum.organizing_body_help')).toBeTruthy()
-  })
-
-  it('renders all 4 forum_type options', () => {
-    const form = createMockForm()
-    render(<ForumDetailsStep form={form} />)
-
-    const options = screen.getAllByRole('option')
-    expect(options.length).toBe(4)
-    expect(screen.getByText('form-wizard:forum.forum_types.conference')).toBeTruthy()
-    expect(screen.getByText('form-wizard:forum.forum_types.seminar')).toBeTruthy()
-    expect(screen.getByText('form-wizard:forum.forum_types.workshop')).toBeTruthy()
-    expect(screen.getByText('form-wizard:forum.forum_types.summit')).toBeTruthy()
   })
 
   it('mounts DossierPicker filtered to organization dossiers', () => {

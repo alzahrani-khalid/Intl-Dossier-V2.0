@@ -2,9 +2,9 @@ import * as z from 'zod'
 import { baseDossierSchema } from './base.schema'
 
 const organizationFields = z.object({
-  org_type: z
-    .enum(['government', 'ngo', 'private', 'international', 'academic'])
-    .optional(),
+  org_type: z.enum(['government', 'ngo', 'private', 'international', 'academic'], {
+    message: 'validation:required',
+  }),
   org_code: z.string().optional().or(z.literal('')),
   website: z.string().url().optional().or(z.literal('')),
   headquarters_en: z.string().optional(),

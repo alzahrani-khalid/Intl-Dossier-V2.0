@@ -21,7 +21,7 @@ interface WorkingGroupDetailsStepProps {
   form: UseFormReturn<WorkingGroupFormData>
 }
 
-const WG_STATUSES = ['active', 'inactive', 'pending', 'suspended'] as const
+const WG_STATUSES = ['active', 'suspended', 'disbanded'] as const
 
 export function WorkingGroupDetailsStep({ form }: WorkingGroupDetailsStepProps): ReactElement {
   const { t } = useTranslation(['form-wizard'])

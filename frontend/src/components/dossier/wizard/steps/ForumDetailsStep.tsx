@@ -1,29 +1,20 @@
 /**
  * ForumDetailsStep -- Second step of the Forum wizard (Plan 29-03, Task 2).
  *
- * Renders an optional forum_type Select (conference/seminar/workshop/summit) and a
- * single-select DossierPicker for the organizing body filtered to organization dossiers.
- * No required validation — both fields are optional.
+ * Renders a single-select DossierPicker for the organizing body filtered to
+ * organization dossiers. The field is optional.
+ *
+ * Note: a forum_type selector previously lived here but was removed because the
+ * `forums` table has no forum_type column (it silently dropped user input). To
+ * reintroduce categorization, add a `forums.forum_type` column and restore the
+ * field + its mapping in forum.config.ts.
  */
 import type { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { UseFormReturn } from 'react-hook-form'
 
 import { FormWizardStep } from '@/components/ui/form-wizard'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { DossierPicker } from '@/components/work-creation/DossierPicker'
 import type { ForumFormData } from '../schemas/forum.schema'
 
@@ -31,38 +22,11 @@ interface ForumDetailsStepProps {
   form: UseFormReturn<ForumFormData>
 }
 
-const FORUM_TYPES = ['conference', 'seminar', 'workshop', 'summit'] as const
-
 export function ForumDetailsStep({ form }: ForumDetailsStepProps): ReactElement {
   const { t } = useTranslation(['form-wizard'])
 
   return (
     <FormWizardStep stepId="forum-details" className="space-y-6 max-w-xl">
-      <FormField
-        control={form.control}
-        name="forum_type"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>{t('form-wizard:forum.forum_type_label')}</FormLabel>
-            <Select onValueChange={field.onChange} value={(field.value as string) ?? ''}>
-              <FormControl>
-                <SelectTrigger className="min-h-11">
-                  <SelectValue placeholder={t('form-wizard:forum.forum_type_placeholder')} />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {FORUM_TYPES.map((v) => (
-                  <SelectItem key={v} value={v}>
-                    {t(`form-wizard:forum.forum_types.${v}`)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
       <FormField
         control={form.control}
         name="organizing_body_id"

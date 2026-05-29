@@ -28,7 +28,7 @@ export const workingGroupWizardConfig: WizardConfig<WorkingGroupFormData> = {
     },
   ],
   filterExtensionData: (data: WorkingGroupFormData) => ({
-    status: data.wg_status,
+    wg_status: data.wg_status,
     established_date: data.established_date !== '' ? data.established_date : undefined,
     mandate_en: data.mandate_en !== '' ? data.mandate_en : undefined,
     mandate_ar: data.mandate_ar !== '' ? data.mandate_ar : undefined,

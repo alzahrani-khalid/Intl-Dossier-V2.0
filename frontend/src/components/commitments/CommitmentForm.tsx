@@ -53,10 +53,10 @@ import { useDirection } from '@/hooks/useDirection'
 
 // T029: Zod validation schema
 const commitmentFormSchema = z.object({
-  title: z.string().min(1, 'validation.titleRequired').max(200, 'validation.titleMaxLength'),
-  description: z.string().min(1, 'validation.descriptionRequired'),
+  title: z.string().min(1, 'validation:titleRequired').max(200, 'validation:titleMaxLength'),
+  description: z.string().min(1, 'validation:descriptionRequired'),
   due_date: z.date({
-    error: 'validation.dueDateRequired',
+    error: 'validation:dueDateRequired',
   }),
   priority: z.enum(['low', 'medium', 'high', 'urgent'] as const),
   owner_type: z.enum(['internal', 'external'] as const),
@@ -85,7 +85,7 @@ export function CommitmentForm({
 }: CommitmentFormProps) {
   const { t } = useTranslation('commitments')
   const { isRTL } = useDirection()
-const isEditMode = !!commitment
+  const isEditMode = !!commitment
 
   const createMutation = useCreateCommitment()
   const updateMutation = useUpdateCommitment()
@@ -161,10 +161,7 @@ const isEditMode = !!commitment
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Title */}
         <FormField
           control={form.control}

@@ -32,9 +32,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { supabase } from '@/lib/supabase'
+import { useCreateTicket } from '@/domains/intake/hooks/useIntakeApi'
 import type { CreationContext } from '../hooks/useCreationContext'
 import type { CreateTicketRequest } from '@/types/intake'
 import { DossierContextBadge, DossierSelector, type SelectedDossier } from '@/components/dossier'
@@ -44,8 +44,8 @@ import { useDirection } from '@/hooks/useDirection'
 // Validation schema
 const intakeQuickFormSchema = z.object({
   requestType: z.enum(['engagement', 'position', 'mou_action', 'foresight'] as const),
-  title: z.string().min(1, 'validation.titleRequired').max(200, 'validation.titleMaxLength'),
-  description: z.string().min(1, 'validation.descriptionRequired'),
+  title: z.string().min(1, 'validation:titleRequired').max(200, 'validation:titleMaxLength'),
+  description: z.string().min(1, 'validation:descriptionRequired'),
   urgency: z.enum(['low', 'medium', 'high', 'critical'] as const),
 })
 
@@ -60,38 +60,6 @@ export interface IntakeQuickFormProps {
   onCancel?: () => void
 }
 
-// Supabase URL
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-
-/**
- * Create intake ticket via Edge Function
- */
-async function createIntakeTicket(request: CreateTicketRequest): Promise<any> {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
-
-  if (!session) {
-    throw new Error('Not authenticated')
-  }
-
-  const response = await fetch(`${supabaseUrl}/functions/v1/intake-tickets/create`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.access_token}`,
-    },
-    body: JSON.stringify(request),
-  })
-
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: 'Failed to create ticket' }))
-    throw new Error(error.message || 'Failed to create intake ticket')
-  }
-
-  return response.json()
-}
-
 export function IntakeQuickForm({
   dossierId,
   creationContext,
@@ -101,7 +69,7 @@ export function IntakeQuickForm({
 }: IntakeQuickFormProps) {
   const { t } = useTranslation(['work-creation', 'intake', 'dossier-context'])
   const { isRTL } = useDirection()
-const queryClient = useQueryClient()
+  const queryClient = useQueryClient()
 
   // State for user-selected dossier when no context is available
   const [userSelectedDossiers, setUserSelectedDossiers] = useState<SelectedDossier[]>([])
@@ -137,21 +105,10 @@ const queryClient = useQueryClient()
     },
   })
 
-  const createMutation = useMutation({
-    mutationFn: createIntakeTicket,
-    onSuccess: (data) => {
-      // Invalidate intake queries
-      queryClient.invalidateQueries({ queryKey: ['intake-tickets'] })
-      queryClient.invalidateQueries({ queryKey: ['unified-work'] })
-      toast.success(t('form.intakeCreated', 'Intake request created successfully'))
-      form.reset()
-      onSuccess?.(data)
-    },
-    onError: (error: any) => {
-      toast.error(error.message || t('form.intakeError', 'Failed to create intake request'))
-    },
-  })
-
+  // Routes through useCreateTicket → intake.repository → intake-tickets-create Edge Function.
+  // Maps camelCase → snake_case (request) and snake_case → camelCase (response), replacing
+  // the previous raw fetch that hit a nonexistent endpoint with a camelCase body.
+  const createMutation = useCreateTicket()
   const isPending = createMutation.isPending
 
   const onSubmit = (values: IntakeQuickFormValues) => {
@@ -165,20 +122,36 @@ const queryClient = useQueryClient()
     const request: CreateTicketRequest = {
       requestType: values.requestType,
       title: values.title,
+      // This palette form is single-language; mirror the English text into the
+      // Arabic columns so the NOT NULL title_ar/description_ar constraints are
+      // satisfied. The full IntakeForm collects Arabic separately.
+      titleAr: values.title,
       description: values.description,
+      descriptionAr: values.description,
       urgency: values.urgency,
       dossierId: effectiveDossierId,
     }
 
-    createMutation.mutate(request)
+    createMutation.mutate(request, {
+      onSuccess: (data) => {
+        void queryClient.invalidateQueries({ queryKey: ['unified-work'] })
+        toast.success(t('form.intakeCreated', 'Intake request created successfully'))
+        form.reset()
+        onSuccess?.(data)
+      },
+      onError: (error: unknown) => {
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : t('form.intakeError', 'Failed to create intake request'),
+        )
+      },
+    })
   }
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {/* T042/US4: Dossier context display or selector */}
         {/* Show badge when dossier is provided from props or context */}
         {selectedDossier && (

@@ -11,7 +11,7 @@
 - ✅ **v6.1 Hardening & Reconciliation** — Phases 44-46 (shipped 2026-05-08) — [archive](milestones/v6.1-ROADMAP.md)
 - ✅ **v6.2 Type-Check, Lint & Bundle Reset** — Phases 47-49 (shipped 2026-05-12) — [archive](milestones/v6.2-ROADMAP.md)
 - ✅ **v6.3 Carryover Sweep & v7.0 Prep** — Phases 50-54 (shipped 2026-05-17) — [archive](milestones/v6.3-ROADMAP.md)
-- 🚧 **v6.4 Stabilization & Carryover Sweep** — Phases 55-59 (in progress)
+- ✅ **v6.4 Stabilization & Carryover Sweep** — Phases 55-59 (shipped 2026-05-27) — [archive](milestones/v6.4-ROADMAP.md)
 
 ## Phases
 
@@ -141,119 +141,18 @@ Full details: [v6.3-ROADMAP.md](milestones/v6.3-ROADMAP.md)
 
 </details>
 
-<details open>
-<summary>🚧 v6.4 Stabilization & Carryover Sweep (Phases 55-59) — IN PROGRESS</summary>
+<details>
+<summary>✅ v6.4 Stabilization & Carryover Sweep (Phases 55-59) — SHIPPED 2026-05-27</summary>
 
-- [x] **Phase 55: DesignV2 → Main Merge & Gate Enforcement** — Land DesignV2 onto `main` with all v6.3 quality gates intact and verify enforcement on post-merge `main` PR contexts (MERGE-01, MERGE-02) — **COMPLETE 2026-05-18** (4/4 plans)
-- [ ] **Phase 56: RLS Closure & Last Typed-Shim Retirement** — Clear the pre-existing `countries` row from `sensitiveTables` (D-54-04) and type `useStakeholderInteractionMutations` at source (RLS-01, TYPE-05)
-- [ ] **Phase 57: Phase 52 Deviation Closure (D-19..D-23)** — Resolve mobile touch DnD scope, kanban regression follow-up, LTR/RTL visual baseline byte-distinction, and live tasks-tab Playwright run (DEVIATE-01..04)
-- [x] **Phase 58: Tier-C Design-Token Suppression Full Clear** — Eliminate all 271 `gsd-design-token-tier-c-allow` suppressions (2336 AST nodes) via wave-staged token swaps and remove the waiver from `eslint.config.mjs` (TOKEN-01, TOKEN-02) — **COMPLETE 2026-05-22** (7/7 plans; merge `aed43b97`; `phase-58-base` signed tag)
-- [ ] **Phase 59: Cosmetic + CI Gap Closure** — POLISH-01..04 closed locally; single-PR merge and signed `phase-59-base` tag gate pending (2/3 plans)
+- [x] Phase 55: DesignV2 → Main Merge & Gate Enforcement (4/4 plans) — DesignV2 landed on `main` (`3f763ddc`); branch protection 6 → 8 required CI contexts; smoke PR #18 `BLOCKED` proof
+- [x] Phase 56: RLS Closure & Last Typed-Shim Retirement (2/2 plans) — `countries` → `globalReferenceTables` tier; `useStakeholderInteractionMutations` typed at source
+- [x] Phase 57: Phase 52 Deviation Closure D-19..D-23 (4/4 plans) — mobile-DnD scope-out ADR + `<select>` fallback; `@dnd-kit/core` ban + regression test; LTR/RTL baselines md5-distinct; live tasks-tab run
+- [x] Phase 58: Tier-C Design-Token Suppression Full Clear (7/7 plans) — 271 suppressions / 2336 AST nodes → 0; waiver removed from `eslint.config.mjs` (merge `aed43b97`)
+- [x] Phase 59: Cosmetic + CI Gap Closure (3/3 plans) — Phase 53 wording, doc drift, bad-fixture positive-failure CI jobs (PR #27 `d3e7f8e`)
+
+Full details: [v6.4-ROADMAP.md](milestones/v6.4-ROADMAP.md)
 
 </details>
-
-## Phase Details
-
-### Phase 55: DesignV2 → Main Merge & Gate Enforcement
-
-**Goal**: DesignV2 lands on `main` and all v6.3 quality gates (type-check, Lint, Bundle Size Check, design-token D-05, react-i18next factory) enforce on every `main` PR context
-**Depends on**: Nothing (first phase of v6.4; blocker for 56-59)
-**Requirements**: MERGE-01, MERGE-02
-**Success Criteria** (what must be TRUE):
-
-1. `git log main --oneline` shows DesignV2 history merged into `main` with no manual cherry-picks
-2. `pnpm type-check`, `pnpm lint`, and `Bundle Size Check (size-limit)` all exit 0 on the post-merge `main` HEAD
-3. A smoke PR opened against `main` introducing an intentional violation (raw hex, palette literal, or vi.mock factory regression) returns `mergeStateStatus=BLOCKED` from `gh pr view --json`
-4. The four v6.3-introduced gate contexts (`type-check`, `Lint`, `Bundle Size Check (size-limit)`, plus the D-09 folded design-token rule inside `Lint`) appear as required contexts on `main` branch protection — UPGRADED per Phase 55 D-13: 8 explicit required contexts (the original 6 + `Design Token Check` + `react-i18next Factory Check`), reversing the v6.3 D-09 fold-into-Lint for failure-attribution clarity
-
-**Plans:** 4 plans (sequential waves 1→4 per D-15 clean causality chain)
-
-Plans:
-
-**Wave 1**
-
-- [x] 55-01-PLAN.md — Pre-merge verification, merge PR creation + green, --no-ff merge, signed phase-55-base tag (Wave 1) — **SHIPPED 2026-05-17**: merge commit `3f763ddc`, phase-55-base SSH-signed, remote DesignV2 deleted
-
-**Wave 2** _(blocked on Wave 1 completion)_
-
-- [x] 55-02-PLAN.md — Add 2 new CI jobs (Design Token Check + react-i18next Factory Check) to ci.yml via separate PR onto main (Wave 2) — **SHIPPED 2026-05-17**: PR #15 merged as `9e4471e3`; both new jobs verified green on post-merge main HEAD CI run 25990939105; MERGE-02 partial (preparation half)
-
-**Wave 3** _(blocked on Wave 2 completion)_
-
-- [x] 55-03-PLAN.md — Update main branch protection to require 8 contexts (round-trip JSON; preserve enforce_admins / no-force-push / no-deletions) (Wave 3) — **SHIPPED 2026-05-17**: `gh api -X PUT` round-trip applied; live state confirmed 8 required contexts (6 original + `Design Token Check` + `react-i18next Factory Check`); all security invariants preserved (enforce_admins=true, allow_force_pushes=false, allow_deletions=false, block_creations=false, strict=true); protection-before.json + protection-after.json committed per D-16 audit trail; MERGE-02 still partial (smoke proof = Plan 04)
-
-**Wave 4** _(blocked on Wave 3 completion)_
-
-- [x] 55-04-PLAN.md — Smoke PR with 4 planted violations, evidence capture (JSON + PNG), cleanup via `gh pr close --delete-branch` (Wave 4) — **SHIPPED 2026-05-18**: PR #18 captured `mergeStateStatus=BLOCKED` (uppercase, GraphQL) with 2 required contexts at FAILURE (`Lint` + `type-check`); evidence committed to main via PR #19 (merge `ec9caffb`) BEFORE smoke PR closed (Pitfall 10); PR #18 closed `--delete-branch` per D-12; remote `smoke/phase-55-merge-02` + `docs/phase-55-smoke-evidence` branches deleted. MERGE-02 satisfied; Phase 55 complete (4/4 plans).
-
-### Phase 56: RLS Closure & Last Typed-Shim Retirement
-
-**Goal**: `rls-audit.test.ts` passes for `countries` without an acknowledged-fail entry, and the final v6.2-era typed shim is removed in favour of source-typed return shapes
-**Depends on**: Phase 55
-**Requirements**: RLS-01, TYPE-05
-**Success Criteria** (what must be TRUE):
-
-1. `rls-audit.test.ts` exits 0 with `countries` present in the projection but absent from any acknowledged-pre-existing-fail list
-2. `grep -r "useStakeholderInteractionMutations" frontend/src` shows zero `as` casts or typed-shim wrappers at consumer sites
-3. The underlying `useStakeholderInteractionMutations` hook declares an explicit, non-`any`, non-`Promise.resolve({ success: true })` return type that consumers consume directly
-4. `pnpm type-check` exits 0 across both workspaces with the shim removed
-
-**Plans**: TBD
-
-### Phase 57: Phase 52 Deviation Closure (D-19..D-23)
-
-**Goal**: All five Phase 52 PASS-WITH-DEVIATION carryovers (D-19..D-23, excluding the already-closed D-20) reach a verified resolution recorded against the original deviation rows
-**Depends on**: Phase 55
-**Requirements**: DEVIATE-01, DEVIATE-02, DEVIATE-03, DEVIATE-04
-**Success Criteria** (what must be TRUE):
-
-1. Mobile touch DnD on the shared `@dnd-kit/core` kanban primitive either works on a 768×1024 device (touch sensor wired) or has an explicit ADR scoping it out with a mobile read-only fallback in place (D-19)
-2. The Phase 39 `kanban-*.spec.ts` Playwright specs run green against the shared `@dnd-kit/core` primitive in CI (D-21)
-3. Re-running the kanban EN+AR visual baseline diff produces byte-distinct snapshots between LTR and RTL (no false byte-identity) (D-22)
-4. The live tasks-tab Playwright run executes on seeded staging data with a host operator and the artifact (run log, screenshots, summary) lands in the phase folder (D-23)
-
-**Plans**: TBD
-**UI hint**: yes
-
-### Phase 58: Tier-C Design-Token Suppression Full Clear
-
-**Goal**: Every `// gsd-design-token-tier-c-allow` suppression in `frontend/src/` is replaced with a real token reference, and the waiver token is removed from `eslint.config.mjs` so `pnpm lint` stays at 0 without it
-**Depends on**: Phase 55
-**Requirements**: TOKEN-01, TOKEN-02
-**Success Criteria** (what must be TRUE):
-
-1. `grep -r "gsd-design-token-tier-c-allow" frontend/src` returns zero matches across all 271 originally-suppressed files / 2336 AST nodes
-2. `eslint.config.mjs` no longer references the Tier-C waiver token in any rule config, allowlist, or comment-marker exception
-3. `pnpm lint` exits 0 workspace-wide with the waiver removed and the D-05 selectors at `error` severity
-4. Wave PRs are organized by surface (forms, tables, charts, drawers, dossier rail) so each wave is independently reviewable and revertable
-
-**Plans**: TBD
-**UI hint**: yes
-
-### Phase 59: Cosmetic + CI Gap Closure
-
-**Goal**: Stale v6.3 paperwork is refreshed, documentation drift is corrected, and the bad-design-token + bad-vi-mock fixtures fail CI loudly when their expected lint/test errors stop firing
-**Depends on**: Phase 55
-**Requirements**: POLISH-01, POLISH-02, POLISH-03, POLISH-04
-**Success Criteria** (what must be TRUE):
-
-1. `53-03-SUMMARY.md` reads `PASS` (not `PASS-WITH-DEFERRAL`) and `53-VERIFICATION.md` records BUNDLE-06 as `verified` (not `verified-local-only`)
-2. `TweaksDrawer.test.tsx:6-8` no longer references the (false) claim that the global setup omits `initReactI18next`
-3. `51-VALIDATION.md` frontmatter reads `status: passed` with `nyquist_compliant: true` preserved
-4. The CI pipeline contains an explicit step that asserts `bad-design-token.tsx` produces an ESLint error and `bad-vi-mock.ts` produces an ESLint error / lint failure; CI breaks if either fixture stops failing as expected
-
-**Plans**: 3 plans
-
-Plans:
-
-**Wave 1**
-
-- [x] 59-01-PLAN.md — POLISH-02/03/04: TweaksDrawer comment delete, 51-VALIDATION status flip, eslint fixture flip-test + criterion reconciliation
-- [x] 59-02-PLAN.md — POLISH-01: gated Phase 53 PASS/verified flip behind origin-tag verification (force-push contingency)
-
-**Wave 2** _(PR merge + signed tag gate pending)_
-
-- [ ] 59-03-PLAN.md — Closure: single PR for all four POLISH items + SSH-signed phase-59-base tag (human-gated protected-main merge and post-merge tag still pending)
 
 ## Progress
 
@@ -271,14 +170,10 @@ Plans:
 | 44-46 | v6.1 | 14/14 | Shipped | 2026-05-08 |
 | 47-49 | v6.2 | 17/17 | Shipped | 2026-05-12 |
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
-| 55 | v6.4 | 4/4 | Complete | 2026-05-18 |
-| 56 | v6.4 | 0/0 | Not started | — |
-| 57 | v6.4 | 0/0 | Not started | — |
-| 58 | v6.4 | 4/7 | Wave-4 implementation complete; merge deferred | — |
-| 59 | v6.4 | 2/3 | In Progress | — |
+| 55-59 | v6.4 | 20/20 | Shipped | 2026-05-27 |
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-05-18 — Phase 55 COMPLETE (4/4 plans). Plan 04 captured `mergeStateStatus=BLOCKED` on smoke PR #18 (uppercase, GraphQL); evidence committed to main via PR #19; smoke PR closed `--delete-branch` per D-12; MERGE-02 satisfied. 8-context gate live on `main`. Recommended next: `/gsd:verify-work 55` then Phase 56 or 57 (parallel-eligible)._
+_Roadmap last updated: 2026-05-27 — v6.4 Stabilization & Carryover Sweep shipped (Phases 55-59, 20 plans, 14/14 requirements); milestone archived to [v6.4-ROADMAP.md](milestones/v6.4-ROADMAP.md). Next: v7.0 Intelligence Engine via `/gsd:new-milestone`._

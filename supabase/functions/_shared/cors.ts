@@ -5,15 +5,29 @@
  * The static corsHeaders is kept for backwards compatibility but should be migrated.
  */
 
+let warnedMissingAllowedOrigins = false
+
 /**
  * List of allowed origins for CORS
  * In production, this comes from ALLOWED_ORIGINS env var
  */
 function getAllowedOrigins(): string[] {
-  const envOrigins = Deno.env.get('ALLOWED_ORIGINS');
+  const envOrigins = Deno.env.get('ALLOWED_ORIGINS')
   if (envOrigins) {
-    return envOrigins.split(',').map((o) => o.trim());
+    return envOrigins.split(',').map((o) => o.trim())
   }
+
+  // ALLOWED_ORIGINS unset in a deployed environment is a misconfiguration: every
+  // non-localhost origin gets rejected with `Access-Control-Allow-Origin: null`.
+  // Warn once per worker instead of on every request.
+  if (!warnedMissingAllowedOrigins && Deno.env.get('ENVIRONMENT') !== 'development') {
+    warnedMissingAllowedOrigins = true
+    console.warn(
+      '[cors] ALLOWED_ORIGINS is not set; falling back to localhost-only defaults. ' +
+        'Deployed origins will be blocked by CORS — set the ALLOWED_ORIGINS secret for this environment.',
+    )
+  }
+
   // Default allowed origins for development
   return [
     'http://localhost:3000',
@@ -24,22 +38,22 @@ function getAllowedOrigins(): string[] {
     'http://127.0.0.1:5173',
     'http://127.0.0.1:5002',
     'http://127.0.0.1:5001',
-  ];
+  ]
 }
 
 /**
  * Check if an origin is allowed
  */
 function isAllowedOrigin(origin: string | null): boolean {
-  if (!origin) return false;
+  if (!origin) return false
 
   // In development, allow all origins
   if (Deno.env.get('ENVIRONMENT') === 'development') {
-    return true;
+    return true
   }
 
-  const allowedOrigins = getAllowedOrigins();
-  return allowedOrigins.includes(origin);
+  const allowedOrigins = getAllowedOrigins()
+  return allowedOrigins.includes(origin)
 }
 
 /**
@@ -47,7 +61,7 @@ function isAllowedOrigin(origin: string | null): boolean {
  * This should be used instead of static corsHeaders
  */
 export function getCorsHeaders(request: Request): Record<string, string> {
-  const origin = request.headers.get('origin');
+  const origin = request.headers.get('origin')
 
   if (isAllowedOrigin(origin)) {
     return {
@@ -55,7 +69,7 @@ export function getCorsHeaders(request: Request): Record<string, string> {
       'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
       'Access-Control-Max-Age': '86400',
-    };
+    }
   }
 
   // Reject unknown origins with restrictive headers
@@ -63,7 +77,7 @@ export function getCorsHeaders(request: Request): Record<string, string> {
     'Access-Control-Allow-Origin': 'null',
     'Access-Control-Allow-Methods': 'OPTIONS',
     'Access-Control-Allow-Headers': 'authorization',
-  };
+  }
 }
 
 /**
@@ -73,7 +87,7 @@ export function handleCorsPreflightRequest(request: Request): Response {
   return new Response(null, {
     status: 204,
     headers: getCorsHeaders(request),
-  });
+  })
 }
 
 /**
@@ -85,4 +99,4 @@ export const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-};
+}

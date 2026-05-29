@@ -41,7 +41,7 @@ import type {
 
 // Form schema
 const legislationFormSchema = z.object({
-  title_en: z.string().min(1, 'Title is required'),
+  title_en: z.string().min(1, 'validation:titleRequired'),
   title_ar: z.string().optional(),
   short_title_en: z.string().optional(),
   short_title_ar: z.string().optional(),
@@ -237,10 +237,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Basic Information */}
         <Card>
           <CardHeader>

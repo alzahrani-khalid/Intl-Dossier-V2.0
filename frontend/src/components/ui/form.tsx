@@ -12,6 +12,8 @@ import {
   type FieldValues,
 } from 'react-hook-form'
 
+import { useTranslation } from 'react-i18next'
+
 import { cn } from '@/lib/utils'
 import { Label } from '@/components/ui/label'
 
@@ -137,8 +139,16 @@ const FormMessage = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
+  const { t } = useTranslation()
   const { error, formMessageId } = useFormField()
-  const body = error ? String(error?.message ?? '') : children
+  const rawBody = error ? String(error?.message ?? '') : children
+  // Translate validation messages so namespaced keys (e.g. "validation:required")
+  // resolve in both languages. defaultValue keeps already-translated text intact,
+  // so forms that pass a pre-translated child still render correctly.
+  const body =
+    typeof rawBody === 'string' && rawBody.length > 0
+      ? t(rawBody, { defaultValue: rawBody })
+      : rawBody
 
   if (!body) {
     return null

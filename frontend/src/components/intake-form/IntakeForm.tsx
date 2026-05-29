@@ -31,12 +31,15 @@ const createIntakeSchema = (t: any, tDossier: any) =>
       error: t('form.requestType.required'),
     }),
     title: z.string().min(3, t('form.title.minLength')).max(200, t('form.title.maxLength')),
-    titleAr: z.string().max(200, t('form.title.maxLength')).optional(),
+    titleAr: z.string().min(1, 'validation:required').max(200, t('form.title.maxLength')),
     description: z
       .string()
       .min(10, t('form.description.minLength'))
       .max(5000, t('form.description.maxLength')),
-    descriptionAr: z.string().max(5000, t('form.description.maxLength')).optional(),
+    descriptionAr: z
+      .string()
+      .min(1, 'validation:required')
+      .max(5000, t('form.description.maxLength')),
     urgency: z.enum(['low', 'medium', 'high', 'critical'], {
       error: t('form.urgency.required'),
     }),
@@ -222,6 +225,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
               <div>
                 <label className="mb-2 block text-sm font-medium text-foreground">
                   {t('form.titleAr.label')}
+                  <span className="ms-1 text-destructive">*</span>
                 </label>
                 <Input
                   type="text"
@@ -254,6 +258,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
               <div>
                 <label className="mb-2 block text-sm font-medium text-foreground">
                   {t('form.descriptionAr.label')}
+                  <span className="ms-1 text-destructive">*</span>
                 </label>
                 <Textarea
                   {...register('descriptionAr')}

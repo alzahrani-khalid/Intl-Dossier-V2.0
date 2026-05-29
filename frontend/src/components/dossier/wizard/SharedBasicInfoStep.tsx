@@ -3,7 +3,7 @@
  * Classification fields appear in a collapsible section, collapsed by default.
  * Generic over form values so type-specific wizards can use it.
  */
-import type { ReactElement } from 'react'
+import type { ReactElement, ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { UseFormReturn, FieldValues, Path } from 'react-hook-form'
 import { ChevronDown } from 'lucide-react'
@@ -205,7 +205,18 @@ export function SharedBasicInfoStep<T extends FieldValues>({
             <FormLabel>{t('dossier:form.tags')}</FormLabel>
             <FormControl>
               <Input
-                {...field}
+                value={((field.value as string[]) ?? []).join(', ')}
+                onChange={(e: ChangeEvent<HTMLInputElement>): void => {
+                  field.onChange(
+                    e.target.value
+                      .split(',')
+                      .map((s) => s.trim())
+                      .filter(Boolean),
+                  )
+                }}
+                onBlur={field.onBlur}
+                name={field.name}
+                ref={field.ref}
                 placeholder={t('dossier:form.tagsPlaceholder')}
                 className="min-h-11"
               />
@@ -239,10 +250,7 @@ export function SharedBasicInfoStep<T extends FieldValues>({
                       mode: 'both',
                     }}
                   />
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value as string}
-                  >
+                  <Select onValueChange={field.onChange} defaultValue={field.value as string}>
                     <FormControl>
                       <SelectTrigger className="min-h-11">
                         <SelectValue placeholder={t('dossier:form.selectStatus')} />
@@ -290,9 +298,7 @@ export function SharedBasicInfoStep<T extends FieldValues>({
                       <SelectItem value="4">{t('dossier:sensitivityLevel.4')}</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormDescription>
-                    {t('dossier:form.sensitivityDescription')}
-                  </FormDescription>
+                  <FormDescription>{t('dossier:form.sensitivityDescription')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
