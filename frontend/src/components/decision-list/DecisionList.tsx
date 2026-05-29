@@ -115,6 +115,7 @@ export function DecisionList({ decisions, onChange, readOnly = false }: Decision
                 maxLength={2000}
                 disabled={readOnly}
                 required
+                aria-required="true"
               />
               <p className="mt-1 text-xs text-muted-foreground">
                 {decision.description.length}/2000
@@ -148,6 +149,7 @@ export function DecisionList({ decisions, onChange, readOnly = false }: Decision
                   maxLength={200}
                   disabled={readOnly}
                   required
+                  aria-required="true"
                 />
               </div>
 
@@ -162,6 +164,7 @@ export function DecisionList({ decisions, onChange, readOnly = false }: Decision
                         !decision.decision_date && 'text-muted-foreground',
                       )}
                       disabled={readOnly}
+                      aria-required="true"
                     >
                       <CalendarIcon className="me-2 size-4 opacity-50" />
                       {decision.decision_date

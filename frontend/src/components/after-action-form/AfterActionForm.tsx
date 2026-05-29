@@ -223,6 +223,7 @@ export function AfterActionForm({
               placeholder={t('afterActions.form.attendeesPlaceholder')}
               disabled={readOnly}
               required
+              aria-required="true"
             />
             <p className="text-xs text-muted-foreground">
               {t('afterActions.form.attendeesHelp')} ({formData.attendees.length}/100)

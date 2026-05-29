@@ -159,6 +159,7 @@ export function CommitmentEditor({
                 maxLength={2000}
                 disabled={readOnly}
                 required
+                aria-required="true"
               />
             </div>
 
@@ -199,7 +200,7 @@ export function CommitmentEditor({
                   onValueChange={(value) => updateCommitment(index, 'owner_user_id', value)}
                   disabled={readOnly}
                 >
-                  <SelectTrigger id={`owner-user-${index}`}>
+                  <SelectTrigger id={`owner-user-${index}`} aria-required="true">
                     <SelectValue placeholder={t('afterActions.commitments.selectUser')} />
                   </SelectTrigger>
                   <SelectContent>
@@ -225,6 +226,7 @@ export function CommitmentEditor({
                     placeholder={t('afterActions.commitments.emailPlaceholder')}
                     disabled={readOnly}
                     required
+                    aria-required="true"
                   />
                 </div>
                 <div>
@@ -239,6 +241,7 @@ export function CommitmentEditor({
                     maxLength={200}
                     disabled={readOnly}
                     required
+                    aria-required="true"
                   />
                 </div>
                 <div>
@@ -269,7 +272,7 @@ export function CommitmentEditor({
                   onValueChange={(value) => updateCommitment(index, 'priority', value)}
                   disabled={readOnly}
                 >
-                  <SelectTrigger id={`priority-${index}`}>
+                  <SelectTrigger id={`priority-${index}`} aria-required="true">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -320,6 +323,7 @@ export function CommitmentEditor({
                         isRTL && 'justify-end text-end',
                       )}
                       disabled={readOnly}
+                      aria-required="true"
                     >
                       <CalendarIcon className={cn('h-4 w-4 opacity-50', isRTL ? 'ms-2' : 'me-2')} />
                       {commitment.due_date
