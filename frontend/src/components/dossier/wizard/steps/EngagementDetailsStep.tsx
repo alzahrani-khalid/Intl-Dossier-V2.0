@@ -115,7 +115,7 @@ export function EngagementDetailsStep({ form }: EngagementDetailsStepProps): Rea
             <FormItem>
               <FormLabel>{t('form-wizard:engagement.start_date_label')} *</FormLabel>
               <FormControl required>
-                <Input {...field} type="date" className="min-h-11" required />
+                <Input {...field} type="date" className="min-h-11" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -128,7 +128,7 @@ export function EngagementDetailsStep({ form }: EngagementDetailsStepProps): Rea
             <FormItem>
               <FormLabel>{t('form-wizard:engagement.end_date_label')} *</FormLabel>
               <FormControl required>
-                <Input {...field} type="date" className="min-h-11" required />
+                <Input {...field} type="date" className="min-h-11" />
               </FormControl>
               <FormMessage />
             </FormItem>
