@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Trash2, Plus, CalendarIcon, ListTodo } from 'lucide-react'
-import { format } from 'date-fns'
+import { formatDayFirst } from '@/lib/format-date'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -27,7 +27,7 @@ interface FollowUpListProps {
 }
 
 export function FollowUpList({ followUpActions, onChange, readOnly = false }: FollowUpListProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { isRTL } = useDirection()
   const addFollowUp = () => {
     onChange([
@@ -144,7 +144,7 @@ export function FollowUpList({ followUpActions, onChange, readOnly = false }: Fo
                     >
                       <CalendarIcon className={cn('h-4 w-4 opacity-50', isRTL ? 'ms-2' : 'me-2')} />
                       {action.target_date
-                        ? format(action.target_date, 'PPP')
+                        ? formatDayFirst(action.target_date, i18n.language)
                         : t('afterActions.followUps.selectDate')}
                     </Button>
                   </PopoverTrigger>

@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Trash2, Plus, CalendarIcon } from 'lucide-react'
-import { format } from 'date-fns'
+import { formatDayFirst } from '@/lib/format-date'
 import { cn } from '@/lib/utils'
 
 export interface Decision {
@@ -27,7 +27,7 @@ interface DecisionListProps {
 }
 
 export function DecisionList({ decisions, onChange, readOnly = false }: DecisionListProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const addDecision = () => {
     onChange([
       ...decisions,
@@ -168,7 +168,7 @@ export function DecisionList({ decisions, onChange, readOnly = false }: Decision
                     >
                       <CalendarIcon className="me-2 size-4 opacity-50" />
                       {decision.decision_date
-                        ? format(decision.decision_date, 'PPP')
+                        ? formatDayFirst(decision.decision_date, i18n.language)
                         : t('common.selectDate')}
                     </Button>
                   </PopoverTrigger>

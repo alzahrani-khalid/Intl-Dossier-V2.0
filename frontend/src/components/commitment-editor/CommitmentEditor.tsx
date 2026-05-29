@@ -16,7 +16,7 @@ import {
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Trash2, Plus, CalendarIcon, User, Mail } from 'lucide-react'
-import { format } from 'date-fns'
+import { formatDayFirst } from '@/lib/format-date'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -57,7 +57,7 @@ export function CommitmentEditor({
   readOnly = false,
   availableUsers = [],
 }: CommitmentEditorProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { isRTL } = useDirection()
   const addCommitment = () => {
     onChange([
@@ -327,7 +327,7 @@ export function CommitmentEditor({
                     >
                       <CalendarIcon className={cn('h-4 w-4 opacity-50', isRTL ? 'ms-2' : 'me-2')} />
                       {commitment.due_date
-                        ? format(commitment.due_date, 'PPP')
+                        ? formatDayFirst(commitment.due_date, i18n.language)
                         : t('common.selectDate')}
                     </Button>
                   </PopoverTrigger>

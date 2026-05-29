@@ -26,6 +26,7 @@ import {
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
+import { formatDayFirst } from '@/lib/format-date'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import { useDirection } from '@/hooks/useDirection'
@@ -140,7 +141,7 @@ function AfterActionDetailPage(): React.ReactNode {
           <div>
             <h1 className="text-3xl font-bold">{t('afterActions.detail')}</h1>
             <p className="text-muted-foreground">
-              {format(new Date(afterAction.created_at), 'PPP', { locale })}
+              {formatDayFirst(afterAction.created_at, isRTL ? 'ar' : 'en')}
             </p>
           </div>
         </div>
