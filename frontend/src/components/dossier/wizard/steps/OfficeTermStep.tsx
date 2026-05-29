@@ -15,13 +15,7 @@ import { useTranslation } from 'react-i18next'
 import type { UseFormReturn } from 'react-hook-form'
 
 import { FormWizardStep } from '@/components/ui/form-wizard'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { DossierPicker } from '@/components/work-creation/DossierPicker'
 import { useDirection } from '@/hooks/useDirection'
@@ -95,14 +89,17 @@ export function OfficeTermStep({ form }: OfficeTermStepProps): ReactElement {
             <FormItem>
               <FormLabel>
                 {t('form-wizard:elected_official.country')}
-                <span className="ms-1 text-destructive" aria-hidden="true">*</span>
+                <span className="ms-1 text-destructive" aria-hidden="true">
+                  *
+                </span>
               </FormLabel>
-              <FormControl>
+              <FormControl required>
                 <DossierPicker
                   value={field.value ?? ''}
                   onChange={(id): void => field.onChange(id ?? '')}
                   filterByDossierType="country"
                   placeholder={t('form-wizard:elected_official.country_ph')}
+                  required
                 />
               </FormControl>
               <p className="text-xs text-muted-foreground text-start">
@@ -251,15 +248,12 @@ export function OfficeTermStep({ form }: OfficeTermStepProps): ReactElement {
               <FormItem>
                 <FormLabel>
                   {t('form-wizard:elected_official.term_start')}
-                  <span className="ms-1 text-destructive" aria-hidden="true">*</span>
+                  <span className="ms-1 text-destructive" aria-hidden="true">
+                    *
+                  </span>
                 </FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    value={field.value ?? ''}
-                    type="date"
-                    className="min-h-11"
-                  />
+                <FormControl required>
+                  <Input {...field} value={field.value ?? ''} type="date" className="min-h-11" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -272,12 +266,7 @@ export function OfficeTermStep({ form }: OfficeTermStepProps): ReactElement {
               <FormItem>
                 <FormLabel>{t('form-wizard:elected_official.term_end')}</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    value={field.value ?? ''}
-                    type="date"
-                    className="min-h-11"
-                  />
+                  <Input {...field} value={field.value ?? ''} type="date" className="min-h-11" />
                 </FormControl>
                 <p className="text-xs text-muted-foreground text-start">
                   {t('form-wizard:elected_official.term_end_help')}

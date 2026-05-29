@@ -3,13 +3,7 @@ import { useTranslation } from 'react-i18next'
 import type { UseFormReturn } from 'react-hook-form'
 
 import { FormWizardStep } from '@/components/ui/form-wizard'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -66,7 +60,7 @@ export function EngagementDetailsStep({ form }: EngagementDetailsStepProps): Rea
                 onValueChange={field.onChange}
                 value={(field.value as string | undefined) ?? ''}
               >
-                <FormControl>
+                <FormControl required>
                   <SelectTrigger className="min-h-11">
                     <SelectValue placeholder={t('form-wizard:engagement.type_placeholder')} />
                   </SelectTrigger>
@@ -94,7 +88,7 @@ export function EngagementDetailsStep({ form }: EngagementDetailsStepProps): Rea
                 onValueChange={field.onChange}
                 value={(field.value as string | undefined) ?? ''}
               >
-                <FormControl>
+                <FormControl required>
                   <SelectTrigger className="min-h-11">
                     <SelectValue placeholder={t('form-wizard:engagement.category_placeholder')} />
                   </SelectTrigger>
@@ -120,7 +114,7 @@ export function EngagementDetailsStep({ form }: EngagementDetailsStepProps): Rea
           render={({ field }) => (
             <FormItem>
               <FormLabel>{t('form-wizard:engagement.start_date_label')} *</FormLabel>
-              <FormControl>
+              <FormControl required>
                 <Input {...field} type="date" className="min-h-11" required />
               </FormControl>
               <FormMessage />
@@ -133,7 +127,7 @@ export function EngagementDetailsStep({ form }: EngagementDetailsStepProps): Rea
           render={({ field }) => (
             <FormItem>
               <FormLabel>{t('form-wizard:engagement.end_date_label')} *</FormLabel>
-              <FormControl>
+              <FormControl required>
                 <Input {...field} type="date" className="min-h-11" required />
               </FormControl>
               <FormMessage />

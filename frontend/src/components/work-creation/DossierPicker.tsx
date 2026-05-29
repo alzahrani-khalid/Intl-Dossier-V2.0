@@ -72,6 +72,8 @@ export interface DossierPickerProps {
   onValuesChange?: (ids: string[], dossiers: DossierOption[]) => void
   /** Pre-selected dossier info for chip rendering (multi-select only) */
   selectedDossiers?: DossierOption[]
+  /** Marks the combobox as a required form control (sets aria-required) */
+  required?: boolean
 }
 
 /**
@@ -132,6 +134,7 @@ export function DossierPicker({
   values,
   onValuesChange,
   selectedDossiers,
+  required = false,
 }: DossierPickerProps) {
   const { t } = useTranslation('work-creation')
   const { isRTL } = useDirection()
@@ -285,7 +288,10 @@ export function DossierPicker({
                   type="button"
                   onClick={() => handleRemove(d.id)}
                   className="min-h-6 min-w-6 inline-flex items-center justify-center"
-                  aria-label={t('chip.remove', { name: chipName, defaultValue: `Remove ${chipName}` })}
+                  aria-label={t('chip.remove', {
+                    name: chipName,
+                    defaultValue: `Remove ${chipName}`,
+                  })}
                   disabled={disabled}
                 >
                   <X className="size-3" />
@@ -305,6 +311,7 @@ export function DossierPicker({
             role="combobox"
             aria-controls={listboxId}
             aria-expanded={open}
+            aria-required={required ? true : undefined}
             className={cn(
               'w-full min-h-11 justify-between font-normal',
               !selectedDossier && 'text-muted-foreground',
@@ -327,7 +334,7 @@ export function DossierPicker({
               value={searchQuery}
               onValueChange={setSearchQuery}
             />
-            <CommandList id={listboxId}>
+            <CommandList id={listboxId} aria-label={t('form.dossierResults', 'Dossier results')}>
               <CommandEmpty>
                 {isSearching ? (
                   t('form.searching', 'Searching...')
