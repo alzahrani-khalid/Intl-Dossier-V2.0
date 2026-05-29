@@ -71,7 +71,7 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
 
   return (
     <div className="space-y-4">
-      <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+      <div className="flex items-center justify-between">
         <h3 className="flex items-center gap-2 text-lg font-semibold">
           <AlertTriangle className="size-5" />
           {t('afterActions.risks.title')}
@@ -100,11 +100,11 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
           )}
         >
           <CardHeader>
-            <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+            <div className="flex items-center justify-between">
               <CardTitle className="text-base">
                 {t('afterActions.risks.item', { number: index + 1 })}
               </CardTitle>
-              <div className={cn('flex items-center gap-2', isRTL && 'flex-row-reverse')}>
+              <div className="flex items-center gap-2">
                 <Badge className={severityColors[risk.severity]}>
                   {t(`afterActions.risks.severities.${risk.severity}`)}
                 </Badge>

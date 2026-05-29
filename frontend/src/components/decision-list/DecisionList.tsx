@@ -10,7 +10,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Trash2, Plus, CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
-import { useDirection } from '@/hooks/useDirection'
 
 export interface Decision {
   id?: string
@@ -29,8 +28,7 @@ interface DecisionListProps {
 
 export function DecisionList({ decisions, onChange, readOnly = false }: DecisionListProps) {
   const { t } = useTranslation()
-  const { isRTL } = useDirection()
-const addDecision = () => {
+  const addDecision = () => {
     onChange([
       ...decisions,
       {
@@ -53,7 +51,7 @@ const addDecision = () => {
 
   return (
     <div className="space-y-4">
-      <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+      <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">{t('afterActions.decisions.title')}</h3>
         {!readOnly && (
           <Button type="button" variant="outline" size="sm" onClick={addDecision}>
@@ -70,11 +68,11 @@ const addDecision = () => {
       {decisions.map((decision, index) => (
         <Card key={index}>
           <CardHeader>
-            <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+            <div className="flex items-center justify-between">
               <CardTitle className="text-base">
                 {t('afterActions.decisions.item', { number: index + 1 })}
               </CardTitle>
-              <div className={cn('flex items-center gap-2', isRTL && 'flex-row-reverse')}>
+              <div className="flex items-center gap-2">
                 {decision.ai_confidence !== undefined && (
                   <Badge
                     variant={

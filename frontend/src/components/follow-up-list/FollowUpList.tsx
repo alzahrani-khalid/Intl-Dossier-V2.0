@@ -29,7 +29,7 @@ interface FollowUpListProps {
 export function FollowUpList({ followUpActions, onChange, readOnly = false }: FollowUpListProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const addFollowUp = () => {
+  const addFollowUp = () => {
     onChange([
       ...followUpActions,
       {
@@ -51,7 +51,7 @@ const addFollowUp = () => {
 
   return (
     <div className="space-y-4">
-      <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+      <div className="flex items-center justify-between">
         <h3 className="flex items-center gap-2 text-lg font-semibold">
           <ListTodo className="size-5" />
           {t('afterActions.followUps.title')}
@@ -71,7 +71,7 @@ const addFollowUp = () => {
       {followUpActions.map((action, index) => (
         <Card key={index} className={cn(action.completed && 'opacity-60')}>
           <CardHeader>
-            <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+            <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2 text-base">
                 <Checkbox
                   checked={action.completed}

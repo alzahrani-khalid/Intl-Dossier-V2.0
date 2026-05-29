@@ -59,7 +59,7 @@ export function CommitmentEditor({
 }: CommitmentEditorProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const addCommitment = () => {
+  const addCommitment = () => {
     onChange([
       ...commitments,
       {
@@ -90,7 +90,7 @@ const addCommitment = () => {
 
   return (
     <div className="space-y-4">
-      <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+      <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">{t('afterActions.commitments.title')}</h3>
         {!readOnly && (
           <Button type="button" variant="outline" size="sm" onClick={addCommitment}>
@@ -107,11 +107,11 @@ const addCommitment = () => {
       {commitments.map((commitment, index) => (
         <Card key={index}>
           <CardHeader>
-            <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+            <div className="flex items-center justify-between">
               <CardTitle className="text-base">
                 {t('afterActions.commitments.item', { number: index + 1 })}
               </CardTitle>
-              <div className={cn('flex items-center gap-2', isRTL && 'flex-row-reverse')}>
+              <div className="flex items-center gap-2">
                 {commitment.tracking_mode && (
                   <Badge variant="outline">
                     {t(`afterActions.commitments.tracking.${commitment.tracking_mode}`)}

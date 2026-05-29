@@ -16,7 +16,6 @@ import { RiskList, type Risk } from '../risk-list/RiskList'
 import { FollowUpList } from '../follow-up-list/FollowUpList'
 import { AttachmentUploader } from '../attachment-uploader/AttachmentUploader'
 import { AIExtractionButton } from '../ai-extraction-button/AIExtractionButton'
-import { useDirection } from '@/hooks/useDirection'
 
 interface FollowUpAction {
   id?: string
@@ -64,7 +63,6 @@ export function AfterActionForm({
   className,
 }: AfterActionFormProps) {
   const { t } = useTranslation()
-  const { isRTL } = useDirection()
   // Form state
   const [formData, setFormData] = useState<AfterActionFormData>({
     engagement_id: engagementId,
@@ -324,7 +322,7 @@ export function AfterActionForm({
       {!readOnly && (
         <Card>
           <CardContent className="pt-6">
-            <div className={cn('flex gap-4', isRTL && 'flex-row-reverse')}>
+            <div className="flex gap-4">
               <Button
                 type="submit"
                 disabled={saving || publishing || !isDirty}
