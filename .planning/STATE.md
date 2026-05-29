@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v6.4
 milestone_name: Stabilization & Carryover Sweep
 status: Awaiting next milestone
-last_updated: '2026-05-29T00:00:00Z'
-last_activity: 2026-05-29 — Quick task 260529-1s8 (data-entry bug fixes) on fix/data-entry-bugs
+last_updated: '2026-05-29T00:15:00Z'
+last_activity: 2026-05-29 — Quick task 260529-4af (PushOptInBanner test fix for PR 32) on fix/data-entry-bugs
 progress:
   total_phases: 5
   completed_phases: 5
@@ -30,9 +30,10 @@ Tag: `v6.4`. DesignV2 now lives on `main` with 8 enforced quality-gate contexts;
 
 ## Quick Tasks Completed
 
-| #          | Description                                           | Date       | Commit              | Directory                                                                   |
-| ---------- | ----------------------------------------------------- | ---------- | ------------------- | --------------------------------------------------------------------------- |
-| 260529-1s8 | Data-entry bug fixes (forms, validation, write paths) | 2026-05-29 | fix/data-entry-bugs | [260529-1s8-data-entry-bug-fixes](./quick/260529-1s8-data-entry-bug-fixes/) |
+| #          | Description                                                     | Date       | Commit              | Directory                                                                                                           |
+| ---------- | --------------------------------------------------------------- | ---------- | ------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| 260529-1s8 | Data-entry bug fixes (forms, validation, write paths)           | 2026-05-29 | fix/data-entry-bugs | [260529-1s8-data-entry-bug-fixes](./quick/260529-1s8-data-entry-bug-fixes/)                                         |
+| 260529-4af | Align PushOptInBanner test w/ update-based dismissal (PR 32 CI) | 2026-05-29 | cae43867            | [260529-4af-align-pushoptinbanner-test-with-update-b](./quick/260529-4af-align-pushoptinbanner-test-with-update-b/) |
 
 > On branch `fix/data-entry-bugs` (6 commits, not yet merged). Fixes broken
 > dossier/forum/working-group/engagement + intake submit paths, validation-message
