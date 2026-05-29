@@ -60,7 +60,9 @@
       "dropzone": "Drag and drop files here, or click to browse",
       "maxSize": "Maximum file size: 25MB",
       "maxTotal": "Maximum total size: 100MB",
-      "supportedFormats": "Supported formats: PDF, DOCX, XLSX, PNG, JPG"
+      "supportedFormats": "Supported formats: PDF, DOCX, XLSX, PNG, JPG",
+      "unavailable": "Attachment upload is not yet available.",
+      "uploading": "Uploading…"
     }
   },
   "slaPreview": {

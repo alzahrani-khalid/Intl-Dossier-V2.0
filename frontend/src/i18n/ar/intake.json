@@ -60,7 +60,9 @@
       "dropzone": "اسحب وأفلت الملفات هنا، أو انقر للتصفح",
       "maxSize": "الحد الأقصى لحجم الملف: 25 ميجابايت",
       "maxTotal": "الحد الأقصى للحجم الإجمالي: 100 ميجابايت",
-      "supportedFormats": "الصيغ المدعومة: PDF، DOCX، XLSX، PNG، JPG"
+      "supportedFormats": "الصيغ المدعومة: PDF، DOCX، XLSX، PNG، JPG",
+      "unavailable": "رفع المرفقات غير متاح بعد.",
+      "uploading": "جارٍ الرفع…"
     }
   },
   "slaPreview": {

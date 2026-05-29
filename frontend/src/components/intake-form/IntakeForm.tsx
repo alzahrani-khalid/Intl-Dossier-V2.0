@@ -7,7 +7,6 @@ import { useNavigate } from '@tanstack/react-router'
 import { CheckCircle2, Loader2 } from 'lucide-react'
 import { IntakeFormData } from '@/types/intake'
 import { TypeSpecificFields } from '../type-specific-fields/TypeSpecificFields'
-import { AttachmentUploader } from '../attachment-uploader/AttachmentUploader'
 import { useCreateTicket, useGetSLAPreview } from '@/hooks/useIntakeApi'
 import { DossierSelector, DossierContextBadge, type SelectedDossier } from '../dossier'
 import type { DossierType } from '@/types/relationship.types'
@@ -63,7 +62,6 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
   const { t } = useTranslation('intake')
   const { t: tDossier } = useTranslation('dossier-context')
   const navigate = useNavigate()
-  const [attachmentIds, setAttachmentIds] = useState<string[]>([])
   const [showSuccess, setShowSuccess] = useState(false)
   const [createdTicket, setCreatedTicket] = useState<{
     id: string
@@ -115,7 +113,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
     try {
       const payload = {
         ...data,
-        attachments: attachmentIds,
+        attachments: [],
       }
 
       const result = await createTicketMutation.mutateAsync(payload)
@@ -132,12 +130,6 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
     } catch (error) {
       console.error('Failed to create ticket:', error)
     }
-  }
-
-  // Handle attachment uploads
-  const handleAttachmentsChange = (newAttachmentIds: string[]) => {
-    setAttachmentIds(newAttachmentIds)
-    setValue('attachmentIds', newAttachmentIds)
   }
 
   return (
@@ -164,7 +156,6 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                 setShowSuccess(false)
                 setCreatedTicket(null)
                 reset()
-                setAttachmentIds([])
                 setSelectedDossiers([])
                 setDossierError('')
               }}
@@ -333,13 +324,15 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                 />
               )}
 
-              {/* Attachments */}
-              <AttachmentUploader
-                attachmentIds={attachmentIds}
-                onChange={handleAttachmentsChange}
-                maxFileSize={25 * 1024 * 1024} // 25MB
-                maxTotalSize={100 * 1024 * 1024} // 100MB
-              />
+              {/* Attachments - upload is not yet functional end-to-end (no ticket
+                  exists at create time, and the detail page has no upload affordance).
+                  Show an honest note instead of a dropzone that silently drops files.
+                  Tracked: .planning/todos/260530-followup-intake-attachment-upload.md */}
+              <div className="rounded-lg border border-border bg-muted/40 p-4">
+                <p className="text-sm text-muted-foreground">
+                  {t('form.attachments.unavailable', 'Attachment upload is not yet available.')}
+                </p>
+              </div>
 
               {/* SLA Preview */}
               {slaPreview && (
