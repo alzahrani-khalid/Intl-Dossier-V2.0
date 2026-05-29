@@ -30,6 +30,11 @@ interface FollowUpListProps {
 export function FollowUpList({ followUpActions, onChange, readOnly = false }: FollowUpListProps) {
   const { t, i18n } = useTranslation()
   const { isRTL } = useDirection()
+  // Follow-up target dates should be today or later. Compare against the start
+  // of the current day so today itself stays selectable (unlike commitments,
+  // which disable from the current instant).
+  const startOfToday = new Date()
+  startOfToday.setHours(0, 0, 0, 0)
   const addFollowUp = () => {
     onChange([
       ...followUpActions,
@@ -153,10 +158,14 @@ export function FollowUpList({ followUpActions, onChange, readOnly = false }: Fo
                       mode="single"
                       selected={action.target_date}
                       onSelect={(date) => updateFollowUp(index, 'target_date', date || undefined)}
+                      disabled={(date) => date < startOfToday}
                       initialFocus
                     />
                   </PopoverContent>
                 </Popover>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {t('afterActions.followUps.targetDateHelp')}
+                </p>
               </div>
             </div>
           </CardContent>

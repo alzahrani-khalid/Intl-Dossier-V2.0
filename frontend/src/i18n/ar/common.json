@@ -630,6 +630,7 @@
       "assignedPlaceholder": "اختر من المسؤول",
       "targetDate": "التاريخ المستهدف",
       "targetDatePlaceholder": "متى يجب إكمال هذا؟",
+      "targetDateHelp": "يجب أن يكون اليوم أو تاريخاً مستقبلياً.",
       "selectDate": "اختر التاريخ",
       "priority": "الأولوية",
       "delete": "حذف المتابعة",

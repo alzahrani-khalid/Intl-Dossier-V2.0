@@ -630,6 +630,7 @@
       "assignedPlaceholder": "Select who is responsible",
       "targetDate": "Target Date",
       "targetDatePlaceholder": "When should this be completed?",
+      "targetDateHelp": "Must be today or a future date.",
       "selectDate": "Select Date",
       "priority": "Priority",
       "delete": "Delete follow-up",
