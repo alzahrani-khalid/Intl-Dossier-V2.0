@@ -120,6 +120,9 @@ frontend/tests/e2e/.auth/
 # Generated knowledge graph output (graphify) — regenerable locally via `graphify update .`
 graphify-out/
 
+# Generated code-graph DB (codegraph) — regenerable tooling artifact, ~69MB
+.codegraph/
+
 # Build artifacts
 .pnpm-buildable-deps
 
