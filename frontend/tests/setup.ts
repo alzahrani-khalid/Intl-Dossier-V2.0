@@ -6,6 +6,91 @@ import { server } from './mocks/server'
 vi.stubEnv('VITE_SUPABASE_URL', 'http://localhost:54321')
 vi.stubEnv('VITE_SUPABASE_ANON_KEY', 'test-anon-key')
 
+// Node 22+ ships an experimental built-in `localStorage` global that is
+// `undefined` unless `--localstorage-file` is provided, and it shadows jsdom's
+// Web Storage implementation. When that happens every test that touches
+// localStorage (directly or via LanguageProvider) throws
+// "Cannot read properties of undefined (reading 'getItem')". Install a minimal
+// in-memory Storage shim only when the global is missing; environments that
+// already expose a working localStorage (e.g. CI) are left untouched.
+if (typeof globalThis.localStorage === 'undefined') {
+  const store = new Map<string, string>()
+
+  // Prefer jsdom's real `Storage` prototype so existing tests that spy on
+  // `Storage.prototype.setItem` (e.g. the density-migration shim) still
+  // intercept calls. Fall back to a plain object when no `Storage` class
+  // exists in the environment.
+  const StorageCtor = (globalThis as { Storage?: typeof Storage }).Storage
+  const hasStorageClass = typeof StorageCtor === 'function'
+  const proto = hasStorageClass ? StorageCtor!.prototype : Object.prototype
+
+  const memoryStorage = Object.create(proto) as Storage
+
+  // Define the storage methods on the *prototype* (when a real `Storage` class
+  // exists) rather than the instance, so `vi.spyOn(Storage.prototype, 'setItem')`
+  // intercepts calls exactly as it does against jsdom's native Storage in CI.
+  // When no Storage class is present, fall back to own-property methods.
+  const methodTarget = hasStorageClass ? proto : memoryStorage
+  Object.defineProperties(methodTarget, {
+    clear: {
+      configurable: true,
+      writable: true,
+      value(): void {
+        store.clear()
+      },
+    },
+    getItem: {
+      configurable: true,
+      writable: true,
+      value(key: string): string | null {
+        return store.has(key) ? store.get(key)! : null
+      },
+    },
+    key: {
+      configurable: true,
+      writable: true,
+      value(index: number): string | null {
+        return Array.from(store.keys())[index] ?? null
+      },
+    },
+    removeItem: {
+      configurable: true,
+      writable: true,
+      value(key: string): void {
+        store.delete(key)
+      },
+    },
+    setItem: {
+      configurable: true,
+      writable: true,
+      value(key: string, value: string): void {
+        store.set(key, String(value))
+      },
+    },
+  })
+
+  Object.defineProperty(memoryStorage, 'length', {
+    configurable: true,
+    get(): number {
+      return store.size
+    },
+  })
+
+  Object.defineProperty(globalThis, 'localStorage', {
+    configurable: true,
+    writable: true,
+    value: memoryStorage,
+  })
+
+  if (typeof window !== 'undefined' && typeof window.localStorage === 'undefined') {
+    Object.defineProperty(window, 'localStorage', {
+      configurable: true,
+      writable: true,
+      value: memoryStorage,
+    })
+  }
+}
+
 // jsdom polyfill: ResizeObserver (used by @radix-ui/react-use-size + signature-visuals)
 if (typeof ResizeObserver === 'undefined') {
   globalThis.ResizeObserver = class ResizeObserver {
@@ -62,6 +147,8 @@ vi.mock('react-i18next', async () => {
           'afterActions.ai.extractButton': 'AI Extract',
           'afterActions.commitments.add': 'Add Commitment',
           'afterActions.commitments.assignedTo': 'Assigned To',
+          'afterActions.commitments.delete': 'Remove commitment',
+          'afterActions.commitments.deleteConfirm': 'This will permanently remove this commitment.',
           'afterActions.commitments.contactEmail': 'Contact Email',
           'afterActions.commitments.contactName': 'Contact Name',
           'afterActions.commitments.description': 'Description',
@@ -94,6 +181,8 @@ vi.mock('react-i18next', async () => {
           'afterActions.commitments.tracking.manual': 'Manual',
           'afterActions.confidence': `${params?.value || 0}% confidence`,
           'afterActions.decisions.add': 'Add Decision',
+          'afterActions.decisions.delete': 'Remove decision',
+          'afterActions.decisions.deleteConfirm': 'This will permanently remove this decision.',
           'afterActions.decisions.decisionDate': 'Decision Date',
           'afterActions.decisions.decisionMaker': 'Decision Maker',
           'afterActions.decisions.decisionMakerPlaceholder': 'Enter decision maker name',
@@ -125,6 +214,7 @@ vi.mock('react-i18next', async () => {
           'afterActions.form.title': 'After-Action Record',
           'common.cancel': 'Cancel',
           'common.days': 'days',
+          'common.delete': 'Delete',
           'common.selectDate': 'Select date',
           'common.unknown': 'Unknown',
           'consistency.actions.accept': 'Accept Risk',

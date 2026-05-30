@@ -1,4 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
+import { cloneElement, isValidElement } from 'react'
+import type { ReactElement } from 'react'
 import { render, screen } from '@testing-library/react'
 import type { UseFormReturn } from 'react-hook-form'
 import type { EngagementFormData } from '../../schemas/engagement.schema'
@@ -21,7 +23,13 @@ vi.mock('@/components/ui/form-wizard', () => ({
 }))
 
 vi.mock('@/components/ui/form', () => ({
-  FormControl: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  FormControl: ({ children, required }: { children: React.ReactNode; required?: boolean }) =>
+    isValidElement(children)
+      ? cloneElement(
+          children as ReactElement<{ 'aria-required'?: boolean }>,
+          required === true ? { 'aria-required': true } : {},
+        )
+      : children,
   FormField: ({
     render,
   }: {
@@ -101,14 +109,17 @@ describe('EngagementDetailsStep', () => {
     })
   })
 
-  it('renders two required date inputs (start + end)', () => {
+  it('renders two date inputs (start + end) marked required via aria-required', () => {
     const form = createMockForm()
     render(<EngagementDetailsStep form={form} />)
 
+    // Wave 3 intentionally removed the HTML5 `required` attribute from the date
+    // inputs and validates via Zod + `aria-required` instead. Assert the
+    // accessibility contract rather than native HTML constraint validation.
     const dateInputs = document.querySelectorAll('input[type="date"]')
     expect(dateInputs.length).toBe(2)
     dateInputs.forEach((input) => {
-      expect((input as HTMLInputElement).required).toBe(true)
+      expect(input.getAttribute('aria-required')).toBe('true')
     })
   })
 

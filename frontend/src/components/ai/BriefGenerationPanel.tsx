@@ -51,7 +51,7 @@ export function BriefGenerationPanel({
 }: BriefGenerationPanelProps) {
   const { t, i18n } = useTranslation('ai-brief')
   const { isRTL } = useDirection()
-const [customPrompt, setCustomPrompt] = useState('')
+  const [customPrompt, setCustomPrompt] = useState('')
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [phase, setPhase] = useState<GenerationPhase>('idle')
 
@@ -61,6 +61,7 @@ const [customPrompt, setCustomPrompt] = useState('')
     background: '',
     recommendations: '',
   })
+  const [manualNotice, setManualNotice] = useState<string | null>(null)
 
   const { generate, brief, streamingContent, isGenerating, progress, error, cancel, retry, reset } =
     useGenerateBrief()
@@ -109,18 +110,26 @@ const [customPrompt, setCustomPrompt] = useState('')
     setCustomPrompt('')
     setShowAdvanced(false)
     setManualContent({ summary: '', background: '', recommendations: '' })
+    setManualNotice(null)
   }
 
   const handleSwitchToManual = () => {
     reset() // Clear error state
     setPhase('manual')
+    setManualNotice(null)
   }
 
-  const handleManualSubmit = () => {
-    // TODO: Implement manual brief submission
-    // For now, just show success message
-    console.warn('Manual brief submitted:', manualContent)
-    // In a real implementation, this would call an API to save the manual brief
+  const handleManualSubmit = (): void => {
+    // No create-brief endpoint exists yet; do not pretend to save. The manual
+    // content is intentionally NOT persisted — surfacing an honest notice instead
+    // of silently dropping the user's text.
+    // Tracked: .planning/todos/260530-followup-manual-brief-endpoint.md
+    setManualNotice(
+      t(
+        'fallback.notAvailable',
+        "Saving a manual brief isn't available yet — your text has not been saved.",
+      ),
+    )
   }
 
   const getPhaseLabel = () => {
@@ -216,7 +225,12 @@ const [customPrompt, setCustomPrompt] = useState('')
 
         {/* Streaming Content Preview with shimmer effect */}
         {isGenerating && (
-          <div className="bg-muted/50 rounded-lg p-4 max-h-64 overflow-y-auto border">
+          <div
+            role="status"
+            aria-live="polite"
+            aria-label={t('streamingPreview', 'Brief generation progress')}
+            className="bg-muted/50 rounded-lg p-4 max-h-64 overflow-y-auto border"
+          >
             {streamingContent ? (
               <pre className="text-sm whitespace-pre-wrap font-sans leading-relaxed">
                 {streamingContent}
@@ -426,6 +440,14 @@ const [customPrompt, setCustomPrompt] = useState('')
                   rows={3}
                 />
               </div>
+
+              {/* Honest notice - manual save is not available yet */}
+              {manualNotice && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{manualNotice}</AlertDescription>
+                </Alert>
+              )}
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-2">

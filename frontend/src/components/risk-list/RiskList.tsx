@@ -12,9 +12,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Trash2, Plus, AlertTriangle } from 'lucide-react'
+import { Plus, AlertTriangle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { ConfirmRemoveButton } from '@/components/ui/confirm-remove-button'
 
 export interface Risk {
   id?: string
@@ -71,7 +72,7 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
 
   return (
     <div className="space-y-4">
-      <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+      <div className="flex items-center justify-between">
         <h3 className="flex items-center gap-2 text-lg font-semibold">
           <AlertTriangle className="size-5" />
           {t('afterActions.risks.title')}
@@ -100,11 +101,11 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
           )}
         >
           <CardHeader>
-            <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+            <div className="flex items-center justify-between">
               <CardTitle className="text-base">
                 {t('afterActions.risks.item', { number: index + 1 })}
               </CardTitle>
-              <div className={cn('flex items-center gap-2', isRTL && 'flex-row-reverse')}>
+              <div className="flex items-center gap-2">
                 <Badge className={severityColors[risk.severity]}>
                   {t(`afterActions.risks.severities.${risk.severity}`)}
                 </Badge>
@@ -122,9 +123,13 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
                   </Badge>
                 )}
                 {!readOnly && (
-                  <Button type="button" variant="ghost" size="sm" onClick={() => removeRisk(index)}>
-                    <Trash2 className="size-4 text-destructive" />
-                  </Button>
+                  <ConfirmRemoveButton
+                    onConfirm={() => removeRisk(index)}
+                    title={t('afterActions.risks.delete')}
+                    description={t('afterActions.risks.deleteConfirm')}
+                    confirmLabel={t('common.delete')}
+                    cancelLabel={t('common.cancel')}
+                  />
                 )}
               </div>
             </div>

@@ -7,10 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Trash2, Plus, CalendarIcon } from 'lucide-react'
-import { format } from 'date-fns'
+import { Plus, CalendarIcon } from 'lucide-react'
+import { formatDayFirst } from '@/lib/format-date'
 import { cn } from '@/lib/utils'
-import { useDirection } from '@/hooks/useDirection'
+import { ConfirmRemoveButton } from '@/components/ui/confirm-remove-button'
 
 export interface Decision {
   id?: string
@@ -28,9 +28,8 @@ interface DecisionListProps {
 }
 
 export function DecisionList({ decisions, onChange, readOnly = false }: DecisionListProps) {
-  const { t } = useTranslation()
-  const { isRTL } = useDirection()
-const addDecision = () => {
+  const { t, i18n } = useTranslation()
+  const addDecision = () => {
     onChange([
       ...decisions,
       {
@@ -53,7 +52,7 @@ const addDecision = () => {
 
   return (
     <div className="space-y-4">
-      <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+      <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">{t('afterActions.decisions.title')}</h3>
         {!readOnly && (
           <Button type="button" variant="outline" size="sm" onClick={addDecision}>
@@ -70,11 +69,11 @@ const addDecision = () => {
       {decisions.map((decision, index) => (
         <Card key={index}>
           <CardHeader>
-            <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+            <div className="flex items-center justify-between">
               <CardTitle className="text-base">
                 {t('afterActions.decisions.item', { number: index + 1 })}
               </CardTitle>
-              <div className={cn('flex items-center gap-2', isRTL && 'flex-row-reverse')}>
+              <div className="flex items-center gap-2">
                 {decision.ai_confidence !== undefined && (
                   <Badge
                     variant={
@@ -91,14 +90,13 @@ const addDecision = () => {
                   </Badge>
                 )}
                 {!readOnly && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeDecision(index)}
-                  >
-                    <Trash2 className="size-4 text-destructive" />
-                  </Button>
+                  <ConfirmRemoveButton
+                    onConfirm={() => removeDecision(index)}
+                    title={t('afterActions.decisions.delete')}
+                    description={t('afterActions.decisions.deleteConfirm')}
+                    confirmLabel={t('common.delete')}
+                    cancelLabel={t('common.cancel')}
+                  />
                 )}
               </div>
             </div>
@@ -117,6 +115,7 @@ const addDecision = () => {
                 maxLength={2000}
                 disabled={readOnly}
                 required
+                aria-required="true"
               />
               <p className="mt-1 text-xs text-muted-foreground">
                 {decision.description.length}/2000
@@ -150,6 +149,7 @@ const addDecision = () => {
                   maxLength={200}
                   disabled={readOnly}
                   required
+                  aria-required="true"
                 />
               </div>
 
@@ -164,10 +164,11 @@ const addDecision = () => {
                         !decision.decision_date && 'text-muted-foreground',
                       )}
                       disabled={readOnly}
+                      aria-required="true"
                     >
                       <CalendarIcon className="me-2 size-4 opacity-50" />
                       {decision.decision_date
-                        ? format(decision.decision_date, 'PPP')
+                        ? formatDayFirst(decision.decision_date, i18n.language)
                         : t('common.selectDate')}
                     </Button>
                   </PopoverTrigger>

@@ -525,7 +525,8 @@
       "info": "Supported formats: TXT, PDF, DOCX (max 10MB)",
       "invalidFileType": "Invalid file type. Only TXT, PDF, and DOCX files are supported",
       "fileTooLarge": "File too large. Maximum size is 10MB",
-      "extractionFailed": "Failed to extract data from document"
+      "extractionFailed": "Failed to extract data from document",
+      "extractionSummary": "Added {{added}}, skipped {{skipped}} duplicates"
     },
     "decisions": {
       "title": "Decisions",
@@ -629,6 +630,7 @@
       "assignedPlaceholder": "Select who is responsible",
       "targetDate": "Target Date",
       "targetDatePlaceholder": "When should this be completed?",
+      "targetDateHelp": "Must be today or a future date.",
       "selectDate": "Select Date",
       "priority": "Priority",
       "delete": "Delete follow-up",

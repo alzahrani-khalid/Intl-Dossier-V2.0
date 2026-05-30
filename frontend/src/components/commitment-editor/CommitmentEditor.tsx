@@ -15,10 +15,11 @@ import {
 } from '@/components/ui/select'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Trash2, Plus, CalendarIcon, User, Mail } from 'lucide-react'
-import { format } from 'date-fns'
+import { Plus, CalendarIcon, User, Mail } from 'lucide-react'
+import { formatDayFirst } from '@/lib/format-date'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { ConfirmRemoveButton } from '@/components/ui/confirm-remove-button'
 
 export interface Commitment {
   id?: string
@@ -57,9 +58,9 @@ export function CommitmentEditor({
   readOnly = false,
   availableUsers = [],
 }: CommitmentEditorProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { isRTL } = useDirection()
-const addCommitment = () => {
+  const addCommitment = () => {
     onChange([
       ...commitments,
       {
@@ -90,7 +91,7 @@ const addCommitment = () => {
 
   return (
     <div className="space-y-4">
-      <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+      <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">{t('afterActions.commitments.title')}</h3>
         {!readOnly && (
           <Button type="button" variant="outline" size="sm" onClick={addCommitment}>
@@ -107,11 +108,11 @@ const addCommitment = () => {
       {commitments.map((commitment, index) => (
         <Card key={index}>
           <CardHeader>
-            <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+            <div className="flex items-center justify-between">
               <CardTitle className="text-base">
                 {t('afterActions.commitments.item', { number: index + 1 })}
               </CardTitle>
-              <div className={cn('flex items-center gap-2', isRTL && 'flex-row-reverse')}>
+              <div className="flex items-center gap-2">
                 {commitment.tracking_mode && (
                   <Badge variant="outline">
                     {t(`afterActions.commitments.tracking.${commitment.tracking_mode}`)}
@@ -133,14 +134,13 @@ const addCommitment = () => {
                   </Badge>
                 )}
                 {!readOnly && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeCommitment(index)}
-                  >
-                    <Trash2 className="size-4 text-destructive" />
-                  </Button>
+                  <ConfirmRemoveButton
+                    onConfirm={() => removeCommitment(index)}
+                    title={t('afterActions.commitments.delete')}
+                    description={t('afterActions.commitments.deleteConfirm')}
+                    confirmLabel={t('common.delete')}
+                    cancelLabel={t('common.cancel')}
+                  />
                 )}
               </div>
             </div>
@@ -159,6 +159,7 @@ const addCommitment = () => {
                 maxLength={2000}
                 disabled={readOnly}
                 required
+                aria-required="true"
               />
             </div>
 
@@ -199,7 +200,7 @@ const addCommitment = () => {
                   onValueChange={(value) => updateCommitment(index, 'owner_user_id', value)}
                   disabled={readOnly}
                 >
-                  <SelectTrigger id={`owner-user-${index}`}>
+                  <SelectTrigger id={`owner-user-${index}`} aria-required="true">
                     <SelectValue placeholder={t('afterActions.commitments.selectUser')} />
                   </SelectTrigger>
                   <SelectContent>
@@ -225,6 +226,7 @@ const addCommitment = () => {
                     placeholder={t('afterActions.commitments.emailPlaceholder')}
                     disabled={readOnly}
                     required
+                    aria-required="true"
                   />
                 </div>
                 <div>
@@ -239,6 +241,7 @@ const addCommitment = () => {
                     maxLength={200}
                     disabled={readOnly}
                     required
+                    aria-required="true"
                   />
                 </div>
                 <div>
@@ -269,7 +272,7 @@ const addCommitment = () => {
                   onValueChange={(value) => updateCommitment(index, 'priority', value)}
                   disabled={readOnly}
                 >
-                  <SelectTrigger id={`priority-${index}`}>
+                  <SelectTrigger id={`priority-${index}`} aria-required="true">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -320,10 +323,11 @@ const addCommitment = () => {
                         isRTL && 'justify-end text-end',
                       )}
                       disabled={readOnly}
+                      aria-required="true"
                     >
                       <CalendarIcon className={cn('h-4 w-4 opacity-50', isRTL ? 'ms-2' : 'me-2')} />
                       {commitment.due_date
-                        ? format(commitment.due_date, 'PPP')
+                        ? formatDayFirst(commitment.due_date, i18n.language)
                         : t('common.selectDate')}
                     </Button>
                   </PopoverTrigger>

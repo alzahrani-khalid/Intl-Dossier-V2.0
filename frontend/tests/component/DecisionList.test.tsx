@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
-import { renderWithProviders as render, screen, fireEvent } from '@tests/utils/render'
+import { renderWithProviders as render, screen, fireEvent, within } from '@tests/utils/render'
 import userEvent from '@testing-library/user-event'
-import { DecisionList, Decision } from '@/components/after-action/DecisionList'
+import { DecisionList, Decision } from '@/components/decision-list/DecisionList'
 
 // i18n mock is global in tests/setup.ts
 
@@ -182,16 +182,21 @@ describe('DecisionList', () => {
   })
 
   describe('Remove Decision', () => {
-    it('removes decision when delete button clicked', async () => {
+    // Removal now goes through a confirm dialog (ConfirmRemoveButton → AlertDialog):
+    // a remove is two steps (click trash → confirm in dialog), not one click.
+    const confirmRemoval = async (user: ReturnType<typeof userEvent.setup>) => {
+      const dialog = await screen.findByRole('alertdialog')
+      const confirmButton = within(dialog).getByRole('button', { name: 'Delete' })
+      await user.click(confirmButton)
+    }
+
+    it('removes decision when delete button confirmed', async () => {
       const user = userEvent.setup()
       render(<DecisionList decisions={mockDecisions} onChange={mockOnChange} />)
 
-      const deleteButtons = screen.getAllByRole('button', { name: '' })
-      const firstDeleteButton = deleteButtons.find((btn) => btn.querySelector('.text-destructive'))
-
-      if (firstDeleteButton) {
-        await user.click(firstDeleteButton)
-      }
+      const removeButtons = screen.getAllByRole('button', { name: 'Remove decision' })
+      await user.click(removeButtons[0]!)
+      await confirmRemoval(user)
 
       expect(mockOnChange).toHaveBeenCalledWith([mockDecisions[1]])
     })
@@ -210,14 +215,9 @@ describe('DecisionList', () => {
 
       render(<DecisionList decisions={threeDecisions} onChange={mockOnChange} />)
 
-      const deleteButtons = screen.getAllByRole('button', { name: '' })
-      const secondDeleteButton = deleteButtons.filter((btn) =>
-        btn.querySelector('.text-destructive'),
-      )[1]
-
-      if (secondDeleteButton) {
-        await user.click(secondDeleteButton)
-      }
+      const removeButtons = screen.getAllByRole('button', { name: 'Remove decision' })
+      await user.click(removeButtons[1]!)
+      await confirmRemoval(user)
 
       expect(mockOnChange).toHaveBeenCalledWith([threeDecisions[0], threeDecisions[2]])
     })
@@ -233,9 +233,7 @@ describe('DecisionList', () => {
     it('hides delete buttons in read-only mode', () => {
       render(<DecisionList decisions={mockDecisions} onChange={mockOnChange} readOnly />)
 
-      const deleteButtons = screen
-        .queryAllByRole('button', { name: '' })
-        .filter((btn) => btn.querySelector('.text-destructive'))
+      const deleteButtons = screen.queryAllByRole('button', { name: 'Remove decision' })
 
       expect(deleteButtons).toHaveLength(0)
     })

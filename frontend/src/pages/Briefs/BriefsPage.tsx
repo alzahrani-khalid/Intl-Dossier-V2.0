@@ -119,6 +119,7 @@ export function BriefsPage(): React.JSX.Element {
   const [showGenerateDialog, setShowGenerateDialog] = useState(false)
   const [briefViewerOpen, setBriefViewerOpen] = useState(false)
   const [generatedBrief, setGeneratedBrief] = useState<BriefContent | null>(null)
+  const [briefFetchError, setBriefFetchError] = useState<string | null>(null)
 
   // Dossier picker for the generation modal (preserved from prior implementation).
   const { data: dossiers } = useQuery({
@@ -234,13 +235,18 @@ export function BriefsPage(): React.JSX.Element {
         const response = await fetch(`${AI_BRIEFS_API_BASE}/ai/briefs/${brief.id}`, {
           headers: { Authorization: `Bearer ${session.access_token}` },
         })
-        if (response.ok) {
-          const data = await response.json()
-          setGeneratedBrief(data.data as BriefContent)
-          setBriefViewerOpen(true)
+        if (!response.ok) {
+          throw new Error(`Brief fetch failed with status ${response.status}`)
         }
+        const data = await response.json()
+        setGeneratedBrief(data.data as BriefContent)
+        setBriefFetchError(null)
+        setBriefViewerOpen(true)
       } catch (err) {
         console.error('Failed to fetch brief:', err)
+        const message = t('error.fetch')
+        setBriefFetchError(message)
+        toast({ title: message, variant: 'destructive' })
       }
       return
     }
@@ -292,6 +298,21 @@ export function BriefsPage(): React.JSX.Element {
         <div className="card" role="alert">
           <Icon name="alert" size={16} style={{ color: 'var(--danger)' }} />
           <span className="ms-2">{t('error.list')}</span>
+        </div>
+      )}
+
+      {briefFetchError != null && (
+        <div className="card flex items-center" role="alert">
+          <Icon name="alert" size={16} style={{ color: 'var(--danger)' }} />
+          <span className="ms-2 flex-1">{briefFetchError}</span>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            style={{ minHeight: 44, minWidth: 44 }}
+            onClick={() => setBriefFetchError(null)}
+          >
+            {t('error.dismiss')}
+          </button>
         </div>
       )}
 

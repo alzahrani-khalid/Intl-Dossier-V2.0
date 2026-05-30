@@ -16,7 +16,7 @@ import { RiskList, type Risk } from '../risk-list/RiskList'
 import { FollowUpList } from '../follow-up-list/FollowUpList'
 import { AttachmentUploader } from '../attachment-uploader/AttachmentUploader'
 import { AIExtractionButton } from '../ai-extraction-button/AIExtractionButton'
-import { useDirection } from '@/hooks/useDirection'
+import { useToast } from '@/hooks/useToast'
 
 interface FollowUpAction {
   id?: string
@@ -50,6 +50,8 @@ interface AfterActionFormProps {
   canPublish?: boolean
   availableUsers?: Array<{ id: string; name: string }>
   className?: string
+  /** Notified whenever the form's unsaved-changes (dirty) state changes. */
+  onDirtyChange?: (dirty: boolean) => void
 }
 
 export function AfterActionForm({
@@ -62,9 +64,10 @@ export function AfterActionForm({
   canPublish = false,
   availableUsers = [],
   className,
+  onDirtyChange,
 }: AfterActionFormProps) {
   const { t } = useTranslation()
-  const { isRTL } = useDirection()
+  const { toast } = useToast()
   // Form state
   const [formData, setFormData] = useState<AfterActionFormData>({
     engagement_id: engagementId,
@@ -101,6 +104,30 @@ export function AfterActionForm({
     if (!initialData) return
     setIsDirty(true)
   }, [formData, initialData])
+
+  // Surface an unsaved-changes signal to the parent. Unlike the edit-mode
+  // `isDirty` above (which gates the save button), this reflects whether the
+  // form currently holds any user-entered content, so create-mode pages can
+  // warn before navigation/unload.
+  useEffect(() => {
+    if (!onDirtyChange) return
+    const hasContent =
+      attendeesInput.trim().length > 0 ||
+      (formData.notes ?? '').trim().length > 0 ||
+      formData.decisions.length > 0 ||
+      formData.commitments.length > 0 ||
+      formData.risks.length > 0 ||
+      formData.follow_ups.length > 0
+    onDirtyChange(hasContent)
+  }, [
+    attendeesInput,
+    formData.notes,
+    formData.decisions,
+    formData.commitments,
+    formData.risks,
+    formData.follow_ups,
+    onDirtyChange,
+  ])
 
   const handleSaveDraft = async () => {
     setSaving(true)
@@ -143,29 +170,77 @@ export function AfterActionForm({
     }
   }
 
+  // Stable identity for an extracted/existing row: prefer its id, otherwise a
+  // normalized (lowercased, whitespace-collapsed) description so re-extractions
+  // of the same source do not duplicate semantically identical rows.
+  const rowKey = (row: { id?: string; description?: string }): string => {
+    if (row.id != null && row.id !== '') return `id:${row.id}`
+    return `desc:${(row.description ?? '').trim().toLowerCase().replace(/\s+/g, ' ')}`
+  }
+
+  // Append only rows whose key is not already present (in existing rows or
+  // earlier in this same batch). Returns the merged list plus add/skip counts.
+  const mergeUnique = <T extends { id?: string; description?: string }>(
+    existing: T[],
+    incoming: T[],
+  ): { merged: T[]; added: number; skipped: number } => {
+    const seen = new Set(existing.map(rowKey))
+    const merged = [...existing]
+    let added = 0
+    let skipped = 0
+    for (const row of incoming) {
+      const key = rowKey(row)
+      if (seen.has(key)) {
+        skipped += 1
+        continue
+      }
+      seen.add(key)
+      merged.push(row)
+      added += 1
+    }
+    return { merged, added, skipped }
+  }
+
   const handleAIExtraction = (extractedData: {
     decisions?: Decision[]
     commitments?: Commitment[]
     risks?: Risk[]
     follow_ups?: FollowUpAction[]
-  }) => {
-    // Merge extracted data with existing form data
-    setFormData((prev) => ({
-      ...prev,
-      decisions: [
-        ...prev.decisions,
-        ...(extractedData.decisions?.filter((d) => (d.ai_confidence || 0) >= 0.5) || []),
-      ],
-      commitments: [
-        ...prev.commitments,
-        ...(extractedData.commitments?.filter((c) => (c.ai_confidence || 0) >= 0.5) || []),
-      ],
-      risks: [
-        ...prev.risks,
-        ...(extractedData.risks?.filter((r) => (r.ai_confidence || 0) >= 0.5) || []),
-      ],
-      follow_ups: [...prev.follow_ups, ...(extractedData.follow_ups || [])],
-    }))
+  }): void => {
+    const newDecisions = extractedData.decisions?.filter((d) => (d.ai_confidence || 0) >= 0.5) ?? []
+    const newCommitments =
+      extractedData.commitments?.filter((c) => (c.ai_confidence || 0) >= 0.5) ?? []
+    const newRisks = extractedData.risks?.filter((r) => (r.ai_confidence || 0) >= 0.5) ?? []
+    const newFollowUps = extractedData.follow_ups ?? []
+
+    let totalAdded = 0
+    let totalSkipped = 0
+
+    setFormData((prev) => {
+      const decisions = mergeUnique(prev.decisions, newDecisions)
+      const commitments = mergeUnique(prev.commitments, newCommitments)
+      const risks = mergeUnique(prev.risks, newRisks)
+      const followUps = mergeUnique(prev.follow_ups, newFollowUps)
+
+      totalAdded = decisions.added + commitments.added + risks.added + followUps.added
+      totalSkipped = decisions.skipped + commitments.skipped + risks.skipped + followUps.skipped
+
+      return {
+        ...prev,
+        decisions: decisions.merged,
+        commitments: commitments.merged,
+        risks: risks.merged,
+        follow_ups: followUps.merged,
+      }
+    })
+
+    toast({
+      title: t('afterActions.ai.extractionSummary', {
+        added: totalAdded,
+        skipped: totalSkipped,
+      }),
+      variant: totalAdded > 0 ? 'success' : 'default',
+    })
   }
 
   const isFormValid = () => {
@@ -225,6 +300,7 @@ export function AfterActionForm({
               placeholder={t('afterActions.form.attendeesPlaceholder')}
               disabled={readOnly}
               required
+              aria-required="true"
             />
             <p className="text-xs text-muted-foreground">
               {t('afterActions.form.attendeesHelp')} ({formData.attendees.length}/100)
@@ -324,7 +400,7 @@ export function AfterActionForm({
       {!readOnly && (
         <Card>
           <CardContent className="pt-6">
-            <div className={cn('flex gap-4', isRTL && 'flex-row-reverse')}>
+            <div className="flex gap-4">
               <Button
                 type="submit"
                 disabled={saving || publishing || !isDirty}

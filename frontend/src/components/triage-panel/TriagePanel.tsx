@@ -39,6 +39,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
   const [isOverriding, setIsOverriding] = useState(false)
   const [overrideValues, setOverrideValues] = useState<Partial<TriageSuggestion>>({})
   const [overrideReason, setOverrideReason] = useState('')
+  const [reasonError, setReasonError] = useState('')
 
   // Fetch AI triage suggestions using the hook
   const {
@@ -78,9 +79,10 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
 
   const handleApplyOverride = () => {
     if (!overrideReason.trim()) {
-      alert(t('triage.overrideReasonRequired', 'Please provide a reason for the override'))
+      setReasonError(t('triage.overrideReasonRequired', 'Please provide a reason for the override'))
       return
     }
+    setReasonError('')
 
     applyTriageMutation.mutate(
       {
@@ -219,12 +221,26 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
               <label className="mb-1 block text-sm font-medium text-ink">
                 {t('triage.reason', 'Reason')}
               </label>
+              {reasonError !== '' && (
+                <div
+                  role="alert"
+                  className="mb-2 flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive"
+                >
+                  <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  <span>{reasonError}</span>
+                </div>
+              )}
               <textarea
                 value={overrideReason}
-                onChange={(e) => setOverrideReason(e.target.value)}
+                onChange={(e) => {
+                  setOverrideReason(e.target.value)
+                  if (reasonError !== '') setReasonError('')
+                }}
                 placeholder={t('triage.reasonPlaceholder', 'Explain your triage decision')}
                 rows={3}
-                className="w-full rounded-md border-line bg-surface text-ink"
+                aria-required="true"
+                aria-invalid={reasonError !== ''}
+                className="w-full rounded-md border-line bg-surface text-ink aria-[invalid=true]:border-destructive"
               />
             </div>
 
@@ -249,7 +265,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
       <div className="rounded-lg border border-info/30 bg-info/10 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {/* CLAUDE.md no-emoji rule: 🤖 replaced with Bot lucide icon. */}
+            {/* CLAUDE.md no-emoji rule: robot emoji replaced with Bot lucide icon. */}
             <Bot className="h-5 w-5 text-info" aria-hidden="true" />
             <div>
               <h3 className="font-semibold text-info">
@@ -407,17 +423,31 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
 
             <div className="md:col-span-2">
               <label className="mb-1 block text-sm font-medium text-ink">
-                {t('triage.overrideReason', 'Reason for Override')} *
+                {t('triage.overrideReasonLabel', 'Reason for Override *')}
               </label>
+              {reasonError !== '' && (
+                <div
+                  role="alert"
+                  className="mb-2 flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive"
+                >
+                  <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  <span>{reasonError}</span>
+                </div>
+              )}
               <textarea
                 value={overrideReason}
-                onChange={(e) => setOverrideReason(e.target.value)}
+                onChange={(e) => {
+                  setOverrideReason(e.target.value)
+                  if (reasonError !== '') setReasonError('')
+                }}
                 placeholder={t(
                   'triage.overrideReasonPlaceholder',
                   'Explain why you are overriding the AI suggestions',
                 )}
                 rows={3}
-                className="w-full rounded-md border-line bg-surface text-ink"
+                aria-required="true"
+                aria-invalid={reasonError !== ''}
+                className="w-full rounded-md border-line bg-surface text-ink aria-[invalid=true]:border-destructive"
               />
             </div>
           </div>
@@ -437,6 +467,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 setIsOverriding(false)
                 setOverrideValues({})
                 setOverrideReason('')
+                setReasonError('')
               }}
               className="rounded-md border border-line px-4 py-2 text-ink hover:bg-muted"
             >

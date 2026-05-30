@@ -1,5 +1,6 @@
 {
   "title": "إنشاء موجز ذكي",
+  "streamingPreview": "تقدم إنشاء الموجز",
   "description": "إنشاء موجز شامل باستخدام تحليل الذكاء الاصطناعي",
   "generate": "إنشاء الموجز",
   "generating": "جاري الإنشاء...",
@@ -77,6 +78,7 @@
     "backgroundPlaceholder": "أدخل معلومات الخلفية...",
     "recommendations": "التوصيات",
     "recommendationsPlaceholder": "أدخل توصياتك...",
-    "submit": "إرسال الموجز"
+    "submit": "إرسال الموجز",
+    "notAvailable": "حفظ الموجز اليدوي غير متاح بعد — لم يتم حفظ النص."
   }
 }

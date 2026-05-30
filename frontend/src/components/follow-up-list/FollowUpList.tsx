@@ -7,10 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Trash2, Plus, CalendarIcon, ListTodo } from 'lucide-react'
-import { format } from 'date-fns'
+import { Plus, CalendarIcon, ListTodo } from 'lucide-react'
+import { formatDayFirst } from '@/lib/format-date'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { ConfirmRemoveButton } from '@/components/ui/confirm-remove-button'
 
 export interface FollowUpAction {
   id?: string
@@ -27,9 +28,14 @@ interface FollowUpListProps {
 }
 
 export function FollowUpList({ followUpActions, onChange, readOnly = false }: FollowUpListProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { isRTL } = useDirection()
-const addFollowUp = () => {
+  // Follow-up target dates should be today or later. Compare against the start
+  // of the current day so today itself stays selectable (unlike commitments,
+  // which disable from the current instant).
+  const startOfToday = new Date()
+  startOfToday.setHours(0, 0, 0, 0)
+  const addFollowUp = () => {
     onChange([
       ...followUpActions,
       {
@@ -51,7 +57,7 @@ const addFollowUp = () => {
 
   return (
     <div className="space-y-4">
-      <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+      <div className="flex items-center justify-between">
         <h3 className="flex items-center gap-2 text-lg font-semibold">
           <ListTodo className="size-5" />
           {t('afterActions.followUps.title')}
@@ -71,7 +77,7 @@ const addFollowUp = () => {
       {followUpActions.map((action, index) => (
         <Card key={index} className={cn(action.completed && 'opacity-60')}>
           <CardHeader>
-            <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
+            <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2 text-base">
                 <Checkbox
                   checked={action.completed}
@@ -81,14 +87,13 @@ const addFollowUp = () => {
                 {t('afterActions.followUps.item', { number: index + 1 })}
               </CardTitle>
               {!readOnly && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => removeFollowUp(index)}
-                >
-                  <Trash2 className="size-4 text-destructive" />
-                </Button>
+                <ConfirmRemoveButton
+                  onConfirm={() => removeFollowUp(index)}
+                  title={t('afterActions.followUps.delete')}
+                  description={t('afterActions.followUps.deleteConfirm')}
+                  confirmLabel={t('common.delete')}
+                  cancelLabel={t('common.cancel')}
+                />
               )}
             </div>
           </CardHeader>
@@ -144,7 +149,7 @@ const addFollowUp = () => {
                     >
                       <CalendarIcon className={cn('h-4 w-4 opacity-50', isRTL ? 'ms-2' : 'me-2')} />
                       {action.target_date
-                        ? format(action.target_date, 'PPP')
+                        ? formatDayFirst(action.target_date, i18n.language)
                         : t('afterActions.followUps.selectDate')}
                     </Button>
                   </PopoverTrigger>
@@ -153,10 +158,14 @@ const addFollowUp = () => {
                       mode="single"
                       selected={action.target_date}
                       onSelect={(date) => updateFollowUp(index, 'target_date', date || undefined)}
+                      disabled={(date) => date < startOfToday}
                       initialFocus
                     />
                   </PopoverContent>
                 </Popover>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {t('afterActions.followUps.targetDateHelp')}
+                </p>
               </div>
             </div>
           </CardContent>

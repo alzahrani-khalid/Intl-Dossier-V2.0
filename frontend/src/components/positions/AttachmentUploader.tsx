@@ -318,60 +318,63 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
           </h3>
 
           {/* Existing Attachments */}
-          {existingAttachments.map((attachment) => (
-            <div
-              key={attachment.id}
-              className="flex items-center justify-between p-3 bg-muted dark:bg-muted rounded-md border border-line dark:border-line"
-            >
-              <div className="flex items-center space-x-3 flex-1 min-w-0">
-                {/* File Icon */}
-                <div className="flex-shrink-0 text-2xl" aria-hidden="true">
-                  {getFileIcon(attachment.file_type)}
-                </div>
+          {existingAttachments.map((attachment) => {
+            const FileIcon = getFileIcon(attachment.file_type)
+            return (
+              <div
+                key={attachment.id}
+                className="flex items-center justify-between p-3 bg-muted dark:bg-muted rounded-md border border-line dark:border-line"
+              >
+                <div className="flex items-center space-x-3 flex-1 min-w-0">
+                  {/* File Icon */}
+                  <div className="flex-shrink-0" aria-hidden="true">
+                    <FileIcon className="h-6 w-6 text-muted-foreground" />
+                  </div>
 
-                {/* File Info */}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground dark:text-muted-foreground truncate">
-                    {attachment.file_name}
-                  </p>
-                  <div className="flex items-center space-x-2 text-xs text-muted-foreground dark:text-muted-foreground">
-                    <span>{formatFileSize(attachment.file_size)}</span>
-                    <span>•</span>
-                    <span>
-                      {new Date(attachment.created_at).toLocaleDateString(undefined, {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </span>
+                  {/* File Info */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground dark:text-muted-foreground truncate">
+                      {attachment.file_name}
+                    </p>
+                    <div className="flex items-center space-x-2 text-xs text-muted-foreground dark:text-muted-foreground">
+                      <span>{formatFileSize(attachment.file_size)}</span>
+                      <span>•</span>
+                      <span>
+                        {new Date(attachment.created_at).toLocaleDateString(undefined, {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Delete Button */}
-              <button
-                type="button"
-                onClick={() => handleDeleteExisting(attachment.id)}
-                disabled={disabled || deleteMutation.isPending}
-                className={`ms-3 flex-shrink-0 p-1 rounded ${
-                  disabled || deleteMutation.isPending
-                    ? 'text-muted-foreground dark:text-muted-foreground cursor-not-allowed'
-                    : 'text-muted-foreground hover:text-danger dark:text-muted-foreground dark:hover:text-danger transition-colors'
-                }`}
-                aria-label={t('positions:attachments.deleteButton', {
-                  fileName: attachment.file_name,
-                })}
-              >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fillRule="evenodd"
-                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            </div>
-          ))}
+                {/* Delete Button */}
+                <button
+                  type="button"
+                  onClick={() => handleDeleteExisting(attachment.id)}
+                  disabled={disabled || deleteMutation.isPending}
+                  className={`ms-3 flex-shrink-0 p-1 rounded ${
+                    disabled || deleteMutation.isPending
+                      ? 'text-muted-foreground dark:text-muted-foreground cursor-not-allowed'
+                      : 'text-muted-foreground hover:text-danger dark:text-muted-foreground dark:hover:text-danger transition-colors'
+                  }`}
+                  aria-label={t('positions:attachments.deleteButton', {
+                    fileName: attachment.file_name,
+                  })}
+                >
+                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+            )
+          })}
 
           {/* Uploading Files */}
           {uploadingFiles.map((attachmentFile) => (

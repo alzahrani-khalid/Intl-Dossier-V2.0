@@ -3,23 +3,43 @@
   "subtitle": "Compile customized briefing materials for meetings and travel",
   "newBriefingBook": "New Briefing Book",
   "myBriefingBooks": "My Briefing Books",
-  "templates": "Templates",
+  "templates": {
+    "title": "Templates",
+    "subtitle": "Save time with pre-configured templates",
+    "useTemplate": "Use Template",
+    "saveAsTemplate": "Save as Template",
+    "defaultTemplates": {
+      "executive": {
+        "name": "Executive Briefing",
+        "description": "High-level overview with key contacts and recent engagements"
+      },
+      "comprehensive": {
+        "name": "Comprehensive Report",
+        "description": "Full dossier with all sections and documents"
+      },
+      "quickReference": {
+        "name": "Quick Reference",
+        "description": "Compact format with essential information only"
+      },
+      "travelBrief": {
+        "name": "Travel Brief",
+        "description": "Key contacts, positions, and upcoming commitments"
+      }
+    }
+  },
   "recentBooks": "Recent Books",
-
   "builder": {
     "title": "Build Briefing Book",
     "step1": "Select Entities",
     "step2": "Configure Sections",
     "step3": "Set Options",
     "step4": "Review & Generate",
-
     "configuration": {
       "title": "Briefing Book Title",
       "titlePlaceholder": "Enter briefing book title",
       "description": "Description (Optional)",
       "descriptionPlaceholder": "Purpose of this briefing book"
     },
-
     "entities": {
       "title": "Select Entities",
       "subtitle": "Choose countries, organizations, forums, or themes to include",
@@ -35,7 +55,6 @@
       "selectAll": "Select All",
       "clearAll": "Clear All"
     },
-
     "dateRange": {
       "title": "Date Range",
       "subtitle": "Filter content by date range",
@@ -49,14 +68,12 @@
         "custom": "Custom Range"
       }
     },
-
     "topics": {
       "title": "Topics",
       "subtitle": "Filter content by topic categories",
       "selectAll": "Select All",
       "clearAll": "Clear All"
     },
-
     "sections": {
       "title": "Sections",
       "subtitle": "Configure which sections to include",
@@ -80,7 +97,6 @@
       "addCustom": "Add Custom Section",
       "customContent": "Custom Content"
     },
-
     "options": {
       "title": "Export Options",
       "format": {
@@ -125,7 +141,6 @@
         "footerPlaceholder": "Custom footer text (optional)"
       }
     },
-
     "review": {
       "title": "Review & Generate",
       "summary": "Summary",
@@ -143,9 +158,12 @@
       "coverPage": "Cover page",
       "executiveSummary": "Executive summary",
       "bilingualContent": "Bilingual content"
-    }
+    },
+    "entitiesLabel": "Entities:",
+    "sectionsLabel": "Sections:",
+    "noMatchingEntities": "No matching entities found",
+    "noEntitiesAvailable": "No entities available"
   },
-
   "generation": {
     "title": "Generating Briefing Book",
     "subtitle": "This may take a few minutes depending on the content",
@@ -164,7 +182,6 @@
     "cancel": "Cancel",
     "cancelConfirm": "Are you sure you want to cancel the generation?"
   },
-
   "preview": {
     "title": "Preview",
     "download": "Download",
@@ -176,7 +193,6 @@
     "fitPage": "Fit Page",
     "print": "Print"
   },
-
   "list": {
     "title": "My Briefing Books",
     "empty": "No briefing books yet",
@@ -209,34 +225,10 @@
       "ready": "Ready",
       "generating": "Generating",
       "failed": "Failed"
-    }
+    },
+    "pageCount_one": "{{count}} page",
+    "pageCount_other": "{{count}} pages"
   },
-
-  "templates": {
-    "title": "Templates",
-    "subtitle": "Save time with pre-configured templates",
-    "useTemplate": "Use Template",
-    "saveAsTemplate": "Save as Template",
-    "defaultTemplates": {
-      "executive": {
-        "name": "Executive Briefing",
-        "description": "High-level overview with key contacts and recent engagements"
-      },
-      "comprehensive": {
-        "name": "Comprehensive Report",
-        "description": "Full dossier with all sections and documents"
-      },
-      "quickReference": {
-        "name": "Quick Reference",
-        "description": "Compact format with essential information only"
-      },
-      "travelBrief": {
-        "name": "Travel Brief",
-        "description": "Key contacts, positions, and upcoming commitments"
-      }
-    }
-  },
-
   "topics": {
     "statistics": "Statistics",
     "economy": "Economy",
@@ -249,7 +241,6 @@
     "cooperation": "International Cooperation",
     "other": "Other"
   },
-
   "actions": {
     "generate": "Generate Briefing Book",
     "generating": "Generating...",
@@ -263,7 +254,6 @@
     "duplicate": "Duplicate",
     "share": "Share"
   },
-
   "success": {
     "created": "Briefing book created successfully",
     "generated": "Briefing book generated successfully",
@@ -271,7 +261,6 @@
     "deleted": "Briefing book deleted",
     "templateSaved": "Template saved successfully"
   },
-
   "errors": {
     "noEntities": "Please select at least one entity",
     "noSections": "Please enable at least one section",
@@ -281,11 +270,11 @@
     "loadFailed": "Failed to load briefing books",
     "templateSaveFailed": "Failed to save template"
   },
-
   "confirmDelete": {
     "title": "Delete Briefing Book",
     "message": "Are you sure you want to delete this briefing book? This action cannot be undone.",
     "confirm": "Delete",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "deleting": "Deleting…"
   }
 }

@@ -62,6 +62,7 @@ import {
   type BriefType,
 } from '@/hooks/useEngagementBriefs'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirst, formatTime } from '@/lib/format-date'
 
 interface EngagementBriefsSectionProps {
   engagementId: string
@@ -138,15 +139,10 @@ export function EngagementBriefsSection({ engagementId }: EngagementBriefsSectio
     }
   }
 
-  // Format date
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
+  // Format date as day-first per the IntelDossier content rules: `Tue 28 Apr 14:30 GST`.
+  const formatDate = (dateStr: string): string => {
+    const locale = isRTL ? 'ar' : 'en'
+    return `${formatDayFirst(dateStr, locale)} ${formatTime(dateStr, locale)}`
   }
 
   return (

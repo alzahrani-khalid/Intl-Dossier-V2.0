@@ -241,7 +241,15 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
                       </span>
                       <span className="uppercase">{book.config.format}</span>
                       <span>{formatDate(book.createdAt)}</span>
-                      {book.pageCount && <span>{book.pageCount} pages</span>}
+                      {book.pageCount != null && book.pageCount > 0 && (
+                        <span>
+                          {t('list.pageCount', {
+                            count: book.pageCount,
+                            defaultValue_one: '{{count}} page',
+                            defaultValue_other: '{{count}} pages',
+                          })}
+                        </span>
+                      )}
                     </div>
 
                     {/* Entity badges */}
@@ -368,7 +376,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
               {isDeleting ? (
                 <>
                   <Loader2 className="h-4 w-4 me-2 animate-spin" />
-                  Deleting...
+                  {t('confirmDelete.deleting', 'Deleting…')}
                 </>
               ) : (
                 t('confirmDelete.confirm')

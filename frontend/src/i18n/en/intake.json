@@ -60,7 +60,13 @@
       "dropzone": "Drag and drop files here, or click to browse",
       "maxSize": "Maximum file size: 25MB",
       "maxTotal": "Maximum total size: 100MB",
-      "supportedFormats": "Supported formats: PDF, DOCX, XLSX, PNG, JPG"
+      "supportedFormats": "Supported formats: PDF, DOCX, XLSX, PNG, JPG",
+      "unavailable": "Attachment upload is not yet available.",
+      "uploading": "Uploading…",
+      "maxFilesAllowed": "Maximum {{count}} files allowed",
+      "fileCount_one": "{{count}} file",
+      "fileCount_other": "{{count}} files",
+      "totalSize": "Total: {{used}} / {{max}}"
     }
   },
   "slaPreview": {
@@ -73,6 +79,7 @@
   },
   "actions": {
     "submit": "Submit Request",
+    "submitRequest": "Submit request",
     "cancel": "Cancel",
     "saveDraft": "Save as Draft",
     "reset": "Reset Form",
@@ -154,7 +161,8 @@
           "amendment": "Amendment",
           "renewal": "Renewal",
           "termination": "Termination"
-        }
+        },
+        "placeholder": "Select action type..."
       },
       "deadline": {
         "label": "Deadline",
@@ -172,7 +180,8 @@
           "short": "Short-term (1-3 years)",
           "medium": "Medium-term (3-5 years)",
           "long": "Long-term (5+ years)"
-        }
+        },
+        "placeholder": "Select time horizon..."
       },
       "stakeholders": {
         "label": "Key Stakeholders",
@@ -253,5 +262,9 @@
       "max_attempts": "Maximum attempts reached. Please wait before trying again.",
       "network_error": "Network error. Please check your connection and try again."
     }
+  },
+  "triage": {
+    "overrideReasonLabel": "Reason for Override *",
+    "overrideReasonRequired": "Please provide a reason for the override"
   }
 }

@@ -1,5 +1,6 @@
 {
   "title": "Generate AI Brief",
+  "streamingPreview": "Brief generation progress",
   "description": "Generate a comprehensive brief using AI analysis",
   "generate": "Generate Brief",
   "generating": "Generating...",
@@ -77,6 +78,7 @@
     "backgroundPlaceholder": "Enter background information...",
     "recommendations": "Recommendations",
     "recommendationsPlaceholder": "Enter your recommendations...",
-    "submit": "Submit Brief"
+    "submit": "Submit Brief",
+    "notAvailable": "Saving a manual brief isn't available yet — your text has not been saved."
   }
 }

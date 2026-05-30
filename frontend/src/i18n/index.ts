@@ -24,6 +24,8 @@ import enCommitments from './en/commitments.json'
 import arCommitments from './ar/commitments.json'
 import enWorkCreation from './en/work-creation.json'
 import arWorkCreation from './ar/work-creation.json'
+import enBriefingBooks from './en/briefing-books.json'
+import arBriefingBooks from './ar/briefing-books.json'
 import enUnifiedKanban from './en/unified-kanban.json'
 import arUnifiedKanban from './ar/unified-kanban.json'
 import enPersons from './en/persons.json'
@@ -233,6 +235,7 @@ const resources = {
     contacts: enContacts,
     commitments: enCommitments,
     'work-creation': enWorkCreation,
+    'briefing-books': enBriefingBooks,
     'unified-kanban': enUnifiedKanban,
     persons: enPersons,
     'working-groups': enWorkingGroups,
@@ -343,6 +346,7 @@ const resources = {
     contacts: arContacts,
     commitments: arCommitments,
     'work-creation': arWorkCreation,
+    'briefing-books': arBriefingBooks,
     'unified-kanban': arUnifiedKanban,
     persons: arPersons,
     'working-groups': arWorkingGroups,

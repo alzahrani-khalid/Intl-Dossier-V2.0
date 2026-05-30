@@ -18,6 +18,7 @@ import { IntakePromotionDialog } from '@/components/engagements/IntakePromotionD
 import { ConvertedTicketBanner } from '@/components/engagements/ConvertedTicketBanner'
 import { usePromoteIntake } from '@/domains/engagements/hooks/useLifecycle'
 import type { IntakePromotionRequest } from '@/types/lifecycle.types'
+import { Paperclip } from 'lucide-react'
 
 // Lazy load EntityLinkManager for performance (Task T049)
 const EntityLinkManager = lazy(() => import('../components/entity-links/EntityLinkManager'))
@@ -279,7 +280,7 @@ export function TicketDetail() {
                         className="flex items-center justify-between rounded-lg bg-muted/50 p-3"
                       >
                         <div className="flex items-center gap-3">
-                          <span className="text-2xl">📎</span>
+                          <Paperclip className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
                           <div>
                             <p className="text-sm font-medium text-foreground">
                               {attachment.file_name}

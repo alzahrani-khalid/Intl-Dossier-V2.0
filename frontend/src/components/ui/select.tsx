@@ -32,7 +32,7 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        'id-select-trigger flex w-fit items-center justify-between gap-2 whitespace-nowrap rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface)] px-3 py-2 text-[13px] text-[var(--ink)]',
+        'id-select-trigger flex w-fit items-center justify-between gap-2 whitespace-nowrap rounded-sm border border-[var(--line)] bg-[var(--surface)] px-3 py-2 text-[13px] text-[var(--ink)]',
         'outline-none focus-visible:border-[var(--accent)] focus-visible:ring-0',
         'aria-invalid:border-[var(--danger)]',
         'disabled:cursor-not-allowed disabled:opacity-50',
@@ -105,7 +105,7 @@ function SelectContent({
         ref={ref}
         data-slot="select-content"
         className={cn(
-          'relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-[var(--radius)] border border-[var(--line)] bg-[var(--surface-raised)] text-[var(--ink)] shadow-[var(--shadow)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+          'relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded border border-[var(--line)] bg-[var(--surface-raised)] text-[var(--ink)] shadow-[var(--shadow)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
           position === 'popper' &&
             'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
           className,
@@ -159,7 +159,7 @@ function SelectItem({
       ref={ref}
       data-slot="select-item"
       className={cn(
-        'relative flex w-full cursor-default select-none items-center rounded-[var(--radius-sm)] py-1.5 ps-8 pe-2 text-[13px] outline-hidden focus:bg-[var(--line-soft)] focus:text-[var(--ink)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 ps-8 pe-2 text-[13px] outline-hidden focus:bg-[var(--line-soft)] focus:text-[var(--ink)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className,
       )}
       {...props}
