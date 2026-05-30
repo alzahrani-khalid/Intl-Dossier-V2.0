@@ -2,26 +2,36 @@
  * Engagement Briefs Edge Function
  * Feature: engagement-brief-linking
  *
- * Handles AI-generated briefs for engagement dossiers with automatic context gathering.
- * Briefs pull recent interactions, positions, and commitments from related entities.
+ * Manual brief management for engagement dossiers. The `engagement_briefs`
+ * object is a VIEW (UNION of `briefs` + `ai_briefs` filtered by
+ * engagement_dossier_id), so:
+ *   - list/context read it via SECURITY DEFINER RPCs;
+ *   - a manual brief is INSERTed into the underlying `briefs` table (with
+ *     engagement_dossier_id set) and surfaces in the view as a classic brief;
+ *   - unlink clears briefs/ai_briefs.engagement_dossier_id via the existing RPC.
+ *
+ * Briefs are composed deterministically from the engagement's real context —
+ * participants, positions, commitments, agenda — with NO external AI dependency.
  *
  * Endpoints:
- * - GET  /engagement-briefs/:engagementId - List briefs for an engagement
- * - POST /engagement-briefs/:engagementId/generate - Generate new brief with AI
- * - POST /engagement-briefs/:engagementId/link/:briefId - Link existing brief
- * - DELETE /engagement-briefs/:engagementId/link/:briefId - Unlink brief
- * - GET  /engagement-briefs/:engagementId/context - Get context for brief generation
+ * - GET    /engagement-briefs/:engagementId             - List briefs for an engagement
+ * - GET    /engagement-briefs/:engagementId/context     - Context for brief composition
+ * - POST   /engagement-briefs/:engagementId/generate    - Create a manual brief from context
+ * - POST   /engagement-briefs/:engagementId/link/:briefId   - Link an existing brief
+ * - DELETE /engagement-briefs/:engagementId/link/:briefId   - Unlink a brief
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
-import {
-  createAIInteractionLogger,
-  extractClientInfo,
-  type AIInteractionType,
-  type AIContentType,
-} from '../_shared/ai-interaction-logger.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+// CORS headers are inlined (rather than importing ../_shared/cors.ts) so the
+// function deploys as a single self-contained module. Mirrors the shared
+// wildcard policy used by sibling functions.
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+};
 
 interface GenerateBriefRequest {
   custom_prompt?: string;
@@ -34,29 +44,46 @@ interface LinkBriefRequest {
   brief_type: 'legacy' | 'ai';
 }
 
+// Engagement row returned by the access-verification query.
+interface EngagementRow {
+  id: string;
+  engagement_type: string;
+  engagement_status: string;
+  dossier: { id: string; name_en: string; name_ar: string; status?: string };
+}
+
+// Best-effort shape of the get_engagement_brief_context payload. Every field is
+// optional so brief composition never throws on a missing key.
+interface BriefContext {
+  engagement?: { name_en?: string; name_ar?: string; objectives_en?: string; objectives_ar?: string };
+  participants?: Array<{ name_en?: string; name_ar?: string; role?: string }>;
+  agenda?: Array<{ title_en?: string; title_ar?: string }>;
+  positions?: Array<{ title_en?: string; title_ar?: string; stance?: string }>;
+  commitments?: Array<{ title_en?: string; title_ar?: string; status?: string }>;
+  recent_interactions?: Array<{ event_title_en?: string; event_title_ar?: string; event_date?: string }>;
+  host_country?: { name_en?: string; name_ar?: string };
+  host_organization?: { name_en?: string; name_ar?: string };
+}
+
+interface ManualBrief {
+  title_en: string;
+  title_ar: string;
+  summary_en: string;
+  summary_ar: string;
+  content_en: string;
+  content_ar: string;
+}
+
 // Bilingual error response helper
-function errorResponse(code: string, messageEn: string, messageAr: string, status: number) {
+function errorResponse(code: string, messageEn: string, messageAr: string, status: number): Response {
   return new Response(
-    JSON.stringify({
-      error: {
-        code,
-        message_en: messageEn,
-        message_ar: messageAr,
-      },
-    }),
-    {
-      status,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    }
+    JSON.stringify({ error: { code, message_en: messageEn, message_ar: messageAr } }),
+    { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
   );
 }
 
 // Parse URL path to extract engagement ID and action
-function parseUrl(url: URL): {
-  engagementId: string | null;
-  action: string | null;
-  briefId: string | null;
-} {
+function parseUrl(url: URL): { engagementId: string | null; action: string | null; briefId: string | null } {
   const pathParts = url.pathname.split('/').filter(Boolean);
   // Path: /engagement-briefs/:engagementId[/action[/:briefId]]
   const engagementIndex = pathParts.indexOf('engagement-briefs');
@@ -82,30 +109,26 @@ serve(async (req) => {
     // Get auth token
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      return errorResponse(
-        'UNAUTHORIZED',
-        'Missing authorization header',
-        'رأس التفويض مفقود',
-        401
-      );
+      return errorResponse('UNAUTHORIZED', 'Missing authorization header', 'رأس التفويض مفقود', 401);
     }
+    // Pass the JWT explicitly to getUser so validation does not depend on the
+    // client library threading the global Authorization header (a bare
+    // getUser() under older supabase-js pins rejected tokens that the @2 build
+    // accepts — the bug already fixed in sibling functions).
+    const token = authHeader.replace('Bearer ', '');
 
-    // Create Supabase client with user context
+    // Create Supabase client with user context (RLS applies)
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      {
-        global: {
-          headers: { Authorization: authHeader },
-        },
-      }
+      { global: { headers: { Authorization: authHeader } } },
     );
 
     // Get current user
     const {
       data: { user },
       error: userError,
-    } = await supabaseClient.auth.getUser();
+    } = await supabaseClient.auth.getUser(token);
 
     if (userError || !user) {
       return errorResponse('UNAUTHORIZED', 'Invalid user session', 'جلسة مستخدم غير صالحة', 401);
@@ -119,7 +142,11 @@ serve(async (req) => {
       return errorResponse('MISSING_ID', 'Engagement ID is required', 'معرف الارتباط مطلوب', 400);
     }
 
-    // Verify engagement exists
+    // Verify engagement exists / the user can access it (RLS-scoped read).
+    // The dossiers embed is pinned to the shared-PK FK (engagement_dossiers.id ->
+    // dossiers.id); engagement_dossiers also has host_country_id / host_organization_id
+    // / parent_forum_id FKs to dossiers, so an un-pinned `dossiers!inner` embed is
+    // ambiguous (PostgREST PGRST201) and would 404 every request.
     const { data: engagement, error: engagementError } = await supabaseClient
       .from('engagement_dossiers')
       .select(
@@ -127,13 +154,13 @@ serve(async (req) => {
         id,
         engagement_type,
         engagement_status,
-        dossier:dossiers!inner(
+        dossier:dossiers!engagement_dossiers_id_fkey(
           id,
           name_en,
           name_ar,
           status
         )
-      `
+      `,
       )
       .eq('id', engagementId)
       .single();
@@ -143,7 +170,7 @@ serve(async (req) => {
         'NOT_FOUND',
         'Engagement not found or access denied',
         'الارتباط غير موجود أو الوصول مرفوض',
-        404
+        404,
       );
     }
 
@@ -157,7 +184,14 @@ serve(async (req) => {
 
       case 'POST':
         if (action === 'generate') {
-          return handleGenerateBrief(req, supabaseClient, user, engagementId, engagement);
+          return handleCreateManualBrief(
+            req,
+            supabaseClient,
+            user,
+            token,
+            engagementId,
+            engagement as unknown as EngagementRow,
+          );
         }
         if (action === 'link' && briefId) {
           return handleLinkBrief(req, supabaseClient, engagementId, briefId);
@@ -171,39 +205,62 @@ serve(async (req) => {
         return errorResponse('INVALID_ACTION', 'Invalid action', 'إجراء غير صالح', 400);
 
       default:
-        return errorResponse(
-          'METHOD_NOT_ALLOWED',
-          'Method not allowed',
-          'الطريقة غير مسموح بها',
-          405
-        );
+        return errorResponse('METHOD_NOT_ALLOWED', 'Method not allowed', 'الطريقة غير مسموح بها', 405);
     }
   } catch (error) {
     console.error('Unexpected error:', error);
-    return errorResponse(
-      'INTERNAL_ERROR',
-      'An unexpected error occurred',
-      'حدث خطأ غير متوقع',
-      500
-    );
+    return errorResponse('INTERNAL_ERROR', 'An unexpected error occurred', 'حدث خطأ غير متوقع', 500);
   }
 });
 
+// Service-role client for privileged writes (used after the user + engagement
+// access has already been verified with the RLS-scoped user client above).
+function getServiceClient(): ReturnType<typeof createClient> {
+  return createClient(
+    Deno.env.get('SUPABASE_URL') ?? '',
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+  );
+}
+
+// The org/tenant is carried by the access-token `org_id` claim (briefs RLS keys
+// on `organization_id = auth.jwt() ->> 'org_id'`); it is not stored on users or
+// dossiers. Decode it from the JWT, falling back to user.app_metadata.
+function decodeOrgId(token: string, user: { app_metadata?: Record<string, unknown> }): string | null {
+  const keys = ['org_id', 'organization_id', 'tenant_id'];
+  try {
+    const part = token.split('.')[1];
+    if (part) {
+      const b64 = part.replace(/-/g, '+').replace(/_/g, '/');
+      const padded = b64 + '='.repeat((4 - (b64.length % 4)) % 4);
+      const claims = JSON.parse(atob(padded)) as Record<string, unknown>;
+      for (const k of keys) {
+        if (typeof claims[k] === 'string') return claims[k] as string;
+      }
+    }
+  } catch (_) {
+    // fall through to app_metadata
+  }
+  const md = user.app_metadata ?? {};
+  for (const k of keys) {
+    if (typeof md[k] === 'string') return md[k] as string;
+  }
+  return null;
+}
+
 /**
  * GET /engagement-briefs/:engagementId
- * List all briefs linked to an engagement
+ * List all briefs linked to an engagement.
  */
 async function handleListBriefs(
   supabase: ReturnType<typeof createClient>,
   engagementId: string,
-  url: URL
-) {
+  url: URL,
+): Promise<Response> {
   const briefType = url.searchParams.get('type'); // 'all', 'legacy', 'ai'
-  const status = url.searchParams.get('status'); // 'completed', 'generating', etc.
+  const status = url.searchParams.get('status');
   const limit = parseInt(url.searchParams.get('limit') || '20');
   const offset = parseInt(url.searchParams.get('offset') || '0');
 
-  // Use the RPC function for efficient querying
   const { data: briefs, error } = await supabase.rpc('get_engagement_briefs', {
     p_engagement_id: engagementId,
   });
@@ -213,57 +270,43 @@ async function handleListBriefs(
     return errorResponse('FETCH_ERROR', 'Failed to fetch briefs', 'فشل في جلب الموجزات', 500);
   }
 
-  // Apply filters
   let filteredBriefs = briefs || [];
 
   if (briefType && briefType !== 'all') {
-    filteredBriefs = filteredBriefs.filter(
-      (b: { brief_type: string }) => b.brief_type === briefType
-    );
+    filteredBriefs = filteredBriefs.filter((b: { brief_type: string }) => b.brief_type === briefType);
   }
 
   if (status) {
     filteredBriefs = filteredBriefs.filter((b: { status: string }) => b.status === status);
   }
 
-  // Apply pagination
   const total = filteredBriefs.length;
   const paginatedBriefs = filteredBriefs.slice(offset, offset + limit);
 
   return new Response(
     JSON.stringify({
       data: paginatedBriefs,
-      pagination: {
-        total,
-        limit,
-        offset,
-        has_more: offset + limit < total,
-      },
+      pagination: { total, limit, offset, has_more: offset + limit < total },
     }),
-    {
-      status: 200,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    }
+    { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
   );
 }
 
 /**
  * GET /engagement-briefs/:engagementId/context
- * Get context data for brief generation
+ * Get context data for brief composition.
  */
-async function handleGetContext(supabase: ReturnType<typeof createClient>, engagementId: string) {
+async function handleGetContext(
+  supabase: ReturnType<typeof createClient>,
+  engagementId: string,
+): Promise<Response> {
   const { data: context, error } = await supabase.rpc('get_engagement_brief_context', {
     p_engagement_id: engagementId,
   });
 
   if (error) {
     console.error('Error fetching context:', error);
-    return errorResponse(
-      'FETCH_ERROR',
-      'Failed to fetch brief context',
-      'فشل في جلب سياق الموجز',
-      500
-    );
+    return errorResponse('FETCH_ERROR', 'Failed to fetch brief context', 'فشل في جلب سياق الموجز', 500);
   }
 
   return new Response(JSON.stringify(context), {
@@ -274,233 +317,101 @@ async function handleGetContext(supabase: ReturnType<typeof createClient>, engag
 
 /**
  * POST /engagement-briefs/:engagementId/generate
- * Generate a new AI brief for the engagement
+ * Compose a manual brief from the engagement's real context (no AI) and persist
+ * it to the underlying `briefs` table so the engagement_briefs view surfaces it.
  */
-async function handleGenerateBrief(
+async function handleCreateManualBrief(
   req: Request,
   supabase: ReturnType<typeof createClient>,
-  user: { id: string },
+  user: { id: string; app_metadata?: Record<string, unknown> },
+  token: string,
   engagementId: string,
-  engagement: {
-    id: string;
-    engagement_type: string;
-    engagement_status: string;
-    dossier: { id: string; name_en: string; name_ar: string };
-  }
-) {
-  // Parse request body
+  engagement: EngagementRow,
+): Promise<Response> {
   const body: GenerateBriefRequest = await req.json().catch(() => ({}));
-  const language = body.language || 'en';
+  const lang: 'en' | 'ar' = body.language === 'ar' ? 'ar' : 'en';
 
-  // Get user's organization
-  const { data: userProfile } = await supabase
-    .from('users')
-    .select('organization_id')
-    .eq('id', user.id)
-    .single();
-
-  if (!userProfile?.organization_id) {
-    return errorResponse('NO_ORG', 'User has no organization', 'المستخدم ليس لديه منظمة', 400);
+  // Gather real engagement context (best effort — the brief still composes from
+  // the engagement name alone if the RPC returns nothing).
+  let context: BriefContext = {};
+  const { data: ctx, error: ctxError } = await supabase.rpc('get_engagement_brief_context', {
+    p_engagement_id: engagementId,
+  });
+  if (!ctxError && ctx) {
+    context = ctx as BriefContext;
   }
 
-  // Get engagement context
-  const { data: context, error: contextError } = await supabase.rpc(
-    'get_engagement_brief_context',
-    {
-      p_engagement_id: engagementId,
-    }
-  );
+  const nameEn = engagement?.dossier?.name_en || 'Engagement';
+  const nameAr = engagement?.dossier?.name_ar || engagement?.dossier?.name_en || 'الارتباط';
+  const brief = buildManualBrief(nameEn, nameAr, context, body.custom_prompt);
 
-  if (contextError) {
-    console.error('Error fetching context:', contextError);
+  const admin = getServiceClient();
+
+  // briefs.tenant_id is NOT NULL and briefs RLS keys on organization_id = the
+  // JWT 'org_id' claim; neither users nor dossiers carry it. Read it from the
+  // access token (we already verified the user and engagement access above, and
+  // write with the service-role client).
+  const orgId = decodeOrgId(token, user);
+  if (!orgId) {
     return errorResponse(
-      'CONTEXT_ERROR',
-      'Failed to gather engagement context',
-      'فشل في جمع سياق الارتباط',
-      500
+      'NO_ORG',
+      'Could not determine your organization from the session',
+      'تعذّر تحديد منظمتك من الجلسة',
+      400,
     );
   }
+  const tenantId = orgId;
+  const organizationId = orgId;
 
-  // Check for AI service
-  const anythingLlmUrl = Deno.env.get('ANYTHINGLLM_URL');
-  const anythingLlmKey = Deno.env.get('ANYTHINGLLM_API_KEY');
+  const title = lang === 'ar' ? brief.title_ar : brief.title_en;
+  const summary = lang === 'ar' ? brief.summary_ar : brief.summary_en;
 
-  // Initialize AI logger
-  const aiLogger = createAIInteractionLogger('engagement-briefs');
-  const clientInfo = extractClientInfo(req);
-  let interactionId: string | undefined;
+  // Insert into `briefs` (the legacy/classic brief table the view unions). status
+  // is left to its default ('draft'); is_deleted defaults false. The view exposes
+  // this row as brief_type='legacy', source='legacy'.
+  const insertPayload: Record<string, unknown> = {
+    type: 'engagement',
+    purpose: 'Manual engagement brief',
+    title,
+    summary,
+    content: { format: 'markdown', en: brief.content_en, ar: brief.content_ar },
+    created_by: user.id,
+    last_modified_by: user.id,
+    tenant_id: tenantId,
+    organization_id: organizationId,
+    engagement_dossier_id: engagementId,
+  };
 
-  if (anythingLlmUrl && anythingLlmKey) {
-    try {
-      // Build comprehensive prompt
-      const prompt = buildBriefPrompt(engagement, context, body.custom_prompt, language);
+  const { data: inserted, error: insertError } = await admin
+    .from('briefs')
+    .insert(insertPayload)
+    .select('id, title, summary, status, engagement_dossier_id, created_at')
+    .single();
 
-      // Log AI interaction start
-      try {
-        const result = await aiLogger.startInteraction({
-          organizationId: userProfile.organization_id,
-          userId: user.id,
-          interactionType: 'generation' as AIInteractionType,
-          contentType: 'brief' as AIContentType,
-          modelProvider: 'ollama',
-          modelName: 'llama2',
-          userPrompt: prompt,
-          targetEntityType: 'engagement',
-          targetEntityId: engagementId,
-          contextSources: [
-            {
-              type: 'engagement_context',
-              id: engagementId,
-              snippet: `Participants: ${context.participants?.length || 0}, Positions: ${context.positions?.length || 0}`,
-            },
-          ],
-          dataClassification: 'internal',
-          requestIp: clientInfo.ip,
-          userAgent: clientInfo.userAgent,
-        });
-        interactionId = result.interactionId;
-      } catch (logError) {
-        console.warn('Failed to log AI interaction start:', logError);
-      }
-
-      const startTime = Date.now();
-
-      // Call AI with timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 90000); // 90s timeout
-
-      const aiResponse = await fetch(`${anythingLlmUrl}/api/chat`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${anythingLlmKey}`,
-        },
-        body: JSON.stringify({
-          message: prompt,
-          mode: 'chat',
-        }),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      if (!aiResponse.ok) {
-        throw new Error(`AI service returned ${aiResponse.status}`);
-      }
-
-      const aiData = await aiResponse.json();
-      const briefData = parseAIResponse(aiData.textResponse);
-      const latencyMs = Date.now() - startTime;
-
-      // Log AI interaction completion
-      if (interactionId) {
-        try {
-          await aiLogger.completeInteraction({
-            interactionId,
-            status: 'completed',
-            aiResponse: aiData.textResponse,
-            aiResponseStructured: briefData,
-            latencyMs,
-            responseTokenCount: aiData.textResponse?.length || 0,
-          });
-        } catch (logError) {
-          console.warn('Failed to log AI interaction completion:', logError);
-        }
-      }
-
-      // Insert brief into ai_briefs table with engagement link
-      const { data: brief, error: insertError } = await supabase
-        .from('ai_briefs')
-        .insert({
-          organization_id: userProfile.organization_id,
-          created_by: user.id,
-          engagement_dossier_id: engagementId,
-          title: briefData.title || `Brief for ${engagement.dossier.name_en}`,
-          executive_summary: briefData.executive_summary,
-          background: briefData.background,
-          key_participants: briefData.key_participants || [],
-          relevant_positions: briefData.relevant_positions || [],
-          active_commitments: briefData.active_commitments || [],
-          historical_context: briefData.historical_context,
-          talking_points: briefData.talking_points || [],
-          recommendations: briefData.recommendations,
-          full_content: briefData,
-          citations: briefData.citations || [],
-          status: 'completed',
-          completed_at: new Date().toISOString(),
-          generation_params: {
-            language,
-            custom_prompt: body.custom_prompt,
-            date_range_start: body.date_range_start,
-            date_range_end: body.date_range_end,
-          },
-        })
-        .select()
-        .single();
-
-      if (insertError) {
-        console.error('Error inserting brief:', insertError);
-        throw new Error('Failed to save brief');
-      }
-
-      return new Response(JSON.stringify(brief), {
-        status: 201,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    } catch (aiError) {
-      console.warn('AI generation failed:', aiError);
-
-      // Log failure
-      if (interactionId) {
-        try {
-          await aiLogger.completeInteraction({
-            interactionId,
-            status: 'failed',
-            errorMessage: aiError instanceof Error ? aiError.message : 'Unknown error',
-          });
-        } catch (logError) {
-          console.warn('Failed to log AI interaction failure:', logError);
-        }
-      }
-
-      // Fall through to template response
-    }
+  if (insertError) {
+    console.error('Error creating manual brief:', insertError);
+    return errorResponse('SAVE_ERROR', `Failed to save brief: ${insertError.message}`, 'فشل في حفظ الموجز', 500);
   }
 
-  // Fallback: Return context for manual brief creation
-  return new Response(
-    JSON.stringify({
-      error: {
-        code: 'AI_UNAVAILABLE',
-        message_en: 'AI service is unavailable. Use the context below to create a manual brief.',
-        message_ar: 'خدمة الذكاء الاصطناعي غير متاحة. استخدم السياق أدناه لإنشاء موجز يدوي.',
-      },
-      fallback: {
-        context,
-        template: generateBriefTemplate(engagement, context, language),
-      },
-    }),
-    {
-      status: 503,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    }
-  );
+  return new Response(JSON.stringify({ data: { ...inserted, brief_type: 'legacy', source: 'manual' } }), {
+    status: 201,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
 }
 
 /**
  * POST /engagement-briefs/:engagementId/link/:briefId
- * Link an existing brief to the engagement
+ * Link an existing brief to the engagement.
  */
 async function handleLinkBrief(
   req: Request,
   supabase: ReturnType<typeof createClient>,
   engagementId: string,
-  briefId: string
-) {
+  briefId: string,
+): Promise<Response> {
   const body: LinkBriefRequest = await req.json().catch(() => ({ brief_type: 'legacy' }));
   const briefType = body.brief_type || 'legacy';
 
-  // Use RPC function to link
   const { data: success, error } = await supabase.rpc('link_brief_to_engagement', {
     p_brief_id: briefId,
     p_engagement_id: engagementId,
@@ -509,12 +420,7 @@ async function handleLinkBrief(
 
   if (error) {
     console.error('Error linking brief:', error);
-    return errorResponse(
-      'LINK_ERROR',
-      'Failed to link brief to engagement',
-      'فشل في ربط الموجز بالارتباط',
-      500
-    );
+    return errorResponse('LINK_ERROR', 'Failed to link brief to engagement', 'فشل في ربط الموجز بالارتباط', 500);
   }
 
   if (!success) {
@@ -522,38 +428,31 @@ async function handleLinkBrief(
       'ALREADY_LINKED',
       'Brief is already linked or does not exist',
       'الموجز مرتبط بالفعل أو غير موجود',
-      400
+      400,
     );
   }
 
   return new Response(
-    JSON.stringify({
-      success: true,
-      message_en: 'Brief linked successfully',
-      message_ar: 'تم ربط الموجز بنجاح',
-    }),
-    {
-      status: 200,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    }
+    JSON.stringify({ success: true, message_en: 'Brief linked successfully', message_ar: 'تم ربط الموجز بنجاح' }),
+    { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
   );
 }
 
 /**
  * DELETE /engagement-briefs/:engagementId/link/:briefId
- * Unlink a brief from the engagement
+ * Unlink a brief from the engagement. The list surfaces view rows keyed by the
+ * underlying briefs/ai_briefs id; the RPC clears engagement_dossier_id so the
+ * row drops out of the view.
  */
 async function handleUnlinkBrief(
   req: Request,
   supabase: ReturnType<typeof createClient>,
   engagementId: string,
-  briefId: string
-) {
-  // Get brief type from query param
+  briefId: string,
+): Promise<Response> {
   const url = new URL(req.url);
   const briefType = url.searchParams.get('brief_type') || 'legacy';
 
-  // Use RPC function to unlink
   const { data: success, error } = await supabase.rpc('unlink_brief_from_engagement', {
     p_brief_id: briefId,
     p_brief_type: briefType,
@@ -565,7 +464,7 @@ async function handleUnlinkBrief(
       'UNLINK_ERROR',
       'Failed to unlink brief from engagement',
       'فشل في إلغاء ربط الموجز من الارتباط',
-      500
+      500,
     );
   }
 
@@ -574,240 +473,140 @@ async function handleUnlinkBrief(
       'NOT_LINKED',
       'Brief is not linked to this engagement',
       'الموجز غير مرتبط بهذا الارتباط',
-      400
+      400,
     );
   }
 
   return new Response(
-    JSON.stringify({
-      success: true,
-      message_en: 'Brief unlinked successfully',
-      message_ar: 'تم إلغاء ربط الموجز بنجاح',
-    }),
-    {
-      status: 200,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    }
+    JSON.stringify({ success: true, message_en: 'Brief unlinked successfully', message_ar: 'تم إلغاء ربط الموجز بنجاح' }),
+    { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
   );
 }
 
 /**
- * Build AI prompt for brief generation
+ * Compose a bilingual manual brief from the engagement context.
  */
-function buildBriefPrompt(
-  engagement: {
-    id: string;
-    engagement_type: string;
-    engagement_status: string;
-    dossier: { id: string; name_en: string; name_ar: string };
-  },
-  context: {
-    engagement?: { name_en?: string; name_ar?: string; objectives_en?: string };
-    participants?: Array<{ name_en?: string; role?: string }>;
-    agenda?: Array<{ title_en?: string }>;
-    positions?: Array<{ title_en?: string; stance?: string }>;
-    commitments?: Array<{ title_en?: string; status?: string }>;
-    recent_interactions?: Array<{ event_title_en?: string; event_date?: string }>;
-    host_country?: { name_en?: string };
-    host_organization?: { name_en?: string };
-  },
+function buildManualBrief(
+  nameEn: string,
+  nameAr: string,
+  ctx: BriefContext,
   customPrompt?: string,
-  language?: string
+): ManualBrief {
+  const participants = ctx.participants ?? [];
+  const positions = ctx.positions ?? [];
+  const commitments = ctx.commitments ?? [];
+
+  const summary_en =
+    `Pre-meeting brief for ${nameEn}. Includes ${participants.length} participant(s), ` +
+    `${positions.length} relevant position(s), and ${commitments.length} active commitment(s).`;
+  const summary_ar =
+    `موجز ما قبل الاجتماع لـ ${nameAr}. يشمل ${participants.length} مشارك، ` +
+    `و${positions.length} موقف ذي صلة، و${commitments.length} التزام نشط.`;
+
+  return {
+    title_en: `Brief: ${nameEn}`,
+    title_ar: `موجز: ${nameAr}`,
+    summary_en,
+    summary_ar,
+    content_en: buildContent('en', nameEn, ctx, customPrompt),
+    content_ar: buildContent('ar', nameAr, ctx, customPrompt),
+  };
+}
+
+/**
+ * Render a markdown brief body in the requested language from real context.
+ */
+function buildContent(
+  lang: 'en' | 'ar',
+  name: string,
+  ctx: BriefContext,
+  customPrompt?: string,
 ): string {
-  const lang = language || 'en';
-  const isArabic = lang === 'ar';
-
-  let prompt = isArabic
-    ? `أنشئ موجزًا تنفيذيًا شاملاً لاجتماع ما قبل الارتباط.`
-    : `Generate a comprehensive pre-meeting executive brief for the following engagement.`;
-
-  // Engagement details
-  prompt += `\n\n## Engagement Details
-Name: ${engagement.dossier.name_en} / ${engagement.dossier.name_ar}
-Type: ${engagement.engagement_type}
-Status: ${engagement.engagement_status}
-${context.engagement?.objectives_en ? `Objectives: ${context.engagement.objectives_en}` : ''}`;
-
-  // Host info
-  if (context.host_country || context.host_organization) {
-    prompt += `\n\n## Host Information`;
-    if (context.host_country) {
-      prompt += `\nHost Country: ${context.host_country.name_en}`;
-    }
-    if (context.host_organization) {
-      prompt += `\nHost Organization: ${context.host_organization.name_en}`;
-    }
-  }
-
-  // Participants
-  if (context.participants && context.participants.length > 0) {
-    prompt += `\n\n## Key Participants (${context.participants.length})`;
-    context.participants.slice(0, 10).forEach((p, i) => {
-      prompt += `\n${i + 1}. ${p.name_en || 'Unknown'} - ${p.role || 'Participant'}`;
-    });
-  }
-
-  // Agenda
-  if (context.agenda && context.agenda.length > 0) {
-    prompt += `\n\n## Agenda Items (${context.agenda.length})`;
-    context.agenda.slice(0, 8).forEach((a, i) => {
-      prompt += `\n${i + 1}. ${a.title_en || 'Unnamed Item'}`;
-    });
-  }
-
-  // Relevant positions
-  if (context.positions && context.positions.length > 0) {
-    prompt += `\n\n## Relevant Positions from Participants (${context.positions.length})`;
-    context.positions.slice(0, 5).forEach((p, i) => {
-      prompt += `\n${i + 1}. ${p.title_en || 'Position'} - Stance: ${p.stance || 'unknown'}`;
-    });
-  }
-
-  // Active commitments
-  if (context.commitments && context.commitments.length > 0) {
-    prompt += `\n\n## Active Commitments (${context.commitments.length})`;
-    context.commitments.slice(0, 5).forEach((c, i) => {
-      prompt += `\n${i + 1}. ${c.title_en || 'Commitment'} - Status: ${c.status || 'pending'}`;
-    });
-  }
-
-  // Recent interactions
-  if (context.recent_interactions && context.recent_interactions.length > 0) {
-    prompt += `\n\n## Recent Interactions (Last 6 months)`;
-    context.recent_interactions.slice(0, 5).forEach((r, i) => {
-      prompt += `\n${i + 1}. ${r.event_title_en || 'Event'} (${r.event_date || 'Unknown date'})`;
-    });
-  }
-
-  // Custom prompt
-  if (customPrompt) {
-    prompt += `\n\n## Additional Instructions\n${customPrompt}`;
-  }
-
-  // Output format
-  prompt += `\n\n## Required Output Format
-Return a JSON object with this structure:
-{
-  "title": "Brief title",
-  "executive_summary": "2-3 paragraph executive summary",
-  "background": "Background context",
-  "key_participants": [{"name": "Name", "role": "Role", "relevance": "Why important"}],
-  "relevant_positions": [{"title": "Position", "stance": "Stance", "source": "Source entity"}],
-  "active_commitments": [{"description": "Commitment", "status": "Status", "deadline": "Date if any"}],
-  "historical_context": "Historical context paragraph",
-  "talking_points": ["Point 1", "Point 2", "Point 3"],
-  "recommendations": "Recommendations for the meeting",
-  "citations": [{"type": "position|commitment|dossier", "id": "uuid", "title": "Title"}]
-}`;
-
-  return prompt;
-}
-
-/**
- * Parse AI response to extract JSON
- */
-function parseAIResponse(response: string): Record<string, unknown> {
-  // Try to extract JSON from the response
-  const jsonMatch = response.match(/\{[\s\S]*\}/);
-  if (jsonMatch) {
-    try {
-      return JSON.parse(jsonMatch[0]);
-    } catch {
-      console.warn('Failed to parse JSON from AI response');
-    }
-  }
-
-  // Fallback: create basic structure from response
-  return {
-    title: 'Generated Brief',
-    executive_summary: response.slice(0, 500),
-    background: '',
-    key_participants: [],
-    relevant_positions: [],
-    active_commitments: [],
-    historical_context: '',
-    talking_points: [],
-    recommendations: '',
-    citations: [],
+  const isAr = lang === 'ar';
+  const T = {
+    title: isAr ? 'موجز الاجتماع' : 'Meeting Brief',
+    host: isAr ? 'معلومات المضيف' : 'Host Information',
+    hostCountry: isAr ? 'الدولة المضيفة' : 'Host Country',
+    hostOrg: isAr ? 'المنظمة المضيفة' : 'Host Organization',
+    participants: isAr ? 'المشاركون الرئيسيون' : 'Key Participants',
+    agenda: isAr ? 'بنود الأجندة' : 'Agenda Items',
+    positions: isAr ? 'المواقف ذات الصلة' : 'Relevant Positions',
+    commitments: isAr ? 'الالتزامات النشطة' : 'Active Commitments',
+    interactions: isAr ? 'التفاعلات الأخيرة' : 'Recent Interactions',
+    notes: isAr ? 'ملاحظات' : 'Notes',
+    recommendations: isAr ? 'التوصيات' : 'Recommendations',
+    none: isAr ? 'لا يوجد' : 'None recorded',
+    stance: isAr ? 'الموقف' : 'Stance',
+    status: isAr ? 'الحالة' : 'Status',
+    fillIn: isAr ? '_أضف توصياتك هنا._' : '_Add your recommendations here._',
+    unknown: isAr ? 'غير معروف' : 'Unknown',
   };
-}
 
-/**
- * Generate template brief for manual creation
- */
-function generateBriefTemplate(
-  engagement: {
-    id: string;
-    engagement_type: string;
-    engagement_status: string;
-    dossier: { id: string; name_en: string; name_ar: string };
-  },
-  context: {
-    participants?: Array<{ name_en?: string; role?: string }>;
-    agenda?: Array<{ title_en?: string }>;
-    positions?: Array<{ title_en?: string; stance?: string }>;
-    commitments?: Array<{ title_en?: string; status?: string }>;
-  },
-  language: string
-) {
-  const isArabic = language === 'ar';
+  const pick = (en?: string, ar?: string): string => (isAr ? ar || en : en || ar) || T.unknown;
+  const lines: string[] = [`# ${T.title}: ${name}`, ''];
 
-  return {
-    title: isArabic
-      ? `موجز الاجتماع: ${engagement.dossier.name_ar}`
-      : `Meeting Brief: ${engagement.dossier.name_en}`,
-    executive_summary: isArabic ? 'أدخل الملخص التنفيذي هنا...' : 'Enter executive summary here...',
-    sections: [
-      {
-        title: isArabic ? 'الخلفية' : 'Background',
-        content: '',
-      },
-      {
-        title: isArabic ? 'المشاركون الرئيسيون' : 'Key Participants',
-        content:
-          context.participants
-            ?.slice(0, 5)
-            .map((p) => `- ${p.name_en || 'Unknown'} (${p.role || 'Participant'})`)
-            .join('\n') || '',
-      },
-      {
-        title: isArabic ? 'نقاط الأجندة' : 'Agenda Points',
-        content:
-          context.agenda
-            ?.slice(0, 5)
-            .map((a, i) => `${i + 1}. ${a.title_en || 'Item'}`)
-            .join('\n') || '',
-      },
-      {
-        title: isArabic ? 'المواقف ذات الصلة' : 'Relevant Positions',
-        content:
-          context.positions
-            ?.slice(0, 3)
-            .map((p) => `- ${p.title_en || 'Position'}: ${p.stance || 'Unknown stance'}`)
-            .join('\n') || '',
-      },
-      {
-        title: isArabic ? 'الالتزامات النشطة' : 'Active Commitments',
-        content:
-          context.commitments
-            ?.slice(0, 3)
-            .map((c) => `- ${c.title_en || 'Commitment'} (${c.status || 'Pending'})`)
-            .join('\n') || '',
-      },
-      {
-        title: isArabic ? 'نقاط النقاش' : 'Talking Points',
-        content: '',
-      },
-      {
-        title: isArabic ? 'التوصيات' : 'Recommendations',
-        content: '',
-      },
-    ],
-    metadata: {
-      engagement_id: engagement.id,
-      engagement_type: engagement.engagement_type,
-      generated_at: new Date().toISOString(),
-      language,
-    },
-  };
+  if (ctx.host_country || ctx.host_organization) {
+    lines.push(`## ${T.host}`);
+    if (ctx.host_country) lines.push(`- ${T.hostCountry}: ${pick(ctx.host_country.name_en, ctx.host_country.name_ar)}`);
+    if (ctx.host_organization)
+      lines.push(`- ${T.hostOrg}: ${pick(ctx.host_organization.name_en, ctx.host_organization.name_ar)}`);
+    lines.push('');
+  }
+
+  const participants = ctx.participants ?? [];
+  lines.push(`## ${T.participants} (${participants.length})`);
+  if (participants.length === 0) {
+    lines.push(`- ${T.none}`);
+  } else {
+    participants.slice(0, 20).forEach((p) => {
+      const role = p.role ? ` — ${p.role}` : '';
+      lines.push(`- ${pick(p.name_en, p.name_ar)}${role}`);
+    });
+  }
+  lines.push('');
+
+  const agenda = ctx.agenda ?? [];
+  if (agenda.length > 0) {
+    lines.push(`## ${T.agenda} (${agenda.length})`);
+    agenda.slice(0, 20).forEach((a, i) => lines.push(`${i + 1}. ${pick(a.title_en, a.title_ar)}`));
+    lines.push('');
+  }
+
+  const positions = ctx.positions ?? [];
+  if (positions.length > 0) {
+    lines.push(`## ${T.positions} (${positions.length})`);
+    positions.slice(0, 20).forEach((p) => {
+      const stance = p.stance ? ` (${T.stance}: ${p.stance})` : '';
+      lines.push(`- ${pick(p.title_en, p.title_ar)}${stance}`);
+    });
+    lines.push('');
+  }
+
+  const commitments = ctx.commitments ?? [];
+  if (commitments.length > 0) {
+    lines.push(`## ${T.commitments} (${commitments.length})`);
+    commitments.slice(0, 20).forEach((c) => {
+      const status = c.status ? ` (${T.status}: ${c.status})` : '';
+      lines.push(`- ${pick(c.title_en, c.title_ar)}${status}`);
+    });
+    lines.push('');
+  }
+
+  const interactions = ctx.recent_interactions ?? [];
+  if (interactions.length > 0) {
+    lines.push(`## ${T.interactions} (${interactions.length})`);
+    interactions.slice(0, 10).forEach((r) => {
+      const date = r.event_date ? ` (${r.event_date})` : '';
+      lines.push(`- ${pick(r.event_title_en, r.event_title_ar)}${date}`);
+    });
+    lines.push('');
+  }
+
+  if (customPrompt && customPrompt.trim()) {
+    lines.push(`## ${T.notes}`, customPrompt.trim(), '');
+  }
+
+  lines.push(`## ${T.recommendations}`, T.fillIn, '');
+
+  return lines.join('\n');
 }
