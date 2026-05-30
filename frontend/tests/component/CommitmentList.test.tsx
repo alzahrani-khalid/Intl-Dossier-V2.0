@@ -1,11 +1,11 @@
 import { describe, it, expect, vi } from 'vitest'
 import { renderWithProviders as render, screen, within } from '@tests/utils/render'
 import userEvent from '@testing-library/user-event'
-import { CommitmentList, Commitment } from '@/components/after-action/CommitmentList'
+import { CommitmentEditor, Commitment } from '@/components/commitment-editor/CommitmentEditor'
 
 // i18n mock is global in tests/setup.ts
 
-describe('CommitmentList', () => {
+describe('CommitmentEditor', () => {
   const mockOnChange = vi.fn()
   const mockUsers = [
     { id: 'user1', name: 'John Doe' },
@@ -51,21 +51,25 @@ describe('CommitmentList', () => {
 
   describe('Rendering', () => {
     it('renders title and add button', () => {
-      render(<CommitmentList commitments={[]} onChange={mockOnChange} availableUsers={mockUsers} />)
+      render(
+        <CommitmentEditor commitments={[]} onChange={mockOnChange} availableUsers={mockUsers} />,
+      )
 
       expect(screen.getByText('Commitments')).toBeInTheDocument()
       expect(screen.getByText('Add Commitment')).toBeInTheDocument()
     })
 
     it('shows empty state when no commitments', () => {
-      render(<CommitmentList commitments={[]} onChange={mockOnChange} availableUsers={mockUsers} />)
+      render(
+        <CommitmentEditor commitments={[]} onChange={mockOnChange} availableUsers={mockUsers} />,
+      )
 
       expect(screen.getByText('No commitments yet')).toBeInTheDocument()
     })
 
     it('renders all commitments with correct data', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -82,7 +86,7 @@ describe('CommitmentList', () => {
   describe('Internal vs External Owner Assignment', () => {
     it('shows internal user dropdown when owner_type is internal', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -98,7 +102,7 @@ describe('CommitmentList', () => {
 
     it('shows external contact fields when owner_type is external', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -116,7 +120,7 @@ describe('CommitmentList', () => {
     it('switches between internal and external when owner_type changes', async () => {
       const user = userEvent.setup()
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -141,7 +145,7 @@ describe('CommitmentList', () => {
     it('sets tracking_mode to automatic for internal owners', async () => {
       const user = userEvent.setup()
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -167,7 +171,7 @@ describe('CommitmentList', () => {
   describe('Tracking Mode Display', () => {
     it('shows automatic tracking badge for internal commitments', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -179,7 +183,7 @@ describe('CommitmentList', () => {
 
     it('shows manual tracking badge for external commitments', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -191,7 +195,7 @@ describe('CommitmentList', () => {
 
     it('disables status dropdown for internal automatic tracking', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -206,7 +210,7 @@ describe('CommitmentList', () => {
 
     it('enables status dropdown for external manual tracking', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -223,7 +227,7 @@ describe('CommitmentList', () => {
   describe('AI Confidence Display', () => {
     it('shows confidence badge for AI-extracted commitments', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -236,7 +240,7 @@ describe('CommitmentList', () => {
 
     it('uses correct badge variant based on confidence level', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -255,7 +259,7 @@ describe('CommitmentList', () => {
   describe('Due Date Validation', () => {
     it('disables past dates in date picker', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -263,11 +267,20 @@ describe('CommitmentList', () => {
       )
 
       // Date picker validation is handled by the Calendar component's disabled prop
-      // The actual validation logic is: date < new Date()
-      // This is tested by verifying the disabled prop is passed correctly
+      // (date < new Date()). The trigger now renders the date in the IntelDossier
+      // day-first format ("Sat 01 Feb") via formatDayFirst, not the previous
+      // "February 1st, 2025" long form. Derive the expected label from the same
+      // en-GB formatting the component uses so the assertion stays timezone-safe.
+      const dueDate = mockCommitments[0]!.due_date
+      const expectedLabel = dueDate.toLocaleDateString('en-GB', {
+        weekday: 'short',
+        day: '2-digit',
+        month: 'short',
+      })
+
       const internalCommitmentCard = getCommitmentCard('Commitment 1')
       const dueDateButton = within(internalCommitmentCard).getByRole('button', {
-        name: /February 1st, 2025/,
+        name: new RegExp(expectedLabel),
       })
 
       expect(dueDateButton).toBeInTheDocument()
@@ -275,7 +288,9 @@ describe('CommitmentList', () => {
 
     it('defaults to 7 days from now for new commitments', async () => {
       const user = userEvent.setup()
-      render(<CommitmentList commitments={[]} onChange={mockOnChange} availableUsers={mockUsers} />)
+      render(
+        <CommitmentEditor commitments={[]} onChange={mockOnChange} availableUsers={mockUsers} />,
+      )
 
       await user.click(screen.getByText('Add Commitment'))
 
@@ -296,7 +311,9 @@ describe('CommitmentList', () => {
   describe('Add Commitment', () => {
     it('adds new commitment with default values', async () => {
       const user = userEvent.setup()
-      render(<CommitmentList commitments={[]} onChange={mockOnChange} availableUsers={mockUsers} />)
+      render(
+        <CommitmentEditor commitments={[]} onChange={mockOnChange} availableUsers={mockUsers} />,
+      )
 
       await user.click(screen.getByText('Add Commitment'))
 
@@ -313,22 +330,24 @@ describe('CommitmentList', () => {
   })
 
   describe('Remove Commitment', () => {
-    it('removes commitment when delete button clicked', async () => {
+    // Removal now goes through a confirm dialog (ConfirmRemoveButton → AlertDialog):
+    // a remove is two steps (click trash → confirm in dialog), not one click.
+    it('removes commitment when delete button confirmed', async () => {
       const user = userEvent.setup()
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
         />,
       )
 
-      const deleteButtons = screen.getAllByRole('button', { name: '' })
-      const firstDeleteButton = deleteButtons.find((btn) => btn.querySelector('.text-destructive'))
+      const removeButtons = screen.getAllByRole('button', { name: 'Remove commitment' })
+      await user.click(removeButtons[0]!)
 
-      if (firstDeleteButton) {
-        await user.click(firstDeleteButton)
-      }
+      const dialog = await screen.findByRole('alertdialog')
+      const confirmButton = within(dialog).getByRole('button', { name: 'Delete' })
+      await user.click(confirmButton)
 
       expect(mockOnChange).toHaveBeenCalledWith([mockCommitments[1]])
     })
@@ -337,7 +356,7 @@ describe('CommitmentList', () => {
   describe('Read-Only Mode', () => {
     it('hides add button in read-only mode', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -350,7 +369,7 @@ describe('CommitmentList', () => {
 
     it('hides delete buttons in read-only mode', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -358,16 +377,14 @@ describe('CommitmentList', () => {
         />,
       )
 
-      const deleteButtons = screen
-        .queryAllByRole('button', { name: '' })
-        .filter((btn) => btn.querySelector('.text-destructive'))
+      const deleteButtons = screen.queryAllByRole('button', { name: 'Remove commitment' })
 
       expect(deleteButtons).toHaveLength(0)
     })
 
     it('disables all inputs in read-only mode', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -385,7 +402,7 @@ describe('CommitmentList', () => {
   describe('External Contact Validation', () => {
     it('requires email for external commitments', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -403,7 +420,7 @@ describe('CommitmentList', () => {
 
     it('requires name for external commitments', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -421,7 +438,7 @@ describe('CommitmentList', () => {
 
     it('allows optional organization for external commitments', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}
@@ -441,7 +458,7 @@ describe('CommitmentList', () => {
   describe('RTL Support', () => {
     it('relies on the global direction provider instead of input dir attributes', () => {
       render(
-        <CommitmentList
+        <CommitmentEditor
           commitments={mockCommitments}
           onChange={mockOnChange}
           availableUsers={mockUsers}

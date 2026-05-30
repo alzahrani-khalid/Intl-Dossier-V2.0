@@ -1,7 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderWithProviders as render, screen, waitFor, fireEvent } from '@tests/utils/render'
 import userEvent from '@testing-library/user-event'
-import { AfterActionForm, AfterActionFormData } from '@/components/after-action/AfterActionForm'
+import {
+  AfterActionForm,
+  AfterActionFormData,
+} from '@/components/after-action-form/AfterActionForm'
 
 // Mock child components
 vi.mock('@/components/decision-list/DecisionList', () => ({
@@ -18,8 +21,8 @@ vi.mock('@/components/decision-list/DecisionList', () => ({
   ),
 }))
 
-vi.mock('@/components/after-action/CommitmentList', () => ({
-  CommitmentList: ({ commitments, onChange }: any) => (
+vi.mock('@/components/commitment-editor/CommitmentEditor', () => ({
+  CommitmentEditor: ({ commitments, onChange }: any) => (
     <div data-testid="commitment-list">
       <button
         type="button"
@@ -57,11 +60,17 @@ vi.mock('@/components/follow-up-list/FollowUpList', () => ({
   ),
 }))
 
-vi.mock('@/components/attachment-uploader/AttachmentUploader', () => ({
+vi.mock('@/components/attachment-uploader/AttachmentUploader', async () => ({
+  ...(await vi.importActual<typeof import('@/components/attachment-uploader/AttachmentUploader')>(
+    '@/components/attachment-uploader/AttachmentUploader',
+  )),
   AttachmentUploader: () => <div data-testid="attachment-uploader">Attachment Uploader</div>,
 }))
 
-vi.mock('@/components/ai-extraction-button/AIExtractionButton', () => ({
+vi.mock('@/components/ai-extraction-button/AIExtractionButton', async () => ({
+  ...(await vi.importActual<typeof import('@/components/ai-extraction-button/AIExtractionButton')>(
+    '@/components/ai-extraction-button/AIExtractionButton',
+  )),
   AIExtractionButton: ({ onExtract }: any) => (
     <button
       type="button"
