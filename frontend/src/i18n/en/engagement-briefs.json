@@ -25,7 +25,7 @@
     "completedAt": "Completed",
     "source": "Source",
     "hasCitations": "Has Citations",
-    "customPrompt": "Custom Instructions",
+    "customPrompt": "Notes",
     "language": "Language",
     "dateRange": "Date Range"
   },
@@ -38,17 +38,19 @@
   "statuses": {
     "completed": "Completed",
     "generating": "Generating",
-    "failed": "Failed"
+    "failed": "Failed",
+    "draft": "Draft"
   },
 
   "sources": {
     "ai": "AI Generated",
-    "manual": "Manual"
+    "manual": "Manual",
+    "legacy": "Brief"
   },
 
   "actions": {
     "generate": "Generate Brief",
-    "generateWithAI": "Generate with AI",
+    "generateWithAI": "Generate brief",
     "link": "Link Brief",
     "unlink": "Unlink",
     "view": "View Brief",
@@ -58,15 +60,15 @@
   },
 
   "generateDialog": {
-    "title": "Generate AI Brief",
-    "description": "Generate a comprehensive pre-meeting brief with AI assistance",
-    "customPromptPlaceholder": "Add any specific instructions for the AI...",
+    "title": "Create brief",
+    "description": "Compose a pre-meeting brief from this engagement's participants, positions, and commitments.",
+    "customPromptPlaceholder": "Add any notes to include in the brief...",
     "languageEn": "English",
     "languageAr": "Arabic",
     "startDate": "Start Date",
     "endDate": "End Date",
-    "generating": "Generating brief...",
-    "contextInfo": "The AI will use {{participantCount}} participants, {{positionCount}} positions, and {{commitmentCount}} active commitments"
+    "generating": "Creating brief...",
+    "contextInfo": "The brief will include {{participantCount}} participants, {{positionCount}} positions, and {{commitmentCount}} active commitments"
   },
 
   "linkDialog": {
@@ -78,7 +80,7 @@
 
   "empty": {
     "title": "No Briefs Yet",
-    "description": "Generate an AI brief or link an existing brief to this engagement",
+    "description": "Create a brief or link an existing brief to this engagement",
     "contextTitle": "Brief Context",
     "contextDescription": "This context will be used to generate comprehensive briefs"
   },
@@ -105,11 +107,11 @@
     "linkError": "Failed to link brief: {{error}}",
     "unlinked": "Brief unlinked successfully",
     "unlinkError": "Failed to unlink brief: {{error}}",
-    "aiUnavailable": "AI service unavailable. Use the template to create a manual brief."
+    "aiUnavailable": "Brief composed from engagement context."
   },
 
   "tooltips": {
-    "generate": "Generate a new AI brief for this engagement",
+    "generate": "Compose a brief for this engagement",
     "link": "Link an existing brief from another source",
     "unlink": "Remove the link between this brief and engagement",
     "citations": "This brief includes source citations"
