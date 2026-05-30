@@ -16,7 +16,7 @@
  * Target: <2s for up to 500 activities
  */
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsHeaders } from '../_shared/cors.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -156,11 +156,14 @@ Deno.serve(async (req: Request) => {
       },
     });
 
-    // Verify user is authenticated
+    // Verify user is authenticated. Pass the JWT explicitly so validation does
+    // not depend on the client library threading the global Authorization
+    // header (the prior bare getUser() under the pinned 2.39.3 build rejected
+    // tokens that sibling functions on @2 accept).
     const {
       data: { user },
       error: authError,
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
       const errorResponse: ErrorResponse = {
