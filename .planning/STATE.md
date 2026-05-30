@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v6.4
 milestone_name: Stabilization & Carryover Sweep
 status: Awaiting next milestone
-last_updated: '2026-05-29T00:53:22Z'
-last_activity: 2026-05-29 — PR #32 (data-entry bug fixes + PushOptInBanner test) merged to main; fix/data-entry-bugs branch deleted
+last_updated: '2026-05-30T00:00:00Z'
+last_activity: 2026-05-30 — data-entry UI/UX polish sweep (Waves 1-4, 29 commits) on fix/data-entry-uiux-polish; PR pending
 progress:
   total_phases: 5
   completed_phases: 5
@@ -30,10 +30,14 @@ Tag: `v6.4`. DesignV2 now lives on `main` with 8 enforced quality-gate contexts;
 
 ## Quick Tasks Completed
 
-| #          | Description                                                     | Date       | Commit            | Directory                                                                                                           |
-| ---------- | --------------------------------------------------------------- | ---------- | ----------------- | ------------------------------------------------------------------------------------------------------------------- |
-| 260529-1s8 | Data-entry bug fixes (forms, validation, write paths)           | 2026-05-29 | e01a3de0 (PR #32) | [260529-1s8-data-entry-bug-fixes](./quick/260529-1s8-data-entry-bug-fixes/)                                         |
-| 260529-4af | Align PushOptInBanner test w/ update-based dismissal (PR 32 CI) | 2026-05-29 | cae43867          | [260529-4af-align-pushoptinbanner-test-with-update-b](./quick/260529-4af-align-pushoptinbanner-test-with-update-b/) |
+| #          | Description                                                                                                      | Date       | Commit             | Directory                                                                                                           |
+| ---------- | ---------------------------------------------------------------------------------------------------------------- | ---------- | ------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| 260529-1s8 | Data-entry bug fixes (forms, validation, write paths)                                                            | 2026-05-29 | e01a3de0 (PR #32)  | [260529-1s8-data-entry-bug-fixes](./quick/260529-1s8-data-entry-bug-fixes/)                                         |
+| 260529-4af | Align PushOptInBanner test w/ update-based dismissal (PR 32 CI)                                                  | 2026-05-29 | cae43867           | [260529-4af-align-pushoptinbanner-test-with-update-b](./quick/260529-4af-align-pushoptinbanner-test-with-update-b/) |
+| 260530-1wk | Data-entry polish W1 — P0 silent-data-loss honesty (attachment uploader, manual brief)                           | 2026-05-30 | cfd68019..12deed25 | [260530-1wk-data-entry-p0-data-loss-fixes-attachment](./quick/260530-1wk-data-entry-p0-data-loss-fixes-attachment/) |
+| 260530-w2  | Data-entry polish W2 — shared primitives + dedupe (radius, aria-required, RTL flips, date util, unsaved-guard)   | 2026-05-30 | 0fa1970a..e7a03684 | [260530-w2-data-entry-shared-primitives-dedupe](./quick/260530-w2-data-entry-shared-primitives-dedupe/)             |
+| 260530-w3  | Data-entry polish W3 — per-surface UX/a11y (inline errors, alert→inline, AI-extract dedupe, confirms, aria-live) | 2026-05-30 | 719c4091..40980c8d | [260530-w3-data-entry-per-surface-ux](./quick/260530-w3-data-entry-per-surface-ux/)                                 |
+| 260530-w4  | Data-entry polish W4 — polish (i18n leaks, emoji→lucide, unified labels, aria-disabled)                          | 2026-05-30 | e660fb91..1bc71ae1 | [260530-w4-data-entry-polish](./quick/260530-w4-data-entry-polish/)                                                 |
 
 > PR #32 (`fix/data-entry-bugs`, 6 commits) **merged to `main` 2026-05-29** (merge commit `e01a3de0`); branch deleted. Fixed broken
 > dossier/forum/working-group/engagement + intake submit paths, validation-message
