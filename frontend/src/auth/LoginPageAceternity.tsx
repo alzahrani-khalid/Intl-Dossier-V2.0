@@ -21,7 +21,7 @@ type LoginFormData = z.infer<typeof loginSchema>
 export function LoginPageAceternity() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { login, isLoading, error } = useAuthStore()
+  const { login, resetPassword, isLoading, error } = useAuthStore()
   const [showPassword, setShowPassword] = useState(false)
   const [showMfaInput, setShowMfaInput] = useState(false)
   const [mfaCode, setMfaCode] = useState('')
@@ -30,6 +30,7 @@ export function LoginPageAceternity() {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -50,8 +51,23 @@ export function LoginPageAceternity() {
     }
   }
 
+  const handleForgotPassword = async (): Promise<void> => {
+    const email = getValues('email')
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error(t('auth.enterEmailFirst'))
+      return
+    }
+
+    try {
+      await resetPassword(email)
+      toast.success(t('auth.resetEmailSent'))
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t('auth.invalidCredentials'))
+    }
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background to-muted p-4">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
         {/* Login card */}
         <div className="rounded-2xl bg-card p-4 sm:p-6 lg:p-8 shadow-xl">
@@ -84,7 +100,7 @@ export function LoginPageAceternity() {
             <div className="space-y-2">
               <label className="block text-sm sm:text-base font-medium text-foreground text-start">
                 {t('auth.password')}
-                <span className="text-destructive ms-1" aria-label={t('validation.required')}>
+                <span className="text-destructive ms-1" aria-hidden="true">
                   *
                 </span>
               </label>
@@ -94,6 +110,8 @@ export function LoginPageAceternity() {
                   {...register('password')}
                   type={showPassword ? 'text' : 'password'}
                   id="password"
+                  required
+                  aria-required="true"
                   autoComplete="current-password"
                   className="w-full min-h-11 sm:min-h-10 md:min-h-12 text-sm sm:text-base px-4 ps-12 pe-12 py-2 border border-input rounded-lg focus:ring-2 focus:border-transparent focus:ring-ring bg-background text-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm focus:shadow-md"
                 />
@@ -142,9 +160,13 @@ export function LoginPageAceternity() {
                 onCheckedChange={(checked) => setRememberMe(checked === true)}
                 variant="aceternity"
               />
-              <a href="#" className="text-sm text-primary hover:text-primary/80">
+              <button
+                type="button"
+                onClick={() => void handleForgotPassword()}
+                className="text-sm text-primary hover:text-primary/80"
+              >
                 {t('auth.forgotPassword')}
-              </a>
+              </button>
             </div>
 
             {/* Error message */}

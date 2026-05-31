@@ -28,6 +28,7 @@ export interface AuthState {
   login: (email: string, password: string, mfaCode?: string) => Promise<void>
   logout: () => Promise<void>
   checkAuth: () => Promise<void>
+  resetPassword: (email: string) => Promise<void>
   clearError: () => void
   handleAuthStateChange: (event: AuthChangeEvent, session: Session | null) => Promise<void>
 }
@@ -165,6 +166,27 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false,
             isAuthenticated: false,
           })
+        }
+      },
+
+      resetPassword: async (email: string): Promise<void> => {
+        set({ isLoading: true, error: null })
+        try {
+          const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${window.location.origin}/reset-password`,
+          })
+
+          if (error) {
+            throw error
+          }
+
+          set({ isLoading: false })
+        } catch (error) {
+          set({
+            error: error instanceof Error ? error.message : 'Password reset failed',
+            isLoading: false,
+          })
+          throw error instanceof Error ? error : new Error('Password reset failed')
         }
       },
 

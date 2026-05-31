@@ -106,7 +106,9 @@
     "loginSuccess": "Login successful!",
     "invalidCredentials": "Invalid login credentials",
     "mfaCode": "MFA Code",
-    "enterMfaCode": "Enter your 6-digit MFA code"
+    "enterMfaCode": "Enter your 6-digit MFA code",
+    "resetEmailSent": "Check your email for a password reset link",
+    "enterEmailFirst": "Enter your email first, then select forgot password"
   },
   "realtime": {
     "connected": "Connected",
