@@ -95,7 +95,7 @@ export function FormInputAceternity({
       >
         {label}
         {required && (
-          <span className="text-danger ms-1" aria-label={t('validation.required')}>
+          <span className="text-danger ms-1" aria-hidden="true">
             *
           </span>
         )}
@@ -126,6 +126,7 @@ export function FormInputAceternity({
           {...(register ? register(name) : {})}
           className={variant === 'aceternity' ? aceternityClasses : inputBaseClasses}
           aria-invalid={!!error}
+          aria-required={required ? true : undefined}
           aria-describedby={error ? `${name}-error` : helpText ? `${name}-help` : undefined}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
