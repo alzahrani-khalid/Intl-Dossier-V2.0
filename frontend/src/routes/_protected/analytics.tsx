@@ -1,7 +1,6 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+import { AnalyticsDashboardPage } from '@/pages/analytics'
 
 export const Route = createFileRoute('/_protected/analytics')({
-  beforeLoad: () => {
-    throw redirect({ to: '/dashboard' })
-  },
+  component: AnalyticsDashboardPage,
 })
