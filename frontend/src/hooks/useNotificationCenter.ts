@@ -100,7 +100,7 @@ export function useNotifications(filters: NotificationFilters = {}) {
           notifications: Notification[]
           nextCursor: string | null
           hasMore: boolean
-        }>(`/notifications-center?${expressParams.toString()}`, { baseUrl: 'express' })
+        }>(`/notifications-center?${expressParams.toString()}`, { baseUrl: 'edge' })
 
         return result
       } catch {
