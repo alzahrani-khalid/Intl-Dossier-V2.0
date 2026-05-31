@@ -108,7 +108,15 @@
     "mfaCode": "MFA Code",
     "enterMfaCode": "Enter your 6-digit MFA code",
     "resetEmailSent": "Check your email for a password reset link",
-    "enterEmailFirst": "Enter your email first, then select forgot password"
+    "enterEmailFirst": "Enter your email first, then select forgot password",
+    "resetPasswordTitle": "Reset your password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "passwordUpdated": "Your password has been updated",
+    "updatePassword": "Update password",
+    "resetLinkInvalid": "This reset link is invalid or has expired",
+    "backToLogin": "Back to sign in"
   },
   "realtime": {
     "connected": "Connected",
