@@ -1,8 +1,9 @@
 ---
-status: awaiting_human_verify
+status: resolved
 trigger: 'Maximum update depth exceeded error on all protected routes'
 created: 2026-04-13T00:00:00Z
-updated: 2026-04-13T00:01:00Z
+updated: 2026-05-30T00:00:00Z
+resolved: 2026-05-30T00:00:00Z
 ---
 
 ## Current Focus
@@ -81,3 +82,26 @@ files_changed:
 - frontend/src/contexts/dossier-context/DossierCollectionContext.tsx
 - frontend/src/components/guided-tours/TourContext.tsx
 - frontend/src/components/work-creation/WorkCreationProvider.tsx
+
+## Closure verification (2026-05-30)
+
+Confirmed resolved on `main` (@ 931240aa). Evidence:
+
+- Fix present in all 6 files. The two loop-driving objects are memoized:
+  `DossierNavigationContext` — `actions` (useMemo, L260) and `value` (useMemo,
+  L287); `App.tsx` — `routerContext = useMemo(() => ({ auth }), [auth])` (L23,
+  passed to RouterProvider, the inline `context={{ auth }}` is gone);
+  `DossierInheritanceContext.value` (useMemo, L138).
+- Fix history: applied in `8dce0da4`, reverted by a worktree merge, then
+  defensively re-applied in `d70e8670` ("reapply render loop fix (reverted by
+  worktree merge)") — so the regression-revert was already caught and undone.
+- Product corroboration: milestones v6.0→v6.4 all shipped after this fix, with
+  the dashboard and other protected routes under active development.
+- CI corroboration: E2E failures on `main` are the known issue #31 set
+  (seed/baseline/RTL assertion failures from the 2026-05-28 stale-secret
+  un-masking) — granular content assertions, NOT the blanket first-paint crash
+  a "Maximum update depth" loop would produce on every protected route.
+
+Not done: a fresh manual browser click-through (the original `awaiting_human_verify`
+step). Closed on the static + history + CI evidence above, which is conclusive
+for a bug that would otherwise make every post-login route non-functional.
