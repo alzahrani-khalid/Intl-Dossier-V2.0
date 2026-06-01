@@ -85,7 +85,7 @@ export function useWorkingGroups(
         .from('dossiers')
         .select('*', { count: 'exact', head: true })
         .eq('type', 'working_group')
-        .neq('archived', true)
+        .neq('status', 'archived')
 
       if (status && status !== 'all') {
         countQuery = countQuery.eq('status', status)
@@ -298,7 +298,7 @@ export function useDeleteWorkingGroup() {
       // Soft delete by archiving
       const { error } = await supabase
         .from('dossiers')
-        .update({ archived: true, status: 'archived' })
+        .update({ status: 'archived' })
         .eq('id', id)
         .eq('type', 'working_group')
 

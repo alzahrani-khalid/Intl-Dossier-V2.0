@@ -211,6 +211,13 @@ jobs:
     name: E2E Tests
     runs-on: ubuntu-latest
     needs: [repo-policy]
+    env:
+      # Map the analyst test user + Supabase config from existing E2E_* secrets
+      # so the Playwright global-setup can authenticate (was the cred wall).
+      TEST_USER_EMAIL: ${{ secrets.E2E_ANALYST_EMAIL }}
+      TEST_USER_PASSWORD: ${{ secrets.E2E_ANALYST_PASSWORD }}
+      VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY }}
     services:
       postgres:
         image: postgres:16-alpine
@@ -261,6 +268,12 @@ jobs:
     name: RTL + Responsive Tests
     runs-on: ubuntu-latest
     needs: [lint, type-check]
+    env:
+      # See E2E Tests job — local dev server authenticates against staging Supabase.
+      TEST_USER_EMAIL: ${{ secrets.E2E_ANALYST_EMAIL }}
+      TEST_USER_PASSWORD: ${{ secrets.E2E_ANALYST_PASSWORD }}
+      VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -295,6 +308,12 @@ jobs:
     name: Accessibility Tests (RTL + WCAG AA)
     runs-on: ubuntu-latest
     needs: [lint, type-check]
+    env:
+      # See E2E Tests job — local dev server authenticates against staging Supabase.
+      TEST_USER_EMAIL: ${{ secrets.E2E_ANALYST_EMAIL }}
+      TEST_USER_PASSWORD: ${{ secrets.E2E_ANALYST_PASSWORD }}
+      VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -349,7 +368,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build ${{ matrix.package }}
-        run: pnpm run build --filter=${{ matrix.package }}
+        run: pnpm run build --filter=intake-${{ matrix.package }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

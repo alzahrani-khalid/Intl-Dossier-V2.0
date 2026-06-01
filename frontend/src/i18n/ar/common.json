@@ -106,7 +106,17 @@
     "loginSuccess": "تم تسجيل الدخول بنجاح!",
     "invalidCredentials": "بيانات الدخول غير صحيحة",
     "mfaCode": "رمز المصادقة الثنائية",
-    "enterMfaCode": "أدخل رمز المصادقة المكون من 6 أرقام"
+    "enterMfaCode": "أدخل رمز المصادقة المكون من 6 أرقام",
+    "resetEmailSent": "تحقق من بريدك الإلكتروني للحصول على رابط إعادة تعيين كلمة المرور",
+    "enterEmailFirst": "أدخل بريدك الإلكتروني أولاً ثم اختر نسيت كلمة المرور",
+    "resetPasswordTitle": "إعادة تعيين كلمة المرور",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين",
+    "passwordUpdated": "تم تحديث كلمة المرور بنجاح",
+    "updatePassword": "تحديث كلمة المرور",
+    "resetLinkInvalid": "رابط إعادة التعيين غير صالح أو منتهي الصلاحية",
+    "backToLogin": "العودة إلى تسجيل الدخول"
   },
   "realtime": {
     "connected": "متصل",
