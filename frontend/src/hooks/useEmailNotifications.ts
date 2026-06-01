@@ -118,17 +118,15 @@ export function useEmailPreferences() {
         .from('email_notification_preferences')
         .select('*')
         .eq('user_id', user.id)
-        .single()
+        .maybeSingle()
 
+      // maybeSingle() returns data: null (no error) when no row exists, so the
+      // page falls back to defaults instead of surfacing a 406 (PGRST116).
       if (error) {
-        // If no preferences exist, return defaults
-        if (error.code === 'PGRST116') {
-          return null
-        }
         throw error
       }
 
-      return data as EmailNotificationPreferences
+      return data as EmailNotificationPreferences | null
     },
   })
 
