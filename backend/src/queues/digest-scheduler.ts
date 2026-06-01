@@ -81,7 +81,7 @@ async function processDailyDigests(): Promise<void> {
   const { data: users, error: queryError } = await supabase
     .from('email_notification_preferences')
     .select('user_id, daily_digest_time, quiet_hours_timezone')
-    .eq('digest_frequency', 'daily')
+    .eq('daily_digest_enabled', true)
     .not('daily_digest_time', 'is', null)
     .limit(BATCH_SIZE)
 
@@ -197,7 +197,7 @@ async function processWeeklyDigests(): Promise<void> {
   const { data: users, error: queryError } = await supabase
     .from('email_notification_preferences')
     .select('user_id, weekly_digest_day, quiet_hours_timezone, daily_digest_time')
-    .eq('digest_frequency', 'weekly')
+    .eq('weekly_digest_enabled', true)
     .eq('weekly_digest_day', currentDay)
     .limit(BATCH_SIZE)
 
