@@ -478,6 +478,23 @@ Core workflow:
 
 <!-- MANUAL ADDITIONS END -->
 
+<!-- fanout:gsd-rule-start (managed by gsd-fanout; edits between the markers are overwritten on re-run) -->
+
+## Fan-out advisory (GSD ⇄ gsd-fanout, opt-in)
+
+When about to run a planned phase (`/gsd-execute-phase`) **and** that phase already has `PLAN.md` artifacts, first run the read-only shape check (zero spend, touches no GSD files):
+
+```bash
+node ~/.claude/skills/gsd-fanout/gsd-adapter.js assess --phases .planning/phases --phase <FULL-phase-dir-name>
+```
+
+- `verdict: favorable` → **offer** (don't force): dispatch the parallel-safe tasks to codex+cursor via `/fanout` instead of executing in GSD (their quota, isolated worktrees, cross-agent review). Proceed only if the user agrees.
+- `verdict: unfavorable` / `mixed` → say nothing; run GSD normally (rich per-task context + dependency-aware waves + strongest model).
+
+Advisory input only — the verdict is a keyword heuristic; the final call is yours with full phase context, and you draft `fanout-tasks.json` from the _parallel-safe subset_ only (dependent tasks stay sequential in GSD). Never auto-fanout, and never fan out `/gsd-verify-work` or `/gsd-secure-phase` (single-context reasoning, not parallel breadth). Full flow: `~/.claude/skills/gsd-fanout/SKILL.md`.
+
+<!-- fanout:gsd-rule-end -->
+
 <!-- GSD:project-start source:PROJECT.md -->
 
 ## Project
