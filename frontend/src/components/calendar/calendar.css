@@ -2,6 +2,11 @@
  * /tmp/inteldossier-handoff/inteldossier/project/src/app.css#L413-423
  * Tokens only. NO hex codes. NO physical-direction CSS. */
 
+/* Re-import dashboard.css's .week-list block (source of truth) via shared-week-list.css.
+   CSS requires @import to precede all other statements, so it is hoisted to the top
+   here. Do NOT duplicate the source-of-truth rules — Phase 38 dashboard.css owns them. */
+@import './shared-week-list.css';
+
 .cal-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -89,11 +94,9 @@
 }
 
 /* Phase 39 Plan 39-07 — week-list mobile toolbar + container layout.
-   NOTE: .week-list and .week-* CSS rules are owned by Phase 38 dashboard.css.
-   This stylesheet RE-IMPORTS dashboard.css's .week-list block via shared-week-list.css
-   (do NOT duplicate the source-of-truth rules; orchestrator open-question 2 resolved). */
-
-@import './shared-week-list.css';
+   NOTE: .week-list and .week-* CSS rules are owned by Phase 38 dashboard.css and are
+   imported at the TOP of this file via shared-week-list.css (do NOT duplicate the
+   source-of-truth rules; orchestrator open-question 2 resolved). */
 
 .week-list-mobile {
   display: flex;
