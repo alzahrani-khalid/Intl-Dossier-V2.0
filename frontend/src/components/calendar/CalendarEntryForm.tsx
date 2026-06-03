@@ -148,7 +148,7 @@ export function CalendarEntryForm({
   onSuccess,
   onCancel,
 }: CalendarEntryFormProps) {
-  const { t } = useTranslation(['calendar', 'dossier-context'])
+  const { t } = useTranslation('calendar')
   const { isRTL } = useDirection()
   const [entryType, setEntryType] = useState<CalendarEntryType>(
     toCalendarEntryType(initialData?.entry_type),
@@ -423,7 +423,7 @@ export function CalendarEntryForm({
             }}
             required
             multiple={false}
-            label={t('dossier-context:selector.title')}
+            label={t('form.linked_dossier')}
             error={dossierError}
           />
         )}
