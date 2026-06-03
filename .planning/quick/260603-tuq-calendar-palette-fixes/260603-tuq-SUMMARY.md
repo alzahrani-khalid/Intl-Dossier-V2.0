@@ -7,6 +7,7 @@ branch: fix/calendar-palette-260603-tuq
 commits:
   - 9a7f6cc4 # calendar: require dossier + RLS fix + form picker (+ migration)
   - 79def656 # palette: set selectedType on auto-advance
+  - 88f26ff2 # calendar: fix dossier-picker label (calendar ns, was unresolved dossier-context key)
 ---
 
 # Quick Task 260603-tuq — Summary
@@ -67,13 +68,25 @@ row with `type: 'other'`, which violates the dossiers type CHECK → 500
 - RLS: corrected predicate confirmed in `pg_policies`; rolled-back authenticated
   insert succeeded.
 - Edge function: deployed v10, ACTIVE.
+- **Live E2E (real browser, staging Supabase):** logged in as the test user,
+  opened the calendar create form (`UnifiedCalendar` → `CalendarEntryForm`),
+  selected the "Saudi Arabia" dossier via the new picker, set a title + start
+  time, submitted → **`POST /functions/v1/calendar-create` returned 201** and a
+  `calendar_events` row persisted, correctly linked to the Saudi Arabia dossier
+  (`event_type: main_event`, sensitivity 1). The cleared user can read it back
+  under RLS. Test row cleaned up afterward (`calendar_events` back to 0). The
+  label fix (`88f26ff2`) was discovered and fixed during this E2E.
 
 ## Out of scope (reported, not changed)
 
-- **Calendar table duality:** Week Ahead (`get_upcoming_events`) reads
-  `calendar_entries` (5 rows) while creation writes `calendar_events`. A created
-  event still will not appear in Week Ahead until the tables are unified — an
-  architectural decision, not a bug fix.
+- **Calendar table duality (confirmed via E2E — broader than first scoped):**
+  BOTH read paths read `calendar_entries` — the main calendar grid via
+  `calendar-get` (which even filters on an `event_date` column that
+  `calendar_events` lacks) AND Week Ahead via `get_upcoming_events` — while
+  `calendar-create` writes `calendar_events`. So a successfully-created event
+  (verified: 201 + persisted row) does **not** display in any calendar view
+  until the tables are unified. Architectural decision, separate from the
+  create-failure fix. This is the single most impactful follow-up.
 - **`calendar_events` UPDATE/DELETE RLS:** no such policies exist, so edits/
   deletes are blocked by default. Related to finding #2 but outside the
   create-failure scope.
@@ -86,6 +99,8 @@ row with `type: 'other'`, which violates the dossiers type CHECK → 500
 ## Follow-ups worth a separate task
 
 - Decide canonical calendar table (`calendar_events` vs `calendar_entries`) and
-  unify create/read so events surface in Week Ahead.
+  unify create/read so events surface in the calendar grid (`calendar-get`) and
+  Week Ahead (`get_upcoming_events`). Without this, created events persist but
+  are invisible everywhere.
 - Add `calendar_events` UPDATE/DELETE RLS policies (mirror the corrected
   clearance predicate) so `calendar-update` works under RLS.
