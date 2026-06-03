@@ -63,25 +63,21 @@ serve(async (req) => {
       );
     }
 
-    // For calendar events, we need a dossier_id
-    // Create a temporary "calendar event" dossier or link to existing dossier
-    let dossier_id = linked_item_id;
+    // Calendar events must be anchored to a dossier. calendar_events.dossier_id
+    // is NOT NULL and the event's clearance is derived entirely from the linked
+    // dossier's sensitivity_level via RLS — an event with no dossier has no
+    // clearance basis (US4: every work item links to a dossier). The previous
+    // implementation fabricated a `type: 'other'` dossier here, which violates
+    // the dossiers type CHECK and 500'd every unlinked create.
+    const dossier_id = linked_item_id;
 
     if (!dossier_id) {
-      // Create a lightweight dossier for this calendar event
-      const { data: newDossier, error: dossierError } = await supabaseClient
-        .from('dossiers')
-        .insert({
-          type: 'other',
-          name_en: title_en || 'Calendar Event',
-          name_ar: title_ar || title_en || 'Calendar Event',
-          status: 'active',
-        })
-        .select('id')
-        .single();
-
-      if (dossierError) throw dossierError;
-      dossier_id = newDossier.id;
+      return new Response(
+        JSON.stringify({
+          error: 'A linked dossier is required to create a calendar event',
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     // Calculate end_datetime if not provided (default to 1 hour)

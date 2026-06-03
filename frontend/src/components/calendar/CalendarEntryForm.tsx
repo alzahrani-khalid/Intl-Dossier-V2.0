@@ -52,6 +52,7 @@ import {
 } from './ConflictResolution'
 import type { ParticipantConflictInfo } from './ConflictResolution'
 import { RecurrencePatternEditor } from './RecurrencePatternEditor'
+import { DossierSelector, type SelectedDossier } from '@/components/dossier'
 import type {
   ConflictCheckRequest,
   ReschedulingSuggestion,
@@ -147,7 +148,7 @@ export function CalendarEntryForm({
   onSuccess,
   onCancel,
 }: CalendarEntryFormProps) {
-  const { t } = useTranslation('calendar')
+  const { t } = useTranslation(['calendar', 'dossier-context'])
   const { isRTL } = useDirection()
   const [entryType, setEntryType] = useState<CalendarEntryType>(
     toCalendarEntryType(initialData?.entry_type),
@@ -177,6 +178,12 @@ export function CalendarEntryForm({
   const [showSideBySideComparison, setShowSideBySideComparison] = useState(true)
   const [recurrencePattern, setRecurrencePattern] = useState<CreateRecurrenceRuleInput | null>(null)
   const [proceedWithConflict, setProceedWithConflict] = useState(false)
+  // US4: standalone calendar events must link to a dossier — the event's
+  // clearance is derived from the linked dossier's sensitivity via RLS. When
+  // no linkedItemId is supplied by context (the /calendar/new path), the user
+  // must pick one.
+  const [selectedDossiers, setSelectedDossiers] = useState<SelectedDossier[]>([])
+  const [dossierError, setDossierError] = useState('')
 
   const createEvent = useCreateCalendarEvent()
   const updateEvent = useUpdateCalendarEvent()
@@ -188,6 +195,10 @@ export function CalendarEntryForm({
   const { data: orgDossiers } = useDossiers({ type: 'organization', status: 'active' })
 
   const isEditing = !!entryId
+  // Show the dossier picker only on standalone creation (no contextual link,
+  // not editing). Editing goes through the update path, not calendar-create.
+  const showDossierPicker = !linkedItemId && !isEditing
+  const effectiveDossierId = linkedItemId ?? selectedDossiers[0]?.id
 
   // Build conflict check request - memoized to prevent unnecessary rerenders
   const conflictCheckRequest = useMemo<ConflictCheckRequest | null>(() => {
@@ -327,6 +338,13 @@ export function CalendarEntryForm({
       return
     }
 
+    // US4: a calendar event must be anchored to a dossier. On the standalone
+    // path the user picks one; block submit (rather than 500 server-side) if not.
+    if (showDossierPicker && !effectiveDossierId) {
+      setDossierError(t('dossier-context:validation.dossier_required'))
+      return
+    }
+
     const eventData: CalendarEventFormInput = {
       entry_type: entryType,
       title_en: titleEn || undefined,
@@ -337,8 +355,8 @@ export function CalendarEntryForm({
       end_datetime: endDatetime || undefined,
       all_day: allDay,
       location: location || undefined,
-      linked_item_type: linkedItemType,
-      linked_item_id: linkedItemId,
+      linked_item_type: linkedItemId ? linkedItemType : 'dossier',
+      linked_item_id: effectiveDossierId,
       reminder_minutes: parseInt(reminderMinutes) || 15,
       participants: participants.map((p) => ({
         participant_type: p.participant_type,
@@ -393,6 +411,23 @@ export function CalendarEntryForm({
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {/* US4: dossier link — required for standalone creation. The event's
+            clearance is derived from the linked dossier's sensitivity via RLS. */}
+        {showDossierPicker && (
+          <DossierSelector
+            value={selectedDossiers.map((d) => d.id)}
+            selectedDossiers={selectedDossiers}
+            onChange={(_, dossiers) => {
+              setSelectedDossiers(dossiers)
+              if (dossiers.length > 0) setDossierError('')
+            }}
+            required
+            multiple={false}
+            label={t('dossier-context:selector.title')}
+            error={dossierError}
+          />
+        )}
+
         {/* Event Type */}
         <div className="flex flex-col gap-2">
           <Label htmlFor="entry-type">{t('form.entry_type')}</Label>
