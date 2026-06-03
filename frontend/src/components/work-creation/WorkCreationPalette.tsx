@@ -86,7 +86,7 @@ export function WorkCreationPalette({
 }: WorkCreationPaletteProps) {
   const { t } = useTranslation('work-creation')
   const { isRTL } = useDirection()
-// Auto-capture context from route
+  // Auto-capture context from route
   const autoContext = useCreationContext()
   const context: CreationContext = {
     ...autoContext,
@@ -119,6 +119,12 @@ export function WorkCreationPalette({
     if (open && defaultType) {
       const option = WORK_TYPE_OPTIONS.find((o) => o.type === defaultType)
       if (option) {
+        // Sync selectedType with defaultType. The palette is opened via
+        // openPalette(type) without the user picking from the type list, so
+        // selectedType (initialized before defaultType arrives on first mount)
+        // must be set here — otherwise the form branch below
+        // (step === 'form' && selectedType) renders an empty dialog.
+        setSelectedType(defaultType)
         if (option.requiresDossier && !context.dossierId) {
           setStep('context-select')
         } else {
