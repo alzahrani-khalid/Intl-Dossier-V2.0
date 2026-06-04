@@ -1,5 +1,9 @@
 // T047: POST /calendar Edge Function (Create calendar entry)
-// Updated for 026-unified-dossier-architecture: Uses calendar_events and event_participants
+// Writes calendar_entries — the canonical operational calendar table that the
+// grid (calendar-get) and Week Ahead (get_upcoming_events) both read. The
+// richer calendar_events table is a separate, currently-unused forum-agenda
+// model (event_type = main_event/session/…); writing there made created events
+// invisible. See .planning/quick/260604-lmy-calendar-write-to-entries.
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
@@ -8,6 +12,20 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
 };
+
+// calendar_entries.linked_item_type CHECK — anything else (incl. 'dossier') is
+// recorded via the dedicated dossier_id column instead.
+const ALLOWED_LINKED_TYPES = ['assignment', 'position', 'mou', 'commitment', 'forum'];
+
+// Split a datetime-local / ISO string into the naive date + time that
+// calendar_entries stores. No timezone math: the entry shows the time the user
+// typed (the columns are date + time without time zone).
+function splitDateTime(value: string): { date: string; time: string } {
+  const [datePart, timePartRaw = '00:00'] = String(value).split('T');
+  const stripped = timePartRaw.replace(/(Z|[+-]\d{2}:?\d{2})$/, '').split('.')[0];
+  const time = stripped.length === 5 ? `${stripped}:00` : stripped.slice(0, 8) || '00:00:00';
+  return { date: datePart, time };
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -32,10 +50,10 @@ serve(async (req) => {
       description_ar,
       start_datetime,
       end_datetime,
+      all_day = false,
       location,
       linked_item_type,
       linked_item_id,
-      participants = [],
     } = body;
 
     // Validate required fields
@@ -63,82 +81,74 @@ serve(async (req) => {
       );
     }
 
-    // For calendar events, we need a dossier_id
-    // Create a temporary "calendar event" dossier or link to existing dossier
-    let dossier_id = linked_item_id;
-
-    if (!dossier_id) {
-      // Create a lightweight dossier for this calendar event
-      const { data: newDossier, error: dossierError } = await supabaseClient
-        .from('dossiers')
-        .insert({
-          type: 'other',
-          name_en: title_en || 'Calendar Event',
-          name_ar: title_ar || title_en || 'Calendar Event',
-          status: 'active',
-        })
-        .select('id')
-        .single();
-
-      if (dossierError) throw dossierError;
-      dossier_id = newDossier.id;
+    // Map start/end into the entries' naive date + time + duration model.
+    const { date: event_date, time: event_time } = splitDateTime(start_datetime);
+    let duration_minutes: number | null = null;
+    if (!all_day) {
+      if (end_datetime) {
+        const diff = Math.round(
+          (new Date(end_datetime).getTime() - new Date(start_datetime).getTime()) / 60000
+        );
+        duration_minutes = diff > 0 ? diff : 60;
+      } else {
+        duration_minutes = 60;
+      }
     }
 
-    // Calculate end_datetime if not provided (default to 1 hour)
-    const finalEndDatetime = end_datetime || new Date(new Date(start_datetime).getTime() + 60 * 60 * 1000).toISOString();
+    // An operational calendar entry may optionally be anchored to a dossier
+    // (e.g. "Training" has none). The form sends linked_item_type='dossier' for a
+    // standalone dossier link; real enum link types map to linked_item_*.
+    let dossier_id: string | null = null;
+    let li_type: string | null = null;
+    let li_id: string | null = null;
+    if (linked_item_type && ALLOWED_LINKED_TYPES.includes(linked_item_type) && linked_item_id) {
+      li_type = linked_item_type;
+      li_id = linked_item_id;
+    } else if (linked_item_id) {
+      dossier_id = linked_item_id;
+    }
 
-    // Create calendar event
-    const { data: event, error: insertError } = await supabaseClient
-      .from('calendar_events')
+    // Create calendar entry. NOTE: form "participants" (person/org dossiers) are
+    // not persisted here — attendee_ids is a user-id array, a semantic mismatch.
+    // Persisting participants on operational entries needs a dedicated table
+    // (tracked as out-of-scope in the quick task plan).
+    const { data: entry, error: insertError } = await supabaseClient
+      .from('calendar_entries')
       .insert({
         dossier_id,
-        event_type: entry_type === 'internal_meeting' ? 'main_event' : 'session',
         title_en,
         title_ar,
         description_en,
         description_ar,
-        start_datetime,
-        end_datetime: finalEndDatetime,
-        location_en: location,
-        location_ar: location,
-        status: 'planned',
+        entry_type,
+        event_date,
+        event_time: all_day ? null : event_time,
+        duration_minutes,
+        all_day,
+        location: location ?? null,
+        is_virtual: false,
+        linked_item_type: li_type,
+        linked_item_id: li_id,
+        organizer_id: user.id,
+        attendee_ids: [],
+        status: 'scheduled',
+        created_by: user.id,
       })
       .select()
       .single();
 
     if (insertError) {
-      // Check if it's a permission error
       if (insertError.code === '42501') {
         return new Response(
-          JSON.stringify({ error: 'Forbidden: You do not have permission to create calendar events' }),
+          JSON.stringify({ error: 'Forbidden: You do not have permission to create calendar entries' }),
           { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
       throw insertError;
     }
 
-    // Add participants to event_participants table
-    if (participants.length > 0) {
-      const participantInserts = participants.map((p: any) => ({
-        event_id: event.id,
-        participant_type: p.participant_type,
-        participant_id: p.participant_id,
-        role: 'attendee',
-        attendance_status: 'invited',
-      }));
-
-      const { error: participantsError } = await supabaseClient
-        .from('event_participants')
-        .insert(participantInserts);
-
-      if (participantsError) {
-        console.error('Failed to add participants:', participantsError);
-        // Don't fail the whole request, just log the error
-      }
-    }
-
     return new Response(
-      JSON.stringify(event),
+      JSON.stringify(entry),
       { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 

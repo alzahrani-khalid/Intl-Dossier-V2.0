@@ -29,6 +29,7 @@
   },
   "form": {
     "entry_type": "Event Type",
+    "linked_dossier": "Linked dossier",
     "title_en": "Title (English)",
     "title_ar": "Title (Arabic)",
     "title_en_placeholder": "Enter event title in English",

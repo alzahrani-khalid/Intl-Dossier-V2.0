@@ -52,6 +52,7 @@ import {
 } from './ConflictResolution'
 import type { ParticipantConflictInfo } from './ConflictResolution'
 import { RecurrencePatternEditor } from './RecurrencePatternEditor'
+import { DossierSelector, type SelectedDossier } from '@/components/dossier'
 import type {
   ConflictCheckRequest,
   ReschedulingSuggestion,
@@ -177,6 +178,10 @@ export function CalendarEntryForm({
   const [showSideBySideComparison, setShowSideBySideComparison] = useState(true)
   const [recurrencePattern, setRecurrencePattern] = useState<CreateRecurrenceRuleInput | null>(null)
   const [proceedWithConflict, setProceedWithConflict] = useState(false)
+  // An operational calendar entry may optionally be linked to a dossier. When a
+  // dossier is selected its id is sent as the dossier link; entries with no
+  // dossier (e.g. training, reminders) are allowed.
+  const [selectedDossiers, setSelectedDossiers] = useState<SelectedDossier[]>([])
 
   const createEvent = useCreateCalendarEvent()
   const updateEvent = useUpdateCalendarEvent()
@@ -188,6 +193,10 @@ export function CalendarEntryForm({
   const { data: orgDossiers } = useDossiers({ type: 'organization', status: 'active' })
 
   const isEditing = !!entryId
+  // Show the dossier picker only on standalone creation (no contextual link,
+  // not editing). Editing goes through the update path, not calendar-create.
+  const showDossierPicker = !linkedItemId && !isEditing
+  const effectiveDossierId = linkedItemId ?? selectedDossiers[0]?.id
 
   // Build conflict check request - memoized to prevent unnecessary rerenders
   const conflictCheckRequest = useMemo<ConflictCheckRequest | null>(() => {
@@ -337,8 +346,8 @@ export function CalendarEntryForm({
       end_datetime: endDatetime || undefined,
       all_day: allDay,
       location: location || undefined,
-      linked_item_type: linkedItemType,
-      linked_item_id: linkedItemId,
+      linked_item_type: linkedItemId ? linkedItemType : 'dossier',
+      linked_item_id: effectiveDossierId,
       reminder_minutes: parseInt(reminderMinutes) || 15,
       participants: participants.map((p) => ({
         participant_type: p.participant_type,
@@ -393,6 +402,20 @@ export function CalendarEntryForm({
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {/* Optional dossier link. When set, the entry inherits the dossier's
+            clearance for visibility (calendar_entries SELECT RLS). */}
+        {showDossierPicker && (
+          <DossierSelector
+            value={selectedDossiers.map((d) => d.id)}
+            selectedDossiers={selectedDossiers}
+            onChange={(_, dossiers) => {
+              setSelectedDossiers(dossiers)
+            }}
+            multiple={false}
+            label={t('form.linked_dossier')}
+          />
+        )}
+
         {/* Event Type */}
         <div className="flex flex-col gap-2">
           <Label htmlFor="entry-type">{t('form.entry_type')}</Label>
