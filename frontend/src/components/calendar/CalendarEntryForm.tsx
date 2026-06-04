@@ -178,12 +178,10 @@ export function CalendarEntryForm({
   const [showSideBySideComparison, setShowSideBySideComparison] = useState(true)
   const [recurrencePattern, setRecurrencePattern] = useState<CreateRecurrenceRuleInput | null>(null)
   const [proceedWithConflict, setProceedWithConflict] = useState(false)
-  // US4: standalone calendar events must link to a dossier — the event's
-  // clearance is derived from the linked dossier's sensitivity via RLS. When
-  // no linkedItemId is supplied by context (the /calendar/new path), the user
-  // must pick one.
+  // An operational calendar entry may optionally be linked to a dossier. When a
+  // dossier is selected its id is sent as the dossier link; entries with no
+  // dossier (e.g. training, reminders) are allowed.
   const [selectedDossiers, setSelectedDossiers] = useState<SelectedDossier[]>([])
-  const [dossierError, setDossierError] = useState('')
 
   const createEvent = useCreateCalendarEvent()
   const updateEvent = useUpdateCalendarEvent()
@@ -338,13 +336,6 @@ export function CalendarEntryForm({
       return
     }
 
-    // US4: a calendar event must be anchored to a dossier. On the standalone
-    // path the user picks one; block submit (rather than 500 server-side) if not.
-    if (showDossierPicker && !effectiveDossierId) {
-      setDossierError(t('dossier-context:validation.dossier_required'))
-      return
-    }
-
     const eventData: CalendarEventFormInput = {
       entry_type: entryType,
       title_en: titleEn || undefined,
@@ -411,20 +402,17 @@ export function CalendarEntryForm({
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {/* US4: dossier link — required for standalone creation. The event's
-            clearance is derived from the linked dossier's sensitivity via RLS. */}
+        {/* Optional dossier link. When set, the entry inherits the dossier's
+            clearance for visibility (calendar_entries SELECT RLS). */}
         {showDossierPicker && (
           <DossierSelector
             value={selectedDossiers.map((d) => d.id)}
             selectedDossiers={selectedDossiers}
             onChange={(_, dossiers) => {
               setSelectedDossiers(dossiers)
-              if (dossiers.length > 0) setDossierError('')
             }}
-            required
             multiple={false}
             label={t('form.linked_dossier')}
-            error={dossierError}
           />
         )}
 
