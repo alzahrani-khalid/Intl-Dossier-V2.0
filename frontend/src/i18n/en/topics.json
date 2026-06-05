@@ -1,0 +1,17 @@
+{
+  "title": "Topics",
+  "subtitle": "Policy areas and strategic initiatives",
+  "row": {
+    "meta": "Meta"
+  },
+  "status": {
+    "active": "Active",
+    "archived": "Archived",
+    "draft": "Draft"
+  },
+  "empty": {
+    "title": "No topics yet",
+    "description": "Topic dossiers will appear here."
+  },
+  "loading": "Loading topics…"
+}

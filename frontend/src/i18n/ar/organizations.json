@@ -1,0 +1,21 @@
+{
+  "title": "المنظمات",
+  "subtitle": "الهيئات والوكالات الدولية",
+  "table": {
+    "name": "المنظمة",
+    "engagements": "الارتباطات",
+    "lastTouch": "آخر تحديث",
+    "sensitivity": "الحساسية"
+  },
+  "sensitivity": {
+    "public": "عام",
+    "internal": "داخلي",
+    "restricted": "مقيد",
+    "confidential": "سري"
+  },
+  "empty": {
+    "title": "لا توجد منظمات بعد",
+    "description": "ستظهر ملفات المنظمات هنا."
+  },
+  "loading": "جارٍ تحميل المنظمات…"
+}
