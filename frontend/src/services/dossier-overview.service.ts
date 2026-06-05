@@ -154,11 +154,18 @@ interface TaskRow {
   description_ar?: string
   status: string
   priority: string | null
-  deadline: string | null
+  sla_deadline: string | null
   assignee_id: string | null
-  assignee: { full_name: string } | null
   created_at: string
   updated_at: string
+}
+
+/**
+ * Minimal user row for the batched assignee-name lookup
+ */
+interface AssigneeUserRow {
+  id: string
+  full_name: string | null
 }
 
 /**
@@ -595,18 +602,35 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
   const allWorkItems: DossierWorkItem[] = []
   const now = new Date()
 
-  // Fetch tasks
+  // Fetch tasks. tasks.assignee_id does NOT FK to a table exposing full_name, so
+  // an embed (assignee:assignee_id(full_name)) returns a PostgREST 400 and every
+  // task is silently dropped. Fetch plain rows, then resolve assignee names via a
+  // batched public.users lookup (the RLS-permitted pattern used in tasks-api.ts).
   if (taskIds.length > 0) {
-    const { data: tasks } = await supabase
-      .from('tasks')
-      .select('*, assignee:assignee_id(full_name)')
-      .in('id', taskIds)
-      .limit(limit)
+    const { data: tasks } = await supabase.from('tasks').select('*').in('id', taskIds).limit(limit)
 
-    ;((tasks || []) as TaskRow[]).forEach((t) => {
+    const taskRows = (tasks || []) as TaskRow[]
+
+    const assigneeIds = Array.from(
+      new Set(taskRows.map((t) => t.assignee_id).filter((id): id is string => id != null)),
+    )
+
+    const assigneeNameById = new Map<string, string | null>()
+    if (assigneeIds.length > 0) {
+      const { data: assignees } = await supabase
+        .from('users')
+        .select('id, full_name')
+        .in('id', assigneeIds)
+
+      ;((assignees || []) as AssigneeUserRow[]).forEach((u) => {
+        assigneeNameById.set(u.id, u.full_name)
+      })
+    }
+
+    taskRows.forEach((t) => {
       const isOverdue =
-        t.deadline &&
-        new Date(t.deadline) < now &&
+        t.sla_deadline &&
+        new Date(t.sla_deadline) < now &&
         t.status !== 'completed' &&
         t.status !== 'cancelled'
       allWorkItems.push({
@@ -618,9 +642,9 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
         description_ar: t.description_ar || null,
         status: isOverdue ? 'overdue' : (t.status as WorkItemStatus),
         priority: (t.priority || 'medium') as WorkItemPriority,
-        deadline: t.deadline,
+        deadline: t.sla_deadline,
         assignee_id: t.assignee_id,
-        assignee_name: t.assignee?.full_name || null,
+        assignee_name: t.assignee_id != null ? (assigneeNameById.get(t.assignee_id) ?? null) : null,
         inheritance_source: linkMap[t.id] || 'direct',
         created_at: t.created_at,
         updated_at: t.updated_at,

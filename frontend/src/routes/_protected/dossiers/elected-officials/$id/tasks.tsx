@@ -1,25 +1,28 @@
 /**
- * Elected Official Tasks Tab
- * Shared tab stub -- renders tasks linked to this dossier.
+ * Elected Official Tasks Tab Route
+ * Lazy-loads the DossierWorkItemsTab component.
  */
 
-import type { ReactElement } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
+import type { ReactElement } from 'react'
+import { lazy, Suspense } from 'react'
+import { TabSkeleton } from '@/components/workspace/TabSkeleton'
+
+const DossierWorkItemsTab = lazy(() =>
+  import('@/components/dossier/tabs/DossierWorkItemsTab').then((m) => ({
+    default: m.DossierWorkItemsTab,
+  })),
+)
 
 export const Route = createFileRoute('/_protected/dossiers/elected-officials/$id/tasks')({
   component: ElectedOfficialTasksTab,
 })
 
 function ElectedOfficialTasksTab(): ReactElement {
-  const { t } = useTranslation('dossier-shell')
-
+  const { id } = Route.useParams()
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold">{t('tabs.tasks')}</h2>
-      <p className="text-sm text-muted-foreground">
-        Tasks linked to this elected official will appear here.
-      </p>
-    </div>
+    <Suspense fallback={<TabSkeleton type="list" />}>
+      <DossierWorkItemsTab dossierId={id} />
+    </Suspense>
   )
 }

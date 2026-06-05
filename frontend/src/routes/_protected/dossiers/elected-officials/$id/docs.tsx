@@ -1,25 +1,28 @@
 /**
- * Elected Official Docs Tab
- * Shared tab stub -- renders documents linked to this dossier.
+ * Elected Official Documents Tab Route
+ * Lazy-loads the DossierDocumentsTab component.
  */
 
-import type { ReactElement } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
+import type { ReactElement } from 'react'
+import { lazy, Suspense } from 'react'
+import { TabSkeleton } from '@/components/workspace/TabSkeleton'
+
+const DossierDocumentsTab = lazy(() =>
+  import('@/components/dossier/tabs/DossierDocumentsTab').then((m) => ({
+    default: m.DossierDocumentsTab,
+  })),
+)
 
 export const Route = createFileRoute('/_protected/dossiers/elected-officials/$id/docs')({
   component: ElectedOfficialDocsTab,
 })
 
 function ElectedOfficialDocsTab(): ReactElement {
-  const { t } = useTranslation('dossier-shell')
-
+  const { id } = Route.useParams()
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold">{t('tabs.docs')}</h2>
-      <p className="text-sm text-muted-foreground">
-        Documents linked to this elected official will appear here.
-      </p>
-    </div>
+    <Suspense fallback={<TabSkeleton type="list" />}>
+      <DossierDocumentsTab dossierId={id} />
+    </Suspense>
   )
 }

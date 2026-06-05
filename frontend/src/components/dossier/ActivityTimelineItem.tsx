@@ -86,6 +86,8 @@ export function ActivityTimelineItem({
   const { isRTL } = useDirection()
   // Get icon for type
   const TypeIcon = typeIcons[activity.work_item_type] || CheckSquare
+  // The edge function does not emit `is_overdue`; derive it from status as a fallback.
+  const isOverdue = activity.is_overdue ?? activity.status === 'overdue'
 
   // Format date
   const formatDate = (dateStr: string | null) => {
@@ -168,8 +170,8 @@ export function ActivityTimelineItem({
             className={cn(
               'flex items-center justify-center size-10 rounded-full shrink-0',
               'bg-muted border-2',
-              activity.is_overdue && 'border-destructive',
-              !activity.is_overdue && 'border-transparent',
+              isOverdue && 'border-destructive',
+              !isOverdue && 'border-transparent',
             )}
           >
             <TypeIcon className={cn('size-5', activityTypeColors[activity.work_item_type]?.text)} />
@@ -217,7 +219,7 @@ export function ActivityTimelineItem({
           {/* Meta Row */}
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             {/* Overdue Warning */}
-            {activity.is_overdue && (
+            {isOverdue && (
               <span className="flex items-center gap-1 text-destructive">
                 <AlertTriangle className="size-3" />
                 {t('timeline.overdue', 'Overdue')}
@@ -225,15 +227,17 @@ export function ActivityTimelineItem({
             )}
 
             {/* Due Date */}
-            {!activity.is_overdue && (activity.due_date || activity.sla_deadline) && (
+            {!isOverdue && (activity.due_date || activity.sla_deadline) && (
               <span className="flex items-center gap-1">
                 <Calendar className="size-3" />
-                {formatDate(activity.due_date || activity.sla_deadline)}
+                {formatDate(activity.due_date ?? activity.sla_deadline ?? null)}
               </span>
             )}
 
             {/* Updated Time */}
-            <span className="ms-auto">{formatRelativeTime(activity.updated_at)}</span>
+            <span className="ms-auto">
+              {formatRelativeTime(activity.updated_at ?? activity.activity_timestamp)}
+            </span>
           </div>
 
           {/* Inheritance Info */}

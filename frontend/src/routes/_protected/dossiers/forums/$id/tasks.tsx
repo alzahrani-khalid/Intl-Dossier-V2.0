@@ -1,23 +1,28 @@
 /**
  * Forum Tasks Tab Route
+ * Lazy-loads the DossierWorkItemsTab component.
  */
 
 import { createFileRoute } from '@tanstack/react-router'
 import type { ReactElement } from 'react'
-import { useTranslation } from 'react-i18next'
+import { lazy, Suspense } from 'react'
+import { TabSkeleton } from '@/components/workspace/TabSkeleton'
+
+const DossierWorkItemsTab = lazy(() =>
+  import('@/components/dossier/tabs/DossierWorkItemsTab').then((m) => ({
+    default: m.DossierWorkItemsTab,
+  })),
+)
 
 export const Route = createFileRoute('/_protected/dossiers/forums/$id/tasks')({
   component: ForumTasksRoute,
 })
 
 function ForumTasksRoute(): ReactElement {
-  const { t } = useTranslation('dossier-shell')
-
+  const { id } = Route.useParams()
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-center">
-      <p className="text-muted-foreground text-sm">
-        {t('tabs.tasks')} — {t('emptyState.comingSoon', { defaultValue: 'Content coming soon' })}
-      </p>
-    </div>
+    <Suspense fallback={<TabSkeleton type="list" />}>
+      <DossierWorkItemsTab dossierId={id} />
+    </Suspense>
   )
 }

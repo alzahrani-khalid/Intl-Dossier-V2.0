@@ -1,25 +1,28 @@
 /**
- * Elected Official Timeline Tab
- * Shared tab stub -- renders activity timeline for this dossier.
+ * Elected Official Timeline Tab Route
+ * Lazy-loads the DossierActivityTimeline component.
  */
 
-import type { ReactElement } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
+import type { ReactElement } from 'react'
+import { lazy, Suspense } from 'react'
+import { TabSkeleton } from '@/components/workspace/TabSkeleton'
+
+const DossierActivityTimeline = lazy(() =>
+  import('@/components/dossier/DossierActivityTimeline').then((m) => ({
+    default: m.DossierActivityTimeline,
+  })),
+)
 
 export const Route = createFileRoute('/_protected/dossiers/elected-officials/$id/timeline')({
   component: ElectedOfficialTimelineTab,
 })
 
 function ElectedOfficialTimelineTab(): ReactElement {
-  const { t } = useTranslation('dossier-shell')
-
+  const { id } = Route.useParams()
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold">{t('tabs.timeline')}</h2>
-      <p className="text-sm text-muted-foreground">
-        Activity timeline for this elected official will appear here.
-      </p>
-    </div>
+    <Suspense fallback={<TabSkeleton type="list" />}>
+      <DossierActivityTimeline dossierId={id} />
+    </Suspense>
   )
 }
