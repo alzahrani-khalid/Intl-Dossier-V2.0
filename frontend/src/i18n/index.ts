@@ -217,6 +217,29 @@ import enAfterActionsPage from './en/after-actions-page.json'
 import arAfterActionsPage from './ar/after-actions-page.json'
 import enTasksPage from './en/tasks-page.json'
 import arTasksPage from './ar/tasks-page.json'
+// Quick 260605-u2z: register 11 referenced-but-unregistered namespaces so Arabic resolves at runtime
+import enAdmin from './en/admin.json'
+import arAdmin from './ar/admin.json'
+import enAiAdmin from './en/ai-admin.json'
+import arAiAdmin from './ar/ai-admin.json'
+import enAiBrief from './en/ai-brief.json'
+import arAiBrief from './ar/ai-brief.json'
+import enAiChat from './en/ai-chat.json'
+import arAiChat from './ar/ai-chat.json'
+import enDossierContext from './en/dossier-context.json'
+import arDossierContext from './ar/dossier-context.json'
+import enEntityLinking from './en/entity-linking.json'
+import arEntityLinking from './ar/entity-linking.json'
+import enGraph from './en/graph.json'
+import arGraph from './ar/graph.json'
+import enPreviewLayouts from './en/preview-layouts.json'
+import arPreviewLayouts from './ar/preview-layouts.json'
+import enGeographicVisualization from './en/geographic-visualization.json'
+import arGeographicVisualization from './ar/geographic-visualization.json'
+import enPushNotifications from './en/push-notifications.json'
+import arPushNotifications from './ar/push-notifications.json'
+import enRetentionPolicies from './en/retention-policies.json'
+import arRetentionPolicies from './ar/retention-policies.json'
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -332,6 +355,18 @@ const resources = {
     'briefs-page': enBriefsPage,
     'after-actions-page': enAfterActionsPage,
     'tasks-page': enTasksPage,
+    // Quick 260605-u2z: 11 previously-unregistered namespaces
+    admin: enAdmin,
+    'ai-admin': enAiAdmin,
+    'ai-brief': enAiBrief,
+    'ai-chat': enAiChat,
+    'dossier-context': enDossierContext,
+    'entity-linking': enEntityLinking,
+    graph: enGraph,
+    'preview-layouts': enPreviewLayouts,
+    'geographic-visualization': enGeographicVisualization,
+    'push-notifications': enPushNotifications,
+    'retention-policies': enRetentionPolicies,
   },
   ar: {
     translation: arCommon,
@@ -443,6 +478,18 @@ const resources = {
     'briefs-page': arBriefsPage,
     'after-actions-page': arAfterActionsPage,
     'tasks-page': arTasksPage,
+    // Quick 260605-u2z: 11 previously-unregistered namespaces
+    admin: arAdmin,
+    'ai-admin': arAiAdmin,
+    'ai-brief': arAiBrief,
+    'ai-chat': arAiChat,
+    'dossier-context': arDossierContext,
+    'entity-linking': arEntityLinking,
+    graph: arGraph,
+    'preview-layouts': arPreviewLayouts,
+    'geographic-visualization': arGeographicVisualization,
+    'push-notifications': arPushNotifications,
+    'retention-policies': arRetentionPolicies,
   },
 }
 

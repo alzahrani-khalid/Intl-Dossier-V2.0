@@ -1,0 +1,159 @@
+{
+  "title": "Preview Card Layouts",
+  "description": "Configure how entity preview cards are displayed in hover previews, search results, and embedded references.",
+  "pageTitle": "Manage Preview Layouts",
+  "pageDescription": "Define custom preview card layouts for each entity type",
+
+  "entityTypes": {
+    "dossier": "Dossier",
+    "organization": "Organization",
+    "country": "Country",
+    "forum": "Forum",
+    "position": "Position",
+    "mou": "MOU",
+    "engagement": "Engagement",
+    "commitment": "Commitment",
+    "assignment": "Assignment",
+    "intelligence_signal": "Signal",
+    "working_group": "Working Group",
+    "topic": "Topic"
+  },
+
+  "contexts": {
+    "hover": "Hover Preview",
+    "search_result": "Search Result",
+    "embedded": "Embedded",
+    "compact": "Compact",
+    "expanded": "Expanded"
+  },
+
+  "fieldTypes": {
+    "text": "Text",
+    "date": "Date",
+    "status": "Status",
+    "badge": "Badge",
+    "tags": "Tags",
+    "avatar": "Avatar",
+    "relationship": "Relationship",
+    "activity": "Activity",
+    "metric": "Metric",
+    "priority": "Priority",
+    "custom": "Custom"
+  },
+
+  "layoutConfig": {
+    "title": "Layout Settings",
+    "showAvatar": "Show Avatar",
+    "showAvatarDesc": "Display photo or avatar if available",
+    "showStatus": "Show Status",
+    "showStatusDesc": "Display status badge (active, inactive, etc.)",
+    "showEntityType": "Show Entity Type",
+    "showEntityTypeDesc": "Display entity type badge",
+    "showLastUpdated": "Show Last Updated",
+    "showLastUpdatedDesc": "Display when the entity was last updated",
+    "maxKeyDetails": "Max Key Details",
+    "maxKeyDetailsDesc": "Maximum number of key details to display",
+    "maxTags": "Max Tags",
+    "maxTagsDesc": "Maximum number of tags to display",
+    "showRecentActivity": "Show Recent Activity",
+    "showRecentActivityDesc": "Display recent activity summary",
+    "showMatchScore": "Show Match Score",
+    "showMatchScoreDesc": "Display search relevance score indicator"
+  },
+
+  "fields": {
+    "title": "Preview Fields",
+    "addField": "Add Field",
+    "editField": "Edit Field",
+    "deleteField": "Delete Field",
+    "fieldKey": "Field Key",
+    "fieldKeyDesc": "Unique identifier for this field",
+    "fieldType": "Field Type",
+    "labelEn": "Label (English)",
+    "labelAr": "Label (Arabic)",
+    "sourceConfig": "Source Configuration",
+    "sourceColumn": "Database Column",
+    "sourcePath": "Nested Path",
+    "sourceComputed": "Computed Field",
+    "displayConfig": "Display Configuration",
+    "displayFormat": "Format",
+    "displayHighlightOverdue": "Highlight Overdue",
+    "displayMaxLength": "Max Length",
+    "displayTruncate": "Truncate",
+    "displayUppercase": "Uppercase",
+    "displaySuffix": "Suffix",
+    "displayPrefix": "Prefix",
+    "displayColorMap": "Color Mapping",
+    "displayMaxItems": "Max Items",
+    "sortOrder": "Sort Order",
+    "isVisible": "Visible",
+    "isRequired": "Required",
+    "isRequiredDesc": "Required fields cannot be hidden by users",
+    "noFields": "No fields configured",
+    "noFieldsDesc": "Add fields to customize the preview card"
+  },
+
+  "layouts": {
+    "title": "Layouts",
+    "createLayout": "Create Layout",
+    "editLayout": "Edit Layout",
+    "deleteLayout": "Delete Layout",
+    "setDefault": "Set as Default",
+    "isDefault": "Default",
+    "nameEn": "Name (English)",
+    "nameAr": "Name (Arabic)",
+    "descriptionEn": "Description (English)",
+    "descriptionAr": "Description (Arabic)",
+    "context": "Context",
+    "fieldCount": "{{count}} fields",
+    "noLayouts": "No layouts found",
+    "noLayoutsDesc": "Create a layout to customize preview cards for this entity type"
+  },
+
+  "actions": {
+    "save": "Save Changes",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "reset": "Reset",
+    "duplicate": "Duplicate",
+    "preview": "Preview",
+    "moveUp": "Move Up",
+    "moveDown": "Move Down",
+    "reorderFields": "Reorder Fields"
+  },
+
+  "messages": {
+    "layoutCreated": "Layout created successfully",
+    "layoutUpdated": "Layout updated successfully",
+    "layoutDeleted": "Layout deleted successfully",
+    "layoutSetDefault": "Layout set as default",
+    "fieldAdded": "Field added successfully",
+    "fieldUpdated": "Field updated successfully",
+    "fieldDeleted": "Field deleted successfully",
+    "fieldsReordered": "Fields reordered successfully",
+    "unsavedChanges": "You have unsaved changes",
+    "unsavedChangesDesc": "Save your changes before leaving",
+    "confirmDelete": "Are you sure you want to delete this?",
+    "confirmDeleteLayout": "Are you sure you want to delete this layout?",
+    "confirmDeleteField": "Are you sure you want to delete this field?"
+  },
+
+  "errors": {
+    "loadFailed": "Failed to load layouts",
+    "saveFailed": "Failed to save changes",
+    "deleteFailed": "Failed to delete",
+    "fieldKeyExists": "A field with this key already exists",
+    "requiredField": "This field is required"
+  },
+
+  "tabs": {
+    "settings": "Settings",
+    "fields": "Fields",
+    "preview": "Preview"
+  },
+
+  "selectEntity": "Select Entity Type",
+  "selectEntityDesc": "Choose an entity type to manage its preview layouts",
+  "selectContext": "Select Context",
+  "selectContextDesc": "Choose the context for this layout"
+}

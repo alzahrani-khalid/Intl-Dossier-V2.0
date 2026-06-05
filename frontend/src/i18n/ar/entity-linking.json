@@ -1,0 +1,45 @@
+{
+  "title": "روابط الكيانات",
+  "description": "كيانات مقترحة من الذكاء الاصطناعي ومربوطة يدوياً",
+  "suggestLinks": "اقتراح روابط",
+  "pendingProposals": "اقتراحات الذكاء الاصطناعي",
+  "linkedEntities": "الكيانات المرتبطة",
+  "noLinks": "لا توجد كيانات مرتبطة بعد",
+  "noLinksHint": "اضغط على \"اقتراح روابط\" للحصول على توصيات الذكاء الاصطناعي",
+  "confidence": {
+    "label": "الثقة",
+    "high": "عالية",
+    "medium": "متوسطة",
+    "low": "منخفضة"
+  },
+  "actions": {
+    "approve": "موافقة",
+    "reject": "رفض",
+    "delete": "إزالة",
+    "retry": "إعادة المحاولة"
+  },
+  "entityTypes": {
+    "dossier": "ملف",
+    "position": "منصب",
+    "person": "شخص",
+    "engagement": "لقاء",
+    "commitment": "التزام"
+  },
+  "badges": {
+    "aiSuggested": "ذ.ا",
+    "manual": "يدوي"
+  },
+  "errors": {
+    "generateFailed": "فشل في توليد الاقتراحات",
+    "approveFailed": "فشل في الموافقة على الاقتراح",
+    "rejectFailed": "فشل في رفض الاقتراح",
+    "deleteFailed": "فشل في إزالة الرابط",
+    "loadFailed": "فشل في تحميل الروابط"
+  },
+  "success": {
+    "approved": "تمت الموافقة على الرابط",
+    "rejected": "تم رفض الاقتراح",
+    "deleted": "تم إزالة الرابط",
+    "generated": "تم توليد الاقتراحات"
+  }
+}
