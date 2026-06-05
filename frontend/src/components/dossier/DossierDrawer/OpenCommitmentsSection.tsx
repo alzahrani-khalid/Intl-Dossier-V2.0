@@ -9,9 +9,9 @@
  *
  * Decisions:
  *  - D-04: read from `work_items.by_source.commitments` (pre-filtered).
- *  - D-08: row click → `/commitments?id=<id>` (RESEARCH §4 — no work-item
- *    detail dialog component exists; revised D-08 expectation captured in
- *    SUMMARY for Wave 2 verification).
+ *  - D-08 (revised, quick 260605-htw): row click opens CommitmentDetailDrawer in
+ *    place via the `commitment` search param (useCommitmentDrawer) so the analyst
+ *    keeps quick-look context, instead of navigating away to `/commitments?id=`.
  *  - D-11: row min-block-size = 44 regardless of density (touch target).
  *
  * Severity color (per UI-SPEC Color anti-list + handoff app.css):
@@ -21,20 +21,17 @@
  *
  * XSS posture: title and assignee_name render as React JSX text (auto-escaped).
  * `ownerInitials` only emits A–Z–derived chars from .toUpperCase()[0]; cannot
- * inject HTML. Hard-coded `to: '/commitments'` literal in navigate prevents
- * open-redirect (T-41-05-02). Invalid deadlines short-circuit to '—'
+ * inject HTML. The row click passes only the item's own id to the drawer (no
+ * free-form redirect target). Invalid deadlines short-circuit to '—'
  * (T-41-05-03).
  */
 import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from '@tanstack/react-router'
 import { differenceInCalendarDays } from 'date-fns'
-import type {
-  DossierOverviewResponse,
-  DossierWorkItem,
-} from '@/types/dossier-overview.types'
+import type { DossierOverviewResponse, DossierWorkItem } from '@/types/dossier-overview.types'
 import { toArDigits } from '@/lib/i18n/toArDigits'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
+import { useCommitmentDrawer } from '@/hooks/useCommitmentDrawer'
 
 export interface OpenCommitmentsSectionProps {
   overview?: DossierOverviewResponse | undefined
@@ -80,31 +77,21 @@ export function OpenCommitmentsSection({
   overview,
 }: OpenCommitmentsSectionProps): React.JSX.Element {
   const { t, i18n } = useTranslation('dossier-drawer')
-  const navigate = useNavigate()
+  const { openCommitment } = useCommitmentDrawer()
   const lang = i18n.language
 
   const all: DossierWorkItem[] = overview?.work_items?.by_source?.commitments ?? []
   const rows = all.filter((it) => isOpenStatus(it.status))
 
   const handleRowClick = (id: string): void => {
-    // RESEARCH §4: no work-item detail dialog component exists in the codebase.
-    // Phase 39 WorkBoard.handleItemClick already routes commitments to
-    // `/commitments`; the protected layout keeps the drawer mounted, so remove
-    // drawer search params explicitly before switching routes.
-    navigate({
-      to: '/commitments',
-      search: (prev: Record<string, unknown>) => {
-        const { dossier: _d, dossierType: _t, ...rest } = prev
-        return { ...rest, id }
-      },
-    } as unknown as Parameters<typeof navigate>[0])
+    // Open the commitment detail drawer in place (a `commitment` search param the
+    // globally-mounted CommitmentDrawer reads) so the analyst keeps dashboard /
+    // dossier quick-look context instead of navigating away to `/commitments`.
+    openCommitment(id)
   }
 
   return (
-    <section
-      className="flex flex-col gap-2"
-      data-testid="dossier-drawer-commitments"
-    >
+    <section className="flex flex-col gap-2" data-testid="dossier-drawer-commitments">
       <h3
         className="t-label"
         style={{
@@ -123,10 +110,7 @@ export function OpenCommitmentsSection({
           {t('empty.open_commitments')}
         </p>
       ) : (
-        <ul
-          className="flex flex-col gap-1"
-          data-testid="dossier-drawer-commitments-list"
-        >
+        <ul className="flex flex-col gap-1" data-testid="dossier-drawer-commitments-list">
           {rows.map((it) => {
             const title =
               lang === 'ar' && it.title_ar !== null && it.title_ar !== ''
@@ -152,10 +136,7 @@ export function OpenCommitmentsSection({
                       backgroundColor: severityColor(it.priority),
                     }}
                   />
-                  <span
-                    className="overdue-title"
-                    style={{ fontSize: 'var(--t-body, 13px)' }}
-                  >
+                  <span className="overdue-title" style={{ fontSize: 'var(--t-body, 13px)' }}>
                     {title}
                   </span>
                   <LtrIsolate>

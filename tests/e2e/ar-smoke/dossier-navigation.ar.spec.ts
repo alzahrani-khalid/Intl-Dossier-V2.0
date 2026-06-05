@@ -7,7 +7,7 @@ import DossierDetailPage, {
 } from '../support/pages/DossierDetailPage'
 
 const SEED_DOSSIER_NAME = process.env.E2E_SEED_DOSSIER_NAME ?? 'Saudi Arabia'
-const TABS: readonly DossierTabName[] = ['overview', 'docs', 'work-items', 'calendar', 'relationships']
+const TABS: readonly DossierTabName[] = ['overview', 'engagements', 'docs', 'tasks', 'timeline']
 
 test.describe('TEST-03 dossier navigation (ar-smoke)', () => {
   test('navigates list -> detail -> tabs in Arabic, dir=rtl preserved', async ({
@@ -22,11 +22,9 @@ test.describe('TEST-03 dossier navigation (ar-smoke)', () => {
 
     // Seed dossier names are bilingual / stable — search still works in AR.
     await list.searchByName(SEED_DOSSIER_NAME)
-    await expect(
-      analystPage.getByRole('link', { name: SEED_DOSSIER_NAME }).first(),
-    ).toBeVisible()
+    await expect(list.card(SEED_DOSSIER_NAME).first()).toBeVisible()
     await list.openDossier(SEED_DOSSIER_NAME)
-    await expect(analystPage).toHaveURL(/\/dossiers\/[0-9a-f-]+/i)
+    await expect(analystPage).toHaveURL(/\/dossiers\/countries\/[0-9a-f-]+/i)
     // dir=rtl survives route change.
     await expect(analystPage.locator('html')).toHaveAttribute('dir', 'rtl')
 
