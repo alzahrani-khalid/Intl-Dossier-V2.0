@@ -17,7 +17,8 @@ import { workItemDossierKeys } from '@/hooks/useCreateWorkItemDossierLinks'
 // ============================================================================
 
 export interface TimelineActivity {
-  id: string
+  // Real fields — the dossier-activity-timeline edge function always emits these.
+  link_id: string
   work_item_id: string
   work_item_type: WorkItemType
   dossier_id: string
@@ -25,14 +26,23 @@ export interface TimelineActivity {
   status: string
   priority: string
   assignee_id: string | null
-  due_date: string | null
-  sla_deadline: string | null
-  is_overdue: boolean
-  created_at: string
-  updated_at: string
+  activity_timestamp: string
   inheritance_source: string
-  inherited_from_type: string | null
-  inherited_from_id: string | null
+  // Real fields the edge function may also emit (display extras).
+  icon_type?: 'checklist' | 'handshake' | 'inbox'
+  inheritance_label?: string | null
+  inheritance_path?: unknown[]
+  // Display-only fields the edge function does NOT populate. They are optional so
+  // the compiler stops consumers from reading them blindly — fall back to the
+  // canonical real fields above (e.g. activity_timestamp, link_id) instead.
+  id?: string
+  created_at?: string
+  updated_at?: string
+  due_date?: string | null
+  sla_deadline?: string | null
+  is_overdue?: boolean
+  inherited_from_type?: string | null
+  inherited_from_id?: string | null
 }
 
 export interface TimelineFilters {
@@ -163,7 +173,7 @@ export interface UseDossierActivityTimelineReturn {
  *
  * // Render timeline
  * {activities.map(activity => (
- *   <ActivityTimelineItem key={activity.id} activity={activity} />
+ *   <ActivityTimelineItem key={activity.link_id} activity={activity} />
  * ))}
  *
  * // Load more button

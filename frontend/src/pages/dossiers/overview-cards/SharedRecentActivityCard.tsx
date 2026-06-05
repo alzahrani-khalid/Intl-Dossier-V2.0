@@ -11,17 +11,21 @@ import { useDossierActivityTimeline } from '@/hooks/useDossierActivityTimeline'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatDistanceToNow } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
-import {
-  CheckCircle2,
-  Clock,
-  AlertCircle,
-  FileText,
-  GitPullRequest,
-} from 'lucide-react'
+import { CheckCircle2, Clock, AlertCircle, FileText, GitPullRequest } from 'lucide-react'
 
 interface SharedRecentActivityCardProps {
   dossierId: string
   maxItems?: number
+}
+
+// Defensive relative-time formatter. The edge function emits `activity_timestamp`;
+// guard nullish / invalid values before date-fns so a malformed timestamp renders
+// a neutral em-dash placeholder instead of throwing RangeError: Invalid time value.
+function formatActivityTime(timestamp: string | null | undefined, isRTL: boolean): string {
+  if (timestamp === undefined || timestamp === null || timestamp === '') return '—'
+  const d = new Date(timestamp)
+  if (Number.isNaN(d.getTime())) return '—'
+  return formatDistanceToNow(d, { addSuffix: true, locale: isRTL ? ar : enUS })
 }
 
 function getActivityIcon(status: string): React.ReactNode {
@@ -80,17 +84,14 @@ export function SharedRecentActivityCard({
         <div className="space-y-2">
           {recentActivities.map((activity) => (
             <div
-              key={activity.id}
+              key={activity.link_id}
               className="flex items-start gap-2 rounded-md p-2 hover:bg-muted/50 transition-colors"
             >
               {getActivityIcon(activity.status)}
               <div className="flex-1 min-w-0">
                 <p className="text-sm truncate">{activity.activity_title}</p>
                 <p className="text-xs text-muted-foreground">
-                  {formatDistanceToNow(new Date(activity.created_at), {
-                    addSuffix: true,
-                    locale: isRTL ? ar : enUS,
-                  })}
+                  {formatActivityTime(activity.activity_timestamp, isRTL)}
                 </p>
               </div>
             </div>

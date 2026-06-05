@@ -69,7 +69,7 @@ export function DossierActivityTimeline({
 }: DossierActivityTimelineProps) {
   const { t } = useTranslation('dossier-context')
   const { isRTL } = useDirection()
-// Fetch timeline data with infinite scroll
+  // Fetch timeline data with infinite scroll
   const {
     activities,
     isLoading,
@@ -200,7 +200,7 @@ export function DossierActivityTimeline({
         <div className="overflow-y-auto space-y-2" style={{ maxHeight }}>
           {activities.map((activity, index) => (
             <ActivityTimelineItem
-              key={activity.id}
+              key={activity.link_id}
               activity={activity}
               isFirst={index === 0}
               isLast={index === activities.length - 1 && !hasNextPage}
