@@ -1,23 +1,28 @@
 /**
  * Working Group Engagements Tab Route
+ * Lazy-loads the DossierEngagementsTab component.
  */
 
 import { createFileRoute } from '@tanstack/react-router'
 import type { ReactElement } from 'react'
-import { useTranslation } from 'react-i18next'
+import { lazy, Suspense } from 'react'
+import { TabSkeleton } from '@/components/workspace/TabSkeleton'
+
+const DossierEngagementsTab = lazy(() =>
+  import('@/components/dossier/tabs/DossierEngagementsTab').then((m) => ({
+    default: m.DossierEngagementsTab,
+  })),
+)
 
 export const Route = createFileRoute('/_protected/dossiers/working_groups/$id/engagements')({
   component: WorkingGroupEngagementsRoute,
 })
 
 function WorkingGroupEngagementsRoute(): ReactElement {
-  const { t } = useTranslation('dossier-shell')
-
+  const { id } = Route.useParams()
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-center">
-      <p className="text-muted-foreground text-sm">
-        {t('tabs.engagements')} — {t('emptyState.comingSoon', { defaultValue: 'Content coming soon' })}
-      </p>
-    </div>
+    <Suspense fallback={<TabSkeleton type="list" />}>
+      <DossierEngagementsTab dossierId={id} />
+    </Suspense>
   )
 }

@@ -1,25 +1,28 @@
 /**
- * Elected Official Engagements Tab
- * Shared tab stub -- renders engagements linked to this dossier.
+ * Elected Official Engagements Tab Route
+ * Lazy-loads the DossierEngagementsTab component.
  */
 
-import type { ReactElement } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
+import type { ReactElement } from 'react'
+import { lazy, Suspense } from 'react'
+import { TabSkeleton } from '@/components/workspace/TabSkeleton'
+
+const DossierEngagementsTab = lazy(() =>
+  import('@/components/dossier/tabs/DossierEngagementsTab').then((m) => ({
+    default: m.DossierEngagementsTab,
+  })),
+)
 
 export const Route = createFileRoute('/_protected/dossiers/elected-officials/$id/engagements')({
   component: ElectedOfficialEngagementsTab,
 })
 
 function ElectedOfficialEngagementsTab(): ReactElement {
-  const { t } = useTranslation('dossier-shell')
-
+  const { id } = Route.useParams()
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold">{t('tabs.engagements')}</h2>
-      <p className="text-sm text-muted-foreground">
-        Engagements linked to this elected official will appear here.
-      </p>
-    </div>
+    <Suspense fallback={<TabSkeleton type="list" />}>
+      <DossierEngagementsTab dossierId={id} />
+    </Suspense>
   )
 }
