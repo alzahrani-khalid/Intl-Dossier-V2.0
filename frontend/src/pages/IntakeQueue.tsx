@@ -49,6 +49,7 @@ import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import { useLastSyncInfo } from '../hooks/useLastSyncInfo'
 import { PullToRefreshIndicator, SyncStatusBar } from '../components/ui/pull-to-refresh-indicator'
 import { useDirection } from '@/hooks/useDirection'
+import { intakeKeys } from '@/hooks/useIntakeApi'
 
 /**
  * Valid ticket_status enum values from database
@@ -103,7 +104,7 @@ interface Ticket {
   }
 }
 
-interface QueueFilters {
+type QueueFilters = {
   statusCategory: StatusCategoryKey
   priority?: string
   requestType?: string
@@ -129,7 +130,7 @@ export function IntakeQueuePage() {
     isLoading,
     refetch,
   } = useQuery<Ticket[], Error>({
-    queryKey: ['intake-queue', filters],
+    queryKey: intakeKeys.ticketList(filters),
     queryFn: async (): Promise<Ticket[]> => {
       let query = supabase
         .from('intake_tickets')

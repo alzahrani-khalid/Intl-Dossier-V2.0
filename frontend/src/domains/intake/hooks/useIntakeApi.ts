@@ -113,6 +113,7 @@ export const useApplyTriage = (ticketId: string) => {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: intakeKeys.ticket(ticketId) })
       void queryClient.invalidateQueries({ queryKey: intakeKeys.triage(ticketId) })
+      void queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() })
     },
   })
 }
