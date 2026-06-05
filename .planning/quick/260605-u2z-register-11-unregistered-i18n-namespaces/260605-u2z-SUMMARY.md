@@ -84,3 +84,19 @@ None — plan executed exactly as written.
 - 16 Group A JSON files present and tracked at `HEAD`.
 - All 11 namespace keys present (≥2 occurrences each) in committed `index.ts`.
 - Commit `46bad7d8` exists in git log.
+
+## Follow-up (orchestrator, verification-driven)
+
+The initial audit only matched single-string `useTranslation('X')`. Post-execution verification also
+swept array-form `useTranslation(['X', ...])` and `{ ns: 'X' }` references and found **3 more orphans of
+the same class** whose JSON lived in the dead `public/locales/{en,ar}`: **countries, organizations, topics**.
+These are the PRIMARY namespace of the dossier list pages (`countries/index.tsx`, `organizations/index.tsx`,
+`topics/-TopicsListPage.tsx`) — the report's own Countries list among them — so bare `t()` calls never
+resolved (English defaults / raw keys in both languages). Copied the 6 JSON files into `src/i18n/{en,ar}`
+and registered all 3. `tsc --noEmit` exit 0; pre-commit build passed.
+
+`lists` was also referenced (via `{ ns: 'lists' }`) but has NO JSON anywhere — a phantom reference, left
+as-is (nothing to register).
+
+**Total namespaces registered: 14** (11 + 3).
+Commit: `05175c87` — fix(quick-260605-u2z): register 3 array-form orphan i18n namespaces (countries/organizations/topics)
