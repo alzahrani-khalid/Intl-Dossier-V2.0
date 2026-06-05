@@ -255,22 +255,64 @@ async function handleCreate(supabase: any, req: Request, userId: string): Promis
   const { data, error } = await supabase.from('work_item_dossiers').insert(linksToInsert).select();
 
   if (error) {
-    console.error('Insert error:', error);
-
-    // Handle unique constraint violation
+    // 23505: at least one requested link already exists. With the
+    // sync_commitment_dossier_link DB trigger, a commitment's home-dossier link is
+    // created automatically, so the client's create call is commonly redundant.
+    // Treat create as idempotent: insert whichever links are missing and return
+    // the full set of active links for the request (200), rather than failing.
     if (error.code === '23505') {
+      const results: WorkItemDossierLink[] = [];
+      for (const link of linksToInsert) {
+        const { data: inserted, error: insErr } = await supabase
+          .from('work_item_dossiers')
+          .insert(link)
+          .select();
+
+        if (insErr) {
+          if (insErr.code === '23505') {
+            // Already linked — fetch and return the existing active link.
+            const { data: existing } = await supabase
+              .from('work_item_dossiers')
+              .select()
+              .eq('work_item_type', link.work_item_type)
+              .eq('work_item_id', link.work_item_id)
+              .eq('dossier_id', link.dossier_id)
+              .is('deleted_at', null);
+            if (existing) results.push(...existing);
+            continue;
+          }
+
+          console.error('Insert error (idempotent retry):', insErr);
+          return new Response(
+            JSON.stringify({
+              error: 'Failed to create dossier links',
+              code: 'INTERNAL_ERROR',
+              details: insErr.message,
+            }),
+            {
+              status: 500,
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            }
+          );
+        }
+
+        if (inserted) results.push(...inserted);
+      }
+
       return new Response(
         JSON.stringify({
-          error: 'One or more dossier links already exist',
-          code: 'DUPLICATE_LINK',
+          links: results,
+          created_count: results.length,
+          idempotent: true,
         }),
         {
-          status: 409,
+          status: 200,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
 
+    console.error('Insert error:', error);
     return new Response(
       JSON.stringify({
         error: 'Failed to create dossier links',

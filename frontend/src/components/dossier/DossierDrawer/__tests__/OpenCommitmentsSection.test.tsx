@@ -16,21 +16,20 @@
  *   7. AR title falls through to title_en when title_ar null
  *   8. days label: T-N for past, T+N for future, '—' for null deadline
  *   9. owner initials computed; '—' when assignee_name null
- *  10. row click → navigate to /commitments?id=<id> while clearing drawer keys
+ *  10. row click → opens commitment drawer in place (commitment search param, no route change)
  *  11. row min-block-size === 44
  *  12. section heading renders t('section.open_commitments')
  */
 import { render, screen, cleanup, fireEvent, within } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import type {
-  DossierOverviewResponse,
-  DossierWorkItem,
-} from '@/types/dossier-overview.types'
+import type { DossierOverviewResponse, DossierWorkItem } from '@/types/dossier-overview.types'
 
 const navigateMock = vi.fn()
 
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => navigateMock,
+  // useCommitmentDrawer reads the current search params; no commitment open by default.
+  useSearch: () => ({}),
 }))
 
 // Per-file override of the global react-i18next mock so we can flip language.
@@ -208,7 +207,7 @@ describe('OpenCommitmentsSection (Phase 41 Plan 05)', () => {
     expect(owners[3]).toBe('—')
   })
 
-  it('10. row click navigates to /commitments?id=<id> and clears drawer params', () => {
+  it('10. row click opens the commitment drawer in place (commitment search param, no route change)', () => {
     const items = [
       mkItem({ id: 'click-me', title_en: 'Click target' }),
       mkItem({ id: 'other', title_en: 'Other row' }),
@@ -221,7 +220,9 @@ describe('OpenCommitmentsSection (Phase 41 Plan 05)', () => {
       to?: string
       search?: (prev: Record<string, unknown>) => Record<string, unknown>
     }
-    expect(navArg.to).toBe('/commitments')
+    // Opens in place via the `commitment` search param — no `to` (stays on page),
+    // and the dossier quick-look stays open (its params are preserved).
+    expect(navArg.to).toBeUndefined()
     expect(typeof navArg.search).toBe('function')
     expect(
       navArg.search?.({
@@ -229,7 +230,12 @@ describe('OpenCommitmentsSection (Phase 41 Plan 05)', () => {
         dossierType: 'country',
         page: 2,
       }),
-    ).toEqual({ id: 'click-me', page: 2 })
+    ).toEqual({
+      dossier: 'open-dossier',
+      dossierType: 'country',
+      page: 2,
+      commitment: 'click-me',
+    })
   })
 
   it('11. each row has min-block-size 44 (D-11 touch target)', () => {
