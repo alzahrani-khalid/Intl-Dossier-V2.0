@@ -240,6 +240,13 @@ import enPushNotifications from './en/push-notifications.json'
 import arPushNotifications from './ar/push-notifications.json'
 import enRetentionPolicies from './en/retention-policies.json'
 import arRetentionPolicies from './ar/retention-policies.json'
+// Quick 260605-u2z: array-form useTranslation([...]) primary namespaces for dossier list pages
+import enCountries from './en/countries.json'
+import arCountries from './ar/countries.json'
+import enOrganizations from './en/organizations.json'
+import arOrganizations from './ar/organizations.json'
+import enTopics from './en/topics.json'
+import arTopics from './ar/topics.json'
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -367,6 +374,9 @@ const resources = {
     'geographic-visualization': enGeographicVisualization,
     'push-notifications': enPushNotifications,
     'retention-policies': enRetentionPolicies,
+    countries: enCountries,
+    organizations: enOrganizations,
+    topics: enTopics,
   },
   ar: {
     translation: arCommon,
@@ -490,6 +500,9 @@ const resources = {
     'geographic-visualization': arGeographicVisualization,
     'push-notifications': arPushNotifications,
     'retention-policies': arRetentionPolicies,
+    countries: arCountries,
+    organizations: arOrganizations,
+    topics: arTopics,
   },
 }
 
