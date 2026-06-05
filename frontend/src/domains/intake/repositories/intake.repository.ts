@@ -43,12 +43,8 @@ export async function applyTriage(
 }
 
 // ============================================================================
-// Assignment & Conversion
+// Conversion
 // ============================================================================
-
-export async function assignTicket(data: Record<string, unknown>): Promise<unknown> {
-  return apiPost('/intake-tickets-assign', data)
-}
 
 export async function convertTicket(data: Record<string, unknown>): Promise<unknown> {
   return apiPost('/intake-tickets-convert', data)
@@ -58,10 +54,7 @@ export async function convertTicket(data: Record<string, unknown>): Promise<unkn
 // Duplicates & Merge
 // ============================================================================
 
-export async function findDuplicates(
-  ticketId: string,
-  threshold: number = 0.65,
-): Promise<unknown> {
+export async function findDuplicates(ticketId: string, threshold: number = 0.65): Promise<unknown> {
   return apiGet(`/intake-tickets-duplicates?id=${ticketId}&threshold=${threshold}`)
 }
 
