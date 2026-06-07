@@ -3,6 +3,7 @@ import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { DossierGlyph } from '@/components/signature-visuals'
 import type { DossierGlyphProps } from '@/components/signature-visuals'
+import { formatDayFirst } from '@/lib/format-date'
 import { sensitivityChipClass, sensitivityLabelKey } from './sensitivity'
 
 export type DossierTableRow = {
@@ -31,17 +32,6 @@ const fallbackSensitivityLabel = (level: number, isRTL: boolean): string => {
     4: { en: 'Confidential', ar: 'سري' },
   }
   return labels[level]?.[isRTL ? 'ar' : 'en'] ?? (isRTL ? 'غير معروف' : 'Unknown')
-}
-
-const formatLastTouch = (iso: string | null | undefined, locale: string): string => {
-  if (iso == null || iso === '') return '—'
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return '—'
-  return d.toLocaleDateString(locale === 'ar' ? 'ar-SA' : 'en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
 }
 
 const SkeletonRow = (): ReactNode => (
@@ -132,7 +122,7 @@ export function DossierTable({
               {row.engagement_count}
             </span>
             <span className="hidden shrink-0 text-[13px] text-[var(--ink-mute)] md:inline">
-              {formatLastTouch(row.last_touch, i18n.language)}
+              {formatDayFirst(row.last_touch ?? '', i18n.language)}
             </span>
             <span className={`chip shrink-0 ${chipClass}`}>{chipLabel}</span>
             <ChevronRight
