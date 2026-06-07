@@ -2,10 +2,11 @@
  * DossierGlyph XSS / injection tests (Phase 37 T-37-01, Plan 05 Task 05-2 — RED).
  *
  * Locks the T-37-01 mitigation from the plan's threat register:
- *   - Flag TSX authored in-repo — never fetched, never string-injected
+ *   - Flag asset URL is gated by the in-repo FLAG_CODES allowlist — only known
+ *     ISO codes reach /assets/flags/{iso}.svg (no traversal/injection input)
  *   - `name` prop flows through a React text node (auto-escaped)
  *   - No `<script>` tag survives rendering (belt-and-braces)
- *   - No `xlink:href` external refs present
+ *   - SVG `<image href>` (not `xlink:href`) — no `xlink:href` external refs present
  */
 
 import { render } from '@testing-library/react'
