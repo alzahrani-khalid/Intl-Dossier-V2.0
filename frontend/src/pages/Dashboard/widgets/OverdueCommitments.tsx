@@ -11,6 +11,7 @@ import {
   type GroupedCommitment,
 } from '@/hooks/usePersonalCommitments'
 import { useDossierDrawer, type DossierDrawerType } from '@/hooks/useDossierDrawer'
+import { useCommitmentDrawer } from '@/hooks/useCommitmentDrawer'
 import { WidgetSkeleton } from './WidgetSkeleton'
 
 /**
@@ -57,6 +58,7 @@ export function OverdueCommitments(): ReactElement {
   const { t } = useTranslation('dashboard-widgets')
   const { data, isLoading, isError } = usePersonalCommitments()
   const { openDossier } = useDossierDrawer()
+  const { openCommitment } = useCommitmentDrawer()
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
 
   if (isLoading) {
@@ -154,26 +156,37 @@ export function OverdueCommitments(): ReactElement {
               <ul className="space-y-1">
                 {visible.map(
                   (c): ReactElement => (
-                    <li
-                      key={c.id}
-                      className="overdue-row overdue-item flex items-center gap-3 min-h-11 rounded-md p-2"
-                    >
-                      <span
-                        className={severityDot({ severity: c.severity })}
-                        data-severity={c.severity}
-                        aria-hidden="true"
-                      />
-                      <span className="text-sm text-ink text-start truncate flex-1">{c.title}</span>
-                      <LtrIsolate className="overdue-days font-mono text-xs">
-                        {`${c.daysOverdue}d`}
-                      </LtrIsolate>
-                      <span
-                        className="overdue-owner text-xs font-mono"
-                        aria-label={`${t('overdue.owner')}: ${c.ownerInitials}`}
+                    <li key={c.id} className="overdue-item">
+                      <button
+                        type="button"
+                        className="overdue-row flex w-full items-center gap-3 min-h-11 rounded-md p-2 text-start hover:bg-surface/60 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--accent)]"
+                        style={{ minBlockSize: 44 }}
+                        onClick={(): void => openCommitment(c.id)}
+                        aria-label={c.title}
+                        data-testid="overdue-commitment-item"
                       >
-                        {c.ownerInitials}
-                      </span>
-                      <ArrowUpRight className="size-4 text-ink-soft icon-flip" aria-hidden="true" />
+                        <span
+                          className={severityDot({ severity: c.severity })}
+                          data-severity={c.severity}
+                          aria-hidden="true"
+                        />
+                        <span className="text-sm text-ink text-start truncate flex-1">
+                          {c.title}
+                        </span>
+                        <LtrIsolate className="overdue-days font-mono text-xs">
+                          {`${c.daysOverdue}d`}
+                        </LtrIsolate>
+                        <span
+                          className="overdue-owner text-xs font-mono"
+                          aria-label={`${t('overdue.owner')}: ${c.ownerInitials}`}
+                        >
+                          {c.ownerInitials}
+                        </span>
+                        <ArrowUpRight
+                          className="size-4 text-ink-soft icon-flip"
+                          aria-hidden="true"
+                        />
+                      </button>
                     </li>
                   ),
                 )}

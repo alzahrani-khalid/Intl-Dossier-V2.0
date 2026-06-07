@@ -35,6 +35,21 @@ vi.mock('@/hooks/useDossierDrawer', () => ({
   }),
 }))
 
+const openCommitmentMock = vi.fn()
+vi.mock('@/hooks/useCommitmentDrawer', () => ({
+  useCommitmentDrawer: (): {
+    openCommitment: typeof openCommitmentMock
+    closeCommitment: () => void
+    open: boolean
+    commitmentId: string | null
+  } => ({
+    openCommitment: openCommitmentMock,
+    closeCommitment: vi.fn(),
+    open: false,
+    commitmentId: null,
+  }),
+}))
+
 import { usePersonalCommitments } from '@/hooks/usePersonalCommitments'
 import { OverdueCommitments } from '../OverdueCommitments'
 
@@ -102,6 +117,7 @@ describe('OverdueCommitments', () => {
   beforeEach((): void => {
     vi.mocked(usePersonalCommitments).mockReset()
     openDossierMock.mockReset()
+    openCommitmentMock.mockReset()
   })
 
   it('renders loading skeleton when loading', (): void => {
@@ -161,6 +177,20 @@ describe('OverdueCommitments', () => {
     const expandToggle = screen.getByText('overdue.expand')
     fireEvent.click(expandToggle)
     expect(container.querySelectorAll('.overdue-row')).toHaveLength(4)
+    expect(openDossierMock).not.toHaveBeenCalled()
+    expect(openCommitmentMock).not.toHaveBeenCalled()
+  })
+
+  it('clicking an overdue-commitment row opens the commitment drawer via openCommitment(id)', (): void => {
+    vi.mocked(usePersonalCommitments).mockReturnValue({
+      data: [redGroup],
+      isLoading: false,
+      isError: false,
+    })
+    render(<OverdueCommitments />)
+    fireEvent.click(screen.getByRole('button', { name: 'Red item' }))
+    expect(openCommitmentMock).toHaveBeenCalledTimes(1)
+    expect(openCommitmentMock).toHaveBeenCalledWith('c5')
     expect(openDossierMock).not.toHaveBeenCalled()
   })
 
