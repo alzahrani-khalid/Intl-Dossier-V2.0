@@ -33,6 +33,7 @@ export interface CountriesPagination {
  */
 export interface CountryDossier extends Dossier {
   iso_code?: string
+  engagement_count?: number
 }
 
 export interface CountriesListResponse {
@@ -97,7 +98,33 @@ export function useCountries(
         }
       }
 
-      const merged: CountryDossier[] = rows.map((d) => ({ ...d, iso_code: isoById[d.id] }))
+      // Count engagements per country from the `engagement_dossiers` extension
+      // table (engagement_dossiers.host_country_id FK → dossiers.id — the
+      // schema-canonical country↔engagement link). PostgREST has no simple
+      // GROUP BY here, so tally in JS — mirrors the iso-merge above (a second
+      // `.in()` query + reduce). Reads 0 until host_country_id is populated, but
+      // removes the latent always-zero bug (the route reads d.engagement_count).
+      const engagementCountById: Record<string, number> = {}
+      if (ids.length > 0) {
+        const { data: engagementExts } = await supabase
+          .from('engagement_dossiers')
+          .select('host_country_id')
+          .in('host_country_id', ids)
+        if (engagementExts) {
+          for (const ext of engagementExts as Array<{ host_country_id: string | null }>) {
+            const hostId = ext.host_country_id
+            if (typeof hostId === 'string' && hostId.length > 0) {
+              engagementCountById[hostId] = (engagementCountById[hostId] ?? 0) + 1
+            }
+          }
+        }
+      }
+
+      const merged: CountryDossier[] = rows.map((d) => ({
+        ...d,
+        iso_code: isoById[d.id],
+        engagement_count: engagementCountById[d.id] ?? 0,
+      }))
       const total: number | null = typeof count === 'number' ? count : null
       const totalPages = total !== null && total > 0 ? Math.ceil(total / limit) : 0
 
