@@ -2,8 +2,9 @@
  * Phase 37 — `<DossierGlyph>` — dossier visual identity primitive (VIZ-04).
  *
  * Resolution order (per D-09..D-11 + RESEARCH Pitfall 6):
- *   1. type='country' + iso in FLAG_KEYS → hand-drawn flag clipped to a circle
- *      with a 1px rgba(0,0,0,0.15) hairline ring
+ *   1. type='country' + iso in FLAG_CODES → accurate flag SVG from
+ *      /assets/flags/{iso}.svg, clipped to a circle with a 1px rgba(0,0,0,0.15)
+ *      hairline ring
  *   2. type='country' + unknown iso → initials fallback (1–2 chars from `name`)
  *   3. type in {forum, person, topic, organization} → Unicode symbol in a
  *      soft-tinted circle (D-10 — `color-mix(in srgb, ...)`)
@@ -12,23 +13,20 @@
  *      `frontend/src/types/dossier-context.types.ts`; `elected_official` is a
  *      person_subtype, not a top-level dossier type, so it is unreachable here.
  *
- * Security (T-37-01): All flag SVGs are static inline TSX authored in-repo
- * (see flags/*.tsx) — never fetched, never string-injected. The `name` prop
- * flows through a React text node (auto-escaped). No raw-HTML-setting props,
- * no xlink:href external refs, no `<script>` tags.
+ * Security (T-37-01): The flag asset is a same-origin static SVG loaded via the
+ * SVG `<image href>` attribute (not `xlink:href`). The `iso` value is never
+ * passed through verbatim — only codes present in the in-repo `FLAG_CODES`
+ * allowlist (generated from the asset filenames) ever reach the
+ * `/assets/flags/{iso}.svg` URL, so no traversal or injection input can flow
+ * through. The `name` prop flows through a React text node (auto-escaped). No
+ * raw-HTML-setting props, no `<script>` tags.
  */
 
 import type { ReactElement } from 'react'
 
 import type { DossierType } from '@/types/dossier-context.types'
 
-import { flags, type FlagKey } from './flags'
-
-const FLAG_KEYS: ReadonlySet<FlagKey> = new Set<FlagKey>([
-  'sa', 'ae', 'id', 'eg', 'qa', 'jo', 'bh', 'om', 'kw', 'pk',
-  'ma', 'tr', 'cn', 'it', 'fr', 'de', 'gb', 'us', 'jp', 'kr',
-  'in', 'br', 'eu', 'un',
-])
+import { FLAG_CODES } from './flagCodes'
 
 const SYMBOL_MAP: Partial<Record<DossierType, string>> = {
   forum: '\u25C7',
@@ -105,11 +103,10 @@ export function DossierGlyph({
   accent = 'var(--ink)',
   className,
 }: DossierGlyphProps): ReactElement {
-  // 1. Country + known ISO → hand-drawn flag.
+  // 1. Country + known ISO → accurate flag asset from /assets/flags/{iso}.svg.
   if (type === 'country' && iso !== undefined) {
-    const key = iso.toLowerCase() as FlagKey
-    if (FLAG_KEYS.has(key)) {
-      const FlagSvg = flags[key]
+    const key = iso.toLowerCase()
+    if (FLAG_CODES.has(key)) {
       const clipId = `dg-clip-${key}`
       return (
         <span
@@ -136,7 +133,14 @@ export function DossierGlyph({
               </clipPath>
             </defs>
             <g clipPath={`url(#${clipId})`}>
-              <FlagSvg />
+              <image
+                href={`/assets/flags/${key}.svg`}
+                x="0"
+                y="0"
+                width="32"
+                height="32"
+                preserveAspectRatio="xMidYMid slice"
+              />
             </g>
             <circle
               cx="16"
