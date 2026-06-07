@@ -26,7 +26,7 @@ import type { ReactElement } from 'react'
 
 import type { DossierType } from '@/types/dossier-context.types'
 
-import { FLAG_CODES } from './flagCodes'
+import { FLAG_CODES } from './FlagCodes'
 
 const SYMBOL_MAP: Partial<Record<DossierType, string>> = {
   forum: '\u25C7',
@@ -65,12 +65,7 @@ interface InitialsBadgeProps {
   className?: string
 }
 
-function InitialsBadge({
-  text,
-  size,
-  accent,
-  className,
-}: InitialsBadgeProps): ReactElement {
+function InitialsBadge({ text, size, accent, className }: InitialsBadgeProps): ReactElement {
   return (
     <span
       className={className}
@@ -120,13 +115,7 @@ export function DossierGlyph({
           }}
           aria-hidden="true"
         >
-          <svg
-            width={size}
-            height={size}
-            viewBox="0 0 32 32"
-            role="img"
-            aria-label={key}
-          >
+          <svg width={size} height={size} viewBox="0 0 32 32" role="img" aria-label={key}>
             <defs>
               <clipPath id={clipId}>
                 <circle cx="16" cy="16" r="16" />
