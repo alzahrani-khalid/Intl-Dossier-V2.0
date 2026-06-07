@@ -21,6 +21,7 @@ const eqStatusMock = vi.fn()
 const neqMock = vi.fn()
 const eqTypeMock = vi.fn()
 const selectMock = vi.fn()
+const inMock = vi.fn()
 const fromMock = vi.fn()
 
 vi.mock('@/lib/supabase', () => ({
@@ -31,7 +32,12 @@ vi.mock('@/lib/supabase', () => ({
 
 import { useCountries } from '../useCountries'
 
-const buildBuilder = (resolved: { data: unknown; error: unknown; count: number | null }): void => {
+const buildBuilder = (
+  resolved: { data: unknown; error: unknown; count: number | null },
+  // Resolution for the secondary `countries` extension lookup
+  // (from('countries').select('id, iso_code_2').in('id', ids)).
+  countriesResolved: { data: unknown; error: unknown } = { data: [], error: null },
+): void => {
   rangeMock.mockResolvedValue(resolved)
   orderMock.mockReturnValue({ range: rangeMock })
   orMock.mockReturnValue({ order: orderMock, range: rangeMock })
@@ -43,7 +49,10 @@ const buildBuilder = (resolved: { data: unknown; error: unknown; count: number |
     range: rangeMock,
   })
   eqTypeMock.mockReturnValue({ neq: neqMock })
-  selectMock.mockReturnValue({ eq: eqTypeMock })
+  inMock.mockResolvedValue(countriesResolved)
+  // selectMock is shared by both from('dossiers') and from('countries'); it must
+  // expose `.eq` (dossiers chain) and `.in` (countries chain).
+  selectMock.mockReturnValue({ eq: eqTypeMock, in: inMock })
   fromMock.mockReturnValue({ select: selectMock })
 }
 
@@ -65,6 +74,7 @@ describe('useCountries — Plan 40-02b adapter', () => {
     neqMock.mockReset()
     eqTypeMock.mockReset()
     selectMock.mockReset()
+    inMock.mockReset()
     fromMock.mockReset()
   })
 
@@ -86,6 +96,24 @@ describe('useCountries — Plan 40-02b adapter', () => {
     expect(result.current.data?.pagination.total).toBe(47)
     expect(result.current.data?.pagination.totalPages).toBe(3)
     expect(result.current.data?.data.length).toBe(1)
+  })
+
+  it('merges iso_code from the countries extension lookup', async () => {
+    buildBuilder(
+      { data: [{ id: 'c1', type: 'country' }], error: null, count: 1 },
+      { data: [{ id: 'c1', iso_code_2: 'CN' }], error: null },
+    )
+
+    const { wrapper } = createWrapper()
+    const { result } = renderHook(() => useCountries({}), { wrapper })
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true)
+    })
+
+    expect(fromMock).toHaveBeenCalledWith('countries')
+    expect(inMock).toHaveBeenCalledWith('id', ['c1'])
+    expect((result.current.data?.data[0] as { iso_code?: string } | undefined)?.iso_code).toBe('CN')
   })
 
   it('throws when Supabase returns an error', async () => {
