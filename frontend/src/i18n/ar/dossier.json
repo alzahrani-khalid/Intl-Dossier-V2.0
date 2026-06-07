@@ -781,6 +781,7 @@
     "subtitle": "إضافة عنصر إلى {{name}}",
     "groups": {
       "workItems": "عناصر العمل",
+      "planning": "التخطيط والجدولة",
       "content": "المحتوى والمعلومات"
     },
     "actions": {

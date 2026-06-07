@@ -13,7 +13,11 @@
   },
   "header": {
     "relationships": "Relationships",
-    "loading": "Loading dossier..."
+    "loading": "Loading dossier...",
+    "dossierHub": "Dossier Hub",
+    "realtimeConnected": "Real-time connected",
+    "realtimeDisconnected": "Real-time disconnected",
+    "exportTooltip": "Export briefing pack"
   },
   "sidebar": {
     "linkDossier": "Link Dossier",

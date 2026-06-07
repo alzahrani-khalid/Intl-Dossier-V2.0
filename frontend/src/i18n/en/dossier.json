@@ -781,6 +781,7 @@
     "subtitle": "Add item to {{name}}",
     "groups": {
       "workItems": "Work Items",
+      "planning": "Planning & Scheduling",
       "content": "Content & Info"
     },
     "actions": {
