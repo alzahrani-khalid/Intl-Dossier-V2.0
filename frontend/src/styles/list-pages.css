@@ -943,7 +943,15 @@ html[dir='rtl'] .icon-flip {
   max-width: 100%;
   white-space: nowrap;
 }
-.dossier-row:last-child {
+/* Rows are wrapped in <li> for a11y (ul[role=list] > li > button.dossier-row),
+   so each row is the only/last child of its <li>. Key the trailing-divider
+   removal off the last list item instead of the row itself. */
+.dossier-row-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.dossier-row-list > li:last-child .dossier-row {
   border-bottom: 0;
 }
 .dossier-row:hover {

@@ -84,11 +84,7 @@ export function DossierTable({
   }
 
   return (
-    <div
-      role="list"
-      aria-label={t('table.aria', { defaultValue: isRTL ? 'الدوسيهات' : 'Dossiers' })}
-      className="card overflow-hidden p-0"
-    >
+    <div className="card overflow-hidden p-0">
       {/* Desktop / tablet header (md+) */}
       <div
         className="dossier-row label hidden md:grid"
@@ -101,39 +97,46 @@ export function DossierTable({
         <span>{t('table.sensitivity', { defaultValue: isRTL ? 'الحساسية' : 'Sensitivity' })}</span>
       </div>
 
-      {rows.map((row) => {
-        const displayName = isRTL ? row.name_ar : row.name_en
-        const chipClass = sensitivityChipClass(row.sensitivity_level)
-        const chipLabel = t(sensitivityLabelKey(row.sensitivity_level), {
-          defaultValue: fallbackSensitivityLabel(row.sensitivity_level, isRTL),
-        })
+      <ul
+        role="list"
+        aria-label={t('table.aria', { defaultValue: isRTL ? 'الدوسيهات' : 'Dossiers' })}
+        className="dossier-row-list"
+      >
+        {rows.map((row) => {
+          const displayName = isRTL ? row.name_ar : row.name_en
+          const chipClass = sensitivityChipClass(row.sensitivity_level)
+          const chipLabel = t(sensitivityLabelKey(row.sensitivity_level), {
+            defaultValue: fallbackSensitivityLabel(row.sensitivity_level, isRTL),
+          })
 
-        return (
-          <button
-            key={row.id}
-            type="button"
-            role="listitem"
-            onClick={onRowClick ? (): void => onRowClick(row) : undefined}
-            className="dossier-row w-full min-w-0 grid-cols-[auto_1fr_auto] text-start transition-colors hover:bg-[var(--line-soft)] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--accent)] md:grid-cols-[auto_1fr_auto_auto_auto]"
-          >
-            <DossierGlyph type={row.type} iso={row.iso} name={displayName} size={32} />
-            <span className="font-medium truncate text-start min-w-0">{displayName}</span>
-            <span className="hidden shrink-0 text-[13px] text-[var(--ink-mute)] md:inline">
-              {row.engagement_count}
-            </span>
-            <span className="hidden shrink-0 text-[13px] text-[var(--ink-mute)] md:inline">
-              {formatDayFirst(row.last_touch ?? '', i18n.language)}
-            </span>
-            <span className={`chip shrink-0 ${chipClass}`}>{chipLabel}</span>
-            <ChevronRight
-              data-testid="row-chevron"
-              className="icon-flip size-4 shrink-0 text-[var(--ink-faint)] md:hidden"
-              style={isRTL ? { transform: 'scaleX(-1)' } : undefined}
-              aria-hidden="true"
-            />
-          </button>
-        )
-      })}
+          return (
+            <li key={row.id}>
+              <button
+                type="button"
+                aria-label={displayName}
+                onClick={onRowClick ? (): void => onRowClick(row) : undefined}
+                className="dossier-row w-full min-w-0 grid-cols-[auto_1fr_auto] text-start transition-colors hover:bg-[var(--line-soft)] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--accent)] md:grid-cols-[auto_1fr_auto_auto_auto]"
+              >
+                <DossierGlyph type={row.type} iso={row.iso} name={displayName} size={32} />
+                <span className="font-medium truncate text-start min-w-0">{displayName}</span>
+                <span className="hidden shrink-0 text-[13px] text-[var(--ink-mute)] md:inline">
+                  {row.engagement_count}
+                </span>
+                <span className="hidden shrink-0 text-[13px] text-[var(--ink-mute)] md:inline">
+                  {formatDayFirst(row.last_touch ?? '', i18n.language)}
+                </span>
+                <span className={`chip shrink-0 ${chipClass}`}>{chipLabel}</span>
+                <ChevronRight
+                  data-testid="row-chevron"
+                  className="icon-flip size-4 shrink-0 text-[var(--ink-faint)] md:hidden"
+                  style={isRTL ? { transform: 'scaleX(-1)' } : undefined}
+                  aria-hidden="true"
+                />
+              </button>
+            </li>
+          )
+        })}
+      </ul>
     </div>
   )
 }
