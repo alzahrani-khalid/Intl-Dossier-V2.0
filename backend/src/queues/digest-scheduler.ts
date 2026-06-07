@@ -329,15 +329,19 @@ export async function processDigestJob(jobName: string): Promise<void> {
  * - Weekly digest processor: runs every 24 hours (checks day-of-week match)
  */
 export async function registerDigestScheduler(): Promise<void> {
-  await notificationQueue.add('process-daily-digests', {} as never, {
-    repeat: { every: 60 * 60 * 1000 },
-    jobId: 'daily-digest-processor',
-  })
+  // Idempotent by scheduler id (see registerDeadlineChecker) — avoids duplicate
+  // repeatable jobs across tsx-watch reloads.
+  await notificationQueue.upsertJobScheduler(
+    'daily-digest-processor',
+    { every: 60 * 60 * 1000 },
+    { name: 'process-daily-digests' },
+  )
 
-  await notificationQueue.add('process-weekly-digests', {} as never, {
-    repeat: { every: 24 * 60 * 60 * 1000 },
-    jobId: 'weekly-digest-processor',
-  })
+  await notificationQueue.upsertJobScheduler(
+    'weekly-digest-processor',
+    { every: 24 * 60 * 60 * 1000 },
+    { name: 'process-weekly-digests' },
+  )
 
   logInfo('Digest schedulers registered')
 }

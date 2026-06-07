@@ -44,5 +44,10 @@ export const notificationWorker = new Worker<NotificationJobData>(
   {
     connection: queueConnection,
     concurrency: 5,
+    // Deadline/digest jobs scan many rows; a longer lock + bounded stalled
+    // retries prevent false stall detection and lock contention under the
+    // duplicate-instance churn that tsx-watch reloads can cause in dev.
+    lockDuration: 60_000,
+    maxStalledCount: 2,
   },
 )

@@ -26,20 +26,20 @@ vi.mock('@supabase/supabase-js', () => {
     for (const m of methods) {
       chain[m] = vi.fn(() => chain)
     }
-    // Default: return empty data
-    chain._resolve = { data: [] as unknown[] }
+    // Default: return empty data (error undefined → happy path)
+    chain._resolve = { data: [] as unknown[] } as { data: unknown; error?: unknown }
     // Make thenable
     chain.then = function (
-      resolve: (val: { data: unknown[] }) => void,
+      resolve: (val: { data: unknown; error?: unknown }) => void,
     ): Record<string, unknown> {
-      resolve((chain as { _resolve: { data: unknown[] } })._resolve)
+      resolve((chain as { _resolve: { data: unknown; error?: unknown } })._resolve)
       return chain
     }
     return chain
   }
 
   let callIndex = 0
-  const mockResults: Array<{ data: unknown[] }> = []
+  const mockResults: Array<{ data: unknown; error?: unknown }> = []
 
   const mockFrom = vi.fn(() => {
     const chain = chainMethods()
@@ -54,7 +54,7 @@ vi.mock('@supabase/supabase-js', () => {
     createClient: vi.fn(() => ({
       from: mockFrom,
     })),
-    __setMockResults: (results: Array<{ data: unknown[] }>): void => {
+    __setMockResults: (results: Array<{ data: unknown; error?: unknown }>): void => {
       mockResults.length = 0
       mockResults.push(...results)
       callIndex = 0
@@ -84,7 +84,7 @@ describe('processDeadlineCheck', () => {
 
     __setMockResults([
       { data: [approachingTask] }, // approaching query
-      { data: [] },                // overdue query
+      { data: [] }, // overdue query
     ])
 
     await processDeadlineCheck()
@@ -112,8 +112,8 @@ describe('processDeadlineCheck', () => {
     }
 
     __setMockResults([
-      { data: [] },               // approaching query
-      { data: [overdueTask] },    // overdue query
+      { data: [] }, // approaching query
+      { data: [overdueTask] }, // overdue query
     ])
 
     await processDeadlineCheck()
@@ -153,6 +153,17 @@ describe('processDeadlineCheck', () => {
     )
   })
 
+  it('surfaces (rejects) a query error instead of silently swallowing it', async () => {
+    // First query (approaching tasks) returns an error — previously this was
+    // logged and execution continued; now it must reject so BullMQ marks the job failed.
+    __setMockResults([{ data: null, error: { message: 'boom' } }])
+
+    await expect(processDeadlineCheck()).rejects.toThrow('boom')
+
+    // No notifications should have been enqueued after the failed query.
+    expect(notificationQueue.add).not.toHaveBeenCalled()
+  })
+
   it('uses jobId for dedup to prevent re-enqueuing same deadline notification', async () => {
     const task = {
       id: 'task-dedup',
@@ -163,7 +174,7 @@ describe('processDeadlineCheck', () => {
 
     __setMockResults([
       { data: [task] }, // approaching
-      { data: [] },     // overdue
+      { data: [] }, // overdue
     ])
 
     await processDeadlineCheck()

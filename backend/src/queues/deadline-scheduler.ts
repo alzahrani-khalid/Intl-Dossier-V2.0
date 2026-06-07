@@ -33,7 +33,15 @@ export async function processDeadlineCheck(): Promise<void> {
       .gt('sla_deadline', now.toISOString())
 
     if (approachError) {
-      logError('Deadline check: failed to query approaching tasks', approachError as unknown as Error)
+      logError(
+        'Deadline check: failed to query approaching tasks',
+        approachError as unknown as Error,
+      )
+      throw new Error(
+        `Deadline check: approaching-tasks query failed: ${
+          (approachError as { message?: string }).message ?? 'unknown error'
+        }`,
+      )
     }
 
     // Query overdue tasks
@@ -49,22 +57,31 @@ export async function processDeadlineCheck(): Promise<void> {
 
     if (overdueError) {
       logError('Deadline check: failed to query overdue tasks', overdueError as unknown as Error)
+      throw new Error(
+        `Deadline check: overdue-tasks query failed: ${
+          (overdueError as { message?: string }).message ?? 'unknown error'
+        }`,
+      )
     }
 
     // Enqueue approaching deadline notifications with dedup
     for (const task of approaching ?? []) {
       try {
-        await notificationQueue.add('deadline-approaching', {
-          userId: task.assignee_id,
-          type: 'deadline_approaching',
-          title: 'Deadline approaching',
-          message: `"${task.title}" is due within 24 hours`,
-          category: 'deadlines',
-          priority: 'high',
-          actionUrl: `/tasks/${task.id}`,
-          sourceType: 'task',
-          sourceId: task.id,
-        }, { jobId: `deadline-24h-${task.id}` })
+        await notificationQueue.add(
+          'deadline-approaching',
+          {
+            userId: task.assignee_id,
+            type: 'deadline_approaching',
+            title: 'Deadline approaching',
+            message: `"${task.title}" is due within 24 hours`,
+            category: 'deadlines',
+            priority: 'high',
+            actionUrl: `/tasks/${task.id}`,
+            sourceType: 'task',
+            sourceId: task.id,
+          },
+          { jobId: `deadline-24h-${task.id}` },
+        )
       } catch (err) {
         logError(`Failed to enqueue approaching deadline for task ${task.id}`, err as Error)
       }
@@ -73,25 +90,34 @@ export async function processDeadlineCheck(): Promise<void> {
     // Enqueue overdue notifications with dedup
     for (const task of overdue ?? []) {
       try {
-        await notificationQueue.add('deadline-overdue', {
-          userId: task.assignee_id,
-          type: 'deadline_overdue',
-          title: 'Task overdue',
-          message: `"${task.title}" is past its deadline`,
-          category: 'deadlines',
-          priority: 'urgent',
-          actionUrl: `/tasks/${task.id}`,
-          sourceType: 'task',
-          sourceId: task.id,
-        }, { jobId: `deadline-overdue-${task.id}` })
+        await notificationQueue.add(
+          'deadline-overdue',
+          {
+            userId: task.assignee_id,
+            type: 'deadline_overdue',
+            title: 'Task overdue',
+            message: `"${task.title}" is past its deadline`,
+            category: 'deadlines',
+            priority: 'urgent',
+            actionUrl: `/tasks/${task.id}`,
+            sourceType: 'task',
+            sourceId: task.id,
+          },
+          { jobId: `deadline-overdue-${task.id}` },
+        )
       } catch (err) {
         logError(`Failed to enqueue overdue notification for task ${task.id}`, err as Error)
       }
     }
 
-    logInfo(`Deadline check: ${approaching?.length ?? 0} approaching, ${overdue?.length ?? 0} overdue`)
+    logInfo(
+      `Deadline check: ${approaching?.length ?? 0} approaching, ${overdue?.length ?? 0} overdue`,
+    )
   } catch (err) {
+    // Surface the failure: re-throw so BullMQ marks the job failed (the worker
+    // has a .on('failed') handler + 3 retries) instead of silently swallowing it.
     logError('Deadline check failed', err as Error)
+    throw err
   }
 }
 
@@ -99,9 +125,12 @@ export async function processDeadlineCheck(): Promise<void> {
  * Register the deadline checker as a repeatable BullMQ job (every 15 minutes).
  */
 export async function registerDeadlineChecker(): Promise<void> {
-  await notificationQueue.add('check-deadlines', {} as never, {
-    repeat: { every: 15 * 60 * 1000 },
-    jobId: 'deadline-checker',
-  })
+  // Idempotent by scheduler id — re-running on a tsx-watch reload replaces the
+  // prior schedule instead of stacking duplicate repeatable jobs (lock churn).
+  await notificationQueue.upsertJobScheduler(
+    'deadline-checker',
+    { every: 15 * 60 * 1000 },
+    { name: 'check-deadlines' },
+  )
   logInfo('Deadline checker registered (every 15 minutes)')
 }
