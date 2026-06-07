@@ -37,6 +37,9 @@ const buildBuilder = (
   // Resolution for the secondary `countries` extension lookup
   // (from('countries').select('id, iso_code_2').in('id', ids)).
   countriesResolved: { data: unknown; error: unknown } = { data: [], error: null },
+  // Resolution for the `engagement_dossiers` count lookup
+  // (from('engagement_dossiers').select('host_country_id').in('host_country_id', ids)).
+  engagementResolved: { data: unknown } = { data: [] },
 ): void => {
   rangeMock.mockResolvedValue(resolved)
   orderMock.mockReturnValue({ range: rangeMock })
@@ -49,9 +52,17 @@ const buildBuilder = (
     range: rangeMock,
   })
   eqTypeMock.mockReturnValue({ neq: neqMock })
-  inMock.mockResolvedValue(countriesResolved)
-  // selectMock is shared by both from('dossiers') and from('countries'); it must
-  // expose `.eq` (dossiers chain) and `.in` (countries chain).
+  // inMock is shared by both extension lookups; discriminate by column so the
+  // iso query (.in('id', …)) and the count query (.in('host_country_id', …))
+  // resolve independently and order-independently.
+  inMock.mockImplementation((column: string) =>
+    column === 'host_country_id'
+      ? Promise.resolve(engagementResolved)
+      : Promise.resolve(countriesResolved),
+  )
+  // selectMock is shared by from('dossiers'), from('countries') and
+  // from('engagement_dossiers'); it must expose `.eq` (dossiers chain) and
+  // `.in` (extension chains).
   selectMock.mockReturnValue({ eq: eqTypeMock, in: inMock })
   fromMock.mockReturnValue({ select: selectMock })
 }
@@ -114,6 +125,42 @@ describe('useCountries — Plan 40-02b adapter', () => {
     expect(fromMock).toHaveBeenCalledWith('countries')
     expect(inMock).toHaveBeenCalledWith('id', ['c1'])
     expect((result.current.data?.data[0] as { iso_code?: string } | undefined)?.iso_code).toBe('CN')
+  })
+
+  it('merges engagement_count from the engagement_dossiers.host_country_id lookup', async () => {
+    buildBuilder(
+      { data: [{ id: 'c1', type: 'country' }], error: null, count: 1 },
+      { data: [], error: null },
+      { data: [{ host_country_id: 'c1' }, { host_country_id: 'c1' }, { host_country_id: 'c1' }] },
+    )
+
+    const { wrapper } = createWrapper()
+    const { result } = renderHook(() => useCountries({}), { wrapper })
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true)
+    })
+
+    expect(fromMock).toHaveBeenCalledWith('engagement_dossiers')
+    expect(inMock).toHaveBeenCalledWith('host_country_id', ['c1'])
+    expect(
+      (result.current.data?.data[0] as { engagement_count?: number } | undefined)?.engagement_count,
+    ).toBe(3)
+  })
+
+  it('defaults engagement_count to 0 when no engagement_dossiers match', async () => {
+    buildBuilder({ data: [{ id: 'c1', type: 'country' }], error: null, count: 1 })
+
+    const { wrapper } = createWrapper()
+    const { result } = renderHook(() => useCountries({}), { wrapper })
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true)
+    })
+
+    expect(
+      (result.current.data?.data[0] as { engagement_count?: number } | undefined)?.engagement_count,
+    ).toBe(0)
   })
 
   it('throws when Supabase returns an error', async () => {
