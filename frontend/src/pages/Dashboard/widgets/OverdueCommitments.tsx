@@ -159,7 +159,7 @@ export function OverdueCommitments(): ReactElement {
                     <li key={c.id} className="overdue-item">
                       <button
                         type="button"
-                        className="overdue-row flex w-full items-center gap-3 min-h-11 rounded-md p-2 text-start hover:bg-surface/60 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--accent)]"
+                        className="overdue-row flex w-full items-center gap-3 min-h-11 rounded-md p-2 text-start hover:bg-[var(--line-soft)] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--accent)]"
                         style={{ minBlockSize: 44 }}
                         onClick={(): void => openCommitment(c.id)}
                         aria-label={c.title}
