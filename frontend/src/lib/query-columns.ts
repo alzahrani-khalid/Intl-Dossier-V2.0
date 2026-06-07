@@ -65,8 +65,11 @@ export const COMMITMENTS_COLUMNS = {
   /** Detail view with all fields */
   DETAIL:
     'id, dossier_id, after_action_id, title, description, due_date, owner_type, owner_user_id, owner_contact_id, priority, status, tracking_mode, proof_required, proof_url, evidence_submitted_at, completed_at, completion_notes, status_changed_at, created_by, updated_by, created_at, updated_at',
-  /** Summary for dashboard widgets */
-  SUMMARY: 'id, title, description, status, priority, due_date, owner_user_id, created_at, updated_at',
+  /** Summary for dashboard widgets. `title_ar` is required so RTL surfaces
+   *  (e.g. the dossier work-items tab) can render the Arabic title; there is no
+   *  `description_ar` column on aa_commitments, so it is intentionally omitted. */
+  SUMMARY:
+    'id, title, title_ar, description, status, priority, due_date, owner_user_id, created_at, updated_at',
 } as const
 
 // =============================================================================

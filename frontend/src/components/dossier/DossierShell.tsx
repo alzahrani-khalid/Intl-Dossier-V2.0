@@ -151,7 +151,7 @@ export function DossierShell({
             to="/dossiers"
             className="flex min-h-9 shrink-0 items-center text-[var(--ink-mute)] transition-colors hover:text-[var(--ink)]"
           >
-            {t('tabs.overview', { ns: 'dossiers', defaultValue: 'Dossier Hub' })}
+            {t('header.dossierHub', { defaultValue: 'Dossier Hub' })}
           </Link>
           <ChevronRight className="icon-flip h-4 w-4 shrink-0 text-[var(--ink-faint)]" />
           <span className="min-w-0 truncate font-medium text-[var(--ink)]">
@@ -210,7 +210,9 @@ export function DossierShell({
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  {isConnected ? 'Real-time connected' : 'Real-time disconnected'}
+                  {isConnected
+                    ? t('header.realtimeConnected', { defaultValue: 'Real-time connected' })
+                    : t('header.realtimeDisconnected', { defaultValue: 'Real-time disconnected' })}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -227,11 +229,13 @@ export function DossierShell({
                   >
                     <FileDown className="h-4 w-4 sm:me-2" />
                     <span className="hidden sm:inline">
-                      {t('tabs.overview', { ns: 'dossier', defaultValue: 'Export' })}
+                      {t('action.export', { ns: 'dossier', defaultValue: 'Export' })}
                     </span>
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>Export briefing pack</TooltipContent>
+                <TooltipContent>
+                  {t('header.exportTooltip', { defaultValue: 'Export briefing pack' })}
+                </TooltipContent>
               </Tooltip>
             </TooltipProvider>
 
