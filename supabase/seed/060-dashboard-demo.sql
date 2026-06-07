@@ -179,6 +179,20 @@ BEGIN
     ('b0000003-0000-0000-0000-000000000007'::uuid, v_d_oecd,        'Finalize defense-cooperation framework',        'Close out OECD defense-cooperation framework draft.',             'high',   'in_progress', 'internal', v_user_id, 'automatic', CURRENT_DATE - 73),
     ('b0000003-0000-0000-0000-000000000008'::uuid, v_d_uae,         'Send follow-up documentation',                  'Compile and send follow-up documentation to UAE counterpart.',    'high',   'pending',     'internal', v_user_id, 'automatic', CURRENT_DATE - 165);
 
+  -- Arabic titles for the demo commitments (the INSERT above leaves title_ar NULL).
+  -- Required so RTL surfaces (e.g. the dossier work-items tab) render Arabic titles.
+  UPDATE aa_commitments SET title_ar = CASE id
+    WHEN 'b0000003-0000-0000-0000-000000000001'::uuid THEN 'التزام تجريبي لشراكة الصين'
+    WHEN 'b0000003-0000-0000-0000-000000000002'::uuid THEN 'مراجعة شروط المشاركة في مبادرة الحزام والطريق'
+    WHEN 'b0000003-0000-0000-0000-000000000003'::uuid THEN 'إعادة التواصل بشأن مذكرة التجارة لما بعد مبادرة الحزام والطريق'
+    WHEN 'b0000003-0000-0000-0000-000000000004'::uuid THEN 'إنهاء اتفاقية التعاون مع مجموعة العشرين'
+    WHEN 'b0000003-0000-0000-0000-000000000005'::uuid THEN 'تنسيق إحاطة مواءمة رؤية 2030'
+    WHEN 'b0000003-0000-0000-0000-000000000006'::uuid THEN 'جدولة الاجتماع الثنائي القادم'
+    WHEN 'b0000003-0000-0000-0000-000000000007'::uuid THEN 'إنهاء إطار التعاون الدفاعي'
+    WHEN 'b0000003-0000-0000-0000-000000000008'::uuid THEN 'إرسال وثائق المتابعة'
+  END
+  WHERE id::text LIKE 'b0000003-%';
+
   -- ============================================================================
   -- 6. ENGAGEMENT_DOSSIERS — what the dashboard RPCs actually read
   --    (legacy `engagements` table is NOT what get_dashboard_stats / get_upcoming_events query)
