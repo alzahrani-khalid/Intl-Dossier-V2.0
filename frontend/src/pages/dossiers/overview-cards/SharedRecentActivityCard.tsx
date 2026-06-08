@@ -89,7 +89,11 @@ export function SharedRecentActivityCard({
             >
               {getActivityIcon(activity.status)}
               <div className="flex-1 min-w-0">
-                <p className="text-sm truncate">{activity.activity_title}</p>
+                <p className="text-sm truncate">
+                  {isRTL && activity.activity_title_ar
+                    ? activity.activity_title_ar
+                    : activity.activity_title}
+                </p>
                 <p className="text-xs text-muted-foreground">
                   {formatActivityTime(activity.activity_timestamp, isRTL)}
                 </p>
