@@ -990,5 +990,61 @@
       "title": "No templates available",
       "description": "Templates help you create structured dossiers quickly"
     }
+  },
+  "overview": {
+    "summary": "Summary",
+    "noData": "No data available",
+    "analytics": "Analytics",
+    "analyticsError": "Unable to load analytics",
+    "stats": {
+      "linkedDossiers": "Linked Dossiers",
+      "openWorkItems": "Open Work Items",
+      "upcomingEvents": "Upcoming Events",
+      "recentActivity": "Recent Activity"
+    },
+    "bilateral": {
+      "title": "Bilateral Summary",
+      "partnerships": "Bilateral Partners",
+      "agreements": "Key Agreements",
+      "lastMeeting": "Last Meeting",
+      "noMeeting": "None recorded",
+      "empty": "No bilateral data available"
+    },
+    "contacts": {
+      "title": "Key Contacts",
+      "empty": "No contacts linked",
+      "viewAll": "View all {{count}} contacts"
+    },
+    "engagements": {
+      "title": "Engagements by Stage",
+      "empty": "No engagements linked",
+      "stage": {
+        "intake": "Intake",
+        "preparation": "Preparation",
+        "briefing": "Briefing",
+        "execution": "Execution",
+        "follow_up": "Follow-up",
+        "closed": "Closed"
+      },
+      "total": "{{count}} total engagements"
+    },
+    "recentActivity": "Recent Activity",
+    "noRecentActivity": "No recent activity"
+  },
+  "analytics": {
+    "engagementCount": "Engagements",
+    "activeTopics": "Active Topics",
+    "workItemsCount": "Work Items",
+    "memberCountries": "Member Countries",
+    "openWorkItems": "Open Work Items",
+    "sessionCount": "Sessions",
+    "linkedDossiers": "Linked Dossiers",
+    "connectedAnchors": "Connected Anchors",
+    "memberCount": "Members",
+    "deliverableCount": "Deliverables",
+    "interactionCount": "Interactions",
+    "affiliationCount": "Affiliations",
+    "committeeCount": "Committees",
+    "recentActivity": "Recent Activity"
   }
 }
