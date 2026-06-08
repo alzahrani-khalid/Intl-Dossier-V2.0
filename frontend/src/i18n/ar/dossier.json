@@ -990,5 +990,61 @@
       "title": "لا توجد قوالب متاحة",
       "description": "تساعدك القوالب في إنشاء دوسيهات منظمة بسرعة"
     }
+  },
+  "overview": {
+    "summary": "ملخص",
+    "noData": "لا توجد بيانات متاحة",
+    "analytics": "التحليلات",
+    "analyticsError": "تعذر تحميل التحليلات",
+    "stats": {
+      "linkedDossiers": "الدوسيهات المرتبطة",
+      "openWorkItems": "عناصر العمل المفتوحة",
+      "upcomingEvents": "الفعاليات القادمة",
+      "recentActivity": "النشاط الأخير"
+    },
+    "bilateral": {
+      "title": "الملخص الثنائي",
+      "partnerships": "الشركاء الثنائيون",
+      "agreements": "الاتفاقيات الرئيسية",
+      "lastMeeting": "آخر اجتماع",
+      "noMeeting": "لا يوجد",
+      "empty": "لا توجد بيانات ثنائية متاحة"
+    },
+    "contacts": {
+      "title": "جهات الاتصال الرئيسية",
+      "empty": "لا توجد جهات اتصال مرتبطة",
+      "viewAll": "عرض كل {{count}} جهة اتصال"
+    },
+    "engagements": {
+      "title": "الارتباطات حسب المرحلة",
+      "empty": "لا توجد ارتباطات مرتبطة",
+      "stage": {
+        "intake": "استقبال",
+        "preparation": "تحضير",
+        "briefing": "إحاطة",
+        "execution": "تنفيذ",
+        "follow_up": "متابعة",
+        "closed": "مغلق"
+      },
+      "total": "{{count}} ارتباط إجمالاً"
+    },
+    "recentActivity": "النشاط الأخير",
+    "noRecentActivity": "لا يوجد نشاط حديث"
+  },
+  "analytics": {
+    "engagementCount": "الارتباطات",
+    "activeTopics": "المواضيع النشطة",
+    "workItemsCount": "عناصر العمل",
+    "memberCountries": "الدول الأعضاء",
+    "openWorkItems": "عناصر العمل المفتوحة",
+    "sessionCount": "الجلسات",
+    "linkedDossiers": "الدوسيهات المرتبطة",
+    "connectedAnchors": "المرتكزات المتصلة",
+    "memberCount": "الأعضاء",
+    "deliverableCount": "المخرجات",
+    "interactionCount": "التفاعلات",
+    "affiliationCount": "الانتماءات",
+    "committeeCount": "اللجان",
+    "recentActivity": "النشاط الأخير"
   }
 }

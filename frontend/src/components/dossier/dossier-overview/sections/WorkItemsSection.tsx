@@ -8,6 +8,7 @@
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import {
   ClipboardList,
   CheckSquare,
@@ -27,6 +28,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Progress } from '@/components/ui/progress'
+import { useCommitmentDrawer } from '@/hooks/useCommitmentDrawer'
+import { formatDayFirst } from '@/lib/format-date'
 import type {
   WorkItemsSectionProps,
   DossierWorkItem,
@@ -105,68 +108,83 @@ function getPriorityVariant(priority: WorkItemPriority) {
 /**
  * Work item card component
  */
-function WorkItemCard({ item, isRTL }: { item: DossierWorkItem; isRTL: boolean }) {
+function WorkItemCard({
+  item,
+  isRTL,
+  onSelect,
+}: {
+  item: DossierWorkItem
+  isRTL: boolean
+  onSelect: (item: DossierWorkItem) => void
+}) {
   const { t } = useTranslation('dossier-overview')
   const SourceIcon = getSourceIcon(item.source)
   const statusConfig = getStatusConfig(item.status)
   const StatusIcon = statusConfig.icon
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
-      <CardContent className="p-3 sm:p-4">
-        <div className="flex items-start gap-3">
-          <div className={`p-2 rounded-lg ${statusConfig.bgColor} shrink-0`}>
-            <StatusIcon className={`h-5 w-5 ${statusConfig.color}`} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2 mb-1">
-              <h4 className="text-sm font-semibold line-clamp-2">
-                {isRTL && item.title_ar ? item.title_ar : item.title_en}
-              </h4>
-              <Badge variant={getPriorityVariant(item.priority)} className="text-xs shrink-0">
-                {t(`priority.${item.priority}`)}
-              </Badge>
+    <button
+      type="button"
+      onClick={() => onSelect(item)}
+      aria-label={isRTL && item.title_ar ? item.title_ar : item.title_en}
+      className="block w-full text-start rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+    >
+      <Card className="hover:shadow-md transition-shadow">
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex items-start gap-3">
+            <div className={`p-2 rounded-lg ${statusConfig.bgColor} shrink-0`}>
+              <StatusIcon className={`h-5 w-5 ${statusConfig.color}`} />
             </div>
-            <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
-              <Badge variant="outline" className="text-xs flex items-center gap-1">
-                <SourceIcon className="h-3 w-3" />
-                {t(`workItemSource.${item.source}`)}
-              </Badge>
-              <Badge
-                variant="outline"
-                className={`text-xs ${
-                  item.status === 'overdue' ? 'border-danger text-danger' : ''
-                }`}
-              >
-                {t(`workItemStatus.${item.status}`)}
-              </Badge>
-              {item.inheritance_source !== 'direct' && (
-                <Badge variant="secondary" className="text-xs">
-                  {t(`inheritanceSource.${item.inheritance_source}`)}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-start justify-between gap-2 mb-1">
+                <h4 className="text-sm font-semibold line-clamp-2">
+                  {isRTL && item.title_ar ? item.title_ar : item.title_en}
+                </h4>
+                <Badge variant={getPriorityVariant(item.priority)} className="text-xs shrink-0">
+                  {t(`priority.${item.priority}`)}
                 </Badge>
-              )}
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+                <Badge variant="outline" className="text-xs flex items-center gap-1">
+                  <SourceIcon className="h-3 w-3" />
+                  {t(`workItemSource.${item.source}`)}
+                </Badge>
+                <Badge
+                  variant="outline"
+                  className={`text-xs ${
+                    item.status === 'overdue' ? 'border-danger text-danger' : ''
+                  }`}
+                >
+                  {t(`workItemStatus.${item.status}`)}
+                </Badge>
+                {item.inheritance_source !== 'direct' && (
+                  <Badge variant="secondary" className="text-xs">
+                    {t(`inheritanceSource.${item.inheritance_source}`)}
+                  </Badge>
+                )}
+              </div>
+              <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-muted-foreground">
+                {item.deadline && (
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    {formatDayFirst(item.deadline, isRTL ? 'ar' : 'en')}
+                  </div>
+                )}
+                {item.assignee_name && (
+                  <div className="flex items-center gap-1">
+                    <User className="h-3 w-3" />
+                    {item.assignee_name}
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-muted-foreground">
-              {item.deadline && (
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
-                  {new Date(item.deadline).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
-                </div>
-              )}
-              {item.assignee_name && (
-                <div className="flex items-center gap-1">
-                  <User className="h-3 w-3" />
-                  {item.assignee_name}
-                </div>
-              )}
-            </div>
+            <ChevronRight
+              className={`h-5 w-5 text-muted-foreground shrink-0 ${isRTL ? 'rotate-180' : ''}`}
+            />
           </div>
-          <ChevronRight
-            className={`h-5 w-5 text-muted-foreground shrink-0 ${isRTL ? 'rotate-180' : ''}`}
-          />
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </button>
   )
 }
 
@@ -250,6 +268,27 @@ function WorkItemList({
   isRTL: boolean
   emptySource?: WorkItemSource | 'all'
 }) {
+  const navigate = useNavigate()
+  const { openCommitment } = useCommitmentDrawer()
+
+  // Drill into the matching detail surface by source. Commitments open the
+  // globally-mounted CommitmentDrawer in place (keeps dossier quick-look
+  // context, mirroring OpenCommitmentsSection); tasks and intakes route to
+  // their detail pages.
+  const handleSelect = (item: DossierWorkItem): void => {
+    switch (item.source) {
+      case 'commitment':
+        openCommitment(item.id)
+        break
+      case 'task':
+        void navigate({ to: '/tasks/$id', params: { id: item.id } })
+        break
+      case 'intake':
+        void navigate({ to: '/intake/tickets/$id', params: { id: item.id } })
+        break
+    }
+  }
+
   if (items.length === 0) {
     return <EmptyState source={emptySource} isRTL={isRTL} />
   }
@@ -257,7 +296,7 @@ function WorkItemList({
   return (
     <div className="grid grid-cols-1 gap-3">
       {items.map((item) => (
-        <WorkItemCard key={item.id} item={item} isRTL={isRTL} />
+        <WorkItemCard key={item.id} item={item} isRTL={isRTL} onSelect={handleSelect} />
       ))}
     </div>
   )

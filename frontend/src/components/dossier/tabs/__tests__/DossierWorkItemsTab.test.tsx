@@ -15,6 +15,22 @@ vi.mock('@/services/dossier-overview.service', () => ({
   fetchDossierOverview: vi.fn(),
 }))
 
+// WorkItemsSection now drills into detail views via the router + commitment
+// drawer; this tab test renders without a RouterProvider, so stub both (mirrors
+// OpenCommitmentsSection.test.tsx).
+vi.mock('@tanstack/react-router', () => ({
+  useNavigate: () => vi.fn(),
+}))
+
+vi.mock('@/hooks/useCommitmentDrawer', () => ({
+  useCommitmentDrawer: () => ({
+    open: false,
+    commitmentId: null,
+    openCommitment: vi.fn(),
+    closeCommitment: vi.fn(),
+  }),
+}))
+
 import { fetchDossierOverview } from '@/services/dossier-overview.service'
 import { DossierWorkItemsTab } from '../DossierWorkItemsTab'
 

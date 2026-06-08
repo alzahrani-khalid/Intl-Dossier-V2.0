@@ -25,6 +25,7 @@ interface DossierActivity {
   inheritance_path: any[];
   activity_timestamp: string;
   activity_title: string;
+  activity_title_ar: string | null;
   status: string;
   priority: string;
   assignee_id: string | null;
@@ -220,6 +221,7 @@ Deno.serve(async (req: Request) => {
       inheritance_path: activity.inheritance_path || [],
       activity_timestamp: activity.activity_timestamp,
       activity_title: activity.activity_title || '',
+      activity_title_ar: activity.activity_title_ar ?? null,
       status: activity.status || 'unknown',
       priority: activity.priority || 'medium',
       assignee_id: activity.assignee_id,

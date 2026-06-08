@@ -12,6 +12,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
+import { formatDayFirst } from '@/lib/format-date'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -456,7 +457,7 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
             {item.deadline && (
               <span className="inline-flex items-center gap-1">
                 <Calendar className="size-3" />
-                {new Date(item.deadline).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
+                {formatDayFirst(item.deadline, isRTL ? 'ar' : 'en')}
               </span>
             )}
 

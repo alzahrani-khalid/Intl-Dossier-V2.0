@@ -23,6 +23,8 @@ export interface TimelineActivity {
   work_item_type: WorkItemType
   dossier_id: string
   activity_title: string
+  // Arabic title (commitment/intake); null for tasks and legacy rows.
+  activity_title_ar?: string | null
   status: string
   priority: string
   assignee_id: string | null
