@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { formatDayFirst } from '@/lib/format-date'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -20,7 +21,8 @@ interface CountryExtensionWithExtra extends CountryExtension {
 const regions = ['Asia', 'Europe', 'Africa', 'Americas', 'Oceania']
 
 export default function Countries() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
   const [searchTerm, setSearchTerm] = useState('')
   const [regionFilter, setRegionFilter] = useState<string>('all')
   const [statusFilter, setStatusFilter] = useState<string>('all')
@@ -278,7 +280,7 @@ export default function Countries() {
                     {(country as CountryExtensionWithExtra | undefined)?.agreements_count || 0}
                   </td>
                   <td className="px-5 py-4 text-xs text-muted-foreground">
-                    {new Date(dossier.updated_at).toLocaleDateString()}
+                    {formatDayFirst(dossier.updated_at, isRTL ? 'ar' : 'en')}
                   </td>
                 </tr>
               )

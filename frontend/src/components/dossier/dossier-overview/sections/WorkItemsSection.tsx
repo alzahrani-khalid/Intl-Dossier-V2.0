@@ -29,6 +29,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Progress } from '@/components/ui/progress'
 import { useCommitmentDrawer } from '@/hooks/useCommitmentDrawer'
+import { formatDayFirst } from '@/lib/format-date'
 import type {
   WorkItemsSectionProps,
   DossierWorkItem,
@@ -166,7 +167,7 @@ function WorkItemCard({
                 {item.deadline && (
                   <div className="flex items-center gap-1">
                     <Calendar className="h-3 w-3" />
-                    {new Date(item.deadline).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
+                    {formatDayFirst(item.deadline, isRTL ? 'ar' : 'en')}
                   </div>
                 )}
                 {item.assignee_name && (
