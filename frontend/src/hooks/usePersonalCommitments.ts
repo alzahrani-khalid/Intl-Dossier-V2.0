@@ -156,9 +156,12 @@ export function usePersonalCommitments(): UsePersonalCommitmentsResult {
         commitments: [],
       }
 
+      const titleText =
+        isArabic && c.title_ar != null && c.title_ar.trim().length > 0 ? c.title_ar : c.title
+
       existing.commitments.push({
         id: c.id,
-        title: c.title,
+        title: titleText,
         daysOverdue,
         severity: deriveSeverity(daysOverdue),
         ownerInitials: deriveInitials(c.owner_user_id ?? ''),

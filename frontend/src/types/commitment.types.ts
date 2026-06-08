@@ -42,6 +42,8 @@ export interface Commitment {
 
   // Core fields
   title: string
+  // Arabic title — selected by COMMITMENTS.LIST/SUMMARY (not DETAIL), so optional.
+  title_ar?: string | null
   description: string
   due_date: string
   status: CommitmentStatus
