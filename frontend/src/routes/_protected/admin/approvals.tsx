@@ -156,10 +156,7 @@ function AdminApprovalsPage() {
       <PageHeader
         icon={<CheckCircle className="h-6 w-6" />}
         title={t('approvals.title', 'Admin: Approval Management')}
-        subtitle={t(
-          'admin.approvals.subtitle',
-          'Reassign stuck approvals and manage approval chains',
-        )}
+        subtitle={t('approvals.subtitle', 'Reassign stuck approvals and manage approval chains')}
       />
 
       {/* Warning Banner */}
@@ -172,7 +169,7 @@ function AdminApprovalsPage() {
             </p>
             <p className="text-sm text-warning">
               {t(
-                'admin.approvals.warningText',
+                'approvals.warningText',
                 'All reassignments are logged and require a reason for audit trail compliance.',
               )}
             </p>
@@ -187,10 +184,7 @@ function AdminApprovalsPage() {
             {t('approvals.underReview', 'Positions Under Review')}
           </h2>
           <p className="text-sm text-muted-foreground">
-            {t(
-              'admin.approvals.underReviewDesc',
-              'All positions currently in the approval workflow',
-            )}
+            {t('approvals.underReviewDesc', 'All positions currently in the approval workflow')}
           </p>
         </div>
 
@@ -252,7 +246,7 @@ function AdminApprovalsPage() {
             <DialogTitle>{t('approvals.reassignTitle', 'Reassign Approval')}</DialogTitle>
             <DialogDescription>
               {t(
-                'admin.approvals.reassignDesc',
+                'approvals.reassignDesc',
                 'Reassign this approval to a different user. A reason is required for audit purposes.',
               )}
             </DialogDescription>
@@ -281,7 +275,7 @@ function AdminApprovalsPage() {
               <Textarea
                 id="reason"
                 placeholder={t(
-                  'admin.approvals.reasonPlaceholder',
+                  'approvals.reasonPlaceholder',
                   'e.g., Original approver is on leave, organizational change',
                 )}
                 value={reassignData.reason}
