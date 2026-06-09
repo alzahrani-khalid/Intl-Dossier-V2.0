@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUND 3 (new uncovered surfaces; user-approved 2026-06-09). Done: dashboard, reports/analytics, data-library/documents. Current: intelligence (cursor-agent inspection running in background).",
+  "status": "ROUND 3 (new uncovered surfaces; user-approved 2026-06-09). Done: dashboard, reports/analytics, data-library/documents, intelligence. Current: briefing-books (cursor-agent inspection running in background).",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -148,8 +148,16 @@
       "escalated": "#1/#12 detail route, #9/#13 create/parties UI, #3-5/#10 backend+edge schema, #7/#8 view soft-delete+parties, #14 common.json i18n (WIP)"
     }
   ],
-  "round3_queue": ["intelligence (in progress)", "briefing-books", "settings/admin"],
+  "round3_queue": ["briefing-books (in progress)", "settings/admin"],
   "round3_done": [
+    {
+      "type": "intelligence",
+      "report": "reports/intelligence-workflow-inspection-2026-06-09.md",
+      "prev_commit_for_data_library": "3bb670b0",
+      "findings": 16,
+      "fixed": "7 bucket-A: #10 intelligence.refresh.* toast keys in common.json EN+AR (hook default-ns, no code change), #11 38 missing intelligence.*+geographic.* keys added to dossier.json EN+AR (AR UI was all-English fallbacks), #12 /monitoring vite proxy added, #13 dir on IntelligencePage root, #14 decorative checkmark prefixes removed + scope* strings i18n'd, #16 text-primary -> text-accent x5 (4 sub-panels + tab spinner)",
+      "escalated": "B-bucket (3 disconnected stacks): #1 CRITICAL Feature-029 dossier intelligence tab orphaned (CountryDossierDetail unrouted), #2 CRITICAL /intelligence page assumes legacy report schema vs generated types (VERIFY vs live), #3 CRITICAL vector RPC param mismatch + results never rendered, #4 intelligence_signals has no UI vs nav label, #5 Phase-54 event/digest tables schema-only, #6 refresh vs refresh-v2 edge drift (VERIFY vs live deploy), #7 Express /api/intelligence unconsumed + detectSignals arity bug, #8 stale /api/intelligence-reports tests, #9 inert create/download/row actions, #15 placeholder E2E (after #1)"
+    },
     {
       "type": "data-library/documents",
       "report": "reports/data-library-documents-workflow-inspection-2026-06-09.md",
@@ -187,5 +195,5 @@
     "e5a04b10 dashboard",
     "68552968 reports-analytics"
   ],
-  "next_planned": "intelligence (cursor-agent running; then fix bucket-A + commit). Round-3 queue after: briefing-books, settings/admin"
+  "next_planned": "briefing-books (cursor-agent running; then fix bucket-A + commit). Round-3 queue after: settings/admin (final)"
 }

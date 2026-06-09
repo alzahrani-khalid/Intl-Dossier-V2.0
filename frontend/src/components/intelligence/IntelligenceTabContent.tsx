@@ -39,7 +39,7 @@ interface IntelligenceTabContentProps {
 export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabContentProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-// Track if auto-generation has been attempted
+  // Track if auto-generation has been attempted
   const [autoGenerationAttempted, setAutoGenerationAttempted] = React.useState(false)
 
   // Fetch all intelligence data
@@ -143,12 +143,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
   // Loading state
   if (isLoading) {
     return (
-      <div
-        className="space-y-6"
-        role="status"
-        aria-live="polite"
-        aria-busy="true"
-      >
+      <div className="space-y-6" role="status" aria-live="polite" aria-busy="true">
         <span className="sr-only">
           {t('intelligence.loadingDashboard', 'Loading intelligence dashboard...')}
         </span>
@@ -206,7 +201,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
           aria-busy="true"
         >
           <RefreshCw
-            className="h-16 w-16 sm:h-20 sm:w-20 text-primary mb-6 animate-spin"
+            className="h-16 w-16 sm:h-20 sm:w-20 text-accent mb-6 animate-spin"
             aria-hidden="true"
           />
 
@@ -222,10 +217,10 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
           </p>
 
           <div className="flex flex-col sm:flex-row gap-2 text-xs text-muted-foreground">
-            <span>✓ Economic indicators</span>
-            <span>✓ Political analysis</span>
-            <span>✓ Security assessment</span>
-            <span>✓ Bilateral relations</span>
+            <span>{t('intelligence.scopeEconomic', 'Economic indicators')}</span>
+            <span>{t('intelligence.scopePolitical', 'Political analysis')}</span>
+            <span>{t('intelligence.scopeSecurity', 'Security assessment')}</span>
+            <span>{t('intelligence.scopeBilateral', 'Bilateral relations')}</span>
           </div>
         </div>
       )
