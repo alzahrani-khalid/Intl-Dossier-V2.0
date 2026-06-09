@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUND 3 (new uncovered surfaces; user-approved 2026-06-09). Done: dashboard, reports/analytics, data-library/documents, intelligence. Current: briefing-books (cursor-agent inspection running in background).",
+  "status": "ROUND 3 (new uncovered surfaces; user-approved 2026-06-09). Done: dashboard, reports/analytics, data-library/documents, intelligence, briefing-books. Current: settings/admin (FINAL round-3 item; codex inspection running). NOTE: cursor-agent monthly quota exhausted (resets 6/27); inspections run via codex CLI as substitute.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -148,8 +148,17 @@
       "escalated": "#1/#12 detail route, #9/#13 create/parties UI, #3-5/#10 backend+edge schema, #7/#8 view soft-delete+parties, #14 common.json i18n (WIP)"
     }
   ],
-  "round3_queue": ["briefing-books (in progress)", "settings/admin"],
+  "round3_queue": ["settings/admin (in progress — FINAL)"],
   "round3_done": [
+    {
+      "type": "briefing-books",
+      "report": "reports/briefing-books-workflow-inspection-2026-06-09.md",
+      "inspector": "codex (cursor-agent quota exhausted)",
+      "prev_commit_for_intelligence": "c93a4d48",
+      "findings": 12,
+      "fixed": "4 bucket-A: #8 no-op View/Duplicate/Regenerate menu items hidden (separator restructured), #10 i18n — actions.retry + list.noFilterMatch + builder.discard.* EN+AR added, hardcoded Arabic/English review label -> existing builder.options.language keys, t()||fallback removed, #11 list card hover shadow -> border-accent. #12 (server-side filter wiring) DEFERRED deliberately: moot while route is disabled (#1) and DTO mismatch (#3) crashes first",
+      "escalated": "B-bucket: #1 CRITICAL route redirects to /dashboard (page unmounted), #2 not in nav, #3 CRITICAL raw DB rows vs BriefingBook DTO (list crashes on book.config), #4 CRITICAL edge fetchEntityData selects nonexistent columns across 5 tables (VERIFY vs live), #5 sensitivity numeric-vs-enum mismatch, #6 template fetch schema-invalid + unused, #7 PDF/DOCX advertised but HTML always generated, #9 generated HTML unsanitized (XSS), #12 GET params not wired"
+    },
     {
       "type": "intelligence",
       "report": "reports/intelligence-workflow-inspection-2026-06-09.md",
@@ -195,5 +204,5 @@
     "e5a04b10 dashboard",
     "68552968 reports-analytics"
   ],
-  "next_planned": "briefing-books (cursor-agent running; then fix bucket-A + commit). Round-3 queue after: settings/admin (final)"
+  "next_planned": "settings/admin (codex running; then fix bucket-A + commit). This is the LAST round-3 item — after it, round 3 is complete; decide with user whether to start a round 4 or consolidate the escalated B-bucket backlog into planned phases"
 }

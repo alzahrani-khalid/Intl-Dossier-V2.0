@@ -940,7 +940,13 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                     <span className="text-muted-foreground">
                       {t('builder.review.languageLabel')}
                     </span>
-                    <span>{config.primaryLanguage === 'ar' ? 'Arabic' : 'English'}</span>
+                    <span>
+                      {t(
+                        config.primaryLanguage === 'ar'
+                          ? 'builder.options.language.ar'
+                          : 'builder.options.language.en',
+                      )}
+                    </span>
                   </div>
                   {dateRange && (
                     <div className="flex justify-between">

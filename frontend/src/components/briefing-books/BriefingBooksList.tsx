@@ -12,8 +12,6 @@ import {
   FileText,
   Download,
   Trash2,
-  Eye,
-  Copy,
   RefreshCw,
   Loader2,
   Clock,
@@ -141,7 +139,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
           <p className="text-destructive font-medium">{t('errors.loadFailed')}</p>
           <Button variant="outline" onClick={() => refresh()} className="mt-4">
             <RefreshCw className="h-4 w-4 me-2" />
-            {t('actions.retry') || 'Retry'}
+            {t('actions.retry')}
           </Button>
         </CardContent>
       </Card>
@@ -204,7 +202,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
           const statusBgColor = statusConfig[book.status].bgColor
 
           return (
-            <Card key={book.id} className="hover:shadow-md transition-shadow">
+            <Card key={book.id} className="hover:border-accent transition-colors">
               <CardContent className="p-4">
                 <div className="flex flex-col sm:flex-row gap-4">
                   {/* Icon */}
@@ -304,27 +302,17 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
+                        {/* View / Duplicate / Regenerate hidden until their flows are
+                            implemented — they rendered with no handlers (inspection #8) */}
                         {book.status === 'ready' && book.fileUrl && (
-                          <DropdownMenuItem onClick={() => handleDownload(book)}>
-                            <Download className="h-4 w-4 me-2" />
-                            {t('list.actions.download')}
-                          </DropdownMenuItem>
+                          <>
+                            <DropdownMenuItem onClick={() => handleDownload(book)}>
+                              <Download className="h-4 w-4 me-2" />
+                              {t('list.actions.download')}
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                          </>
                         )}
-                        <DropdownMenuItem>
-                          <Eye className="h-4 w-4 me-2" />
-                          {t('list.actions.view')}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Copy className="h-4 w-4 me-2" />
-                          {t('list.actions.duplicate')}
-                        </DropdownMenuItem>
-                        {(book.status === 'failed' || book.status === 'expired') && (
-                          <DropdownMenuItem>
-                            <RefreshCw className="h-4 w-4 me-2" />
-                            {t('list.actions.regenerate')}
-                          </DropdownMenuItem>
-                        )}
-                        <DropdownMenuSeparator />
                         <DropdownMenuItem
                           className="text-destructive focus:text-destructive"
                           onClick={() => setDeleteDialogId(book.id)}
@@ -352,7 +340,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
       {/* Empty filtered state */}
       {filteredBooks.length === 0 && briefingBooks.length > 0 && (
         <div className="text-center py-8 text-muted-foreground">
-          <p>No briefing books match the selected filter.</p>
+          <p>{t('list.noFilterMatch')}</p>
           <Button variant="link" onClick={() => setStatusFilter('all')}>
             {t('list.filters.all')}
           </Button>

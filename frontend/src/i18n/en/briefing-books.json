@@ -34,6 +34,12 @@
     "step2": "Configure Sections",
     "step3": "Set Options",
     "step4": "Review & Generate",
+    "discard": {
+      "title": "Discard changes?",
+      "description": "Your briefing book configuration has unsaved changes. Leaving now will discard them.",
+      "keepEditing": "Keep editing",
+      "confirm": "Discard"
+    },
     "configuration": {
       "title": "Briefing Book Title",
       "titlePlaceholder": "Enter briefing book title",
@@ -198,6 +204,7 @@
     "empty": "No briefing books yet",
     "emptyDescription": "Create your first briefing book to compile materials for meetings and travel",
     "createFirst": "Create Briefing Book",
+    "noFilterMatch": "No briefing books match the selected filter.",
     "columns": {
       "title": "Title",
       "entities": "Entities",
@@ -252,7 +259,8 @@
     "download": "Download",
     "delete": "Delete",
     "duplicate": "Duplicate",
-    "share": "Share"
+    "share": "Share",
+    "retry": "Retry"
   },
   "success": {
     "created": "Briefing book created successfully",
