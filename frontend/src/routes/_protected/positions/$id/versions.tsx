@@ -86,13 +86,13 @@ function VersionHistoryPage() {
               {t('common.back', 'Back')}
             </Button>
           </Link>
-          <h1 className="text-3xl font-bold">{t('positions.versions.title', 'Version History')}</h1>
+          <h1 className="text-3xl font-bold">{t('positions:versions.title', 'Version History')}</h1>
         </div>
 
         {canCompare && (
           <Button onClick={() => {}}>
             <GitCompare className="me-2 h-4 w-4" />
-            {t('positions.versions.compare', 'Compare Versions')}
+            {t('positions:versions.compare', 'Compare Versions')}
           </Button>
         )}
       </div>
@@ -102,7 +102,7 @@ function VersionHistoryPage() {
         <Card className="p-6">
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              {t('positions.versions.selectTwo', 'Select two versions to compare')}
+              {t('positions:versions.selectTwo', 'Select two versions to compare')}
             </p>
 
             <div className="space-y-2">
@@ -120,11 +120,11 @@ function VersionHistoryPage() {
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold">
-                          {t('positions.versions.version', 'Version')} {version.version_number}
+                          {t('positions:versions.version', 'Version')} {version.version_number}
                         </span>
                         {!version.superseded && (
                           <Badge variant="default">
-                            {t('positions.versions.current', 'Current')}
+                            {t('positions:versions.current', 'Current')}
                           </Badge>
                         )}
                       </div>
@@ -146,7 +146,7 @@ function VersionHistoryPage() {
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">
-                {t('positions.versions.comparing', 'Comparing versions')}:
+                {t('positions:versions.comparing', 'Comparing versions')}:
               </span>
               <Badge>{selectedVersions[0]}</Badge>
               <span className="text-sm text-muted-foreground">vs</span>

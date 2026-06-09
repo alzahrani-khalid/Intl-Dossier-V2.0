@@ -215,7 +215,57 @@
   "attachments": "المرفقات",
   "approvalChain": "تقدم الموافقة",
   "versions": {
-    "description": "عرض سجل الإصدارات ومقارنة التغييرات"
+    "description": "عرض سجل الإصدارات ومقارنة التغييرات",
+    "title": "سجل الإصدارات",
+    "compare": "مقارنة الإصدارات",
+    "selectTwo": "اختر إصدارين للمقارنة",
+    "version": "الإصدار",
+    "current": "الحالي",
+    "comparing": "مقارنة الإصدارات"
+  },
+  "versionComparison": {
+    "title": "مقارنة الإصدارات",
+    "fromVersion": "من الإصدار",
+    "toVersion": "إلى الإصدار",
+    "selectVersion": "اختر الإصدار",
+    "compare": "قارن",
+    "sameVersionError": "يرجى اختيار إصدارين مختلفين للمقارنة.",
+    "error": "تعذّر تحميل مقارنة الإصدارات.",
+    "added": "مُضاف",
+    "removed": "محذوف",
+    "contentChanges": "تغييرات المحتوى",
+    "englishVersion": "الإنجليزية",
+    "arabicVersion": "العربية",
+    "noChanges": "لا تغييرات",
+    "metadataChanges": "تغييرات البيانات الوصفية",
+    "field": "الحقل",
+    "oldValue": "القيمة السابقة",
+    "newValue": "القيمة الجديدة",
+    "noChangesBetweenVersions": "لا توجد تغييرات بين الإصدارين المحددين."
+  },
+  "fields": {
+    "status": "الحالة",
+    "thematic_category": "التصنيف الموضوعي",
+    "priority": "الأولوية",
+    "position_type_id": "نوع الموقف",
+    "title_en": "العنوان (الإنجليزية)",
+    "title_ar": "العنوان (العربية)",
+    "content_en": "المحتوى (الإنجليزية)",
+    "content_ar": "المحتوى (العربية)",
+    "rationale_en": "المسوّغ (الإنجليزية)",
+    "rationale_ar": "المسوّغ (العربية)"
+  },
+  "approvals": {
+    "title": "تتبّع الاعتماد",
+    "progress": "تقدّم الاعتماد",
+    "history": "سجل الاعتماد",
+    "stage": "المرحلة",
+    "approver": "المعتمِد",
+    "action": "الإجراء",
+    "stepUp": "تحقّق معزّز",
+    "comments": "التعليقات",
+    "timestamp": "الطابع الزمني",
+    "delegatedFrom": "مُفوّض من"
   },
   "loading": "جاري تحميل المواقف...",
   "type": {
