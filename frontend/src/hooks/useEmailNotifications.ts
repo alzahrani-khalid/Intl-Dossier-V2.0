@@ -137,11 +137,14 @@ export function useEmailPreferences() {
       } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
 
-      const { error } = await supabase.from('email_notification_preferences').upsert({
-        user_id: user.id,
-        ...preferences,
-        updated_at: new Date().toISOString(),
-      })
+      const { error } = await supabase.from('email_notification_preferences').upsert(
+        {
+          user_id: user.id,
+          ...preferences,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'user_id' },
+      )
 
       if (error) throw error
     },

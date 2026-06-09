@@ -165,7 +165,7 @@ export default function PushOptInBanner({
       data-testid="push-opt-in-banner"
     >
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        <Bell className="h-5 w-5 text-primary-600 shrink-0" aria-hidden="true" />
+        <Bell className="h-5 w-5 text-[var(--accent)] shrink-0" aria-hidden="true" />
 
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-foreground">{t('softAsk.headline')}</p>
