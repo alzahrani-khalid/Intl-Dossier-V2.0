@@ -82,7 +82,7 @@ export function DossierEngagementsTab({ dossierId }: DossierEngagementsTabProps)
 
       {entries.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('emptyState.noEngagements', { defaultValue: 'No engagements' })}
+          {t('empty.engagements.title')}
         </p>
       ) : (
         <div className="relative">

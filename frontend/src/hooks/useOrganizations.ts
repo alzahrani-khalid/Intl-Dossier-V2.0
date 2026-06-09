@@ -67,11 +67,39 @@ export function useOrganizations(
       }
 
       const rows = (data ?? []) as Dossier[]
+
+      // Merge engagement counts from the `engagement_dossiers` extension table
+      // (engagement_dossiers.host_organization_id FK → dossiers.id). The list
+      // route reads `d.engagement_count`; without this merge it is always 0.
+      // Mirrors useCountries.ts host_country_id tally — PostgREST has no GROUP BY
+      // here, so tally in JS via a second `.in()` query.
+      const ids = rows.map((d) => d.id)
+      const engagementCountById: Record<string, number> = {}
+      if (ids.length > 0) {
+        const { data: engagementExts } = await supabase
+          .from('engagement_dossiers')
+          .select('host_organization_id')
+          .in('host_organization_id', ids)
+        if (engagementExts) {
+          for (const ext of engagementExts as Array<{ host_organization_id: string | null }>) {
+            const hostId = ext.host_organization_id
+            if (typeof hostId === 'string' && hostId.length > 0) {
+              engagementCountById[hostId] = (engagementCountById[hostId] ?? 0) + 1
+            }
+          }
+        }
+      }
+
+      const merged = rows.map((d) => ({
+        ...d,
+        engagement_count: engagementCountById[d.id] ?? 0,
+      }))
+
       const total: number | null = typeof count === 'number' ? count : null
       const totalPages = total !== null && total > 0 ? Math.ceil(total / limit) : 0
 
       return {
-        data: rows,
+        data: merged,
         pagination: { page, limit, total, totalPages },
       }
     },

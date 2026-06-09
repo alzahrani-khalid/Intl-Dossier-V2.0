@@ -1029,7 +1029,30 @@
       "total": "{{count}} ارتباط إجمالاً"
     },
     "recentActivity": "النشاط الأخير",
-    "noRecentActivity": "لا يوجد نشاط حديث"
+    "noRecentActivity": "لا يوجد نشاط حديث",
+    "membership": {
+      "title": "هيكل العضوية",
+      "members": "الأعضاء",
+      "memberOf": "عضو في",
+      "subUnits": "الوحدات الفرعية",
+      "totalRelated": "{{count}} ملفات مرتبطة إجمالًا",
+      "empty": "لا تتوفر بيانات عضوية"
+    },
+    "mou": {
+      "title": "حالة مذكرات التفاهم",
+      "active": "نشطة",
+      "pending": "قيد الانتظار",
+      "expired": "منتهية",
+      "draft": "مسودة",
+      "total": "{{count}} اتفاقيات إجمالًا",
+      "empty": "لا توجد مذكرات تفاهم مسجلة",
+      "viewAll": "عرض مذكرات التفاهم"
+    },
+    "representatives": {
+      "title": "الممثلون الرئيسيون",
+      "empty": "لا يوجد ممثلون مرتبطون",
+      "total": "{{count}} ممثلين إجمالًا"
+    }
   },
   "analytics": {
     "engagementCount": "الارتباطات",

@@ -188,7 +188,9 @@ export function ActivityTimelineItem({
           {/* Title Row */}
           <div className="flex items-start justify-between gap-2">
             <h4 className="font-medium text-sm leading-tight truncate">
-              {activity.activity_title || t('timeline.noTitle', 'Untitled')}
+              {(isRTL && activity.activity_title_ar
+                ? activity.activity_title_ar
+                : activity.activity_title) || t('timeline.noTitle', 'Untitled')}
             </h4>
             <ChevronRight
               className={cn('size-4 shrink-0 text-muted-foreground', isRTL && 'rotate-180')}

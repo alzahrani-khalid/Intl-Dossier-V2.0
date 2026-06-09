@@ -44,6 +44,7 @@ export function MoUStatusCard({ dossierId }: MoUStatusCardProps): React.ReactEle
         .from('mous')
         .select('lifecycle_state')
         .or(`signatory_1_dossier_id.eq.${dossierId},signatory_2_dossier_id.eq.${dossierId}`)
+        .is('deleted_at', null)
 
       if (error) throw error
 
@@ -57,14 +58,17 @@ export function MoUStatusCard({ dossierId }: MoUStatusCardProps): React.ReactEle
 
       for (const mou of data ?? []) {
         counts.total++
+        // Bucket the real mou_state enum: draft, negotiation, pending_approval,
+        // signed, active, suspended, expired, terminated.
         const state = mou.lifecycle_state as string
-        if (state === 'active' || state === 'renewed') {
+        if (state === 'active' || state === 'signed') {
           counts.active++
-        } else if (state === 'expired' || state === 'cancelled') {
+        } else if (state === 'expired' || state === 'terminated' || state === 'suspended') {
           counts.expired++
-        } else if (state === 'pending') {
+        } else if (state === 'pending_approval' || state === 'negotiation') {
           counts.pending++
         } else {
+          // 'draft' and any unrecognized state
           counts.draft++
         }
       }
@@ -145,9 +149,8 @@ export function MoUStatusCard({ dossierId }: MoUStatusCardProps): React.ReactEle
           </p>
 
           <Link
-            to="/dossiers/organizations/$id"
+            to="/dossiers/organizations/$id/mous"
             params={{ id: dossierId }}
-            search={{ tab: 'mous' }}
             className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 transition-colors min-h-11"
           >
             <ExternalLink className="h-3.5 w-3.5" />

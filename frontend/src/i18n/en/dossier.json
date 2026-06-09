@@ -1029,7 +1029,30 @@
       "total": "{{count}} total engagements"
     },
     "recentActivity": "Recent Activity",
-    "noRecentActivity": "No recent activity"
+    "noRecentActivity": "No recent activity",
+    "membership": {
+      "title": "Membership Structure",
+      "members": "Members",
+      "memberOf": "Member Of",
+      "subUnits": "Sub-Units",
+      "totalRelated": "{{count}} total related dossiers",
+      "empty": "No membership data available"
+    },
+    "mou": {
+      "title": "MoU Status",
+      "active": "Active",
+      "pending": "Pending",
+      "expired": "Expired",
+      "draft": "Draft",
+      "total": "{{count}} total agreements",
+      "empty": "No MoUs recorded",
+      "viewAll": "View MoUs"
+    },
+    "representatives": {
+      "title": "Key Representatives",
+      "empty": "No representatives linked",
+      "total": "{{count}} representatives total"
+    }
   },
   "analytics": {
     "engagementCount": "Engagements",

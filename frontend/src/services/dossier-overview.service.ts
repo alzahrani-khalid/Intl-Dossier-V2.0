@@ -115,7 +115,8 @@ interface PositionLinkRow {
 interface MOURow {
   id: string
   title: string
-  status: string
+  title_ar: string | null
+  lifecycle_state: string
   created_at: string
   updated_at: string
 }
@@ -482,18 +483,25 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     })
     .filter((p): p is NonNullable<PositionLinkRow['position']> => p !== null)
 
-  // Fetch MOUs where this dossier is a signatory
-  const { data: mous1 } = await supabase
+  // Fetch MOUs where this dossier is a signatory.
+  // The `mous` table has no `status` column — lifecycle is `lifecycle_state`
+  // (enum mou_state). Selecting a nonexistent column makes PostgREST return an
+  // error, which was previously swallowed (MoUs silently dropped from Documents).
+  const { data: mous1, error: mous1Error } = await supabase
     .from('mous')
-    .select('id, title, status, created_at, updated_at')
+    .select('id, title, title_ar, lifecycle_state, created_at, updated_at')
     .eq('signatory_1_dossier_id', dossierId)
     .is('deleted_at', null)
 
-  const { data: mous2 } = await supabase
+  const { data: mous2, error: mous2Error } = await supabase
     .from('mous')
-    .select('id, title, status, created_at, updated_at')
+    .select('id, title, title_ar, lifecycle_state, created_at, updated_at')
     .eq('signatory_2_dossier_id', dossierId)
     .is('deleted_at', null)
+
+  if (mous1Error || mous2Error) {
+    console.error('[fetchDocuments] MoU query failed', mous1Error ?? mous2Error)
+  }
 
   // Combine MOUs (avoid duplicates)
   const mouIds = new Set<string>()
@@ -534,13 +542,13 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
   const mouDocs: DossierDocument[] = mous.map((m) => ({
     id: m.id,
     title_en: m.title || 'Untitled MOU',
-    title_ar: m.title, // MOU table uses single 'title' column
+    title_ar: m.title_ar ?? m.title,
     document_type: 'mou' as DossierDocumentType,
     file_name: null,
     file_path: null,
     mime_type: null,
     size_bytes: null,
-    status: m.status,
+    status: m.lifecycle_state,
     classification: null,
     created_at: m.created_at,
     updated_at: m.updated_at,

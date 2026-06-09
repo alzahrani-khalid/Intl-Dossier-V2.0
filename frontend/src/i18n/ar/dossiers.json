@@ -274,5 +274,26 @@
     "monthsAgo": "منذ {{count}} أشهر",
     "yearsAgo": "منذ {{count}} سنوات"
   },
-  "untitled": "دوسيه بدون عنوان"
+  "untitled": "دوسيه بدون عنوان",
+  "mous": {
+    "title": "مذكرات التفاهم",
+    "no_mous": "لا توجد مذكرات تفاهم",
+    "no_mous_description": "لا توجد مذكرات تفاهم لهذا الملف بعد",
+    "signed": "موقّعة",
+    "expires": "تنتهي",
+    "effective": "سارية",
+    "renewal_required": "التجديد مطلوب",
+    "error_loading": "خطأ في تحميل مذكرات التفاهم",
+    "error_generic": "حدث خطأ أثناء تحميل مذكرات التفاهم. يرجى المحاولة مرة أخرى.",
+    "status": {
+      "draft": "مسودة",
+      "negotiation": "تفاوض",
+      "pending_approval": "بانتظار الموافقة",
+      "signed": "موقّعة",
+      "active": "نشطة",
+      "suspended": "معلّقة",
+      "expired": "منتهية",
+      "terminated": "منهاة"
+    }
+  }
 }

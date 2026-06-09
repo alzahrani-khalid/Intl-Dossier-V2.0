@@ -108,22 +108,15 @@ export function KeyRepresentativesCard({
           })}
 
           {hasMore && (
-            <Link
-              to="/dossiers/organizations/$id"
-              params={{ id: dossierId }}
-              search={{ tab: 'contacts' }}
-              className="block"
-            >
-              <button
-                type="button"
-                className="w-full text-sm text-primary hover:text-primary/80 py-2 min-h-11 transition-colors"
-              >
-                {t('overview.representatives.viewAll', {
-                  count: totalCount,
-                  defaultValue: 'View all {{count}} representatives',
-                })}
-              </button>
-            </Link>
+            // The organization shell has no `contacts` tab/route, so the old
+            // search-param link dead-ended on overview. Show the total as a
+            // static summary instead of a broken affordance.
+            <p className="w-full text-sm text-muted-foreground py-2 text-start">
+              {t('overview.representatives.total', {
+                count: totalCount,
+                defaultValue: '{{count}} representatives total',
+              })}
+            </p>
           )}
         </div>
       )}

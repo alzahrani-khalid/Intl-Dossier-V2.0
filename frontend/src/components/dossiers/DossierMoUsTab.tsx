@@ -29,7 +29,15 @@ interface MoU {
   }
   effective_date?: string
   expiry_date?: string
-  lifecycle_state: 'draft' | 'pending' | 'active' | 'expired' | 'cancelled' | 'renewed'
+  lifecycle_state:
+    | 'draft'
+    | 'negotiation'
+    | 'pending_approval'
+    | 'signed'
+    | 'active'
+    | 'suspended'
+    | 'expired'
+    | 'terminated'
   document_path?: string
   created_at: string
 }
@@ -54,6 +62,7 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
         .from('mous')
         .select('*')
         .or(`signatory_1_dossier_id.eq.${dossierId},signatory_2_dossier_id.eq.${dossierId}`)
+        .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
       if (error) throw error
@@ -62,19 +71,20 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
   })
 
   // Status color mapping
-  const getStatusColor = (status: MoU['lifecycle_state']) => {
+  const getStatusColor = (status: MoU['lifecycle_state']): string => {
     switch (status) {
       case 'active':
+      case 'signed':
         return 'bg-success/10 text-success dark:bg-success/20 dark:text-success'
-      case 'draft':
-      case 'pending':
+      case 'negotiation':
+      case 'pending_approval':
         return 'bg-warning/10 text-warning dark:bg-warning/20 dark:text-warning'
       case 'expired':
+      case 'terminated':
         return 'bg-danger/10 text-danger dark:bg-danger/20 dark:text-danger'
-      case 'cancelled':
-        return 'bg-muted text-foreground dark:bg-muted dark:text-muted-foreground'
-      case 'renewed':
+      case 'suspended':
         return 'bg-info/10 text-info dark:bg-info/20 dark:text-info'
+      case 'draft':
       default:
         return 'bg-muted text-foreground dark:bg-muted dark:text-muted-foreground'
     }
@@ -147,21 +157,13 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
               {/* MoU Info */}
               <div className="flex-1 min-w-0">
                 {/* Title */}
-                <h4
-                  className={`text-base sm:text-lg font-medium text-foreground dark:text-white truncate ${
-                    isRTL ? 'text-end' : 'text-start'
-                  }`}
-                >
+                <h4 className="text-base sm:text-lg font-medium text-foreground dark:text-white truncate text-start">
                   {isRTL ? mou.title_ar : mou.title}
                 </h4>
 
                 {/* Summary */}
                 {mou.description && (
-                  <p
-                    className={`mt-1 text-sm text-muted-foreground dark:text-muted-foreground line-clamp-2 ${
-                      isRTL ? 'text-end' : 'text-start'
-                    }`}
-                  >
+                  <p className="mt-1 text-sm text-muted-foreground dark:text-muted-foreground line-clamp-2 text-start">
                     {mou.description}
                   </p>
                 )}

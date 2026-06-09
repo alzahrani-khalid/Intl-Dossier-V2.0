@@ -508,7 +508,13 @@
       "active": "Active",
       "expired": "Expired",
       "cancelled": "Cancelled",
-      "renewed": "Renewed"
+      "renewed": "Renewed",
+      "draft": "Draft",
+      "negotiation": "Negotiation",
+      "pending_approval": "Pending Approval",
+      "signed": "Signed",
+      "suspended": "Suspended",
+      "terminated": "Terminated"
     },
     "statuses": {
       "pending": "Pending",
