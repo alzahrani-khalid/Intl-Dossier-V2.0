@@ -466,14 +466,18 @@ async function fetchRelatedDossiers(dossierId: string): Promise<RelatedDossiersS
 
 async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
   // Fetch positions via position_dossier_links junction table
-  const { data: positionLinks } = await supabase
+  const { data: positionLinks, error: positionLinksError } = await supabase
     .from('position_dossier_links')
     .select(
       `
-      position:position_id(id, title_en, title_ar, status, created_at, updated_at)
+      position:positions(id, title_en, title_ar, status, created_at, updated_at)
     `,
     )
     .eq('dossier_id', dossierId)
+
+  if (positionLinksError) {
+    console.error('[fetchDocuments] position links query failed', positionLinksError)
+  }
 
   // Extract positions from links (Supabase joins may return arrays)
   const positions = ((positionLinks || []) as unknown as PositionLinkRow[])

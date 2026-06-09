@@ -1063,6 +1063,21 @@
     "sessions": {
       "title": "Sessions",
       "empty": "No sessions recorded"
+    },
+    "positions": {
+      "title": "Position Tracker",
+      "empty": "No positions tracked yet. Add positions in the Positions tab.",
+      "addPositions": "Add Positions",
+      "ourStance": "Our Position",
+      "noOurStance": "Not defined",
+      "counterpart": "Counterpart Positions",
+      "noCounterpart": "None recorded",
+      "viewAll": "View Positions"
+    },
+    "anchors": {
+      "title": "Connected Anchors",
+      "empty": "No anchor dossiers connected",
+      "viewSidebar": "View all in sidebar"
     }
   },
   "analytics": {

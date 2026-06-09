@@ -183,7 +183,7 @@ export const DOSSIER_RELATIONSHIPS_COLUMNS = {
 export const POSITION_DOSSIER_LINKS_COLUMNS = {
   /** With position join */
   WITH_POSITION: `
-    position:position_id(id, title_en, title_ar, status, created_at, updated_at)
+    position:positions(id, title_en, title_ar, status, created_at, updated_at)
   `,
 } as const
 
