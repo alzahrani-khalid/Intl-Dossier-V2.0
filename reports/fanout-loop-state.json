@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUND 5 in progress (2026-06-10). Done: sla-monitoring, my-work. Current: activity (codex inspection running). Queue after: audit-logs, approvals(list). Rounds 1-4 complete. NOTE: cursor-agent quota resets 6/27; codex CLI substituted. PROCESS RULE since 43ef442a incident: every commit verified via direct pnpm --filter intake-frontend build.",
+  "status": "ROUND 5 in progress (2026-06-10). Done: sla-monitoring, my-work, activity. Current: audit-logs (codex inspection running). Queue after: approvals(list) — FINAL round-5 item. Rounds 1-4 complete. NOTE: cursor-agent quota resets 6/27; codex CLI substituted. PROCESS RULE since 43ef442a incident: every commit verified via direct pnpm --filter intake-frontend build.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -150,8 +150,17 @@
   ],
   "round3_queue": [],
   "round4_queue": [],
-  "round5_queue": ["activity (in progress)", "audit-logs", "approvals (list page)"],
+  "round5_queue": ["audit-logs (in progress)", "approvals (list page) — FINAL"],
   "round5_done": [
+    {
+      "type": "activity (global /activity feed)",
+      "report": "reports/activity-workflow-inspection-2026-06-10.md",
+      "inspector": "codex",
+      "prev_commit_for_my_work": "a46d06c5",
+      "findings": 5,
+      "fixed": "2 bucket-A: #2 load-more restored (hook/edge had full cursor pagination; the Phase-42 reskin silently capped the feed at 20 rows — btn-ghost Load more wired to hasNextPage/fetchNextPage), #5-half aria-label 'Activity' -> t('title') (was English in AR). DELIBERATELY SKIPPED #5-half tab-panel restructure: empty TabsContent panels are a documented Phase-42 axe-core decision in the file header",
+      "escalated": "B-bucket: #1 activity_stream RLS allows any authenticated insert w/o actor_id=auth.uid() binding + visibility_scope unenforced (spoofable feed — VERIFY vs live policies), #3 Following tab has NO follow affordance anywhere active (only legacy unmounted EnhancedActivityFeed had it), #4 realtime claimed in comments but polling-only (60s)"
+    },
     {
       "type": "my-work",
       "report": "reports/my-work-workflow-inspection-2026-06-10.md",

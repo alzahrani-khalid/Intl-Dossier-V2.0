@@ -29,23 +29,19 @@ export function ActivityPage(): ReactElement {
   const [tab, setTab] = useState<ActivityTab>('all')
 
   const feed = useActivityFeed({ followed_only: tab === 'following' })
-  const { activities, isLoading, error } = feed
+  const { activities, isLoading, error, hasNextPage, isFetchingNextPage, fetchNextPage } = feed
 
   return (
     <section
       role="region"
-      aria-label="Activity"
+      aria-label={t('title')}
       dir={isRTL ? 'rtl' : 'ltr'}
       data-loading={isLoading ? 'true' : 'false'}
       className="page flex min-w-0 flex-col gap-[var(--gap)]"
     >
       <PageHeader title={t('title')} />
 
-      <Tabs
-        value={tab}
-        onValueChange={(v) => setTab(v as ActivityTab)}
-        className="w-full"
-      >
+      <Tabs value={tab} onValueChange={(v) => setTab(v as ActivityTab)} className="w-full">
         <TabsList>
           <TabsTrigger value="all">{t('tabs.all')}</TabsTrigger>
           <TabsTrigger value="following">{t('tabs.following')}</TabsTrigger>
@@ -84,9 +80,26 @@ export function ActivityPage(): ReactElement {
       )}
 
       {!isLoading && error == null && activities.length > 0 && (
-        <div className="card">
-          <ActivityList activities={activities} />
-        </div>
+        <>
+          <div className="card">
+            <ActivityList activities={activities} />
+          </div>
+          {/* Cursor pagination existed in the hook/edge contract but the
+              reskin dropped the control — feed was silently capped at the
+              first page (inspection #2) */}
+          {hasNextPage && (
+            <div className="flex justify-center">
+              <button
+                type="button"
+                className="btn-ghost"
+                onClick={() => void fetchNextPage()}
+                disabled={isFetchingNextPage}
+              >
+                {isFetchingNextPage ? t('loading') : t('loadMore')}
+              </button>
+            </div>
+          )}
+        </>
       )}
     </section>
   )
