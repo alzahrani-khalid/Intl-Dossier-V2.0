@@ -155,7 +155,7 @@ export function RelationshipSidebar({
   const { isRTL } = useDirection()
 
   // Data fetching
-  const { data: relationshipsData, isLoading } = useRelationshipsForDossier(dossierId)
+  const { data: relationshipsData, isLoading, isError } = useRelationshipsForDossier(dossierId)
   const { data: dossier } = useDossier(dossierId)
   const createRelationship = useCreateRelationship()
   const deleteRelationship = useDeleteRelationship()
@@ -178,22 +178,28 @@ export function RelationshipSidebar({
     const relationships = relationshipsData.data ?? []
     if (!Array.isArray(relationships)) return []
 
-    return relationships.map((rel) => {
-      const isSource = rel.source_dossier_id === dossierId
-      const linked = isSource ? rel.target_dossier : rel.source_dossier
-      const linkedObj = (linked ?? {}) as Record<string, unknown>
-      const relType = rel.relationship_type ?? 'related_to'
+    return (
+      relationships
+        .map((rel) => {
+          const isSource = rel.source_dossier_id === dossierId
+          const linked = isSource ? rel.target_dossier : rel.source_dossier
+          const linkedObj = (linked ?? {}) as Record<string, unknown>
+          const relType = rel.relationship_type ?? 'related_to'
 
-      return {
-        id: (linkedObj.id as string) ?? '',
-        type: (linkedObj.type as string) ?? 'country',
-        name_en: (linkedObj.name_en as string) ?? '',
-        name_ar: (linkedObj.name_ar as string | null) ?? null,
-        relationshipId: rel.id ?? '',
-        relationshipType: relType,
-        tier: TIER_CLASSIFICATION[relType] ?? 'informational',
-      }
-    })
+          return {
+            id: (linkedObj.id as string) ?? '',
+            type: (linkedObj.type as string) ?? 'country',
+            name_en: (linkedObj.name_en as string) ?? '',
+            name_ar: (linkedObj.name_ar as string | null) ?? null,
+            relationshipId: rel.id ?? '',
+            relationshipType: relType,
+            tier: TIER_CLASSIFICATION[relType] ?? 'informational',
+          }
+        })
+        // Drop rows whose linked dossier embed is missing (deleted/restricted) —
+        // their id is '' and would produce a broken navigation target.
+        .filter((d) => d.id !== '')
+    )
   }, [relationshipsData, dossierId])
 
   // Group by tier
@@ -303,6 +309,11 @@ export function RelationshipSidebar({
                 <Skeleton className="h-10 w-full" />
               </div>
             ))}
+          </div>
+        ) : isError ? (
+          /* Error state — don't mask fetch failures as an empty list */
+          <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
+            <p className="text-sm font-medium text-destructive">{t('error.loadFailed')}</p>
           </div>
         ) : linkedDossiers.length === 0 ? (
           /* Empty state */

@@ -125,10 +125,10 @@ export function useCreateRelationship() {
         queryKey: relationshipKeys.forDossier(data.target_dossier_id),
       })
       queryClient.setQueryData(relationshipKeys.detail(data.id), data)
-      toast.success(t('relationship.create.success'))
+      toast.success(t('messages.created', { ns: 'relationships' }))
     },
     onError: (error: RelationshipAPIError) => {
-      toast.error(t('relationship.create.error', { message: error.message }))
+      toast.error(t('messages.createError', { ns: 'relationships', message: error.message }))
     },
   })
 }
@@ -166,7 +166,7 @@ export function useUpdateRelationship() {
       queryClient.invalidateQueries({
         queryKey: relationshipKeys.forDossier(data.target_dossier_id),
       })
-      toast.success(t('relationship.update.success'))
+      toast.success(t('messages.updated', { ns: 'relationships' }))
     },
     onError: (error: RelationshipAPIError, { id }, context) => {
       if (
@@ -177,7 +177,7 @@ export function useUpdateRelationship() {
       ) {
         queryClient.setQueryData(relationshipKeys.detail(id), context.previousRelationship)
       }
-      toast.error(t('relationship.update.error', { message: error.message }))
+      toast.error(t('messages.updateError', { ns: 'relationships', message: error.message }))
     },
   })
 }
@@ -213,7 +213,7 @@ export function useDeleteRelationship() {
           queryKey: relationshipKeys.forDossier(prev.target_dossier_id),
         })
       }
-      toast.success(t('relationship.delete.success'))
+      toast.success(t('messages.deleted', { ns: 'relationships' }))
     },
     onError: (error: RelationshipAPIError, id: string, context) => {
       if (
@@ -224,7 +224,7 @@ export function useDeleteRelationship() {
       ) {
         queryClient.setQueryData(relationshipKeys.detail(id), context.previousRelationship)
       }
-      toast.error(t('relationship.delete.error', { message: error.message }))
+      toast.error(t('messages.deleteError', { ns: 'relationships', message: error.message }))
     },
   })
 }

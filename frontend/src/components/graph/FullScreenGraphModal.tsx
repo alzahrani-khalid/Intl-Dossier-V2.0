@@ -14,10 +14,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { ReactFlowProvider } from '@xyflow/react'
-import {
-  AdaptiveDialog,
-  AdaptiveDialogBody,
-} from '@/components/ui/adaptive-dialog'
+import { AdaptiveDialog, AdaptiveDialogBody } from '@/components/ui/adaptive-dialog'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -214,15 +211,15 @@ export default function FullScreenGraphModal({
             <SelectContent>
               <SelectItem value="all">{t('graph.allTypes')}</SelectItem>
               <SelectItem value="member_of">{t('graph.memberOf')}</SelectItem>
-              <SelectItem value="partner">{t('graph.partner')}</SelectItem>
+              <SelectItem value="partnership">{t('graph.partner')}</SelectItem>
               <SelectItem value="hosted_by">{t('graph.hostedBy')}</SelectItem>
             </SelectContent>
           </Select>
 
           {graphData != null && (
             <span className="text-xs text-muted-foreground ms-auto">
-              {graphData.stats.node_count} {t('graph.nodes')} &middot;{' '}
-              {graphData.stats.edge_count} {t('graph.edges')}
+              {graphData.stats.node_count} {t('graph.nodes')} &middot; {graphData.stats.edge_count}{' '}
+              {t('graph.edges')}
             </span>
           )}
         </div>
@@ -242,9 +239,7 @@ export default function FullScreenGraphModal({
             <div className="flex items-center justify-center h-full">
               <div className="text-center space-y-2">
                 <AlertCircle className="h-8 w-8 text-destructive mx-auto" />
-                <p className="text-sm text-destructive">
-                  {(error as Error).message}
-                </p>
+                <p className="text-sm text-destructive">{(error as Error).message}</p>
                 <Button
                   variant="outline"
                   size="sm"
