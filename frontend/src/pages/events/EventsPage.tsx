@@ -208,8 +208,8 @@ ${event.status === 'cancelled' ? 'bg-danger/10 text-danger' : ''}
 
   return (
     <div className="space-y-4">
+      {/* No detail route exists yet — cards render as plain cards, not fake links */}
       {events?.map((event) => (
-        {/* No detail route exists yet — render as a plain card, not a fake link */}
         <Card key={event.id}>
           <CardContent className="p-4">
             <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-4">
