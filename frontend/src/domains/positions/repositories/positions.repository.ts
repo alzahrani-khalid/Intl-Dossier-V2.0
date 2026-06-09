@@ -7,7 +7,12 @@
  */
 
 import { apiGet, apiPost, apiPut, apiDelete } from '@/lib/api-client'
-import type { PositionFilters, PositionListResponse, Position, CreatePositionRequest } from '@/types/position'
+import type {
+  PositionFilters,
+  PositionListResponse,
+  Position,
+  CreatePositionRequest,
+} from '@/types/position'
 import type {
   UpdatePositionVariables,
   SubmitPositionResponse,
@@ -80,7 +85,8 @@ export async function createPosition(data: CreatePositionRequest): Promise<Posit
  * Update an existing position.
  */
 export async function updatePosition({ id, data }: UpdatePositionVariables): Promise<Position> {
-  return apiPut<Position>(`/positions-update?id=${id}`, data)
+  // positions-update reads position_id (and version) from the JSON body, not the query string.
+  return apiPut<Position>('/positions-update', { position_id: id, ...data })
 }
 
 // ============================================================================
@@ -91,7 +97,8 @@ export async function updatePosition({ id, data }: UpdatePositionVariables): Pro
  * Submit a position for review.
  */
 export async function submitPosition(id: string): Promise<SubmitPositionResponse> {
-  return apiPut<SubmitPositionResponse>(`/positions-submit?id=${id}`, {})
+  // positions-submit reads position_id from the JSON body, not the query string.
+  return apiPut<SubmitPositionResponse>('/positions-submit', { position_id: id })
 }
 
 // ============================================================================
@@ -157,10 +164,7 @@ export async function createPositionDossierLink(
   positionId: string,
   input: CreatePositionDossierLinkInput,
 ): Promise<PositionDossierLink> {
-  return apiPost<PositionDossierLink>(
-    `/positions-dossiers-create?positionId=${positionId}`,
-    input,
-  )
+  return apiPost<PositionDossierLink>(`/positions-dossiers-create?positionId=${positionId}`, input)
 }
 
 /**

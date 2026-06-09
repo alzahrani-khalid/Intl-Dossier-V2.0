@@ -34,7 +34,7 @@ async function fetchApprovals(positionId: string) {
   const {
     data: { session },
   } = await supabase.auth.getSession()
-  const response = await fetch(`${API_BASE_URL}/positions-get?id=${positionId}`, {
+  const response = await fetch(`${API_BASE_URL}/positions-get?position_id=${positionId}`, {
     headers: {
       Authorization: `Bearer ${session?.access_token}`,
       'Content-Type': 'application/json',
