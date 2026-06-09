@@ -64,10 +64,10 @@ function kindChipClass(source: WorkItem['source']): string {
   return source === 'commitment' ? 'chip chip-accent' : 'chip chip-info'
 }
 
-function buildDueText(item: KCardItem, lang: string): string {
+function buildDueText(item: KCardItem, lang: string, t: (key: string) => string): string {
   if (item.is_overdue && typeof item.days_until_due === 'number') {
-    const raw = `Overdue ${Math.abs(item.days_until_due)}d`
-    return toArDigits(raw, lang)
+    const n = Math.abs(item.days_until_due)
+    return `${t('card.overdue')} ${toArDigits(`${n}d`, lang)}`
   }
   if (item.deadline == null) return ''
   const date = new Date(item.deadline)
@@ -80,7 +80,7 @@ function buildDueText(item: KCardItem, lang: string): string {
 }
 
 export function KCard({ item, onItemClick, dndEnabled = false }: KCardProps): ReactElement {
-  const { i18n } = useTranslation('unified-kanban')
+  const { t, i18n } = useTranslation('unified-kanban')
   const lang = i18n.language
 
   const isDone = item.status === 'completed' || item.workflow_stage === 'done'
@@ -95,11 +95,10 @@ export function KCard({ item, onItemClick, dndEnabled = false }: KCardProps): Re
   const flag = item.dossier?.flag ?? ''
   const initials = computeInitials(item.assignee?.name)
   const ownerLabel = item.assignee?.name ?? '?'
-  const dueText = buildDueText(item, lang)
+  const dueText = buildDueText(item, lang, t)
 
-  const kindLabel =
-    item.source === 'task' ? 'Task' : item.source === 'commitment' ? 'Commitment' : 'Intake'
-  const priorityLabel = item.priority.charAt(0).toUpperCase() + item.priority.slice(1)
+  const kindLabel = t(`sources.${item.source}`)
+  const priorityLabel = t(`priority.${item.priority}`)
 
   const handleClick = (): void => {
     onItemClick(item)
