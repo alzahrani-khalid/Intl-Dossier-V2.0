@@ -153,18 +153,17 @@ export function IconRail({
       )}
       aria-label={t('navigation.mainNav', 'Main navigation')}
     >
-      {/* Top Navigation Items - ULTRA DARK Section */}
+      {/* Top Navigation Items */}
       <nav
         className={cn(
           'flex flex-col items-center overflow-y-auto',
-          // ULTRA DARK background for top section - dramatic contrast
-          'bg-gradient-to-b from-[hsl(220,15%,2%)] via-[hsl(220,15%,4%)] to-[hsl(220,15%,6%)]',
+          // Flat token surface (was raw HSL gradient + arbitrary shadows — design rules:
+          // no gradients, shadows reserved for drawers)
+          'bg-sidebar border border-line',
           // Margins on all sides
           'mx-1 mt-1',
           // Top and bottom rounded corners
           'rounded-t-xl rounded-b-xl',
-          // Moderate shadows
-          'shadow-[0_3px_12px_rgba(0,0,0,0.35),0_1px_4px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.05)]',
         )}
         aria-label={t('navigation.primary', 'Primary navigation')}
       >

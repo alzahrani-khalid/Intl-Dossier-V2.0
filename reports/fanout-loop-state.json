@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUND 3 (new uncovered surfaces; user-approved 2026-06-09). Done: dashboard, reports/analytics, data-library/documents, intelligence, briefing-books. Current: settings/admin (FINAL round-3 item; codex inspection running). NOTE: cursor-agent monthly quota exhausted (resets 6/27); inspections run via codex CLI as substitute.",
+  "status": "ROUND 3 COMPLETE (dashboard, reports/analytics, data-library/documents, intelligence, briefing-books, settings/admin — all inspected + bucket-A fixed + committed). ROUND 4 started (remaining uncovered Reports/System surfaces): word-assistant + export combined inspection running via codex. NOTE: cursor-agent monthly quota exhausted (resets 6/27); inspections run via codex CLI as substitute.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -148,8 +148,24 @@
       "escalated": "#1/#12 detail route, #9/#13 create/parties UI, #3-5/#10 backend+edge schema, #7/#8 view soft-delete+parties, #14 common.json i18n (WIP)"
     }
   ],
-  "round3_queue": ["settings/admin (in progress — FINAL)"],
+  "round3_queue": [],
+  "round4_queue": [
+    "word-assistant + export (in progress, combined)",
+    "tags",
+    "events",
+    "task-queue/escalations"
+  ],
   "round3_done": [
+    {
+      "type": "settings/admin (System category: /settings, /users, /admin, /help)",
+      "report": "reports/settings-admin-workflow-inspection-2026-06-09.md",
+      "inspector": "codex",
+      "prev_commit_for_briefing_books": "0bcdb14a",
+      "findings": 13,
+      "fixed": "4 bucket-A: #6 ExpandedPanel now filters adminOnly nav items via authStore role (renderer ignored the flag), #11 help page honesty — no-destination View-all removed, mailto:/tel: wired on support buttons, inert resource cards de-affordanced (pointer+external-icon removed), #12 admin approvals route switched to admin ns (AR showed English defaults) + navigation.system key EN+AR, #13 IconRail raw HSL gradient+RGBA shadows -> bg-sidebar+border-line, help guide/resource card shadows -> border-accent + transition-colors, accessibility focus-indicator rows: div onClick removed, Label is the click target",
+      "deferred_from_A": "#11 help namespace migration (page is bilingual via inline pairs; full help-ns extraction is a phase-sized mechanical change)",
+      "escalated": "B-bucket: #1 CRITICAL /settings saves to nonexistent users columns (preferences schema decision + migration, VERIFY vs live), #2 appearance prefs localStorage-only vs account-level, #3 /users create/view/edit/role routes missing (edge fns exist unwired), #4 /users not admin-gated (route+RLS decision), #5 admin role-source split (profile-table vs auth metadata), #7 calendar-sync settings import stub hooks (real repository exists), #8 data-privacy export/delete references absent tables, #9 MFA is a flag with no enrollment flow, #10 bot pending-link user_id nullability"
+    },
     {
       "type": "briefing-books",
       "report": "reports/briefing-books-workflow-inspection-2026-06-09.md",
@@ -204,5 +220,5 @@
     "e5a04b10 dashboard",
     "68552968 reports-analytics"
   ],
-  "next_planned": "settings/admin (codex running; then fix bucket-A + commit). This is the LAST round-3 item — after it, round 3 is complete; decide with user whether to start a round 4 or consolidate the escalated B-bucket backlog into planned phases"
+  "next_planned": "word-assistant + export combined (codex running; then fix bucket-A + commit). Round-4 queue after: tags, events, task-queue/escalations. OPEN QUESTION for user: consolidate the round-2/3 escalated B-bucket backlog (state file entries + escalated-backlog-master) into planned GSD phases — biggest items: settings preferences schema, briefing-books re-enable+DTO, intelligence 3-stack unification, data-library schema reconcile, analytics-dashboard proxy/contract"
 }

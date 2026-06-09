@@ -120,17 +120,13 @@ export function AccessibilitySettingsSection({ form }: AccessibilitySettingsSect
                   key={option.value}
                   className={cn(
                     'flex items-center gap-2 px-3 py-2 rounded-lg border',
-                    'cursor-pointer hover:bg-muted/50',
+                    'hover:bg-muted/50',
                     focusIndicators === option.value && 'border-primary bg-muted/30',
                   )}
-                  onClick={() =>
-                    form.setValue('focus_indicators', option.value, {
-                      shouldDirty: true,
-                    })
-                  }
                 >
                   <RadioGroupItem value={option.value} id={option.value} />
-                  <Label htmlFor={option.value} className="text-sm cursor-pointer">
+                  {/* Label carries the click target (a11y) — no div onClick */}
+                  <Label htmlFor={option.value} className="text-sm cursor-pointer flex-1">
                     {option.label}
                   </Label>
                 </div>

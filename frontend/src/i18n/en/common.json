@@ -166,6 +166,7 @@
     "export": "Export",
     "users": "User Management",
     "admin": "Admin",
+    "system": "System",
     "adminSystem": "System Utilities",
     "adminApprovals": "Approval Management",
     "aiUsage": "AI Usage",
