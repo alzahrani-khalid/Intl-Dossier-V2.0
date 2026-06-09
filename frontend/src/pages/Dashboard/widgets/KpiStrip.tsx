@@ -12,11 +12,12 @@ import { useDashboardStats } from '@/domains/operations-hub/hooks/useDashboardSt
  * `useDashboardStats(user.id)`. Card 3 (SLA at Risk) carries the
  * `kpi-accent` class — `dashboard.css` paints the `var(--accent)` top-bar.
  *
- * Phase 41: deltas added per handoff dashboard.jsx lines 45-58. Until
- * useDashboardStats returns delta info, values are hardcoded to match the
- * design fixtures. `dir` is the trend semantic (up=good, down=bad), not the
- * sign of `delta` — e.g. SLA at Risk going up by 2 is `dir: 'down'` because
- * more risk is bad. `.kpi-delta.up` paints --ok green, `.down` paints --danger.
+ * Honesty rule (dashboard inspection 2026-06-09, Findings 2+3): the Phase 41
+ * hardcoded delta chips and the static i18n meta lines ("5 this week · 3
+ * travel") were fabricated fixtures, not data. Both are removed until
+ * `get_dashboard_stats` (or a successor RPC) returns real week-over-week
+ * deltas / breakdowns. `delta`/`trend`/`meta` stay on the interface so the
+ * render path is ready when real values exist.
  *
  * RTL: every numeral wrapped in `<LtrIsolate>` (SP-4) so Latin digits don't
  * reflow under `forceRTL`. Delta uses `dir="ltr"` for the same reason.
@@ -25,7 +26,7 @@ import { useDashboardStats } from '@/domains/operations-hub/hooks/useDashboardSt
 interface KpiCard {
   label: string
   value: number
-  meta: string
+  meta?: string
   delta?: number
   trend?: 'up' | 'down'
   accent?: boolean
@@ -61,38 +62,14 @@ export function KpiStrip(): ReactElement {
 
   if (isLoading || !data) return <KpiStripSkeleton />
 
-  // Phase-41 design fixtures: deltas + trends per handoff dashboard.jsx 45-48.
-  // TODO Phase 42: extend useDashboardStats to return week-over-week deltas.
+  // Counts only — no fabricated deltas/meta. TODO Phase 42: extend
+  // useDashboardStats to return week-over-week deltas + meta breakdowns,
+  // then populate `delta`/`trend`/`meta` from the payload.
   const cards: ReadonlyArray<KpiCard> = [
-    {
-      label: t('kpi.activeEngagements'),
-      value: data.active_engagements,
-      meta: t('kpi.activeMeta'),
-      delta: 2,
-      trend: 'up',
-    },
-    {
-      label: t('kpi.openCommitments'),
-      value: data.open_tasks,
-      meta: t('kpi.openMeta'),
-      delta: -4,
-      trend: 'up', // fewer open commitments = good trend
-    },
-    {
-      label: t('kpi.slaAtRisk'),
-      value: data.sla_at_risk,
-      meta: t('kpi.slaMeta'),
-      delta: 2,
-      trend: 'down', // more SLA at risk = bad trend
-      accent: true,
-    },
-    {
-      label: t('kpi.weekAhead'),
-      value: data.upcoming_week,
-      meta: t('kpi.weekAheadMeta'),
-      delta: 1,
-      trend: 'up',
-    },
+    { label: t('kpi.activeEngagements'), value: data.active_engagements },
+    { label: t('kpi.openCommitments'), value: data.open_tasks },
+    { label: t('kpi.slaAtRisk'), value: data.sla_at_risk, accent: true },
+    { label: t('kpi.weekAhead'), value: data.upcoming_week },
   ]
 
   return (
@@ -115,7 +92,7 @@ export function KpiStrip(): ReactElement {
                 </span>
               )}
             </div>
-            {k.meta !== '' && <div className="kpi-meta">{k.meta}</div>}
+            {k.meta != null && k.meta !== '' && <div className="kpi-meta">{k.meta}</div>}
           </div>
         )
       })}

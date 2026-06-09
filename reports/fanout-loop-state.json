@@ -1,8 +1,8 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "RESUMED. Current: AI briefing generation workflow (last distinct workflow).",
+  "status": "ROUND 3 (new uncovered surfaces; user-approved 2026-06-09). Current: dashboard done; next: reports/analytics.",
   "started": "2026-06-08",
-  "finished": "2026-06-09",
+  "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
   "covered": [
     "country",
@@ -146,6 +146,22 @@
       "findings": 20,
       "fixed": "#2 library crash (real mou_state enum+guard), #6 KPI buckets, #11 error state, #16 chevron RTL",
       "escalated": "#1/#12 detail route, #9/#13 create/parties UI, #3-5/#10 backend+edge schema, #7/#8 view soft-delete+parties, #14 common.json i18n (WIP)"
+    }
+  ],
+  "round3_queue": [
+    "reports/analytics",
+    "data-library/documents",
+    "intelligence",
+    "briefing-books",
+    "settings/admin"
+  ],
+  "round3_done": [
+    {
+      "type": "dashboard (analyst home)",
+      "report": "reports/dashboard-workflow-inspection-2026-06-09.md",
+      "findings": 20,
+      "fixed": "11 bucket-A: KPI fabricated deltas+meta removed (honest counts), trends mock fallback removed + SlaHealth error branch, owner initials via users lookup (live-verified full_name 393/393), MyTasks enabled+assigned guard, FirstRun operations-hub/digest/first-run-check invalidation, VIP view-all 404->engagements, overdue.owner i18n (en+ar), forums.status inactive+unknown (live statuses=active/inactive), loading incl lookups + hide empty initials, bureau kpi/kcard shadow removal, spinner border-accent",
+      "escalated": "B-bucket: get_dashboard_stats deltas/meta RPC, SlaHealth domain model (intake vs work-items + bad band), openCommitments label vs open_tasks, dossierType propagation to drawer, overdue pagination, get_work_item_trends RPC, /vip-visits route decision, dead Operations Hub zone components, WeekAhead glyph typing, MyTasks uncheck status restore"
     }
   ],
   "session_commits": [

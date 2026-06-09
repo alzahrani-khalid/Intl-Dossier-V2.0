@@ -120,8 +120,13 @@ export function SlaHealth(): ReactElement {
         </ul>
       </div>
       {/* No parent transform — Sparkline auto-flips via Phase 37 37-08-04. */}
+      {/* Trends errors surface honestly — never a mock series (Finding 4). */}
       <div className="sla-spark mt-3">
-        <Sparkline data={sparkSeries} width={80} height={22} />
+        {trends.isError ? (
+          <p className="text-xs text-ink-soft text-start">{t('error.load_failed')}</p>
+        ) : (
+          <Sparkline data={sparkSeries} width={80} height={22} />
+        )}
       </div>
     </section>
   )

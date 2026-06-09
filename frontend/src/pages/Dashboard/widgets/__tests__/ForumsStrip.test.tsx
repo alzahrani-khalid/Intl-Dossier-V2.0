@@ -18,10 +18,23 @@ vi.mock('@/components/ui/badge', () => ({
 
 vi.mock('react-i18next', () => ({
   useTranslation: (): {
-    t: (k: string, fallback?: string) => string
+    t: (k: string, opts?: string | { defaultValue?: string }) => string
     i18n: { language: string }
   } => ({
-    t: (k: string, fallback?: string): string => fallback ?? k,
+    // Micro-i18next: resolve known keys, else defaultValue, else the key —
+    // mirrors real lookup order so the raw-enum-leak guard (inspection
+    // 2026-06-09 Finding 20) is actually testable.
+    t: (k: string, opts?: string | { defaultValue?: string }): string => {
+      const dict: Record<string, string> = {
+        'forums.status.active': 'Active',
+        'forums.status.inactive': 'Inactive',
+        'forums.status.unknown': 'Status unavailable',
+      }
+      const hit = dict[k]
+      if (hit != null) return hit
+      if (typeof opts === 'string') return opts
+      return opts?.defaultValue ?? k
+    },
     i18n: { language: 'en' },
   }),
 }))
@@ -129,8 +142,19 @@ describe('ForumsStrip', () => {
       isError: false,
     } as never)
     render(<ForumsStrip />)
-    // t mock returns fallback (status string) so we assert badge contains it
-    expect(screen.getByTestId('badge').textContent).toBe('active')
+    // dict resolves forums.status.active — proves the key construction
+    expect(screen.getByTestId('badge').textContent).toBe('Active')
+  })
+
+  it('falls back to the translated unknown label for unmapped statuses (no raw enum leak)', () => {
+    vi.mocked(useForums).mockReturnValue({
+      data: { data: [makeForum('f1', 'General Assembly', 'some_new_enum')], pagination: {} },
+      isLoading: false,
+      isError: false,
+    } as never)
+    render(<ForumsStrip />)
+    // Never the raw 'some_new_enum' and never the raw i18n key (Finding 20)
+    expect(screen.getByTestId('badge').textContent).toBe('Status unavailable')
   })
 
   it("clicking a forum item calls openDossier({id, type: 'forum'})", () => {

@@ -75,7 +75,13 @@ export function MyTasks(): ReactElement {
   const { t, i18n } = useTranslation('dashboard-widgets')
   const { user } = useAuth()
   const userId = user?.id ?? ''
-  const { data, isLoading, isError } = useTasks({ assignee_id: userId })
+  // `enabled` guard: without it the first render fetched with an empty
+  // assignee_id, which tasks-get ignores → up to 50 unrelated tasks flash
+  // in before auth resolves (inspection 2026-06-09 Finding 12).
+  const { data, isLoading, isError } = useTasks(
+    { assignee_id: userId, filter: 'assigned' },
+    { enabled: userId !== '' },
+  )
   const updateTask = useUpdateTask()
 
   if (isLoading) {

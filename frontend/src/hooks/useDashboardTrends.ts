@@ -2,7 +2,9 @@
  * Dashboard Trends Hook
  *
  * TanStack Query hook for fetching daily work item trend data.
- * Uses the unified_work_items view via Supabase, with mock fallback.
+ * Uses the unified_work_items view via Supabase. Errors propagate to the
+ * query state — consumers must render their own error branch (no silent
+ * mock fallback; see dashboard inspection 2026-06-09 Finding 4).
  */
 
 import { useQuery } from '@tanstack/react-query'
@@ -89,38 +91,10 @@ async function fetchTrends(range: TrendRange): Promise<TrendDataPoint[]> {
   }))
 }
 
-/**
- * Generate mock trend data as fallback.
- */
-function generateMockTrends(range: TrendRange): TrendDataPoint[] {
-  const days = rangeToDays(range)
-  const now = new Date()
-  const data: TrendDataPoint[] = []
-
-  for (let i = days - 1; i >= 0; i--) {
-    const date = new Date(now)
-    date.setDate(date.getDate() - i)
-    data.push({
-      date: date.toISOString().slice(0, 10),
-      created: Math.floor(Math.random() * 8) + 1,
-      completed: Math.floor(Math.random() * 6) + 1,
-    })
-  }
-
-  return data
-}
-
 export function useDashboardTrends(range: TrendRange = '30d') {
   return useQuery<TrendDataPoint[]>({
     queryKey: ['dashboard-trends', range],
-    queryFn: async () => {
-      try {
-        return await fetchTrends(range)
-      } catch {
-        // Graceful fallback to mock data when query fails
-        return generateMockTrends(range)
-      }
-    },
+    queryFn: () => fetchTrends(range),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   })

@@ -46,10 +46,13 @@ export const tasksKeys = {
 /**
  * Hook to fetch tasks with filtering and pagination
  */
-export function useTasks(filters: TaskFilters = {}) {
+export function useTasks(filters: TaskFilters = {}, options: { enabled?: boolean } = {}) {
   return useQuery({
     queryKey: tasksKeys.list(filters),
     queryFn: () => tasksAPI.getTasks(filters),
+    // Callers gate on prerequisites (e.g. MyTasks waits for user.id so an
+    // empty assignee_id never fetches every RLS-visible task — Finding 12).
+    enabled: options.enabled ?? true,
     staleTime: 1000 * 60 * 2, // 2 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes
   })

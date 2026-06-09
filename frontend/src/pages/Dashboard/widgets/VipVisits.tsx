@@ -125,7 +125,10 @@ export function VipVisits(): ReactElement {
         <h3 id="vip-heading" className="card-title text-start">
           {t('vip.title')}
         </h3>
-        <a href="/vip-visits" className="text-xs text-ink-soft inline-flex items-center gap-1">
+        {/* /vip-visits has no route (404) — VIP rows come from the
+            operations-hub timeline whose events are engagements, so the
+            engagements list is the real "view all" surface (Finding 1). */}
+        <a href="/engagements" className="text-xs text-ink-soft inline-flex items-center gap-1">
           {t('actions.viewAll')}
           <ArrowRight className="size-3 icon-flip" aria-hidden="true" />
         </a>

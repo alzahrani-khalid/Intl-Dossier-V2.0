@@ -68,6 +68,12 @@ const INVALIDATION_PREFIXES: ReadonlyArray<ReadonlyArray<string>> = [
   ['forums'],
   ['engagements'],
   ['persons'],
+  // Inspection 2026-06-09 Finding 9 — without these, KpiStrip / WeekAhead /
+  // VipVisits / SlaHealth / Digest show stale zeros for up to 5 min after
+  // seeding, and check_first_run keeps reporting first-run.
+  ['operations-hub'],
+  ['dashboard', 'dashboard-digest'],
+  ['first-run-check'],
 ]
 
 export function FirstRunModal({

@@ -18,10 +18,6 @@
     "openCommitments": "Open Commitments",
     "slaAtRisk": "SLA at Risk",
     "weekAhead": "Week Ahead",
-    "activeMeta": "5 this week · 3 travel",
-    "openMeta": "11 due this week",
-    "slaMeta": "4 breached · 5 amber",
-    "weekAheadMeta": "2 VIP visits · 1 travel",
     "strip": "Key metrics"
   },
   "weekAhead": {
@@ -43,6 +39,7 @@
   "overdue": {
     "title": "Overdue Commitments",
     "empty": "No overdue commitments",
+    "owner": "Owner",
     "expand": "Show more",
     "collapse": "Show less"
   },
@@ -88,8 +85,10 @@
     "empty": "No active forums",
     "status": {
       "active": "Active",
+      "inactive": "Inactive",
       "scheduled": "Scheduled",
-      "archived": "Archived"
+      "archived": "Archived",
+      "unknown": "Status unavailable"
     }
   },
   "error": {
