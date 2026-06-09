@@ -92,6 +92,25 @@
     }
   },
   "queue": {
+    "title": "قائمة انتظار التعيينات",
+    "description": "إدارة عناصر العمل في قائمة الانتظار بانتظار توفر السعة",
+    "queuedItems": "العناصر في قائمة الانتظار",
+    "normalLow": "عادي/منخفض",
+    "clearFilters": "مسح الفلاتر",
+    "assign": "تعيين",
+    "assignNotAvailable": "التعيين اليدوي غير متاح بعد",
+    "failedAttempts_zero": "لا توجد محاولات فاشلة",
+    "failedAttempts_one": "محاولة فاشلة واحدة",
+    "failedAttempts_two": "محاولتان فاشلتان",
+    "failedAttempts_few": "{{count}} محاولات فاشلة",
+    "failedAttempts_many": "{{count}} محاولة فاشلة",
+    "failedAttempts_other": "{{count}} محاولة فاشلة",
+    "types": {
+      "dossier": "ملف",
+      "ticket": "تذكرة",
+      "position": "موقف",
+      "task": "مهمة"
+    },
     "filterPriority": "تصفية حسب الأولوية",
     "allPriorities": "جميع الأولويات",
     "filterWorkItemType": "تصفية حسب النوع",
@@ -151,6 +170,11 @@
     "ok": "في المسار الصحيح",
     "warning": "في خطر",
     "breached": "تم تجاوز الموعد"
+  },
+  "escalations": {
+    "title": "التصعيدات",
+    "description": "مراقبة وإدارة المهام المصعّدة التي تتطلب اهتماماً فورياً",
+    "info": "تُنشأ التصعيدات تلقائياً عند تجاوز مواعيد اتفاقية مستوى الخدمة أو عند طلب تصعيد يدوي"
   },
   "escalation_dashboard": {
     "title": "لوحة معلومات التصعيد",
