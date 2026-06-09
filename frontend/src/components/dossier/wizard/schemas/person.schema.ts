@@ -60,7 +60,7 @@ export const personSchema = baseDossierSchema.merge(personFields).superRefine((d
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       path: ['last_name_en'],
-      message: 'last_name_required',
+      message: 'form-wizard:wizard.person_identity.validation.last_name_required',
     })
   }
   // last_name_ar required
@@ -68,7 +68,7 @@ export const personSchema = baseDossierSchema.merge(personFields).superRefine((d
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       path: ['last_name_ar'],
-      message: 'last_name_required',
+      message: 'form-wizard:wizard.person_identity.validation.last_name_required',
     })
   }
   // nationality_id required (form-field name; rename to nationality_country_id at boundary — D-26)
@@ -76,7 +76,7 @@ export const personSchema = baseDossierSchema.merge(personFields).superRefine((d
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       path: ['nationality_id'],
-      message: 'nationality_required',
+      message: 'form-wizard:wizard.person_identity.validation.nationality_required',
     })
   }
   // "Other" reveal — both EN + AR free-text must be populated when user picks Other
@@ -85,14 +85,14 @@ export const personSchema = baseDossierSchema.merge(personFields).superRefine((d
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['honorific_en'],
-        message: 'honorific_other_required',
+        message: 'form-wizard:wizard.person_identity.validation.honorific_other_required',
       })
     }
     if (((data.honorific_ar as string | undefined) ?? '').trim() === '') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['honorific_ar'],
-        message: 'honorific_other_required',
+        message: 'form-wizard:wizard.person_identity.validation.honorific_other_required',
       })
     }
   }

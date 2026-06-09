@@ -214,7 +214,7 @@ export function useDossiersByType(
  */
 export function useCreateDossier() {
   const queryClient = useQueryClient()
-  const { t } = useTranslation()
+  const { t } = useTranslation('dossier')
 
   return useMutation({
     mutationFn: (request: CreateDossierRequest) => createDossier(request),
@@ -226,17 +226,17 @@ export function useCreateDossier() {
       // Set the new dossier in the cache
       queryClient.setQueryData(dossierKeys.detail(data.id), data)
 
-      toast.success(t('dossier.create.success', { name: data.name_en }))
+      toast.success(t('create.success', { name: data.name_en }))
     },
     onError: (error: DossierAPIError) => {
       if (error.status === 409 || error.code === 'DUPLICATE_DOSSIER') {
         toast.error(
-          t('dossier.create.duplicate', {
+          t('create.duplicate', {
             defaultValue: error.message || 'A dossier with this name already exists.',
           }),
         )
       } else {
-        toast.error(t('dossier.create.error', { message: error.message }))
+        toast.error(t('create.error', { message: error.message }))
       }
     },
   })

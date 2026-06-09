@@ -103,11 +103,17 @@ export function useCreateDossierWizard<T extends FieldValues>(
           await config.postCreate(newDossier.id, values)
         } catch (err) {
           console.warn('postCreate hook failed', err)
+          toast.warning(
+            t('form-wizard:postCreateWarning', {
+              defaultValue:
+                'Dossier created, but some related records (e.g. participants) failed to save.',
+            }),
+          )
         }
       }
 
       clearDraft()
-      toast.success(t('dossier:create.success'))
+      // Success toast is shown by useCreateDossier.onSuccess (single source).
 
       if (config.onSuccess != null) {
         config.onSuccess(newDossier.id, newDossier.type as DossierType)
@@ -133,8 +139,7 @@ export function useCreateDossierWizard<T extends FieldValues>(
   }, [])
 
   // 10. canComplete -- minimum name lengths
-  const canComplete =
-    (nameEn?.length ?? 0) >= 2 && (nameAr != null ? nameAr.length >= 2 : false)
+  const canComplete = (nameEn?.length ?? 0) >= 2 && (nameAr != null ? nameAr.length >= 2 : false)
 
   return {
     type: config.type,

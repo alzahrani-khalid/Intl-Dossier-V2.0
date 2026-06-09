@@ -17,7 +17,7 @@
  * Abbreviation is intentionally absent — it is not a person identity concept
  * and was dropped from this flow per PBI-01.
  */
-import type { ReactElement } from 'react'
+import type { ChangeEvent, ReactElement } from 'react'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { UseFormReturn, FieldValues, Path } from 'react-hook-form'
@@ -485,8 +485,18 @@ export function PersonBasicInfoStep<T extends FieldValues>({
             <FormLabel>{t('dossier:form.tags')}</FormLabel>
             <FormControl>
               <Input
-                {...field}
-                value={(field.value as string | undefined) ?? ''}
+                value={((field.value as string[]) ?? []).join(', ')}
+                onChange={(e: ChangeEvent<HTMLInputElement>): void => {
+                  field.onChange(
+                    e.target.value
+                      .split(',')
+                      .map((s) => s.trim())
+                      .filter(Boolean),
+                  )
+                }}
+                onBlur={field.onBlur}
+                name={field.name}
+                ref={field.ref}
                 placeholder={t('dossier:form.tagsPlaceholder')}
                 className="min-h-11"
               />
