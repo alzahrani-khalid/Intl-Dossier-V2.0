@@ -1,17 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
-import {
-  Send,
-  Bot,
-  User,
-  Copy,
-  ThumbsUp,
-  ThumbsDown,
-  RefreshCw,
-  FileText,
-  Sparkles,
-} from 'lucide-react'
+import { Send, Bot, User, Copy, RefreshCw, FileText, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -101,7 +91,7 @@ export function WordAssistantPage() {
 
   function generateLocalAssistantResponse(message: string, history: string): WordAssistantResponse {
     const parts = [
-      '📝 *Draft Response*',
+      'Draft response',
       `You asked: ${message}`,
       history
         ? `Context considered (${Math.min(history.length, 120)} chars shown): ${history.slice(-120)}`
@@ -326,24 +316,24 @@ export function WordAssistantPage() {
                     {t('wordAssistant.welcomeMessage')}
                   </p>
                   <div className="grid gap-3 mt-6 md:grid-cols-2 w-full max-w-2xl">
+                    {/* Keyboard-accessible buttons, not clickable cards (inspection #8) */}
                     {suggestedPrompts.map((prompt, i) => (
-                      <Card
+                      <button
                         key={i}
-                        className="cursor-pointer hover:shadow-md transition-shadow"
+                        type="button"
                         onClick={() => handlePromptClick(prompt.prompt)}
+                        className="rounded-xl border bg-card text-card-foreground p-4 text-start hover:border-accent transition-colors"
                       >
-                        <CardContent className="p-4">
-                          <div className="flex items-center gap-3">
-                            <div className="text-primary">{prompt.icon}</div>
-                            <div className="text-start">
-                              <p className="font-medium text-sm">{prompt.title}</p>
-                              <p className="text-xs text-muted-foreground line-clamp-2">
-                                {prompt.prompt}
-                              </p>
-                            </div>
+                        <div className="flex items-center gap-3">
+                          <div className="text-accent">{prompt.icon}</div>
+                          <div className="text-start">
+                            <p className="font-medium text-sm">{prompt.title}</p>
+                            <p className="text-xs text-muted-foreground line-clamp-2">
+                              {prompt.prompt}
+                            </p>
                           </div>
-                        </CardContent>
-                      </Card>
+                        </div>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -385,19 +375,16 @@ export function WordAssistantPage() {
                                   </span>
                                   {message.role === 'assistant' && (
                                     <div className="flex gap-1 ms-auto">
+                                      {/* Thumbs up/down removed — no feedback backend
+                                          exists yet (inspection #5) */}
                                       <Button
                                         size="sm"
                                         variant="ghost"
                                         className="h-6 w-6 p-0"
+                                        aria-label={t('wordAssistant.copyResponse')}
                                         onClick={() => copyToClipboard(message.content)}
                                       >
                                         <Copy className="h-3 w-3" />
-                                      </Button>
-                                      <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
-                                        <ThumbsUp className="h-3 w-3" />
-                                      </Button>
-                                      <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
-                                        <ThumbsDown className="h-3 w-3" />
                                       </Button>
                                     </div>
                                   )}

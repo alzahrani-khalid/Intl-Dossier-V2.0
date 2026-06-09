@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUND 3 COMPLETE (dashboard, reports/analytics, data-library/documents, intelligence, briefing-books, settings/admin — all inspected + bucket-A fixed + committed). ROUND 4 started (remaining uncovered Reports/System surfaces): word-assistant + export combined inspection running via codex. NOTE: cursor-agent monthly quota exhausted (resets 6/27); inspections run via codex CLI as substitute.",
+  "status": "ROUND 4 in progress. Done: word-assistant+export (combined). Current: tags (codex inspection running). Rounds 1-3 complete. NOTE: cursor-agent monthly quota exhausted (resets 6/27); inspections run via codex CLI as substitute.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -149,11 +149,16 @@
     }
   ],
   "round3_queue": [],
-  "round4_queue": [
-    "word-assistant + export (in progress, combined)",
-    "tags",
-    "events",
-    "task-queue/escalations"
+  "round4_queue": ["tags (in progress)", "events", "task-queue/escalations"],
+  "round4_done": [
+    {
+      "type": "word-assistant + export (combined)",
+      "report": "reports/word-assistant-export-workflow-inspection-2026-06-09.md",
+      "inspector": "codex",
+      "findings": 8,
+      "fixed": "3 bucket-A (all [WA]): #3 full wordAssistant i18n block EN+AR in common.json (page copy was 100% raw keys, 29 keys incl. new copyResponse aria-label), #5 inert thumbs up/down removed (no feedback backend), #8 prompt tiles cursor-Cards -> keyboard-accessible buttons + hover shadow removed + text-primary -> text-accent + emoji stripped from local fallback",
+      "escalated": "B-bucket: [EXP] #1 CRITICAL /export nav target redirects to /dossiers (no export page mounted; 4 parallel export implementations exist unwired), #6 orphan Express ExportDialog hard-codes Bearer test-auth-token, #7 data-export edge queries stale vs generated types across 5 entities (VERIFY vs live); [WA] #2 default fallback mode shows 'connected' without any backend, #4 edge returns fallback text/RANDOM embeddings as success"
+    }
   ],
   "round3_done": [
     {
