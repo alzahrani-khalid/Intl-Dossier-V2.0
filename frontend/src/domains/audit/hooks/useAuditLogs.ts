@@ -21,24 +21,32 @@ export const auditLogKeys = {
   stats: (params?: Record<string, unknown>) => [...auditLogKeys.all, 'stats', params] as const,
 }
 
+// Param names mirror the audit-logs-viewer edge contract exactly — the
+// previous page/action/entity_type/from/to names were silently ignored
+// and offset never moved, so pagination/filters were no-ops.
 export function useAuditLogs(params?: {
-  page?: number
   limit?: number
-  action?: string
-  entity_type?: string
+  offset?: number
+  operation?: string
+  table_name?: string
   user_id?: string
-  from?: string
-  to?: string
+  user_email?: string
+  date_from?: string
+  date_to?: string
+  ip_address?: string
+  search?: string
+  row_id?: string
+  sort_by?: string
+  sort_order?: 'asc' | 'desc'
   enabled?: boolean
 }) {
   const searchParams = new URLSearchParams()
-  if (params?.page) searchParams.set('page', params.page.toString())
-  if (params?.limit) searchParams.set('limit', params.limit.toString())
-  if (params?.action) searchParams.set('action', params.action)
-  if (params?.entity_type) searchParams.set('entity_type', params.entity_type)
-  if (params?.user_id) searchParams.set('user_id', params.user_id)
-  if (params?.from) searchParams.set('from', params.from)
-  if (params?.to) searchParams.set('to', params.to)
+  const { enabled: _enabled, ...queryParams } = params ?? {}
+  Object.entries(queryParams).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      searchParams.set(key, String(value))
+    }
+  })
 
   return useQuery({
     queryKey: auditLogKeys.list(params),
@@ -56,28 +64,7 @@ export function useAuditLogDetail(logId: string | null) {
   })
 }
 
-export function useAuditLogStats(params?: Record<string, unknown>) {
-  const searchParams = new URLSearchParams()
-  if (params) {
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined) searchParams.set(key, String(value))
-    })
-  }
-
-  return useQuery({
-    queryKey: auditLogKeys.stats(params),
-    queryFn: () => getAuditLogStats(searchParams),
-    staleTime: 5 * 60 * 1000,
-  })
-}
-
-export function useExportAuditLogs() {
-  return useMutation({
-    mutationFn: (params: Record<string, unknown>) => exportAuditLogsApi(params),
-  })
-}
-
-/* Stub hooks – removed during refactoring, still imported by components */
+/* Stub hooks kept for components not yet wired */
 
 export function useAuditLogDistinctValues(field?: string) {
   return useQuery({
@@ -87,16 +74,57 @@ export function useAuditLogDistinctValues(field?: string) {
   })
 }
 
+/**
+ * Statistics for the audit viewer panel. Calls the edge /statistics route
+ * (the component's expected { by_operation, by_table, total_events, period }
+ * shape matches the edge response data exactly — it was previously a stub
+ * resolving {}).
+ */
 export function useAuditLogStatistics(params?: Record<string, unknown>) {
+  const searchParams = new URLSearchParams()
+  if (params?.dateFrom !== undefined) searchParams.set('date_from', String(params.dateFrom))
+  if (params?.dateTo !== undefined) searchParams.set('date_to', String(params.dateTo))
+
   return useQuery({
     queryKey: [...auditLogKeys.all, 'statistics', params],
-    queryFn: () => Promise.resolve({}),
+    queryFn: async () => {
+      const response = (await getAuditLogStats(searchParams)) as { data?: unknown } | undefined
+      return response?.data ?? {}
+    },
     staleTime: 5 * 60 * 1000,
   })
 }
 
+/**
+ * Export audit logs as a downloaded file. Streams the edge GET /export
+ * response as a Blob and triggers a browser download (the previous stub
+ * resolved a fake success without any network call).
+ */
 export function useAuditLogExport() {
   return useMutation({
-    mutationFn: (_params: Record<string, unknown>) => Promise.resolve({ url: '', success: true }),
+    mutationFn: async ({
+      format,
+      filters,
+    }: {
+      format: 'csv' | 'json'
+      filters?: Record<string, unknown>
+    }) => {
+      const searchParams = new URLSearchParams()
+      searchParams.set('format', format)
+      Object.entries(filters ?? {}).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          searchParams.set(key, String(value))
+        }
+      })
+
+      const blob = await exportAuditLogsApi(searchParams)
+      const url = URL.createObjectURL(blob)
+      const anchor = document.createElement('a')
+      anchor.href = url
+      anchor.download = `audit_logs_${new Date().toISOString().split('T')[0]}.${format}`
+      anchor.click()
+      URL.revokeObjectURL(url)
+      return { success: true }
+    },
   })
 }

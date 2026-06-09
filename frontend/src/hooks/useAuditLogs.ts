@@ -6,8 +6,6 @@ export {
   auditLogKeys,
   useAuditLogs,
   useAuditLogDetail,
-  useAuditLogStats,
-  useExportAuditLogs,
   useAuditLogDistinctValues,
   useAuditLogStatistics,
   useAuditLogExport,

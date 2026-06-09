@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUND 5 in progress (2026-06-10). Done: sla-monitoring, my-work, activity. Current: audit-logs (codex inspection running). Queue after: approvals(list) — FINAL round-5 item. Rounds 1-4 complete. NOTE: cursor-agent quota resets 6/27; codex CLI substituted. PROCESS RULE since 43ef442a incident: every commit verified via direct pnpm --filter intake-frontend build.",
+  "status": "ROUND 5 in progress (2026-06-10). Done: sla-monitoring, my-work, activity, audit-logs. Current: approvals(list) — FINAL round-5 item (codex inspection running). Rounds 1-4 complete. NOTE: cursor-agent quota resets 6/27; codex CLI substituted. PROCESS RULE since 43ef442a incident: every commit verified via direct pnpm --filter intake-frontend build.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -150,8 +150,18 @@
   ],
   "round3_queue": [],
   "round4_queue": [],
-  "round5_queue": ["audit-logs (in progress)", "approvals (list page) — FINAL"],
+  "round5_queue": ["approvals (list page) — FINAL (in progress)"],
   "round5_done": [
+    {
+      "type": "audit-logs (admin viewer)",
+      "report": "reports/audit-logs-workflow-inspection-2026-06-10.md",
+      "inspector": "codex",
+      "prev_commit_for_activity": "6cf25685",
+      "findings": 6,
+      "fixed": "3 bucket-A (REAL functional repairs): #2 list adapter spoke a dead contract — page/action/entity_type/from/to renamed to edge params (limit/offset/operation/table_name/date_from/date_to/+search/ip/sort now forwarded), offset now advances (pagination was stuck on page 1), totals read from metadata.total/has_more (UI always showed 0); #3 statistics stub -> real /statistics route (component shape matched edge data exactly) + export stub -> real GET /export streamed as Blob via new apiGetBlob + browser download (repo had POSTed to a GET-only route); #5 inert row-click/View-Related-Logs affordance removed (no detail surface); stale useAuditLogStats(/stats 404)+useExportAuditLogs deleted from barrel+re-export",
+      "deferred_from_A": "#6 i18n/a11y polish (inline label_en/ar pairs ARE bilingual; icon aria-labels + System fallback + EO audit stub left for a sweep)",
+      "escalated": "B-bucket: #1 viewer reads audit_log (singular, generated type lacks the selected columns) while real compliance producers write audit_logs (plural, mixed writer schemas incl. ungenerated role-mgmt fields) — canonical-trail decision + VERIFY vs live, #4 role gating split (route has NO admin guard; nav uses users.role; edge allows admin/editor/supervisor; /admin/* uses auth metadata)"
+    },
     {
       "type": "activity (global /activity feed)",
       "report": "reports/activity-workflow-inspection-2026-06-10.md",

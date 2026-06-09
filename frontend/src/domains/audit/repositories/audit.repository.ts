@@ -5,7 +5,7 @@
  * All audit, compliance, and data retention API operations.
  */
 
-import { apiGet, apiPost, apiPut, apiDelete } from '@/lib/api-client'
+import { apiGet, apiGetBlob, apiPost, apiPut, apiDelete } from '@/lib/api-client'
 
 // ============================================================================
 // Audit Logs
@@ -21,11 +21,14 @@ export async function getAuditLogDetails(logId: string): Promise<unknown> {
 
 export async function getAuditLogStats(params?: URLSearchParams): Promise<unknown> {
   const query = params?.toString()
-  return apiGet(`/audit-logs-viewer/stats${query ? `?${query}` : ''}`)
+  // Edge route is /statistics (was /stats — a 404 path)
+  return apiGet(`/audit-logs-viewer/statistics${query ? `?${query}` : ''}`)
 }
 
-export async function exportAuditLogs(params: Record<string, unknown>): Promise<unknown> {
-  return apiPost('/audit-logs-viewer/export', params)
+export async function exportAuditLogs(params: URLSearchParams): Promise<Blob> {
+  // Edge handles GET /export and streams the file body (CSV text or raw
+  // JSON array) — must be fetched as a Blob, not JSON-parsed.
+  return apiGetBlob(`/audit-logs-viewer/export?${params.toString()}`)
 }
 
 // ============================================================================
@@ -105,10 +108,7 @@ export async function createLegalHold(data: Record<string, unknown>): Promise<un
   return apiPost('/data-retention/legal-holds', data)
 }
 
-export async function updateLegalHold(
-  id: string,
-  data: Record<string, unknown>,
-): Promise<unknown> {
+export async function updateLegalHold(id: string, data: Record<string, unknown>): Promise<unknown> {
   return apiPut(`/data-retention/legal-holds/${id}`, data)
 }
 
