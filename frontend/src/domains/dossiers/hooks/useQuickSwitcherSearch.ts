@@ -91,9 +91,9 @@ function getWorkItemUrl(item: QuickSwitcherWorkItem): string {
     case 'task':
       return `/tasks/${item.id}`
     case 'commitment':
-      return `/commitments/${item.id}`
+      return `/commitments?id=${item.id}`
     case 'intake':
-      return `/intake/${item.id}`
+      return `/intake/tickets/${item.id}`
     case 'mou':
       return `/mous/${item.id}`
     case 'document':

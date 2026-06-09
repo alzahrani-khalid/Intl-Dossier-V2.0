@@ -21,6 +21,8 @@ const neqMock = vi.fn()
 const eqTypeMock = vi.fn()
 const selectMock = vi.fn()
 const fromMock = vi.fn()
+// Second query: from('engagement_dossiers').select('host_organization_id').in(...)
+const inMock = vi.fn()
 
 vi.mock('@/lib/supabase', () => ({
   supabase: {
@@ -42,7 +44,8 @@ const buildBuilder = (resolved: { data: unknown; error: unknown; count: number |
     range: rangeMock,
   })
   eqTypeMock.mockReturnValue({ neq: neqMock })
-  selectMock.mockReturnValue({ eq: eqTypeMock })
+  inMock.mockResolvedValue({ data: [] })
+  selectMock.mockReturnValue({ eq: eqTypeMock, in: inMock })
   fromMock.mockReturnValue({ select: selectMock })
 }
 
@@ -65,6 +68,7 @@ describe('useOrganizations — Plan 40-02b adapter', () => {
     eqTypeMock.mockReset()
     selectMock.mockReset()
     fromMock.mockReset()
+    inMock.mockReset()
   })
 
   it('queries dossiers with type=organization and applies pagination math', async () => {

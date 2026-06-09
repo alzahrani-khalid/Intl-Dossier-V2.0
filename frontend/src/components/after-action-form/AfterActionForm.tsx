@@ -308,7 +308,7 @@ export function AfterActionForm({
           </div>
 
           {/* Confidential Flag */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2">
             <Checkbox
               id="confidential"
               checked={formData.is_confidential}

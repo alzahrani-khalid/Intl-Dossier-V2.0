@@ -69,6 +69,27 @@ function isCancelled(item: KCardItem): boolean {
   return item.workflow_stage === 'cancelled' || item.status === 'cancelled'
 }
 
+// Board columns are workflow stages, but commitments/intakes carry their state in
+// `status` (workflow_stage is null from the RPC). Resolve a board column for any
+// source so non-task items don't all collapse into To Do. Tasks keep workflow_stage.
+function resolveBoardStage(item: KCardItem): WorkflowStage {
+  if (item.source === 'task') return (item.workflow_stage as WorkflowStage | null) ?? 'todo'
+  switch (item.status) {
+    case 'in_progress':
+      return 'in_progress'
+    case 'review':
+      return 'review'
+    case 'completed':
+      return 'done'
+    case 'cancelled':
+      return 'cancelled'
+    default:
+      // 'overdue' / 'pending' / null → To Do (the board has no overdue column;
+      // KCard still shows the overdue indicator via styling).
+      return 'todo'
+  }
+}
+
 function matchesSearch(item: KCardItem, q: string): boolean {
   if (q === '') return true
   const candidates: Array<string | null | undefined> = [
@@ -126,7 +147,7 @@ export function WorkBoard(): ReactElement {
       cancelled: [],
     }
     for (const it of filtered) {
-      const s = it.workflow_stage ?? 'todo'
+      const s = resolveBoardStage(it)
       if (s in empty) empty[s].push(it)
     }
     return empty
@@ -139,7 +160,7 @@ export function WorkBoard(): ReactElement {
       filtered.map((it) => ({
         ...it,
         name: it.title,
-        column: (it.workflow_stage ?? 'todo') as string,
+        column: resolveBoardStage(it) as string,
       })),
     [filtered],
   )
@@ -190,7 +211,7 @@ export function WorkBoard(): ReactElement {
           // target column rather than the column-droppable itself.
           const overCard = visibleItems.find((it) => it.id === overIdStr)
           if (overCard !== undefined) {
-            targetStage = overCard.workflow_stage as WorkflowStage
+            targetStage = resolveBoardStage(overCard)
           }
         }
       }

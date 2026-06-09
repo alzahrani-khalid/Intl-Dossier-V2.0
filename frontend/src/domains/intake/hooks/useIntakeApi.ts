@@ -123,10 +123,8 @@ export const useConvertTicket = (ticketId: string) => {
 
   return useMutation({
     mutationFn: async (data: ConvertTicketRequest): Promise<unknown> => {
-      return convertTicketApi({ ...data, ticket_id: ticketId } as unknown as Record<
-        string,
-        unknown
-      >)
+      // The intake-tickets-convert edge function reads `id` (not ticket_id).
+      return convertTicketApi({ ...data, id: ticketId } as unknown as Record<string, unknown>)
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() })

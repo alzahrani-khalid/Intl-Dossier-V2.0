@@ -17,7 +17,7 @@ const sentryRelease =
   process.env.SENTRY_RELEASE ||
   `intl-dossier-frontend@${process.env.npm_package_version || '1.0.0'}`
 const devPort = process.env.VITE_DEV_PORT ? Number(process.env.VITE_DEV_PORT) : 5173
-const backendProxyTarget = process.env.VITE_BACKEND_PROXY_TARGET || 'http://localhost:5000'
+const backendProxyTarget = process.env.VITE_BACKEND_PROXY_TARGET || 'http://localhost:5001'
 
 // Only enable Sentry plugin in production build with proper config
 const isSentryEnabled = !!(

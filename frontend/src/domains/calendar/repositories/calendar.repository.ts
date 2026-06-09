@@ -8,6 +8,7 @@
 
 import { apiGet, apiPost, apiPatch, apiPut, apiDelete } from '@/lib/api-client'
 import type {
+  CalendarEvent,
   CalendarEventsFilters,
   CalendarEventsResponse,
   CreateCalendarEventInput,
@@ -44,6 +45,57 @@ import type {
 // ============================================================================
 
 /**
+ * Raw calendar_entries row returned by the calendar-get edge function.
+ * (Operational calendar table — date and time are split, not one datetime.)
+ */
+interface CalendarEntryRow {
+  id: string
+  dossier_id: string | null
+  entry_type: string
+  title_en: string | null
+  title_ar: string | null
+  description_en?: string | null
+  description_ar?: string | null
+  event_date: string
+  event_time: string | null
+  duration_minutes: number | null
+  all_day: boolean | null
+  location: string | null
+  status: string | null
+  created_at: string
+  updated_at: string
+}
+
+/**
+ * Map a raw calendar_entries row to the CalendarEvent view model the grid/list
+ * render. calendar_entries splits event_date + event_time; the UI buckets on a
+ * single `start_datetime`, so synthesize a LOCAL datetime string (not
+ * toISOString) so day-bucketing stays timezone-stable.
+ */
+function mapEntryToCalendarEvent(e: CalendarEntryRow): CalendarEvent {
+  const time = e.all_day ? '00:00:00' : (e.event_time ?? '00:00:00')
+  const startDatetime = `${e.event_date}T${time}`
+  return {
+    id: e.id,
+    dossier_id: e.dossier_id ?? '',
+    event_type: e.entry_type as CalendarEvent['event_type'],
+    title_en: e.title_en ?? undefined,
+    title_ar: e.title_ar ?? undefined,
+    description_en: e.description_en ?? undefined,
+    description_ar: e.description_ar ?? undefined,
+    start_datetime: startDatetime,
+    end_datetime: startDatetime,
+    timezone: 'Asia/Riyadh',
+    location_en: e.location ?? undefined,
+    location_ar: e.location ?? undefined,
+    is_virtual: false,
+    status: (e.status as CalendarEvent['status']) ?? 'planned',
+    created_at: e.created_at,
+    updated_at: e.updated_at,
+  }
+}
+
+/**
  * Fetch calendar events with filters.
  */
 export async function getCalendarEvents(
@@ -52,28 +104,34 @@ export async function getCalendarEvents(
   const params = new URLSearchParams()
   if (filters?.start_date) params.append('start_date', filters.start_date)
   if (filters?.end_date) params.append('end_date', filters.end_date)
-  if (filters?.event_type) params.append('event_type', filters.event_type)
+  // calendar-get filters on `entry_type` (the calendar_entries column), not event_type.
+  if (filters?.event_type) params.append('entry_type', filters.event_type)
   if (filters?.dossier_id) params.append('dossier_id', filters.dossier_id)
   if (filters?.status) params.append('status', filters.status)
 
-  return apiGet<CalendarEventsResponse>(`/calendar-get?${params.toString()}`)
+  const raw = await apiGet<{ entries?: CalendarEntryRow[]; total_count?: number }>(
+    `/calendar-get?${params.toString()}`,
+  )
+  return {
+    entries: (raw.entries ?? []).map(mapEntryToCalendarEvent),
+    total_count: raw.total_count ?? 0,
+  }
 }
 
 /**
  * Create a new calendar event.
  */
-export async function createCalendarEvent(
-  input: CreateCalendarEventInput,
-): Promise<unknown> {
+export async function createCalendarEvent(input: CreateCalendarEventInput): Promise<unknown> {
   return apiPost('/calendar-create', input)
 }
 
 /**
  * Update a calendar event.
  */
-export async function updateCalendarEvent(
-  { entryId, ...updates }: UpdateCalendarEventInput,
-): Promise<unknown> {
+export async function updateCalendarEvent({
+  entryId,
+  ...updates
+}: UpdateCalendarEventInput): Promise<unknown> {
   return apiPatch(`/calendar-update?entryId=${entryId}`, updates)
 }
 
@@ -95,9 +153,7 @@ export async function checkConflicts(
 /**
  * Get existing conflicts with pagination.
  */
-export async function getConflicts(
-  filters?: ConflictListFilters,
-): Promise<ConflictsListResponse> {
+export async function getConflicts(filters?: ConflictListFilters): Promise<ConflictsListResponse> {
   const params = new URLSearchParams()
   if (filters) {
     Object.entries(filters).forEach(([key, value]) => {
@@ -112,9 +168,7 @@ export async function getConflicts(
 /**
  * Get conflicts for a specific event.
  */
-export async function getEventConflicts(
-  eventId: string,
-): Promise<ConflictsListResponse> {
+export async function getEventConflicts(eventId: string): Promise<ConflictsListResponse> {
   return apiGet<ConflictsListResponse>(`${CONFLICTS_PATH}?event_id=${eventId}`)
 }
 
@@ -134,9 +188,10 @@ export async function generateSuggestions(
 /**
  * Get stored suggestions for an event or conflict.
  */
-export async function getSuggestions(
-  params: { event_id?: string; conflict_id?: string },
-): Promise<{ suggestions: ReschedulingSuggestion[] }> {
+export async function getSuggestions(params: {
+  event_id?: string
+  conflict_id?: string
+}): Promise<{ suggestions: ReschedulingSuggestion[] }> {
   const searchParams = new URLSearchParams()
   if (params.event_id) searchParams.append('event_id', params.event_id)
   if (params.conflict_id) searchParams.append('conflict_id', params.conflict_id)
@@ -188,9 +243,7 @@ export async function createScenario(
 /**
  * Get user's what-if scenarios.
  */
-export async function getScenarios(
-  status?: string,
-): Promise<{ scenarios: WhatIfScenario[] }> {
+export async function getScenarios(status?: string): Promise<{ scenarios: WhatIfScenario[] }> {
   const params = status ? `?status=${status}` : ''
   return apiGet<{ scenarios: WhatIfScenario[] }>(`${CONFLICTS_PATH}/scenarios${params}`)
 }
@@ -209,9 +262,7 @@ export async function applyScenario(
 /**
  * Delete a what-if scenario.
  */
-export async function deleteScenario(
-  scenarioId: string,
-): Promise<{ success: boolean }> {
+export async function deleteScenario(scenarioId: string): Promise<{ success: boolean }> {
   return apiDelete<{ success: boolean }>(`${CONFLICTS_PATH}/scenarios/${scenarioId}`)
 }
 
@@ -292,31 +343,24 @@ export async function deleteOccurrences(
 /**
  * Add an exception to a series.
  */
-export async function createException(
-  input: CreateExceptionInput,
-): Promise<SeriesException> {
-  return apiPost<SeriesException>(
-    `${RECURRING_PATH}/series/${input.series_id}/exceptions`,
-    input,
-  )
+export async function createException(input: CreateExceptionInput): Promise<SeriesException> {
+  return apiPost<SeriesException>(`${RECURRING_PATH}/series/${input.series_id}/exceptions`, input)
 }
 
 /**
  * Remove an exception.
  */
-export async function removeException(
-  seriesId: string,
-  exceptionDate: string,
-): Promise<void> {
+export async function removeException(seriesId: string, exceptionDate: string): Promise<void> {
   await apiDelete(`${RECURRING_PATH}/series/${seriesId}/exceptions/${exceptionDate}`)
 }
 
 /**
  * Get user's event notifications.
  */
-export async function getEventNotifications(
-  options?: { unreadOnly?: boolean; limit?: number },
-): Promise<{ notifications: EventNotification[]; unread_count: number }> {
+export async function getEventNotifications(options?: {
+  unreadOnly?: boolean
+  limit?: number
+}): Promise<{ notifications: EventNotification[]; unread_count: number }> {
   const params = new URLSearchParams()
   if (options?.unreadOnly) params.append('unread_only', 'true')
   if (options?.limit) params.append('limit', options.limit.toString())

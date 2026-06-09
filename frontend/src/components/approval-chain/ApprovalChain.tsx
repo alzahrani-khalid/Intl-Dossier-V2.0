@@ -211,7 +211,7 @@ export function ApprovalChain({
                           }
                           className="text-xs"
                         >
-                          {t(`positions.approval.actions.${lastApproval.action}`)}
+                          {t(`approval.actions.${lastApproval.action}`)}
                         </Badge>
 
                         {/* Step-up verification badge */}
@@ -337,7 +337,7 @@ export function ApprovalChain({
                                   {stageApprovals.map((approval, idx) => (
                                     <div key={approval.id} className="text-xs">
                                       <div className="font-medium">
-                                        {t(`positions.approval.actions.${approval.action}`)}
+                                        {t(`approval.actions.${approval.action}`)}
                                       </div>
                                       <div className="text-muted-foreground">
                                         {approval.approver_name || approval.approver_id}
@@ -420,7 +420,7 @@ export function ApprovalChain({
                   : 'outline'
             }
           >
-            {t(`positions.status.${status}`)}
+            {t(`status.${status}`)}
           </Badge>
         </div>
       </div>

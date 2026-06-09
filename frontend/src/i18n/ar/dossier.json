@@ -858,6 +858,20 @@
       "direct": "مباشر"
     },
     "form": {
+      "taskTitle": "العنوان",
+      "taskTitlePlaceholder": "أدخل عنوانًا",
+      "taskDescription": "الوصف",
+      "taskDescriptionPlaceholder": "أدخل وصفًا",
+      "assignee": "المُكلَّف",
+      "assigneePlaceholder": "اختر المُكلَّف",
+      "submit": {
+        "intake": "إنشاء طلب",
+        "task": "إنشاء مهمة",
+        "commitment": "إنشاء التزام",
+        "position": "إنشاء موقف",
+        "event": "إنشاء حدث",
+        "relationship": "إنشاء علاقة"
+      },
       "priority": "الأولوية",
       "priorityLevels": {
         "low": "منخفضة",
@@ -1029,7 +1043,85 @@
       "total": "{{count}} ارتباط إجمالاً"
     },
     "recentActivity": "النشاط الأخير",
-    "noRecentActivity": "لا يوجد نشاط حديث"
+    "noRecentActivity": "لا يوجد نشاط حديث",
+    "membership": {
+      "title": "هيكل العضوية",
+      "members": "الأعضاء",
+      "memberOf": "عضو في",
+      "subUnits": "الوحدات الفرعية",
+      "totalRelated": "{{count}} ملفات مرتبطة إجمالًا",
+      "empty": "لا تتوفر بيانات عضوية"
+    },
+    "mou": {
+      "title": "حالة مذكرات التفاهم",
+      "active": "نشطة",
+      "pending": "قيد الانتظار",
+      "expired": "منتهية",
+      "draft": "مسودة",
+      "total": "{{count}} اتفاقيات إجمالًا",
+      "empty": "لا توجد مذكرات تفاهم مسجلة",
+      "viewAll": "عرض مذكرات التفاهم"
+    },
+    "representatives": {
+      "title": "الممثلون الرئيسيون",
+      "empty": "لا يوجد ممثلون مرتبطون",
+      "total": "{{count}} ممثلين إجمالًا"
+    },
+    "forum": {
+      "title": "تفاصيل المنتدى",
+      "type": "نوع المنتدى",
+      "frequency": "التكرار",
+      "host": "الجهة المنظِّمة",
+      "participants": "المشاركون"
+    },
+    "sessions": {
+      "title": "الجلسات",
+      "empty": "لا توجد جلسات مسجلة"
+    },
+    "positions": {
+      "title": "متتبع المواقف",
+      "empty": "لا توجد مواقف متتبعة بعد. أضف مواقف في تبويب المواقف.",
+      "addPositions": "إضافة مواقف",
+      "ourStance": "موقفنا",
+      "noOurStance": "غير محدد",
+      "counterpart": "مواقف الطرف المقابل",
+      "noCounterpart": "لا يوجد",
+      "viewAll": "عرض المواقف"
+    },
+    "anchors": {
+      "title": "المراسي المرتبطة",
+      "empty": "لا توجد مراسٍ مرتبطة",
+      "viewSidebar": "عرض الكل في الشريط الجانبي"
+    },
+    "members": {
+      "title": "الأعضاء",
+      "empty": "لا يوجد أعضاء مرتبطون",
+      "viewAll": "عرض كل الأعضاء"
+    },
+    "meetings": {
+      "title": "الاجتماعات القادمة",
+      "empty": "لا توجد اجتماعات قادمة",
+      "untitled": "اجتماع"
+    },
+    "deliverables": {
+      "title": "المخرجات",
+      "empty": "لا توجد مخرجات متتبعة",
+      "completed": "مكتملة",
+      "inProgress": "قيد التنفيذ",
+      "pending": "قيد الانتظار"
+    },
+    "person": {
+      "organization": "المنظمة",
+      "role": "الدور / المنصب",
+      "lastEngagement": "آخر مشاركة",
+      "noEngagement": "لا يوجد",
+      "title": "الملف الشخصي"
+    },
+    "engagementHistory": {
+      "title": "سجل المشاركات",
+      "empty": "لا يوجد سجل مشاركات",
+      "viewAll": "عرض كل المشاركات"
+    }
   },
   "analytics": {
     "engagementCount": "الارتباطات",

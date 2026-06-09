@@ -1,39 +1,46 @@
+import type * as React from 'react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useNavigate } from '@tanstack/react-router'
 import { Globe, Loader2 } from 'lucide-react'
-import { supabase } from '../store/authStore'
 import toast from 'react-hot-toast'
+import { supabase } from '../store/authStore'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 
 const registerSchema = z
   .object({
-    email: z.string().email('Invalid email address'),
-    password: z.string().min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string(),
-    name: z.string().min(2, 'Name must be at least 2 characters'),
+    name: z.string().min(1, 'validation:required').min(2, 'validation:minLength'),
+    email: z.string().min(1, 'validation:required').email('validation:email.invalid'),
+    password: z.string().min(1, 'validation:required').min(6, 'validation:minLength'),
+    confirmPassword: z.string().min(1, 'validation:required'),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    message: 'auth.passwordsDoNotMatch',
     path: ['confirmPassword'],
   })
 
-type RegisterForm = z.infer<typeof registerSchema>
+type RegisterFormData = z.infer<typeof registerSchema>
 
-export function RegisterPage() {
+export function RegisterPage(): React.JSX.Element {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
-  } = useForm<RegisterForm>({
+  } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
   })
 
-  const onSubmit = async (data: RegisterForm) => {
+  const onSubmit = async (data: RegisterFormData): Promise<void> => {
     setIsLoading(true)
     try {
       const { data: authData, error } = await supabase.auth.signUp({
@@ -52,193 +59,160 @@ export function RegisterPage() {
       }
 
       if (authData.user) {
-        toast.success(
-          'Account created successfully! Please check your email to verify your account.',
-        )
+        toast.success(t('auth.accountCreated'))
         navigate({ to: '/login' })
       }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Registration failed'
-      toast.error(errorMessage)
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t('auth.registrationFailed'))
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="from-base-50 to-base-100 flex min-h-screen items-center justify-center bg-gradient-to-br p-4">
+    <div className="flex min-h-screen items-center justify-center bg-bg p-4">
       <div className="w-full max-w-md">
-        <div className="dark:bg-base-800 rounded-2xl bg-white p-8 shadow-xl">
-          <div className="mb-6 flex justify-center">
-            <div className="flex size-16 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900">
-              <Globe className="size-8 text-primary-600 dark:text-primary-400" />
+        <div className="rounded-[var(--radius-lg)] border border-line bg-surface p-6 sm:p-8">
+          {/* Brand + title */}
+          <div className="mb-8 text-center">
+            <div className="mb-4 inline-flex size-14 items-center justify-center rounded-full bg-accent-soft">
+              <Globe className="size-7 text-accent" aria-hidden="true" />
             </div>
+            <h1 className="text-xl font-semibold text-ink">{t('common.appTitle')}</h1>
+            <p className="mt-1 text-sm text-ink-mute">{t('auth.createAccount')}</p>
           </div>
 
-          <h1 className="font-display text-base-900 dark:text-base-50 mb-2 text-center text-2xl">
-            Create Your Account
-          </h1>
-          <p className="text-base-600 dark:text-base-400 font-text mb-6 text-center">
-            Join GASTAT International Dossier System
-          </p>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <label
-                htmlFor="name"
-                className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium"
-              >
-                Full Name{' '}
-                <span className="text-danger" aria-label="required">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+            {/* Full name */}
+            <div className="space-y-2">
+              <Label htmlFor="name">
+                {t('auth.fullName')}
+                <span className="ms-1 text-danger" aria-hidden="true">
                   *
                 </span>
-              </label>
-              <input
-                {...register('name')}
+              </Label>
+              <Input
                 id="name"
                 type="text"
-                placeholder="John Doe"
-                className="border-base-300 dark:border-base-600 dark:bg-base-800 dark:text-base-50 font-text w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                autoComplete="name"
                 disabled={isLoading}
-                aria-describedby={errors.name ? 'name-error' : undefined}
-                aria-invalid={errors.name ? 'true' : undefined}
+                aria-invalid={errors.name ? true : undefined}
+                {...register('name')}
               />
               {errors.name && (
-                <p
-                  id="name-error"
-                  className="font-text mt-1 text-sm text-danger dark:text-danger"
-                  role="alert"
-                >
-                  {errors.name.message}
+                <p className="text-start text-sm text-danger">
+                  {t(errors.name.message || '', {
+                    min: 2,
+                    current: getValues('name')?.length ?? 0,
+                  })}
                 </p>
               )}
             </div>
 
-            <div>
-              <label
-                htmlFor="email"
-                className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium"
-              >
-                Email{' '}
-                <span className="text-danger" aria-label="required">
+            {/* Email */}
+            <div className="space-y-2">
+              <Label htmlFor="email">
+                {t('auth.email')}
+                <span className="ms-1 text-danger" aria-hidden="true">
                   *
                 </span>
-              </label>
-              <input
-                {...register('email')}
+              </Label>
+              <Input
                 id="email"
                 type="email"
+                autoComplete="username"
                 placeholder="user@gastat.sa"
-                className="border-base-300 dark:border-base-600 dark:bg-base-800 dark:text-base-50 font-text w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 disabled={isLoading}
-                aria-describedby={errors.email ? 'email-error' : undefined}
-                aria-invalid={errors.email ? 'true' : undefined}
+                aria-invalid={errors.email ? true : undefined}
+                {...register('email')}
               />
               {errors.email && (
-                <p
-                  id="email-error"
-                  className="font-text mt-1 text-sm text-danger dark:text-danger"
-                  role="alert"
-                >
-                  {errors.email.message}
-                </p>
+                <p className="text-start text-sm text-danger">{t(errors.email.message || '')}</p>
               )}
             </div>
 
-            <div>
-              <label
-                htmlFor="password"
-                className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium"
-              >
-                Password{' '}
-                <span className="text-danger" aria-label="required">
+            {/* Password */}
+            <div className="space-y-2">
+              <Label htmlFor="password">
+                {t('auth.password')}
+                <span className="ms-1 text-danger" aria-hidden="true">
                   *
                 </span>
-              </label>
-              <input
-                {...register('password')}
+              </Label>
+              <Input
                 id="password"
                 type="password"
-                className="border-base-300 dark:border-base-600 dark:bg-base-800 dark:text-base-50 font-text w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                autoComplete="new-password"
                 disabled={isLoading}
-                aria-describedby={errors.password ? 'password-error' : undefined}
-                aria-invalid={errors.password ? 'true' : undefined}
+                aria-invalid={errors.password ? true : undefined}
+                {...register('password')}
               />
               {errors.password && (
-                <p
-                  id="password-error"
-                  className="font-text mt-1 text-sm text-danger dark:text-danger"
-                  role="alert"
-                >
-                  {errors.password.message}
+                <p className="text-start text-sm text-danger">
+                  {t(errors.password.message || '', {
+                    min: 6,
+                    current: getValues('password')?.length ?? 0,
+                  })}
                 </p>
               )}
             </div>
 
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium"
-              >
-                Confirm Password{' '}
-                <span className="text-danger" aria-label="required">
+            {/* Confirm password */}
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">
+                {t('auth.confirmPassword')}
+                <span className="ms-1 text-danger" aria-hidden="true">
                   *
                 </span>
-              </label>
-              <input
-                {...register('confirmPassword')}
+              </Label>
+              <Input
                 id="confirmPassword"
                 type="password"
-                className="border-base-300 dark:border-base-600 dark:bg-base-800 dark:text-base-50 font-text w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                autoComplete="new-password"
                 disabled={isLoading}
-                aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined}
-                aria-invalid={errors.confirmPassword ? 'true' : undefined}
+                aria-invalid={errors.confirmPassword ? true : undefined}
+                {...register('confirmPassword')}
               />
               {errors.confirmPassword && (
-                <p
-                  id="confirmPassword-error"
-                  className="font-text mt-1 text-sm text-danger dark:text-danger"
-                  role="alert"
-                >
-                  {errors.confirmPassword.message}
+                <p className="text-start text-sm text-danger">
+                  {t(errors.confirmPassword.message || '')}
                 </p>
               )}
             </div>
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="font-text flex w-full items-center justify-center rounded-lg bg-primary-600 px-4 py-3 font-medium text-primary-50 transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50"
-            >
+            {/* Submit */}
+            <Button type="submit" fullWidth loading={isLoading}>
               {isLoading ? (
-                <>
-                  <Loader2 className="me-2 size-4 animate-spin" />
-                  Creating Account...
-                </>
+                <span className="flex items-center justify-center">
+                  <Loader2 className="me-2 size-4 animate-spin" aria-hidden="true" />
+                  {t('common.loading')}
+                </span>
               ) : (
-                'Sign Up'
+                t('auth.signUp')
               )}
-            </button>
-
-            <div className="text-base-600 dark:text-base-400 font-text text-center text-sm">
-              Already have an account?{' '}
-              <a
-                href="/login"
-                className="font-text text-primary-600 hover:text-primary-700 hover:underline"
-                onClick={(e) => {
-                  e.preventDefault()
-                  navigate({ to: '/login' })
-                }}
-              >
-                Sign In
-              </a>
-            </div>
+            </Button>
           </form>
+
+          {/* Sign in */}
+          <p className="mt-6 text-center text-sm text-ink-mute">
+            {t('auth.alreadyHaveAccount')}{' '}
+            <a
+              href="/login"
+              className="text-accent hover:underline"
+              onClick={(event) => {
+                event.preventDefault()
+                navigate({ to: '/login' })
+              }}
+            >
+              {t('auth.signIn')}
+            </a>
+          </p>
         </div>
 
-        <div className="text-base-600 dark:text-base-400 font-text mt-6 text-center text-sm">
-          © 2025 GASTAT - General Authority for Statistics
-        </div>
+        {/* Footer */}
+        <p className="mt-6 text-center text-xs text-ink-mute">
+          © {new Date().getFullYear()} GASTAT — General Authority for Statistics
+        </p>
       </div>
     </div>
   )

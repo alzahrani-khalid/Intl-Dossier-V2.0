@@ -58,21 +58,21 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
   const getRelevanceIndicator = (score: number) => {
     if (score >= 0.85) {
       return {
-        label: t('positions.suggestions.relevance.high'),
+        label: t('positions:suggestions.relevance.high'),
         icon: TrendingUp,
         variant: 'default' as const,
         color: 'text-success',
       }
     } else if (score >= 0.75) {
       return {
-        label: t('positions.suggestions.relevance.medium'),
+        label: t('positions:suggestions.relevance.medium'),
         icon: Minus,
         variant: 'secondary' as const,
         color: 'text-warning',
       }
     } else {
       return {
-        label: t('positions.suggestions.relevance.low'),
+        label: t('positions:suggestions.relevance.low'),
         icon: TrendingDown,
         variant: 'outline' as const,
         color: 'text-accent',
@@ -119,14 +119,14 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5" />
-            {t('positions.suggestions.title')}
+            {t('positions:suggestions.title')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
             <div className="flex flex-col items-center gap-2">
               <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-              <p className="text-sm text-muted-foreground">{t('positions.suggestions.loading')}</p>
+              <p className="text-sm text-muted-foreground">{t('positions:suggestions.loading')}</p>
             </div>
           </div>
         </CardContent>
@@ -140,16 +140,16 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5" />
-            {t('positions.suggestions.title')}
+            {t('positions:suggestions.title')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{t('positions.suggestions.error')}</AlertDescription>
+            <AlertDescription>{t('positions:suggestions.error')}</AlertDescription>
           </Alert>
           <Button variant="outline" onClick={() => refetch()} className="mt-4">
-            {t('positions.suggestions.retry')}
+            {t('positions:suggestions.retry')}
           </Button>
         </CardContent>
       </Card>
@@ -161,9 +161,9 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Sparkles className="h-5 w-5" />
-          {t('positions.suggestions.title')}
+          {t('positions:suggestions.title')}
         </CardTitle>
-        <CardDescription>{t('positions.suggestions.description')}</CardDescription>
+        <CardDescription>{t('positions:suggestions.description')}</CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -171,7 +171,7 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
         {isFallbackMode && (
           <Alert className="mb-4">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{t('positions.suggestions.fallbackMode')}</AlertDescription>
+            <AlertDescription>{t('positions:suggestions.fallbackMode')}</AlertDescription>
           </Alert>
         )}
 
@@ -179,13 +179,13 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
         {suggestions.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-8">
             <Sparkles className="mb-2 h-8 w-8 text-muted-foreground" />
-            <p className="text-center text-muted-foreground">{t('positions.suggestions.empty')}</p>
+            <p className="text-center text-muted-foreground">{t('positions:suggestions.empty')}</p>
             <p className="mt-1 text-center text-xs text-muted-foreground">
-              {t('positions.suggestions.emptyHint')}
+              {t('positions:suggestions.emptyHint')}
             </p>
           </div>
         ) : (
-          <div className="space-y-3" role="list" aria-label={t('positions.suggestions.listLabel')}>
+          <div className="space-y-3" role="list" aria-label={t('positions:suggestions.listLabel')}>
             {suggestions.map((suggestion) => {
               const relevanceIndicator = getRelevanceIndicator(suggestion.relevance_score)
               const Icon = relevanceIndicator.icon
@@ -219,7 +219,7 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
 
                         {/* Relevance Score */}
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <span>{t('positions.suggestions.score')}:</span>
+                          <span>{t('positions:suggestions.score')}:</span>
                           <span className="font-mono font-medium">
                             {(suggestion.relevance_score * 100).toFixed(0)}%
                           </span>
@@ -247,22 +247,22 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
                             size="sm"
                             onClick={() => handleAttach(suggestion)}
                             disabled={!onAttach || updateActionMutation.isPending}
-                            aria-label={t('positions.suggestions.attachLabel', {
+                            aria-label={t('positions:suggestions.attachLabel', {
                               title: getPositionTitle(suggestion.position),
                             })}
                           >
-                            {t('positions.suggestions.attach')}
+                            {t('positions:suggestions.attach')}
                           </Button>
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleReject(suggestion.id)}
                             disabled={updateActionMutation.isPending}
-                            aria-label={t('positions.suggestions.rejectLabel', {
+                            aria-label={t('positions:suggestions.rejectLabel', {
                               title: getPositionTitle(suggestion.position),
                             })}
                           >
-                            {t('positions.suggestions.reject')}
+                            {t('positions:suggestions.reject')}
                           </Button>
                         </div>
                       )}
@@ -272,7 +272,7 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
                         <Badge
                           variant={suggestion.user_action === 'accepted' ? 'default' : 'secondary'}
                         >
-                          {t(`positions.suggestions.action.${suggestion.user_action}`)}
+                          {t(`positions:suggestions.action.${suggestion.user_action}`)}
                         </Badge>
                       )}
                     </div>
@@ -293,7 +293,7 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
             disabled={isLoading}
           >
             <Sparkles className="me-2 h-4 w-4" />
-            {t('positions.suggestions.refresh')}
+            {t('positions:suggestions.refresh')}
           </Button>
         )}
       </CardContent>

@@ -342,7 +342,8 @@ export function TicketDetail() {
                 placeholder={t('ticketDetail.selectType', 'Select type...')}
                 inputType="select"
                 options={[
-                  { value: 'dossier', label: t('ticketDetail.convertOptions.dossier', 'Dossier') },
+                  // 'dossier' removed: convert_ticket_to_artifact RPC only supports
+                  // engagement / position / mou_action / foresight (not dossier).
                   {
                     value: 'engagement',
                     label: t('ticketDetail.convertOptions.engagement', 'Engagement'),

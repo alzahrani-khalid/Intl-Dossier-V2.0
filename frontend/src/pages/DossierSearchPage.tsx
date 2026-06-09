@@ -140,13 +140,13 @@ export function DossierSearchPage() {
         navigate({ to: `/engagements/${item.id}` })
         break
       case 'task':
-        navigate({ to: `/my-work?taskId=${item.id}` })
+        navigate({ to: `/tasks/${item.id}` })
         break
       case 'commitment':
-        navigate({ to: `/my-work?commitmentId=${item.id}` })
+        navigate({ to: `/commitments?id=${item.id}` })
         break
       case 'intake':
-        navigate({ to: `/intake/${item.id}` })
+        navigate({ to: `/intake/tickets/${item.id}` })
         break
       case 'mou':
         navigate({ to: `/mous/${item.id}` })

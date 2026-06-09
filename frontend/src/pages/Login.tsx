@@ -1,7 +1,8 @@
-import { LoginPageAceternity } from '../auth/LoginPageAceternity'
+import type * as React from 'react'
+import { LoginPage } from '../auth/LoginPage'
 
-export default function Login() {
-  return <LoginPageAceternity />
+export default function Login(): React.JSX.Element {
+  return <LoginPage />
 }
 
-export { LoginPageAceternity as LoginPage }
+export { LoginPage }

@@ -60,7 +60,13 @@ vi.mock('@/components/ui/form', () => ({
     name: string
   }) =>
     render({
-      field: { value: '', onChange: vi.fn(), onBlur: vi.fn(), name, ref: vi.fn() },
+      field: {
+        value: name === 'tags' ? [] : '',
+        onChange: vi.fn(),
+        onBlur: vi.fn(),
+        name,
+        ref: vi.fn(),
+      },
     }),
   FormItem: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   FormLabel: ({ children }: { children: React.ReactNode }) => <label>{children}</label>,
@@ -77,7 +83,9 @@ vi.mock('@/components/ui/textarea', () => ({
 
 // Minimal Select mock: exposes trigger + content and renders options as buttons.
 vi.mock('@/components/ui/select', () => ({
-  Select: ({ children }: { children: React.ReactNode }) => <div data-testid="select">{children}</div>,
+  Select: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="select">{children}</div>
+  ),
   SelectTrigger: ({ children }: { children: React.ReactNode }) => (
     <button type="button">{children}</button>
   ),
@@ -112,7 +120,9 @@ import { PersonBasicInfoStep } from '../PersonBasicInfoStep'
 
 // ── Mock form factory ───────────────────────────────────────────────────────
 
-function createMockForm(overrides: Partial<Record<string, unknown>> = {}): UseFormReturn<PersonFormData> {
+function createMockForm(
+  overrides: Partial<Record<string, unknown>> = {},
+): UseFormReturn<PersonFormData> {
   return {
     control: {} as UseFormReturn<PersonFormData>['control'],
     watch: vi.fn((name: string) => (overrides[name] as unknown) ?? ''),
@@ -188,12 +198,10 @@ describe('PersonBasicInfoStep', () => {
   it("gender Select renders EXACTLY 'female' + 'male' options (no prefer-not-to-say)", () => {
     const form = createMockForm()
     render(<PersonBasicInfoStep form={form} dossierType="person" />)
-    const genderOpts = screen
-      .getAllByRole('option')
-      .filter((el) => {
-        const v = el.getAttribute('data-value')
-        return v === 'female' || v === 'male'
-      })
+    const genderOpts = screen.getAllByRole('option').filter((el) => {
+      const v = el.getAttribute('data-value')
+      return v === 'female' || v === 'male'
+    })
     expect(genderOpts.length).toBe(2)
     const preferNotToSay = screen
       .queryAllByRole('option')

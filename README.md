@@ -97,7 +97,7 @@ pnpm dev
 The web app will be available at:
 
 - Frontend: http://localhost:5173
-- Backend: http://localhost:5000
+- Backend: http://localhost:5001
 
 ### Mobile Application Setup
 

@@ -129,7 +129,7 @@ export function VersionComparison({
               <span
                 key={index}
                 className="rounded bg-success/10 px-0.5 text-success"
-                aria-label={t('positions.versionComparison.added')}
+                aria-label={t('positions:versionComparison.added')}
               >
                 {item.text}
               </span>
@@ -141,7 +141,7 @@ export function VersionComparison({
               <span
                 key={index}
                 className="rounded bg-danger/10 px-0.5 text-danger line-through"
-                aria-label={t('positions.versionComparison.removed')}
+                aria-label={t('positions:versionComparison.removed')}
               >
                 {item.text}
               </span>
@@ -171,7 +171,7 @@ export function VersionComparison({
       <Card>
         <CardHeader>
           <CardTitle className={cn('flex items-center gap-2', isRTL && 'flex-row-reverse')}>
-            {t('positions.versionComparison.title')}
+            {t('positions:versionComparison.title')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -181,14 +181,14 @@ export function VersionComparison({
                 className={cn('block text-sm font-medium mb-2', isRTL && 'text-end')}
                 htmlFor="from-version"
               >
-                {t('positions.versionComparison.fromVersion')}
+                {t('positions:versionComparison.fromVersion')}
               </label>
               <Select
                 value={fromVersion?.toString()}
                 onValueChange={(value) => setFromVersion(parseInt(value))}
               >
                 <SelectTrigger id="from-version" className="w-full">
-                  <SelectValue placeholder={t('positions.versionComparison.selectVersion')} />
+                  <SelectValue placeholder={t('positions:versionComparison.selectVersion')} />
                 </SelectTrigger>
                 <SelectContent>
                   {availableVersions.map((version) => (
@@ -212,14 +212,14 @@ export function VersionComparison({
                 className={cn('block text-sm font-medium mb-2', isRTL && 'text-end')}
                 htmlFor="to-version"
               >
-                {t('positions.versionComparison.toVersion')}
+                {t('positions:versionComparison.toVersion')}
               </label>
               <Select
                 value={toVersion?.toString()}
                 onValueChange={(value) => setToVersion(parseInt(value))}
               >
                 <SelectTrigger id="to-version" className="w-full">
-                  <SelectValue placeholder={t('positions.versionComparison.selectVersion')} />
+                  <SelectValue placeholder={t('positions:versionComparison.selectVersion')} />
                 </SelectTrigger>
                 <SelectContent>
                   {availableVersions.map((version) => (
@@ -244,7 +244,7 @@ export function VersionComparison({
               {isLoading ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : (
-                t('positions.versionComparison.compare')
+                t('positions:versionComparison.compare')
               )}
             </Button>
           </div>
@@ -253,7 +253,7 @@ export function VersionComparison({
             <Alert className="mt-4">
               <AlertCircle className="size-4" />
               <AlertDescription>
-                {t('positions.versionComparison.sameVersionError')}
+                {t('positions:versionComparison.sameVersionError')}
               </AlertDescription>
             </Alert>
           )}
@@ -272,7 +272,7 @@ export function VersionComparison({
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
           <AlertDescription>
-            {error instanceof Error ? error.message : t('positions.versionComparison.error')}
+            {error instanceof Error ? error.message : t('positions:versionComparison.error')}
           </AlertDescription>
         </Alert>
       )}
@@ -284,7 +284,7 @@ export function VersionComparison({
           <Card>
             <CardHeader>
               <CardTitle className={cn('flex items-center gap-2', isRTL && 'flex-row-reverse')}>
-                {t('positions.versionComparison.contentChanges')}
+                {t('positions:versionComparison.contentChanges')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -293,16 +293,16 @@ export function VersionComparison({
                 <div className="space-y-2">
                   <div className="mb-3 flex items-center gap-2">
                     <h3 className="text-sm font-semibold">
-                      {t('positions.versionComparison.englishVersion')}
+                      {t('positions:versionComparison.englishVersion')}
                     </h3>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <span className="inline-flex items-center gap-1">
                         <span className="size-3 rounded border border-success/30 bg-success/10" />
-                        {t('positions.versionComparison.added')}
+                        {t('positions:versionComparison.added')}
                       </span>
                       <span className="inline-flex items-center gap-1">
                         <span className="size-3 rounded border border-danger/30 bg-danger/10" />
-                        {t('positions.versionComparison.removed')}
+                        {t('positions:versionComparison.removed')}
                       </span>
                     </div>
                   </div>
@@ -311,7 +311,7 @@ export function VersionComparison({
                       renderDiffText(versionDiff.english_diff, false)
                     ) : (
                       <p className="text-sm text-muted-foreground">
-                        {t('positions.versionComparison.noChanges')}
+                        {t('positions:versionComparison.noChanges')}
                       </p>
                     )}
                   </div>
@@ -323,15 +323,15 @@ export function VersionComparison({
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <span className="inline-flex items-center gap-1">
                         <span className="size-3 rounded border border-danger/30 bg-danger/10" />
-                        {t('positions.versionComparison.removed')}
+                        {t('positions:versionComparison.removed')}
                       </span>
                       <span className="inline-flex items-center gap-1">
                         <span className="size-3 rounded border border-success/30 bg-success/10" />
-                        {t('positions.versionComparison.added')}
+                        {t('positions:versionComparison.added')}
                       </span>
                     </div>
                     <h3 className="text-sm font-semibold">
-                      {t('positions.versionComparison.arabicVersion')}
+                      {t('positions:versionComparison.arabicVersion')}
                     </h3>
                   </div>
                   <div className="min-h-[200px] rounded-md border bg-muted p-4" dir="rtl">
@@ -339,7 +339,7 @@ export function VersionComparison({
                       renderDiffText(versionDiff.arabic_diff, true)
                     ) : (
                       <p className="text-end text-sm text-muted-foreground">
-                        {t('positions.versionComparison.noChanges')}
+                        {t('positions:versionComparison.noChanges')}
                       </p>
                     )}
                   </div>
@@ -353,7 +353,7 @@ export function VersionComparison({
             <Card>
               <CardHeader>
                 <CardTitle className={cn('flex items-center gap-2', isRTL && 'flex-row-reverse')}>
-                  {t('positions.versionComparison.metadataChanges')}
+                  {t('positions:versionComparison.metadataChanges')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -362,13 +362,13 @@ export function VersionComparison({
                     <TableHeader>
                       <TableRow>
                         <TableHead className={cn(isRTL && 'text-end')}>
-                          {t('positions.versionComparison.field')}
+                          {t('positions:versionComparison.field')}
                         </TableHead>
                         <TableHead className={cn(isRTL && 'text-end')}>
-                          {t('positions.versionComparison.oldValue')}
+                          {t('positions:versionComparison.oldValue')}
                         </TableHead>
                         <TableHead className={cn(isRTL && 'text-end')}>
-                          {t('positions.versionComparison.newValue')}
+                          {t('positions:versionComparison.newValue')}
                         </TableHead>
                       </TableRow>
                     </TableHeader>
@@ -376,7 +376,7 @@ export function VersionComparison({
                       {Object.entries(versionDiff.metadata_changes).map(([field, change]) => (
                         <TableRow key={field}>
                           <TableCell className={cn('font-medium', isRTL && 'text-end')}>
-                            {t(`positions.fields.${field}`, field)}
+                            {t(`positions:fields.${field}`, field)}
                           </TableCell>
                           <TableCell className={cn(isRTL && 'text-end')}>
                             <span className="text-danger">{renderMetadataValue(change.old)}</span>
@@ -400,7 +400,7 @@ export function VersionComparison({
               <Alert>
                 <AlertCircle className="size-4" />
                 <AlertDescription>
-                  {t('positions.versionComparison.noChangesBetweenVersions')}
+                  {t('positions:versionComparison.noChangesBetweenVersions')}
                 </AlertDescription>
               </Alert>
             )}

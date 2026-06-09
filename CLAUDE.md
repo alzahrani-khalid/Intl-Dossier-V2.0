@@ -2,6 +2,22 @@
 
 Last updated: 2026-05-01
 
+## Codebase Knowledge-Graph Dashboard (shared, all agents)
+
+An Understand-Anything knowledge graph of `frontend/src` (3,202 nodes / 3,883
+edges across 1,574 files) is served locally behind a token gate. The token is
+**pinned** (via `UNDERSTAND_ACCESS_TOKEN`), so the URL is stable across restarts
+and any agent can use it directly:
+
+```
+http://127.0.0.1:5174/?token=85763bd5b157b039536df19c556bd258
+```
+
+`curl` access, per-file queries, and the idempotent launcher are documented in
+`frontend/src/.understand-anything/DASHBOARD.md`. To (re)start the dashboard:
+`./frontend/src/.understand-anything/start-dashboard.sh`. That directory is
+git-ignored (local only).
+
 ## Visual Design Source of Truth (READ BEFORE ANY UI WORK)
 
 The canonical visual design is the **IntelDossier prototype** at:

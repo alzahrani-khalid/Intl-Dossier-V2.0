@@ -858,6 +858,20 @@
       "direct": "Direct"
     },
     "form": {
+      "taskTitle": "Title",
+      "taskTitlePlaceholder": "Enter a title",
+      "taskDescription": "Description",
+      "taskDescriptionPlaceholder": "Enter a description",
+      "assignee": "Assignee",
+      "assigneePlaceholder": "Select an assignee",
+      "submit": {
+        "intake": "Create request",
+        "task": "Create task",
+        "commitment": "Create commitment",
+        "position": "Create position",
+        "event": "Create event",
+        "relationship": "Create relationship"
+      },
       "priority": "Priority",
       "priorityLevels": {
         "low": "Low",
@@ -1029,7 +1043,85 @@
       "total": "{{count}} total engagements"
     },
     "recentActivity": "Recent Activity",
-    "noRecentActivity": "No recent activity"
+    "noRecentActivity": "No recent activity",
+    "membership": {
+      "title": "Membership Structure",
+      "members": "Members",
+      "memberOf": "Member Of",
+      "subUnits": "Sub-Units",
+      "totalRelated": "{{count}} total related dossiers",
+      "empty": "No membership data available"
+    },
+    "mou": {
+      "title": "MoU Status",
+      "active": "Active",
+      "pending": "Pending",
+      "expired": "Expired",
+      "draft": "Draft",
+      "total": "{{count}} total agreements",
+      "empty": "No MoUs recorded",
+      "viewAll": "View MoUs"
+    },
+    "representatives": {
+      "title": "Key Representatives",
+      "empty": "No representatives linked",
+      "total": "{{count}} representatives total"
+    },
+    "forum": {
+      "title": "Forum Details",
+      "type": "Forum Type",
+      "frequency": "Frequency",
+      "host": "Host Organization",
+      "participants": "Participants"
+    },
+    "sessions": {
+      "title": "Sessions",
+      "empty": "No sessions recorded"
+    },
+    "positions": {
+      "title": "Position Tracker",
+      "empty": "No positions tracked yet. Add positions in the Positions tab.",
+      "addPositions": "Add Positions",
+      "ourStance": "Our Position",
+      "noOurStance": "Not defined",
+      "counterpart": "Counterpart Positions",
+      "noCounterpart": "None recorded",
+      "viewAll": "View Positions"
+    },
+    "anchors": {
+      "title": "Connected Anchors",
+      "empty": "No anchor dossiers connected",
+      "viewSidebar": "View all in sidebar"
+    },
+    "members": {
+      "title": "Members",
+      "empty": "No members linked",
+      "viewAll": "View all members"
+    },
+    "meetings": {
+      "title": "Upcoming Meetings",
+      "empty": "No upcoming meetings",
+      "untitled": "Meeting"
+    },
+    "deliverables": {
+      "title": "Deliverables",
+      "empty": "No deliverables tracked",
+      "completed": "Completed",
+      "inProgress": "In Progress",
+      "pending": "Pending"
+    },
+    "person": {
+      "organization": "Organization",
+      "role": "Role / Title",
+      "lastEngagement": "Last Engagement",
+      "noEngagement": "None recorded",
+      "title": "Profile"
+    },
+    "engagementHistory": {
+      "title": "Engagement History",
+      "empty": "No engagement history",
+      "viewAll": "View all engagements"
+    }
   },
   "analytics": {
     "engagementCount": "Engagements",

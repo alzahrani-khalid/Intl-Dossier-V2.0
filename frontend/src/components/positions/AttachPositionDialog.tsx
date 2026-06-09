@@ -48,7 +48,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
 }) => {
   const { t, i18n } = useTranslation()
   const { isRTL } = useDirection()
-const locale = isRTL ? ar : enUS
+  const locale = isRTL ? ar : enUS
 
   // Dialog state
   const [open, setOpen] = useState(false)
@@ -144,15 +144,15 @@ const locale = isRTL ? ar : enUS
         {trigger || (
           <Button>
             <Link2 className="me-2 h-4 w-4" />
-            {t('positions.attach.dialogTrigger')}
+            {t('positions:attach.dialogTrigger')}
           </Button>
         )}
       </DialogTrigger>
 
       <DialogContent className="max-h-[90vh] max-w-6xl p-0">
         <DialogHeader className="p-6 pb-0">
-          <DialogTitle>{t('positions.attach.dialogTitle')}</DialogTitle>
-          <DialogDescription>{t('positions.attach.dialogDescription')}</DialogDescription>
+          <DialogTitle>{t('positions:attach.dialogTitle')}</DialogTitle>
+          <DialogDescription>{t('positions:attach.dialogDescription')}</DialogDescription>
         </DialogHeader>
 
         <div className="flex h-[70vh] gap-4 p-6 pt-4">
@@ -165,7 +165,7 @@ const locale = isRTL ? ar : enUS
               />
               <Input
                 type="search"
-                placeholder={t('positions.attach.searchPlaceholder')}
+                placeholder={t('positions:attach.searchPlaceholder')}
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 className={isRTL ? 'pe-10' : 'ps-10'}
@@ -176,14 +176,14 @@ const locale = isRTL ? ar : enUS
             {/* Selection Info */}
             <div className="flex items-center justify-between rounded-lg border bg-muted/50 px-3 py-2 text-sm">
               <span>
-                {t('positions.attach.selected', {
+                {t('positions:attach.selected', {
                   count: selectedIds.length,
                   max: maxSelections,
                 })}
               </span>
               {selectedIds.length > 0 && (
                 <Button variant="ghost" size="sm" onClick={() => setSelectedIds([])}>
-                  {t('positions.attach.clearSelection')}
+                  {t('positions:attach.clearSelection')}
                 </Button>
               )}
             </div>
@@ -192,7 +192,7 @@ const locale = isRTL ? ar : enUS
             {selectedIds.length >= maxSelections && (
               <Alert>
                 <AlertDescription>
-                  {t('positions.attach.maxSelectionsReached', { max: maxSelections })}
+                  {t('positions:attach.maxSelectionsReached', { max: maxSelections })}
                 </AlertDescription>
               </Alert>
             )}
@@ -203,15 +203,15 @@ const locale = isRTL ? ar : enUS
                 <div className="flex items-center justify-center py-12">
                   <div className="flex flex-col items-center gap-2">
                     <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-                    <p className="text-sm text-muted-foreground">{t('positions.loading')}</p>
+                    <p className="text-sm text-muted-foreground">{t('positions:loading')}</p>
                   </div>
                 </div>
               ) : filteredPositions.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12">
                   <p className="text-center text-muted-foreground">
                     {debouncedSearch
-                      ? t('positions.attach.noResults')
-                      : t('positions.attach.allAttached')}
+                      ? t('positions:attach.noResults')
+                      : t('positions:attach.allAttached')}
                   </p>
                 </div>
               ) : (
@@ -232,7 +232,7 @@ const locale = isRTL ? ar : enUS
                           checked={isSelected}
                           onCheckedChange={() => toggleSelection(position.id)}
                           disabled={!isSelected && selectedIds.length >= maxSelections}
-                          aria-label={t('positions.attach.selectLabel', {
+                          aria-label={t('positions:attach.selectLabel', {
                             title: getPositionTitle(position),
                           })}
                         />
@@ -244,7 +244,7 @@ const locale = isRTL ? ar : enUS
                           </h4>
                           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                             <Badge variant="outline">
-                              {t(`positions.type.${position.position_type_id}`)}
+                              {t(`positions:type.${position.position_type_id}`)}
                             </Badge>
                             {position.thematic_category && (
                               <Badge variant="outline">{position.thematic_category}</Badge>
@@ -258,7 +258,7 @@ const locale = isRTL ? ar : enUS
                           variant="ghost"
                           size="sm"
                           onClick={() => setPreviewPosition(position)}
-                          aria-label={t('positions.attach.previewLabel', {
+                          aria-label={t('positions:attach.previewLabel', {
                             title: getPositionTitle(position),
                           })}
                         >
@@ -278,9 +278,7 @@ const locale = isRTL ? ar : enUS
               <div className="flex h-full flex-col">
                 {/* Preview Header */}
                 <div className="flex items-start justify-between border-b p-4">
-                  <h3 className="font-semibold">
-                    {t('positions.attach.previewTitle')}
-                  </h3>
+                  <h3 className="font-semibold">{t('positions:attach.previewTitle')}</h3>
                   <Button variant="ghost" size="sm" onClick={() => setPreviewPosition(null)}>
                     <X className="h-4 w-4" />
                   </Button>
@@ -294,9 +292,9 @@ const locale = isRTL ? ar : enUS
                         {getPositionTitle(previewPosition)}
                       </h4>
                       <div className="flex flex-wrap gap-2">
-                        <Badge>{t(`positions.status.${previewPosition.status}`)}</Badge>
+                        <Badge>{t(`positions:status.${previewPosition.status}`)}</Badge>
                         <Badge variant="outline">
-                          {t(`positions.type.${previewPosition.position_type_id}`)}
+                          {t(`positions:type.${previewPosition.position_type_id}`)}
                         </Badge>
                       </div>
                     </div>
@@ -304,10 +302,8 @@ const locale = isRTL ? ar : enUS
                     <Separator />
 
                     <div>
-                      <p className="mb-1 text-sm font-medium">{t('positions.attach.content')}</p>
-                      <p
-                        className="whitespace-pre-wrap text-sm text-muted-foreground"
-                      >
+                      <p className="mb-1 text-sm font-medium">{t('positions:attach.content')}</p>
+                      <p className="whitespace-pre-wrap text-sm text-muted-foreground">
                         {getPositionContent(previewPosition)}
                       </p>
                     </div>
@@ -317,7 +313,7 @@ const locale = isRTL ? ar : enUS
                         <Separator />
                         <div>
                           <p className="mb-1 text-sm font-medium">
-                            {t('positions.attach.keyMessages')}
+                            {t('positions:attach.keyMessages')}
                           </p>
                           <p className="text-sm text-muted-foreground">
                             {isRTL ? previewPosition.rationale_ar : previewPosition.rationale_en}
@@ -342,12 +338,12 @@ const locale = isRTL ? ar : enUS
                     {selectedIds.includes(previewPosition.id) ? (
                       <>
                         <Check className="me-2 h-4 w-4" />
-                        {t('positions.attach.selected')}
+                        {t('positions:attach.selected')}
                       </>
                     ) : (
                       <>
                         <Link2 className="me-2 h-4 w-4" />
-                        {t('positions.attach.selectThis')}
+                        {t('positions:attach.selectThis')}
                       </>
                     )}
                   </Button>
@@ -358,7 +354,7 @@ const locale = isRTL ? ar : enUS
                 <div className="space-y-2">
                   <Eye className="mx-auto h-12 w-12 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
-                    {t('positions.attach.previewEmpty')}
+                    {t('positions:attach.previewEmpty')}
                   </p>
                 </div>
               </div>
@@ -374,12 +370,12 @@ const locale = isRTL ? ar : enUS
             {isAttaching ? (
               <>
                 <div className="me-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                {t('positions.attach.attaching')}
+                {t('positions:attach.attaching')}
               </>
             ) : (
               <>
                 <Link2 className="me-2 h-4 w-4" />
-                {t('positions.attach.attachSelected', { count: selectedIds.length })}
+                {t('positions:attach.attachSelected', { count: selectedIds.length })}
               </>
             )}
           </Button>

@@ -65,7 +65,7 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
       setJobId(null)
     } else if (job.status === 'failed') {
       setStatus('failed')
-      setErrorMessage(jobErrorMessage ?? t('positions.briefing.error'))
+      setErrorMessage(jobErrorMessage ?? t('positions:briefing.error'))
       setJobId(null)
     }
   }, [job, jobFileUrl, jobErrorMessage, t])
@@ -73,7 +73,7 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
   // Handle generation
   const handleGenerate = async () => {
     if (attachedPositionCount === 0) {
-      setErrorMessage(t('positions.briefing.noPositions'))
+      setErrorMessage(t('positions:briefing.noPositions'))
       return
     }
 
@@ -86,7 +86,7 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
       setJobId(result.job_id)
     } catch (error: any) {
       setStatus('failed')
-      setErrorMessage(error.message || t('positions.briefing.error'))
+      setErrorMessage(error.message || t('positions:briefing.error'))
     }
   }
 
@@ -113,10 +113,10 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FileText className="h-5 w-5" />
-          {t('positions.briefing.title')}
+          {t('positions:briefing.title')}
         </CardTitle>
         <CardDescription>
-          {t('positions.briefing.description', { count: attachedPositionCount })}
+          {t('positions:briefing.description', { count: attachedPositionCount })}
         </CardDescription>
       </CardHeader>
 
@@ -125,18 +125,18 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
         {status === 'idle' && (
           <>
             <div className="space-y-3">
-              <Label>{t('positions.briefing.selectLanguage')}</Label>
+              <Label>{t('positions:briefing.selectLanguage')}</Label>
               <RadioGroup value={language} onValueChange={(val) => setLanguage(val as 'en' | 'ar')}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="en" id="lang-en" />
                   <Label htmlFor="lang-en" className="cursor-pointer">
-                    {t('positions.briefing.language.english')}
+                    {t('positions:briefing.language.english')}
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="ar" id="lang-ar" />
                   <Label htmlFor="lang-ar" className="cursor-pointer">
-                    {t('positions.briefing.language.arabic')}
+                    {t('positions:briefing.language.arabic')}
                   </Label>
                 </div>
               </RadioGroup>
@@ -145,7 +145,7 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
             {/* Info */}
             <Alert>
               <AlertDescription>
-                {t('positions.briefing.estimatedTime', { seconds: estimatedTime })}
+                {t('positions:briefing.estimatedTime', { seconds: estimatedTime })}
               </AlertDescription>
             </Alert>
 
@@ -158,12 +158,12 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
               {generateMutation.isPending ? (
                 <>
                   <Loader2 className="me-2 h-4 w-4 animate-spin" />
-                  {t('positions.briefing.initiating')}
+                  {t('positions:briefing.initiating')}
                 </>
               ) : (
                 <>
                   <FileText className="me-2 h-4 w-4" />
-                  {t('positions.briefing.generate')}
+                  {t('positions:briefing.generate')}
                 </>
               )}
             </Button>
@@ -178,11 +178,11 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
             </div>
             <div className="space-y-2">
               <p className="text-center text-sm font-medium">
-                {t('positions.briefing.generating')}
+                {t('positions:briefing.generating')}
               </p>
               <Progress value={undefined} className="h-2" />
               <p className="text-center text-xs text-muted-foreground">
-                {t('positions.briefing.pleaseWait')}
+                {t('positions:briefing.pleaseWait')}
               </p>
             </div>
           </div>
@@ -193,16 +193,16 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
           <div className="space-y-4">
             <div className="flex flex-col items-center gap-2 rounded-lg border border-success bg-success/5 p-6 dark:bg-success/20">
               <CheckCircle className="h-12 w-12 text-success" />
-              <p className="font-medium text-success">{t('positions.briefing.completed')}</p>
+              <p className="font-medium text-success">{t('positions:briefing.completed')}</p>
             </div>
 
             <Button onClick={handleDownload} className="w-full">
               <Download className="me-2 h-5 w-5" />
-              {t('positions.briefing.download')}
+              {t('positions:briefing.download')}
             </Button>
 
             <Button onClick={handleReset} variant="outline" className="w-full">
-              {t('positions.briefing.generateAnother')}
+              {t('positions:briefing.generateAnother')}
             </Button>
           </div>
         )}
@@ -216,7 +216,7 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
             </Alert>
 
             <Button onClick={handleReset} variant="outline" className="w-full">
-              {t('positions.briefing.tryAgain')}
+              {t('positions:briefing.tryAgain')}
             </Button>
           </div>
         )}
@@ -224,7 +224,7 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
         {/* Validation Error */}
         {attachedPositionCount === 0 && status === 'idle' && (
           <Alert>
-            <AlertDescription>{t('positions.briefing.noPositions')}</AlertDescription>
+            <AlertDescription>{t('positions:briefing.noPositions')}</AlertDescription>
           </Alert>
         )}
       </CardContent>

@@ -207,10 +207,12 @@ export function PositionsLibraryPage() {
                   <SelectContent>
                     <SelectItem value="all">{t('positions:library.all_statuses')}</SelectItem>
                     <SelectItem value="draft">{t('positions:status.draft')}</SelectItem>
-                    <SelectItem value="review">{t('positions:status.review')}</SelectItem>
+                    <SelectItem value="under_review">
+                      {t('positions:status.under_review')}
+                    </SelectItem>
                     <SelectItem value="approved">{t('positions:status.approved')}</SelectItem>
                     <SelectItem value="published">{t('positions:status.published')}</SelectItem>
-                    <SelectItem value="archived">{t('positions:status.archived')}</SelectItem>
+                    <SelectItem value="unpublished">{t('positions:status.unpublished')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

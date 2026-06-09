@@ -54,11 +54,15 @@ function AfterActionFormPage(): React.ReactNode {
 
   const handleSaveDraft = async (data: any): Promise<void> => {
     try {
+      // The form nests follow-ups under `follow_ups`; the create edge reads
+      // `follow_up_actions`, so rename to avoid silently dropping them.
+      const { follow_ups, ...rest } = data
       const afterAction = await createAfterAction.mutateAsync({
         engagement_id: engagementId,
         dossier_id: (engagement as any).dossier_id ?? engagement.id,
         publication_status: 'draft',
-        ...data,
+        ...rest,
+        follow_up_actions: follow_ups,
       })
 
       setFormDirty(false)

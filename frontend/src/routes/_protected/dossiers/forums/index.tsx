@@ -123,8 +123,8 @@ function ForumsListPage(): React.ReactNode {
       isEmpty={!query.isLoading && items.length === 0}
       emptyState={
         <div className="empty-hint flex flex-col items-start gap-1 py-6">
-          <p className="text-sm font-medium">{t('forums:empty.title')}</p>
-          <p className="text-xs text-muted-foreground">{t('forums:empty.description')}</p>
+          <p className="text-sm font-medium">{t('forums:noForumsFound')}</p>
+          <p className="text-xs text-muted-foreground">{t('forums:noForumsDescription')}</p>
         </div>
       }
     >

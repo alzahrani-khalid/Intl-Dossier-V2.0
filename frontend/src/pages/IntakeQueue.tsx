@@ -128,6 +128,7 @@ export function IntakeQueuePage() {
   const {
     data: tickets = [],
     isLoading,
+    isError,
     refetch,
   } = useQuery<Ticket[], Error>({
     queryKey: intakeKeys.ticketList(filters),
@@ -414,8 +415,15 @@ export function IntakeQueuePage() {
           </div>
         )}
 
+        {/* Error state — surface fetch failures instead of masking them as an empty queue */}
+        {!isLoading && isError && (
+          <Card className="p-4 sm:p-8 text-center" role="alert">
+            <p className="text-sm text-destructive">{t('queue.error', { ns: 'intake' })}</p>
+          </Card>
+        )}
+
         {/* Role-Based Empty State */}
-        {!isLoading && (!tickets || tickets.length === 0) && (
+        {!isLoading && !isError && (!tickets || tickets.length === 0) && (
           <Card className="p-4 sm:p-8">
             <IntakeRoleEmptyState
               onCreateRequest={() => navigate({ to: '/intake/new' })}
@@ -476,10 +484,16 @@ export function IntakeQueuePage() {
                             {displayTitle}
                           </h3>
                           <Badge variant={getPriorityColor(ticket.priority)}>
-                            {ticket.priority}
+                            {t(`queue.priority.${ticket.priority}`, {
+                              ns: 'intake',
+                              defaultValue: ticket.priority,
+                            })}
                           </Badge>
                           <Badge variant={getStatusVariant(ticket.status)} className="text-xs">
-                            {t(`intake.status.${ticket.status}`, ticket.status)}
+                            {t(`queue.status.${ticket.status}`, {
+                              ns: 'intake',
+                              defaultValue: ticket.status,
+                            })}
                           </Badge>
                           <Badge variant="outline" className="text-xs">
                             {ticket.ticket_number}

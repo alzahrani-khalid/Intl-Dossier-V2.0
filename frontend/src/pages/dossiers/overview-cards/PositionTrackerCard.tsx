@@ -23,8 +23,6 @@ interface PositionTrackerCardProps {
 // optional summary_* / title_* fields fetched off the join.
 type PositionWithLink = Position & {
   link_type?: 'primary' | 'related' | 'reference'
-  summary_en?: string
-  summary_ar?: string
 }
 
 export function PositionTrackerCard({ dossierId }: PositionTrackerCardProps): React.ReactElement {
@@ -68,9 +66,8 @@ export function PositionTrackerCard({ dossierId }: PositionTrackerCardProps): Re
             })}
           </p>
           <Link
-            to="/dossiers/topics/$id"
+            to="/dossiers/topics/$id/positions"
             params={{ id: dossierId }}
-            search={{ tab: 'positions' }}
             className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 transition-colors min-h-11"
           >
             <ExternalLink className="h-3.5 w-3.5" />
@@ -97,9 +94,9 @@ export function PositionTrackerCard({ dossierId }: PositionTrackerCardProps): Re
                       <p className="font-medium truncate">
                         {(isRTL ? pos.title_ar : pos.title_en) || pos.title_en}
                       </p>
-                      {pos.summary_en && (
+                      {pos.content_en && (
                         <p className="text-muted-foreground line-clamp-2 mt-0.5">
-                          {isRTL ? pos.summary_ar : pos.summary_en}
+                          {isRTL ? pos.content_ar : pos.content_en}
                         </p>
                       )}
                     </div>
@@ -124,9 +121,9 @@ export function PositionTrackerCard({ dossierId }: PositionTrackerCardProps): Re
                       <p className="font-medium truncate">
                         {(isRTL ? pos.title_ar : pos.title_en) || pos.title_en}
                       </p>
-                      {pos.summary_en && (
+                      {pos.content_en && (
                         <p className="text-muted-foreground line-clamp-2 mt-0.5">
-                          {isRTL ? pos.summary_ar : pos.summary_en}
+                          {isRTL ? pos.content_ar : pos.content_en}
                         </p>
                       )}
                     </div>
@@ -138,9 +135,8 @@ export function PositionTrackerCard({ dossierId }: PositionTrackerCardProps): Re
 
           {/* View Positions link */}
           <Link
-            to="/dossiers/topics/$id"
+            to="/dossiers/topics/$id/positions"
             params={{ id: dossierId }}
-            search={{ tab: 'positions' }}
             className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 transition-colors min-h-11"
           >
             <ExternalLink className="h-3.5 w-3.5" />

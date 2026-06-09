@@ -337,7 +337,7 @@ export function ElectedOfficialListTable(): ReactElement {
             onClick={handlePrevPage}
             className="min-h-11 min-w-11 w-full sm:w-auto"
           >
-            {t('termStatus.expired', { ns: 'common', defaultValue: 'Previous' })}
+            {t('common.previous', { ns: 'common', defaultValue: 'Previous' })}
           </Button>
           <span className="text-sm text-muted-foreground">
             {currentPage} / {totalPages}
@@ -348,7 +348,7 @@ export function ElectedOfficialListTable(): ReactElement {
             onClick={handleNextPage}
             className="min-h-11 min-w-11 w-full sm:w-auto"
           >
-            {t('termStatus.current', { ns: 'common', defaultValue: 'Next' })}
+            {t('common.next', { ns: 'common', defaultValue: 'Next' })}
           </Button>
         </div>
       )}

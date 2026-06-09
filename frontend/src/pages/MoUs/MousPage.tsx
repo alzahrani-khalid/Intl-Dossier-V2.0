@@ -30,20 +30,26 @@ interface MoU {
   }
 }
 
+// Real mou_state enum: draft, negotiation, pending_approval, signed, active,
+// suspended, expired, terminated. (Legacy keys like internal_review/renewed
+// don't exist and caused undefined stateConfig -> render crash.)
 const WORKFLOW_STATES = {
-  draft: { color: 'gray', next: 'internal_review' },
-  internal_review: { color: 'yellow', next: 'external_review' },
-  external_review: { color: 'orange', next: 'negotiation' },
-  negotiation: { color: 'blue', next: 'signed' },
+  draft: { color: 'gray', next: 'negotiation' },
+  negotiation: { color: 'blue', next: 'pending_approval' },
+  pending_approval: { color: 'yellow', next: 'signed' },
   signed: { color: 'green', next: 'active' },
-  active: { color: 'green', next: 'expired' },
-  renewed: { color: 'blue', next: null },
-  expired: { color: 'red', next: 'renewed' },
+  active: { color: 'green', next: null },
+  suspended: { color: 'orange', next: 'active' },
+  expired: { color: 'red', next: null },
+  terminated: { color: 'red', next: null },
 }
 
 function WorkflowIndicator({ state }: { state: string }) {
   const { t } = useTranslation()
-  const stateConfig = WORKFLOW_STATES[state as keyof typeof WORKFLOW_STATES]
+  const { isRTL } = useDirection()
+  // Guard against unknown/legacy states so an unexpected value never crashes the row.
+  const stateConfig =
+    WORKFLOW_STATES[state as keyof typeof WORKFLOW_STATES] ?? WORKFLOW_STATES.draft
   return (
     <div className="flex items-center gap-2">
       <span
@@ -68,7 +74,7 @@ function WorkflowIndicator({ state }: { state: string }) {
             /* handle transition */
           }}
         >
-          <ChevronRight className="h-3 w-3" />
+          <ChevronRight className={`h-3 w-3 ${isRTL ? 'rotate-180' : ''}`} />
           {t(`mous.statuses.${stateConfig.next}`)}
         </Button>
       )}
@@ -81,7 +87,11 @@ export function MousPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterState, setFilterState] = useState<string>('all')
   const { isRTL } = useDirection()
-  const { data: mous, isLoading } = useQuery({
+  const {
+    data: mous,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ['mous', searchTerm, filterState],
     queryFn: async () => {
       let query = supabase
@@ -218,7 +228,7 @@ export function MousPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {mous?.filter((m) => m.workflow_state === 'active').length || 0}
+              {mous?.filter((m) => ['active', 'signed'].includes(m.workflow_state)).length || 0}
             </div>
           </CardContent>
         </Card>
@@ -245,9 +255,8 @@ export function MousPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {mous?.filter((m) =>
-                ['internal_review', 'external_review', 'negotiation'].includes(m.workflow_state),
-              ).length || 0}
+              {mous?.filter((m) => ['negotiation', 'pending_approval'].includes(m.workflow_state))
+                .length || 0}
             </div>
           </CardContent>
         </Card>
@@ -292,6 +301,10 @@ export function MousPage() {
         <CardContent className="p-0">
           {isLoading ? (
             <div className="p-8 text-center">{t('common.loading')}</div>
+          ) : isError ? (
+            <div className="p-8 text-center text-destructive" role="alert">
+              {t('common.error', { defaultValue: 'Failed to load MoUs' })}
+            </div>
           ) : mous && mous.length > 0 ? (
             <DataTable
               data={mous}

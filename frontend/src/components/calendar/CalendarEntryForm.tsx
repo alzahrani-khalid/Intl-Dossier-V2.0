@@ -338,7 +338,9 @@ export function CalendarEntryForm({
 
     const eventData: CalendarEventFormInput = {
       entry_type: entryType,
-      title_en: titleEn || undefined,
+      // title_en is NOT NULL in calendar_entries; fall back to the Arabic title so
+      // Arabic-first analysts can save an entry with only title_ar filled.
+      title_en: titleEn || titleAr || undefined,
       title_ar: titleAr || undefined,
       description_en: descriptionEn || undefined,
       description_ar: descriptionAr || undefined,

@@ -34,7 +34,7 @@ async function fetchApprovals(positionId: string) {
   const {
     data: { session },
   } = await supabase.auth.getSession()
-  const response = await fetch(`${API_BASE_URL}/positions-get?id=${positionId}`, {
+  const response = await fetch(`${API_BASE_URL}/positions-get?position_id=${positionId}`, {
     headers: {
       Authorization: `Bearer ${session?.access_token}`,
       'Content-Type': 'application/json',
@@ -92,14 +92,14 @@ function ApprovalTrackingPage() {
           </Button>
         </Link>
         <h1 className="text-3xl font-bold">
-          {t('positions.approvals.title', 'Approval Tracking')}
+          {t('positions:approvals.title', 'Approval Tracking')}
         </h1>
       </div>
 
       {/* Approval Chain Visualization */}
       <Card className="p-6">
         <h2 className="text-xl font-semibold mb-4">
-          {t('positions.approvals.progress', 'Approval Progress')}
+          {t('positions:approvals.progress', 'Approval Progress')}
         </h2>
         <ApprovalChain
           approvalChainConfig={position?.approval_chain_config || { stages: [] }}
@@ -112,18 +112,18 @@ function ApprovalTrackingPage() {
       {/* Approval History Table */}
       <Card className="p-6">
         <h2 className="text-xl font-semibold mb-4">
-          {t('positions.approvals.history', 'Approval History')}
+          {t('positions:approvals.history', 'Approval History')}
         </h2>
 
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>{t('positions.approvals.stage', 'Stage')}</TableHead>
-              <TableHead>{t('positions.approvals.approver', 'Approver')}</TableHead>
-              <TableHead>{t('positions.approvals.action', 'Action')}</TableHead>
-              <TableHead>{t('positions.approvals.stepUp', 'Step-Up Verified')}</TableHead>
-              <TableHead>{t('positions.approvals.comments', 'Comments')}</TableHead>
-              <TableHead>{t('positions.approvals.timestamp', 'Timestamp')}</TableHead>
+              <TableHead>{t('positions:approvals.stage', 'Stage')}</TableHead>
+              <TableHead>{t('positions:approvals.approver', 'Approver')}</TableHead>
+              <TableHead>{t('positions:approvals.action', 'Action')}</TableHead>
+              <TableHead>{t('positions:approvals.stepUp', 'Step-Up Verified')}</TableHead>
+              <TableHead>{t('positions:approvals.comments', 'Comments')}</TableHead>
+              <TableHead>{t('positions:approvals.timestamp', 'Timestamp')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -139,7 +139,7 @@ function ApprovalTrackingPage() {
                     </span>
                     {approval.delegated_from && (
                       <span className="text-xs text-muted-foreground">
-                        {t('positions.approvals.delegatedFrom', 'Delegated from')}:{' '}
+                        {t('positions:approvals.delegatedFrom', 'Delegated from')}:{' '}
                         {approval.delegated_from}
                       </span>
                     )}

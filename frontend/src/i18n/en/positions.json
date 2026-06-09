@@ -245,7 +245,57 @@
   "attachments": "Attachments",
   "approvalChain": "Approval Progress",
   "versions": {
-    "description": "View version history and compare changes"
+    "description": "View version history and compare changes",
+    "title": "Version History",
+    "compare": "Compare Versions",
+    "selectTwo": "Select two versions to compare",
+    "version": "Version",
+    "current": "Current",
+    "comparing": "Comparing versions"
+  },
+  "versionComparison": {
+    "title": "Compare Versions",
+    "fromVersion": "From Version",
+    "toVersion": "To Version",
+    "selectVersion": "Select version",
+    "compare": "Compare",
+    "sameVersionError": "Please select two different versions to compare.",
+    "error": "Failed to load version comparison.",
+    "added": "Added",
+    "removed": "Removed",
+    "contentChanges": "Content changes",
+    "englishVersion": "English",
+    "arabicVersion": "Arabic",
+    "noChanges": "No changes",
+    "metadataChanges": "Metadata changes",
+    "field": "Field",
+    "oldValue": "Old value",
+    "newValue": "New value",
+    "noChangesBetweenVersions": "No changes between the selected versions."
+  },
+  "fields": {
+    "status": "Status",
+    "thematic_category": "Thematic category",
+    "priority": "Priority",
+    "position_type_id": "Position type",
+    "title_en": "Title (English)",
+    "title_ar": "Title (Arabic)",
+    "content_en": "Content (English)",
+    "content_ar": "Content (Arabic)",
+    "rationale_en": "Rationale (English)",
+    "rationale_ar": "Rationale (Arabic)"
+  },
+  "approvals": {
+    "title": "Approval Tracking",
+    "progress": "Approval Progress",
+    "history": "Approval History",
+    "stage": "Stage",
+    "approver": "Approver",
+    "action": "Action",
+    "stepUp": "Step-Up Verified",
+    "comments": "Comments",
+    "timestamp": "Timestamp",
+    "delegatedFrom": "Delegated from"
   },
   "loading": "Loading positions...",
   "type": {

@@ -54,12 +54,17 @@ import { useCreateCalendarEvent } from '@/hooks/useCreateCalendarEvent'
 import { useCreateRelationship } from '@/hooks/useCreateRelationship'
 import { useGenerateBrief } from '@/hooks/useGenerateBrief'
 import { useUploadDocument } from '@/hooks/useUploadDocument'
-import { useCreateWorkItemDossierLinks } from '@/hooks/useCreateWorkItemDossierLinks'
+import { useQueryClient } from '@tanstack/react-query'
+import {
+  useCreateWorkItemDossierLinks,
+  workItemDossierKeys,
+} from '@/hooks/useCreateWorkItemDossierLinks'
 import type { CreateWorkItemDossierLinksRequest } from '@/hooks/useCreateWorkItemDossierLinks'
 import type { Dossier } from '@/lib/dossier-type-guards'
 import type { ActionDialogState, DossierContextForAction } from '@/hooks/useAddToDossierActions'
 import type { AddToDossierActionType } from './AddToDossierMenu'
 import { useDirection } from '@/hooks/useDirection'
+import { UserPicker } from '@/components/forms/UserPicker'
 
 // =============================================================================
 // Types
@@ -292,7 +297,7 @@ function IntakeDialog({
             </Button>
             <Button type="submit" disabled={isSubmitting || !title} className="min-h-11">
               {isSubmitting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
-              {t('form.create')}
+              {t('addToDossier.form.submit.intake')}
             </Button>
           </DialogFooter>
         </form>
@@ -315,8 +320,10 @@ function TaskDialog({
   const { t } = useTranslation('dossier')
   const [title, setTitle] = React.useState('')
   const [description, setDescription] = React.useState('')
+  const [assigneeId, setAssigneeId] = React.useState('')
   const [priority, setPriority] = React.useState<string>('medium')
 
+  const queryClient = useQueryClient()
   const createTask = useCreateTask()
   const createLinks = useCreateWorkItemDossierLinks()
 
@@ -325,21 +332,29 @@ function TaskDialog({
   const resetForm = () => {
     setTitle('')
     setDescription('')
+    setAssigneeId('')
     setPriority('medium')
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!assigneeId) return
     try {
       const result = await createTask.mutateAsync({
         title,
         description,
-        assignee_id: '', // Will be assigned by the system or later
+        assignee_id: assigneeId,
         priority: priority as 'low' | 'medium' | 'high' | 'urgent',
       })
 
       if (result?.id) {
         await createLinks.mutateAsync(buildDossierLinkPayload('task', result.id, dossierContext))
+        await queryClient.invalidateQueries({
+          queryKey: ['dossier-tab', 'work_items', dossierContext.dossier_id],
+        })
+        await queryClient.invalidateQueries({
+          queryKey: workItemDossierKeys.timeline(dossierContext.dossier_id),
+        })
       }
 
       toast.success(t('addToDossier.success.task'))
@@ -366,25 +381,36 @@ function TaskDialog({
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="task-title">{t('form.nameEn')}</Label>
+              <Label htmlFor="task-title">{t('addToDossier.form.taskTitle')}</Label>
               <Input
                 id="task-title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder={t('form.nameEnPlaceholder')}
+                placeholder={t('addToDossier.form.taskTitlePlaceholder')}
                 required
                 className="min-h-11"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="task-description">{t('form.descriptionEn')}</Label>
+              <Label htmlFor="task-description">{t('addToDossier.form.taskDescription')}</Label>
               <Textarea
                 id="task-description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder={t('form.descriptionEnPlaceholder')}
+                placeholder={t('addToDossier.form.taskDescriptionPlaceholder')}
                 rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <UserPicker
+                value={assigneeId}
+                onChange={(userId) => setAssigneeId(userId ?? '')}
+                label={t('addToDossier.form.assignee')}
+                placeholder={t('addToDossier.form.assigneePlaceholder')}
+                required
+                className="min-h-11"
               />
             </div>
 
@@ -406,9 +432,13 @@ function TaskDialog({
             <Button type="button" variant="outline" onClick={onClose} className="min-h-11">
               {t('action.cancel')}
             </Button>
-            <Button type="submit" disabled={isSubmitting || !title} className="min-h-11">
+            <Button
+              type="submit"
+              disabled={isSubmitting || !title || !assigneeId}
+              className="min-h-11"
+            >
               {isSubmitting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
-              {t('form.create')}
+              {t('addToDossier.form.submit.task')}
             </Button>
           </DialogFooter>
         </form>
@@ -543,7 +573,7 @@ function CommitmentDialog({
               className="min-h-11"
             >
               {isSubmitting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
-              {t('form.create')}
+              {t('addToDossier.form.submit.commitment')}
             </Button>
           </DialogFooter>
         </form>
@@ -640,7 +670,7 @@ function PositionDialog({
             </Button>
             <Button type="submit" disabled={isSubmitting || !title} className="min-h-11">
               {isSubmitting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
-              {t('form.create')}
+              {t('addToDossier.form.submit.position')}
             </Button>
           </DialogFooter>
         </form>
@@ -766,7 +796,7 @@ function EventDialog({
             </Button>
             <Button type="submit" disabled={isSubmitting || !title || !date} className="min-h-11">
               {isSubmitting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
-              {t('form.create')}
+              {t('addToDossier.form.submit.event')}
             </Button>
           </DialogFooter>
         </form>
@@ -877,7 +907,7 @@ function RelationshipDialog({
             </Button>
             <Button type="submit" disabled={isSubmitting || !targetDossierId} className="min-h-11">
               {isSubmitting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
-              {t('form.create')}
+              {t('addToDossier.form.submit.relationship')}
             </Button>
           </DialogFooter>
         </form>
@@ -1098,7 +1128,7 @@ export function AddToDossierDialogs({
   dossierContext,
 }: AddToDossierDialogsProps) {
   const { isRTL } = useDirection()
-const commonProps = {
+  const commonProps = {
     dossier,
     dossierContext,
     isRTL,

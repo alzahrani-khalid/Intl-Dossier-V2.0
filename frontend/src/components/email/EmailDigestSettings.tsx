@@ -91,9 +91,9 @@ export function EmailDigestSettings() {
         .from('email_notification_preferences')
         .select('*')
         .eq('user_id', user.id)
-        .single()
+        .maybeSingle()
 
-      if (error && error.code !== 'PGRST116') throw error
+      if (error) throw error
       return data
     },
   })
@@ -153,11 +153,14 @@ export function EmailDigestSettings() {
       } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
 
-      const { error } = await supabase.from('email_notification_preferences').upsert({
-        user_id: user.id,
-        ...values,
-        updated_at: new Date().toISOString(),
-      })
+      const { error } = await supabase.from('email_notification_preferences').upsert(
+        {
+          user_id: user.id,
+          ...values,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'user_id' },
+      )
 
       if (error) throw error
     },

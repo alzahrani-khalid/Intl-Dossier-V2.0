@@ -20,6 +20,7 @@ import { WorkspaceTabNav } from '@/components/workspace/WorkspaceTabNav'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
+import { ENGAGEMENT_TYPE_LABELS } from '@/types/engagement.types'
 
 // ============================================================================
 // Props
@@ -78,7 +79,8 @@ export function WorkspaceShell({ engagementId, children }: WorkspaceShellProps):
                 <h1 className="truncate text-2xl sm:text-3xl font-semibold">{displayName}</h1>
                 {engagement?.engagement_type != null && (
                   <span className="inline-block mt-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-                    {engagement.engagement_type}
+                    {ENGAGEMENT_TYPE_LABELS[engagement.engagement_type]?.[isRTL ? 'ar' : 'en'] ??
+                      engagement.engagement_type}
                   </span>
                 )}
               </>
@@ -101,10 +103,7 @@ export function WorkspaceShell({ engagementId, children }: WorkspaceShellProps):
               className="min-h-11 min-w-11 text-xs sm:text-sm"
               asChild
             >
-              <Link
-                to="/engagements/$engagementId/after-action"
-                params={{ engagementId }}
-              >
+              <Link to="/engagements/$engagementId/after-action" params={{ engagementId }}>
                 {t('actions.logAfterAction')}
               </Link>
             </Button>
@@ -128,14 +127,10 @@ export function WorkspaceShell({ engagementId, children }: WorkspaceShellProps):
       </div>
 
       {/* Tab navigation — hidden on after-action */}
-      {!isAfterAction && (
-        <WorkspaceTabNav engagementId={engagementId} />
-      )}
+      {!isAfterAction && <WorkspaceTabNav engagementId={engagementId} />}
 
       {/* Content area */}
-      <main className="flex-1 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        {children}
-      </main>
+      <main className="flex-1 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">{children}</main>
     </div>
   )
 }

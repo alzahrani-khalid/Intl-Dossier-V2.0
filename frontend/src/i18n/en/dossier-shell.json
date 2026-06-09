@@ -72,5 +72,8 @@
   },
   "error": {
     "loadFailed": "Failed to load dossier data. Check your connection and try again."
+  },
+  "emptyState": {
+    "comingSoon": "Content coming soon"
   }
 }
