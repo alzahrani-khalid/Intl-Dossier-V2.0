@@ -1052,6 +1052,17 @@
       "title": "Key Representatives",
       "empty": "No representatives linked",
       "total": "{{count}} representatives total"
+    },
+    "forum": {
+      "title": "Forum Details",
+      "type": "Forum Type",
+      "frequency": "Frequency",
+      "host": "Host Organization",
+      "participants": "Participants"
+    },
+    "sessions": {
+      "title": "Sessions",
+      "empty": "No sessions recorded"
     }
   },
   "analytics": {
