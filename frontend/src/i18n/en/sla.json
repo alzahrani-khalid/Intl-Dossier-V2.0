@@ -166,7 +166,11 @@
     "saving": "Saving...",
     "delete": "Delete",
     "edit": "Edit",
-    "view": "View"
+    "view": "View",
+    "status": "Status",
+    "actions": "Actions",
+    "active": "Active",
+    "inactive": "Inactive"
   },
 
   "tabs": {

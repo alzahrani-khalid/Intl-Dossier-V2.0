@@ -116,10 +116,13 @@ export function SLAAtRiskList({
                   <div
                     key={item.entity_id}
                     className={cn(
-                      'border rounded-lg p-4 transition-colors cursor-pointer hover:bg-muted/50',
+                      'border rounded-lg p-4 transition-colors',
+                      // Click affordances only when a handler is actually wired
+                      // (the /sla-monitoring mount passes none — inspection #7)
+                      onItemClick && 'cursor-pointer hover:bg-muted/50',
                       isBreached && 'border-danger/30 bg-danger/10',
                     )}
-                    onClick={() => onItemClick?.(item)}
+                    onClick={onItemClick ? () => onItemClick(item) : undefined}
                   >
                     <div className="flex items-start justify-between gap-4 mb-3">
                       <div className="flex-1 min-w-0">
@@ -131,9 +134,11 @@ export function SLAAtRiskList({
                           <Badge variant="secondary">{item.status}</Badge>
                         </div>
                       </div>
-                      <Button variant="ghost" size="icon" className="shrink-0">
-                        <ExternalLink className="h-4 w-4" />
-                      </Button>
+                      {onItemClick && (
+                        <Button variant="ghost" size="icon" className="shrink-0">
+                          <ExternalLink className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
 
                     <div className="space-y-2">

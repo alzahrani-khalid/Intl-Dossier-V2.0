@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUNDS 1-4 COMPLETE (2026-06-10). Round 4: word-assistant+export, tags, events, task-queue/escalations — all inspected + bucket-A fixed + committed. Remaining uninspected active-Sidebar surfaces for a possible round 5: sla-monitoring, my-work, activity, audit-logs, approvals(list). NOTE: cursor-agent quota resets 6/27; codex CLI substituted from briefing-books onward. PROCESS RULE since 43ef442a incident: every commit verified via direct pnpm --filter intake-frontend build.",
+  "status": "ROUND 5 in progress (2026-06-10). Done: sla-monitoring. Current: my-work (codex inspection running). Queue after: activity, audit-logs, approvals(list). Rounds 1-4 complete. NOTE: cursor-agent quota resets 6/27; codex CLI substituted. PROCESS RULE since 43ef442a incident: every commit verified via direct pnpm --filter intake-frontend build.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -150,12 +150,16 @@
   ],
   "round3_queue": [],
   "round4_queue": [],
-  "round5_candidates": [
-    "sla-monitoring",
-    "my-work",
-    "activity",
-    "audit-logs",
-    "approvals (list page)"
+  "round5_queue": ["my-work (in progress)", "activity", "audit-logs", "approvals (list page)"],
+  "round5_done": [
+    {
+      "type": "sla-monitoring",
+      "report": "reports/sla-monitoring-workflow-inspection-2026-06-10.md",
+      "inspector": "codex",
+      "findings": 9,
+      "fixed": "3 bucket-A: #6 sla.common.{status,actions,active,inactive} added EN+AR (policy table leaked raw keys), #7 at-risk card click affordances + external-link icon now conditional on onItemClick (page passes none — was fake-clickable), #9 compliance chart 4x #22c55e -> var(--heroui-success)",
+      "escalated": "B-bucket: #1 CRITICAL sla_escalations has NO writer in source (UI reads/acks/resolves rows nothing creates; cron paths write escalation_events/sla_events instead — VERIFY vs live), #2 four dashboard RPCs migration-only, absent from generated types (VERIFY vs live deploy), #3 metrics SQL is ticket-only while UI advertises ticket/commitment/task, #4 assignee/at-risk RPCs join staff_profiles.full_name which doesn't exist in generated schema, #5 policy enum drift (priority critical/normal + request_type dossier missing from form+i18n), #8 not in active Sidebar (after origin fixed)"
+    }
   ],
   "round4_done": [
     {
