@@ -53,7 +53,9 @@ describe('personSchema — Phase 32 identity rules (D-25)', () => {
     if (!result.success) {
       const issue = result.error.issues.find((i) => i.path.join('.') === 'nationality_id')
       expect(issue).toBeDefined()
-      expect(issue?.message).toBe('nationality_required')
+      expect(issue?.message).toBe(
+        'form-wizard:wizard.person_identity.validation.nationality_required',
+      )
     }
   })
 
@@ -63,7 +65,9 @@ describe('personSchema — Phase 32 identity rules (D-25)', () => {
     if (!result.success) {
       const issue = result.error.issues.find((i) => i.path.join('.') === 'last_name_en')
       expect(issue).toBeDefined()
-      expect(issue?.message).toBe('last_name_required')
+      expect(issue?.message).toBe(
+        'form-wizard:wizard.person_identity.validation.last_name_required',
+      )
     }
   })
 
@@ -73,7 +77,9 @@ describe('personSchema — Phase 32 identity rules (D-25)', () => {
     if (!result.success) {
       const issue = result.error.issues.find((i) => i.path.join('.') === 'last_name_ar')
       expect(issue).toBeDefined()
-      expect(issue?.message).toBe('last_name_required')
+      expect(issue?.message).toBe(
+        'form-wizard:wizard.person_identity.validation.last_name_required',
+      )
     }
   })
 
@@ -128,7 +134,9 @@ describe('personSchema — Phase 32 identity rules (D-25)', () => {
     if (!result.success) {
       const issue = result.error.issues.find((i) => i.path.join('.') === 'honorific_en')
       expect(issue).toBeDefined()
-      expect(issue?.message).toBe('honorific_other_required')
+      expect(issue?.message).toBe(
+        'form-wizard:wizard.person_identity.validation.honorific_other_required',
+      )
     }
   })
 
@@ -143,7 +151,9 @@ describe('personSchema — Phase 32 identity rules (D-25)', () => {
     if (!result.success) {
       const issue = result.error.issues.find((i) => i.path.join('.') === 'honorific_ar')
       expect(issue).toBeDefined()
-      expect(issue?.message).toBe('honorific_other_required')
+      expect(issue?.message).toBe(
+        'form-wizard:wizard.person_identity.validation.honorific_other_required',
+      )
     }
   })
 
@@ -165,7 +175,9 @@ describe('personSchema — Phase 32 identity rules (D-25)', () => {
     expect(result.success).toBe(false)
     if (!result.success) {
       const issue = result.error.issues.find((i) => i.path.join('.') === 'last_name_en')
-      expect(issue?.message).toBe('last_name_required')
+      expect(issue?.message).toBe(
+        'form-wizard:wizard.person_identity.validation.last_name_required',
+      )
     }
   })
 })

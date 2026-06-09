@@ -12,11 +12,17 @@ vi.mock('react-i18next', () => ({
       if (k === 'working-groups:title') return 'Working Groups'
       if (k === 'working-groups:subtitle') return 'Committees and task forces'
       if (k === 'working-groups:empty.title') return 'No working groups yet'
-      if (k === 'working-groups:empty.description') return 'Working group dossiers will appear here.'
+      if (k === 'working-groups:empty.description')
+        return 'Working group dossiers will appear here.'
       if (k === 'working-groups:status.active') return 'Active'
       if (k === 'working-groups:status.completed') return 'Completed'
-      if (k === 'working-groups:status.on_hold') return 'On hold'
-      if (opts && typeof opts === 'object' && 'defaultValue' in opts && typeof opts.defaultValue === 'string') {
+      if (k === 'working-groups:status.suspended') return 'Suspended'
+      if (
+        opts &&
+        typeof opts === 'object' &&
+        'defaultValue' in opts &&
+        typeof opts.defaultValue === 'string'
+      ) {
         return opts.defaultValue
       }
       return k
@@ -39,7 +45,7 @@ vi.mock('@/hooks/useWorkingGroups', () => ({
         id: string
         name_en: string
         name_ar: string
-        status: 'active' | 'completed' | 'on_hold'
+        status: 'active' | 'suspended' | 'disbanded'
         updated_at: string
       }>
       pagination: { page: number; limit: number; total: number; totalPages: number }
@@ -59,7 +65,7 @@ vi.mock('@/hooks/useWorkingGroups', () => ({
           id: 'wg2',
           name_en: 'Trade Sanctions WG',
           name_ar: 'فريق العقوبات التجارية',
-          status: 'on_hold',
+          status: 'suspended',
           updated_at: '2026-03-01T00:00:00Z',
         },
       ],
@@ -77,27 +83,25 @@ vi.mock('@/components/signature-visuals', () => ({
 
 describe('WorkingGroupsListPage', () => {
   it('renders the Working Groups title', () => {
-    render(
-      <WorkingGroupsListPage page={1} onItemNavigate={(): void => undefined} />,
-    )
+    render(<WorkingGroupsListPage page={1} onItemNavigate={(): void => undefined} />)
     expect(screen.getByText('Working Groups')).toBeTruthy()
   })
 
   it('renders one row per working group with correct status chips', () => {
-    render(
-      <WorkingGroupsListPage page={1} onItemNavigate={(): void => undefined} />,
-    )
+    render(<WorkingGroupsListPage page={1} onItemNavigate={(): void => undefined} />)
 
     const rows = screen.getAllByTestId('generic-list-page-row')
     expect(rows.length).toBe(2)
 
     // Active → chip-ok
-    const activeRow = screen.getByText('AI Ethics WG').closest('[data-testid="generic-list-page-row"]')
+    const activeRow = screen
+      .getByText('AI Ethics WG')
+      .closest('[data-testid="generic-list-page-row"]')
     expect(activeRow).toBeTruthy()
     const activeChip = activeRow?.querySelector('[data-testid="generic-list-page-status"]')
     expect(activeChip?.className).toContain('chip-ok')
 
-    // on_hold → chip-warn
+    // suspended → chip-warn
     const onHoldRow = screen
       .getByText('Trade Sanctions WG')
       .closest('[data-testid="generic-list-page-row"]')
@@ -107,9 +111,7 @@ describe('WorkingGroupsListPage', () => {
   })
 
   it('renders glyph with type=working_group for each row', () => {
-    render(
-      <WorkingGroupsListPage page={1} onItemNavigate={(): void => undefined} />,
-    )
+    render(<WorkingGroupsListPage page={1} onItemNavigate={(): void => undefined} />)
     const glyphs = screen.getAllByTestId('glyph-working_group')
     expect(glyphs.length).toBe(2)
   })
