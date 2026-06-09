@@ -24,7 +24,7 @@ let currentLang = 'en'
 
 vi.mock('react-i18next', () => ({
   useTranslation: (): { t: (k: string) => string; i18n: { language: string } } => ({
-    t: (key: string): string => key,
+    t: (key: string): string => (key === 'card.overdue' ? 'Overdue' : key),
     i18n: { language: currentLang },
   }),
 }))

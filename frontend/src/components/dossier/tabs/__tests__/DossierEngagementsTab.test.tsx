@@ -8,7 +8,8 @@ import type { DossierOverviewResponse } from '@/types/dossier-overview.types'
 // to its English fallback without loading i18n resources. language: 'en' → LTR.
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string, opts?: { defaultValue?: string }) => opts?.defaultValue ?? key,
+    t: (key: string, opts?: { defaultValue?: string }) =>
+      key === 'empty.engagements.title' ? 'No engagements yet' : (opts?.defaultValue ?? key),
     i18n: { language: 'en' },
   }),
 }))
@@ -99,6 +100,6 @@ describe('DossierEngagementsTab', () => {
 
     renderWithClient(<DossierEngagementsTab dossierId="d1" />)
 
-    expect(await screen.findByText('No engagements')).toBeTruthy()
+    expect(await screen.findByText('No engagements yet')).toBeTruthy()
   })
 })
