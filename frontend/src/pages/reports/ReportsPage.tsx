@@ -51,9 +51,9 @@ export function ReportsPage() {
           label: t('reports.parameters.country'),
           options: [
             { value: 'all', label: t('common.all') },
-            { value: 'sa', label: 'Saudi Arabia' },
-            { value: 'ae', label: 'UAE' },
-            { value: 'eg', label: 'Egypt' },
+            { value: 'sa', label: t('reports.parameters.countries.sa') },
+            { value: 'ae', label: t('reports.parameters.countries.ae') },
+            { value: 'eg', label: t('reports.parameters.countries.eg') },
           ],
         },
         {
@@ -123,8 +123,8 @@ export function ReportsPage() {
           label: t('reports.parameters.confidenceLevel'),
           options: [
             { value: 'all', label: t('common.all') },
-            { value: 'high', label: t('intelligence.confidence.high') },
-            { value: 'verified', label: t('intelligence.confidence.verified') },
+            { value: 'high', label: t('intelligence.confidenceLevels.high') },
+            { value: 'verified', label: t('intelligence.confidenceLevels.verified') },
           ],
         },
         {
@@ -132,8 +132,8 @@ export function ReportsPage() {
           type: 'select',
           label: t('reports.parameters.classification'),
           options: [
-            { value: 'public', label: t('intelligence.classification.public') },
-            { value: 'internal', label: t('intelligence.classification.internal') },
+            { value: 'public', label: t('intelligence.classifications.public') },
+            { value: 'internal', label: t('intelligence.classifications.internal') },
           ],
         },
       ],
@@ -237,7 +237,7 @@ export function ReportsPage() {
                 {reportTemplates.map((template) => (
                   <Card
                     key={template.id}
-                    className={`cursor-pointer transition-all hover:shadow-md ${
+                    className={`cursor-pointer transition-colors hover:border-accent ${
                       selectedTemplate === template.id ? 'ring-2 ring-primary' : ''
                     }`}
                     onClick={() => {

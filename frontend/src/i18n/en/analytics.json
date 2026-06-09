@@ -118,11 +118,6 @@
       "critical": "Critical",
       "unknown": "Unknown"
     },
-    "trends": {
-      "improving": "Improving",
-      "stable": "Stable",
-      "declining": "Declining"
-    },
     "noData": "No relationship health data available"
   },
 

@@ -158,6 +158,7 @@
     "organizations": "Organizations",
     "countries": "Countries",
     "reports": "Reports",
+    "scheduledReports": "Scheduled reports",
     "analytics": "Analytics",
     "monitoring": "Monitoring",
     "export": "Export",
@@ -415,6 +416,11 @@
     "selectTemplateDesc": "Choose a report template to generate",
     "parameters": {
       "country": "Country",
+      "countries": {
+        "sa": "Saudi Arabia",
+        "ae": "United Arab Emirates",
+        "eg": "Egypt"
+      },
       "dateRange": "Date Range",
       "status": "Status",
       "includeExpiring": "Include Expiring Soon",
@@ -424,6 +430,7 @@
       "organization": "Organization",
       "reportPeriod": "Report Period"
     },
+    "parametersTitle": "Report parameters",
     "parametersDesc": "Configure report parameters",
     "format": "Format",
     "generateReport": "Generate Report",

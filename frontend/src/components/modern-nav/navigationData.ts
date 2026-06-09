@@ -236,6 +236,13 @@ export const navigationCategories: NavigationCategory[] = [
         path: '/reports',
       },
       {
+        id: 'scheduled-reports',
+        label: 'Scheduled Reports',
+        labelKey: 'navigation.scheduledReports',
+        icon: CalendarDays,
+        path: '/reports/scheduled',
+      },
+      {
         id: 'analytics',
         label: 'Analytics',
         labelKey: 'navigation.analytics',
@@ -333,4 +340,3 @@ export const navigationCategories: NavigationCategory[] = [
 export function getNavigationCategory(id: string): NavigationCategory | undefined {
   return navigationCategories.find((cat) => cat.id === id)
 }
-

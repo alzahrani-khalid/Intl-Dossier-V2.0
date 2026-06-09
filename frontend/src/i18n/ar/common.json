@@ -158,6 +158,7 @@
     "organizations": "المنظمات",
     "countries": "البلدان",
     "reports": "التقارير",
+    "scheduledReports": "التقارير المجدولة",
     "analytics": "التحليلات",
     "monitoring": "المراقبة",
     "export": "التصدير",
@@ -415,6 +416,11 @@
     "selectTemplateDesc": "اختر قالب تقرير لإنشائه",
     "parameters": {
       "country": "البلد",
+      "countries": {
+        "sa": "المملكة العربية السعودية",
+        "ae": "الإمارات العربية المتحدة",
+        "eg": "مصر"
+      },
       "dateRange": "نطاق التاريخ",
       "status": "الحالة",
       "includeExpiring": "تضمين التي تنتهي قريباً",
@@ -424,6 +430,7 @@
       "organization": "المنظمة",
       "reportPeriod": "فترة التقرير"
     },
+    "parametersTitle": "معاملات التقرير",
     "parametersDesc": "تكوين معاملات التقرير",
     "format": "الصيغة",
     "generateReport": "إنشاء التقرير",
