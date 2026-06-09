@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUND 5 in progress (2026-06-10). Done: sla-monitoring, my-work, activity, audit-logs. Current: approvals(list) — FINAL round-5 item (codex inspection running). Rounds 1-4 complete. NOTE: cursor-agent quota resets 6/27; codex CLI substituted. PROCESS RULE since 43ef442a incident: every commit verified via direct pnpm --filter intake-frontend build.",
+  "status": "ROUNDS 1-5 COMPLETE (2026-06-10). Every nav-reachable surface inspected: 8 dossier types (r1), 10 feature workflows (r2), 6 new surfaces (r3), 4 dormant/secondary surfaces (r4), 5 operations/admin surfaces (r5). NEXT: consolidate the cross-round escalated B-bucket backlog into an updated reports/escalated-backlog-master + propose GSD phases to the user. NOTE: cursor-agent quota resets 6/27; codex CLI substituted from briefing-books onward. PROCESS RULE since 43ef442a incident: every commit verified via direct pnpm --filter intake-frontend build.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -150,8 +150,17 @@
   ],
   "round3_queue": [],
   "round4_queue": [],
-  "round5_queue": ["approvals (list page) — FINAL (in progress)"],
+  "round5_queue": [],
   "round5_done": [
+    {
+      "type": "approvals (list page /approvals — FINAL round-5)",
+      "report": "reports/approvals-workflow-inspection-2026-06-10.md",
+      "inspector": "codex",
+      "prev_commit_for_audit_logs": "682ed488",
+      "findings": 6,
+      "fixed": "2 bucket-A: #4 honest UI — All/Pending/Completed filter badges removed (fetch fixed to under_review; filter never reached it) + Approved-This-Month/Returned stat cards removed (both hardcoded 0; real Pending count kept), #5 NEW approvals namespace created+registered EN+AR (page had NO Arabic — default-ns keys with English defaultValues) + locale-aware date. SKIPPED #3 deliberately: zero badge renders nothing today (real fix = B#1 count endpoint)",
+      "escalated": "B-bucket: #1 'My Approvals' is NOT a current-user queue (generic positions-list?status=under_review; no approver/stage/user param; RLS checks approvals.approver_id but positions-submit never creates assignment rows — VERIFY vs live), #2 no approve/request-revisions/delegate actions or StepUpMFA mounted (edge fns exist unwired), #3 counts.approvals hardcoded 0 in SECTION_BADGE_COUNTS, #6 approval-adjacent schema split (approvals audit vs pending_role_approvals ungenerated vs position_delegations ungenerated)"
+    },
     {
       "type": "audit-logs (admin viewer)",
       "report": "reports/audit-logs-workflow-inspection-2026-06-10.md",

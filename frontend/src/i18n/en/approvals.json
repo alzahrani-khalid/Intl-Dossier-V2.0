@@ -1,0 +1,11 @@
+{
+  "myApprovals": "My Approvals",
+  "subtitle": "Positions pending your review and approval",
+  "stats": {
+    "pending": "Pending"
+  },
+  "stage": "Stage",
+  "submittedBy": "Submitted by",
+  "uncategorized": "Uncategorized",
+  "noPositions": "No positions pending your approval"
+}

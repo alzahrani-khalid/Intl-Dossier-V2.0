@@ -44,6 +44,8 @@ import enAdvancedSearch from './en/advanced-search.json'
 import arAdvancedSearch from './ar/advanced-search.json'
 import enAuditLogs from './en/audit-logs.json'
 import arAuditLogs from './ar/audit-logs.json'
+import enApprovals from './en/approvals.json'
+import arApprovals from './ar/approvals.json'
 import enBulkActions from './en/bulk-actions.json'
 import arBulkActions from './ar/bulk-actions.json'
 import enDashboardWidgets from './en/dashboard-widgets.json'
@@ -275,6 +277,7 @@ const resources = {
     relationships: enRelationships,
     'advanced-search': enAdvancedSearch,
     'audit-logs': enAuditLogs,
+    approvals: enApprovals,
     'bulk-actions': enBulkActions,
     'dashboard-widgets': enDashboardWidgets,
     dashboard: enDashboard,
@@ -401,6 +404,7 @@ const resources = {
     relationships: arRelationships,
     'advanced-search': arAdvancedSearch,
     'audit-logs': arAuditLogs,
+    approvals: arApprovals,
     'bulk-actions': arBulkActions,
     'dashboard-widgets': arDashboardWidgets,
     dashboard: arDashboard,
