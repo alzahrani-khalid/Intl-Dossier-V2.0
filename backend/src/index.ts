@@ -28,7 +28,7 @@ import {
 initSentry()
 
 const app = express()
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5001
 
 // Initialize cache metrics service
 cacheMetrics.initialize()

@@ -31,6 +31,9 @@
     "warning": "Warning",
     "info": "Information"
   },
+  "validation": {
+    "required": "Required field"
+  },
   "common": {
     "actions": {
       "previous": "Previous",
@@ -95,6 +98,10 @@
   "auth": {
     "signIn": "Sign In",
     "signUp": "Sign Up",
+    "createAccount": "Create account",
+    "fullName": "Full name",
+    "accountCreated": "Account created. Check your email to verify your account.",
+    "registrationFailed": "Registration failed",
     "email": "Email",
     "password": "Password",
     "showPassword": "Show password",

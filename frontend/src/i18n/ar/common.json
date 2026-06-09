@@ -31,6 +31,9 @@
     "warning": "تحذير",
     "info": "معلومات"
   },
+  "validation": {
+    "required": "حقل مطلوب"
+  },
   "common": {
     "actions": {
       "previous": "السابق",
@@ -95,6 +98,10 @@
   "auth": {
     "signIn": "تسجيل الدخول",
     "signUp": "إنشاء حساب",
+    "createAccount": "إنشاء حساب",
+    "fullName": "الاسم الكامل",
+    "accountCreated": "تم إنشاء الحساب. تحقق من بريدك الإلكتروني لتأكيد حسابك.",
+    "registrationFailed": "فشل إنشاء الحساب",
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
     "showPassword": "إظهار كلمة المرور",

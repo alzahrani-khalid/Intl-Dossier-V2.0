@@ -1,0 +1,164 @@
+{
+  "loop": "fanout-dossier-workflow-inspection",
+  "status": "RESUMED. Current: AI briefing generation workflow (last distinct workflow).",
+  "started": "2026-06-08",
+  "finished": "2026-06-09",
+  "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
+  "covered": [
+    "country",
+    "organization",
+    "forum",
+    "engagement",
+    "topic",
+    "working_group",
+    "person",
+    "elected_official"
+  ],
+  "queue": [],
+  "meta_observation": "Recurring architectural debt across forum/engagement/working_group/person/elected_official: overview cards read generic relationship/calendar/work-item data instead of dedicated entity tables; the rich section components live in dead, unrouted *DossierDetail wrappers; several fixes need edge-fn/RPC deploys. Safe auto-fix surface per workflow = mostly i18n + small data-contract/label fixes. Topic + organization were the cleanest. ALWAYS verify CRITICAL DB/RPC findings vs live SQL before acting (WG #1 was a false positive: stale migration file vs already-patched deployed RPC).",
+  "iterations": [
+    {
+      "type": "country",
+      "report": "reports/country-dossier-workflow-inspection-2026-06-08.md",
+      "status": "pre-existing"
+    },
+    {
+      "type": "organization",
+      "commit": "bb3d5b53",
+      "status": "done",
+      "findings": 14,
+      "fixed": "CRITICAL MoU lifecycle_state + 3 HIGH + soft-delete/status + RTL + i18n",
+      "note": "git-checkout mishap discarded prior uncommitted en/ar dossier.json delta (unrecoverable); user approved commit-and-continue"
+    },
+    {
+      "type": "forum",
+      "commit": "b3d50a1d",
+      "status": "partial-escalated",
+      "findings": 15,
+      "fixed": "2 i18n",
+      "escalated": "split session model (parent_forum_id written, never read) + 11 architectural"
+    },
+    {
+      "type": "engagement",
+      "commit": "e527d216",
+      "status": "partial-escalated",
+      "findings": 14,
+      "fixed": "1 label",
+      "escalated": "legacy engagements/assignments vs unified tables, dead components, edge-fn, i18n sweep"
+    },
+    {
+      "type": "topic",
+      "commit": "af68d942",
+      "status": "done",
+      "findings": 12,
+      "fixed": "6 incl shared fetchDocuments position embed (broke Docs tab for ALL types)",
+      "deferred": "attach no-op (bulk hook+test) + LOW"
+    },
+    {
+      "type": "working_group",
+      "commit": "74fddc18",
+      "status": "partial-escalated",
+      "findings": 15,
+      "fixed": "3 (update mapping, list wg_status, i18n)",
+      "false_positive": "#1 CRITICAL RPC summary_* (deployed RPC already correct)",
+      "escalated": "cards->WG tables, tabs, hooks"
+    },
+    {
+      "type": "person",
+      "commit": "f05851ad",
+      "status": "partial-escalated",
+      "findings": 17,
+      "fixed": "2 i18n",
+      "escalated": "unreachable sections, RPC/edge-fn deploys, overview plumbing"
+    },
+    {
+      "type": "elected_official",
+      "commit": "07a8b8e9",
+      "status": "partial-escalated",
+      "findings": 12,
+      "fixed": "CRITICAL detail-404 (backend unwrap + hook), pagination i18n",
+      "deferred_no_rpc": "#5 Arabic list columns (RPC lacks *_ar)",
+      "escalated": "unreachable sections, list count, analytics, dual routes"
+    }
+  ],
+  "escalated_backlog_summary": "Highest-value follow-ups requiring planned phases (not unattended auto-fix): (1) forum split session model + WG/forum overview cards wired to dedicated entity tables; (2) engagement legacy->unified table migration (after-action hook, kanban edge fn); (3) route the dead *DossierDetail section components (person/elected_official/forum) or delete them; (4) edge-fn/RPC: persons subtype filter, get_person_full engagement names, filtered pagination counts, EO list *_ar columns; (5) backend restart/redeploy needed for the EO detail-404 fix to take effect on staging.",
+  "round2_current": "ai-briefing",
+  "round2_done": [
+    {
+      "type": "dossier-create-edit (wizard)",
+      "commit": "b2cf9465",
+      "findings": 13,
+      "fixed": "5 (i18n ns, double toast, person validation keys, tags type, participant warning)",
+      "escalated": "#1 enable Zod validation (needs per-type runtime test), #2/#4 edit route+contract, #3 draft persist, legacy create paths"
+    },
+    {
+      "type": "work-items / unified kanban",
+      "commit": "9291ed61",
+      "findings": 9,
+      "fixed": "#1/#6 WorkBoard commitment column resolver + DnD, #3 KCard i18n",
+      "escalated": "#2 dossier intake fetch (latent), #4 AddToDossier invalidation (WIP file), #5 stale intake columns, #7 kanban migration drift, #9 board realtime"
+    },
+    {
+      "type": "intake / service-request",
+      "commit": "f1b241e4",
+      "findings": 17,
+      "fixed": "#2 convert id, #7 queue error state, #8/#16 queue badge i18n, #10 remove dossier convert option",
+      "escalated": "#1 close edge missing, #5 SLA RPCs, #6 attachments table, #11 NULL AR, #13 awaiting_info, #3/#14 latent intake column drift, #4/#9 triage casing"
+    },
+    {
+      "type": "positions / approval-chain",
+      "commit": "968378ba",
+      "findings": 30,
+      "fixed": "#1/#2/#3 CRITICAL editor+approvals contract (position_id in body/query), #10 ApprovalChain i18n double-prefix, #11 status filter enum",
+      "escalated": "#4-7 analytics/suggestions/briefing edge URL+parsing+columns, #8-9 approval action UI + history, #12 link_type CHECK, #16 reassign stub, + i18n/feature items"
+    },
+    {
+      "type": "calendar",
+      "commit": "bdbd1d98",
+      "findings": 19,
+      "fixed": "#1 grid mapper (empty grid), #2 entry_type filter param, #7 AR-only title save",
+      "escalated": "#4/#5/#6 parallel calendar_events stack (dossier overview/recurring/conflicts), #3/#11 unimplemented filters, #8 view modes, #9 mobile week sync"
+    },
+    {
+      "type": "relationships / network graph",
+      "commit": "4208c332",
+      "findings": 13,
+      "fixed": "#5 graph filter partnership, #6 sidebar error state, #7 empty-id rows, #8 toast i18n ns",
+      "escalated": "#1 /relationships/graph route, #2/#3 AddToDossierDialogs create path + dup hook export (WIP file), #4 outgoing-only traversal RPC, #11 circular-check RPC params"
+    },
+    {
+      "type": "after-action records",
+      "commit": "cc2b83a6",
+      "findings": 16,
+      "fixed": "#6 follow_ups->follow_up_actions payload, #13 RTL space-x-2",
+      "escalated": "#1-5 CRITICAL edge transport (get/update/publish/list POST-vs-GET + create engagements.dossier_id), #8 conflict contract, #9 versions snapshot col, #10 EditApprovalFlow, #11 versions URL"
+    },
+    {
+      "type": "notifications",
+      "commit": "d23d4317",
+      "findings": 15,
+      "fixed": "#5 email upsert onConflict, #6 maybeSingle, #15 token",
+      "escalated": "#1/#2 Topbar panel not wired (real NotificationPanel on unused Header), #3 backend sendInAppNotification metadata->data+type, #4/#9 edge single()/markAsRead, #8 dev /api proxy, #10-12 i18n polish"
+    },
+    {
+      "type": "mou",
+      "commit": "a9056c0f",
+      "findings": 20,
+      "fixed": "#2 library crash (real mou_state enum+guard), #6 KPI buckets, #11 error state, #16 chevron RTL",
+      "escalated": "#1/#12 detail route, #9/#13 create/parties UI, #3-5/#10 backend+edge schema, #7/#8 view soft-delete+parties, #14 common.json i18n (WIP)"
+    }
+  ],
+  "session_commits": [
+    "bb3d5b53 organization",
+    "b3d50a1d forum",
+    "e527d216 engagement",
+    "af68d942 topic",
+    "74fddc18 working_group",
+    "f05851ad person",
+    "07a8b8e9 elected_official",
+    "b2cf9465 create-wizard",
+    "9291ed61 work-board",
+    "9072d263 global-search"
+  ],
+  "next_planned": "intake / service-request workflow"
+}

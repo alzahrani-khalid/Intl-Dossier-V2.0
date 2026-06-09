@@ -858,6 +858,20 @@
       "direct": "مباشر"
     },
     "form": {
+      "taskTitle": "العنوان",
+      "taskTitlePlaceholder": "أدخل عنوانًا",
+      "taskDescription": "الوصف",
+      "taskDescriptionPlaceholder": "أدخل وصفًا",
+      "assignee": "المُكلَّف",
+      "assigneePlaceholder": "اختر المُكلَّف",
+      "submit": {
+        "intake": "إنشاء طلب",
+        "task": "إنشاء مهمة",
+        "commitment": "إنشاء التزام",
+        "position": "إنشاء موقف",
+        "event": "إنشاء حدث",
+        "relationship": "إنشاء علاقة"
+      },
       "priority": "الأولوية",
       "priorityLevels": {
         "low": "منخفضة",

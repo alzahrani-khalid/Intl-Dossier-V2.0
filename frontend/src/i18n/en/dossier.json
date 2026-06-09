@@ -858,6 +858,20 @@
       "direct": "Direct"
     },
     "form": {
+      "taskTitle": "Title",
+      "taskTitlePlaceholder": "Enter a title",
+      "taskDescription": "Description",
+      "taskDescriptionPlaceholder": "Enter a description",
+      "assignee": "Assignee",
+      "assigneePlaceholder": "Select an assignee",
+      "submit": {
+        "intake": "Create request",
+        "task": "Create task",
+        "commitment": "Create commitment",
+        "position": "Create position",
+        "event": "Create event",
+        "relationship": "Create relationship"
+      },
       "priority": "Priority",
       "priorityLevels": {
         "low": "Low",

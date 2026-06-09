@@ -200,7 +200,7 @@ Deno.serve(async (req) => {
       last_modified_by: user.id,
       updated_by: user.id,
       tenant_id: tenantId,
-      type: 'regular', // Default task type
+      type: 'action_item', // Default task type (matches tasks.service.ts)
       version: 1,
     };
 

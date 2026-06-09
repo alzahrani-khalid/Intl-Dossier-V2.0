@@ -20,6 +20,9 @@ src/routeTree.gen.ts
 .vite/
 coverage/
 
+# Understand-Anything knowledge graph + dashboard token note (local only)
+src/.understand-anything/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
