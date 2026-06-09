@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUNDS 1-5 COMPLETE (2026-06-10). Every nav-reachable surface inspected: 8 dossier types (r1), 10 feature workflows (r2), 6 new surfaces (r3), 4 dormant/secondary surfaces (r4), 5 operations/admin surfaces (r5). NEXT: consolidate the cross-round escalated B-bucket backlog into an updated reports/escalated-backlog-master + propose GSD phases to the user. NOTE: cursor-agent quota resets 6/27; codex CLI substituted from briefing-books onward. PROCESS RULE since 43ef442a incident: every commit verified via direct pnpm --filter intake-frontend build.",
+  "status": "ROUNDS 1-5 COMPLETE + BACKLOG CONSOLIDATED (2026-06-10). Every nav-reachable surface inspected (33 surfaces across 5 rounds). Cross-round B-bucket consolidated into reports/escalated-backlog-master-2026-06-10.md with 8 proposed GSD phases (P1 schema/type truth -> P2 security pass -> P3-P6 verticals -> P7 product decisions -> P8 r1-2 carryover). LOOP IDLE: awaiting user decision on phase planning (/gsd:phase or /gsd:plan-phase per cluster). cursor-agent quota resets 6/27. PROCESS RULE: every commit verified via direct pnpm --filter intake-frontend build.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
