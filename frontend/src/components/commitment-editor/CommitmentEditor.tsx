@@ -173,14 +173,14 @@ export function CommitmentEditor({
                 disabled={readOnly}
                 className="flex gap-4"
               >
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2">
                   <RadioGroupItem value="internal" id={`internal-${index}`} />
                   <Label htmlFor={`internal-${index}`} className="flex items-center gap-2">
                     <User className="size-4" />
                     {t('afterActions.commitments.internal')}
                   </Label>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2">
                   <RadioGroupItem value="external" id={`external-${index}`} />
                   <Label htmlFor={`external-${index}`} className="flex items-center gap-2">
                     <Mail className="size-4" />
