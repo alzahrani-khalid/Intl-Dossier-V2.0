@@ -288,7 +288,9 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
                             ? t('hierarchy.root')
                             : t('hierarchy.level', { level })}
                         </span>
-                        <span className="text-muted-foreground">{count} tags</span>
+                        <span className="text-muted-foreground">
+                          {t('hierarchy.tagCount', { count })}
+                        </span>
                       </div>
                       <Progress value={percentage} className="h-2" />
                     </div>

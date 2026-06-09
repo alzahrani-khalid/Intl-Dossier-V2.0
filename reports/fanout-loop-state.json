@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUND 4 in progress. Done: word-assistant+export (combined). Current: tags (codex inspection running). Rounds 1-3 complete. NOTE: cursor-agent monthly quota exhausted (resets 6/27); inspections run via codex CLI as substitute.",
+  "status": "ROUND 4 in progress. Done: word-assistant+export, tags. Current: events (codex inspection running). Rounds 1-3 complete. NOTE: cursor-agent monthly quota exhausted (resets 6/27); inspections run via codex CLI as substitute.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -149,8 +149,17 @@
     }
   ],
   "round3_queue": [],
-  "round4_queue": ["tags (in progress)", "events", "task-queue/escalations"],
+  "round4_queue": ["events (in progress)", "task-queue/escalations"],
   "round4_done": [
+    {
+      "type": "tags",
+      "report": "reports/tags-workflow-inspection-2026-06-09.md",
+      "inspector": "codex",
+      "prev_commit_for_word_assistant": "8f6122ea",
+      "findings": 8,
+      "fixed": "5 bucket-A: #1 CRITICAL hierarchy crash — repository now unwraps edge {data,total} to the array all 3 consumers cast to (filteredTree.map TypeError), #2 edit/delete id contract — PUT/DELETE now send ?id= + body.id (edge parses path segment as ACTION, never id; both ops always 400'd), #6 /tags added to Sidebar Administration group (was mounted but unreachable), #7 hardcoded literals -> tags.json keys EN+AR (Target Tag, 4 form placeholders, '{count} tags' -> plural tagCount), #8 edge create fallback #3B82F6 -> var(--color-accent) (file-only; takes effect on next edge deploy)",
+      "escalated": "B-bucket: #3 merge/history/analytics are local stubs presented as live (merge shows success without backend write), #4 canonical tag model split — taxonomy entity_tag_assignments vs legacy dossiers.tags string[] (TagSelector no-ops, discards entityType/entityId), #5 data-library tags consumption stale vs generated types (overlaps data-library round-3 B-bucket)"
+    },
     {
       "type": "word-assistant + export (combined)",
       "report": "reports/word-assistant-export-workflow-inspection-2026-06-09.md",

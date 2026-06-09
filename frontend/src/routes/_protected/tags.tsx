@@ -120,7 +120,8 @@ function MergeHistoryCard({ isRTL }: { isRTL: boolean }) {
                   <p className="text-sm">
                     {t('history.mergedInto', {
                       source: isRTL ? entry.source_tag_name_ar : entry.source_tag_name_en,
-                      target: 'Target Tag', // Would need to fetch target name
+                      // Target name is not in the history payload yet
+                      target: t('history.unknownTarget'),
                     })}
                   </p>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">

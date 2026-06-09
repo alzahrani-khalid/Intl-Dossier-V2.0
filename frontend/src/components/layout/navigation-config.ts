@@ -185,6 +185,12 @@ export const createNavigationGroups = (
           icon: Wrench,
         },
         {
+          id: 'admin-tags',
+          label: 'navigation.tags',
+          path: '/tags',
+          icon: Tag,
+        },
+        {
           id: 'admin-field-permissions',
           label: 'navigation.fieldPermissions',
           path: '/admin/field-permissions',

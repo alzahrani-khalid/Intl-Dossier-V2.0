@@ -343,7 +343,9 @@ async function handlePost(
           parent_id: tagData.parent_id || null,
           name_en: tagData.name_en,
           name_ar: tagData.name_ar,
-          color: tagData.color || '#3B82F6',
+          // Semantic token default — keeps tag colors inside the design palette
+          // (matches the frontend form default; was raw #3B82F6)
+          color: tagData.color || 'var(--color-accent)',
           icon: tagData.icon || 'tag',
           description_en: tagData.description_en,
           description_ar: tagData.description_ar,
