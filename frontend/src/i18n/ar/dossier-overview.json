@@ -101,7 +101,13 @@
     "active": "نشط",
     "approved": "معتمد",
     "archived": "مؤرشف",
-    "template": "قالب"
+    "template": "قالب",
+    "internal_review": "مراجعة داخلية",
+    "external_review": "مراجعة خارجية",
+    "negotiation": "تفاوض",
+    "signed": "موقعة",
+    "renewed": "مجددة",
+    "expired": "منتهية"
   },
 
   "documents": {

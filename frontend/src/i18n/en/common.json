@@ -55,6 +55,8 @@
     "download": "Download",
     "close": "Close",
     "confirm": "Confirm",
+    "completed": "Completed",
+    "error": "Error",
     "back": "Back",
     "next": "Next",
     "previous": "Previous",
@@ -410,6 +412,26 @@
       "approved": "Approved",
       "published": "Published"
     }
+  },
+  "dataLibrary": {
+    "dragDropFiles": "Drag and drop files here",
+    "or": "or",
+    "browseFiles": "Browse files",
+    "maxFileSize": "Maximum file size",
+    "fileTooLarge": "File is too large. Maximum size is 50MB.",
+    "uploading": "Uploading…",
+    "totalFiles": "Total files",
+    "categories": {
+      "document": "Documents",
+      "dataset": "Datasets",
+      "image": "Images",
+      "video": "Videos",
+      "other": "Other"
+    },
+    "searchPlaceholder": "Search files…",
+    "category": "Category",
+    "tags": "Tags",
+    "downloads": "Downloads"
   },
   "reports": {
     "selectTemplate": "Select Report Template",

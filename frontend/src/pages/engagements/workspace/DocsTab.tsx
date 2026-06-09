@@ -158,7 +158,7 @@ export default function DocsTab(): ReactElement {
           {/* Upload placeholder */}
           <Button variant="outline" size="sm" className="min-h-11 gap-2">
             <Upload className="h-4 w-4" />
-            <span className="hidden sm:inline">Upload Document</span>
+            <span className="hidden sm:inline">{t('docs.upload')}</span>
           </Button>
 
           {/* Generate Briefing */}
@@ -185,9 +185,7 @@ export default function DocsTab(): ReactElement {
       </div>
 
       {/* Brief count */}
-      <p className="text-sm text-muted-foreground">
-        {briefs.length} {briefs.length === 1 ? 'document' : 'documents'}
-      </p>
+      <p className="text-sm text-muted-foreground">{t('docs.count', { count: briefs.length })}</p>
 
       {/* Brief cards list */}
       <div className="space-y-3">
@@ -203,8 +201,9 @@ export default function DocsTab(): ReactElement {
  * Individual brief card -- displays title, status, type, date, and summary.
  */
 function BriefCard({ brief, isRTL }: { brief: EngagementBrief; isRTL: boolean }): ReactElement {
+  const { t } = useTranslation('workspace')
   return (
-    <div className="rounded-lg border bg-card p-4 hover:shadow-md transition-shadow">
+    <div className="rounded-lg border bg-card p-4 hover:border-accent transition-colors">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         {/* Brief info */}
         <div className="flex-1 min-w-0 space-y-2">
@@ -212,7 +211,7 @@ function BriefCard({ brief, isRTL }: { brief: EngagementBrief; isRTL: boolean })
           <div className="flex items-center gap-2 flex-wrap">
             <FileText className="size-4 text-muted-foreground flex-shrink-0" />
             <h4 className="text-sm font-medium truncate">
-              {brief.title !== '' ? brief.title : 'Untitled Brief'}
+              {brief.title !== '' ? brief.title : t('docs.untitled')}
             </h4>
           </div>
 

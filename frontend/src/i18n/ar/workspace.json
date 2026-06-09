@@ -8,6 +8,16 @@
     "audit": "السجل",
     "ariaLabel": "علامات تبويب مساحة العمل"
   },
+  "docs": {
+    "upload": "رفع مستند",
+    "count_zero": "لا توجد مستندات",
+    "count_one": "مستند واحد",
+    "count_two": "مستندان",
+    "count_few": "{{count}} مستندات",
+    "count_many": "{{count}} مستنداً",
+    "count_other": "{{count}} مستند",
+    "untitled": "موجز بلا عنوان"
+  },
   "header": {
     "engagement": "الارتباط",
     "loading": "جاري تحميل الارتباط..."

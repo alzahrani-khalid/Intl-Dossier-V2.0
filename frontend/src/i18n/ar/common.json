@@ -55,6 +55,8 @@
     "download": "تحميل",
     "close": "إغلاق",
     "confirm": "تأكيد",
+    "completed": "مكتمل",
+    "error": "خطأ",
     "back": "رجوع",
     "next": "التالي",
     "previous": "السابق",
@@ -410,6 +412,26 @@
       "approved": "معتمد",
       "published": "منشور"
     }
+  },
+  "dataLibrary": {
+    "dragDropFiles": "اسحب الملفات وأفلتها هنا",
+    "or": "أو",
+    "browseFiles": "تصفح الملفات",
+    "maxFileSize": "الحد الأقصى لحجم الملف",
+    "fileTooLarge": "الملف كبير جداً. الحد الأقصى للحجم هو 50 ميجابايت.",
+    "uploading": "جاري الرفع…",
+    "totalFiles": "إجمالي الملفات",
+    "categories": {
+      "document": "المستندات",
+      "dataset": "مجموعات البيانات",
+      "image": "الصور",
+      "video": "الفيديوهات",
+      "other": "أخرى"
+    },
+    "searchPlaceholder": "البحث في الملفات…",
+    "category": "الفئة",
+    "tags": "الوسوم",
+    "downloads": "التنزيلات"
   },
   "reports": {
     "selectTemplate": "اختر قالب التقرير",

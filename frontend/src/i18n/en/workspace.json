@@ -8,6 +8,12 @@
     "audit": "Audit",
     "ariaLabel": "Engagement workspace tabs"
   },
+  "docs": {
+    "upload": "Upload document",
+    "count_one": "{{count}} document",
+    "count_other": "{{count}} documents",
+    "untitled": "Untitled brief"
+  },
   "header": {
     "engagement": "Engagement",
     "loading": "Loading engagement..."

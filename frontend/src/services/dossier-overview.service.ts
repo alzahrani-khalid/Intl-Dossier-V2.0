@@ -105,7 +105,6 @@ interface PositionLinkRow {
     status: string
     created_at: string
     updated_at: string
-    classification?: string
   } | null
 }
 
@@ -537,7 +536,8 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     mime_type: null,
     size_bytes: null,
     status: p.status,
-    classification: p.classification || null,
+    // positions has no classification column (verified vs database.types.ts)
+    classification: null,
     created_at: p.created_at,
     updated_at: p.updated_at,
     created_by_name: null,

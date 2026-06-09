@@ -75,7 +75,7 @@ function DocumentCard({ document, isRTL }: { document: DossierDocument; isRTL: b
   }
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="hover:border-accent transition-colors">
       <CardContent className="p-3 sm:p-4">
         <div className="flex items-start gap-3">
           <div className="p-2 rounded-lg bg-muted shrink-0">
