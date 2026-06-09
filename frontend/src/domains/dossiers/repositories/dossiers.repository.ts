@@ -143,7 +143,7 @@ export async function getDossierFirstSearch(
   params.set('dossier_first', 'true')
 
   if (filters.types !== 'all' && Array.isArray(filters.types)) {
-    params.set('types', JSON.stringify(filters.types))
+    params.set('types', filters.types.join(','))
   }
   if (filters.status !== 'all') {
     params.set('status', filters.status)
