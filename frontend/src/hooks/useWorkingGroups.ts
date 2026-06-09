@@ -229,8 +229,9 @@ export function useUpdateWorkingGroup() {
       const dossierUpdates: Record<string, unknown> = { updated_at: new Date().toISOString() }
       if (data.name_en !== undefined) dossierUpdates.name_en = data.name_en
       if (data.name_ar !== undefined) dossierUpdates.name_ar = data.name_ar
-      if (data.summary_en !== undefined) dossierUpdates.summary_en = data.summary_en
-      if (data.summary_ar !== undefined) dossierUpdates.summary_ar = data.summary_ar
+      // dossiers has description_en/description_ar (not summary_*); mirror create
+      if (data.summary_en !== undefined) dossierUpdates.description_en = data.summary_en
+      if (data.summary_ar !== undefined) dossierUpdates.description_ar = data.summary_ar
       if (data.status !== undefined) dossierUpdates.status = data.status
       if (data.sensitivity_level !== undefined)
         dossierUpdates.sensitivity_level = data.sensitivity_level

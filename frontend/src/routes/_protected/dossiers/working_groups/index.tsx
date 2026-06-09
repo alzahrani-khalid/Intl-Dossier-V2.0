@@ -35,8 +35,8 @@ export const Route = createFileRoute('/_protected/dossiers/working_groups/')({
 
 export const WG_STATUS_TONE: Record<string, string> = {
   active: 'chip-ok',
-  completed: 'chip-info',
-  on_hold: 'chip-warn',
+  suspended: 'chip-warn',
+  disbanded: 'chip-default',
 }
 
 export interface WorkingGroupsListPageProps {
@@ -60,7 +60,7 @@ export function WorkingGroupsListPage({
   const items = useMemo<GenericListPageItem[]>(
     () =>
       rows.map((wg) => {
-        const statusKey = wg.status ?? 'active'
+        const statusKey = wg.wg_status ?? wg.status ?? 'active'
         const chipClass = WG_STATUS_TONE[statusKey] ?? 'chip-default'
         return {
           id: wg.id,

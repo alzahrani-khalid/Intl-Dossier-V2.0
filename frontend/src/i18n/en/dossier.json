@@ -1078,6 +1078,23 @@
       "title": "Connected Anchors",
       "empty": "No anchor dossiers connected",
       "viewSidebar": "View all in sidebar"
+    },
+    "members": {
+      "title": "Members",
+      "empty": "No members linked",
+      "viewAll": "View all members"
+    },
+    "meetings": {
+      "title": "Upcoming Meetings",
+      "empty": "No upcoming meetings",
+      "untitled": "Meeting"
+    },
+    "deliverables": {
+      "title": "Deliverables",
+      "empty": "No deliverables tracked",
+      "completed": "Completed",
+      "inProgress": "In Progress",
+      "pending": "Pending"
     }
   },
   "analytics": {
