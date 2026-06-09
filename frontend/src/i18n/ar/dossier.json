@@ -1095,6 +1095,18 @@
       "completed": "مكتملة",
       "inProgress": "قيد التنفيذ",
       "pending": "قيد الانتظار"
+    },
+    "person": {
+      "organization": "المنظمة",
+      "role": "الدور / المنصب",
+      "lastEngagement": "آخر مشاركة",
+      "noEngagement": "لا يوجد",
+      "title": "الملف الشخصي"
+    },
+    "engagementHistory": {
+      "title": "سجل المشاركات",
+      "empty": "لا يوجد سجل مشاركات",
+      "viewAll": "عرض كل المشاركات"
     }
   },
   "analytics": {

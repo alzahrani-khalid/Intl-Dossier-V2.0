@@ -1095,6 +1095,18 @@
       "completed": "Completed",
       "inProgress": "In Progress",
       "pending": "Pending"
+    },
+    "person": {
+      "organization": "Organization",
+      "role": "Role / Title",
+      "lastEngagement": "Last Engagement",
+      "noEngagement": "None recorded",
+      "title": "Profile"
+    },
+    "engagementHistory": {
+      "title": "Engagement History",
+      "empty": "No engagement history",
+      "viewAll": "View all engagements"
     }
   },
   "analytics": {
