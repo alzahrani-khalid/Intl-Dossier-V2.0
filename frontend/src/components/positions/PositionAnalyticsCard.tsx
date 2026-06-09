@@ -32,7 +32,7 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
     return (
       <Card className={className}>
         <CardHeader>
-          <CardTitle>{t('positions.analytics.title')}</CardTitle>
+          <CardTitle>{t('positions:analytics.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
@@ -47,11 +47,11 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
     return (
       <Card className={className}>
         <CardHeader>
-          <CardTitle>{t('positions.analytics.title')}</CardTitle>
+          <CardTitle>{t('positions:analytics.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-center text-sm text-muted-foreground">
-            {t('positions.analytics.error')}
+            {t('positions:analytics.error')}
           </p>
         </CardContent>
       </Card>
@@ -89,9 +89,9 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5" />
-          {t('positions.analytics.title')}
+          {t('positions:analytics.title')}
         </CardTitle>
-        <CardDescription>{t('positions.analytics.description')}</CardDescription>
+        <CardDescription>{t('positions:analytics.description')}</CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-6">
@@ -101,12 +101,12 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
             <div className="flex items-center gap-3">
               <Award className="h-8 w-8 text-primary" />
               <div>
-                <p className="text-sm font-medium">{t('positions.analytics.rank')}</p>
+                <p className="text-sm font-medium">{t('positions:analytics.rank')}</p>
                 <p className="text-2xl font-bold">#{usage_rank}</p>
               </div>
             </div>
             <Badge variant={getPopularityVariant(popularity_score || 0)}>
-              {t('positions.analytics.popularityScore')}:{' '}
+              {t('positions:analytics.popularityScore')}:{' '}
               {((popularity_score || 0) * 100).toFixed(0)}%
             </Badge>
           </div>
@@ -123,10 +123,10 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
               )}
             </div>
             <p className="text-2xl font-bold">{view_count}</p>
-            <p className="text-xs text-muted-foreground">{t('positions.analytics.views')}</p>
+            <p className="text-xs text-muted-foreground">{t('positions:analytics.views')}</p>
             {last_viewed_at && (
               <p className="text-xs text-muted-foreground">
-                {t('positions.analytics.lastViewed')}:{' '}
+                {t('positions:analytics.lastViewed')}:{' '}
                 {format(new Date(last_viewed_at), 'PP', { locale })}
               </p>
             )}
@@ -143,10 +143,10 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
               )}
             </div>
             <p className="text-2xl font-bold">{attachment_count}</p>
-            <p className="text-xs text-muted-foreground">{t('positions.analytics.attachments')}</p>
+            <p className="text-xs text-muted-foreground">{t('positions:analytics.attachments')}</p>
             {last_attached_at && (
               <p className="text-xs text-muted-foreground">
-                {t('positions.analytics.lastAttached')}:{' '}
+                {t('positions:analytics.lastAttached')}:{' '}
                 {format(new Date(last_attached_at), 'PP', { locale })}
               </p>
             )}
@@ -164,7 +164,7 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
             </div>
             <p className="text-2xl font-bold">{briefing_pack_count}</p>
             <p className="text-xs text-muted-foreground">
-              {t('positions.analytics.briefingPacks')}
+              {t('positions:analytics.briefingPacks')}
             </p>
           </div>
         </div>
@@ -172,7 +172,7 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
         {/* Trend Chart Placeholder */}
         {trend_data?.daily && trend_data.daily.length > 0 && (
           <div className="space-y-2">
-            <p className="text-sm font-medium">{t('positions.analytics.usageTrend')}</p>
+            <p className="text-sm font-medium">{t('positions:analytics.usageTrend')}</p>
             <div className="flex h-32 items-end justify-between gap-1 rounded-lg border p-4">
               {trend_data.daily.slice(-7).map((day: any, i: number) => {
                 const maxValue = Math.max(...trend_data.daily.map((d: any) => d.total))
@@ -188,7 +188,7 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
               })}
             </div>
             <p className="text-xs text-muted-foreground text-center">
-              {t('positions.analytics.last7Days')}
+              {t('positions:analytics.last7Days')}
             </p>
           </div>
         )}
