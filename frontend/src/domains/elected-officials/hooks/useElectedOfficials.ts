@@ -66,7 +66,14 @@ export function useElectedOfficials(filters?: ElectedOfficialFilters) {
 export function useElectedOfficial(id: string) {
   return useQuery({
     queryKey: electedOfficialKeys.detail(id),
-    queryFn: () => apiGet<ElectedOfficial>(`/api/elected-officials/${id}`, { baseUrl: 'express' }),
+    queryFn: async (): Promise<ElectedOfficial> => {
+      // Backend returns { data: <flat person> }; unwrap so consumers read fields
+      // (office_name_en, committee_assignments, …) at the root.
+      const res = await apiGet<{ data: ElectedOfficial }>(`/api/elected-officials/${id}`, {
+        baseUrl: 'express',
+      })
+      return res.data
+    },
     enabled: id !== '',
   })
 }

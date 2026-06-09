@@ -202,9 +202,12 @@ router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) =
       })
     }
 
-    // Verify this is actually an elected official
-    const personData = Array.isArray(data) ? data[0] : data
-    if (personData?.person_subtype !== 'elected_official') {
+    // Verify this is actually an elected official.
+    // get_person_full returns { person: {...}, roles, ... } — the subtype and the
+    // elected-official columns live on the nested `person`, not the root object.
+    const profile = Array.isArray(data) ? data[0] : data
+    const person = profile?.person ?? profile
+    if (person?.person_subtype !== 'elected_official') {
       return res.status(404).json({
         error: createBilingualError(
           'Elected official not found',
@@ -214,7 +217,7 @@ router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) =
       })
     }
 
-    return res.json({ data: personData })
+    return res.json({ data: person })
   } catch (error) {
     logError('Failed to fetch elected official', error as Error)
     return next(error)
