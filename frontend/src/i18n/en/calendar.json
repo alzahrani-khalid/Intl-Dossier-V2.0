@@ -393,6 +393,12 @@
     "title": "Calendar",
     "description": "Manage and view your scheduled events and engagements"
   },
+  "new_event": {
+    "title": "New calendar entry",
+    "description": "Schedule a new entry on the operational calendar",
+    "form_title": "Entry details",
+    "back_to_calendar": "Back to calendar"
+  },
   "more": "more",
   "upcoming_events": "Upcoming Events"
 }

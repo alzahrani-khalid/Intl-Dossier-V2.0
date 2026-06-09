@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUND 4 in progress. Done: word-assistant+export, tags. Current: events (codex inspection running). Rounds 1-3 complete. NOTE: cursor-agent monthly quota exhausted (resets 6/27); inspections run via codex CLI as substitute.",
+  "status": "ROUND 4 in progress. Done: word-assistant+export, tags, events. Current: task-queue/escalations (FINAL round-4 item; codex inspection running). Rounds 1-3 complete. NOTE: cursor-agent monthly quota exhausted (resets 6/27); inspections run via codex CLI as substitute.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -149,8 +149,18 @@
     }
   ],
   "round3_queue": [],
-  "round4_queue": ["events (in progress)", "task-queue/escalations"],
+  "round4_queue": ["task-queue/escalations (in progress — FINAL)"],
   "round4_done": [
+    {
+      "type": "events (+/calendar/new wrapper)",
+      "report": "reports/events-workflow-inspection-2026-06-09.md",
+      "inspector": "codex",
+      "prev_commit_for_tags": "5f30eedf",
+      "findings": 8,
+      "fixed": "4 bucket-A: #1 inert Add Event button removed + list cards no longer fake-clickable, #6 page title navigation.calendar -> navigation.events + /calendar/new wrapper switched to calendar ns with new_event.* keys EN+AR (was raw keys) + navigation.newEvent EN+AR, #8 7-cols-in-grid-cols-6 -> responsive 2/4/7, filter bar wraps, solid pills+text-white -> soft token badge pairs with unknown-type fallback, day-card shadow -> border-accent, date d MMM yyyy",
+      "deferred_from_A": "#7 month navigation / selected-day panel — feature work gated on the #2 model decision",
+      "escalated": "B-bucket: #2 /events (event_details over public.events) vs /calendar/new (calendar_entries) are unrelated models presented as siblings, #3 single-entry participant selection silently dropped on save (calendar-create doesn't persist), #4 event_details view absent from generated types + type enum drift (training vs visit, VERIFY vs live), #5 active-Sidebar placement decision"
+    },
     {
       "type": "tags",
       "report": "reports/tags-workflow-inspection-2026-06-09.md",
