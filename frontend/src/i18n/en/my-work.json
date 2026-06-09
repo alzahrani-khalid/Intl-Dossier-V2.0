@@ -14,7 +14,9 @@
     "title": "Your Productivity",
     "completed30d": "Completed (30d)",
     "onTimeRate": "On-Time Rate",
-    "avgCompletionTime": "Avg Completion"
+    "avgCompletionTime": "Avg Completion",
+    "hoursShort": "{{value}}h",
+    "daysShort": "{{value}}d"
   },
 
   "tabs": {

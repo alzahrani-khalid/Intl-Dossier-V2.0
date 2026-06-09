@@ -8,7 +8,6 @@ import { Users, AlertTriangle, TrendingUp } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import type { TeamMemberWorkload } from '@/types/unified-work.types'
@@ -27,7 +26,8 @@ export function TeamWorkloadPanel({
   onMemberClick,
   selectedMemberId,
 }: TeamWorkloadPanelProps) {
-  const { t } = useTranslation('my-work')
+  const { t, i18n } = useTranslation('my-work')
+  const nf = new Intl.NumberFormat(i18n.language === 'ar' ? 'ar' : 'en')
   if (isLoading) {
     return (
       <Card className="mb-4 sm:mb-6">
@@ -68,7 +68,7 @@ export function TeamWorkloadPanel({
           <Users className="h-5 w-5" />
           {t('team.title', 'Team Workload')}
           <Badge variant="secondary" className="ms-2">
-            {teamMembers.length} {t('team.members', 'members')}
+            {nf.format(teamMembers.length)} {t('team.members', 'members')}
           </Badge>
         </CardTitle>
       </CardHeader>
@@ -77,13 +77,12 @@ export function TeamWorkloadPanel({
           <div className="flex gap-3 pb-2">
             {teamMembers.map((member) => {
               const hasOverdue = member.overdue_count > 0
-              const workloadPct = Math.min((member.total_active / 20) * 100, 100) // Assume 20 is max capacity
 
               return (
                 <Card
                   key={member.user_id}
                   className={cn(
-                    'w-48 shrink-0 transition-all hover:shadow-md',
+                    'w-48 shrink-0 transition-colors hover:border-accent',
                     hasOverdue && 'border-danger/20 dark:border-danger/70',
                     onMemberClick && 'cursor-pointer',
                     selectedMemberId === member.user_id && 'ring-2 ring-primary ring-offset-2',
@@ -106,7 +105,7 @@ export function TeamWorkloadPanel({
                           <div className="flex items-center gap-1 text-xs text-danger">
                             <AlertTriangle className="h-3 w-3" />
                             <span>
-                              {member.overdue_count} {t('team.overdue', 'overdue')}
+                              {nf.format(member.overdue_count)} {t('team.overdue', 'overdue')}
                             </span>
                           </div>
                         )}
@@ -120,20 +119,11 @@ export function TeamWorkloadPanel({
                         <span className="text-muted-foreground text-start">
                           {t('team.active', 'Active')}
                         </span>
-                        <span className="font-medium">{member.total_active}</span>
+                        <span className="font-medium">{nf.format(member.total_active)}</span>
                       </div>
 
-                      {/* Workload Bar */}
-                      <Progress
-                        value={workloadPct}
-                        className={cn(
-                          'h-1.5',
-                          workloadPct > 80 && 'bg-danger/10 [&>div]:bg-danger',
-                          workloadPct > 60 &&
-                            workloadPct <= 80 &&
-                            'bg-warning/10 [&>div]:bg-warning',
-                        )}
-                      />
+                      {/* Capacity bar removed — get_team_workload returns no capacity
+                          field; the bar divided by a hardcoded 20 (inspection #5) */}
 
                       {/* On-Time Rate */}
                       <div className="flex items-center justify-between text-xs pt-1">
@@ -151,7 +141,7 @@ export function TeamWorkloadPanel({
                                 : 'text-danger',
                           )}
                         >
-                          {member.on_time_rate_30d}%
+                          {nf.format(member.on_time_rate_30d)}%
                         </span>
                       </div>
                     </div>

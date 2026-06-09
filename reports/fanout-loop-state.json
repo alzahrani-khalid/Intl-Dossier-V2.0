@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUND 5 in progress (2026-06-10). Done: sla-monitoring. Current: my-work (codex inspection running). Queue after: activity, audit-logs, approvals(list). Rounds 1-4 complete. NOTE: cursor-agent quota resets 6/27; codex CLI substituted. PROCESS RULE since 43ef442a incident: every commit verified via direct pnpm --filter intake-frontend build.",
+  "status": "ROUND 5 in progress (2026-06-10). Done: sla-monitoring, my-work. Current: activity (codex inspection running). Queue after: audit-logs, approvals(list). Rounds 1-4 complete. NOTE: cursor-agent quota resets 6/27; codex CLI substituted. PROCESS RULE since 43ef442a incident: every commit verified via direct pnpm --filter intake-frontend build.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -150,8 +150,17 @@
   ],
   "round3_queue": [],
   "round4_queue": [],
-  "round5_queue": ["my-work (in progress)", "activity", "audit-logs", "approvals (list page)"],
+  "round5_queue": ["activity (in progress)", "audit-logs", "approvals (list page)"],
   "round5_done": [
+    {
+      "type": "my-work",
+      "report": "reports/my-work-workflow-inspection-2026-06-10.md",
+      "inspector": "codex",
+      "prev_commit_for_sla": "96d54818",
+      "findings": 6,
+      "fixed": "3 bucket-A: #4 locale-aware numbers across my-work (on-time %, completion h/d via metrics.hoursShort/daysShort keys EN+AR, team counts/percentages, tab badges incl 99+ — Arabic now gets Arabic-Indic digits), #5 fabricated capacity-of-20 workload progress bar removed (RPC returns no capacity field) + member card hover shadow -> border-accent, #6 dashboard quick-action /my-work?action=create-task (unsupported param) -> /kanban?create=true (the FAB's real create path)",
+      "escalated": "B-bucket: #1 manager assignee drill-down written to URL but DROPPED before the RPC (edge never reads assigneeId; p_user_id always auth user; MyWorkUrlState omits assignee), #2 due-today/due-week cards write filter state the list query ignores (no due-window RPC args), #3 core unified view/RPC SQL not in repo migrations (generated types only — VERIFY vs live scoping/deadline derivation)"
+    },
     {
       "type": "sla-monitoring",
       "report": "reports/sla-monitoring-workflow-inspection-2026-06-10.md",

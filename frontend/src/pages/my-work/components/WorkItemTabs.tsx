@@ -21,7 +21,8 @@ interface WorkItemTabsProps {
 }
 
 export function WorkItemTabs({ activeTab, onTabChange, counts }: WorkItemTabsProps) {
-  const { t } = useTranslation('my-work')
+  const { t, i18n } = useTranslation('my-work')
+  const nf = new Intl.NumberFormat(i18n.language === 'ar' ? 'ar' : 'en')
   const tabs = [
     {
       id: 'all',
@@ -50,11 +51,7 @@ export function WorkItemTabs({ activeTab, onTabChange, counts }: WorkItemTabsPro
   ]
 
   return (
-    <Tabs
-      value={activeTab}
-      onValueChange={onTabChange}
-      className="mb-4"
-    >
+    <Tabs value={activeTab} onValueChange={onTabChange} className="mb-4">
       <TabsList className="w-full h-auto flex-wrap justify-start gap-1 bg-muted/50 p-1">
         {tabs.map((tab) => {
           const Icon = tab.icon
@@ -76,7 +73,7 @@ export function WorkItemTabs({ activeTab, onTabChange, counts }: WorkItemTabsPro
                   variant={isActive ? 'default' : 'secondary'}
                   className="ms-1 h-5 min-w-5 px-1.5 text-xs"
                 >
-                  {tab.count > 99 ? '99+' : tab.count}
+                  {tab.count > 99 ? `${nf.format(99)}+` : nf.format(tab.count)}
                 </Badge>
               )}
             </TabsTrigger>
