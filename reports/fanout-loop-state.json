@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUND 6 COMPLETE (2026-06-10): per-type Add-to-Dossier / detail-tab action workflows inspected (one per dossier type, 11 findings: 5 A / 6 B). Bucket-A fixed + committed; B-bucket appended below (NOT yet merged into escalated-backlog-master). Rounds 1-5: every nav-reachable surface inspected (33 surfaces); consolidated backlog in reports/escalated-backlog-master-2026-06-10.md with 8 proposed GSD phases — still awaiting user decision on phase planning. cursor-agent quota-walled until 6/27 (confirmed live this round); inspector was codex gpt-5.5 xhigh. PROCESS RULE: every commit verified via direct pnpm --filter intake-frontend build.",
+  "status": "ROUND 7 COMPLETE (2026-06-10): per-type still-uncovered workflows inspected (export pack, tasks/audit/engagements tabs, engagement list filters; 8 findings: 5 A / 3 B). Bucket-A fixed + committed; rounds 6-7 B-buckets appended below (NOT yet merged into escalated-backlog-master). Rounds 1-5: every nav-reachable surface inspected (33 surfaces); consolidated backlog in reports/escalated-backlog-master-2026-06-10.md with 8 proposed GSD phases — still awaiting user decision on phase planning. cursor-agent quota-walled until 6/27; inspector codex gpt-5.5 xhigh. PROCESS RULE: every commit verified via direct pnpm --filter intake-frontend build.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -151,6 +151,16 @@
   "round3_queue": [],
   "round4_queue": [],
   "round5_queue": [],
+  "round7_done": [
+    {
+      "type": "still-uncovered per-type workflows (country export pack, org/wg Tasks tab, forum/topic Audit tab, engagement list filters, person Engagements tab, eo export label)",
+      "report": "reports/dossier-workflows-round7-inspection-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh",
+      "findings": 8,
+      "fixed": "5 bucket-A: R7-02 normalizeWorkItemPriority guard (critical->urgent, normal->medium, unknown->medium) applied to ALL 3 cast sites in fetchWorkItems (tasks/commitments/intakes — same-bug-class sweep beyond the flagged intake site), R7-03 audit tab removed from BASE_DOSSIER_TABS centrally (ALL 7 shell-type audit routes verified to be coming-soon stubs, not just forum/topic; routes stay mounted; opt back in via extraTabs), R7-05 dead 'call' filter pill removed (no engagement_type maps to call; E2E list-pages-engagements.spec.ts updated 4->3 pills; 'event' pill deferred to B R7-04 server contract), R7-07 DossierEngagementsTab badges localized via dossier-overview:relationshipType.*/eventType.* colon form w/ raw fallback, R7-08 dossier-export type.elected_official EN+AR added",
+      "escalated": "B-bucket: R7-01 dossier-export-pack edge reads stale contracts (positions.classification/dossier_ids, mous.title_en/status, documents.entity_type, legacy commitments instead of aa_commitments) and always emits HTML while dialog advertises PDF/DOCX (VERIFY vs live deploy), R7-04 engagement list filter pills are client-side over infinite pages (filtered first page can show empty + suppress Load more; RPC supports only exact engagement_type, grouped pills need a mapping contract), R7-06 fetchWorkItems hard-limits 50/source and reports fetched-window length as total_count (linked commitments crowded out by direct ones; no pagination/truncation UI)"
+    }
+  ],
   "round6_done": [
     {
       "type": "dossier detail-tab/action workflows (one per type: country KeyContacts card, org/forum/topic/wg/person/eo Add-to-Dossier actions, engagement Docs generate-brief)",

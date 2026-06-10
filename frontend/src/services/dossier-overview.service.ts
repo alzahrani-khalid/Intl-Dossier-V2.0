@@ -591,6 +591,17 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
 // Fetch Work Items
 // =============================================================================
 
+// intake_tickets.priority is the wider priority_level enum whose deprecated
+// values (critical/normal) predate the 20251203000001 normalization migration
+const normalizeWorkItemPriority = (priority: string | null | undefined): WorkItemPriority => {
+  if (priority === 'critical') return 'urgent'
+  if (priority === 'normal') return 'medium'
+  if (priority === 'low' || priority === 'medium' || priority === 'high' || priority === 'urgent') {
+    return priority
+  }
+  return 'medium'
+}
+
 async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<WorkItemsSection> {
   // Fetch work item dossier links
   const { data: links } = await supabase
@@ -653,7 +664,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
         description_en: t.description_en || t.description || null,
         description_ar: t.description_ar || null,
         status: isOverdue ? 'overdue' : (t.status as WorkItemStatus),
-        priority: (t.priority || 'medium') as WorkItemPriority,
+        priority: normalizeWorkItemPriority(t.priority),
         deadline: t.sla_deadline,
         assignee_id: t.assignee_id,
         assignee_name: t.assignee_id != null ? (assigneeNameById.get(t.assignee_id) ?? null) : null,
@@ -709,7 +720,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
           description_en: c.description_en || c.description || null,
           description_ar: c.description_ar || null,
           status: isOverdue ? 'overdue' : (c.status as WorkItemStatus),
-          priority: (c.priority || 'medium') as WorkItemPriority,
+          priority: normalizeWorkItemPriority(c.priority),
           deadline,
           assignee_id: assigneeId,
           assignee_name: null,
@@ -742,7 +753,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
         description_en: i.description,
         description_ar: i.description_ar || null,
         status: isOverdue ? 'overdue' : (i.status as WorkItemStatus),
-        priority: (i.priority || 'medium') as WorkItemPriority,
+        priority: normalizeWorkItemPriority(i.priority),
         deadline: i.sla_deadline,
         assignee_id: i.assigned_to_id,
         assignee_name: i.assigned_to?.full_name || null,

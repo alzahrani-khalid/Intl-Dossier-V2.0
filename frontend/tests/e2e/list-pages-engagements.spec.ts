@@ -26,20 +26,20 @@ test.describe('Engagements LIST-04', () => {
     await page.waitForLoadState('networkidle')
   })
 
-  test('4 filter pills render with aria-pressed', async ({ page }) => {
+  test('3 filter pills render with aria-pressed', async ({ page }) => {
     const pills = page.locator('button.btn[aria-pressed]')
-    await expect(pills).toHaveCount(4)
+    await expect(pills).toHaveCount(3)
   })
 
   test('Filter pills toggle aria-pressed correctly across the type taxonomy', async ({ page }) => {
-    // Shipped FILTERS array exposes 4 values: all, meeting, call, travel
-    // (no `event` — diverged from 40-CONTEXT-GAPS draft; type-source-of-truth
-    // is `EngagementsList.tsx` FILTERS constant).
-    const pills = ['all', 'meeting', 'call', 'travel'] as const
+    // Shipped FILTERS array exposes 3 values: all, meeting, travel
+    // ('call' removed — no engagement_type maps to it; `event` pill gated on
+    // the server-side filter contract; type-source-of-truth is
+    // `EngagementsList.tsx` FILTERS constant).
+    const pills = ['all', 'meeting', 'travel'] as const
     const aria: Record<(typeof pills)[number], RegExp> = {
       all: /^All$|^الكل$|^all$/i,
       meeting: /meeting|اجتماع/i,
-      call: /call|اتصال|مكالمة/i,
       travel: /travel|سفر/i,
     }
 
