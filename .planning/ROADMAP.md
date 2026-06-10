@@ -16,11 +16,11 @@
 
 ## Phases
 
-### Phase 60: Schema & Type Truth Restoration
+### Phase 60: Schema & Type Truth Restoration ✅ COMPLETE 2026-06-10
 
 **Goal:** The repo's generated types, committed migrations, and edge-function SQL all agree with the live staging database — every RPC/table an edge function references exists in generated types, and the missing canonical SQL is committed as forward migrations.
 **Depends on:** Nothing (foundation phase; unblocks P2-P8 backlog phases)
-**Plans:** 6 plans
+**Plans:** 6/6 complete (VERIFICATION passed 14/14)
 **Requirements:** Backlog P1 (reports/escalated-backlog-master-2026-06-10.md)
 
 Plans:
@@ -224,4 +224,4 @@ Full details: [v6.4-ROADMAP.md](milestones/v6.4-ROADMAP.md)
 
 ---
 
-_Roadmap last updated: 2026-06-10 — Phase 60 (Schema & Type Truth Restoration) planned: 6 plans across 3 waves. Next: `/gsd:execute-phase 60`._
+_Roadmap last updated: 2026-06-10 — Phase 60 (Schema & Type Truth Restoration) COMPLETE: 6/6 plans, verification passed 14/14, 5 forward migrations applied to staging, types regenerated, CI smoke test live. Next: Phase 61 (Security Pass)._
