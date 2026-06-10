@@ -12,95 +12,105 @@
  * - GET /briefing-books/templates - List available templates
  */
 
-import { createClient } from 'jsr:@supabase/supabase-js@2';
-import { corsHeaders } from '../_shared/cors.ts';
+import { createClient } from 'jsr:@supabase/supabase-js@2'
+import { corsHeaders } from '../_shared/cors.ts'
+
+// Escape DB/user-supplied strings before interpolating them into HTML (XSS sink).
+function escapeHtml(s: unknown): string {
+  return String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
 
 // Types
 interface BriefingBookConfig {
-  title_en: string;
-  title_ar: string;
-  description_en?: string;
-  description_ar?: string;
+  title_en: string
+  title_ar: string
+  description_en?: string
+  description_ar?: string
   entities: Array<{
-    id: string;
-    type: 'country' | 'organization' | 'forum' | 'theme';
-    name_en: string;
-    name_ar: string;
-    includedSections: string[];
-  }>;
+    id: string
+    type: 'country' | 'organization' | 'forum' | 'theme'
+    name_en: string
+    name_ar: string
+    includedSections: string[]
+  }>
   dateRange?: {
-    startDate: string;
-    endDate: string;
-  };
-  topics?: string[];
+    startDate: string
+    endDate: string
+  }
+  topics?: string[]
   sections: Array<{
-    type: string;
-    title_en: string;
-    title_ar: string;
-    enabled: boolean;
-    order: number;
-    customContent?: { en: string; ar: string };
-  }>;
-  format: 'pdf' | 'docx' | 'html';
-  primaryLanguage: 'en' | 'ar';
-  includeBilingual: boolean;
-  includeTableOfContents: boolean;
-  includePageNumbers: boolean;
-  includeBookmarks: boolean;
-  includeCoverPage: boolean;
-  includeExecutiveSummary: boolean;
-  maxSensitivityLevel?: 'low' | 'medium' | 'high';
-  headerText?: string;
-  footerText?: string;
+    type: string
+    title_en: string
+    title_ar: string
+    enabled: boolean
+    order: number
+    customContent?: { en: string; ar: string }
+  }>
+  format: 'pdf' | 'docx' | 'html'
+  primaryLanguage: 'en' | 'ar'
+  includeBilingual: boolean
+  includeTableOfContents: boolean
+  includePageNumbers: boolean
+  includeBookmarks: boolean
+  includeCoverPage: boolean
+  includeExecutiveSummary: boolean
+  maxSensitivityLevel?: 'low' | 'medium' | 'high'
+  headerText?: string
+  footerText?: string
 }
 
 interface EntityData {
-  id: string;
-  name_en: string;
-  name_ar: string;
-  type: string;
-  summary_en?: string;
-  summary_ar?: string;
+  id: string
+  name_en: string
+  name_ar: string
+  type: string
+  summary_en?: string
+  summary_ar?: string
   contacts?: Array<{
-    name: string;
-    role: string;
-    email?: string;
-    phone?: string;
-  }>;
+    name: string
+    role: string
+    email?: string
+    phone?: string
+  }>
   engagements?: Array<{
-    id: string;
-    title: string;
-    date: string;
-    description?: string;
-  }>;
+    id: string
+    title: string
+    date: string
+    description?: string
+  }>
   positions?: Array<{
-    id: string;
-    title: string;
-    content: string;
-    type: string;
-  }>;
+    id: string
+    title: string
+    content: string
+    type: string
+  }>
   mous?: Array<{
-    id: string;
-    title: string;
-    status: string;
-    signing_date?: string;
-  }>;
+    id: string
+    title: string
+    status: string
+    signing_date?: string
+  }>
   commitments?: Array<{
-    id: string;
-    title: string;
-    deadline?: string;
-    status: string;
-  }>;
+    id: string
+    title: string
+    deadline?: string
+    status: string
+  }>
 }
 
 // HTML template for PDF generation
 function generateHTMLDocument(
   config: BriefingBookConfig,
   entitiesData: EntityData[],
-  language: 'en' | 'ar'
+  language: 'en' | 'ar',
 ): string {
-  const isRTL = language === 'ar';
-  const direction = isRTL ? 'rtl' : 'ltr';
+  const isRTL = language === 'ar'
+  const direction = isRTL ? 'rtl' : 'ltr'
 
   const labels = {
     en: {
@@ -151,16 +161,14 @@ function generateHTMLDocument(
       deadline: 'الموعد النهائي',
       noData: 'لا توجد بيانات متاحة',
     },
-  };
+  }
 
-  const l = labels[language];
-  const title = language === 'ar' ? config.title_ar : config.title_en;
-  const enabledSections = config.sections
-    .filter((s) => s.enabled)
-    .sort((a, b) => a.order - b.order);
+  const l = labels[language]
+  const title = language === 'ar' ? config.title_ar : config.title_en
+  const enabledSections = config.sections.filter((s) => s.enabled).sort((a, b) => a.order - b.order)
 
   // Generate table of contents
-  let tocHTML = '';
+  let tocHTML = ''
   if (config.includeTableOfContents) {
     tocHTML = `
       <div class="toc" id="toc">
@@ -169,38 +177,38 @@ function generateHTMLDocument(
           ${enabledSections
             .map(
               (section, idx) => `
-            <li><a href="#section-${idx}">${language === 'ar' ? section.title_ar : section.title_en}</a></li>
-          `
+            <li><a href="#section-${idx}">${escapeHtml(language === 'ar' ? section.title_ar : section.title_en)}</a></li>
+          `,
             )
             .join('')}
         </ul>
       </div>
-    `;
+    `
   }
 
   // Generate cover page
-  let coverPageHTML = '';
+  let coverPageHTML = ''
   if (config.includeCoverPage) {
     coverPageHTML = `
       <div class="cover-page">
         <div class="cover-content">
-          <h1 class="cover-title">${title}</h1>
-          ${config.description_en || config.description_ar ? `<p class="cover-description">${language === 'ar' ? config.description_ar : config.description_en}</p>` : ''}
+          <h1 class="cover-title">${escapeHtml(title)}</h1>
+          ${config.description_en || config.description_ar ? `<p class="cover-description">${escapeHtml(language === 'ar' ? config.description_ar : config.description_en)}</p>` : ''}
           <div class="cover-entities">
-            ${entitiesData.map((e) => `<span class="entity-badge">${language === 'ar' ? e.name_ar : e.name_en}</span>`).join('')}
+            ${entitiesData.map((e) => `<span class="entity-badge">${escapeHtml(language === 'ar' ? e.name_ar : e.name_en)}</span>`).join('')}
           </div>
           <p class="cover-date">${l.generatedOn}: ${new Date().toLocaleDateString(language === 'ar' ? 'ar-SA' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
         </div>
       </div>
-    `;
+    `
   }
 
   // Generate section content
   function generateSectionContent(sectionType: string, sectionIndex: number): string {
-    const section = enabledSections.find((s) => s.type === sectionType);
-    if (!section) return '';
+    const section = enabledSections.find((s) => s.type === sectionType)
+    if (!section) return ''
 
-    const sectionTitle = language === 'ar' ? section.title_ar : section.title_en;
+    const sectionTitle = escapeHtml(language === 'ar' ? section.title_ar : section.title_en)
 
     switch (sectionType) {
       case 'executive_summary':
@@ -211,14 +219,14 @@ function generateHTMLDocument(
               .map(
                 (e) => `
               <div class="entity-summary">
-                <h3>${language === 'ar' ? e.name_ar : e.name_en}</h3>
-                <p>${language === 'ar' ? e.summary_ar || l.noData : e.summary_en || l.noData}</p>
+                <h3>${escapeHtml(language === 'ar' ? e.name_ar : e.name_en)}</h3>
+                <p>${escapeHtml(language === 'ar' ? e.summary_ar || l.noData : e.summary_en || l.noData)}</p>
               </div>
-            `
+            `,
               )
               .join('')}
           </section>
-        `;
+        `
 
       case 'entity_overview':
         return `
@@ -228,15 +236,15 @@ function generateHTMLDocument(
               .map(
                 (e) => `
               <div class="entity-overview">
-                <h3>${language === 'ar' ? e.name_ar : e.name_en}</h3>
-                <p class="entity-type">${e.type}</p>
-                <p>${language === 'ar' ? e.summary_ar || l.noData : e.summary_en || l.noData}</p>
+                <h3>${escapeHtml(language === 'ar' ? e.name_ar : e.name_en)}</h3>
+                <p class="entity-type">${escapeHtml(e.type)}</p>
+                <p>${escapeHtml(language === 'ar' ? e.summary_ar || l.noData : e.summary_en || l.noData)}</p>
               </div>
-            `
+            `,
               )
               .join('')}
           </section>
-        `;
+        `
 
       case 'key_contacts':
         return `
@@ -246,7 +254,7 @@ function generateHTMLDocument(
               .map(
                 (e) => `
               <div class="contacts-section">
-                <h3>${language === 'ar' ? e.name_ar : e.name_en}</h3>
+                <h3>${escapeHtml(language === 'ar' ? e.name_ar : e.name_en)}</h3>
                 ${
                   e.contacts && e.contacts.length > 0
                     ? `
@@ -264,12 +272,12 @@ function generateHTMLDocument(
                         .map(
                           (c) => `
                         <tr>
-                          <td>${c.name}</td>
-                          <td>${c.role || '-'}</td>
-                          <td>${c.email || '-'}</td>
-                          <td>${c.phone || '-'}</td>
+                          <td>${escapeHtml(c.name)}</td>
+                          <td>${escapeHtml(c.role || '-')}</td>
+                          <td>${escapeHtml(c.email || '-')}</td>
+                          <td>${escapeHtml(c.phone || '-')}</td>
                         </tr>
-                      `
+                      `,
                         )
                         .join('')}
                     </tbody>
@@ -278,11 +286,11 @@ function generateHTMLDocument(
                     : `<p class="no-data">${l.noData}</p>`
                 }
               </div>
-            `
+            `,
               )
               .join('')}
           </section>
-        `;
+        `
 
       case 'recent_engagements':
         return `
@@ -292,7 +300,7 @@ function generateHTMLDocument(
               .map(
                 (e) => `
               <div class="engagements-section">
-                <h3>${language === 'ar' ? e.name_ar : e.name_en}</h3>
+                <h3>${escapeHtml(language === 'ar' ? e.name_ar : e.name_en)}</h3>
                 ${
                   e.engagements && e.engagements.length > 0
                     ? `
@@ -301,11 +309,11 @@ function generateHTMLDocument(
                       .map(
                         (eng) => `
                       <div class="engagement-item">
-                        <h4>${eng.title}</h4>
+                        <h4>${escapeHtml(eng.title)}</h4>
                         <p class="date">${l.date}: ${new Date(eng.date).toLocaleDateString(language === 'ar' ? 'ar-SA' : 'en-US')}</p>
-                        ${eng.description ? `<p>${eng.description}</p>` : ''}
+                        ${eng.description ? `<p>${escapeHtml(eng.description)}</p>` : ''}
                       </div>
-                    `
+                    `,
                       )
                       .join('')}
                   </div>
@@ -313,11 +321,11 @@ function generateHTMLDocument(
                     : `<p class="no-data">${l.noData}</p>`
                 }
               </div>
-            `
+            `,
               )
               .join('')}
           </section>
-        `;
+        `
 
       case 'positions':
         return `
@@ -327,7 +335,7 @@ function generateHTMLDocument(
               .map(
                 (e) => `
               <div class="positions-section">
-                <h3>${language === 'ar' ? e.name_ar : e.name_en}</h3>
+                <h3>${escapeHtml(language === 'ar' ? e.name_ar : e.name_en)}</h3>
                 ${
                   e.positions && e.positions.length > 0
                     ? `
@@ -336,11 +344,11 @@ function generateHTMLDocument(
                       .map(
                         (pos) => `
                       <div class="position-item">
-                        <h4>${pos.title}</h4>
-                        <span class="position-type">${pos.type}</span>
-                        <div class="position-content">${pos.content}</div>
+                        <h4>${escapeHtml(pos.title)}</h4>
+                        <span class="position-type">${escapeHtml(pos.type)}</span>
+                        <div class="position-content">${escapeHtml(pos.content)}</div>
                       </div>
-                    `
+                    `,
                       )
                       .join('')}
                   </div>
@@ -348,11 +356,11 @@ function generateHTMLDocument(
                     : `<p class="no-data">${l.noData}</p>`
                 }
               </div>
-            `
+            `,
               )
               .join('')}
           </section>
-        `;
+        `
 
       case 'mou_agreements':
         return `
@@ -362,7 +370,7 @@ function generateHTMLDocument(
               .map(
                 (e) => `
               <div class="mous-section">
-                <h3>${language === 'ar' ? e.name_ar : e.name_en}</h3>
+                <h3>${escapeHtml(language === 'ar' ? e.name_ar : e.name_en)}</h3>
                 ${
                   e.mous && e.mous.length > 0
                     ? `
@@ -379,11 +387,11 @@ function generateHTMLDocument(
                         .map(
                           (m) => `
                         <tr>
-                          <td>${m.title}</td>
-                          <td>${m.status}</td>
+                          <td>${escapeHtml(m.title)}</td>
+                          <td>${escapeHtml(m.status)}</td>
                           <td>${m.signing_date ? new Date(m.signing_date).toLocaleDateString(language === 'ar' ? 'ar-SA' : 'en-US') : '-'}</td>
                         </tr>
-                      `
+                      `,
                         )
                         .join('')}
                     </tbody>
@@ -392,11 +400,11 @@ function generateHTMLDocument(
                     : `<p class="no-data">${l.noData}</p>`
                 }
               </div>
-            `
+            `,
               )
               .join('')}
           </section>
-        `;
+        `
 
       case 'commitments':
         return `
@@ -406,7 +414,7 @@ function generateHTMLDocument(
               .map(
                 (e) => `
               <div class="commitments-section">
-                <h3>${language === 'ar' ? e.name_ar : e.name_en}</h3>
+                <h3>${escapeHtml(language === 'ar' ? e.name_ar : e.name_en)}</h3>
                 ${
                   e.commitments && e.commitments.length > 0
                     ? `
@@ -423,11 +431,11 @@ function generateHTMLDocument(
                         .map(
                           (c) => `
                         <tr>
-                          <td>${c.title}</td>
+                          <td>${escapeHtml(c.title)}</td>
                           <td>${c.deadline ? new Date(c.deadline).toLocaleDateString(language === 'ar' ? 'ar-SA' : 'en-US') : '-'}</td>
-                          <td>${c.status}</td>
+                          <td>${escapeHtml(c.status)}</td>
                         </tr>
-                      `
+                      `,
                         )
                         .join('')}
                     </tbody>
@@ -436,11 +444,11 @@ function generateHTMLDocument(
                     : `<p class="no-data">${l.noData}</p>`
                 }
               </div>
-            `
+            `,
               )
               .join('')}
           </section>
-        `;
+        `
 
       case 'custom':
         return section.customContent
@@ -448,11 +456,11 @@ function generateHTMLDocument(
           <section id="section-${sectionIndex}" class="section">
             <h2>${sectionTitle}</h2>
             <div class="custom-content">
-              ${language === 'ar' ? section.customContent.ar : section.customContent.en}
+              ${escapeHtml(language === 'ar' ? section.customContent.ar : section.customContent.en)}
             </div>
           </section>
         `
-          : '';
+          : ''
 
       default:
         return `
@@ -460,14 +468,14 @@ function generateHTMLDocument(
             <h2>${sectionTitle}</h2>
             <p class="no-data">${l.noData}</p>
           </section>
-        `;
+        `
     }
   }
 
   // Generate all sections
   const sectionsHTML = enabledSections
     .map((section, idx) => generateSectionContent(section.type, idx))
-    .join('');
+    .join('')
 
   // Build the complete HTML document
   return `
@@ -476,7 +484,7 @@ function generateHTMLDocument(
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>${title}</title>
+      <title>${escapeHtml(title)}</title>
       <style>
         @page {
           size: A4;
@@ -743,7 +751,7 @@ function generateHTMLDocument(
       ${sectionsHTML}
     </body>
     </html>
-  `;
+  `
 }
 
 // Fetch entity data from database
@@ -752,28 +760,28 @@ async function fetchEntityData(
   entityId: string,
   entityType: string,
   dateRange?: { startDate: string; endDate: string },
-  maxSensitivityLevel?: string
+  maxSensitivityLevel?: string,
 ): Promise<EntityData | null> {
   // Fetch basic dossier info
   const { data: dossier, error: dossierError } = await supabase
     .from('dossiers')
     .select('id, name_en, name_ar, type, summary_en, summary_ar, sensitivity_level')
     .eq('id', entityId)
-    .single();
+    .single()
 
   if (dossierError || !dossier) {
-    console.error('Error fetching dossier:', dossierError);
-    return null;
+    console.error('Error fetching dossier:', dossierError)
+    return null
   }
 
   // Check sensitivity level
-  const sensitivityOrder = { low: 1, medium: 2, high: 3 };
+  const sensitivityOrder = { low: 1, medium: 2, high: 3 }
   if (
     maxSensitivityLevel &&
     sensitivityOrder[dossier.sensitivity_level as keyof typeof sensitivityOrder] >
       sensitivityOrder[maxSensitivityLevel as keyof typeof sensitivityOrder]
   ) {
-    return null;
+    return null
   }
 
   // Fetch contacts
@@ -781,7 +789,7 @@ async function fetchEntityData(
     .from('key_contacts')
     .select('name, role, email, phone')
     .eq('dossier_id', entityId)
-    .limit(20);
+    .limit(20)
 
   // Fetch engagements (with date filter if provided)
   let engagementsQuery = supabase
@@ -789,52 +797,52 @@ async function fetchEntityData(
     .select('id, title, date, description')
     .contains('dossier_ids', [entityId])
     .order('date', { ascending: false })
-    .limit(10);
+    .limit(10)
 
   if (dateRange) {
     engagementsQuery = engagementsQuery
       .gte('date', dateRange.startDate)
-      .lte('date', dateRange.endDate);
+      .lte('date', dateRange.endDate)
   }
 
-  const { data: engagements } = await engagementsQuery;
+  const { data: engagements } = await engagementsQuery
 
   // Fetch positions
   let positionsQuery = supabase
     .from('positions')
     .select('id, title, content, type')
     .contains('dossier_ids', [entityId])
-    .limit(20);
+    .limit(20)
 
   if (dateRange) {
     positionsQuery = positionsQuery
       .gte('created_at', dateRange.startDate)
-      .lte('created_at', dateRange.endDate);
+      .lte('created_at', dateRange.endDate)
   }
 
-  const { data: positions } = await positionsQuery;
+  const { data: positions } = await positionsQuery
 
   // Fetch MOUs
   const { data: mous } = await supabase
     .from('mous')
     .select('id, title, status, signing_date')
     .eq('dossier_id', entityId)
-    .limit(10);
+    .limit(10)
 
   // Fetch commitments
   let commitmentsQuery = supabase
     .from('commitments')
     .select('id, title, deadline, status')
     .eq('dossier_id', entityId)
-    .limit(20);
+    .limit(20)
 
   if (dateRange) {
     commitmentsQuery = commitmentsQuery
       .gte('created_at', dateRange.startDate)
-      .lte('created_at', dateRange.endDate);
+      .lte('created_at', dateRange.endDate)
   }
 
-  const { data: commitments } = await commitmentsQuery;
+  const { data: commitments } = await commitmentsQuery
 
   return {
     id: dossier.id,
@@ -848,126 +856,132 @@ async function fetchEntityData(
     positions: positions || [],
     mous: mous || [],
     commitments: commitments || [],
-  };
+  }
 }
 
 // Main handler
 Deno.serve(async (req: Request) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders })
   }
 
   try {
-    const url = new URL(req.url);
-    const pathParts = url.pathname.split('/').filter(Boolean);
-    const method = req.method;
+    const url = new URL(req.url)
+    const pathParts = url.pathname.split('/').filter(Boolean)
+    const method = req.method
 
     // Initialize Supabase client with user's auth token
-    const authHeader = req.headers.get('Authorization');
+    const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      })
     }
 
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const supabase = createClient(supabaseUrl, supabaseServiceKey, {
       global: {
         headers: { Authorization: authHeader },
       },
-    });
+    })
 
     // Get authenticated user
     const {
       data: { user },
       error: userError,
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser()
     if (userError || !user) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      })
     }
 
     // Route: GET /briefing-books/templates
     if (method === 'GET' && pathParts[1] === 'templates') {
       const { data: templates, error } = await supabase
         .from('briefing_book_templates')
-        .select('id, name, description, sections, format_options, is_default, created_by, created_at, updated_at')
+        .select(
+          'id, name, description, sections, format_options, is_default, created_by, created_at, updated_at',
+        )
         .or(`is_default.eq.true,created_by.eq.${user.id}`)
         .order('is_default', { ascending: false })
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
 
       if (error) {
         return new Response(JSON.stringify({ error: error.message }), {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        })
       }
 
       return new Response(JSON.stringify({ data: templates }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      })
     }
 
     // Route: GET /briefing-books/:id
     if (method === 'GET' && pathParts[1]) {
-      const bookId = pathParts[1];
+      const bookId = pathParts[1]
 
       const { data: book, error } = await supabase
         .from('briefing_books')
-        .select('id, title_en, title_ar, description_en, description_ar, entity_ids, date_range_start, date_range_end, topics, sections, format, primary_language, include_bilingual, include_table_of_contents, include_page_numbers, include_bookmarks, include_cover_page, include_executive_summary, max_sensitivity_level, header_text, footer_text, status, file_url, file_size_bytes, page_count, word_count, generated_at, expires_at, error_message, created_by, created_at, updated_at')
+        .select(
+          'id, title_en, title_ar, description_en, description_ar, entity_ids, date_range_start, date_range_end, topics, sections, format, primary_language, include_bilingual, include_table_of_contents, include_page_numbers, include_bookmarks, include_cover_page, include_executive_summary, max_sensitivity_level, header_text, footer_text, status, file_url, file_size_bytes, page_count, word_count, generated_at, expires_at, error_message, created_by, created_at, updated_at',
+        )
         .eq('id', bookId)
         .eq('created_by', user.id)
-        .single();
+        .single()
 
       if (error || !book) {
         return new Response(JSON.stringify({ error: 'Briefing book not found' }), {
           status: 404,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        })
       }
 
       return new Response(JSON.stringify({ data: book }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      })
     }
 
     // Route: GET /briefing-books
     if (method === 'GET') {
-      const status = url.searchParams.get('status');
-      const limit = parseInt(url.searchParams.get('limit') || '20');
-      const cursor = url.searchParams.get('cursor');
+      const status = url.searchParams.get('status')
+      const limit = parseInt(url.searchParams.get('limit') || '20')
+      const cursor = url.searchParams.get('cursor')
 
       let query = supabase
         .from('briefing_books')
-        .select('id, title_en, title_ar, description_en, description_ar, entity_ids, date_range_start, date_range_end, topics, sections, format, primary_language, include_bilingual, include_table_of_contents, include_page_numbers, include_bookmarks, include_cover_page, include_executive_summary, max_sensitivity_level, header_text, footer_text, status, file_url, file_size_bytes, page_count, word_count, generated_at, expires_at, error_message, created_by, created_at, updated_at')
+        .select(
+          'id, title_en, title_ar, description_en, description_ar, entity_ids, date_range_start, date_range_end, topics, sections, format, primary_language, include_bilingual, include_table_of_contents, include_page_numbers, include_bookmarks, include_cover_page, include_executive_summary, max_sensitivity_level, header_text, footer_text, status, file_url, file_size_bytes, page_count, word_count, generated_at, expires_at, error_message, created_by, created_at, updated_at',
+        )
         .eq('created_by', user.id)
         .order('created_at', { ascending: false })
-        .limit(limit + 1);
+        .limit(limit + 1)
 
       if (status) {
-        query = query.eq('status', status);
+        query = query.eq('status', status)
       }
 
       if (cursor) {
-        query = query.lt('created_at', cursor);
+        query = query.lt('created_at', cursor)
       }
 
-      const { data: books, error } = await query;
+      const { data: books, error } = await query
 
       if (error) {
         return new Response(JSON.stringify({ error: error.message }), {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        })
       }
 
-      const hasMore = books && books.length > limit;
-      const data = hasMore ? books.slice(0, limit) : books;
+      const hasMore = books && books.length > limit
+      const data = hasMore ? books.slice(0, limit) : books
 
       return new Response(
         JSON.stringify({
@@ -977,20 +991,20 @@ Deno.serve(async (req: Request) => {
             nextCursor: hasMore ? data[data.length - 1].created_at : null,
           },
         }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      )
     }
 
     // Route: POST /briefing-books
     if (method === 'POST') {
-      const body = await req.json();
-      const config: BriefingBookConfig = body.config;
+      const body = await req.json()
+      const config: BriefingBookConfig = body.config
 
       if (!config || !config.entities || config.entities.length === 0) {
         return new Response(JSON.stringify({ error: 'Invalid configuration: entities required' }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        })
       }
 
       // Create briefing book record
@@ -1021,13 +1035,13 @@ Deno.serve(async (req: Request) => {
           created_by: user.id,
         })
         .select()
-        .single();
+        .single()
 
       if (createError || !book) {
         return new Response(
           JSON.stringify({ error: createError?.message || 'Failed to create briefing book' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+        )
       }
 
       // Insert entity junction records
@@ -1037,22 +1051,22 @@ Deno.serve(async (req: Request) => {
         entity_type: e.type,
         included_sections: e.includedSections,
         order: idx,
-      }));
+      }))
 
-      await supabase.from('briefing_book_entities').insert(entityRecords);
+      await supabase.from('briefing_book_entities').insert(entityRecords)
 
       // Fetch data for all entities
-      const entitiesData: EntityData[] = [];
+      const entitiesData: EntityData[] = []
       for (const entity of config.entities) {
         const entityData = await fetchEntityData(
           supabase,
           entity.id,
           entity.type,
           config.dateRange,
-          config.maxSensitivityLevel
-        );
+          config.maxSensitivityLevel,
+        )
         if (entityData) {
-          entitiesData.push(entityData);
+          entitiesData.push(entityData)
         }
       }
 
@@ -1060,53 +1074,53 @@ Deno.serve(async (req: Request) => {
         await supabase
           .from('briefing_books')
           .update({ status: 'failed', error_message: 'No accessible entities found' })
-          .eq('id', book.id);
+          .eq('id', book.id)
 
         return new Response(JSON.stringify({ error: 'No accessible entities found' }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        })
       }
 
       // Generate HTML document
-      const htmlContent = generateHTMLDocument(config, entitiesData, config.primaryLanguage);
+      const htmlContent = generateHTMLDocument(config, entitiesData, config.primaryLanguage)
 
       // Calculate estimated metrics
       const wordCount = htmlContent
         .replace(/<[^>]*>/g, ' ')
         .split(/\s+/)
-        .filter(Boolean).length;
-      const estimatedPages = Math.ceil(wordCount / 300); // ~300 words per page
+        .filter(Boolean).length
+      const estimatedPages = Math.ceil(wordCount / 300) // ~300 words per page
 
       // Upload to storage
-      const encoder = new TextEncoder();
-      const fileContent = encoder.encode(htmlContent);
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-      const fileName = `${user.id}/${book.id}-${timestamp}.html`;
+      const encoder = new TextEncoder()
+      const fileContent = encoder.encode(htmlContent)
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+      const fileName = `${user.id}/${book.id}-${timestamp}.html`
 
       const { error: uploadError } = await supabase.storage
         .from('briefing-books')
         .upload(fileName, fileContent, {
           contentType: 'text/html',
           upsert: false,
-        });
+        })
 
       if (uploadError) {
         await supabase
           .from('briefing_books')
           .update({ status: 'failed', error_message: uploadError.message })
-          .eq('id', book.id);
+          .eq('id', book.id)
 
         return new Response(JSON.stringify({ error: uploadError.message }), {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        })
       }
 
       // Get signed URL (24 hours)
       const { data: urlData } = await supabase.storage
         .from('briefing-books')
-        .createSignedUrl(fileName, 86400);
+        .createSignedUrl(fileName, 86400)
 
       // Update book record with file info
       const { data: updatedBook, error: updateError } = await supabase
@@ -1122,13 +1136,13 @@ Deno.serve(async (req: Request) => {
         })
         .eq('id', book.id)
         .select()
-        .single();
+        .single()
 
       if (updateError) {
         return new Response(JSON.stringify({ error: updateError.message }), {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        })
       }
 
       return new Response(
@@ -1136,13 +1150,13 @@ Deno.serve(async (req: Request) => {
           briefingBook: updatedBook,
           estimatedTime: 0,
         }),
-        { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+        { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      )
     }
 
     // Route: DELETE /briefing-books/:id
     if (method === 'DELETE' && pathParts[1]) {
-      const bookId = pathParts[1];
+      const bookId = pathParts[1]
 
       // Get the book first to check ownership and get file path
       const { data: book, error: fetchError } = await supabase
@@ -1150,20 +1164,20 @@ Deno.serve(async (req: Request) => {
         .select('id, file_url, created_by')
         .eq('id', bookId)
         .eq('created_by', user.id)
-        .single();
+        .single()
 
       if (fetchError || !book) {
         return new Response(JSON.stringify({ error: 'Briefing book not found' }), {
           status: 404,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        })
       }
 
       // Delete from storage if file exists
       if (book.file_url) {
-        const filePath = book.file_url.split('/briefing-books/')[1]?.split('?')[0];
+        const filePath = book.file_url.split('/briefing-books/')[1]?.split('?')[0]
         if (filePath) {
-          await supabase.storage.from('briefing-books').remove([filePath]);
+          await supabase.storage.from('briefing-books').remove([filePath])
         }
       }
 
@@ -1172,30 +1186,30 @@ Deno.serve(async (req: Request) => {
         .from('briefing_books')
         .delete()
         .eq('id', bookId)
-        .eq('created_by', user.id);
+        .eq('created_by', user.id)
 
       if (deleteError) {
         return new Response(JSON.stringify({ error: deleteError.message }), {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        })
       }
 
       return new Response(JSON.stringify({ success: true }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      })
     }
 
     // Route not found
     return new Response(JSON.stringify({ error: 'Not found' }), {
       status: 404,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error:', error)
     return new Response(
       JSON.stringify({ error: error instanceof Error ? error.message : 'Internal server error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+    )
   }
-});
+})
