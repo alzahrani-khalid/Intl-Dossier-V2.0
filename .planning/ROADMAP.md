@@ -20,8 +20,15 @@
 
 **Goal:** The repo's generated types, committed migrations, and edge-function SQL all agree with the live staging database — every RPC/table an edge function references exists in generated types, and the missing canonical SQL is committed as forward migrations.
 **Depends on:** Nothing (foundation phase; unblocks P2-P8 backlog phases)
-**Plans:** TBD
+**Plans:** 5 plans
 **Requirements:** Backlog P1 (reports/escalated-backlog-master-2026-06-10.md)
+
+Plans:
+- [ ] 60-01-PLAN.md — Capture unified work stack (view + RPCs) from live into a forward migration [my-work #3]
+- [ ] 60-02-PLAN.md — Corrected SLA monitoring migration (users.full_name, not staff_profiles) + apply 4 dashboard RPCs [sla #2/#4]
+- [ ] 60-03-PLAN.md — event_details view + pending_role_approvals/position_delegations/word_assistant_logs tables (RLS, no auth.users trigger) [events #4, approvals #6, wa #4]
+- [ ] 60-04-PLAN.md — Regenerate types byte-identical + remove dead doubled-path + supersede 009 + fix/redeploy escalations-report [tq #5, data-library #1]
+- [ ] 60-05-PLAN.md — CI smoke test: every edge-fn .from/.rpc reference must exist in generated types (wired into lint job)
 
 Scope:
 
@@ -207,4 +214,4 @@ Full details: [v6.4-ROADMAP.md](milestones/v6.4-ROADMAP.md)
 
 ---
 
-_Roadmap last updated: 2026-05-27 — v6.4 Stabilization & Carryover Sweep shipped (Phases 55-59, 20 plans, 14/14 requirements); milestone archived to [v6.4-ROADMAP.md](milestones/v6.4-ROADMAP.md). Next: v7.0 Intelligence Engine via `/gsd:new-milestone`._
+_Roadmap last updated: 2026-06-10 — Phase 60 (Schema & Type Truth Restoration) planned: 5 plans across 3 waves. Next: `/gsd:execute-phase 60`._

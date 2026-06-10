@@ -15,13 +15,13 @@ created: 2026-06-10
 
 ## Test Infrastructure
 
-| Property               | Value                                                                                        |
-| ---------------------- | -------------------------------------------------------------------------------------------- |
-| **Framework**          | vitest (frontend unit), live staging SQL probes via Supabase MCP, node script for smoke test |
-| **Config file**        | `frontend/vitest.config.ts`                                                                  |
-| **Quick run command**  | `pnpm --filter intake-frontend build` (build = the canonical post-commit gate per handoff)   |
-| **Full suite command** | `pnpm --filter intake-frontend exec tsc --noEmit && pnpm --filter intake-frontend build`     |
-| **Estimated runtime**  | ~10-40 seconds                                                                               |
+| Property | Value |
+|----------|-------|
+| **Framework** | vitest (frontend unit), live staging SQL probes via Supabase MCP, node script for smoke test |
+| **Config file** | `frontend/vitest.config.ts` |
+| **Quick run command** | `pnpm --filter intake-frontend build` (build = the canonical post-commit gate per handoff) |
+| **Full suite command** | `pnpm --filter intake-frontend exec tsc --noEmit && pnpm --filter intake-frontend build` |
+| **Estimated runtime** | ~10-40 seconds |
 
 ---
 
@@ -36,11 +36,11 @@ created: 2026-06-10
 
 ## Per-Task Verification Map
 
-| Task ID             | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type                  | Automated Command                       | File Exists | Status     |
-| ------------------- | ---- | ---- | ----------- | ---------- | --------------- | -------------------------- | --------------------------------------- | ----------- | ---------- |
-| (filled by planner) |      |      | Backlog P1  |            |                 | sql-probe / build / script | see RESEARCH.md Validation Architecture | ✅          | ⬜ pending |
+| Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
+|---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
+| (filled by planner) | | | Backlog P1 | | | sql-probe / build / script | see RESEARCH.md Validation Architecture | ✅ | ⬜ pending |
 
-_Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
+*Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
 ---
 
@@ -52,8 +52,8 @@ Existing infrastructure covers all phase requirements (build + tsc + MCP SQL pro
 
 ## Manual-Only Verifications
 
-| Behavior                                            | Requirement            | Why Manual                      | Test Instructions                                                               |
-| --------------------------------------------------- | ---------------------- | ------------------------------- | ------------------------------------------------------------------------------- |
+| Behavior | Requirement | Why Manual | Test Instructions |
+|----------|-------------|------------|-------------------|
 | EventsPage renders against new `event_details` view | Backlog P1 (events #4) | Needs running dev server + auth | Login on :5175, open /events, confirm list loads without 400/404 in network tab |
 
 ---
