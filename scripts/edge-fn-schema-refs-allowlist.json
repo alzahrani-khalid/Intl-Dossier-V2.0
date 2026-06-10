@@ -1,0 +1,272 @@
+{
+  "_doc": "Names that check-edge-fn-schema-refs.mjs must NOT flag even though they are absent from the public schema in frontend/src/types/database.types.ts. Each entry is { name, reason }. Categories: (a) cross-schema objects that legitimately live outside public (auth.*, events.*) — PostgREST/type-gen only emits public, so these can never appear in the types and are correctly exempt; (b) Storage buckets are handled in-code (storage.from), not here; (c) genuinely-absent objects the edge fn references that do NOT exist in any schema on staging (verified via live SQL 2026-06-10) — these are pre-existing dead/aspirational/backlog edge-fn references, tracked in reports/escalated-backlog-master-2026-06-10.md, NOT type-file drift this phase introduced. A real LIVE public object missing from the generated types is DRIFT — regenerate the types, do not allowlist it.",
+  "_verification": "All 66 entries below were checked against staging (zkrcjzdemdmwhearhfgg) on 2026-06-10: none exist as a public-schema table/view/function. refresh_tokens=auth schema; append_event/create_snapshot/get_aggregate_events/get_aggregate_history/get_correlated_events/get_state_at_time/rebuild_aggregate_state=events schema; check_circular_delegation exists in public but only as a zero-arg signature while the edge fn calls it with args (signature mismatch) — exempted as a backlog fix, not a regen. All others: absent from every schema.",
+  "tables": [
+    {
+      "name": "access_certifications",
+      "reason": "Absent from all schemas on staging (verified 2026-06-10). Access-review edge fns reference a never-shipped table. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "access_review_summary",
+      "reason": "Absent from all schemas on staging. Access-review view never shipped. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "access_reviews",
+      "reason": "Absent from all schemas on staging. Access-review edge fns reference a never-shipped table. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "activity_log",
+      "reason": "Absent from all schemas on staging. mou-lifecycle references a legacy/never-shipped table (activity_stream is the live equivalent). Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "ai_extraction_jobs",
+      "reason": "Absent from all schemas on staging. ai-extract edge fns reference a never-shipped async-jobs table. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "assignment_history",
+      "reason": "Absent from all schemas on staging. intake-tickets-assign references a never-shipped table. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "audit_statistics",
+      "reason": "Absent from all schemas on staging. audit-logs-viewer references a never-shipped view. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "biometric_credentials",
+      "reason": "Absent from all schemas on staging. auth-biometric-setup references a never-shipped WebAuthn table. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "cd_contact_relationships",
+      "reason": "Absent from all schemas on staging. relationships-manage references a never-shipped contact-directory table (cd_* prefix). Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "cd_contacts",
+      "reason": "Absent from all schemas on staging. cd_* contact-directory feature never shipped. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "cd_document_sources",
+      "reason": "Absent from all schemas on staging. ocr-extract references a never-shipped cd_* table. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "cd_interaction_notes",
+      "reason": "Absent from all schemas on staging. interaction-notes-* edge fns reference a never-shipped cd_* table. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "cd_organizations",
+      "reason": "Absent from all schemas on staging. organizations-create/list reference a never-shipped cd_* table (live table is organizations). Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "cd_tags",
+      "reason": "Absent from all schemas on staging. tags-manage references a never-shipped cd_* table. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "delegations",
+      "reason": "Absent from all schemas on staging. Delegation feature edge fns reference a never-shipped table (position_delegations is the live equivalent). Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "device_tokens",
+      "reason": "Absent from all schemas on staging. Push-notification edge fns reference a never-shipped table. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "dossier_collaborators",
+      "reason": "Absent from all schemas on staging. briefing-pack edge fns reference a never-shipped table. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "dossier_timeline",
+      "reason": "Absent from all schemas on staging. ai-summary/briefs reference a never-shipped table (dossier-unified-activity edge fn is the live path). Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "entity_tags",
+      "reason": "Absent from all schemas on staging. workflow-executor references a never-shipped table. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "external_calendar_events",
+      "reason": "Absent from all schemas on staging. smart-import-suggestions references a never-shipped table. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "refresh_tokens",
+      "reason": "Cross-schema: lives in auth.refresh_tokens, not public. Type generator only emits public, so this can never appear in the types. auth-refresh-token edge fn queries it via service role. Permanent exempt."
+    },
+    {
+      "name": "ticket_attachments",
+      "reason": "Absent from all schemas on staging. intake-tickets-create references a never-shipped table. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "user_profiles",
+      "reason": "Absent from all schemas on staging. meeting-minutes references a never-shipped table (live table is profiles). Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "user_sessions",
+      "reason": "Absent from all schemas on staging. Auth/role edge fns reference a never-shipped session table. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    }
+  ],
+  "functions": [
+    {
+      "name": "append_event",
+      "reason": "Cross-schema: events.append_event (event-sourcing schema), not public. event-store/persons call it via an events-schema client. Type generator only emits public. Permanent exempt."
+    },
+    {
+      "name": "create_snapshot",
+      "reason": "Cross-schema: events.create_snapshot. event-store event-sourcing RPC. Permanent exempt."
+    },
+    {
+      "name": "get_aggregate_events",
+      "reason": "Cross-schema: events.get_aggregate_events. event-store event-sourcing RPC. Permanent exempt."
+    },
+    {
+      "name": "get_aggregate_history",
+      "reason": "Cross-schema: events.get_aggregate_history. event-store event-sourcing RPC. Permanent exempt."
+    },
+    {
+      "name": "get_correlated_events",
+      "reason": "Cross-schema: events.get_correlated_events. event-store event-sourcing RPC. Permanent exempt."
+    },
+    {
+      "name": "get_state_at_time",
+      "reason": "Cross-schema: events.get_state_at_time. event-store event-sourcing RPC. Permanent exempt."
+    },
+    {
+      "name": "rebuild_aggregate_state",
+      "reason": "Cross-schema: events.rebuild_aggregate_state. event-store event-sourcing RPC. Permanent exempt."
+    },
+    {
+      "name": "check_circular_delegation",
+      "reason": "Exists in public but only as a zero-arg signature, while delegate-permissions/validate-delegation call it WITH args (signature mismatch) — type-gen omits it. Backlog fix (align signature), not a regen. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "approve_classification_change",
+      "reason": "Absent from all schemas on staging. document-classification references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "array_append_unique",
+      "reason": "Absent from all schemas on staging. custom-reports references a never-shipped helper RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "calculate_event_priority",
+      "reason": "Absent from all schemas on staging. calendar-conflicts references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "change_document_classification",
+      "reason": "Absent from all schemas on staging. document-classification references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "check_pgvector_health",
+      "reason": "Absent from all schemas on staging. intake-ai-health references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "cron_schedule",
+      "reason": "Absent from all schemas on staging. schedule-access-review references a never-shipped wrapper (pg_cron lives in extensions/cron schema). Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "cron_unschedule",
+      "reason": "Absent from all schemas on staging. schedule-access-review references a never-shipped wrapper (pg_cron lives in extensions/cron schema). Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "execute_advanced_search",
+      "reason": "Absent from all schemas on staging. saved-searches references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "extend_content_expiration",
+      "reason": "Absent from all schemas on staging. content-expiration references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "find_available_slots",
+      "reason": "Absent from all schemas on staging. calendar-conflicts references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "find_similar_tickets_vector",
+      "reason": "Absent from all schemas on staging. intake-classification/triage reference a never-shipped pgvector RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "get_accessible_documents",
+      "reason": "Absent from all schemas on staging. document-classification references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "get_column",
+      "reason": "Absent from all schemas on staging. email-send references a never-shipped helper RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "get_delegation_chain",
+      "reason": "Absent from all schemas on staging. validate-delegation references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "get_document_with_redaction",
+      "reason": "Absent from all schemas on staging. document-classification references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "get_expiring_content",
+      "reason": "Absent from all schemas on staging. content-expiration(-processor) reference a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "get_model_performance_metrics",
+      "reason": "Absent from all schemas on staging. intake-classification references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "get_or_create_onboarding_progress",
+      "reason": "Absent from all schemas on staging. onboarding-progress references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "get_unified_calendar_events",
+      "reason": "Absent from all schemas on staging. calendar-sync references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "increment",
+      "reason": "Absent from all schemas on staging. progressive-disclosure/recurring-events/webhook-delivery reference a never-shipped generic counter RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "increment_attempts",
+      "reason": "Absent from all schemas on staging. voice-memos-transcribe references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "increment_edit_count",
+      "reason": "Absent from all schemas on staging. collaborative-editing references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "increment_webhook_failure",
+      "reason": "Absent from all schemas on staging. webhook-delivery references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "mark_content_reviewed",
+      "reason": "Absent from all schemas on staging. content-expiration references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "match_intelligence_reports",
+      "reason": "Absent from all schemas on staging. intelligence references a never-shipped pgvector RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "queue_email_notification",
+      "reason": "Absent from all schemas on staging. email-inbound references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "queue_workflow_execution",
+      "reason": "Absent from all schemas on staging. content-expiration-processor references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "record_prediction_feedback",
+      "reason": "Absent from all schemas on staging. intake-classification references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "refresh_tag_analytics",
+      "reason": "Absent from all schemas on staging. tag-hierarchy references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "register_device_token",
+      "reason": "Absent from all schemas on staging. push-device-register references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "set_content_expiration",
+      "reason": "Absent from all schemas on staging. content-expiration references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "trigger_matching_workflows",
+      "reason": "Absent from all schemas on staging. workflow-executor references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "update_content_freshness_statuses",
+      "reason": "Absent from all schemas on staging. content-expiration(-processor) reference a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    },
+    {
+      "name": "update_workflow_execution_statuses",
+      "reason": "Absent from all schemas on staging. workflow-executor references a never-shipped RPC. Backlog: reports/escalated-backlog-master-2026-06-10.md"
+    }
+  ]
+}
