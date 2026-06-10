@@ -68,9 +68,10 @@
     "no_dossiers": "لا توجد دوسيهات متاحة",
     "link_type": "نوع الرابط",
     "types": {
-      "primary": "أساسي",
-      "related": "ذو صلة",
-      "reference": "مرجعي"
+      "applies_to": "ينطبق على",
+      "related_to": "ذو صلة",
+      "endorsed_by": "مؤيَّد من",
+      "opposed_by": "معارَض من"
     },
     "notes_optional": "ملاحظات (اختياري)",
     "notes_placeholder": "أضف أي ملاحظات عن هذا الرابط..."

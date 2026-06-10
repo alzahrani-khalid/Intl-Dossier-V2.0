@@ -68,9 +68,10 @@
     "no_dossiers": "No dossiers available",
     "link_type": "Link Type",
     "types": {
-      "primary": "Primary",
-      "related": "Related",
-      "reference": "Reference"
+      "applies_to": "Applies to",
+      "related_to": "Related to",
+      "endorsed_by": "Endorsed by",
+      "opposed_by": "Opposed by"
     },
     "notes_optional": "Notes (Optional)",
     "notes_placeholder": "Add any notes about this link..."

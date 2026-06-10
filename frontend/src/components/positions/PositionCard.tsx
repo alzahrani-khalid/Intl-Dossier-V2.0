@@ -12,10 +12,11 @@ import { Badge } from '@/components/ui/badge'
 import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import type { Position } from '@/types/position'
+import type { PositionDossierLinkType } from '@/domains/positions/types'
 import { useDirection } from '@/hooks/useDirection'
 
 export interface PositionCardProps {
-  position: Position & { link_type?: 'primary' | 'related' | 'reference' }
+  position: Position & { link_type?: PositionDossierLinkType }
   onClick?: () => void
   onAttach?: () => void
   onDetach?: () => void
@@ -71,26 +72,23 @@ export const PositionCard: React.FC<PositionCardProps> = ({
     }
   }
 
-  // Link type badge configuration (T059)
-  const getLinkTypeBadge = (linkType?: 'primary' | 'related' | 'reference') => {
+  // Link type badge configuration (T059). Values mirror the canonical live
+  // position_dossier_links_link_type_check; labels come from the positions
+  // namespace so Arabic resolves (round-13 vocabulary realign).
+  const getLinkTypeBadge = (linkType?: PositionDossierLinkType) => {
     if (!linkType) return null
 
-    const config = {
-      primary: {
-        label: 'Primary',
-        className: 'bg-accent/10 text-accent dark:bg-accent/30',
-      },
-      related: {
-        label: 'Related',
-        className: 'bg-muted/10 text-muted-foreground dark:bg-muted/30',
-      },
-      reference: {
-        label: 'Reference',
-        className: 'bg-muted/5 text-muted-foreground dark:bg-muted/20',
-      },
+    const className: Record<PositionDossierLinkType, string> = {
+      applies_to: 'bg-accent/10 text-accent dark:bg-accent/30',
+      related_to: 'bg-muted/10 text-muted-foreground dark:bg-muted/30',
+      endorsed_by: 'bg-success/10 text-success dark:bg-success/30',
+      opposed_by: 'bg-destructive/10 text-destructive dark:bg-destructive/30',
     }
 
-    return config[linkType]
+    return {
+      label: t(`position_dossier_links.types.${linkType}`),
+      className: className[linkType],
+    }
   }
 
   return (

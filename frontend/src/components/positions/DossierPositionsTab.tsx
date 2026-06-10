@@ -19,6 +19,7 @@ import { Input } from '../ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
 import type { PositionStatus, PositionType } from '../../types/position'
+import type { PositionDossierLinkType } from '../../domains/positions/types'
 
 interface DossierPositionsTabProps {
   dossierId: string
@@ -32,9 +33,7 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<PositionStatus | 'all'>('all')
   const [typeFilter, setTypeFilter] = useState<PositionType | 'all'>('all')
-  const [linkTypeFilter, setLinkTypeFilter] = useState<'primary' | 'related' | 'reference' | 'all'>(
-    'all',
-  )
+  const [linkTypeFilter, setLinkTypeFilter] = useState<PositionDossierLinkType | 'all'>('all')
   const [showAttachDialog, setShowAttachDialog] = useState(false)
 
   // Debounce search input
@@ -103,23 +102,24 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
           <div>
             <Select
               value={linkTypeFilter}
-              onValueChange={(value) =>
-                setLinkTypeFilter(value as 'primary' | 'related' | 'reference' | 'all')
-              }
+              onValueChange={(value) => setLinkTypeFilter(value as PositionDossierLinkType | 'all')}
             >
               <SelectTrigger aria-label={t('positions:position_dossier_links.link_type')}>
                 <SelectValue placeholder={t('positions:dossier_tab.all_link_types')} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t('positions:dossier_tab.all_link_types')}</SelectItem>
-                <SelectItem value="primary">
-                  {t('positions:position_dossier_links.types.primary')}
+                <SelectItem value="applies_to">
+                  {t('positions:position_dossier_links.types.applies_to')}
                 </SelectItem>
-                <SelectItem value="related">
-                  {t('positions:position_dossier_links.types.related')}
+                <SelectItem value="related_to">
+                  {t('positions:position_dossier_links.types.related_to')}
                 </SelectItem>
-                <SelectItem value="reference">
-                  {t('positions:position_dossier_links.types.reference')}
+                <SelectItem value="endorsed_by">
+                  {t('positions:position_dossier_links.types.endorsed_by')}
+                </SelectItem>
+                <SelectItem value="opposed_by">
+                  {t('positions:position_dossier_links.types.opposed_by')}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -155,7 +155,7 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
               onClick={handleClearFilters}
               aria-label={t('positions:dossier_tab.clear_filters')}
             >
-              {t('common:clear_filters')}
+              {t('positions:dossier_tab.clear_filters')}
             </Button>
           </div>
         )}
