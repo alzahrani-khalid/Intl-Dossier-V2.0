@@ -395,16 +395,17 @@ serve(async (req) => {
       return errorResponse('Invalid user session', 401, 'AUTH_REQUIRED');
     }
 
-    // Check if user has permission to view audit logs. Admin-only: the audit trail is a
-    // compliance surface and the admin nav (Sidebar) is admin-only, so the edge fn must
-    // agree. Role is read from public.users.role (the single authorization truth).
+    // Check if user has permission to view audit logs. Gated to admin + super_admin to
+    // match the route guard (requireAdmin) and the Sidebar admin-nav, which both accept
+    // both roles — so a super_admin who can open the page also gets data, not a 403.
+    // Role is read from public.users.role (the single authorization truth).
     const { data: userData } = await supabase
       .from('users')
       .select('role')
       .eq('id', user.id)
       .single();
 
-    if (!userData || !['admin'].includes(userData.role)) {
+    if (!userData || !['admin', 'super_admin'].includes(userData.role)) {
       return errorResponse('Insufficient permissions to view audit logs', 403, 'FORBIDDEN');
     }
 
