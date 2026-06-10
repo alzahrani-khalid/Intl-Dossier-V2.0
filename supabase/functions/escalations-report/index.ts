@@ -60,8 +60,6 @@ interface Assignment {
   id: string;
   work_item_type: string;
   assignee_id: string;
-  organizational_unit_id: string;
-  sla_status: string;
 }
 
 serve(async (req) => {
@@ -105,6 +103,29 @@ serve(async (req) => {
     const workItemType = url.searchParams.get('work_item_type');
     const groupBy = url.searchParams.get('group_by') || 'day';
 
+    // assignments has no organizational-unit column — organizational unit lives on
+    // staff_profiles.unit_id, keyed by the assignee's user_id. When a unit filter is
+    // requested, resolve the set of assignee user_ids in that unit first, then filter
+    // escalations by assignee_id.
+    let unitAssigneeIds: string[] | null = null;
+    if (unitId) {
+      const { data: unitStaff, error: unitStaffError } = await supabase
+        .from('staff_profiles')
+        .select('user_id')
+        .eq('unit_id', unitId);
+
+      if (unitStaffError) {
+        throw unitStaffError;
+      }
+
+      unitAssigneeIds = (unitStaff || []).map((s: { user_id: string }) => s.user_id);
+
+      // No staff in the requested unit → no escalations can match.
+      if (unitAssigneeIds.length === 0) {
+        unitAssigneeIds = ['00000000-0000-0000-0000-000000000000'];
+      }
+    }
+
     // Build query for escalation events
     let escalationsQuery = supabase
       .from('escalation_events')
@@ -117,17 +138,15 @@ serve(async (req) => {
         assignments!inner (
           id,
           work_item_type,
-          assignee_id,
-          organizational_unit_id,
-          sla_status
+          assignee_id
         )
       `)
       .gte('created_at', startDate)
       .lte('created_at', endDate);
 
-    // Apply filters via join
-    if (unitId) {
-      escalationsQuery = escalationsQuery.eq('assignments.organizational_unit_id', unitId);
+    // Apply filters via join (unit filter routed through assignee_id set above)
+    if (unitAssigneeIds) {
+      escalationsQuery = escalationsQuery.in('assignments.assignee_id', unitAssigneeIds);
     }
     if (assigneeId) {
       escalationsQuery = escalationsQuery.eq('assignments.assignee_id', assigneeId);
@@ -198,23 +217,55 @@ serve(async (req) => {
       }))
       .sort((a, b) => a.date.localeCompare(b.date));
 
-    // Escalations by organizational unit
+    // Collect all assignee user_ids referenced by these escalations. Both the by-unit
+    // and by-assignee aggregations resolve through staff_profiles (the assignee's
+    // user_id), since assignments has no organizational-unit column — the unit lives on
+    // staff_profiles.unit_id and the display name lives on users.full_name.
+    const assigneeCounts: { [key: string]: number } = {};
+    escalations?.forEach((esc: any) => {
+      const assigneeId = esc.assignments?.assignee_id;
+      if (assigneeId) {
+        assigneeCounts[assigneeId] = (assigneeCounts[assigneeId] || 0) + 1;
+      }
+    });
+
+    const assigneeIds = Object.keys(assigneeCounts);
+
+    // Single staff_profiles fetch: maps user_id -> { unit_id, current_assignment_count }.
+    const { data: staffProfiles } = await supabase
+      .from('staff_profiles')
+      .select('user_id, unit_id, current_assignment_count')
+      .in('user_id', assigneeIds);
+
+    const staffMap = new Map(staffProfiles?.map((s: any) => [s.user_id, s]) || []);
+
+    // Assignee display names come from users.full_name (staff_profiles has no full_name).
+    const { data: assigneeUsers } = await supabase
+      .from('users')
+      .select('id, full_name')
+      .in('id', assigneeIds);
+
+    const userNameMap = new Map(assigneeUsers?.map((u: any) => [u.id, u.full_name]) || []);
+
+    // Escalations by organizational unit — derive each escalation's unit from its
+    // assignee's staff_profiles.unit_id.
     const unitCounts: { [key: string]: number } = {};
     escalations?.forEach((esc: any) => {
-      const unitId = esc.assignments?.organizational_unit_id;
+      const assigneeId = esc.assignments?.assignee_id;
+      const unitId = assigneeId ? staffMap.get(assigneeId)?.unit_id : undefined;
       if (unitId) {
         unitCounts[unitId] = (unitCounts[unitId] || 0) + 1;
       }
     });
 
-    // Fetch unit names
+    // Fetch unit names (organizational_units has name_en / name_ar, not name).
     const unitIds = Object.keys(unitCounts);
     const { data: units } = await supabase
       .from('organizational_units')
-      .select('id, name')
+      .select('id, name_en, name_ar')
       .in('id', unitIds);
 
-    const unitMap = new Map(units?.map((u: any) => [u.id, u.name]) || []);
+    const unitMap = new Map(units?.map((u: any) => [u.id, u.name_en]) || []);
 
     const byUnit = Object.entries(unitCounts)
       .map(([unitId, count]) => ({
@@ -226,23 +277,6 @@ serve(async (req) => {
       .sort((a, b) => b.escalation_count - a.escalation_count);
 
     // Escalations by assignee
-    const assigneeCounts: { [key: string]: number } = {};
-    escalations?.forEach((esc: any) => {
-      const assigneeId = esc.assignments?.assignee_id;
-      if (assigneeId) {
-        assigneeCounts[assigneeId] = (assigneeCounts[assigneeId] || 0) + 1;
-      }
-    });
-
-    // Fetch assignee details and total assignment counts
-    const assigneeIds = Object.keys(assigneeCounts);
-    const { data: staffProfiles } = await supabase
-      .from('staff_profiles')
-      .select('user_id, full_name, current_assignment_count')
-      .in('user_id', assigneeIds);
-
-    const staffMap = new Map(staffProfiles?.map((s: any) => [s.user_id, s]) || []);
-
     const byAssignee = Object.entries(assigneeCounts)
       .map(([assigneeId, escalationCount]) => {
         const staff = staffMap.get(assigneeId);
@@ -253,7 +287,7 @@ serve(async (req) => {
 
         return {
           assignee_id: assigneeId,
-          assignee_name: staff?.full_name || 'Unknown',
+          assignee_name: userNameMap.get(assigneeId) || 'Unknown',
           escalation_count: escalationCount,
           total_assignments: totalAssignments,
           escalation_rate: escalationRate,
