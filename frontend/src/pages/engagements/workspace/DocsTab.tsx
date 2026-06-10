@@ -17,7 +17,6 @@ import {
   AlertCircle,
   Upload,
   Quote,
-  ChevronLeft,
 } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
 import {
@@ -70,13 +69,6 @@ function formatBriefDate(dateStr: string, isRTL: boolean): string {
     day: 'numeric',
     year: 'numeric',
   })
-}
-
-/**
- * Brief type label mapping.
- */
-function getBriefTypeLabel(briefType: string): string {
-  return briefType === 'ai' ? 'AI Brief' : 'Legacy'
 }
 
 export default function DocsTab(): ReactElement {
@@ -220,18 +212,18 @@ function BriefCard({ brief, isRTL }: { brief: EngagementBrief; isRTL: boolean })
             {/* Status badge */}
             <Badge variant="outline" className={`text-xs gap-1 ${getStatusVariant(brief.status)}`}>
               <StatusIcon status={brief.status} />
-              {brief.status}
+              {t(`engagement-briefs:statuses.${brief.status}`, { defaultValue: brief.status })}
             </Badge>
 
             {/* Type badge */}
             {brief.brief_type === 'ai' ? (
               <Badge variant="secondary" className="text-xs gap-1">
                 <Sparkles className="size-3" />
-                {getBriefTypeLabel(brief.brief_type)}
+                {t('engagement-briefs:briefTypes.ai')}
               </Badge>
             ) : (
               <Badge variant="outline" className="text-xs">
-                {getBriefTypeLabel(brief.brief_type)}
+                {t('engagement-briefs:briefTypes.legacy')}
               </Badge>
             )}
 
@@ -239,7 +231,7 @@ function BriefCard({ brief, isRTL }: { brief: EngagementBrief; isRTL: boolean })
             {brief.has_citations && (
               <Badge variant="outline" className="text-xs gap-1">
                 <Quote className="size-3" />
-                Citations
+                {t('engagement-briefs:labels.hasCitations')}
               </Badge>
             )}
           </div>
@@ -256,13 +248,7 @@ function BriefCard({ brief, isRTL }: { brief: EngagementBrief; isRTL: boolean })
           </div>
         </div>
 
-        {/* View action */}
-        <div className="flex-shrink-0">
-          <Button variant="outline" size="sm" className="min-h-11 gap-1">
-            <ChevronLeft className={`size-4 ${isRTL ? '' : 'rotate-180'}`} />
-            <span className="hidden sm:inline">View</span>
-          </Button>
-        </div>
+        {/* No view action: there is no brief detail route to navigate to yet */}
       </div>
     </div>
   )

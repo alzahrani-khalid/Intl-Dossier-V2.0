@@ -130,7 +130,9 @@ function DossierContextBadge({
         </p>
       </div>
       <Badge variant="secondary" className="shrink-0 text-xs">
-        {dossierContext.inheritance_source}
+        {t(`addToDossier.context.${dossierContext.inheritance_source}`, {
+          defaultValue: dossierContext.inheritance_source,
+        })}
       </Badge>
     </div>
   )
@@ -464,6 +466,7 @@ function CommitmentDialog({
   const [dueDate, setDueDate] = React.useState('')
   const [ownerType, setOwnerType] = React.useState<string>('internal')
 
+  const queryClient = useQueryClient()
   const createCommitment = useCreateCommitment()
   const createLinks = useCreateWorkItemDossierLinks()
 
@@ -491,12 +494,19 @@ function CommitmentDialog({
         await createLinks.mutateAsync(
           buildDossierLinkPayload('commitment', result.id, dossierContext),
         )
+        await queryClient.invalidateQueries({
+          queryKey: ['dossier-tab', 'work_items', dossierContext.dossier_id],
+        })
+        await queryClient.invalidateQueries({
+          queryKey: workItemDossierKeys.timeline(dossierContext.dossier_id),
+        })
       }
 
-      toast.success(t('addToDossier.success.commitment'))
+      // success toast comes from useCreateCommitment; a second one here double-toasted
       resetForm()
       onClose()
     } catch {
+      // createCommitment toasts its own failure; this also covers link-creation failures
       toast.error(t('addToDossier.error.commitment'))
     }
   }

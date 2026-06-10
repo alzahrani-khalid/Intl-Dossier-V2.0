@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUNDS 1-5 COMPLETE + BACKLOG CONSOLIDATED (2026-06-10). Every nav-reachable surface inspected (33 surfaces across 5 rounds). Cross-round B-bucket consolidated into reports/escalated-backlog-master-2026-06-10.md with 8 proposed GSD phases (P1 schema/type truth -> P2 security pass -> P3-P6 verticals -> P7 product decisions -> P8 r1-2 carryover). LOOP IDLE: awaiting user decision on phase planning (/gsd:phase or /gsd:plan-phase per cluster). cursor-agent quota resets 6/27. PROCESS RULE: every commit verified via direct pnpm --filter intake-frontend build.",
+  "status": "ROUND 6 COMPLETE (2026-06-10): per-type Add-to-Dossier / detail-tab action workflows inspected (one per dossier type, 11 findings: 5 A / 6 B). Bucket-A fixed + committed; B-bucket appended below (NOT yet merged into escalated-backlog-master). Rounds 1-5: every nav-reachable surface inspected (33 surfaces); consolidated backlog in reports/escalated-backlog-master-2026-06-10.md with 8 proposed GSD phases — still awaiting user decision on phase planning. cursor-agent quota-walled until 6/27 (confirmed live this round); inspector was codex gpt-5.5 xhigh. PROCESS RULE: every commit verified via direct pnpm --filter intake-frontend build.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -151,6 +151,17 @@
   "round3_queue": [],
   "round4_queue": [],
   "round5_queue": [],
+  "round6_done": [
+    {
+      "type": "dossier detail-tab/action workflows (one per type: country KeyContacts card, org/forum/topic/wg/person/eo Add-to-Dossier actions, engagement Docs generate-brief)",
+      "report": "reports/dossier-tab-workflows-inspection-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh",
+      "findings": 11,
+      "fixed": "4 bucket-A: R6-01 KeyContactsCard dead ?tab=contacts deep-link -> honest non-interactive '+N more' (new overview.contacts.more EN+AR), R6-05 DocsTab brief card localized via engagement-briefs colon-form (status incl draft widened in BriefStatus, type, hasCitations) + inert View button removed (no brief detail route), R6-09 CommitmentDialog now invalidates dossier-tab work_items + timeline (mirrors TaskDialog) and duplicate success toast removed (hook toasts; dialog error toast kept for link failures), R6-11 inheritance_source badge localized + engagement/after_action/position/mou context keys EN+AR",
+      "skipped": "R6-08 deliberately: invalidation-key fix on the obsolete T064 relationship hook has zero user effect while the create path itself 400s (B R6-07 owns the migration to the canonical service)",
+      "escalated": "B-bucket: R6-02 key_contacts schema drift (query selects name_ar/photo_url/linked_person_dossier_id absent from generated types — VERIFY vs live), R6-03 PositionDialog sends dossier id as position_type_id + empty title_ar/audience_groups and never creates position_dossier_links (edge rejects; needs UX/data rewrite), R6-04 forum Schedule Event writes calendar_entries but dossier Engagements tab reads calendar_events (created events invisible), R6-06 document upload sends multipart FormData to JSON-parsing documents-create requiring pre-existing storage_path (needs storage-first upload flow), R6-07 relationship create posts child_dossier_id but edge requires source/target_dossier_id (migrate to canonical relationship-api + dossier picker; affects working_group + elected_official routes), R6-10 elected_official action context collapses to person (needs subtype-aware context decision)"
+    }
+  ],
   "round5_done": [
     {
       "type": "approvals (list page /approvals — FINAL round-5)",

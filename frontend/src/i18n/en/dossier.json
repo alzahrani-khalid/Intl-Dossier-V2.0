@@ -897,7 +897,11 @@
     "context": {
       "linkedTo": "Will be linked to",
       "inheritanceSource": "Inheritance",
-      "direct": "Direct"
+      "direct": "Direct",
+      "engagement": "Engagement",
+      "after_action": "After-action",
+      "position": "Position",
+      "mou": "MoU"
     },
     "form": {
       "taskTitle": "Title",
@@ -1069,7 +1073,8 @@
     "contacts": {
       "title": "Key Contacts",
       "empty": "No contacts linked",
-      "viewAll": "View all {{count}} contacts"
+      "viewAll": "View all {{count}} contacts",
+      "more": "+{{count}} more contacts"
     },
     "engagements": {
       "title": "Engagements by Stage",

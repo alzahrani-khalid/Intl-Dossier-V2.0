@@ -75,7 +75,8 @@ export type WorkflowStage = 'todo' | 'in_progress' | 'review' | 'done' | 'cancel
 // ============================================================================
 
 export type BriefType = 'legacy' | 'ai'
-export type BriefStatus = 'completed' | 'generating' | 'failed'
+// 'draft' occurs on legacy/manual rows: engagement-briefs leaves briefs.status at its DB default
+export type BriefStatus = 'completed' | 'generating' | 'failed' | 'draft'
 
 export interface EngagementBrief {
   id: string

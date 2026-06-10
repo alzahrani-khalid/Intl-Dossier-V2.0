@@ -897,7 +897,11 @@
     "context": {
       "linkedTo": "سيتم ربطه بـ",
       "inheritanceSource": "مصدر الوراثة",
-      "direct": "مباشر"
+      "direct": "مباشر",
+      "engagement": "مشاركة",
+      "after_action": "ما بعد الاجتماع",
+      "position": "موقف",
+      "mou": "مذكرة تفاهم"
     },
     "form": {
       "taskTitle": "العنوان",
@@ -1069,7 +1073,8 @@
     "contacts": {
       "title": "جهات الاتصال الرئيسية",
       "empty": "لا توجد جهات اتصال مرتبطة",
-      "viewAll": "عرض كل {{count}} جهة اتصال"
+      "viewAll": "عرض كل {{count}} جهة اتصال",
+      "more": "+{{count}} جهة اتصال أخرى"
     },
     "engagements": {
       "title": "الارتباطات حسب المرحلة",
