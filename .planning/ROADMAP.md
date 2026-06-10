@@ -38,7 +38,7 @@ Plans:
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
-- [ ] 60-06-PLAN.md (Wave 3) — CI smoke test: every edge-fn .from/.rpc reference must exist in generated types (wired into existing lint job)
+- [x] 60-06-PLAN.md (Wave 3) — CI smoke test: every edge-fn .from/.rpc reference must exist in generated types (wired into existing lint job)
 
 Scope:
 
