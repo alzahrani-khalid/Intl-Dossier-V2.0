@@ -51,7 +51,11 @@ import { useCreateCommitment } from '@/hooks/useCommitments'
 import { useCreateTicket } from '@/hooks/useIntakeApi'
 import { useCreatePosition } from '@/hooks/useCreatePosition'
 import { useCreateCalendarEvent } from '@/hooks/useCreateCalendarEvent'
-import { useCreateRelationship } from '@/hooks/useCreateRelationship'
+// canonical relationship mutation (source/target contract); the obsolete
+// child_dossier_id hook at @/hooks/useCreateRelationship posts a payload the
+// dossiers-relationships-create edge fn rejects (verified vs staging 2026-06-10)
+import { useCreateRelationship } from '@/domains/relationships/hooks/useRelationships'
+import type { RelationshipType } from '@/services/relationship-api'
 import { useGenerateBrief } from '@/hooks/useGenerateBrief'
 import { useUploadDocument } from '@/hooks/useUploadDocument'
 import { useQueryClient } from '@tanstack/react-query'
@@ -828,36 +832,31 @@ function RelationshipDialog({
 }: ActionDialogProps) {
   const { t } = useTranslation('dossier')
   const [targetDossierId, setTargetDossierId] = React.useState('')
-  const [relationshipType, setRelationshipType] = React.useState<string>('collaborates_with')
+  const [relationshipType, setRelationshipType] = React.useState<string>('related_to')
 
-  const createRelationship = useCreateRelationship(dossierContext.dossier_id)
+  const createRelationship = useCreateRelationship()
 
   const isSubmitting = createRelationship.isPending
 
   const resetForm = () => {
     setTargetDossierId('')
-    setRelationshipType('collaborates_with')
+    setRelationshipType('related_to')
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
       await createRelationship.mutateAsync({
-        child_dossier_id: targetDossierId,
-        relationship_type: relationshipType as
-          | 'member_of'
-          | 'participates_in'
-          | 'collaborates_with'
-          | 'monitors'
-          | 'is_member'
-          | 'hosts',
+        source_dossier_id: dossierContext.dossier_id,
+        target_dossier_id: targetDossierId.trim(),
+        relationship_type: relationshipType as RelationshipType,
       })
 
-      toast.success(t('addToDossier.success.relationship'))
+      // success/error toasts come from the canonical hook (relationships ns)
       resetForm()
       onClose()
     } catch {
-      toast.error(t('addToDossier.error.relationship'))
+      // hook already surfaced the error toast; keep the dialog open for retry
     }
   }
 
@@ -896,17 +895,20 @@ function RelationshipDialog({
               value={relationshipType}
               onChange={setRelationshipType}
               options={[
+                // values must come from the dossier-relationships edge fn's
+                // VALID_RELATIONSHIP_TYPES (the old collaborates_with/monitors/
+                // hosts options were rejected by it)
+                { value: 'related_to', label: t('addToDossier.form.relationshipTypes.related_to') },
                 { value: 'member_of', label: t('addToDossier.form.relationshipTypes.member_of') },
                 {
                   value: 'participates_in',
                   label: t('addToDossier.form.relationshipTypes.participates_in'),
                 },
                 {
-                  value: 'collaborates_with',
-                  label: t('addToDossier.form.relationshipTypes.collaborates_with'),
+                  value: 'cooperates_with',
+                  label: t('addToDossier.form.relationshipTypes.cooperates_with'),
                 },
-                { value: 'monitors', label: t('addToDossier.form.relationshipTypes.monitors') },
-                { value: 'hosts', label: t('addToDossier.form.relationshipTypes.hosts') },
+                { value: 'hosted_by', label: t('addToDossier.form.relationshipTypes.hosted_by') },
               ]}
             />
           </div>

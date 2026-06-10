@@ -81,7 +81,8 @@ serve(async (req) => {
         dossier_id,
         link_type: link_type || 'related',
         notes,
-        linked_by: user.id,
+        // live position_dossier_links has created_by, not linked_by (verified 2026-06-10)
+        created_by: user.id,
       })
       .select(`
         *,

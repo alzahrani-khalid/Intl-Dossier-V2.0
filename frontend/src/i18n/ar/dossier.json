@@ -970,7 +970,10 @@
         "participates_in": "يشارك في",
         "collaborates_with": "يتعاون مع",
         "monitors": "يراقب",
-        "hosts": "يستضيف"
+        "hosts": "يستضيف",
+        "cooperates_with": "يتعاون مع",
+        "related_to": "مرتبط بـ",
+        "hosted_by": "مستضاف من"
       }
     },
     "success": {

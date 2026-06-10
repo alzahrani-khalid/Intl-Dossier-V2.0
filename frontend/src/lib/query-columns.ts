@@ -87,8 +87,9 @@ export const CALENDAR_EVENTS_COLUMNS = {
 // KEY CONTACTS TABLE
 // =============================================================================
 export const KEY_CONTACTS_COLUMNS = {
-  /** List view columns */
-  LIST: 'id, name, name_ar, role, title_en, title_ar, organization, organization_ar, email, phone, photo_url, last_interaction_date, notes, linked_person_dossier_id, dossier_id',
+  /** List view columns — live key_contacts has no bilingual/photo/person-link
+   * columns (verified 2026-06-10); selecting them 400s and blanks the card */
+  LIST: 'id, name, role, organization, email, phone, last_interaction_date, notes, dossier_id',
 } as const
 
 // =============================================================================

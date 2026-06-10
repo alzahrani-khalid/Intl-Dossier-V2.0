@@ -970,7 +970,10 @@
         "participates_in": "Participates In",
         "collaborates_with": "Collaborates With",
         "monitors": "Monitors",
-        "hosts": "Hosts"
+        "hosts": "Hosts",
+        "cooperates_with": "Cooperates with",
+        "related_to": "Related to",
+        "hosted_by": "Hosted by"
       }
     },
     "success": {

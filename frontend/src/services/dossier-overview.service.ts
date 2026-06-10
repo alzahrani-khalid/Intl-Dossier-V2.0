@@ -209,42 +209,40 @@ interface IntakeTicketRow {
 }
 
 /**
- * Calendar event row from Supabase
+ * Calendar entry row from Supabase — calendar_entries is the canonical
+ * operational calendar (calendar_events is a separate, empty forum-agenda
+ * model; verified vs staging 2026-06-10). Dates split into event_date +
+ * event_time; a local start_datetime is synthesized at mapping time.
  */
-interface CalendarEventRow {
+interface CalendarEntryRow {
   id: string
-  title_en?: string
-  title_ar?: string
-  event_type: string | null
-  start_datetime: string
-  end_datetime: string | null
-  location_en?: string
-  location_ar?: string
+  title_en: string | null
+  title_ar: string | null
+  entry_type: string | null
+  event_date: string
+  event_time: string | null
+  all_day: boolean | null
+  location: string | null
   is_virtual: boolean | null
-  virtual_link: string | null
-  description_en?: string
-  description_ar?: string
+  meeting_link: string | null
+  description_en: string | null
+  description_ar: string | null
   created_at: string
 }
 
 /**
- * Key contact row from Supabase
+ * Key contact row from Supabase — live key_contacts is monolingual and has no
+ * photo/person-link columns (verified vs staging 2026-06-10)
  */
 interface KeyContactRow {
   id: string
   name: string
-  name_ar: string | null
-  role?: string
-  title_en?: string
-  title_ar?: string
+  role: string | null
   organization: string | null
-  organization_ar?: string
   email: string | null
   phone: string | null
-  photo_url: string | null
   last_interaction_date: string | null
   notes: string | null
-  linked_person_dossier_id: string | null
 }
 
 // =============================================================================
@@ -802,34 +800,44 @@ async function fetchCalendarEvents(
   const endDate = new Date(now)
   endDate.setDate(endDate.getDate() + daysAhead)
 
+  // calendar_entries is the canonical operational calendar; event_date is a
+  // DATE column, so window on date strings
   const { data: events } = await supabase
-    .from('calendar_events')
-    .select(COLUMNS.CALENDAR_EVENTS.LIST)
+    .from('calendar_entries')
+    .select(
+      'id, title_en, title_ar, entry_type, event_date, event_time, all_day, location, is_virtual, meeting_link, description_en, description_ar, created_at',
+    )
     .eq('dossier_id', dossierId)
-    .gte('start_datetime', startDate.toISOString())
-    .lte('start_datetime', endDate.toISOString())
-    .order('start_datetime', { ascending: true })
+    .gte('event_date', startDate.toISOString().slice(0, 10))
+    .lte('event_date', endDate.toISOString().slice(0, 10))
+    .order('event_date', { ascending: true })
 
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const todayEnd = new Date(todayStart)
   todayEnd.setDate(todayEnd.getDate() + 1)
 
-  const allEvents: DossierCalendarEvent[] = ((events || []) as CalendarEventRow[]).map((e) => ({
-    id: e.id,
-    title_en: e.title_en || e.title_ar || '',
-    title_ar: e.title_ar || e.title_en || null,
-    event_type: (e.event_type || 'meeting') as DossierCalendarEvent['event_type'],
-    start_datetime: e.start_datetime,
-    end_datetime: e.end_datetime,
-    is_all_day: false,
-    location_en: e.location_en || null,
-    location_ar: e.location_ar || null,
-    is_virtual: e.is_virtual || false,
-    meeting_link: e.virtual_link,
-    description_en: e.description_en || null,
-    description_ar: e.description_ar || null,
-    created_at: e.created_at,
-  }))
+  const allEvents: DossierCalendarEvent[] = ((events || []) as CalendarEntryRow[]).map((e) => {
+    // synthesize a LOCAL datetime (not toISOString) so day-bucketing stays
+    // timezone-stable — same approach as calendar.repository mapEntryToCalendarEvent
+    const time = e.all_day === true ? '00:00:00' : (e.event_time ?? '00:00:00')
+    const startDatetime = `${e.event_date}T${time}`
+    return {
+      id: e.id,
+      title_en: e.title_en || e.title_ar || '',
+      title_ar: e.title_ar || e.title_en || null,
+      event_type: (e.entry_type || 'meeting') as DossierCalendarEvent['event_type'],
+      start_datetime: startDatetime,
+      end_datetime: null,
+      is_all_day: e.all_day || false,
+      location_en: e.location || null,
+      location_ar: e.location || null,
+      is_virtual: e.is_virtual || false,
+      meeting_link: e.meeting_link,
+      description_en: e.description_en || null,
+      description_ar: e.description_ar || null,
+      created_at: e.created_at,
+    }
+  })
 
   return {
     total_count: allEvents.length,
@@ -856,17 +864,17 @@ async function fetchKeyContacts(dossierId: string): Promise<KeyContactsSection> 
   const allContacts: DossierKeyContact[] = ((contacts || []) as KeyContactRow[]).map((c) => ({
     id: c.id,
     name: c.name,
-    name_ar: c.name_ar,
-    title_en: c.role || c.title_en || null,
-    title_ar: c.title_ar || null,
+    name_ar: null,
+    title_en: c.role || null,
+    title_ar: null,
     organization_en: c.organization,
-    organization_ar: c.organization_ar || null,
+    organization_ar: null,
     email: c.email,
     phone: c.phone,
-    photo_url: c.photo_url,
+    photo_url: null,
     last_interaction_date: c.last_interaction_date,
     notes: c.notes,
-    linked_person_dossier_id: c.linked_person_dossier_id,
+    linked_person_dossier_id: null,
   }))
 
   return {

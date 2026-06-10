@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUND 9 COMPLETE (2026-06-10): per-type overview cards inspected at depth (6 findings: 5 A / 1 B — smallest yield yet, mostly Arabic-numeral formatting; the safe-finding well is NEARLY DRY). Bucket-A fixed + committed; rounds 6-9 B-buckets appended below (NOT yet merged into escalated-backlog-master). RECOMMENDATION: further inspection rounds have diminishing returns — remaining value is in the planned B-bucket phases awaiting user decision (reports/escalated-backlog-master-2026-06-10.md, 8 proposed GSD phases + rounds 6-9 additions). cursor-agent quota-walled until 6/27; inspector codex gpt-5.5 xhigh. PROCESS RULE: every commit verified via direct pnpm --filter intake-frontend build.",
+  "status": "ROUND 10 COMPLETE (2026-06-10, VERIFICATION ROUND): user re-armed after round-9 stop, so the loop pivoted to live-verifying the escalated B-bucket vs staging (codex drafted the SQL matrix in reports/dossier-b-bucket-verification-matrix-2026-06-10.md; Claude ran it via Supabase MCP). 5 verified-SMALL fixes landed; engagement grouped filters, position-create defaults, document upload rebuild, and persons RLS INSERT/UPDATE/DELETE remain PHASE (now live-confirmed, not speculative). NEXT ROUND GUIDANCE: re-inspection is exhausted; only verification or user-decided phase work remains. cursor-agent quota-walled until 6/27. PROCESS RULE: every commit verified via direct pnpm --filter intake-frontend build.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -151,6 +151,16 @@
   "round3_queue": [],
   "round4_queue": [],
   "round5_queue": [],
+  "round10_done": [
+    {
+      "type": "B-bucket live verification vs staging (codex matrix + Claude Supabase MCP checks)",
+      "report": "reports/dossier-b-bucket-verification-matrix-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh (matrix) + Claude (live SQL)",
+      "verified_small_fixed": "5: R6-02 key_contacts live table LACKS all 7 rich columns (name_ar/title_en/title_ar/organization_ar/photo_url/linked_person_dossier_id) -> the select 400'd silently and the Key Contacts card was ALWAYS empty; narrowed COLUMNS.KEY_CONTACTS.LIST + KeyContactRow + mapping (UI degrades via existing null fallbacks). R6-04 calendar_events has 0 rows live while calendar_entries has the dossier-linked data -> fetchCalendarEvents re-pointed to calendar_entries (local datetime synthesis per calendar.repository pattern) — dossier Engagements tab + drawer event KPI now read real data. R6-07 dossier_relationships live = canonical source/target (no type CHECK; edge validates) -> RelationshipDialog rewired to canonical useCreateRelationship + {source,target,type} payload + valid type options (old collaborates_with/monitors/hosts were edge-rejected; +cooperates_with/related_to/hosted_by keys EN+AR). R6-03-part position_dossier_links live column is created_by not linked_by -> positions-dossiers-create edge file fixed (NEEDS EDGE DEPLOY). R6-06-mitigation live documents table matches generated model (edge columns absent) -> document upload action removed from AddToDossierMenu content group until a storage-first contract exists.",
+      "verified_phase_confirmed": "R7-04 RPC has p_engagement_type live but grouped pills (meeting=4 enums, travel=3) cannot use a single-type param -> PHASE (server group-filter contract). R6-03 position_types=2 + audience_groups=4 exist live but picking defaults unattended encodes product semantics -> PHASE (picker UX). R6-06 working upload needs storage-first rebuild -> PHASE. Persons RLS: INSERT with_check + UPDATE/DELETE qual still require organization_id = jwt org_id (NULL-org rows immutable; SELECT-only was fixed) -> PHASE (policy/RPC reconciliation).",
+      "deploy_note": "positions-dossiers-create created_by fix is file-only until the edge fn is redeployed"
+    }
+  ],
   "round9_done": [
     {
       "type": "per-type overview cards (BilateralSummary, MembershipStructure, ForumMetadata, workspace OverviewTab, ConnectedAnchors, MemberList, SharedSummaryStats, EO OfficeCard)",
