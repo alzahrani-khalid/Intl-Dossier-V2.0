@@ -13,6 +13,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
 import { useMutation } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { requireAdmin } from '@/lib/auth/requireAdmin'
 import {
   Settings,
   Globe,
@@ -27,18 +28,7 @@ import { PageHeader } from '@/components/layout/PageHeader'
 
 export const Route = createFileRoute('/_protected/admin/system')({
   component: AdminSystemPage,
-  beforeLoad: async () => {
-    // Check admin role
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-    const user = session?.user
-    const isAdmin = user?.user_metadata?.role === 'admin' || user?.app_metadata?.role === 'admin'
-
-    if (!isAdmin) {
-      throw new Error('Admin access required')
-    }
-  },
+  beforeLoad: requireAdmin,
 })
 
 const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1'

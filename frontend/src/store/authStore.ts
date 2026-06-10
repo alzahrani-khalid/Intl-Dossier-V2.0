@@ -145,7 +145,10 @@ export const useAuthStore = create<AuthState>()(
                 id: session.user.id,
                 email: session.user.email || '',
                 name: profile?.full_name || session.user.user_metadata?.name,
-                role: profile?.role || session.user.user_metadata?.role,
+                // Authorization role comes ONLY from public.users.role (service-role-written
+                // truth). Never fall back to client-writable auth metadata (privilege
+                // escalation). name/avatar metadata fallbacks are display-only and stay.
+                role: profile?.role ?? 'viewer',
                 avatar: profile?.avatar_url || session.user.user_metadata?.avatar_url,
                 jobTitleEn: profile?.job_title_en ?? undefined,
                 jobTitleAr: profile?.job_title_ar ?? undefined,
@@ -211,7 +214,9 @@ export const useAuthStore = create<AuthState>()(
               .eq('id', session.user.id)
               .single()
 
-            const userRole = profile?.role || session.user.user_metadata?.role
+            // Authorization role comes ONLY from public.users.role; never fall back to
+            // client-writable auth metadata (privilege escalation).
+            const userRole = profile?.role ?? 'viewer'
 
             // Update Sentry user context on auth state change
             setSentryUser({

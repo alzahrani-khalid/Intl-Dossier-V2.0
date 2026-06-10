@@ -44,7 +44,7 @@ import {
 } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
-import { supabase } from '@/lib/supabase'
+import { requireAdmin } from '@/lib/auth/requireAdmin'
 import { PageHeader } from '@/components/layout/PageHeader'
 import {
   Shield,
@@ -87,16 +87,7 @@ import type {
 
 export const Route = createFileRoute('/_protected/admin/data-retention')({
   component: DataRetentionPage,
-  beforeLoad: async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-    const user = session?.user
-    const isAdmin = user?.user_metadata?.role === 'admin' || user?.app_metadata?.role === 'admin'
-    if (!isAdmin) {
-      throw new Error('Admin access required')
-    }
-  },
+  beforeLoad: requireAdmin,
 })
 
 // Entity type options
