@@ -255,6 +255,7 @@ export function DossierShell({
               size="sm"
               className="min-h-10 min-w-10 lg:hidden"
               onClick={() => setIsMobileSheetOpen(true)}
+              aria-label={t('header.relationships')}
             >
               <Link2 className="h-4 w-4 sm:me-2" />
               <span className="hidden sm:inline">{t('header.relationships')}</span>

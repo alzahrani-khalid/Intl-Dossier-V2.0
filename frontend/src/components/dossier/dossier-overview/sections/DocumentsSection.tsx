@@ -14,14 +14,11 @@ import {
   FileSignature,
   ScrollText,
   Paperclip,
-  Download,
-  Eye,
   Calendar,
   Shield,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type {
   DocumentsSectionProps,
@@ -110,16 +107,8 @@ function DocumentCard({ document, isRTL }: { document: DossierDocument; isRTL: b
               )}
             </div>
           </div>
-          <div className="flex items-center gap-1 shrink-0">
-            {document.file_path && (
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Download className="h-4 w-4" />
-              </Button>
-            )}
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Eye className="h-4 w-4" />
-            </Button>
-          </div>
+          {/* No view/download actions: neither had a click handler or target;
+              wire them once a document preview/storage-download path exists */}
         </div>
       </CardContent>
     </Card>

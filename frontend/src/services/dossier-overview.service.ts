@@ -1118,5 +1118,10 @@ export const dossierOverviewKeys = {
   all: ['dossier-overview'] as const,
   list: () => [...dossierOverviewKeys.all, 'list'] as const,
   detail: (dossierId: string) => [...dossierOverviewKeys.all, 'detail', dossierId] as const,
+  // Partial-overview requests must not share one cache entry: a drawer asking
+  // 3 sections would otherwise satisfy an overview card asking different ones.
+  // Extends detail() so prefix invalidation still hits every variant.
+  detailWithOptions: (dossierId: string, options: Record<string, unknown>) =>
+    [...dossierOverviewKeys.detail(dossierId), options] as const,
   export: (dossierId: string) => [...dossierOverviewKeys.all, 'export', dossierId] as const,
 }

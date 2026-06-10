@@ -1,7 +1,6 @@
 {
   "title": "سياق الملف",
   "description": "إدارة ارتباطات الملفات لعناصر العمل",
-
   "badge": {
     "linked_to": "مرتبط بـ {{dossierName}}",
     "linked_dossiers": "مرتبط بـ:",
@@ -12,7 +11,6 @@
     "direct": "ربط مباشر",
     "primary": "رئيسي"
   },
-
   "selector": {
     "title": "اختر الملف",
     "placeholder": "البحث في الملفات...",
@@ -26,14 +24,12 @@
     "filter_by_type": "تصفية حسب النوع",
     "all_types": "جميع الأنواع"
   },
-
   "type": {
     "country": "دولة",
     "organization": "منظمة",
     "forum": "منتدى",
     "theme": "موضوع"
   },
-
   "timeline": {
     "title": "الجدول الزمني للأنشطة",
     "empty": "لا توجد أنشطة لهذا الملف",
@@ -71,7 +67,14 @@
       "done": "منجز",
       "cancelled": "ملغي",
       "open": "مفتوح",
-      "closed": "مغلق"
+      "closed": "مغلق",
+      "draft": "مسودة",
+      "submitted": "مُرسلة",
+      "triaged": "مفروزة",
+      "assigned": "معيّنة",
+      "converted": "محوّلة",
+      "merged": "مدمجة",
+      "overdue": "متأخرة"
     },
     "priority": {
       "low": "منخفضة",
@@ -88,7 +91,6 @@
       "mou": "مذكرة التفاهم"
     }
   },
-
   "activity": {
     "task": "مهمة",
     "commitment": "التزام",
@@ -97,7 +99,6 @@
     "updated_at": "تم التحديث {{date}}",
     "view_details": "عرض التفاصيل"
   },
-
   "inheritance": {
     "direct": "مرتبط مباشرة",
     "engagement": "موروث من المشاركة",
@@ -106,13 +107,11 @@
     "mou": "موروث من مذكرة التفاهم",
     "path": "مسار الوراثة"
   },
-
   "status": {
     "active": "نشط",
     "inactive": "غير نشط",
     "archived": "مؤرشف"
   },
-
   "validation": {
     "dossier_required": "مطلوب ملف واحد على الأقل",
     "dossier_access_denied": "ليس لديك صلاحية الوصول لهذا الملف",
@@ -120,7 +119,6 @@
     "duplicate_link": "هذا الملف مرتبط بالفعل",
     "invalid_inheritance": "تكوين وراثة غير صالح"
   },
-
   "errors": {
     "resolve_failed": "فشل في حل سياق الملف",
     "create_link_failed": "فشل في ربط الملف",
@@ -129,7 +127,6 @@
     "search_failed": "فشل في البحث عن الملفات",
     "permission_denied": "ليس لديك صلاحية الوصول لهذا الملف"
   },
-
   "actions": {
     "add_dossier": "إضافة ملف",
     "remove_dossier": "إزالة الملف",
@@ -137,20 +134,17 @@
     "view_dossier": "عرض الملف",
     "edit_links": "تعديل ارتباطات الملف"
   },
-
   "context": {
     "auto_resolved": "تم حل سياق الملف تلقائياً",
     "manual_selection_required": "الرجاء اختيار ملف",
     "inherited_from": "موروث من {{source}}",
     "no_context": "لا يتوفر سياق ملف"
   },
-
   "hints": {
     "inheritance": "ترث عناصر العمل سياق الملف من الكيان الأصلي",
     "multiple_dossiers": "يمكنك ربط عنصر العمل بعدة ملفات",
     "primary_dossier": "يتم عرض الملف الرئيسي بشكل بارز في القوائم"
   },
-
   "error": {
     "timeline_title": "خطأ في الجدول الزمني للأنشطة",
     "timeline_description": "تعذر تحميل الجدول الزمني للأنشطة. يرجى المحاولة مرة أخرى.",
@@ -166,7 +160,6 @@
     "try_again": "حاول مرة أخرى",
     "refresh_page": "تحديث الصفحة"
   },
-
   "widget": {
     "title": "الملفات المرتبطة",
     "primary": "رئيسي",

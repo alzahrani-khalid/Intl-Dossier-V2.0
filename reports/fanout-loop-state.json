@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUND 7 COMPLETE (2026-06-10): per-type still-uncovered workflows inspected (export pack, tasks/audit/engagements tabs, engagement list filters; 8 findings: 5 A / 3 B). Bucket-A fixed + committed; rounds 6-7 B-buckets appended below (NOT yet merged into escalated-backlog-master). Rounds 1-5: every nav-reachable surface inspected (33 surfaces); consolidated backlog in reports/escalated-backlog-master-2026-06-10.md with 8 proposed GSD phases — still awaiting user decision on phase planning. cursor-agent quota-walled until 6/27; inspector codex gpt-5.5 xhigh. PROCESS RULE: every commit verified via direct pnpm --filter intake-frontend build.",
+  "status": "ROUND 8 COMPLETE (2026-06-10): drawer KPI/relationship-sidebar/docs-actions/timeline-status workflows inspected (8 findings: 7 A / 1 B). Bucket-A fixed + committed; rounds 6-8 B-buckets appended below (NOT yet merged into escalated-backlog-master). Per-type safe-finding well is THINNING — remaining value is mostly in the planned B-bucket phases. Rounds 1-5: every nav-reachable surface inspected (33 surfaces); consolidated backlog in reports/escalated-backlog-master-2026-06-10.md with 8 proposed GSD phases — still awaiting user decision on phase planning. cursor-agent quota-walled until 6/27; inspector codex gpt-5.5 xhigh. PROCESS RULE: every commit verified via direct pnpm --filter intake-frontend build.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -151,6 +151,16 @@
   "round3_queue": [],
   "round4_queue": [],
   "round5_queue": [],
+  "round8_done": [
+    {
+      "type": "drawer KPI strip (country), overview cache key (topic), Docs tab actions (org), relationship sidebar (forum/wg/person), eo timeline statuses",
+      "report": "reports/dossier-workflows-round8-inspection-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh",
+      "findings": 8,
+      "fixed": "7 bucket-A: R8-01 drawer includeSections += documents (documents KPI was guaranteed 0), R8-02 useDossierOverview cache key now carries normalized options via new detailWithOptions (partial responses cross-pollinated ALL overview cards/drawer/analytics for 5-min stale window; prefix invalidation preserved; useDossierExport JSON branch switched to getQueriesData prefix lookup; 83/83 drawer tests pass), R8-03 inert view/download icon buttons removed from DocumentsSection, R8-05/06 RelationshipSidebar localized (tier labels, 24 relationshipType keys EN+AR in dossier-shell.sidebar, remove aria-label, Cancel/Remove buttons, collapsed strip aria-labels + tooltips via dossier:type.*), R8-07 mobile relationships trigger aria-label, R8-08 timeline.status draft/submitted/triaged/assigned/converted/merged/overdue EN+AR in dossier-context",
+      "escalated": "B-bucket: R8-04 drawer 'Log engagement' CTA opens blank wizard dropping source dossier context (needs product/data-contract decision: participant vs host vs relationship edge vs prefill-only; then verify engagement_participants/engagement_dossiers writes vs live)"
+    }
+  ],
   "round7_done": [
     {
       "type": "still-uncovered per-type workflows (country export pack, org/wg Tasks tab, forum/topic Audit tab, engagement list filters, person Engagements tab, eo export label)",

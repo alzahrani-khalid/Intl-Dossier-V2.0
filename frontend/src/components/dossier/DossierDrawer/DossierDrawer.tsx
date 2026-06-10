@@ -43,7 +43,8 @@ export function DossierDrawer(): React.JSX.Element | null {
     dossierId ?? undefined,
     {
       enabled: open && Boolean(dossierId),
-      includeSections: ['work_items', 'calendar_events', 'activity_timeline'],
+      // 'documents' included so the documents KPI in MiniKpiStrip has real data
+      includeSections: ['work_items', 'calendar_events', 'activity_timeline', 'documents'],
     },
   )
 
@@ -89,15 +90,8 @@ export function DossierDrawer(): React.JSX.Element | null {
         className="drawer w-[min(720px,92vw)] max-md:w-screen max-md:border-0 max-md:shadow-none p-0 gap-0"
         style={{ boxShadow: isMobileNarrow ? 'none' : undefined }}
       >
-        <DrawerHead
-          dossierId={dossierId}
-          dossierType={dossierType}
-          onClose={closeDossier}
-        />
-        <div
-          className="drawer-body"
-          data-loading={overviewLoading || !overview ? 'true' : 'false'}
-        >
+        <DrawerHead dossierId={dossierId} dossierType={dossierType} onClose={closeDossier} />
+        <div className="drawer-body" data-loading={overviewLoading || !overview ? 'true' : 'false'}>
           {overviewLoading || !overview ? (
             <DrawerSkeleton />
           ) : (
