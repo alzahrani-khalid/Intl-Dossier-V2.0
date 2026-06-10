@@ -163,7 +163,9 @@ export default function CalendarTab(): ReactElement {
         <p className="text-sm text-muted-foreground text-center max-w-sm mb-4">
           {t('empty.calendar.body')}
         </p>
-        <Button variant="outline" size="sm" className="min-h-11">
+        {/* No-op until event creation is wired (R15-02); disabled to avoid a
+            false affordance. */}
+        <Button variant="outline" size="sm" className="min-h-11" disabled>
           <Plus className="h-4 w-4" />
           {t('empty.calendar.action')}
         </Button>
@@ -191,8 +193,9 @@ export default function CalendarTab(): ReactElement {
             <span className="hidden sm:inline">{t('actions.schedulePoll')}</span>
           </Button>
 
-          {/* TODO: Link to event creation when events API supports engagement_id filter */}
-          <Button variant="outline" size="sm" className="min-h-8">
+          {/* TODO: Link to event creation when events API supports engagement_id
+              filter. Disabled until wired so it is not a false affordance (R15-02). */}
+          <Button variant="outline" size="sm" className="min-h-8" disabled>
             <Plus className="h-4 w-4" />
             {t('actions.addEvent')}
           </Button>

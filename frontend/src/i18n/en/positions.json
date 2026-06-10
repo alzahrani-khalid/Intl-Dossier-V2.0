@@ -1,4 +1,7 @@
 {
+  "errors": {
+    "failed_to_load": "Failed to load"
+  },
   "library": {
     "title": "Positions Library",
     "subtitle": "{{count}} positions available",

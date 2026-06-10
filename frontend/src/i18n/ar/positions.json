@@ -1,4 +1,7 @@
 {
+  "errors": {
+    "failed_to_load": "فشل التحميل"
+  },
   "library": {
     "title": "مكتبة المواقف",
     "subtitle": "{{count}} موقف متاح",

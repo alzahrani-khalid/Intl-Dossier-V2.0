@@ -330,7 +330,9 @@ export default function OverviewTab(): ReactElement {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            <Button variant="default" className="min-h-11 min-w-11">
+            {/* Transition Stage + Create Task are no-ops until wired (R15-02);
+                disabled to avoid false affordances. Log After-Action is real. */}
+            <Button variant="default" className="min-h-11 min-w-11" disabled>
               {t('actions.transitionStage')}
             </Button>
             <Button variant="outline" className="min-h-11 min-w-11" asChild>
@@ -338,7 +340,7 @@ export default function OverviewTab(): ReactElement {
                 {t('actions.logAfterAction')}
               </Link>
             </Button>
-            <Button variant="outline" className="min-h-11 min-w-11">
+            <Button variant="outline" className="min-h-11 min-w-11" disabled>
               <Plus className="size-4" />
               {t('actions.createTask')}
             </Button>

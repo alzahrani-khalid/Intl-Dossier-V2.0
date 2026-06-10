@@ -280,7 +280,7 @@ export function PositionsLibraryPage() {
                   onClick={handleClearFilters}
                   aria-label={t('positions:library.clear_filters')}
                 >
-                  {t('common:clear_filters')}
+                  {t('positions:library.clear_filters')}
                 </Button>
               </div>
             )}

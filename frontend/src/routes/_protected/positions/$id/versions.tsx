@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { ArrowLeft, GitCompare } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { VersionComparison } from '@/components/version-comparison/VersionComparison'
 import { Skeleton } from '@/components/ui/skeleton'
 import { p } from '@/lib/navigation'
@@ -88,13 +88,9 @@ function VersionHistoryPage() {
           </Link>
           <h1 className="text-3xl font-bold">{t('positions:versions.title', 'Version History')}</h1>
         </div>
-
-        {canCompare && (
-          <Button onClick={() => {}}>
-            <GitCompare className="me-2 h-4 w-4" />
-            {t('positions:versions.compare', 'Compare Versions')}
-          </Button>
-        )}
+        {/* The comparison renders automatically below when two versions are
+            selected (canCompare), so a separate Compare button would be an inert
+            no-op (R15-04). */}
       </div>
 
       {/* Version List */}

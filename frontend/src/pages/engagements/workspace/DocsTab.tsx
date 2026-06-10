@@ -147,8 +147,9 @@ export default function DocsTab(): ReactElement {
         <h2 className="text-xl font-semibold">{t('tabs.docs')}</h2>
 
         <div className="flex items-center gap-2">
-          {/* Upload placeholder */}
-          <Button variant="outline" size="sm" className="min-h-11 gap-2">
+          {/* Upload placeholder — no-op until wired; disabled to avoid a false
+              affordance (R15-02). */}
+          <Button variant="outline" size="sm" className="min-h-11 gap-2" disabled>
             <Upload className="h-4 w-4" />
             <span className="hidden sm:inline">{t('docs.upload')}</span>
           </Button>
