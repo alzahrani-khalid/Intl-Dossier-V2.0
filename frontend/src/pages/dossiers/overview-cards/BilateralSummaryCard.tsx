@@ -42,17 +42,18 @@ export function BilateralSummaryCard({ dossierId }: BilateralSummaryCardProps): 
   const bilateralRelations = data?.related_dossiers?.by_relationship_type?.bilateral ?? []
   const mouCount = data?.documents?.mous?.length ?? 0
   const lastMeeting = data?.calendar_events?.past?.[0]
+  const numberFormat = new Intl.NumberFormat(i18n.language)
 
   const items = [
     {
       icon: <Handshake className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
       label: t('overview.bilateral.partnerships', { defaultValue: 'Bilateral Partners' }),
-      value: String(bilateralRelations.length),
+      value: numberFormat.format(bilateralRelations.length),
     },
     {
       icon: <FileSignature className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
       label: t('overview.bilateral.agreements', { defaultValue: 'Key Agreements' }),
-      value: String(mouCount),
+      value: numberFormat.format(mouCount),
     },
     {
       icon: <CalendarCheck className="h-4 w-4 text-muted-foreground flex-shrink-0" />,

@@ -26,7 +26,8 @@
     "committees": "Committees",
     "officeInfo": "Office Information",
     "termInfo": "Term Information",
-    "contactInfo": "Contact Information"
+    "contactInfo": "Contact Information",
+    "officeEmpty": "No office data available"
   },
   "delete": {
     "title": "Delete {{name}}?",

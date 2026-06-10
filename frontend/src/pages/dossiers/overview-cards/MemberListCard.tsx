@@ -88,10 +88,10 @@ export function MemberListCard({ dossierId }: MemberListCardProps): React.ReactE
             </div>
           ))}
           {hasMore && (
-            <p className="text-xs text-primary cursor-pointer hover:underline pt-1">
-              {t('overview.members.viewAll', {
-                defaultValue: 'View all {{count}} members',
-                count: members.length,
+            <p className="text-xs text-muted-foreground text-center pt-1">
+              {t('overview.members.more', {
+                defaultValue: '+{{count}} more members',
+                count: members.length - MAX_MEMBERS,
               })}
             </p>
           )}

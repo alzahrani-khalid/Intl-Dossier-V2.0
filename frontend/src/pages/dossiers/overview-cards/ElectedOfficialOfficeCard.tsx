@@ -105,7 +105,7 @@ export function ElectedOfficialOfficeCard({
 
       {displayRows.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
-          {t('list.empty', { defaultValue: 'No office data available' })}
+          {t('detail.officeEmpty', { defaultValue: 'No office data available' })}
         </p>
       ) : (
         <dl className="space-y-3">
@@ -120,7 +120,9 @@ export function ElectedOfficialOfficeCard({
               <dt className="text-sm text-muted-foreground flex-1 min-w-0">
                 {t('columns.termNumber')}
               </dt>
-              <dd className="text-sm font-medium text-end">{official.term_number}</dd>
+              <dd className="text-sm font-medium text-end">
+                {new Intl.NumberFormat(i18n.language).format(official.term_number)}
+              </dd>
             </div>
           )}
         </dl>

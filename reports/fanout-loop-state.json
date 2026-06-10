@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUND 8 COMPLETE (2026-06-10): drawer KPI/relationship-sidebar/docs-actions/timeline-status workflows inspected (8 findings: 7 A / 1 B). Bucket-A fixed + committed; rounds 6-8 B-buckets appended below (NOT yet merged into escalated-backlog-master). Per-type safe-finding well is THINNING — remaining value is mostly in the planned B-bucket phases. Rounds 1-5: every nav-reachable surface inspected (33 surfaces); consolidated backlog in reports/escalated-backlog-master-2026-06-10.md with 8 proposed GSD phases — still awaiting user decision on phase planning. cursor-agent quota-walled until 6/27; inspector codex gpt-5.5 xhigh. PROCESS RULE: every commit verified via direct pnpm --filter intake-frontend build.",
+  "status": "ROUND 9 COMPLETE (2026-06-10): per-type overview cards inspected at depth (6 findings: 5 A / 1 B — smallest yield yet, mostly Arabic-numeral formatting; the safe-finding well is NEARLY DRY). Bucket-A fixed + committed; rounds 6-9 B-buckets appended below (NOT yet merged into escalated-backlog-master). RECOMMENDATION: further inspection rounds have diminishing returns — remaining value is in the planned B-bucket phases awaiting user decision (reports/escalated-backlog-master-2026-06-10.md, 8 proposed GSD phases + rounds 6-9 additions). cursor-agent quota-walled until 6/27; inspector codex gpt-5.5 xhigh. PROCESS RULE: every commit verified via direct pnpm --filter intake-frontend build.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -151,6 +151,16 @@
   "round3_queue": [],
   "round4_queue": [],
   "round5_queue": [],
+  "round9_done": [
+    {
+      "type": "per-type overview cards (BilateralSummary, MembershipStructure, ForumMetadata, workspace OverviewTab, ConnectedAnchors, MemberList, SharedSummaryStats, EO OfficeCard)",
+      "report": "reports/dossier-workflows-round9-inspection-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh",
+      "findings": 6,
+      "fixed": "5 bucket-A: R9-01 BilateralSummaryCard counts via Intl.NumberFormat (AR got Latin digits), R9-03 workspace OverviewTab days-in-stage + progress percent (style:percent) + done/total localized, R9-04 MemberListCard fake 'View all' affordance -> honest '+N more members' muted text (new overview.members.more EN+AR), R9-05 SharedSummaryStatsCard 4 stat values localized, R9-06 EO OfficeCard list.empty -> new detail.officeEmpty key EN+AR + term_number localized",
+      "escalated": "B-bucket: R9-02 shared overview-section error contract — fetchRelatedDossiers/fetchDocuments/fetchCalendarEvents swallow Supabase errors and return empty section shapes, so cards render failures as trustworthy zero/empty states; needs decision: fail whole query vs section-level error metadata vs explicit unknown state (affects all overview cards)"
+    }
+  ],
   "round8_done": [
     {
       "type": "drawer KPI strip (country), overview cache key (topic), Docs tab actions (org), relationship sidebar (forum/wg/person), eo timeline statuses",

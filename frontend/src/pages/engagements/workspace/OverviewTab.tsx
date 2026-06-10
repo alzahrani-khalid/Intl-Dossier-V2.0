@@ -168,7 +168,9 @@ export default function OverviewTab(): ReactElement {
               {isLoading ? (
                 <Skeleton className="mt-1 h-6 w-12" />
               ) : (
-                <p className="text-xl font-semibold">{daysInStage}</p>
+                <p className="text-xl font-semibold">
+                  {new Intl.NumberFormat(locale).format(daysInStage)}
+                </p>
               )}
             </div>
           </CardContent>
@@ -186,9 +188,15 @@ export default function OverviewTab(): ReactElement {
                 <Skeleton className="mt-1 h-6 w-16" />
               ) : (
                 <>
-                  <p className="text-xl font-semibold">{stats.progressPercentage}%</p>
+                  <p className="text-xl font-semibold">
+                    {new Intl.NumberFormat(locale, {
+                      style: 'percent',
+                      maximumFractionDigits: 0,
+                    }).format(stats.progressPercentage / 100)}
+                  </p>
                   <p className="text-xs text-muted-foreground">
-                    {stats.done}/{stats.total}
+                    {new Intl.NumberFormat(locale).format(stats.done)}/
+                    {new Intl.NumberFormat(locale).format(stats.total)}
                   </p>
                 </>
               )}

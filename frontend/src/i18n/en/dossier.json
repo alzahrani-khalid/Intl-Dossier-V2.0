@@ -1143,7 +1143,8 @@
     "members": {
       "title": "Members",
       "empty": "No members linked",
-      "viewAll": "View all members"
+      "viewAll": "View all members",
+      "more": "+{{count}} more members"
     },
     "meetings": {
       "title": "Upcoming Meetings",
