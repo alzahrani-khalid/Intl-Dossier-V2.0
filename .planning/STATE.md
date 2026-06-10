@@ -1,16 +1,15 @@
 ---
 gsd_state_version: 1.0
 milestone: v6.4
-milestone_name: Stabilization & Carryover Sweep
+milestone_name: Escalated Backlog Hardening
 status: Awaiting next milestone
-last_updated: '2026-06-07T10:55:00Z'
-last_activity: 2026-06-07 — Completed quick task 260607-j2e — Country-Dossier inspection report RTL/i18n fixes (branch `quick/260607-j2e-country-dossier-rtl-i18n`, e4d16838..52c17473): (1) DossierShell breadcrumb + Export i18n keys fixed (bogus `tabs.overview` → `header.dossierHub` / `dossier:action.export`), realtime + export tooltips localized, `addToDossier.groups.planning` added (en+ar); (2) `COMMITMENTS.SUMMARY` now selects `title_ar` so RTL work-items render Arabic commitment titles + seeded `title_ar` for the 8 demo commitments (060-dashboard-demo.sql + staging UPDATE). 4 of 6 report findings confirmed non-issues (M1 engagements=data gap, L1 port=env override, L2 onboarding=localStorage, L3 nav=stale ref). tsc clean, build ×2. PRIOR: 260607-h9z — Country-Dossier inspection fixes (4 findings).
+last_updated: '2026-06-10T07:17:12.919Z'
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 20
-  completed_plans: 20
-  percent: 100
+  total_phases: 14
+  completed_phases: 12
+  total_plans: 79
+  completed_plans: 64
+  percent: 81
 ---
 
 # Project State
@@ -20,10 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-27 after v6.4 milestone)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** v6.4 shipped — planning next milestone (v7.0 Intelligence Engine)
+**Current focus:** Phase 60 — Schema & Type Truth Restoration
 
 ## Current Position
 
+Phase: 60 (Schema & Type Truth Restoration) — EXECUTING
+Plan: 1 of 6
 Milestone v6.4 Stabilization & Carryover Sweep: **SHIPPED 2026-05-27** (Phases 55-59, 20 plans, 14/14 requirements satisfied).
 Archived: `.planning/milestones/v6.4-ROADMAP.md` · `v6.4-REQUIREMENTS.md` · `v6.4-MILESTONE-AUDIT.md` (status: tech_debt — functionally complete; integration 14/14 wired, 0 functional blockers).
 Tag: `v6.4`. DesignV2 now lives on `main` with 8 enforced quality-gate contexts; v7.0 Intelligence Engine unblocked.
