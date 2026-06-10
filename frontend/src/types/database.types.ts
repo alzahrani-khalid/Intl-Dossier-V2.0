@@ -1186,6 +1186,20 @@ export type Database = {
             foreignKeyName: "agenda_items_linked_dossier_id_fkey"
             columns: ["linked_dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "agenda_items_linked_dossier_id_fkey"
+            columns: ["linked_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "agenda_items_linked_dossier_id_fkey"
+            columns: ["linked_dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -1237,6 +1251,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenda_items_presenter_person_id_fkey"
+            columns: ["presenter_person_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "agenda_items_presenter_person_id_fkey"
+            columns: ["presenter_person_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "agenda_items_presenter_person_id_fkey"
@@ -1366,6 +1394,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenda_participants_person_dossier_id_fkey"
+            columns: ["person_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "agenda_participants_person_dossier_id_fkey"
+            columns: ["person_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "agenda_participants_person_dossier_id_fkey"
@@ -1657,6 +1699,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_briefs_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "ai_briefs_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "ai_briefs_dossier_id_fkey"
@@ -3010,6 +3066,13 @@ export type Database = {
             foreignKeyName: "attendees_event_id_fkey"
             columns: ["event_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendees_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
             referencedRelation: "events"
             referencedColumns: ["id"]
           },
@@ -3228,6 +3291,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "availability_polls_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "availability_polls_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "availability_polls_dossier_id_fkey"
@@ -4836,6 +4913,20 @@ export type Database = {
             foreignKeyName: "calendar_events_dossier_id_fkey"
             columns: ["dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "calendar_events_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "calendar_events_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -5150,6 +5241,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cluster_memberships_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "cluster_memberships_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "cluster_memberships_dossier_id_fkey"
@@ -6653,6 +6758,20 @@ export type Database = {
             foreignKeyName: "countries_id_fkey"
             columns: ["id"]
             isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "countries_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "countries_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -6708,6 +6827,13 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "countries"
             referencedColumns: ["iso_code_2"]
+          },
+          {
+            foreignKeyName: "country_coordinates_iso_code_2_fkey"
+            columns: ["iso_code_2"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_code"]
           },
           {
             foreignKeyName: "country_coordinates_iso_code_2_fkey"
@@ -6873,6 +6999,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "intelligence_digest_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "intelligence_digest_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "intelligence_digest_dossier_id_fkey"
@@ -8955,6 +9095,20 @@ export type Database = {
             foreignKeyName: "dossier_interactions_dossier_id_fkey"
             columns: ["dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "dossier_interactions_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "dossier_interactions_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -9114,6 +9268,20 @@ export type Database = {
             foreignKeyName: "dossier_recommendations_recommended_dossier_id_fkey"
             columns: ["recommended_dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "dossier_recommendations_recommended_dossier_id_fkey"
+            columns: ["recommended_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "dossier_recommendations_recommended_dossier_id_fkey"
+            columns: ["recommended_dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -9151,6 +9319,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dossier_recommendations_source_dossier_id_fkey"
+            columns: ["source_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "dossier_recommendations_source_dossier_id_fkey"
+            columns: ["source_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "dossier_recommendations_source_dossier_id_fkey"
@@ -9247,6 +9429,20 @@ export type Database = {
             foreignKeyName: "dossier_relationships_source_dossier_id_fkey"
             columns: ["source_dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_source_dossier_id_fkey"
+            columns: ["source_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_source_dossier_id_fkey"
+            columns: ["source_dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -9284,6 +9480,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_target_dossier_id_fkey"
+            columns: ["target_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_target_dossier_id_fkey"
+            columns: ["target_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "dossier_relationships_target_dossier_id_fkey"
@@ -9354,6 +9564,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dossier_tags_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "dossier_tags_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "dossier_tags_dossier_id_fkey"
@@ -10401,6 +10625,20 @@ export type Database = {
             foreignKeyName: "engagement_dossiers_host_country_id_fkey"
             columns: ["host_country_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "engagement_dossiers_host_country_id_fkey"
+            columns: ["host_country_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "engagement_dossiers_host_country_id_fkey"
+            columns: ["host_country_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -10443,6 +10681,20 @@ export type Database = {
             foreignKeyName: "engagement_dossiers_host_organization_id_fkey"
             columns: ["host_organization_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "engagement_dossiers_host_organization_id_fkey"
+            columns: ["host_organization_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "engagement_dossiers_host_organization_id_fkey"
+            columns: ["host_organization_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -10480,6 +10732,20 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engagement_dossiers_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "engagement_dossiers_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "engagement_dossiers_id_fkey"
@@ -10522,6 +10788,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engagement_dossiers_parent_forum_id_fkey"
+            columns: ["parent_forum_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "engagement_dossiers_parent_forum_id_fkey"
+            columns: ["parent_forum_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "engagement_dossiers_parent_forum_id_fkey"
@@ -10626,6 +10906,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engagement_participants_participant_dossier_id_fkey"
+            columns: ["participant_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "engagement_participants_participant_dossier_id_fkey"
+            columns: ["participant_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "engagement_participants_participant_dossier_id_fkey"
@@ -10937,6 +11231,20 @@ export type Database = {
             foreignKeyName: "engagement_recommendations_resulting_engagement_id_fkey"
             columns: ["resulting_engagement_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "engagement_recommendations_resulting_engagement_id_fkey"
+            columns: ["resulting_engagement_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "engagement_recommendations_resulting_engagement_id_fkey"
+            columns: ["resulting_engagement_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -10974,6 +11282,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engagement_recommendations_target_dossier_id_fkey"
+            columns: ["target_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "engagement_recommendations_target_dossier_id_fkey"
+            columns: ["target_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "engagement_recommendations_target_dossier_id_fkey"
@@ -11044,6 +11366,20 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engagements_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "engagements_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "engagements_id_fkey"
@@ -11600,6 +11936,20 @@ export type Database = {
             foreignKeyName: "entity_dependency_snapshots_source_entity_id_fkey"
             columns: ["source_entity_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "entity_dependency_snapshots_source_entity_id_fkey"
+            columns: ["source_entity_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "entity_dependency_snapshots_source_entity_id_fkey"
+            columns: ["source_entity_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -11718,6 +12068,20 @@ export type Database = {
             foreignKeyName: "entity_duplicate_candidates_source_entity_id_fkey"
             columns: ["source_entity_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "entity_duplicate_candidates_source_entity_id_fkey"
+            columns: ["source_entity_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "entity_duplicate_candidates_source_entity_id_fkey"
+            columns: ["source_entity_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -11755,6 +12119,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entity_duplicate_candidates_target_entity_id_fkey"
+            columns: ["target_entity_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "entity_duplicate_candidates_target_entity_id_fkey"
+            columns: ["target_entity_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "entity_duplicate_candidates_target_entity_id_fkey"
@@ -11988,6 +12366,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entity_merge_history_primary_entity_id_fkey"
+            columns: ["primary_entity_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "entity_merge_history_primary_entity_id_fkey"
+            columns: ["primary_entity_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "entity_merge_history_primary_entity_id_fkey"
@@ -12487,6 +12879,13 @@ export type Database = {
             columns: ["added_by"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_attendees_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
             referencedColumns: ["id"]
           },
           {
@@ -13765,6 +14164,20 @@ export type Database = {
             foreignKeyName: "fk_forums_organizing_body"
             columns: ["organizing_body_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "fk_forums_organizing_body"
+            columns: ["organizing_body_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "fk_forums_organizing_body"
+            columns: ["organizing_body_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -13802,6 +14215,20 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "forums_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "forums_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "forums_id_fkey"
@@ -13972,6 +14399,20 @@ export type Database = {
             foreignKeyName: "government_decisions_related_dossier_id_fkey"
             columns: ["related_dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "government_decisions_related_dossier_id_fkey"
+            columns: ["related_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "government_decisions_related_dossier_id_fkey"
+            columns: ["related_dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -14074,6 +14515,20 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "health_scores_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "health_scores_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "health_scores_dossier_id_fkey"
@@ -14307,6 +14762,20 @@ export type Database = {
             foreignKeyName: "impact_affected_entities_affected_entity_id_fkey"
             columns: ["affected_entity_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "impact_affected_entities_affected_entity_id_fkey"
+            columns: ["affected_entity_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "impact_affected_entities_affected_entity_id_fkey"
+            columns: ["affected_entity_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -14426,6 +14895,20 @@ export type Database = {
             foreignKeyName: "impact_assessments_source_entity_id_fkey"
             columns: ["source_entity_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "impact_assessments_source_entity_id_fkey"
+            columns: ["source_entity_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "impact_assessments_source_entity_id_fkey"
+            columns: ["source_entity_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -14518,6 +15001,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "impact_notifications_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "impact_notifications_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "impact_notifications_entity_id_fkey"
@@ -15036,6 +15533,20 @@ export type Database = {
             foreignKeyName: "intelligence_digest_dossier_id_fkey1"
             columns: ["dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "intelligence_digest_dossier_id_fkey1"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "intelligence_digest_dossier_id_fkey1"
+            columns: ["dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -15152,6 +15663,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "intelligence_event_dossiers_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "intelligence_event_dossiers_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "intelligence_event_dossiers_dossier_id_fkey"
@@ -15520,6 +16045,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "intelligence_reports_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "intelligence_reports_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "intelligence_reports_entity_id_fkey"
@@ -16003,6 +16542,20 @@ export type Database = {
             foreignKeyName: "legislation_amendments_proposed_by_dossier_id_fkey"
             columns: ["proposed_by_dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "legislation_amendments_proposed_by_dossier_id_fkey"
+            columns: ["proposed_by_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "legislation_amendments_proposed_by_dossier_id_fkey"
+            columns: ["proposed_by_dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -16253,6 +16806,20 @@ export type Database = {
             foreignKeyName: "legislation_sponsors_organization_dossier_id_fkey"
             columns: ["organization_dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "legislation_sponsors_organization_dossier_id_fkey"
+            columns: ["organization_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "legislation_sponsors_organization_dossier_id_fkey"
+            columns: ["organization_dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -16290,6 +16857,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "legislation_sponsors_person_dossier_id_fkey"
+            columns: ["person_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "legislation_sponsors_person_dossier_id_fkey"
+            columns: ["person_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "legislation_sponsors_person_dossier_id_fkey"
@@ -16579,6 +17160,20 @@ export type Database = {
             foreignKeyName: "legislations_dossier_id_fkey"
             columns: ["dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "legislations_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "legislations_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -16814,6 +17409,20 @@ export type Database = {
             foreignKeyName: "meeting_action_items_assignee_person_id_fkey"
             columns: ["assignee_person_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "meeting_action_items_assignee_person_id_fkey"
+            columns: ["assignee_person_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "meeting_action_items_assignee_person_id_fkey"
+            columns: ["assignee_person_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -16985,6 +17594,20 @@ export type Database = {
             foreignKeyName: "meeting_agendas_dossier_id_fkey"
             columns: ["dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "meeting_agendas_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "meeting_agendas_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -17116,6 +17739,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meeting_attendees_person_dossier_id_fkey"
+            columns: ["person_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "meeting_attendees_person_dossier_id_fkey"
+            columns: ["person_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "meeting_attendees_person_dossier_id_fkey"
@@ -17274,6 +17911,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meeting_minutes_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "meeting_minutes_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "meeting_minutes_dossier_id_fkey"
@@ -18997,6 +19648,20 @@ export type Database = {
             foreignKeyName: "mous_signatory_1_dossier_id_fkey"
             columns: ["signatory_1_dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "mous_signatory_1_dossier_id_fkey"
+            columns: ["signatory_1_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "mous_signatory_1_dossier_id_fkey"
+            columns: ["signatory_1_dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -19034,6 +19699,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mous_signatory_2_dossier_id_fkey"
+            columns: ["signatory_2_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "mous_signatory_2_dossier_id_fkey"
+            columns: ["signatory_2_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "mous_signatory_2_dossier_id_fkey"
@@ -19146,6 +19825,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "network_clusters_leader_dossier_id_fkey"
+            columns: ["leader_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "network_clusters_leader_dossier_id_fkey"
+            columns: ["leader_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "network_clusters_leader_dossier_id_fkey"
@@ -19950,6 +20643,20 @@ export type Database = {
             foreignKeyName: "organizations_id_fkey"
             columns: ["id"]
             isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "organizations_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "organizations_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -20028,6 +20735,66 @@ export type Database = {
           source?: string | null
           timezone?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      pending_role_approvals: {
+        Row: {
+          created_at: string | null
+          current_role: Database["public"]["Enums"]["user_role"]
+          expires_at: string | null
+          first_approved_at: string | null
+          first_approver_id: string | null
+          id: string
+          reason: string
+          rejected_at: string | null
+          rejected_by: string | null
+          rejection_reason: string | null
+          requested_by: string
+          requested_role: Database["public"]["Enums"]["user_role"]
+          second_approved_at: string | null
+          second_approver_id: string | null
+          status: Database["public"]["Enums"]["approval_status"] | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          current_role: Database["public"]["Enums"]["user_role"]
+          expires_at?: string | null
+          first_approved_at?: string | null
+          first_approver_id?: string | null
+          id?: string
+          reason: string
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
+          requested_by: string
+          requested_role: Database["public"]["Enums"]["user_role"]
+          second_approved_at?: string | null
+          second_approver_id?: string | null
+          status?: Database["public"]["Enums"]["approval_status"] | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          current_role?: Database["public"]["Enums"]["user_role"]
+          expires_at?: string | null
+          first_approved_at?: string | null
+          first_approver_id?: string | null
+          id?: string
+          reason?: string
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
+          requested_by?: string
+          requested_role?: Database["public"]["Enums"]["user_role"]
+          second_approved_at?: string | null
+          second_approver_id?: string | null
+          status?: Database["public"]["Enums"]["approval_status"] | null
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -20640,6 +21407,20 @@ export type Database = {
             foreignKeyName: "persons_id_fkey"
             columns: ["id"]
             isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "persons_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "persons_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -20809,6 +21590,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planned_milestones_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "planned_milestones_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "planned_milestones_dossier_id_fkey"
@@ -21255,6 +22050,47 @@ export type Database = {
           },
         ]
       }
+      position_delegations: {
+        Row: {
+          created_at: string
+          delegate_id: string
+          delegator_id: string
+          expires_at: string | null
+          id: string
+          position_id: string
+          reason: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          delegate_id: string
+          delegator_id: string
+          expires_at?: string | null
+          id?: string
+          position_id: string
+          reason?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          delegate_id?: string
+          delegator_id?: string
+          expires_at?: string | null
+          id?: string
+          position_id?: string
+          reason?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "position_delegations_position_id_fkey"
+            columns: ["position_id"]
+            isOneToOne: false
+            referencedRelation: "positions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       position_dossier_links: {
         Row: {
           created_at: string
@@ -21297,6 +22133,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "position_dossier_links_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "position_dossier_links_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "position_dossier_links_dossier_id_fkey"
@@ -24752,6 +25602,13 @@ export type Database = {
             foreignKeyName: "sla_escalations_policy_id_fkey"
             columns: ["policy_id"]
             isOneToOne: false
+            referencedRelation: "sla_compliance_metrics"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "sla_escalations_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
             referencedRelation: "sla_policies"
             referencedColumns: ["id"]
           },
@@ -24802,6 +25659,13 @@ export type Database = {
           ticket_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "sla_events_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "sla_compliance_metrics"
+            referencedColumns: ["policy_id"]
+          },
           {
             foreignKeyName: "sla_events_policy_id_fkey"
             columns: ["policy_id"]
@@ -25212,6 +26076,20 @@ export type Database = {
             foreignKeyName: "stakeholder_influence_history_dossier_id_fkey"
             columns: ["dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "stakeholder_influence_history_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "stakeholder_influence_history_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -25325,6 +26203,20 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stakeholder_influence_scores_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "stakeholder_influence_scores_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "stakeholder_influence_scores_dossier_id_fkey"
@@ -26469,6 +27361,20 @@ export type Database = {
             foreignKeyName: "themes_id_fkey"
             columns: ["id"]
             isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "themes_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "themes_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -26728,6 +27634,20 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "topics_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "topics_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "topics_id_fkey"
@@ -28639,6 +29559,36 @@ export type Database = {
         }
         Relationships: []
       }
+      word_assistant_logs: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          input_text: string | null
+          output_text: string | null
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          input_text?: string | null
+          output_text?: string | null
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          input_text?: string | null
+          output_text?: string | null
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       work_item_dossiers: {
         Row: {
           _version: number
@@ -28711,6 +29661,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_item_dossiers_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "work_item_dossiers_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "work_item_dossiers_dossier_id_fkey"
@@ -29979,6 +30943,20 @@ export type Database = {
             foreignKeyName: "working_groups_id_fkey"
             columns: ["id"]
             isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "working_groups_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "working_groups_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -30023,6 +31001,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "working_groups_parent_body_id_fkey"
+            columns: ["parent_body_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "working_groups_parent_body_id_fkey"
+            columns: ["parent_body_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "working_groups_parent_body_id_fkey"
@@ -30347,6 +31339,7 @@ export type Database = {
         Row: {
           activity_timestamp: string | null
           activity_title: string | null
+          activity_title_ar: string | null
           assignee_id: string | null
           dossier_id: string | null
           icon_type: string | null
@@ -30373,6 +31366,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "work_item_dossiers_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "work_item_dossiers_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "work_item_dossiers_dossier_id_fkey"
@@ -30438,6 +31445,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dossier_interactions_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "dossier_interactions_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "dossier_interactions_dossier_id_fkey"
@@ -30630,6 +31651,20 @@ export type Database = {
             foreignKeyName: "engagement_recommendations_target_dossier_id_fkey"
             columns: ["target_dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "engagement_recommendations_target_dossier_id_fkey"
+            columns: ["target_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "engagement_recommendations_target_dossier_id_fkey"
+            columns: ["target_dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -30713,6 +31748,32 @@ export type Database = {
           },
         ]
       }
+      event_details: {
+        Row: {
+          country_code: string | null
+          country_id: string | null
+          country_name_ar: string | null
+          country_name_en: string | null
+          end_datetime: string | null
+          id: string | null
+          is_virtual: boolean | null
+          location_ar: string | null
+          location_en: string | null
+          max_participants: number | null
+          organizer_id: string | null
+          organizer_name_ar: string | null
+          organizer_name_en: string | null
+          start_datetime: string | null
+          status: string | null
+          title_ar: string | null
+          title_en: string | null
+          type: string | null
+          venue_ar: string | null
+          venue_en: string | null
+          virtual_link: string | null
+        }
+        Relationships: []
+      }
       intelligence_cache_status: {
         Row: {
           cache_expires_at: string | null
@@ -30748,6 +31809,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "intelligence_reports_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "intelligence_reports_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "intelligence_reports_entity_id_fkey"
@@ -31006,6 +32081,20 @@ export type Database = {
             foreignKeyName: "dossier_relationships_source_dossier_id_fkey"
             columns: ["source_dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_source_dossier_id_fkey"
+            columns: ["source_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_source_dossier_id_fkey"
+            columns: ["source_dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -31043,6 +32132,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_target_dossier_id_fkey"
+            columns: ["target_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_target_dossier_id_fkey"
+            columns: ["target_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "dossier_relationships_target_dossier_id_fkey"
@@ -31112,6 +32215,20 @@ export type Database = {
             foreignKeyName: "dossier_relationships_source_dossier_id_fkey"
             columns: ["source_dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_source_dossier_id_fkey"
+            columns: ["source_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_source_dossier_id_fkey"
+            columns: ["source_dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -31149,6 +32266,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_target_dossier_id_fkey"
+            columns: ["target_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_target_dossier_id_fkey"
+            columns: ["target_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "dossier_relationships_target_dossier_id_fkey"
@@ -31232,6 +32363,20 @@ export type Database = {
             foreignKeyName: "dossier_relationships_source_dossier_id_fkey"
             columns: ["source_dossier_id"]
             isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_source_dossier_id_fkey"
+            columns: ["source_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_source_dossier_id_fkey"
+            columns: ["source_dossier_id"]
+            isOneToOne: false
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -31269,6 +32414,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_target_dossier_id_fkey"
+            columns: ["target_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "dossier_relationships_target_dossier_id_fkey"
+            columns: ["target_dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "dossier_relationships_target_dossier_id_fkey"
@@ -31343,6 +32502,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      sla_compliance_metrics: {
+        Row: {
+          ack_breached_count: number | null
+          ack_met_count: number | null
+          avg_resolution_minutes: number | null
+          compliance_rate_pct: number | null
+          entity_type: Database["public"]["Enums"]["sla_entity_type"] | null
+          policy_id: string | null
+          policy_name: string | null
+          priority: Database["public"]["Enums"]["priority_level"] | null
+          refreshed_at: string | null
+          request_type: Database["public"]["Enums"]["request_type"] | null
+          resolution_breached_count: number | null
+          resolution_met_count: number | null
+          total_items: number | null
+        }
+        Relationships: []
       }
       stakeholder_network_summary: {
         Row: {
@@ -31456,6 +32633,20 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "themes_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "themes_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "themes_id_fkey"
@@ -31588,6 +32779,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planned_milestones_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "planned_milestones_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "planned_milestones_dossier_id_fkey"
@@ -31761,6 +32966,20 @@ export type Database = {
             foreignKeyName: "countries_id_fkey"
             columns: ["country_id"]
             isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "countries_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "countries_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: true
             referencedRelation: "stakeholder_network_summary"
             referencedColumns: ["dossier_id"]
           },
@@ -31838,6 +33057,34 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "countries_id_fkey"
+            columns: ["target_country_id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "countries_id_fkey"
+            columns: ["source_country_id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "countries_id_fkey"
+            columns: ["target_country_id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
+          },
+          {
+            foreignKeyName: "countries_id_fkey"
+            columns: ["source_country_id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "countries_id_fkey"
@@ -31972,6 +33219,20 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "working_groups_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["country_id"]
+          },
+          {
+            foreignKeyName: "working_groups_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "event_details"
+            referencedColumns: ["organizer_id"]
           },
           {
             foreignKeyName: "working_groups_id_fkey"
@@ -32287,6 +33548,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      capture_sla_daily_snapshot: { Args: never; Returns: undefined }
       check_ai_spend_cap: {
         Args: { p_org_id: string }
         Returns: {
@@ -32665,6 +33927,7 @@ export type Database = {
       expire_old_access_requests: { Args: never; Returns: undefined }
       expire_old_engagement_recommendations: { Args: never; Returns: number }
       expire_old_recommendations: { Args: never; Returns: number }
+      expire_pending_approvals: { Args: never; Returns: undefined }
       find_all_paths: {
         Args: {
           include_inactive?: boolean
@@ -34733,6 +35996,27 @@ export type Database = {
           venue_en: string
         }[]
       }
+      get_sla_at_risk_items: {
+        Args: {
+          p_entity_type?: Database["public"]["Enums"]["sla_entity_type"]
+          p_limit?: number
+          p_threshold_pct?: number
+        }
+        Returns: {
+          assigned_to: string
+          assignee_name: string
+          deadline_at: string
+          elapsed_minutes: number
+          entity_id: string
+          entity_type: Database["public"]["Enums"]["sla_entity_type"]
+          priority: string
+          progress_pct: number
+          remaining_minutes: number
+          sla_target_minutes: number
+          status: string
+          title: string
+        }[]
+      }
       get_sla_breached_tickets: {
         Args: never
         Returns: {
@@ -34744,6 +36028,51 @@ export type Database = {
           ticket_id: string
           ticket_number: string
           title: string
+        }[]
+      }
+      get_sla_compliance_by_assignee: {
+        Args: { p_end_date?: string; p_limit?: number; p_start_date?: string }
+        Returns: {
+          assignee_id: string
+          assignee_name: string
+          assignee_name_ar: string
+          avg_resolution_minutes: number
+          breached_count: number
+          compliance_rate: number
+          currently_at_risk: number
+          met_count: number
+          total_items: number
+        }[]
+      }
+      get_sla_compliance_by_type: {
+        Args: {
+          p_end_date?: string
+          p_entity_type?: Database["public"]["Enums"]["sla_entity_type"]
+          p_start_date?: string
+        }
+        Returns: {
+          avg_resolution_minutes: number
+          breached_count: number
+          compliance_rate: number
+          met_count: number
+          request_type: string
+          total_items: number
+        }[]
+      }
+      get_sla_dashboard_overview: {
+        Args: {
+          p_end_date?: string
+          p_entity_type?: Database["public"]["Enums"]["sla_entity_type"]
+          p_start_date?: string
+        }
+        Returns: {
+          at_risk_count: number
+          avg_resolution_minutes: number
+          breached_count: number
+          compliance_rate: number
+          met_count: number
+          total_items: number
+          trend_data: Json
         }[]
       }
       get_staff_directory: {
@@ -37093,6 +38422,7 @@ export type Database = {
         | "stamp"
         | "signature"
       annotation_visibility: "private" | "team" | "public"
+      approval_status: "pending" | "approved" | "rejected" | "expired"
       assignment_event_type:
         | "created"
         | "status_changed"
@@ -38406,6 +39736,7 @@ export const Constants = {
         "signature",
       ],
       annotation_visibility: ["private", "team", "public"],
+      approval_status: ["pending", "approved", "rejected", "expired"],
       assignment_event_type: [
         "created",
         "status_changed",
