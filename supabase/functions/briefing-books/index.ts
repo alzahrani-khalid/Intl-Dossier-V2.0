@@ -701,7 +701,7 @@ function generateHTMLDocument(
             ? `
         @page {
           @top-center {
-            content: "${config.headerText}";
+            content: "${escapeHtml(config.headerText)}";
             font-size: 9pt;
             color: #6b7280;
           }
@@ -715,7 +715,7 @@ function generateHTMLDocument(
             ? `
         @page {
           @bottom-left {
-            content: "${config.footerText}";
+            content: "${escapeHtml(config.footerText)}";
             font-size: 9pt;
             color: #6b7280;
           }
