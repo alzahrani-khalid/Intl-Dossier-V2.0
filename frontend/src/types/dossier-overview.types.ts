@@ -394,6 +394,10 @@ export interface RelatedDossiersSectionProps extends OverviewSectionProps {
 export interface DocumentsSectionProps extends OverviewSectionProps {
   data: DocumentsSection | null
   dossierId: string
+  // Drives type-aware bucket visibility: MoUs only render for country/organization
+  // (the only supported signatory types). DossierType excludes elected_official,
+  // which is a person subtype — pass 'person' for EO routes.
+  dossierType: DossierType
 }
 
 export interface WorkItemsSectionProps extends OverviewSectionProps {

@@ -163,19 +163,31 @@ function DocumentList({
  */
 export function DocumentsSection({
   data,
+  dossierType,
   isLoading,
   isRTL = false,
   className = '',
 }: DocumentsSectionProps) {
   const { t } = useTranslation('dossier-overview')
 
-  // Combine all documents for the "All" tab
+  // Type-aware bucket visibility (R14-01):
+  // - MoUs are only supported for country/organization signatories.
+  // - Briefs are never populatable (the dossier-scoped sub-fetch was removed in
+  //   round-11 and is hardcoded empty for every type) -> hidden entirely.
+  // - Attachments are likewise dead today -> shown only if rows actually exist.
+  const canShowMous = dossierType === 'country' || dossierType === 'organization'
+  const visibleMous = canShowMous ? (data?.mous ?? []) : []
+  const visibleAttachments = data?.attachments ?? []
+  const showAttachments = visibleAttachments.length > 0
+
+  // Combine the VISIBLE buckets for the "All" tab and the section totals, so a
+  // hidden/dead bucket can never keep the section alive or inflate the count.
   const allDocuments = useMemo(() => {
     if (!data) return []
-    return [...data.positions, ...data.mous, ...data.briefs, ...data.attachments].sort(
+    return [...data.positions, ...visibleMous, ...visibleAttachments].sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     )
-  }, [data])
+  }, [data, visibleMous, visibleAttachments])
 
   if (isLoading) {
     return (
@@ -191,7 +203,7 @@ export function DocumentsSection({
     )
   }
 
-  if (!data || data.total_count === 0) {
+  if (!data || allDocuments.length === 0) {
     return (
       <Card className={className}>
         <CardHeader className="pb-2">
@@ -213,7 +225,7 @@ export function DocumentsSection({
         <CardTitle className="text-base sm:text-lg flex items-center gap-2">
           <FileStack className="h-5 w-5" />
           {t('documents.title')}
-          <Badge variant="secondary">{data.total_count}</Badge>
+          <Badge variant="secondary">{allDocuments.length}</Badge>
         </CardTitle>
       </CardHeader>
 
@@ -227,18 +239,18 @@ export function DocumentsSection({
               <FileSignature className="h-4 w-4 me-1" />
               {t('documents.tabs.positions')} ({data.positions.length})
             </TabsTrigger>
-            <TabsTrigger value="mous" className="text-xs sm:text-sm shrink-0">
-              <ScrollText className="h-4 w-4 me-1" />
-              {t('documents.tabs.mous')} ({data.mous.length})
-            </TabsTrigger>
-            <TabsTrigger value="briefs" className="text-xs sm:text-sm shrink-0">
-              <FileText className="h-4 w-4 me-1" />
-              {t('documents.tabs.briefs')} ({data.briefs.length})
-            </TabsTrigger>
-            <TabsTrigger value="attachments" className="text-xs sm:text-sm shrink-0">
-              <Paperclip className="h-4 w-4 me-1" />
-              {t('documents.tabs.attachments')} ({data.attachments.length})
-            </TabsTrigger>
+            {canShowMous && (
+              <TabsTrigger value="mous" className="text-xs sm:text-sm shrink-0">
+                <ScrollText className="h-4 w-4 me-1" />
+                {t('documents.tabs.mous')} ({visibleMous.length})
+              </TabsTrigger>
+            )}
+            {showAttachments && (
+              <TabsTrigger value="attachments" className="text-xs sm:text-sm shrink-0">
+                <Paperclip className="h-4 w-4 me-1" />
+                {t('documents.tabs.attachments')} ({visibleAttachments.length})
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="all" className="mt-0">
@@ -249,17 +261,17 @@ export function DocumentsSection({
             <DocumentList documents={data.positions} isRTL={isRTL} emptyType="position" />
           </TabsContent>
 
-          <TabsContent value="mous" className="mt-0">
-            <DocumentList documents={data.mous} isRTL={isRTL} emptyType="mou" />
-          </TabsContent>
+          {canShowMous && (
+            <TabsContent value="mous" className="mt-0">
+              <DocumentList documents={visibleMous} isRTL={isRTL} emptyType="mou" />
+            </TabsContent>
+          )}
 
-          <TabsContent value="briefs" className="mt-0">
-            <DocumentList documents={data.briefs} isRTL={isRTL} emptyType="brief" />
-          </TabsContent>
-
-          <TabsContent value="attachments" className="mt-0">
-            <DocumentList documents={data.attachments} isRTL={isRTL} emptyType="attachment" />
-          </TabsContent>
+          {showAttachments && (
+            <TabsContent value="attachments" className="mt-0">
+              <DocumentList documents={visibleAttachments} isRTL={isRTL} emptyType="attachment" />
+            </TabsContent>
+          )}
         </Tabs>
       </CardContent>
     </Card>

@@ -22,7 +22,7 @@ function ForumDocsRoute(): ReactElement {
   const { id } = Route.useParams()
   return (
     <Suspense fallback={<TabSkeleton type="list" />}>
-      <DossierDocumentsTab dossierId={id} />
+      <DossierDocumentsTab dossierId={id} dossierType="forum" />
     </Suspense>
   )
 }

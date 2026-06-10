@@ -14,12 +14,17 @@ import { fetchDossierOverview } from '@/services/dossier-overview.service'
 import { STALE_TIME } from '@/lib/query-tiers'
 import { DocumentsSection } from '@/components/dossier/dossier-overview/sections/DocumentsSection'
 import { Button } from '@/components/ui/button'
+import type { DossierType } from '@/services/dossier-api'
 
 interface DossierDocumentsTabProps {
   dossierId: string
+  dossierType: DossierType
 }
 
-export function DossierDocumentsTab({ dossierId }: DossierDocumentsTabProps): ReactElement {
+export function DossierDocumentsTab({
+  dossierId,
+  dossierType,
+}: DossierDocumentsTabProps): ReactElement {
   const { t, i18n } = useTranslation('dossier-overview')
   const isRTL = i18n.language === 'ar'
 
@@ -47,6 +52,7 @@ export function DossierDocumentsTab({ dossierId }: DossierDocumentsTabProps): Re
       <DocumentsSection
         data={data?.documents ?? null}
         dossierId={dossierId}
+        dossierType={dossierType}
         isRTL={isRTL}
         isLoading={isLoading}
       />
