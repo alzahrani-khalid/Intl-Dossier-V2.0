@@ -58,6 +58,7 @@ import { useCreateRelationship } from '@/domains/relationships/hooks/useRelation
 import type { RelationshipType } from '@/services/relationship-api'
 import { useGenerateBrief } from '@/hooks/useGenerateBrief'
 import { useUploadDocument } from '@/hooks/useUploadDocument'
+import { dossierOverviewKeys } from '@/services/dossier-overview.service'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   useCreateWorkItemDossierLinks,
@@ -705,6 +706,7 @@ function EventDialog({
   isRTL,
 }: ActionDialogProps) {
   const { t } = useTranslation('dossier')
+  const queryClient = useQueryClient()
   const [title, setTitle] = React.useState('')
   const [date, setDate] = React.useState('')
   const [entryType, setEntryType] = React.useState<string>('internal_meeting')
@@ -736,6 +738,17 @@ function EventDialog({
         start_datetime: date,
         linked_item_type: 'dossier',
         linked_item_id: dossierContext.dossier_id,
+      })
+
+      // The mutation only invalidates the global ['calendar-events'] key; the
+      // dossier Engagements tab and overview Upcoming-Events KPI read
+      // dossier-scoped keys and would otherwise stay stale until the 5-min
+      // window (R12-04). Invalidate both so the new event shows immediately.
+      await queryClient.invalidateQueries({
+        queryKey: ['dossier-tab', 'engagements', dossierContext.dossier_id],
+      })
+      await queryClient.invalidateQueries({
+        queryKey: dossierOverviewKeys.detail(dossierContext.dossier_id),
       })
 
       toast.success(t('addToDossier.success.event'))

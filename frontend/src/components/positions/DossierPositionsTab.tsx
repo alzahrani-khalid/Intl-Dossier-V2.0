@@ -8,7 +8,10 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import { useDossierPositionLinks } from '../../hooks/useDossierPositionLinks'
+import { createPositionDossierLink } from '../../domains/positions/repositories/positions.repository'
 import { PositionList } from './PositionList'
 import { AttachPositionDialog } from './AttachPositionDialog'
 import { Button } from '../ui/button'
@@ -23,6 +26,7 @@ interface DossierPositionsTabProps {
 
 export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
   const { t } = useTranslation(['positions', 'common'])
+  const queryClient = useQueryClient()
 
   // Search and filter state
   const [searchQuery, setSearchQuery] = useState('')
@@ -103,14 +107,20 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
                 setLinkTypeFilter(value as 'primary' | 'related' | 'reference' | 'all')
               }
             >
-              <SelectTrigger aria-label="Filter by link type">
-                <SelectValue placeholder="All Link Types" />
+              <SelectTrigger aria-label={t('positions:position_dossier_links.link_type')}>
+                <SelectValue placeholder={t('positions:dossier_tab.all_link_types')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Link Types</SelectItem>
-                <SelectItem value="primary">Primary</SelectItem>
-                <SelectItem value="related">Related</SelectItem>
-                <SelectItem value="reference">Reference</SelectItem>
+                <SelectItem value="all">{t('positions:dossier_tab.all_link_types')}</SelectItem>
+                <SelectItem value="primary">
+                  {t('positions:position_dossier_links.types.primary')}
+                </SelectItem>
+                <SelectItem value="related">
+                  {t('positions:position_dossier_links.types.related')}
+                </SelectItem>
+                <SelectItem value="reference">
+                  {t('positions:position_dossier_links.types.reference')}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -181,7 +191,38 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
         <AttachPositionDialog
           engagementId=""
           dossierId={dossierId}
-          onAttach={async () => {
+          attachedPositionIds={positions.map((p) => p.id)}
+          onAttach={async (positionIds) => {
+            // Persist each selected position as a position_dossier_link. The
+            // dialog previously discarded the selection (no-op), so attaching
+            // never added rows to the tab (R12-06).
+            const results = await Promise.allSettled(
+              positionIds.map((positionId) =>
+                createPositionDossierLink(positionId, { dossier_id: dossierId }),
+              ),
+            )
+            const failed = results.filter((r) => r.status === 'rejected').length
+            // Invalidate the dossier-scoped reader (the mutation hook only knows
+            // the inverse position-detail key) so the new rows render.
+            await queryClient.invalidateQueries({
+              queryKey: ['dossier-position-links', dossierId],
+            })
+            if (failed > 0) {
+              toast.error(
+                t('positions:attach.attachPartialError', {
+                  failed,
+                  total: positionIds.length,
+                  defaultValue: 'Failed to attach {{failed}} of {{total}} positions',
+                }),
+              )
+            } else {
+              toast.success(
+                t('positions:attach.attachSuccess', {
+                  count: positionIds.length,
+                  defaultValue: 'Attached {{count}} position(s)',
+                }),
+              )
+            }
             setShowAttachDialog(false)
           }}
         />

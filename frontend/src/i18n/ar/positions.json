@@ -354,7 +354,9 @@
     "selected": "محدد",
     "selectThis": "اختر هذا الموقف",
     "attachSelected": "إرفاق {{count}} موقف",
-    "attaching": "جاري الإرفاق..."
+    "attaching": "جاري الإرفاق...",
+    "attachSuccess": "تم إرفاق {{count}} موقف",
+    "attachPartialError": "تعذّر إرفاق {{failed}} من {{total}} موقف"
   },
   "briefing": {
     "title": "إنشاء حزمة إحاطة",
@@ -429,6 +431,7 @@
     "type_filter": "تصفية حسب النوع",
     "all_statuses": "كل الحالات",
     "all_types": "كل الأنواع",
+    "all_link_types": "كل أنواع الروابط",
     "clear_filters": "مسح الفلاتر",
     "error_loading": "فشل تحميل المواقف",
     "no_results": "لا توجد مواقف تطابق الفلاتر",

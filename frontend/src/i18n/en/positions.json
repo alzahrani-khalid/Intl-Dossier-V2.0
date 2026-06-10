@@ -384,7 +384,9 @@
     "selected": "Selected",
     "selectThis": "Select This Position",
     "attachSelected": "Attach {{count}} Position(s)",
-    "attaching": "Attaching..."
+    "attaching": "Attaching...",
+    "attachSuccess": "Attached {{count}} position(s)",
+    "attachPartialError": "Failed to attach {{failed}} of {{total}} positions"
   },
   "briefing": {
     "title": "Generate Briefing Pack",
@@ -430,6 +432,7 @@
     "type_filter": "Filter by type",
     "all_statuses": "All Statuses",
     "all_types": "All Types",
+    "all_link_types": "All Link Types",
     "clear_filters": "Clear Filters",
     "error_loading": "Failed to load positions",
     "no_results": "No positions found matching your filters",

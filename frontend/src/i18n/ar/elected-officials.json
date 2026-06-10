@@ -71,7 +71,11 @@
     "roles": {
       "chair": "رئيس",
       "vice_chair": "نائب الرئيس",
-      "member": "عضو"
+      "member": "عضو",
+      "alternate": "عضو احتياطي",
+      "observer": "مراقب",
+      "secretary": "أمين السر",
+      "rapporteur": "مقرر"
     }
   }
 }

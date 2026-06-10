@@ -71,7 +71,11 @@
     "roles": {
       "chair": "Chair",
       "vice_chair": "Vice Chair",
-      "member": "Member"
+      "member": "Member",
+      "alternate": "Alternate",
+      "observer": "Observer",
+      "secretary": "Secretary",
+      "rapporteur": "Rapporteur"
     }
   }
 }
