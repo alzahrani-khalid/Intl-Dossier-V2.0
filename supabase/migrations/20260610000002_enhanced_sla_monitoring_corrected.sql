@@ -307,18 +307,21 @@ BEGIN
     WHERE t.created_at::date BETWEEN p_start_date AND p_end_date
   ),
   trend AS (
+    -- Alias snapshots (s) and qualify every column: total_items / met_count /
+    -- breached_count collide with this function's RETURNS TABLE OUT params, which
+    -- otherwise raises 42702 column reference is ambiguous at RETURN QUERY.
     SELECT jsonb_agg(
       jsonb_build_object(
-        'date', snapshot_date,
-        'compliance_pct', overall_compliance_pct,
-        'total', total_items,
-        'met', met_count,
-        'breached', breached_count
-      ) ORDER BY snapshot_date
+        'date', s.snapshot_date,
+        'compliance_pct', s.overall_compliance_pct,
+        'total', s.total_items,
+        'met', s.met_count,
+        'breached', s.breached_count
+      ) ORDER BY s.snapshot_date
     ) AS data
-    FROM sla_compliance_snapshots
-    WHERE snapshot_date BETWEEN p_start_date AND p_end_date
-      AND entity_type = p_entity_type
+    FROM sla_compliance_snapshots s
+    WHERE s.snapshot_date BETWEEN p_start_date AND p_end_date
+      AND s.entity_type = p_entity_type
   )
   SELECT
     cm.total,
@@ -392,8 +395,11 @@ BEGIN
   RETURN QUERY
   SELECT
     t.assigned_to,
-    COALESCE(u.full_name, 'Unassigned'),
-    u.name_ar,
+    -- Cast to text: users.full_name / users.name_ar are varchar; the RETURNS TABLE
+    -- declares assignee_name / assignee_name_ar as text. A bare varchar select raises
+    -- 42804 structure of query does not match function result type.
+    COALESCE(u.full_name, 'Unassigned')::text,
+    u.name_ar::text,
     COUNT(DISTINCT t.id),
     COUNT(DISTINCT CASE WHEN e.event_type = 'met' THEN t.id END),
     COUNT(DISTINCT CASE WHEN e.event_type = 'breached' THEN t.id END),
