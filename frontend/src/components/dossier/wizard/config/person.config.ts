@@ -94,12 +94,11 @@ const composePersonExtension = (
   )
 
   // ── D-26: rename nationality_id → nationality_country_id at boundary ──
-  const nationality_country_id =
-    ((data.nationality_id as string | undefined) ?? '').trim() || null
+  const nationality_country_id = ((data.nationality_id as string | undefined) ?? '').trim() || null
 
   // Trim helper for optional string columns.
   const trimOrNull = (v: string | undefined): string | null =>
-    ((v ?? '').trim() === '' ? null : (v ?? '').trim())
+    (v ?? '').trim() === '' ? null : (v ?? '').trim()
 
   return {
     honorific_en,
@@ -162,6 +161,9 @@ export const personWizardConfig: WizardConfig<PersonFormData> = {
 // Phase 30 D-01, D-16, D-17 — same shell/hook, subtype-aware step array.
 export const electedOfficialWizardConfig: WizardConfig<PersonFormData> = {
   type: 'person',
+  // Submits as DB type 'person' (+ person_subtype) but must land on the
+  // elected-official shell, not the generic person detail (R16-02).
+  detailRouteSegment: 'elected-officials',
   schema: personSchema,
   defaultValues: getElectedOfficialDefaults(),
   steps: [

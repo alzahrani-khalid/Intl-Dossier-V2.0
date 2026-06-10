@@ -138,7 +138,7 @@ export function DossierShell({
         {/* Breadcrumbs */}
         <nav
           className="label mb-2 flex min-w-0 items-center gap-2 overflow-hidden"
-          aria-label="Breadcrumb"
+          aria-label={t('header.breadcrumb', { defaultValue: 'Breadcrumb' })}
         >
           <Link
             to="/dashboard"

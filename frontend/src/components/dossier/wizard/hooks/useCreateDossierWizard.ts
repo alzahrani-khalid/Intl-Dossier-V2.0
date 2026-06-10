@@ -117,6 +117,10 @@ export function useCreateDossierWizard<T extends FieldValues>(
 
       if (config.onSuccess != null) {
         config.onSuccess(newDossier.id, newDossier.type as DossierType)
+      } else if (config.detailRouteSegment != null) {
+        // Subtype wizards (e.g. elected officials submit as DB type 'person')
+        // override the detail route so create lands on the correct shell (R16-02).
+        void navigate({ to: `/dossiers/${config.detailRouteSegment}/${newDossier.id}` })
       } else {
         void navigate({
           to: getDossierDetailPath(newDossier.id, newDossier.type as DossierType),

@@ -15,6 +15,7 @@
     "relationships": "العلاقات",
     "loading": "جارٍ تحميل الملف...",
     "dossierHub": "مركز الدوسيهات",
+    "breadcrumb": "مسار التنقل",
     "realtimeConnected": "متصل في الوقت الفعلي",
     "realtimeDisconnected": "غير متصل في الوقت الفعلي",
     "exportTooltip": "تصدير حزمة الإحاطة"

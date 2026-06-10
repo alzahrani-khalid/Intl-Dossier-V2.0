@@ -15,6 +15,7 @@
     "relationships": "Relationships",
     "loading": "Loading dossier...",
     "dossierHub": "Dossier Hub",
+    "breadcrumb": "Breadcrumb",
     "realtimeConnected": "Real-time connected",
     "realtimeDisconnected": "Real-time disconnected",
     "exportTooltip": "Export briefing pack"
