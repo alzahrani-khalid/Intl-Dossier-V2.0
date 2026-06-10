@@ -1,6 +1,6 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "ROUND 10 COMPLETE (2026-06-10, VERIFICATION ROUND): user re-armed after round-9 stop, so the loop pivoted to live-verifying the escalated B-bucket vs staging (codex drafted the SQL matrix in reports/dossier-b-bucket-verification-matrix-2026-06-10.md; Claude ran it via Supabase MCP). 5 verified-SMALL fixes landed; engagement grouped filters, position-create defaults, document upload rebuild, and persons RLS INSERT/UPDATE/DELETE remain PHASE (now live-confirmed, not speculative). NEXT ROUND GUIDANCE: re-inspection is exhausted; only verification or user-decided phase work remains. cursor-agent quota-walled until 6/27. PROCESS RULE: every commit verified via direct pnpm --filter intake-frontend build.",
+  "status": "ROUND 11 COMPLETE (2026-06-10, UAT ROUND): live-browser acceptance test of all rounds-6-10 bucket-A fixes (codex matrix reports/dossier-uat-matrix-round11-2026-06-10.md; Claude executed EN+AR via browser automation + Supabase MCP; results reports/dossier-uat-round11-2026-06-10.md). 22/26 PASS, 0 regressions. 4 new findings, 3 FIXED same round: F1 briefs dead-select 400 on every dossier (sub-fetch removed), F2 eventType i18n map missing 5 live entry_type values (added EN+AR), F4 backend fetchUserContext selected dead users.permissions + profiles.role -> 401 on EVERY authed /api route (dropped; NEEDS DROPLET BACKEND DEPLOY), F5 Intl.NumberFormat('ar') = latn digits in Chrome so ALL round-9 digit fixes were inert -> new lib/format-locale.ts toFormatLocale(ar->ar-SA) applied to 6 sites. F3 = elected_official is person_subtype by design (migration 20260202000001); staging had ZERO EO rows -> seeded Sen. Maria Vergara 19a22b0d. Also seeded: in-window calendar_entries for Indonesia, UAT commitment on UAE (via UI), WG-D->Indonesia cooperates_with relationship (via UI, proves canonical edge 201). NEXT ROUND GUIDANCE: UAT exhausted the verifiable surface; remaining items are data-blocked (R8-08 timeline statuses, R9-04 >5 members) or PHASE work (R9-02 error-swallow contract is the top enabler of F1-class silent breakage). cursor-agent quota-walled until 6/27. PROCESS RULE: every commit verified via direct pnpm --filter intake-frontend build.",
   "started": "2026-06-08",
   "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
@@ -151,6 +151,19 @@
   "round3_queue": [],
   "round4_queue": [],
   "round5_queue": [],
+  "round11_done": [
+    {
+      "type": "UAT acceptance round — all rounds-6-10 bucket-A fixes, EN+AR, live browser",
+      "matrix": "reports/dossier-uat-matrix-round11-2026-06-10.md",
+      "report": "reports/dossier-uat-round11-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh (matrix) + Claude (browser execution + live SQL)",
+      "result": "22/26 PASS (12 full, 10 observable-path w/ data-blocked remainder), 0 regressions",
+      "writes_proven": "R6-09 commitment create (1 toast + live invalidation), R10/R6-07 relationship create (canonical payload 201 + refetch)",
+      "fixed": "F1 briefs dead-select 400 every dossier (fetchDocuments sub-fetch removed + BRIEFS_COLUMNS corrected), F2 eventType +5 keys EN+AR (internal_meeting/holiday/training/forum/other), F4 backend auth.ts dead columns users.permissions + profiles.role 401'd ALL authed /api routes (NEEDS DROPLET DEPLOY), F5 toFormatLocale(ar->ar-SA) helper applied to BilateralSummary/SharedSummaryStats/EO OfficeCard/workspace OverviewTab/TeamWorkloadPanel/WorkItemTabs (bare 'ar' = latn digits in Chrome — round-9 digit fixes were inert)",
+      "noted": "F3 elected_official = person_subtype by design; staging had 0 EO rows (seeded). /api/countries 500s (legacy, unconsumed). Graph panel vs tier strip read different sources. R9-02 error-swallow contract enables F1-class silent breakage — top phase candidate.",
+      "seeds": "calendar_entries 3f465d9e (Indonesia, 2026-06-08), aa_commitments 'UAT round-11 commitment' (UAE), dossier_relationships WG-D->Indonesia cooperates_with, person dossier 19a22b0d Sen. Maria Vergara (elected_official subtype, office+term)"
+    }
+  ],
   "round10_done": [
     {
       "type": "B-bucket live verification vs staging (codex matrix + Claude Supabase MCP checks)",

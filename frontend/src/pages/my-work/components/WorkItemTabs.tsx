@@ -22,7 +22,7 @@ interface WorkItemTabsProps {
 
 export function WorkItemTabs({ activeTab, onTabChange, counts }: WorkItemTabsProps) {
   const { t, i18n } = useTranslation('my-work')
-  const nf = new Intl.NumberFormat(i18n.language === 'ar' ? 'ar' : 'en')
+  const nf = new Intl.NumberFormat(i18n.language === 'ar' ? 'ar-SA' : 'en')
   const tabs = [
     {
       id: 'all',

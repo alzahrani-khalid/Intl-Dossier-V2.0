@@ -13,6 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import { Landmark } from 'lucide-react'
+import { toFormatLocale } from '@/lib/format-locale'
 
 interface ElectedOfficialOfficeCardProps {
   dossierId: string
@@ -121,7 +122,7 @@ export function ElectedOfficialOfficeCard({
                 {t('columns.termNumber')}
               </dt>
               <dd className="text-sm font-medium text-end">
-                {new Intl.NumberFormat(i18n.language).format(official.term_number)}
+                {new Intl.NumberFormat(toFormatLocale(i18n.language)).format(official.term_number)}
               </dd>
             </div>
           )}

@@ -184,7 +184,12 @@
     "milestone": "مرحلة هامة",
     "reminder": "تذكير",
     "engagement": "مشاركة",
-    "review": "مراجعة"
+    "review": "مراجعة",
+    "internal_meeting": "اجتماع داخلي",
+    "holiday": "إجازة",
+    "training": "تدريب",
+    "forum": "منتدى",
+    "other": "أخرى"
   },
 
   "calendarEvents": {

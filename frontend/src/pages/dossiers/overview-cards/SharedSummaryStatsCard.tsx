@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { useDossierOverview } from '@/hooks/useDossierOverview'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Users, FileText, CalendarDays, Activity } from 'lucide-react'
+import { toFormatLocale } from '@/lib/format-locale'
 
 interface SharedSummaryStatsCardProps {
   dossierId: string
@@ -88,7 +89,7 @@ export function SharedSummaryStatsCard({
                 <span className="text-sm text-muted-foreground">{stat.label}</span>
               </div>
               <span className="text-base font-semibold">
-                {new Intl.NumberFormat(i18n.language).format(stat.value)}
+                {new Intl.NumberFormat(toFormatLocale(i18n.language)).format(stat.value)}
               </span>
             </div>
           ))}

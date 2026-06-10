@@ -30,6 +30,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { toFormatLocale } from '@/lib/format-locale'
 
 // ============================================================================
 // Helpers
@@ -103,6 +104,7 @@ export default function OverviewTab(): ReactElement {
   const { t, i18n } = useTranslation('workspace')
   const { direction, isRTL } = useDirection()
   const locale = i18n.language
+  const numberLocale = toFormatLocale(locale)
 
   // Data fetching
   const { data: profile, isLoading: profileLoading } = useEngagement(engagementId)
@@ -169,7 +171,7 @@ export default function OverviewTab(): ReactElement {
                 <Skeleton className="mt-1 h-6 w-12" />
               ) : (
                 <p className="text-xl font-semibold">
-                  {new Intl.NumberFormat(locale).format(daysInStage)}
+                  {new Intl.NumberFormat(numberLocale).format(daysInStage)}
                 </p>
               )}
             </div>
@@ -189,14 +191,14 @@ export default function OverviewTab(): ReactElement {
               ) : (
                 <>
                   <p className="text-xl font-semibold">
-                    {new Intl.NumberFormat(locale, {
+                    {new Intl.NumberFormat(numberLocale, {
                       style: 'percent',
                       maximumFractionDigits: 0,
                     }).format(stats.progressPercentage / 100)}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {new Intl.NumberFormat(locale).format(stats.done)}/
-                    {new Intl.NumberFormat(locale).format(stats.total)}
+                    {new Intl.NumberFormat(numberLocale).format(stats.done)}/
+                    {new Intl.NumberFormat(numberLocale).format(stats.total)}
                   </p>
                 </>
               )}

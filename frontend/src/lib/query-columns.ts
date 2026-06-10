@@ -199,9 +199,13 @@ export const MOUS_COLUMNS = {
 // =============================================================================
 // BRIEFS TABLE
 // =============================================================================
+// WARNING: live briefs has NO dossier_id (links via country_id/organization_id/
+// engagement_dossier_id) and stores content as a single jsonb `content` column.
+// A dossier-scoped list select is not possible against the current schema
+// (verified vs staging 2026-06-10).
 export const BRIEFS_COLUMNS = {
-  /** List view */
-  LIST: 'id, content_en, content_ar, generated_by, generated_at, is_template, dossier_id',
+  /** List view (live columns only) */
+  LIST: 'id, title, summary, status, created_at',
 } as const
 
 // =============================================================================

@@ -514,11 +514,13 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     }
   })
 
-  // Fetch briefs
-  const { data: briefs } = await supabase
-    .from('briefs')
-    .select('id, content_en, content_ar, generated_by, generated_at, is_template')
-    .eq('dossier_id', dossierId)
+  // Briefs sub-fetch removed: live briefs table has NO dossier_id column (links
+  // via country_id/organization_id/engagement_dossier_id) and none of the
+  // selected columns (content_en/ar, generated_by/at, is_template) exist, so
+  // this select 42703'd on every dossier and was swallowed into an empty group
+  // (verified vs staging 2026-06-10, round-11 UAT). Restore once a real
+  // dossier→brief contract exists.
+  const briefs: BriefRow[] = []
 
   // Note: Generic documents/attachments table doesn't exist in expected format
   // Attachments are linked to after_action_records, not directly to dossiers
@@ -557,7 +559,7 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     created_by_name: null,
   }))
 
-  const briefDocs: DossierDocument[] = ((briefs || []) as BriefRow[]).map((b) => ({
+  const briefDocs: DossierDocument[] = briefs.map((b) => ({
     id: b.id,
     title_en: b.content_en?.summary?.substring(0, 50) || 'Brief',
     title_ar: b.content_ar?.summary?.substring(0, 50) || null,

@@ -184,7 +184,12 @@
     "milestone": "Milestone",
     "reminder": "Reminder",
     "engagement": "Engagement",
-    "review": "Review"
+    "review": "Review",
+    "internal_meeting": "Internal meeting",
+    "holiday": "Holiday",
+    "training": "Training",
+    "forum": "Forum",
+    "other": "Other"
   },
 
   "calendarEvents": {

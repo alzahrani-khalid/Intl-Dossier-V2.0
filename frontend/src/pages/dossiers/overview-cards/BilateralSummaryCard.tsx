@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import { Handshake, FileSignature, CalendarCheck } from 'lucide-react'
+import { toFormatLocale } from '@/lib/format-locale'
 
 interface BilateralSummaryCardProps {
   dossierId: string
@@ -42,7 +43,7 @@ export function BilateralSummaryCard({ dossierId }: BilateralSummaryCardProps): 
   const bilateralRelations = data?.related_dossiers?.by_relationship_type?.bilateral ?? []
   const mouCount = data?.documents?.mous?.length ?? 0
   const lastMeeting = data?.calendar_events?.past?.[0]
-  const numberFormat = new Intl.NumberFormat(i18n.language)
+  const numberFormat = new Intl.NumberFormat(toFormatLocale(i18n.language))
 
   const items = [
     {
