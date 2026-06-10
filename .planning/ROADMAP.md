@@ -20,15 +20,17 @@
 
 **Goal:** The repo's generated types, committed migrations, and edge-function SQL all agree with the live staging database — every RPC/table an edge function references exists in generated types, and the missing canonical SQL is committed as forward migrations.
 **Depends on:** Nothing (foundation phase; unblocks P2-P8 backlog phases)
-**Plans:** 5 plans
+**Plans:** 6 plans
 **Requirements:** Backlog P1 (reports/escalated-backlog-master-2026-06-10.md)
 
 Plans:
-- [ ] 60-01-PLAN.md — Capture unified work stack (view + RPCs) from live into a forward migration [my-work #3]
-- [ ] 60-02-PLAN.md — Corrected SLA monitoring migration (users.full_name, not staff_profiles) + apply 4 dashboard RPCs [sla #2/#4]
-- [ ] 60-03-PLAN.md — event_details view + pending_role_approvals/position_delegations/word_assistant_logs tables (RLS, no auth.users trigger) [events #4, approvals #6, wa #4]
-- [ ] 60-04-PLAN.md — Regenerate types byte-identical + remove dead doubled-path + supersede 009 + fix/redeploy escalations-report [tq #5, data-library #1]
-- [ ] 60-05-PLAN.md — CI smoke test: every edge-fn .from/.rpc reference must exist in generated types (wired into lint job)
+
+- [ ] 60-01-PLAN.md (Wave 1) — Capture unified work stack (view + RPCs) from live into a forward migration [my-work #3]
+- [ ] 60-02-PLAN.md (Wave 1) — Corrected SLA monitoring migration (users.full_name, not staff_profiles) + 4 dashboard RPCs + fix/redeploy escalations-report absent columns [sla #2/#4, tq #5]
+- [ ] 60-03-PLAN.md (Wave 1) — event_details view (035 shape + organizer/country via dossiers) + supersede dead 009_data_library [events #4, data-library #1]
+- [ ] 60-06-PLAN.md (Wave 1) — pending_role_approvals + position_delegations + word_assistant_logs tables (owner-scoped RLS, no auth.users trigger) [approvals #6, wa #4]
+- [ ] 60-04-PLAN.md (Wave 2) — Regenerate database.types byte-identical (frontend+backend) + remove dead doubled-path copy + type-check both workspaces [P1 type regen]
+- [ ] 60-05-PLAN.md (Wave 3) — CI smoke test: every edge-fn .from/.rpc reference must exist in generated types (wired into existing lint job)
 
 Scope:
 
@@ -214,4 +216,4 @@ Full details: [v6.4-ROADMAP.md](milestones/v6.4-ROADMAP.md)
 
 ---
 
-_Roadmap last updated: 2026-06-10 — Phase 60 (Schema & Type Truth Restoration) planned: 5 plans across 3 waves. Next: `/gsd:execute-phase 60`._
+_Roadmap last updated: 2026-06-10 — Phase 60 (Schema & Type Truth Restoration) planned: 6 plans across 3 waves. Next: `/gsd:execute-phase 60`._
