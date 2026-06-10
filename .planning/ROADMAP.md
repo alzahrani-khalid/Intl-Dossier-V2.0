@@ -28,9 +28,9 @@ Plans:
 - [ ] 60-01-PLAN.md (Wave 1) — Capture unified work stack (view + RPCs) from live into a forward migration [my-work #3]
 - [ ] 60-02-PLAN.md (Wave 1) — Corrected SLA monitoring migration (users.full_name, not staff_profiles) + 4 dashboard RPCs + fix/redeploy escalations-report absent columns [sla #2/#4, tq #5]
 - [ ] 60-03-PLAN.md (Wave 1) — event_details view (035 shape + organizer/country via dossiers) + supersede dead 009_data_library [events #4, data-library #1]
-- [ ] 60-06-PLAN.md (Wave 1) — pending_role_approvals + position_delegations + word_assistant_logs tables (owner-scoped RLS, no auth.users trigger) [approvals #6, wa #4]
-- [ ] 60-04-PLAN.md (Wave 2) — Regenerate database.types byte-identical (frontend+backend) + remove dead doubled-path copy + type-check both workspaces [P1 type regen]
-- [ ] 60-05-PLAN.md (Wave 3) — CI smoke test: every edge-fn .from/.rpc reference must exist in generated types (wired into existing lint job)
+- [ ] 60-04-PLAN.md (Wave 1) — pending_role_approvals + position_delegations + word_assistant_logs tables (owner-scoped RLS, no auth.users trigger) [approvals #6, wa #4]
+- [ ] 60-05-PLAN.md (Wave 2) — Regenerate database.types byte-identical (frontend+backend) + remove dead doubled-path copy + type-check both workspaces [P1 type regen]
+- [ ] 60-06-PLAN.md (Wave 3) — CI smoke test: every edge-fn .from/.rpc reference must exist in generated types (wired into existing lint job)
 
 Scope:
 
