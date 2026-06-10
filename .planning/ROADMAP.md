@@ -34,7 +34,7 @@ Plans:
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
-- [ ] 60-05-PLAN.md (Wave 2) — Regenerate database.types byte-identical (frontend+backend) + remove dead doubled-path copy + type-check both workspaces [P1 type regen]
+- [x] 60-05-PLAN.md (Wave 2) — Regenerate database.types byte-identical (frontend+backend) + remove dead doubled-path copy + type-check both workspaces [P1 type regen]
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
