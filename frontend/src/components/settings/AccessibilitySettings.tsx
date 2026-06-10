@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase'
 
 type Prefs = {
   high_contrast: boolean
@@ -9,9 +10,23 @@ type Prefs = {
   focus_indicators: 'default' | 'enhanced' | 'none'
 }
 
+// Build request headers using the real authenticated session token. Never hard-code a
+// bearer token — a fixed placeholder credential is both dead and a real bypass risk if
+// the endpoint were ever wired to accept it.
+async function authHeaders(extra?: Record<string, string>): Promise<Record<string, string>> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+  const headers: Record<string, string> = { ...extra }
+  if (session?.access_token) {
+    headers.Authorization = `Bearer ${session.access_token}`
+  }
+  return headers
+}
+
 async function getPrefs(): Promise<Prefs> {
   const res = await fetch('/accessibility/preferences', {
-    headers: { Authorization: 'Bearer test-auth-token' },
+    headers: await authHeaders(),
   })
   if (!res.ok) throw new Error('failed')
   return res.json()
@@ -20,7 +35,7 @@ async function getPrefs(): Promise<Prefs> {
 async function savePrefs(p: Partial<Prefs>): Promise<Prefs> {
   const res = await fetch('/accessibility/preferences', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer test-auth-token' },
+    headers: await authHeaders({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(p),
   })
   if (!res.ok) throw new Error('failed')
