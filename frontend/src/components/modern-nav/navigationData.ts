@@ -29,7 +29,6 @@ import {
   FileEdit,
   HelpCircle,
   Shield,
-  Eye,
   LucideIcon,
 } from 'lucide-react'
 
@@ -322,13 +321,6 @@ export const navigationCategories: NavigationCategory[] = [
         icon: Shield,
         path: '/admin',
         adminOnly: true, // Only visible to admin users
-      },
-      {
-        id: 'accessibility',
-        label: 'Accessibility',
-        labelKey: 'navigation.accessibility',
-        icon: Eye,
-        path: '/accessibility',
       },
     ],
   },

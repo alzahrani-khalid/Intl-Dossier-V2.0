@@ -73,7 +73,6 @@ import { Route as ProtectedAnalyticsRouteImport } from './routes/_protected/anal
 import { Route as ProtectedAdvancedSearchRouteImport } from './routes/_protected/advanced-search'
 import { Route as ProtectedActivityRouteImport } from './routes/_protected/activity'
 import { Route as ProtectedActionableErrorsDemoRouteImport } from './routes/_protected/actionable-errors-demo'
-import { Route as ProtectedAccessibilityRouteImport } from './routes/_protected/accessibility'
 import { Route as ProtectedTasksIndexRouteImport } from './routes/_protected/tasks/index'
 import { Route as ProtectedReportsIndexRouteImport } from './routes/_protected/reports/index'
 import { Route as ProtectedPositionsIndexRouteImport } from './routes/_protected/positions/index'
@@ -533,11 +532,6 @@ const ProtectedActivityRoute = ProtectedActivityRouteImport.update({
 const ProtectedActionableErrorsDemoRoute = ProtectedActionableErrorsDemoRouteImport.update({
   id: '/actionable-errors-demo',
   path: '/actionable-errors-demo',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedAccessibilityRoute = ProtectedAccessibilityRouteImport.update({
-  id: '/accessibility',
-  path: '/accessibility',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedTasksIndexRoute = ProtectedTasksIndexRouteImport.update({
@@ -1304,7 +1298,6 @@ export interface FileRoutesByFullPath {
   '/modern-nav-standalone': typeof ModernNavStandaloneRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/accessibility': typeof ProtectedAccessibilityRoute
   '/actionable-errors-demo': typeof ProtectedActionableErrorsDemoRoute
   '/activity': typeof ProtectedActivityRoute
   '/advanced-search': typeof ProtectedAdvancedSearchRoute
@@ -1511,7 +1504,6 @@ export interface FileRoutesByTo {
   '/modern-nav-standalone': typeof ModernNavStandaloneRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/accessibility': typeof ProtectedAccessibilityRoute
   '/actionable-errors-demo': typeof ProtectedActionableErrorsDemoRoute
   '/activity': typeof ProtectedActivityRoute
   '/advanced-search': typeof ProtectedAdvancedSearchRoute
@@ -1706,7 +1698,6 @@ export interface FileRoutesById {
   '/modern-nav-standalone': typeof ModernNavStandaloneRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/_protected/accessibility': typeof ProtectedAccessibilityRoute
   '/_protected/actionable-errors-demo': typeof ProtectedActionableErrorsDemoRoute
   '/_protected/activity': typeof ProtectedActivityRoute
   '/_protected/advanced-search': typeof ProtectedAdvancedSearchRoute
@@ -1915,7 +1906,6 @@ export interface FileRouteTypes {
     | '/modern-nav-standalone'
     | '/register'
     | '/reset-password'
-    | '/accessibility'
     | '/actionable-errors-demo'
     | '/activity'
     | '/advanced-search'
@@ -2122,7 +2112,6 @@ export interface FileRouteTypes {
     | '/modern-nav-standalone'
     | '/register'
     | '/reset-password'
-    | '/accessibility'
     | '/actionable-errors-demo'
     | '/activity'
     | '/advanced-search'
@@ -2316,7 +2305,6 @@ export interface FileRouteTypes {
     | '/modern-nav-standalone'
     | '/register'
     | '/reset-password'
-    | '/_protected/accessibility'
     | '/_protected/actionable-errors-demo'
     | '/_protected/activity'
     | '/_protected/advanced-search'
@@ -2975,13 +2963,6 @@ declare module '@tanstack/react-router' {
       path: '/actionable-errors-demo'
       fullPath: '/actionable-errors-demo'
       preLoaderRoute: typeof ProtectedActionableErrorsDemoRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/accessibility': {
-      id: '/_protected/accessibility'
-      path: '/accessibility'
-      fullPath: '/accessibility'
-      preLoaderRoute: typeof ProtectedAccessibilityRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/tasks/': {
@@ -4393,7 +4374,6 @@ const ProtectedDossiersWorking_groupsIdRouteWithChildren =
   )
 
 interface ProtectedRouteChildren {
-  ProtectedAccessibilityRoute: typeof ProtectedAccessibilityRoute
   ProtectedActionableErrorsDemoRoute: typeof ProtectedActionableErrorsDemoRoute
   ProtectedActivityRoute: typeof ProtectedActivityRoute
   ProtectedAdvancedSearchRoute: typeof ProtectedAdvancedSearchRoute
@@ -4500,7 +4480,6 @@ interface ProtectedRouteChildren {
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
-  ProtectedAccessibilityRoute: ProtectedAccessibilityRoute,
   ProtectedActionableErrorsDemoRoute: ProtectedActionableErrorsDemoRoute,
   ProtectedActivityRoute: ProtectedActivityRoute,
   ProtectedAdvancedSearchRoute: ProtectedAdvancedSearchRoute,
