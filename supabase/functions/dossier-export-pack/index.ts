@@ -26,8 +26,7 @@ interface ExportSectionConfig {
 }
 
 interface ExportConfig {
-  format: 'pdf' | 'docx';
-  language: 'en' | 'ar' | 'both';
+  language: 'en' | 'ar';
   sections: ExportSectionConfig[];
   includeCoverPage: boolean;
   includeTableOfContents: boolean;
@@ -657,7 +656,7 @@ function generateHTMLDocument(dossier: any, data: any, config: ExportConfig): st
 
   return `
 <!DOCTYPE html>
-<html dir="${direction}" lang="${config.language === 'both' ? 'en' : config.language}">
+<html dir="${direction}" lang="${config.language}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
