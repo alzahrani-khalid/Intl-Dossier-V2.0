@@ -2,14 +2,16 @@
  * Dossier Export Pack Edge Function
  * Feature: dossier-export-pack
  *
- * Generates comprehensive briefing packets for dossiers in PDF or DOCX format.
- * Includes timeline, relationships, documents, commitments, positions, events, and contacts.
- * Supports bilingual output (EN/AR).
+ * Generates a self-contained, print-ready HTML briefing pack for a dossier and
+ * returns it directly as text/html (the client opens it in a new tab; PDF via the
+ * browser print dialog). Sections: overview, relationships, positions, MoUs,
+ * commitments, timeline, events, contacts, documents. Output language is EN or AR.
+ * A failed section degrades to an in-document error note and is listed in the
+ * X-Failed-Sections response header rather than failing the whole export.
  */
 
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // =============================================================================
 // Types
@@ -1247,11 +1249,13 @@ async function fetchDossierData(supabase: any, dossierId: string): Promise<any> 
 // Main Handler
 // =============================================================================
 
-serve(async (req) => {
-  // Handle CORS
+Deno.serve(async (req: Request) => {
+  // Handle CORS preflight with origin-validated headers
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
+
+  const cors = getCorsHeaders(req);
 
   if (req.method !== 'POST') {
     return new Response(
@@ -1265,7 +1269,7 @@ serve(async (req) => {
       }),
       {
         status: 405,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...cors, 'Content-Type': 'application/json' },
       }
     );
   }
@@ -1285,12 +1289,12 @@ serve(async (req) => {
         }),
         {
           status: 401,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...cors, 'Content-Type': 'application/json' },
         }
       );
     }
 
-    // Create Supabase client
+    // Create Supabase client scoped to the user token (RLS enforced)
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -1299,7 +1303,7 @@ serve(async (req) => {
       }
     );
 
-    // Get user
+    // Get user (explicit getUser(token) — bare getUser() 401s on valid tokens)
     const token = authHeader.replace('Bearer ', '');
     const {
       data: { user },
@@ -1318,7 +1322,7 @@ serve(async (req) => {
         }),
         {
           status: 401,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...cors, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -1339,26 +1343,39 @@ serve(async (req) => {
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...cors, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Validate dossier_id is a UUID before any query (ASVS V5)
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(dossier_id)) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: {
+            code: 'INVALID_REQUEST',
+            message_en: 'Invalid dossier_id format. Must be a valid UUID.',
+            message_ar: 'صيغة معرف الملف غير صالحة. يجب أن يكون UUID صالحًا.',
+          },
+        }),
+        {
+          status: 400,
+          headers: { ...cors, 'Content-Type': 'application/json' },
         }
       );
     }
 
     console.log(`Generating export for dossier ${dossier_id}`);
 
-    // Fetch all dossier data
+    // Fetch all dossier data (user-scoped client; per-section failures tracked)
     const data = await fetchDossierData(supabase, dossier_id);
 
     // Generate HTML document
     const html = generateHTMLDocument(data.dossier, data, config);
 
-    // For now, we return HTML as base64 and let the client render/print
-    // In production, integrate with a PDF generation service
-    const encoder = new TextEncoder();
-    const htmlBytes = encoder.encode(html);
-    const base64 = btoa(String.fromCharCode(...htmlBytes));
-
-    // Generate filename
+    // Build a save filename hint for Content-Disposition
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
     const dossierSlug = (data.dossier.name_en || 'dossier')
       .toLowerCase()
@@ -1366,45 +1383,22 @@ serve(async (req) => {
       .slice(0, 30);
     const fileName = `briefing-pack-${dossierSlug}-${timestamp}.html`;
 
-    // Upload to storage
-    const serviceClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
+    // D-08: surface which sections failed via a custom header (CORS-exposed)
+    const failedSectionsHeader = Object.keys(data.sectionErrors || {}).join(',');
 
-    const storagePath = `exports/${user.id}/${fileName}`;
-    const { error: uploadError } = await serviceClient.storage
-      .from('briefing-packs')
-      .upload(storagePath, htmlBytes, {
-        contentType: 'text/html',
-        upsert: true,
-      });
-
-    let downloadUrl: string | undefined;
-    if (!uploadError) {
-      const { data: urlData } = await serviceClient.storage
-        .from('briefing-packs')
-        .createSignedUrl(storagePath, 3600); // 1 hour expiry
-      downloadUrl = urlData?.signedUrl;
-    }
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        download_url: downloadUrl,
-        file_name: fileName,
-        file_size: htmlBytes.length,
-        page_count: Math.ceil(htmlBytes.length / 5000), // Rough estimate
-        expires_at: new Date(Date.now() + 3600000).toISOString(),
-        // Also include base64 for direct client rendering
-        content_base64: base64,
-        content_type: 'text/html',
-      }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+    // D-06: return the generated HTML directly — no storage upload, no signed
+    // URL, no service-role client. The function runs entirely on the user-scoped
+    // anon-key client under RLS.
+    return new Response(html, {
+      status: 200,
+      headers: {
+        ...cors,
+        'Content-Type': 'text/html; charset=utf-8',
+        'Content-Disposition': `inline; filename="${fileName}"`,
+        'Access-Control-Expose-Headers': 'X-Failed-Sections',
+        ...(failedSectionsHeader ? { 'X-Failed-Sections': failedSectionsHeader } : {}),
+      },
+    });
   } catch (error) {
     console.error('Export error:', error);
     return new Response(
@@ -1419,7 +1413,7 @@ serve(async (req) => {
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...cors, 'Content-Type': 'application/json' },
       }
     );
   }
