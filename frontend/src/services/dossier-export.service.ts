@@ -2,15 +2,22 @@
  * Dossier Export Service
  * Feature: dossier-export-pack
  *
- * API client for exporting dossiers to PDF/DOCX briefing packets.
- * Aggregates all dossier data and calls the Edge Function for document generation.
+ * API client for exporting a dossier to a print-ready HTML briefing pack.
+ * Calls the Edge Function, which returns the pack HTML body and reports any
+ * sections it could not generate via the X-Failed-Sections response header.
  */
 
 import { supabase } from '@/lib/supabase'
-import type {
-  DossierExportRequest,
-  DossierExportResponse,
-} from '@/types/dossier-export.types'
+import type { DossierExportRequest } from '@/types/dossier-export.types'
+
+/**
+ * Result of a successful export: the pack HTML and the list of section keys
+ * the edge could not generate (empty when every section rendered).
+ */
+export interface ExportDossierResult {
+  html: string
+  failedSections: string[]
+}
 
 // =============================================================================
 // API Error
@@ -56,9 +63,10 @@ async function getAuthHeaders(): Promise<Headers> {
 // =============================================================================
 
 /**
- * Export a dossier to PDF or DOCX format
+ * Export a dossier — returns the briefing pack HTML and the list of sections
+ * that could not be generated (read from the X-Failed-Sections header).
  */
-export async function exportDossier(request: DossierExportRequest): Promise<DossierExportResponse> {
+export async function exportDossier(request: DossierExportRequest): Promise<ExportDossierResult> {
   const headers = await getAuthHeaders()
 
   const response = await fetch(
@@ -83,38 +91,14 @@ export async function exportDossier(request: DossierExportRequest): Promise<Doss
     )
   }
 
-  return response.json()
-}
+  // The edge returns the pack as a text/html body.
+  const html = await response.text()
 
-/**
- * Download the exported file
- */
-export async function downloadExportedFile(downloadUrl: string, fileName: string): Promise<void> {
-  try {
-    const response = await fetch(downloadUrl)
+  // Sections that failed are reported as a comma-separated header.
+  const failedSectionsRaw = response.headers.get('X-Failed-Sections') ?? ''
+  const failedSections = failedSectionsRaw ? failedSectionsRaw.split(',').filter(Boolean) : []
 
-    if (!response.ok) {
-      throw new Error('Download failed')
-    }
-
-    const blob = await response.blob()
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = fileName
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
-  } catch (error) {
-    console.error('Download error:', error)
-    throw new DossierExportAPIError(
-      'Failed to download file',
-      500,
-      'DOWNLOAD_FAILED',
-      error instanceof Error ? error.message : 'Unknown error',
-    )
-  }
+  return { html, failedSections }
 }
 
 // =============================================================================
@@ -124,5 +108,4 @@ export async function downloadExportedFile(downloadUrl: string, fileName: string
 export const dossierExportKeys = {
   all: ['dossier-export'] as const,
   estimate: (dossierId: string) => [...dossierExportKeys.all, 'estimate', dossierId] as const,
-  history: (dossierId: string) => [...dossierExportKeys.all, 'history', dossierId] as const,
 }

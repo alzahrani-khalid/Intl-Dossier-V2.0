@@ -2,22 +2,18 @@
  * Dossier Export Types
  * Feature: dossier-export-pack
  *
- * TypeScript interfaces for one-click dossier export to PDF/DOCX briefing packets.
- * Includes timeline, relationships, documents, commitments, positions, events, and contacts.
- * Supports bilingual export (EN/AR).
+ * TypeScript interfaces for one-click dossier export to a print-ready HTML
+ * briefing pack. Includes timeline, relationships, documents, commitments,
+ * positions, events, and contacts. The pack is rendered in a single language
+ * (EN or AR).
  */
 
 import type { DossierType } from '@/services/dossier-api'
 
 /**
- * Export format options
- */
-export type DossierExportFormat = 'pdf' | 'docx'
-
-/**
  * Export language options
  */
-export type ExportLanguage = 'en' | 'ar' | 'both'
+export type ExportLanguage = 'en' | 'ar'
 
 /**
  * Export status for tracking progress
@@ -27,7 +23,6 @@ export type DossierExportStatus =
   | 'preparing'
   | 'fetching'
   | 'generating'
-  | 'uploading'
   | 'ready'
   | 'failed'
 
@@ -142,9 +137,7 @@ export const DEFAULT_EXPORT_SECTIONS: ExportSectionConfig[] = [
  * Export configuration options
  */
 export interface DossierExportConfig {
-  /** Export format */
-  format: DossierExportFormat
-  /** Primary language */
+  /** Pack language */
   language: ExportLanguage
   /** Sections to include */
   sections: ExportSectionConfig[]
@@ -171,8 +164,7 @@ export interface DossierExportConfig {
  * Default export configuration
  */
 export const DEFAULT_EXPORT_CONFIG: DossierExportConfig = {
-  format: 'pdf',
-  language: 'both',
+  language: 'en', // overridden at dialog level to match i18n.language
   sections: DEFAULT_EXPORT_SECTIONS,
   includeCoverPage: true,
   includeTableOfContents: true,
@@ -206,25 +198,13 @@ export interface DossierExportProgress {
 }
 
 /**
- * Export response from the Edge Function
+ * Export response surfaced to onSuccess callbacks
  */
 export interface DossierExportResponse {
   /** Whether export succeeded */
   success: boolean
-  /** Download URL for the generated file */
-  download_url?: string
-  /** Generated filename */
-  file_name?: string
-  /** File size in bytes */
-  file_size?: number
-  /** Number of pages */
-  page_count?: number
-  /** Expiration timestamp for the download URL */
-  expires_at?: string
-  /** Base64 encoded content (fallback when storage upload fails) */
-  content_base64?: string
-  /** MIME type of the content */
-  content_type?: string
+  /** Sections that could not be generated (D-08) */
+  failed_sections?: string[]
   /** Error details if failed */
   error?: {
     code: string
@@ -251,19 +231,21 @@ export interface UseDossierExportOptions {
  * Hook return type for useDossierExport
  */
 export interface UseDossierExportReturn {
-  /** Start export with configuration */
+  /** Start export with configuration — resolves with the pack HTML and failed sections */
   exportDossier: (
     dossierId: string,
     config?: Partial<DossierExportConfig>,
-  ) => Promise<DossierExportResponse>
+  ) => Promise<{ html: string; failedSections: string[] }>
   /** Quick export with default settings */
-  quickExport: (dossierId: string, format: DossierExportFormat) => Promise<DossierExportResponse>
+  quickExport: (dossierId: string) => Promise<{ html: string; failedSections: string[] }>
   /** Current export progress */
   progress: DossierExportProgress | null
   /** Whether export is in progress */
   isExporting: boolean
   /** Last export error */
   error: Error | null
+  /** Sections the edge could not generate (D-08) */
+  failedSections: string[]
   /** Reset state */
   reset: () => void
 }

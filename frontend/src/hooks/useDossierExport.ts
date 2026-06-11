@@ -3,7 +3,9 @@
  * Feature: dossier-export-pack
  *
  * React hook for managing dossier export operations.
- * Handles export state, progress tracking, and file download.
+ * Handles export state and progress tracking. Delivery (new-tab write or
+ * fallback download) is owned by the calling dialog — this hook performs no
+ * window/document side effects.
  */
 
 import { useState, useCallback } from 'react'
@@ -11,15 +13,11 @@ import type {
   DossierExportConfig,
   DossierExportProgress,
   DossierExportResponse,
-  DossierExportFormat,
   UseDossierExportOptions,
   UseDossierExportReturn,
 } from '@/types/dossier-export.types'
 import { DEFAULT_EXPORT_CONFIG } from '@/types/dossier-export.types'
-import {
-  exportDossier as exportDossierApi,
-  downloadExportedFile,
-} from '@/services/dossier-export.service'
+import { exportDossier as exportDossierApi } from '@/services/dossier-export.service'
 
 /**
  * Hook for managing dossier export operations
@@ -31,6 +29,7 @@ export function useDossierExport(options: UseDossierExportOptions = {}): UseDoss
   const [isExporting, setIsExporting] = useState(false)
   const [progress, setProgress] = useState<DossierExportProgress | null>(null)
   const [error, setError] = useState<Error | null>(null)
+  const [failedSections, setFailedSections] = useState<string[]>([])
 
   // Update progress helper
   const updateProgress = useCallback(
@@ -55,9 +54,10 @@ export function useDossierExport(options: UseDossierExportOptions = {}): UseDoss
     async (
       dossierId: string,
       config?: Partial<DossierExportConfig>,
-    ): Promise<DossierExportResponse> => {
+    ): Promise<{ html: string; failedSections: string[] }> => {
       setIsExporting(true)
       setError(null)
+      setFailedSections([])
       onStart?.()
 
       // Merge with default config
@@ -79,7 +79,7 @@ export function useDossierExport(options: UseDossierExportOptions = {}): UseDoss
         // Stage 2: Fetching data
         updateProgress({
           status: 'fetching',
-          progress: 25,
+          progress: 30,
           message_en: 'Fetching dossier data...',
           message_ar: 'جارٍ جلب بيانات الملف...',
         })
@@ -87,66 +87,31 @@ export function useDossierExport(options: UseDossierExportOptions = {}): UseDoss
         // Stage 3: Generating document
         updateProgress({
           status: 'generating',
-          progress: 50,
-          message_en: 'Generating document...',
-          message_ar: 'جارٍ إنشاء المستند...',
+          progress: 60,
+          message_en: 'Generating briefing pack...',
+          message_ar: 'جارٍ إنشاء حزمة الإحاطة...',
         })
 
-        // Make API call
-        const response = await exportDossierApi({
+        // The service returns the pack HTML and any sections that failed.
+        const { html, failedSections: sections } = await exportDossierApi({
           dossier_id: dossierId,
           config: fullConfig,
         })
 
-        // Stage 4: Uploading
+        setFailedSections(sections)
+
+        // Stage 4: Ready
         updateProgress({
-          status: 'uploading',
-          progress: 80,
-          message_en: 'Finalizing export...',
-          message_ar: 'جارٍ إنهاء التصدير...',
+          status: 'ready',
+          progress: 100,
+          message_en: 'Export complete',
+          message_ar: 'اكتمل التصدير',
         })
 
-        if (response.success) {
-          // Stage 5: Ready
-          updateProgress({
-            status: 'ready',
-            progress: 100,
-            message_en: 'Export complete!',
-            message_ar: 'اكتمل التصدير!',
-          })
+        const response: DossierExportResponse = { success: true, failed_sections: sections }
+        onSuccess?.(response)
 
-          // Trigger download if URL is available
-          if (response.download_url && response.file_name) {
-            await downloadExportedFile(response.download_url, response.file_name)
-          } else if (response.content_base64) {
-            // Fallback: Download from base64 content
-            const byteCharacters = atob(response.content_base64)
-            const byteNumbers = new Array(byteCharacters.length)
-            for (let i = 0; i < byteCharacters.length; i++) {
-              byteNumbers[i] = byteCharacters.charCodeAt(i)
-            }
-            const byteArray = new Uint8Array(byteNumbers)
-            const blob = new Blob([byteArray], {
-              type: response.content_type || 'text/html',
-            })
-            const url = URL.createObjectURL(blob)
-            const link = document.createElement('a')
-            link.href = url
-            link.download = response.file_name || `briefing-pack-${dossierId}.html`
-            document.body.appendChild(link)
-            link.click()
-            document.body.removeChild(link)
-            URL.revokeObjectURL(url)
-          }
-
-          onSuccess?.(response)
-        } else {
-          // Handle error response
-          const errorMsg = response.error?.message_en || 'Export failed'
-          throw new Error(errorMsg)
-        }
-
-        return response
+        return { html, failedSections: sections }
       } catch (err) {
         const exportError = err instanceof Error ? err : new Error('Export failed')
         setError(exportError)
@@ -167,11 +132,8 @@ export function useDossierExport(options: UseDossierExportOptions = {}): UseDoss
 
   // Quick export with default settings
   const quickExport = useCallback(
-    async (
-      dossierId: string,
-      format: DossierExportFormat = 'pdf',
-    ): Promise<DossierExportResponse> => {
-      return exportDossier(dossierId, { format })
+    async (dossierId: string): Promise<{ html: string; failedSections: string[] }> => {
+      return exportDossier(dossierId)
     },
     [exportDossier],
   )
@@ -181,6 +143,7 @@ export function useDossierExport(options: UseDossierExportOptions = {}): UseDoss
     setIsExporting(false)
     setProgress(null)
     setError(null)
+    setFailedSections([])
   }, [])
 
   return {
@@ -189,6 +152,7 @@ export function useDossierExport(options: UseDossierExportOptions = {}): UseDoss
     progress,
     isExporting,
     error,
+    failedSections,
     reset,
   }
 }
