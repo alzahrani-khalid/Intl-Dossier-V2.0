@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v6.6
 milestone_name: Dossier Workflow Completion
-status: roadmap_created
-last_updated: '2026-06-11T12:00:00.000Z'
-last_activity: 2026-06-11
+status: 'Roadmap created (Phases 62-67, 15/15 requirements mapped) — next: /gsd:plan-phase 62'
+last_updated: '2026-06-11T11:14:43.497Z'
+last_activity: 2026-06-11 — v6.6 roadmap created
 progress:
   total_phases: 6
   completed_phases: 0
