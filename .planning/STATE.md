@@ -1,33 +1,33 @@
 ---
 gsd_state_version: 1.0
-milestone: v6.4
+milestone: v6.5
 milestone_name: Escalated Backlog Hardening
 status: Awaiting next milestone
-last_updated: '2026-06-10T08:11:22.055Z'
+last_updated: '2026-06-11T07:27:33.571Z'
+last_activity: 2026-06-11 — Milestone v6.5 completed and archived
 progress:
   total_phases: 14
-  completed_phases: 12
+  completed_phases: 13
   total_plans: 79
-  completed_plans: 64
-  percent: 81
+  completed_plans: 70
+  percent: 89
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-05-27 after v6.4 milestone)
+See: .planning/PROJECT.md (updated 2026-06-11 after v6.5 milestone)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 60 — Schema & Type Truth Restoration
+**Current focus:** v6.5 shipped — next: v6.6 Dossier Workflow Completion (/gsd:new-milestone)
 
 ## Current Position
 
-Phase: 60 (Schema & Type Truth Restoration) — EXECUTING
-Plan: 1 of 6
-Milestone v6.4 Stabilization & Carryover Sweep: **SHIPPED 2026-05-27** (Phases 55-59, 20 plans, 14/14 requirements satisfied).
-Archived: `.planning/milestones/v6.4-ROADMAP.md` · `v6.4-REQUIREMENTS.md` · `v6.4-MILESTONE-AUDIT.md` (status: tech_debt — functionally complete; integration 14/14 wired, 0 functional blockers).
-Tag: `v6.4`. DesignV2 now lives on `main` with 8 enforced quality-gate contexts; v7.0 Intelligence Engine unblocked.
+Phase: Milestone v6.5 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-06-11 — Milestone v6.5 completed and archived
 
 ## Quick Tasks Completed
 
@@ -112,4 +112,48 @@ engineering work remained in any of these items.**
 
 ## Operator Next Steps
 
-- Start the next milestone with `/gsd:new-milestone` (after `/clear`).
+- Start the next milestone with /gsd-new-milestone
+
+## Deferred Items
+
+Items acknowledged and deferred at v6.5 milestone close on 2026-06-11:
+all 34 are quick-task directories whose work shipped (merged to main; see
+STATE.md Quick Tasks table and PR history) but that lack a completion marker
+file. Bookkeeping debt only — no open functional work.
+
+| Category   | Item                                                | Status                                   |
+| ---------- | --------------------------------------------------- | ---------------------------------------- |
+| quick_task | 260409-dgf-fix-redis-initialization-race-maxmemory- | completion marker missing (work shipped) |
+| quick_task | 260412-hlb-fix-batch-5-data-flow-state-management-d | completion marker missing (work shipped) |
+| quick_task | 260412-jkp-fix-batch-6-navigation-routing-n-20-n-21 | completion marker missing (work shipped) |
+| quick_task | 260412-jth-fix-batch-7-per-journey-route-fixes-28-f | completion marker missing (work shipped) |
+| quick_task | 260412-kmh-fix-batch-0-critical-audit-findings-b-01 | completion marker missing (work shipped) |
+| quick_task | 260412-kot-route-notifications-center-through-expre | completion marker missing (work shipped) |
+| quick_task | 260413-tuf-create-unified-pageheader-component-and- | completion marker missing (work shipped) |
+| quick_task | 260513-dds-close-v6-2-paperwork-gaps-write-47-verif | completion marker missing (work shipped) |
+| quick_task | 260514-tv7-split-phase-50-plan-50-13-into-50-13a-50 | completion marker missing (work shipped) |
+| quick_task | 260516-s3j-v6-3-audit-closure-backfill-50-51-52-ver | completion marker missing (work shipped) |
+| quick_task | 260524-ttg-bump-node-floor-22-13-0-to-22-22-0-for-p | completion marker missing (work shipped) |
+| quick_task | 260529-1s8-data-entry-bug-fixes                     | completion marker missing (work shipped) |
+| quick_task | 260529-4af-align-pushoptinbanner-test-with-update-b | completion marker missing (work shipped) |
+| quick_task | 260530-w2-data-entry-shared-primitives-dedupe       | completion marker missing (work shipped) |
+| quick_task | 260530-w3-data-entry-per-surface-ux                 | completion marker missing (work shipped) |
+| quick_task | 260530-w4-data-entry-polish                         | completion marker missing (work shipped) |
+| quick_task | 260531-tko-post-walkthrough-fixes                   | completion marker missing (work shipped) |
+| quick_task | 260601-gd5-fix-notification-walkthrough-bugs-digest | completion marker missing (work shipped) |
+| quick_task | 260601-h00-reconcile-stale-carried-items-tracking-i | completion marker missing (work shipped) |
+| quick_task | 260603-pua-fix-dev-run-css-i18n-and-port-docs       | completion marker missing (work shipped) |
+| quick_task | 260603-tuq-calendar-palette-fixes                   | completion marker missing (work shipped) |
+| quick_task | 260604-lmy-calendar-write-to-entries                | completion marker missing (work shipped) |
+| quick_task | 260605-ehg-work-item-dossiers-commitment-rls        | completion marker missing (work shipped) |
+| quick_task | 260605-hqn-fix-intake-workflow-unify-queue-cache-in | completion marker missing (work shipped) |
+| quick_task | 260605-htw-overdue-commitment-triage-followups      | completion marker missing (work shipped) |
+| quick_task | 260605-r92-fix-dossier-overview-rangeerror-sharedre | completion marker missing (work shipped) |
+| quick_task | 260605-s32-wire-country-dossier-tabs-engagements-ta | completion marker missing (work shipped) |
+| quick_task | 260605-u2z-register-11-unregistered-i18n-namespaces | completion marker missing (work shipped) |
+| quick_task | 260607-eqp-country-list-flags-date                  | completion marker missing (work shipped) |
+| quick_task | 260607-fxt-dossier-glyph-accurate-flags             | completion marker missing (work shipped) |
+| quick_task | 260607-h9z-fix-country-dossier-inspection-findings- | completion marker missing (work shipped) |
+| quick_task | 260607-j2e-country-dossier-rtl-i18n                 | completion marker missing (work shipped) |
+| quick_task | 260608-c9b-country-dossier-workflow-fixes           | completion marker missing (work shipped) |
+| quick_task | 260610-fkn-p2-security-pass-activity-stream-rls-act | completion marker missing (work shipped) |
