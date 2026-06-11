@@ -121,3 +121,10 @@ Rewrote `fetchDossierData` from a fragile single `Promise.all` (where any one st
 - **Deploy** (`supabase functions deploy dossier-export-pack --project-ref zkrcjzdemdmwhearhfgg`) and 7-type staging verification are **plan 62-03**.
 - **Frontend** dialog rework (D-03/D-04 format-picker removal, language trim), the new-tab open flow (D-07), and reading `X-Failed-Sections` are **plan 62-02**.
 - `ExportConfig.format`/`language: 'both'` type and the `config.language === 'both' ? 'en'` `<html lang>` fallback were intentionally left untouched — the type/contract change is owned by plan 62-02; the edge function tolerates the legacy shape without a dead 500 path.
+
+## Self-Check: PASSED
+
+- `supabase/functions/dossier-export-pack/index.ts` — FOUND
+- `.planning/phases/62-export-pack-contract-deploy/62-01-SUMMARY.md` — FOUND
+- Commits `c263f0fe`, `0113d19d`, `e705c53e`, `0a730672` — all FOUND in git log
+- `deno check` exit 0; all three task grep-gates PASS; forbidden-token sweep 0
