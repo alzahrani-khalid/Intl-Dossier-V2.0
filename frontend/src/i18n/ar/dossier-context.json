@@ -28,6 +28,11 @@
     "country": "دولة",
     "organization": "منظمة",
     "forum": "منتدى",
+    "engagement": "ارتباط",
+    "topic": "موضوع",
+    "working_group": "فريق عمل",
+    "person": "شخص",
+    "elected_official": "مسؤول منتخب",
     "theme": "موضوع"
   },
   "timeline": {

@@ -6,6 +6,7 @@ import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate, useSearch } from '@tanstack/react-router'
+import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { Card, CardContent } from '@/components/ui/card'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
@@ -153,12 +154,13 @@ export function RelationshipGraphPage() {
   }, [graphData])
 
   const handleNodeSelect = (nodeId: string) => {
-    // Navigate to the dossier detail page
-    // Using type assertion due to dynamic route structure
-    navigate({
-      to: '/dossiers/$id' as '/dossiers',
-      params: { id: nodeId } as any,
-    })
+    // Navigate to the type-aware dossier detail route (R17-02). The old target
+    // '/dossiers/$id' is not a mounted route — only '/dossiers/<segment>/$id'
+    // exists per type — so a node click 404'd/dead-ended. Resolve the clicked
+    // node's type and build the correct path via getDossierDetailPath.
+    const node = deduplicatedNodes.find((n) => n.id === nodeId)
+    const path = getDossierDetailPath(nodeId, node?.type)
+    navigate({ to: path as '/dossiers' })
   }
 
   const handleRefresh = () => {

@@ -28,6 +28,11 @@
     "country": "Country",
     "organization": "Organization",
     "forum": "Forum",
+    "engagement": "Engagement",
+    "topic": "Topic",
+    "working_group": "Working group",
+    "person": "Person",
+    "elected_official": "Elected official",
     "theme": "Theme"
   },
   "timeline": {
