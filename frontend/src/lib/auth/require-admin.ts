@@ -24,11 +24,7 @@ export async function requireAdmin(): Promise<void> {
     throw new Error('Admin access required')
   }
 
-  const { data: profile } = await supabase
-    .from('users')
-    .select('role')
-    .eq('id', userId)
-    .single()
+  const { data: profile } = await supabase.from('users').select('role').eq('id', userId).single()
 
   if (!ADMIN_ROLES.has(profile?.role ?? 'viewer')) {
     throw new Error('Admin access required')

@@ -36,7 +36,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
-import { requireAdmin } from '@/lib/auth/requireAdmin'
+import { requireAdmin } from '@/lib/auth/require-admin'
 import {
   LayoutGrid,
   Plus,

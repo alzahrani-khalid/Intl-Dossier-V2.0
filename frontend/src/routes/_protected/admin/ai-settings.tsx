@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/select'
 // cn utility available if needed for conditional classes
 import { supabase } from '@/lib/supabase'
-import { requireAdmin } from '@/lib/auth/requireAdmin'
+import { requireAdmin } from '@/lib/auth/require-admin'
 import { PageHeader } from '@/components/layout/PageHeader'
 import {
   Bot,

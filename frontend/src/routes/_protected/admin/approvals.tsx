@@ -30,7 +30,7 @@ import {
 } from '@/components/ui/table'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { requireAdmin } from '@/lib/auth/requireAdmin'
+import { requireAdmin } from '@/lib/auth/require-admin'
 import { AlertCircle, Users, CheckCircle } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PageHeader } from '@/components/layout/PageHeader'

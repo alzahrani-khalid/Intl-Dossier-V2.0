@@ -44,7 +44,7 @@ import {
 } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
-import { requireAdmin } from '@/lib/auth/requireAdmin'
+import { requireAdmin } from '@/lib/auth/require-admin'
 import { PageHeader } from '@/components/layout/PageHeader'
 import {
   Shield,

@@ -24,7 +24,7 @@ import {
 import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
-import { requireAdmin } from '@/lib/auth/requireAdmin'
+import { requireAdmin } from '@/lib/auth/require-admin'
 import { PageHeader } from '@/components/layout/PageHeader'
 import {
   BarChart3,
