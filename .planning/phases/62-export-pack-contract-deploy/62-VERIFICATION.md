@@ -1,16 +1,19 @@
 ---
 phase: 62-export-pack-contract-deploy
 verified: 2026-06-11T13:29:50Z
-status: human_needed
+status: verified
+human_verified: 2026-06-11T20:35:00Z
 score: 8/8 must-haves verified
 overrides_applied: 0
 human_verification:
   - test: 'Popup-blocker fallback in Chrome with strict popup settings'
     expected: 'Block popups for staging origin, click Export — the .html file downloads and a popupBlocked notice appears in the dialog; then allow popups and confirm new-tab opens with placeholder → pack.'
     why_human: 'popup-blocker heuristics are browser/UI-state dependent; jsdom cannot reproduce them'
+    result: 'PASS — 62-HUMAN-UAT.md test 1. Blocked path downloaded briefing-pack-saudi-arabia-20260611.html with popupBlocked notice; allowed path (trusted gesture) opened a new tab rendering the pack.'
   - test: 'Print pagination (Cmd+P, A4 preview) on an exported briefing pack'
     expected: 'Cover page alone on page 1; each section starts a new page; table rows unsplit; amber failure block (if any) unsplit and visible in grayscale'
     why_human: 'Print rendering is a browser print-engine behavior; cannot verify with grep or unit tests'
+    result: 'PASS — 62-HUMAN-UAT.md test 2. printToPDF (A4) shows cover/TOC/8 sections each on own page; injected 40-row table split cleanly with repeating thead; amber section-error block intact and legible in grayscale. Minor cosmetic: 2 blank pages from empty Executive Summary section; fixed footer overlaps last dense row.'
 ---
 
 # Phase 62: Export Pack Contract & Deploy Verification Report

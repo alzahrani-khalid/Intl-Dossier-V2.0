@@ -10,8 +10,8 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Export / Briefing Pack (backlog P1 — HIGH)
 
-- [ ] **EXPORT-01**: The dossier Export dialog advertises only formats the system actually produces (decision: implement PDF/DOCX rendering, or relabel to HTML honestly)
-- [ ] **EXPORT-02**: User can export a dossier of each of the 7 types and receives the advertised file — no 404 (edge deployed on staging) and no stale-column 500 (`positions.classification`/`dossier_ids`, `mous.title_en`/`status`, `documents.entity_type`, legacy `commitments` → `aa_commitments` all reconciled)
+- [x] **EXPORT-01**: The dossier Export dialog advertises only formats the system actually produces (decision: implement PDF/DOCX rendering, or relabel to HTML honestly)
+- [x] **EXPORT-02**: User can export a dossier of each of the 7 types and receives the advertised file — no 404 (edge deployed on staging) and no stale-column 500 (`positions.classification`/`dossier_ids`, `mous.title_en`/`status`, `documents.entity_type`, legacy `commitments` → `aa_commitments` all reconciled)
 
 ### Relationship Graph (backlog P2)
 
@@ -66,23 +66,23 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase    | Status  |
-| ----------- | -------- | ------- |
-| EXPORT-01   | Phase 62 | Pending |
-| EXPORT-02   | Phase 62 | Pending |
-| GRAPH-01    | Phase 63 | Pending |
-| GRAPH-02    | Phase 63 | Pending |
-| GRAPH-03    | Phase 63 | Pending |
-| POSNEW-01   | Phase 64 | Pending |
-| POSNEW-02   | Phase 64 | Pending |
-| ENGPOS-01   | Phase 65 | Pending |
-| ENGPOS-02   | Phase 65 | Pending |
-| ENGPOS-03   | Phase 65 | Pending |
-| OVRERR-01   | Phase 66 | Pending |
-| OVRERR-02   | Phase 66 | Pending |
-| PERENG-01   | Phase 67 | Pending |
-| PERENG-02   | Phase 67 | Pending |
-| PERENG-03   | Phase 67 | Pending |
+| Requirement | Phase    | Status   |
+| ----------- | -------- | -------- |
+| EXPORT-01   | Phase 62 | Complete |
+| EXPORT-02   | Phase 62 | Complete |
+| GRAPH-01    | Phase 63 | Pending  |
+| GRAPH-02    | Phase 63 | Pending  |
+| GRAPH-03    | Phase 63 | Pending  |
+| POSNEW-01   | Phase 64 | Pending  |
+| POSNEW-02   | Phase 64 | Pending  |
+| ENGPOS-01   | Phase 65 | Pending  |
+| ENGPOS-02   | Phase 65 | Pending  |
+| ENGPOS-03   | Phase 65 | Pending  |
+| OVRERR-01   | Phase 66 | Pending  |
+| OVRERR-02   | Phase 66 | Pending  |
+| PERENG-01   | Phase 67 | Pending  |
+| PERENG-02   | Phase 67 | Pending  |
+| PERENG-03   | Phase 67 | Pending  |
 
 **Coverage:**
 

@@ -22,7 +22,7 @@
 **Goal:** Every advertised dossier workflow works end-to-end — no advertised-but-broken paths, no silent failures rendered as empty states, no dead routes.
 **Source:** `.planning/dossier-workflow-backlog-phases-2026-06-11.md` (bucket-B escalations from the 17-round inspection loop, rounds 1-17)
 
-- [ ] **Phase 62: Export Pack Contract & Deploy** - Exporting a dossier returns the advertised file format from a deployed, schema-correct edge (HIGH — most visible broken path)
+- [x] **Phase 62: Export Pack Contract & Deploy** - Exporting a dossier returns the advertised file format from a deployed, schema-correct edge (HIGH — most visible broken path)
 - [ ] **Phase 63: Relationship Graph Route & Bidirectional Traversal** - Graph page reachable with incoming + outgoing edges and per-type node navigation, or formally retired
 - [ ] **Phase 64: New Position from Dossier** - Creating a position from a dossier persists a valid position and its dossier link
 - [ ] **Phase 65: Engagement Positions Tab & Legacy Reconciliation** - Working engagement Positions surface on canonical tables; no inert workspace CTAs
@@ -285,7 +285,7 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
 | 55-59 | v6.4 | 20/20 | Shipped | 2026-05-27 |
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
-| 62. Export Pack Contract & Deploy | v6.6 | 3/3 | Complete   | 2026-06-11 |
+| 62. Export Pack Contract & Deploy | v6.6 | 3/3 | Complete    | 2026-06-11 |
 | 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 0/TBD | Not started | - |
 | 64. New Position from Dossier | v6.6 | 0/TBD | Not started | - |
 | 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 0/TBD | Not started | - |
