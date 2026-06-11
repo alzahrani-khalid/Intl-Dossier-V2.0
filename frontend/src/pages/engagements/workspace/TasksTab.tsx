@@ -126,7 +126,9 @@ export default function TasksTab(): ReactElement {
         <p className="text-sm text-muted-foreground text-center max-w-sm mb-4">
           {t('empty.tasks.body')}
         </p>
-        <Button variant="outline" size="sm" className="min-h-11">
+        {/* No-op until task creation is wired (R15-02); disabled to avoid a
+            false affordance. */}
+        <Button variant="outline" size="sm" className="min-h-11" disabled>
           <Plus className="h-4 w-4" />
           {t('empty.tasks.action')}
         </Button>
@@ -174,8 +176,9 @@ export default function TasksTab(): ReactElement {
             </select>
           </div>
 
-          {/* Create task button */}
-          <Button variant="outline" size="sm" className="min-h-8">
+          {/* Create task button — no-op until wired; disabled to avoid a false
+              affordance (R15-02). */}
+          <Button variant="outline" size="sm" className="min-h-8" disabled>
             <Plus className="h-4 w-4" />
             <span className="hidden sm:inline">{t('actions.createTask')}</span>
           </Button>

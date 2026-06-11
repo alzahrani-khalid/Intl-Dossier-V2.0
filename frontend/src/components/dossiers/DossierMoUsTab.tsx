@@ -145,13 +145,7 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
     <div className="space-y-4">
       {/* MoUs List */}
       {mous.map((mou) => (
-        <Card
-          key={mou.id}
-          className="cursor-pointer hover:shadow-lg transition-shadow duration-200"
-          onClick={() => {
-            // TODO: Navigate to MoU detail page or open modal
-          }}
-        >
+        <Card key={mou.id}>
           <CardContent className="p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
               {/* MoU Info */}

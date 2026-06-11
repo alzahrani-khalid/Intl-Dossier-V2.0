@@ -1,3 +1,8 @@
+-- SUPERSEDED (data-library #1): this bilingual title_en/title_ar/file_url/category
+-- schema was NEVER applied to staging. The LIVE data_library_items schema is created by
+-- 009_create_data_library_items.sql (name/description/file_path/file_hash). Do NOT apply
+-- this file or fix the drift backwards. Kept for git history only. Marked 2026-06-10.
+
 -- 009_data_library.sql: DataLibraryItems table
 -- Documents and resources in the data library
 

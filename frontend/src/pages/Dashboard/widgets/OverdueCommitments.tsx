@@ -176,12 +176,14 @@ export function OverdueCommitments(): ReactElement {
                         <LtrIsolate className="overdue-days font-mono text-xs">
                           {`${c.daysOverdue}d`}
                         </LtrIsolate>
-                        <span
-                          className="overdue-owner text-xs font-mono"
-                          aria-label={`${t('overdue.owner')}: ${c.ownerInitials}`}
-                        >
-                          {c.ownerInitials}
-                        </span>
+                        {c.ownerInitials !== '' && (
+                          <span
+                            className="overdue-owner text-xs font-mono"
+                            aria-label={`${t('overdue.owner')}: ${c.ownerInitials}`}
+                          >
+                            {c.ownerInitials}
+                          </span>
+                        )}
                         <ArrowUpRight
                           className="size-4 text-ink-soft icon-flip"
                           aria-hidden="true"

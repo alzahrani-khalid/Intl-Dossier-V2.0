@@ -15,6 +15,7 @@
     "relationships": "Relationships",
     "loading": "Loading dossier...",
     "dossierHub": "Dossier Hub",
+    "breadcrumb": "Breadcrumb",
     "realtimeConnected": "Real-time connected",
     "realtimeDisconnected": "Real-time disconnected",
     "exportTooltip": "Export briefing pack"
@@ -28,7 +29,41 @@
     "removeConfirmTitle": "Remove link to {{name}}?",
     "removeConfirmBody": "This will remove the relationship between these dossiers. This action cannot be undone.",
     "relationshipMap": "Relationship Map",
-    "expandGraph": "Expand Graph"
+    "expandGraph": "Expand Graph",
+    "tier": {
+      "strategic": "Strategic",
+      "operational": "Operational",
+      "informational": "Informational"
+    },
+    "relationshipType": {
+      "bilateral_relation": "Bilateral relation",
+      "partnership": "Partnership",
+      "cooperates_with": "Cooperates with",
+      "member_of": "Member of",
+      "participates_in": "Participates in",
+      "parent_of": "Parent of",
+      "subsidiary_of": "Subsidiary of",
+      "hosted_by": "Hosted by",
+      "sponsored_by": "Sponsored by",
+      "involves": "Involves",
+      "participant_in": "Participant in",
+      "observer_of": "Observer of",
+      "membership": "Membership",
+      "parent_child": "Parent / child",
+      "participation": "Participation",
+      "affiliation": "Affiliation",
+      "dependency": "Dependency",
+      "collaboration": "Collaboration",
+      "represents": "Represents",
+      "related_to": "Related to",
+      "discusses": "Discusses",
+      "affiliate_of": "Affiliate of",
+      "successor_of": "Successor of",
+      "predecessor_of": "Predecessor of"
+    },
+    "cancel": "Cancel",
+    "remove": "Remove",
+    "removeItem": "Remove {{name}}"
   },
   "graph": {
     "fullScreen": "Relationship Network",

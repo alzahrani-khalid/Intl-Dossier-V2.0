@@ -13,12 +13,7 @@ import type { ReactElement } from 'react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from '@tanstack/react-router'
-import {
-  FileText,
-  Link2,
-  Lightbulb,
-  Plus,
-} from 'lucide-react'
+import { FileText, Link2, Lightbulb, Plus } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
 import { useEngagement } from '@/domains/engagements/hooks/useEngagements'
 import {
@@ -95,8 +90,9 @@ export default function ContextTab(): ReactElement {
 
   // Data fetching
   const { data: profile, isLoading: profileLoading } = useEngagement(engagementId)
-  const { data: recommendationsData, isLoading: recsLoading } =
-    useEngagementRecommendations({ target_dossier_id: engagementId })
+  const { data: recommendationsData, isLoading: recsLoading } = useEngagementRecommendations({
+    target_dossier_id: engagementId,
+  })
 
   const engagement = profile?.engagement
 
@@ -157,15 +153,15 @@ export default function ContextTab(): ReactElement {
   const talkingPointsContent = useMemo((): string | null => {
     if (engagement == null) return null
     if (isRTL) {
-      return engagement.objectives_ar
-        ?? engagement.description_ar
-        ?? engagement.objectives_en
-        ?? engagement.description_en
-        ?? null
+      return (
+        engagement.objectives_ar ??
+        engagement.description_ar ??
+        engagement.objectives_en ??
+        engagement.description_en ??
+        null
+      )
     }
-    return engagement.objectives_en
-      ?? engagement.description_en
-      ?? null
+    return engagement.objectives_en ?? engagement.description_en ?? null
   }, [engagement, isRTL])
 
   return (
@@ -175,7 +171,9 @@ export default function ContextTab(): ReactElement {
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-xl font-semibold">
             <Link2 className="size-5" />
-            {isRTL ? '\u0627\u0644\u0645\u0644\u0641\u0627\u062a \u0627\u0644\u0645\u0631\u062a\u0628\u0637\u0629' : 'Linked Dossiers'}
+            {isRTL
+              ? '\u0627\u0644\u0645\u0644\u0641\u0627\u062a \u0627\u0644\u0645\u0631\u062a\u0628\u0637\u0629'
+              : 'Linked Dossiers'}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -192,10 +190,10 @@ export default function ContextTab(): ReactElement {
               <p className="text-sm font-medium text-muted-foreground">
                 {t('empty.context.heading')}
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {t('empty.context.body')}
-              </p>
-              <Button variant="outline" size="sm" className="mt-3 min-h-11 min-w-11">
+              <p className="mt-1 text-xs text-muted-foreground">{t('empty.context.body')}</p>
+              {/* No-op until dossier linking is wired (R15-02); disabled to
+                  avoid a false affordance. */}
+              <Button variant="outline" size="sm" className="mt-3 min-h-11 min-w-11" disabled>
                 <Plus className="size-4" />
                 {t('empty.context.action')}
               </Button>
@@ -221,7 +219,9 @@ export default function ContextTab(): ReactElement {
                   </div>
                 </div>
               ))}
-              <Button variant="outline" size="sm" className="mt-2 min-h-11 min-w-11">
+              {/* No-op until dossier linking is wired (R15-02); disabled to
+                  avoid a false affordance. */}
+              <Button variant="outline" size="sm" className="mt-2 min-h-11 min-w-11" disabled>
                 <Plus className="size-4" />
                 {t('actions.linkDossier')}
               </Button>
@@ -235,7 +235,9 @@ export default function ContextTab(): ReactElement {
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-xl font-semibold">
             <Lightbulb className="size-5" />
-            {isRTL ? '\u062a\u0648\u0635\u064a\u0627\u062a \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a' : 'AI Recommendations'}
+            {isRTL
+              ? '\u062a\u0648\u0635\u064a\u0627\u062a \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a'
+              : 'AI Recommendations'}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -262,13 +264,8 @@ export default function ContextTab(): ReactElement {
                 rec.recommendation_type as RecommendationType,
               )
               return (
-                <div
-                  key={rec.id}
-                  className="rounded-lg border p-3 space-y-2"
-                >
-                  <p className="text-base font-semibold">
-                    {isRTL ? rec.title_ar : rec.title_en}
-                  </p>
+                <div key={rec.id} className="rounded-lg border p-3 space-y-2">
+                  <p className="text-base font-semibold">{isRTL ? rec.title_ar : rec.title_en}</p>
                   {rec.target_dossier_name_en != null && (
                     <p className="text-xs text-muted-foreground">
                       {isRTL
@@ -277,15 +274,14 @@ export default function ContextTab(): ReactElement {
                     </p>
                   )}
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge
-                      variant="secondary"
-                      className={cn('text-xs', typeBg)}
-                    >
+                    <Badge variant="secondary" className={cn('text-xs', typeBg)}>
                       {typeLabel ?? rec.recommendation_type}
                     </Badge>
                     {rec.priority >= 4 && (
                       <Badge variant="destructive" className="text-xs">
-                        {isRTL ? '\u0623\u0648\u0644\u0648\u064a\u0629 \u0639\u0627\u0644\u064a\u0629' : 'High Priority'}
+                        {isRTL
+                          ? '\u0623\u0648\u0644\u0648\u064a\u0629 \u0639\u0627\u0644\u064a\u0629'
+                          : 'High Priority'}
                       </Badge>
                     )}
                   </div>
@@ -301,7 +297,9 @@ export default function ContextTab(): ReactElement {
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-xl font-semibold">
             <FileText className="size-5" />
-            {isRTL ? '\u0646\u0642\u0627\u0637 \u0627\u0644\u062d\u0648\u0627\u0631' : 'Talking Points'}
+            {isRTL
+              ? '\u0646\u0642\u0627\u0637 \u0627\u0644\u062d\u0648\u0627\u0631'
+              : 'Talking Points'}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
@@ -313,9 +311,7 @@ export default function ContextTab(): ReactElement {
             </div>
           ) : talkingPointsContent != null && talkingPointsContent !== '' ? (
             <div className="rounded-lg border bg-muted/30 p-4">
-              <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                {talkingPointsContent}
-              </p>
+              <p className="text-sm leading-relaxed whitespace-pre-wrap">{talkingPointsContent}</p>
             </div>
           ) : (
             <p className="text-sm text-muted-foreground text-center py-4">

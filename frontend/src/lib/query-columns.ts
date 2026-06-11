@@ -87,8 +87,9 @@ export const CALENDAR_EVENTS_COLUMNS = {
 // KEY CONTACTS TABLE
 // =============================================================================
 export const KEY_CONTACTS_COLUMNS = {
-  /** List view columns */
-  LIST: 'id, name, name_ar, role, title_en, title_ar, organization, organization_ar, email, phone, photo_url, last_interaction_date, notes, linked_person_dossier_id, dossier_id',
+  /** List view columns — live key_contacts has no bilingual/photo/person-link
+   * columns (verified 2026-06-10); selecting them 400s and blanks the card */
+  LIST: 'id, name, role, organization, email, phone, last_interaction_date, notes, dossier_id',
 } as const
 
 // =============================================================================
@@ -198,9 +199,13 @@ export const MOUS_COLUMNS = {
 // =============================================================================
 // BRIEFS TABLE
 // =============================================================================
+// WARNING: live briefs has NO dossier_id (links via country_id/organization_id/
+// engagement_dossier_id) and stores content as a single jsonb `content` column.
+// A dossier-scoped list select is not possible against the current schema
+// (verified vs staging 2026-06-10).
 export const BRIEFS_COLUMNS = {
-  /** List view */
-  LIST: 'id, content_en, content_ar, generated_by, generated_at, is_template, dossier_id',
+  /** List view (live columns only) */
+  LIST: 'id, title, summary, status, created_at',
 } as const
 
 // =============================================================================

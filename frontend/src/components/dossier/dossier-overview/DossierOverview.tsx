@@ -384,7 +384,12 @@ export function DossierOverview({
         </TabsContent>
 
         <TabsContent value="documents" className="mt-0">
-          <DocumentsSection data={data.documents} dossierId={dossierId} isRTL={isRTL} />
+          <DocumentsSection
+            data={data.documents}
+            dossierId={dossierId}
+            dossierType={dossier.type}
+            isRTL={isRTL}
+          />
         </TabsContent>
 
         <TabsContent value="workItems" className="mt-0">

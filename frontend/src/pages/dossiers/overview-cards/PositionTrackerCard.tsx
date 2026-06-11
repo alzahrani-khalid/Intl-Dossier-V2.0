@@ -14,6 +14,7 @@ import { useDossierPositionLinks } from '@/hooks/useDossierPositionLinks'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ExternalLink } from 'lucide-react'
 import type { Position } from '@/types/position'
+import type { PositionDossierLinkType } from '@/domains/positions/types'
 
 interface PositionTrackerCardProps {
   dossierId: string
@@ -22,7 +23,7 @@ interface PositionTrackerCardProps {
 // The hook augments each Position with link_type and may also include
 // optional summary_* / title_* fields fetched off the join.
 type PositionWithLink = Position & {
-  link_type?: 'primary' | 'related' | 'reference'
+  link_type?: PositionDossierLinkType
 }
 
 export function PositionTrackerCard({ dossierId }: PositionTrackerCardProps): React.ReactElement {
@@ -44,9 +45,11 @@ export function PositionTrackerCard({ dossierId }: PositionTrackerCardProps): Re
     )
   }
 
-  // Separate our positions (primary) from counterpart positions (related/reference)
-  const ourPositions = positionsWithLink?.filter((p) => p.link_type === 'primary') ?? []
-  const counterpartPositions = positionsWithLink?.filter((p) => p.link_type !== 'primary') ?? []
+  // Separate our positions (applies_to) from counterpart positions
+  // (related_to/endorsed_by/opposed_by). Canonical link_type vocabulary
+  // (round-13 realign): the old 'primary' check never matched live rows.
+  const ourPositions = positionsWithLink?.filter((p) => p.link_type === 'applies_to') ?? []
+  const counterpartPositions = positionsWithLink?.filter((p) => p.link_type !== 'applies_to') ?? []
 
   const hasPositions = (positions?.length ?? 0) > 0
 

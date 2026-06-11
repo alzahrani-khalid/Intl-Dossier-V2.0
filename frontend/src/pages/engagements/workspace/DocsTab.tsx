@@ -17,7 +17,6 @@ import {
   AlertCircle,
   Upload,
   Quote,
-  ChevronLeft,
 } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
 import {
@@ -70,13 +69,6 @@ function formatBriefDate(dateStr: string, isRTL: boolean): string {
     day: 'numeric',
     year: 'numeric',
   })
-}
-
-/**
- * Brief type label mapping.
- */
-function getBriefTypeLabel(briefType: string): string {
-  return briefType === 'ai' ? 'AI Brief' : 'Legacy'
 }
 
 export default function DocsTab(): ReactElement {
@@ -155,10 +147,11 @@ export default function DocsTab(): ReactElement {
         <h2 className="text-xl font-semibold">{t('tabs.docs')}</h2>
 
         <div className="flex items-center gap-2">
-          {/* Upload placeholder */}
-          <Button variant="outline" size="sm" className="min-h-11 gap-2">
+          {/* Upload placeholder — no-op until wired; disabled to avoid a false
+              affordance (R15-02). */}
+          <Button variant="outline" size="sm" className="min-h-11 gap-2" disabled>
             <Upload className="h-4 w-4" />
-            <span className="hidden sm:inline">Upload Document</span>
+            <span className="hidden sm:inline">{t('docs.upload')}</span>
           </Button>
 
           {/* Generate Briefing */}
@@ -185,9 +178,7 @@ export default function DocsTab(): ReactElement {
       </div>
 
       {/* Brief count */}
-      <p className="text-sm text-muted-foreground">
-        {briefs.length} {briefs.length === 1 ? 'document' : 'documents'}
-      </p>
+      <p className="text-sm text-muted-foreground">{t('docs.count', { count: briefs.length })}</p>
 
       {/* Brief cards list */}
       <div className="space-y-3">
@@ -203,8 +194,9 @@ export default function DocsTab(): ReactElement {
  * Individual brief card -- displays title, status, type, date, and summary.
  */
 function BriefCard({ brief, isRTL }: { brief: EngagementBrief; isRTL: boolean }): ReactElement {
+  const { t } = useTranslation('workspace')
   return (
-    <div className="rounded-lg border bg-card p-4 hover:shadow-md transition-shadow">
+    <div className="rounded-lg border bg-card p-4 hover:border-accent transition-colors">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         {/* Brief info */}
         <div className="flex-1 min-w-0 space-y-2">
@@ -212,7 +204,7 @@ function BriefCard({ brief, isRTL }: { brief: EngagementBrief; isRTL: boolean })
           <div className="flex items-center gap-2 flex-wrap">
             <FileText className="size-4 text-muted-foreground flex-shrink-0" />
             <h4 className="text-sm font-medium truncate">
-              {brief.title !== '' ? brief.title : 'Untitled Brief'}
+              {brief.title !== '' ? brief.title : t('docs.untitled')}
             </h4>
           </div>
 
@@ -221,18 +213,18 @@ function BriefCard({ brief, isRTL }: { brief: EngagementBrief; isRTL: boolean })
             {/* Status badge */}
             <Badge variant="outline" className={`text-xs gap-1 ${getStatusVariant(brief.status)}`}>
               <StatusIcon status={brief.status} />
-              {brief.status}
+              {t(`engagement-briefs:statuses.${brief.status}`, { defaultValue: brief.status })}
             </Badge>
 
             {/* Type badge */}
             {brief.brief_type === 'ai' ? (
               <Badge variant="secondary" className="text-xs gap-1">
                 <Sparkles className="size-3" />
-                {getBriefTypeLabel(brief.brief_type)}
+                {t('engagement-briefs:briefTypes.ai')}
               </Badge>
             ) : (
               <Badge variant="outline" className="text-xs">
-                {getBriefTypeLabel(brief.brief_type)}
+                {t('engagement-briefs:briefTypes.legacy')}
               </Badge>
             )}
 
@@ -240,7 +232,7 @@ function BriefCard({ brief, isRTL }: { brief: EngagementBrief; isRTL: boolean })
             {brief.has_citations && (
               <Badge variant="outline" className="text-xs gap-1">
                 <Quote className="size-3" />
-                Citations
+                {t('engagement-briefs:labels.hasCitations')}
               </Badge>
             )}
           </div>
@@ -257,13 +249,7 @@ function BriefCard({ brief, isRTL }: { brief: EngagementBrief; isRTL: boolean })
           </div>
         </div>
 
-        {/* View action */}
-        <div className="flex-shrink-0">
-          <Button variant="outline" size="sm" className="min-h-11 gap-1">
-            <ChevronLeft className={`size-4 ${isRTL ? '' : 'rotate-180'}`} />
-            <span className="hidden sm:inline">View</span>
-          </Button>
-        </div>
+        {/* No view action: there is no brief detail route to navigate to yet */}
       </div>
     </div>
   )

@@ -44,11 +44,7 @@ export function ForumsStrip(): ReactElement {
 
   if (isError) {
     return (
-      <section
-        role="region"
-        aria-labelledby="forums-heading"
-        className="forums card"
-      >
+      <section role="region" aria-labelledby="forums-heading" className="forums card">
         <h3 id="forums-heading" className="card-title mb-3 text-start">
           {t('forums.title')}
         </h3>
@@ -60,11 +56,7 @@ export function ForumsStrip(): ReactElement {
   const forums = data?.data ?? []
   if (forums.length === 0) {
     return (
-      <section
-        role="region"
-        aria-labelledby="forums-heading"
-        className="forums card"
-      >
+      <section role="region" aria-labelledby="forums-heading" className="forums card">
         <h3 id="forums-heading" className="card-title mb-3 text-start">
           {t('forums.title')}
         </h3>
@@ -74,11 +66,7 @@ export function ForumsStrip(): ReactElement {
   }
 
   return (
-    <section
-      role="region"
-      aria-labelledby="forums-heading"
-      className="forums card"
-    >
+    <section role="region" aria-labelledby="forums-heading" className="forums card">
       <h3 id="forums-heading" className="card-title mb-3 text-start">
         {t('forums.title')}
       </h3>
@@ -100,7 +88,12 @@ export function ForumsStrip(): ReactElement {
                   {monogram(f.name_en)}
                 </LtrIsolate>
                 <span className="text-sm text-ink text-start truncate flex-1">{name}</span>
-                <Badge>{t(`forums.status.${status}`, status)}</Badge>
+                {/* Unknown enums fall back to a translated label, never the
+                    raw English value (live statuses include `inactive`,
+                    which had no key — Finding 20). */}
+                <Badge>
+                  {t(`forums.status.${status}`, { defaultValue: t('forums.status.unknown') })}
+                </Badge>
               </button>
             </li>
           )

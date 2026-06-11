@@ -22,7 +22,6 @@ const mockStats: DashboardStats = {
   sla_at_risk: 3,
   upcoming_week: 5,
 }
-const MINUS_SIGN = '\u2212'
 
 function asResult(
   over: Partial<UseQueryResult<DashboardStats, Error>>,
@@ -51,7 +50,19 @@ describe('KpiStrip', (): void => {
     const { container } = renderKpi()
     expect(container.querySelectorAll('.kpi')).toHaveLength(4)
     const values = screen.getAllByTestId('kpi-value').map((n): string | null => n.textContent)
-    expect(values).toEqual(['12+2', `8${MINUS_SIGN}4`, '3+2', '5+1'])
+    // Counts only — fabricated delta chips were removed (inspection 2026-06-09
+    // Finding 2). No '+2'/'−4' suffixes until the RPC returns real deltas.
+    expect(values).toEqual(['12', '8', '3', '5'])
+  })
+
+  it('renders no delta chips while useDashboardStats lacks delta data', (): void => {
+    vi.mocked(useDashboardStats).mockReturnValue(
+      asResult({ data: mockStats, isLoading: false, isError: false }),
+    )
+    const { container } = renderKpi()
+    expect(container.querySelectorAll('.kpi-delta')).toHaveLength(0)
+    // Static fabricated meta lines are gone too (Finding 3).
+    expect(container.querySelectorAll('.kpi-meta')).toHaveLength(0)
   })
 
   it('third card carries kpi-accent class (var(--accent) top-bar)', (): void => {

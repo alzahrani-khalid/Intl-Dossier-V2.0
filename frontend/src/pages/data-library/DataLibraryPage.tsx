@@ -247,7 +247,7 @@ export function DataLibraryPage() {
   const allTags = Array.from(new Set(items?.flatMap((item) => item.tags) || []))
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="container mx-auto py-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{t('navigation.dataLibrary')}</h1>
       </div>
@@ -294,13 +294,18 @@ export function DataLibraryPage() {
                     <div className="flex justify-between mb-1">
                       <span className="text-sm font-medium">{progress.fileName}</span>
                       <span className="text-sm text-muted-foreground">
-                        {progress.status === 'uploading' &&
-                          `${Math.round(progress.progress ?? 0)}%`}
+                        {progress.status === 'uploading' && t('dataLibrary.uploading')}
                         {progress.status === 'completed' && t('common.completed')}
                         {progress.status === 'error' && t('common.error')}
                       </span>
                     </div>
-                    <Progress value={progress.progress} className="h-2" />
+                    {progress.status === 'uploading' ? (
+                      // Supabase storage upload exposes no progress events — show
+                      // an indeterminate bar instead of a misleading frozen 0%.
+                      <div className="h-2 rounded-full bg-accent/30 animate-pulse" />
+                    ) : (
+                      <Progress value={progress.progress} className="h-2" />
+                    )}
                     {progress.error && <p className="text-xs text-danger mt-1">{progress.error}</p>}
                   </div>
                 </div>
@@ -402,7 +407,7 @@ export function DataLibraryPage() {
           <div className="col-span-full text-center py-8">{t('common.loading')}</div>
         ) : items && items.length > 0 ? (
           items.map((item) => (
-            <Card key={item.id} className="hover:shadow-lg transition-shadow">
+            <Card key={item.id} className="hover:border-accent transition-colors">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between mb-3">
                   {getCategoryIcon(item.category)}
@@ -426,7 +431,7 @@ export function DataLibraryPage() {
                 <div className="space-y-1 text-xs text-muted-foreground">
                   <div>{formatFileSize(item.file_size_bytes)}</div>
                   <div>{item.uploaded_by.full_name}</div>
-                  <div>{format(new Date(item.created_at), 'dd MMM yyyy')}</div>
+                  <div>{format(new Date(item.created_at), 'd MMM yyyy')}</div>
                   {item.download_count > 0 && (
                     <div>
                       {t('dataLibrary.downloads')}: {item.download_count}

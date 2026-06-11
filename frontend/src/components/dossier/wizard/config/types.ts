@@ -19,6 +19,11 @@ export interface WizardConfig<T extends FieldValues> {
   defaultValues: T
   steps: WizardStepConfig[]
   filterExtensionData: (data: T) => DossierExtensionData | undefined
+  // Optional detail-route override for subtype wizards whose DB type differs
+  // from their UI route. Elected officials submit as DB type 'person' but must
+  // land on /dossiers/elected-officials/:id, not the generic person shell
+  // (R16-02). When unset, navigation derives from the returned DB type.
+  detailRouteSegment?: string
   onSuccess?: (dossierId: string, type: DossierType) => void
   // Optional post-create hook invoked AFTER the dossier is persisted and
   // BEFORE navigation. Used by engagement wizard to batch-insert participant

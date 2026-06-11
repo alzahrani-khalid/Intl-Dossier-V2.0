@@ -11,7 +11,7 @@ export const Route = createFileRoute('/_protected/calendar/new')({
 })
 
 function NewCalendarEntryPage() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('calendar')
   const { isRTL } = useDirection()
 const navigate = useNavigate()
 
@@ -31,13 +31,11 @@ const navigate = useNavigate()
       <div className="mb-6">
         <Button variant="ghost" size="sm" onClick={handleCancel} className="mb-2">
           <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180 ms-2' : 'me-2'}`} />
-          {t('calendar.new_event.back_to_calendar')}
+          {t('new_event.back_to_calendar')}
         </Button>
-        <h1 className="text-2xl sm:text-3xl font-bold text-start">
-          {t('calendar.new_event.title')}
-        </h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-start">{t('new_event.title')}</h1>
         <p className="text-sm sm:text-base text-muted-foreground mt-1 text-start">
-          {t('calendar.new_event.description')}
+          {t('new_event.description')}
         </p>
       </div>
 
@@ -45,7 +43,7 @@ const navigate = useNavigate()
       <Card>
         <CardHeader>
           <CardTitle className="text-base sm:text-lg text-start">
-            {t('calendar.new_event.form_title')}
+            {t('new_event.form_title')}
           </CardTitle>
         </CardHeader>
         <CardContent>

@@ -1,5 +1,13 @@
 {
-  "model_profile": "quality",
+  "model_profile": "balanced",
+  "model_overrides": {
+    "gsd-planner": "fable",
+    "gsd-roadmapper": "fable",
+    "gsd-debugger": "fable",
+    "gsd-executor": "opus",
+    "gsd-research-synthesizer": "haiku",
+    "gsd-security-auditor": "opus"
+  },
   "commit_docs": true,
   "parallelization": true,
   "search_gitignored": false,

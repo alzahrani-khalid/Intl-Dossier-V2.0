@@ -57,7 +57,7 @@ interface SLAComplianceChartProps {
 export function SLAComplianceChart({ data, isLoading, className }: SLAComplianceChartProps) {
   const { t } = useTranslation('sla')
   const { isRTL } = useDirection()
-const chartData = useMemo(() => {
+  const chartData = useMemo(() => {
     if (!data || data.length === 0) {
       // Generate mock data for empty state
       return []
@@ -119,83 +119,91 @@ const chartData = useMemo(() => {
           </TabsList>
 
           <TabsContent value="line" className="h-64">
-            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={chartData}
-                margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis
-                  dataKey="date"
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  reversed={isRTL}
-                />
-                <YAxis
-                  domain={[0, 100]}
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(value) => `${value}%`}
-                  orientation={isRTL ? 'right' : 'left'}
-                />
-                <Tooltip content={<SLACustomTooltip isRTL={isRTL} complianceLabel={complianceLabel} />} />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="compliance"
-                  name={t('charts.compliance')}
-                  stroke="#22c55e"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                  activeDot={{ r: 6 }}
-                />
-              </LineChart>
-            </ResponsiveContainer></LtrIsolate>
+            <LtrIsolate className="h-full w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={chartData}
+                  margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                    reversed={isRTL}
+                  />
+                  <YAxis
+                    domain={[0, 100]}
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(value) => `${value}%`}
+                    orientation={isRTL ? 'right' : 'left'}
+                  />
+                  <Tooltip
+                    content={<SLACustomTooltip isRTL={isRTL} complianceLabel={complianceLabel} />}
+                  />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="compliance"
+                    name={t('charts.compliance')}
+                    stroke="var(--heroui-success)"
+                    strokeWidth={2}
+                    dot={{ r: 4 }}
+                    activeDot={{ r: 6 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </LtrIsolate>
           </TabsContent>
 
           <TabsContent value="area" className="h-64">
-            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
-              <AreaChart
-                data={chartData}
-                margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis
-                  dataKey="date"
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  reversed={isRTL}
-                />
-                <YAxis
-                  domain={[0, 100]}
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(value) => `${value}%`}
-                  orientation={isRTL ? 'right' : 'left'}
-                />
-                <Tooltip content={<SLACustomTooltip isRTL={isRTL} complianceLabel={complianceLabel} />} />
-                <Legend />
-                <defs>
-                  <linearGradient id="colorCompliance" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <Area
-                  type="monotone"
-                  dataKey="compliance"
-                  name={t('charts.compliance')}
-                  stroke="#22c55e"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#colorCompliance)"
-                />
-              </AreaChart>
-            </ResponsiveContainer></LtrIsolate>
+            <LtrIsolate className="h-full w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart
+                  data={chartData}
+                  margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                    reversed={isRTL}
+                  />
+                  <YAxis
+                    domain={[0, 100]}
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(value) => `${value}%`}
+                    orientation={isRTL ? 'right' : 'left'}
+                  />
+                  <Tooltip
+                    content={<SLACustomTooltip isRTL={isRTL} complianceLabel={complianceLabel} />}
+                  />
+                  <Legend />
+                  <defs>
+                    <linearGradient id="colorCompliance" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="var(--heroui-success)" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="var(--heroui-success)" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <Area
+                    type="monotone"
+                    dataKey="compliance"
+                    name={t('charts.compliance')}
+                    stroke="var(--heroui-success)"
+                    strokeWidth={2}
+                    fillOpacity={1}
+                    fill="url(#colorCompliance)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </LtrIsolate>
           </TabsContent>
         </Tabs>
       </CardContent>

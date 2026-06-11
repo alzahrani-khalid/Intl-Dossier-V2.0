@@ -120,6 +120,21 @@
     }
   },
   "queue": {
+    "title": "Assignment Queue",
+    "description": "Manage queued work items awaiting capacity",
+    "queuedItems": "Queued Items",
+    "normalLow": "Normal/Low",
+    "clearFilters": "Clear filters",
+    "assign": "Assign",
+    "assignNotAvailable": "Manual assignment is not available yet",
+    "failedAttempts_one": "{{count}} failed attempt",
+    "failedAttempts_other": "{{count}} failed attempts",
+    "types": {
+      "dossier": "Dossier",
+      "ticket": "Ticket",
+      "position": "Position",
+      "task": "Task"
+    },
     "filterPriority": "Filter by Priority",
     "allPriorities": "All Priorities",
     "filterWorkItemType": "Filter by Type",

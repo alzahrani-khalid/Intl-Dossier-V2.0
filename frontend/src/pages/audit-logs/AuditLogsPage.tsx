@@ -53,10 +53,15 @@ import { useDirection } from '@/hooks/useDirection'
 // The adapter is intentionally local to this file to keep the change in plan
 // scope (frontend/src/pages/**); the underlying useQuery hook lives in
 // frontend/src/domains/audit/hooks/useAuditLogs.ts.
+// Mirrors the audit-logs-viewer successResponse envelope: rows in `data`,
+// pagination under `metadata` (the page previously read top-level total/
+// hasMore fields the edge never returns, so totals were always 0).
 interface AuditLogsApiResponse {
   data?: AuditLogEntry[]
-  total?: number
-  hasMore?: boolean
+  metadata?: {
+    total?: number
+    has_more?: boolean
+  }
 }
 
 function useAuditLogs(): {
@@ -78,15 +83,23 @@ function useAuditLogs(): {
   const [filters, setFiltersState] = useState<AuditLogFiltersType>({})
   const [pagination, setPagination] = useState<AuditLogPagination>({ limit: 25, offset: 0 })
 
+  // Edge-contract parameter names (audit-logs-viewer) — the previous
+  // page/action/entity_type/from/to names were ignored server-side and
+  // offset never advanced, so filters and pagination were no-ops.
   const queryParams = useMemo(
     () => ({
-      page: Math.floor(pagination.offset / pagination.limit) + 1,
       limit: pagination.limit,
-      action: filters.operation,
-      entity_type: filters.table_name,
+      offset: pagination.offset,
+      operation: filters.operation,
+      table_name: filters.table_name,
       user_id: filters.user_id,
-      from: filters.date_from,
-      to: filters.date_to,
+      user_email: filters.user_email,
+      date_from: filters.date_from,
+      date_to: filters.date_to,
+      ip_address: filters.ip_address,
+      search: filters.search,
+      sort_by: filters.sort_by,
+      sort_order: filters.sort_order,
     }),
     [filters, pagination],
   )
@@ -95,8 +108,8 @@ function useAuditLogs(): {
   const data = query.data as AuditLogsApiResponse | undefined
 
   const logs: AuditLogEntry[] = data?.data ?? []
-  const total: number = data?.total ?? 0
-  const hasMore: boolean = data?.hasMore ?? false
+  const total: number = data?.metadata?.total ?? 0
+  const hasMore: boolean = data?.metadata?.has_more ?? false
 
   const setFilters = useCallback((next: AuditLogFiltersType) => {
     setFiltersState(next)
@@ -144,7 +157,6 @@ export function AuditLogsPage() {
   const { t } = useTranslation('audit-logs')
   const { isRTL } = useDirection()
   const [showStatistics, setShowStatistics] = useState(false)
-  const [_selectedLog, setSelectedLog] = useState<AuditLogEntry | null>(null)
 
   const {
     logs,
@@ -162,11 +174,6 @@ export function AuditLogsPage() {
     prevPage,
     refetch,
   } = useAuditLogs()
-
-  const handleLogClick = useCallback((log: AuditLogEntry) => {
-    setSelectedLog(log)
-    // Could open a detail modal here
-  }, [])
 
   const handlePageSizeChange = useCallback(
     (value: string) => {
@@ -252,12 +259,14 @@ export function AuditLogsPage() {
           {/* Table */}
           {!error && (
             <>
+              {/* onLogClick intentionally not passed — no detail surface exists
+                  yet, so the row affordance + View Related Logs button stay
+                  hidden (inspection #5) */}
               <AuditLogTable
                 logs={logs}
                 isLoading={isLoading}
                 filters={filters}
                 onFiltersChange={setFilters}
-                onLogClick={handleLogClick}
               />
 
               {/* Pagination */}

@@ -17,6 +17,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { Plus, X, Link as LinkIcon } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
+import type { PositionDossierLinkType } from '@/domains/positions/types'
 
 interface PositionDossierLinkerProps {
   positionId: string
@@ -25,9 +26,9 @@ interface PositionDossierLinkerProps {
 export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps) {
   const { t } = useTranslation(['positions', 'translation'])
   const { isRTL } = useDirection()
-const [isAdding, setIsAdding] = useState(false)
+  const [isAdding, setIsAdding] = useState(false)
   const [selectedDossierId, setSelectedDossierId] = useState('')
-  const [linkType, setLinkType] = useState<'primary' | 'related' | 'reference'>('related')
+  const [linkType, setLinkType] = useState<PositionDossierLinkType>('related_to')
   const [notes, setNotes] = useState('')
 
   const { links, isLoading, error } = usePositionDossierLinks(positionId)
@@ -46,7 +47,7 @@ const [isAdding, setIsAdding] = useState(false)
 
       // Reset form
       setSelectedDossierId('')
-      setLinkType('related')
+      setLinkType('related_to')
       setNotes('')
       setIsAdding(false)
     } catch (err) {
@@ -128,14 +129,17 @@ const [isAdding, setIsAdding] = useState(false)
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="primary">
-                      {t('position_dossier_links.types.primary')}
+                    <SelectItem value="applies_to">
+                      {t('position_dossier_links.types.applies_to')}
                     </SelectItem>
-                    <SelectItem value="related">
-                      {t('position_dossier_links.types.related')}
+                    <SelectItem value="related_to">
+                      {t('position_dossier_links.types.related_to')}
                     </SelectItem>
-                    <SelectItem value="reference">
-                      {t('position_dossier_links.types.reference')}
+                    <SelectItem value="endorsed_by">
+                      {t('position_dossier_links.types.endorsed_by')}
+                    </SelectItem>
+                    <SelectItem value="opposed_by">
+                      {t('position_dossier_links.types.opposed_by')}
                     </SelectItem>
                   </SelectContent>
                 </Select>

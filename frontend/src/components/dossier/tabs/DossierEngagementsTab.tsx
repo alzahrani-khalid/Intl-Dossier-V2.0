@@ -111,7 +111,10 @@ export function DossierEngagementsTab({ dossierId }: DossierEngagementsTabProps)
                     </span>
                     {entry.badge !== '' && (
                       <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
-                        {entry.badge}
+                        {t(
+                          `dossier-overview:${entry.kind === 'dossier' ? 'relationshipType' : 'eventType'}.${entry.badge}`,
+                          { defaultValue: entry.badge },
+                        )}
                       </span>
                     )}
                   </div>

@@ -11,6 +11,12 @@
     "parent": "الوسم الأب",
     "noParent": "بدون أب (وسم رئيسي)",
     "level": "المستوى {{level}}",
+    "tagCount_zero": "لا توجد وسوم",
+    "tagCount_one": "وسم واحد",
+    "tagCount_two": "وسمان",
+    "tagCount_few": "{{count}} وسوم",
+    "tagCount_many": "{{count}} وسماً",
+    "tagCount_other": "{{count}} وسم",
     "path": "المسار",
     "expand": "توسيع",
     "collapse": "طي",
@@ -35,8 +41,12 @@
   "form": {
     "nameEn": "الاسم (الإنجليزية)",
     "nameAr": "الاسم (العربية)",
+    "nameEnPlaceholder": "اسم الوسم بالإنجليزية",
+    "nameArPlaceholder": "اسم الوسم بالعربية",
     "descriptionEn": "الوصف (الإنجليزية)",
     "descriptionAr": "الوصف (العربية)",
+    "descriptionEnPlaceholder": "الوصف بالإنجليزية (اختياري)",
+    "descriptionArPlaceholder": "الوصف بالعربية (اختياري)",
     "color": "اللون",
     "icon": "الأيقونة",
     "parent": "الوسم الأب",
@@ -146,6 +156,7 @@
     "renameHistory": "سجل إعادة التسمية",
     "noHistory": "لا يوجد سجل متاح",
     "mergedInto": "تم دمج \"{{source}}\" في \"{{target}}\"",
+    "unknownTarget": "وسم آخر",
     "renamedFrom": "تمت إعادة التسمية من \"{{old}}\" إلى \"{{new}}\""
   },
   "filters": {

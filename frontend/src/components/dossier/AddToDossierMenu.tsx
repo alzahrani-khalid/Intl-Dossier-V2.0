@@ -175,7 +175,10 @@ const ACTION_GROUPS: { labelKey: string; actions: AddToDossierActionType[] }[] =
   },
   {
     labelKey: 'addToDossier.groups.content',
-    actions: ['relationship', 'brief', 'document'],
+    // 'document' removed: the upload path is contract-broken end-to-end (multipart
+    // to a JSON-only edge fn that inserts columns absent from the live documents
+    // table — verified 2026-06-10). Re-add once a storage-first contract exists.
+    actions: ['relationship', 'brief'],
   },
 ]
 
@@ -207,7 +210,7 @@ export function AddToDossierButton({
 }: AddToDossierMenuProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = React.useState(false)
 
   const defaultActions = getDefaultActions(t)
   const dossierContext = buildDossierContext(dossier)
@@ -501,9 +504,7 @@ export function AddToDossierCard({
   }
 
   return (
-    <div
-      className={cn('rounded-lg border bg-card text-card-foreground shadow-sm', className)}
-    >
+    <div className={cn('rounded-lg border bg-card text-card-foreground shadow-sm', className)}>
       {/* Header */}
       <div className="px-4 py-3 border-b">
         <h3 className="text-sm font-semibold">{t('addToDossier.title')}</h3>
@@ -571,4 +572,3 @@ export function AddToDossierMenu(props: AddToDossierMenuProps) {
       return <AddToDossierButton {...props} />
   }
 }
-

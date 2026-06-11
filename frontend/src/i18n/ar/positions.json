@@ -1,4 +1,7 @@
 {
+  "errors": {
+    "failed_to_load": "فشل التحميل"
+  },
   "library": {
     "title": "مكتبة المواقف",
     "subtitle": "{{count}} موقف متاح",
@@ -68,9 +71,10 @@
     "no_dossiers": "لا توجد دوسيهات متاحة",
     "link_type": "نوع الرابط",
     "types": {
-      "primary": "أساسي",
-      "related": "ذو صلة",
-      "reference": "مرجعي"
+      "applies_to": "ينطبق على",
+      "related_to": "ذو صلة",
+      "endorsed_by": "مؤيَّد من",
+      "opposed_by": "معارَض من"
     },
     "notes_optional": "ملاحظات (اختياري)",
     "notes_placeholder": "أضف أي ملاحظات عن هذا الرابط..."
@@ -354,7 +358,9 @@
     "selected": "محدد",
     "selectThis": "اختر هذا الموقف",
     "attachSelected": "إرفاق {{count}} موقف",
-    "attaching": "جاري الإرفاق..."
+    "attaching": "جاري الإرفاق...",
+    "attachSuccess": "تم إرفاق {{count}} موقف",
+    "attachPartialError": "تعذّر إرفاق {{failed}} من {{total}} موقف"
   },
   "briefing": {
     "title": "إنشاء حزمة إحاطة",
@@ -429,6 +435,7 @@
     "type_filter": "تصفية حسب النوع",
     "all_statuses": "كل الحالات",
     "all_types": "كل الأنواع",
+    "all_link_types": "كل أنواع الروابط",
     "clear_filters": "مسح الفلاتر",
     "error_loading": "فشل تحميل المواقف",
     "no_results": "لا توجد مواقف تطابق الفلاتر",

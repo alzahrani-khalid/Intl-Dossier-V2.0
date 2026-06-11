@@ -590,7 +590,49 @@
     "refreshing": "جاري التحديث...",
     "refreshButtonLabel": "تحديث بيانات المعلومات الاستخبارية",
     "refreshAllLabel": "تحديث جميع أنواع المعلومات",
-    "selectType": "اختر النوع للتحديث"
+    "selectType": "اختر النوع للتحديث",
+    "loadingDashboard": "جاري تحميل لوحة الاستخبارات...",
+    "generating": "جاري إنشاء الاستخبارات...",
+    "generatingDescription": "يقوم الذكاء الاصطناعي بتحليل البيانات المتاحة لإنشاء رؤى استخباراتية شاملة. قد يستغرق ذلك 30-60 ثانية.",
+    "noData": "لا توجد استخبارات متاحة",
+    "noDataDescription": "أنشئ رؤى استخباراتية مدعومة بالذكاء الاصطناعي لهذا البلد. سيحلل النظام البيانات المتاحة لتقديم استخبارات اقتصادية وسياسية وأمنية وثنائية باللغتين العربية والإنجليزية.",
+    "generateButton": "إنشاء الاستخبارات",
+    "generateError": "فشل إنشاء الاستخبارات. حاول مرة أخرى.",
+    "generateSuccess": "بدأ إنشاء الاستخبارات بنجاح. ستظهر البيانات قريباً.",
+    "dashboardLabel": "لوحة الاستخبارات",
+    "dashboardTitle": "لوحة الاستخبارات",
+    "dashboardDescription": "تحليل شامل عبر الأبعاد الاقتصادية والسياسية والأمنية والثنائية",
+    "dashboardSectionsLabel": "أقسام الاستخبارات",
+    "showingReports": "عرض {{count}} من {{total}} تقرير",
+    "scopeEconomic": "المؤشرات الاقتصادية",
+    "scopePolitical": "التحليل السياسي",
+    "scopeSecurity": "التقييم الأمني",
+    "scopeBilateral": "العلاقات الثنائية",
+    "executiveSummary": "الملخص التنفيذي",
+    "showMore": "عرض المزيد",
+    "showLess": "عرض أقل",
+    "keyIndicators": "المؤشرات الرئيسية",
+    "keyOpportunities": "الفرص الرئيسية",
+    "stabilityIndicators": "مؤشرات الاستقرار",
+    "securityMetrics": "المقاييس الأمنية",
+    "securityStale": "البيانات الأمنية قديمة - يلزم التحديث",
+    "threatAssessment": "تقييم التهديدات",
+    "relationshipAnalysis": "تحليل العلاقات",
+    "noEconomicData": "لا توجد استخبارات اقتصادية متاحة",
+    "noPoliticalData": "لا توجد استخبارات سياسية متاحة",
+    "noSecurityData": "لا توجد استخبارات أمنية متاحة",
+    "noBilateralData": "لا توجد استخبارات ثنائية متاحة",
+    "sources": "مصادر البيانات",
+    "generatedBy": "تم الإنشاء بواسطة",
+    "current": "الحالي",
+    "updated": "آخر تحديث"
+  },
+  "geographic": {
+    "isoCode": "رمز ISO",
+    "region": "المنطقة",
+    "capital": "العاصمة",
+    "population": "عدد السكان",
+    "area": "المساحة (كم²)"
   },
   "timeline": {
     "title": "الجدول الزمني التفاعلي",
@@ -855,7 +897,11 @@
     "context": {
       "linkedTo": "سيتم ربطه بـ",
       "inheritanceSource": "مصدر الوراثة",
-      "direct": "مباشر"
+      "direct": "مباشر",
+      "engagement": "مشاركة",
+      "after_action": "ما بعد الاجتماع",
+      "position": "موقف",
+      "mou": "مذكرة تفاهم"
     },
     "form": {
       "taskTitle": "العنوان",
@@ -924,7 +970,10 @@
         "participates_in": "يشارك في",
         "collaborates_with": "يتعاون مع",
         "monitors": "يراقب",
-        "hosts": "يستضيف"
+        "hosts": "يستضيف",
+        "cooperates_with": "يتعاون مع",
+        "related_to": "مرتبط بـ",
+        "hosted_by": "مستضاف من"
       }
     },
     "success": {
@@ -1027,7 +1076,8 @@
     "contacts": {
       "title": "جهات الاتصال الرئيسية",
       "empty": "لا توجد جهات اتصال مرتبطة",
-      "viewAll": "عرض كل {{count}} جهة اتصال"
+      "viewAll": "عرض كل {{count}} جهة اتصال",
+      "more": "+{{count}} جهة اتصال أخرى"
     },
     "engagements": {
       "title": "الارتباطات حسب المرحلة",
@@ -1096,7 +1146,8 @@
     "members": {
       "title": "الأعضاء",
       "empty": "لا يوجد أعضاء مرتبطون",
-      "viewAll": "عرض كل الأعضاء"
+      "viewAll": "عرض كل الأعضاء",
+      "more": "+{{count}} أعضاء آخرين"
     },
     "meetings": {
       "title": "الاجتماعات القادمة",

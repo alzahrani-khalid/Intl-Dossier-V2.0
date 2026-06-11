@@ -38,9 +38,11 @@ const JWT_SECRET = process.env.JWT_SECRET || ''
  */
 async function fetchUserContext(userId: string): Promise<NonNullable<Express.Request['user']>> {
   // Fetch from users table
+  // NOTE: live users table has NO permissions column — selecting it 42703s the
+  // query and turns every valid token into 401 'User not found'.
   const { data: user, error: userError } = await supabaseAdmin
     .from('users')
-    .select('id, email, role, full_name, department, is_active, permissions')
+    .select('id, email, role, full_name, department, is_active')
     .eq('id', userId)
     .single()
 
@@ -52,15 +54,17 @@ async function fetchUserContext(userId: string): Promise<NonNullable<Express.Req
     throw new UnauthorizedError('Account is inactive')
   }
 
-  // Fetch organization_id and clearance_level from profiles table (per D-02)
+  // Fetch organization_id and clearance_level from profiles table (per D-02).
+  // NOTE: live profiles has NO role column — selecting it 42703s the whole query,
+  // nulling organization_id and fail-closing every authenticated route with 401.
+  // Authorization is unified on public.users.role (260610-fkn).
   const { data: profile } = await supabaseAdmin
     .from('profiles')
-    .select('organization_id, clearance_level, role')
+    .select('organization_id, clearance_level')
     .eq('user_id', userId)
     .single()
 
-  // Use profile data when available, fall back to users table
-  const role = (profile?.role || user.role || 'viewer') as NonNullable<Express.Request['user']>['role']
+  const role = (user.role || 'viewer') as NonNullable<Express.Request['user']>['role']
   const organizationId = profile?.organization_id
   const clearanceLevel = profile?.clearance_level ?? 1
 
@@ -78,7 +82,7 @@ async function fetchUserContext(userId: string): Promise<NonNullable<Express.Req
     role,
     organization_id: organizationId,
     clearance_level: clearanceLevel,
-    permissions: user.permissions || [],
+    permissions: [],
     fullName: user.full_name || undefined,
     department: user.department || undefined,
   }
@@ -164,7 +168,9 @@ export const authenticateToken = async (
 /**
  * Check if user has required role (legacy -- prefer rbac.ts requireMinRole)
  */
-export const requireRole = (roles: string[]): ((req: Request, res: Response, next: NextFunction) => void) => {
+export const requireRole = (
+  roles: string[],
+): ((req: Request, res: Response, next: NextFunction) => void) => {
   return (req: Request, _res: Response, next: NextFunction): void => {
     if (!req.user) {
       return next(new UnauthorizedError())
@@ -186,7 +192,9 @@ export const requireRole = (roles: string[]): ((req: Request, res: Response, nex
 /**
  * Check if user has required permissions
  */
-export const requirePermission = (permissions: string[]): ((req: Request, res: Response, next: NextFunction) => void) => {
+export const requirePermission = (
+  permissions: string[],
+): ((req: Request, res: Response, next: NextFunction) => void) => {
   return (req: Request, _res: Response, next: NextFunction): void => {
     if (!req.user) {
       return next(new UnauthorizedError())

@@ -57,6 +57,7 @@
     "engagement": "Engagement",
     "topic": "Topic",
     "working_group": "Working Group",
-    "person": "Person"
+    "person": "Person",
+    "elected_official": "Elected official"
   }
 }

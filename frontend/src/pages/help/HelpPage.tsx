@@ -18,7 +18,6 @@ import {
   FileText,
   Mail,
   Phone,
-  ExternalLink,
   HelpCircle,
   Lightbulb,
   AlertCircle,
@@ -30,7 +29,6 @@ import {
   Globe,
   Briefcase,
   ListTodo,
-  ArrowRight,
 } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -255,13 +253,8 @@ export function HelpPage() {
               </Card>
             )}
 
-            {/* View All FAQ Link */}
-            <div className="mt-4 text-center">
-              <Button variant="ghost" className="gap-2">
-                {isRTL ? 'عرض جميع الأسئلة' : 'View all questions'}
-                <ArrowRight className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
-              </Button>
-            </div>
+            {/* "View all questions" removed — it had no destination (inspection #11);
+                restore once a full-FAQ route exists */}
           </section>
 
           {/* Support Section - Takes 1 column */}
@@ -288,9 +281,11 @@ export function HelpPage() {
                       <p className="text-sm text-muted-foreground text-start truncate">
                         support@gastat.gov.sa
                       </p>
-                      <Button variant="link" className="h-auto p-0 mt-1">
-                        {isRTL ? 'إرسال رسالة' : 'Send message'}
-                        <ChevronRight className={`size-4 ms-1 ${isRTL ? 'rotate-180' : ''}`} />
+                      <Button variant="link" className="h-auto p-0 mt-1" asChild>
+                        <a href="mailto:support@gastat.gov.sa">
+                          {isRTL ? 'إرسال رسالة' : 'Send message'}
+                          <ChevronRight className={`size-4 ms-1 ${isRTL ? 'rotate-180' : ''}`} />
+                        </a>
                       </Button>
                     </div>
                   </div>
@@ -311,9 +306,11 @@ export function HelpPage() {
                       <p className="text-sm text-muted-foreground text-start" dir="ltr">
                         +966 11 123 4567
                       </p>
-                      <Button variant="link" className="h-auto p-0 mt-1">
-                        {isRTL ? 'اتصل الآن' : 'Call now'}
-                        <ChevronRight className={`size-4 ms-1 ${isRTL ? 'rotate-180' : ''}`} />
+                      <Button variant="link" className="h-auto p-0 mt-1" asChild>
+                        <a href="tel:+966111234567">
+                          {isRTL ? 'اتصل الآن' : 'Call now'}
+                          <ChevronRight className={`size-4 ms-1 ${isRTL ? 'rotate-180' : ''}`} />
+                        </a>
                       </Button>
                     </div>
                   </div>
@@ -393,10 +390,8 @@ function FeatureGuideCard({
 
   const cardContent = (
     <Card
-      className={`group relative overflow-hidden transition-all duration-300 ${
-        guide.comingSoon
-          ? 'opacity-60 cursor-not-allowed'
-          : 'hover:shadow-lg hover:border-primary/50 cursor-pointer'
+      className={`group relative overflow-hidden transition-colors ${
+        guide.comingSoon ? 'opacity-60 cursor-not-allowed' : 'hover:border-accent cursor-pointer'
       }`}
     >
       {/* Color accent bar */}
@@ -457,18 +452,19 @@ function ResourceCard({
   description: string
   isRTL: boolean
 }) {
+  // No destination URLs exist yet for resources (inspection #11) — render as
+  // plain informational cards without pointer/external-link affordances.
   return (
-    <Card className="group hover:shadow-md transition-shadow cursor-pointer">
+    <Card>
       <CardContent className="pt-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-            <Icon className="size-5 text-muted-foreground group-hover:text-primary transition-colors" />
+          <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
+            <Icon className="size-5 text-muted-foreground" />
           </div>
           <div className="flex-1">
             <h3 className="font-medium text-sm text-start">{title}</h3>
             <p className="text-xs text-muted-foreground text-start">{description}</p>
           </div>
-          <ExternalLink className="size-4 text-muted-foreground" />
         </div>
       </CardContent>
     </Card>

@@ -155,7 +155,7 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
             </h4>
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="text-xs text-primary hover:underline"
+              className="text-xs text-accent hover:underline"
             >
               {isExpanded
                 ? t('intelligence.showLess', 'Show Less')

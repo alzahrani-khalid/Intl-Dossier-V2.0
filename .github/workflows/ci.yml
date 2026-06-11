@@ -63,6 +63,15 @@ jobs:
       - name: Run linting
         run: pnpm run lint
 
+      - name: Check edge-fn schema references
+        run: pnpm run check:edge-fn-schema
+
+      - name: Assert edge-fn schema check fails on bad fixture (positive-failure)
+        shell: bash
+        run: |
+          set -e
+          ! node scripts/check-edge-fn-schema-refs.mjs tools/edge-fn-fixtures/bad-schema-ref
+
   design-token-check:
     name: Design Token Check
     runs-on: ubuntu-latest

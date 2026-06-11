@@ -61,7 +61,9 @@ export const DEFAULT_QUICK_ACTIONS: QuickAction[] = [
     labelAr: 'إنشاء مهمة',
     icon: 'ListTodo',
     action: 'create-task',
-    route: '/my-work?action=create-task',
+    // /my-work has no `action` search param — route to the kanban create flow
+    // the context-aware FAB already uses (inspection my-work #6)
+    route: '/kanban?create=true',
     color: 'bg-success/10 dark:bg-success/30 text-success',
   },
   {

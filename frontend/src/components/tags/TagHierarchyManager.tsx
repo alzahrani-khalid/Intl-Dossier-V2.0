@@ -559,7 +559,7 @@ export function TagHierarchyManager({
                   id="name_en"
                   value={formData.name_en}
                   onChange={(e) => setFormData((p) => ({ ...p, name_en: e.target.value }))}
-                  placeholder="Tag name"
+                  placeholder={t('form.nameEnPlaceholder')}
                 />
               </div>
               <div className="space-y-2">
@@ -568,7 +568,7 @@ export function TagHierarchyManager({
                   id="name_ar"
                   value={formData.name_ar}
                   onChange={(e) => setFormData((p) => ({ ...p, name_ar: e.target.value }))}
-                  placeholder="اسم الوسم"
+                  placeholder={t('form.nameArPlaceholder')}
                   dir="rtl"
                 />
               </div>
@@ -626,7 +626,7 @@ export function TagHierarchyManager({
                   id="description_en"
                   value={formData.description_en}
                   onChange={(e) => setFormData((p) => ({ ...p, description_en: e.target.value }))}
-                  placeholder="Description (optional)"
+                  placeholder={t('form.descriptionEnPlaceholder')}
                 />
               </div>
               <div className="space-y-2">
@@ -635,7 +635,7 @@ export function TagHierarchyManager({
                   id="description_ar"
                   value={formData.description_ar}
                   onChange={(e) => setFormData((p) => ({ ...p, description_ar: e.target.value }))}
-                  placeholder="الوصف (اختياري)"
+                  placeholder={t('form.descriptionArPlaceholder')}
                   dir="rtl"
                 />
               </div>

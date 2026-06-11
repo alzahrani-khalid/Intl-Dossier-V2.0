@@ -353,41 +353,44 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
         </div>
       )}
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <SummaryCard
-          title={t('summary.totalEngagements')}
-          value={displayData.summary?.totalEngagements || 0}
-          change={displayData.summary?.engagementsChange}
-          changeLabel={t('summary.fromPrevious')}
-          icon={<BarChart3 className="h-5 w-5" />}
-          format="number"
-        />
-        <SummaryCard
-          title={t('summary.avgHealthScore')}
-          value={displayData.summary?.avgHealthScore || 0}
-          change={displayData.summary?.healthScoreChange}
-          changeLabel={t('summary.fromPrevious')}
-          icon={<TrendingUp className="h-5 w-5" />}
-          format="score"
-        />
-        <SummaryCard
-          title={t('summary.fulfillmentRate')}
-          value={displayData.summary?.fulfillmentRate || 0}
-          change={displayData.summary?.fulfillmentRateChange}
-          changeLabel={t('summary.fromPrevious')}
-          icon={<ClipboardCheck className="h-5 w-5" />}
-          format="percentage"
-        />
-        <SummaryCard
-          title={t('summary.totalActiveWork')}
-          value={displayData.summary?.totalActiveWork || 0}
-          change={displayData.summary?.activeWorkChange}
-          changeLabel={t('summary.fromPrevious')}
-          icon={<Users className="h-5 w-5" />}
-          format="number"
-        />
-      </div>
+      {/* Summary Cards — only rendered when real (or sample) summary data exists.
+          Without this gate a failed/empty API response renders misleading zeros. */}
+      {displayData.summary && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <SummaryCard
+            title={t('summary.totalEngagements')}
+            value={displayData.summary.totalEngagements || 0}
+            change={displayData.summary.engagementsChange}
+            changeLabel={t('summary.fromPrevious')}
+            icon={<BarChart3 className="h-5 w-5" />}
+            format="number"
+          />
+          <SummaryCard
+            title={t('summary.avgHealthScore')}
+            value={displayData.summary.avgHealthScore || 0}
+            change={displayData.summary.healthScoreChange}
+            changeLabel={t('summary.fromPrevious')}
+            icon={<TrendingUp className="h-5 w-5" />}
+            format="score"
+          />
+          <SummaryCard
+            title={t('summary.fulfillmentRate')}
+            value={displayData.summary.fulfillmentRate || 0}
+            change={displayData.summary.fulfillmentRateChange}
+            changeLabel={t('summary.fromPrevious')}
+            icon={<ClipboardCheck className="h-5 w-5" />}
+            format="percentage"
+          />
+          <SummaryCard
+            title={t('summary.totalActiveWork')}
+            value={displayData.summary.totalActiveWork || 0}
+            change={displayData.summary.activeWorkChange}
+            changeLabel={t('summary.fromPrevious')}
+            icon={<Users className="h-5 w-5" />}
+            format="number"
+          />
+        </div>
+      )}
 
       {/* Alert summary cards */}
       {summary && (summary.criticalAlerts > 0 || summary.overdueItems > 0) && (

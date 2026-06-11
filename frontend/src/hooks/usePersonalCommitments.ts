@@ -12,8 +12,13 @@
  * from the embedded `dossier` join on `Commitment` (added to
  * COMMITMENTS_COLUMNS.LIST). When the join is absent (e.g. SUMMARY column
  * set), the hook falls back to `dossier_id` so the widget degrades
- * gracefully. `ownerInitials` is still derived from `owner_user_id` until a
- * `users.full_name` join is added.
+ * gracefully.
+ *
+ * `ownerInitials` resolve through a batched `users` lookup (same pattern as
+ * tasks-api.ts assignee names) — passing the raw `owner_user_id` UUID into
+ * `deriveInitials` produced garbage like "8F" (inspection 2026-06-09
+ * Finding 5; verified live: users.full_name is populated for all 393 rows).
+ * When the name is unknown the initials are '' and the widget hides the chip.
  */
 
 import { useMemo } from 'react'
@@ -28,6 +33,13 @@ interface DossierLookupRow {
   name_en: string
   name_ar: string | null
   metadata: { flag?: string } | null
+}
+
+interface UserLookupRow {
+  id: string
+  full_name: string | null
+  username: string | null
+  email: string | null
 }
 
 export type CommitmentSeverity = 'red' | 'amber' | 'yellow'
@@ -127,6 +139,44 @@ export function usePersonalCommitments(): UsePersonalCommitmentsResult {
     return m
   }, [dossiersQuery.data])
 
+  const ownerIds = useMemo<string[]>((): string[] => {
+    if (query.data == null) return []
+    const set = new Set<string>()
+    for (const c of query.data.commitments) {
+      if (typeof c.owner_user_id === 'string' && c.owner_user_id.length > 0) {
+        set.add(c.owner_user_id)
+      }
+    }
+    return Array.from(set)
+  }, [query.data])
+
+  // Batched owner-name lookup — mirrors tasks-api.ts (users: full_name →
+  // username → email). Required so ownerInitials come from a display name,
+  // never from the UUID (Finding 5).
+  const usersQuery = useQuery<UserLookupRow[], Error>({
+    queryKey: ['users-for-commitments', ownerIds],
+    queryFn: async (): Promise<UserLookupRow[]> => {
+      if (ownerIds.length === 0) return []
+      const { data, error } = await supabase
+        .from('users')
+        .select('id, full_name, username, email')
+        .in('id', ownerIds)
+      if (error !== null) throw new Error(error.message)
+      return (data ?? []) as UserLookupRow[]
+    },
+    enabled: ownerIds.length > 0,
+    staleTime: 5 * 60 * 1000,
+  })
+
+  const ownerNameById = useMemo<Map<string, string>>(() => {
+    const m = new Map<string, string>()
+    for (const u of usersQuery.data ?? []) {
+      const name = u.full_name ?? u.username ?? u.email ?? ''
+      if (name.trim().length > 0) m.set(u.id, name)
+    }
+    return m
+  }, [usersQuery.data])
+
   const grouped = useMemo((): GroupedCommitment[] | undefined => {
     if (query.data == null) {
       return undefined
@@ -164,18 +214,21 @@ export function usePersonalCommitments(): UsePersonalCommitmentsResult {
         title: titleText,
         daysOverdue,
         severity: deriveSeverity(daysOverdue),
-        ownerInitials: deriveInitials(c.owner_user_id ?? ''),
+        // Display-name initials only — '' (hidden chip) beats UUID garbage.
+        ownerInitials: deriveInitials(ownerNameById.get(c.owner_user_id ?? '') ?? ''),
       })
 
       byDossier.set(c.dossier_id, existing)
     }
 
     return Array.from(byDossier.values())
-  }, [query.data, dossierMap, isArabic])
+  }, [query.data, dossierMap, ownerNameById, isArabic])
 
   return {
     data: grouped,
-    isLoading: query.isLoading,
+    // Lookups participate in loading so the widget doesn't flash raw
+    // dossier_id / blank-owner rows before names resolve (Finding 18).
+    isLoading: query.isLoading || dossiersQuery.isLoading || usersQuery.isLoading,
     isError: query.isError,
   }
 }

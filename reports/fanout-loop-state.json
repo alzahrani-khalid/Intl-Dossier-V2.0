@@ -1,8 +1,8 @@
 {
   "loop": "fanout-dossier-workflow-inspection",
-  "status": "RESUMED. Current: AI briefing generation workflow (last distinct workflow).",
+  "status": "LOOP STOPPED (2026-06-11) after ROUND 17 — per user. 17 inspection rounds (codex) + Claude live-fix exhausted the safe unattended bucket-A surface. Round 17 (final, fresh cross-dossier data-flow) fixed R17-02 HIGH (relationship-graph node click navigated to unmounted /dossiers/$id -> getDossierDetailPath per node type) + R17-01 LOW (dossier-context.type EN/AR for 5 missing types); R17-03 timeline cross-link route contract -> B. The full escalated B-backlog is consolidated into 6 proposed GSD phases at .planning/dossier-workflow-backlog-phases-2026-06-11.md (P1 export-pack deploy/contract, P2 relationship graph route+bidirectional traversal, P3 New Position contract, P4 engagement Positions tab + legacy reconcile, P5 overview error-contract + timeline cross-links, P6 person/EO engagement contracts + legacy detail route-or-delete). OUTSTANDING DEPLOY: droplet backend needs the round-11 auth.ts dead-column fix. To resume inspection, re-arm /loop; otherwise feed the phase doc into /gsd:phase or /gsd:new-milestone. PRIOR — ROUND 16 COMPLETE (FRESH CROSS-DOSSIER NAV SWEEP): pivoted from exhausted per-type/same-class surface to cross-dossier entry/navigation flows (codex; report dossier-workflows-round16-inspection-2026-06-10.md). Found 3 real bucket-A nav bugs, ALL FIXED + live-verified: R16-01 command-palette create-dossier actions went to inert /dossiers?action=create list pages -> real /dossiers/create hub + /dossiers/<seg>/create wizards (verified render); R16-02 EO create landed on generic person shell -> WizardConfig.detailRouteSegment override -> elected-officials shell; R16-03 breadcrumb aria-label hardcoded EN -> localized (verified AR مسار التنقل). Search/drawer/create-edge traced clean. The pivot proved fresh ground still yields safe fixes, but the cross-dossier nav surface is now also largely swept. cursor-agent still quota-walled until 6/27. RECOMMENDATION STANDS: after 16 rounds the remaining backlog is phase-sized B (R6-03 New Position contract, R14-02 engagement Positions tab, R13-02/R14-03 host-org/person_engagements, legacy person/EO raw-key debt) — escalate to GSD phases rather than more inspection. PROCESS: pnpm --filter intake-frontend build per commit; edge/migrations via Supabase MCP. PRIOR — ROUND 15 (HONEST COMPLETENESS SWEEP): codex did a cross-cutting bucket-A sweep (not per-type) + negative checks (report dossier-workflows-round15-inspection-2026-06-10.md). Found 4 real-but-small bucket-A items, ALL FIXED + build-green + lint-clean: R15-01 positions-library clear-filters key leak (same class as R13-04), R15-02 9 inert engagement-workspace buttons -> disabled, R15-03 PositionDossierLinker error key, R15-04 redundant no-op Compare Versions button removed. Negative checks confirmed the round-12/14 same-bug-class repairs are COMPLETE (no remaining reference_type edge embed; no bare NumberFormat(i18n.language) in swept surfaces). The auto-fix surface is now genuinely thin — round 15 surfaced only LOW/MEDIUM polish. All remaining deferred items are phase-sized B (R6-03 New Position contract, R14-02 engagement Positions tab, R13-02/R14-03 host-org/person_engagements, legacy person/EO raw-key debt). RECOMMENDATION: the loop has exhausted the safe unattended-fix surface across 15 rounds; next step should be escalating the B-backlog into planned GSD phases rather than further inspection passes. cursor-agent still quota-walled until 6/27. PROCESS: pnpm --filter intake-frontend build per commit; vitest for touched tests; edge/migrations via Supabase MCP. PRIOR — ROUND 14 (TYPE-AWARE-DOCS + FRESH-TRACE ROUND): codex produced a 10-step recipe for the R13-03 carryover + traced 4 fresh workflows + ran live aggregate SQL (report dossier-workflows-round14-inspection-2026-06-10.md). Claude applied + live-verified BOTH directions: R14-01 made DocumentsSection type-aware — added dossierType prop threaded from all 7 docs routes + DossierOverview; hides the universally-dead Briefs tab, gates MoU on country|organization, gates Attachments on non-empty, totals/empty-state on visible buckets only. Verified: topic shows only All+Positions; org shows All+Positions+MOUs (Briefs/Attachments hidden both). Unit test updated+passing. R14-02 (engagement workspace has NO routed Positions tab; only impl is unrouted+no-op+legacy engagement_positions) and R14-03 (EO/person Engagements ignores person_engagements) are bucket-B (R14-02 feature-slice, R14-03 latent w/ 0 rows). Frontend-only, no deploys. cursor-agent STILL quota-walled until 6/27. NEXT ROUND: remaining clean bucket-A surface is largely exhausted — the named items (R14-02 engagement positions tab, R14-03 person_engagements, R13-02 host_org engagement branch) are all phase-sized feature work or product decisions, not unattended auto-fixes. Consider pausing the loop or escalating the B-backlog to planned GSD phases. PROCESS: pnpm --filter intake-frontend build per commit; vitest for touched tests; edge/migrations via Supabase MCP. PRIOR — ROUND 13 (VOCABULARY-REALIGN + FRESH-TRACE ROUND): codex produced a 12-step recipe for the carryover R12-11b link_type vocabulary mismatch + traced 4 fresh per-type workflows (report dossier-workflows-round13-inspection-2026-06-10.md). Claude applied + live-verified: R13-01 realigned the ENTIRE positions link_type vocabulary primary/related/reference -> canonical applies_to/related_to/endorsed_by/opposed_by (8 source files + i18n en/ar), making the link-type filter functional for the first time (verified: Related-to filter now matches the seeded related_to row; badge resolves EN+AR). R13-04 NEW (found during verify): clear-filters raw key leak (common:clear_filters absent) -> positions:dossier_tab.clear_filters, verified مسح الفلاتر. R13-02 (org Engagements ignores host_organization_id) + R13-03 (WG MoU/Briefs dead buckets) LIVE-CLASSIFIED LATENT (0 host links, 0 wg mou signatories). Frontend-only round, no deploys. cursor-agent STILL quota-walled until 6/27. NEXT ROUND: R13-03 type-aware DocumentsSection (hide MoU for working_group + hide universal dead Briefs tab) is the cleanest remaining bucket-A; R13-02 host-org engagement branch is phase work. PROCESS: pnpm --filter intake-frontend build per commit; edge via Supabase MCP; migrations via Supabase MCP. PRIOR — ROUND 12 (ONE-WORKFLOW-PER-TYPE + LIVE-FIX ROUND): codex inspected 8 fresh per-type workflows (report dossier-workflows-round12-inspection-2026-06-10.md); Claude live-verified + fixed. 5 bucket-A fixed. Live-tracing the topic/country positions-attach (R12-06, was a NO-OP) exposed a 4-bug stack that made attach 100% broken end-to-end: R12-09 edge embed dossiers.reference_type->type (500), R12-10 RLS clearance subquery typo dossiers.id=auth.uid()->profiles.user_id=auth.uid() (blocked 20/35 dossiers), R12-11 edge default link_type related->related_to (CHECK violation 500). ALL fixed + deployed (edge v11, migration 20260610000002) + live-verified (attach now 201/persists/renders). R12-11b (frontend link_type vocab primary/related/reference wrong vs live applies_to/related_to/endorsed_by/opposed_by) documented bucket-B. R12-03 forum upcoming-events product decision; R12-05 after-action latent (ids mirror 1:1); R12-07 person-MoU latent (mous empty). cursor-agent STILL quota-walled until 6/27 (codex is sole inspector). NEXT ROUND: R12-11b vocab realign is the cleanest remaining bucket-A-ish fix; otherwise per-type re-inspection is deep into latent/product-decision territory. PROCESS: every commit verified via pnpm --filter intake-frontend build; edge fns via Supabase MCP deploy; migrations via Supabase MCP. PRIOR — ROUND 11 (UAT ROUND): live-browser acceptance test of all rounds-6-10 bucket-A fixes (codex matrix reports/dossier-uat-matrix-round11-2026-06-10.md; Claude executed EN+AR via browser automation + Supabase MCP; results reports/dossier-uat-round11-2026-06-10.md). 22/26 PASS, 0 regressions. 4 new findings, 3 FIXED same round: F1 briefs dead-select 400 on every dossier (sub-fetch removed), F2 eventType i18n map missing 5 live entry_type values (added EN+AR), F4 backend fetchUserContext selected dead users.permissions + profiles.role -> 401 on EVERY authed /api route (dropped; NEEDS DROPLET BACKEND DEPLOY), F5 Intl.NumberFormat('ar') = latn digits in Chrome so ALL round-9 digit fixes were inert -> new lib/format-locale.ts toFormatLocale(ar->ar-SA) applied to 6 sites. F3 = elected_official is person_subtype by design (migration 20260202000001); staging had ZERO EO rows -> seeded Sen. Maria Vergara 19a22b0d. Also seeded: in-window calendar_entries for Indonesia, UAT commitment on UAE (via UI), WG-D->Indonesia cooperates_with relationship (via UI, proves canonical edge 201). NEXT ROUND GUIDANCE: UAT exhausted the verifiable surface; remaining items are data-blocked (R8-08 timeline statuses, R9-04 >5 members) or PHASE work (R9-02 error-swallow contract is the top enabler of F1-class silent breakage). cursor-agent quota-walled until 6/27. PROCESS RULE: every commit verified via direct pnpm --filter intake-frontend build.",
   "started": "2026-06-08",
-  "finished": "2026-06-09",
+  "finished": null,
   "branch": "quick/260608-c9b-country-dossier-workflow-fixes",
   "covered": [
     "country",
@@ -148,6 +148,286 @@
       "escalated": "#1/#12 detail route, #9/#13 create/parties UI, #3-5/#10 backend+edge schema, #7/#8 view soft-delete+parties, #14 common.json i18n (WIP)"
     }
   ],
+  "round3_queue": [],
+  "round4_queue": [],
+  "round5_queue": [],
+  "round17_done": [
+    {
+      "type": "FINAL round — fresh cross-dossier DATA-FLOW surfaces (codex) + loop-stop decision",
+      "report": "reports/dossier-workflows-round17-inspection-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh (data-flow trace + live SQL/edge checks; first dispatch hung at startup ~42min 0.08s CPU -> killed + relaunched foreground, succeeded) + Claude (apply + build/lint + verify)",
+      "findings": 3,
+      "bucket_a_fixed": "R17-02 HIGH — RelationshipGraphPage.handleNodeSelect navigated to unmounted '/dossiers/$id' with just {id} (dead-end/404) -> resolves node.type from deduplicatedNodes + getDossierDetailPath (matches the already-correct reachable MiniRelationshipGraph). R17-01 LOW — dossier-context.type missing engagement/topic/working_group/person/elected_official -> added EN+AR (DossierContextBadge tooltip no longer raw-type-fallback).",
+      "bucket_b": "R17-03 timeline cross-links to unmounted /calendar/$id + /mous/$id and dead-end overview activity rows -> escalated.",
+      "no_finding": "work-item badge data source + inheritance labels + click route (all correct); graph node labels localized; export dialog type labels all 7 present. Export FORMAT pipeline = already-escalated R7-01 (worsened: dossier-export-pack NOT deployed on staging, 404).",
+      "deploys": "none",
+      "loop_decision": "STOPPED per user after round 17. Broad auto-fix (bucket-A) surface exhausted across 17 rounds. B-backlog escalated to proposed GSD phases in .planning/dossier-workflow-backlog-phases-2026-06-11.md (P1 export-pack deploy, P2 relationship graph route+traversal, P3 New Position contract, P4 engagement Positions tab, P5 overview error-contract+timeline links, P6 person/EO engagement contracts + legacy detail route-or-delete)."
+    }
+  ],
+  "round16_done": [
+    {
+      "type": "fresh CROSS-DOSSIER entry/navigation surfaces (codex) — search/drawer/create-wizard/breadcrumb",
+      "report": "reports/dossier-workflows-round16-inspection-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh (cross-dossier trace + live edge/RPC checks) + Claude (apply + browser verify)",
+      "findings": 3,
+      "all_bucket_a_fixed": "R16-01 command-palette 8 create-dossier actions navigated to /dossiers[/<seg>]?action=create (inert list pages w/ ignored param) -> /dossiers/create (hub) + /dossiers/<segment>/create (verified all render real wizards); R16-02 EO create landed on generic /dossiers/persons/:id (returned DB type=person) -> added optional WizardConfig.detailRouteSegment honored by useCreateDossierWizard + set 'elected-officials' on electedOfficialWizardConfig (plain person unaffected); R16-03 breadcrumb nav aria-label='Breadcrumb' hardcoded EN -> t('header.breadcrumb') + key EN/AR (verified AR announces مسار التنقل)",
+      "clean_surfaces": "global search->dossier (getDossierDetailPath/getDossierRouteSegment per type, localized, graceful empty); dashboard drawer deep-link (invalid dossierType degrades to no-drawer, no crash); all 7 DB-type create routes submit correct type + land correctly; create edge rejects elected_official (non-DB type) as designed",
+      "deploys": "none (frontend-only)",
+      "new_bucket_b": "none"
+    }
+  ],
+  "round15_done": [
+    {
+      "type": "honest cross-cutting completeness sweep (codex) — remaining safe bucket-A polish + negative checks",
+      "report": "reports/dossier-workflows-round15-inspection-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh (sweep + live aggregate SQL) + Claude (apply + build/lint + spot-verify)",
+      "findings": 4,
+      "all_bucket_a_fixed": "R15-01 positions LIBRARY clear-filters label common:clear_filters (absent) -> positions:library.clear_filters (same class as R13-04); R15-02 9 inert engagement-workspace buttons (Calendar/Tasks/Context/Overview/Docs Add/Create/Link/Transition/Upload) -> disabled (honest non-affordance; real Schedule Poll/Log After-Action/Generate Briefing untouched); R15-03 PositionDossierLinker error branch raw errors.failed_to_load -> added positions:errors.failed_to_load EN/AR; R15-04 removed redundant no-op Compare Versions button (+orphaned GitCompare import) since comparison auto-renders",
+      "negative_checks_clean": "no remaining dossiers.reference_type embed in any edge fn (only staff-availability uses its own reference_type:'staff_profile'); no bare Intl.NumberFormat(i18n.language) in swept dossier/positions/workspace surfaces -> round-12/14 same-bug-class repairs confirmed complete",
+      "deferred_phase_B": "R6-03 Add-to-Dossier New Position contract (position_type_id=dossier_id + blank title_ar + empty audience_groups vs positions-create requirements); R14-02 engagement Positions tab (legacy engagement_positions, unrouted, no-op attach); R13-02/R14-03 host_organization_id + person_engagements engagement contracts; raw-key debt in legacy/unrouted person/EO detail (route-or-delete backlog)",
+      "deploys": "none (frontend-only)"
+    }
+  ],
+  "round14_done": [
+    {
+      "type": "R13-03 type-aware DocumentsSection (carryover) + 4 fresh per-type workflow traces",
+      "report": "reports/dossier-workflows-round14-inspection-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh (recipe + traces + live aggregate SQL) + Claude (apply + browser verify both directions)",
+      "findings": 3,
+      "bucket_a_fixed": "R14-01 DocumentsSection is now TYPE-AWARE. Added required dossierType: DossierType to DocumentsSectionProps; threaded from all 7 docs routes (country/organization/topic/working_group/person/forum + person for EO) + DossierDocumentsTab + DossierOverview (dossier.type). DocumentsSection computes canShowMous = country|organization, HIDES Briefs tab entirely (dead for all types since round-11 sub-fetch removal), gates MoU on canShowMous, gates Attachments on length>0, and bases All-tab + total + empty-state on VISIBLE buckets only. LIVE-VERIFIED BOTH WAYS: topic with 1 position -> only All(1)+Positions(1) (dead MoU/Briefs/Attachments gone); org with 1 seeded position -> All(1)+Positions(1)+MOUs(0) (MoU kept for supported type, Briefs/Attachments hidden). Unit test updated+passing (asserts MoU+Briefs absent for topic).",
+      "bucket_b": "R14-02 engagement workspace has NO routed Positions tab; only impl (EngagementPositionsSection in unrouted EngagementDossierDetail) reads legacy engagement_positions + no-op attach -> phase work (route+nav+canonical-vs-legacy decision+wire attach). R14-03 EO/person Engagements tab ignores person_engagements (get_person_full.recent_engagements) -> LATENT (person_engagements=0 globally + for seeded EO), product decision.",
+      "no_finding": "person Tasks New Task (shared path, parity with topic confirmed round-13)",
+      "live_snapshot": "mous=0, briefs=0, attachments=0, engagement_positions=0, person_engagements=0; only position_dossier_links rows are topic(1)+org(1 seeded)",
+      "deploys": "none (frontend-only)",
+      "seeds": "position_dossier_link 44c105d3->org GASTAT (applies_to)"
+    }
+  ],
+  "round13_done": [
+    {
+      "type": "R12-11b link_type vocabulary realign (carryover) + 4 fresh per-type workflow traces",
+      "report": "reports/dossier-workflows-round13-inspection-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh (recipe + traces) + Claude (apply + browser verify EN/AR)",
+      "findings": 4,
+      "bucket_a_fixed": "R13-01 FULL realign of the positions link_type vocabulary primary/related/reference -> canonical applies_to/related_to/endorsed_by/opposed_by (matches live position_dossier_links_link_type_check). New PositionDossierLinkType exported from domains/positions/types; threaded through useDossierPositionLinks, DossierPositionsTab (filter+SelectItems), PositionDossierLinker (default related->related_to), PositionCard (badge now i18n + success/destructive tokens), PositionTrackerCard (our=applies_to), i18n en/ar types block (AR ينطبق على/ذو صلة/مؤيَّد من/معارَض من). LIVE-VERIFIED: filter now offers the 4 canonical labels AND matches live rows (Related-to filter keeps the seeded related_to position; was 0-match before); badge resolves EN+AR. R13-04 NEW (found during verify): DossierPositionsTab clear-filters button used t('common:clear_filters') (absent key) -> raw leak; switched to positions:dossier_tab.clear_filters; verified مسح الفلاتر in AR.",
+      "bucket_b_latent": "R13-02 org Engagements tab never reads engagement_dossiers.host_organization_id -> LIVE-CLASSIFIED LATENT (0 rows have host_organization_id or host_country_id; edge/repo only transport host_country_id); R13-03 WG Docs MoU+Briefs buckets -> LATENT (wg mou signatories=0, mous empty; Briefs is universal dead affordance post-round-11 but only shows with >=1 other doc). Both left for planned phases.",
+      "no_finding": "country Timeline tab (link_id/activity_timestamp contract intact), topic Tasks New Task (payload + work_item_dossiers + invalidation aligned)",
+      "deploys": "none (frontend-only realign; no migration/edge needed — DB+edge already canonical from round 12)"
+    }
+  ],
+  "round12_done": [
+    {
+      "type": "one-workflow-per-type inspection (codex) + Claude live-verify & fix of the topic/country positions-attach chain",
+      "report": "reports/dossier-workflows-round12-inspection-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh (8 workflows) + Claude (browser + Supabase MCP fixes)",
+      "findings": 8,
+      "bucket_a_fixed": "R12-06 positions attach was a NO-OP (onAttach discarded selection) -> wired createPositionDossierLink + dossier-tab invalidation + EN/AR toasts; R12-04 EventDialog now invalidates dossier-tab engagements + overview detail; R12-01 link-type filter i18n (existing keys + all_link_types EN+AR); R12-08 committee roles alternate/observer/secretary/rapporteur EN+AR; R12-02 dead MoU row click (cursor-pointer+TODO onClick) removed",
+      "new_findings_from_live_verify": "Tracing R12-06 end-to-end exposed a 4-bug stack making attach 100% broken: R12-09 CRITICAL edge post-insert SELECT embedded dossiers.reference_type (live col is type) -> 42703 500 every attach (round-10 fixed the INSERT, missed this SELECT) [FIXED+deployed v10]; R12-10 CRITICAL position_dossier_links RLS clearance subquery keyed dossiers.id=auth.uid() (never matches) -> COALESCE to 1 -> gate collapsed to sensitivity<=1 for ALL users, blocking 20/35 dossiers; DELETE had same typo [FIXED migration 20260610000002, profiles.user_id=auth.uid()]; R12-11 CRITICAL edge default link_type 'related' violates live CHECK (applies_to/related_to/endorsed_by/opposed_by) -> 500 [FIXED+deployed v11 -> related_to]. Attach now 201 + persists + renders (live-verified). R12-11b MEDIUM frontend link_type vocabulary primary/related/reference is wrong vs live -> filter non-functional (documented, not fixed).",
+      "bucket_b_live_results": "R12-03 forum Engagements tab reads calendar_events.past only (upcoming/today invisible) — code-confirmed, product decision; R12-05 after-action legacy engagements.id is LATENT not repro (engagement_dossiers.id mirrors engagements.id 1:1, route loads fine) — downgraded; R12-07 person Docs MoU sub-tab LATENT (mous empty, 0 person signatories, no docs)",
+      "deploys": "positions-dossiers-create v9->v11 LIVE; migration 20260610000002 applied",
+      "seeds": "2 positions (44c105d3, 4baf9c95 published, author=admin) + 1 position_dossier_link (4baf9c95->Vision2030 topic, related_to)"
+    }
+  ],
+  "round11_done": [
+    {
+      "type": "UAT acceptance round — all rounds-6-10 bucket-A fixes, EN+AR, live browser",
+      "matrix": "reports/dossier-uat-matrix-round11-2026-06-10.md",
+      "report": "reports/dossier-uat-round11-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh (matrix) + Claude (browser execution + live SQL)",
+      "result": "22/26 PASS (12 full, 10 observable-path w/ data-blocked remainder), 0 regressions",
+      "writes_proven": "R6-09 commitment create (1 toast + live invalidation), R10/R6-07 relationship create (canonical payload 201 + refetch)",
+      "fixed": "F1 briefs dead-select 400 every dossier (fetchDocuments sub-fetch removed + BRIEFS_COLUMNS corrected), F2 eventType +5 keys EN+AR (internal_meeting/holiday/training/forum/other), F4 backend auth.ts dead columns users.permissions + profiles.role 401'd ALL authed /api routes (NEEDS DROPLET DEPLOY), F5 toFormatLocale(ar->ar-SA) helper applied to BilateralSummary/SharedSummaryStats/EO OfficeCard/workspace OverviewTab/TeamWorkloadPanel/WorkItemTabs (bare 'ar' = latn digits in Chrome — round-9 digit fixes were inert)",
+      "noted": "F3 elected_official = person_subtype by design; staging had 0 EO rows (seeded). /api/countries 500s (legacy, unconsumed). Graph panel vs tier strip read different sources. R9-02 error-swallow contract enables F1-class silent breakage — top phase candidate.",
+      "seeds": "calendar_entries 3f465d9e (Indonesia, 2026-06-08), aa_commitments 'UAT round-11 commitment' (UAE), dossier_relationships WG-D->Indonesia cooperates_with, person dossier 19a22b0d Sen. Maria Vergara (elected_official subtype, office+term)"
+    }
+  ],
+  "round10_done": [
+    {
+      "type": "B-bucket live verification vs staging (codex matrix + Claude Supabase MCP checks)",
+      "report": "reports/dossier-b-bucket-verification-matrix-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh (matrix) + Claude (live SQL)",
+      "verified_small_fixed": "5: R6-02 key_contacts live table LACKS all 7 rich columns (name_ar/title_en/title_ar/organization_ar/photo_url/linked_person_dossier_id) -> the select 400'd silently and the Key Contacts card was ALWAYS empty; narrowed COLUMNS.KEY_CONTACTS.LIST + KeyContactRow + mapping (UI degrades via existing null fallbacks). R6-04 calendar_events has 0 rows live while calendar_entries has the dossier-linked data -> fetchCalendarEvents re-pointed to calendar_entries (local datetime synthesis per calendar.repository pattern) — dossier Engagements tab + drawer event KPI now read real data. R6-07 dossier_relationships live = canonical source/target (no type CHECK; edge validates) -> RelationshipDialog rewired to canonical useCreateRelationship + {source,target,type} payload + valid type options (old collaborates_with/monitors/hosts were edge-rejected; +cooperates_with/related_to/hosted_by keys EN+AR). R6-03-part position_dossier_links live column is created_by not linked_by -> positions-dossiers-create edge file fixed (NEEDS EDGE DEPLOY). R6-06-mitigation live documents table matches generated model (edge columns absent) -> document upload action removed from AddToDossierMenu content group until a storage-first contract exists.",
+      "verified_phase_confirmed": "R7-04 RPC has p_engagement_type live but grouped pills (meeting=4 enums, travel=3) cannot use a single-type param -> PHASE (server group-filter contract). R6-03 position_types=2 + audience_groups=4 exist live but picking defaults unattended encodes product semantics -> PHASE (picker UX). R6-06 working upload needs storage-first rebuild -> PHASE. Persons RLS: INSERT with_check + UPDATE/DELETE qual still require organization_id = jwt org_id (NULL-org rows immutable; SELECT-only was fixed) -> PHASE (policy/RPC reconciliation).",
+      "deploy_note": "positions-dossiers-create redeployed to staging zkrcjzdemdmwhearhfgg via Supabase CLI same session (created_by fix is LIVE)"
+    }
+  ],
+  "round9_done": [
+    {
+      "type": "per-type overview cards (BilateralSummary, MembershipStructure, ForumMetadata, workspace OverviewTab, ConnectedAnchors, MemberList, SharedSummaryStats, EO OfficeCard)",
+      "report": "reports/dossier-workflows-round9-inspection-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh",
+      "findings": 6,
+      "fixed": "5 bucket-A: R9-01 BilateralSummaryCard counts via Intl.NumberFormat (AR got Latin digits), R9-03 workspace OverviewTab days-in-stage + progress percent (style:percent) + done/total localized, R9-04 MemberListCard fake 'View all' affordance -> honest '+N more members' muted text (new overview.members.more EN+AR), R9-05 SharedSummaryStatsCard 4 stat values localized, R9-06 EO OfficeCard list.empty -> new detail.officeEmpty key EN+AR + term_number localized",
+      "escalated": "B-bucket: R9-02 shared overview-section error contract — fetchRelatedDossiers/fetchDocuments/fetchCalendarEvents swallow Supabase errors and return empty section shapes, so cards render failures as trustworthy zero/empty states; needs decision: fail whole query vs section-level error metadata vs explicit unknown state (affects all overview cards)"
+    }
+  ],
+  "round8_done": [
+    {
+      "type": "drawer KPI strip (country), overview cache key (topic), Docs tab actions (org), relationship sidebar (forum/wg/person), eo timeline statuses",
+      "report": "reports/dossier-workflows-round8-inspection-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh",
+      "findings": 8,
+      "fixed": "7 bucket-A: R8-01 drawer includeSections += documents (documents KPI was guaranteed 0), R8-02 useDossierOverview cache key now carries normalized options via new detailWithOptions (partial responses cross-pollinated ALL overview cards/drawer/analytics for 5-min stale window; prefix invalidation preserved; useDossierExport JSON branch switched to getQueriesData prefix lookup; 83/83 drawer tests pass), R8-03 inert view/download icon buttons removed from DocumentsSection, R8-05/06 RelationshipSidebar localized (tier labels, 24 relationshipType keys EN+AR in dossier-shell.sidebar, remove aria-label, Cancel/Remove buttons, collapsed strip aria-labels + tooltips via dossier:type.*), R8-07 mobile relationships trigger aria-label, R8-08 timeline.status draft/submitted/triaged/assigned/converted/merged/overdue EN+AR in dossier-context",
+      "escalated": "B-bucket: R8-04 drawer 'Log engagement' CTA opens blank wizard dropping source dossier context (needs product/data-contract decision: participant vs host vs relationship edge vs prefill-only; then verify engagement_participants/engagement_dossiers writes vs live)"
+    }
+  ],
+  "round7_done": [
+    {
+      "type": "still-uncovered per-type workflows (country export pack, org/wg Tasks tab, forum/topic Audit tab, engagement list filters, person Engagements tab, eo export label)",
+      "report": "reports/dossier-workflows-round7-inspection-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh",
+      "findings": 8,
+      "fixed": "5 bucket-A: R7-02 normalizeWorkItemPriority guard (critical->urgent, normal->medium, unknown->medium) applied to ALL 3 cast sites in fetchWorkItems (tasks/commitments/intakes — same-bug-class sweep beyond the flagged intake site), R7-03 audit tab removed from BASE_DOSSIER_TABS centrally (ALL 7 shell-type audit routes verified to be coming-soon stubs, not just forum/topic; routes stay mounted; opt back in via extraTabs), R7-05 dead 'call' filter pill removed (no engagement_type maps to call; E2E list-pages-engagements.spec.ts updated 4->3 pills; 'event' pill deferred to B R7-04 server contract), R7-07 DossierEngagementsTab badges localized via dossier-overview:relationshipType.*/eventType.* colon form w/ raw fallback, R7-08 dossier-export type.elected_official EN+AR added",
+      "escalated": "B-bucket: R7-01 dossier-export-pack edge reads stale contracts (positions.classification/dossier_ids, mous.title_en/status, documents.entity_type, legacy commitments instead of aa_commitments) and always emits HTML while dialog advertises PDF/DOCX (VERIFY vs live deploy), R7-04 engagement list filter pills are client-side over infinite pages (filtered first page can show empty + suppress Load more; RPC supports only exact engagement_type, grouped pills need a mapping contract), R7-06 fetchWorkItems hard-limits 50/source and reports fetched-window length as total_count (linked commitments crowded out by direct ones; no pagination/truncation UI)"
+    }
+  ],
+  "round6_done": [
+    {
+      "type": "dossier detail-tab/action workflows (one per type: country KeyContacts card, org/forum/topic/wg/person/eo Add-to-Dossier actions, engagement Docs generate-brief)",
+      "report": "reports/dossier-tab-workflows-inspection-2026-06-10.md",
+      "inspector": "codex gpt-5.5 xhigh",
+      "findings": 11,
+      "fixed": "4 bucket-A: R6-01 KeyContactsCard dead ?tab=contacts deep-link -> honest non-interactive '+N more' (new overview.contacts.more EN+AR), R6-05 DocsTab brief card localized via engagement-briefs colon-form (status incl draft widened in BriefStatus, type, hasCitations) + inert View button removed (no brief detail route), R6-09 CommitmentDialog now invalidates dossier-tab work_items + timeline (mirrors TaskDialog) and duplicate success toast removed (hook toasts; dialog error toast kept for link failures), R6-11 inheritance_source badge localized + engagement/after_action/position/mou context keys EN+AR",
+      "skipped": "R6-08 deliberately: invalidation-key fix on the obsolete T064 relationship hook has zero user effect while the create path itself 400s (B R6-07 owns the migration to the canonical service)",
+      "escalated": "B-bucket: R6-02 key_contacts schema drift (query selects name_ar/photo_url/linked_person_dossier_id absent from generated types — VERIFY vs live), R6-03 PositionDialog sends dossier id as position_type_id + empty title_ar/audience_groups and never creates position_dossier_links (edge rejects; needs UX/data rewrite), R6-04 forum Schedule Event writes calendar_entries but dossier Engagements tab reads calendar_events (created events invisible), R6-06 document upload sends multipart FormData to JSON-parsing documents-create requiring pre-existing storage_path (needs storage-first upload flow), R6-07 relationship create posts child_dossier_id but edge requires source/target_dossier_id (migrate to canonical relationship-api + dossier picker; affects working_group + elected_official routes), R6-10 elected_official action context collapses to person (needs subtype-aware context decision)"
+    }
+  ],
+  "round5_done": [
+    {
+      "type": "approvals (list page /approvals — FINAL round-5)",
+      "report": "reports/approvals-workflow-inspection-2026-06-10.md",
+      "inspector": "codex",
+      "prev_commit_for_audit_logs": "682ed488",
+      "findings": 6,
+      "fixed": "2 bucket-A: #4 honest UI — All/Pending/Completed filter badges removed (fetch fixed to under_review; filter never reached it) + Approved-This-Month/Returned stat cards removed (both hardcoded 0; real Pending count kept), #5 NEW approvals namespace created+registered EN+AR (page had NO Arabic — default-ns keys with English defaultValues) + locale-aware date. SKIPPED #3 deliberately: zero badge renders nothing today (real fix = B#1 count endpoint)",
+      "escalated": "B-bucket: #1 'My Approvals' is NOT a current-user queue (generic positions-list?status=under_review; no approver/stage/user param; RLS checks approvals.approver_id but positions-submit never creates assignment rows — VERIFY vs live), #2 no approve/request-revisions/delegate actions or StepUpMFA mounted (edge fns exist unwired), #3 counts.approvals hardcoded 0 in SECTION_BADGE_COUNTS, #6 approval-adjacent schema split (approvals audit vs pending_role_approvals ungenerated vs position_delegations ungenerated)"
+    },
+    {
+      "type": "audit-logs (admin viewer)",
+      "report": "reports/audit-logs-workflow-inspection-2026-06-10.md",
+      "inspector": "codex",
+      "prev_commit_for_activity": "6cf25685",
+      "findings": 6,
+      "fixed": "3 bucket-A (REAL functional repairs): #2 list adapter spoke a dead contract — page/action/entity_type/from/to renamed to edge params (limit/offset/operation/table_name/date_from/date_to/+search/ip/sort now forwarded), offset now advances (pagination was stuck on page 1), totals read from metadata.total/has_more (UI always showed 0); #3 statistics stub -> real /statistics route (component shape matched edge data exactly) + export stub -> real GET /export streamed as Blob via new apiGetBlob + browser download (repo had POSTed to a GET-only route); #5 inert row-click/View-Related-Logs affordance removed (no detail surface); stale useAuditLogStats(/stats 404)+useExportAuditLogs deleted from barrel+re-export",
+      "deferred_from_A": "#6 i18n/a11y polish (inline label_en/ar pairs ARE bilingual; icon aria-labels + System fallback + EO audit stub left for a sweep)",
+      "escalated": "B-bucket: #1 viewer reads audit_log (singular, generated type lacks the selected columns) while real compliance producers write audit_logs (plural, mixed writer schemas incl. ungenerated role-mgmt fields) — canonical-trail decision + VERIFY vs live, #4 role gating split (route has NO admin guard; nav uses users.role; edge allows admin/editor/supervisor; /admin/* uses auth metadata)"
+    },
+    {
+      "type": "activity (global /activity feed)",
+      "report": "reports/activity-workflow-inspection-2026-06-10.md",
+      "inspector": "codex",
+      "prev_commit_for_my_work": "a46d06c5",
+      "findings": 5,
+      "fixed": "2 bucket-A: #2 load-more restored (hook/edge had full cursor pagination; the Phase-42 reskin silently capped the feed at 20 rows — btn-ghost Load more wired to hasNextPage/fetchNextPage), #5-half aria-label 'Activity' -> t('title') (was English in AR). DELIBERATELY SKIPPED #5-half tab-panel restructure: empty TabsContent panels are a documented Phase-42 axe-core decision in the file header",
+      "escalated": "B-bucket: #1 activity_stream RLS allows any authenticated insert w/o actor_id=auth.uid() binding + visibility_scope unenforced (spoofable feed — VERIFY vs live policies), #3 Following tab has NO follow affordance anywhere active (only legacy unmounted EnhancedActivityFeed had it), #4 realtime claimed in comments but polling-only (60s)"
+    },
+    {
+      "type": "my-work",
+      "report": "reports/my-work-workflow-inspection-2026-06-10.md",
+      "inspector": "codex",
+      "prev_commit_for_sla": "96d54818",
+      "findings": 6,
+      "fixed": "3 bucket-A: #4 locale-aware numbers across my-work (on-time %, completion h/d via metrics.hoursShort/daysShort keys EN+AR, team counts/percentages, tab badges incl 99+ — Arabic now gets Arabic-Indic digits), #5 fabricated capacity-of-20 workload progress bar removed (RPC returns no capacity field) + member card hover shadow -> border-accent, #6 dashboard quick-action /my-work?action=create-task (unsupported param) -> /kanban?create=true (the FAB's real create path)",
+      "escalated": "B-bucket: #1 manager assignee drill-down written to URL but DROPPED before the RPC (edge never reads assigneeId; p_user_id always auth user; MyWorkUrlState omits assignee), #2 due-today/due-week cards write filter state the list query ignores (no due-window RPC args), #3 core unified view/RPC SQL not in repo migrations (generated types only — VERIFY vs live scoping/deadline derivation)"
+    },
+    {
+      "type": "sla-monitoring",
+      "report": "reports/sla-monitoring-workflow-inspection-2026-06-10.md",
+      "inspector": "codex",
+      "findings": 9,
+      "fixed": "3 bucket-A: #6 sla.common.{status,actions,active,inactive} added EN+AR (policy table leaked raw keys), #7 at-risk card click affordances + external-link icon now conditional on onItemClick (page passes none — was fake-clickable), #9 compliance chart 4x #22c55e -> var(--heroui-success)",
+      "escalated": "B-bucket: #1 CRITICAL sla_escalations has NO writer in source (UI reads/acks/resolves rows nothing creates; cron paths write escalation_events/sla_events instead — VERIFY vs live), #2 four dashboard RPCs migration-only, absent from generated types (VERIFY vs live deploy), #3 metrics SQL is ticket-only while UI advertises ticket/commitment/task, #4 assignee/at-risk RPCs join staff_profiles.full_name which doesn't exist in generated schema, #5 policy enum drift (priority critical/normal + request_type dossier missing from form+i18n), #8 not in active Sidebar (after origin fixed)"
+    }
+  ],
+  "round4_done": [
+    {
+      "type": "task-queue + escalations (combined, FINAL round-4)",
+      "report": "reports/task-queue-escalations-workflow-inspection-2026-06-09.md",
+      "inspector": "codex",
+      "prev_commits": "events 43ef442a + build repair 8f1f8c84",
+      "findings": 10,
+      "fixed": "bucket-A: #8 EscalationsPage -> assignments ns (header/alert leaked raw keys) + 4x dashboard common.loading leaks -> translation: colon form + AR escalations block ADDED (report wrongly said AR parity existed — AR had NO escalations block), #9 AssignmentQueue full i18n via existing assignments.queue keys + new queue.{title,description,queuedItems,normalLow,clearFilters,assign,assignNotAvailable,failedAttempts plurals,types.*} EN+AR, locale-aware dates, filter bar wraps, card hover shadow removed, #3-half inert Assign button now disabled with explanatory title",
+      "escalated": "B-bucket (both routes dormant + contract-broken): #1 queue edge response shape mismatch (queue_id/position/queued_at/skill objects vs id/queue_position/created_at/uuid strings), #2 filters never transported (invoke body vs URL params) + 'all' sent as literal + priority_level enum drift, #3 manual-override edge writes columns absent from assignments, #4 queue-processor imports nonexistent backend service + fallback cron is a placeholder, #5 CRITICAL escalations-report selects absent columns (assignments.organizational_unit_id, organizational_units.name, staff_profiles.full_name), #6 page claims manage but is analytics-only (SLA ack/resolve lives in /sla-monitoring), #7 waiting-queue-escalation writes absent escalation_records columns, #10 active-Sidebar placement after semantics fixed"
+    },
+    {
+      "type": "events (+/calendar/new wrapper)",
+      "report": "reports/events-workflow-inspection-2026-06-09.md",
+      "inspector": "codex",
+      "prev_commit_for_tags": "5f30eedf",
+      "findings": 8,
+      "fixed": "4 bucket-A: #1 inert Add Event button removed + list cards no longer fake-clickable, #6 page title navigation.calendar -> navigation.events + /calendar/new wrapper switched to calendar ns with new_event.* keys EN+AR (was raw keys) + navigation.newEvent EN+AR, #8 7-cols-in-grid-cols-6 -> responsive 2/4/7, filter bar wraps, solid pills+text-white -> soft token badge pairs with unknown-type fallback, day-card shadow -> border-accent, date d MMM yyyy",
+      "deferred_from_A": "#7 month navigation / selected-day panel — feature work gated on the #2 model decision",
+      "incident": "43ef442a landed with a BROKEN build (invalid JSX comment placement; esbuild parse error). Discovered: pre-commit hook RUNS the build but does NOT block the commit on failure, and `timeout`/`npx` are broken on this machine so in-session tsc checks were silent no-ops. Repaired in 8f1f8c84; build verified green via direct `pnpm --filter intake-frontend build`. All 8 earlier session commits audited — their hook builds genuinely passed.",
+      "escalated": "B-bucket: #2 /events (event_details over public.events) vs /calendar/new (calendar_entries) are unrelated models presented as siblings, #3 single-entry participant selection silently dropped on save (calendar-create doesn't persist), #4 event_details view absent from generated types + type enum drift (training vs visit, VERIFY vs live), #5 active-Sidebar placement decision"
+    },
+    {
+      "type": "tags",
+      "report": "reports/tags-workflow-inspection-2026-06-09.md",
+      "inspector": "codex",
+      "prev_commit_for_word_assistant": "8f6122ea",
+      "findings": 8,
+      "fixed": "5 bucket-A: #1 CRITICAL hierarchy crash — repository now unwraps edge {data,total} to the array all 3 consumers cast to (filteredTree.map TypeError), #2 edit/delete id contract — PUT/DELETE now send ?id= + body.id (edge parses path segment as ACTION, never id; both ops always 400'd), #6 /tags added to Sidebar Administration group (was mounted but unreachable), #7 hardcoded literals -> tags.json keys EN+AR (Target Tag, 4 form placeholders, '{count} tags' -> plural tagCount), #8 edge create fallback #3B82F6 -> var(--color-accent) (file-only; takes effect on next edge deploy)",
+      "escalated": "B-bucket: #3 merge/history/analytics are local stubs presented as live (merge shows success without backend write), #4 canonical tag model split — taxonomy entity_tag_assignments vs legacy dossiers.tags string[] (TagSelector no-ops, discards entityType/entityId), #5 data-library tags consumption stale vs generated types (overlaps data-library round-3 B-bucket)"
+    },
+    {
+      "type": "word-assistant + export (combined)",
+      "report": "reports/word-assistant-export-workflow-inspection-2026-06-09.md",
+      "inspector": "codex",
+      "findings": 8,
+      "fixed": "3 bucket-A (all [WA]): #3 full wordAssistant i18n block EN+AR in common.json (page copy was 100% raw keys, 29 keys incl. new copyResponse aria-label), #5 inert thumbs up/down removed (no feedback backend), #8 prompt tiles cursor-Cards -> keyboard-accessible buttons + hover shadow removed + text-primary -> text-accent + emoji stripped from local fallback",
+      "escalated": "B-bucket: [EXP] #1 CRITICAL /export nav target redirects to /dossiers (no export page mounted; 4 parallel export implementations exist unwired), #6 orphan Express ExportDialog hard-codes Bearer test-auth-token, #7 data-export edge queries stale vs generated types across 5 entities (VERIFY vs live); [WA] #2 default fallback mode shows 'connected' without any backend, #4 edge returns fallback text/RANDOM embeddings as success"
+    }
+  ],
+  "round3_done": [
+    {
+      "type": "settings/admin (System category: /settings, /users, /admin, /help)",
+      "report": "reports/settings-admin-workflow-inspection-2026-06-09.md",
+      "inspector": "codex",
+      "prev_commit_for_briefing_books": "0bcdb14a",
+      "findings": 13,
+      "fixed": "4 bucket-A: #6 ExpandedPanel now filters adminOnly nav items via authStore role (renderer ignored the flag), #11 help page honesty — no-destination View-all removed, mailto:/tel: wired on support buttons, inert resource cards de-affordanced (pointer+external-icon removed), #12 admin approvals route switched to admin ns (AR showed English defaults) + navigation.system key EN+AR, #13 IconRail raw HSL gradient+RGBA shadows -> bg-sidebar+border-line, help guide/resource card shadows -> border-accent + transition-colors, accessibility focus-indicator rows: div onClick removed, Label is the click target",
+      "deferred_from_A": "#11 help namespace migration (page is bilingual via inline pairs; full help-ns extraction is a phase-sized mechanical change)",
+      "escalated": "B-bucket: #1 CRITICAL /settings saves to nonexistent users columns (preferences schema decision + migration, VERIFY vs live), #2 appearance prefs localStorage-only vs account-level, #3 /users create/view/edit/role routes missing (edge fns exist unwired), #4 /users not admin-gated (route+RLS decision), #5 admin role-source split (profile-table vs auth metadata), #7 calendar-sync settings import stub hooks (real repository exists), #8 data-privacy export/delete references absent tables, #9 MFA is a flag with no enrollment flow, #10 bot pending-link user_id nullability"
+    },
+    {
+      "type": "briefing-books",
+      "report": "reports/briefing-books-workflow-inspection-2026-06-09.md",
+      "inspector": "codex (cursor-agent quota exhausted)",
+      "prev_commit_for_intelligence": "c93a4d48",
+      "findings": 12,
+      "fixed": "4 bucket-A: #8 no-op View/Duplicate/Regenerate menu items hidden (separator restructured), #10 i18n — actions.retry + list.noFilterMatch + builder.discard.* EN+AR added, hardcoded Arabic/English review label -> existing builder.options.language keys, t()||fallback removed, #11 list card hover shadow -> border-accent. #12 (server-side filter wiring) DEFERRED deliberately: moot while route is disabled (#1) and DTO mismatch (#3) crashes first",
+      "escalated": "B-bucket: #1 CRITICAL route redirects to /dashboard (page unmounted), #2 not in nav, #3 CRITICAL raw DB rows vs BriefingBook DTO (list crashes on book.config), #4 CRITICAL edge fetchEntityData selects nonexistent columns across 5 tables (VERIFY vs live), #5 sensitivity numeric-vs-enum mismatch, #6 template fetch schema-invalid + unused, #7 PDF/DOCX advertised but HTML always generated, #9 generated HTML unsanitized (XSS), #12 GET params not wired"
+    },
+    {
+      "type": "intelligence",
+      "report": "reports/intelligence-workflow-inspection-2026-06-09.md",
+      "prev_commit_for_data_library": "3bb670b0",
+      "findings": 16,
+      "fixed": "7 bucket-A: #10 intelligence.refresh.* toast keys in common.json EN+AR (hook default-ns, no code change), #11 38 missing intelligence.*+geographic.* keys added to dossier.json EN+AR (AR UI was all-English fallbacks), #12 /monitoring vite proxy added, #13 dir on IntelligencePage root, #14 decorative checkmark prefixes removed + scope* strings i18n'd, #16 text-primary -> text-accent x5 (4 sub-panels + tab spinner)",
+      "escalated": "B-bucket (3 disconnected stacks): #1 CRITICAL Feature-029 dossier intelligence tab orphaned (CountryDossierDetail unrouted), #2 CRITICAL /intelligence page assumes legacy report schema vs generated types (VERIFY vs live), #3 CRITICAL vector RPC param mismatch + results never rendered, #4 intelligence_signals has no UI vs nav label, #5 Phase-54 event/digest tables schema-only, #6 refresh vs refresh-v2 edge drift (VERIFY vs live deploy), #7 Express /api/intelligence unconsumed + detectSignals arity bug, #8 stale /api/intelligence-reports tests, #9 inert create/download/row actions, #15 placeholder E2E (after #1)"
+    },
+    {
+      "type": "data-library/documents",
+      "report": "reports/data-library-documents-workflow-inspection-2026-06-09.md",
+      "findings": 21,
+      "fixed": "10 bucket-A: #11 dataLibrary i18n block EN+AR (page copy was 100% raw keys), #12 common.completed/error keys, #13 documentStatus mou_state labels EN+AR, #14 dead positions.classification mapping removed (col verified absent), #15 indeterminate upload bar (was frozen 0%), #17 DocsTab hardcoded strings -> workspace.json docs.* incl plural count + untitled (same-class), #18 hover shadows removed x3 (DataLibraryPage/DocumentsSection/BriefCard), #19 dir on data-library root, #20 date d MMM yyyy, #21 DossierDocumentsTab error state + retry",
+      "escalated": "B-bucket (CRITICAL data-library is schema-incompatible): #1-3 data_library_items column model vs types/RLS (dual 009_* migrations, VERIFY vs live) + missing uploaded_by/file_hash, #2 data-library storage bucket not provisioned, #4-5 documents-get/create edge contract broken vs live documents schema + FormData-vs-JSON, #6-7 inert download/delete + getPublicUrl on private bucket, #8-10 docs tab entity-links vs files + attachments always empty + 3 parallel document stacks, #16 MSW mock drift"
+    },
+    {
+      "type": "reports/analytics",
+      "report": "reports/reports-analytics-workflow-inspection-2026-06-09.md",
+      "commit": "68552968",
+      "findings": 22,
+      "fixed": "9 bucket-A: #11 reports.parametersTitle EN+AR, #12 intelligence confidenceLevels/classifications key paths, #13 i18n country labels (sa/ae/eg), #17 template-card hover shadow->border-accent, #3 KPI cards gated on real summary (no zeros on silent API failure), #21 duplicate relationships.trends removed, #9 scheduled-reports nav item + navigation.scheduledReports EN+AR, #15 AnalyticsPreviewOverlay full token re-skin (gradients/palette literals/shadow-sm/SVG hexes removed), #16 EngagementMetricsChart OUTCOME_COLORS+stroke -> CSS var tokens",
+      "escalated": "B-bucket: #1/#2/#20 analytics-dashboard Express 404 + param/response contract + multi-endpoint fetch, #4 export stub, #5/#6 reports edge contract + mock job/download, #7/#8 report builder fully stubbed + dual scheduling hooks, #10/#19 scheduled report-name fetch + recipients users join VERIFY vs live, #18 persistent report history, #14 sample-data policy, #22 MOU filter values vs workflow_state"
+    },
+    {
+      "type": "dashboard (analyst home)",
+      "report": "reports/dashboard-workflow-inspection-2026-06-09.md",
+      "findings": 20,
+      "fixed": "11 bucket-A: KPI fabricated deltas+meta removed (honest counts), trends mock fallback removed + SlaHealth error branch, owner initials via users lookup (live-verified full_name 393/393), MyTasks enabled+assigned guard, FirstRun operations-hub/digest/first-run-check invalidation, VIP view-all 404->engagements, overdue.owner i18n (en+ar), forums.status inactive+unknown (live statuses=active/inactive), loading incl lookups + hide empty initials, bureau kpi/kcard shadow removal, spinner border-accent",
+      "escalated": "B-bucket: get_dashboard_stats deltas/meta RPC, SlaHealth domain model (intake vs work-items + bad band), openCommitments label vs open_tasks, dossierType propagation to drawer, overdue pagination, get_work_item_trends RPC, /vip-visits route decision, dead Operations Hub zone components, WeekAhead glyph typing, MyTasks uncheck status restore"
+    }
+  ],
   "session_commits": [
     "bb3d5b53 organization",
     "b3d50a1d forum",
@@ -158,7 +438,9 @@
     "07a8b8e9 elected_official",
     "b2cf9465 create-wizard",
     "9291ed61 work-board",
-    "9072d263 global-search"
+    "9072d263 global-search",
+    "e5a04b10 dashboard",
+    "68552968 reports-analytics"
   ],
-  "next_planned": "intake / service-request workflow"
+  "next_planned": "word-assistant + export combined (codex running; then fix bucket-A + commit). Round-4 queue after: tags, events, task-queue/escalations. OPEN QUESTION for user: consolidate the round-2/3 escalated B-bucket backlog (state file entries + escalated-backlog-master) into planned GSD phases — biggest items: settings preferences schema, briefing-books re-enable+DTO, intelligence 3-stack unification, data-library schema reconcile, analytics-dashboard proxy/contract"
 }

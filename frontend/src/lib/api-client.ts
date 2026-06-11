@@ -76,6 +76,22 @@ export async function apiGet<T>(path: string, options?: ApiClientOptions): Promi
 }
 
 /**
+ * Sends a GET request and returns the raw body as a Blob — for file
+ * downloads (CSV/JSON exports) that must not be JSON-parsed.
+ */
+export async function apiGetBlob(path: string, options?: ApiClientOptions): Promise<Blob> {
+  const headers = await getAuthHeaders()
+  const response = await fetch(resolveUrl(path, options), {
+    method: 'GET',
+    headers,
+  })
+  if (!response.ok) {
+    throw new Error(`API error ${response.status}: ${response.statusText}`)
+  }
+  return response.blob()
+}
+
+/**
  * Sends a POST request to the API with a JSON body
  */
 export async function apiPost<T>(

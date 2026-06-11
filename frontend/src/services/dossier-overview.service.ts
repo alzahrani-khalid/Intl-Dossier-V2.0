@@ -105,7 +105,6 @@ interface PositionLinkRow {
     status: string
     created_at: string
     updated_at: string
-    classification?: string
   } | null
 }
 
@@ -210,42 +209,40 @@ interface IntakeTicketRow {
 }
 
 /**
- * Calendar event row from Supabase
+ * Calendar entry row from Supabase — calendar_entries is the canonical
+ * operational calendar (calendar_events is a separate, empty forum-agenda
+ * model; verified vs staging 2026-06-10). Dates split into event_date +
+ * event_time; a local start_datetime is synthesized at mapping time.
  */
-interface CalendarEventRow {
+interface CalendarEntryRow {
   id: string
-  title_en?: string
-  title_ar?: string
-  event_type: string | null
-  start_datetime: string
-  end_datetime: string | null
-  location_en?: string
-  location_ar?: string
+  title_en: string | null
+  title_ar: string | null
+  entry_type: string | null
+  event_date: string
+  event_time: string | null
+  all_day: boolean | null
+  location: string | null
   is_virtual: boolean | null
-  virtual_link: string | null
-  description_en?: string
-  description_ar?: string
+  meeting_link: string | null
+  description_en: string | null
+  description_ar: string | null
   created_at: string
 }
 
 /**
- * Key contact row from Supabase
+ * Key contact row from Supabase — live key_contacts is monolingual and has no
+ * photo/person-link columns (verified vs staging 2026-06-10)
  */
 interface KeyContactRow {
   id: string
   name: string
-  name_ar: string | null
-  role?: string
-  title_en?: string
-  title_ar?: string
+  role: string | null
   organization: string | null
-  organization_ar?: string
   email: string | null
   phone: string | null
-  photo_url: string | null
   last_interaction_date: string | null
   notes: string | null
-  linked_person_dossier_id: string | null
 }
 
 // =============================================================================
@@ -517,11 +514,13 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     }
   })
 
-  // Fetch briefs
-  const { data: briefs } = await supabase
-    .from('briefs')
-    .select('id, content_en, content_ar, generated_by, generated_at, is_template')
-    .eq('dossier_id', dossierId)
+  // Briefs sub-fetch removed: live briefs table has NO dossier_id column (links
+  // via country_id/organization_id/engagement_dossier_id) and none of the
+  // selected columns (content_en/ar, generated_by/at, is_template) exist, so
+  // this select 42703'd on every dossier and was swallowed into an empty group
+  // (verified vs staging 2026-06-10, round-11 UAT). Restore once a real
+  // dossier→brief contract exists.
+  const briefs: BriefRow[] = []
 
   // Note: Generic documents/attachments table doesn't exist in expected format
   // Attachments are linked to after_action_records, not directly to dossiers
@@ -537,7 +536,8 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     mime_type: null,
     size_bytes: null,
     status: p.status,
-    classification: p.classification || null,
+    // positions has no classification column (verified vs database.types.ts)
+    classification: null,
     created_at: p.created_at,
     updated_at: p.updated_at,
     created_by_name: null,
@@ -559,7 +559,7 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     created_by_name: null,
   }))
 
-  const briefDocs: DossierDocument[] = ((briefs || []) as BriefRow[]).map((b) => ({
+  const briefDocs: DossierDocument[] = briefs.map((b) => ({
     id: b.id,
     title_en: b.content_en?.summary?.substring(0, 50) || 'Brief',
     title_ar: b.content_ar?.summary?.substring(0, 50) || null,
@@ -590,6 +590,17 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
 // =============================================================================
 // Fetch Work Items
 // =============================================================================
+
+// intake_tickets.priority is the wider priority_level enum whose deprecated
+// values (critical/normal) predate the 20251203000001 normalization migration
+const normalizeWorkItemPriority = (priority: string | null | undefined): WorkItemPriority => {
+  if (priority === 'critical') return 'urgent'
+  if (priority === 'normal') return 'medium'
+  if (priority === 'low' || priority === 'medium' || priority === 'high' || priority === 'urgent') {
+    return priority
+  }
+  return 'medium'
+}
 
 async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<WorkItemsSection> {
   // Fetch work item dossier links
@@ -653,7 +664,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
         description_en: t.description_en || t.description || null,
         description_ar: t.description_ar || null,
         status: isOverdue ? 'overdue' : (t.status as WorkItemStatus),
-        priority: (t.priority || 'medium') as WorkItemPriority,
+        priority: normalizeWorkItemPriority(t.priority),
         deadline: t.sla_deadline,
         assignee_id: t.assignee_id,
         assignee_name: t.assignee_id != null ? (assigneeNameById.get(t.assignee_id) ?? null) : null,
@@ -709,7 +720,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
           description_en: c.description_en || c.description || null,
           description_ar: c.description_ar || null,
           status: isOverdue ? 'overdue' : (c.status as WorkItemStatus),
-          priority: (c.priority || 'medium') as WorkItemPriority,
+          priority: normalizeWorkItemPriority(c.priority),
           deadline,
           assignee_id: assigneeId,
           assignee_name: null,
@@ -742,7 +753,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
         description_en: i.description,
         description_ar: i.description_ar || null,
         status: isOverdue ? 'overdue' : (i.status as WorkItemStatus),
-        priority: (i.priority || 'medium') as WorkItemPriority,
+        priority: normalizeWorkItemPriority(i.priority),
         deadline: i.sla_deadline,
         assignee_id: i.assigned_to_id,
         assignee_name: i.assigned_to?.full_name || null,
@@ -791,34 +802,44 @@ async function fetchCalendarEvents(
   const endDate = new Date(now)
   endDate.setDate(endDate.getDate() + daysAhead)
 
+  // calendar_entries is the canonical operational calendar; event_date is a
+  // DATE column, so window on date strings
   const { data: events } = await supabase
-    .from('calendar_events')
-    .select(COLUMNS.CALENDAR_EVENTS.LIST)
+    .from('calendar_entries')
+    .select(
+      'id, title_en, title_ar, entry_type, event_date, event_time, all_day, location, is_virtual, meeting_link, description_en, description_ar, created_at',
+    )
     .eq('dossier_id', dossierId)
-    .gte('start_datetime', startDate.toISOString())
-    .lte('start_datetime', endDate.toISOString())
-    .order('start_datetime', { ascending: true })
+    .gte('event_date', startDate.toISOString().slice(0, 10))
+    .lte('event_date', endDate.toISOString().slice(0, 10))
+    .order('event_date', { ascending: true })
 
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const todayEnd = new Date(todayStart)
   todayEnd.setDate(todayEnd.getDate() + 1)
 
-  const allEvents: DossierCalendarEvent[] = ((events || []) as CalendarEventRow[]).map((e) => ({
-    id: e.id,
-    title_en: e.title_en || e.title_ar || '',
-    title_ar: e.title_ar || e.title_en || null,
-    event_type: (e.event_type || 'meeting') as DossierCalendarEvent['event_type'],
-    start_datetime: e.start_datetime,
-    end_datetime: e.end_datetime,
-    is_all_day: false,
-    location_en: e.location_en || null,
-    location_ar: e.location_ar || null,
-    is_virtual: e.is_virtual || false,
-    meeting_link: e.virtual_link,
-    description_en: e.description_en || null,
-    description_ar: e.description_ar || null,
-    created_at: e.created_at,
-  }))
+  const allEvents: DossierCalendarEvent[] = ((events || []) as CalendarEntryRow[]).map((e) => {
+    // synthesize a LOCAL datetime (not toISOString) so day-bucketing stays
+    // timezone-stable — same approach as calendar.repository mapEntryToCalendarEvent
+    const time = e.all_day === true ? '00:00:00' : (e.event_time ?? '00:00:00')
+    const startDatetime = `${e.event_date}T${time}`
+    return {
+      id: e.id,
+      title_en: e.title_en || e.title_ar || '',
+      title_ar: e.title_ar || e.title_en || null,
+      event_type: (e.entry_type || 'meeting') as DossierCalendarEvent['event_type'],
+      start_datetime: startDatetime,
+      end_datetime: null,
+      is_all_day: e.all_day || false,
+      location_en: e.location || null,
+      location_ar: e.location || null,
+      is_virtual: e.is_virtual || false,
+      meeting_link: e.meeting_link,
+      description_en: e.description_en || null,
+      description_ar: e.description_ar || null,
+      created_at: e.created_at,
+    }
+  })
 
   return {
     total_count: allEvents.length,
@@ -845,17 +866,17 @@ async function fetchKeyContacts(dossierId: string): Promise<KeyContactsSection> 
   const allContacts: DossierKeyContact[] = ((contacts || []) as KeyContactRow[]).map((c) => ({
     id: c.id,
     name: c.name,
-    name_ar: c.name_ar,
-    title_en: c.role || c.title_en || null,
-    title_ar: c.title_ar || null,
+    name_ar: null,
+    title_en: c.role || null,
+    title_ar: null,
     organization_en: c.organization,
-    organization_ar: c.organization_ar || null,
+    organization_ar: null,
     email: c.email,
     phone: c.phone,
-    photo_url: c.photo_url,
+    photo_url: null,
     last_interaction_date: c.last_interaction_date,
     notes: c.notes,
-    linked_person_dossier_id: c.linked_person_dossier_id,
+    linked_person_dossier_id: null,
   }))
 
   return {
@@ -1107,5 +1128,10 @@ export const dossierOverviewKeys = {
   all: ['dossier-overview'] as const,
   list: () => [...dossierOverviewKeys.all, 'list'] as const,
   detail: (dossierId: string) => [...dossierOverviewKeys.all, 'detail', dossierId] as const,
+  // Partial-overview requests must not share one cache entry: a drawer asking
+  // 3 sections would otherwise satisfy an overview card asking different ones.
+  // Extends detail() so prefix invalidation still hits every variant.
+  detailWithOptions: (dossierId: string, options: Record<string, unknown>) =>
+    [...dossierOverviewKeys.detail(dossierId), options] as const,
   export: (dossierId: string) => [...dossierOverviewKeys.all, 'export', dossierId] as const,
 }

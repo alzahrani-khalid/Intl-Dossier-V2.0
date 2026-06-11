@@ -30,24 +30,14 @@ import {
 } from '@/components/ui/table'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { requireAdmin } from '@/lib/auth/require-admin'
 import { AlertCircle, Users, CheckCircle } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PageHeader } from '@/components/layout/PageHeader'
 
 export const Route = createFileRoute('/_protected/admin/approvals')({
   component: AdminApprovalsPage,
-  beforeLoad: async () => {
-    // Check admin role
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-    const user = session?.user
-    const isAdmin = user?.user_metadata?.role === 'admin' || user?.app_metadata?.role === 'admin'
-
-    if (!isAdmin) {
-      throw new Error('Admin access required')
-    }
-  },
+  beforeLoad: requireAdmin,
 })
 
 const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1'
@@ -95,7 +85,7 @@ async function reassignApproval(approvalId: string, newApproverId: string, reaso
 }
 
 function AdminApprovalsPage() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('admin')
   const queryClient = useQueryClient()
   const [isReassignDialogOpen, setIsReassignDialogOpen] = useState(false)
   const [selectedPosition, setSelectedPosition] = useState<any>(null)
@@ -155,11 +145,8 @@ function AdminApprovalsPage() {
     <div className="space-y-6">
       <PageHeader
         icon={<CheckCircle className="h-6 w-6" />}
-        title={t('admin.approvals.title', 'Admin: Approval Management')}
-        subtitle={t(
-          'admin.approvals.subtitle',
-          'Reassign stuck approvals and manage approval chains',
-        )}
+        title={t('approvals.title', 'Admin: Approval Management')}
+        subtitle={t('approvals.subtitle', 'Reassign stuck approvals and manage approval chains')}
       />
 
       {/* Warning Banner */}
@@ -168,11 +155,11 @@ function AdminApprovalsPage() {
           <AlertCircle className="h-5 w-5 text-warning mt-0.5" />
           <div>
             <p className="font-medium text-warning">
-              {t('admin.approvals.warning', 'Admin Privileges Active')}
+              {t('approvals.warning', 'Admin Privileges Active')}
             </p>
             <p className="text-sm text-warning">
               {t(
-                'admin.approvals.warningText',
+                'approvals.warningText',
                 'All reassignments are logged and require a reason for audit trail compliance.',
               )}
             </p>
@@ -184,24 +171,21 @@ function AdminApprovalsPage() {
       <Card className="p-6">
         <div className="mb-4">
           <h2 className="text-xl font-semibold">
-            {t('admin.approvals.underReview', 'Positions Under Review')}
+            {t('approvals.underReview', 'Positions Under Review')}
           </h2>
           <p className="text-sm text-muted-foreground">
-            {t(
-              'admin.approvals.underReviewDesc',
-              'All positions currently in the approval workflow',
-            )}
+            {t('approvals.underReviewDesc', 'All positions currently in the approval workflow')}
           </p>
         </div>
 
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>{t('admin.approvals.position', 'Position')}</TableHead>
-              <TableHead>{t('admin.approvals.stage', 'Current Stage')}</TableHead>
-              <TableHead>{t('admin.approvals.category', 'Category')}</TableHead>
-              <TableHead>{t('admin.approvals.submittedDate', 'Submitted')}</TableHead>
-              <TableHead>{t('admin.approvals.actions', 'Actions')}</TableHead>
+              <TableHead>{t('approvals.position', 'Position')}</TableHead>
+              <TableHead>{t('approvals.stage', 'Current Stage')}</TableHead>
+              <TableHead>{t('approvals.category', 'Category')}</TableHead>
+              <TableHead>{t('approvals.submittedDate', 'Submitted')}</TableHead>
+              <TableHead>{t('approvals.actions', 'Actions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -216,7 +200,7 @@ function AdminApprovalsPage() {
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary">
-                      {t('admin.approvals.stageOf', 'Stage {{current}} of {{total}}', {
+                      {t('approvals.stageOf', 'Stage {{current}} of {{total}}', {
                         current: position.current_stage,
                         total: position.approval_chain_config?.stages?.length || 0,
                       })}
@@ -229,7 +213,7 @@ function AdminApprovalsPage() {
                   <TableCell>
                     <Button variant="outline" size="sm" onClick={() => handleReassign(position)}>
                       <Users className="me-2 h-4 w-4" />
-                      {t('admin.approvals.reassign', 'Reassign')}
+                      {t('approvals.reassign', 'Reassign')}
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -237,7 +221,7 @@ function AdminApprovalsPage() {
             ) : (
               <TableRow>
                 <TableCell colSpan={5} className="text-center text-muted-foreground">
-                  {t('admin.approvals.noPositions', 'No positions under review')}
+                  {t('approvals.noPositions', 'No positions under review')}
                 </TableCell>
               </TableRow>
             )}
@@ -249,10 +233,10 @@ function AdminApprovalsPage() {
       <Dialog open={isReassignDialogOpen} onOpenChange={setIsReassignDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>{t('admin.approvals.reassignTitle', 'Reassign Approval')}</DialogTitle>
+            <DialogTitle>{t('approvals.reassignTitle', 'Reassign Approval')}</DialogTitle>
             <DialogDescription>
               {t(
-                'admin.approvals.reassignDesc',
+                'approvals.reassignDesc',
                 'Reassign this approval to a different user. A reason is required for audit purposes.',
               )}
             </DialogDescription>
@@ -260,17 +244,15 @@ function AdminApprovalsPage() {
 
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="position">{t('admin.approvals.position', 'Position')}</Label>
+              <Label htmlFor="position">{t('approvals.position', 'Position')}</Label>
               <p className="text-sm font-medium">{selectedPosition?.title_en}</p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="newApprover">
-                {t('admin.approvals.newApprover', 'New Approver')} *
-              </Label>
+              <Label htmlFor="newApprover">{t('approvals.newApprover', 'New Approver')} *</Label>
               <Input
                 id="newApprover"
-                placeholder={t('admin.approvals.newApproverPlaceholder', 'Enter user ID or search')}
+                placeholder={t('approvals.newApproverPlaceholder', 'Enter user ID or search')}
                 value={reassignData.newApproverId}
                 onChange={(e) =>
                   setReassignData({ ...reassignData, newApproverId: e.target.value })
@@ -279,13 +261,11 @@ function AdminApprovalsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="reason">
-                {t('admin.approvals.reason', 'Reason for Reassignment')} *
-              </Label>
+              <Label htmlFor="reason">{t('approvals.reason', 'Reason for Reassignment')} *</Label>
               <Textarea
                 id="reason"
                 placeholder={t(
-                  'admin.approvals.reasonPlaceholder',
+                  'approvals.reasonPlaceholder',
                   'e.g., Original approver is on leave, organizational change',
                 )}
                 value={reassignData.reason}
@@ -297,13 +277,13 @@ function AdminApprovalsPage() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsReassignDialogOpen(false)}>
-              {t('common.cancel', 'Cancel')}
+              {t('translation:common.cancel', 'Cancel')}
             </Button>
             <Button
               onClick={handleReassignSubmit}
               disabled={!reassignData.newApproverId || !reassignData.reason}
             >
-              {t('admin.approvals.confirmReassign', 'Confirm Reassignment')}
+              {t('approvals.confirmReassign', 'Confirm Reassignment')}
             </Button>
           </DialogFooter>
         </DialogContent>

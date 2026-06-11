@@ -12,8 +12,56 @@
 - ✅ **v6.2 Type-Check, Lint & Bundle Reset** — Phases 47-49 (shipped 2026-05-12) — [archive](milestones/v6.2-ROADMAP.md)
 - ✅ **v6.3 Carryover Sweep & v7.0 Prep** — Phases 50-54 (shipped 2026-05-17) — [archive](milestones/v6.3-ROADMAP.md)
 - ✅ **v6.4 Stabilization & Carryover Sweep** — Phases 55-59 (shipped 2026-05-27) — [archive](milestones/v6.4-ROADMAP.md)
+- 🔄 **v6.5 Escalated Backlog Hardening** — Phases 60-61 (in progress) — source: `reports/escalated-backlog-master-2026-06-10.md`
 
 ## Phases
+
+### Phase 60: Schema & Type Truth Restoration ✅ COMPLETE 2026-06-10
+
+**Goal:** The repo's generated types, committed migrations, and edge-function SQL all agree with the live staging database — every RPC/table an edge function references exists in generated types, and the missing canonical SQL is committed as forward migrations.
+**Depends on:** Nothing (foundation phase; unblocks P2-P8 backlog phases)
+**Plans:** 6/6 complete (VERIFICATION passed 14/14)
+**Requirements:** Backlog P1 (reports/escalated-backlog-master-2026-06-10.md)
+
+Plans:
+
+**Wave 1**
+
+- [x] 60-01-PLAN.md (Wave 1) — Capture unified work stack (view + RPCs) from live into a forward migration [my-work #3]
+- [x] 60-02-PLAN.md (Wave 1) — Corrected SLA monitoring migration (users.full_name, not staff_profiles) + 4 dashboard RPCs + fix/redeploy escalations-report absent columns [sla #2/#4, tq #5]
+- [x] 60-03-PLAN.md (Wave 1) — event_details view (035 shape + organizer/country via dossiers) + supersede dead 009_data_library [events #4, data-library #1]
+- [x] 60-04-PLAN.md (Wave 1) — pending_role_approvals + position_delegations + word_assistant_logs tables (owner-scoped RLS, no auth.users trigger) [approvals #6, wa #4]
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [x] 60-05-PLAN.md (Wave 2) — Regenerate database.types byte-identical (frontend+backend) + remove dead doubled-path copy + type-check both workspaces [P1 type regen]
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
+- [x] 60-06-PLAN.md (Wave 3) — CI smoke test: every edge-fn .from/.rpc reference must exist in generated types (wired into existing lint job)
+
+Scope:
+
+- Regenerate `frontend/src/types/database.types.ts` from staging (project `zkrcjzdemdmwhearhfgg`) via Supabase MCP `generate_typescript_types`
+- Commit missing canonical SQL as forward migrations: unified work view/RPCs (`unified_work_items`, `get_unified_work_items`, `get_user_work_summary`, `get_user_productivity_metrics`) [my-work #3], 4 SLA dashboard RPCs (`get_sla_dashboard_overview` etc.) [sla #2], `event_details` view [events #4]
+- Reconcile dual `009_create_data_library_items.sql` vs `009_data_library.sql` (query staging FIRST to decide which schema is live) [data-library #1]
+- Generate-or-migrate ungenerated tables: `pending_role_approvals`, `position_delegations`, `word_assistant_logs` [approvals #6, wa #4]
+- Fix RPC SQL referencing absent columns: `staff_profiles.full_name` (SLA assignee/at-risk) [sla #4], escalations-report columns (`assignments.organizational_unit_id`, `organizational_units.name`) [tq #5]
+- Add CI smoke test: every RPC/table an edge fn references must exist in generated types
+
+### Phase 61: Security Pass
+
+**Goal:** The four known security holes are closed: activity_stream inserts are bound to the authenticated actor with visibility scope enforced, briefing-books HTML output is sanitized, the test-token ExportDialog is gone, and admin-surface role gating reads one canonical role source.
+**Depends on:** Phase 60 (regenerated types)
+**Plans:** TBD
+**Requirements:** Backlog P2 (reports/escalated-backlog-master-2026-06-10.md)
+
+Scope:
+
+- `activity_stream` RLS: bind `actor_id = auth.uid()` WITH CHECK; enforce `visibility_scope` [activity #1]
+- Sanitize `supabase/functions/briefing-books/index.ts` HTML generation [bb #9]
+- Delete or rewire `frontend/src/components/export/ExportDialog.tsx` (hard-codes `Bearer test-auth-token`) [exp #6]
+- Unify role source (users.role vs auth metadata) for /admin/\*, Sidebar, /users, /audit-logs + decide/enforce gating [settings #4/#5, audit #4]
 
 <details>
 <summary>✅ v2.0 Production Quality (Phases 1-7) — SHIPPED 2026-03-28</summary>
@@ -176,4 +224,4 @@ Full details: [v6.4-ROADMAP.md](milestones/v6.4-ROADMAP.md)
 
 ---
 
-_Roadmap last updated: 2026-05-27 — v6.4 Stabilization & Carryover Sweep shipped (Phases 55-59, 20 plans, 14/14 requirements); milestone archived to [v6.4-ROADMAP.md](milestones/v6.4-ROADMAP.md). Next: v7.0 Intelligence Engine via `/gsd:new-milestone`._
+_Roadmap last updated: 2026-06-10 — Phase 60 (Schema & Type Truth Restoration) COMPLETE: 6/6 plans, verification passed 14/14, 5 forward migrations applied to staging, types regenerated, CI smoke test live. Next: Phase 61 (Security Pass)._

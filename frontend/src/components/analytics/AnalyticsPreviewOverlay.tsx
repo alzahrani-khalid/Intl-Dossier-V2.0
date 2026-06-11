@@ -49,39 +49,34 @@ interface ChartPreviewConfig {
   icon: typeof BarChart3
   insights: string[]
   color: string
-  bgGradient: string
 }
 
+// Semantic token colors only (IntelDossier flat surfaces — no gradients, no palette literals)
 const chartConfigs: Record<PreviewChartType, ChartPreviewConfig> = {
   engagements: {
     icon: LineChart,
     insights: ['engagements.insight1', 'engagements.insight2', 'engagements.insight3'],
-    color: 'text-blue-600 dark:text-blue-400',
-    bgGradient: 'from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10',
+    color: 'text-accent',
   },
   relationships: {
     icon: PieChart,
     insights: ['relationships.insight1', 'relationships.insight2', 'relationships.insight3'],
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bgGradient: 'from-emerald-50 to-teal-50 dark:from-emerald-900/10 dark:to-teal-900/10',
+    color: 'text-success',
   },
   commitments: {
     icon: BarChart3,
     insights: ['commitments.insight1', 'commitments.insight2', 'commitments.insight3'],
-    color: 'text-amber-600 dark:text-amber-400',
-    bgGradient: 'from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10',
+    color: 'text-warning',
   },
   workload: {
     icon: TrendingUp,
     insights: ['workload.insight1', 'workload.insight2', 'workload.insight3'],
-    color: 'text-purple-600 dark:text-purple-400',
-    bgGradient: 'from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10',
+    color: 'text-info',
   },
   overview: {
     icon: BarChart3,
     insights: ['overview.insight1', 'overview.insight2', 'overview.insight3'],
-    color: 'text-gray-600 dark:text-gray-400',
-    bgGradient: 'from-gray-50 to-slate-50 dark:from-gray-900/10 dark:to-slate-900/10',
+    color: 'text-muted-foreground',
   },
 }
 
@@ -99,27 +94,20 @@ export function AnalyticsPreviewOverlay({
   className,
 }: AnalyticsPreviewOverlayProps) {
   const { t } = useTranslation('analytics')
-const config = chartConfigs[chartType]
+  const config = chartConfigs[chartType]
   const Icon = config.icon
 
   if (showingSampleData) {
     return (
-      <Alert
-        className={cn(
-          'border-dashed border-2 border-blue-300 dark:border-blue-700 bg-blue-50/50 dark:bg-blue-900/20',
-          className,
-        )}
-      >
-        <Sparkles className="h-4 w-4 text-blue-500" />
+      <Alert className={cn('border-dashed border-2 border-accent/40 bg-accent/5', className)}>
+        <Sparkles className="h-4 w-4 text-accent" />
         <AlertDescription className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <span className="text-sm text-blue-700 dark:text-blue-300">
-            {t('preview.sampleDataActive')}
-          </span>
+          <span className="text-sm text-accent">{t('preview.sampleDataActive')}</span>
           <Button
             variant="outline"
             size="sm"
             onClick={onHideSampleData}
-            className="h-8 gap-1.5 border-blue-300 text-blue-700 hover:bg-blue-100 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/30"
+            className="h-8 gap-1.5 border-accent/40 text-accent hover:bg-accent/10"
           >
             <EyeOff className="h-3.5 w-3.5" />
             {t('preview.hideSampleData')}
@@ -130,18 +118,13 @@ const config = chartConfigs[chartType]
   }
 
   return (
-    <Card
-      className={cn('relative overflow-hidden border-dashed border-2', className)}
-    >
-      {/* Gradient background */}
-      <div className={cn('absolute inset-0 bg-gradient-to-br opacity-50', config.bgGradient)} />
-
+    <Card className={cn('relative overflow-hidden border-dashed border-2', className)}>
       <CardHeader className="relative z-10 pb-2">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
             <div
               className={cn(
-                'flex h-10 w-10 items-center justify-center rounded-lg bg-white/80 dark:bg-gray-900/80 shadow-sm',
+                'flex h-10 w-10 items-center justify-center rounded-lg bg-surface border border-line',
                 'sm:h-12 sm:w-12',
               )}
             >
@@ -228,7 +211,7 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
         return (
           <svg
             viewBox="0 0 200 80"
-            className="w-full h-24 sm:h-32"
+            className={cn('w-full h-24 sm:h-32', config.color)}
             style={{ transform: isRTL ? 'scaleX(-1)' : undefined }}
           >
             {/* Grid lines */}
@@ -251,7 +234,6 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
               stroke="currentColor"
               strokeWidth="2.5"
               strokeLinecap="round"
-              className={config.color.replace('text-', 'stroke-')}
               strokeOpacity="0.6"
             />
             {/* Data points */}
@@ -266,14 +248,7 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
               [170, 28],
               [190, 25],
             ].map(([x, y]) => (
-              <circle
-                key={`${x}-${y}`}
-                cx={x}
-                cy={y}
-                r="3"
-                className={config.color.replace('text-', 'fill-')}
-                fillOpacity="0.6"
-              />
+              <circle key={`${x}-${y}`} cx={x} cy={y} r="3" fill="currentColor" fillOpacity="0.6" />
             ))}
           </svg>
         )
@@ -281,50 +256,53 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
       case 'relationships':
         // Donut chart placeholder
         return (
-          <svg viewBox="0 0 100 100" className="w-24 h-24 sm:w-32 sm:h-32 mx-auto">
+          <svg
+            viewBox="0 0 100 100"
+            className={cn('w-24 h-24 sm:w-32 sm:h-32 mx-auto', config.color)}
+          >
             <circle
               cx="50"
               cy="50"
               r="35"
               fill="none"
-              stroke="#10B981"
+              stroke="currentColor"
               strokeWidth="12"
               strokeDasharray="55 165"
               strokeDashoffset="0"
-              strokeOpacity="0.5"
+              strokeOpacity="0.55"
             />
             <circle
               cx="50"
               cy="50"
               r="35"
               fill="none"
-              stroke="#34D399"
+              stroke="currentColor"
               strokeWidth="12"
               strokeDasharray="70 150"
               strokeDashoffset="-55"
-              strokeOpacity="0.5"
+              strokeOpacity="0.4"
             />
             <circle
               cx="50"
               cy="50"
               r="35"
               fill="none"
-              stroke="#FBBF24"
+              stroke="currentColor"
               strokeWidth="12"
               strokeDasharray="45 175"
               strokeDashoffset="-125"
-              strokeOpacity="0.5"
+              strokeOpacity="0.25"
             />
             <circle
               cx="50"
               cy="50"
               r="35"
               fill="none"
-              stroke="#F97316"
+              stroke="currentColor"
               strokeWidth="12"
               strokeDasharray="30 190"
               strokeDashoffset="-170"
-              strokeOpacity="0.5"
+              strokeOpacity="0.15"
             />
           </svg>
         )
@@ -334,14 +312,14 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
         return (
           <div className="flex items-end justify-center gap-2 sm:gap-3 h-24 sm:h-32 px-4">
             {[
-              { height: '60%', colors: ['bg-emerald-400/50', 'bg-amber-400/50', 'bg-red-400/50'] },
-              { height: '75%', colors: ['bg-emerald-400/50', 'bg-amber-400/50', 'bg-gray-400/50'] },
-              { height: '50%', colors: ['bg-emerald-400/50', 'bg-gray-400/50'] },
+              { height: '60%', colors: ['bg-success/40', 'bg-warning/40', 'bg-danger/40'] },
+              { height: '75%', colors: ['bg-success/40', 'bg-warning/40', 'bg-muted'] },
+              { height: '50%', colors: ['bg-success/40', 'bg-muted'] },
               {
                 height: '85%',
-                colors: ['bg-emerald-400/50', 'bg-amber-400/50', 'bg-red-400/50', 'bg-gray-400/50'],
+                colors: ['bg-success/40', 'bg-warning/40', 'bg-danger/40', 'bg-muted'],
               },
-              { height: '65%', colors: ['bg-emerald-400/50', 'bg-amber-400/50'] },
+              { height: '65%', colors: ['bg-success/40', 'bg-warning/40'] },
             ].map((bar) => (
               <div
                 key={bar.height}
@@ -362,11 +340,8 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
           <div className="space-y-2 sm:space-y-3 px-4">
             {[90, 75, 60, 45, 30].map((width) => (
               <div key={width} className="flex items-center gap-2 sm:gap-3">
-                <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-gray-200 dark:bg-gray-700 shrink-0" />
-                <div
-                  className="h-3 sm:h-4 rounded bg-purple-400/50"
-                  style={{ width: `${width}%` }}
-                />
+                <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-muted shrink-0" />
+                <div className="h-3 sm:h-4 rounded bg-info/40" style={{ width: `${width}%` }} />
               </div>
             ))}
           </div>
@@ -378,37 +353,31 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
         return (
           <div className="grid grid-cols-2 gap-2 sm:gap-4 px-4">
             {/* Mini line chart */}
-            <div className="h-16 sm:h-20 rounded-lg bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/20 dark:to-blue-800/10 flex items-center justify-center">
-              <svg viewBox="0 0 60 30" className="w-12 h-6">
+            <div className="h-16 sm:h-20 rounded-lg bg-muted/40 border border-line flex items-center justify-center">
+              <svg viewBox="0 0 60 30" className="w-12 h-6 text-accent">
                 <path
                   d="M 5 20 Q 15 25, 25 15 T 45 12 T 55 8"
                   fill="none"
-                  stroke="#3B82F6"
+                  stroke="currentColor"
                   strokeWidth="2"
                   strokeOpacity="0.6"
                 />
               </svg>
             </div>
             {/* Mini donut */}
-            <div className="h-16 sm:h-20 rounded-lg bg-gradient-to-br from-emerald-100 to-emerald-50 dark:from-emerald-900/20 dark:to-emerald-800/10 flex items-center justify-center">
-              <div className="h-8 w-8 rounded-full border-4 border-emerald-400/50 border-t-emerald-200/30" />
+            <div className="h-16 sm:h-20 rounded-lg bg-muted/40 border border-line flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full border-4 border-success/40 border-t-success/10" />
             </div>
             {/* Mini bars */}
-            <div className="h-16 sm:h-20 rounded-lg bg-gradient-to-br from-amber-100 to-amber-50 dark:from-amber-900/20 dark:to-amber-800/10 flex items-end justify-center gap-1 pb-2">
+            <div className="h-16 sm:h-20 rounded-lg bg-muted/40 border border-line flex items-end justify-center gap-1 pb-2">
               {[40, 60, 35, 80, 55].map((h) => (
-                <div
-                  key={h}
-                  className="w-2 rounded-t bg-amber-400/50"
-                  style={{ height: `${h}%` }}
-                />
+                <div key={h} className="w-2 rounded-t bg-warning/40" style={{ height: `${h}%` }} />
               ))}
             </div>
             {/* Mini metric */}
-            <div className="h-16 sm:h-20 rounded-lg bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/20 dark:to-purple-800/10 flex flex-col items-center justify-center">
-              <span className="text-lg sm:text-xl font-bold text-purple-600/50 dark:text-purple-400/50">
-                85%
-              </span>
-              <span className="text-[10px] text-purple-500/50">Sample</span>
+            <div className="h-16 sm:h-20 rounded-lg bg-muted/40 border border-line flex flex-col items-center justify-center">
+              <span className="text-lg sm:text-xl font-bold text-accent/60">85%</span>
+              <span className="text-[10px] text-muted-foreground">Sample</span>
             </div>
           </div>
         )

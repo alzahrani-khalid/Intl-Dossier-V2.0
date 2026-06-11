@@ -43,13 +43,15 @@ export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsP
     )
   }
 
-  // Format completion time to hours/days
+  const numberLocale = isRTL ? 'ar-SA' : 'en-US'
+
+  // Format completion time to hours/days (localized digits + unit)
   const formatCompletionTime = (hours: number): string => {
     if (hours < 24) {
-      return `${Math.round(hours)}h`
+      return t('metrics.hoursShort', { value: Math.round(hours).toLocaleString(numberLocale) })
     }
     const days = Math.round(hours / 24)
-    return `${days}d`
+    return t('metrics.daysShort', { value: days.toLocaleString(numberLocale) })
   }
 
   const metricItems: {
@@ -67,7 +69,7 @@ export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsP
       value: metrics?.completed_count_30d || 0,
       icon: CheckCircle2,
       color: 'text-success bg-success/10 dark:bg-success/30',
-      format: (v: number) => v.toLocaleString(isRTL ? 'ar-SA' : 'en-US'),
+      format: (v: number) => v.toLocaleString(numberLocale),
     },
     {
       key: 'on-time',
@@ -75,7 +77,7 @@ export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsP
       value: metrics?.on_time_rate_30d || 0,
       icon: TrendingUp,
       color: 'text-accent bg-accent/10 dark:bg-accent/30',
-      format: (v: number) => `${v}%`,
+      format: (v: number) => `${v.toLocaleString(numberLocale)}%`,
       showProgress: true,
     },
     {

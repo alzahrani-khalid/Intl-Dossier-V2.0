@@ -63,8 +63,12 @@ describe('DossierDocumentsTab', () => {
       }),
     )
 
-    renderWithClient(<DossierDocumentsTab dossierId="d1" />)
+    renderWithClient(<DossierDocumentsTab dossierId="d1" dossierType="topic" />)
 
     expect(await screen.findByText('Climate Position')).toBeTruthy()
+    // R14-01: topic is non-country/org so the MoU tab is hidden, and Briefs is
+    // hidden for every type after the round-11 briefs-removal.
+    expect(screen.queryByText(/MOUs \(/)).toBeNull()
+    expect(screen.queryByText(/Briefs \(/)).toBeNull()
   })
 })

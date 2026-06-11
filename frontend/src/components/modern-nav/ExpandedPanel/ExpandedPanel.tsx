@@ -1,9 +1,9 @@
-
 import { UserProfile } from './UserProfile'
 import { NavigationSection } from './NavigationSection'
 import { cn } from '@/lib/utils'
 import { getNavigationCategory } from '../navigationData'
 import { useDirection } from '@/hooks/useDirection'
+import { useAuthStore } from '@/store/authStore'
 
 export interface ExpandedPanelProps {
   /** Whether the panel is open/visible */
@@ -59,10 +59,13 @@ export function ExpandedPanel({
   className,
   activeCategory = 'dashboard',
 }: ExpandedPanelProps) {
-const { isRTL } = useDirection()
-// Get navigation items for active category
+  const { isRTL } = useDirection()
+  const { user } = useAuthStore()
+  // Same role gate as Sidebar: adminOnly items are hidden for non-admins
+  const isAdmin = user?.role === 'admin' || user?.role === 'super_admin'
+  // Get navigation items for active category
   const category = getNavigationCategory(activeCategory)
-  const navigationItems = category?.items || []
+  const navigationItems = (category?.items || []).filter((item) => !item.adminOnly || isAdmin)
 
   return (
     <aside

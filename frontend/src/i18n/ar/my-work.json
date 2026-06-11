@@ -14,7 +14,9 @@
     "title": "إنتاجيتك",
     "completed30d": "مكتملة (٣٠ يوم)",
     "onTimeRate": "نسبة الالتزام",
-    "avgCompletionTime": "متوسط الإنجاز"
+    "avgCompletionTime": "متوسط الإنجاز",
+    "hoursShort": "{{value}} س",
+    "daysShort": "{{value}} ي"
   },
 
   "tabs": {

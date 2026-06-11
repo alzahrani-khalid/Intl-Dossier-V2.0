@@ -47,7 +47,13 @@ export function useDossierOverview(
   } = options || {}
 
   const query = useQuery({
-    queryKey: dossierOverviewKeys.detail(dossierId || ''),
+    queryKey: dossierOverviewKeys.detailWithOptions(dossierId || '', {
+      sections: includeSections ? [...includeSections].sort() : 'all',
+      activityLimit,
+      workItemsLimit,
+      calendarDaysAhead,
+      calendarDaysBehind,
+    }),
     queryFn: async () => {
       if (!dossierId) throw new Error('Dossier ID is required')
 
@@ -86,9 +92,11 @@ export function useDossierExport(): UseDossierExportReturn {
     mutationFn: async (request: DossierExportRequest): Promise<DossierExportResponse> => {
       // For JSON format, we can export client-side
       if (request.format === 'json') {
-        const overview = queryClient.getQueryData<DossierOverviewResponse>(
-          dossierOverviewKeys.detail(request.dossier_id),
-        )
+        // detail keys carry an options segment, so prefix-match any cached variant
+        const cachedVariants = queryClient.getQueriesData<DossierOverviewResponse>({
+          queryKey: dossierOverviewKeys.detail(request.dossier_id),
+        })
+        const overview = cachedVariants.map(([, data]) => data).find((data) => data !== undefined)
 
         if (overview) {
           // Generate and download JSON

@@ -81,10 +81,11 @@ interface EngagementMetricsChartProps {
   onShowSampleData?: () => void
 }
 
+// Token refs (matches DEFAULT_CHART_COLORS pattern in analytics.types.ts)
 const OUTCOME_COLORS = {
-  positive: '#10B981',
-  neutral: '#9CA3AF',
-  negative: '#EF4444',
+  positive: 'var(--heroui-success)',
+  neutral: 'var(--color-muted-foreground)',
+  negative: 'var(--heroui-danger)',
 }
 
 export function EngagementMetricsChart({
@@ -96,7 +97,7 @@ export function EngagementMetricsChart({
 }: EngagementMetricsChartProps) {
   const { t } = useTranslation('analytics')
   const { isRTL } = useDirection()
-const trendData = useMemo(() => {
+  const trendData = useMemo(() => {
     if (!data?.engagementTrend) return []
     return data.engagementTrend.map((point) => ({
       ...point,
@@ -185,90 +186,96 @@ const trendData = useMemo(() => {
           </TabsList>
 
           <TabsContent value="trend" className="h-64 sm:h-72">
-            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={trendData}
-                margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis
-                  dataKey="dateLabel"
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  reversed={isRTL}
-                />
-                <YAxis
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  orientation={isRTL ? 'right' : 'left'}
-                />
-                <Tooltip content={<EngagementCustomTooltip isRTL={isRTL} />} />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  name={t('engagements.engagementCount')}
-                  stroke="#3B82F6"
-                  strokeWidth={2}
-                  dot={{ r: 3 }}
-                  activeDot={{ r: 5 }}
-                />
-              </LineChart>
-            </ResponsiveContainer></LtrIsolate>
+            <LtrIsolate className="h-full w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={trendData}
+                  margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis
+                    dataKey="dateLabel"
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                    reversed={isRTL}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                    orientation={isRTL ? 'right' : 'left'}
+                  />
+                  <Tooltip content={<EngagementCustomTooltip isRTL={isRTL} />} />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    name={t('engagements.engagementCount')}
+                    stroke="var(--color-accent)"
+                    strokeWidth={2}
+                    dot={{ r: 3 }}
+                    activeDot={{ r: 5 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </LtrIsolate>
           </TabsContent>
 
           <TabsContent value="type" className="h-64 sm:h-72">
-            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={typeData}
-                layout="vertical"
-                margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 80, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis type="number" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
-                <YAxis
-                  type="category"
-                  dataKey="name"
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  width={70}
-                />
-                <Tooltip content={<EngagementCustomTooltip isRTL={isRTL} />} />
-                <Bar dataKey="count" name={t('engagements.count')} radius={[0, 4, 4, 0]}>
-                  {typeData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.fill} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer></LtrIsolate>
+            <LtrIsolate className="h-full w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={typeData}
+                  layout="vertical"
+                  margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 80, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis type="number" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                  <YAxis
+                    type="category"
+                    dataKey="name"
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                    width={70}
+                  />
+                  <Tooltip content={<EngagementCustomTooltip isRTL={isRTL} />} />
+                  <Bar dataKey="count" name={t('engagements.count')} radius={[0, 4, 4, 0]}>
+                    {typeData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </LtrIsolate>
           </TabsContent>
 
           <TabsContent value="outcome" className="h-64 sm:h-72">
-            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={outcomeData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={80}
-                  paddingAngle={2}
-                  dataKey="count"
-                  nameKey="name"
-                  label={(props: any) => `${props.name}: ${props.percentage?.toFixed(0) ?? 0}%`}
-                  labelLine={{ strokeWidth: 1 }}
-                >
-                  {outcomeData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.fill} />
-                  ))}
-                </Pie>
-                <Tooltip content={<EngagementPieTooltip isRTL={isRTL} />} />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer></LtrIsolate>
+            <LtrIsolate className="h-full w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={outcomeData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={80}
+                    paddingAngle={2}
+                    dataKey="count"
+                    nameKey="name"
+                    label={(props: any) => `${props.name}: ${props.percentage?.toFixed(0) ?? 0}%`}
+                    labelLine={{ strokeWidth: 1 }}
+                  >
+                    {outcomeData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<EngagementPieTooltip isRTL={isRTL} />} />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </LtrIsolate>
           </TabsContent>
         </Tabs>
       </CardContent>

@@ -1,16 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
-import {
-  Plus,
-  Calendar as CalendarIcon,
-  MapPin,
-  Users,
-  Video,
-  List,
-  Building2,
-  Flag,
-} from 'lucide-react'
+import { Calendar as CalendarIcon, MapPin, Users, Video, List, Building2, Flag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -25,13 +16,15 @@ import {
 } from 'date-fns'
 import { useDirection } from '@/hooks/useDirection'
 
+// Soft badge pairs (bg + readable foreground token) — same pattern as the
+// list-view type badges; replaces solid bg + hardcoded text-white pills.
 const eventTypeColors: Record<string, string> = {
-  meeting: 'bg-accent',
-  conference: 'bg-secondary',
-  workshop: 'bg-success',
-  training: 'bg-warning',
-  ceremony: 'bg-secondary/70',
-  other: 'bg-muted',
+  meeting: 'bg-accent/10 text-accent',
+  conference: 'bg-secondary/30 text-secondary-foreground',
+  workshop: 'bg-success/10 text-success',
+  training: 'bg-warning/10 text-warning',
+  ceremony: 'bg-secondary/20 text-secondary-foreground',
+  other: 'bg-muted text-ink-mute',
 }
 
 interface CalendarViewProps {
@@ -65,7 +58,7 @@ function CalendarView({ events, selectedDate, setSelectedDate, isRTL, t }: Calen
         return (
           <Card
             key={index}
-            className={`min-h-[100px] p-2 cursor-pointer hover:shadow-md transition-shadow ${
+            className={`min-h-[100px] p-2 cursor-pointer hover:border-accent transition-colors ${
               !isCurrentMonth ? 'opacity-50' : ''
             }`}
             onClick={() => setSelectedDate(day)}
@@ -75,8 +68,8 @@ function CalendarView({ events, selectedDate, setSelectedDate, isRTL, t }: Calen
               {dayEvents.slice(0, 3).map((event, i) => (
                 <div
                   key={i}
-                  className={`text-xs p-1 rounded text-white truncate ${
-                    eventTypeColors[event.type as keyof typeof eventTypeColors]
+                  className={`text-xs p-1 rounded truncate ${
+                    eventTypeColors[event.type] || 'bg-muted text-ink-mute'
                   }`}
                 >
                   {isRTL ? event.title_ar : event.title_en}
@@ -136,7 +129,7 @@ ${event.type === 'other' ? 'bg-muted text-ink-mute' : ''}
       header: t('events.dateTime'),
       cell: (event: Event) => (
         <div className="text-sm">
-          <div>{format(new Date(event.start_datetime), 'dd MMM yyyy')}</div>
+          <div>{format(new Date(event.start_datetime), 'd MMM yyyy')}</div>
           <div className="text-muted-foreground">
             {format(new Date(event.start_datetime), 'HH:mm')} -
             {format(new Date(event.end_datetime), 'HH:mm')}
@@ -215,10 +208,11 @@ ${event.status === 'cancelled' ? 'bg-danger/10 text-danger' : ''}
 
   return (
     <div className="space-y-4">
+      {/* No detail route exists yet — cards render as plain cards, not fake links */}
       {events?.map((event) => (
-        <Card key={event.id} className="hover:shadow-md transition-shadow cursor-pointer">
+        <Card key={event.id}>
           <CardContent className="p-4">
-            <div className="grid grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-4">
               {columns.map((col) => (
                 <div key={col.key}>
                   <div className="text-xs text-muted-foreground mb-1">{col.header}</div>
@@ -294,7 +288,7 @@ export function EventsPage() {
   return (
     <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">{t('navigation.calendar')}</h1>
+        <h1 className="text-3xl font-bold">{t('navigation.events')}</h1>
         <div className="flex gap-2">
           <Button
             variant={viewMode === 'calendar' ? 'default' : 'outline'}
@@ -312,10 +306,8 @@ export function EventsPage() {
             <List className="h-4 w-4 me-2" />
             {t('events.listView')}
           </Button>
-          <Button>
-            <Plus className="h-4 w-4 me-2" />
-            {t('events.addEvent')}
-          </Button>
+          {/* "Add event" removed — it had no handler and the create model for
+              /events is undecided (inspection #1/#2) */}
         </div>
       </div>
 
@@ -324,14 +316,14 @@ export function EventsPage() {
           <CardTitle>{t('common.filter')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <Input
               placeholder={t('common.search')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="max-w-sm"
             />
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {eventTypes.map((type) => (
                 <Button
                   key={type}

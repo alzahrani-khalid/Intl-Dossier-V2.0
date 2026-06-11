@@ -29,7 +29,6 @@ import {
   FileEdit,
   HelpCircle,
   Shield,
-  Eye,
   LucideIcon,
 } from 'lucide-react'
 
@@ -236,6 +235,13 @@ export const navigationCategories: NavigationCategory[] = [
         path: '/reports',
       },
       {
+        id: 'scheduled-reports',
+        label: 'Scheduled Reports',
+        labelKey: 'navigation.scheduledReports',
+        icon: CalendarDays,
+        path: '/reports/scheduled',
+      },
+      {
         id: 'analytics',
         label: 'Analytics',
         labelKey: 'navigation.analytics',
@@ -316,13 +322,6 @@ export const navigationCategories: NavigationCategory[] = [
         path: '/admin',
         adminOnly: true, // Only visible to admin users
       },
-      {
-        id: 'accessibility',
-        label: 'Accessibility',
-        labelKey: 'navigation.accessibility',
-        icon: Eye,
-        path: '/accessibility',
-      },
     ],
   },
 ]
@@ -333,4 +332,3 @@ export const navigationCategories: NavigationCategory[] = [
 export function getNavigationCategory(id: string): NavigationCategory | undefined {
   return navigationCategories.find((cat) => cat.id === id)
 }
-

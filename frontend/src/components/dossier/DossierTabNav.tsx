@@ -36,7 +36,9 @@ const BASE_DOSSIER_TABS: DossierTabConfig[] = [
   { key: 'docs', labelKey: 'tabs.docs', path: 'docs' },
   { key: 'tasks', labelKey: 'tabs.tasks', path: 'tasks' },
   { key: 'timeline', labelKey: 'tabs.timeline', path: 'timeline' },
-  { key: 'audit', labelKey: 'tabs.audit', path: 'audit' },
+  // 'audit' is intentionally absent: every dossier audit route is a coming-soon
+  // stub (no dossier-scoped audit reader exists). Re-add here or via extraTabs
+  // once a real reader lands. The /$id/audit routes stay mounted for direct URLs.
 ]
 
 // ============================================================================

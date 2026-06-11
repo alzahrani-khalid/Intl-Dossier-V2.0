@@ -7,7 +7,7 @@
  * Includes inherited permissions from entity relationships and field-level audit trails.
  */
 
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -43,7 +43,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
-import { supabase } from '@/lib/supabase'
+import { requireAdmin } from '@/lib/auth/require-admin'
 import { PageHeader } from '@/components/layout/PageHeader'
 import {
   Shield,
@@ -88,17 +88,7 @@ import {
 
 export const Route = createFileRoute('/_protected/admin/field-permissions')({
   component: FieldPermissionsPage,
-  beforeLoad: async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-    const user = session?.user
-    const role = user?.user_metadata?.role || user?.app_metadata?.role
-    const isAdmin = role === 'admin' || role === 'super_admin'
-    if (!isAdmin) {
-      throw redirect({ to: '/dashboard' })
-    }
-  },
+  beforeLoad: requireAdmin,
 })
 
 // User roles

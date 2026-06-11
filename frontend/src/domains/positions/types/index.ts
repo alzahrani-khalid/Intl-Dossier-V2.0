@@ -105,11 +105,17 @@ export interface TopPosition {
 // Position Dossier Links Types (from usePositionDossierLinks)
 // ============================================================================
 
+// Canonical link_type vocabulary — must match the live
+// position_dossier_links_link_type_check (migration 20251022000009).
+// The old primary/related/reference union never matched live rows and the
+// edge rejected it on write (round-12/13 verified).
+export type PositionDossierLinkType = 'applies_to' | 'related_to' | 'endorsed_by' | 'opposed_by'
+
 export interface PositionDossierLink {
   id: string
   position_id: string
   dossier_id: string
-  link_type: 'primary' | 'related' | 'reference'
+  link_type: PositionDossierLinkType
   notes?: string | null
   created_by: string
   created_at: string
@@ -125,7 +131,7 @@ export interface PositionDossierLink {
 }
 
 export interface PositionDossierLinksFilters {
-  link_type?: string
+  link_type?: PositionDossierLinkType
 }
 
 export interface PositionDossierLinksResponse {
@@ -135,7 +141,7 @@ export interface PositionDossierLinksResponse {
 
 export interface CreatePositionDossierLinkInput {
   dossier_id: string
-  link_type?: 'primary' | 'related' | 'reference'
+  link_type?: PositionDossierLinkType
   notes?: string
 }
 

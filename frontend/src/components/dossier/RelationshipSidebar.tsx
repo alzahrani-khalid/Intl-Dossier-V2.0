@@ -356,7 +356,7 @@ export function RelationshipSidebar({
                         isCollapsed && '-rotate-90',
                       )}
                     />
-                    <span>{TIER_LABELS[tier]}</span>
+                    <span>{t(`sidebar.tier.${tier}`, { defaultValue: TIER_LABELS[tier] })}</span>
                     <span className="chip chip-accent px-2 py-0 text-[10px]">{items.length}</span>
                   </button>
 
@@ -385,7 +385,9 @@ export function RelationshipSidebar({
                               <div className="min-w-0 flex-1">
                                 <span className="text-sm truncate block">{displayName}</span>
                                 <span className="text-xs text-[var(--ink-mute)]">
-                                  {item.relationshipType.replace(/_/g, ' ')}
+                                  {t(`sidebar.relationshipType.${item.relationshipType}`, {
+                                    defaultValue: item.relationshipType.replace(/_/g, ' '),
+                                  })}
                                 </span>
                               </div>
                             </Link>
@@ -393,7 +395,7 @@ export function RelationshipSidebar({
                               type="button"
                               className="flex min-h-10 min-w-10 items-center justify-center rounded-[var(--radius-sm)] p-1 text-[var(--ink-faint)] opacity-0 transition-opacity hover:bg-[var(--danger-soft)] hover:text-[var(--danger)] group-hover:opacity-100"
                               onClick={() => setRemoveTarget(item)}
-                              aria-label={`Remove ${displayName}`}
+                              aria-label={t('sidebar.removeItem', { name: displayName })}
                             >
                               <X className="h-3.5 w-3.5" />
                             </button>
@@ -427,6 +429,7 @@ export function RelationshipSidebar({
                   type="button"
                   className="relative flex min-h-10 min-w-10 items-center justify-center rounded-[var(--radius-sm)] p-2 transition-colors hover:bg-[var(--line-soft)]"
                   onClick={onToggle}
+                  aria-label={`${t(`dossier:type.${type}`, { defaultValue: type })} (${count})`}
                 >
                   <Icon className="h-4 w-4 text-[var(--ink-mute)]" />
                   {count > 1 && (
@@ -437,7 +440,7 @@ export function RelationshipSidebar({
                 </button>
               </TooltipTrigger>
               <TooltipContent side={isRTL ? 'right' : 'left'}>
-                {type.replace(/_/g, ' ')} ({count})
+                {t(`dossier:type.${type}`, { defaultValue: type.replace(/_/g, ' ') })} ({count})
               </TooltipContent>
             </Tooltip>
           )
@@ -527,7 +530,7 @@ export function RelationshipSidebar({
               className="min-h-11"
               onClick={() => setRemoveTarget(null)}
             >
-              Cancel
+              {t('sidebar.cancel')}
             </Button>
             <Button
               variant="destructive"
@@ -536,7 +539,7 @@ export function RelationshipSidebar({
               onClick={handleRemoveConfirm}
             >
               <Trash2 className="h-4 w-4" />
-              Remove
+              {t('sidebar.remove')}
             </Button>
           </div>
         </AdaptiveDialogBody>

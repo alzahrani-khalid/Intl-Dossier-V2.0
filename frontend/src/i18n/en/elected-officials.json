@@ -26,7 +26,8 @@
     "committees": "Committees",
     "officeInfo": "Office Information",
     "termInfo": "Term Information",
-    "contactInfo": "Contact Information"
+    "contactInfo": "Contact Information",
+    "officeEmpty": "No office data available"
   },
   "delete": {
     "title": "Delete {{name}}?",
@@ -70,7 +71,11 @@
     "roles": {
       "chair": "Chair",
       "vice_chair": "Vice Chair",
-      "member": "Member"
+      "member": "Member",
+      "alternate": "Alternate",
+      "observer": "Observer",
+      "secretary": "Secretary",
+      "rapporteur": "Rapporteur"
     }
   }
 }

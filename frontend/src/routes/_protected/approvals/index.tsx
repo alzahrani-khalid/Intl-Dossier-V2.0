@@ -4,7 +4,6 @@
  */
 
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Card } from '@/components/ui/card'
@@ -12,7 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { Link } from '@tanstack/react-router'
-import { Clock, CheckCircle, XCircle } from 'lucide-react'
+import { Clock, CheckCircle } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export const Route = createFileRoute('/_protected/approvals/')({
@@ -43,11 +42,11 @@ async function fetchMyApprovals() {
 }
 
 function MyApprovalsPage() {
-  const { t } = useTranslation()
-  const [filter, setFilter] = useState<'all' | 'pending' | 'completed'>('pending')
+  const { t, i18n } = useTranslation('approvals')
+  const dateLocale = i18n.language === 'ar' ? 'ar-SA' : 'en-US'
 
   const { data: positions, isLoading } = useQuery({
-    queryKey: ['approvals', 'my', filter],
+    queryKey: ['approvals', 'my'],
     queryFn: fetchMyApprovals,
     staleTime: 30 * 1000, // 30 seconds
   })
@@ -63,38 +62,16 @@ function MyApprovalsPage() {
 
   return (
     <div className="space-y-6">
+      {/* Filter badges removed: the fetch is fixed to status=under_review so
+          All/Pending/Completed never changed the list (inspection #4).
+          Approved/Returned stat cards removed: both were hardcoded 0. */}
       <PageHeader
         icon={<CheckCircle className="h-6 w-6" />}
-        title={t('approvals.myApprovals', 'My Approvals')}
-        subtitle={t('approvals.subtitle', 'Positions pending your review and approval')}
-        actions={
-          <>
-            <Badge
-              variant={filter === 'all' ? 'default' : 'outline'}
-              className="cursor-pointer"
-              onClick={() => setFilter('all')}
-            >
-              {t('approvals.filter.all', 'All')}
-            </Badge>
-            <Badge
-              variant={filter === 'pending' ? 'default' : 'outline'}
-              className="cursor-pointer"
-              onClick={() => setFilter('pending')}
-            >
-              {t('approvals.filter.pending', 'Pending')}
-            </Badge>
-            <Badge
-              variant={filter === 'completed' ? 'default' : 'outline'}
-              className="cursor-pointer"
-              onClick={() => setFilter('completed')}
-            >
-              {t('approvals.filter.completed', 'Completed')}
-            </Badge>
-          </>
-        }
+        title={t('myApprovals')}
+        subtitle={t('subtitle')}
       />
 
-      {/* Stats Cards */}
+      {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="p-4">
           <div className="flex items-center gap-4">
@@ -103,37 +80,7 @@ function MyApprovalsPage() {
             </div>
             <div>
               <p className="text-2xl font-bold">{positions?.length || 0}</p>
-              <p className="text-sm text-muted-foreground">
-                {t('approvals.stats.pending', 'Pending')}
-              </p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-4">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-success/10 dark:bg-success/30 rounded-lg">
-              <CheckCircle className="h-6 w-6 text-success" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold">0</p>
-              <p className="text-sm text-muted-foreground">
-                {t('approvals.stats.approved', 'Approved This Month')}
-              </p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-4">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-danger/10 dark:bg-danger/30 rounded-lg">
-              <XCircle className="h-6 w-6 text-danger" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold">0</p>
-              <p className="text-sm text-muted-foreground">
-                {t('approvals.stats.rejected', 'Returned for Revisions')}
-              </p>
+              <p className="text-sm text-muted-foreground">{t('stats.pending')}</p>
             </div>
           </div>
         </Card>
@@ -155,21 +102,19 @@ function MyApprovalsPage() {
                     <div className="flex items-center gap-3 mb-2">
                       <h3 className="font-semibold">{position.title_en}</h3>
                       <Badge variant="secondary">
-                        {t('approvals.stage', 'Stage')} {position.current_stage}
+                        {t('stage')} {position.current_stage}
                       </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground">{position.title_ar}</p>
                     <p className="text-xs text-muted-foreground mt-2">
-                      {t('approvals.submittedBy', 'Submitted by')}: {position.author_id}
+                      {t('submittedBy')}: {position.author_id}
                     </p>
                   </div>
 
                   <div className="flex flex-col items-end gap-2">
-                    <Badge>
-                      {position.thematic_category || t('approvals.uncategorized', 'Uncategorized')}
-                    </Badge>
+                    <Badge>{position.thematic_category || t('uncategorized')}</Badge>
                     <span className="text-xs text-muted-foreground">
-                      {new Date(position.created_at).toLocaleDateString()}
+                      {new Date(position.created_at).toLocaleDateString(dateLocale)}
                     </span>
                   </div>
                 </div>
@@ -178,9 +123,7 @@ function MyApprovalsPage() {
           </div>
         ) : (
           <div className="text-center py-12">
-            <p className="text-lg text-muted-foreground">
-              {t('approvals.noPositions', 'No positions pending your approval')}
-            </p>
+            <p className="text-lg text-muted-foreground">{t('noPositions')}</p>
           </div>
         )}
       </Card>

@@ -35,7 +35,8 @@ export type EngagementsListProps = {
 const FILTERS: ReadonlyArray<{ value: EngagementFilter; labelKey: string }> = [
   { value: 'all', labelKey: 'filter.all' },
   { value: 'meeting', labelKey: 'filter.meeting' },
-  { value: 'call', labelKey: 'filter.call' },
+  // no 'call' pill: no engagement_type maps to 'call', so it always filtered to
+  // an empty list; an 'event' pill is gated on the server-side filter contract
   { value: 'travel', labelKey: 'filter.travel' },
 ] as const
 

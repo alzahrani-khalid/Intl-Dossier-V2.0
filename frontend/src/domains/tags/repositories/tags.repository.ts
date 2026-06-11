@@ -13,7 +13,9 @@ import { apiGet, apiPost, apiPut, apiDelete } from '@/lib/api-client'
 
 export async function getTagHierarchy(params?: URLSearchParams): Promise<unknown> {
   const query = params?.toString()
-  return apiGet(`/tag-hierarchy${query ? `?${query}` : ''}`)
+  // Edge returns { data, total }; every consumer expects the bare array.
+  const response = await apiGet<{ data?: unknown[] }>(`/tag-hierarchy${query ? `?${query}` : ''}`)
+  return response?.data ?? []
 }
 
 export async function createTag(data: Record<string, unknown>): Promise<unknown> {
@@ -21,11 +23,14 @@ export async function createTag(data: Record<string, unknown>): Promise<unknown>
 }
 
 export async function updateTag(id: string, data: Record<string, unknown>): Promise<unknown> {
-  return apiPut(`/tag-hierarchy/${id}`, data)
+  // Edge reads the tag id from ?id= or body.id — NOT from the URL path
+  // (the trailing path segment is parsed as the action).
+  return apiPut(`/tag-hierarchy?id=${id}`, { id, ...data })
 }
 
 export async function deleteTag(id: string): Promise<unknown> {
-  return apiDelete(`/tag-hierarchy/${id}`)
+  // Same contract as update: id must travel as a query param.
+  return apiDelete(`/tag-hierarchy?id=${id}`)
 }
 
 // ============================================================================

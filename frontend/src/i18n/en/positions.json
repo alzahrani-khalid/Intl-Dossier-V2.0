@@ -1,4 +1,7 @@
 {
+  "errors": {
+    "failed_to_load": "Failed to load"
+  },
   "library": {
     "title": "Positions Library",
     "subtitle": "{{count}} positions available",
@@ -68,9 +71,10 @@
     "no_dossiers": "No dossiers available",
     "link_type": "Link Type",
     "types": {
-      "primary": "Primary",
-      "related": "Related",
-      "reference": "Reference"
+      "applies_to": "Applies to",
+      "related_to": "Related to",
+      "endorsed_by": "Endorsed by",
+      "opposed_by": "Opposed by"
     },
     "notes_optional": "Notes (Optional)",
     "notes_placeholder": "Add any notes about this link..."
@@ -384,7 +388,9 @@
     "selected": "Selected",
     "selectThis": "Select This Position",
     "attachSelected": "Attach {{count}} Position(s)",
-    "attaching": "Attaching..."
+    "attaching": "Attaching...",
+    "attachSuccess": "Attached {{count}} position(s)",
+    "attachPartialError": "Failed to attach {{failed}} of {{total}} positions"
   },
   "briefing": {
     "title": "Generate Briefing Pack",
@@ -430,6 +436,7 @@
     "type_filter": "Filter by type",
     "all_statuses": "All Statuses",
     "all_types": "All Types",
+    "all_link_types": "All Link Types",
     "clear_filters": "Clear Filters",
     "error_loading": "Failed to load positions",
     "no_results": "No positions found matching your filters",

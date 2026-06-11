@@ -1,7 +1,6 @@
 {
   "title": "Dossier Context",
   "description": "Manage dossier associations for work items",
-
   "badge": {
     "linked_to": "Linked to {{dossierName}}",
     "linked_dossiers": "Linked to:",
@@ -12,7 +11,6 @@
     "direct": "Direct link",
     "primary": "Primary"
   },
-
   "selector": {
     "title": "Select Dossier",
     "placeholder": "Search dossiers...",
@@ -26,14 +24,17 @@
     "filter_by_type": "Filter by type",
     "all_types": "All types"
   },
-
   "type": {
     "country": "Country",
     "organization": "Organization",
     "forum": "Forum",
+    "engagement": "Engagement",
+    "topic": "Topic",
+    "working_group": "Working group",
+    "person": "Person",
+    "elected_official": "Elected official",
     "theme": "Theme"
   },
-
   "timeline": {
     "title": "Activity Timeline",
     "empty": "No activities found for this dossier",
@@ -71,7 +72,14 @@
       "done": "Done",
       "cancelled": "Cancelled",
       "open": "Open",
-      "closed": "Closed"
+      "closed": "Closed",
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "triaged": "Triaged",
+      "assigned": "Assigned",
+      "converted": "Converted",
+      "merged": "Merged",
+      "overdue": "Overdue"
     },
     "priority": {
       "low": "Low",
@@ -88,7 +96,6 @@
       "mou": "MOU"
     }
   },
-
   "activity": {
     "task": "Task",
     "commitment": "Commitment",
@@ -97,7 +104,6 @@
     "updated_at": "Updated {{date}}",
     "view_details": "View details"
   },
-
   "inheritance": {
     "direct": "Directly linked",
     "engagement": "Inherited from Engagement",
@@ -106,13 +112,11 @@
     "mou": "Inherited from MOU",
     "path": "Inheritance path"
   },
-
   "status": {
     "active": "Active",
     "inactive": "Inactive",
     "archived": "Archived"
   },
-
   "validation": {
     "dossier_required": "At least one dossier is required",
     "dossier_access_denied": "You don't have access to this dossier",
@@ -120,7 +124,6 @@
     "duplicate_link": "This dossier is already linked",
     "invalid_inheritance": "Invalid inheritance configuration"
   },
-
   "errors": {
     "resolve_failed": "Failed to resolve dossier context",
     "create_link_failed": "Failed to link dossier",
@@ -129,7 +132,6 @@
     "search_failed": "Failed to search dossiers",
     "permission_denied": "You don't have permission to access this dossier"
   },
-
   "actions": {
     "add_dossier": "Add Dossier",
     "remove_dossier": "Remove Dossier",
@@ -137,20 +139,17 @@
     "view_dossier": "View Dossier",
     "edit_links": "Edit Dossier Links"
   },
-
   "context": {
     "auto_resolved": "Dossier context automatically resolved",
     "manual_selection_required": "Please select a dossier",
     "inherited_from": "Inherited from {{source}}",
     "no_context": "No dossier context available"
   },
-
   "hints": {
     "inheritance": "Work items inherit dossier context from their parent entity",
     "multiple_dossiers": "You can link a work item to multiple dossiers",
     "primary_dossier": "The primary dossier is displayed prominently in lists"
   },
-
   "error": {
     "timeline_title": "Activity Timeline Error",
     "timeline_description": "Unable to load the activity timeline. Please try refreshing.",
@@ -166,7 +165,6 @@
     "try_again": "Try Again",
     "refresh_page": "Refresh Page"
   },
-
   "widget": {
     "title": "Linked Dossiers",
     "primary": "Primary",

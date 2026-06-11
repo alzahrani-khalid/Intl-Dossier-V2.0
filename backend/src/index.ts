@@ -73,13 +73,19 @@ app.get('/health', (_req, res) => {
   })
 })
 
-// Contract-test friendly routes mounted at root (no /api prefix)
-app.use('/auth/mfa', mfaContractRouter)
-app.use('/monitoring', monitoringContractRouter)
-app.use('/export', exportContractRouter)
-app.use('/analytics', analyticsContractRouter)
-app.use('/accessibility', accessibilityContractRouter)
-app.use('/audit', auditContractRouter)
+// Contract-test mock routers (in-memory stubs that authorize on a hard-coded
+// 'test-auth-token'). These are test scaffolding only — never mount them in production,
+// where they would expose a fixed-token admin surface (e.g. GET /audit/logs) on the
+// deployed backend. Contract tests run against a non-production server, so they are
+// unaffected.
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/auth/mfa', mfaContractRouter)
+  app.use('/monitoring', monitoringContractRouter)
+  app.use('/export', exportContractRouter)
+  app.use('/analytics', analyticsContractRouter)
+  app.use('/accessibility', accessibilityContractRouter)
+  app.use('/audit', auditContractRouter)
+}
 
 // Mount API router
 app.use('/api', apiRouter)

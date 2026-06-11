@@ -10,7 +10,7 @@
  * @description
  * This hook retrieves all position papers linked to a specific dossier through
  * the position_dossier_links junction table. Each link includes:
- * - Link type: 'primary', 'related', or 'reference'
+ * - Link type: 'applies_to', 'related_to', 'endorsed_by', or 'opposed_by'
  * - Link notes (optional)
  * - Full position paper data
  *
@@ -26,7 +26,7 @@
  * @example
  * // With filters
  * const { positions } = useDossierPositionLinks('dossier-uuid', {
- *   link_type: 'primary',
+ *   link_type: 'applies_to',
  *   status: 'approved',
  *   search: 'climate',
  * });
@@ -35,12 +35,13 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type { Position } from '@/types/position'
+import type { PositionDossierLinkType } from '@/domains/positions/types'
 
 /**
  * Represents a link between a dossier and a position paper
  * @property position_id - UUID of the linked position paper
  * @property dossier_id - UUID of the dossier
- * @property link_type - Relationship type: 'primary' (main topic), 'related' (supporting), or 'reference' (informational)
+ * @property link_type - Relationship type: 'applies_to', 'related_to', 'endorsed_by', or 'opposed_by'
  * @property notes - Optional notes explaining the relationship
  * @property created_at - ISO timestamp of when the link was created
  * @property created_by - UUID of the user who created the link
@@ -49,7 +50,7 @@ import type { Position } from '@/types/position'
 export interface DossierPositionLink {
   position_id: string
   dossier_id: string
-  link_type: 'primary' | 'related' | 'reference'
+  link_type: PositionDossierLinkType
   notes?: string | null
   created_at: string
   created_by: string
@@ -63,7 +64,7 @@ export interface DossierPositionLink {
  * @property search - Text search across position title and content fields
  */
 export interface UseDossierPositionLinksFilters {
-  link_type?: 'primary' | 'related' | 'reference'
+  link_type?: PositionDossierLinkType
   status?: string
   search?: string
 }

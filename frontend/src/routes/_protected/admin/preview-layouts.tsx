@@ -36,7 +36,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
-import { supabase } from '@/lib/supabase'
+import { requireAdmin } from '@/lib/auth/require-admin'
 import {
   LayoutGrid,
   Plus,
@@ -94,16 +94,7 @@ import {
 
 export const Route = createFileRoute('/_protected/admin/preview-layouts')({
   component: PreviewLayoutsPage,
-  beforeLoad: async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-    const user = session?.user
-    const isAdmin = user?.user_metadata?.role === 'admin' || user?.app_metadata?.role === 'admin'
-    if (!isAdmin) {
-      throw new Error('Admin access required')
-    }
-  },
+  beforeLoad: requireAdmin,
 })
 
 // Entity type icons

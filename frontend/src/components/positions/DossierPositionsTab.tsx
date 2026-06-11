@@ -8,7 +8,10 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import { useDossierPositionLinks } from '../../hooks/useDossierPositionLinks'
+import { createPositionDossierLink } from '../../domains/positions/repositories/positions.repository'
 import { PositionList } from './PositionList'
 import { AttachPositionDialog } from './AttachPositionDialog'
 import { Button } from '../ui/button'
@@ -16,6 +19,7 @@ import { Input } from '../ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
 import type { PositionStatus, PositionType } from '../../types/position'
+import type { PositionDossierLinkType } from '../../domains/positions/types'
 
 interface DossierPositionsTabProps {
   dossierId: string
@@ -23,14 +27,13 @@ interface DossierPositionsTabProps {
 
 export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
   const { t } = useTranslation(['positions', 'common'])
+  const queryClient = useQueryClient()
 
   // Search and filter state
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<PositionStatus | 'all'>('all')
   const [typeFilter, setTypeFilter] = useState<PositionType | 'all'>('all')
-  const [linkTypeFilter, setLinkTypeFilter] = useState<'primary' | 'related' | 'reference' | 'all'>(
-    'all',
-  )
+  const [linkTypeFilter, setLinkTypeFilter] = useState<PositionDossierLinkType | 'all'>('all')
   const [showAttachDialog, setShowAttachDialog] = useState(false)
 
   // Debounce search input
@@ -99,18 +102,25 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
           <div>
             <Select
               value={linkTypeFilter}
-              onValueChange={(value) =>
-                setLinkTypeFilter(value as 'primary' | 'related' | 'reference' | 'all')
-              }
+              onValueChange={(value) => setLinkTypeFilter(value as PositionDossierLinkType | 'all')}
             >
-              <SelectTrigger aria-label="Filter by link type">
-                <SelectValue placeholder="All Link Types" />
+              <SelectTrigger aria-label={t('positions:position_dossier_links.link_type')}>
+                <SelectValue placeholder={t('positions:dossier_tab.all_link_types')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Link Types</SelectItem>
-                <SelectItem value="primary">Primary</SelectItem>
-                <SelectItem value="related">Related</SelectItem>
-                <SelectItem value="reference">Reference</SelectItem>
+                <SelectItem value="all">{t('positions:dossier_tab.all_link_types')}</SelectItem>
+                <SelectItem value="applies_to">
+                  {t('positions:position_dossier_links.types.applies_to')}
+                </SelectItem>
+                <SelectItem value="related_to">
+                  {t('positions:position_dossier_links.types.related_to')}
+                </SelectItem>
+                <SelectItem value="endorsed_by">
+                  {t('positions:position_dossier_links.types.endorsed_by')}
+                </SelectItem>
+                <SelectItem value="opposed_by">
+                  {t('positions:position_dossier_links.types.opposed_by')}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -145,7 +155,7 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
               onClick={handleClearFilters}
               aria-label={t('positions:dossier_tab.clear_filters')}
             >
-              {t('common:clear_filters')}
+              {t('positions:dossier_tab.clear_filters')}
             </Button>
           </div>
         )}
@@ -181,7 +191,38 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
         <AttachPositionDialog
           engagementId=""
           dossierId={dossierId}
-          onAttach={async () => {
+          attachedPositionIds={positions.map((p) => p.id)}
+          onAttach={async (positionIds) => {
+            // Persist each selected position as a position_dossier_link. The
+            // dialog previously discarded the selection (no-op), so attaching
+            // never added rows to the tab (R12-06).
+            const results = await Promise.allSettled(
+              positionIds.map((positionId) =>
+                createPositionDossierLink(positionId, { dossier_id: dossierId }),
+              ),
+            )
+            const failed = results.filter((r) => r.status === 'rejected').length
+            // Invalidate the dossier-scoped reader (the mutation hook only knows
+            // the inverse position-detail key) so the new rows render.
+            await queryClient.invalidateQueries({
+              queryKey: ['dossier-position-links', dossierId],
+            })
+            if (failed > 0) {
+              toast.error(
+                t('positions:attach.attachPartialError', {
+                  failed,
+                  total: positionIds.length,
+                  defaultValue: 'Failed to attach {{failed}} of {{total}} positions',
+                }),
+              )
+            } else {
+              toast.success(
+                t('positions:attach.attachSuccess', {
+                  count: positionIds.length,
+                  defaultValue: 'Attached {{count}} position(s)',
+                }),
+              )
+            }
             setShowAttachDialog(false)
           }}
         />

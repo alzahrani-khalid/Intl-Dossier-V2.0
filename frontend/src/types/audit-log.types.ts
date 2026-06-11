@@ -64,6 +64,9 @@ export interface AuditLogFilters {
   row_id?: string
   sort_by?: 'timestamp' | 'table_name' | 'operation' | 'user_email'
   sort_order?: 'asc' | 'desc'
+  // Index signature so AuditLogFilters is assignable to Record<string, unknown>
+  // (the export mutation's filters param) — all fields are string/enum|undefined.
+  [key: string]: unknown
 }
 
 export type DateRangePreset =

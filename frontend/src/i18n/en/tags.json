@@ -11,6 +11,8 @@
     "parent": "Parent Tag",
     "noParent": "No parent (root tag)",
     "level": "Level {{level}}",
+    "tagCount_one": "{{count}} tag",
+    "tagCount_other": "{{count}} tags",
     "path": "Path",
     "expand": "Expand",
     "collapse": "Collapse",
@@ -35,8 +37,12 @@
   "form": {
     "nameEn": "Name (English)",
     "nameAr": "Name (Arabic)",
+    "nameEnPlaceholder": "Tag name in English",
+    "nameArPlaceholder": "Tag name in Arabic",
     "descriptionEn": "Description (English)",
     "descriptionAr": "Description (Arabic)",
+    "descriptionEnPlaceholder": "Description in English (optional)",
+    "descriptionArPlaceholder": "Description in Arabic (optional)",
     "color": "Color",
     "icon": "Icon",
     "parent": "Parent Tag",
@@ -146,6 +152,7 @@
     "renameHistory": "Rename History",
     "noHistory": "No history available",
     "mergedInto": "\"{{source}}\" merged into \"{{target}}\"",
+    "unknownTarget": "another tag",
     "renamedFrom": "Renamed from \"{{old}}\" to \"{{new}}\""
   },
   "filters": {

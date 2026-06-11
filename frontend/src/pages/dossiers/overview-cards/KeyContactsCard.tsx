@@ -107,22 +107,12 @@ export function KeyContactsCard({ dossierId }: KeyContactsCardProps): React.Reac
           })}
 
           {hasMore && (
-            <Link
-              to="/dossiers/countries/$id"
-              params={{ id: dossierId }}
-              search={{ tab: 'contacts' }}
-              className="block"
-            >
-              <button
-                type="button"
-                className="w-full text-sm text-primary hover:text-primary/80 py-2 min-h-11 transition-colors"
-              >
-                {t('overview.contacts.viewAll', {
-                  count: totalCount,
-                  defaultValue: 'View all {{count}} contacts',
-                })}
-              </button>
-            </Link>
+            <p className="text-xs text-muted-foreground text-center py-2">
+              {t('overview.contacts.more', {
+                count: totalCount - MAX_CONTACTS,
+                defaultValue: '+{{count}} more contacts',
+              })}
+            </p>
           )}
         </div>
       )}

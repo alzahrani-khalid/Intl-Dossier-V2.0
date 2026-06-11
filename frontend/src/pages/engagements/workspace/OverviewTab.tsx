@@ -30,6 +30,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { toFormatLocale } from '@/lib/format-locale'
 
 // ============================================================================
 // Helpers
@@ -103,6 +104,7 @@ export default function OverviewTab(): ReactElement {
   const { t, i18n } = useTranslation('workspace')
   const { direction, isRTL } = useDirection()
   const locale = i18n.language
+  const numberLocale = toFormatLocale(locale)
 
   // Data fetching
   const { data: profile, isLoading: profileLoading } = useEngagement(engagementId)
@@ -168,7 +170,9 @@ export default function OverviewTab(): ReactElement {
               {isLoading ? (
                 <Skeleton className="mt-1 h-6 w-12" />
               ) : (
-                <p className="text-xl font-semibold">{daysInStage}</p>
+                <p className="text-xl font-semibold">
+                  {new Intl.NumberFormat(numberLocale).format(daysInStage)}
+                </p>
               )}
             </div>
           </CardContent>
@@ -186,9 +190,15 @@ export default function OverviewTab(): ReactElement {
                 <Skeleton className="mt-1 h-6 w-16" />
               ) : (
                 <>
-                  <p className="text-xl font-semibold">{stats.progressPercentage}%</p>
+                  <p className="text-xl font-semibold">
+                    {new Intl.NumberFormat(numberLocale, {
+                      style: 'percent',
+                      maximumFractionDigits: 0,
+                    }).format(stats.progressPercentage / 100)}
+                  </p>
                   <p className="text-xs text-muted-foreground">
-                    {stats.done}/{stats.total}
+                    {new Intl.NumberFormat(numberLocale).format(stats.done)}/
+                    {new Intl.NumberFormat(numberLocale).format(stats.total)}
                   </p>
                 </>
               )}
@@ -320,7 +330,9 @@ export default function OverviewTab(): ReactElement {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            <Button variant="default" className="min-h-11 min-w-11">
+            {/* Transition Stage + Create Task are no-ops until wired (R15-02);
+                disabled to avoid false affordances. Log After-Action is real. */}
+            <Button variant="default" className="min-h-11 min-w-11" disabled>
               {t('actions.transitionStage')}
             </Button>
             <Button variant="outline" className="min-h-11 min-w-11" asChild>
@@ -328,7 +340,7 @@ export default function OverviewTab(): ReactElement {
                 {t('actions.logAfterAction')}
               </Link>
             </Button>
-            <Button variant="outline" className="min-h-11 min-w-11">
+            <Button variant="outline" className="min-h-11 min-w-11" disabled>
               <Plus className="size-4" />
               {t('actions.createTask')}
             </Button>

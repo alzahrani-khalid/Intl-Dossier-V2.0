@@ -9,12 +9,8 @@
 import { useTranslation } from 'react-i18next'
 import { useDossierOverview } from '@/hooks/useDossierOverview'
 import { Skeleton } from '@/components/ui/skeleton'
-import {
-  Users,
-  FileText,
-  CalendarDays,
-  Activity,
-} from 'lucide-react'
+import { Users, FileText, CalendarDays, Activity } from 'lucide-react'
+import { toFormatLocale } from '@/lib/format-locale'
 
 interface SharedSummaryStatsCardProps {
   dossierId: string
@@ -26,7 +22,9 @@ interface StatItem {
   icon: React.ReactNode
 }
 
-export function SharedSummaryStatsCard({ dossierId }: SharedSummaryStatsCardProps): React.ReactElement {
+export function SharedSummaryStatsCard({
+  dossierId,
+}: SharedSummaryStatsCardProps): React.ReactElement {
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
 
@@ -85,15 +83,14 @@ export function SharedSummaryStatsCard({ dossierId }: SharedSummaryStatsCardProp
       ) : (
         <div className="grid grid-cols-2 gap-4">
           {stats.map((stat) => (
-            <div
-              key={stat.label}
-              className="flex flex-col gap-1 rounded-md bg-muted/50 p-3"
-            >
+            <div key={stat.label} className="flex flex-col gap-1 rounded-md bg-muted/50 p-3">
               <div className="flex items-center gap-2">
                 {stat.icon}
                 <span className="text-sm text-muted-foreground">{stat.label}</span>
               </div>
-              <span className="text-base font-semibold">{stat.value}</span>
+              <span className="text-base font-semibold">
+                {new Intl.NumberFormat(toFormatLocale(i18n.language)).format(stat.value)}
+              </span>
             </div>
           ))}
         </div>
