@@ -74,7 +74,9 @@ function formatDate(dateString: string | null, language: string): string {
   if (!dateString) return '-';
   try {
     const date = new Date(dateString);
-    return date.toLocaleDateString(language === 'ar' ? 'ar-SA' : 'en-US', {
+    // ar-SA alone defaults to the Islamic-Umalqura calendar and Arabic-Indic
+    // digits in modern ICU; force Gregorian + Latin digits (repo standard).
+    return date.toLocaleDateString(language === 'ar' ? 'ar-SA-u-ca-gregory-nu-latn' : 'en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
