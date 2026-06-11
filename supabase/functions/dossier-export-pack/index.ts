@@ -219,6 +219,25 @@ function generateTableOfContents(sections: ExportSectionConfig[], isRTL: boolean
   `;
 }
 
+// Renders the executive_summary section from the already-fetched dossier and
+// stats. The section is enabled by default and listed in the TOC, so the body
+// must render it — a silent omission would break the TOC contract (WR-01).
+function generateExecutiveSummarySection(dossier: any, stats: any, isRTL: boolean): string {
+  const title = isRTL ? 'الملخص التنفيذي' : 'Executive Summary';
+  const description = escapeHtml(isRTL ? dossier.description_ar : dossier.description_en);
+  const summary = isRTL
+    ? `يتضمن هذا الملف حاليًا ${stats.relationships_count || 0} من العلاقات، و${stats.positions_count || 0} من المواقف، و${stats.mous_count || 0} من مذكرات التفاهم، و${stats.commitments_count || 0} من الالتزامات، و${stats.events_count || 0} من الفعاليات القادمة، و${stats.contacts_count || 0} من جهات الاتصال الرئيسية.`
+    : `This dossier currently has ${stats.relationships_count || 0} relationships, ${stats.positions_count || 0} positions, ${stats.mous_count || 0} MoU agreements, ${stats.commitments_count || 0} commitments, ${stats.events_count || 0} upcoming events, and ${stats.contacts_count || 0} key contacts.`;
+
+  return `
+    <div class="section">
+      <h2 class="section-title">${title}</h2>
+      ${description ? `<p>${description}</p>` : ''}
+      <p>${summary}</p>
+    </div>
+  `;
+}
+
 function generateRelationshipsSection(relationships: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'العلاقات' : 'Relationships';
   const noData = isRTL ? 'لا توجد علاقات' : 'No relationships found';
@@ -596,6 +615,9 @@ function generateHTMLDocument(dossier: any, data: any, config: ExportConfig): st
   // Generate sections
   for (const section of enabledSections) {
     switch (section.type) {
+      case 'executive_summary':
+        content += generateExecutiveSummarySection(dossier, data.stats, isRTL);
+        break;
       case 'overview':
         content += `
           <div class="section">
