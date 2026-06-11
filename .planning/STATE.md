@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v6.5
-milestone_name: Escalated Backlog Hardening
-status: Awaiting next milestone
-last_updated: '2026-06-11T07:27:33.571Z'
-last_activity: 2026-06-11 — Milestone v6.5 completed and archived
+milestone: v6.6
+milestone_name: Dossier Workflow Completion
+status: planning
+last_updated: '2026-06-11T07:35:06.314Z'
+last_activity: 2026-06-11
 progress:
-  total_phases: 14
-  completed_phases: 13
-  total_plans: 79
-  completed_plans: 70
-  percent: 89
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -24,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-06-11 after v6.5 milestone)
 
 ## Current Position
 
-Phase: Milestone v6.5 complete
+Phase: Not started (defining requirements)
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-06-11 — Milestone v6.5 completed and archived
+Status: Defining requirements
+Last activity: 2026-06-11 — Milestone v6.6 started
 
 ## Quick Tasks Completed
 

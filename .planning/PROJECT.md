@@ -29,9 +29,20 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-## Next Milestone: v6.6 Dossier Workflow Completion (planned)
+## Current Milestone: v6.6 Dossier Workflow Completion
 
-Every advertised dossier workflow works end-to-end. Six independently-shippable phases escalated from the 17-round inspection loop, ordered by user-facing severity: export/briefing-pack contract+deploy (HIGH), relationship graph route + bidirectional traversal, New Position creation contract, engagement Positions tab + legacy-table reconciliation, overview error-contract + timeline cross-links, person/EO engagement contracts. Source: `.planning/dossier-workflow-backlog-phases-2026-06-11.md`. Define scope via `/gsd:new-milestone`.
+**Goal:** Every advertised dossier workflow works end-to-end — no advertised-but-broken paths, no silent failures rendered as empty states, no dead routes.
+
+**Source:** `.planning/dossier-workflow-backlog-phases-2026-06-11.md` (bucket-B escalations from the 17-round inspection loop, rounds 1-17 on branch quick/260608-c9b)
+
+**Target features:**
+
+- Export/briefing-pack produces the advertised format against a deployed, schema-correct edge (or the dialog honestly states what it produces) — HIGH, most visible broken path
+- Relationship graph page reachable with bidirectional traversal (incoming + outgoing edges), or formally retired in favor of the mini-graph
+- "New Position" from a dossier persists a valid position AND its dossier link (real type picker, bilingual title, audience groups)
+- Engagement workspace has a working Positions tab on canonical tables; round-15-disabled CTAs re-enabled as they're wired
+- Overview sections distinguish "empty" from "failed" (error contract), and timeline cross-links go to real destinations
+- Person/EO/organization Engagements tabs honor their per-type contracts (host_organization_id, person_engagements); legacy \*DossierDetail components routed or deleted
 
 **After v6.6: v7.0 Intelligence Engine.** Unblocked since v6.4; schema groundwork shipped in v6.3 (INTEL-01..05). Seed: `.planning/seeds/v7.0-intelligence-engine.md`.
 

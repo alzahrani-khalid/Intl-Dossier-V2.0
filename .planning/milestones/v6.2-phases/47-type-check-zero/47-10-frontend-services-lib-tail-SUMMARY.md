@@ -166,9 +166,9 @@ Total frontend tsc dropped 134 → 15 (Δ-119):
 
 ## Tasks Completed
 
-| Task | Name                                                                          | Commit     | Files                                     |
-| ---- | ----------------------------------------------------------------------------- | ---------- | ----------------------------------------- |
-| 1    | services + lib + utils + store + contexts + design-system cluster (119 → 0)  | (this plan) | 40 files: 39 src + 1 SUMMARY.md          |
+| Task | Name                                                                        | Commit      | Files                           |
+| ---- | --------------------------------------------------------------------------- | ----------- | ------------------------------- |
+| 1    | services + lib + utils + store + contexts + design-system cluster (119 → 0) | (this plan) | 40 files: 39 src + 1 SUMMARY.md |
 
 ## Strategy
 
@@ -193,6 +193,7 @@ declarations dropped to TS6133.
 
 **Fix:** Wrote a reusable Python deletion script (`/tmp/delete_unused.py`)
 that:
+
 1. Reads a list of `(file, symbol, kind)` tuples — kinds are `function`,
    `asyncFunc`, `const`, `const_arrow`, `const_object`, `interface`,
    `type_alias`.
@@ -283,25 +284,25 @@ recorded per-surface counts (`fe`, `be`, `fun`, `tests`, `shared`).
 **14 symbols had non-zero hit counts that turned out to be
 false-positives on inspection:**
 
-| Symbol | Hits | False-positive reason |
-| --- | --- | --- |
-| `isElectedOfficialPerson` | fe=1 | local variable in `PersonDossierDetail.tsx` (different identifier, same name) |
-| `Project` | fe=7, tests=1 | type alias in `project-plugin/types.ts`; the 7 hits are filenames, JSON keys, and component names containing the word "Project" — none import the type |
-| `invalidateQueries` | fe=106 | the const `invalidateQueries` at line 154 is unused; the 106 hits are all `queryClient.invalidateQueries(...)` (TanStack method) |
-| `setQueryData` / `getQueryData` | fe=23/15 | same pattern — `queryClient.setQueryData(...)` is the TanStack method, not the local helper |
-| `generateUserColor` | fe=2 | both consumers are `.disabled` files (out of TS scope) |
-| `isAuthenticated` | fe=7 | identifier reused as `useState` setter, store field, JSDoc — none import the local helper |
-| `getSession` | fe=50 | all 50 hits are `supabase.auth.getSession()` (Supabase API method) |
-| `hasRole` | fe=1 | hit is in a JSDoc comment |
-| `searchContacts` | fe=3 | hits are i18n translation keys (`placeholders.searchContacts`) |
-| `PersonSubtype` | fe=3 | type alias duplicated; the 3 hits import from `dossier-type-guards.ts`, not from `dossier-api.ts` |
-| `deleteAttachment` | fe=2 | hits are a different `deleteAttachment` in `intake/repositories/intake.repository.ts` |
-| `addToQueue` / `processQueue` / `clearCompleted` / `retryFailed` | varies | hits are destructured from `useOfflineQueue()` (Zustand store hook), not the standalone wrappers in offline-queue.ts |
-| `usePresence` | fe=1 | hit is the `.disabled` file |
-| `quickSearch` | fe=1 | hit is an i18n translation key (`search.quickSearch`) |
-| `getFileIcon` | fe=4, tests=1 | each consumer imports a DIFFERENT `getFileIcon` (one in usePositionAttachments, one in UnifiedFileUpload) — the upload.ts wrapper is orphaned |
-| `ApiError` | fe=2 | three different `ApiError` definitions in different namespaces; the `interface ApiError` in user-management-api.ts is unused |
-| `createUser`/`activateAccount`/`assignRole`/`deactivateUser` | varies | hits are i18n translation keys + duplicate methods on the auth Zustand store |
+| Symbol                                                           | Hits          | False-positive reason                                                                                                                                  |
+| ---------------------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `isElectedOfficialPerson`                                        | fe=1          | local variable in `PersonDossierDetail.tsx` (different identifier, same name)                                                                          |
+| `Project`                                                        | fe=7, tests=1 | type alias in `project-plugin/types.ts`; the 7 hits are filenames, JSON keys, and component names containing the word "Project" — none import the type |
+| `invalidateQueries`                                              | fe=106        | the const `invalidateQueries` at line 154 is unused; the 106 hits are all `queryClient.invalidateQueries(...)` (TanStack method)                       |
+| `setQueryData` / `getQueryData`                                  | fe=23/15      | same pattern — `queryClient.setQueryData(...)` is the TanStack method, not the local helper                                                            |
+| `generateUserColor`                                              | fe=2          | both consumers are `.disabled` files (out of TS scope)                                                                                                 |
+| `isAuthenticated`                                                | fe=7          | identifier reused as `useState` setter, store field, JSDoc — none import the local helper                                                              |
+| `getSession`                                                     | fe=50         | all 50 hits are `supabase.auth.getSession()` (Supabase API method)                                                                                     |
+| `hasRole`                                                        | fe=1          | hit is in a JSDoc comment                                                                                                                              |
+| `searchContacts`                                                 | fe=3          | hits are i18n translation keys (`placeholders.searchContacts`)                                                                                         |
+| `PersonSubtype`                                                  | fe=3          | type alias duplicated; the 3 hits import from `dossier-type-guards.ts`, not from `dossier-api.ts`                                                      |
+| `deleteAttachment`                                               | fe=2          | hits are a different `deleteAttachment` in `intake/repositories/intake.repository.ts`                                                                  |
+| `addToQueue` / `processQueue` / `clearCompleted` / `retryFailed` | varies        | hits are destructured from `useOfflineQueue()` (Zustand store hook), not the standalone wrappers in offline-queue.ts                                   |
+| `usePresence`                                                    | fe=1          | hit is the `.disabled` file                                                                                                                            |
+| `quickSearch`                                                    | fe=1          | hit is an i18n translation key (`search.quickSearch`)                                                                                                  |
+| `getFileIcon`                                                    | fe=4, tests=1 | each consumer imports a DIFFERENT `getFileIcon` (one in usePositionAttachments, one in UnifiedFileUpload) — the upload.ts wrapper is orphaned          |
+| `ApiError`                                                       | fe=2          | three different `ApiError` definitions in different namespaces; the `interface ApiError` in user-management-api.ts is unused                           |
+| `createUser`/`activateAccount`/`assignRole`/`deactivateUser`     | varies        | hits are i18n translation keys + duplicate methods on the auth Zustand store                                                                           |
 
 **No new ledger rows appended to `47-EXCEPTIONS.md ## Deferred deletions`.**
 
@@ -397,6 +398,7 @@ each look like a hand-edit (no machine-noise).
 **Found during:** Post-deletion type-check.
 
 **Issue:** Two cascades broke initially:
+
 1. `validation-rules.ts`: the `const_object` extraction for
    `ValidationPatterns` swallowed the trailing `validateField` function
    because the script's brace-tracker walked into `validateField`'s
@@ -409,14 +411,15 @@ each look like a hand-edit (no machine-noise).
    single-line JSDoc above it) accidentally consumed the OPENING `/**`
    of the JSDoc block belonging to the next function
    (`initWebVitalsReporting`), leaving an orphan ` * Initialize web-vitals
-   reporting...` block.
+reporting...` block.
 
 **Fix:** Rule 1 deviations:
+
 1. Restored `validateField` (107 lines) inline by reading the
    pre-deletion content from `git show HEAD:...` and Edit'ing it back
    into validation-rules.ts under the same JSDoc + section banner.
 2. Restored `export type DossierStatus = 'active' | 'inactive' |
-   'archived' | 'deleted'` inline.
+'archived' | 'deleted'` inline.
 3. Restored the `/**` opening of the `initWebVitalsReporting` JSDoc.
 
 **Justification:** Each was a script-correctness bug that produced a
@@ -465,7 +468,7 @@ just needed a one-shot manual follow-up.
 **`frontend/src/{services,lib,utils,store,contexts,design-system}/**` is
 now type-clean.** Total frontend tsc remaining: **15 errors** (was 134 at
 start of this plan). All 15 are out-of-scope for 47-10, exactly the same
-set 47-09 SUMMARY enumerated for downstream. **47-11 owns these.**
+set 47-09 SUMMARY enumerated for downstream. **47-11 owns these.\*\*
 
 ### Residual error list (handed to 47-11)
 
@@ -488,7 +491,7 @@ src/domains/misc/hooks/useStakeholderInfluence.ts(124,74): TS2769 — no overloa
 ```
 
 **Pattern observation for 47-11:** these errors share a cluster:
-*page/component is calling a stub-hook with the wrong argument shape*.
+_page/component is calling a stub-hook with the wrong argument shape_.
 The stub hook signatures were tightened by 47-08/47-09 (or never
 parametrized in the first place) and the call sites need to be aligned
 with the actual hook contract. The 3 IntakeForm.tsx errors and 1
