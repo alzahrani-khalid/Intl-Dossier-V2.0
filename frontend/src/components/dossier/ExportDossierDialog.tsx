@@ -7,7 +7,7 @@
  * single output language (EN or AR) and mobile-first responsive design.
  */
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Dialog,
@@ -81,6 +81,21 @@ export function ExportDossierDialog({
   const [includeTableOfContents, setIncludeTableOfContents] = useState(true)
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [popupBlocked, setPopupBlocked] = useState(false)
+  // Auto-close timer handle — cleared on close/unmount so reset() never fires
+  // after unmount and a pending auto-close never outlives a user action.
+  const autoCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const clearAutoCloseTimer = useCallback(() => {
+    if (autoCloseTimerRef.current !== null) {
+      clearTimeout(autoCloseTimerRef.current)
+      autoCloseTimerRef.current = null
+    }
+  }, [])
+
+  // Clear any pending auto-close timer on unmount.
+  useEffect(() => {
+    return () => clearAutoCloseTimer()
+  }, [clearAutoCloseTimer])
 
   // Export hook
   const { exportDossier, progress, isExporting, error, failedSections, reset } = useDossierExport({
@@ -108,6 +123,7 @@ export function ExportDossierDialog({
 
   // Handle export — popup-blocker-safe new-tab delivery (D-07).
   const handleExport = async () => {
+    clearAutoCloseTimer()
     setPopupBlocked(false)
 
     // MUST open the tab synchronously before any await (popup-blocker constraint).
@@ -153,7 +169,8 @@ export function ExportDossierDialog({
       // Clean success auto-closes; warnings (failed sections or popup-blocked)
       // keep the dialog open so the user can read them.
       if (newTab && failed.length === 0) {
-        setTimeout(() => {
+        autoCloseTimerRef.current = setTimeout(() => {
+          autoCloseTimerRef.current = null
           onClose()
           reset()
         }, 1500)
@@ -168,6 +185,7 @@ export function ExportDossierDialog({
   // Reset and close
   const handleClose = () => {
     if (!isExporting) {
+      clearAutoCloseTimer()
       reset()
       setPopupBlocked(false)
       onClose()
