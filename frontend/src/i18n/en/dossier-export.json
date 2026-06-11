@@ -3,14 +3,13 @@
   "description": "Export all dossier information as a formatted briefing packet.",
   "format": {
     "label": "Export Format",
-    "pdf": "PDF Document",
-    "docx": "Word Document"
+    "html": "HTML briefing pack",
+    "html_info": "Exports as a print-ready HTML briefing pack. To save as PDF, use your browser's print dialog."
   },
   "language": {
     "label": "Language",
     "en": "English",
-    "ar": "Arabic",
-    "both": "Bilingual"
+    "ar": "Arabic"
   },
   "options": {
     "coverPage": "Include cover page",
@@ -40,14 +39,20 @@
     "preparing": "Preparing export...",
     "fetching": "Fetching dossier data...",
     "generating": "Generating document...",
-    "uploading": "Finalizing export...",
-    "ready": "Export complete!"
+    "ready": "Export complete"
   },
-  "success": "Export complete! Download starting...",
+  "newTab": {
+    "generating": "Generating briefing pack…"
+  },
+  "warning": {
+    "failedSections": "Some sections could not be generated: {{sections}}"
+  },
+  "popupBlocked": "Pop-ups are blocked. The briefing pack was downloaded as an HTML file instead.",
+  "success": "Export complete. The briefing pack opened in a new tab.",
   "error": "Export failed. Please try again.",
   "export": "Export",
   "exporting": "Exporting...",
-  "cancel": "Cancel",
+  "cancel": "Close",
   "quickExport": "Quick Export",
   "quickExportTooltip": "Export with default settings",
   "type": {
