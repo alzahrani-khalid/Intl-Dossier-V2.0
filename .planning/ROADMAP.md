@@ -39,8 +39,14 @@
 1. The Export dialog advertises only formats the system actually produces — PDF/DOCX rendering implemented, or the dialog honestly states HTML output (decision recorded)
 2. Exporting a dossier of each of the 7 types on staging returns the advertised file — no 404 (edge deployed) and no 500
 3. Export content resolves against live schema: positions, MoUs, documents, and commitments sections read current columns (`aa_commitments`, not legacy `commitments`; no stale `positions.classification`/`dossier_ids`, `mous.title_en`/`status`, `documents.entity_type` reads)
-   **Plans**: TBD
+   **Plans**: 3 plans (2 waves)
    **UI hint**: yes
+
+Plans:
+
+- [ ] 62-01-PLAN.md — Edge function surgery: stale-read reconciliation, D-08 error notes, print CSS, direct HTML response (wave 1)
+- [ ] 62-02-PLAN.md — Frontend export contract rework: dialog, types, service, hook, EN/AR i18n + EXPORT-01 component test (wave 1)
+- [ ] 62-03-PLAN.md — Staging deploy, ALLOWED_ORIGINS check, 7-type smoke verification (wave 2)
 
 ### Phase 63: Relationship Graph Route & Bidirectional Traversal
 
