@@ -95,7 +95,7 @@ function getStatusBadge(status: string, isRTL: boolean): string {
     cancelled: '#6b7280',
   };
   const color = statusColors[status] || '#6b7280';
-  return `<span style="background-color: ${color}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">${status}</span>`;
+  return `<span style="background-color: ${color}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">${escapeHtml(status)}</span>`;
 }
 
 function generateCoverPage(dossier: any, stats: any, config: ExportConfig, isRTL: boolean): string {
@@ -1002,7 +1002,7 @@ function generateHTMLDocument(dossier: any, data: any, config: ExportConfig): st
     config.includePageNumbers
       ? `
     <div class="document-footer">
-      ${config.footerText || 'GASTAT - International Dossier System'} | ${formatDate(new Date().toISOString(), isRTL ? 'ar' : 'en')}
+      ${escapeHtml(config.footerText) || 'GASTAT - International Dossier System'} | ${formatDate(new Date().toISOString(), isRTL ? 'ar' : 'en')}
     </div>
   `
       : ''
