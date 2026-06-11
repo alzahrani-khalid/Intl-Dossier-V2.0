@@ -45,7 +45,6 @@
   "hooks": {
     "context_warnings": true
   },
-  "branching_strategy": "none",
   "mode": "yolo",
   "granularity": "standard"
 }
