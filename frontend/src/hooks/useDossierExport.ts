@@ -68,23 +68,9 @@ export function useDossierExport(options: UseDossierExportOptions = {}): UseDoss
       }
 
       try {
-        // Stage 1: Preparing
-        updateProgress({
-          status: 'preparing',
-          progress: 10,
-          message_en: 'Preparing export...',
-          message_ar: 'جارٍ إعداد التصدير...',
-        })
-
-        // Stage 2: Fetching data
-        updateProgress({
-          status: 'fetching',
-          progress: 30,
-          message_en: 'Fetching dossier data...',
-          message_ar: 'جارٍ جلب بيانات الملف...',
-        })
-
-        // Stage 3: Generating document
+        // Single in-flight stage: the export is one request/response with no
+        // observable intermediate milestones, and React batches synchronous
+        // state updates — staged preparing/fetching updates could never render.
         updateProgress({
           status: 'generating',
           progress: 60,
