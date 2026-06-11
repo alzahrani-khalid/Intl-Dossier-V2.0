@@ -54,6 +54,21 @@ function escapeHtml(text: string | null | undefined): string {
     .replace(/'/g, '&#039;');
 }
 
+// Renders the section heading plus an amber-barred failure block (D-08). The
+// failure copy is a static localized string — no DB-derived value is ever
+// interpolated here, preserving the XSS hardening invariant.
+function renderSectionError(title: string, isRTL: boolean): string {
+  const message = isRTL ? 'تعذّر إنشاء هذا القسم.' : 'This section could not be generated.';
+  return `
+    <div class="section">
+      <h2 class="section-title">${title}</h2>
+      <div class="section-error">
+        <p>${message}</p>
+      </div>
+    </div>
+  `;
+}
+
 function formatDate(dateString: string | null, language: string): string {
   if (!dateString) return '-';
   try {
@@ -202,9 +217,13 @@ function generateTableOfContents(sections: ExportSectionConfig[], isRTL: boolean
   `;
 }
 
-function generateRelationshipsSection(relationships: any[], isRTL: boolean): string {
+function generateRelationshipsSection(relationships: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'العلاقات' : 'Relationships';
   const noData = isRTL ? 'لا توجد علاقات' : 'No relationships found';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!relationships || relationships.length === 0) {
     return `
@@ -246,9 +265,13 @@ function generateRelationshipsSection(relationships: any[], isRTL: boolean): str
   `;
 }
 
-function generatePositionsSection(positions: any[], isRTL: boolean): string {
+function generatePositionsSection(positions: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'المواقف ونقاط النقاش' : 'Positions & Talking Points';
   const noData = isRTL ? 'لا توجد مواقف' : 'No positions found';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!positions || positions.length === 0) {
     return `
@@ -269,7 +292,6 @@ function generatePositionsSection(positions: any[], isRTL: boolean): string {
           <h3>${i + 1}. ${escapeHtml(isRTL ? pos.title_ar : pos.title_en)}</h3>
           <div class="card-meta">
             <span>${isRTL ? 'الحالة' : 'Status'}: ${getStatusBadge(pos.status, isRTL)}</span>
-            ${pos.classification ? `<span>${isRTL ? 'التصنيف' : 'Classification'}: ${escapeHtml(pos.classification)}</span>` : ''}
           </div>
         </div>
       `
@@ -279,9 +301,13 @@ function generatePositionsSection(positions: any[], isRTL: boolean): string {
   `;
 }
 
-function generateMousSection(mous: any[], isRTL: boolean): string {
+function generateMousSection(mous: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'مذكرات التفاهم' : 'MoU Agreements';
   const noData = isRTL ? 'لا توجد مذكرات تفاهم' : 'No MoU agreements found';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!mous || mous.length === 0) {
     return `
@@ -308,8 +334,8 @@ function generateMousSection(mous: any[], isRTL: boolean): string {
             .map(
               (m) => `
             <tr>
-              <td>${escapeHtml(isRTL ? m.title_ar : m.title_en)}</td>
-              <td>${getStatusBadge(m.status, isRTL)}</td>
+              <td>${escapeHtml(isRTL ? m.title_ar : m.title)}</td>
+              <td>${getStatusBadge(m.lifecycle_state, isRTL)}</td>
               <td>${formatDate(m.created_at, isRTL ? 'ar' : 'en')}</td>
             </tr>
           `
@@ -321,9 +347,13 @@ function generateMousSection(mous: any[], isRTL: boolean): string {
   `;
 }
 
-function generateCommitmentsSection(commitments: any[], isRTL: boolean): string {
+function generateCommitmentsSection(commitments: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'الالتزامات والمخرجات' : 'Commitments & Deliverables';
   const noData = isRTL ? 'لا توجد التزامات' : 'No commitments found';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!commitments || commitments.length === 0) {
     return `
@@ -344,7 +374,6 @@ function generateCommitmentsSection(commitments: any[], isRTL: boolean): string 
             <th>${isRTL ? 'الحالة' : 'Status'}</th>
             <th>${isRTL ? 'الأولوية' : 'Priority'}</th>
             <th>${isRTL ? 'الموعد النهائي' : 'Deadline'}</th>
-            <th>${isRTL ? 'المسؤول' : 'Assignee'}</th>
           </tr>
         </thead>
         <tbody>
@@ -352,11 +381,10 @@ function generateCommitmentsSection(commitments: any[], isRTL: boolean): string 
             .map(
               (c) => `
             <tr>
-              <td>${escapeHtml(isRTL ? c.title_ar : c.title_en)}</td>
+              <td>${escapeHtml(isRTL ? c.title_ar : c.title)}</td>
               <td>${getStatusBadge(c.status, isRTL)}</td>
               <td>${escapeHtml(c.priority)}</td>
-              <td>${formatDate(c.deadline, isRTL ? 'ar' : 'en')}</td>
-              <td>${escapeHtml(c.assignee_name) || '-'}</td>
+              <td>${formatDate(c.due_date, isRTL ? 'ar' : 'en')}</td>
             </tr>
           `
             )
@@ -367,9 +395,13 @@ function generateCommitmentsSection(commitments: any[], isRTL: boolean): string 
   `;
 }
 
-function generateTimelineSection(activities: any[], isRTL: boolean): string {
+function generateTimelineSection(activities: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'الجدول الزمني للأنشطة' : 'Activity Timeline';
   const noData = isRTL ? 'لا توجد أنشطة' : 'No activities found';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!activities || activities.length === 0) {
     return `
@@ -403,9 +435,13 @@ function generateTimelineSection(activities: any[], isRTL: boolean): string {
   `;
 }
 
-function generateEventsSection(events: any[], isRTL: boolean): string {
+function generateEventsSection(events: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'الفعاليات القادمة' : 'Upcoming Events';
   const noData = isRTL ? 'لا توجد فعاليات قادمة' : 'No upcoming events';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!events || events.length === 0) {
     return `
@@ -447,9 +483,13 @@ function generateEventsSection(events: any[], isRTL: boolean): string {
   `;
 }
 
-function generateContactsSection(contacts: any[], isRTL: boolean): string {
+function generateContactsSection(contacts: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'جهات الاتصال الرئيسية' : 'Key Contacts';
   const noData = isRTL ? 'لا توجد جهات اتصال' : 'No contacts found';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!contacts || contacts.length === 0) {
     return `
@@ -468,9 +508,9 @@ function generateContactsSection(contacts: any[], isRTL: boolean): string {
           .map(
             (c) => `
           <div class="contact-card">
-            <h4>${escapeHtml(isRTL ? c.name_ar : c.name) || escapeHtml(c.name)}</h4>
-            ${c.title_en || c.title_ar ? `<p class="contact-title">${escapeHtml(isRTL ? c.title_ar : c.title_en)}</p>` : ''}
-            ${c.organization_en || c.organization_ar ? `<p class="contact-org">${escapeHtml(isRTL ? c.organization_ar : c.organization_en)}</p>` : ''}
+            <h4>${escapeHtml(c.name)}</h4>
+            ${c.role ? `<p class="contact-title">${escapeHtml(c.role)}</p>` : ''}
+            ${c.organization ? `<p class="contact-org">${escapeHtml(c.organization)}</p>` : ''}
             ${c.email ? `<p class="contact-email">${escapeHtml(c.email)}</p>` : ''}
             ${c.phone ? `<p class="contact-phone">${escapeHtml(c.phone)}</p>` : ''}
           </div>
@@ -482,9 +522,13 @@ function generateContactsSection(contacts: any[], isRTL: boolean): string {
   `;
 }
 
-function generateDocumentsSection(documents: any[], isRTL: boolean): string {
+function generateDocumentsSection(documents: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'المستندات ذات الصلة' : 'Related Documents';
   const noData = isRTL ? 'لا توجد مستندات' : 'No documents found';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!documents || documents.length === 0) {
     return `
@@ -533,6 +577,8 @@ function generateHTMLDocument(dossier: any, data: any, config: ExportConfig): st
     .filter((s) => s.enabled)
     .sort((a, b) => a.order - b.order);
 
+  const sectionErrors: Record<string, string> = data.sectionErrors || {};
+
   let content = '';
 
   // Cover page
@@ -559,28 +605,28 @@ function generateHTMLDocument(dossier: any, data: any, config: ExportConfig): st
         `;
         break;
       case 'relationships':
-        content += generateRelationshipsSection(data.relationships, isRTL);
+        content += generateRelationshipsSection(data.relationships, isRTL, sectionErrors['relationships']);
         break;
       case 'positions':
-        content += generatePositionsSection(data.positions, isRTL);
+        content += generatePositionsSection(data.positions, isRTL, sectionErrors['positions']);
         break;
       case 'mous':
-        content += generateMousSection(data.mous, isRTL);
+        content += generateMousSection(data.mous, isRTL, sectionErrors['mous']);
         break;
       case 'commitments':
-        content += generateCommitmentsSection(data.commitments, isRTL);
+        content += generateCommitmentsSection(data.commitments, isRTL, sectionErrors['commitments']);
         break;
       case 'timeline':
-        content += generateTimelineSection(data.activities, isRTL);
+        content += generateTimelineSection(data.activities, isRTL, sectionErrors['timeline']);
         break;
       case 'events':
-        content += generateEventsSection(data.events, isRTL);
+        content += generateEventsSection(data.events, isRTL, sectionErrors['events']);
         break;
       case 'contacts':
-        content += generateContactsSection(data.contacts, isRTL);
+        content += generateContactsSection(data.contacts, isRTL, sectionErrors['contacts']);
         break;
       case 'documents':
-        content += generateDocumentsSection(data.documents, isRTL);
+        content += generateDocumentsSection(data.documents, isRTL, sectionErrors['documents']);
         break;
     }
   }
@@ -756,6 +802,27 @@ function generateHTMLDocument(dossier: any, data: any, config: ExportConfig): st
       padding: 20px;
     }
 
+    /* D-08 partial-failure note — visually distinct from .no-data:
+       start-aligned, normal style, amber inline-start bar, boxed tint. */
+    .section-error {
+      border: 1px solid #d1d5db;
+      border-inline-start: 4px solid #b45309;
+      background-color: #fffbeb;
+      padding: 16px 20px;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .section-error p {
+      margin: 0;
+      color: #92400e;
+      font-size: 11pt;
+      font-style: normal;
+      text-align: start;
+    }
+
     /* Table Styles */
     .data-table {
       width: 100%;
@@ -895,6 +962,31 @@ function generateHTMLDocument(dossier: any, data: any, config: ExportConfig): st
     }
 
     @media print {
+      .section {
+        break-before: page;
+        page-break-before: always;
+      }
+      .cover-page {
+        break-after: page;
+        page-break-after: always;
+      }
+      .toc {
+        break-after: page;
+        page-break-after: always;
+      }
+      .data-table tr {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .data-table thead {
+        display: table-header-group;
+      }
+      .content-card,
+      .contact-card,
+      .section-error {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
       .document-footer {
         position: fixed;
       }
