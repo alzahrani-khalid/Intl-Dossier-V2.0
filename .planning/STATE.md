@@ -2,11 +2,11 @@
 gsd_state_version: 1.0
 milestone: v6.6
 milestone_name: Dossier Workflow Completion
-status: planning
-last_updated: '2026-06-11T07:35:06.314Z'
+status: roadmap_created
+last_updated: '2026-06-11T12:00:00.000Z'
 last_activity: 2026-06-11
 progress:
-  total_phases: 0
+  total_phases: 6
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-11 after v6.5 milestone)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** v6.5 shipped — next: v6.6 Dossier Workflow Completion (/gsd:new-milestone)
+**Current focus:** v6.6 Dossier Workflow Completion — roadmap created (Phases 62-67); Phase 62 (export pack, HIGH) first
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 62 of 67 — Export Pack Contract & Deploy (not started)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-06-11 — Milestone v6.6 started
+Status: Roadmap created (Phases 62-67, 15/15 requirements mapped) — next: /gsd:plan-phase 62
+Last activity: 2026-06-11 — v6.6 roadmap created
 
 ## Quick Tasks Completed
 
@@ -66,11 +66,9 @@ Last activity: 2026-06-11 — Milestone v6.6 started
 
 ## Next Action
 
-v6.4 is closed. Recommended next steps:
+v6.6 roadmap created (Phases 62-67, 15/15 requirements mapped). Next: `/gsd:plan-phase 62` (Export Pack Contract & Deploy — HIGH, the most visible advertised-but-broken path).
 
-1. **Start next milestone:** `/clear` then `/gsd:new-milestone` (v7.0 Intelligence Engine — seed at `.planning/seeds/v7.0-intelligence-engine.md`).
-2. **Provenance (no action needed):** `phase-59-base` is SSH-signed and already on origin (`29efc676` matches local) — the audit's "not on origin" note was stale, verified at close.
-3. **Optional Nyquist backfill:** `/gsd:validate-phase 56|57|58|59` to clear the discovery-only validation paperwork (non-blocking).
+Carried deploy note from the inspection loop: the droplet **backend** still needs the round-11 auth fix (`backend/src/middleware/auth.ts`) deployed, or elected-official detail and other Express-backed routes stay 401 in production (staging is correct).
 
 ## Deferred Items — RECONCILED & CLEARED (2026-06-01, quick task 260601-h00)
 
@@ -112,7 +110,7 @@ engineering work remained in any of these items.**
 
 ## Operator Next Steps
 
-- Start the next milestone with /gsd-new-milestone
+- Plan the first v6.6 phase with /gsd:plan-phase 62
 
 ## Deferred Items
 

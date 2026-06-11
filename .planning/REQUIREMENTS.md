@@ -66,28 +66,28 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase | Status  |
-| ----------- | ----- | ------- |
-| EXPORT-01   | TBD   | Pending |
-| EXPORT-02   | TBD   | Pending |
-| GRAPH-01    | TBD   | Pending |
-| GRAPH-02    | TBD   | Pending |
-| GRAPH-03    | TBD   | Pending |
-| POSNEW-01   | TBD   | Pending |
-| POSNEW-02   | TBD   | Pending |
-| ENGPOS-01   | TBD   | Pending |
-| ENGPOS-02   | TBD   | Pending |
-| ENGPOS-03   | TBD   | Pending |
-| OVRERR-01   | TBD   | Pending |
-| OVRERR-02   | TBD   | Pending |
-| PERENG-01   | TBD   | Pending |
-| PERENG-02   | TBD   | Pending |
-| PERENG-03   | TBD   | Pending |
+| Requirement | Phase    | Status  |
+| ----------- | -------- | ------- |
+| EXPORT-01   | Phase 62 | Pending |
+| EXPORT-02   | Phase 62 | Pending |
+| GRAPH-01    | Phase 63 | Pending |
+| GRAPH-02    | Phase 63 | Pending |
+| GRAPH-03    | Phase 63 | Pending |
+| POSNEW-01   | Phase 64 | Pending |
+| POSNEW-02   | Phase 64 | Pending |
+| ENGPOS-01   | Phase 65 | Pending |
+| ENGPOS-02   | Phase 65 | Pending |
+| ENGPOS-03   | Phase 65 | Pending |
+| OVRERR-01   | Phase 66 | Pending |
+| OVRERR-02   | Phase 66 | Pending |
+| PERENG-01   | Phase 67 | Pending |
+| PERENG-02   | Phase 67 | Pending |
+| PERENG-03   | Phase 67 | Pending |
 
 **Coverage:**
 
 - v6.6 requirements: 15 total
-- Mapped to phases: 0 (roadmap pending)
-- Unmapped: 15 ⚠️
+- Mapped to phases: 15 ✓
+- Unmapped: 0
 
 ---
