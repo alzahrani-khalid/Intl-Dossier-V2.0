@@ -35,18 +35,19 @@ Three UI surfaces are in scope:
 
 ## Spacing Scale
 
-Declared values (Bureau `--space-*` tokens, all multiples of 4):
+Declared values (Bureau `--space-*` tokens):
 
 | Token       | Value | Usage in this phase                                                                           |
 | ----------- | ----- | --------------------------------------------------------------------------------------------- |
 | `--space-1` | 4px   | Icon-to-text gaps inside banners                                                              |
 | `--space-2` | 8px   | Gap between stacked banner lines; checkbox-to-label gap                                       |
-| `--space-3` | 12px  | Compact padding (`p-3`) on the dossier info card, mobile banner padding                       |
+| `--space-3` | 12px  | Compact padding (`p-3`) on the dossier info card, mobile banner padding — see exception below |
 | `--space-4` | 16px  | Default padding (`p-4`) on banners and advanced-options panel; section gap inside dialog body |
 | `--space-6` | 24px  | Vertical rhythm between dialog config groups (`space-y-6`, existing)                          |
 
 Exceptions:
 
+- **12px (`--space-3`):** outside the standard {4, 8, 16, 24, 32, 48, 64} set. It is a Bureau design-system density token (project-level addition to the standard scale), used exclusively for compact card padding (`p-3`) to match the IntelDossier density rhythm. Declared exception — do not substitute 8px or 16px where the prototype uses `--space-3`.
 - The exported pack document uses print units (pt/cm) inside its own stylesheet — `@page` margin 1.5cm, body 12pt. These are document-print conventions, not app spacing tokens. Allowed.
 - Failure block (`.section-error`) padding inside the pack: `16px 20px` (matches the pack's existing `.content-card` rhythm).
 
@@ -64,6 +65,8 @@ App dialog (this phase's new/changed elements only — pre-existing dialog text 
 | Dialog title       | 18px (DialogTitle default) | 600    | 1.2         |
 
 Two weights only: 400 (regular) and 600 (semibold). RTL renders in Tajawal automatically via the `html[dir="rtl"]` fallback.
+
+Note: 12px (meta) and 14px (body) sit close in size; the hierarchy between them is carried by the semantic role split (meta = muted secondary info in `--ink-mute`, body = primary content in `--ink`), not by size contrast — no size change needed.
 
 Exported pack document (existing scale retained; only the failure block is new):
 
@@ -110,6 +113,7 @@ Voice: sentence case, no marketing, no exclamation marks, no emoji. All strings 
 | Element                                                                 | Copy (EN)                                                                                       | Copy (AR)                                                                                          |
 | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | Primary CTA                                                             | `Export` (unchanged)                                                                            | `تصدير`                                                                                            |
+| Footer dismiss button                                                   | `Close` (changed from `Cancel` — see i18n diff)                                                 | `إغلاق`                                                                                            |
 | Info line (D-03, replaces format picker)                                | `Exports as a print-ready HTML briefing pack. To save as PDF, use your browser's print dialog.` | `يُصدَّر الملف كحزمة إحاطة HTML جاهزة للطباعة. لحفظها بصيغة PDF، استخدم نافذة الطباعة في المتصفح.` |
 | Success state (clean)                                                   | `Export complete. The briefing pack opened in a new tab.`                                       | `اكتمل التصدير. فُتحت حزمة الإحاطة في تبويب جديد.`                                                 |
 | Failed-sections warning (D-08, success annotation)                      | `Some sections could not be generated: {{sections}}`                                            | `تعذّر إنشاء بعض الأقسام: {{sections}}`                                                            |
@@ -147,7 +151,7 @@ The `dossier-export` namespace is already registered in `src/i18n/index.ts` (no 
 
 AR values per the copywriting table above; `format.html` AR: `حزمة إحاطة HTML`.
 
-**Change (both languages):** `success` → new-tab copy (table above); `progress.ready` → drop exclamation.
+**Change (both languages):** `success` → new-tab copy (table above); `progress.ready` → drop exclamation; `cancel` → value changes from `Cancel`/`إلغاء` to `Close`/`إغلاق` (key name retained; this dialog is configuration-before-export, not a destructive flow, so the generic `Cancel` label is replaced).
 
 **Remove (both languages):** `format.pdf`, `format.docx`, `language.both`, `progress.uploading`.
 
@@ -164,14 +168,16 @@ File: `frontend/src/components/dossier/ExportDossierDialog.tsx`
 3. **Info line (NEW, replaces the entire format picker group):** a single flat note row. Markup contract: `Info` icon (lucide, `h-4 w-4 text-[var(--ink-mute)] shrink-0 mt-0.5`) + `format.html_info` text at `text-sm text-[var(--ink-mute)]`, laid out `flex items-start gap-2`, `text-start`. No border, no background, no accent — it is a statement of fact, not a callout. The PDF/Word radio cards, the `format` state, and the `format.label` group are deleted.
 4. **Language group** — keep the existing radio-card pattern and selected/unselected styling exactly as-is, trimmed to two options: `English` / `العربية`. The `both` option and its map entry are deleted. Default: `i18n.language === 'ar' ? 'ar' : 'en'` (current UI language), set via initial state — not hardcoded `'both'`.
 5. **Advanced options** — unchanged: toggle button, cover-page checkbox, TOC checkbox, section checkboxes (all sections stay per D-05).
-6. **Footer** — unchanged: Cancel (outline) + Export (primary, accent). Export button content unchanged (FileDown icon / spinner + label).
+6. **Footer** — Close (outline, label changed from `Cancel` per the copywriting contract) + Export (primary, accent). Export button content unchanged (FileDown icon / spinner + label).
+
+**Visual anchor:** the Export button (accent primary) in the dialog footer is the primary focal point of the surface; the FileText icon in the dialog header is the secondary anchor. No other element competes for accent emphasis.
 
 ### States
 
 | State                               | Contract                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Idle                                | Config visible (info line, language, advanced). Export enabled.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| Exporting                           | Config hidden (existing pattern). Spinner (`text-[var(--accent)]`) + bilingual progress message + Progress bar + percent. Progress stages are now three: preparing → generating → complete (`uploading` stage removed). Cancel disabled.                                                                                                                                                                                                                                                                                                                                                                         |
+| Exporting                           | Config hidden (existing pattern). Spinner (`text-[var(--accent)]`) + bilingual progress message + Progress bar + percent. Progress stages are now three: preparing → generating → complete (`uploading` stage removed). Close disabled.                                                                                                                                                                                                                                                                                                                                                                          |
 | Success (clean)                     | Green banner, existing styling (`border-[var(--ok)] bg-[var(--ok-soft)]`, CheckCircle2 icon), copy = new-tab success string. Dialog auto-closes after 1500ms (existing behavior).                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | Success with failed sections (D-08) | Green success banner PLUS a warning banner directly below it: `flex items-start gap-3 rounded-[var(--radius-sm)] border border-[var(--warn)] bg-[var(--warn-soft)] p-4`, `AlertTriangle` icon `h-5 w-5 text-[var(--warn)] shrink-0`, text `text-sm text-[var(--ink)]` = `warning.failedSections` with localized section names. **Decision (discretion): the warning does NOT pause the auto-open — the tab opens regardless (the pack carries its own in-document failure notes). It DOES suppress the 1500ms auto-close: the dialog stays open until the user closes it, so the warning is actually readable.** |
 | Popup blocked                       | The export still completes via fallback download (Surface 3). Success banner shows `popupBlocked` copy instead of the new-tab copy. Auto-close suppressed (user should read why no tab appeared).                                                                                                                                                                                                                                                                                                                                                                                                                |
