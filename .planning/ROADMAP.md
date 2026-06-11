@@ -44,8 +44,13 @@
 
 Plans:
 
+**Wave 1**
+
 - [ ] 62-01-PLAN.md — Edge function surgery: stale-read reconciliation, D-08 error notes, print CSS, direct HTML response (wave 1)
 - [ ] 62-02-PLAN.md — Frontend export contract rework: dialog, types, service, hook, EN/AR i18n + EXPORT-01 component test (wave 1)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
 - [ ] 62-03-PLAN.md — Staging deploy, ALLOWED_ORIGINS check, 7-type smoke verification (wave 2)
 
 ### Phase 63: Relationship Graph Route & Bidirectional Traversal
