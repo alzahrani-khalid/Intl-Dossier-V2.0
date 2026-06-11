@@ -434,9 +434,9 @@ function generateEventsSection(events: any[], isRTL: boolean): string {
               (e) => `
             <tr>
               <td>${escapeHtml(isRTL ? e.title_ar : e.title_en)}</td>
-              <td>${escapeHtml(e.event_type)}</td>
-              <td>${formatDate(e.start_datetime, isRTL ? 'ar' : 'en')}</td>
-              <td>${escapeHtml(isRTL ? e.location_ar : e.location_en) || '-'}</td>
+              <td>${escapeHtml(e.entry_type)}</td>
+              <td>${formatDate(e.event_date, isRTL ? 'ar' : 'en')}</td>
+              <td>${escapeHtml(e.location) || '-'}</td>
             </tr>
           `
             )
@@ -923,7 +923,11 @@ function generateHTMLDocument(dossier: any, data: any, config: ExportConfig): st
 // =============================================================================
 
 async function fetchDossierData(supabase: any, dossierId: string): Promise<any> {
-  // Fetch dossier
+  // Per-section failure tracking (D-08). Keys MUST match DEFAULT_EXPORT_SECTIONS
+  // `type` values so the dialog can map them to localized section labels.
+  const sectionErrors: Record<string, string> = {};
+
+  // Fetch dossier (a failure here is fatal — there is no pack without it).
   const { data: dossier, error: dossierError } = await supabase
     .from('dossiers')
     .select('*')
@@ -934,167 +938,216 @@ async function fetchDossierData(supabase: any, dossierId: string): Promise<any> 
     throw new Error(`Failed to fetch dossier: ${dossierError.message}`);
   }
 
-  // Fetch all related data in parallel
-  const [
-    relationshipsResult,
-    positionsResult,
-    mousResult,
-    workItemsResult,
-    eventsResult,
-    contactsResult,
-    activitiesResult,
-    documentsResult,
-  ] = await Promise.all([
-    // Relationships
-    Promise.all([
+  // --- Relationships (bidirectional; soft-delete filter is `status = active`) ---
+  let relationships: any[] = [];
+  try {
+    const [outgoing, incoming] = await Promise.all([
       supabase
         .from('dossier_relationships')
         .select('*, target_dossier:target_dossier_id(id, name_en, name_ar, type)')
         .eq('source_dossier_id', dossierId)
-        .is('deleted_at', null),
+        .eq('status', 'active'),
       supabase
         .from('dossier_relationships')
         .select('*, source_dossier:source_dossier_id(id, name_en, name_ar, type)')
         .eq('target_dossier_id', dossierId)
-        .is('deleted_at', null),
-    ]).then(([outgoing, incoming]) => {
-      const rels: any[] = [];
-      (outgoing.data || []).forEach((r: any) => {
-        if (r.target_dossier) {
-          rels.push({
-            ...r.target_dossier,
-            relationship_type: r.relationship_type,
-            notes_en: r.notes_en,
-            notes_ar: r.notes_ar,
-          });
-        }
-      });
-      (incoming.data || []).forEach((r: any) => {
-        if (r.source_dossier) {
-          rels.push({
-            ...r.source_dossier,
-            relationship_type: r.relationship_type,
-            notes_en: r.notes_en,
-            notes_ar: r.notes_ar,
-          });
-        }
-      });
-      return rels;
-    }),
+        .eq('status', 'active'),
+    ]);
+    if (outgoing.error) throw outgoing.error;
+    if (incoming.error) throw incoming.error;
+    (outgoing.data || []).forEach((r: any) => {
+      if (r.target_dossier) {
+        relationships.push({
+          ...r.target_dossier,
+          relationship_type: r.relationship_type,
+          notes_en: r.notes_en,
+          notes_ar: r.notes_ar,
+        });
+      }
+    });
+    (incoming.data || []).forEach((r: any) => {
+      if (r.source_dossier) {
+        relationships.push({
+          ...r.source_dossier,
+          relationship_type: r.relationship_type,
+          notes_en: r.notes_en,
+          notes_ar: r.notes_ar,
+        });
+      }
+    });
+  } catch (e: any) {
+    sectionErrors['relationships'] = e?.message || 'Failed to load relationships';
+    relationships = [];
+  }
 
-    // Positions
-    supabase
-      .from('positions')
-      .select('id, title_en, title_ar, status, classification, created_at')
-      .contains('dossier_ids', [dossierId])
-      .order('created_at', { ascending: false })
-      .limit(20),
-
-    // MOUs
-    supabase
-      .from('mous')
-      .select('id, title_en, title_ar, status, created_at')
-      .contains('dossier_ids', [dossierId])
-      .order('created_at', { ascending: false })
-      .limit(20),
-
-    // Work items (commitments/tasks)
-    supabase
-      .from('work_item_dossiers')
-      .select('work_item_type, work_item_id')
+  // --- Positions (canonical linkage: position_dossier_links junction) ---
+  let positions: any[] = [];
+  try {
+    const { data, error } = await supabase
+      .from('position_dossier_links')
+      .select('position:positions(id, title_en, title_ar, status, created_at)')
       .eq('dossier_id', dossierId)
-      .is('deleted_at', null)
-      .limit(50),
+      .limit(20);
+    if (error) throw error;
+    positions = (data || [])
+      .map((link: any) => {
+        const posRaw = link.position;
+        return Array.isArray(posRaw) ? posRaw[0] : posRaw;
+      })
+      .filter(Boolean);
+  } catch (e: any) {
+    sectionErrors['positions'] = e?.message || 'Failed to load positions';
+    positions = [];
+  }
 
-    // Calendar events
-    supabase
+  // --- MoUs (linkage via signatory dossier columns; soft-delete is deleted_at) ---
+  let mous: any[] = [];
+  try {
+    const [mous1, mous2] = await Promise.all([
+      supabase
+        .from('mous')
+        .select('id, title, title_ar, lifecycle_state, created_at')
+        .eq('signatory_1_dossier_id', dossierId)
+        .is('deleted_at', null)
+        .limit(20),
+      supabase
+        .from('mous')
+        .select('id, title, title_ar, lifecycle_state, created_at')
+        .eq('signatory_2_dossier_id', dossierId)
+        .is('deleted_at', null)
+        .limit(20),
+    ]);
+    if (mous1.error) throw mous1.error;
+    if (mous2.error) throw mous2.error;
+    const mouIds = new Set<string>();
+    [...(mous1.data || []), ...(mous2.data || [])].forEach((m: any) => {
+      if (!mouIds.has(m.id)) {
+        mouIds.add(m.id);
+        mous.push(m);
+      }
+    });
+  } catch (e: any) {
+    sectionErrors['mous'] = e?.message || 'Failed to load MoUs';
+    mous = [];
+  }
+
+  // --- Commitments (aa_commitments is canonical; direct dossier_id link) ---
+  let commitments: any[] = [];
+  try {
+    const { data, error } = await supabase
+      .from('aa_commitments')
+      .select('id, title, title_ar, status, priority, due_date, owner_user_id, created_at')
+      .eq('dossier_id', dossierId)
+      .is('is_deleted', false)
+      .order('created_at', { ascending: false })
+      .limit(20);
+    if (error) throw error;
+    commitments = data || [];
+  } catch (e: any) {
+    sectionErrors['commitments'] = e?.message || 'Failed to load commitments';
+    commitments = [];
+  }
+
+  // --- Calendar events (calendar_entries; date column is event_date) ---
+  let events: any[] = [];
+  try {
+    const { data, error } = await supabase
       .from('calendar_entries')
-      .select('*')
+      .select('id, title_en, title_ar, entry_type, event_date, event_time, location, is_virtual, status')
       .eq('dossier_id', dossierId)
-      .gte('start_datetime', new Date().toISOString())
-      .order('start_datetime', { ascending: true })
-      .limit(10),
+      .gte('event_date', new Date().toISOString().split('T')[0])
+      .order('event_date', { ascending: true })
+      .limit(10);
+    if (error) throw error;
+    events = data || [];
+  } catch (e: any) {
+    sectionErrors['events'] = e?.message || 'Failed to load events';
+    events = [];
+  }
 
-    // Key contacts
-    supabase
+  // --- Key contacts (monolingual: name/role/organization) ---
+  let contacts: any[] = [];
+  try {
+    const { data, error } = await supabase
       .from('key_contacts')
       .select('*')
       .eq('dossier_id', dossierId)
       .order('name', { ascending: true })
-      .limit(20),
+      .limit(20);
+    if (error) throw error;
+    contacts = data || [];
+  } catch (e: any) {
+    sectionErrors['contacts'] = e?.message || 'Failed to load contacts';
+    contacts = [];
+  }
 
-    // Recent activities
-    supabase
+  // --- Timeline / activities (audit_logs; entity_id + action + created_at) ---
+  let activities: any[] = [];
+  try {
+    const { data, error } = await supabase
       .from('audit_logs')
       .select('*')
       .eq('entity_id', dossierId)
       .order('created_at', { ascending: false })
-      .limit(20),
-
-    // Documents
-    supabase
-      .from('documents')
-      .select('*')
-      .eq('entity_type', 'dossier')
-      .eq('entity_id', dossierId)
-      .limit(20),
-  ]);
-
-  // Fetch commitments for work items
-  const commitmentIds = (workItemsResult.data || [])
-    .filter((w: any) => w.work_item_type === 'commitment')
-    .map((w: any) => w.work_item_id);
-
-  let commitments: any[] = [];
-  if (commitmentIds.length > 0) {
-    const { data } = await supabase
-      .from('commitments')
-      .select('*, assignee:responsible_user_id(full_name)')
-      .in('id', commitmentIds);
-    commitments = (data || []).map((c: any) => ({
-      ...c,
-      title_en: c.title_en || c.title,
-      title_ar: c.title_ar,
-      assignee_name: c.assignee?.full_name,
+      .limit(20);
+    if (error) throw error;
+    activities = (data || []).map((a: any) => ({
+      id: a.id,
+      title_en: a.action || 'Activity',
+      title_ar: a.action,
+      activity_type: a.action,
+      timestamp: a.created_at,
     }));
+  } catch (e: any) {
+    sectionErrors['timeline'] = e?.message || 'Failed to load timeline';
+    activities = [];
   }
+
+  // --- Documents (derived from positions + mous; no direct dossier linkage on
+  // the documents table — mirrors the app's own Documents tab contract). This
+  // derivation cannot fail independently, so it never records a sectionErrors key.
+  const documents = [
+    ...positions.map((p: any) => ({
+      id: p.id,
+      title_en: p.title_en || 'Untitled Position',
+      title_ar: p.title_ar,
+      document_type: 'position',
+      status: p.status,
+      created_at: p.created_at,
+    })),
+    ...mous.map((m: any) => ({
+      id: m.id,
+      title_en: m.title || 'Untitled MoU',
+      title_ar: m.title_ar ?? m.title,
+      document_type: 'mou',
+      status: m.lifecycle_state,
+      created_at: m.created_at,
+    })),
+  ];
 
   // Calculate stats
   const stats = {
-    relationships_count: relationshipsResult.length,
-    positions_count: positionsResult.data?.length || 0,
-    mous_count: mousResult.data?.length || 0,
+    relationships_count: relationships.length,
+    positions_count: positions.length,
+    mous_count: mous.length,
     commitments_count: commitments.length,
-    events_count: eventsResult.data?.length || 0,
-    contacts_count: contactsResult.data?.length || 0,
-    documents_count: documentsResult.data?.length || 0,
+    events_count: events.length,
+    contacts_count: contacts.length,
+    documents_count: documents.length,
   };
-
-  // Transform activities
-  const activities = (activitiesResult.data || []).map((a: any) => ({
-    id: a.id,
-    title_en: a.action || 'Activity',
-    title_ar: a.action,
-    activity_type: a.action,
-    timestamp: a.created_at,
-  }));
 
   return {
     dossier,
     stats,
-    relationships: relationshipsResult,
-    positions: positionsResult.data || [],
-    mous: mousResult.data || [],
+    relationships,
+    positions,
+    mous,
     commitments,
-    events: eventsResult.data || [],
-    contacts: contactsResult.data || [],
+    events,
+    contacts,
     activities,
-    documents: (documentsResult.data || []).map((d: any) => ({
-      ...d,
-      title_en: d.file_name,
-      title_ar: d.file_name,
-      document_type: d.document_type || 'attachment',
-    })),
+    documents,
+    sectionErrors,
   };
 }
 
