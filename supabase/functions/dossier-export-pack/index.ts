@@ -1389,6 +1389,29 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    // Validate config shape before use (ASVS V5): fail fast with a clear 400
+    // instead of letting generateHTMLDocument crash to a generic 500.
+    if (
+      !config ||
+      !Array.isArray(config.sections) ||
+      (config.language !== 'en' && config.language !== 'ar')
+    ) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: {
+            code: 'INVALID_REQUEST',
+            message_en: 'Invalid export config. Expected a sections array and language "en" or "ar".',
+            message_ar: 'إعدادات التصدير غير صالحة. يجب توفير قائمة الأقسام واللغة "en" أو "ar".',
+          },
+        }),
+        {
+          status: 400,
+          headers: { ...cors, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     console.log(`Generating export for dossier ${dossier_id}`);
 
     // Fetch all dossier data (user-scoped client; per-section failures tracked)
