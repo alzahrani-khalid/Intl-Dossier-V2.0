@@ -17,24 +17,28 @@ Two technical surfaces were verified empirically in this session: the live `main
 ### Locked Decisions
 
 **Merge Strategy**
+
 - **D-01:** Merge commit (`--no-ff`) — preserves all 111 remote commits + phase-base tag SHAs (`phase-47-base`, `phase-48-base`, `phase-49-base`, `phase-54-base`) which are SSH-signed annotated. Squash would orphan signed tags from main's reachable history.
 - **D-02:** Merge channel = PR via `gh pr create`; user clicks "Merge pull request" in GitHub UI (creates merge commit). `enforce_admins=true` so owner respects required checks. Full audit trail on the PR.
 - **D-03:** Rollback plan = `git revert -m 1 <merge-sha>` on `main` + push. Documented in phase SUMMARY with the exact command and decision criteria. No force-push, no protection bypass.
 - **D-04:** Post-merge DesignV2 disposition = delete remote branch (`gh api -X DELETE repos/.../git/refs/heads/DesignV2`). Future phases 56-59 branch off `main`. `phase-54-base` SSH-signed tag preserves the historic DesignV2 tip.
 
 **Pre-Merge Push & Verify**
+
 - **D-05:** Local verification depth BEFORE push = full gate parity. Run `pnpm type-check && pnpm lint && pnpm size-limit && pnpm test` locally on DesignV2 tip. Mirrors 4 of 6 required CI contexts.
 - **D-06:** Push shape = single `git push origin DesignV2` of all 110 unpushed commits. Remote is strict ancestor (110 ahead, 0 behind).
 - **D-07:** Merge PR gate requirement = ALL 6 required contexts green before clicking Merge — `type-check`, `Security Scan`, `Lint`, `Bundle Size Check (size-limit)`, `Tests (frontend)`, `Tests (backend)`.
 - **D-08:** CI regression fix path = commit fixes onto DesignV2 directly (same PR source); push; CI re-runs; merge when green. Single-PR audit trail.
 
 **Smoke PR (MERGE-02)**
+
 - **D-09:** PR count = single multi-violation PR. Plant raw hex (Lint), `vi.mock` factory regression (Tests), bundle bloat (Bundle Size Check), and type error (type-check). One `mergeStateStatus=BLOCKED` proves multiple gate contexts at once.
 - **D-10:** Violations source = reuse existing fixtures `tools/eslint-fixtures/bad-design-token.tsx` and `tools/eslint-fixtures/bad-vi-mock.ts`. Smoke PR imports them into a real component path so CI exercises them against `main`. Also closes the Phase 59 POLISH-04 "positive-failure CI assertion" gap as a byproduct.
 - **D-11:** Evidence artifact = commit `55-SMOKE-PR-EVIDENCE.json` (output of `gh pr view <num> --json mergeStateStatus,statusCheckRollup`) AND `55-SMOKE-PR-EVIDENCE.png` (screenshot of BLOCKED status banner) to the phase folder.
 - **D-12:** Smoke PR cleanup = `gh pr close <num> --delete-branch` after evidence captured.
 
 **Branch Protection Re-Config**
+
 - **D-13:** Final required contexts on `main` = **8 contexts** = current 6 PLUS 2 new explicit gates (`Design Token Check`, `react-i18next Factory Check`). Reverses v6.3 D-09 fold-into-Lint decision.
 - **D-14:** CI wiring for new contexts = 2 separate jobs in `.github/workflows/ci.yml` (`design-token-check`, `i18next-factory-check`). Each runs the specific ESLint rule / fixture assertion in isolation against `tools/eslint-fixtures/bad-design-token.tsx` and `tools/eslint-fixtures/bad-vi-mock.ts` as positive-failure assertions.
 - **D-15:** Sequence = (1) merge DesignV2 → main, (2) separate PR adds new ci.yml jobs + smoke-verifies they run green on `main`, (3) `gh api -X PUT repos/.../branches/main/protection` adds 2 new required contexts, (4) smoke PR exercises full 8-context gate. Clean causality: stabilize main first, then expand contracts.
@@ -56,52 +60,52 @@ Two technical surfaces were verified empirically in this session: the live `main
 
 ## Phase Requirements
 
-| ID | Description | Research Support |
-|----|-------------|------------------|
-| MERGE-01 | DesignV2 branch merged to `main` with all v6.3 quality gates green (type-check, Lint, Bundle Size Check (size-limit), design-token D-05 selectors, `react-i18next` factory) | Live `main` protection JSON captured (Code Examples §"Current branch protection JSON"); `--no-ff` mechanics documented (Code Examples §"Merge via UI"); 6 required contexts already match DesignV2's ci.yml job names (verified via `gh api ... actions/runs/<id>/jobs`) |
-| MERGE-02 | v6.3 enforcement verified live on `main` PR contexts post-merge (smoke PR captures `mergeStateStatus=BLOCKED`) | `mergeStateStatus=BLOCKED` empirically verified on prior smoke PRs #8-12 against main (gh GraphQL query in this session); GitHub docs confirm BLOCKED is the value when required checks fail (Sources); positive-failure idiom documented (Code Examples §"Positive-failure CI assertion") |
+| ID       | Description                                                                                                                                                                 | Research Support                                                                                                                                                                                                                                                                           |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| MERGE-01 | DesignV2 branch merged to `main` with all v6.3 quality gates green (type-check, Lint, Bundle Size Check (size-limit), design-token D-05 selectors, `react-i18next` factory) | Live `main` protection JSON captured (Code Examples §"Current branch protection JSON"); `--no-ff` mechanics documented (Code Examples §"Merge via UI"); 6 required contexts already match DesignV2's ci.yml job names (verified via `gh api ... actions/runs/<id>/jobs`)                   |
+| MERGE-02 | v6.3 enforcement verified live on `main` PR contexts post-merge (smoke PR captures `mergeStateStatus=BLOCKED`)                                                              | `mergeStateStatus=BLOCKED` empirically verified on prior smoke PRs #8-12 against main (gh GraphQL query in this session); GitHub docs confirm BLOCKED is the value when required checks fail (Sources); positive-failure idiom documented (Code Examples §"Positive-failure CI assertion") |
 
 ## Architectural Responsibility Map
 
-| Capability | Primary Tier | Secondary Tier | Rationale |
-|------------|-------------|----------------|-----------|
-| Branch protection update | GitHub API | `gh` CLI | Protection lives in GitHub's repo settings, mutated via REST API; `gh api -X PUT` is the canonical client |
-| Merge commit creation | GitHub UI (web) | git (CLI fallback) | D-02 locks UI merge so `enforce_admins=true` is exercised; CLI merge would bypass that test |
-| Push of 111 commits | git protocol | — | Plain `git push` — no API surface |
-| Smoke PR creation | `gh pr create` | git | PR is a GitHub artifact; `gh` is the CLI client |
-| Evidence capture | `gh pr view --json` | manual screenshot | JSON is machine-readable durable proof; PNG is human-readable durable proof |
-| CI job execution | GitHub Actions runners | — | Workflow runs are GitHub's responsibility once the YAML lands |
-| Positive-failure assertion | Bash idiom in CI step | ESLint | `eslint ... && exit 1 || exit 0` inverts exit code; ESLint produces the underlying signal |
-| Tag signing | local git (SSH key in `~/.ssh/`) | `git tag -s` | Signing happens client-side; GitHub validates if the key is enrolled as a Signing Key |
+| Capability                 | Primary Tier                     | Secondary Tier     | Rationale                                                                                                 |
+| -------------------------- | -------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------------- | --- | ---------------------------------------------------------------- |
+| Branch protection update   | GitHub API                       | `gh` CLI           | Protection lives in GitHub's repo settings, mutated via REST API; `gh api -X PUT` is the canonical client |
+| Merge commit creation      | GitHub UI (web)                  | git (CLI fallback) | D-02 locks UI merge so `enforce_admins=true` is exercised; CLI merge would bypass that test               |
+| Push of 111 commits        | git protocol                     | —                  | Plain `git push` — no API surface                                                                         |
+| Smoke PR creation          | `gh pr create`                   | git                | PR is a GitHub artifact; `gh` is the CLI client                                                           |
+| Evidence capture           | `gh pr view --json`              | manual screenshot  | JSON is machine-readable durable proof; PNG is human-readable durable proof                               |
+| CI job execution           | GitHub Actions runners           | —                  | Workflow runs are GitHub's responsibility once the YAML lands                                             |
+| Positive-failure assertion | Bash idiom in CI step            | ESLint             | `eslint ... && exit 1                                                                                     |     | exit 0` inverts exit code; ESLint produces the underlying signal |
+| Tag signing                | local git (SSH key in `~/.ssh/`) | `git tag -s`       | Signing happens client-side; GitHub validates if the key is enrolled as a Signing Key                     |
 
 ## Standard Stack
 
 ### Core
 
-| Tool | Version | Purpose | Why Standard |
-|------|---------|---------|--------------|
-| `gh` CLI | 2.92.0 (verified `gh --version`) [VERIFIED: local installation] | GitHub API client for PR, branch protection, status check rollup | Official GitHub CLI; only tool with `gh api -X PUT` for branch protection in one line. Already installed (verified). |
-| `git` | 2.x with SSH signing config | Push, merge, tag (annotated + signed) | Project already uses SSH signing per `CLAUDE.md §Tag signing setup`. `phase-47/48/49/54-base` tags verified working in this session. |
-| ESLint (resolved via `pnpm`) | from `eslint.config.mjs` flat config | Positive-failure assertions for the 2 new CI jobs | Already the enforcement mechanism for `Lint` context; fixtures live at `tools/eslint-fixtures/` |
-| `bash` (in CI runner) | 5.x | Wrap eslint invocation to invert exit code | Standard POSIX idiom — `cmd && exit 1 || exit 0` |
-| `size-limit` (via `pnpm -C frontend size-limit`) | from `frontend/.size-limit.json` | Bundle size budget — preserve existing context | Already wired as `Bundle Size Check (size-limit)` context in main protection |
-| Vitest | from `frontend/tests/setup.ts` | Underlying test runner whose vi.mock contract the i18next fixture enforces | Already the test runner; the fixture is an eslint regression test on the vi.mock factory shape, NOT a vitest test |
+| Tool                                             | Version                                                         | Purpose                                                                    | Why Standard                                                                                                                         |
+| ------------------------------------------------ | --------------------------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | --- | ------- |
+| `gh` CLI                                         | 2.92.0 (verified `gh --version`) [VERIFIED: local installation] | GitHub API client for PR, branch protection, status check rollup           | Official GitHub CLI; only tool with `gh api -X PUT` for branch protection in one line. Already installed (verified).                 |
+| `git`                                            | 2.x with SSH signing config                                     | Push, merge, tag (annotated + signed)                                      | Project already uses SSH signing per `CLAUDE.md §Tag signing setup`. `phase-47/48/49/54-base` tags verified working in this session. |
+| ESLint (resolved via `pnpm`)                     | from `eslint.config.mjs` flat config                            | Positive-failure assertions for the 2 new CI jobs                          | Already the enforcement mechanism for `Lint` context; fixtures live at `tools/eslint-fixtures/`                                      |
+| `bash` (in CI runner)                            | 5.x                                                             | Wrap eslint invocation to invert exit code                                 | Standard POSIX idiom — `cmd && exit 1                                                                                                |     | exit 0` |
+| `size-limit` (via `pnpm -C frontend size-limit`) | from `frontend/.size-limit.json`                                | Bundle size budget — preserve existing context                             | Already wired as `Bundle Size Check (size-limit)` context in main protection                                                         |
+| Vitest                                           | from `frontend/tests/setup.ts`                                  | Underlying test runner whose vi.mock contract the i18next fixture enforces | Already the test runner; the fixture is an eslint regression test on the vi.mock factory shape, NOT a vitest test                    |
 
 ### Supporting
 
-| Tool | Purpose | When to Use |
-|------|---------|-------------|
-| `jq` (via `gh api --jq`) | Filter JSON output from `gh api` | When extracting specific fields like `.required_status_checks.contexts` |
-| `pnpm` 10.29.1 | Workspace-scoped script execution | For all `pnpm -C frontend ...` invocations |
-| `git tag -v` | Verify SSH signature on phase-base tags | Pre-merge: confirm `phase-47/48/49/54-base` still pass; Post-merge: confirm they remain reachable + verifiable; After issuing `phase-55-base` |
+| Tool                     | Purpose                                 | When to Use                                                                                                                                   |
+| ------------------------ | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `jq` (via `gh api --jq`) | Filter JSON output from `gh api`        | When extracting specific fields like `.required_status_checks.contexts`                                                                       |
+| `pnpm` 10.29.1           | Workspace-scoped script execution       | For all `pnpm -C frontend ...` invocations                                                                                                    |
+| `git tag -v`             | Verify SSH signature on phase-base tags | Pre-merge: confirm `phase-47/48/49/54-base` still pass; Post-merge: confirm they remain reachable + verifiable; After issuing `phase-55-base` |
 
 ### Alternatives Considered
 
-| Instead of | Could Use | Tradeoff |
-|------------|-----------|----------|
-| `gh api -X PUT branches/main/protection --input protection.json` | Terraform branch protection resource | Terraform is IaC, requires module + state — deferred per CONTEXT.md `<deferred>` |
-| Inline CI job `design-token-check` | Reusable workflow `.github/workflows/check-gate.yml` | Reusable workflow is DRY but premature with only 2 gates — deferred per CONTEXT.md `<deferred>` |
-| `git push origin DesignV2 --force-with-lease` | Plain `git push origin DesignV2` | DesignV2 remote is strict ancestor (verified: 111 ahead, 0 behind) — plain push works; force-push is forbidden per repo guardrails |
+| Instead of                                                       | Could Use                                            | Tradeoff                                                                                                                           |
+| ---------------------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `gh api -X PUT branches/main/protection --input protection.json` | Terraform branch protection resource                 | Terraform is IaC, requires module + state — deferred per CONTEXT.md `<deferred>`                                                   |
+| Inline CI job `design-token-check`                               | Reusable workflow `.github/workflows/check-gate.yml` | Reusable workflow is DRY but premature with only 2 gates — deferred per CONTEXT.md `<deferred>`                                    |
+| `git push origin DesignV2 --force-with-lease`                    | Plain `git push origin DesignV2`                     | DesignV2 remote is strict ancestor (verified: 111 ahead, 0 behind) — plain push works; force-push is forbidden per repo guardrails |
 
 **Installation:** none required. All tools already present (verified `gh auth status` showing `Logged in to github.com account alzahrani-khalid (keyring)` with `repo`, `workflow`, `admin:public_key`, `admin:ssh_signing_key` scopes — exactly the scopes needed for branch protection PUT and SSH-signing-key operations).
 
@@ -209,6 +213,7 @@ This is a **release-engineering phase, not a code phase**. There is no `src/` st
 **Counter-example:** **Squash merge would orphan the signed tags from main's reachable history** — the squashed commit has different SHA from any of the original commits, so phase-47-base etc would still point to the original commits but those commits would no longer be in main's first-parent ancestry (they'd live only in the closed PR's now-deleted branch ref).
 
 **Verification command (post-merge):**
+
 ```bash
 git tag -v phase-47-base   # MUST exit 0
 git tag -v phase-48-base   # MUST exit 0
@@ -222,6 +227,7 @@ git merge-base --is-ancestor $(git rev-parse phase-54-base) main && echo "phase-
 **What:** A CI job whose pass condition is "this command MUST exit non-zero". The pattern proves a guardrail is active: if the guard ever silently degrades to permissive, the assertion fires.
 
 **Bash idiom:**
+
 ```bash
 # Pass when fixture FAILS lint, fail when fixture starts passing lint
 # (Use `!` form not `&& exit 1 || exit 0` — the latter masks set -e)
@@ -253,13 +259,13 @@ set -e
 
 ## Don't Hand-Roll
 
-| Problem | Don't Build | Use Instead | Why |
-|---------|-------------|-------------|-----|
-| Wait for all PR checks to settle before recording status | Custom polling script | `gh pr checks <num> --watch` OR `gh pr view <num> --json statusCheckRollup` invoked in a small loop | `gh` already handles auth, pagination, retries, and exposes JSON; rolling a poller invites timeout edge cases |
-| Construct the protection JSON | Manual JSON authoring from spec | `gh api ... | jq` of current protection → modify → PUT back | The endpoint REPLACES the entire config (not merges) — see Pitfall §"GitHub branch protection PUT is replace-not-merge". Always round-trip from current state. |
-| Detect "no required contexts pending" | Custom rollup logic | `gh pr view --json mergeStateStatus` and check for `BLOCKED` vs `CLEAN` | GitHub already computes this; the enum is documented (see Sources). |
-| Verify SSH signatures | Custom verification script | `git tag -v <name>` — must exit 0 with "Good \"git\" signature" | Project already uses this idiom per CLAUDE.md §"Tag signing setup". |
-| Wait for CI run on the protection-update PR | sleep + polling | `gh run watch <run-id>` | Native command that streams logs and exits with the workflow's conclusion. |
+| Problem                                                  | Don't Build                     | Use Instead                                                                                         | Why                                                                                                           |
+| -------------------------------------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Wait for all PR checks to settle before recording status | Custom polling script           | `gh pr checks <num> --watch` OR `gh pr view <num> --json statusCheckRollup` invoked in a small loop | `gh` already handles auth, pagination, retries, and exposes JSON; rolling a poller invites timeout edge cases |
+| Construct the protection JSON                            | Manual JSON authoring from spec | `gh api ...                                                                                         | jq` of current protection → modify → PUT back                                                                 | The endpoint REPLACES the entire config (not merges) — see Pitfall §"GitHub branch protection PUT is replace-not-merge". Always round-trip from current state. |
+| Detect "no required contexts pending"                    | Custom rollup logic             | `gh pr view --json mergeStateStatus` and check for `BLOCKED` vs `CLEAN`                             | GitHub already computes this; the enum is documented (see Sources).                                           |
+| Verify SSH signatures                                    | Custom verification script      | `git tag -v <name>` — must exit 0 with "Good \"git\" signature"                                     | Project already uses this idiom per CLAUDE.md §"Tag signing setup".                                           |
+| Wait for CI run on the protection-update PR              | sleep + polling                 | `gh run watch <run-id>`                                                                             | Native command that streams logs and exits with the workflow's conclusion.                                    |
 
 **Key insight:** Every API the phase touches has a first-class `gh` subcommand or a published JSON-schema endpoint. There is zero need to write any custom code — the phase is a sequence of curl/`gh` invocations against documented APIs, plus a `--no-ff` merge button click and a signed-tag creation.
 
@@ -267,20 +273,20 @@ set -e
 
 This phase is NOT a rename/refactor/migration. It is a merge + branch-protection + CI-config phase. The standard rename checklist does not apply. However, a parallel inventory of runtime state that MUST survive the merge is useful and is captured here:
 
-| Category | Items Found | Action Required |
-|----------|-------------|------------------|
-| Signed annotated tags | `phase-47-base` (SHA `7fc9e756...`, annotated, SSH-signed — verified `git tag -v` Good) | None — verify post-merge they remain reachable from main and `git tag -v` still passes |
-| Signed annotated tags | `phase-48-base` (annotated, SSH-signed — verified) | Same |
-| Signed annotated tags | `phase-49-base` (annotated, SSH-signed — verified; points to current origin/main HEAD `7fc9e756...`) | Same |
-| Signed annotated tags | `phase-54-base` (annotated, SSH-signed — verified; points to `b174815e...` on DesignV2 only) | Verify post-merge that the commit is reachable from main via the merge commit (test: `git merge-base --is-ancestor $(git rev-parse phase-54-base) origin/main` must exit 0) |
-| Lightweight tags | `phase-51-base` (commit type, NOT annotated, NOT signed) | None — CONTEXT.md does not list it; preserve as-is; `git tag -v` will continue to fail with "cannot verify a non-tag object" but that's the existing state |
-| Branch protection rule | `main` requires 6 contexts: `type-check`, `Security Scan`, `Lint`, `Bundle Size Check (size-limit)`, `Tests (frontend)`, `Tests (backend)`; `enforce_admins=true`; `allow_force_pushes=false`; `allow_deletions=false`; `block_creations=false`; `required_conversation_resolution=false`; `required_signatures.enabled=false`; `required_linear_history.enabled=false` | Capture as `protection-before.json` in phase folder; PUT new version `protection-after.json` with 8 contexts |
-| Open PRs against main | Verified via `gh pr list --state all --base main` — past smoke PRs (#8-12) all closed with `mergeStateStatus=BLOCKED` (good — proves the gate works historically) | None — for context only |
-| Remote `DesignV2` branch ref | Present (111 commits unpushed locally; 222 commits ahead of origin/main) | Push 111 commits, merge, then DELETE per D-04 |
-| Workflow runs | Most recent CI run on origin/main HEAD = `25659989275`, conclusion `failure` (Security Scan, Unit Tests, Lint, E2E Tests all failed; type-check passed) — **main is currently in a degraded CI state because main's ci.yml predates the DesignV2 ci.yml shape** | None — the merge brings DesignV2's stable ci.yml shape into main |
-| Local `main` branch | 802 commits BEHIND origin/main | Pull/fetch before any merge work; do NOT use stale local main as merge base |
-| `.husky/` hooks | Present (per repo-policy CI job); active on every commit | None — preserve; do not use `--no-verify` |
-| Deploy workflow trigger | `.github/workflows/deploy.yml` triggers on `workflow_run` of `CI` on `main` with `conclusion == 'success'` | **WARNING: merging DesignV2 → main will trigger production deploy if CI passes.** See Pitfall §"Deploy workflow auto-triggers on main merge". |
+| Category                     | Items Found                                                                                                                                                                                                                                                                                                                                                             | Action Required                                                                                                                                                             |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Signed annotated tags        | `phase-47-base` (SHA `7fc9e756...`, annotated, SSH-signed — verified `git tag -v` Good)                                                                                                                                                                                                                                                                                 | None — verify post-merge they remain reachable from main and `git tag -v` still passes                                                                                      |
+| Signed annotated tags        | `phase-48-base` (annotated, SSH-signed — verified)                                                                                                                                                                                                                                                                                                                      | Same                                                                                                                                                                        |
+| Signed annotated tags        | `phase-49-base` (annotated, SSH-signed — verified; points to current origin/main HEAD `7fc9e756...`)                                                                                                                                                                                                                                                                    | Same                                                                                                                                                                        |
+| Signed annotated tags        | `phase-54-base` (annotated, SSH-signed — verified; points to `b174815e...` on DesignV2 only)                                                                                                                                                                                                                                                                            | Verify post-merge that the commit is reachable from main via the merge commit (test: `git merge-base --is-ancestor $(git rev-parse phase-54-base) origin/main` must exit 0) |
+| Lightweight tags             | `phase-51-base` (commit type, NOT annotated, NOT signed)                                                                                                                                                                                                                                                                                                                | None — CONTEXT.md does not list it; preserve as-is; `git tag -v` will continue to fail with "cannot verify a non-tag object" but that's the existing state                  |
+| Branch protection rule       | `main` requires 6 contexts: `type-check`, `Security Scan`, `Lint`, `Bundle Size Check (size-limit)`, `Tests (frontend)`, `Tests (backend)`; `enforce_admins=true`; `allow_force_pushes=false`; `allow_deletions=false`; `block_creations=false`; `required_conversation_resolution=false`; `required_signatures.enabled=false`; `required_linear_history.enabled=false` | Capture as `protection-before.json` in phase folder; PUT new version `protection-after.json` with 8 contexts                                                                |
+| Open PRs against main        | Verified via `gh pr list --state all --base main` — past smoke PRs (#8-12) all closed with `mergeStateStatus=BLOCKED` (good — proves the gate works historically)                                                                                                                                                                                                       | None — for context only                                                                                                                                                     |
+| Remote `DesignV2` branch ref | Present (111 commits unpushed locally; 222 commits ahead of origin/main)                                                                                                                                                                                                                                                                                                | Push 111 commits, merge, then DELETE per D-04                                                                                                                               |
+| Workflow runs                | Most recent CI run on origin/main HEAD = `25659989275`, conclusion `failure` (Security Scan, Unit Tests, Lint, E2E Tests all failed; type-check passed) — **main is currently in a degraded CI state because main's ci.yml predates the DesignV2 ci.yml shape**                                                                                                         | None — the merge brings DesignV2's stable ci.yml shape into main                                                                                                            |
+| Local `main` branch          | 802 commits BEHIND origin/main                                                                                                                                                                                                                                                                                                                                          | Pull/fetch before any merge work; do NOT use stale local main as merge base                                                                                                 |
+| `.husky/` hooks              | Present (per repo-policy CI job); active on every commit                                                                                                                                                                                                                                                                                                                | None — preserve; do not use `--no-verify`                                                                                                                                   |
+| Deploy workflow trigger      | `.github/workflows/deploy.yml` triggers on `workflow_run` of `CI` on `main` with `conclusion == 'success'`                                                                                                                                                                                                                                                              | **WARNING: merging DesignV2 → main will trigger production deploy if CI passes.** See Pitfall §"Deploy workflow auto-triggers on main merge".                               |
 
 **The canonical question for this phase:** After the merge lands and `phase-55-base` is tagged, do all 4 prior signed phase-base tags still `git tag -v` Good AND have their SHAs reachable from main? If yes, the merge correctly preserved provenance.
 
@@ -377,9 +383,10 @@ jobs:
 
 **What goes wrong:** If the DesignV2 merge needs to be reverted (D-03), the obvious reflex is `git revert -m 1 <merge-sha>`. That works for undoing. But then if you want to re-merge DesignV2 later (after fixing whatever motivated the revert), Git will say "Already up to date" because the merge-base computation thinks DesignV2 is already merged.
 
-**Why it happens:** Reverting a merge commit produces a new commit that *undoes* the diff but does NOT change the commit graph. The merge commit still exists in main's history. Git's "already merged" check is based on the graph, not the diff.
+**Why it happens:** Reverting a merge commit produces a new commit that _undoes_ the diff but does NOT change the commit graph. The merge commit still exists in main's history. Git's "already merged" check is based on the graph, not the diff.
 
 **How to avoid:** The full revert-and-re-merge sequence is:
+
 1. `git revert -m 1 <merge-sha>` → creates `revert-of-merge` commit on main
 2. (fix whatever motivated the revert on DesignV2)
 3. To re-merge: first `git revert <revert-of-merge-sha>` on a new branch → creates `revert-of-revert` commit that re-applies DesignV2's diff
@@ -398,6 +405,7 @@ jobs:
 **Why it happens:** The trigger predates Phase 55 and exists for normal development flow.
 
 **How to avoid (decision for the planner / user):** Pick one of:
+
 1. **Accept the deploy** (default). The merge is intended to ship; production is expected to follow. Document in 55-SUMMARY.md that the merge causes a production deploy and that's expected.
 2. **Disable the workflow temporarily.** `gh workflow disable Deploy` before merging; re-enable after. Two-step ceremony; reduces blast radius if the merge has runtime regressions not caught by CI gates.
 3. **Plan a deploy window.** Time the merge for a low-traffic window so a regression discovered post-deploy can be reverted (per D-03) with minimal user impact.
@@ -413,6 +421,7 @@ jobs:
 **Why it happens:** Verified empirically in this session — the fixture-specific override at `eslint.config.mjs:286-292` sets `'no-restricted-syntax': ['warn', ...]`, intentionally so the fixture file doesn't break general workspace lint. The general frontend block at line 162 uses `error`, but the per-file override at line 290 wins.
 
 **How to avoid:** Always use `--max-warnings 0` in the CI job invocation:
+
 ```bash
 ! pnpm exec eslint -c eslint.config.mjs --max-warnings 0 tools/eslint-fixtures/bad-design-token.tsx
 ```
@@ -446,6 +455,7 @@ This is also how the root `scripts/lint.mjs` invokes eslint when given args.
 **What goes wrong:** `gh pr close <num> --delete-branch` (D-12) is the cleanup step. If the JSON / PNG evidence isn't committed to the phase folder BEFORE this command, the evidence is gone.
 
 **How to avoid:** Plan 4 ordering must be:
+
 1. Open smoke PR
 2. Wait for required contexts to run
 3. Confirm `mergeStateStatus=BLOCKED`
@@ -620,57 +630,57 @@ Note: as of this session, `phase-54-base` points to `b174815e...` and DesignV2 t
 Append after the existing `lint:` job block (D-15: separate PR after the merge):
 
 ```yaml
-  design-token-check:
-    name: Design Token Check
-    runs-on: ubuntu-latest
-    needs: [repo-policy]
-    steps:
-      - uses: actions/checkout@v4
+design-token-check:
+  name: Design Token Check
+  runs-on: ubuntu-latest
+  needs: [repo-policy]
+  steps:
+    - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'pnpm'
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
 
-      - name: Assert design-token fixture fails lint (positive-failure)
-        shell: bash
-        run: |
-          set -e
-          ! pnpm exec eslint -c eslint.config.mjs --max-warnings 0 \
-            tools/eslint-fixtures/bad-design-token.tsx
+    - name: Assert design-token fixture fails lint (positive-failure)
+      shell: bash
+      run: |
+        set -e
+        ! pnpm exec eslint -c eslint.config.mjs --max-warnings 0 \
+          tools/eslint-fixtures/bad-design-token.tsx
 
-  i18next-factory-check:
-    name: react-i18next Factory Check
-    runs-on: ubuntu-latest
-    needs: [repo-policy]
-    steps:
-      - uses: actions/checkout@v4
+i18next-factory-check:
+  name: react-i18next Factory Check
+  runs-on: ubuntu-latest
+  needs: [repo-policy]
+  steps:
+    - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'pnpm'
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
 
-      - name: Assert vi.mock fixture fails lint (positive-failure)
-        shell: bash
-        run: |
-          set -e
-          ! pnpm exec eslint -c eslint.config.mjs --max-warnings 0 \
-            tools/eslint-fixtures/bad-vi-mock.ts
+    - name: Assert vi.mock fixture fails lint (positive-failure)
+      shell: bash
+      run: |
+        set -e
+        ! pnpm exec eslint -c eslint.config.mjs --max-warnings 0 \
+          tools/eslint-fixtures/bad-vi-mock.ts
 ```
 
 The leading `!` and `set -e` together produce the correct exit semantics: bash inverts the eslint exit code, but only if eslint actually ran (set -e catches eslint binary missing).
@@ -783,14 +793,15 @@ gh pr close "$PR" --delete-branch --comment "Evidence captured in 55-SMOKE-PR-EV
 
 ## State of the Art
 
-| Old Approach | Current Approach | When Changed | Impact |
-|--------------|------------------|--------------|--------|
+| Old Approach                                                     | Current Approach                                                                                          | When Changed                                                                                         | Impact                                                                                                                               |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `required_status_checks.contexts: ["foo", "bar"]` (string array) | `required_status_checks.checks: [{context: "foo", app_id: ...}]` (object array with optional app pinning) | GitHub API rolled out the `checks` field ~2021; `contexts` marked "closing down" but still supported | The GET response includes BOTH fields; PUT can use either. This phase uses `contexts` (simpler, no app-pinning needed for our jobs). |
-| Squash-only merges to keep main linear | `--no-ff` merge commits when source branch has signed tags to preserve | Per Phase 55 D-01 | Signed tag SHAs stay reachable from main; squash would orphan them. |
-| `gh pr merge --auto` | Manual UI merge per D-02 | This phase | Exercises `enforce_admins=true` via the documented user flow |
-| `mergeable` (REST, boolean) | `mergeStateStatus` (GraphQL, enum) | GitHub API v4 GraphQL | More granular — distinguishes BLOCKED vs UNSTABLE vs DIRTY |
+| Squash-only merges to keep main linear                           | `--no-ff` merge commits when source branch has signed tags to preserve                                    | Per Phase 55 D-01                                                                                    | Signed tag SHAs stay reachable from main; squash would orphan them.                                                                  |
+| `gh pr merge --auto`                                             | Manual UI merge per D-02                                                                                  | This phase                                                                                           | Exercises `enforce_admins=true` via the documented user flow                                                                         |
+| `mergeable` (REST, boolean)                                      | `mergeStateStatus` (GraphQL, enum)                                                                        | GitHub API v4 GraphQL                                                                                | More granular — distinguishes BLOCKED vs UNSTABLE vs DIRTY                                                                           |
 
 **Deprecated / outdated:**
+
 - `required_status_checks.contexts` is "closing down" per docs but works — keep using it; switching to `checks[]` is a future deferred concern (not needed for Phase 55).
 
 ## Project Constraints (from CLAUDE.md)
@@ -808,15 +819,15 @@ Phase 55 is release engineering — most CLAUDE.md visual/RTL/dossier directives
 
 ## Assumptions Log
 
-| # | Claim | Section | Risk if Wrong |
-|---|-------|---------|---------------|
-| A1 | The user will click "Merge pull request" in the GitHub UI (D-02), not run `gh pr merge` | Execution flow | Low — both achieve the same `--no-ff` result; UI is preferred for the audit trail |
-| A2 | Production deploy on `deploy.yml` is acceptable as a side-effect of the merge | Pitfall 6 | Medium — if the user wanted to avoid it, plan 1 needs an extra step. **Plan 1 SHOULD surface this choice during execution.** |
-| A3 | No PRs from contributors are currently in-flight against `main` | Plan 3 protection update | Low — verified no open PRs against main other than smoke PRs (which are closed). Re-verify before plan 3. |
-| A4 | The `Build` matrix job is NOT in the required-contexts list (and won't be) | Pitfall 3 matrix discussion | Low — verified current required contexts have no `Build` entry; D-13 enumerates the 8 final contexts and Build is not among them |
-| A5 | `phase-54-base` ≠ DesignV2 tip is acceptable for D-04 | Code Examples §Delete remote DesignV2 | Low — the trailing 5 commits past `phase-54-base` are all phase-55 setup docs; merge preserves them in main's reachable history via the merge commit |
-| A6 | `eslint.config.mjs` flat-config severity resolution will not change between now and execution | Pitfall 7 + Pattern 2 | Low — verified empirically in this session; no Phase 55 plan modifies eslint config |
-| A7 | A signed `phase-55-base` tag does not need to be issued BEFORE the protection update — it can come after | Sequencing | Low — `phase-NN-base` is a provenance artifact for the merge commit, not a gate; either order works. Recommended after plan 4 (end of phase). |
+| #   | Claim                                                                                                    | Section                               | Risk if Wrong                                                                                                                                        |
+| --- | -------------------------------------------------------------------------------------------------------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A1  | The user will click "Merge pull request" in the GitHub UI (D-02), not run `gh pr merge`                  | Execution flow                        | Low — both achieve the same `--no-ff` result; UI is preferred for the audit trail                                                                    |
+| A2  | Production deploy on `deploy.yml` is acceptable as a side-effect of the merge                            | Pitfall 6                             | Medium — if the user wanted to avoid it, plan 1 needs an extra step. **Plan 1 SHOULD surface this choice during execution.**                         |
+| A3  | No PRs from contributors are currently in-flight against `main`                                          | Plan 3 protection update              | Low — verified no open PRs against main other than smoke PRs (which are closed). Re-verify before plan 3.                                            |
+| A4  | The `Build` matrix job is NOT in the required-contexts list (and won't be)                               | Pitfall 3 matrix discussion           | Low — verified current required contexts have no `Build` entry; D-13 enumerates the 8 final contexts and Build is not among them                     |
+| A5  | `phase-54-base` ≠ DesignV2 tip is acceptable for D-04                                                    | Code Examples §Delete remote DesignV2 | Low — the trailing 5 commits past `phase-54-base` are all phase-55 setup docs; merge preserves them in main's reachable history via the merge commit |
+| A6  | `eslint.config.mjs` flat-config severity resolution will not change between now and execution            | Pitfall 7 + Pattern 2                 | Low — verified empirically in this session; no Phase 55 plan modifies eslint config                                                                  |
+| A7  | A signed `phase-55-base` tag does not need to be issued BEFORE the protection update — it can come after | Sequencing                            | Low — `phase-NN-base` is a provenance artifact for the merge commit, not a gate; either order works. Recommended after plan 4 (end of phase).        |
 
 ## Open Questions
 
@@ -842,16 +853,16 @@ Phase 55 is release engineering — most CLAUDE.md visual/RTL/dossier directives
 
 ## Environment Availability
 
-| Dependency | Required By | Available | Version | Fallback |
-|------------|------------|-----------|---------|----------|
-| `gh` CLI | Plan 1 (PR create), Plan 2 (PR create), Plan 3 (`gh api -X PUT`), Plan 4 (PR create + evidence + close) | ✓ | 2.92.0 | None — required |
-| `gh auth` with `repo` + `workflow` + `admin:public_key` + `admin:ssh_signing_key` scopes | All plans | ✓ | scopes verified `gh auth status` | None |
-| `git` with SSH signing config | Plan 1 (signed tag); pre-existing `git tag -v` on prior phase tags | ✓ | per CLAUDE.md `~/.gitconfig` setup | None |
-| `pnpm` 10.29.1 | Plan 1 local pre-flight (D-05) | ✓ | verified via `package.json packageManager` | None |
-| Node.js 22.13.0+ | Plan 1 local pre-flight | ✓ | per CI workflow env | None |
-| `jq` | Plan 3 (protection JSON transform) | ✓ (standard on macOS via Homebrew, verified earlier `gh api ... --jq` pattern works) | — | use Python `json` module |
-| Network access to github.com | All plans | ✓ | — | None — blocks phase |
-| SSH key enrolled as Signing Key on github.com | "Verified" badge on tag (CLAUDE.md §Tag signing setup) | UNKNOWN — was set up for phase-49-base etc, must verify pre-tag | — | If badge missing, tag is still locally verifiable via `~/.ssh/allowed_signers`; UI badge is cosmetic only |
+| Dependency                                                                               | Required By                                                                                             | Available                                                                            | Version                                    | Fallback                                                                                                  |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| `gh` CLI                                                                                 | Plan 1 (PR create), Plan 2 (PR create), Plan 3 (`gh api -X PUT`), Plan 4 (PR create + evidence + close) | ✓                                                                                    | 2.92.0                                     | None — required                                                                                           |
+| `gh auth` with `repo` + `workflow` + `admin:public_key` + `admin:ssh_signing_key` scopes | All plans                                                                                               | ✓                                                                                    | scopes verified `gh auth status`           | None                                                                                                      |
+| `git` with SSH signing config                                                            | Plan 1 (signed tag); pre-existing `git tag -v` on prior phase tags                                      | ✓                                                                                    | per CLAUDE.md `~/.gitconfig` setup         | None                                                                                                      |
+| `pnpm` 10.29.1                                                                           | Plan 1 local pre-flight (D-05)                                                                          | ✓                                                                                    | verified via `package.json packageManager` | None                                                                                                      |
+| Node.js 22.13.0+                                                                         | Plan 1 local pre-flight                                                                                 | ✓                                                                                    | per CI workflow env                        | None                                                                                                      |
+| `jq`                                                                                     | Plan 3 (protection JSON transform)                                                                      | ✓ (standard on macOS via Homebrew, verified earlier `gh api ... --jq` pattern works) | —                                          | use Python `json` module                                                                                  |
+| Network access to github.com                                                             | All plans                                                                                               | ✓                                                                                    | —                                          | None — blocks phase                                                                                       |
+| SSH key enrolled as Signing Key on github.com                                            | "Verified" badge on tag (CLAUDE.md §Tag signing setup)                                                  | UNKNOWN — was set up for phase-49-base etc, must verify pre-tag                      | —                                          | If badge missing, tag is still locally verifiable via `~/.ssh/allowed_signers`; UI badge is cosmetic only |
 
 **Missing dependencies with no fallback:** None — all critical tools are present.
 
@@ -862,38 +873,41 @@ Phase 55 is release engineering — most CLAUDE.md visual/RTL/dossier directives
 Nyquist validation is enabled (`workflow.nyquist_validation: true` in `.planning/config.json`). Phase 55 has unique validation surface because the artifacts are CI configuration + GitHub state, not local code.
 
 ### Test Framework
-| Property | Value |
-|----------|-------|
-| Framework | None (CI-config phase) + smoke vitest/eslint reuse |
-| Config file | `.github/workflows/ci.yml` (CI YAML); `eslint.config.mjs` (lint config — unchanged in this phase); `frontend/tests/setup.ts` (vitest setup — unchanged) |
-| Quick run command | `pnpm exec eslint -c eslint.config.mjs --max-warnings 0 tools/eslint-fixtures/bad-design-token.tsx && echo "FAIL: should have errored" \|\| echo "OK: positive-failure as expected"` (local smoke for design-token-check job) |
-| Full suite command | `pnpm install --frozen-lockfile && pnpm --filter intake-frontend type-check && pnpm --filter intake-backend type-check && pnpm run lint && pnpm -C frontend size-limit && pnpm --filter intake-frontend test --run && pnpm --filter intake-backend test --run` (D-05 local parity) |
-| Phase gate | All 4 ROADMAP success criteria met before `/gsd:verify-work`: (1) `git log main --oneline` shows DesignV2 history merged; (2) `pnpm type-check && pnpm lint && pnpm -C frontend size-limit` all 0 on post-merge main; (3) `gh pr view <smoke-num> --json mergeStateStatus` = `BLOCKED`; (4) `gh api ... protection --jq '.required_status_checks.contexts | length'` = 8 |
+
+| Property           | Value                                                                                                                                                                                                                                                                                                                                                     |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| Framework          | None (CI-config phase) + smoke vitest/eslint reuse                                                                                                                                                                                                                                                                                                        |
+| Config file        | `.github/workflows/ci.yml` (CI YAML); `eslint.config.mjs` (lint config — unchanged in this phase); `frontend/tests/setup.ts` (vitest setup — unchanged)                                                                                                                                                                                                   |
+| Quick run command  | `pnpm exec eslint -c eslint.config.mjs --max-warnings 0 tools/eslint-fixtures/bad-design-token.tsx && echo "FAIL: should have errored" \|\| echo "OK: positive-failure as expected"` (local smoke for design-token-check job)                                                                                                                             |
+| Full suite command | `pnpm install --frozen-lockfile && pnpm --filter intake-frontend type-check && pnpm --filter intake-backend type-check && pnpm run lint && pnpm -C frontend size-limit && pnpm --filter intake-frontend test --run && pnpm --filter intake-backend test --run` (D-05 local parity)                                                                        |
+| Phase gate         | All 4 ROADMAP success criteria met before `/gsd:verify-work`: (1) `git log main --oneline` shows DesignV2 history merged; (2) `pnpm type-check && pnpm lint && pnpm -C frontend size-limit` all 0 on post-merge main; (3) `gh pr view <smoke-num> --json mergeStateStatus` = `BLOCKED`; (4) `gh api ... protection --jq '.required_status_checks.contexts | length'` = 8 |
 
 ### Phase Requirements → Test Map
 
-| Req ID | Behavior | Test Type | Automated Command | File Exists? |
-|--------|----------|-----------|-------------------|-------------|
-| MERGE-01 | DesignV2 history reachable from main via merge commit | integration | `git merge-base --is-ancestor $(git rev-parse origin/DesignV2 2>/dev/null \|\| git rev-parse phase-54-base) origin/main && echo MERGED` | ✅ existing git tooling |
-| MERGE-01 | All 6 required v6.3 contexts exit 0 on the merge PR | integration | `gh pr view <merge-pr-num> --json statusCheckRollup --jq '.statusCheckRollup \| map(select(.name \| IN("type-check","Lint","Tests (frontend)","Tests (backend)","Bundle Size Check (size-limit)","Security Scan"))) \| map(.conclusion) \| unique'` should equal `["SUCCESS"]` | ✅ |
-| MERGE-01 | Local pre-flight parity passes | integration | `pnpm install --frozen-lockfile && pnpm --filter intake-frontend type-check && pnpm run lint && pnpm -C frontend size-limit && pnpm test` | ✅ |
-| MERGE-01 | All 4 SSH-signed phase-base tags survive merge | integration | `for t in phase-47-base phase-48-base phase-49-base phase-54-base; do git tag -v "$t" \|\| exit 1; done` | ✅ |
-| MERGE-02 | Smoke PR returns `mergeStateStatus=BLOCKED` | integration | `gh pr view <smoke-num> --json mergeStateStatus --jq '.mergeStateStatus == "BLOCKED"'` returns `true` | ✅ |
-| MERGE-02 | All 8 required contexts present on main protection | integration | `gh api repos/alzahrani-khalid/Intl-Dossier-V2.0/branches/main/protection --jq '.required_status_checks.contexts \| length'` returns `8` | ✅ |
-| MERGE-02 | Both new CI jobs run green on main | integration | `gh api repos/.../actions/workflows/ci.yml/runs?branch=main&per_page=1 --jq '.workflow_runs[0].id' \| xargs -I{} gh api repos/.../actions/runs/{}/jobs --jq '.jobs \| map(select(.name \| IN("Design Token Check","react-i18next Factory Check"))) \| map(.conclusion) \| unique'` returns `["success"]` | ✅ |
-| MERGE-02 | Positive-failure CI assertion fires locally | unit | `! pnpm exec eslint -c eslint.config.mjs --max-warnings 0 tools/eslint-fixtures/bad-design-token.tsx; ! pnpm exec eslint -c eslint.config.mjs --max-warnings 0 tools/eslint-fixtures/bad-vi-mock.ts` (both must succeed via `!`) | ✅ |
+| Req ID   | Behavior                                              | Test Type   | Automated Command                                                                                                                                                                                                                                                                                        | File Exists?            |
+| -------- | ----------------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| MERGE-01 | DesignV2 history reachable from main via merge commit | integration | `git merge-base --is-ancestor $(git rev-parse origin/DesignV2 2>/dev/null \|\| git rev-parse phase-54-base) origin/main && echo MERGED`                                                                                                                                                                  | ✅ existing git tooling |
+| MERGE-01 | All 6 required v6.3 contexts exit 0 on the merge PR   | integration | `gh pr view <merge-pr-num> --json statusCheckRollup --jq '.statusCheckRollup \| map(select(.name \| IN("type-check","Lint","Tests (frontend)","Tests (backend)","Bundle Size Check (size-limit)","Security Scan"))) \| map(.conclusion) \| unique'` should equal `["SUCCESS"]`                           | ✅                      |
+| MERGE-01 | Local pre-flight parity passes                        | integration | `pnpm install --frozen-lockfile && pnpm --filter intake-frontend type-check && pnpm run lint && pnpm -C frontend size-limit && pnpm test`                                                                                                                                                                | ✅                      |
+| MERGE-01 | All 4 SSH-signed phase-base tags survive merge        | integration | `for t in phase-47-base phase-48-base phase-49-base phase-54-base; do git tag -v "$t" \|\| exit 1; done`                                                                                                                                                                                                 | ✅                      |
+| MERGE-02 | Smoke PR returns `mergeStateStatus=BLOCKED`           | integration | `gh pr view <smoke-num> --json mergeStateStatus --jq '.mergeStateStatus == "BLOCKED"'` returns `true`                                                                                                                                                                                                    | ✅                      |
+| MERGE-02 | All 8 required contexts present on main protection    | integration | `gh api repos/alzahrani-khalid/Intl-Dossier-V2.0/branches/main/protection --jq '.required_status_checks.contexts \| length'` returns `8`                                                                                                                                                                 | ✅                      |
+| MERGE-02 | Both new CI jobs run green on main                    | integration | `gh api repos/.../actions/workflows/ci.yml/runs?branch=main&per_page=1 --jq '.workflow_runs[0].id' \| xargs -I{} gh api repos/.../actions/runs/{}/jobs --jq '.jobs \| map(select(.name \| IN("Design Token Check","react-i18next Factory Check"))) \| map(.conclusion) \| unique'` returns `["success"]` | ✅                      |
+| MERGE-02 | Positive-failure CI assertion fires locally           | unit        | `! pnpm exec eslint -c eslint.config.mjs --max-warnings 0 tools/eslint-fixtures/bad-design-token.tsx; ! pnpm exec eslint -c eslint.config.mjs --max-warnings 0 tools/eslint-fixtures/bad-vi-mock.ts` (both must succeed via `!`)                                                                         | ✅                      |
 
 ### Sampling Rate
+
 - **Per task commit:** Each plan's commit should run the relevant local pre-flight (D-05 for plan 1; eslint positive-failure local check for plan 2; protection JSON dry-validate via `jq -e` for plan 3; mergeStateStatus check for plan 4).
 - **Per wave merge:** N/A — this is a sequential phase, not waved.
 - **Phase gate:** All 4 ROADMAP success criteria pass via the commands above before `/gsd:verify-work`.
 
 ### Wave 0 Gaps
+
 - [ ] No new test files needed — this phase exercises existing infrastructure
 - [ ] No new test framework setup — vitest + eslint + size-limit already in place
 - [ ] Smoke artifacts (`55-SMOKE-PR-EVIDENCE.json/.png`, `protection-before.json`, `protection-after.json`) are EVIDENCE not tests — produced by plan 4 + plan 3
 
-*Existing test infrastructure covers all phase requirements.*
+_Existing test infrastructure covers all phase requirements._
 
 ## Security Domain
 
@@ -901,29 +915,30 @@ Nyquist validation is enabled (`workflow.nyquist_validation: true` in `.planning
 
 ### Applicable ASVS Categories
 
-| ASVS Category | Applies | Standard Control |
-|---------------|---------|-----------------|
-| V2 Authentication | partial | `gh auth status` already shows token-based auth with keyring storage; scope-limited |
-| V3 Session Management | no | No web sessions in this phase |
-| V4 Access Control | yes | Branch protection `enforce_admins=true`; `allow_force_pushes=false`; `allow_deletions=false` — all preserved across the PUT |
-| V5 Input Validation | partial | `protection-after.json` is validated by GitHub before applying — but Pitfall 1/2 are the real validation surface |
-| V6 Cryptography | yes | SSH-signed annotated tags (Ed25519) — handled by `git tag -s -a`, never hand-rolled |
-| V14 Configuration | yes | `.github/workflows/ci.yml` changes are config; reviewed via PR (plan 2 is its own reviewable PR per D-15) |
+| ASVS Category         | Applies | Standard Control                                                                                                            |
+| --------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------- |
+| V2 Authentication     | partial | `gh auth status` already shows token-based auth with keyring storage; scope-limited                                         |
+| V3 Session Management | no      | No web sessions in this phase                                                                                               |
+| V4 Access Control     | yes     | Branch protection `enforce_admins=true`; `allow_force_pushes=false`; `allow_deletions=false` — all preserved across the PUT |
+| V5 Input Validation   | partial | `protection-after.json` is validated by GitHub before applying — but Pitfall 1/2 are the real validation surface            |
+| V6 Cryptography       | yes     | SSH-signed annotated tags (Ed25519) — handled by `git tag -s -a`, never hand-rolled                                         |
+| V14 Configuration     | yes     | `.github/workflows/ci.yml` changes are config; reviewed via PR (plan 2 is its own reviewable PR per D-15)                   |
 
 ### Known Threat Patterns for this phase
 
-| Pattern | STRIDE | Standard Mitigation |
-|---------|--------|---------------------|
-| Branch protection accidentally weakened by partial PUT body | Tampering | Round-trip JSON pattern (Pitfall 1) — snapshot `protection-before.json`, transform, PUT; commit both files for audit |
-| Force-push to main bypasses gates | Tampering | `allow_force_pushes.enabled=false` (verified); plus repo-policy CI job blocks committed env files / build artifacts |
-| Unsigned tag passed off as signed | Spoofing | `git tag -v` exit code; CLAUDE.md tag signing setup requires SSH key in `~/.ssh/allowed_signers` |
-| Admin bypass merging without protection | Elevation of Privilege | `enforce_admins=true`; CONTEXT.md guardrails forbid disabling protection; audit via PR + commit history |
-| Secret leakage through committed env files | Information Disclosure | Existing `repo-policy` CI job blocks tracked env files; this phase does not add any env files |
-| Smoke PR planted violations accidentally merged | Tampering | `mergeStateStatus=BLOCKED` is the test that proves they CAN'T be merged; plus D-12 cleanup deletes the branch |
+| Pattern                                                     | STRIDE                 | Standard Mitigation                                                                                                  |
+| ----------------------------------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Branch protection accidentally weakened by partial PUT body | Tampering              | Round-trip JSON pattern (Pitfall 1) — snapshot `protection-before.json`, transform, PUT; commit both files for audit |
+| Force-push to main bypasses gates                           | Tampering              | `allow_force_pushes.enabled=false` (verified); plus repo-policy CI job blocks committed env files / build artifacts  |
+| Unsigned tag passed off as signed                           | Spoofing               | `git tag -v` exit code; CLAUDE.md tag signing setup requires SSH key in `~/.ssh/allowed_signers`                     |
+| Admin bypass merging without protection                     | Elevation of Privilege | `enforce_admins=true`; CONTEXT.md guardrails forbid disabling protection; audit via PR + commit history              |
+| Secret leakage through committed env files                  | Information Disclosure | Existing `repo-policy` CI job blocks tracked env files; this phase does not add any env files                        |
+| Smoke PR planted violations accidentally merged             | Tampering              | `mergeStateStatus=BLOCKED` is the test that proves they CAN'T be merged; plus D-12 cleanup deletes the branch        |
 
 ## Sources
 
 ### Primary (HIGH confidence)
+
 - Live `gh api repos/alzahrani-khalid/Intl-Dossier-V2.0/branches/main/protection` — current 6 required contexts, all booleans, `app_id` 15368 (GitHub Actions app); captured this session.
 - Live `gh api repos/.../actions/runs/25659989275/jobs` — actual job names from most recent main CI run.
 - Live `gh pr list ... --json mergeStateStatus` — past smoke PRs #8-12 all `BLOCKED`; confirms enum value empirically.
@@ -934,11 +949,13 @@ Nyquist validation is enabled (`workflow.nyquist_validation: true` in `.planning
 - `eslint.config.mjs` — fixture-specific override severity at lines 286-292 (`warn` not `error`).
 
 ### Secondary (MEDIUM confidence)
+
 - [GitHub REST API — Update branch protection](https://docs.github.com/en/rest/branches/branch-protection?apiVersion=2022-11-28#update-branch-protection) — JSON body shape, replace-not-merge semantics, required fields, `contexts` vs `checks` distinction.
 - [GitHub GraphQL — MergeStateStatus enum](https://docs.github.com/en/graphql/reference/enums#mergestatestatus) — enum values and their meanings.
 - [GitHub Docs — Troubleshooting required status checks](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/collaborating-on-repositories-with-code-quality-features/troubleshooting-required-status-checks) — BLOCKED vs UNSTABLE distinction.
 
 ### Tertiary (LOW confidence — used only for cross-verification)
+
 - [How to revert a merge commit then merge again — DEV community](https://dev.to/jbrocher/how-to-revert-a-merge-commit-then-merge-again-hoo) — Pattern 5 / Pitfall 5 (revert-then-re-merge dance).
 - [git-tower.com — How to undo a merge](https://www.git-tower.com/learn/git/faq/undo-git-merge) — `git revert -m 1` mechanics for merge commits.
 - [GitHub Community Discussion #26822 — Status check for matrix jobs](https://github.com/orgs/community/discussions/26822) — context naming with matrix strategies (Pitfall 3 / focus area 5; partially answered, confirmed via empirical check that current phase's required contexts have no matrix entries).
@@ -946,6 +963,7 @@ Nyquist validation is enabled (`workflow.nyquist_validation: true` in `.planning
 ## Metadata
 
 **Confidence breakdown:**
+
 - Standard stack: HIGH — all tools verified working in this session against the live repo
 - Architecture: HIGH — D-01..D-16 are locked; no architectural choices remain
 - Pitfalls: HIGH — 13 pitfalls documented, 8 of them with empirical verification in this session, 5 with explicit doc citations

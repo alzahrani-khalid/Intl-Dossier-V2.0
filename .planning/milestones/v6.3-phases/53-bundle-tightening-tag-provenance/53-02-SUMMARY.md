@@ -38,11 +38,11 @@ Two literal find-and-replace edits in `CLAUDE.md`:
 
 1. **Line 84** (Core Tech Stack → Backend):
    - Before: `- **Backend**: Node.js 18+ LTS, Supabase (PostgreSQL 15+, Auth, RLS, Realtime, Storage), Redis 7.x`
-   - After:  `- **Backend**: Node.js 22.13.0+, Supabase (PostgreSQL 15+, Auth, RLS, Realtime, Storage), Redis 7.x`
+   - After: `- **Backend**: Node.js 22.13.0+, Supabase (PostgreSQL 15+, Auth, RLS, Realtime, Storage), Redis 7.x`
 
 2. **Line 457** (Technology Stack → Runtime):
    - Before: `- **Runtime**: Node.js 20.19.0+, pnpm 10.29.1+ (monorepo via Turbo)`
-   - After:  `- **Runtime**: Node.js 22.13.0+, pnpm 10.29.1+ (monorepo via Turbo)`
+   - After: `- **Runtime**: Node.js 22.13.0+, pnpm 10.29.1+ (monorepo via Turbo)`
 
 No other line in `CLAUDE.md` touched; `package.json` unchanged.
 

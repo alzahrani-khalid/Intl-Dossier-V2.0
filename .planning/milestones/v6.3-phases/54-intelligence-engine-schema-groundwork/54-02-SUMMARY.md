@@ -67,7 +67,7 @@ working_group|person)` exactly (no `elected_official`), `dossier_id`
      SELECT via `tenant_isolation.rls_select_policy(organization_id)`,
      INSERT/UPDATE via
      `tenant_isolation.rls_*_policy(organization_id) AND
- public.auth_has_any_role(ARRAY['admin','editor'])`,
+public.auth_has_any_role(ARRAY['admin','editor'])`,
      DELETE via `tenant_isolation.rls_delete_policy(organization_id)` —
      helper-only, no extra `AND auth_has_any_role` clause (Pitfall 6).
    - `GRANT SELECT/INSERT/UPDATE/DELETE TO authenticated` on both tables.

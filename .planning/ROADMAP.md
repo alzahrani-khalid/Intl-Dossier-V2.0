@@ -12,56 +12,100 @@
 - ✅ **v6.2 Type-Check, Lint & Bundle Reset** — Phases 47-49 (shipped 2026-05-12) — [archive](milestones/v6.2-ROADMAP.md)
 - ✅ **v6.3 Carryover Sweep & v7.0 Prep** — Phases 50-54 (shipped 2026-05-17) — [archive](milestones/v6.3-ROADMAP.md)
 - ✅ **v6.4 Stabilization & Carryover Sweep** — Phases 55-59 (shipped 2026-05-27) — [archive](milestones/v6.4-ROADMAP.md)
-- 🔄 **v6.5 Escalated Backlog Hardening** — Phases 60-61 (in progress) — source: `reports/escalated-backlog-master-2026-06-10.md`
+- ✅ **v6.5 Escalated Backlog Hardening** — Phases 60-61 (shipped 2026-06-11) — [archive](milestones/v6.5-ROADMAP.md)
+- 🔄 **v6.6 Dossier Workflow Completion** — Phases 62-67 (in progress)
 
 ## Phases
 
-### Phase 60: Schema & Type Truth Restoration ✅ COMPLETE 2026-06-10
+### 🔄 v6.6 Dossier Workflow Completion (Phases 62-67) — IN PROGRESS
 
-**Goal:** The repo's generated types, committed migrations, and edge-function SQL all agree with the live staging database — every RPC/table an edge function references exists in generated types, and the missing canonical SQL is committed as forward migrations.
-**Depends on:** Nothing (foundation phase; unblocks P2-P8 backlog phases)
-**Plans:** 6/6 complete (VERIFICATION passed 14/14)
-**Requirements:** Backlog P1 (reports/escalated-backlog-master-2026-06-10.md)
+**Goal:** Every advertised dossier workflow works end-to-end — no advertised-but-broken paths, no silent failures rendered as empty states, no dead routes.
+**Source:** `.planning/dossier-workflow-backlog-phases-2026-06-11.md` (bucket-B escalations from the 17-round inspection loop, rounds 1-17)
 
-Plans:
+- [ ] **Phase 62: Export Pack Contract & Deploy** - Exporting a dossier returns the advertised file format from a deployed, schema-correct edge (HIGH — most visible broken path)
+- [ ] **Phase 63: Relationship Graph Route & Bidirectional Traversal** - Graph page reachable with incoming + outgoing edges and per-type node navigation, or formally retired
+- [ ] **Phase 64: New Position from Dossier** - Creating a position from a dossier persists a valid position and its dossier link
+- [ ] **Phase 65: Engagement Positions Tab & Legacy Reconciliation** - Working engagement Positions surface on canonical tables; no inert workspace CTAs
+- [ ] **Phase 66: Overview Error Contract & Timeline Cross-Links** - Overview sections distinguish empty from failed; timeline links never hit unmounted routes
+- [ ] **Phase 67: Per-Type Engagement Contracts & Legacy Detail Cleanup** - Org/person/EO Engagements tabs honor per-type contracts; legacy `*DossierDetail` routed or deleted
 
-**Wave 1**
+### Phase 62: Export Pack Contract & Deploy
 
-- [x] 60-01-PLAN.md (Wave 1) — Capture unified work stack (view + RPCs) from live into a forward migration [my-work #3]
-- [x] 60-02-PLAN.md (Wave 1) — Corrected SLA monitoring migration (users.full_name, not staff_profiles) + 4 dashboard RPCs + fix/redeploy escalations-report absent columns [sla #2/#4, tq #5]
-- [x] 60-03-PLAN.md (Wave 1) — event_details view (035 shape + organizer/country via dossiers) + supersede dead 009_data_library [events #4, data-library #1]
-- [x] 60-04-PLAN.md (Wave 1) — pending_role_approvals + position_delegations + word_assistant_logs tables (owner-scoped RLS, no auth.users trigger) [approvals #6, wa #4]
+**Goal**: Exporting a dossier produces the advertised file format from a deployed, schema-correct `dossier-export-pack` edge function
+**Depends on**: Nothing (independent — sequenced first by severity: the most visible advertised-but-broken path)
+**Requirements**: EXPORT-01, EXPORT-02
+**Success Criteria** (what must be TRUE):
 
-**Wave 2** _(blocked on Wave 1 completion)_
+1. The Export dialog advertises only formats the system actually produces — PDF/DOCX rendering implemented, or the dialog honestly states HTML output (decision recorded)
+2. Exporting a dossier of each of the 7 types on staging returns the advertised file — no 404 (edge deployed) and no 500
+3. Export content resolves against live schema: positions, MoUs, documents, and commitments sections read current columns (`aa_commitments`, not legacy `commitments`; no stale `positions.classification`/`dossier_ids`, `mous.title_en`/`status`, `documents.entity_type` reads)
+   **Plans**: TBD
+   **UI hint**: yes
 
-- [x] 60-05-PLAN.md (Wave 2) — Regenerate database.types byte-identical (frontend+backend) + remove dead doubled-path copy + type-check both workspaces [P1 type regen]
+### Phase 63: Relationship Graph Route & Bidirectional Traversal
 
-**Wave 3** _(blocked on Wave 2 completion)_
+**Goal**: Users reach a relationship graph that shows relationships from both directions with correct per-type navigation — or the page is formally retired in favor of the documented mini-graph contract
+**Depends on**: Nothing (independent)
+**Requirements**: GRAPH-01, GRAPH-02, GRAPH-03
+**Success Criteria** (what must be TRUE):
 
-- [x] 60-06-PLAN.md (Wave 3) — CI smoke test: every edge-fn .from/.rpc reference must exist in generated types (wired into existing lint job)
+1. Navigating to the relationship graph from a dossier renders the graph page (no redirect to `/dossiers`) — or the route is formally retired with the mini-graph + a list view documented as the contract
+2. A dossier referenced by another dossier shows that incoming edge in its graph (traversal RPC returns incoming + outgoing relationships)
+3. Clicking either endpoint node navigates to the correct per-type dossier route, matching the already-correct MiniRelationshipGraph helper
+   **Plans**: TBD
+   **UI hint**: yes
 
-Scope:
+### Phase 64: New Position from Dossier
 
-- Regenerate `frontend/src/types/database.types.ts` from staging (project `zkrcjzdemdmwhearhfgg`) via Supabase MCP `generate_typescript_types`
-- Commit missing canonical SQL as forward migrations: unified work view/RPCs (`unified_work_items`, `get_unified_work_items`, `get_user_work_summary`, `get_user_productivity_metrics`) [my-work #3], 4 SLA dashboard RPCs (`get_sla_dashboard_overview` etc.) [sla #2], `event_details` view [events #4]
-- Reconcile dual `009_create_data_library_items.sql` vs `009_data_library.sql` (query staging FIRST to decide which schema is live) [data-library #1]
-- Generate-or-migrate ungenerated tables: `pending_role_approvals`, `position_delegations`, `word_assistant_logs` [approvals #6, wa #4]
-- Fix RPC SQL referencing absent columns: `staff_profiles.full_name` (SLA assignee/at-risk) [sla #4], escalations-report columns (`assignments.organizational_unit_id`, `organizational_units.name`) [tq #5]
-- Add CI smoke test: every RPC/table an edge fn references must exist in generated types
+**Goal**: Creating a position from any dossier persists a valid position and its dossier link
+**Depends on**: Nothing within v6.6 (builds on the positions-attach chain fixed in inspection rounds 12-13, already on main)
+**Requirements**: POSNEW-01, POSNEW-02
+**Success Criteria** (what must be TRUE):
 
-### Phase 61: Security Pass
+1. The New Position dialog offers a real position-type picker, bilingual title fields, and audience-group selection whose submission satisfies `positions-create` validation (no `position_type_id = dossier_id`, no blank `title_ar`, no empty `audience_groups`)
+2. After create, the `position_dossier_links` row exists for the originating dossier (DB-verified on staging)
+3. The new position appears on the dossier's Positions tab without a manual refresh (live-verified)
+   **Plans**: TBD
+   **UI hint**: yes
 
-**Goal:** The four known security holes are closed: activity_stream inserts are bound to the authenticated actor with visibility scope enforced, briefing-books HTML output is sanitized, the test-token ExportDialog is gone, and admin-surface role gating reads one canonical role source.
-**Depends on:** Phase 60 (regenerated types)
-**Plans:** TBD
-**Requirements:** Backlog P2 (reports/escalated-backlog-master-2026-06-10.md)
+### Phase 65: Engagement Positions Tab & Legacy Reconciliation
 
-Scope:
+**Goal**: The engagement workspace has a working Positions surface on canonical tables, with no inert CTAs left behind
+**Depends on**: Phase 64 (soft — the position-creation contract decision informs the canonical `position_dossier_links` vs legacy `engagement_positions` choice); otherwise independent
+**Requirements**: ENGPOS-01, ENGPOS-02, ENGPOS-03
+**Success Criteria** (what must be TRUE):
 
-- `activity_stream` RLS: bind `actor_id = auth.uid()` WITH CHECK; enforce `visibility_scope` [activity #1]
-- Sanitize `supabase/functions/briefing-books/index.ts` HTML generation [bb #9]
-- Delete or rewire `frontend/src/components/export/ExportDialog.tsx` (hard-codes `Bearer test-auth-token`) [exp #6]
-- Unify role source (users.role vs auth metadata) for /admin/\*, Sidebar, /users, /audit-logs + decide/enforce gating [settings #4/#5, audit #4]
+1. The engagement workspace shows a routed Positions tab reading the decided canonical source (`position_dossier_links` vs legacy `engagement_positions` — decision recorded and implemented)
+2. Attaching a position to an engagement persists, renders in the tab, and invalidates queries — live-verified on staging
+3. No inert buttons remain in the engagement workspace: every round-15-disabled CTA is re-enabled and functional, or removed
+   **Plans**: TBD
+   **UI hint**: yes
+
+### Phase 66: Overview Error Contract & Timeline Cross-Links
+
+**Goal**: Overview sections distinguish "empty" from "failed", and timeline cross-links never dead-end on unmounted routes
+**Depends on**: Nothing (independent)
+**Requirements**: OVRERR-01, OVRERR-02
+**Success Criteria** (what must be TRUE):
+
+1. A single section error contract is decided (fail-the-query vs section-level error metadata vs explicit unknown state) and applied across overview section fetchers and cards
+2. A forced section fetch error renders an explicit error state on that card — never a trustworthy-looking zero/empty state
+3. No timeline "View details" navigates to an unmounted route (`/calendar/$id`, `/mous/$id`): each affordance routes to a real destination (detail route or filtered list page) or is suppressed
+   **Plans**: TBD
+   **UI hint**: yes
+
+### Phase 67: Per-Type Engagement Contracts & Legacy Detail Cleanup
+
+**Goal**: Org/person/EO Engagements tabs honor their per-type contracts, and no dead legacy `*DossierDetail` surfaces remain
+**Depends on**: Nothing (independent)
+**Requirements**: PERENG-01, PERENG-02, PERENG-03
+**Success Criteria** (what must be TRUE):
+
+1. An organization dossier with a `host_organization_id` engagement shows it on its Engagements tab — or the tab is documented as generic history-only (decision implemented either way)
+2. A person/EO dossier with `person_engagements` rows shows them on its Engagements tab per the chosen contract, including `get_person_full.recent_engagements` wiring
+3. Every legacy unrouted `*DossierDetail` component is routed or deleted, and whatever survives renders localized strings in both EN and AR (no raw i18n keys)
+   **Plans**: TBD
+   **UI hint**: yes
 
 <details>
 <summary>✅ v2.0 Production Quality (Phases 1-7) — SHIPPED 2026-03-28</summary>
@@ -202,6 +246,16 @@ Full details: [v6.4-ROADMAP.md](milestones/v6.4-ROADMAP.md)
 
 </details>
 
+<details>
+<summary>✅ v6.5 Escalated Backlog Hardening (Phases 60-61) — SHIPPED 2026-06-11</summary>
+
+- [x] Phase 60: Schema & Type Truth Restoration (6/6 plans) — completed 2026-06-10
+- [x] Phase 61: Security Pass (delivered by quick task 260610-fkn; verified 2026-06-11)
+
+Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
+
+</details>
+
 ## Progress
 
 <!-- gsd:progress:start -->
@@ -219,9 +273,16 @@ Full details: [v6.4-ROADMAP.md](milestones/v6.4-ROADMAP.md)
 | 47-49 | v6.2 | 17/17 | Shipped | 2026-05-12 |
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
 | 55-59 | v6.4 | 20/20 | Shipped | 2026-05-27 |
+| 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
+| 62. Export Pack Contract & Deploy | v6.6 | 0/TBD | Not started | - |
+| 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 0/TBD | Not started | - |
+| 64. New Position from Dossier | v6.6 | 0/TBD | Not started | - |
+| 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 0/TBD | Not started | - |
+| 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 0/TBD | Not started | - |
+| 67. Per-Type Engagement Contracts & Legacy Detail Cleanup | v6.6 | 0/TBD | Not started | - |
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-06-10 — Phase 60 (Schema & Type Truth Restoration) COMPLETE: 6/6 plans, verification passed 14/14, 5 forward migrations applied to staging, types regenerated, CI smoke test live. Next: Phase 61 (Security Pass)._
+_Roadmap last updated: 2026-06-11 — v6.6 roadmap created (Phases 62-67, 15/15 requirements mapped). Source: `.planning/dossier-workflow-backlog-phases-2026-06-11.md`._
