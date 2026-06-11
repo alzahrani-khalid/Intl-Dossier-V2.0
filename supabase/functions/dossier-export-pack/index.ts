@@ -2,14 +2,16 @@
  * Dossier Export Pack Edge Function
  * Feature: dossier-export-pack
  *
- * Generates comprehensive briefing packets for dossiers in PDF or DOCX format.
- * Includes timeline, relationships, documents, commitments, positions, events, and contacts.
- * Supports bilingual output (EN/AR).
+ * Generates a self-contained, print-ready HTML briefing pack for a dossier and
+ * returns it directly as text/html (the client opens it in a new tab; PDF via the
+ * browser print dialog). Sections: overview, relationships, positions, MoUs,
+ * commitments, timeline, events, contacts, documents. Output language is EN or AR.
+ * A failed section degrades to an in-document error note and is listed in the
+ * X-Failed-Sections response header rather than failing the whole export.
  */
 
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // =============================================================================
 // Types
@@ -52,6 +54,21 @@ function escapeHtml(text: string | null | undefined): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+}
+
+// Renders the section heading plus an amber-barred failure block (D-08). The
+// failure copy is a static localized string — no DB-derived value is ever
+// interpolated here, preserving the XSS hardening invariant.
+function renderSectionError(title: string, isRTL: boolean): string {
+  const message = isRTL ? 'تعذّر إنشاء هذا القسم.' : 'This section could not be generated.';
+  return `
+    <div class="section">
+      <h2 class="section-title">${title}</h2>
+      <div class="section-error">
+        <p>${message}</p>
+      </div>
+    </div>
+  `;
 }
 
 function formatDate(dateString: string | null, language: string): string {
@@ -202,9 +219,13 @@ function generateTableOfContents(sections: ExportSectionConfig[], isRTL: boolean
   `;
 }
 
-function generateRelationshipsSection(relationships: any[], isRTL: boolean): string {
+function generateRelationshipsSection(relationships: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'العلاقات' : 'Relationships';
   const noData = isRTL ? 'لا توجد علاقات' : 'No relationships found';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!relationships || relationships.length === 0) {
     return `
@@ -246,9 +267,13 @@ function generateRelationshipsSection(relationships: any[], isRTL: boolean): str
   `;
 }
 
-function generatePositionsSection(positions: any[], isRTL: boolean): string {
+function generatePositionsSection(positions: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'المواقف ونقاط النقاش' : 'Positions & Talking Points';
   const noData = isRTL ? 'لا توجد مواقف' : 'No positions found';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!positions || positions.length === 0) {
     return `
@@ -269,7 +294,6 @@ function generatePositionsSection(positions: any[], isRTL: boolean): string {
           <h3>${i + 1}. ${escapeHtml(isRTL ? pos.title_ar : pos.title_en)}</h3>
           <div class="card-meta">
             <span>${isRTL ? 'الحالة' : 'Status'}: ${getStatusBadge(pos.status, isRTL)}</span>
-            ${pos.classification ? `<span>${isRTL ? 'التصنيف' : 'Classification'}: ${escapeHtml(pos.classification)}</span>` : ''}
           </div>
         </div>
       `
@@ -279,9 +303,13 @@ function generatePositionsSection(positions: any[], isRTL: boolean): string {
   `;
 }
 
-function generateMousSection(mous: any[], isRTL: boolean): string {
+function generateMousSection(mous: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'مذكرات التفاهم' : 'MoU Agreements';
   const noData = isRTL ? 'لا توجد مذكرات تفاهم' : 'No MoU agreements found';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!mous || mous.length === 0) {
     return `
@@ -308,8 +336,8 @@ function generateMousSection(mous: any[], isRTL: boolean): string {
             .map(
               (m) => `
             <tr>
-              <td>${escapeHtml(isRTL ? m.title_ar : m.title_en)}</td>
-              <td>${getStatusBadge(m.status, isRTL)}</td>
+              <td>${escapeHtml(isRTL ? m.title_ar : m.title)}</td>
+              <td>${getStatusBadge(m.lifecycle_state, isRTL)}</td>
               <td>${formatDate(m.created_at, isRTL ? 'ar' : 'en')}</td>
             </tr>
           `
@@ -321,9 +349,13 @@ function generateMousSection(mous: any[], isRTL: boolean): string {
   `;
 }
 
-function generateCommitmentsSection(commitments: any[], isRTL: boolean): string {
+function generateCommitmentsSection(commitments: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'الالتزامات والمخرجات' : 'Commitments & Deliverables';
   const noData = isRTL ? 'لا توجد التزامات' : 'No commitments found';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!commitments || commitments.length === 0) {
     return `
@@ -344,7 +376,6 @@ function generateCommitmentsSection(commitments: any[], isRTL: boolean): string 
             <th>${isRTL ? 'الحالة' : 'Status'}</th>
             <th>${isRTL ? 'الأولوية' : 'Priority'}</th>
             <th>${isRTL ? 'الموعد النهائي' : 'Deadline'}</th>
-            <th>${isRTL ? 'المسؤول' : 'Assignee'}</th>
           </tr>
         </thead>
         <tbody>
@@ -352,11 +383,10 @@ function generateCommitmentsSection(commitments: any[], isRTL: boolean): string 
             .map(
               (c) => `
             <tr>
-              <td>${escapeHtml(isRTL ? c.title_ar : c.title_en)}</td>
+              <td>${escapeHtml(isRTL ? c.title_ar : c.title)}</td>
               <td>${getStatusBadge(c.status, isRTL)}</td>
               <td>${escapeHtml(c.priority)}</td>
-              <td>${formatDate(c.deadline, isRTL ? 'ar' : 'en')}</td>
-              <td>${escapeHtml(c.assignee_name) || '-'}</td>
+              <td>${formatDate(c.due_date, isRTL ? 'ar' : 'en')}</td>
             </tr>
           `
             )
@@ -367,9 +397,13 @@ function generateCommitmentsSection(commitments: any[], isRTL: boolean): string 
   `;
 }
 
-function generateTimelineSection(activities: any[], isRTL: boolean): string {
+function generateTimelineSection(activities: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'الجدول الزمني للأنشطة' : 'Activity Timeline';
   const noData = isRTL ? 'لا توجد أنشطة' : 'No activities found';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!activities || activities.length === 0) {
     return `
@@ -403,9 +437,13 @@ function generateTimelineSection(activities: any[], isRTL: boolean): string {
   `;
 }
 
-function generateEventsSection(events: any[], isRTL: boolean): string {
+function generateEventsSection(events: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'الفعاليات القادمة' : 'Upcoming Events';
   const noData = isRTL ? 'لا توجد فعاليات قادمة' : 'No upcoming events';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!events || events.length === 0) {
     return `
@@ -434,9 +472,9 @@ function generateEventsSection(events: any[], isRTL: boolean): string {
               (e) => `
             <tr>
               <td>${escapeHtml(isRTL ? e.title_ar : e.title_en)}</td>
-              <td>${escapeHtml(e.event_type)}</td>
-              <td>${formatDate(e.start_datetime, isRTL ? 'ar' : 'en')}</td>
-              <td>${escapeHtml(isRTL ? e.location_ar : e.location_en) || '-'}</td>
+              <td>${escapeHtml(e.entry_type)}</td>
+              <td>${formatDate(e.event_date, isRTL ? 'ar' : 'en')}</td>
+              <td>${escapeHtml(e.location) || '-'}</td>
             </tr>
           `
             )
@@ -447,9 +485,13 @@ function generateEventsSection(events: any[], isRTL: boolean): string {
   `;
 }
 
-function generateContactsSection(contacts: any[], isRTL: boolean): string {
+function generateContactsSection(contacts: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'جهات الاتصال الرئيسية' : 'Key Contacts';
   const noData = isRTL ? 'لا توجد جهات اتصال' : 'No contacts found';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!contacts || contacts.length === 0) {
     return `
@@ -468,9 +510,9 @@ function generateContactsSection(contacts: any[], isRTL: boolean): string {
           .map(
             (c) => `
           <div class="contact-card">
-            <h4>${escapeHtml(isRTL ? c.name_ar : c.name) || escapeHtml(c.name)}</h4>
-            ${c.title_en || c.title_ar ? `<p class="contact-title">${escapeHtml(isRTL ? c.title_ar : c.title_en)}</p>` : ''}
-            ${c.organization_en || c.organization_ar ? `<p class="contact-org">${escapeHtml(isRTL ? c.organization_ar : c.organization_en)}</p>` : ''}
+            <h4>${escapeHtml(c.name)}</h4>
+            ${c.role ? `<p class="contact-title">${escapeHtml(c.role)}</p>` : ''}
+            ${c.organization ? `<p class="contact-org">${escapeHtml(c.organization)}</p>` : ''}
             ${c.email ? `<p class="contact-email">${escapeHtml(c.email)}</p>` : ''}
             ${c.phone ? `<p class="contact-phone">${escapeHtml(c.phone)}</p>` : ''}
           </div>
@@ -482,9 +524,13 @@ function generateContactsSection(contacts: any[], isRTL: boolean): string {
   `;
 }
 
-function generateDocumentsSection(documents: any[], isRTL: boolean): string {
+function generateDocumentsSection(documents: any[], isRTL: boolean, error?: string): string {
   const title = isRTL ? 'المستندات ذات الصلة' : 'Related Documents';
   const noData = isRTL ? 'لا توجد مستندات' : 'No documents found';
+
+  if (error) {
+    return renderSectionError(title, isRTL);
+  }
 
   if (!documents || documents.length === 0) {
     return `
@@ -533,6 +579,8 @@ function generateHTMLDocument(dossier: any, data: any, config: ExportConfig): st
     .filter((s) => s.enabled)
     .sort((a, b) => a.order - b.order);
 
+  const sectionErrors: Record<string, string> = data.sectionErrors || {};
+
   let content = '';
 
   // Cover page
@@ -559,28 +607,28 @@ function generateHTMLDocument(dossier: any, data: any, config: ExportConfig): st
         `;
         break;
       case 'relationships':
-        content += generateRelationshipsSection(data.relationships, isRTL);
+        content += generateRelationshipsSection(data.relationships, isRTL, sectionErrors['relationships']);
         break;
       case 'positions':
-        content += generatePositionsSection(data.positions, isRTL);
+        content += generatePositionsSection(data.positions, isRTL, sectionErrors['positions']);
         break;
       case 'mous':
-        content += generateMousSection(data.mous, isRTL);
+        content += generateMousSection(data.mous, isRTL, sectionErrors['mous']);
         break;
       case 'commitments':
-        content += generateCommitmentsSection(data.commitments, isRTL);
+        content += generateCommitmentsSection(data.commitments, isRTL, sectionErrors['commitments']);
         break;
       case 'timeline':
-        content += generateTimelineSection(data.activities, isRTL);
+        content += generateTimelineSection(data.activities, isRTL, sectionErrors['timeline']);
         break;
       case 'events':
-        content += generateEventsSection(data.events, isRTL);
+        content += generateEventsSection(data.events, isRTL, sectionErrors['events']);
         break;
       case 'contacts':
-        content += generateContactsSection(data.contacts, isRTL);
+        content += generateContactsSection(data.contacts, isRTL, sectionErrors['contacts']);
         break;
       case 'documents':
-        content += generateDocumentsSection(data.documents, isRTL);
+        content += generateDocumentsSection(data.documents, isRTL, sectionErrors['documents']);
         break;
     }
   }
@@ -756,6 +804,27 @@ function generateHTMLDocument(dossier: any, data: any, config: ExportConfig): st
       padding: 20px;
     }
 
+    /* D-08 partial-failure note — visually distinct from .no-data:
+       start-aligned, normal style, amber inline-start bar, boxed tint. */
+    .section-error {
+      border: 1px solid #d1d5db;
+      border-inline-start: 4px solid #b45309;
+      background-color: #fffbeb;
+      padding: 16px 20px;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .section-error p {
+      margin: 0;
+      color: #92400e;
+      font-size: 11pt;
+      font-style: normal;
+      text-align: start;
+    }
+
     /* Table Styles */
     .data-table {
       width: 100%;
@@ -895,6 +964,31 @@ function generateHTMLDocument(dossier: any, data: any, config: ExportConfig): st
     }
 
     @media print {
+      .section {
+        break-before: page;
+        page-break-before: always;
+      }
+      .cover-page {
+        break-after: page;
+        page-break-after: always;
+      }
+      .toc {
+        break-after: page;
+        page-break-after: always;
+      }
+      .data-table tr {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .data-table thead {
+        display: table-header-group;
+      }
+      .content-card,
+      .contact-card,
+      .section-error {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
       .document-footer {
         position: fixed;
       }
@@ -923,7 +1017,11 @@ function generateHTMLDocument(dossier: any, data: any, config: ExportConfig): st
 // =============================================================================
 
 async function fetchDossierData(supabase: any, dossierId: string): Promise<any> {
-  // Fetch dossier
+  // Per-section failure tracking (D-08). Keys MUST match DEFAULT_EXPORT_SECTIONS
+  // `type` values so the dialog can map them to localized section labels.
+  const sectionErrors: Record<string, string> = {};
+
+  // Fetch dossier (a failure here is fatal — there is no pack without it).
   const { data: dossier, error: dossierError } = await supabase
     .from('dossiers')
     .select('*')
@@ -934,167 +1032,216 @@ async function fetchDossierData(supabase: any, dossierId: string): Promise<any> 
     throw new Error(`Failed to fetch dossier: ${dossierError.message}`);
   }
 
-  // Fetch all related data in parallel
-  const [
-    relationshipsResult,
-    positionsResult,
-    mousResult,
-    workItemsResult,
-    eventsResult,
-    contactsResult,
-    activitiesResult,
-    documentsResult,
-  ] = await Promise.all([
-    // Relationships
-    Promise.all([
+  // --- Relationships (bidirectional; soft-delete filter is `status = active`) ---
+  let relationships: any[] = [];
+  try {
+    const [outgoing, incoming] = await Promise.all([
       supabase
         .from('dossier_relationships')
         .select('*, target_dossier:target_dossier_id(id, name_en, name_ar, type)')
         .eq('source_dossier_id', dossierId)
-        .is('deleted_at', null),
+        .eq('status', 'active'),
       supabase
         .from('dossier_relationships')
         .select('*, source_dossier:source_dossier_id(id, name_en, name_ar, type)')
         .eq('target_dossier_id', dossierId)
-        .is('deleted_at', null),
-    ]).then(([outgoing, incoming]) => {
-      const rels: any[] = [];
-      (outgoing.data || []).forEach((r: any) => {
-        if (r.target_dossier) {
-          rels.push({
-            ...r.target_dossier,
-            relationship_type: r.relationship_type,
-            notes_en: r.notes_en,
-            notes_ar: r.notes_ar,
-          });
-        }
-      });
-      (incoming.data || []).forEach((r: any) => {
-        if (r.source_dossier) {
-          rels.push({
-            ...r.source_dossier,
-            relationship_type: r.relationship_type,
-            notes_en: r.notes_en,
-            notes_ar: r.notes_ar,
-          });
-        }
-      });
-      return rels;
-    }),
+        .eq('status', 'active'),
+    ]);
+    if (outgoing.error) throw outgoing.error;
+    if (incoming.error) throw incoming.error;
+    (outgoing.data || []).forEach((r: any) => {
+      if (r.target_dossier) {
+        relationships.push({
+          ...r.target_dossier,
+          relationship_type: r.relationship_type,
+          notes_en: r.notes_en,
+          notes_ar: r.notes_ar,
+        });
+      }
+    });
+    (incoming.data || []).forEach((r: any) => {
+      if (r.source_dossier) {
+        relationships.push({
+          ...r.source_dossier,
+          relationship_type: r.relationship_type,
+          notes_en: r.notes_en,
+          notes_ar: r.notes_ar,
+        });
+      }
+    });
+  } catch (e: any) {
+    sectionErrors['relationships'] = e?.message || 'Failed to load relationships';
+    relationships = [];
+  }
 
-    // Positions
-    supabase
-      .from('positions')
-      .select('id, title_en, title_ar, status, classification, created_at')
-      .contains('dossier_ids', [dossierId])
-      .order('created_at', { ascending: false })
-      .limit(20),
-
-    // MOUs
-    supabase
-      .from('mous')
-      .select('id, title_en, title_ar, status, created_at')
-      .contains('dossier_ids', [dossierId])
-      .order('created_at', { ascending: false })
-      .limit(20),
-
-    // Work items (commitments/tasks)
-    supabase
-      .from('work_item_dossiers')
-      .select('work_item_type, work_item_id')
+  // --- Positions (canonical linkage: position_dossier_links junction) ---
+  let positions: any[] = [];
+  try {
+    const { data, error } = await supabase
+      .from('position_dossier_links')
+      .select('position:positions(id, title_en, title_ar, status, created_at)')
       .eq('dossier_id', dossierId)
-      .is('deleted_at', null)
-      .limit(50),
+      .limit(20);
+    if (error) throw error;
+    positions = (data || [])
+      .map((link: any) => {
+        const posRaw = link.position;
+        return Array.isArray(posRaw) ? posRaw[0] : posRaw;
+      })
+      .filter(Boolean);
+  } catch (e: any) {
+    sectionErrors['positions'] = e?.message || 'Failed to load positions';
+    positions = [];
+  }
 
-    // Calendar events
-    supabase
+  // --- MoUs (linkage via signatory dossier columns; soft-delete is deleted_at) ---
+  let mous: any[] = [];
+  try {
+    const [mous1, mous2] = await Promise.all([
+      supabase
+        .from('mous')
+        .select('id, title, title_ar, lifecycle_state, created_at')
+        .eq('signatory_1_dossier_id', dossierId)
+        .is('deleted_at', null)
+        .limit(20),
+      supabase
+        .from('mous')
+        .select('id, title, title_ar, lifecycle_state, created_at')
+        .eq('signatory_2_dossier_id', dossierId)
+        .is('deleted_at', null)
+        .limit(20),
+    ]);
+    if (mous1.error) throw mous1.error;
+    if (mous2.error) throw mous2.error;
+    const mouIds = new Set<string>();
+    [...(mous1.data || []), ...(mous2.data || [])].forEach((m: any) => {
+      if (!mouIds.has(m.id)) {
+        mouIds.add(m.id);
+        mous.push(m);
+      }
+    });
+  } catch (e: any) {
+    sectionErrors['mous'] = e?.message || 'Failed to load MoUs';
+    mous = [];
+  }
+
+  // --- Commitments (aa_commitments is canonical; direct dossier_id link) ---
+  let commitments: any[] = [];
+  try {
+    const { data, error } = await supabase
+      .from('aa_commitments')
+      .select('id, title, title_ar, status, priority, due_date, owner_user_id, created_at')
+      .eq('dossier_id', dossierId)
+      .is('is_deleted', false)
+      .order('created_at', { ascending: false })
+      .limit(20);
+    if (error) throw error;
+    commitments = data || [];
+  } catch (e: any) {
+    sectionErrors['commitments'] = e?.message || 'Failed to load commitments';
+    commitments = [];
+  }
+
+  // --- Calendar events (calendar_entries; date column is event_date) ---
+  let events: any[] = [];
+  try {
+    const { data, error } = await supabase
       .from('calendar_entries')
-      .select('*')
+      .select('id, title_en, title_ar, entry_type, event_date, event_time, location, is_virtual, status')
       .eq('dossier_id', dossierId)
-      .gte('start_datetime', new Date().toISOString())
-      .order('start_datetime', { ascending: true })
-      .limit(10),
+      .gte('event_date', new Date().toISOString().split('T')[0])
+      .order('event_date', { ascending: true })
+      .limit(10);
+    if (error) throw error;
+    events = data || [];
+  } catch (e: any) {
+    sectionErrors['events'] = e?.message || 'Failed to load events';
+    events = [];
+  }
 
-    // Key contacts
-    supabase
+  // --- Key contacts (monolingual: name/role/organization) ---
+  let contacts: any[] = [];
+  try {
+    const { data, error } = await supabase
       .from('key_contacts')
       .select('*')
       .eq('dossier_id', dossierId)
       .order('name', { ascending: true })
-      .limit(20),
+      .limit(20);
+    if (error) throw error;
+    contacts = data || [];
+  } catch (e: any) {
+    sectionErrors['contacts'] = e?.message || 'Failed to load contacts';
+    contacts = [];
+  }
 
-    // Recent activities
-    supabase
+  // --- Timeline / activities (audit_logs; entity_id + action + created_at) ---
+  let activities: any[] = [];
+  try {
+    const { data, error } = await supabase
       .from('audit_logs')
       .select('*')
       .eq('entity_id', dossierId)
       .order('created_at', { ascending: false })
-      .limit(20),
-
-    // Documents
-    supabase
-      .from('documents')
-      .select('*')
-      .eq('entity_type', 'dossier')
-      .eq('entity_id', dossierId)
-      .limit(20),
-  ]);
-
-  // Fetch commitments for work items
-  const commitmentIds = (workItemsResult.data || [])
-    .filter((w: any) => w.work_item_type === 'commitment')
-    .map((w: any) => w.work_item_id);
-
-  let commitments: any[] = [];
-  if (commitmentIds.length > 0) {
-    const { data } = await supabase
-      .from('commitments')
-      .select('*, assignee:responsible_user_id(full_name)')
-      .in('id', commitmentIds);
-    commitments = (data || []).map((c: any) => ({
-      ...c,
-      title_en: c.title_en || c.title,
-      title_ar: c.title_ar,
-      assignee_name: c.assignee?.full_name,
+      .limit(20);
+    if (error) throw error;
+    activities = (data || []).map((a: any) => ({
+      id: a.id,
+      title_en: a.action || 'Activity',
+      title_ar: a.action,
+      activity_type: a.action,
+      timestamp: a.created_at,
     }));
+  } catch (e: any) {
+    sectionErrors['timeline'] = e?.message || 'Failed to load timeline';
+    activities = [];
   }
+
+  // --- Documents (derived from positions + mous; no direct dossier linkage on
+  // the documents table — mirrors the app's own Documents tab contract). This
+  // derivation cannot fail independently, so it never records a sectionErrors key.
+  const documents = [
+    ...positions.map((p: any) => ({
+      id: p.id,
+      title_en: p.title_en || 'Untitled Position',
+      title_ar: p.title_ar,
+      document_type: 'position',
+      status: p.status,
+      created_at: p.created_at,
+    })),
+    ...mous.map((m: any) => ({
+      id: m.id,
+      title_en: m.title || 'Untitled MoU',
+      title_ar: m.title_ar ?? m.title,
+      document_type: 'mou',
+      status: m.lifecycle_state,
+      created_at: m.created_at,
+    })),
+  ];
 
   // Calculate stats
   const stats = {
-    relationships_count: relationshipsResult.length,
-    positions_count: positionsResult.data?.length || 0,
-    mous_count: mousResult.data?.length || 0,
+    relationships_count: relationships.length,
+    positions_count: positions.length,
+    mous_count: mous.length,
     commitments_count: commitments.length,
-    events_count: eventsResult.data?.length || 0,
-    contacts_count: contactsResult.data?.length || 0,
-    documents_count: documentsResult.data?.length || 0,
+    events_count: events.length,
+    contacts_count: contacts.length,
+    documents_count: documents.length,
   };
-
-  // Transform activities
-  const activities = (activitiesResult.data || []).map((a: any) => ({
-    id: a.id,
-    title_en: a.action || 'Activity',
-    title_ar: a.action,
-    activity_type: a.action,
-    timestamp: a.created_at,
-  }));
 
   return {
     dossier,
     stats,
-    relationships: relationshipsResult,
-    positions: positionsResult.data || [],
-    mous: mousResult.data || [],
+    relationships,
+    positions,
+    mous,
     commitments,
-    events: eventsResult.data || [],
-    contacts: contactsResult.data || [],
+    events,
+    contacts,
     activities,
-    documents: (documentsResult.data || []).map((d: any) => ({
-      ...d,
-      title_en: d.file_name,
-      title_ar: d.file_name,
-      document_type: d.document_type || 'attachment',
-    })),
+    documents,
+    sectionErrors,
   };
 }
 
@@ -1102,11 +1249,13 @@ async function fetchDossierData(supabase: any, dossierId: string): Promise<any> 
 // Main Handler
 // =============================================================================
 
-serve(async (req) => {
-  // Handle CORS
+Deno.serve(async (req: Request) => {
+  // Handle CORS preflight with origin-validated headers
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
+
+  const cors = getCorsHeaders(req);
 
   if (req.method !== 'POST') {
     return new Response(
@@ -1120,7 +1269,7 @@ serve(async (req) => {
       }),
       {
         status: 405,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...cors, 'Content-Type': 'application/json' },
       }
     );
   }
@@ -1140,12 +1289,12 @@ serve(async (req) => {
         }),
         {
           status: 401,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...cors, 'Content-Type': 'application/json' },
         }
       );
     }
 
-    // Create Supabase client
+    // Create Supabase client scoped to the user token (RLS enforced)
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -1154,7 +1303,7 @@ serve(async (req) => {
       }
     );
 
-    // Get user
+    // Get user (explicit getUser(token) — bare getUser() 401s on valid tokens)
     const token = authHeader.replace('Bearer ', '');
     const {
       data: { user },
@@ -1173,7 +1322,7 @@ serve(async (req) => {
         }),
         {
           status: 401,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...cors, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -1194,26 +1343,39 @@ serve(async (req) => {
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: { ...cors, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Validate dossier_id is a UUID before any query (ASVS V5)
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(dossier_id)) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: {
+            code: 'INVALID_REQUEST',
+            message_en: 'Invalid dossier_id format. Must be a valid UUID.',
+            message_ar: 'صيغة معرف الملف غير صالحة. يجب أن يكون UUID صالحًا.',
+          },
+        }),
+        {
+          status: 400,
+          headers: { ...cors, 'Content-Type': 'application/json' },
         }
       );
     }
 
     console.log(`Generating export for dossier ${dossier_id}`);
 
-    // Fetch all dossier data
+    // Fetch all dossier data (user-scoped client; per-section failures tracked)
     const data = await fetchDossierData(supabase, dossier_id);
 
     // Generate HTML document
     const html = generateHTMLDocument(data.dossier, data, config);
 
-    // For now, we return HTML as base64 and let the client render/print
-    // In production, integrate with a PDF generation service
-    const encoder = new TextEncoder();
-    const htmlBytes = encoder.encode(html);
-    const base64 = btoa(String.fromCharCode(...htmlBytes));
-
-    // Generate filename
+    // Build a save filename hint for Content-Disposition
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
     const dossierSlug = (data.dossier.name_en || 'dossier')
       .toLowerCase()
@@ -1221,45 +1383,22 @@ serve(async (req) => {
       .slice(0, 30);
     const fileName = `briefing-pack-${dossierSlug}-${timestamp}.html`;
 
-    // Upload to storage
-    const serviceClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
+    // D-08: surface which sections failed via a custom header (CORS-exposed)
+    const failedSectionsHeader = Object.keys(data.sectionErrors || {}).join(',');
 
-    const storagePath = `exports/${user.id}/${fileName}`;
-    const { error: uploadError } = await serviceClient.storage
-      .from('briefing-packs')
-      .upload(storagePath, htmlBytes, {
-        contentType: 'text/html',
-        upsert: true,
-      });
-
-    let downloadUrl: string | undefined;
-    if (!uploadError) {
-      const { data: urlData } = await serviceClient.storage
-        .from('briefing-packs')
-        .createSignedUrl(storagePath, 3600); // 1 hour expiry
-      downloadUrl = urlData?.signedUrl;
-    }
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        download_url: downloadUrl,
-        file_name: fileName,
-        file_size: htmlBytes.length,
-        page_count: Math.ceil(htmlBytes.length / 5000), // Rough estimate
-        expires_at: new Date(Date.now() + 3600000).toISOString(),
-        // Also include base64 for direct client rendering
-        content_base64: base64,
-        content_type: 'text/html',
-      }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+    // D-06: return the generated HTML directly — no storage upload, no signed
+    // URL, no service-role client. The function runs entirely on the user-scoped
+    // anon-key client under RLS.
+    return new Response(html, {
+      status: 200,
+      headers: {
+        ...cors,
+        'Content-Type': 'text/html; charset=utf-8',
+        'Content-Disposition': `inline; filename="${fileName}"`,
+        'Access-Control-Expose-Headers': 'X-Failed-Sections',
+        ...(failedSectionsHeader ? { 'X-Failed-Sections': failedSectionsHeader } : {}),
+      },
+    });
   } catch (error) {
     console.error('Export error:', error);
     return new Response(
@@ -1274,7 +1413,7 @@ serve(async (req) => {
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...cors, 'Content-Type': 'application/json' },
       }
     );
   }
