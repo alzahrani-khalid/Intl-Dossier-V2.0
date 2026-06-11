@@ -2,7 +2,7 @@
  * EngagementsListPage tests (Phase 40 LIST-04).
  *
  * Mocks `useEngagementsInfinite` so the page renders against a deterministic
- * page payload. Asserts the primitive is wired (search, 4 pills, week list,
+ * page payload. Asserts the primitive is wired (search, 3 pills, week list,
  * load-more, GlobeSpinner during pagination, click-through navigation).
  */
 
@@ -117,10 +117,10 @@ describe('EngagementsListPage', () => {
     expect(screen.getByRole('heading', { name: /Engagements/i, level: 1 })).toBeTruthy()
   })
 
-  it('renders 4 filter pills', () => {
+  it('renders 3 filter pills (no call pill — nothing maps to it)', () => {
     render(<EngagementsListPage />)
     const group = screen.getByRole('group', { name: /Filter engagements/i })
-    expect(group.querySelectorAll('button').length).toBe(4)
+    expect(group.querySelectorAll('button').length).toBe(3)
   })
 
   it('renders engagement rows from the mock data', () => {
@@ -134,8 +134,8 @@ describe('EngagementsListPage', () => {
     render(<EngagementsListPage />)
     const group = screen.getByRole('group', { name: /Filter engagements/i })
     const buttons = group.querySelectorAll('button')
-    // Order: 0=all, 1=meeting, 2=call, 3=travel
-    fireEvent.click(buttons[3]!)
+    // Order: 0=all, 1=meeting, 2=travel (call pill removed in round 7)
+    fireEvent.click(buttons[2]!)
     expect(screen.queryByText('Geneva Summit')).toBeNull() // summit → 'event', filtered out
     expect(screen.queryByText('Bilateral Call')).toBeNull() // bilateral_meeting → 'meeting', filtered out
     expect(screen.getByText('Paris Mission')).toBeTruthy() // mission → 'travel'
@@ -145,7 +145,7 @@ describe('EngagementsListPage', () => {
     render(<EngagementsListPage />)
     const group = screen.getByRole('group', { name: /Filter engagements/i })
     const buttons = group.querySelectorAll('button')
-    fireEvent.click(buttons[3]!) // travel
+    fireEvent.click(buttons[2]!) // travel
     expect(screen.queryByText('Geneva Summit')).toBeNull()
     fireEvent.click(buttons[0]!) // all
     expect(screen.getByText('Geneva Summit')).toBeTruthy()
