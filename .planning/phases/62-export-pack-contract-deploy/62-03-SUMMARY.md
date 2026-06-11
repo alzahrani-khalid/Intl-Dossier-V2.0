@@ -134,6 +134,12 @@ None - no external service configuration required by this plan. (Optional operat
 - EXPORT-02 is proven live: the deployed function + frontend rework (62-02) together deliver the advertised HTML briefing pack for every dossier type. Ready for `/gsd:verify-work`.
 - No blockers. The function is ACTIVE on staging with correct CORS; the frontend consumes the deployed URL.
 
+## Self-Check: PASSED
+
+- SUMMARY file exists on disk (`.planning/phases/62-export-pack-contract-deploy/62-03-SUMMARY.md`) ✓
+- Commit `cb58c4be` exists in git log ✓
+- Deployed function independently re-probed post-commit: OPTIONS preflight returns 204 (still ACTIVE) ✓
+
 ---
 
 _Phase: 62-export-pack-contract-deploy_
