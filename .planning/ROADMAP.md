@@ -46,8 +46,8 @@ Plans:
 
 **Wave 1**
 
-- [ ] 62-01-PLAN.md — Edge function surgery: stale-read reconciliation, D-08 error notes, print CSS, direct HTML response (wave 1)
-- [ ] 62-02-PLAN.md — Frontend export contract rework: dialog, types, service, hook, EN/AR i18n + EXPORT-01 component test (wave 1)
+- [x] 62-01-PLAN.md — Edge function surgery: stale-read reconciliation, D-08 error notes, print CSS, direct HTML response (wave 1)
+- [x] 62-02-PLAN.md — Frontend export contract rework: dialog, types, service, hook, EN/AR i18n + EXPORT-01 component test (wave 1)
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
@@ -285,7 +285,7 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
 | 55-59 | v6.4 | 20/20 | Shipped | 2026-05-27 |
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
-| 62. Export Pack Contract & Deploy | v6.6 | 0/TBD | Not started | - |
+| 62. Export Pack Contract & Deploy | v6.6 | 2/3 | In Progress|  |
 | 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 0/TBD | Not started | - |
 | 64. New Position from Dossier | v6.6 | 0/TBD | Not started | - |
 | 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 0/TBD | Not started | - |
