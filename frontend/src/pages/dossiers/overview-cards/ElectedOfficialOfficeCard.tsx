@@ -26,7 +26,7 @@ export function ElectedOfficialOfficeCard({
   const isRTL = i18n.language === 'ar'
   const dateLocale = isRTL ? ar : enUS
 
-  const { data: official, isLoading } = useElectedOfficial(dossierId)
+  const { data: official, isLoading, isError } = useElectedOfficial(dossierId)
 
   if (isLoading) {
     return (
@@ -104,7 +104,13 @@ export function ElectedOfficialOfficeCard({
         )}
       </div>
 
-      {displayRows.length === 0 ? (
+      {isError && official === undefined ? (
+        <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
+          {t('dossier:overview.sectionError', {
+            defaultValue: 'Failed to load this section. Check your connection and try again.',
+          })}
+        </p>
+      ) : displayRows.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
           {t('detail.officeEmpty', { defaultValue: 'No office data available' })}
         </p>

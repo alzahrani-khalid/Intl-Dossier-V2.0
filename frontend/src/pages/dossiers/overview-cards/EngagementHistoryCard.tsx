@@ -27,7 +27,7 @@ export function EngagementHistoryCard({
   const isRTL = i18n.language === 'ar'
   const dateLocale = isRTL ? ar : enUS
 
-  const { data, isLoading } = useDossierOverview(dossierId, {
+  const { data, isLoading, isError } = useDossierOverview(dossierId, {
     includeSections: ['related_dossiers', 'calendar_events'],
   })
 
@@ -66,8 +66,7 @@ export function EngagementHistoryCard({
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, MAX_ENTRIES)
 
-  const hasMore =
-    engagementDossiers.length + pastEvents.length > MAX_ENTRIES
+  const hasMore = engagementDossiers.length + pastEvents.length > MAX_ENTRIES
 
   return (
     <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -78,7 +77,13 @@ export function EngagementHistoryCard({
         </h3>
       </div>
 
-      {timelineEntries.length === 0 ? (
+      {isError && data === null ? (
+        <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
+          {t('overview.sectionError', {
+            defaultValue: 'Failed to load this section. Check your connection and try again.',
+          })}
+        </p>
+      ) : timelineEntries.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
           {t('overview.engagementHistory.empty', { defaultValue: 'No engagement history' })}
         </p>

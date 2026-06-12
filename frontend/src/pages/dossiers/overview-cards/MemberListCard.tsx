@@ -27,7 +27,7 @@ export function MemberListCard({ dossierId }: MemberListCardProps): React.ReactE
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
 
-  const { data, isLoading } = useDossierOverview(dossierId, {
+  const { data, isLoading, isError } = useDossierOverview(dossierId, {
     includeSections: ['related_dossiers'],
   })
 
@@ -66,7 +66,13 @@ export function MemberListCard({ dossierId }: MemberListCardProps): React.ReactE
         </h3>
       </div>
 
-      {members.length === 0 ? (
+      {isError && data === null ? (
+        <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
+          {t('overview.sectionError', {
+            defaultValue: 'Failed to load this section. Check your connection and try again.',
+          })}
+        </p>
+      ) : members.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
           {t('overview.members.empty', { defaultValue: 'No members linked' })}
         </p>

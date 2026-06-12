@@ -26,7 +26,7 @@ export function ForumMetadataCard({ dossierId }: ForumMetadataCardProps): React.
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
 
-  const { data, isLoading } = useDossierOverview(dossierId, {
+  const { data, isLoading, isError } = useDossierOverview(dossierId, {
     includeSections: ['related_dossiers'],
   })
 
@@ -62,9 +62,8 @@ export function ForumMetadataCard({ dossierId }: ForumMetadataCardProps): React.
     {
       icon: <Building2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
       label: t('overview.forum.host', { defaultValue: 'Host Organization' }),
-      value: hostOrg != null
-        ? (isRTL ? (hostOrg.name_ar ?? hostOrg.name_en) : hostOrg.name_en)
-        : '-',
+      value:
+        hostOrg != null ? (isRTL ? (hostOrg.name_ar ?? hostOrg.name_en) : hostOrg.name_en) : '-',
     },
     {
       icon: <Users className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
@@ -82,19 +81,25 @@ export function ForumMetadataCard({ dossierId }: ForumMetadataCardProps): React.
         </h3>
       </div>
 
-      <div className="space-y-3">
-        {rows.map((row) => (
-          <div key={row.label} className="flex items-center gap-3">
-            {row.icon}
-            <div className="flex-1 min-w-0">
-              <span className="text-sm text-muted-foreground">{row.label}</span>
+      {isError && data === null ? (
+        <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
+          {t('overview.sectionError', {
+            defaultValue: 'Failed to load this section. Check your connection and try again.',
+          })}
+        </p>
+      ) : (
+        <div className="space-y-3">
+          {rows.map((row) => (
+            <div key={row.label} className="flex items-center gap-3">
+              {row.icon}
+              <div className="flex-1 min-w-0">
+                <span className="text-sm text-muted-foreground">{row.label}</span>
+              </div>
+              <span className="text-sm font-medium truncate max-w-[50%] text-end">{row.value}</span>
             </div>
-            <span className="text-sm font-medium truncate max-w-[50%] text-end">
-              {row.value}
-            </span>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
