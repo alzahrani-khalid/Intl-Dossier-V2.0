@@ -365,12 +365,16 @@ serve(async (req) => {
     // Return dossier with extension data if available
     const result = extensionResult ? { ...dossier, extension: extensionResult } : dossier
 
+    // getDossierDetailPath returns null for unresolvable types (never for a
+    // freshly inserted enum-validated dossier.type) — omit Location if so.
+    const location = getDossierDetailPath(dossier.id, dossier.type)
+
     return new Response(JSON.stringify(result), {
       status: 201,
       headers: {
         ...corsHeaders,
         'Content-Type': 'application/json',
-        Location: getDossierDetailPath(dossier.id, dossier.type),
+        ...(location === null ? {} : { Location: location }),
       },
     })
   } catch (error) {

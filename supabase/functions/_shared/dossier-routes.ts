@@ -7,7 +7,8 @@
 
 /**
  * Maps dossier types to their URL route segments.
- * Note: elected_official is now a person_subtype, all persons use /persons route.
+ * Covers all 8 dossier types; segments match the frontend routeTree mounts
+ * (working_groups underscore, elected-officials hyphen).
  */
 export const DOSSIER_TYPE_TO_ROUTE: Record<string, string> = {
   country: 'countries',
@@ -17,23 +18,38 @@ export const DOSSIER_TYPE_TO_ROUTE: Record<string, string> = {
   forum: 'forums',
   working_group: 'working_groups',
   topic: 'topics',
+  elected_official: 'elected-officials',
 };
 
 /**
- * Converts a dossier type to its plural route segment.
- * Handles both lowercase ('country') and PascalCase ('Country') formats.
+ * Converts a dossier type to its plural route segment, or null when the type
+ * is unknown. Handles lowercase ('country'), PascalCase ('Country'), camelCase
+ * humps ('WorkingGroup' → 'working_group'), and space variants.
+ *
+ * Returns null instead of guessing: a fabricated wrong-type segment produces a
+ * link the client mounted-route guard ACCEPTS (it matches a mounted prefix) but
+ * lands the user on the wrong detail page with a foreign id. null lets callers
+ * suppress the affordance instead (navigation_url: null → client drops it).
  */
-export function getDossierRouteSegment(type: string | undefined | null): string {
+export function getDossierRouteSegment(type: string | undefined | null): string | null {
   if (!type) {
-    return 'countries';
+    return null;
   }
-  const normalizedType = type.toLowerCase().replace(/\s+/g, '_');
-  return DOSSIER_TYPE_TO_ROUTE[normalizedType] ?? 'countries';
+  const normalizedType = type
+    .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
+    .toLowerCase()
+    .replace(/\s+/g, '_');
+  return DOSSIER_TYPE_TO_ROUTE[normalizedType] ?? null;
 }
 
 /**
- * Generates the full detail path for a dossier.
+ * Generates the full detail path for a dossier, or null when the type cannot
+ * be resolved (caller emits navigation_url: null → client suppresses).
  */
-export function getDossierDetailPath(dossierId: string, type: string | undefined | null): string {
-  return `/dossiers/${getDossierRouteSegment(type)}/${dossierId}`;
+export function getDossierDetailPath(
+  dossierId: string,
+  type: string | undefined | null,
+): string | null {
+  const segment = getDossierRouteSegment(type);
+  return segment === null ? null : `/dossiers/${segment}/${dossierId}`;
 }
