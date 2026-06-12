@@ -56,6 +56,8 @@ The remaining findings are below. The most significant is the recorded-but-only-
 
 ### WR-01: TasksTab masks kanban fetch errors as the "No tasks yet" empty state
 
+**Status:** fixed — commit `7ae3cac9`. TasksTab now destructures `error` and renders a `role="alert"` danger-token line (`error.tabLoad`, existing EN+AR keys) before the empty branch. The OverviewTab Task Progress card had the same masked shape and the fix there was small and contained (one ternary branch in the card), so it was applied in the same commit rather than deferred. Error-state test added to `CreateTaskCtas.test.tsx`.
+
 **File:** `frontend/src/pages/engagements/workspace/TasksTab.tsx:48,140`
 **Issue:** `useEngagementKanban` returns an `error` field, but TasksTab destructures only `{ columns, stats, handleDragEnd, isLoading }`. On any fetch failure, `isLoading` becomes false and `columns` stays undefined, so `isEmpty = !isLoading && (stats.total === 0 || !columns)` evaluates true and the tab renders the **empty state** ("No tasks yet" + Create task CTA) instead of an error. This is not theoretical: the phase's own 65-04 summary records that `engagements-kanban-get` validates against the legacy `engagements` table and **404s for canonical engagements without a legacy twin** — for those engagements this tab will permanently display "No tasks yet" while the fetch is hard-failing. `OverviewTab.tsx:116` has the same masked-error shape (Task Progress silently shows 0%/0/0 on error). The `error.tabLoad` key already exists in both workspace bundles and is unused here.
 **Fix:**
@@ -74,11 +76,15 @@ if (error) {
 
 ### WR-02: Created tasks never appear on the kanban board; populated-board path has no honesty mitigation
 
+**Status:** fixed — commit `492656b3`. The comment now states the truth: the invalidation only refetches the board and cannot surface the new task (tasks-row write vs legacy `assignments` reader) until kanban canonicalization (T-65-11); the created task appears in the main tasks list. No copy change was required on the populated-board path: the success toast ("Task created successfully") makes no board claim, and the empty-state body already directs users to the main tasks list. Kanban canonicalization itself remains T-65-11 (not attempted here).
+
 **File:** `frontend/src/components/dossier/AddToDossierDialogs.tsx:364-370`, `frontend/src/pages/engagements/workspace/TasksTab.tsx:218-229`
 **Issue:** Traced end-to-end: `TaskDialog` → `tasks-create` inserts only a `tasks` row with `engagement_id: null` (the dialog intentionally posts none) plus a `work_item_dossiers` link; no migration trigger creates an `assignments` row; `engagements-kanban-get` reads `assignments` filtered `.eq('engagement_id', engagementId)`. Therefore a task created from the workspace **will never render on the board the user just created it from** — the `['engagement-kanban', engagementId]` invalidation refetches identical data. The phase recorded this caveat (T-65-11) and mitigated the **empty-state** path via the honest `empty.tasks.body` copy, but the **header "Create task" on a populated board** (disposition #5) has zero signal: success toast fires, board is unchanged, and the feature reads as broken. The code comment at AddToDossierDialogs.tsx:364-367 ("so a task created from the workspace refreshes the board") overstates what the invalidation achieves today.
 **Fix:** Until T-65-11 reconciles the kanban reader onto `tasks`/`work_item_dossiers`, surface the same honesty on the populated-board path — e.g. an engagement-context success toast ("Task created — it appears in the main tasks list") or an inline note near the header CTA; and reword the comment to state the invalidation is a forward-compat no-op until the data planes are reconciled.
 
 ### WR-03: EN/AR key-parity gap — `positions:status.review` exists only in EN
+
+**Status:** fixed — commit `393fa73d`. AR `status.review` ("قيد المراجعة") added. EN/AR `status.*` key parity verified: both bundles carry exactly `draft`, `under_review`, `review`, `approved`, `published`, `unpublished`.
 
 **File:** `frontend/src/i18n/en/positions.json:235`, `frontend/src/i18n/ar/positions.json:203-208`
 **Issue:** EN carries `status.review: "Under Review"` (a safety alias for the dynamic lookup) but AR has no `status.review`. `AttachPositionDialog.tsx:295` renders `t(`positions:status.${previewPosition.status}`)` dynamically — and this dialog is now mounted on the new engagement Positions tab. A position whose status is `review` renders "Under Review" in EN but silently falls back to English in AR (the exact recurring pitfall this project has documented: looks fine in EN, breaks AR). This asymmetry predates phase 65, but the phase put a new high-traffic surface in front of it and the file is in scope.
@@ -89,6 +95,8 @@ if (error) {
 ```
 
 ### WR-04: TaskDialog/IntakeDialog partial failure shows a full-failure toast and invites duplicate creation
+
+**Status:** fixed (TaskDialog only) — commit `6403633a`. The link write now has its own catch (NewPositionDialog phase-64 precedent): a link failure after a successful create closes/resets the dialog and shows a distinct warning toast (`addToDossier.error.taskLinkOnly`, new EN+AR keys) so resubmission cannot duplicate the task. Invalidation failures after both writes fall through to the success path. Partial-failure contract test added. **Scope decision:** IntakeDialog has the same pre-existing shape but was not modified this phase — left untouched, tracked by this finding's record for a future pass.
 
 **File:** `frontend/src/components/dossier/AddToDossierDialogs.tsx:345-379` (TaskDialog), `:212-233` (IntakeDialog)
 **Issue:** In `handleSubmit`, the create call and the `work_item_dossiers` link write share one `try/catch`. If `createTask.mutateAsync` succeeds but `createLinks.mutateAsync` rejects, the catch fires `toast.error(t('addToDossier.error.task'))` — a full-failure message — while the task **was** created (orphaned, unlinked to the dossier/engagement). The dialog stays open with the form populated; the natural user response is to resubmit, producing a duplicate task. CommitmentDialog (line 519-522) at least documents the ambiguity in a comment; Task and Intake do not. This pattern predates the phase, but `TaskDialog.handleSubmit` was modified this phase (kanban invalidation added inside the same block) and TaskDialog is now the primary CTA on two workspace tabs.
