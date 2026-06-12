@@ -103,6 +103,10 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
         <div className="flex flex-col sm:flex-row gap-2">
           <Button
             onClick={handleCreatePosition}
+            // The dialog only renders once the dossier row has loaded; without
+            // this guard the click is a silent no-op while useDossier is
+            // loading or errored (WR-03).
+            disabled={dossierContext === null}
             className="w-full sm:w-auto min-h-11"
             aria-label={t('positions:dossier_tab.create_position')}
           >
