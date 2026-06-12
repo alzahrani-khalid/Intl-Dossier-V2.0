@@ -40,7 +40,7 @@
   },
 
   "error": {
-    "title": "Error Loading Dossier Overview",
+    "title": "Error loading dossier overview",
     "description": "Failed to load the dossier overview. Please try again."
   },
 
