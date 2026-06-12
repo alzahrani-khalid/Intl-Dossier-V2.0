@@ -563,3 +563,10 @@ All require live staging access (Supabase MCP) — none block planning; Q1-Q3 sh
 
 **Research date:** 2026-06-12
 **Valid until:** ~2026-07-12 (in-repo facts are stable; re-check staging row counts before execution via Open Q4)
+
+## Wave-0 Diagnostic Answers (orchestrator, Supabase MCP, 2026-06-12 22:45)
+
+1. **Legacy `engagements` overlap:** ALL THREE canonical engagement-dossier ids exist in legacy `engagements` too (seed data dual-writes), each with **0 assignment rows**. The `engagements-kanban-get` edge therefore does NOT 404 for these ids — it returns an empty board. TasksTab CTA disposition: the kanban renders but will never show TaskDialog-created tasks (different plane); the recorded-caveat re-enable path stands, with "404" softened to "empty-board mismatch". New canonical engagements created WITHOUT a legacy twin would still 404 — the caveat must say so.
+2. **Published positions:** 2 published (2 total) — attach-existing flow has live supply.
+3. **UAT target:** `b0000002-0000-0000-0000-000000000001` "Bilateral consultation — ESCWA" (sensitivity 2); test user clearance_level = 3 ≥ 2 → clearance-gated position_dossier_links INSERT will pass. All four engagement dossiers are ≤ level 2, so any works.
+4. **engagement_positions provenance:** confirmed earlier this session: 0 rows, SELECT-only policy (write-deny). Re-check cheaply before the deletion commit at execution time (SQL above).
