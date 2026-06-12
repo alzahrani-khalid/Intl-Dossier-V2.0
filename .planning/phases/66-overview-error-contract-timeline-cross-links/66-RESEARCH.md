@@ -557,3 +557,10 @@ Safest forced-error method — **client-side network blocking** (zero staging mu
 
 **Research date:** 2026-06-13
 **Valid until:** ~2026-07-13 for stack facts; staging row counts and deployed-edge state should be re-probed at execution start (Q2/Q3)
+
+## Open Question Answers (orchestrator, 2026-06-13)
+
+1. **Calendar-row disposition: SUPPRESS** (product call recorded — /calendar has no event-focus param; a bare list link is a dishonest affordance. Rows render without a View-details action.)
+2. **Staging probe:** calendar_entries = 6 rows (the /calendar/<uuid> dead link IS live-reproducible — good UAT target); mous (not deleted) = 0 rows (emission fixed anyway; not live-reproducible).
+3. **Staging probe:** activity_stream rows with metadata.navigation_url = 0 (guard on ActivityList is belt-and-braces, as expected).
+4. **Relationship-metadata enrichment: DEFERRED** to backlog (suppression satisfies OVRERR-02; enrichment needs RPC payload changes — out of phase scope).
