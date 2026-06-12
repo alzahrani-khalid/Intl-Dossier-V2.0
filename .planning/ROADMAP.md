@@ -71,7 +71,7 @@ Plans:
 **Wave 1**
 
 - [x] 63-01-PLAN.md — Bidirectional RPC migration (DROP+CREATE+GRANT) + [BLOCKING] apply via Supabase MCP + live probes (wave 1)
-- [ ] 63-02-PLAN.md — Route mount with validateSearch + page repair (graph namespace, canonical filter, D-02 link) + Wave 0 page test (wave 1)
+- [x] 63-02-PLAN.md — Route mount with validateSearch + page repair (graph namespace, canonical filter, D-02 link) + Wave 0 page test (wave 1)
 - [ ] 63-03-PLAN.md — Edge-orientation contract helper + per-type path test (Wave 0) + Basic-mode arrows + graph.json sentence-case sweep (wave 1)
 
 **Wave 2** _(blocked on 63-01 + 63-03)_
@@ -302,7 +302,7 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 | 55-59 | v6.4 | 20/20 | Shipped | 2026-05-27 |
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
 | 62. Export Pack Contract & Deploy | v6.6 | 3/3 | Complete    | 2026-06-11 |
-| 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 1/5 | In Progress|  |
+| 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 2/5 | In Progress|  |
 | 64. New Position from Dossier | v6.6 | 0/TBD | Not started | - |
 | 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 0/TBD | Not started | - |
 | 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 0/TBD | Not started | - |
