@@ -1,3 +1,10 @@
+// DEPRECATED (Phase 65 / ENGPOS-01, 2026-06-12): this edge validates against the
+// LEGACY `engagements` table and reads/writes `engagement_positions` (0 rows,
+// write-deny RLS, no migration provenance). The canonical engagement-positions
+// plane is `position_dossier_links` keyed by the engagement's dossiers.id,
+// written via the `positions-dossiers-create` edge. Zero frontend callers.
+// Do NOT extend or "fix" this function. Undeploy deferred (environment action)
+// — see .planning/phases/65-engagement-positions-tab-legacy-reconciliation/65-03-SUMMARY.md.
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 import { corsHeaders } from '../_shared/cors.ts';
