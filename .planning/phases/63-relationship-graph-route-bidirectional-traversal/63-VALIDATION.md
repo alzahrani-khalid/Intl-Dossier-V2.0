@@ -1,9 +1,9 @@
 ---
 phase: 63
 slug: relationship-graph-route-bidirectional-traversal
-status: ready
+status: complete
 nyquist_compliant: true
-wave_0_complete: false
+wave_0_complete: true
 created: 2026-06-12
 ---
 
@@ -36,14 +36,14 @@ created: 2026-06-12
 
 ## Per-Task Verification Map
 
-| Task ID             | Plan     | Wave | Requirement     | Threat Ref | Secure Behavior                                                                                                                                                | Test Type                         | Automated Command                                                                                 | File Exists                 | Status     |
-| ------------------- | -------- | ---- | --------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------- | --------------------------- | ---------- |
-| 63-02 T1/T3         | 63-02    | 1    | GRAPH-01        | T-63-05    | Route renders page (no redirect); no-dossier alert has `/dossiers` link                                                                                        | unit                              | `cd frontend && pnpm vitest run src/pages/relationships/__tests__/RelationshipGraphPage.test.tsx` | ❌ W0 (created by 63-02 T1) | ⬜ pending |
-| 63-02 T1 c3         | 63-02    | 1    | GRAPH-01        | —          | Page requests the `graph` namespace with bare keys (D-07 dot-vs-colon regression guard) — namespace-form only; live AR string rendering is covered by 63-05 T3 | unit                              | same file, namespace-form guard case (Test 3)                                                     | ❌ W0 (created by 63-02 T1) | ⬜ pending |
-| 63-01 T2 / 63-04 T2 | 63-01/04 | 1/2  | GRAPH-02        | T-63-01    | RPC returns incoming + outgoing                                                                                                                                | manual (live staging probe)       | curl probe (see RESEARCH.md Code Examples)                                                        | n/a                         | ⬜ pending |
-| 63-03 T1            | 63-03    | 1    | GRAPH-02 / D-04 | T-63-08    | Edge orientation: `direction_path 'incoming'` swaps source/target                                                                                              | unit on extracted pure transform  | `cd frontend && pnpm vitest run src/pages/relationships/__tests__/edge-orientation.test.ts`       | ❌ W0 (created by 63-03 T1) | ⬜ pending |
-| 63-03 T2            | 63-03    | 1    | GRAPH-03        | —          | `handleNodeSelect` produces `/dossiers/<segment>/<id>` for each of the 8 types                                                                                 | unit (via `getDossierDetailPath`) | `cd frontend && pnpm vitest run src/lib/dossier-routes.test.ts`                                   | ❌ W0 (created by 63-03 T2) | ⬜ pending |
-| 63-05 T2            | 63-05    | 3    | D-09            | T-63-16    | All-types live click-through on staging                                                                                                                        | manual-only                       | browser walkthrough checklist                                                                     | n/a                         | ⬜ pending |
+| Task ID             | Plan     | Wave | Requirement     | Threat Ref | Secure Behavior                                                                                                                                                | Test Type                         | Automated Command                                                                                 | File Exists   | Status   |
+| ------------------- | -------- | ---- | --------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------- | ------------- | -------- |
+| 63-02 T1/T3         | 63-02    | 1    | GRAPH-01        | T-63-05    | Route renders page (no redirect); no-dossier alert has `/dossiers` link                                                                                        | unit                              | `cd frontend && pnpm vitest run src/pages/relationships/__tests__/RelationshipGraphPage.test.tsx` | ✅ W0 created | ✅ green |
+| 63-02 T1 c3         | 63-02    | 1    | GRAPH-01        | —          | Page requests the `graph` namespace with bare keys (D-07 dot-vs-colon regression guard) — namespace-form only; live AR string rendering is covered by 63-05 T3 | unit                              | same file, namespace-form guard case (Test 3)                                                     | ✅ W0 created | ✅ green |
+| 63-01 T2 / 63-04 T2 | 63-01/04 | 1/2  | GRAPH-02        | T-63-01    | RPC returns incoming + outgoing                                                                                                                                | manual (live staging probe)       | curl probe (see RESEARCH.md Code Examples)                                                        | n/a           | ✅ green |
+| 63-03 T1            | 63-03    | 1    | GRAPH-02 / D-04 | T-63-08    | Edge orientation: `direction_path 'incoming'` swaps source/target                                                                                              | unit on extracted pure transform  | `cd frontend && pnpm vitest run src/pages/relationships/__tests__/edge-orientation.test.ts`       | ✅ W0 created | ✅ green |
+| 63-03 T2            | 63-03    | 1    | GRAPH-03        | —          | `handleNodeSelect` produces `/dossiers/<segment>/<id>` for each of the 8 types                                                                                 | unit (via `getDossierDetailPath`) | `cd frontend && pnpm vitest run src/lib/dossier-routes.test.ts`                                   | ✅ W0 created | ✅ green |
+| 63-05 T2            | 63-05    | 3    | D-09            | T-63-16    | All-types live click-through on staging                                                                                                                        | manual-only                       | browser walkthrough checklist                                                                     | n/a           | ✅ green |
 
 _Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
 _Task IDs filled by planner — map rows to concrete plan tasks._
@@ -52,9 +52,9 @@ _Task IDs filled by planner — map rows to concrete plan tasks._
 
 ## Wave 0 Requirements
 
-- [ ] `frontend/src/pages/relationships/__tests__/RelationshipGraphPage.test.tsx` — stubs for GRAPH-01 (render, no-dossier link, graph-namespace guard)
-- [ ] Edge-orientation unit test (pure transform mirroring the edge-fn logic) — covers GRAPH-02/D-04 client side
-- [ ] Per-type path test for node-click — covers GRAPH-03
+- [x] `frontend/src/pages/relationships/__tests__/RelationshipGraphPage.test.tsx` — stubs for GRAPH-01 (render, no-dossier link, graph-namespace guard)
+- [x] Edge-orientation unit test (pure transform mirroring the edge-fn logic) — covers GRAPH-02/D-04 client side
+- [x] Per-type path test for node-click — covers GRAPH-03
 - Framework install: none needed (Vitest configured; `CountriesListPage.test.tsx` is the existing page-test pattern to copy)
 
 ---

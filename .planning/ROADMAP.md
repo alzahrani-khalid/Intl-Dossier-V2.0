@@ -23,7 +23,7 @@
 **Source:** `.planning/dossier-workflow-backlog-phases-2026-06-11.md` (bucket-B escalations from the 17-round inspection loop, rounds 1-17)
 
 - [x] **Phase 62: Export Pack Contract & Deploy** - Exporting a dossier returns the advertised file format from a deployed, schema-correct edge (HIGH — most visible broken path)
-- [ ] **Phase 63: Relationship Graph Route & Bidirectional Traversal** - Graph page reachable with incoming + outgoing edges and per-type node navigation, or formally retired
+- [x] **Phase 63: Relationship Graph Route & Bidirectional Traversal** - Graph page reachable with incoming + outgoing edges and per-type node navigation, or formally retired
 - [ ] **Phase 64: New Position from Dossier** - Creating a position from a dossier persists a valid position and its dossier link
 - [ ] **Phase 65: Engagement Positions Tab & Legacy Reconciliation** - Working engagement Positions surface on canonical tables; no inert workspace CTAs
 - [ ] **Phase 66: Overview Error Contract & Timeline Cross-Links** - Overview sections distinguish empty from failed; timeline links never hit unmounted routes
@@ -80,7 +80,7 @@ Plans:
 
 **Wave 3** _(blocked on all prior)_
 
-- [ ] 63-05-PLAN.md — Staging relationship seed (all 7 types) + live all-types click-through, AR/RTL + width verification, suite/size gates (wave 3)
+- [x] 63-05-PLAN.md — Staging relationship seed (all 7 types) + live all-types click-through, AR/RTL + width verification, suite/size gates (wave 3)
 
 ### Phase 64: New Position from Dossier
 

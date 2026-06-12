@@ -1,0 +1,214 @@
+{
+  "generatedAt": "2026-06-12T08:53:16.725Z",
+  "baseUrl": "http://127.0.0.1:5173",
+  "login": {
+    "landedOn": "http://127.0.0.1:5173/dashboard",
+    "title": "GASTAT International Dossier"
+  },
+  "entryLinkHref": "/relationships/graph?dossierId=b0000001-0000-0000-0000-000000000001",
+  "entry": {
+    "url": "http://127.0.0.1:5173/relationships/graph?dossierId=b0000001-0000-0000-0000-000000000001",
+    "clickedFromMiniGraph": true,
+    "hasHeading": true
+  },
+  "graph": {
+    "status": 200,
+    "nodeCount": 8,
+    "edgeCount": 7,
+    "maxDegree": 2,
+    "nodeTypes": [
+      "country",
+      "engagement",
+      "forum",
+      "organization",
+      "person",
+      "topic",
+      "working_group"
+    ],
+    "edgeTypes": [
+      "cooperates_with",
+      "discusses",
+      "involves",
+      "member_of",
+      "participates_in",
+      "represents"
+    ],
+    "secondDegreeNodes": [
+      {
+        "id": "f63d0900-0000-0000-0000-000000000002",
+        "type": "forum",
+        "name_en": "Phase 63 second-degree verification forum"
+      }
+    ]
+  },
+  "clickMatrix": {
+    "country": {
+      "id": "b0000001-0000-0000-0000-000000000001",
+      "url": "http://127.0.0.1:5173/dossiers/countries/b0000001-0000-0000-0000-000000000001",
+      "surface": "advanced-graph-start-node-double-click"
+    },
+    "organization": {
+      "id": "b0000001-0000-0000-0000-000000000002",
+      "url": "http://127.0.0.1:5173/dossiers/organizations/b0000001-0000-0000-0000-000000000002",
+      "surface": "relationship-navigator-list"
+    },
+    "forum": {
+      "id": "f63d0900-0000-0000-0000-000000000002",
+      "url": "http://127.0.0.1:5173/dossiers/forums/f63d0900-0000-0000-0000-000000000002",
+      "surface": "relationship-navigator-list"
+    },
+    "engagement": {
+      "id": "b0000002-0000-0000-0000-000000000001",
+      "url": "http://127.0.0.1:5173/dossiers/engagements/b0000002-0000-0000-0000-000000000001",
+      "surface": "relationship-navigator-list"
+    },
+    "person": {
+      "id": "a0000000-0000-0000-0000-000000000501",
+      "url": "http://127.0.0.1:5173/dossiers/persons/a0000000-0000-0000-0000-000000000501",
+      "surface": "relationship-navigator-list"
+    },
+    "topic": {
+      "id": "f63d0900-0000-0000-0000-000000000001",
+      "url": "http://127.0.0.1:5173/dossiers/topics/f63d0900-0000-0000-0000-000000000001",
+      "surface": "relationship-navigator-list"
+    },
+    "working_group": {
+      "id": "a0000000-0000-0000-0000-000000000404",
+      "url": "http://127.0.0.1:5173/dossiers/working_groups/a0000000-0000-0000-0000-000000000404",
+      "surface": "relationship-navigator-list"
+    }
+  },
+  "maxDegrees3": {
+    "status": 200,
+    "nodeCount": 8,
+    "edgeCount": 7,
+    "maxDegree": 2,
+    "nodeTypes": [
+      "country",
+      "engagement",
+      "forum",
+      "organization",
+      "person",
+      "topic",
+      "working_group"
+    ],
+    "edgeTypes": [
+      "cooperates_with",
+      "discusses",
+      "involves",
+      "member_of",
+      "participates_in",
+      "represents"
+    ],
+    "secondDegreeNodes": [
+      {
+        "id": "f63d0900-0000-0000-0000-000000000002",
+        "type": "forum",
+        "name_en": "Phase 63 second-degree verification forum"
+      }
+    ]
+  },
+  "cooperatesWithFilter": {
+    "status": 200,
+    "nodeCount": 2,
+    "edgeCount": 1,
+    "maxDegree": 1,
+    "nodeTypes": ["country", "working_group"],
+    "edgeTypes": ["cooperates_with"],
+    "secondDegreeNodes": []
+  },
+  "noDossier": {
+    "alertVisible": true,
+    "browseVisible": true
+  },
+  "arRtl": {
+    "url": "http://127.0.0.1:5173/relationships/graph?dossierId=b0000001-0000-0000-0000-000000000001&lng=ar",
+    "htmlDir": "rtl",
+    "bodyDir": "rtl",
+    "headingVisible": true,
+    "anchorVisible": true,
+    "topicVisible": true
+  },
+  "widths": [
+    {
+      "width": 1024,
+      "locale": "en",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "bodyScrollWidth": 1024,
+      "overflowX": 0
+    },
+    {
+      "width": 1400,
+      "locale": "en",
+      "innerWidth": 1400,
+      "scrollWidth": 1400,
+      "bodyScrollWidth": 1400,
+      "overflowX": 0
+    },
+    {
+      "width": 1280,
+      "locale": "ar",
+      "innerWidth": 1280,
+      "scrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "overflowX": 0
+    }
+  ],
+  "stakeholderInfluence": {
+    "url": "http://127.0.0.1:5173/stakeholder-influence?lng=en",
+    "rendered": true,
+    "headingText": "Stakeholder Influence"
+  },
+  "consoleErrorCount": 3,
+  "consoleErrors": [
+    "In HTML, %s cannot be a descendant of <%s>.\nThis will cause a hydration error.%s <div> p \n\n  ...\n    <StakeholderInfluencePage>\n      <div className=\"space-y-6\">\n        <PageHeader>\n        <div className=\"grid grid-...\">\n          <HeroUICard>\n            <CardRoot data-slot=\"card\" className=\"card flex ...\">\n              <bound DOMElement className=\"card card-...\" data-slot=\"card\">\n                <div className=\"card card-...\" data-slot=\"card\" ref={function}>\n                  <HeroUICardContent className=\"p-4\">\n                    <CardContent data-slot=\"card-content\" className=\"card-conte...\">\n                      <bound DOMElement className=\"card__cont...\" data-slot=\"card-content\">\n                        <div className=\"card__cont...\" data-slot=\"card-content\" ref={function}>\n                          <div className=\"flex items...\">\n                            <Users>\n                            <div>\n                              <p>\n>                             <p className=\"text-xl font-bold\">\n                                <HeroUISkeleton className=\"h-6 w-12\">\n                                  <SkeletonRoot data-slot=\"skeleton\" className=\"animate-pu...\">\n                                    <bound DOMElement className=\"skeleton s...\" data-slot=\"skeleton\">\n>                                     <div\n>                                       className=\"skeleton skeleton--shimmer animate-pulse rounded-[var(--radius-sm)]...\"\n>                                       data-slot=\"skeleton\"\n>                                       ref={function}\n>                                     >\n          ...\n        ...\n",
+    "<%s> cannot contain a nested %s.\nSee this log for the ancestor stack trace. p <div>",
+    "Query data cannot be undefined. Please make sure to return a value other than undefined from your query function. Affected query key: [\"stakeholder-influence\",\"network-statistics\",null]"
+  ],
+  "pageErrors": [],
+  "arrowDirection": {
+    "sourceId": "a0000000-0000-0000-0000-000000000404",
+    "targetId": "b0000001-0000-0000-0000-000000000001",
+    "relationshipType": "cooperates_with",
+    "observed": "working_group_to_anchor_country",
+    "expectation": "arrow points into Indonesia because ReactFlow edge source is working_group and target is country anchor"
+  },
+  "edgeList": [
+    {
+      "source_id": "a0000000-0000-0000-0000-000000000404",
+      "target_id": "b0000001-0000-0000-0000-000000000001",
+      "relationship_type": "cooperates_with"
+    },
+    {
+      "source_id": "a0000000-0000-0000-0000-000000000501",
+      "target_id": "b0000001-0000-0000-0000-000000000001",
+      "relationship_type": "represents"
+    },
+    {
+      "source_id": "b0000001-0000-0000-0000-000000000001",
+      "target_id": "b0000001-0000-0000-0000-000000000002",
+      "relationship_type": "member_of"
+    },
+    {
+      "source_id": "b0000001-0000-0000-0000-000000000001",
+      "target_id": "b0000001-0000-0000-0000-000000000003",
+      "relationship_type": "participates_in"
+    },
+    {
+      "source_id": "b0000002-0000-0000-0000-000000000001",
+      "target_id": "b0000001-0000-0000-0000-000000000001",
+      "relationship_type": "involves"
+    },
+    {
+      "source_id": "f63d0900-0000-0000-0000-000000000001",
+      "target_id": "b0000001-0000-0000-0000-000000000001",
+      "relationship_type": "discusses"
+    },
+    {
+      "source_id": "b0000001-0000-0000-0000-000000000002",
+      "target_id": "f63d0900-0000-0000-0000-000000000002",
+      "relationship_type": "participates_in"
+    }
+  ]
+}
