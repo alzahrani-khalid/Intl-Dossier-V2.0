@@ -137,7 +137,7 @@ export function DossierOverview({
   const [activeTab, setActiveTab] = useState('related')
 
   // Fetch dossier overview
-  const { data, isLoading, isError, error, refetch } = useDossierOverview(dossierId)
+  const { data, isLoading, isError, refetch } = useDossierOverview(dossierId)
 
   // Export functionality
   const { exportDossier, isExporting } = useDossierExport()
@@ -231,7 +231,7 @@ export function DossierOverview({
           <CardContent className="p-6 sm:p-8 text-center">
             <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
             <h2 className="text-lg font-semibold mb-2">{t('error.title')}</h2>
-            <p className="text-muted-foreground mb-4">{error?.message || t('error.description')}</p>
+            <p className="text-muted-foreground mb-4">{t('error.description')}</p>
             <Button onClick={() => refetch()} variant="outline">
               <RefreshCw className="h-4 w-4 me-2" />
               {t('actions.retry')}

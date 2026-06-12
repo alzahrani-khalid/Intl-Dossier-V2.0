@@ -74,7 +74,6 @@ export function DossierActivityTimeline({
     activities,
     isLoading,
     isError,
-    error,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
@@ -173,7 +172,7 @@ export function DossierActivityTimeline({
       {isError && (
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <p className="text-destructive mb-4">
-            {error?.message || t('timeline.error', 'Failed to load activities')}
+            {t('timeline.error', 'Failed to load activities')}
           </p>
           <Button variant="outline" onClick={() => refetch()}>
             {t('timeline.retry', 'Try Again')}
