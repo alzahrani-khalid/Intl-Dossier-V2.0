@@ -137,7 +137,7 @@ interface MiniNodeData {
 
 const MiniDossierNode = memo(({ data }: { data: MiniNodeData }) => {
   const { isRTL } = useDirection()
-const name = isRTL ? data.name_ar || data.name_en : data.name_en
+  const name = isRTL ? data.name_ar || data.name_en : data.name_en
 
   const nodeColor = NODE_COLORS[data.type] || '#6b7280'
   const size = data.isCenter ? 50 : 36
@@ -424,60 +424,60 @@ function MiniGraphInner({ centerDossier, nodes, edges, height, isRTL, t }: MiniG
   )
 
   return (
-    <LtrIsolate className="relative w-full rounded-lg border bg-background/50 overflow-hidden" style={{ height }}>
-    <div
-      ref={containerRef}
-      className="h-full w-full"
+    <LtrIsolate
+      className="relative w-full rounded-lg border bg-background/50 overflow-hidden"
+      style={{ height }}
     >
-      <ReactFlow
-        nodes={reactFlowNodes}
-        edges={reactFlowEdges}
-        nodeTypes={miniNodeTypes}
-        connectionMode={ConnectionMode.Loose}
-        fitView
-        fitViewOptions={{ padding: 0.2 }}
-        onNodeMouseEnter={handleNodeMouseEnter}
-        onNodeMouseLeave={handleNodeMouseLeave}
-        onNodeClick={handleNodeClick}
-        panOnDrag={false}
-        zoomOnScroll={false}
-        zoomOnPinch={false}
-        zoomOnDoubleClick={false}
-        nodesDraggable={false}
-        nodesConnectable={false}
-        elementsSelectable={false}
-        attributionPosition={isRTL ? 'bottom-left' : 'bottom-right'}
-        proOptions={{ hideAttribution: true }}
-      >
-        <Background variant={BackgroundVariant.Dots} gap={12} size={0.5} color="#e5e7eb" />
-
-        {/* Stats Panel */}
-        <Panel
-          position={isRTL ? 'top-left' : 'top-right'}
-          className="bg-background/80 px-2 py-1 rounded text-[10px] text-muted-foreground"
+      <div ref={containerRef} className="h-full w-full">
+        <ReactFlow
+          nodes={reactFlowNodes}
+          edges={reactFlowEdges}
+          nodeTypes={miniNodeTypes}
+          connectionMode={ConnectionMode.Loose}
+          fitView
+          fitViewOptions={{ padding: 0.2 }}
+          onNodeMouseEnter={handleNodeMouseEnter}
+          onNodeMouseLeave={handleNodeMouseLeave}
+          onNodeClick={handleNodeClick}
+          panOnDrag={false}
+          zoomOnScroll={false}
+          zoomOnPinch={false}
+          zoomOnDoubleClick={false}
+          nodesDraggable={false}
+          nodesConnectable={false}
+          elementsSelectable={false}
+          attributionPosition={isRTL ? 'bottom-left' : 'bottom-right'}
+          proOptions={{ hideAttribution: true }}
         >
-          {flowNodes.length - 1} {t('miniGraph.connections', 'connections')}
-        </Panel>
-      </ReactFlow>
+          <Background variant={BackgroundVariant.Dots} gap={12} size={0.5} color="#e5e7eb" />
 
-      {/* Hover Preview */}
-      <AnimatePresence>
-        {hoveredNodeData && (
-          <m.div
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 5 }}
-            className={cn(
-              'absolute bottom-2 bg-popover border rounded-lg shadow-lg p-3 z-10',
-              isRTL ? 'start-2' : 'end-2',
-            )}
-            style={{ maxWidth: '200px' }}
+          {/* Stats Panel */}
+          <Panel
+            position={isRTL ? 'top-left' : 'top-right'}
+            className="bg-background/80 px-2 py-1 rounded text-[10px] text-muted-foreground"
           >
-            <DossierQuickPreview node={hoveredNodeData} isRTL={isRTL} t={t} />
-          </m.div>
-        )}
-      </AnimatePresence>
-    </div>
+            {flowNodes.length - 1} {t('miniGraph.connections', 'connections')}
+          </Panel>
+        </ReactFlow>
+
+        {/* Hover Preview */}
+        <AnimatePresence>
+          {hoveredNodeData && (
+            <m.div
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 5 }}
+              className={cn(
+                'absolute bottom-2 bg-popover border rounded-lg shadow-lg p-3 z-10',
+                isRTL ? 'start-2' : 'end-2',
+              )}
+              style={{ maxWidth: '200px' }}
+            >
+              <DossierQuickPreview node={hoveredNodeData} isRTL={isRTL} t={t} />
+            </m.div>
+          )}
+        </AnimatePresence>
+      </div>
     </LtrIsolate>
   )
 }
@@ -721,7 +721,7 @@ export function MiniRelationshipGraph({
 
             {/* View Full Graph Link */}
             <Button variant="outline" size="sm" className="w-full min-h-10" asChild>
-              <Link to="/relationships/graph" search={{ dossierId: dossier.id } as any}>
+              <Link to="/relationships/graph" search={{ dossierId: dossier.id }}>
                 <Network className={cn('size-4', isRTL ? 'ms-2' : 'me-2')} />
                 {t('miniGraph.viewFullGraph', 'View Full Graph')}
                 <ExternalLink className={cn('size-3', isRTL ? 'me-2' : 'ms-2')} />
