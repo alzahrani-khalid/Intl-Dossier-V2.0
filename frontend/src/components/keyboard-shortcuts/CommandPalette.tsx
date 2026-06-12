@@ -469,19 +469,16 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
   }, [apiDossiers, cachedResults.cachedDossiers])
 
   const relatedWork = useMemo((): QuickSwitcherWorkItem[] => {
+    const seen = new Set(apiRelatedWork.map((a) => a.id))
     const merged =
       apiRelatedWork.length > 0
-        ? [
-            ...apiRelatedWork,
-            ...cachedResults.cachedWorkItems.filter(
-              (w) => !new Set(apiRelatedWork.map((a) => a.id)).has(w.id),
-            ),
-          ].slice(0, 3)
+        ? [...apiRelatedWork, ...cachedResults.cachedWorkItems.filter((w) => !seen.has(w.id))]
         : cachedResults.cachedWorkItems
     // Suppression-as-absence (UI-SPEC A-8 / §3): items with no mounted
     // destination (e.g. a document with no/engagement context) are dropped —
-    // never rendered as a disabled or dead-end row.
-    return merged.filter((item) => getWorkItemUrl(item) !== null)
+    // never rendered as a disabled or dead-end row. Filter BEFORE slicing so
+    // suppressed items never consume the 3 display slots.
+    return merged.filter((item) => getWorkItemUrl(item) !== null).slice(0, 3)
   }, [apiRelatedWork, cachedResults.cachedWorkItems])
 
   // Navigation pages from config for "Pages" group
