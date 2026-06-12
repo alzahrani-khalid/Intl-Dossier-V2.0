@@ -14,15 +14,15 @@
  * GET /contextual-suggestions?context=<page_context>&limit=<n>
  */
 
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 // CORS headers
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'GET, OPTIONS',
-};
+}
 
 // Types
 type SuggestionCategory =
@@ -32,9 +32,9 @@ type SuggestionCategory =
   | 'pending_task'
   | 'seasonal'
   | 'anniversary'
-  | 'quick_action';
+  | 'quick_action'
 
-type SuggestionPriority = 'high' | 'medium' | 'low';
+type SuggestionPriority = 'high' | 'medium' | 'low'
 
 type SuggestionContext =
   | 'dashboard'
@@ -44,44 +44,44 @@ type SuggestionContext =
   | 'commitment'
   | 'task'
   | 'document'
-  | 'global';
+  | 'global'
 
 interface ContextualSuggestion {
-  id: string;
-  category: SuggestionCategory;
-  priority: SuggestionPriority;
-  context: SuggestionContext[];
-  title_en: string;
-  title_ar: string;
-  description_en: string;
-  description_ar: string;
-  action_label_en: string;
-  action_label_ar: string;
-  action_route?: string;
-  action_params?: Record<string, string>;
-  relevant_until?: string;
-  days_until_event?: number;
-  related_entity_type?: string;
-  related_entity_id?: string;
-  related_entity_name_en?: string;
-  related_entity_name_ar?: string;
-  icon?: string;
-  badge_text_en?: string;
-  badge_text_ar?: string;
-  badge_variant?: 'default' | 'warning' | 'danger' | 'success';
+  id: string
+  category: SuggestionCategory
+  priority: SuggestionPriority
+  context: SuggestionContext[]
+  title_en: string
+  title_ar: string
+  description_en: string
+  description_ar: string
+  action_label_en: string
+  action_label_ar: string
+  action_route?: string
+  action_params?: Record<string, string>
+  relevant_until?: string
+  days_until_event?: number
+  related_entity_type?: string
+  related_entity_id?: string
+  related_entity_name_en?: string
+  related_entity_name_ar?: string
+  icon?: string
+  badge_text_en?: string
+  badge_text_ar?: string
+  badge_variant?: 'default' | 'warning' | 'danger' | 'success'
 }
 
 interface ContextualSuggestionsResponse {
-  suggestions: ContextualSuggestion[];
+  suggestions: ContextualSuggestion[]
   metadata: {
-    generated_at: string;
-    reference_date: string;
-    total_available: number;
-    context: SuggestionContext;
-    upcoming_events_count: number;
-    expiring_mous_count: number;
-    overdue_commitments_count: number;
-  };
+    generated_at: string
+    reference_date: string
+    total_available: number
+    context: SuggestionContext
+    upcoming_events_count: number
+    expiring_mous_count: number
+    overdue_commitments_count: number
+  }
 }
 
 // Organizational calendar events
@@ -158,16 +158,16 @@ const SEASONAL_EVENTS = [
     duration_days: 60,
     preparation_days: 60,
   },
-];
+]
 
 // Initialize Supabase
-const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
-const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
 
 serve(async (req: Request) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders })
   }
 
   if (req.method !== 'GET') {
@@ -180,13 +180,13 @@ serve(async (req: Request) => {
       {
         status: 405,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+      },
+    )
   }
 
   try {
     // Get auth token from header
-    const authHeader = req.headers.get('Authorization');
+    const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
       return new Response(
         JSON.stringify({
@@ -197,8 +197,8 @@ serve(async (req: Request) => {
         {
           status: 401,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     // Create Supabase client with user's token
@@ -208,13 +208,13 @@ serve(async (req: Request) => {
           Authorization: authHeader,
         },
       },
-    });
+    })
 
     // Get user from token
     const {
       data: { user },
       error: userError,
-    } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''));
+    } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''))
 
     if (userError || !user) {
       return new Response(
@@ -226,19 +226,19 @@ serve(async (req: Request) => {
         {
           status: 401,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     // Parse query parameters
-    const url = new URL(req.url);
-    const context = (url.searchParams.get('context') || 'global') as SuggestionContext;
-    const entityType = url.searchParams.get('entity_type') || undefined;
-    const entityId = url.searchParams.get('entity_id') || undefined;
-    const limit = Math.min(Math.max(1, parseInt(url.searchParams.get('limit') || '10', 10)), 20);
-    const includeLowPriority = url.searchParams.get('include_low_priority') === 'true';
-    const referenceDateParam = url.searchParams.get('reference_date');
-    const referenceDate = referenceDateParam ? new Date(referenceDateParam) : new Date();
+    const url = new URL(req.url)
+    const context = (url.searchParams.get('context') || 'global') as SuggestionContext
+    const entityType = url.searchParams.get('entity_type') || undefined
+    const entityId = url.searchParams.get('entity_id') || undefined
+    const limit = Math.min(Math.max(1, parseInt(url.searchParams.get('limit') || '10', 10)), 20)
+    const includeLowPriority = url.searchParams.get('include_low_priority') === 'true'
+    const referenceDateParam = url.searchParams.get('reference_date')
+    const referenceDate = referenceDateParam ? new Date(referenceDateParam) : new Date()
 
     // Generate suggestions
     const response = await generateSuggestions(
@@ -249,15 +249,15 @@ serve(async (req: Request) => {
       entityId,
       limit,
       includeLowPriority,
-      referenceDate
-    );
+      referenceDate,
+    )
 
     return new Response(JSON.stringify(response), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   } catch (error) {
-    console.error('Contextual suggestions error:', error);
+    console.error('Contextual suggestions error:', error)
     return new Response(
       JSON.stringify({
         error: 'internal_server_error',
@@ -267,10 +267,10 @@ serve(async (req: Request) => {
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+      },
+    )
   }
-});
+})
 
 /**
  * Generate contextual suggestions based on various data sources
@@ -283,12 +283,12 @@ async function generateSuggestions(
   entityId: string | undefined,
   limit: number,
   includeLowPriority: boolean,
-  referenceDate: Date
+  referenceDate: Date,
 ): Promise<ContextualSuggestionsResponse> {
-  const suggestions: ContextualSuggestion[] = [];
-  let upcomingEventsCount = 0;
-  let expiringMousCount = 0;
-  let overdueCommitmentsCount = 0;
+  const suggestions: ContextualSuggestion[] = []
+  let upcomingEventsCount = 0
+  let expiringMousCount = 0
+  let overdueCommitmentsCount = 0
 
   // Run all data fetching in parallel
   const [upcomingEvents, expiringMous, overdueCommitments, pendingTasks] = await Promise.all([
@@ -296,59 +296,59 @@ async function generateSuggestions(
     getExpiringMous(supabase, referenceDate),
     getOverdueCommitments(supabase, userId, referenceDate),
     getPendingTasks(supabase, userId),
-  ]);
+  ])
 
-  upcomingEventsCount = upcomingEvents.length;
-  expiringMousCount = expiringMous.length;
-  overdueCommitmentsCount = overdueCommitments.length;
+  upcomingEventsCount = upcomingEvents.length
+  expiringMousCount = expiringMous.length
+  overdueCommitmentsCount = overdueCommitments.length
 
   // Add upcoming events suggestions
   for (const event of upcomingEvents.slice(0, 3)) {
-    suggestions.push(event);
+    suggestions.push(event)
   }
 
   // Add expiring MOUs suggestions
   for (const mou of expiringMous.slice(0, 2)) {
-    suggestions.push(mou);
+    suggestions.push(mou)
   }
 
   // Add overdue commitments (high priority)
   for (const commitment of overdueCommitments.slice(0, 2)) {
-    suggestions.push(commitment);
+    suggestions.push(commitment)
   }
 
   // Add seasonal suggestions
-  const seasonalSuggestions = getSeasonalSuggestions(referenceDate, context);
+  const seasonalSuggestions = getSeasonalSuggestions(referenceDate, context)
   for (const seasonal of seasonalSuggestions.slice(0, 2)) {
-    suggestions.push(seasonal);
+    suggestions.push(seasonal)
   }
 
   // Add quick actions for empty states
   if (context === 'dashboard' || context === 'global') {
-    const quickActions = getQuickActionSuggestions(context);
+    const quickActions = getQuickActionSuggestions(context)
     for (const action of quickActions.slice(0, 2)) {
-      suggestions.push(action);
+      suggestions.push(action)
     }
   }
 
   // Add pending tasks suggestions
   if (pendingTasks.length > 0 && (context === 'dashboard' || context === 'task')) {
     for (const task of pendingTasks.slice(0, 2)) {
-      suggestions.push(task);
+      suggestions.push(task)
     }
   }
 
   // Filter by priority if needed
   let filteredSuggestions = includeLowPriority
     ? suggestions
-    : suggestions.filter((s) => s.priority !== 'low');
+    : suggestions.filter((s) => s.priority !== 'low')
 
   // Sort by priority (high > medium > low)
-  const priorityOrder = { high: 0, medium: 1, low: 2 };
-  filteredSuggestions.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+  const priorityOrder = { high: 0, medium: 1, low: 2 }
+  filteredSuggestions.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])
 
   // Apply limit
-  filteredSuggestions = filteredSuggestions.slice(0, limit);
+  filteredSuggestions = filteredSuggestions.slice(0, limit)
 
   return {
     suggestions: filteredSuggestions,
@@ -361,7 +361,7 @@ async function generateSuggestions(
       expiring_mous_count: expiringMousCount,
       overdue_commitments_count: overdueCommitmentsCount,
     },
-  };
+  }
 }
 
 /**
@@ -370,11 +370,11 @@ async function generateSuggestions(
 async function getUpcomingEvents(
   supabase: ReturnType<typeof createClient>,
   referenceDate: Date,
-  context: SuggestionContext
+  context: SuggestionContext,
 ): Promise<ContextualSuggestion[]> {
-  const suggestions: ContextualSuggestion[] = [];
-  const futureDate = new Date(referenceDate);
-  futureDate.setDate(futureDate.getDate() + 30); // Look 30 days ahead
+  const suggestions: ContextualSuggestion[] = []
+  const futureDate = new Date(referenceDate)
+  futureDate.setDate(futureDate.getDate() + 30) // Look 30 days ahead
 
   try {
     // Get upcoming engagements from engagement_dossiers table
@@ -394,23 +394,23 @@ async function getUpcomingEvents(
           name_en,
           name_ar
         )
-      `
+      `,
       )
       .gte('start_date', referenceDate.toISOString().split('T')[0])
       .lte('start_date', futureDate.toISOString().split('T')[0])
       .in('engagement_status', ['planned', 'confirmed'])
       .order('start_date', { ascending: true })
-      .limit(5);
+      .limit(5)
 
     if (!error && engagements) {
       for (const eng of engagements) {
-        const startDate = new Date(eng.start_date);
+        const startDate = new Date(eng.start_date)
         const daysUntil = Math.ceil(
-          (startDate.getTime() - referenceDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
-        const dossier = eng.dossiers as { name_en: string; name_ar: string } | null;
+          (startDate.getTime() - referenceDate.getTime()) / (1000 * 60 * 60 * 24),
+        )
+        const dossier = eng.dossiers as { name_en: string; name_ar: string } | null
 
-        const isUrgent = daysUntil <= 7;
+        const isUrgent = daysUntil <= 7
 
         suggestions.push({
           id: `event-${eng.id}`,
@@ -434,7 +434,7 @@ async function getUpcomingEvents(
           badge_text_en: daysUntil <= 7 ? `${daysUntil} days` : undefined,
           badge_text_ar: daysUntil <= 7 ? `${daysUntil} أيام` : undefined,
           badge_variant: isUrgent ? 'danger' : 'warning',
-        });
+        })
       }
     }
 
@@ -445,15 +445,15 @@ async function getUpcomingEvents(
       .gte('start_datetime', referenceDate.toISOString())
       .lte('start_datetime', futureDate.toISOString())
       .order('start_datetime', { ascending: true })
-      .limit(5);
+      .limit(5)
 
     if (calendarEntries) {
       for (const entry of calendarEntries) {
-        const startDate = new Date(entry.start_datetime);
+        const startDate = new Date(entry.start_datetime)
         const daysUntil = Math.ceil(
-          (startDate.getTime() - referenceDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
-        const isUrgent = daysUntil <= 3;
+          (startDate.getTime() - referenceDate.getTime()) / (1000 * 60 * 60 * 24),
+        )
+        const isUrgent = daysUntil <= 3
 
         suggestions.push({
           id: `calendar-${entry.id}`,
@@ -476,14 +476,14 @@ async function getUpcomingEvents(
           badge_text_en: daysUntil === 0 ? 'Today' : daysUntil === 1 ? 'Tomorrow' : undefined,
           badge_text_ar: daysUntil === 0 ? 'اليوم' : daysUntil === 1 ? 'غداً' : undefined,
           badge_variant: isUrgent ? 'danger' : 'default',
-        });
+        })
       }
     }
   } catch (error) {
-    console.error('Error fetching upcoming events:', error);
+    console.error('Error fetching upcoming events:', error)
   }
 
-  return suggestions;
+  return suggestions
 }
 
 /**
@@ -491,11 +491,11 @@ async function getUpcomingEvents(
  */
 async function getExpiringMous(
   supabase: ReturnType<typeof createClient>,
-  referenceDate: Date
+  referenceDate: Date,
 ): Promise<ContextualSuggestion[]> {
-  const suggestions: ContextualSuggestion[] = [];
-  const futureDate = new Date(referenceDate);
-  futureDate.setDate(futureDate.getDate() + 90); // Look 90 days ahead
+  const suggestions: ContextualSuggestion[] = []
+  const futureDate = new Date(referenceDate)
+  futureDate.setDate(futureDate.getDate() + 90) // Look 90 days ahead
 
   try {
     const { data: mous, error } = await supabase
@@ -512,23 +512,23 @@ async function getExpiringMous(
           name_en,
           name_ar
         )
-      `
+      `,
       )
       .gte('expiry_date', referenceDate.toISOString().split('T')[0])
       .lte('expiry_date', futureDate.toISOString().split('T')[0])
       .in('status', ['active', 'pending_renewal'])
       .order('expiry_date', { ascending: true })
-      .limit(5);
+      .limit(5)
 
     if (!error && mous) {
       for (const mou of mous) {
-        const expiryDate = new Date(mou.expiry_date);
+        const expiryDate = new Date(mou.expiry_date)
         const daysUntil = Math.ceil(
-          (expiryDate.getTime() - referenceDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
-        const counterparty = mou.dossiers as { name_en: string; name_ar: string } | null;
+          (expiryDate.getTime() - referenceDate.getTime()) / (1000 * 60 * 60 * 24),
+        )
+        const counterparty = mou.dossiers as { name_en: string; name_ar: string } | null
 
-        const isUrgent = daysUntil <= 30;
+        const isUrgent = daysUntil <= 30
 
         suggestions.push({
           id: `mou-${mou.id}`,
@@ -553,14 +553,14 @@ async function getExpiringMous(
           badge_text_en: `${daysUntil} days`,
           badge_text_ar: `${daysUntil} يوم`,
           badge_variant: isUrgent ? 'danger' : 'warning',
-        });
+        })
       }
     }
   } catch (error) {
-    console.error('Error fetching expiring MOUs:', error);
+    console.error('Error fetching expiring MOUs:', error)
   }
 
-  return suggestions;
+  return suggestions
 }
 
 /**
@@ -569,9 +569,9 @@ async function getExpiringMous(
 async function getOverdueCommitments(
   supabase: ReturnType<typeof createClient>,
   userId: string,
-  referenceDate: Date
+  referenceDate: Date,
 ): Promise<ContextualSuggestion[]> {
-  const suggestions: ContextualSuggestion[] = [];
+  const suggestions: ContextualSuggestion[] = []
 
   try {
     const { data: commitments, error } = await supabase
@@ -585,19 +585,19 @@ async function getOverdueCommitments(
         status,
         priority,
         assignee_id
-      `
+      `,
       )
       .lt('deadline', referenceDate.toISOString())
       .in('status', ['pending', 'in_progress'])
       .order('deadline', { ascending: true })
-      .limit(5);
+      .limit(5)
 
     if (!error && commitments) {
       for (const commitment of commitments) {
-        const deadlineDate = new Date(commitment.deadline);
+        const deadlineDate = new Date(commitment.deadline)
         const daysOverdue = Math.ceil(
-          (referenceDate.getTime() - deadlineDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
+          (referenceDate.getTime() - deadlineDate.getTime()) / (1000 * 60 * 60 * 24),
+        )
 
         suggestions.push({
           id: `commitment-${commitment.id}`,
@@ -621,14 +621,14 @@ async function getOverdueCommitments(
           badge_text_en: `${daysOverdue}d overdue`,
           badge_text_ar: `متأخر ${daysOverdue} يوم`,
           badge_variant: 'danger',
-        });
+        })
       }
     }
   } catch (error) {
-    console.error('Error fetching overdue commitments:', error);
+    console.error('Error fetching overdue commitments:', error)
   }
 
-  return suggestions;
+  return suggestions
 }
 
 /**
@@ -636,9 +636,9 @@ async function getOverdueCommitments(
  */
 async function getPendingTasks(
   supabase: ReturnType<typeof createClient>,
-  userId: string
+  userId: string,
 ): Promise<ContextualSuggestion[]> {
-  const suggestions: ContextualSuggestion[] = [];
+  const suggestions: ContextualSuggestion[] = []
 
   try {
     // Try to get from unified work items or tasks table
@@ -648,11 +648,11 @@ async function getPendingTasks(
       .eq('assignee_id', userId)
       .in('workflow_stage', ['todo', 'in_progress'])
       .order('due_date', { ascending: true, nullsFirst: false })
-      .limit(3);
+      .limit(3)
 
     if (!error && tasks) {
       for (const task of tasks) {
-        const isHighPriority = task.priority === 'urgent' || task.priority === 'high';
+        const isHighPriority = task.priority === 'urgent' || task.priority === 'high'
 
         suggestions.push({
           id: `task-${task.id}`,
@@ -677,14 +677,14 @@ async function getPendingTasks(
           badge_text_en: isHighPriority ? 'High Priority' : undefined,
           badge_text_ar: isHighPriority ? 'أولوية عالية' : undefined,
           badge_variant: isHighPriority ? 'danger' : 'default',
-        });
+        })
       }
     }
   } catch (error) {
-    console.error('Error fetching pending tasks:', error);
+    console.error('Error fetching pending tasks:', error)
   }
 
-  return suggestions;
+  return suggestions
 }
 
 /**
@@ -692,23 +692,23 @@ async function getPendingTasks(
  */
 function getSeasonalSuggestions(
   referenceDate: Date,
-  context: SuggestionContext
+  context: SuggestionContext,
 ): ContextualSuggestion[] {
-  const suggestions: ContextualSuggestion[] = [];
-  const year = referenceDate.getFullYear();
+  const suggestions: ContextualSuggestion[] = []
+  const year = referenceDate.getFullYear()
 
   for (const event of SEASONAL_EVENTS) {
     // Check for this year and next year
     for (const checkYear of [year, year + 1]) {
-      const eventDate = new Date(checkYear, event.month - 1, event.day);
-      const prepStartDate = new Date(eventDate);
-      prepStartDate.setDate(prepStartDate.getDate() - event.preparation_days);
+      const eventDate = new Date(checkYear, event.month - 1, event.day)
+      const prepStartDate = new Date(eventDate)
+      prepStartDate.setDate(prepStartDate.getDate() - event.preparation_days)
 
       // Only show if we're in the preparation window
       if (referenceDate >= prepStartDate && referenceDate <= eventDate) {
         const daysUntil = Math.ceil(
-          (eventDate.getTime() - referenceDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
+          (eventDate.getTime() - referenceDate.getTime()) / (1000 * 60 * 60 * 24),
+        )
 
         suggestions.push({
           id: `seasonal-${event.id}-${checkYear}`,
@@ -729,19 +729,19 @@ function getSeasonalSuggestions(
           badge_text_en: daysUntil <= 7 ? `${daysUntil} days` : undefined,
           badge_text_ar: daysUntil <= 7 ? `${daysUntil} أيام` : undefined,
           badge_variant: daysUntil <= 14 ? 'warning' : 'default',
-        });
+        })
       }
     }
   }
 
-  return suggestions;
+  return suggestions
 }
 
 /**
  * Get quick action suggestions for empty states
  */
 function getQuickActionSuggestions(context: SuggestionContext): ContextualSuggestion[] {
-  const suggestions: ContextualSuggestion[] = [];
+  const suggestions: ContextualSuggestion[] = []
 
   // Create dossier suggestion
   suggestions.push({
@@ -758,7 +758,7 @@ function getQuickActionSuggestions(context: SuggestionContext): ContextualSugges
     action_route: '/dossiers/new',
     action_params: { type: 'country' },
     icon: 'rocket',
-  });
+  })
 
   // Add engagement suggestion
   suggestions.push({
@@ -774,7 +774,7 @@ function getQuickActionSuggestions(context: SuggestionContext): ContextualSugges
     action_label_ar: 'إضافة ارتباط',
     action_route: '/engagements/new',
     icon: 'rocket',
-  });
+  })
 
   // Review commitments suggestion
   suggestions.push({
@@ -790,7 +790,7 @@ function getQuickActionSuggestions(context: SuggestionContext): ContextualSugges
     action_label_ar: 'عملي',
     action_route: '/my-work',
     icon: 'target',
-  });
+  })
 
-  return suggestions;
+  return suggestions
 }
