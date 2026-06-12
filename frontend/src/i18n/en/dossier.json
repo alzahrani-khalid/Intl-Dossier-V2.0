@@ -1058,6 +1058,7 @@
   "overview": {
     "summary": "Summary",
     "noData": "No data available",
+    "sectionError": "Failed to load this section. Check your connection and try again.",
     "analytics": "Analytics",
     "analyticsError": "Unable to load analytics",
     "stats": {
