@@ -47,6 +47,25 @@ export function getDossierDetailPath(dossierId: string, type: string | undefined
 }
 
 /**
+ * Get the mounted Docs-tab path for a dossier.
+ *
+ * Engagement dossiers have NO /dossiers/engagements/$id/docs child route —
+ * their docs tab is mounted in the engagement workspace at
+ * /engagements/$id/docs. Every other dossier type mounts
+ * /dossiers/{segment}/$id/docs (UI-SPEC A-8).
+ *
+ * @param dossierId - The dossier UUID
+ * @param type - The dossier type (e.g., 'country', 'engagement')
+ * @returns The mounted docs-tab route path
+ */
+export function getDossierDocsPath(dossierId: string, type: string | undefined | null): string {
+  if (getDossierRouteSegment(type) === 'engagements') {
+    return `/engagements/${dossierId}/docs`
+  }
+  return `${getDossierDetailPath(dossierId, type)}/docs`
+}
+
+/**
  * Type guard to check if a type string is a valid dossier type.
  *
  * @param type - The type string to validate

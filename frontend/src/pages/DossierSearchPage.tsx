@@ -19,7 +19,7 @@ import { Search, Loader2, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { getDossierRouteSegment } from '@/lib/dossier-routes'
+import { getDossierDocsPath, getDossierRouteSegment } from '@/lib/dossier-routes'
 import { DossierFirstSearchResults } from '@/components/search/DossierFirstSearchResults'
 import { DossierSearchFilters } from '@/components/search/DossierSearchFilters'
 import { useDossierFirstSearch } from '@/hooks/useDossierFirstSearch'
@@ -135,8 +135,10 @@ export function DossierSearchPage() {
         break
       case 'document':
         // /documents/$id is UNMOUNTED — route to the owning dossier's Docs tab (UI-SPEC A-8).
+        // Engagement dossiers have no /dossiers/engagements/$id/docs child; their docs
+        // tab is mounted in the engagement workspace at /engagements/$id/docs.
         navigate({
-          to: `/dossiers/${getDossierRouteSegment(item.dossier_context.type)}/${item.dossier_context.id}/docs`,
+          to: getDossierDocsPath(item.dossier_context.id, item.dossier_context.type),
         })
         break
       case 'engagement':
