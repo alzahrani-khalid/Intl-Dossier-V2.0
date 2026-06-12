@@ -203,6 +203,7 @@
   "status": {
     "draft": "مسودة",
     "under_review": "قيد المراجعة",
+    "review": "قيد المراجعة",
     "approved": "معتمد",
     "published": "منشور",
     "unpublished": "غير منشور"
