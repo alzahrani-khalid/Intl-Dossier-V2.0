@@ -168,10 +168,10 @@ Plans:
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
-- [ ] 66-04-PLAN.md — Card error-line sweep A: shared/country/org cards (8 files) — error before empty, stale-while-error
-- [ ] 66-05-PLAN.md — Card error-line sweep B: forum/topic/WG/person/EO cards (11 files) incl. the EO all-dash failure mode
-- [ ] 66-06-PLAN.md — DossierDrawer error branch + Retry (no permanent skeleton), DrawerHead fallback, raw error.message removal (Pitfall 9)
-- [ ] 66-07-PLAN.md — Guard the navigation_url consumers: TimelineEventCard/EnhancedVerticalTimelineCard suppression + ActivityList mountedness extension
+- [x] 66-04-PLAN.md — Card error-line sweep A: shared/country/org cards (8 files) — error before empty, stale-while-error
+- [x] 66-05-PLAN.md — Card error-line sweep B: forum/topic/WG/person/EO cards (11 files) incl. the EO all-dash failure mode
+- [x] 66-06-PLAN.md — DossierDrawer error branch + Retry (no permanent skeleton), DrawerHead fallback, raw error.message removal (Pitfall 9)
+- [x] 66-07-PLAN.md — Guard the navigation_url consumers: TimelineEventCard/EnhancedVerticalTimelineCard suppression + ActivityList mountedness extension
 
 **Wave 3**
 
@@ -361,7 +361,7 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 | 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 4/5 | In Progress|  |
 | 64. New Position from Dossier | v6.6 | 6/6 | Complete    | 2026-06-12 |
 | 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 6/6 | Complete    | 2026-06-12 |
-| 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 3/8 | In Progress|  |
+| 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 7/8 | In Progress|  |
 | 67. Per-Type Engagement Contracts & Legacy Detail Cleanup | v6.6 | 0/TBD | Not started | - |
 
 <!-- gsd:progress:end -->
