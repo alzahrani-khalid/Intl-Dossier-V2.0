@@ -195,14 +195,16 @@ export function NewPositionDialog({
     const allStaff = groups.find((row) => row.name_en === ALL_STAFF_NAME) ?? groups[0]
     if (standardType === undefined || allStaff === undefined) return
 
+    // Preserve anything the user already typed while the lookups were in flight
+    // (cold cache, first open): only the two defaultable fields are filled, and
+    // audience only when still empty (WR-01).
+    const current = form.getValues()
     form.reset(
       {
+        ...current,
         position_type_id: standardType.id,
-        title_en: '',
-        title_ar: '',
-        content_en: '',
-        content_ar: '',
-        audience_groups: [allStaff.id],
+        audience_groups:
+          current.audience_groups.length === 0 ? [allStaff.id] : current.audience_groups,
       },
       { keepDefaultValues: false },
     )
