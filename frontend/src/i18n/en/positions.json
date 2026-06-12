@@ -488,18 +488,5 @@
     "created": "Created",
     "last_updated": "Last Updated",
     "version": "Version"
-  },
-  "engagement_section": {
-    "title": "Positions",
-    "subtitle": "Attached positions and suggestions",
-    "attached_tab": "Attached",
-    "suggestions_tab": "Suggestions",
-    "briefing_tab": "Briefing",
-    "no_attached": "No positions attached",
-    "attach_position": "Attach Position",
-    "error_loading_attached": "Failed to load attached positions",
-    "error_loading_suggestions": "Failed to load suggestions",
-    "no_positions_for_briefing": "No positions attached yet. Attach positions to generate a briefing pack.",
-    "attach_positions_first": "Attach Positions First"
   }
 }
