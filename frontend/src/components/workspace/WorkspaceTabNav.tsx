@@ -26,6 +26,7 @@ interface WorkspaceTab {
 const WORKSPACE_TABS: WorkspaceTab[] = [
   { key: 'overview', labelKey: 'tabs.overview', path: 'overview' },
   { key: 'context', labelKey: 'tabs.context', path: 'context' },
+  { key: 'positions', labelKey: 'tabs.positions', path: 'positions' },
   { key: 'tasks', labelKey: 'tabs.tasks', path: 'tasks' },
   { key: 'calendar', labelKey: 'tabs.calendar', path: 'calendar' },
   { key: 'docs', labelKey: 'tabs.docs', path: 'docs' },
