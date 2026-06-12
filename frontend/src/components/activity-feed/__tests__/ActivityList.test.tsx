@@ -216,6 +216,26 @@ describe('ActivityList', () => {
     }
     expect(navigateSpy).not.toHaveBeenCalled()
   })
+
+  it('Test 8 — OVRERR-02 mountedness: unmounted detail routes render NON-interactive', () => {
+    // Stale activity_stream metadata pointing at unmounted detail routes
+    // (the /calendar and /mous list pages exist, but /<id> detail routes do
+    // not). The guard now resolves these to null so the row cannot dead-end.
+    const unmounted: Array<string> = ['/calendar/0a1b-uuid', '/mous/0a1b-uuid']
+    const activities = unmounted.map((url, i) =>
+      makeActivity({ id: `unmounted-${i}`, metadata: { navigation_url: url } }),
+    )
+    const { container } = render(<ActivityList activities={activities} />)
+    const rows = Array.from(container.querySelectorAll<HTMLLIElement>('li.act-row'))
+    expect(rows).toHaveLength(unmounted.length)
+    for (const row of rows) {
+      expect(row.hasAttribute('role')).toBe(false)
+      expect(row.hasAttribute('tabindex')).toBe(false)
+      expect(row.style.cursor).toBe('default')
+      row.click()
+    }
+    expect(navigateSpy).not.toHaveBeenCalled()
+  })
 })
 
 // keep TS happy when this file is treated as a module under isolatedModules

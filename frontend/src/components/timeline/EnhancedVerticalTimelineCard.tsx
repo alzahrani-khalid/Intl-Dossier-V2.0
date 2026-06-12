@@ -33,6 +33,7 @@ import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useOutsideClick } from '@/hooks/useOutsideClick'
 import { cn } from '@/lib/utils'
+import { resolveTimelineNavUrl } from '@/lib/timeline-navigation'
 import type { UnifiedTimelineEvent } from '@/types/timeline.types'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -171,6 +172,11 @@ export function EnhancedVerticalTimelineCard({
   const formattedDate = formatEventDate(event.event_date, i18n.language)
   const formattedTime = formatEventTime(event.event_date, i18n.language)
 
+  // OVRERR-02: gate navigation on the shared mounted-route guard. When the
+  // server/DB-sourced navigation_url is unmounted or unsafe, navUrl is null and
+  // the View-details affordance is absent (suppression-as-absence, UI-SPEC §3).
+  const navUrl = resolveTimelineNavUrl(event.metadata.navigation_url)
+
   // Handle escape key and body overflow
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -192,9 +198,9 @@ export function EnhancedVerticalTimelineCard({
   useOutsideClick(ref as React.RefObject<HTMLElement>, () => setIsActive(false))
 
   const handleNavigate = () => {
-    if (event.metadata.navigation_url) {
+    if (navUrl !== null) {
       setIsActive(false)
-      navigate({ to: event.metadata.navigation_url })
+      navigate({ to: navUrl })
     }
   }
 
@@ -419,7 +425,7 @@ export function EnhancedVerticalTimelineCard({
                 </div>
 
                 {/* Action Buttons */}
-                {event.metadata.navigation_url && (
+                {navUrl !== null && (
                   <div className="p-4 sm:p-6 border-t border-border bg-muted/30">
                     <Button
                       onClick={handleNavigate}

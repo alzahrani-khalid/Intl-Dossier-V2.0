@@ -26,6 +26,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { Icon, type IconName } from '@/components/signature-visuals'
 import { toArDigits } from '@/lib/i18n/toArDigits'
+import { resolveTimelineNavUrl } from '@/lib/timeline-navigation'
 import type { ActivityActionType, ActivityItem } from '@/types/activity-feed.types'
 
 interface ActivityListProps {
@@ -95,23 +96,18 @@ export function ActivityList({ activities }: ActivityListProps): ReactElement {
   return (
     <ul className="act-list">
       {activities.map((a) => {
-        // R-05 open-redirect guard. ONLY relative in-app paths (`/...`) are
-        // interactive. Absolute URLs (`https://...`), protocol-relative
-        // (`//...`) — note: `'//evil'.startsWith('/')` is TRUE so we must
-        // also reject the second-char `/`), `javascript:`/`data:`/`mailto:`
-        // schemes, and empty strings all fail the guard and the row stays
-        // fully non-interactive (no role/tabIndex/onClick/onKeyDown).
-        // WR-01: also reject backslash variants (`/\evil.example`,
-        // `\\evil.example`). Some browsers normalise `\` → `/` in URL
-        // parsing, which would turn `/\evil.example` into `//evil.example`.
-        const navUrl = a.metadata?.navigation_url
-        const safeNavUrl =
-          typeof navUrl === 'string' &&
-          navUrl.startsWith('/') &&
-          !navUrl.startsWith('//') &&
-          !navUrl.includes('\\')
-            ? navUrl
-            : null
+        // R-05 open-redirect guard + OVRERR-02 mountedness, now owned by
+        // resolveTimelineNavUrl in lib/timeline-navigation.ts. The rules it
+        // enforces (a strict superset of the prior inline check): ONLY relative
+        // in-app paths (`/...`) are interactive; absolute URLs (`https://...`),
+        // protocol-relative (`//...` — note `'//evil'.startsWith('/')` is TRUE),
+        // `javascript:`/`data:`/`mailto:` schemes, backslash variants (WR-01),
+        // and empty strings all resolve to null and the row stays fully
+        // non-interactive (no role/tabIndex/onClick/onKeyDown). It ADDS
+        // mountedness: unmounted detail routes (`/calendar/<uuid>`,
+        // `/mous/<uuid>`) also resolve to null so stale activity_stream
+        // metadata can no longer dead-end on the notFound page.
+        const safeNavUrl = resolveTimelineNavUrl(a.metadata?.navigation_url)
         const interactive = safeNavUrl !== null
 
         const entity =
