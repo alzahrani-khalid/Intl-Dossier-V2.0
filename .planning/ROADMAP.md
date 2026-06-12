@@ -63,8 +63,24 @@ Plans:
 1. Navigating to the relationship graph from a dossier renders the graph page (no redirect to `/dossiers`) — or the route is formally retired with the mini-graph + a list view documented as the contract
 2. A dossier referenced by another dossier shows that incoming edge in its graph (traversal RPC returns incoming + outgoing relationships)
 3. Clicking either endpoint node navigates to the correct per-type dossier route, matching the already-correct MiniRelationshipGraph helper
-   **Plans**: TBD
+   **Plans**: 5 plans (3 waves)
    **UI hint**: yes
+
+Plans:
+
+**Wave 1**
+
+- [ ] 63-01-PLAN.md — Bidirectional RPC migration (DROP+CREATE+GRANT) + [BLOCKING] apply via Supabase MCP + live probes (wave 1)
+- [ ] 63-02-PLAN.md — Route mount with validateSearch + page repair (graph namespace, canonical filter, D-02 link) + Wave 0 page test (wave 1)
+- [ ] 63-03-PLAN.md — Edge-orientation contract helper + per-type path test (Wave 0) + Basic-mode arrows + graph.json sentence-case sweep (wave 1)
+
+**Wave 2** _(blocked on 63-01 + 63-03)_
+
+- [ ] 63-04-PLAN.md — Direction-aware edge building in graph-traversal edge fn + staging redeploy + e2e probes (wave 2)
+
+**Wave 3** _(blocked on all prior)_
+
+- [ ] 63-05-PLAN.md — Staging relationship seed (all 7 types) + live all-types click-through, AR/RTL + width verification, suite/size gates (wave 3)
 
 ### Phase 64: New Position from Dossier
 
