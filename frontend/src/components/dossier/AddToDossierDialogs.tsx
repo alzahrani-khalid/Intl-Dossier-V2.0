@@ -361,10 +361,14 @@ export function TaskDialog({
         await queryClient.invalidateQueries({
           queryKey: workItemDossierKeys.timeline(dossierContext.dossier_id),
         })
-        // Engagement workspace TasksTab reads the kanban via
-        // ['engagement-kanban', engagementId, sortBy]; prefix-invalidate so a
-        // task created from the workspace refreshes the board. Harmless no-op on
-        // dossier pages (no active engagement-kanban query).
+        // Prefix-invalidate the engagement workspace TasksTab board query
+        // (['engagement-kanban', engagementId, sortBy]). NOTE: this only
+        // refetches the board — it CANNOT surface the task just created here,
+        // because this dialog writes a `tasks` row while engagements-kanban-get
+        // reads the legacy `assignments` table. Until kanban canonicalization
+        // (T-65-11) the new task appears in the main tasks list, not on this
+        // board; the invalidation is forward-compat. Harmless no-op on dossier
+        // pages (no active engagement-kanban query).
         await queryClient.invalidateQueries({
           queryKey: ['engagement-kanban', dossierContext.dossier_id],
         })
