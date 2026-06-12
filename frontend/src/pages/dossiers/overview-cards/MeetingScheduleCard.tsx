@@ -24,7 +24,7 @@ export function MeetingScheduleCard({ dossierId }: MeetingScheduleCardProps): Re
   const isRTL = i18n.language === 'ar'
   const dateLocale = isRTL ? ar : enUS
 
-  const { data, isLoading } = useDossierOverview(dossierId, {
+  const { data, isLoading, isError } = useDossierOverview(dossierId, {
     includeSections: ['calendar_events'],
   })
 
@@ -52,7 +52,13 @@ export function MeetingScheduleCard({ dossierId }: MeetingScheduleCardProps): Re
         </h3>
       </div>
 
-      {upcomingEvents.length === 0 ? (
+      {isError && data === null ? (
+        <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
+          {t('overview.sectionError', {
+            defaultValue: 'Failed to load this section. Check your connection and try again.',
+          })}
+        </p>
+      ) : upcomingEvents.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
           {t('overview.meetings.empty', { defaultValue: 'No upcoming meetings' })}
         </p>

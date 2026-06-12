@@ -29,7 +29,7 @@ export function PersonMetadataCard({ dossierId }: PersonMetadataCardProps): Reac
   const isRTL = i18n.language === 'ar'
   const dateLocale = isRTL ? ar : enUS
 
-  const { data, isLoading } = useDossierOverview(dossierId, {
+  const { data, isLoading, isError } = useDossierOverview(dossierId, {
     includeSections: ['related_dossiers', 'calendar_events'],
   })
 
@@ -89,17 +89,25 @@ export function PersonMetadataCard({ dossierId }: PersonMetadataCardProps): Reac
         </h3>
       </div>
 
-      <div className="space-y-3">
-        {rows.map((row) => (
-          <div key={row.label} className="flex items-center gap-3">
-            {row.icon}
-            <div className="flex-1 min-w-0">
-              <span className="text-sm text-muted-foreground">{row.label}</span>
+      {isError && data === null ? (
+        <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
+          {t('overview.sectionError', {
+            defaultValue: 'Failed to load this section. Check your connection and try again.',
+          })}
+        </p>
+      ) : (
+        <div className="space-y-3">
+          {rows.map((row) => (
+            <div key={row.label} className="flex items-center gap-3">
+              {row.icon}
+              <div className="flex-1 min-w-0">
+                <span className="text-sm text-muted-foreground">{row.label}</span>
+              </div>
+              <span className="text-sm font-medium truncate max-w-[50%] text-end">{row.value}</span>
             </div>
-            <span className="text-sm font-medium truncate max-w-[50%] text-end">{row.value}</span>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
