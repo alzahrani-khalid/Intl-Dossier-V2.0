@@ -1,23 +1,14 @@
 /**
  * DocsTab -- Document management tab for the engagement workspace.
- * Lists AI briefs via useEngagementBriefs, provides Generate Briefing
- * action via useGenerateEngagementBrief mutation, and an upload placeholder.
+ * Lists AI briefs via useEngagementBriefs and provides a Generate Briefing
+ * action via useGenerateEngagementBrief mutation.
  * Mobile-first, RTL-safe layout per L-06 in UI-SPEC.
  */
 
 import type { ReactElement } from 'react'
 import { useParams } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import {
-  FileText,
-  Sparkles,
-  Loader2,
-  Clock,
-  CheckCircle2,
-  AlertCircle,
-  Upload,
-  Quote,
-} from 'lucide-react'
+import { FileText, Sparkles, Loader2, Clock, CheckCircle2, AlertCircle, Quote } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
 import {
   useEngagementBriefs,
@@ -147,13 +138,6 @@ export default function DocsTab(): ReactElement {
         <h2 className="text-xl font-semibold">{t('tabs.docs')}</h2>
 
         <div className="flex items-center gap-2">
-          {/* Upload placeholder — no-op until wired; disabled to avoid a false
-              affordance (R15-02). */}
-          <Button variant="outline" size="sm" className="min-h-11 gap-2" disabled>
-            <Upload className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('docs.upload')}</span>
-          </Button>
-
           {/* Generate Briefing */}
           <Button
             variant="default"

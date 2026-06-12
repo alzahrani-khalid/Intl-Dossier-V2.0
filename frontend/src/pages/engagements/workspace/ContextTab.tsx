@@ -13,7 +13,7 @@ import type { ReactElement } from 'react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from '@tanstack/react-router'
-import { FileText, Link2, Lightbulb, Plus } from 'lucide-react'
+import { FileText, Link2, Lightbulb } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
 import { useEngagement } from '@/domains/engagements/hooks/useEngagements'
 import {
@@ -29,7 +29,6 @@ import type { RecommendationType } from '@/types/engagement-recommendation.types
 import { DossierContextBadge } from '@/components/dossier'
 import type { DossierType } from '@/types/relationship.types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
@@ -191,41 +190,27 @@ export default function ContextTab(): ReactElement {
                 {t('empty.context.heading')}
               </p>
               <p className="mt-1 text-xs text-muted-foreground">{t('empty.context.body')}</p>
-              {/* No-op until dossier linking is wired (R15-02); disabled to
-                  avoid a false affordance. */}
-              <Button variant="outline" size="sm" className="mt-3 min-h-11 min-w-11" disabled>
-                <Plus className="size-4" />
-                {t('empty.context.action')}
-              </Button>
             </div>
           ) : (
-            <>
-              {tiers.map((tier) => (
-                <div key={tier.label.en} className="space-y-2">
-                  <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                    {isRTL ? tier.label.ar : tier.label.en}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {tier.dossiers.map((dossier) => (
-                      <DossierContextBadge
-                        key={dossier.id}
-                        dossierId={dossier.id}
-                        dossierType={dossier.type}
-                        nameEn={dossier.name_en}
-                        nameAr={dossier.name_ar}
-                        inheritanceSource="direct"
-                      />
-                    ))}
-                  </div>
+            tiers.map((tier) => (
+              <div key={tier.label.en} className="space-y-2">
+                <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                  {isRTL ? tier.label.ar : tier.label.en}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {tier.dossiers.map((dossier) => (
+                    <DossierContextBadge
+                      key={dossier.id}
+                      dossierId={dossier.id}
+                      dossierType={dossier.type}
+                      nameEn={dossier.name_en}
+                      nameAr={dossier.name_ar}
+                      inheritanceSource="direct"
+                    />
+                  ))}
                 </div>
-              ))}
-              {/* No-op until dossier linking is wired (R15-02); disabled to
-                  avoid a false affordance. */}
-              <Button variant="outline" size="sm" className="mt-2 min-h-11 min-w-11" disabled>
-                <Plus className="size-4" />
-                {t('actions.linkDossier')}
-              </Button>
-            </>
+              </div>
+            ))
           )}
         </CardContent>
       </Card>
