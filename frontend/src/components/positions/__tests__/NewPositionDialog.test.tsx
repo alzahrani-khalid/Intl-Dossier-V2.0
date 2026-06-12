@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { ReactNode } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -120,8 +120,13 @@ vi.mock('@/domains/positions/hooks/useCreatePosition', () => ({
   }),
 }))
 
-const linkMock = vi.fn()
-const translateMock = vi.fn()
+// vi.mock is hoisted above these declarations, so the factory closure must read
+// the spies through a vi.hoisted() container (plain consts would be uninitialized
+// when the factory runs).
+const { linkMock, translateMock } = vi.hoisted(() => ({
+  linkMock: vi.fn(),
+  translateMock: vi.fn(),
+}))
 vi.mock('@/domains/positions/repositories/positions.repository', () => ({
   createPositionDossierLink: linkMock,
   translateContent: translateMock,
@@ -206,7 +211,12 @@ describe('NewPositionDialog', () => {
     renderDialog()
 
     // Type control shows Standard Position (name-match default, not a hard-coded UUID).
-    await waitFor(() => expect(screen.getByText('Standard Position')).toBeInTheDocument())
+    // Radix Select renders the chosen value in a span[data-slot="select-value"]
+    // plus a hidden native <option>; assert on the visible value span.
+    await waitFor(() => {
+      const selectValue = document.querySelector('[data-slot="select-value"]')
+      expect(selectValue?.textContent).toBe('Standard Position')
+    })
 
     // All Staff is checked; the other three are unchecked.
     const allStaff = screen.getByRole('checkbox', { name: 'All Staff' })
@@ -229,7 +239,10 @@ describe('NewPositionDialog', () => {
     await user.type(titleEn, 'Our position')
 
     // Click the EN-title translate button (fills the AR counterpart on 2xx only).
-    const translateBtn = screen.getByRole('button', { name: 'Translate to Arabic' })
+    // Both the title_en and content_en assists are labeled "Translate to Arabic";
+    // scope to the one inside the title_en form item.
+    const titleEnItem = titleEn.closest('[class*="space-y-2"]') as HTMLElement
+    const translateBtn = within(titleEnItem).getByRole('button', { name: 'Translate to Arabic' })
     await user.click(translateBtn)
 
     // title_ar stays empty; an error toast fired exactly once.
