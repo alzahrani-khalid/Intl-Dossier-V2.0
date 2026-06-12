@@ -15,6 +15,7 @@
 import type * as React from 'react'
 import { useSyncExternalStore } from 'react'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
+import { Button } from '@/components/ui/button'
 import { useTranslation } from 'react-i18next'
 import { useDossierDrawer } from '@/hooks/useDossierDrawer'
 import { useDossier } from '@/hooks/useDossier'
@@ -39,14 +40,22 @@ export function DossierDrawer(): React.JSX.Element | null {
   })
   const dossier = dossierQuery.data
 
-  const { data: overview, isLoading: overviewLoading } = useDossierOverview(
-    dossierId ?? undefined,
-    {
-      enabled: open && Boolean(dossierId),
-      // 'documents' included so the documents KPI in MiniKpiStrip has real data
-      includeSections: ['work_items', 'calendar_events', 'activity_timeline', 'documents'],
-    },
-  )
+  const {
+    data: overview,
+    isLoading: overviewLoading,
+    isError: overviewIsError,
+    refetch: refetchOverview,
+  } = useDossierOverview(dossierId ?? undefined, {
+    enabled: open && Boolean(dossierId),
+    // 'documents' included so the documents KPI in MiniKpiStrip has real data
+    includeSections: ['work_items', 'calendar_events', 'activity_timeline', 'documents'],
+  })
+
+  // OVRERR-01 / Pitfall 5: after 66-01 fail-the-query lands, a failed overview with
+  // no cache would hold the drawer in DrawerSkeleton FOREVER. overviewFailed gates the
+  // explicit error branch. With cached data present (overview !== null), stale-while-error
+  // applies: render the sections, never blank trustworthy data over a transient refetch fail.
+  const overviewFailed = overviewIsError && overview === null
 
   // G5 (Phase 41-08): force box-shadow:none at viewport ≤768px. The Tailwind
   // utility `max-md:shadow-none` cannot beat the cva-base
@@ -91,8 +100,23 @@ export function DossierDrawer(): React.JSX.Element | null {
         style={{ boxShadow: isMobileNarrow ? 'none' : undefined }}
       >
         <DrawerHead dossierId={dossierId} dossierType={dossierType} onClose={closeDossier} />
-        <div className="drawer-body" data-loading={overviewLoading || !overview ? 'true' : 'false'}>
-          {overviewLoading || !overview ? (
+        <div className="drawer-body" data-loading={overviewLoading && !overview ? 'true' : 'false'}>
+          {overviewFailed ? (
+            <div role="alert" className="px-4 py-16 text-center space-y-2">
+              <p className="text-sm font-semibold text-[var(--danger)]">
+                {t('error.load_failed_heading')}
+              </p>
+              <p className="text-sm text-muted-foreground">{t('error.load_failed_body')}</p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="min-h-11"
+                onClick={() => void refetchOverview()}
+              >
+                {t('error.retry')}
+              </Button>
+            </div>
+          ) : overviewLoading || !overview ? (
             <DrawerSkeleton />
           ) : (
             <>
