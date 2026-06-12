@@ -5,7 +5,7 @@
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
-import { useNavigate, useSearch } from '@tanstack/react-router'
+import { Link, getRouteApi, useNavigate } from '@tanstack/react-router'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { Card, CardContent } from '@/components/ui/card'
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -28,6 +28,32 @@ import { AdvancedGraphVisualization } from '@/components/relationships/AdvancedG
 import { RelationshipNavigator } from '@/components/relationships/RelationshipNavigator'
 import { Network, List, AlertCircle, Settings, Sparkles, Layers, Rocket } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import type { DossierRelationshipType } from '@/types/relationship.types'
+
+const routeApi = getRouteApi('/_protected/relationships/graph')
+
+const RELATIONSHIP_TYPES: DossierRelationshipType[] = [
+  'member_of',
+  'participates_in',
+  'cooperates_with',
+  'bilateral_relation',
+  'partnership',
+  'parent_of',
+  'subsidiary_of',
+  'related_to',
+  'represents',
+  'hosted_by',
+  'sponsored_by',
+  'involves',
+  'discusses',
+  'participant_in',
+  'observer_of',
+  'affiliate_of',
+  'successor_of',
+  'predecessor_of',
+]
+
+type RelationshipTypeFilter = DossierRelationshipType | 'all'
 
 // Graph data interface
 interface GraphData {
@@ -68,7 +94,7 @@ interface GraphData {
 async function fetchGraphData(
   startDossierId: string,
   maxDegrees: number,
-  relationshipType?: string,
+  relationshipType?: RelationshipTypeFilter,
 ): Promise<GraphData> {
   const {
     data: { session },
@@ -104,16 +130,13 @@ async function fetchGraphData(
 }
 
 export function RelationshipGraphPage() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('graph')
   const navigate = useNavigate()
-
-  // Get query parameters
-  const search = useSearch({ strict: false })
-  const startDossierId = (search as any)?.dossierId as string | undefined
+  const { dossierId: startDossierId } = routeApi.useSearch()
 
   // State
   const [maxDegrees, setMaxDegrees] = useState(2)
-  const [relationshipType, setRelationshipType] = useState<string>('all')
+  const [relationshipType, setRelationshipType] = useState<RelationshipTypeFilter>('all')
   const [activeTab, setActiveTab] = useState<'graph' | 'list'>('graph')
   const [graphMode, setGraphMode] = useState<'basic' | 'enhanced' | 'advanced'>('advanced') // Default to advanced for new features
 
@@ -174,11 +197,14 @@ export function RelationshipGraphPage() {
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
             {t(
-              'graph.noDossier',
+              'noDossier',
               'No dossier selected. Please select a dossier to view its relationship graph.',
             )}
           </AlertDescription>
         </Alert>
+        <Button variant="outline" asChild>
+          <Link to="/dossiers">{t('browseDossiers', 'Browse dossiers')}</Link>
+        </Button>
       </div>
     )
   }
@@ -187,8 +213,8 @@ export function RelationshipGraphPage() {
     <div className="space-y-6">
       <PageHeader
         icon={<Network className="h-6 w-6" />}
-        title={t('graph.title', 'Relationship Graph')}
-        subtitle={t('graph.description', 'Explore connections between entities')}
+        title={t('title', 'Relationship graph')}
+        subtitle={t('description', 'Explore connections between entities')}
       />
 
       {/* Controls */}
@@ -197,7 +223,7 @@ export function RelationshipGraphPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <Label htmlFor="maxDegrees" className="mb-2 block">
-                {t('graph.maxDegrees', 'Degrees of Separation')}
+                {t('maxDegrees', 'Degrees of separation')}
               </Label>
               <Select
                 value={maxDegrees.toString()}
@@ -207,41 +233,33 @@ export function RelationshipGraphPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">1° {t('graph.degree', 'degree')}</SelectItem>
-                  <SelectItem value="2">2° {t('graph.degrees', 'degrees')}</SelectItem>
-                  <SelectItem value="3">3° {t('graph.degrees', 'degrees')}</SelectItem>
-                  <SelectItem value="4">4° {t('graph.degrees', 'degrees')}</SelectItem>
-                  <SelectItem value="5">5° {t('graph.degrees', 'degrees')}</SelectItem>
+                  <SelectItem value="1">1° {t('degree', 'degree')}</SelectItem>
+                  <SelectItem value="2">2° {t('degrees', 'degrees')}</SelectItem>
+                  <SelectItem value="3">3° {t('degrees', 'degrees')}</SelectItem>
+                  <SelectItem value="4">4° {t('degrees', 'degrees')}</SelectItem>
+                  <SelectItem value="5">5° {t('degrees', 'degrees')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div>
               <Label htmlFor="relationshipType" className="mb-2 block">
-                {t('graph.relationshipType', 'Relationship Type')}
+                {t('relationshipType', 'Relationship type')}
               </Label>
-              <Select value={relationshipType} onValueChange={setRelationshipType}>
+              <Select
+                value={relationshipType}
+                onValueChange={(value) => setRelationshipType(value as RelationshipTypeFilter)}
+              >
                 <SelectTrigger id="relationshipType">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('graph.allTypes', 'All Types')}</SelectItem>
-                  <SelectItem value="member_of">
-                    {t('relationship.memberOf', 'Member Of')}
-                  </SelectItem>
-                  <SelectItem value="partner">{t('relationship.partner', 'Partner')}</SelectItem>
-                  <SelectItem value="parent_org">
-                    {t('relationship.parentOrg', 'Parent Organization')}
-                  </SelectItem>
-                  <SelectItem value="hosted_by">
-                    {t('relationship.hostedBy', 'Hosted By')}
-                  </SelectItem>
-                  <SelectItem value="participant">
-                    {t('relationship.participant', 'Participant')}
-                  </SelectItem>
-                  <SelectItem value="signatory">
-                    {t('relationship.signatory', 'Signatory')}
-                  </SelectItem>
+                  <SelectItem value="all">{t('allTypes', 'All types')}</SelectItem>
+                  {RELATIONSHIP_TYPES.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {t(`relationship.${type}`)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -249,7 +267,7 @@ export function RelationshipGraphPage() {
             <div className="flex items-end">
               <Button onClick={handleRefresh} variant="outline" className="w-full">
                 <Settings className="h-4 w-4 me-2" />
-                {t('graph.refresh', 'Refresh')}
+                {t('refresh', 'Refresh')}
               </Button>
             </div>
           </div>
@@ -262,7 +280,7 @@ export function RelationshipGraphPage() {
                 <div className="flex items-center gap-2">
                   <Layers className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm font-medium">
-                    {t('graph.complexity.label', 'Complexity')}:
+                    {t('complexity.label', 'Complexity')}:
                   </span>
                   <Badge
                     variant={
@@ -274,14 +292,14 @@ export function RelationshipGraphPage() {
                     }
                   >
                     {graphData.stats.node_count > 50
-                      ? t('graph.complexity.complex', 'Complex')
+                      ? t('complexity.complex', 'Complex')
                       : graphData.stats.node_count > 20
-                        ? t('graph.complexity.moderate', 'Moderate')
-                        : t('graph.complexity.simple', 'Simple')}
+                        ? t('complexity.moderate', 'Moderate')
+                        : t('complexity.simple', 'Simple')}
                   </Badge>
                   {graphData.stats.node_count > 20 && (
                     <span className="text-xs text-muted-foreground">
-                      {t('graph.complexity.tip', 'Use clustered layout for complex graphs')}
+                      {t('complexity.tip', 'Use clustered layout for complex graphs')}
                     </span>
                   )}
                 </div>
@@ -299,19 +317,19 @@ export function RelationshipGraphPage() {
                       <SelectItem value="basic" className="text-xs">
                         <div className="flex items-center gap-2">
                           <Network className="h-3 w-3" />
-                          {t('graph.basicMode', 'Basic')}
+                          {t('basicMode', 'Basic')}
                         </div>
                       </SelectItem>
                       <SelectItem value="enhanced" className="text-xs">
                         <div className="flex items-center gap-2">
                           <Sparkles className="h-3 w-3" />
-                          {t('graph.enhancedMode', 'Enhanced')}
+                          {t('enhancedMode', 'Enhanced')}
                         </div>
                       </SelectItem>
                       <SelectItem value="advanced" className="text-xs">
                         <div className="flex items-center gap-2">
                           <Rocket className="h-3 w-3" />
-                          {t('graph.advancedMode', 'Advanced')}
+                          {t('advancedMode', 'Advanced')}
                         </div>
                       </SelectItem>
                     </SelectContent>
@@ -322,26 +340,22 @@ export function RelationshipGraphPage() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
                 <div>
                   <div className="text-2xl font-bold">{graphData.stats.node_count}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {t('graph.nodes', 'Entities')}
-                  </div>
+                  <div className="text-xs text-muted-foreground">{t('nodes', 'Entities')}</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{graphData.stats.edge_count}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {t('graph.edges', 'Relationships')}
-                  </div>
+                  <div className="text-xs text-muted-foreground">{t('edges', 'Relationships')}</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{graphData.stats.max_degree}°</div>
                   <div className="text-xs text-muted-foreground">
-                    {t('graph.maxDegree', 'Max Degree')}
+                    {t('maxDegree', 'Max degree')}
                   </div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{graphData.stats.query_time_ms}ms</div>
                   <div className="text-xs text-muted-foreground">
-                    {t('graph.queryTime', 'Query Time')}
+                    {t('queryTime', 'Query time')}
                   </div>
                 </div>
               </div>
@@ -362,7 +376,7 @@ export function RelationshipGraphPage() {
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            {t('graph.error', 'Failed to load graph data')}: {(error as Error).message}
+            {t('error', 'Failed to load graph data')}: {(error as Error).message}
           </AlertDescription>
         </Alert>
       )}
@@ -382,11 +396,11 @@ export function RelationshipGraphPage() {
           <TabsList className="mb-4">
             <TabsTrigger value="graph" className="gap-2">
               <Network className="h-4 w-4" />
-              {t('graph.graphView', 'Graph View')}
+              {t('graphView', 'Graph view')}
             </TabsTrigger>
             <TabsTrigger value="list" className="gap-2">
               <List className="h-4 w-4" />
-              {t('graph.listView', 'List View')}
+              {t('listView', 'List view')}
             </TabsTrigger>
           </TabsList>
 
