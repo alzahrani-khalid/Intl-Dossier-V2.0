@@ -10,6 +10,24 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'GET, OPTIONS',
 };
 
+interface GraphTraversalRow {
+  dossier_id: string;
+  dossier_type: string;
+  name_en: string;
+  name_ar: string;
+  status: string;
+  degree: number;
+  path: string[];
+  relationship_path?: string[];
+  direction_path?: string[];
+}
+
+interface GraphEdge {
+  source_id: string;
+  target_id: string;
+  relationship_type: string;
+}
+
 serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -114,7 +132,7 @@ serve(async (req) => {
 
     // Transform results into nodes and edges
     const nodesMap = new Map();
-    const edges: any[] = [];
+    const edges: GraphEdge[] = [];
 
     // Add starting node
     nodesMap.set(startDossierId, {
@@ -128,7 +146,7 @@ serve(async (req) => {
     });
 
     // Process graph results
-    (graphData || []).forEach((row: any) => {
+    ((graphData || []) as GraphTraversalRow[]).forEach((row) => {
       // Add node if not exists
       if (!nodesMap.has(row.dossier_id)) {
         nodesMap.set(row.dossier_id, {
@@ -145,9 +163,23 @@ serve(async (req) => {
       // Build edges from path
       if (row.path && row.path.length > 1 && row.relationship_path) {
         for (let i = 0; i < row.path.length - 1; i++) {
-          const sourceId = row.path[i];
-          const targetId = row.path[i + 1];
           const relationshipType = row.relationship_path[i];
+
+          if (!relationshipType) {
+            continue;
+          }
+
+          const currentId = row.path[i];
+          const nextId = row.path[i + 1];
+
+          if (currentId === undefined || nextId === undefined) {
+            continue;
+          }
+
+          // Keep in lockstep with frontend/src/lib/graph-edge-orientation.ts.
+          const isIncoming = row.direction_path?.[i] === 'incoming';
+          const sourceId = isIncoming ? nextId : currentId;
+          const targetId = isIncoming ? currentId : nextId;
 
           // Check if edge already exists
           const edgeExists = edges.some(
