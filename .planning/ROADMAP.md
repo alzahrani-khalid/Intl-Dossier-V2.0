@@ -125,8 +125,25 @@ Plans:
 1. The engagement workspace shows a routed Positions tab reading the decided canonical source (`position_dossier_links` vs legacy `engagement_positions` — decision recorded and implemented)
 2. Attaching a position to an engagement persists, renders in the tab, and invalidates queries — live-verified on staging
 3. No inert buttons remain in the engagement workspace: every round-15-disabled CTA is re-enabled and functional, or removed
-   **Plans**: TBD
+   **Plans**: 6 plans (3 waves)
    **UI hint**: yes
+
+Plans:
+
+**Wave 1**
+
+- [ ] 65-01-PLAN.md — Routed Positions tab on position_dossier_links (route + nav entry + phase i18n keys + ENGPOS-01 decision recorded; ENGPOS-02 unit pins)
+- [ ] 65-02-PLAN.md — Remove unwireable CTAs: WorkspaceShell Transition Stage, ContextTab Link Dossier ×2, DocsTab Upload
+- [ ] 65-03-PLAN.md — Delete the orphaned engagement_positions frontend stack + deprecate the engagements-positions-\* edges (staging emptiness gate)
+- [ ] 65-04-PLAN.md — Create Task wiring (Overview + Tasks) via exported TaskDialog; workspace invalidations; kanban caveat recorded
+
+**Wave 2**
+
+- [ ] 65-05-PLAN.md — CalendarTab Scheduled-events reader + live Add Event CTAs via exported EventDialog
+
+**Wave 3**
+
+- [ ] 65-06-PLAN.md — Live staging verification (orchestrator-run): attach/create DB-verified, nine-CTA pass, AR/RTL + gates + cleanup
 
 ### Phase 66: Overview Error Contract & Timeline Cross-Links
 
@@ -324,7 +341,7 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 | 62. Export Pack Contract & Deploy | v6.6 | 3/3 | Complete    | 2026-06-11 |
 | 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 4/5 | In Progress|  |
 | 64. New Position from Dossier | v6.6 | 6/6 | Complete    | 2026-06-12 |
-| 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 0/TBD | Not started | - |
+| 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 0/6 | Planned | - |
 | 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 0/TBD | Not started | - |
 | 67. Per-Type Engagement Contracts & Legacy Detail Cleanup | v6.6 | 0/TBD | Not started | - |
 
