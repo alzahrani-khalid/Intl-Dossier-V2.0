@@ -17,7 +17,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 - [x] **GRAPH-01**: User can reach a relationship graph page from a dossier (route mounted, no redirect to `/dossiers`) — or the page is formally retired with the mini-graph + a list view as the documented contract
 - [x] **GRAPH-02**: The graph traversal returns both incoming and outgoing relationships, so a dossier referenced by another shows that edge from both sides
-- [ ] **GRAPH-03**: Clicking either endpoint node navigates to the correct per-type dossier route (helper already correct in MiniRelationshipGraph; full page must match)
+- [x] **GRAPH-03**: Clicking either endpoint node navigates to the correct per-type dossier route (helper already correct in MiniRelationshipGraph; full page must match)
 
 ### New Position from Dossier (backlog P3)
 
@@ -72,7 +72,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | EXPORT-02   | Phase 62 | Complete |
 | GRAPH-01    | Phase 63 | Complete |
 | GRAPH-02    | Phase 63 | Complete |
-| GRAPH-03    | Phase 63 | Pending  |
+| GRAPH-03    | Phase 63 | Complete |
 | POSNEW-01   | Phase 64 | Pending  |
 | POSNEW-02   | Phase 64 | Pending  |
 | ENGPOS-01   | Phase 65 | Pending  |
