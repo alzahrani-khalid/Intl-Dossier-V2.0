@@ -471,14 +471,14 @@ curl -s "$SUPABASE_URL/functions/v1/graph-traversal?startDossierId=b0000001-0000
 | A3  | Test-user clearance ≥ 2 covers all seeded verification dossiers (Indonesia at sensitivity 2 was visible live; new seeds should use level ≤ 2)                    | Pitfall 6                 | Seeded nodes invisible during D-09 click-through                                    |
 | A4  | `pnpm exec size-limit` headroom exists for the new route chunk (~component code only; libs already bundled)                                                      | Pitfall 7                 | PR blocked by required Bundle Size Check; mitigate by trimming or budget discussion |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Should the i18n sentence-case sweep extend to `graph.json` keys consumed by the viz components and mini-graph (e.g., `View Full Graph`)?**
    - What we know: D-06 scopes the conformance pass to the page; the mini-graph button is the contract entry point and shows Title Case today.
-   - Recommendation: include `miniGraph.viewFullGraph` and the page-consumed keys in the sweep (same JSON file, trivial); leave deep viz-internal keys (layout/pathFinding/timeAnimation) as-is to limit diff surface.
+   - RESOLVED: include `miniGraph.viewFullGraph` and the page-consumed keys in the sweep (same JSON file, trivial); leave deep viz-internal keys (layout/pathFinding/timeAnimation) as-is to limit diff surface.
 2. **Does D-05's "verify rendering holds with real staging volumes" need more than the D-09 seed set?**
    - What we know: staging has 1 relationship; after seeding ~8-12 rows across 7 types, 2-degree bidirectional graphs stay small.
-   - Recommendation: treat the D-09 seed as the volume test; verify complexity badge and layout at degrees 2 and 3.
+   - RESOLVED: treat the D-09 seed as the volume test; verify complexity badge and layout at degrees 2 and 3.
 
 ## Environment Availability
 
@@ -505,14 +505,14 @@ curl -s "$SUPABASE_URL/functions/v1/graph-traversal?startDossierId=b0000001-0000
 
 ### Phase Requirements → Test Map
 
-| Req ID          | Behavior                                                                       | Test Type                                                                                                                    | Automated Command                                                                                 | File Exists? |
-| --------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------ |
-| GRAPH-01        | Route renders page (no redirect); no-dossier alert has a `/dossiers` link      | unit (component render)                                                                                                      | `cd frontend && pnpm vitest run src/pages/relationships/__tests__/RelationshipGraphPage.test.tsx` | ❌ Wave 0    |
-| GRAPH-01        | AR mode renders `graph.json` AR strings (namespace fix regression guard)       | unit                                                                                                                         | same file, `i18n.changeLanguage('ar')` case                                                       | ❌ Wave 0    |
-| GRAPH-02        | RPC returns incoming + outgoing                                                | live staging probe (SQL function not unit-testable in jsdom)                                                                 | curl probe documented in Code Examples (manual-only, justified: requires live DB)                 | n/a          |
-| GRAPH-02 / D-04 | Edge orientation: `direction_path 'incoming'` swaps source/target              | unit on extracted transform (extract edge-building into a testable pure helper, or mirror the logic in a frontend util test) | `cd frontend && pnpm vitest run src/pages/relationships/__tests__/edge-orientation.test.ts`       | ❌ Wave 0    |
-| GRAPH-03        | `handleNodeSelect` produces `/dossiers/<segment>/<id>` for each of the 8 types | unit (via `getDossierDetailPath`)                                                                                            | `cd frontend && pnpm vitest run src/lib` (extend existing or add)                                 | ❌ Wave 0    |
-| D-09            | All-types live click-through on staging                                        | manual-only (justified: live data + visual navigation, Phase 62 precedent)                                                   | browser walkthrough checklist                                                                     | n/a          |
+| Req ID          | Behavior                                                                                                                               | Test Type                                                                                                                    | Automated Command                                                                                 | File Exists? |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------ |
+| GRAPH-01        | Route renders page (no redirect); no-dossier alert has a `/dossiers` link                                                              | unit (component render)                                                                                                      | `cd frontend && pnpm vitest run src/pages/relationships/__tests__/RelationshipGraphPage.test.tsx` | ❌ Wave 0    |
+| GRAPH-01        | Page requests the `graph` namespace with bare keys (D-07 dot-vs-colon regression guard); live AR string rendering verified in 63-05 T3 | unit                                                                                                                         | same file, namespace-form guard case (Test 3)                                                     | ❌ Wave 0    |
+| GRAPH-02        | RPC returns incoming + outgoing                                                                                                        | live staging probe (SQL function not unit-testable in jsdom)                                                                 | curl probe documented in Code Examples (manual-only, justified: requires live DB)                 | n/a          |
+| GRAPH-02 / D-04 | Edge orientation: `direction_path 'incoming'` swaps source/target                                                                      | unit on extracted transform (extract edge-building into a testable pure helper, or mirror the logic in a frontend util test) | `cd frontend && pnpm vitest run src/pages/relationships/__tests__/edge-orientation.test.ts`       | ❌ Wave 0    |
+| GRAPH-03        | `handleNodeSelect` produces `/dossiers/<segment>/<id>` for each of the 8 types                                                         | unit (via `getDossierDetailPath`)                                                                                            | `cd frontend && pnpm vitest run src/lib` (extend existing or add)                                 | ❌ Wave 0    |
+| D-09            | All-types live click-through on staging                                                                                                | manual-only (justified: live data + visual navigation, Phase 62 precedent)                                                   | browser walkthrough checklist                                                                     | n/a          |
 
 ### Sampling Rate
 
@@ -522,7 +522,7 @@ curl -s "$SUPABASE_URL/functions/v1/graph-traversal?startDossierId=b0000001-0000
 
 ### Wave 0 Gaps
 
-- [ ] `frontend/src/pages/relationships/__tests__/RelationshipGraphPage.test.tsx` — covers GRAPH-01 (render, no-dossier link, AR strings)
+- [ ] `frontend/src/pages/relationships/__tests__/RelationshipGraphPage.test.tsx` — covers GRAPH-01 (render, no-dossier link, graph-namespace guard)
 - [ ] Edge-orientation unit test (pure transform mirroring the edge-fn logic) — covers GRAPH-02/D-04 client side
 - [ ] Per-type path test for node-click — covers GRAPH-03
 - Framework install: none needed (Vitest configured; `CountriesListPage.test.tsx` is the existing page-test pattern to copy)
