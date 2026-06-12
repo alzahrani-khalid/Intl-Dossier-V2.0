@@ -162,8 +162,12 @@ export function NewPositionDialog({
   const types = typesQuery.data ?? []
   const groups = groupsQuery.data ?? []
   const lookupsLoading = typesQuery.isLoading || groupsQuery.isLoading
-  const typesError = typesQuery.error != null
-  const groupsError = groupsQuery.error != null
+  // Resolved-but-EMPTY lookups are as unusable as errored ones: the defaults
+  // effect early-returns, the audience grid renders no checkboxes, and .min(1)
+  // can never pass — render the same lookup_error message (WR-04).
+  const typesUnavailable = typesQuery.error != null || (!typesQuery.isLoading && types.length === 0)
+  const groupsUnavailable =
+    groupsQuery.error != null || (!groupsQuery.isLoading && groups.length === 0)
 
   // The translate button currently in flight (and its disabled pair share state).
   const [translating, setTranslating] = useState<TranslatableField | null>(null)
@@ -386,7 +390,7 @@ export function NewPositionDialog({
             <DossierContextBadge dossierContext={dossierContext} isRTL={isRTL} />
 
             {/* Position type ------------------------------------------------ */}
-            {typesError ? (
+            {typesUnavailable ? (
               <p className="text-xs text-[var(--danger)]">
                 {t('positions:create_dialog.lookup_error')}
               </p>
@@ -541,7 +545,7 @@ export function NewPositionDialog({
             />
 
             {/* Audience groups --------------------------------------------- */}
-            {groupsError ? (
+            {groupsUnavailable ? (
               <p className="text-xs text-[var(--danger)]">
                 {t('positions:create_dialog.lookup_error')}
               </p>
