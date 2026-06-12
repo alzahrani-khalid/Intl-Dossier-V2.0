@@ -149,7 +149,8 @@ export function DossierSearchPage() {
         navigate({ to: `/intake/tickets/${item.id}` })
         break
       case 'mou':
-        navigate({ to: `/mous/${item.id}` })
+        // /mous/$id is UNMOUNTED — navigate to the mounted list (UI-SPEC A-8).
+        navigate({ to: '/mous' })
         break
       default:
         // Navigate to parent dossier context

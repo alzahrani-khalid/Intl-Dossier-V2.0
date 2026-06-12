@@ -92,7 +92,9 @@ import {
   type QuickSwitcherDossier,
   type QuickSwitcherWorkItem,
 } from '@/hooks/useQuickSwitcherSearch'
+import { getWorkItemUrl } from '@/domains/dossiers/hooks/useQuickSwitcherSearch'
 import type { DossierType } from '@/lib/dossier-type-guards'
+import { resolveTimelineNavUrl } from '@/lib/timeline-navigation'
 import { useDirection } from '@/hooks/useDirection'
 import { useRecentNavigation } from '@/hooks/useRecentNavigation'
 import { createNavigationGroups, type NavigationItem } from '@/components/layout/navigation-config'
@@ -467,12 +469,19 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
   }, [apiDossiers, cachedResults.cachedDossiers])
 
   const relatedWork = useMemo((): QuickSwitcherWorkItem[] => {
-    if (apiRelatedWork.length > 0) {
-      const seen = new Set(apiRelatedWork.map((w) => w.id))
-      const extra = cachedResults.cachedWorkItems.filter((w) => !seen.has(w.id))
-      return [...apiRelatedWork, ...extra].slice(0, 3)
-    }
-    return cachedResults.cachedWorkItems
+    const merged =
+      apiRelatedWork.length > 0
+        ? [
+            ...apiRelatedWork,
+            ...cachedResults.cachedWorkItems.filter(
+              (w) => !new Set(apiRelatedWork.map((a) => a.id)).has(w.id),
+            ),
+          ].slice(0, 3)
+        : cachedResults.cachedWorkItems
+    // Suppression-as-absence (UI-SPEC A-8 / §3): items with no mounted
+    // destination (e.g. a document with no/engagement context) are dropped —
+    // never rendered as a disabled or dead-end row.
+    return merged.filter((item) => getWorkItemUrl(item) !== null)
   }, [apiRelatedWork, cachedResults.cachedWorkItems])
 
   // Navigation pages from config for "Pages" group
@@ -902,6 +911,8 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
   const handleWorkItemClick = useCallback(
     (item: QuickSwitcherWorkItem) => {
       const url = handleWorkItemSelect(item)
+      // No mounted destination → suppress: no navigation, no recent entry.
+      if (url === null) return
       navigate({ to: url })
       addRecentNav({
         path: url,
@@ -1113,6 +1124,11 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                 <>
                   <CommandGroup heading={tQs('recentEntities', 'Recent Entities')}>
                     {entityRecentItems.slice(0, 5).map((item) => {
+                      // Re-validate persisted urls: stale localStorage entries may carry
+                      // pre-phase dead targets (/mous/<uuid>) — suppress those rows
+                      // (absence, not a dead-end). UI-SPEC A-8 + threat T-66-04.
+                      const safeUrl = resolveTimelineNavUrl(item.url)
+                      if (safeUrl === null) return null
                       let RecentIcon: React.ElementType = Clock
                       if (item.dossierType != null && item.dossierType in dossierTypeIcons) {
                         RecentIcon = dossierTypeIcons[item.dossierType as DossierType] || Clock
@@ -1127,7 +1143,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                           key={`recent-${item.id}`}
                           value={`recent-${item.id}`}
                           onSelect={() => {
-                            navigate({ to: item.url as string & {} })
+                            navigate({ to: safeUrl as string & {} })
                             closeCommandPalette()
                             setSearchQuery('')
                           }}

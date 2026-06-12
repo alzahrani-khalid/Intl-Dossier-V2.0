@@ -82,9 +82,14 @@ export interface RecentItem {
 }
 
 /**
- * Get URL for a work item
+ * Get the mounted-route URL for a work item, or null when no mounted
+ * destination exists (caller must then suppress the affordance — UI-SPEC A-8).
+ *
+ * /mous/$id and /documents/$id are UNMOUNTED: mou maps to the /mous list
+ * (or the owning org's mounted /mous tab), document maps to the owning
+ * dossier's /docs tab or null when there is no non-engagement context.
  */
-function getWorkItemUrl(item: QuickSwitcherWorkItem): string {
+export function getWorkItemUrl(item: QuickSwitcherWorkItem): string | null {
   switch (item.type) {
     case 'position':
       return `/positions/${item.id}`
@@ -95,11 +100,18 @@ function getWorkItemUrl(item: QuickSwitcherWorkItem): string {
     case 'intake':
       return `/intake/tickets/${item.id}`
     case 'mou':
-      return `/mous/${item.id}`
+      // /mous/$id is UNMOUNTED. Org dossiers have a mounted mous tab; otherwise the list.
+      return item.dossier_context?.type === 'organization'
+        ? `${getDossierDetailPath(item.dossier_context.id, 'organization')}/mous`
+        : '/mous'
     case 'document':
-      return `/documents/${item.id}`
+      // No /documents/* route exists. Mounted docs tabs exist for the 7 dossier types
+      // (/dossiers/{segment}/$id/docs) but NOT under /dossiers/engagements — suppress those.
+      return item.dossier_context != null && item.dossier_context.type !== 'engagement'
+        ? `${getDossierDetailPath(item.dossier_context.id, item.dossier_context.type)}/docs`
+        : null
     default:
-      return '#'
+      return null // was '#' — a dead affordance; null lets callers suppress
   }
 }
 
@@ -199,8 +211,10 @@ export function useQuickSwitcherSearch(
 
   // Handle work item selection
   const handleWorkItemSelect = useCallback(
-    (item: QuickSwitcherWorkItem) => {
+    (item: QuickSwitcherWorkItem): string | null => {
       const url = getWorkItemUrl(item)
+      // No mounted destination → suppress: do not store a dead recent item.
+      if (url === null) return null
       addToRecentItems({
         id: item.id,
         type: item.type,
