@@ -92,8 +92,28 @@ Plans:
 1. The New Position dialog offers a real position-type picker, bilingual title fields, and audience-group selection whose submission satisfies `positions-create` validation (no `position_type_id = dossier_id`, no blank `title_ar`, no empty `audience_groups`)
 2. After create, the `position_dossier_links` row exists for the originating dossier (DB-verified on staging)
 3. The new position appears on the dossier's Positions tab without a manual refresh (live-verified)
-   **Plans**: TBD
+   **Plans**: 6 plans (4 waves)
    **UI hint**: yes
+
+Plans:
+
+**Wave 1**
+
+- [ ] 64-01-PLAN.md — Restore the positions INSERT RLS policy on staging (P0 blocker; diagnostic + idempotent migration via Supabase MCP + live probes)
+- [ ] 64-02-PLAN.md — Foundation: position-type/audience-group lookup hooks, translateContent repository wrapper, bilingual i18n key set
+
+**Wave 2**
+
+- [ ] 64-03-PLAN.md — NewPositionDialog form layer, test-first (type picker, bilingual titles + translate assists, audience checkboxes, Zod validation, name-match defaults)
+
+**Wave 3**
+
+- [ ] 64-04-PLAN.md — Two-step submit (create → applies_to link), dossier-scoped invalidation, honest failure states; gut the broken PositionDialog wrapper
+- [ ] 64-05-PLAN.md — D-13 tab rewire: Create position opens the new dialog; attach-existing demoted to a secondary button
+
+**Wave 4**
+
+- [ ] 64-06-PLAN.md — Live staging verification: both entry points, DB-verified applies_to link, tab refresh without reload, AR/RTL + gates + cleanup
 
 ### Phase 65: Engagement Positions Tab & Legacy Reconciliation
 
