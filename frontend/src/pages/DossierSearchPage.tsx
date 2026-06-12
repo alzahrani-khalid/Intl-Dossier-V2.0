@@ -134,7 +134,10 @@ export function DossierSearchPage() {
         navigate({ to: `/positions/${item.id}` })
         break
       case 'document':
-        navigate({ to: `/documents/${item.id}` })
+        // /documents/$id is UNMOUNTED — route to the owning dossier's Docs tab (UI-SPEC A-8).
+        navigate({
+          to: `/dossiers/${getDossierRouteSegment(item.dossier_context.type)}/${item.dossier_context.id}/docs`,
+        })
         break
       case 'engagement':
         navigate({ to: `/engagements/${item.id}` })

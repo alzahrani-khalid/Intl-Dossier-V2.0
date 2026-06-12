@@ -541,7 +541,8 @@ async function getExpiringMous(
           description_ar: `مذكرة التفاهم مع ${counterparty?.name_ar || 'الشريك'} تنتهي في ${expiryDate.toLocaleDateString('ar-SA', { month: 'short', day: 'numeric', year: 'numeric' })}. ${daysUntil <= 30 ? 'ابدأ عملية التجديد.' : 'راجع وخطط للتجديد.'}`,
           action_label_en: 'Review MOU',
           action_label_ar: 'مراجعة المذكرة',
-          action_route: `/mous/${mou.id}`,
+          // /mous/$id is UNMOUNTED — route to the mounted MoU list (OVRERR-02, A-8 disposition).
+          action_route: '/mous',
           relevant_until: mou.expiry_date,
           days_until_event: daysUntil,
           related_entity_type: 'mou',
