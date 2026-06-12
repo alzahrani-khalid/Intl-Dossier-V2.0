@@ -2,11 +2,17 @@
   "tabs": {
     "overview": "Overview",
     "context": "Context",
+    "positions": "Positions",
     "tasks": "Tasks",
     "calendar": "Calendar",
     "docs": "Docs",
     "audit": "Audit",
     "ariaLabel": "Engagement workspace tabs"
+  },
+  "calendar": {
+    "scheduledEvents": "Scheduled events",
+    "entriesEmpty": "No scheduled events yet. Use Add event to schedule one.",
+    "entriesError": "Failed to load scheduled events. Check your connection and try again."
   },
   "docs": {
     "upload": "Upload document",
@@ -21,11 +27,11 @@
   "actions": {
     "transitionStage": "Advance Stage",
     "generateBriefing": "Generate Briefing",
-    "addEvent": "Add Event",
+    "addEvent": "Add event",
     "schedulePoll": "Schedule Poll",
     "linkDossier": "Link Dossier",
     "logAfterAction": "Log After-Action",
-    "createTask": "Create Task"
+    "createTask": "Create task"
   },
   "overview": {
     "whatsNext": "What's Next",
@@ -42,17 +48,17 @@
   "empty": {
     "tasks": {
       "heading": "No tasks yet",
-      "body": "Create your first task for this engagement to start tracking work.",
-      "action": "+ Create Task"
+      "body": "Create a task for this engagement to start tracking work. New tasks appear in the main tasks list.",
+      "action": "Create task"
     },
     "calendar": {
       "heading": "No events scheduled",
       "body": "Add events to track meetings, deadlines, and milestones for this engagement.",
-      "action": "+ Add Event"
+      "action": "Add event"
     },
     "docs": {
       "heading": "No documents yet",
-      "body": "Upload documents or generate an AI briefing to get started.",
+      "body": "Generate an AI briefing to get started.",
       "action": "Generate Briefing"
     },
     "audit": {
@@ -61,7 +67,7 @@
     },
     "context": {
       "heading": "No linked dossiers",
-      "body": "Link relevant countries, organizations, and topics to build the engagement context.",
+      "body": "Linked dossiers appear here when a host country, organizations, or participants are added to the engagement.",
       "action": "+ Link Dossier"
     }
   },

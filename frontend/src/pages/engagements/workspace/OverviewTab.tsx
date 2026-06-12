@@ -11,7 +11,7 @@
  */
 
 import type { ReactElement } from 'react'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams, Link } from '@tanstack/react-router'
 import { Activity, Calendar, CheckCircle2, Clock, Plus, Users } from 'lucide-react'
@@ -22,6 +22,9 @@ import {
 } from '@/domains/engagements/hooks/useEngagements'
 import { useEngagementKanban } from '@/domains/engagements/hooks/useEngagementKanban'
 import { useLifecycleHistory } from '@/domains/engagements/hooks/useLifecycle'
+import { useDossier } from '@/domains/dossiers/hooks/useDossier'
+import { TaskDialog } from '@/components/dossier/AddToDossierDialogs'
+import type { DossierContextForAction } from '@/hooks/useAddToDossierActions'
 import { LIFECYCLE_STAGE_LABELS } from '@/types/lifecycle.types'
 import type { LifecycleStage, LifecycleTransition } from '@/types/lifecycle.types'
 import type { EngagementParticipant } from '@/types/engagement.types'
@@ -110,10 +113,26 @@ export default function OverviewTab(): ReactElement {
   const { data: profile, isLoading: profileLoading } = useEngagement(engagementId)
   const { data: participantsData, isLoading: participantsLoading } =
     useEngagementParticipants(engagementId)
-  const { stats, isLoading: kanbanLoading } = useEngagementKanban(engagementId)
+  const { stats, isLoading: kanbanLoading, error: kanbanError } = useEngagementKanban(engagementId)
   const { data: lifecycleHistory, isLoading: historyLoading } = useLifecycleHistory(engagementId)
 
   const engagement = profile?.engagement
+
+  // The engagement IS a dossier; the shipped TaskDialog works verbatim with an
+  // engagement-typed context. useDossier supplies the required-but-ignored
+  // `dossier` prop (real fetch — Pitfall 5).
+  const { data: dossier } = useDossier(engagementId)
+  const [taskDialogOpen, setTaskDialogOpen] = useState(false)
+  const dossierContext: DossierContextForAction | null = engagement
+    ? {
+        dossier_id: engagementId,
+        dossier_type: 'engagement',
+        dossier_name_en: engagement.name_en,
+        dossier_name_ar: engagement.name_ar ?? null,
+        inheritance_source: 'direct',
+      }
+    : null
+
   const participants: EngagementParticipant[] = useMemo(() => {
     if (participantsData == null) return []
     const raw = participantsData as { data?: EngagementParticipant[] }
@@ -188,6 +207,9 @@ export default function OverviewTab(): ReactElement {
               <p className="text-sm text-muted-foreground">{t('overview.taskProgress')}</p>
               {kanbanLoading ? (
                 <Skeleton className="mt-1 h-6 w-16" />
+              ) : kanbanError != null ? (
+                // A failed kanban fetch must not read as 0%/0/0 (WR-01).
+                <p className="text-xs text-[var(--danger)]">{t('error.tabLoad')}</p>
               ) : (
                 <>
                   <p className="text-xl font-semibold">
@@ -330,23 +352,37 @@ export default function OverviewTab(): ReactElement {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {/* Transition Stage + Create Task are no-ops until wired (R15-02);
-                disabled to avoid false affordances. Log After-Action is real. */}
-            <Button variant="default" className="min-h-11 min-w-11" disabled>
-              {t('actions.transitionStage')}
-            </Button>
+            {/* Stage transitions happen via the LifecycleStepperBar above the
+                tabs (UI-SPEC #2); this redundant button was removed. */}
             <Button variant="outline" className="min-h-11 min-w-11" asChild>
               <Link to="/engagements/$engagementId/after-action" params={{ engagementId }}>
                 {t('actions.logAfterAction')}
               </Link>
             </Button>
-            <Button variant="outline" className="min-h-11 min-w-11" disabled>
+            <Button
+              variant="outline"
+              className="min-h-11 min-w-11"
+              disabled={dossierContext === null || dossier === undefined}
+              onClick={() => setTaskDialogOpen(true)}
+            >
               <Plus className="size-4" />
               {t('actions.createTask')}
             </Button>
           </div>
         </CardContent>
       </Card>
+
+      {/* Create-task dialog — the engagement IS a dossier, so the shipped
+          dialog works with an engagement-typed context. */}
+      {dossierContext !== null && dossier !== undefined && (
+        <TaskDialog
+          isOpen={taskDialogOpen}
+          onClose={() => setTaskDialogOpen(false)}
+          dossier={dossier as Parameters<typeof TaskDialog>[0]['dossier']}
+          dossierContext={dossierContext}
+          isRTL={isRTL}
+        />
+      )}
     </div>
   )
 }

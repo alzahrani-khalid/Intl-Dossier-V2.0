@@ -203,6 +203,7 @@
   "status": {
     "draft": "مسودة",
     "under_review": "قيد المراجعة",
+    "review": "قيد المراجعة",
     "approved": "معتمد",
     "published": "منشور",
     "unpublished": "غير منشور"
@@ -487,18 +488,5 @@
     "created": "تاريخ الإنشاء",
     "last_updated": "آخر تحديث",
     "version": "الإصدار"
-  },
-  "engagement_section": {
-    "title": "المواقف",
-    "subtitle": "المواقف المرفقة والاقتراحات",
-    "attached_tab": "المرفقة",
-    "suggestions_tab": "الاقتراحات",
-    "briefing_tab": "الإحاطة",
-    "no_attached": "لا توجد مواقف مرفقة",
-    "attach_position": "إرفاق موقف",
-    "error_loading_attached": "فشل تحميل المواقف المرفقة",
-    "error_loading_suggestions": "فشل تحميل الاقتراحات",
-    "no_positions_for_briefing": "لا توجد مواقف مرفقة بعد. قم بإرفاق مواقف لإنشاء حزمة إحاطة.",
-    "attach_positions_first": "إرفاق المواقف أولاً"
   }
 }

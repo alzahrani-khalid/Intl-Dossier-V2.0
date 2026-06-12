@@ -1,8 +1,9 @@
 /**
  * CalendarTab — Engagement calendar view
- * Shows engagement date range, key lifecycle dates, and Add Event placeholder.
- * NOTE: Events API lacks engagement_id filter (confirmed blocker in RESEARCH).
- * Uses the engagement's own dates as primary content per research recommendation.
+ * Renders the engagement's own dates (derived Today/Upcoming/Past groups) plus a
+ * "Scheduled events" reader of the user-created calendar_entries anchored to the
+ * engagement dossier. Add event (CTAs #6/#7) opens the shipped EventDialog; a
+ * created entry renders in the Scheduled events section without reload.
  */
 
 import { type ReactElement, useMemo, useState } from 'react'
@@ -11,6 +12,14 @@ import { useTranslation } from 'react-i18next'
 import { useDirection } from '@/hooks/useDirection'
 import { useEngagement } from '@/domains/engagements/hooks/useEngagements'
 import { useLifecycleHistory } from '@/domains/engagements/hooks/useLifecycle'
+import { useDossier } from '@/domains/dossiers/hooks/useDossier'
+import {
+  useEngagementCalendarEntries,
+  type EngagementCalendarEntry,
+} from '@/hooks/useEngagementCalendarEntries'
+import { EventDialog } from '@/components/dossier/AddToDossierDialogs'
+import type { DossierContextForAction } from '@/hooks/useAddToDossierActions'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { AdaptiveDialog } from '@/components/ui/adaptive-dialog'
@@ -33,9 +42,33 @@ export default function CalendarTab(): ReactElement {
   const { t, i18n } = useTranslation('workspace')
   const { isRTL } = useDirection()
   const [pollDialogOpen, setPollDialogOpen] = useState(false)
+  const [eventDialogOpen, setEventDialogOpen] = useState(false)
 
   const { data: engagement, isLoading } = useEngagement(engagementId)
   const { data: lifecycleHistory } = useLifecycleHistory(engagementId)
+
+  // Add event wiring: the engagement IS a dossier, so the shipped EventDialog
+  // works with an engagement-typed context. useDossier supplies the
+  // required-but-ignored `dossier` prop (Pitfall 5).
+  const { data: dossier } = useDossier(engagementId)
+  const eng = engagement?.engagement
+  const dossierContext: DossierContextForAction | null = eng
+    ? {
+        dossier_id: engagementId,
+        dossier_type: 'engagement',
+        dossier_name_en: eng.name_en,
+        dossier_name_ar: eng.name_ar ?? null,
+        inheritance_source: 'direct',
+      }
+    : null
+  const addEventDisabled = dossierContext === null || dossier === undefined
+
+  // Scheduled-events reader: user-created calendar_entries for this engagement.
+  const {
+    entries,
+    isLoading: entriesLoading,
+    error: entriesError,
+  } = useEngagementCalendarEntries(engagementId)
 
   const locale = i18n.language === 'ar' ? 'ar-SA' : 'en-US'
   const dateFormatter = useMemo(
@@ -50,28 +83,42 @@ export default function CalendarTab(): ReactElement {
     [locale],
   )
 
+  // Day-first short formatter for the Scheduled-events rows (UI-SPEC §3):
+  // "Tue 28 Apr". en-GB for EN (en-US is month-first); toFormatLocale for AR
+  // (raw 'ar' yields Latin digits in Chrome — round-11 fact).
+  const entryDateFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(i18n.language === 'en' ? 'en-GB' : toFormatLocale(i18n.language), {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        timeZone: 'UTC',
+      }),
+    [i18n.language],
+  )
+
   // Build calendar events from engagement dates
   const events = useMemo((): CalendarEvent[] => {
     if (!engagement?.engagement) return []
-    const eng = engagement.engagement
+    const e = engagement.engagement
     const items: CalendarEvent[] = []
 
-    if (eng.start_date) {
+    if (e.start_date) {
       items.push({
         id: 'start',
         title: i18n.language === 'ar' ? 'بداية المشاركة' : 'Engagement Start',
-        date: eng.start_date,
+        date: e.start_date,
         type: 'start',
         icon: CalendarCheck,
         badgeLabel: i18n.language === 'ar' ? 'بداية' : 'Start',
       })
     }
 
-    if (eng.end_date) {
+    if (e.end_date) {
       items.push({
         id: 'end',
         title: i18n.language === 'ar' ? 'موعد نهاية المشاركة' : 'Engagement Deadline',
-        date: eng.end_date,
+        date: e.end_date,
         type: 'end',
         icon: CalendarClock,
         badgeLabel: i18n.language === 'ar' ? 'نهاية' : 'Deadline',
@@ -79,20 +126,20 @@ export default function CalendarTab(): ReactElement {
     }
 
     // Use lifecycle transition timestamp, not eng.updated_at (Codex P2 fix)
-    if (eng.lifecycle_stage && lifecycleHistory?.length) {
+    if (e.lifecycle_stage && lifecycleHistory?.length) {
       const latestTransition = lifecycleHistory[lifecycleHistory.length - 1]
       if (latestTransition) {
         const stageLabel =
           i18n.language === 'ar'
-            ? `مرحلة: ${eng.lifecycle_stage}`
-            : `Current Stage: ${eng.lifecycle_stage}`
+            ? `مرحلة: ${e.lifecycle_stage}`
+            : `Current Stage: ${e.lifecycle_stage}`
         items.push({
           id: 'lifecycle',
           title: stageLabel,
           date: latestTransition.transitioned_at,
           type: 'lifecycle',
           icon: Milestone,
-          badgeLabel: eng.lifecycle_stage,
+          badgeLabel: e.lifecycle_stage,
         })
       }
     }
@@ -130,15 +177,28 @@ export default function CalendarTab(): ReactElement {
   // Date range display
   const dateRange = useMemo((): string => {
     if (!engagement?.engagement) return ''
-    const eng = engagement.engagement
-    if (eng.start_date && eng.end_date) {
-      return `${dateFormatter.format(new Date(eng.start_date))} — ${dateFormatter.format(new Date(eng.end_date))}`
+    const e = engagement.engagement
+    if (e.start_date && e.end_date) {
+      return `${dateFormatter.format(new Date(e.start_date))} — ${dateFormatter.format(new Date(e.end_date))}`
     }
-    if (eng.start_date) {
-      return dateFormatter.format(new Date(eng.start_date))
+    if (e.start_date) {
+      return dateFormatter.format(new Date(e.start_date))
     }
     return ''
   }, [engagement, dateFormatter])
+
+  // The shipped EventDialog, mounted once and shared by both Add event CTAs.
+  // Rendered in both the empty-state and main render paths (separate returns).
+  const eventDialog =
+    dossierContext !== null && dossier !== undefined ? (
+      <EventDialog
+        isOpen={eventDialogOpen}
+        onClose={() => setEventDialogOpen(false)}
+        dossier={dossier as Parameters<typeof EventDialog>[0]['dossier']}
+        dossierContext={dossierContext}
+        isRTL={isRTL}
+      />
+    ) : null
 
   // Loading
   if (isLoading) {
@@ -152,8 +212,11 @@ export default function CalendarTab(): ReactElement {
     )
   }
 
-  // Empty state
-  if (events.length === 0) {
+  // Whole-tab empty state: only when derived events AND scheduled entries are
+  // BOTH empty. While the entries query is unresolved, keep derived-only
+  // behavior (no flash) — an unresolved query is not "empty".
+  const entriesEmptyResolved = !entriesLoading && entriesError === null && entries.length === 0
+  if (events.length === 0 && entriesEmptyResolved) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4">
         <CalendarDays className="h-12 w-12 text-muted-foreground/40 mb-4" />
@@ -163,12 +226,17 @@ export default function CalendarTab(): ReactElement {
         <p className="text-sm text-muted-foreground text-center max-w-sm mb-4">
           {t('empty.calendar.body')}
         </p>
-        {/* No-op until event creation is wired (R15-02); disabled to avoid a
-            false affordance. */}
-        <Button variant="outline" size="sm" className="min-h-11" disabled>
+        <Button
+          variant="outline"
+          size="sm"
+          className="min-h-11"
+          disabled={addEventDisabled}
+          onClick={() => setEventDialogOpen(true)}
+        >
           <Plus className="h-4 w-4" />
           {t('empty.calendar.action')}
         </Button>
+        {eventDialog}
       </div>
     )
   }
@@ -193,14 +261,35 @@ export default function CalendarTab(): ReactElement {
             <span className="hidden sm:inline">{t('actions.schedulePoll')}</span>
           </Button>
 
-          {/* TODO: Link to event creation when events API supports engagement_id
-              filter. Disabled until wired so it is not a false affordance (R15-02). */}
-          <Button variant="outline" size="sm" className="min-h-8" disabled>
+          {/* Add event — opens the shipped EventDialog (min-h-11 per CLAUDE.md
+              44px CTA floor). The created entry renders in Scheduled events
+              below without reload (EventDialog invalidates the reader key). */}
+          <Button
+            variant="outline"
+            size="sm"
+            className="min-h-11"
+            disabled={addEventDisabled}
+            onClick={() => setEventDialogOpen(true)}
+          >
             <Plus className="h-4 w-4" />
             {t('actions.addEvent')}
           </Button>
         </div>
       </div>
+
+      {/* Scheduled events — user-created calendar_entries (FIRST content section,
+          above the derived date groups: user content outranks derived metadata). */}
+      <ScheduledEventsSection
+        heading={t('calendar.scheduledEvents')}
+        emptyLabel={t('calendar.entriesEmpty')}
+        errorLabel={t('calendar.entriesError')}
+        entries={entries}
+        isLoading={entriesLoading}
+        hasError={entriesError !== null}
+        language={i18n.language}
+        dateFormatter={entryDateFormatter}
+        typeLabel={(entryType) => t(`calendar:types.${entryType}`, { defaultValue: entryType })}
+      />
 
       {/* Schedule Poll Dialog */}
       <AdaptiveDialog
@@ -215,6 +304,9 @@ export default function CalendarTab(): ReactElement {
           onCancel={() => setPollDialogOpen(false)}
         />
       </AdaptiveDialog>
+
+      {/* Add event dialog */}
+      {eventDialog}
 
       {/* Event sections by date group */}
       {categorized.today.length > 0 && (
@@ -239,9 +331,75 @@ export default function CalendarTab(): ReactElement {
         />
       )}
 
-      {/* TODO: Conflict detection endpoint exists at POST /api/events/conflicts
-       * but is not wired until events API supports engagement_id filter.
-       * Backend extension needed: GET /api/calendar-events?engagement_id=:id */}
+      {/* TODO: Wire the conflict-detection endpoint (POST /api/events/conflicts)
+       * into the Add event flow so overlapping entries surface a warning. */}
+    </div>
+  )
+}
+
+/**
+ * Scheduled events reader section (UI-SPEC §3): bordered divided list of the
+ * user-created calendar_entries for this engagement. Non-interactive rows.
+ */
+function ScheduledEventsSection({
+  heading,
+  emptyLabel,
+  errorLabel,
+  entries,
+  isLoading,
+  hasError,
+  language,
+  dateFormatter,
+  typeLabel,
+}: {
+  heading: string
+  emptyLabel: string
+  errorLabel: string
+  entries: EngagementCalendarEntry[]
+  isLoading: boolean
+  hasError: boolean
+  language: string
+  dateFormatter: Intl.DateTimeFormat
+  typeLabel: (entryType: string) => string
+}): ReactElement {
+  const isAr = language === 'ar'
+  return (
+    <div className="space-y-2">
+      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        {heading}
+      </h3>
+      {hasError ? (
+        <p className="text-xs text-[var(--danger)]">{errorLabel}</p>
+      ) : !isLoading && entries.length === 0 ? (
+        <p className="text-sm text-muted-foreground">{emptyLabel}</p>
+      ) : (
+        <div className="rounded-md border divide-y">
+          {entries.map((entry) => {
+            const title =
+              isAr && entry.title_ar && entry.title_ar.length > 0 ? entry.title_ar : entry.title_en
+            const dateLabel = dateFormatter.format(new Date(entry.event_date))
+            const timeLabel =
+              !entry.all_day && entry.event_time ? ` ${entry.event_time.slice(0, 5)}` : ''
+            return (
+              <div
+                key={entry.id}
+                className="flex items-center justify-between gap-3 px-3 min-h-[var(--row-h)]"
+              >
+                <p className="text-sm font-medium text-foreground truncate min-w-0">{title}</p>
+                <div className="flex items-center gap-3 shrink-0">
+                  <span className="text-xs text-muted-foreground">
+                    {dateLabel}
+                    {timeLabel}
+                  </span>
+                  <Badge variant="secondary" className="text-xs">
+                    {typeLabel(entry.entry_type)}
+                  </Badge>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

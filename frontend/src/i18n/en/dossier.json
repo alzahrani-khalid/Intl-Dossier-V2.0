@@ -989,6 +989,7 @@
     "error": {
       "intake": "Failed to create intake request",
       "task": "Failed to create task",
+      "taskLinkOnly": "Task created but not linked to this dossier. Find it in the main tasks list.",
       "commitment": "Failed to record commitment",
       "position": "Failed to add position",
       "event": "Failed to schedule event",

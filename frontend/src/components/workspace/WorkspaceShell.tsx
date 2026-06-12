@@ -93,14 +93,6 @@ export function WorkspaceShell({ engagementId, children }: WorkspaceShellProps):
               variant="outline"
               size="sm"
               className="min-h-11 min-w-11 text-xs sm:text-sm"
-              disabled={isLoading}
-            >
-              {t('actions.transitionStage')}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="min-h-11 min-w-11 text-xs sm:text-sm"
               asChild
             >
               <Link to="/engagements/$engagementId/after-action" params={{ engagementId }}>

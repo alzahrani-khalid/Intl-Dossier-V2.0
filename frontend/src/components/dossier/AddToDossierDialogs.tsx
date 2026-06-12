@@ -316,7 +316,7 @@ function IntakeDialog({
 // Task Dialog
 // =============================================================================
 
-function TaskDialog({
+export function TaskDialog({
   isOpen,
   onClose,
   dossier: _dossier,
@@ -345,6 +345,8 @@ function TaskDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!assigneeId) return
+
+    let taskId: string | undefined
     try {
       const result = await createTask.mutateAsync({
         title,
@@ -352,23 +354,56 @@ function TaskDialog({
         assignee_id: assigneeId,
         priority: priority as 'low' | 'medium' | 'high' | 'urgent',
       })
+      taskId = result?.id
+    } catch {
+      // Total failure: nothing persisted. Keep the dialog open with input
+      // intact so the user can retry.
+      toast.error(t('addToDossier.error.task'))
+      return
+    }
 
-      if (result?.id) {
-        await createLinks.mutateAsync(buildDossierLinkPayload('task', result.id, dossierContext))
+    if (taskId) {
+      // The link write gets its own catch (NewPositionDialog precedent, phase
+      // 64 / WR-04): the task already persisted, so a full-failure toast with
+      // the dialog still open would invite a resubmit that duplicates the task
+      // and orphans this one. Close/reset and warn instead — the unlinked task
+      // lives in the main tasks list.
+      try {
+        await createLinks.mutateAsync(buildDossierLinkPayload('task', taskId, dossierContext))
+      } catch {
+        resetForm()
+        onClose()
+        toast.warning(t('addToDossier.error.taskLinkOnly'))
+        return
+      }
+
+      try {
         await queryClient.invalidateQueries({
           queryKey: ['dossier-tab', 'work_items', dossierContext.dossier_id],
         })
         await queryClient.invalidateQueries({
           queryKey: workItemDossierKeys.timeline(dossierContext.dossier_id),
         })
+        // Prefix-invalidate the engagement workspace TasksTab board query
+        // (['engagement-kanban', engagementId, sortBy]). NOTE: this only
+        // refetches the board — it CANNOT surface the task just created here,
+        // because this dialog writes a `tasks` row while engagements-kanban-get
+        // reads the legacy `assignments` table. Until kanban canonicalization
+        // (T-65-11) the new task appears in the main tasks list, not on this
+        // board; the invalidation is forward-compat. Harmless no-op on dossier
+        // pages (no active engagement-kanban query).
+        await queryClient.invalidateQueries({
+          queryKey: ['engagement-kanban', dossierContext.dossier_id],
+        })
+      } catch {
+        // Cache refresh is bookkeeping; both writes succeeded. Fall through to
+        // the success path — stale readers self-heal on their stale window.
       }
-
-      toast.success(t('addToDossier.success.task'))
-      resetForm()
-      onClose()
-    } catch {
-      toast.error(t('addToDossier.error.task'))
     }
+
+    toast.success(t('addToDossier.success.task'))
+    resetForm()
+    onClose()
   }
 
   return (
@@ -627,7 +662,7 @@ function PositionDialog({
 // Event Dialog
 // =============================================================================
 
-function EventDialog({
+export function EventDialog({
   isOpen,
   onClose,
   dossier: _dossier,
@@ -678,6 +713,12 @@ function EventDialog({
       })
       await queryClient.invalidateQueries({
         queryKey: dossierOverviewKeys.detail(dossierContext.dossier_id),
+      })
+      // Engagement workspace CalendarTab "Scheduled events" reader (plan 65-05)
+      // consumes ['engagement-calendar-entries', engagementId]; invalidate it so a
+      // workspace-created event shows without reload. No-op on dossier pages.
+      await queryClient.invalidateQueries({
+        queryKey: ['engagement-calendar-entries', dossierContext.dossier_id],
       })
 
       toast.success(t('addToDossier.success.event'))
