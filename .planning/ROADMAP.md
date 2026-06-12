@@ -341,7 +341,7 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 | 62. Export Pack Contract & Deploy | v6.6 | 3/3 | Complete    | 2026-06-11 |
 | 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 4/5 | In Progress|  |
 | 64. New Position from Dossier | v6.6 | 6/6 | Complete    | 2026-06-12 |
-| 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 6/6 | Complete   | 2026-06-12 |
+| 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 6/6 | Complete    | 2026-06-12 |
 | 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 0/TBD | Not started | - |
 | 67. Per-Type Engagement Contracts & Legacy Detail Cleanup | v6.6 | 0/TBD | Not started | - |
 

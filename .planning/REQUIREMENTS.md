@@ -26,9 +26,9 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Engagement Positions (backlog P4)
 
-- [ ] **ENGPOS-01**: The engagement workspace has a routed Positions tab reading canonical tables (decision: canonical `position_dossier_links` vs legacy `engagement_positions`)
-- [ ] **ENGPOS-02**: User can attach a position to an engagement; it persists, renders, and invalidates queries
-- [ ] **ENGPOS-03**: The round-15-disabled workspace CTAs are re-enabled as they are wired — no inert buttons remain in the engagement workspace
+- [x] **ENGPOS-01**: The engagement workspace has a routed Positions tab reading canonical tables (decision: canonical `position_dossier_links` vs legacy `engagement_positions`)
+- [x] **ENGPOS-02**: User can attach a position to an engagement; it persists, renders, and invalidates queries
+- [x] **ENGPOS-03**: The round-15-disabled workspace CTAs are re-enabled as they are wired — no inert buttons remain in the engagement workspace
 
 ### Overview Honesty (backlog P5)
 
@@ -75,9 +75,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | GRAPH-03    | Phase 63 | Complete |
 | POSNEW-01   | Phase 64 | Complete |
 | POSNEW-02   | Phase 64 | Complete |
-| ENGPOS-01   | Phase 65 | Pending  |
-| ENGPOS-02   | Phase 65 | Pending  |
-| ENGPOS-03   | Phase 65 | Pending  |
+| ENGPOS-01   | Phase 65 | Complete |
+| ENGPOS-02   | Phase 65 | Complete |
+| ENGPOS-03   | Phase 65 | Complete |
 | OVRERR-01   | Phase 66 | Pending  |
 | OVRERR-02   | Phase 66 | Pending  |
 | PERENG-01   | Phase 67 | Pending  |
