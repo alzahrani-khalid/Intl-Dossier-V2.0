@@ -18,6 +18,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
+import { useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 import { Info, Languages, Loader2, MessageSquare } from 'lucide-react'
 import {
   Dialog,
@@ -50,7 +52,12 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { usePositionTypes } from '@/domains/positions/hooks/usePositionTypes'
 import { useAudienceGroups } from '@/domains/positions/hooks/useAudienceGroups'
-import { translateContent } from '@/domains/positions/repositories/positions.repository'
+import { useCreatePosition } from '@/domains/positions/hooks/useCreatePosition'
+import {
+  createPositionDossierLink,
+  translateContent,
+} from '@/domains/positions/repositories/positions.repository'
+import { dossierOverviewKeys } from '@/services/dossier-overview.service'
 import type { DossierContextForAction } from '@/hooks/useAddToDossierActions'
 
 // =============================================================================
@@ -146,6 +153,9 @@ export function NewPositionDialog({
   isRTL,
 }: NewPositionDialogProps): React.JSX.Element {
   const { t } = useTranslation(['positions', 'dossier'])
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const createPosition = useCreatePosition()
 
   const typesQuery = usePositionTypes()
   const groupsQuery = useAudienceGroups()
@@ -157,6 +167,8 @@ export function NewPositionDialog({
 
   // The translate button currently in flight (and its disabled pair share state).
   const [translating, setTranslating] = useState<TranslatableField | null>(null)
+  // Guards against double-submit while the two-step create→link flow runs.
+  const [submitting, setSubmitting] = useState(false)
 
   const form = useForm<NewPositionFormValues>({
     resolver: zodResolver(newPositionSchema),
@@ -196,9 +208,97 @@ export function NewPositionDialog({
     )
   }, [isOpen, types, groups, form])
 
-  // Form submission is wired in plan 64-04 (create → link → invalidate → toast).
-  const onSubmit = (): void => {
-    // implemented in plan 64-04 (submit flow)
+  // After a full success (both create and link resolved), refresh every
+  // dossier-scoped reader and surface the success toast. The mutation hooks only
+  // invalidate the GLOBAL ['positions','list'] (useCreatePosition.onSuccess) and
+  // the INVERSE ['position-dossier-links', positionId] keys; the dossier
+  // Positions tab reads ['dossier-position-links', dossierId] and the overview
+  // KPI reads dossierOverviewKeys.detail(dossierId), so both would stay stale
+  // until their window expires unless invalidated here (R12-04 precedent).
+  const finishSuccess = async (positionId: string): Promise<void> => {
+    await queryClient.invalidateQueries({
+      queryKey: ['dossier-position-links', dossierContext.dossier_id],
+    })
+    await queryClient.invalidateQueries({
+      queryKey: dossierOverviewKeys.detail(dossierContext.dossier_id),
+    })
+    await queryClient.invalidateQueries({
+      queryKey: ['position-dossier-links', positionId],
+    })
+    form.reset()
+    onClose()
+    toast.success(t('positions:create_dialog.toast_success'), {
+      action: {
+        label: t('positions:create_dialog.toast_open_position'),
+        onClick: () => void navigate({ to: '/positions/$id', params: { id: positionId } }),
+      },
+    })
+  }
+
+  // Step 2 (and the retry path) — always passes link_type explicitly; the edge
+  // defaults to related_to when omitted, which would be the wrong relationship
+  // for a position created FROM this dossier (D-09/D-10, Pitfall 2).
+  const linkToDossier = async (positionId: string): Promise<void> => {
+    await createPositionDossierLink(positionId, {
+      dossier_id: dossierContext.dossier_id,
+      link_type: 'applies_to',
+    })
+  }
+
+  // Partial failure (position created, link write threw): the dialog has already
+  // closed (re-submitting would duplicate the position — UI-SPEC state 9). Offer a
+  // Retry link action; on retry success run the full-success path, on retry
+  // failure re-show the same warning. Never render clean success here.
+  const showPartialFailure = (positionId: string): void => {
+    toast.warning(t('positions:create_dialog.toast_partial_failure'), {
+      duration: 10000,
+      action: {
+        label: t('positions:create_dialog.toast_retry_link'),
+        onClick: () => {
+          void (async (): Promise<void> => {
+            try {
+              await linkToDossier(positionId)
+              await finishSuccess(positionId)
+            } catch {
+              showPartialFailure(positionId)
+            }
+          })()
+        },
+      },
+    })
+  }
+
+  // Two-step submit: positions-create, then the applies_to dossier link. The two
+  // writes have independent try/catch so a link failure is reported as a partial
+  // failure (warning + retry) — distinct from a total create failure (D-11).
+  const onSubmit = async (values: NewPositionFormValues): Promise<void> => {
+    if (submitting) return
+    setSubmitting(true)
+
+    let positionId: string
+    try {
+      const position = await createPosition.mutateAsync(values)
+      positionId = position.id
+    } catch {
+      // Total failure (UI-SPEC state 10): keep the dialog open with input intact;
+      // the shared api-client strips the edge bilingual body (Pitfall 3), so show
+      // a generic localized error. The hook already invalidated ['positions','list'].
+      toast.error(t('positions:create_dialog.toast_error'))
+      setSubmitting(false)
+      return
+    }
+
+    try {
+      await linkToDossier(positionId)
+      await finishSuccess(positionId)
+    } catch {
+      // Partial failure: the position persisted but the link write failed.
+      form.reset()
+      onClose()
+      showPartialFailure(positionId)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const handleTranslate = async (
@@ -460,10 +560,21 @@ export function NewPositionDialog({
             </div>
 
             <DialogFooter className="mt-6">
-              <Button type="button" variant="outline" onClick={onClose} className="min-h-11">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                disabled={submitting}
+                className="min-h-11"
+              >
                 {t('dossier:action.cancel')}
               </Button>
-              <Button type="submit" disabled={!form.formState.isValid} className="min-h-11">
+              <Button
+                type="submit"
+                disabled={!form.formState.isValid || submitting}
+                className="min-h-11"
+              >
+                {submitting ? <Loader2 className="me-2 h-4 w-4 animate-spin" /> : null}
                 {t('dossier:addToDossier.form.submit.position')}
               </Button>
             </DialogFooter>
