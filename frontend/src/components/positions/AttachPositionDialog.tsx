@@ -338,7 +338,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
                     {selectedIds.includes(previewPosition.id) ? (
                       <>
                         <Check className="me-2 h-4 w-4" />
-                        {t('positions:attach.selected')}
+                        {t('positions:attach.selectedBadge')}
                       </>
                     ) : (
                       <>

@@ -12,21 +12,25 @@ import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useDossierPositionLinks } from '../../hooks/useDossierPositionLinks'
 import { createPositionDossierLink } from '../../domains/positions/repositories/positions.repository'
+import { useDossier } from '../../domains/dossiers/hooks/useDossier'
 import { PositionList } from './PositionList'
 import { AttachPositionDialog } from './AttachPositionDialog'
+import { NewPositionDialog } from './NewPositionDialog'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
 import type { PositionStatus, PositionType } from '../../types/position'
 import type { PositionDossierLinkType } from '../../domains/positions/types'
+import type { DossierContextForAction } from '../../hooks/useAddToDossierActions'
 
 interface DossierPositionsTabProps {
   dossierId: string
 }
 
 export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
-  const { t } = useTranslation(['positions', 'common'])
+  const { t, i18n } = useTranslation(['positions', 'common'])
+  const isRTL = i18n.language === 'ar'
   const queryClient = useQueryClient()
 
   // Search and filter state
@@ -35,6 +39,12 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
   const [typeFilter, setTypeFilter] = useState<PositionType | 'all'>('all')
   const [linkTypeFilter, setLinkTypeFilter] = useState<PositionDossierLinkType | 'all'>('all')
   const [showAttachDialog, setShowAttachDialog] = useState(false)
+  const [showNewPositionDialog, setShowNewPositionDialog] = useState(false)
+
+  // Cache hit on dossierKeys.detail — the dossier shell already loaded this row,
+  // so this resolves immediately (zero extra network). Used to build the
+  // create-dialog's dossier context.
+  const { data: dossier } = useDossier(dossierId)
 
   // Debounce search input
   const debouncedSearch = useDebouncedValue(searchQuery, 300)
@@ -46,8 +56,24 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
     search: debouncedSearch,
   })
 
-  // Handler for creating new position
-  const handleCreatePosition = () => {
+  // Build the create-dialog's dossier context from the cached dossier row.
+  const dossierContext: DossierContextForAction | null = dossier
+    ? {
+        dossier_id: dossierId,
+        dossier_type: dossier.type,
+        dossier_name_en: dossier.name_en,
+        dossier_name_ar: dossier.name_ar,
+        inheritance_source: 'direct',
+      }
+    : null
+
+  // Handler for creating a new position — opens the quick-create dialog (D-13).
+  const handleCreatePosition = (): void => {
+    setShowNewPositionDialog(true)
+  }
+
+  // Handler for attaching an existing position (demoted to a secondary action).
+  const handleAttachExisting = (): void => {
     setShowAttachDialog(true)
   }
 
@@ -74,13 +100,27 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
             {t('positions:dossier_tab.subtitle', { count: totalCount })}
           </p>
         </div>
-        <Button
-          onClick={handleCreatePosition}
-          className="w-full sm:w-auto"
-          aria-label={t('positions:dossier_tab.create_position')}
-        >
-          {t('positions:dossier_tab.create_position')}
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Button
+            onClick={handleCreatePosition}
+            // The dialog only renders once the dossier row has loaded; without
+            // this guard the click is a silent no-op while useDossier is
+            // loading or errored (WR-03).
+            disabled={dossierContext === null}
+            className="w-full sm:w-auto min-h-11"
+            aria-label={t('positions:dossier_tab.create_position')}
+          >
+            {t('positions:dossier_tab.create_position')}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleAttachExisting}
+            className="w-full sm:w-auto min-h-11"
+            aria-label={t('positions:dossier_tab.attach_existing')}
+          >
+            {t('positions:dossier_tab.attach_existing')}
+          </Button>
+        </div>
       </div>
 
       {/* Search and Filters */}
@@ -225,6 +265,17 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
             }
             setShowAttachDialog(false)
           }}
+        />
+      )}
+
+      {/* New Position Dialog (quick-create) — rendered once the dossier row is
+          cached so the context badge has its names/type. */}
+      {dossierContext && (
+        <NewPositionDialog
+          isOpen={showNewPositionDialog}
+          onClose={() => setShowNewPositionDialog(false)}
+          dossierContext={dossierContext}
+          isRTL={isRTL}
         />
       )}
     </div>

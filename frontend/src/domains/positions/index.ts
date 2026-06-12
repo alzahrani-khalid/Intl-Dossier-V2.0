@@ -28,6 +28,8 @@ export {
 } from './hooks/usePositionDossierLinks'
 export { useCreatePositionDossierLink } from './hooks/useCreatePositionDossierLink'
 export { useDeletePositionDossierLink } from './hooks/useDeletePositionDossierLink'
+export { usePositionTypes, type PositionTypeRow } from './hooks/usePositionTypes'
+export { useAudienceGroups, type AudienceGroupRow } from './hooks/useAudienceGroups'
 
 // Repository
 export * as positionsRepo from './repositories/positions.repository'

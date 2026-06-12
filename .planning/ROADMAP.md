@@ -99,21 +99,21 @@ Plans:
 
 **Wave 1**
 
-- [ ] 64-01-PLAN.md — Restore the positions INSERT RLS policy on staging (P0 blocker; diagnostic + idempotent migration via Supabase MCP + live probes)
-- [ ] 64-02-PLAN.md — Foundation: position-type/audience-group lookup hooks, translateContent repository wrapper, bilingual i18n key set
+- [x] 64-01-PLAN.md — Restore the positions INSERT RLS policy on staging (P0 blocker; diagnostic + idempotent migration via Supabase MCP + live probes)
+- [x] 64-02-PLAN.md — Foundation: position-type/audience-group lookup hooks, translateContent repository wrapper, bilingual i18n key set
 
 **Wave 2**
 
-- [ ] 64-03-PLAN.md — NewPositionDialog form layer, test-first (type picker, bilingual titles + translate assists, audience checkboxes, Zod validation, name-match defaults)
+- [x] 64-03-PLAN.md — NewPositionDialog form layer, test-first (type picker, bilingual titles + translate assists, audience checkboxes, Zod validation, name-match defaults)
 
 **Wave 3**
 
-- [ ] 64-04-PLAN.md — Two-step submit (create → applies_to link), dossier-scoped invalidation, honest failure states; gut the broken PositionDialog wrapper
-- [ ] 64-05-PLAN.md — D-13 tab rewire: Create position opens the new dialog; attach-existing demoted to a secondary button
+- [x] 64-04-PLAN.md — Two-step submit (create → applies_to link), dossier-scoped invalidation, honest failure states; gut the broken PositionDialog wrapper
+- [x] 64-05-PLAN.md — D-13 tab rewire: Create position opens the new dialog; attach-existing demoted to a secondary button
 
 **Wave 4**
 
-- [ ] 64-06-PLAN.md — Live staging verification: both entry points, DB-verified applies_to link, tab refresh without reload, AR/RTL + gates + cleanup
+- [x] 64-06-PLAN.md — Live staging verification: both entry points, DB-verified applies_to link, tab refresh without reload, AR/RTL + gates + cleanup
 
 ### Phase 65: Engagement Positions Tab & Legacy Reconciliation
 
@@ -323,7 +323,7 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
 | 62. Export Pack Contract & Deploy | v6.6 | 3/3 | Complete    | 2026-06-11 |
 | 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 4/5 | In Progress|  |
-| 64. New Position from Dossier | v6.6 | 0/TBD | Not started | - |
+| 64. New Position from Dossier | v6.6 | 6/6 | Complete    | 2026-06-12 |
 | 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 0/TBD | Not started | - |
 | 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 0/TBD | Not started | - |
 | 67. Per-Type Engagement Contracts & Legacy Detail Cleanup | v6.6 | 0/TBD | Not started | - |

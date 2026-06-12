@@ -24,7 +24,6 @@ import {
   Inbox,
   CheckSquare,
   Handshake,
-  MessageSquare,
   Calendar,
   GitBranch,
   FileText,
@@ -49,7 +48,6 @@ import { cn } from '@/lib/utils'
 import { useCreateTask } from '@/hooks/useTasks'
 import { useCreateCommitment } from '@/hooks/useCommitments'
 import { useCreateTicket } from '@/hooks/useIntakeApi'
-import { useCreatePosition } from '@/hooks/useCreatePosition'
 import { useCreateCalendarEvent } from '@/hooks/useCreateCalendarEvent'
 // canonical relationship mutation (source/target contract); the obsolete
 // child_dossier_id hook at @/hooks/useCreateRelationship posts a payload the
@@ -65,6 +63,7 @@ import {
   workItemDossierKeys,
 } from '@/hooks/useCreateWorkItemDossierLinks'
 import type { CreateWorkItemDossierLinksRequest } from '@/hooks/useCreateWorkItemDossierLinks'
+import { NewPositionDialog } from '@/components/positions/NewPositionDialog'
 import type { Dossier } from '@/lib/dossier-type-guards'
 import type { ActionDialogState, DossierContextForAction } from '@/hooks/useAddToDossierActions'
 import type { AddToDossierActionType } from './AddToDossierMenu'
@@ -601,6 +600,12 @@ function CommitmentDialog({
 // Position Dialog
 // =============================================================================
 
+// PositionDialog is now a thin wrapper around the rebuilt NewPositionDialog
+// (Phase 64 / POSNEW-02). The previous in-file form posted a broken payload
+// (position_type_id = dossier_id, blank title_ar, empty audience_groups, no
+// dossier link write); NewPositionDialog replaces it with the real two-step
+// create→link flow. The function name and ActionDialogProps signature are kept
+// so the main-export wiring below stays untouched; `dossier` is unused here.
 function PositionDialog({
   isOpen,
   onClose,
@@ -608,89 +613,13 @@ function PositionDialog({
   dossierContext,
   isRTL,
 }: ActionDialogProps) {
-  const { t } = useTranslation('dossier')
-  const [title, setTitle] = React.useState('')
-  const [content, setContent] = React.useState('')
-
-  const createPosition = useCreatePosition()
-
-  const isSubmitting = createPosition.isPending
-
-  const resetForm = () => {
-    setTitle('')
-    setContent('')
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    try {
-      await createPosition.mutateAsync({
-        position_type_id: dossierContext.dossier_id,
-        title_en: title,
-        title_ar: '',
-        content_en: content,
-        audience_groups: [],
-      })
-
-      toast.success(t('addToDossier.success.position'))
-      resetForm()
-      onClose()
-    } catch {
-      toast.error(t('addToDossier.error.position'))
-    }
-  }
-
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5" />
-            {t('addToDossier.dialogs.position.title')}
-          </DialogTitle>
-          <DialogDescription>{t('addToDossier.dialogs.position.description')}</DialogDescription>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit}>
-          <DossierContextBadge dossierContext={dossierContext} isRTL={isRTL} />
-
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="position-title">{t('form.nameEn')}</Label>
-              <Input
-                id="position-title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder={t('form.nameEnPlaceholder')}
-                required
-                className="min-h-11"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="position-content">{t('form.descriptionEn')}</Label>
-              <Textarea
-                id="position-content"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder={t('form.descriptionEnPlaceholder')}
-                rows={4}
-              />
-            </div>
-          </div>
-
-          <DialogFooter className="mt-6">
-            <Button type="button" variant="outline" onClick={onClose} className="min-h-11">
-              {t('action.cancel')}
-            </Button>
-            <Button type="submit" disabled={isSubmitting || !title} className="min-h-11">
-              {isSubmitting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
-              {t('addToDossier.form.submit.position')}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+    <NewPositionDialog
+      isOpen={isOpen}
+      onClose={onClose}
+      dossierContext={dossierContext}
+      isRTL={isRTL}
+    />
   )
 }
 

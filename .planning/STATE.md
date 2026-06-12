@@ -2,15 +2,16 @@
 gsd_state_version: 1.0
 milestone: v6.6
 milestone_name: Dossier Workflow Completion
-status: executing
-last_updated: '2026-06-12T10:57:40.237Z'
-last_activity: 2026-06-12 -- Phase 64 planning complete
+status: ready_to_plan
+last_updated: 2026-06-12T12:09:46.780Z
+last_activity: 2026-06-12 -- Phase 64 execution started
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 14
-  completed_plans: 8
+  completed_plans: 14
   percent: 33
+stopped_at: Phase 64 complete (6/6) — ready to discuss Phase 65
 ---
 
 # Project State
@@ -20,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-11 after v6.5 milestone)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 64 — new-position-from-dossier
+**Current focus:** Phase 65 — engagement positions tab & legacy reconciliation
 
 ## Current Position
 
-Phase: 64 (new-position-from-dossier) — READY TO PLAN
-Plan: TBD
-Status: Ready to execute
-Last activity: 2026-06-12 -- Phase 64 planning complete
+Phase: 65
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-06-12
 
 ## Quick Tasks Completed
 

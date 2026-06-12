@@ -21,8 +21,8 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### New Position from Dossier (backlog P3)
 
-- [ ] **POSNEW-01**: User creating a position from a dossier gets a real position-type picker, bilingual title fields, and audience-group selection that satisfy `positions-create` (no more `position_type_id = dossier_id`, blank `title_ar`, empty `audience_groups`)
-- [ ] **POSNEW-02**: After create, the `position_dossier_links` row is written and the new position appears on the dossier's Positions tab (live-verified)
+- [x] **POSNEW-01**: User creating a position from a dossier gets a real position-type picker, bilingual title fields, and audience-group selection that satisfy `positions-create` (no more `position_type_id = dossier_id`, blank `title_ar`, empty `audience_groups`)
+- [x] **POSNEW-02**: After create, the `position_dossier_links` row is written and the new position appears on the dossier's Positions tab (live-verified)
 
 ### Engagement Positions (backlog P4)
 
@@ -73,8 +73,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | GRAPH-01    | Phase 63 | Complete |
 | GRAPH-02    | Phase 63 | Complete |
 | GRAPH-03    | Phase 63 | Complete |
-| POSNEW-01   | Phase 64 | Pending  |
-| POSNEW-02   | Phase 64 | Pending  |
+| POSNEW-01   | Phase 64 | Complete |
+| POSNEW-02   | Phase 64 | Complete |
 | ENGPOS-01   | Phase 65 | Pending  |
 | ENGPOS-02   | Phase 65 | Pending  |
 | ENGPOS-03   | Phase 65 | Pending  |

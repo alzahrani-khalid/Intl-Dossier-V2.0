@@ -151,6 +151,29 @@ export interface DeletePositionDossierLinkInput {
 }
 
 // ============================================================================
+// Translate Content (translate-content edge — used by NewPositionDialog)
+// ============================================================================
+
+// Request/response shapes for the deployed translate-content v2 edge function.
+// Contract verified against the DEPLOYED edge (not the repo source): the edge
+// enforces a 10,000-char text limit and returns HTTP 503 when AnythingLLM is
+// down. See translateContent() in positions.repository.ts for caller rules.
+
+export interface TranslateContentInput {
+  text: string
+  direction: 'en_to_ar' | 'ar_to_en'
+  content_type: 'title' | 'content'
+}
+
+export interface TranslateContentResponse {
+  translated_text: string
+  confidence: number
+  source_language: string
+  target_language: string
+  metadata: Record<string, unknown>
+}
+
+// ============================================================================
 // Update Position Variables (from useUpdatePosition)
 // ============================================================================
 

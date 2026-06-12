@@ -32,7 +32,6 @@
     "no_positions": "لا توجد مواقف متاحة بعد"
   },
   "editor": {
-    "title": "محرر الموقف",
     "toolbar": "شريط أدوات المحرر",
     "bold": "غامق",
     "italic": "مائل",
@@ -355,7 +354,7 @@
     "content": "المحتوى",
     "keyMessages": "الرسائل الرئيسية",
     "previewEmpty": "اختر موقفاً للمعاينة",
-    "selected": "محدد",
+    "selectedBadge": "محدد",
     "selectThis": "اختر هذا الموقف",
     "attachSelected": "إرفاق {{count}} موقف",
     "attaching": "جاري الإرفاق...",
@@ -425,10 +424,36 @@
     "adminRequired": "مطلوب وصول المسؤول لإجراء التصحيحات الطارئة",
     "reasonRequired": "يجب أن يكون سبب التصحيح 10 أحرف على الأقل"
   },
+  "create_dialog": {
+    "type_label": "نوع الموقف",
+    "title_en_label": "العنوان (إنجليزي)",
+    "title_ar_label": "العنوان (عربي)",
+    "content_en_label": "المحتوى (إنجليزي) — اختياري",
+    "content_ar_label": "المحتوى (عربي) — اختياري",
+    "audience_legend": "مجموعات الجمهور",
+    "translate_to_ar": "ترجمة إلى العربية",
+    "translate_to_en": "ترجمة إلى الإنجليزية",
+    "translating": "جارٍ الترجمة…",
+    "translate_unavailable": "الترجمة غير متاحة. أدخل النص يدويًا.",
+    "toast_success": "تم إنشاء الموقف",
+    "toast_open_position": "فتح الموقف",
+    "toast_partial_failure": "تم إنشاء الموقف، لكن تعذّر ربطه بهذا الملف.",
+    "toast_retry_link": "إعادة محاولة الربط",
+    "toast_error": "فشل إنشاء الموقف. حاول مرة أخرى.",
+    "lookup_error": "تعذّر تحميل خيارات النموذج. أغلق مربع الحوار وحاول مرة أخرى."
+  },
+  "validation": {
+    "type_required": "اختر نوع الموقف",
+    "title_en_required": "العنوان الإنجليزي مطلوب",
+    "title_ar_required": "العنوان العربي مطلوب",
+    "title_max_length": "يجب ألا يتجاوز العنوان 200 حرف",
+    "audience_required": "اختر مجموعة جمهور واحدة على الأقل"
+  },
   "dossier_tab": {
     "title": "المواقف المرفقة",
     "subtitle": "{{count}} موقف مرفق بهذا الملف",
-    "create_position": "إرفاق موقف",
+    "create_position": "إنشاء موقف",
+    "attach_existing": "إرفاق موقف موجود",
     "search_placeholder": "البحث في المواقف...",
     "search_label": "البحث في المواقف",
     "status_filter": "تصفية حسب الحالة",
