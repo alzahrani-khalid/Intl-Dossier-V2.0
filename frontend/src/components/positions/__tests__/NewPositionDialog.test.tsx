@@ -256,8 +256,7 @@ describe('NewPositionDialog', () => {
     await waitFor(() => expect(submit).toBeEnabled())
   })
 
-  it.skip('submits real position_type_id and audience_groups then links with applies_to (POSNEW-02, D-09/D-10)', async () => {
-    // unskipped + implemented in plan 64-04 (submit flow)
+  it('submits real position_type_id and audience_groups then links with applies_to (POSNEW-02, D-09/D-10)', async () => {
     const user = userEvent.setup()
     createMock.mockResolvedValue({ id: 'pos-1' })
     linkMock.mockResolvedValue({ id: 'link-1' })
@@ -282,8 +281,7 @@ describe('NewPositionDialog', () => {
     })
   })
 
-  it.skip('invalidates dossier-position-links and overview keys on full success (POSNEW-02, D-12)', async () => {
-    // unskipped + implemented in plan 64-04 (submit flow)
+  it('invalidates dossier-position-links and overview keys on full success (POSNEW-02, D-12)', async () => {
     const user = userEvent.setup()
     createMock.mockResolvedValue({ id: 'pos-1' })
     linkMock.mockResolvedValue({ id: 'link-1' })
@@ -303,8 +301,7 @@ describe('NewPositionDialog', () => {
     expect(baseProps.onClose).toHaveBeenCalled()
   })
 
-  it.skip('shows a warning toast with retry, not success, when the link write fails (POSNEW-02, D-11)', async () => {
-    // unskipped + implemented in plan 64-04 (submit flow)
+  it('shows a warning toast with retry, not success, when the link write fails (POSNEW-02, D-11)', async () => {
     const user = userEvent.setup()
     createMock.mockResolvedValue({ id: 'pos-1' })
     linkMock.mockRejectedValue(new Error('link failed'))
