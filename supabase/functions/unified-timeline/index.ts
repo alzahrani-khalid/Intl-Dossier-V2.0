@@ -175,7 +175,8 @@ Deno.serve(async (req: Request) => {
                 is_virtual: event.is_virtual,
                 meeting_link: event.meeting_link,
                 all_day: event.all_day,
-                navigation_url: `/calendar/${event.id}`,
+                // OVRERR-02 A-7: calendar rows SUPPRESS — /calendar/$id is unmounted and /calendar has no event-focus param; null removes the View-details affordance client-side.
+                navigation_url: null,
               },
               created_at: event.created_at,
               updated_at: event.updated_at,
@@ -236,7 +237,7 @@ Deno.serve(async (req: Request) => {
               icon: 'Users',
               color: 'purple',
               interaction_type: interaction.interaction_type,
-              navigation_url: `${getDossierDetailPath(dossier_id, dossier_type)}?tab=interactions`,
+              navigation_url: getDossierDetailPath(dossier_id, dossier_type),
             },
             created_at: interaction.created_at,
             updated_at: interaction.updated_at,
@@ -303,7 +304,7 @@ Deno.serve(async (req: Request) => {
                 color: priority === 'high' ? 'red' : 'orange',
                 confidence_score: report.confidence_score,
                 intelligence_type: report.intelligence_type,
-                navigation_url: `${getDossierDetailPath(dossier_id, dossier_type)}?tab=intelligence`,
+                navigation_url: getDossierDetailPath(dossier_id, dossier_type),
               },
               created_at: report.created_at,
               updated_at: report.last_refreshed_at,
@@ -357,7 +358,8 @@ Deno.serve(async (req: Request) => {
             metadata: {
               icon: 'Briefcase',
               color: 'green',
-              navigation_url: `/mous/${mou.id}`,
+              // /mous/$id is unmounted; route to the list.
+              navigation_url: '/mous',
             },
             created_at: mou.created_at,
             updated_at: mou.updated_at,
