@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v6.6
 milestone_name: Dossier Workflow Completion
 status: planning
-last_updated: '2026-06-12T09:41:42.683Z'
+last_updated: '2026-06-12T10:27:22.935Z'
 last_activity: 2026-06-12
 progress:
   total_phases: 6
