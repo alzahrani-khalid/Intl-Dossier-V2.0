@@ -316,7 +316,7 @@ function IntakeDialog({
 // Task Dialog
 // =============================================================================
 
-function TaskDialog({
+export function TaskDialog({
   isOpen,
   onClose,
   dossier: _dossier,
@@ -360,6 +360,13 @@ function TaskDialog({
         })
         await queryClient.invalidateQueries({
           queryKey: workItemDossierKeys.timeline(dossierContext.dossier_id),
+        })
+        // Engagement workspace TasksTab reads the kanban via
+        // ['engagement-kanban', engagementId, sortBy]; prefix-invalidate so a
+        // task created from the workspace refreshes the board. Harmless no-op on
+        // dossier pages (no active engagement-kanban query).
+        await queryClient.invalidateQueries({
+          queryKey: ['engagement-kanban', dossierContext.dossier_id],
         })
       }
 
@@ -627,7 +634,7 @@ function PositionDialog({
 // Event Dialog
 // =============================================================================
 
-function EventDialog({
+export function EventDialog({
   isOpen,
   onClose,
   dossier: _dossier,
@@ -678,6 +685,12 @@ function EventDialog({
       })
       await queryClient.invalidateQueries({
         queryKey: dossierOverviewKeys.detail(dossierContext.dossier_id),
+      })
+      // Engagement workspace CalendarTab "Scheduled events" reader (plan 65-05)
+      // consumes ['engagement-calendar-entries', engagementId]; invalidate it so a
+      // workspace-created event shows without reload. No-op on dossier pages.
+      await queryClient.invalidateQueries({
+        queryKey: ['engagement-calendar-entries', dossierContext.dossier_id],
       })
 
       toast.success(t('addToDossier.success.event'))
