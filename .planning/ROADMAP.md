@@ -155,8 +155,27 @@ Plans:
 1. A single section error contract is decided (fail-the-query vs section-level error metadata vs explicit unknown state) and applied across overview section fetchers and cards
 2. A forced section fetch error renders an explicit error state on that card — never a trustworthy-looking zero/empty state
 3. No timeline "View details" navigates to an unmounted route (`/calendar/$id`, `/mous/$id`): each affordance routes to a real destination (detail route or filtered list page) or is suppressed
-   **Plans**: TBD
+   **Plans**: 8 plans (3 waves)
    **UI hint**: yes
+
+Plans:
+
+**Wave 1**
+
+- [ ] 66-01-PLAN.md — Service fail-the-query: all 7 overview fetchers throw DossierOverviewAPIError + sectionError i18n key (en/ar) + RED-first service suite
+- [ ] 66-02-PLAN.md — resolveTimelineNavUrl mounted-route guard lib + A-8 live dead-link retargets (quick-switcher, CommandPalette, DossierSearchPage)
+- [ ] 66-03-PLAN.md — unified-timeline emission fixes: calendar→null (A-7 SUPPRESS), mou→/mous, dead ?tab= params dropped (code only; deploy in 66-08)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [ ] 66-04-PLAN.md — Card error-line sweep A: shared/country/org cards (8 files) — error before empty, stale-while-error
+- [ ] 66-05-PLAN.md — Card error-line sweep B: forum/topic/WG/person/EO cards (11 files) incl. the EO all-dash failure mode
+- [ ] 66-06-PLAN.md — DossierDrawer error branch + Retry (no permanent skeleton), DrawerHead fallback, raw error.message removal (Pitfall 9)
+- [ ] 66-07-PLAN.md — Guard the navigation_url consumers: TimelineEventCard/EnhancedVerticalTimelineCard suppression + ActivityList mountedness extension
+
+**Wave 3**
+
+- [ ] 66-08-PLAN.md — Live verification (orchestrator-run): edge redeploy + emission probe, CDP forced-error protocol (empty vs failed), AR/RTL, gates
 
 ### Phase 67: Per-Type Engagement Contracts & Legacy Detail Cleanup
 
