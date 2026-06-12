@@ -345,6 +345,8 @@ export function TaskDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!assigneeId) return
+
+    let taskId: string | undefined
     try {
       const result = await createTask.mutateAsync({
         title,
@@ -352,9 +354,30 @@ export function TaskDialog({
         assignee_id: assigneeId,
         priority: priority as 'low' | 'medium' | 'high' | 'urgent',
       })
+      taskId = result?.id
+    } catch {
+      // Total failure: nothing persisted. Keep the dialog open with input
+      // intact so the user can retry.
+      toast.error(t('addToDossier.error.task'))
+      return
+    }
 
-      if (result?.id) {
-        await createLinks.mutateAsync(buildDossierLinkPayload('task', result.id, dossierContext))
+    if (taskId) {
+      // The link write gets its own catch (NewPositionDialog precedent, phase
+      // 64 / WR-04): the task already persisted, so a full-failure toast with
+      // the dialog still open would invite a resubmit that duplicates the task
+      // and orphans this one. Close/reset and warn instead — the unlinked task
+      // lives in the main tasks list.
+      try {
+        await createLinks.mutateAsync(buildDossierLinkPayload('task', taskId, dossierContext))
+      } catch {
+        resetForm()
+        onClose()
+        toast.warning(t('addToDossier.error.taskLinkOnly'))
+        return
+      }
+
+      try {
         await queryClient.invalidateQueries({
           queryKey: ['dossier-tab', 'work_items', dossierContext.dossier_id],
         })
@@ -372,14 +395,15 @@ export function TaskDialog({
         await queryClient.invalidateQueries({
           queryKey: ['engagement-kanban', dossierContext.dossier_id],
         })
+      } catch {
+        // Cache refresh is bookkeeping; both writes succeeded. Fall through to
+        // the success path — stale readers self-heal on their stale window.
       }
-
-      toast.success(t('addToDossier.success.task'))
-      resetForm()
-      onClose()
-    } catch {
-      toast.error(t('addToDossier.error.task'))
     }
+
+    toast.success(t('addToDossier.success.task'))
+    resetForm()
+    onClose()
   }
 
   return (

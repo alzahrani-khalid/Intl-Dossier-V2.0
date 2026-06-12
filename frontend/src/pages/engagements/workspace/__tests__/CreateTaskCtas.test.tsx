@@ -309,4 +309,106 @@ describe('TaskDialog submit payload (ENGPOS-03)', () => {
       ),
     )
   })
+
+  it('link failure after a successful create closes the dialog and warns, not full-failure (WR-04)', async () => {
+    vi.resetModules()
+    vi.doUnmock('@/components/dossier/AddToDossierDialogs')
+
+    const createTaskMock = vi.fn().mockResolvedValue({ id: 'task-2' })
+    const createLinksMock = vi.fn().mockRejectedValue(new Error('link write failed'))
+    const toastMock = { success: vi.fn(), error: vi.fn(), warning: vi.fn() }
+    const onClose = vi.fn()
+
+    vi.doMock('react-i18next', () => ({
+      useTranslation: (): { t: (k: string) => string; i18n: { language: string } } => ({
+        t: (k: string): string => k,
+        i18n: { language: 'en' },
+      }),
+      initReactI18next: { type: '3rdParty', init: (): void => undefined },
+      Trans: ({ children }: { children: ReactNode }): ReactNode => children,
+    }))
+    vi.doMock('sonner', () => ({ toast: toastMock }))
+    vi.doMock('@/hooks/useTasks', () => ({
+      useCreateTask: (): { mutateAsync: typeof createTaskMock; isPending: boolean } => ({
+        mutateAsync: createTaskMock,
+        isPending: false,
+      }),
+    }))
+    vi.doMock('@/hooks/useCreateWorkItemDossierLinks', () => ({
+      useCreateWorkItemDossierLinks: (): {
+        mutateAsync: typeof createLinksMock
+        isPending: boolean
+      } => ({ mutateAsync: createLinksMock, isPending: false }),
+      workItemDossierKeys: {
+        timeline: (id: string): readonly string[] => ['work-item-dossier', 'timeline', id],
+      },
+    }))
+    vi.doMock('@/components/forms/UserPicker', () => ({
+      UserPicker: ({ onChange }: { onChange?: (id: string | null) => void }): ReactNode => (
+        <button type="button" data-testid="pick-user" onClick={() => onChange?.('user-9')}>
+          pick
+        </button>
+      ),
+    }))
+    vi.doMock('@/hooks/useDirection', () => ({
+      useDirection: (): { isRTL: boolean; direction: 'ltr' } => ({
+        isRTL: false,
+        direction: 'ltr',
+      }),
+    }))
+
+    const { TaskDialog } = await import('@/components/dossier/AddToDossierDialogs')
+    const { QueryClient: QC, QueryClientProvider: QCP } = await import('@tanstack/react-query')
+    const {
+      render: renderReal,
+      screen: screenReal,
+      waitFor: waitForReal,
+    } = await import('@testing-library/react')
+    const userEventReal = (await import('@testing-library/user-event')).default
+
+    // The prior test rendered through ITS OWN dynamic testing-library copy; its
+    // cleanup does not cover this copy's queries. Clear any leftover DOM so
+    // getBy* queries cannot double-match.
+    document.body.innerHTML = ''
+
+    const queryClient = new QC({
+      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+    })
+
+    const dossierContext = {
+      dossier_id: ENGAGEMENT_ID,
+      dossier_type: 'engagement' as const,
+      dossier_name_en: 'Bilateral talks',
+      dossier_name_ar: 'محادثات ثنائية',
+      inheritance_source: 'direct' as const,
+    }
+
+    const user = userEventReal.setup()
+    renderReal(
+      <QCP client={queryClient}>
+        <TaskDialog
+          isOpen
+          onClose={onClose}
+          dossier={DOSSIER_ROW as never}
+          dossierContext={dossierContext as never}
+          isRTL={false}
+        />
+      </QCP>,
+    )
+
+    await user.type(screenReal.getByLabelText('addToDossier.form.taskTitle'), 'Draft agenda')
+    await user.click(screenReal.getByTestId('pick-user'))
+    await user.click(screenReal.getByRole('button', { name: 'addToDossier.form.submit.task' }))
+
+    await waitForReal(() => expect(createLinksMock).toHaveBeenCalled())
+    await waitForReal(() =>
+      expect(toastMock.warning).toHaveBeenCalledWith('addToDossier.error.taskLinkOnly'),
+    )
+    // Partial failure must not read as total failure, must not fake success,
+    // and must close the dialog so a resubmit cannot duplicate the task.
+    expect(toastMock.error).not.toHaveBeenCalled()
+    expect(toastMock.success).not.toHaveBeenCalled()
+    expect(onClose).toHaveBeenCalled()
+    expect(createTaskMock).toHaveBeenCalledTimes(1)
+  })
 })
