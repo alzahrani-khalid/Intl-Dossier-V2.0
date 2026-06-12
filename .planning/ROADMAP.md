@@ -132,10 +132,10 @@ Plans:
 
 **Wave 1**
 
-- [ ] 65-01-PLAN.md — Routed Positions tab on position_dossier_links (route + nav entry + phase i18n keys + ENGPOS-01 decision recorded; ENGPOS-02 unit pins)
-- [ ] 65-02-PLAN.md — Remove unwireable CTAs: WorkspaceShell Transition Stage, ContextTab Link Dossier ×2, DocsTab Upload
-- [ ] 65-03-PLAN.md — Delete the orphaned engagement_positions frontend stack + deprecate the engagements-positions-\* edges (staging emptiness gate)
-- [ ] 65-04-PLAN.md — Create Task wiring (Overview + Tasks) via exported TaskDialog; workspace invalidations; kanban caveat recorded
+- [x] 65-01-PLAN.md — Routed Positions tab on position_dossier_links (route + nav entry + phase i18n keys + ENGPOS-01 decision recorded; ENGPOS-02 unit pins)
+- [x] 65-02-PLAN.md — Remove unwireable CTAs: WorkspaceShell Transition Stage, ContextTab Link Dossier ×2, DocsTab Upload
+- [x] 65-03-PLAN.md — Delete the orphaned engagement_positions frontend stack + deprecate the engagements-positions-\* edges (staging emptiness gate)
+- [x] 65-04-PLAN.md — Create Task wiring (Overview + Tasks) via exported TaskDialog; workspace invalidations; kanban caveat recorded
 
 **Wave 2**
 
@@ -341,7 +341,7 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 | 62. Export Pack Contract & Deploy | v6.6 | 3/3 | Complete    | 2026-06-11 |
 | 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 4/5 | In Progress|  |
 | 64. New Position from Dossier | v6.6 | 6/6 | Complete    | 2026-06-12 |
-| 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 0/6 | Planned | - |
+| 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 4/6 | In Progress|  |
 | 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 0/TBD | Not started | - |
 | 67. Per-Type Engagement Contracts & Legacy Detail Cleanup | v6.6 | 0/TBD | Not started | - |
 
