@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v6.6
 milestone_name: Dossier Workflow Completion
-status: roadmap_created
-last_updated: '2026-06-11T12:00:00.000Z'
-last_activity: 2026-06-11
+status: executing
+last_updated: '2026-06-12T10:57:40.237Z'
+last_activity: 2026-06-12 -- Phase 64 planning complete
 progress:
   total_phases: 6
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  completed_phases: 2
+  total_plans: 14
+  completed_plans: 8
+  percent: 33
 ---
 
 # Project State
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-11 after v6.5 milestone)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** v6.6 Dossier Workflow Completion — roadmap created (Phases 62-67); Phase 62 (export pack, HIGH) first
+**Current focus:** Phase 64 — new-position-from-dossier
 
 ## Current Position
 
-Phase: 62 of 67 — Export Pack Contract & Deploy (not started)
-Plan: —
-Status: Roadmap created (Phases 62-67, 15/15 requirements mapped) — next: /gsd:plan-phase 62
-Last activity: 2026-06-11 — v6.6 roadmap created
+Phase: 64 (new-position-from-dossier) — READY TO PLAN
+Plan: TBD
+Status: Ready to execute
+Last activity: 2026-06-12 -- Phase 64 planning complete
 
 ## Quick Tasks Completed
 
@@ -66,7 +66,7 @@ Last activity: 2026-06-11 — v6.6 roadmap created
 
 ## Next Action
 
-v6.6 roadmap created (Phases 62-67, 15/15 requirements mapped). Next: `/gsd:plan-phase 62` (Export Pack Contract & Deploy — HIGH, the most visible advertised-but-broken path).
+Phase 63 completed with live staging graph verification, all-type click-through, AR/RTL width evidence, and green frontend gates. Next: `/gsd:plan-phase 64` (New Position from Dossier).
 
 Carried deploy note from the inspection loop: the droplet **backend** still needs the round-11 auth fix (`backend/src/middleware/auth.ts`) deployed, or elected-official detail and other Express-backed routes stay 401 in production (staging is correct).
 

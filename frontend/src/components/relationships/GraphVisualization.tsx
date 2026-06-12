@@ -20,6 +20,7 @@ import {
   NodeTypes,
   useReactFlow,
   ReactFlowProvider,
+  MarkerType,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import { Card } from '@/components/ui/card'
@@ -66,7 +67,7 @@ interface GraphVisualizationProps {
 // T086: Memoized custom node component to prevent unnecessary re-renders
 const DossierNode = memo(({ data }: { data: NodeData }) => {
   const { isRTL } = useDirection()
-const name = isRTL ? data.name_ar : data.name_en
+  const name = isRTL ? data.name_ar : data.name_en
 
   return (
     <Card className="min-w-[200px] px-4 py-3 border-2 shadow-md">
@@ -224,6 +225,12 @@ function GraphVisualizationInner({
         stroke: getEdgeColor(edge.relationship_type),
         strokeWidth: 2,
       },
+      markerEnd: {
+        type: MarkerType.ArrowClosed,
+        width: 10,
+        height: 10,
+        color: getEdgeColor(edge.relationship_type),
+      },
       labelStyle: {
         fontSize: 12,
         fontWeight: 500,
@@ -345,19 +352,31 @@ function GraphVisualizationInner({
             <div className="text-sm font-semibold">{t('graph.legend', 'Legend')}</div>
             <div className="flex flex-col gap-1 text-xs">
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: getNodeColor('country') }} />
+                <div
+                  className="h-3 w-3 rounded-full"
+                  style={{ backgroundColor: getNodeColor('country') }}
+                />
                 <span>{t('graph.country', 'Country')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: getNodeColor('organization') }} />
+                <div
+                  className="h-3 w-3 rounded-full"
+                  style={{ backgroundColor: getNodeColor('organization') }}
+                />
                 <span>{t('graph.organization', 'Organization')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: getNodeColor('individual') }} />
+                <div
+                  className="h-3 w-3 rounded-full"
+                  style={{ backgroundColor: getNodeColor('individual') }}
+                />
                 <span>{t('graph.individual', 'Individual')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: getNodeColor('forum') }} />
+                <div
+                  className="h-3 w-3 rounded-full"
+                  style={{ backgroundColor: getNodeColor('forum') }}
+                />
                 <span>{t('graph.forum', 'Forum')}</span>
               </div>
             </div>

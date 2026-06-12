@@ -6,7 +6,13 @@
     "gsd-debugger": "fable",
     "gsd-executor": "opus",
     "gsd-research-synthesizer": "haiku",
-    "gsd-security-auditor": "opus"
+    "gsd-security-auditor": "opus",
+    "gsd-phase-researcher": "fable",
+    "gsd-project-researcher": "fable",
+    "gsd-ui-researcher": "fable",
+    "gsd-domain-researcher": "fable",
+    "gsd-ai-researcher": "fable",
+    "gsd-advisor-researcher": "fable"
   },
   "commit_docs": true,
   "parallelization": true,
@@ -39,7 +45,6 @@
   "hooks": {
     "context_warnings": true
   },
-  "branching_strategy": "none",
   "mode": "yolo",
   "granularity": "standard"
 }

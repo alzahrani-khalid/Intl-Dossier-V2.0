@@ -2,11 +2,12 @@
  * ExportDossierDialog - One-click export dialog for dossier briefing packs
  * Feature: dossier-export-pack
  *
- * Allows users to export dossier information as PDF/DOCX with configurable sections.
- * Supports bilingual output (EN/AR) and mobile-first responsive design.
+ * Exports dossier information as a print-ready HTML briefing pack delivered in a
+ * new browser tab (with a popup-blocked blob-download fallback). Supports a
+ * single output language (EN or AR) and mobile-first responsive design.
  */
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Dialog,
@@ -27,12 +28,13 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
+  AlertTriangle,
   ChevronDown,
   ChevronUp,
+  Info,
 } from 'lucide-react'
 import type {
   ExportDossierDialogProps,
-  DossierExportFormat,
   ExportLanguage,
   ExportSectionConfig,
 } from '@/types/dossier-export.types'
@@ -40,6 +42,24 @@ import { DEFAULT_EXPORT_SECTIONS } from '@/types/dossier-export.types'
 import { useDossierExport } from '@/hooks/useDossierExport'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+
+/**
+ * Build a filesystem-safe slug from a dossier name for the fallback filename.
+ */
+function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+    .slice(0, 30)
+}
+
+/**
+ * Today's date as YYYYMMDD for the fallback filename.
+ */
+function todayStamp(): string {
+  return new Date().toISOString().slice(0, 10).replace(/-/g, '')
+}
 
 /**
  * Export dialog for dossier briefing packs
@@ -52,18 +72,33 @@ export function ExportDossierDialog({
   onClose,
   onSuccess,
 }: ExportDossierDialogProps) {
-  const { t } = useTranslation('dossier-export')
+  const { t, i18n } = useTranslation('dossier-export')
   const { isRTL } = useDirection()
   // Export configuration state
-  const [format, setFormat] = useState<DossierExportFormat>('pdf')
-  const [language, setLanguage] = useState<ExportLanguage>('both')
+  const [language, setLanguage] = useState<ExportLanguage>(i18n.language === 'ar' ? 'ar' : 'en')
   const [sections, setSections] = useState<ExportSectionConfig[]>(DEFAULT_EXPORT_SECTIONS)
   const [includeCoverPage, setIncludeCoverPage] = useState(true)
   const [includeTableOfContents, setIncludeTableOfContents] = useState(true)
   const [showAdvanced, setShowAdvanced] = useState(false)
+  const [popupBlocked, setPopupBlocked] = useState(false)
+  // Auto-close timer handle — cleared on close/unmount so reset() never fires
+  // after unmount and a pending auto-close never outlives a user action.
+  const autoCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const clearAutoCloseTimer = useCallback(() => {
+    if (autoCloseTimerRef.current !== null) {
+      clearTimeout(autoCloseTimerRef.current)
+      autoCloseTimerRef.current = null
+    }
+  }, [])
+
+  // Clear any pending auto-close timer on unmount.
+  useEffect(() => {
+    return () => clearAutoCloseTimer()
+  }, [clearAutoCloseTimer])
 
   // Export hook
-  const { exportDossier, progress, isExporting, error, reset } = useDossierExport({
+  const { exportDossier, progress, isExporting, error, failedSections, reset } = useDossierExport({
     onSuccess: (response) => {
       onSuccess?.(response)
     },
@@ -76,11 +111,38 @@ export function ExportDossierDialog({
     )
   }, [])
 
-  // Handle export
+  // Map failed section keys to their localized names for the warning banner.
+  const failedSectionNames = useCallback(
+    (keys: string[]): string =>
+      keys
+        .map((key) => t(`sections.${key}`, { defaultValue: key }))
+        .filter(Boolean)
+        .join(', '),
+    [t],
+  )
+
+  // Handle export — popup-blocker-safe new-tab delivery (D-07).
   const handleExport = async () => {
+    clearAutoCloseTimer()
+    setPopupBlocked(false)
+
+    // MUST open the tab synchronously before any await (popup-blocker constraint).
+    const newTab = window.open('', '_blank')
+
+    // Write a quiet placeholder so the user never stares at a blank tab.
+    if (newTab) {
+      const dir = language === 'ar' ? 'rtl' : 'ltr'
+      newTab.document.write(
+        `<!doctype html><html dir="${dir}" lang="${language}"><head><meta charset="utf-8">` +
+          `<title>${t('newTab.generating')}</title></head>` +
+          `<body style="margin:0;display:flex;align-items:center;justify-content:center;` +
+          `min-height:100vh;background:#f7f6f4;color:#6b6459;font-family:system-ui;font-size:14px;">` +
+          `<p>${t('newTab.generating')}</p></body></html>`,
+      )
+    }
+
     try {
-      const response = await exportDossier(dossierId, {
-        format,
+      const { html, failedSections: failed } = await exportDossier(dossierId, {
         language,
         sections,
         includeCoverPage,
@@ -88,15 +150,34 @@ export function ExportDossierDialog({
         includePageNumbers: true,
       })
 
-      // If successful, the download will be triggered by the hook
-      if (response.success && response.download_url) {
-        // Auto-close after success (with small delay to show success state)
-        setTimeout(() => {
+      if (newTab) {
+        newTab.document.open()
+        newTab.document.write(html)
+        newTab.document.close()
+      } else {
+        // Fallback: blob download when popups are blocked.
+        const blob = new Blob([html], { type: 'text/html; charset=utf-8' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `briefing-pack-${slugify(dossierName)}-${todayStamp()}.html`
+        a.click()
+        URL.revokeObjectURL(url)
+        setPopupBlocked(true)
+      }
+
+      // Clean success auto-closes; warnings (failed sections or popup-blocked)
+      // keep the dialog open so the user can read them.
+      if (newTab && failed.length === 0) {
+        autoCloseTimerRef.current = setTimeout(() => {
+          autoCloseTimerRef.current = null
           onClose()
           reset()
         }, 1500)
       }
     } catch (err) {
+      // Never leave an orphaned placeholder tab behind.
+      newTab?.close()
       console.error('Export failed:', err)
     }
   }
@@ -104,10 +185,14 @@ export function ExportDossierDialog({
   // Reset and close
   const handleClose = () => {
     if (!isExporting) {
+      clearAutoCloseTimer()
       reset()
+      setPopupBlocked(false)
       onClose()
     }
   }
+
+  const isReady = progress?.status === 'ready'
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -145,63 +230,67 @@ export function ExportDossierDialog({
         )}
 
         {/* Success State */}
-        {progress?.status === 'ready' && (
-          <div className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-[var(--ok)] bg-[var(--ok-soft)] p-4">
-            <CheckCircle2 className="h-5 w-5 text-[var(--ok)]" />
+        {isReady && (
+          <div
+            role="status"
+            aria-live="polite"
+            className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-[var(--ok)] bg-[var(--ok-soft)] p-4"
+          >
+            <CheckCircle2 className="h-5 w-5 shrink-0 text-[var(--ok)]" />
             <span className="text-sm text-[var(--ok)]">
-              {t('success', { defaultValue: 'Export complete! Download starting...' })}
+              {popupBlocked
+                ? t('popupBlocked', {
+                    defaultValue:
+                      'Pop-ups are blocked. The briefing pack was downloaded as an HTML file instead.',
+                  })
+                : t('success', {
+                    defaultValue: 'Export complete. The briefing pack opened in a new tab.',
+                  })}
+            </span>
+          </div>
+        )}
+
+        {/* Failed-sections warning (D-08) — below the success banner */}
+        {isReady && failedSections.length > 0 && (
+          <div
+            role="alert"
+            className="flex items-start gap-3 rounded-[var(--radius-sm)] border border-[var(--warn)] bg-[var(--warn-soft)] p-4"
+          >
+            <AlertTriangle className="h-5 w-5 shrink-0 text-[var(--warn)]" />
+            <span className="text-sm text-[var(--ink)] text-start">
+              {t('warning.failedSections', {
+                defaultValue: 'Some sections could not be generated: {{sections}}',
+                sections: failedSectionNames(failedSections),
+              })}
             </span>
           </div>
         )}
 
         {/* Error State */}
         {error && (
-          <div className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-[var(--danger)] bg-[var(--danger-soft)] p-4">
-            <AlertCircle className="h-5 w-5 text-[var(--danger)]" />
-            <span className="text-sm text-[var(--danger)]">{error.message}</span>
+          <div
+            role="alert"
+            className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-[var(--danger)] bg-[var(--danger-soft)] p-4"
+          >
+            <AlertCircle className="h-5 w-5 shrink-0 text-[var(--danger)]" />
+            <span className="text-sm text-[var(--danger)]">
+              {t('error', { defaultValue: 'Export failed. Please try again.' })}
+            </span>
           </div>
         )}
 
-        {/* Configuration - Hidden during export */}
-        {!isExporting && progress?.status !== 'ready' && (
+        {/* Configuration - Hidden during export and after completion */}
+        {!isExporting && !isReady && (
           <div className="space-y-6 py-2">
-            {/* Format Selection */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium">
-                {t('format.label', { defaultValue: 'Export Format' })}
-              </Label>
-              <RadioGroup
-                value={format}
-                onValueChange={(v) => setFormat(v as DossierExportFormat)}
-                className="grid grid-cols-2 gap-3"
-              >
-                <Label
-                  htmlFor="pdf"
-                  className={cn(
-                    'flex cursor-pointer items-center justify-center gap-2 rounded-[var(--radius-sm)] border p-3 transition-colors sm:p-4',
-                    format === 'pdf'
-                      ? 'border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent-ink)]'
-                      : 'border-[var(--line)] hover:border-[var(--ink-faint)]',
-                  )}
-                >
-                  <RadioGroupItem value="pdf" id="pdf" className="sr-only" />
-                  <FileText className="h-5 w-5" />
-                  <span className="font-medium">PDF</span>
-                </Label>
-                <Label
-                  htmlFor="docx"
-                  className={cn(
-                    'flex cursor-pointer items-center justify-center gap-2 rounded-[var(--radius-sm)] border p-3 transition-colors sm:p-4',
-                    format === 'docx'
-                      ? 'border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent-ink)]'
-                      : 'border-[var(--line)] hover:border-[var(--ink-faint)]',
-                  )}
-                >
-                  <RadioGroupItem value="docx" id="docx" className="sr-only" />
-                  <FileDown className="h-5 w-5" />
-                  <span className="font-medium">Word</span>
-                </Label>
-              </RadioGroup>
+            {/* Format info line (D-03) — replaces the PDF/Word picker */}
+            <div className="flex items-start gap-2 text-start">
+              <Info className="h-4 w-4 shrink-0 mt-0.5 text-[var(--ink-mute)]" />
+              <p className="text-sm text-[var(--ink-mute)]">
+                {t('format.html_info', {
+                  defaultValue:
+                    "Exports as a print-ready HTML briefing pack. To save as PDF, use your browser's print dialog.",
+                })}
+              </p>
             </div>
 
             {/* Language Selection */}
@@ -214,7 +303,7 @@ export function ExportDossierDialog({
                 onValueChange={(v) => setLanguage(v as ExportLanguage)}
                 className="flex flex-wrap gap-3"
               >
-                {(['en', 'ar', 'both'] as ExportLanguage[]).map((lang) => (
+                {(['en', 'ar'] as ExportLanguage[]).map((lang) => (
                   <Label
                     key={lang}
                     htmlFor={`lang-${lang}`}
@@ -227,11 +316,7 @@ export function ExportDossierDialog({
                   >
                     <RadioGroupItem value={lang} id={`lang-${lang}`} className="sr-only" />
                     <span className="text-sm">
-                      {lang === 'en'
-                        ? 'English'
-                        : lang === 'ar'
-                          ? 'العربية'
-                          : t('language.both', { defaultValue: 'Bilingual' })}
+                      {lang === 'en' ? t('language.en') : t('language.ar')}
                     </span>
                   </Label>
                 ))}
@@ -312,13 +397,9 @@ export function ExportDossierDialog({
 
         <DialogFooter thumbZone>
           <Button variant="outline" onClick={handleClose} disabled={isExporting}>
-            {t('cancel', { defaultValue: 'Cancel' })}
+            {t('cancel', { defaultValue: 'Close' })}
           </Button>
-          <Button
-            onClick={handleExport}
-            disabled={isExporting || progress?.status === 'ready'}
-            className="gap-2"
-          >
+          <Button onClick={handleExport} disabled={isExporting || isReady} className="gap-2">
             {isExporting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />

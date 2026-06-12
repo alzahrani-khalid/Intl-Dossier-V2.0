@@ -22,8 +22,8 @@
 **Goal:** Every advertised dossier workflow works end-to-end — no advertised-but-broken paths, no silent failures rendered as empty states, no dead routes.
 **Source:** `.planning/dossier-workflow-backlog-phases-2026-06-11.md` (bucket-B escalations from the 17-round inspection loop, rounds 1-17)
 
-- [ ] **Phase 62: Export Pack Contract & Deploy** - Exporting a dossier returns the advertised file format from a deployed, schema-correct edge (HIGH — most visible broken path)
-- [ ] **Phase 63: Relationship Graph Route & Bidirectional Traversal** - Graph page reachable with incoming + outgoing edges and per-type node navigation, or formally retired
+- [x] **Phase 62: Export Pack Contract & Deploy** - Exporting a dossier returns the advertised file format from a deployed, schema-correct edge (HIGH — most visible broken path)
+- [x] **Phase 63: Relationship Graph Route & Bidirectional Traversal** - Graph page reachable with incoming + outgoing edges and per-type node navigation, or formally retired
 - [ ] **Phase 64: New Position from Dossier** - Creating a position from a dossier persists a valid position and its dossier link
 - [ ] **Phase 65: Engagement Positions Tab & Legacy Reconciliation** - Working engagement Positions surface on canonical tables; no inert workspace CTAs
 - [ ] **Phase 66: Overview Error Contract & Timeline Cross-Links** - Overview sections distinguish empty from failed; timeline links never hit unmounted routes
@@ -39,8 +39,19 @@
 1. The Export dialog advertises only formats the system actually produces — PDF/DOCX rendering implemented, or the dialog honestly states HTML output (decision recorded)
 2. Exporting a dossier of each of the 7 types on staging returns the advertised file — no 404 (edge deployed) and no 500
 3. Export content resolves against live schema: positions, MoUs, documents, and commitments sections read current columns (`aa_commitments`, not legacy `commitments`; no stale `positions.classification`/`dossier_ids`, `mous.title_en`/`status`, `documents.entity_type` reads)
-   **Plans**: TBD
+   **Plans**: 3 plans (2 waves)
    **UI hint**: yes
+
+Plans:
+
+**Wave 1**
+
+- [x] 62-01-PLAN.md — Edge function surgery: stale-read reconciliation, D-08 error notes, print CSS, direct HTML response (wave 1)
+- [x] 62-02-PLAN.md — Frontend export contract rework: dialog, types, service, hook, EN/AR i18n + EXPORT-01 component test (wave 1)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [x] 62-03-PLAN.md — Staging deploy, ALLOWED_ORIGINS check, 7-type smoke verification (wave 2)
 
 ### Phase 63: Relationship Graph Route & Bidirectional Traversal
 
@@ -52,8 +63,24 @@
 1. Navigating to the relationship graph from a dossier renders the graph page (no redirect to `/dossiers`) — or the route is formally retired with the mini-graph + a list view documented as the contract
 2. A dossier referenced by another dossier shows that incoming edge in its graph (traversal RPC returns incoming + outgoing relationships)
 3. Clicking either endpoint node navigates to the correct per-type dossier route, matching the already-correct MiniRelationshipGraph helper
-   **Plans**: TBD
+   **Plans**: 5 plans (3 waves)
    **UI hint**: yes
+
+Plans:
+
+**Wave 1**
+
+- [x] 63-01-PLAN.md — Bidirectional RPC migration (DROP+CREATE+GRANT) + [BLOCKING] apply via Supabase MCP + live probes (wave 1)
+- [x] 63-02-PLAN.md — Route mount with validateSearch + page repair (graph namespace, canonical filter, D-02 link) + Wave 0 page test (wave 1)
+- [x] 63-03-PLAN.md — Edge-orientation contract helper + per-type path test (Wave 0) + Basic-mode arrows + graph.json sentence-case sweep (wave 1)
+
+**Wave 2** _(blocked on 63-01 + 63-03)_
+
+- [x] 63-04-PLAN.md — Direction-aware edge building in graph-traversal edge fn + staging redeploy + e2e probes (wave 2)
+
+**Wave 3** _(blocked on all prior)_
+
+- [x] 63-05-PLAN.md — Staging relationship seed (all 7 types) + live all-types click-through, AR/RTL + width verification, suite/size gates (wave 3)
 
 ### Phase 64: New Position from Dossier
 
@@ -65,8 +92,28 @@
 1. The New Position dialog offers a real position-type picker, bilingual title fields, and audience-group selection whose submission satisfies `positions-create` validation (no `position_type_id = dossier_id`, no blank `title_ar`, no empty `audience_groups`)
 2. After create, the `position_dossier_links` row exists for the originating dossier (DB-verified on staging)
 3. The new position appears on the dossier's Positions tab without a manual refresh (live-verified)
-   **Plans**: TBD
+   **Plans**: 6 plans (4 waves)
    **UI hint**: yes
+
+Plans:
+
+**Wave 1**
+
+- [ ] 64-01-PLAN.md — Restore the positions INSERT RLS policy on staging (P0 blocker; diagnostic + idempotent migration via Supabase MCP + live probes)
+- [ ] 64-02-PLAN.md — Foundation: position-type/audience-group lookup hooks, translateContent repository wrapper, bilingual i18n key set
+
+**Wave 2**
+
+- [ ] 64-03-PLAN.md — NewPositionDialog form layer, test-first (type picker, bilingual titles + translate assists, audience checkboxes, Zod validation, name-match defaults)
+
+**Wave 3**
+
+- [ ] 64-04-PLAN.md — Two-step submit (create → applies_to link), dossier-scoped invalidation, honest failure states; gut the broken PositionDialog wrapper
+- [ ] 64-05-PLAN.md — D-13 tab rewire: Create position opens the new dialog; attach-existing demoted to a secondary button
+
+**Wave 4**
+
+- [ ] 64-06-PLAN.md — Live staging verification: both entry points, DB-verified applies_to link, tab refresh without reload, AR/RTL + gates + cleanup
 
 ### Phase 65: Engagement Positions Tab & Legacy Reconciliation
 
@@ -274,8 +321,8 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
 | 55-59 | v6.4 | 20/20 | Shipped | 2026-05-27 |
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
-| 62. Export Pack Contract & Deploy | v6.6 | 0/TBD | Not started | - |
-| 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 0/TBD | Not started | - |
+| 62. Export Pack Contract & Deploy | v6.6 | 3/3 | Complete    | 2026-06-11 |
+| 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 4/5 | In Progress|  |
 | 64. New Position from Dossier | v6.6 | 0/TBD | Not started | - |
 | 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 0/TBD | Not started | - |
 | 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 0/TBD | Not started | - |
