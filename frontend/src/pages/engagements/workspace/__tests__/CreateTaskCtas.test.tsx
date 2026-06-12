@@ -94,7 +94,7 @@ vi.mock('@/domains/engagements/hooks/useLifecycle', () => ({
 }))
 
 // Stub the exported TaskDialog so the tab tests can capture the props it gets.
-vi.mock('@/components/Dossier/AddToDossierDialogs', () => ({
+vi.mock('@/components/dossier/AddToDossierDialogs', () => ({
   TaskDialog: (props: Record<string, unknown>): ReactNode => {
     taskDialogPropsCapture.current = props
     return props.isOpen ? <div data-testid="task-dialog-stub" /> : null
@@ -194,7 +194,7 @@ describe('TaskDialog submit payload (ENGPOS-03)', () => {
     vi.resetModules()
     // The file-level vi.mock stubs TaskDialog; drop that stub so the dynamic
     // import below loads the REAL dialog and exercises the submit payload.
-    vi.doUnmock('@/components/Dossier/AddToDossierDialogs')
+    vi.doUnmock('@/components/dossier/AddToDossierDialogs')
 
     const createTaskMock = vi.fn().mockResolvedValue({ id: 'task-1' })
     const createLinksMock = vi.fn().mockResolvedValue({ linked: 1 })
@@ -238,7 +238,7 @@ describe('TaskDialog submit payload (ENGPOS-03)', () => {
       }),
     }))
 
-    const { TaskDialog } = await import('@/components/Dossier/AddToDossierDialogs')
+    const { TaskDialog } = await import('@/components/dossier/AddToDossierDialogs')
     const { QueryClient: QC, QueryClientProvider: QCP } = await import('@tanstack/react-query')
     const {
       render: renderReal,

@@ -29,6 +29,10 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
 import { Plus, ChevronDown, ChevronUp, ArrowDownUp, ClipboardList } from 'lucide-react'
+import { useEngagement } from '@/domains/engagements/hooks/useEngagements'
+import { useDossier } from '@/domains/dossiers/hooks/useDossier'
+import { TaskDialog } from '@/components/dossier/AddToDossierDialogs'
+import type { DossierContextForAction } from '@/hooks/useAddToDossierActions'
 
 const VISIBLE_STAGES: WorkflowStage[] = ['todo', 'in_progress', 'review', 'done']
 
@@ -42,6 +46,36 @@ export default function TasksTab(): ReactElement {
   const [sortBy, setSortBy] = useState<SortOption>('created_at')
 
   const { columns, stats, handleDragEnd, isLoading } = useEngagementKanban(engagementId, sortBy)
+
+  // Create-task wiring: the engagement IS a dossier, so the shipped TaskDialog
+  // works with an engagement-typed context. useDossier supplies the
+  // required-but-ignored `dossier` prop (Pitfall 5).
+  const { data: profile } = useEngagement(engagementId)
+  const engagement = profile?.engagement
+  const { data: dossier } = useDossier(engagementId)
+  const [taskDialogOpen, setTaskDialogOpen] = useState(false)
+  const dossierContext: DossierContextForAction | null = engagement
+    ? {
+        dossier_id: engagementId,
+        dossier_type: 'engagement',
+        dossier_name_en: engagement.name_en,
+        dossier_name_ar: engagement.name_ar ?? null,
+        inheritance_source: 'direct',
+      }
+    : null
+  const createTaskDisabled = dossierContext === null || dossier === undefined
+
+  // Rendered in both the empty-state and main render paths (separate returns).
+  const taskDialog =
+    dossierContext !== null && dossier !== undefined ? (
+      <TaskDialog
+        isOpen={taskDialogOpen}
+        onClose={() => setTaskDialogOpen(false)}
+        dossier={dossier as Parameters<typeof TaskDialog>[0]['dossier']}
+        dossierContext={dossierContext}
+        isRTL={isRTL}
+      />
+    ) : null
 
   // Determine which stages to show (include cancelled only if non-empty)
   const activeStages = useMemo((): WorkflowStage[] => {
@@ -126,12 +160,17 @@ export default function TasksTab(): ReactElement {
         <p className="text-sm text-muted-foreground text-center max-w-sm mb-4">
           {t('empty.tasks.body')}
         </p>
-        {/* No-op until task creation is wired (R15-02); disabled to avoid a
-            false affordance. */}
-        <Button variant="outline" size="sm" className="min-h-11" disabled>
+        <Button
+          variant="outline"
+          size="sm"
+          className="min-h-11"
+          disabled={createTaskDisabled}
+          onClick={() => setTaskDialogOpen(true)}
+        >
           <Plus className="h-4 w-4" />
           {t('empty.tasks.action')}
         </Button>
+        {taskDialog}
       </div>
     )
   }
@@ -176,9 +215,15 @@ export default function TasksTab(): ReactElement {
             </select>
           </div>
 
-          {/* Create task button — no-op until wired; disabled to avoid a false
-              affordance (R15-02). */}
-          <Button variant="outline" size="sm" className="min-h-8" disabled>
+          {/* Create task — opens the shipped TaskDialog (min-h-11 per CLAUDE.md
+              44px CTA floor). */}
+          <Button
+            variant="outline"
+            size="sm"
+            className="min-h-11"
+            disabled={createTaskDisabled}
+            onClick={() => setTaskDialogOpen(true)}
+          >
             <Plus className="h-4 w-4" />
             <span className="hidden sm:inline">{t('actions.createTask')}</span>
           </Button>
@@ -251,6 +296,8 @@ export default function TasksTab(): ReactElement {
           />
         ))}
       </div>
+
+      {taskDialog}
     </div>
   )
 }
