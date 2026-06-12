@@ -431,7 +431,7 @@ Service-level: `vi.mock('@/lib/supabase')` with a chainable builder whose termin
 | A3  | Deployed `unified-timeline` on staging matches the repo source (R17 live evidence is 2 days old)                                               | Timeline Inventory       | Low — Open Question probe Q2 confirms before/after deploy                                                                                                                                |
 | A4  | Nothing besides `unified-timeline` ever wrote `navigation_url` into `activity_stream.metadata` (repo grep covers code, not historical DB rows) | Timeline Inventory row 7 | Low — guard makes stale DB rows safe either way; probe Q3 quantifies                                                                                                                     |
 
-## Open Questions
+## Open Questions (RESOLVED — see §Open Question Answers below)
 
 1. **Calendar-row disposition: suppress vs link-to-list** — `/calendar` has no event-focus param, so the honest choices are `null` (no affordance) or a bare `/calendar` link. Recommendation: suppress. Needs a one-line product call at plan time (Claude's discretion acceptable).
 2. **Staging probe (orchestrator, Supabase MCP):** confirm deployed `unified-timeline` emissions before and after redeploy —
