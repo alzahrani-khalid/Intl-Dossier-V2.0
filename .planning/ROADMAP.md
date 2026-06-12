@@ -108,8 +108,8 @@ Plans:
 
 **Wave 3**
 
-- [ ] 64-04-PLAN.md — Two-step submit (create → applies_to link), dossier-scoped invalidation, honest failure states; gut the broken PositionDialog wrapper
-- [ ] 64-05-PLAN.md — D-13 tab rewire: Create position opens the new dialog; attach-existing demoted to a secondary button
+- [x] 64-04-PLAN.md — Two-step submit (create → applies_to link), dossier-scoped invalidation, honest failure states; gut the broken PositionDialog wrapper
+- [x] 64-05-PLAN.md — D-13 tab rewire: Create position opens the new dialog; attach-existing demoted to a secondary button
 
 **Wave 4**
 
@@ -323,7 +323,7 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
 | 62. Export Pack Contract & Deploy | v6.6 | 3/3 | Complete    | 2026-06-11 |
 | 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 4/5 | In Progress|  |
-| 64. New Position from Dossier | v6.6 | 3/6 | In Progress|  |
+| 64. New Position from Dossier | v6.6 | 5/6 | In Progress|  |
 | 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 0/TBD | Not started | - |
 | 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 0/TBD | Not started | - |
 | 67. Per-Type Engagement Contracts & Legacy Detail Cleanup | v6.6 | 0/TBD | Not started | - |
