@@ -426,10 +426,36 @@
     "usageTrend": "Usage Trend",
     "last7Days": "Last 7 days"
   },
+  "create_dialog": {
+    "type_label": "Position type",
+    "title_en_label": "Title (English)",
+    "title_ar_label": "Title (Arabic)",
+    "content_en_label": "Content (English) — optional",
+    "content_ar_label": "Content (Arabic) — optional",
+    "audience_legend": "Audience groups",
+    "translate_to_ar": "Translate to Arabic",
+    "translate_to_en": "Translate to English",
+    "translating": "Translating…",
+    "translate_unavailable": "Translation unavailable. Enter the text manually.",
+    "toast_success": "Position created",
+    "toast_open_position": "Open position",
+    "toast_partial_failure": "Position created, but linking to this dossier failed.",
+    "toast_retry_link": "Retry link",
+    "toast_error": "Failed to create position. Try again.",
+    "lookup_error": "Couldn't load form options. Close the dialog and try again."
+  },
+  "validation": {
+    "type_required": "Select a position type",
+    "title_en_required": "English title is required",
+    "title_ar_required": "Arabic title is required",
+    "title_max_length": "Title must be 200 characters or less",
+    "audience_required": "Select at least one audience group"
+  },
   "dossier_tab": {
     "title": "Attached Positions",
     "subtitle": "{{count}} positions attached to this dossier",
-    "create_position": "Attach Position",
+    "create_position": "Create position",
+    "attach_existing": "Attach existing position",
     "search_placeholder": "Search positions...",
     "search_label": "Search positions",
     "status_filter": "Filter by status",

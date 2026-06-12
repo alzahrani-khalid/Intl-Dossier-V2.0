@@ -25,6 +25,8 @@ import type {
   PositionDossierLinksResponse,
   CreatePositionDossierLinkInput,
   DeletePositionDossierLinkInput,
+  TranslateContentInput,
+  TranslateContentResponse,
 } from '../types'
 
 // ============================================================================
@@ -75,6 +77,31 @@ export async function getPosition(id: string): Promise<Position> {
  */
 export async function createPosition(data: CreatePositionRequest): Promise<Position> {
   return apiPost<Position>('/positions-create', data)
+}
+
+// ============================================================================
+// Translate Content (AI edge)
+// ============================================================================
+
+/**
+ * Translate position title/content via the translate-content edge function.
+ *
+ * Contract verified against the DEPLOYED v2 edge (NOT the repo source):
+ * - POST /translate-content { text (≤10,000 chars), direction, content_type }
+ * - The edge enforces the 10,000-char text limit server-side.
+ * - When AnythingLLM is down the deployed edge returns HTTP 503, and the shared
+ *   api-client (handleResponse) rejects ALL non-2xx — so this function THROWS.
+ *
+ * Callers (the translate buttons in NewPositionDialog) MUST treat any throw as
+ * "translation unavailable": show a generic toast and leave the field untouched.
+ * NEVER block position submission on a translate failure (D-07, RESEARCH Pitfall 4).
+ * Do NOT modify shared api-client behavior to surface the bilingual edge error
+ * body (Pitfall 3 — that would affect every consumer).
+ */
+export async function translateContent(
+  input: TranslateContentInput,
+): Promise<TranslateContentResponse> {
+  return apiPost<TranslateContentResponse>('/translate-content', input)
 }
 
 // ============================================================================
