@@ -162,9 +162,9 @@ Plans:
 
 **Wave 1**
 
-- [ ] 66-01-PLAN.md — Service fail-the-query: all 7 overview fetchers throw DossierOverviewAPIError + sectionError i18n key (en/ar) + RED-first service suite
-- [ ] 66-02-PLAN.md — resolveTimelineNavUrl mounted-route guard lib + A-8 live dead-link retargets (quick-switcher, CommandPalette, DossierSearchPage)
-- [ ] 66-03-PLAN.md — unified-timeline emission fixes: calendar→null (A-7 SUPPRESS), mou→/mous, dead ?tab= params dropped (code only; deploy in 66-08)
+- [x] 66-01-PLAN.md — Service fail-the-query: all 7 overview fetchers throw DossierOverviewAPIError + sectionError i18n key (en/ar) + RED-first service suite
+- [x] 66-02-PLAN.md — resolveTimelineNavUrl mounted-route guard lib + A-8 live dead-link retargets (quick-switcher, CommandPalette, DossierSearchPage)
+- [x] 66-03-PLAN.md — unified-timeline emission fixes: calendar→null (A-7 SUPPRESS), mou→/mous, dead ?tab= params dropped (code only; deploy in 66-08)
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
@@ -361,7 +361,7 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 | 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 4/5 | In Progress|  |
 | 64. New Position from Dossier | v6.6 | 6/6 | Complete    | 2026-06-12 |
 | 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 6/6 | Complete    | 2026-06-12 |
-| 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 0/TBD | Not started | - |
+| 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 3/8 | In Progress|  |
 | 67. Per-Type Engagement Contracts & Legacy Detail Cleanup | v6.6 | 0/TBD | Not started | - |
 
 <!-- gsd:progress:end -->
