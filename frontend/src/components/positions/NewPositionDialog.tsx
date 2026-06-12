@@ -247,6 +247,22 @@ export function NewPositionDialog({
     })
   }
 
+  // finishSuccess, but a post-link failure must never masquerade as a link
+  // failure (WR-02): the link write already succeeded, so showing the partial-
+  // failure toast would invite a retry that re-POSTs the same link and trips
+  // unique_position_dossier_link — an unescapable false-warning loop. Log the
+  // bookkeeping failure and still close with the success toast.
+  const finishSuccessSafely = async (positionId: string): Promise<void> => {
+    try {
+      await finishSuccess(positionId)
+    } catch (error) {
+      console.error('NewPositionDialog: post-link refresh failed after create+link', error)
+      form.reset()
+      onClose()
+      toast.success(t('positions:create_dialog.toast_success'))
+    }
+  }
+
   // Partial failure (position created, link write threw): the dialog has already
   // closed (re-submitting would duplicate the position — UI-SPEC state 9). Offer a
   // Retry link action; on retry success run the full-success path, on retry
@@ -260,10 +276,19 @@ export function NewPositionDialog({
           void (async (): Promise<void> => {
             try {
               await linkToDossier(positionId)
-              await finishSuccess(positionId)
-            } catch {
-              showPartialFailure(positionId)
+            } catch (error) {
+              // The api-client throws Error('API error 409: …') on conflict —
+              // the link already exists (lost response, or an earlier write that
+              // WR-02 previously misreported). Treat 409 as already-linked and
+              // fall through to the success path (WR-02).
+              const alreadyLinked =
+                error instanceof Error && error.message.startsWith('API error 409')
+              if (!alreadyLinked) {
+                showPartialFailure(positionId)
+                return
+              }
             }
+            await finishSuccessSafely(positionId)
           })()
         },
       },
@@ -290,17 +315,22 @@ export function NewPositionDialog({
       return
     }
 
+    // The catch is scoped to the LINK write only (WR-02): a finishSuccess throw
+    // after a successful link must not surface as a linking failure, because
+    // retrying would violate unique_position_dossier_link.
     try {
       await linkToDossier(positionId)
-      await finishSuccess(positionId)
     } catch {
       // Partial failure: the position persisted but the link write failed.
       form.reset()
       onClose()
       showPartialFailure(positionId)
+      return
     } finally {
       setSubmitting(false)
     }
+
+    await finishSuccessSafely(positionId)
   }
 
   const handleTranslate = async (

@@ -314,4 +314,27 @@ describe('NewPositionDialog', () => {
     await waitFor(() => expect(toast.warning).toHaveBeenCalledTimes(1))
     expect(toast.success).not.toHaveBeenCalled()
   })
+
+  it('never reports a post-link refresh failure as a linking failure (WR-02)', async () => {
+    const user = userEvent.setup()
+    createMock.mockResolvedValue({ id: 'pos-1' })
+    linkMock.mockResolvedValue({ id: 'link-1' })
+    const { queryClient } = renderDialog()
+    // The link write succeeds, then finishSuccess throws (cache invalidation).
+    vi.spyOn(queryClient, 'invalidateQueries').mockRejectedValue(new Error('refresh failed'))
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation((): void => undefined)
+
+    await user.type(screen.getByLabelText('Title (English)', { exact: false }), 'Our position')
+    await user.type(screen.getByLabelText('Title (Arabic)', { exact: false }), 'موقفنا')
+    await user.click(screen.getByRole('button', { name: 'Create position' }))
+
+    // Success toast, NOT the partial-failure warning (a retry would re-POST the
+    // link and trip unique_position_dossier_link).
+    await waitFor(() => expect(toast.success).toHaveBeenCalledTimes(1))
+    expect(toast.warning).not.toHaveBeenCalled()
+    expect(linkMock).toHaveBeenCalledTimes(1)
+    expect(baseProps.onClose).toHaveBeenCalled()
+    expect(consoleErrorSpy).toHaveBeenCalled()
+    consoleErrorSpy.mockRestore()
+  })
 })
