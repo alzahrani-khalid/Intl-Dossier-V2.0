@@ -32,7 +32,6 @@
     "no_positions": "No positions available yet"
   },
   "editor": {
-    "title": "Position Editor",
     "toolbar": "Editor toolbar",
     "bold": "Bold",
     "italic": "Italic",
@@ -385,7 +384,7 @@
     "content": "Content",
     "keyMessages": "Key Messages",
     "previewEmpty": "Select a position to preview",
-    "selected": "Selected",
+    "selectedBadge": "Selected",
     "selectThis": "Select This Position",
     "attachSelected": "Attach {{count}} Position(s)",
     "attaching": "Attaching...",

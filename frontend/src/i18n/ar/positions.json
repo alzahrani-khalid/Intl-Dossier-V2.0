@@ -32,7 +32,6 @@
     "no_positions": "لا توجد مواقف متاحة بعد"
   },
   "editor": {
-    "title": "محرر الموقف",
     "toolbar": "شريط أدوات المحرر",
     "bold": "غامق",
     "italic": "مائل",
@@ -355,7 +354,7 @@
     "content": "المحتوى",
     "keyMessages": "الرسائل الرئيسية",
     "previewEmpty": "اختر موقفاً للمعاينة",
-    "selected": "محدد",
+    "selectedBadge": "محدد",
     "selectThis": "اختر هذا الموقف",
     "attachSelected": "إرفاق {{count}} موقف",
     "attaching": "جاري الإرفاق...",
