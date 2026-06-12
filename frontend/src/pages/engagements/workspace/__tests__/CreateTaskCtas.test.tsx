@@ -72,17 +72,24 @@ vi.mock('@/domains/dossiers/hooks/useDossier', () => ({
   useDossier: (): { data: unknown } => dossierState,
 }))
 
+// Mutable kanban query state — error flipped for the WR-01 error-state test.
+const kanbanState = {
+  error: null as Error | null,
+}
+
 vi.mock('@/domains/engagements/hooks/useEngagementKanban', () => ({
   useEngagementKanban: (): {
     columns: null
     stats: { total: number; done: number; progressPercentage: number }
     handleDragEnd: () => void
     isLoading: boolean
+    error: Error | null
   } => ({
     columns: null,
     stats: { total: 0, done: 0, progressPercentage: 0 },
     handleDragEnd: vi.fn(),
     isLoading: false,
+    error: kanbanState.error,
   }),
 }))
 
@@ -128,6 +135,7 @@ describe('Create Task CTAs (ENGPOS-03)', () => {
     engagementState.data = undefined
     engagementState.isLoading = true
     dossierState.data = undefined
+    kanbanState.error = null
   })
 
   function resolveEngagement(): void {
@@ -183,6 +191,16 @@ describe('Create Task CTAs (ENGPOS-03)', () => {
     const ctx = taskDialogPropsCapture.current?.dossierContext as Record<string, unknown>
     expect(ctx.dossier_type).toBe('engagement')
     expect(ctx.dossier_id).toBe(ENGAGEMENT_ID)
+  })
+
+  it('TasksTab renders an error state, not the empty state, when the kanban query fails (WR-01)', () => {
+    resolveEngagement()
+    kanbanState.error = new Error('engagements-kanban-get 404')
+    renderWithClient(<TasksTab />)
+
+    expect(screen.getByRole('alert')).toHaveTextContent('error.tabLoad')
+    expect(screen.queryByText('empty.tasks.heading')).toBeNull()
+    expect(screen.queryByRole('button', { name: /empty\.tasks\.action/ })).toBeNull()
   })
 })
 

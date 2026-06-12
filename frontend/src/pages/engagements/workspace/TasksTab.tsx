@@ -45,7 +45,10 @@ export default function TasksTab(): ReactElement {
   const { isRTL } = useDirection()
   const [sortBy, setSortBy] = useState<SortOption>('created_at')
 
-  const { columns, stats, handleDragEnd, isLoading } = useEngagementKanban(engagementId, sortBy)
+  const { columns, stats, handleDragEnd, isLoading, error } = useEngagementKanban(
+    engagementId,
+    sortBy,
+  )
 
   // Create-task wiring: the engagement IS a dossier, so the shipped TaskDialog
   // works with an engagement-typed context. useDossier supplies the
@@ -147,6 +150,17 @@ export default function TasksTab(): ReactElement {
           <ClipboardList className="mx-auto h-8 w-8 mb-2 animate-pulse" />
           <p className="text-sm">{tAssign('kanban.loading')}</p>
         </div>
+      </div>
+    )
+  }
+
+  // Error state — a failed kanban fetch must not masquerade as "No tasks yet"
+  // (engagements-kanban-get 404s for canonical engagements without a legacy
+  // twin; WR-01). Mirrors CalendarTab's reader-error line.
+  if (error != null) {
+    return (
+      <div role="alert" className="px-4 py-16 text-center text-sm text-[var(--danger)]">
+        {t('error.tabLoad')}
       </div>
     )
   }

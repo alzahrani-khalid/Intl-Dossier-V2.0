@@ -113,7 +113,7 @@ export default function OverviewTab(): ReactElement {
   const { data: profile, isLoading: profileLoading } = useEngagement(engagementId)
   const { data: participantsData, isLoading: participantsLoading } =
     useEngagementParticipants(engagementId)
-  const { stats, isLoading: kanbanLoading } = useEngagementKanban(engagementId)
+  const { stats, isLoading: kanbanLoading, error: kanbanError } = useEngagementKanban(engagementId)
   const { data: lifecycleHistory, isLoading: historyLoading } = useLifecycleHistory(engagementId)
 
   const engagement = profile?.engagement
@@ -207,6 +207,9 @@ export default function OverviewTab(): ReactElement {
               <p className="text-sm text-muted-foreground">{t('overview.taskProgress')}</p>
               {kanbanLoading ? (
                 <Skeleton className="mt-1 h-6 w-16" />
+              ) : kanbanError != null ? (
+                // A failed kanban fetch must not read as 0%/0/0 (WR-01).
+                <p className="text-xs text-[var(--danger)]">{t('error.tabLoad')}</p>
               ) : (
                 <>
                   <p className="text-xl font-semibold">
