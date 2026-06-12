@@ -184,6 +184,9 @@ beforeEach(() => {
 // =============================================================================
 describe('useEngagementCalendarEntries (ENGPOS-03)', () => {
   it('queries calendar_entries filtered by dossier_id, ordered event_date ascending, with the engagement key', async () => {
+    // Render the REAL hook (the top-level stub is for the tab tests) against a
+    // mocked supabase client that records its query chain.
+    vi.doUnmock('@/hooks/useEngagementCalendarEntries')
     vi.resetModules()
     // Build a thenable PostgREST-style chain that records its calls.
     const result = { data: ENTRIES, error: null }
@@ -234,6 +237,15 @@ describe('useEngagementCalendarEntries (ENGPOS-03)', () => {
     expect(cached).toEqual(ENTRIES)
 
     vi.doUnmock('@/lib/supabase')
+    // Restore the top-level hook stub for the tab tests in the next describe.
+    vi.doMock('@/hooks/useEngagementCalendarEntries', () => ({
+      useEngagementCalendarEntries: (): {
+        data: unknown
+        isLoading: boolean
+        error: Error | null
+      } => entriesState,
+    }))
+    vi.resetModules()
   })
 })
 
