@@ -48,6 +48,7 @@ None found.
 
 **File:** `frontend/src/components/positions/NewPositionDialog.tsx:189-209`
 **Severity:** WARNING
+**Status:** fixed (a513fea9)
 **Issue:** The D-05/D-06 defaults effect fires once both lookup queries have data and `position_type_id === ''`. It then calls `form.reset({ position_type_id: standardType.id, title_en: '', title_ar: '', content_en: '', content_ar: '', audience_groups: [allStaff.id] })`. On a cold cache (first session open, slow network), the user can already be typing into `title_en`/`title_ar` while the lookups are in flight; when they resolve, the reset wipes the typed input back to `''`. The 30-minute `staleTime` masks this on subsequent opens but not on the first one.
 **Fix:** Preserve current field values instead of hard-coding empties:
 
@@ -66,6 +67,7 @@ form.reset(
 
 **File:** `frontend/src/components/positions/NewPositionDialog.tsx:291-301` (and retry path `252-269`)
 **Severity:** WARNING
+**Status:** fixed (c871a568)
 **Issue:** The second try block wraps BOTH `linkToDossier(positionId)` and `finishSuccess(positionId)`. If `finishSuccess` throws after the link write succeeded (e.g. the parent `onClose` callback throws, or any post-link bookkeeping fails), the user is shown the "Position created, but linking failed" warning even though linking succeeded. Clicking Retry re-POSTs the same `applies_to` link, which now violates `unique_position_dossier_link (position_id, dossier_id, link_type)` (migration 20251022000009) — a non-2xx that `showPartialFailure` re-surfaces as another link failure, producing an unescapable false-warning loop. The same loop occurs in the legitimate lost-response case (link persisted server-side, response dropped).
 **Fix:** Scope the catch to the link write only, and treat a uniqueness conflict on retry as success:
 
@@ -89,6 +91,7 @@ await finishSuccess(positionId)
 
 **File:** `frontend/src/components/positions/DossierPositionsTab.tsx:71-73, 104-110, 269-276`
 **Severity:** WARNING
+**Status:** fixed (17dbdb5e)
 **Issue:** `NewPositionDialog` is only rendered when `dossierContext` is non-null, i.e. when `useDossier(dossierId)` has data. The comment asserts a guaranteed cache hit, but `useDossier`'s key is `[...dossierKeys.detail(id), { include }]` with `include: undefined` — if the shell loaded the row under a different `include` variant, this is a fresh network request, and if it is in-flight or errored, clicking "Create position" sets `showNewPositionDialog = true` and nothing appears. No feedback, no error, and the state is already `true` so a second click also does nothing even after data arrives only because the dialog then pops unexpectedly.
 **Fix:** Disable the button until the context is ready and surface the error case:
 
@@ -104,6 +107,7 @@ await finishSuccess(positionId)
 
 **File:** `frontend/src/components/positions/NewPositionDialog.tsx:189-195, 357-393, 512-555`
 **Severity:** WARNING
+**Status:** fixed (b2ab6b48)
 **Issue:** The error branches only render on `query.error != null`. If `position_types` or `audience_groups` legitimately returns zero rows (empty reference table, RLS drift — the exact incident class this phase's own migration fixes), there is no error: the defaults effect early-returns (`types.length === 0 || groups.length === 0`), the audience section renders an empty checkbox grid, `audience_groups` can never satisfy `.min(1)`, and the submit button is permanently disabled with no explanation. Unhandled empty-collection edge case.
 **Fix:** Treat resolved-but-empty lookups like the error state:
 
@@ -119,6 +123,7 @@ and render `create_dialog.lookup_error` for the unavailable section.
 
 **File:** `frontend/src/i18n/en/positions.json:48, 388` and `frontend/src/i18n/ar/positions.json:48, 358`
 **Severity:** WARNING (pre-existing — verified present at `bc154052^`, i.e. before this phase)
+**Status:** fixed (57f7d01b) — kept `editor.title` = "Title" (the only callers are PositionEditor field labels; the shadowed "Position Editor" heading had no consumers and was deleted); kept `attach.selected` = the `{{count}} of {{max}}` counter (restoring the broken selection counter) and renamed the badge string to `attach.selectedBadge`, updating its consumer in AttachPositionDialog.tsx:341
 **Issue:** Both locale files contain duplicate object keys, and `JSON.parse` keeps only the last occurrence:
 
 - `editor.title` is defined twice (EN lines 35 and 48). The second ("Title" / "العنوان") silently overrides the first ("Position Editor" / "محرر الموقف"), so the editor heading string is unreachable.
