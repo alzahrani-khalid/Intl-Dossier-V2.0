@@ -65,8 +65,9 @@ const engagementState = {
 }
 const dossierState = { data: undefined as unknown }
 const lifecycleState = { data: [] as unknown[] }
+// Mirrors the real hook's return shape: { entries, isLoading, error }.
 const entriesState = {
-  data: undefined as unknown,
+  entries: [] as unknown[],
   isLoading: true as boolean,
   error: null as Error | null,
 }
@@ -87,7 +88,7 @@ vi.mock('@/domains/engagements/hooks/useLifecycle', () => ({
 // OWN query-shape is asserted against a mocked supabase client below.
 vi.mock('@/hooks/useEngagementCalendarEntries', () => ({
   useEngagementCalendarEntries: (): {
-    data: unknown
+    entries: unknown[]
     isLoading: boolean
     error: Error | null
   } => entriesState,
@@ -157,7 +158,7 @@ function resolveEngagement(): void {
 }
 
 function resolveEntries(rows: unknown[]): void {
-  entriesState.data = rows
+  entriesState.entries = rows
   entriesState.isLoading = false
   entriesState.error = null
 }
@@ -169,7 +170,7 @@ beforeEach(() => {
   engagementState.isLoading = false
   dossierState.data = undefined
   lifecycleState.data = []
-  entriesState.data = undefined
+  entriesState.entries = []
   entriesState.isLoading = true
   entriesState.error = null
   supabaseChain.builder = null
@@ -240,7 +241,7 @@ describe('useEngagementCalendarEntries (ENGPOS-03)', () => {
     // Restore the top-level hook stub for the tab tests in the next describe.
     vi.doMock('@/hooks/useEngagementCalendarEntries', () => ({
       useEngagementCalendarEntries: (): {
-        data: unknown
+        entries: unknown[]
         isLoading: boolean
         error: Error | null
       } => entriesState,
@@ -261,12 +262,14 @@ describe('CalendarTab Scheduled events reader + Add event CTAs (ENGPOS-03)', () 
     const heading = screen.getByText('calendar.scheduledEvents')
     expect(heading).toBeInTheDocument()
 
-    // The "Today/Upcoming/Past" derived labels come AFTER the scheduled-events heading.
+    // The derived date-group section (the engagement's start/end fall in the
+    // past relative to "now", so the "Past" group renders) comes AFTER the
+    // Scheduled-events heading in DOM order.
     const allText = document.body.textContent ?? ''
     const scheduledIdx = allText.indexOf('calendar.scheduledEvents')
-    const upcomingIdx = allText.indexOf('Upcoming')
+    const derivedIdx = allText.indexOf('Past')
     expect(scheduledIdx).toBeGreaterThanOrEqual(0)
-    expect(upcomingIdx).toBeGreaterThan(scheduledIdx)
+    expect(derivedIdx).toBeGreaterThan(scheduledIdx)
   })
 
   it('renders locale-picked titles, day-first dates, HH:mm for timed entries, and type badges (ENGPOS-03 #6)', () => {
@@ -286,9 +289,12 @@ describe('CalendarTab Scheduled events reader + Add event CTAs (ENGPOS-03)', () 
     // Day-first format — day precedes the month abbreviation.
     expect(document.body.textContent).toMatch(/30 Apr/)
 
-    // Entry-type badge label via calendar:types.* (defaultValue fallback to slug).
-    expect(screen.getByText('calendar:types.internal_meeting')).toBeInTheDocument()
-    expect(screen.getByText('calendar:types.review')).toBeInTheDocument()
+    // Entry-type badge label via t('calendar:types.' + entry_type,
+    // { defaultValue: entry_type }). The test t() returns the defaultValue, so
+    // the badge renders the slug — proving the colon-namespace lookup is wired
+    // with the defaultValue fallback (real i18n resolves it to the bilingual label).
+    expect(screen.getByText('internal_meeting')).toBeInTheDocument()
+    expect(screen.getByText('review')).toBeInTheDocument()
   })
 
   it('AR locale picks title_ar for entry titles (ENGPOS-03 #6)', () => {
@@ -313,7 +319,7 @@ describe('CalendarTab Scheduled events reader + Add event CTAs (ENGPOS-03)', () 
 
   it('shows the entriesError line when the reader errors (ENGPOS-03 #6)', () => {
     resolveEngagement()
-    entriesState.data = undefined
+    entriesState.entries = []
     entriesState.isLoading = false
     entriesState.error = new Error('boom')
     renderWithClient(<CalendarTab />)
