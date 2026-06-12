@@ -61,6 +61,12 @@ _Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
 
 ## Manual-Only Verifications
 
+> **Nyquist exemption (explicit):** `nyquist_compliant: false` is a deliberate, scoped
+> exemption covering ONLY the live-staging rows below (plan 65-06 Tasks 1-2). Live RLS
+> enforcement, TanStack cache re-render-without-reload behavior, and visual RTL cannot be
+> substituted by automated tests — the milestone norm applied in phases 62/63/64. Every
+> implementation task in plans 65-01..65-05 carries an `<automated>` verify command.
+
 | Behavior                                    | Requirement | Why Manual                                          | Test Instructions                             |
 | ------------------------------------------- | ----------- | --------------------------------------------------- | --------------------------------------------- |
 | Attach persists + renders without reload    | ENGPOS-02   | Live RLS + TanStack cache behavior (milestone norm) | Live protocol steps 2-3 below                 |

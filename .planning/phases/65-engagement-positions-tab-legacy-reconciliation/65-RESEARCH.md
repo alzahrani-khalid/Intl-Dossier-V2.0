@@ -413,7 +413,7 @@ const { data: entries } = useQuery({
 | A3  | `ar` translation "المواقف" matches the established positions terminology in the app's other AR surfaces                                                                            | Tab Mounting / i18n    | Trivially correctable at execution by checking `ar/positions.json` usage ("المواقف" is used there today)                                                                                   |
 | A4  | Undeploying the three legacy edges has no hidden external caller (e.g., scripts, n8n-style automations)                                                                            | Legacy Reconciliation  | Leave deployed-but-deprecated if any doubt; zero in-repo callers is verified                                                                                                               |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 All require live staging access (Supabase MCP) — none block planning; Q1-Q3 should run as a Wave-0 diagnostic task.
 
