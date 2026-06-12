@@ -25,33 +25,52 @@ vi.mock('@tanstack/react-router', () => ({
   useSearch: () => searchValue,
 }))
 
-const overviewState: { data: unknown; isLoading: boolean } = {
+const refetchSpy = vi.fn()
+
+const overviewState: { data: unknown; isLoading: boolean; isError: boolean } = {
   data: undefined,
   isLoading: true,
+  isError: false,
+}
+
+const dossierState: { data: unknown; isError: boolean } = {
+  data: undefined,
+  isError: false,
 }
 
 vi.mock('@/hooks/useDossier', () => ({
-  useDossier: () => ({ data: undefined, isLoading: false }),
+  useDossier: () => ({
+    data: dossierState.data,
+    isLoading: false,
+    isError: dossierState.isError,
+    error: dossierState.isError ? new Error('core fail') : null,
+  }),
 }))
 
 vi.mock('@/hooks/useDossierOverview', () => ({
   useDossierOverview: () => ({
+    // Mirror the real hook contract: data || null.
     data: overviewState.data ?? null,
     isLoading: overviewState.isLoading,
-    isError: false,
-    error: null,
-    refetch: vi.fn(),
+    isError: overviewState.isError,
+    error: overviewState.isError ? new Error('overview fail') : null,
+    refetch: refetchSpy,
   }),
 }))
 
 import { DossierDrawer } from '../DossierDrawer'
+import { DrawerHead } from '../DrawerHead'
 
 describe('DossierDrawer (Wave 0 shell)', () => {
   beforeEach(() => {
     navigateMock.mockReset()
+    refetchSpy.mockReset()
     searchValue = {}
     overviewState.data = undefined
     overviewState.isLoading = true
+    overviewState.isError = false
+    dossierState.data = undefined
+    dossierState.isError = false
     cleanup()
   })
 
@@ -161,5 +180,89 @@ describe('DossierDrawer (Wave 0 shell)', () => {
     } finally {
       window.matchMedia = originalMatchMedia
     }
+  })
+})
+
+describe('DossierDrawer error branch (OVRERR-01 / Pitfall 5)', () => {
+  beforeEach(() => {
+    navigateMock.mockReset()
+    refetchSpy.mockReset()
+    searchValue = {}
+    overviewState.data = undefined
+    overviewState.isLoading = true
+    overviewState.isError = false
+    dossierState.data = undefined
+    dossierState.isError = false
+    cleanup()
+  })
+
+  it('renders the error branch (role=alert + heading) instead of a permanent skeleton when overview fails with no cache', () => {
+    // Pitfall 5: a failed overview with no data must NEVER hold the skeleton forever.
+    searchValue = { dossier: 'test-id', dossierType: 'country' }
+    overviewState.data = null
+    overviewState.isLoading = false
+    overviewState.isError = true
+    render(<DossierDrawer />)
+
+    const alert = screen.getByRole('alert')
+    expect(alert).toBeTruthy()
+    // Key-passthrough i18n mock → the dot-path key is the rendered text.
+    expect(screen.getByText('error.load_failed_heading')).toBeTruthy()
+    // Skeleton MUST be absent in the error state.
+    expect(screen.queryByTestId('dossier-drawer-skeleton')).toBeNull()
+    // data-loading must be honest (false) — not stuck "true".
+    const body = document.querySelector('.drawer-body') as HTMLElement | null
+    expect(body).not.toBeNull()
+    expect(body!.getAttribute('data-loading')).toBe('false')
+  })
+
+  it('clicking Retry refetches the overview query exactly once', () => {
+    searchValue = { dossier: 'test-id', dossierType: 'country' }
+    overviewState.data = null
+    overviewState.isLoading = false
+    overviewState.isError = true
+    render(<DossierDrawer />)
+
+    const retryBtn = screen.getByRole('button', { name: 'error.retry' })
+    fireEvent.click(retryBtn)
+    expect(refetchSpy).toHaveBeenCalledTimes(1)
+  })
+
+  it('stale-while-error — cached overview present + failed refetch renders sections, no alert', () => {
+    // TanStack v5 retains last-good data on refetch failure; trustworthy cache must render.
+    searchValue = { dossier: 'test-id', dossierType: 'country' }
+    // Minimal-but-complete shape MiniKpiStrip + sections read (stats + work_items.by_source).
+    overviewState.data = {
+      stats: { calendar_events_count: 2, overdue_work_items: 0, documents_count: 1 },
+      work_items: { by_source: { commitments: [] } },
+      calendar_events: { upcoming: [] },
+      activity_timeline: { recent_activities: [] },
+    }
+    overviewState.isLoading = false
+    overviewState.isError = true
+    render(<DossierDrawer />)
+
+    // Sections render (MiniKpiStrip content) — assert no error alert leaked over real data.
+    expect(screen.queryByRole('alert')).toBeNull()
+    expect(screen.queryByText('error.load_failed_heading')).toBeNull()
+    expect(screen.queryByTestId('dossier-drawer-skeleton')).toBeNull()
+    expect(screen.getByTestId('dossier-drawer-kpi-strip')).toBeTruthy()
+  })
+
+  it('DrawerHead never strands in skeleton: core query error keeps a functional close button and a — title', () => {
+    // T-66-13 (DoS-UX): close must never depend on query health.
+    dossierState.data = undefined
+    dossierState.isError = true
+    const onClose = vi.fn()
+    render(<DrawerHead dossierId="test-id" dossierType="country" onClose={onClose} />)
+
+    const closeBtn = screen.getByTestId('dossier-drawer-close')
+    expect(closeBtn).toBeTruthy()
+    fireEvent.click(closeBtn)
+    expect(onClose).toHaveBeenCalledTimes(1)
+    // Title falls back to the em-dash sentinel when the core query failed with no data.
+    const title = document.querySelector('.drawer-title') as HTMLElement | null
+    expect(title).not.toBeNull()
+    expect(title!.textContent).toBe('—')
   })
 })
