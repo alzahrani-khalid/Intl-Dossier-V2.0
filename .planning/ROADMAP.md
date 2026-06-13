@@ -14,7 +14,7 @@
 - ✅ **v6.4 Stabilization & Carryover Sweep** — Phases 55-59 (shipped 2026-05-27) — [archive](milestones/v6.4-ROADMAP.md)
 - ✅ **v6.5 Escalated Backlog Hardening** — Phases 60-61 (shipped 2026-06-11) — [archive](milestones/v6.5-ROADMAP.md)
 - ✅ **v6.6 Dossier Workflow Completion** — Phases 62-67 (shipped 2026-06-13) — [archive](milestones/v6.6-ROADMAP.md)
-- 🔄 **v6.6 Dossier Workflow Completion** — Phases 62-67 (in progress)
+- 🔄 **v7.0 Intelligence Engine** — Phases 68-74 (in progress)
 
 ## Phases
 
@@ -167,6 +167,43 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 
 </details>
 
+<details>
+<summary>✅ v6.6 Dossier Workflow Completion (Phases 62-67) — SHIPPED 2026-06-13</summary>
+
+- [x] Phase 62: Export Pack Contract & Deploy (3/3 plans) — completed 2026-06-12
+- [x] Phase 63: Relationship Graph Route & Bidirectional Traversal (5/5 plans) — completed 2026-06-12
+- [x] Phase 64: New Position from Dossier (6/6 plans) — completed 2026-06-12
+- [x] Phase 65: Engagement Positions Tab & Legacy Reconciliation (6/6 plans) — completed 2026-06-13
+- [x] Phase 66: Overview Error Contract & Timeline Cross-Links (8/8 plans) — completed 2026-06-13
+- [x] Phase 67: Per-Type Engagement Contracts & Legacy Detail Cleanup (6/6 plans) — completed 2026-06-13
+
+Full details: [v6.6-ROADMAP.md](milestones/v6.6-ROADMAP.md)
+
+</details>
+
+### 🔄 v7.0 Intelligence Engine (Phases 68-74) — IN PROGRESS
+
+**Goal:** Turn dossiers from passive records into a fully on-prem, Arabic-first intelligence layer — delivered as conventional analyst surfaces (signals triage, digests/alerts, analytic graph) AND an agentic copilot that is incapable by construction of reading above the caller's clearance.
+
+**Cross-cutting guarantees (apply to every phase):**
+
+- Security keystone: every interactive agent DB op runs under the caller's JWT; every write is HITL; service-role only on cron/no-user paths
+- Bilingual/RTL: every new surface renders in `i18n.language`; new i18n namespaces registered in `src/i18n/index.ts`; `dir="rtl"` + Tajawal + logical properties; design tokens only
+- On-prem fidelity: no data egress; all models/embedders/rerankers/observability self-hosted
+- GSD discipline: research → plan → execute → live UAT staging (seed/observe/restore, EN+AR) → code review → verify → PR → merge
+
+**Parallel infra track (begins Phase 68, lands by Phase 72):** vLLM + Gemma 4 12B + TEI (bge-m3 + bge-reranker) + Langfuse + Arize Phoenix — zero telemetry egress.
+
+- [ ] **Phase 68: AI Foundations Remediation** - One canonical clearance scale; no corrupted embeddings; the interactive AI path honors RLS
+- [ ] **Phase 69: Signals** - Analysts capture and triage signals tied to dossiers; the agent can read them
+- [ ] **Phase 70: Digests + Alerts** - Recurring digests and threshold alerts reach subscribers across channels
+- [ ] **Phase 71: Analytic Graph** - First-class analytic queries over the relationship graph, clearance-gated
+- [ ] **Phase 72: Agent Platform — Runtime, Retrieval, Reads** - The on-prem agent goes live reading P69–71 data under the JWT keystone
+- [ ] **Phase 73: Agent Platform — Writes + Generative UI** - The copilot safely drives dossiers with human-in-the-loop
+- [ ] **Phase 74: Eval Gate + AnythingLLM Retirement** - Quality is regression-gated; the legacy AI path is gone
+
+Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
+
 ## Progress
 
 <!-- gsd:progress:start -->
@@ -185,29 +222,17 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
 | 55-59 | v6.4 | 20/20 | Shipped | 2026-05-27 |
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
-| 62. Export Pack Contract & Deploy | v6.6 | 3/3 | Complete    | 2026-06-11 |
-| 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 4/5 | In Progress|  |
-| 64. New Position from Dossier | v6.6 | 6/6 | Complete    | 2026-06-12 |
-| 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 6/6 | Complete    | 2026-06-12 |
-| 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 8/8 | Complete    | 2026-06-12 |
-| 67. Per-Type Engagement Contracts & Legacy Detail Cleanup | v6.6 | 6/6 | Complete    | 2026-06-13 |
+| 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
+| 68. AI Foundations Remediation | v7.0 | 0/? | Not started | - |
+| 69. Signals | v7.0 | 0/? | Not started | - |
+| 70. Digests + Alerts | v7.0 | 0/? | Not started | - |
+| 71. Analytic Graph | v7.0 | 0/? | Not started | - |
+| 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 0/? | Not started | - |
+| 73. Agent Platform — Writes + Generative UI | v7.0 | 0/? | Not started | - |
+| 74. Eval Gate + AnythingLLM Retirement | v7.0 | 0/? | Not started | - |
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-06-11 — v6.6 roadmap created (Phases 62-67, 15/15 requirements mapped). Source: `.planning/dossier-workflow-backlog-phases-2026-06-11.md`._
-
-<details>
-<summary>✅ v6.6 Dossier Workflow Completion (Phases 62-67) — SHIPPED 2026-06-13</summary>
-
-- [x] Phase 62: Export Pack Contract & Deploy (3/3 plans) — completed 2026-06-12
-- [x] Phase 63: Relationship Graph Route & Bidirectional Traversal (5/5 plans) — completed 2026-06-12
-- [x] Phase 64: New Position from Dossier (6/6 plans) — completed 2026-06-12
-- [x] Phase 65: Engagement Positions Tab & Legacy Reconciliation (6/6 plans) — completed 2026-06-13
-- [x] Phase 66: Overview Error Contract & Timeline Cross-Links (8/8 plans) — completed 2026-06-13
-- [x] Phase 67: Per-Type Engagement Contracts & Legacy Detail Cleanup (6/6 plans) — completed 2026-06-13
-
-Full details: [v6.6-ROADMAP.md](milestones/v6.6-ROADMAP.md)
-
-</details>
+_Roadmap last updated: 2026-06-13 — v7.0 Intelligence Engine roadmap created (Phases 68-74, 41/41 requirements mapped). Source: `docs/superpowers/specs/2026-06-13-v7.0-intelligence-engine-design.md`._

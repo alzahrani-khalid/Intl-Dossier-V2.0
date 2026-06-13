@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: planning
-last_updated: '2026-06-13T16:27:20.161Z'
+last_updated: '2026-06-13T00:00:00.000Z'
 last_activity: 2026-06-13
 progress:
-  total_phases: 0
+  total_phases: 7
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -17,17 +17,30 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-11 after v6.5 milestone)
+See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Milestone complete
+**Current focus:** v7.0 Intelligence Engine — Phase 68 (AI Foundations Remediation)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 68 — AI Foundations Remediation
 Plan: —
-Status: Defining requirements
-Last activity: 2026-06-13 — Milestone v7.0 started
+Status: Not started (roadmap created; planning Phase 68 next)
+Last activity: 2026-06-13 — Milestone v7.0 roadmap created (7 phases, 41 requirements)
+
+```
+Phase Progress: 0/7 phases complete
+[░░░░░░░░░░░░░░░░░░░░] 0%
+
+Phase 68: Not started
+Phase 69: Not started
+Phase 70: Not started
+Phase 71: Not started
+Phase 72: Not started
+Phase 73: Not started
+Phase 74: Not started
+```
 
 ## Quick Tasks Completed
 
@@ -66,9 +79,38 @@ Last activity: 2026-06-13 — Milestone v7.0 started
 
 ## Next Action
 
-Phase 63 completed with live staging graph verification, all-type click-through, AR/RTL width evidence, and green frontend gates. Next: `/gsd:plan-phase 64` (New Position from Dossier).
+Roadmap created for v7.0 (phases 68–74, 41 requirements). Next: `/gsd:plan-phase 68` (AI Foundations Remediation — hard gate for the rest of the milestone).
 
-Carried deploy note from the inspection loop: the droplet **backend** still needs the round-11 auth fix (`backend/src/middleware/auth.ts`) deployed, or elected-official detail and other Express-backed routes stay 401 in production (staging is correct).
+Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/middleware/auth.ts`) deployed — elected-official detail and other Express-backed routes stay 401 in production until deployed (staging is correct).
+
+## Accumulated Context
+
+### Decisions Made
+
+| Decision                                                         | Rationale                                                                         | Phase  |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------ |
+| Architecture locked: Mastra + CopilotKit/AG-UI + vLLM + pgvector | Only option holding all hard constraints (TS-native, sovereign, existing deps)    | Pre-68 |
+| JWT propagation as security keystone                             | RLS enforces clearance automatically; service-role retired from interactive paths | Pre-68 |
+| Option C thin-slice spike first (Phase 72)                       | Validate AG-UI SSE loop cheaply before full Mastra wiring                         | Pre-68 |
+| Remediation-first sequencing                                     | Clearance/embedding/service-role bugs affect all later RLS + retrieval            | Pre-68 |
+| Data-layer-first (69→70→71 before 72)                            | Agent over real data vs stub data is the product vs a demo                        | Pre-68 |
+| Parallel infra track (starts P68, lands by P72)                  | vLLM/TEI has no data dependency — stand it up early                               | Pre-68 |
+
+### Open Todos
+
+- Phase 68: verify pgvector `extversion >= 0.7.0` on staging before migration (HNSW `halfvec` requires 0.7.0+)
+- Phase 68: confirm actual GPU model/VRAM on target deployment before Gemma 4 12B sizing decision
+- Phase 70: confirm sanctioned external webhook/Teams endpoint with customer before building the adapter
+- Phase 70: confirm digest frequency preferences (daily/weekly/monthly presets) with analysts during planning
+
+### Research Flags for Upcoming Phases
+
+- Phase 68: clearance-scale migration backward-compat matrix; pgvector `extversion` verification on staging
+- Phase 70: digest cron timing + subscriber deprovisioning + concurrent delivery edge cases
+- Phase 71: analytic RPC performance at scale (recursive CTEs on 50K+ relationships)
+- Phase 72: Option-C spike design (thin-slice AG-UI + Ollama bridge); re-embed batching strategy
+- Phase 73: RTL streaming-text rendering (buffer sentences vs char-by-char; CSS isolation)
+- Phase 74: eval ground-truth curation (50 briefing samples EN/AR, 30 correlation pairs, 20 Arabic diplomatic queries)
 
 ## Deferred Items — RECONCILED & CLEARED (2026-06-01, quick task 260601-h00)
 
@@ -107,10 +149,6 @@ engineering work remained in any of these items.**
 4. `57-LIVE-RUN-SUMMARY.md` non-standard filename; Phase 58 superseded stub PLANs 58-07..10.
 5. RLS-01 test env-gated on `SUPABASE_*` CI secrets — confirm `Tests (backend)` injects them.
 6. REQUIREMENTS.md traceability was reconciled to 14/14 during close (originally stale at audit time).
-
-## Operator Next Steps
-
-- Plan the first v6.6 phase with /gsd:plan-phase 62
 
 ## Deferred Items
 

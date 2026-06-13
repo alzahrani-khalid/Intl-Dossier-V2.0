@@ -82,9 +82,9 @@ Requirements for the v7.0 milestone (phases 68–74). Each maps to exactly one r
 
 Applied as acceptance criteria to **every** phase (spec §5) — verified per-phase rather than mapped to a single phase:
 
-- **Security keystone:** every interactive agent DB op runs under the caller's JWT (RLS enforces `sensitivity_level <= clearance`); every write is HITL; service-role only on cron/no-user paths with explicit app-layer authz.
-- **Bilingual/RTL:** every new surface + agent-authored copy renders in `i18n.language`; new namespaces registered in `src/i18n/index.ts`; `dir="rtl"` + Tajawal + logical properties; design tokens only (no raw hex, no card shadows, no shadcn defaults).
-- **On-prem fidelity:** no data egress; all models/embedders/rerankers/observability self-hosted and permissively licensed (Gemma's custom terms the one recorded exception).
+- **Security keystone:** every interactive agent DB op runs under the user JWT (RLS enforces `sensitivity_level <= clearance`); every write is HITL; service-role only on cron/no-user paths with explicit app-layer authz; feed-ingested content treated as untrusted (quarantine posture if/when feeds are added — feeds themselves are **out of v7.0 scope**, deferred to v7.1).
+- **Bilingual/RTL:** every new surface + agent-authored copy in `i18n.language`; new i18n namespaces registered in `src/i18n/index.ts` (unregistered → silent English fallback); `dir="rtl"` + Tajawal + logical properties; design tokens only (no shadcn defaults, no raw hex, no card shadows).
+- **On-prem fidelity:** no data egress; all models/embedders/rerankers/observability self-hosted and permissively licensed (Gemma's custom license is the one accepted exception, recorded above).
 - **GSD discipline:** each phase = research → (UI-spec where applicable) → plan → check → execute → self-run live UAT on staging (seed/observe/restore, EN+AR) → code review → verify → PR → merge on green.
 
 ## Future Requirements (v7.1+)
@@ -118,19 +118,59 @@ Explicitly excluded for v7.0. Documented to prevent scope creep.
 
 ## Traceability
 
-Which phases cover which requirements. Populated during roadmap creation.
+Which phases cover which requirements.
 
-| Requirement               | Phase | Status  |
-| ------------------------- | ----- | ------- |
-| (populated by roadmapper) | —     | Pending |
+| Requirement | Phase    | Status  |
+| ----------- | -------- | ------- |
+| REMED-01    | Phase 68 | Pending |
+| REMED-02    | Phase 68 | Pending |
+| REMED-03    | Phase 68 | Pending |
+| REMED-04    | Phase 68 | Pending |
+| REMED-05    | Phase 68 | Pending |
+| REMED-06    | Phase 68 | Pending |
+| SIGNAL-01   | Phase 69 | Pending |
+| SIGNAL-02   | Phase 69 | Pending |
+| SIGNAL-03   | Phase 69 | Pending |
+| SIGNAL-04   | Phase 69 | Pending |
+| SIGNAL-05   | Phase 69 | Pending |
+| SIGNAL-06   | Phase 69 | Pending |
+| DIGEST-01   | Phase 70 | Pending |
+| DIGEST-02   | Phase 70 | Pending |
+| DIGEST-03   | Phase 70 | Pending |
+| DIGEST-04   | Phase 70 | Pending |
+| ALERT-01    | Phase 70 | Pending |
+| ALERT-02    | Phase 70 | Pending |
+| ALERT-03    | Phase 70 | Pending |
+| ALERT-04    | Phase 70 | Pending |
+| GRAPH-01    | Phase 71 | Pending |
+| GRAPH-02    | Phase 71 | Pending |
+| GRAPH-03    | Phase 71 | Pending |
+| GRAPH-04    | Phase 71 | Pending |
+| AGENT-01    | Phase 72 | Pending |
+| AGENT-02    | Phase 72 | Pending |
+| AGENT-03    | Phase 72 | Pending |
+| AGENT-04    | Phase 72 | Pending |
+| AGENT-05    | Phase 72 | Pending |
+| AGENT-06    | Phase 72 | Pending |
+| INFRA-01    | Phase 72 | Pending |
+| INFRA-02    | Phase 72 | Pending |
+| INFRA-03    | Phase 72 | Pending |
+| GENUI-01    | Phase 73 | Pending |
+| GENUI-02    | Phase 73 | Pending |
+| GENUI-03    | Phase 73 | Pending |
+| GENUI-04    | Phase 73 | Pending |
+| EVAL-01     | Phase 74 | Pending |
+| EVAL-02     | Phase 74 | Pending |
+| EVAL-03     | Phase 74 | Pending |
+| EVAL-04     | Phase 74 | Pending |
 
 **Coverage:**
 
 - v1 requirements: 41 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 41 ⚠️
+- Mapped to phases: 41 (all mapped)
+- Unmapped: 0 ✓
 
 ---
 
 _Requirements defined: 2026-06-13_
-_Last updated: 2026-06-13 after initial v7.0 definition_
+_Last updated: 2026-06-13 — Traceability table populated; 41/41 requirements mapped to phases 68–74_
