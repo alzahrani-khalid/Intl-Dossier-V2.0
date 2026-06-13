@@ -63,6 +63,7 @@ status: issues_found
 **Depth:** standard
 **Files Reviewed:** 45
 **Status:** issues_found
+**Fix pass:** 2026-06-13 — CR-01 + WR-01..WR-04 fixed (per-finding hashes below). Info findings not in fix scope. REDEPLOY REQUIRED: `unified-timeline` (bundles the changed `_shared/dossier-routes.ts`).
 
 ## Summary
 
@@ -83,6 +84,7 @@ What does not hold up: one dead-link retarget reintroduces the exact defect clas
 ### CR-01: DossierSearchPage retargets engagement-context documents to an UNMOUNTED route — dead-end navigation reintroduced
 
 **File:** `frontend/src/pages/DossierSearchPage.tsx:136-141`
+**Fix status:** FIXED in `cd5ebb2d` — new `getDossierDocsPath` helper (`frontend/src/lib/dossier-routes.ts`) routes engagement-context documents to the mounted engagement-workspace tab `/engagements/$id/docs` and the other 7 dossier types to their mounted `/dossiers/{segment}/$id/docs` children; pinned by `frontend/src/lib/__tests__/dossier-routes.test.ts`.
 **Issue:** The `document` case now builds `/dossiers/${getDossierRouteSegment(item.dossier_context.type)}/${item.dossier_context.id}/docs`. `DossierContext.type` is the full `DossierType` union, which includes `'engagement'` (`frontend/src/lib/dossier-type-guards.ts:33`). For an engagement-context document this produces `/dossiers/engagements/<id>/docs`, which is **unmounted** — `routeTree.gen.ts` has `/dossiers/engagements/$id` with no `/docs` child. Clicking such a result dead-ends on notFound — the exact OVRERR-02/A-8 failure this phase removes elsewhere. The sibling implementation in the same diff (`getWorkItemUrl`, `useQuickSwitcherSearch.ts:107-112`) explicitly documents and suppresses this case ("Mounted docs tabs exist for the 7 dossier types but NOT under /dossiers/engagements — suppress those"), so the two retargets shipped in this phase contradict each other.
 **Fix:** Mirror the quick-switcher disposition. Since a click handler must do something, fall back to the mounted engagement-dossier detail page rather than the unmounted docs tab:
 
@@ -106,6 +108,7 @@ case 'document': {
 ### WR-01: Edge `_shared/dossier-routes.ts` silently emits wrong-type links for `elected_official` and camel-case types — undermines the guarded emission contract
 
 **File:** `supabase/functions/_shared/dossier-routes.ts:12-32` (consumed by the changed emission lines `supabase/functions/unified-timeline/index.ts:240,307`)
+**Fix status:** FIXED in `ee2944cc` — map now mirrors the frontend twin (all 8 types incl. `elected_official`), normalization inserts underscores at camel humps (`WorkingGroup` → `working_group`), and `getDossierRouteSegment`/`getDossierDetailPath` return `null` for unresolvable types (callers emit `navigation_url: null` → client suppresses); `dossiers-create` omits its `Location` header in the null case. **REDEPLOY REQUIRED:** `unified-timeline`.
 **Issue:** Two gaps in the helper that the phase's interaction/intelligence `navigation_url` emissions now route through:
 
 1. `DOSSIER_TYPE_TO_ROUTE` is missing `elected_official: 'elected-officials'` (the frontend twin in `frontend/src/lib/dossier-routes.ts` has it).
@@ -116,6 +119,7 @@ case 'document': {
 ### WR-02: CommandPalette `relatedWork` slices to 3 BEFORE suppression-filtering — suppressed items consume display slots
 
 **File:** `frontend/src/components/keyboard-shortcuts/CommandPalette.tsx:471-485`
+**Fix status:** FIXED in `cf1c7478` — suppression filter now runs before `slice(0, 3)`; dedup `Set` hoisted out of the filter callback.
 **Issue:** The memo builds `merged = [...api, ...cacheExtras].slice(0, 3)` and only then applies `.filter((item) => getWorkItemUrl(item) !== null)`. Suppressed items (documents without context / engagement-context documents) occupy the 3 result slots, so the palette can show 0-2 related-work rows — or none at all — while valid items beyond index 2 were silently discarded. Additionally, the rewrite moved `new Set(apiRelatedWork.map(...))` **inside** the filter callback, rebuilding the set per cached item (the pre-diff code hoisted it).
 **Fix:**
 
@@ -131,12 +135,14 @@ return merged.filter((item) => getWorkItemUrl(item) !== null).slice(0, 3)
 ### WR-03: Uncommitted working-tree edits to a deployed edge function
 
 **File:** `supabase/functions/contextual-suggestions/index.ts` (working tree vs HEAD)
+**Fix status:** FIXED in `a67bd74f` (orchestrator) — formatting committed deliberately as `style(66)`, aligning the committed source with the deployed artifact.
 **Issue:** `git status` shows uncommitted modifications to this file — a format-only sweep (semicolon removal, interface reformatting) on top of the committed `action_route: '/mous'` fix. The phase records this function as "(deployed)"; Supabase CLI deploys from disk, so the deployed artifact and the committed source now differ, and the format diff risks riding into an unrelated future commit or being clobbered (`git checkout` on a dirty file is unrecoverable — this repo has prior history of exactly that loss mode).
 **Fix:** Commit the formatting change deliberately (e.g. `chore(66): format contextual-suggestions`) or revert the working tree to HEAD before the orchestrator's commit step.
 
 ### WR-04: "Recent Entities" group can render as an empty labeled group when every visible recent is suppressed
 
 **File:** `frontend/src/components/keyboard-shortcuts/CommandPalette.tsx:1124,1131-1132`
+**Fix status:** FIXED in `24b4e729` — recents pre-filtered through `resolveTimelineNavUrl` (then sliced to 5) in a `safeEntityRecents` memo; the group gates on the filtered list, so the heading never renders empty and guard-passing items beyond index 4 fill the slots.
 **Issue:** The group renders when `entityRecentItems.length > 0`, but the per-item guard (`resolveTimelineNavUrl(item.url)` → `return null`) is applied inside the `.slice(0, 5).map(...)`. If all of the first 5 persisted recents are stale dead targets (the precise localStorage state T-66-04 anticipates after this phase ships), the palette renders the "Recent Entities" heading + separator with zero rows. Items 6-10 that would pass the guard never get a chance to fill the 5 slots either.
 **Fix:** Pre-filter before gating and slicing:
 
