@@ -1,7 +1,8 @@
 ---
 phase: 67
 slug: per-type-engagement-contracts-legacy-detail-cleanup
-status: draft
+status: approved
+reviewed_at: 2026-06-13
 shadcn_initialized: false
 preset: none
 created: 2026-06-13
@@ -283,11 +284,11 @@ Aceternity UI, Kibo UI, and shadcn defaults remain banned without explicit user 
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: PASS (FLAG, non-blocking — reused shipped `engagements:participantRoles.*` / `engagements:types.*` badge labels are Title Case ("Head of Delegation", "Bilateral Meeting") vs the project's sentence-case voice; A-5 records the same FLAG-pass posture as the approved 66 contract — retitling is out of phase scope)
+- [x] Dimension 2 Visuals: PASS
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS
 
-**Approval:** pending
+**Approval:** APPROVED by gsd-ui-checker, 2026-06-13 (dimension 1 FLAG-pass; recommendation recorded above and in A-5)
