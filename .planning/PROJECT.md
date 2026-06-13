@@ -31,24 +31,25 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-## Current Milestone: v6.6 Dossier Workflow Completion
+## Current Milestone: v7.0 Intelligence Engine
 
-**Goal:** Every advertised dossier workflow works end-to-end — no advertised-but-broken paths, no silent failures rendered as empty states, no dead routes.
+**Goal:** Turn dossiers from passive records into a fully on-prem, Arabic-first intelligence layer — delivered as **both** conventional analyst surfaces (signals triage, digests/alerts, analytic graph) **and** an agentic copilot — with the agent _incapable by construction_ of reading above the caller's clearance.
 
-**Source:** `.planning/dossier-workflow-backlog-phases-2026-06-11.md` (bucket-B escalations from the 17-round inspection loop, rounds 1-17 on branch quick/260608-c9b)
+**Source:** `docs/superpowers/specs/2026-06-13-v7.0-intelligence-engine-design.md` (approved design & decision record) + `docs/research/v7.0-ai-architecture-research-2026-06-13.md` (authoritative architecture analysis). Seed: `.planning/seeds/v7.0-intelligence-engine.md`.
 
-**Target features:**
+**Target features (phases 68–74):**
 
-- Export/briefing-pack produces the advertised format against a deployed, schema-correct edge (or the dialog honestly states what it produces) — HIGH, most visible broken path
-- Relationship graph page reachable with bidirectional traversal (incoming + outgoing edges), or formally retired in favor of the mini-graph
-- "New Position" from a dossier persists a valid position AND its dossier link (real type picker, bilingual title, audience groups)
-- Engagement workspace has a working Positions tab on canonical tables; round-15-disabled CTAs re-enabled as they're wired
-- Overview sections distinguish "empty" from "failed" (error contract), and timeline cross-links go to real destinations
-- Person/EO/organization Engagements tabs honor their per-type contracts (host_organization_id, person_engagements); legacy \*DossierDetail components routed or deleted
+- **AI foundations remediation (P68 — gates the rest):** reconcile to one canonical clearance scale; stop the embedding pad/truncate corruption; the interactive AI path honors RLS; retire `supabaseAdmin` service-role from `chat-assistant.ts`; bilingual eval-harness scaffolding (Langfuse + Phoenix, OTel).
+- **Signals (P69):** `intelligence_signal` table + polymorphic dossier links + clearance-RLS; manual + AI-surfaced capture; keyboard-driven RTL triage surface; `read_signals` agent tool.
+- **Digests + Alerts (P70):** recurring digest pipeline + threshold alerts + subscriber model; pluggable channel adapters (in-app, on-prem SMTP email, external webhook/Teams); Digests/Alerts UI; HITL agent tools.
+- **Analytic graph (P71):** `SECURITY INVOKER` clearance-aware analytic RPCs (who-sits-on-which-forum, shared committees, engagement chains); Network panel + Cmd+K surfacing; `query_graph` agent tool.
+- **Agent platform — reads (P72):** new `agent-runtime` Turborepo workspace (Mastra + CopilotKit/AG-UI); vLLM + Gemma 4 12B + TEI stood up; re-embed to bge-m3 1024-dim hybrid+rerank; JWT-propagation read tools; Option-C thin-slice spike first.
+- **Agent platform — writes + generative UI (P73):** HITL write tools committed under the user's JWT; generative UI rendering token-bound bilingual cards + deep-links.
+- **Eval gate + AnythingLLM retirement (P74):** bilingual (EN/AR) eval rubrics wired as a CI gate; decommission AnythingLLM from the critical path.
 
-**After v6.6: v7.0 Intelligence Engine.** Unblocked since v6.4; schema groundwork shipped in v6.3 (INTEL-01..05). Seed: `.planning/seeds/v7.0-intelligence-engine.md`.
+**Architecture (locked — Option A):** Mastra (TS-native agent runtime) + CopilotKit/AG-UI + vLLM-served local models (Gemma 4 12B, eval-gated & swappable) + pgvector hybrid retrieval (HNSW + tsvector/pg_trgm RRF + local bge-reranker). **Security keystone:** JWT propagation so RLS enforces `sensitivity_level <= clearance` automatically; service-role reserved strictly for cron/no-user paths with explicit app-layer authz. Fully on-prem, no data egress; all models/embedders/rerankers/observability self-hosted.
 
-**Held out of scope for v6.6+:** net-new design tokens or direction variants; mobile native app (cancelled, code in git history); OAuth/social login; real-time chat; video content support.
+**Held out of scope (→ v7.1):** external feed ingestion (RSS/public APIs — the untrusted-content/indirect-injection surface); multi-GPU horizontal model-serving scale-out; advanced quarantine/dual-LLM rigor. Plus the standing exclusions: net-new design directions, mobile native app (cancelled), OAuth/social login, real-time chat, video content.
 
 ## Requirements
 
@@ -151,9 +152,16 @@ Unified intelligence management for diplomatic operations — every relationship
 - ✓ CI smoke test: edge-fn `.from`/`.rpc` references must exist in generated types — v6.5 Phase 60
 - ✓ Four security holes closed: activity_stream actor-bound RLS, briefing-books HTML escaping, token ExportDialog deleted, admin role gating unified on `public.users.role` — v6.5 Phase 61 (Backlog P2, delivered by quick 260610-fkn)
 
+- ✓ Export/briefing pack reconciled to live schema with honest export contract, deployed — v6.6 Phase 62
+- ✓ Relationship graph route with bidirectional (incoming + outgoing) traversal + per-type node navigation — v6.6 Phase 63
+- ✓ "New Position" from a dossier: two-step create→`applies_to` link + positions INSERT RLS drift closed — v6.6 Phase 64
+- ✓ Engagement Positions tab on canonical `position_dossier_links`; all 9 round-15 inert CTAs resolved (5 wired, 4 removed) — v6.6 Phase 65
+- ✓ Overview error contract (empty ≠ failed, `role="alert"` across 19 cards + drawer) + timeline cross-link integrity (CDP forced-error verified) — v6.6 Phase 66
+- ✓ Per-type Engagements tabs on canonical tables (`host_organization_id`, `engagement_participants`) + ~42 dead legacy `*DossierDetail` files deleted (~9,200 lines) — v6.6 Phase 67
+
 ### Active
 
-(v6.5 shipped 2026-06-11. The next milestone is v6.6 Dossier Workflow Completion — define requirements via `/gsd:new-milestone` from `.planning/dossier-workflow-backlog-phases-2026-06-11.md`. v7.0 Intelligence Engine follows.)
+**v7.0 Intelligence Engine (phases 68–74).** Scoped requirements in `.planning/REQUIREMENTS.md`; phase decomposition in `.planning/ROADMAP.md`. Headline scope: AI-foundations remediation (canonical clearance scale, embedding integrity, JWT keystone), structured Signals, Digests + Alerts across channels, clearance-aware analytic graph queries, the on-prem Mastra + CopilotKit agent platform (reads → HITL writes + generative UI), and a bilingual eval CI gate that retires AnythingLLM. See `## Current Milestone` above for detail.
 
 ### Out of Scope
 
@@ -266,4 +274,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-06-13 — v6.6 Dossier Workflow Completion shipped (all 6 phases 62-67). v7.0 Intelligence Engine is the next milestone._
+_Last updated: 2026-06-13 — v7.0 Intelligence Engine milestone started (phases 68–74); v6.6 Dossier Workflow Completion shipped & archived._
