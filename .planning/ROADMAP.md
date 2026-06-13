@@ -204,6 +204,124 @@ Full details: [v6.6-ROADMAP.md](milestones/v6.6-ROADMAP.md)
 
 Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 
+---
+
+### Phase 68: AI Foundations Remediation
+
+**Goal**: One canonical clearance scale exists; no corrupted embeddings reach the vector store; the interactive AI path honors RLS at the DB level.
+**Depends on**: Nothing — this is the hard gate. All later phases depend on Phase 68.
+**Requirements**: REMED-01, REMED-02, REMED-03, REMED-04, REMED-05, REMED-06
+**Success Criteria** (what must be TRUE):
+
+1. A non-cleared user cannot retrieve above-clearance content via the existing semantic/vector search — verified live on staging by blocking a low-clearance account and confirming zero above-clearance results are returned.
+2. A non-cleared user cannot retrieve above-clearance content via the existing interactive assistant — verified live by confirming `supabaseAdmin` is retired from `chat-assistant.ts` and the assistant runs all DB reads under the caller's JWT.
+3. All clearance checks key off `profiles.clearance_level` (1–4) as the single canonical scale — verified by confirming the prior 1–3 function and `low/medium/high` sensitivity string variants are reconciled without breaking existing RLS policies on staging.
+4. A new embedding write stores vectors at native 1024-dim with no pad/truncate applied — verified by inserting a test document and asserting `array_length(embedding, 1) = 1024` in the DB.
+5. An operator can trace a complete AI request (prompt → model → response) end-to-end in self-hosted Langfuse or Arize Phoenix, with zero network egress to external telemetry endpoints.
+   **Plans**: TBD
+   **UI hint**: no
+
+---
+
+### Phase 69: Signals
+
+**Goal**: Analysts can capture and triage intelligence signals tied to one or more dossiers; the agent can read signals under clearance gating.
+**Depends on**: Phase 68 (clearance scale and JWT keystone must be canonical before signal RLS is authored)
+**Requirements**: SIGNAL-01, SIGNAL-02, SIGNAL-03, SIGNAL-04, SIGNAL-05, SIGNAL-06
+**Success Criteria** (what must be TRUE):
+
+1. A user can manually create an intelligence signal (title, body, sensitivity level, linked dossier(s)) and immediately see it appear on the linked dossier's Signals tab — verified live EN+AR.
+2. An AI-surfaced signal (created programmatically via the `ai_generated` source type) appears in the same triage surface as manual signals, clearance-gated — verified by seeding one above-clearance signal and confirming it is hidden from a lower-clearance account.
+3. A user can triage a signal (acknowledge / dismiss / escalate) using only the keyboard from the RTL-safe triage surface — verified live in Arabic mode.
+4. A user can escalate a signal into a tracked work item and see the work item in the Kanban board — verified live on staging (seed → escalate → observe in Tasks).
+5. The agent's `read_signals` tool returns only signals at or below the caller's clearance, and returns the correct result when a cleared user queries signals on a specific dossier — verified via live tool invocation against staging.
+   **Plans**: TBD
+   **UI hint**: yes
+
+---
+
+### Phase 70: Digests + Alerts
+
+**Goal**: Recurring digests and threshold alerts reach subscribers across in-app, email, and external channels, with all content clearance-gated.
+**Depends on**: Phase 69 (signals are the primary trigger source for alerts; digest content includes signal data)
+**Requirements**: DIGEST-01, DIGEST-02, DIGEST-03, DIGEST-04, ALERT-01, ALERT-02, ALERT-03, ALERT-04
+**Success Criteria** (what must be TRUE):
+
+1. A user can subscribe to a recurring digest scoped to a dossier or topic, view it rendered in-app, and unsubscribe — verified live EN+AR.
+2. A triggered threshold alert (new signal on a tracked dossier) is delivered to in-app, on-prem SMTP email, and an external webhook endpoint — verified live by seeding a signal on a tracked dossier and confirming delivery on all three channels.
+3. External-channel payloads (webhook/Teams) carry only deep-links and zero classified content — verified by inspecting the outbound payload body on a MEDIUM-sensitivity signal and confirming no signal body text is present.
+4. The digest pipeline runs under service-role with explicit app-layer authz; each subscriber receives only clearance-appropriate content — verified by subscribing two accounts at different clearance levels to the same dossier and confirming each digest contains only within-clearance signals.
+5. The agent's `generate_digest` HITL tool presents a bilingual confirmation card before committing and publishes only after approval — verified live via the agent surface on staging.
+   **Plans**: TBD
+   **UI hint**: yes
+
+---
+
+### Phase 71: Analytic Graph
+
+**Goal**: Analysts and the agent can run clearance-aware analytic graph queries (who-sits-on-which-forum, shared committees, engagement chains) from the Network panel and Cmd+K.
+**Depends on**: Phase 70 (completes the data layer before agent reads are wired; graph queries reference engagements and signals from prior phases)
+**Requirements**: GRAPH-01, GRAPH-02, GRAPH-03, GRAPH-04
+**Success Criteria** (what must be TRUE):
+
+1. A user can run the "who connects to whom across forums" analytic query from the Network panel and receive a result — verified live on seeded staging data.
+2. A user can launch an analytic graph query from Cmd+K ("Analyze: shared committees") and see clearance-gated results inline — verified live EN+AR.
+3. A lower-clearance user running the same query as a higher-clearance user sees a strictly reduced result set — verified live by running identical queries from two different clearance-level accounts and comparing node/edge counts.
+4. The agent's `query_graph` tool returns clearance-correct results under the caller's JWT, enforced by `SECURITY INVOKER` on all analytic RPCs — verified via live tool invocation with a low-clearance account and confirming no above-clearance nodes appear.
+   **Plans**: TBD
+   **UI hint**: yes
+
+---
+
+### Phase 72: Agent Platform — Runtime, Retrieval, Reads
+
+**Goal**: The on-prem copilot is live, reading Phases 69–71 data under the JWT keystone, with hybrid-RAG retrieval and a bilingual token-bound conversational surface.
+**Depends on**: Phases 69, 70, 71 (the agent needs real signal/digest/graph data to read); Parallel infra track must land (vLLM + TEI stood up before this phase executes)
+**Requirements**: AGENT-01, AGENT-02, AGENT-03, AGENT-04, AGENT-05, AGENT-06, INFRA-01, INFRA-02, INFRA-03
+**Success Criteria** (what must be TRUE):
+
+1. A cleared user can converse with the on-prem copilot from the primary conversational surface and from Cmd+K, and the copilot answers from gated intelligence data (signals, digests, graph, dossiers) under the caller's JWT — verified live on staging.
+2. A non-cleared user receives clearance-correct (reduced) copilot results and provably cannot receive above-clearance content — verified live by querying the copilot as a low-clearance account and confirming no above-clearance content appears in the response.
+3. Copilot replies render as token-bound bilingual cards in the user's language with correct RTL rendering in Arabic mode — verified live in both EN and AR.
+4. All retrievable content is embedded at bge-m3 1024-dim (one-time re-embed completed; `array_length(embedding, 1) = 1024` for all rows in `rag_chunks`) and the `rag_chunks` table uses `SECURITY INVOKER` + RLS — verified by inspecting the DB schema on staging.
+5. The `agent-runtime` Turborepo workspace runs on its own port in `docker-compose.prod`, is reachable by the frontend, and processes a chat turn end-to-end — verified by a smoke-test request from staging.
+   **Plans**: TBD
+   **UI hint**: yes
+
+---
+
+### Phase 73: Agent Platform — Writes + Generative UI
+
+**Goal**: The copilot safely drives dossier actions with human-in-the-loop confirmation, committing writes under the user's JWT, with immediate query-cache sync to the conventional UI.
+**Depends on**: Phase 72 (reads must be proven before writes are enabled; the `agent-runtime` workspace must exist)
+**Requirements**: GENUI-01, GENUI-02, GENUI-03, GENUI-04
+**Success Criteria** (what must be TRUE):
+
+1. Every state-changing copilot action (create/link work item, generate brief, publish digest, dismiss signal) shows a bilingual token-bound confirmation card and commits only after user approval — verified live on staging for at least two distinct write operations (EN+AR).
+2. Approved copilot writes commit under the user's JWT (RLS-enforced), never service-role — verified by confirming the DB row's `created_by` / `actor_id` matches the caller's `auth.uid()` after an approved write.
+3. After an approved copilot write, the conventional UI (TanStack Query cache) reflects the change immediately without a manual page reload — verified live in the same browser session.
+4. Generative UI renders the app's own token-bound components (UniversalDossierCard, signal cards, etc.) inline in the copilot surface with working deep-links into the app — verified live EN+AR.
+   **Plans**: TBD
+   **UI hint**: yes
+
+---
+
+### Phase 74: Eval Gate + AnythingLLM Retirement
+
+**Goal**: AI quality is regression-gated via bilingual CI rubrics; the legacy AnythingLLM path is decommissioned from the critical path.
+**Depends on**: Phases 69, 70, 71, 72, 73 (all surfaces must exist before their eval rubrics can be wired and before AnythingLLM can be safely retired)
+**Requirements**: EVAL-01, EVAL-02, EVAL-03, EVAL-04
+**Success Criteria** (what must be TRUE):
+
+1. CI fails on a briefing-quality regression below threshold (EN+AR rubric ≥ 0.80) — verified by deliberately degrading a prompt and confirming the CI job fails on the evaluation step.
+2. CI fails on a correlation-accuracy regression below threshold (precision ≥ 0.75 / recall ≥ 0.70) — verified by same mechanism.
+3. CI fails on an Arabic-quality regression below threshold (≥ 0.75) — verified by same mechanism.
+4. The critical AI path (search suggestions, dashboard digest, assistant) makes zero AnythingLLM calls — verified by blocking the AnythingLLM endpoint at the network level on staging and confirming all three surfaces continue to function correctly.
+   **Plans**: TBD
+   **UI hint**: no
+
+---
+
 ## Progress
 
 <!-- gsd:progress:start -->
