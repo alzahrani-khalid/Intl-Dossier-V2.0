@@ -27,7 +27,7 @@ export function DeliverablesTrackerCard({
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
 
-  const { data, isLoading } = useDossierOverview(dossierId, {
+  const { data, isLoading, isError } = useDossierOverview(dossierId, {
     includeSections: ['work_items'],
   })
 
@@ -75,7 +75,13 @@ export function DeliverablesTrackerCard({
         </h3>
       </div>
 
-      {totalCount === 0 ? (
+      {isError && data === null ? (
+        <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
+          {t('overview.sectionError', {
+            defaultValue: 'Failed to load this section. Check your connection and try again.',
+          })}
+        </p>
+      ) : totalCount === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
           {t('overview.deliverables.empty', { defaultValue: 'No deliverables tracked' })}
         </p>
@@ -86,12 +92,8 @@ export function DeliverablesTrackerCard({
               key={status.label}
               className="flex flex-col items-center rounded-md bg-muted/50 p-3"
             >
-              <span className={`text-lg font-semibold ${status.colorClass}`}>
-                {status.count}
-              </span>
-              <span className="text-xs text-muted-foreground text-center mt-1">
-                {status.label}
-              </span>
+              <span className={`text-lg font-semibold ${status.colorClass}`}>{status.count}</span>
+              <span className="text-xs text-muted-foreground text-center mt-1">{status.label}</span>
             </div>
           ))}
         </div>

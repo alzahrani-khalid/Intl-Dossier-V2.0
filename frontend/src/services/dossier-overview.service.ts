@@ -249,6 +249,15 @@ interface KeyContactRow {
 // API Error
 // =============================================================================
 
+/**
+ * OVRERR-01 contract: fail-the-query. Every section fetcher throws
+ * DossierOverviewAPIError on a PostgREST/edge error; Promise.all rejects the
+ * section-variant query; cards render role="alert" error lines from isError.
+ * Status 500 by default — transient errors keep the global 3x retry
+ * (lib/query-client.ts). The optional schema-error→400 fast-fail mapping is
+ * intentionally NOT implemented (keep simple); details carry PostgREST messages
+ * for console/debug only and are never rendered in the UI.
+ */
 export class DossierOverviewAPIError extends Error {
   code: string
   status: number
@@ -360,7 +369,13 @@ async function fetchRelatedDossiers(dossierId: string): Promise<RelatedDossiersS
     .eq('target_dossier_id', dossierId)
 
   if (outError || inError) {
-    console.error('Error fetching relationships:', outError || inError)
+    const cause = outError ?? inError
+    throw new DossierOverviewAPIError(
+      'Failed to fetch related dossiers',
+      500,
+      'RELATED_DOSSIERS_FETCH_FAILED',
+      cause?.message,
+    )
   }
 
   const allRelated: RelatedDossier[] = []
@@ -473,7 +488,12 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     .eq('dossier_id', dossierId)
 
   if (positionLinksError) {
-    console.error('[fetchDocuments] position links query failed', positionLinksError)
+    throw new DossierOverviewAPIError(
+      'Failed to fetch documents',
+      500,
+      'DOCUMENTS_FETCH_FAILED',
+      positionLinksError.message,
+    )
   }
 
   // Extract positions from links (Supabase joins may return arrays)
@@ -501,7 +521,13 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     .is('deleted_at', null)
 
   if (mous1Error || mous2Error) {
-    console.error('[fetchDocuments] MoU query failed', mous1Error ?? mous2Error)
+    const cause = mous1Error ?? mous2Error
+    throw new DossierOverviewAPIError(
+      'Failed to fetch documents',
+      500,
+      'DOCUMENTS_FETCH_FAILED',
+      cause?.message,
+    )
   }
 
   // Combine MOUs (avoid duplicates)
@@ -604,11 +630,20 @@ const normalizeWorkItemPriority = (priority: string | null | undefined): WorkIte
 
 async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<WorkItemsSection> {
   // Fetch work item dossier links
-  const { data: links } = await supabase
+  const { data: links, error: linksError } = await supabase
     .from('work_item_dossiers')
     .select('work_item_type, work_item_id, inheritance_source')
     .eq('dossier_id', dossierId)
     .is('deleted_at', null)
+
+  if (linksError) {
+    throw new DossierOverviewAPIError(
+      'Failed to fetch work items',
+      500,
+      'WORK_ITEMS_FETCH_FAILED',
+      linksError.message,
+    )
+  }
 
   const taskIds: string[] = []
   const commitmentIds: string[] = []
@@ -630,7 +665,20 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
   // task is silently dropped. Fetch plain rows, then resolve assignee names via a
   // batched public.users lookup (the RLS-permitted pattern used in tasks-api.ts).
   if (taskIds.length > 0) {
-    const { data: tasks } = await supabase.from('tasks').select('*').in('id', taskIds).limit(limit)
+    const { data: tasks, error: tasksError } = await supabase
+      .from('tasks')
+      .select('*')
+      .in('id', taskIds)
+      .limit(limit)
+
+    if (tasksError) {
+      throw new DossierOverviewAPIError(
+        'Failed to fetch work items',
+        500,
+        'WORK_ITEMS_FETCH_FAILED',
+        tasksError.message,
+      )
+    }
 
     const taskRows = (tasks || []) as TaskRow[]
 
@@ -640,10 +688,19 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
 
     const assigneeNameById = new Map<string, string | null>()
     if (assigneeIds.length > 0) {
-      const { data: assignees } = await supabase
+      const { data: assignees, error: assigneesError } = await supabase
         .from('users')
         .select('id, full_name')
         .in('id', assigneeIds)
+
+      if (assigneesError) {
+        throw new DossierOverviewAPIError(
+          'Failed to fetch work items',
+          500,
+          'WORK_ITEMS_FETCH_FAILED',
+          assigneesError.message,
+        )
+      }
 
       ;((assignees || []) as AssigneeUserRow[]).forEach((u) => {
         assigneeNameById.set(u.id, u.full_name)
@@ -683,20 +740,38 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
     ;(rows || []).forEach((row) => commitmentsById.set(row.id, row))
   }
 
-  const { data: directCommitments } = await supabase
+  const { data: directCommitments, error: directCommitmentsError } = await supabase
     .from('aa_commitments')
     .select(COLUMNS.COMMITMENTS.SUMMARY)
     .eq('dossier_id', dossierId)
     .limit(limit)
 
+  if (directCommitmentsError) {
+    throw new DossierOverviewAPIError(
+      'Failed to fetch work items',
+      500,
+      'WORK_ITEMS_FETCH_FAILED',
+      directCommitmentsError.message,
+    )
+  }
+
   addCommitments(directCommitments as unknown as CommitmentRow[])
 
   if (commitmentIds.length > 0 && commitmentsById.size < limit) {
-    const { data: linkedCommitments } = await supabase
+    const { data: linkedCommitments, error: linkedCommitmentsError } = await supabase
       .from('aa_commitments')
       .select(COLUMNS.COMMITMENTS.SUMMARY)
       .in('id', commitmentIds)
       .limit(limit)
+
+    if (linkedCommitmentsError) {
+      throw new DossierOverviewAPIError(
+        'Failed to fetch work items',
+        500,
+        'WORK_ITEMS_FETCH_FAILED',
+        linkedCommitmentsError.message,
+      )
+    }
 
     addCommitments(linkedCommitments as unknown as CommitmentRow[])
   }
@@ -733,11 +808,20 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
 
   // Fetch intake tickets
   if (intakeIds.length > 0) {
-    const { data: intakes } = await supabase
+    const { data: intakes, error: intakesError } = await supabase
       .from('intake_tickets')
       .select('*, assigned_to:assigned_to_id(full_name)')
       .in('id', intakeIds)
       .limit(limit)
+
+    if (intakesError) {
+      throw new DossierOverviewAPIError(
+        'Failed to fetch work items',
+        500,
+        'WORK_ITEMS_FETCH_FAILED',
+        intakesError.message,
+      )
+    }
 
     ;((intakes || []) as IntakeTicketRow[]).forEach((i) => {
       const isOverdue =
@@ -804,7 +888,7 @@ async function fetchCalendarEvents(
 
   // calendar_entries is the canonical operational calendar; event_date is a
   // DATE column, so window on date strings
-  const { data: events } = await supabase
+  const { data: events, error: eventsError } = await supabase
     .from('calendar_entries')
     .select(
       'id, title_en, title_ar, entry_type, event_date, event_time, all_day, location, is_virtual, meeting_link, description_en, description_ar, created_at',
@@ -813,6 +897,15 @@ async function fetchCalendarEvents(
     .gte('event_date', startDate.toISOString().slice(0, 10))
     .lte('event_date', endDate.toISOString().slice(0, 10))
     .order('event_date', { ascending: true })
+
+  if (eventsError) {
+    throw new DossierOverviewAPIError(
+      'Failed to fetch calendar events',
+      500,
+      'CALENDAR_EVENTS_FETCH_FAILED',
+      eventsError.message,
+    )
+  }
 
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const todayEnd = new Date(todayStart)
@@ -857,11 +950,20 @@ async function fetchCalendarEvents(
 // =============================================================================
 
 async function fetchKeyContacts(dossierId: string): Promise<KeyContactsSection> {
-  const { data: contacts } = await supabase
+  const { data: contacts, error: contactsError } = await supabase
     .from('key_contacts')
     .select(COLUMNS.KEY_CONTACTS.LIST)
     .eq('dossier_id', dossierId)
     .order('name', { ascending: true })
+
+  if (contactsError) {
+    throw new DossierOverviewAPIError(
+      'Failed to fetch key contacts',
+      500,
+      'KEY_CONTACTS_FETCH_FAILED',
+      contactsError.message,
+    )
+  }
 
   const allContacts: DossierKeyContact[] = ((contacts || []) as KeyContactRow[]).map((c) => ({
     id: c.id,
@@ -893,26 +995,19 @@ async function fetchActivityTimeline(
   dossierId: string,
   limit: number = 20,
 ): Promise<ActivityTimelineSection> {
-  try {
-    const result = await fetchUnifiedDossierActivities({
-      dossier_id: dossierId,
-      limit,
-    })
+  // OVRERR-01: no try/catch — a UnifiedActivityAPIError rejection from
+  // fetchUnifiedDossierActivities propagates out of fetchDossierOverview so the
+  // activity-timeline section fails the query instead of impersonating empty.
+  const result = await fetchUnifiedDossierActivities({
+    dossier_id: dossierId,
+    limit,
+  })
 
-    return {
-      total_count: result.total_estimate || result.activities.length,
-      recent_activities: result.activities,
-      has_more: result.has_more,
-      next_cursor: result.next_cursor,
-    }
-  } catch (error) {
-    console.error('Error fetching activity timeline:', error)
-    return {
-      total_count: 0,
-      recent_activities: [],
-      has_more: false,
-      next_cursor: null,
-    }
+  return {
+    total_count: result.total_estimate || result.activities.length,
+    recent_activities: result.activities,
+    has_more: result.has_more,
+    next_cursor: result.next_cursor,
   }
 }
 

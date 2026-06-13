@@ -23,7 +23,7 @@ export function ElectedOfficialCommitteesCard({
   const { t, i18n } = useTranslation('elected-officials')
   const isRTL = i18n.language === 'ar'
 
-  const { data: official, isLoading } = useElectedOfficial(dossierId)
+  const { data: official, isLoading, isError } = useElectedOfficial(dossierId)
 
   if (isLoading) {
     return (
@@ -60,10 +60,14 @@ export function ElectedOfficialCommitteesCard({
         </h3>
       </div>
 
-      {committees.length === 0 ? (
-        <p className="text-muted-foreground text-sm text-center py-8">
-          {t('committees.empty')}
+      {isError && official === undefined ? (
+        <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
+          {t('dossier:overview.sectionError', {
+            defaultValue: 'Failed to load this section. Check your connection and try again.',
+          })}
         </p>
+      ) : committees.length === 0 ? (
+        <p className="text-muted-foreground text-sm text-center py-8">{t('committees.empty')}</p>
       ) : (
         <div className="space-y-2">
           {committees.map((committee, index) => (
@@ -80,7 +84,9 @@ export function ElectedOfficialCommitteesCard({
                   }`}
                 >
                   {isRTL
-                    ? (committee.name_ar !== '' ? committee.name_ar : committee.name_en)
+                    ? committee.name_ar !== ''
+                      ? committee.name_ar
+                      : committee.name_en
                     : committee.name_en}
                 </p>
               </div>
@@ -97,9 +103,7 @@ export function ElectedOfficialCommitteesCard({
                       : 'bg-muted text-muted-foreground'
                   }`}
                 >
-                  {committee.is_active
-                    ? t('committees.active')
-                    : t('committees.inactive')}
+                  {committee.is_active ? t('committees.active') : t('committees.inactive')}
                 </span>
               </div>
             </div>

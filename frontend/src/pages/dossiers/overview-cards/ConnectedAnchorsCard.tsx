@@ -39,7 +39,7 @@ export function ConnectedAnchorsCard({ dossierId }: ConnectedAnchorsCardProps): 
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
 
-  const { data, isLoading } = useDossierOverview(dossierId, {
+  const { data, isLoading, isError } = useDossierOverview(dossierId, {
     includeSections: ['related_dossiers'],
   })
 
@@ -69,7 +69,13 @@ export function ConnectedAnchorsCard({ dossierId }: ConnectedAnchorsCardProps): 
         {t('overview.anchors.title', { defaultValue: 'Connected Anchors' })}
       </h3>
 
-      {displayAnchors.length === 0 ? (
+      {isError && data === null ? (
+        <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
+          {t('overview.sectionError', {
+            defaultValue: 'Failed to load this section. Check your connection and try again.',
+          })}
+        </p>
+      ) : displayAnchors.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
           {t('overview.anchors.empty', {
             defaultValue: 'No anchor dossiers connected',

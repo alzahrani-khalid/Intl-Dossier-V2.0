@@ -35,6 +35,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
+import { resolveTimelineNavUrl } from '@/lib/timeline-navigation'
 import type { UnifiedTimelineEvent } from '@/types/timeline.types'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -114,9 +115,14 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
   const description = isRTL ? event.description_ar : event.description_en
   const formattedDate = formatEventDate(event.event_date, i18n.language)
 
+  // OVRERR-02: gate navigation on the shared mounted-route guard. When the
+  // server/DB-sourced navigation_url is unmounted or unsafe, navUrl is null and
+  // the View-details affordance is absent (suppression-as-absence, UI-SPEC §3).
+  const navUrl = resolveTimelineNavUrl(event.metadata.navigation_url)
+
   const handleNavigate = () => {
-    if (event.metadata.navigation_url) {
-      navigate({ to: event.metadata.navigation_url })
+    if (navUrl !== null) {
+      navigate({ to: navUrl })
     }
   }
 
@@ -324,7 +330,7 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
             </Button>
 
             {/* View Full Details Button */}
-            {event.metadata.navigation_url && (
+            {navUrl !== null && (
               <Button
                 variant="default"
                 size="sm"

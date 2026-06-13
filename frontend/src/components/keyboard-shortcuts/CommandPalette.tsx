@@ -92,7 +92,9 @@ import {
   type QuickSwitcherDossier,
   type QuickSwitcherWorkItem,
 } from '@/hooks/useQuickSwitcherSearch'
+import { getWorkItemUrl, type RecentItem } from '@/domains/dossiers/hooks/useQuickSwitcherSearch'
 import type { DossierType } from '@/lib/dossier-type-guards'
+import { resolveTimelineNavUrl } from '@/lib/timeline-navigation'
 import { useDirection } from '@/hooks/useDirection'
 import { useRecentNavigation } from '@/hooks/useRecentNavigation'
 import { createNavigationGroups, type NavigationItem } from '@/components/layout/navigation-config'
@@ -467,13 +469,31 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
   }, [apiDossiers, cachedResults.cachedDossiers])
 
   const relatedWork = useMemo((): QuickSwitcherWorkItem[] => {
-    if (apiRelatedWork.length > 0) {
-      const seen = new Set(apiRelatedWork.map((w) => w.id))
-      const extra = cachedResults.cachedWorkItems.filter((w) => !seen.has(w.id))
-      return [...apiRelatedWork, ...extra].slice(0, 3)
-    }
-    return cachedResults.cachedWorkItems
+    const seen = new Set(apiRelatedWork.map((a) => a.id))
+    const merged =
+      apiRelatedWork.length > 0
+        ? [...apiRelatedWork, ...cachedResults.cachedWorkItems.filter((w) => !seen.has(w.id))]
+        : cachedResults.cachedWorkItems
+    // Suppression-as-absence (UI-SPEC A-8 / §3): items with no mounted
+    // destination (e.g. a document with no/engagement context) are dropped —
+    // never rendered as a disabled or dead-end row. Filter BEFORE slicing so
+    // suppressed items never consume the 3 display slots.
+    return merged.filter((item) => getWorkItemUrl(item) !== null).slice(0, 3)
   }, [apiRelatedWork, cachedResults.cachedWorkItems])
+
+  // Re-validate persisted recents BEFORE gating/slicing: stale localStorage
+  // entries may carry pre-phase dead targets (/mous/<uuid>) — suppress those
+  // rows (absence, not a dead-end; UI-SPEC A-8 + threat T-66-04). Filtering
+  // first means the "Recent Entities" heading never renders with zero rows
+  // and valid items beyond the first 5 can still fill the display slots.
+  const safeEntityRecents = useMemo(
+    (): { item: RecentItem; safeUrl: string }[] =>
+      entityRecentItems
+        .map((item) => ({ item, safeUrl: resolveTimelineNavUrl(item.url) }))
+        .filter((r): r is { item: RecentItem; safeUrl: string } => r.safeUrl !== null)
+        .slice(0, 5),
+    [entityRecentItems],
+  )
 
   // Navigation pages from config for "Pages" group
   const allNavPages = useMemo((): NavigationItem[] => {
@@ -902,6 +922,8 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
   const handleWorkItemClick = useCallback(
     (item: QuickSwitcherWorkItem) => {
       const url = handleWorkItemSelect(item)
+      // No mounted destination → suppress: no navigation, no recent entry.
+      if (url === null) return
       navigate({ to: url })
       addRecentNav({
         path: url,
@@ -1108,11 +1130,13 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                 </>
               )}
 
-              {/* Entity Recent Items (from useQuickSwitcherSearch localStorage) */}
-              {entityRecentItems.length > 0 && (
+              {/* Entity Recent Items (from useQuickSwitcherSearch localStorage).
+                  Gate on the PRE-FILTERED list so the group heading never
+                  renders when every persisted recent is suppressed (WR-04). */}
+              {safeEntityRecents.length > 0 && (
                 <>
                   <CommandGroup heading={tQs('recentEntities', 'Recent Entities')}>
-                    {entityRecentItems.slice(0, 5).map((item) => {
+                    {safeEntityRecents.map(({ item, safeUrl }) => {
                       let RecentIcon: React.ElementType = Clock
                       if (item.dossierType != null && item.dossierType in dossierTypeIcons) {
                         RecentIcon = dossierTypeIcons[item.dossierType as DossierType] || Clock
@@ -1127,7 +1151,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
                           key={`recent-${item.id}`}
                           value={`recent-${item.id}`}
                           onSelect={() => {
-                            navigate({ to: item.url as string & {} })
+                            navigate({ to: safeUrl as string & {} })
                             closeCommandPalette()
                             setSearchQuery('')
                           }}

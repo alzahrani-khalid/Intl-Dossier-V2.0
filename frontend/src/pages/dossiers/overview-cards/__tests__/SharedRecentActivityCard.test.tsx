@@ -1,10 +1,13 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import type { TimelineActivity } from '@/hooks/useDossierActivityTimeline'
 
 // Mutable holder the hook mock reads on every render. Declared via vi.hoisted so
 // it is initialised before the hoisted vi.mock factory below runs.
-const mockState = vi.hoisted(() => ({ activities: [] as TimelineActivity[] }))
+const mockState = vi.hoisted(() => ({
+  activities: [] as TimelineActivity[],
+  isError: false,
+}))
 
 // Echo translation keys, honouring defaultValue so the card title resolves to
 // its English fallback ('Recent Activity') without loading i18n resources.
@@ -22,7 +25,7 @@ vi.mock('@/hooks/useDossierActivityTimeline', () => ({
   useDossierActivityTimeline: () => ({
     activities: mockState.activities,
     isLoading: false,
-    isError: false,
+    isError: mockState.isError,
     error: null,
     hasNextPage: false,
     isFetchingNextPage: false,
@@ -56,6 +59,11 @@ const makeActivity = (overrides: Partial<TimelineActivity>): TimelineActivity =>
 })
 
 describe('SharedRecentActivityCard', () => {
+  beforeEach(() => {
+    mockState.activities = []
+    mockState.isError = false
+  })
+
   it('renders the real edge-function payload (link_id + activity_timestamp, no created_at) without throwing', () => {
     mockState.activities = [
       makeActivity({
@@ -84,5 +92,27 @@ describe('SharedRecentActivityCard', () => {
 
     expect(() => render(<SharedRecentActivityCard dossierId="d1" />)).not.toThrow()
     expect(screen.getByText('No timestamp')).toBeTruthy()
+  })
+
+  it('renders the section error line, not the no-recent-activity empty copy, on section failure (OVRERR-01)', () => {
+    mockState.isError = true
+    mockState.activities = []
+
+    render(<SharedRecentActivityCard dossierId="d1" />)
+
+    expect(screen.getByRole('alert').textContent).toMatch(/failed to load this section/i)
+    expect(screen.queryByText('No recent activity')).toBeNull()
+  })
+
+  it('renders cached activities and no error line on background refetch failure (stale-while-error)', () => {
+    mockState.isError = true
+    mockState.activities = [
+      makeActivity({ link_id: 'l9', activity_title: 'Stale-but-real activity' }),
+    ]
+
+    render(<SharedRecentActivityCard dossierId="d1" />)
+
+    expect(screen.queryByRole('alert')).toBeNull()
+    expect(screen.getByText('Stale-but-real activity')).toBeTruthy()
   })
 })

@@ -44,9 +44,13 @@ interface OverviewLite {
   stats?: { calendar_events_count?: number }
 }
 
-export function DrawerHead({ dossierId, dossierType, onClose }: DrawerHeadProps): React.JSX.Element {
+export function DrawerHead({
+  dossierId,
+  dossierType,
+  onClose,
+}: DrawerHeadProps): React.JSX.Element {
   const { t, i18n } = useTranslation('dossier-drawer')
-  const { data: dossierRaw } = useDossier(dossierId, undefined, {
+  const { data: dossierRaw, isError: dossierIsError } = useDossier(dossierId, undefined, {
     enabled: Boolean(dossierId),
   })
   const { data: overviewRaw } = useDossierOverview(dossierId, {
@@ -63,10 +67,14 @@ export function DrawerHead({ dossierId, dossierType, onClose }: DrawerHeadProps)
   const showConfidential = (dossier?.sensitivity_level ?? 0) >= 3
 
   const titleAr = dossier?.name_ar
-  const name =
+  const resolvedName =
     lang === 'ar' && typeof titleAr === 'string' && titleAr.length > 0
       ? titleAr
-      : dossier?.name_en ?? ''
+      : (dossier?.name_en ?? '')
+  // OVRERR-01 / T-66-13: the head must never strand in its own skeleton. When the
+  // core dossier query errors with no data, fall the title back to '—' (the body
+  // error branch carries the message) and keep all chrome — chip + close — functional.
+  const name = resolvedName.length > 0 ? resolvedName : dossierIsError ? '—' : resolvedName
 
   const engagementCount =
     typeof overview?.stats?.calendar_events_count === 'number'

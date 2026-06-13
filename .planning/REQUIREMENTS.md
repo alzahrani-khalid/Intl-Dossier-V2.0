@@ -32,8 +32,8 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Overview Honesty (backlog P5)
 
-- [ ] **OVRERR-01**: Overview section fetchers no longer swallow Supabase errors — a forced section error renders an explicit error state, never a trustworthy-looking zero/empty state (decide the contract: fail-the-query, section-level error metadata, or explicit unknown state — then apply across overview cards)
-- [ ] **OVRERR-02**: No timeline "View details" navigates to an unmounted route (`/calendar/$id`, `/mous/$id`): suppress the affordance, route to filtered list pages, or add detail routes with enriched relationship metadata
+- [x] **OVRERR-01**: Overview section fetchers no longer swallow Supabase errors — a forced section error renders an explicit error state, never a trustworthy-looking zero/empty state (decide the contract: fail-the-query, section-level error metadata, or explicit unknown state — then apply across overview cards)
+- [x] **OVRERR-02**: No timeline "View details" navigates to an unmounted route (`/calendar/$id`, `/mous/$id`): suppress the affordance, route to filtered list pages, or add detail routes with enriched relationship metadata
 
 ### Per-Type Engagement Contracts (backlog P6)
 
@@ -78,8 +78,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ENGPOS-01   | Phase 65 | Complete |
 | ENGPOS-02   | Phase 65 | Complete |
 | ENGPOS-03   | Phase 65 | Complete |
-| OVRERR-01   | Phase 66 | Pending  |
-| OVRERR-02   | Phase 66 | Pending  |
+| OVRERR-01   | Phase 66 | Complete |
+| OVRERR-02   | Phase 66 | Complete |
 | PERENG-01   | Phase 67 | Pending  |
 | PERENG-02   | Phase 67 | Pending  |
 | PERENG-03   | Phase 67 | Pending  |

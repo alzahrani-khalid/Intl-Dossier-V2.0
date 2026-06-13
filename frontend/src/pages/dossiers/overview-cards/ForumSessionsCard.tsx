@@ -24,7 +24,7 @@ export function ForumSessionsCard({ dossierId }: ForumSessionsCardProps): React.
   const isRTL = i18n.language === 'ar'
   const dateLocale = isRTL ? ar : enUS
 
-  const { data, isLoading } = useDossierOverview(dossierId, {
+  const { data, isLoading, isError } = useDossierOverview(dossierId, {
     includeSections: ['related_dossiers', 'calendar_events'],
   })
 
@@ -44,14 +44,16 @@ export function ForumSessionsCard({ dossierId }: ForumSessionsCardProps): React.
   // Sessions are child engagements of the forum
   const engagementDossiers = data?.related_dossiers?.by_dossier_type?.engagement ?? []
   const childRelations = data?.related_dossiers?.by_relationship_type?.child ?? []
-  const sessionDossiers = engagementDossiers.length > 0
-    ? engagementDossiers.slice(0, MAX_SESSIONS)
-    : childRelations.slice(0, MAX_SESSIONS)
+  const sessionDossiers =
+    engagementDossiers.length > 0
+      ? engagementDossiers.slice(0, MAX_SESSIONS)
+      : childRelations.slice(0, MAX_SESSIONS)
 
   // Fall back to calendar events if no session relations
-  const calendarSessions = sessionDossiers.length === 0
-    ? (data?.calendar_events?.upcoming ?? []).slice(0, MAX_SESSIONS)
-    : []
+  const calendarSessions =
+    sessionDossiers.length === 0
+      ? (data?.calendar_events?.upcoming ?? []).slice(0, MAX_SESSIONS)
+      : []
 
   const hasItems = sessionDossiers.length > 0 || calendarSessions.length > 0
 
@@ -80,7 +82,13 @@ export function ForumSessionsCard({ dossierId }: ForumSessionsCardProps): React.
         </h3>
       </div>
 
-      {!hasItems ? (
+      {isError && data === null ? (
+        <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
+          {t('overview.sectionError', {
+            defaultValue: 'Failed to load this section. Check your connection and try again.',
+          })}
+        </p>
+      ) : !hasItems ? (
         <p className="text-muted-foreground text-sm text-center py-8">
           {t('overview.sessions.empty', { defaultValue: 'No sessions recorded' })}
         </p>
@@ -93,9 +101,7 @@ export function ForumSessionsCard({ dossierId }: ForumSessionsCardProps): React.
             >
               <div className="flex-1 min-w-0">
                 <p className="text-sm truncate">
-                  {isRTL
-                    ? (session.name_ar ?? session.name_en)
-                    : session.name_en}
+                  {isRTL ? (session.name_ar ?? session.name_en) : session.name_en}
                 </p>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   {format(new Date(session.created_at), 'PP', { locale: dateLocale })}

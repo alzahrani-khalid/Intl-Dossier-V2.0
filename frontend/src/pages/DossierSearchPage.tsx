@@ -19,7 +19,7 @@ import { Search, Loader2, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { getDossierRouteSegment } from '@/lib/dossier-routes'
+import { getDossierDocsPath, getDossierRouteSegment } from '@/lib/dossier-routes'
 import { DossierFirstSearchResults } from '@/components/search/DossierFirstSearchResults'
 import { DossierSearchFilters } from '@/components/search/DossierSearchFilters'
 import { useDossierFirstSearch } from '@/hooks/useDossierFirstSearch'
@@ -134,7 +134,12 @@ export function DossierSearchPage() {
         navigate({ to: `/positions/${item.id}` })
         break
       case 'document':
-        navigate({ to: `/documents/${item.id}` })
+        // /documents/$id is UNMOUNTED — route to the owning dossier's Docs tab (UI-SPEC A-8).
+        // Engagement dossiers have no /dossiers/engagements/$id/docs child; their docs
+        // tab is mounted in the engagement workspace at /engagements/$id/docs.
+        navigate({
+          to: getDossierDocsPath(item.dossier_context.id, item.dossier_context.type),
+        })
         break
       case 'engagement':
         navigate({ to: `/engagements/${item.id}` })
@@ -149,7 +154,8 @@ export function DossierSearchPage() {
         navigate({ to: `/intake/tickets/${item.id}` })
         break
       case 'mou':
-        navigate({ to: `/mous/${item.id}` })
+        // /mous/$id is UNMOUNTED — navigate to the mounted list (UI-SPEC A-8).
+        navigate({ to: '/mous' })
         break
       default:
         // Navigate to parent dossier context

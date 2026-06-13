@@ -21,7 +21,7 @@ export function MembershipStructureCard({
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
 
-  const { data, isLoading } = useDossierOverview(dossierId, {
+  const { data, isLoading, isError } = useDossierOverview(dossierId, {
     includeSections: ['related_dossiers'],
   })
 
@@ -34,6 +34,23 @@ export function MembershipStructureCard({
             <Skeleton key={n} className="h-10" />
           ))}
         </div>
+      </div>
+    )
+  }
+
+  // Error before empty (OVRERR-01): only when no cached data — stale-while-error
+  // retains last-good data on a background refetch failure.
+  if (isError && data === null) {
+    return (
+      <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
+        <h3 className="text-base font-semibold leading-tight text-start mb-4">
+          {t('overview.membership.title', { defaultValue: 'Membership Structure' })}
+        </h3>
+        <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
+          {t('overview.sectionError', {
+            defaultValue: 'Failed to load this section. Check your connection and try again.',
+          })}
+        </p>
       </div>
     )
   }

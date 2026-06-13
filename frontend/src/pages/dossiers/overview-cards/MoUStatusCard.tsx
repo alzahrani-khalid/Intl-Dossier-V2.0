@@ -37,7 +37,11 @@ export function MoUStatusCard({ dossierId }: MoUStatusCardProps): React.ReactEle
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
 
-  const { data: summary, isLoading } = useQuery<MoUStatusSummary>({
+  const {
+    data: summary,
+    isLoading,
+    isError,
+  } = useQuery<MoUStatusSummary>({
     queryKey: ['dossier-mou-summary', dossierId],
     queryFn: async (): Promise<MoUStatusSummary> => {
       const { data, error } = await supabase
@@ -87,6 +91,26 @@ export function MoUStatusCard({ dossierId }: MoUStatusCardProps): React.ReactEle
             <Skeleton key={n} className="h-7 w-20" />
           ))}
         </div>
+      </div>
+    )
+  }
+
+  // Error before empty (OVRERR-01): only when no cached data — stale-while-error
+  // retains last-good data on a background refetch failure. (raw useQuery → undefined)
+  if (isError && summary === undefined) {
+    return (
+      <div className="bg-card rounded-lg border p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-base font-semibold leading-tight text-start">
+            {t('overview.mou.title', { defaultValue: 'MoU Status' })}
+          </h3>
+          <FileSignature className="h-4 w-4 text-muted-foreground" />
+        </div>
+        <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
+          {t('overview.sectionError', {
+            defaultValue: 'Failed to load this section. Check your connection and try again.',
+          })}
+        </p>
       </div>
     )
   }

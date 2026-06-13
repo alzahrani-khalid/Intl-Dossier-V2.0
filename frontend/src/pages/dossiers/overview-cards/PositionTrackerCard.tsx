@@ -30,7 +30,7 @@ export function PositionTrackerCard({ dossierId }: PositionTrackerCardProps): Re
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
 
-  const { positions, isLoading } = useDossierPositionLinks(dossierId)
+  const { positions, isLoading, error } = useDossierPositionLinks(dossierId)
   const positionsWithLink = positions as PositionWithLink[] | undefined
 
   if (isLoading) {
@@ -61,7 +61,13 @@ export function PositionTrackerCard({ dossierId }: PositionTrackerCardProps): Re
         </h3>
       </div>
 
-      {!hasPositions ? (
+      {error != null && !hasPositions ? (
+        <p role="alert" className="text-sm text-[var(--danger)] text-center py-8">
+          {t('overview.sectionError', {
+            defaultValue: 'Failed to load this section. Check your connection and try again.',
+          })}
+        </p>
+      ) : !hasPositions ? (
         <div className="text-center py-8">
           <p className="text-muted-foreground text-sm mb-3">
             {t('overview.positions.empty', {
