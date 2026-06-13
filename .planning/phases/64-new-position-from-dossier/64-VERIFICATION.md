@@ -1,7 +1,7 @@
 ---
 phase: 64-new-position-from-dossier
 verified: 2026-06-12T15:08:00Z
-status: human_needed
+status: passed
 score: 3/3 must-haves verified
 overrides_applied: 0
 human_verification:
@@ -12,6 +12,8 @@ human_verification:
     expected: 'Full bilingual contract holds: AR labels from positions.json ar block, dir=rtl on the container, title_en field still dir=ltr, validation message العنوان العربي مطلوب visible on touched-empty title_ar'
     why_human: 'Visual/RTL verification of font rendering and dir attributes requires a live browser — the live evidence in 64-06-SUMMARY.md covers this but was captured by the executor, not an independent verification agent'
 ---
+
+> **Resolution (64):** the human-verification items were performed LIVE during the orchestrator-run phase gate and recorded in `64-HUMAN-UAT.md` (status: complete, all items passed with SQL/DOM/screenshot evidence). Status flipped human_needed → passed accordingly.
 
 # Phase 64: New Position from Dossier — Verification Report
 

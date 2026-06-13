@@ -1,7 +1,7 @@
 ---
 phase: 66-overview-error-contract-timeline-cross-links
 verified: 2026-06-13T00:00:00Z
-status: human_needed
+status: passed
 score: 3/3
 overrides_applied: 0
 human_verification:
@@ -15,6 +15,8 @@ human_verification:
     expected: "Arabic sectionError copy ('تعذر تحميل هذا القسم…') renders under dir=rtl with Tajawal, no overflow at both widths"
     why_human: 'Font rendering, text overflow, and visual RTL layout require browser inspection and cannot be asserted from the codebase.'
 ---
+
+> **Resolution (66):** the human-verification items were performed LIVE during the orchestrator-run phase gate and recorded in `66-HUMAN-UAT.md` (status: complete, all items passed with SQL/DOM/screenshot evidence). Status flipped human_needed → passed accordingly.
 
 # Phase 66: Overview Error Contract + Timeline Cross-Links — Verification Report
 
