@@ -110,5 +110,10 @@
   },
   "emptyState": {
     "comingSoon": "Content coming soon"
+  },
+  "sections": {
+    "hostedEngagements": "Hosted engagements",
+    "participation": "Participation",
+    "history": "History"
   }
 }
