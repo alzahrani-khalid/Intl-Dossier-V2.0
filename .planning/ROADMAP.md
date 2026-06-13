@@ -13,191 +13,10 @@
 - ✅ **v6.3 Carryover Sweep & v7.0 Prep** — Phases 50-54 (shipped 2026-05-17) — [archive](milestones/v6.3-ROADMAP.md)
 - ✅ **v6.4 Stabilization & Carryover Sweep** — Phases 55-59 (shipped 2026-05-27) — [archive](milestones/v6.4-ROADMAP.md)
 - ✅ **v6.5 Escalated Backlog Hardening** — Phases 60-61 (shipped 2026-06-11) — [archive](milestones/v6.5-ROADMAP.md)
+- ✅ **v6.6 Dossier Workflow Completion** — Phases 62-67 (shipped 2026-06-13) — [archive](milestones/v6.6-ROADMAP.md)
 - 🔄 **v6.6 Dossier Workflow Completion** — Phases 62-67 (in progress)
 
 ## Phases
-
-### 🔄 v6.6 Dossier Workflow Completion (Phases 62-67) — IN PROGRESS
-
-**Goal:** Every advertised dossier workflow works end-to-end — no advertised-but-broken paths, no silent failures rendered as empty states, no dead routes.
-**Source:** `.planning/dossier-workflow-backlog-phases-2026-06-11.md` (bucket-B escalations from the 17-round inspection loop, rounds 1-17)
-
-- [x] **Phase 62: Export Pack Contract & Deploy** - Exporting a dossier returns the advertised file format from a deployed, schema-correct edge (HIGH — most visible broken path)
-- [x] **Phase 63: Relationship Graph Route & Bidirectional Traversal** - Graph page reachable with incoming + outgoing edges and per-type node navigation, or formally retired
-- [ ] **Phase 64: New Position from Dossier** - Creating a position from a dossier persists a valid position and its dossier link
-- [ ] **Phase 65: Engagement Positions Tab & Legacy Reconciliation** - Working engagement Positions surface on canonical tables; no inert workspace CTAs
-- [ ] **Phase 66: Overview Error Contract & Timeline Cross-Links** - Overview sections distinguish empty from failed; timeline links never hit unmounted routes
-- [ ] **Phase 67: Per-Type Engagement Contracts & Legacy Detail Cleanup** - Org/person/EO Engagements tabs honor per-type contracts; legacy `*DossierDetail` routed or deleted
-
-### Phase 62: Export Pack Contract & Deploy
-
-**Goal**: Exporting a dossier produces the advertised file format from a deployed, schema-correct `dossier-export-pack` edge function
-**Depends on**: Nothing (independent — sequenced first by severity: the most visible advertised-but-broken path)
-**Requirements**: EXPORT-01, EXPORT-02
-**Success Criteria** (what must be TRUE):
-
-1. The Export dialog advertises only formats the system actually produces — PDF/DOCX rendering implemented, or the dialog honestly states HTML output (decision recorded)
-2. Exporting a dossier of each of the 7 types on staging returns the advertised file — no 404 (edge deployed) and no 500
-3. Export content resolves against live schema: positions, MoUs, documents, and commitments sections read current columns (`aa_commitments`, not legacy `commitments`; no stale `positions.classification`/`dossier_ids`, `mous.title_en`/`status`, `documents.entity_type` reads)
-   **Plans**: 3 plans (2 waves)
-   **UI hint**: yes
-
-Plans:
-
-**Wave 1**
-
-- [x] 62-01-PLAN.md — Edge function surgery: stale-read reconciliation, D-08 error notes, print CSS, direct HTML response (wave 1)
-- [x] 62-02-PLAN.md — Frontend export contract rework: dialog, types, service, hook, EN/AR i18n + EXPORT-01 component test (wave 1)
-
-**Wave 2** _(blocked on Wave 1 completion)_
-
-- [x] 62-03-PLAN.md — Staging deploy, ALLOWED_ORIGINS check, 7-type smoke verification (wave 2)
-
-### Phase 63: Relationship Graph Route & Bidirectional Traversal
-
-**Goal**: Users reach a relationship graph that shows relationships from both directions with correct per-type navigation — or the page is formally retired in favor of the documented mini-graph contract
-**Depends on**: Nothing (independent)
-**Requirements**: GRAPH-01, GRAPH-02, GRAPH-03
-**Success Criteria** (what must be TRUE):
-
-1. Navigating to the relationship graph from a dossier renders the graph page (no redirect to `/dossiers`) — or the route is formally retired with the mini-graph + a list view documented as the contract
-2. A dossier referenced by another dossier shows that incoming edge in its graph (traversal RPC returns incoming + outgoing relationships)
-3. Clicking either endpoint node navigates to the correct per-type dossier route, matching the already-correct MiniRelationshipGraph helper
-   **Plans**: 5 plans (3 waves)
-   **UI hint**: yes
-
-Plans:
-
-**Wave 1**
-
-- [x] 63-01-PLAN.md — Bidirectional RPC migration (DROP+CREATE+GRANT) + [BLOCKING] apply via Supabase MCP + live probes (wave 1)
-- [x] 63-02-PLAN.md — Route mount with validateSearch + page repair (graph namespace, canonical filter, D-02 link) + Wave 0 page test (wave 1)
-- [x] 63-03-PLAN.md — Edge-orientation contract helper + per-type path test (Wave 0) + Basic-mode arrows + graph.json sentence-case sweep (wave 1)
-
-**Wave 2** _(blocked on 63-01 + 63-03)_
-
-- [x] 63-04-PLAN.md — Direction-aware edge building in graph-traversal edge fn + staging redeploy + e2e probes (wave 2)
-
-**Wave 3** _(blocked on all prior)_
-
-- [x] 63-05-PLAN.md — Staging relationship seed (all 7 types) + live all-types click-through, AR/RTL + width verification, suite/size gates (wave 3)
-
-### Phase 64: New Position from Dossier
-
-**Goal**: Creating a position from any dossier persists a valid position and its dossier link
-**Depends on**: Nothing within v6.6 (builds on the positions-attach chain fixed in inspection rounds 12-13, already on main)
-**Requirements**: POSNEW-01, POSNEW-02
-**Success Criteria** (what must be TRUE):
-
-1. The New Position dialog offers a real position-type picker, bilingual title fields, and audience-group selection whose submission satisfies `positions-create` validation (no `position_type_id = dossier_id`, no blank `title_ar`, no empty `audience_groups`)
-2. After create, the `position_dossier_links` row exists for the originating dossier (DB-verified on staging)
-3. The new position appears on the dossier's Positions tab without a manual refresh (live-verified)
-   **Plans**: 6 plans (4 waves)
-   **UI hint**: yes
-
-Plans:
-
-**Wave 1**
-
-- [x] 64-01-PLAN.md — Restore the positions INSERT RLS policy on staging (P0 blocker; diagnostic + idempotent migration via Supabase MCP + live probes)
-- [x] 64-02-PLAN.md — Foundation: position-type/audience-group lookup hooks, translateContent repository wrapper, bilingual i18n key set
-
-**Wave 2**
-
-- [x] 64-03-PLAN.md — NewPositionDialog form layer, test-first (type picker, bilingual titles + translate assists, audience checkboxes, Zod validation, name-match defaults)
-
-**Wave 3**
-
-- [x] 64-04-PLAN.md — Two-step submit (create → applies_to link), dossier-scoped invalidation, honest failure states; gut the broken PositionDialog wrapper
-- [x] 64-05-PLAN.md — D-13 tab rewire: Create position opens the new dialog; attach-existing demoted to a secondary button
-
-**Wave 4**
-
-- [x] 64-06-PLAN.md — Live staging verification: both entry points, DB-verified applies_to link, tab refresh without reload, AR/RTL + gates + cleanup
-
-### Phase 65: Engagement Positions Tab & Legacy Reconciliation
-
-**Goal**: The engagement workspace has a working Positions surface on canonical tables, with no inert CTAs left behind
-**Depends on**: Phase 64 (soft — the position-creation contract decision informs the canonical `position_dossier_links` vs legacy `engagement_positions` choice); otherwise independent
-**Requirements**: ENGPOS-01, ENGPOS-02, ENGPOS-03
-**Success Criteria** (what must be TRUE):
-
-1. The engagement workspace shows a routed Positions tab reading the decided canonical source (`position_dossier_links` vs legacy `engagement_positions` — decision recorded and implemented)
-2. Attaching a position to an engagement persists, renders in the tab, and invalidates queries — live-verified on staging
-3. No inert buttons remain in the engagement workspace: every round-15-disabled CTA is re-enabled and functional, or removed
-   **Plans**: 6 plans (3 waves)
-   **UI hint**: yes
-
-Plans:
-
-**Wave 1**
-
-- [x] 65-01-PLAN.md — Routed Positions tab on position_dossier_links (route + nav entry + phase i18n keys + ENGPOS-01 decision recorded; ENGPOS-02 unit pins)
-- [x] 65-02-PLAN.md — Remove unwireable CTAs: WorkspaceShell Transition Stage, ContextTab Link Dossier ×2, DocsTab Upload
-- [x] 65-03-PLAN.md — Delete the orphaned engagement_positions frontend stack + deprecate the engagements-positions-\* edges (staging emptiness gate)
-- [x] 65-04-PLAN.md — Create Task wiring (Overview + Tasks) via exported TaskDialog; workspace invalidations; kanban caveat recorded
-
-**Wave 2**
-
-- [x] 65-05-PLAN.md — CalendarTab Scheduled-events reader + live Add Event CTAs via exported EventDialog
-
-**Wave 3**
-
-- [x] 65-06-PLAN.md — Live staging verification (orchestrator-run): attach/create DB-verified, nine-CTA pass, AR/RTL + gates + cleanup
-
-### Phase 66: Overview Error Contract & Timeline Cross-Links
-
-**Goal**: Overview sections distinguish "empty" from "failed", and timeline cross-links never dead-end on unmounted routes
-**Depends on**: Nothing (independent)
-**Requirements**: OVRERR-01, OVRERR-02
-**Success Criteria** (what must be TRUE):
-
-1. A single section error contract is decided (fail-the-query vs section-level error metadata vs explicit unknown state) and applied across overview section fetchers and cards
-2. A forced section fetch error renders an explicit error state on that card — never a trustworthy-looking zero/empty state
-3. No timeline "View details" navigates to an unmounted route (`/calendar/$id`, `/mous/$id`): each affordance routes to a real destination (detail route or filtered list page) or is suppressed
-   **Plans**: 8 plans (3 waves)
-   **UI hint**: yes
-
-Plans:
-
-**Wave 1**
-
-- [x] 66-01-PLAN.md — Service fail-the-query: all 7 overview fetchers throw DossierOverviewAPIError + sectionError i18n key (en/ar) + RED-first service suite
-- [x] 66-02-PLAN.md — resolveTimelineNavUrl mounted-route guard lib + A-8 live dead-link retargets (quick-switcher, CommandPalette, DossierSearchPage)
-- [x] 66-03-PLAN.md — unified-timeline emission fixes: calendar→null (A-7 SUPPRESS), mou→/mous, dead ?tab= params dropped (code only; deploy in 66-08)
-
-**Wave 2** _(blocked on Wave 1 completion)_
-
-- [x] 66-04-PLAN.md — Card error-line sweep A: shared/country/org cards (8 files) — error before empty, stale-while-error
-- [x] 66-05-PLAN.md — Card error-line sweep B: forum/topic/WG/person/EO cards (11 files) incl. the EO all-dash failure mode
-- [x] 66-06-PLAN.md — DossierDrawer error branch + Retry (no permanent skeleton), DrawerHead fallback, raw error.message removal (Pitfall 9)
-- [x] 66-07-PLAN.md — Guard the navigation_url consumers: TimelineEventCard/EnhancedVerticalTimelineCard suppression + ActivityList mountedness extension
-
-**Wave 3**
-
-- [x] 66-08-PLAN.md — Live verification (orchestrator-run): edge redeploy + emission probe, CDP forced-error protocol (empty vs failed), AR/RTL, gates
-
-### Phase 67: Per-Type Engagement Contracts & Legacy Detail Cleanup
-
-**Goal**: Org/person/EO Engagements tabs honor their per-type contracts, and no dead legacy `*DossierDetail` surfaces remain
-**Depends on**: Nothing (independent)
-**Requirements**: PERENG-01, PERENG-02, PERENG-03
-**Success Criteria** (what must be TRUE):
-
-1. An organization dossier with a `host_organization_id` engagement shows it on its Engagements tab — or the tab is documented as generic history-only (decision implemented either way)
-2. A person/EO dossier with `person_engagements` rows shows them on its Engagements tab per the chosen contract, including `get_person_full.recent_engagements` wiring
-3. Every legacy unrouted `*DossierDetail` component is routed or deleted, and whatever survives renders localized strings in both EN and AR (no raw i18n keys)
-   **Plans**: 6 plans
-   **UI hint**: yes
-
-Plans:
-
-- [x] 67-01-PLAN.md — Per-type hosted/participation sections + Phase 66 error contract on DossierEngagementsTab (PERENG-01, PERENG-02)
-- [x] 67-02-PLAN.md — Wizard engagement_participants created_by payload fix, RED-first (PERENG-02)
-- [x] 67-03-PLAN.md — Author get_person_full recent_engagements repoint migration (rename-and-wrap over the drifted live body) (PERENG-02)
-- [x] 67-04-PLAN.md — Delete the 13-file legacy *DossierDetail/*DossierPage root chain + DossierDetailLayout (PERENG-03)
-- [x] 67-05-PLAN.md — Sweep orphaned sections/ + transitive leaves; canonical link typing; size/grep gates (PERENG-02, PERENG-03)
-- [x] 67-06-PLAN.md — ORCHESTRATOR-RUN live gate: apply migration, seed host/participation, browser EN/AR, cleanup (all reqs)
 
 <details>
 <summary>✅ v2.0 Production Quality (Phases 1-7) — SHIPPED 2026-03-28</summary>
@@ -378,3 +197,17 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 ---
 
 _Roadmap last updated: 2026-06-11 — v6.6 roadmap created (Phases 62-67, 15/15 requirements mapped). Source: `.planning/dossier-workflow-backlog-phases-2026-06-11.md`._
+
+<details>
+<summary>✅ v6.6 Dossier Workflow Completion (Phases 62-67) — SHIPPED 2026-06-13</summary>
+
+- [x] Phase 62: Export Pack Contract & Deploy (3/3 plans) — completed 2026-06-12
+- [x] Phase 63: Relationship Graph Route & Bidirectional Traversal (5/5 plans) — completed 2026-06-12
+- [x] Phase 64: New Position from Dossier (6/6 plans) — completed 2026-06-12
+- [x] Phase 65: Engagement Positions Tab & Legacy Reconciliation (6/6 plans) — completed 2026-06-13
+- [x] Phase 66: Overview Error Contract & Timeline Cross-Links (8/8 plans) — completed 2026-06-13
+- [x] Phase 67: Per-Type Engagement Contracts & Legacy Detail Cleanup (6/6 plans) — completed 2026-06-13
+
+Full details: [v6.6-ROADMAP.md](milestones/v6.6-ROADMAP.md)
+
+</details>

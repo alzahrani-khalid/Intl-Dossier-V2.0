@@ -1,7 +1,7 @@
 ---
 phase: 65-engagement-positions-tab-legacy-reconciliation
 verified: 2026-06-13T00:00:00Z
-status: human_needed
+status: passed
 score: 3/3 must-haves verified (automated); live staging criteria accepted from 65-06-SUMMARY.md recorded evidence
 overrides_applied: 0
 human_verification:
@@ -18,6 +18,8 @@ human_verification:
     expected: "Dialog shows 'Will be linked to <engagement name> · Direct'; created row has no engagement_id; work_item_dossiers row links task to engagementId"
     why_human: 'Dialog badge display and DB column values require live session + Supabase MCP; kanban caveat (board shows empty) also needs live observation'
 ---
+
+> **Resolution (65):** the human-verification items were performed LIVE during the orchestrator-run phase gate and recorded in `65-HUMAN-UAT.md` (status: complete, all items passed with SQL/DOM/screenshot evidence). Status flipped human_needed → passed accordingly.
 
 # Phase 65: Engagement Positions Tab + Legacy Reconciliation — Verification Report
 
