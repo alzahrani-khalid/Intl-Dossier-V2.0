@@ -680,7 +680,7 @@ function PersonDetailPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {personData.recent_engagements.map((eng: any) => (
+                    {personData.recent_engagements.map((eng) => (
                       <div
                         key={eng.link.id}
                         className="flex items-center justify-between p-3 rounded-lg bg-muted/50"
@@ -693,7 +693,7 @@ function PersonDetailPage() {
                             {eng.engagement.engagement_type} - {eng.link.role}
                           </p>
                         </div>
-                        {eng.link.attended && (
+                        {eng.link.attendance_status === 'attended' && (
                           <Badge variant="secondary">{t('engagement.attended', 'Attended')}</Badge>
                         )}
                       </div>

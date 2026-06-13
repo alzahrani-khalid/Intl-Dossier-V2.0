@@ -52,8 +52,12 @@ vi.mock('@/services/dossier-overview.service', async () => {
 // Per-table supabase mock: from(table) returns a self-returning chainable
 // (select/eq/in) whose awaited terminal resolves the per-test configured
 // { data, error } for that table. tableResults is reset in beforeEach.
-const { tableResults } = vi.hoisted(() => ({
+const { tableResults, eqCalls } = vi.hoisted(() => ({
   tableResults: new Map<string, { data: unknown; error: unknown }>(),
+  // Records every .eq(column, value) per table so tests can assert the
+  // load-bearing filter column (a wrong-column regression, e.g. swapping
+  // host_organization_id → host_country_id, would otherwise pass silently).
+  eqCalls: new Map<string, Array<{ column: string; value: unknown }>>(),
 }))
 
 vi.mock('@/lib/supabase', () => {
@@ -61,7 +65,12 @@ vi.mock('@/lib/supabase', () => {
     const result = tableResults.get(table) ?? { data: [], error: null }
     const chain: Record<string, unknown> = {
       select: () => chain,
-      eq: () => chain,
+      eq: (column: string, value: unknown) => {
+        const calls = eqCalls.get(table) ?? []
+        calls.push({ column, value })
+        eqCalls.set(table, calls)
+        return chain
+      },
       in: () => chain,
       // Thenable terminal: awaiting the chain resolves the configured result.
       then: (resolve: (value: { data: unknown; error: unknown }) => unknown) => resolve(result),
@@ -99,6 +108,7 @@ describe('DossierEngagementsTab', () => {
   beforeEach(() => {
     mockedFetch.mockReset()
     tableResults.clear()
+    eqCalls.clear()
     // Generic branch resolves empty unless a test overrides it.
     mockedFetch.mockResolvedValue(
       makeResponse({
@@ -171,6 +181,12 @@ describe('DossierEngagementsTab', () => {
     expect(await screen.findByText('Hosted engagements')).toBeTruthy()
     expect(await screen.findByText('OECD Summit')).toBeTruthy()
     expect(await screen.findByText('bilateral_meeting')).toBeTruthy()
+    // The hosted branch MUST filter engagement_dossiers on host_organization_id
+    // (not host_country_id or any other real column) keyed on the org dossier id.
+    expect(eqCalls.get('engagement_dossiers')).toContainEqual({
+      column: 'host_organization_id',
+      value: 'org1',
+    })
   })
 
   it('renders the participation section for a person dossier', async () => {
@@ -187,6 +203,12 @@ describe('DossierEngagementsTab', () => {
     expect(await screen.findByText('Participation')).toBeTruthy()
     expect(await screen.findByText('G20 Meeting')).toBeTruthy()
     expect(await screen.findByText('delegate')).toBeTruthy()
+    // The participation branch MUST filter engagement_participants on
+    // participant_dossier_id (the canonical plane), keyed on the person dossier id.
+    expect(eqCalls.get('engagement_participants')).toContainEqual({
+      column: 'participant_dossier_id',
+      value: 'p1',
+    })
   })
 
   it('omits the participation section entirely when there are zero rows', async () => {

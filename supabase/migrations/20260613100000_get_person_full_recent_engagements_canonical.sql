@@ -38,6 +38,12 @@ BEGIN
   END IF;
 END $$;
 
+-- Pin search_path on the preserved base (it is SECURITY DEFINER and, after the
+-- rename, an independently-callable surface). Closes the classic DEFINER
+-- search_path-injection vector on unqualified name resolution (matches the
+-- wrapper's pin below). Idempotent.
+ALTER FUNCTION public.get_person_full_base(uuid) SET search_path = public, pg_temp;
+
 CREATE OR REPLACE FUNCTION public.get_person_full(p_person_id uuid)
 RETURNS json
 LANGUAGE sql
@@ -85,4 +91,14 @@ AS $fn$
   )::json
 $fn$;
 
-GRANT EXECUTE ON FUNCTION public.get_person_full(uuid) TO authenticated, anon, service_role;
+-- Least-privilege EXECUTE — match the original contract (20260202000001 granted
+-- authenticated only). CREATE OR REPLACE re-grants EXECUTE to PUBLIC by default,
+-- and the live function had drifted to also carry anon; revoke both explicitly so
+-- the SECURITY DEFINER body (which bypasses the dossiers clearance RLS for the
+-- recent_engagements branch) is NOT reachable via the unauthenticated PostgREST
+-- role. The persons edge fn auth-walls and calls as `authenticated`, so
+-- authenticated-only is sufficient. Applied to both the wrapper and the base.
+REVOKE EXECUTE ON FUNCTION public.get_person_full(uuid) FROM PUBLIC, anon;
+REVOKE EXECUTE ON FUNCTION public.get_person_full_base(uuid) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.get_person_full(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.get_person_full_base(uuid) TO authenticated;
