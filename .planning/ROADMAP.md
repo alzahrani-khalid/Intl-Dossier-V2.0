@@ -197,7 +197,7 @@ Plans:
 - [x] 67-03-PLAN.md — Author get_person_full recent_engagements repoint migration (rename-and-wrap over the drifted live body) (PERENG-02)
 - [x] 67-04-PLAN.md — Delete the 13-file legacy *DossierDetail/*DossierPage root chain + DossierDetailLayout (PERENG-03)
 - [x] 67-05-PLAN.md — Sweep orphaned sections/ + transitive leaves; canonical link typing; size/grep gates (PERENG-02, PERENG-03)
-- [ ] 67-06-PLAN.md — ORCHESTRATOR-RUN live gate: apply migration, seed host/participation, browser EN/AR, cleanup (all reqs)
+- [x] 67-06-PLAN.md — ORCHESTRATOR-RUN live gate: apply migration, seed host/participation, browser EN/AR, cleanup (all reqs)
 
 <details>
 <summary>✅ v2.0 Production Quality (Phases 1-7) — SHIPPED 2026-03-28</summary>
@@ -371,7 +371,7 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 | 64. New Position from Dossier | v6.6 | 6/6 | Complete    | 2026-06-12 |
 | 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 6/6 | Complete    | 2026-06-12 |
 | 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 8/8 | Complete    | 2026-06-12 |
-| 67. Per-Type Engagement Contracts & Legacy Detail Cleanup | v6.6 | 5/6 | In Progress|  |
+| 67. Per-Type Engagement Contracts & Legacy Detail Cleanup | v6.6 | 6/6 | Complete   | 2026-06-13 |
 
 <!-- gsd:progress:end -->
 
