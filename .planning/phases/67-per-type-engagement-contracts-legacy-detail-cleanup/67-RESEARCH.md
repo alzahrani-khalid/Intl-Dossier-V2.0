@@ -542,3 +542,12 @@ None — no external research needed; phase is fully repo-internal.
 
 **Research date:** 2026-06-13
 **Valid until:** 2026-07-13 (repo-internal; invalidated by any engagement-plane migration or tab refactor landing first)
+
+## Open Question Answers (orchestrator, Supabase MCP, 2026-06-13 04:00)
+
+1. **Q1 — engagement_participants:** 1 row total — person participant `b0000011-…-0001`, role `head_of_delegation`, engagement `b0000002-…-0003` (Indonesia BPS), `created_by` SET (the edge-writer path works). The canonical plane is live but nearly empty.
+2. **Q2 — EO persons:** exactly 1 person with `person_subtype = 'elected_official'` (note: 0 dossiers of TYPE elected_official — EO lives as a person dossier with subtype, confirming the routing assumption).
+3. **Q3 — legacy plane:** `engagements` = 4 rows, `person_engagements` = 0 rows. Nothing to migrate; never write to either.
+4. **Q4 — LIVE get_person_full (CRITICAL DRIFT):** the deployed function returns ONLY `person` + `active_committees` + `key_staff` — **there is NO `recent_engagements` key in the live body** (repo migration drift, same class as prior incidents). The PERENG-02 repoint migration must be authored against the live body captured this session: add `recent_engagements` sourced from `engagement_participants ⋈ engagement_dossiers ⋈ dossiers` (participant_dossier_id = p_person_id), keeping SECURITY DEFINER + the existing three keys byte-compatible.
+5. **Q5 — RLS:** `engagement_participants`: INSERT ("Users can create engagement participants"), DELETE (own), SELECT (view) — all present. `engagement_dossiers`: full INSERT/UPDATE/DELETE/SELECT set. No drift blocking reads; the INSERT WITH CHECK created_by predicate confirms the wizard-payload bug analysis.
+6. **Q6 — seed candidates:** orgs `b0000001-…-0005` (OECD), `…-0006` (GCC Stat Centre), `b0000000-…-aaaa` (GASTAT); persons `a0000000-…-0501..0505` (all subtype standard); the 1 EO person id resolvable at seed time via `person_subtype='elected_official'`; engagements `b0000002-…-0001..0003`.
