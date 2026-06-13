@@ -1,5 +1,23 @@
 # Milestones
 
+## v6.6 Dossier Workflow Completion (Shipped: 2026-06-13)
+
+**Phases completed:** 6 phases (62-67), 34 plans across 5 PRs (#56-#60)
+**Source:** `.planning/dossier-workflow-backlog-phases-2026-06-11.md` (bucket-B escalations)
+
+**Key accomplishments:**
+
+- **Export pack** (62): reconciled `dossier-export-pack` to the live schema, honest export contract, deployed.
+- **Relationship graph** (63): mounted route with bidirectional (incoming+outgoing) traversal and per-type node navigation.
+- **New position from dossier** (64): closed the P0 positions INSERT RLS drift (no insert policy existed on staging) and shipped a working NewPositionDialog with two-step create→`applies_to` link, live-verified.
+- **Engagement positions tab** (65): mounted on canonical `position_dossier_links`, resolved all nine round-15 inert CTAs (5 wired, 4 removed), deleted the orphaned `engagement_positions` frontend stack.
+- **Overview error contract** (66): single fail-the-query contract + `role="alert"` error lines across all 19 cards + drawer branch (empty≠failed), and killed every timeline dead-end via a mounted-route guard + edge emission fixes — CDP forced-error-verified.
+- **Per-type engagement contracts + legacy cleanup** (67): org/person/EO Engagements tabs on canonical tables (`host_organization_id`; `engagement_participants` + `get_person_full` recent_engagements RPC repoint + wizard `created_by` RLS write-drop fix), and deleted ~42 dead legacy `*DossierDetail` files (~9,200 lines).
+
+**Verification:** every phase VERIFICATION.md = passed; all live-verified on staging (seed/observe/restore, EN+AR); exhaustively code-reviewed (0 critical). Known deferred items at close: 34 historical quick-task registry entries (see STATE.md Deferred Items) — pre-existing, not v6.6 scope.
+
+---
+
 ## v6.5 Escalated Backlog Hardening (Shipped: 2026-06-11)
 
 **Phases completed:** 2 phases (60-61), 6 plans + 1 quick-task delivery
