@@ -264,17 +264,22 @@ export type EngagementRole =
   | 'guest'
 
 /**
- * Person engagement link record
+ * Canonical `engagement_participants` row — the `link` half of
+ * `recent_engagements` (PERENG-02). Mirrors the 67-03 migration emission
+ * (`get_person_full` → `to_jsonb(engagement_participants row)`); the legacy
+ * `person_id`/`attended` fields are gone so consumers cannot trust phantom
+ * columns the RPC never returns (T-67-11).
  */
 export interface PersonEngagement {
   id: string
-  person_id: string
   engagement_id: string
+  participant_type: 'person' | 'organization' | 'country' | 'external'
+  participant_dossier_id: string | null
   role: EngagementRole
-  notes?: string
-  attended: boolean
+  attendance_status: string
+  notes?: string | null
   created_at: string
-  created_by?: string
+  created_by?: string | null
 }
 
 /**

@@ -36,9 +36,6 @@ export {
 
 export { AddToDossierDialogs, type AddToDossierDialogsProps } from './AddToDossierDialogs'
 
-// Detail Layout
-export { DossierDetailLayout } from './DossierDetailLayout'
-
 // Export Dialog (Feature: dossier-export-pack)
 export { ExportDossierDialog } from './ExportDossierDialog'
 

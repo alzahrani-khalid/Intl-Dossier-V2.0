@@ -110,5 +110,10 @@
   },
   "emptyState": {
     "comingSoon": "المحتوى قريبًا"
+  },
+  "sections": {
+    "hostedEngagements": "المشاركات المستضافة",
+    "participation": "المشاركة",
+    "history": "السجل"
   }
 }

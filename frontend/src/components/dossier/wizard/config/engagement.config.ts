@@ -71,7 +71,18 @@ export const engagementWizardConfig: WizardConfig<EngagementFormData> = {
     end_date: data.end_date,
   }),
   postCreate: async (newDossierId, data) => {
-    const rows = buildParticipantRows(newDossierId, data)
+    const { data: auth } = await supabase.auth.getUser()
+    const userId = auth.user?.id
+    if (userId == null) {
+      console.warn('engagement postCreate: no authenticated user — skipping participant insert', {
+        engagementId: newDossierId,
+      })
+      return
+    }
+    const rows = buildParticipantRows(newDossierId, data).map((row) => ({
+      ...row,
+      created_by: userId,
+    }))
     if (rows.length === 0) return
     const { error } = await supabase.from('engagement_participants').insert(rows)
     if (error) {
