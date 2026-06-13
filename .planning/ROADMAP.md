@@ -187,8 +187,17 @@ Plans:
 1. An organization dossier with a `host_organization_id` engagement shows it on its Engagements tab — or the tab is documented as generic history-only (decision implemented either way)
 2. A person/EO dossier with `person_engagements` rows shows them on its Engagements tab per the chosen contract, including `get_person_full.recent_engagements` wiring
 3. Every legacy unrouted `*DossierDetail` component is routed or deleted, and whatever survives renders localized strings in both EN and AR (no raw i18n keys)
-   **Plans**: TBD
+   **Plans**: 6 plans
    **UI hint**: yes
+
+Plans:
+
+- [ ] 67-01-PLAN.md — Per-type hosted/participation sections + Phase 66 error contract on DossierEngagementsTab (PERENG-01, PERENG-02)
+- [ ] 67-02-PLAN.md — Wizard engagement_participants created_by payload fix, RED-first (PERENG-02)
+- [ ] 67-03-PLAN.md — Author get_person_full recent_engagements repoint migration (rename-and-wrap over the drifted live body) (PERENG-02)
+- [ ] 67-04-PLAN.md — Delete the 13-file legacy *DossierDetail/*DossierPage root chain + DossierDetailLayout (PERENG-03)
+- [ ] 67-05-PLAN.md — Sweep orphaned sections/ + transitive leaves; canonical link typing; size/grep gates (PERENG-02, PERENG-03)
+- [ ] 67-06-PLAN.md — ORCHESTRATOR-RUN live gate: apply migration, seed host/participation, browser EN/AR, cleanup (all reqs)
 
 <details>
 <summary>✅ v2.0 Production Quality (Phases 1-7) — SHIPPED 2026-03-28</summary>
