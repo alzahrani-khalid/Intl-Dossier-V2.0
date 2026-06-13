@@ -1,0 +1,136 @@
+# Requirements: Intl-Dossier — v7.0 Intelligence Engine
+
+**Defined:** 2026-06-13
+**Core Value:** Unified intelligence management for diplomatic operations — every relationship, commitment, and signal tracked in one secure, bilingual, sovereign platform.
+**Source:** `docs/superpowers/specs/2026-06-13-v7.0-intelligence-engine-design.md` (approved decisions §2, roadmap §4) + `.planning/research/SUMMARY.md`.
+
+Each capability ships as **both** a first-class user-facing surface AND an agent tool, under clearance-RLS, in the same phase (spec §2 "Platform vs feature: BOTH").
+
+## v1 Requirements
+
+Requirements for the v7.0 milestone (phases 68–74). Each maps to exactly one roadmap phase (see Traceability).
+
+### Remediation — AI foundations (gates the rest)
+
+- [ ] **REMED-01**: All clearance checks key off a single canonical clearance scale (`profiles.clearance_level`, 1–4); the prior 1–3 function and low/med/high sensitivity variants are reconciled to it without breaking existing RLS
+- [ ] **REMED-02**: A non-cleared user cannot retrieve above-clearance content through the existing semantic/vector search (clearance-RLS enforced on the current retrieval path)
+- [ ] **REMED-03**: A non-cleared user cannot retrieve above-clearance content through the existing interactive assistant (assistant reads run under the caller's JWT; service-role retired from `chat-assistant.ts`)
+- [ ] **REMED-04**: Embeddings are stored at their native dimension with no pad/truncate corruption of vector geometry
+- [ ] **REMED-05**: An operator can trace any AI request end-to-end in self-hosted observability (Langfuse + Arize Phoenix via OTel) with zero telemetry egress
+- [ ] **REMED-06**: CI fails when a React surface uses an i18n namespace that is not registered in `src/i18n/index.ts` (silent-English-fallback guard)
+
+### Signals
+
+- [ ] **SIGNAL-01**: A user can manually capture an intelligence signal and link it to one or more dossiers
+- [ ] **SIGNAL-02**: The system can record an AI-surfaced signal linked to the relevant dossier(s)
+- [ ] **SIGNAL-03**: A user can triage a signal (acknowledge / dismiss / escalate) from a keyboard-driven, RTL-safe triage surface
+- [ ] **SIGNAL-04**: A user sees a dossier's signals in the dossier context, clearance-gated (above-clearance signals are hidden)
+- [ ] **SIGNAL-05**: A user can escalate a signal into a tracked work item
+- [ ] **SIGNAL-06**: The agent can read signals via a clearance-gated `read_signals` tool
+
+### Digests
+
+- [ ] **DIGEST-01**: A user can subscribe to and unsubscribe from a recurring digest scoped to a dossier or topic
+- [ ] **DIGEST-02**: The system generates and delivers recurring digests on schedule (cron, service-role + explicit authz), with each subscriber receiving only clearance-appropriate content
+- [ ] **DIGEST-03**: A user can view rendered digests in-app
+- [ ] **DIGEST-04**: The agent can generate a digest on demand via a human-in-the-loop `generate_digest` tool
+
+### Alerts
+
+- [ ] **ALERT-01**: A user can define a threshold alert (e.g., a new signal on a tracked dossier)
+- [ ] **ALERT-02**: A triggered alert is delivered immediately to the subscriber's configured channels
+- [ ] **ALERT-03**: Alert and digest delivery flows through a pluggable channel adapter supporting in-app, on-prem SMTP email, and an external webhook/Teams endpoint
+- [ ] **ALERT-04**: External-channel payloads carry deep-links only — no classified content leaves the platform
+
+### Analytic graph
+
+- [ ] **GRAPH-01**: A user can run analytic graph queries (who-sits-on-which-forum, shared committees, engagement chains over N days) from the Network panel
+- [ ] **GRAPH-02**: A user can launch an analytic graph query from Cmd+K
+- [ ] **GRAPH-03**: Analytic graph results are clearance-gated — the querying user sees only within-clearance nodes and edges
+- [ ] **GRAPH-04**: The agent can run analytic graph queries via a clearance-gated `query_graph` tool
+
+### Agent platform — runtime, retrieval, reads
+
+- [ ] **AGENT-01**: A cleared user can converse with the on-prem copilot from a primary conversational surface and via Cmd+K
+- [ ] **AGENT-02**: The copilot answers from the gated intelligence data (signals, digests, graph, dossiers) under the caller's JWT
+- [ ] **AGENT-03**: A non-cleared user receives clearance-correct (reduced) copilot results and never above-clearance content
+- [ ] **AGENT-04**: The copilot retrieves via a hybrid (dense + sparse + rerank) RAG over a single chunks store, with clearance enforced by `SECURITY INVOKER` + RLS
+- [ ] **AGENT-05**: Retrievable content is embedded at bge-m3 1024-dim (one-time re-embed completed; no dimension drift)
+- [ ] **AGENT-06**: The copilot replies in the user's language (EN/AR) with correct RTL rendering
+
+### Generative UI + HITL writes
+
+- [ ] **GENUI-01**: The copilot renders results as token-bound bilingual cards (the app's own components) inline, with deep-links into the app
+- [ ] **GENUI-02**: Every state-changing copilot action (create/link work item, generate brief, publish digest, dismiss signal) shows a bilingual token-bound confirmation and commits only on approval
+- [ ] **GENUI-03**: Approved copilot writes commit under the user's JWT (RLS-enforced), never service-role
+- [ ] **GENUI-04**: After an approved copilot write, the conventional UI reflects the change immediately (query-cache sync)
+
+### Eval gate + AnythingLLM retirement
+
+- [ ] **EVAL-01**: A bilingual (EN/AR) briefing-quality rubric runs in CI and fails the build on a regression below threshold
+- [ ] **EVAL-02**: A correlation-accuracy rubric runs in CI and fails the build on a regression below threshold
+- [ ] **EVAL-03**: An Arabic-quality rubric runs in CI and fails the build on a regression below threshold
+- [ ] **EVAL-04**: The critical AI path (search suggestions, dashboard digest, assistant) makes zero AnythingLLM calls; AnythingLLM is decommissioned from the critical path
+
+### Infrastructure substrate (parallel track)
+
+- [ ] **INFRA-01**: A local LLM is served over an OpenAI-compatible API (vLLM + Gemma 4 12B as the eval-gated starting model), swappable by config
+- [ ] **INFRA-02**: Embeddings and reranking are served locally (TEI: bge-m3 + bge-reranker-v2-m3)
+- [ ] **INFRA-03**: The agent runtime runs as its own deployable Turborepo workspace (Mastra + CopilotKit runtime) in `docker-compose.prod` on a distinct port
+
+## Cross-Cutting Guarantees
+
+Applied as acceptance criteria to **every** phase (spec §5) — verified per-phase rather than mapped to a single phase:
+
+- **Security keystone:** every interactive agent DB op runs under the caller's JWT (RLS enforces `sensitivity_level <= clearance`); every write is HITL; service-role only on cron/no-user paths with explicit app-layer authz.
+- **Bilingual/RTL:** every new surface + agent-authored copy renders in `i18n.language`; new namespaces registered in `src/i18n/index.ts`; `dir="rtl"` + Tajawal + logical properties; design tokens only (no raw hex, no card shadows, no shadcn defaults).
+- **On-prem fidelity:** no data egress; all models/embedders/rerankers/observability self-hosted and permissively licensed (Gemma's custom terms the one recorded exception).
+- **GSD discipline:** each phase = research → (UI-spec where applicable) → plan → check → execute → self-run live UAT on staging (seed/observe/restore, EN+AR) → code review → verify → PR → merge on green.
+
+## Future Requirements (v7.1+)
+
+Deferred — tracked but not in the v7.0 roadmap.
+
+### Feeds & ingestion
+
+- **FEED-01**: External feed ingestion (RSS / public APIs / scheduled pulls) with provenance tracking
+- **FEED-02**: Untrusted-content quarantine posture + advanced dual-LLM rigor for ingested content
+
+### Scale
+
+- **SCALE-01**: Multi-GPU / horizontal model-serving scale-out beyond a single server
+
+## Out of Scope
+
+Explicitly excluded for v7.0. Documented to prevent scope creep.
+
+| Feature                                                                                 | Reason                                                                                                                      |
+| --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| External feed ingestion (RSS/public APIs)                                               | The untrusted-content / indirect-injection surface; v7.0 signals are manual + AI-surfaced only — deferred to v7.1 (FEED-01) |
+| Advanced quarantine / dual-LLM rigor                                                    | Lands with feeds in v7.1; no untrusted ingest in v7.0 to defend (FEED-02)                                                   |
+| Multi-GPU horizontal serving scale-out                                                  | Single ~16–24GB GPU targets v7.0 concurrency; revisit on demand (SCALE-01)                                                  |
+| Second vector datastore                                                                 | Clearance model is enforced once, in Postgres; pgvector stays the only store                                                |
+| Python polyglot agent service                                                           | TS-native Mastra runtime holds the on-prem constraint; no second language runtime                                           |
+| LangGraph agent runtime                                                                 | EL-2.0 production-server license blocks sovereign self-host                                                                 |
+| External graph database (Neo4j etc.)                                                    | Analytic graph stays in Postgres recursive CTEs on the same instance                                                        |
+| Forcing ALLaM/SDAIA as the brain                                                        | 4K ctx + no tool-calling → optional secondary only; the eval harness picks the brain                                        |
+| Net-new design directions, mobile native app, OAuth/social login, real-time chat, video | Standing v6.x exclusions — unchanged                                                                                        |
+
+## Traceability
+
+Which phases cover which requirements. Populated during roadmap creation.
+
+| Requirement               | Phase | Status  |
+| ------------------------- | ----- | ------- |
+| (populated by roadmapper) | —     | Pending |
+
+**Coverage:**
+
+- v1 requirements: 41 total
+- Mapped to phases: 0 (pending roadmap)
+- Unmapped: 41 ⚠️
+
+---
+
+_Requirements defined: 2026-06-13_
+_Last updated: 2026-06-13 after initial v7.0 definition_
