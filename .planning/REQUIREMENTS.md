@@ -37,9 +37,9 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Per-Type Engagement Contracts (backlog P6)
 
-- [ ] **PERENG-01**: Organization dossiers' Engagements tab honors `engagement_dossiers.host_organization_id` (or the tab is documented as generic history-only — decision implemented either way)
-- [ ] **PERENG-02**: Person/EO dossiers' Engagements tab shows `person_engagements` rows per the chosen contract (incl. `get_person_full.recent_engagements` wiring)
-- [ ] **PERENG-03**: Legacy unrouted `*DossierDetail` components are routed or deleted, and their raw-key i18n debt is cleared on whatever survives
+- [x] **PERENG-01**: Organization dossiers' Engagements tab honors `engagement_dossiers.host_organization_id` (or the tab is documented as generic history-only — decision implemented either way)
+- [x] **PERENG-02**: Person/EO dossiers' Engagements tab shows `person_engagements` rows per the chosen contract (incl. `get_person_full.recent_engagements` wiring)
+- [x] **PERENG-03**: Legacy unrouted `*DossierDetail` components are routed or deleted, and their raw-key i18n debt is cleared on whatever survives
 
 ## Future Requirements
 
@@ -80,9 +80,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ENGPOS-03   | Phase 65 | Complete |
 | OVRERR-01   | Phase 66 | Complete |
 | OVRERR-02   | Phase 66 | Complete |
-| PERENG-01   | Phase 67 | Pending  |
-| PERENG-02   | Phase 67 | Pending  |
-| PERENG-03   | Phase 67 | Pending  |
+| PERENG-01   | Phase 67 | Complete |
+| PERENG-02   | Phase 67 | Complete |
+| PERENG-03   | Phase 67 | Complete |
 
 **Coverage:**
 

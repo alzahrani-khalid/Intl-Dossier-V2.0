@@ -371,7 +371,7 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 | 64. New Position from Dossier | v6.6 | 6/6 | Complete    | 2026-06-12 |
 | 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 6/6 | Complete    | 2026-06-12 |
 | 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 8/8 | Complete    | 2026-06-12 |
-| 67. Per-Type Engagement Contracts & Legacy Detail Cleanup | v6.6 | 6/6 | Complete   | 2026-06-13 |
+| 67. Per-Type Engagement Contracts & Legacy Detail Cleanup | v6.6 | 6/6 | Complete    | 2026-06-13 |
 
 <!-- gsd:progress:end -->
 
