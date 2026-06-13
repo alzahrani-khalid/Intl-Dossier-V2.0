@@ -22,7 +22,7 @@ function OrganizationEngagementsRoute(): ReactElement {
   const { id } = Route.useParams()
   return (
     <Suspense fallback={<TabSkeleton type="list" />}>
-      <DossierEngagementsTab dossierId={id} />
+      <DossierEngagementsTab dossierId={id} dossierType="organization" />
     </Suspense>
   )
 }

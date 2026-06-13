@@ -7,11 +7,20 @@ import enDossierShell from '@/i18n/en/dossier-shell.json'
 import arDossierShell from '@/i18n/ar/dossier-shell.json'
 
 // Echo translation keys, honouring defaultValue so the empty-state copy resolves
-// to its English fallback without loading i18n resources. language: 'en' → LTR.
+// to its English fallback without loading i18n resources. The three own-namespace
+// section keys (dossier-shell, dot-form) are resolved from a small literal map so
+// the headings render their English copy. language: 'en' → LTR.
+const ownNamespaceStrings: Record<string, string> = {
+  'empty.engagements.title': 'No engagements yet',
+  'sections.hostedEngagements': 'Hosted engagements',
+  'sections.participation': 'Participation',
+  'sections.history': 'History',
+}
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, opts?: { defaultValue?: string }) =>
-      key === 'empty.engagements.title' ? 'No engagements yet' : (opts?.defaultValue ?? key),
+      ownNamespaceStrings[key] ?? opts?.defaultValue ?? key,
     i18n: { language: 'en' },
   }),
 }))
