@@ -236,7 +236,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 
 **Wave 4** _(blocked on Wave 3 completion)_
 
-- [ ] 68-05-PLAN.md — REMED-04: native-1024 embedding write path (storeEmbedding)
+- [x] 68-05-PLAN.md — REMED-04: native-1024 embedding write path (storeEmbedding)
 - [x] 68-06-PLAN.md — REMED-05: Langfuse + Phoenix docker-compose + OTel wiring
 - [x] 68-07-PLAN.md — REMED-06: i18n namespace guard (check-i18n-namespaces.mjs + lint integration)
 
@@ -365,7 +365,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 55-59 | v6.4 | 20/20 | Shipped | 2026-05-27 |
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
 | 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
-| 68. AI Foundations Remediation | v7.0 | 6/8 | In Progress|  |
+| 68. AI Foundations Remediation | v7.0 | 7/8 | In Progress|  |
 | 69. Signals | v7.0 | 0/? | Not started | - |
 | 70. Digests + Alerts | v7.0 | 0/? | Not started | - |
 | 71. Analytic Graph | v7.0 | 0/? | Not started | - |
