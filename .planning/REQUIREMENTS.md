@@ -21,12 +21,12 @@ Requirements for the v7.0 milestone (phases 68–74). Each maps to exactly one r
 
 ### Signals
 
-- [ ] **SIGNAL-01**: A user can manually capture an intelligence signal and link it to one or more dossiers
-- [ ] **SIGNAL-02**: The system can record an AI-surfaced signal linked to the relevant dossier(s)
-- [ ] **SIGNAL-03**: A user can triage a signal (acknowledge / dismiss / escalate) from a keyboard-driven, RTL-safe triage surface
-- [ ] **SIGNAL-04**: A user sees a dossier's signals in the dossier context, clearance-gated (above-clearance signals are hidden)
-- [ ] **SIGNAL-05**: A user can escalate a signal into a tracked work item
-- [ ] **SIGNAL-06**: The agent can read signals via a clearance-gated `read_signals` tool
+- [x] **SIGNAL-01**: A user can manually capture an intelligence signal and link it to one or more dossiers
+- [x] **SIGNAL-02**: The system can record an AI-surfaced signal linked to the relevant dossier(s)
+- [x] **SIGNAL-03**: A user can triage a signal (acknowledge / dismiss / escalate) from a keyboard-driven, RTL-safe triage surface
+- [x] **SIGNAL-04**: A user sees a dossier's signals in the dossier context, clearance-gated (above-clearance signals are hidden)
+- [x] **SIGNAL-05**: A user can escalate a signal into a tracked work item
+- [x] **SIGNAL-06**: The agent can read signals via a clearance-gated `read_signals` tool
 
 ### Digests
 
@@ -128,12 +128,12 @@ Which phases cover which requirements.
 | REMED-04    | Phase 68 | Complete |
 | REMED-05    | Phase 68 | Complete |
 | REMED-06    | Phase 68 | Complete |
-| SIGNAL-01   | Phase 69 | Pending  |
-| SIGNAL-02   | Phase 69 | Pending  |
-| SIGNAL-03   | Phase 69 | Pending  |
-| SIGNAL-04   | Phase 69 | Pending  |
-| SIGNAL-05   | Phase 69 | Pending  |
-| SIGNAL-06   | Phase 69 | Pending  |
+| SIGNAL-01   | Phase 69 | Complete |
+| SIGNAL-02   | Phase 69 | Complete |
+| SIGNAL-03   | Phase 69 | Complete |
+| SIGNAL-04   | Phase 69 | Complete |
+| SIGNAL-05   | Phase 69 | Complete |
+| SIGNAL-06   | Phase 69 | Complete |
 | DIGEST-01   | Phase 70 | Pending  |
 | DIGEST-02   | Phase 70 | Pending  |
 | DIGEST-03   | Phase 70 | Pending  |

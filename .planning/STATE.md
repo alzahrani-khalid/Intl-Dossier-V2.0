@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: executing
-last_updated: '2026-06-14T15:35:58.596Z'
-last_activity: 2026-06-14 -- Phase 69 execution started
+last_updated: '2026-06-14T15:45:59.237Z'
+last_activity: 2026-06-14
 progress:
   total_phases: 7
   completed_phases: 1
   total_plans: 12
-  completed_plans: 8
+  completed_plans: 9
   percent: 14
 ---
 
@@ -25,16 +25,16 @@ See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 ## Current Position
 
 Phase: 69 (signals) — EXECUTING
-Plan: 1 of 4
-Status: Executing Phase 69
-Last activity: 2026-06-14 -- Phase 69 execution started
+Plan: 2 of 4
+Status: 69-01 complete (data layer + i18n + types); migration LIVE APPLY pending orchestrator
+Last activity: 2026-06-14 -- Phase 69 plan 01 executed (commits 9b2a7ec7 / 3dd7b958 / d598199d)
 
 ```
-Phase Progress: 0/7 phases complete
-[░░░░░░░░░░░░░░░░░░░░] 0%
+Phase Progress: 1/7 phases complete (Phase 68 shipped)
+[██░░░░░░░░░░░░░░░░░░░] 14%
 
-Phase 68: Not started
-Phase 69: Not started
+Phase 68: Complete
+Phase 69: Executing (1/4 plans — 69-01 done)
 Phase 70: Not started
 Phase 71: Not started
 Phase 72: Not started
@@ -95,6 +95,8 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 | Remediation-first sequencing                                     | Clearance/embedding/service-role bugs affect all later RLS + retrieval            | Pre-68 |
 | Data-layer-first (69→70→71 before 72)                            | Agent over real data vs stub data is the product vs a demo                        | Pre-68 |
 | Parallel infra track (starts P68, lands by P72)                  | vLLM/TEI has no data dependency — stand it up early                               | Pre-68 |
+
+- [Phase 69]: Phase 69 data layer: extend intelligence_event in place (D-06) with 6 signal columns; clearance-keyed RLS (D-05) loosens writes to any-cleared-user; read_signals SECURITY INVOKER RPC (D-14) — Migration written + committed (9b2a7ec7); LIVE APPLY to staging delegated to orchestrator (executor has no Supabase MCP)
 
 ### Open Todos
 

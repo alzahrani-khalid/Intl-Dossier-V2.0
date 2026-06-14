@@ -263,7 +263,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 
 **Wave 1** (baseline)
 
-- [ ] 69-01-PLAN.md — Migration + Supabase MCP apply + i18n namespace + base types
+- [x] 69-01-PLAN.md — Migration + Supabase MCP apply + i18n namespace + base types
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
@@ -382,7 +382,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
 | 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
 | 68. AI Foundations Remediation | v7.0 | 8/8 | Complete    | 2026-06-14 |
-| 69. Signals | v7.0 | 0/? | Not started | - |
+| 69. Signals | v7.0 | 1/4 | In Progress|  |
 | 70. Digests + Alerts | v7.0 | 0/? | Not started | - |
 | 71. Analytic Graph | v7.0 | 0/? | Not started | - |
 | 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 0/? | Not started | - |
