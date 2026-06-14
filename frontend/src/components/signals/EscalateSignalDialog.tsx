@@ -40,12 +40,21 @@ import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/useToast'
 import { useDirection } from '@/hooks/useDirection'
 import { useAuth } from '@/contexts/auth.context'
-import { useSignalEscalate, type Signal, type SignalSeverity } from '@/domains/signals'
+import {
+  useSignalDossierLinks,
+  useSignalEscalate,
+  type Signal,
+  type SignalSeverity,
+} from '@/domains/signals'
 
 interface EscalateSignalDialogProps {
   /** The signal being escalated — pre-fill source. Null when closed. */
   signal: Signal | null
-  /** Dossier UUIDs linked to the signal — copied onto the new task (D-11). */
+  /**
+   * Optional override for the dossier UUIDs copied onto the new task (D-11/SIGNAL-05).
+   * When omitted, the dialog sources the signal's linked dossiers from the
+   * intelligence_event_dossiers junction itself (clearance-gated, caller JWT).
+   */
   dossierIds?: string[]
   /** Whether the dialog is open. */
   isOpen: boolean
@@ -72,6 +81,12 @@ export function EscalateSignalDialog({
 
   const signalEscalate = useSignalEscalate()
   const isLoading = signalEscalate.isPending
+
+  // Source the signal's linked dossiers from the junction (clearance-gated, caller JWT)
+  // so Step 2 of the escalate copies them onto the task. An explicit `dossierIds` prop
+  // overrides this fetch; otherwise the hook is the source of truth (D-11/SIGNAL-05).
+  const { data: fetchedDossierIds = [] } = useSignalDossierLinks(signal?.id ?? null)
+  const effectiveDossierIds = dossierIds ?? fetchedDossierIds
 
   // Pre-filled, editable form state (D-10 field pre-fill map).
   const [title, setTitle] = useState<string>(signal?.title ?? '')
@@ -106,7 +121,7 @@ export function EscalateSignalDialog({
         priority,
         assigneeId: effectiveAssigneeId || undefined,
         slaDeadline: slaDeadline || undefined,
-        dossierIds: dossierIds ?? [],
+        dossierIds: effectiveDossierIds,
       })
 
       toast({ title: t('toast.escalateSuccess'), variant: 'success' })

@@ -53,6 +53,8 @@ export function SignalsQueue({ dossierId }: SignalsQueueProps): React.ReactEleme
   const { focusedIndex, setFocusedIndex } = useSignalKeyboardTriage({
     signals,
     containerRef,
+    // Suppress triage keys while the escalate dialog is open so `e` can't re-fire over it.
+    enabled: escalateTarget === null,
     onAcknowledge: (id) => {
       if (id) updateStatus.mutate({ id, status: 'acknowledged' })
     },

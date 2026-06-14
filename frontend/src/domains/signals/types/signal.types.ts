@@ -69,4 +69,5 @@ export const signalKeys = {
   all: ['signals'] as const,
   lists: () => [...signalKeys.all, 'list'] as const,
   list: (filters: SignalFilters) => [...signalKeys.lists(), filters] as const,
+  dossierLinks: (signalId: string) => [...signalKeys.all, 'dossier-links', signalId] as const,
 }

@@ -27,6 +27,12 @@ export interface UseSignalKeyboardTriageOptions {
   onDismiss: (id: string) => void
   onEscalate: (signal: Signal | null) => void
   containerRef: RefObject<HTMLUListElement | null>
+  /**
+   * When false, the keydown handler short-circuits — used to suppress triage keys
+   * (a/d/e and j/k navigation) while a modal such as the escalate dialog is open,
+   * preventing a re-fire of `e` over the already-open dialog. Defaults to true.
+   */
+  enabled?: boolean
 }
 
 export interface UseSignalKeyboardTriageResult {
@@ -40,6 +46,7 @@ export function useSignalKeyboardTriage({
   onDismiss,
   onEscalate,
   containerRef,
+  enabled = true,
 }: UseSignalKeyboardTriageOptions): UseSignalKeyboardTriageResult {
   const [focusedIndex, setFocusedIndex] = useState(0)
 
@@ -54,6 +61,10 @@ export function useSignalKeyboardTriage({
     if (!el) return
 
     const handler = (e: KeyboardEvent): void => {
+      // Guard: short-circuit entirely while disabled (e.g. the escalate dialog is open),
+      // so `e`/`a`/`d` cannot re-fire over an already-open modal.
+      if (!enabled) return
+
       // Guard: never intercept triage keys while the user is typing in a field.
       const target = e.target as HTMLElement
       const tag = target.tagName
@@ -83,7 +94,7 @@ export function useSignalKeyboardTriage({
     return () => {
       el.removeEventListener('keydown', handler)
     }
-  }, [focusedIndex, signals, onAcknowledge, onDismiss, onEscalate, containerRef])
+  }, [focusedIndex, signals, onAcknowledge, onDismiss, onEscalate, containerRef, enabled])
 
   return { focusedIndex, setFocusedIndex }
 }
