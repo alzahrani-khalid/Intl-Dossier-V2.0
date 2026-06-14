@@ -217,3 +217,76 @@ describe('RLS Audit: All Public Tables', () => {
     }
   })
 })
+
+/**
+ * REMED-01: Canonical clearance scale (Phase 68).
+ *
+ * After migration 20260614000001_p68_clearance_canonical.sql,
+ * get_user_clearance_level(user_id) reads profiles.clearance_level (the single
+ * canonical 1-4 scale) instead of role-derived 1-3 values. These tests start RED
+ * (pre-migration the function reads user_roles and diverges from profiles) and
+ * flip GREEN once plan 68-02 applies the migration.
+ *
+ * Live staging facts (A1-A6, confirmed plan 68-01): profiles distribution is
+ * L1=388, L3=5; the 5 manually-set level-3 profiles must never be downgraded.
+ */
+describe('REMED-01: Canonical clearance scale', () => {
+  let supabaseAdmin: SupabaseClient
+
+  beforeAll(() => {
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      return
+    }
+    supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    })
+  })
+
+  it('get_user_clearance_level() returns 1 for a nonexistent user (COALESCE default)', async () => {
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      return
+    }
+    const { data, error } = await supabaseAdmin.rpc('get_user_clearance_level', {
+      user_id: '00000000-0000-0000-0000-000000000000',
+    })
+    expect(error, `get_user_clearance_level should be callable: ${error?.message}`).toBeNull()
+    expect(data).toBe(1)
+  })
+
+  it('get_user_clearance_level() reads profiles.clearance_level (canonical scale), not role-derived', async () => {
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      return
+    }
+    // Pick a user with an elevated role. Pre-migration the function returns the
+    // role-derived value (2/3) while profiles.clearance_level is still 1 -> RED.
+    // Post-migration the backfill aligns them and the shim reads profiles -> GREEN.
+    const { data: elevated, error: roleErr } = await supabaseAdmin
+      .from('user_roles')
+      .select('user_id, role')
+      .in('role', ['admin', 'manager', 'analyst'])
+      .limit(1)
+
+    if (roleErr || !elevated || elevated.length === 0) {
+      // No elevated-role user available in this environment -- nothing to assert.
+      console.warn('REMED-01: no elevated-role user found; skipping canonical-scale comparison')
+      return
+    }
+
+    const userId = (elevated[0] as { user_id: string }).user_id
+
+    const { data: fnLevel, error: fnErr } = await supabaseAdmin.rpc('get_user_clearance_level', {
+      user_id: userId,
+    })
+    expect(fnErr, `get_user_clearance_level error: ${fnErr?.message}`).toBeNull()
+
+    const { data: profile, error: profErr } = await supabaseAdmin
+      .from('profiles')
+      .select('clearance_level')
+      .eq('user_id', userId)
+      .maybeSingle()
+    expect(profErr, `profiles lookup error: ${profErr?.message}`).toBeNull()
+
+    // The canonical contract: the function's result IS profiles.clearance_level.
+    expect(fnLevel).toBe((profile as { clearance_level: number } | null)?.clearance_level)
+  })
+})
