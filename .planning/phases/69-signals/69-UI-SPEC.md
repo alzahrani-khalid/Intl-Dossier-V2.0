@@ -70,14 +70,37 @@ Padding token for this phase:
 All sizes from `colors_and_type.css`. Weights limited to two: regular (400) and
 semibold (600). No other weights introduced.
 
-| Role               | CSS Variable     | Size   | Weight | Line Height            | Letter Spacing | Usage                                                                                       |
-| ------------------ | ---------------- | ------ | ------ | ---------------------- | -------------- | ------------------------------------------------------------------------------------------- |
-| Page title         | `--t-page-title` | 28px   | 600    | 1.1 (`--line-h-tight`) | -0.02em        | "Intelligence" workspace header                                                             |
-| Card/section title | `--t-card-title` | 16px   | 600    | 1.35                   | -0.005em       | "Signals", tab labels, dialog title                                                         |
-| Body               | `--t-body`       | 13px   | 400    | 1.5                    | 0              | Signal title in row, dialog body text                                                       |
-| Meta / secondary   | `--t-meta`       | 12px   | 400    | 1.5                    | 0              | Date, source type, dossier name under title                                                 |
-| Uppercase label    | `--t-label`      | 10.5px | 600    | —                      | 0.1em          | Column headers (SEVERITY, CATEGORY, STATUS), keyboard shortcut hints (UPPERCASE per design) |
-| Mono small         | `--t-mono-small` | 11px   | 400    | —                      | 0              | AI confidence %, sensitivity level badge, keyboard key glyph                                |
+### Sizes introduced by new Signals components
+
+The new Signals components (SignalTriageRow, SignalsToolbar, CaptureSignalForm,
+EscalateSignalDialog, DossierSignalsTab) introduce exactly **4 font sizes**, all
+existing `colors_and_type.css` tokens:
+
+| Role               | CSS Variable     | Size | Weight  | Line Height | Letter Spacing            | Usage                                                                                                                                                         |
+| ------------------ | ---------------- | ---- | ------- | ----------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Card/section title | `--t-card-title` | 16px | 600     | 1.35        | -0.005em                  | "Signals", tab labels, dialog title                                                                                                                           |
+| Body               | `--t-body`       | 13px | 400     | 1.5         | 0                         | Signal title in row, dialog body text                                                                                                                         |
+| Meta / secondary   | `--t-meta`       | 12px | 400/600 | 1.5         | 0 (body) / 0.1em (labels) | Date, source type, dossier name under title; AND column headers (SEVERITY / CATEGORY / STATUS / DATE) rendered UPPERCASE + letter-spacing 0.1em at weight 600 |
+| Mono small         | `--t-mono-small` | 11px | 400     | —           | 0                         | AI confidence % (`AI · {N}%`), keyboard key glyphs — mono-family (`--font-mono`) only                                                                         |
+
+**Column header treatment:** Column headers (SEVERITY, CATEGORY, STATUS, DATE) use
+`--t-meta` (12px) at weight 600 with `text-transform: uppercase` and `letter-spacing:
+var(--tracking-label)` (0.1em). The visual differentiation between a body meta line
+and a column header comes from UPPERCASE + letter-spacing, not from a separate font
+size. This matches the `.t-label` semantic class in `colors_and_type.css` — its styling
+is applied at `--t-meta` size; no distinct 10.5px size is needed.
+
+**Mono small rationale:** `--t-mono-small` (11px) is differentiated from `--t-meta`
+(12px) by font-family (`--font-mono` JetBrains Mono vs. Inter), not primarily by the
+1px size delta. It is reserved for elements that require tabular/monospaced rendering:
+keyboard key glyphs and AI confidence percentages. Do not use it for prose or labels.
+
+### Inherited page chrome (not introduced by this phase)
+
+The `/intelligence` page header (`"Intelligence"` h1) renders at `--t-page-title`
+(28px / weight 600 / line-height 1.1). This size belongs to the existing page shell,
+not to any new Signals component. It is listed here for reference only — the Signals
+components do not introduce a 28px title.
 
 **RTL:** Tajawal applies automatically via the `html[dir="rtl"] *` cascade. No
 `font-family` overrides needed in component code. Do not set `textAlign: right`
@@ -220,7 +243,7 @@ Differences from the existing component:
 - Assignee: optional select (not pre-filled)
 - Deadline: optional date input
 - Submit: "Escalate" (EN) / "تصعيد" (AR) — `.btn-primary`
-- Cancel: "Cancel" / "إلغاء" — `.btn-ghost`
+- Cancel: "Cancel escalation" (EN) / "إلغاء التصعيد" (AR) — `.btn-ghost`
 - On success: signal `status → escalated`; toast "Signal escalated. Work item created." (EN) / "تمت إشارة التصعيد. تم إنشاء بند العمل." (AR)
 
 ### 5. SignalDetailPanel (optional read panel — planner's call)
@@ -395,6 +418,7 @@ keyboard key glyphs.
 | **Restore action (toast)**                    | Signal dismissed. Restore?                            | تم رفض الإشارة. استعادة؟                                 |
 | **Escalate dialog title**                     | Escalate signal                                       | تصعيد الإشارة                                            |
 | **Escalate confirm**                          | Escalate                                              | تصعيد                                                    |
+| **Escalate cancel**                           | Cancel escalation                                     | إلغاء التصعيد                                            |
 | **Escalated row link**                        | View work item                                        | عرض بند العمل                                            |
 | **Empty state — global queue (all statuses)** | No signals.                                           | لا توجد إشارات.                                          |
 | **Empty state — body**                        | Capture a signal or wait for AI-surfaced items.       | سجّل إشارة أو انتظر العناصر المُكتشفة بالذكاء الاصطناعي. |
@@ -435,7 +459,7 @@ queue and the clearance-denied queue are visually and textually indistinguishabl
 There are NO hard-delete or irreversible destructive actions in this phase:
 
 - Dismiss is reversible (D-04) — no confirmation dialog required, just a 5-second toast undo
-- Escalate is irreversible but constructive (creates a task) — compact dialog with "Escalate" / "Cancel"
+- Escalate is irreversible but constructive (creates a task) — compact dialog with "Escalate" / "Cancel escalation"
 - No signal deletion in P69
 
 ---
@@ -617,6 +641,10 @@ No shadcn or third-party component registries in use. Not applicable.
 | `intelligence-signals` i18n namespace required                    | REQUIREMENTS cross-cutting + memory note  |
 | Work item terminology (Assignee, Deadline, Priority, Status)      | CLAUDE.md Work Management Glossary        |
 | `work_item_dossiers` junction for dossier link copy               | CLAUDE.md Dossier-Centric Patterns + D-11 |
+| 4 font sizes for new Signals components (checker revision r1)     | colors_and_type.css + checker feedback    |
+| `--t-label` folded into `--t-meta` + UPPERCASE treatment          | checker revision r1 — redundant size      |
+| `--t-page-title` classified as inherited page chrome              | checker revision r1 — not introduced here |
+| Cancel escalation copy (EscalateSignalDialog secondary)           | checker revision r1 — non-blocking copy   |
 
 ---
 
