@@ -137,6 +137,7 @@ import { Route as ProtectedPositionsIdVersionsRouteImport } from './routes/_prot
 import { Route as ProtectedPositionsIdApprovalsRouteImport } from './routes/_protected/positions/$id/approvals'
 import { Route as ProtectedIntakeTicketsIdRouteImport } from './routes/_protected/intake/tickets.$id'
 import { Route as ProtectedEngagementsEngagementIdTasksRouteImport } from './routes/_protected/engagements/$engagementId/tasks'
+import { Route as ProtectedEngagementsEngagementIdSignalsRouteImport } from './routes/_protected/engagements/$engagementId/signals'
 import { Route as ProtectedEngagementsEngagementIdPositionsRouteImport } from './routes/_protected/engagements/$engagementId/positions'
 import { Route as ProtectedEngagementsEngagementIdOverviewRouteImport } from './routes/_protected/engagements/$engagementId/overview'
 import { Route as ProtectedEngagementsEngagementIdDocsRouteImport } from './routes/_protected/engagements/$engagementId/docs'
@@ -869,6 +870,12 @@ const ProtectedEngagementsEngagementIdTasksRoute =
     path: '/tasks',
     getParentRoute: () => ProtectedEngagementsEngagementIdRoute,
   } as any)
+const ProtectedEngagementsEngagementIdSignalsRoute =
+  ProtectedEngagementsEngagementIdSignalsRouteImport.update({
+    id: '/signals',
+    path: '/signals',
+    getParentRoute: () => ProtectedEngagementsEngagementIdRoute,
+  } as any)
 const ProtectedEngagementsEngagementIdPositionsRoute =
   ProtectedEngagementsEngagementIdPositionsRouteImport.update({
     id: '/positions',
@@ -1484,6 +1491,7 @@ export interface FileRoutesByFullPath {
   '/engagements/$engagementId/docs': typeof ProtectedEngagementsEngagementIdDocsRoute
   '/engagements/$engagementId/overview': typeof ProtectedEngagementsEngagementIdOverviewRoute
   '/engagements/$engagementId/positions': typeof ProtectedEngagementsEngagementIdPositionsRoute
+  '/engagements/$engagementId/signals': typeof ProtectedEngagementsEngagementIdSignalsRoute
   '/engagements/$engagementId/tasks': typeof ProtectedEngagementsEngagementIdTasksRoute
   '/intake/tickets/$id': typeof ProtectedIntakeTicketsIdRoute
   '/positions/$id/approvals': typeof ProtectedPositionsIdApprovalsRoute
@@ -1684,6 +1692,7 @@ export interface FileRoutesByTo {
   '/engagements/$engagementId/docs': typeof ProtectedEngagementsEngagementIdDocsRoute
   '/engagements/$engagementId/overview': typeof ProtectedEngagementsEngagementIdOverviewRoute
   '/engagements/$engagementId/positions': typeof ProtectedEngagementsEngagementIdPositionsRoute
+  '/engagements/$engagementId/signals': typeof ProtectedEngagementsEngagementIdSignalsRoute
   '/engagements/$engagementId/tasks': typeof ProtectedEngagementsEngagementIdTasksRoute
   '/intake/tickets/$id': typeof ProtectedIntakeTicketsIdRoute
   '/positions/$id/approvals': typeof ProtectedPositionsIdApprovalsRoute
@@ -1900,6 +1909,7 @@ export interface FileRoutesById {
   '/_protected/engagements/$engagementId/docs': typeof ProtectedEngagementsEngagementIdDocsRoute
   '/_protected/engagements/$engagementId/overview': typeof ProtectedEngagementsEngagementIdOverviewRoute
   '/_protected/engagements/$engagementId/positions': typeof ProtectedEngagementsEngagementIdPositionsRoute
+  '/_protected/engagements/$engagementId/signals': typeof ProtectedEngagementsEngagementIdSignalsRoute
   '/_protected/engagements/$engagementId/tasks': typeof ProtectedEngagementsEngagementIdTasksRoute
   '/_protected/intake/tickets/$id': typeof ProtectedIntakeTicketsIdRoute
   '/_protected/positions/$id/approvals': typeof ProtectedPositionsIdApprovalsRoute
@@ -2116,6 +2126,7 @@ export interface FileRouteTypes {
     | '/engagements/$engagementId/docs'
     | '/engagements/$engagementId/overview'
     | '/engagements/$engagementId/positions'
+    | '/engagements/$engagementId/signals'
     | '/engagements/$engagementId/tasks'
     | '/intake/tickets/$id'
     | '/positions/$id/approvals'
@@ -2316,6 +2327,7 @@ export interface FileRouteTypes {
     | '/engagements/$engagementId/docs'
     | '/engagements/$engagementId/overview'
     | '/engagements/$engagementId/positions'
+    | '/engagements/$engagementId/signals'
     | '/engagements/$engagementId/tasks'
     | '/intake/tickets/$id'
     | '/positions/$id/approvals'
@@ -2531,6 +2543,7 @@ export interface FileRouteTypes {
     | '/_protected/engagements/$engagementId/docs'
     | '/_protected/engagements/$engagementId/overview'
     | '/_protected/engagements/$engagementId/positions'
+    | '/_protected/engagements/$engagementId/signals'
     | '/_protected/engagements/$engagementId/tasks'
     | '/_protected/intake/tickets/$id'
     | '/_protected/positions/$id/approvals'
@@ -3514,6 +3527,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedEngagementsEngagementIdTasksRouteImport
       parentRoute: typeof ProtectedEngagementsEngagementIdRoute
     }
+    '/_protected/engagements/$engagementId/signals': {
+      id: '/_protected/engagements/$engagementId/signals'
+      path: '/signals'
+      fullPath: '/engagements/$engagementId/signals'
+      preLoaderRoute: typeof ProtectedEngagementsEngagementIdSignalsRouteImport
+      parentRoute: typeof ProtectedEngagementsEngagementIdRoute
+    }
     '/_protected/engagements/$engagementId/positions': {
       id: '/_protected/engagements/$engagementId/positions'
       path: '/positions'
@@ -4160,6 +4180,7 @@ interface ProtectedEngagementsEngagementIdRouteChildren {
   ProtectedEngagementsEngagementIdDocsRoute: typeof ProtectedEngagementsEngagementIdDocsRoute
   ProtectedEngagementsEngagementIdOverviewRoute: typeof ProtectedEngagementsEngagementIdOverviewRoute
   ProtectedEngagementsEngagementIdPositionsRoute: typeof ProtectedEngagementsEngagementIdPositionsRoute
+  ProtectedEngagementsEngagementIdSignalsRoute: typeof ProtectedEngagementsEngagementIdSignalsRoute
   ProtectedEngagementsEngagementIdTasksRoute: typeof ProtectedEngagementsEngagementIdTasksRoute
   ProtectedEngagementsEngagementIdIndexRoute: typeof ProtectedEngagementsEngagementIdIndexRoute
 }
@@ -4174,6 +4195,7 @@ const ProtectedEngagementsEngagementIdRouteChildren: ProtectedEngagementsEngagem
     ProtectedEngagementsEngagementIdDocsRoute: ProtectedEngagementsEngagementIdDocsRoute,
     ProtectedEngagementsEngagementIdOverviewRoute: ProtectedEngagementsEngagementIdOverviewRoute,
     ProtectedEngagementsEngagementIdPositionsRoute: ProtectedEngagementsEngagementIdPositionsRoute,
+    ProtectedEngagementsEngagementIdSignalsRoute: ProtectedEngagementsEngagementIdSignalsRoute,
     ProtectedEngagementsEngagementIdTasksRoute: ProtectedEngagementsEngagementIdTasksRoute,
     ProtectedEngagementsEngagementIdIndexRoute: ProtectedEngagementsEngagementIdIndexRoute,
   }
