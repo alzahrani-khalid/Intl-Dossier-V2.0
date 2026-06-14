@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: executing
-last_updated: '2026-06-14T16:00:38.890Z'
+last_updated: '2026-06-14T16:15:58.351Z'
 last_activity: 2026-06-14
 progress:
   total_phases: 7
   completed_phases: 1
   total_plans: 12
-  completed_plans: 10
+  completed_plans: 11
   percent: 14
 ---
 
@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 ## Current Position
 
 Phase: 69 (signals) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-06-14
 
@@ -100,6 +100,8 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase ?]: 69-02: Signals data hooks complete — useSignals (read_signals INVOKER RPC), useCreateSignal/useUpdateSignalStatus (caller-JWT intelligence_event CRUD; D-13 ai_generated on same insert+RLS), useSignalEscalate (tasks-create→work-item-dossiers→escalate)
 - [Phase ?]: 69-02: organization_id for signal INSERT resolved from users.default_organization_id (NOT NULL; INSERT RLS requires tenant membership via tenant_isolation.rls_insert_policy)
 - [Phase ?]: 69-02: escalation work_item_type='task' as const; Step 2 dossier-link copy warn-only, Step 3 escalate+escalated_task_id throws (bidirectional link is the contract)
+- [Phase ?]: Phase 69 (69-03): triage UI shipped — useSignalKeyboardTriage (container-ref j/k/a/d/e), SignalsQueue one-component global+per-dossier (D-01), CaptureSignalForm drawer, IntelligencePage Reports|Signals tab (reports untouched)
+- [Phase ?]: Phase 69 (69-03): soft semantic backgrounds use arbitrary bg-[var(--info-soft)]/--warn-soft/--danger-soft — those -soft variants are NOT @theme utilities (only text-info/text-warning/text-danger + bg-line-soft/bg-accent-soft are mapped); the plain bg-\*-soft classes render no background and lint won't catch it
 
 ### Open Todos
 

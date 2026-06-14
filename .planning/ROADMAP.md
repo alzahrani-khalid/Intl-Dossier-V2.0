@@ -271,7 +271,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
-- [ ] 69-03-PLAN.md — Triage queue UI: keyboard hook, SignalRow, SignalsQueue, CaptureSignalForm, IntelligencePage tab extension
+- [x] 69-03-PLAN.md — Triage queue UI: keyboard hook, SignalRow, SignalsQueue, CaptureSignalForm, IntelligencePage tab extension
 
 **Wave 4** _(blocked on Wave 3 completion)_
 
@@ -382,7 +382,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
 | 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
 | 68. AI Foundations Remediation | v7.0 | 8/8 | Complete    | 2026-06-14 |
-| 69. Signals | v7.0 | 2/4 | In Progress|  |
+| 69. Signals | v7.0 | 3/4 | In Progress|  |
 | 70. Digests + Alerts | v7.0 | 0/? | Not started | - |
 | 71. Analytic Graph | v7.0 | 0/? | Not started | - |
 | 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 0/? | Not started | - |
