@@ -70,7 +70,11 @@
     "severityLabel": "Severity",
     "categoryLabel": "Category",
     "sensitivityLabel": "Sensitivity level",
-    "dossiersLabel": "Linked dossiers"
+    "dossiersLabel": "Linked dossiers",
+    "assigneeLabel": "Assignee",
+    "assigneePlaceholder": "Assignee user ID",
+    "assigneeRequired": "Assignee required — defaults to you if left blank.",
+    "deadlineLabel": "Deadline"
   },
   "badge": {
     "aiConfidence": "AI · {{n}}%",

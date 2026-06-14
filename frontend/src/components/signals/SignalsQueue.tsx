@@ -26,6 +26,7 @@ import {
 } from '@/domains/signals'
 import { SignalRow } from './SignalRow'
 import { CaptureSignalForm } from './CaptureSignalForm'
+import { EscalateSignalDialog } from './EscalateSignalDialog'
 
 interface SignalsQueueProps {
   dossierId?: string
@@ -160,8 +161,14 @@ export function SignalsQueue({ dossierId }: SignalsQueueProps): React.ReactEleme
         </ul>
       )}
 
-      {/* Escalate dialog placeholder — Wave 4 wires the real EscalateSignalDialog here */}
-      {escalateTarget !== null && <div data-escalate-target={escalateTarget.id} hidden />}
+      {/* Escalate dialog — pre-filled from the focused signal (D-10). The hook's
+          Step 3 flips status='escalated', so onSuccess only closes the dialog. */}
+      <EscalateSignalDialog
+        signal={escalateTarget}
+        isOpen={escalateTarget !== null}
+        onClose={() => setEscalateTarget(null)}
+        onSuccess={() => setEscalateTarget(null)}
+      />
 
       {/* Capture drawer */}
       <CaptureSignalForm isOpen={captureOpen} onClose={() => setCaptureOpen(false)} />

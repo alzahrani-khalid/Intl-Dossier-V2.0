@@ -70,7 +70,11 @@
     "severityLabel": "الخطورة",
     "categoryLabel": "الفئة",
     "sensitivityLabel": "مستوى الحساسية",
-    "dossiersLabel": "الملفات المرتبطة"
+    "dossiersLabel": "الملفات المرتبطة",
+    "assigneeLabel": "المُكلَّف",
+    "assigneePlaceholder": "معرّف المستخدم المُكلَّف",
+    "assigneeRequired": "المُكلَّف مطلوب — يُسنَد إليك إن تُرك فارغًا.",
+    "deadlineLabel": "الموعد النهائي"
   },
   "badge": {
     "aiConfidence": "ذكاء اصطناعي · {{n}}%",
