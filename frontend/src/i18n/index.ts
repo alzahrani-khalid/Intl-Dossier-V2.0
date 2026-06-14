@@ -249,6 +249,9 @@ import enOrganizations from './en/organizations.json'
 import arOrganizations from './ar/organizations.json'
 import enTopics from './en/topics.json'
 import arTopics from './ar/topics.json'
+// Phase 69: intelligence-signals namespace
+import enIntelligenceSignals from './en/intelligence-signals.json'
+import arIntelligenceSignals from './ar/intelligence-signals.json'
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -380,6 +383,8 @@ const resources = {
     countries: enCountries,
     organizations: enOrganizations,
     topics: enTopics,
+    // Phase 69
+    'intelligence-signals': enIntelligenceSignals,
   },
   ar: {
     translation: arCommon,
@@ -507,6 +512,8 @@ const resources = {
     countries: arCountries,
     organizations: arOrganizations,
     topics: arTopics,
+    // Phase 69
+    'intelligence-signals': arIntelligenceSignals,
   },
 }
 

@@ -1,0 +1,83 @@
+{
+  "tab": {
+    "label": "Signals"
+  },
+  "queue": {
+    "emptyState": {
+      "heading": "No signals.",
+      "body": "Capture a signal or wait for AI-surfaced items."
+    },
+    "emptyDossier": "No signals for this dossier.",
+    "emptyDismissed": "No dismissed signals.",
+    "emptyEscalated": "No escalated signals.",
+    "errorState": "Signals could not be loaded. Refresh to try again.",
+    "loading": "Loading signals…",
+    "count_one": "{{count}} signal",
+    "count_other": "{{count}} signals"
+  },
+  "filters": {
+    "all": "All",
+    "new": "New",
+    "acknowledged": "Acknowledged",
+    "dismissed": "Dismissed",
+    "escalated": "Escalated"
+  },
+  "actions": {
+    "capture": "Capture signal",
+    "acknowledge": "Acknowledge",
+    "dismiss": "Dismiss",
+    "escalate": "Escalate",
+    "restore": "Restore",
+    "viewWorkItem": "View work item"
+  },
+  "status": {
+    "new": "New",
+    "acknowledged": "Acknowledged",
+    "dismissed": "Dismissed",
+    "escalated": "Escalated"
+  },
+  "category": {
+    "political": "Political",
+    "economic": "Economic",
+    "security": "Security",
+    "diplomatic": "Diplomatic",
+    "other": "Other"
+  },
+  "toast": {
+    "dismissed": "Signal dismissed.",
+    "restoreAction": "Signal dismissed. Restore?",
+    "restored": "Signal restored.",
+    "escalateSuccess": "Signal escalated. Work item created."
+  },
+  "dialog": {
+    "escalateTitle": "Escalate signal",
+    "escalateDesc": "Create a work item from this signal",
+    "cancelEscalation": "Cancel escalation",
+    "captureTitle": "Capture signal",
+    "discardSignal": "Discard signal"
+  },
+  "form": {
+    "titleLabel": "Title",
+    "titlePlaceholder": "Signal title",
+    "bodyLabel": "Body",
+    "bodyPlaceholder": "Describe the signal…",
+    "severityLabel": "Severity",
+    "categoryLabel": "Category",
+    "sensitivityLabel": "Sensitivity level",
+    "dossiersLabel": "Linked dossiers"
+  },
+  "badge": {
+    "aiConfidence": "AI · {{n}}%",
+    "aiConfidenceAria": "AI generated, {{n}}% confidence",
+    "sensitivity": "L{{n}}"
+  },
+  "keyboard": {
+    "hint": "J/K navigate · A acknowledge · D dismiss · E escalate"
+  },
+  "columns": {
+    "severity": "SEVERITY",
+    "category": "CATEGORY",
+    "status": "STATUS",
+    "date": "DATE"
+  }
+}

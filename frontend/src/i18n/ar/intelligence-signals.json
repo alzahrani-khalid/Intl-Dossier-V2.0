@@ -1,0 +1,83 @@
+{
+  "tab": {
+    "label": "الإشارات"
+  },
+  "queue": {
+    "emptyState": {
+      "heading": "لا توجد إشارات.",
+      "body": "سجّل إشارة أو انتظر العناصر المُكتشفة بالذكاء الاصطناعي."
+    },
+    "emptyDossier": "لا توجد إشارات لهذا الملف.",
+    "emptyDismissed": "لا توجد إشارات مرفوضة.",
+    "emptyEscalated": "لا توجد إشارات تم تصعيدها.",
+    "errorState": "تعذّر تحميل الإشارات. أعد التحميل للمحاولة مرة أخرى.",
+    "loading": "جارٍ تحميل الإشارات…",
+    "count_one": "إشارة واحدة",
+    "count_other": "{{count}} إشارة"
+  },
+  "filters": {
+    "all": "الكل",
+    "new": "جديدة",
+    "acknowledged": "مُستلمة",
+    "dismissed": "مُهملة",
+    "escalated": "مُصعَّدة"
+  },
+  "actions": {
+    "capture": "تسجيل الإشارة",
+    "acknowledge": "إقرار",
+    "dismiss": "رفض",
+    "escalate": "تصعيد",
+    "restore": "استعادة",
+    "viewWorkItem": "عرض بند العمل"
+  },
+  "status": {
+    "new": "جديدة",
+    "acknowledged": "مُستلمة",
+    "dismissed": "مُهملة",
+    "escalated": "مُصعَّدة"
+  },
+  "category": {
+    "political": "سياسي",
+    "economic": "اقتصادي",
+    "security": "أمني",
+    "diplomatic": "دبلوماسي",
+    "other": "أخرى"
+  },
+  "toast": {
+    "dismissed": "تم رفض الإشارة.",
+    "restoreAction": "تم رفض الإشارة. استعادة؟",
+    "restored": "تمت استعادة الإشارة.",
+    "escalateSuccess": "تمت إشارة التصعيد. تم إنشاء بند العمل."
+  },
+  "dialog": {
+    "escalateTitle": "تصعيد الإشارة",
+    "escalateDesc": "إنشاء بند عمل من هذه الإشارة",
+    "cancelEscalation": "إلغاء التصعيد",
+    "captureTitle": "تسجيل الإشارة",
+    "discardSignal": "تجاهل الإشارة"
+  },
+  "form": {
+    "titleLabel": "العنوان",
+    "titlePlaceholder": "عنوان الإشارة",
+    "bodyLabel": "النص",
+    "bodyPlaceholder": "صِف الإشارة…",
+    "severityLabel": "الخطورة",
+    "categoryLabel": "الفئة",
+    "sensitivityLabel": "مستوى الحساسية",
+    "dossiersLabel": "الملفات المرتبطة"
+  },
+  "badge": {
+    "aiConfidence": "ذكاء اصطناعي · {{n}}%",
+    "aiConfidenceAria": "ذكاء اصطناعي، ثقة {{n}}%",
+    "sensitivity": "م{{n}}"
+  },
+  "keyboard": {
+    "hint": "ي/ك للتنقل · أ للإقرار · م للرفض · ت للتصعيد"
+  },
+  "columns": {
+    "severity": "الخطورة",
+    "category": "الفئة",
+    "status": "الحالة",
+    "date": "التاريخ"
+  }
+}
