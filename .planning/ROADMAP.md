@@ -218,8 +218,18 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 3. All clearance checks key off `profiles.clearance_level` (1–4) as the single canonical scale — verified by confirming the prior 1–3 function and `low/medium/high` sensitivity string variants are reconciled without breaking existing RLS policies on staging.
 4. A new embedding write stores vectors at native 1024-dim with no pad/truncate applied — verified by inserting a test document and asserting `array_length(embedding, 1) = 1024` in the DB.
 5. An operator can trace a complete AI request (prompt → model → response) end-to-end in self-hosted Langfuse or Arize Phoenix, with zero network egress to external telemetry endpoints.
-   **Plans**: TBD
-   **UI hint**: no
+   **Plans**: 8 plans
+   Plans:
+
+- [ ] 68-01-PLAN.md — Wave-0 test stubs + live A1-A6 DB introspection
+- [ ] 68-02-PLAN.md — REMED-01: clearance compat shim migration + staging apply
+- [ ] 68-03-PLAN.md — REMED-02: search_semantic_clearance_gated INVOKER RPC + edge-fn repoint
+- [ ] 68-04-PLAN.md — REMED-03: chat-assistant supabaseAdmin retirement + D-10 repoints
+- [ ] 68-05-PLAN.md — REMED-04: native-1024 embedding write path (storeEmbedding)
+- [ ] 68-06-PLAN.md — REMED-05: Langfuse + Phoenix docker-compose + OTel wiring
+- [ ] 68-07-PLAN.md — REMED-06: i18n namespace guard (check-i18n-namespaces.mjs + lint integration)
+- [ ] 68-08-PLAN.md — [BLOCKING] Full test suite + live UAT clearance-block verification
+      **UI hint**: no
 
 ---
 
