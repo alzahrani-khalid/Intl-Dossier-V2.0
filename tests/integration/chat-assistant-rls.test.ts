@@ -21,11 +21,14 @@ const repoRoot = path.resolve(here, '..', '..')
 const chatAssistantPath = path.join(repoRoot, 'backend', 'src', 'ai', 'agents', 'chat-assistant.ts')
 
 describe('REMED-03: chat-assistant has no supabaseAdmin', () => {
-  it('backend/src/ai/agents/ contains no supabaseAdmin reference', () => {
+  // Scope: REMED-03 / D-08 retires supabaseAdmin from the INTERACTIVE assistant
+  // (chat-assistant.ts). brief-generator.ts and intake-linker.ts are separate
+  // background agents and are out of scope for this phase (tracked as a follow-up).
+  it('chat-assistant.ts contains no supabaseAdmin reference', () => {
     let found = true
     try {
-      // grep -r exits 0 when a match is found, 1 when none. We want NO matches.
-      execSync('grep -r "supabaseAdmin" backend/src/ai/agents/', {
+      // grep exits 0 when a match is found, 1 when none. We want NO matches.
+      execSync('grep "supabaseAdmin" backend/src/ai/agents/chat-assistant.ts', {
         cwd: repoRoot,
         stdio: 'pipe',
       })
@@ -34,7 +37,7 @@ describe('REMED-03: chat-assistant has no supabaseAdmin', () => {
     }
     expect(
       found,
-      'supabaseAdmin is still present under backend/src/ai/agents/ (RED until plan 68-04)',
+      'supabaseAdmin is still present in chat-assistant.ts (RED until plan 68-04)',
     ).toBe(false)
   })
 
