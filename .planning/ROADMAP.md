@@ -195,7 +195,7 @@ Full details: [v6.6-ROADMAP.md](milestones/v6.6-ROADMAP.md)
 **Parallel infra track (begins Phase 68, lands by Phase 72):** vLLM + Gemma 4 12B + TEI (bge-m3 + bge-reranker) + Langfuse + Arize Phoenix — zero telemetry egress.
 
 - [x] **Phase 68: AI Foundations Remediation** - One canonical clearance scale; no corrupted embeddings; the interactive AI path honors RLS (completed 2026-06-14)
-- [ ] **Phase 69: Signals** - Analysts capture and triage signals tied to dossiers; the agent can read them
+- [x] **Phase 69: Signals** - Analysts capture and triage signals tied to dossiers; the agent can read them (completed 2026-06-14)
 - [ ] **Phase 70: Digests + Alerts** - Recurring digests and threshold alerts reach subscribers across channels
 - [ ] **Phase 71: Analytic Graph** - First-class analytic queries over the relationship graph, clearance-gated
 - [ ] **Phase 72: Agent Platform — Runtime, Retrieval, Reads** - The on-prem agent goes live reading P69–71 data under the JWT keystone
@@ -275,7 +275,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 
 **Wave 4** _(blocked on Wave 3 completion)_
 
-- [ ] 69-04-PLAN.md — EscalateSignalDialog + DossierSignalsTab wiring + Phase Gate UAT (all 6 SIGNAL scenarios)
+- [x] 69-04-PLAN.md — EscalateSignalDialog + DossierSignalsTab wiring + Phase Gate UAT (all 6 SIGNAL scenarios)
       **UI hint**: yes
 
 ---
@@ -382,7 +382,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
 | 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
 | 68. AI Foundations Remediation | v7.0 | 8/8 | Complete    | 2026-06-14 |
-| 69. Signals | v7.0 | 3/4 | In Progress|  |
+| 69. Signals | v7.0 | 4/4 | Complete   | 2026-06-14 |
 | 70. Digests + Alerts | v7.0 | 0/? | Not started | - |
 | 71. Analytic Graph | v7.0 | 0/? | Not started | - |
 | 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 0/? | Not started | - |

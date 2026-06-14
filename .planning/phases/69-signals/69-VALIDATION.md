@@ -1,15 +1,23 @@
 ---
 phase: 69
 slug: signals
-status: draft
+status: executed
 nyquist_compliant: false
-wave_0_complete: false
+wave_0_complete: true
 created: 2026-06-14
 ---
 
 # Phase 69 — Validation Strategy
 
 > Per-phase validation contract for feedback sampling during execution.
+>
+> **Execution status (2026-06-14):** Wave 0 closed (migration applied live + i18n + types).
+> Data-layer / agent-tool rows **VERIFIED LIVE** on staging via Supabase MCP impersonation —
+> SIGNAL-06 (`read_signals` clearance + per-dossier, no 42804) and the SIGNAL-02/04 clearance
+> core (above-clearance hidden) pass; a critical `profiles.id`→`user_id` RLS bug was caught
+> here and fixed. UI rows (SIGNAL-01 create, SIGNAL-03 keyboard-AR triage, SIGNAL-05
+> escalate→Kanban) are build-green and **pending the user's live spot-check** (finalize-now
+> decision) — `nyquist_compliant` stays false until those are confirmed live.
 > Derived from `69-RESEARCH.md` → "## Validation Architecture". Task IDs are
 > assigned by the planner; rows below are requirement-keyed until plans exist.
 
