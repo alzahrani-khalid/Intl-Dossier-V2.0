@@ -36,6 +36,9 @@ const BASE_DOSSIER_TABS: DossierTabConfig[] = [
   { key: 'docs', labelKey: 'tabs.docs', path: 'docs' },
   { key: 'tasks', labelKey: 'tabs.tasks', path: 'tasks' },
   { key: 'timeline', labelKey: 'tabs.timeline', path: 'timeline' },
+  // Phase 69: per-dossier Signals tab (the same SignalsQueue, filtered by dossierId).
+  // Mounted via a /$id/signals child route on every DossierShell type.
+  { key: 'signals', labelKey: 'tabs.signals', path: 'signals' },
   // 'audit' is intentionally absent: every dossier audit route is a coming-soon
   // stub (no dossier-scoped audit reader exists). Re-add here or via extraTabs
   // once a real reader lands. The /$id/audit routes stay mounted for direct URLs.
