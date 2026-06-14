@@ -227,7 +227,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
-- [ ] 68-02-PLAN.md — REMED-01: clearance compat shim migration + staging apply
+- [x] 68-02-PLAN.md — REMED-01: clearance compat shim migration + staging apply
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
@@ -365,7 +365,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 55-59 | v6.4 | 20/20 | Shipped | 2026-05-27 |
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
 | 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
-| 68. AI Foundations Remediation | v7.0 | 1/8 | In Progress|  |
+| 68. AI Foundations Remediation | v7.0 | 2/8 | In Progress|  |
 | 69. Signals | v7.0 | 0/? | Not started | - |
 | 70. Digests + Alerts | v7.0 | 0/? | Not started | - |
 | 71. Analytic Graph | v7.0 | 0/? | Not started | - |
