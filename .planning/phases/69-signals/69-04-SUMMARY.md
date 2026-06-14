@@ -91,9 +91,19 @@ Exact reproduction steps for these three are in the checkpoint return (seed via 
 
 - `pnpm --filter intake-frontend type-check` exit 0 · `lint` (`--max-warnings 0` + i18n namespace guard) exit 0 · `build` (vite) exit 0 across all three commits.
 
+## Post-review fixes (advisory code-review gate)
+
+Code review: **0 CRITICAL / 0 HIGH**; security + RLS clean (caller-JWT only, INVOKER, clearance ceiling on INSERT, `user_id` fix confirmed). Two MEDIUM items fixed before close (`ab240490`):
+
+1. **SIGNAL-05 dossier-link gap** — `SignalsQueue` never passed `dossierIds` to `EscalateSignalDialog`, so `useSignalEscalate` Step 2 was always skipped and escalated tasks got **zero** dossier links (would fail the SIGNAL-05 spot-check). Fixed: new `useSignalDossierLinks(signalId)` reads `intelligence_event_dossiers` under the caller JWT (RLS clearance-safe by construction) and feeds the IDs into the escalate call.
+2. **Double-submit guard** — `useSignalKeyboardTriage` gained an `enabled` flag; `SignalsQueue` passes `enabled={escalateTarget === null}` so `e`/`a`/`d`/`j`/`k` go quiet while the escalate dialog is open.
+
+Two LOW items → backlog (documented tradeoffs): (a) the non-transactional 3-step escalate can orphan a created task if Step 3 fails — needs a retry-with-existing-taskId recovery path; (b) `useSignalKeyboardTriage` action branches read `signals[focusedIndex]` from closure (correct today via the dep array, but asymmetric with the `j/k` functional form).
+
 ## Commits
 
 - `2f10556a` feat(69-04): EscalateSignalDialog wired into SignalsQueue
 - `fa3e59c3` feat(69-04): per-dossier Signals tab on all 7 DossierShell types
 - `262b93ce` feat(69-04): wire engagement Signals tab (8th dossier type, workspace nav)
 - `fcd4e412` fix(69-01): clearance subquery profiles.id → profiles.user_id (RLS was blocking all signal reads)
+- `ab240490` fix(69-04): copy signal dossier links onto escalated task + guard double-submit
