@@ -4,8 +4,8 @@
  * TanStack Query hook over the SECURITY INVOKER `read_signals` RPC. The RPC runs
  * under the caller's JWT, so clearance gating (sensitivity_level <= clearance_level)
  * is enforced at the DB layer — non-cleared callers receive an empty result that is
- * indistinguishable from a zero-signal state (D-09). Never call this with
- * supabaseAdmin; the @/lib/supabase client passes the active session automatically.
+ * indistinguishable from a zero-signal state (D-09). Never call this with the
+ * service-role client; the @/lib/supabase client passes the active session automatically.
  *
  * @module domains/signals/hooks/useSignals
  */
