@@ -259,8 +259,24 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 3. A user can triage a signal (acknowledge / dismiss / escalate) using only the keyboard from the RTL-safe triage surface — verified live in Arabic mode.
 4. A user can escalate a signal into a tracked work item and see the work item in the Kanban board — verified live on staging (seed → escalate → observe in Tasks).
 5. The agent's `read_signals` tool returns only signals at or below the caller's clearance, and returns the correct result when a cleared user queries signals on a specific dossier — verified via live tool invocation against staging.
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 4 plans
+
+**Wave 1** (baseline)
+
+- [ ] 69-01-PLAN.md — Migration + Supabase MCP apply + i18n namespace + base types
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [ ] 69-02-PLAN.md — Data hooks: useSignals (read_signals RPC), useSignalMutations, useSignalEscalate
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
+- [ ] 69-03-PLAN.md — Triage queue UI: keyboard hook, SignalRow, SignalsQueue, CaptureSignalForm, IntelligencePage tab extension
+
+**Wave 4** _(blocked on Wave 3 completion)_
+
+- [ ] 69-04-PLAN.md — EscalateSignalDialog + DossierSignalsTab wiring + Phase Gate UAT (all 6 SIGNAL scenarios)
+      **UI hint**: yes
 
 ---
 
