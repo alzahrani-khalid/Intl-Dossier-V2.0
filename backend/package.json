@@ -23,6 +23,9 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.98.0",
     "@mastra/core": "^1.36.0",
+    "@opentelemetry/auto-instrumentations-node": "0.77.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "0.219.0",
+    "@opentelemetry/sdk-node": "0.219.0",
     "@sentry/node": "^10.53.1",
     "@supabase/supabase-js": "^2.100.1",
     "@types/bcrypt": "^6.0.0",

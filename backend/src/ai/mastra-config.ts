@@ -1,4 +1,7 @@
 import { Mastra } from '@mastra/core'
+import { NodeSDK } from '@opentelemetry/sdk-node'
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc'
+import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node'
 import { aiConfig, AIProvider } from './config.js'
 import logger from '../utils/logger.js'
 
@@ -36,7 +39,31 @@ class MastraRegistry {
     this.initializeMastra()
   }
 
+  private initializeTelemetry(): void {
+    // P68 REMED-05: export traces to the self-hosted Phoenix collector over OTLP
+    // gRPC (phoenix:4317) — zero external egress. NodeSDK is used instead of
+    // Mastra-native telemetry because @mastra/core 1.36 exposes no obvious OTLP
+    // config key; NodeSDK registers the global tracer and auto-instruments
+    // HTTP/Express so a full chat request (prompt -> model -> response) is
+    // captured. Guarded so a missing/unreachable collector never blocks startup.
+    try {
+      const traceExporter = new OTLPTraceExporter({
+        url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT ?? 'http://phoenix:4317',
+      })
+      const sdk = new NodeSDK({
+        serviceName: 'intl-dossier-ai',
+        traceExporter,
+        instrumentations: [getNodeAutoInstrumentations()],
+      })
+      sdk.start()
+      logger.info('OTel telemetry initialized -> Phoenix (OTLP gRPC)')
+    } catch (error) {
+      logger.warn('OTel telemetry init failed; continuing without tracing', { error })
+    }
+  }
+
   private initializeMastra(): void {
+    this.initializeTelemetry()
     try {
       this.mastra = new Mastra({})
       logger.info('Mastra initialized successfully')
