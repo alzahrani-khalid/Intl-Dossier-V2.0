@@ -870,25 +870,28 @@ This approach handles array-form without AST complexity and is readable for futu
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **`embedding_owner_type` enum values**
+Items A2, A3, A4, and A6 below were unresolved at research time and are deferred to Wave-0 live introspection (plan 01 Task 1). They will be confirmed via Supabase MCP `execute_sql` before the dependent implementation tasks run. Results are recorded in `68-01-SUMMARY.md`.
+
+1. **`embedding_owner_type` enum values** (A6)
    - What we know: `ai_embeddings.owner_type` is `USER-DEFINED` type `embedding_owner_type`.
    - What's unclear: What values does this enum include? Are 'dossier', 'position', 'brief' all present?
-   - Recommendation: Query `SELECT enum_range(NULL::embedding_owner_type)` in Wave 0 before writing to `ai_embeddings`.
+   - **RESOLVED via Wave-0 introspection in plan 01 Task 1** (query `SELECT enum_range(NULL::embedding_owner_type)` before plan 03/05 write tasks). Result recorded in 68-01-SUMMARY.md.
 
-2. **`aa_commitments` full schema**
+2. **`aa_commitments` full schema** (A2)
    - What we know: It's the canonical commitments table (confirmed from prior fixes).
    - What's unclear: Exact column list for the rewritten `queryCommitments()` select.
-   - Recommendation: Query live: `SELECT column_name FROM information_schema.columns WHERE table_name='aa_commitments'` before coding D-10.
+   - **RESOLVED via Wave-0 introspection in plan 01 Task 1** (query `SELECT column_name FROM information_schema.columns WHERE table_name='aa_commitments'` before plan 04 coding). Result recorded in 68-01-SUMMARY.md.
 
-3. **`engagement_dossiers` column list for D-10**
+3. **`engagement_dossiers` column list for D-10** (A3)
    - Similar to above — query live before coding.
+   - **RESOLVED via Wave-0 introspection in plan 01 Task 1** (query `SELECT column_name FROM information_schema.columns WHERE table_name='engagement_dossiers'` before plan 04 coding). Result recorded in 68-01-SUMMARY.md.
 
-4. **Langfuse + Mastra integration depth**
+4. **Langfuse + Mastra integration depth** — not an Assumption item; not a Wave-0 blocker.
    - What we know: Mastra `@mastra/core` accepts a `telemetry` config.
    - What's unclear: Whether the current `@mastra/core` version in the repo supports OTLP export natively or requires `openllmetry` SDK wrapping.
-   - Recommendation: `cat backend/package.json | grep mastra` and check version; then consult Mastra docs for OTel config.
+   - **RESOLVED via Wave-0 introspection in plan 01 Task 1** (query `cat backend/package.json | grep mastra` and check version against Mastra OTel docs). Result recorded in 68-01-SUMMARY.md.
 
 ---
 
