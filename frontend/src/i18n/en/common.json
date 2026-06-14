@@ -370,6 +370,9 @@
   },
   "intelligence": {
     "report": "Report",
+    "tabs": {
+      "reports": "Reports"
+    },
     "analysisType": "Analysis Type",
     "confidence": "Confidence",
     "classification": "Classification",

@@ -370,6 +370,9 @@
   },
   "intelligence": {
     "report": "التقرير",
+    "tabs": {
+      "reports": "التقارير"
+    },
     "analysisType": "نوع التحليل",
     "confidence": "الثقة",
     "classification": "التصنيف",
