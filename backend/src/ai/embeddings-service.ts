@@ -15,7 +15,9 @@
  * - OPENAI_API_KEY: Direct OpenAI fallback
  */
 
+import crypto from 'node:crypto'
 import { redis } from '../config/redis.js'
+import { supabaseAdmin } from '../config/supabase.js'
 import { aiConfig } from './config.js'
 import logger from '../utils/logger.js'
 
@@ -530,6 +532,36 @@ class EmbeddingsService {
     }
 
     return status
+  }
+
+  /**
+   * P68 REMED-04: store a content embedding in ai_embeddings at native 1024-dim.
+   * The dimension is asserted (no pad/truncate), so a wrong-size vector fails
+   * loudly instead of silently corrupting the store. Idempotent on
+   * (owner_type, owner_id, model). Backend write under service role — these are
+   * content embeddings, not user-facing data reads.
+   */
+  async storeEmbedding(ownerId: string, ownerType: string, content: string): Promise<void> {
+    const { embedding } = await this.embed(content)
+    if (embedding.length !== 1024) {
+      throw new Error(`Expected 1024-dim embedding, got ${embedding.length}`)
+    }
+    const contentHash = '\\x' + crypto.createHash('sha256').update(content).digest('hex')
+    const { error } = await supabaseAdmin.from('ai_embeddings').upsert(
+      {
+        owner_type: ownerType,
+        owner_id: ownerId,
+        content_hash: contentHash,
+        embedding: `[${embedding.join(',')}]`,
+        model: this.modelName,
+        model_version: '1.0',
+        embedding_dim: embedding.length,
+      },
+      { onConflict: 'owner_type,owner_id,model' },
+    )
+    if (error) {
+      throw new Error(`Failed to store embedding: ${error.message}`)
+    }
   }
 }
 
