@@ -69,8 +69,8 @@ _Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
 
 ## Wave 0 Requirements
 
-- [ ] `frontend/src/i18n/en/signals.json` — full key set, created **before** any component references the `signals` namespace
-- [ ] `frontend/src/i18n/ar/signals.json` — full Arabic translation (status values: جديدة / مُستلمة / مُهملة / مُصعَّدة), registered in **both** `resources.en` and `resources.ar` of `frontend/src/i18n/index.ts`
+- [ ] `frontend/src/i18n/en/intelligence-signals.json` — full key set, created **before** any component references the `intelligence-signals` namespace
+- [ ] `frontend/src/i18n/ar/intelligence-signals.json` — full Arabic translation (status values: جديدة / مُستلمة / مُهملة / مُصعَّدة), registered (key `'intelligence-signals'`) in **both** `resources.en` and `resources.ar` of `frontend/src/i18n/index.ts`
 - [ ] `supabase/migrations/20260614_phase69_signals_extend.sql` — applied via **Supabase MCP** (`mcp__supabase__apply_migration`) to staging **before** any frontend code references the new columns ([BLOCKING] — see Schema Push task in plans)
 - [ ] `frontend/src/domains/signals/types/signal.types.ts` — base type definitions consumed by all hooks/components
 
