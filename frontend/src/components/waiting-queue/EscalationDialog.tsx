@@ -98,7 +98,7 @@ export function EscalationDialog({
   onEscalate,
   isLoading: externalLoading = false,
 }: EscalationDialogProps) {
-  const { t } = useTranslation(['common', 'waitingQueue'])
+  const { t } = useTranslation('common')
   const { isRTL } = useDirection()
   const { toast } = useToast()
 

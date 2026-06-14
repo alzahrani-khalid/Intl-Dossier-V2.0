@@ -225,22 +225,22 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 
 - [ ] 68-01-PLAN.md — Wave-0 test stubs + live A1-A6 DB introspection
 
-**Wave 2** _(blocked on Wave 1 completion)_
+**Wave 2** *(blocked on Wave 1 completion)*
 
 - [ ] 68-02-PLAN.md — REMED-01: clearance compat shim migration + staging apply
 
-**Wave 3** _(blocked on Wave 2 completion)_
+**Wave 3** *(blocked on Wave 2 completion)*
 
 - [ ] 68-03-PLAN.md — REMED-02: search_semantic_clearance_gated INVOKER RPC + edge-fn repoint
 - [ ] 68-04-PLAN.md — REMED-03: chat-assistant supabaseAdmin retirement + D-10 repoints
 
-**Wave 4** _(blocked on Wave 3 completion)_
+**Wave 4** *(blocked on Wave 3 completion)*
 
 - [ ] 68-05-PLAN.md — REMED-04: native-1024 embedding write path (storeEmbedding)
 - [ ] 68-06-PLAN.md — REMED-05: Langfuse + Phoenix docker-compose + OTel wiring
 - [ ] 68-07-PLAN.md — REMED-06: i18n namespace guard (check-i18n-namespaces.mjs + lint integration)
 
-**Wave 5** _(blocked on Wave 4 completion)_
+**Wave 5** *(blocked on Wave 4 completion)*
 
 - [ ] 68-08-PLAN.md — [BLOCKING] Full test suite + live UAT clearance-block verification
       **UI hint**: no
