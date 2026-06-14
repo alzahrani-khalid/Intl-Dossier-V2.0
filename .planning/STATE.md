@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: executing
-last_updated: '2026-06-14T15:45:59.237Z'
+last_updated: '2026-06-14T16:00:38.890Z'
 last_activity: 2026-06-14
 progress:
   total_phases: 7
   completed_phases: 1
   total_plans: 12
-  completed_plans: 9
+  completed_plans: 10
   percent: 14
 ---
 
@@ -25,9 +25,9 @@ See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 ## Current Position
 
 Phase: 69 (signals) — EXECUTING
-Plan: 2 of 4
-Status: 69-01 complete (data layer + i18n + types); migration LIVE APPLY pending orchestrator
-Last activity: 2026-06-14 -- Phase 69 plan 01 executed (commits 9b2a7ec7 / 3dd7b958 / d598199d)
+Plan: 3 of 4
+Status: Ready to execute
+Last activity: 2026-06-14
 
 ```
 Phase Progress: 1/7 phases complete (Phase 68 shipped)
@@ -97,6 +97,9 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 | Parallel infra track (starts P68, lands by P72)                  | vLLM/TEI has no data dependency — stand it up early                               | Pre-68 |
 
 - [Phase 69]: Phase 69 data layer: extend intelligence_event in place (D-06) with 6 signal columns; clearance-keyed RLS (D-05) loosens writes to any-cleared-user; read_signals SECURITY INVOKER RPC (D-14) — Migration written + committed (9b2a7ec7); LIVE APPLY to staging delegated to orchestrator (executor has no Supabase MCP)
+- [Phase ?]: 69-02: Signals data hooks complete — useSignals (read_signals INVOKER RPC), useCreateSignal/useUpdateSignalStatus (caller-JWT intelligence_event CRUD; D-13 ai_generated on same insert+RLS), useSignalEscalate (tasks-create→work-item-dossiers→escalate)
+- [Phase ?]: 69-02: organization_id for signal INSERT resolved from users.default_organization_id (NOT NULL; INSERT RLS requires tenant membership via tenant_isolation.rls_insert_policy)
+- [Phase ?]: 69-02: escalation work_item_type='task' as const; Step 2 dossier-link copy warn-only, Step 3 escalate+escalated_task_id throws (bidirectional link is the contract)
 
 ### Open Todos
 
