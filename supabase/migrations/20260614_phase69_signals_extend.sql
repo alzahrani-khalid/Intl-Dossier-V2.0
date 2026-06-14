@@ -44,6 +44,10 @@ CREATE INDEX IF NOT EXISTS idx_intelligence_event_category
 
 -- =============================================================================
 -- 3. RLS: replace role-locked policies with clearance-keyed policies (RF-2)
+--    NOTE: profiles keys on user_id (NOT id). Clearance subquery MUST use
+--    `WHERE user_id = auth.uid()` — matches the canonical dossiers clearance
+--    policies. Using `id` silently binds to the outer table → NULL → all reads
+--    blocked (fixed live via 20260614 phase69_signals_fix_clearance_subquery_user_id).
 -- =============================================================================
 
 -- intelligence_event — drop the 4 role-locked policies first (idempotent)
@@ -57,7 +61,7 @@ CREATE POLICY intelligence_event_select_clearance
   ON public.intelligence_event FOR SELECT TO authenticated
   USING (
     tenant_isolation.rls_select_policy(organization_id)
-    AND sensitivity_level <= (SELECT clearance_level FROM profiles WHERE id = auth.uid())
+    AND sensitivity_level <= (SELECT clearance_level FROM profiles WHERE user_id = auth.uid())
   );
 
 -- INSERT: any cleared user (D-05) — can create signals at/below their clearance
@@ -65,7 +69,7 @@ CREATE POLICY intelligence_event_insert_cleared
   ON public.intelligence_event FOR INSERT TO authenticated
   WITH CHECK (
     tenant_isolation.rls_insert_policy(organization_id)
-    AND sensitivity_level <= (SELECT clearance_level FROM profiles WHERE id = auth.uid())
+    AND sensitivity_level <= (SELECT clearance_level FROM profiles WHERE user_id = auth.uid())
     AND created_by = auth.uid()
   );
 
@@ -74,11 +78,11 @@ CREATE POLICY intelligence_event_update_cleared
   ON public.intelligence_event FOR UPDATE TO authenticated
   USING (
     tenant_isolation.rls_update_policy(organization_id)
-    AND sensitivity_level <= (SELECT clearance_level FROM profiles WHERE id = auth.uid())
+    AND sensitivity_level <= (SELECT clearance_level FROM profiles WHERE user_id = auth.uid())
   )
   WITH CHECK (
     tenant_isolation.rls_update_policy(organization_id)
-    AND sensitivity_level <= (SELECT clearance_level FROM profiles WHERE id = auth.uid())
+    AND sensitivity_level <= (SELECT clearance_level FROM profiles WHERE user_id = auth.uid())
   );
 
 -- DELETE: admin-only (unchanged intent — no need to loosen deletes)
@@ -98,7 +102,7 @@ CREATE POLICY intelligence_event_dossiers_select
       SELECT 1 FROM public.intelligence_event ie
       WHERE ie.id = intelligence_event_dossiers.event_id
         AND tenant_isolation.rls_select_policy(ie.organization_id)
-        AND ie.sensitivity_level <= (SELECT clearance_level FROM profiles WHERE id = auth.uid())
+        AND ie.sensitivity_level <= (SELECT clearance_level FROM profiles WHERE user_id = auth.uid())
     )
   );
 
@@ -109,7 +113,7 @@ CREATE POLICY intelligence_event_dossiers_insert
       SELECT 1 FROM public.intelligence_event ie
       WHERE ie.id = intelligence_event_dossiers.event_id
         AND tenant_isolation.rls_insert_policy(ie.organization_id)
-        AND ie.sensitivity_level <= (SELECT clearance_level FROM profiles WHERE id = auth.uid())
+        AND ie.sensitivity_level <= (SELECT clearance_level FROM profiles WHERE user_id = auth.uid())
     )
   );
 
@@ -120,7 +124,7 @@ CREATE POLICY intelligence_event_dossiers_update
       SELECT 1 FROM public.intelligence_event ie
       WHERE ie.id = intelligence_event_dossiers.event_id
         AND tenant_isolation.rls_update_policy(ie.organization_id)
-        AND ie.sensitivity_level <= (SELECT clearance_level FROM profiles WHERE id = auth.uid())
+        AND ie.sensitivity_level <= (SELECT clearance_level FROM profiles WHERE user_id = auth.uid())
     )
   )
   WITH CHECK (
@@ -128,7 +132,7 @@ CREATE POLICY intelligence_event_dossiers_update
       SELECT 1 FROM public.intelligence_event ie
       WHERE ie.id = intelligence_event_dossiers.event_id
         AND tenant_isolation.rls_update_policy(ie.organization_id)
-        AND ie.sensitivity_level <= (SELECT clearance_level FROM profiles WHERE id = auth.uid())
+        AND ie.sensitivity_level <= (SELECT clearance_level FROM profiles WHERE user_id = auth.uid())
     )
   );
 
