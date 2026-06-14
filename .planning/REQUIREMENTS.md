@@ -12,12 +12,12 @@ Requirements for the v7.0 milestone (phases 68–74). Each maps to exactly one r
 
 ### Remediation — AI foundations (gates the rest)
 
-- [ ] **REMED-01**: All clearance checks key off a single canonical clearance scale (`profiles.clearance_level`, 1–4); the prior 1–3 function and low/med/high sensitivity variants are reconciled to it without breaking existing RLS
-- [ ] **REMED-02**: A non-cleared user cannot retrieve above-clearance content through the existing semantic/vector search (clearance-RLS enforced on the current retrieval path)
-- [ ] **REMED-03**: A non-cleared user cannot retrieve above-clearance content through the existing interactive assistant (assistant reads run under the caller's JWT; service-role retired from `chat-assistant.ts`)
-- [ ] **REMED-04**: Embeddings are stored at their native dimension with no pad/truncate corruption of vector geometry
-- [ ] **REMED-05**: An operator can trace any AI request end-to-end in self-hosted observability (Langfuse + Arize Phoenix via OTel) with zero telemetry egress
-- [ ] **REMED-06**: CI fails when a React surface uses an i18n namespace that is not registered in `src/i18n/index.ts` (silent-English-fallback guard)
+- [x] **REMED-01**: All clearance checks key off a single canonical clearance scale (`profiles.clearance_level`, 1–4); the prior 1–3 function and low/med/high sensitivity variants are reconciled to it without breaking existing RLS
+- [x] **REMED-02**: A non-cleared user cannot retrieve above-clearance content through the existing semantic/vector search (clearance-RLS enforced on the current retrieval path)
+- [x] **REMED-03**: A non-cleared user cannot retrieve above-clearance content through the existing interactive assistant (assistant reads run under the caller's JWT; service-role retired from `chat-assistant.ts`)
+- [x] **REMED-04**: Embeddings are stored at their native dimension with no pad/truncate corruption of vector geometry
+- [x] **REMED-05**: An operator can trace any AI request end-to-end in self-hosted observability (Langfuse + Arize Phoenix via OTel) with zero telemetry egress
+- [x] **REMED-06**: CI fails when a React surface uses an i18n namespace that is not registered in `src/i18n/index.ts` (silent-English-fallback guard)
 
 ### Signals
 
@@ -120,49 +120,49 @@ Explicitly excluded for v7.0. Documented to prevent scope creep.
 
 Which phases cover which requirements.
 
-| Requirement | Phase    | Status  |
-| ----------- | -------- | ------- |
-| REMED-01    | Phase 68 | Pending |
-| REMED-02    | Phase 68 | Pending |
-| REMED-03    | Phase 68 | Pending |
-| REMED-04    | Phase 68 | Pending |
-| REMED-05    | Phase 68 | Pending |
-| REMED-06    | Phase 68 | Pending |
-| SIGNAL-01   | Phase 69 | Pending |
-| SIGNAL-02   | Phase 69 | Pending |
-| SIGNAL-03   | Phase 69 | Pending |
-| SIGNAL-04   | Phase 69 | Pending |
-| SIGNAL-05   | Phase 69 | Pending |
-| SIGNAL-06   | Phase 69 | Pending |
-| DIGEST-01   | Phase 70 | Pending |
-| DIGEST-02   | Phase 70 | Pending |
-| DIGEST-03   | Phase 70 | Pending |
-| DIGEST-04   | Phase 70 | Pending |
-| ALERT-01    | Phase 70 | Pending |
-| ALERT-02    | Phase 70 | Pending |
-| ALERT-03    | Phase 70 | Pending |
-| ALERT-04    | Phase 70 | Pending |
-| GRAPH-01    | Phase 71 | Pending |
-| GRAPH-02    | Phase 71 | Pending |
-| GRAPH-03    | Phase 71 | Pending |
-| GRAPH-04    | Phase 71 | Pending |
-| AGENT-01    | Phase 72 | Pending |
-| AGENT-02    | Phase 72 | Pending |
-| AGENT-03    | Phase 72 | Pending |
-| AGENT-04    | Phase 72 | Pending |
-| AGENT-05    | Phase 72 | Pending |
-| AGENT-06    | Phase 72 | Pending |
-| INFRA-01    | Phase 72 | Pending |
-| INFRA-02    | Phase 72 | Pending |
-| INFRA-03    | Phase 72 | Pending |
-| GENUI-01    | Phase 73 | Pending |
-| GENUI-02    | Phase 73 | Pending |
-| GENUI-03    | Phase 73 | Pending |
-| GENUI-04    | Phase 73 | Pending |
-| EVAL-01     | Phase 74 | Pending |
-| EVAL-02     | Phase 74 | Pending |
-| EVAL-03     | Phase 74 | Pending |
-| EVAL-04     | Phase 74 | Pending |
+| Requirement | Phase    | Status   |
+| ----------- | -------- | -------- |
+| REMED-01    | Phase 68 | Complete |
+| REMED-02    | Phase 68 | Complete |
+| REMED-03    | Phase 68 | Complete |
+| REMED-04    | Phase 68 | Complete |
+| REMED-05    | Phase 68 | Complete |
+| REMED-06    | Phase 68 | Complete |
+| SIGNAL-01   | Phase 69 | Pending  |
+| SIGNAL-02   | Phase 69 | Pending  |
+| SIGNAL-03   | Phase 69 | Pending  |
+| SIGNAL-04   | Phase 69 | Pending  |
+| SIGNAL-05   | Phase 69 | Pending  |
+| SIGNAL-06   | Phase 69 | Pending  |
+| DIGEST-01   | Phase 70 | Pending  |
+| DIGEST-02   | Phase 70 | Pending  |
+| DIGEST-03   | Phase 70 | Pending  |
+| DIGEST-04   | Phase 70 | Pending  |
+| ALERT-01    | Phase 70 | Pending  |
+| ALERT-02    | Phase 70 | Pending  |
+| ALERT-03    | Phase 70 | Pending  |
+| ALERT-04    | Phase 70 | Pending  |
+| GRAPH-01    | Phase 71 | Pending  |
+| GRAPH-02    | Phase 71 | Pending  |
+| GRAPH-03    | Phase 71 | Pending  |
+| GRAPH-04    | Phase 71 | Pending  |
+| AGENT-01    | Phase 72 | Pending  |
+| AGENT-02    | Phase 72 | Pending  |
+| AGENT-03    | Phase 72 | Pending  |
+| AGENT-04    | Phase 72 | Pending  |
+| AGENT-05    | Phase 72 | Pending  |
+| AGENT-06    | Phase 72 | Pending  |
+| INFRA-01    | Phase 72 | Pending  |
+| INFRA-02    | Phase 72 | Pending  |
+| INFRA-03    | Phase 72 | Pending  |
+| GENUI-01    | Phase 73 | Pending  |
+| GENUI-02    | Phase 73 | Pending  |
+| GENUI-03    | Phase 73 | Pending  |
+| GENUI-04    | Phase 73 | Pending  |
+| EVAL-01     | Phase 74 | Pending  |
+| EVAL-02     | Phase 74 | Pending  |
+| EVAL-03     | Phase 74 | Pending  |
+| EVAL-04     | Phase 74 | Pending  |
 
 **Coverage:**
 
