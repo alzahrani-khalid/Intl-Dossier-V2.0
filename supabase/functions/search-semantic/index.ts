@@ -50,8 +50,10 @@ async function generateQueryEmbedding(query: string): Promise<number[] | null> {
 
     const data = await response.json();
     if (data.embedding && Array.isArray(data.embedding)) {
-      // Normalize to 1536 dimensions if needed
-      return normalizeEmbedding(data.embedding, 1536);
+      // P68 REMED-04: pass the native-dimension embedding straight through.
+      // No pad/truncate — ai_embeddings.embedding is vector(1024) and the BGE-M3
+      // embedder already emits 1024 dims; padding to 1536 corrupted the vector.
+      return data.embedding;
     }
 
     return null;
@@ -59,23 +61,6 @@ async function generateQueryEmbedding(query: string): Promise<number[] | null> {
     console.error('AnythingLLM embedding error:', error);
     return null;
   }
-}
-
-/**
- * Normalize embedding to target dimensions (pad or truncate)
- */
-function normalizeEmbedding(embedding: number[], targetDim: number): number[] {
-  if (embedding.length === targetDim) {
-    return embedding;
-  }
-
-  if (embedding.length < targetDim) {
-    // Pad with zeros
-    return [...embedding, ...new Array(targetDim - embedding.length).fill(0)];
-  }
-
-  // Truncate
-  return embedding.slice(0, targetDim);
 }
 
 serve(async (req: Request) => {
@@ -173,6 +158,18 @@ serve(async (req: Request) => {
       },
     });
 
+    // P68 REMED-02: anon-key client carries the caller's JWT so RLS + clearance
+    // gating actually apply. The service-role client above bypasses RLS, so every
+    // clearance-sensitive RPC below must use this user-scoped client instead.
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
+    const supabaseUserClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: {
+        headers: {
+          Authorization: authHeader,
+        },
+      },
+    });
+
     // SECURITY FIX: Generate real embedding using AnythingLLM
     // Previously used placeholder zeros which returned random results
     const embeddingStartTime = Date.now();
@@ -187,7 +184,7 @@ serve(async (req: Request) => {
       const keywordResults: any[] = [];
       for (const entityType of entityTypes) {
         try {
-          const { data, error } = await supabase.rpc('search_entities_fulltext', {
+          const { data, error } = await supabaseUserClient.rpc('search_entities_fulltext', {
             p_entity_type: entityType,
             p_query: query,
             p_language: 'english',
@@ -254,10 +251,10 @@ serve(async (req: Request) => {
 
     for (const entityType of entityTypes) {
       try {
-        // Call search_entities_semantic function
-        const { data, error } = await supabase.rpc('search_entities_semantic', {
-          p_entity_type: entityType,
+        // P68 REMED-02: clearance-gated SECURITY INVOKER RPC under the caller JWT.
+        const { data, error } = await supabaseUserClient.rpc('search_semantic_clearance_gated', {
           p_query_embedding: `[${queryEmbedding.join(',')}]`, // Format as PostgreSQL vector
+          p_entity_types: [entityType],
           p_similarity_threshold: similarityThreshold,
           p_limit: validatedLimit,
         });
@@ -268,13 +265,14 @@ serve(async (req: Request) => {
         }
 
         if (data && data.length > 0) {
+          // New RPC returns (entity_id, owner_type, similarity_score, sensitivity_level).
+          // Title enrichment is deferred to a later v7.0 phase (ai_embeddings is empty).
           const typedResults = data.map((item: any) => ({
             id: item.entity_id,
-            type: item.entity_type,
-            title_en: item.entity_title_en || '',
-            title_ar: item.entity_title_ar || '',
+            type: item.owner_type,
+            title_en: '',
+            title_ar: '',
             similarity_score: item.similarity_score,
-            updated_at: item.updated_at,
             match_type: 'semantic',
           }));
 
@@ -291,7 +289,7 @@ serve(async (req: Request) => {
 
       for (const entityType of entityTypes) {
         try {
-          const { data, error } = await supabase.rpc('search_entities_fulltext', {
+          const { data, error } = await supabaseUserClient.rpc('search_entities_fulltext', {
             p_entity_type: entityType,
             p_query: query,
             p_language: 'english', // Auto-detect in production
