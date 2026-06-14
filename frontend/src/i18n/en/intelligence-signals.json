@@ -43,6 +43,12 @@
     "diplomatic": "Diplomatic",
     "other": "Other"
   },
+  "severity": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "urgent": "Urgent"
+  },
   "toast": {
     "dismissed": "Signal dismissed.",
     "restoreAction": "Signal dismissed. Restore?",
