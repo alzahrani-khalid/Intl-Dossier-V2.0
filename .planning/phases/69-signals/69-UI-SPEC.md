@@ -226,7 +226,7 @@ Fields (sentence-case labels):
 
 - Form validation: inline error messages below each field (not toast), per 260530-w3 pattern
 - Submit CTA: "Capture signal" (EN) / "تسجيل الإشارة" (AR) — `.btn-primary`
-- Cancel: "Cancel" / "إلغاء" — `.btn-ghost`
+- Discard: "Discard signal" (EN) / "تجاهل الإشارة" (AR) — `.btn-ghost` (compound label mirrors the `EscalateSignalDialog` "Cancel escalation" pattern — no bare "Cancel")
 - Button placement: footer of drawer, logical end (right in LTR, left in RTL)
 - `aria-required="true"` on required fields
 
@@ -439,6 +439,7 @@ keyboard key glyphs.
 | **Capture form: category label**              | Category                                              | الفئة                                                    |
 | **Capture form: sensitivity label**           | Sensitivity level                                     | مستوى الحساسية                                           |
 | **Capture form: dossier links label**         | Linked dossiers                                       | الملفات المرتبطة                                         |
+| **Capture form: discard**                     | Discard signal                                        | تجاهل الإشارة                                            |
 | **Column header: severity**                   | SEVERITY                                              | الخطورة                                                  |
 | **Column header: category**                   | CATEGORY                                              | الفئة                                                    |
 | **Column header: status**                     | STATUS                                                | الحالة                                                   |
