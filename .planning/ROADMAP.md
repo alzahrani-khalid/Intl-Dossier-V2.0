@@ -223,24 +223,24 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 
 **Wave 1**
 
-- [ ] 68-01-PLAN.md — Wave-0 test stubs + live A1-A6 DB introspection
+- [x] 68-01-PLAN.md — Wave-0 test stubs + live A1-A6 DB introspection
 
-**Wave 2** *(blocked on Wave 1 completion)*
+**Wave 2** _(blocked on Wave 1 completion)_
 
 - [ ] 68-02-PLAN.md — REMED-01: clearance compat shim migration + staging apply
 
-**Wave 3** *(blocked on Wave 2 completion)*
+**Wave 3** _(blocked on Wave 2 completion)_
 
 - [ ] 68-03-PLAN.md — REMED-02: search_semantic_clearance_gated INVOKER RPC + edge-fn repoint
 - [ ] 68-04-PLAN.md — REMED-03: chat-assistant supabaseAdmin retirement + D-10 repoints
 
-**Wave 4** *(blocked on Wave 3 completion)*
+**Wave 4** _(blocked on Wave 3 completion)_
 
 - [ ] 68-05-PLAN.md — REMED-04: native-1024 embedding write path (storeEmbedding)
 - [ ] 68-06-PLAN.md — REMED-05: Langfuse + Phoenix docker-compose + OTel wiring
 - [ ] 68-07-PLAN.md — REMED-06: i18n namespace guard (check-i18n-namespaces.mjs + lint integration)
 
-**Wave 5** *(blocked on Wave 4 completion)*
+**Wave 5** _(blocked on Wave 4 completion)_
 
 - [ ] 68-08-PLAN.md — [BLOCKING] Full test suite + live UAT clearance-block verification
       **UI hint**: no
@@ -365,7 +365,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 55-59 | v6.4 | 20/20 | Shipped | 2026-05-27 |
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
 | 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
-| 68. AI Foundations Remediation | v7.0 | 0/? | Not started | - |
+| 68. AI Foundations Remediation | v7.0 | 1/8 | In Progress|  |
 | 69. Signals | v7.0 | 0/? | Not started | - |
 | 70. Digests + Alerts | v7.0 | 0/? | Not started | - |
 | 71. Analytic Graph | v7.0 | 0/? | Not started | - |
