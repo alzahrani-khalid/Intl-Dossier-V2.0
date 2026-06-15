@@ -1169,22 +1169,22 @@ export async function registerIntelligenceDigestScheduler(): Promise<void> {
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **`aa_commitments` join path to dossier_id**
-   - What we know: `aa_commitments` is the canonical commitments table; `work_item_dossiers` is the junction table.
-   - What's unclear: whether `aa_commitments` has a direct `dossier_id` column or whether the dossier link is always via `work_item_dossiers`.
-   - Recommendation: Before writing `generate_digest_content` RPC, run `SELECT column_name FROM information_schema.columns WHERE table_name = 'aa_commitments'` on staging. Use whichever path exists.
+> Resolved 2026-06-15 against live staging `zkrcjzdemdmwhearhfgg` (orchestrator Supabase MCP)
+> during `/gsd:plan-phase 70` plan-checker revision. All three closed; facts feed Plan 02.
 
-2. **`pg` LISTEN/NOTIFY vs polling fallback decision**
-   - What we know: `pg` raw client is needed for LISTEN; it may not be installed yet.
-   - What's unclear: whether there's an easy way to piggyback LISTEN on the existing Supabase client.
-   - Recommendation: Supabase JS client does not expose raw LISTEN. The planner should include a task to add `pg` as a backend dep, and a conditional fallback to 30s polling if the pg connection cannot be established at startup.
+1. **`aa_commitments` join path to dossier_id — RESOLVED.**
+   - **Answer:** `aa_commitments.dossier_id` is a direct `uuid` column (verified via `information_schema.columns`). `aa_commitments.owner_user_id` (uuid), `due_date` (date), `status` (text) also confirmed.
+   - **Use:** the `generate_digest_content` RPC filters commitments directly with `WHERE dossier_id = p_dossier_id` — NO `work_item_dossiers` junction hop required for the home link. (Matches the 260605-htw backfill which sourced junction rows from `aa_commitments.dossier_id`.)
 
-3. **`dossier_type` field name in `intelligence_digest` for `elected_official`**
-   - What we know: the existing `dossiers` table likely stores `elected_official` as the type for elected official dossiers.
-   - What's unclear: whether the `dossiers.type` enum already includes `elected_official` (it should, given Phase 50 work).
-   - Recommendation: Verify `SELECT DISTINCT type FROM dossiers` on staging before writing the `generate_digest` RPC.
+2. **`pg` LISTEN/NOTIFY vs polling fallback decision — RESOLVED.**
+   - **Answer:** `pg` (node-postgres) is NOT installed in `backend/` — not a direct dep and not present transitively in `node_modules` (verified). The Supabase JS client does not expose raw `LISTEN`.
+   - **Use:** Plan 01 (Wave 0) adds `pg` (+ `@types/pg`) as a backend dep. The alert worker (Plan 04) uses `pg` `LISTEN intelligence_alert` as primary, with a **30s polling fallback** when the LISTEN connection cannot be established at startup. Commit this as a Plan 04 truth.
+
+3. **`dossier_type` domain + `elected_official` — RESOLVED (RF-2 premise corrected).**
+   - **Answer:** `dossiers_type_check` allows EXACTLY 7 values: `country, organization, forum, engagement, topic, working_group, person`. **`elected_official` is NOT a `dossiers.type` value** and there is no `subtype`/`category` column — elected officials are stored as `type = 'person'` (the "8 types" in CLAUDE.md is a UI/route taxonomy; EO is a `person` variant at the DB level). The existing `intelligence_digest.dossier_type` CHECK already allows exactly these 7 values.
+   - **Use (corrects RF-2):** Do **NOT** add `elected_official` to any CHECK. The new `intelligence_digest_subscriptions` and `intelligence_alert_rules` `dossier_type` CHECK must mirror the 7 `dossiers.type` values. Subscribing to an elected-official dossier persists `dossier_type = 'person'`. Adding `elected_official` to a CHECK would reject valid EO-dossier inserts. No `intelligence_digest` CHECK change is needed for elected_official.
 
 ---
 
