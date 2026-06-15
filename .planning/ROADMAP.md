@@ -295,7 +295,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
    **Plans**: 7 plans
    Plans:
    **Wave 1**
-   - [ ] 70-01-PLAN.md — Wave 1: test scaffold (8 stubs) + nodemailer/pg install (blocking package legitimacy checkpoint)
+   - [x] 70-01-PLAN.md — Wave 1: test scaffold (8 stubs) + nodemailer/pg install (blocking package legitimacy checkpoint)
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
@@ -407,7 +407,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
 | 68. AI Foundations Remediation | v7.0 | 8/8 | Complete    | 2026-06-14 |
 | 69. Signals | v7.0 | 4/4 | Complete   | 2026-06-14 |
-| 70. Digests + Alerts | v7.0 | 0/? | Not started | - |
+| 70. Digests + Alerts | v7.0 | 1/7 | In Progress|  |
 | 71. Analytic Graph | v7.0 | 0/? | Not started | - |
 | 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 0/? | Not started | - |
 | 73. Agent Platform — Writes + Generative UI | v7.0 | 0/? | Not started | - |

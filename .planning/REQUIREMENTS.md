@@ -30,17 +30,17 @@ Requirements for the v7.0 milestone (phases 68–74). Each maps to exactly one r
 
 ### Digests
 
-- [ ] **DIGEST-01**: A user can subscribe to and unsubscribe from a recurring digest scoped to a dossier or topic
-- [ ] **DIGEST-02**: The system generates and delivers recurring digests on schedule (cron, service-role + explicit authz), with each subscriber receiving only clearance-appropriate content
-- [ ] **DIGEST-03**: A user can view rendered digests in-app
-- [ ] **DIGEST-04**: The agent can generate a digest on demand via a human-in-the-loop `generate_digest` tool
+- [x] **DIGEST-01**: A user can subscribe to and unsubscribe from a recurring digest scoped to a dossier or topic
+- [x] **DIGEST-02**: The system generates and delivers recurring digests on schedule (cron, service-role + explicit authz), with each subscriber receiving only clearance-appropriate content
+- [x] **DIGEST-03**: A user can view rendered digests in-app
+- [x] **DIGEST-04**: The agent can generate a digest on demand via a human-in-the-loop `generate_digest` tool
 
 ### Alerts
 
-- [ ] **ALERT-01**: A user can define a threshold alert (e.g., a new signal on a tracked dossier)
-- [ ] **ALERT-02**: A triggered alert is delivered immediately to the subscriber's configured channels
-- [ ] **ALERT-03**: Alert and digest delivery flows through a pluggable channel adapter supporting in-app, on-prem SMTP email, and an external webhook/Teams endpoint
-- [ ] **ALERT-04**: External-channel payloads carry deep-links only — no classified content leaves the platform
+- [x] **ALERT-01**: A user can define a threshold alert (e.g., a new signal on a tracked dossier)
+- [x] **ALERT-02**: A triggered alert is delivered immediately to the subscriber's configured channels
+- [x] **ALERT-03**: Alert and digest delivery flows through a pluggable channel adapter supporting in-app, on-prem SMTP email, and an external webhook/Teams endpoint
+- [x] **ALERT-04**: External-channel payloads carry deep-links only — no classified content leaves the platform
 
 ### Analytic graph
 
@@ -134,14 +134,14 @@ Which phases cover which requirements.
 | SIGNAL-04   | Phase 69 | Complete |
 | SIGNAL-05   | Phase 69 | Complete |
 | SIGNAL-06   | Phase 69 | Complete |
-| DIGEST-01   | Phase 70 | Pending  |
-| DIGEST-02   | Phase 70 | Pending  |
-| DIGEST-03   | Phase 70 | Pending  |
-| DIGEST-04   | Phase 70 | Pending  |
-| ALERT-01    | Phase 70 | Pending  |
-| ALERT-02    | Phase 70 | Pending  |
-| ALERT-03    | Phase 70 | Pending  |
-| ALERT-04    | Phase 70 | Pending  |
+| DIGEST-01   | Phase 70 | Complete |
+| DIGEST-02   | Phase 70 | Complete |
+| DIGEST-03   | Phase 70 | Complete |
+| DIGEST-04   | Phase 70 | Complete |
+| ALERT-01    | Phase 70 | Complete |
+| ALERT-02    | Phase 70 | Complete |
+| ALERT-03    | Phase 70 | Complete |
+| ALERT-04    | Phase 70 | Complete |
 | GRAPH-01    | Phase 71 | Pending  |
 | GRAPH-02    | Phase 71 | Pending  |
 | GRAPH-03    | Phase 71 | Pending  |
