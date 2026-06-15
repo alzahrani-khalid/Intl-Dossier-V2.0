@@ -168,9 +168,10 @@ export function renderDigestPayload(
 }
 
 export function normalizeChannels(config?: DigestFrequencyConfig): IntelligenceChannel[] {
-  const channels = Array.isArray(config?.channels) ? config.channels : ['in_app']
-  const valid = channels.filter((channel): channel is IntelligenceChannel =>
-    channelNames.has(channel),
+  const channels: unknown[] = Array.isArray(config?.channels) ? config.channels : ['in_app']
+  const valid = channels.filter(
+    (channel): channel is IntelligenceChannel =>
+      typeof channel === 'string' && channelNames.has(channel as IntelligenceChannel),
   )
   return valid.length > 0 ? valid : ['in_app']
 }
