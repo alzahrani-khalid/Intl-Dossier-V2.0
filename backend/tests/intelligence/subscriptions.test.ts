@@ -1,16 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+const mocks = vi.hoisted(() => ({
+  from: vi.fn(),
+}))
+
+vi.mock('../../src/config/supabase', () => ({
+  supabaseAdmin: {
+    from: mocks.from,
+  },
+}))
+
 describe('DIGEST-01: digest subscriptions', () => {
-  const mocks = vi.hoisted(() => ({
-    from: vi.fn(),
-  }))
-
-  vi.mock('../../src/config/supabase', () => ({
-    supabaseAdmin: {
-      from: mocks.from,
-    },
-  }))
-
   const makeChain = (result: unknown) => {
     const chain: any = {
       select: vi.fn(() => chain),

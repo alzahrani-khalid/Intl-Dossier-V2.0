@@ -8,6 +8,7 @@ import {
   processIntelligenceAlertJob,
   type IntelligenceAlertPayload,
 } from './intelligence-alert.worker'
+import { processIntelligenceDigestJob } from './intelligence-digest.scheduler'
 
 export interface NotificationJobData {
   userId: string
@@ -23,10 +24,6 @@ export interface NotificationJobData {
 }
 
 export type NotificationQueueJobData = NotificationJobData | IntelligenceAlertPayload
-
-export async function processIntelligenceDigestJob(jobName: string): Promise<void> {
-  void jobName
-}
 
 export const notificationQueue = new Queue<NotificationQueueJobData>('notifications', {
   connection: queueConnection,

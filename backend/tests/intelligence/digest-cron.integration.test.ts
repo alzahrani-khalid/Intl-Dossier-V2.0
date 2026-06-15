@@ -1,44 +1,44 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-describe('DIGEST-02: clearance-gated digest cron', () => {
-  const mocks = vi.hoisted(() => ({
-    from: vi.fn(),
-    rpc: vi.fn(),
-    getUserById: vi.fn(),
-    logInfo: vi.fn(),
-    logError: vi.fn(),
-    inserts: [] as Array<Record<string, unknown>>,
-    eqCalls: [] as Array<[string, unknown]>,
-  }))
+const mocks = vi.hoisted(() => ({
+  from: vi.fn(),
+  rpc: vi.fn(),
+  getUserById: vi.fn(),
+  logInfo: vi.fn(),
+  logError: vi.fn(),
+  inserts: [] as Array<Record<string, unknown>>,
+  eqCalls: [] as Array<[string, unknown]>,
+}))
 
-  vi.mock('../../src/config/supabase', () => ({
-    supabaseAdmin: {
-      from: mocks.from,
-      rpc: mocks.rpc,
-      auth: {
-        admin: {
-          getUserById: mocks.getUserById,
-        },
+vi.mock('../../src/config/supabase', () => ({
+  supabaseAdmin: {
+    from: mocks.from,
+    rpc: mocks.rpc,
+    auth: {
+      admin: {
+        getUserById: mocks.getUserById,
       },
     },
-  }))
+  },
+}))
 
-  vi.mock('../../src/utils/logger', () => ({
-    logInfo: mocks.logInfo,
-    logError: mocks.logError,
-    logApiRequest: vi.fn(),
-  }))
+vi.mock('../../src/utils/logger', () => ({
+  logInfo: mocks.logInfo,
+  logError: mocks.logError,
+  logApiRequest: vi.fn(),
+}))
 
-  vi.mock('../../src/adapters/intelligence/in-app-adapter', () => ({
-    inAppAdapter: { name: 'in_app', send: vi.fn(async () => undefined) },
-  }))
-  vi.mock('../../src/adapters/intelligence/smtp-adapter', () => ({
-    smtpAdapter: { name: 'smtp', send: vi.fn(async () => undefined) },
-  }))
-  vi.mock('../../src/adapters/intelligence/webhook-adapter', () => ({
-    webhookAdapter: { name: 'webhook', send: vi.fn(async () => undefined) },
-  }))
+vi.mock('../../src/adapters/intelligence/in-app-adapter', () => ({
+  inAppAdapter: { name: 'in_app', send: vi.fn(async () => undefined) },
+}))
+vi.mock('../../src/adapters/intelligence/smtp-adapter', () => ({
+  smtpAdapter: { name: 'smtp', send: vi.fn(async () => undefined) },
+}))
+vi.mock('../../src/adapters/intelligence/webhook-adapter', () => ({
+  webhookAdapter: { name: 'webhook', send: vi.fn(async () => undefined) },
+}))
 
+describe('DIGEST-02: clearance-gated digest cron', () => {
   const subscriptions = [
     {
       id: 'sub-low',
