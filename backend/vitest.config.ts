@@ -23,6 +23,7 @@ export default defineConfig({
       'tests/unit/**/*.test.ts',
       'tests/services/**/*.test.ts',
       'tests/security/**/*.test.ts',
+      'tests/intelligence/**/*.test.ts',
       'tests/{deadline-checker,digest-scheduler,email-notifications,notification-queue,push-notifications}.test.ts',
     ],
     exclude: [
