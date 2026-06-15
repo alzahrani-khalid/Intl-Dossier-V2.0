@@ -294,14 +294,30 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 5. The agent's `generate_digest` HITL tool presents a bilingual confirmation card before committing and publishes only after approval — verified live via the agent surface on staging.
    **Plans**: 7 plans
    Plans:
+   **Wave 1**
    - [ ] 70-01-PLAN.md — Wave 1: test scaffold (8 stubs) + nodemailer/pg install (blocking package legitimacy checkpoint)
-   - [ ] 70-02-PLAN.md — Wave 2: full database migration SQL (4 tables, 4 INVOKER RPCs, pg_notify trigger)
-   - [ ] 70-03-PLAN.md — Wave 3: [BLOCKING] Supabase MCP migration apply to staging + 6-query verification
-   - [ ] 70-04-PLAN.md — Wave 4: ChannelAdapter layer + alert worker (3 adapters, pg LISTEN, BullMQ)
-   - [ ] 70-05-PLAN.md — Wave 4: digest pipeline + alerts.service.ts replacement + Express API routes
-   - [ ] 70-06-PLAN.md — Wave 5: frontend surfaces (i18n, hooks, 7 components, IntelligencePage 4-tab extension)
-   - [ ] 70-07-PLAN.md — Wave 6: GenerateDigestButton + 8 dossier digests routes + backend wiring + live UAT
-         **UI hint**: yes
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [ ] 70-02-PLAN.md — Wave 2: full database migration SQL (4 tables, 4 INVOKER RPCs, pg_notify trigger)
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
+- [ ] 70-03-PLAN.md — Wave 3: [BLOCKING] Supabase MCP migration apply to staging + 6-query verification
+
+**Wave 4** _(blocked on Wave 3 completion)_
+
+- [ ] 70-04-PLAN.md — Wave 4: ChannelAdapter layer + alert worker (3 adapters, pg LISTEN, BullMQ)
+- [ ] 70-05-PLAN.md — Wave 4: digest pipeline + alerts.service.ts replacement + Express API routes
+
+**Wave 5** _(blocked on Wave 4 completion)_
+
+- [ ] 70-06-PLAN.md — Wave 5: frontend surfaces (i18n, hooks, 7 components, IntelligencePage 4-tab extension)
+
+**Wave 6** _(blocked on Wave 5 completion)_
+
+- [ ] 70-07-PLAN.md — Wave 6: GenerateDigestButton + 8 dossier digests routes + backend wiring + live UAT
+      **UI hint**: yes
 
 ---
 
