@@ -15,6 +15,8 @@ import { cacheMetrics } from './services/cache-metrics.service'
 import { notificationWorker, notificationQueue } from './queues/notification.queue'
 import { registerDeadlineChecker } from './queues/deadline-scheduler'
 import { registerDigestScheduler } from './queues/digest-scheduler'
+import { registerIntelligenceDigestScheduler } from './queues/intelligence-digest.scheduler'
+import { startAlertListener } from './queues/intelligence-alert.worker'
 import {
   initSentry,
   sentryRequestHandler,
@@ -147,6 +149,12 @@ async function startServer(): Promise<void> {
 
     // Register digest scheduler (daily + weekly email digests)
     await registerDigestScheduler()
+
+    // Register intelligence digest scheduler (daily/weekly/monthly per-subscriber cron)
+    await registerIntelligenceDigestScheduler()
+
+    // Start intelligence alert listener (pg LISTEN + BullMQ alert worker)
+    await startAlertListener()
   } else {
     logInfo('Redis unavailable - cache operations will fail gracefully to direct DB queries')
   }

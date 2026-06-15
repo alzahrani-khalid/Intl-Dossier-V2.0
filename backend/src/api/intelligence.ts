@@ -3,6 +3,8 @@ import { IntelligenceService } from '../services/intelligence.service'
 import { validate } from '../utils/validation'
 import { z } from 'zod'
 import { requirePermission } from '../middleware/auth'
+import intelligenceDigestRouter from './intelligence-digest'
+import intelligenceAlertsRouter from './intelligence-alerts'
 
 const router = Router()
 const intelligenceService = new IntelligenceService()
@@ -91,5 +93,8 @@ router.post('/feedback', requirePermission(['view_intelligence']), async (req, r
     next(error)
   }
 })
+
+router.use('/digest', intelligenceDigestRouter)
+router.use('/alerts', intelligenceAlertsRouter)
 
 export default router

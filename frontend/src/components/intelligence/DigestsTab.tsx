@@ -8,14 +8,20 @@ import {
   useDigests,
   useUnsubscribeFromDigest,
   type Digest,
+  type DigestFrequency,
 } from '@/domains/signals/hooks/useDigests'
 import type { DossierType } from '@/lib/dossier-type-guards'
 import { DigestCard, DossierGlyph, getDigestDossierName } from './DigestCard'
 import { DigestReader } from './DigestReader'
 import { DigestSubscribeDrawer } from './DigestSubscribeDrawer'
+import { GenerateDigestButton } from './GenerateDigestButton'
 
 interface DigestsTabProps {
   dossierId?: string
+}
+
+function normalizeFrequency(value: string): DigestFrequency {
+  return value === 'daily' || value === 'weekly' || value === 'monthly' ? value : 'weekly'
 }
 
 export function DigestsTab({ dossierId }: DigestsTabProps): React.ReactElement {
@@ -55,13 +61,18 @@ export function DigestsTab({ dossierId }: DigestsTabProps): React.ReactElement {
         <Button
           variant="outline"
           size="sm"
-          className="ms-auto text-ink-mute"
+          className={dossierId ? 'text-ink-mute' : 'ms-auto text-ink-mute'}
           disabled={!canSubscribeFromContext}
           onClick={() => setSubscribeOpen(true)}
         >
           <Plus className="h-4 w-4 me-2" aria-hidden="true" />
           {t('action.subscribe')}
         </Button>
+        {dossierId && (
+          <div className="ms-auto">
+            <GenerateDigestButton dossierId={dossierId} period="weekly" />
+          </div>
+        )}
       </div>
 
       <details className="rounded-sm border border-line bg-surface">
@@ -89,9 +100,12 @@ export function DigestsTab({ dossierId }: DigestsTabProps): React.ReactElement {
                 <span className="rounded-full bg-accent-soft ps-2 pe-2 pt-0.5 pb-0.5 font-mono text-xs uppercase text-accent-ink">
                   {t(`chip.${subscription.frequency}`)}
                 </span>
-                <Button variant="ghost" size="sm" className="ms-auto text-ink-mute">
-                  {t('action.editFrequency')}
-                </Button>
+                <div className="ms-auto">
+                  <GenerateDigestButton
+                    dossierId={subscription.dossier_id}
+                    period={subscription.frequency}
+                  />
+                </div>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -163,6 +177,12 @@ export function DigestsTab({ dossierId }: DigestsTabProps): React.ReactElement {
               onOpen={() => setSelectedDigestId(digest.id)}
               onUnsubscribe={() => handleUnsubscribe(digest)}
               onGenerateNow={() => setSelectedDigestId(digest.id)}
+              generateControl={
+                <GenerateDigestButton
+                  dossierId={digest.dossier_id}
+                  period={normalizeFrequency(String(digest.frequency))}
+                />
+              }
             />
           ))}
         </div>

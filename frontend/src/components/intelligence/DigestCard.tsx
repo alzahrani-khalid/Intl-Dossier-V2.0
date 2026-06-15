@@ -1,4 +1,5 @@
 import { Bell, Building2, CalendarDays, FileText, Globe, Target, Users } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { useDirection } from '@/hooks/useDirection'
@@ -106,8 +107,9 @@ export function DossierGlyph({ type }: DossierGlyphProps): React.ReactElement {
 interface DigestCardProps {
   digest: Digest
   onUnsubscribe: () => void
-  onGenerateNow: () => void
+  onGenerateNow?: () => void
   onOpen?: () => void
+  generateControl?: ReactNode
 }
 
 export function DigestCard({
@@ -115,6 +117,7 @@ export function DigestCard({
   onUnsubscribe,
   onGenerateNow,
   onOpen,
+  generateControl,
 }: DigestCardProps): React.ReactElement {
   const { t } = useTranslation('intelligence-digests')
   const { isRTL } = useDirection()
@@ -199,10 +202,15 @@ export function DigestCard({
             time: formatTime(digest.generated_at, locale),
           })}
         </span>
-        <Button variant="ghost" size="sm" className="ms-auto text-ink-mute" onClick={onGenerateNow}>
-          <Bell className="h-4 w-4 me-2" aria-hidden="true" />
-          {t('action.generateNow')}
-        </Button>
+        <div className="ms-auto">
+          {generateControl ??
+            (onGenerateNow ? (
+              <Button variant="ghost" size="sm" className="text-ink-mute" onClick={onGenerateNow}>
+                <Bell className="h-4 w-4 me-2" aria-hidden="true" />
+                {t('action.generateNow')}
+              </Button>
+            ) : null)}
+        </div>
         <Button variant="ghost" size="sm" className="text-ink-mute" onClick={onUnsubscribe}>
           {t('action.unsubscribe')}
         </Button>
