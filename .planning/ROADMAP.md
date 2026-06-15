@@ -312,7 +312,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 
 **Wave 5** _(blocked on Wave 4 completion)_
 
-- [ ] 70-06-PLAN.md — Wave 5: frontend surfaces (i18n, hooks, 7 components, IntelligencePage 4-tab extension)
+- [x] 70-06-PLAN.md — Wave 5: frontend surfaces (i18n, hooks, 7 components, IntelligencePage 4-tab extension)
 
 **Wave 6** _(blocked on Wave 5 completion)_
 
