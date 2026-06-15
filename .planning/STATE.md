@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: executing
-last_updated: '2026-06-15T10:37:02.000Z'
-last_activity: 2026-06-15
+last_updated: '2026-06-16T02:00:00.000Z'
+last_activity: 2026-06-16
 progress:
   total_phases: 7
   completed_phases: 2
   total_plans: 19
-  completed_plans: 17
+  completed_plans: 18
   percent: 29
 ---
 
@@ -24,18 +24,18 @@ See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 
 ## Current Position
 
-Phase: 70 (digests-alerts) — EXECUTING
+Phase: 70 (digests-alerts) — EXECUTED (all plans done; live UAT passed; ready for verify/close)
 Plan: 7 of 7
-Status: Plan 70-07 implementation committed; awaiting blocking live UAT checkpoint
-Last activity: 2026-06-15
+Status: Plan 70-07 complete — all 5 live UATs PASSED. UAT-2 (alert fan-out) initially FAILED live and was root-caused + fixed via debug session p70-alert-fanout (BullMQ colon jobId; D-08 in_app/email_queue isolation; notification_type enum values + create_categorized_notification enum casts; SMTP→intelligence_email_queue per RF-1). Fixes committed (46066f55, aec2e3e1, 999f9e32, cac5bc89); 70-07-SUMMARY written. Follow-up: on-prem SMTP drain worker (drains intelligence_email_queue when SMTP_HOST set) + webhook URL are customer-TBD.
+Last activity: 2026-06-16
 
 ```
-Phase Progress: Phase 70 is 6/7 plans complete
-[█████████████████░░░] 86%
+Phase Progress: Phase 70 is 7/7 plans complete
+[████████████████████] 100%
 
 Phase 68: Complete
 Phase 69: Complete
-Phase 70: Executing (6/7 plans — 70-01 through 70-06 done; 70-07 code committed, UAT pending)
+Phase 70: Executed (7/7 plans; live UAT-1..5 passed) — ready for verification/close
 Phase 71: Not started
 Phase 72: Not started
 Phase 73: Not started
