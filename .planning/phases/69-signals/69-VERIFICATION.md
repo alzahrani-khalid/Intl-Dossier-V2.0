@@ -2,16 +2,16 @@
 phase: 69
 slug: signals
 status: passed
-verified: 2026-06-14
-verifier: orchestrator (execute-phase)
-caveat: UI live spot-check (SIGNAL-01/03/05) pending per finalize-now decision
+verified: 2026-06-15
+verifier: orchestrator (execute-phase + driven live UAT)
+caveat: none — all 6 criteria verified live (backend impersonation + driven browser UAT EN/AR)
 ---
 
 # Phase 69 — Signals: Verification
 
 **Goal:** Analysts can capture and triage intelligence signals tied to one or more dossiers; the agent can read signals under clearance gating.
 
-**Method:** Code shipped across 4 waves (type-check + lint + production build green on every commit). Data-layer / agent-tool behaviour verified **live** on staging `zkrcjzdemdmwhearhfgg` via Supabase MCP (schema introspection + clearance impersonation). UI flows verified by build + advisory code review; live UI confirmation deferred to the user's spot-check (finalize-now decision).
+**Method:** Code shipped across 4 waves (type-check + lint + production build green on every commit). Data-layer / agent-tool behaviour verified **live** on staging `zkrcjzdemdmwhearhfgg` via Supabase MCP (schema introspection + clearance impersonation). **UI flows driven live (2026-06-15)** against the running dev app as `kazahrani@stats.gov.sa` (clearance-3 org member): SIGNAL-01 create→appears (count 2→3); SIGNAL-03 Arabic RTL + keyboard `j`/`a` (status New→Acknowledged); SIGNAL-04 per-dossier Signals tab on the Saudi Arabia dossier (2 linked signals, same data path); SIGNAL-05 `e`→escalate dialog→confirm, DB-confirmed task (`workflow_stage=todo`, `priority=high`) + dossier-link copy + bidirectional link. Empty/denial states generic (no clearance leak); sensitivity selector capped at caller clearance.
 
 ## Success criteria (from ROADMAP)
 
