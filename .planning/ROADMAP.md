@@ -292,8 +292,16 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 3. External-channel payloads (webhook/Teams) carry only deep-links and zero classified content — verified by inspecting the outbound payload body on a MEDIUM-sensitivity signal and confirming no signal body text is present.
 4. The digest pipeline runs under service-role with explicit app-layer authz; each subscriber receives only clearance-appropriate content — verified by subscribing two accounts at different clearance levels to the same dossier and confirming each digest contains only within-clearance signals.
 5. The agent's `generate_digest` HITL tool presents a bilingual confirmation card before committing and publishes only after approval — verified live via the agent surface on staging.
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 7 plans
+   Plans:
+   - [ ] 70-01-PLAN.md — Wave 1: test scaffold (8 stubs) + nodemailer/pg install (blocking package legitimacy checkpoint)
+   - [ ] 70-02-PLAN.md — Wave 2: full database migration SQL (4 tables, 4 INVOKER RPCs, pg_notify trigger)
+   - [ ] 70-03-PLAN.md — Wave 3: [BLOCKING] Supabase MCP migration apply to staging + 6-query verification
+   - [ ] 70-04-PLAN.md — Wave 4: ChannelAdapter layer + alert worker (3 adapters, pg LISTEN, BullMQ)
+   - [ ] 70-05-PLAN.md — Wave 4: digest pipeline + alerts.service.ts replacement + Express API routes
+   - [ ] 70-06-PLAN.md — Wave 5: frontend surfaces (i18n, hooks, 7 components, IntelligencePage 4-tab extension)
+   - [ ] 70-07-PLAN.md — Wave 6: GenerateDigestButton + 8 dossier digests routes + backend wiring + live UAT
+         **UI hint**: yes
 
 ---
 
