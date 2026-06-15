@@ -64,7 +64,7 @@ function toAlertPayload(row: IntelligenceEventRow): IntelligenceAlertPayload {
 
 async function enqueueAlertCheck(payload: IntelligenceAlertPayload): Promise<void> {
   await notificationQueue.add('intelligence-alert', payload, {
-    jobId: `alert:${payload.event_id}:check`,
+    jobId: `alert-${payload.event_id}-check`,
     removeOnComplete: { count: 500 },
   })
 }
@@ -102,7 +102,7 @@ async function enqueueMatchingAlertJobs(payload: IntelligenceAlertPayload): Prom
   for (const rule of rules) {
     try {
       await notificationQueue.add('intelligence-alert', payload, {
-        jobId: `alert:${payload.event_id}:${rule.id}:check`,
+        jobId: `alert-${payload.event_id}-${rule.id}-check`,
         removeOnComplete: { count: 500 },
       })
     } catch (err) {
