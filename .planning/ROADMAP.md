@@ -308,7 +308,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 **Wave 4** _(blocked on Wave 3 completion)_
 
 - [x] 70-04-PLAN.md — Wave 4: ChannelAdapter layer + alert worker (3 adapters, pg LISTEN, BullMQ)
-- [ ] 70-05-PLAN.md — Wave 4: digest pipeline + alerts.service.ts replacement + Express API routes
+- [x] 70-05-PLAN.md — Wave 4: digest pipeline + alerts.service.ts replacement + Express API routes
 
 **Wave 5** _(blocked on Wave 4 completion)_
 
