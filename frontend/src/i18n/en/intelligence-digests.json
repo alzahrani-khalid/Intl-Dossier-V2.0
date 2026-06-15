@@ -1,0 +1,76 @@
+{
+  "tab": {
+    "label": "Digests"
+  },
+  "header": "Digests",
+  "empty": {
+    "noSubscriptions": {
+      "heading": "No digest subscriptions yet",
+      "body": "Subscribe to a dossier to receive a recurring rollup of its signals and activity."
+    },
+    "noDraftPublished": {
+      "heading": "No digests published yet",
+      "body": "Your first digest will appear here after the next scheduled delivery, or generate one now."
+    }
+  },
+  "action": {
+    "subscribe": "Subscribe to digest",
+    "unsubscribe": "Unsubscribe",
+    "generate": "Generate digest now",
+    "generateNow": "Generate now",
+    "editFrequency": "Edit frequency",
+    "publish": "Publish digest",
+    "discard": "Discard",
+    "cancel": "Cancel",
+    "close": "Close",
+    "retry": "Retry"
+  },
+  "frequency": {
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly"
+  },
+  "chip": {
+    "daily": "DAILY",
+    "weekly": "WEEKLY",
+    "monthly": "MONTHLY"
+  },
+  "preview": {
+    "banner": "Preview — not published",
+    "published": "Digest published {{date}} at {{time}}"
+  },
+  "error": {
+    "load": "Couldn't load digests. Check your connection and retry.",
+    "generate": "Couldn't generate digest. Check your connection and retry.",
+    "publish": "Couldn't publish digest. Try again.",
+    "subscribe": "Couldn't subscribe. Try again."
+  },
+  "confirm": {
+    "unsubscribe": {
+      "heading": "Unsubscribe from this digest?",
+      "body": "You'll stop receiving the recurring rollup for this dossier.",
+      "confirm": "Unsubscribe",
+      "cancel": "Keep subscription"
+    }
+  },
+  "section": {
+    "signals": "Signals",
+    "engagements": "Engagements",
+    "commitments": "Commitments",
+    "statusChanges": "Status changes"
+  },
+  "metric": {
+    "signals": "Signals",
+    "engagements": "Engagements",
+    "commitments": "Commitments"
+  },
+  "subscriptions": "Your subscriptions",
+  "digest": {
+    "generated": "Generated {{date}} at {{time}}",
+    "published": "Published {{date}} at {{time}}",
+    "more": "+ {{count}} more",
+    "back": "Digests",
+    "untitledDossier": "Tracked dossier",
+    "period": "Period"
+  }
+}

@@ -20,6 +20,8 @@ import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
 import { useDirection } from '@/hooks/useDirection'
 import { SignalsQueue } from '@/components/signals/SignalsQueue'
+import { DigestsTab } from '@/components/intelligence/DigestsTab'
+import { AlertsTab } from '@/components/intelligence/AlertsTab'
 
 function ConfidenceIndicator({ level, t }: { level: string; t: (key: string) => string }) {
   const configs = {
@@ -146,7 +148,11 @@ type IntelligenceReportRow = {
 export function IntelligencePage() {
   const { t } = useTranslation()
   const { t: tSignals } = useTranslation('intelligence-signals')
-  const [activeTab, setActiveTab] = useState<'reports' | 'signals'>('reports')
+  const { t: tDigests } = useTranslation('intelligence-digests')
+  const { t: tAlerts } = useTranslation('intelligence-alerts')
+  const [activeTab, setActiveTab] = useState<'reports' | 'signals' | 'digests' | 'alerts'>(
+    'reports',
+  )
   const [searchTerm, setSearchTerm] = useState('')
   const [filterConfidence, setFilterConfidence] = useState<string>('all')
   const [filterClassification, setFilterClassification] = useState<string>('all')
@@ -413,9 +419,25 @@ export function IntelligencePage() {
         >
           {tSignals('tab.label')}
         </Button>
+        <Button
+          variant={activeTab === 'digests' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setActiveTab('digests')}
+        >
+          {tDigests('tab.label')}
+        </Button>
+        <Button
+          variant={activeTab === 'alerts' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setActiveTab('alerts')}
+        >
+          {tAlerts('tab.label')}
+        </Button>
       </div>
 
       {activeTab === 'signals' && <SignalsQueue />}
+      {activeTab === 'digests' && <DigestsTab />}
+      {activeTab === 'alerts' && <AlertsTab />}
 
       {activeTab === 'reports' && (
         <>

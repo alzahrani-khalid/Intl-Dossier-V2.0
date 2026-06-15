@@ -252,6 +252,11 @@ import arTopics from './ar/topics.json'
 // Phase 69: intelligence-signals namespace
 import enIntelligenceSignals from './en/intelligence-signals.json'
 import arIntelligenceSignals from './ar/intelligence-signals.json'
+// Phase 70: intelligence-digests and intelligence-alerts namespaces
+import enIntelligenceDigests from './en/intelligence-digests.json'
+import arIntelligenceDigests from './ar/intelligence-digests.json'
+import enIntelligenceAlerts from './en/intelligence-alerts.json'
+import arIntelligenceAlerts from './ar/intelligence-alerts.json'
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -385,6 +390,9 @@ const resources = {
     topics: enTopics,
     // Phase 69
     'intelligence-signals': enIntelligenceSignals,
+    // Phase 70
+    'intelligence-digests': enIntelligenceDigests,
+    'intelligence-alerts': enIntelligenceAlerts,
   },
   ar: {
     translation: arCommon,
@@ -514,6 +522,9 @@ const resources = {
     topics: arTopics,
     // Phase 69
     'intelligence-signals': arIntelligenceSignals,
+    // Phase 70
+    'intelligence-digests': arIntelligenceDigests,
+    'intelligence-alerts': arIntelligenceAlerts,
   },
 }
 
