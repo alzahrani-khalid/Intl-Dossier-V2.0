@@ -201,7 +201,7 @@ describe('ALERT-02: signal-triggered alert fan-out', () => {
     })
 
     expect(queueAddMock).toHaveBeenCalledWith('intelligence-alert', payload, {
-      jobId: 'alert:event-1:check',
+      jobId: 'alert-event-1-check',
       removeOnComplete: { count: 500 },
     })
   })
@@ -258,7 +258,7 @@ describe('ALERT-02: signal-triggered alert fan-out', () => {
 
     expect(fromCalls).toContain('intelligence_event')
     expect(queueAddMock).toHaveBeenCalledWith('intelligence-alert', payload, {
-      jobId: 'alert:event-1:rule-1:check',
+      jobId: 'alert-event-1-rule-1-check',
       removeOnComplete: { count: 500 },
     })
   })
@@ -292,5 +292,96 @@ describe('ALERT-02: signal-triggered alert fan-out', () => {
 
     expect(inAppSendMock).toHaveBeenCalledTimes(2)
     expect(updateCalls).toHaveLength(2)
+  })
+})
+
+describe('ALERT-02 regression: BullMQ-legal job IDs (no colon)', () => {
+  // Mirrors BullMQ 5.77.1 Job.validateOptions: a custom jobId throws
+  // 'Custom Id cannot contain :' when it includes ':' and does not split into
+  // exactly 3 segments. Colon job IDs from the worker (4 segments for the
+  // per-rule path) crashed every enqueue at live UAT-2. A hyphen separator
+  // removes colons entirely, so this guard asserts the worker generates IDs
+  // that BullMQ accepts without needing a live Redis connection.
+  function bullmqRejectsCustomJobId(jobId: string): boolean {
+    return jobId.includes(':') && jobId.split(':').length !== 3
+  }
+
+  function jobIdsFromQueueAdds(): string[] {
+    return queueAddMock.mock.calls
+      .map((call) => (call[2] as { jobId?: string } | undefined)?.jobId)
+      .filter((jobId): jobId is string => typeof jobId === 'string')
+  }
+
+  beforeEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    queryResponses.length = 0
+    fromCalls.length = 0
+    updateCalls.length = 0
+    mockFrom.mockImplementation((table: string) => {
+      fromCalls.push(table)
+      const response = queryResponses.shift() ?? { data: [], error: null }
+      const chain: Record<string, unknown> = {
+        select: vi.fn(() => chain),
+        insert: vi.fn(() => chain),
+        update: vi.fn((values: unknown) => {
+          updateCalls.push({ table, values })
+          return chain
+        }),
+        eq: vi.fn(() => chain),
+        in: vi.fn(() => chain),
+        gt: vi.fn(() => chain),
+        gte: vi.fn(() => chain),
+        limit: vi.fn(() => chain),
+        single: vi.fn(async () => response),
+        then: (resolve: (value: typeof response) => unknown) =>
+          Promise.resolve(response).then(resolve),
+      }
+      return chain
+    })
+    process.env.DATABASE_URL = 'postgres://user:pass@localhost:5432/db'
+  })
+
+  it('generates an event-scoped jobId with no colon (enqueueAlertCheck)', async () => {
+    setQueryResponses([{ data: [] }])
+    const { startAlertListener } = await import('../../src/queues/intelligence-alert.worker')
+
+    await startAlertListener()
+    await mockPgClient.emitNotification({
+      channel: 'intelligence_alert',
+      payload: JSON.stringify(payload),
+    })
+
+    const jobIds = jobIdsFromQueueAdds()
+    expect(jobIds).toContain('alert-event-1-check')
+    for (const jobId of jobIds) {
+      expect(jobId).not.toContain(':')
+      expect(jobId).toMatch(/^alert-[^:]+(-[^:]+)?-check$/)
+      expect(bullmqRejectsCustomJobId(jobId)).toBe(false)
+    }
+  })
+
+  it('generates a rule-scoped jobId with no colon (enqueueMatchingAlertJobs)', async () => {
+    setQueryResponses([
+      { data: [{ ...payload, id: payload.event_id }] },
+      { data: [{ dossier_id: 'dossier-1' }] },
+      { data: [mockRule()] },
+    ])
+    const { startAlertListener } = await import('../../src/queues/intelligence-alert.worker')
+
+    await startAlertListener()
+
+    const jobIds = jobIdsFromQueueAdds()
+    expect(jobIds).toContain('alert-event-1-rule-1-check')
+    for (const jobId of jobIds) {
+      expect(jobId).not.toContain(':')
+      expect(jobId).toMatch(/^alert-[^:]+(-[^:]+)?-check$/)
+      expect(bullmqRejectsCustomJobId(jobId)).toBe(false)
+    }
+  })
+
+  it('confirms the old colon jobId WOULD be rejected by BullMQ (sanity)', () => {
+    // The 4-segment per-rule colon ID that crashed live UAT-2.
+    expect(bullmqRejectsCustomJobId('alert:event-1:rule-1:check')).toBe(true)
   })
 })
