@@ -57,7 +57,7 @@ Out of scope (deferred — do NOT pull forward):
   add a monthly cadence. (The existing personal-notification digest only has daily/weekly.)
 - **D-03:** **Subscription target = a single dossier of any of the 8 types** (incl. `topic` —
   DIGEST-01's "dossier or topic" = any dossier). One subscription = one dossier, via the
-  polymorphic junction pattern. _(Claude's discretion — user said "you decide".)_
+  polymorphic junction pattern. (Claude's discretion — user said "you decide".)
 - **D-04:** **Digest body = structured rollup rendered from data** (counts by category/severity +
   linked items), **bilingual chrome**, free-text items shown **as entered** (single-language —
   mirrors P69 D-09: no system translation, no `title_en`/`title_ar` pairs). `intelligence_digest.summary`
@@ -70,8 +70,8 @@ Out of scope (deferred — do NOT pull forward):
   filter** (only `high`/`urgent`). The "threshold" in ALERT-01 is satisfied by the severity
   filter. Store the rule **condition as structured config** (JSON/columns) so count/window and
   other-event rules can be added later without rework. Count-thresholds (N-in-window) and
-  non-signal triggers are **deferred**. _(Claude's discretion — user said "you decide best for
-  the project".)_
+  non-signal triggers are **deferred**. (Claude's discretion — user said "you decide best for
+  the project".)
 - **D-06:** **Alert = an independent alert-rule object** (target dossier + condition + channels +
   `is_active` + owner), **separate** from digest subscriptions. You can alert without a digest and
   vice-versa (reads like ALERT-01 "define a threshold alert").
@@ -81,11 +81,11 @@ Out of scope (deferred — do NOT pull forward):
 
 ### Channels & external payload
 
-- **D-08:** **A new `ChannelAdapter` interface with 3 adapters** (in*app, on-prem SMTP email,
+- **D-08:** **A new `ChannelAdapter` interface with 3 adapters** (`in_app`, on-prem SMTP email,
   webhook) for the v7.0 digest/alert dispatch, **reusing** the existing `email_queue` → `email-send`
   edge fn and in-app notifications under the hood. **Isolated** from the existing v4.0
   personal-notification dispatch (no regression). Fully realizes ALERT-03's "pluggable channel
-  adapter". *(Claude's discretion — user said "you decide".)\_
+  adapter". (Claude's discretion — user said "you decide".)
 - **D-09:** **External format = generic JSON envelope POSTed to a configured URL + a
   Teams-compatible card formatter** (a Teams incoming-webhook is the first supported consumer).
   The endpoint URL is still **TBD with the customer** (open todo).
@@ -206,7 +206,7 @@ Factual gaps the researcher must close against **live staging** (`zkrcjzdemdmwhe
 - `backend/src/queues/digest-scheduler.ts` — BullMQ repeatable daily/weekly digest cron
   (`upsertJobScheduler`, tz / day-of-week checks, `email_queue` insert) — the cron pattern to
   mirror + extend with monthly (RF-4)
-- `backend/src/queues/notification.processor.ts` — channel dispatch (in_app / email via
+- `backend/src/queues/notification.processor.ts` — channel dispatch (`in_app` / email via
   `email_queue` / push), preference-gated — model the `ChannelAdapter` on this (D-08)
 - `backend/src/services/notification.service.ts` — notification creation/dispatch service
 - `backend/src/services/digest-template.service.ts` — digest rendering/templating (reuse for the
@@ -266,8 +266,8 @@ Factual gaps the researcher must close against **live staging** (`zkrcjzdemdmwhe
   across reloads; mirror for the intelligence-digest cron (daily/weekly/monthly).
 - **`email_queue` + `email-send` edge fn** — the existing async email send path; the SMTP adapter
   routes through it (pending RF-1 transport confirmation).
-- **`notification.processor.ts` channel dispatch** (in_app / email / push, preference-gated) — the
-  model for the new `ChannelAdapter`; the in_app + email adapters wrap existing paths.
+- **`notification.processor.ts` channel dispatch** (`in_app` / email / push, preference-gated) — the
+  model for the new `ChannelAdapter`; the `in_app` + email adapters wrap existing paths.
 - **`digest-template.service.ts` + `email-template.service.ts`** — bilingual rendering/templating to
   reuse for the structured digest body + email.
 - **`intelligence_event` (+ P69 extension) + `intelligence_event_dossiers` junction** — signal
@@ -302,7 +302,7 @@ Factual gaps the researcher must close against **live staging** (`zkrcjzdemdmwhe
   even a dossier name must not leak (D-10).
 - **Verification bar** (milestone cross-cutting guarantee): subscribe two accounts at different
   clearance to the same dossier → each digest contains only within-clearance content; seed a signal
-  on a tracked dossier → alert reaches in_app + on-prem SMTP + webhook; inspect the outbound webhook
+  on a tracked dossier → alert reaches `in_app` + on-prem SMTP + webhook; inspect the outbound webhook
   body on a MEDIUM-sensitivity signal → only a deep-link + generic label, zero content. EN+AR, live
   on staging.
 
