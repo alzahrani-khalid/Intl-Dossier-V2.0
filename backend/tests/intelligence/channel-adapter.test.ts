@@ -2,19 +2,18 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-const { createTransportMock, enqueueNotificationMock, fetchMock, sendMailMock } = vi.hoisted(() => {
-  const sendMailMock = vi.fn().mockResolvedValue({ messageId: 'smtp-1' })
+const { enqueueNotificationMock, fetchMock, insertMock, fromMock } = vi.hoisted(() => {
+  const insertMock = vi.fn().mockResolvedValue({ error: null })
   return {
-    createTransportMock: vi.fn(() => ({ sendMail: sendMailMock })),
     enqueueNotificationMock: vi.fn().mockResolvedValue(undefined),
     fetchMock: vi.fn().mockResolvedValue({ ok: true, status: 200 }),
-    sendMailMock,
+    insertMock,
+    fromMock: vi.fn(() => ({ insert: insertMock })),
   }
 })
 
-vi.mock('nodemailer', () => ({
-  default: { createTransport: createTransportMock },
-  createTransport: createTransportMock,
+vi.mock('../../src/config/supabase', () => ({
+  supabaseAdmin: { from: fromMock },
 }))
 
 vi.mock('../../src/services/notification.service', () => ({
@@ -61,36 +60,48 @@ describe('ALERT-03: channel adapter isolation', () => {
     expect(webhookAdapter.name).toBe('webhook')
   })
 
-  it('sends SMTP directly through nodemailer when SMTP_HOST is configured', async () => {
-    process.env.SMTP_HOST = 'smtp.internal'
-    process.env.SMTP_FROM = 'alerts@example.test'
-
+  it('enqueues SMTP alerts into intelligence_email_queue (RF-1 on-prem design)', async () => {
     await smtpAdapter.send(payload)
 
-    expect(sendMailMock).toHaveBeenCalledWith({
-      from: 'alerts@example.test',
-      to: payload.recipientEmail,
+    expect(fromMock).toHaveBeenCalledWith('intelligence_email_queue')
+    expect(insertMock).toHaveBeenCalledWith({
+      recipient_id: payload.recipientId,
+      recipient_email: payload.recipientEmail,
       subject: payload.subject,
-      html: payload.bodyHtml,
-      text: payload.bodyText,
+      body_html: payload.bodyHtml,
+      body_text: payload.bodyText,
+      deep_link: payload.deepLink,
     })
   })
 
-  it('does not reference email queue persistence from intelligence adapters', () => {
-    const adapterDir = join(process.cwd(), 'src/adapters/intelligence')
-    const sources = ['in-app-adapter.ts', 'smtp-adapter.ts', 'webhook-adapter.ts'].map((file) =>
-      readFileSync(join(adapterDir, file), 'utf8'),
-    )
+  it('enqueues SMTP even when SMTP_HOST is undefined (queue is egress-free)', async () => {
+    delete process.env.SMTP_HOST
+    await smtpAdapter.send(payload)
 
-    for (const source of sources) {
-      expect(source).not.toContain('email_queue')
-      expect(source).not.toContain('intelligence_email_queue')
-    }
+    expect(insertMock).toHaveBeenCalledTimes(1)
+    expect(fromMock).toHaveBeenCalledWith('intelligence_email_queue')
   })
 
-  it('skips SMTP gracefully when SMTP_HOST is undefined', async () => {
-    await expect(smtpAdapter.send(payload)).resolves.toBeUndefined()
-    expect(sendMailMock).not.toHaveBeenCalled()
+  it('throws when the intelligence_email_queue insert fails', async () => {
+    insertMock.mockResolvedValueOnce({ error: { message: 'boom' } })
+
+    await expect(smtpAdapter.send(payload)).rejects.toThrow(/failed to enqueue intelligence email/)
+  })
+
+  it('keeps the v4.0 email_queue out of intelligence adapters (D-08); smtp uses the dedicated intelligence_email_queue', () => {
+    const adapterDir = join(process.cwd(), 'src/adapters/intelligence')
+    const read = (file: string): string => readFileSync(join(adapterDir, file), 'utf8')
+
+    // No intelligence adapter may write the v4.0 email_queue table.
+    for (const file of ['in-app-adapter.ts', 'smtp-adapter.ts', 'webhook-adapter.ts']) {
+      expect(read(file)).not.toContain("from('email_queue')")
+    }
+    // in_app + webhook touch no email queue at all.
+    for (const file of ['in-app-adapter.ts', 'webhook-adapter.ts']) {
+      expect(read(file)).not.toContain('email_queue')
+    }
+    // smtp routes through the dedicated intelligence queue (RF-1).
+    expect(read('smtp-adapter.ts')).toContain('intelligence_email_queue')
   })
 
   it('maps in-app payloads to enqueueNotification data', async () => {

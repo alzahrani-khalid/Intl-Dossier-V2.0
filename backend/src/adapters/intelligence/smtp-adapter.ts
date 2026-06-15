@@ -1,34 +1,29 @@
-import nodemailer from 'nodemailer'
-import { logInfo } from '../../utils/logger'
+import { supabaseAdmin } from '../../config/supabase'
 import type { ChannelAdapter, IntelligenceDeliveryPayload } from './ChannelAdapter'
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT ?? 587),
-  secure: false,
-  auth:
-    process.env.SMTP_USER != null || process.env.SMTP_PASS != null
-      ? {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        }
-      : undefined,
-})
-
+/**
+ * On-prem SMTP channel (ALERT-03, research RF-1).
+ *
+ * The adapter ENQUEUES the alert/digest into `intelligence_email_queue` — it does
+ * not send directly. A separate on-prem nodemailer drain worker sends queued rows
+ * once an on-prem SMTP relay (`SMTP_HOST`, customer-TBD) is configured. Queuing
+ * keeps the path egress-free and verifiable without SMTP infrastructure, and is
+ * isolated from the v4.0 `email_queue` (D-08).
+ */
 export const smtpAdapter: ChannelAdapter = {
   name: 'smtp',
   async send(payload: IntelligenceDeliveryPayload): Promise<void> {
-    if (process.env.SMTP_HOST == null) {
-      logInfo('SMTP adapter: SMTP_HOST not configured; skipping')
-      return
-    }
-
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM ?? 'noreply@stats.gov.sa',
-      to: payload.recipientEmail,
+    const { error } = await supabaseAdmin.from('intelligence_email_queue').insert({
+      recipient_id: payload.recipientId,
+      recipient_email: payload.recipientEmail,
       subject: payload.subject,
-      html: payload.bodyHtml,
-      text: payload.bodyText,
+      body_html: payload.bodyHtml,
+      body_text: payload.bodyText,
+      deep_link: payload.deepLink,
     })
+
+    if (error != null) {
+      throw new Error(`SMTP adapter: failed to enqueue intelligence email: ${error.message}`)
+    }
   },
 }
