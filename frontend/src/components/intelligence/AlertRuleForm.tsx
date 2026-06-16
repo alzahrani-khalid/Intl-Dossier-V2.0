@@ -210,6 +210,7 @@ export function AlertRuleForm({
             insetBlockStart: 0,
             insetBlockEnd: 0,
             transform: 'none',
+            translate: 'none',
             boxShadow: 'var(--shadow-lg)',
           }}
           dir={isRTL ? 'rtl' : 'ltr'}
