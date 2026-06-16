@@ -30,6 +30,10 @@
     "weekly": "أسبوعي",
     "monthly": "شهري"
   },
+  "picker": {
+    "step1": "اختر فترة",
+    "generatePreview": "إنشاء معاينة"
+  },
   "chip": {
     "daily": "يومي",
     "weekly": "أسبوعي",

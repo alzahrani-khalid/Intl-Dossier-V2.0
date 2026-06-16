@@ -30,6 +30,10 @@
     "weekly": "Weekly",
     "monthly": "Monthly"
   },
+  "picker": {
+    "step1": "Choose a period",
+    "generatePreview": "Generate preview"
+  },
   "chip": {
     "daily": "DAILY",
     "weekly": "WEEKLY",
