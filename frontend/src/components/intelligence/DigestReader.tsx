@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { useDirection } from '@/hooks/useDirection'
 import { formatDayFirst, formatTime } from '@/lib/format-date'
-import { useDigests } from '@/domains/signals/hooks/useDigests'
+import { useDigests, useUnsubscribeFromDigest } from '@/domains/signals/hooks/useDigests'
 import {
   formatDigestPeriod,
   getDigestCounts,
@@ -29,6 +29,7 @@ export function DigestReader({ digestId, onBack }: DigestReaderProps): React.Rea
   const { isRTL } = useDirection()
   const locale = isRTL ? 'ar' : 'en'
   const { data: digests = [] } = useDigests({ limit: 100 })
+  const unsubscribe = useUnsubscribeFromDigest()
   const digest = digests.find((item) => item.id === digestId)
 
   if (!digest) return null
@@ -125,6 +126,14 @@ export function DigestReader({ digestId, onBack }: DigestReaderProps): React.Rea
             time: formatTime(digest.published_at, locale),
           })}
         </span>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="ms-auto text-ink-mute"
+          onClick={() => unsubscribe.mutate({ dossierId: digest.dossier_id })}
+        >
+          {t('action.unsubscribe')}
+        </Button>
       </footer>
     </section>
   )

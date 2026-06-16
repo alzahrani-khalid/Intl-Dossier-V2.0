@@ -11,7 +11,7 @@
     "add": "Add alert",
     "edit": "Edit alert rule",
     "delete": "Delete alert rule",
-    "save": "Save",
+    "save": "Save changes",
     "cancel": "Cancel",
     "close": "Close",
     "retry": "Retry"
