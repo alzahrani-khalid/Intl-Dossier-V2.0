@@ -19,6 +19,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
 import { useDirection } from '@/hooks/useDirection'
+import { cn } from '@/lib/utils'
 import { SignalsQueue } from '@/components/signals/SignalsQueue'
 import { DigestsTab } from '@/components/intelligence/DigestsTab'
 import { AlertsTab } from '@/components/intelligence/AlertsTab'
@@ -404,36 +405,56 @@ export function IntelligencePage() {
         )}
       </div>
 
-      <div className="flex gap-2 mb-4">
-        <Button
-          variant={activeTab === 'reports' ? 'default' : 'outline'}
-          size="sm"
+      <nav role="tablist" className="tabs mb-4" dir={isRTL ? 'rtl' : 'ltr'}>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'reports'}
           onClick={() => setActiveTab('reports')}
+          className={cn(
+            'tab outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
+            activeTab === 'reports' && 'active',
+          )}
         >
           {t('intelligence.tabs.reports', { defaultValue: 'Reports' })}
-        </Button>
-        <Button
-          variant={activeTab === 'signals' ? 'default' : 'outline'}
-          size="sm"
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'signals'}
           onClick={() => setActiveTab('signals')}
+          className={cn(
+            'tab outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
+            activeTab === 'signals' && 'active',
+          )}
         >
           {tSignals('tab.label')}
-        </Button>
-        <Button
-          variant={activeTab === 'digests' ? 'default' : 'outline'}
-          size="sm"
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'digests'}
           onClick={() => setActiveTab('digests')}
+          className={cn(
+            'tab outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
+            activeTab === 'digests' && 'active',
+          )}
         >
           {tDigests('tab.label')}
-        </Button>
-        <Button
-          variant={activeTab === 'alerts' ? 'default' : 'outline'}
-          size="sm"
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'alerts'}
           onClick={() => setActiveTab('alerts')}
+          className={cn(
+            'tab outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
+            activeTab === 'alerts' && 'active',
+          )}
         >
           {tAlerts('tab.label')}
-        </Button>
-      </div>
+        </button>
+      </nav>
 
       {activeTab === 'signals' && <SignalsQueue />}
       {activeTab === 'digests' && <DigestsTab />}
