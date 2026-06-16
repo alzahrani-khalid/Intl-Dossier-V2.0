@@ -2,15 +2,16 @@
 gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
-status: executing
-last_updated: '2026-06-16T02:00:00.000Z'
+status: ready_to_plan
+last_updated: 2026-06-16T13:26:56.047Z
 last_activity: 2026-06-16
 progress:
   total_phases: 7
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 19
-  completed_plans: 18
-  percent: 29
+  completed_plans: 19
+  percent: 43
+stopped_at: Phase 70 complete (7/7) — ready to discuss Phase 71
 ---
 
 # Project State
@@ -20,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 70 — digests-alerts
+**Current focus:** Phase 71 — analytic graph
 
 ## Current Position
 
-Phase: 70 (digests-alerts) — EXECUTED (all plans done; live UAT passed; ready for verify/close)
-Plan: 7 of 7
-Status: Plan 70-07 complete — all 5 live UATs PASSED. UAT-2 (alert fan-out) initially FAILED live and was root-caused + fixed via debug session p70-alert-fanout (BullMQ colon jobId; D-08 in_app/email_queue isolation; notification_type enum values + create_categorized_notification enum casts; SMTP→intelligence_email_queue per RF-1). Fixes committed (46066f55, aec2e3e1, 999f9e32, cac5bc89); 70-07-SUMMARY written. Follow-up: on-prem SMTP drain worker (drains intelligence_email_queue when SMTP_HOST set) + webhook URL are customer-TBD.
-Last activity: 2026-06-16 - Completed quick task 260616-l4e: remaining Phase 70 UI-review findings (digests tab, hub tab strip, HITL 720px drawer, token sweep, a11y)
+Phase: 71
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-06-16
 
 ```
 Phase Progress: Phase 70 is 7/7 plans complete
@@ -35,7 +36,7 @@ Phase Progress: Phase 70 is 7/7 plans complete
 
 Phase 68: Complete
 Phase 69: Complete
-Phase 70: Executed (7/7 plans; live UAT-1..5 passed) — ready for verification/close
+Phase 70: Complete (7/7 plans; UAT 10/10 pass, verified + security-clean 2026-06-16)
 Phase 71: Not started
 Phase 72: Not started
 Phase 73: Not started
@@ -81,7 +82,9 @@ Phase 74: Not started
 
 ## Next Action
 
-Complete Phase 70 Plan 70-07 live UAT checkpoint. Resume when the human signal is `UAT complete` with one-line pass/N-A/fail notes for UAT-1 through UAT-5; then create `.planning/phases/70-digests-alerts/70-07-SUMMARY.md` and run phase closeout.
+Phase 70 closed (2026-06-16): UAT 10/10 pass (`70-UAT.md`), `70-VERIFICATION.md` status=passed (human-accepted), `70-SECURITY.md` threats_open=0. Carry-forward: on-prem SMTP **drain worker** + external webhook URL are customer-config (RF-1) — alerts enqueue to `intelligence_email_queue` and the webhook adapter is built/tested, but live SMTP/webhook delivery is not exercisable on staging. Phase 70 work is local-only (UNPUSHED; main protected → needs PR).
+
+Next: `/gsd:discuss-phase 71` (analytic-graph) — no CONTEXT.md yet.
 
 Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/middleware/auth.ts`) deployed — elected-official detail and other Express-backed routes stay 401 in production until deployed (staging is correct).
 

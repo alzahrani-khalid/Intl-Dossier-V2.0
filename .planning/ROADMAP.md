@@ -196,7 +196,7 @@ Full details: [v6.6-ROADMAP.md](milestones/v6.6-ROADMAP.md)
 
 - [x] **Phase 68: AI Foundations Remediation** - One canonical clearance scale; no corrupted embeddings; the interactive AI path honors RLS (completed 2026-06-14)
 - [x] **Phase 69: Signals** - Analysts capture and triage signals tied to dossiers; the agent can read them (completed 2026-06-14)
-- [ ] **Phase 70: Digests + Alerts** - Recurring digests and threshold alerts reach subscribers across channels
+- [x] **Phase 70: Digests + Alerts** - Recurring digests and threshold alerts reach subscribers across channels (completed 2026-06-16)
 - [ ] **Phase 71: Analytic Graph** - First-class analytic queries over the relationship graph, clearance-gated
 - [ ] **Phase 72: Agent Platform — Runtime, Retrieval, Reads** - The on-prem agent goes live reading P69–71 data under the JWT keystone
 - [ ] **Phase 73: Agent Platform — Writes + Generative UI** - The copilot safely drives dossiers with human-in-the-loop
@@ -316,7 +316,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 
 **Wave 6** _(blocked on Wave 5 completion)_
 
-- [ ] 70-07-PLAN.md — Wave 6: GenerateDigestButton + 8 dossier digests routes + backend wiring + live UAT
+- [x] 70-07-PLAN.md — Wave 6: GenerateDigestButton + 8 dossier digests routes + backend wiring + live UAT
       **UI hint**: yes
 
 ---
@@ -407,7 +407,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
 | 68. AI Foundations Remediation | v7.0 | 8/8 | Complete    | 2026-06-14 |
 | 69. Signals | v7.0 | 4/4 | Complete   | 2026-06-14 |
-| 70. Digests + Alerts | v7.0 | 4/7 | In Progress|  |
+| 70. Digests + Alerts | v7.0 | 7/7 | Complete    | 2026-06-16 |
 | 71. Analytic Graph | v7.0 | 0/? | Not started | - |
 | 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 0/? | Not started | - |
 | 73. Agent Platform — Writes + Generative UI | v7.0 | 0/? | Not started | - |
