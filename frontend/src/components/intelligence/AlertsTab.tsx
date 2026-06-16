@@ -101,7 +101,7 @@ export function AlertsTab({ dossierId }: AlertsTabProps): React.ReactElement {
           className="rounded-sm border border-line bg-surface ps-4 pe-4 pt-4 pb-4 text-start"
           role="alert"
         >
-          <p className="text-sm text-danger">{t('error.load')}</p>
+          <p className="[font-size:var(--t-body)] text-danger">{t('error.load')}</p>
           <Button
             variant="ghost"
             size="sm"
@@ -116,8 +116,8 @@ export function AlertsTab({ dossierId }: AlertsTabProps): React.ReactElement {
 
       {!isLoading && !isError && rules.length === 0 && (
         <div className="rounded-sm border border-line bg-surface ps-4 pe-4 pt-8 pb-8 text-center">
-          <p className="text-sm font-medium text-ink">{t('empty.heading')}</p>
-          <p className="mt-1 text-sm text-ink-mute">{t('empty.body')}</p>
+          <p className="[font-size:var(--t-body)] font-medium text-ink">{t('empty.heading')}</p>
+          <p className="mt-1 [font-size:var(--t-body)] text-ink-mute">{t('empty.body')}</p>
           <Button size="sm" className="mt-4" onClick={openCreate}>
             <Plus className="h-4 w-4 me-2" aria-hidden="true" />
             {t('action.add')}

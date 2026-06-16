@@ -98,12 +98,12 @@ export function AlertRuleRow({
         </bdi>
       </button>
 
-      <span className="rounded-full bg-[var(--info-soft)] ps-2 pe-2 pt-0.5 pb-0.5 font-mono text-xs uppercase text-[var(--info)]">
+      <span className="rounded-full bg-[var(--info-soft)] ps-2 pe-2 pt-1 pb-1 font-mono [font-size:var(--t-meta)] uppercase text-[var(--info)]">
         {t('chip.newSignal')}
       </span>
 
       {severities.length > 0 && (
-        <span className="rounded-full bg-[var(--danger-soft)] ps-2 pe-2 pt-0.5 pb-0.5 font-mono text-xs uppercase text-danger">
+        <span className="rounded-full bg-[var(--danger-soft)] ps-2 pe-2 pt-1 pb-1 font-mono [font-size:var(--t-meta)] uppercase text-danger">
           {severities.map((severity) => t(`chip.${severity}`)).join(' / ')}
         </span>
       )}

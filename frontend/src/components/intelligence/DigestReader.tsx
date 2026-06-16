@@ -83,10 +83,10 @@ export function DigestReader({ digestId, onBack }: DigestReaderProps): React.Rea
         {sectionRows.map(({ key, items }) => (
           <details key={key} className="rounded-sm border border-line bg-surface" open>
             <summary className="flex cursor-pointer items-center justify-between gap-3 ps-4 pe-4 pt-3 pb-3">
-              <span className="font-mono text-xs uppercase text-ink-mute">
+              <span className="font-mono [font-size:var(--t-meta)] uppercase text-ink-mute">
                 {t(`section.${key}`)}
               </span>
-              <span className="rounded-full bg-line-soft ps-2 pe-2 pt-0.5 pb-0.5 text-xs text-ink-mute">
+              <span className="rounded-full bg-line-soft ps-2 pe-2 pt-1 pb-1 [font-size:var(--t-meta)] text-ink-mute">
                 {items.length}
               </span>
             </summary>
@@ -101,7 +101,7 @@ export function DigestReader({ digestId, onBack }: DigestReaderProps): React.Rea
                       {sectionItemLabel(item, t(`section.${key}`))}
                     </bdi>
                     {item.severity !== undefined && (
-                      <span className="rounded-full bg-[var(--warn-soft)] ps-2 pe-2 pt-0.5 pb-0.5 text-xs text-warning">
+                      <span className="rounded-full bg-[var(--warn-soft)] ps-2 pe-2 pt-1 pb-1 [font-size:var(--t-meta)] text-[var(--warn)]">
                         {text(item.severity)}
                       </span>
                     )}

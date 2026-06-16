@@ -219,7 +219,7 @@ export function AlertRuleForm({
             <DialogTitle className="text-start [font-size:var(--t-card-title)]">
               {isEdit ? t('action.edit') : t('action.add')}
             </DialogTitle>
-            <DialogDescription className="text-start text-sm text-ink-mute">
+            <DialogDescription className="text-start [font-size:var(--t-body)] text-ink-mute">
               {t('form.condition')}
             </DialogDescription>
           </DialogHeader>
@@ -231,7 +231,7 @@ export function AlertRuleForm({
             <div className="space-y-2">
               <Label
                 htmlFor="alert-dossier-type"
-                className="block text-start text-xs uppercase text-ink-mute"
+                className="block text-start [font-size:var(--t-meta)] uppercase text-ink-mute"
               >
                 {t('form.dossier')}
               </Label>
@@ -239,7 +239,7 @@ export function AlertRuleForm({
                 id="alert-dossier-type"
                 value={dossierType}
                 onChange={(event) => handleDossierTypeChange(event.target.value as DossierType)}
-                className="id-select-trigger flex w-full rounded-sm border border-line bg-surface ps-3 pe-3 pt-2 pb-2 text-sm text-ink outline-none focus-visible:border-[var(--accent)]"
+                className="id-select-trigger flex w-full rounded-sm border border-line bg-surface ps-3 pe-3 pt-2 pb-2 [font-size:var(--t-body)] text-ink outline-none focus-visible:border-[var(--accent)]"
               >
                 {DOSSIER_TYPES.map((type) => (
                   <option key={type} value={type}>
@@ -259,16 +259,16 @@ export function AlertRuleForm({
             </div>
 
             <div className="space-y-2">
-              <Label className="block text-start text-xs uppercase text-ink-mute">
+              <Label className="block text-start [font-size:var(--t-meta)] uppercase text-ink-mute">
                 {t('form.condition')}
               </Label>
-              <span className="inline-flex rounded-full bg-[var(--info-soft)] ps-2 pe-2 pt-1 pb-1 font-mono text-xs uppercase text-[var(--info)]">
+              <span className="inline-flex rounded-full bg-[var(--info-soft)] ps-2 pe-2 pt-1 pb-1 font-mono [font-size:var(--t-meta)] uppercase text-[var(--info)]">
                 {t('chip.newSignal')}
               </span>
             </div>
 
             <div className="space-y-2">
-              <Label className="block text-start text-xs uppercase text-ink-mute">
+              <Label className="block text-start [font-size:var(--t-meta)] uppercase text-ink-mute">
                 {t('form.severityFilter')}
               </Label>
               <div className="flex flex-wrap gap-2">
@@ -278,7 +278,7 @@ export function AlertRuleForm({
                     type="button"
                     onClick={() => toggleSeverity(severity)}
                     className={[
-                      'rounded-sm border ps-3 pe-3 pt-2 pb-2 text-sm transition-colors',
+                      'rounded-sm border ps-3 pe-3 pt-2 pb-2 [font-size:var(--t-body)] transition-colors',
                       severities.includes(severity)
                         ? 'border-[var(--accent)] bg-accent-soft text-accent-ink'
                         : 'border-line bg-surface text-ink-mute hover:bg-line-soft',
@@ -288,18 +288,24 @@ export function AlertRuleForm({
                   </button>
                 ))}
               </div>
-              <p className="text-start text-sm text-ink-mute">{t('form.severityHelper')}</p>
+              <p className="text-start [font-size:var(--t-body)] text-ink-mute">
+                {t('form.severityHelper')}
+              </p>
             </div>
 
             <div className="space-y-3">
-              <Label className="block text-start text-xs uppercase text-ink-mute">
+              <Label className="block text-start [font-size:var(--t-meta)] uppercase text-ink-mute">
                 {t('form.channels')}
               </Label>
               <label className="flex items-start gap-2">
                 <Checkbox checked disabled aria-label={t('channel.in_app')} />
                 <span className="pt-2 text-start">
-                  <span className="block text-sm text-ink">{t('channel.in_app')}</span>
-                  <span className="block text-xs text-ink-mute">{t('form.channelDesc.inApp')}</span>
+                  <span className="block [font-size:var(--t-body)] text-ink">
+                    {t('channel.in_app')}
+                  </span>
+                  <span className="block [font-size:var(--t-meta)] text-ink-mute">
+                    {t('form.channelDesc.inApp')}
+                  </span>
                 </span>
               </label>
               {OPTIONAL_CHANNELS.map((channel) => (
@@ -310,8 +316,10 @@ export function AlertRuleForm({
                     aria-label={t(`channel.${channel}`)}
                   />
                   <span className="pt-2 text-start">
-                    <span className="block text-sm text-ink">{t(`channel.${channel}`)}</span>
-                    <span className="block text-xs text-ink-mute">
+                    <span className="block [font-size:var(--t-body)] text-ink">
+                      {t(`channel.${channel}`)}
+                    </span>
+                    <span className="block [font-size:var(--t-meta)] text-ink-mute">
                       {channel === 'smtp'
                         ? t('form.channelDesc.smtp')
                         : t('form.channelDesc.webhook')}
@@ -322,7 +330,10 @@ export function AlertRuleForm({
             </div>
 
             <div className="flex items-center justify-between gap-3 rounded-sm border border-line bg-bg ps-3 pe-3 pt-3 pb-3">
-              <Label htmlFor="alert-active" className="text-start text-sm text-ink">
+              <Label
+                htmlFor="alert-active"
+                className="text-start [font-size:var(--t-body)] text-ink"
+              >
                 {t('form.active')}
               </Label>
               <Switch
@@ -333,7 +344,7 @@ export function AlertRuleForm({
             </div>
 
             {(formError || errors.dossier_id) && (
-              <p className="text-start text-sm text-danger">
+              <p className="text-start [font-size:var(--t-body)] text-danger">
                 {formError ?? t('form.dossierRequired')}
               </p>
             )}

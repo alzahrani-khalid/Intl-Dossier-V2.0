@@ -100,7 +100,7 @@ export function DigestSubscribeDrawer({
             <DialogTitle className="text-start [font-size:var(--t-card-title)]">
               {t('action.subscribe')}
             </DialogTitle>
-            <DialogDescription className="text-start text-sm text-ink-mute">
+            <DialogDescription className="text-start [font-size:var(--t-body)] text-ink-mute">
               <bdi>{dossierName}</bdi>
             </DialogDescription>
           </DialogHeader>
@@ -108,7 +108,7 @@ export function DigestSubscribeDrawer({
           <div className="space-y-4 pt-4 pb-4">
             {activeSubscription ? (
               <div className="rounded-sm border border-line bg-bg ps-3 pe-3 pt-3 pb-3">
-                <span className="inline-flex rounded-full bg-accent-soft ps-2 pe-2 pt-0.5 pb-0.5 font-mono text-xs uppercase text-accent-ink">
+                <span className="inline-flex rounded-full bg-accent-soft ps-2 pe-2 pt-1 pb-1 font-mono [font-size:var(--t-meta)] uppercase text-accent-ink">
                   {t(`chip.${activeSubscription.frequency}`)}
                 </span>
                 <Button
@@ -132,7 +132,7 @@ export function DigestSubscribeDrawer({
                       aria-checked={frequency === value}
                       onClick={() => setFrequency(value)}
                       className={[
-                        'rounded-sm border ps-3 pe-3 pt-2 pb-2 text-sm transition-colors',
+                        'rounded-sm border ps-3 pe-3 pt-2 pb-2 [font-size:var(--t-body)] transition-colors',
                         frequency === value
                           ? 'border-[var(--accent)] bg-accent-soft text-accent-ink'
                           : 'border-line bg-surface text-ink-mute hover:bg-line-soft',
@@ -143,7 +143,9 @@ export function DigestSubscribeDrawer({
                   ))}
                 </div>
                 {subscribe.isError && (
-                  <p className="text-start text-xs text-danger">{t('error.subscribe')}</p>
+                  <p className="text-start [font-size:var(--t-meta)] text-danger">
+                    {t('error.subscribe')}
+                  </p>
                 )}
               </div>
             )}

@@ -19,9 +19,9 @@ const DOSSIER_ICONS: Record<string, typeof Globe> = {
 }
 
 const SEVERITY_CLASSES: Record<string, string> = {
-  urgent: 'bg-[var(--danger-soft)] text-danger',
-  high: 'bg-[var(--danger-soft)] text-danger',
-  medium: 'bg-[var(--warn-soft)] text-warning',
+  urgent: 'bg-[var(--danger-soft)] text-[var(--danger)]',
+  high: 'bg-[var(--danger-soft)] text-[var(--danger)]',
+  medium: 'bg-[var(--warn-soft)] text-[var(--warn)]',
   low: 'bg-[var(--ok-soft)] text-[var(--ok)]',
 }
 
@@ -142,7 +142,7 @@ export function DigestCard({
         <div className="flex flex-wrap items-center gap-2">
           <DossierGlyph type={digest.dossier_type} />
           <bdi className="font-semibold text-ink [font-size:var(--t-body)]">{dossierName}</bdi>
-          <span className="rounded-full bg-accent-soft ps-2 pe-2 pt-0.5 pb-0.5 font-mono text-xs uppercase text-accent-ink">
+          <span className="rounded-full bg-accent-soft ps-2 pe-2 pt-1 pb-1 font-mono [font-size:var(--t-meta)] uppercase text-accent-ink">
             {t(`chip.${digest.frequency}`, {
               defaultValue: String(digest.frequency).toUpperCase(),
             })}
@@ -176,7 +176,7 @@ export function DigestCard({
             <li key={`${digest.id}-signal-${index}`} className="flex items-center gap-2">
               <span
                 className={[
-                  'inline-flex shrink-0 rounded-full ps-2 pe-2 pt-0.5 pb-0.5 text-xs font-medium',
+                  'inline-flex shrink-0 rounded-full ps-2 pe-2 pt-1 pb-1 [font-size:var(--t-meta)] font-medium',
                   severityClass(item.severity),
                 ].join(' ')}
               >

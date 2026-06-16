@@ -81,7 +81,7 @@ export function DigestsTab({ dossierId }: DigestsTabProps): React.ReactElement {
         </summary>
         <div className="border-t border-line">
           {subscriptions.length === 0 ? (
-            <p className="ps-4 pe-4 pt-3 pb-3 text-start text-sm text-ink-mute">
+            <p className="ps-4 pe-4 pt-3 pb-3 text-start [font-size:var(--t-body)] text-ink-mute">
               {t('empty.noSubscriptions.body')}
             </p>
           ) : (
@@ -97,7 +97,7 @@ export function DigestsTab({ dossierId }: DigestsTabProps): React.ReactElement {
                     ? (subscription.dossier_name_ar ?? subscription.dossier_name_en)
                     : (subscription.dossier_name_en ?? subscription.dossier_name_ar)}
                 </bdi>
-                <span className="rounded-full bg-accent-soft ps-2 pe-2 pt-0.5 pb-0.5 font-mono text-xs uppercase text-accent-ink">
+                <span className="rounded-full bg-accent-soft ps-2 pe-2 pt-1 pb-1 font-mono [font-size:var(--t-meta)] uppercase text-accent-ink">
                   {t(`chip.${subscription.frequency}`)}
                 </span>
                 <div className="ms-auto">
@@ -140,7 +140,7 @@ export function DigestsTab({ dossierId }: DigestsTabProps): React.ReactElement {
           className="rounded-sm border border-line bg-surface ps-4 pe-4 pt-4 pb-4 text-start"
           role="alert"
         >
-          <p className="text-sm text-danger">{t('error.load')}</p>
+          <p className="[font-size:var(--t-body)] text-danger">{t('error.load')}</p>
           <Button
             variant="ghost"
             size="sm"
@@ -155,12 +155,12 @@ export function DigestsTab({ dossierId }: DigestsTabProps): React.ReactElement {
 
       {!isLoading && !isError && digests.length === 0 && (
         <div className="rounded-sm border border-line bg-surface ps-4 pe-4 pt-8 pb-8 text-center">
-          <p className="text-sm font-medium text-ink">
+          <p className="[font-size:var(--t-body)] font-medium text-ink">
             {subscriptions.length === 0
               ? t('empty.noSubscriptions.heading')
               : t('empty.noDraftPublished.heading')}
           </p>
-          <p className="mt-1 text-sm text-ink-mute">
+          <p className="mt-1 [font-size:var(--t-body)] text-ink-mute">
             {subscriptions.length === 0
               ? t('empty.noSubscriptions.body')
               : t('empty.noDraftPublished.body')}
