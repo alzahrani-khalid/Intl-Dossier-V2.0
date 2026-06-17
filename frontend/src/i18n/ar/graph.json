@@ -150,5 +150,43 @@
     "svg": "تصدير كـ SVG",
     "success": "تم تصدير المخطط كـ {{format}}",
     "error": "فشل تصدير المخطط"
+  },
+  "analyze": {
+    "mode": "تحليل",
+    "commandPrefix": "تحليل:",
+    "pickerHeading": "اختر تحليلاً",
+    "entity": "الكيان",
+    "entityPrimary": "الكيان الأول",
+    "entitySecondary": "الكيان الثاني",
+    "entityPlaceholder": "معرّف الملف",
+    "window": "خلال آخر {{count}} يوماً",
+    "run": "تشغيل التحليل",
+    "resultHeading": "النتيجة",
+    "graphView": "عرض الرسم",
+    "listView": "عرض القائمة",
+    "loading": "جارٍ تشغيل التحليل…",
+    "error": "تعذّر تشغيل هذا التحليل. تحقق من اختيارك وحاول مرة أخرى.",
+    "openInPanel": "افتح في لوحة الشبكة",
+    "template": {
+      "forumMembership": "من يشارك في أي منتدى",
+      "sharedCommittees": "اللجان المشتركة",
+      "engagementChain": "سلاسل الارتباطات",
+      "shortestPath": "كيف يرتبط هذان الكيانان"
+    },
+    "count": {
+      "membership": "{{count}} منتدى ومجموعة عمل",
+      "intersection": "{{count}} لجنة مشتركة",
+      "chain": "{{count}} ارتباطاً",
+      "path": "مرتبطان عبر {{count}} خطوة"
+    },
+    "col": {
+      "committee": "اللجنة",
+      "type": "النوع"
+    },
+    "empty": {
+      "heading": "لا توجد نتائج",
+      "body": "لا توجد سجلات مطابقة لهذا الكيان في هذا التحليل.",
+      "path": "لم يُعثر على ارتباط بين هذين الكيانين."
+    }
   }
 }
