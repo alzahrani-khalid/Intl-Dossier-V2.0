@@ -85,6 +85,7 @@ import {
   Download,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { getAnalyzeCommandActions, type AnalyticQueryType } from './analyze-commands'
 import { useKeyboardShortcutContext } from './KeyboardShortcutProvider'
 import type { KeyboardShortcut, ModifierKey } from '@/hooks/useKeyboardShortcuts'
 import {
@@ -134,6 +135,14 @@ const shortcutIcons: Record<string, React.ElementType> = {
   'list-move-down': ChevronDown,
   'command-palette': CommandIcon,
   'show-shortcuts': Keyboard,
+}
+
+// Localized label key (keyboard-shortcuts namespace) per analyze query template.
+const analyzeLabelKey: Record<AnalyticQueryType, string> = {
+  forum_membership: 'quickActions.analyzeForumMembership',
+  shared_committees: 'quickActions.analyzeSharedCommittees',
+  engagement_chain: 'quickActions.analyzeEngagementChains',
+  shortest_path: 'quickActions.analyzeShortestPath',
 }
 
 // Icons for dossier types
@@ -207,38 +216,42 @@ const routeContexts: RouteContext[] = [
   {
     pattern: /^\/dossiers\/countries/,
     contextType: 'dossier',
-    suggestedActions: ['create-country', 'view-relationships'],
+    suggestedActions: ['create-country', 'view-relationships', 'cmd-analyze-forum-membership'],
   },
   {
     pattern: /^\/dossiers\/organizations/,
     contextType: 'dossier',
-    suggestedActions: ['create-organization', 'view-relationships'],
+    suggestedActions: ['create-organization', 'view-relationships', 'cmd-analyze-forum-membership'],
   },
   {
     pattern: /^\/dossiers\/forums/,
     contextType: 'dossier',
-    suggestedActions: ['create-forum', 'view-relationships'],
+    suggestedActions: ['create-forum', 'view-relationships', 'cmd-analyze-forum-membership'],
   },
   {
     pattern: /^\/dossiers\/engagements/,
     contextType: 'dossier',
-    suggestedActions: ['create-engagement', 'view-calendar'],
+    suggestedActions: ['create-engagement', 'view-calendar', 'cmd-analyze-engagement-chains'],
   },
   {
     pattern: /^\/dossiers\/persons/,
     contextType: 'dossier',
-    suggestedActions: ['create-person', 'view-relationships'],
+    suggestedActions: ['create-person', 'view-relationships', 'cmd-analyze-shortest-path'],
   },
   { pattern: /^\/dossiers\/topics/, contextType: 'dossier', suggestedActions: ['create-topic'] },
   {
     pattern: /^\/dossiers\/working_groups/,
     contextType: 'dossier',
-    suggestedActions: ['create-working-group', 'view-relationships'],
+    suggestedActions: [
+      'create-working-group',
+      'view-relationships',
+      'cmd-analyze-shared-committees',
+    ],
   },
   {
     pattern: /^\/dossiers/,
     contextType: 'dossier',
-    suggestedActions: ['create-dossier', 'view-relationships'],
+    suggestedActions: ['create-dossier', 'view-relationships', 'cmd-analyze-forum-membership'],
   },
   { pattern: /^\/tasks/, contextType: 'task', suggestedActions: ['create-task', 'view-my-work'] },
   {
@@ -755,6 +768,17 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
           }
         },
       },
+      // Cmd+K "Analyze:" entries (GRAPH-02, D-02/D-03/D-04). Surfaced only on a
+      // dossier route, where the entity pre-fills from the pathname; each deep-links
+      // to the Network panel's Analyze mode. Localized label overrides the helper's
+      // canonical English. Compact inline result + "Open in the Network panel"
+      // deep-link live in the panel (the deep-link target), not here.
+      ...getAnalyzeCommandActions(location.pathname).map((analyze) => ({
+        id: analyze.id,
+        label: t(analyzeLabelKey[analyze.queryType], analyze.label),
+        icon: Sparkles,
+        action: (): void => navigateTo(analyze.deepLink),
+      })),
       {
         id: 'nav-activity',
         label: t('quickActions.recentActivity', 'Recent Activity'),
@@ -863,6 +887,20 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
           label: quickAction.label,
           icon: quickAction.icon,
           action: quickAction.action,
+        })
+        continue
+      }
+
+      // Find in quick actions by full command id (e.g. cmd-analyze-*). The
+      // analyze entries only exist in quickActions on a dossier route, so this
+      // silently no-ops elsewhere.
+      const cmdAction = quickActions.find((a) => a.id === actionId)
+      if (cmdAction != null) {
+        suggestions.push({
+          id: cmdAction.id,
+          label: cmdAction.label,
+          icon: cmdAction.icon,
+          action: cmdAction.action,
         })
       }
     }
