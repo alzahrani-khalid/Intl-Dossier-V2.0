@@ -176,7 +176,7 @@
     "count": {
       "membership": "{{count}} منتدى ومجموعة عمل",
       "intersection": "{{count}} لجنة مشتركة",
-      "chain": "{{count}} ارتباطاً خلال {{days}} يوماً",
+      "chain": "{{count}} ارتباطاً",
       "path": "مرتبطان عبر {{count}} خطوة"
     },
     "col": {

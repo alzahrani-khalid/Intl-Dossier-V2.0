@@ -258,7 +258,7 @@ function renderBody(
                 className="t-meta text-start"
                 style={{ padding: 'var(--space-2) var(--space-4)', color: 'var(--ink-mute)' }}
               >
-                {node.type != null ? t(`dossier.type.${node.type}`, node.type) : '—'}
+                {node.type != null ? t(`type.${node.type}`, node.type) : '—'}
               </td>
             </tr>
           ))}
@@ -297,7 +297,7 @@ function renderBody(
           <RowName name={nameOf(node)} nodeId={node.id} onNodeSelect={onNodeSelect} />
           {node.type != null && (
             <span className="t-meta" style={{ color: 'var(--ink-mute)' }}>
-              {t(`dossier.type.${node.type}`, node.type)}
+              {t(`type.${node.type}`, node.type)}
             </span>
           )}
         </li>

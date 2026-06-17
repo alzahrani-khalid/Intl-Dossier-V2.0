@@ -105,10 +105,18 @@ async function fetchAnalyticGraph({
   return response.json() as Promise<AnalyticGraphResult>
 }
 
+/** Two-entity templates require entityId2 before the request is satisfiable; the edge fn 400s otherwise. */
+const TWO_ENTITY_QUERIES: ReadonlySet<AnalyticQueryType> = new Set([
+  'shared_committees',
+  'shortest_path',
+])
+
 /**
  * Runs an analytic graph query. Disabled until a primary `entityId` is provided
  * (mirrors `enabled: !!startDossierId`). Two-entity templates (shared_committees,
- * shortest_path) additionally require `entityId2`, which is enforced by the picker.
+ * shortest_path) additionally require `entityId2` — gated here as well as in the
+ * picker, so a stale/hand-edited deep-link (e.g. query=shortest_path with no
+ * entity2) does not fire a request that 400s.
  */
 export function useAnalyticGraph(
   params: AnalyticGraphParams,
@@ -118,7 +126,10 @@ export function useAnalyticGraph(
   return useQuery<AnalyticGraphResult, Error>({
     queryKey: ['analytic-graph', queryType, entityId, entityId2, windowDays],
     queryFn: () => fetchAnalyticGraph(params),
-    enabled: entityId != null && entityId.length > 0,
+    enabled:
+      entityId != null &&
+      entityId.length > 0 &&
+      (!TWO_ENTITY_QUERIES.has(queryType) || (entityId2 != null && entityId2.length > 0)),
     staleTime: 30000, // 30s cache — same precedent as graph-traversal
   })
 }
