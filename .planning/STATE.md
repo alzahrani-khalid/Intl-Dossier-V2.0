@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: executing
-last_updated: "2026-06-17T07:23:38.586Z"
-last_activity: 2026-06-17 -- Phase 71 planning complete
+last_updated: '2026-06-17T09:21:36.464Z'
+last_activity: 2026-06-17
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 24
-  completed_plans: 19
+  completed_plans: 20
   percent: 43
 ---
 
@@ -20,23 +20,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 71 — analytic graph
+**Current focus:** Phase 71 — analytic-graph
 
 ## Current Position
 
-Phase: 71
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-06-17 -- Phase 71 planning complete
+Phase: 71 (analytic-graph) — EXECUTING
+Plan: 2 of 5
+Status: Ready to execute (71-01 Wave 0 test scaffolding complete + RED)
+Last activity: 2026-06-17 -- 71-01-PLAN.md complete (6 RED test files + RF-7 fixture)
 
 ```
-Phase Progress: Phase 70 is 7/7 plans complete
-[████████████████████] 100%
+Phase Progress: Phase 71 is 1/5 plans complete
+[████░░░░░░░░░░░░░░░░] 20%
 
 Phase 68: Complete
 Phase 69: Complete
 Phase 70: Complete (7/7 plans; UAT 10/10 pass, verified + security-clean 2026-06-16)
-Phase 71: Not started
+Phase 71: In progress (1/5 plans; Wave 0 test scaffolding RED, pending query_graph RPC)
 Phase 72: Not started
 Phase 73: Not started
 Phase 74: Not started
@@ -106,6 +106,7 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase ?]: 69-02: escalation work_item_type='task' as const; Step 2 dossier-link copy warn-only, Step 3 escalate+escalated_task_id throws (bidirectional link is the contract)
 - [Phase ?]: Phase 69 (69-03): triage UI shipped — useSignalKeyboardTriage (container-ref j/k/a/d/e), SignalsQueue one-component global+per-dossier (D-01), CaptureSignalForm drawer, IntelligencePage Reports|Signals tab (reports untouched)
 - [Phase ?]: Phase 69 (69-03): soft semantic backgrounds use arbitrary bg-[var(--info-soft)]/--warn-soft/--danger-soft — those -soft variants are NOT @theme utilities (only text-info/text-warning/text-danger + bg-line-soft/bg-accent-soft are mapped); the plain bg-\*-soft classes render no background and lint won't catch it
+- [Phase 71]: Backend integration tests use real createClient (not the @/config/supabase mock) so the 71-03 live run hits staging
 
 ### Open Todos
 
