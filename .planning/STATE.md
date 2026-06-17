@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: executing
-last_updated: '2026-06-17T09:21:36.464Z'
+last_updated: '2026-06-17T09:34:39.000Z'
 last_activity: 2026-06-17
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 24
-  completed_plans: 20
+  completed_plans: 21
   percent: 43
 ---
 
@@ -25,18 +25,18 @@ See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 ## Current Position
 
 Phase: 71 (analytic-graph) — EXECUTING
-Plan: 2 of 5
-Status: Ready to execute (71-01 Wave 0 test scaffolding complete + RED)
-Last activity: 2026-06-17 -- 71-01-PLAN.md complete (6 RED test files + RF-7 fixture)
+Plan: 3 of 5
+Status: Ready to execute (71-02 authored query_graph RPC + analytic-graph edge fn; apply/deploy in 71-03)
+Last activity: 2026-06-17 -- 71-02-PLAN.md complete (query_graph INVOKER RPC + analytic-graph edge fn)
 
 ```
-Phase Progress: Phase 71 is 1/5 plans complete
-[████░░░░░░░░░░░░░░░░] 20%
+Phase Progress: Phase 71 is 2/5 plans complete
+[████████░░░░░░░░░░░░] 40%
 
 Phase 68: Complete
 Phase 69: Complete
 Phase 70: Complete (7/7 plans; UAT 10/10 pass, verified + security-clean 2026-06-16)
-Phase 71: In progress (1/5 plans; Wave 0 test scaffolding RED, pending query_graph RPC)
+Phase 71: In progress (2/5 plans; Wave 0 RED + query_graph RPC/edge-fn authored, pending 71-03 apply)
 Phase 72: Not started
 Phase 73: Not started
 Phase 74: Not started
@@ -107,6 +107,9 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase ?]: Phase 69 (69-03): triage UI shipped — useSignalKeyboardTriage (container-ref j/k/a/d/e), SignalsQueue one-component global+per-dossier (D-01), CaptureSignalForm drawer, IntelligencePage Reports|Signals tab (reports untouched)
 - [Phase ?]: Phase 69 (69-03): soft semantic backgrounds use arbitrary bg-[var(--info-soft)]/--warn-soft/--danger-soft — those -soft variants are NOT @theme utilities (only text-info/text-warning/text-danger + bg-line-soft/bg-accent-soft are mapped); the plain bg-\*-soft classes render no background and lint won't catch it
 - [Phase 71]: Backend integration tests use real createClient (not the @/config/supabase mock) so the 71-03 live run hits staging
+- [Phase 71]: 71-02: query_graph = single multiplexed SECURITY INVOKER RETURNS JSONB RPC (forum_membership/shared_committees/engagement_chain/shortest_path); clearance read profiles.user_id=auth.uid() (NOT id), inline sensitivity_level<=v_clearance at EVERY dossiers join (does NOT rely on broken dossiers SELECT RLS); shortest_path re-impls get_relationship_path CTE inline (DEFINER fns untouched, D-05) + path-wide clearance NOT-EXISTS
+- [Phase 71]: 71-02: service_role (auth.role(), no auth.uid()) treated as max clearance (4) so the GRAPH-01 service-role integration test sees seeded sensitivity-3/4 rows; anon/authenticated always get strict profiles-derived clearance so GRAPH-03/04 dual-account proofs stay real enforcement; the edge fn never uses service-role (gated SERVICE_ROLE==0)
+- [Phase 71]: 71-02: analytic-graph edge fn = thin JWT-forwarding mirror of graph-traversal (anon key + forwarded Authorization, getUser(token), pass-through {nodes,edges,stats} + 2s perf budget); RPC + edge fn AUTHORED only, applied/deployed in 71-03 (executor lacks Supabase MCP) — GRAPH-01/03/04 turn GREEN there, not closed now
 
 ### Open Todos
 
