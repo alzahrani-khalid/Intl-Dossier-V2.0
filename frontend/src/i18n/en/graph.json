@@ -176,7 +176,7 @@
     "count": {
       "membership": "{{count}} forums and working groups",
       "intersection": "{{count}} shared committees",
-      "chain": "{{count}} engagements",
+      "chain": "{{count}} engagements over {{days}} days",
       "path": "Connected in {{count}} hops"
     },
     "col": {
