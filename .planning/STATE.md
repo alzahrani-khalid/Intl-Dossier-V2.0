@@ -2,8 +2,8 @@
 gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
-status: verifying
-last_updated: '2026-06-17T10:54:08.646Z'
+status: ready_to_plan
+last_updated: 2026-06-17T11:08:13.364Z
 last_activity: 2026-06-17
 progress:
   total_phases: 7
@@ -11,6 +11,7 @@ progress:
   total_plans: 24
   completed_plans: 24
   percent: 57
+stopped_at: Phase 71 complete (5/5) — ready to discuss Phase 72
 ---
 
 # Project State
@@ -20,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 71 — analytic-graph
+**Current focus:** Phase 72 — agent platform — runtime, retrieval, reads
 
 ## Current Position
 
-Phase: 71 (analytic-graph) — EXECUTING
-Plan: 5 of 5
-Status: Phase complete — ready for verification
+Phase: 72
+Plan: Not started
+Status: Ready to plan
 Last activity: 2026-06-17
 
 ```

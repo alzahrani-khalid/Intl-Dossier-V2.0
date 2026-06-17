@@ -413,7 +413,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 68. AI Foundations Remediation | v7.0 | 8/8 | Complete    | 2026-06-14 |
 | 69. Signals | v7.0 | 4/4 | Complete   | 2026-06-14 |
 | 70. Digests + Alerts | v7.0 | 7/7 | Complete    | 2026-06-16 |
-| 71. Analytic Graph | v7.0 | 5/5 | Complete   | 2026-06-17 |
+| 71. Analytic Graph | v7.0 | 5/5 | Complete    | 2026-06-17 |
 | 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 0/? | Not started | - |
 | 73. Agent Platform — Writes + Generative UI | v7.0 | 0/? | Not started | - |
 | 74. Eval Gate + AnythingLLM Retirement | v7.0 | 0/? | Not started | - |
