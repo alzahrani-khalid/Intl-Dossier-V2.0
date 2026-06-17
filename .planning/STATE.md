@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: executing
-last_updated: '2026-06-17T09:53:59.715Z'
+last_updated: '2026-06-17T10:11:46.951Z'
 last_activity: 2026-06-17
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 24
-  completed_plans: 22
+  completed_plans: 23
   percent: 43
 ---
 
@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 ## Current Position
 
 Phase: 71 (analytic-graph) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-06-17
 
@@ -110,6 +110,8 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase 71]: 71-02: query_graph = single multiplexed SECURITY INVOKER RETURNS JSONB RPC (forum_membership/shared_committees/engagement_chain/shortest_path); clearance read profiles.user_id=auth.uid() (NOT id), inline sensitivity_level<=v_clearance at EVERY dossiers join (does NOT rely on broken dossiers SELECT RLS); shortest_path re-impls get_relationship_path CTE inline (DEFINER fns untouched, D-05) + path-wide clearance NOT-EXISTS
 - [Phase 71]: 71-02: service_role (auth.role(), no auth.uid()) treated as max clearance (4) so the GRAPH-01 service-role integration test sees seeded sensitivity-3/4 rows; anon/authenticated always get strict profiles-derived clearance so GRAPH-03/04 dual-account proofs stay real enforcement; the edge fn never uses service-role (gated SERVICE_ROLE==0)
 - [Phase 71]: 71-02: analytic-graph edge fn = thin JWT-forwarding mirror of graph-traversal (anon key + forwarded Authorization, getUser(token), pass-through {nodes,edges,stats} + 2s perf budget); RPC + edge fn AUTHORED only, applied/deployed in 71-03 (executor lacks Supabase MCP) — GRAPH-01/03/04 turn GREEN there, not closed now
+- [Phase ?]: 71-04: shortest_path shipped unconditionally (RF-4); all 4 Analyze templates always visible
+- [Phase ?]: 71-04: Analyze mode is an additive early-return branch in RelationshipGraphPage — degrees-traversal preserved (zero regression)
 
 ### Open Todos
 

@@ -44,9 +44,9 @@ Requirements for the v7.0 milestone (phases 68–74). Each maps to exactly one r
 
 ### Analytic graph
 
-- [ ] **GRAPH-01**: A user can run analytic graph queries (who-sits-on-which-forum, shared committees, engagement chains over N days) from the Network panel
+- [x] **GRAPH-01**: A user can run analytic graph queries (who-sits-on-which-forum, shared committees, engagement chains over N days) from the Network panel
 - [ ] **GRAPH-02**: A user can launch an analytic graph query from Cmd+K
-- [ ] **GRAPH-03**: Analytic graph results are clearance-gated — the querying user sees only within-clearance nodes and edges
+- [x] **GRAPH-03**: Analytic graph results are clearance-gated — the querying user sees only within-clearance nodes and edges
 - [ ] **GRAPH-04**: The agent can run analytic graph queries via a clearance-gated `query_graph` tool
 
 ### Agent platform — runtime, retrieval, reads
@@ -142,9 +142,9 @@ Which phases cover which requirements.
 | ALERT-02    | Phase 70 | Complete |
 | ALERT-03    | Phase 70 | Complete |
 | ALERT-04    | Phase 70 | Complete |
-| GRAPH-01    | Phase 71 | Pending  |
+| GRAPH-01    | Phase 71 | Complete |
 | GRAPH-02    | Phase 71 | Pending  |
-| GRAPH-03    | Phase 71 | Pending  |
+| GRAPH-03    | Phase 71 | Complete |
 | GRAPH-04    | Phase 71 | Pending  |
 | AGENT-01    | Phase 72 | Pending  |
 | AGENT-02    | Phase 72 | Pending  |

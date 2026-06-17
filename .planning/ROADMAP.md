@@ -336,7 +336,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
    - [x] 71-01-PLAN.md — Wave 0 test scaffolding (3 backend integration + 3 FE tests) + RF-7 high-sensitivity seed fixture
    - [x] 71-02-PLAN.md — query_graph multiplexed SECURITY INVOKER RPC (forum/committees/chain/path) + analytic-graph edge fn
    - [x] 71-03-PLAN.md — [BLOCKING] apply migration via Supabase MCP + deploy edge fn + backend integration tests green on staging
-   - [ ] 71-04-PLAN.md — Network-panel Analyze mode: useAnalyticGraph hook, route schema, AnalyticQueryPicker + AnalyticResultView
+   - [x] 71-04-PLAN.md — Network-panel Analyze mode: useAnalyticGraph hook, route schema, AnalyticQueryPicker + AnalyticResultView
    - [ ] 71-05-PLAN.md — Cmd+K Analyze entries + per-dossier affordance + i18n (en/ar) + live UAT (4 criteria, EN+AR)
          **UI hint**: yes
 
@@ -413,7 +413,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 68. AI Foundations Remediation | v7.0 | 8/8 | Complete    | 2026-06-14 |
 | 69. Signals | v7.0 | 4/4 | Complete   | 2026-06-14 |
 | 70. Digests + Alerts | v7.0 | 7/7 | Complete    | 2026-06-16 |
-| 71. Analytic Graph | v7.0 | 3/5 | In Progress|  |
+| 71. Analytic Graph | v7.0 | 4/5 | In Progress|  |
 | 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 0/? | Not started | - |
 | 73. Agent Platform — Writes + Generative UI | v7.0 | 0/? | Not started | - |
 | 74. Eval Gate + AnythingLLM Retirement | v7.0 | 0/? | Not started | - |
