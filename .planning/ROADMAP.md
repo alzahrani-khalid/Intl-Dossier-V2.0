@@ -332,8 +332,13 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 2. A user can launch an analytic graph query from Cmd+K ("Analyze: shared committees") and see clearance-gated results inline — verified live EN+AR.
 3. A lower-clearance user running the same query as a higher-clearance user sees a strictly reduced result set — verified live by running identical queries from two different clearance-level accounts and comparing node/edge counts.
 4. The agent's `query_graph` tool returns clearance-correct results under the caller's JWT, enforced by `SECURITY INVOKER` on all analytic RPCs — verified via live tool invocation with a low-clearance account and confirming no above-clearance nodes appear.
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 5 plans
+   - [ ] 71-01-PLAN.md — Wave 0 test scaffolding (3 backend integration + 3 FE tests) + RF-7 high-sensitivity seed fixture
+   - [ ] 71-02-PLAN.md — query_graph multiplexed SECURITY INVOKER RPC (forum/committees/chain/path) + analytic-graph edge fn
+   - [ ] 71-03-PLAN.md — [BLOCKING] apply migration via Supabase MCP + deploy edge fn + backend integration tests green on staging
+   - [ ] 71-04-PLAN.md — Network-panel Analyze mode: useAnalyticGraph hook, route schema, AnalyticQueryPicker + AnalyticResultView
+   - [ ] 71-05-PLAN.md — Cmd+K Analyze entries + per-dossier affordance + i18n (en/ar) + live UAT (4 criteria, EN+AR)
+         **UI hint**: yes
 
 ---
 
