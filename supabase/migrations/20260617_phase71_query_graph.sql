@@ -106,8 +106,7 @@ BEGIN
                )), '[]'::jsonb),
       'stats', jsonb_build_object(
                  'node_count', COUNT(DISTINCT d.id),
-                 'edge_count', COUNT(DISTINCT dr.id),
-                 'clearance_level', v_clearance
+                 'edge_count', COUNT(DISTINCT dr.id)
                )
     )
     INTO v_result
@@ -144,8 +143,7 @@ BEGIN
       'edges', '[]'::jsonb,
       'stats', jsonb_build_object(
                  'node_count', COUNT(DISTINCT wg_d.id),
-                 'edge_count', 0,
-                 'clearance_level', v_clearance
+                 'edge_count', 0
                )
     )
     INTO v_result
@@ -175,8 +173,7 @@ BEGIN
       'edges', '[]'::jsonb,
       'stats', jsonb_build_object(
                  'node_count', COUNT(*),
-                 'edge_count', 0,
-                 'clearance_level', v_clearance
+                 'edge_count', 0
                )
     )
     INTO v_result
@@ -260,8 +257,7 @@ BEGIN
       'edges', '[]'::jsonb,
       'stats', jsonb_build_object(
                  'node_count', array_length(ps.path, 1),
-                 'edge_count', ps.path_length,
-                 'clearance_level', v_clearance
+                 'edge_count', ps.path_length
                )
     )
     INTO v_result
@@ -288,7 +284,7 @@ BEGIN
       'entity_id',  p_entity_id,
       'nodes', '[]'::jsonb,
       'edges', '[]'::jsonb,
-      'stats', jsonb_build_object('node_count', 0, 'edge_count', 0, 'clearance_level', v_clearance)
+      'stats', jsonb_build_object('node_count', 0, 'edge_count', 0)
     );
   END IF;
 
