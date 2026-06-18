@@ -228,6 +228,70 @@ services:
     networks:
       - intl-dossier
 
+  # ===========================================
+  # vLLM - Gemma 4 12B over OpenAI-compatible /v1 (INFRA-01)
+  # Internal-only (expose:, never ports:). Zero egress — local model weights, no
+  # telemetry. The copilot (agent-runtime) reaches it as http://vllm:8000.
+  # Model is swappable by config: --served-model-name gemma-4-12b is the stable
+  # name callers use; the underlying --model can change without touching callers.
+  # Requires an NVIDIA GPU host (16-24GB) with the container runtime — see the
+  # GPU-host step in DROPLET_INSTRUCTIONS.md (deploy-time human action).
+  # ===========================================
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: intl-dossier-vllm
+    restart: unless-stopped
+    command: >
+      --model google/gemma-4-12B-it
+      --served-model-name gemma-4-12b
+      --enable-auto-tool-choice
+      --tool-call-parser gemma4
+      --max-model-len 8192
+      --kv-cache-dtype fp8
+      --gpu-memory-utilization 0.90
+    expose:
+      - '8000'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - intl-dossier
+
+  # ===========================================
+  # TEI (embeddings) - bge-m3, 1024-dim (INFRA-02)
+  # Internal-only (expose:, never ports:). Zero egress — local model weights.
+  # The agent-runtime + re-embed job reach it as http://tei-embed:80.
+  # ===========================================
+  tei-embed:
+    image: ghcr.io/huggingface/text-embeddings-inference:latest
+    container_name: intl-dossier-tei-embed
+    restart: unless-stopped
+    command: --model-id BAAI/bge-m3
+    expose:
+      - '80'
+    networks:
+      - intl-dossier
+
+  # ===========================================
+  # TEI (rerank) - bge-reranker-v2-m3 cross-encoder (INFRA-02)
+  # Internal-only (expose:, never ports:). Zero egress — local model weights.
+  # The agent-runtime hybrid-RAG tool reaches it as http://tei-rerank:80 to
+  # re-rank RLS-passing candidates (rerank runs AFTER the clearance-gated RPC).
+  # ===========================================
+  tei-rerank:
+    image: ghcr.io/huggingface/text-embeddings-inference:latest
+    container_name: intl-dossier-tei-rerank
+    restart: unless-stopped
+    command: --model-id BAAI/bge-reranker-v2-m3
+    expose:
+      - '80'
+    networks:
+      - intl-dossier
+
 # ===========================================
 # VOLUMES
 # ===========================================
