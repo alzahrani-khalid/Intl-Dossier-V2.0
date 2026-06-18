@@ -51,12 +51,12 @@ Requirements for the v7.0 milestone (phases 68–74). Each maps to exactly one r
 
 ### Agent platform — runtime, retrieval, reads
 
-- [ ] **AGENT-01**: A cleared user can converse with the on-prem copilot from a primary conversational surface and via Cmd+K
+- [x] **AGENT-01**: A cleared user can converse with the on-prem copilot from a primary conversational surface and via Cmd+K
 - [ ] **AGENT-02**: The copilot answers from the gated intelligence data (signals, digests, graph, dossiers) under the caller's JWT
 - [x] **AGENT-03**: A non-cleared user receives clearance-correct (reduced) copilot results and never above-clearance content
 - [x] **AGENT-04**: The copilot retrieves via a hybrid (dense + sparse + rerank) RAG over a single chunks store, with clearance enforced by `SECURITY INVOKER` + RLS
 - [x] **AGENT-05**: Retrievable content is embedded at bge-m3 1024-dim (one-time re-embed completed; no dimension drift)
-- [ ] **AGENT-06**: The copilot replies in the user's language (EN/AR) with correct RTL rendering
+- [x] **AGENT-06**: The copilot replies in the user's language (EN/AR) with correct RTL rendering
 
 ### Generative UI + HITL writes
 
@@ -76,7 +76,7 @@ Requirements for the v7.0 milestone (phases 68–74). Each maps to exactly one r
 
 - [x] **INFRA-01**: A local LLM is served over an OpenAI-compatible API (vLLM + Gemma 4 12B as the eval-gated starting model), swappable by config
 - [x] **INFRA-02**: Embeddings and reranking are served locally (TEI: bge-m3 + bge-reranker-v2-m3)
-- [ ] **INFRA-03**: The agent runtime runs as its own deployable Turborepo workspace (Mastra + CopilotKit runtime) in `docker-compose.prod` on a distinct port
+- [x] **INFRA-03**: The agent runtime runs as its own deployable Turborepo workspace (Mastra + CopilotKit runtime) in `docker-compose.prod` on a distinct port
 
 ## Cross-Cutting Guarantees
 
@@ -146,15 +146,15 @@ Which phases cover which requirements.
 | GRAPH-02    | Phase 71 | Complete |
 | GRAPH-03    | Phase 71 | Complete |
 | GRAPH-04    | Phase 71 | Complete |
-| AGENT-01    | Phase 72 | Pending  |
+| AGENT-01    | Phase 72 | Complete |
 | AGENT-02    | Phase 72 | Pending  |
 | AGENT-03    | Phase 72 | Complete |
 | AGENT-04    | Phase 72 | Complete |
 | AGENT-05    | Phase 72 | Complete |
-| AGENT-06    | Phase 72 | Pending  |
+| AGENT-06    | Phase 72 | Complete |
 | INFRA-01    | Phase 72 | Complete |
 | INFRA-02    | Phase 72 | Complete |
-| INFRA-03    | Phase 72 | Pending  |
+| INFRA-03    | Phase 72 | Complete |
 | GENUI-01    | Phase 73 | Pending  |
 | GENUI-02    | Phase 73 | Pending  |
 | GENUI-03    | Phase 73 | Pending  |
