@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: executing
-last_updated: '2026-06-18T10:33:01.881Z'
+last_updated: '2026-06-18T10:47:28.911Z'
 last_activity: 2026-06-18
 progress:
   total_phases: 7
   completed_phases: 4
   total_plans: 33
-  completed_plans: 29
+  completed_plans: 30
   percent: 57
 ---
 
@@ -25,8 +25,8 @@ See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 ## Current Position
 
 Phase: 72 (agent-platform-runtime-retrieval-reads) — EXECUTING
-Plan: 6 of 9
-Status: Ready to execute
+Plan: 7 of 9
+Status: Executing — 72-04 complete (4 of 9 incomplete plans remain: 72-06, 72-08, 72-09)
 Last activity: 2026-06-18
 
 ```
@@ -37,7 +37,7 @@ Phase 68: Complete
 Phase 69: Complete
 Phase 70: Complete (7/7 plans; UAT 10/10 pass, verified + security-clean 2026-06-16)
 Phase 71: Complete (5/5 plans; analytic-graph RPC+edge-fn live, 3-entry Analyze surface, UAT 4/4 EN+AR)
-Phase 72: Executing (5/9 plans: 72-01 keystone spike — JWT-reaches-tools via requestContext PASS + air-gap PASS + shell_decision=assistant-ui pending AR visual, Wave-0 test infra + copilot i18n; 72-02 serving-substrate config; 72-07 supabaseAdmin retirement; 72-03 RAG/memory migrations AUTHORED — rag_chunks halfvec(1024) hybrid store + per-source clearance-sync, hybrid_rag_search INVOKER RRF k=60, mastra thread/message owner-only RLS; AGENT-04/05 done; NOT applied — apply in 72-04; 72-05 agent-runtime workspace LIVE — 4th Turborepo pkg, Mastra+registerCopilotKit AG-UI/SSE on :4100, requestContext keystone setContext, reads-only bilingual copilot agent + @mastra/pg threads + typed stub tool barrel for 72-06, lifted config/llm-router, @mastra/core 1.43.0 pinned, type-check/lint/build/test green + smoke-boot /health ok)
+Phase 72: Executing (6/9 plans: 72-04 re-embed backfill — the three 72-03 migrations APPLIED + verified live on staging (rag_chunks halfvec(1024) ✓, RLS user_id=auth.uid() trap-free ✓, sync trigger ✓, hybrid_rag_search prosecdef=false ✓ + anon REVOKEd; mastra_threads_rls no-op until runtime boots — RE-APPLY at 72-05/09), authored reembed-rag-chunks.ts + chunk-source-content.ts + 12 unit tests (TEI mocked, 1024-dim guard, per-source parent_dossier_id, idempotent natural-key upsert); LIVE RUN DEFERRED to the 72-09 deploy gate (bge-m3 TEI is GPU-served); sensitivity sent NULL→DB trigger resolves fail-closed; AGENT-04/05 store live; 72-01 keystone spike — JWT-reaches-tools via requestContext PASS + air-gap PASS + shell_decision=assistant-ui pending AR visual, Wave-0 test infra + copilot i18n; 72-02 serving-substrate config; 72-07 supabaseAdmin retirement; 72-03 RAG/memory migrations AUTHORED — rag_chunks halfvec(1024) hybrid store + per-source clearance-sync, hybrid_rag_search INVOKER RRF k=60, mastra thread/message owner-only RLS; AGENT-04/05 done; NOT applied — apply in 72-04; 72-05 agent-runtime workspace LIVE — 4th Turborepo pkg, Mastra+registerCopilotKit AG-UI/SSE on :4100, requestContext keystone setContext, reads-only bilingual copilot agent + @mastra/pg threads + typed stub tool barrel for 72-06, lifted config/llm-router, @mastra/core 1.43.0 pinned, type-check/lint/build/test green + smoke-boot /health ok)
 Phase 73: Not started
 Phase 74: Not started
 ```
@@ -123,6 +123,7 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase ?]: 72-01 spike GATE 1 PASS: JWT reaches tool.execute via requestContext (mastra 1.43 + ag-ui 1.0.3, no middleware); RuntimeContext renamed RequestContext
 - [Phase ?]: 72-01 spike: shell_decision=assistant-ui RECOMMENDED (CopilotKit 0 RTL rules + hardcoded shadows); air-gap PASS (zero non-local egress, no Cloud key); GATE 2 AR visual confirmation pending orchestrator
 - [Phase ?]: 72-05: agent-runtime 4th workspace; Mastra+registerCopilotKit AG-UI/SSE :4100 via requestContext keystone; @mastra/core 1.43.0 pinned
+- [Phase 72]: 72-04: the three 72-03 migrations APPLIED to staging by the orchestrator (executor has no MCP) + verified live 2026-06-18 — rag_chunks.embedding=halfvec(1024), RLS clearance uses profiles.user_id=auth.uid() (trap-free, NOT id), sensitivity-sync trigger present, hybrid_rag_search prosecdef=false (SECURITY INVOKER) + 0 anon EXECUTE grants; mastra_threads_rls applied but a NO-OP (mastra_threads/messages don't exist until the runtime boots) → MUST be re-applied after agent-runtime first boots (72-05/72-09). dossiers.sensitivity_level is INTEGER 1/2/3 live. Re-embed backfill (reembed-rag-chunks.ts + chunk-source-content.ts) chunks+embeds dossiers/positions/aa_commitments at bge-m3 native 1024-dim via a single TEI /embed boundary, asserts dims=1024 (throw, never pad/truncate), idempotent upsert onConflict source_type,source_id,chunk_index; sensitivity_level sent NULL so the DB trigger resolves it fail-closed (parent_dossier_id set per source; dossier reads source_id). One-shot CLI script (NOT BullMQ → colon-jobId landmine N/A); service-role write is the D-10 background carve-out (no authenticated INSERT policy on rag_chunks; reads go through the INVOKER RPC under caller JWT). signal/brief/document resolvers reserved for the 72-09 seed step (0 rows on staging; document→dossier link unconfirmed). LIVE RUN DEFERRED to the 72-09 deploy gate (bge-m3 TEI is GPU-served, unavailable locally) — author + 12 unit tests (TEI mocked) only. Test placed in backend/tests/unit/ NOT src/jobs/ (vitest include only collects tests/unit/\*\*). Commit 0d507497
 
 ### Open Todos
 
