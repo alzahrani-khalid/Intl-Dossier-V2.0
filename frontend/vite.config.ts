@@ -164,6 +164,28 @@ export default defineConfig({
             if (id.includes('@tanstack')) {
               return 'tanstack-vendor'
             }
+            // Copilot conversational shell (Phase 72, AGENT-01). assistant-ui + the
+            // AG-UI client + the markdown stack are used ONLY by the dynamic-imported
+            // CopilotDrawer tree, so isolating them here keeps Rollup from hoisting
+            // them into the eager `vendor`/entry — the weight loads only with the lazy
+            // CopilotDrawer chunk (bundle ceiling, threat T-72-SC). Placed before the
+            // `react` match because `@assistant-ui/react` contains the 'react' substring.
+            if (
+              id.includes('@assistant-ui') ||
+              id.includes('@ag-ui') ||
+              id.includes('assistant-stream') ||
+              id.includes('react-markdown') ||
+              id.includes('remark') ||
+              id.includes('rehype') ||
+              id.includes('micromark') ||
+              id.includes('mdast') ||
+              id.includes('hast') ||
+              id.includes('unist') ||
+              id.includes('unified') ||
+              id.includes('vfile')
+            ) {
+              return 'copilot-vendor'
+            }
             // React runtime ONLY. A broad `react` substring also swept app-level
             // react-* packages (react-i18next, react-hook-form, …) into react-vendor;
             // those depend on motion/radix/heroui chunks which depend back on react,

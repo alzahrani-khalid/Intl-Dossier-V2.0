@@ -32,11 +32,12 @@
  */
 
 import type { JSX } from 'react'
-import { Menu, Search, Bell, Sun, Moon, Sliders } from 'lucide-react'
+import { Menu, Search, Bell, Sun, Moon, Sliders, Sparkles } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@/lib/utils'
 import { useTweaksOpen } from '@/components/tweaks'
+import { useCopilotDrawer } from '@/components/copilot/useCopilotDrawer'
 import { useDesignDirection, useMode, useLocale } from '@/design-system/hooks'
 import type { Direction } from '@/design-system/tokens/types'
 
@@ -57,10 +58,12 @@ const NOTIFICATION_COUNT = 3
 
 export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
   const { t } = useTranslation()
+  const { t: tCopilot } = useTranslation('copilot')
   const { direction, setDirection } = useDesignDirection()
   const { mode, setMode } = useMode()
   const { locale, setLocale } = useLocale()
   const { open: openTweaks } = useTweaksOpen()
+  const openCopilot = useCopilotDrawer((s) => s.openCopilot)
 
   return (
     <header
@@ -119,6 +122,22 @@ export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
 
       {/* Right cluster — `ms-auto` pushes it to the inline-end */}
       <div className="tb-right ms-auto flex items-center gap-2 max-sm:gap-1">
+        {/* Copilot FAB (AGENT-01) — opens the reads-only copilot drawer. .btn-ghost
+            icon idiom; aria-label is the accessible name (copilot namespace). */}
+        <button
+          type="button"
+          className={cn(
+            'tb-icon-btn h-9 w-9 inline-flex items-center justify-center p-1.5',
+            'rounded-[var(--radius-sm)] text-[var(--ink-mute)]',
+            'hover:bg-[var(--line-soft)] hover:text-[var(--ink)]',
+            'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
+          )}
+          onClick={() => openCopilot(null)}
+          aria-label={tCopilot('aria.openCopilot')}
+        >
+          <Sparkles size={16} />
+        </button>
+
         {/* 3 — Direction switcher */}
         <div
           className="tb-dir inline-flex overflow-hidden border border-[var(--line)] rounded-[var(--radius-sm)]"

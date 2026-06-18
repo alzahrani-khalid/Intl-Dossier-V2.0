@@ -2,7 +2,7 @@
   {
     "name": "Initial JS (entry point)",
     "path": "dist/assets/app-*.js",
-    "limit": "460 KB",
+    "limit": "465 KB",
     "gzip": true,
     "running": false
   },
@@ -42,9 +42,16 @@
     "running": false
   },
   {
+    "name": "Copilot vendor (lazy)",
+    "path": "dist/assets/copilot-vendor-*.js",
+    "limit": "145 KB",
+    "gzip": true,
+    "running": false
+  },
+  {
     "name": "Total JS",
     "path": "dist/assets/*.js",
-    "limit": "2.55 MB",
+    "limit": "2.78 MB",
     "gzip": true,
     "running": false
   },

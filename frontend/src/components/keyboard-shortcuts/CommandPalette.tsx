@@ -86,6 +86,8 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getAnalyzeCommandActions, type AnalyticQueryType } from './analyze-commands'
+import { getCopilotCommandAction } from '@/components/copilot/copilot-commands'
+import { useCopilotDrawer } from '@/components/copilot/useCopilotDrawer'
 import { useKeyboardShortcutContext } from './KeyboardShortcutProvider'
 import type { KeyboardShortcut, ModifierKey } from '@/hooks/useKeyboardShortcuts'
 import {
@@ -424,6 +426,8 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
   const { t } = useTranslation('keyboard-shortcuts')
   const { t: tQs } = useTranslation('quickswitcher')
   const { t: tCommon } = useTranslation('common')
+  const { t: tCopilot } = useTranslation('copilot')
+  const openCopilot = useCopilotDrawer((s) => s.openCopilot)
   const navigate = useNavigate()
   const location = useLocation()
   const { isRTL } = useDirection()
@@ -779,6 +783,27 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
         icon: Sparkles,
         action: (): void => navigateTo(analyze.deepLink),
       })),
+      // "Ask the copilot" (AGENT-01, D-05). Always available; on a dossier route it
+      // pre-fills that dossier as readable context. Opens the drawer + closes the palette.
+      (() => {
+        const copilot = getCopilotCommandAction(location.pathname)
+        return {
+          id: copilot.id,
+          label: copilot.hasDossierContext ? tCopilot('cta.askAboutDossier') : tCopilot('cta.ask'),
+          icon: MessageSquare,
+          action: (): void => {
+            openCopilot(
+              copilot.dossierId != null
+                ? {
+                    dossierId: copilot.dossierId,
+                    dossierType: copilot.dossierType ?? undefined,
+                  }
+                : null,
+            )
+            closeCommandPalette()
+          },
+        }
+      })(),
       {
         id: 'nav-activity',
         label: t('quickActions.recentActivity', 'Recent Activity'),
@@ -844,7 +869,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
         action: () => navigateTo('/sla-monitoring'),
       },
     ],
-    [t, formatShortcut, navigateTo, location.pathname],
+    [t, tCopilot, formatShortcut, navigateTo, location.pathname, openCopilot, closeCommandPalette],
   )
 
   // Most-used commands for empty state (D-03)

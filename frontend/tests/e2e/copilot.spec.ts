@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test'
 
 /**
- * Wave-0 E2E SCAFFOLD (Plan 72-01) — copilot drawer flows. SKIPPED until the drawer
- * lands (Wave 6, Plan 72-08). Authored now so the Nyquist sampling rate has concrete
- * targets per 72-VALIDATION.md Per-Requirement Verification Map.
+ * Wave-6 E2E (Plan 72-08) — copilot drawer flows. REALIZED now that the drawer, FAB,
+ * and Cmd+K copilot entry have landed (72-08). Targets the Nyquist sampling map per
+ * 72-VALIDATION.md Per-Requirement Verification Map.
  *
  * Verification reality (MEMORY / 72-VALIDATION): RLS denial returns an EMPTY 200, not
  * an error status. Force errors via CDP `Network.setBlockedURLs` and assert
@@ -11,11 +11,12 @@ import { test, expect } from '@playwright/test'
  * wedge; prefer DOM assertions. Language persists under localStorage['id.locale']
  * (NOT i18nextLng); switch to AR via the ع topbar button.
  *
- * These stay RED/skipped until 72-08 wires the drawer, FAB, and Cmd+K copilot entry.
+ * Run against the deployed app vs staging (the e2e suite tests the deployed app). The
+ * AGENT-03 forced-error test requires the agent-runtime /chat route to be reachable.
  */
 
 // AGENT-01 — converse from the primary surface AND via Cmd+K.
-test.describe.skip('AGENT-01: copilot drawer + Cmd+K entry (RED until 72-08)', () => {
+test.describe('AGENT-01: copilot drawer + Cmd+K entry', () => {
   test('opens the drawer from the topbar FAB and streams a reply', async ({ page }) => {
     await page.goto('/')
     // Topbar copilot FAB — aria-label from the copilot namespace ("Ask the copilot").
@@ -43,7 +44,7 @@ test.describe.skip('AGENT-01: copilot drawer + Cmd+K entry (RED until 72-08)', (
 })
 
 // AGENT-06 — EN + AR reply with correct RTL at analyst-workstation widths.
-test.describe.skip('AGENT-06: bilingual EN/AR + dir=rtl (RED until 72-08)', () => {
+test.describe('AGENT-06: bilingual EN/AR + dir=rtl', () => {
   for (const width of [1024, 1400]) {
     test(`Arabic drawer renders dir="rtl" + Tajawal at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 })
@@ -60,7 +61,7 @@ test.describe.skip('AGENT-06: bilingual EN/AR + dir=rtl (RED until 72-08)', () =
 })
 
 // AGENT-03 (forced-error) — RLS denial → neutral empty, never a clearance leak.
-test.describe.skip('AGENT-03: forced-error neutral empty via CDP (RED until 72-08)', () => {
+test.describe('AGENT-03: forced-error neutral empty via CDP', () => {
   test('blocked RAG/tool call surfaces role="alert" neutral copy, no leak', async ({ page }) => {
     // CDP session to block the copilot tool/RAG endpoint at the network layer.
     const client = await page.context().newCDPSession(page)
