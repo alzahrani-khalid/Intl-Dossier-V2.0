@@ -1,0 +1,76 @@
+# ===========================================
+# PRODUCTION DOCKERFILE - agent-runtime
+# Multi-stage build (mirrors backend/Dockerfile.prod)
+# Phase 72: on-prem copilot runtime — Mastra + self-hosted CopilotKit/AG-UI
+# ===========================================
+#
+# Serves AG-UI over SSE on :4100. Self-hosted runtime — NO Copilot Cloud key
+# (air-gap proven in the 72-01 spike). The model client points at the on-prem
+# OpenAI-compatible endpoint (vLLM in prod / Ollama in dev) via VLLM_BASE_URL.
+#
+# Environment variables:
+# - ALLOWED_ORIGINS   - CSV of allowed CORS origins (NEVER '*')
+# - VLLM_BASE_URL     - on-prem OpenAI-compatible model endpoint (gemma-4-12b)
+# - SUPABASE_URL, SUPABASE_ANON_KEY - anon key only; the caller JWT enforces RLS
+# - MASTRA_PG_URL     - Postgres URL for @mastra/pg persistent threads
+# - OTEL_EXPORTER_OTLP_ENDPOINT - phoenix:4317 (zero external egress)
+
+# Stage 1: Dependencies & Build
+FROM node:22-alpine AS builder
+WORKDIR /app
+
+RUN apk add --no-cache python3 make g++ libc6-compat
+
+# Install pnpm (pinned to match the repo's packageManager; pnpm@latest moved to
+# v11 which hard-fails on ignored native build scripts via ERR_PNPM_IGNORED_BUILDS)
+RUN corepack enable && corepack prepare pnpm@10.29.1 --activate
+
+# Copy package files
+COPY package.json pnpm-lock.yaml* ./
+
+# Install all dependencies (including devDependencies for build)
+RUN pnpm install --no-frozen-lockfile || true
+
+# Copy source code
+COPY . .
+
+# Build TypeScript -> dist/**
+RUN pnpm build
+
+# Remove devDependencies after build (CI=true for non-TTY environments)
+RUN CI=true pnpm prune --prod
+
+# Stage 2: Production image
+FROM node:22-alpine AS production
+WORKDIR /app
+
+RUN apk add --no-cache libc6-compat tini curl
+
+# Create non-root user for security
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
+
+# Copy built application
+COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
+COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nodejs:nodejs /app/package.json ./package.json
+
+# Set environment
+ENV NODE_ENV=production
+ENV PORT=4100
+
+# Switch to non-root user
+USER nodejs
+
+# Expose port (4100 — backend is 4000, anythingllm 3001, langfuse 3000, phoenix 6006/4317)
+EXPOSE 4100
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD curl -f http://localhost:4100/health || exit 1
+
+# Use tini as init system
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# Start the application
+CMD ["node", "dist/index.js"]

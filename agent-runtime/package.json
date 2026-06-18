@@ -3,11 +3,41 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "STUB (authored in Plan 72-01 Wave 0; completed in Plan 72-05). The on-prem copilot runtime workspace — Mastra + self-hosted CopilotKit/AG-UI. This file currently declares ONLY the name + a test script so `pnpm --filter agent-runtime test` resolves and the Wave-0 vitest scaffold has a home. 72-05 adds the real dependencies (@mastra/core 1.43.0, @ag-ui/mastra 1.0.3, @ai-sdk/openai, zod — pinned per 72-01 SPIKE-FINDINGS), dev/build/start/lint/type-check scripts, and the src/ runtime.",
+  "description": "On-prem copilot runtime workspace — Express + Mastra server + the self-hosted CopilotKit/AG-UI runtime. Terminates AG-UI over SSE on :4100, forwards the caller JWT via setContext (the spike-proven requestContext path, @mastra/core 1.43.0), and hosts the reads-only copilot agent. Lifts backend/src/ai/{config,llm-router}.ts. Built in Plan 72-05; tools land in 72-06.",
   "scripts": {
-    "test": "vitest run --config ./vitest.config.ts"
+    "dev": "NODE_ENV=development tsx watch src/index.ts",
+    "build": "node build.mjs",
+    "start": "node dist/index.js",
+    "test": "vitest run --config ./vitest.config.ts",
+    "lint": "cd .. && eslint -c eslint.config.mjs --max-warnings 0 'agent-runtime/src/**/*.ts'",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ag-ui/client": "^0.0.57",
+    "@ag-ui/core": "^0.0.57",
+    "@ag-ui/mastra": "1.0.3",
+    "@ai-sdk/openai": "3.0.73",
+    "@copilotkit/runtime": "^1.60.2",
+    "@mastra/client-js": "^1.25.0",
+    "@mastra/core": "1.43.0",
+    "@mastra/memory": "^1.20.5",
+    "@mastra/pg": "^1.13.2",
+    "@opentelemetry/auto-instrumentations-node": "0.77.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "0.219.0",
+    "@opentelemetry/sdk-node": "0.219.0",
+    "@supabase/supabase-js": "^2.100.1",
+    "ai": "6.0.208",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "winston": "^3.19.0",
+    "zod": "4.4.3"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.9.1",
+    "esbuild": "^0.27.4",
+    "tsx": "^4.22.3",
+    "typescript": "~5.9.3",
     "vitest": "^4.1.7"
   }
 }
