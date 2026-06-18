@@ -29,14 +29,5 @@
     "allowUnusedLabels": false
   },
   "include": ["src/**/*"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "spike",
-    // Wave-0 tool-test scaffold (Plan 72-01): held out of the run via
-    // vitest.config.ts test.exclude AND build.mjs; mirror that here so tsc
-    // doesn't trip on its intentional `never`-cast vi.spyOn before 72-06
-    // relocates it into the live tools dir.
-    "src/mastra/tools/__scaffold__/**"
-  ]
+  "exclude": ["node_modules", "dist", "spike"]
 }
