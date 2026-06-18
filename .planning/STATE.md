@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 
 Phase: 72
 Plan: Not started
-Status: Context gathered — ready to plan (72-CONTEXT.md committed a4a8c071)
+Status: UI-SPEC approved — ready to plan (72-UI-SPEC.md committed 5d916bbe; 72-CONTEXT.md a4a8c071)
 Last activity: 2026-06-18
 
 ```
@@ -37,7 +37,7 @@ Phase 68: Complete
 Phase 69: Complete
 Phase 70: Complete (7/7 plans; UAT 10/10 pass, verified + security-clean 2026-06-16)
 Phase 71: Complete (5/5 plans; analytic-graph RPC+edge-fn live, 3-entry Analyze surface, UAT 4/4 EN+AR)
-Phase 72: Context gathered (72-CONTEXT.md) — ready to plan
+Phase 72: UI-SPEC approved (72-UI-SPEC.md, 6/6 dimensions) — ready to plan
 Phase 73: Not started
 Phase 74: Not started
 ```
