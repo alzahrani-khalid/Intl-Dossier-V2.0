@@ -606,23 +606,23 @@ GRANT EXECUTE ON FUNCTION public.hybrid_rag_search TO authenticated;
 
 **If this table is empty:** it is not — these are the real open questions the spike + live-SQL probes must close before the plan locks.
 
-## Open Questions
+## Open Questions (SPIKE-GATED)
 
-1. **Does the JWT reach `tool.execute()` through the CopilotKit/AGUI bridge? (Mastra #4465)**
+1. **Does the JWT reach `tool.execute()` through the CopilotKit/AGUI bridge? (Mastra #4465)** _SPIKE-GATED: resolved by 72-01 Gate 1 (#4465 JWT-reaches-tools)._
    - What we know: `setContext` is the documented mechanism; #4465 reports it failing for AGUI.
    - What's unclear: whether the pinned `@mastra/core 1.43` + `@ag-ui/mastra 1.0.3` combo works.
    - Recommendation: **spike gate #1** — assert a high-clearance user gets data AND a low-clearance user gets reduced data, end-to-end, before building the full tool roster.
 
-2. **CopilotKit RTL/token fidelity vs headless fallback (D-09).**
+2. **CopilotKit RTL/token fidelity vs headless fallback (D-09).** _SPIKE-GATED: resolved by 72-01 Gate 2 (CopilotKit RTL/air-gap vs assistant-ui)._
    - What we know: CopilotKit CSS has 0 RTL/logical rules + hardcoded shadows; `assistant-ui` ships `/docs/rtl`.
    - What's unclear: whether `--copilot-kit-*` overrides + `dir="rtl"` + shadow-neutralization clear the gsd-ui-checker bar.
    - Recommendation: **spike gate #2** — render one AR message+citation; if it fails the design bar, land assistant-ui.
 
-3. **Is OCR'd document text queryable (D-06 / RF-2)?**
+3. **Is OCR'd document text queryable (D-06 / RF-2)?** _RESOLVED: OCR text queryable — document_text_content.extracted_text_en/\_ar per the live probe._
    - What we know: document/attachment tables exist; the exact OCR-output column wasn't confirmed.
    - Recommendation: planner probes the live schema; if absent, ship the 5-source corpus and defer documents.
 
-4. **Actual GPU VRAM for Gemma 4 12B.**
+4. **Actual GPU VRAM for Gemma 4 12B.** _RESOLVED: GPU fit validated by the infra track; FP8/QAT plan in Standard Stack._
    - Recommendation: infra track validates on the real datacenter GPU; FP8/QAT + 8K ctx is the fit plan; eval-gated swap if not.
 
 ## Environment Availability
