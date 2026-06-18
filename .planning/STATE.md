@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: planning
-last_updated: '2026-06-18T06:01:18.160Z'
+last_updated: '2026-06-18T06:15:11.907Z'
 last_activity: 2026-06-18
 progress:
   total_phases: 7
@@ -87,7 +87,9 @@ Phase 71 shipped (2026-06-17): analytic-graph RPC + edge-fn live on staging, 3-e
 
 Phase 72 context gathered (2026-06-18): `72-CONTEXT.md` committed (a4a8c071). Decisions — Gemma 4 12B on vLLM (1×16–24GB GPU, no ALLaM in v1); throwaway Option-C spike then rebuild on Mastra+vLLM; responsive app-wide copilot drawer (desktop slide-over + mobile sheet) + Cmd+K/FAB, context-aware; corpus = core intel text + documents/OCR re-embedded to bge-m3 1024; tools = hybrid-RAG + read_signals + query_graph + dossier/work-item lookups + generate_digest preview-only; persistent user-private Mastra threads; **CopilotKit-first** (spike must prove RTL/token + air-gap; headless fallback); fold + audit supabaseAdmin in brief-generator + intake-linker; standing OSS-survey mandate.
 
-Next: `/gsd:plan-phase 72` (agent platform — runtime, retrieval, reads). Optionally `/gsd:ui-phase 72` first (UI hint = yes — the copilot drawer surface).
+Phase 72 UI-SPEC approved (2026-06-18): `72-UI-SPEC.md` committed (5d916bbe), gsd-ui-checker 6/6 dimensions PASS (1 non-blocking FLAG fixed — single-word "Stop"/"Retry" → "Stop response"/"Retry question", EN+AR). Contract locks the responsive copilot drawer (desktop slide-over mirroring the 720px dossier drawer + mobile BottomSheet), CopilotKit token-theming (`--copilot-kit-*` → IntelDossier tokens, RTL/Tajawal, no raw hex/no card shadows), indistinguishable-empty copy (no clearance/filtered/restricted anywhere), 60/30/10 color with a 4-item accent reserve, 4-size/2-weight type, justified spacing exceptions, and the full token-bound component inventory (CopilotDrawer/Sheet, Composer, MessageList, CitationCard, ThreadList, states).
+
+Next: `/gsd:plan-phase 72` (agent platform — runtime, retrieval, reads) — the planner consumes 72-UI-SPEC.md as the design contract.
 
 Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/middleware/auth.ts`) deployed — elected-official detail and other Express-backed routes stay 401 in production until deployed (staging is correct).
 
