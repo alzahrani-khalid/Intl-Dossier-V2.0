@@ -27,6 +27,15 @@
 -- AGENT-03 invoker proof can assert no row exceeds the caller's clearance — that token
 -- is the clearance scale value, not a forbidden redaction-label substring.)
 --
+-- REGCONFIG CAST (deviation Rule 1 — fixes a latent bug in the pre-written RESEARCH
+-- SQL L548/L552): the FTS config is selected by a CASE that types as `text`.
+-- websearch_to_tsquery has signature (regconfig, text) and Postgres does NOT implicitly
+-- cast text->regconfig, so `websearch_to_tsquery(CASE ... END, ...)` raises
+-- `function websearch_to_tsquery(text, unknown) does not exist` at function creation.
+-- A string LITERAL first arg is special-cased to regconfig (which is why the existing
+-- migrations' `websearch_to_tsquery('english', ...)` work), but a CASE expression is
+-- not. The explicit `(CASE ... END)::regconfig` cast is MANDATORY — do not remove it.
+--
 -- ITERATIVE-SCAN NOTE (tool layer, pgvector 0.8): before calling this RPC the tool
 -- SETs LOCAL hnsw.iterative_scan='relaxed_order' and hnsw.max_scan_tuples so the RLS
 -- post-filter inside the dense CTE does not collapse recall. That is a session GUC set
@@ -68,15 +77,15 @@ AS $$
            ROW_NUMBER() OVER (
              ORDER BY ts_rank_cd(
                CASE WHEN p_lang = 'ar' THEN content_tsv_ar ELSE content_tsv_en END,
-               websearch_to_tsquery(CASE WHEN p_lang = 'ar' THEN 'arabic' ELSE 'english' END, p_query_text)
+               websearch_to_tsquery((CASE WHEN p_lang = 'ar' THEN 'arabic' ELSE 'english' END)::regconfig, p_query_text)
              ) DESC
            ) AS rank
     FROM public.rag_chunks
     WHERE (CASE WHEN p_lang = 'ar' THEN content_tsv_ar ELSE content_tsv_en END)
-          @@ websearch_to_tsquery(CASE WHEN p_lang = 'ar' THEN 'arabic' ELSE 'english' END, p_query_text)
+          @@ websearch_to_tsquery((CASE WHEN p_lang = 'ar' THEN 'arabic' ELSE 'english' END)::regconfig, p_query_text)
     ORDER BY ts_rank_cd(
                CASE WHEN p_lang = 'ar' THEN content_tsv_ar ELSE content_tsv_en END,
-               websearch_to_tsquery(CASE WHEN p_lang = 'ar' THEN 'arabic' ELSE 'english' END, p_query_text)
+               websearch_to_tsquery((CASE WHEN p_lang = 'ar' THEN 'arabic' ELSE 'english' END)::regconfig, p_query_text)
              ) DESC
     LIMIT (p_limit * 2)
   )
