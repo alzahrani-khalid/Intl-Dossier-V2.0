@@ -47,8 +47,11 @@ router.post(
     const { language = 'en' } = req.body
     const userId = req.user?.id
     const organizationId = req.user?.organization_id
+    // P72 D-10: forward the caller's Authorization header so the intake-linker
+    // agent reads/writes under the user's JWT (RLS-scoped), not service-role.
+    const authHeader = req.headers.authorization
 
-    if (!userId || !organizationId) {
+    if (!userId || !organizationId || !authHeader) {
       res.status(401).json({ error: 'Unauthorized' })
       return
     }
@@ -76,6 +79,7 @@ router.post(
         organizationId,
         userId,
         language,
+        authHeader,
       })
 
       res.json({
