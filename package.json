@@ -13,7 +13,8 @@
   "workspaces": [
     "backend",
     "frontend",
-    "shared"
+    "shared",
+    "agent-runtime"
   ],
   "scripts": {
     "preinstall": "npx only-allow pnpm",

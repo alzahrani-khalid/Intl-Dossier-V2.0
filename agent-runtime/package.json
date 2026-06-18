@@ -1,0 +1,13 @@
+{
+  "name": "agent-runtime",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "STUB (authored in Plan 72-01 Wave 0; completed in Plan 72-05). The on-prem copilot runtime workspace — Mastra + self-hosted CopilotKit/AG-UI. This file currently declares ONLY the name + a test script so `pnpm --filter agent-runtime test` resolves and the Wave-0 vitest scaffold has a home. 72-05 adds the real dependencies (@mastra/core 1.43.0, @ag-ui/mastra 1.0.3, @ai-sdk/openai, zod — pinned per 72-01 SPIKE-FINDINGS), dev/build/start/lint/type-check scripts, and the src/ runtime.",
+  "scripts": {
+    "test": "vitest run --config ./vitest.config.ts"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.7"
+  }
+}
