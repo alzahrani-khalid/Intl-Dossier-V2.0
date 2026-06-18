@@ -229,6 +229,47 @@ services:
       - intl-dossier
 
   # ===========================================
+  # AGENT-RUNTIME - Mastra + CopilotKit/AG-UI copilot (INFRA-03)
+  # Internal-only (expose:, never ports:). nginx is the ONLY externally-proxied
+  # path: /api/copilot/ -> agent-runtime:4100/chat (SSE). The workspace + its
+  # Dockerfile.prod are authored in plan 72-05 — this block lands the
+  # network/env contract first so the model/embed/rerank URLs resolve by name.
+  # CORS: ALLOWED_ORIGINS is a SECRET, never '*' (carried edge-fn lesson —
+  # unset falls back to ACAO:null on deployed origins). Keystone: SUPABASE_ANON_KEY
+  # + the caller's JWT (rides the AG-UI request header), NEVER the service-role key.
+  # ===========================================
+  agent-runtime:
+    build:
+      context: ../agent-runtime
+      dockerfile: Dockerfile.prod
+    container_name: intl-dossier-agent-runtime
+    restart: unless-stopped
+    expose:
+      - '4100'
+    environment:
+      NODE_ENV: production
+      PORT: 4100
+      # Supabase — ANON key + caller JWT keystone (RLS enforces clearance);
+      # NEVER SUPABASE_SERVICE_ROLE_KEY in the interactive copilot path.
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      # CORS origin allow-list (comma-separated). SECRET — never '*'.
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+      # Model + retrieval backends, reachable by service name on this network.
+      VLLM_BASE_URL: http://vllm:8000
+      TEI_EMBED_URL: http://tei-embed:80
+      TEI_RERANK_URL: http://tei-rerank:80
+      # @mastra/pg threads/messages live on the same Supabase Postgres.
+      DATABASE_URL: ${MASTRA_PG_URL}
+      # Traces export to Phoenix over OTLP gRPC (internal network).
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://phoenix:4317
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - intl-dossier
+
+  # ===========================================
   # vLLM - Gemma 4 12B over OpenAI-compatible /v1 (INFRA-01)
   # Internal-only (expose:, never ports:). Zero egress — local model weights, no
   # telemetry. The copilot (agent-runtime) reaches it as http://vllm:8000.
