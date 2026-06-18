@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: executing
-last_updated: '2026-06-18T07:45:41.805Z'
-last_activity: 2026-06-18 -- Phase 72 planning complete
+last_updated: '2026-06-18T08:38:25.372Z'
+last_activity: 2026-06-18
 progress:
   total_phases: 7
   completed_phases: 4
   total_plans: 33
-  completed_plans: 24
+  completed_plans: 25
   percent: 57
 ---
 
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 72 — agent platform — runtime, retrieval, reads
+**Current focus:** Phase 72 — agent-platform-runtime-retrieval-reads
 
 ## Current Position
 
-Phase: 72
-Plan: Not started
+Phase: 72 (agent-platform-runtime-retrieval-reads) — EXECUTING
+Plan: 2 of 9
 Status: Ready to execute
-Last activity: 2026-06-18 -- Phase 72 planning complete
+Last activity: 2026-06-18
 
 ```
 Milestone Progress: 4/7 phases complete
@@ -118,6 +118,7 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase 71]: 71-02: analytic-graph edge fn = thin JWT-forwarding mirror of graph-traversal (anon key + forwarded Authorization, getUser(token), pass-through {nodes,edges,stats} + 2s perf budget); RPC + edge fn AUTHORED only, applied/deployed in 71-03 (executor lacks Supabase MCP) — GRAPH-01/03/04 turn GREEN there, not closed now
 - [Phase ?]: 71-04: shortest_path shipped unconditionally (RF-4); all 4 Analyze templates always visible
 - [Phase ?]: 71-04: Analyze mode is an additive early-return branch in RelationshipGraphPage — degrees-traversal preserved (zero regression)
+- [Phase 72]: 72-07 retired supabaseAdmin from brief-generator (3 sites: ai_briefs C/U/U) + intake-linker (6 sites: intake_tickets/dossiers/persons reads + ai_runs C/U + ai_entity_link_proposals write) — ALL 9 user-triggered. Call-graph disproved the plan's "intake-linker L452 = cron carve-out" hypothesis (no queue/worker/cron caller; proposeLinks runs the proposals INSERT inside the authenticated request), so every site swapped to createUserClient(authHeader); both supabaseAdmin imports removed (zero carve-outs remain). HTTP callers briefs.ts + intake-linking.ts forward req.headers.authorization (401 if absent). Tests live under backend/tests/unit/ (the planned src/ai/agents/\*.test.ts path is NOT collected by the default vitest include globs). D-10 + folded P68 supabaseAdmin follow-up closed; AGENT-03 reinforced. Commits 94a4fa7f, b6fdb447
 
 ### Open Todos
 
