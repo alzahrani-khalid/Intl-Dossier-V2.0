@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: executing
-last_updated: '2026-06-18T09:34:13.026Z'
+last_updated: '2026-06-18T10:04:10.492Z'
 last_activity: 2026-06-18
 progress:
   total_phases: 7
   completed_phases: 4
   total_plans: 33
-  completed_plans: 27
+  completed_plans: 28
   percent: 57
 ---
 
@@ -25,8 +25,8 @@ See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 ## Current Position
 
 Phase: 72 (agent-platform-runtime-retrieval-reads) — EXECUTING
-Plan: 4 of 9
-Status: 72-01 complete (keystone spike — GATE 1 JWT-reaches-tools PASS, GATE 3 air-gap PASS, GATE 2 shell_decision=assistant-ui pending AR visual; Wave-0 test infra + copilot i18n landed). 72-01/72-02/72-07 done.
+Plan: 5 of 9
+Status: Ready to execute
 Last activity: 2026-06-18
 
 ```
@@ -37,7 +37,7 @@ Phase 68: Complete
 Phase 69: Complete
 Phase 70: Complete (7/7 plans; UAT 10/10 pass, verified + security-clean 2026-06-16)
 Phase 71: Complete (5/5 plans; analytic-graph RPC+edge-fn live, 3-entry Analyze surface, UAT 4/4 EN+AR)
-Phase 72: Executing (3/9 plans: 72-01 keystone spike — JWT-reaches-tools via requestContext PASS + air-gap PASS + shell_decision=assistant-ui pending AR visual, Wave-0 test infra + copilot i18n; 72-02 serving-substrate config; 72-07 supabaseAdmin retirement)
+Phase 72: Executing (4/9 plans: 72-01 keystone spike — JWT-reaches-tools via requestContext PASS + air-gap PASS + shell_decision=assistant-ui pending AR visual, Wave-0 test infra + copilot i18n; 72-02 serving-substrate config; 72-07 supabaseAdmin retirement; 72-03 RAG/memory migrations AUTHORED — rag_chunks halfvec(1024) hybrid store + per-source clearance-sync, hybrid_rag_search INVOKER RRF k=60, mastra thread/message owner-only RLS; AGENT-04/05 done; NOT applied — apply in 72-04)
 Phase 73: Not started
 Phase 74: Not started
 ```

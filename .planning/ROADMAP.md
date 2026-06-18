@@ -363,7 +363,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 
 **Wave 2** _(blocked on Wave 1)_
 
-- [ ] 72-03-PLAN.md — Migrations: rag_chunks (halfvec 1024 + per-source sensitivity-sync) + hybrid_rag_search INVOKER RPC + mastra_threads RLS
+- [x] 72-03-PLAN.md — Migrations: rag_chunks (halfvec 1024 + per-source sensitivity-sync) + hybrid_rag_search INVOKER RPC + mastra_threads RLS
 
 **Wave 3** _(blocked on Wave 2)_
 
@@ -444,7 +444,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 69. Signals | v7.0 | 4/4 | Complete   | 2026-06-14 |
 | 70. Digests + Alerts | v7.0 | 7/7 | Complete    | 2026-06-16 |
 | 71. Analytic Graph | v7.0 | 5/5 | Complete    | 2026-06-17 |
-| 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 3/9 | In Progress|  |
+| 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 4/9 | In Progress|  |
 | 73. Agent Platform — Writes + Generative UI | v7.0 | 0/? | Not started | - |
 | 74. Eval Gate + AnythingLLM Retirement | v7.0 | 0/? | Not started | - |
 
