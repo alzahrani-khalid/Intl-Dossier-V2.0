@@ -52,7 +52,7 @@ Requirements for the v7.0 milestone (phases 68–74). Each maps to exactly one r
 ### Agent platform — runtime, retrieval, reads
 
 - [x] **AGENT-01**: A cleared user can converse with the on-prem copilot from a primary conversational surface and via Cmd+K
-- [ ] **AGENT-02**: The copilot answers from the gated intelligence data (signals, digests, graph, dossiers) under the caller's JWT
+- [x] **AGENT-02**: The copilot answers from the gated intelligence data (signals, digests, graph, dossiers) under the caller's JWT
 - [x] **AGENT-03**: A non-cleared user receives clearance-correct (reduced) copilot results and never above-clearance content
 - [x] **AGENT-04**: The copilot retrieves via a hybrid (dense + sparse + rerank) RAG over a single chunks store, with clearance enforced by `SECURITY INVOKER` + RLS
 - [x] **AGENT-05**: Retrievable content is embedded at bge-m3 1024-dim (one-time re-embed completed; no dimension drift)
@@ -147,7 +147,7 @@ Which phases cover which requirements.
 | GRAPH-03    | Phase 71 | Complete |
 | GRAPH-04    | Phase 71 | Complete |
 | AGENT-01    | Phase 72 | Complete |
-| AGENT-02    | Phase 72 | Pending  |
+| AGENT-02    | Phase 72 | Complete |
 | AGENT-03    | Phase 72 | Complete |
 | AGENT-04    | Phase 72 | Complete |
 | AGENT-05    | Phase 72 | Complete |

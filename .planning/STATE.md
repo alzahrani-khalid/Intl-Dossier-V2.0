@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: executing
-last_updated: '2026-06-18T10:47:28.911Z'
+last_updated: '2026-06-18T11:08:05.334Z'
 last_activity: 2026-06-18
 progress:
   total_phases: 7
   completed_phases: 4
   total_plans: 33
-  completed_plans: 30
-  percent: 57
+  completed_plans: 32
+  percent: 58
 ---
 
 # Project State
@@ -25,19 +25,19 @@ See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 ## Current Position
 
 Phase: 72 (agent-platform-runtime-retrieval-reads) — EXECUTING
-Plan: 7 of 9
-Status: Executing — 72-04 complete (4 of 9 incomplete plans remain: 72-06, 72-08, 72-09)
+Plan: 8 of 9
+Status: Ready to execute
 Last activity: 2026-06-18
 
 ```
 Milestone Progress: 4/7 phases complete
-[████████████░░░░░░░░] 57%
+[████████████░░░░░░░░] 58%
 
 Phase 68: Complete
 Phase 69: Complete
 Phase 70: Complete (7/7 plans; UAT 10/10 pass, verified + security-clean 2026-06-16)
 Phase 71: Complete (5/5 plans; analytic-graph RPC+edge-fn live, 3-entry Analyze surface, UAT 4/4 EN+AR)
-Phase 72: Executing (6/9 plans: 72-04 re-embed backfill — the three 72-03 migrations APPLIED + verified live on staging (rag_chunks halfvec(1024) ✓, RLS user_id=auth.uid() trap-free ✓, sync trigger ✓, hybrid_rag_search prosecdef=false ✓ + anon REVOKEd; mastra_threads_rls no-op until runtime boots — RE-APPLY at 72-05/09), authored reembed-rag-chunks.ts + chunk-source-content.ts + 12 unit tests (TEI mocked, 1024-dim guard, per-source parent_dossier_id, idempotent natural-key upsert); LIVE RUN DEFERRED to the 72-09 deploy gate (bge-m3 TEI is GPU-served); sensitivity sent NULL→DB trigger resolves fail-closed; AGENT-04/05 store live; 72-01 keystone spike — JWT-reaches-tools via requestContext PASS + air-gap PASS + shell_decision=assistant-ui pending AR visual, Wave-0 test infra + copilot i18n; 72-02 serving-substrate config; 72-07 supabaseAdmin retirement; 72-03 RAG/memory migrations AUTHORED — rag_chunks halfvec(1024) hybrid store + per-source clearance-sync, hybrid_rag_search INVOKER RRF k=60, mastra thread/message owner-only RLS; AGENT-04/05 done; NOT applied — apply in 72-04; 72-05 agent-runtime workspace LIVE — 4th Turborepo pkg, Mastra+registerCopilotKit AG-UI/SSE on :4100, requestContext keystone setContext, reads-only bilingual copilot agent + @mastra/pg threads + typed stub tool barrel for 72-06, lifted config/llm-router, @mastra/core 1.43.0 pinned, type-check/lint/build/test green + smoke-boot /health ok)
+Phase 72: Executing (7/9 plans: 72-06 reads-only tool roster (D-07) LIVE — keystone _supabase (anon+caller JWT, NEVER service-role) + 6 narrow Zod tools all under context.requestContext.get('authorization') (Mastra 1.43 RequestContext): read_signals/query_graph(enum-bounded query_type)/generate_digest-PREVIEW wrap the live P69/P70/P71 INVOKER RPCs, hybrid_rag_search = TEI embed→iterative-scan GUC→INVOKER RPC→TEI rerank (RLS-before-rerank, AGENT-04, degrades to RRF if reranker down), dossier-lookups (get/list/work_items→aa_commitments) direct; indistinguishable-empty everywhere (no clearance|filtered|restricted); publish_digest NEVER reachable (preview only); tools.test.ts 23/23 GREEN + __scaffold__ exclude removed (vitest+tsconfig); AGENT-02/03/04 done; type-check/test/build/lint clean; DEFERRED: fold set_config('hnsw.iterative_scan',true) into the RPC (pooling) + re-apply mastra_threads RLS post-boot — both for 72-09; 72-04 re-embed backfill — the three 72-03 migrations APPLIED + verified live on staging (rag_chunks halfvec(1024) ✓, RLS user_id=auth.uid() trap-free ✓, sync trigger ✓, hybrid_rag_search prosecdef=false ✓ + anon REVOKEd; mastra_threads_rls no-op until runtime boots — RE-APPLY at 72-05/09), authored reembed-rag-chunks.ts + chunk-source-content.ts + 12 unit tests (TEI mocked, 1024-dim guard, per-source parent_dossier_id, idempotent natural-key upsert); LIVE RUN DEFERRED to the 72-09 deploy gate (bge-m3 TEI is GPU-served); sensitivity sent NULL→DB trigger resolves fail-closed; AGENT-04/05 store live; 72-01 keystone spike — JWT-reaches-tools via requestContext PASS + air-gap PASS + shell_decision=assistant-ui pending AR visual, Wave-0 test infra + copilot i18n; 72-02 serving-substrate config; 72-07 supabaseAdmin retirement; 72-03 RAG/memory migrations AUTHORED — rag_chunks halfvec(1024) hybrid store + per-source clearance-sync, hybrid_rag_search INVOKER RRF k=60, mastra thread/message owner-only RLS; AGENT-04/05 done; NOT applied — apply in 72-04; 72-05 agent-runtime workspace LIVE — 4th Turborepo pkg, Mastra+registerCopilotKit AG-UI/SSE on :4100, requestContext keystone setContext, reads-only bilingual copilot agent + @mastra/pg threads + typed stub tool barrel for 72-06, lifted config/llm-router, @mastra/core 1.43.0 pinned, type-check/lint/build/test green + smoke-boot /health ok)
 Phase 73: Not started
 Phase 74: Not started
 ```
