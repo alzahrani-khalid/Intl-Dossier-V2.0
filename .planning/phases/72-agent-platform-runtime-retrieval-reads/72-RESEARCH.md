@@ -676,6 +676,16 @@ SELECT table_name, column_name FROM information_schema.columns
 WHERE table_schema='public' AND (column_name ILIKE '%ocr%' OR column_name ILIKE '%extracted%text%');
 ```
 
+### Pre-plan live-SQL probe RESULTS (orchestrator-run, staging `zkrcjzdemdmwhearhfgg`, 2026-06-18)
+
+> Closes assumptions A1/A2/A3 + the pgvector-version check with **verified live facts**. The planner writes the migration and re-embed job against these, not assumptions.
+
+- **A1 — chunks store:** `ai_embeddings` is live, **`vector(1024)` (NOT halfvec), 0 rows**. `rag_chunks`, `mastra_threads`, `mastra_messages`, and the `hybrid_rag_search` proc do **NOT exist** → all net-new (confirms the **new-`rag_chunks`** recommendation; `ai_embeddings` can be left untouched / not the write target). **pgvector = 0.8.0** → iterative scans ARE available (no `ef_search`-only fallback needed).
+- **`profiles` columns = `user_id, clearance_level` — NO `id`.** The deny-all landmine is real: every RLS policy + the hybrid RPC MUST use `WHERE user_id = auth.uid()`; `WHERE id = auth.uid()` silently binds to the outer table → NULL → blocks all reads.
+- **A2 — corpus sizing (tiny → one-shot backfill, no batching/throughput planning):** dossiers(active)=**12**, positions=**2**, aa_commitments=**9**; intelligence_event=**0**, intelligence_signals=**0**, briefs=**0**, documents=**0**. Substance ≈ 23 rows. **Signals / events / briefs / documents are empty on staging → AGENT-05 (`array_length=1024`) and the AGENT-03 clearance-reduction proofs require seeded rows in the live-UAT seed step.**
+- **A3 — OCR text IS queryable:** `document_text_content.extracted_text_en` / `extracted_text_ar` (+ `ocr_status`, `ocr_confidence`) is the OCR-output table; also `document_versions.text_content`, `document_annotations.text_content`, `government_decisions.full_text_en/_ar`. The D-06 documents/OCR source is viable (0 rows today — defer-vs-ship is a corpus-coverage call, not a blocker).
+- **⚠ Clearance-source asymmetry (NEW finding — the denormalized-sensitivity sync MUST be designed around this):** only **`dossiers`** and **`intelligence_event`** carry their own `sensitivity_level` (both `integer`). **`intelligence_signals`, `positions`, `briefs`, `aa_commitments`, `documents` do NOT.** Each `rag_chunks` row's denormalized `sensitivity_level` must therefore be **resolved from the owning dossier** (for signals, the linked dossier/event) — **never defaulted**. A default-low over-exposes; a NULL deny-alls. The re-embed/sync path + the RLS-sync trigger must map every source's clearance explicitly per source table.
+
 ### Phase Requirements → Test Map
 
 | Req ID                  | Behavior                                                                                                    | Test Type                              | Automated Command / Live Proof                                                                                                                                                         | File Exists?                             |
