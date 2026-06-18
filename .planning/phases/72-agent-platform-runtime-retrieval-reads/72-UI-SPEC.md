@@ -1,10 +1,11 @@
 ---
 phase: 72
 slug: agent-platform-runtime-retrieval-reads
-status: draft
+status: approved
 shadcn_initialized: true
 preset: 'new-york / baseColor neutral (components.json present — NOT re-initialized)'
 created: 2026-06-18
+reviewed_at: 2026-06-18
 ---
 
 # Phase 72 — UI Design Contract
@@ -106,14 +107,14 @@ Sentence case for all titles and buttons. UPPERCASE only for classification ribb
 | Primary CTA / drawer entry                                            | Ask the copilot                                                                                                                               | اسأل المساعد                                                                                                                     |
 | Cmd+K entry row (on a dossier)                                        | Ask the copilot about this dossier                                                                                                            | اسأل المساعد عن هذا الملف                                                                                                        |
 | Composer send action (icon button)                                    | aria-label: **Send message** (visible: paper-plane glyph; the aria-label is the accessible name)                                              | إرسال الرسالة                                                                                                                    |
-| Stop streaming control                                                | Stop                                                                                                                                          | إيقاف                                                                                                                            |
+| Stop streaming control                                                | Stop response                                                                                                                                 | إيقاف الاستجابة                                                                                                                  |
 | Empty state — heading (dossier context)                               | Ask about this dossier                                                                                                                        | اسأل عن هذا الملف                                                                                                                |
 | Empty state — heading (no dossier)                                    | Ask the copilot                                                                                                                               | اسأل المساعد                                                                                                                     |
 | Empty state — body                                                    | Start with a question about signals, digests, the network graph, or linked records. The copilot answers only from data you're cleared to see. | ابدأ بسؤال عن الإشارات أو الموجزات أو شبكة العلاقات أو السجلات المرتبطة. يجيب المساعد فقط من البيانات المصرّح لك بالاطلاع عليها. |
 | No-answer / no-citation result (neutral, **indistinguishable-empty**) | The copilot couldn't find anything to answer that. Try rephrasing, or ask about a specific dossier.                                           | لم يجد المساعد ما يجيب عن ذلك. حاول إعادة الصياغة، أو اسأل عن ملف محدد.                                                          |
 | Error state — heading                                                 | The copilot is unavailable                                                                                                                    | المساعد غير متاح                                                                                                                 |
 | Error state — body                                                    | The on-prem assistant didn't respond. Retry your question; if it keeps failing, the agent-runtime service may be down.                        | لم يستجب المساعد المحلي. أعد إرسال سؤالك؛ وإذا استمر الفشل فقد تكون خدمة وحدة التشغيل متوقفة.                                    |
-| Error state — action                                                  | Retry                                                                                                                                         | إعادة المحاولة                                                                                                                   |
+| Error state — action                                                  | Retry question                                                                                                                                | إعادة إرسال السؤال                                                                                                               |
 | Streaming / loading indicator                                         | Thinking…                                                                                                                                     | جارٍ التفكير…                                                                                                                    |
 | Destructive — "Delete conversation"                                   | Delete conversation                                                                                                                           | حذف المحادثة                                                                                                                     |
 | Destructive confirmation dialog                                       | Delete conversation — this removes the thread and its history. This can't be undone.                                                          | حذف المحادثة — يؤدي ذلك إلى إزالة المحادثة وسجلّها. لا يمكن التراجع عن هذا الإجراء.                                              |
@@ -156,7 +157,7 @@ All re-skinned to IntelDossier tokens; no shadcn default chrome, no Aceternity. 
 | Send message                  | Send message        | إرسال الرسالة   |
 | Close drawer                  | Close               | إغلاق           |
 | Cmd+K / FAB trigger           | Ask the copilot     | اسأل المساعد    |
-| Stop stream                   | Stop                | إيقاف           |
+| Stop stream                   | Stop response       | إيقاف الاستجابة |
 | Copy message                  | Copy message        | نسخ الرسالة     |
 | Delete conversation (per row) | Delete conversation | حذف المحادثة    |
 
@@ -184,11 +185,11 @@ All re-skinned to IntelDossier tokens; no shadcn default chrome, no Aceternity. 
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: PASS
+- [x] Dimension 2 Visuals: PASS
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS
 
-**Approval:** pending
+**Approval:** approved 2026-06-18
