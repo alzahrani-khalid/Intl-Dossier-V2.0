@@ -257,6 +257,9 @@ import enIntelligenceDigests from './en/intelligence-digests.json'
 import arIntelligenceDigests from './ar/intelligence-digests.json'
 import enIntelligenceAlerts from './en/intelligence-alerts.json'
 import arIntelligenceAlerts from './ar/intelligence-alerts.json'
+// Phase 72: copilot namespace (the reads-only conversational drawer)
+import enCopilot from './en/copilot.json'
+import arCopilot from './ar/copilot.json'
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -393,6 +396,8 @@ const resources = {
     // Phase 70
     'intelligence-digests': enIntelligenceDigests,
     'intelligence-alerts': enIntelligenceAlerts,
+    // Phase 72
+    copilot: enCopilot,
   },
   ar: {
     translation: arCommon,
@@ -525,6 +530,8 @@ const resources = {
     // Phase 70
     'intelligence-digests': arIntelligenceDigests,
     'intelligence-alerts': arIntelligenceAlerts,
+    // Phase 72
+    copilot: arCopilot,
   },
 }
 

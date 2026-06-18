@@ -1,0 +1,40 @@
+{
+  "title": "Copilot",
+  "cta": {
+    "ask": "Ask the copilot",
+    "askAboutDossier": "Ask the copilot about this dossier"
+  },
+  "composer": {
+    "placeholder": "Ask about signals, digests, the network graph, or linked records",
+    "send": "Send message",
+    "stop": "Stop response"
+  },
+  "empty": {
+    "headingDossier": "Ask about this dossier",
+    "headingNoDossier": "Ask the copilot",
+    "body": "Start with a question about signals, digests, the network graph, or linked records. The copilot answers only from data you're cleared to see."
+  },
+  "noAnswer": {
+    "body": "The copilot couldn't find anything to answer that. Try rephrasing, or ask about a specific dossier."
+  },
+  "error": {
+    "heading": "The copilot is unavailable",
+    "body": "The on-prem assistant didn't respond. Retry your question; if it keeps failing, the agent-runtime service may be down.",
+    "retry": "Retry question"
+  },
+  "streaming": {
+    "thinking": "Thinking…"
+  },
+  "delete": {
+    "action": "Delete conversation",
+    "confirm": "Delete conversation — this removes the thread and its history. This can't be undone."
+  },
+  "aria": {
+    "sendMessage": "Send message",
+    "closeDrawer": "Close",
+    "openCopilot": "Ask the copilot",
+    "stopStream": "Stop response",
+    "copyMessage": "Copy message",
+    "deleteConversation": "Delete conversation"
+  }
+}
