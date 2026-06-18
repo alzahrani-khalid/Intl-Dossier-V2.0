@@ -1,0 +1,348 @@
+/*
+ * copilot-theme.css — the D-09 token-bound conversational-shell contract.
+ *
+ * shell_decision = assistant-ui (72-01 SPIKE-FINDINGS, user sign-off 2026-06-18).
+ * assistant-ui is headless and ships ZERO foreign CSS, so unlike the CopilotKit path
+ * there are no `--copilot-kit-*` shadow/colour rules to override — every surface below
+ * is OUR markup, styled token-only. We KEEP the proven `--copilot-kit-*` remap block
+ * (the GATE-2 contract from agent-runtime/spike/copilot-tokens.css) so the D-09
+ * theming contract is still encoded and a future flip to the CopilotKit react-ui shell
+ * (should the orchestrator's visual ever prefer it) inherits it for free.
+ *
+ * CLAUDE.md design bar (non-negotiable): all colours via var(--*) tokens; borders
+ * 1px solid var(--line); NO card drop-shadows on message/citation surfaces (the
+ * drawer's own --shadow-lg is the only allowed one); NO gradients; radii from
+ * --radius-sm / --radius / --radius-lg; logical properties only; dir="rtl" + Tajawal
+ * in Arabic (NEVER textAlign:right — writing direction handles it).
+ */
+
+/* ---------------------------------------------------------------------------
+ * D-09 contract block — the --copilot-kit-* → IntelDossier token remap, carried
+ * verbatim from the proven spike so the theming contract is encoded shell-agnostically.
+ * Inert under assistant-ui (no consumer reads these vars); load-bearing if the shell
+ * ever flips to copilotkit react-ui.
+ * ------------------------------------------------------------------------- */
+.copilot-surface {
+  --copilot-kit-background-color: var(--surface);
+  --copilot-kit-foreground-color: var(--ink);
+  --copilot-kit-primary-color: var(--accent);
+  --copilot-kit-contrast-color: var(--accent-fg);
+  --copilot-kit-secondary-color: var(--bg);
+  --copilot-kit-secondary-contrast-color: var(--ink);
+  --copilot-kit-separator-color: var(--line-soft);
+  --copilot-kit-muted-color: var(--ink-mute);
+  --copilot-kit-input-border-color: var(--line);
+
+  /* Shadows neutralized — no card shadows on message/citation surfaces (CLAUDE.md). */
+  --copilot-kit-shadow-sm: none;
+  --copilot-kit-shadow-md: none;
+  --copilot-kit-shadow-lg: none;
+
+  --copilot-kit-border-radius: var(--radius);
+
+  /* The surface itself: flat, token-bound, fills the drawer body. */
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 auto;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+}
+
+/* Arabic: Tajawal applies under dir="rtl" (mirrors the html[dir="rtl"] rule). */
+[dir='rtl'] .copilot-surface,
+[dir='rtl'].copilot-surface {
+  font-family: var(--font-arabic);
+}
+
+/* ---------------------------------------------------------------------------
+ * Thread viewport — the scrolling message stream (the focal region).
+ * ------------------------------------------------------------------------- */
+.copilot-viewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap, 16px);
+  padding-block: var(--space-4, 16px);
+  padding-inline: var(--pad, 20px);
+}
+
+/* ---------------------------------------------------------------------------
+ * Message rows — user + assistant both flat --surface, --line edge, NO shadow.
+ * Differentiation is by start/end alignment (logical), never accent-tinted bubbles.
+ * ------------------------------------------------------------------------- */
+.copilot-message {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 8px);
+  max-width: 100%;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: none;
+  padding-block: var(--space-3, 12px);
+  padding-inline: 16px;
+  font-size: var(--t-body);
+  line-height: var(--line-h-body, 1.5);
+}
+
+/* User turn sits toward the inline-end; assistant toward the inline-start. Logical
+   margins so RTL mirrors automatically (no left/right). */
+.copilot-message[data-role='user'] {
+  align-self: flex-end;
+  margin-inline-start: var(--space-8, 32px);
+  background: var(--bg);
+}
+
+.copilot-message[data-role='assistant'] {
+  align-self: flex-start;
+  margin-inline-end: var(--space-8, 32px);
+}
+
+.copilot-message__role {
+  color: var(--ink-mute);
+  font-size: var(--t-meta);
+  line-height: 1.5;
+}
+
+/* Markdown prose inside a message — tight, token-bound, no foreign styling. */
+.copilot-message__body {
+  font-size: var(--t-body);
+  line-height: var(--line-h-body, 1.5);
+  color: var(--ink);
+}
+.copilot-message__body > * + * {
+  margin-block-start: var(--space-2, 8px);
+}
+.copilot-message__body a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+.copilot-message__body code {
+  font-family: var(--font-mono);
+  font-size: var(--t-mono-small, 11px);
+  background: var(--line-soft);
+  border-radius: var(--radius-sm);
+  padding-inline: 4px;
+}
+.copilot-message__body pre {
+  background: var(--line-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3, 12px);
+  overflow-x: auto;
+}
+.copilot-message__body ul,
+.copilot-message__body ol {
+  padding-inline-start: var(--space-6, 24px);
+}
+
+/* Per-assistant-turn action bar (copy). Icon-only; the aria-label is the name. */
+.copilot-message__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1, 4px);
+}
+
+/* ---------------------------------------------------------------------------
+ * Citation card / source chip — flat --surface, --line, --radius, NO shadow.
+ * Selected = accent. Mono source id. (No rich generative dossier card — that is P73.)
+ * ------------------------------------------------------------------------- */
+.copilot-citations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 8px);
+  margin-block-start: var(--space-2, 8px);
+}
+
+.copilot-citation {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1, 4px);
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+  padding-block: var(--space-1, 4px);
+  padding-inline: var(--space-2, 8px);
+  font-size: var(--t-meta);
+  text-align: start;
+  cursor: pointer;
+  transition: border-color var(--dur, 150ms) ease;
+}
+.copilot-citation:hover {
+  border-color: var(--ink-mute);
+}
+.copilot-citation:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.copilot-citation[data-selected='true'] {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-color: var(--accent);
+}
+.copilot-citation__id {
+  font-family: var(--font-mono);
+  font-size: var(--t-mono-small, 11px);
+}
+
+/* ---------------------------------------------------------------------------
+ * Streaming indicator — accent caret + "Thinking…" (--t-meta, --ink-mute label).
+ * ------------------------------------------------------------------------- */
+.copilot-streaming {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  color: var(--ink-mute);
+  font-size: var(--t-meta);
+}
+.copilot-streaming__caret {
+  width: 2px;
+  height: 1em;
+  background: var(--accent);
+  border-radius: 1px;
+  animation: copilot-caret-blink 1s steps(2, start) infinite;
+}
+@keyframes copilot-caret-blink {
+  to {
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .copilot-streaming__caret {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Composer — textarea on --surface + 1px solid --line + accent focus ring.
+ * Send = .btn-primary (its fill resolves from --accent). Logical padding only.
+ * ------------------------------------------------------------------------- */
+.copilot-composer {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2, 8px);
+  border-block-start: 1px solid var(--line);
+  background: var(--surface);
+  padding-block: var(--space-3, 12px);
+  padding-inline: var(--pad, 20px);
+}
+.copilot-composer__input {
+  flex: 1 1 auto;
+  resize: none;
+  max-height: 160px;
+  min-height: 40px;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding-block: var(--space-2, 8px);
+  padding-inline: var(--space-3, 12px);
+  font-family: inherit;
+  font-size: var(--t-body);
+  line-height: var(--line-h-body, 1.5);
+  outline: none;
+}
+.copilot-composer__input::placeholder {
+  color: var(--ink-mute);
+}
+.copilot-composer__input:focus-visible {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+/* ---------------------------------------------------------------------------
+ * Empty + error states.
+ * ------------------------------------------------------------------------- */
+.copilot-empty {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-10, 40px);
+  text-align: center;
+  padding-block: var(--space-12, 48px);
+  padding-inline: var(--pad, 20px);
+}
+.copilot-empty__heading {
+  font-size: var(--t-page-title);
+  font-weight: 600;
+  line-height: var(--line-h-tight, 1.1);
+  color: var(--ink);
+}
+.copilot-empty__body {
+  font-size: var(--t-body);
+  line-height: var(--line-h-body, 1.5);
+  color: var(--ink-mute);
+  max-width: 42ch;
+}
+
+.copilot-error {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 8px);
+  text-align: center;
+  padding-block: var(--space-12, 48px);
+  padding-inline: var(--pad, 20px);
+}
+.copilot-error__heading {
+  font-size: var(--t-card-title);
+  font-weight: 600;
+  color: var(--danger);
+}
+.copilot-error__body {
+  font-size: var(--t-body);
+  color: var(--ink-mute);
+}
+
+/* ---------------------------------------------------------------------------
+ * ThreadList rows — --row-h, --line-soft dividers, hover --shadow-sm (the one
+ * allowed list-row shadow). Active/unread dot = --accent.
+ * ------------------------------------------------------------------------- */
+.copilot-threadlist {
+  display: flex;
+  flex-direction: column;
+}
+.copilot-thread-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  min-height: var(--row-h, 52px);
+  border-block-end: 1px solid var(--line-soft);
+  padding-inline: var(--space-3, 12px);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: start;
+}
+.copilot-thread-row:hover {
+  box-shadow: var(--shadow-sm);
+}
+.copilot-thread-row[data-active='true'] .copilot-thread-row__dot {
+  background: var(--accent);
+}
+.copilot-thread-row__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--line);
+  flex-shrink: 0;
+}
+.copilot-thread-row__title {
+  font-size: var(--t-body);
+  color: var(--ink);
+}
+.copilot-thread-row__meta {
+  font-size: var(--t-meta);
+  color: var(--ink-mute);
+}

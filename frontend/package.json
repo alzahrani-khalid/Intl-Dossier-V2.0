@@ -26,6 +26,8 @@
     "size-limit": "size-limit"
   },
   "dependencies": {
+    "@assistant-ui/react": "0.14.23",
+    "@assistant-ui/react-ag-ui": "0.0.42",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
@@ -107,8 +109,11 @@
     "react-hot-toast": "^2.6.0",
     "react-i18next": "17.0.0",
     "react-intersection-observer": "^10.0.3",
+    "react-markdown": "10.1.0",
     "react-vertical-timeline-component": "^4.0.0",
     "recharts": "^3.8.1",
+    "rehype-sanitize": "6.0.0",
+    "remark-gfm": "4.0.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
     "topojson-client": "3.1.0",
