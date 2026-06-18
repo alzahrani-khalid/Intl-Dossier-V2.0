@@ -10,10 +10,23 @@
  * - Supports streaming output
  */
 
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { llmRouter, LLMRouterConfig, StreamChunk } from '../llm-router.js'
 import { briefContextService, BriefContext } from '../../services/brief.service.js'
-import { supabaseAdmin } from '../../config/supabase.js'
 import logger from '../../utils/logger.js'
+
+// P72 D-10 (folded P68 REMED-03 follow-up): build a per-request Supabase client
+// scoped to the caller's JWT so RLS (sensitivity_level <= clearance_level)
+// applies. Brief generation is user-triggered (POST /api/ai/briefs/generate,
+// authenticated) — the service-role admin client is retired here exactly as P68
+// retired it in chat-assistant.ts. ANON_KEY + the caller's Bearer token runs
+// every read/write under the user's role. There is NO background/cron caller of
+// this agent (verified via call-graph), so there is no service-role carve-out.
+function createUserClient(authHeader: string): SupabaseClient {
+  return createClient(process.env.SUPABASE_URL ?? '', process.env.SUPABASE_ANON_KEY ?? '', {
+    global: { headers: { Authorization: authHeader } },
+  })
+}
 
 export interface BriefGenerationRequest {
   engagementId?: string
@@ -22,6 +35,9 @@ export interface BriefGenerationRequest {
   userId: string
   customPrompt?: string
   language?: 'en' | 'ar'
+  // P72 D-10: the caller's 'Bearer <token>' — threads the JWT into the
+  // RLS-scoped Supabase client for every brief-record write.
+  authHeader: string
 }
 
 export interface GeneratedBrief {
@@ -109,6 +125,7 @@ export class BriefGeneratorAgent {
       userId,
       customPrompt,
       language = 'en',
+      authHeader,
     } = request
 
     // Gather context
@@ -151,12 +168,16 @@ export class BriefGeneratorAgent {
       const brief = this.parseResponse(response.content, context, briefId, response.runId)
 
       // Update brief record
-      await this.updateBriefRecord(briefId, brief)
+      await this.updateBriefRecord(briefId, brief, authHeader)
 
       return brief
     } catch (error) {
       logger.error('Brief generation failed', { error, request })
-      await this.markBriefFailed(briefId, error instanceof Error ? error.message : 'Unknown error')
+      await this.markBriefFailed(
+        briefId,
+        error instanceof Error ? error.message : 'Unknown error',
+        authHeader,
+      )
       throw error
     }
   }
@@ -171,6 +192,7 @@ export class BriefGeneratorAgent {
       userId,
       customPrompt,
       language = 'en',
+      authHeader,
     } = request
 
     // Gather context
@@ -230,14 +252,18 @@ export class BriefGeneratorAgent {
         briefStatus: brief.status,
         hasTitle: !!brief.title,
       })
-      await this.updateBriefRecord(briefId, brief)
+      await this.updateBriefRecord(briefId, brief, authHeader)
       logger.info('Brief record updated successfully', { briefId })
 
       // Now yield done to signal completion (after saving)
       yield { type: 'done' }
     } catch (error) {
       logger.error('Stream brief generation failed', { error, request })
-      await this.markBriefFailed(briefId, error instanceof Error ? error.message : 'Unknown error')
+      await this.markBriefFailed(
+        briefId,
+        error instanceof Error ? error.message : 'Unknown error',
+        authHeader,
+      )
       yield { type: 'error', error: error instanceof Error ? error.message : 'Unknown error' }
     }
   }
@@ -410,7 +436,9 @@ ${context.recentEngagements.map((e) => `- [${e.id}] ${e.title_en} (${e.engagemen
     request: BriefGenerationRequest,
     context: BriefContext,
   ): Promise<string> {
-    const { data, error } = await supabaseAdmin
+    // P72 D-10: write under the caller's JWT so RLS applies (user-triggered).
+    const supabaseClient = createUserClient(request.authHeader)
+    const { data, error } = await supabaseClient
       .from('ai_briefs')
       .insert({
         organization_id: request.organizationId,
@@ -433,7 +461,11 @@ ${context.recentEngagements.map((e) => `- [${e.id}] ${e.title_en} (${e.engagemen
     return data.id
   }
 
-  private async updateBriefRecord(briefId: string, brief: GeneratedBrief): Promise<void> {
+  private async updateBriefRecord(
+    briefId: string,
+    brief: GeneratedBrief,
+    authHeader: string,
+  ): Promise<void> {
     logger.info('Updating brief record', {
       briefId,
       status: brief.status,
@@ -441,7 +473,9 @@ ${context.recentEngagements.map((e) => `- [${e.id}] ${e.title_en} (${e.engagemen
       summaryLength: brief.executiveSummary?.length,
     })
 
-    const { error, data } = await supabaseAdmin
+    // P72 D-10: write under the caller's JWT so RLS applies (user-triggered).
+    const supabaseClient = createUserClient(authHeader)
+    const { error, data } = await supabaseClient
       .from('ai_briefs')
       .update({
         status: brief.status === 'completed' ? 'completed' : 'partial',
@@ -468,8 +502,14 @@ ${context.recentEngagements.map((e) => `- [${e.id}] ${e.title_en} (${e.engagemen
     }
   }
 
-  private async markBriefFailed(briefId: string, errorMessage: string): Promise<void> {
-    await supabaseAdmin
+  private async markBriefFailed(
+    briefId: string,
+    errorMessage: string,
+    authHeader: string,
+  ): Promise<void> {
+    // P72 D-10: write under the caller's JWT so RLS applies (user-triggered).
+    const supabaseClient = createUserClient(authHeader)
+    await supabaseClient
       .from('ai_briefs')
       .update({
         status: 'failed',
