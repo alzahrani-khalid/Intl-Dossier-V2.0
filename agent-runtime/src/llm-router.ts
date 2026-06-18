@@ -1,5 +1,3 @@
-import { createOpenAI, type OpenAIProvider } from '@ai-sdk/openai'
-import type { LanguageModel } from 'ai'
 import { aiConfig, AIProvider, getPrivateProvider } from './config.js'
 
 // LIFTED from backend/src/ai/llm-router.ts (Plan 72-05, D-01 — lift, do not rewrite).
@@ -59,28 +57,24 @@ export function selectCopilotProvider(
 
 export type DataClassification = 'public' | 'internal' | 'confidential' | 'secret'
 
-let cachedProvider: OpenAIProvider | null = null
-let cachedBaseUrl: string | null = null
-
 /**
- * The model seam the copilot agent binds to. The on-prem endpoint (vLLM in prod /
- * Ollama in dev) is OpenAI-compatible, so the AI-SDK OpenAI provider is pointed at
- * its baseUrl. Air-gap: no cloud key — a placeholder apiKey satisfies the SDK while
- * the local server ignores it. Model-native tool-calling is enabled by the agent's
- * tool roster (no heuristic decideToolUsage).
+ * The Mastra OpenAI-compatible model config the copilot agent binds to. The on-prem
+ * endpoint (vLLM in prod / Ollama in dev) is OpenAI-compatible, so Mastra's native
+ * model-router handles the call directly via `{ id, url, apiKey }` — no AI-SDK
+ * provider instance and no @ai-sdk/provider version-interop trap. Air-gap: the
+ * apiKey is a placeholder the local server ignores (NOT a cloud key). Model-native
+ * tool-calling is driven by the agent's tool roster (no heuristic decideToolUsage).
  */
-export function getCopilotModel(): LanguageModel {
+export function getCopilotModel(): {
+  id: `${string}/${string}`
+  url: string
+  apiKey: string
+} {
   const { model, endpoint } = selectCopilotProvider('internal')
   const baseURL = endpoint ? `${endpoint.replace(/\/$/, '')}/v1` : 'http://localhost:8000/v1'
-
-  if (!cachedProvider || cachedBaseUrl !== baseURL) {
-    cachedProvider = createOpenAI({
-      baseURL,
-      // On-prem server ignores the key; required non-empty by the SDK. NOT a cloud key.
-      apiKey: process.env.VLLM_API_KEY || process.env.OPENAI_API_KEY || 'on-prem-no-key',
-    })
-    cachedBaseUrl = baseURL
+  return {
+    id: `openai-compatible/${model}`,
+    url: baseURL,
+    apiKey: process.env.VLLM_API_KEY || process.env.OPENAI_API_KEY || 'on-prem-no-key',
   }
-
-  return cachedProvider(model)
 }
