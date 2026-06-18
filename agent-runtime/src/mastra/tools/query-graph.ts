@@ -1,10 +1,13 @@
 import { createTool } from '@mastra/core/tools'
 import { z } from 'zod'
-import { createUserClient, getAuthorization } from './_supabase.js'
+import * as supa from './_supabase.js'
 
-export { createUserClient }
+// Re-export the keystone helper; the body calls `supa.createUserClient(...)` so the
+// tests' `vi.mock('./_supabase.js')` intercepts every client build.
+export const createUserClient = supa.createUserClient
 
-// Whitelisted graph query types (analytic-graph/index.ts L18, P71).
+// Whitelisted graph query types (analytic-graph/index.ts L18, P71). A Zod enum so the
+// model cannot dispatch an arbitrary query_type string.
 const GRAPH_QUERY_TYPES = [
   'forum_membership',
   'shared_committees',
@@ -12,36 +15,85 @@ const GRAPH_QUERY_TYPES = [
   'shortest_path',
 ] as const
 
+// The neutral empty JSONB the P71 RPC returns on no-data — mirrored here so a missing
+// JWT / error path is indistinguishable from "no relationships found". No
+// clearance/filtered/restricted key anywhere (P71 GRAPH-03 lock).
+const EMPTY_GRAPH = {
+  nodes: [] as unknown[],
+  edges: [] as unknown[],
+  stats: { node_count: 0, edge_count: 0 },
+} as const
+
 /**
- * query_graph — STUB (typed placeholder, TODO: 72-06).
+ * query_graph (D-07, AGENT-02) — wraps the P71 `query_graph` SECURITY INVOKER RPC under
+ * the caller's JWT. Clearance is enforced INLINE in the RPC at every dossiers join, so
+ * this tool adds none of its own.
  *
- * Wraps the P71 `query_graph(p_query_type, p_entity_id, p_entity_id_2, p_window_days)`
- * RPC (SECURITY INVOKER + inline clearance + indistinguishable-empty) under the
- * caller's JWT. 72-06 fills the body. The P71 RPC already returns the neutral
- * empty shape (no clearance keys), preserved here.
+ * Live signature (staging, 2026-06-18, INVOKER):
+ *   query_graph(p_query_type text, p_entity_id uuid, p_entity_id_2 uuid, p_window_days int) -> JSONB
+ *
+ * The RPC returns a JSONB object whose keys vary by query_type (query_type, entity_id,
+ * nodes, edges, stats, and path/window_days for some types). We pass it through verbatim
+ * under `result` so the model sees the full structured answer.
+ *
+ * Indistinguishable-empty: on no-data, above-clearance, missing JWT, or error the tool
+ * returns the SAME neutral empty graph — no clearance/filtered/restricted field.
  */
 export const queryGraphTool = createTool({
   id: 'query_graph',
   description:
-    'Traverse relationships between entities the caller is cleared to see (forum membership, shared committees, engagement chains, shortest path).',
+    'Traverse relationships between entities the caller is cleared to see: forum membership, shared committees, engagement chains, or the shortest path between two entities.',
   inputSchema: z.object({
-    queryType: z.enum(GRAPH_QUERY_TYPES),
-    entityId: z.string().uuid(),
-    entityId2: z.string().uuid().optional(),
-    windowDays: z.number().int().max(365).default(90),
+    queryType: z
+      .enum(GRAPH_QUERY_TYPES)
+      .describe('Which relationship traversal to run (one of the four supported types)'),
+    entityId: z.string().uuid().describe('The primary entity (dossier) UUID to traverse from'),
+    entityId2: z
+      .string()
+      .uuid()
+      .optional()
+      .describe('The second entity UUID — required only for shortest_path'),
+    windowDays: z
+      .number()
+      .int()
+      .min(1)
+      .max(365)
+      .default(90)
+      .describe('Time window in days for engagement-chain traversal'),
   }),
   outputSchema: z.object({
-    nodes: z.array(z.unknown()),
-    edges: z.array(z.unknown()),
+    result: z.record(z.string(), z.unknown()),
   }),
-  execute: async (_input, context) => {
-    const authorization = getAuthorization(context?.requestContext ?? { get: () => undefined })
+  execute: async (input, context) => {
+    const authorization = supa.getAuthorization(context?.requestContext ?? { get: () => undefined })
     if (!authorization) {
-      return { nodes: [], edges: [] }
+      return { result: { ...EMPTY_GRAPH } }
     }
-    // TODO: 72-06 — const sb = createUserClient(authorization)
-    //   const { data } = await sb.rpc('query_graph', { p_query_type, p_entity_id, ... })
-    return { nodes: [], edges: [] }
+
+    const args = input as {
+      queryType: (typeof GRAPH_QUERY_TYPES)[number]
+      entityId: string
+      entityId2?: string
+      windowDays?: number
+    }
+
+    try {
+      const sb = supa.createUserClient(authorization)
+      const { data, error } = await sb.rpc('query_graph', {
+        p_query_type: args.queryType,
+        p_entity_id: args.entityId,
+        p_entity_id_2: args.entityId2 ?? null,
+        p_window_days: args.windowDays ?? 90,
+      })
+      // The RPC returns a JSONB object; coerce anything non-object (null, array, scalar)
+      // to the neutral empty graph so the output stays well-shaped and indistinguishable.
+      if (error || data == null || typeof data !== 'object' || Array.isArray(data)) {
+        return { result: { ...EMPTY_GRAPH } }
+      }
+      return { result: data as Record<string, unknown> }
+    } catch {
+      return { result: { ...EMPTY_GRAPH } }
+    }
   },
 })
 
