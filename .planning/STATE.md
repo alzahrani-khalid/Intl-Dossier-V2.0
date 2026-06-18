@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: executing
-last_updated: '2026-06-18T08:38:25.372Z'
+last_updated: '2026-06-18T08:47:52.481Z'
 last_activity: 2026-06-18
 progress:
   total_phases: 7
   completed_phases: 4
   total_plans: 33
-  completed_plans: 25
+  completed_plans: 26
   percent: 57
 ---
 
@@ -25,8 +25,8 @@ See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 ## Current Position
 
 Phase: 72 (agent-platform-runtime-retrieval-reads) — EXECUTING
-Plan: 2 of 9
-Status: Ready to execute
+Plan: 3 of 9
+Status: 72-02 complete (serving substrate config landed); ready for next plan
 Last activity: 2026-06-18
 
 ```
@@ -37,7 +37,7 @@ Phase 68: Complete
 Phase 69: Complete
 Phase 70: Complete (7/7 plans; UAT 10/10 pass, verified + security-clean 2026-06-16)
 Phase 71: Complete (5/5 plans; analytic-graph RPC+edge-fn live, 3-entry Analyze surface, UAT 4/4 EN+AR)
-Phase 72: UI-SPEC approved (72-UI-SPEC.md, 6/6 dimensions) — ready to plan
+Phase 72: Executing (2/9 plans: 72-02 serving-substrate config landed — vLLM/TEI/agent-runtime + nginx SSE proxy, config-only)
 Phase 73: Not started
 Phase 74: Not started
 ```
@@ -119,6 +119,7 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase ?]: 71-04: shortest_path shipped unconditionally (RF-4); all 4 Analyze templates always visible
 - [Phase ?]: 71-04: Analyze mode is an additive early-return branch in RelationshipGraphPage — degrees-traversal preserved (zero regression)
 - [Phase 72]: 72-07 retired supabaseAdmin from brief-generator (3 sites: ai_briefs C/U/U) + intake-linker (6 sites: intake_tickets/dossiers/persons reads + ai_runs C/U + ai_entity_link_proposals write) — ALL 9 user-triggered. Call-graph disproved the plan's "intake-linker L452 = cron carve-out" hypothesis (no queue/worker/cron caller; proposeLinks runs the proposals INSERT inside the authenticated request), so every site swapped to createUserClient(authHeader); both supabaseAdmin imports removed (zero carve-outs remain). HTTP callers briefs.ts + intake-linking.ts forward req.headers.authorization (401 if absent). Tests live under backend/tests/unit/ (the planned src/ai/agents/\*.test.ts path is NOT collected by the default vitest include globs). D-10 + folded P68 supabaseAdmin follow-up closed; AGENT-03 reinforced. Commits 94a4fa7f, b6fdb447
+- [Phase 72]: 72-02 agent serving substrate is CONFIG-ONLY (no service stood up): added 4 internal-only docker-compose.prod services — agent-runtime (4100, anon-key+caller-JWT keystone, ALLOWED_ORIGINS secret never '\*', VLLM/TEI/MASTRA_PG URLs), vllm (Gemma 4 12B over OpenAI /v1, served-model-name gemma-4-12b, --tool-call-parser gemma4, 8K/fp8/GPU), tei-embed (bge-m3), tei-rerank (bge-reranker-v2-m3); all expose-only zero-egress on intl-dossier net. nginx /api/copilot/ SSE proxy (trailing-slash→/chat, proxy_buffering off, 3600s read, Connection '') added to BOTH nginx.conf + nginx.prod.conf, before generic /api/. Followed plan <action> over RESEARCH (omitted --reasoning-parser gemma4). `docker compose config` + `nginx -t` both clean (upstreams stubbed to isolate compose-DNS). GPU-host google/gemma-4-12B-it pull + FP8/8K fit validation DEFERRED to phase gate 72-09 (no GPU here). agent-runtime Dockerfile.prod forward-referenced (built in 72-05). Commits ef9debe2, 16cf5e48
 
 ### Open Todos
 

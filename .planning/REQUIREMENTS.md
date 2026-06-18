@@ -74,8 +74,8 @@ Requirements for the v7.0 milestone (phases 68–74). Each maps to exactly one r
 
 ### Infrastructure substrate (parallel track)
 
-- [ ] **INFRA-01**: A local LLM is served over an OpenAI-compatible API (vLLM + Gemma 4 12B as the eval-gated starting model), swappable by config
-- [ ] **INFRA-02**: Embeddings and reranking are served locally (TEI: bge-m3 + bge-reranker-v2-m3)
+- [x] **INFRA-01**: A local LLM is served over an OpenAI-compatible API (vLLM + Gemma 4 12B as the eval-gated starting model), swappable by config
+- [x] **INFRA-02**: Embeddings and reranking are served locally (TEI: bge-m3 + bge-reranker-v2-m3)
 - [ ] **INFRA-03**: The agent runtime runs as its own deployable Turborepo workspace (Mastra + CopilotKit runtime) in `docker-compose.prod` on a distinct port
 
 ## Cross-Cutting Guarantees
@@ -152,8 +152,8 @@ Which phases cover which requirements.
 | AGENT-04    | Phase 72 | Pending  |
 | AGENT-05    | Phase 72 | Pending  |
 | AGENT-06    | Phase 72 | Pending  |
-| INFRA-01    | Phase 72 | Pending  |
-| INFRA-02    | Phase 72 | Pending  |
+| INFRA-01    | Phase 72 | Complete |
+| INFRA-02    | Phase 72 | Complete |
 | INFRA-03    | Phase 72 | Pending  |
 | GENUI-01    | Phase 73 | Pending  |
 | GENUI-02    | Phase 73 | Pending  |

@@ -359,7 +359,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 **Wave 1** (spike + infra — de-risk first)
 
 - [ ] 72-01-PLAN.md — Option-C spike (#4465 JWT-reaches-tools + D-09 CopilotKit-vs-assistant-ui) + Wave-0 test scaffold + copilot i18n namespace
-- [ ] 72-02-PLAN.md — Infra: vLLM (Gemma 4 12B) + TEI (bge-m3 + reranker) + agent-runtime docker-compose services + env contract
+- [x] 72-02-PLAN.md — Infra: vLLM (Gemma 4 12B) + TEI (bge-m3 + reranker) + agent-runtime docker-compose services + env contract
 
 **Wave 2** _(blocked on Wave 1)_
 
@@ -444,7 +444,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 69. Signals | v7.0 | 4/4 | Complete   | 2026-06-14 |
 | 70. Digests + Alerts | v7.0 | 7/7 | Complete    | 2026-06-16 |
 | 71. Analytic Graph | v7.0 | 5/5 | Complete    | 2026-06-17 |
-| 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 1/9 | In Progress|  |
+| 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 2/9 | In Progress|  |
 | 73. Agent Platform — Writes + Generative UI | v7.0 | 0/? | Not started | - |
 | 74. Eval Gate + AnythingLLM Retirement | v7.0 | 0/? | Not started | - |
 
