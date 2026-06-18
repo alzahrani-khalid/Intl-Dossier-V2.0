@@ -4,7 +4,7 @@ milestone: v7.0
 milestone_name: Intelligence Engine
 status: planning
 last_updated: '2026-06-18T06:01:18.160Z'
-last_activity: 2026-06-17
+last_activity: 2026-06-18
 progress:
   total_phases: 7
   completed_phases: 4
@@ -26,18 +26,18 @@ See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 
 Phase: 72
 Plan: Not started
-Status: Ready to plan
-Last activity: 2026-06-17
+Status: Context gathered — ready to plan (72-CONTEXT.md committed a4a8c071)
+Last activity: 2026-06-18
 
 ```
-Phase Progress: Phase 71 is 2/5 plans complete
-[████████░░░░░░░░░░░░] 40%
+Milestone Progress: 4/7 phases complete
+[████████████░░░░░░░░] 57%
 
 Phase 68: Complete
 Phase 69: Complete
 Phase 70: Complete (7/7 plans; UAT 10/10 pass, verified + security-clean 2026-06-16)
-Phase 71: In progress (2/5 plans; Wave 0 RED + query_graph RPC/edge-fn authored, pending 71-03 apply)
-Phase 72: Not started
+Phase 71: Complete (5/5 plans; analytic-graph RPC+edge-fn live, 3-entry Analyze surface, UAT 4/4 EN+AR)
+Phase 72: Context gathered (72-CONTEXT.md) — ready to plan
 Phase 73: Not started
 Phase 74: Not started
 ```
@@ -83,7 +83,11 @@ Phase 74: Not started
 
 Phase 70 closed (2026-06-16): UAT 10/10 pass (`70-UAT.md`), `70-VERIFICATION.md` status=passed (human-accepted), `70-SECURITY.md` threats_open=0. Carry-forward: on-prem SMTP **drain worker** + external webhook URL are customer-config (RF-1) — alerts enqueue to `intelligence_email_queue` and the webhook adapter is built/tested, but live SMTP/webhook delivery is not exercisable on staging. Phase 70 work is local-only (UNPUSHED; main protected → needs PR).
 
-Next: `/gsd:discuss-phase 71` (analytic-graph) — no CONTEXT.md yet.
+Phase 71 shipped (2026-06-17): analytic-graph RPC + edge-fn live on staging, 3-entry Analyze surface, UAT 4/4 EN+AR; phase execution complete (commit 63397cda).
+
+Phase 72 context gathered (2026-06-18): `72-CONTEXT.md` committed (a4a8c071). Decisions — Gemma 4 12B on vLLM (1×16–24GB GPU, no ALLaM in v1); throwaway Option-C spike then rebuild on Mastra+vLLM; responsive app-wide copilot drawer (desktop slide-over + mobile sheet) + Cmd+K/FAB, context-aware; corpus = core intel text + documents/OCR re-embedded to bge-m3 1024; tools = hybrid-RAG + read_signals + query_graph + dossier/work-item lookups + generate_digest preview-only; persistent user-private Mastra threads; **CopilotKit-first** (spike must prove RTL/token + air-gap; headless fallback); fold + audit supabaseAdmin in brief-generator + intake-linker; standing OSS-survey mandate.
+
+Next: `/gsd:plan-phase 72` (agent platform — runtime, retrieval, reads). Optionally `/gsd:ui-phase 72` first (UI hint = yes — the copilot drawer surface).
 
 Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/middleware/auth.ts`) deployed — elected-official detail and other Express-backed routes stay 401 in production until deployed (staging is correct).
 
