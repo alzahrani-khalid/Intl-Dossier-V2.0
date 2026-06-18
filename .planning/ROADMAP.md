@@ -354,8 +354,38 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 3. Copilot replies render as token-bound bilingual cards in the user's language with correct RTL rendering in Arabic mode — verified live in both EN and AR.
 4. All retrievable content is embedded at bge-m3 1024-dim (one-time re-embed completed; `array_length(embedding, 1) = 1024` for all rows in `rag_chunks`) and the `rag_chunks` table uses `SECURITY INVOKER` + RLS — verified by inspecting the DB schema on staging.
 5. The `agent-runtime` Turborepo workspace runs on its own port in `docker-compose.prod`, is reachable by the frontend, and processes a chat turn end-to-end — verified by a smoke-test request from staging.
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 9 plans
+
+**Wave 1** (spike + infra — de-risk first)
+
+- [ ] 72-01-PLAN.md — Option-C spike (#4465 JWT-reaches-tools + D-09 CopilotKit-vs-assistant-ui) + Wave-0 test scaffold + copilot i18n namespace
+- [ ] 72-02-PLAN.md — Infra: vLLM (Gemma 4 12B) + TEI (bge-m3 + reranker) + agent-runtime docker-compose services + env contract
+
+**Wave 2** _(blocked on Wave 1)_
+
+- [ ] 72-03-PLAN.md — Migrations: rag_chunks (halfvec 1024 + per-source sensitivity-sync) + hybrid_rag_search INVOKER RPC + mastra_threads RLS
+
+**Wave 3** _(blocked on Wave 2)_
+
+- [ ] 72-04-PLAN.md — [BLOCKING] Supabase MCP apply + one-time re-embed backfill (array_length=1024 proof)
+
+**Wave 4** _(blocked on Wave 3; 72-07 parallel)_
+
+- [ ] 72-05-PLAN.md — agent-runtime workspace + Mastra server (registerCopilotKit + JWT setContext) + reads-only copilot agent
+- [ ] 72-07-PLAN.md — Retire supabaseAdmin from brief-generator.ts + intake-linker.ts (D-10)
+
+**Wave 5** _(blocked on Wave 4)_
+
+- [ ] 72-06-PLAN.md — Read tools: hybrid_rag_search + read_signals/query_graph/generate_digest-preview wraps + dossier/work-item lookups (keystone + RLS-before-rerank)
+
+**Wave 6** _(blocked on Wave 5)_
+
+- [ ] 72-08-PLAN.md — Responsive copilot drawer (desktop slide-over + mobile sheet) + token remap + Cmd+K/FAB + \_protected mount
+
+**Wave 7** _(blocked on Wave 6)_
+
+- [ ] 72-09-PLAN.md — Live UAT phase gate: 5 milestone proofs (clearance-reduction, EN+AR RTL, 1024, INVOKER+RLS, e2e smoke), seed -> observe -> restore
+      **UI hint**: yes
 
 ---
 
