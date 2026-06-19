@@ -279,9 +279,22 @@ services:
   # GPU-host step in DROPLET_INSTRUCTIONS.md (deploy-time human action).
   # ===========================================
   vllm:
+    # Keep the :latest tag — Gemma 4 needs a recent latest/nightly (CUDA 12.9+)
+    # build; older version tags lack Gemma 4 support (do NOT downgrade). After a
+    # successful smoke test, pin to a @sha256 digest of the validated build for
+    # reproducibility. CUDA-13 variant: vllm/vllm-openai:latest-cu130.
     image: vllm/vllm-openai:latest
     container_name: intl-dossier-vllm
     restart: unless-stopped
+    environment:
+      # Gated-pull token for google/gemma-4-12B-it (gated weights). Accept the
+      # Gemma license on the model's Hugging Face page and set HF_TOKEN in
+      # deploy/.env on the GPU host — without it vLLM 401s and crash-loops on the
+      # first weight pull. MUST be the plain ${} form (empty-if-unset), NEVER
+      # ${HF_TOKEN:?...}: Compose interpolates ${} across ALL services BEFORE
+      # profile-filtering, so the required (:?) form would error on the Mac path
+      # (-f prod -f mac) where vllm is profiled out. Never hardcode the value.
+      HF_TOKEN: ${HF_TOKEN}
     command: >
       --model google/gemma-4-12B-it
       --served-model-name gemma-4-12b
