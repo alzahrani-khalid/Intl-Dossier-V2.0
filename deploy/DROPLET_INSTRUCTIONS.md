@@ -216,6 +216,8 @@ Required variables:
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `JWT_SECRET`
 - `OPENAI_API_KEY` (for AnythingLLM)
+- `HF_TOKEN` (GPU host only — Hugging Face read token for the gated `vllm`
+  Gemma-4 weight pull; see "Gemma 4 12B serving (vLLM)" below)
 
 ## Phase 72 — Agent Platform (copilot runtime, vLLM, TEI)
 
@@ -269,6 +271,37 @@ runtime. Before standing the phase up, on the GPU host:
 `tei-embed` (`BAAI/bge-m3`) and `tei-rerank` (`BAAI/bge-reranker-v2-m3`) pull
 their model weights on first start; no GPU is strictly required for TEI but a GPU
 host improves throughput.
+
+### Gemma 4 12B serving (vLLM)
+
+`google/gemma-4-12B-it` is a **gated** model. The compose `vllm` service will
+401 and crash-loop on the first weight pull unless a Hugging Face token is
+supplied. Cover the four points below before standing the service up.
+
+1. **Gated license + HF_TOKEN.** Open the `google/gemma-4-12B-it` page on Hugging
+   Face, accept the Gemma license, then create a Hugging Face **read** token. Set
+   `HF_TOKEN` in `/opt/intl-dossier/deploy/.env` on the GPU host. The compose
+   `vllm` service reads `HF_TOKEN` from that `.env` (plain `${HF_TOKEN}`
+   reference); without it the gated pull fails and vLLM crash-loops on start.
+
+2. **GPU fit (16–24 GB vs the recipe's 40 GB+).** The vLLM Gemma 4 recipe
+   recommends **40 GB+** of VRAM for the full-precision `google/gemma-4-12B-it`.
+   To fit the current 16–24 GB GPU, either: (i) point `--model` at a **quantized**
+   weight variant — for example `AxionML/Gemma-4-12B-FP8` or
+   `AxionML/Gemma-4-12B-NVFP4` — with a matching `--quantization` flag; or (ii)
+   accept tight margins on the current `--kv-cache-dtype fp8 --max-model-len 8192`
+   and validate headroom during the smoke test. The model is config-swappable via
+   `--served-model-name gemma-4-12b`, so the app/caller is unaffected by a weight
+   swap (callers always address the stable `gemma-4-12b` name).
+
+3. **Tool chat template.** The command already sets `--tool-call-parser gemma4`.
+   Verify whether a `--chat-template .../tool_chat_template_gemma4.jinja` is also
+   required for correct `gemma4` tool-calling on the chosen build, and validate
+   tool-call output during the smoke test.
+
+4. **Recipe reference.** Follow the vLLM Gemma 4 serving recipe for the
+   authoritative fit/quantization/template guidance:
+   https://docs.vllm.ai/projects/recipes/en/latest/Google/Gemma4.html
 
 ## Quick Reference
 
