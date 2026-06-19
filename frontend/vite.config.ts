@@ -89,6 +89,14 @@ export default defineConfig({
       usePolling: false,
     },
     proxy: {
+      // Copilot SSE -> agent-runtime :4100 /chat (Phase 72). Mirrors the prod nginx
+      // /api/copilot/ mapping (strip prefix). MUST precede the generic /api rule.
+      '/api/copilot': {
+        target: 'http://localhost:4100',
+        changeOrigin: true,
+        ws: true,
+        rewrite: (path) => path.replace(/^\/api\/copilot/, ''),
+      },
       // Express backend routes
       // Edge Functions use full VITE_SUPABASE_URL so don't need a proxy
       '/api': {
