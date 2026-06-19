@@ -198,7 +198,7 @@ Full details: [v6.6-ROADMAP.md](milestones/v6.6-ROADMAP.md)
 - [x] **Phase 69: Signals** - Analysts capture and triage signals tied to dossiers; the agent can read them (completed 2026-06-14)
 - [x] **Phase 70: Digests + Alerts** - Recurring digests and threshold alerts reach subscribers across channels (completed 2026-06-16)
 - [x] **Phase 71: Analytic Graph** - First-class analytic queries over the relationship graph, clearance-gated (completed 2026-06-17)
-- [~] **Phase 72: Agent Platform — Runtime, Retrieval, Reads** - The on-prem agent reads P69–71 data under the JWT keystone (9/9 plans authored 2026-06-19; **phase gate PENDING** — 72-09 live UAT proofs are deploy-gated on the GPU stack: PROOF 1/2/5 + INFRA-01/02 unrun, seed authored not applied. ORCHESTRATOR-MCP DB proofs runnable now.)
+- [~] **Phase 72: Agent Platform — Runtime, Retrieval, Reads** - The on-prem agent reads P69–71 data under the JWT keystone (9/9 plans authored 2026-06-19; **DB/RLS proofs PASS, e2e+INFRA deploy-gated**. 72-09 DB/RLS proofs RUN + PASS live 2026-06-19 via MCP, staging RESTORED: PROOF 4 (INVOKER + `user_id=auth.uid()` RLS + anon REVOKEd), PROOF 1 DB-layer keystone (L1 result strict subset of L3, zero above-clearance, via authenticated impersonation), PROOF 3 synthetic dims=1024. **PHASE GATE still PENDING** — the e2e copilot-UI proofs PROOF 1 full / 2 / 5 + INFRA-01/02 are deploy-gated on the GPU stack. NOT a full live-UAT pass.)
 - [ ] **Phase 73: Agent Platform — Writes + Generative UI** - The copilot safely drives dossiers with human-in-the-loop
 - [ ] **Phase 74: Eval Gate + AnythingLLM Retirement** - Quality is regression-gated; the legacy AI path is gone
 
@@ -384,7 +384,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 
 **Wave 7** _(blocked on Wave 6)_
 
-- [x] 72-09-PLAN.md — Live UAT phase gate: 5 milestone proofs (clearance-reduction, EN+AR RTL, 1024, INVOKER+RLS, e2e smoke), seed -> observe -> restore. **Artifacts AUTHORED** (seed + 72-UAT.md skeleton, commits fbd966b9/039994a3); **live proofs PENDING** the GPU deploy gate (PROOF 1/2/5 + INFRA), ORCHESTRATOR-MCP DB proofs runnable now via MCP.
+- [x] 72-09-PLAN.md — Live UAT phase gate: 5 milestone proofs (clearance-reduction, EN+AR RTL, 1024, INVOKER+RLS, e2e smoke), seed -> observe -> restore. **Artifacts AUTHORED** (seed + 72-UAT.md, commits fbd966b9/039994a3) + the **3 ORCHESTRATOR-MCP DB/RLS proofs RUN + PASS** live 2026-06-19 (PROOF 4 INVOKER+RLS, PROOF 1 DB-layer keystone L1⊂L3, PROOF 3 synthetic dims=1024; staging RESTORED, `rag_chunks`=0). **e2e + INFRA proofs PENDING** the GPU deploy gate (PROOF 1 full / 2 / 5 + INFRA-01/02 + real-corpus dims).
       **UI hint**: yes
 
 ---

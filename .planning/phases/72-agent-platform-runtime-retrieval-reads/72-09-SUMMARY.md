@@ -15,8 +15,9 @@ requires:
   - phase: 69
     provides: intelligence_event sensitivity_level INTEGER + clearance RLS + read_signals RPC
 provides:
-  - '72-UAT.md — the 5 phase-gate proof skeleton (clearance-reduction, EN+AR RTL, dims=1024, INVOKER+RLS, e2e) + INFRA smokes, each tagged ORCHESTRATOR-MCP / DEPLOY-GATED / AUTH-GATED'
-  - 'supabase/seeds/72-copilot-uat-seed.sql — multi-clearance signal seed (2x L1, 1x L3) + restore, for AGENT-03/05'
+  - '72-UAT.md — the 5 phase-gate proofs + INFRA smokes, EN+AR; the 3 DB/RLS proofs (PROOF 4 INVOKER+RLS, PROOF 1 DB-layer clearance-reduction, PROOF 3 synthetic dims=1024) RUN + PASS live 2026-06-19, staging RESTORED; e2e (PROOF 1 full/2/5) + INFRA PENDING the GPU deploy gate'
+  - 'supabase/seeds/72-copilot-uat-seed.sql — multi-clearance signal seed (2x L1, 1x L3) + restore, ready for the deploy-time e2e proof (PROOF 5)'
+  - 'live DB/RLS evidence that the keystone holds at the RLS layer (L1 result strict subset of L3, zero above-clearance)'
   - 'explicit deploy-gate manifest for the remaining live proofs'
 affects: [72-verify-work, 73, 74, milestone-v7.0-gate]
 
@@ -35,13 +36,17 @@ key-files:
   modified: []
 
 key-decisions:
-  - 'Authoring-only execution (Rule 3): no GPU + no Supabase MCP + no browser here, so the seed is NOT applied, the re-embed is NOT re-run, and the live proofs are NOT self-signed — the orchestrator runs the DB/RLS proofs via MCP; the rest is deploy-gated'
-  - 'Seed resolves org via tenant_isolation.resolve_user_tenant(test_user) so L1/L3 share the tenant; clearance is the only differing axis (else tenant-isolation RLS hides the rows from both)'
-  - 'Seed verified against live migration column/type contracts (intelligence_event base + P69 extend, junction CHECK 7 types, dossiers.sensitivity_level INTEGER) — no invented columns; dossiers have no organization_id'
-  - 'Fixed recorded UUIDs (72090000-...) make SECTION 2 RESTORE delete exactly the seeded events + their rag_chunks rows'
+  - 'DB/RLS-layer keystone proven live 2026-06-19 via MCP: under authenticated impersonation (NOT service-role) over 2 synthetic rag_chunks rows (sens 1+3), an L1 caller sees rows=1 [1] — a strict subset of the L3 caller rows=2 [1,3] — and ZERO above-clearance content; this is the exact INVOKER + profiles.user_id=auth.uid() path hybrid_rag_search uses'
+  - 'Orchestrator used synthetic rag_chunks rows directly (clearance-only RLS) rather than the intelligence_event seed file — deliberately removing tenant-isolation as a confounder for the clearance proof; the canonical seed file remains ready for the deploy-time e2e proof (PROOF 5)'
+  - 'PROOF 4 PASS: hybrid_rag_search prosecdef=false (SECURITY INVOKER), rag_chunks SELECT RLS gates on profiles.user_id=auth.uid() (trap-free, NOT id=auth.uid()), anon EXECUTE = 0'
+  - 'PROOF 3 split: synthetic rows confirm the column/constraint enforces 1024-dim (0 failing); the real-corpus bge-m3 dimension proof is DEPLOY-GATED post-re-embed (TEI is GPU-served)'
+  - 'Authoring-only at first (Rule 3): no GPU + no Supabase MCP + no browser in the executor, so the seed was authored not applied and no proof self-signed; the orchestrator then ran the 3 ORCHESTRATOR-MCP DB/RLS proofs and restored staging'
+  - 'Restore CONFIRMED: synthetic rows deleted, rag_chunks total = 0, intelligence_event 72090000- seed never applied (count 0) — staging clean'
+  - 'Phase live-UAT is split: DB/RLS PASS now; the end-to-end copilot-UI proofs (PROOF 1 full / 2 / 5) + INFRA smokes are PENDING the GPU deploy gate + a browser session — NOT a full live-UAT pass'
 
 patterns-established:
-  - 'Live-UAT proof skeleton authored when the runtime is deploy-gated: structure + placeholders + explicit who-runs-what, never self-signed'
+  - 'Live-UAT proof skeleton authored when the runtime is deploy-gated: structure + placeholders + explicit who-runs-what, never self-signed; the runnable-now DB/RLS proofs run via MCP, the GPU/browser proofs stay PENDING'
+  - 'Clearance keystone provable at the DB/RLS layer via P69-pattern authenticated impersonation over synthetic rows — independent of the GPU stack — by exercising the same INVOKER + RLS path the agent tool uses'
 
 requirements-completed: []
 
@@ -50,9 +55,9 @@ duration: 25min
 completed: 2026-06-19
 ---
 
-# Phase 72 Plan 09: Copilot Live-UAT (seed + proof skeleton) Summary
+# Phase 72 Plan 09: Copilot Live-UAT (seed + DB/RLS proofs PASS; e2e deploy-gated) Summary
 
-**Authored the multi-clearance UAT seed (2× L1 + 1× L3 intelligence_event rows linked to an anchor dossier) and the 5 phase-gate proof skeleton (clearance-reduction, EN+AR RTL, dims=1024, INVOKER+RLS, e2e smoke) + INFRA smokes — every proof tagged ORCHESTRATOR-MCP / DEPLOY-GATED / AUTH-GATED so the runnable-now DB proofs are cleanly split from the GPU/browser-gated live proofs. Not applied, not self-signed — the orchestrator runs the DB/RLS proofs via MCP.**
+**The keystone security guarantee is proven live at the DB/RLS layer: under authenticated impersonation (not service-role), an L1 caller gets a strict subset of an L3 caller (rows=1 `[1]` ⊂ rows=2 `[1,3]`) with ZERO above-clearance content — the exact `SECURITY INVOKER` + `profiles.user_id=auth.uid()` path `hybrid_rag_search` uses (PROOF 4 INVOKER+RLS, PROOF 1 DB-layer, PROOF 3 synthetic dims=1024 all PASS via MCP 2026-06-19; staging RESTORED, `rag_chunks`=0). The end-to-end copilot-UI proofs (PROOF 1 full / 2 / 5) + INFRA smokes remain PENDING the on-prem GPU deploy gate + a browser session — a clean split, not a full live-UAT pass.**
 
 ## Performance
 
@@ -64,18 +69,23 @@ completed: 2026-06-19
 
 ## Accomplishments
 
-- **`supabase/seeds/72-copilot-uat-seed.sql`** — inserts 3 `intelligence_event` rows (two at `sensitivity_level` 1 that an L1 user MUST see, one at `sensitivity_level` 3 that an L1 user MUST NOT see), each linked to an existing anchor dossier via `intelligence_event_dossiers`. Idempotent SECTION 1 (self-delete then insert) + a commented SECTION 2 RESTORE that deletes the seeded events and any `rag_chunks` rows they produce. All columns verified against the live migration contracts; tenant resolved via `tenant_isolation.resolve_user_tenant` (the seed/060 pattern) so the proof's L1/L3 accounts share the tenant.
-- **`72-UAT.md`** — the 5 phase-gate proofs + INFRA-01/02 smokes, EN+AR, each check with a result placeholder and a tag:
-  - **PROOF 4 (INVOKER + RLS)** and the **PROOF 3 DB query** are `[ORCHESTRATOR-MCP]` — runnable now via `execute_sql`, no GPU.
-  - **PROOF 1 (clearance-reduction)**, **PROOF 2 (EN+AR RTL)**, **PROOF 5 (e2e)** and the **INFRA smokes** are `[DEPLOY-GATED]` / `[AUTH-GATED]` — they need the on-prem GPU stack and a real authenticated browser session.
-- **Deploy-gate manifest** — enumerates exactly what must be live to complete the PENDING proofs: GPU host, vLLM Gemma 4 12B over `/v1`, TEI embed+rerank up, agent-runtime on :4100, the re-embed re-run, the `mastra_threads`/`mastra_messages` RLS re-apply, and the `hnsw.iterative_scan` RPC fold (the two 72-06 deferrals).
+- **DB/RLS-layer keystone PROVEN live (2026-06-19, via Supabase MCP on staging `zkrcjzdemdmwhearhfgg`).** The orchestrator ran the 3 `[ORCHESTRATOR-MCP]` proofs and recorded them PASS in `72-UAT.md`:
+  - **PROOF 1 DB-layer (AGENT-03 clearance-reduction) — ✅ PASS.** Authenticated impersonation (`SET LOCAL ROLE authenticated` + `set_config('request.jwt.claims', …)`, the P69 pattern — **not** service-role), identical query over **2 synthetic `rag_chunks` rows** (sensitivity 1 + 3). L1 caller (`00242210-…`, clearance 1): **1** row, levels `[1]`. L3 caller (`1aae53d5-…`, clearance 3): **2** rows, levels `[1,3]`. **VERDICT: L1 `[1]` is a strict subset of L3 `[1,3]`; L1 sees ZERO above-clearance content** — the exact INVOKER + RLS path `hybrid_rag_search` runs.
+  - **PROOF 4 (SECURITY INVOKER + RLS) — ✅ PASS.** `hybrid_rag_search` `prosecdef=false` (INVOKER, never DEFINER); `rag_chunks` SELECT RLS qual gates on `sensitivity_level <= (SELECT clearance_level FROM profiles WHERE user_id = auth.uid())` — the trap-free `profiles.user_id` form (NOT the deny-all `id=auth.uid()` landmine); anon `EXECUTE` on `hybrid_rag_search` = **0** (REVOKEd).
+  - **PROOF 3 synthetic dims=1024 — ✅ PASS.** Both synthetic rows report `vector_dims(embedding)=1024`, **0** failing rows — the column/constraint enforces 1024 on actual rows. (The real-corpus bge-m3 dimension proof is DEPLOY-GATED post-re-embed.)
+  - **RESTORE — ✅ CONFIRMED.** Synthetic rows deleted; `rag_chunks` total = **0**; the `72090000-` `intelligence_event` seed was **never applied** (count 0). Staging clean.
+- **`supabase/seeds/72-copilot-uat-seed.sql`** — inserts 3 `intelligence_event` rows (two at `sensitivity_level` 1 that an L1 user MUST see, one at `sensitivity_level` 3 that an L1 user MUST NOT see), each linked to an existing anchor dossier via `intelligence_event_dossiers`. Idempotent SECTION 1 (self-delete then insert) + a commented SECTION 2 RESTORE. All columns verified against the live migration contracts; tenant resolved via `tenant_isolation.resolve_user_tenant` (the seed/060 pattern). **The file remains ready for the deploy-time e2e proof (PROOF 5)** — the orchestrator used synthetic `rag_chunks` rows directly for the clearance proof to keep tenant-isolation out of the way.
+- **`72-UAT.md`** — the 5 phase-gate proofs + INFRA-01/02 smokes, EN+AR; the 3 DB/RLS proofs marked PASS with evidence + the restore confirmation; the deploy-gated/auth-gated proofs (PROOF 1 full, PROOF 2, PROOF 5, INFRA) PENDING with the deploy-gate checklist. A status banner makes explicit this is **not** a full live-UAT pass.
+- **Deploy-gate manifest** — enumerates exactly what must be live to complete the PENDING proofs: GPU host, vLLM Gemma 4 12B over `/v1`, TEI embed+rerank up, agent-runtime on :4100, the bge-m3 re-embed re-run, the `mastra_threads`/`mastra_messages` RLS re-apply, and the `hnsw.iterative_scan` RPC fold (the two 72-06 deferrals).
 
 ## Task Commits
 
 1. **Task 1: Author copilot UAT seed (multi-clearance signals + restore)** — `fbd966b9` (feat)
 2. **Task 2: Author 72-UAT.md skeleton (5 proofs + INFRA smokes, tagged, EN/AR)** — `039994a3` (docs)
+3. **Prior continuation: SUMMARY + state (skeleton-authored, proofs deferred)** — `820dabec` (docs)
+4. **This continuation: record live DB/RLS UAT proofs + deploy gate (SUMMARY + UAT + STATE + ROADMAP)** — _(this commit)_ (docs)
 
-_(Plan metadata commit — this SUMMARY + STATE + ROADMAP — follows separately.)_
+_The orchestrator ran the 3 ORCHESTRATOR-MCP DB/RLS proofs live on staging via the Supabase MCP and restored staging; this continuation recorded those results (no proofs run here — no MCP/GPU/browser in this executor)._
 
 ## Files Created/Modified
 
@@ -117,18 +127,22 @@ The remaining live proofs are gated on the **72-02 GPU deploy** (vLLM Gemma 4 12
 
 ## Next Phase Readiness
 
-- **Runnable now (orchestrator, MCP):** apply seed SECTION 1, then run PROOF 4 (INVOKER + `user_id=auth.uid()` RLS) and the PROOF 3 DB query, and the AGENT-03 authenticated impersonation at the DB/RLS layer (`read_signals` / `hybrid_rag_search` under L1 vs L3 JWT).
-- **Deploy-gated:** PROOF 1 (full e2e clearance-reduction), PROOF 2 (EN+AR RTL render), PROOF 5 (e2e smoke), INFRA-01/02 smokes — after the GPU stack + browser session exist.
-- **Teardown:** seed SECTION 2 RESTORE must run after the AUTH-GATED proofs to return staging to its pre-UAT state.
-- **Blocker:** Phase 72 cannot be marked fully verified (and the v7.0 milestone gate cannot close) until the deploy-gated proofs pass EN+AR and the seed is restored.
+- **Done now (DB/RLS layer, via MCP):** PROOF 4 (INVOKER + `user_id=auth.uid()` RLS, anon REVOKEd), PROOF 1 DB-layer (AGENT-03 clearance-reduction — L1 ⊂ L3, zero above-clearance), and PROOF 3 synthetic dims=1024 all **PASS**; staging **RESTORED** (`rag_chunks`=0). The keystone holds at the RLS layer.
+- **Deploy-gated (PENDING):** PROOF 1 full e2e (clearance-reduction through the copilot UI), PROOF 2 (EN+AR RTL render at 1024 & 1400), PROOF 3 real-corpus dims (post bge-m3 re-embed), PROOF 5 (e2e smoke), INFRA-01/02 smokes — after the GPU stack (vLLM Gemma + TEI) + agent-runtime on :4100 + a real authenticated browser session exist. Plus the deploy-time tasks: bge-m3 re-embed re-run, `mastra_threads`/`mastra_messages` RLS re-apply, `hnsw.iterative_scan` RPC fold.
+- **Teardown for the deploy-time proof:** when PROOF 5 applies the canonical seed SECTION 1, SECTION 2 RESTORE must run afterward to return staging to its pre-UAT state (the DB-proof synthetic rows are already cleaned up).
+- **Blocker:** Phase 72 cannot be marked **fully** verified (and the v7.0 milestone gate cannot close) until the deploy-gated **e2e** proofs pass EN+AR and the seed is restored. The **executable-here scope (seed + UAT + DB/RLS proofs) is complete.**
 
 ## Self-Check: PASSED
+
+The executable-here scope is complete and the live DB/RLS evidence is recorded.
 
 - FOUND: supabase/seeds/72-copilot-uat-seed.sql
 - FOUND: .planning/phases/72-agent-platform-runtime-retrieval-reads/72-UAT.md
 - FOUND: .planning/phases/72-agent-platform-runtime-retrieval-reads/72-09-SUMMARY.md
 - FOUND commit: fbd966b9 (seed)
 - FOUND commit: 039994a3 (UAT skeleton)
+- FOUND commit: 820dabec (prior SUMMARY + state — skeleton-authored state)
+- 72-UAT.md records the 3 ORCHESTRATOR-MCP proofs PASS (PROOF 4 / PROOF 1 DB-layer / PROOF 3 synthetic) + restore CONFIRMED; e2e (PROOF 1 full / 2 / 5) + INFRA PENDING with the deploy-gate checklist
 
 ---
 

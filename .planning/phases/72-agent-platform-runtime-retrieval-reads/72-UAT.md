@@ -3,8 +3,9 @@ phase: 72
 slug: agent-platform-runtime-retrieval-reads
 plan: 09
 artifact: live-UAT
-status: skeleton-authored-proofs-pending
+status: db-rls-proofs-PASS-e2e-and-infra-deploy-gated
 authored: 2026-06-19
+db_proofs_run: 2026-06-19
 seed: supabase/seeds/72-copilot-uat-seed.sql
 requirements:
   [AGENT-01, AGENT-02, AGENT-03, AGENT-04, AGENT-05, AGENT-06, INFRA-01, INFRA-02, INFRA-03]
@@ -19,12 +20,30 @@ requirements:
 > **empty 200**, not an error → force errors via CDP `Network.setBlockedURLs` and
 > assert `role="alert"` / reduced-counts via DOM, **never HTTP status**.
 
+## Status banner (2026-06-19)
+
+> **DB/RLS-layer proofs RUN and PASS.** The orchestrator (with the Supabase MCP)
+> executed the three `[ORCHESTRATOR-MCP]` proofs live on staging
+> `zkrcjzdemdmwhearhfgg` on **2026-06-19**, then **RESTORED** staging to its
+> pre-UAT empty state. The keystone security guarantee — a low-clearance (L1)
+> caller sees a strict subset of an L3 caller and **zero** above-clearance
+> content — **holds at the DB/RLS layer** (PROOF 1 DB-layer, AGENT-03), via the
+> exact INVOKER + `profiles.user_id = auth.uid()` path `hybrid_rag_search` uses.
+> The **end-to-end** copilot-UI proofs (PROOF 1 full, PROOF 2, PROOF 5) and the
+> **INFRA** smokes remain `⬜ PENDING` — they need the on-prem GPU stack
+> (vLLM Gemma + TEI) + the runtime booted + a real authenticated browser session.
+> **Do not read this as "the full live UAT passed."** It is a clean split:
+> DB/RLS PASS now, e2e + INFRA after the deploy gate.
+
 ## Authoring vs Execution split (read first)
 
-This file's **structure is authored** by the 72-09 executor. The executor has
-**NO Supabase MCP and NO GPU/browser** in its toolset, and the on-prem model
-stack (vLLM/Gemma + TEI) is **not running here**, so the executor did **not** run
-any live proof. Each proof below is tagged with **who runs it and when**:
+This file's **structure was authored** by the 72-09 executor (no Supabase MCP /
+no GPU / no browser in its toolset), and the on-prem model stack (vLLM/Gemma +
+TEI) is **not running in the authoring environment**. The `[ORCHESTRATOR-MCP]`
+proofs below have since been **run by the orchestrator via the Supabase MCP** and
+are marked PASS with evidence. The `[DEPLOY-GATED]` / `[AUTH-GATED]` proofs were
+**not** run (no GPU / no browser) and stay `⬜ PENDING`. Each proof is tagged with
+**who runs it and when**:
 
 | Tag                    | Meaning                                                                                                                         | Who / When                                               |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -36,7 +55,7 @@ any live proof. Each proof below is tagged with **who runs it and when**:
 > until the GPU host + a real browser session exist. The seed must be **restored**
 > after the AUTH-GATED proofs (PROOF 3 / PROOF 5) complete.
 
-**Result legend:** ⬜ PENDING · ✅ PASS · ❌ FAIL · ⚠️ FLAKY
+**Result legend:** ⬜ PENDING · ✅ PASS · ❌ FAIL · ⚠️ FLAKY · ⚪ NOT APPLIED (intentionally) · N/A not applicable here
 
 ---
 
@@ -57,9 +76,10 @@ multi-clearance rows; signals/events are 0 rows on staging.
    WHERE event_id::text LIKE '72090000-%';   -- EXPECT 3 junction rows
    ```
 
-| Step                   | Tag                | Result     | Evidence (counts / notes)                                   |
-| ---------------------- | ------------------ | ---------- | ----------------------------------------------------------- |
-| Seed SECTION 1 applied | [ORCHESTRATOR-MCP] | ⬜ PENDING | _(orchestrator: paste the 3-row + 3-junction confirmation)_ |
+| Step                                | Tag                | Result             | Evidence (counts / notes)                                                                                                                                                                                                                                                                                                                                                |
+| ----------------------------------- | ------------------ | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Seed SECTION 1 (intelligence_event) | [ORCHESTRATOR-MCP] | ⚪ NOT APPLIED     | The canonical `intelligence_event` seed file was **not** applied. The orchestrator instead inserted **2 synthetic `rag_chunks` rows** (sensitivity 1 + 3) directly, exercising the **clearance-only** RLS on `rag_chunks` and deliberately avoiding tenant-isolation as a confounder. The canonical seed file remains ready for the **deploy-time e2e** proof (PROOF 5). |
+| Synthetic rag_chunks rows inserted  | [ORCHESTRATOR-MCP] | ✅ PASS (restored) | 2 rows: sensitivity 1 + 3, placeholder 1024-dim halfvec, used by PROOF 1 (DB-layer) + PROOF 3. **Deleted on restore** — `rag_chunks` total = 0 (see RESTORE).                                                                                                                                                                                                            |
 
 > The **re-embed re-run** that turns the seeded signals into `rag_chunks` rows is
 > **[DEPLOY-GATED]** (TEI is GPU-served) — see the Deploy gate section. Until it
@@ -94,6 +114,36 @@ UI-SPEC hard constraint).
 - EN: "The copilot couldn't find anything to answer that. Try rephrasing, or ask about a specific dossier."
 - AR: «لم يجد المساعد ما يجيب عن ذلك. حاول إعادة الصياغة، أو اسأل عن ملف محدد.»
 
+### PROOF 1 — DB-layer (AGENT-03) · [ORCHESTRATOR-MCP] · ✅ PASS (2026-06-19)
+
+The keystone proven at the **DB/RLS layer** — the exact INVOKER + RLS path
+`hybrid_rag_search` uses. Method: `SET LOCAL ROLE authenticated` +
+`set_config('request.jwt.claims', …)` per the P69 impersonation pattern (NOT
+service-role — service-role bypasses RLS), identical query over the **2 synthetic
+`rag_chunks` rows** (sensitivity 1 + 3), once per caller:
+
+| Caller (authenticated impersonation)        | clearance | rows visible | max_sensitivity | levels  |
+| ------------------------------------------- | --------- | ------------ | --------------- | ------- |
+| L1 — `00242210-2f81-4cfc-9799-1cc02c76be44` | 1         | **1**        | 1               | `[1]`   |
+| L3 — `1aae53d5-1488-4c9d-8ded-6c1926d6f0e8` | 3         | **2**        | 3               | `[1,3]` |
+
+**VERDICT — ✅ PASS:** L1 result `[1]` is a **strict subset** of L3 `[1,3]`; the
+L1 caller sees **ZERO above-clearance content** (the sensitivity-3 row is
+invisible to L1). This is the same RLS path `hybrid_rag_search` runs as
+`SECURITY INVOKER` (PROOF 4). The keystone security guarantee **holds at the
+DB/RLS layer.**
+
+| Check                                                        | Tag                | Result  | Evidence                                                              |
+| ------------------------------------------------------------ | ------------------ | ------- | --------------------------------------------------------------------- |
+| 1-DB. L1 ⊂ L3 at the RLS layer; L1 sees zero above-clearance | [ORCHESTRATOR-MCP] | ✅ PASS | L1 rows=1 `[1]` ⊂ L3 rows=2 `[1,3]`; impersonation (not service-role) |
+
+### PROOF 1 — full e2e (AGENT-03) · [AUTH-GATED] · ⬜ PENDING
+
+The copilot-UI clearance-reduction through 2 **real browser sessions** (L1/L3) +
+the CDP `Network.setBlockedURLs` forced-error → neutral `role="alert"` copy +
+the indistinguishable-empty payload grep, in EN + AR. Needs the deploy gate +
+authenticated browser sessions (the DB-layer keystone above already holds).
+
 | Check                                                 | Tag          | Result     | Evidence (L1 vs L3 node/result counts; payload grep)                     |
 | ----------------------------------------------------- | ------------ | ---------- | ------------------------------------------------------------------------ |
 | 1a. L1 result ⊂ L3 (EN)                               | [AUTH-GATED] | ⬜ PENDING | _(L1 count = ** ; L3 count = ** ; L1 ⊂ L3 = \_\_)_                       |
@@ -113,6 +163,11 @@ citation flipped; token-bound (no raw hex, no card shadow).
 **How (AUTH-GATED):** open the drawer; switch AR via the ع button
 (`localStorage['id.locale']='ar'`); inspect `dir`, computed font, and flip order
 at each width.
+
+> NOTE: the copilot **drawer visual** (token remap, `dir="rtl"` + Tajawal, flipped
+> message/composer/citation, no raw hex / no card shadow) was **approved on
+> evidence** at the 72-08 human-verify checkpoint (2026-06-19). The **full live
+> render through login at 1024 & 1400** is deploy/auth-gated and stays PENDING.
 
 | Check                                          | Tag          | Result     | Evidence                             |
 | ---------------------------------------------- | ------------ | ---------- | ------------------------------------ |
@@ -142,10 +197,17 @@ SELECT count(*) AS total_chunk_rows,
 FROM public.rag_chunks;   -- EXPECT distinct_dims=1, min=max=1024 (post re-embed)
 ```
 
-| Check                                    | Tag                                                                        | Result     | Evidence                        |
-| ---------------------------------------- | -------------------------------------------------------------------------- | ---------- | ------------------------------- |
-| 3a. 0 rows fail the 1024 dimension check | [ORCHESTRATOR-MCP] (covers seeded rows only after [DEPLOY-GATED] re-embed) | ⬜ PENDING | _(rows_failing = \_\_)_         |
-| 3b. distinct_dims=1, min=max=1024        | [ORCHESTRATOR-MCP] / [DEPLOY-GATED]                                        | ⬜ PENDING | _(total rows = ** ; dims = **)_ |
+**Result (2026-06-19):** the orchestrator inserted **2 synthetic `rag_chunks`
+rows** (sensitivity 1 + 3, placeholder 1024-dim halfvec) and confirmed
+`vector_dims(embedding) = 1024` for **both** rows, **0** failing rows. This
+proves the **column/constraint enforces 1024 on actual rows**. The **real-corpus**
+dimension proof on **bge-m3** embeddings is **[DEPLOY-GATED]** post-re-embed (TEI
+is GPU-served). Synthetic rows **deleted on restore**.
+
+| Check                                                                | Tag                | Result             | Evidence                                                          |
+| -------------------------------------------------------------------- | ------------------ | ------------------ | ----------------------------------------------------------------- |
+| 3a. 0 synthetic rows fail the 1024 dimension check                   | [ORCHESTRATOR-MCP] | ✅ PASS (restored) | `vector_dims(embedding)=1024` for both rows; rows_failing = **0** |
+| 3b. Real-corpus distinct_dims=1, min=max=1024 (post bge-m3 re-embed) | [DEPLOY-GATED]     | ⬜ PENDING         | _(after the GPU-served TEI re-embed produces real rows)_          |
 
 ---
 
@@ -174,11 +236,21 @@ WHERE relname='rag_chunks' AND relnamespace='public'::regnamespace;         -- E
 > time (`prosecdef=false ✓`, RLS `user_id=auth.uid()` trap-free ✓, anon REVOKEd).
 > Re-confirmed here at the gate.
 
-| Check                                                 | Tag                | Result     | Evidence                                |
-| ----------------------------------------------------- | ------------------ | ---------- | --------------------------------------- |
-| 4a. `hybrid_rag_search` prosecdef = false             | [ORCHESTRATOR-MCP] | ⬜ PENDING | _(pg_proc + get_function_security)_     |
-| 4b. rag_chunks SELECT RLS uses `user_id = auth.uid()` | [ORCHESTRATOR-MCP] | ⬜ PENDING | _(qual snippet; NOT `id = auth.uid()`)_ |
-| 4c. RLS enabled on rag_chunks                         | [ORCHESTRATOR-MCP] | ⬜ PENDING | _(relrowsecurity = true)_               |
+**Result (2026-06-19, via MCP) — ✅ PASS:**
+
+- `hybrid_rag_search` `prosecdef = false` → **SECURITY INVOKER**, never DEFINER.
+- `rag_chunks` SELECT RLS qual =
+  `sensitivity_level <= (SELECT clearance_level FROM profiles WHERE user_id = auth.uid())`
+  — the **trap-free** `profiles.user_id` form (NOT the deny-all `id = auth.uid()`
+  landmine), live-confirmed.
+- **anon** `EXECUTE` grants on `hybrid_rag_search` = **0** (REVOKEd; `authenticated`
+  GRANTed).
+
+| Check                                                 | Tag                | Result  | Evidence                                                                                                               |
+| ----------------------------------------------------- | ------------------ | ------- | ---------------------------------------------------------------------------------------------------------------------- |
+| 4a. `hybrid_rag_search` prosecdef = false             | [ORCHESTRATOR-MCP] | ✅ PASS | `prosecdef = false` (SECURITY INVOKER)                                                                                 |
+| 4b. rag_chunks SELECT RLS uses `user_id = auth.uid()` | [ORCHESTRATOR-MCP] | ✅ PASS | qual = `sensitivity_level <= (SELECT clearance_level FROM profiles WHERE user_id = auth.uid())`; NOT `id = auth.uid()` |
+| 4c. anon EXECUTE on hybrid_rag_search REVOKEd         | [ORCHESTRATOR-MCP] | ✅ PASS | anon grants = 0; authenticated GRANTed                                                                                 |
 
 ---
 
@@ -215,20 +287,21 @@ Run on the GPU host once the on-prem stack is up (env vars from 72-02 config).
 
 ---
 
-## Post-proof: RESTORE the seed (ORCHESTRATOR-MCP, after PROOF 1/3/5)
+## Post-proof: RESTORE (ORCHESTRATOR-MCP) · ✅ CONFIRMED (2026-06-19)
 
-Apply `supabase/seeds/72-copilot-uat-seed.sql` **SECTION 2** (uncomment + run) to
-return staging to its pre-UAT state.
+The orchestrator used **synthetic `rag_chunks` rows** directly (not the
+`intelligence_event` seed file — see Pre-proof), so the restore deleted those
+synthetic rows rather than running SECTION 2 of the seed file. Staging is clean:
 
 ```sql
-SELECT count(*) FROM public.intelligence_event WHERE id::text LIKE '72090000-%';  -- EXPECT 0
-SELECT count(*) FROM public.rag_chunks
-WHERE source_type='signal' AND source_id::text LIKE '72090000-%';                 -- EXPECT 0
+SELECT count(*) FROM public.rag_chunks;                                           -- ACTUAL: 0
+SELECT count(*) FROM public.intelligence_event WHERE id::text LIKE '72090000-%';  -- ACTUAL: 0 (seed never applied)
 ```
 
-| Step                                            | Tag                | Result     | Evidence            |
-| ----------------------------------------------- | ------------------ | ---------- | ------------------- |
-| Seed SECTION 2 (RESTORE) applied; staging clean | [ORCHESTRATOR-MCP] | ⬜ PENDING | _(both counts = 0)_ |
+| Step                                               | Tag                | Result  | Evidence                                                                                              |
+| -------------------------------------------------- | ------------------ | ------- | ----------------------------------------------------------------------------------------------------- |
+| Synthetic rag_chunks rows deleted; staging clean   | [ORCHESTRATOR-MCP] | ✅ PASS | `rag_chunks` total = **0**; the `72090000-` intelligence_event seed was **never applied** (count = 0) |
+| Seed SECTION 2 (deploy-time RESTORE after PROOF 5) | [ORCHESTRATOR-MCP] | ⬜ N/A  | Runs only after the deploy-time e2e proof applies SECTION 1; the canonical seed file remains ready    |
 
 ---
 
@@ -262,16 +335,26 @@ the **INFRA smokes**, and the end-to-end portions of **PROOF 1** (AUTH-GATED), i
 
 ## Sign-off
 
-- [ ] Seed applied (ORCHESTRATOR-MCP) + verified 3 events / 3 junction rows
-- [ ] PROOF 4 (INVOKER + RLS) — ORCHESTRATOR-MCP, runnable now
-- [ ] PROOF 3 (dims=1024) — after [DEPLOY-GATED] re-embed
-- [ ] PROOF 1 (clearance-reduction) — AUTH-GATED, EN + AR, no forbidden substring
-- [ ] PROOF 2 (EN+AR RTL) — AUTH-GATED, 1024 & 1400
+**DB/RLS layer — RUN 2026-06-19 (ORCHESTRATOR-MCP):**
+
+- [x] PROOF 4 (INVOKER + RLS) — ✅ PASS: `prosecdef=false`, `user_id=auth.uid()` RLS, anon REVOKEd
+- [x] PROOF 1 DB-layer (AGENT-03 clearance-reduction) — ✅ PASS: L1 `[1]` ⊂ L3 `[1,3]`, zero above-clearance (impersonation)
+- [x] PROOF 3 synthetic dims=1024 — ✅ PASS: both synthetic rows `vector_dims=1024`, 0 failing
+- [x] RESTORE — ✅ CONFIRMED: `rag_chunks` total = 0; staging clean
+
+**Deploy-gated / auth-gated — ⬜ PENDING the GPU stack + a browser session:**
+
+- [ ] PROOF 3 real-corpus dims=1024 — after [DEPLOY-GATED] bge-m3 re-embed
+- [ ] PROOF 1 full e2e (clearance-reduction) — AUTH-GATED, EN + AR, no forbidden substring + CDP forced-error
+- [ ] PROOF 2 (EN+AR RTL) — AUTH-GATED, 1024 & 1400 (drawer visual approved on evidence in 72-08)
 - [ ] PROOF 5 (e2e smoke) — DEPLOY-GATED + AUTH-GATED
 - [ ] INFRA-01/02 smokes — DEPLOY-GATED
-- [ ] Seed RESTORED; staging clean
-- [ ] AGENT-01..06 + INFRA-01..03 closed with live evidence
+- [ ] Deploy-time tasks: bge-m3 re-embed re-run; `mastra_threads`/`mastra_messages` RLS re-apply; `hnsw.iterative_scan` RPC fold
+- [ ] AGENT-01..06 + INFRA-01..03 closed with **full** live (e2e) evidence
 
-**Status:** skeleton authored 2026-06-19; live proofs pending the deploy gate +
-authenticated sessions. The 72-09 executor authored the seed + this structure and
-explicitly did **not** self-sign the live proofs (no GPU / no MCP / no browser).
+**Status:** **DB/RLS-layer proofs PASS** (the keystone holds at the RLS layer) and
+staging is restored, as of **2026-06-19**. The **end-to-end** copilot-UI proofs
+(PROOF 1 full, PROOF 2, PROOF 5) and the **INFRA** smokes remain **PENDING** the
+on-prem GPU deploy gate + a real authenticated browser session. This is **not** a
+full live-UAT pass — it is a clean split: DB/RLS proven now, e2e + INFRA deferred
+to the deploy gate.
