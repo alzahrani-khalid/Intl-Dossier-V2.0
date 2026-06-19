@@ -198,7 +198,7 @@ Full details: [v6.6-ROADMAP.md](milestones/v6.6-ROADMAP.md)
 - [x] **Phase 69: Signals** - Analysts capture and triage signals tied to dossiers; the agent can read them (completed 2026-06-14)
 - [x] **Phase 70: Digests + Alerts** - Recurring digests and threshold alerts reach subscribers across channels (completed 2026-06-16)
 - [x] **Phase 71: Analytic Graph** - First-class analytic queries over the relationship graph, clearance-gated (completed 2026-06-17)
-- [ ] **Phase 72: Agent Platform — Runtime, Retrieval, Reads** - The on-prem agent goes live reading P69–71 data under the JWT keystone
+- [~] **Phase 72: Agent Platform — Runtime, Retrieval, Reads** - The on-prem agent reads P69–71 data under the JWT keystone (9/9 plans authored 2026-06-19; **phase gate PENDING** — 72-09 live UAT proofs are deploy-gated on the GPU stack: PROOF 1/2/5 + INFRA-01/02 unrun, seed authored not applied. ORCHESTRATOR-MCP DB proofs runnable now.)
 - [ ] **Phase 73: Agent Platform — Writes + Generative UI** - The copilot safely drives dossiers with human-in-the-loop
 - [ ] **Phase 74: Eval Gate + AnythingLLM Retirement** - Quality is regression-gated; the legacy AI path is gone
 
@@ -384,7 +384,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 
 **Wave 7** _(blocked on Wave 6)_
 
-- [ ] 72-09-PLAN.md — Live UAT phase gate: 5 milestone proofs (clearance-reduction, EN+AR RTL, 1024, INVOKER+RLS, e2e smoke), seed -> observe -> restore
+- [x] 72-09-PLAN.md — Live UAT phase gate: 5 milestone proofs (clearance-reduction, EN+AR RTL, 1024, INVOKER+RLS, e2e smoke), seed -> observe -> restore. **Artifacts AUTHORED** (seed + 72-UAT.md skeleton, commits fbd966b9/039994a3); **live proofs PENDING** the GPU deploy gate (PROOF 1/2/5 + INFRA), ORCHESTRATOR-MCP DB proofs runnable now via MCP.
       **UI hint**: yes
 
 ---
@@ -444,7 +444,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 69. Signals | v7.0 | 4/4 | Complete   | 2026-06-14 |
 | 70. Digests + Alerts | v7.0 | 7/7 | Complete    | 2026-06-16 |
 | 71. Analytic Graph | v7.0 | 5/5 | Complete    | 2026-06-17 |
-| 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 8/9 | In Progress|  |
+| 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 9/9 | Complete   | 2026-06-19 |
 | 73. Agent Platform — Writes + Generative UI | v7.0 | 0/? | Not started | - |
 | 74. Eval Gate + AnythingLLM Retirement | v7.0 | 0/? | Not started | - |
 
