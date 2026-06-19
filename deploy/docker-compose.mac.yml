@@ -1,0 +1,61 @@
+# ===========================================
+# MAC-LOCAL OVERRIDE for the Phase-72 copilot stack
+# ===========================================
+# This is a Compose OVERRIDE layered ON TOP of deploy/docker-compose.prod.yml —
+# it is NOT a fork. Run it as:
+#
+#   docker compose -f deploy/docker-compose.prod.yml -f deploy/docker-compose.mac.yml up -d
+#
+# Everything (nginx /api/copilot SSE proxy, frontend, backend, redis, anythingllm,
+# langfuse, phoenix, the intl-dossier network, the expose-only contract, and the
+# agent-runtime SUPABASE_ANON_KEY + caller-JWT keystone) is INHERITED verbatim from
+# the prod file. The ONLY divergence from prod is the two GPU-bound backends, swapped
+# for Mac-runnable equivalents:
+#   - the LLM: vLLM (CUDA-only) is gated out; the host's Ollama serves the model.
+#   - TEI embed + rerank: the GPU image is swapped for the CPU image (linux/amd64).
+#
+# Do NOT run vLLM on Mac — it requires an NVIDIA GPU and will crash on Apple Silicon.
+# See deploy/MAC-LOCAL.md for the full runbook.
+
+services:
+  # vLLM is CUDA-only. A profiles gate EXCLUDES it from a plain `docker compose up`
+  # on Mac (the model is served by Ollama on the host instead — see agent-runtime
+  # below). Rationale: `deploy.replicas: 0` is Swarm-only and is SILENTLY IGNORED by
+  # `docker compose up`, so vLLM would still try to start; a profiles gate is the
+  # reliable exclusion for non-Swarm Compose. The service stays DEFINED in the prod
+  # file — this only gates it out of the Mac run (enable with `--profile gpu-only`).
+  vllm:
+    profiles: ['gpu-only']
+
+  # Override ONLY the two model-pointer env vars so the copilot calls the Mac-host
+  # Ollama (OpenAI-compatible) instead of the in-network vLLM, using the SAME knob
+  # prod uses. Compose deep-merges `environment` maps, so every other agent-runtime
+  # env (SUPABASE_URL, SUPABASE_ANON_KEY, ALLOWED_ORIGINS, TEI_EMBED_URL,
+  # TEI_RERANK_URL, DATABASE_URL, OTEL_EXPORTER_OTLP_ENDPOINT) and the
+  # build/expose/depends_on/networks all inherit from prod UNCHANGED.
+  # getCopilotModel() appends `/v1` → Ollama's OpenAI-compatible endpoint at
+  # :11434/v1 as model qwen3:30b. The keystone (anon key + caller JWT, NO
+  # service-role) is inherited from prod and MUST stay that way.
+  agent-runtime:
+    environment:
+      VLLM_BASE_URL: http://host.docker.internal:11434
+      VLLM_MODEL: qwen3:30b
+
+  # TEI ships no native arm64 image, so override to the CPU build and pin the amd64
+  # platform (runs under emulation on Apple Silicon). Keep the SAME service name,
+  # `expose: ["80"]`, and the SAME `--model-id` so TEI_EMBED_URL resolves unchanged.
+  # Note: the prod TEI services declare NO GPU `deploy.resources.reservations.devices`
+  # block (only vllm does), so there is NOTHING to neutralize here — the image +
+  # platform swap is sufficient. Do not add a phantom `deploy:` removal.
+  tei-embed:
+    image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest
+    platform: linux/amd64
+    command: --model-id BAAI/bge-m3
+
+  # Same CPU/amd64 swap for the cross-encoder reranker; service name, expose:80, and
+  # --model-id unchanged so TEI_RERANK_URL resolves unchanged. No GPU `deploy:` block
+  # exists on the prod reranker either — nothing to neutralize.
+  tei-rerank:
+    image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest
+    platform: linux/amd64
+    command: --model-id BAAI/bge-reranker-v2-m3
