@@ -37128,6 +37128,15 @@ export type Database = {
       }
       process_stale_queue_items: { Args: never; Returns: undefined }
       process_unsubscribe: { Args: { p_token: string }; Returns: boolean }
+      query_graph: {
+        Args: {
+          p_entity_id: string
+          p_entity_id_2?: string
+          p_query_type: string
+          p_window_days?: number
+        }
+        Returns: Json
+      }
       queue_bot_notification_delivery: {
         Args: {
           p_channel_subscription_id: string
@@ -37738,6 +37747,20 @@ export type Database = {
           photo_url: string
           title_ar: string
           title_en: string
+        }[]
+      }
+      search_semantic_clearance_gated: {
+        Args: {
+          p_entity_types: string[]
+          p_limit?: number
+          p_query_embedding: string
+          p_similarity_threshold?: number
+        }
+        Returns: {
+          entity_id: string
+          owner_type: string
+          sensitivity_level: number
+          similarity_score: number
         }[]
       }
       search_similar_documents: {

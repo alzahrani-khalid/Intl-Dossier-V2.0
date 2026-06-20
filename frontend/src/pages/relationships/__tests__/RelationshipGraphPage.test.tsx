@@ -79,6 +79,9 @@ vi.mock('react-i18next', () => ({
     }
   },
   Trans: ({ children }: { children: ReactNode }): ReactNode => children,
+  // i18n/index.ts runs `.use(initReactI18next)` at import time; this local mock
+  // overrides the global setup mock, so it must also expose initReactI18next.
+  initReactI18next: { type: '3rdParty', init: (): void => {} },
 }))
 
 let searchValue: { dossierId?: string } = {}
