@@ -400,8 +400,14 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 2. Approved copilot writes commit under the user's JWT (RLS-enforced), never service-role — verified by confirming the DB row's `created_by` / `actor_id` matches the caller's `auth.uid()` after an approved write.
 3. After an approved copilot write, the conventional UI (TanStack Query cache) reflects the change immediately without a manual page reload — verified live in the same browser session.
 4. Generative UI renders the app's own token-bound components (UniversalDossierCard, signal cards, etc.) inline in the copilot surface with working deep-links into the app — verified live EN+AR.
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 5 plans (5 waves — DB foundation → agent propose-tools → HITL commit → genUI → bilingual E2E)
+
+- [ ] 73-01-PLAN.md — Signal actor migration + persist_brief INVOKER RPC (DB foundation)
+- [ ] 73-02-PLAN.md — agent-runtime propose\_\* write-tools (4) + revised agent prompt
+- [ ] 73-03-PLAN.md — HITL confirmation cards + caller-JWT approve-commit + post-commit cache invalidation
+- [ ] 73-04-PLAN.md — generative-UI inline component renderers (UniversalDossierCard + signal card) + deep-links
+- [ ] 73-05-PLAN.md — bilingual E2E (HITL approve/reject EN+AR, JWT-actor, cache-sync, indistinguishable-empty) + live verification
+      **UI hint**: yes
 
 ---
 
