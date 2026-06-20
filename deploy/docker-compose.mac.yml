@@ -27,6 +27,13 @@ services:
   vllm:
     profiles: ['gpu-only']
 
+  # langfuse is the heavy self-hosted observability backend; it is NOT needed for the
+  # Phase-72 proofs and adds real memory pressure under x86 emulation. A profiles gate
+  # EXCLUDES it from a plain Mac `up` (phoenix + OTel export stay, so tracing still
+  # works). Enable the full observability stack with `--profile langfuse-full`.
+  langfuse:
+    profiles: ['langfuse-full']
+
   # Override ONLY the two model-pointer env vars so the copilot calls the Mac-host
   # Ollama (OpenAI-compatible) instead of the in-network vLLM, using the SAME knob
   # prod uses. Compose deep-merges `environment` maps, so every other agent-runtime
@@ -47,10 +54,16 @@ services:
   # Note: the prod TEI services declare NO GPU `deploy.resources.reservations.devices`
   # block (only vllm does), so there is NOTHING to neutralize here — the image +
   # platform swap is sufficient. Do not add a phantom `deploy:` removal.
+  #
+  # Memory constraint (Mac-only): under x86 emulation TEI's DEFAULT batch buffers
+  # (max-batch-tokens 16384, ~17 tokenization-workers, 512 concurrent) balloon to ~13GiB
+  # and OOM the VM. The flags below cap each TEI server to ~2.3GiB — tuned for the
+  # single-query proof workload, NOT throughput. Drop them on a real GPU host (prod),
+  # where the GPU image's defaults fit comfortably.
   tei-embed:
     image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest
     platform: linux/amd64
-    command: --model-id BAAI/bge-m3
+    command: --model-id BAAI/bge-m3 --max-batch-tokens 2048 --max-concurrent-requests 8 --tokenization-workers 2 --max-client-batch-size 2
 
   # Same CPU/amd64 swap for the cross-encoder reranker; service name, expose:80, and
   # --model-id unchanged so TEI_RERANK_URL resolves unchanged. No GPU `deploy:` block
@@ -58,4 +71,4 @@ services:
   tei-rerank:
     image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest
     platform: linux/amd64
-    command: --model-id BAAI/bge-reranker-v2-m3
+    command: --model-id BAAI/bge-reranker-v2-m3 --max-batch-tokens 2048 --max-concurrent-requests 8 --tokenization-workers 2 --max-client-batch-size 2

@@ -28,11 +28,15 @@ ollama serve            # must be listening on :11434
 docker compose -f deploy/docker-compose.prod.yml -f deploy/docker-compose.mac.yml up -d
 ```
 
-This gates out `vllm` (CUDA-only, profile `gpu-only`), points agent-runtime at the host
-Ollama (`VLLM_BASE_URL=http://host.docker.internal:11434`, `VLLM_MODEL=qwen3:30b`), and runs
-both TEI servers on the CPU image (`cpu-latest`, `linux/amd64`). `host.docker.internal` lets
-the in-container agent-runtime reach the host Ollama. First boot pulls the TEI model weights
-(slow first run, cached after).
+This gates out `vllm` (CUDA-only, profile `gpu-only`) and `langfuse` (heavy observability,
+profile `langfuse-full`), points agent-runtime at the host Ollama
+(`VLLM_BASE_URL=http://host.docker.internal:11434`, `VLLM_MODEL=qwen3:30b`), and runs both
+TEI servers on the CPU image (`cpu-latest`, `linux/amd64`) with their batch buffers capped
+(`--max-batch-tokens 2048 --tokenization-workers 2 …`) so the x86-emulated servers stay near
+~2.3GiB instead of ballooning to ~13GiB and OOM-ing the VM. `host.docker.internal` lets the
+in-container agent-runtime reach the host Ollama. First boot pulls the TEI model weights (slow
+first run, cached after). For the full observability stack (phoenix already runs), add
+`--profile langfuse-full`.
 
 Set these keys in `deploy/.env` (the prod compose reads them via `${...}`):
 
