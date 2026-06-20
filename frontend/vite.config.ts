@@ -89,6 +89,14 @@ export default defineConfig({
       usePolling: false,
     },
     proxy: {
+      // Copilot SSE -> agent-runtime :4100 /chat (Phase 72). Mirrors the prod nginx
+      // /api/copilot/ mapping (strip prefix). MUST precede the generic /api rule.
+      '/api/copilot': {
+        target: 'http://localhost:4100',
+        changeOrigin: true,
+        ws: true,
+        rewrite: (path) => path.replace(/^\/api\/copilot/, ''),
+      },
       // Express backend routes
       // Edge Functions use full VITE_SUPABASE_URL so don't need a proxy
       '/api': {
@@ -163,6 +171,28 @@ export default defineConfig({
             // TanStack ecosystem - routing, query, table (before react: @tanstack/react-* contains 'react')
             if (id.includes('@tanstack')) {
               return 'tanstack-vendor'
+            }
+            // Copilot conversational shell (Phase 72, AGENT-01). assistant-ui + the
+            // AG-UI client + the markdown stack are used ONLY by the dynamic-imported
+            // CopilotDrawer tree, so isolating them here keeps Rollup from hoisting
+            // them into the eager `vendor`/entry — the weight loads only with the lazy
+            // CopilotDrawer chunk (bundle ceiling, threat T-72-SC). Placed before the
+            // `react` match because `@assistant-ui/react` contains the 'react' substring.
+            if (
+              id.includes('@assistant-ui') ||
+              id.includes('@ag-ui') ||
+              id.includes('assistant-stream') ||
+              id.includes('react-markdown') ||
+              id.includes('remark') ||
+              id.includes('rehype') ||
+              id.includes('micromark') ||
+              id.includes('mdast') ||
+              id.includes('hast') ||
+              id.includes('unist') ||
+              id.includes('unified') ||
+              id.includes('vfile')
+            ) {
+              return 'copilot-vendor'
             }
             // React runtime ONLY. A broad `react` substring also swept app-level
             // react-* packages (react-i18next, react-hook-form, …) into react-vendor;

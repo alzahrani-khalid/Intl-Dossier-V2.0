@@ -41,6 +41,9 @@ router.post('/', checkFeatureEnabled, async (req: Request, res: Response): Promi
   const { message, conversation_history, language = 'en' } = req.body
   const userId = req.user?.id
   const organizationId = req.user?.organization_id
+  // P68 REMED-03: forward the caller's Bearer token so the assistant's tool reads
+  // run under the user's JWT (RLS-scoped), not service role.
+  const authHeader = req.headers.authorization ?? ''
 
   if (!userId || !organizationId) {
     res.status(401).json({ error: 'Unauthorized' })
@@ -94,6 +97,7 @@ router.post('/', checkFeatureEnabled, async (req: Request, res: Response): Promi
         organizationId,
         userId,
         language,
+        authHeader,
       })) {
         // Handle tool calls
         if (chunk.type === 'tool_call' && chunk.toolName) {
@@ -161,6 +165,7 @@ router.post('/', checkFeatureEnabled, async (req: Request, res: Response): Promi
           organizationId,
           userId,
           language,
+          authHeader,
         }),
         timeoutPromise,
       ])

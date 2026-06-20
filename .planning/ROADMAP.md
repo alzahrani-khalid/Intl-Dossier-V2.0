@@ -14,7 +14,7 @@
 - ✅ **v6.4 Stabilization & Carryover Sweep** — Phases 55-59 (shipped 2026-05-27) — [archive](milestones/v6.4-ROADMAP.md)
 - ✅ **v6.5 Escalated Backlog Hardening** — Phases 60-61 (shipped 2026-06-11) — [archive](milestones/v6.5-ROADMAP.md)
 - ✅ **v6.6 Dossier Workflow Completion** — Phases 62-67 (shipped 2026-06-13) — [archive](milestones/v6.6-ROADMAP.md)
-- 🔄 **v6.6 Dossier Workflow Completion** — Phases 62-67 (in progress)
+- 🔄 **v7.0 Intelligence Engine** — Phases 68-74 (in progress)
 
 ## Phases
 
@@ -167,6 +167,260 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 
 </details>
 
+<details>
+<summary>✅ v6.6 Dossier Workflow Completion (Phases 62-67) — SHIPPED 2026-06-13</summary>
+
+- [x] Phase 62: Export Pack Contract & Deploy (3/3 plans) — completed 2026-06-12
+- [x] Phase 63: Relationship Graph Route & Bidirectional Traversal (5/5 plans) — completed 2026-06-12
+- [x] Phase 64: New Position from Dossier (6/6 plans) — completed 2026-06-12
+- [x] Phase 65: Engagement Positions Tab & Legacy Reconciliation (6/6 plans) — completed 2026-06-13
+- [x] Phase 66: Overview Error Contract & Timeline Cross-Links (8/8 plans) — completed 2026-06-13
+- [x] Phase 67: Per-Type Engagement Contracts & Legacy Detail Cleanup (6/6 plans) — completed 2026-06-13
+
+Full details: [v6.6-ROADMAP.md](milestones/v6.6-ROADMAP.md)
+
+</details>
+
+### 🔄 v7.0 Intelligence Engine (Phases 68-74) — IN PROGRESS
+
+**Goal:** Turn dossiers from passive records into a fully on-prem, Arabic-first intelligence layer — delivered as conventional analyst surfaces (signals triage, digests/alerts, analytic graph) AND an agentic copilot that is incapable by construction of reading above the caller's clearance.
+
+**Cross-cutting guarantees (apply to every phase):**
+
+- Security keystone: every interactive agent DB op runs under the caller's JWT; every write is HITL; service-role only on cron/no-user paths
+- Bilingual/RTL: every new surface renders in `i18n.language`; new i18n namespaces registered in `src/i18n/index.ts`; `dir="rtl"` + Tajawal + logical properties; design tokens only
+- On-prem fidelity: no data egress; all models/embedders/rerankers/observability self-hosted
+- GSD discipline: research → plan → execute → live UAT staging (seed/observe/restore, EN+AR) → code review → verify → PR → merge
+
+**Parallel infra track (begins Phase 68, lands by Phase 72):** vLLM + Gemma 4 12B + TEI (bge-m3 + bge-reranker) + Langfuse + Arize Phoenix — zero telemetry egress.
+
+- [x] **Phase 68: AI Foundations Remediation** - One canonical clearance scale; no corrupted embeddings; the interactive AI path honors RLS (completed 2026-06-14)
+- [x] **Phase 69: Signals** - Analysts capture and triage signals tied to dossiers; the agent can read them (completed 2026-06-14)
+- [x] **Phase 70: Digests + Alerts** - Recurring digests and threshold alerts reach subscribers across channels (completed 2026-06-16)
+- [x] **Phase 71: Analytic Graph** - First-class analytic queries over the relationship graph, clearance-gated (completed 2026-06-17)
+- [~] **Phase 72: Agent Platform — Runtime, Retrieval, Reads** - The on-prem agent reads P69–71 data under the JWT keystone (9/9 plans authored 2026-06-19; **DB/RLS proofs PASS, e2e+INFRA deploy-gated**. 72-09 DB/RLS proofs RUN + PASS live 2026-06-19 via MCP, staging RESTORED: PROOF 4 (INVOKER + `user_id=auth.uid()` RLS + anon REVOKEd), PROOF 1 DB-layer keystone (L1 result strict subset of L3, zero above-clearance, via authenticated impersonation), PROOF 3 synthetic dims=1024. **PHASE GATE still PENDING** — the e2e copilot-UI proofs PROOF 1 full / 2 / 5 + INFRA-01/02 are deploy-gated on the GPU stack. NOT a full live-UAT pass.)
+- [ ] **Phase 73: Agent Platform — Writes + Generative UI** - The copilot safely drives dossiers with human-in-the-loop
+- [ ] **Phase 74: Eval Gate + AnythingLLM Retirement** - Quality is regression-gated; the legacy AI path is gone
+
+Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
+
+---
+
+### Phase 68: AI Foundations Remediation
+
+**Goal**: One canonical clearance scale exists; no corrupted embeddings reach the vector store; the interactive AI path honors RLS at the DB level.
+**Depends on**: Nothing — this is the hard gate. All later phases depend on Phase 68.
+**Requirements**: REMED-01, REMED-02, REMED-03, REMED-04, REMED-05, REMED-06
+**Success Criteria** (what must be TRUE):
+
+1. A non-cleared user cannot retrieve above-clearance content via the existing semantic/vector search — verified live on staging by blocking a low-clearance account and confirming zero above-clearance results are returned.
+2. A non-cleared user cannot retrieve above-clearance content via the existing interactive assistant — verified live by confirming `supabaseAdmin` is retired from `chat-assistant.ts` and the assistant runs all DB reads under the caller's JWT.
+3. All clearance checks key off `profiles.clearance_level` (1–4) as the single canonical scale — verified by confirming the prior 1–3 function and `low/medium/high` sensitivity string variants are reconciled without breaking existing RLS policies on staging.
+4. A new embedding write stores vectors at native 1024-dim with no pad/truncate applied — verified by inserting a test document and asserting `array_length(embedding, 1) = 1024` in the DB.
+5. An operator can trace a complete AI request (prompt → model → response) end-to-end in self-hosted Langfuse or Arize Phoenix, with zero network egress to external telemetry endpoints.
+   **Plans**: 8 plans
+   Plans:
+
+**Wave 1**
+
+- [x] 68-01-PLAN.md — Wave-0 test stubs + live A1-A6 DB introspection
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [x] 68-02-PLAN.md — REMED-01: clearance compat shim migration + staging apply
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
+- [x] 68-03-PLAN.md — REMED-02: search_semantic_clearance_gated INVOKER RPC + edge-fn repoint
+- [x] 68-04-PLAN.md — REMED-03: chat-assistant supabaseAdmin retirement + D-10 repoints
+
+**Wave 4** _(blocked on Wave 3 completion)_
+
+- [x] 68-05-PLAN.md — REMED-04: native-1024 embedding write path (storeEmbedding)
+- [x] 68-06-PLAN.md — REMED-05: Langfuse + Phoenix docker-compose + OTel wiring
+- [x] 68-07-PLAN.md — REMED-06: i18n namespace guard (check-i18n-namespaces.mjs + lint integration)
+
+**Wave 5** _(blocked on Wave 4 completion)_
+
+- [x] 68-08-PLAN.md — [BLOCKING] Full test suite + live UAT clearance-block verification
+      **UI hint**: no
+
+---
+
+### Phase 69: Signals
+
+**Goal**: Analysts can capture and triage intelligence signals tied to one or more dossiers; the agent can read signals under clearance gating.
+**Depends on**: Phase 68 (clearance scale and JWT keystone must be canonical before signal RLS is authored)
+**Requirements**: SIGNAL-01, SIGNAL-02, SIGNAL-03, SIGNAL-04, SIGNAL-05, SIGNAL-06
+**Success Criteria** (what must be TRUE):
+
+1. A user can manually create an intelligence signal (title, body, sensitivity level, linked dossier(s)) and immediately see it appear on the linked dossier's Signals tab — verified live EN+AR.
+2. An AI-surfaced signal (created programmatically via the `ai_generated` source type) appears in the same triage surface as manual signals, clearance-gated — verified by seeding one above-clearance signal and confirming it is hidden from a lower-clearance account.
+3. A user can triage a signal (acknowledge / dismiss / escalate) using only the keyboard from the RTL-safe triage surface — verified live in Arabic mode.
+4. A user can escalate a signal into a tracked work item and see the work item in the Kanban board — verified live on staging (seed → escalate → observe in Tasks).
+5. The agent's `read_signals` tool returns only signals at or below the caller's clearance, and returns the correct result when a cleared user queries signals on a specific dossier — verified via live tool invocation against staging.
+   **Plans**: 4 plans
+
+**Wave 1** (baseline)
+
+- [x] 69-01-PLAN.md — Migration + Supabase MCP apply + i18n namespace + base types
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [x] 69-02-PLAN.md — Data hooks: useSignals (read_signals RPC), useSignalMutations, useSignalEscalate
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
+- [x] 69-03-PLAN.md — Triage queue UI: keyboard hook, SignalRow, SignalsQueue, CaptureSignalForm, IntelligencePage tab extension
+
+**Wave 4** _(blocked on Wave 3 completion)_
+
+- [x] 69-04-PLAN.md — EscalateSignalDialog + DossierSignalsTab wiring + Phase Gate UAT (all 6 SIGNAL scenarios)
+      **UI hint**: yes
+
+---
+
+### Phase 70: Digests + Alerts
+
+**Goal**: Recurring digests and threshold alerts reach subscribers across in-app, email, and external channels, with all content clearance-gated.
+**Depends on**: Phase 69 (signals are the primary trigger source for alerts; digest content includes signal data)
+**Requirements**: DIGEST-01, DIGEST-02, DIGEST-03, DIGEST-04, ALERT-01, ALERT-02, ALERT-03, ALERT-04
+**Success Criteria** (what must be TRUE):
+
+1. A user can subscribe to a recurring digest scoped to a dossier or topic, view it rendered in-app, and unsubscribe — verified live EN+AR.
+2. A triggered threshold alert (new signal on a tracked dossier) is delivered to in-app, on-prem SMTP email, and an external webhook endpoint — verified live by seeding a signal on a tracked dossier and confirming delivery on all three channels.
+3. External-channel payloads (webhook/Teams) carry only deep-links and zero classified content — verified by inspecting the outbound payload body on a MEDIUM-sensitivity signal and confirming no signal body text is present.
+4. The digest pipeline runs under service-role with explicit app-layer authz; each subscriber receives only clearance-appropriate content — verified by subscribing two accounts at different clearance levels to the same dossier and confirming each digest contains only within-clearance signals.
+5. The agent's `generate_digest` HITL tool presents a bilingual confirmation card before committing and publishes only after approval — verified live via the agent surface on staging.
+   **Plans**: 7 plans
+   Plans:
+   **Wave 1**
+   - [x] 70-01-PLAN.md — Wave 1: test scaffold (8 stubs) + nodemailer/pg install (blocking package legitimacy checkpoint)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [x] 70-02-PLAN.md — Wave 2: full database migration SQL (4 tables, 4 INVOKER RPCs, pg_notify trigger)
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
+- [x] 70-03-PLAN.md — Wave 3: [BLOCKING] Supabase MCP migration apply to staging + 6-query verification
+
+**Wave 4** _(blocked on Wave 3 completion)_
+
+- [x] 70-04-PLAN.md — Wave 4: ChannelAdapter layer + alert worker (3 adapters, pg LISTEN, BullMQ)
+- [x] 70-05-PLAN.md — Wave 4: digest pipeline + alerts.service.ts replacement + Express API routes
+
+**Wave 5** _(blocked on Wave 4 completion)_
+
+- [x] 70-06-PLAN.md — Wave 5: frontend surfaces (i18n, hooks, 7 components, IntelligencePage 4-tab extension)
+
+**Wave 6** _(blocked on Wave 5 completion)_
+
+- [x] 70-07-PLAN.md — Wave 6: GenerateDigestButton + 8 dossier digests routes + backend wiring + live UAT
+      **UI hint**: yes
+
+---
+
+### Phase 71: Analytic Graph
+
+**Goal**: Analysts and the agent can run clearance-aware analytic graph queries (who-sits-on-which-forum, shared committees, engagement chains) from the Network panel and Cmd+K.
+**Depends on**: Phase 70 (completes the data layer before agent reads are wired; graph queries reference engagements and signals from prior phases)
+**Requirements**: GRAPH-01, GRAPH-02, GRAPH-03, GRAPH-04
+**Success Criteria** (what must be TRUE):
+
+1. A user can run the "who connects to whom across forums" analytic query from the Network panel and receive a result — verified live on seeded staging data.
+2. A user can launch an analytic graph query from Cmd+K ("Analyze: shared committees") and see clearance-gated results inline — verified live EN+AR.
+3. A lower-clearance user running the same query as a higher-clearance user sees a strictly reduced result set — verified live by running identical queries from two different clearance-level accounts and comparing node/edge counts.
+4. The agent's `query_graph` tool returns clearance-correct results under the caller's JWT, enforced by `SECURITY INVOKER` on all analytic RPCs — verified via live tool invocation with a low-clearance account and confirming no above-clearance nodes appear.
+   **Plans**: 5 plans
+   - [x] 71-01-PLAN.md — Wave 0 test scaffolding (3 backend integration + 3 FE tests) + RF-7 high-sensitivity seed fixture
+   - [x] 71-02-PLAN.md — query_graph multiplexed SECURITY INVOKER RPC (forum/committees/chain/path) + analytic-graph edge fn
+   - [x] 71-03-PLAN.md — [BLOCKING] apply migration via Supabase MCP + deploy edge fn + backend integration tests green on staging
+   - [x] 71-04-PLAN.md — Network-panel Analyze mode: useAnalyticGraph hook, route schema, AnalyticQueryPicker + AnalyticResultView
+   - [x] 71-05-PLAN.md — Cmd+K Analyze entries + per-dossier affordance + i18n (en/ar) + live UAT (4 criteria, EN+AR)
+         **UI hint**: yes
+
+---
+
+### Phase 72: Agent Platform — Runtime, Retrieval, Reads
+
+**Goal**: The on-prem copilot is live, reading Phases 69–71 data under the JWT keystone, with hybrid-RAG retrieval and a bilingual token-bound conversational surface.
+**Depends on**: Phases 69, 70, 71 (the agent needs real signal/digest/graph data to read); Parallel infra track must land (vLLM + TEI stood up before this phase executes)
+**Requirements**: AGENT-01, AGENT-02, AGENT-03, AGENT-04, AGENT-05, AGENT-06, INFRA-01, INFRA-02, INFRA-03
+**Success Criteria** (what must be TRUE):
+
+1. A cleared user can converse with the on-prem copilot from the primary conversational surface and from Cmd+K, and the copilot answers from gated intelligence data (signals, digests, graph, dossiers) under the caller's JWT — verified live on staging.
+2. A non-cleared user receives clearance-correct (reduced) copilot results and provably cannot receive above-clearance content — verified live by querying the copilot as a low-clearance account and confirming no above-clearance content appears in the response.
+3. Copilot replies render as token-bound bilingual cards in the user's language with correct RTL rendering in Arabic mode — verified live in both EN and AR.
+4. All retrievable content is embedded at bge-m3 1024-dim (one-time re-embed completed; `array_length(embedding, 1) = 1024` for all rows in `rag_chunks`) and the `rag_chunks` table uses `SECURITY INVOKER` + RLS — verified by inspecting the DB schema on staging.
+5. The `agent-runtime` Turborepo workspace runs on its own port in `docker-compose.prod`, is reachable by the frontend, and processes a chat turn end-to-end — verified by a smoke-test request from staging.
+   **Plans**: 9 plans
+
+**Wave 1** (spike + infra — de-risk first)
+
+- [x] 72-01-PLAN.md — Option-C spike (#4465 JWT-reaches-tools + D-09 CopilotKit-vs-assistant-ui) + Wave-0 test scaffold + copilot i18n namespace
+- [x] 72-02-PLAN.md — Infra: vLLM (Gemma 4 12B) + TEI (bge-m3 + reranker) + agent-runtime docker-compose services + env contract
+
+**Wave 2** _(blocked on Wave 1)_
+
+- [x] 72-03-PLAN.md — Migrations: rag_chunks (halfvec 1024 + per-source sensitivity-sync) + hybrid_rag_search INVOKER RPC + mastra_threads RLS
+
+**Wave 3** _(blocked on Wave 2)_
+
+- [x] 72-04-PLAN.md — [BLOCKING] Supabase MCP apply + one-time re-embed backfill (array_length=1024 proof)
+
+**Wave 4** _(blocked on Wave 3; 72-07 parallel)_
+
+- [x] 72-05-PLAN.md — agent-runtime workspace + Mastra server (registerCopilotKit + JWT setContext) + reads-only copilot agent
+- [x] 72-07-PLAN.md — Retire supabaseAdmin from brief-generator.ts + intake-linker.ts (D-10)
+
+**Wave 5** _(blocked on Wave 4)_
+
+- [x] 72-06-PLAN.md — Read tools: hybrid_rag_search + read_signals/query_graph/generate_digest-preview wraps + dossier/work-item lookups (keystone + RLS-before-rerank)
+
+**Wave 6** _(blocked on Wave 5)_
+
+- [x] 72-08-PLAN.md — Responsive copilot drawer (desktop slide-over + mobile sheet) + token remap + Cmd+K/FAB + \_protected mount
+
+**Wave 7** _(blocked on Wave 6)_
+
+- [x] 72-09-PLAN.md — Live UAT phase gate: 5 milestone proofs (clearance-reduction, EN+AR RTL, 1024, INVOKER+RLS, e2e smoke), seed -> observe -> restore. **Artifacts AUTHORED** (seed + 72-UAT.md, commits fbd966b9/039994a3) + the **3 ORCHESTRATOR-MCP DB/RLS proofs RUN + PASS** live 2026-06-19 (PROOF 4 INVOKER+RLS, PROOF 1 DB-layer keystone L1⊂L3, PROOF 3 synthetic dims=1024; staging RESTORED, `rag_chunks`=0). **e2e + INFRA proofs PENDING** the GPU deploy gate (PROOF 1 full / 2 / 5 + INFRA-01/02 + real-corpus dims).
+      **UI hint**: yes
+
+---
+
+### Phase 73: Agent Platform — Writes + Generative UI
+
+**Goal**: The copilot safely drives dossier actions with human-in-the-loop confirmation, committing writes under the user's JWT, with immediate query-cache sync to the conventional UI.
+**Depends on**: Phase 72 (reads must be proven before writes are enabled; the `agent-runtime` workspace must exist)
+**Requirements**: GENUI-01, GENUI-02, GENUI-03, GENUI-04
+**Success Criteria** (what must be TRUE):
+
+1. Every state-changing copilot action (create/link work item, generate brief, publish digest, dismiss signal) shows a bilingual token-bound confirmation card and commits only after user approval — verified live on staging for at least two distinct write operations (EN+AR).
+2. Approved copilot writes commit under the user's JWT (RLS-enforced), never service-role — verified by confirming the DB row's `created_by` / `actor_id` matches the caller's `auth.uid()` after an approved write.
+3. After an approved copilot write, the conventional UI (TanStack Query cache) reflects the change immediately without a manual page reload — verified live in the same browser session.
+4. Generative UI renders the app's own token-bound components (UniversalDossierCard, signal cards, etc.) inline in the copilot surface with working deep-links into the app — verified live EN+AR.
+   **Plans**: TBD
+   **UI hint**: yes
+
+---
+
+### Phase 74: Eval Gate + AnythingLLM Retirement
+
+**Goal**: AI quality is regression-gated via bilingual CI rubrics; the legacy AnythingLLM path is decommissioned from the critical path.
+**Depends on**: Phases 69, 70, 71, 72, 73 (all surfaces must exist before their eval rubrics can be wired and before AnythingLLM can be safely retired)
+**Requirements**: EVAL-01, EVAL-02, EVAL-03, EVAL-04
+**Success Criteria** (what must be TRUE):
+
+1. CI fails on a briefing-quality regression below threshold (EN+AR rubric ≥ 0.80) — verified by deliberately degrading a prompt and confirming the CI job fails on the evaluation step.
+2. CI fails on a correlation-accuracy regression below threshold (precision ≥ 0.75 / recall ≥ 0.70) — verified by same mechanism.
+3. CI fails on an Arabic-quality regression below threshold (≥ 0.75) — verified by same mechanism.
+4. The critical AI path (search suggestions, dashboard digest, assistant) makes zero AnythingLLM calls — verified by blocking the AnythingLLM endpoint at the network level on staging and confirming all three surfaces continue to function correctly.
+   **Plans**: TBD
+   **UI hint**: no
+
+---
+
 ## Progress
 
 <!-- gsd:progress:start -->
@@ -185,29 +439,17 @@ Full details: [v6.5-ROADMAP.md](milestones/v6.5-ROADMAP.md)
 | 50-54 | v6.3 | 28/28 | Shipped | 2026-05-17 |
 | 55-59 | v6.4 | 20/20 | Shipped | 2026-05-27 |
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
-| 62. Export Pack Contract & Deploy | v6.6 | 3/3 | Complete    | 2026-06-11 |
-| 63. Relationship Graph Route & Bidirectional Traversal | v6.6 | 4/5 | In Progress|  |
-| 64. New Position from Dossier | v6.6 | 6/6 | Complete    | 2026-06-12 |
-| 65. Engagement Positions Tab & Legacy Reconciliation | v6.6 | 6/6 | Complete    | 2026-06-12 |
-| 66. Overview Error Contract & Timeline Cross-Links | v6.6 | 8/8 | Complete    | 2026-06-12 |
-| 67. Per-Type Engagement Contracts & Legacy Detail Cleanup | v6.6 | 6/6 | Complete    | 2026-06-13 |
+| 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
+| 68. AI Foundations Remediation | v7.0 | 8/8 | Complete    | 2026-06-14 |
+| 69. Signals | v7.0 | 4/4 | Complete   | 2026-06-14 |
+| 70. Digests + Alerts | v7.0 | 7/7 | Complete    | 2026-06-16 |
+| 71. Analytic Graph | v7.0 | 5/5 | Complete    | 2026-06-17 |
+| 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 9/9 | Complete   | 2026-06-19 |
+| 73. Agent Platform — Writes + Generative UI | v7.0 | 0/? | Not started | - |
+| 74. Eval Gate + AnythingLLM Retirement | v7.0 | 0/? | Not started | - |
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-06-11 — v6.6 roadmap created (Phases 62-67, 15/15 requirements mapped). Source: `.planning/dossier-workflow-backlog-phases-2026-06-11.md`._
-
-<details>
-<summary>✅ v6.6 Dossier Workflow Completion (Phases 62-67) — SHIPPED 2026-06-13</summary>
-
-- [x] Phase 62: Export Pack Contract & Deploy (3/3 plans) — completed 2026-06-12
-- [x] Phase 63: Relationship Graph Route & Bidirectional Traversal (5/5 plans) — completed 2026-06-12
-- [x] Phase 64: New Position from Dossier (6/6 plans) — completed 2026-06-12
-- [x] Phase 65: Engagement Positions Tab & Legacy Reconciliation (6/6 plans) — completed 2026-06-13
-- [x] Phase 66: Overview Error Contract & Timeline Cross-Links (8/8 plans) — completed 2026-06-13
-- [x] Phase 67: Per-Type Engagement Contracts & Legacy Detail Cleanup (6/6 plans) — completed 2026-06-13
-
-Full details: [v6.6-ROADMAP.md](milestones/v6.6-ROADMAP.md)
-
-</details>
+_Roadmap last updated: 2026-06-13 — v7.0 Intelligence Engine roadmap created (Phases 68-74, 41/41 requirements mapped). Source: `docs/superpowers/specs/2026-06-13-v7.0-intelligence-engine-design.md`._

@@ -4,6 +4,11 @@ import { queueConnection } from './queue-connection'
 import { processNotificationJob } from './notification.processor'
 import { processDeadlineCheck } from './deadline-scheduler'
 import { processDigestJob } from './digest-scheduler'
+import {
+  processIntelligenceAlertJob,
+  type IntelligenceAlertPayload,
+} from './intelligence-alert.worker'
+import { processIntelligenceDigestJob } from './intelligence-digest.scheduler'
 
 export interface NotificationJobData {
   userId: string
@@ -18,7 +23,9 @@ export interface NotificationJobData {
   data?: Record<string, unknown>
 }
 
-export const notificationQueue = new Queue<NotificationJobData>('notifications', {
+export type NotificationQueueJobData = NotificationJobData | IntelligenceAlertPayload
+
+export const notificationQueue = new Queue<NotificationQueueJobData>('notifications', {
   connection: queueConnection,
   defaultJobOptions: {
     attempts: 3,
@@ -28,9 +35,9 @@ export const notificationQueue = new Queue<NotificationJobData>('notifications',
   },
 })
 
-export const notificationWorker = new Worker<NotificationJobData>(
+export const notificationWorker = new Worker<NotificationQueueJobData>(
   'notifications',
-  async (job: Job<NotificationJobData>) => {
+  async (job: Job<NotificationQueueJobData>) => {
     if (job.name === 'check-deadlines') {
       await processDeadlineCheck()
       return
@@ -39,7 +46,19 @@ export const notificationWorker = new Worker<NotificationJobData>(
       await processDigestJob(job.name)
       return
     }
-    await processNotificationJob(job)
+    if (job.name === 'intelligence-alert') {
+      await processIntelligenceAlertJob(job.data as IntelligenceAlertPayload)
+      return
+    }
+    if (
+      job.name === 'process-intelligence-digests-daily' ||
+      job.name === 'process-intelligence-digests-weekly' ||
+      job.name === 'process-intelligence-digests-monthly'
+    ) {
+      await processIntelligenceDigestJob(job.name)
+      return
+    }
+    await processNotificationJob(job as Job<NotificationJobData>)
   },
   {
     connection: queueConnection,

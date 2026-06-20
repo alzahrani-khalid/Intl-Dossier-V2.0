@@ -10,11 +10,25 @@
  * - Supports multiple entity types (dossiers, positions, persons)
  */
 
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { llmRouter, LLMRouterConfig } from '../llm-router.js'
-import { supabaseAdmin } from '../../config/supabase.js'
 import { defineAgent, createAgentTools } from '../mastra-config.js'
 import { SemanticSearchService } from '../../services/semantic-search.service.js'
 import logger from '../../utils/logger.js'
+
+// P72 D-10 (folded P68 REMED-03 follow-up): build a per-request Supabase client
+// scoped to the caller's JWT so RLS (sensitivity_level <= clearance_level)
+// applies. Entity linking is user-triggered (POST
+// /api/ai/intake/:ticketId/propose-links, authenticated) and runs entirely
+// inside that request — including the ai_entity_link_proposals write, which the
+// call-graph confirms has NO queue/worker/cron caller. So every read AND write
+// here runs under the caller's identity; the service-role admin client is
+// retired (no background carve-out exists in this agent).
+function createUserClient(authHeader: string): SupabaseClient {
+  return createClient(process.env.SUPABASE_URL ?? '', process.env.SUPABASE_ANON_KEY ?? '', {
+    global: { headers: { Authorization: authHeader } },
+  })
+}
 
 // Lazy initialization to ensure env vars are loaded
 let semanticSearchService: SemanticSearchService | null = null
@@ -38,6 +52,9 @@ export interface IntakeLinkingRequest {
   organizationId: string
   userId: string
   language?: 'en' | 'ar'
+  // P72 D-10: the caller's 'Bearer <token>' — threads the JWT into the
+  // RLS-scoped Supabase client for every read/write in the linking pass.
+  authHeader: string
 }
 
 export interface IntakeLinkingResponse {
@@ -117,19 +134,19 @@ export class IntakeLinkerAgent {
   }
 
   async proposeLinks(request: IntakeLinkingRequest): Promise<IntakeLinkingResponse> {
-    const { intakeTicketId, organizationId, userId, language = 'en' } = request
+    const { intakeTicketId, organizationId, userId, language = 'en', authHeader } = request
 
     // Fetch intake ticket details
-    const ticket = await this.getIntakeTicket(intakeTicketId, organizationId)
+    const ticket = await this.getIntakeTicket(intakeTicketId, organizationId, authHeader)
     if (!ticket) {
       throw new Error('Intake ticket not found')
     }
 
     // Search for similar entities
-    const searchResults = await this.searchSimilarEntities(ticket, organizationId)
+    const searchResults = await this.searchSimilarEntities(ticket, organizationId, authHeader)
 
     // Create AI run record
-    const runId = await this.createRunRecord(organizationId, userId, intakeTicketId)
+    const runId = await this.createRunRecord(organizationId, userId, intakeTicketId, authHeader)
 
     // Build context for LLM
     const context = this.buildContext(ticket, searchResults, language)
@@ -161,10 +178,10 @@ export class IntakeLinkerAgent {
       const parsed = this.parseResponse(response.content, searchResults)
 
       // Save proposals to database
-      await this.saveProposals(intakeTicketId, organizationId, runId, parsed.proposals)
+      await this.saveProposals(intakeTicketId, organizationId, runId, parsed.proposals, authHeader)
 
       // Update run status
-      await this.updateRunStatus(runId, 'completed')
+      await this.updateRunStatus(runId, 'completed', authHeader)
 
       return {
         proposals: parsed.proposals,
@@ -175,6 +192,7 @@ export class IntakeLinkerAgent {
       await this.updateRunStatus(
         runId,
         'failed',
+        authHeader,
         error instanceof Error ? error.message : 'Unknown error',
       )
       logger.error('Intake linking failed', { error, request })
@@ -185,13 +203,16 @@ export class IntakeLinkerAgent {
   private async getIntakeTicket(
     ticketId: string,
     organizationId: string,
+    authHeader: string,
   ): Promise<{
     id: string
     subject: string
     description: string
     metadata: Record<string, unknown>
   } | null> {
-    const { data, error } = await supabaseAdmin
+    // P72 D-10: read under the caller's JWT so RLS applies (user-triggered).
+    const supabaseClient = createUserClient(authHeader)
+    const { data, error } = await supabaseClient
       .from('intake_tickets')
       .select('id, subject, description, metadata')
       .eq('id', ticketId)
@@ -209,6 +230,7 @@ export class IntakeLinkerAgent {
   private async searchSimilarEntities(
     ticket: { subject: string; description: string },
     _organizationId: string,
+    authHeader: string,
   ): Promise<
     Array<{ id: string; type: string; name: string; relevance: number; snippet: string }>
   > {
@@ -220,6 +242,9 @@ export class IntakeLinkerAgent {
       relevance: number
       snippet: string
     }> = []
+
+    // P72 D-10: read under the caller's JWT so RLS applies (user-triggered).
+    const supabaseClient = createUserClient(authHeader)
 
     try {
       // Search using semantic search service
@@ -240,7 +265,7 @@ export class IntakeLinkerAgent {
       }
 
       // Also search dossiers directly
-      const { data: dossiers } = await supabaseAdmin
+      const { data: dossiers } = await supabaseClient
         .from('dossiers')
         .select('id, name_en, name_ar, overview_en, overview_ar, dossier_type')
         .or(
@@ -261,7 +286,7 @@ export class IntakeLinkerAgent {
       }
 
       // Search persons
-      const { data: persons } = await supabaseAdmin
+      const { data: persons } = await supabaseClient
         .from('persons')
         .select('id, name_en, name_ar, title_en, title_ar')
         .or(
@@ -388,8 +413,11 @@ ${language === 'ar' ? 'Respond in Arabic.' : ''}`)
     organizationId: string,
     userId: string,
     intakeTicketId: string,
+    authHeader: string,
   ): Promise<string> {
-    const { data, error } = await supabaseAdmin
+    // P72 D-10: write under the caller's JWT so RLS applies (user-triggered).
+    const supabaseClient = createUserClient(authHeader)
+    const { data, error } = await supabaseClient
       .from('ai_runs')
       .insert({
         organization_id: organizationId,
@@ -415,11 +443,14 @@ ${language === 'ar' ? 'Respond in Arabic.' : ''}`)
   private async updateRunStatus(
     runId: string,
     status: 'completed' | 'failed',
+    authHeader: string,
     errorMessage?: string,
   ): Promise<void> {
     if (!runId) return
 
-    await supabaseAdmin
+    // P72 D-10: write under the caller's JWT so RLS applies (user-triggered).
+    const supabaseClient = createUserClient(authHeader)
+    await supabaseClient
       .from('ai_runs')
       .update({
         status,
@@ -434,6 +465,7 @@ ${language === 'ar' ? 'Respond in Arabic.' : ''}`)
     organizationId: string,
     runId: string,
     proposals: LinkProposal[],
+    authHeader: string,
   ): Promise<void> {
     if (proposals.length === 0) return
 
@@ -449,7 +481,12 @@ ${language === 'ar' ? 'Respond in Arabic.' : ''}`)
       expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days
     }))
 
-    const { error } = await supabaseAdmin.from('ai_entity_link_proposals').insert(records)
+    // P72 D-10: this proposals INSERT runs synchronously inside the
+    // authenticated proposeLinks request (the call-graph confirms NO queue/cron
+    // caller) — so it is user-triggered, NOT a service-role carve-out. Write
+    // under the caller's JWT so RLS applies.
+    const supabaseClient = createUserClient(authHeader)
+    const { error } = await supabaseClient.from('ai_entity_link_proposals').insert(records)
 
     if (error) {
       logger.error('Failed to save proposals', { error })

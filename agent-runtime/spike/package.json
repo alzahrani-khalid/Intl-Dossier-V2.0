@@ -1,0 +1,28 @@
+{
+  "name": "agent-runtime-spike",
+  "private": true,
+  "type": "module",
+  "description": "THROWAWAY Option-C de-risk spike (Plan 72-01). NOT production. Deleted/ignored before merge. Standalone — intentionally NOT in pnpm-workspace.yaml so its node_modules stays isolated.",
+  "scripts": {
+    "gate1:server": "tsx server.ts",
+    "gate1:drive": "tsx drive-jwt.ts",
+    "gate3:airgap": "tsx airgap-check.ts",
+    "gate2:dom": "tsx render-evidence.tsx",
+    "client": "vite"
+  },
+  "dependencies": {
+    "@ag-ui/mastra": "1.0.3",
+    "@ai-sdk/openai": "3.0.73",
+    "@mastra/core": "1.43.0",
+    "ai": "6.0.208",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.3.4",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "tsx": "4.19.2",
+    "typescript": "5.9.2",
+    "vite": "6.0.7"
+  }
+}

@@ -133,8 +133,11 @@ router.post(
     const { engagement_id, dossier_id, custom_prompt, language = 'en' } = req.body
     const userId = req.user?.id
     const organizationId = req.user?.organization_id
+    // P72 D-10: forward the caller's Authorization header so the brief-generator
+    // agent writes its records under the user's JWT (RLS-scoped), not service-role.
+    const authHeader = req.headers.authorization
 
-    if (!userId || !organizationId) {
+    if (!userId || !organizationId || !authHeader) {
       return res.status(401).json({ error: 'Unauthorized' })
     }
 
@@ -173,6 +176,7 @@ router.post(
           userId,
           customPrompt: custom_prompt,
           language,
+          authHeader,
         })) {
           if (chunk.briefId) {
             briefId = chunk.briefId
@@ -213,6 +217,7 @@ router.post(
             userId,
             customPrompt: custom_prompt,
             language,
+            authHeader,
           }),
           timeoutPromise,
         ])

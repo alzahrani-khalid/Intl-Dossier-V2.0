@@ -1,3 +1,4 @@
+import { Suspense, lazy } from 'react'
 import { createFileRoute, Outlet, redirect, useNavigate } from '@tanstack/react-router'
 import { AppShell } from '@/components/layout/AppShell'
 import { useAuthStore, supabase } from '../store/authStore'
@@ -8,6 +9,13 @@ import { OnboardingTourTrigger } from '@/components/guided-tours'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { DossierDrawer } from '@/components/dossier/DossierDrawer'
 import { CommitmentDrawer } from '@/components/commitments/CommitmentDrawer'
+
+// Phase 72 (AGENT-01): the reads-only copilot drawer is DYNAMIC-IMPORTED so the
+// assistant-ui + markdown weight stays out of the entry chunk (bundle ceiling,
+// threat T-72-SC). It self-gates on the useCopilotDrawer open-state store and owns
+// its own AG-UI runtime provider (mounted only while open), so no provider wrapper is
+// needed at this mount — opening from the Topbar FAB / Cmd+K flips the store.
+const CopilotDrawer = lazy(() => import('@/components/copilot/CopilotDrawer'))
 // Phase 41 (D-02 / 41-RESEARCH §7 Path A): validateSearch whitelists drawer params on
 // the protected layout route so any deep-link to a child route can open the dossier
 // quick-look drawer via ?dossier=<id>&dossierType=<type>.
@@ -99,6 +107,11 @@ function ProtectedLayout(): React.ReactElement {
       </ErrorBoundary>
       <ErrorBoundary>
         <CommitmentDrawer />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <Suspense fallback={null}>
+          <CopilotDrawer />
+        </Suspense>
       </ErrorBoundary>
       <OnboardingTourTrigger
         autoStartDelay={1000}

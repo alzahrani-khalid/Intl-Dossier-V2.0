@@ -2,7 +2,10 @@ import { createClient } from '@supabase/supabase-js'
 import type { Job } from 'bullmq'
 import type { NotificationJobData } from './notification.queue'
 import { logInfo, logError } from '../utils/logger'
-import { renderAlertEmailTemplate, mapNotificationTypeToTemplate } from '../services/email-template.service'
+import {
+  renderAlertEmailTemplate,
+  mapNotificationTypeToTemplate,
+} from '../services/email-template.service'
 import { sendPushNotification, getUserPushSubscriptions } from '../services/push.service'
 
 const supabase = createClient(
@@ -18,8 +21,18 @@ const supabase = createClient(
  * 3. Throws on RPC error to trigger BullMQ retry with exponential backoff
  */
 export async function processNotificationJob(job: Job<NotificationJobData>): Promise<void> {
-  const { userId, category, type, title, message, priority, actionUrl, sourceType, sourceId, data } =
-    job.data
+  const {
+    userId,
+    category,
+    type,
+    title,
+    message,
+    priority,
+    actionUrl,
+    sourceType,
+    sourceId,
+    data,
+  } = job.data
 
   // Check user preference for this category
   const { data: preference, error: prefError } = await supabase
@@ -31,12 +44,17 @@ export async function processNotificationJob(job: Job<NotificationJobData>): Pro
 
   if (prefError !== null && prefError.code !== 'PGRST116') {
     // PGRST116 = no rows returned (no preference set, default to enabled)
-    logError(`Failed to check notification preferences for user ${userId}`, prefError as unknown as Error)
+    logError(
+      `Failed to check notification preferences for user ${userId}`,
+      prefError as unknown as Error,
+    )
   }
 
   // Skip if user explicitly disabled in-app for this category
   if (preference !== null && preference.in_app_enabled === false) {
-    logInfo(`Notification skipped: user ${userId} has in_app_enabled=false for category ${category}`)
+    logInfo(
+      `Notification skipped: user ${userId} has in_app_enabled=false for category ${category}`,
+    )
     return
   }
 
@@ -61,65 +79,76 @@ export async function processNotificationJob(job: Job<NotificationJobData>): Pro
 
   logInfo(`Notification created for user ${userId}: ${title} [job=${job.id}]`)
 
+  // Intelligence in_app notifications are isolated from the v4.0 email_queue
+  // path (D-08): they create a notifications row only. Email/webhook delivery
+  // for intelligence is handled by the intelligence channel adapters, not here.
+  const isIntelligenceNotification = type === 'intelligence_alert' || type === 'intelligence_digest'
+
   // --- Email channel dispatch ---
   // Fire-and-forget: email failure must not block in-app notification
-  try {
-    // Check if user has email_enabled for this category
-    const { data: emailPref, error: emailPrefError } = await supabase
-      .from('notification_category_preferences')
-      .select('email_enabled')
-      .eq('user_id', userId)
-      .eq('category', category)
-      .single()
-
-    if (emailPrefError !== null && emailPrefError.code !== 'PGRST116') {
-      logError(
-        `Failed to check email preferences for user ${userId}`,
-        emailPrefError as unknown as Error,
-      )
-    }
-
-    // Default to enabled if no preference row exists
-    if (emailPref !== null && emailPref.email_enabled === false) {
-      logInfo(`Email skipped: user ${userId} has email_enabled=false for category ${category}`)
-      return
-    }
-
-    const { email: userEmail, language } = await getUserEmailAndLanguage(userId)
-
-    const { subject, bodyHtml, bodyText } = renderAlertEmailTemplate(language, {
-      title,
-      message,
-      actionUrl: actionUrl ?? '',
-    })
-
-    const emailPriority = priority === 'urgent' ? 1 : priority === 'high' ? 2 : 3
-
-    const { error: insertError } = await supabase.from('email_queue').insert({
-      to_email: userEmail,
-      subject,
-      body_html: bodyHtml,
-      body_text: bodyText,
-      template_type: mapNotificationTypeToTemplate(type),
-      template_data: { title, message, actionUrl: actionUrl ?? '' },
-      language,
-      user_id: userId,
-      priority: emailPriority,
-    })
-
-    if (insertError !== null) {
-      logError(
-        `Failed to insert email_queue for user ${userId} [job=${job.id}]`,
-        insertError as unknown as Error,
-      )
-    } else {
-      logInfo(`Email queued for user ${userId}: ${title} [job=${job.id}]`)
-    }
-  } catch (emailError) {
-    logError(
-      `Email dispatch failed for user ${userId} [job=${job.id}]`,
-      emailError instanceof Error ? emailError : new Error(String(emailError)),
+  if (isIntelligenceNotification) {
+    logInfo(
+      `Email_queue dispatch skipped for intelligence notification (D-08 isolation): user ${userId} [job=${job.id}]`,
     )
+  } else {
+    try {
+      // Check if user has email_enabled for this category
+      const { data: emailPref, error: emailPrefError } = await supabase
+        .from('notification_category_preferences')
+        .select('email_enabled')
+        .eq('user_id', userId)
+        .eq('category', category)
+        .single()
+
+      if (emailPrefError !== null && emailPrefError.code !== 'PGRST116') {
+        logError(
+          `Failed to check email preferences for user ${userId}`,
+          emailPrefError as unknown as Error,
+        )
+      }
+
+      // Default to enabled if no preference row exists
+      if (emailPref !== null && emailPref.email_enabled === false) {
+        logInfo(`Email skipped: user ${userId} has email_enabled=false for category ${category}`)
+        return
+      }
+
+      const { email: userEmail, language } = await getUserEmailAndLanguage(userId)
+
+      const { subject, bodyHtml, bodyText } = renderAlertEmailTemplate(language, {
+        title,
+        message,
+        actionUrl: actionUrl ?? '',
+      })
+
+      const emailPriority = priority === 'urgent' ? 1 : priority === 'high' ? 2 : 3
+
+      const { error: insertError } = await supabase.from('email_queue').insert({
+        to_email: userEmail,
+        subject,
+        body_html: bodyHtml,
+        body_text: bodyText,
+        template_type: mapNotificationTypeToTemplate(type),
+        template_data: { title, message, actionUrl: actionUrl ?? '' },
+        language,
+        user_id: userId,
+        priority: emailPriority,
+      })
+
+      if (insertError !== null) {
+        logError(
+          `Failed to insert email_queue for user ${userId} [job=${job.id}]`,
+          insertError as unknown as Error,
+        )
+      } else {
+        logInfo(`Email queued for user ${userId}: ${title} [job=${job.id}]`)
+      }
+    } catch (emailError) {
+      logError(
+        `Email dispatch failed for user ${userId} [job=${job.id}]`,
+        emailError instanceof Error ? emailError : new Error(String(emailError)),
+      )
+    }
   }
 
   // --- Push notification channel dispatch ---
@@ -162,7 +191,7 @@ export async function processNotificationJob(job: Job<NotificationJobData>): Pro
         title,
         body: message,
         url: actionUrl ?? '/',
-        dir: userLanguage === 'ar' ? 'rtl' as const : 'ltr' as const,
+        dir: userLanguage === 'ar' ? ('rtl' as const) : ('ltr' as const),
         lang: userLanguage,
       }
 
@@ -175,7 +204,9 @@ export async function processNotificationJob(job: Job<NotificationJobData>): Pro
         ),
       )
 
-      logInfo(`Push notifications sent to ${subscriptions.length} subscription(s) for user ${userId} [job=${job.id}]`)
+      logInfo(
+        `Push notifications sent to ${subscriptions.length} subscription(s) for user ${userId} [job=${job.id}]`,
+      )
     }
   } catch (pushError) {
     logError(
@@ -206,8 +237,7 @@ async function getUserEmailAndLanguage(
     .eq('user_id', userId)
     .single()
 
-  const language: 'ar' | 'en' =
-    prefData?.language === 'ar' ? 'ar' : 'en'
+  const language: 'ar' | 'en' = prefData?.language === 'ar' ? 'ar' : 'en'
 
   return { email: userData.user.email, language }
 }

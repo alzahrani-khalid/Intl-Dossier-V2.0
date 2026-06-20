@@ -10,11 +10,22 @@
  * - Supports streaming responses
  */
 
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { llmRouter, LLMRouterConfig, StreamChunk } from '../llm-router.js'
-import { supabaseAdmin } from '../../config/supabase.js'
 import { defineAgent, createAgentTools, AgentTool } from '../mastra-config.js'
 import { SemanticSearchService } from '../../services/semantic-search.service.js'
 import logger from '../../utils/logger.js'
+
+// P68 REMED-03 (D-08): build a per-request Supabase client scoped to the caller's
+// JWT so RLS (sensitivity_level <= clearance_level) applies. The service-role
+// admin client is retired from the interactive assistant — it bypassed RLS and
+// leaked above-clearance content. ANON_KEY + the caller's Bearer token runs every
+// read under the user's role.
+function createUserClient(authHeader: string): SupabaseClient {
+  return createClient(process.env.SUPABASE_URL ?? '', process.env.SUPABASE_ANON_KEY ?? '', {
+    global: { headers: { Authorization: authHeader } },
+  })
+}
 
 // Lazy initialization to ensure env vars are loaded
 let semanticSearchService: SemanticSearchService | null = null
@@ -39,6 +50,9 @@ export interface ChatRequest {
   organizationId: string
   userId: string
   language?: 'en' | 'ar'
+  // P68 REMED-03: caller's 'Bearer <token>' — threads the JWT into every tool's
+  // RLS-scoped Supabase client.
+  authHeader: string
 }
 
 export interface ChatResponse {
@@ -98,7 +112,7 @@ const ARABIC_CHAT_SYSTEM_PROMPT = `أنت مساعد ذكي لنظام إدار�
 // Tool implementations
 async function searchEntities(
   input: { query: string; entityTypes?: string[]; limit?: number },
-  _organizationId: string,
+  authHeader: string,
 ): Promise<{ results: Array<{ id: string; type: string; title: string; snippet: string }> }> {
   try {
     const results: Array<{ id: string; type: string; title: string; snippet: string }> = []
@@ -128,6 +142,7 @@ async function searchEntities(
     // Also search dossiers directly via text matching (semantic search doesn't support dossiers)
     const shouldSearchDossiers = !input.entityTypes || input.entityTypes.includes('dossier')
     if (shouldSearchDossiers) {
+      const supabaseClient = createUserClient(authHeader)
       // Extract meaningful search terms (remove common words)
       const stopWords = [
         'dossiers',
@@ -155,7 +170,7 @@ async function searchEntities(
       })
 
       // Use textSearch on search_vector column for better results
-      const { data: dossierResults, error: dossierError } = await supabaseAdmin
+      const { data: dossierResults, error: dossierError } = await supabaseClient
         .from('dossiers')
         .select('id, name_en, name_ar, type, description_en, description_ar')
         .eq('is_active', true)
@@ -168,7 +183,7 @@ async function searchEntities(
           searchTerm,
         })
         // Fallback to ilike if textSearch fails
-        const { data: fallbackResults, error: fallbackError } = await supabaseAdmin
+        const { data: fallbackResults, error: fallbackError } = await supabaseClient
           .from('dossiers')
           .select('id, name_en, name_ar, type, description_en, description_ar')
           .eq('is_active', true)
@@ -199,7 +214,7 @@ async function searchEntities(
       } else {
         logger.info('No dossier results from textSearch, trying ilike', { searchTerm })
         // Try ilike as last resort
-        const { data: ilikeResults } = await supabaseAdmin
+        const { data: ilikeResults } = await supabaseClient
           .from('dossiers')
           .select('id, name_en, name_ar, type, description_en, description_ar')
           .eq('is_active', true)
@@ -229,10 +244,11 @@ async function searchEntities(
 
 async function getDossier(
   input: { dossierId: string },
-  _organizationId: string,
+  authHeader: string,
 ): Promise<{ dossier: Record<string, unknown> | null }> {
   try {
-    const { data, error } = await supabaseAdmin
+    const supabaseClient = createUserClient(authHeader)
+    const { data, error } = await supabaseClient
       .from('dossiers')
       .select(
         `
@@ -263,15 +279,18 @@ async function queryCommitments(
     status?: string
     limit?: number
   },
-  _organizationId: string,
+  authHeader: string,
 ): Promise<{ commitments: Array<Record<string, unknown>> }> {
   try {
-    let query = supabaseAdmin
-      .from('commitments')
+    // P68 D-10: legacy `commitments` is empty; read the canonical aa_commitments.
+    // Columns per A2 (68-01-SUMMARY) — aa_commitments has no `type` column.
+    const supabaseClient = createUserClient(authHeader)
+    let query = supabaseClient
+      .from('aa_commitments')
       .select(
         `
-        id, title, type, status, priority,
-        source, responsible, timeline, tracking,
+        id, title, title_ar, status, priority,
+        due_date, owner_user_id, is_deleted,
         created_at, updated_at
       `,
       )
@@ -301,15 +320,18 @@ async function getEngagementHistory(
   input: {
     limit?: number
   },
-  _organizationId: string,
+  authHeader: string,
 ): Promise<{ engagements: Array<Record<string, unknown>> }> {
   try {
-    const { data, error } = await supabaseAdmin
-      .from('engagements')
+    // P68 D-10: legacy `engagements` repointed to canonical engagement_dossiers.
+    // Columns per A3 (68-01-SUMMARY) — uses start_date/end_date (no engagement_date).
+    const supabaseClient = createUserClient(authHeader)
+    const { data, error } = await supabaseClient
+      .from('engagement_dossiers')
       .select(
         `
         id, engagement_type, engagement_category,
-        location_en, location_ar
+        location_en, location_ar, start_date, end_date
       `,
       )
       .limit(input.limit || 10)
@@ -332,10 +354,11 @@ async function listDossiers(
     type?: string
     limit?: number
   },
-  _organizationId: string,
+  authHeader: string,
 ): Promise<{ dossiers: Array<Record<string, unknown>> }> {
   try {
-    let query = supabaseAdmin
+    const supabaseClient = createUserClient(authHeader)
+    let query = supabaseClient
       .from('dossiers')
       .select('id, name_en, name_ar, type, status, description_en, description_ar')
       .eq('is_active', true)
@@ -437,7 +460,14 @@ export class ChatAssistantAgent {
   }
 
   async chat(request: ChatRequest): Promise<ChatResponse> {
-    const { message, conversationHistory = [], organizationId, userId, language = 'en' } = request
+    const {
+      message,
+      conversationHistory = [],
+      organizationId,
+      userId,
+      language = 'en',
+      authHeader,
+    } = request
 
     const systemPrompt = language === 'ar' ? ARABIC_CHAT_SYSTEM_PROMPT : CHAT_SYSTEM_PROMPT
 
@@ -472,7 +502,7 @@ export class ChatAssistantAgent {
         const toolResult = await this.executeTool(
           toolDecision.toolName!,
           toolDecision.toolInput!,
-          organizationId,
+          authHeader,
         )
 
         toolCalls.push({
@@ -517,7 +547,14 @@ export class ChatAssistantAgent {
   ): AsyncGenerator<
     StreamChunk & { toolCall?: { name: string; input: Record<string, unknown>; result?: unknown } }
   > {
-    const { message, conversationHistory = [], organizationId, userId, language = 'en' } = request
+    const {
+      message,
+      conversationHistory = [],
+      organizationId,
+      userId,
+      language = 'en',
+      authHeader,
+    } = request
 
     const systemPrompt = language === 'ar' ? ARABIC_CHAT_SYSTEM_PROMPT : CHAT_SYSTEM_PROMPT
 
@@ -556,7 +593,7 @@ export class ChatAssistantAgent {
         const toolResult = await this.executeTool(
           toolDecision.toolName!,
           toolDecision.toolInput!,
-          organizationId,
+          authHeader,
         )
 
         // Signal tool result
@@ -738,22 +775,22 @@ export class ChatAssistantAgent {
   private async executeTool(
     toolName: string,
     input: Record<string, unknown>,
-    organizationId: string,
+    authHeader: string,
   ): Promise<unknown> {
     switch (toolName) {
       case 'search_entities':
         return searchEntities(
           input as { query: string; entityTypes?: string[]; limit?: number },
-          organizationId,
+          authHeader,
         )
       case 'list_dossiers':
-        return listDossiers(input as { type?: string; limit?: number }, organizationId)
+        return listDossiers(input as { type?: string; limit?: number }, authHeader)
       case 'get_dossier':
-        return getDossier(input as { dossierId: string }, organizationId)
+        return getDossier(input as { dossierId: string }, authHeader)
       case 'query_commitments':
-        return queryCommitments(input as { status?: string; limit?: number }, organizationId)
+        return queryCommitments(input as { status?: string; limit?: number }, authHeader)
       case 'get_engagement_history':
-        return getEngagementHistory(input as { limit?: number }, organizationId)
+        return getEngagementHistory(input as { limit?: number }, authHeader)
       default:
         throw new Error(`Unknown tool: ${toolName}`)
     }

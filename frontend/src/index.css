@@ -489,6 +489,19 @@ html[dir='rtl'] .cls-chip {
   font-family: 'Tajawal', system-ui, sans-serif !important;
 }
 
+/* Force Tajawal on .btn-* variants in RTL — .dir-bureau/.dir-situation .btn-primary  */
+/* set font-family: var(--font-body)/var(--font-mono) (Latin, no Arabic glyphs) and    */
+/* win on (0,2,0) specificity over the universal html[dir='rtl'] * rule. Outline/ghost */
+/* buttons set no font-family so they already inherit Tajawal correctly.               */
+html[dir='rtl'] .btn,
+html[dir='rtl'] .btn-primary,
+html[dir='rtl'] .btn-secondary,
+html[dir='rtl'] .btn-accent,
+html[dir='rtl'] .btn-danger,
+html[dir='rtl'] .btn-ghost {
+  font-family: 'Tajawal', system-ui, sans-serif !important;
+}
+
 /* The Arabic-ع button in the locale switcher should also use Tajawal */
 html[dir='rtl'] .tb-locale-btn,
 .tb-locale-btn[data-lang='ar'] {

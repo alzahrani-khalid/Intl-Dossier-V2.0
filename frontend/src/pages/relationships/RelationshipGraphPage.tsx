@@ -24,8 +24,18 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { GraphVisualization } from '@/components/relationships/GraphVisualization'
 import { EnhancedGraphVisualization } from '@/components/relationships/EnhancedGraphVisualization'
-import { AdvancedGraphVisualization } from '@/components/relationships/AdvancedGraphVisualization'
+import {
+  AdvancedGraphVisualization,
+  type NodeData as GraphNodeData,
+  type EdgeData as GraphEdgeData,
+} from '@/components/relationships/AdvancedGraphVisualization'
 import { RelationshipNavigator } from '@/components/relationships/RelationshipNavigator'
+import { AnalyticQueryPicker } from '@/components/relationships/AnalyticQueryPicker'
+import {
+  AnalyticResultView,
+  type AnalyticResult,
+} from '@/components/relationships/AnalyticResultView'
+import { useAnalyticGraph, type AnalyticQueryType } from '@/hooks/useAnalyticGraph'
 import { Network, List, AlertCircle, Settings, Sparkles, Layers, Rocket } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import type { DossierRelationshipType } from '@/types/relationship.types'
@@ -132,12 +142,22 @@ async function fetchGraphData(
 export function RelationshipGraphPage() {
   const { t } = useTranslation('graph')
   const navigate = useNavigate()
-  const { dossierId: startDossierId } = routeApi.useSearch()
+  const {
+    dossierId: startDossierId,
+    mode,
+    query: analyticQuery,
+    entity2,
+    windowDays,
+  } = routeApi.useSearch()
+
+  const isAnalyze = mode === 'analyze'
 
   // State
   const [maxDegrees, setMaxDegrees] = useState(2)
   const [relationshipType, setRelationshipType] = useState<RelationshipTypeFilter>('all')
   const [activeTab, setActiveTab] = useState<'graph' | 'list'>('graph')
+  // The Analyze result defaults to the structured (List) view per D-03.
+  const [analyticTab, setAnalyticTab] = useState<'graph' | 'list'>('list')
   const [graphMode, setGraphMode] = useState<'basic' | 'enhanced' | 'advanced'>('advanced') // Default to advanced for new features
 
   // Fetch graph data
@@ -180,8 +200,11 @@ export function RelationshipGraphPage() {
     // Navigate to the type-aware dossier detail route (R17-02). The old target
     // '/dossiers/$id' is not a mounted route — only '/dossiers/<segment>/$id'
     // exists per type — so a node click 404'd/dead-ended. Resolve the clicked
-    // node's type and build the correct path via getDossierDetailPath.
-    const node = deduplicatedNodes.find((n) => n.id === nodeId)
+    // node's type and build the correct path via getDossierDetailPath. Analytic
+    // results are not in the degrees-traversal set, so fall back to them.
+    const node =
+      deduplicatedNodes.find((n) => n.id === nodeId) ??
+      analyticGraphNodes.find((n) => n.id === nodeId)
     const path = getDossierDetailPath(nodeId, node?.type)
     navigate({ to: path as '/dossiers' })
   }
@@ -190,7 +213,83 @@ export function RelationshipGraphPage() {
     refetch()
   }
 
-  if (!startDossierId) {
+  // ── Analyze mode (GRAPH-01 / D-04) ──────────────────────────────────────────
+  // URL-as-state: the active query + its params live in the route search so the
+  // experience is deep-linkable (the Cmd+K "Analyze:" entries navigate here).
+  const {
+    data: analyticData,
+    isLoading: analyticLoading,
+    isError: analyticError,
+  } = useAnalyticGraph({
+    queryType: (analyticQuery as AnalyticQueryType) ?? 'forum_membership',
+    entityId: isAnalyze ? startDossierId : undefined,
+    entityId2: entity2,
+    windowDays,
+  })
+
+  const handleRunAnalysis = ({
+    queryType,
+    entityId,
+    entityId2,
+    windowDays: nextWindowDays,
+  }: {
+    queryType: AnalyticQueryType
+    entityId: string
+    entityId2?: string
+    windowDays?: number
+  }): void => {
+    navigate({
+      to: '/relationships/graph',
+      search: {
+        dossierId: entityId,
+        mode: 'analyze',
+        query: queryType,
+        entity2: entityId2,
+        windowDays: nextWindowDays,
+      },
+    })
+  }
+
+  // Compose the structured result for the view: the edge fn returns
+  // {nodes, edges, stats}; the active query type + path fields key the render.
+  const analyticResult: AnalyticResult | undefined =
+    analyticData != null
+      ? {
+          query_type: (analyticQuery as AnalyticQueryType) ?? 'forum_membership',
+          nodes: analyticData.nodes,
+          edges: analyticData.edges,
+          path: analyticData.path,
+          relationship_path: analyticData.relationship_path,
+          path_length: analyticData.path_length,
+        }
+      : undefined
+
+  // Map the analytic nodes/edges onto the shape AdvancedGraphVisualization expects
+  // (Graph view of the result — D-03). Reused for type-aware node navigation too.
+  const analyticGraphNodes: GraphNodeData[] = useMemo(
+    () =>
+      (analyticData?.nodes ?? []).map((node) => ({
+        id: node.id,
+        type: node.type ?? 'dossier',
+        name_en: node.name_en ?? node.id,
+        name_ar: node.name_ar ?? node.name_en ?? node.id,
+        status: node.status ?? 'active',
+        degree: 0,
+      })),
+    [analyticData],
+  )
+
+  const analyticGraphEdges: GraphEdgeData[] = useMemo(
+    () =>
+      (analyticData?.edges ?? []).map((edge) => ({
+        source_id: edge.source_id,
+        target_id: edge.target_id,
+        relationship_type: edge.relationship_type ?? 'related_to',
+      })),
+    [analyticData],
+  )
+
+  if (!startDossierId && !isAnalyze) {
     return (
       <div className="space-y-6">
         <Alert>
@@ -205,6 +304,114 @@ export function RelationshipGraphPage() {
         <Button variant="outline" asChild>
           <Link to="/dossiers">{t('browseDossiers', 'Browse dossiers')}</Link>
         </Button>
+      </div>
+    )
+  }
+
+  // ── Analyze mode render (D-04 surfacing: same panel, not a new route) ───────
+  if (isAnalyze) {
+    const hasAnalyticStats = analyticData != null
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          icon={<Sparkles className="h-6 w-6" />}
+          title={t('analyze.mode', 'Analyze')}
+          subtitle={t('description', 'Explore connections between entities')}
+        />
+
+        {/* Query picker — primary entity pre-filled from the dossier anchor (D-02) */}
+        <AnalyticQueryPicker defaultEntityId={startDossierId} onRun={handleRunAnalysis} />
+
+        {/* Stats strip — reuse the complexity badge + perf warning (RF-8) */}
+        {hasAnalyticStats && (
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Layers className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium">{t('complexity.label', 'Complexity')}:</span>
+                <Badge
+                  variant={
+                    analyticData.stats.node_count > 50
+                      ? 'destructive'
+                      : analyticData.stats.node_count > 20
+                        ? 'secondary'
+                        : 'outline'
+                  }
+                >
+                  {analyticData.stats.node_count > 50
+                    ? t('complexity.complex', 'Complex')
+                    : analyticData.stats.node_count > 20
+                      ? t('complexity.moderate', 'Moderate')
+                      : t('complexity.simple', 'Simple')}
+                </Badge>
+              </div>
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div>
+                  <div className="text-2xl font-bold">{analyticData.stats.node_count}</div>
+                  <div className="text-xs text-muted-foreground">{t('nodes', 'Entities')}</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold">{analyticData.stats.edge_count}</div>
+                  <div className="text-xs text-muted-foreground">{t('edges', 'Relationships')}</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold">{analyticData.stats.query_time_ms}ms</div>
+                  <div className="text-xs text-muted-foreground">
+                    {t('queryTime', 'Query time')}
+                  </div>
+                </div>
+              </div>
+              {analyticData.stats.performance_warning != null && (
+                <Alert variant="destructive" className="mt-4">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{analyticData.stats.performance_warning}</AlertDescription>
+                </Alert>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Result region — structured (List) is the default; Graph view is secondary */}
+        <Tabs value={analyticTab} onValueChange={(v) => setAnalyticTab(v as 'graph' | 'list')}>
+          <TabsList className="mb-4">
+            <TabsTrigger value="list" className="gap-2">
+              <List className="h-4 w-4" />
+              {t('analyze.listView', 'List view')}
+            </TabsTrigger>
+            <TabsTrigger value="graph" className="gap-2">
+              <Network className="h-4 w-4" />
+              {t('analyze.graphView', 'Graph view')}
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="list">
+            <AnalyticResultView
+              result={analyticResult}
+              isLoading={analyticLoading}
+              isError={analyticError}
+              onNodeSelect={handleNodeSelect}
+            />
+          </TabsContent>
+
+          <TabsContent value="graph">
+            {analyticGraphNodes.length > 0 ? (
+              <AdvancedGraphVisualization
+                nodes={analyticGraphNodes}
+                edges={analyticGraphEdges}
+                onNodeClick={handleNodeSelect}
+                height="calc(100vh - 500px)"
+                showMiniMap
+                centerNodeId={startDossierId}
+              />
+            ) : (
+              <AnalyticResultView
+                result={analyticResult}
+                isLoading={analyticLoading}
+                isError={analyticError}
+              />
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     )
   }

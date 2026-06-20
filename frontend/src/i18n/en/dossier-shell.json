@@ -9,6 +9,8 @@
     "positions": "Positions",
     "mous": "MOUs",
     "committees": "Committees",
+    "signals": "Signals",
+    "digests": "Digests",
     "ariaLabel": "Dossier navigation tabs"
   },
   "header": {

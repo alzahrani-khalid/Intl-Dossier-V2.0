@@ -23,6 +23,7 @@ export default defineConfig({
       'tests/unit/**/*.test.ts',
       'tests/services/**/*.test.ts',
       'tests/security/**/*.test.ts',
+      'tests/intelligence/**/*.test.ts',
       'tests/{deadline-checker,digest-scheduler,email-notifications,notification-queue,push-notifications}.test.ts',
     ],
     exclude: [
@@ -32,6 +33,11 @@ export default defineConfig({
       'tests/contracts/**',
       'tests/integration/**',
       'tests/performance/**',
+      // Real-service integration tests (need live SUPABASE_URL + SERVICE_ROLE_KEY) live
+      // alongside unit tests under tests/intelligence/ etc. — route them out of this
+      // required unit job by their *.integration.test.ts suffix. They run in the
+      // non-required "Tests (integration)" job (vitest.integration.config.ts).
+      'tests/**/*.integration.test.ts',
     ],
     testTimeout: 30000, // 30s for integration tests with database
     hookTimeout: 30000,

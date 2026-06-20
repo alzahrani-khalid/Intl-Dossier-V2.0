@@ -1,0 +1,67 @@
+{
+  "tab": {
+    "label": "Alerts"
+  },
+  "header": "Alerts",
+  "empty": {
+    "heading": "No alert rules",
+    "body": "Add an alert to be notified when a new signal appears on a dossier you track."
+  },
+  "action": {
+    "add": "Add alert",
+    "edit": "Edit alert rule",
+    "delete": "Delete alert rule",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "close": "Close",
+    "retry": "Retry"
+  },
+  "form": {
+    "dossier": "Dossier",
+    "condition": "New signal on this dossier",
+    "severityFilter": "Severity filter",
+    "severityHelper": "Only alert for signals at these severities. Leave unselected to alert on all signals.",
+    "channels": "Channels",
+    "active": "Alert active",
+    "channelDesc": {
+      "inApp": "In-app notification",
+      "smtp": "Delivered to your account email via on-prem SMTP.",
+      "webhook": "POST to configured endpoint. Deep-link only."
+    },
+    "dossierRequired": "Choose a dossier before saving."
+  },
+  "chip": {
+    "newSignal": "NEW SIGNAL",
+    "high": "HIGH",
+    "urgent": "URGENT"
+  },
+  "severity": {
+    "high": "High",
+    "urgent": "Urgent"
+  },
+  "channel": {
+    "in_app": "In-app",
+    "smtp": "Email",
+    "webhook": "Webhook"
+  },
+  "toggle": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "error": {
+    "load": "Couldn't load alert rules. Check your connection and retry.",
+    "save": "Couldn't save alert rule. Try again."
+  },
+  "confirm": {
+    "delete": {
+      "heading": "Delete this alert rule?",
+      "body": "You'll no longer be notified of matching signals on this dossier.",
+      "confirm": "Delete",
+      "cancel": "Keep alert"
+    }
+  },
+  "rule": {
+    "untitledDossier": "Tracked dossier",
+    "allSeverities": "All severities"
+  }
+}

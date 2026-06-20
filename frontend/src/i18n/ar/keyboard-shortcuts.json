@@ -53,7 +53,11 @@
     "exportDossiers": "تصدير الملفات",
     "intelligence": "الانتقال إلى الاستخبارات",
     "reports": "الانتقال إلى التقارير",
-    "slaMonitoring": "مراقبة اتفاقية مستوى الخدمة"
+    "slaMonitoring": "مراقبة اتفاقية مستوى الخدمة",
+    "analyzeForumMembership": "تحليل: من يشارك في أي منتدى",
+    "analyzeSharedCommittees": "تحليل: اللجان المشتركة",
+    "analyzeEngagementChains": "تحليل: سلاسل الارتباطات",
+    "analyzeShortestPath": "تحليل: كيف يرتبط هذان الكيانان"
   },
 
   "shortcuts": {

@@ -1,0 +1,10 @@
+# THROWAWAY spike — never commit its dependency tree or transient run artifacts.
+node_modules/
+pnpm-lock.yaml
+package-lock.json
+dist/
+.vite/
+*.log
+gate1-result.json
+gate3-result.json
+gate2-dom-result.json

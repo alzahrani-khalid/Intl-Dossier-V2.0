@@ -19,6 +19,10 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
 import { useDirection } from '@/hooks/useDirection'
+import { cn } from '@/lib/utils'
+import { SignalsQueue } from '@/components/signals/SignalsQueue'
+import { DigestsTab } from '@/components/intelligence/DigestsTab'
+import { AlertsTab } from '@/components/intelligence/AlertsTab'
 
 function ConfidenceIndicator({ level, t }: { level: string; t: (key: string) => string }) {
   const configs = {
@@ -144,6 +148,12 @@ type IntelligenceReportRow = {
 
 export function IntelligencePage() {
   const { t } = useTranslation()
+  const { t: tSignals } = useTranslation('intelligence-signals')
+  const { t: tDigests } = useTranslation('intelligence-digests')
+  const { t: tAlerts } = useTranslation('intelligence-alerts')
+  const [activeTab, setActiveTab] = useState<'reports' | 'signals' | 'digests' | 'alerts'>(
+    'reports',
+  )
   const [searchTerm, setSearchTerm] = useState('')
   const [filterConfidence, setFilterConfidence] = useState<string>('all')
   const [filterClassification, setFilterClassification] = useState<string>('all')
@@ -387,154 +397,219 @@ export function IntelligencePage() {
     <div className="container mx-auto py-6" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{t('navigation.intelligence')}</h1>
-        <Button>
-          <Plus className="h-4 w-4 me-2" />
-          {t('intelligence.createReport')}
-        </Button>
+        {activeTab === 'reports' && (
+          <Button>
+            <Plus className="h-4 w-4 me-2" />
+            {t('intelligence.createReport')}
+          </Button>
+        )}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mb-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('intelligence.totalReports')}</CardTitle>
-            <Brain className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{reports?.length || 0}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {t('intelligence.verifiedReports')}
-            </CardTitle>
-            <Shield className="h-4 w-4 text-success" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {reports?.filter((r) => r.confidence_level === 'verified').length || 0}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('intelligence.pendingReview')}</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-warning" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {reports?.filter((r) => r.status === 'review').length || 0}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('intelligence.published')}</CardTitle>
-            <Target className="h-4 w-4 text-accent" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {reports?.filter((r) => r.status === 'published').length || 0}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>{t('intelligence.search')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex gap-4">
-              <Input
-                placeholder={t('intelligence.searchPlaceholder')}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="max-w-sm"
-              />
-              <div className="flex-1 flex gap-2">
-                <Input
-                  placeholder={t('intelligence.similaritySearchPlaceholder')}
-                  value={similaritySearch}
-                  onChange={(e) => setSimilaritySearch(e.target.value)}
-                />
-                <Button
-                  onClick={() => similaritySearchMutation.mutate(similaritySearch)}
-                  disabled={!similaritySearch || similaritySearchMutation.isPending}
-                >
-                  <Search className="h-4 w-4 me-2" />
-                  {t('intelligence.vectorSearch')}
-                </Button>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <div className="flex gap-2">
-                <span className="text-sm text-muted-foreground mt-2">
-                  {t('intelligence.confidence')}:
-                </span>
-                <Button
-                  variant={filterConfidence === 'all' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setFilterConfidence('all')}
-                >
-                  {t('common.all')}
-                </Button>
-                {confidenceLevels.map((level) => (
-                  <Button
-                    key={level}
-                    variant={filterConfidence === level ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setFilterConfidence(level)}
-                  >
-                    {t(`intelligence.confidenceLevels.${level}`)}
-                  </Button>
-                ))}
-              </div>
-              <div className="flex gap-2">
-                <span className="text-sm text-muted-foreground mt-2">
-                  {t('intelligence.classification')}:
-                </span>
-                <Button
-                  variant={filterClassification === 'all' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setFilterClassification('all')}
-                >
-                  {t('common.all')}
-                </Button>
-                {classifications.map((cls) => (
-                  <Button
-                    key={cls}
-                    variant={filterClassification === cls ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setFilterClassification(cls)}
-                  >
-                    {t(`intelligence.classifications.${cls}`)}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent className="p-0">
-          {isLoading ? (
-            <div className="p-8 text-center">{t('common.loading')}</div>
-          ) : reports && reports.length > 0 ? (
-            <DataTable
-              data={reports}
-              columns={columns}
-              onRowClick={(_report) => {
-                /* TODO: Navigate to report detail */
-              }}
-            />
-          ) : (
-            <div className="p-8 text-center text-muted-foreground">{t('common.noData')}</div>
+      <nav role="tablist" className="tabs mb-4" dir={isRTL ? 'rtl' : 'ltr'}>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'reports'}
+          onClick={() => setActiveTab('reports')}
+          className={cn(
+            'tab outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
+            activeTab === 'reports' && 'active',
           )}
-        </CardContent>
-      </Card>
+        >
+          {t('intelligence.tabs.reports', { defaultValue: 'Reports' })}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'signals'}
+          onClick={() => setActiveTab('signals')}
+          className={cn(
+            'tab outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
+            activeTab === 'signals' && 'active',
+          )}
+        >
+          {tSignals('tab.label')}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'digests'}
+          onClick={() => setActiveTab('digests')}
+          className={cn(
+            'tab outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
+            activeTab === 'digests' && 'active',
+          )}
+        >
+          {tDigests('tab.label')}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'alerts'}
+          onClick={() => setActiveTab('alerts')}
+          className={cn(
+            'tab outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
+            activeTab === 'alerts' && 'active',
+          )}
+        >
+          {tAlerts('tab.label')}
+        </button>
+      </nav>
+
+      {activeTab === 'signals' && <SignalsQueue />}
+      {activeTab === 'digests' && <DigestsTab />}
+      {activeTab === 'alerts' && <AlertsTab />}
+
+      {activeTab === 'reports' && (
+        <>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mb-6">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {t('intelligence.totalReports')}
+                </CardTitle>
+                <Brain className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{reports?.length || 0}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {t('intelligence.verifiedReports')}
+                </CardTitle>
+                <Shield className="h-4 w-4 text-success" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {reports?.filter((r) => r.confidence_level === 'verified').length || 0}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {t('intelligence.pendingReview')}
+                </CardTitle>
+                <AlertTriangle className="h-4 w-4 text-warning" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {reports?.filter((r) => r.status === 'review').length || 0}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{t('intelligence.published')}</CardTitle>
+                <Target className="h-4 w-4 text-accent" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {reports?.filter((r) => r.status === 'published').length || 0}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>{t('intelligence.search')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex gap-4">
+                  <Input
+                    placeholder={t('intelligence.searchPlaceholder')}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="max-w-sm"
+                  />
+                  <div className="flex-1 flex gap-2">
+                    <Input
+                      placeholder={t('intelligence.similaritySearchPlaceholder')}
+                      value={similaritySearch}
+                      onChange={(e) => setSimilaritySearch(e.target.value)}
+                    />
+                    <Button
+                      onClick={() => similaritySearchMutation.mutate(similaritySearch)}
+                      disabled={!similaritySearch || similaritySearchMutation.isPending}
+                    >
+                      <Search className="h-4 w-4 me-2" />
+                      {t('intelligence.vectorSearch')}
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex gap-2">
+                    <span className="text-sm text-muted-foreground mt-2">
+                      {t('intelligence.confidence')}:
+                    </span>
+                    <Button
+                      variant={filterConfidence === 'all' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setFilterConfidence('all')}
+                    >
+                      {t('common.all')}
+                    </Button>
+                    {confidenceLevels.map((level) => (
+                      <Button
+                        key={level}
+                        variant={filterConfidence === level ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setFilterConfidence(level)}
+                      >
+                        {t(`intelligence.confidenceLevels.${level}`)}
+                      </Button>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <span className="text-sm text-muted-foreground mt-2">
+                      {t('intelligence.classification')}:
+                    </span>
+                    <Button
+                      variant={filterClassification === 'all' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setFilterClassification('all')}
+                    >
+                      {t('common.all')}
+                    </Button>
+                    {classifications.map((cls) => (
+                      <Button
+                        key={cls}
+                        variant={filterClassification === cls ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setFilterClassification(cls)}
+                      >
+                        {t(`intelligence.classifications.${cls}`)}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-0">
+              {isLoading ? (
+                <div className="p-8 text-center">{t('common.loading')}</div>
+              ) : reports && reports.length > 0 ? (
+                <DataTable
+                  data={reports}
+                  columns={columns}
+                  onRowClick={(_report) => {
+                    /* TODO: Navigate to report detail */
+                  }}
+                />
+              ) : (
+                <div className="p-8 text-center text-muted-foreground">{t('common.noData')}</div>
+              )}
+            </CardContent>
+          </Card>
+        </>
+      )}
     </div>
   )
 }

@@ -175,6 +175,177 @@ services:
     networks:
       - intl-dossier
 
+  # ===========================================
+  # LANGFUSE - LLM Observability (REMED-05)
+  # Internal-only (expose:, never ports:). Zero egress — TELEMETRY_ENABLED=false.
+  # Access the UI via SSH tunnel or an nginx proxy, never the public internet.
+  # ===========================================
+  langfuse:
+    image: langfuse/langfuse:latest
+    container_name: intl-dossier-langfuse
+    restart: unless-stopped
+    expose:
+      - '3000'
+    environment:
+      DATABASE_URL: ${LANGFUSE_DATABASE_URL}
+      NEXTAUTH_URL: http://langfuse:3000
+      NEXTAUTH_SECRET: ${LANGFUSE_SECRET}
+      SALT: ${LANGFUSE_SALT}
+      TELEMETRY_ENABLED: 'false'
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'wget',
+          '--no-verbose',
+          '--tries=1',
+          '--spider',
+          'http://localhost:3000/api/public/health',
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - intl-dossier
+
+  # ===========================================
+  # ARIZE PHOENIX - AI Tracing (REMED-05)
+  # OTLP gRPC receiver on 4317 + UI on 6006, both expose-only (within the Docker
+  # network). The backend exports traces to http://phoenix:4317 — no external host.
+  # ===========================================
+  phoenix:
+    image: arizephoenix/phoenix:latest
+    container_name: intl-dossier-phoenix
+    restart: unless-stopped
+    expose:
+      - '6006'
+      - '4317'
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:6006']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - intl-dossier
+
+  # ===========================================
+  # AGENT-RUNTIME - Mastra + CopilotKit/AG-UI copilot (INFRA-03)
+  # Internal-only (expose:, never ports:). nginx is the ONLY externally-proxied
+  # path: /api/copilot/ -> agent-runtime:4100/chat (SSE). The workspace + its
+  # Dockerfile.prod are authored in plan 72-05 — this block lands the
+  # network/env contract first so the model/embed/rerank URLs resolve by name.
+  # CORS: ALLOWED_ORIGINS is a SECRET, never '*' (carried edge-fn lesson —
+  # unset falls back to ACAO:null on deployed origins). Keystone: SUPABASE_ANON_KEY
+  # + the caller's JWT (rides the AG-UI request header), NEVER the service-role key.
+  # ===========================================
+  agent-runtime:
+    build:
+      context: ../agent-runtime
+      dockerfile: Dockerfile.prod
+    container_name: intl-dossier-agent-runtime
+    restart: unless-stopped
+    expose:
+      - '4100'
+    environment:
+      NODE_ENV: production
+      PORT: 4100
+      # Supabase — ANON key + caller JWT keystone (RLS enforces clearance);
+      # NEVER SUPABASE_SERVICE_ROLE_KEY in the interactive copilot path.
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      # CORS origin allow-list (comma-separated). SECRET — never '*'.
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+      # Model + retrieval backends, reachable by service name on this network.
+      VLLM_BASE_URL: http://vllm:8000
+      TEI_EMBED_URL: http://tei-embed:80
+      TEI_RERANK_URL: http://tei-rerank:80
+      # @mastra/pg threads/messages live on the same Supabase Postgres.
+      DATABASE_URL: ${MASTRA_PG_URL}
+      # Traces export to Phoenix over OTLP gRPC (internal network).
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://phoenix:4317
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - intl-dossier
+
+  # ===========================================
+  # vLLM - Gemma 4 12B over OpenAI-compatible /v1 (INFRA-01)
+  # Internal-only (expose:, never ports:). Zero egress — local model weights, no
+  # telemetry. The copilot (agent-runtime) reaches it as http://vllm:8000.
+  # Model is swappable by config: --served-model-name gemma-4-12b is the stable
+  # name callers use; the underlying --model can change without touching callers.
+  # Requires an NVIDIA GPU host (16-24GB) with the container runtime — see the
+  # GPU-host step in DROPLET_INSTRUCTIONS.md (deploy-time human action).
+  # ===========================================
+  vllm:
+    # Keep the :latest tag — Gemma 4 needs a recent latest/nightly (CUDA 12.9+)
+    # build; older version tags lack Gemma 4 support (do NOT downgrade). After a
+    # successful smoke test, pin to a @sha256 digest of the validated build for
+    # reproducibility. CUDA-13 variant: vllm/vllm-openai:latest-cu130.
+    image: vllm/vllm-openai:latest
+    container_name: intl-dossier-vllm
+    restart: unless-stopped
+    environment:
+      # Gated-pull token for google/gemma-4-12B-it (gated weights). Accept the
+      # Gemma license on the model's Hugging Face page and set HF_TOKEN in
+      # deploy/.env on the GPU host — without it vLLM 401s and crash-loops on the
+      # first weight pull. MUST be the plain ${} form (empty-if-unset), NEVER
+      # ${HF_TOKEN:?...}: Compose interpolates ${} across ALL services BEFORE
+      # profile-filtering, so the required (:?) form would error on the Mac path
+      # (-f prod -f mac) where vllm is profiled out. Never hardcode the value.
+      HF_TOKEN: ${HF_TOKEN}
+    command: >
+      --model google/gemma-4-12B-it
+      --served-model-name gemma-4-12b
+      --enable-auto-tool-choice
+      --tool-call-parser gemma4
+      --max-model-len 8192
+      --kv-cache-dtype fp8
+      --gpu-memory-utilization 0.90
+    expose:
+      - '8000'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - intl-dossier
+
+  # ===========================================
+  # TEI (embeddings) - bge-m3, 1024-dim (INFRA-02)
+  # Internal-only (expose:, never ports:). Zero egress — local model weights.
+  # The agent-runtime + re-embed job reach it as http://tei-embed:80.
+  # ===========================================
+  tei-embed:
+    image: ghcr.io/huggingface/text-embeddings-inference:latest
+    container_name: intl-dossier-tei-embed
+    restart: unless-stopped
+    command: --model-id BAAI/bge-m3
+    expose:
+      - '80'
+    networks:
+      - intl-dossier
+
+  # ===========================================
+  # TEI (rerank) - bge-reranker-v2-m3 cross-encoder (INFRA-02)
+  # Internal-only (expose:, never ports:). Zero egress — local model weights.
+  # The agent-runtime hybrid-RAG tool reaches it as http://tei-rerank:80 to
+  # re-rank RLS-passing candidates (rerank runs AFTER the clearance-gated RPC).
+  # ===========================================
+  tei-rerank:
+    image: ghcr.io/huggingface/text-embeddings-inference:latest
+    container_name: intl-dossier-tei-rerank
+    restart: unless-stopped
+    command: --model-id BAAI/bge-reranker-v2-m3
+    expose:
+      - '80'
+    networks:
+      - intl-dossier
+
 # ===========================================
 # VOLUMES
 # ===========================================

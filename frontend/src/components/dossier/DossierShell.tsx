@@ -27,6 +27,7 @@ import {
   type DossierContext,
 } from '@/components/dossier/AddToDossierMenu'
 import { AddToDossierDialogs } from '@/components/dossier/AddToDossierDialogs'
+import { DossierAnalyzeButton } from '@/components/dossier/DossierAnalyzeButton'
 import { ExportDossierDialog } from '@/components/dossier/ExportDossierDialog'
 import { ActiveViewers, ActiveViewersCompact } from '@/components/collaboration'
 import { Button } from '@/components/ui/button'
@@ -216,6 +217,11 @@ export function DossierShell({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
+
+            {/* Analyze affordance (D-04, third entry point) — deep-links to the
+                Network panel Analyze mode with this dossier pre-filled (.btn-ghost,
+                secondary). */}
+            <DossierAnalyzeButton dossierId={dossierId} />
 
             {/* Export button */}
             <TooltipProvider>

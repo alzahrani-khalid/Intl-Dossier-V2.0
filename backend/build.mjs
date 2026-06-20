@@ -119,7 +119,13 @@ const excludePatterns = [
   'src/realtime/WebSocketServer.ts',
   // Voice transcription uses Whisper API in production but has ONNX imports
   'src/api/voice.ts',
-  'src/adapters/',
+  // NOTE: 'src/adapters/' was removed. It excluded ALL of src/adapters/, but the only
+  // files there are the Phase-70 intelligence channel adapters (in-app/smtp/webhook +
+  // ChannelAdapter) that src/queues/intelligence-alert.worker.ts REQUIRES at runtime.
+  // Excluding them made the esbuild prod build emit the worker WITHOUT its adapters ->
+  // ERR_MODULE_NOT_FOUND on boot. Surfaced only in the esbuild prod build (Docker),
+  // never in tsx dev which loads every .ts directly. Their imports all resolve to
+  // non-excluded dirs (config/queues/services/utils), so building them is self-contained.
   'src/workers/',
 ];
 

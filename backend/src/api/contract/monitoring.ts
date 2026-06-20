@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { alertsService } from '../../services/alerts.service'
+import { monitoringAlertsService } from '../../services/monitoring-alerts.service'
 import { anomalyService } from '../../services/anomaly-detection.service'
 import { ok, requireAuthHeader, sendError } from './helpers'
 
@@ -11,7 +11,7 @@ router.get('/alerts', requireAuthHeader, (req, res) => {
   const filter: any = {}
   if (severity) filter.severity = String(severity)
   if (typeof is_active !== 'undefined') filter.is_active = String(is_active) === 'true'
-  return ok(res, alertsService.list(filter))
+  return ok(res, monitoringAlertsService.list(filter))
 })
 
 router.post('/alerts', requireAuthHeader, (req, res) => {
@@ -31,7 +31,7 @@ router.post('/alerts', requireAuthHeader, (req, res) => {
   if (threshold < 0 || threshold > 1) {
     return sendError(res, 400, 'INVALID_THRESHOLD', 'Invalid threshold', 'حد غير صالح')
   }
-  const item = alertsService.create({
+  const item = monitoringAlertsService.create({
     name,
     name_ar,
     condition,
@@ -44,7 +44,7 @@ router.post('/alerts', requireAuthHeader, (req, res) => {
 })
 
 router.get('/alerts/:id', requireAuthHeader, (req, res) => {
-  const item = alertsService.get(req.params.id as string)
+  const item = monitoringAlertsService.get(req.params.id as string)
   if (!item)
     return sendError(res, 404, 'ALERT_NOT_FOUND', 'Alert not found', 'لم يتم العثور على التنبيه')
   return ok(res, item)
@@ -62,7 +62,7 @@ router.patch('/alerts/:id', requireAuthHeader, (req, res) => {
     ) {
       return sendError(res, 400, 'INVALID_THRESHOLD', 'Invalid threshold', 'حد غير صالح')
     }
-    return ok(res, alertsService.update(req.params.id as string, patch))
+    return ok(res, monitoringAlertsService.update(req.params.id as string, patch))
   } catch (e: any) {
     return sendError(res, e.status || 400, e.code || 'BAD_REQUEST', e.message || 'Error', 'خطأ')
   }
@@ -70,7 +70,7 @@ router.patch('/alerts/:id', requireAuthHeader, (req, res) => {
 
 router.delete('/alerts/:id', requireAuthHeader, (req, res) => {
   try {
-    alertsService.delete(req.params.id as string)
+    monitoringAlertsService.delete(req.params.id as string)
     return res.status(204).send()
   } catch (e: any) {
     return sendError(
@@ -85,7 +85,7 @@ router.delete('/alerts/:id', requireAuthHeader, (req, res) => {
 
 router.post('/alerts/:id/acknowledge', requireAuthHeader, (req, res) => {
   try {
-    const result = alertsService.acknowledge(req.params.id as string)
+    const result = monitoringAlertsService.acknowledge(req.params.id as string)
     return ok(res, result)
   } catch (e: any) {
     return sendError(res, e.status || 400, e.code || 'BAD_REQUEST', e.message || 'Error', 'خطأ')

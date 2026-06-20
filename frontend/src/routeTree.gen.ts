@@ -137,9 +137,11 @@ import { Route as ProtectedPositionsIdVersionsRouteImport } from './routes/_prot
 import { Route as ProtectedPositionsIdApprovalsRouteImport } from './routes/_protected/positions/$id/approvals'
 import { Route as ProtectedIntakeTicketsIdRouteImport } from './routes/_protected/intake/tickets.$id'
 import { Route as ProtectedEngagementsEngagementIdTasksRouteImport } from './routes/_protected/engagements/$engagementId/tasks'
+import { Route as ProtectedEngagementsEngagementIdSignalsRouteImport } from './routes/_protected/engagements/$engagementId/signals'
 import { Route as ProtectedEngagementsEngagementIdPositionsRouteImport } from './routes/_protected/engagements/$engagementId/positions'
 import { Route as ProtectedEngagementsEngagementIdOverviewRouteImport } from './routes/_protected/engagements/$engagementId/overview'
 import { Route as ProtectedEngagementsEngagementIdDocsRouteImport } from './routes/_protected/engagements/$engagementId/docs'
+import { Route as ProtectedEngagementsEngagementIdDigestsRouteImport } from './routes/_protected/engagements/$engagementId/digests'
 import { Route as ProtectedEngagementsEngagementIdContextRouteImport } from './routes/_protected/engagements/$engagementId/context'
 import { Route as ProtectedEngagementsEngagementIdCalendarRouteImport } from './routes/_protected/engagements/$engagementId/calendar'
 import { Route as ProtectedEngagementsEngagementIdAuditRouteImport } from './routes/_protected/engagements/$engagementId/audit'
@@ -171,49 +173,63 @@ import { Route as ProtectedDossiersElectedOfficialsIdIndexRouteImport } from './
 import { Route as ProtectedDossiersCountriesIdIndexRouteImport } from './routes/_protected/dossiers/countries/$id/index'
 import { Route as ProtectedDossiersWorking_groupsIdTimelineRouteImport } from './routes/_protected/dossiers/working_groups/$id/timeline'
 import { Route as ProtectedDossiersWorking_groupsIdTasksRouteImport } from './routes/_protected/dossiers/working_groups/$id/tasks'
+import { Route as ProtectedDossiersWorking_groupsIdSignalsRouteImport } from './routes/_protected/dossiers/working_groups/$id/signals'
 import { Route as ProtectedDossiersWorking_groupsIdOverviewRouteImport } from './routes/_protected/dossiers/working_groups/$id/overview'
 import { Route as ProtectedDossiersWorking_groupsIdEngagementsRouteImport } from './routes/_protected/dossiers/working_groups/$id/engagements'
 import { Route as ProtectedDossiersWorking_groupsIdDocsRouteImport } from './routes/_protected/dossiers/working_groups/$id/docs'
+import { Route as ProtectedDossiersWorking_groupsIdDigestsRouteImport } from './routes/_protected/dossiers/working_groups/$id/digests'
 import { Route as ProtectedDossiersWorking_groupsIdAuditRouteImport } from './routes/_protected/dossiers/working_groups/$id/audit'
 import { Route as ProtectedDossiersTopicsIdTimelineRouteImport } from './routes/_protected/dossiers/topics/$id/timeline'
 import { Route as ProtectedDossiersTopicsIdTasksRouteImport } from './routes/_protected/dossiers/topics/$id/tasks'
+import { Route as ProtectedDossiersTopicsIdSignalsRouteImport } from './routes/_protected/dossiers/topics/$id/signals'
 import { Route as ProtectedDossiersTopicsIdPositionsRouteImport } from './routes/_protected/dossiers/topics/$id/positions'
 import { Route as ProtectedDossiersTopicsIdOverviewRouteImport } from './routes/_protected/dossiers/topics/$id/overview'
 import { Route as ProtectedDossiersTopicsIdEngagementsRouteImport } from './routes/_protected/dossiers/topics/$id/engagements'
 import { Route as ProtectedDossiersTopicsIdDocsRouteImport } from './routes/_protected/dossiers/topics/$id/docs'
+import { Route as ProtectedDossiersTopicsIdDigestsRouteImport } from './routes/_protected/dossiers/topics/$id/digests'
 import { Route as ProtectedDossiersTopicsIdAuditRouteImport } from './routes/_protected/dossiers/topics/$id/audit'
 import { Route as ProtectedDossiersPersonsIdTimelineRouteImport } from './routes/_protected/dossiers/persons/$id/timeline'
 import { Route as ProtectedDossiersPersonsIdTasksRouteImport } from './routes/_protected/dossiers/persons/$id/tasks'
+import { Route as ProtectedDossiersPersonsIdSignalsRouteImport } from './routes/_protected/dossiers/persons/$id/signals'
 import { Route as ProtectedDossiersPersonsIdOverviewRouteImport } from './routes/_protected/dossiers/persons/$id/overview'
 import { Route as ProtectedDossiersPersonsIdEngagementsRouteImport } from './routes/_protected/dossiers/persons/$id/engagements'
 import { Route as ProtectedDossiersPersonsIdDocsRouteImport } from './routes/_protected/dossiers/persons/$id/docs'
+import { Route as ProtectedDossiersPersonsIdDigestsRouteImport } from './routes/_protected/dossiers/persons/$id/digests'
 import { Route as ProtectedDossiersPersonsIdAuditRouteImport } from './routes/_protected/dossiers/persons/$id/audit'
 import { Route as ProtectedDossiersOrganizationsIdTimelineRouteImport } from './routes/_protected/dossiers/organizations/$id/timeline'
 import { Route as ProtectedDossiersOrganizationsIdTasksRouteImport } from './routes/_protected/dossiers/organizations/$id/tasks'
+import { Route as ProtectedDossiersOrganizationsIdSignalsRouteImport } from './routes/_protected/dossiers/organizations/$id/signals'
 import { Route as ProtectedDossiersOrganizationsIdOverviewRouteImport } from './routes/_protected/dossiers/organizations/$id/overview'
 import { Route as ProtectedDossiersOrganizationsIdMousRouteImport } from './routes/_protected/dossiers/organizations/$id/mous'
 import { Route as ProtectedDossiersOrganizationsIdEngagementsRouteImport } from './routes/_protected/dossiers/organizations/$id/engagements'
 import { Route as ProtectedDossiersOrganizationsIdDocsRouteImport } from './routes/_protected/dossiers/organizations/$id/docs'
+import { Route as ProtectedDossiersOrganizationsIdDigestsRouteImport } from './routes/_protected/dossiers/organizations/$id/digests'
 import { Route as ProtectedDossiersOrganizationsIdAuditRouteImport } from './routes/_protected/dossiers/organizations/$id/audit'
 import { Route as ProtectedDossiersForumsIdTimelineRouteImport } from './routes/_protected/dossiers/forums/$id/timeline'
 import { Route as ProtectedDossiersForumsIdTasksRouteImport } from './routes/_protected/dossiers/forums/$id/tasks'
+import { Route as ProtectedDossiersForumsIdSignalsRouteImport } from './routes/_protected/dossiers/forums/$id/signals'
 import { Route as ProtectedDossiersForumsIdOverviewRouteImport } from './routes/_protected/dossiers/forums/$id/overview'
 import { Route as ProtectedDossiersForumsIdEngagementsRouteImport } from './routes/_protected/dossiers/forums/$id/engagements'
 import { Route as ProtectedDossiersForumsIdDocsRouteImport } from './routes/_protected/dossiers/forums/$id/docs'
+import { Route as ProtectedDossiersForumsIdDigestsRouteImport } from './routes/_protected/dossiers/forums/$id/digests'
 import { Route as ProtectedDossiersForumsIdAuditRouteImport } from './routes/_protected/dossiers/forums/$id/audit'
 import { Route as ProtectedDossiersElectedOfficialsIdTimelineRouteImport } from './routes/_protected/dossiers/elected-officials/$id/timeline'
 import { Route as ProtectedDossiersElectedOfficialsIdTasksRouteImport } from './routes/_protected/dossiers/elected-officials/$id/tasks'
+import { Route as ProtectedDossiersElectedOfficialsIdSignalsRouteImport } from './routes/_protected/dossiers/elected-officials/$id/signals'
 import { Route as ProtectedDossiersElectedOfficialsIdOverviewRouteImport } from './routes/_protected/dossiers/elected-officials/$id/overview'
 import { Route as ProtectedDossiersElectedOfficialsIdEngagementsRouteImport } from './routes/_protected/dossiers/elected-officials/$id/engagements'
 import { Route as ProtectedDossiersElectedOfficialsIdDocsRouteImport } from './routes/_protected/dossiers/elected-officials/$id/docs'
+import { Route as ProtectedDossiersElectedOfficialsIdDigestsRouteImport } from './routes/_protected/dossiers/elected-officials/$id/digests'
 import { Route as ProtectedDossiersElectedOfficialsIdCommitteesRouteImport } from './routes/_protected/dossiers/elected-officials/$id/committees'
 import { Route as ProtectedDossiersElectedOfficialsIdAuditRouteImport } from './routes/_protected/dossiers/elected-officials/$id/audit'
 import { Route as ProtectedDossiersCountriesIdTimelineRouteImport } from './routes/_protected/dossiers/countries/$id/timeline'
 import { Route as ProtectedDossiersCountriesIdTasksRouteImport } from './routes/_protected/dossiers/countries/$id/tasks'
+import { Route as ProtectedDossiersCountriesIdSignalsRouteImport } from './routes/_protected/dossiers/countries/$id/signals'
 import { Route as ProtectedDossiersCountriesIdPositionsRouteImport } from './routes/_protected/dossiers/countries/$id/positions'
 import { Route as ProtectedDossiersCountriesIdOverviewRouteImport } from './routes/_protected/dossiers/countries/$id/overview'
 import { Route as ProtectedDossiersCountriesIdEngagementsRouteImport } from './routes/_protected/dossiers/countries/$id/engagements'
 import { Route as ProtectedDossiersCountriesIdDocsRouteImport } from './routes/_protected/dossiers/countries/$id/docs'
+import { Route as ProtectedDossiersCountriesIdDigestsRouteImport } from './routes/_protected/dossiers/countries/$id/digests'
 import { Route as ProtectedDossiersCountriesIdAuditRouteImport } from './routes/_protected/dossiers/countries/$id/audit'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -862,6 +878,12 @@ const ProtectedEngagementsEngagementIdTasksRoute =
     path: '/tasks',
     getParentRoute: () => ProtectedEngagementsEngagementIdRoute,
   } as any)
+const ProtectedEngagementsEngagementIdSignalsRoute =
+  ProtectedEngagementsEngagementIdSignalsRouteImport.update({
+    id: '/signals',
+    path: '/signals',
+    getParentRoute: () => ProtectedEngagementsEngagementIdRoute,
+  } as any)
 const ProtectedEngagementsEngagementIdPositionsRoute =
   ProtectedEngagementsEngagementIdPositionsRouteImport.update({
     id: '/positions',
@@ -878,6 +900,12 @@ const ProtectedEngagementsEngagementIdDocsRoute =
   ProtectedEngagementsEngagementIdDocsRouteImport.update({
     id: '/docs',
     path: '/docs',
+    getParentRoute: () => ProtectedEngagementsEngagementIdRoute,
+  } as any)
+const ProtectedEngagementsEngagementIdDigestsRoute =
+  ProtectedEngagementsEngagementIdDigestsRouteImport.update({
+    id: '/digests',
+    path: '/digests',
     getParentRoute: () => ProtectedEngagementsEngagementIdRoute,
   } as any)
 const ProtectedEngagementsEngagementIdContextRoute =
@@ -1050,6 +1078,12 @@ const ProtectedDossiersWorking_groupsIdTasksRoute =
     path: '/tasks',
     getParentRoute: () => ProtectedDossiersWorking_groupsIdRoute,
   } as any)
+const ProtectedDossiersWorking_groupsIdSignalsRoute =
+  ProtectedDossiersWorking_groupsIdSignalsRouteImport.update({
+    id: '/signals',
+    path: '/signals',
+    getParentRoute: () => ProtectedDossiersWorking_groupsIdRoute,
+  } as any)
 const ProtectedDossiersWorking_groupsIdOverviewRoute =
   ProtectedDossiersWorking_groupsIdOverviewRouteImport.update({
     id: '/overview',
@@ -1068,6 +1102,12 @@ const ProtectedDossiersWorking_groupsIdDocsRoute =
     path: '/docs',
     getParentRoute: () => ProtectedDossiersWorking_groupsIdRoute,
   } as any)
+const ProtectedDossiersWorking_groupsIdDigestsRoute =
+  ProtectedDossiersWorking_groupsIdDigestsRouteImport.update({
+    id: '/digests',
+    path: '/digests',
+    getParentRoute: () => ProtectedDossiersWorking_groupsIdRoute,
+  } as any)
 const ProtectedDossiersWorking_groupsIdAuditRoute =
   ProtectedDossiersWorking_groupsIdAuditRouteImport.update({
     id: '/audit',
@@ -1082,6 +1122,11 @@ const ProtectedDossiersTopicsIdTimelineRoute = ProtectedDossiersTopicsIdTimeline
 const ProtectedDossiersTopicsIdTasksRoute = ProtectedDossiersTopicsIdTasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
+  getParentRoute: () => ProtectedDossiersTopicsIdRoute,
+} as any)
+const ProtectedDossiersTopicsIdSignalsRoute = ProtectedDossiersTopicsIdSignalsRouteImport.update({
+  id: '/signals',
+  path: '/signals',
   getParentRoute: () => ProtectedDossiersTopicsIdRoute,
 } as any)
 const ProtectedDossiersTopicsIdPositionsRoute =
@@ -1106,6 +1151,11 @@ const ProtectedDossiersTopicsIdDocsRoute = ProtectedDossiersTopicsIdDocsRouteImp
   path: '/docs',
   getParentRoute: () => ProtectedDossiersTopicsIdRoute,
 } as any)
+const ProtectedDossiersTopicsIdDigestsRoute = ProtectedDossiersTopicsIdDigestsRouteImport.update({
+  id: '/digests',
+  path: '/digests',
+  getParentRoute: () => ProtectedDossiersTopicsIdRoute,
+} as any)
 const ProtectedDossiersTopicsIdAuditRoute = ProtectedDossiersTopicsIdAuditRouteImport.update({
   id: '/audit',
   path: '/audit',
@@ -1120,6 +1170,11 @@ const ProtectedDossiersPersonsIdTimelineRoute =
 const ProtectedDossiersPersonsIdTasksRoute = ProtectedDossiersPersonsIdTasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
+  getParentRoute: () => ProtectedDossiersPersonsIdRoute,
+} as any)
+const ProtectedDossiersPersonsIdSignalsRoute = ProtectedDossiersPersonsIdSignalsRouteImport.update({
+  id: '/signals',
+  path: '/signals',
   getParentRoute: () => ProtectedDossiersPersonsIdRoute,
 } as any)
 const ProtectedDossiersPersonsIdOverviewRoute =
@@ -1139,6 +1194,11 @@ const ProtectedDossiersPersonsIdDocsRoute = ProtectedDossiersPersonsIdDocsRouteI
   path: '/docs',
   getParentRoute: () => ProtectedDossiersPersonsIdRoute,
 } as any)
+const ProtectedDossiersPersonsIdDigestsRoute = ProtectedDossiersPersonsIdDigestsRouteImport.update({
+  id: '/digests',
+  path: '/digests',
+  getParentRoute: () => ProtectedDossiersPersonsIdRoute,
+} as any)
 const ProtectedDossiersPersonsIdAuditRoute = ProtectedDossiersPersonsIdAuditRouteImport.update({
   id: '/audit',
   path: '/audit',
@@ -1154,6 +1214,12 @@ const ProtectedDossiersOrganizationsIdTasksRoute =
   ProtectedDossiersOrganizationsIdTasksRouteImport.update({
     id: '/tasks',
     path: '/tasks',
+    getParentRoute: () => ProtectedDossiersOrganizationsIdRoute,
+  } as any)
+const ProtectedDossiersOrganizationsIdSignalsRoute =
+  ProtectedDossiersOrganizationsIdSignalsRouteImport.update({
+    id: '/signals',
+    path: '/signals',
     getParentRoute: () => ProtectedDossiersOrganizationsIdRoute,
   } as any)
 const ProtectedDossiersOrganizationsIdOverviewRoute =
@@ -1180,6 +1246,12 @@ const ProtectedDossiersOrganizationsIdDocsRoute =
     path: '/docs',
     getParentRoute: () => ProtectedDossiersOrganizationsIdRoute,
   } as any)
+const ProtectedDossiersOrganizationsIdDigestsRoute =
+  ProtectedDossiersOrganizationsIdDigestsRouteImport.update({
+    id: '/digests',
+    path: '/digests',
+    getParentRoute: () => ProtectedDossiersOrganizationsIdRoute,
+  } as any)
 const ProtectedDossiersOrganizationsIdAuditRoute =
   ProtectedDossiersOrganizationsIdAuditRouteImport.update({
     id: '/audit',
@@ -1196,6 +1268,11 @@ const ProtectedDossiersForumsIdTasksRoute = ProtectedDossiersForumsIdTasksRouteI
   path: '/tasks',
   getParentRoute: () => ProtectedDossiersForumsIdRoute,
 } as any)
+const ProtectedDossiersForumsIdSignalsRoute = ProtectedDossiersForumsIdSignalsRouteImport.update({
+  id: '/signals',
+  path: '/signals',
+  getParentRoute: () => ProtectedDossiersForumsIdRoute,
+} as any)
 const ProtectedDossiersForumsIdOverviewRoute = ProtectedDossiersForumsIdOverviewRouteImport.update({
   id: '/overview',
   path: '/overview',
@@ -1210,6 +1287,11 @@ const ProtectedDossiersForumsIdEngagementsRoute =
 const ProtectedDossiersForumsIdDocsRoute = ProtectedDossiersForumsIdDocsRouteImport.update({
   id: '/docs',
   path: '/docs',
+  getParentRoute: () => ProtectedDossiersForumsIdRoute,
+} as any)
+const ProtectedDossiersForumsIdDigestsRoute = ProtectedDossiersForumsIdDigestsRouteImport.update({
+  id: '/digests',
+  path: '/digests',
   getParentRoute: () => ProtectedDossiersForumsIdRoute,
 } as any)
 const ProtectedDossiersForumsIdAuditRoute = ProtectedDossiersForumsIdAuditRouteImport.update({
@@ -1229,6 +1311,12 @@ const ProtectedDossiersElectedOfficialsIdTasksRoute =
     path: '/tasks',
     getParentRoute: () => ProtectedDossiersElectedOfficialsIdRoute,
   } as any)
+const ProtectedDossiersElectedOfficialsIdSignalsRoute =
+  ProtectedDossiersElectedOfficialsIdSignalsRouteImport.update({
+    id: '/signals',
+    path: '/signals',
+    getParentRoute: () => ProtectedDossiersElectedOfficialsIdRoute,
+  } as any)
 const ProtectedDossiersElectedOfficialsIdOverviewRoute =
   ProtectedDossiersElectedOfficialsIdOverviewRouteImport.update({
     id: '/overview',
@@ -1245,6 +1333,12 @@ const ProtectedDossiersElectedOfficialsIdDocsRoute =
   ProtectedDossiersElectedOfficialsIdDocsRouteImport.update({
     id: '/docs',
     path: '/docs',
+    getParentRoute: () => ProtectedDossiersElectedOfficialsIdRoute,
+  } as any)
+const ProtectedDossiersElectedOfficialsIdDigestsRoute =
+  ProtectedDossiersElectedOfficialsIdDigestsRouteImport.update({
+    id: '/digests',
+    path: '/digests',
     getParentRoute: () => ProtectedDossiersElectedOfficialsIdRoute,
   } as any)
 const ProtectedDossiersElectedOfficialsIdCommitteesRoute =
@@ -1270,6 +1364,12 @@ const ProtectedDossiersCountriesIdTasksRoute = ProtectedDossiersCountriesIdTasks
   path: '/tasks',
   getParentRoute: () => ProtectedDossiersCountriesIdRoute,
 } as any)
+const ProtectedDossiersCountriesIdSignalsRoute =
+  ProtectedDossiersCountriesIdSignalsRouteImport.update({
+    id: '/signals',
+    path: '/signals',
+    getParentRoute: () => ProtectedDossiersCountriesIdRoute,
+  } as any)
 const ProtectedDossiersCountriesIdPositionsRoute =
   ProtectedDossiersCountriesIdPositionsRouteImport.update({
     id: '/positions',
@@ -1293,6 +1393,12 @@ const ProtectedDossiersCountriesIdDocsRoute = ProtectedDossiersCountriesIdDocsRo
   path: '/docs',
   getParentRoute: () => ProtectedDossiersCountriesIdRoute,
 } as any)
+const ProtectedDossiersCountriesIdDigestsRoute =
+  ProtectedDossiersCountriesIdDigestsRouteImport.update({
+    id: '/digests',
+    path: '/digests',
+    getParentRoute: () => ProtectedDossiersCountriesIdRoute,
+  } as any)
 const ProtectedDossiersCountriesIdAuditRoute = ProtectedDossiersCountriesIdAuditRouteImport.update({
   id: '/audit',
   path: '/audit',
@@ -1435,9 +1541,11 @@ export interface FileRoutesByFullPath {
   '/engagements/$engagementId/audit': typeof ProtectedEngagementsEngagementIdAuditRoute
   '/engagements/$engagementId/calendar': typeof ProtectedEngagementsEngagementIdCalendarRoute
   '/engagements/$engagementId/context': typeof ProtectedEngagementsEngagementIdContextRoute
+  '/engagements/$engagementId/digests': typeof ProtectedEngagementsEngagementIdDigestsRoute
   '/engagements/$engagementId/docs': typeof ProtectedEngagementsEngagementIdDocsRoute
   '/engagements/$engagementId/overview': typeof ProtectedEngagementsEngagementIdOverviewRoute
   '/engagements/$engagementId/positions': typeof ProtectedEngagementsEngagementIdPositionsRoute
+  '/engagements/$engagementId/signals': typeof ProtectedEngagementsEngagementIdSignalsRoute
   '/engagements/$engagementId/tasks': typeof ProtectedEngagementsEngagementIdTasksRoute
   '/intake/tickets/$id': typeof ProtectedIntakeTicketsIdRoute
   '/positions/$id/approvals': typeof ProtectedPositionsIdApprovalsRoute
@@ -1453,49 +1561,63 @@ export interface FileRoutesByFullPath {
   '/dossiers/working_groups/': typeof ProtectedDossiersWorking_groupsIndexRoute
   '/engagements/$engagementId/': typeof ProtectedEngagementsEngagementIdIndexRoute
   '/dossiers/countries/$id/audit': typeof ProtectedDossiersCountriesIdAuditRoute
+  '/dossiers/countries/$id/digests': typeof ProtectedDossiersCountriesIdDigestsRoute
   '/dossiers/countries/$id/docs': typeof ProtectedDossiersCountriesIdDocsRoute
   '/dossiers/countries/$id/engagements': typeof ProtectedDossiersCountriesIdEngagementsRoute
   '/dossiers/countries/$id/overview': typeof ProtectedDossiersCountriesIdOverviewRoute
   '/dossiers/countries/$id/positions': typeof ProtectedDossiersCountriesIdPositionsRoute
+  '/dossiers/countries/$id/signals': typeof ProtectedDossiersCountriesIdSignalsRoute
   '/dossiers/countries/$id/tasks': typeof ProtectedDossiersCountriesIdTasksRoute
   '/dossiers/countries/$id/timeline': typeof ProtectedDossiersCountriesIdTimelineRoute
   '/dossiers/elected-officials/$id/audit': typeof ProtectedDossiersElectedOfficialsIdAuditRoute
   '/dossiers/elected-officials/$id/committees': typeof ProtectedDossiersElectedOfficialsIdCommitteesRoute
+  '/dossiers/elected-officials/$id/digests': typeof ProtectedDossiersElectedOfficialsIdDigestsRoute
   '/dossiers/elected-officials/$id/docs': typeof ProtectedDossiersElectedOfficialsIdDocsRoute
   '/dossiers/elected-officials/$id/engagements': typeof ProtectedDossiersElectedOfficialsIdEngagementsRoute
   '/dossiers/elected-officials/$id/overview': typeof ProtectedDossiersElectedOfficialsIdOverviewRoute
+  '/dossiers/elected-officials/$id/signals': typeof ProtectedDossiersElectedOfficialsIdSignalsRoute
   '/dossiers/elected-officials/$id/tasks': typeof ProtectedDossiersElectedOfficialsIdTasksRoute
   '/dossiers/elected-officials/$id/timeline': typeof ProtectedDossiersElectedOfficialsIdTimelineRoute
   '/dossiers/forums/$id/audit': typeof ProtectedDossiersForumsIdAuditRoute
+  '/dossiers/forums/$id/digests': typeof ProtectedDossiersForumsIdDigestsRoute
   '/dossiers/forums/$id/docs': typeof ProtectedDossiersForumsIdDocsRoute
   '/dossiers/forums/$id/engagements': typeof ProtectedDossiersForumsIdEngagementsRoute
   '/dossiers/forums/$id/overview': typeof ProtectedDossiersForumsIdOverviewRoute
+  '/dossiers/forums/$id/signals': typeof ProtectedDossiersForumsIdSignalsRoute
   '/dossiers/forums/$id/tasks': typeof ProtectedDossiersForumsIdTasksRoute
   '/dossiers/forums/$id/timeline': typeof ProtectedDossiersForumsIdTimelineRoute
   '/dossiers/organizations/$id/audit': typeof ProtectedDossiersOrganizationsIdAuditRoute
+  '/dossiers/organizations/$id/digests': typeof ProtectedDossiersOrganizationsIdDigestsRoute
   '/dossiers/organizations/$id/docs': typeof ProtectedDossiersOrganizationsIdDocsRoute
   '/dossiers/organizations/$id/engagements': typeof ProtectedDossiersOrganizationsIdEngagementsRoute
   '/dossiers/organizations/$id/mous': typeof ProtectedDossiersOrganizationsIdMousRoute
   '/dossiers/organizations/$id/overview': typeof ProtectedDossiersOrganizationsIdOverviewRoute
+  '/dossiers/organizations/$id/signals': typeof ProtectedDossiersOrganizationsIdSignalsRoute
   '/dossiers/organizations/$id/tasks': typeof ProtectedDossiersOrganizationsIdTasksRoute
   '/dossiers/organizations/$id/timeline': typeof ProtectedDossiersOrganizationsIdTimelineRoute
   '/dossiers/persons/$id/audit': typeof ProtectedDossiersPersonsIdAuditRoute
+  '/dossiers/persons/$id/digests': typeof ProtectedDossiersPersonsIdDigestsRoute
   '/dossiers/persons/$id/docs': typeof ProtectedDossiersPersonsIdDocsRoute
   '/dossiers/persons/$id/engagements': typeof ProtectedDossiersPersonsIdEngagementsRoute
   '/dossiers/persons/$id/overview': typeof ProtectedDossiersPersonsIdOverviewRoute
+  '/dossiers/persons/$id/signals': typeof ProtectedDossiersPersonsIdSignalsRoute
   '/dossiers/persons/$id/tasks': typeof ProtectedDossiersPersonsIdTasksRoute
   '/dossiers/persons/$id/timeline': typeof ProtectedDossiersPersonsIdTimelineRoute
   '/dossiers/topics/$id/audit': typeof ProtectedDossiersTopicsIdAuditRoute
+  '/dossiers/topics/$id/digests': typeof ProtectedDossiersTopicsIdDigestsRoute
   '/dossiers/topics/$id/docs': typeof ProtectedDossiersTopicsIdDocsRoute
   '/dossiers/topics/$id/engagements': typeof ProtectedDossiersTopicsIdEngagementsRoute
   '/dossiers/topics/$id/overview': typeof ProtectedDossiersTopicsIdOverviewRoute
   '/dossiers/topics/$id/positions': typeof ProtectedDossiersTopicsIdPositionsRoute
+  '/dossiers/topics/$id/signals': typeof ProtectedDossiersTopicsIdSignalsRoute
   '/dossiers/topics/$id/tasks': typeof ProtectedDossiersTopicsIdTasksRoute
   '/dossiers/topics/$id/timeline': typeof ProtectedDossiersTopicsIdTimelineRoute
   '/dossiers/working_groups/$id/audit': typeof ProtectedDossiersWorking_groupsIdAuditRoute
+  '/dossiers/working_groups/$id/digests': typeof ProtectedDossiersWorking_groupsIdDigestsRoute
   '/dossiers/working_groups/$id/docs': typeof ProtectedDossiersWorking_groupsIdDocsRoute
   '/dossiers/working_groups/$id/engagements': typeof ProtectedDossiersWorking_groupsIdEngagementsRoute
   '/dossiers/working_groups/$id/overview': typeof ProtectedDossiersWorking_groupsIdOverviewRoute
+  '/dossiers/working_groups/$id/signals': typeof ProtectedDossiersWorking_groupsIdSignalsRoute
   '/dossiers/working_groups/$id/tasks': typeof ProtectedDossiersWorking_groupsIdTasksRoute
   '/dossiers/working_groups/$id/timeline': typeof ProtectedDossiersWorking_groupsIdTimelineRoute
   '/dossiers/countries/$id/': typeof ProtectedDossiersCountriesIdIndexRoute
@@ -1628,9 +1750,11 @@ export interface FileRoutesByTo {
   '/engagements/$engagementId/audit': typeof ProtectedEngagementsEngagementIdAuditRoute
   '/engagements/$engagementId/calendar': typeof ProtectedEngagementsEngagementIdCalendarRoute
   '/engagements/$engagementId/context': typeof ProtectedEngagementsEngagementIdContextRoute
+  '/engagements/$engagementId/digests': typeof ProtectedEngagementsEngagementIdDigestsRoute
   '/engagements/$engagementId/docs': typeof ProtectedEngagementsEngagementIdDocsRoute
   '/engagements/$engagementId/overview': typeof ProtectedEngagementsEngagementIdOverviewRoute
   '/engagements/$engagementId/positions': typeof ProtectedEngagementsEngagementIdPositionsRoute
+  '/engagements/$engagementId/signals': typeof ProtectedEngagementsEngagementIdSignalsRoute
   '/engagements/$engagementId/tasks': typeof ProtectedEngagementsEngagementIdTasksRoute
   '/intake/tickets/$id': typeof ProtectedIntakeTicketsIdRoute
   '/positions/$id/approvals': typeof ProtectedPositionsIdApprovalsRoute
@@ -1646,49 +1770,63 @@ export interface FileRoutesByTo {
   '/dossiers/working_groups': typeof ProtectedDossiersWorking_groupsIndexRoute
   '/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdIndexRoute
   '/dossiers/countries/$id/audit': typeof ProtectedDossiersCountriesIdAuditRoute
+  '/dossiers/countries/$id/digests': typeof ProtectedDossiersCountriesIdDigestsRoute
   '/dossiers/countries/$id/docs': typeof ProtectedDossiersCountriesIdDocsRoute
   '/dossiers/countries/$id/engagements': typeof ProtectedDossiersCountriesIdEngagementsRoute
   '/dossiers/countries/$id/overview': typeof ProtectedDossiersCountriesIdOverviewRoute
   '/dossiers/countries/$id/positions': typeof ProtectedDossiersCountriesIdPositionsRoute
+  '/dossiers/countries/$id/signals': typeof ProtectedDossiersCountriesIdSignalsRoute
   '/dossiers/countries/$id/tasks': typeof ProtectedDossiersCountriesIdTasksRoute
   '/dossiers/countries/$id/timeline': typeof ProtectedDossiersCountriesIdTimelineRoute
   '/dossiers/elected-officials/$id/audit': typeof ProtectedDossiersElectedOfficialsIdAuditRoute
   '/dossiers/elected-officials/$id/committees': typeof ProtectedDossiersElectedOfficialsIdCommitteesRoute
+  '/dossiers/elected-officials/$id/digests': typeof ProtectedDossiersElectedOfficialsIdDigestsRoute
   '/dossiers/elected-officials/$id/docs': typeof ProtectedDossiersElectedOfficialsIdDocsRoute
   '/dossiers/elected-officials/$id/engagements': typeof ProtectedDossiersElectedOfficialsIdEngagementsRoute
   '/dossiers/elected-officials/$id/overview': typeof ProtectedDossiersElectedOfficialsIdOverviewRoute
+  '/dossiers/elected-officials/$id/signals': typeof ProtectedDossiersElectedOfficialsIdSignalsRoute
   '/dossiers/elected-officials/$id/tasks': typeof ProtectedDossiersElectedOfficialsIdTasksRoute
   '/dossiers/elected-officials/$id/timeline': typeof ProtectedDossiersElectedOfficialsIdTimelineRoute
   '/dossiers/forums/$id/audit': typeof ProtectedDossiersForumsIdAuditRoute
+  '/dossiers/forums/$id/digests': typeof ProtectedDossiersForumsIdDigestsRoute
   '/dossiers/forums/$id/docs': typeof ProtectedDossiersForumsIdDocsRoute
   '/dossiers/forums/$id/engagements': typeof ProtectedDossiersForumsIdEngagementsRoute
   '/dossiers/forums/$id/overview': typeof ProtectedDossiersForumsIdOverviewRoute
+  '/dossiers/forums/$id/signals': typeof ProtectedDossiersForumsIdSignalsRoute
   '/dossiers/forums/$id/tasks': typeof ProtectedDossiersForumsIdTasksRoute
   '/dossiers/forums/$id/timeline': typeof ProtectedDossiersForumsIdTimelineRoute
   '/dossiers/organizations/$id/audit': typeof ProtectedDossiersOrganizationsIdAuditRoute
+  '/dossiers/organizations/$id/digests': typeof ProtectedDossiersOrganizationsIdDigestsRoute
   '/dossiers/organizations/$id/docs': typeof ProtectedDossiersOrganizationsIdDocsRoute
   '/dossiers/organizations/$id/engagements': typeof ProtectedDossiersOrganizationsIdEngagementsRoute
   '/dossiers/organizations/$id/mous': typeof ProtectedDossiersOrganizationsIdMousRoute
   '/dossiers/organizations/$id/overview': typeof ProtectedDossiersOrganizationsIdOverviewRoute
+  '/dossiers/organizations/$id/signals': typeof ProtectedDossiersOrganizationsIdSignalsRoute
   '/dossiers/organizations/$id/tasks': typeof ProtectedDossiersOrganizationsIdTasksRoute
   '/dossiers/organizations/$id/timeline': typeof ProtectedDossiersOrganizationsIdTimelineRoute
   '/dossiers/persons/$id/audit': typeof ProtectedDossiersPersonsIdAuditRoute
+  '/dossiers/persons/$id/digests': typeof ProtectedDossiersPersonsIdDigestsRoute
   '/dossiers/persons/$id/docs': typeof ProtectedDossiersPersonsIdDocsRoute
   '/dossiers/persons/$id/engagements': typeof ProtectedDossiersPersonsIdEngagementsRoute
   '/dossiers/persons/$id/overview': typeof ProtectedDossiersPersonsIdOverviewRoute
+  '/dossiers/persons/$id/signals': typeof ProtectedDossiersPersonsIdSignalsRoute
   '/dossiers/persons/$id/tasks': typeof ProtectedDossiersPersonsIdTasksRoute
   '/dossiers/persons/$id/timeline': typeof ProtectedDossiersPersonsIdTimelineRoute
   '/dossiers/topics/$id/audit': typeof ProtectedDossiersTopicsIdAuditRoute
+  '/dossiers/topics/$id/digests': typeof ProtectedDossiersTopicsIdDigestsRoute
   '/dossiers/topics/$id/docs': typeof ProtectedDossiersTopicsIdDocsRoute
   '/dossiers/topics/$id/engagements': typeof ProtectedDossiersTopicsIdEngagementsRoute
   '/dossiers/topics/$id/overview': typeof ProtectedDossiersTopicsIdOverviewRoute
   '/dossiers/topics/$id/positions': typeof ProtectedDossiersTopicsIdPositionsRoute
+  '/dossiers/topics/$id/signals': typeof ProtectedDossiersTopicsIdSignalsRoute
   '/dossiers/topics/$id/tasks': typeof ProtectedDossiersTopicsIdTasksRoute
   '/dossiers/topics/$id/timeline': typeof ProtectedDossiersTopicsIdTimelineRoute
   '/dossiers/working_groups/$id/audit': typeof ProtectedDossiersWorking_groupsIdAuditRoute
+  '/dossiers/working_groups/$id/digests': typeof ProtectedDossiersWorking_groupsIdDigestsRoute
   '/dossiers/working_groups/$id/docs': typeof ProtectedDossiersWorking_groupsIdDocsRoute
   '/dossiers/working_groups/$id/engagements': typeof ProtectedDossiersWorking_groupsIdEngagementsRoute
   '/dossiers/working_groups/$id/overview': typeof ProtectedDossiersWorking_groupsIdOverviewRoute
+  '/dossiers/working_groups/$id/signals': typeof ProtectedDossiersWorking_groupsIdSignalsRoute
   '/dossiers/working_groups/$id/tasks': typeof ProtectedDossiersWorking_groupsIdTasksRoute
   '/dossiers/working_groups/$id/timeline': typeof ProtectedDossiersWorking_groupsIdTimelineRoute
   '/dossiers/countries/$id': typeof ProtectedDossiersCountriesIdIndexRoute
@@ -1837,9 +1975,11 @@ export interface FileRoutesById {
   '/_protected/engagements/$engagementId/audit': typeof ProtectedEngagementsEngagementIdAuditRoute
   '/_protected/engagements/$engagementId/calendar': typeof ProtectedEngagementsEngagementIdCalendarRoute
   '/_protected/engagements/$engagementId/context': typeof ProtectedEngagementsEngagementIdContextRoute
+  '/_protected/engagements/$engagementId/digests': typeof ProtectedEngagementsEngagementIdDigestsRoute
   '/_protected/engagements/$engagementId/docs': typeof ProtectedEngagementsEngagementIdDocsRoute
   '/_protected/engagements/$engagementId/overview': typeof ProtectedEngagementsEngagementIdOverviewRoute
   '/_protected/engagements/$engagementId/positions': typeof ProtectedEngagementsEngagementIdPositionsRoute
+  '/_protected/engagements/$engagementId/signals': typeof ProtectedEngagementsEngagementIdSignalsRoute
   '/_protected/engagements/$engagementId/tasks': typeof ProtectedEngagementsEngagementIdTasksRoute
   '/_protected/intake/tickets/$id': typeof ProtectedIntakeTicketsIdRoute
   '/_protected/positions/$id/approvals': typeof ProtectedPositionsIdApprovalsRoute
@@ -1855,49 +1995,63 @@ export interface FileRoutesById {
   '/_protected/dossiers/working_groups/': typeof ProtectedDossiersWorking_groupsIndexRoute
   '/_protected/engagements/$engagementId/': typeof ProtectedEngagementsEngagementIdIndexRoute
   '/_protected/dossiers/countries/$id/audit': typeof ProtectedDossiersCountriesIdAuditRoute
+  '/_protected/dossiers/countries/$id/digests': typeof ProtectedDossiersCountriesIdDigestsRoute
   '/_protected/dossiers/countries/$id/docs': typeof ProtectedDossiersCountriesIdDocsRoute
   '/_protected/dossiers/countries/$id/engagements': typeof ProtectedDossiersCountriesIdEngagementsRoute
   '/_protected/dossiers/countries/$id/overview': typeof ProtectedDossiersCountriesIdOverviewRoute
   '/_protected/dossiers/countries/$id/positions': typeof ProtectedDossiersCountriesIdPositionsRoute
+  '/_protected/dossiers/countries/$id/signals': typeof ProtectedDossiersCountriesIdSignalsRoute
   '/_protected/dossiers/countries/$id/tasks': typeof ProtectedDossiersCountriesIdTasksRoute
   '/_protected/dossiers/countries/$id/timeline': typeof ProtectedDossiersCountriesIdTimelineRoute
   '/_protected/dossiers/elected-officials/$id/audit': typeof ProtectedDossiersElectedOfficialsIdAuditRoute
   '/_protected/dossiers/elected-officials/$id/committees': typeof ProtectedDossiersElectedOfficialsIdCommitteesRoute
+  '/_protected/dossiers/elected-officials/$id/digests': typeof ProtectedDossiersElectedOfficialsIdDigestsRoute
   '/_protected/dossiers/elected-officials/$id/docs': typeof ProtectedDossiersElectedOfficialsIdDocsRoute
   '/_protected/dossiers/elected-officials/$id/engagements': typeof ProtectedDossiersElectedOfficialsIdEngagementsRoute
   '/_protected/dossiers/elected-officials/$id/overview': typeof ProtectedDossiersElectedOfficialsIdOverviewRoute
+  '/_protected/dossiers/elected-officials/$id/signals': typeof ProtectedDossiersElectedOfficialsIdSignalsRoute
   '/_protected/dossiers/elected-officials/$id/tasks': typeof ProtectedDossiersElectedOfficialsIdTasksRoute
   '/_protected/dossiers/elected-officials/$id/timeline': typeof ProtectedDossiersElectedOfficialsIdTimelineRoute
   '/_protected/dossiers/forums/$id/audit': typeof ProtectedDossiersForumsIdAuditRoute
+  '/_protected/dossiers/forums/$id/digests': typeof ProtectedDossiersForumsIdDigestsRoute
   '/_protected/dossiers/forums/$id/docs': typeof ProtectedDossiersForumsIdDocsRoute
   '/_protected/dossiers/forums/$id/engagements': typeof ProtectedDossiersForumsIdEngagementsRoute
   '/_protected/dossiers/forums/$id/overview': typeof ProtectedDossiersForumsIdOverviewRoute
+  '/_protected/dossiers/forums/$id/signals': typeof ProtectedDossiersForumsIdSignalsRoute
   '/_protected/dossiers/forums/$id/tasks': typeof ProtectedDossiersForumsIdTasksRoute
   '/_protected/dossiers/forums/$id/timeline': typeof ProtectedDossiersForumsIdTimelineRoute
   '/_protected/dossiers/organizations/$id/audit': typeof ProtectedDossiersOrganizationsIdAuditRoute
+  '/_protected/dossiers/organizations/$id/digests': typeof ProtectedDossiersOrganizationsIdDigestsRoute
   '/_protected/dossiers/organizations/$id/docs': typeof ProtectedDossiersOrganizationsIdDocsRoute
   '/_protected/dossiers/organizations/$id/engagements': typeof ProtectedDossiersOrganizationsIdEngagementsRoute
   '/_protected/dossiers/organizations/$id/mous': typeof ProtectedDossiersOrganizationsIdMousRoute
   '/_protected/dossiers/organizations/$id/overview': typeof ProtectedDossiersOrganizationsIdOverviewRoute
+  '/_protected/dossiers/organizations/$id/signals': typeof ProtectedDossiersOrganizationsIdSignalsRoute
   '/_protected/dossiers/organizations/$id/tasks': typeof ProtectedDossiersOrganizationsIdTasksRoute
   '/_protected/dossiers/organizations/$id/timeline': typeof ProtectedDossiersOrganizationsIdTimelineRoute
   '/_protected/dossiers/persons/$id/audit': typeof ProtectedDossiersPersonsIdAuditRoute
+  '/_protected/dossiers/persons/$id/digests': typeof ProtectedDossiersPersonsIdDigestsRoute
   '/_protected/dossiers/persons/$id/docs': typeof ProtectedDossiersPersonsIdDocsRoute
   '/_protected/dossiers/persons/$id/engagements': typeof ProtectedDossiersPersonsIdEngagementsRoute
   '/_protected/dossiers/persons/$id/overview': typeof ProtectedDossiersPersonsIdOverviewRoute
+  '/_protected/dossiers/persons/$id/signals': typeof ProtectedDossiersPersonsIdSignalsRoute
   '/_protected/dossiers/persons/$id/tasks': typeof ProtectedDossiersPersonsIdTasksRoute
   '/_protected/dossiers/persons/$id/timeline': typeof ProtectedDossiersPersonsIdTimelineRoute
   '/_protected/dossiers/topics/$id/audit': typeof ProtectedDossiersTopicsIdAuditRoute
+  '/_protected/dossiers/topics/$id/digests': typeof ProtectedDossiersTopicsIdDigestsRoute
   '/_protected/dossiers/topics/$id/docs': typeof ProtectedDossiersTopicsIdDocsRoute
   '/_protected/dossiers/topics/$id/engagements': typeof ProtectedDossiersTopicsIdEngagementsRoute
   '/_protected/dossiers/topics/$id/overview': typeof ProtectedDossiersTopicsIdOverviewRoute
   '/_protected/dossiers/topics/$id/positions': typeof ProtectedDossiersTopicsIdPositionsRoute
+  '/_protected/dossiers/topics/$id/signals': typeof ProtectedDossiersTopicsIdSignalsRoute
   '/_protected/dossiers/topics/$id/tasks': typeof ProtectedDossiersTopicsIdTasksRoute
   '/_protected/dossiers/topics/$id/timeline': typeof ProtectedDossiersTopicsIdTimelineRoute
   '/_protected/dossiers/working_groups/$id/audit': typeof ProtectedDossiersWorking_groupsIdAuditRoute
+  '/_protected/dossiers/working_groups/$id/digests': typeof ProtectedDossiersWorking_groupsIdDigestsRoute
   '/_protected/dossiers/working_groups/$id/docs': typeof ProtectedDossiersWorking_groupsIdDocsRoute
   '/_protected/dossiers/working_groups/$id/engagements': typeof ProtectedDossiersWorking_groupsIdEngagementsRoute
   '/_protected/dossiers/working_groups/$id/overview': typeof ProtectedDossiersWorking_groupsIdOverviewRoute
+  '/_protected/dossiers/working_groups/$id/signals': typeof ProtectedDossiersWorking_groupsIdSignalsRoute
   '/_protected/dossiers/working_groups/$id/tasks': typeof ProtectedDossiersWorking_groupsIdTasksRoute
   '/_protected/dossiers/working_groups/$id/timeline': typeof ProtectedDossiersWorking_groupsIdTimelineRoute
   '/_protected/dossiers/countries/$id/': typeof ProtectedDossiersCountriesIdIndexRoute
@@ -2046,9 +2200,11 @@ export interface FileRouteTypes {
     | '/engagements/$engagementId/audit'
     | '/engagements/$engagementId/calendar'
     | '/engagements/$engagementId/context'
+    | '/engagements/$engagementId/digests'
     | '/engagements/$engagementId/docs'
     | '/engagements/$engagementId/overview'
     | '/engagements/$engagementId/positions'
+    | '/engagements/$engagementId/signals'
     | '/engagements/$engagementId/tasks'
     | '/intake/tickets/$id'
     | '/positions/$id/approvals'
@@ -2064,49 +2220,63 @@ export interface FileRouteTypes {
     | '/dossiers/working_groups/'
     | '/engagements/$engagementId/'
     | '/dossiers/countries/$id/audit'
+    | '/dossiers/countries/$id/digests'
     | '/dossiers/countries/$id/docs'
     | '/dossiers/countries/$id/engagements'
     | '/dossiers/countries/$id/overview'
     | '/dossiers/countries/$id/positions'
+    | '/dossiers/countries/$id/signals'
     | '/dossiers/countries/$id/tasks'
     | '/dossiers/countries/$id/timeline'
     | '/dossiers/elected-officials/$id/audit'
     | '/dossiers/elected-officials/$id/committees'
+    | '/dossiers/elected-officials/$id/digests'
     | '/dossiers/elected-officials/$id/docs'
     | '/dossiers/elected-officials/$id/engagements'
     | '/dossiers/elected-officials/$id/overview'
+    | '/dossiers/elected-officials/$id/signals'
     | '/dossiers/elected-officials/$id/tasks'
     | '/dossiers/elected-officials/$id/timeline'
     | '/dossiers/forums/$id/audit'
+    | '/dossiers/forums/$id/digests'
     | '/dossiers/forums/$id/docs'
     | '/dossiers/forums/$id/engagements'
     | '/dossiers/forums/$id/overview'
+    | '/dossiers/forums/$id/signals'
     | '/dossiers/forums/$id/tasks'
     | '/dossiers/forums/$id/timeline'
     | '/dossiers/organizations/$id/audit'
+    | '/dossiers/organizations/$id/digests'
     | '/dossiers/organizations/$id/docs'
     | '/dossiers/organizations/$id/engagements'
     | '/dossiers/organizations/$id/mous'
     | '/dossiers/organizations/$id/overview'
+    | '/dossiers/organizations/$id/signals'
     | '/dossiers/organizations/$id/tasks'
     | '/dossiers/organizations/$id/timeline'
     | '/dossiers/persons/$id/audit'
+    | '/dossiers/persons/$id/digests'
     | '/dossiers/persons/$id/docs'
     | '/dossiers/persons/$id/engagements'
     | '/dossiers/persons/$id/overview'
+    | '/dossiers/persons/$id/signals'
     | '/dossiers/persons/$id/tasks'
     | '/dossiers/persons/$id/timeline'
     | '/dossiers/topics/$id/audit'
+    | '/dossiers/topics/$id/digests'
     | '/dossiers/topics/$id/docs'
     | '/dossiers/topics/$id/engagements'
     | '/dossiers/topics/$id/overview'
     | '/dossiers/topics/$id/positions'
+    | '/dossiers/topics/$id/signals'
     | '/dossiers/topics/$id/tasks'
     | '/dossiers/topics/$id/timeline'
     | '/dossiers/working_groups/$id/audit'
+    | '/dossiers/working_groups/$id/digests'
     | '/dossiers/working_groups/$id/docs'
     | '/dossiers/working_groups/$id/engagements'
     | '/dossiers/working_groups/$id/overview'
+    | '/dossiers/working_groups/$id/signals'
     | '/dossiers/working_groups/$id/tasks'
     | '/dossiers/working_groups/$id/timeline'
     | '/dossiers/countries/$id/'
@@ -2239,9 +2409,11 @@ export interface FileRouteTypes {
     | '/engagements/$engagementId/audit'
     | '/engagements/$engagementId/calendar'
     | '/engagements/$engagementId/context'
+    | '/engagements/$engagementId/digests'
     | '/engagements/$engagementId/docs'
     | '/engagements/$engagementId/overview'
     | '/engagements/$engagementId/positions'
+    | '/engagements/$engagementId/signals'
     | '/engagements/$engagementId/tasks'
     | '/intake/tickets/$id'
     | '/positions/$id/approvals'
@@ -2257,49 +2429,63 @@ export interface FileRouteTypes {
     | '/dossiers/working_groups'
     | '/engagements/$engagementId'
     | '/dossiers/countries/$id/audit'
+    | '/dossiers/countries/$id/digests'
     | '/dossiers/countries/$id/docs'
     | '/dossiers/countries/$id/engagements'
     | '/dossiers/countries/$id/overview'
     | '/dossiers/countries/$id/positions'
+    | '/dossiers/countries/$id/signals'
     | '/dossiers/countries/$id/tasks'
     | '/dossiers/countries/$id/timeline'
     | '/dossiers/elected-officials/$id/audit'
     | '/dossiers/elected-officials/$id/committees'
+    | '/dossiers/elected-officials/$id/digests'
     | '/dossiers/elected-officials/$id/docs'
     | '/dossiers/elected-officials/$id/engagements'
     | '/dossiers/elected-officials/$id/overview'
+    | '/dossiers/elected-officials/$id/signals'
     | '/dossiers/elected-officials/$id/tasks'
     | '/dossiers/elected-officials/$id/timeline'
     | '/dossiers/forums/$id/audit'
+    | '/dossiers/forums/$id/digests'
     | '/dossiers/forums/$id/docs'
     | '/dossiers/forums/$id/engagements'
     | '/dossiers/forums/$id/overview'
+    | '/dossiers/forums/$id/signals'
     | '/dossiers/forums/$id/tasks'
     | '/dossiers/forums/$id/timeline'
     | '/dossiers/organizations/$id/audit'
+    | '/dossiers/organizations/$id/digests'
     | '/dossiers/organizations/$id/docs'
     | '/dossiers/organizations/$id/engagements'
     | '/dossiers/organizations/$id/mous'
     | '/dossiers/organizations/$id/overview'
+    | '/dossiers/organizations/$id/signals'
     | '/dossiers/organizations/$id/tasks'
     | '/dossiers/organizations/$id/timeline'
     | '/dossiers/persons/$id/audit'
+    | '/dossiers/persons/$id/digests'
     | '/dossiers/persons/$id/docs'
     | '/dossiers/persons/$id/engagements'
     | '/dossiers/persons/$id/overview'
+    | '/dossiers/persons/$id/signals'
     | '/dossiers/persons/$id/tasks'
     | '/dossiers/persons/$id/timeline'
     | '/dossiers/topics/$id/audit'
+    | '/dossiers/topics/$id/digests'
     | '/dossiers/topics/$id/docs'
     | '/dossiers/topics/$id/engagements'
     | '/dossiers/topics/$id/overview'
     | '/dossiers/topics/$id/positions'
+    | '/dossiers/topics/$id/signals'
     | '/dossiers/topics/$id/tasks'
     | '/dossiers/topics/$id/timeline'
     | '/dossiers/working_groups/$id/audit'
+    | '/dossiers/working_groups/$id/digests'
     | '/dossiers/working_groups/$id/docs'
     | '/dossiers/working_groups/$id/engagements'
     | '/dossiers/working_groups/$id/overview'
+    | '/dossiers/working_groups/$id/signals'
     | '/dossiers/working_groups/$id/tasks'
     | '/dossiers/working_groups/$id/timeline'
     | '/dossiers/countries/$id'
@@ -2447,9 +2633,11 @@ export interface FileRouteTypes {
     | '/_protected/engagements/$engagementId/audit'
     | '/_protected/engagements/$engagementId/calendar'
     | '/_protected/engagements/$engagementId/context'
+    | '/_protected/engagements/$engagementId/digests'
     | '/_protected/engagements/$engagementId/docs'
     | '/_protected/engagements/$engagementId/overview'
     | '/_protected/engagements/$engagementId/positions'
+    | '/_protected/engagements/$engagementId/signals'
     | '/_protected/engagements/$engagementId/tasks'
     | '/_protected/intake/tickets/$id'
     | '/_protected/positions/$id/approvals'
@@ -2465,49 +2653,63 @@ export interface FileRouteTypes {
     | '/_protected/dossiers/working_groups/'
     | '/_protected/engagements/$engagementId/'
     | '/_protected/dossiers/countries/$id/audit'
+    | '/_protected/dossiers/countries/$id/digests'
     | '/_protected/dossiers/countries/$id/docs'
     | '/_protected/dossiers/countries/$id/engagements'
     | '/_protected/dossiers/countries/$id/overview'
     | '/_protected/dossiers/countries/$id/positions'
+    | '/_protected/dossiers/countries/$id/signals'
     | '/_protected/dossiers/countries/$id/tasks'
     | '/_protected/dossiers/countries/$id/timeline'
     | '/_protected/dossiers/elected-officials/$id/audit'
     | '/_protected/dossiers/elected-officials/$id/committees'
+    | '/_protected/dossiers/elected-officials/$id/digests'
     | '/_protected/dossiers/elected-officials/$id/docs'
     | '/_protected/dossiers/elected-officials/$id/engagements'
     | '/_protected/dossiers/elected-officials/$id/overview'
+    | '/_protected/dossiers/elected-officials/$id/signals'
     | '/_protected/dossiers/elected-officials/$id/tasks'
     | '/_protected/dossiers/elected-officials/$id/timeline'
     | '/_protected/dossiers/forums/$id/audit'
+    | '/_protected/dossiers/forums/$id/digests'
     | '/_protected/dossiers/forums/$id/docs'
     | '/_protected/dossiers/forums/$id/engagements'
     | '/_protected/dossiers/forums/$id/overview'
+    | '/_protected/dossiers/forums/$id/signals'
     | '/_protected/dossiers/forums/$id/tasks'
     | '/_protected/dossiers/forums/$id/timeline'
     | '/_protected/dossiers/organizations/$id/audit'
+    | '/_protected/dossiers/organizations/$id/digests'
     | '/_protected/dossiers/organizations/$id/docs'
     | '/_protected/dossiers/organizations/$id/engagements'
     | '/_protected/dossiers/organizations/$id/mous'
     | '/_protected/dossiers/organizations/$id/overview'
+    | '/_protected/dossiers/organizations/$id/signals'
     | '/_protected/dossiers/organizations/$id/tasks'
     | '/_protected/dossiers/organizations/$id/timeline'
     | '/_protected/dossiers/persons/$id/audit'
+    | '/_protected/dossiers/persons/$id/digests'
     | '/_protected/dossiers/persons/$id/docs'
     | '/_protected/dossiers/persons/$id/engagements'
     | '/_protected/dossiers/persons/$id/overview'
+    | '/_protected/dossiers/persons/$id/signals'
     | '/_protected/dossiers/persons/$id/tasks'
     | '/_protected/dossiers/persons/$id/timeline'
     | '/_protected/dossiers/topics/$id/audit'
+    | '/_protected/dossiers/topics/$id/digests'
     | '/_protected/dossiers/topics/$id/docs'
     | '/_protected/dossiers/topics/$id/engagements'
     | '/_protected/dossiers/topics/$id/overview'
     | '/_protected/dossiers/topics/$id/positions'
+    | '/_protected/dossiers/topics/$id/signals'
     | '/_protected/dossiers/topics/$id/tasks'
     | '/_protected/dossiers/topics/$id/timeline'
     | '/_protected/dossiers/working_groups/$id/audit'
+    | '/_protected/dossiers/working_groups/$id/digests'
     | '/_protected/dossiers/working_groups/$id/docs'
     | '/_protected/dossiers/working_groups/$id/engagements'
     | '/_protected/dossiers/working_groups/$id/overview'
+    | '/_protected/dossiers/working_groups/$id/signals'
     | '/_protected/dossiers/working_groups/$id/tasks'
     | '/_protected/dossiers/working_groups/$id/timeline'
     | '/_protected/dossiers/countries/$id/'
@@ -3426,6 +3628,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedEngagementsEngagementIdTasksRouteImport
       parentRoute: typeof ProtectedEngagementsEngagementIdRoute
     }
+    '/_protected/engagements/$engagementId/signals': {
+      id: '/_protected/engagements/$engagementId/signals'
+      path: '/signals'
+      fullPath: '/engagements/$engagementId/signals'
+      preLoaderRoute: typeof ProtectedEngagementsEngagementIdSignalsRouteImport
+      parentRoute: typeof ProtectedEngagementsEngagementIdRoute
+    }
     '/_protected/engagements/$engagementId/positions': {
       id: '/_protected/engagements/$engagementId/positions'
       path: '/positions'
@@ -3445,6 +3654,13 @@ declare module '@tanstack/react-router' {
       path: '/docs'
       fullPath: '/engagements/$engagementId/docs'
       preLoaderRoute: typeof ProtectedEngagementsEngagementIdDocsRouteImport
+      parentRoute: typeof ProtectedEngagementsEngagementIdRoute
+    }
+    '/_protected/engagements/$engagementId/digests': {
+      id: '/_protected/engagements/$engagementId/digests'
+      path: '/digests'
+      fullPath: '/engagements/$engagementId/digests'
+      preLoaderRoute: typeof ProtectedEngagementsEngagementIdDigestsRouteImport
       parentRoute: typeof ProtectedEngagementsEngagementIdRoute
     }
     '/_protected/engagements/$engagementId/context': {
@@ -3664,6 +3880,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDossiersWorking_groupsIdTasksRouteImport
       parentRoute: typeof ProtectedDossiersWorking_groupsIdRoute
     }
+    '/_protected/dossiers/working_groups/$id/signals': {
+      id: '/_protected/dossiers/working_groups/$id/signals'
+      path: '/signals'
+      fullPath: '/dossiers/working_groups/$id/signals'
+      preLoaderRoute: typeof ProtectedDossiersWorking_groupsIdSignalsRouteImport
+      parentRoute: typeof ProtectedDossiersWorking_groupsIdRoute
+    }
     '/_protected/dossiers/working_groups/$id/overview': {
       id: '/_protected/dossiers/working_groups/$id/overview'
       path: '/overview'
@@ -3685,6 +3908,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDossiersWorking_groupsIdDocsRouteImport
       parentRoute: typeof ProtectedDossiersWorking_groupsIdRoute
     }
+    '/_protected/dossiers/working_groups/$id/digests': {
+      id: '/_protected/dossiers/working_groups/$id/digests'
+      path: '/digests'
+      fullPath: '/dossiers/working_groups/$id/digests'
+      preLoaderRoute: typeof ProtectedDossiersWorking_groupsIdDigestsRouteImport
+      parentRoute: typeof ProtectedDossiersWorking_groupsIdRoute
+    }
     '/_protected/dossiers/working_groups/$id/audit': {
       id: '/_protected/dossiers/working_groups/$id/audit'
       path: '/audit'
@@ -3704,6 +3934,13 @@ declare module '@tanstack/react-router' {
       path: '/tasks'
       fullPath: '/dossiers/topics/$id/tasks'
       preLoaderRoute: typeof ProtectedDossiersTopicsIdTasksRouteImport
+      parentRoute: typeof ProtectedDossiersTopicsIdRoute
+    }
+    '/_protected/dossiers/topics/$id/signals': {
+      id: '/_protected/dossiers/topics/$id/signals'
+      path: '/signals'
+      fullPath: '/dossiers/topics/$id/signals'
+      preLoaderRoute: typeof ProtectedDossiersTopicsIdSignalsRouteImport
       parentRoute: typeof ProtectedDossiersTopicsIdRoute
     }
     '/_protected/dossiers/topics/$id/positions': {
@@ -3734,6 +3971,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDossiersTopicsIdDocsRouteImport
       parentRoute: typeof ProtectedDossiersTopicsIdRoute
     }
+    '/_protected/dossiers/topics/$id/digests': {
+      id: '/_protected/dossiers/topics/$id/digests'
+      path: '/digests'
+      fullPath: '/dossiers/topics/$id/digests'
+      preLoaderRoute: typeof ProtectedDossiersTopicsIdDigestsRouteImport
+      parentRoute: typeof ProtectedDossiersTopicsIdRoute
+    }
     '/_protected/dossiers/topics/$id/audit': {
       id: '/_protected/dossiers/topics/$id/audit'
       path: '/audit'
@@ -3753,6 +3997,13 @@ declare module '@tanstack/react-router' {
       path: '/tasks'
       fullPath: '/dossiers/persons/$id/tasks'
       preLoaderRoute: typeof ProtectedDossiersPersonsIdTasksRouteImport
+      parentRoute: typeof ProtectedDossiersPersonsIdRoute
+    }
+    '/_protected/dossiers/persons/$id/signals': {
+      id: '/_protected/dossiers/persons/$id/signals'
+      path: '/signals'
+      fullPath: '/dossiers/persons/$id/signals'
+      preLoaderRoute: typeof ProtectedDossiersPersonsIdSignalsRouteImport
       parentRoute: typeof ProtectedDossiersPersonsIdRoute
     }
     '/_protected/dossiers/persons/$id/overview': {
@@ -3776,6 +4027,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDossiersPersonsIdDocsRouteImport
       parentRoute: typeof ProtectedDossiersPersonsIdRoute
     }
+    '/_protected/dossiers/persons/$id/digests': {
+      id: '/_protected/dossiers/persons/$id/digests'
+      path: '/digests'
+      fullPath: '/dossiers/persons/$id/digests'
+      preLoaderRoute: typeof ProtectedDossiersPersonsIdDigestsRouteImport
+      parentRoute: typeof ProtectedDossiersPersonsIdRoute
+    }
     '/_protected/dossiers/persons/$id/audit': {
       id: '/_protected/dossiers/persons/$id/audit'
       path: '/audit'
@@ -3795,6 +4053,13 @@ declare module '@tanstack/react-router' {
       path: '/tasks'
       fullPath: '/dossiers/organizations/$id/tasks'
       preLoaderRoute: typeof ProtectedDossiersOrganizationsIdTasksRouteImport
+      parentRoute: typeof ProtectedDossiersOrganizationsIdRoute
+    }
+    '/_protected/dossiers/organizations/$id/signals': {
+      id: '/_protected/dossiers/organizations/$id/signals'
+      path: '/signals'
+      fullPath: '/dossiers/organizations/$id/signals'
+      preLoaderRoute: typeof ProtectedDossiersOrganizationsIdSignalsRouteImport
       parentRoute: typeof ProtectedDossiersOrganizationsIdRoute
     }
     '/_protected/dossiers/organizations/$id/overview': {
@@ -3825,6 +4090,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDossiersOrganizationsIdDocsRouteImport
       parentRoute: typeof ProtectedDossiersOrganizationsIdRoute
     }
+    '/_protected/dossiers/organizations/$id/digests': {
+      id: '/_protected/dossiers/organizations/$id/digests'
+      path: '/digests'
+      fullPath: '/dossiers/organizations/$id/digests'
+      preLoaderRoute: typeof ProtectedDossiersOrganizationsIdDigestsRouteImport
+      parentRoute: typeof ProtectedDossiersOrganizationsIdRoute
+    }
     '/_protected/dossiers/organizations/$id/audit': {
       id: '/_protected/dossiers/organizations/$id/audit'
       path: '/audit'
@@ -3844,6 +4116,13 @@ declare module '@tanstack/react-router' {
       path: '/tasks'
       fullPath: '/dossiers/forums/$id/tasks'
       preLoaderRoute: typeof ProtectedDossiersForumsIdTasksRouteImport
+      parentRoute: typeof ProtectedDossiersForumsIdRoute
+    }
+    '/_protected/dossiers/forums/$id/signals': {
+      id: '/_protected/dossiers/forums/$id/signals'
+      path: '/signals'
+      fullPath: '/dossiers/forums/$id/signals'
+      preLoaderRoute: typeof ProtectedDossiersForumsIdSignalsRouteImport
       parentRoute: typeof ProtectedDossiersForumsIdRoute
     }
     '/_protected/dossiers/forums/$id/overview': {
@@ -3867,6 +4146,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDossiersForumsIdDocsRouteImport
       parentRoute: typeof ProtectedDossiersForumsIdRoute
     }
+    '/_protected/dossiers/forums/$id/digests': {
+      id: '/_protected/dossiers/forums/$id/digests'
+      path: '/digests'
+      fullPath: '/dossiers/forums/$id/digests'
+      preLoaderRoute: typeof ProtectedDossiersForumsIdDigestsRouteImport
+      parentRoute: typeof ProtectedDossiersForumsIdRoute
+    }
     '/_protected/dossiers/forums/$id/audit': {
       id: '/_protected/dossiers/forums/$id/audit'
       path: '/audit'
@@ -3888,6 +4174,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDossiersElectedOfficialsIdTasksRouteImport
       parentRoute: typeof ProtectedDossiersElectedOfficialsIdRoute
     }
+    '/_protected/dossiers/elected-officials/$id/signals': {
+      id: '/_protected/dossiers/elected-officials/$id/signals'
+      path: '/signals'
+      fullPath: '/dossiers/elected-officials/$id/signals'
+      preLoaderRoute: typeof ProtectedDossiersElectedOfficialsIdSignalsRouteImport
+      parentRoute: typeof ProtectedDossiersElectedOfficialsIdRoute
+    }
     '/_protected/dossiers/elected-officials/$id/overview': {
       id: '/_protected/dossiers/elected-officials/$id/overview'
       path: '/overview'
@@ -3907,6 +4200,13 @@ declare module '@tanstack/react-router' {
       path: '/docs'
       fullPath: '/dossiers/elected-officials/$id/docs'
       preLoaderRoute: typeof ProtectedDossiersElectedOfficialsIdDocsRouteImport
+      parentRoute: typeof ProtectedDossiersElectedOfficialsIdRoute
+    }
+    '/_protected/dossiers/elected-officials/$id/digests': {
+      id: '/_protected/dossiers/elected-officials/$id/digests'
+      path: '/digests'
+      fullPath: '/dossiers/elected-officials/$id/digests'
+      preLoaderRoute: typeof ProtectedDossiersElectedOfficialsIdDigestsRouteImport
       parentRoute: typeof ProtectedDossiersElectedOfficialsIdRoute
     }
     '/_protected/dossiers/elected-officials/$id/committees': {
@@ -3937,6 +4237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDossiersCountriesIdTasksRouteImport
       parentRoute: typeof ProtectedDossiersCountriesIdRoute
     }
+    '/_protected/dossiers/countries/$id/signals': {
+      id: '/_protected/dossiers/countries/$id/signals'
+      path: '/signals'
+      fullPath: '/dossiers/countries/$id/signals'
+      preLoaderRoute: typeof ProtectedDossiersCountriesIdSignalsRouteImport
+      parentRoute: typeof ProtectedDossiersCountriesIdRoute
+    }
     '/_protected/dossiers/countries/$id/positions': {
       id: '/_protected/dossiers/countries/$id/positions'
       path: '/positions'
@@ -3963,6 +4270,13 @@ declare module '@tanstack/react-router' {
       path: '/docs'
       fullPath: '/dossiers/countries/$id/docs'
       preLoaderRoute: typeof ProtectedDossiersCountriesIdDocsRouteImport
+      parentRoute: typeof ProtectedDossiersCountriesIdRoute
+    }
+    '/_protected/dossiers/countries/$id/digests': {
+      id: '/_protected/dossiers/countries/$id/digests'
+      path: '/digests'
+      fullPath: '/dossiers/countries/$id/digests'
+      preLoaderRoute: typeof ProtectedDossiersCountriesIdDigestsRouteImport
       parentRoute: typeof ProtectedDossiersCountriesIdRoute
     }
     '/_protected/dossiers/countries/$id/audit': {
@@ -4020,9 +4334,11 @@ interface ProtectedEngagementsEngagementIdRouteChildren {
   ProtectedEngagementsEngagementIdAuditRoute: typeof ProtectedEngagementsEngagementIdAuditRoute
   ProtectedEngagementsEngagementIdCalendarRoute: typeof ProtectedEngagementsEngagementIdCalendarRoute
   ProtectedEngagementsEngagementIdContextRoute: typeof ProtectedEngagementsEngagementIdContextRoute
+  ProtectedEngagementsEngagementIdDigestsRoute: typeof ProtectedEngagementsEngagementIdDigestsRoute
   ProtectedEngagementsEngagementIdDocsRoute: typeof ProtectedEngagementsEngagementIdDocsRoute
   ProtectedEngagementsEngagementIdOverviewRoute: typeof ProtectedEngagementsEngagementIdOverviewRoute
   ProtectedEngagementsEngagementIdPositionsRoute: typeof ProtectedEngagementsEngagementIdPositionsRoute
+  ProtectedEngagementsEngagementIdSignalsRoute: typeof ProtectedEngagementsEngagementIdSignalsRoute
   ProtectedEngagementsEngagementIdTasksRoute: typeof ProtectedEngagementsEngagementIdTasksRoute
   ProtectedEngagementsEngagementIdIndexRoute: typeof ProtectedEngagementsEngagementIdIndexRoute
 }
@@ -4034,9 +4350,11 @@ const ProtectedEngagementsEngagementIdRouteChildren: ProtectedEngagementsEngagem
     ProtectedEngagementsEngagementIdAuditRoute: ProtectedEngagementsEngagementIdAuditRoute,
     ProtectedEngagementsEngagementIdCalendarRoute: ProtectedEngagementsEngagementIdCalendarRoute,
     ProtectedEngagementsEngagementIdContextRoute: ProtectedEngagementsEngagementIdContextRoute,
+    ProtectedEngagementsEngagementIdDigestsRoute: ProtectedEngagementsEngagementIdDigestsRoute,
     ProtectedEngagementsEngagementIdDocsRoute: ProtectedEngagementsEngagementIdDocsRoute,
     ProtectedEngagementsEngagementIdOverviewRoute: ProtectedEngagementsEngagementIdOverviewRoute,
     ProtectedEngagementsEngagementIdPositionsRoute: ProtectedEngagementsEngagementIdPositionsRoute,
+    ProtectedEngagementsEngagementIdSignalsRoute: ProtectedEngagementsEngagementIdSignalsRoute,
     ProtectedEngagementsEngagementIdTasksRoute: ProtectedEngagementsEngagementIdTasksRoute,
     ProtectedEngagementsEngagementIdIndexRoute: ProtectedEngagementsEngagementIdIndexRoute,
   }
@@ -4211,10 +4529,12 @@ const ProtectedAfterActionsAfterActionIdRouteWithChildren =
 
 interface ProtectedDossiersCountriesIdRouteChildren {
   ProtectedDossiersCountriesIdAuditRoute: typeof ProtectedDossiersCountriesIdAuditRoute
+  ProtectedDossiersCountriesIdDigestsRoute: typeof ProtectedDossiersCountriesIdDigestsRoute
   ProtectedDossiersCountriesIdDocsRoute: typeof ProtectedDossiersCountriesIdDocsRoute
   ProtectedDossiersCountriesIdEngagementsRoute: typeof ProtectedDossiersCountriesIdEngagementsRoute
   ProtectedDossiersCountriesIdOverviewRoute: typeof ProtectedDossiersCountriesIdOverviewRoute
   ProtectedDossiersCountriesIdPositionsRoute: typeof ProtectedDossiersCountriesIdPositionsRoute
+  ProtectedDossiersCountriesIdSignalsRoute: typeof ProtectedDossiersCountriesIdSignalsRoute
   ProtectedDossiersCountriesIdTasksRoute: typeof ProtectedDossiersCountriesIdTasksRoute
   ProtectedDossiersCountriesIdTimelineRoute: typeof ProtectedDossiersCountriesIdTimelineRoute
   ProtectedDossiersCountriesIdIndexRoute: typeof ProtectedDossiersCountriesIdIndexRoute
@@ -4222,10 +4542,12 @@ interface ProtectedDossiersCountriesIdRouteChildren {
 
 const ProtectedDossiersCountriesIdRouteChildren: ProtectedDossiersCountriesIdRouteChildren = {
   ProtectedDossiersCountriesIdAuditRoute: ProtectedDossiersCountriesIdAuditRoute,
+  ProtectedDossiersCountriesIdDigestsRoute: ProtectedDossiersCountriesIdDigestsRoute,
   ProtectedDossiersCountriesIdDocsRoute: ProtectedDossiersCountriesIdDocsRoute,
   ProtectedDossiersCountriesIdEngagementsRoute: ProtectedDossiersCountriesIdEngagementsRoute,
   ProtectedDossiersCountriesIdOverviewRoute: ProtectedDossiersCountriesIdOverviewRoute,
   ProtectedDossiersCountriesIdPositionsRoute: ProtectedDossiersCountriesIdPositionsRoute,
+  ProtectedDossiersCountriesIdSignalsRoute: ProtectedDossiersCountriesIdSignalsRoute,
   ProtectedDossiersCountriesIdTasksRoute: ProtectedDossiersCountriesIdTasksRoute,
   ProtectedDossiersCountriesIdTimelineRoute: ProtectedDossiersCountriesIdTimelineRoute,
   ProtectedDossiersCountriesIdIndexRoute: ProtectedDossiersCountriesIdIndexRoute,
@@ -4237,9 +4559,11 @@ const ProtectedDossiersCountriesIdRouteWithChildren =
 interface ProtectedDossiersElectedOfficialsIdRouteChildren {
   ProtectedDossiersElectedOfficialsIdAuditRoute: typeof ProtectedDossiersElectedOfficialsIdAuditRoute
   ProtectedDossiersElectedOfficialsIdCommitteesRoute: typeof ProtectedDossiersElectedOfficialsIdCommitteesRoute
+  ProtectedDossiersElectedOfficialsIdDigestsRoute: typeof ProtectedDossiersElectedOfficialsIdDigestsRoute
   ProtectedDossiersElectedOfficialsIdDocsRoute: typeof ProtectedDossiersElectedOfficialsIdDocsRoute
   ProtectedDossiersElectedOfficialsIdEngagementsRoute: typeof ProtectedDossiersElectedOfficialsIdEngagementsRoute
   ProtectedDossiersElectedOfficialsIdOverviewRoute: typeof ProtectedDossiersElectedOfficialsIdOverviewRoute
+  ProtectedDossiersElectedOfficialsIdSignalsRoute: typeof ProtectedDossiersElectedOfficialsIdSignalsRoute
   ProtectedDossiersElectedOfficialsIdTasksRoute: typeof ProtectedDossiersElectedOfficialsIdTasksRoute
   ProtectedDossiersElectedOfficialsIdTimelineRoute: typeof ProtectedDossiersElectedOfficialsIdTimelineRoute
   ProtectedDossiersElectedOfficialsIdIndexRoute: typeof ProtectedDossiersElectedOfficialsIdIndexRoute
@@ -4250,11 +4574,15 @@ const ProtectedDossiersElectedOfficialsIdRouteChildren: ProtectedDossiersElected
     ProtectedDossiersElectedOfficialsIdAuditRoute: ProtectedDossiersElectedOfficialsIdAuditRoute,
     ProtectedDossiersElectedOfficialsIdCommitteesRoute:
       ProtectedDossiersElectedOfficialsIdCommitteesRoute,
+    ProtectedDossiersElectedOfficialsIdDigestsRoute:
+      ProtectedDossiersElectedOfficialsIdDigestsRoute,
     ProtectedDossiersElectedOfficialsIdDocsRoute: ProtectedDossiersElectedOfficialsIdDocsRoute,
     ProtectedDossiersElectedOfficialsIdEngagementsRoute:
       ProtectedDossiersElectedOfficialsIdEngagementsRoute,
     ProtectedDossiersElectedOfficialsIdOverviewRoute:
       ProtectedDossiersElectedOfficialsIdOverviewRoute,
+    ProtectedDossiersElectedOfficialsIdSignalsRoute:
+      ProtectedDossiersElectedOfficialsIdSignalsRoute,
     ProtectedDossiersElectedOfficialsIdTasksRoute: ProtectedDossiersElectedOfficialsIdTasksRoute,
     ProtectedDossiersElectedOfficialsIdTimelineRoute:
       ProtectedDossiersElectedOfficialsIdTimelineRoute,
@@ -4268,9 +4596,11 @@ const ProtectedDossiersElectedOfficialsIdRouteWithChildren =
 
 interface ProtectedDossiersForumsIdRouteChildren {
   ProtectedDossiersForumsIdAuditRoute: typeof ProtectedDossiersForumsIdAuditRoute
+  ProtectedDossiersForumsIdDigestsRoute: typeof ProtectedDossiersForumsIdDigestsRoute
   ProtectedDossiersForumsIdDocsRoute: typeof ProtectedDossiersForumsIdDocsRoute
   ProtectedDossiersForumsIdEngagementsRoute: typeof ProtectedDossiersForumsIdEngagementsRoute
   ProtectedDossiersForumsIdOverviewRoute: typeof ProtectedDossiersForumsIdOverviewRoute
+  ProtectedDossiersForumsIdSignalsRoute: typeof ProtectedDossiersForumsIdSignalsRoute
   ProtectedDossiersForumsIdTasksRoute: typeof ProtectedDossiersForumsIdTasksRoute
   ProtectedDossiersForumsIdTimelineRoute: typeof ProtectedDossiersForumsIdTimelineRoute
   ProtectedDossiersForumsIdIndexRoute: typeof ProtectedDossiersForumsIdIndexRoute
@@ -4278,9 +4608,11 @@ interface ProtectedDossiersForumsIdRouteChildren {
 
 const ProtectedDossiersForumsIdRouteChildren: ProtectedDossiersForumsIdRouteChildren = {
   ProtectedDossiersForumsIdAuditRoute: ProtectedDossiersForumsIdAuditRoute,
+  ProtectedDossiersForumsIdDigestsRoute: ProtectedDossiersForumsIdDigestsRoute,
   ProtectedDossiersForumsIdDocsRoute: ProtectedDossiersForumsIdDocsRoute,
   ProtectedDossiersForumsIdEngagementsRoute: ProtectedDossiersForumsIdEngagementsRoute,
   ProtectedDossiersForumsIdOverviewRoute: ProtectedDossiersForumsIdOverviewRoute,
+  ProtectedDossiersForumsIdSignalsRoute: ProtectedDossiersForumsIdSignalsRoute,
   ProtectedDossiersForumsIdTasksRoute: ProtectedDossiersForumsIdTasksRoute,
   ProtectedDossiersForumsIdTimelineRoute: ProtectedDossiersForumsIdTimelineRoute,
   ProtectedDossiersForumsIdIndexRoute: ProtectedDossiersForumsIdIndexRoute,
@@ -4292,10 +4624,12 @@ const ProtectedDossiersForumsIdRouteWithChildren = ProtectedDossiersForumsIdRout
 
 interface ProtectedDossiersOrganizationsIdRouteChildren {
   ProtectedDossiersOrganizationsIdAuditRoute: typeof ProtectedDossiersOrganizationsIdAuditRoute
+  ProtectedDossiersOrganizationsIdDigestsRoute: typeof ProtectedDossiersOrganizationsIdDigestsRoute
   ProtectedDossiersOrganizationsIdDocsRoute: typeof ProtectedDossiersOrganizationsIdDocsRoute
   ProtectedDossiersOrganizationsIdEngagementsRoute: typeof ProtectedDossiersOrganizationsIdEngagementsRoute
   ProtectedDossiersOrganizationsIdMousRoute: typeof ProtectedDossiersOrganizationsIdMousRoute
   ProtectedDossiersOrganizationsIdOverviewRoute: typeof ProtectedDossiersOrganizationsIdOverviewRoute
+  ProtectedDossiersOrganizationsIdSignalsRoute: typeof ProtectedDossiersOrganizationsIdSignalsRoute
   ProtectedDossiersOrganizationsIdTasksRoute: typeof ProtectedDossiersOrganizationsIdTasksRoute
   ProtectedDossiersOrganizationsIdTimelineRoute: typeof ProtectedDossiersOrganizationsIdTimelineRoute
   ProtectedDossiersOrganizationsIdIndexRoute: typeof ProtectedDossiersOrganizationsIdIndexRoute
@@ -4304,11 +4638,13 @@ interface ProtectedDossiersOrganizationsIdRouteChildren {
 const ProtectedDossiersOrganizationsIdRouteChildren: ProtectedDossiersOrganizationsIdRouteChildren =
   {
     ProtectedDossiersOrganizationsIdAuditRoute: ProtectedDossiersOrganizationsIdAuditRoute,
+    ProtectedDossiersOrganizationsIdDigestsRoute: ProtectedDossiersOrganizationsIdDigestsRoute,
     ProtectedDossiersOrganizationsIdDocsRoute: ProtectedDossiersOrganizationsIdDocsRoute,
     ProtectedDossiersOrganizationsIdEngagementsRoute:
       ProtectedDossiersOrganizationsIdEngagementsRoute,
     ProtectedDossiersOrganizationsIdMousRoute: ProtectedDossiersOrganizationsIdMousRoute,
     ProtectedDossiersOrganizationsIdOverviewRoute: ProtectedDossiersOrganizationsIdOverviewRoute,
+    ProtectedDossiersOrganizationsIdSignalsRoute: ProtectedDossiersOrganizationsIdSignalsRoute,
     ProtectedDossiersOrganizationsIdTasksRoute: ProtectedDossiersOrganizationsIdTasksRoute,
     ProtectedDossiersOrganizationsIdTimelineRoute: ProtectedDossiersOrganizationsIdTimelineRoute,
     ProtectedDossiersOrganizationsIdIndexRoute: ProtectedDossiersOrganizationsIdIndexRoute,
@@ -4321,9 +4657,11 @@ const ProtectedDossiersOrganizationsIdRouteWithChildren =
 
 interface ProtectedDossiersPersonsIdRouteChildren {
   ProtectedDossiersPersonsIdAuditRoute: typeof ProtectedDossiersPersonsIdAuditRoute
+  ProtectedDossiersPersonsIdDigestsRoute: typeof ProtectedDossiersPersonsIdDigestsRoute
   ProtectedDossiersPersonsIdDocsRoute: typeof ProtectedDossiersPersonsIdDocsRoute
   ProtectedDossiersPersonsIdEngagementsRoute: typeof ProtectedDossiersPersonsIdEngagementsRoute
   ProtectedDossiersPersonsIdOverviewRoute: typeof ProtectedDossiersPersonsIdOverviewRoute
+  ProtectedDossiersPersonsIdSignalsRoute: typeof ProtectedDossiersPersonsIdSignalsRoute
   ProtectedDossiersPersonsIdTasksRoute: typeof ProtectedDossiersPersonsIdTasksRoute
   ProtectedDossiersPersonsIdTimelineRoute: typeof ProtectedDossiersPersonsIdTimelineRoute
   ProtectedDossiersPersonsIdIndexRoute: typeof ProtectedDossiersPersonsIdIndexRoute
@@ -4331,9 +4669,11 @@ interface ProtectedDossiersPersonsIdRouteChildren {
 
 const ProtectedDossiersPersonsIdRouteChildren: ProtectedDossiersPersonsIdRouteChildren = {
   ProtectedDossiersPersonsIdAuditRoute: ProtectedDossiersPersonsIdAuditRoute,
+  ProtectedDossiersPersonsIdDigestsRoute: ProtectedDossiersPersonsIdDigestsRoute,
   ProtectedDossiersPersonsIdDocsRoute: ProtectedDossiersPersonsIdDocsRoute,
   ProtectedDossiersPersonsIdEngagementsRoute: ProtectedDossiersPersonsIdEngagementsRoute,
   ProtectedDossiersPersonsIdOverviewRoute: ProtectedDossiersPersonsIdOverviewRoute,
+  ProtectedDossiersPersonsIdSignalsRoute: ProtectedDossiersPersonsIdSignalsRoute,
   ProtectedDossiersPersonsIdTasksRoute: ProtectedDossiersPersonsIdTasksRoute,
   ProtectedDossiersPersonsIdTimelineRoute: ProtectedDossiersPersonsIdTimelineRoute,
   ProtectedDossiersPersonsIdIndexRoute: ProtectedDossiersPersonsIdIndexRoute,
@@ -4344,10 +4684,12 @@ const ProtectedDossiersPersonsIdRouteWithChildren =
 
 interface ProtectedDossiersTopicsIdRouteChildren {
   ProtectedDossiersTopicsIdAuditRoute: typeof ProtectedDossiersTopicsIdAuditRoute
+  ProtectedDossiersTopicsIdDigestsRoute: typeof ProtectedDossiersTopicsIdDigestsRoute
   ProtectedDossiersTopicsIdDocsRoute: typeof ProtectedDossiersTopicsIdDocsRoute
   ProtectedDossiersTopicsIdEngagementsRoute: typeof ProtectedDossiersTopicsIdEngagementsRoute
   ProtectedDossiersTopicsIdOverviewRoute: typeof ProtectedDossiersTopicsIdOverviewRoute
   ProtectedDossiersTopicsIdPositionsRoute: typeof ProtectedDossiersTopicsIdPositionsRoute
+  ProtectedDossiersTopicsIdSignalsRoute: typeof ProtectedDossiersTopicsIdSignalsRoute
   ProtectedDossiersTopicsIdTasksRoute: typeof ProtectedDossiersTopicsIdTasksRoute
   ProtectedDossiersTopicsIdTimelineRoute: typeof ProtectedDossiersTopicsIdTimelineRoute
   ProtectedDossiersTopicsIdIndexRoute: typeof ProtectedDossiersTopicsIdIndexRoute
@@ -4355,10 +4697,12 @@ interface ProtectedDossiersTopicsIdRouteChildren {
 
 const ProtectedDossiersTopicsIdRouteChildren: ProtectedDossiersTopicsIdRouteChildren = {
   ProtectedDossiersTopicsIdAuditRoute: ProtectedDossiersTopicsIdAuditRoute,
+  ProtectedDossiersTopicsIdDigestsRoute: ProtectedDossiersTopicsIdDigestsRoute,
   ProtectedDossiersTopicsIdDocsRoute: ProtectedDossiersTopicsIdDocsRoute,
   ProtectedDossiersTopicsIdEngagementsRoute: ProtectedDossiersTopicsIdEngagementsRoute,
   ProtectedDossiersTopicsIdOverviewRoute: ProtectedDossiersTopicsIdOverviewRoute,
   ProtectedDossiersTopicsIdPositionsRoute: ProtectedDossiersTopicsIdPositionsRoute,
+  ProtectedDossiersTopicsIdSignalsRoute: ProtectedDossiersTopicsIdSignalsRoute,
   ProtectedDossiersTopicsIdTasksRoute: ProtectedDossiersTopicsIdTasksRoute,
   ProtectedDossiersTopicsIdTimelineRoute: ProtectedDossiersTopicsIdTimelineRoute,
   ProtectedDossiersTopicsIdIndexRoute: ProtectedDossiersTopicsIdIndexRoute,
@@ -4370,9 +4714,11 @@ const ProtectedDossiersTopicsIdRouteWithChildren = ProtectedDossiersTopicsIdRout
 
 interface ProtectedDossiersWorking_groupsIdRouteChildren {
   ProtectedDossiersWorking_groupsIdAuditRoute: typeof ProtectedDossiersWorking_groupsIdAuditRoute
+  ProtectedDossiersWorking_groupsIdDigestsRoute: typeof ProtectedDossiersWorking_groupsIdDigestsRoute
   ProtectedDossiersWorking_groupsIdDocsRoute: typeof ProtectedDossiersWorking_groupsIdDocsRoute
   ProtectedDossiersWorking_groupsIdEngagementsRoute: typeof ProtectedDossiersWorking_groupsIdEngagementsRoute
   ProtectedDossiersWorking_groupsIdOverviewRoute: typeof ProtectedDossiersWorking_groupsIdOverviewRoute
+  ProtectedDossiersWorking_groupsIdSignalsRoute: typeof ProtectedDossiersWorking_groupsIdSignalsRoute
   ProtectedDossiersWorking_groupsIdTasksRoute: typeof ProtectedDossiersWorking_groupsIdTasksRoute
   ProtectedDossiersWorking_groupsIdTimelineRoute: typeof ProtectedDossiersWorking_groupsIdTimelineRoute
   ProtectedDossiersWorking_groupsIdIndexRoute: typeof ProtectedDossiersWorking_groupsIdIndexRoute
@@ -4381,10 +4727,12 @@ interface ProtectedDossiersWorking_groupsIdRouteChildren {
 const ProtectedDossiersWorking_groupsIdRouteChildren: ProtectedDossiersWorking_groupsIdRouteChildren =
   {
     ProtectedDossiersWorking_groupsIdAuditRoute: ProtectedDossiersWorking_groupsIdAuditRoute,
+    ProtectedDossiersWorking_groupsIdDigestsRoute: ProtectedDossiersWorking_groupsIdDigestsRoute,
     ProtectedDossiersWorking_groupsIdDocsRoute: ProtectedDossiersWorking_groupsIdDocsRoute,
     ProtectedDossiersWorking_groupsIdEngagementsRoute:
       ProtectedDossiersWorking_groupsIdEngagementsRoute,
     ProtectedDossiersWorking_groupsIdOverviewRoute: ProtectedDossiersWorking_groupsIdOverviewRoute,
+    ProtectedDossiersWorking_groupsIdSignalsRoute: ProtectedDossiersWorking_groupsIdSignalsRoute,
     ProtectedDossiersWorking_groupsIdTasksRoute: ProtectedDossiersWorking_groupsIdTasksRoute,
     ProtectedDossiersWorking_groupsIdTimelineRoute: ProtectedDossiersWorking_groupsIdTimelineRoute,
     ProtectedDossiersWorking_groupsIdIndexRoute: ProtectedDossiersWorking_groupsIdIndexRoute,

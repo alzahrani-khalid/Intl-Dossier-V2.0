@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Cross2Icon } from '@radix-ui/react-icons'
 
@@ -29,25 +30,32 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay />
-    <DialogPrimitive.Content
-      ref={ref}
-      className={cn(
-        'id-dialog-content fixed left-[50%] top-[50%] z-50 grid w-[calc(100vw-2rem)] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-[var(--gap)] border border-[var(--line)] bg-[var(--surface)] p-[var(--pad)] text-[var(--ink)] shadow-[var(--shadow)] duration-[var(--dur)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 sm:w-full sm:rounded-[var(--radius)]',
-        className,
-      )}
-      {...props}
-    >
-      {children}
-      <DialogPrimitive.Close className="tb-icon-btn absolute end-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] text-[var(--ink-mute)] transition-colors hover:bg-[var(--line-soft)] hover:text-[var(--ink)] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:pointer-events-none">
-        <Cross2Icon className="h-4 w-4" />
-        <span className="sr-only">Close</span>
-      </DialogPrimitive.Close>
-    </DialogPrimitive.Content>
-  </DialogPortal>
-))
+>(({ className, children, ...props }, ref) => {
+  const { t } = useTranslation('common')
+
+  return (
+    <DialogPortal>
+      <DialogOverlay />
+      <DialogPrimitive.Content
+        ref={ref}
+        className={cn(
+          'id-dialog-content fixed left-[50%] top-[50%] z-50 grid w-[calc(100vw-2rem)] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-[var(--gap)] border border-[var(--line)] bg-[var(--surface)] p-[var(--pad)] text-[var(--ink)] shadow-[var(--shadow)] duration-[var(--dur)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 sm:w-full sm:rounded-[var(--radius)]',
+          className,
+        )}
+        {...props}
+      >
+        {children}
+        <DialogPrimitive.Close
+          aria-label={t('common.close', { defaultValue: 'Close' })}
+          className="tb-icon-btn absolute end-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] text-[var(--ink-mute)] transition-colors hover:bg-[var(--line-soft)] hover:text-[var(--ink)] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:pointer-events-none"
+        >
+          <Cross2Icon className="h-4 w-4" />
+          <span className="sr-only">{t('common.close', { defaultValue: 'Close' })}</span>
+        </DialogPrimitive.Close>
+      </DialogPrimitive.Content>
+    </DialogPortal>
+  )
+})
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (

@@ -150,5 +150,43 @@
     "svg": "Export as SVG",
     "success": "Graph exported as {{format}}",
     "error": "Failed to export graph"
+  },
+  "analyze": {
+    "mode": "Analyze",
+    "commandPrefix": "Analyze:",
+    "pickerHeading": "Choose an analysis",
+    "entity": "Entity",
+    "entityPrimary": "First entity",
+    "entitySecondary": "Second entity",
+    "entityPlaceholder": "Dossier id",
+    "window": "Over the last {{count}} days",
+    "run": "Run analysis",
+    "resultHeading": "Result",
+    "graphView": "Graph view",
+    "listView": "List view",
+    "loading": "Running analysis…",
+    "error": "Could not run this analysis. Check your selection and try again.",
+    "openInPanel": "Open in the Network panel",
+    "template": {
+      "forumMembership": "Who sits on which forum",
+      "sharedCommittees": "Shared committees",
+      "engagementChain": "Engagement chains",
+      "shortestPath": "How are these connected"
+    },
+    "count": {
+      "membership": "{{count}} forums and working groups",
+      "intersection": "{{count}} shared committees",
+      "chain": "{{count}} engagements",
+      "path": "Connected in {{count}} hops"
+    },
+    "col": {
+      "committee": "Committee",
+      "type": "Type"
+    },
+    "empty": {
+      "heading": "No results",
+      "body": "This entity has no matching records for this analysis.",
+      "path": "No connection found between these entities."
+    }
   }
 }

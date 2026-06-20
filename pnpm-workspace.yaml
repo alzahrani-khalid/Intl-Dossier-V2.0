@@ -2,3 +2,6 @@ packages:
   - 'backend'
   - 'frontend'
   - 'shared'
+  # NOTE: exact 'agent-runtime' (NOT 'agent-runtime/*') so the throwaway
+  # agent-runtime/spike standalone package stays OUT of the workspace.
+  - 'agent-runtime'

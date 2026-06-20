@@ -53,7 +53,11 @@
     "exportDossiers": "Export Dossiers",
     "intelligence": "Go to Intelligence",
     "reports": "Go to Reports",
-    "slaMonitoring": "SLA Monitoring"
+    "slaMonitoring": "SLA Monitoring",
+    "analyzeForumMembership": "Analyze: Who sits on which forum",
+    "analyzeSharedCommittees": "Analyze: Shared committees",
+    "analyzeEngagementChains": "Analyze: Engagement chains",
+    "analyzeShortestPath": "Analyze: How are these connected"
   },
 
   "shortcuts": {
