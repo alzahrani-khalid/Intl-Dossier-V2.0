@@ -1,0 +1,47 @@
+# Phase 73 — Deferred / Out-of-Scope Discoveries
+
+Items found during execution that are NOT caused by this phase's changes and are
+out of scope per the executor scope boundary. Logged, not fixed.
+
+## DEFER-73-01-A — Live `dossiers-briefs-generate` edge function INSERTs to non-existent `briefs` columns (pre-existing prod break)
+
+- **Found during:** 73-01 Task 2 live-schema verification (2026-06-20).
+- **What:** `supabase/functions/dossiers-briefs-generate/index.ts` L298–310 inserts
+  into `briefs` with `dossier_id`, `content_en`, `content_ar`, `generated_by`,
+  `generated_by_user_id`. The **live** `briefs` table on staging
+  (`zkrcjzdemdmwhearhfgg`) has **none** of those columns. The function is deployed
+  (OPTIONS → HTTP 200) but its brief INSERT raises `PGRST204 / column does not exist`
+  at runtime — the AI brief-generate path is dead in production.
+- **Evidence:** PostgREST OpenAPI + safe invalid-insert probes confirm the live
+  `briefs` columns are `id, type, target_entity(jsonb), purpose(text),
+audience(jsonb), parameters(jsonb), content(jsonb), generation(jsonb), usage,
+created_at, updated_at, created_by, last_modified_by, version, tenant_id,
+is_deleted, deleted_at, title, summary, attachments, intelligence_report_id,
+country_id, organization_id, status(brief_status), search_vector, embedding,
+engagement_dossier_id, expires_at, freshness_status`. NOT NULL-no-default set:
+  `type, target_entity, purpose, audience, parameters, content, generation,
+created_by, last_modified_by, version, tenant_id, is_deleted, status` (+ id/created_at/updated_at defaulted).
+- **Why deferred:** Not caused by 73-01; fixing the edge function (or reconciling the
+  `briefs` schema) is the very decision blocking 73-01 Task 2 and is being escalated
+  to the user as a checkpoint. Whoever resolves the brief data-model fork should also
+  repair or retire this edge function.
+
+## DEFER-73-01-B — `briefs` migration history diverges from the live table
+
+- The repo contains three contradictory `briefs` definitions
+  (`007_create_briefs.sql`, `20250930005_create_briefs_table.sql`, and the
+  `engagement_briefs` VIEW in `20260110100001_engagement_brief_linking.sql`), and the
+  **actual live shape matches none of them**. The migration that produced the live
+  `briefs` table (the `type/target_entity/audience/generation/tenant_id/
+last_modified_by/version` shape) is not present in the local migrations tree —
+  consistent with prior MEMORY notes that staging schema was applied out-of-band via
+  the Supabase MCP. Any future `briefs` work must treat the live schema as the source
+  of truth, not the repo migrations.
+
+## DEFER-73-01-C — Supabase migration ledger badly out of sync (blocks `supabase db push`)
+
+- `supabase db push --linked --dry-run` aborts with "Remote migration versions not
+  found in local migrations directory" and lists ~600 remote-only versions. Pushing
+  via the CLI would require a large `supabase migration repair` reconciliation first.
+  Out of scope. The sanctioned apply channel for this repo is the Supabase MCP
+  `apply_migration` (per CLAUDE.md), which records its own version IDs.
