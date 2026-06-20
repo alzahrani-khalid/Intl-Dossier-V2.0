@@ -1,0 +1,18 @@
+# Docker build-context excludes. CRITICAL: without `node_modules` here, the host's
+# macOS-arm64 node_modules is copied by `COPY . .` and clobbers the clean in-image
+# Linux install (its pnpm symlinks point into the workspace store that isn't in the
+# standalone image), breaking `vite build` with a MODULE_NOT_FOUND on vite/bin/vite.js.
+node_modules
+dist
+dist-ssr
+.env
+.env.*
+.git
+.gitignore
+.turbo
+.vite
+coverage
+*.log
+.DS_Store
+Dockerfile*
+.dockerignore

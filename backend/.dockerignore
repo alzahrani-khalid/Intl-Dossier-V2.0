@@ -1,0 +1,15 @@
+# Docker build-context excludes. Without `node_modules` here, the host's macOS-arm64
+# node_modules is copied by `COPY . .` and clobbers the clean in-image Linux install,
+# breaking the standalone build.
+node_modules
+dist
+.env
+.env.*
+.git
+.gitignore
+.turbo
+coverage
+*.log
+.DS_Store
+Dockerfile*
+.dockerignore

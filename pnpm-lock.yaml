@@ -160,6 +160,9 @@ importers:
       express:
         specifier: ^5.2.1
         version: 5.2.1
+      openai:
+        specifier: ^6.39.0
+        version: 6.39.0(ws@8.20.0)(zod@4.4.3)
       winston:
         specifier: ^3.19.0
         version: 3.19.0
@@ -348,6 +351,9 @@ importers:
 
   frontend:
     dependencies:
+      '@ag-ui/client':
+        specifier: 0.0.57
+        version: 0.0.57
       '@assistant-ui/react':
         specifier: 0.14.23
         version: 0.14.23(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(immer@10.1.3)(ioredis@5.10.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(use-sync-external-store@1.6.0(react@19.2.6))
@@ -20195,7 +20201,6 @@ snapshots:
     optionalDependencies:
       ws: 8.20.0
       zod: 4.4.3
-    optional: true
 
   openapi-types@12.1.3: {}
 

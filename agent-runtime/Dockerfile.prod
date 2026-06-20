@@ -25,8 +25,10 @@ RUN apk add --no-cache python3 make g++ libc6-compat
 # v11 which hard-fails on ignored native build scripts via ERR_PNPM_IGNORED_BUILDS)
 RUN corepack enable && corepack prepare pnpm@10.29.1 --activate
 
-# Copy package files
-COPY package.json pnpm-lock.yaml* ./
+# Copy package files (+ .npmrc so the standalone install hoists copilotkit's peer SDKs
+# exactly like the workspace root does — without it @copilotkit/runtime's eagerly
+# imported adapters crash at boot with `Cannot find package 'openai'`).
+COPY package.json pnpm-lock.yaml* .npmrc* ./
 
 # Install all dependencies (including devDependencies for build)
 RUN pnpm install --no-frozen-lockfile || true

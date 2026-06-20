@@ -148,7 +148,7 @@ export async function embedChunk(text: string): Promise<number[]> {
 // --- Source resolvers -------------------------------------------------------
 // Each pulls one source type's rows + text fields + owning-dossier link.
 // Column names are verified against the live schema (72-03/72-04 probes):
-//   dossiers:       name_en/ar, summary_en/ar; sensitivity_level INTEGER (live)
+//   dossiers:       name_en/ar, description_en/ar; sensitivity_level INTEGER (live)
 //   positions:      title_en/ar, content_en/ar, rationale_en/ar; linked via
 //                   position_dossier_links (trigger uses it — we set parent to
 //                   the first linked dossier so resolution always has an anchor)
@@ -159,26 +159,27 @@ export async function embedChunk(text: string): Promise<number[]> {
 async function resolveDossiers(sb: SupabaseClient): Promise<ResolvedSource[]> {
   const { data, error } = await sb
     .from('dossiers')
-    .select('id, organization_id, name_en, name_ar, summary_en, summary_ar')
+    .select('id, name_en, name_ar, description_en, description_ar')
   if (error != null) throw new Error(`Failed to read dossiers: ${error.message}`)
 
   return (data ?? []).map((row): ResolvedSource => {
     const r = row as {
       id: string
-      organization_id: string | null
       name_en: string | null
       name_ar: string | null
-      summary_en: string | null
-      summary_ar: string | null
+      description_en: string | null
+      description_ar: string | null
     }
     return {
       sourceType: 'dossier',
       sourceId: r.id,
       parentDossierId: null, // source_id IS the dossier; trigger reads it directly
-      organizationId: r.organization_id ?? null,
+      // dossiers has NO organization_id column on staging (rag_chunks.organization_id
+      // is nullable); leave tenant null, matching the position/after_action resolvers.
+      organizationId: null,
       fields: [
-        { lang: 'en', text: [r.name_en, r.summary_en].filter(Boolean).join('. ') },
-        { lang: 'ar', text: [r.name_ar, r.summary_ar].filter(Boolean).join('. ') },
+        { lang: 'en', text: [r.name_en, r.description_en].filter(Boolean).join('. ') },
+        { lang: 'ar', text: [r.name_ar, r.description_ar].filter(Boolean).join('. ') },
       ],
     }
   })
