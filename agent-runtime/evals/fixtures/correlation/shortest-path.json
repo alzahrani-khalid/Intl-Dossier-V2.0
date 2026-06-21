@@ -1,0 +1,53 @@
+{
+  "queryType": "shortest_path",
+  "description": "EVAL-02 golden: shortest path between entity 40 and entity 44 (40-41-42-43-44). Path edges are undirected for comparison; one returned edge (43--42) is endpoint-flipped vs golden to prove edgeKey folds it. 4 TP, 0 FP, 0 FN: precision 1.0, recall 1.0. A deterministic path is expected to recover exactly.",
+  "input": {
+    "entityId": "00000000-0000-4000-8000-000000000040",
+    "entityId2": "00000000-0000-4000-8000-000000000044",
+    "windowDays": 90
+  },
+  "returned": [
+    {
+      "source": "00000000-0000-4000-8000-000000000040",
+      "target": "00000000-0000-4000-8000-000000000041",
+      "type": "shortest_path"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000041",
+      "target": "00000000-0000-4000-8000-000000000042",
+      "type": "shortest_path"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000043",
+      "target": "00000000-0000-4000-8000-000000000042",
+      "type": "shortest_path"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000043",
+      "target": "00000000-0000-4000-8000-000000000044",
+      "type": "shortest_path"
+    }
+  ],
+  "golden": [
+    {
+      "source": "00000000-0000-4000-8000-000000000040",
+      "target": "00000000-0000-4000-8000-000000000041",
+      "type": "shortest_path"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000041",
+      "target": "00000000-0000-4000-8000-000000000042",
+      "type": "shortest_path"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000042",
+      "target": "00000000-0000-4000-8000-000000000043",
+      "type": "shortest_path"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000043",
+      "target": "00000000-0000-4000-8000-000000000044",
+      "type": "shortest_path"
+    }
+  ]
+}

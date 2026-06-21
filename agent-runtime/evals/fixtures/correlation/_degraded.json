@@ -1,0 +1,72 @@
+{
+  "queryType": "forum_membership",
+  "description": "EVAL-02 POSITIVE-FAILURE fixture: a deliberately degraded query_graph response that DROPS most golden edges and adds spurious ones, so precision AND recall fall below threshold. The rubric asserts the gate REJECTS this (mirrors ci.yml's bad-fixture assert). 2 TP, 4 FP (90/91/92/93), 4 FN (53/54/55/56): precision 2/6=0.333, recall 2/6=0.333 — both below 0.75/0.70.",
+  "input": {
+    "entityId": "00000000-0000-4000-8000-000000000051",
+    "windowDays": 90
+  },
+  "returned": [
+    {
+      "source": "00000000-0000-4000-8000-000000000051",
+      "target": "00000000-0000-4000-8000-000000000052",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000052",
+      "target": "00000000-0000-4000-8000-000000000053",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000051",
+      "target": "00000000-0000-4000-8000-000000000090",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000051",
+      "target": "00000000-0000-4000-8000-000000000091",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000051",
+      "target": "00000000-0000-4000-8000-000000000092",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000051",
+      "target": "00000000-0000-4000-8000-000000000093",
+      "type": "forum_membership"
+    }
+  ],
+  "golden": [
+    {
+      "source": "00000000-0000-4000-8000-000000000051",
+      "target": "00000000-0000-4000-8000-000000000052",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000052",
+      "target": "00000000-0000-4000-8000-000000000053",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000051",
+      "target": "00000000-0000-4000-8000-000000000054",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000051",
+      "target": "00000000-0000-4000-8000-000000000055",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000054",
+      "target": "00000000-0000-4000-8000-000000000055",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000051",
+      "target": "00000000-0000-4000-8000-000000000056",
+      "type": "forum_membership"
+    }
+  ]
+}

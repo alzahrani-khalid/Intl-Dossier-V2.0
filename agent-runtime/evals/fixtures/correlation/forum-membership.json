@@ -1,0 +1,72 @@
+{
+  "queryType": "forum_membership",
+  "description": "EVAL-02 golden: which dossiers co-belong to forum hub 0001. Undirected co-membership; one returned edge is endpoint-flipped vs golden to prove edgeKey folds A--B == B--A. 5 TP, 1 FP (10), 1 FN (06): precision 5/6=0.833, recall 5/6=0.833.",
+  "input": {
+    "entityId": "00000000-0000-4000-8000-000000000001",
+    "windowDays": 90
+  },
+  "returned": [
+    {
+      "source": "00000000-0000-4000-8000-000000000001",
+      "target": "00000000-0000-4000-8000-000000000002",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000001",
+      "target": "00000000-0000-4000-8000-000000000003",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000004",
+      "target": "00000000-0000-4000-8000-000000000001",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000001",
+      "target": "00000000-0000-4000-8000-000000000005",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000002",
+      "target": "00000000-0000-4000-8000-000000000003",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000001",
+      "target": "00000000-0000-4000-8000-000000000010",
+      "type": "forum_membership"
+    }
+  ],
+  "golden": [
+    {
+      "source": "00000000-0000-4000-8000-000000000001",
+      "target": "00000000-0000-4000-8000-000000000002",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000001",
+      "target": "00000000-0000-4000-8000-000000000003",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000001",
+      "target": "00000000-0000-4000-8000-000000000004",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000001",
+      "target": "00000000-0000-4000-8000-000000000005",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000002",
+      "target": "00000000-0000-4000-8000-000000000003",
+      "type": "forum_membership"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000001",
+      "target": "00000000-0000-4000-8000-000000000006",
+      "type": "forum_membership"
+    }
+  ]
+}
