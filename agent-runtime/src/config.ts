@@ -5,10 +5,15 @@ dotenv.config()
 // LIFTED from backend/src/ai/config.ts (Plan 72-05, D-01 — lift, do not rewrite).
 // The ONLY divergence from the backend original: the `vllm` block defaults its
 // model to the served-model-name 'gemma-4-12b' (D-02), so the agent-runtime copilot
-// runs on the on-prem model by default. The backend's global AI_USE_ANYTHINGLLM is
-// NOT flipped here — this workspace is independent (RESEARCH Runtime State).
+// runs on the on-prem model by default.
+//
+// Phase 74 (D3 — FULL external-LLM-platform rip-out): the legacy external-LLM-platform
+// provider was removed from this union, the `providers` map, and the env reads. It was
+// already unreachable (routing only ever resolves to vllm/ollama via getCopilotModel),
+// but the dead block still read its env levers — gone now so the copilot runtime carries
+// no path to it. The on-prem stack (vLLM/gemma + Ollama in dev) is the sole binding.
 
-export type AIProvider = 'openai' | 'anthropic' | 'google' | 'vllm' | 'ollama' | 'anythingllm'
+export type AIProvider = 'openai' | 'anthropic' | 'google' | 'vllm' | 'ollama'
 
 export type AIFeature =
   | 'brief_generation'
@@ -122,13 +127,8 @@ export const aiConfig: AIConfig = {
       defaultModel: process.env.OLLAMA_MODEL || 'llama3.1',
       enabled: !!process.env.OLLAMA_BASE_URL,
     },
-    anythingllm: {
-      provider: 'anythingllm',
-      apiKey: process.env.ANYTHINGLLM_API_KEY,
-      baseUrl: process.env.ANYTHINGLLM_API_URL || 'http://localhost:3001',
-      defaultModel: 'workspace-chat',
-      enabled: !!process.env.ANYTHINGLLM_API_URL || process.env.AI_USE_ANYTHINGLLM === 'true',
-    },
+    // (Phase 74 D3) The legacy external-LLM-platform provider block was removed here —
+    // it was unreachable (routing resolves only to vllm/ollama) and its env reads are gone.
   },
   features: {
     briefGeneration: process.env.AI_BRIEF_GENERATION_ENABLED !== 'false',
