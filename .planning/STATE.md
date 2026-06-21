@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: executing
-last_updated: '2026-06-21T12:15:05.440Z'
+last_updated: '2026-06-21T13:20:03.960Z'
 last_activity: 2026-06-21
 progress:
   total_phases: 7
   completed_phases: 6
   total_plans: 49
-  completed_plans: 40
-  percent: 82
+  completed_plans: 46
+  percent: 86
 ---
 
 # Project State
@@ -143,6 +143,8 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase ?]: 73-04: InlineDossierCard uses OPTION A (useDossier full-fetch, RLS-gated, retry:false) for UniversalDossierCard fidelity; whole-card deep-link via getDossierDetailPath; not-found/above-level/failure → one neutral line (indistinguishable-empty)
 - [Phase ?]: 73-04: signal deep-link = /intelligence (no per-signal route; queue selects by focusedIndex); inline cap N=5; bidi title via HTML dir attr (computed writingDirection) NOT CSS writingDirection (RN-only, absent from web CSSProperties)
 - [Phase ?]: 74-05: omit (not null) legacy anythingllm\_\* upsert columns — nullable in intelligence_reports; on-prem generation via shared \_shared/onprem-llm.ts generateStructuredJson (VLLM_BASE_URL /v1/chat/completions JSON mode), reusable by 74-06
+- [Phase ?]: 74-11: full-repo AnythingLLM audit confirms ZERO real calls remain on the critical path; FULL rip-out (D3) complete
+- [Phase ?]: 74-11: removed two dead AnythingLLM levers the guard does not scan — agent-runtime config provider block (233e5c02) + root .env.example keys (c3e2ee87)
 
 ### Open Todos
 
