@@ -294,33 +294,31 @@ Return JSON with this exact structure:
           }
         }
 
-        // Insert brief into database
-        const { data: brief, error: insertError } = await supabaseClient
-          .from('briefs')
-          .insert({
-            dossier_id: dossierId,
-            content_en: briefData.en,
-            content_ar: briefData.ar,
-            date_range_start: body.date_range_start || null,
-            date_range_end: body.date_range_end || null,
-            generated_by: 'ai',
-            generated_by_user_id: user.id,
-          })
-          .select()
-          .single();
-
-        if (insertError) {
-          console.error('Error inserting brief:', insertError);
-          throw new Error('Failed to save brief');
-        }
-
-        return new Response(JSON.stringify(brief), {
-          status: 201,
-          headers: {
-            ...corsHeaders,
-            'Content-Type': 'application/json',
-          },
-        });
+        // ---------------------------------------------------------------------
+        // SUPERSEDED (Phase 73): this `briefs` INSERT targets a DEAD pre-swap
+        // schema (dossier_id / content_en / content_ar / generated_by /
+        // generated_by_user_id) that NO LONGER EXISTS on the live `briefs` table
+        // (verified live 2026-06-20; see deferred-items DEFER-73-01-A/B). It would
+        // raise `PGRST204 / column does not exist` at runtime — this AI-generate
+        // persist path has been dead in production. The supported brief-write path
+        // is now the SECURITY INVOKER `persist_brief(p_dossier_id, p_content,
+        // p_title, p_summary)` RPC (migration 20260621090100_phase73_persist_brief.sql),
+        // committed under the caller JWT by the copilot HITL surface (P73 73-03).
+        //
+        // We GATE the dead INSERT off so it can never run: instead of writing to a
+        // non-existent schema, we route into the existing `catch (aiError)` fallback
+        // below, which returns the manual-template (AI_UNAVAILABLE) response and
+        // touches `briefs` not at all.
+        //
+        // REMOVAL: this entire AnythingLLM-based generate+persist branch is retired
+        // in P74 (external-LLM retirement). Do NOT "repair" this INSERT to the live
+        // schema — the persist contract lives in persist_brief, not here.
+        // ---------------------------------------------------------------------
+        void briefData;
+        throw new Error(
+          'dossiers-briefs-generate brief persistence is superseded by the persist_brief RPC (P73); ' +
+            'see migration 20260621090100_phase73_persist_brief.sql. Falling back to the manual template.',
+        );
       } catch (aiError) {
         console.warn('AI generation failed or timed out:', aiError);
 

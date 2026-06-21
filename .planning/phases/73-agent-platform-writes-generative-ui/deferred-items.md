@@ -38,6 +38,24 @@ last_modified_by/version` shape) is not present in the local migrations tree —
   the Supabase MCP. Any future `briefs` work must treat the live schema as the source
   of truth, not the repo migrations.
 
+## DEFER-73-01-D — `backend/src/services/brief.service.ts` also writes the dead `briefs` schema (P74 removal)
+
+- **Found during:** 73-01 Task 2 reconciliation (2026-06-21).
+- **What:** `backend/src/services/brief.service.ts` `BriefService.generateBrief()` (L132–154)
+  INSERTs into `briefs` via `supabaseAdmin` (service-role) with columns from a DEAD schema
+  (`entity_id`, `title_en`, `content_en`, `content_ar`, `template_id`, `sections`,
+  `key_points`, `recommendations`, `generation_method`, `ai_model`, `confidence_score`,
+  `review_status`) — none of which exist on the live `briefs` table. `reviewBrief()` (L211)
+  UPDATEs `review_status`/`reviewed_by` (also dead columns). This Express path is an
+  AnythingLLM-based generator like the `dossiers-briefs-generate` edge fn.
+- **Status:** LEFT AS-IS for P74 (external-LLM retirement). P73's reconciliation does NOT
+  touch the backend — the supported brief-write path is the `persist_brief` INVOKER RPC
+  (frontend HITL commit). When P74 retires the AnythingLLM substrate it must also retire or
+  re-point this service (and the `dossiers-briefs-generate` edge fn, gated off in P73).
+- **Why deferred (not fixed in P73):** out of P73 scope (the agent/frontend HITL loop);
+  this backend service is not invoked by the copilot write path and its dead INSERT is a
+  pre-existing prod break, not caused by P73.
+
 ## DEFER-73-01-C — Supabase migration ledger badly out of sync (blocks `supabase db push`)
 
 - `supabase db push --linked --dry-run` aborts with "Remote migration versions not
