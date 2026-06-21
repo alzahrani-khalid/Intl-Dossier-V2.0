@@ -40,12 +40,25 @@ unit config's root collection — neither run can be silently broadened into the
   whose metrics fall below threshold; the rubric asserts the gate would REJECT it. Mirrors
   the repo precedent at `.github/workflows/ci.yml` (the bad-fixture schema-ref assert).
 
-### Live-mode — deploy-gated, non-blocking (added in Plan 74-08)
+### Live-mode — deploy-gated, non-blocking (Plan 74-09)
 
-- **EVAL-01** briefing quality (EN+AR) and **EVAL-03** Arabic quality — generative judge
-  scoring via the on-prem gemma-4-12B model (`getCopilotModel()`, **D4**: zero-egress).
-  These run only when `secrets.EVAL_AI_URL` is set, since they need the GPU/gemma stack
-  (same deploy gate as Phases 72/73).
+- **EVAL-01** briefing quality EN+AR (`briefs.eval.test.ts`, ≥ **0.80**) and **EVAL-03**
+  Arabic quality (`arabic.eval.test.ts`, ≥ **0.75**) — generative judge scoring via the
+  on-prem gemma-4-12B model (`evals/lib/judge.ts` → `getCopilotModel()`, **D4**:
+  zero-egress). The live-scoring assertions are gated by `isJudgeConfigured()`
+  (`EVAL_AI_URL` / `VLLM_BASE_URL`): when the GPU/gemma host is absent they **skip** (not
+  fail), so CI stays green (same deploy gate as Phases 72/73). Their **structural +
+  positive-failure** half (golden + candidate parse to the brief shape; each `_degraded.json`
+  is structurally KNOWN-bad) runs in CI-mode now.
+
+#### Golden fixtures (D5)
+
+`fixtures/briefs/` and `fixtures/arabic/` carry a representative seed subset toward the D5
+target of ≈15–30 cases per rubric. The harness reads **every** `*.json` in each dir
+(leading-underscore = positive-failure), so adding more goldens is a drop-in: author a new
+JSON file in the matching `fixtures/{briefs,arabic}/` dir and the rubric picks it up — no
+test change. Current seed: 3 brief goldens (EN economic, EN political, AR economic) + 3
+Arabic cases; synthetic content only (no real dossier names or classified data).
 
 ## Layout
 
@@ -53,9 +66,15 @@ unit config's root collection — neither run can be silently broadened into the
 evals/
 ├── vitest.eval.config.ts        eval-only Vitest config (this run)
 ├── schemas/score.ts             SetMetricsSchema + RubricScoreSchema (shared Zod envelopes)
-├── lib/set-metrics.ts           computeSetMetrics + edgeKey (pure precision/recall/F1)
-├── correlation.eval.test.ts     EVAL-02 rubric (this plan)
-└── fixtures/correlation/        golden edge sets + the _degraded positive-failure fixture
+├── lib/set-metrics.ts           computeSetMetrics + edgeKey (pure precision/recall/F1, EVAL-02)
+├── lib/judge.ts                 on-prem gemma judge (getCopilotModel), RubricScore-validated (EVAL-01/03)
+├── correlation.eval.test.ts     EVAL-02 rubric (74-01)
+├── briefs.eval.test.ts          EVAL-01 bilingual briefing-quality rubric (74-09, ≥ 0.80)
+├── arabic.eval.test.ts          EVAL-03 Arabic-quality rubric (74-09, ≥ 0.75)
+└── fixtures/
+    ├── correlation/             golden edge sets + _degraded positive-failure (EVAL-02)
+    ├── briefs/                  golden EN+AR briefs + _degraded positive-failure (EVAL-01)
+    └── arabic/                  golden Arabic cases + _degraded positive-failure (EVAL-03)
 ```
 
 ## Fixtures

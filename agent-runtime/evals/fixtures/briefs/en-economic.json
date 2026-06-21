@@ -1,0 +1,45 @@
+{
+  "lang": "en",
+  "dossierType": "country",
+  "description": "EVAL-01 golden (EN, economic). Golden reference + a high-quality candidate that should score >= 0.80 on completeness / accuracy-vs-reference / bilingual-parity. Synthetic data only — no real dossier names or classified content.",
+  "input": {
+    "nameEn": "Republic of Astrabia",
+    "nameAr": "جمهورية أسترابيا",
+    "descEn": "A mid-size trading partner; bilateral trade volume grew 12% year on year.",
+    "descAr": "شريك تجاري متوسط الحجم؛ نما حجم التبادل التجاري الثنائي بنسبة 12% على أساس سنوي."
+  },
+  "golden": {
+    "summary": "Astrabia is a mid-size economic partner with bilateral trade up 12% year on year, driven by energy and agricultural exports. A free-trade memorandum is under negotiation, with the third round scheduled for next quarter.",
+    "sections": [
+      {
+        "title": "Trade Posture",
+        "content": "Two-way trade reached 4.2 billion last year, a 12% increase. Energy accounts for 58% of imports from Astrabia; agricultural goods make up 31% of exports to it."
+      },
+      {
+        "title": "Open Negotiations",
+        "content": "A free-trade memorandum is in its second round. The main open item is tariff schedules on processed foods; a third round is set for next quarter."
+      },
+      {
+        "title": "Outlook",
+        "content": "Trade momentum is positive but exposed to commodity-price swings. Concluding the memorandum would lock in tariff certainty for both sides."
+      }
+    ]
+  },
+  "candidate": {
+    "summary": "Astrabia is a mid-size trade partner. Bilateral trade rose 12% over the past year, led by energy imports and agricultural exports. A free-trade memorandum is being negotiated and reaches its third round next quarter.",
+    "sections": [
+      {
+        "title": "Trade Posture",
+        "content": "Bilateral trade was 4.2 billion last year, up 12%. Energy is the largest import category from Astrabia at roughly 58%, while agricultural products lead exports to it at about 31%."
+      },
+      {
+        "title": "Open Negotiations",
+        "content": "The free-trade memorandum is in round two. Tariff schedules on processed foods remain the principal sticking point, with round three planned for next quarter."
+      },
+      {
+        "title": "Outlook",
+        "content": "The trade trend is favorable but sensitive to commodity prices. Finalizing the memorandum would give both parties tariff predictability."
+      }
+    ]
+  }
+}

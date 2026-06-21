@@ -1,0 +1,45 @@
+{
+  "lang": "en",
+  "dossierType": "organization",
+  "description": "EVAL-01 golden (EN, political/organization). Golden reference + a high-quality candidate that should score >= 0.80. Synthetic data only.",
+  "input": {
+    "nameEn": "Northern Maritime Forum",
+    "nameAr": "منتدى الشمال البحري",
+    "descEn": "A nine-member regional body coordinating maritime security and search-and-rescue.",
+    "descAr": "هيئة إقليمية تضم تسعة أعضاء تنسق الأمن البحري وعمليات البحث والإنقاذ."
+  },
+  "golden": {
+    "summary": "The Northern Maritime Forum is a nine-member regional body coordinating maritime security and joint search-and-rescue. Its rotating chair passes to a new member next month, and a revised information-sharing protocol awaits ratification by three members.",
+    "sections": [
+      {
+        "title": "Mandate and Membership",
+        "content": "Nine member states coordinate on maritime domain awareness, anti-smuggling patrols, and search-and-rescue. The chair rotates annually and transfers next month."
+      },
+      {
+        "title": "Current Agenda",
+        "content": "A revised information-sharing protocol has been adopted in principle but still needs ratification by three members. A joint exercise is planned for the autumn."
+      },
+      {
+        "title": "Engagement Notes",
+        "content": "The forum favors consensus decisions, so bilateral pre-coordination with the incoming chair is the most effective channel for advancing proposals."
+      }
+    ]
+  },
+  "candidate": {
+    "summary": "The Northern Maritime Forum brings together nine member states to coordinate maritime security and search-and-rescue. The chair rotates to a new member next month, and a new information-sharing protocol is pending ratification by three members.",
+    "sections": [
+      {
+        "title": "Mandate and Membership",
+        "content": "The forum's nine members cooperate on maritime awareness, anti-smuggling operations, and search-and-rescue. Chairmanship rotates yearly, with the handover due next month."
+      },
+      {
+        "title": "Current Agenda",
+        "content": "Members agreed in principle to a revised information-sharing protocol, which three of them have yet to ratify. An autumn joint exercise is on the calendar."
+      },
+      {
+        "title": "Engagement Notes",
+        "content": "Decisions are reached by consensus, so coordinating bilaterally with the incoming chair ahead of meetings is the best way to move a proposal forward."
+      }
+    ]
+  }
+}
