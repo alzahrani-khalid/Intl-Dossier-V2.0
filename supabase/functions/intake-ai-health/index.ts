@@ -16,10 +16,10 @@ interface AIHealthResponse {
 /**
  * AI Health Check Endpoint
  *
- * Checks the health of AI services including:
- * - AnythingLLM embedding model
- * - AnythingLLM classification model
- * - pgvector extension
+ * Checks the health of the on-prem AI services (Phase 74, D3 — zero-egress):
+ * - embedding_model  -> on-prem TEI BGE-M3  (TEI_EMBED_URL)
+ * - classification_model -> on-prem vLLM    (VLLM_BASE_URL)
+ * - vector_store     -> pgvector extension
  *
  * Implements fallback detection based on last successful AI operation.
  */
@@ -42,12 +42,14 @@ Deno.serve(async (req: Request) => {
     let lastSuccess: string | null = null;
     let fallbackActive = false;
 
-    // Check AnythingLLM service availability
-    const anythingllmUrl = Deno.env.get("ANYTHINGLLM_API_URL");
-    const anythingllmKey = Deno.env.get("ANYTHINGLLM_API_KEY");
+    // Check on-prem AI service availability (Phase 74, D3 — zero-egress).
+    // embedding_model -> TEI BGE-M3 (TEI_EMBED_URL); classification_model -> vLLM
+    // (VLLM_BASE_URL). External LLM removed.
+    const teiUrl = Deno.env.get("TEI_EMBED_URL");
+    const vllmUrl = Deno.env.get("VLLM_BASE_URL");
 
-    if (!anythingllmUrl || !anythingllmKey) {
-      console.error("AnythingLLM configuration missing");
+    if (!teiUrl && !vllmUrl) {
+      console.error("On-prem AI configuration missing");
       return new Response(
         JSON.stringify({
           status: "unhealthy",
@@ -55,7 +57,7 @@ Deno.serve(async (req: Request) => {
           fallback_active: true,
           last_success: null,
           timestamp: new Date().toISOString(),
-          error: "AnythingLLM not configured",
+          error: "On-prem AI services not configured",
         }),
         {
           status: 503,
@@ -64,54 +66,54 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Check embedding model (timeout: 5 seconds)
-    try {
-      const embeddingController = new AbortController();
-      const embeddingTimeout = setTimeout(() => embeddingController.abort(), 5000);
+    // Check embedding model — on-prem TEI BGE-M3 (timeout: 5 seconds)
+    if (teiUrl) {
+      try {
+        const embeddingController = new AbortController();
+        const embeddingTimeout = setTimeout(() => embeddingController.abort(), 5000);
 
-      const embeddingResponse = await fetch(`${anythingllmUrl}/api/v1/embedding/health`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${anythingllmKey}`,
-          "Content-Type": "application/json",
-        },
-        signal: embeddingController.signal,
-      });
+        const embeddingResponse = await fetch(`${teiUrl.replace(/\/+$/, "")}/health`, {
+          method: "GET",
+          signal: embeddingController.signal,
+        });
 
-      clearTimeout(embeddingTimeout);
-      services.embedding_model = embeddingResponse.ok;
+        clearTimeout(embeddingTimeout);
+        services.embedding_model = embeddingResponse.ok;
 
-      if (embeddingResponse.ok) {
-        lastSuccess = new Date().toISOString();
+        if (embeddingResponse.ok) {
+          lastSuccess = new Date().toISOString();
+        }
+      } catch (error) {
+        console.error("Embedding model check failed:", error);
+        services.embedding_model = false;
       }
-    } catch (error) {
-      console.error("Embedding model check failed:", error);
-      services.embedding_model = false;
     }
 
-    // Check classification model (timeout: 5 seconds)
-    try {
-      const classificationController = new AbortController();
-      const classificationTimeout = setTimeout(() => classificationController.abort(), 5000);
+    // Check classification model — on-prem vLLM (timeout: 5 seconds)
+    if (vllmUrl) {
+      try {
+        const classificationController = new AbortController();
+        const classificationTimeout = setTimeout(() => classificationController.abort(), 5000);
 
-      const classificationResponse = await fetch(`${anythingllmUrl}/api/v1/chat/health`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${anythingllmKey}`,
-          "Content-Type": "application/json",
-        },
-        signal: classificationController.signal,
-      });
+        // vLLM is OpenAI-compatible; /v1/models is an unauthenticated liveness probe.
+        const classificationResponse = await fetch(
+          `${vllmUrl.replace(/\/+$/, "")}/v1/models`,
+          {
+            method: "GET",
+            signal: classificationController.signal,
+          }
+        );
 
-      clearTimeout(classificationTimeout);
-      services.classification_model = classificationResponse.ok;
+        clearTimeout(classificationTimeout);
+        services.classification_model = classificationResponse.ok;
 
-      if (classificationResponse.ok && !lastSuccess) {
-        lastSuccess = new Date().toISOString();
+        if (classificationResponse.ok && !lastSuccess) {
+          lastSuccess = new Date().toISOString();
+        }
+      } catch (error) {
+        console.error("Classification model check failed:", error);
+        services.classification_model = false;
       }
-    } catch (error) {
-      console.error("Classification model check failed:", error);
-      services.classification_model = false;
     }
 
     // Check pgvector extension
