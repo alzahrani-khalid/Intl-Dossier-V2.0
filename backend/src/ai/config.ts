@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-export type AIProvider = 'openai' | 'anthropic' | 'google' | 'vllm' | 'ollama' | 'anythingllm'
+export type AIProvider = 'openai' | 'anthropic' | 'google' | 'vllm' | 'ollama'
 
 export type AIFeature =
   | 'brief_generation'
@@ -114,13 +114,6 @@ export const aiConfig: AIConfig = {
       defaultModel: 'llama3.1',
       enabled: !!process.env.OLLAMA_BASE_URL,
     },
-    anythingllm: {
-      provider: 'anythingllm',
-      apiKey: process.env.ANYTHINGLLM_API_KEY,
-      baseUrl: process.env.ANYTHINGLLM_API_URL || 'http://localhost:3001',
-      defaultModel: 'workspace-chat',
-      enabled: !!process.env.ANYTHINGLLM_API_URL || process.env.AI_USE_ANYTHINGLLM === 'true',
-    },
   },
   features: {
     briefGeneration: process.env.AI_BRIEF_GENERATION_ENABLED !== 'false',
@@ -153,10 +146,7 @@ export const aiConfig: AIConfig = {
   },
   routing: {
     arabicThreshold: 0.3,
-    defaultProvider:
-      process.env.AI_USE_ANYTHINGLLM === 'true' || process.env.ANYTHINGLLM_API_URL
-        ? 'anythingllm'
-        : ((process.env.ANTHROPIC_API_KEY ? 'anthropic' : 'openai') as AIProvider),
+    defaultProvider: (process.env.ANTHROPIC_API_KEY ? 'anthropic' : 'openai') as AIProvider,
     arabicProvider: null,
     privateProvider: process.env.VLLM_BASE_URL
       ? 'vllm'
