@@ -2,7 +2,7 @@
 gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
-status: completed
+status: in_progress
 last_updated: '2026-06-21T10:09:06.219Z'
 last_activity: 2026-06-21
 progress:
@@ -20,13 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 72 — agent-platform-runtime-retrieval-reads
+**Current focus:** Phase 74 — eval-gate-anythingllm-retirement (final v7.0 phase)
 
 ## Current Position
 
-Phase: 73 (agent-platform-writes-generative-ui) — EXECUTED (live-verify deploy-gated)
-Plan: 5 of 5
-Status: All 5 waves CODE-COMPLETE + verified (GENUI-01..04). DB foundation (signal actor cols + persist_brief INVOKER RPC + additive dossier-edit policy + source_dossier_id link col; briefs schema reconciled; anon-EXECUTE revoked) APPLIED + verified live on staging zkrcjzdemdmwhearhfgg. 73-05 E2E specs written + green (12 tests, skip-not-fail). Live e2e UAT = DEPLOY-GATED on the agent-runtime/GPU stack + qwen3 model-parity gap (same posture as P72).
+Phase: 74 (eval-gate-anythingllm-retirement) — EXECUTING (sequential, one plan at a time)
+Plan: 4 of 11
+Status: Final v7.0 phase, executing sequentially after a parallel-git race in W1 was recovered. W1 DONE (in HEAD): 74-01 eval harness + EVAL-02 computed precision/recall; 74-02 ChatDock un-mount + /api/ai/chat retire; 74-03 three semantic-search edge fns → TEI BGE-M3. 74-04 DONE: backend AI-core AnythingLLM rip-out (provider/client/AI_USE_ANYTHINGLLM levers/embedding-fallback/health/CSP removed; type-check/build/lint green; keystone preserved; chatAssistantAgent kept for 74-06). NEXT: 74-05 intelligence-refresh×3 on-prem re-home (net-new generation). EVAL-04 closes at 74-08 static guard + 74-11 network-block UAT. EVAL-01/03 live judge scoring + EVAL-04 UAT = DEPLOY-GATED on the GPU/gemma stack.
+Phase 73: EXECUTED — code-complete + verified, live-verify deploy-gated (see ROADMAP + 73-05-SUMMARY).
 Resume file: None
 Last activity: 2026-06-21
 
