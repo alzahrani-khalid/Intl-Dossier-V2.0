@@ -51,8 +51,8 @@ vi.mock('@/lib/supabase', () => ({
   },
 }))
 
-// Imported AFTER the mock so the hook binds to the mocked client.
-// eslint-disable-next-line import/first
+// vi.mock is hoisted above imports by the Vitest transform, so the hook binds to the
+// mocked @/lib/supabase regardless of this import's textual position.
 import { useApproveWrite } from './useApproveWrite'
 
 const createWrapper = (): {
