@@ -120,8 +120,6 @@ export function buildCspDirectives(): Record<string, string[]> {
         : 'wss://*.supabase.co',
       // Sentry error reporting
       process.env.SENTRY_DSN ? new URL(process.env.SENTRY_DSN).origin : null,
-      // AnythingLLM API
-      process.env.ANYTHINGLLM_API_URL || null,
     ].filter(Boolean) as string[],
     workerSrc: ["'self'", 'blob:'],
     frameSrc: ["'none'"],

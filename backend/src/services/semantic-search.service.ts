@@ -4,7 +4,7 @@
  * Task: T035
  *
  * Implements semantic search using vector embeddings:
- * - Generates query embeddings via BGE-M3 (primary) or AnythingLLM (fallback)
+ * - Generates query embeddings via BGE-M3 (local)
  * - Searches using pgvector similarity
  * - Hybrid mode: combines exact matches + semantic results
  * - Deduplication by entity ID
@@ -110,7 +110,7 @@ export class SemanticSearchService {
     performance.embedding_generation_ms = Date.now() - embeddingStartTime
 
     if (!queryEmbedding) {
-      warnings.push('AnythingLLM unavailable. Semantic search requires embedding service.')
+      warnings.push('Embedding service unavailable. Semantic search requires embeddings.')
 
       // If hybrid mode requested, fallback to keyword-only search
       if (options.includeKeywordResults) {
@@ -255,15 +255,10 @@ export class SemanticSearchService {
   }
 
   /**
-   * Check if semantic search is available (BGE-M3 or AnythingLLM)
+   * Check if semantic search is available (BGE-M3 embeddings)
    */
   async isSemanticSearchAvailable(): Promise<boolean> {
-    // First check BGE-M3
-    const bgem3Ready = await embeddingsService.isReady()
-    if (bgem3Ready) return true
-
-    // Fallback to AnythingLLM check
-    return await this.vectorService.checkAnythingLLMStatus()
+    return await embeddingsService.isReady()
   }
 
   /**
@@ -274,7 +269,7 @@ export class SemanticSearchService {
       const result = await embeddingsService.embed(text)
       return result.embedding
     } catch {
-      // Fallback to VectorService (AnythingLLM)
+      // Fallback to VectorService (also BGE-M3, then keyword degradation)
       return this.vectorService.generateEmbeddingFromText(text)
     }
   }
