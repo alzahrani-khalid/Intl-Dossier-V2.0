@@ -6,9 +6,6 @@
  */
 
 // Hooks
-export { useAIChat } from './hooks/useAIChat'
-export type { ChatMessage, UseAIChatReturn } from './hooks/useAIChat'
-
 export { useAIFieldAssist } from './hooks/useAIFieldAssist'
 export type { GeneratedFields, FieldAssistParams, UseAIFieldAssistReturn } from './hooks/useAIFieldAssist'
 

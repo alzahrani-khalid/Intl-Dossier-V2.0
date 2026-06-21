@@ -1,10 +1,8 @@
 import { Suspense, lazy } from 'react'
-import { createFileRoute, Outlet, redirect, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { AppShell } from '@/components/layout/AppShell'
 import { useAuthStore, supabase } from '../store/authStore'
-import { ChatDock } from '@/components/ai/ChatDock'
 import { ChatProvider } from '@/contexts/ChatContext'
-import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { OnboardingTourTrigger } from '@/components/guided-tours'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { DossierDrawer } from '@/components/dossier/DossierDrawer'
@@ -74,24 +72,6 @@ export const Route = createFileRoute('/_protected')({
 })
 
 function ProtectedLayout(): React.ReactElement {
-  const navigate = useNavigate()
-
-  const handleCitationClick = (type: string, id: string, dossierType?: string): void => {
-    switch (type) {
-      case 'dossier':
-        navigate({ to: getDossierDetailPath(id, dossierType) })
-        break
-      case 'commitment':
-        navigate({ to: '/commitments', search: { id } as any })
-        break
-      case 'engagement':
-        navigate({ to: '/engagements/$engagementId', params: { engagementId: id } as any })
-        break
-      default:
-        navigate({ to: '/search', search: { q: id } as any })
-    }
-  }
-
   return (
     <ChatProvider>
       <AppShell>
@@ -99,9 +79,6 @@ function ProtectedLayout(): React.ReactElement {
           <Outlet />
         </ErrorBoundary>
       </AppShell>
-      <ErrorBoundary>
-        <ChatDock onCitationClick={handleCitationClick} />
-      </ErrorBoundary>
       <ErrorBoundary>
         <DossierDrawer />
       </ErrorBoundary>
