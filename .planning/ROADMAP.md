@@ -466,7 +466,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 71. Analytic Graph | v7.0 | 5/5 | Complete    | 2026-06-17 |
 | 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 9/9 | Complete   | 2026-06-19 |
 | 73. Agent Platform — Writes + Generative UI | v7.0 | 5/5 | Executed (live-verify deploy-gated) | 2026-06-21 |
-| 74. Eval Gate + AnythingLLM Retirement | v7.0 | 2/11 | In Progress|  |
+| 74. Eval Gate + AnythingLLM Retirement | v7.0 | 11/11 | Executed (live-verify deploy-gated) | 2026-06-21 |
 
 <!-- gsd:progress:end -->
 
