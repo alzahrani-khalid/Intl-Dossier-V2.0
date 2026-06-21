@@ -418,6 +418,11 @@ jobs:
     name: Eval Gate
     runs-on: ubuntu-latest
     needs: [lint, type-check]
+    # `secrets` cannot be referenced in a step `if:` (GitHub rejects the workflow at
+    # dispatch). Surface the gate secret as a job-level env var so the deploy-gated
+    # live-scoring step can guard on env.EVAL_AI_URL instead.
+    env:
+      EVAL_AI_URL: ${{ secrets.EVAL_AI_URL }}
     steps:
       - uses: actions/checkout@v4
 
@@ -460,7 +465,7 @@ jobs:
       # sees EVAL_AI_URL so the 74-09 judge assertions activate. continue-on-error keeps
       # it NON-blocking until the GPU/gemma host is permanent.
       - name: Live judge scoring (deploy-gated)
-        if: ${{ secrets.EVAL_AI_URL != '' }}
+        if: ${{ env.EVAL_AI_URL != '' }}
         continue-on-error: true
         env:
           EVAL_AI_URL: ${{ secrets.EVAL_AI_URL }}
