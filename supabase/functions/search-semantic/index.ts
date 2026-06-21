@@ -20,45 +20,55 @@ import { corsHeaders } from '../_shared/cors.ts';
 // Initialize Supabase client
 const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-const anythingLLMUrl = Deno.env.get('ANYTHINGLLM_URL') ?? '';
-const anythingLLMApiKey = Deno.env.get('ANYTHINGLLM_API_KEY') ?? '';
+
+// bge-m3 native dimension; the corpus (ai_embeddings) is halfvec(1024). The query
+// MUST share this model/dimension or cosine distance is meaningless. Never pad/truncate
+// (P68 REMED-04 corrupted the vector by padding to 1536).
+const EMBEDDING_DIM = 1024;
 
 /**
- * Generate embedding for query text using AnythingLLM
- * Falls back to null if embedding generation fails
+ * Generate a 1024-dim bge-m3 query embedding via the on-prem TEI `/embed` route (D3).
+ * Mirrors agent-runtime/src/mastra/tools/hybrid-rag-search.ts so the query vector matches
+ * the corpus embedder. Returns null on missing env / non-ok / wrong shape so the caller
+ * degrades to full-text search (NOT a 500) — preserving the EVAL-04 "surfaces still work"
+ * invariant.
  */
 async function generateQueryEmbedding(query: string): Promise<number[] | null> {
-  if (!anythingLLMUrl || !anythingLLMApiKey) {
-    console.warn('AnythingLLM not configured, embedding generation unavailable');
+  const teiUrl = Deno.env.get('TEI_EMBED_URL');
+  if (!teiUrl) {
+    console.warn('TEI_EMBED_URL not configured, embedding generation unavailable');
     return null;
   }
 
   try {
-    const response = await fetch(`${anythingLLMUrl}/api/v1/embed`, {
+    const response = await fetch(`${teiUrl.replace(/\/+$/, '')}/embed`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${anythingLLMApiKey}`,
-      },
-      body: JSON.stringify({ text: query }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ inputs: query }),
     });
 
     if (!response.ok) {
-      console.error('AnythingLLM embedding request failed:', response.status);
+      console.error('TEI embedding request failed:', response.status);
       return null;
     }
 
     const data = await response.json();
-    if (data.embedding && Array.isArray(data.embedding)) {
-      // P68 REMED-04: pass the native-dimension embedding straight through.
-      // No pad/truncate — ai_embeddings.embedding is vector(1024) and the BGE-M3
-      // embedder already emits 1024 dims; padding to 1536 corrupted the vector.
-      return data.embedding;
+    const embedding = Array.isArray(data) ? data[0] : undefined;
+    if (Array.isArray(embedding) && embedding.length === EMBEDDING_DIM) {
+      // Pass the native 1024-dim bge-m3 embedding straight through.
+      // No pad/truncate — ai_embeddings.embedding is halfvec(1024) and TEI bge-m3
+      // already emits 1024 dims; padding to 1536 corrupts the vector.
+      return embedding;
     }
 
+    console.error(
+      `TEI embedding wrong shape: expected ${EMBEDDING_DIM}-dim, got ${
+        Array.isArray(embedding) ? embedding.length : typeof embedding
+      }`,
+    );
     return null;
   } catch (error) {
-    console.error('AnythingLLM embedding error:', error);
+    console.error('TEI embedding error:', error);
     return null;
   }
 }
@@ -170,8 +180,8 @@ serve(async (req: Request) => {
       },
     });
 
-    // SECURITY FIX: Generate real embedding using AnythingLLM
-    // Previously used placeholder zeros which returned random results
+    // Generate the real query embedding via the on-prem TEI bge-m3 `/embed` route (D3).
+    // Previously used placeholder zeros which returned random results.
     const embeddingStartTime = Date.now();
     const queryEmbedding = await generateQueryEmbedding(query);
     const embeddingGenTime = Date.now() - embeddingStartTime;

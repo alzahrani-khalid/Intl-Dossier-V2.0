@@ -7,10 +7,18 @@
 
 // Hooks
 export { useAIFieldAssist } from './hooks/useAIFieldAssist'
-export type { GeneratedFields, FieldAssistParams, UseAIFieldAssistReturn } from './hooks/useAIFieldAssist'
+export type {
+  GeneratedFields,
+  FieldAssistParams,
+  UseAIFieldAssistReturn,
+} from './hooks/useAIFieldAssist'
 
 export { useGenerateBrief } from './hooks/useGenerateBrief'
-export type { BriefGenerationParams, BriefContent, UseGenerateBriefReturn } from './hooks/useGenerateBrief'
+export type {
+  BriefGenerationParams,
+  BriefContent,
+  UseGenerateBriefReturn,
+} from './hooks/useGenerateBrief'
 
 // Repository
 export * as aiRepo from './repositories/ai.repository'
