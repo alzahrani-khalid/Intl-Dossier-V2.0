@@ -142,6 +142,9 @@ BEGIN
 END;
 $$;
 
+-- Keystone: strip the default PUBLIC grant so anon cannot EXECUTE (anon-EXECUTE=0,
+-- matching every P72 reads-only RPC). authenticated is the ONLY caller.
+REVOKE EXECUTE ON FUNCTION public.persist_brief(UUID, JSONB, TEXT, TEXT) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.persist_brief(UUID, JSONB, TEXT, TEXT) TO authenticated;
 
 COMMENT ON FUNCTION public.persist_brief(UUID, JSONB, TEXT, TEXT) IS
