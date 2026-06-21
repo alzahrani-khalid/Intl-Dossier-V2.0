@@ -89,6 +89,16 @@
       "error": "That did not go through. Nothing was changed."
     }
   },
+  "genui": {
+    "dossier": {
+      "open": "Open dossier",
+      "unavailable": "That dossier isn't available to show here."
+    },
+    "signal": {
+      "open": "Open in the signals queue",
+      "untitled": "Untitled signal"
+    }
+  },
   "delete": {
     "action": "Delete conversation",
     "confirm": "Delete conversation — this removes the thread and its history. This can't be undone."
