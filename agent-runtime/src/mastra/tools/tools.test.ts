@@ -197,6 +197,10 @@ describe('reads-only tool roster: least-privilege (source-level guards)', () => 
       'generate-digest.ts',
       'dossier-lookups.ts',
       'index.ts',
+      'propose-publish-digest.ts',
+      'propose-signal-status.ts',
+      'propose-work-item.ts',
+      'propose-brief.ts',
     ]
     for (const f of files) {
       const src = readFileSync(path.join(toolsDir, f), 'utf8')
@@ -225,6 +229,182 @@ describe('reads-only tool roster: least-privilege (source-level guards)', () => 
     expect(src).toContain('SUPABASE_ANON_KEY')
     expect(src).toContain('Authorization')
     expect(src).not.toContain('SUPABASE_SERVICE_ROLE_KEY')
+  })
+})
+
+// ── 73-02 propose-only write-tools ────────────────────────────────────────────
+// The four propose_* tools (GENUI-02/03, D-01/D-03) VALIDATE + ECHO structured args for
+// a HITL confirmation card but COMMIT NOTHING server-side — the frontend commits under
+// the caller JWT on approval. These cases prove, per tool:
+//   (a) empty authorization  → the neutral { proposed: false } (no throw, no fallback);
+//   (b) valid args           → { proposed: true, action, args } echoing validated input
+//        (the three mechanical tools — propose_brief reads the dossier, which the empty
+//         fake client returns as no-row, so its propose:true path is exercised by source +
+//         the dedicated read-shape assertion below);
+//   (c) no commit side effect → the tool body never calls .rpc / .insert / .update
+//        (the three mechanical tools never even build a client; propose_brief may build a
+//         read client but issues no write — asserted via the fake client's spies).
+
+const PROPOSE_ECHO_TOOLS: Array<{
+  name: string
+  importPath: string
+  validInput: Record<string, unknown>
+  expectedAction: string
+}> = [
+  {
+    name: 'propose_publish_digest',
+    importPath: './propose-publish-digest.js',
+    validInput: { dossierId: VALID_UUID, period: 'weekly', summary: 'A short digest summary.' },
+    expectedAction: 'publish_digest',
+  },
+  {
+    name: 'propose_signal_status',
+    importPath: './propose-signal-status.js',
+    validInput: { signalId: VALID_UUID, action: 'dismiss', reason: 'duplicate' },
+    expectedAction: 'signal_status',
+  },
+  {
+    name: 'propose_work_item',
+    importPath: './propose-work-item.js',
+    validInput: {
+      title: 'Follow up with the delegation',
+      assigneeId: VALID_UUID,
+      priority: 'high',
+      dossierIds: [VALID_UUID],
+      inheritanceSource: 'direct',
+    },
+    expectedAction: 'work_item',
+  },
+]
+
+describe('73-02 propose-only write-tools: HITL propose-only contract', () => {
+  for (const { name, importPath, validInput, expectedAction } of PROPOSE_ECHO_TOOLS) {
+    it(`${name} returns neutral { proposed: false } on empty authorization (no throw)`, async () => {
+      const mod = await import(importPath)
+      const tool = mod.default ?? Object.values(mod)[0]
+      const result = (await (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute(
+        validInput,
+        { requestContext: rcWith(undefined) },
+      )) as { proposed?: boolean; action?: string }
+      expect(result.proposed, `${name} must not propose without a JWT`).toBe(false)
+      expect(result.action, `${name} must echo no action without a JWT`).toBeUndefined()
+    })
+
+    it(`${name} echoes validated args as { proposed: true, action, args } on valid input`, async () => {
+      const mod = await import(importPath)
+      const tool = mod.default ?? Object.values(mod)[0]
+      const result = (await (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute(
+        validInput,
+        { requestContext: rcWith(JWT) },
+      )) as { proposed?: boolean; action?: string; args?: Record<string, unknown> }
+      expect(result.proposed, `${name} must propose on valid input`).toBe(true)
+      expect(result.action).toBe(expectedAction)
+      expect(result.args, `${name} must echo the validated args`).toMatchObject(validInput)
+    })
+
+    it(`${name} performs no commit side effect (never builds a client, never writes)`, async () => {
+      createUserClientSpy.mockClear()
+      fakeEmptyClient.rpc.mockClear()
+      const mod = await import(importPath)
+      const tool = mod.default ?? Object.values(mod)[0]
+      await (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute(validInput, {
+        requestContext: rcWith(JWT),
+      })
+      // The three mechanical echo tools validate + return without any DB client at all.
+      expect(createUserClientSpy, `${name} must not build a Supabase client`).not.toHaveBeenCalled()
+      expect(fakeEmptyClient.rpc, `${name} must not call any RPC`).not.toHaveBeenCalled()
+    })
+
+    it(`${name} returns no forbidden clearance substring (indistinguishable-empty)`, async () => {
+      const mod = await import(importPath)
+      const tool = mod.default ?? Object.values(mod)[0]
+      const denied = await (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute(
+        validInput,
+        { requestContext: rcWith(undefined) },
+      )
+      expect(JSON.stringify(denied)).not.toMatch(FORBIDDEN)
+    })
+  }
+
+  it('propose_brief: empty authorization → neutral { proposed: false }, never builds a client', async () => {
+    createUserClientSpy.mockClear()
+    const mod = await import('./propose-brief.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    const result = (await (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute(
+      { dossierId: VALID_UUID },
+      { requestContext: rcWith(undefined) },
+    )) as { proposed?: boolean }
+    expect(result.proposed).toBe(false)
+    expect(createUserClientSpy, 'propose_brief must not build a client without a JWT').not.toHaveBeenCalled()
+  })
+
+  it('propose_brief: reads the dossier under the caller JWT and issues NO write (no .rpc/.insert)', async () => {
+    createUserClientSpy.mockClear()
+    fakeEmptyClient.rpc.mockClear()
+    const mod = await import('./propose-brief.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    // The fake client returns an empty dossier (.single → { data: null }), so propose_brief
+    // returns indistinguishable-empty BEFORE any generation — proving the read-then-draft
+    // order and that no write is ever attempted on the denial path.
+    const result = (await (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute(
+      { dossierId: VALID_UUID },
+      { requestContext: rcWith(JWT) },
+    )) as { proposed?: boolean }
+    expect(createUserClientSpy, 'propose_brief must read under the caller JWT').toHaveBeenCalledWith(JWT)
+    expect(result.proposed, 'unreadable dossier → neutral empty').toBe(false)
+    expect(fakeEmptyClient.rpc, 'propose_brief must never call an RPC (no persist)').not.toHaveBeenCalled()
+    expect(JSON.stringify(result)).not.toMatch(FORBIDDEN)
+  })
+
+  it('propose_brief source persists nothing and has no external workspace coupling', () => {
+    const toolsDir = path.dirname(fileURLToPath(import.meta.url))
+    const src = readFileSync(path.join(toolsDir, 'propose-brief.ts'), 'utf8')
+    // No persist RPC call target, no DB insert, no per-language columns, no legacy
+    // workspace generation service — propose-only on-prem draft (D-02).
+    expect(src.toLowerCase()).not.toContain('anythingllm')
+    expect(src).not.toContain('persist_brief')
+    expect(src).not.toContain('.insert(')
+    expect(src).not.toContain('content_en')
+    expect(src).not.toContain('content_ar')
+  })
+
+  it('copilotTools exposes all four propose_* tools plus the seven reads (11 total)', async () => {
+    const mod = await import('./index.js')
+    const tools = (mod as { copilotTools: Record<string, unknown> }).copilotTools
+    for (const key of [
+      'hybrid_rag_search',
+      'read_signals',
+      'query_graph',
+      'generate_digest_preview',
+      'get_dossier',
+      'list_dossiers',
+      'query_work_items',
+      'propose_publish_digest',
+      'propose_signal_status',
+      'propose_work_item',
+      'propose_brief',
+    ]) {
+      expect(tools[key], `copilotTools must expose ${key}`).toBeDefined()
+    }
+    expect(Object.keys(tools)).toHaveLength(11)
+  })
+
+  it('copilot agent prompts are no longer read-only and propose the four writes (EN + AR)', () => {
+    const agentsDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'agents')
+    const src = readFileSync(path.join(agentsDir, 'copilot.ts'), 'utf8')
+    expect(src.toLowerCase()).not.toContain('read-only')
+    expect(src.toLowerCase()).not.toContain('read only')
+    // EN + AR both name the four propose_* tools and the approval gate.
+    for (const id of [
+      'propose_publish_digest',
+      'propose_signal_status',
+      'propose_work_item',
+      'propose_brief',
+    ]) {
+      expect(src, `prompt must mention ${id}`).toContain(id)
+    }
+    expect(src, 'AR prompt must keep the read-only removal').not.toContain('للقراءة فقط')
+    expect(src, 'AR prompt must mention proposing (يقترح/تقترح)').toMatch(/تقترح|اقتراح|يقترح/)
   })
 })
 
