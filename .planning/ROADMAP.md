@@ -405,7 +405,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 - [x] 73-01-PLAN.md — Signal actor migration + persist_brief INVOKER RPC (DB foundation)
 - [x] 73-02-PLAN.md — agent-runtime propose\_\* write-tools (4) + revised agent prompt
 - [x] 73-03-PLAN.md — HITL confirmation cards + caller-JWT approve-commit + post-commit cache invalidation
-- [ ] 73-04-PLAN.md — generative-UI inline component renderers (UniversalDossierCard + signal card) + deep-links
+- [x] 73-04-PLAN.md — generative-UI inline component renderers (UniversalDossierCard + signal card) + deep-links
 - [ ] 73-05-PLAN.md — bilingual E2E (HITL approve/reject EN+AR, JWT-actor, cache-sync, indistinguishable-empty) + live verification
       **UI hint**: yes
 
@@ -451,7 +451,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 70. Digests + Alerts | v7.0 | 7/7 | Complete    | 2026-06-16 |
 | 71. Analytic Graph | v7.0 | 5/5 | Complete    | 2026-06-17 |
 | 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 9/9 | Complete   | 2026-06-19 |
-| 73. Agent Platform — Writes + Generative UI | v7.0 | 3/5 | In Progress|  |
+| 73. Agent Platform — Writes + Generative UI | v7.0 | 4/5 | In Progress|  |
 | 74. Eval Gate + AnythingLLM Retirement | v7.0 | 0/? | Not started | - |
 
 <!-- gsd:progress:end -->

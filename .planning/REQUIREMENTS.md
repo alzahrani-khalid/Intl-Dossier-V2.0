@@ -60,7 +60,7 @@ Requirements for the v7.0 milestone (phases 68–74). Each maps to exactly one r
 
 ### Generative UI + HITL writes
 
-- [ ] **GENUI-01**: The copilot renders results as token-bound bilingual cards (the app's own components) inline, with deep-links into the app
+- [x] **GENUI-01**: The copilot renders results as token-bound bilingual cards (the app's own components) inline, with deep-links into the app
 - [x] **GENUI-02**: Every state-changing copilot action (create/link work item, generate brief, publish digest, dismiss signal) shows a bilingual token-bound confirmation and commits only on approval
 - [x] **GENUI-03**: Approved copilot writes commit under the user's JWT (RLS-enforced), never service-role
 - [x] **GENUI-04**: After an approved copilot write, the conventional UI reflects the change immediately (query-cache sync)
@@ -155,7 +155,7 @@ Which phases cover which requirements.
 | INFRA-01    | Phase 72 | Complete |
 | INFRA-02    | Phase 72 | Complete |
 | INFRA-03    | Phase 72 | Complete |
-| GENUI-01    | Phase 73 | Pending  |
+| GENUI-01    | Phase 73 | Complete |
 | GENUI-02    | Phase 73 | Complete |
 | GENUI-03    | Phase 73 | Complete |
 | GENUI-04    | Phase 73 | Complete |
