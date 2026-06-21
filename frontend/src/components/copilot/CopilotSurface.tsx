@@ -26,8 +26,8 @@ import {
 import { useCopilotRuntime } from './useCopilotRuntime'
 import { CopilotMessageList } from './CopilotMessageList'
 import { CopilotComposer } from './CopilotComposer'
-import { ProposeToolUIs } from './hitl/proposeToolUIs'
-import { GenUiToolUIs } from './genui/genUiToolUIs'
+import { ProposeToolUIs } from './hitl/ProposeToolUIs'
+import { GenUiToolUIs } from './genui/GenUiToolUIs'
 import type { CopilotDossierContext } from './useCopilotDrawer'
 
 interface CopilotSurfaceProps {
