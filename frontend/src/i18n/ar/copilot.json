@@ -25,6 +25,70 @@
   "streaming": {
     "thinking": "جارٍ التفكير…"
   },
+  "confirm": {
+    "title": {
+      "publish_digest": "نشر الموجز",
+      "signal_status": "تحديث الإشارة",
+      "work_item": "إنشاء عنصر عمل",
+      "brief": "حفظ الموجز"
+    },
+    "intro": {
+      "publish_digest": "راجع هذا الموجز قبل نشره للمشتركين.",
+      "signal_status": "راجع هذا التغيير على الإشارة قبل تطبيقه.",
+      "work_item": "راجع عنصر العمل هذا قبل إنشائه.",
+      "brief": "راجع هذا الموجز قبل حفظه في الملف."
+    },
+    "field": {
+      "dossier": "الملف",
+      "period": "الفترة",
+      "summary": "الملخص",
+      "signal": "الإشارة",
+      "action": "الإجراء",
+      "reason": "السبب",
+      "title": "العنوان",
+      "assignee": "المسؤول",
+      "priority": "الأولوية",
+      "dossiers": "الملفات",
+      "language": "اللغة"
+    },
+    "value": {
+      "period": {
+        "daily": "يومي",
+        "weekly": "أسبوعي",
+        "monthly": "شهري"
+      },
+      "signalAction": {
+        "dismiss": "تجاهل",
+        "escalate": "تصعيد"
+      },
+      "priority": {
+        "low": "منخفضة",
+        "medium": "متوسطة",
+        "high": "عالية",
+        "urgent": "عاجلة"
+      },
+      "bilingual": "الإنجليزية والعربية",
+      "none": "غير محدد",
+      "count": "{{count}} مرتبط"
+    },
+    "approve": "موافقة",
+    "reject": "رفض",
+    "rejectReason": {
+      "label": "سبب الرفض (اختياري)",
+      "placeholder": "أضف ملاحظة قصيرة",
+      "submit": "تأكيد الرفض"
+    },
+    "typedConfirm": {
+      "prompt": "اكتب اسم الملف للنشر للمشتركين",
+      "placeholder": "اسم الملف",
+      "mismatch": "الاسم غير مطابق بعد."
+    },
+    "state": {
+      "committed": "تم. حُفظ التغيير وتم تحديث العروض.",
+      "rejected": "رُفض. لم يتغير شيء.",
+      "error": "لم يكتمل ذلك. لم يتغير شيء."
+    }
+  },
   "delete": {
     "action": "حذف المحادثة",
     "confirm": "حذف المحادثة — يؤدي ذلك إلى إزالة المحادثة وسجلّها. لا يمكن التراجع عن هذا الإجراء."

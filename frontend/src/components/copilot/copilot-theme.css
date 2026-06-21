@@ -195,6 +195,118 @@
 }
 
 /* ---------------------------------------------------------------------------
+ * HITL confirmation card (P73 GENUI-02) — flat --surface, 1px solid --line,
+ * --radius-sm, NO shadow. Rendered inline from a propose_* tool call's args; the
+ * user approves or rejects-with-reason before anything commits. Token-bound,
+ * logical properties only, so RTL mirrors with no extra styling.
+ * ------------------------------------------------------------------------- */
+.copilot-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 12px);
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+  padding-block: var(--space-3, 12px);
+  padding-inline: 16px;
+  font-size: var(--t-body);
+}
+.copilot-confirm__title {
+  font-size: var(--t-card-title);
+  font-weight: 600;
+  line-height: var(--line-h-tight, 1.1);
+  color: var(--ink);
+}
+.copilot-confirm__intro {
+  font-size: var(--t-meta);
+  color: var(--ink-mute);
+  line-height: 1.5;
+}
+.copilot-confirm__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 8px);
+  margin: 0;
+}
+.copilot-confirm__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1, 4px);
+}
+.copilot-confirm__label {
+  font-size: var(--t-meta);
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.copilot-confirm__value {
+  font-size: var(--t-body);
+  color: var(--ink);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.copilot-confirm__typed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1, 4px);
+  border-block-start: 1px solid var(--line-soft);
+  padding-block-start: var(--space-3, 12px);
+}
+.copilot-confirm__input {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding-block: var(--space-2, 8px);
+  padding-inline: var(--space-3, 12px);
+  font-family: inherit;
+  font-size: var(--t-body);
+  line-height: var(--line-h-body, 1.5);
+  outline: none;
+  min-height: 40px;
+}
+.copilot-confirm__input::placeholder {
+  color: var(--ink-mute);
+}
+.copilot-confirm__input:focus-visible {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+.copilot-confirm__hint {
+  font-size: var(--t-meta);
+  color: var(--ink-mute);
+}
+.copilot-confirm__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 8px);
+  align-items: center;
+}
+/* The reject reason editor opens inline above the action row. */
+.copilot-confirm__reject {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 8px);
+  border-block-start: 1px solid var(--line-soft);
+  padding-block-start: var(--space-3, 12px);
+}
+/* Post-commit state line — neutral; success/rejected/error all read calmly. The
+   error variant carries NO clearance/filtered/restricted wording (indistinguishable
+   empty): a denied write and a generic failure are the same string. */
+.copilot-confirm__state {
+  font-size: var(--t-meta);
+  line-height: 1.5;
+  color: var(--ink-mute);
+}
+.copilot-confirm__state[data-tone='success'] {
+  color: var(--ink);
+}
+
+/* ---------------------------------------------------------------------------
  * Streaming indicator — accent caret + "Thinking…" (--t-meta, --ink-mute label).
  * ------------------------------------------------------------------------- */
 .copilot-streaming {

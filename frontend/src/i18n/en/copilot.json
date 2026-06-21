@@ -25,6 +25,70 @@
   "streaming": {
     "thinking": "Thinking…"
   },
+  "confirm": {
+    "title": {
+      "publish_digest": "Publish digest",
+      "signal_status": "Update signal",
+      "work_item": "Create work item",
+      "brief": "Save brief"
+    },
+    "intro": {
+      "publish_digest": "Review this digest before it is published to subscribers.",
+      "signal_status": "Review this signal change before it is applied.",
+      "work_item": "Review this work item before it is created.",
+      "brief": "Review this brief before it is saved to the dossier."
+    },
+    "field": {
+      "dossier": "Dossier",
+      "period": "Period",
+      "summary": "Summary",
+      "signal": "Signal",
+      "action": "Action",
+      "reason": "Reason",
+      "title": "Title",
+      "assignee": "Assignee",
+      "priority": "Priority",
+      "dossiers": "Dossiers",
+      "language": "Language"
+    },
+    "value": {
+      "period": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly"
+      },
+      "signalAction": {
+        "dismiss": "Dismiss",
+        "escalate": "Escalate"
+      },
+      "priority": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "urgent": "Urgent"
+      },
+      "bilingual": "English and Arabic",
+      "none": "Not set",
+      "count": "{{count}} linked"
+    },
+    "approve": "Approve",
+    "reject": "Reject",
+    "rejectReason": {
+      "label": "Reason for rejecting (optional)",
+      "placeholder": "Add a short note",
+      "submit": "Confirm reject"
+    },
+    "typedConfirm": {
+      "prompt": "Type the dossier name to publish to subscribers",
+      "placeholder": "Dossier name",
+      "mismatch": "The name does not match yet."
+    },
+    "state": {
+      "committed": "Done. The change is saved and the views are refreshed.",
+      "rejected": "Rejected. Nothing was changed.",
+      "error": "That did not go through. Nothing was changed."
+    }
+  },
   "delete": {
     "action": "Delete conversation",
     "confirm": "Delete conversation — this removes the thread and its history. This can't be undone."
