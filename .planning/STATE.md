@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
-status: in_progress
-last_updated: '2026-06-21T10:09:06.219Z'
+status: executing
+last_updated: '2026-06-21T12:15:05.440Z'
 last_activity: 2026-06-21
 progress:
   total_phases: 7
-  completed_phases: 5
-  total_plans: 38
-  completed_plans: 37
-  percent: 71
+  completed_phases: 6
+  total_plans: 49
+  completed_plans: 40
+  percent: 82
 ---
 
 # Project State
@@ -25,8 +25,8 @@ See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 ## Current Position
 
 Phase: 74 (eval-gate-anythingllm-retirement) — EXECUTING (sequential, one plan at a time)
-Plan: 4 of 11
-Status: Final v7.0 phase, executing sequentially after a parallel-git race in W1 was recovered. W1 DONE (in HEAD): 74-01 eval harness + EVAL-02 computed precision/recall; 74-02 ChatDock un-mount + /api/ai/chat retire; 74-03 three semantic-search edge fns → TEI BGE-M3. 74-04 DONE: backend AI-core AnythingLLM rip-out (provider/client/AI_USE_ANYTHINGLLM levers/embedding-fallback/health/CSP removed; type-check/build/lint green; keystone preserved; chatAssistantAgent kept for 74-06). NEXT: 74-05 intelligence-refresh×3 on-prem re-home (net-new generation). EVAL-04 closes at 74-08 static guard + 74-11 network-block UAT. EVAL-01/03 live judge scoring + EVAL-04 UAT = DEPLOY-GATED on the GPU/gemma stack.
+Plan: 5 of 11
+Status: Ready to execute
 Phase 73: EXECUTED — code-complete + verified, live-verify deploy-gated (see ROADMAP + 73-05-SUMMARY).
 Resume file: None
 Last activity: 2026-06-21
@@ -142,6 +142,7 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase ?]: 73-04: GenUI READ renderers = FIXED allowlist of 3 makeAssistantToolUI (D-07) → ONLY InlineDossierCard/InlineSignalCard; read-only (no addResult)
 - [Phase ?]: 73-04: InlineDossierCard uses OPTION A (useDossier full-fetch, RLS-gated, retry:false) for UniversalDossierCard fidelity; whole-card deep-link via getDossierDetailPath; not-found/above-level/failure → one neutral line (indistinguishable-empty)
 - [Phase ?]: 73-04: signal deep-link = /intelligence (no per-signal route; queue selects by focusedIndex); inline cap N=5; bidi title via HTML dir attr (computed writingDirection) NOT CSS writingDirection (RN-only, absent from web CSSProperties)
+- [Phase ?]: 74-05: omit (not null) legacy anythingllm\_\* upsert columns — nullable in intelligence_reports; on-prem generation via shared \_shared/onprem-llm.ts generateStructuredJson (VLLM_BASE_URL /v1/chat/completions JSON mode), reusable by 74-06
 
 ### Open Todos
 
