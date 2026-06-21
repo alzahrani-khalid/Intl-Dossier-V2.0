@@ -428,7 +428,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 - [ ] 74-01-PLAN.md — Eval-harness scaffold + EVAL-02 computed precision/recall (CI-runnable, no LLM)
 - [ ] 74-02-PLAN.md — ChatDock un-mount + `/api/ai/chat` retire (D2)
 - [ ] 74-03-PLAN.md — 3 semantic-search edge fns to TEI BGE-M3 (1024-dim)
-- [ ] 74-04-PLAN.md — Backend AI-core AnythingLLM rip-out (config/router/service/embeddings/health/CSP)
+- [x] 74-04-PLAN.md — Backend AI-core AnythingLLM rip-out (config/router/service/embeddings/health/CSP)
 - [ ] 74-05-PLAN.md — intelligence-refresh x3 to on-prem vLLM generation (net-new, shared helper)
 - [ ] 74-06-PLAN.md — Text-AI edge fns re-home on-prem (extract/summary/translate/field-assist/word-assistant)
 - [ ] 74-07-PLAN.md — Embed/health/brief edge fns + backend brief.service/dossier-field-assist rip-out
@@ -466,7 +466,7 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 71. Analytic Graph | v7.0 | 5/5 | Complete    | 2026-06-17 |
 | 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 9/9 | Complete   | 2026-06-19 |
 | 73. Agent Platform — Writes + Generative UI | v7.0 | 5/5 | Executed (live-verify deploy-gated) | 2026-06-21 |
-| 74. Eval Gate + AnythingLLM Retirement | v7.0 | 0/? | Not started | - |
+| 74. Eval Gate + AnythingLLM Retirement | v7.0 | 1/11 | In Progress|  |
 
 <!-- gsd:progress:end -->
 
