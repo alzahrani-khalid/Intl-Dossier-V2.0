@@ -24,7 +24,7 @@ key-files:
 decisions:
   - 'Inserted eval-gate after bundle-size-check (sibling with needs:[lint,type-check], no downstream dependents) so a deploy-gated step can never block build/docker-build (T-74-10-01).'
   - 'Required steps carry NO continue-on-error; only the secret-gated live-scoring step is continue-on-error:true (D6 / T-74-10-01).'
-  - "Live step uses both `if: secrets.EVAL_AI_URL != '` AND `env: EVAL_AI_URL` so isJudgeConfigured() activates the 74-09 judge tests only when the host exists (T-74-10-02)."
+  - 'Live step is guarded by the non-empty EVAL_AI_URL secret AND passes that secret as env, so isJudgeConfigured() activates the 74-09 judge tests only when the host exists (T-74-10-02).'
 metrics:
   duration: ~20m
   completed: 2026-06-21
