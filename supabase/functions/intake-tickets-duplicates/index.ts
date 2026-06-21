@@ -103,26 +103,22 @@ serve(async (req) => {
           .filter(Boolean)
           .join(' | ');
 
-        // Call AnythingLLM to generate embedding
-        const anythingLLMUrl = Deno.env.get('ANYTHINGLLM_API_URL');
-        const anythingLLMKey = Deno.env.get('ANYTHINGLLM_API_KEY');
+        // Generate the query embedding via on-prem TEI BGE-M3 (Phase 74, D3 —
+        // zero-egress). TEI `/embed` contract: POST { inputs } -> number[][];
+        // BGE-M3 is 1024-dim native. External LLM embedder removed.
+        const teiUrl = Deno.env.get('TEI_EMBED_URL');
 
-        if (anythingLLMUrl && anythingLLMKey) {
-          const embeddingResponse = await fetch(`${anythingLLMUrl}/api/embed`, {
+        if (teiUrl) {
+          const embeddingResponse = await fetch(`${teiUrl.replace(/\/+$/, '')}/embed`, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${anythingLLMKey}`,
-            },
-            body: JSON.stringify({
-              text: textToEmbed,
-              model: Deno.env.get('EMBEDDING_MODEL') || 'bge-m3',
-            }),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ inputs: textToEmbed }),
           });
 
           if (embeddingResponse.ok) {
             const embeddingData = await embeddingResponse.json();
-            embedding = embeddingData.embedding || null;
+            const candidate = Array.isArray(embeddingData) ? embeddingData[0] : null;
+            embedding = Array.isArray(candidate) && candidate.length === 1024 ? candidate : null;
 
             // Store embedding
             if (embedding) {

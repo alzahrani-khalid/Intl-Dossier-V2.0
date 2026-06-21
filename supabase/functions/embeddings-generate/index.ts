@@ -6,8 +6,8 @@
  * Decouples embedding generation from main API to avoid Alpine/ONNX issues.
  *
  * Supported providers:
- * - OpenAI (text-embedding-3-small, text-embedding-ada-002)
- * - AnythingLLM (self-hosted fallback)
+ * - OpenAI (text-embedding-3-small, 1536-dim — configured primary)
+ * - TEI BGE-M3 (on-prem self-hosted fallback, 1024-dim) — zero-egress (Phase 74, D3)
  *
  * Endpoints:
  * - POST /embeddings-generate - Generate embeddings for text(s)
@@ -33,7 +33,7 @@ interface EmbeddingResponse {
     prompt_tokens: number;
     total_tokens: number;
   };
-  provider: 'openai' | 'anythingllm' | 'fallback';
+  provider: 'openai' | 'tei' | 'fallback';
 }
 
 interface BatchProcessRequest {
@@ -99,48 +99,54 @@ async function generateOpenAIEmbedding(
   };
 }
 
-// AnythingLLM fallback
-async function generateAnythingLLMEmbedding(texts: string[]): Promise<EmbeddingResponse> {
-  const apiUrl = Deno.env.get('ANYTHINGLLM_URL');
-  const apiKey = Deno.env.get('ANYTHINGLLM_API_KEY');
+// TEI BGE-M3 self-hosted fallback (Phase 74, D3 — zero-egress on-prem embedder).
+// Mirrors the TEI `/embed` contract used by agent-runtime hybrid-rag-search and
+// backend reembed-rag-chunks: POST { inputs: string | string[] } -> number[][].
+// BGE-M3 returns 1024-dim vectors natively; the dim is asserted, never padded.
+const TEI_EMBEDDING_DIM = 1024;
 
-  if (!apiUrl) {
-    throw new Error('AnythingLLM not configured');
+async function generateTEIEmbedding(texts: string[]): Promise<EmbeddingResponse> {
+  const teiUrl = Deno.env.get('TEI_EMBED_URL');
+
+  if (!teiUrl) {
+    throw new Error('TEI_EMBED_URL not configured');
   }
 
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-
-  if (apiKey) {
-    headers['Authorization'] = `Bearer ${apiKey}`;
-  }
-
-  const response = await fetch(`${apiUrl}/v1/embeddings`, {
+  const response = await fetch(`${teiUrl.replace(/\/+$/, '')}/embed`, {
     method: 'POST',
-    headers,
-    body: JSON.stringify({
-      input: texts,
-      model: 'text-embedding-ada-002',
-    }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ inputs: texts }),
   });
 
   if (!response.ok) {
     const error = await response.text();
-    throw new Error(`AnythingLLM API error: ${response.status} - ${error}`);
+    throw new Error(`TEI API error: ${response.status} - ${error}`);
   }
 
-  const data = await response.json();
+  const data = (await response.json()) as number[][];
+
+  if (!Array.isArray(data) || !Array.isArray(data[0])) {
+    throw new Error('TEI embed returned an unexpected shape (expected number[][])');
+  }
+
+  // Assert BGE-M3 native dimension on every returned vector — never pad/truncate.
+  for (const vector of data) {
+    if (vector.length !== TEI_EMBEDDING_DIM) {
+      throw new Error(
+        `Expected ${TEI_EMBEDDING_DIM}-dim TEI embedding, got ${vector.length}`
+      );
+    }
+  }
 
   return {
-    embeddings: data.data.map((item: { embedding: number[] }) => item.embedding),
-    model: data.model || 'anythingllm',
-    dimensions: data.data[0]?.embedding?.length || 1536,
+    embeddings: data,
+    model: Deno.env.get('EMBEDDING_MODEL') || 'bge-m3',
+    dimensions: TEI_EMBEDDING_DIM,
     usage: {
-      prompt_tokens: data.usage?.prompt_tokens || 0,
-      total_tokens: data.usage?.total_tokens || 0,
+      prompt_tokens: 0,
+      total_tokens: 0,
     },
-    provider: 'anythingllm',
+    provider: 'tei',
   };
 }
 
@@ -150,18 +156,18 @@ async function generateEmbedding(request: EmbeddingRequest): Promise<EmbeddingRe
   const model = request.model || 'text-embedding-3-small';
   const dimensions = request.dimensions;
 
-  // Try OpenAI first
+  // Try OpenAI first (configured primary)
   try {
     return await generateOpenAIEmbedding(texts, model, dimensions);
   } catch (openaiError) {
-    console.warn('OpenAI embedding failed, trying AnythingLLM:', openaiError);
+    console.warn('OpenAI embedding failed, trying on-prem TEI BGE-M3:', openaiError);
   }
 
-  // Try AnythingLLM fallback
+  // Try on-prem TEI BGE-M3 fallback (zero-egress)
   try {
-    return await generateAnythingLLMEmbedding(texts);
-  } catch (anythingllmError) {
-    console.error('All embedding providers failed:', anythingllmError);
+    return await generateTEIEmbedding(texts);
+  } catch (teiError) {
+    console.error('All embedding providers failed:', teiError);
     throw new Error('All embedding providers unavailable');
   }
 }
@@ -409,7 +415,7 @@ async function updateEntityEmbedding(
 // Check health of AI providers
 async function checkProviderHealth(): Promise<{
   openai: { available: boolean; latency?: number; error?: string };
-  anythingllm: { available: boolean; latency?: number; error?: string };
+  tei: { available: boolean; latency?: number; error?: string };
 }> {
   const health = {
     openai: {
@@ -417,7 +423,7 @@ async function checkProviderHealth(): Promise<{
       latency: undefined as number | undefined,
       error: undefined as string | undefined,
     },
-    anythingllm: {
+    tei: {
       available: false,
       latency: undefined as number | undefined,
       error: undefined as string | undefined,
@@ -441,19 +447,19 @@ async function checkProviderHealth(): Promise<{
     health.openai.error = 'API key not configured';
   }
 
-  // Check AnythingLLM
-  const anythingllmUrl = Deno.env.get('ANYTHINGLLM_URL');
-  if (anythingllmUrl) {
+  // Check on-prem TEI BGE-M3 (zero-egress embedder)
+  const teiUrl = Deno.env.get('TEI_EMBED_URL');
+  if (teiUrl) {
     const start = Date.now();
     try {
-      const response = await fetch(`${anythingllmUrl}/health`);
-      health.anythingllm.available = response.ok;
-      health.anythingllm.latency = Date.now() - start;
+      const response = await fetch(`${teiUrl.replace(/\/+$/, '')}/health`);
+      health.tei.available = response.ok;
+      health.tei.latency = Date.now() - start;
     } catch (error) {
-      health.anythingllm.error = error instanceof Error ? error.message : 'Unknown error';
+      health.tei.error = error instanceof Error ? error.message : 'Unknown error';
     }
   } else {
-    health.anythingllm.error = 'URL not configured';
+    health.tei.error = 'URL not configured';
   }
 
   return health;
@@ -473,7 +479,7 @@ Deno.serve(async (req) => {
     // Health check endpoint (no auth required)
     if (req.method === 'GET' && (path === '/health' || path === '')) {
       const health = await checkProviderHealth();
-      const anyAvailable = health.openai.available || health.anythingllm.available;
+      const anyAvailable = health.openai.available || health.tei.available;
 
       return new Response(
         JSON.stringify({

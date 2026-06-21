@@ -10,6 +10,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
 import { corsHeaders } from '../_shared/cors.ts';
+import { generateText } from '../_shared/onprem-llm.ts';
 import {
   createAIInteractionLogger,
   extractClientInfo,
@@ -325,10 +326,13 @@ serve(async (req: Request) => {
     let aiGaps: Gap[] = [];
     let aiServiceAvailable = false;
 
-    const anythingLlmUrl = Deno.env.get('ANYTHINGLLM_URL');
-    const anythingLlmKey = Deno.env.get('ANYTHINGLLM_API_KEY');
+    // On-prem vLLM recommendations generation (Phase 74, D3 — zero-egress).
+    // Re-homed onto the shared on-prem chat helper, which reads VLLM_BASE_URL.
+    // When the on-prem endpoint is unset/unreachable, generateText throws and we
+    // fall through to the keyword-based fallback recommendations.
+    const onPremGenerationConfigured = !!Deno.env.get('VLLM_BASE_URL');
 
-    if (anythingLlmUrl && anythingLlmKey && includeRecommendations) {
+    if (onPremGenerationConfigured && includeRecommendations) {
       try {
         // Get user's organization ID for logging
         const { data: userProfile } = await supabaseClient
@@ -352,8 +356,8 @@ serve(async (req: Request) => {
             userId: user.id,
             interactionType: 'analysis' as AIInteractionType,
             contentType: 'position' as AIContentType,
-            modelProvider: 'ollama',
-            modelName: 'llama2',
+            modelProvider: 'vllm',
+            modelName: Deno.env.get('VLLM_MODEL') || 'gemma-4-12b',
             userPrompt: prompt,
             targetEntityType: 'position',
             targetEntityId: body.position_id,
@@ -371,46 +375,32 @@ serve(async (req: Request) => {
           console.warn('Failed to log AI interaction start:', logError);
         }
 
-        // Call AI with timeout
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s timeout
-
-        const aiResponse = await fetch(`${anythingLlmUrl}/api/chat`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${anythingLlmKey}`,
-          },
-          body: JSON.stringify({
-            message: prompt,
-            mode: 'chat',
-          }),
-          signal: controller.signal,
+        // Call the on-prem model (45s timeout, prose completion).
+        const aiResponseText = await generateText({
+          systemPrompt:
+            'You are a diplomatic policy consistency analyst. Return only the requested JSON object.',
+          userPrompt: prompt,
+          timeoutMs: 45000,
         });
 
-        clearTimeout(timeoutId);
+        const aiResult = parseAIResponse(aiResponseText);
+        aiRecommendations = aiResult.recommendations;
+        aiGaps = aiResult.gaps;
+        aiServiceAvailable = true;
 
-        if (aiResponse.ok) {
-          const aiData = await aiResponse.json();
-          const aiResult = parseAIResponse(aiData.textResponse);
-          aiRecommendations = aiResult.recommendations;
-          aiGaps = aiResult.gaps;
-          aiServiceAvailable = true;
-
-          // Log AI interaction completion
-          if (interactionId) {
-            try {
-              await aiLogger.completeInteraction({
-                interactionId,
-                status: 'completed',
-                aiResponse: aiData.textResponse,
-                aiResponseStructured: aiResult,
-                latencyMs: Date.now() - startTime,
-                responseTokenCount: aiData.textResponse?.length || 0,
-              });
-            } catch (logError) {
-              console.warn('Failed to log AI interaction completion:', logError);
-            }
+        // Log AI interaction completion
+        if (interactionId) {
+          try {
+            await aiLogger.completeInteraction({
+              interactionId,
+              status: 'completed',
+              aiResponse: aiResponseText,
+              aiResponseStructured: aiResult,
+              latencyMs: Date.now() - startTime,
+              responseTokenCount: aiResponseText.length,
+            });
+          } catch (logError) {
+            console.warn('Failed to log AI interaction completion:', logError);
           }
         }
       } catch (aiError) {
