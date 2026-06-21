@@ -63,3 +63,28 @@ last_modified_by/version` shape) is not present in the local migrations tree —
   via the CLI would require a large `supabase migration repair` reconciliation first.
   Out of scope. The sanctioned apply channel for this repo is the Supabase MCP
   `apply_migration` (per CLAUDE.md), which records its own version IDs.
+
+## DEFER-73-03-A — 73-01 migrations (signal actor columns + persist_brief) live-apply is operator/deploy-gated
+
+- **Found during:** 73-03 execution (2026-06-21). The Supabase MCP tools are NOT exposed
+  to the executor agent this session (same agent-tool-stripping as 73-01), so the live
+  state of the two 73-01 migrations could not be verified or applied from here.
+- **What 73-03 depends on at runtime:**
+  - `intelligence_event.dismissed_by` / `escalated_by` / `status_changed_at`
+    (migration `20260620000001_phase73_signal_actor_columns.sql`) — written by
+    `useApproveWrite.commitSignalStatus`.
+  - `persist_brief(p_dossier_id UUID, p_content JSONB, p_title TEXT, p_summary TEXT)
+RETURNS UUID` + the additive `briefs.source_dossier_id` column + the
+    `briefs_insert_via_dossier_edit` INSERT policy
+    (migration `20260621090100_phase73_persist_brief.sql`) — called by
+    `useApproveWrite.commitBrief`.
+- **Status:** Both migration files are committed (`e8cd2b61`, `d17a20f5`/`ae5fff67`). The
+  73-03 frontend targets the EXACT signatures/columns those migrations define. Until they
+  are applied to staging (`zkrcjzdemdmwhearhfgg`) via the Supabase MCP `apply_migration`,
+  the signal-status and brief commits will fail at runtime (the card shows its neutral
+  error). The digest (`publish_digest`) and work-item (`tasks-create` →
+  `work-item-dossiers`) commit paths use already-live RPCs/edge fns and work today.
+- **Apply (operator, via Supabase MCP):** `apply_migration` for
+  `phase73_signal_actor_columns` then `phase73_persist_brief` (full file contents). This is
+  the phase-level deploy gate, consistent with the P72 GPU/re-embed deploy gate — it is
+  surfaced here, not silently swallowed.
