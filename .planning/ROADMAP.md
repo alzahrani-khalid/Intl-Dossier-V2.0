@@ -422,8 +422,22 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 2. CI fails on a correlation-accuracy regression below threshold (precision ≥ 0.75 / recall ≥ 0.70) — verified by same mechanism.
 3. CI fails on an Arabic-quality regression below threshold (≥ 0.75) — verified by same mechanism.
 4. The critical AI path (search suggestions, dashboard digest, assistant) makes zero AnythingLLM calls — verified by blocking the AnythingLLM endpoint at the network level on staging and confirming all three surfaces continue to function correctly.
-   **Plans**: TBD
-   **UI hint**: no
+
+**Plans**: 11 plans, 6 waves
+
+- [ ] 74-01-PLAN.md — Eval-harness scaffold + EVAL-02 computed precision/recall (CI-runnable, no LLM)
+- [ ] 74-02-PLAN.md — ChatDock un-mount + `/api/ai/chat` retire (D2)
+- [ ] 74-03-PLAN.md — 3 semantic-search edge fns to TEI BGE-M3 (1024-dim)
+- [ ] 74-04-PLAN.md — Backend AI-core AnythingLLM rip-out (config/router/service/embeddings/health/CSP)
+- [ ] 74-05-PLAN.md — intelligence-refresh x3 to on-prem vLLM generation (net-new, shared helper)
+- [ ] 74-06-PLAN.md — Text-AI edge fns re-home on-prem (extract/summary/translate/field-assist/word-assistant)
+- [ ] 74-07-PLAN.md — Embed/health/brief edge fns + backend brief.service/dossier-field-assist rip-out
+- [ ] 74-08-PLAN.md — Infra removal (compose/nginx/env) + static no-AnythingLLM critical-surface guard
+- [ ] 74-09-PLAN.md — EVAL-01/03 rubrics (on-prem gemma judge, golden EN+AR, positive-failure; deploy-gated)
+- [ ] 74-10-PLAN.md — CI eval-gate job (two-mode) + EVAL-04 network-block UAT spec
+- [ ] 74-11-PLAN.md — Live verification (deploy-gated checkpoint: EVAL-04 UAT + live EVAL-01/03 + full-repo audit)
+
+**UI hint**: no
 
 ---
 
