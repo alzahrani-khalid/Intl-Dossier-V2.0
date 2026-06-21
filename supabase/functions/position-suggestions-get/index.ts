@@ -116,28 +116,38 @@ serve(async (req) => {
         ...(engagement.stakeholders || [])
       ].filter(Boolean).join(' ');
 
-      // Call AnythingLLM for embedding
-      const anythingLLMUrl = Deno.env.get('ANYTHINGLLM_URL');
-      const anythingLLMKey = Deno.env.get('ANYTHINGLLM_API_KEY');
+      // Embed via the on-prem TEI bge-m3 `/embed` route (D3), mirroring
+      // agent-runtime/src/mastra/tools/hybrid-rag-search.ts. bge-m3 native dim is 1024;
+      // the corpus is halfvec(1024). Never pad/truncate (P68 REMED-04). A throw here is
+      // caught by the circuit breaker and routed to the keyword fallback (graceful).
+      const EMBEDDING_DIM = 1024;
+      const teiUrl = Deno.env.get('TEI_EMBED_URL');
 
-      if (!anythingLLMUrl || !anythingLLMKey) {
-        throw new Error('AnythingLLM not configured');
+      if (!teiUrl) {
+        throw new Error('TEI_EMBED_URL not configured');
       }
 
-      const embeddingResponse = await fetch(`${anythingLLMUrl}/api/v1/embeddings`, {
+      const embeddingResponse = await fetch(`${teiUrl.replace(/\/+$/, '')}/embed`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${anythingLLMKey}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text: embeddingText }),
+        body: JSON.stringify({ inputs: embeddingText }),
       });
 
       if (!embeddingResponse.ok) {
         throw new Error('Failed to generate embedding');
       }
 
-      const { embedding } = await embeddingResponse.json();
+      const embeddingData = await embeddingResponse.json();
+      const embedding = Array.isArray(embeddingData) ? embeddingData[0] : undefined;
+      if (!Array.isArray(embedding) || embedding.length !== EMBEDDING_DIM) {
+        throw new Error(
+          `Expected ${EMBEDDING_DIM}-dim query embedding, got ${
+            Array.isArray(embedding) ? embedding.length : typeof embedding
+          }`,
+        );
+      }
 
       // Call pgvector similarity search
       const { data: matches, error: matchError } = await supabaseClient
