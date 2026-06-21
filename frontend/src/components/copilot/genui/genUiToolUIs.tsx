@@ -14,9 +14,8 @@
  * READ-ONLY: unlike the 73-03 HITL renderers, these have NO approval and call NO addResult.
  * They render from `result` once `status.type === 'complete'`; while the tool is still
  * running they render nothing (let the existing streaming/text parts show). A null/empty
- * result renders nothing here, so the default text part stays — and that text carries no
- * clearance/filtered/restricted wording (indistinguishable-empty, enforced upstream in the
- * tools themselves).
+ * result renders nothing here, so the default text part stays — and that text names no
+ * reason at all (indistinguishable-empty, enforced upstream in the tools themselves).
  *
  * Mounted as <GenUiToolUIs /> inside AssistantRuntimeProvider in CopilotSurface, ALONGSIDE
  * the 73-03 <ProposeToolUIs /> (both register on the same provider).

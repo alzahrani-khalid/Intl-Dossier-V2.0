@@ -5,7 +5,7 @@
  *
  * The genUI tool-UI renderer (genUiToolUIs) hands us a PARTIAL dossier row from
  * get_dossier / list_dossiers (id + type + a few display fields). For fidelity we fetch
- * the FULL DossierWithExtension via the app's clearance-gated useDossier (caller JWT,
+ * the FULL DossierWithExtension via the app's RLS-gated useDossier (caller JWT,
  * shares the app QueryClient) and render UniversalDossierCard with NO edit/delete/view
  * callbacks — read-only inline (T-73-04-03: no privileged read; RLS gates the fetch).
  *
@@ -13,9 +13,9 @@
  * getDossierDetailPath(id, type) (CitationCard precedent, T-73-04-04 — an app-relative
  * path built from the already-accessible id+type, never a raw model URL).
  *
- * INDISTINGUISHABLE-EMPTY (T-73-04-02): when the fetch returns nothing — above-clearance
+ * INDISTINGUISHABLE-EMPTY (T-73-04-02): when the fetch returns nothing — above-level
  * OR not-found OR a generic failure all read the same — we render one neutral inline line.
- * NO clearance / filtered / restricted wording anywhere (carried P71 GRAPH-03).
+ * The neutral line names no reason at all (carried P71 GRAPH-03).
  *
  * @module components/copilot/genui/InlineDossierCard
  */
@@ -45,8 +45,8 @@ export function InlineDossierCard({ dossierRow }: { dossierRow: InlineDossierRow
   const navigate = useNavigate()
   const parsed = readRow(dossierRow)
 
-  // Clearance-gated full fetch under the caller JWT (shares the app QueryClient). retry:false
-  // so an above-clearance/not-found read settles to the neutral empty line without churn.
+  // RLS-gated full fetch under the caller JWT (shares the app QueryClient). retry:false
+  // so an above-level/not-found read settles to the neutral empty line without churn.
   const { data, isPending, isError } = useDossier(parsed?.id ?? '', undefined, {
     enabled: parsed != null,
     retry: false,
@@ -62,7 +62,7 @@ export function InlineDossierCard({ dossierRow }: { dossierRow: InlineDossierRow
     void navigate({ to: getDossierDetailPath(parsed.id, parsed.type) as string & {} })
   }
 
-  // Loading → neutral token-bound placeholder (no clearance wording).
+  // Loading → neutral token-bound placeholder (names no reason).
   if (isPending) {
     return (
       <div className="copilot-genui__placeholder" aria-hidden="true">
@@ -72,7 +72,7 @@ export function InlineDossierCard({ dossierRow }: { dossierRow: InlineDossierRow
     )
   }
 
-  // Above-clearance / not-found / generic failure → ONE neutral line (indistinguishable-empty).
+  // Above-level / not-found / generic failure → ONE neutral line (indistinguishable-empty).
   if (isError || data == null) {
     return <p className="copilot-genui__empty">{t('genui.dossier.unavailable')}</p>
   }
