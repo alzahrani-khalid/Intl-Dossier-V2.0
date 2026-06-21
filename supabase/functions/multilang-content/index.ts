@@ -7,6 +7,7 @@
 
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { generateText } from '../_shared/onprem-llm.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -113,7 +114,7 @@ type RequestBody =
   | BulkUpsertRequest;
 
 /**
- * Translate text using AI (AnythingLLM or fallback)
+ * Translate text using the on-prem vLLM model (or fallback)
  */
 async function translateText(
   content: string,
@@ -121,14 +122,12 @@ async function translateText(
   targetLanguage: ContentLanguage,
   context?: string
 ): Promise<{ translated_content: string; confidence: number }> {
-  const ANYTHINGLLM_URL = Deno.env.get('ANYTHINGLLM_URL') || 'http://localhost:3001';
-  const ANYTHINGLLM_TOKEN = Deno.env.get('ANYTHINGLLM_API_KEY');
-  const ANYTHINGLLM_WORKSPACE = Deno.env.get('ANYTHINGLLM_WORKSPACE') || 'dossier';
-
   const sourceLangName = LANGUAGE_NAMES[sourceLanguage];
   const targetLangName = LANGUAGE_NAMES[targetLanguage];
 
-  const translationPrompt = `You are a professional diplomatic translator. Translate the following text from ${sourceLangName} to ${targetLangName}.
+  const systemPrompt = `You are a professional diplomatic translator. Translate from ${sourceLangName} to ${targetLangName}. Provide ONLY the translated text, without any explanations or notes.`;
+
+  const translationPrompt = `Translate the following text from ${sourceLangName} to ${targetLangName}.
 
 Important guidelines:
 - Maintain the original meaning and tone
@@ -143,27 +142,12 @@ ${content}
 Provide ONLY the translated text, without any explanations or notes.`;
 
   try {
-    const response = await fetch(
-      `${ANYTHINGLLM_URL}/api/v1/workspace/${ANYTHINGLLM_WORKSPACE}/chat`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${ANYTHINGLLM_TOKEN}`,
-        },
-        body: JSON.stringify({
-          message: translationPrompt,
-          mode: 'chat',
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`AnythingLLM API error: ${response.status}`);
-    }
-
-    const result = await response.json();
-    const translatedContent = result.textResponse || result.response || '';
+    // Translate via the on-prem vLLM model (plain text).
+    const translatedContent = await generateText({
+      systemPrompt,
+      userPrompt: translationPrompt,
+      timeoutMs: 30000,
+    });
 
     // Calculate confidence based on response quality
     let confidence = 0.85; // Base confidence for AI translation
@@ -182,8 +166,8 @@ Provide ONLY the translated text, without any explanations or notes.`;
   } catch (error) {
     console.error('Translation error:', error);
 
-    // Fallback: Return original with low confidence if AI fails
-    // In production, could use a backup translation service
+    // Fallback: Return original with low confidence if the model is unavailable.
+    // In production, could use a backup translation service.
     return {
       translated_content: content,
       confidence: 0.1,
