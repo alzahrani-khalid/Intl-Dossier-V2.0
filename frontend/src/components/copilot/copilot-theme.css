@@ -204,6 +204,13 @@
 .copilot-genui {
   margin-block-start: var(--space-2, 8px);
 }
+/* A capped vertical stack of inline cards (list_dossiers / read_signals results). */
+.copilot-genui-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 8px);
+  margin-block-start: var(--space-2, 8px);
+}
 /* Whole-card activation target: a bare button wrapper, no border/shadow of its own
    (the inner UniversalDossierCard owns the visible frame). Logical text-align: start. */
 .copilot-genui__activate {
