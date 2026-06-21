@@ -16,6 +16,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
 import { corsHeaders } from '../_shared/cors.ts';
 import { validateJWT, createUserClient, createServiceClient } from '../_shared/auth.ts';
+import { generateStructuredJson } from '../_shared/onprem-llm.ts';
 import {
   RefreshIntelligenceRequestSchema,
   RefreshIntelligenceResponseSchema,
@@ -26,10 +27,6 @@ import {
   type RefreshIntelligenceResponse,
   type IntelligenceType,
 } from '../_shared/validation-schemas.ts';
-
-// AnythingLLM configuration
-const ANYTHINGLLM_URL = Deno.env.get('ANYTHINGLLM_URL') || 'http://localhost:3001';
-const ANYTHINGLLM_API_KEY = Deno.env.get('ANYTHINGLLM_API_KEY') || '';
 
 serve(async (req) => {
   // Handle CORS preflight
@@ -169,8 +166,8 @@ serve(async (req) => {
         console.log(`[${intelligenceType.toUpperCase()}] Starting refresh...`);
         const refreshStartTime = Date.now();
 
-        // Call AnythingLLM to generate intelligence
-        const intelligenceData = await fetchIntelligenceFromAnythingLLM(
+        // Generate intelligence via the on-prem vLLM model
+        const intelligenceData = await fetchIntelligenceOnPrem(
           entity_id,
           entity.name_en,
           intelligenceType
@@ -199,9 +196,6 @@ serve(async (req) => {
             refresh_duration_ms: refreshDuration,
             refresh_error_message: null,
             data_sources_metadata: intelligenceData.data_sources_metadata,
-            anythingllm_workspace_id: intelligenceData.workspace_id,
-            anythingllm_query: intelligenceData.query,
-            anythingllm_response_metadata: intelligenceData.response_metadata,
             metrics: intelligenceData.metrics, // Store parsed key indicators
           }, {
             onConflict: 'entity_id,intelligence_type'
@@ -234,7 +228,7 @@ serve(async (req) => {
       }
     });
 
-    // Wait for all refreshes with timeout (90 seconds to accommodate AnythingLLM's 60s timeout plus processing)
+    // Wait for all refreshes with timeout (90 seconds to accommodate the on-prem model's 60s timeout plus processing)
     const refreshResults = await Promise.allSettled(
       refreshPromises.map((p) =>
         Promise.race([
@@ -286,9 +280,11 @@ serve(async (req) => {
 });
 
 /**
- * Fetches intelligence from AnythingLLM using RAG
+ * Generates country intelligence via the on-prem vLLM model (OpenAI-compatible
+ * `/v1/chat/completions`, JSON mode). Replaces the retired workspace-chat
+ * generation path — zero-egress, on-prem only (P74 EVAL-04, D3).
  */
-async function fetchIntelligenceFromAnythingLLM(
+async function fetchIntelligenceOnPrem(
   entityId: string,
   entityName: string,
   intelligenceType: IntelligenceType
@@ -299,31 +295,8 @@ async function fetchIntelligenceFromAnythingLLM(
   content_ar: string;
   confidence_level: 'low' | 'medium' | 'high' | 'verified';
   data_sources_metadata: any[];
-  workspace_id: string;
-  query: string;
-  response_metadata: any;
   metrics: Record<string, string> | null;
 }> {
-  // Check if AnythingLLM service is available
-  try {
-    const healthCheck = await fetch(`${ANYTHINGLLM_URL}/api/health`, {
-      method: 'GET',
-      signal: AbortSignal.timeout(5000),
-    });
-
-    if (!healthCheck.ok) {
-      throw new Error('AnythingLLM service unavailable');
-    }
-  } catch (error) {
-    throw new Error(`AnythingLLM service unavailable: ${error.message}`);
-  }
-
-  // Use single shared workspace for all countries
-  const workspaceSlug = 'country-intelligence';
-
-  // Ensure workspace exists (create if needed)
-  await ensureWorkspaceExists(workspaceSlug);
-
   // Build structured query with JSON response format for efficient parsing
   // Single-language generation for better performance (50% faster)
   // VERIFICATION MARKER: VERSION_2025_10_31_V45_STRUCTURED_JSON_PROMPTS
@@ -397,60 +370,34 @@ Be comprehensive but concise.`,
 
   const query = queries[intelligenceType];
 
-  // Call AnythingLLM API with extended timeout for complex queries
-  console.log(`[${intelligenceType.toUpperCase()}] CALLING ANYTHINGLLM WITH STRUCTURED JSON PROMPT (V43) - CACHE CLEARED...`);
-  console.log(`[${intelligenceType.toUpperCase()}] Full query being sent:`, query);
-  const response = await fetch(
-    `${ANYTHINGLLM_URL}/api/v1/workspace/${workspaceSlug}/chat`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${ANYTHINGLLM_API_KEY}`,
-      },
-      body: JSON.stringify({
-        message: query,
-        mode: 'chat', // Chat mode for general intelligence without RAG documents
-      }),
-      signal: AbortSignal.timeout(60000), // 60 second timeout for LLM generation
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(
-      `AnythingLLM API error: ${response.status} ${response.statusText}`
-    );
-  }
-
-  const data = await response.json();
-
-  // Extract intelligence from response
-  const rawContent = data.textResponse || data.message || '';
-  const sources = data.sources || [];
+  // Call the on-prem vLLM model with JSON-mode and an extended timeout.
+  console.log(`[${intelligenceType.toUpperCase()}] Generating intelligence via on-prem model (structured JSON)...`);
+  const parsedResponse = await generateStructuredJson({
+    systemPrompt:
+      'You are a country-intelligence analyst. Respond ONLY with the requested JSON object — no markdown, no commentary.',
+    userPrompt: query,
+    temperature: 0.2,
+    timeoutMs: 60000,
+  });
 
   // Parse structured JSON response - extract summary, analysis, and metrics
-  console.log(`[${intelligenceType.toUpperCase()}] Raw AnythingLLM response:`, rawContent.substring(0, 500));
-  const { content, content_ar, metrics } = parseStructuredResponse(rawContent, entityName, intelligenceType);
+  const { content, content_ar, metrics } = parseStructuredResponse(parsedResponse, entityName, intelligenceType);
   console.log(`[${intelligenceType.toUpperCase()}] Parsed metrics:`, JSON.stringify(metrics));
 
   // Calculate confidence score based on multiple factors
   // 1. Base score from authoritative data sources (70 points - we always use high-quality sources)
-  // 2. Bonus for RAG sources cited (+5 per source, up to 15 points)
-  // 3. Bonus for successfully extracted metrics (+10 points)
+  // 2. Bonus for successfully extracted metrics (+10 points)
   let confidenceScore = 70; // Base score for authoritative sources (World Bank, IMF, CIA, etc.)
-  
-  // Add points for RAG sources
-  confidenceScore += Math.min(15, sources.length * 5);
-  
+
   // Add bonus if metrics were successfully extracted
   if (metrics && Object.keys(metrics).length > 0) {
     confidenceScore += 10;
   }
-  
+
   // Cap at 100
   confidenceScore = Math.min(100, confidenceScore);
-  
-  console.log(`[${intelligenceType.toUpperCase()}] Confidence score: ${confidenceScore} (base=70, RAG sources=${sources.length}, has metrics=${!!metrics})`);
+
+  console.log(`[${intelligenceType.toUpperCase()}] Confidence score: ${confidenceScore} (base=70, has metrics=${!!metrics})`);
 
   // Convert numeric confidence score to enum
   const confidenceLevel: 'low' | 'medium' | 'high' | 'verified' =
@@ -489,21 +436,12 @@ Be comprehensive but concise.`,
   // Get relevant sources for this intelligence type
   const typeSources = intelligenceTypeSources[intelligenceType] || intelligenceTypeSources.general;
 
-  const dataSources = [
-    ...typeSources.map(typeSource => ({
-      source: typeSource.source,
-      endpoint: typeSource.endpoint,
-      retrieved_at: new Date().toISOString(),
-      confidence: typeSource.confidence,
-    })),
-    // Add AnythingLLM RAG sources if available
-    ...sources.map((source: any) => ({
-      source: source.title || 'RAG Document',
-      endpoint: source.link || '',
-      retrieved_at: new Date().toISOString(),
-      confidence: 85,
-    })),
-  ];
+  const dataSources = typeSources.map(typeSource => ({
+    source: typeSource.source,
+    endpoint: typeSource.endpoint,
+    retrieved_at: new Date().toISOString(),
+    confidence: typeSource.confidence,
+  }));
 
   // Generate bilingual titles
   const intelligenceTypeLabels: Record<IntelligenceType, { en: string; ar: string }> = {
@@ -523,55 +461,45 @@ Be comprehensive but concise.`,
     content_ar,
     confidence_level: confidenceLevel,
     data_sources_metadata: dataSources,
-    workspace_id: workspaceSlug,
-    query,
-    response_metadata: {
-      model: data.model || 'unknown',
-      tokens_used: data.tokens || 0,
-      sources_cited: sources.map((s: any) => s.title || 'Unknown'),
-    },
     metrics,
   };
 }
 
 /**
- * Parses bilingual response from AnythingLLM
- * Extracts English and Arabic sections using [ENGLISH] and [ARABIC] markers
- */
-/**
- * Parses structured JSON response from AnythingLLM
- * Extracts summary, metrics, and detailed analysis
+ * Maps the structured JSON object returned by the on-prem model into bilingual
+ * content + parsed metrics. Accepts the already-parsed object from
+ * generateStructuredJson (JSON mode), with a defensive fallback for an
+ * unexpected shape.
  */
 function parseStructuredResponse(
-  rawContent: string,
+  parsed: unknown,
   entityName: string,
   intelligenceType: string
 ): { content: string; content_ar: string; metrics: Record<string, string> | null } {
   try {
-    // Try to extract JSON from response
-    // Handle cases where LLM might add text before/after JSON
-    const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
-
-    if (!jsonMatch) {
-      console.warn('No JSON found in response, using fallback parsing');
+    if (!parsed || typeof parsed !== 'object') {
+      console.warn('Model response was not a JSON object, using fallback');
       return {
-        content: rawContent.trim() || `Intelligence for ${entityName} is currently unavailable.`,
+        content: `Intelligence for ${entityName} is currently unavailable.`,
         content_ar: `معلومات استخباراتية عن ${entityName} غير متوفرة حالياً.`,
         metrics: null,
       };
     }
 
-    const parsed = JSON.parse(jsonMatch[0]);
+    const record = parsed as Record<string, unknown>;
 
     // Extract fields from structured response
-    const summary = parsed.summary || '';
-    const analysis = parsed.analysis || '';
-    const metrics = parsed.metrics || null;
+    const summary = typeof record.summary === 'string' ? record.summary : '';
+    const analysis = typeof record.analysis === 'string' ? record.analysis : '';
+    const metrics =
+      record.metrics && typeof record.metrics === 'object'
+        ? (record.metrics as Record<string, string>)
+        : null;
 
     // Combine summary and analysis for content
     const content = summary && analysis
       ? `${summary}\n\n${analysis}`
-      : summary || analysis || rawContent.trim();
+      : summary || analysis || `Intelligence for ${entityName} is currently unavailable.`;
 
     // For now, use English content as Arabic placeholder
     // In production, you'd want to translate or generate separate Arabic content
@@ -583,83 +511,13 @@ function parseStructuredResponse(
       metrics,
     };
   } catch (error) {
-    console.error('Error parsing structured JSON response:', error);
+    console.error('Error mapping structured model response:', error);
 
-    // Fallback to using raw content
+    // Fallback to a neutral unavailable message
     return {
-      content: rawContent.trim() || `Intelligence for ${entityName} is currently unavailable.`,
+      content: `Intelligence for ${entityName} is currently unavailable.`,
       content_ar: `معلومات استخباراتية عن ${entityName} غير متوفرة حالياً.`,
       metrics: null,
     };
-  }
-}
-
-/**
- * Ensures shared country intelligence workspace exists in AnythingLLM
- * Creates workspace if it doesn't exist (only runs once per deployment)
- */
-async function ensureWorkspaceExists(workspaceSlug: string): Promise<void> {
-  try {
-    // Check if workspace exists
-    const checkResponse = await fetch(
-      `${ANYTHINGLLM_URL}/api/v1/workspace/${workspaceSlug}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${ANYTHINGLLM_API_KEY}`,
-        },
-        signal: AbortSignal.timeout(5000),
-      }
-    );
-
-    // If workspace exists, return
-    if (checkResponse.ok) {
-      console.log(`Workspace ${workspaceSlug} already exists`);
-      return;
-    }
-
-    // If not found, create workspace
-    if (checkResponse.status === 404) {
-      console.log(`Creating shared workspace: ${workspaceSlug}`);
-
-      const createResponse = await fetch(
-        `${ANYTHINGLLM_URL}/api/v1/workspace/new`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${ANYTHINGLLM_API_KEY}`,
-          },
-          body: JSON.stringify({
-            name: 'Country Intelligence (Shared)',
-            slug: workspaceSlug,
-            openAiTemp: 0.7,
-            openAiHistory: 20,
-            similarityThreshold: 0.25,
-            topN: 4,
-          }),
-          signal: AbortSignal.timeout(10000),
-        }
-      );
-
-      if (!createResponse.ok) {
-        const errorText = await createResponse.text();
-        throw new Error(
-          `Failed to create workspace: ${createResponse.status} - ${errorText}`
-        );
-      }
-
-      const workspaceData = await createResponse.json();
-      console.log(`Workspace created successfully: ${workspaceSlug}`, workspaceData);
-      return;
-    }
-
-    // Other errors
-    throw new Error(
-      `Failed to check workspace: ${checkResponse.status} ${checkResponse.statusText}`
-    );
-  } catch (error) {
-    console.error(`Error ensuring workspace exists for ${workspaceSlug}:`, error);
-    throw new Error(`Workspace management failed: ${error.message}`);
   }
 }
