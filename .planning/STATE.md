@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v7.0
 milestone_name: Intelligence Engine
 status: completed
-last_updated: "2026-06-20T05:59:22.408Z"
-last_activity: "2026-06-19 — quick task 260619-dek: vLLM/Gemma-4 deploy hardening (HF_TOKEN wiring + Gemma-4 deploy notes)"
+last_updated: '2026-06-21T09:31:06.620Z'
+last_activity: 2026-06-21
 progress:
   total_phases: 7
   completed_phases: 5
-  total_plans: 33
-  completed_plans: 33
+  total_plans: 38
+  completed_plans: 35
   percent: 71
 ---
 
@@ -24,11 +24,11 @@ See: .planning/PROJECT.md (updated 2026-06-13 after v7.0 milestone kickoff)
 
 ## Current Position
 
-Phase: 72 (agent-platform-runtime-retrieval-reads) — EXECUTING
-Plan: 9 of 9
-Status: 72-09 executable scope COMPLETE — seed + UAT authored + the 3 ORCHESTRATOR-MCP DB/RLS proofs RUN + PASS live 2026-06-19 (staging RESTORED). Phase live-UAT is SPLIT: DB/RLS proofs PASS; the e2e copilot-UI proofs (PROOF 1 full / 2 / 5) + INFRA smokes are DEPLOY-GATED on the GPU stack (see Open Todos). NOT a full live-UAT pass.
+Phase: 73 (agent-platform-writes-generative-ui) — EXECUTING
+Plan: 2 of 5
+Status: 73-02 complete — four propose-only copilot write-tools (digest, signal status, work item, on-prem bilingual brief) + EN/AR prompt revision to propose-with-approval. agent-runtime type-check/test(40)/build/lint all green; propose-only keystone intact (only DB touch = propose_brief caller-JWT dossier read).
 Resume file: None
-Last activity: 2026-06-19 — quick task 260619-dek: vLLM/Gemma-4 deploy hardening (HF_TOKEN wiring + Gemma-4 deploy notes)
+Last activity: 2026-06-21
 
 ```
 Milestone Progress: 4/7 phases complete
@@ -133,6 +133,8 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase ?]: 72-09: live-UAT seed + 5-proof skeleton AUTHORED (not applied/run) — no GPU/MCP/browser here; orchestrator runs the ORCHESTRATOR-MCP DB proofs (AGENT-04/05 + AGENT-03 impersonation), PROOF 1/2/5 + INFRA are deploy-gated. Seed=72090000- ids, restore-safe
 - [Phase ?]: 72-09 seed resolves org via tenant_isolation.resolve_user_tenant(test_user) so L1/L3 share the tenant (dossiers carry NO organization_id); clearance is the only differing axis (else tenant RLS hides rows from both)
 - [Phase 72]: 72-09 DB/RLS proofs RUN + PASS live on staging 2026-06-19 (orchestrator via MCP), then RESTORED — the keystone holds at the RLS layer. **PROOF 4:** hybrid_rag_search prosecdef=false (SECURITY INVOKER) + rag_chunks SELECT RLS = `sensitivity_level <= (SELECT clearance_level FROM profiles WHERE user_id=auth.uid())` (trap-free, NOT id) + anon EXECUTE=0. **PROOF 1 DB-layer (AGENT-03 keystone):** P69-pattern authenticated impersonation (SET LOCAL ROLE authenticated + set_config request.jwt.claims, NOT service-role) over 2 synthetic rag_chunks rows (sens 1+3) — L1 caller 00242210-2f81-4cfc-9799-1cc02c76be44 (clearance 1) sees rows=1 levels [1]; L3 caller 1aae53d5-1488-4c9d-8ded-6c1926d6f0e8 (clearance 3) sees rows=2 levels [1,3] → L1 STRICT SUBSET of L3, ZERO above-clearance, the exact INVOKER+RLS path hybrid_rag_search uses. **PROOF 3:** synthetic rows vector_dims=1024 (0 failing) — column/constraint enforces 1024 on real rows; real-corpus bge-m3 proof DEPLOY-GATED post-re-embed. **RESTORE:** rag_chunks total=0; the 72090000- intelligence_event seed was NEVER applied (orchestrator used synthetic rag_chunks rows directly to keep tenant-isolation out of the clearance proof; seed file stays ready for the deploy-time PROOF 5 e2e). Phase live-UAT is SPLIT: DB/RLS PASS now; PROOF 1 full e2e / PROOF 2 EN+AR RTL / PROOF 5 e2e smoke / INFRA-01/02 remain DEPLOY-GATED+AUTH-GATED. NOT a full live-UAT pass. (this continuation recorded results; no proofs run in this executor)
+- [Phase ?]: 73-02: copilot gains four propose-only write-tools (propose_publish_digest/propose_signal_status/propose_work_item/propose_brief) — narrow-Zod validate + echo for a HITL card, commit NOTHING server-side; the frontend commits under the caller JWT on approval (D-03). Only DB touch across the four is propose_brief's caller-JWT dossier read.
+- [Phase ?]: 73-02: propose_brief generates on-prem via getCopilotModel()→openai client at the vLLM/Ollama endpoint (no new dep, no AnythingLLM), returning the SINGLE content envelope { en:{summary,sections}, ar:{summary,sections} } the reconciled persist RPC stores (NOT content_en/content_ar) — matches the live briefs single content jsonb (73-01).
 
 ### Open Todos
 
