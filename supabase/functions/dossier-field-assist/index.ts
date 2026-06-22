@@ -25,6 +25,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
 import { corsHeaders } from '../_shared/cors.ts';
+import { generateStructuredJson } from '../_shared/onprem-llm.ts';
 import {
   createAIInteractionLogger,
   extractClientInfo,
@@ -291,19 +292,19 @@ serve(async (req) => {
     const preferredLanguage = body.language || 'en';
     const context = TYPE_CONTEXT[body.dossier_type];
 
-    // Try AI generation with AnythingLLM
-    const anythingLlmUrl = Deno.env.get('ANYTHINGLLM_URL');
-    const anythingLlmKey = Deno.env.get('ANYTHINGLLM_API_KEY');
-
     // Initialize AI interaction logger
     const aiLogger = createAIInteractionLogger('dossier-field-assist');
     const clientInfo = extractClientInfo(req);
     let interactionId: string | undefined;
 
-    if (anythingLlmUrl && anythingLlmKey) {
-      try {
-        // Prepare AI prompt
-        const prompt = `You are a diplomatic dossier assistant. Generate structured fields for ${context.en}.
+    // Try AI generation with the on-prem vLLM model (JSON mode). The helper
+    // throws if VLLM_BASE_URL is unset or the model is unreachable, in which
+    // case we degrade to generateFallbackFields below.
+    try {
+      // Prepare AI prompt
+      const systemPrompt =
+        'You are a diplomatic dossier assistant. Respond ONLY with the requested JSON object, no additional text.';
+      const prompt = `Generate structured bilingual fields for ${context.en}.
 
 User's description: "${body.description}"
 
@@ -323,138 +324,109 @@ The response MUST be valid JSON only, no additional text:
   "suggested_tags": ["tag1", "tag2", "tag3"]
 }`;
 
-        // Log AI interaction start
-        try {
-          const { data: userProfile } = await supabaseClient
-            .from('users')
-            .select('organization_id')
-            .eq('id', user.id)
-            .single();
+      // Log AI interaction start
+      try {
+        const { data: userProfile } = await supabaseClient
+          .from('users')
+          .select('organization_id')
+          .eq('id', user.id)
+          .single();
 
-          const result = await aiLogger.startInteraction({
-            organizationId: userProfile?.organization_id || 'unknown',
-            userId: user.id,
-            interactionType: 'generation' as AIInteractionType,
-            contentType: 'extraction' as AIContentType,
-            modelProvider: 'ollama',
-            modelName: 'llama2',
-            userPrompt: prompt,
-            targetEntityType: 'dossier',
-            contextSources: [
-              {
-                type: 'user_input',
-                id: 'description',
-                snippet: body.description.slice(0, 100),
-              },
-            ],
-            dataClassification: 'internal',
-            requestIp: clientInfo.ip,
-            userAgent: clientInfo.userAgent,
-          });
-          interactionId = result.interactionId;
-        } catch (logError) {
-          console.warn('Failed to log AI interaction start:', logError);
-        }
-
-        const startTime = Date.now();
-
-        // Call AI with timeout (30 seconds)
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000);
-
-        const aiResponse = await fetch(`${anythingLlmUrl}/api/chat`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${anythingLlmKey}`,
-          },
-          body: JSON.stringify({
-            message: prompt,
-            mode: 'chat',
-          }),
-          signal: controller.signal,
+        const result = await aiLogger.startInteraction({
+          organizationId: userProfile?.organization_id || 'unknown',
+          userId: user.id,
+          interactionType: 'generation' as AIInteractionType,
+          contentType: 'extraction' as AIContentType,
+          modelProvider: 'vllm',
+          modelName: Deno.env.get('VLLM_MODEL') || 'gemma-4-12b',
+          userPrompt: prompt,
+          targetEntityType: 'dossier',
+          contextSources: [
+            {
+              type: 'user_input',
+              id: 'description',
+              snippet: body.description.slice(0, 100),
+            },
+          ],
+          dataClassification: 'internal',
+          requestIp: clientInfo.ip,
+          userAgent: clientInfo.userAgent,
         });
-
-        clearTimeout(timeoutId);
-
-        if (!aiResponse.ok) {
-          throw new Error(`AI service returned ${aiResponse.status}`);
-        }
-
-        const aiData = await aiResponse.json();
-        const latencyMs = Date.now() - startTime;
-
-        // Parse AI response
-        let generatedFields: GeneratedFields;
-
-        try {
-          // Try to extract JSON from the response
-          const responseText = aiData.textResponse || '';
-          const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-
-          if (jsonMatch) {
-            generatedFields = JSON.parse(jsonMatch[0]);
-          } else {
-            throw new Error('No JSON found in response');
-          }
-
-          // Validate required fields
-          if (!generatedFields.name_en || !generatedFields.name_ar) {
-            throw new Error('Missing required fields');
-          }
-
-          // Ensure suggested_tags is an array
-          if (!Array.isArray(generatedFields.suggested_tags)) {
-            generatedFields.suggested_tags = context.suggestedTags;
-          }
-        } catch (parseError) {
-          console.warn('Failed to parse AI response, using fallback:', parseError);
-          generatedFields = generateFallbackFields(
-            body.dossier_type,
-            body.description,
-            preferredLanguage
-          );
-        }
-
-        // Log AI interaction completion
-        if (interactionId) {
-          try {
-            await aiLogger.completeInteraction({
-              interactionId,
-              status: 'completed',
-              aiResponse: aiData.textResponse,
-              aiResponseStructured: generatedFields,
-              latencyMs,
-              responseTokenCount: aiData.textResponse?.length || 0,
-            });
-          } catch (logError) {
-            console.warn('Failed to log AI interaction completion:', logError);
-          }
-        }
-
-        return new Response(JSON.stringify(generatedFields), {
-          status: 200,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
-      } catch (aiError) {
-        console.warn('AI generation failed:', aiError);
-
-        // Log AI interaction failure
-        if (interactionId) {
-          try {
-            await aiLogger.completeInteraction({
-              interactionId,
-              status: 'failed',
-              errorMessage: aiError instanceof Error ? aiError.message : 'Unknown error',
-              latencyMs: 0,
-            });
-          } catch (logError) {
-            console.warn('Failed to log AI interaction failure:', logError);
-          }
-        }
-
-        // Fall through to fallback
+        interactionId = result.interactionId;
+      } catch (logError) {
+        console.warn('Failed to log AI interaction start:', logError);
       }
+
+      const startTime = Date.now();
+
+      // Call the on-prem model (JSON mode); 30s timeout
+      const parsed = (await generateStructuredJson({
+        systemPrompt,
+        userPrompt: prompt,
+        timeoutMs: 30000,
+      })) as Partial<GeneratedFields>;
+
+      const latencyMs = Date.now() - startTime;
+
+      // Validate required fields; fall back if the model omitted them.
+      let generatedFields: GeneratedFields;
+      if (!parsed.name_en || !parsed.name_ar) {
+        console.warn('On-prem response missing required fields, using fallback');
+        generatedFields = generateFallbackFields(
+          body.dossier_type,
+          body.description,
+          preferredLanguage
+        );
+      } else {
+        generatedFields = {
+          name_en: parsed.name_en,
+          name_ar: parsed.name_ar,
+          description_en: parsed.description_en || '',
+          description_ar: parsed.description_ar || '',
+          suggested_tags: Array.isArray(parsed.suggested_tags)
+            ? parsed.suggested_tags
+            : context.suggestedTags,
+        };
+      }
+
+      // Log AI interaction completion
+      if (interactionId) {
+        try {
+          await aiLogger.completeInteraction({
+            interactionId,
+            status: 'completed',
+            aiResponse: JSON.stringify(generatedFields),
+            aiResponseStructured: generatedFields,
+            latencyMs,
+            responseTokenCount: JSON.stringify(generatedFields).length,
+          });
+        } catch (logError) {
+          console.warn('Failed to log AI interaction completion:', logError);
+        }
+      }
+
+      return new Response(JSON.stringify(generatedFields), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    } catch (aiError) {
+      console.warn('AI generation failed:', aiError);
+
+      // Log AI interaction failure
+      if (interactionId) {
+        try {
+          await aiLogger.completeInteraction({
+            interactionId,
+            status: 'failed',
+            errorMessage: aiError instanceof Error ? aiError.message : 'Unknown error',
+            latencyMs: 0,
+          });
+        } catch (logError) {
+          console.warn('Failed to log AI interaction failure:', logError);
+        }
+      }
+
+      // Fall through to fallback
     }
 
     // Fallback: Generate fields without AI

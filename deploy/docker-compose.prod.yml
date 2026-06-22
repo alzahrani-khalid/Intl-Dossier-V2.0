@@ -44,7 +44,6 @@ services:
         VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
         VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
         VITE_API_URL: ${VITE_API_URL}
-        VITE_ANYTHINGLLM_URL: ${VITE_ANYTHINGLLM_URL}
     container_name: intl-dossier-frontend
     restart: unless-stopped
     expose:
@@ -79,11 +78,6 @@ services:
       SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
       # Redis
       REDIS_URL: redis://redis:6379
-      # AnythingLLM
-      ANYTHINGLLM_API_URL: http://anythingllm:3001
-      ANYTHINGLLM_API_KEY: ${ANYTHINGLLM_API_KEY}
-      ANYTHINGLLM_WORKSPACE: ${ANYTHINGLLM_WORKSPACE:-intl-dossier}
-      AI_USE_ANYTHINGLLM: 'true'
       # JWT
       JWT_SECRET: ${JWT_SECRET}
       # Other
@@ -122,43 +116,6 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-    networks:
-      - intl-dossier
-
-  # ===========================================
-  # ANYTHINGLLM - AI Service
-  # ===========================================
-  anythingllm:
-    image: mintplexlabs/anythingllm:latest
-    container_name: intl-dossier-anythingllm
-    restart: unless-stopped
-    expose:
-      - '3001'
-    volumes:
-      - anythingllm_data:/app/server/storage
-    environment:
-      STORAGE_DIR: /app/server/storage
-      SERVER_PORT: 3001
-      # LLM Provider Configuration
-      LLM_PROVIDER: openai
-      OPEN_AI_KEY: ${OPEN_AI_KEY}
-      OPEN_MODEL_PREF: ${OPEN_MODEL_PREF:-gpt-4}
-      # Embedding Configuration
-      EMBEDDING_ENGINE: openai
-      EMBEDDING_MODEL_PREF: text-embedding-ada-002
-      EMBEDDING_MODEL_MAX_CHUNK_LENGTH: 800
-      # Vector DB
-      VECTOR_DB: lancedb
-      # Auth Token for API access
-      AUTH_TOKEN: ${ANYTHINGLLM_API_KEY}
-      # Disable telemetry
-      DISABLE_TELEMETRY: 'true'
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:3001/api/health']
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
     networks:
       - intl-dossier
 
@@ -351,7 +308,6 @@ services:
 # ===========================================
 volumes:
   redis_data:
-  anythingllm_data:
 
 # ===========================================
 # NETWORKS

@@ -1,8 +1,12 @@
 /**
  * Dossier Field Assist API Endpoint
  *
- * Uses AnythingLLM workspace chat to generate bilingual (EN/AR)
- * field values for dossier creation.
+ * Generates bilingual (EN/AR) field values for dossier creation.
+ *
+ * Phase 74 (D3 / EVAL-04): the external-LLM generator is removed.
+ * This endpoint now uses the deterministic, rule-based `generateFallbackFields`
+ * extractor — zero-egress, no service-role. (AI-assisted entity extraction lives
+ * in the on-prem copilot surfaces.)
  *
  * POST /api/ai/dossier-field-assist
  * {
@@ -16,11 +20,6 @@ import { Router, Request, Response } from 'express'
 import logger from '../../utils/logger.js'
 
 const router = Router()
-
-// AnythingLLM configuration
-const ANYTHINGLLM_BASE_URL = process.env.ANYTHINGLLM_API_URL || 'http://localhost:3001'
-const ANYTHINGLLM_API_KEY = process.env.ANYTHINGLLM_API_KEY || ''
-const ANYTHINGLLM_WORKSPACE = process.env.ANYTHINGLLM_WORKSPACE || 'intl-dossier'
 
 // Valid dossier types
 const VALID_DOSSIER_TYPES = [
@@ -128,46 +127,6 @@ function generateFallbackFields(dossierType: DossierType, description: string): 
 }
 
 /**
- * Call AnythingLLM workspace chat API
- */
-async function callAnythingLLM(prompt: string): Promise<string | null> {
-  if (!ANYTHINGLLM_API_KEY) {
-    logger.warn('AnythingLLM API key not configured')
-    return null
-  }
-
-  try {
-    const response = await fetch(
-      `${ANYTHINGLLM_BASE_URL}/api/v1/workspace/${ANYTHINGLLM_WORKSPACE}/chat`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${ANYTHINGLLM_API_KEY}`,
-        },
-        body: JSON.stringify({
-          message: prompt,
-          mode: 'chat',
-        }),
-        signal: AbortSignal.timeout(30000), // 30 second timeout
-      },
-    )
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      logger.error('AnythingLLM API error', { status: response.status, error: errorText })
-      return null
-    }
-
-    const data = (await response.json()) as { textResponse?: string }
-    return data.textResponse || null
-  } catch (error) {
-    logger.error('AnythingLLM request failed', { error })
-    return null
-  }
-}
-
-/**
  * POST /api/ai/dossier-field-assist
  * Generate bilingual fields for dossier creation
  */
@@ -210,70 +169,11 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     return
   }
 
-  const context = TYPE_CONTEXT[dossier_type as DossierType]
-
-  // Build AI prompt
-  const prompt = `You are a diplomatic records assistant. Extract and generate clean entity information for ${context.en}.
-
-User's input: "${description}"
-
-CRITICAL RULES:
-- name_en/name_ar: Use the ACTUAL entity name only. NEVER include words like "Dossier", "File", "Record", "ملف", "سجل"
-- description_en/description_ar: Describe the entity itself, NOT the dossier. Write about what the organization/country/person does or represents.
-
-EXAMPLES:
-- If user says "ILO organization", name_en should be "International Labour Organization" (NOT "ILO Dossier")
-- If user says "meeting with Japan", name_en should be "Japan Bilateral Meeting" (NOT "Japan Meeting Dossier")
-- For Arabic, "منظمة العمل الدولية" (NOT "ملف منظمة العمل الدولية")
-
-Generate JSON with these fields:
-1. name_en: The entity's proper English name (max 60 chars, NO "Dossier"/"File" words)
-2. name_ar: The entity's proper Arabic name (max 60 chars, NO "ملف"/"سجل" words)
-3. description_en: What this entity is/does (max 200 chars, describe the entity NOT the file)
-4. description_ar: Arabic description of the entity (max 200 chars, describe the entity NOT the file)
-5. suggested_tags: 3-5 relevant tags in English (lowercase, hyphenated)
-
-Return ONLY valid JSON:
-{
-  "name_en": "...",
-  "name_ar": "...",
-  "description_en": "...",
-  "description_ar": "...",
-  "suggested_tags": ["tag1", "tag2", "tag3"]
-}`
-
   try {
-    // Try AI generation
-    const aiResponse = await callAnythingLLM(prompt)
-
-    if (aiResponse) {
-      // Try to parse JSON from response
-      const jsonMatch = aiResponse.match(/\{[\s\S]*\}/)
-      if (jsonMatch) {
-        try {
-          const parsed = JSON.parse(jsonMatch[0]) as GeneratedFields
-
-          // Validate required fields
-          if (parsed.name_en && parsed.name_ar) {
-            // Ensure suggested_tags is an array
-            if (!Array.isArray(parsed.suggested_tags)) {
-              parsed.suggested_tags = context.suggestedTags
-            }
-
-            logger.info('AI dossier field assist successful', { dossier_type, userId })
-            res.json(parsed)
-            return
-          }
-        } catch (parseError) {
-          logger.warn('Failed to parse AI response JSON', { parseError })
-        }
-      }
-    }
-
-    // Fallback to rule-based generation
-    logger.info('Using fallback field generation', { dossier_type, userId })
-    const fallbackFields = generateFallbackFields(dossier_type as DossierType, description)
-    res.json(fallbackFields)
+    // Deterministic rule-based field generation (zero-egress; Phase 74, D3).
+    const fields = generateFallbackFields(dossier_type as DossierType, description)
+    logger.info('Dossier field assist generated', { dossier_type, userId })
+    res.json(fields)
   } catch (error) {
     logger.error('Dossier field assist failed', { error, dossier_type, userId })
 

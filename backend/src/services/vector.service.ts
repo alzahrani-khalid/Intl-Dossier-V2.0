@@ -22,13 +22,11 @@ interface VectorSearchResult {
 
 export class VectorService {
   private supabase: any
-  private anythingLLMAvailable: boolean = true
   private fallbackMode: 'keyword' | 'cached' | null = null
   private useBGEM3: boolean = true
 
   constructor(supabaseUrl: string, supabaseKey: string) {
     this.supabase = createClient(supabaseUrl, supabaseKey)
-    this.useBGEM3 = !process.env.AI_USE_ANYTHINGLLM || process.env.AI_USE_ANYTHINGLLM === 'false'
   }
 
   async createEmbedding(input: VectorEmbeddingInput): Promise<VectorEmbedding> {
@@ -64,50 +62,20 @@ export class VectorService {
   }
 
   async generateEmbeddingFromText(text: string): Promise<number[] | null> {
-    // Use BGE-M3 embeddings service (default)
+    // Use BGE-M3 embeddings service (local primary)
     if (this.useBGEM3) {
       try {
         const result = await embeddingsService.embed(text)
         return result.embedding
       } catch (error) {
         console.error('BGE-M3 embedding failed:', error)
-        // Fall through to AnythingLLM fallback if configured
-        if (!process.env.ANYTHINGLLM_API_URL) {
-          return null
-        }
+        // Degrade to keyword search; no external embedding fallback
+        this.fallbackMode = 'keyword'
+        return null
       }
     }
 
-    // Fallback to AnythingLLM if configured
-    if (!this.anythingLLMAvailable) {
-      return null
-    }
-
-    try {
-      const response = await fetch(process.env.ANYTHINGLLM_API_URL + '/v1/embeddings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.ANYTHINGLLM_API_KEY}`,
-        },
-        body: JSON.stringify({
-          input: text,
-          model: 'text-embedding-ada-002',
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error(`AnythingLLM API error: ${response.statusText}`)
-      }
-
-      const data = (await response.json()) as any
-      return data.data[0].embedding
-    } catch (error) {
-      console.error('Failed to generate embedding:', error)
-      this.anythingLLMAvailable = false
-      this.fallbackMode = 'keyword'
-      return null
-    }
+    return null
   }
 
   async searchByVector(options: VectorSearchOptions): Promise<VectorSearchResult[]> {
@@ -118,7 +86,7 @@ export class VectorService {
       filter = {},
     } = options
 
-    if (!this.anythingLLMAvailable || this.fallbackMode) {
+    if (this.fallbackMode) {
       return this.fallbackSearch(filter, limit)
     }
 
@@ -271,27 +239,5 @@ export class VectorService {
 
   getFallbackMode(): string | null {
     return this.fallbackMode
-  }
-
-  async checkAnythingLLMStatus(): Promise<boolean> {
-    try {
-      const response = await fetch(process.env.ANYTHINGLLM_API_URL + '/health', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${process.env.ANYTHINGLLM_API_KEY}`,
-        },
-      })
-
-      this.anythingLLMAvailable = response.ok
-      if (response.ok) {
-        this.fallbackMode = null
-      }
-
-      return this.anythingLLMAvailable
-    } catch {
-      this.anythingLLMAvailable = false
-      this.fallbackMode = 'keyword'
-      return false
-    }
   }
 }

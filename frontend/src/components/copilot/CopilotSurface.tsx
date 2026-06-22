@@ -26,6 +26,8 @@ import {
 import { useCopilotRuntime } from './useCopilotRuntime'
 import { CopilotMessageList } from './CopilotMessageList'
 import { CopilotComposer } from './CopilotComposer'
+import { ProposeToolUIs } from './hitl/ProposeToolUIs'
+import { GenUiToolUIs } from './genui/GenUiToolUIs'
 import type { CopilotDossierContext } from './useCopilotDrawer'
 
 interface CopilotSurfaceProps {
@@ -80,6 +82,11 @@ export function CopilotSurface({ context }: CopilotSurfaceProps): ReactElement {
   const { runtime } = useCopilotRuntime()
   return (
     <AssistantRuntimeProvider runtime={runtime}>
+      {/* P73: register the four propose_* HITL tool-UI renderers (73-03) AND the three
+          generative-UI READ renderers (73-04) for the whole thread. Rendering them only
+          registers the renderers; they emit no visible chrome themselves. */}
+      <ProposeToolUIs />
+      <GenUiToolUIs />
       <CopilotSurfaceBody context={context} />
     </AssistantRuntimeProvider>
   )

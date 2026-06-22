@@ -10,6 +10,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
 import { corsHeaders } from '../_shared/cors.ts';
+import { generateText } from '../_shared/onprem-llm.ts';
 import {
   createAIInteractionLogger,
   extractClientInfo,
@@ -312,15 +313,14 @@ serve(async (req) => {
     let interactionId: string | undefined;
     const startTime = Date.now();
 
-    // Try AI translation
-    const anythingLlmUrl = Deno.env.get('ANYTHINGLLM_URL');
-    const anythingLlmKey = Deno.env.get('ANYTHINGLLM_API_KEY');
-
+    // Try AI translation via the on-prem vLLM model. The helper throws if
+    // VLLM_BASE_URL is unset or the model is unreachable; the catch degrades to
+    // the word-by-word/placeholder fallback.
     let translatedText: string;
     let confidence = 0.95;
-    let modelUsed = 'anythingllm';
+    let modelUsed = 'vllm';
 
-    if (anythingLlmUrl && anythingLlmKey) {
+    {
       try {
         const prompt = buildTranslationPrompt(
           body.text,
@@ -343,8 +343,8 @@ serve(async (req) => {
             userId: user.id,
             interactionType: 'translation' as AIInteractionType,
             contentType: 'translation' as AIContentType,
-            modelProvider: 'ollama',
-            modelName: 'llama2',
+            modelProvider: 'vllm',
+            modelName: Deno.env.get('VLLM_MODEL') || 'gemma-4-12b',
             userPrompt: prompt,
             targetEntityType: body.entity_type as any,
             targetEntityId: body.entity_id,
@@ -363,33 +363,15 @@ serve(async (req) => {
           console.warn('Failed to log AI interaction start:', logError);
         }
 
-        // Call AI with timeout
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000);
-
-        const aiResponse = await fetch(`${anythingLlmUrl}/api/chat`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${anythingLlmKey}`,
-          },
-          body: JSON.stringify({
-            message: prompt,
-            mode: 'chat',
-          }),
-          signal: controller.signal,
+        // Call the on-prem model (plain text); 30s timeout
+        translatedText = await generateText({
+          systemPrompt:
+            'You are a professional diplomatic translator. Return ONLY the translated text, with no preamble or notes.',
+          userPrompt: prompt,
+          timeoutMs: 30000,
         });
 
-        clearTimeout(timeoutId);
-
-        if (!aiResponse.ok) {
-          throw new Error(`AI service returned ${aiResponse.status}`);
-        }
-
-        const aiData = await aiResponse.json();
-        translatedText = aiData.textResponse?.trim() || '';
-
-        // Clean up any unwanted prefixes the AI might have added
+        // Clean up any unwanted prefixes the model might have added
         translatedText = translatedText
           .replace(/^(Translation:|Here is the translation:|Translated text:)\s*/i, '')
           .trim();
@@ -438,11 +420,6 @@ serve(async (req) => {
         confidence = 0.0;
         modelUsed = 'fallback';
       }
-    } else {
-      // No AI configured, use fallback
-      translatedText = generateFallbackTranslation(body.text, sourceLanguage, targetLanguage);
-      confidence = 0.0;
-      modelUsed = 'fallback';
     }
 
     const latencyMs = Date.now() - startTime;
@@ -570,9 +547,6 @@ async function handleBatchTranslation(
     targetLanguage = sourceLanguage === 'en' ? 'ar' : 'en';
   }
 
-  const anythingLlmUrl = Deno.env.get('ANYTHINGLLM_URL');
-  const anythingLlmKey = Deno.env.get('ANYTHINGLLM_API_KEY');
-
   const translations: BatchTranslateResponse['translations'] = [];
   let totalChars = 0;
 
@@ -589,59 +563,35 @@ async function handleBatchTranslation(
 
     totalChars += item.text.length;
 
-    if (anythingLlmUrl && anythingLlmKey) {
-      try {
-        const prompt = buildTranslationPrompt(
-          item.text,
-          sourceLanguage,
-          targetLanguage,
-          contentType,
-          true
-        );
+    // Translate each item via the on-prem vLLM model; degrade per-item to the
+    // word-by-word/placeholder fallback if the model is unavailable.
+    try {
+      const prompt = buildTranslationPrompt(
+        item.text,
+        sourceLanguage,
+        targetLanguage,
+        contentType,
+        true
+      );
 
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000);
+      let translatedText = await generateText({
+        systemPrompt:
+          'You are a professional diplomatic translator. Return ONLY the translated text, with no preamble or notes.',
+        userPrompt: prompt,
+        timeoutMs: 30000,
+      });
+      translatedText = translatedText
+        .replace(/^(Translation:|Here is the translation:|Translated text:)\s*/i, '')
+        .trim();
 
-        const aiResponse = await fetch(`${anythingLlmUrl}/api/chat`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${anythingLlmKey}`,
-          },
-          body: JSON.stringify({
-            message: prompt,
-            mode: 'chat',
-          }),
-          signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        if (aiResponse.ok) {
-          const aiData = await aiResponse.json();
-          let translatedText = aiData.textResponse?.trim() || '';
-          translatedText = translatedText
-            .replace(/^(Translation:|Here is the translation:|Translated text:)\s*/i, '')
-            .trim();
-
-          translations.push({
-            id: item.id,
-            original_text: item.text,
-            translated_text: translatedText,
-            confidence: 0.95,
-          });
-        } else {
-          throw new Error(`AI returned ${aiResponse.status}`);
-        }
-      } catch (err) {
-        translations.push({
-          id: item.id,
-          original_text: item.text,
-          translated_text: generateFallbackTranslation(item.text, sourceLanguage, targetLanguage),
-          confidence: 0.0,
-        });
-      }
-    } else {
+      translations.push({
+        id: item.id,
+        original_text: item.text,
+        translated_text: translatedText,
+        confidence: 0.95,
+      });
+    } catch (err) {
+      console.warn('Batch item translation failed:', err);
       translations.push({
         id: item.id,
         original_text: item.text,

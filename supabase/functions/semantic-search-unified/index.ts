@@ -95,8 +95,10 @@ const DOSSIER_SUBTYPES = ['country', 'organization', 'forum', 'theme'];
 // Initialize Supabase
 const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-const anythingLLMUrl = Deno.env.get('ANYTHINGLLM_URL') ?? '';
-const anythingLLMApiKey = Deno.env.get('ANYTHINGLLM_API_KEY') ?? '';
+
+// bge-m3 native dimension; the corpus is halfvec(1024). Query and corpus MUST share the
+// embedder/dimension or cosine distance is meaningless. Never pad/truncate (P68 REMED-04).
+const EMBEDDING_DIM = 1024;
 
 /**
  * Detect language of query text
@@ -112,53 +114,45 @@ function detectLanguage(text: string): 'en' | 'ar' {
 }
 
 /**
- * Generate embedding for query text using BGE-M3 or AnythingLLM fallback
+ * Generate a 1024-dim bge-m3 query embedding via the on-prem TEI `/embed` route (D3).
+ * Mirrors agent-runtime/src/mastra/tools/hybrid-rag-search.ts so the query vector matches
+ * the corpus embedder. Returns null on missing env / non-ok / wrong shape so the caller
+ * degrades to full-text search (NOT a 500).
  */
 async function generateQueryEmbedding(query: string): Promise<number[] | null> {
-  // Try AnythingLLM first (text-embedding-ada-002 compatible)
-  if (anythingLLMUrl && anythingLLMApiKey) {
-    try {
-      const response = await fetch(`${anythingLLMUrl}/api/v1/embed`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${anythingLLMApiKey}`,
-        },
-        body: JSON.stringify({ text: query }),
-      });
+  const teiUrl = Deno.env.get('TEI_EMBED_URL');
+  if (!teiUrl) {
+    return null;
+  }
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.embedding && Array.isArray(data.embedding)) {
-          // Normalize embedding to 1536 dimensions if needed
-          return normalizeEmbedding(data.embedding, 1536);
-        }
+  try {
+    const response = await fetch(`${teiUrl.replace(/\/+$/, '')}/embed`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ inputs: query }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const embedding = Array.isArray(data) ? data[0] : undefined;
+      // No pad/truncate: the corpus is halfvec(1024) and TEI bge-m3 emits 1024 dims.
+      // A wrong-dim vector silently corrupts cosine distance (P68 REMED-04), so reject it.
+      if (Array.isArray(embedding) && embedding.length === EMBEDDING_DIM) {
+        return embedding;
       }
-    } catch (error) {
-      console.warn('AnythingLLM embedding failed:', error);
+      console.warn(
+        `TEI embedding wrong shape: expected ${EMBEDDING_DIM}-dim, got ${
+          Array.isArray(embedding) ? embedding.length : typeof embedding
+        }`,
+      );
     }
+  } catch (error) {
+    console.warn('TEI embedding failed:', error);
   }
 
   // Return null if embedding generation fails
   // The function will fallback to full-text search
   return null;
-}
-
-/**
- * Normalize embedding to target dimensions (pad or truncate)
- */
-function normalizeEmbedding(embedding: number[], targetDim: number): number[] {
-  if (embedding.length === targetDim) {
-    return embedding;
-  }
-
-  if (embedding.length < targetDim) {
-    // Pad with zeros
-    return [...embedding, ...new Array(targetDim - embedding.length).fill(0)];
-  }
-
-  // Truncate
-  return embedding.slice(0, targetDim);
 }
 
 /**
@@ -507,8 +501,8 @@ serve(async (req: Request) => {
       },
       performance,
       embedding_info: {
-        model: 'text-embedding-ada-002',
-        dimensions: 1536,
+        model: 'bge-m3',
+        dimensions: EMBEDDING_DIM,
         generated: embeddingGenerated,
       },
       warnings,

@@ -1,0 +1,62 @@
+{
+  "queryType": "engagement_chain",
+  "description": "EVAL-02 golden: DIRECTED engagement hops 30->31->32->33->34->35 within the window. 4 TP, 1 FP (35->34, a reversed hop that must NOT fold onto golden 34->35), 1 FN (34->35): precision 4/5=0.80, recall 4/5=0.80. Proves engagement_chain is directed.",
+  "input": {
+    "entityId": "00000000-0000-4000-8000-000000000030",
+    "windowDays": 180
+  },
+  "returned": [
+    {
+      "source": "00000000-0000-4000-8000-000000000030",
+      "target": "00000000-0000-4000-8000-000000000031",
+      "type": "engagement_chain"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000031",
+      "target": "00000000-0000-4000-8000-000000000032",
+      "type": "engagement_chain"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000032",
+      "target": "00000000-0000-4000-8000-000000000033",
+      "type": "engagement_chain"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000033",
+      "target": "00000000-0000-4000-8000-000000000034",
+      "type": "engagement_chain"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000035",
+      "target": "00000000-0000-4000-8000-000000000034",
+      "type": "engagement_chain"
+    }
+  ],
+  "golden": [
+    {
+      "source": "00000000-0000-4000-8000-000000000030",
+      "target": "00000000-0000-4000-8000-000000000031",
+      "type": "engagement_chain"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000031",
+      "target": "00000000-0000-4000-8000-000000000032",
+      "type": "engagement_chain"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000032",
+      "target": "00000000-0000-4000-8000-000000000033",
+      "type": "engagement_chain"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000033",
+      "target": "00000000-0000-4000-8000-000000000034",
+      "type": "engagement_chain"
+    },
+    {
+      "source": "00000000-0000-4000-8000-000000000034",
+      "target": "00000000-0000-4000-8000-000000000035",
+      "type": "engagement_chain"
+    }
+  ]
+}

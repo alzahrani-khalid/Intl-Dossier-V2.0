@@ -11,7 +11,6 @@ import {
   getPrivateProvider,
 } from './config.js'
 import logger from '../utils/logger.js'
-import AnythingLLMService from '../services/anythingllm.service.js'
 
 // Request deduplication: Track in-flight requests
 const inFlightRequests = new Map<string, Promise<LLMResponse>>()
@@ -102,7 +101,6 @@ function generateRequestHash(
 export class LLMRouter {
   private openai: OpenAI | null = null
   private anthropic: Anthropic | null = null
-  private anythingllm: AnythingLLMService | null = null
 
   constructor() {
     if (aiConfig.providers.openai.enabled && aiConfig.providers.openai.apiKey) {
@@ -112,16 +110,6 @@ export class LLMRouter {
     if (aiConfig.providers.anthropic.enabled && aiConfig.providers.anthropic.apiKey) {
       this.anthropic = new Anthropic({ apiKey: aiConfig.providers.anthropic.apiKey })
       providerHealth.set('anthropic', { healthy: true, lastCheck: Date.now(), failCount: 0 })
-    }
-    if (aiConfig.providers.anythingllm.enabled) {
-      this.anythingllm = new AnythingLLMService(
-        aiConfig.providers.anythingllm.baseUrl,
-        aiConfig.providers.anythingllm.apiKey,
-      )
-      providerHealth.set('anythingllm', { healthy: true, lastCheck: Date.now(), failCount: 0 })
-      logger.info('AnythingLLM provider initialized', {
-        baseUrl: aiConfig.providers.anythingllm.baseUrl,
-      })
     }
   }
 
@@ -396,9 +384,7 @@ export class LLMRouter {
       try {
         let response: LLMResponse
 
-        if (provider === 'anythingllm' && this.anythingllm) {
-          response = await this.chatAnythingLLM(messages, model, options, runId, provider)
-        } else if (provider === 'openai' && this.openai) {
+        if (provider === 'openai' && this.openai) {
           response = await this.chatOpenAI(messages, model, options, runId, provider)
         } else if (provider === 'anthropic' && this.anthropic) {
           response = await this.chatAnthropic(messages, model, options, runId, provider)
@@ -498,41 +484,6 @@ export class LLMRouter {
     }
   }
 
-  private async chatAnythingLLM(
-    messages: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>,
-    model: string,
-    options?: { temperature?: number; maxTokens?: number },
-    runId?: string,
-    provider?: AIProvider,
-  ): Promise<LLMResponse> {
-    if (!this.anythingllm) throw new Error('AnythingLLM client not initialized')
-
-    const response = await this.anythingllm.chat(
-      messages.map((m) => ({ role: m.role, content: m.content })),
-      {
-        model,
-        temperature: options?.temperature ?? 0.7,
-        maxTokens: options?.maxTokens ?? 4096,
-      },
-    )
-
-    // AnythingLLM may not return detailed usage, estimate based on content
-    const estimatedInputTokens = messages.reduce(
-      (sum, m) => sum + Math.ceil(m.content.length / 4),
-      0,
-    )
-    const estimatedOutputTokens = Math.ceil((response.text?.length || 0) / 4)
-
-    return {
-      content: response.text || '',
-      inputTokens: (response.usage as any)?.prompt_tokens || estimatedInputTokens,
-      outputTokens: (response.usage as any)?.completion_tokens || estimatedOutputTokens,
-      provider: provider || 'anythingllm',
-      model: response.model || model,
-      runId: runId || '',
-    }
-  }
-
   async *streamChat(
     config: LLMRouterConfig,
     messages: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>,
@@ -555,21 +506,7 @@ export class LLMRouter {
     let outputTokens = 0
 
     try {
-      if (provider === 'anythingllm' && this.anythingllm) {
-        // AnythingLLM - fall back to non-streaming for now
-        // (streaming would require SSE handling from their API)
-        const response = await this.anythingllm.chat(
-          messages.map((m) => ({ role: m.role, content: m.content })),
-          {
-            model,
-            temperature: options?.temperature ?? 0.7,
-            maxTokens: options?.maxTokens ?? 4096,
-          },
-        )
-        yield { type: 'content', content: response.text || '' }
-        inputTokens = Math.ceil(messages.reduce((sum, m) => sum + m.content.length, 0) / 4)
-        outputTokens = Math.ceil((response.text?.length || 0) / 4)
-      } else if (provider === 'openai' && this.openai) {
+      if (provider === 'openai' && this.openai) {
         const stream = await this.openai.chat.completions.create({
           model,
           messages,

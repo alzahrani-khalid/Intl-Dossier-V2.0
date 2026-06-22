@@ -4,6 +4,7 @@
  */
 
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { generateText } from './onprem-llm.ts';
 
 interface Position {
   id: string;
@@ -37,43 +38,33 @@ interface TranslationResult {
 }
 
 /**
- * Translate text using AnythingLLM
+ * Translate text using the on-prem vLLM model (Phase 74, D3 — zero-egress).
+ *
+ * Re-homed onto the shared `generateText` helper (reads VLLM_BASE_URL). When the
+ * on-prem endpoint is unset/unreachable, generateText throws and we fall back to
+ * the original text so briefing-pack generation degrades rather than fails.
  */
 async function translateText(
   text: string,
   fromLang: string,
   toLang: string
 ): Promise<string> {
-  const anythingLLMUrl = Deno.env.get('ANYTHINGLLM_URL');
-  const anythingLLMKey = Deno.env.get('ANYTHINGLLM_API_KEY');
-
-  if (!anythingLLMUrl || !anythingLLMKey) {
-    console.warn('AnythingLLM not configured, returning original text');
-    return text;
-  }
+  const langName = (code: string): string => (code === 'ar' ? 'Arabic' : 'English');
 
   try {
-    const response = await fetch(`${anythingLLMUrl}/api/v1/workspace/translate`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${anythingLLMKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text,
-        from_language: fromLang,
-        to_language: toLang,
-        context: 'diplomatic briefing document',
-      }),
-      signal: AbortSignal.timeout(30000), // 30s timeout per translation
+    const translated = await generateText({
+      systemPrompt:
+        'You are a professional diplomatic translator. Translate the user-provided ' +
+        'text faithfully and return ONLY the translated text, with no preamble, ' +
+        'notes, or quotation marks.',
+      userPrompt:
+        `Translate the following diplomatic briefing document text from ` +
+        `${langName(fromLang)} to ${langName(toLang)}:\n\n${text}`,
+      temperature: 0.2,
+      timeoutMs: 30000, // 30s per translation
     });
 
-    if (!response.ok) {
-      throw new Error(`Translation failed: ${response.statusText}`);
-    }
-
-    const result = await response.json();
-    return result.translated_text || text;
+    return translated || text;
   } catch (error) {
     console.error('Translation error:', error);
     return text; // Fallback to original text

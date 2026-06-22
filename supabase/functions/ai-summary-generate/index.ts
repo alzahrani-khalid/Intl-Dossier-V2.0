@@ -10,6 +10,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
 import { corsHeaders } from '../_shared/cors.ts';
+import { generateStructuredJson } from '../_shared/onprem-llm.ts';
 import {
   createAIInteractionLogger,
   extractClientInfo,
@@ -199,19 +200,20 @@ serve(async (req) => {
       body.date_range_end
     );
 
-    // Try AI generation with 60s timeout
-    const anythingLlmUrl = Deno.env.get('ANYTHINGLLM_URL');
-    const anythingLlmKey = Deno.env.get('ANYTHINGLLM_API_KEY');
-
     // Initialize AI interaction logger
     const aiLogger = createAIInteractionLogger('ai-summary-generate');
     const clientInfo = extractClientInfo(req);
     let interactionId: string | undefined;
     let startTime = Date.now();
 
-    if (anythingLlmUrl && anythingLlmKey) {
+    // Try AI generation with the on-prem vLLM model (JSON mode, 60s timeout).
+    // The helper throws if VLLM_BASE_URL is unset or the model is unreachable;
+    // the catch below degrades to the basic data-derived summary (503).
+    {
       try {
         // Build the AI prompt
+        const systemPrompt =
+          'You are a bilingual (English/Arabic) diplomatic intelligence analyst. Respond ONLY with a JSON object of the shape {"en": {...}, "ar": {...}}, no markdown, no commentary.';
         const prompt = buildSummaryPrompt(
           entityData,
           contextData,
@@ -233,8 +235,8 @@ serve(async (req) => {
             userId: user.id,
             interactionType: 'summarization' as AIInteractionType,
             contentType: 'summary' as AIContentType,
-            modelProvider: 'ollama',
-            modelName: 'llama2',
+            modelProvider: 'vllm',
+            modelName: Deno.env.get('VLLM_MODEL') || 'gemma-4-12b',
             userPrompt: prompt,
             targetEntityType: body.entity_type as any,
             targetEntityId: body.entity_id,
@@ -254,31 +256,17 @@ serve(async (req) => {
 
         startTime = Date.now();
 
-        // Call AI with timeout
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 60000);
+        // Call the on-prem model (JSON mode); 60s timeout
+        const summaryData = (await generateStructuredJson({
+          systemPrompt,
+          userPrompt: prompt,
+          timeoutMs: 60000,
+        })) as SummaryResponse;
 
-        const aiResponse = await fetch(`${anythingLlmUrl}/api/chat`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${anythingLlmKey}`,
-          },
-          body: JSON.stringify({
-            message: prompt,
-            mode: 'chat',
-          }),
-          signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        if (!aiResponse.ok) {
-          throw new Error(`AI service returned ${aiResponse.status}`);
+        if (!summaryData?.en || !summaryData?.ar) {
+          throw new Error('On-prem model returned an incomplete bilingual summary');
         }
 
-        const aiData = await aiResponse.json();
-        const summaryData: SummaryResponse = JSON.parse(aiData.textResponse);
         const latencyMs = Date.now() - startTime;
 
         // Add metadata
@@ -300,10 +288,10 @@ serve(async (req) => {
             await aiLogger.completeInteraction({
               interactionId,
               status: 'completed',
-              aiResponse: aiData.textResponse,
+              aiResponse: JSON.stringify(summaryData),
               aiResponseStructured: summaryData,
               latencyMs,
-              responseTokenCount: aiData.textResponse?.length || 0,
+              responseTokenCount: JSON.stringify(summaryData).length,
             });
           } catch (logError) {
             console.warn('Failed to log AI interaction completion:', logError);

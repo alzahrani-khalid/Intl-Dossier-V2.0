@@ -195,6 +195,224 @@
 }
 
 /* ---------------------------------------------------------------------------
+ * Generative-UI inline cards (P73 GENUI-01) — render the app's OWN token-bound
+ * components (UniversalDossierCard / a signal card) inline in the reply, deep-linking
+ * into the app. Read-only. The dossier card is the app component as-is (its own tokens);
+ * the wrapper just makes the whole card a single in-app activation target with no extra
+ * chrome. The signal card is a thin token-bound card mirroring SignalRow's badges.
+ * ------------------------------------------------------------------------- */
+.copilot-genui {
+  margin-block-start: var(--space-2, 8px);
+}
+/* A capped vertical stack of inline cards (list_dossiers / read_signals results). */
+.copilot-genui-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 8px);
+  margin-block-start: var(--space-2, 8px);
+}
+/* Whole-card activation target: a bare button wrapper, no border/shadow of its own
+   (the inner UniversalDossierCard owns the visible frame). Logical text-align: start. */
+.copilot-genui__activate {
+  display: block;
+  inline-size: 100%;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  text-align: start;
+  cursor: pointer;
+}
+.copilot-genui__activate:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+.copilot-genui__card {
+  inline-size: 100%;
+}
+/* Neutral empty line (above-clearance / not-found / failure all read the same — no
+   clearance/filtered/restricted wording, indistinguishable-empty). */
+.copilot-genui__empty {
+  font-size: var(--t-meta);
+  color: var(--ink-mute);
+  line-height: 1.5;
+  margin-block-start: var(--space-2, 8px);
+}
+/* Loading placeholder — neutral token-bound bars, no wording. */
+.copilot-genui__placeholder {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 8px);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+  padding-block: var(--space-3, 12px);
+  padding-inline: 16px;
+  margin-block-start: var(--space-2, 8px);
+}
+.copilot-genui__placeholder-bar {
+  block-size: var(--t-body);
+  inline-size: 70%;
+  background: var(--line-soft);
+  border-radius: var(--radius-sm);
+}
+.copilot-genui__placeholder-bar--short {
+  inline-size: 40%;
+}
+
+/* Thin read-only signal card — flat --surface, 1px solid --line, --radius-sm, NO shadow.
+   Title + badge cluster stacked; logical properties so RTL mirrors automatically. */
+.copilot-genui-signal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 8px);
+  inline-size: 100%;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+  padding-block: var(--space-3, 12px);
+  padding-inline: 16px;
+  margin-block-start: var(--space-2, 8px);
+  text-align: start;
+  cursor: pointer;
+  transition: border-color var(--dur, 150ms) ease;
+}
+.copilot-genui-signal:hover {
+  border-color: var(--ink-mute);
+}
+.copilot-genui-signal:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.copilot-genui-signal__title {
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.copilot-genui-signal__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 8px);
+  align-items: center;
+}
+
+/* ---------------------------------------------------------------------------
+ * HITL confirmation card (P73 GENUI-02) — flat --surface, 1px solid --line,
+ * --radius-sm, NO shadow. Rendered inline from a propose_* tool call's args; the
+ * user approves or rejects-with-reason before anything commits. Token-bound,
+ * logical properties only, so RTL mirrors with no extra styling.
+ * ------------------------------------------------------------------------- */
+.copilot-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 12px);
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+  padding-block: var(--space-3, 12px);
+  padding-inline: 16px;
+  font-size: var(--t-body);
+}
+.copilot-confirm__title {
+  font-size: var(--t-card-title);
+  font-weight: 600;
+  line-height: var(--line-h-tight, 1.1);
+  color: var(--ink);
+}
+.copilot-confirm__intro {
+  font-size: var(--t-meta);
+  color: var(--ink-mute);
+  line-height: 1.5;
+}
+.copilot-confirm__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 8px);
+  margin: 0;
+}
+.copilot-confirm__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1, 4px);
+}
+.copilot-confirm__label {
+  font-size: var(--t-meta);
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.copilot-confirm__value {
+  font-size: var(--t-body);
+  color: var(--ink);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.copilot-confirm__typed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1, 4px);
+  border-block-start: 1px solid var(--line-soft);
+  padding-block-start: var(--space-3, 12px);
+}
+.copilot-confirm__input {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding-block: var(--space-2, 8px);
+  padding-inline: var(--space-3, 12px);
+  font-family: inherit;
+  font-size: var(--t-body);
+  line-height: var(--line-h-body, 1.5);
+  outline: none;
+  min-height: 40px;
+}
+.copilot-confirm__input::placeholder {
+  color: var(--ink-mute);
+}
+.copilot-confirm__input:focus-visible {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+.copilot-confirm__hint {
+  font-size: var(--t-meta);
+  color: var(--ink-mute);
+}
+.copilot-confirm__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 8px);
+  align-items: center;
+}
+/* The reject reason editor opens inline above the action row. */
+.copilot-confirm__reject {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 8px);
+  border-block-start: 1px solid var(--line-soft);
+  padding-block-start: var(--space-3, 12px);
+}
+/* Post-commit state line — neutral; success/rejected/error all read calmly. The
+   error variant carries NO clearance/filtered/restricted wording (indistinguishable
+   empty): a denied write and a generic failure are the same string. */
+.copilot-confirm__state {
+  font-size: var(--t-meta);
+  line-height: 1.5;
+  color: var(--ink-mute);
+}
+.copilot-confirm__state[data-tone='success'] {
+  color: var(--ink);
+}
+
+/* ---------------------------------------------------------------------------
  * Streaming indicator — accent caret + "Thinking…" (--t-meta, --ink-mute label).
  * ------------------------------------------------------------------------- */
 .copilot-streaming {

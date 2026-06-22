@@ -1,0 +1,28 @@
+{
+  "degraded": true,
+  "description": "EVAL-03 POSITIVE-FAILURE fixture. Broken Arabic that MUST score below 0.75 (ARABIC_MIN): Latin digits where Arabic-Indic are expected, machine-literal/word-for-word phrasing, and mixed Latin-script terms dropped into the Arabic text. The CI-mode structural check asserts this is KNOWN-bad (degraded flag + Latin-digit and mixed-script markers present) so the gate proves it rejects a regression even with the judge absent.",
+  "cases": [
+    {
+      "id": "broken-arabic",
+      "topic": "economic readout",
+      "golden": {
+        "summary": "نما حجم التبادل التجاري الثنائي بنسبة ١٢٪ ليبلغ ٤٫٢ مليار خلال العام الماضي، مع جولة مفاوضات ثالثة مقررة في الربع المقبل.",
+        "sections": [
+          {
+            "title": "المؤشرات",
+            "content": "تمثل الطاقة ٥٨٪ من الواردات، بينما تشكل المنتجات الزراعية ٣١٪ من الصادرات."
+          }
+        ]
+      },
+      "candidate": {
+        "summary": "التجارة volume زاد بـ 12% الى 4.2 billion في last year, و الجولة الثالثة من negotiation مقرر في next quarter.",
+        "sections": [
+          {
+            "title": "indicators",
+            "content": "energy هو 58% من imports و agricultural products هو 31% من exports."
+          }
+        ]
+      }
+    }
+  ]
+}

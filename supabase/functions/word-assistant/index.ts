@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
 import { corsHeaders } from "../_shared/cors.ts";
+import { generateText } from "../_shared/onprem-llm.ts";
 
 interface WordAssistantRequest {
   action: 'complete' | 'translate' | 'summarize' | 'expand' | 'rephrase' | 'check_grammar' | 'generate_embeddings';
@@ -12,12 +13,6 @@ interface WordAssistantRequest {
   workspace_slug?: string;
 }
 
-interface AnythingLLMRequest {
-  message: string;
-  mode?: string;
-  sessionId?: string;
-}
-
 interface WordAssistantResponse {
   result: string;
   tokens_used?: number;
@@ -26,114 +21,76 @@ interface WordAssistantResponse {
   embeddings?: number[];
 }
 
-async function callAnythingLLM(
-  prompt: string, 
-  workspace: string = 'default',
-  sessionId?: string
-): Promise<any> {
-  const anythingLLMUrl = Deno.env.get('ANYTHINGLLM_URL') || 'http://localhost:3001';
-  const apiKey = Deno.env.get('ANYTHINGLLM_API_KEY');
+interface OnPremResult {
+  textResponse: string;
+  sessionId: string;
+  error?: string;
+}
 
-  if (!apiKey) {
-    throw new Error('AnythingLLM API key not configured');
-  }
-
+/**
+ * Generate a writing-assistant completion via the on-prem vLLM model.
+ *
+ * Returns the prose result plus a session id. On any failure (model
+ * unreachable, VLLM_BASE_URL unset) it degrades to generateFallbackResponse so
+ * the standalone Word Assistant page stays usable instead of erroring.
+ */
+async function callOnPremModel(prompt: string, sessionId?: string): Promise<OnPremResult> {
+  const session = sessionId || crypto.randomUUID();
   try {
-    const response = await fetch(`${anythingLLMUrl}/api/v1/workspace/${workspace}/chat`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        message: prompt,
-        mode: 'chat',
-        sessionId: sessionId || crypto.randomUUID()
-      })
+    const textResponse = await generateText({
+      systemPrompt:
+        'You are a professional bilingual (English/Arabic) writing assistant. Respond with the requested text only, no preamble.',
+      userPrompt: prompt,
+      timeoutMs: 30000,
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('AnythingLLM error:', errorText);
-      
-      return {
-        textResponse: generateFallbackResponse(prompt),
-        sessionId: sessionId || 'fallback',
-        error: 'Using fallback response due to AnythingLLM error'
-      };
-    }
-
-    const data = await response.json();
-    return data;
+    return { textResponse, sessionId: session };
   } catch (error) {
-    console.error('AnythingLLM connection error:', error);
-    
+    console.error('On-prem writing-assistant error:', error);
+
     return {
       textResponse: generateFallbackResponse(prompt),
-      sessionId: sessionId || 'fallback',
-      error: 'Using fallback response due to connection error'
+      sessionId: 'fallback',
+      error: 'Using fallback response due to on-prem model error',
     };
   }
 }
 
 function generateFallbackResponse(prompt: string): string {
   const lowerPrompt = prompt.toLowerCase();
-  
+
   if (lowerPrompt.includes('translate') && lowerPrompt.includes('arabic')) {
-    return '[Translation to Arabic would appear here - AnythingLLM service temporarily unavailable]';
+    return '[Translation to Arabic would appear here - AI service temporarily unavailable]';
   }
   if (lowerPrompt.includes('translate') && lowerPrompt.includes('english')) {
-    return '[Translation to English would appear here - AnythingLLM service temporarily unavailable]';
+    return '[Translation to English would appear here - AI service temporarily unavailable]';
   }
   if (lowerPrompt.includes('summarize')) {
-    return '[Summary would appear here - AnythingLLM service temporarily unavailable]';
+    return '[Summary would appear here - AI service temporarily unavailable]';
   }
   if (lowerPrompt.includes('expand')) {
-    return '[Expanded text would appear here - AnythingLLM service temporarily unavailable]';
+    return '[Expanded text would appear here - AI service temporarily unavailable]';
   }
   if (lowerPrompt.includes('rephrase')) {
-    return '[Rephrased text would appear here - AnythingLLM service temporarily unavailable]';
+    return '[Rephrased text would appear here - AI service temporarily unavailable]';
   }
   if (lowerPrompt.includes('grammar')) {
-    return '[Grammar corrections would appear here - AnythingLLM service temporarily unavailable]';
+    return '[Grammar corrections would appear here - AI service temporarily unavailable]';
   }
-  
-  return '[AI response would appear here - AnythingLLM service temporarily unavailable]';
+
+  return '[AI response would appear here - AI service temporarily unavailable]';
 }
 
-async function generateEmbeddings(text: string): Promise<number[]> {
-  const anythingLLMUrl = Deno.env.get('ANYTHINGLLM_URL') || 'http://localhost:3001';
-  const apiKey = Deno.env.get('ANYTHINGLLM_API_KEY');
-
-  if (!apiKey) {
-    const mockEmbedding = new Array(1536).fill(0).map(() => Math.random() * 2 - 1);
-    return mockEmbedding;
-  }
-
-  try {
-    const response = await fetch(`${anythingLLMUrl}/api/v1/embed`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        text: text
-      })
-    });
-
-    if (!response.ok) {
-      const mockEmbedding = new Array(1536).fill(0).map(() => Math.random() * 2 - 1);
-      return mockEmbedding;
-    }
-
-    const data = await response.json();
-    return data.embeddings || new Array(1536).fill(0).map(() => Math.random() * 2 - 1);
-  } catch (error) {
-    console.error('Embedding generation error:', error);
-    const mockEmbedding = new Array(1536).fill(0).map(() => Math.random() * 2 - 1);
-    return mockEmbedding;
-  }
+/**
+ * Placeholder embeddings for the optional `generate_embeddings` action.
+ *
+ * NOTE: real embedding generation is re-homed to the on-prem TEI BGE-M3 service
+ * (1024-dim) in 74-07 alongside the semantic-search edge fns. The Word Assistant
+ * page does not invoke this action; it remains here only for API compatibility
+ * and returns a placeholder vector until 74-07 wires TEI.
+ */
+function generatePlaceholderEmbeddings(): number[] {
+  return new Array(1024).fill(0);
 }
 
 serve(async (req: Request) => {
@@ -178,7 +135,7 @@ serve(async (req: Request) => {
     let prompt = '';
     let response: WordAssistantResponse = {
       result: '',
-      model: 'anythingllm'
+      model: 'vllm'
     };
 
     switch (body.action) {
@@ -222,10 +179,12 @@ serve(async (req: Request) => {
         break;
 
       case 'generate_embeddings':
-        const embeddings = await generateEmbeddings(body.text);
-        response.embeddings = embeddings;
+        // Placeholder until 74-07 re-homes embeddings to the on-prem TEI BGE-M3
+        // service. The Word Assistant page does not use this action.
+        response.embeddings = generatePlaceholderEmbeddings();
         response.result = 'Embeddings generated successfully';
-        
+        response.model = 'placeholder';
+
         return new Response(
           JSON.stringify(response),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -238,14 +197,11 @@ serve(async (req: Request) => {
         );
     }
 
-    const llmResponse = await callAnythingLLM(
-      prompt, 
-      body.workspace_slug || 'default'
-    );
+    const llmResponse = await callOnPremModel(prompt);
 
     response.result = llmResponse.textResponse || generateFallbackResponse(prompt);
     response.session_id = llmResponse.sessionId;
-    
+
     if (llmResponse.error) {
       response.model = 'fallback';
     }

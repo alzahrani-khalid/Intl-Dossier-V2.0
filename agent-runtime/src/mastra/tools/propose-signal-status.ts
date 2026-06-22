@@ -1,0 +1,66 @@
+import { createTool } from '@mastra/core/tools'
+import { z } from 'zod'
+import * as supa from './_supabase.js'
+
+// Re-export the keystone helper to keep the test harness uniform across the roster.
+// This tool never builds a client — it only validates + echoes.
+export const createUserClient = supa.createUserClient
+
+/**
+ * propose_signal_status (GENUI-02/03, D-01/D-03) — PROPOSE-ONLY write-tool.
+ *
+ * The agent calls this when the user asks to DISMISS or ESCALATE an intelligence
+ * signal. It VALIDATES the model-supplied args (UUID + 2-value enum + bounded reason)
+ * and ECHOES them as a structured proposal for the HITL confirmation card (73-03). It
+ * NEVER commits: it does not UPDATE `intelligence_event`. The status mapping
+ * (dismiss → 'dismissed' / escalate → 'escalated') and the D-06 actor columns are
+ * applied by the frontend commit under the caller JWT on approval (D-03), not here.
+ *
+ * Narrow Zod is the threat control (T-73-02-02). Indistinguishable-empty (T-73-02-03):
+ * a missing caller JWT returns the neutral `{ proposed: false }` — no service-role
+ * fallback, no clearance/filtered/restricted token.
+ */
+export const proposeSignalStatusTool = createTool({
+  id: 'propose_signal_status',
+  description:
+    'Propose dismissing or escalating an intelligence signal, for the user to confirm. Use this when the user asks to dismiss or escalate a signal. This only proposes the action — the signal status is not changed until the user approves the confirmation card.',
+  inputSchema: z.object({
+    signalId: z.string().uuid().describe('The intelligence signal UUID to act on'),
+    action: z
+      .enum(['dismiss', 'escalate'])
+      .describe('Whether to dismiss or escalate the signal'),
+    reason: z
+      .string()
+      .max(500)
+      .optional()
+      .describe('Optional short reason for the status change'),
+  }),
+  outputSchema: z.object({
+    proposed: z.boolean(),
+    action: z.string().optional(),
+    args: z.record(z.string(), z.unknown()).optional(),
+  }),
+  execute: async (input, context) => {
+    // KEYSTONE (#4465 gate): require the caller JWT; an empty header surfaces the neutral
+    // proposal-absent shape rather than proposing an unauthenticated write.
+    const authorization = supa.getAuthorization(context?.requestContext ?? { get: () => undefined })
+    if (!authorization) {
+      return { proposed: false }
+    }
+
+    const args = input as { signalId: string; action: 'dismiss' | 'escalate'; reason?: string }
+
+    // PROPOSE-ONLY: validate + echo. No UPDATE. The frontend commits on approval (D-03).
+    return {
+      proposed: true,
+      action: 'signal_status',
+      args: {
+        signalId: args.signalId,
+        action: args.action,
+        reason: args.reason,
+      },
+    }
+  },
+})
+
+export default proposeSignalStatusTool

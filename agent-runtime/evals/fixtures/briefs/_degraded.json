@@ -1,0 +1,38 @@
+{
+  "lang": "en",
+  "dossierType": "country",
+  "degraded": true,
+  "description": "EVAL-01 POSITIVE-FAILURE fixture. A deliberately poor candidate against the en-economic golden: the summary is near-empty, sections are missing/wrong-language, and the trade figures contradict the reference. A judge MUST score this below 0.80 (BRIEF_MIN). The CI-mode structural check asserts it is KNOWN-bad (degraded flag + structurally deficient) so the gate proves it rejects a regression even with the judge absent.",
+  "input": {
+    "nameEn": "Republic of Astrabia",
+    "nameAr": "جمهورية أسترابيا",
+    "descEn": "A mid-size trading partner; bilateral trade volume grew 12% year on year.",
+    "descAr": "شريك تجاري متوسط الحجم؛ نما حجم التبادل التجاري الثنائي بنسبة 12% على أساس سنوي."
+  },
+  "golden": {
+    "summary": "Astrabia is a mid-size economic partner with bilateral trade up 12% year on year, driven by energy and agricultural exports. A free-trade memorandum is under negotiation, with the third round scheduled for next quarter.",
+    "sections": [
+      {
+        "title": "Trade Posture",
+        "content": "Two-way trade reached 4.2 billion last year, a 12% increase. Energy accounts for 58% of imports from Astrabia; agricultural goods make up 31% of exports to it."
+      },
+      {
+        "title": "Open Negotiations",
+        "content": "A free-trade memorandum is in its second round. The main open item is tariff schedules on processed foods; a third round is set for next quarter."
+      },
+      {
+        "title": "Outlook",
+        "content": "Trade momentum is positive but exposed to commodity-price swings. Concluding the memorandum would lock in tariff certainty for both sides."
+      }
+    ]
+  },
+  "candidate": {
+    "summary": "",
+    "sections": [
+      {
+        "title": "ملاحظة",
+        "content": "التجارة انخفضت ولا توجد مفاوضات."
+      }
+    ]
+  }
+}

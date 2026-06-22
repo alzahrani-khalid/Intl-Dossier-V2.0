@@ -26,7 +26,7 @@ export interface EmbeddingResult {
   model: string
   dimensions: number
   cached: boolean
-  provider: 'local' | 'edge-function' | 'openai' | 'anythingllm'
+  provider: 'local' | 'edge-function' | 'openai'
 }
 
 export interface BatchEmbeddingResult {
@@ -34,7 +34,7 @@ export interface BatchEmbeddingResult {
   model: string
   dimensions: number
   cachedCount: number
-  provider: 'local' | 'edge-function' | 'openai' | 'anythingllm'
+  provider: 'local' | 'edge-function' | 'openai'
 }
 
 const CACHE_PREFIX = 'embedding:v2:'

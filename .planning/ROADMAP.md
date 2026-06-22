@@ -400,8 +400,14 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 2. Approved copilot writes commit under the user's JWT (RLS-enforced), never service-role — verified by confirming the DB row's `created_by` / `actor_id` matches the caller's `auth.uid()` after an approved write.
 3. After an approved copilot write, the conventional UI (TanStack Query cache) reflects the change immediately without a manual page reload — verified live in the same browser session.
 4. Generative UI renders the app's own token-bound components (UniversalDossierCard, signal cards, etc.) inline in the copilot surface with working deep-links into the app — verified live EN+AR.
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 5 plans (5 waves — DB foundation → agent propose-tools → HITL commit → genUI → bilingual E2E)
+
+- [x] 73-01-PLAN.md — Signal actor migration + persist_brief INVOKER RPC (DB foundation)
+- [x] 73-02-PLAN.md — agent-runtime propose\_\* write-tools (4) + revised agent prompt
+- [x] 73-03-PLAN.md — HITL confirmation cards + caller-JWT approve-commit + post-commit cache invalidation
+- [x] 73-04-PLAN.md — generative-UI inline component renderers (UniversalDossierCard + signal card) + deep-links
+- [ ] 73-05-PLAN.md — bilingual E2E (HITL approve/reject EN+AR, JWT-actor, cache-sync, indistinguishable-empty) + live verification
+      **UI hint**: yes
 
 ---
 
@@ -416,8 +422,22 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 2. CI fails on a correlation-accuracy regression below threshold (precision ≥ 0.75 / recall ≥ 0.70) — verified by same mechanism.
 3. CI fails on an Arabic-quality regression below threshold (≥ 0.75) — verified by same mechanism.
 4. The critical AI path (search suggestions, dashboard digest, assistant) makes zero AnythingLLM calls — verified by blocking the AnythingLLM endpoint at the network level on staging and confirming all three surfaces continue to function correctly.
-   **Plans**: TBD
-   **UI hint**: no
+
+**Plans**: 11 plans, 6 waves
+
+- [ ] 74-01-PLAN.md — Eval-harness scaffold + EVAL-02 computed precision/recall (CI-runnable, no LLM)
+- [ ] 74-02-PLAN.md — ChatDock un-mount + `/api/ai/chat` retire (D2)
+- [ ] 74-03-PLAN.md — 3 semantic-search edge fns to TEI BGE-M3 (1024-dim)
+- [x] 74-04-PLAN.md — Backend AI-core AnythingLLM rip-out (config/router/service/embeddings/health/CSP)
+- [x] 74-05-PLAN.md — intelligence-refresh x3 to on-prem vLLM generation (net-new, shared helper)
+- [ ] 74-06-PLAN.md — Text-AI edge fns re-home on-prem (extract/summary/translate/field-assist/word-assistant)
+- [ ] 74-07-PLAN.md — Embed/health/brief edge fns + backend brief.service/dossier-field-assist rip-out
+- [ ] 74-08-PLAN.md — Infra removal (compose/nginx/env) + static no-AnythingLLM critical-surface guard
+- [ ] 74-09-PLAN.md — EVAL-01/03 rubrics (on-prem gemma judge, golden EN+AR, positive-failure; deploy-gated)
+- [ ] 74-10-PLAN.md — CI eval-gate job (two-mode) + EVAL-04 network-block UAT spec
+- [ ] 74-11-PLAN.md — Live verification (deploy-gated checkpoint: EVAL-04 UAT + live EVAL-01/03 + full-repo audit)
+
+**UI hint**: no
 
 ---
 
@@ -445,8 +465,8 @@ Full details: [v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md)
 | 70. Digests + Alerts | v7.0 | 7/7 | Complete    | 2026-06-16 |
 | 71. Analytic Graph | v7.0 | 5/5 | Complete    | 2026-06-17 |
 | 72. Agent Platform — Runtime, Retrieval, Reads | v7.0 | 9/9 | Complete   | 2026-06-19 |
-| 73. Agent Platform — Writes + Generative UI | v7.0 | 0/? | Not started | - |
-| 74. Eval Gate + AnythingLLM Retirement | v7.0 | 0/? | Not started | - |
+| 73. Agent Platform — Writes + Generative UI | v7.0 | 5/5 | Executed (live-verify deploy-gated) | 2026-06-21 |
+| 74. Eval Gate + AnythingLLM Retirement | v7.0 | 11/11 | Executed (live-verify deploy-gated) | 2026-06-21 |
 
 <!-- gsd:progress:end -->
 

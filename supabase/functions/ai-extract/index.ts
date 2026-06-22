@@ -1,9 +1,8 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsHeaders } from '../_shared/cors.ts';
+import { generateStructuredJson } from '../_shared/onprem-llm.ts';
 
-const ANYTHINGLLM_API_URL = Deno.env.get('ANYTHINGLLM_API_URL') || 'http://anythingllm:3001';
-const ANYTHINGLLM_API_KEY = Deno.env.get('ANYTHINGLLM_API_KEY') || '';
 const AI_SYNC_THRESHOLD = parseInt(Deno.env.get('AI_SYNC_THRESHOLD') || '5', 10); // seconds
 
 interface ExtractionRequest {
@@ -58,58 +57,36 @@ async function extractTextFromFile(file: File): Promise<string> {
   return await file.text();
 }
 
-// Call AnythingLLM API for extraction
-async function callAnythingLLM(text: string, language: string): Promise<ExtractionResult> {
-  const prompt = `
-System: Extract structured information from meeting notes as JSON.
+// Extract structured information via the on-prem vLLM model (JSON mode).
+async function extractStructuredData(text: string, language: string): Promise<ExtractionResult> {
+  const systemPrompt =
+    'You are a bilingual (English/Arabic) meeting-notes data extractor. Respond ONLY with the requested JSON object, no markdown, no commentary.';
 
-Output format:
+  const userPrompt = `Extract structured information from the meeting notes below.
+
+Output format (JSON object only):
 {
   "decisions": [{"description": string, "decision_maker": string, "confidence": 0-1}],
-  "commitments": [{"description": string, "owner": string, "due_date": "YYYY-MM-DD", "confidence": 0-1}],
+  "commitments": [{"description": string, "owner": string, "due_date": "YYYY-MM-DD", "priority": "low|medium|high|critical", "confidence": 0-1}],
   "risks": [{"description": string, "severity": "low|medium|high|critical", "likelihood": "unlikely|possible|likely|certain", "confidence": 0-1}]
 }
 
-Examples:
+Example:
 Input: "Team decided to use PostgreSQL. John will research alternatives by Friday."
 Output: {
   "decisions": [{"description": "Use PostgreSQL", "decision_maker": "Team", "confidence": 0.9}],
-  "commitments": [{"description": "Research database alternatives", "owner": "John", "due_date": "2025-10-06", "confidence": 0.95, "priority": "medium"}]
+  "commitments": [{"description": "Research database alternatives", "owner": "John", "due_date": "2025-10-06", "priority": "medium", "confidence": 0.95}],
+  "risks": []
 }
 
-Input: [Meeting minutes in ${language === 'ar' ? 'Arabic' : 'English'}]
-${text}
-
-Output (JSON only, no markdown):
-`;
+Meeting minutes (${language === 'ar' ? 'Arabic' : 'English'}):
+${text}`;
 
   try {
-    const response = await fetch(`${ANYTHINGLLM_API_URL}/api/v1/workspace/chat`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${ANYTHINGLLM_API_KEY}`,
-      },
-      body: JSON.stringify({
-        message: prompt,
-        mode: 'query',
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`AnythingLLM API error: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    const content = data.text || data.response || '';
-
-    // Parse JSON response
-    const jsonMatch = content.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      throw new Error('Failed to extract JSON from AnythingLLM response');
-    }
-
-    const extracted = JSON.parse(jsonMatch[0]);
+    const extracted = (await generateStructuredJson({
+      systemPrompt,
+      userPrompt,
+    })) as Partial<ExtractionResult>;
 
     return {
       mode: 'sync',
@@ -118,7 +95,8 @@ Output (JSON only, no markdown):
       risks: extracted.risks || [],
     };
   } catch (error) {
-    console.error('AnythingLLM extraction error:', error);
+    // On-prem model unavailable / malformed output → degrade to manual entry.
+    console.error('On-prem extraction error:', error);
     throw new Error('AI extraction failed. Please try manual entry.');
   }
 }
@@ -207,7 +185,7 @@ serve(async (req) => {
 
     if (shouldSync) {
       // Sync mode: Extract immediately
-      const result = await callAnythingLLM(text, language);
+      const result = await extractStructuredData(text, language);
 
       return new Response(JSON.stringify(result), {
         status: 200,
@@ -273,8 +251,8 @@ async function processExtractionAsync(
       .update({ progress: 30 })
       .eq('id', jobId);
 
-    // Call AnythingLLM
-    const result = await callAnythingLLM(text, language);
+    // Call the on-prem model
+    const result = await extractStructuredData(text, language);
 
     // Update progress to 80%
     await supabase

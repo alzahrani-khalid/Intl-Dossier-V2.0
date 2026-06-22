@@ -9,10 +9,9 @@ import { supabaseAuth } from '../middleware/supabase-auth.js'
 import { logInfo, logError } from '../utils/logger'
 import multer from 'multer'
 import briefsRouter from './ai/briefs.js'
-import chatRouter from './ai/chat.js'
 import intakeLinkingRouter from './ai/intake-linking.js'
 import dossierFieldAssistRouter from './ai/dossier-field-assist.js'
-import { getAIFeatureStatus, aiConfig } from '../ai/config.js'
+import { getAIFeatureStatus } from '../ai/config.js'
 import { embeddingsService } from '../ai/embeddings-service.js'
 
 const router = Router()
@@ -29,31 +28,13 @@ router.get('/health', async (_req, res) => {
     const embeddingHealth = await embeddingsService.getHealthStatus()
     const embeddingInfo = embeddingsService.getModelInfo()
 
-    // Check AnythingLLM health
-    let anythingllmHealth = { available: false, error: 'Not configured' as string | undefined }
-    if (aiConfig.providers.anythingllm.enabled && aiConfig.providers.anythingllm.baseUrl) {
-      try {
-        const response = await fetch(`${aiConfig.providers.anythingllm.baseUrl}/health`)
-        anythingllmHealth = {
-          available: response.ok,
-          error: response.ok ? undefined : `HTTP ${response.status}`,
-        }
-      } catch (error) {
-        anythingllmHealth = {
-          available: false,
-          error: error instanceof Error ? error.message : 'Unknown error',
-        }
-      }
-    }
-
     // Determine overall health
     const hasEmbeddingProvider =
       embeddingHealth.edgeFunction.available ||
       embeddingHealth.localOnnx.available ||
       embeddingHealth.openai.available
 
-    const hasInferenceProvider =
-      anythingllmHealth.available || !!process.env.OPENAI_API_KEY || !!process.env.ANTHROPIC_API_KEY
+    const hasInferenceProvider = !!process.env.OPENAI_API_KEY || !!process.env.ANTHROPIC_API_KEY
 
     const isHealthy = hasEmbeddingProvider && hasInferenceProvider
 
@@ -67,7 +48,6 @@ router.get('/health', async (_req, res) => {
           config: embeddingInfo,
         },
         inference: {
-          anythingllm: anythingllmHealth,
           openai: {
             available: !!process.env.OPENAI_API_KEY,
             error: !process.env.OPENAI_API_KEY ? 'Not configured' : undefined,
@@ -108,10 +88,7 @@ const intelligenceService = new IntelligenceService()
 // Mount AI brief generation routes (SSE streaming)
 router.use('/briefs', briefsRouter)
 
-// Mount AI chat routes (SSE streaming)
-router.use('/chat', chatRouter)
-
-// Mount dossier field assist routes (AnythingLLM integration)
+// Mount dossier field assist routes
 router.use('/dossier-field-assist', dossierFieldAssistRouter)
 
 // Mount AI entity linking routes

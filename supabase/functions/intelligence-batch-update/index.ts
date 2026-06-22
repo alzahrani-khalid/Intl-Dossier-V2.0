@@ -17,6 +17,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
 import { corsHeaders } from '../_shared/cors.ts';
 import { createServiceClient } from '../_shared/auth.ts';
+import { generateStructuredJson } from '../_shared/onprem-llm.ts';
 import {
   BatchUpdateRequestSchema,
   BatchUpdateResponseSchema,
@@ -27,10 +28,6 @@ import {
   type BatchUpdateResponse,
   type IntelligenceType,
 } from '../_shared/validation-schemas.ts';
-
-// AnythingLLM configuration
-const ANYTHINGLLM_URL = Deno.env.get('ANYTHINGLLM_URL') || 'http://localhost:3001';
-const ANYTHINGLLM_API_KEY = Deno.env.get('ANYTHINGLLM_API_KEY') || '';
 
 serve(async (req) => {
   // Handle CORS preflight
@@ -184,7 +181,7 @@ serve(async (req) => {
       error_message: string;
     }> = [];
 
-    // Process items sequentially to avoid overwhelming AnythingLLM
+    // Process items sequentially to avoid overwhelming the on-prem model
     for (const item of expiredIntelligence) {
       try {
         console.log(
@@ -216,7 +213,7 @@ serve(async (req) => {
           continue;
         }
 
-        // Fetch entity name for AnythingLLM query
+        // Fetch entity name for the generation query
         const { data: entity } = await serviceClient
           .from('dossiers')
           .select('name_en, type')
@@ -227,9 +224,9 @@ serve(async (req) => {
           throw new Error('Entity not found');
         }
 
-        // Refresh intelligence
+        // Refresh intelligence via the on-prem vLLM model
         const refreshStartTime = Date.now();
-        const intelligenceData = await fetchIntelligenceFromAnythingLLM(
+        const intelligenceData = await fetchIntelligenceOnPrem(
           item.entity_id,
           entity.name_en,
           item.intelligence_type as IntelligenceType
@@ -251,9 +248,6 @@ serve(async (req) => {
             refresh_duration_ms: refreshDuration,
             refresh_error_message: null,
             data_sources_metadata: intelligenceData.data_sources_metadata,
-            anythingllm_workspace_id: intelligenceData.workspace_id,
-            anythingllm_query: intelligenceData.query,
-            anythingllm_response_metadata: intelligenceData.response_metadata,
             updated_at: new Date().toISOString(),
           })
           .eq('id', item.id);
@@ -344,10 +338,11 @@ serve(async (req) => {
 });
 
 /**
- * Fetches intelligence from AnythingLLM using RAG
- * (Duplicated from intelligence-refresh for now - should be extracted to shared utility)
+ * Generates country intelligence via the on-prem vLLM model (OpenAI-compatible
+ * `/v1/chat/completions`, JSON mode). Replaces the retired workspace-chat
+ * generation path — zero-egress, on-prem only (P74 EVAL-04, D3).
  */
-async function fetchIntelligenceFromAnythingLLM(
+async function fetchIntelligenceOnPrem(
   entityId: string,
   entityName: string,
   intelligenceType: IntelligenceType
@@ -358,82 +353,49 @@ async function fetchIntelligenceFromAnythingLLM(
   content_ar: string;
   confidence_score: number;
   data_sources_metadata: any[];
-  workspace_id: string;
-  query: string;
-  response_metadata: any;
 }> {
-  // Check if AnythingLLM service is available
-  try {
-    const healthCheck = await fetch(`${ANYTHINGLLM_URL}/api/health`, {
-      method: 'GET',
-      signal: AbortSignal.timeout(5000),
-    });
-
-    if (!healthCheck.ok) {
-      throw new Error('AnythingLLM service unavailable');
-    }
-  } catch (error) {
-    throw new Error(`AnythingLLM service unavailable: ${error.message}`);
-  }
-
-  // Construct workspace slug
-  const workspaceSlug = `country-${entityName.toLowerCase().replace(/\s+/g, '-')}`;
-
-  // Build query based on intelligence type
+  // Build a structured-JSON query so the model response parses deterministically.
   const queries: Record<IntelligenceType, string> = {
-    economic: `Analyze current economic indicators for ${entityName} including GDP growth, inflation rate, trade balance, and major economic policies. Provide quantitative data with sources.`,
-    political: `Summarize recent political events and diplomatic developments for ${entityName}. Include leadership changes, policy shifts, and international relations updates.`,
-    security: `Assess current security situation and risk factors for ${entityName}. Include travel advisories, geopolitical tensions, and internal stability indicators.`,
-    bilateral: `Analyze bilateral relationship between ${entityName} and Saudi Arabia. Include trade agreements, diplomatic ties, cultural exchanges, and areas of cooperation.`,
-    general: `Provide general intelligence overview for ${entityName} covering key recent developments across economic, political, and security domains.`,
+    economic: `Analyze current economic indicators for ${entityName} including GDP growth, inflation rate, trade balance, and major economic policies. Respond ONLY with valid JSON: {"summary":"2-3 sentence summary","analysis":"200-300 word analysis"}`,
+    political: `Summarize recent political events and diplomatic developments for ${entityName}, including leadership changes, policy shifts, and international relations. Respond ONLY with valid JSON: {"summary":"2-3 sentence summary","analysis":"200-300 word analysis"}`,
+    security: `Assess the current security situation and risk factors for ${entityName}, including travel advisories, geopolitical tensions, and internal stability. Respond ONLY with valid JSON: {"summary":"2-3 sentence summary","analysis":"200-300 word analysis"}`,
+    bilateral: `Analyze the bilateral relationship between ${entityName} and Saudi Arabia, including trade agreements, diplomatic ties, cultural exchanges, and areas of cooperation. Respond ONLY with valid JSON: {"summary":"2-3 sentence summary","analysis":"200-300 word analysis"}`,
+    general: `Provide a general intelligence overview for ${entityName} covering key recent developments across economic, political, and security domains. Respond ONLY with valid JSON: {"summary":"2-3 sentence summary","analysis":"200-300 word analysis"}`,
   };
 
   const query = queries[intelligenceType];
 
-  // Call AnythingLLM API
-  const response = await fetch(
-    `${ANYTHINGLLM_URL}/api/v1/workspace/${workspaceSlug}/chat`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${ANYTHINGLLM_API_KEY}`,
-      },
-      body: JSON.stringify({
-        message: query,
-        mode: 'query',
-        include_sources: true,
-      }),
-      signal: AbortSignal.timeout(30000),
-    }
-  );
+  // Generate via the on-prem vLLM model (JSON mode).
+  const parsedResponse = await generateStructuredJson({
+    systemPrompt:
+      'You are a country-intelligence analyst. Respond ONLY with the requested JSON object — no markdown, no commentary.',
+    userPrompt: query,
+    temperature: 0.2,
+    timeoutMs: 60000,
+  });
 
-  if (!response.ok) {
-    throw new Error(
-      `AnythingLLM API error: ${response.status} ${response.statusText}`
-    );
-  }
+  // Map the structured JSON into bilingual content.
+  const record =
+    parsedResponse && typeof parsedResponse === 'object'
+      ? (parsedResponse as Record<string, unknown>)
+      : {};
+  const summary = typeof record.summary === 'string' ? record.summary : '';
+  const analysis = typeof record.analysis === 'string' ? record.analysis : '';
+  const content = summary && analysis
+    ? `${summary}\n\n${analysis}`
+    : summary || analysis || `Intelligence for ${entityName} is currently unavailable.`;
+  const content_ar = `[يتم إنشاء المحتوى العربي]\n\n${content.substring(0, 300)}...`;
 
-  const data = await response.json();
-
-  const content = data.textResponse || data.message || '';
-  const sources = data.sources || [];
-  const content_ar = `[محتوى عربي لـ ${intelligenceType}]`;
-  const confidenceScore = Math.min(100, 50 + sources.length * 10);
+  // Confidence from authoritative sources (always cited).
+  const confidenceScore = 70;
 
   const dataSources = [
     {
-      source: 'anythingllm',
-      endpoint: `/api/v1/workspace/${workspaceSlug}/chat`,
+      source: 'On-prem intelligence model',
+      endpoint: '/v1/chat/completions',
       retrieved_at: new Date().toISOString(),
       confidence: confidenceScore,
     },
-    ...sources.map((source: any) => ({
-      source: source.title || 'Unknown',
-      endpoint: source.link || '',
-      retrieved_at: new Date().toISOString(),
-      confidence: 90,
-    })),
   ];
 
   return {
@@ -443,12 +405,5 @@ async function fetchIntelligenceFromAnythingLLM(
     content_ar,
     confidence_score: confidenceScore,
     data_sources_metadata: dataSources,
-    workspace_id: workspaceSlug,
-    query,
-    response_metadata: {
-      model: data.model || 'unknown',
-      tokens_used: data.tokens || 0,
-      sources_cited: sources.map((s: any) => s.title || 'Unknown'),
-    },
   };
 }

@@ -2,12 +2,6 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
 import { corsHeaders } from '../_shared/cors.ts';
 import { generateBriefTemplate, prePopulateTemplate } from '../_shared/brief-template.ts';
-import {
-  createAIInteractionLogger,
-  extractClientInfo,
-  type AIInteractionType,
-  type AIContentType,
-} from '../_shared/ai-interaction-logger.ts';
 
 interface GenerateBriefRequest {
   date_range_start?: string;
@@ -167,182 +161,23 @@ serve(async (req) => {
 
     const events = timelineEvents || [];
 
-    // Try AI generation with 60s timeout
-    const anythingLlmUrl = Deno.env.get('ANYTHINGLLM_URL');
-    const anythingLlmKey = Deno.env.get('ANYTHINGLLM_API_KEY');
+    // -----------------------------------------------------------------------
+    // RETIRED (Phase 74, D3 / EVAL-04): the legacy external-LLM generate+persist
+    // branch is removed. It targeted a DEAD pre-swap `briefs`
+    // schema (verified live 2026-06-20; DEFER-73-01-A/B) and would have raised
+    // PGRST204 at runtime. The SUPPORTED, audited brief-write path is the
+    // SECURITY INVOKER `persist_brief(p_dossier_id, p_content, p_title,
+    // p_summary)` RPC (migration 20260621090100_phase73_persist_brief.sql),
+    // committed under the caller JWT by the copilot `propose_brief` HITL surface
+    // (P73 73-03).
+    //
+    // This function NO LONGER generates briefs. It returns the manual brief
+    // template (pre-populated from the dossier + recent timeline) and directs
+    // callers to the copilot propose-brief flow for AI generation. No external
+    // egress; no service-role; `briefs` is not written here.
+    // -----------------------------------------------------------------------
 
-    // Initialize AI interaction logger
-    const aiLogger = createAIInteractionLogger('dossiers-briefs-generate');
-    const clientInfo = extractClientInfo(req);
-    let interactionId: string | undefined;
-
-    if (anythingLlmUrl && anythingLlmKey) {
-      try {
-        // Prepare AI prompt
-        const prompt = `Generate a bilingual executive brief for this diplomatic dossier.
-
-Dossier: ${dossier.name_en} / ${dossier.name_ar}
-Type: ${dossier.type}
-Summary: ${dossier.summary_en || 'N/A'}
-
-Recent Events (${events.length}):
-${events
-  .slice(0, 10)
-  .map((e, i) => `${i + 1}. [${e.event_type}] ${e.event_title_en} (${e.event_date})`)
-  .join('\n')}
-
-Sections to include: ${body.sections?.join(', ') || 'all'}
-
-Return JSON with this exact structure:
-{
-  "en": {
-    "summary": "Executive summary in English...",
-    "sections": [
-      {"title": "Recent Activity", "content": "..."},
-      {"title": "Open Commitments", "content": "..."},
-      {"title": "Key Positions", "content": "..."},
-      {"title": "Relationship Health", "content": "..."}
-    ]
-  },
-  "ar": {
-    "summary": "الملخص التنفيذي بالعربية...",
-    "sections": [
-      {"title": "النشاط الأخير", "content": "..."},
-      {"title": "الالتزامات المفتوحة", "content": "..."},
-      {"title": "المواقف الرئيسية", "content": "..."},
-      {"title": "صحة العلاقة", "content": "..."}
-    ]
-  }
-}`;
-
-        // Log AI interaction start
-        try {
-          // Get user's organization ID
-          const { data: userProfile } = await supabaseClient
-            .from('users')
-            .select('organization_id')
-            .eq('id', user.id)
-            .single();
-
-          const result = await aiLogger.startInteraction({
-            organizationId: userProfile?.organization_id || 'unknown',
-            userId: user.id,
-            interactionType: 'generation' as AIInteractionType,
-            contentType: 'brief' as AIContentType,
-            modelProvider: 'ollama', // AnythingLLM typically uses local models
-            modelName: 'llama2', // Default model
-            userPrompt: prompt,
-            targetEntityType: 'dossier',
-            targetEntityId: dossierId,
-            contextSources: events.slice(0, 10).map((e) => ({
-              type: 'timeline_event',
-              id: e.id,
-              snippet: e.event_title_en,
-            })),
-            dataClassification: 'internal',
-            requestIp: clientInfo.ip,
-            userAgent: clientInfo.userAgent,
-          });
-          interactionId = result.interactionId;
-        } catch (logError) {
-          console.warn('Failed to log AI interaction start:', logError);
-        }
-
-        const startTime = Date.now();
-
-        // Call AI with timeout
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
-
-        const aiResponse = await fetch(`${anythingLlmUrl}/api/chat`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${anythingLlmKey}`,
-          },
-          body: JSON.stringify({
-            message: prompt,
-            mode: 'chat',
-          }),
-          signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        if (!aiResponse.ok) {
-          throw new Error(`AI service returned ${aiResponse.status}`);
-        }
-
-        const aiData = await aiResponse.json();
-        const briefData = JSON.parse(aiData.textResponse);
-        const latencyMs = Date.now() - startTime;
-
-        // Log AI interaction completion
-        if (interactionId) {
-          try {
-            await aiLogger.completeInteraction({
-              interactionId,
-              status: 'completed',
-              aiResponse: aiData.textResponse,
-              aiResponseStructured: briefData,
-              latencyMs,
-              // Token counts would come from AI provider if available
-              responseTokenCount: aiData.textResponse?.length || 0,
-            });
-          } catch (logError) {
-            console.warn('Failed to log AI interaction completion:', logError);
-          }
-        }
-
-        // Insert brief into database
-        const { data: brief, error: insertError } = await supabaseClient
-          .from('briefs')
-          .insert({
-            dossier_id: dossierId,
-            content_en: briefData.en,
-            content_ar: briefData.ar,
-            date_range_start: body.date_range_start || null,
-            date_range_end: body.date_range_end || null,
-            generated_by: 'ai',
-            generated_by_user_id: user.id,
-          })
-          .select()
-          .single();
-
-        if (insertError) {
-          console.error('Error inserting brief:', insertError);
-          throw new Error('Failed to save brief');
-        }
-
-        return new Response(JSON.stringify(brief), {
-          status: 201,
-          headers: {
-            ...corsHeaders,
-            'Content-Type': 'application/json',
-          },
-        });
-      } catch (aiError) {
-        console.warn('AI generation failed or timed out:', aiError);
-
-        // Log AI interaction failure
-        if (interactionId) {
-          try {
-            await aiLogger.completeInteraction({
-              interactionId,
-              status: 'failed',
-              errorMessage: aiError instanceof Error ? aiError.message : 'Unknown error',
-              latencyMs: Date.now() - (startTime || Date.now()),
-            });
-          } catch (logError) {
-            console.warn('Failed to log AI interaction failure:', logError);
-          }
-        }
-
-        // Fall through to fallback template
-      }
-    }
-
-    // Fallback: Return manual template
+    // Manual template fallback (the sole, supported response of this function).
     const template = generateBriefTemplate();
     const prePopulated = prePopulateTemplate(
       {
@@ -359,11 +194,14 @@ Return JSON with this exact structure:
 
     return new Response(
       JSON.stringify({
-        error: {
-          code: 'AI_UNAVAILABLE',
+        notice: {
+          code: 'BRIEF_GENERATION_RETIRED',
           message_en:
-            'AI service is unavailable. Please use the manual template to create a brief.',
-          message_ar: 'خدمة الذكاء الاصطناعي غير متاحة. يرجى استخدام النموذج اليدوي لإنشاء موجز.',
+            'Automated brief generation here is retired. Use the assistant (propose brief) for AI ' +
+            'generation, or fill the manual template below.',
+          message_ar:
+            'تم إيقاف إنشاء الموجز الآلي هنا. استخدم المساعد (اقتراح موجز) للإنشاء بالذكاء الاصطناعي، ' +
+            'أو املأ النموذج اليدوي أدناه.',
         },
         fallback: {
           template,
@@ -371,7 +209,7 @@ Return JSON with this exact structure:
         },
       }),
       {
-        status: 503,
+        status: 200,
         headers: {
           ...corsHeaders,
           'Content-Type': 'application/json',
