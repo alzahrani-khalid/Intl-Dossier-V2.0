@@ -244,7 +244,9 @@ services:
     container_name: intl-dossier-vllm
     restart: unless-stopped
     environment:
-      # Gated-pull token for google/gemma-4-12B-it (gated weights). Accept the
+      # Gated-pull token for google/gemma-3-12b-it (gated weights; the spec's
+      # "gemma-4-12b-it" does not exist on HF — gemma-3-12b-it is the real 12B Gemma,
+      # served below as gemma-4-12b so callers + the INFRA-01 check are unaffected). Accept the
       # Gemma license on the model's Hugging Face page and set HF_TOKEN in
       # deploy/.env on the GPU host — without it vLLM 401s and crash-loops on the
       # first weight pull. MUST be the plain ${} form (empty-if-unset), NEVER
@@ -253,7 +255,7 @@ services:
       # (-f prod -f mac) where vllm is profiled out. Never hardcode the value.
       HF_TOKEN: ${HF_TOKEN}
     command: >
-      --model google/gemma-4-12B-it
+      --model google/gemma-3-12b-it
       --served-model-name gemma-4-12b
       --enable-auto-tool-choice
       --tool-call-parser gemma4
