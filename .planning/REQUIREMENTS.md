@@ -70,7 +70,7 @@ Requirements for the v7.0 milestone (phases 68–74). Each maps to exactly one r
 - [ ] **EVAL-01**: A bilingual (EN/AR) briefing-quality rubric runs in CI and fails the build on a regression below threshold
 - [ ] **EVAL-02**: A correlation-accuracy rubric runs in CI and fails the build on a regression below threshold
 - [ ] **EVAL-03**: An Arabic-quality rubric runs in CI and fails the build on a regression below threshold
-- [ ] **EVAL-04**: The critical AI path (search suggestions, dashboard digest, assistant) makes zero AnythingLLM calls; AnythingLLM is decommissioned from the critical path
+- [x] **EVAL-04**: The critical AI path (search suggestions, dashboard digest, assistant) makes zero AnythingLLM calls; AnythingLLM is decommissioned from the critical path
 
 ### Infrastructure substrate (parallel track)
 
@@ -162,7 +162,7 @@ Which phases cover which requirements.
 | EVAL-01     | Phase 74 | Pending  |
 | EVAL-02     | Phase 74 | Pending  |
 | EVAL-03     | Phase 74 | Pending  |
-| EVAL-04     | Phase 74 | Pending  |
+| EVAL-04     | Phase 74 | Complete |
 
 **Coverage:**
 
