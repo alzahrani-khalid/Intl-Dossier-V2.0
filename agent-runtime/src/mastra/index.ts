@@ -1,15 +1,16 @@
 import { Mastra } from '@mastra/core/mastra'
 import { registerApiRoute } from '@mastra/core/server'
-import { registerCopilotKit } from '@ag-ui/mastra/copilotkit'
-import {
-  MASTRA_RESOURCE_ID_KEY,
-  type RequestContext,
-} from '@mastra/core/request-context'
+import { stream } from 'hono/streaming'
+import type { Context } from 'hono'
+import { MastraAgent } from '@ag-ui/mastra'
+import { EventEncoder } from '@ag-ui/encoder'
+import type { RunAgentInput } from '@ag-ui/client'
+import { MASTRA_RESOURCE_ID_KEY, RequestContext } from '@mastra/core/request-context'
 import { copilotAgent, type CopilotRequestContext } from './agents/copilot.js'
 
 // Bind port from env (4100 default — backend 4000, anythingllm 3001, langfuse 3000,
-// phoenix 6006/4317). NEVER 5000 (macOS AirPlay). The Mastra runtime serves the
-// AG-UI /chat SSE route + /health on this port.
+// phoenix 6006/4317). NEVER 5000 (macOS AirPlay). The AG-UI /chat SSE route + /health
+// are served on this port by the bootstrap (src/index.ts) which mounts these apiRoutes.
 const PORT = Number(process.env.PORT ?? 4100)
 
 // The per-request DI bag values forwarded to the agent + tools. `authorization` and
@@ -41,42 +42,94 @@ function deriveResourceId(authorization: string): string {
 }
 
 /**
- * KEYSTONE delivery (#4465, AGENT-02). The caller JWT + language ride the AG-UI
- * request headers and are written onto the RequestContext here; tools read them via
- * `context.requestContext.get('authorization')`. This is the spike-PROVEN path on the
- * pinned versions (@mastra/core 1.43.0, @ag-ui/mastra 1.0.3) — RequestContext, NOT
- * runtimeContext. GATE 1 passed with NO server-middleware workaround needed.
+ * KEYSTONE delivery (#4465, AGENT-02). The caller JWT + language ride the AG-UI request
+ * headers and are written onto a per-request RequestContext; tools read them via
+ * `context.requestContext.get('authorization')` and build a caller-JWT Supabase client so
+ * RLS enforces clearance. RequestContext, NOT runtimeContext (spike-PROVEN on the pinned
+ * versions @mastra/core 1.43.0, @ag-ui/mastra 1.0.3). The reserved resourceId is derived
+ * from the verified JWT, never trusted from the client (D-08 owner-only threads).
  */
-function setContext(
-  c: { req: { header: (name: string) => string | undefined } },
-  requestContext: RequestContext<RuntimeContextValues>,
-): void {
-  const authorization = c.req.header('authorization') ?? ''
-  const language = (c.req.header('x-language') as 'en' | 'ar') ?? 'en'
+function buildRequestContext(authorization: string, language: 'en' | 'ar'): RequestContext {
+  const requestContext = new RequestContext<RuntimeContextValues>()
   requestContext.set('authorization', authorization)
-  requestContext.set('language', language === 'ar' ? 'ar' : 'en')
-
-  // Owner-only persistent threads (D-08): the resourceId is derived from the verified
-  // JWT, never trusted from the client. The reserved key wins over client values. It
-  // lives outside the typed CopilotRequestContext value map (it is a Mastra-reserved
-  // key), so set it on the untyped view.
+  requestContext.set('language', language)
   const resourceId = deriveResourceId(authorization)
   if (resourceId) {
-    ;(requestContext as RequestContext).set(MASTRA_RESOURCE_ID_KEY, resourceId)
+    ;(requestContext as unknown as RequestContext).set(MASTRA_RESOURCE_ID_KEY, resourceId)
   }
+  // Returned as the default (untyped) RequestContext — the invariant generic would not
+  // unify with `getLocalAgent`'s `requestContext: RequestContext` parameter otherwise.
+  return requestContext as unknown as RequestContext
 }
 
 /**
- * The Mastra server — terminates AG-UI over SSE on the bootstrap port (4100).
- *
- * - registerCopilotKit exposes the SSE /chat route the conversational shell talks to.
- *   shell_decision = assistant-ui (72-01 SPIKE-FINDINGS, user sign-off): the
- *   @assistant-ui/react-ag-ui client speaks this same AG-UI server contract, so the
- *   server side is identical to the CopilotKit path — only the frontend message /
- *   citation rendering layer (Plan 72-08) differs. The CopilotKit/AG-UI runtime +
- *   the requestContext JWT keystone STAY either way (D-09 preserved fallback).
- * - CORS origin is read from ALLOWED_ORIGINS (CSV) — NEVER '*' (carried edge-fn lock).
- * - bundler.externals MUST include '@copilotkit/runtime' or `mastra build` 500-errors.
+ * The AG-UI `/chat` endpoint the conversational shell talks to (shell_decision =
+ * assistant-ui, 72-01 SPIKE-FINDINGS). The frontend `@ag-ui/client` HttpAgent POSTs an
+ * AG-UI `RunAgentInput` and consumes an SSE stream of AG-UI `BaseEvent`s — the RAW AG-UI
+ * wire protocol, NOT CopilotKit's single-route protocol (registerCopilotKit serves the
+ * latter, which rejects an AG-UI body with "Missing method field"). We bridge the local
+ * Mastra agent to AG-UI via `MastraAgent.getLocalAgent` (forwarding the per-request
+ * keystone RequestContext) and SSE-encode each emitted event with `@ag-ui/encoder`.
+ */
+function aguiChatRoute(): ReturnType<typeof registerApiRoute> {
+  return registerApiRoute('/chat', {
+    method: 'POST',
+    handler: async (c) => {
+      let input: RunAgentInput
+      try {
+        input = (await c.req.json()) as RunAgentInput
+      } catch {
+        return c.json({ error: 'invalid_request', message: 'Expected an AG-UI RunAgentInput body' }, 400)
+      }
+
+      const authorization = c.req.header('authorization') ?? ''
+      const language = c.req.header('x-language') === 'ar' ? 'ar' : 'en'
+      const resourceId = deriveResourceId(authorization)
+      const requestContext = buildRequestContext(authorization, language)
+
+      const agent = MastraAgent.getLocalAgent({
+        mastra,
+        agentId: 'copilot',
+        resourceId: resourceId !== '' ? resourceId : 'copilot',
+        requestContext,
+      })
+
+      const encoder = new EventEncoder({ accept: c.req.header('accept') })
+      c.header('Content-Type', encoder.getContentType())
+      c.header('Cache-Control', 'no-cache, no-transform')
+      // Disable proxy buffering so SSE tokens reach the browser as they stream (nginx).
+      c.header('X-Accel-Buffering', 'no')
+
+      return stream(c as unknown as Context, async (s) => {
+        await new Promise<void>((resolve) => {
+          // Track the latest write so the stream is not closed before the final event
+          // is flushed (the run emits hundreds of events for a thinking model).
+          let pending: Promise<unknown> = Promise.resolve()
+          const finish = (): void => {
+            void pending.then(() => resolve()).catch(() => resolve())
+          }
+          const subscription = agent.run(input).subscribe({
+            next: (event) => {
+              pending = s.write(encoder.encodeSSE(event))
+            },
+            error: finish,
+            complete: finish,
+          })
+          s.onAbort(() => {
+            subscription.unsubscribe()
+            resolve()
+          })
+        })
+      })
+    },
+  })
+}
+
+/**
+ * The Mastra config — holds the reads-only copilot agent and the served apiRoutes
+ * (the AG-UI /chat SSE route + /health). `new Mastra(...)` only CONSTRUCTS this graph;
+ * the bootstrap (src/index.ts) mounts `getServer().apiRoutes` on a Hono server and
+ * listens on PORT. CORS origin is read from ALLOWED_ORIGINS (CSV) — NEVER '*'.
  */
 export const mastra = new Mastra({
   agents: { copilot: copilotAgent },
@@ -84,15 +137,11 @@ export const mastra = new Mastra({
     port: PORT,
     cors: {
       origin: process.env.ALLOWED_ORIGINS?.split(',').map((o) => o.trim()) ?? [],
-      allowMethods: ['*'],
-      allowHeaders: ['content-type', 'authorization', 'x-copilotkit-runtime-client-gql-version'],
+      allowMethods: ['GET', 'POST', 'OPTIONS'],
+      allowHeaders: ['content-type', 'authorization', 'x-language', 'accept'],
     },
     apiRoutes: [
-      registerCopilotKit<RuntimeContextValues>({
-        path: '/chat',
-        resourceId: 'copilot',
-        setContext,
-      }),
+      aguiChatRoute(),
       // Liveness probe for the container healthcheck (Dockerfile.prod :4100/health).
       registerApiRoute('/health', {
         method: 'GET',
@@ -100,5 +149,4 @@ export const mastra = new Mastra({
       }),
     ],
   },
-  bundler: { externals: ['@copilotkit/runtime'] },
 })
