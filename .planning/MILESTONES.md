@@ -1,5 +1,31 @@
 # Milestones
 
+## v7.0 Intelligence Engine (Shipped: 2026-06-24)
+
+**Phases:** 7 (68–74) · **Plans:** 49 · **Timeline:** 2026-06-13 → 2026-06-24 (11 days) · **Scope:** 213 commits, 576 files (+75,365 / −31,333)
+
+**Delivered:** Turned dossiers from passive records into a sovereign, Arabic-first intelligence layer — analyst surfaces (signals triage, digests + alerts, analytic graph) and an on-prem agentic copilot (Mastra + CopilotKit/AG-UI over vLLM/Gemma-4-12B + TEI) that reads and acts on that layer under the caller's JWT, with RLS enforcing `sensitivity_level <= clearance` so the agent is incapable by construction of reading above the caller's clearance.
+
+**Key accomplishments:**
+
+- **AI foundations + clearance keystone (P68):** unified the clearance scale on `profiles.clearance_level` (1–4), put the interactive AI/search path under the caller's JWT (service-role retired from the assistant), fixed native-dimension embeddings, stood up self-hosted observability (Langfuse + Phoenix/OTel, zero egress), and added a CI i18n-namespace guard.
+- **Signals (P69):** manual + AI-surfaced intelligence signals linked to dossiers, a keyboard-driven RTL triage inbox, escalate-to-work-item, and a clearance-gated agent `read_signals` tool.
+- **Digests + Alerts (P70):** recurring clearance-filtered digests (service-role cron), threshold alerts delivered immediately through a pluggable channel adapter (in-app / on-prem SMTP / webhook-Teams), with deep-link-only external payloads (no classified egress).
+- **Analytic graph (P71):** clearance-aware analytic graph queries (Postgres recursive CTEs) from the Network panel and Cmd+K, plus an agent `query_graph` tool (SECURITY INVOKER + RLS).
+- **On-prem agent platform (P72–P73):** a bilingual copilot reading gated signals/digests/graph/dossiers via hybrid RAG (bge-m3 1024-dim, RLS-before-rerank), rendering the app's own token-bound cards inline, and committing HITL-confirmed writes under the caller's JWT with immediate query-cache sync — running as its own Turborepo workspace.
+- **Eval gate + AnythingLLM retirement (P74):** bilingual CI eval rubrics (briefing / correlation / Arabic-quality) and a full AnythingLLM decommission from the critical path (CI-guarded by `check-no-anythingllm`).
+
+**Audit:** `gaps_found` with **zero code blockers** — keystone uniform across all 11 agent tools, 18/18 cross-phase wirings intact (see `milestones/v7.0-MILESTONE-AUDIT.md`). GAP-1 (digest clearance watermark) fixed at close; retroactive `68`/`73` VERIFICATION.md authored.
+
+**Known gaps at close (deferred):**
+
+- **EVAL-01/02/03** — bilingual CI eval rubrics are authored but their live thresholds are deploy-gated on the on-prem GPU/TEI stack (EVAL-04 / AnythingLLM retirement is complete + CI-guarded).
+- **AGENT/INFRA live verification + 3 E2E flows** — code-wired, deploy-gated on the same GPU/TEI stack.
+- **GAP-2** (no token-bound renderer for `query_graph` / `generate_digest_preview`) and **GAP-3** (`dossiers-briefs-generate` retired-but-deployed) — non-blocking warnings.
+- **48 open artifacts** acknowledged as deferred at close (39 legacy quick-tasks + 4 stale context-questions + 3 UAT / 1 verification deploy-gated + 1 todo) — see STATE.md Deferred Items.
+
+---
+
 ## v6.6 Dossier Workflow Completion (Shipped: 2026-06-13)
 
 **Phases completed:** 6 phases (62-67), 34 plans across 5 PRs (#56-#60)
