@@ -13,7 +13,9 @@ no Copilot Cloud key — the spike only needs an OpenAI-compatible endpoint + th
 
 ---
 
-## shell_decision: assistant-ui (RECOMMENDED — pending orchestrator 1024px AR visual confirmation + human sign-off)
+## shell_decision: assistant-ui (CONFIRMED — orchestrator 1024px AR visual PASS + user sign-off 2026-06-18)
+
+> **GATE 2 visual — CONFIRMED PASS (orchestrator, 2026-06-18).** The spike was rendered at 1024px via CDP. The AR (rtl) column flips correctly (role label `المساعد` leads at inline-start = right; citation chip mirrored), Tajawal renders the Arabic glyphs, `box-shadow: none` on the message + citation surfaces, colors resolve to tokens only (`--ink`, `--surface`, `--accent` as `oklch(.58 .14 32)` — no raw hex), `text-align: start`. The user signed off `shell_decision: assistant-ui`. The CopilotKit/AG-UI runtime + the `requestContext` JWT keystone path (GATE 1) STAY; only the message/citation rendering layer uses assistant-ui (@assistant-ui/react + @assistant-ui/react-ag-ui).
 
 The production conversational shell recommendation is **`shell_decision: assistant-ui`**
 (the headless `@assistant-ui/react` + `@assistant-ui/react-ag-ui` fallback documented in

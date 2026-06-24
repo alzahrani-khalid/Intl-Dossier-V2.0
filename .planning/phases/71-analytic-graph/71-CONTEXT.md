@@ -21,9 +21,9 @@ In scope:
      working groups both belong to)
    - **engagement chains over N days** (temporal: given an entity → its sequence of
      engagements over a window)
-   PLUS, if the researcher confirms it is low-cost, a **4th "how are X and Y
-   connected?" shortest-path query** promoting the existing `get_relationship_path`
-   recursive CTE (D-01).
+     PLUS, if the researcher confirms it is low-cost, a **4th "how are X and Y
+     connected?" shortest-path query** promoting the existing `get_relationship_path`
+     recursive CTE (D-01).
 2. **Parameterized, entity-anchored launch** — each query is a template with typed
    inputs (1 entity, 2 entities, or entity + time-window N); launching from a dossier
    pre-fills the primary entity (D-02).
@@ -67,8 +67,8 @@ Out of scope (deferred — do NOT pull forward):
   chains over N days — GRAPH-01 verbatim). **Promote the existing `get_relationship_path`
   recursive CTE to a 4th "how are entity X and Y connected?" analytic query IF the
   researcher confirms it is low-cost** (the CTE already exists; it needs an INVOKER path
-  + surfacing). High analyst value, minimal new code. _(Claude's discretion — user said
-  "you decide best for the project".)_
+  - surfacing). High analyst value, minimal new code. _(Claude's discretion — user said
+    "you decide best for the project".)_
 - **D-02:** **Entity-anchored parameterized templates.** Each query is a template with
   typed inputs: **1 entity** (forum-membership, engagement-chains), **2 entities**
   (shared-committees, shortest-path), and engagement-chains adds an **adjustable
@@ -229,7 +229,7 @@ and the live code:
 
 - `frontend/src/pages/relationships/RelationshipGraphPage.tsx` — **the "Network panel"**
   to extend with an "Analyze" mode (React Flow basic/enhanced/advanced + Graph/List tabs
-  + complexity stats; `?dossierId=` anchored; calls the `graph-traversal` edge fn)
+  - complexity stats; `?dossierId=` anchored; calls the `graph-traversal` edge fn)
 - `frontend/src/routes/_protected/relationships/graph.tsx` — the route (search-param schema)
 - `frontend/src/components/relationships/{GraphVisualization,EnhancedGraphVisualization,AdvancedGraphVisualization,RelationshipNavigator}.tsx`
   — the React Flow render components (Graph view) + list navigator (List view) to reuse
@@ -263,7 +263,7 @@ and the live code:
 
 - `supabase/migrations/20251022000009_update_polymorphic_refs.sql` (≈L102/L119) —
   canonical comparison `sensitivity_level <= (SELECT clearance_level FROM profiles WHERE
-  user_id = auth.uid())` — apply to the new INVOKER analytic RPCs
+user_id = auth.uid())` — apply to the new INVOKER analytic RPCs
 - Phase 68 clearance compat shim (`get_user_clearance_level` rewritten to read
   `profiles.clearance_level`) — the canonical 1–4 source
 
@@ -366,5 +366,5 @@ and the live code:
 
 ---
 
-*Phase: 71-Analytic Graph*
-*Context gathered: 2026-06-17*
+_Phase: 71-Analytic Graph_
+_Context gathered: 2026-06-17_
