@@ -41,12 +41,14 @@ services:
   # TEI_RERANK_URL, DATABASE_URL, OTEL_EXPORTER_OTLP_ENDPOINT) and the
   # build/expose/depends_on/networks all inherit from prod UNCHANGED.
   # getCopilotModel() appends `/v1` → Ollama's OpenAI-compatible endpoint at
-  # :11434/v1 as model qwen3:30b. The keystone (anon key + caller JWT, NO
-  # service-role) is inherited from prod and MUST stay that way.
+  # :11434/v1 as model gemma4:12b (real Gemma 4 12B, GA 2026-06-03; the Mac
+  # equivalent of prod's google/gemma-4-12B-it — Ollama tag advertises the
+  # `tools` capability and is tool-call-verified). The keystone (anon key +
+  # caller JWT, NO service-role) is inherited from prod and MUST stay that way.
   agent-runtime:
     environment:
       VLLM_BASE_URL: http://host.docker.internal:11434
-      VLLM_MODEL: qwen3:30b
+      VLLM_MODEL: gemma4:12b
 
   # TEI ships no native arm64 image, so override to the CPU build and pin the amd64
   # platform (runs under emulation on Apple Silicon). Keep the SAME service name,
