@@ -16,9 +16,11 @@
   "dependencies": {
     "@ag-ui/client": "^0.0.57",
     "@ag-ui/core": "^0.0.57",
+    "@ag-ui/encoder": "^0.0.57",
     "@ag-ui/mastra": "1.0.3",
     "@ai-sdk/openai": "3.0.73",
     "@copilotkit/runtime": "^1.60.2",
+    "@hono/node-server": "1.19.14",
     "@mastra/client-js": "^1.25.0",
     "@mastra/core": "1.43.0",
     "@mastra/memory": "^1.20.5",
@@ -29,13 +31,12 @@
     "@supabase/supabase-js": "^2.100.1",
     "ai": "6.0.208",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1",
+    "hono": "4.12.26",
     "openai": "^6.39.0",
     "winston": "^3.19.0",
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@types/express": "^5.0.6",
     "@types/node": "^25.9.1",
     "esbuild": "^0.27.4",
     "tsx": "^4.22.3",
