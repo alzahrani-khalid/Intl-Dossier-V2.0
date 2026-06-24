@@ -49,7 +49,12 @@ export interface CommitPublishDigestInput {
   dossierId: string
   period: DigestFrequency
   summary: string
-  /** The caller's clearance level at generation; defaults to 1 (mirrors GenerateDigestButton). */
+  /**
+   * Clearance watermark to stamp on the digest. Omit it (the copilot path does): the
+   * publish_digest RPC then derives the caller's real clearance from their profile via
+   * COALESCE(p_clearance_level_at_generation, v_clearance). NEVER hard-default to 1 — a
+   * fixed 1 understates the watermark for higher-clearance callers (GAP-1).
+   */
   clearanceLevel?: number
 }
 
@@ -115,8 +120,10 @@ export function useApproveWrite(): UseApproveWriteResult {
 
   /**
    * Publish digest to subscribers via the already-INVOKER publish_digest RPC under the
-   * caller JWT. clearance_level_at_generation = the caller's clearance (default 1, as in
-   * GenerateDigestButton). Post-commit invalidates the digest keys.
+   * caller JWT. When clearanceLevel is omitted we pass null so the RPC stamps the caller's
+   * real clearance (LEAST(COALESCE(arg, v_clearance), v_clearance)); passing a fixed 1
+   * understated the watermark and could surface L4-sourced digests to L1 readers (GAP-1).
+   * Post-commit invalidates the digest keys.
    */
   const commitPublishDigest = async ({
     dossierId,
@@ -128,7 +135,7 @@ export function useApproveWrite(): UseApproveWriteResult {
       p_dossier_id: dossierId,
       p_period: period,
       p_summary: summary,
-      p_clearance_level_at_generation: clearanceLevel ?? 1,
+      p_clearance_level_at_generation: clearanceLevel ?? null,
     })
     if (error) throw error
 

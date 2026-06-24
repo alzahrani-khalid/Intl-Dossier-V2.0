@@ -101,7 +101,7 @@ export function GenerateDigestButton({
         p_dossier_id: dossierId,
         p_period: pickedPeriod,
         p_summary: renderSummaryText(digestPreview, pickedPeriod),
-        p_clearance_level_at_generation: digestPreview.clearance_level ?? 1,
+        p_clearance_level_at_generation: digestPreview.clearance_level ?? null,
       })
       if (error) throw error
       return data
