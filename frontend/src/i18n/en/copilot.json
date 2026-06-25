@@ -83,6 +83,7 @@
       },
       "bilingual": "English and Arabic",
       "none": "Not set",
+      "assigneeSelf": "Assigned to you",
       "count": "{{count}} linked"
     },
     "approve": "Approve",

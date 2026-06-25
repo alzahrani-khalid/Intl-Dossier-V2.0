@@ -10,9 +10,13 @@ export const createUserClient = supa.createUserClient
  * propose_work_item (GENUI-02/03, D-01/D-03) — PROPOSE-ONLY write-tool.
  *
  * The agent calls this when the user asks to CREATE a work item (task) and LINK it to
- * one or more dossiers. It VALIDATES the model-supplied args (bounded title + assignee
- * UUID + priority enum + non-empty dossier-UUID array + inheritance-source enum) and
- * ECHOES them as a structured proposal for the HITL confirmation card (73-03). It NEVER
+ * one or more dossiers. It VALIDATES the model-supplied args (bounded title + OPTIONAL
+ * assignee UUID + priority enum + OPTIONAL dossier-UUID array + inheritance-source enum)
+ * and ECHOES them as a structured proposal for the HITL confirmation card (73-03). The
+ * assignee and dossier links are optional because the model cannot know the caller's own
+ * UUID (JWT-derived) nor a dossier UUID it has not looked up — "create a task for me"
+ * arrives with neither, and the frontend defaults the assignee to the caller at commit
+ * (D-03). It NEVER
  * commits: it does not call the `tasks-create` edge function nor insert into
  * `work-item-dossiers`. The frontend approve-handler commits under the caller JWT on
  * approval (D-03).
@@ -30,15 +34,19 @@ export const proposeWorkItemTool = createTool({
     'Propose creating a work item (task) and linking it to one or more dossiers, for the user to confirm. Use this when the user asks to create a task, assignment, or action item. This only proposes the action — nothing is created until the user approves the confirmation card.',
   inputSchema: z.object({
     title: z.string().min(1).max(500).describe('The work item title'),
-    assigneeId: z.string().uuid().describe('The UUID of the user the work item is assigned to'),
+    assigneeId: z
+      .string()
+      .uuid()
+      .optional()
+      .describe('Omit to assign to the current user; never invent a UUID'),
     priority: z
       .enum(['low', 'medium', 'high', 'urgent'])
       .optional()
       .describe('Optional priority: low, medium, high, or urgent'),
     dossierIds: z
       .array(z.string().uuid())
-      .min(1)
-      .describe('One or more dossier UUIDs to link the work item to'),
+      .optional()
+      .describe('Dossier UUIDs to link the work item to; include ONLY UUIDs from a lookup tool, omit if unknown'),
     inheritanceSource: z
       .enum(['direct', 'engagement', 'after_action', 'position', 'mou'])
       .default('direct')
@@ -59,9 +67,9 @@ export const proposeWorkItemTool = createTool({
 
     const args = input as {
       title: string
-      assigneeId: string
+      assigneeId?: string
       priority?: 'low' | 'medium' | 'high' | 'urgent'
-      dossierIds: string[]
+      dossierIds?: string[]
       inheritanceSource?: 'direct' | 'engagement' | 'after_action' | 'position' | 'mou'
     }
 

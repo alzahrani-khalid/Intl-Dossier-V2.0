@@ -60,9 +60,11 @@ export interface CommitPublishDigestInput {
 
 export interface CommitWorkItemInput {
   title: string
-  assigneeId: string
+  /** Omit to assign to the current user — defaulted from the caller JWT (resolveUid) at commit. */
+  assigneeId?: string
   priority?: WorkItemPriority
-  dossierIds: string[]
+  /** Omit/empty links nothing — the length>0 guard skips the work-item-dossiers step. */
+  dossierIds?: string[]
   inheritanceSource?: string
 }
 
@@ -157,6 +159,13 @@ export function useApproveWrite(): UseApproveWriteResult {
   }: CommitWorkItemInput): Promise<{ taskId: string }> => {
     const workItemType = 'task' as const
 
+    // Default the assignee to the caller (JWT) when the proposal omitted it — the model
+    // never knows the caller's UUID, so "create a task for me" arrives without assigneeId.
+    const resolvedAssigneeId =
+      assigneeId != null && assigneeId.length > 0 ? assigneeId : await resolveUid()
+    // Tolerate an absent dossier link list; the length>0 guard below skips the link step.
+    const linkedDossierIds = dossierIds ?? []
+
     const { data: taskData, error: taskError } = await supabase.functions.invoke<{
       task: { id: string }
     }>('tasks-create', {
@@ -164,26 +173,26 @@ export function useApproveWrite(): UseApproveWriteResult {
         title,
         priority,
         workflow_stage: 'todo',
-        assignee_id: assigneeId,
+        assignee_id: resolvedAssigneeId,
       },
     })
     if (taskError) throw new Error(taskError.message || 'Task creation failed')
     const taskId = taskData?.task?.id
     if (!taskId) throw new Error('No task ID returned')
 
-    if (dossierIds.length > 0) {
+    if (linkedDossierIds.length > 0) {
       const { error: linkError } = await supabase.functions.invoke('work-item-dossiers', {
         body: {
           work_item_type: workItemType,
           work_item_id: taskId,
-          dossier_ids: dossierIds,
+          dossier_ids: linkedDossierIds,
           inheritance_source: inheritanceSource ?? 'direct',
         },
       })
       if (linkError) throw new Error(linkError.message || 'Dossier link failed')
     }
 
-    const primaryDossierId = dossierIds[0]
+    const primaryDossierId = linkedDossierIds[0]
     await queryClient.invalidateQueries({ queryKey: workItemKeys.lists() })
     if (primaryDossierId != null) {
       await queryClient.invalidateQueries({ queryKey: workItemKeys.byDossier(primaryDossierId) })

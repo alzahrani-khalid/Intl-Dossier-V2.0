@@ -327,6 +327,47 @@ describe('73-02 propose-only write-tools: HITL propose-only contract', () => {
     })
   }
 
+  it('propose_work_item proposes with assigneeId OMITTED (title only) and still validates a provided UUID', async () => {
+    const mod = await import('./propose-work-item.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    const exec = (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute
+
+    // (a) Omitted assigneeId + omitted dossierIds: the model cannot know the caller's UUID,
+    // so "create a task for me" must STILL propose — the frontend defaults the assignee at
+    // commit. This is the exact flow that the required `assigneeId: z.string().uuid()` broke.
+    const omitted = (await exec(
+      { title: 'Draft the agenda' },
+      { requestContext: rcWith(JWT) },
+    )) as { proposed?: boolean; action?: string; args?: Record<string, unknown> }
+    expect(omitted.proposed, 'omitted assigneeId must still propose').toBe(true)
+    expect(omitted.action).toBe('work_item')
+    expect(omitted.args?.title).toBe('Draft the agenda')
+    expect(omitted.args?.assigneeId, 'no invented UUID when omitted').toBeUndefined()
+
+    // (b) A provided assigneeId UUID still validates + echoes unchanged.
+    const provided = (await exec(
+      { title: 'Draft the agenda', assigneeId: VALID_UUID },
+      { requestContext: rcWith(JWT) },
+    )) as { proposed?: boolean; args?: Record<string, unknown> }
+    expect(provided.proposed, 'a provided UUID must propose').toBe(true)
+    expect(provided.args?.assigneeId).toBe(VALID_UUID)
+
+    // (c) The exact value that broke the live flow ("current_user_id_placeholder") is not a
+    // UUID — Zod rejects it, so the tool never proposes an invalid assignee (no throw needed).
+    let invalidProposed: unknown
+    try {
+      invalidProposed = (
+        (await exec(
+          { title: 'Draft the agenda', assigneeId: 'current_user_id_placeholder' },
+          { requestContext: rcWith(JWT) },
+        )) as { proposed?: boolean }
+      ).proposed
+    } catch {
+      invalidProposed = undefined
+    }
+    expect(invalidProposed, 'a non-UUID assigneeId must NOT propose').not.toBe(true)
+  })
+
   it('propose_brief: empty authorization → neutral { proposed: false }, never builds a client', async () => {
     createUserClientSpy.mockClear()
     const mod = await import('./propose-brief.js')
