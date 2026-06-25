@@ -444,6 +444,47 @@ _A living document updated after each milestone. Lessons feed forward into futur
 
 ---
 
+## Milestone: v7.0 — Intelligence Engine
+
+**Shipped:** 2026-06-24
+**Phases:** 7 (68–74) | **Plans:** 49 | **Scope:** 213 commits, 576 files (+75,365 / −31,333) over 11 days
+
+### What Was Built
+
+A sovereign, Arabic-first intelligence layer over dossiers: signals capture + RTL triage (P69), clearance-filtered recurring digests + multi-channel threshold alerts (P70), a clearance-aware analytic graph over Postgres recursive CTEs (P71), and an on-prem agentic copilot (Mastra + CopilotKit/AG-UI over vLLM/Gemma-4-12B + TEI) that reads gated data via hybrid RAG and commits HITL writes under the caller's JWT with token-bound generative UI (P72–P73) — all gated by P68's clearance keystone, with AnythingLLM retired from the critical path and a bilingual CI eval gate (P74).
+
+### What Worked
+
+- **Keystone-first sequencing.** P68 reconciled the clearance scale and put the AI path under the caller's JWT before any feature RLS was authored — so every later phase inherited one correct enforcement model (the integration check later confirmed the scale was uniform across all 7 phases).
+- **Parallel infra track + thin-slice spike.** Standing up vLLM/TEI config early and proving the AG-UI/requestContext keystone with a throwaway Option-C spike de-risked the full Mastra wiring.
+- **Decoupling DB/RLS proofs from the GPU deploy-gate.** P72's security keystone was proven live via authenticated impersonation (L1 ⊂ L3, zero above-clearance) through the MCP — independent of the unprovisioned GPU host — so the security claim didn't wait on infra.
+- **Indistinguishable-empty as a first-class contract**, enforced at the RPC layer and in UI copy, kept "no data" and "above clearance" identical end-to-end.
+
+### What Was Inefficient
+
+- **The deploy-gate dominated the close.** P72/73/74 live verification (copilot e2e, hybrid-RAG retrieval, EVAL-01/02/03 thresholds) all blocked on an on-prem GPU/TEI stack that was never stood up — so the milestone ships _code-complete, live-verification-deferred_. The "done" and "verified-done" gates were entangled and only separated at audit time.
+- **Two phases (68, 73) shipped without a VERIFICATION.md** — caught only by the milestone audit, which authored them retroactively.
+- **The `milestone.complete` CLI dumped 49 raw per-plan one-liners** (code-review fragments, empty "Status:" stubs) into MILESTONES.md — required a full hand-rewrite into a scoped summary.
+
+### Patterns Established
+
+- **RLS-before-rerank** hybrid RAG (TEI embed → INVOKER RPC under JWT → TEI rerank) so clearance filters before the reranker sees a row.
+- **HITL propose/commit split**: propose-only agent tools validate + echo for a confirmation card; the commit path runs under the caller's JWT with post-commit TanStack cache invalidation.
+- **Allowlisted token-bound generative UI** — a fixed `makeAssistantToolUI` renderer set rendering the app's own components inline, never free-form model HTML.
+
+### Key Lessons
+
+1. **The VERIFICATION.md-absence lesson recurred a THIRD time** (v6.3 → v6.4 → v7.0, phases 68 & 73). The v6.4 retrospective already concluded discipline-dependent lessons must be enforced by tooling; phase-close still does not emit a VERIFICATION.md, so it keeps recurring. Until the tooling emits it, every milestone audit will keep finding it.
+2. **Separate "code-complete" from "verified-complete" when verification depends on infra you don't control.** Gating live AI verification behind an unprovisioned GPU stack produced a milestone genuinely shipped in code but not live-proven — track those as explicit deploy-gated deferred items, not as "done."
+3. **A clearance watermark must be derived server-side, never defaulted client-side** — GAP-1 (`clearance_level ?? 1`) understated the digest watermark; the fix was to pass null and let the RPC's `LEAST(COALESCE(arg, v_clearance), v_clearance)` derive it.
+
+### Cost Observations
+
+- Model mix: opus executor + opus planner (per config); 213 commits over 11 days.
+- A standing pattern: the same on-prem GPU/TEI deploy-gate recurred in P72, P73, and P74 — one unprovisioned dependency deferred verification for three consecutive phases.
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution

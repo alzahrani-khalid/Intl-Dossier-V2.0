@@ -15,7 +15,7 @@
  */
 import type { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Copy, Check } from 'lucide-react'
+import { Copy, Check, RotateCcw } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeSanitize from 'rehype-sanitize'
@@ -23,9 +23,12 @@ import {
   ThreadPrimitive,
   MessagePrimitive,
   ActionBarPrimitive,
+  useMessage,
   type TextMessagePartComponent,
+  type ReasoningMessagePartComponent,
 } from '@assistant-ui/react'
 import { CitationCard } from './CitationCard'
+import { GenericToolResultCard } from './genui/GenericToolResultCard'
 
 /**
  * The assistant-ui Text message-part: render the part text as sanitized markdown.
@@ -42,13 +45,77 @@ const MarkdownText: TextMessagePartComponent = ({ text }): ReactElement => {
   )
 }
 
+/**
+ * Reasoning message-part — a collapsible <details> disclosure, COLLAPSED by default.
+ * The model's chain-of-thought is rendered as plain text (never markdown/HTML — no
+ * injection surface) inside a muted token-bound panel. After the latency fix suppresses
+ * thinking upstream this rarely streams, but when reasoning IS shown it stays tucked
+ * away until the analyst opens it. Native <details> is keyboard-operable as-is.
+ */
+const ReasoningPart: ReasoningMessagePartComponent = ({ text }): ReactElement | null => {
+  const { t } = useTranslation('copilot')
+  if (text.length === 0) return null
+  return (
+    <details className="copilot-reasoning">
+      <summary className="copilot-reasoning__summary">{t('reasoning.label')}</summary>
+      <div className="copilot-reasoning__body">{text}</div>
+    </details>
+  )
+}
+
+/**
+ * Retry affordance shown ONLY when the run errored (RUN_ERROR → message status
+ * incomplete/error). Neutral copy + a Retry control that re-runs the turn via the
+ * assistant-ui reload action. Indistinguishable-empty: the body names no reason.
+ */
+function AssistantRetry(): ReactElement | null {
+  const { t } = useTranslation('copilot')
+  const hasError = useMessage((m) => {
+    const s = m.status
+    return s != null && s.type === 'incomplete' && s.reason === 'error'
+  })
+
+  if (!hasError) return null
+
+  return (
+    <div className="copilot-retry" role="alert">
+      <span className="copilot-retry__text">{t('error.body')}</span>
+      <ActionBarPrimitive.Root>
+        <ActionBarPrimitive.Reload asChild>
+          <button
+            type="button"
+            className="btn-ghost inline-flex min-h-9 items-center gap-2 px-3 text-start"
+          >
+            <RotateCcw size={14} />
+            {t('error.retry')}
+          </button>
+        </ActionBarPrimitive.Reload>
+      </ActionBarPrimitive.Root>
+    </div>
+  )
+}
+
 function AssistantMessage(): ReactElement {
   const { t } = useTranslation('copilot')
 
   return (
     <MessagePrimitive.Root className="copilot-message" data-role="assistant">
       <div className="copilot-message__role">{t('title')}</div>
-      <MessagePrimitive.Parts components={{ Text: MarkdownText, Source: CitationCard }} />
+      {/* Text → sanitized markdown; Source → citation chip; any tool with NO dedicated
+          renderer (the FIXED-allowlist genUI + propose_* HITL cards still win, resolved
+          as toolUIs[name] ?? Fallback) → the generic token-bound tool card. The parts
+          live in an aria-live="polite" region so the streamed answer is announced. */}
+      <div className="copilot-message__live" aria-live="polite">
+        <MessagePrimitive.Parts
+          components={{
+            Text: MarkdownText,
+            Reasoning: ReasoningPart,
+            Source: CitationCard,
+            tools: { Fallback: GenericToolResultCard },
+          }}
+        />
+      </div>
+      <AssistantRetry />
       <div className="copilot-message__actions">
         <ActionBarPrimitive.Root hideWhenRunning autohide="not-last">
           <ActionBarPrimitive.Copy asChild>

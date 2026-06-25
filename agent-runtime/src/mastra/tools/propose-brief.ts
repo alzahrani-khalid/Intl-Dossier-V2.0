@@ -2,6 +2,7 @@ import { createTool } from '@mastra/core/tools'
 import { z } from 'zod'
 import OpenAI from 'openai'
 import * as supa from './_supabase.js'
+import { isUuidShape } from './_uuid.js'
 import { getCopilotModel } from '../../llm-router.js'
 
 // Re-export the keystone helper so a `vi.spyOn(supaModule, 'createUserClient')` in the
@@ -115,7 +116,9 @@ export const proposeBriefTool = createTool({
   description:
     'Propose a generated bilingual (English + Arabic) brief draft for a dossier, for the user to confirm. Use this when the user asks to generate, draft, or write a brief for a dossier. This only proposes the draft — nothing is saved until the user approves the confirmation card.',
   inputSchema: z.object({
-    dossierId: z.string().uuid().describe('The dossier UUID to draft a brief for'),
+    dossierId: z
+      .string()
+      .describe('The dossier UUID to draft a brief for (must be a UUID from a lookup, never a name)'),
   }),
   outputSchema: z.object({
     proposed: z.boolean(),
@@ -139,6 +142,13 @@ export const proposeBriefTool = createTool({
 
     const args = input as { dossierId: string }
 
+    // Lenient UUID-shape gate (T-73-02-02): accept any UUID-shaped id (incl. non-RFC-4122 seed
+    // ids), but a name/placeholder yields the neutral shape BEFORE building a client or reading.
+    const dossierId = args.dossierId.trim()
+    if (!isUuidShape(dossierId)) {
+      return { ...NEUTRAL }
+    }
+
     try {
       // Read the dossier the brief summarizes under the caller JWT (RLS-gated). Mirrors
       // getDossierTool's read so above-clearance dossiers simply return no row.
@@ -153,7 +163,7 @@ export const proposeBriefTool = createTool({
           created_at, updated_at
         `,
         )
-        .eq('id', args.dossierId)
+        .eq('id', dossierId)
         .eq('is_active', true)
         .single()
       if (error || !data) {
@@ -169,7 +179,7 @@ export const proposeBriefTool = createTool({
         proposed: true,
         action: 'brief',
         args: {
-          dossierId: args.dossierId,
+          dossierId,
           content,
         },
       }

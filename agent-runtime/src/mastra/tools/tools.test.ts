@@ -34,6 +34,9 @@ const fakeEmptyClient = {
     const chain = (): unknown => builder
     builder.select = chain
     builder.eq = chain
+    builder.not = chain
+    builder.or = chain
+    builder.ilike = chain
     builder.order = chain
     builder.limit = chain
     // .single() and the awaited query both resolve to an empty PostgREST result.
@@ -183,6 +186,31 @@ describe('reads-only tool roster: indistinguishable-empty (every tool)', () => {
       expect(JSON.stringify(result)).not.toMatch(FORBIDDEN)
     }
   })
+
+  it('get_dossier accepts a NAME (non-UUID) — loosened schema validates, resolves via ILIKE, stays empty', async () => {
+    createUserClientSpy.mockClear()
+    const mod = await import('./dossier-lookups.js')
+    const tool = (mod as Record<string, unknown>).getDossierTool as {
+      execute: (i: unknown, c: unknown) => Promise<unknown>
+    }
+    // The model passed a dossier NAME instead of a UUID (live evidence). The loosened
+    // z.string() schema accepts it (no Zod 'Invalid UUID'), execute builds the client from the
+    // JWT and runs the name→id ILIKE resolution; an empty match yields the neutral
+    // { dossier: null } (indistinguishable-empty).
+    const result = await tool.execute(
+      { dossierId: 'G20 Data Gaps Initiative' },
+      { requestContext: rcWith(JWT) },
+    )
+    expect(
+      (result as { error?: boolean })?.error,
+      'a name must validate (no Zod rejection)',
+    ).not.toBe(true)
+    expect(createUserClientSpy, 'name path still builds the client from the caller JWT').toHaveBeenCalledWith(
+      JWT,
+    )
+    expect(result).toEqual({ dossier: null })
+    expect(JSON.stringify(result)).not.toMatch(FORBIDDEN)
+  })
 })
 
 describe('reads-only tool roster: least-privilege (source-level guards)', () => {
@@ -191,6 +219,7 @@ describe('reads-only tool roster: least-privilege (source-level guards)', () => 
   it('no tool source references SUPABASE_SERVICE_ROLE_KEY', () => {
     const files = [
       '_supabase.ts',
+      '_uuid.ts',
       'hybrid-rag-search.ts',
       'read-signals.ts',
       'query-graph.ts',
@@ -326,6 +355,87 @@ describe('73-02 propose-only write-tools: HITL propose-only contract', () => {
     })
   }
 
+  it('propose_work_item is lenient + self-normalizing: invalid assignee/dossier ids normalize, valid survive', async () => {
+    const mod = await import('./propose-work-item.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    const exec = (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute
+
+    // (a) Omitted assigneeId + omitted dossierIds: "create a task for me" must STILL propose —
+    // the frontend defaults the assignee at commit. assigneeId echoes undefined; dossierIds [].
+    const omitted = (await exec(
+      { title: 'Draft the agenda' },
+      { requestContext: rcWith(JWT) },
+    )) as { proposed?: boolean; action?: string; args?: Record<string, unknown> }
+    expect(omitted.proposed, 'omitted assigneeId must still propose').toBe(true)
+    expect(omitted.action).toBe('work_item')
+    expect(omitted.args?.title).toBe('Draft the agenda')
+    expect(omitted.args?.assigneeId, 'no invented UUID when omitted').toBeUndefined()
+    expect(omitted.args?.dossierIds, 'omitted dossierIds normalize to []').toEqual([])
+
+    // (b) The exact live-failure values — "CURRENT_USER_ID" (EN) and "" (AR) — must NOT be
+    // rejected: they NORMALIZE to undefined and STILL propose (Round 2 contract). The model
+    // presenting junk instead of omitting is no longer a hard failure.
+    for (const junk of ['CURRENT_USER_ID', 'current_user_id_placeholder', '', '  ', 'Jane Doe']) {
+      const r = (await exec(
+        { title: 'Draft the agenda', assigneeId: junk },
+        { requestContext: rcWith(JWT) },
+      )) as { proposed?: boolean; args?: Record<string, unknown> }
+      expect(r.proposed, `assigneeId ${JSON.stringify(junk)} must still propose`).toBe(true)
+      expect(
+        r.args?.assigneeId,
+        `assigneeId ${JSON.stringify(junk)} must normalize to undefined`,
+      ).toBeUndefined()
+    }
+
+    // (c) A valid UUID assignee is preserved (trimmed).
+    const provided = (await exec(
+      { title: 'Draft the agenda', assigneeId: `  ${VALID_UUID}  ` },
+      { requestContext: rcWith(JWT) },
+    )) as { proposed?: boolean; args?: Record<string, unknown> }
+    expect(provided.proposed, 'a provided UUID must propose').toBe(true)
+    expect(provided.args?.assigneeId, 'a valid UUID is preserved').toBe(VALID_UUID)
+
+    // (d) Mixed dossierIds: invalid entries are dropped, valid UUIDs survive.
+    const mixed = (await exec(
+      { title: 'Draft the agenda', dossierIds: [VALID_UUID, 'not-a-uuid', ''] },
+      { requestContext: rcWith(JWT) },
+    )) as { proposed?: boolean; args?: Record<string, unknown> }
+    expect(mixed.proposed).toBe(true)
+    expect(mixed.args?.dossierIds, 'invalid dossier ids dropped, valid survive').toEqual([
+      VALID_UUID,
+    ])
+
+    // (e) All-invalid dossierIds normalize to an empty array (the frontend link step is skipped).
+    const allInvalid = (await exec(
+      { title: 'Draft the agenda', dossierIds: ['nope', 'CURRENT_DOSSIER'] },
+      { requestContext: rcWith(JWT) },
+    )) as { args?: Record<string, unknown> }
+    expect(allInvalid.args?.dossierIds, 'all-invalid dossierIds → []').toEqual([])
+
+    // (f) inheritanceSource: the model presents "none" (live evidence) — it must NORMALIZE to
+    // the safe default 'direct' and STILL propose, not hard-reject the whole call.
+    for (const bad of ['none', '', 'whatever']) {
+      const r = (await exec(
+        { title: 'Draft the agenda', inheritanceSource: bad },
+        { requestContext: rcWith(JWT) },
+      )) as { proposed?: boolean; args?: Record<string, unknown> }
+      expect(r.proposed, `inheritanceSource ${JSON.stringify(bad)} must still propose`).toBe(true)
+      expect(
+        r.args?.inheritanceSource,
+        `inheritanceSource ${JSON.stringify(bad)} normalizes to 'direct'`,
+      ).toBe('direct')
+    }
+
+    // (g) A valid inheritanceSource is preserved.
+    const validSource = (await exec(
+      { title: 'Draft the agenda', inheritanceSource: 'engagement' },
+      { requestContext: rcWith(JWT) },
+    )) as { args?: Record<string, unknown> }
+    expect(validSource.args?.inheritanceSource, 'valid inheritanceSource preserved').toBe(
+      'engagement',
+    )
+  })
+
   it('propose_brief: empty authorization → neutral { proposed: false }, never builds a client', async () => {
     createUserClientSpy.mockClear()
     const mod = await import('./propose-brief.js')
@@ -405,6 +515,171 @@ describe('73-02 propose-only write-tools: HITL propose-only contract', () => {
     }
     expect(src, 'AR prompt must keep the read-only removal').not.toContain('للقراءة فقط')
     expect(src, 'AR prompt must mention proposing (يقترح/تقترح)').toMatch(/تقترح|اقتراح|يقترح/)
+  })
+})
+
+// ── Round 4: lenient UUID-shape for the id-taking propose tools ────────────────
+// propose_brief / propose_publish_digest / propose_signal_status loosened dossierId/signalId
+// from strict z.string().uuid() to a lenient UUID-shape check. A non-RFC-4122 SEED id (the
+// staging ids the model legitimately gets from get_dossier, e.g. b0000001-…0003 — Zod's
+// strict .uuid() rejects it because its version/variant nibbles are 0) is now ACCEPTED; a
+// name/placeholder is still REJECTED to the neutral { proposed: false } (T-73-02-02 holds).
+describe('round-4: lenient UUID-shape on the id-taking propose tools', () => {
+  const SEED_ID = 'b0000001-0000-0000-0000-000000000003'
+  const NAME = 'G20 Data Gaps Initiative'
+
+  it('propose_publish_digest accepts a non-RFC-4122 seed id (echoes it) and rejects a name', async () => {
+    const mod = await import('./propose-publish-digest.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    const exec = (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute
+
+    const ok = (await exec(
+      { dossierId: SEED_ID, period: 'weekly', summary: 'A short digest.' },
+      { requestContext: rcWith(JWT) },
+    )) as { proposed?: boolean; args?: Record<string, unknown> }
+    expect(ok.proposed, 'a UUID-shaped seed id must propose').toBe(true)
+    expect(ok.args?.dossierId).toBe(SEED_ID)
+
+    const rejected = (await exec(
+      { dossierId: NAME, period: 'weekly', summary: 'A short digest.' },
+      { requestContext: rcWith(JWT) },
+    )) as { proposed?: boolean }
+    expect(rejected.proposed, 'a name must NOT propose (T-73-02-02)').toBe(false)
+  })
+
+  it('propose_signal_status accepts a non-RFC-4122 seed id (echoes it) and rejects a non-UUID', async () => {
+    const mod = await import('./propose-signal-status.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    const exec = (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute
+
+    const ok = (await exec(
+      { signalId: SEED_ID, action: 'dismiss' },
+      { requestContext: rcWith(JWT) },
+    )) as { proposed?: boolean; args?: Record<string, unknown> }
+    expect(ok.proposed).toBe(true)
+    expect(ok.args?.signalId).toBe(SEED_ID)
+
+    const rejected = (await exec(
+      { signalId: 'not-a-uuid', action: 'dismiss' },
+      { requestContext: rcWith(JWT) },
+    )) as { proposed?: boolean }
+    expect(rejected.proposed, 'a non-UUID signalId must NOT propose').toBe(false)
+  })
+
+  it('propose_brief accepts a seed id (reaches the read under the JWT); a name is rejected before any read', async () => {
+    createUserClientSpy.mockClear()
+    const mod = await import('./propose-brief.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    const exec = (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute
+
+    // A UUID-shaped seed id passes the gate → builds the read client from the JWT (the fake
+    // returns no row, so the result is the neutral empty — but the client WAS built).
+    const seed = (await exec({ dossierId: SEED_ID }, { requestContext: rcWith(JWT) })) as {
+      proposed?: boolean
+    }
+    expect(createUserClientSpy, 'a UUID-shaped seed id reaches the read under the caller JWT').toHaveBeenCalledWith(
+      JWT,
+    )
+    expect(seed.proposed, 'empty fake read → neutral').toBe(false)
+    expect(JSON.stringify(seed)).not.toMatch(FORBIDDEN)
+
+    // A name is rejected by the shape gate BEFORE any client is built (no read attempted).
+    createUserClientSpy.mockClear()
+    const named = (await exec({ dossierId: NAME }, { requestContext: rcWith(JWT) })) as {
+      proposed?: boolean
+    }
+    expect(createUserClientSpy, 'a name must be rejected before building a client').not.toHaveBeenCalled()
+    expect(named.proposed).toBe(false)
+  })
+})
+
+// ── Final sweep: lenient UUID-shape on the remaining read tools + shared helper ──────
+// generate_digest_preview / query_graph / read_signals loosened from strict z.string().uuid()
+// to the shared _uuid shape check. A non-RFC-4122 SEED id (e.g. b0000001-…0003) is ACCEPTED;
+// a name is REJECTED to the neutral empty (required ids) or IGNORED (optional filters), and
+// no id-shaped value reaches the DB malformed — T-73-02-02 holds.
+describe('final sweep: lenient UUID-shape on the remaining read tools', () => {
+  const SEED_ID = 'b0000001-0000-0000-0000-000000000003'
+  const NAME = 'G20 Data Gaps Initiative'
+
+  it('the shared _uuid helper accepts seed shapes (trim-tolerant) and rejects names', async () => {
+    const { isUuidShape, uuidShape } = await import('./_uuid.js')
+    expect(isUuidShape(SEED_ID)).toBe(true)
+    expect(isUuidShape(`  ${SEED_ID}  `)).toBe(true)
+    expect(isUuidShape(VALID_UUID)).toBe(true)
+    expect(isUuidShape(NAME)).toBe(false)
+    expect(isUuidShape('')).toBe(false)
+    expect(uuidShape).toBeInstanceOf(RegExp)
+  })
+
+  it('generate_digest_preview accepts a seed id (reaches the RPC) and rejects a name (no client)', async () => {
+    const mod = await import('./generate-digest.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    const exec = (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute
+
+    createUserClientSpy.mockClear()
+    fakeEmptyClient.rpc.mockClear()
+    const seed = await exec({ dossierId: SEED_ID, period: 'weekly' }, { requestContext: rcWith(JWT) })
+    expect(createUserClientSpy, 'a seed id reaches the RPC under the JWT').toHaveBeenCalledWith(JWT)
+    expect(fakeEmptyClient.rpc).toHaveBeenCalledWith(
+      'generate_digest',
+      expect.objectContaining({ p_dossier_id: SEED_ID }),
+    )
+    expect((seed as { error?: boolean })?.error, 'a seed id must validate').not.toBe(true)
+    expect(JSON.stringify(seed)).not.toMatch(FORBIDDEN)
+
+    createUserClientSpy.mockClear()
+    const named = await exec({ dossierId: NAME, period: 'weekly' }, { requestContext: rcWith(JWT) })
+    expect(createUserClientSpy, 'a name is rejected before building a client').not.toHaveBeenCalled()
+    expect((named as { error?: boolean })?.error).not.toBe(true)
+    expect(JSON.stringify(named)).not.toMatch(FORBIDDEN)
+  })
+
+  it('query_graph accepts a seed entityId (reaches the RPC) and rejects a name (no client)', async () => {
+    const mod = await import('./query-graph.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    const exec = (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute
+
+    createUserClientSpy.mockClear()
+    fakeEmptyClient.rpc.mockClear()
+    const seed = await exec(
+      { queryType: 'forum_membership', entityId: SEED_ID },
+      { requestContext: rcWith(JWT) },
+    )
+    expect(createUserClientSpy).toHaveBeenCalledWith(JWT)
+    expect(fakeEmptyClient.rpc).toHaveBeenCalledWith(
+      'query_graph',
+      expect.objectContaining({ p_entity_id: SEED_ID }),
+    )
+    expect((seed as { error?: boolean })?.error).not.toBe(true)
+
+    createUserClientSpy.mockClear()
+    const named = await exec(
+      { queryType: 'forum_membership', entityId: NAME },
+      { requestContext: rcWith(JWT) },
+    )
+    expect(createUserClientSpy, 'a name entityId is rejected before building a client').not.toHaveBeenCalled()
+    expect((named as { error?: boolean })?.error).not.toBe(true)
+  })
+
+  it('read_signals ignores a non-UUID dossierId (p_dossier_id null) and passes a seed id through', async () => {
+    const mod = await import('./read-signals.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    const exec = (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute
+
+    fakeEmptyClient.rpc.mockClear()
+    await exec({ dossierId: NAME }, { requestContext: rcWith(JWT) })
+    expect(fakeEmptyClient.rpc, 'a non-UUID dossier filter degrades to null').toHaveBeenCalledWith(
+      'read_signals',
+      expect.objectContaining({ p_dossier_id: null }),
+    )
+
+    fakeEmptyClient.rpc.mockClear()
+    await exec({ dossierId: SEED_ID }, { requestContext: rcWith(JWT) })
+    expect(fakeEmptyClient.rpc, 'a seed id is passed through as the filter').toHaveBeenCalledWith(
+      'read_signals',
+      expect.objectContaining({ p_dossier_id: SEED_ID }),
+    )
   })
 })
 

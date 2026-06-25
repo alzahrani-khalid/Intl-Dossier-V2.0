@@ -51,9 +51,9 @@ type DigestArgs = { dossierId: string; period: 'daily' | 'weekly' | 'monthly'; s
 type SignalArgs = { signalId: string; action: SignalCommitAction; reason?: string }
 type WorkItemArgs = {
   title: string
-  assigneeId: string
+  assigneeId?: string
   priority?: WorkItemPriority
-  dossierIds: string[]
+  dossierIds?: string[]
   inheritanceSource?: string
 }
 type BriefArgs = { dossierId: string; content: BriefContent }
@@ -223,14 +223,21 @@ const WorkItemToolUI = makeAssistantToolUI<ProposeEnvelope<WorkItemArgs>, Approv
 
     const summaryFields: ConfirmSummaryField[] = [
       { labelKey: 'confirm.field.title', value: op.title },
-      { labelKey: 'confirm.field.assignee', value: op.assigneeId },
+      {
+        labelKey: 'confirm.field.assignee',
+        // Omitted assigneeId means the work item is assigned to the caller at commit.
+        value:
+          op.assigneeId != null && op.assigneeId.length > 0
+            ? op.assigneeId
+            : t('confirm.value.assigneeSelf'),
+      },
       {
         labelKey: 'confirm.field.priority',
         value: op.priority ? t(`confirm.value.priority.${op.priority}`) : t('confirm.value.none'),
       },
       {
         labelKey: 'confirm.field.dossiers',
-        value: t('confirm.value.count', { count: op.dossierIds.length }),
+        value: t('confirm.value.count', { count: op.dossierIds?.length ?? 0 }),
       },
     ]
 

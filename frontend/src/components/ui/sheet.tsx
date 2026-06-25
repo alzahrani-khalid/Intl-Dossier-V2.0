@@ -43,9 +43,19 @@ const sheetVariants = cva(
         right:
           'inset-y-0 end-0 h-full w-3/4 border-s border-[var(--line)] ltr:data-[state=closed]:slide-out-to-right ltr:data-[state=open]:slide-in-from-right rtl:data-[state=closed]:slide-out-to-left rtl:data-[state=open]:slide-in-from-left sm:max-w-sm',
       },
+      // Width cap. `content` keeps the narrow detail-drawer default (sm:max-w-sm from the
+      // side variant). `wide` opts a drawer into the analyst-workstation width — it lifts
+      // that cap to min(720px, 92vw) so a `w-[min(720px,92vw)]` className is actually
+      // honored (tailwind-merge drops the earlier sm:max-w-sm). Without an explicit
+      // size, behavior is unchanged for every existing consumer.
+      size: {
+        content: '',
+        wide: 'sm:max-w-[min(720px,92vw)]',
+      },
     },
     defaultVariants: {
       side: 'right',
+      size: 'content',
     },
   },
 )
@@ -61,12 +71,12 @@ interface SheetContentProps
 const SheetContent = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Content>,
   SheetContentProps
->(({ side = 'right', className, children, accessibleTitle, ...props }, ref) => (
+>(({ side = 'right', size, className, children, accessibleTitle, ...props }, ref) => (
   <SheetPortal>
     <SheetOverlay />
     <SheetPrimitive.Content
       ref={ref}
-      className={cn(sheetVariants({ side }), className)}
+      className={cn(sheetVariants({ side, size }), className)}
       aria-describedby={undefined}
       {...props}
     >

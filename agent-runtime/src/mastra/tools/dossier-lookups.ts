@@ -1,6 +1,7 @@
 import { createTool } from '@mastra/core/tools'
 import { z } from 'zod'
 import * as supa from './_supabase.js'
+import { isUuidShape } from './_uuid.js'
 
 // Re-export the keystone helper; every body calls `supa.createUserClient(...)` so the
 // tests' `vi.mock('./_supabase.js')` intercepts the client build.
@@ -19,6 +20,38 @@ const DOSSIER_TYPES = [
 ] as const
 
 /**
+ * Resolve a get_dossier identifier to a dossier UUID. A well-formed UUID is returned as-is;
+ * otherwise the value is treated as a name/title and matched (case-insensitive, partial) on
+ * name_en/name_ar — best single active match. Returns null when nothing matches (the caller
+ * then surfaces the neutral `{ dossier: null }`). The term is sanitized for the PostgREST
+ * or-filter — its delimiters `,()*` are stripped — before interpolation, so a stray name
+ * character cannot break the filter or inject extra conditions.
+ */
+async function resolveDossierIdentifier(
+  sb: ReturnType<typeof supa.createUserClient>,
+  raw: string,
+): Promise<string | null> {
+  const term = raw.trim()
+  if (isUuidShape(term)) {
+    return term
+  }
+  const safe = term.replace(/[,()*]/g, ' ').trim()
+  if (!safe) {
+    return null
+  }
+  const { data, error } = await sb
+    .from('dossiers')
+    .select('id')
+    .eq('is_active', true)
+    .or(`name_en.ilike.*${safe}*,name_ar.ilike.*${safe}*`)
+    .limit(1)
+  if (error || !data || data.length === 0) {
+    return null
+  }
+  return (data[0] as { id?: string }).id ?? null
+}
+
+/**
  * get_dossier (D-07, AGENT-02) — one dossier the caller is cleared to see. Mirrors
  * chat-assistant.ts getDossier (L245-275) verbatim, but builds the client from the
  * RequestContext JWT instead of an authHeader arg. Indistinguishable-empty: any
@@ -28,7 +61,9 @@ export const getDossierTool = createTool({
   id: 'get_dossier',
   description: 'Get detailed information about a specific dossier the caller is cleared to see.',
   inputSchema: z.object({
-    dossierId: z.string().uuid().describe('The dossier UUID to fetch'),
+    dossierId: z
+      .string()
+      .describe('The dossier UUID, or its name/title (resolved to the best matching dossier)'),
   }),
   outputSchema: z.object({
     dossier: z.record(z.string(), z.unknown()).nullable(),
@@ -41,6 +76,12 @@ export const getDossierTool = createTool({
     const args = input as { dossierId: string }
     try {
       const sb = supa.createUserClient(authorization)
+      // Accept a name OR a UUID — resolve a non-UUID to an id before the by-id query so the
+      // model passing a dossier name (live evidence) no longer hard-fails.
+      const resolvedId = await resolveDossierIdentifier(sb, args.dossierId)
+      if (!resolvedId) {
+        return { dossier: null }
+      }
       const { data, error } = await sb
         .from('dossiers')
         .select(
@@ -51,7 +92,7 @@ export const getDossierTool = createTool({
           created_at, updated_at
         `,
         )
-        .eq('id', args.dossierId)
+        .eq('id', resolvedId)
         .eq('is_active', true)
         .single()
       if (error || !data) {
@@ -120,7 +161,14 @@ export const queryWorkItemsTool = createTool({
   description:
     'Query work items (commitments) the caller is cleared to see, optionally filtered by status.',
   inputSchema: z.object({
-    status: z.string().optional().describe('Optional status filter'),
+    status: z
+      .string()
+      .optional()
+      .describe(
+        'Optional status filter. Stored values include: pending, in_progress, review, overdue, ' +
+          'completed, cancelled. Pass "open" or "active" for all items not in a terminal ' +
+          '(completed/cancelled) state. Omit to return everything.',
+      ),
     limit: z.number().int().min(1).max(100).default(20).describe('Max work items to return'),
   }),
   outputSchema: z.object({
@@ -149,7 +197,20 @@ export const queryWorkItemsTool = createTool({
         .order('created_at', { ascending: false })
         .limit(args.limit ?? 20)
       if (args.status) {
-        query = query.eq('status', args.status)
+        // "open"/"active" are natural-language asks (the system prompt literally says
+        // "open commitments"), NOT stored status values — exact-matching them returns
+        // nothing. Map the vague synonyms to "anything not in a terminal state"; a real
+        // stored status still exact-matches. This keeps answers grounded regardless of how
+        // the model phrases the filter (it previously masked this by over-reasoning the arg
+        // to null; with thinking suppressed it passes "open" verbatim).
+        const s = args.status.trim().toLowerCase()
+        const ACTIVE_SYNONYMS = ['open', 'active', 'outstanding', 'ongoing']
+        const TERMINAL = ['completed', 'cancelled', 'canceled', 'closed', 'done']
+        if (ACTIVE_SYNONYMS.includes(s)) {
+          query = query.not('status', 'in', `(${TERMINAL.join(',')})`)
+        } else {
+          query = query.eq('status', s)
+        }
       }
       const { data, error } = await query
       if (error) {

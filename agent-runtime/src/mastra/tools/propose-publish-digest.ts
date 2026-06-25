@@ -1,6 +1,7 @@
 import { createTool } from '@mastra/core/tools'
 import { z } from 'zod'
 import * as supa from './_supabase.js'
+import { isUuidShape } from './_uuid.js'
 
 // Re-export the keystone helper so a `vi.spyOn(supaModule, 'createUserClient')` in the
 // tests intercepts the (unused-here) client build, keeping the test harness uniform
@@ -31,7 +32,9 @@ export const proposePublishDigestTool = createTool({
   description:
     'Propose publishing a digest of recent signals and activity for one dossier, for the user to confirm. Use this when the user asks to publish or send out a digest. This only proposes the action — nothing is published until the user approves the confirmation card.',
   inputSchema: z.object({
-    dossierId: z.string().uuid().describe('The dossier UUID the digest is for'),
+    dossierId: z
+      .string()
+      .describe('The dossier UUID the digest is for (must be a UUID from a lookup, never a name)'),
     period: z
       .enum(['daily', 'weekly', 'monthly'])
       .default('daily')
@@ -58,13 +61,20 @@ export const proposePublishDigestTool = createTool({
 
     const args = input as { dossierId: string; period?: 'daily' | 'weekly' | 'monthly'; summary: string }
 
+    // Lenient UUID-shape gate (T-73-02-02): accept any UUID-shaped id (incl. non-RFC-4122 seed
+    // ids), but a name/placeholder yields the neutral proposal-absent shape — never a write.
+    const dossierId = args.dossierId.trim()
+    if (!isUuidShape(dossierId)) {
+      return { proposed: false }
+    }
+
     // PROPOSE-ONLY: validate + echo. No RPC, no insert/update. `publish_digest` is the
     // action label, not a call target — the frontend commits on approval (D-03).
     return {
       proposed: true,
       action: 'publish_digest',
       args: {
-        dossierId: args.dossierId,
+        dossierId,
         period: args.period ?? 'daily',
         summary: args.summary,
       },

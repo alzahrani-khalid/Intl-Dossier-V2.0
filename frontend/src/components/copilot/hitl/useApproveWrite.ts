@@ -49,15 +49,22 @@ export interface CommitPublishDigestInput {
   dossierId: string
   period: DigestFrequency
   summary: string
-  /** The caller's clearance level at generation; defaults to 1 (mirrors GenerateDigestButton). */
+  /**
+   * Clearance watermark to stamp on the digest. Omit it (the copilot path does): the
+   * publish_digest RPC then derives the caller's real clearance from their profile via
+   * COALESCE(p_clearance_level_at_generation, v_clearance). NEVER hard-default to 1 — a
+   * fixed 1 understates the watermark for higher-clearance callers (GAP-1).
+   */
   clearanceLevel?: number
 }
 
 export interface CommitWorkItemInput {
   title: string
-  assigneeId: string
+  /** Omit to assign to the current user — defaulted from the caller JWT (resolveUid) at commit. */
+  assigneeId?: string
   priority?: WorkItemPriority
-  dossierIds: string[]
+  /** Omit/empty links nothing — the length>0 guard skips the work-item-dossiers step. */
+  dossierIds?: string[]
   inheritanceSource?: string
 }
 
@@ -115,8 +122,10 @@ export function useApproveWrite(): UseApproveWriteResult {
 
   /**
    * Publish digest to subscribers via the already-INVOKER publish_digest RPC under the
-   * caller JWT. clearance_level_at_generation = the caller's clearance (default 1, as in
-   * GenerateDigestButton). Post-commit invalidates the digest keys.
+   * caller JWT. When clearanceLevel is omitted we pass null so the RPC stamps the caller's
+   * real clearance (LEAST(COALESCE(arg, v_clearance), v_clearance)); passing a fixed 1
+   * understated the watermark and could surface L4-sourced digests to L1 readers (GAP-1).
+   * Post-commit invalidates the digest keys.
    */
   const commitPublishDigest = async ({
     dossierId,
@@ -128,7 +137,7 @@ export function useApproveWrite(): UseApproveWriteResult {
       p_dossier_id: dossierId,
       p_period: period,
       p_summary: summary,
-      p_clearance_level_at_generation: clearanceLevel ?? 1,
+      p_clearance_level_at_generation: clearanceLevel ?? null,
     })
     if (error) throw error
 
@@ -150,6 +159,13 @@ export function useApproveWrite(): UseApproveWriteResult {
   }: CommitWorkItemInput): Promise<{ taskId: string }> => {
     const workItemType = 'task' as const
 
+    // Default the assignee to the caller (JWT) when the proposal omitted it — the model
+    // never knows the caller's UUID, so "create a task for me" arrives without assigneeId.
+    const resolvedAssigneeId =
+      assigneeId != null && assigneeId.length > 0 ? assigneeId : await resolveUid()
+    // Tolerate an absent dossier link list; the length>0 guard below skips the link step.
+    const linkedDossierIds = dossierIds ?? []
+
     const { data: taskData, error: taskError } = await supabase.functions.invoke<{
       task: { id: string }
     }>('tasks-create', {
@@ -157,26 +173,26 @@ export function useApproveWrite(): UseApproveWriteResult {
         title,
         priority,
         workflow_stage: 'todo',
-        assignee_id: assigneeId,
+        assignee_id: resolvedAssigneeId,
       },
     })
     if (taskError) throw new Error(taskError.message || 'Task creation failed')
     const taskId = taskData?.task?.id
     if (!taskId) throw new Error('No task ID returned')
 
-    if (dossierIds.length > 0) {
+    if (linkedDossierIds.length > 0) {
       const { error: linkError } = await supabase.functions.invoke('work-item-dossiers', {
         body: {
           work_item_type: workItemType,
           work_item_id: taskId,
-          dossier_ids: dossierIds,
+          dossier_ids: linkedDossierIds,
           inheritance_source: inheritanceSource ?? 'direct',
         },
       })
       if (linkError) throw new Error(linkError.message || 'Dossier link failed')
     }
 
-    const primaryDossierId = dossierIds[0]
+    const primaryDossierId = linkedDossierIds[0]
     await queryClient.invalidateQueries({ queryKey: workItemKeys.lists() })
     if (primaryDossierId != null) {
       await queryClient.invalidateQueries({ queryKey: workItemKeys.byDossier(primaryDossierId) })
