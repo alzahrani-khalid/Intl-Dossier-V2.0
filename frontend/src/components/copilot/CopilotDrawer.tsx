@@ -111,6 +111,7 @@ export function CopilotDrawer(): ReactElement | null {
     >
       <SheetContent
         side="right"
+        size="wide"
         accessibleTitle={t('title')}
         dir={isRTL ? 'rtl' : 'ltr'}
         className="drawer flex flex-col w-[min(720px,92vw)] max-md:w-screen max-md:border-0 max-md:shadow-none p-0 gap-0"
