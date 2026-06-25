@@ -116,7 +116,28 @@ export const copilotAgent = new Agent({
     selectInstructions(requestContext as RequestContext<CopilotRequestContext>),
   // On-prem OpenAI-compatible model config (vLLM/Ollama) resolved lazily so env is
   // read at request time, not import time.
-  model: () => getCopilotModel(),
+  //
+  // LATENCY (quick 260625-dul): gemma4:12b is a *thinking* model (Modelfile temperature 1).
+  // Bound bare it ran every turn at temp=1 with full chain-of-thought (~1,800 reasoning
+  // tokens before a ~50-token answer) → ~46s/turn. We pin the generation policy here via the
+  // documented `ModelWithRetries[]` fallback-array form, which binds per-model `modelSettings`
+  // + `providerOptions` that actually reach the `/v1/chat/completions` body. (Agent-level
+  // `modelSettings`/`providerOptions` are NOT merged into the `agent.stream()` path the
+  // @ag-ui/mastra bridge uses — proven empirically against the live endpoint; the
+  // fallback-array form is.)
+  //   - temperature 0.2 → tighter, deterministic answers.
+  //   - reasoning_effort "none" → suppresses chain-of-thought (measured: 594→0 reasoning
+  //     chars, tool-calling unaffected). This is the OpenAI-standard chat-completions field;
+  //     it is server-agnostic and honored IDENTICALLY by Ollama (Mac dev) and vLLM (prod GPU
+  //     host) on the OpenAI-compatible `/v1` path, so this same binding is correct for the
+  //     prod gemma-4-12b deployment — no prod-specific override needed.
+  model: () => [
+    {
+      model: getCopilotModel(),
+      modelSettings: { temperature: 0.2 },
+      providerOptions: { 'openai-compatible': { reasoningEffort: 'none' } },
+    },
+  ],
   tools: copilotTools,
   memory: buildMemory(),
 })
