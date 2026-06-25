@@ -35,6 +35,8 @@ const fakeEmptyClient = {
     builder.select = chain
     builder.eq = chain
     builder.not = chain
+    builder.or = chain
+    builder.ilike = chain
     builder.order = chain
     builder.limit = chain
     // .single() and the awaited query both resolve to an empty PostgREST result.
@@ -183,6 +185,31 @@ describe('reads-only tool roster: indistinguishable-empty (every tool)', () => {
       const result = await tool.execute({}, { requestContext: rcWith(JWT) })
       expect(JSON.stringify(result)).not.toMatch(FORBIDDEN)
     }
+  })
+
+  it('get_dossier accepts a NAME (non-UUID) — loosened schema validates, resolves via ILIKE, stays empty', async () => {
+    createUserClientSpy.mockClear()
+    const mod = await import('./dossier-lookups.js')
+    const tool = (mod as Record<string, unknown>).getDossierTool as {
+      execute: (i: unknown, c: unknown) => Promise<unknown>
+    }
+    // The model passed a dossier NAME instead of a UUID (live evidence). The loosened
+    // z.string() schema accepts it (no Zod 'Invalid UUID'), execute builds the client from the
+    // JWT and runs the name→id ILIKE resolution; an empty match yields the neutral
+    // { dossier: null } (indistinguishable-empty).
+    const result = await tool.execute(
+      { dossierId: 'G20 Data Gaps Initiative' },
+      { requestContext: rcWith(JWT) },
+    )
+    expect(
+      (result as { error?: boolean })?.error,
+      'a name must validate (no Zod rejection)',
+    ).not.toBe(true)
+    expect(createUserClientSpy, 'name path still builds the client from the caller JWT').toHaveBeenCalledWith(
+      JWT,
+    )
+    expect(result).toEqual({ dossier: null })
+    expect(JSON.stringify(result)).not.toMatch(FORBIDDEN)
   })
 })
 

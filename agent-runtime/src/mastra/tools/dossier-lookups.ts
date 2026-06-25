@@ -18,6 +18,43 @@ const DOSSIER_TYPES = [
   'elected_official',
 ] as const
 
+// Accept a name OR a UUID for get_dossier: the model frequently passes a dossier NAME/title
+// where a UUID is expected (live evidence: get_dossier 'Invalid UUID'). A UUID regex gates the
+// cheap by-id path; a non-UUID is resolved to an id via a name/title lookup first.
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+/**
+ * Resolve a get_dossier identifier to a dossier UUID. A well-formed UUID is returned as-is;
+ * otherwise the value is treated as a name/title and matched (case-insensitive, partial) on
+ * name_en/name_ar — best single active match. Returns null when nothing matches (the caller
+ * then surfaces the neutral `{ dossier: null }`). The term is sanitized for the PostgREST
+ * or-filter — its delimiters `,()*` are stripped — before interpolation, so a stray name
+ * character cannot break the filter or inject extra conditions.
+ */
+async function resolveDossierIdentifier(
+  sb: ReturnType<typeof supa.createUserClient>,
+  raw: string,
+): Promise<string | null> {
+  const term = raw.trim()
+  if (UUID_RE.test(term)) {
+    return term
+  }
+  const safe = term.replace(/[,()*]/g, ' ').trim()
+  if (!safe) {
+    return null
+  }
+  const { data, error } = await sb
+    .from('dossiers')
+    .select('id')
+    .eq('is_active', true)
+    .or(`name_en.ilike.*${safe}*,name_ar.ilike.*${safe}*`)
+    .limit(1)
+  if (error || !data || data.length === 0) {
+    return null
+  }
+  return (data[0] as { id?: string }).id ?? null
+}
+
 /**
  * get_dossier (D-07, AGENT-02) — one dossier the caller is cleared to see. Mirrors
  * chat-assistant.ts getDossier (L245-275) verbatim, but builds the client from the
@@ -28,7 +65,9 @@ export const getDossierTool = createTool({
   id: 'get_dossier',
   description: 'Get detailed information about a specific dossier the caller is cleared to see.',
   inputSchema: z.object({
-    dossierId: z.string().uuid().describe('The dossier UUID to fetch'),
+    dossierId: z
+      .string()
+      .describe('The dossier UUID, or its name/title (resolved to the best matching dossier)'),
   }),
   outputSchema: z.object({
     dossier: z.record(z.string(), z.unknown()).nullable(),
@@ -41,6 +80,12 @@ export const getDossierTool = createTool({
     const args = input as { dossierId: string }
     try {
       const sb = supa.createUserClient(authorization)
+      // Accept a name OR a UUID — resolve a non-UUID to an id before the by-id query so the
+      // model passing a dossier name (live evidence) no longer hard-fails.
+      const resolvedId = await resolveDossierIdentifier(sb, args.dossierId)
+      if (!resolvedId) {
+        return { dossier: null }
+      }
       const { data, error } = await sb
         .from('dossiers')
         .select(
@@ -51,7 +96,7 @@ export const getDossierTool = createTool({
           created_at, updated_at
         `,
         )
-        .eq('id', args.dossierId)
+        .eq('id', resolvedId)
         .eq('is_active', true)
         .single()
       if (error || !data) {
