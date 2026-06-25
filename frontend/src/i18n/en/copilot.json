@@ -22,6 +22,10 @@
     "body": "The on-prem assistant didn't respond. Retry your question; if it keeps failing, the agent-runtime service may be down.",
     "retry": "Retry question"
   },
+  "header": {
+    "history": "Conversation history",
+    "hideHistory": "Hide history"
+  },
   "reasoning": {
     "label": "Reasoning"
   },

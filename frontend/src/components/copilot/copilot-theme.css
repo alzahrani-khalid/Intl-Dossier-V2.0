@@ -58,6 +58,41 @@
 }
 
 /* ---------------------------------------------------------------------------
+ * Drawer header — visible title + conversation-history toggle. Flat --surface,
+ * 1px solid --line divider, NO shadow. Logical padding so RTL mirrors. The history
+ * panel is a bounded scroll region revealed on toggle (collapsed by default).
+ * ------------------------------------------------------------------------- */
+.copilot-header {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  border-block-end: 1px solid var(--line);
+  background: var(--surface);
+}
+.copilot-header__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2, 8px);
+  padding-block: var(--space-3, 12px);
+  padding-inline: var(--pad, 20px);
+}
+.copilot-header__title {
+  font-size: var(--t-card-title);
+  font-weight: 600;
+  line-height: var(--line-h-tight, 1.1);
+  color: var(--ink);
+}
+.copilot-header__history {
+  max-block-size: 240px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-block-start: 1px solid var(--line-soft);
+  padding-block: var(--space-2, 8px);
+  padding-inline: var(--space-2, 8px);
+}
+
+/* ---------------------------------------------------------------------------
  * Thread viewport — the scrolling message stream (the focal region).
  * ------------------------------------------------------------------------- */
 .copilot-viewport {

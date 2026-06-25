@@ -24,6 +24,7 @@ import {
   useAssistantInstructions,
 } from '@assistant-ui/react'
 import { useCopilotRuntime } from './useCopilotRuntime'
+import { CopilotHeader } from './CopilotHeader'
 import { CopilotMessageList } from './CopilotMessageList'
 import { CopilotComposer } from './CopilotComposer'
 import { ProposeToolUIs } from './hitl/ProposeToolUIs'
@@ -67,6 +68,7 @@ function CopilotSurfaceBody({ context }: CopilotSurfaceProps): ReactElement {
 
   return (
     <ThreadPrimitive.Root className="copilot-surface">
+      <CopilotHeader />
       <ThreadPrimitive.Empty>
         <CopilotEmptyState hasDossier={context != null} />
       </ThreadPrimitive.Empty>
