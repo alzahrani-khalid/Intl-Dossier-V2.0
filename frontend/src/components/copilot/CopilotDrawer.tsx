@@ -31,6 +31,21 @@ import { CopilotSurface } from './CopilotSurface'
 import './copilot-theme.css'
 
 /**
+ * Override the drawer's default open-focus (which would land on the close / header
+ * toggle button) and put the caret in the composer so the analyst can type at once.
+ * preventDefault must run synchronously to stop Radix; the focus is deferred a frame so
+ * the composer is mounted. Scoped to the opened content node (no global query churn).
+ */
+function focusComposerOnOpen(event: Event): void {
+  event.preventDefault()
+  const content = event.currentTarget as HTMLElement | null
+  requestAnimationFrame(() => {
+    const input = content?.querySelector<HTMLTextAreaElement>('.copilot-composer__input') ?? null
+    input?.focus()
+  })
+}
+
+/**
  * jsdom-safe matchMedia subscription (mirrors DossierDrawer). Returns true ≤768px so the
  * mobile BottomSheet renders; falls back to desktop where matchMedia is missing.
  */
@@ -78,6 +93,7 @@ export function CopilotDrawer(): ReactElement | null {
           className="copilot-mobile-sheet"
           dir={isRTL ? 'rtl' : 'ltr'}
           aria-label={t('title')}
+          onOpenAutoFocus={focusComposerOnOpen}
         >
           <CopilotSurface context={context} />
         </BottomSheetContent>
@@ -98,6 +114,7 @@ export function CopilotDrawer(): ReactElement | null {
         accessibleTitle={t('title')}
         dir={isRTL ? 'rtl' : 'ltr'}
         className="drawer flex flex-col w-[min(720px,92vw)] max-md:w-screen max-md:border-0 max-md:shadow-none p-0 gap-0"
+        onOpenAutoFocus={focusComposerOnOpen}
       >
         <CopilotSurface context={context} />
       </SheetContent>

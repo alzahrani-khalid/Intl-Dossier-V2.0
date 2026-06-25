@@ -146,6 +146,29 @@
   line-height: 1.5;
 }
 
+/* aria-live wrapper around the assistant parts — preserves the inter-part spacing
+   while making the streamed answer a polite live region. */
+.copilot-message__live {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 8px);
+}
+
+/* Retry row shown only on a run error — neutral copy + Retry control. Token-bound,
+   logical, no shadow; the body names no reason (indistinguishable-empty). */
+.copilot-retry {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  margin-block-start: var(--space-2, 8px);
+  font-size: var(--t-meta);
+  color: var(--ink-mute);
+}
+.copilot-retry__text {
+  color: var(--ink-mute);
+}
+
 /* Markdown prose inside a message — tight, token-bound, no foreign styling. */
 .copilot-message__body {
   font-size: var(--t-body);
