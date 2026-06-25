@@ -327,14 +327,13 @@ describe('73-02 propose-only write-tools: HITL propose-only contract', () => {
     })
   }
 
-  it('propose_work_item proposes with assigneeId OMITTED (title only) and still validates a provided UUID', async () => {
+  it('propose_work_item is lenient + self-normalizing: invalid assignee/dossier ids normalize, valid survive', async () => {
     const mod = await import('./propose-work-item.js')
     const tool = mod.default ?? Object.values(mod)[0]
     const exec = (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute
 
-    // (a) Omitted assigneeId + omitted dossierIds: the model cannot know the caller's UUID,
-    // so "create a task for me" must STILL propose — the frontend defaults the assignee at
-    // commit. This is the exact flow that the required `assigneeId: z.string().uuid()` broke.
+    // (a) Omitted assigneeId + omitted dossierIds: "create a task for me" must STILL propose —
+    // the frontend defaults the assignee at commit. assigneeId echoes undefined; dossierIds [].
     const omitted = (await exec(
       { title: 'Draft the agenda' },
       { requestContext: rcWith(JWT) },
@@ -343,29 +342,70 @@ describe('73-02 propose-only write-tools: HITL propose-only contract', () => {
     expect(omitted.action).toBe('work_item')
     expect(omitted.args?.title).toBe('Draft the agenda')
     expect(omitted.args?.assigneeId, 'no invented UUID when omitted').toBeUndefined()
+    expect(omitted.args?.dossierIds, 'omitted dossierIds normalize to []').toEqual([])
 
-    // (b) A provided assigneeId UUID still validates + echoes unchanged.
+    // (b) The exact live-failure values — "CURRENT_USER_ID" (EN) and "" (AR) — must NOT be
+    // rejected: they NORMALIZE to undefined and STILL propose (Round 2 contract). The model
+    // presenting junk instead of omitting is no longer a hard failure.
+    for (const junk of ['CURRENT_USER_ID', 'current_user_id_placeholder', '', '  ', 'Jane Doe']) {
+      const r = (await exec(
+        { title: 'Draft the agenda', assigneeId: junk },
+        { requestContext: rcWith(JWT) },
+      )) as { proposed?: boolean; args?: Record<string, unknown> }
+      expect(r.proposed, `assigneeId ${JSON.stringify(junk)} must still propose`).toBe(true)
+      expect(
+        r.args?.assigneeId,
+        `assigneeId ${JSON.stringify(junk)} must normalize to undefined`,
+      ).toBeUndefined()
+    }
+
+    // (c) A valid UUID assignee is preserved (trimmed).
     const provided = (await exec(
-      { title: 'Draft the agenda', assigneeId: VALID_UUID },
+      { title: 'Draft the agenda', assigneeId: `  ${VALID_UUID}  ` },
       { requestContext: rcWith(JWT) },
     )) as { proposed?: boolean; args?: Record<string, unknown> }
     expect(provided.proposed, 'a provided UUID must propose').toBe(true)
-    expect(provided.args?.assigneeId).toBe(VALID_UUID)
+    expect(provided.args?.assigneeId, 'a valid UUID is preserved').toBe(VALID_UUID)
 
-    // (c) The exact value that broke the live flow ("current_user_id_placeholder") is not a
-    // UUID — Zod rejects it, so the tool never proposes an invalid assignee (no throw needed).
-    let invalidProposed: unknown
-    try {
-      invalidProposed = (
-        (await exec(
-          { title: 'Draft the agenda', assigneeId: 'current_user_id_placeholder' },
-          { requestContext: rcWith(JWT) },
-        )) as { proposed?: boolean }
-      ).proposed
-    } catch {
-      invalidProposed = undefined
+    // (d) Mixed dossierIds: invalid entries are dropped, valid UUIDs survive.
+    const mixed = (await exec(
+      { title: 'Draft the agenda', dossierIds: [VALID_UUID, 'not-a-uuid', ''] },
+      { requestContext: rcWith(JWT) },
+    )) as { proposed?: boolean; args?: Record<string, unknown> }
+    expect(mixed.proposed).toBe(true)
+    expect(mixed.args?.dossierIds, 'invalid dossier ids dropped, valid survive').toEqual([
+      VALID_UUID,
+    ])
+
+    // (e) All-invalid dossierIds normalize to an empty array (the frontend link step is skipped).
+    const allInvalid = (await exec(
+      { title: 'Draft the agenda', dossierIds: ['nope', 'CURRENT_DOSSIER'] },
+      { requestContext: rcWith(JWT) },
+    )) as { args?: Record<string, unknown> }
+    expect(allInvalid.args?.dossierIds, 'all-invalid dossierIds → []').toEqual([])
+
+    // (f) inheritanceSource: the model presents "none" (live evidence) — it must NORMALIZE to
+    // the safe default 'direct' and STILL propose, not hard-reject the whole call.
+    for (const bad of ['none', '', 'whatever']) {
+      const r = (await exec(
+        { title: 'Draft the agenda', inheritanceSource: bad },
+        { requestContext: rcWith(JWT) },
+      )) as { proposed?: boolean; args?: Record<string, unknown> }
+      expect(r.proposed, `inheritanceSource ${JSON.stringify(bad)} must still propose`).toBe(true)
+      expect(
+        r.args?.inheritanceSource,
+        `inheritanceSource ${JSON.stringify(bad)} normalizes to 'direct'`,
+      ).toBe('direct')
     }
-    expect(invalidProposed, 'a non-UUID assigneeId must NOT propose').not.toBe(true)
+
+    // (g) A valid inheritanceSource is preserved.
+    const validSource = (await exec(
+      { title: 'Draft the agenda', inheritanceSource: 'engagement' },
+      { requestContext: rcWith(JWT) },
+    )) as { args?: Record<string, unknown> }
+    expect(validSource.args?.inheritanceSource, 'valid inheritanceSource preserved').toBe(
+      'engagement',
+    )
   })
 
   it('propose_brief: empty authorization → neutral { proposed: false }, never builds a client', async () => {
