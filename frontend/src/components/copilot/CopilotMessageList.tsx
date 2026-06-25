@@ -24,6 +24,7 @@ import {
   MessagePrimitive,
   ActionBarPrimitive,
   type TextMessagePartComponent,
+  type ReasoningMessagePartComponent,
 } from '@assistant-ui/react'
 import { CitationCard } from './CitationCard'
 import { GenericToolResultCard } from './genui/GenericToolResultCard'
@@ -43,6 +44,24 @@ const MarkdownText: TextMessagePartComponent = ({ text }): ReactElement => {
   )
 }
 
+/**
+ * Reasoning message-part — a collapsible <details> disclosure, COLLAPSED by default.
+ * The model's chain-of-thought is rendered as plain text (never markdown/HTML — no
+ * injection surface) inside a muted token-bound panel. After the latency fix suppresses
+ * thinking upstream this rarely streams, but when reasoning IS shown it stays tucked
+ * away until the analyst opens it. Native <details> is keyboard-operable as-is.
+ */
+const ReasoningPart: ReasoningMessagePartComponent = ({ text }): ReactElement | null => {
+  const { t } = useTranslation('copilot')
+  if (text.length === 0) return null
+  return (
+    <details className="copilot-reasoning">
+      <summary className="copilot-reasoning__summary">{t('reasoning.label')}</summary>
+      <div className="copilot-reasoning__body">{text}</div>
+    </details>
+  )
+}
+
 function AssistantMessage(): ReactElement {
   const { t } = useTranslation('copilot')
 
@@ -55,6 +74,7 @@ function AssistantMessage(): ReactElement {
       <MessagePrimitive.Parts
         components={{
           Text: MarkdownText,
+          Reasoning: ReasoningPart,
           Source: CitationCard,
           tools: { Fallback: GenericToolResultCard },
         }}
