@@ -95,6 +95,7 @@ export function DossierDrawer(): React.JSX.Element | null {
     >
       <SheetContent
         side="right"
+        size="wide"
         accessibleTitle={t('accessible_title')}
         className="drawer w-[min(720px,92vw)] max-md:w-screen max-md:border-0 max-md:shadow-none p-0 gap-0"
         style={{ boxShadow: isMobileNarrow ? 'none' : undefined }}
