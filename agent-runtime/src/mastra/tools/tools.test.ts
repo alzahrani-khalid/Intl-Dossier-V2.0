@@ -34,6 +34,7 @@ const fakeEmptyClient = {
     const chain = (): unknown => builder
     builder.select = chain
     builder.eq = chain
+    builder.not = chain
     builder.order = chain
     builder.limit = chain
     // .single() and the awaited query both resolve to an empty PostgREST result.

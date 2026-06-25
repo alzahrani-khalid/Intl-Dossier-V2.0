@@ -120,7 +120,14 @@ export const queryWorkItemsTool = createTool({
   description:
     'Query work items (commitments) the caller is cleared to see, optionally filtered by status.',
   inputSchema: z.object({
-    status: z.string().optional().describe('Optional status filter'),
+    status: z
+      .string()
+      .optional()
+      .describe(
+        'Optional status filter. Stored values include: pending, in_progress, review, overdue, ' +
+          'completed, cancelled. Pass "open" or "active" for all items not in a terminal ' +
+          '(completed/cancelled) state. Omit to return everything.',
+      ),
     limit: z.number().int().min(1).max(100).default(20).describe('Max work items to return'),
   }),
   outputSchema: z.object({
@@ -149,7 +156,20 @@ export const queryWorkItemsTool = createTool({
         .order('created_at', { ascending: false })
         .limit(args.limit ?? 20)
       if (args.status) {
-        query = query.eq('status', args.status)
+        // "open"/"active" are natural-language asks (the system prompt literally says
+        // "open commitments"), NOT stored status values — exact-matching them returns
+        // nothing. Map the vague synonyms to "anything not in a terminal state"; a real
+        // stored status still exact-matches. This keeps answers grounded regardless of how
+        // the model phrases the filter (it previously masked this by over-reasoning the arg
+        // to null; with thinking suppressed it passes "open" verbatim).
+        const s = args.status.trim().toLowerCase()
+        const ACTIVE_SYNONYMS = ['open', 'active', 'outstanding', 'ongoing']
+        const TERMINAL = ['completed', 'cancelled', 'canceled', 'closed', 'done']
+        if (ACTIVE_SYNONYMS.includes(s)) {
+          query = query.not('status', 'in', `(${TERMINAL.join(',')})`)
+        } else {
+          query = query.eq('status', s)
+        }
       }
       const { data, error } = await query
       if (error) {
