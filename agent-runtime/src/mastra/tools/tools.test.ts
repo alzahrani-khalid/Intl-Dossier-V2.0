@@ -219,6 +219,7 @@ describe('reads-only tool roster: least-privilege (source-level guards)', () => 
   it('no tool source references SUPABASE_SERVICE_ROLE_KEY', () => {
     const files = [
       '_supabase.ts',
+      '_uuid.ts',
       'hybrid-rag-search.ts',
       'read-signals.ts',
       'query-graph.ts',
@@ -589,6 +590,96 @@ describe('round-4: lenient UUID-shape on the id-taking propose tools', () => {
     }
     expect(createUserClientSpy, 'a name must be rejected before building a client').not.toHaveBeenCalled()
     expect(named.proposed).toBe(false)
+  })
+})
+
+// ── Final sweep: lenient UUID-shape on the remaining read tools + shared helper ──────
+// generate_digest_preview / query_graph / read_signals loosened from strict z.string().uuid()
+// to the shared _uuid shape check. A non-RFC-4122 SEED id (e.g. b0000001-…0003) is ACCEPTED;
+// a name is REJECTED to the neutral empty (required ids) or IGNORED (optional filters), and
+// no id-shaped value reaches the DB malformed — T-73-02-02 holds.
+describe('final sweep: lenient UUID-shape on the remaining read tools', () => {
+  const SEED_ID = 'b0000001-0000-0000-0000-000000000003'
+  const NAME = 'G20 Data Gaps Initiative'
+
+  it('the shared _uuid helper accepts seed shapes (trim-tolerant) and rejects names', async () => {
+    const { isUuidShape, uuidShape } = await import('./_uuid.js')
+    expect(isUuidShape(SEED_ID)).toBe(true)
+    expect(isUuidShape(`  ${SEED_ID}  `)).toBe(true)
+    expect(isUuidShape(VALID_UUID)).toBe(true)
+    expect(isUuidShape(NAME)).toBe(false)
+    expect(isUuidShape('')).toBe(false)
+    expect(uuidShape).toBeInstanceOf(RegExp)
+  })
+
+  it('generate_digest_preview accepts a seed id (reaches the RPC) and rejects a name (no client)', async () => {
+    const mod = await import('./generate-digest.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    const exec = (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute
+
+    createUserClientSpy.mockClear()
+    fakeEmptyClient.rpc.mockClear()
+    const seed = await exec({ dossierId: SEED_ID, period: 'weekly' }, { requestContext: rcWith(JWT) })
+    expect(createUserClientSpy, 'a seed id reaches the RPC under the JWT').toHaveBeenCalledWith(JWT)
+    expect(fakeEmptyClient.rpc).toHaveBeenCalledWith(
+      'generate_digest',
+      expect.objectContaining({ p_dossier_id: SEED_ID }),
+    )
+    expect((seed as { error?: boolean })?.error, 'a seed id must validate').not.toBe(true)
+    expect(JSON.stringify(seed)).not.toMatch(FORBIDDEN)
+
+    createUserClientSpy.mockClear()
+    const named = await exec({ dossierId: NAME, period: 'weekly' }, { requestContext: rcWith(JWT) })
+    expect(createUserClientSpy, 'a name is rejected before building a client').not.toHaveBeenCalled()
+    expect((named as { error?: boolean })?.error).not.toBe(true)
+    expect(JSON.stringify(named)).not.toMatch(FORBIDDEN)
+  })
+
+  it('query_graph accepts a seed entityId (reaches the RPC) and rejects a name (no client)', async () => {
+    const mod = await import('./query-graph.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    const exec = (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute
+
+    createUserClientSpy.mockClear()
+    fakeEmptyClient.rpc.mockClear()
+    const seed = await exec(
+      { queryType: 'forum_membership', entityId: SEED_ID },
+      { requestContext: rcWith(JWT) },
+    )
+    expect(createUserClientSpy).toHaveBeenCalledWith(JWT)
+    expect(fakeEmptyClient.rpc).toHaveBeenCalledWith(
+      'query_graph',
+      expect.objectContaining({ p_entity_id: SEED_ID }),
+    )
+    expect((seed as { error?: boolean })?.error).not.toBe(true)
+
+    createUserClientSpy.mockClear()
+    const named = await exec(
+      { queryType: 'forum_membership', entityId: NAME },
+      { requestContext: rcWith(JWT) },
+    )
+    expect(createUserClientSpy, 'a name entityId is rejected before building a client').not.toHaveBeenCalled()
+    expect((named as { error?: boolean })?.error).not.toBe(true)
+  })
+
+  it('read_signals ignores a non-UUID dossierId (p_dossier_id null) and passes a seed id through', async () => {
+    const mod = await import('./read-signals.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    const exec = (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute
+
+    fakeEmptyClient.rpc.mockClear()
+    await exec({ dossierId: NAME }, { requestContext: rcWith(JWT) })
+    expect(fakeEmptyClient.rpc, 'a non-UUID dossier filter degrades to null').toHaveBeenCalledWith(
+      'read_signals',
+      expect.objectContaining({ p_dossier_id: null }),
+    )
+
+    fakeEmptyClient.rpc.mockClear()
+    await exec({ dossierId: SEED_ID }, { requestContext: rcWith(JWT) })
+    expect(fakeEmptyClient.rpc, 'a seed id is passed through as the filter').toHaveBeenCalledWith(
+      'read_signals',
+      expect.objectContaining({ p_dossier_id: SEED_ID }),
+    )
   })
 })
 

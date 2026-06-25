@@ -2,6 +2,7 @@ import { createTool } from '@mastra/core/tools'
 import { z } from 'zod'
 import OpenAI from 'openai'
 import * as supa from './_supabase.js'
+import { isUuidShape } from './_uuid.js'
 import { getCopilotModel } from '../../llm-router.js'
 
 // Re-export the keystone helper so a `vi.spyOn(supaModule, 'createUserClient')` in the
@@ -20,13 +21,6 @@ type BriefLang = { summary: string; sections: BriefSection[] }
 type BriefContent = { en: BriefLang; ar: BriefLang }
 
 const NEUTRAL = { proposed: false } as const
-
-// Lenient UUID-shape matcher (same as propose_work_item / get_dossier). Real dossier ids in this
-// system include non-RFC-4122 seed ids (e.g. b0000001-…0003) that Zod's strict `.uuid()` rejects,
-// so the model passing a legitimate id (from get_dossier) would hard-fail. This shape check
-// accepts any UUID-shaped hex but still REJECTS names/placeholders/garbage, so the T-73-02-02
-// narrow-Zod threat control holds (a non-UUID-shaped value never reaches the read or a proposal).
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 /**
  * Ask the on-prem OpenAI-compatible model (vLLM/Ollama via getCopilotModel — the legacy
@@ -151,7 +145,7 @@ export const proposeBriefTool = createTool({
     // Lenient UUID-shape gate (T-73-02-02): accept any UUID-shaped id (incl. non-RFC-4122 seed
     // ids), but a name/placeholder yields the neutral shape BEFORE building a client or reading.
     const dossierId = args.dossierId.trim()
-    if (!UUID_RE.test(dossierId)) {
+    if (!isUuidShape(dossierId)) {
       return { ...NEUTRAL }
     }
 

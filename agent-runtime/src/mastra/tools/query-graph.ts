@@ -1,6 +1,7 @@
 import { createTool } from '@mastra/core/tools'
 import { z } from 'zod'
 import * as supa from './_supabase.js'
+import { isUuidShape } from './_uuid.js'
 
 // Re-export the keystone helper; the body calls `supa.createUserClient(...)` so the
 // tests' `vi.mock('./_supabase.js')` intercepts every client build.
@@ -47,10 +48,11 @@ export const queryGraphTool = createTool({
     queryType: z
       .enum(GRAPH_QUERY_TYPES)
       .describe('Which relationship traversal to run (one of the four supported types)'),
-    entityId: z.string().uuid().describe('The primary entity (dossier) UUID to traverse from'),
+    entityId: z
+      .string()
+      .describe('The primary entity (dossier) UUID to traverse from (a UUID from a lookup, never a name)'),
     entityId2: z
       .string()
-      .uuid()
       .optional()
       .describe('The second entity UUID — required only for shortest_path'),
     windowDays: z
@@ -77,12 +79,22 @@ export const queryGraphTool = createTool({
       windowDays?: number
     }
 
+    // Lenient UUID-shape gate: the primary entity must be UUID-shaped (incl. non-RFC-4122 seed
+    // ids the model takes from a lookup); a name/placeholder yields the neutral empty graph
+    // before any client/RPC. The optional second entity is only passed when it is UUID-shaped.
+    const entityId = args.entityId.trim()
+    if (!isUuidShape(entityId)) {
+      return { result: { ...EMPTY_GRAPH } }
+    }
+    const entityId2 =
+      typeof args.entityId2 === 'string' && isUuidShape(args.entityId2) ? args.entityId2.trim() : null
+
     try {
       const sb = supa.createUserClient(authorization)
       const { data, error } = await sb.rpc('query_graph', {
         p_query_type: args.queryType,
-        p_entity_id: args.entityId,
-        p_entity_id_2: args.entityId2 ?? null,
+        p_entity_id: entityId,
+        p_entity_id_2: entityId2,
         p_window_days: args.windowDays ?? 90,
       })
       // The RPC returns a JSONB object; coerce anything non-object (null, array, scalar)

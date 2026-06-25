@@ -1,6 +1,7 @@
 import { createTool } from '@mastra/core/tools'
 import { z } from 'zod'
 import * as supa from './_supabase.js'
+import { isUuidShape } from './_uuid.js'
 
 // Re-export the keystone helper; every body calls `supa.createUserClient(...)` so the
 // tests' `vi.mock('./_supabase.js')` intercepts the client build.
@@ -18,11 +19,6 @@ const DOSSIER_TYPES = [
   'elected_official',
 ] as const
 
-// Accept a name OR a UUID for get_dossier: the model frequently passes a dossier NAME/title
-// where a UUID is expected (live evidence: get_dossier 'Invalid UUID'). A UUID regex gates the
-// cheap by-id path; a non-UUID is resolved to an id via a name/title lookup first.
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-
 /**
  * Resolve a get_dossier identifier to a dossier UUID. A well-formed UUID is returned as-is;
  * otherwise the value is treated as a name/title and matched (case-insensitive, partial) on
@@ -36,7 +32,7 @@ async function resolveDossierIdentifier(
   raw: string,
 ): Promise<string | null> {
   const term = raw.trim()
-  if (UUID_RE.test(term)) {
+  if (isUuidShape(term)) {
     return term
   }
   const safe = term.replace(/[,()*]/g, ' ').trim()

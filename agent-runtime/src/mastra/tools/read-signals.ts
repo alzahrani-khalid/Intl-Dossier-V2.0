@@ -1,6 +1,7 @@
 import { createTool } from '@mastra/core/tools'
 import { z } from 'zod'
 import * as supa from './_supabase.js'
+import { isUuidShape } from './_uuid.js'
 
 // Re-export the keystone helper for callers that import it from this tool module.
 // The execute body below calls `supa.createUserClient(...)` (a live module-namespace
@@ -26,7 +27,10 @@ export const readSignalsTool = createTool({
   description:
     'Read intelligence signals the caller is cleared to see, optionally scoped to a dossier, status, or time window. Use this when the user asks about signals, alerts, or recent intelligence.',
   inputSchema: z.object({
-    dossierId: z.string().uuid().optional().describe('Optional dossier UUID to scope signals to'),
+    dossierId: z
+      .string()
+      .optional()
+      .describe('Optional dossier UUID to scope signals to (a UUID from a lookup; a non-UUID is ignored)'),
     status: z
       .string()
       .optional()
@@ -56,10 +60,16 @@ export const readSignalsTool = createTool({
       limit?: number
     }
 
+    // Optional dossier filter: only scope by it when it is UUID-shaped (incl. non-RFC-4122 seed
+    // ids). A non-UUID value (e.g. a name) is IGNORED — the read degrades to unscoped rather than
+    // hard-failing on "Invalid UUID"; the RPC's inline clearance still gates every returned row.
+    const dossierId =
+      typeof args.dossierId === 'string' && isUuidShape(args.dossierId) ? args.dossierId.trim() : null
+
     try {
       const sb = supa.createUserClient(authorization)
       const { data, error } = await sb.rpc('read_signals', {
-        p_dossier_id: args.dossierId ?? null,
+        p_dossier_id: dossierId,
         p_status: args.status ?? null,
         p_since: args.since ?? null,
         p_limit: args.limit ?? 50,

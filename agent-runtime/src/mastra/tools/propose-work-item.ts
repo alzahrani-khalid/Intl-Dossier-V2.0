@@ -1,16 +1,11 @@
 import { createTool } from '@mastra/core/tools'
 import { z } from 'zod'
 import * as supa from './_supabase.js'
+import { isUuidShape } from './_uuid.js'
 
 // Re-export the keystone helper to keep the test harness uniform across the roster.
 // This tool never builds a client — it only validates + echoes.
 export const createUserClient = supa.createUserClient
-
-// Canonical RFC-4122 UUID matcher used to NORMALIZE model-supplied identifiers. The model
-// frequently presents placeholders ("", "CURRENT_USER_ID") or names instead of real UUIDs;
-// we keep only well-formed UUIDs and drop the rest rather than hard-rejecting the call (a
-// rejection yields no proposal at all, leaving "create a task for me" broken).
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 // The closed set of valid dossier-link inheritance sources. The model also fumbles this
 // field (live evidence: it presents "none"), so — same principle as the UUID fields — we
@@ -96,12 +91,12 @@ export const proposeWorkItemTool = createTool({
     // assigneeId ("", a name, "CURRENT_USER_ID") becomes undefined so the frontend defaults
     // the assignee to the caller (resolveUid) at commit; junk dossier ids are filtered out.
     const normalizedAssigneeId =
-      typeof args.assigneeId === 'string' && UUID_RE.test(args.assigneeId.trim())
+      typeof args.assigneeId === 'string' && isUuidShape(args.assigneeId)
         ? args.assigneeId.trim()
         : undefined
     const normalizedDossierIds = (args.dossierIds ?? [])
       .map((id) => (typeof id === 'string' ? id.trim() : ''))
-      .filter((id) => UUID_RE.test(id))
+      .filter((id) => isUuidShape(id))
     // An unknown/placeholder inheritance source ("none", "") falls back to the safe default.
     const candidateInheritance =
       typeof args.inheritanceSource === 'string' ? args.inheritanceSource.trim() : ''
