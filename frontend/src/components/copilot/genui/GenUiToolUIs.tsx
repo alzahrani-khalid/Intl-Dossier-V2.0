@@ -26,6 +26,8 @@ import type { ReactElement } from 'react'
 import { makeAssistantToolUI } from '@assistant-ui/react'
 import { InlineDossierCard, type InlineDossierRow } from './InlineDossierCard'
 import { InlineSignalCard, type InlineSignalRow } from './InlineSignalCard'
+import { InlineWorkItemCard, type InlineWorkItemRow } from './InlineWorkItemCard'
+import { ToolRunningIndicator } from './ToolRunningIndicator'
 
 /** Cap how many cards render inline; the rest stay summarized in the agent's text part. */
 const INLINE_RENDER_CAP = 5
@@ -96,7 +98,39 @@ const ReadSignalsToolUI = makeAssistantToolUI<
 })
 
 /**
- * Mount-once fragment: rendering these registers the three READ tool-UI renderers for the
+ * query_work_items → { workItems } — a capped vertical stack of inline work-item cards.
+ * While the tool is RUNNING (TOOL_CALL_START → TOOL_CALL_RESULT, the ~10s turn gap) we
+ * render the per-tool running cue — the primary perceived-latency signal once reasoning
+ * is suppressed upstream. On complete an empty list renders nothing (the default text
+ * part stands, indistinguishable-empty).
+ */
+const QueryWorkItemsToolUI = makeAssistantToolUI<
+  Record<string, unknown>,
+  { workItems?: InlineWorkItemRow[] | null }
+>({
+  toolName: 'query_work_items',
+  render: ({ status, result }): ReactElement | null => {
+    if (status.type === 'running') {
+      return <ToolRunningIndicator toolName="query_work_items" />
+    }
+    if (!isComplete(status)) return null
+    const workItems = Array.isArray(result?.workItems) ? result.workItems : []
+    if (workItems.length === 0) return null
+    return (
+      <div className="copilot-genui-stack">
+        {workItems.slice(0, INLINE_RENDER_CAP).map((row, index) => (
+          <InlineWorkItemCard
+            key={typeof row.id === 'string' ? row.id : `work-item-${index}`}
+            item={row}
+          />
+        ))}
+      </div>
+    )
+  },
+})
+
+/**
+ * Mount-once fragment: rendering these registers the READ tool-UI renderers for the
  * whole thread (they emit no chrome themselves). Placed inside AssistantRuntimeProvider in
  * CopilotSurface, alongside the 73-03 ProposeToolUIs.
  */
@@ -106,6 +140,7 @@ export function GenUiToolUIs(): ReactElement {
       <GetDossierToolUI />
       <ListDossiersToolUI />
       <ReadSignalsToolUI />
+      <QueryWorkItemsToolUI />
     </>
   )
 }

@@ -26,6 +26,7 @@ import {
   type TextMessagePartComponent,
 } from '@assistant-ui/react'
 import { CitationCard } from './CitationCard'
+import { GenericToolResultCard } from './genui/GenericToolResultCard'
 
 /**
  * The assistant-ui Text message-part: render the part text as sanitized markdown.
@@ -48,7 +49,16 @@ function AssistantMessage(): ReactElement {
   return (
     <MessagePrimitive.Root className="copilot-message" data-role="assistant">
       <div className="copilot-message__role">{t('title')}</div>
-      <MessagePrimitive.Parts components={{ Text: MarkdownText, Source: CitationCard }} />
+      {/* Text → sanitized markdown; Source → citation chip; any tool with NO dedicated
+          renderer (the FIXED-allowlist genUI + propose_* HITL cards still win, resolved
+          as toolUIs[name] ?? Fallback) → the generic token-bound tool card. */}
+      <MessagePrimitive.Parts
+        components={{
+          Text: MarkdownText,
+          Source: CitationCard,
+          tools: { Fallback: GenericToolResultCard },
+        }}
+      />
       <div className="copilot-message__actions">
         <ActionBarPrimitive.Root hideWhenRunning autohide="not-last">
           <ActionBarPrimitive.Copy asChild>

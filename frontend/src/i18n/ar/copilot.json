@@ -23,7 +23,14 @@
     "retry": "إعادة إرسال السؤال"
   },
   "streaming": {
-    "thinking": "جارٍ التفكير…"
+    "thinking": "جارٍ التفكير…",
+    "searching": "جارٍ البحث…",
+    "tool": {
+      "query_work_items": "جارٍ البحث في عناصر العمل…",
+      "get_dossier": "جارٍ فتح الملف…",
+      "list_dossiers": "جارٍ البحث في الملفات…",
+      "read_signals": "جارٍ البحث في الإشارات…"
+    }
   },
   "confirm": {
     "title": {
@@ -97,6 +104,30 @@
     "signal": {
       "open": "فتح في قائمة الإشارات",
       "untitled": "إشارة بلا عنوان"
+    },
+    "workItem": {
+      "open": "فتح في عملي",
+      "untitled": "عنصر عمل بلا عنوان",
+      "status": {
+        "pending": "قيد الانتظار",
+        "todo": "للتنفيذ",
+        "in_progress": "قيد التنفيذ",
+        "review": "قيد المراجعة",
+        "completed": "مكتمل",
+        "done": "منجز",
+        "cancelled": "ملغى",
+        "overdue": "متأخر"
+      },
+      "priority": {
+        "low": "منخفضة",
+        "medium": "متوسطة",
+        "high": "عالية",
+        "urgent": "عاجلة",
+        "critical": "عاجلة"
+      }
+    },
+    "tool": {
+      "result": "نتيجة من {{tool}}"
     }
   },
   "delete": {

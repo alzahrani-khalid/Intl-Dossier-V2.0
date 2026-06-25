@@ -23,7 +23,14 @@
     "retry": "Retry question"
   },
   "streaming": {
-    "thinking": "Thinking…"
+    "thinking": "Thinking…",
+    "searching": "Searching…",
+    "tool": {
+      "query_work_items": "Searching work items…",
+      "get_dossier": "Looking up the dossier…",
+      "list_dossiers": "Searching dossiers…",
+      "read_signals": "Searching signals…"
+    }
   },
   "confirm": {
     "title": {
@@ -97,6 +104,30 @@
     "signal": {
       "open": "Open in the signals queue",
       "untitled": "Untitled signal"
+    },
+    "workItem": {
+      "open": "Open in my work",
+      "untitled": "Untitled work item",
+      "status": {
+        "pending": "Pending",
+        "todo": "To do",
+        "in_progress": "In progress",
+        "review": "Review",
+        "completed": "Completed",
+        "done": "Done",
+        "cancelled": "Cancelled",
+        "overdue": "Overdue"
+      },
+      "priority": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "urgent": "Urgent",
+        "critical": "Urgent"
+      }
+    },
+    "tool": {
+      "result": "Result from {{tool}}"
     }
   },
   "delete": {
