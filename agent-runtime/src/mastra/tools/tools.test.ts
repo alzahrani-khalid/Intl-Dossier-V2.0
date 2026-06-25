@@ -517,6 +517,81 @@ describe('73-02 propose-only write-tools: HITL propose-only contract', () => {
   })
 })
 
+// ── Round 4: lenient UUID-shape for the id-taking propose tools ────────────────
+// propose_brief / propose_publish_digest / propose_signal_status loosened dossierId/signalId
+// from strict z.string().uuid() to a lenient UUID-shape check. A non-RFC-4122 SEED id (the
+// staging ids the model legitimately gets from get_dossier, e.g. b0000001-…0003 — Zod's
+// strict .uuid() rejects it because its version/variant nibbles are 0) is now ACCEPTED; a
+// name/placeholder is still REJECTED to the neutral { proposed: false } (T-73-02-02 holds).
+describe('round-4: lenient UUID-shape on the id-taking propose tools', () => {
+  const SEED_ID = 'b0000001-0000-0000-0000-000000000003'
+  const NAME = 'G20 Data Gaps Initiative'
+
+  it('propose_publish_digest accepts a non-RFC-4122 seed id (echoes it) and rejects a name', async () => {
+    const mod = await import('./propose-publish-digest.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    const exec = (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute
+
+    const ok = (await exec(
+      { dossierId: SEED_ID, period: 'weekly', summary: 'A short digest.' },
+      { requestContext: rcWith(JWT) },
+    )) as { proposed?: boolean; args?: Record<string, unknown> }
+    expect(ok.proposed, 'a UUID-shaped seed id must propose').toBe(true)
+    expect(ok.args?.dossierId).toBe(SEED_ID)
+
+    const rejected = (await exec(
+      { dossierId: NAME, period: 'weekly', summary: 'A short digest.' },
+      { requestContext: rcWith(JWT) },
+    )) as { proposed?: boolean }
+    expect(rejected.proposed, 'a name must NOT propose (T-73-02-02)').toBe(false)
+  })
+
+  it('propose_signal_status accepts a non-RFC-4122 seed id (echoes it) and rejects a non-UUID', async () => {
+    const mod = await import('./propose-signal-status.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    const exec = (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute
+
+    const ok = (await exec(
+      { signalId: SEED_ID, action: 'dismiss' },
+      { requestContext: rcWith(JWT) },
+    )) as { proposed?: boolean; args?: Record<string, unknown> }
+    expect(ok.proposed).toBe(true)
+    expect(ok.args?.signalId).toBe(SEED_ID)
+
+    const rejected = (await exec(
+      { signalId: 'not-a-uuid', action: 'dismiss' },
+      { requestContext: rcWith(JWT) },
+    )) as { proposed?: boolean }
+    expect(rejected.proposed, 'a non-UUID signalId must NOT propose').toBe(false)
+  })
+
+  it('propose_brief accepts a seed id (reaches the read under the JWT); a name is rejected before any read', async () => {
+    createUserClientSpy.mockClear()
+    const mod = await import('./propose-brief.js')
+    const tool = mod.default ?? Object.values(mod)[0]
+    const exec = (tool as { execute: (i: unknown, c: unknown) => Promise<unknown> }).execute
+
+    // A UUID-shaped seed id passes the gate → builds the read client from the JWT (the fake
+    // returns no row, so the result is the neutral empty — but the client WAS built).
+    const seed = (await exec({ dossierId: SEED_ID }, { requestContext: rcWith(JWT) })) as {
+      proposed?: boolean
+    }
+    expect(createUserClientSpy, 'a UUID-shaped seed id reaches the read under the caller JWT').toHaveBeenCalledWith(
+      JWT,
+    )
+    expect(seed.proposed, 'empty fake read → neutral').toBe(false)
+    expect(JSON.stringify(seed)).not.toMatch(FORBIDDEN)
+
+    // A name is rejected by the shape gate BEFORE any client is built (no read attempted).
+    createUserClientSpy.mockClear()
+    const named = (await exec({ dossierId: NAME }, { requestContext: rcWith(JWT) })) as {
+      proposed?: boolean
+    }
+    expect(createUserClientSpy, 'a name must be rejected before building a client').not.toHaveBeenCalled()
+    expect(named.proposed).toBe(false)
+  })
+})
+
 // Sentinel: the forbidden-substring regex is the indistinguishable-empty guard.
 describe('indistinguishable-empty sentinel', () => {
   it('forbidden-substring guard matches the P71 GRAPH-03 landmine and not the empty shape', () => {

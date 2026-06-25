@@ -7,6 +7,13 @@ import * as supa from './_supabase.js'
 // across the whole roster. This tool never builds a client — it only validates + echoes.
 export const createUserClient = supa.createUserClient
 
+// Lenient UUID-shape matcher (same as propose_work_item / get_dossier). Real dossier ids in
+// this system include non-RFC-4122 seed ids (e.g. b0000001-…0003) that Zod's strict `.uuid()`
+// rejects, so the model passing a legitimate id would hard-fail. This shape check accepts any
+// UUID-shaped hex but still REJECTS names/placeholders/garbage, so the T-73-02-02 narrow-Zod
+// threat control holds (a non-UUID-shaped value never produces a write proposal).
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 /**
  * propose_publish_digest (GENUI-02/03, D-01/D-03) — PROPOSE-ONLY write-tool.
  *
@@ -31,7 +38,9 @@ export const proposePublishDigestTool = createTool({
   description:
     'Propose publishing a digest of recent signals and activity for one dossier, for the user to confirm. Use this when the user asks to publish or send out a digest. This only proposes the action — nothing is published until the user approves the confirmation card.',
   inputSchema: z.object({
-    dossierId: z.string().uuid().describe('The dossier UUID the digest is for'),
+    dossierId: z
+      .string()
+      .describe('The dossier UUID the digest is for (must be a UUID from a lookup, never a name)'),
     period: z
       .enum(['daily', 'weekly', 'monthly'])
       .default('daily')
@@ -58,13 +67,20 @@ export const proposePublishDigestTool = createTool({
 
     const args = input as { dossierId: string; period?: 'daily' | 'weekly' | 'monthly'; summary: string }
 
+    // Lenient UUID-shape gate (T-73-02-02): accept any UUID-shaped id (incl. non-RFC-4122 seed
+    // ids), but a name/placeholder yields the neutral proposal-absent shape — never a write.
+    const dossierId = args.dossierId.trim()
+    if (!UUID_RE.test(dossierId)) {
+      return { proposed: false }
+    }
+
     // PROPOSE-ONLY: validate + echo. No RPC, no insert/update. `publish_digest` is the
     // action label, not a call target — the frontend commits on approval (D-03).
     return {
       proposed: true,
       action: 'publish_digest',
       args: {
-        dossierId: args.dossierId,
+        dossierId,
         period: args.period ?? 'daily',
         summary: args.summary,
       },
