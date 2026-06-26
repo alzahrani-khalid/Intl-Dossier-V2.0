@@ -20,6 +20,7 @@ import { redis, cacheHelpers } from '../config/redis'
 import { CACHE_TTL, type CacheableEntityType } from '../config/cache-ttl.config'
 import { logInfo, logError } from '../utils/logger'
 import { validate } from '../utils/validation'
+import { requireMinRole } from '../middleware/rbac'
 
 const router = Router()
 
@@ -93,28 +94,31 @@ router.get(
  * POST /cache/reset
  * Reset all cache metrics (requires admin permissions)
  */
-router.post('/reset', async (_req: Request, res: Response, next: NextFunction) => {
-  try {
-    // In production, you'd want to check for admin permissions here
-    await resetMetrics()
-    logInfo('Cache metrics reset by user')
+router.post(
+  '/reset',
+  requireMinRole('admin'),
+  async (_req: Request, res: Response, next: NextFunction) => {
+    try {
+      await resetMetrics()
+      logInfo('Cache metrics reset by user')
 
-    res.json({
-      success: true,
-      message: 'Cache metrics have been reset',
-      timestamp: new Date().toISOString(),
-    })
-  } catch (error) {
-    logError('Error resetting cache metrics', error as Error)
-    next(error)
-  }
-})
+      res.json({
+        success: true,
+        message: 'Cache metrics have been reset',
+        timestamp: new Date().toISOString(),
+      })
+    } catch (error) {
+      logError('Error resetting cache metrics', error as Error)
+      next(error)
+    }
+  },
+)
 
 /**
  * GET /cache/health
  * Check cache health status
  */
-router.get('/health', async (_req: Request, res: Response) => {
+router.get('/health', requireMinRole('admin'), async (_req: Request, res: Response) => {
   try {
     const startTime = Date.now()
 
@@ -162,11 +166,20 @@ router.get('/health', async (_req: Request, res: Response) => {
  */
 router.delete(
   '/clear/:pattern',
+  requireMinRole('admin'),
   validate({ params: clearPatternParamSchema }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const pattern = req.params.pattern || '*'
-      // In production, you'd want to check for admin permissions here
+      const pattern = req.params.pattern
+      // Require an explicit key prefix; a missing param or a leading wildcard would match
+      // the entire keyspace and let an admin flush every cache entry in a single call.
+      if (pattern == null || pattern.startsWith('*') || pattern.startsWith('?')) {
+        res.status(400).json({
+          success: false,
+          message: 'An explicit key prefix is required; wildcard-only patterns are not allowed',
+        })
+        return
+      }
 
       const keysToDelete = await redis.keys(pattern)
       if (keysToDelete.length > 0) {
@@ -193,6 +206,7 @@ router.delete(
  */
 router.get(
   '/keys/:prefix',
+  requireMinRole('admin'),
   validate({ params: keysPrefixParamSchema, query: keysQuerySchema }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {

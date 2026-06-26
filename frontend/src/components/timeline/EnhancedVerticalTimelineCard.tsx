@@ -145,7 +145,7 @@ function CloseIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-4 w-4 text-black dark:text-white"
+      className="h-4 w-4 text-ink"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M18 6l-12 12" />
@@ -217,7 +217,7 @@ export function EnhancedVerticalTimelineCard({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm h-full w-full z-[100]"
+            className="fixed inset-0 bg-ink/40 h-full w-full z-[100]"
           />
         )}
       </AnimatePresence>
@@ -244,18 +244,18 @@ export function EnhancedVerticalTimelineCard({
             <m.div
               layoutId={`card-${event.id}-${id}`}
               ref={ref}
-              className="w-full max-w-3xl h-full md:h-fit md:max-h-[90%] flex flex-col bg-card sm:rounded-3xl overflow-hidden shadow-2xl"
+              className="w-full max-w-3xl h-full md:h-fit md:max-h-[90%] flex flex-col bg-card sm:rounded-[var(--radius-lg)] overflow-hidden shadow-2xl"
             >
               {/* Event Icon Header */}
               <div
                 className={cn(
                   'w-full h-32 sm:h-40 flex items-center justify-center',
                   eventColorClass,
-                  'sm:rounded-t-3xl relative overflow-hidden',
+                  'sm:rounded-t-[var(--radius-lg)] relative overflow-hidden',
                 )}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
-                <EventIcon className="h-16 w-16 sm:h-20 sm:w-20 text-white relative z-10" />
+                <div className="absolute inset-0 bg-surface/10" />
+                <EventIcon className="h-16 w-16 sm:h-20 sm:w-20 text-primary-foreground relative z-10" />
               </div>
 
               {/* Content */}

@@ -96,6 +96,7 @@ function DraggableField({ field, isRTL, onAddColumn }: DraggableFieldProps) {
               variant="ghost"
               size="icon"
               className="h-7 w-7 flex-shrink-0"
+              aria-label={t('tooltips.addColumn')}
               onClick={(e) => {
                 e.stopPropagation()
                 onAddColumn(field)
@@ -114,7 +115,7 @@ function DraggableField({ field, isRTL, onAddColumn }: DraggableFieldProps) {
 export function FieldList({ fields, onAddColumn }: FieldListProps) {
   const { t } = useTranslation('report-builder')
   const { isRTL } = useDirection()
-const [search, setSearch] = useState('')
+  const [search, setSearch] = useState('')
 
   // Group fields by entity
   const groupedFields = useMemo(() => {

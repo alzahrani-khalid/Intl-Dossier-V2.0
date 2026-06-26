@@ -59,9 +59,9 @@ function AvatarFallback({
 const avatarIndicatorVariants = cva('absolute size-2 rounded-full', {
   variants: {
     variant: {
-      success: 'bg-green-400',
-      danger: 'bg-red-400',
-      warning: 'bg-orange-400',
+      success: 'bg-success',
+      danger: 'bg-danger',
+      warning: 'bg-warning',
     },
     position: {
       'top-end': 'end-0.5 top-0.5',

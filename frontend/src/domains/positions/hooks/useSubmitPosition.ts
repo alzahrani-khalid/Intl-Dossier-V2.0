@@ -14,7 +14,9 @@ import type { SubmitPositionResponse } from '../types'
  * Hook to submit a position for review
  * Returns position + consistency check results
  */
-export const useSubmitPosition = (): ReturnType<typeof useMutation<SubmitPositionResponse, Error, string>> => {
+export const useSubmitPosition = (): ReturnType<
+  typeof useMutation<SubmitPositionResponse, Error, string>
+> => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -24,6 +26,8 @@ export const useSubmitPosition = (): ReturnType<typeof useMutation<SubmitPositio
     onSuccess: (data, id) => {
       queryClient.setQueryData(['positions', 'detail', id], data.position)
       queryClient.invalidateQueries({ queryKey: ['positions', 'list'] })
+      // Submit creates a new version server-side — refresh the version-history tab.
+      queryClient.invalidateQueries({ queryKey: ['positions', 'versions', id] })
     },
   })
 }

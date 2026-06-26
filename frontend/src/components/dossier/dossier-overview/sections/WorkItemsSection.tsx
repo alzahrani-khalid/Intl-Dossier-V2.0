@@ -129,7 +129,7 @@ function WorkItemCard({
       aria-label={isRTL && item.title_ar ? item.title_ar : item.title_en}
       className="block w-full text-start rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
-      <Card className="hover:shadow-md transition-shadow">
+      <Card className="transition-colors hover:bg-line-soft">
         <CardContent className="p-3 sm:p-4">
           <div className="flex items-start gap-3">
             <div className={`p-2 rounded-lg ${statusConfig.bgColor} shrink-0`}>

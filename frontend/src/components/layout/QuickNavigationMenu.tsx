@@ -260,7 +260,12 @@ export function QuickNavigationMenu({
       <TooltipProvider delayDuration={0}>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className={cn('h-10 w-10', className)}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn('h-10 w-10', className)}
+              aria-label={t('quickNav.title', 'Quick Access')}
+            >
               <Zap className="h-5 w-5" />
             </Button>
           </TooltipTrigger>

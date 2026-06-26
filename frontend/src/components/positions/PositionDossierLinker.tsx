@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { usePositionDossierLinks } from '@/hooks/usePositionDossierLinks'
 import { useCreatePositionDossierLink } from '@/hooks/useCreatePositionDossierLink'
 import { useDeletePositionDossierLink } from '@/hooks/useDeletePositionDossierLink'
+import { useDossiers } from '@/hooks/useDossier'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -32,8 +33,18 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
   const [notes, setNotes] = useState('')
 
   const { links, isLoading, error } = usePositionDossierLinks(positionId)
+  const { data: dossiersData, isLoading: isLoadingDossiers } = useDossiers({
+    status: 'active',
+    page_size: 100,
+    sort_by: 'name_en',
+    sort_order: 'asc',
+  })
   const createLink = useCreatePositionDossierLink(positionId)
   const deleteLink = useDeletePositionDossierLink()
+  const linkedDossierIds = new Set(links.map((link) => link.dossier_id))
+  const availableDossiers = (dossiersData?.data ?? []).filter(
+    (dossier) => !linkedDossierIds.has(dossier.id),
+  )
 
   const handleAddLink = async () => {
     if (!selectedDossierId) return
@@ -112,10 +123,23 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
                     <SelectValue placeholder={t('position_dossier_links.select_placeholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    {/* TODO: Fetch and display available dossiers */}
-                    <SelectItem value="placeholder">
-                      {t('position_dossier_links.no_dossiers')}
-                    </SelectItem>
+                    {isLoadingDossiers ? (
+                      <SelectItem value="loading" disabled>
+                        {t('common.loading')}
+                      </SelectItem>
+                    ) : availableDossiers.length > 0 ? (
+                      availableDossiers.map((dossier) => (
+                        <SelectItem key={dossier.id} value={dossier.id}>
+                          {isRTL
+                            ? dossier.name_ar || dossier.name_en
+                            : dossier.name_en || dossier.name_ar}
+                        </SelectItem>
+                      ))
+                    ) : (
+                      <SelectItem value="none" disabled>
+                        {t('position_dossier_links.no_dossiers')}
+                      </SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
               </div>

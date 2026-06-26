@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { NavigationShell, MetricCard, ExecutionsTabs } from '@/components/modern-nav'
+import { devModeGuard } from '@/lib/dev-mode-guard'
 
 /**
  * Standalone Modern Navigation Demo
@@ -11,6 +12,8 @@ import { NavigationShell, MetricCard, ExecutionsTabs } from '@/components/modern
  * Access at: /modern-nav-standalone
  */
 export const Route = createFileRoute('/modern-nav-standalone')({
+  // FE-FUNC-18: standalone navigation demo (carries a placeholder user) — dev-only.
+  beforeLoad: devModeGuard,
   component: StandaloneDemo,
 })
 

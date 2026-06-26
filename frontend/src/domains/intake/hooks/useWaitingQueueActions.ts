@@ -64,7 +64,10 @@ export function useReminderAction() {
       return sendReminderApi(data) as Promise<SendReminderResponse>
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['waiting-queue'] })
+      // The displayed waiting queue is keyed ['queue-filters','assignments',filters]
+      // (useQueueFilters). ['waiting-queue'] had no producer — invalidate the real
+      // key prefix so reminder/escalate/ack actions refresh the rendered rows.
+      void queryClient.invalidateQueries({ queryKey: ['queue-filters'] })
     },
   })
 }
@@ -139,7 +142,10 @@ export function useEscalationAction() {
       ) as Promise<EscalateAssignmentResponse>
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['waiting-queue'] })
+      // The displayed waiting queue is keyed ['queue-filters','assignments',filters]
+      // (useQueueFilters). ['waiting-queue'] had no producer — invalidate the real
+      // key prefix so reminder/escalate/ack actions refresh the rendered rows.
+      void queryClient.invalidateQueries({ queryKey: ['queue-filters'] })
     },
   })
 }
@@ -152,7 +158,10 @@ function useAcknowledgeEscalation() {
       return acknowledgeEscalationApi(escalationId)
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['waiting-queue'] })
+      // The displayed waiting queue is keyed ['queue-filters','assignments',filters]
+      // (useQueueFilters). ['waiting-queue'] had no producer — invalidate the real
+      // key prefix so reminder/escalate/ack actions refresh the rendered rows.
+      void queryClient.invalidateQueries({ queryKey: ['queue-filters'] })
     },
   })
 }
@@ -168,7 +177,10 @@ function useResolveEscalation() {
       return resolveEscalationApi(params.escalationId, params.data)
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['waiting-queue'] })
+      // The displayed waiting queue is keyed ['queue-filters','assignments',filters]
+      // (useQueueFilters). ['waiting-queue'] had no producer — invalidate the real
+      // key prefix so reminder/escalate/ack actions refresh the rendered rows.
+      void queryClient.invalidateQueries({ queryKey: ['queue-filters'] })
     },
   })
 }

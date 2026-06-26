@@ -258,6 +258,7 @@ export function AvailabilityPollingPage() {
             size="icon"
             onClick={() => setViewMode('grid')}
             className="h-9 w-9"
+            aria-label={t('common.actions.gridView', { defaultValue: 'Grid view' })}
           >
             <LayoutGrid className="h-4 w-4" />
           </Button>
@@ -266,6 +267,7 @@ export function AvailabilityPollingPage() {
             size="icon"
             onClick={() => setViewMode('list')}
             className="h-9 w-9"
+            aria-label={t('common.actions.listView', { defaultValue: 'List view' })}
           >
             <List className="h-4 w-4" />
           </Button>

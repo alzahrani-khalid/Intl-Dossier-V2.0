@@ -37,6 +37,7 @@ export interface AfterActionFormData {
   commitments: Commitment[]
   risks: Risk[]
   follow_ups: FollowUpAction[]
+  attachment_ids: string[]
   notes?: string
   version?: number
 }
@@ -79,6 +80,7 @@ export function AfterActionForm({
     commitments: initialData?.commitments || [],
     risks: initialData?.risks || [],
     follow_ups: initialData?.follow_ups || [],
+    attachment_ids: initialData?.attachment_ids || [],
     notes: initialData?.notes || '',
     version: initialData?.version,
     ...(initialData?.id && { id: initialData.id }),
@@ -144,7 +146,8 @@ export function AfterActionForm({
       formData.decisions.length > 0 ||
       formData.commitments.length > 0 ||
       formData.risks.length > 0 ||
-      formData.follow_ups.length > 0
+      formData.follow_ups.length > 0 ||
+      formData.attachment_ids.length > 0
     onDirtyChange(hasContent)
   }, [
     formData.attendees,
@@ -154,6 +157,7 @@ export function AfterActionForm({
     formData.commitments,
     formData.risks,
     formData.follow_ups,
+    formData.attachment_ids,
     onDirtyChange,
   ])
 
@@ -444,8 +448,8 @@ export function AfterActionForm({
 
       {/* Attachments */}
       <AttachmentUploader
-        attachmentIds={[]}
-        onChange={() => {}}
+        attachmentIds={formData.attachment_ids}
+        onChange={(attachment_ids) => setFormData((prev) => ({ ...prev, attachment_ids }))}
         maxFiles={10}
         maxFileSize={100 * 1024 * 1024} // 100MB
       />

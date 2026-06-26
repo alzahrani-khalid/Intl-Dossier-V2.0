@@ -43,147 +43,147 @@
  * PATCH  /collaborative-editing/:documentId/settings - Update settings
  */
 
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
-import { corsHeaders } from '../_shared/cors.ts';
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { corsHeaders } from '../_shared/cors.ts'
 
 // Types
 interface JoinSessionRequest {
-  document_id: string;
-  document_version_id?: string;
+  document_id: string
+  document_version_id?: string
 }
 
 interface UpdateCursorRequest {
-  session_id: string;
+  session_id: string
   cursor_position: {
-    line: number;
-    column: number;
+    line: number
+    column: number
     selection?: {
-      start: { line: number; column: number };
-      end: { line: number; column: number };
-    };
-  };
+      start: { line: number; column: number }
+      end: { line: number; column: number }
+    }
+  }
   viewport?: {
-    scrollTop: number;
-    scrollLeft: number;
-    visibleRange: { start: number; end: number };
-  };
+    scrollTop: number
+    scrollLeft: number
+    visibleRange: { start: number; end: number }
+  }
 }
 
 interface CreateSuggestionRequest {
-  document_version_id?: string;
-  start_position: { line: number; column: number; offset: number };
-  end_position: { line: number; column: number; offset: number };
-  original_text: string;
-  suggested_text: string;
-  change_type: 'insertion' | 'deletion' | 'replacement' | 'formatting';
-  comment?: string;
+  document_version_id?: string
+  start_position: { line: number; column: number; offset: number }
+  end_position: { line: number; column: number; offset: number }
+  original_text: string
+  suggested_text: string
+  change_type: 'insertion' | 'deletion' | 'replacement' | 'formatting'
+  comment?: string
 }
 
 interface ResolveSuggestionRequest {
-  accept: boolean;
-  comment?: string;
+  accept: boolean
+  comment?: string
 }
 
 interface CreateTrackChangeRequest {
-  document_version_id?: string;
-  session_id?: string;
-  start_position: { line: number; column: number; offset: number };
-  end_position: { line: number; column: number; offset: number };
-  original_text?: string;
-  new_text?: string;
-  change_type: 'insertion' | 'deletion' | 'replacement' | 'formatting';
-  change_group_id?: string;
-  sequence_number?: number;
+  document_version_id?: string
+  session_id?: string
+  start_position: { line: number; column: number; offset: number }
+  end_position: { line: number; column: number; offset: number }
+  original_text?: string
+  new_text?: string
+  change_type: 'insertion' | 'deletion' | 'replacement' | 'formatting'
+  change_group_id?: string
+  sequence_number?: number
 }
 
 interface ResolveChangeRequest {
-  accept: boolean;
+  accept: boolean
 }
 
 interface CreateInlineCommentRequest {
-  document_version_id?: string;
-  anchor_start: { line: number; column: number; offset: number };
-  anchor_end: { line: number; column: number; offset: number };
-  highlighted_text: string;
-  content: string;
-  parent_id?: string;
-  mentioned_users?: string[];
+  document_version_id?: string
+  anchor_start: { line: number; column: number; offset: number }
+  anchor_end: { line: number; column: number; offset: number }
+  highlighted_text: string
+  content: string
+  parent_id?: string
+  mentioned_users?: string[]
 }
 
 interface UpdateInlineCommentRequest {
-  content: string;
-  mentioned_users?: string[];
+  content: string
+  mentioned_users?: string[]
 }
 
 interface ResolveInlineCommentRequest {
-  status: 'resolved' | 'dismissed' | 'open';
+  status: 'resolved' | 'dismissed' | 'open'
 }
 
 interface AddCollaboratorRequest {
-  user_id: string;
-  can_edit?: boolean;
-  can_suggest?: boolean;
-  can_comment?: boolean;
-  can_resolve?: boolean;
-  can_manage?: boolean;
-  expires_at?: string;
+  user_id: string
+  can_edit?: boolean
+  can_suggest?: boolean
+  can_comment?: boolean
+  can_resolve?: boolean
+  can_manage?: boolean
+  expires_at?: string
 }
 
 interface UpdateCollaboratorRequest {
-  can_edit?: boolean;
-  can_suggest?: boolean;
-  can_comment?: boolean;
-  can_resolve?: boolean;
-  can_manage?: boolean;
-  expires_at?: string;
-  is_active?: boolean;
+  can_edit?: boolean
+  can_suggest?: boolean
+  can_comment?: boolean
+  can_resolve?: boolean
+  can_manage?: boolean
+  expires_at?: string
+  is_active?: boolean
 }
 
 interface LockDocumentRequest {
-  reason?: string;
+  reason?: string
 }
 
 interface UpdateSettingsRequest {
-  track_changes_enabled?: boolean;
-  suggestions_enabled?: boolean;
+  track_changes_enabled?: boolean
+  suggestions_enabled?: boolean
 }
 
 // Simple markdown to HTML converter
 function renderMarkdown(content: string): string {
-  let html = content;
+  let html = content
 
   // Escape HTML
-  html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
   // Bold
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
 
   // Italic
-  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>')
 
   // Code
-  html = html.replace(/`(.+?)`/g, '<code>$1</code>');
+  html = html.replace(/`(.+?)`/g, '<code>$1</code>')
 
   // @mentions
-  html = html.replace(/@([a-zA-Z0-9_.-]+)/g, '<span class="mention" data-username="$1">@$1</span>');
+  html = html.replace(/@([a-zA-Z0-9_.-]+)/g, '<span class="mention" data-username="$1">@$1</span>')
 
   // Line breaks
-  html = html.replace(/\n/g, '<br>');
+  html = html.replace(/\n/g, '<br>')
 
-  return html;
+  return html
 }
 
 // URL pattern matching
 function matchRoute(
   pathname: string,
-  method: string
+  method: string,
 ): { handler: string; params: Record<string, string> } | null {
   const routes: Array<{
-    pattern: RegExp;
-    method: string;
-    handler: string;
-    paramNames: string[];
+    pattern: RegExp
+    method: string
+    handler: string
+    paramNames: string[]
   }> = [
     // Sessions
     {
@@ -352,50 +352,50 @@ function matchRoute(
       handler: 'updateSettings',
       paramNames: ['documentId'],
     },
-  ];
+  ]
 
   for (const route of routes) {
-    if (route.method !== method) continue;
+    if (route.method !== method) continue
 
-    const match = pathname.match(route.pattern);
+    const match = pathname.match(route.pattern)
     if (match) {
-      const params: Record<string, string> = {};
+      const params: Record<string, string> = {}
       route.paramNames.forEach((name, index) => {
-        params[name] = match[index + 1];
-      });
-      return { handler: route.handler, params };
+        params[name] = match[index + 1]
+      })
+      return { handler: route.handler, params }
     }
   }
 
-  return null;
+  return null
 }
 
 serve(async (req: Request) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders })
   }
 
   try {
-    const url = new URL(req.url);
-    const pathname = url.pathname;
+    const url = new URL(req.url)
+    const pathname = url.pathname
 
     // Match route
-    const routeMatch = matchRoute(pathname, req.method);
+    const routeMatch = matchRoute(pathname, req.method)
     if (!routeMatch) {
       return new Response(JSON.stringify({ error: 'Not found' }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      })
     }
 
     // Get auth token
-    const authHeader = req.headers.get('Authorization');
+    const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      })
     }
 
     // Create Supabase client
@@ -404,76 +404,78 @@ serve(async (req: Request) => {
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       {
         global: { headers: { Authorization: authHeader } },
-      }
-    );
+      },
+    )
 
-    // Get user
+    // Get user — pass the bearer token explicitly; a bare getUser() returns 401
+    // on valid tokens with this supabase-js client.
+    const token = authHeader.replace('Bearer ', '')
     const {
       data: { user },
       error: authError,
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser(token)
     if (authError || !user) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      })
     }
 
-    const { handler, params } = routeMatch;
-    let result: unknown;
+    const { handler, params } = routeMatch
+    let result: unknown
 
     // Route handlers
     switch (handler) {
       // ========== SESSION HANDLERS ==========
       case 'joinSession': {
-        const body: JoinSessionRequest = await req.json();
+        const body: JoinSessionRequest = await req.json()
         const { data, error } = await supabase.rpc('join_edit_session', {
           p_document_id: body.document_id,
           p_document_version_id: body.document_version_id,
-        });
-        if (error) throw error;
-        result = data;
-        break;
+        })
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'leaveSession': {
-        const body = await req.json();
+        const body = await req.json()
         const { error } = await supabase.rpc('leave_edit_session', {
           p_session_id: body.session_id,
-        });
-        if (error) throw error;
-        result = { success: true };
-        break;
+        })
+        if (error) throw error
+        result = { success: true }
+        break
       }
 
       case 'updateCursor': {
-        const body: UpdateCursorRequest = await req.json();
+        const body: UpdateCursorRequest = await req.json()
         const { error } = await supabase.rpc('update_cursor_position', {
           p_session_id: body.session_id,
           p_cursor_position: body.cursor_position,
           p_viewport: body.viewport,
-        });
-        if (error) throw error;
-        result = { success: true };
-        break;
+        })
+        if (error) throw error
+        result = { success: true }
+        break
       }
 
       case 'getActiveEditors': {
         const { data, error } = await supabase.rpc('get_active_editors', {
           p_document_id: params.documentId,
-        });
-        if (error) throw error;
-        result = data;
-        break;
+        })
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'getSummary': {
         const { data, error } = await supabase.rpc('get_collaboration_summary', {
           p_document_id: params.documentId,
-        });
-        if (error) throw error;
-        result = data?.[0] || null;
-        break;
+        })
+        if (error) throw error
+        result = data?.[0] || null
+        break
       }
 
       // ========== SUGGESTION HANDLERS ==========
@@ -483,23 +485,23 @@ serve(async (req: Request) => {
           | 'accepted'
           | 'rejected'
           | 'resolved'
-          | null;
-        const limit = parseInt(url.searchParams.get('limit') || '50');
-        const offset = parseInt(url.searchParams.get('offset') || '0');
+          | null
+        const limit = parseInt(url.searchParams.get('limit') || '50')
+        const offset = parseInt(url.searchParams.get('offset') || '0')
 
         const { data, error } = await supabase.rpc('get_document_suggestions', {
           p_document_id: params.documentId,
           p_status: status,
           p_limit: limit,
           p_offset: offset,
-        });
-        if (error) throw error;
-        result = data;
-        break;
+        })
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'createSuggestion': {
-        const body: CreateSuggestionRequest = await req.json();
+        const body: CreateSuggestionRequest = await req.json()
         const { data, error } = await supabase
           .from('document_suggestions')
           .insert({
@@ -514,43 +516,43 @@ serve(async (req: Request) => {
             comment: body.comment,
           })
           .select()
-          .single();
-        if (error) throw error;
-        result = data;
-        break;
+          .single()
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'resolveSuggestion': {
-        const body: ResolveSuggestionRequest = await req.json();
+        const body: ResolveSuggestionRequest = await req.json()
         const { data, error } = await supabase.rpc('resolve_suggestion', {
           p_suggestion_id: params.suggestionId,
           p_accept: body.accept,
           p_comment: body.comment,
-        });
-        if (error) throw error;
-        result = data;
-        break;
+        })
+        if (error) throw error
+        result = data
+        break
       }
 
       // ========== TRACK CHANGE HANDLERS ==========
       case 'listChanges': {
-        const showPendingOnly = url.searchParams.get('pending_only') === 'true';
-        const limit = parseInt(url.searchParams.get('limit') || '100');
-        const offset = parseInt(url.searchParams.get('offset') || '0');
+        const showPendingOnly = url.searchParams.get('pending_only') === 'true'
+        const limit = parseInt(url.searchParams.get('limit') || '100')
+        const offset = parseInt(url.searchParams.get('offset') || '0')
 
         const { data, error } = await supabase.rpc('get_document_track_changes', {
           p_document_id: params.documentId,
           p_show_pending_only: showPendingOnly,
           p_limit: limit,
           p_offset: offset,
-        });
-        if (error) throw error;
-        result = data;
-        break;
+        })
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'createChange': {
-        const body: CreateTrackChangeRequest = await req.json();
+        const body: CreateTrackChangeRequest = await req.json()
         const { data, error } = await supabase
           .from('document_track_changes')
           .insert({
@@ -567,32 +569,32 @@ serve(async (req: Request) => {
             sequence_number: body.sequence_number,
           })
           .select()
-          .single();
-        if (error) throw error;
-        result = data;
-        break;
+          .single()
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'resolveChange': {
-        const body: ResolveChangeRequest = await req.json();
+        const body: ResolveChangeRequest = await req.json()
         const { data, error } = await supabase.rpc('resolve_track_change', {
           p_change_id: params.changeId,
           p_accept: body.accept,
-        });
-        if (error) throw error;
-        result = data;
-        break;
+        })
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'resolveChangeGroup': {
-        const body: ResolveChangeRequest = await req.json();
+        const body: ResolveChangeRequest = await req.json()
         const { data, error } = await supabase.rpc('resolve_change_group', {
           p_group_id: params.groupId,
           p_accept: body.accept,
-        });
-        if (error) throw error;
-        result = { affected_count: data };
-        break;
+        })
+        if (error) throw error
+        result = { affected_count: data }
+        break
       }
 
       case 'acceptAllChanges': {
@@ -605,10 +607,10 @@ serve(async (req: Request) => {
           })
           .eq('document_id', params.documentId)
           .is('is_accepted', null)
-          .select();
-        if (error) throw error;
-        result = { affected_count: data?.length || 0 };
-        break;
+          .select()
+        if (error) throw error
+        result = { affected_count: data?.length || 0 }
+        break
       }
 
       case 'rejectAllChanges': {
@@ -621,30 +623,30 @@ serve(async (req: Request) => {
           })
           .eq('document_id', params.documentId)
           .is('is_accepted', null)
-          .select();
-        if (error) throw error;
-        result = { affected_count: data?.length || 0 };
-        break;
+          .select()
+        if (error) throw error
+        result = { affected_count: data?.length || 0 }
+        break
       }
 
       // ========== INLINE COMMENT HANDLERS ==========
       case 'listComments': {
-        const status = url.searchParams.get('status') as 'open' | 'resolved' | 'dismissed' | null;
-        const threadRootId = url.searchParams.get('thread_root_id');
+        const status = url.searchParams.get('status') as 'open' | 'resolved' | 'dismissed' | null
+        const threadRootId = url.searchParams.get('thread_root_id')
 
         const { data, error } = await supabase.rpc('get_document_inline_comments', {
           p_document_id: params.documentId,
           p_status: status,
           p_thread_root_id: threadRootId,
-        });
-        if (error) throw error;
-        result = data;
-        break;
+        })
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'createComment': {
-        const body: CreateInlineCommentRequest = await req.json();
-        const contentHtml = renderMarkdown(body.content);
+        const body: CreateInlineCommentRequest = await req.json()
+        const contentHtml = renderMarkdown(body.content)
 
         const { data, error } = await supabase
           .from('document_inline_comments')
@@ -661,15 +663,15 @@ serve(async (req: Request) => {
             mentioned_users: body.mentioned_users || [],
           })
           .select()
-          .single();
-        if (error) throw error;
-        result = data;
-        break;
+          .single()
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'updateComment': {
-        const body: UpdateInlineCommentRequest = await req.json();
-        const contentHtml = renderMarkdown(body.content);
+        const body: UpdateInlineCommentRequest = await req.json()
+        const contentHtml = renderMarkdown(body.content)
 
         const { data, error } = await supabase
           .from('document_inline_comments')
@@ -684,21 +686,21 @@ serve(async (req: Request) => {
           .eq('id', params.commentId)
           .eq('author_id', user.id)
           .select()
-          .single();
-        if (error) throw error;
-        result = data;
-        break;
+          .single()
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'resolveComment': {
-        const body: ResolveInlineCommentRequest = await req.json();
+        const body: ResolveInlineCommentRequest = await req.json()
         const { data, error } = await supabase.rpc('resolve_inline_comment', {
           p_comment_id: params.commentId,
           p_status: body.status,
-        });
-        if (error) throw error;
-        result = data;
-        break;
+        })
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'deleteComment': {
@@ -712,10 +714,10 @@ serve(async (req: Request) => {
           .eq('id', params.commentId)
           .eq('author_id', user.id)
           .select()
-          .single();
-        if (error) throw error;
-        result = { success: true };
-        break;
+          .single()
+        if (error) throw error
+        result = { success: true }
+        break
       }
 
       // ========== COLLABORATOR HANDLERS ==========
@@ -735,17 +737,17 @@ serve(async (req: Request) => {
               email,
               raw_user_meta_data
             )
-          `
+          `,
           )
           .eq('document_id', params.documentId)
-          .eq('is_active', true);
-        if (error) throw error;
-        result = data;
-        break;
+          .eq('is_active', true)
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'addCollaborator': {
-        const body: AddCollaboratorRequest = await req.json();
+        const body: AddCollaboratorRequest = await req.json()
         const { data, error } = await supabase
           .from('document_collaborators')
           .insert({
@@ -760,47 +762,47 @@ serve(async (req: Request) => {
             expires_at: body.expires_at,
           })
           .select()
-          .single();
-        if (error) throw error;
-        result = data;
-        break;
+          .single()
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'updateCollaborator': {
-        const body: UpdateCollaboratorRequest = await req.json();
-        const updateData: Record<string, unknown> = {};
-        if (body.can_edit !== undefined) updateData.can_edit = body.can_edit;
-        if (body.can_suggest !== undefined) updateData.can_suggest = body.can_suggest;
-        if (body.can_comment !== undefined) updateData.can_comment = body.can_comment;
-        if (body.can_resolve !== undefined) updateData.can_resolve = body.can_resolve;
-        if (body.can_manage !== undefined) updateData.can_manage = body.can_manage;
-        if (body.expires_at !== undefined) updateData.expires_at = body.expires_at;
-        if (body.is_active !== undefined) updateData.is_active = body.is_active;
+        const body: UpdateCollaboratorRequest = await req.json()
+        const updateData: Record<string, unknown> = {}
+        if (body.can_edit !== undefined) updateData.can_edit = body.can_edit
+        if (body.can_suggest !== undefined) updateData.can_suggest = body.can_suggest
+        if (body.can_comment !== undefined) updateData.can_comment = body.can_comment
+        if (body.can_resolve !== undefined) updateData.can_resolve = body.can_resolve
+        if (body.can_manage !== undefined) updateData.can_manage = body.can_manage
+        if (body.expires_at !== undefined) updateData.expires_at = body.expires_at
+        if (body.is_active !== undefined) updateData.is_active = body.is_active
 
         const { data, error } = await supabase
           .from('document_collaborators')
           .update(updateData)
           .eq('id', params.collaboratorId)
           .select()
-          .single();
-        if (error) throw error;
-        result = data;
-        break;
+          .single()
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'removeCollaborator': {
         const { error } = await supabase
           .from('document_collaborators')
           .update({ is_active: false })
-          .eq('id', params.collaboratorId);
-        if (error) throw error;
-        result = { success: true };
-        break;
+          .eq('id', params.collaboratorId)
+        if (error) throw error
+        result = { success: true }
+        break
       }
 
       // ========== DOCUMENT LOCK/SETTINGS HANDLERS ==========
       case 'lockDocument': {
-        const body: LockDocumentRequest = await req.json();
+        const body: LockDocumentRequest = await req.json()
 
         // Upsert collaborative state
         const { data, error } = await supabase
@@ -815,13 +817,13 @@ serve(async (req: Request) => {
             },
             {
               onConflict: 'document_id',
-            }
+            },
           )
           .select()
-          .single();
-        if (error) throw error;
-        result = data;
-        break;
+          .single()
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'unlockDocument': {
@@ -835,20 +837,20 @@ serve(async (req: Request) => {
           })
           .eq('document_id', params.documentId)
           .select()
-          .single();
-        if (error) throw error;
-        result = data;
-        break;
+          .single()
+        if (error) throw error
+        result = data
+        break
       }
 
       case 'updateSettings': {
-        const body: UpdateSettingsRequest = await req.json();
-        const updateData: Record<string, unknown> = {};
+        const body: UpdateSettingsRequest = await req.json()
+        const updateData: Record<string, unknown> = {}
         if (body.track_changes_enabled !== undefined) {
-          updateData.track_changes_enabled = body.track_changes_enabled;
+          updateData.track_changes_enabled = body.track_changes_enabled
         }
         if (body.suggestions_enabled !== undefined) {
-          updateData.suggestions_enabled = body.suggestions_enabled;
+          updateData.suggestions_enabled = body.suggestions_enabled
         }
 
         // Upsert collaborative state
@@ -861,28 +863,28 @@ serve(async (req: Request) => {
             },
             {
               onConflict: 'document_id',
-            }
+            },
           )
           .select()
-          .single();
-        if (error) throw error;
-        result = data;
-        break;
+          .single()
+        if (error) throw error
+        result = data
+        break
       }
 
       default:
         return new Response(JSON.stringify({ error: 'Handler not found' }), {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        })
     }
 
     return new Response(JSON.stringify(result), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error:', error)
     return new Response(
       JSON.stringify({
         error: error instanceof Error ? error.message : 'Internal server error',
@@ -890,7 +892,7 @@ serve(async (req: Request) => {
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+      },
+    )
   }
-});
+})

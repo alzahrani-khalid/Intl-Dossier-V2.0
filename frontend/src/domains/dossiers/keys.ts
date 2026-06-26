@@ -22,8 +22,13 @@ export const dossierKeys = {
   list: (filters?: Record<string, unknown>) => [...dossierKeys.lists(), filters] as const,
   details: () => [...dossierKeys.all, 'detail'] as const,
   detail: (id: string) => [...dossierKeys.details(), id] as const,
+  // When called without paging (invalidation), return a clean prefix so it
+  // matches paginated byType list queries — a trailing {page:undefined} object
+  // is rejected by TanStack's partialDeepEqual against a list's {page:1,...}.
   byType: (type: string, page?: number, pageSize?: number) =>
-    [...dossierKeys.all, 'type', type, { page, pageSize }] as const,
+    page === undefined && pageSize === undefined
+      ? ([...dossierKeys.all, 'type', type] as const)
+      : ([...dossierKeys.all, 'type', type, { page, pageSize }] as const),
   timeline: (id: string, filters?: unknown) =>
     [...dossierKeys.all, 'timeline', id, filters] as const,
   briefs: (id: string) => [...dossierKeys.all, 'briefs', id] as const,

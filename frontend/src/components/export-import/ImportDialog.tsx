@@ -256,7 +256,12 @@ export function ImportDialog({
                     {validationResult.fileInfo?.columns.length} columns
                   </p>
                 </div>
-                <Button variant="ghost" size="icon" onClick={handleReset}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleReset}
+                  aria-label={t('common:common.actions.remove')}
+                >
                   <X className="h-4 w-4" />
                 </Button>
               </div>

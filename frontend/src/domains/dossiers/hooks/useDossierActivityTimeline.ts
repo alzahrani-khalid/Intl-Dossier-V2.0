@@ -57,7 +57,6 @@ export interface TimelineFilters {
 export interface DossierActivityTimelineResponse {
   activities: TimelineActivity[]
   next_cursor: string | null
-  has_more: boolean
   total_count: number
 }
 

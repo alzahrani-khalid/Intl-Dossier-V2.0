@@ -280,7 +280,7 @@ export function DossierSearchPage() {
       ) : (
         /* Empty state - no query */
         <div className="py-12 text-center">
-          <div className="mb-4 text-6xl">🔍</div>
+          <Search className="mx-auto mb-4 size-12 text-muted-foreground" aria-hidden="true" />
           <h3 className="mb-2 text-lg font-semibold text-foreground dark:text-muted-foreground">
             {t('empty.noQuery.title')}
           </h3>

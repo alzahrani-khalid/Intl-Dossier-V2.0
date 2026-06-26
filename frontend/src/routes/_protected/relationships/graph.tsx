@@ -1,6 +1,12 @@
 import type { ReactElement } from 'react'
+import { lazy, Suspense } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { RelationshipGraphPage } from '@/pages/relationships/RelationshipGraphPage'
+
+const RelationshipGraphPage = lazy(() =>
+  import('@/pages/relationships/RelationshipGraphPage').then((module) => ({
+    default: module.RelationshipGraphPage,
+  })),
+)
 
 // The four analytic query templates (Phase 71 / GRAPH-01). Kept in sync with
 // AnalyticQueryType in `@/hooks/useAnalyticGraph`.
@@ -44,5 +50,13 @@ export const Route = createFileRoute('/_protected/relationships/graph')({
 })
 
 function RelationshipGraphRoute(): ReactElement {
-  return <RelationshipGraphPage />
+  return (
+    <Suspense
+      fallback={
+        <div className="h-[60vh] w-full rounded-md border border-[var(--line)] bg-[var(--surface)]" />
+      }
+    >
+      <RelationshipGraphPage />
+    </Suspense>
+  )
 }

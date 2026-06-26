@@ -1,23 +1,29 @@
 /**
  * Working Group Audit Tab Route
+ * Renders the full dossier activity log (this app's "audit" surface) for the dossier.
  */
 
 import { createFileRoute } from '@tanstack/react-router'
 import type { ReactElement } from 'react'
-import { useTranslation } from 'react-i18next'
+import { lazy, Suspense } from 'react'
+import { TabSkeleton } from '@/components/workspace/TabSkeleton'
+
+const DossierActivityTimeline = lazy(() =>
+  import('@/components/dossier/DossierActivityTimeline').then((m) => ({
+    default: m.DossierActivityTimeline,
+  })),
+)
 
 export const Route = createFileRoute('/_protected/dossiers/working_groups/$id/audit')({
   component: WorkingGroupAuditRoute,
 })
 
 function WorkingGroupAuditRoute(): ReactElement {
-  const { t } = useTranslation('dossier-shell')
+  const { id } = Route.useParams()
 
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-center">
-      <p className="text-muted-foreground text-sm">
-        {t('tabs.audit')} — {t('emptyState.comingSoon', { defaultValue: 'Content coming soon' })}
-      </p>
-    </div>
+    <Suspense fallback={<TabSkeleton type="list" />}>
+      <DossierActivityTimeline dossierId={id} />
+    </Suspense>
   )
 }

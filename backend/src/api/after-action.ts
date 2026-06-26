@@ -38,6 +38,78 @@ const notificationService: NotificationService = createNotificationService(
   supabaseServiceKey,
 )
 
+type AaCommitmentInsert = Database['public']['Tables']['aa_commitments']['Insert']
+
+type AfterActionCommitmentInput = Record<string, unknown> & {
+  description?: string
+  title?: string
+  title_ar?: string | null
+  owner_type?: string
+  owner_internal_id?: string
+  owner_external_id?: string
+  owner_user_id?: string
+  owner_contact_id?: string
+  due_date?: string | Date
+  priority?: string
+  status?: string
+  tracking_type?: string
+  tracking_mode?: string
+  completion_notes?: string | null
+  completed_at?: string | Date | null
+  confidence_score?: number
+  ai_confidence?: number
+}
+
+function toDateOnly(value: string | Date | undefined): string {
+  if (value instanceof Date) {
+    return value.toISOString().slice(0, 10)
+  }
+  return String(value ?? '').split('T')[0] ?? ''
+}
+
+function mapAaCommitmentInsert(
+  commitment: AfterActionCommitmentInput,
+  afterActionId: string,
+  dossierId: string,
+  userId: string,
+): AaCommitmentInsert {
+  const description = String(commitment.description ?? commitment.title ?? '').trim()
+  const ownerType = commitment.owner_type === 'external' ? 'external' : 'internal'
+  const title = String(commitment.title ?? description).trim() || 'Commitment'
+
+  return {
+    after_action_id: afterActionId,
+    dossier_id: dossierId,
+    description,
+    title,
+    title_ar: commitment.title_ar ?? null,
+    due_date: toDateOnly(commitment.due_date),
+    owner_type: ownerType,
+    owner_user_id:
+      ownerType === 'internal'
+        ? (commitment.owner_user_id ?? commitment.owner_internal_id ?? null)
+        : null,
+    owner_contact_id:
+      ownerType === 'external'
+        ? (commitment.owner_contact_id ?? commitment.owner_external_id ?? null)
+        : null,
+    priority: commitment.priority ?? 'medium',
+    status: commitment.status ?? 'pending',
+    tracking_mode:
+      commitment.tracking_mode ??
+      commitment.tracking_type ??
+      (ownerType === 'internal' ? 'automatic' : 'manual'),
+    completion_notes: commitment.completion_notes ?? null,
+    completed_at:
+      commitment.completed_at instanceof Date
+        ? commitment.completed_at.toISOString()
+        : (commitment.completed_at ?? null),
+    ai_confidence: commitment.ai_confidence ?? commitment.confidence_score ?? null,
+    created_by: userId,
+    updated_by: userId,
+  }
+}
+
 /**
  * List query schema
  */
@@ -80,7 +152,7 @@ router.get(
         `
           *,
           decisions:decisions(count),
-          commitments:commitments(count),
+          commitments:aa_commitments(count),
           risks:risks(count),
           follow_up_actions:follow_up_actions(count),
           attachments:attachments(count)
@@ -187,7 +259,24 @@ router.get(
           `
           *,
           decisions(*),
-          commitments(*),
+          commitments:aa_commitments(
+            id,
+            after_action_id,
+            dossier_id,
+            description,
+            owner_type,
+            owner_internal_id:owner_user_id,
+            owner_external_id:owner_contact_id,
+            due_date,
+            priority,
+            status,
+            tracking_type:tracking_mode,
+            completion_notes,
+            completed_at,
+            confidence_score:ai_confidence,
+            created_at,
+            updated_at
+          ),
           risks(*),
           follow_up_actions(*),
           attachments(*)
@@ -334,12 +423,10 @@ router.post(
       }
 
       if (req.body.commitments && req.body.commitments.length > 0) {
-        const commitmentsData = req.body.commitments.map((c: Record<string, unknown>) => ({
-          ...c,
-          after_action_id: afterActionId,
-          dossier_id: req.body.dossier_id,
-        }))
-        promises.push(supabase.from('commitments').insert(commitmentsData).select())
+        const commitmentsData = req.body.commitments.map((c: AfterActionCommitmentInput) =>
+          mapAaCommitmentInsert(c, afterActionId, req.body.dossier_id, userId),
+        )
+        promises.push(supabase.from('aa_commitments').insert(commitmentsData).select())
       }
 
       if (req.body.risks && req.body.risks.length > 0) {
@@ -538,11 +625,9 @@ router.put(
       if (req.body.commitments) {
         await supabase.from('aa_commitments').delete().eq('after_action_id', id)
         if (req.body.commitments.length > 0) {
-          const commitmentsData = req.body.commitments.map((c: Record<string, unknown>) => ({
-            ...c,
-            after_action_id: id,
-            dossier_id: currentRecord.dossier_id,
-          })) as Database['public']['Tables']['aa_commitments']['Insert'][]
+          const commitmentsData = req.body.commitments.map((c: AfterActionCommitmentInput) =>
+            mapAaCommitmentInsert(c, id, currentRecord.dossier_id, userId),
+          )
           await supabase.from('aa_commitments').insert(commitmentsData)
         }
       }
@@ -606,7 +691,24 @@ router.post(
         .select(
           `
           *,
-          commitments(*)
+          commitments:aa_commitments(
+            id,
+            after_action_id,
+            dossier_id,
+            description,
+            owner_type,
+            owner_internal_id:owner_user_id,
+            owner_external_id:owner_contact_id,
+            due_date,
+            priority,
+            status,
+            tracking_type:tracking_mode,
+            completion_notes,
+            completed_at,
+            confidence_score:ai_confidence,
+            created_at,
+            updated_at
+          )
         `,
         )
         .eq('id', id)

@@ -67,7 +67,7 @@ export function BatchContactReview({
 }: BatchContactReviewProps) {
   const { t } = useTranslation('contacts')
   const { isRTL } = useDirection()
-// Calculate selected contacts
+  // Calculate selected contacts
   const selectedContacts = useMemo(() => contacts.filter((c) => c.selected), [contacts])
 
   const allSelected = contacts.length > 0 && selectedContacts.length === contacts.length
@@ -370,6 +370,7 @@ export function BatchContactReview({
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => handleRemoveEmail(contact.id, index)}
+                                  aria-label={t('common:common.actions.remove')}
                                   className="flex-shrink-0 min-h-9 min-w-9"
                                 >
                                   <Trash2 className="h-3 w-3" />
@@ -412,6 +413,7 @@ export function BatchContactReview({
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => handleRemovePhone(contact.id, index)}
+                                  aria-label={t('common:common.actions.remove')}
                                   className="flex-shrink-0 min-h-9 min-w-9"
                                 >
                                   <Trash2 className="h-3 w-3" />
@@ -438,6 +440,7 @@ export function BatchContactReview({
                       variant="ghost"
                       size="icon"
                       onClick={() => handleRemoveContact(contact.id)}
+                      aria-label={t('common:common.actions.remove')}
                       className="flex-shrink-0 min-h-9 min-w-9"
                     >
                       <Trash2 className="h-4 w-4 text-destructive" />

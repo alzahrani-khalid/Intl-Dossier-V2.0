@@ -375,6 +375,9 @@ export function TagHierarchyManager({
             ) : (
               <ChevronRight className={cn('size-4', isRTL && 'rotate-180')} />
             )}
+            <span className="sr-only">
+              {t('common:common.actions.toggleSection', { defaultValue: 'Toggle section' })}
+            </span>
           </button>
 
           {/* Tag color indicator */}
@@ -414,6 +417,9 @@ export function TagHierarchyManager({
                   onClick={(e) => e.stopPropagation()}
                 >
                   <MoreVertical className="size-4" />
+                  <span className="sr-only">
+                    {t('common:common.actions.openMenu', { defaultValue: 'Open menu' })}
+                  </span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align={isRTL ? 'start' : 'end'}>

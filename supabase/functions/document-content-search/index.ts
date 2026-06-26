@@ -151,45 +151,61 @@ serve(async (req) => {
 
     // Enrich results with document metadata
     const enrichedResults: SearchResult[] = [];
+    const results = searchResults || [];
+    const metadataByResult = new Map<string, Record<string, any>>();
+    const documentIds = [
+      ...new Set(
+        results
+          .filter((result: any) => result.document_table === 'documents')
+          .map((result: any) => result.document_id)
+      ),
+    ];
+    const attachmentIds = [
+      ...new Set(
+        results
+          .filter((result: any) => result.document_table === 'attachments')
+          .map((result: any) => result.document_id)
+      ),
+    ];
 
-    for (const result of searchResults || []) {
-      let metadata: Record<string, any> = {};
+    const [documentsResult, attachmentsResult] = await Promise.all([
+      documentIds.length > 0
+        ? supabase
+            .from('documents')
+            .select('id, title, file_info, owner_type, owner_id')
+            .in('id', documentIds)
+        : Promise.resolve({ data: [] }),
+      attachmentIds.length > 0
+        ? supabase
+            .from('attachments')
+            .select('id, file_name, mime_type, file_size, file_key')
+            .in('id', attachmentIds)
+        : Promise.resolve({ data: [] }),
+    ]);
 
-      // Get document metadata based on table
-      if (result.document_table === 'documents') {
-        const { data: docData } = await supabase
-          .from('documents')
-          .select('title, file_info, owner_type, owner_id')
-          .eq('id', result.document_id)
-          .single();
+    for (const docData of documentsResult.data || []) {
+      const fileInfo = docData.file_info || {};
+      metadataByResult.set(`documents:${docData.id}`, {
+        title_en: docData.title,
+        mime_type: fileInfo.mime_type,
+        file_size: fileInfo.size,
+        storage_path: fileInfo.storage_path,
+        owner_type: docData.owner_type,
+        owner_id: docData.owner_id,
+      });
+    }
 
-        if (docData) {
-          const fileInfo = docData.file_info || {};
-          metadata = {
-            title_en: docData.title,
-            mime_type: fileInfo.mime_type,
-            file_size: fileInfo.size,
-            storage_path: fileInfo.storage_path,
-            owner_type: docData.owner_type,
-            owner_id: docData.owner_id,
-          };
-        }
-      } else if (result.document_table === 'attachments') {
-        const { data: attData } = await supabase
-          .from('attachments')
-          .select('file_name, mime_type, file_size, file_key')
-          .eq('id', result.document_id)
-          .single();
+    for (const attData of attachmentsResult.data || []) {
+      metadataByResult.set(`attachments:${attData.id}`, {
+        title_en: attData.file_name,
+        mime_type: attData.mime_type,
+        file_size: attData.file_size,
+        storage_path: attData.file_key,
+      });
+    }
 
-        if (attData) {
-          metadata = {
-            title_en: attData.file_name,
-            mime_type: attData.mime_type,
-            file_size: attData.file_size,
-            storage_path: attData.file_key,
-          };
-        }
-      }
+    for (const result of results) {
+      const metadata = metadataByResult.get(`${result.document_table}:${result.document_id}`) || {};
 
       // Apply owner filters if specified
       if (searchParams.owner_type && metadata.owner_type !== searchParams.owner_type) {

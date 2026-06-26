@@ -19,6 +19,61 @@ export interface ExportDossierResult {
   failedSections: string[]
 }
 
+const EXPORT_HTML_CSP =
+  "default-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; script-src 'none'; img-src data: https:; style-src 'unsafe-inline'; font-src data: https:"
+
+function stripExecutableHtmlFallback(html: string): string {
+  return html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/\s+on[a-z]+\s*=\s*(["']).*?\1/gi, '')
+    .replace(/\s+(href|src|xlink:href|formaction)\s*=\s*(["'])\s*javascript:[\s\S]*?\2/gi, '')
+    .replace(/<meta\b[^>]*http-equiv\s*=\s*(["'])refresh\1[^>]*>/gi, '')
+}
+
+export function sanitizeDossierExportHtml(html: string): string {
+  if (typeof DOMParser === 'undefined') {
+    return stripExecutableHtmlFallback(html)
+  }
+
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(html, 'text/html')
+
+  doc
+    .querySelectorAll(
+      'script, iframe, object, embed, link[rel="modulepreload"], link[rel="preload"][as="script"], meta[http-equiv="refresh"]',
+    )
+    .forEach((node) => node.remove())
+
+  doc.querySelectorAll('*').forEach((element) => {
+    Array.from(element.attributes).forEach((attribute) => {
+      const name = attribute.name.toLowerCase()
+      const value = attribute.value.trim()
+      if (
+        name.startsWith('on') ||
+        name === 'srcdoc' ||
+        ((name === 'href' || name === 'src' || name === 'xlink:href' || name === 'formaction') &&
+          /^javascript:/i.test(value))
+      ) {
+        element.removeAttribute(attribute.name)
+      }
+    })
+  })
+
+  let head = doc.head
+  if (!head) {
+    head = doc.createElement('head')
+    doc.documentElement.insertBefore(head, doc.body)
+  }
+  const existingCsp = head.querySelector('meta[http-equiv="Content-Security-Policy"]')
+  existingCsp?.remove()
+  const csp = doc.createElement('meta')
+  csp.setAttribute('http-equiv', 'Content-Security-Policy')
+  csp.setAttribute('content', EXPORT_HTML_CSP)
+  head.prepend(csp)
+
+  return `<!doctype html>\n${doc.documentElement.outerHTML}`
+}
+
 // =============================================================================
 // API Error
 // =============================================================================
@@ -91,8 +146,9 @@ export async function exportDossier(request: DossierExportRequest): Promise<Expo
     )
   }
 
-  // The edge returns the pack as a text/html body.
-  const html = await response.text()
+  // The edge returns the pack as a text/html body. Strip executable content
+  // before the UI writes the preview into a browser context.
+  const html = sanitizeDossierExportHtml(await response.text())
 
   // Sections that failed are reported as a comma-separated header.
   const failedSectionsRaw = response.headers.get('X-Failed-Sections') ?? ''

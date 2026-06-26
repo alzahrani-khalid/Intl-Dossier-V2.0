@@ -194,6 +194,9 @@ function ExecutionCard({
                   ) : (
                     <ChevronDown className="h-4 w-4" />
                   )}
+                  <span className="sr-only">
+                    {t('common:common.actions.toggleSection', { defaultValue: 'Toggle section' })}
+                  </span>
                 </Button>
               </CollapsibleTrigger>
             </div>

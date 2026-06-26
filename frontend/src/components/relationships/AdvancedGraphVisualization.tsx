@@ -861,6 +861,7 @@ function TimeAnimationPanel({ edges, onTimeChange }: TimeAnimationPanelProps) {
               setCurrentDate(dateRange.min)
               setIsPlaying(false)
             }}
+            aria-label={t('playback.skipToStart', 'Skip to start')}
           >
             <SkipBack className="h-4 w-4" />
           </Button>
@@ -870,6 +871,7 @@ function TimeAnimationPanel({ edges, onTimeChange }: TimeAnimationPanelProps) {
             variant={isPlaying ? 'secondary' : 'default'}
             className="h-8 w-8"
             onClick={() => setIsPlaying(!isPlaying)}
+            aria-label={isPlaying ? t('playback.pause', 'Pause') : t('playback.play', 'Play')}
           >
             {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           </Button>
@@ -882,6 +884,7 @@ function TimeAnimationPanel({ edges, onTimeChange }: TimeAnimationPanelProps) {
               setCurrentDate(dateRange.max)
               setIsPlaying(false)
             }}
+            aria-label={t('playback.skipToEnd', 'Skip to end')}
           >
             <SkipForward className="h-4 w-4" />
           </Button>
@@ -1008,6 +1011,7 @@ function ExportPanel({ reactFlowRef }: ExportPanelProps) {
               className="h-8 w-8"
               onClick={() => handleExport('png')}
               disabled={isExporting}
+              aria-label={t('export.png', 'Export as PNG')}
             >
               <Image className="h-4 w-4" />
             </Button>
@@ -1025,6 +1029,7 @@ function ExportPanel({ reactFlowRef }: ExportPanelProps) {
               className="h-8 w-8"
               onClick={() => handleExport('svg')}
               disabled={isExporting}
+              aria-label={t('export.svg', 'Export as SVG')}
             >
               <FileImage className="h-4 w-4" />
             </Button>
@@ -1593,6 +1598,7 @@ function AdvancedGraphVisualizationInner({
                           size="icon"
                           className="h-6 w-6"
                           onClick={collapseAllClusters}
+                          aria-label={t('collapseAll', 'Collapse All')}
                         >
                           <Shrink className="h-3 w-3" />
                         </Button>
@@ -1610,6 +1616,7 @@ function AdvancedGraphVisualizationInner({
                           size="icon"
                           className="h-6 w-6"
                           onClick={expandAllClusters}
+                          aria-label={t('expandAll', 'Expand All')}
                         >
                           <Expand className="h-3 w-3" />
                         </Button>
@@ -1766,7 +1773,12 @@ function AdvancedGraphVisualizationInner({
             {/* Settings Popover */}
             <Popover open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
               <PopoverTrigger asChild>
-                <Button size="icon" variant="outline" className="h-8 w-8 bg-background/95">
+                <Button
+                  size="icon"
+                  variant="outline"
+                  className="h-8 w-8 bg-background/95"
+                  aria-label={t('settings.title', 'Display Settings')}
+                >
                   <Settings2 className="h-4 w-4" />
                 </Button>
               </PopoverTrigger>

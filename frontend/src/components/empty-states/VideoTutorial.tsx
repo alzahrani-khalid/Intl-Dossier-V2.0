@@ -91,7 +91,7 @@ export function VideoTutorial({
 }: VideoTutorialProps) {
   const { t } = useTranslation('empty-states')
   const { isRTL } = useDirection()
-const videoRef = useRef<HTMLVideoElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const [isPlaying, setIsPlaying] = useState(false)
@@ -255,7 +255,7 @@ const videoRef = useRef<HTMLVideoElement>(null)
         <CardContent className="p-0">
           {/* Video Element */}
           <div
-            className={cn('relative bg-black cursor-pointer group', sizeClasses.video)}
+            className={cn('relative bg-ink cursor-pointer group', sizeClasses.video)}
             onClick={() => !isEnded && handlePlayPause()}
             onMouseMove={() => setShowControls(true)}
           >
@@ -280,11 +280,11 @@ const videoRef = useRef<HTMLVideoElement>(null)
 
             {/* Play Button Overlay (shown when not playing) */}
             {!isPlaying && !isEnded && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+              <div className="absolute inset-0 flex items-center justify-center bg-ink/30">
                 <Button
                   variant="secondary"
                   size="lg"
-                  className="h-14 w-14 sm:h-16 sm:w-16 min-h-11 min-w-11 rounded-full bg-white/90 hover:bg-white shadow-lg"
+                  className="h-14 w-14 sm:h-16 sm:w-16 min-h-11 min-w-11 rounded-full bg-surface/90 hover:bg-surface shadow-lg"
                   onClick={(e) => {
                     e.stopPropagation()
                     handlePlayPause()
@@ -298,11 +298,11 @@ const videoRef = useRef<HTMLVideoElement>(null)
 
             {/* Replay Overlay (shown when ended) */}
             {isEnded && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/50">
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-ink/50">
                 <Button
                   variant="secondary"
                   size="lg"
-                  className="h-14 w-14 sm:h-16 sm:w-16 min-h-11 min-w-11 rounded-full bg-white/90 hover:bg-white shadow-lg"
+                  className="h-14 w-14 sm:h-16 sm:w-16 min-h-11 min-w-11 rounded-full bg-surface/90 hover:bg-surface shadow-lg"
                   onClick={(e) => {
                     e.stopPropagation()
                     handleReplay()
@@ -311,7 +311,7 @@ const videoRef = useRef<HTMLVideoElement>(null)
                 >
                   <RotateCcw className="h-6 w-6 sm:h-7 sm:w-7 text-foreground" />
                 </Button>
-                <span className="text-white text-sm font-medium">
+                <span className="text-surface text-sm font-medium">
                   {t('video.replayLabel', 'Watch Again')}
                 </span>
               </div>
@@ -320,14 +320,14 @@ const videoRef = useRef<HTMLVideoElement>(null)
             {/* Controls Bar */}
             <div
               className={cn(
-                'absolute bottom-0 start-0 end-0 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-200',
+                'absolute bottom-0 start-0 end-0 bg-ink/60 transition-opacity duration-200',
                 sizeClasses.controls,
                 showControls || !isPlaying ? 'opacity-100' : 'opacity-0',
               )}
             >
               {/* Progress Bar */}
               <div
-                className="w-full h-1.5 sm:h-2 bg-white/30 rounded-full cursor-pointer mb-2"
+                className="w-full h-1.5 sm:h-2 bg-surface/30 rounded-full cursor-pointer mb-2"
                 onClick={(e) => {
                   e.stopPropagation()
                   handleSeek(e)
@@ -335,7 +335,7 @@ const videoRef = useRef<HTMLVideoElement>(null)
                 data-testid={`${testId}-progress`}
               >
                 <div
-                  className="h-full bg-white rounded-full transition-all duration-100"
+                  className="h-full bg-surface rounded-full transition-all duration-100"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -347,7 +347,7 @@ const videoRef = useRef<HTMLVideoElement>(null)
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={cn('text-white hover:bg-white/20', sizeClasses.button)}
+                    className={cn('text-surface hover:bg-surface/20', sizeClasses.button)}
                     onClick={(e) => {
                       e.stopPropagation()
                       handlePlayPause()
@@ -364,7 +364,7 @@ const videoRef = useRef<HTMLVideoElement>(null)
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={cn('text-white hover:bg-white/20', sizeClasses.button)}
+                    className={cn('text-surface hover:bg-surface/20', sizeClasses.button)}
                     onClick={(e) => {
                       e.stopPropagation()
                       handleMuteToggle()
@@ -378,7 +378,7 @@ const videoRef = useRef<HTMLVideoElement>(null)
                   </Button>
 
                   {/* Time Display */}
-                  <span className={cn('text-white/90 tabular-nums', sizeClasses.text)}>
+                  <span className={cn('text-surface/90 tabular-nums', sizeClasses.text)}>
                     {formatTime(currentTime)} / {formatTime(videoDuration)}
                   </span>
                 </div>
@@ -390,9 +390,9 @@ const videoRef = useRef<HTMLVideoElement>(null)
                       variant="ghost"
                       size="sm"
                       className={cn(
-                        'text-white hover:bg-white/20',
+                        'text-surface hover:bg-surface/20',
                         sizeClasses.button,
-                        showTranscript && 'bg-white/20',
+                        showTranscript && 'bg-surface/20',
                       )}
                       onClick={(e) => {
                         e.stopPropagation()
@@ -408,7 +408,7 @@ const videoRef = useRef<HTMLVideoElement>(null)
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={cn('text-white hover:bg-white/20', sizeClasses.button)}
+                    className={cn('text-surface hover:bg-surface/20', sizeClasses.button)}
                     onClick={(e) => {
                       e.stopPropagation()
                       handleFullscreen()
@@ -421,7 +421,7 @@ const videoRef = useRef<HTMLVideoElement>(null)
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={cn('text-white hover:bg-white/20', sizeClasses.button)}
+                    className={cn('text-surface hover:bg-surface/20', sizeClasses.button)}
                     onClick={(e) => {
                       e.stopPropagation()
                       handleDismiss()

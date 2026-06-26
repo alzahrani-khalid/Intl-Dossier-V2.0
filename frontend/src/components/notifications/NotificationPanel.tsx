@@ -9,6 +9,7 @@ import { NotificationBadge } from './NotificationBadge'
 import { NotificationList } from './NotificationList'
 import PushOptInBanner from './PushOptInBanner'
 import {
+  resolveNotificationActionUrl,
   useNotificationCenter,
   useNotificationRealtime,
   type Notification,
@@ -22,17 +23,12 @@ interface NotificationPanelProps {
   className?: string
 }
 
-const CATEGORIES: NotificationCategory[] = [
-  'assignments',
-  'deadlines',
-  'workflow',
-  'system',
-]
+const CATEGORIES: NotificationCategory[] = ['assignments', 'deadlines', 'workflow', 'system']
 
 export function NotificationPanel({ className }: NotificationPanelProps) {
   const { t } = useTranslation('notification-center')
   const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
   const { toast } = useToast()
 
   const [isOpen, setIsOpen] = useState(false)
@@ -56,9 +52,7 @@ const navigate = useNavigate()
   // Determine if user has actionable notifications (assignments, deadlines)
   const hasActionableNotification = notifications.some(
     (n) =>
-      n.type === 'assignment' ||
-      n.type === 'deadline_overdue' ||
-      n.type === 'deadline_approaching',
+      n.type === 'assignment' || n.type === 'deadline_overdue' || n.type === 'deadline_approaching',
   )
 
   // Real-time updates
@@ -104,12 +98,14 @@ const navigate = useNavigate()
 
     // Navigate if action URL exists
     if (notification.action_url) {
+      const resolvedActionUrl = resolveNotificationActionUrl(notification.action_url)
+      if (!resolvedActionUrl) return
+
       setIsOpen(false)
-      // Handle internal vs external URLs
-      if (notification.action_url.startsWith('/')) {
-        navigate({ to: notification.action_url })
+      if (resolvedActionUrl.kind === 'internal') {
+        navigate({ to: resolvedActionUrl.path })
       } else {
-        window.open(notification.action_url, '_blank')
+        window.open(resolvedActionUrl.href, '_blank', 'noopener,noreferrer')
       }
     }
   }
@@ -209,9 +205,7 @@ const navigate = useNavigate()
                 >
                   {t('categories.all')}
                   {unreadCount > 0 && (
-                    <span className="ms-1.5 text-[10px] text-muted-foreground">
-                      {unreadCount}
-                    </span>
+                    <span className="ms-1.5 text-[10px] text-muted-foreground">{unreadCount}</span>
                   )}
                 </TabsTrigger>
                 {CATEGORIES.map((category) => {

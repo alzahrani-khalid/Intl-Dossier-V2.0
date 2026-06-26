@@ -362,6 +362,7 @@ export function StakeholderInteractionTimeline({
                   )}
                 >
                   <X className="h-4 w-4" />
+                  <span className="sr-only">{t('common:common.clear')}</span>
                 </Button>
               )}
             </div>
@@ -395,6 +396,7 @@ export function StakeholderInteractionTimeline({
             size="icon"
             onClick={() => refetch()}
             className="min-h-11 min-w-11 sm:min-h-10 sm:min-w-10"
+            aria-label={t('common:common.actions.refresh', { defaultValue: 'Refresh' })}
           >
             <RotateCcw className="h-4 w-4" />
           </Button>

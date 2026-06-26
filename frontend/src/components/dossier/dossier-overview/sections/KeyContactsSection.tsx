@@ -65,7 +65,7 @@ function ContactCard({ contact, isRTL }: { contact: DossierKeyContact; isRTL: bo
   const lastInteraction = formatLastInteraction(contact.last_interaction_date, locale)
 
   const cardContent = (
-    <Card className="hover:shadow-md transition-shadow h-full">
+    <Card className="transition-colors hover:bg-line-soft h-full">
       <CardContent className="p-4 sm:p-5 h-full flex flex-col">
         {/* Avatar and Name */}
         <div className="flex items-start gap-3 mb-3">

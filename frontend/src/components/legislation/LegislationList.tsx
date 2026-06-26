@@ -440,6 +440,9 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
                   onToggleWatch()
                 }}
                 disabled={isWatching}
+                aria-label={t('common:common.actions.toggleWatch', {
+                  defaultValue: 'Toggle watch',
+                })}
               >
                 {isWatching ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -450,7 +453,12 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
                 )}
               </Button>
               <Link to="/legislation/$id" params={{ id: legislation.id } as any}>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  aria-label={t('common:common.view')}
+                >
                   <ChevronRight className={cn('h-4 w-4', isRTL && 'rotate-180')} />
                 </Button>
               </Link>

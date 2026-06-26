@@ -22,7 +22,7 @@ export interface Assignment {
   time_remaining_seconds: number
   priority: 'urgent' | 'high' | 'normal' | 'low'
   status: 'pending' | 'assigned' | 'in_progress' | 'completed' | 'cancelled'
-  warning_sent: boolean
+  warning_sent_at: string | null
   escalated: boolean
   escalated_at?: string | null
   escalation_recipient_name?: string | null

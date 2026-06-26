@@ -311,6 +311,9 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
               className="min-h-11 min-w-11"
             >
               <RefreshCw className={cn('h-4 w-4', isLoading && 'animate-spin')} />
+              <span className="sr-only">
+                {t('common:common.actions.refresh', { defaultValue: 'Refresh' })}
+              </span>
             </Button>
             <Button
               variant="outline"
@@ -319,6 +322,9 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
               className="min-h-11 min-w-11"
             >
               <Download className="h-4 w-4" />
+              <span className="sr-only">
+                {t('common:common.export', { defaultValue: 'Export' })}
+              </span>
             </Button>
           </>
         }

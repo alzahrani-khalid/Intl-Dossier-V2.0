@@ -831,8 +831,8 @@ async function fetchEntityData(
 
   // Fetch commitments
   let commitmentsQuery = supabase
-    .from('commitments')
-    .select('id, title, deadline, status')
+    .from('aa_commitments')
+    .select('id, title, deadline:due_date, status')
     .eq('dossier_id', entityId)
     .limit(20)
 
