@@ -114,7 +114,7 @@ export const getDossierTool = createTool({
 export const listDossiersTool = createTool({
   id: 'list_dossiers',
   description:
-    'List dossiers the caller is cleared to see, optionally filtered by type (country, organization, forum, engagement, topic, working_group, person, elected_official).',
+    'List the dossiers the caller is cleared to see. Returns all of them in one call by default; pass the optional type filter only to narrow to a single dossier type.',
   inputSchema: z.object({
     type: z.enum(DOSSIER_TYPES).optional().describe('Optional dossier-type filter'),
     limit: z.number().int().min(1).max(100).default(20).describe('Max dossiers to return'),
