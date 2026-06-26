@@ -195,7 +195,10 @@
     "files": "الدوسيهات",
     "intelligence": "المعلومات الاستخبارية",
     "relationships": "العلاقات",
-    "contacts": "جهات الاتصال الرئيسية"
+    "contacts": "جهات الاتصال الرئيسية",
+    "overview": "نظرة عامة",
+    "engagements": "الارتباطات",
+    "documents": "الوثائق"
   },
   "relationships": {
     "title": "ترابط الدوسيهات",
@@ -229,6 +232,27 @@
       "loadFailed": "فشل تحميل العلاقات",
       "createFailed": "فشل إنشاء العلاقة",
       "deleteFailed": "فشل حذف العلاقة"
+    },
+    "fields": {
+      "parentDossier": "الدوسيه الأصلي",
+      "childDossier": "الدوسيه المرتبط",
+      "relationshipType": "نوع العلاقة",
+      "strength": "القوة",
+      "establishedDate": "تاريخ التأسيس",
+      "endDate": "تاريخ الانتهاء",
+      "notes": "ملاحظات"
+    },
+    "graph": {
+      "zoomIn": "تكبير",
+      "zoomOut": "تصغير",
+      "fitView": "ملاءمة العرض",
+      "reset": "إعادة تعيين العرض",
+      "loading": "جاري تحميل الرسم البياني...",
+      "noData": "لا توجد علاقات لعرضها"
+    },
+    "success": {
+      "created": "تم إنشاء العلاقة بنجاح",
+      "deleted": "تم حذف العلاقة بنجاح"
     }
   },
   "hub": {
@@ -293,7 +317,301 @@
       "active": "نشطة",
       "suspended": "معلّقة",
       "expired": "منتهية",
-      "terminated": "منهاة"
+      "terminated": "منهاة",
+      "pending": "قيد الانتظار",
+      "cancelled": "ملغاة",
+      "renewed": "مجددة"
+    },
+    "add": "إضافة مذكرة تفاهم",
+    "edit": "تعديل مذكرة التفاهم",
+    "delete": "حذف مذكرة التفاهم",
+    "viewDocument": "عرض الوثيقة",
+    "empty": "لم يتم العثور على مذكرات تفاهم",
+    "statuses": {
+      "pending": "قيد الانتظار",
+      "active": "نشطة",
+      "expired": "منتهية",
+      "cancelled": "ملغاة",
+      "renewed": "مجددة"
+    },
+    "fields": {
+      "title": "العنوان",
+      "summary": "الملخص",
+      "signedDate": "تاريخ التوقيع",
+      "effectiveDate": "تاريخ السريان",
+      "expiryDate": "تاريخ الانتهاء",
+      "renewalRequiredBy": "التجديد مطلوب قبل",
+      "status": "الحالة",
+      "documentPath": "الوثيقة",
+      "parties": "الأطراف",
+      "renewedBy": "جددها"
+    },
+    "parties": {
+      "title": "الموقعون",
+      "add": "إضافة طرف",
+      "remove": "إزالة طرف",
+      "partyType": "النوع",
+      "partyRole": "الدور",
+      "signedByName": "وقّع باسم",
+      "signedByTitle": "وقّع بصفة",
+      "types": {
+        "country": "دولة",
+        "organization": "منظمة"
+      },
+      "roles": {
+        "signatory": "موقّع",
+        "witness": "شاهد",
+        "observer": "مراقب"
+      }
+    },
+    "alerts": {
+      "renewalDue": "التجديد مستحق خلال {{days}} يوم",
+      "expired": "انتهت صلاحية مذكرة التفاهم هذه",
+      "expiringSoon": "تنتهي قريباً"
+    },
+    "errors": {
+      "loadFailed": "فشل تحميل مذكرات التفاهم",
+      "createFailed": "فشل إنشاء مذكرة التفاهم",
+      "updateFailed": "فشل تحديث مذكرة التفاهم",
+      "deleteFailed": "فشل حذف مذكرة التفاهم"
+    },
+    "success": {
+      "created": "تم إنشاء مذكرة التفاهم بنجاح",
+      "updated": "تم تحديث مذكرة التفاهم بنجاح",
+      "deleted": "تم حذف مذكرة التفاهم بنجاح"
+    }
+  },
+  "documents": {
+    "title": "الوثائق",
+    "upload": "رفع وثيقة",
+    "download": "تحميل",
+    "delete": "حذف",
+    "preview": "معاينة",
+    "empty": "لم يتم العثور على وثائق",
+    "ownerTypes": {
+      "dossier": "دوسيه",
+      "engagement": "ارتباط",
+      "position": "موقف",
+      "mou": "مذكرة تفاهم",
+      "after_action": "ما بعد الإجراء",
+      "ticket": "تذكرة",
+      "assignment": "تكليف",
+      "intelligence_signal": "معلومات استخبارية",
+      "commitment": "التزام"
+    },
+    "fields": {
+      "fileName": "اسم الملف",
+      "fileSize": "حجم الملف",
+      "mimeType": "النوع",
+      "documentType": "نوع الوثيقة",
+      "language": "اللغة",
+      "tags": "الوسوم",
+      "uploaded": "تم الرفع",
+      "uploadedBy": "رفعها"
+    },
+    "scanStatus": {
+      "pending": "جاري الفحص...",
+      "clean": "سليم",
+      "infected": "مصاب",
+      "error": "خطأ في الفحص"
+    },
+    "sensitivity": {
+      "public": "عام",
+      "internal": "داخلي",
+      "confidential": "سري",
+      "secret": "سري للغاية"
+    },
+    "types": {
+      "memo": "مذكرة",
+      "report": "تقرير",
+      "agreement": "اتفاقية",
+      "minutes": "محضر",
+      "analysis": "تحليل",
+      "photo": "صورة"
+    },
+    "errors": {
+      "uploadFailed": "فشل رفع الوثيقة",
+      "downloadFailed": "فشل تحميل الوثيقة",
+      "deleteFailed": "فشل حذف الوثيقة",
+      "fileTooLarge": "حجم الملف يتجاوز الحد الأقصى البالغ 100 ميجابايت",
+      "infected": "يحتوي الملف على برمجيات خبيثة ولا يمكن رفعه"
+    },
+    "success": {
+      "uploaded": "تم رفع الوثيقة بنجاح",
+      "deleted": "تم حذف الوثيقة بنجاح"
+    }
+  },
+  "calendar": {
+    "title": "التقويم",
+    "addEvent": "إضافة فعالية",
+    "editEvent": "تعديل الفعالية",
+    "deleteEvent": "حذف الفعالية",
+    "today": "اليوم",
+    "month": "شهر",
+    "week": "أسبوع",
+    "day": "يوم",
+    "agenda": "جدول الأعمال",
+    "empty": "لا توجد فعاليات مجدولة",
+    "entryTypes": {
+      "internal_meeting": "اجتماع داخلي",
+      "deadline": "موعد نهائي",
+      "reminder": "تذكير",
+      "holiday": "عطلة",
+      "training": "تدريب",
+      "review": "مراجعة",
+      "other": "أخرى"
+    },
+    "fields": {
+      "title": "العنوان",
+      "description": "الوصف",
+      "eventDate": "التاريخ",
+      "eventTime": "الوقت",
+      "duration": "المدة (بالدقائق)",
+      "allDay": "طوال اليوم",
+      "location": "الموقع",
+      "isVirtual": "اجتماع افتراضي",
+      "meetingLink": "رابط الاجتماع",
+      "organizer": "المنظم",
+      "attendees": "الحضور",
+      "linkedItem": "العنصر المرتبط"
+    },
+    "recurrence": {
+      "enabled": "فعالية متكررة",
+      "pattern": "نمط التكرار",
+      "endDate": "تاريخ الانتهاء",
+      "daily": "يومي",
+      "weekly": "أسبوعي",
+      "monthly": "شهري",
+      "yearly": "سنوي"
+    },
+    "status": {
+      "scheduled": "مجدول",
+      "completed": "مكتمل",
+      "cancelled": "ملغى",
+      "rescheduled": "أعيدت جدولته"
+    },
+    "errors": {
+      "loadFailed": "فشل تحميل فعاليات التقويم",
+      "createFailed": "فشل إنشاء الفعالية",
+      "updateFailed": "فشل تحديث الفعالية",
+      "deleteFailed": "فشل حذف الفعالية"
+    },
+    "success": {
+      "created": "تم إنشاء الفعالية بنجاح",
+      "updated": "تم تحديث الفعالية بنجاح",
+      "deleted": "تم حذف الفعالية بنجاح"
+    }
+  },
+  "positionLinks": {
+    "title": "المواقف المرتبطة",
+    "link": "ربط موقف",
+    "unlink": "إلغاء ربط الموقف",
+    "bulkLink": "ربط مواقف بالجملة",
+    "empty": "لا توجد مواقف مرتبطة",
+    "linkTypes": {
+      "primary": "أساسي",
+      "related": "مرتبط",
+      "reference": "مرجعي"
+    },
+    "fields": {
+      "position": "الموقف",
+      "linkType": "نوع الربط",
+      "addedAt": "تمت الإضافة",
+      "addedBy": "أضافه",
+      "notes": "ملاحظات"
+    },
+    "errors": {
+      "loadFailed": "فشل تحميل روابط المواقف",
+      "linkFailed": "فشل ربط الموقف",
+      "unlinkFailed": "فشل إلغاء ربط الموقف"
+    },
+    "success": {
+      "linked": "تم ربط الموقف بنجاح",
+      "unlinked": "تم إلغاء ربط الموقف بنجاح",
+      "bulkLinked": "تم ربط {{count}} موقف بنجاح"
+    }
+  },
+  "intelligence": {
+    "title": "المعلومات الاستخبارية",
+    "log": "تسجيل معلومة",
+    "edit": "تعديل المعلومة",
+    "delete": "حذف المعلومة",
+    "validate": "تحقق",
+    "empty": "لم يتم تسجيل أي معلومات استخبارية",
+    "no_signals": "لا توجد معلومات استخبارية",
+    "no_signals_filtered": "لم يتم العثور على معلومات",
+    "no_signals_description": "لم يتم تسجيل أي معلومات استخبارية لهذا الدوسيه بعد",
+    "error_loading": "خطأ في تحميل المعلومات الاستخبارية",
+    "error_generic": "حدث خطأ أثناء تحميل المعلومات الاستخبارية. يرجى المحاولة مرة أخرى.",
+    "filter": "تصفية المعلومات",
+    "filter_by_type": "تصفية حسب النوع",
+    "all_types": "جميع الأنواع",
+    "source": "المصدر",
+    "logged_at": "تاريخ التسجيل",
+    "validated": "تم التحقق",
+    "more_tags": "المزيد",
+    "type": {
+      "news": "خبر",
+      "report": "تقرير",
+      "rumor": "إشاعة",
+      "tip": "معلومة سرية",
+      "analysis": "تحليل",
+      "alert": "تنبيه"
+    },
+    "confidence": {
+      "confirmed": "مؤكد",
+      "probable": "مرجح",
+      "possible": "محتمل",
+      "unconfirmed": "غير مؤكد"
+    },
+    "signalTypes": {
+      "news": "خبر",
+      "report": "تقرير",
+      "rumor": "إشاعة",
+      "tip": "معلومة سرية",
+      "analysis": "تحليل",
+      "alert": "تنبيه"
+    },
+    "confidenceLevels": {
+      "confirmed": "مؤكد",
+      "probable": "مرجح",
+      "possible": "محتمل",
+      "unconfirmed": "غير مؤكد"
+    },
+    "fields": {
+      "signalType": "النوع",
+      "source": "المصدر",
+      "sourceReliability": "موثوقية المصدر",
+      "sourceUrl": "رابط المصدر",
+      "title": "العنوان",
+      "content": "المحتوى",
+      "confidenceLevel": "مستوى الثقة",
+      "tags": "الوسوم",
+      "impactAssessment": "تقييم الأثر",
+      "loggedBy": "سجلها",
+      "loggedAt": "تاريخ التسجيل",
+      "validatedBy": "تحقق منها",
+      "validatedAt": "تاريخ التحقق"
+    },
+    "reliability": {
+      "1": "غير موثوق",
+      "2": "مشكوك فيه",
+      "3": "متوسط",
+      "4": "موثوق",
+      "5": "موثوق للغاية"
+    },
+    "errors": {
+      "loadFailed": "فشل تحميل المعلومات الاستخبارية",
+      "createFailed": "فشل تسجيل المعلومة",
+      "updateFailed": "فشل تحديث المعلومة",
+      "deleteFailed": "فشل حذف المعلومة",
+      "validateFailed": "فشل التحقق من المعلومة"
+    },
+    "success": {
+      "logged": "تم تسجيل المعلومة بنجاح",
+      "updated": "تم تحديث المعلومة بنجاح",
+      "deleted": "تم حذف المعلومة بنجاح",
+      "validated": "تم التحقق من المعلومة بنجاح"
     }
   }
 }

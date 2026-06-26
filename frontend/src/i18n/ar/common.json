@@ -1141,6 +1141,20 @@
       "manualSearch": "استخدام البحث اليدوي",
       "stillUseManualSearch": "أو استخدم البحث اليدوي",
       "retry": "إعادة المحاولة"
+    },
+    "dossierTypes": {
+      "dossier": "دوسيه",
+      "position": "موقف",
+      "mou": "مذكرة تفاهم",
+      "engagement": "دوسيه ارتباط",
+      "assignment": "تكليف",
+      "commitment": "التزام",
+      "intelligence_signal": "إشارة استخبارات",
+      "organization": "دوسيه منظمة",
+      "country": "دوسيه دولة",
+      "forum": "دوسيه منتدى",
+      "working_group": "دوسيه مجموعة عمل",
+      "topic": "دوسيه موضوع"
     }
   },
   "pullToRefresh": {
