@@ -508,8 +508,8 @@ function PluginDemoPage() {
               <h4 className="font-semibold mb-2">4. {isRTL ? 'التكامل' : 'Integration'}</h4>
               <p className="text-sm text-muted-foreground">
                 {isRTL
-                  ? 'يتكامل بسلاسة مع النظام الحالي دون تعديل الكود الأساسي'
-                  : 'Seamlessly integrates with existing system without core code changes'}
+                  ? 'يتكامل مع النظام الحالي دون تعديل الكود الأساسي'
+                  : 'Integrates with the existing system without core code changes'}
               </p>
             </div>
           </div>
