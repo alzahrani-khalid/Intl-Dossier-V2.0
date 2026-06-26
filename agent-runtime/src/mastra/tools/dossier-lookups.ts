@@ -168,7 +168,7 @@ export const listDossiersTool = createTool({
 export const queryWorkItemsTool = createTool({
   id: 'query_work_items',
   description:
-    'Query work items (commitments) the caller is cleared to see, optionally filtered by status.',
+    'Query work items (commitments) the caller is cleared to see, optionally filtered by status and/or by dossier (pass dossierId to return only the work items linked to that dossier).',
   inputSchema: z.object({
     status: z
       .string()
@@ -177,6 +177,14 @@ export const queryWorkItemsTool = createTool({
         'Optional status filter. Stored values include: pending, in_progress, review, overdue, ' +
           'completed, cancelled. Pass "open" or "active" for all items not in a terminal ' +
           '(completed/cancelled) state. Omit to return everything.',
+      ),
+    dossierId: z
+      .string()
+      .optional()
+      .describe(
+        'Optional dossier UUID — return ONLY work items linked to that dossier (via the ' +
+          'work_item_dossiers junction). Resolve the UUID first with get_dossier or list_dossiers. ' +
+          'Use this for questions like "work items linked to / for <dossier>".',
       ),
     limit: z.number().int().min(1).max(100).default(20).describe('Max work items to return'),
   }),
@@ -188,9 +196,29 @@ export const queryWorkItemsTool = createTool({
     if (!authorization) {
       return { workItems: [] }
     }
-    const args = input as { status?: string; limit?: number }
+    const args = input as { status?: string; limit?: number; dossierId?: string }
     try {
       const sb = supa.createUserClient(authorization)
+      // Optional dossier scoping: aa_commitments has NO FK to dossiers, so resolve the linked
+      // work-item ids from the work_item_dossiers junction first and filter with .in() (PostgREST
+      // cannot embed without the FK — MEMORY). No links → genuinely nothing is linked to this
+      // dossier; return empty rather than the unfiltered global list (which over-claims the linkage).
+      let linkedIds: string[] | null = null
+      if (args.dossierId && isUuidShape(args.dossierId.trim())) {
+        const { data: links, error: linkErr } = await sb
+          .from('work_item_dossiers')
+          .select('work_item_id')
+          .eq('dossier_id', args.dossierId.trim())
+        if (linkErr) {
+          return { workItems: [] }
+        }
+        linkedIds = (links ?? [])
+          .map((l) => (l as { work_item_id?: unknown }).work_item_id)
+          .filter((v): v is string => typeof v === 'string')
+        if (linkedIds.length === 0) {
+          return { workItems: [] }
+        }
+      }
       // P68 D-10: read the canonical aa_commitments (legacy `commitments` is empty).
       // Columns per chat-assistant.ts L290-296 — aa_commitments has no `type` column.
       let query = sb
@@ -205,6 +233,9 @@ export const queryWorkItemsTool = createTool({
         .eq('is_deleted', false)
         .order('created_at', { ascending: false })
         .limit(args.limit ?? 20)
+      if (linkedIds) {
+        query = query.in('id', linkedIds)
+      }
       if (args.status) {
         // "open"/"active" are natural-language asks (the system prompt literally says
         // "open commitments"), NOT stored status values — exact-matching them returns
