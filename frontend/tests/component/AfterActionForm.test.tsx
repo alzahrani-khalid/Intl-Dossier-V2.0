@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderWithProviders as render, screen, waitFor, fireEvent } from '@tests/utils/render'
+import { renderWithProviders as render, screen, waitFor } from '@tests/utils/render'
 import userEvent from '@testing-library/user-event'
 import {
   AfterActionForm,
@@ -159,14 +159,18 @@ describe('AfterActionForm', () => {
   })
 
   describe('Attendees Management', () => {
-    it('parses comma-separated attendees correctly', async () => {
+    it('commits typed names as chips on comma or Enter', async () => {
       const user = userEvent.setup()
       render(<AfterActionForm {...defaultProps} />)
 
       const attendeesInput = screen.getByPlaceholderText('Enter attendee names (comma-separated)')
-      await user.type(attendeesInput, 'John Doe, Jane Smith, Bob Johnson')
+      // Comma commits each in-progress name; Enter commits the trailing one.
+      await user.type(attendeesInput, 'John Doe,Jane Smith,Bob Johnson{Enter}')
 
       expect(screen.getByText(/Enter names separated by commas/)).toHaveTextContent('(3/100)')
+      expect(screen.getByText('John Doe')).toBeInTheDocument()
+      expect(screen.getByText('Jane Smith')).toBeInTheDocument()
+      expect(screen.getByText('Bob Johnson')).toBeInTheDocument()
     })
 
     it('trims whitespace from attendee names', async () => {
@@ -174,10 +178,12 @@ describe('AfterActionForm', () => {
       render(<AfterActionForm {...defaultProps} />)
 
       const attendeesInput = screen.getByPlaceholderText('Enter attendee names (comma-separated)')
-      await user.type(attendeesInput, '  John Doe  ,  Jane Smith  ')
+      await user.type(attendeesInput, '  John Doe  ,  Jane Smith  {Enter}')
 
-      // Should be parsed as 2 attendees
+      // Stored trimmed, as 2 chips
       expect(screen.getByText(/Enter names separated by commas/)).toHaveTextContent('(2/100)')
+      expect(screen.getByText('John Doe')).toBeInTheDocument()
+      expect(screen.getByText('Jane Smith')).toBeInTheDocument()
     })
 
     it('filters out empty names', async () => {
@@ -202,20 +208,22 @@ describe('AfterActionForm', () => {
       expect(mockOnPublish).not.toHaveBeenCalled()
     })
 
-    it('validates max 100 attendees on publish', async () => {
-      const user = userEvent.setup()
-      render(<AfterActionForm {...defaultProps} canPublish onPublish={mockOnPublish} />)
-
-      // Create 101 attendees
-      const attendees = Array.from({ length: 101 }, (_, i) => `Attendee ${i + 1}`).join(', ')
-      const attendeesInput = screen.getByPlaceholderText('Enter attendee names (comma-separated)')
-      fireEvent.change(attendeesInput, { target: { value: attendees } })
-
-      // Try to publish
-      const publishButton = screen.getByText('Publish')
+    it('validates max 100 attendees on publish', () => {
+      // 101 attendees seeded via initialData (interactive chip entry caps adds at 100).
+      const initialData: Partial<AfterActionFormData> = {
+        attendees: Array.from({ length: 101 }, (_, i) => `Attendee ${i + 1}`),
+      }
+      render(
+        <AfterActionForm
+          {...defaultProps}
+          canPublish
+          onPublish={mockOnPublish}
+          initialData={initialData}
+        />,
+      )
 
       expect(screen.getByText(/Enter names separated by commas/)).toHaveTextContent('(101/100)')
-      expect(publishButton).toBeDisabled()
+      expect(screen.getByText('Publish')).toBeDisabled()
       expect(mockOnPublish).not.toHaveBeenCalled()
     })
   })
@@ -497,7 +505,8 @@ describe('AfterActionForm', () => {
 
       render(<AfterActionForm {...defaultProps} initialData={initialData} />)
 
-      expect(screen.getByDisplayValue('John Doe, Jane Smith')).toBeInTheDocument()
+      expect(screen.getByText('John Doe')).toBeInTheDocument()
+      expect(screen.getByText('Jane Smith')).toBeInTheDocument()
       expect(screen.getByDisplayValue('Initial notes')).toBeInTheDocument()
       expect(screen.getByRole('checkbox')).toBeChecked()
       expect(screen.getByText('Decisions: 1')).toBeInTheDocument()
