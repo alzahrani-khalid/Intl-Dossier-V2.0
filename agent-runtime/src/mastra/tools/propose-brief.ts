@@ -71,6 +71,12 @@ async function draftBilingualBrief(dossier: Record<string, unknown>): Promise<Br
       { role: 'user', content: prompt },
     ],
     temperature: 0.2,
+    // Suppress gemma4:12b chain-of-thought on this RAW OpenAI-SDK draft call — the agent's
+    // Mastra-level providerOptions reasoningEffort:'none' does NOT reach this direct client,
+    // so without it the bilingual draft reasons ~1,800 tokens before emitting JSON (~19s/turn).
+    // 'none' is the on-prem (Ollama/vLLM) value that zeroes thinking on the /v1 path — the same
+    // lever the main copilot turn uses; it is a typed member of the SDK's ReasoningEffort union.
+    reasoning_effort: 'none',
     response_format: { type: 'json_object' },
   })
 
