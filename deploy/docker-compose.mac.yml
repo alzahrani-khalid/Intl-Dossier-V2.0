@@ -49,6 +49,50 @@ services:
     environment:
       VLLM_BASE_URL: http://host.docker.internal:11434
       VLLM_MODEL: gemma4:12b
+      # Persistent copilot threads (D-08): point @mastra/pg's PostgresStore at the
+      # Mac-local `mastra-pg` service below. buildMemory() (copilot.ts) reads
+      # MASTRA_PG_URL — when set it returns a Memory backed by Postgres, so the agent
+      # stores + recalls thread history (default lastMessages: 10) keyed by the
+      # AG-UI threadId + JWT-derived resourceId, and conversations survive container
+      # restarts. Compose deep-merges `environment`, so the prod agent-runtime env
+      # (SUPABASE_*, ALLOWED_ORIGINS, TEI_*, OTEL_*) is inherited UNCHANGED.
+      # PROD points MASTRA_PG_URL at the Supabase Postgres separately — NOT here.
+      MASTRA_PG_URL: postgresql://postgres:${MASTRA_LOCAL_PG_PASSWORD:-mastra_local_dev}@mastra-pg:5432/postgres
+    depends_on:
+      mastra-pg:
+        condition: service_healthy
+
+  # ===========================================
+  # MASTRA-PG - Mac-local Postgres for persistent copilot threads
+  # ===========================================
+  # Mac-ONLY service backing @mastra/memory's @mastra/pg PostgresStore so copilot
+  # threads + messages (mastra_threads / mastra_messages, auto-created by
+  # PostgresStore on first use) survive `docker restart`. Internal-only (NO host
+  # `ports:`), single user, on the inherited intl-dossier network so agent-runtime
+  # reaches it by name as `mastra-pg:5432`. Durability via the named volume
+  # mastra_pg_data (declared at the bottom of this file, merged with prod's
+  # redis_data). PROD does NOT use this — it points MASTRA_PG_URL at the Supabase
+  # Postgres and applies owner-only RLS on the two tables (72-03/04/05 carry-over),
+  # a deploy-time follow-up not needed for the Mac single-user case. The password is
+  # a LOCAL, non-exposed dev credential (override via MASTRA_LOCAL_PG_PASSWORD in
+  # deploy/.env); it is not a production secret.
+  mastra-pg:
+    image: postgres:16-alpine
+    container_name: intl-dossier-mastra-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${MASTRA_LOCAL_PG_PASSWORD:-mastra_local_dev}
+      POSTGRES_DB: postgres
+    volumes:
+      - mastra_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - intl-dossier
 
   # TEI ships no native arm64 image, so override to the CPU build and pin the amd64
   # platform (runs under emulation on Apple Silicon). Keep the SAME service name,
@@ -74,3 +118,10 @@ services:
     image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest
     platform: linux/amd64
     command: --model-id BAAI/bge-reranker-v2-m3 --max-batch-tokens 2048 --max-concurrent-requests 8 --tokenization-workers 2 --max-client-batch-size 2
+
+# ===========================================
+# VOLUMES (Mac-local additions; Compose merges this with prod's redis_data)
+# ===========================================
+volumes:
+  # Durable storage for the Mac-local mastra-pg Postgres (persistent copilot threads).
+  mastra_pg_data:
