@@ -79,6 +79,7 @@
     "recommendations": "التوصيات",
     "recommendationsPlaceholder": "أدخل توصياتك...",
     "submit": "إرسال الموجز",
-    "notAvailable": "حفظ الموجز اليدوي غير متاح بعد — لم يتم حفظ النص."
+    "saved": "تم حفظ الموجز بنجاح!",
+    "saveError": "تعذّر حفظ الموجز. حاول مرة أخرى."
   }
 }

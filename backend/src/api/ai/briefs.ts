@@ -418,4 +418,88 @@ router.delete('/:id', verifySupabaseToken, async (req: AuthenticatedRequest, res
   }
 })
 
+/**
+ * POST /api/ai/briefs/manual
+ * Persist a manually-entered brief (no AI generation). The analyst types the
+ * summary/background/recommendations directly — used as a fallback when AI
+ * generation is unavailable. Writes to the same `ai_briefs` table the read/list
+ * routes use, so the created brief is immediately viewable via GET /:id.
+ */
+router.post(
+  '/manual',
+  verifySupabaseToken,
+  checkFeatureEnabled,
+  async (req: AuthenticatedRequest, res: Response) => {
+    const { engagement_id, dossier_id, summary, background, recommendations } = req.body
+    const userId = req.user?.id
+    const organizationId = req.user?.organization_id
+
+    if (!userId || !organizationId) {
+      return res.status(401).json({ error: 'Unauthorized' })
+    }
+
+    if (!engagement_id && !dossier_id) {
+      return res.status(400).json({
+        error: 'Either engagement_id or dossier_id is required',
+        code: 'MISSING_TARGET',
+      })
+    }
+
+    const trimmedSummary = typeof summary === 'string' ? summary.trim() : ''
+    if (!trimmedSummary) {
+      return res.status(400).json({
+        error: 'A summary is required to save a manual brief',
+        code: 'MISSING_SUMMARY',
+      })
+    }
+
+    try {
+      // Manual briefs have no AI-generated title — derive one from the summary.
+      const derivedTitle =
+        (trimmedSummary.split('\n')[0] ?? trimmedSummary).slice(0, 120).trim() || 'Manual brief'
+
+      // created_by / organization_id are pinned from the verified token, never the
+      // request body. supabaseAdmin (service-role) is used here exactly as the
+      // sibling GET/DELETE routes do; the auth gate is verifySupabaseToken.
+      const { data, error } = await supabaseAdmin
+        .from('ai_briefs')
+        .insert({
+          organization_id: organizationId,
+          created_by: userId,
+          engagement_id: engagement_id ?? null,
+          dossier_id: dossier_id ?? null,
+          status: 'completed',
+          title: derivedTitle,
+          executive_summary: trimmedSummary,
+          background: typeof background === 'string' && background.trim() ? background : null,
+          recommendations:
+            typeof recommendations === 'string' && recommendations.trim() ? recommendations : null,
+          full_content: { source: 'manual' },
+          completed_at: new Date().toISOString(),
+        })
+        .select('*')
+        .single()
+
+      if (error || !data) {
+        logger.error('Failed to create manual brief', { error })
+        return res.status(500).json({
+          error: 'Failed to save manual brief',
+          code: 'CREATE_FAILED',
+        })
+      }
+
+      return res.status(201).json({
+        success: true,
+        data: transformBriefToFrontend(data as DbBrief),
+      })
+    } catch (error) {
+      logger.error('Manual brief creation failed', { error })
+      return res.status(500).json({
+        error: 'Failed to save manual brief',
+        code: 'CREATE_FAILED',
+      })
+    }
+  },
+)
+
 export default router

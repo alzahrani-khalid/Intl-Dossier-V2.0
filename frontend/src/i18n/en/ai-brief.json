@@ -79,6 +79,7 @@
     "recommendations": "Recommendations",
     "recommendationsPlaceholder": "Enter your recommendations...",
     "submit": "Submit Brief",
-    "notAvailable": "Saving a manual brief isn't available yet — your text has not been saved."
+    "saved": "Brief saved successfully!",
+    "saveError": "Failed to save the brief. Please try again."
   }
 }

@@ -83,6 +83,15 @@ export interface BriefGenerationParams {
   language?: 'en' | 'ar'
 }
 
+/** Params for persisting a manually-entered brief (no AI generation). */
+export interface CreateManualBriefParams {
+  engagementId?: string
+  dossierId?: string
+  summary: string
+  background?: string
+  recommendations?: string
+}
+
 /** Brief content structure */
 export interface BriefContent {
   id: string
