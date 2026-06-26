@@ -13,6 +13,7 @@ import {
   Check,
   ChevronRight,
   Clock,
+  Lightbulb,
   Lock,
   SkipForward,
   X,
@@ -301,8 +302,9 @@ function ChecklistItem({
       {/* Hint tooltip */}
       {item.hintKey && !isCompleted && !isLocked && (
         <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-dashed">
-          <p className="text-[10px] sm:text-xs text-muted-foreground italic">
-            💡 {t(item.hintKey)}
+          <p className="flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground italic">
+            <Lightbulb className="size-3 shrink-0" aria-hidden="true" />
+            {t(item.hintKey)}
           </p>
         </div>
       )}
@@ -455,6 +457,7 @@ export function OnboardingChecklist({
                 <AlertDialogTrigger asChild>
                   <Button variant="ghost" size="icon" className="h-8 w-8">
                     <X className="w-4 h-4" />
+                    <span className="sr-only">{t('checklist.dismiss')}</span>
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>

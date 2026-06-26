@@ -216,7 +216,12 @@ function SLADashboardPage() {
               </SelectContent>
             </Select>
 
-            <Button variant="outline" size="icon" onClick={handleRefresh}>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleRefresh}
+              aria-label={t('common:common.actions.refresh', { defaultValue: 'Refresh' })}
+            >
               <RefreshCw className="h-4 w-4" />
             </Button>
           </>
@@ -322,6 +327,7 @@ function SLADashboardPage() {
                             onClick={() => handleEditPolicy(policy)}
                           >
                             <Settings className="h-4 w-4" />
+                            <span className="sr-only">{t('policies.edit')}</span>
                           </Button>
                         </TableCell>
                       </TableRow>

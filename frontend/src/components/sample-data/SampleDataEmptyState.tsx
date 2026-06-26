@@ -46,7 +46,7 @@ export function SampleDataEmptyState({
         className={`
           flex flex-col items-center justify-center
           text-center py-12 sm:py-16 px-4 sm:px-6
-          rounded-2xl bg-gradient-to-br from-muted/30 to-muted/10
+          rounded-[var(--radius-lg)] bg-muted/20
           border border-dashed border-muted-foreground/20
           ${className}
         `}

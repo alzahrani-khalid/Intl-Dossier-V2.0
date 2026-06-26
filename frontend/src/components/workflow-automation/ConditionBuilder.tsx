@@ -49,7 +49,7 @@ export function ConditionBuilder({
 }: ConditionBuilderProps) {
   const { t } = useTranslation('workflow-automation')
   const { isRTL } = useDirection()
-const availableFields = getEntityFields(entityType)
+  const availableFields = getEntityFields(entityType)
 
   const addCondition = () => {
     const newCondition: WorkflowCondition = {
@@ -226,6 +226,7 @@ const availableFields = getEntityFields(entityType)
                   size="icon"
                   onClick={() => removeCondition(index)}
                   className="shrink-0 text-destructive hover:text-destructive"
+                  aria-label={t('common:common.actions.remove')}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

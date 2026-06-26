@@ -29,7 +29,6 @@ import type {
   MergeTicketsRequest,
   CloseTicketRequest,
   TriageSuggestions,
-  DuplicateCandidate,
 } from '@/types/intake'
 
 // Query keys
@@ -98,7 +97,30 @@ export const useTicket = (ticketId: string) => {
 export const useTriageSuggestions = (ticketId: string) => {
   return useQuery({
     queryKey: intakeKeys.triage(ticketId),
-    queryFn: () => getTriageSuggestionsApi(ticketId) as Promise<TriageSuggestions>,
+    queryFn: async (): Promise<TriageSuggestions> => {
+      // The intake-tickets-triage GET endpoint returns snake_case fields
+      // (suggested_assignee, suggested_unit, confidence_scores, model_info,
+      // ml_powered). Map them to the camelCase TriageSuggestions contract the
+      // TriagePanel reads, so the AI panel and the accept action see real values.
+      const raw = (await getTriageSuggestionsApi(ticketId)) as Record<string, unknown>
+      const model = (raw.model_info ?? raw.modelInfo ?? {}) as { name?: string; version?: string }
+      return {
+        requestType: (raw.request_type ?? raw.requestType) as TriageSuggestions['requestType'],
+        sensitivity: raw.sensitivity as TriageSuggestions['sensitivity'],
+        urgency: raw.urgency as TriageSuggestions['urgency'],
+        priority: (raw.priority ?? undefined) as TriageSuggestions['priority'],
+        suggestedAssignee: (raw.suggested_assignee ?? raw.suggestedAssignee) as string | undefined,
+        suggestedUnit: (raw.suggested_unit ?? raw.suggestedUnit) as string | undefined,
+        confidenceScores: (raw.confidence_scores ??
+          raw.confidenceScores ??
+          {}) as TriageSuggestions['confidenceScores'],
+        modelInfo: { name: model.name ?? '', version: model.version ?? '' },
+        cached: Boolean(raw.cached),
+        cachedAt: (raw.cached_at ?? raw.cachedAt) as string | undefined,
+        mlPowered: Boolean(raw.ml_powered ?? raw.mlPowered),
+        predictionId: (raw.prediction_id ?? raw.predictionId) as string | undefined,
+      }
+    },
     enabled: Boolean(ticketId),
   })
 }
@@ -132,10 +154,25 @@ export const useConvertTicket = (ticketId: string) => {
   })
 }
 
+// intake-tickets-duplicates returns an envelope { candidates: [...] } whose rows
+// are snake_case (ticket_id / overall_score), not a bare camelCase
+// DuplicateCandidate[]. Type the hook honestly to the real payload.
+export interface DuplicateCandidatesResult {
+  candidates: Array<{
+    ticket_id: string
+    ticket_number?: string
+    title?: string
+    overall_score: number
+    title_similarity?: number
+    content_similarity?: number
+    is_high_confidence?: boolean
+  }>
+}
+
 export const useDuplicateCandidates = (ticketId: string, threshold = 0.65) => {
   return useQuery({
     queryKey: intakeKeys.duplicates(ticketId),
-    queryFn: () => findDuplicatesApi(ticketId, threshold) as Promise<DuplicateCandidate[]>,
+    queryFn: () => findDuplicatesApi(ticketId, threshold) as Promise<DuplicateCandidatesResult>,
     enabled: Boolean(ticketId),
   })
 }
@@ -227,12 +264,30 @@ export const useGetSLAPreview = (urgency: string, requestType?: string, sensitiv
 
       if (error) throw error
 
-      if (data && data.length > 0) {
-        return toSLAPreview({
-          response_hours: data[0].response_hours,
-          resolution_hours: data[0].resolution_hours,
-          escalation_hours: data[0].escalation_hours,
-        })
+      // find_sla_configuration RETURNS sla_configurations — a single composite
+      // row (not a SETOF). Treat `data` as one object and map its real columns
+      // (acknowledgment_target_minutes / resolution_target_minutes); the legacy
+      // `data[0].response_hours` path read non-existent columns and was dead.
+      const config = data as {
+        acknowledgment_target_minutes?: number
+        resolution_target_minutes?: number
+        assignment_target_minutes?: number
+        business_hours_only?: boolean
+      } | null
+
+      if (config && typeof config.acknowledgment_target_minutes === 'number') {
+        const resolutionHours = (config.resolution_target_minutes ?? 0) / 60
+        return {
+          response_hours: config.acknowledgment_target_minutes / 60,
+          resolution_hours: resolutionHours,
+          escalation_hours:
+            typeof config.assignment_target_minutes === 'number'
+              ? config.assignment_target_minutes / 60
+              : resolutionHours,
+          acknowledgmentMinutes: config.acknowledgment_target_minutes,
+          resolutionHours,
+          businessHoursOnly: config.business_hours_only ?? false,
+        }
       }
 
       // Default SLA based on urgency

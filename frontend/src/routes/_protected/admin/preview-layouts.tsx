@@ -575,6 +575,7 @@ function PreviewLayoutsPage() {
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" onClick={openEditDialog}>
                     <Edit className="h-4 w-4" />
+                    <span className="sr-only">{t('layouts.editLayout')}</span>
                   </Button>
                 </div>
               )}
@@ -767,6 +768,7 @@ function LayoutCard({
           ) : (
             <StarOff className="h-4 w-4" />
           )}
+          <span className="sr-only">{t('layouts.setDefault')}</span>
         </Button>
         <Button
           size="icon"
@@ -778,6 +780,7 @@ function LayoutCard({
           className="h-8 w-8 text-destructive"
         >
           <Trash2 className="h-4 w-4" />
+          <span className="sr-only">{t('layouts.deleteLayout')}</span>
         </Button>
       </div>
     </div>
@@ -999,6 +1002,7 @@ function FieldCard({
           disabled={index === 0}
         >
           <ChevronUp className="h-4 w-4" />
+          <span className="sr-only">{t('actions.moveUp')}</span>
         </Button>
         <Button
           size="icon"
@@ -1008,6 +1012,7 @@ function FieldCard({
           disabled={index === totalFields - 1}
         >
           <ChevronDown className="h-4 w-4" />
+          <span className="sr-only">{t('actions.moveDown')}</span>
         </Button>
       </div>
 
@@ -1036,6 +1041,7 @@ function FieldCard({
       <div className="flex items-center gap-1">
         <Button size="icon" variant="ghost" className="h-8 w-8" onClick={onEdit}>
           <Edit className="h-4 w-4" />
+          <span className="sr-only">{t('fields.editField')}</span>
         </Button>
         <Button
           size="icon"
@@ -1045,6 +1051,7 @@ function FieldCard({
           disabled={field.is_required}
         >
           <Trash2 className="h-4 w-4" />
+          <span className="sr-only">{t('fields.deleteField')}</span>
         </Button>
       </div>
     </div>

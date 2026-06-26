@@ -136,6 +136,7 @@ export function ConflictResolutionPanel({
           {onDismiss && (
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onDismiss}>
               <X className="h-4 w-4" />
+              <span className="sr-only">{t('common:common.close')}</span>
             </Button>
           )}
         </div>
@@ -314,6 +315,7 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
                     size="icon"
                     className="h-8 w-8"
                     onClick={() => onGenerateSuggestions(conflict.id)}
+                    aria-label={t('conflicts.getSuggestions')}
                   >
                     <Sparkles className="h-4 w-4" />
                   </Button>
@@ -330,6 +332,7 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
                     size="icon"
                     className="h-8 w-8"
                     onClick={() => onResolve(conflict.id!)}
+                    aria-label={t('conflicts.resolve')}
                   >
                     <ChevronRight className={cn('h-4 w-4', isRTL && 'rotate-180')} />
                   </Button>

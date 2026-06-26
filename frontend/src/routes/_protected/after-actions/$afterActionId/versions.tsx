@@ -16,7 +16,7 @@ function VersionHistoryPage() {
   const { afterActionId } = Route.useParams()
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const { data: versions, isLoading, error } = useAfterActionVersions(afterActionId)
+  const { data: versions, isLoading, error } = useAfterActionVersions(afterActionId)
 
   if (isLoading) {
     return (
@@ -41,10 +41,12 @@ const { data: versions, isLoading, error } = useAfterActionVersions(afterActionI
   }
 
   return (
-    <div className={`container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 ${isRTL ? 'rtl' : 'ltr'}`}>
+    <div
+      className={`container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 ${isRTL ? 'rtl' : 'ltr'}`}
+    >
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
+        <Button variant="ghost" size="icon" asChild aria-label={t('common.back')}>
           <Link to="/after-actions/$afterActionId" params={{ afterActionId } as any}>
             <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
           </Link>

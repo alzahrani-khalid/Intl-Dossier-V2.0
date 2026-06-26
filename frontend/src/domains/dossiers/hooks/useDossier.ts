@@ -221,7 +221,10 @@ export function useCreateDossier() {
     onSuccess: (data) => {
       // Invalidate all dossier lists to refetch with new data
       queryClient.invalidateQueries({ queryKey: dossierKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: dossierKeys.byType(data.type) })
+      // Prefix invalidation without the {page,page_size} object: TanStack's
+      // partialDeepEqual rejects {page:undefined} vs the list's {page:1,...},
+      // so byType(type) never matched a paginated byType list query.
+      queryClient.invalidateQueries({ queryKey: [...dossierKeys.all, 'type', data.type] })
 
       // Set the new dossier in the cache
       queryClient.setQueryData(dossierKeys.detail(data.id), data)
@@ -297,7 +300,10 @@ export function useUpdateDossier() {
 
       // Invalidate lists to refetch
       queryClient.invalidateQueries({ queryKey: dossierKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: dossierKeys.byType(data.type) })
+      // Prefix invalidation without the {page,page_size} object: TanStack's
+      // partialDeepEqual rejects {page:undefined} vs the list's {page:1,...},
+      // so byType(type) never matched a paginated byType list query.
+      queryClient.invalidateQueries({ queryKey: [...dossierKeys.all, 'type', data.type] })
 
       toast.success(t('dossier.update.success', { name: data.name_en }))
     },

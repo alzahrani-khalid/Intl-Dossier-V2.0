@@ -124,16 +124,14 @@ export function useCreateWorkItemDossierLinks(options: UseCreateWorkItemDossierL
         queryKey: workItemDossierKeys.list(variables.work_item_type, variables.work_item_id),
       })
 
-      // Invalidate timeline for each linked dossier
+      // Invalidate the dossier activity timeline for each linked dossier. This is
+      // the real producer key (useDossierActivityTimeline queries under
+      // workItemDossierKeys.timeline). The former ['dossier-activity-timeline']
+      // invalidation was a dead key with no producing query.
       variables.dossier_ids.forEach((dossierId) => {
         queryClient.invalidateQueries({
           queryKey: workItemDossierKeys.timeline(dossierId),
         })
-      })
-
-      // Also invalidate general dossier queries
-      queryClient.invalidateQueries({
-        queryKey: ['dossier-activity-timeline'],
       })
 
       onSuccess?.(data)

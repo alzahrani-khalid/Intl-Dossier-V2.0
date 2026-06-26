@@ -307,6 +307,7 @@ export function InteractiveTimeline({
                     size="icon"
                     onClick={() => dispatch({ type: 'TOGGLE_ANNOTATIONS' })}
                     className="min-h-10 min-w-10"
+                    aria-label={t('timeline.annotations.toggle')}
                   >
                     <StickyNote className="h-4 w-4" />
                   </Button>
@@ -326,6 +327,7 @@ export function InteractiveTimeline({
                   size="icon"
                   onClick={() => refetch()}
                   className="min-h-10 min-w-10"
+                  aria-label={t('common.refresh', { defaultValue: 'Refresh' })}
                 >
                   <RefreshCw className="h-4 w-4" />
                 </Button>

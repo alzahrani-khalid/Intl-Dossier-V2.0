@@ -52,8 +52,10 @@ import type {
 } from '@/types/scenario-sandbox.types'
 import { SCENARIO_TYPE_LABELS, SCENARIO_STATUS_LABELS } from '@/types/scenario-sandbox.types'
 import { useDirection } from '@/hooks/useDirection'
+import { devModeGuard } from '@/lib/dev-mode-guard'
 
 export const Route = createFileRoute('/_protected/scenario-sandbox')({
+  beforeLoad: devModeGuard,
   component: ScenarioSandboxPage,
 })
 

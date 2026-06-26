@@ -209,7 +209,13 @@ function AIUsageDashboard() {
                 <SelectItem value="90d">{t('usage.dateRange.90d', 'Last 90 days')}</SelectItem>
               </SelectContent>
             </Select>
-            <Button variant="outline" size="icon" onClick={() => refetch()} disabled={isRefetching}>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => refetch()}
+              disabled={isRefetching}
+              aria-label={t('common:common.actions.refresh', { defaultValue: 'Refresh' })}
+            >
               <RefreshCw className={cn('h-4 w-4', isRefetching && 'animate-spin')} />
             </Button>
           </div>

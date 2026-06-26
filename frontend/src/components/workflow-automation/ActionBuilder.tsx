@@ -68,7 +68,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) {
   const { t } = useTranslation('workflow-automation')
   const { isRTL } = useDirection()
-const addAction = (type: WorkflowActionType) => {
+  const addAction = (type: WorkflowActionType) => {
     const newAction: WorkflowAction = {
       id: crypto.randomUUID(),
       type,
@@ -245,6 +245,7 @@ const addAction = (type: WorkflowActionType) => {
                         variant="ghost"
                         size="icon"
                         onClick={() => moveAction(index, index - 1)}
+                        aria-label={t('common:common.actions.moveUp', { defaultValue: 'Move up' })}
                         className="h-8 w-8"
                       >
                         <GripVertical className="h-4 w-4 rotate-90" />
@@ -254,6 +255,7 @@ const addAction = (type: WorkflowActionType) => {
                       variant="ghost"
                       size="icon"
                       onClick={() => removeAction(index)}
+                      aria-label={t('common:common.actions.remove')}
                       className="h-8 w-8 text-destructive hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />

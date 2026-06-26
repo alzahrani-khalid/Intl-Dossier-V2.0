@@ -18,7 +18,7 @@ import { useDirection } from '@/hooks/useDirection'
 export function UserMenu() {
   const { t } = useTranslation('common')
   const { isRTL } = useDirection()
-const { user, logout } = useAuth()
+  const { user, logout } = useAuth()
 
   if (!user) return null
 
@@ -32,7 +32,12 @@ const { user, logout } = useAuth()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="size-8 rounded-full">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-8 rounded-full"
+          aria-label={t('accessibility.userMenu')}
+        >
           <Avatar className="size-8">
             {user.avatar && <AvatarImage src={user.avatar} alt={user.name || ''} />}
             <AvatarFallback className="text-xs">{initials}</AvatarFallback>

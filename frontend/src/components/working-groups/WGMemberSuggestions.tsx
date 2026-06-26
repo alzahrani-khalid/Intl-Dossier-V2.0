@@ -382,7 +382,7 @@ function SelectionStep({
       : `person_${s.suggested_person_id}`
 
   return (
-    <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-b from-primary/5 to-transparent">
+    <Card className="border-2 border-dashed border-primary/30 bg-primary/5">
       <CardHeader className="pb-4">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
@@ -640,7 +640,7 @@ function RoleAssignmentStep({
   const memberRoles = Object.keys(MEMBER_ROLE_LABELS) as MemberRole[]
 
   return (
-    <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-b from-primary/5 to-transparent">
+    <Card className="border-2 border-dashed border-primary/30 bg-primary/5">
       <CardHeader className="pb-4">
         <div className="flex items-center gap-3">
           <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -781,7 +781,7 @@ function ReviewStep({
   const personCount = items.length - orgCount
 
   return (
-    <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-b from-primary/5 to-transparent">
+    <Card className="border-2 border-dashed border-primary/30 bg-primary/5">
       <CardHeader className="pb-4">
         <div className="flex items-center gap-3">
           <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">

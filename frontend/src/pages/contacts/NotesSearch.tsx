@@ -246,6 +246,7 @@ export function NotesSearch() {
                   size="icon"
                   onClick={() => setShowFilters(!showFilters)}
                   className={cn('h-11 w-11', hasActiveFilters && 'border-primary')}
+                  aria-label={t('common:common.filter')}
                 >
                   <Filter className="w-4 h-4" />
                 </Button>

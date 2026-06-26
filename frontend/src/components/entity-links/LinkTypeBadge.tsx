@@ -10,39 +10,43 @@
 import { Badge } from '@/components/ui/badge'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
+import { ClipboardList, Link2, MessageSquare, Star, User, type LucideIcon } from 'lucide-react'
 import type { EntityLink } from '../../../../backend/src/types/intake-entity-links.types'
 import { useDirection } from '@/hooks/useDirection'
 
 /**
- * Link type configuration with colors and icons
+ * Link type configuration with colors and icons (stroked icon set, not emoji)
  */
-const LINK_TYPE_CONFIG = {
+const LINK_TYPE_CONFIG: Record<
+  EntityLink['link_type'],
+  { variant: 'default' | 'secondary' | 'outline'; colorClass: string; icon: LucideIcon }
+> = {
   primary: {
-    variant: 'default' as const,
+    variant: 'default',
     colorClass: 'bg-accent hover:bg-accent/90 text-accent-foreground',
-    icon: '⭐',
+    icon: Star,
   },
   related: {
-    variant: 'secondary' as const,
+    variant: 'secondary',
     colorClass: 'bg-muted hover:bg-muted/90 text-ink',
-    icon: '🔗',
+    icon: Link2,
   },
   requested: {
-    variant: 'outline' as const,
+    variant: 'outline',
     colorClass: 'bg-secondary hover:bg-secondary/80 text-secondary-foreground border-secondary',
-    icon: '📋',
+    icon: ClipboardList,
   },
   mentioned: {
-    variant: 'outline' as const,
+    variant: 'outline',
     colorClass: 'bg-warning/10 hover:bg-warning/20 text-warning border-warning/30',
-    icon: '💬',
+    icon: MessageSquare,
   },
   assigned_to: {
-    variant: 'outline' as const,
+    variant: 'outline',
     colorClass: 'bg-success/10 hover:bg-success/20 text-success border-success/30',
-    icon: '👤',
+    icon: User,
   },
-} as const
+}
 
 export interface LinkTypeBadgeProps {
   /** Link type to display */
@@ -90,6 +94,8 @@ export function LinkTypeBadge({
   // Translation key for link type
   const translationKey = `entityLinks.linkTypes.${linkType}`
 
+  const Icon = config.icon
+
   return (
     <Badge
       variant={config.variant}
@@ -116,11 +122,7 @@ export function LinkTypeBadge({
       role="status"
     >
       {/* Icon (conditionally rendered) */}
-      {displayIcon && (
-        <span className="inline-block" aria-hidden="true">
-          {config.icon}
-        </span>
-      )}
+      {displayIcon && <Icon className="size-3.5 shrink-0" aria-hidden="true" />}
 
       {/* Link type text */}
       <span className="inline-block whitespace-nowrap">{t(translationKey)}</span>

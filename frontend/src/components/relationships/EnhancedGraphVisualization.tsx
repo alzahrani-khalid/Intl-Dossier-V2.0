@@ -139,7 +139,7 @@ const EnhancedDossierNode = memo(
     selected?: boolean
   }) => {
     const { isRTL } = useDirection()
-const name = isRTL ? data.name_ar : data.name_en
+    const name = isRTL ? data.name_ar : data.name_en
 
     const baseSize = 40
     const connectionBonus = Math.min((data.connectionCount || 0) * 2, 30)
@@ -711,7 +711,10 @@ function EnhancedGraphVisualizationInner({
   // ============================================
 
   return (
-    <LtrIsolate className="relative w-full rounded-lg border bg-background overflow-hidden" style={{ height }}>
+    <LtrIsolate
+      className="relative w-full rounded-lg border bg-background overflow-hidden"
+      style={{ height }}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -826,6 +829,7 @@ function EnhancedGraphVisualizationInner({
                         size="icon"
                         className="h-6 w-6"
                         onClick={collapseAllClusters}
+                        aria-label={t('collapseAll', 'Collapse All')}
                       >
                         <Shrink className="h-3 w-3" />
                       </Button>
@@ -843,6 +847,7 @@ function EnhancedGraphVisualizationInner({
                         size="icon"
                         className="h-6 w-6"
                         onClick={expandAllClusters}
+                        aria-label={t('expandAll', 'Expand All')}
                       >
                         <Expand className="h-3 w-3" />
                       </Button>
@@ -922,7 +927,12 @@ function EnhancedGraphVisualizationInner({
           {/* Settings Popover */}
           <Popover open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
             <PopoverTrigger asChild>
-              <Button size="icon" variant="outline" className="h-8 w-8 bg-background/95">
+              <Button
+                size="icon"
+                variant="outline"
+                className="h-8 w-8 bg-background/95"
+                aria-label={t('settings.title', 'Display Settings')}
+              >
                 <Settings2 className="h-4 w-4" />
               </Button>
             </PopoverTrigger>

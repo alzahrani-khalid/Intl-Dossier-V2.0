@@ -8,6 +8,11 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
+    <!-- Baseline client-side CSP for local/static delivery. Deploy/nginx headers remain authoritative. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co http://localhost:* http://127.0.0.1:* ws: wss:; worker-src 'self' blob:; form-action 'self'"
+    />
     <title>GASTAT International Dossier</title>
 
     <!-- Design-system fonts (handoff IntelDossier Redesign.html). Per-direction

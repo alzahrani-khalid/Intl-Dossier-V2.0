@@ -108,7 +108,7 @@ export function CountryMapImage({
       <div
         className={cn(
           'relative overflow-hidden flex items-center justify-center',
-          'bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg',
+          'bg-primary/10 rounded-lg',
           'min-h-32 sm:min-h-48',
           className,
         )}
@@ -127,7 +127,7 @@ export function CountryMapImage({
     <div
       className={cn(
         'relative overflow-hidden flex items-center justify-center',
-        'bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg',
+        'bg-primary/10 rounded-lg',
         className,
       )}
     >
@@ -177,4 +177,3 @@ export function CountryMapImage({
     </div>
   )
 }
-

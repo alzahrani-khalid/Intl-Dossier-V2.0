@@ -12,6 +12,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQueryClient } from '@tanstack/react-query'
 import {
   Calendar,
   RefreshCw,
@@ -50,13 +51,18 @@ import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 
-import { useCalendarSync, useExternalCalendars } from '@/hooks/useCalendarSync'
-import type {
-  ExternalCalendarProvider,
-  ExternalCalendarConnection,
-  CalendarSyncConflict,
-  ICalFeedSubscription,
+import { calendarKeys, useCalendarSync, useExternalCalendars } from '@/hooks/useCalendarSync'
+import { supabase, supabaseUrl } from '@/lib/supabase'
+import {
+  CALENDAR_PROVIDERS,
+  SYNC_DIRECTION_OPTIONS,
+  CONFLICT_STRATEGY_OPTIONS,
+  type ExternalCalendarProvider,
+  type ExternalCalendarConnection,
+  type CalendarSyncConflict,
+  type ICalFeedSubscription,
 } from '@/types/calendar-sync.types'
+import { useDirection } from '@/hooks/useDirection'
 
 interface ExternalCalendarShape {
   id: string
@@ -65,12 +71,37 @@ interface ExternalCalendarShape {
   color?: string
   sync_enabled?: boolean
 }
-import {
-  CALENDAR_PROVIDERS,
-  SYNC_DIRECTION_OPTIONS,
-  CONFLICT_STRATEGY_OPTIONS,
-} from '@/types/calendar-sync.types'
-import { useDirection } from '@/hooks/useDirection'
+
+async function updateExternalCalendar(
+  calendarId: string,
+  updates: Record<string, unknown>,
+): Promise<void> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  if (!session) {
+    throw new Error('Not authenticated')
+  }
+
+  const response = await fetch(
+    `${supabaseUrl}/functions/v1/calendar-sync/calendars/${calendarId}`,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify(updates),
+    },
+  )
+
+  if (!response.ok) {
+    const error = (await response.json().catch(() => null)) as { error?: string } | null
+    throw new Error(error?.error || 'Failed to update calendar')
+  }
+}
 
 // ============================================================================
 // Provider Icons
@@ -147,6 +178,7 @@ function ConnectionCard({
 }: ConnectionCardProps) {
   const { t } = useTranslation('calendar-sync')
   const { isRTL } = useDirection()
+  const queryClient = useQueryClient()
   const [isExpanded, setIsExpanded] = useState(false)
   const [showDisconnectDialog, setShowDisconnectDialog] = useState(false)
 
@@ -157,6 +189,18 @@ function ConnectionCard({
   }
 
   const providerConfig = CALENDAR_PROVIDERS[connection.provider]
+
+  const handleCalendarSyncChange = async (
+    calendar: ExternalCalendarShape,
+    checked: boolean,
+  ): Promise<void> => {
+    try {
+      await updateExternalCalendar(calendar.id, { sync_enabled: checked })
+      void queryClient.invalidateQueries({ queryKey: calendarKeys.all })
+    } catch (error) {
+      console.error('Failed to update calendar sync setting:', error)
+    }
+  }
 
   return (
     <Card className="w-full">
@@ -346,9 +390,9 @@ function ConnectionCard({
                       </div>
                       <Switch
                         checked={calendar.sync_enabled}
-                        onCheckedChange={() => {
-                          // TODO: This would call updateCalendar mutation
-                        }}
+                        onCheckedChange={(checked) =>
+                          void handleCalendarSyncChange(calendar, checked)
+                        }
                       />
                     </div>
                   ))}

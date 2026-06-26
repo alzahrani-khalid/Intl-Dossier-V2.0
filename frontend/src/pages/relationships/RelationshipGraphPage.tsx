@@ -2,7 +2,7 @@
 // User Story 3: Traverse Entity Relationships as Graph
 // Main page for exploring dossier relationships with graph and list views
 // Enhanced with clustering, focus mode, and complexity controls to prevent graph overwhelm
-import { useState, useMemo } from 'react'
+import { lazy, Suspense, useState, useMemo, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { Link, getRouteApi, useNavigate } from '@tanstack/react-router'
@@ -22,12 +22,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
-import { GraphVisualization } from '@/components/relationships/GraphVisualization'
-import { EnhancedGraphVisualization } from '@/components/relationships/EnhancedGraphVisualization'
-import {
-  AdvancedGraphVisualization,
-  type NodeData as GraphNodeData,
-  type EdgeData as GraphEdgeData,
+import type {
+  NodeData as GraphNodeData,
+  EdgeData as GraphEdgeData,
 } from '@/components/relationships/AdvancedGraphVisualization'
 import { RelationshipNavigator } from '@/components/relationships/RelationshipNavigator'
 import { AnalyticQueryPicker } from '@/components/relationships/AnalyticQueryPicker'
@@ -41,6 +38,34 @@ import { supabase } from '@/lib/supabase'
 import type { DossierRelationshipType } from '@/types/relationship.types'
 
 const routeApi = getRouteApi('/_protected/relationships/graph')
+
+const GraphVisualization = lazy(() =>
+  import('@/components/relationships/GraphVisualization').then((module) => ({
+    default: module.GraphVisualization,
+  })),
+)
+
+const EnhancedGraphVisualization = lazy(() =>
+  import('@/components/relationships/EnhancedGraphVisualization').then((module) => ({
+    default: module.EnhancedGraphVisualization,
+  })),
+)
+
+const AdvancedGraphVisualization = lazy(() =>
+  import('@/components/relationships/AdvancedGraphVisualization').then((module) => ({
+    default: module.AdvancedGraphVisualization,
+  })),
+)
+
+function GraphVisualizationFallback(): ReactElement {
+  return (
+    <Card>
+      <CardContent className="pt-6">
+        <Skeleton className="h-[600px] w-full" />
+      </CardContent>
+    </Card>
+  )
+}
 
 const RELATIONSHIP_TYPES: DossierRelationshipType[] = [
   'member_of',
@@ -395,14 +420,16 @@ export function RelationshipGraphPage() {
 
           <TabsContent value="graph">
             {analyticGraphNodes.length > 0 ? (
-              <AdvancedGraphVisualization
-                nodes={analyticGraphNodes}
-                edges={analyticGraphEdges}
-                onNodeClick={handleNodeSelect}
-                height="calc(100vh - 500px)"
-                showMiniMap
-                centerNodeId={startDossierId}
-              />
+              <Suspense fallback={<GraphVisualizationFallback />}>
+                <AdvancedGraphVisualization
+                  nodes={analyticGraphNodes}
+                  edges={analyticGraphEdges}
+                  onNodeClick={handleNodeSelect}
+                  height="calc(100vh - 500px)"
+                  showMiniMap
+                  centerNodeId={startDossierId}
+                />
+              </Suspense>
             ) : (
               <AnalyticResultView
                 result={analyticResult}
@@ -612,34 +639,36 @@ export function RelationshipGraphPage() {
           </TabsList>
 
           <TabsContent value="graph">
-            {graphMode === 'advanced' ? (
-              <AdvancedGraphVisualization
-                nodes={deduplicatedNodes}
-                edges={graphData.edges}
-                onNodeClick={handleNodeSelect}
-                height="calc(100vh - 500px)"
-                showMiniMap
-                centerNodeId={startDossierId}
-              />
-            ) : graphMode === 'enhanced' ? (
-              <EnhancedGraphVisualization
-                nodes={deduplicatedNodes}
-                edges={graphData.edges}
-                onNodeClick={handleNodeSelect}
-                height="calc(100vh - 500px)"
-                showMiniMap
-                centerNodeId={startDossierId}
-              />
-            ) : (
-              <GraphVisualization
-                nodes={deduplicatedNodes}
-                edges={graphData.edges}
-                onNodeClick={handleNodeSelect}
-                height="calc(100vh - 500px)"
-                showMiniMap
-                showControls
-              />
-            )}
+            <Suspense fallback={<GraphVisualizationFallback />}>
+              {graphMode === 'advanced' ? (
+                <AdvancedGraphVisualization
+                  nodes={deduplicatedNodes}
+                  edges={graphData.edges}
+                  onNodeClick={handleNodeSelect}
+                  height="calc(100vh - 500px)"
+                  showMiniMap
+                  centerNodeId={startDossierId}
+                />
+              ) : graphMode === 'enhanced' ? (
+                <EnhancedGraphVisualization
+                  nodes={deduplicatedNodes}
+                  edges={graphData.edges}
+                  onNodeClick={handleNodeSelect}
+                  height="calc(100vh - 500px)"
+                  showMiniMap
+                  centerNodeId={startDossierId}
+                />
+              ) : (
+                <GraphVisualization
+                  nodes={deduplicatedNodes}
+                  edges={graphData.edges}
+                  onNodeClick={handleNodeSelect}
+                  height="calc(100vh - 500px)"
+                  showMiniMap
+                  showControls
+                />
+              )}
+            </Suspense>
           </TabsContent>
 
           <TabsContent value="list">

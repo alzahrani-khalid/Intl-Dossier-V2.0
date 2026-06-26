@@ -195,7 +195,7 @@ describe('RelationshipGraphPage', () => {
     expect(browseLink.getAttribute('href')).toBe('/dossiers')
   })
 
-  it('renders graph chrome for a selected dossier without redirecting', () => {
+  it('renders graph chrome for a selected dossier without redirecting', async () => {
     searchValue = { dossierId: 'a0000000-0000-0000-0000-000000000404' }
     useQueryMock.mockReturnValue({
       data: graphData,
@@ -209,7 +209,7 @@ describe('RelationshipGraphPage', () => {
     expect(screen.getByRole('heading', { name: 'Relationship graph' })).toBeTruthy()
     expect(screen.getByText('Degrees of separation')).toBeTruthy()
     expect(screen.getByText('Relationship type')).toBeTruthy()
-    expect(screen.getByTestId('advanced-graph')).toBeTruthy()
+    expect(await screen.findByTestId('advanced-graph')).toBeTruthy()
   })
 
   it('requests the graph namespace with bare translation keys', () => {

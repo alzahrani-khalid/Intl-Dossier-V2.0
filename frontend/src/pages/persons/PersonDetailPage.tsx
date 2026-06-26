@@ -185,6 +185,7 @@ function PersonDetailPage() {
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="icon" onClick={handleBack} className="h-10 w-10">
                 <ArrowLeft className={`h-5 w-5 ${isRTL ? 'rotate-180' : ''}`} />
+                <span className="sr-only">{t('common:common.back')}</span>
               </Button>
               <div className="flex items-center gap-3">
                 <Avatar className="h-12 w-12">
@@ -213,6 +214,7 @@ function PersonDetailPage() {
                     className="text-destructive hover:text-destructive"
                   >
                     <Trash2 className="h-4 w-4" />
+                    <span className="sr-only">{t('actions.archive', 'Archive')}</span>
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -460,7 +462,11 @@ function PersonDetailPage() {
                       {personData.roles?.length || 0}
                     </Badge>
                   </CardTitle>
-                  <Button variant="ghost" size="icon">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label={t('common:common.actions.toggleSection')}
+                  >
                     {expandedSections.roles ? (
                       <ChevronUp className="h-4 w-4" />
                     ) : (
@@ -542,7 +548,11 @@ function PersonDetailPage() {
                       {personData.affiliations?.length || 0}
                     </Badge>
                   </CardTitle>
-                  <Button variant="ghost" size="icon">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label={t('common:common.actions.toggleSection')}
+                  >
                     {expandedSections.affiliations ? (
                       <ChevronUp className="h-4 w-4" />
                     ) : (

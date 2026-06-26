@@ -84,14 +84,11 @@ export function useDeleteWorkItemDossierLink(options: UseDeleteWorkItemDossierLi
         queryKey: workItemDossierKeys.list(variables.workItemType, variables.workItemId),
       })
 
-      // Invalidate timeline for the dossier
+      // Invalidate the dossier activity timeline (real producer key:
+      // useDossierActivityTimeline queries under workItemDossierKeys.timeline).
+      // The former ['dossier-activity-timeline'] invalidation was a dead key.
       queryClient.invalidateQueries({
         queryKey: workItemDossierKeys.timeline(variables.dossierId),
-      })
-
-      // Also invalidate general dossier queries
-      queryClient.invalidateQueries({
-        queryKey: ['dossier-activity-timeline'],
       })
 
       onSuccess?.()

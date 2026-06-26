@@ -93,6 +93,7 @@ function SortableColumn({ column, isRTL, onRemove, onUpdate }: SortableColumnPro
           size="icon"
           className="h-8 w-8"
           onClick={() => onUpdate({ visible: !column.visible })}
+          aria-label={t('columns.toggleVisibility', { defaultValue: 'Toggle column visibility' })}
         >
           {column.visible ? (
             <Eye className="h-4 w-4" />
@@ -106,6 +107,7 @@ function SortableColumn({ column, isRTL, onRemove, onUpdate }: SortableColumnPro
           size="icon"
           className="h-8 w-8 text-destructive hover:text-destructive"
           onClick={onRemove}
+          aria-label={t('common:common.actions.remove')}
         >
           <X className="h-4 w-4" />
         </Button>
@@ -122,7 +124,7 @@ export function ColumnBuilder({
 }: ColumnBuilderProps) {
   const { t } = useTranslation('report-builder')
   const { isRTL } = useDirection()
-const { setNodeRef, isOver } = useDroppable({
+  const { setNodeRef, isOver } = useDroppable({
     id: 'columns-drop-zone',
     data: { type: 'columns' },
   })

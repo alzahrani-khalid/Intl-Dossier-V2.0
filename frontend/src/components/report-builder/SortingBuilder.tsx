@@ -37,7 +37,7 @@ export function SortingBuilder({
 }: SortingBuilderProps) {
   const { t } = useTranslation('report-builder')
   const { isRTL } = useDirection()
-const sortableFields = availableFields.filter((f) => f.sortable)
+  const sortableFields = availableFields.filter((f) => f.sortable)
 
   // Fields not yet used in sorting
   const availableSortFields = sortableFields.filter((f) => !sorting.some((s) => s.fieldId === f.id))
@@ -96,6 +96,7 @@ const sortableFields = availableFields.filter((f) => f.sortable)
                       size="icon"
                       className="h-8 w-8 text-destructive hover:text-destructive"
                       onClick={() => onRemoveSort(sort.id)}
+                      aria-label={t('common:common.actions.remove')}
                     >
                       <X className="h-4 w-4" />
                     </Button>

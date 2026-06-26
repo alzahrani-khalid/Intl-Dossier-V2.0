@@ -194,7 +194,13 @@ export function SchedulingConflictComparison({
               </Badge>
             )}
             {onDismiss && (
-              <Button variant="ghost" size="icon" className="h-8 w-8 ms-1" onClick={onDismiss}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 ms-1"
+                onClick={onDismiss}
+                aria-label={t('common:common.close', { defaultValue: 'Dismiss' })}
+              >
                 <X className="h-4 w-4" />
               </Button>
             )}

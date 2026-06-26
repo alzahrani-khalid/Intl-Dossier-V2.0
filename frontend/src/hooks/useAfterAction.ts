@@ -162,21 +162,17 @@ export interface ConflictError {
   serverUpdatedAt: string | null
 }
 
+// Shape returned by the after-actions-versions Edge Function, which selects
+// id, after_action_id, version_number, snapshot, changed_by, changed_at,
+// change_summary. The previously-declared display fields were never emitted.
 export interface AfterActionVersion {
   id: string
   after_action_id: string
   version_number: number
-  publication_status: 'draft' | 'published' | 'edit_requested' | 'edit_approved' | 'edit_rejected'
-  is_confidential: boolean
-  attendees?: string[]
-  notes?: string | null
-  decisions?: Decision[]
-  commitments?: Commitment[]
-  risks?: Risk[]
-  follow_up_actions?: FollowUpAction[]
-  created_by: string
-  created_at: string
-  superseded: boolean
+  snapshot: Record<string, unknown> | null
+  changed_by: string
+  changed_at: string
+  change_summary: string | null
 }
 
 // Fetch single after-action by ID

@@ -133,6 +133,7 @@ function RecommendationsHeader({
                 onClick={onRefresh}
                 disabled={isGenerating}
                 className="h-8 w-8"
+                aria-label={t('refreshTooltip')}
               >
                 {isGenerating ? (
                   <Loader2 className="h-4 w-4 animate-spin" />

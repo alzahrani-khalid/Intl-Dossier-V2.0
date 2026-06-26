@@ -71,7 +71,7 @@ export function TimelineZoomControls({
 }: TimelineZoomControlsProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const currentConfig = zoomLevels.find((z) => z.level === currentZoom)
+  const currentConfig = zoomLevels.find((z) => z.level === currentZoom)
 
   return (
     <div
@@ -90,6 +90,7 @@ const currentConfig = zoomLevels.find((z) => z.level === currentZoom)
                 size="icon"
                 onClick={onScrollBackward}
                 disabled={!canScrollBackward}
+                aria-label={t('timeline.zoom.scroll_back')}
                 className="min-h-10 min-w-10 sm:min-h-9 sm:min-w-9"
               >
                 <ChevronLeft className={cn('h-4 w-4', isRTL && 'rotate-180')} />
@@ -108,6 +109,7 @@ const currentConfig = zoomLevels.find((z) => z.level === currentZoom)
                 variant="outline"
                 size="icon"
                 onClick={onGoToToday}
+                aria-label={t('timeline.zoom.go_today')}
                 className="min-h-10 min-w-10 sm:min-h-9 sm:min-w-9"
               >
                 <Home className="h-4 w-4" />
@@ -127,6 +129,7 @@ const currentConfig = zoomLevels.find((z) => z.level === currentZoom)
                 size="icon"
                 onClick={onScrollForward}
                 disabled={!canScrollForward}
+                aria-label={t('timeline.zoom.scroll_forward')}
                 className="min-h-10 min-w-10 sm:min-h-9 sm:min-w-9"
               >
                 <ChevronRight className={cn('h-4 w-4', isRTL && 'rotate-180')} />
@@ -162,6 +165,7 @@ const currentConfig = zoomLevels.find((z) => z.level === currentZoom)
                 size="icon"
                 onClick={onZoomOut}
                 disabled={!canZoomOut}
+                aria-label={t('timeline.zoom.zoom_out')}
                 className="min-h-10 min-w-10 sm:min-h-9 sm:min-w-9"
               >
                 <ZoomOut className="h-4 w-4" />
@@ -197,6 +201,7 @@ const currentConfig = zoomLevels.find((z) => z.level === currentZoom)
                 size="icon"
                 onClick={onZoomIn}
                 disabled={!canZoomIn}
+                aria-label={t('timeline.zoom.zoom_in')}
                 className="min-h-10 min-w-10 sm:min-h-9 sm:min-w-9"
               >
                 <ZoomIn className="h-4 w-4" />
@@ -217,6 +222,7 @@ const currentConfig = zoomLevels.find((z) => z.level === currentZoom)
               variant="ghost"
               size="icon"
               onClick={() => onZoomChange('all')}
+              aria-label={t('timeline.zoom.fit_all')}
               className="min-h-10 min-w-10 sm:min-h-9 sm:min-w-9 hidden sm:flex"
             >
               <Maximize2 className="h-4 w-4" />

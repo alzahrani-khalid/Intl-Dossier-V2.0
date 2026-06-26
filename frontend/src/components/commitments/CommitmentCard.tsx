@@ -149,7 +149,7 @@ export function CommitmentCard({
     <>
       <Card
         className={`
-          hover:shadow-md transition-shadow duration-200 cursor-pointer
+          transition-colors duration-200 hover:bg-line-soft cursor-pointer
           ${overdue ? 'border-danger/30 dark:border-danger/70' : ''}
           ${commitment.status === 'completed' ? 'opacity-75' : ''}
         `}

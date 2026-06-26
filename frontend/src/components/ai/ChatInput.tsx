@@ -87,6 +87,7 @@ export function ChatInput({
         onClick={handleSend}
         disabled={disabled || isLoading || !message.trim()}
         size="icon"
+        aria-label={t('sendMessage', { defaultValue: 'Send message' })}
         className={cn(
           'h-11 w-11 shrink-0 rounded-full',
           'transition-all duration-200',

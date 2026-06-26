@@ -4,7 +4,7 @@
  * Description: Main page for complex multi-criteria search
  */
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import {
@@ -73,6 +73,31 @@ const statusColors: Record<string, string> = {
   published: 'bg-secondary/30 text-secondary-foreground dark:bg-secondary/50',
 }
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function renderHighlightedSnippet(snippet: string, query: string): ReactNode {
+  const terms = query
+    .trim()
+    .split(/\s+/)
+    .map((term) => term.trim())
+    .filter((term) => term.length >= 2)
+
+  if (terms.length === 0) return snippet
+
+  const pattern = new RegExp(`(${terms.map(escapeRegExp).join('|')})`, 'gi')
+  return snippet.split(pattern).map((part, index) =>
+    terms.some((term) => term.toLowerCase() === part.toLowerCase()) ? (
+      <mark key={`${part}-${index}`} className="rounded-sm bg-warning/20 text-inherit">
+        {part}
+      </mark>
+    ) : (
+      part
+    ),
+  )
+}
+
 export function AdvancedSearchPage() {
   const { t } = useTranslation('advanced-search')
   const { isRTL } = useDirection()
@@ -138,9 +163,11 @@ export function AdvancedSearchPage() {
   const renderResultCard = (result: SearchResult) => {
     const IconComponent = entityIcons[result.entity_type as SearchableEntityType] || FileText
     const entityLabel = ENTITY_TYPE_LABELS[result.entity_type as SearchableEntityType]
+    const snippet = isRTL ? result.snippet_ar : result.snippet_en
+    const searchText = searchMutation.data?.query.original ?? ''
 
     return (
-      <Card key={result.entity_id} className="hover:shadow-md transition-shadow cursor-pointer">
+      <Card key={result.entity_id} className="cursor-pointer">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-start gap-3 min-w-0">
@@ -170,14 +197,11 @@ export function AdvancedSearchPage() {
           </div>
         </CardHeader>
 
-        {(result.snippet_en || result.snippet_ar) && (
+        {snippet && (
           <CardContent className="pt-0">
-            <p
-              className="text-sm text-muted-foreground line-clamp-2"
-              dangerouslySetInnerHTML={{
-                __html: isRTL ? result.snippet_ar : result.snippet_en,
-              }}
-            />
+            <p className="text-sm text-muted-foreground line-clamp-2">
+              {renderHighlightedSnippet(snippet, searchText)}
+            </p>
             <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />

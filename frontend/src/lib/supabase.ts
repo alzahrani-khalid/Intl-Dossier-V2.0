@@ -12,6 +12,9 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
+    // Tradeoff: the SPA persists Supabase sessions in browser storage so tabs can
+    // survive refreshes. A future BFF/HttpOnly-cookie boundary would reduce XSS
+    // impact, but that is an architecture change outside this frontend fix lane.
     persistSession: true,
     autoRefreshToken: true,
   },

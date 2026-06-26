@@ -135,7 +135,12 @@ export function SLAAtRiskList({
                         </div>
                       </div>
                       {onItemClick && (
-                        <Button variant="ghost" size="icon" className="shrink-0">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="shrink-0"
+                          aria-label={t('common:common.view')}
+                        >
                           <ExternalLink className="h-4 w-4" />
                         </Button>
                       )}

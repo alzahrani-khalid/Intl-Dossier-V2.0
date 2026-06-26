@@ -70,7 +70,7 @@ export function TimelineFilters({
 }: TimelineFiltersProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const [searchInput, setSearchInput] = useState(filters.search_query || '')
+  const [searchInput, setSearchInput] = useState(filters.search_query || '')
   const [dateRangePreset, setDateRangePreset] = useState<DateRangePreset>('all_time')
   const [customDateFrom, setCustomDateFrom] = useState<Date | undefined>()
   const [customDateTo, setCustomDateTo] = useState<Date | undefined>()
@@ -223,6 +223,7 @@ const [searchInput, setSearchInput] = useState(filters.search_query || '')
               )}
             >
               <X className="h-4 w-4" />
+              <span className="sr-only">{t('common:common.clear')}</span>
             </Button>
           )}
         </div>
@@ -255,6 +256,7 @@ const [searchInput, setSearchInput] = useState(filters.search_query || '')
           size="icon"
           onClick={onRefresh}
           className="min-h-11 min-w-11 sm:min-h-10 sm:min-w-10"
+          aria-label={t('common:common.actions.refresh', { defaultValue: 'Refresh' })}
         >
           <RotateCcw className="h-4 w-4" />
         </Button>

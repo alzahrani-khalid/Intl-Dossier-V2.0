@@ -166,7 +166,13 @@ export const EntityComparisonPage = memo(function EntityComparisonPage({
         <div>
           <div className="flex items-center gap-3">
             {step === 2 && (
-              <Button variant="ghost" size="icon" onClick={handleBack} className="flex-shrink-0">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleBack}
+                className="flex-shrink-0"
+                aria-label={t('common:common.back')}
+              >
                 <ArrowLeft className={cn('h-5 w-5', isRTL && 'rotate-180')} />
               </Button>
             )}
