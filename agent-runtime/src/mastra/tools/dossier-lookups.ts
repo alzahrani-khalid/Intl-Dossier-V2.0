@@ -116,7 +116,14 @@ export const listDossiersTool = createTool({
   description:
     'List the dossiers the caller is cleared to see. Returns all of them in one call by default; pass the optional type filter only to narrow to a single dossier type.',
   inputSchema: z.object({
-    type: z.enum(DOSSIER_TYPES).optional().describe('Optional dossier-type filter'),
+    // Loose string (NOT z.enum) so the model's natural "list everything" call — type:"all" — does
+    // not fail validation and loop with no answer; execute() applies the filter only for a real type.
+    type: z
+      .string()
+      .optional()
+      .describe(
+        'Optional dossier-type filter — one of: country, organization, forum, engagement, topic, working_group, person, elected_official. OMIT this field to list every dossier type; do not pass "all".',
+      ),
     limit: z.number().int().min(1).max(100).default(20).describe('Max dossiers to return'),
   }),
   outputSchema: z.object({
@@ -127,7 +134,7 @@ export const listDossiersTool = createTool({
     if (!authorization) {
       return { dossiers: [] }
     }
-    const args = input as { type?: (typeof DOSSIER_TYPES)[number]; limit?: number }
+    const args = input as { type?: string; limit?: number }
     try {
       const sb = supa.createUserClient(authorization)
       let query = sb
@@ -136,7 +143,9 @@ export const listDossiersTool = createTool({
         .eq('is_active', true)
         .order('name_en', { ascending: true })
         .limit(args.limit ?? 20)
-      if (args.type) {
+      // Tolerate out-of-enum / natural-language type values (e.g. the model passing "all" or
+      // "everything"): apply the filter ONLY for a real dossier type — anything else means all types.
+      if (args.type && (DOSSIER_TYPES as readonly string[]).includes(args.type)) {
         query = query.eq('type', args.type)
       }
       const { data, error } = await query
