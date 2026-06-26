@@ -146,13 +146,16 @@ export const copilotAgent = new Agent({
     },
   ],
   tools: copilotTools,
-  // STEP BUDGET: @mastra/core 1.43's stream() defaults the loop cap to stepCountIs(5), and the
-  // Agent only forwards a cap when one is set here (this.settings.stopWhen). With no cap, a turn
-  // that spends all 5 steps on tool calls (observed: "list the dossiers" → list_dossiers ×5 on
-  // gemma4:12b) hits the ceiling ON a tool-call step and ends with NO answer text. Raising it to
-  // 8 leaves headroom for a synthesis step after a few exploratory lookups. (maxSteps at the
-  // agent level is NOT forwarded into this build's loop path — stopWhen is.)
-  stopWhen: stepCountIs(8),
+  // STEP BUDGET: @mastra/core 1.43's stream() defaults the loop cap to stepCountIs(5). With no cap,
+  // a turn that spends all 5 steps on tool calls (observed: "list the dossiers" → list_dossiers ×5
+  // on gemma4:12b) hits the ceiling ON a tool-call step and ends with NO answer text. Raising it to
+  // 8 leaves headroom for a synthesis step after a few exploratory lookups. The cap must live under
+  // `defaultOptions` (an AgentConfig key typed as AgentExecutionOptions): the stream()/generate()
+  // path resolves `config.defaultOptions` via getDefaultOptions() and deep-merges it into the loop
+  // options, so `defaultOptions.stopWhen` reaches the loop. A bare top-level `stopWhen` is NOT an
+  // AgentConfig key — it fails type-check and only feeds the separate toConfig() serializer, not the
+  // @ag-ui/mastra stream loop. (`maxSteps` is likewise not forwarded into this build's loop path.)
+  defaultOptions: { stopWhen: stepCountIs(8) },
   memory: buildMemory(),
 })
 
