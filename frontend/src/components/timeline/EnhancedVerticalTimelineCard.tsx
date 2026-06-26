@@ -244,7 +244,7 @@ export function EnhancedVerticalTimelineCard({
             <m.div
               layoutId={`card-${event.id}-${id}`}
               ref={ref}
-              className="w-full max-w-3xl h-full md:h-fit md:max-h-[90%] flex flex-col bg-card sm:rounded-[var(--radius-lg)] overflow-hidden shadow-2xl"
+              className="w-full max-w-3xl h-full md:h-fit md:max-h-[90%] flex flex-col bg-card sm:rounded-[var(--radius-lg)] overflow-hidden shadow-[var(--shadow-lg)]"
             >
               {/* Event Icon Header */}
               <div
@@ -453,7 +453,7 @@ export function EnhancedVerticalTimelineCard({
           cursor: 'pointer',
         }}
         contentArrowStyle={{
-          borderRight: '7px solid hsl(var(--border))',
+          borderRight: '7px solid var(--line)',
         }}
         date={formattedDate}
         iconStyle={{

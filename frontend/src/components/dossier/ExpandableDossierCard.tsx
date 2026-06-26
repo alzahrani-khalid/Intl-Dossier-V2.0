@@ -53,7 +53,7 @@ interface ExpandableDossierCardProps {
  * Get type-specific icon component
  */
 function getTypeIcon(type: DossierType, className?: string) {
-  const iconProps = { className: className || 'h-4 w-4 sm:h-5 sm:w-5 text-white' }
+  const iconProps = { className: className || 'h-4 w-4 sm:h-5 sm:w-5 text-accent' }
 
   switch (type) {
     case 'country':
@@ -91,11 +91,11 @@ function CountryFlag({
     return (
       <div
         className={cn(
-          'rounded-full border-2 border-white/30 bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg',
+          'rounded-full border border-line bg-surface flex items-center justify-center',
           className,
         )}
       >
-        <Globe className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+        <Globe className="h-5 w-5 sm:h-6 sm:w-6 text-accent" />
       </div>
     )
   }
@@ -103,9 +103,7 @@ function CountryFlag({
   const flagPath = `/assets/flags/${countryCode}.svg`
 
   return (
-    <div
-      className={cn('overflow-hidden rounded-full border-2 border-white/30 shadow-lg', className)}
-    >
+    <div className={cn('overflow-hidden rounded-full border border-line', className)}>
       <img
         src={flagPath}
         alt={countryName || 'Country flag'}
@@ -116,12 +114,12 @@ function CountryFlag({
           const parent = target.parentElement
           if (parent) {
             parent.className = cn(
-              'rounded-full border-2 border-white/30 bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg',
+              'rounded-full border border-line bg-surface flex items-center justify-center',
               className,
             )
             const icon = document.createElement('div')
             icon.innerHTML =
-              '<svg class="h-5 w-5 sm:h-6 sm:w-6 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>'
+              '<svg class="h-5 w-5 sm:h-6 sm:w-6 text-accent" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>'
             parent.appendChild(icon)
           }
         }}
@@ -131,33 +129,32 @@ function CountryFlag({
 }
 
 /**
- * Get type-specific gradient background.
+ * Get type-specific flat surface tint.
  *
- * D-58-04-08: per-type gradients aligned to the canonical dossierTypeColors
- * map in semantic-colors.ts. Each branch returns Tailwind `from-...`/`via-...`/
- * `to-...` triplet using a single semantic token at descending opacity steps so
- * the card retains a directional sweep without relying on raw palette hexes.
- * D-07 collision: organization/topic resolve to secondary (accent-soft) per
- * the canonical purple-family mapping.
+ * Visual-token migration: the IntelDossier prototype is flat — no gradient
+ * backgrounds. Each branch returns a single soft semantic tint (a sanctioned
+ * chip/banner background) so the card keeps light type differentiation while
+ * resolving entirely to design tokens. Type identity is also carried by the
+ * badge and the flag/icon glyph, so a pale surface is sufficient here.
  */
-function getTypeGradient(type: DossierType): string {
+function getTypeSurface(type: DossierType): string {
   switch (type) {
     case 'country':
-      return 'from-primary/90 via-primary/80 to-primary/70'
+      return 'bg-accent-soft'
     case 'organization':
-      return 'from-secondary via-secondary to-secondary'
+      return 'bg-secondary'
     case 'forum':
-      return 'from-success/90 via-success/80 to-success/70'
+      return 'bg-success/10'
     case 'engagement':
-      return 'from-warning/90 via-warning/80 to-warning/70'
+      return 'bg-warning/10'
     case 'topic':
-      return 'from-destructive/90 via-destructive/80 to-destructive/70'
+      return 'bg-danger/10'
     case 'working_group':
-      return 'from-accent/90 via-accent/80 to-accent/70'
+      return 'bg-accent-soft'
     case 'person':
-      return 'from-muted via-muted to-muted'
+      return 'bg-surface'
     default:
-      return 'from-muted via-muted to-muted'
+      return 'bg-surface'
   }
 }
 
@@ -258,12 +255,11 @@ export function ExpandableDossierCard({
         onClick={onActivate}
         className={cn(
           'cursor-pointer overflow-hidden relative group/card',
-          'h-72 sm:h-80 rounded-2xl shadow-xl',
+          'h-72 sm:h-80 rounded-[var(--radius-lg)] border border-line',
           'flex flex-col justify-between p-4 sm:p-6',
-          'bg-gradient-to-br',
-          getTypeGradient(dossier.type),
-          'transition-transform duration-200',
-          'hover:scale-[1.02]',
+          getTypeSurface(dossier.type),
+          'transition-colors duration-150',
+          'hover:border-ink-faint',
         )}
       >
         {/* Isolated country map (for country dossiers only) */}
@@ -276,35 +272,29 @@ export function ExpandableDossierCard({
           />
         )}
 
-        {/* Hover overlay effect */}
-        <div className="absolute w-full h-full top-0 start-0 transition duration-300 group-hover/card:bg-black/20 opacity-0 group-hover/card:opacity-100"></div>
-
         {/* Header section with avatar/icon and metadata */}
         <div className="flex flex-col gap-3 sm:gap-4 z-10">
           <div className="flex items-center gap-3 sm:gap-4">
             {dossier.type === 'person' && (dossier.extension as any)?.photo_url ? (
-              <Avatar className="h-12 w-12 sm:h-14 sm:w-14 border-2 border-white/30 shadow-lg">
+              <Avatar className="h-12 w-12 sm:h-14 sm:w-14 border border-line">
                 <AvatarImage src={(dossier.extension as any).photo_url} alt={displayName || ''} />
-                <AvatarFallback className="bg-white/20 text-white text-sm sm:text-base font-bold backdrop-blur-sm">
+                <AvatarFallback className="bg-accent-soft text-accent-ink text-sm sm:text-base font-bold">
                   {displayName ? getInitials(displayName) : 'VIP'}
                 </AvatarFallback>
               </Avatar>
             ) : dossier.type === 'country' ? (
               <CountryFlag countryName={displayName} className="h-12 w-12 sm:h-14 sm:w-14" />
             ) : (
-              <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full border-2 border-white/30 bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
+              <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full border border-line bg-surface flex items-center justify-center">
                 {getTypeIcon(dossier.type)}
               </div>
             )}
 
             <div className="flex flex-col gap-1.5 sm:gap-2 flex-1 min-w-0">
-              <Badge
-                variant="secondary"
-                className="w-fit text-xs sm:text-sm bg-white/20 text-white border-white/30 backdrop-blur-sm"
-              >
+              <Badge variant="secondary" className="w-fit text-xs sm:text-sm">
                 {t(`type.${dossier.type}`)}
               </Badge>
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-white/80">
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-ink-mute">
                 <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
                 <span>{relativeTime}</span>
               </div>
@@ -322,14 +312,14 @@ export function ExpandableDossierCard({
         <div className="text-content z-10">
           <m.h1
             layoutId={`title-${dossier.id}-${id}`}
-            className="font-bold text-xl sm:text-2xl md:text-3xl text-white relative line-clamp-2 text-start mb-2"
+            className="font-bold text-xl sm:text-2xl md:text-3xl text-ink relative line-clamp-2 text-start mb-2"
           >
             {displayName || t('untitled')}
           </m.h1>
           {displayDescription && (
             <m.p
               layoutId={`description-${dossier.id}-${id}`}
-              className="font-normal text-sm sm:text-base text-white/90 relative line-clamp-2 text-start"
+              className="font-normal text-sm sm:text-base text-ink-mute relative line-clamp-2 text-start"
             >
               {displayDescription}
             </m.p>
@@ -346,7 +336,7 @@ export function ExpandableDossierCard({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm h-full w-full z-[100]"
+              className="fixed inset-0 bg-ink/40 h-full w-full z-[100]"
             />
 
             {/* Expanded Card */}
@@ -354,7 +344,7 @@ export function ExpandableDossierCard({
               <m.div
                 ref={ref}
                 layoutId={`card-${dossier.id}-${id}`}
-                className="w-full max-w-2xl h-full md:h-fit md:max-h-[90vh] flex flex-col bg-card rounded-3xl overflow-hidden shadow-2xl"
+                className="w-full max-w-2xl h-full md:h-fit md:max-h-[90vh] flex flex-col bg-surface rounded-[var(--radius-lg)] overflow-hidden shadow-[var(--shadow-lg)]"
               >
                 {/* Close Button */}
                 <m.button
@@ -366,11 +356,10 @@ export function ExpandableDossierCard({
                   className={cn(
                     'absolute top-4 z-10',
                     'flex items-center justify-center',
-                    'bg-card/90 backdrop-blur-sm',
+                    'bg-surface border border-line',
                     'rounded-full h-8 w-8 sm:h-10 sm:w-10',
-                    'shadow-lg',
-                    'hover:bg-card',
-                    'transition-colors duration-200',
+                    'hover:bg-line-soft',
+                    'transition-colors duration-150',
                     isRTL ? 'start-4' : 'end-4',
                   )}
                   onClick={onDeactivate}
@@ -384,8 +373,7 @@ export function ExpandableDossierCard({
                   layoutId={`image-${dossier.id}-${id}`}
                   className={cn(
                     'relative w-full h-48 sm:h-64 md:h-72',
-                    'bg-gradient-to-br',
-                    getTypeGradient(dossier.type),
+                    getTypeSurface(dossier.type),
                     'flex items-center justify-center',
                   )}
                 >
@@ -401,12 +389,12 @@ export function ExpandableDossierCard({
                   {/* Large Avatar/Icon/Flag */}
                   <div className="relative z-10">
                     {dossier.type === 'person' && (dossier.extension as any)?.photo_url ? (
-                      <Avatar className="h-24 w-24 sm:h-32 sm:w-32 border-4 border-white/30 shadow-2xl">
+                      <Avatar className="h-24 w-24 sm:h-32 sm:w-32 border border-line">
                         <AvatarImage
                           src={(dossier.extension as any).photo_url}
                           alt={displayName || ''}
                         />
-                        <AvatarFallback className="bg-white/20 text-white text-3xl font-bold backdrop-blur-sm">
+                        <AvatarFallback className="bg-accent-soft text-accent-ink text-3xl font-bold">
                           {displayName ? getInitials(displayName) : 'VIP'}
                         </AvatarFallback>
                       </Avatar>
@@ -416,8 +404,8 @@ export function ExpandableDossierCard({
                         className="h-24 w-24 sm:h-32 sm:w-32"
                       />
                     ) : (
-                      <div className="h-24 w-24 sm:h-32 sm:w-32 rounded-full border-4 border-white/30 bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-2xl">
-                        {getTypeIcon(dossier.type, 'h-12 w-12 sm:h-16 sm:w-16')}
+                      <div className="h-24 w-24 sm:h-32 sm:w-32 rounded-full border border-line bg-surface flex items-center justify-center">
+                        {getTypeIcon(dossier.type, 'h-12 w-12 sm:h-16 sm:w-16 text-accent')}
                       </div>
                     )}
                   </div>

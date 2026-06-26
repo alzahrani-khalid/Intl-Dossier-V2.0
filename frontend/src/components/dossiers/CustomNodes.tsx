@@ -7,11 +7,12 @@
 //   organization (purple)  → secondary (D-07 blue+purple collision rule)
 //   forum        (amber)   → warning
 //   default      (gray)    → muted
-// Center-node hero gradient collapses to accent/primary single-tone.
-// White-card surfaces remap to bg-card / border-line / text-foreground so the
-// React-Flow nodes inherit the OKLCH token engine in both light/dark modes
-// without per-class dark: variants. Chromatic-watch documented in PR body per
-// manifest override_notes.
+// Visual-token flatten: all gradients, glow rings, blur and scale/pulse motion
+// removed — node surfaces are flat bg-surface with 1px borders. The center node
+// uses a solid accent header (the sanctioned primary-button fill); related nodes
+// carry type identity via soft-token icon color + badge + a 1px colored border.
+// Everything resolves to design tokens in both light/dark modes without
+// per-class dark: variants.
 import { memo } from 'react'
 import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import {
@@ -44,26 +45,20 @@ type CustomNode = Node<CustomNodeData>
 export const CenterNode = memo(({ data }: NodeProps<CustomNode>) => {
   return (
     <div className="relative group">
-      {/* Animated glow ring */}
-      <div className="absolute -inset-3 bg-gradient-to-r from-primary via-accent to-destructive rounded-3xl opacity-60 blur-xl group-hover:opacity-80 transition-opacity duration-500 animate-pulse"></div>
-
       {/* Main card content */}
-      <div className="relative w-80 bg-card rounded-2xl shadow-2xl border-2 border-primary/50 backdrop-blur-sm overflow-hidden">
-        {/* Header with gradient background */}
-        <div className="bg-gradient-to-br from-primary via-primary to-accent px-6 py-4 relative">
+      <div className="relative w-80 bg-surface rounded-[var(--radius-lg)] border border-accent overflow-hidden">
+        {/* Header — solid accent (primary-button fill), flat */}
+        <div className="bg-primary px-6 py-4 relative">
           {/* Sparkle badge */}
-          <div className="absolute -top-2 -end-2 bg-warning rounded-full p-2 shadow-lg">
-            <Sparkles
-              className="w-5 h-5 text-warning-foreground animate-spin"
-              style={{ animationDuration: '3s' }}
-            />
+          <div className="absolute -top-2 -end-2 bg-warning rounded-full p-2">
+            <Sparkles className="w-5 h-5 text-warning-foreground" />
           </div>
 
           {/* Title */}
           <div className="flex items-center gap-3">
-            <div className="w-3 h-3 bg-primary-foreground rounded-full animate-pulse"></div>
+            <div className="w-3 h-3 bg-primary-foreground rounded-full"></div>
             <div>
-              <h3 className="text-primary-foreground font-bold text-lg tracking-wide drop-shadow-lg">
+              <h3 className="text-primary-foreground font-bold text-lg tracking-wide">
                 {data.label}
               </h3>
               <p className="text-primary-foreground/80 text-xs mt-0.5">Current Dossier</p>
@@ -103,7 +98,7 @@ export const CenterNode = memo(({ data }: NodeProps<CustomNode>) => {
           {/* Action footer */}
           <div className="flex items-center justify-between pt-3 border-t border-line">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+              <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground text-xs font-bold">K</span>
               </div>
               <span className="text-xs text-muted-foreground">View Details</span>
@@ -155,50 +150,46 @@ export const RelatedNode = memo(({ data, isConnectable }: NodeProps<CustomNode>)
     switch (referenceType) {
       case 'country':
         return {
-          bgGradient: 'from-success/10 to-success/5',
-          headerGradient: 'from-success to-success',
           border: 'border-success/30',
           icon: Globe2,
           iconColor: 'text-success',
           accentColor: 'text-success',
           badgeBg: 'bg-success/10',
           badgeText: 'text-success',
+          barColor: 'bg-success',
           label: 'Country',
         }
       case 'organization':
         return {
-          bgGradient: 'from-secondary to-secondary/50',
-          headerGradient: 'from-accent to-accent',
           border: 'border-secondary',
           icon: Building2,
           iconColor: 'text-secondary-foreground',
           accentColor: 'text-secondary-foreground',
           badgeBg: 'bg-secondary',
           badgeText: 'text-secondary-foreground',
+          barColor: 'bg-accent',
           label: 'Organization',
         }
       case 'forum':
         return {
-          bgGradient: 'from-warning/10 to-warning/5',
-          headerGradient: 'from-warning to-warning',
           border: 'border-warning/30',
           icon: Users2,
           iconColor: 'text-warning',
           accentColor: 'text-warning',
           badgeBg: 'bg-warning/10',
           badgeText: 'text-warning',
+          barColor: 'bg-warning',
           label: 'Forum',
         }
       default:
         return {
-          bgGradient: 'from-muted to-muted/50',
-          headerGradient: 'from-muted-foreground to-muted-foreground',
           border: 'border-line',
           icon: Building2,
           iconColor: 'text-muted-foreground',
           accentColor: 'text-muted-foreground',
-          badgeBg: 'bg-muted',
+          badgeBg: 'bg-line-soft',
           badgeText: 'text-muted-foreground',
+          barColor: 'bg-ink-faint',
           label: 'Entity',
         }
     }
@@ -209,18 +200,13 @@ export const RelatedNode = memo(({ data, isConnectable }: NodeProps<CustomNode>)
 
   return (
     <div className="relative group">
-      {/* Hover glow effect */}
-      <div
-        className={`absolute -inset-2 bg-gradient-${style.headerGradient} rounded-2xl opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-300`}
-      ></div>
-
       {/* Main card */}
       <div
-        className={`relative w-72 bg-gradient-to-br ${style.bgGradient} rounded-xl shadow-lg border-2 ${style.border} transform transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl cursor-pointer overflow-hidden`}
+        className={`relative w-72 bg-surface rounded-[var(--radius)] border ${style.border} transition-colors duration-150 cursor-pointer overflow-hidden hover:bg-line-soft`}
       >
         {/* Header with icon */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-line">
-          <div className={`p-2 rounded-lg bg-card shadow-sm`}>
+          <div className="p-2 rounded-[var(--radius-sm)] bg-line-soft">
             <IconComponent className={`w-5 h-5 ${style.iconColor}`} />
           </div>
           <div className="flex-1 min-w-0">
@@ -246,13 +232,13 @@ export const RelatedNode = memo(({ data, isConnectable }: NodeProps<CustomNode>)
           {stats && (
             <div className="flex gap-2">
               {stats.mous !== undefined && (
-                <div className="flex-1 bg-card rounded-lg p-2 shadow-sm">
+                <div className="flex-1 bg-line-soft rounded-[var(--radius-sm)] p-2">
                   <p className="text-xs text-muted-foreground">MoUs</p>
                   <p className={`text-lg font-bold ${style.accentColor}`}>{stats.mous}</p>
                 </div>
               )}
               {stats.engagements !== undefined && (
-                <div className="flex-1 bg-card rounded-lg p-2 shadow-sm">
+                <div className="flex-1 bg-line-soft rounded-[var(--radius-sm)] p-2">
                   <p className="text-xs text-muted-foreground">Engage</p>
                   <p className={`text-lg font-bold ${style.accentColor}`}>{stats.engagements}</p>
                 </div>
@@ -264,9 +250,9 @@ export const RelatedNode = memo(({ data, isConnectable }: NodeProps<CustomNode>)
           {stats?.health_score !== undefined && (
             <div className="flex items-center gap-2">
               <TrendingUp className={`w-4 h-4 ${style.iconColor}`} />
-              <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+              <div className="flex-1 h-1.5 bg-line-soft rounded-full overflow-hidden">
                 <div
-                  className={`h-full bg-gradient-to-r ${style.headerGradient} rounded-full transition-all duration-500`}
+                  className={`h-full ${style.barColor} rounded-full transition-all duration-300`}
                   style={{ width: `${stats.health_score}%` }}
                 ></div>
               </div>
@@ -276,12 +262,12 @@ export const RelatedNode = memo(({ data, isConnectable }: NodeProps<CustomNode>)
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-2 bg-card/50 border-t border-line flex items-center justify-between">
+        <div className="px-4 py-2 bg-line-soft border-t border-line flex items-center justify-between">
           <div className="flex items-center gap-1">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+            <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
               <span className="text-primary-foreground text-[10px] font-bold">A</span>
             </div>
-            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-success to-success flex items-center justify-center -ms-1">
+            <div className="w-5 h-5 rounded-full bg-success flex items-center justify-center -ms-1">
               <span className="text-success-foreground text-[10px] font-bold">B</span>
             </div>
           </div>
@@ -289,9 +275,6 @@ export const RelatedNode = memo(({ data, isConnectable }: NodeProps<CustomNode>)
             View
           </button>
         </div>
-
-        {/* Shine effect overlay */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-card/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
 
         {/* Connection Handles - Hidden by default */}
         <Handle
