@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { AlertTriangle, Bot } from 'lucide-react'
 import { useTriageSuggestions, useApplyTriage } from '@/hooks/useIntakeApi'
 import { useDirection } from '@/hooks/useDirection'
+import { Button } from '@/components/ui/button'
 
 interface TriageSuggestion {
   suggested_type?: string
@@ -244,15 +245,16 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
               />
             </div>
 
-            <button
+            <Button
+              type="button"
               onClick={handleApplyOverride}
               disabled={applyTriageMutation.isPending || !overrideReason.trim()}
-              className="w-full rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full"
             >
               {applyTriageMutation.isPending
                 ? t('triage.applying', 'Applying...')
                 : t('triage.applyManualTriage', 'Apply Manual Triage')}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -333,16 +335,19 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
 
           {/* Action Buttons */}
           <div className="flex gap-3 border-t border-line pt-4">
-            <button
+            <Button
+              type="button"
               onClick={handleAcceptSuggestions}
               disabled={applyTriageMutation.isPending}
-              className="flex-1 rounded-md bg-success px-4 py-2 text-success-foreground hover:bg-success/90 disabled:opacity-50"
+              className="flex-1"
             >
               {applyTriageMutation.isPending
                 ? t('triage.applying', 'Applying...')
                 : t('triage.acceptSuggestions', 'Accept AI Suggestions')}
-            </button>
-            <button
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
               onClick={() => {
                 setIsOverriding(true)
                 setOverrideValues({
@@ -354,10 +359,10 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                   confidence_score: suggestions.confidenceScores?.type,
                 })
               }}
-              className="flex-1 rounded-md bg-warning px-4 py-2 text-warning-foreground hover:bg-warning/90"
+              className="flex-1"
             >
               {t('triage.override', 'Override')}
-            </button>
+            </Button>
           </div>
         </div>
       ) : (
@@ -453,26 +458,28 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
           </div>
 
           <div className="flex gap-3 border-t border-line pt-4">
-            <button
+            <Button
+              type="button"
               onClick={handleApplyOverride}
               disabled={applyTriageMutation.isPending || !overrideReason.trim()}
-              className="flex-1 rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+              className="flex-1"
             >
               {applyTriageMutation.isPending
                 ? t('triage.applying', 'Applying...')
                 : t('triage.applyOverride', 'Apply Override')}
-            </button>
-            <button
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
               onClick={() => {
                 setIsOverriding(false)
                 setOverrideValues({})
                 setOverrideReason('')
                 setReasonError('')
               }}
-              className="rounded-md border border-line px-4 py-2 text-ink hover:bg-muted"
             >
               {t('common.cancel', 'Cancel')}
-            </button>
+            </Button>
           </div>
         </div>
       )}
