@@ -148,6 +148,7 @@
     "openCopilot": "اسأل المساعد",
     "stopStream": "إيقاف الاستجابة",
     "copyMessage": "نسخ الرسالة",
-    "deleteConversation": "حذف المحادثة"
+    "deleteConversation": "حذف المحادثة",
+    "scrollToBottom": "الانتقال إلى الأحدث"
   }
 }

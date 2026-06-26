@@ -107,6 +107,30 @@
   padding-inline: var(--pad, 20px);
 }
 
+/* Floating "jump to latest" affordance — assistant-ui disables the control while the
+ * viewport is at the bottom, so we fade it out when :disabled and reveal it on scroll-up. */
+.copilot-scroll-to-bottom {
+  position: sticky;
+  bottom: var(--space-2, 8px);
+  align-self: flex-end;
+  inline-size: 36px;
+  block-size: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+.copilot-scroll-to-bottom:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ---------------------------------------------------------------------------
  * Message rows — user + assistant both flat --surface, --line edge, NO shadow.
  * Differentiation is by start/end alignment (logical), never accent-tinted bubbles.

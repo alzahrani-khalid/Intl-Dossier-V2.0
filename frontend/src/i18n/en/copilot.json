@@ -148,6 +148,7 @@
     "openCopilot": "Ask the copilot",
     "stopStream": "Stop response",
     "copyMessage": "Copy message",
-    "deleteConversation": "Delete conversation"
+    "deleteConversation": "Delete conversation",
+    "scrollToBottom": "Scroll to latest"
   }
 }

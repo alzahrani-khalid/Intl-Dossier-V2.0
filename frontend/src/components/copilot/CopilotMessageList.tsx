@@ -15,7 +15,7 @@
  */
 import type { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Copy, Check, RotateCcw } from 'lucide-react'
+import { Copy, Check, RotateCcw, ChevronDown } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeSanitize from 'rehype-sanitize'
@@ -162,6 +162,7 @@ function StreamingIndicator(): ReactElement {
 }
 
 export function CopilotMessageList(): ReactElement {
+  const { t } = useTranslation('copilot')
   return (
     <ThreadPrimitive.Viewport className="copilot-viewport" autoScroll>
       <ThreadPrimitive.Messages
@@ -173,6 +174,15 @@ export function CopilotMessageList(): ReactElement {
       <ThreadPrimitive.If running>
         <StreamingIndicator />
       </ThreadPrimitive.If>
+      <ThreadPrimitive.ScrollToBottom asChild>
+        <button
+          type="button"
+          className="copilot-scroll-to-bottom"
+          aria-label={t('aria.scrollToBottom')}
+        >
+          <ChevronDown size={18} aria-hidden="true" />
+        </button>
+      </ThreadPrimitive.ScrollToBottom>
     </ThreadPrimitive.Viewport>
   )
 }
