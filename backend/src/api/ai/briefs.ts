@@ -99,7 +99,10 @@ const verifySupabaseToken = async (
 
     req.user = {
       id: user.id,
-      organization_id: profile?.organization_id || user.user_metadata?.organization_id || '',
+      // SEC-BE-16: tenant (org) scoping must resolve from the DB profile only. Falling
+      // back to client-settable user_metadata.organization_id would let a caller spoof
+      // their tenant. Missing profile org → '' → the route guards below fail closed (401).
+      organization_id: profile?.organization_id || '',
     } as typeof req.user
 
     return next()
@@ -237,10 +240,15 @@ router.post(
           })
         }
 
+        // SEC-BE-17: do not leak the raw agent/DB error to the client. Detail is already
+        // logged server-side above; gate the message on NODE_ENV like the global handler.
         return res.status(500).json({
           error: 'Brief generation failed',
           code: 'GENERATION_FAILED',
-          message: error instanceof Error ? error.message : 'Unknown error',
+          message:
+            process.env.NODE_ENV === 'development' && error instanceof Error
+              ? error.message
+              : 'An error occurred',
         })
       }
     }

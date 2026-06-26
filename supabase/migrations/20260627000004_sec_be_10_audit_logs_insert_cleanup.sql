@@ -1,0 +1,13 @@
+-- SEC-BE-10 (MEDIUM) — audit_logs forgeable INSERT WITH CHECK(true).
+--
+-- 20251011214948_setup_rls_policies.sql:237 created
+--   CREATE POLICY "System can insert audit logs" ON audit_logs FOR INSERT WITH CHECK (true);
+-- with no TO clause, letting any authenticated user forge audit rows.
+--
+-- Live staging is ALREADY remediated: the live INSERT policy is `audit_insert`
+-- WITH CHECK (system_operation('any') OR user_id = auth.uid()); the blanket
+-- "System can insert audit logs" policy is no longer present. This migration is a
+-- defensive, idempotent DROP so a fresh replay (where 20251011214948 recreates the
+-- blanket policy) also ends in the safe state. The correct `audit_insert` policy
+-- is left intact.
+DROP POLICY IF EXISTS "System can insert audit logs" ON audit_logs;

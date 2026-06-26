@@ -3,6 +3,7 @@ import { z } from 'zod'
 import AuthService from '../services/auth.service'
 import { validate, createBilingualError, getRequestLanguage } from '../utils/validation'
 import { logInfo, logError } from '../utils/logger'
+import { authLimiter } from '../middleware/rate-limit.middleware'
 
 const router = Router()
 const authService = new AuthService()
@@ -56,6 +57,12 @@ const verifyMfaSchema = z.object({
 const setupMfaSchema = z.object({
   userId: z.string().uuid(),
 })
+
+// SEC-BE-07: brute-force protection on credential endpoints. authLimiter (5 attempts /
+// 15 min, skips successful requests) runs ahead of each handler via next(). Scoped to these
+// POST routes only — not the whole /auth mount — so repeated GET /me or /refresh failures
+// cannot exhaust the budget and lock legitimate users out of /login.
+router.post(['/login', '/register', '/refresh', '/reset-password', '/verify-mfa'], authLimiter)
 
 /**
  * @route POST /api/auth/login
