@@ -4,6 +4,15 @@ import { AlertTriangle, Bot } from 'lucide-react'
 import { useTriageSuggestions, useApplyTriage } from '@/hooks/useIntakeApi'
 import { useDirection } from '@/hooks/useDirection'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 interface TriageSuggestion {
   suggested_type?: string
@@ -165,56 +174,67 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
               <label className="mb-1 block text-sm font-medium text-ink">
                 {t('triage.sensitivity', 'Sensitivity Level')}
               </label>
-              <select
-                value={overrideValues.suggested_sensitivity || ''}
-                onChange={(e) =>
-                  setOverrideValues({ ...overrideValues, suggested_sensitivity: e.target.value })
+              <Select
+                value={overrideValues.suggested_sensitivity || undefined}
+                onValueChange={(value) =>
+                  setOverrideValues({ ...overrideValues, suggested_sensitivity: value })
                 }
-                className="w-full rounded-md border-line bg-surface text-ink"
               >
-                <option value="">{t('common.select', 'Select...')}</option>
-                <option value="public">{t('triage.sensitivityLevels.public', 'Public')}</option>
-                <option value="internal">
-                  {t('triage.sensitivityLevels.internal', 'Internal')}
-                </option>
-                <option value="confidential">
-                  {t('triage.sensitivityLevels.confidential', 'Confidential')}
-                </option>
-                <option value="secret">{t('triage.sensitivityLevels.secret', 'Secret')}</option>
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder={t('common.select', 'Select...')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="public">
+                    {t('triage.sensitivityLevels.public', 'Public')}
+                  </SelectItem>
+                  <SelectItem value="internal">
+                    {t('triage.sensitivityLevels.internal', 'Internal')}
+                  </SelectItem>
+                  <SelectItem value="confidential">
+                    {t('triage.sensitivityLevels.confidential', 'Confidential')}
+                  </SelectItem>
+                  <SelectItem value="secret">
+                    {t('triage.sensitivityLevels.secret', 'Secret')}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
               <label className="mb-1 block text-sm font-medium text-ink">
                 {t('triage.urgency', 'Urgency')}
               </label>
-              <select
-                value={overrideValues.suggested_urgency || ''}
-                onChange={(e) =>
-                  setOverrideValues({ ...overrideValues, suggested_urgency: e.target.value })
+              <Select
+                value={overrideValues.suggested_urgency || undefined}
+                onValueChange={(value) =>
+                  setOverrideValues({ ...overrideValues, suggested_urgency: value })
                 }
-                className="w-full rounded-md border-line bg-surface text-ink"
               >
-                <option value="">{t('common.select', 'Select...')}</option>
-                <option value="low">{t('queue.urgency.low', 'Low')}</option>
-                <option value="medium">{t('queue.urgency.medium', 'Medium')}</option>
-                <option value="high">{t('queue.urgency.high', 'High')}</option>
-                <option value="critical">{t('queue.urgency.critical', 'Critical')}</option>
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder={t('common.select', 'Select...')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">{t('queue.urgency.low', 'Low')}</SelectItem>
+                  <SelectItem value="medium">{t('queue.urgency.medium', 'Medium')}</SelectItem>
+                  <SelectItem value="high">{t('queue.urgency.high', 'High')}</SelectItem>
+                  <SelectItem value="critical">
+                    {t('queue.urgency.critical', 'Critical')}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
               <label className="mb-1 block text-sm font-medium text-ink">
                 {t('triage.assignedUnit', 'Assigned Unit')}
               </label>
-              <input
+              <Input
                 type="text"
                 value={overrideValues.suggested_unit || ''}
                 onChange={(e) =>
                   setOverrideValues({ ...overrideValues, suggested_unit: e.target.value })
                 }
                 placeholder={t('triage.assignedUnitPlaceholder', 'Enter unit name')}
-                className="w-full rounded-md border-line bg-surface text-ink"
               />
             </div>
 
@@ -231,7 +251,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                   <span>{reasonError}</span>
                 </div>
               )}
-              <textarea
+              <Textarea
                 value={overrideReason}
                 onChange={(e) => {
                   setOverrideReason(e.target.value)
@@ -241,7 +261,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 rows={3}
                 aria-required="true"
                 aria-invalid={reasonError !== ''}
-                className="w-full rounded-md border-line bg-surface text-ink aria-[invalid=true]:border-destructive"
+                className="aria-[invalid=true]:border-destructive"
               />
             </div>
 
@@ -376,53 +396,66 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
               <label className="mb-1 block text-sm font-medium text-ink">
                 {t('triage.sensitivity', 'Sensitivity Level')}
               </label>
-              <select
-                value={overrideValues.suggested_sensitivity || ''}
-                onChange={(e) =>
-                  setOverrideValues({ ...overrideValues, suggested_sensitivity: e.target.value })
+              <Select
+                value={overrideValues.suggested_sensitivity || undefined}
+                onValueChange={(value) =>
+                  setOverrideValues({ ...overrideValues, suggested_sensitivity: value })
                 }
-                className="w-full rounded-md border-line bg-surface text-ink"
               >
-                <option value="public">{t('triage.sensitivityLevels.public', 'Public')}</option>
-                <option value="internal">
-                  {t('triage.sensitivityLevels.internal', 'Internal')}
-                </option>
-                <option value="confidential">
-                  {t('triage.sensitivityLevels.confidential', 'Confidential')}
-                </option>
-                <option value="secret">{t('triage.sensitivityLevels.secret', 'Secret')}</option>
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder={t('common.select', 'Select...')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="public">
+                    {t('triage.sensitivityLevels.public', 'Public')}
+                  </SelectItem>
+                  <SelectItem value="internal">
+                    {t('triage.sensitivityLevels.internal', 'Internal')}
+                  </SelectItem>
+                  <SelectItem value="confidential">
+                    {t('triage.sensitivityLevels.confidential', 'Confidential')}
+                  </SelectItem>
+                  <SelectItem value="secret">
+                    {t('triage.sensitivityLevels.secret', 'Secret')}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
               <label className="mb-1 block text-sm font-medium text-ink">
                 {t('triage.urgency', 'Urgency')}
               </label>
-              <select
-                value={overrideValues.suggested_urgency || ''}
-                onChange={(e) =>
-                  setOverrideValues({ ...overrideValues, suggested_urgency: e.target.value })
+              <Select
+                value={overrideValues.suggested_urgency || undefined}
+                onValueChange={(value) =>
+                  setOverrideValues({ ...overrideValues, suggested_urgency: value })
                 }
-                className="w-full rounded-md border-line bg-surface text-ink"
               >
-                <option value="low">{t('queue.urgency.low', 'Low')}</option>
-                <option value="medium">{t('queue.urgency.medium', 'Medium')}</option>
-                <option value="high">{t('queue.urgency.high', 'High')}</option>
-                <option value="critical">{t('queue.urgency.critical', 'Critical')}</option>
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder={t('common.select', 'Select...')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">{t('queue.urgency.low', 'Low')}</SelectItem>
+                  <SelectItem value="medium">{t('queue.urgency.medium', 'Medium')}</SelectItem>
+                  <SelectItem value="high">{t('queue.urgency.high', 'High')}</SelectItem>
+                  <SelectItem value="critical">
+                    {t('queue.urgency.critical', 'Critical')}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="md:col-span-2">
               <label className="mb-1 block text-sm font-medium text-ink">
                 {t('triage.assignedUnit', 'Assigned Unit')}
               </label>
-              <input
+              <Input
                 type="text"
                 value={overrideValues.suggested_unit || ''}
                 onChange={(e) =>
                   setOverrideValues({ ...overrideValues, suggested_unit: e.target.value })
                 }
-                className="w-full rounded-md border-line bg-surface text-ink"
               />
             </div>
 
@@ -439,7 +472,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                   <span>{reasonError}</span>
                 </div>
               )}
-              <textarea
+              <Textarea
                 value={overrideReason}
                 onChange={(e) => {
                   setOverrideReason(e.target.value)
@@ -452,7 +485,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 rows={3}
                 aria-required="true"
                 aria-invalid={reasonError !== ''}
-                className="w-full rounded-md border-line bg-surface text-ink aria-[invalid=true]:border-destructive"
+                className="aria-[invalid=true]:border-destructive"
               />
             </div>
           </div>
