@@ -259,14 +259,18 @@ export function mapColumnKeyToStatus(
   columnKey: string,
 ): { status: string; workflowStage?: string } {
   if (source === 'task') {
-    // Tasks use workflow_stage directly
+    // Tasks use workflow_stage directly; status is derived 1:1 where the
+    // task_status enum allows (B-26 — matches the tasks-update edge fn so the
+    // enum's 'pending'/'review' values are actually written, not collapsed).
+    const STAGE_TO_STATUS: Record<string, string> = {
+      todo: 'pending',
+      in_progress: 'in_progress',
+      review: 'review',
+      done: 'completed',
+      cancelled: 'cancelled',
+    }
     return {
-      status:
-        columnKey === 'done'
-          ? 'completed'
-          : columnKey === 'cancelled'
-            ? 'cancelled'
-            : 'in_progress',
+      status: STAGE_TO_STATUS[columnKey] ?? 'in_progress',
       workflowStage: columnKey,
     }
   }

@@ -55,10 +55,12 @@ const STAGES: WorkflowStage[] = ['todo', 'in_progress', 'review', 'done']
 const SOURCE_FILTER: WorkSource[] = ['commitment', 'task']
 
 // Map workflow stage → task_status enum value (per useUnifiedKanban DB notes).
+// B-26: 1:1 where the task_status enum allows — 'review' has its own enum value,
+// so it must not collapse into 'in_progress' (that hid tasks from review filters).
 const STAGE_TO_STATUS: Record<WorkflowStage, string> = {
   todo: 'pending',
   in_progress: 'in_progress',
-  review: 'in_progress',
+  review: 'review',
   done: 'completed',
   cancelled: 'cancelled',
 }
