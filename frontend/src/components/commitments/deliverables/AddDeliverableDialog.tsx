@@ -54,7 +54,7 @@ import { useDirection } from '@/hooks/useDirection'
 
 // Form validation schema
 const formSchema = z.object({
-  title_en: z.string().min(1, 'Required').max(200),
+  title_en: z.string().min(1, 'validation:titleRequired').max(200),
   title_ar: z.string().max(200).optional(),
   description_en: z.string().max(1000).optional(),
   description_ar: z.string().max(1000).optional(),
@@ -67,7 +67,7 @@ const formSchema = z.object({
     'report',
     'custom',
   ]),
-  due_date: z.string().min(1, 'Required'),
+  due_date: z.string().min(1, 'validation:dueDateRequired'),
   weight: z.number().min(1).max(10),
   notes: z.string().max(500).optional(),
 })
@@ -273,7 +273,9 @@ export function AddDeliverableDialog({
               className="min-h-11"
             />
             {form.formState.errors.title_en && (
-              <p className="text-xs text-destructive">{form.formState.errors.title_en.message}</p>
+              <p className="text-xs text-destructive">
+                {t(form.formState.errors.title_en.message ?? 'validation:required')}
+              </p>
             )}
           </div>
 
@@ -311,7 +313,9 @@ export function AddDeliverableDialog({
             </Label>
             <Input id="due_date" type="date" {...form.register('due_date')} className="min-h-11" />
             {form.formState.errors.due_date && (
-              <p className="text-xs text-destructive">{form.formState.errors.due_date.message}</p>
+              <p className="text-xs text-destructive">
+                {t(form.formState.errors.due_date.message ?? 'validation:required')}
+              </p>
             )}
           </div>
 
