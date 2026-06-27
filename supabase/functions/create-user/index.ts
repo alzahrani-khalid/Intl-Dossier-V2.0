@@ -337,8 +337,12 @@ serve(async (req) => {
       )
     }
 
-    // Update auth.users table with extended fields
-    const { error: updateError } = await supabaseAdmin
+    // Write the canonical role + profile fields onto the public.users row created
+    // by the on_auth_user_created trigger. Authorization reads public.users.role,
+    // so this write is NOT optional: a failed or 0-row update would leave a user
+    // with no canonical role behind a 201. Use the service-role client and, if it
+    // does not land, compensate by deleting the just-created auth user and 500.
+    const { data: updatedRows, error: updateError } = await supabaseAdmin
       .from('users')
       .update({
         username: body.username.toLowerCase(),
@@ -349,10 +353,23 @@ serve(async (req) => {
         created_by: requester.id,
       })
       .eq('id', newUser.user.id)
+      .select('id')
 
-    if (updateError) {
-      console.error('User profile update error:', updateError)
-      // Non-critical - user was created, this is just profile data
+    if (updateError || !updatedRows || updatedRows.length === 0) {
+      console.error('User role write did not land, rolling back auth user:', updateError)
+      // Compensate so we never leave an account with no canonical role/authorization.
+      await supabaseAdmin.auth.admin.deleteUser(newUser.user.id)
+      return new Response(
+        JSON.stringify({
+          error: 'Failed to persist user role',
+          code: 'USER_ROLE_WRITE_FAILED',
+          details: updateError?.message,
+        }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        },
+      )
     }
 
     // Generate activation token (expires in 48 hours)
