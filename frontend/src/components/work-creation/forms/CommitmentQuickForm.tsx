@@ -56,7 +56,11 @@ const commitmentQuickFormSchema = z.object({
     error: 'validation:dueDateRequired',
   }),
   priority: z.enum(['low', 'medium', 'high', 'urgent'] as const),
-  owner_type: z.enum(['internal', 'external'] as const),
+  // Quick form is internal-only: it collects no external contact, so an
+  // 'external' owner would set owner_contact_id=null and violate the
+  // commitments valid_owner constraint (always 500). External ownership is
+  // handled by the full CommitmentForm, which validates a contact id.
+  owner_type: z.enum(['internal'] as const),
 })
 
 type CommitmentQuickFormValues = z.infer<typeof commitmentQuickFormSchema>
@@ -393,7 +397,6 @@ export function CommitmentQuickForm({
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="internal">{t('commitments:ownerType.internal')}</SelectItem>
-                  <SelectItem value="external">{t('commitments:ownerType.external')}</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
