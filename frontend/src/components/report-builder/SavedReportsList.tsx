@@ -249,6 +249,9 @@ export function SavedReportsList({
                             onClick={(e) => e.stopPropagation()}
                           >
                             <MoreVertical className="h-4 w-4" />
+                            <span className="sr-only">
+                              {t('common:common.actions.openMenu', { defaultValue: 'Open menu' })}
+                            </span>
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align={isRTL ? 'start' : 'end'}>

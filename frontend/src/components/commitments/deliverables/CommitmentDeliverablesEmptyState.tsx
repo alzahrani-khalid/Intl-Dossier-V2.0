@@ -120,7 +120,7 @@ export function CommitmentDeliverablesEmptyState({
       >
         {/* Hero Icon */}
         <div className="relative mb-4 sm:mb-6">
-          <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+          <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
             <Target className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
           </div>
           <div className="absolute -bottom-1 -end-1 h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-primary flex items-center justify-center">

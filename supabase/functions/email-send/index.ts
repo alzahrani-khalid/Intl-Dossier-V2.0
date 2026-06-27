@@ -179,10 +179,26 @@ serve(async (req) => {
   }
 
   try {
+    // Internal/service authentication (fail CLOSED).
+    // This function processes the email queue and can send mail FROM a trusted
+    // government sender, so it must never be reachable with the public anon key
+    // (which already satisfies the gateway verify_jwt). Mirror the service-role
+    // gate used by cron/internal functions (see intelligence-batch-update):
+    // require the service-role key in the Authorization header. Reject when the
+    // key is unset rather than failing open.
+    const authHeader = req.headers.get('Authorization');
+    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    if (!serviceRoleKey || !authHeader || !authHeader.includes(serviceRoleKey)) {
+      return new Response(
+        JSON.stringify({ error: 'Service role authentication required' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Create admin client
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      serviceRoleKey
     );
 
     const emailProvider = getEmailProvider();

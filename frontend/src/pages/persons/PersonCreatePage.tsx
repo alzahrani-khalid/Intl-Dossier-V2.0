@@ -131,6 +131,7 @@ function PersonCreatePage() {
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" onClick={handleBack} className="h-10 w-10">
           <ArrowLeft className={`h-5 w-5 ${isRTL ? 'rotate-180' : ''}`} />
+          <span className="sr-only">{t('common:common.back', { defaultValue: 'Back' })}</span>
         </Button>
         <PageHeader
           icon={<User className="h-6 w-6" />}

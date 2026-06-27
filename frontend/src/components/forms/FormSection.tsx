@@ -290,6 +290,9 @@ export function FormSection({
                       <TooltipTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-5 w-5 p-0">
                           <Info className="h-4 w-4 text-muted-foreground" />
+                          <span className="sr-only">
+                            {t('common.actions.moreInfo', { defaultValue: 'More information' })}
+                          </span>
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>

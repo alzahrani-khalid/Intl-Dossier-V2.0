@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Dialog,
@@ -24,6 +24,7 @@ import { Search, Loader2 } from 'lucide-react'
 import { useAddContributor } from '@/hooks/useContributors'
 import type { AddContributorRequest } from '@/services/contributors-api'
 import { useDirection } from '@/hooks/useDirection'
+import { supabase } from '@/lib/supabase'
 
 interface AddContributorDialogProps {
   open: boolean
@@ -37,10 +38,21 @@ const CONTRIBUTOR_ROLES = ['helper', 'reviewer', 'advisor', 'observer', 'supervi
 
 type ContributorRole = (typeof CONTRIBUTOR_ROLES)[number]
 
+interface UserSearchResult {
+  id: string
+  name: string
+  email: string
+  avatarUrl?: string
+}
+
+function sanitizeUserSearchQuery(query: string): string {
+  return query.trim().replace(/[%_,()]/g, ' ')
+}
+
 /**
  * Dialog for adding contributors to a task
  * Features:
- * - User search (placeholder - replace with actual API)
+ * - User search backed by the active users table
  * - Role selection
  * - Optional notes
  * - Mobile-first responsive layout
@@ -62,36 +74,68 @@ export function AddContributorDialog({
 }: AddContributorDialogProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
   const [selectedUserId, setSelectedUserId] = useState<string>('')
   const [selectedRole, setSelectedRole] = useState<ContributorRole>('helper')
   const [notes, setNotes] = useState('')
+  const searchRequestRef = useRef(0)
 
   const addContributor = useAddContributor(taskId)
 
-  // Placeholder user search results - replace with actual API
-  const [searchResults, setSearchResults] = useState<
-    Array<{ id: string; name: string; email: string }>
-  >([])
+  const [searchResults, setSearchResults] = useState<UserSearchResult[]>([])
   const [isSearching, setIsSearching] = useState(false)
 
-  const handleSearch = async (query: string) => {
+  const handleSearch = async (query: string): Promise<void> => {
     setSearchQuery(query)
-    if (query.length < 2) {
+    const normalizedQuery = sanitizeUserSearchQuery(query)
+    const requestId = searchRequestRef.current + 1
+    searchRequestRef.current = requestId
+
+    if (normalizedQuery.length < 2) {
       setSearchResults([])
+      setIsSearching(false)
       return
     }
 
     setIsSearching(true)
-    // TODO: Replace with actual user search API call
-    setTimeout(() => {
-      setSearchResults([
-        { id: '1', name: 'Ahmed Ali', email: 'ahmed@example.com' },
-        { id: '2', name: 'Sara Mohammed', email: 'sara@example.com' },
-        { id: '3', name: 'Khalid Fahad', email: 'khalid@example.com' },
-      ])
-      setIsSearching(false)
-    }, 500)
+    try {
+      const searchTerm = `%${normalizedQuery}%`
+      const { data, error } = await supabase
+        .from('users')
+        .select('id, full_name, name_en, name_ar, email, avatar_url')
+        .eq('is_active', true)
+        .or(
+          [
+            `full_name.ilike.${searchTerm}`,
+            `name_en.ilike.${searchTerm}`,
+            `name_ar.ilike.${searchTerm}`,
+            `email.ilike.${searchTerm}`,
+          ].join(','),
+        )
+        .order('full_name', { ascending: true })
+        .limit(10)
+
+      if (requestId !== searchRequestRef.current) return
+
+      if (error) {
+        console.warn('User search failed:', error)
+        setSearchResults([])
+        return
+      }
+
+      setSearchResults(
+        (data || []).map((user) => ({
+          id: user.id,
+          name: user.full_name || user.name_en || user.name_ar || user.email || user.id,
+          email: user.email || '',
+          avatarUrl: user.avatar_url || undefined,
+        })),
+      )
+    } finally {
+      if (requestId === searchRequestRef.current) {
+        setIsSearching(false)
+      }
+    }
   }
 
   const handleSubmit = async () => {
@@ -125,9 +169,7 @@ const [searchQuery, setSearchQuery] = useState('')
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="w-full max-w-full sm:max-w-[540px] md:max-w-[640px]"
-      >
+      <DialogContent className="w-full max-w-full sm:max-w-[540px] md:max-w-[640px]">
         <DialogHeader>
           <DialogTitle className="text-start text-xl sm:text-2xl">
             {t('tasks.addContributor', 'Add Contributor')}
@@ -179,7 +221,7 @@ const [searchQuery, setSearchQuery] = useState('')
                     }`}
                   >
                     <Avatar className="size-10">
-                      <AvatarImage src={`/avatars/${user.id}.png`} />
+                      <AvatarImage src={user.avatarUrl} />
                       <AvatarFallback className="text-sm">
                         {user.name
                           .split(' ')

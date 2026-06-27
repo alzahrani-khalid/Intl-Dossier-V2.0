@@ -375,6 +375,9 @@ export function TagHierarchyManager({
             ) : (
               <ChevronRight className={cn('size-4', isRTL && 'rotate-180')} />
             )}
+            <span className="sr-only">
+              {t('common:common.actions.toggleSection', { defaultValue: 'Toggle section' })}
+            </span>
           </button>
 
           {/* Tag color indicator */}
@@ -414,6 +417,9 @@ export function TagHierarchyManager({
                   onClick={(e) => e.stopPropagation()}
                 >
                   <MoreVertical className="size-4" />
+                  <span className="sr-only">
+                    {t('common:common.actions.openMenu', { defaultValue: 'Open menu' })}
+                  </span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -769,7 +775,13 @@ export function TagHierarchyManager({
             <Button variant="outline" onClick={() => setIsMergeDialogOpen(false)}>
               {t('common:cancel', 'Cancel')}
             </Button>
-            <Button onClick={handleMergeTags} disabled={!mergeTargetId || mergeTags.isPending}>
+            {/* Stub-backed: useMergeTags resolves without a real merge.
+                Disabled for honesty until backed; handler kept for re-enable. */}
+            <Button
+              onClick={handleMergeTags}
+              disabled
+              title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
+            >
               {mergeTags.isPending && <RefreshCw className="size-4 me-2 animate-spin" />}
               {t('merge.confirm')}
             </Button>

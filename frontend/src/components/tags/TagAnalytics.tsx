@@ -185,11 +185,14 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
           <h2 className="text-lg sm:text-xl font-semibold">{t('analytics.title')}</h2>
           <p className="text-sm text-muted-foreground">{t('analytics.overview')}</p>
         </div>
+        {/* Stub-backed: useRefreshTagAnalytics resolves a no-op (analytics
+            query is also a fake-empty stub). Disabled for honesty until backed. */}
         <Button
           variant="outline"
           size="sm"
           onClick={handleRefresh}
-          disabled={refreshAnalytics.isPending}
+          disabled
+          title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
         >
           <RefreshCw className={cn('size-4 me-2', refreshAnalytics.isPending && 'animate-spin')} />
           {t('actions.refresh')}

@@ -575,26 +575,26 @@ async function getOverdueCommitments(
 
   try {
     const { data: commitments, error } = await supabase
-      .from('commitments')
+      .from('aa_commitments')
       .select(
         `
         id,
-        title_en,
+        title,
         title_ar,
-        deadline,
+        due_date,
         status,
         priority,
-        assignee_id
+        owner_user_id
       `,
       )
-      .lt('deadline', referenceDate.toISOString())
+      .lt('due_date', referenceDate.toISOString().split('T')[0])
       .in('status', ['pending', 'in_progress'])
-      .order('deadline', { ascending: true })
+      .order('due_date', { ascending: true })
       .limit(5)
 
     if (!error && commitments) {
       for (const commitment of commitments) {
-        const deadlineDate = new Date(commitment.deadline)
+        const deadlineDate = new Date(commitment.due_date)
         const daysOverdue = Math.ceil(
           (referenceDate.getTime() - deadlineDate.getTime()) / (1000 * 60 * 60 * 24),
         )
@@ -604,7 +604,7 @@ async function getOverdueCommitments(
           category: 'overdue_commitment',
           priority: 'high',
           context: ['dashboard', 'commitment', 'task'],
-          title_en: `Overdue: ${commitment.title_en || 'Commitment'}`,
+          title_en: `Overdue: ${commitment.title || 'Commitment'}`,
           title_ar: `متأخر: ${commitment.title_ar || 'التزام'}`,
           description_en: `This commitment was due ${daysOverdue} day${daysOverdue !== 1 ? 's' : ''} ago. Take immediate action to address this.`,
           description_ar: `هذا الالتزام متأخر منذ ${daysOverdue} يوم${daysOverdue !== 1 ? '' : ''}. اتخذ إجراء فوري لمعالجة هذا.`,
@@ -615,7 +615,7 @@ async function getOverdueCommitments(
           days_until_event: -daysOverdue,
           related_entity_type: 'commitment',
           related_entity_id: commitment.id,
-          related_entity_name_en: commitment.title_en,
+          related_entity_name_en: commitment.title,
           related_entity_name_ar: commitment.title_ar,
           icon: 'alert-circle',
           badge_text_en: `${daysOverdue}d overdue`,

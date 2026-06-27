@@ -163,6 +163,21 @@ async function getAuthUser(req: Request, supabase: ReturnType<typeof createClien
   return { user, error: null };
 }
 
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  concurrency: number,
+  mapper: (item: T) => Promise<R>
+): Promise<R[]> {
+  const results: R[] = [];
+
+  for (let index = 0; index < items.length; index += concurrency) {
+    const batch = items.slice(index, index + concurrency);
+    results.push(...(await Promise.all(batch.map(mapper))));
+  }
+
+  return results;
+}
+
 function getInfluenceTierLabel(tier: string): { en: string; ar: string } {
   const labels: Record<string, { en: string; ar: string }> = {
     key_influencer: { en: 'Key Influencer', ar: 'مؤثر رئيسي' },
@@ -702,11 +717,15 @@ serve(async (req) => {
 
           let updatedCount = 0;
 
-          // Calculate influence for each dossier
-          for (const dossier of dossiers || []) {
+          const calculatedAt = new Date().toISOString();
+          const periodStart = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString();
+          const periodEnd = new Date().toISOString();
+
+          // Calculate influence metrics in bounded batches, then write in bulk.
+          const calculations = await mapWithConcurrency(dossiers || [], 5, async (dossier) => {
             try {
               // Get metrics
-              const { data: metricsData } = await serviceClient.rpc(
+              const { data: metricsData, error: metricsError } = await serviceClient.rpc(
                 'get_stakeholder_influence_metrics',
                 {
                   target_dossier_id: dossier.id,
@@ -714,8 +733,10 @@ serve(async (req) => {
                 }
               );
 
+              if (metricsError) return null;
+
               const metrics = metricsData?.[0];
-              if (!metrics) continue;
+              if (!metrics) return null;
 
               // Calculate overall influence score (weighted composite)
               const degreeCentrality = metrics.degree_centrality_score || 0;
@@ -762,9 +783,8 @@ serve(async (req) => {
               else if (betweenness >= 40 && degreeCentrality < 50) role = 'gatekeeper';
               else role = 'peripheral';
 
-              // Upsert influence score
-              await serviceClient.from('stakeholder_influence_scores').upsert(
-                {
+              return {
+                score: {
                   dossier_id: dossier.id,
                   degree_centrality_score: degreeCentrality,
                   betweenness_centrality_score: betweenness,
@@ -784,32 +804,67 @@ serve(async (req) => {
                     total_engagements: metrics.total_engagements,
                     unique_engagement_partners: metrics.unique_engagement_partners,
                   },
-                  calculated_at: new Date().toISOString(),
-                  period_start: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
-                  period_end: new Date().toISOString(),
+                  calculated_at: calculatedAt,
+                  period_start: periodStart,
+                  period_end: periodEnd,
                 },
+                history: {
+                  dossier_id: dossier.id,
+                  overall_influence_score: overallScore,
+                  degree_centrality_score: degreeCentrality,
+                  betweenness_centrality_score: betweenness,
+                  engagement_frequency_score: engagementFrequency,
+                  avg_relationship_health: avgHealth,
+                  influence_tier: tier,
+                  stakeholder_role: role,
+                  period_start: periodStart,
+                  period_end: periodEnd,
+                },
+              };
+            } catch {
+              // Continue with other dossiers if one fails
+              return null;
+            }
+          });
+
+          const completedCalculations = calculations.filter(Boolean) as Array<{
+            score: Record<string, unknown>;
+            history: Record<string, unknown>;
+          }>;
+
+          if (completedCalculations.length > 0) {
+            const { error: upsertError } = await serviceClient
+              .from('stakeholder_influence_scores')
+              .upsert(
+                completedCalculations.map((calculation) => calculation.score),
                 { onConflict: 'dossier_id' }
               );
 
-              // Store history
-              await serviceClient.from('stakeholder_influence_history').insert({
-                dossier_id: dossier.id,
-                overall_influence_score: overallScore,
-                degree_centrality_score: degreeCentrality,
-                betweenness_centrality_score: betweenness,
-                engagement_frequency_score: engagementFrequency,
-                avg_relationship_health: avgHealth,
-                influence_tier: tier,
-                stakeholder_role: role,
-                period_start: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
-                period_end: new Date().toISOString(),
-              });
-
-              updatedCount++;
-            } catch {
-              // Continue with other dossiers if one fails
-              continue;
+            if (upsertError) {
+              return errorResponse(
+                'UPSERT_ERROR',
+                upsertError.message,
+                'خطأ في تحديث درجات التأثير',
+                500,
+                upsertError
+              );
             }
+
+            const { error: historyError } = await serviceClient
+              .from('stakeholder_influence_history')
+              .insert(completedCalculations.map((calculation) => calculation.history));
+
+            if (historyError) {
+              return errorResponse(
+                'INSERT_ERROR',
+                historyError.message,
+                'خطأ في حفظ سجل التأثير',
+                500,
+                historyError
+              );
+            }
+
+            updatedCount = completedCalculations.length;
           }
 
           // Refresh materialized view

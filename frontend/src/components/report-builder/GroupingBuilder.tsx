@@ -57,7 +57,7 @@ export function GroupingBuilder({
 }: GroupingBuilderProps) {
   const { t } = useTranslation('report-builder')
   const { isRTL } = useDirection()
-const { setNodeRef, isOver } = useDroppable({
+  const { setNodeRef, isOver } = useDroppable({
     id: 'groupings-drop-zone',
     data: { type: 'groupings' },
   })
@@ -126,6 +126,7 @@ const { setNodeRef, isOver } = useDroppable({
                         size="icon"
                         className="h-4 w-4 p-0 hover:bg-transparent"
                         onClick={() => onRemoveGrouping(grouping.id)}
+                        aria-label={t('common:common.actions.remove')}
                       >
                         <X className="h-3 w-3" />
                       </Button>
@@ -182,6 +183,7 @@ const { setNodeRef, isOver } = useDroppable({
                           size="icon"
                           className="h-6 w-6"
                           onClick={() => onRemoveAggregation(agg.id)}
+                          aria-label={t('common:common.actions.remove')}
                         >
                           <X className="h-3 w-3" />
                         </Button>

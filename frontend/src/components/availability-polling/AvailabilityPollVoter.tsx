@@ -355,6 +355,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                           vote?.response === 'available' && 'bg-success hover:bg-success',
                         )}
                         onClick={() => handleVoteChange(slot.id, 'available')}
+                        aria-label={t('responses.available')}
                       >
                         <Check className="h-4 w-4" />
                       </Button>
@@ -367,6 +368,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                           vote?.response === 'maybe' && 'bg-warning hover:bg-warning',
                         )}
                         onClick={() => handleVoteChange(slot.id, 'maybe')}
+                        aria-label={t('responses.maybe')}
                       >
                         <HelpCircle className="h-4 w-4" />
                       </Button>
@@ -379,6 +381,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                           vote?.response === 'unavailable' && 'bg-danger hover:bg-danger',
                         )}
                         onClick={() => handleVoteChange(slot.id, 'unavailable')}
+                        aria-label={t('responses.unavailable')}
                       >
                         <X className="h-4 w-4" />
                       </Button>

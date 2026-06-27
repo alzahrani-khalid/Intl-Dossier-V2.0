@@ -84,6 +84,49 @@ const NOTIFICATION_KEYS = {
   devices: () => [...NOTIFICATION_KEYS.all, 'devices'] as const,
 }
 
+export type ResolvedNotificationActionUrl =
+  | { kind: 'internal'; path: string; href: string }
+  | { kind: 'external'; href: string }
+
+function getApprovedNotificationOrigins(): Set<string> {
+  const configuredOrigins = String(import.meta.env.VITE_NOTIFICATION_ALLOWED_ORIGINS ?? '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean)
+
+  return new Set([window.location.origin, ...configuredOrigins])
+}
+
+export function resolveNotificationActionUrl(
+  actionUrl: string | null,
+): ResolvedNotificationActionUrl | null {
+  if (!actionUrl || typeof window === 'undefined') return null
+  if (actionUrl.startsWith('\\')) return null
+
+  try {
+    const parsedUrl = new URL(actionUrl, window.location.origin)
+    if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+      return null
+    }
+
+    if (parsedUrl.origin === window.location.origin) {
+      return {
+        kind: 'internal',
+        path: `${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`,
+        href: parsedUrl.href,
+      }
+    }
+
+    if (getApprovedNotificationOrigins().has(parsedUrl.origin)) {
+      return { kind: 'external', href: parsedUrl.href }
+    }
+  } catch {
+    return null
+  }
+
+  return null
+}
+
 // Hook for fetching paginated notifications
 export function useNotifications(filters: NotificationFilters = {}) {
   return useInfiniteQuery({
@@ -458,11 +501,16 @@ function dispatchNotificationToast(notification: Notification): void {
     toastOptions.description = notification.message
   }
 
-  if (notification.action_url) {
+  const resolvedActionUrl = resolveNotificationActionUrl(notification.action_url)
+  if (resolvedActionUrl) {
     toastOptions.action = {
       label: 'View',
       onClick: (): void => {
-        window.location.href = notification.action_url as string
+        if (resolvedActionUrl.kind === 'internal') {
+          window.location.assign(resolvedActionUrl.path)
+        } else {
+          window.open(resolvedActionUrl.href, '_blank', 'noopener,noreferrer')
+        }
       },
     }
   }

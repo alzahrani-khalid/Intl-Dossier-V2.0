@@ -5,7 +5,11 @@ import { useContext, type HTMLAttributes, type ReactElement, type ReactNode } fr
 
 import { cn } from '@/lib/utils'
 
-import { KanbanContext, type KanbanContextProps, type KanbanItemProps } from './KanbanProvider'
+import {
+  KanbanDataContext,
+  type KanbanDataContextProps,
+  type KanbanItemProps,
+} from './KanbanProvider'
 
 export type KanbanCardsProps<T extends KanbanItemProps = KanbanItemProps> = Omit<
   HTMLAttributes<HTMLDivElement>,
@@ -21,8 +25,11 @@ export const KanbanCards = <T extends KanbanItemProps = KanbanItemProps>({
   id,
   ...props
 }: KanbanCardsProps<T>): ReactElement => {
-  const { data } = useContext(KanbanContext) as KanbanContextProps<T>
-  const filteredData = data.filter((item) => item.column === id)
+  // PERF-02: consume the data-only context (no activeCardId) so cards do not
+  // re-render on every drag move. getColumnItems(id) returns the same
+  // pre-grouped, same-order items as data.filter(item => item.column === id).
+  const { getColumnItems } = useContext(KanbanDataContext) as KanbanDataContextProps<T>
+  const filteredData = getColumnItems(id)
   const items = filteredData.map((item) => item.id)
 
   // Plain div instead of Radix ScrollArea. ScrollArea's Viewport renders a

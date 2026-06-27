@@ -56,9 +56,7 @@ export async function chatWithAI(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      (errorData as Record<string, string>).error || 'Chat request failed',
-    )
+    throw new Error((errorData as Record<string, string>).error || 'Chat request failed')
   }
 
   return response
@@ -139,9 +137,7 @@ export async function generateBrief(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      (errorData as Record<string, string>).error || 'Failed to generate brief',
-    )
+    throw new Error((errorData as Record<string, string>).error || 'Failed to generate brief')
   }
 
   return response
@@ -152,4 +148,38 @@ export async function generateBrief(
  */
 export async function getBrief(briefId: string): Promise<{ data: BriefContent }> {
   return apiGet<{ data: BriefContent }>(`/ai/briefs/${briefId}`, { baseUrl: 'express' })
+}
+
+/**
+ * Persist a manually-entered brief (no AI generation). Returns the created brief
+ * so the caller can open it. Simple JSON POST — not SSE.
+ */
+export async function createManualBrief(params: {
+  engagement_id?: string
+  dossier_id?: string
+  summary: string
+  background?: string
+  recommendations?: string
+}): Promise<{ data: BriefContent }> {
+  const token = await getAuthToken()
+
+  if (!token) {
+    throw new Error('UNAUTHORIZED')
+  }
+
+  const response = await fetch(`${getExpressBaseUrl()}/ai/briefs/manual`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(params),
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}))
+    throw new Error((errorData as Record<string, string>).error || 'Failed to save manual brief')
+  }
+
+  return response.json() as Promise<{ data: BriefContent }>
 }

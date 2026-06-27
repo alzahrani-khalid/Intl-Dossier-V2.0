@@ -165,6 +165,7 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
                   size="icon"
                   onClick={clearFile}
                   className="flex-shrink-0 min-h-8 min-w-8"
+                  aria-label={t('common:common.clear')}
                 >
                   <X className="h-4 w-4" />
                 </Button>

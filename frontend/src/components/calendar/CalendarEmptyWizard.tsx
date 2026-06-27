@@ -336,7 +336,13 @@ export function CalendarEmptyWizard({
                   {t('wizard.back')}
                 </Button>
                 {onDismiss && (
-                  <Button variant="ghost" size="icon" onClick={onDismiss} className="h-9 w-9">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={onDismiss}
+                    className="h-9 w-9"
+                    aria-label={t('common:common.close')}
+                  >
                     <X className="h-4 w-4" />
                   </Button>
                 )}
@@ -430,7 +436,13 @@ export function CalendarEmptyWizard({
                   {t('wizard.back')}
                 </Button>
                 {onDismiss && (
-                  <Button variant="ghost" size="icon" onClick={onDismiss} className="h-9 w-9">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={onDismiss}
+                    className="h-9 w-9"
+                    aria-label={t('common:common.close')}
+                  >
                     <X className="h-4 w-4" />
                   </Button>
                 )}

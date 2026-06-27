@@ -204,6 +204,9 @@ async function processQueueBatch(
   let processed = 0;
   let failed = 0;
   const errors: string[] = [];
+  // N12: collect queue ids to remove (successes + max-retry exhaustions) and
+  // issue ONE batched DELETE after the loop instead of a DELETE per item.
+  const idsToDelete: string[] = [];
 
   for (const item of queueItems as QueueItem[]) {
     try {
@@ -231,8 +234,8 @@ async function processQueueBatch(
       // Update entity with embedding
       await updateEntityEmbedding(supabase, item.entity_type, item.entity_id, result.embeddings[0]);
 
-      // Remove from queue
-      await supabase.from('embedding_update_queue').delete().eq('id', item.id);
+      // Remove from queue (batched after the loop)
+      idsToDelete.push(item.id);
 
       processed++;
     } catch (error) {
@@ -244,8 +247,8 @@ async function processQueueBatch(
       const MAX_RETRIES = 5;
 
       if (retryCount >= MAX_RETRIES) {
-        // Remove from queue after max retries
-        await supabase.from('embedding_update_queue').delete().eq('id', item.id);
+        // Remove from queue after max retries (batched after the loop)
+        idsToDelete.push(item.id);
       } else {
         // Update with retry info
         await supabase
@@ -258,6 +261,20 @@ async function processQueueBatch(
       }
 
       failed++;
+    }
+  }
+
+  // N12: one batched removal of all processed / exhausted queue items in a
+  // single round-trip. The original swallowed per-item delete errors; we keep
+  // the response shape unchanged and only log a cleanup failure here (undeleted
+  // rows are simply retried next batch — same at-least-once semantics).
+  if (idsToDelete.length > 0) {
+    const { error: deleteError } = await supabase
+      .from('embedding_update_queue')
+      .delete()
+      .in('id', idsToDelete);
+    if (deleteError) {
+      console.error('Failed to delete processed queue items:', deleteError);
     }
   }
 

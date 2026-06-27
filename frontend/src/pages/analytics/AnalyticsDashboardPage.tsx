@@ -311,14 +311,26 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
               className="min-h-11 min-w-11"
             >
               <RefreshCw className={cn('h-4 w-4', isLoading && 'animate-spin')} />
+              <span className="sr-only">
+                {t('common:common.actions.refresh', { defaultValue: 'Refresh' })}
+              </span>
             </Button>
+            {/* Export disabled: useAnalyticsExport is a stub (no real export
+                endpoint), so a click would download a misleading payload.
+                Honest UX: disable with a bilingual "not yet available" tooltip
+                until a real export API exists. Handler kept wired for re-enable. */}
             <Button
               variant="outline"
               size="icon"
               onClick={handleExport}
+              disabled
+              title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
               className="min-h-11 min-w-11"
             >
               <Download className="h-4 w-4" />
+              <span className="sr-only">
+                {t('common:common.export', { defaultValue: 'Export' })}
+              </span>
             </Button>
           </>
         }

@@ -16,6 +16,7 @@
   "header": {
     "relationships": "العلاقات",
     "loading": "جارٍ تحميل الملف...",
+    "home": "الرئيسية",
     "dossierHub": "مركز الدوسيهات",
     "breadcrumb": "مسار التنقل",
     "realtimeConnected": "متصل في الوقت الفعلي",

@@ -34,10 +34,14 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
       {/* Partner Name */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-muted-foreground">
+        <label
+          htmlFor="tsf-partnerName"
+          className="mb-2 block text-sm font-medium text-muted-foreground"
+        >
           {t('typeSpecific.engagement.partnerName.label')}
         </label>
         <input
+          id="tsf-partnerName"
           type="text"
           value={value.partnerName || ''}
           onChange={(e) => handleFieldChange('partnerName', e.target.value)}
@@ -103,10 +107,14 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
       {/* Expected Duration */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-muted-foreground">
+        <label
+          htmlFor="tsf-expectedDuration"
+          className="mb-2 block text-sm font-medium text-muted-foreground"
+        >
           {t('typeSpecific.engagement.expectedDuration.label')}
         </label>
         <input
+          id="tsf-expectedDuration"
           type="text"
           value={value.expectedDuration || ''}
           onChange={(e) => handleFieldChange('expectedDuration', e.target.value)}
@@ -127,10 +135,14 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
       {/* Position Title */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-muted-foreground">
+        <label
+          htmlFor="tsf-positionTitle"
+          className="mb-2 block text-sm font-medium text-muted-foreground"
+        >
           {t('typeSpecific.position.positionTitle.label')}
         </label>
         <input
+          id="tsf-positionTitle"
           type="text"
           value={value.positionTitle || ''}
           onChange={(e) => handleFieldChange('positionTitle', e.target.value)}
@@ -141,10 +153,14 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
       {/* Department */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-muted-foreground">
+        <label
+          htmlFor="tsf-department"
+          className="mb-2 block text-sm font-medium text-muted-foreground"
+        >
           {t('typeSpecific.position.department.label')}
         </label>
         <input
+          id="tsf-department"
           type="text"
           value={value.department || ''}
           onChange={(e) => handleFieldChange('department', e.target.value)}
@@ -155,10 +171,14 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
       {/* Required Skills */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-muted-foreground">
+        <label
+          htmlFor="tsf-requiredSkills"
+          className="mb-2 block text-sm font-medium text-muted-foreground"
+        >
           {t('typeSpecific.position.requiredSkills.label')}
         </label>
         <textarea
+          id="tsf-requiredSkills"
           value={value.requiredSkills || ''}
           onChange={(e) => handleFieldChange('requiredSkills', e.target.value)}
           placeholder={t('typeSpecific.position.requiredSkills.placeholder')}
@@ -179,10 +199,14 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
       {/* MoU Reference */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-muted-foreground">
+        <label
+          htmlFor="tsf-mouReference"
+          className="mb-2 block text-sm font-medium text-muted-foreground"
+        >
           {t('typeSpecific.mou_action.mouReference.label')}
         </label>
         <input
+          id="tsf-mouReference"
           type="text"
           value={value.mouReference || ''}
           onChange={(e) => handleFieldChange('mouReference', e.target.value)}
@@ -193,10 +217,14 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
       {/* Action Type */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-muted-foreground">
+        <label
+          htmlFor="tsf-actionType"
+          className="mb-2 block text-sm font-medium text-muted-foreground"
+        >
           {t('typeSpecific.mou_action.actionType.label')}
         </label>
         <select
+          id="tsf-actionType"
           value={value.actionType || ''}
           onChange={(e) => handleFieldChange('actionType', e.target.value)}
           className="w-full rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
@@ -217,10 +245,14 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
       {/* Deadline */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-muted-foreground">
+        <label
+          htmlFor="tsf-deadline"
+          className="mb-2 block text-sm font-medium text-muted-foreground"
+        >
           {t('typeSpecific.mou_action.deadline.label')}
         </label>
         <input
+          id="tsf-deadline"
           type="date"
           value={value.deadline || ''}
           onChange={(e) => handleFieldChange('deadline', e.target.value)}
@@ -240,10 +272,11 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
       {/* Topic */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-muted-foreground">
+        <label htmlFor="tsf-topic" className="mb-2 block text-sm font-medium text-muted-foreground">
           {t('typeSpecific.foresight.topic.label')}
         </label>
         <input
+          id="tsf-topic"
           type="text"
           value={value.topic || ''}
           onChange={(e) => handleFieldChange('topic', e.target.value)}
@@ -254,10 +287,14 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
       {/* Time Horizon */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-muted-foreground">
+        <label
+          htmlFor="tsf-timeHorizon"
+          className="mb-2 block text-sm font-medium text-muted-foreground"
+        >
           {t('typeSpecific.foresight.timeHorizon.label')}
         </label>
         <select
+          id="tsf-timeHorizon"
           value={value.timeHorizon || ''}
           onChange={(e) => handleFieldChange('timeHorizon', e.target.value)}
           className="w-full rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
@@ -273,10 +310,14 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
       {/* Stakeholders */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-muted-foreground">
+        <label
+          htmlFor="tsf-stakeholders"
+          className="mb-2 block text-sm font-medium text-muted-foreground"
+        >
           {t('typeSpecific.foresight.stakeholders.label')}
         </label>
         <textarea
+          id="tsf-stakeholders"
           value={value.stakeholders || ''}
           onChange={(e) => handleFieldChange('stakeholders', e.target.value)}
           placeholder={t('typeSpecific.foresight.stakeholders.placeholder')}

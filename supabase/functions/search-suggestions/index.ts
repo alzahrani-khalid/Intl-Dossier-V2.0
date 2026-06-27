@@ -526,7 +526,7 @@ async function handleFilterCounts(
     const filterCounts = await computeFilterCounts(supabase, body.entity_types, body.base_query);
 
     // Cache the results
-    for (const fc of filterCounts) {
+    await mapWithConcurrency(filterCounts, 4, async (fc) => {
       await supabase.rpc('cache_filter_counts', {
         p_cache_key: body.cache_key,
         p_filter_type: fc.filter_type,
@@ -534,7 +534,7 @@ async function handleFilterCounts(
         p_result_count: fc.result_count,
         p_ttl_minutes: 5,
       });
-    }
+    });
 
     return new Response(JSON.stringify({ filter_counts: filterCounts, from_cache: false }), {
       status: 200,
@@ -697,6 +697,21 @@ function categorizeSuggestions(
   };
 }
 
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  concurrency: number,
+  mapper: (item: T) => Promise<R>
+): Promise<R[]> {
+  const results: R[] = [];
+
+  for (let index = 0; index < items.length; index += concurrency) {
+    const batch = items.slice(index, index + concurrency);
+    results.push(...(await Promise.all(batch.map(mapper))));
+  }
+
+  return results;
+}
+
 /**
  * Compute filter counts for adaptive filtering
  */
@@ -705,61 +720,44 @@ async function computeFilterCounts(
   entityTypes: string[],
   baseQuery?: string
 ): Promise<FilterCount[]> {
-  const counts: FilterCount[] = [];
-
-  // Count by status
-  const statusValues = ['active', 'inactive', 'archived', 'draft', 'published'];
-  for (const status of statusValues) {
-    let query = supabase
-      .from('dossiers')
-      .select('id', { count: 'exact', head: true })
-      .eq('status', status);
-    if (baseQuery) {
-      query = query.textSearch('search_vector', baseQuery, { type: 'websearch', config: 'simple' });
-    }
-    const { count } = await query;
-    counts.push({ filter_type: 'status', filter_value: status, result_count: count || 0 });
-  }
-
-  // Count by dossier type
-  const typeValues = ['country', 'organization', 'forum', 'theme'];
-  for (const type of typeValues) {
-    let query = supabase
-      .from('dossiers')
-      .select('id', { count: 'exact', head: true })
-      .eq('type', type);
-    if (baseQuery) {
-      query = query.textSearch('search_vector', baseQuery, { type: 'websearch', config: 'simple' });
-    }
-    const { count } = await query;
-    counts.push({ filter_type: 'type', filter_value: type, result_count: count || 0 });
-  }
-
-  // Count by date ranges
   const now = new Date();
-  const dateRanges = [
-    { preset: 'last_7_days', from: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000) },
-    { preset: 'last_30_days', from: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000) },
-    { preset: 'last_90_days', from: new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000) },
-  ];
-
-  for (const range of dateRanges) {
-    let query = supabase
-      .from('dossiers')
-      .select('id', { count: 'exact', head: true })
-      .gte('updated_at', range.from.toISOString());
-    if (baseQuery) {
-      query = query.textSearch('search_vector', baseQuery, { type: 'websearch', config: 'simple' });
-    }
-    const { count } = await query;
-    counts.push({
+  const countSpecs = [
+    ...['active', 'inactive', 'archived', 'draft', 'published'].map((status) => ({
+      filter_type: 'status',
+      filter_value: status,
+      apply: (query: any) => query.eq('status', status),
+    })),
+    ...['country', 'organization', 'forum', 'theme'].map((type) => ({
+      filter_type: 'type',
+      filter_value: type,
+      apply: (query: any) => query.eq('type', type),
+    })),
+    ...[
+      { preset: 'last_7_days', from: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000) },
+      { preset: 'last_30_days', from: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000) },
+      { preset: 'last_90_days', from: new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000) },
+    ].map((range) => ({
       filter_type: 'date_range',
       filter_value: range.preset,
-      result_count: count || 0,
-    });
-  }
+      apply: (query: any) => query.gte('updated_at', range.from.toISOString()),
+    })),
+  ];
 
-  return counts;
+  return mapWithConcurrency(countSpecs, 4, async (spec) => {
+    let query = supabase
+      .from('dossiers')
+      .select('id', { count: 'exact', head: true });
+    query = spec.apply(query);
+    if (baseQuery) {
+      query = query.textSearch('search_vector', baseQuery, { type: 'websearch', config: 'simple' });
+    }
+    const { count } = await query;
+    return {
+      filter_type: spec.filter_type,
+      filter_value: spec.filter_value,
+      result_count: count || 0,
+    };
+  });
 }
 
 // =============================================================================
@@ -921,17 +919,26 @@ async function getRelatedTerms(
   const queryWords = normalizedQuery.split(/\s+/);
 
   try {
-    // Search for items with partial word matches
-    for (const word of queryWords) {
-      if (word.length < 3) continue;
+    // N5: run the per-word dossier lookups concurrently instead of awaiting one
+    // sequential round-trip per word. Each word keeps its own ilike + limit(5)
+    // so per-word weighting is unchanged; results are merged in the same word
+    // order with the same first-seen dedupe as before. Cap the words considered
+    // to bound work on long queries.
+    const MAX_WORDS = 6;
+    const wordsToSearch = queryWords.filter((word) => word.length >= 3).slice(0, MAX_WORDS);
 
-      const { data } = await supabase
-        .from('dossiers')
-        .select('name_en, name_ar, type')
-        .or(`name_en.ilike.%${word}%,name_ar.ilike.%${word}%`)
-        .neq('name_en', query)
-        .limit(5);
+    const perWordResults = await Promise.all(
+      wordsToSearch.map((word) =>
+        supabase
+          .from('dossiers')
+          .select('name_en, name_ar, type')
+          .or(`name_en.ilike.%${word}%,name_ar.ilike.%${word}%`)
+          .neq('name_en', query)
+          .limit(5)
+      )
+    );
 
+    for (const { data } of perWordResults) {
       if (data) {
         for (const item of data) {
           if (item.name_en && !terms.some((t) => t.term === item.name_en)) {

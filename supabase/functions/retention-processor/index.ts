@@ -1,33 +1,33 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
+import { corsHeaders } from '../_shared/cors.ts'
 
 interface ProcessorConfig {
-  dry_run?: boolean;
-  entity_type?: string;
-  action?: string;
-  batch_size?: number;
-  send_warnings?: boolean;
-  warning_days?: number;
+  dry_run?: boolean
+  entity_type?: string
+  action?: string
+  batch_size?: number
+  send_warnings?: boolean
+  warning_days?: number
 }
 
 interface ProcessingResult {
-  execution_id: string;
-  started_at: string;
-  completed_at?: string;
-  items_processed: number;
-  items_archived: number;
-  items_deleted: number;
-  items_anonymized: number;
-  items_skipped: number;
-  items_warned: number;
-  errors: Array<{ entity_id: string; error: string }>;
+  execution_id: string
+  started_at: string
+  completed_at?: string
+  items_processed: number
+  items_archived: number
+  items_deleted: number
+  items_anonymized: number
+  items_skipped: number
+  items_warned: number
+  errors: Array<{ entity_id: string; error: string }>
 }
 
 serve(async (req) => {
   // Handle CORS
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response('ok', { headers: corsHeaders })
   }
 
   if (req.method !== 'POST') {
@@ -42,13 +42,13 @@ serve(async (req) => {
       {
         status: 405,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+      },
+    )
   }
 
   try {
     // Get auth token
-    const authHeader = req.headers.get('Authorization');
+    const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
       return new Response(
         JSON.stringify({
@@ -61,8 +61,8 @@ serve(async (req) => {
         {
           status: 401,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     // Create Supabase client with service role for background processing
@@ -74,8 +74,8 @@ serve(async (req) => {
           autoRefreshToken: false,
           persistSession: false,
         },
-      }
-    );
+      },
+    )
 
     // Create Supabase client with user context for permission checking
     const supabaseClient = createClient(
@@ -85,14 +85,14 @@ serve(async (req) => {
         global: {
           headers: { Authorization: authHeader },
         },
-      }
-    );
+      },
+    )
 
     // Get current user
     const {
       data: { user },
       error: userError,
-    } = await supabaseClient.auth.getUser();
+    } = await supabaseClient.auth.getUser()
 
     if (userError || !user) {
       return new Response(
@@ -106,12 +106,17 @@ serve(async (req) => {
         {
           status: 401,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
-    // Check admin role
-    const isAdmin = user.user_metadata?.role === 'admin' || user.app_metadata?.role === 'admin';
+    // Check admin role from public.users (never trust client-settable user_metadata)
+    const { data: userRecord } = await supabaseAdmin
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+    const isAdmin = userRecord?.role === 'admin'
 
     if (!isAdmin) {
       return new Response(
@@ -125,12 +130,12 @@ serve(async (req) => {
         {
           status: 403,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     // Parse configuration
-    const config: ProcessorConfig = await req.json();
+    const config: ProcessorConfig = await req.json()
     const {
       dry_run = false,
       entity_type = null,
@@ -138,7 +143,7 @@ serve(async (req) => {
       batch_size = 100,
       send_warnings = true,
       warning_days = 30,
-    } = config;
+    } = config
 
     // Initialize result tracking
     const result: ProcessingResult = {
@@ -151,7 +156,7 @@ serve(async (req) => {
       items_skipped: 0,
       items_warned: 0,
       errors: [],
-    };
+    }
 
     // Create execution log entry
     const { data: logEntry, error: logError } = await supabaseAdmin
@@ -165,22 +170,17 @@ serve(async (req) => {
         execution_params: config,
       })
       .select()
-      .single();
+      .single()
 
     if (logError) {
-      console.error('Failed to create execution log:', logError);
+      console.error('Failed to create execution log:', logError)
     }
 
     // Step 1: Send warnings for expiring entities
     if (send_warnings) {
-      const warningResult = await processWarnings(
-        supabaseAdmin,
-        entity_type,
-        warning_days,
-        dry_run
-      );
-      result.items_warned = warningResult.warned;
-      result.errors.push(...warningResult.errors);
+      const warningResult = await processWarnings(supabaseAdmin, entity_type, warning_days, dry_run)
+      result.items_warned = warningResult.warned
+      result.errors.push(...warningResult.errors)
     }
 
     // Step 2: Get pending retention actions
@@ -190,23 +190,23 @@ serve(async (req) => {
         p_entity_type: entity_type,
         p_action: action,
         p_limit: batch_size,
-      }
-    );
+      },
+    )
 
     if (pendingError) {
       result.errors.push({
         entity_id: 'system',
         error: `Failed to get pending actions: ${pendingError.message}`,
-      });
+      })
     } else if (pendingItems && pendingItems.length > 0) {
       // Process each pending item
       for (const item of pendingItems) {
-        result.items_processed++;
+        result.items_processed++
 
         // Skip if under legal hold (should be filtered by RPC but double-check)
         if (item.under_legal_hold) {
-          result.items_skipped++;
-          continue;
+          result.items_skipped++
+          continue
         }
 
         try {
@@ -214,15 +214,15 @@ serve(async (req) => {
             // Just count what would be done
             switch (item.action) {
               case 'archive':
-                result.items_archived++;
-                break;
+                result.items_archived++
+                break
               case 'soft_delete':
               case 'hard_delete':
-                result.items_deleted++;
-                break;
+                result.items_deleted++
+                break
               case 'anonymize':
-                result.items_anonymized++;
-                break;
+                result.items_anonymized++
+                break
             }
           } else {
             // Actually perform the action
@@ -231,42 +231,42 @@ serve(async (req) => {
               item.entity_type,
               item.entity_id,
               item.action,
-              item.policy_id
-            );
+              item.policy_id,
+            )
 
             if (actionResult.success) {
               switch (item.action) {
                 case 'archive':
-                  result.items_archived++;
-                  break;
+                  result.items_archived++
+                  break
                 case 'soft_delete':
                 case 'hard_delete':
-                  result.items_deleted++;
-                  break;
+                  result.items_deleted++
+                  break
                 case 'anonymize':
-                  result.items_anonymized++;
-                  break;
+                  result.items_anonymized++
+                  break
               }
             } else {
-              result.items_skipped++;
+              result.items_skipped++
               result.errors.push({
                 entity_id: item.entity_id,
                 error: actionResult.error || 'Unknown error',
-              });
+              })
             }
           }
         } catch (error) {
-          result.items_skipped++;
+          result.items_skipped++
           result.errors.push({
             entity_id: item.entity_id,
             error: error instanceof Error ? error.message : 'Unknown error',
-          });
+          })
         }
       }
     }
 
     // Update execution log with results
-    result.completed_at = new Date().toISOString();
+    result.completed_at = new Date().toISOString()
 
     await supabaseAdmin
       .from('retention_execution_log')
@@ -280,13 +280,13 @@ serve(async (req) => {
         items_warned: result.items_warned,
         errors: result.errors,
       })
-      .eq('id', result.execution_id);
+      .eq('id', result.execution_id)
 
     return new Response(JSON.stringify({ data: result }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   } catch (error) {
-    console.error('Unexpected error:', error);
+    console.error('Unexpected error:', error)
     return new Response(
       JSON.stringify({
         error: {
@@ -299,18 +299,18 @@ serve(async (req) => {
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+      },
+    )
   }
-});
+})
 
 async function processWarnings(
   supabase: ReturnType<typeof createClient>,
   entityType: string | null,
   warningDays: number,
-  dryRun: boolean
+  dryRun: boolean,
 ): Promise<{ warned: number; errors: Array<{ entity_id: string; error: string }> }> {
-  const result = { warned: 0, errors: [] as Array<{ entity_id: string; error: string }> };
+  const result = { warned: 0, errors: [] as Array<{ entity_id: string; error: string }> }
 
   try {
     // Get expiring entities that haven't been warned
@@ -318,22 +318,22 @@ async function processWarnings(
       p_days_ahead: warningDays,
       p_entity_type: entityType,
       p_limit: 500,
-    });
+    })
 
     if (error) {
       result.errors.push({
         entity_id: 'system',
         error: `Failed to get expiring entities: ${error.message}`,
-      });
-      return result;
+      })
+      return result
     }
 
     if (!expiringItems || expiringItems.length === 0) {
-      return result;
+      return result
     }
 
     // Filter to only items that haven't been warned
-    const unwarned = expiringItems.filter((item: { warning_sent: boolean }) => !item.warning_sent);
+    const unwarned = expiringItems.filter((item: { warning_sent: boolean }) => !item.warning_sent)
 
     for (const item of unwarned) {
       if (!dryRun) {
@@ -345,30 +345,30 @@ async function processWarnings(
             warning_sent_at: new Date().toISOString(),
           })
           .eq('entity_type', item.entity_type)
-          .eq('entity_id', item.entity_id);
+          .eq('entity_id', item.entity_id)
 
         if (updateError) {
           result.errors.push({
             entity_id: item.entity_id,
             error: `Failed to mark warning sent: ${updateError.message}`,
-          });
-          continue;
+          })
+          continue
         }
 
         // TODO: Send actual notification (integrate with notification system)
         // This would typically create a notification entry or send an email
       }
 
-      result.warned++;
+      result.warned++
     }
   } catch (error) {
     result.errors.push({
       entity_id: 'system',
       error: error instanceof Error ? error.message : 'Unknown error in warning process',
-    });
+    })
   }
 
-  return result;
+  return result
 }
 
 async function performRetentionAction(
@@ -376,7 +376,7 @@ async function performRetentionAction(
   entityType: string,
   entityId: string,
   action: string,
-  policyId: string
+  policyId: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     // Get the policy details for archive path
@@ -384,29 +384,29 @@ async function performRetentionAction(
       .from('data_retention_policies')
       .select('archive_storage_bucket, archive_path_template')
       .eq('id', policyId)
-      .single();
+      .single()
 
     switch (action) {
       case 'archive':
-        return await archiveEntity(supabase, entityType, entityId, policy);
+        return await archiveEntity(supabase, entityType, entityId, policy)
 
       case 'soft_delete':
-        return await softDeleteEntity(supabase, entityType, entityId);
+        return await softDeleteEntity(supabase, entityType, entityId)
 
       case 'hard_delete':
-        return await hardDeleteEntity(supabase, entityType, entityId);
+        return await hardDeleteEntity(supabase, entityType, entityId)
 
       case 'anonymize':
-        return await anonymizeEntity(supabase, entityType, entityId);
+        return await anonymizeEntity(supabase, entityType, entityId)
 
       default:
-        return { success: false, error: `Unknown action: ${action}` };
+        return { success: false, error: `Unknown action: ${action}` }
     }
   } catch (error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
-    };
+    }
   }
 }
 
@@ -414,7 +414,7 @@ async function archiveEntity(
   supabase: ReturnType<typeof createClient>,
   entityType: string,
   entityId: string,
-  policy: { archive_storage_bucket?: string; archive_path_template?: string } | null
+  policy: { archive_storage_bucket?: string; archive_path_template?: string } | null,
 ): Promise<{ success: boolean; error?: string }> {
   // Get the table name based on entity type
   const tableMap: Record<string, string> = {
@@ -431,30 +431,30 @@ async function archiveEntity(
     calendar_event: 'calendar_events',
     notification: 'notifications',
     activity_feed: 'activity_stream',
-  };
+  }
 
-  const tableName = tableMap[entityType];
+  const tableName = tableMap[entityType]
   if (!tableName) {
-    return { success: false, error: `Unknown entity type: ${entityType}` };
+    return { success: false, error: `Unknown entity type: ${entityType}` }
   }
 
   // Generate archive path
-  const now = new Date();
+  const now = new Date()
   const archivePath =
     policy?.archive_path_template
       ?.replace(/{year}/g, now.getFullYear().toString())
       .replace(/{entity_type}/g, entityType)
-      .replace(/{id}/g, entityId) || `archive/${now.getFullYear()}/${entityType}/${entityId}`;
+      .replace(/{id}/g, entityId) || `archive/${now.getFullYear()}/${entityType}/${entityId}`
 
   // For dossiers, update status to archived
   if (entityType === 'dossier') {
     const { error } = await supabase
       .from(tableName)
       .update({ status: 'archived', archived: true })
-      .eq('id', entityId);
+      .eq('id', entityId)
 
     if (error) {
-      return { success: false, error: error.message };
+      return { success: false, error: error.message }
     }
   }
 
@@ -466,19 +466,19 @@ async function archiveEntity(
       archive_location: archivePath,
     })
     .eq('entity_type', entityType)
-    .eq('entity_id', entityId);
+    .eq('entity_id', entityId)
 
   if (statusError) {
-    return { success: false, error: statusError.message };
+    return { success: false, error: statusError.message }
   }
 
-  return { success: true };
+  return { success: true }
 }
 
 async function softDeleteEntity(
   supabase: ReturnType<typeof createClient>,
   entityType: string,
-  entityId: string
+  entityId: string,
 ): Promise<{ success: boolean; error?: string }> {
   const tableMap: Record<string, string> = {
     dossier: 'dossiers',
@@ -492,11 +492,11 @@ async function softDeleteEntity(
     calendar_event: 'calendar_events',
     notification: 'notifications',
     activity_feed: 'activity_stream',
-  };
+  }
 
-  const tableName = tableMap[entityType];
+  const tableName = tableMap[entityType]
   if (!tableName) {
-    return { success: false, error: `Unknown entity type: ${entityType}` };
+    return { success: false, error: `Unknown entity type: ${entityType}` }
   }
 
   // Update with deleted status where applicable
@@ -504,21 +504,21 @@ async function softDeleteEntity(
     const { error } = await supabase
       .from(tableName)
       .update({ status: 'deleted', archived: true })
-      .eq('id', entityId);
+      .eq('id', entityId)
 
     if (error) {
-      return { success: false, error: error.message };
+      return { success: false, error: error.message }
     }
   } else {
     // Try deleted_at column if available
     const { error } = await supabase
       .from(tableName)
       .update({ deleted_at: new Date().toISOString() })
-      .eq('id', entityId);
+      .eq('id', entityId)
 
     // If deleted_at doesn't exist, this is acceptable - we'll track in retention status
     if (error && !error.message.includes('column')) {
-      return { success: false, error: error.message };
+      return { success: false, error: error.message }
     }
   }
 
@@ -527,38 +527,38 @@ async function softDeleteEntity(
     .from('entity_retention_status')
     .update({ deleted_at: new Date().toISOString() })
     .eq('entity_type', entityType)
-    .eq('entity_id', entityId);
+    .eq('entity_id', entityId)
 
   if (statusError) {
-    return { success: false, error: statusError.message };
+    return { success: false, error: statusError.message }
   }
 
-  return { success: true };
+  return { success: true }
 }
 
 async function hardDeleteEntity(
   supabase: ReturnType<typeof createClient>,
   entityType: string,
-  entityId: string
+  entityId: string,
 ): Promise<{ success: boolean; error?: string }> {
   const tableMap: Record<string, string> = {
     notification: 'notifications',
     activity_feed: 'activity_stream',
     ai_interaction_log: 'ai_interaction_logs',
-  };
+  }
 
   // Only allow hard delete for specific entity types
-  const tableName = tableMap[entityType];
+  const tableName = tableMap[entityType]
   if (!tableName) {
     // For protected entities, fall back to soft delete
-    return await softDeleteEntity(supabase, entityType, entityId);
+    return await softDeleteEntity(supabase, entityType, entityId)
   }
 
   // Hard delete from the table
-  const { error } = await supabase.from(tableName).delete().eq('id', entityId);
+  const { error } = await supabase.from(tableName).delete().eq('id', entityId)
 
   if (error) {
-    return { success: false, error: error.message };
+    return { success: false, error: error.message }
   }
 
   // Remove from retention status tracking
@@ -566,26 +566,26 @@ async function hardDeleteEntity(
     .from('entity_retention_status')
     .delete()
     .eq('entity_type', entityType)
-    .eq('entity_id', entityId);
+    .eq('entity_id', entityId)
 
   if (statusError) {
-    console.warn('Failed to remove retention status:', statusError);
+    console.warn('Failed to remove retention status:', statusError)
     // Not a critical error
   }
 
-  return { success: true };
+  return { success: true }
 }
 
 async function anonymizeEntity(
   supabase: ReturnType<typeof createClient>,
   entityType: string,
-  entityId: string
+  entityId: string,
 ): Promise<{ success: boolean; error?: string }> {
   // Anonymization is entity-type specific
   // This removes PII while keeping the structural record
 
-  const anonymizedMarker = '[ANONYMIZED]';
-  const anonymizedEmail = 'anonymized@example.com';
+  const anonymizedMarker = '[ANONYMIZED]'
+  const anonymizedEmail = 'anonymized@example.com'
 
   switch (entityType) {
     case 'intake_ticket': {
@@ -597,12 +597,12 @@ async function anonymizeEntity(
           description: anonymizedMarker,
           notes: anonymizedMarker,
         })
-        .eq('id', entityId);
+        .eq('id', entityId)
 
       if (error) {
-        return { success: false, error: error.message };
+        return { success: false, error: error.message }
       }
-      break;
+      break
     }
 
     case 'commitment': {
@@ -612,17 +612,17 @@ async function anonymizeEntity(
           description: anonymizedMarker,
           notes: anonymizedMarker,
         })
-        .eq('id', entityId);
+        .eq('id', entityId)
 
       if (error) {
-        return { success: false, error: error.message };
+        return { success: false, error: error.message }
       }
-      break;
+      break
     }
 
     default:
       // For other types, fall back to soft delete
-      return await softDeleteEntity(supabase, entityType, entityId);
+      return await softDeleteEntity(supabase, entityType, entityId)
   }
 
   // Update retention status
@@ -630,11 +630,11 @@ async function anonymizeEntity(
     .from('entity_retention_status')
     .update({ anonymized_at: new Date().toISOString() })
     .eq('entity_type', entityType)
-    .eq('entity_id', entityId);
+    .eq('entity_id', entityId)
 
   if (statusError) {
-    return { success: false, error: statusError.message };
+    return { success: false, error: statusError.message }
   }
 
-  return { success: true };
+  return { success: true }
 }

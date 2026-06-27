@@ -471,6 +471,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                 size="icon"
                 onClick={() => setSearchQuery('')}
                 className="absolute end-1 top-1/2 -translate-y-1/2 h-6 w-6"
+                aria-label={t('common:common.clear')}
               >
                 <X className="h-3.5 w-3.5" />
               </Button>

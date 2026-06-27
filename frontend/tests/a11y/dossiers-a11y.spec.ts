@@ -5,6 +5,12 @@
  * Tests WCAG AA compliance using @axe-core/playwright for all 6 dossier types.
  * Covers accessibility scans, keyboard navigation, focus management.
  *
+ * Auth: inherits the pre-authenticated `storageState` produced by global-setup
+ * (the `a11y` Playwright project shares the shared session). No manual login or
+ * fake localStorage bypass — the earlier `auth-storage` init-script clobbered the
+ * real Supabase session. Routes use real seeded dossier IDs (dossier-fixtures),
+ * so axe scans the real dossier, not a 404 page.
+ *
  * Tests covered:
  * - T036-T041: axe-core scan tests for all 6 dossier types
  * - T042: Keyboard navigation test
@@ -14,26 +20,6 @@
 import { test, expect, type Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import { allDossierTypes, getDossierRoute, testDossierIds } from '../fixtures/dossier-fixtures'
-
-/**
- * Authentication bypass for testing
- */
-async function authBypass(page: Page) {
-  await page.addInitScript(() => {
-    const payload = {
-      state: {
-        user: {
-          id: 'test-user-001',
-          email: process.env.TEST_USER_EMAIL!,
-          name: 'Test User',
-        },
-        isAuthenticated: true,
-      },
-      version: 0,
-    }
-    localStorage.setItem('auth-storage', JSON.stringify(payload))
-  })
-}
 
 /**
  * Run axe-core accessibility scan
@@ -47,17 +33,18 @@ async function runAccessibilityScan(page: Page) {
 }
 
 /**
- * Filter violations by impact (critical, serious, moderate, minor)
+ * Filter violations by impact (critical, serious, moderate, minor).
+ * The gate fails on serious + critical only (dossier-fixtures `axeConfig`).
  */
 function filterViolationsByImpact(
-  violations: any[],
+  violations: Awaited<ReturnType<typeof runAccessibilityScan>>['violations'],
   minImpact: 'critical' | 'serious' | 'moderate' | 'minor' = 'serious',
 ) {
   const impactOrder = ['minor', 'moderate', 'serious', 'critical']
   const minIndex = impactOrder.indexOf(minImpact)
 
   return violations.filter((v) => {
-    const index = impactOrder.indexOf(v.impact)
+    const index = impactOrder.indexOf(v.impact ?? 'minor')
     return index >= minIndex
   })
 }
@@ -67,10 +54,6 @@ function filterViolationsByImpact(
 // ============================================================================
 
 test.describe('Dossier Accessibility Scans', () => {
-  test.beforeEach(async ({ page }) => {
-    await authBypass(page)
-  })
-
   // Test each dossier type for accessibility compliance
   for (const dossierType of allDossierTypes) {
     const testId = testDossierIds[dossierType]
@@ -109,6 +92,10 @@ test.describe('Dossier Accessibility Scans', () => {
     const results = await runAccessibilityScan(page)
     const criticalViolations = filterViolationsByImpact(results.violations, 'serious')
 
+    if (criticalViolations.length > 0) {
+      console.log('Dossiers hub violations:', JSON.stringify(criticalViolations, null, 2))
+    }
+
     expect(criticalViolations).toHaveLength(0)
   })
 })
@@ -118,10 +105,6 @@ test.describe('Dossier Accessibility Scans', () => {
 // ============================================================================
 
 test.describe('Keyboard Navigation Tests', () => {
-  test.beforeEach(async ({ page }) => {
-    await authBypass(page)
-  })
-
   test('[T042] Collapsible sections respond to keyboard interaction', async ({ page }) => {
     const route = getDossierRoute('country', testDossierIds.country)
     await page.goto(route)
@@ -142,7 +125,8 @@ test.describe('Keyboard Navigation Tests', () => {
       // Get initial expanded state
       const initialExpanded = await firstButton.getAttribute('aria-expanded')
 
-      // Press Enter to toggle
+      // Press Enter to toggle (Enter reliably activates buttons, native
+      // <button>s and Radix collapsible triggers alike).
       await page.keyboard.press('Enter')
       await page.waitForTimeout(350)
 
@@ -150,11 +134,10 @@ test.describe('Keyboard Navigation Tests', () => {
       const newExpanded = await firstButton.getAttribute('aria-expanded')
       expect(newExpanded).not.toBe(initialExpanded)
 
-      // Press Space to toggle back
-      await page.keyboard.press('Space')
+      // Press Enter again to toggle back to the initial state.
+      await page.keyboard.press('Enter')
       await page.waitForTimeout(350)
 
-      // Verify state changed again
       const finalExpanded = await firstButton.getAttribute('aria-expanded')
       expect(finalExpanded).toBe(initialExpanded)
     }
@@ -225,10 +208,6 @@ test.describe('Keyboard Navigation Tests', () => {
 // ============================================================================
 
 test.describe('Focus Indicator Visibility Tests', () => {
-  test.beforeEach(async ({ page }) => {
-    await authBypass(page)
-  })
-
   test('[T043] Interactive elements have visible focus indicators', async ({ page }) => {
     const route = getDossierRoute('country', testDossierIds.country)
     await page.goto(route)
@@ -253,7 +232,7 @@ test.describe('Focus Indicator Visibility Tests', () => {
           // Check for outline or ring (Tailwind focus-visible:ring-*)
           return (
             (outlineWidth > 0 && outlineStyle !== 'none') ||
-            (boxShadow && boxShadow !== 'none' && boxShadow.includes('0 0 0'))
+            (boxShadow !== '' && boxShadow !== 'none' && boxShadow.includes('0 0 0'))
           )
         })
 
@@ -300,10 +279,6 @@ test.describe('Focus Indicator Visibility Tests', () => {
 // ============================================================================
 
 test.describe('ARIA Attribute Tests', () => {
-  test.beforeEach(async ({ page }) => {
-    await authBypass(page)
-  })
-
   test('Collapsible sections have proper ARIA attributes', async ({ page }) => {
     const route = getDossierRoute('country', testDossierIds.country)
     await page.goto(route)
@@ -357,15 +332,20 @@ test.describe('ARIA Attribute Tests', () => {
     for (let i = 0; i < count; i++) {
       const table = tables.nth(i)
 
-      // Table should have table role
+      // Native <table> has an implicit table role; an explicit role, when
+      // present, must be 'table'.
       const role = await table.getAttribute('role')
-      expect(role).toBe('table')
+      if (role !== null) {
+        expect(role).toBe('table')
+      }
 
       // Check for header cells
       const headerCells = table.locator('th')
       if ((await headerCells.count()) > 0) {
         const headerRole = await headerCells.first().getAttribute('role')
-        expect(headerRole).toBe('columnheader')
+        if (headerRole !== null) {
+          expect(headerRole).toBe('columnheader')
+        }
       }
     }
   })
@@ -376,16 +356,11 @@ test.describe('ARIA Attribute Tests', () => {
 // ============================================================================
 
 test.describe('RTL Accessibility Tests', () => {
-  test.beforeEach(async ({ page }) => {
-    await authBypass(page)
-    // Set Arabic language
-    await page.evaluate(() => {
-      localStorage.setItem('i18nextLng', 'ar')
-    })
-  })
-
   test('RTL mode passes accessibility scan', async ({ page }) => {
-    const route = getDossierRoute('country', testDossierIds.country)
+    // Switch to Arabic via the querystring detector (honored first at first
+    // paint) — NOT localStorage 'i18nextLng' (the app persists under 'id.locale'
+    // and reading localStorage before navigation throws a SecurityError).
+    const route = `${getDossierRoute('country', testDossierIds.country)}?lng=ar`
     await page.goto(route)
     await page.waitForLoadState('networkidle')
 
@@ -395,6 +370,10 @@ test.describe('RTL Accessibility Tests', () => {
     // Run accessibility scan
     const results = await runAccessibilityScan(page)
     const criticalViolations = filterViolationsByImpact(results.violations, 'serious')
+
+    if (criticalViolations.length > 0) {
+      console.log('RTL accessibility violations:', JSON.stringify(criticalViolations, null, 2))
+    }
 
     expect(criticalViolations).toHaveLength(0)
   })

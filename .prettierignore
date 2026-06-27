@@ -24,6 +24,10 @@ pnpm-lock.yaml
 *.generated.js
 database.types.ts
 **/database.types.ts
+# TanStack Router generated route tree — prettier would reformat the generator's
+# wrapped output to single-line and fight the build on every commit.
+routeTree.gen.ts
+**/routeTree.gen.ts
 
 # Vendor files
 vendor/

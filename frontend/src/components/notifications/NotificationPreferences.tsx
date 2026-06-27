@@ -294,6 +294,7 @@ export function NotificationPreferences() {
                     size="icon"
                     onClick={() => handleRemoveDevice(device.device_token)}
                     disabled={isRemoving}
+                    aria-label={t('common:common.actions.remove')}
                   >
                     <Trash2 className="h-4 w-4 text-destructive" />
                   </Button>

@@ -235,6 +235,7 @@ export function TemplateSelector({
             size="icon"
             className={cn('absolute top-1/2 h-6 w-6 -translate-y-1/2', isRTL ? 'start-2' : 'end-2')}
             onClick={() => setSearchQuery('')}
+            aria-label={t('common:common.clear')}
           >
             <X className="h-4 w-4" />
           </Button>

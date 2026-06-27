@@ -13,18 +13,17 @@ import { createClient } from '@/lib/supabase-client'
 const supabase = createClient()
 
 export interface QueueItem {
-  queue_id: string
+  id: string
   work_item_id: string
   work_item_type: 'dossier' | 'ticket' | 'position' | 'task'
-  required_skills: Array<{
-    skill_id: string
-    skill_name_en: string
-    skill_name_ar: string
-  }>
+  required_skills: string[]
+  target_unit_id: string | null
   priority: 'urgent' | 'high' | 'normal' | 'low'
-  queued_at: string
-  position: number
+  created_at: string
+  queue_position: number
   attempts: number
+  last_attempt_at: string | null
+  notes: string | null
 }
 
 export interface QueueListResponse {
@@ -32,7 +31,7 @@ export interface QueueListResponse {
   total_count: number
   page: number
   page_size: number
-  has_next_page: boolean
+  total_pages: number
 }
 
 interface UseAssignmentQueueOptions {

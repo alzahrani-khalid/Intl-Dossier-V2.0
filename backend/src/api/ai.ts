@@ -6,6 +6,7 @@ import { IntelligenceService } from '../services/intelligence.service'
 import { validate, createBilingualError, getRequestLanguage } from '../utils/validation'
 import { requirePermission } from '../middleware/auth'
 import { supabaseAuth } from '../middleware/supabase-auth.js'
+import { aiLimiter, uploadLimiter } from '../middleware/rate-limit.middleware'
 import { logInfo, logError } from '../utils/logger'
 import multer from 'multer'
 import briefsRouter from './ai/briefs.js'
@@ -81,6 +82,12 @@ router.get('/health', async (_req, res) => {
 
 // Apply Supabase authentication to all other AI routes
 router.use(supabaseAuth)
+
+// SEC-BE-08: throttle expensive AI work (on-prem LLM inference, transcription, brief
+// generation) for every authenticated AI route below. The public /health probe above is
+// left unthrottled, consistent with the codebase-wide rate-limit health-check exemption.
+router.use(aiLimiter)
+
 const briefService = new BriefService()
 const voiceService = new VoiceService()
 const intelligenceService = new IntelligenceService()
@@ -238,7 +245,7 @@ router.get('/briefs/:id', async (req, res, next) => {
  * @desc Transcribe audio to text
  * @access Private
  */
-router.post('/voice/transcribe', upload.single('audio'), async (req, res, next) => {
+router.post('/voice/transcribe', uploadLimiter, upload.single('audio'), async (req, res, next) => {
   try {
     if (!req.file) {
       const lang = getRequestLanguage(req)

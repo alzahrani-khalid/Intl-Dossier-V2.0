@@ -249,10 +249,14 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-ink-mute">
+                  <label
+                    htmlFor="merge-reason"
+                    className="mb-1 block text-sm font-medium text-ink-mute"
+                  >
                     {t('duplicates.mergeDialog.reason', 'Reason for Merge')} *
                   </label>
                   <textarea
+                    id="merge-reason"
                     value={mergeReason}
                     onChange={(e) => setMergeReason(e.target.value)}
                     placeholder={t(

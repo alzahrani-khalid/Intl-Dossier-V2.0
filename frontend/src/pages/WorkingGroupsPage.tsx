@@ -451,6 +451,7 @@ export default function WorkingGroupsPage() {
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="size-8">
                           <MoreHorizontal className="size-4" />
+                          <span className="sr-only">{t('common:common.actions.openMenu')}</span>
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -483,6 +484,7 @@ export default function WorkingGroupsPage() {
             className="min-h-10"
           >
             <ChevronRight className={`size-4 ${isRTL ? '' : 'rotate-180'}`} />
+            <span className="sr-only">{t('common:common.previous')}</span>
           </Button>
           <span className="text-sm px-4">
             {filters.page || 1} / {pagination.totalPages}
@@ -500,6 +502,7 @@ export default function WorkingGroupsPage() {
             className="min-h-10"
           >
             <ChevronRight className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
+            <span className="sr-only">{t('common:common.next')}</span>
           </Button>
         </div>
       )}

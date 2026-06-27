@@ -470,8 +470,9 @@ async function executeNotifyRole(
   context: ExecutionContext,
   config: Record<string, unknown>
 ): Promise<Record<string, unknown>> {
-  const { supabase } = context;
+  const { supabase, execution, entityData, rule } = context;
   const role = config.role as string;
+  const templateCode = config.template as string;
 
   // Get users with the role
   const { data: users } = await supabase.from('user_roles').select('user_id').eq('role', role);
@@ -480,14 +481,52 @@ async function executeNotifyRole(
     return { skipped: true, reason: `No users with role: ${role}` };
   }
 
-  // Notify each user
-  const results = [];
-  for (const user of users) {
-    const result = await executeNotifyUser(context, { ...config, user_id: user.user_id });
-    results.push(result);
+  // N13: previously this called executeNotifyUser per user, which re-ran the
+  // identical template SELECT and a separate INSERT for every user (unbounded by
+  // role size). Fetch the template ONCE and bulk-insert one notification per
+  // user in a single round-trip. Title/body/metadata do not depend on user_id,
+  // so each row is identical to what executeNotifyUser would have produced.
+  const { data: template } = await supabase
+    .from('workflow_notification_templates')
+    .select('*')
+    .eq('code', templateCode)
+    .single();
+
+  const variables = {
+    'entity.title': entityData.title || entityData.name_en || entityData.subject || 'Unknown',
+    'entity.type': execution.entity_type,
+    rule_name: rule.name_en,
+    url: `/dashboard/${execution.entity_type}/${execution.entity_id}`,
+    ...context.execution.trigger_context,
+  };
+
+  const title = template
+    ? interpolateTemplate(template.subject_en, variables)
+    : `Workflow notification: ${rule.name_en}`;
+  const body = template
+    ? interpolateTemplate(template.body_en, variables)
+    : `Action triggered for ${execution.entity_type}`;
+
+  const notificationRows = users.map((u: { user_id: string }) => ({
+    user_id: u.user_id,
+    title,
+    message: body,
+    type: 'workflow',
+    metadata: {
+      rule_id: execution.rule_id,
+      entity_type: execution.entity_type,
+      entity_id: execution.entity_id,
+      template_code: templateCode,
+    },
+  }));
+
+  const { error } = await supabase.from('notifications').insert(notificationRows);
+
+  if (error) {
+    throw new Error(`Failed to create notification: ${error.message}`);
   }
 
-  return { notified_count: results.length, role };
+  return { notified_count: notificationRows.length, role };
 }
 
 async function executeUpdateStatus(

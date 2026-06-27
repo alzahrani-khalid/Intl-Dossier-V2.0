@@ -70,7 +70,7 @@ export function ReportPreview({
 }: ReportPreviewProps) {
   const { t } = useTranslation('report-builder')
   const { isRTL } = useDirection()
-const visibleColumns = useMemo(() => {
+  const visibleColumns = useMemo(() => {
     return configuration.columns.filter((c) => c.visible)
   }, [configuration.columns])
 
@@ -159,16 +159,18 @@ const visibleColumns = useMemo(() => {
     const [, yField] = yAxisFieldId.split('.')
 
     return (
-      <LtrIsolate className="w-full" style={{ height: 300 }}><ResponsiveContainer width="100%" height={300}>
-        <BarChart data={chartData}>
-          {showGrid && <CartesianGrid strokeDasharray="3 3" />}
-          <XAxis dataKey={xField} tick={{ fontSize: 12 }} reversed={isRTL} />
-          <YAxis tick={{ fontSize: 12 }} />
-          <Tooltip />
-          {showLegend && <Legend />}
-          <Bar dataKey={yField} fill={CHART_COLORS[0]} name={getFieldLabel(yAxisFieldId)} />
-        </BarChart>
-      </ResponsiveContainer></LtrIsolate>
+      <LtrIsolate className="w-full" style={{ height: 300 }}>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={chartData}>
+            {showGrid && <CartesianGrid strokeDasharray="3 3" />}
+            <XAxis dataKey={xField} tick={{ fontSize: 12 }} reversed={isRTL} />
+            <YAxis tick={{ fontSize: 12 }} />
+            <Tooltip />
+            {showLegend && <Legend />}
+            <Bar dataKey={yField} fill={CHART_COLORS[0]} name={getFieldLabel(yAxisFieldId)} />
+          </BarChart>
+        </ResponsiveContainer>
+      </LtrIsolate>
     )
   }
 
@@ -187,22 +189,24 @@ const visibleColumns = useMemo(() => {
     const [, yField] = yAxisFieldId.split('.')
 
     return (
-      <LtrIsolate className="w-full" style={{ height: 300 }}><ResponsiveContainer width="100%" height={300}>
-        <LineChart data={chartData}>
-          {showGrid && <CartesianGrid strokeDasharray="3 3" />}
-          <XAxis dataKey={xField} tick={{ fontSize: 12 }} reversed={isRTL} />
-          <YAxis tick={{ fontSize: 12 }} />
-          <Tooltip />
-          {showLegend && <Legend />}
-          <Line
-            type="monotone"
-            dataKey={yField}
-            stroke={CHART_COLORS[0]}
-            strokeWidth={2}
-            name={getFieldLabel(yAxisFieldId)}
-          />
-        </LineChart>
-      </ResponsiveContainer></LtrIsolate>
+      <LtrIsolate className="w-full" style={{ height: 300 }}>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={chartData}>
+            {showGrid && <CartesianGrid strokeDasharray="3 3" />}
+            <XAxis dataKey={xField} tick={{ fontSize: 12 }} reversed={isRTL} />
+            <YAxis tick={{ fontSize: 12 }} />
+            <Tooltip />
+            {showLegend && <Legend />}
+            <Line
+              type="monotone"
+              dataKey={yField}
+              stroke={CHART_COLORS[0]}
+              strokeWidth={2}
+              name={getFieldLabel(yAxisFieldId)}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </LtrIsolate>
     )
   }
 
@@ -221,23 +225,25 @@ const visibleColumns = useMemo(() => {
     const [, yField] = yAxisFieldId.split('.')
 
     return (
-      <LtrIsolate className="w-full" style={{ height: 300 }}><ResponsiveContainer width="100%" height={300}>
-        <AreaChart data={chartData}>
-          {showGrid && <CartesianGrid strokeDasharray="3 3" />}
-          <XAxis dataKey={xField} tick={{ fontSize: 12 }} reversed={isRTL} />
-          <YAxis tick={{ fontSize: 12 }} />
-          <Tooltip />
-          {showLegend && <Legend />}
-          <Area
-            type="monotone"
-            dataKey={yField!}
-            fill={CHART_COLORS[0]}
-            fillOpacity={0.3}
-            stroke={CHART_COLORS[0]}
-            name={getFieldLabel(yAxisFieldId)}
-          />
-        </AreaChart>
-      </ResponsiveContainer></LtrIsolate>
+      <LtrIsolate className="w-full" style={{ height: 300 }}>
+        <ResponsiveContainer width="100%" height={300}>
+          <AreaChart data={chartData}>
+            {showGrid && <CartesianGrid strokeDasharray="3 3" />}
+            <XAxis dataKey={xField} tick={{ fontSize: 12 }} reversed={isRTL} />
+            <YAxis tick={{ fontSize: 12 }} />
+            <Tooltip />
+            {showLegend && <Legend />}
+            <Area
+              type="monotone"
+              dataKey={yField!}
+              fill={CHART_COLORS[0]}
+              fillOpacity={0.3}
+              stroke={CHART_COLORS[0]}
+              name={getFieldLabel(yAxisFieldId)}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </LtrIsolate>
     )
   }
 
@@ -268,30 +274,32 @@ const visibleColumns = useMemo(() => {
     const { showLegend, showLabels } = configuration.visualization
 
     return (
-      <LtrIsolate className="w-full" style={{ height: 300 }}><ResponsiveContainer width="100%" height={300}>
-        <PieChart>
-          <Pie
-            data={pieData}
-            dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            outerRadius={100}
-            label={
-              showLabels
-                ? ((({ name, percent }: { name: string; percent: number }) =>
-                    `${name}: ${(Number(percent) * 100).toFixed(0)}%`) as any)
-                : false
-            }
-          >
-            {pieData.map((entry, index) => (
-              <Cell key={`cell-${entry.name}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
-            ))}
-          </Pie>
-          <Tooltip />
-          {showLegend && <Legend />}
-        </PieChart>
-      </ResponsiveContainer></LtrIsolate>
+      <LtrIsolate className="w-full" style={{ height: 300 }}>
+        <ResponsiveContainer width="100%" height={300}>
+          <PieChart>
+            <Pie
+              data={pieData}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={100}
+              label={
+                showLabels
+                  ? ((({ name, percent }: { name: string; percent: number }) =>
+                      `${name}: ${(Number(percent) * 100).toFixed(0)}%`) as any)
+                  : false
+              }
+            >
+              {pieData.map((entry, index) => (
+                <Cell key={`cell-${entry.name}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+            {showLegend && <Legend />}
+          </PieChart>
+        </ResponsiveContainer>
+      </LtrIsolate>
     )
   }
 
@@ -372,7 +380,16 @@ const visibleColumns = useMemo(() => {
                 </Badge>
               </div>
             )}
-            <Button variant="outline" size="sm" onClick={onRefresh} disabled={isLoading}>
+            {/* Stub-backed: onRefresh re-runs the fake useReportPreview mutation
+                (resolves an empty {} no-op). Disabled for honesty until a real
+                preview endpoint exists; handler kept wired for re-enable. */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onRefresh}
+              disabled
+              title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
+            >
               <RefreshCw className={cn('h-4 w-4 me-2', isLoading && 'animate-spin')} />
               {t('preview.refresh')}
             </Button>

@@ -26,7 +26,7 @@ function HomePage() {
   }, [isAuthenticated, navigate])
 
   return (
-    <div className="from-base-50 to-base-100 min-h-screen bg-gradient-to-b">
+    <div className="min-h-screen bg-bg">
       <div className="container mx-auto px-4 py-16">
         <div className="mx-auto max-w-3xl text-center">
           <h1 className="font-display text-base-900 mb-6 text-5xl">

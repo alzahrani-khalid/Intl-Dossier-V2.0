@@ -27,7 +27,7 @@ interface BusinessCardScannerProps {
 export function BusinessCardScanner({ onExtracted, onCancel }: BusinessCardScannerProps) {
   const { t } = useTranslation('contacts')
   const { isRTL } = useDirection()
-const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [consentCloudOCR, setConsentCloudOCR] = useState(false)
   const [showCamera, setShowCamera] = useState(false)
@@ -226,6 +226,7 @@ const [selectedFile, setSelectedFile] = useState<File | null>(null)
                   size="icon"
                   onClick={clearFile}
                   className="absolute top-2 end-2 min-h-8 min-w-8"
+                  aria-label={t('common:common.actions.remove')}
                 >
                   <X className="h-4 w-4" />
                 </Button>

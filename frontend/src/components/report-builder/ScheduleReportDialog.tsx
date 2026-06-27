@@ -108,7 +108,7 @@ export function ScheduleReportDialog({
 }: ScheduleReportDialogProps) {
   const { t } = useTranslation('report-builder')
   const { isRTL } = useDirection()
-const form = useForm<FormValues>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: existingSchedule?.name || '',
@@ -403,7 +403,14 @@ const form = useForm<FormValues>({
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 {t('savedReports.confirmDelete.cancel')}
               </Button>
-              <Button type="submit" disabled={isSaving}>
+              {/* Stub-backed: onSave calls the fake report-builder useCreateSchedule
+                  (resolves {id:''}), NOT the real useScheduledReports path. Disabled
+                  for honesty until backed; handler kept wired for re-enable. */}
+              <Button
+                type="submit"
+                disabled
+                title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
+              >
                 {isSaving && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
                 {existingSchedule ? t('schedule.updateButton') : t('schedule.createButton')}
               </Button>

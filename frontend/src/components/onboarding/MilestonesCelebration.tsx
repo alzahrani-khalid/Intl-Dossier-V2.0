@@ -156,7 +156,7 @@ function CheckmarkAnimation() {
         animate={{ pathLength: 1 }}
         transition={{ duration: 0.4, delay: 0.3 }}
       >
-        <Check className="w-10 h-10 sm:w-12 sm:h-12 text-white" strokeWidth={3} />
+        <Check className="w-10 h-10 sm:w-12 sm:h-12 text-primary-foreground" strokeWidth={3} />
       </m.div>
     </m.div>
   )
@@ -278,7 +278,7 @@ export function MilestonesCelebration({
       >
         {/* Backdrop */}
         <m.div
-          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+          className="absolute inset-0 bg-ink/60"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -294,7 +294,7 @@ export function MilestonesCelebration({
 
         {/* Content card */}
         <m.div
-          className="relative z-10 bg-card rounded-2xl sm:rounded-3xl p-6 sm:p-8 mx-4 max-w-sm w-full text-center shadow-2xl"
+          className="relative z-10 bg-card rounded-[var(--radius-lg)] p-6 sm:p-8 mx-4 max-w-sm w-full text-center shadow-2xl"
           initial={{ scale: 0.8, y: 20 }}
           animate={{ scale: 1, y: 0 }}
           exit={{ scale: 0.8, y: 20 }}
@@ -303,6 +303,7 @@ export function MilestonesCelebration({
           {/* Close button */}
           <button
             onClick={handleDismiss}
+            aria-label={t('common:common.close')}
             className="absolute top-3 end-3 sm:top-4 sm:end-4 p-1.5 rounded-full hover:bg-muted transition-colors"
           >
             <X className="w-4 h-4 text-muted-foreground" />
@@ -315,20 +316,20 @@ export function MilestonesCelebration({
             ) : (
               <m.div
                 className={cn(
-                  'w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center',
+                  'w-16 h-16 sm:w-20 sm:h-20 rounded-[var(--radius-lg)] flex items-center justify-center',
                   celebration.percentage === 100
-                    ? 'bg-gradient-to-br from-warning to-warning'
+                    ? 'bg-warning'
                     : celebration.percentage >= 75
-                      ? 'bg-gradient-to-br from-secondary to-secondary'
+                      ? 'bg-secondary'
                       : celebration.percentage >= 50
-                        ? 'bg-gradient-to-br from-accent to-info'
-                        : 'bg-gradient-to-br from-success to-success',
+                        ? 'bg-accent'
+                        : 'bg-success',
                 )}
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ type: 'spring', damping: 12, stiffness: 200 }}
               >
-                <BadgeIcon className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                <BadgeIcon className="w-8 h-8 sm:w-10 sm:h-10 text-primary-foreground" />
               </m.div>
             )}
           </div>

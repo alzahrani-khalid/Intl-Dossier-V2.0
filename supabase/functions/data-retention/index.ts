@@ -1,60 +1,60 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
+import { corsHeaders } from '../_shared/cors.ts'
 
 interface RetentionPolicy {
-  id?: string;
-  code: string;
-  name_en: string;
-  name_ar: string;
-  description_en?: string;
-  description_ar?: string;
-  entity_type: string;
-  document_class?: string;
-  sensitivity_level?: number;
-  dossier_type?: string;
-  retention_days: number;
-  warning_days: number;
-  action: string;
-  archive_storage_bucket?: string;
-  archive_path_template?: string;
-  status: string;
-  priority: number;
-  regulatory_reference?: string;
-  compliance_notes?: string;
+  id?: string
+  code: string
+  name_en: string
+  name_ar: string
+  description_en?: string
+  description_ar?: string
+  entity_type: string
+  document_class?: string
+  sensitivity_level?: number
+  dossier_type?: string
+  retention_days: number
+  warning_days: number
+  action: string
+  archive_storage_bucket?: string
+  archive_path_template?: string
+  status: string
+  priority: number
+  regulatory_reference?: string
+  compliance_notes?: string
 }
 
 interface LegalHold {
-  id?: string;
-  name_en: string;
-  name_ar: string;
-  description_en?: string;
-  description_ar?: string;
-  reference_number: string;
-  entity_type?: string;
-  entity_ids?: string[];
-  keywords?: string[];
-  date_range_start?: string;
-  date_range_end?: string;
-  custodians?: string[];
-  status: string;
-  reason_en: string;
-  reason_ar: string;
-  legal_matter?: string;
-  effective_date: string;
-  expiry_date?: string;
-  notify_custodians?: boolean;
+  id?: string
+  name_en: string
+  name_ar: string
+  description_en?: string
+  description_ar?: string
+  reference_number: string
+  entity_type?: string
+  entity_ids?: string[]
+  keywords?: string[]
+  date_range_start?: string
+  date_range_end?: string
+  custodians?: string[]
+  status: string
+  reason_en: string
+  reason_ar: string
+  legal_matter?: string
+  effective_date: string
+  expiry_date?: string
+  notify_custodians?: boolean
 }
 
 serve(async (req) => {
   // Handle CORS
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response('ok', { headers: corsHeaders })
   }
 
   try {
     // Get auth token
-    const authHeader = req.headers.get('Authorization');
+    const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
       return new Response(
         JSON.stringify({
@@ -67,8 +67,8 @@ serve(async (req) => {
         {
           status: 401,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     // Create Supabase client with user context
@@ -79,14 +79,14 @@ serve(async (req) => {
         global: {
           headers: { Authorization: authHeader },
         },
-      }
-    );
+      },
+    )
 
     // Get current user
     const {
       data: { user },
       error: userError,
-    } = await supabaseClient.auth.getUser();
+    } = await supabaseClient.auth.getUser()
 
     if (userError || !user) {
       return new Response(
@@ -100,24 +100,29 @@ serve(async (req) => {
         {
           status: 401,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
-    // Check admin role
-    const isAdmin = user.user_metadata?.role === 'admin' || user.app_metadata?.role === 'admin';
+    // Check admin role from public.users (never trust client-settable user_metadata)
+    const { data: userRecord } = await supabaseClient
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+    const isAdmin = userRecord?.role === 'admin'
 
     // Extract path and determine action
-    const url = new URL(req.url);
-    const pathParts = url.pathname.split('/').filter(Boolean);
-    const resource = pathParts[pathParts.length - 2] || pathParts[pathParts.length - 1];
+    const url = new URL(req.url)
+    const pathParts = url.pathname.split('/').filter(Boolean)
+    const resource = pathParts[pathParts.length - 2] || pathParts[pathParts.length - 1]
     const resourceId =
-      pathParts[pathParts.length - 1] !== resource ? pathParts[pathParts.length - 1] : null;
+      pathParts[pathParts.length - 1] !== resource ? pathParts[pathParts.length - 1] : null
 
     // Route based on method and path
     switch (req.method) {
       case 'GET':
-        return handleGet(supabaseClient, url, resource, resourceId);
+        return handleGet(supabaseClient, url, resource, resourceId)
 
       case 'POST':
         if (!isAdmin) {
@@ -132,10 +137,10 @@ serve(async (req) => {
             {
               status: 403,
               headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            }
-          );
+            },
+          )
         }
-        return handlePost(supabaseClient, req, url, resource, user.id);
+        return handlePost(supabaseClient, req, url, resource, user.id)
 
       case 'PUT':
       case 'PATCH':
@@ -151,10 +156,10 @@ serve(async (req) => {
             {
               status: 403,
               headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            }
-          );
+            },
+          )
         }
-        return handleUpdate(supabaseClient, req, resourceId, resource, user.id);
+        return handleUpdate(supabaseClient, req, resourceId, resource, user.id)
 
       case 'DELETE':
         if (!isAdmin) {
@@ -169,10 +174,10 @@ serve(async (req) => {
             {
               status: 403,
               headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            }
-          );
+            },
+          )
         }
-        return handleDelete(supabaseClient, resourceId, resource);
+        return handleDelete(supabaseClient, resourceId, resource)
 
       default:
         return new Response(
@@ -186,11 +191,11 @@ serve(async (req) => {
           {
             status: 405,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          }
-        );
+          },
+        )
     }
   } catch (error) {
-    console.error('Unexpected error:', error);
+    console.error('Unexpected error:', error)
     return new Response(
       JSON.stringify({
         error: {
@@ -203,18 +208,18 @@ serve(async (req) => {
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+      },
+    )
   }
-});
+})
 
 async function handleGet(
   supabase: ReturnType<typeof createClient>,
   url: URL,
   resource: string,
-  resourceId: string | null
+  resourceId: string | null,
 ) {
-  const searchParams = url.searchParams;
+  const searchParams = url.searchParams
 
   // Handle different GET operations
   if (resource === 'policies' || resource === 'data-retention') {
@@ -224,7 +229,7 @@ async function handleGet(
         .from('data_retention_policies')
         .select('*')
         .eq('id', resourceId)
-        .single();
+        .single()
 
       if (error) {
         return new Response(
@@ -238,29 +243,29 @@ async function handleGet(
           {
             status: 404,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          }
-        );
+          },
+        )
       }
 
       return new Response(JSON.stringify({ data }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      })
     }
 
     // List policies with filtering
-    let query = supabase.from('data_retention_policies').select('*');
+    let query = supabase.from('data_retention_policies').select('*')
 
-    const status = searchParams.get('status');
-    const entityType = searchParams.get('entity_type');
-    const documentClass = searchParams.get('document_class');
+    const status = searchParams.get('status')
+    const entityType = searchParams.get('entity_type')
+    const documentClass = searchParams.get('document_class')
 
-    if (status) query = query.eq('status', status);
-    if (entityType) query = query.eq('entity_type', entityType);
-    if (documentClass) query = query.eq('document_class', documentClass);
+    if (status) query = query.eq('status', status)
+    if (entityType) query = query.eq('entity_type', entityType)
+    if (documentClass) query = query.eq('document_class', documentClass)
 
-    query = query.order('priority', { ascending: true });
+    query = query.order('priority', { ascending: true })
 
-    const { data, error } = await query;
+    const { data, error } = await query
 
     if (error) {
       return new Response(
@@ -275,13 +280,13 @@ async function handleGet(
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     return new Response(JSON.stringify({ data }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   }
 
   if (resource === 'legal-holds') {
@@ -291,7 +296,7 @@ async function handleGet(
         .from('legal_holds')
         .select('*')
         .eq('id', resourceId)
-        .single();
+        .single()
 
       if (error) {
         return new Response(
@@ -305,24 +310,24 @@ async function handleGet(
           {
             status: 404,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          }
-        );
+          },
+        )
       }
 
       return new Response(JSON.stringify({ data }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      })
     }
 
     // List legal holds
-    let query = supabase.from('legal_holds').select('*');
+    let query = supabase.from('legal_holds').select('*')
 
-    const status = searchParams.get('status');
-    if (status) query = query.eq('status', status);
+    const status = searchParams.get('status')
+    if (status) query = query.eq('status', status)
 
-    query = query.order('created_at', { ascending: false });
+    query = query.order('created_at', { ascending: false })
 
-    const { data, error } = await query;
+    const { data, error } = await query
 
     if (error) {
       return new Response(
@@ -337,18 +342,18 @@ async function handleGet(
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     return new Response(JSON.stringify({ data }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   }
 
   if (resource === 'statistics') {
     // Get retention statistics
-    const { data, error } = await supabase.rpc('get_retention_statistics');
+    const { data, error } = await supabase.rpc('get_retention_statistics')
 
     if (error) {
       return new Response(
@@ -363,26 +368,26 @@ async function handleGet(
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     return new Response(JSON.stringify({ data }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   }
 
   if (resource === 'expiring') {
     // Get expiring entities
-    const daysAhead = parseInt(searchParams.get('days') || '30');
-    const entityType = searchParams.get('entity_type') || null;
-    const limit = parseInt(searchParams.get('limit') || '100');
+    const daysAhead = parseInt(searchParams.get('days') || '30')
+    const entityType = searchParams.get('entity_type') || null
+    const limit = parseInt(searchParams.get('limit') || '100')
 
     const { data, error } = await supabase.rpc('get_expiring_entities', {
       p_days_ahead: daysAhead,
       p_entity_type: entityType,
       p_limit: limit,
-    });
+    })
 
     if (error) {
       return new Response(
@@ -397,26 +402,26 @@ async function handleGet(
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     return new Response(JSON.stringify({ data }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   }
 
   if (resource === 'pending-actions') {
     // Get pending retention actions
-    const entityType = searchParams.get('entity_type') || null;
-    const action = searchParams.get('action') || null;
-    const limit = parseInt(searchParams.get('limit') || '100');
+    const entityType = searchParams.get('entity_type') || null
+    const action = searchParams.get('action') || null
+    const limit = parseInt(searchParams.get('limit') || '100')
 
     const { data, error } = await supabase.rpc('get_pending_retention_actions', {
       p_entity_type: entityType,
       p_action: action,
       p_limit: limit,
-    });
+    })
 
     if (error) {
       return new Response(
@@ -431,29 +436,29 @@ async function handleGet(
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     return new Response(JSON.stringify({ data }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   }
 
   if (resource === 'execution-log') {
     // Get execution log
-    let query = supabase.from('retention_execution_log').select('*');
+    let query = supabase.from('retention_execution_log').select('*')
 
-    const executionType = searchParams.get('type');
-    const policyId = searchParams.get('policy_id');
-    const limit = parseInt(searchParams.get('limit') || '50');
+    const executionType = searchParams.get('type')
+    const policyId = searchParams.get('policy_id')
+    const limit = parseInt(searchParams.get('limit') || '50')
 
-    if (executionType) query = query.eq('execution_type', executionType);
-    if (policyId) query = query.eq('policy_id', policyId);
+    if (executionType) query = query.eq('execution_type', executionType)
+    if (policyId) query = query.eq('policy_id', policyId)
 
-    query = query.order('started_at', { ascending: false }).limit(limit);
+    query = query.order('started_at', { ascending: false }).limit(limit)
 
-    const { data, error } = await query;
+    const { data, error } = await query
 
     if (error) {
       return new Response(
@@ -468,13 +473,13 @@ async function handleGet(
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     return new Response(JSON.stringify({ data }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   }
 
   return new Response(
@@ -488,8 +493,8 @@ async function handleGet(
     {
       status: 404,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    }
-  );
+    },
+  )
 }
 
 async function handlePost(
@@ -497,13 +502,13 @@ async function handlePost(
   req: Request,
   url: URL,
   resource: string,
-  userId: string
+  userId: string,
 ) {
-  const body = await req.json();
+  const body = await req.json()
 
   if (resource === 'policies' || resource === 'data-retention') {
     // Create new policy
-    const policy: RetentionPolicy = body;
+    const policy: RetentionPolicy = body
 
     const { data, error } = await supabase
       .from('data_retention_policies')
@@ -513,7 +518,7 @@ async function handlePost(
         updated_by: userId,
       })
       .select()
-      .single();
+      .single()
 
     if (error) {
       return new Response(
@@ -528,19 +533,19 @@ async function handlePost(
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     return new Response(JSON.stringify({ data }), {
       status: 201,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   }
 
   if (resource === 'legal-holds') {
     // Create new legal hold
-    const hold: LegalHold = body;
+    const hold: LegalHold = body
 
     const { data, error } = await supabase
       .from('legal_holds')
@@ -550,7 +555,7 @@ async function handlePost(
         updated_by: userId,
       })
       .select()
-      .single();
+      .single()
 
     if (error) {
       return new Response(
@@ -565,8 +570,8 @@ async function handlePost(
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     // Apply legal hold if active
@@ -574,18 +579,18 @@ async function handlePost(
       await supabase.rpc('manage_legal_hold', {
         p_legal_hold_id: data.id,
         p_action: 'apply',
-      });
+      })
     }
 
     return new Response(JSON.stringify({ data }), {
       status: 201,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   }
 
   if (resource === 'apply-policy') {
     // Apply retention policy to entity
-    const { entity_type, entity_id, document_class, sensitivity_level, dossier_type } = body;
+    const { entity_type, entity_id, document_class, sensitivity_level, dossier_type } = body
 
     const { data, error } = await supabase.rpc('apply_retention_policy', {
       p_entity_type: entity_type,
@@ -593,7 +598,7 @@ async function handlePost(
       p_document_class: document_class || null,
       p_sensitivity_level: sensitivity_level || null,
       p_dossier_type: dossier_type || null,
-    });
+    })
 
     if (error) {
       return new Response(
@@ -608,19 +613,19 @@ async function handlePost(
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     return new Response(JSON.stringify({ status_id: data }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   }
 
   if (resource === 'manual-hold') {
     // Set manual hold on entity
-    const { entity_type, entity_id, reason, until } = body;
+    const { entity_type, entity_id, reason, until } = body
 
     const { data, error } = await supabase
       .from('entity_retention_status')
@@ -633,10 +638,10 @@ async function handlePost(
           manual_hold_by: userId,
           manual_hold_until: until || null,
         },
-        { onConflict: 'entity_type,entity_id' }
+        { onConflict: 'entity_type,entity_id' },
       )
       .select()
-      .single();
+      .single()
 
     if (error) {
       return new Response(
@@ -651,24 +656,24 @@ async function handlePost(
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     return new Response(JSON.stringify({ data }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   }
 
   if (resource === 'release-hold') {
     // Release legal hold
-    const { legal_hold_id } = body;
+    const { legal_hold_id } = body
 
     const { data, error } = await supabase.rpc('manage_legal_hold', {
       p_legal_hold_id: legal_hold_id,
       p_action: 'release',
-    });
+    })
 
     if (error) {
       return new Response(
@@ -683,14 +688,14 @@ async function handlePost(
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     return new Response(JSON.stringify({ affected_count: data }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   }
 
   return new Response(
@@ -704,8 +709,8 @@ async function handlePost(
     {
       status: 404,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    }
-  );
+    },
+  )
 }
 
 async function handleUpdate(
@@ -713,7 +718,7 @@ async function handleUpdate(
   req: Request,
   resourceId: string | null,
   resource: string,
-  userId: string
+  userId: string,
 ) {
   if (!resourceId) {
     return new Response(
@@ -727,11 +732,11 @@ async function handleUpdate(
       {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+      },
+    )
   }
 
-  const body = await req.json();
+  const body = await req.json()
 
   if (resource === 'policies') {
     const { data, error } = await supabase
@@ -742,7 +747,7 @@ async function handleUpdate(
       })
       .eq('id', resourceId)
       .select()
-      .single();
+      .single()
 
     if (error) {
       return new Response(
@@ -757,13 +762,13 @@ async function handleUpdate(
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     return new Response(JSON.stringify({ data }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   }
 
   if (resource === 'legal-holds') {
@@ -775,7 +780,7 @@ async function handleUpdate(
       })
       .eq('id', resourceId)
       .select()
-      .single();
+      .single()
 
     if (error) {
       return new Response(
@@ -790,13 +795,13 @@ async function handleUpdate(
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     return new Response(JSON.stringify({ data }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    })
   }
 
   return new Response(
@@ -810,14 +815,14 @@ async function handleUpdate(
     {
       status: 404,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    }
-  );
+    },
+  )
 }
 
 async function handleDelete(
   supabase: ReturnType<typeof createClient>,
   resourceId: string | null,
-  resource: string
+  resource: string,
 ) {
   if (!resourceId) {
     return new Response(
@@ -831,8 +836,8 @@ async function handleDelete(
       {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+      },
+    )
   }
 
   if (resource === 'policies') {
@@ -840,7 +845,7 @@ async function handleDelete(
     const { error } = await supabase
       .from('data_retention_policies')
       .update({ status: 'archived' })
-      .eq('id', resourceId);
+      .eq('id', resourceId)
 
     if (error) {
       return new Response(
@@ -855,14 +860,14 @@ async function handleDelete(
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     return new Response(null, {
       status: 204,
       headers: corsHeaders,
-    });
+    })
   }
 
   if (resource === 'legal-holds') {
@@ -871,7 +876,7 @@ async function handleDelete(
       .from('legal_holds')
       .select('status')
       .eq('id', resourceId)
-      .single();
+      .single()
 
     if (hold?.status === 'active') {
       return new Response(
@@ -885,11 +890,11 @@ async function handleDelete(
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
-    const { error } = await supabase.from('legal_holds').delete().eq('id', resourceId);
+    const { error } = await supabase.from('legal_holds').delete().eq('id', resourceId)
 
     if (error) {
       return new Response(
@@ -904,14 +909,14 @@ async function handleDelete(
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     return new Response(null, {
       status: 204,
       headers: corsHeaders,
-    });
+    })
   }
 
   return new Response(
@@ -925,6 +930,6 @@ async function handleDelete(
     {
       status: 404,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    }
-  );
+    },
+  )
 }

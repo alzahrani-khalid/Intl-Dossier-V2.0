@@ -20,6 +20,8 @@ export type {
   UseGenerateBriefReturn,
 } from './hooks/useGenerateBrief'
 
+export { useCreateManualBrief } from './hooks/useCreateManualBrief'
+
 // Repository
 export * as aiRepo from './repositories/ai.repository'
 

@@ -439,6 +439,7 @@ export function AvailabilityPollCreator({
                   className="text-destructive h-8 w-8"
                   onClick={() => removeSlot(index)}
                   disabled={slots.length <= 1}
+                  aria-label={t('common:common.actions.remove')}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

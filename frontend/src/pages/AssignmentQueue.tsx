@@ -155,7 +155,7 @@ export function AssignmentQueuePage() {
           </Card>
         ) : data?.items && data.items.length > 0 ? (
           data.items.map((item) => (
-            <Card key={item.queue_id}>
+            <Card key={item.id}>
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -169,14 +169,14 @@ export function AssignmentQueuePage() {
                         })}
                       </Badge>
                       <Badge variant="secondary">
-                        {t('queue.position')} #{item.position}
+                        {t('queue.position')} #{item.queue_position}
                       </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground">
                       {t('queue.workItemId')}: {item.work_item_id}
                     </p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {t('queue.createdAt')}: {new Date(item.queued_at).toLocaleString(dateLocale)}
+                      {t('queue.createdAt')}: {new Date(item.created_at).toLocaleString(dateLocale)}
                     </p>
                     {item.required_skills && item.required_skills.length > 0 && (
                       <div className="mt-2">
@@ -185,8 +185,8 @@ export function AssignmentQueuePage() {
                         </p>
                         <div className="flex flex-wrap gap-1">
                           {item.required_skills.map((skill) => (
-                            <Badge key={skill.skill_id} variant="outline" className="text-xs">
-                              {skill.skill_name_en}
+                            <Badge key={skill} variant="outline" className="text-xs">
+                              {skill}
                             </Badge>
                           ))}
                         </div>

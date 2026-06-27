@@ -14,7 +14,9 @@ import type { UpdatePositionVariables } from '../types'
 /**
  * Hook to update a position with optimistic updates
  */
-export const useUpdatePosition = (): ReturnType<typeof useMutation<Position, Error, UpdatePositionVariables>> => {
+export const useUpdatePosition = (): ReturnType<
+  typeof useMutation<Position, Error, UpdatePositionVariables>
+> => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -43,6 +45,9 @@ export const useUpdatePosition = (): ReturnType<typeof useMutation<Position, Err
     onSuccess: (data, { id }) => {
       queryClient.setQueryData(['positions', 'detail', id], data)
       queryClient.invalidateQueries({ queryKey: ['positions', 'list'] })
+      // Edit creates a new version server-side — refresh the version-history tab
+      // (positionKeys.versions(id) === ['positions','versions',id]).
+      queryClient.invalidateQueries({ queryKey: ['positions', 'versions', id] })
     },
   })
 }

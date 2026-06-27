@@ -121,7 +121,7 @@ serve(async (req: Request) => {
     const { data: userProfile } = await supabase
       .from('profiles')
       .select('role')
-      .eq('id', user.id)
+      .eq('user_id', user.id)
       .single();
 
     const isAuthor = position.author_id === user.id;

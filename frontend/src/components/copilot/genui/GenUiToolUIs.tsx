@@ -13,9 +13,10 @@
  *
  * READ-ONLY: unlike the 73-03 HITL renderers, these have NO approval and call NO addResult.
  * They render from `result` once `status.type === 'complete'`; while the tool is still
- * running they render nothing (let the existing streaming/text parts show). A null/empty
- * result renders nothing here, so the default text part stays — and that text names no
- * reason at all (indistinguishable-empty, enforced upstream in the tools themselves).
+ * running they show the per-tool running cue (ToolRunningIndicator) so the analyst gets
+ * immediate feedback during the tool round-trip. A null/empty result renders nothing here,
+ * so the default text part stays — and that text names no reason at all
+ * (indistinguishable-empty, enforced upstream in the tools themselves).
  *
  * Mounted as <GenUiToolUIs /> inside AssistantRuntimeProvider in CopilotSurface, ALONGSIDE
  * the 73-03 <ProposeToolUIs /> (both register on the same provider).
@@ -44,6 +45,9 @@ const GetDossierToolUI = makeAssistantToolUI<
 >({
   toolName: 'get_dossier',
   render: ({ status, result }): ReactElement | null => {
+    if (status.type === 'running') {
+      return <ToolRunningIndicator toolName="get_dossier" />
+    }
     if (!isComplete(status)) return null
     const dossier = result?.dossier
     if (dossier == null) return null
@@ -58,6 +62,9 @@ const ListDossiersToolUI = makeAssistantToolUI<
 >({
   toolName: 'list_dossiers',
   render: ({ status, result }): ReactElement | null => {
+    if (status.type === 'running') {
+      return <ToolRunningIndicator toolName="list_dossiers" />
+    }
     if (!isComplete(status)) return null
     const dossiers = Array.isArray(result?.dossiers) ? result.dossiers : []
     if (dossiers.length === 0) return null
@@ -81,6 +88,9 @@ const ReadSignalsToolUI = makeAssistantToolUI<
 >({
   toolName: 'read_signals',
   render: ({ status, result }): ReactElement | null => {
+    if (status.type === 'running') {
+      return <ToolRunningIndicator toolName="read_signals" />
+    }
     if (!isComplete(status)) return null
     const signals = Array.isArray(result?.signals) ? result.signals : []
     if (signals.length === 0) return null

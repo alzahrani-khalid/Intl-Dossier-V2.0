@@ -935,7 +935,10 @@
   color: var(--ink);
 }
 .dir-bureau .tab.active {
-  color: var(--accent);
+  /* Text uses --accent-ink (the darker accent-for-text token); raw --accent
+     (#bf5542) is 4.23:1 on --surface, just below WCAG AA. The 2px underline
+     keeps brand --accent (non-text, 3:1 suffices). */
+  color: var(--accent-ink);
   border-bottom-color: var(--accent);
   font-weight: 600;
 }

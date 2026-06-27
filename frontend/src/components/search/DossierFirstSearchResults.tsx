@@ -31,6 +31,7 @@ import {
   Folder,
   ListTodo,
   TrendingUp,
+  Search,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getDossierRouteSegment } from '@/lib/dossier-routes'
@@ -545,7 +546,7 @@ export function DossierFirstSearchResults({
   if (!isLoading && dossiers.length === 0 && relatedWork.length === 0) {
     return (
       <div className="py-12 text-center">
-        <div className="mb-4 text-6xl">🔍</div>
+        <Search className="mx-auto mb-4 size-12 text-muted-foreground" aria-hidden="true" />
         <h3 className="mb-2 text-lg font-semibold text-foreground">{t('empty.title')}</h3>
         <p className="text-muted-foreground">{t('empty.description')}</p>
       </div>

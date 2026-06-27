@@ -15,6 +15,13 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -181,18 +188,37 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                   {t('form.requestType.label')}
                   <span className="ms-1 text-destructive">*</span>
                 </label>
-                <select
-                  {...register('requestType')}
-                  aria-invalid={!!errors.requestType}
-                  aria-describedby={errors.requestType ? 'requestType-error' : undefined}
-                  className="flex h-12 w-full items-center rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-destructive sm:text-sm"
+                <Select
+                  value={requestType || undefined}
+                  onValueChange={(value) =>
+                    setValue('requestType', value as IntakeFormData['requestType'], {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                    })
+                  }
                 >
-                  <option value="">{t('form.requestType.placeholder')}</option>
-                  <option value="engagement">{t('form.requestType.options.engagement')}</option>
-                  <option value="position">{t('form.requestType.options.position')}</option>
-                  <option value="mou_action">{t('form.requestType.options.mou_action')}</option>
-                  <option value="foresight">{t('form.requestType.options.foresight')}</option>
-                </select>
+                  <SelectTrigger
+                    className="h-12"
+                    aria-invalid={!!errors.requestType}
+                    aria-describedby={errors.requestType ? 'requestType-error' : undefined}
+                  >
+                    <SelectValue placeholder={t('form.requestType.placeholder')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="engagement">
+                      {t('form.requestType.options.engagement')}
+                    </SelectItem>
+                    <SelectItem value="position">
+                      {t('form.requestType.options.position')}
+                    </SelectItem>
+                    <SelectItem value="mou_action">
+                      {t('form.requestType.options.mou_action')}
+                    </SelectItem>
+                    <SelectItem value="foresight">
+                      {t('form.requestType.options.foresight')}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
                 {errors.requestType && (
                   <p id="requestType-error" className="mt-1 text-sm text-destructive">
                     {errors.requestType.message}
@@ -292,18 +318,29 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                   {t('form.urgency.label')}
                   <span className="ms-1 text-destructive">*</span>
                 </label>
-                <select
-                  {...register('urgency')}
-                  aria-invalid={!!errors.urgency}
-                  aria-describedby={errors.urgency ? 'urgency-error' : undefined}
-                  className="flex h-12 w-full items-center rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-destructive sm:text-sm"
+                <Select
+                  value={urgency || undefined}
+                  onValueChange={(value) =>
+                    setValue('urgency', value as IntakeFormData['urgency'], {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                    })
+                  }
                 >
-                  <option value="">{t('form.urgency.placeholder')}</option>
-                  <option value="low">{t('form.urgency.options.low')}</option>
-                  <option value="medium">{t('form.urgency.options.medium')}</option>
-                  <option value="high">{t('form.urgency.options.high')}</option>
-                  <option value="critical">{t('form.urgency.options.critical')}</option>
-                </select>
+                  <SelectTrigger
+                    className="h-12"
+                    aria-invalid={!!errors.urgency}
+                    aria-describedby={errors.urgency ? 'urgency-error' : undefined}
+                  >
+                    <SelectValue placeholder={t('form.urgency.placeholder')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">{t('form.urgency.options.low')}</SelectItem>
+                    <SelectItem value="medium">{t('form.urgency.options.medium')}</SelectItem>
+                    <SelectItem value="high">{t('form.urgency.options.high')}</SelectItem>
+                    <SelectItem value="critical">{t('form.urgency.options.critical')}</SelectItem>
+                  </SelectContent>
+                </Select>
                 {errors.urgency && (
                   <p id="urgency-error" className="mt-1 text-sm text-destructive">
                     {errors.urgency.message}

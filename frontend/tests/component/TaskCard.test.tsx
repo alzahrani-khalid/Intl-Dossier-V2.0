@@ -308,7 +308,7 @@ describe('TaskCard Component', () => {
       renderTaskCard()
 
       const card = getTaskCard()
-      expect(card.className).toContain('hover:shadow-md')
+      expect(card.className).toContain('hover:bg-line-soft')
     })
 
     it('should show cursor pointer for clickable card', () => {

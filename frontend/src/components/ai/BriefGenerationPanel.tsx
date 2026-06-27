@@ -16,6 +16,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Label } from '@/components/ui/label'
 import { useGenerateBrief, BriefGenerationParams } from '@/hooks/useGenerateBrief'
+import { useCreateManualBrief } from '@/domains/ai'
 import { formatAIError } from '@/utils/ai-errors'
 import {
   Loader2,
@@ -62,9 +63,11 @@ export function BriefGenerationPanel({
     recommendations: '',
   })
   const [manualNotice, setManualNotice] = useState<string | null>(null)
+  const [manualBrief, setManualBrief] = useState<{ id: string; title: string } | null>(null)
 
   const { generate, brief, streamingContent, isGenerating, progress, error, cancel, retry, reset } =
     useGenerateBrief()
+  const createManualBrief = useCreateManualBrief()
 
   // Track phase based on state changes
   useEffect(() => {
@@ -99,18 +102,21 @@ export function BriefGenerationPanel({
   }
 
   const handleViewBrief = () => {
-    if (brief?.id && onBriefGenerated) {
-      onBriefGenerated(brief.id)
+    const briefId = brief?.id ?? manualBrief?.id
+    if (briefId && onBriefGenerated) {
+      onBriefGenerated(briefId)
     }
   }
 
   const handleGenerateAnother = () => {
     reset() // Clear all hook state including brief
+    createManualBrief.reset()
     setPhase('idle')
     setCustomPrompt('')
     setShowAdvanced(false)
     setManualContent({ summary: '', background: '', recommendations: '' })
     setManualNotice(null)
+    setManualBrief(null)
   }
 
   const handleSwitchToManual = () => {
@@ -120,15 +126,28 @@ export function BriefGenerationPanel({
   }
 
   const handleManualSubmit = (): void => {
-    // No create-brief endpoint exists yet; do not pretend to save. The manual
-    // content is intentionally NOT persisted — surfacing an honest notice instead
-    // of silently dropping the user's text.
-    // Tracked: .planning/todos/260530-followup-manual-brief-endpoint.md
-    setManualNotice(
-      t(
-        'fallback.notAvailable',
-        "Saving a manual brief isn't available yet — your text has not been saved.",
-      ),
+    setManualNotice(null)
+    createManualBrief.mutate(
+      {
+        engagementId,
+        dossierId,
+        summary: manualContent.summary,
+        background: manualContent.background || undefined,
+        recommendations: manualContent.recommendations || undefined,
+      },
+      {
+        onSuccess: (data) => {
+          setManualBrief({ id: data.id, title: data.title })
+          setPhase('success')
+        },
+        onError: (err) => {
+          setManualNotice(
+            err instanceof Error
+              ? err.message
+              : t('fallback.saveError', 'Failed to save the brief. Please try again.'),
+          )
+        },
+      },
     )
   }
 
@@ -169,7 +188,7 @@ export function BriefGenerationPanel({
 
       <CardContent className="space-y-4">
         {/* Three-step progress indicator */}
-        {(phase === 'context' || phase === 'generating' || phase === 'success') && (
+        {(phase === 'context' || phase === 'generating' || (phase === 'success' && !!brief)) && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               {/* Step indicators */}
@@ -282,15 +301,19 @@ export function BriefGenerationPanel({
           </Alert>
         )}
 
-        {/* Success Display */}
-        {phase === 'success' && brief && (
+        {/* Success Display (AI-generated or manually saved) */}
+        {phase === 'success' && (brief || manualBrief) && (
           <Alert className={briefSuccessColors.alert}>
             <CheckCircle className={`h-4 w-4 ${briefSuccessColors.icon}`} />
             <AlertTitle className={briefSuccessColors.title}>
-              {t('success', 'Brief generated successfully!')}
+              {manualBrief && !brief
+                ? t('fallback.saved', 'Brief saved successfully!')
+                : t('success', 'Brief generated successfully!')}
             </AlertTitle>
             <AlertDescription className="mt-3">
-              <p className={`text-sm ${briefSuccessColors.description} mb-3`}>{brief.title}</p>
+              <p className={`text-sm ${briefSuccessColors.description} mb-3`}>
+                {brief?.title ?? manualBrief?.title}
+              </p>
               <div className="flex items-center gap-2">
                 <Button variant="default" size="sm" onClick={handleViewBrief} className="gap-1">
                   <Eye className="h-3 w-3" />
@@ -453,10 +476,14 @@ export function BriefGenerationPanel({
               <div className="flex flex-col sm:flex-row gap-2">
                 <Button
                   onClick={handleManualSubmit}
-                  disabled={!manualContent.summary.trim()}
+                  disabled={!manualContent.summary.trim() || createManualBrief.isPending}
                   className="flex-1 min-h-11"
                 >
-                  <CheckCircle className="h-4 w-4 me-2" />
+                  {createManualBrief.isPending ? (
+                    <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                  ) : (
+                    <CheckCircle className="h-4 w-4 me-2" />
+                  )}
                   {t('fallback.submit', 'Submit Brief')}
                 </Button>
                 <Button variant="outline" onClick={handleGenerateAnother} className="min-h-11">

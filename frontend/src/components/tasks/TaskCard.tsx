@@ -39,7 +39,7 @@ export function TaskCard({
 
   return (
     <Card
-      className={`hover:shadow-md transition-shadow cursor-pointer ${className}`}
+      className={`transition-colors hover:bg-line-soft cursor-pointer ${className}`}
       onClick={() => onClick?.(task)}
     >
       <CardContent className="p-4 sm:p-6">

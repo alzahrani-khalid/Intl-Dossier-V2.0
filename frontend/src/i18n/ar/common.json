@@ -53,6 +53,7 @@
     "edit": "تعديل",
     "view": "عرض",
     "download": "تحميل",
+    "notYetAvailable": "غير متاح بعد",
     "close": "إغلاق",
     "confirm": "تأكيد",
     "completed": "مكتمل",
@@ -90,6 +91,7 @@
     "english": "الإنجليزية",
     "arabic": "العربية",
     "clear": "مسح",
+    "reorder": "إعادة الترتيب",
     "notFound": {
       "title": "الصفحة غير موجودة",
       "message": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
@@ -578,10 +580,11 @@
       "title": "تفاصيل ما بعد الإجراء",
       "basicInfo": "المعلومات الأساسية",
       "attendees": "الحضور",
-      "attendeesPlaceholder": "أدخل الأسماء مفصولة بفواصل",
-      "attendeesHelp": "افصل بين الأسماء المتعددة بفواصل",
+      "attendeesPlaceholder": "اكتب اسمًا ثم اضغط Enter",
+      "attendeesHelp": "أضف الحضور واحدًا تلو الآخر — اضغط Enter أو فاصلة بعد كل اسم",
       "attendeesRequired": "مطلوب حضور واحد على الأقل",
       "attendeesMax": "الحد الأقصى 100 حاضر",
+      "removeAttendee": "إزالة {{name}}",
       "notes": "ملاحظات",
       "notesPlaceholder": "أضف أي ملاحظات أو سياق إضافي",
       "confidential": "تمييز كسري",
@@ -1140,6 +1143,20 @@
       "manualSearch": "استخدام البحث اليدوي",
       "stillUseManualSearch": "أو استخدم البحث اليدوي",
       "retry": "إعادة المحاولة"
+    },
+    "dossierTypes": {
+      "dossier": "دوسيه",
+      "position": "موقف",
+      "mou": "مذكرة تفاهم",
+      "engagement": "دوسيه ارتباط",
+      "assignment": "تكليف",
+      "commitment": "التزام",
+      "intelligence_signal": "إشارة استخبارات",
+      "organization": "دوسيه منظمة",
+      "country": "دوسيه دولة",
+      "forum": "دوسيه منتدى",
+      "working_group": "دوسيه مجموعة عمل",
+      "topic": "دوسيه موضوع"
     }
   },
   "pullToRefresh": {

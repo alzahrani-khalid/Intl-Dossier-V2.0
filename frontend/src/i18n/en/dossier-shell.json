@@ -16,6 +16,7 @@
   "header": {
     "relationships": "Relationships",
     "loading": "Loading dossier...",
+    "home": "Home",
     "dossierHub": "Dossier Hub",
     "breadcrumb": "Breadcrumb",
     "realtimeConnected": "Real-time connected",

@@ -387,5 +387,28 @@
       "cancel": "إلغاء",
       "warning": "لا يمكن التراجع عن هذا الإجراء"
     }
+  },
+  "my_assignments": "تكليفاتي",
+  "my_assignments_description": "عرض وإدارة عناصر العمل المكلّف بها عبر جميع الأنواع",
+  "active_assignments": "التكليفات النشطة",
+  "completed_assignments": "التكليفات المكتملة",
+  "total_active": "إجمالي النشطة",
+  "at_risk": "في خطر",
+  "breached": "تجاوز مدة الاتفاقية",
+  "error_loading": "فشل تحميل التكليفات. يرجى المحاولة مرة أخرى.",
+  "no_assignments": "لا توجد تكليفات",
+  "work_item": "عنصر العمل",
+  "type": "النوع",
+  "sla_remaining": "المتبقي من مدة الاتفاقية",
+  "assigned_at": "تاريخ التكليف",
+  "all_statuses": "جميع الحالات",
+  "all_priorities": "جميع الأولويات",
+  "all_types": "جميع الأنواع",
+  "work_type": {
+    "label": "نوع العمل",
+    "dossier": "دوسيه",
+    "ticket": "تذكرة",
+    "position": "موقف",
+    "task": "مهمة"
   }
 }

@@ -1,95 +1,104 @@
 /**
  * Supabase Edge Function: Populate Countries v2 (with Progress Tracking)
- * 
+ *
  * Fetches data from REST Countries API and creates/updates country dossiers
  * with real-time progress tracking
- * 
+ *
  * Endpoint: /functions/v1/populate-countries-v2
  * Method: POST
  * Auth: Required (admin only)
  */
 
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+}
 
 interface RestCountry {
-  cca2: string;
-  cca3: string;
+  cca2: string
+  cca3: string
   name: {
-    common: string;
-    official: string;
-  };
-  capital?: string[];
-  region: string;
-  subregion?: string;
-  population: number;
-  area: number;
+    common: string
+    official: string
+  }
+  capital?: string[]
+  region: string
+  subregion?: string
+  population: number
+  area: number
   flags: {
-    svg: string;
-    png: string;
-  };
-  translations?: Record<string, { official: string; common: string }>;
+    svg: string
+    png: string
+  }
+  translations?: Record<string, { official: string; common: string }>
 }
 
 serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders })
   }
 
   try {
     // Initialize Supabase client
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    const supabase = createClient(supabaseUrl, supabaseKey)
 
     // Verify authentication
-    const authHeader = req.headers.get('Authorization');
+    const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: 'Missing authorization header' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    const token = authHeader.replace('Bearer ', '')
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token)
 
     if (authError || !user) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
-    // Check if user has admin role
-    const userRole = user.user_metadata?.role || user.app_metadata?.role;
-    
+    // Check if user has admin role from public.users (never trust client-settable metadata)
+    const { data: userRecord } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+    const userRole = userRecord?.role
+
     if (userRole !== 'admin' && userRole !== 'super_admin') {
-      return new Response(
-        JSON.stringify({ error: 'Admin access required' }),
-        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: 'Admin access required' }), {
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
-    console.log('[Populate Countries v2] Starting operation for user:', user.id);
+    console.log('[Populate Countries v2] Starting operation for user:', user.id)
 
     // Fetch all countries from REST Countries API
-    console.log('[Populate Countries v2] Fetching from REST Countries API...');
-    const apiUrl = 'https://restcountries.com/v3.1/all?fields=cca2,cca3,name,capital,region,subregion,population,area,flags,translations';
-    const apiResponse = await fetch(apiUrl);
+    console.log('[Populate Countries v2] Fetching from REST Countries API...')
+    const apiUrl =
+      'https://restcountries.com/v3.1/all?fields=cca2,cca3,name,capital,region,subregion,population,area,flags,translations'
+    const apiResponse = await fetch(apiUrl)
 
     if (!apiResponse.ok) {
-      throw new Error(`REST Countries API error: ${apiResponse.statusText}`);
+      throw new Error(`REST Countries API error: ${apiResponse.statusText}`)
     }
 
-    const countries: RestCountry[] = await apiResponse.json();
-    console.log(`[Populate Countries v2] Fetched ${countries.length} countries`);
+    const countries: RestCountry[] = await apiResponse.json()
+    console.log(`[Populate Countries v2] Fetched ${countries.length} countries`)
 
     // Create progress record
     const { data: progressRecord, error: progressError } = await supabase
@@ -104,29 +113,29 @@ serve(async (req) => {
         status: 'running',
       })
       .select()
-      .single();
+      .single()
 
     if (progressError || !progressRecord) {
-      console.error('[Populate Countries v2] Failed to create progress record:', progressError);
-      throw new Error('Failed to create progress tracking');
+      console.error('[Populate Countries v2] Failed to create progress record:', progressError)
+      throw new Error('Failed to create progress tracking')
     }
 
-    const progressId = progressRecord.id;
-    console.log('[Populate Countries v2] Created progress record:', progressId);
+    const progressId = progressRecord.id
+    console.log('[Populate Countries v2] Created progress record:', progressId)
 
     // Process countries with progress updates
-    let processed = 0;
-    let successful = 0;
-    let failed = 0;
-    const errors: string[] = [];
-    const updateInterval = 10; // Update progress every 10 countries
+    let processed = 0
+    let successful = 0
+    let failed = 0
+    const errors: string[] = []
+    const updateInterval = 10 // Update progress every 10 countries
 
     for (const country of countries) {
       try {
-        const countryNameEn = country.name.common;
-        const countryNameAr = country.translations?.ara?.common || countryNameEn;
-        const capitalEn = country.capital?.[0] || null;
-        const capitalAr = country.translations?.ara?.official || capitalEn;
+        const countryNameEn = country.name.common
+        const countryNameAr = country.translations?.ara?.common || countryNameEn
+        const capitalEn = country.capital?.[0] || null
+        const capitalAr = country.translations?.ara?.official || capitalEn
 
         // Check if country exists
         const { data: existingDossier } = await supabase
@@ -134,7 +143,7 @@ serve(async (req) => {
           .select('id')
           .eq('type', 'country')
           .eq('name_en', countryNameEn)
-          .single();
+          .single()
 
         if (existingDossier) {
           // Update existing
@@ -151,13 +160,13 @@ serve(async (req) => {
               area_sq_km: country.area,
               flag_url: country.flags.svg,
             })
-            .eq('id', existingDossier.id);
+            .eq('id', existingDossier.id)
 
           if (updateError) {
-            failed++;
-            errors.push(`${countryNameEn}: ${updateError.message}`);
+            failed++
+            errors.push(`${countryNameEn}: ${updateError.message}`)
           } else {
-            successful++;
+            successful++
           }
         } else {
           // Create new
@@ -180,39 +189,37 @@ serve(async (req) => {
               },
             })
             .select('id')
-            .single();
+            .single()
 
           if (dossierError) {
-            failed++;
-            errors.push(`${countryNameEn}: ${dossierError.message}`);
-            continue;
+            failed++
+            errors.push(`${countryNameEn}: ${dossierError.message}`)
+            continue
           }
 
-          const { error: extensionError } = await supabase
-            .from('countries')
-            .insert({
-              id: newDossier.id,
-              iso_code_2: country.cca2,
-              iso_code_3: country.cca3,
-              capital_en: capitalEn,
-              capital_ar: capitalAr,
-              region: country.region,
-              subregion: country.subregion || null,
-              population: country.population,
-              area_sq_km: country.area,
-              flag_url: country.flags.svg,
-            });
+          const { error: extensionError } = await supabase.from('countries').insert({
+            id: newDossier.id,
+            iso_code_2: country.cca2,
+            iso_code_3: country.cca3,
+            capital_en: capitalEn,
+            capital_ar: capitalAr,
+            region: country.region,
+            subregion: country.subregion || null,
+            population: country.population,
+            area_sq_km: country.area,
+            flag_url: country.flags.svg,
+          })
 
           if (extensionError) {
-            failed++;
-            errors.push(`${countryNameEn}: ${extensionError.message}`);
-            await supabase.from('dossiers').delete().eq('id', newDossier.id);
+            failed++
+            errors.push(`${countryNameEn}: ${extensionError.message}`)
+            await supabase.from('dossiers').delete().eq('id', newDossier.id)
           } else {
-            successful++;
+            successful++
           }
         }
 
-        processed++;
+        processed++
 
         // Update progress every N countries
         if (processed % updateInterval === 0 || processed === countries.length) {
@@ -224,15 +231,18 @@ serve(async (req) => {
               failed_items: failed,
               updated_at: new Date().toISOString(),
             })
-            .eq('id', progressId);
+            .eq('id', progressId)
 
-          console.log(`[Populate Countries v2] Progress: ${processed}/${countries.length} (${Math.round((processed / countries.length) * 100)}%)`);
+          console.log(
+            `[Populate Countries v2] Progress: ${processed}/${countries.length} (${Math.round((processed / countries.length) * 100)}%)`,
+          )
         }
-
       } catch (error) {
-        failed++;
-        errors.push(`${country.name.common}: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        processed++;
+        failed++
+        errors.push(
+          `${country.name.common}: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        )
+        processed++
       }
     }
 
@@ -247,9 +257,9 @@ serve(async (req) => {
         completed_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
-      .eq('id', progressId);
+      .eq('id', progressId)
 
-    console.log('[Populate Countries v2] Completed:', { processed, successful, failed });
+    console.log('[Populate Countries v2] Completed:', { processed, successful, failed })
 
     return new Response(
       JSON.stringify({
@@ -268,10 +278,10 @@ serve(async (req) => {
       {
         status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+      },
+    )
   } catch (error) {
-    console.error('[Populate Countries v2] Fatal error:', error);
+    console.error('[Populate Countries v2] Fatal error:', error)
     return new Response(
       JSON.stringify({
         success: false,
@@ -282,8 +292,7 @@ serve(async (req) => {
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+      },
+    )
   }
-});
-
+})

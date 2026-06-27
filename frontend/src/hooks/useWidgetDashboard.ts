@@ -189,6 +189,8 @@ async function fetchKpiData(metric: string): Promise<KpiData> {
             .eq('status', 'active')
             .lt('created_at', weekAgo.toISOString()),
         ])
+        if (current.error) throw current.error
+        if (previous.error) throw previous.error
         value = current.count || 0
         previousValue = previous.count || value
         break
@@ -196,25 +198,28 @@ async function fetchKpiData(metric: string): Promise<KpiData> {
       case 'pending-tasks': {
         const [current, previous] = await Promise.all([
           supabase
-            .from('work_items')
+            .from('unified_work_items')
             .select('id', { count: 'exact', head: true })
             .eq('status', 'pending'),
           supabase
-            .from('work_items')
+            .from('unified_work_items')
             .select('id', { count: 'exact', head: true })
             .eq('status', 'pending')
             .lt('created_at', weekAgo.toISOString()),
         ])
+        if (current.error) throw current.error
+        if (previous.error) throw previous.error
         value = current.count || 0
         previousValue = previous.count || value
         break
       }
       case 'overdue-items': {
-        const { count } = await supabase
-          .from('work_items')
+        const { count, error } = await supabase
+          .from('unified_work_items')
           .select('id', { count: 'exact', head: true })
           .lt('deadline', now.toISOString())
           .neq('status', 'completed')
+        if (error) throw error
         value = count || 0
         previousValue = value // No historical comparison for overdue
         break
@@ -222,27 +227,30 @@ async function fetchKpiData(metric: string): Promise<KpiData> {
       case 'completed-this-week': {
         const [current, previous] = await Promise.all([
           supabase
-            .from('work_items')
+            .from('unified_work_items')
             .select('id', { count: 'exact', head: true })
             .eq('status', 'completed')
             .gte('updated_at', weekAgo.toISOString()),
           supabase
-            .from('work_items')
+            .from('unified_work_items')
             .select('id', { count: 'exact', head: true })
             .eq('status', 'completed')
             .gte('updated_at', twoWeeksAgo.toISOString())
             .lt('updated_at', weekAgo.toISOString()),
         ])
+        if (current.error) throw current.error
+        if (previous.error) throw previous.error
         value = current.count || 0
         previousValue = previous.count || value
         break
       }
       case 'engagement-count': {
-        const { count } = await supabase
+        const { count, error } = await supabase
           .from('dossiers')
           .select('id', { count: 'exact', head: true })
           .eq('type', 'engagement')
           .eq('status', 'active')
+        if (error) throw error
         value = count || 0
         previousValue = value
         break
@@ -259,6 +267,8 @@ async function fetchKpiData(metric: string): Promise<KpiData> {
             .gte('created_at', twoWeeksAgo.toISOString())
             .lt('created_at', weekAgo.toISOString()),
         ])
+        if (current.error) throw current.error
+        if (previous.error) throw previous.error
         value = current.count || 0
         previousValue = previous.count || value
         break
@@ -278,14 +288,9 @@ async function fetchKpiData(metric: string): Promise<KpiData> {
       sparklineData: [], // Could add historical data if needed
     }
   } catch (error) {
+    // Surface the error to the query state instead of returning silent zeros.
     console.error('Failed to fetch KPI data:', error)
-    return {
-      value: 0,
-      previousValue: 0,
-      trend: 'neutral',
-      trendPercentage: 0,
-      sparklineData: [],
-    }
+    throw error instanceof Error ? error : new Error('Failed to fetch KPI data')
   }
 }
 
@@ -293,7 +298,8 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
   try {
     switch (dataSource) {
       case 'work-items-by-status': {
-        const { data } = await supabase.from('work_items').select('status')
+        const { data, error } = await supabase.from('unified_work_items').select('status')
+        if (error) throw error
 
         const statusCounts: Record<string, number> = {
           pending: 0,
@@ -336,7 +342,8 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
         }
       }
       case 'work-items-by-source': {
-        const { data } = await supabase.from('work_items').select('source')
+        const { data, error } = await supabase.from('unified_work_items').select('source')
+        if (error) throw error
 
         const sourceCounts: Record<string, number> = {
           task: 0,
@@ -375,7 +382,7 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
       case 'completion-trend': {
         const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
         const { data } = await supabase
-          .from('work_items')
+          .from('unified_work_items')
           .select('updated_at')
           .eq('status', 'completed')
           .gte('updated_at', weekAgo.toISOString())
@@ -476,7 +483,7 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
       }
       case 'priority-breakdown': {
         const { data } = await supabase
-          .from('work_items')
+          .from('unified_work_items')
           .select('priority')
           .neq('status', 'completed')
 
@@ -518,25 +525,38 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
         }
       }
       case 'team-workload': {
-        const { data } = await supabase
-          .from('work_items')
-          .select('assignee_id, profiles!inner(display_name)')
+        const { data, error } = await supabase
+          .from('unified_work_items')
+          .select('assigned_to')
           .neq('status', 'completed')
+        if (error) throw error
 
-        const assigneeCounts: Record<string, { name: string; count: number }> = {}
-
+        const counts: Record<string, number> = {}
         for (const item of data || []) {
-          const id = item.assignee_id as string
-          const profile = item.profiles as unknown as { display_name: string }
-          if (id && profile?.display_name) {
-            if (!assigneeCounts[id]) {
-              assigneeCounts[id] = { name: profile.display_name, count: 0 }
-            }
-            assigneeCounts[id]!.count++
-          }
+          const id = item.assigned_to as string | null
+          if (id) counts[id] = (counts[id] ?? 0) + 1
         }
 
-        const sorted = Object.values(assigneeCounts)
+        const ids = Object.keys(counts)
+        if (ids.length === 0) {
+          return { labels: [], datasets: [] }
+        }
+
+        // unified_work_items is a view with no PostgREST profile embed; resolve
+        // assignee display names from public.users separately.
+        const { data: users, error: usersError } = await supabase
+          .from('users')
+          .select('id, full_name')
+          .in('id', ids)
+        if (usersError) throw usersError
+
+        const nameById = new Map<string, string>()
+        for (const u of users || []) {
+          if (u.id) nameById.set(u.id as string, (u.full_name as string) ?? (u.id as string))
+        }
+
+        const sorted = ids
+          .map((id) => ({ name: nameById.get(id) ?? id, count: counts[id]! }))
           .sort((a, b) => b.count - a.count)
           .slice(0, 10)
 
@@ -558,127 +578,120 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
         }
     }
   } catch (error) {
+    // Surface the error to the query state instead of returning a silent empty chart.
     console.error('Failed to fetch chart data:', error)
-    return { labels: [], datasets: [] }
+    throw error instanceof Error ? error : new Error('Failed to fetch chart data')
   }
 }
 
 async function fetchEvents(maxItems = 5): Promise<EventData[]> {
-  try {
-    const now = new Date()
-    const { data } = await supabase
-      .from('calendar_entries')
-      .select('id, title_en, title_ar, entry_type, start_datetime, description_en, description_ar')
-      .gte('start_datetime', now.toISOString())
-      .order('start_datetime', { ascending: true })
-      .limit(maxItems)
+  const now = new Date()
+  const { data, error } = await supabase
+    .from('calendar_entries')
+    .select('id, title_en, title_ar, entry_type, start_datetime, description_en, description_ar')
+    .gte('start_datetime', now.toISOString())
+    .order('start_datetime', { ascending: true })
+    .limit(maxItems)
 
-    return (data || []).map((entry) => ({
-      id: entry.id,
-      title: entry.title_en || entry.title_ar || 'Untitled',
-      type: entry.entry_type || 'other',
-      startDate: entry.start_datetime,
-      description: entry.description_en || entry.description_ar,
-    }))
-  } catch (error) {
-    console.error('Failed to fetch events:', error)
-    return []
-  }
+  // Surface the error to the query state instead of swallowing it into [].
+  if (error) throw error
+
+  return (data || []).map((entry) => ({
+    id: entry.id,
+    title: entry.title_en || entry.title_ar || 'Untitled',
+    type: entry.entry_type || 'other',
+    startDate: entry.start_datetime,
+    description: entry.description_en || entry.description_ar,
+  }))
 }
 
 async function fetchTasks(maxItems = 10, showCompleted = false) {
-  try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) return []
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return []
 
-    let query = supabase
-      .from('work_items')
-      .select('id, title, source, priority, status, deadline')
-      .eq('assignee_id', user.id)
-      .order('deadline', { ascending: true, nullsFirst: false })
-      .limit(maxItems)
+  let query = supabase
+    .from('unified_work_items')
+    .select('id, title, source, priority, status, deadline')
+    .eq('assigned_to', user.id)
+    .order('deadline', { ascending: true, nullsFirst: false })
+    .limit(maxItems)
 
-    if (!showCompleted) {
-      query = query.neq('status', 'completed')
-    }
-
-    const { data } = await query
-
-    const now = new Date()
-    return (data || []).map((item) => ({
-      id: item.id,
-      title: item.title,
-      source: item.source || 'task',
-      priority: item.priority || 'medium',
-      status: item.status || 'pending',
-      deadline: item.deadline,
-      isOverdue: item.deadline
-        ? new Date(item.deadline) < now && item.status !== 'completed'
-        : false,
-    }))
-  } catch (error) {
-    console.error('Failed to fetch tasks:', error)
-    return []
+  if (!showCompleted) {
+    query = query.neq('status', 'completed')
   }
+
+  const { data, error } = await query
+
+  // Surface the error to the query state instead of swallowing it into [].
+  if (error) throw error
+
+  const now = new Date()
+  return (data || []).map((item) => ({
+    id: item.id,
+    title: item.title,
+    source: item.source || 'task',
+    priority: item.priority || 'medium',
+    status: item.status || 'pending',
+    deadline: item.deadline,
+    isOverdue: item.deadline ? new Date(item.deadline) < now && item.status !== 'completed' : false,
+  }))
 }
 
 async function fetchNotifications(): Promise<NotificationData[]> {
-  try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) return []
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return []
 
-    const { data } = await supabase
-      .from('notifications')
-      .select('id, title, message, category, read, created_at, action_url')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(10)
+  const { data, error } = await supabase
+    .from('notifications')
+    .select('id, title, message, category, read, created_at, action_url')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(10)
 
-    return (data || []).map((n) => ({
-      id: n.id,
-      title: n.title,
-      message: n.message,
-      category: n.category || 'general',
-      isRead: n.read || false,
-      createdAt: n.created_at,
-      actionUrl: n.action_url,
-    }))
-  } catch (error) {
-    console.error('Failed to fetch notifications:', error)
-    return []
-  }
+  // Surface the error to the query state instead of swallowing it into [].
+  if (error) throw error
+
+  return (data || []).map((n) => ({
+    id: n.id,
+    title: n.title,
+    message: n.message,
+    category: n.category || 'general',
+    isRead: n.read || false,
+    createdAt: n.created_at,
+    actionUrl: n.action_url,
+  }))
 }
 
 async function fetchActivityFeed(maxItems = 15) {
-  try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) return []
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return []
 
-    const { data } = await supabase
-      .from('activity_log')
-      .select('id, action, entity_type, entity_id, created_at, metadata')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(maxItems)
+  // No activity_log table — the canonical activity table is activity_stream
+  // (action_type / actor_id, not action / user_id).
+  const { data, error } = await supabase
+    .from('activity_stream')
+    .select('id, action_type, entity_type, entity_id, created_at, metadata')
+    .eq('actor_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(maxItems)
 
-    return (data || []).map((entry) => ({
-      id: entry.id,
-      action: entry.action,
-      entityType: entry.entity_type,
-      entityId: entry.entity_id,
-      createdAt: entry.created_at,
-      metadata: entry.metadata,
-    }))
-  } catch (error) {
-    console.error('Failed to fetch activity feed:', error)
-    return []
-  }
+  // Surface the error to the query state instead of swallowing it into [].
+  if (error) throw error
+
+  return (data || []).map((entry) => ({
+    id: entry.id,
+    action: entry.action_type,
+    entityType: entry.entity_type,
+    entityId: entry.entity_id,
+    createdAt: entry.created_at,
+    metadata: entry.metadata,
+  }))
 }
 
 async function fetchStatsSummary() {
@@ -689,16 +702,16 @@ async function fetchStatsSummary() {
     const [activeDossiers, openWorkItems, completedThisMonth, overdueItems] = await Promise.all([
       supabase.from('dossiers').select('id', { count: 'exact', head: true }).eq('status', 'active'),
       supabase
-        .from('work_items')
+        .from('unified_work_items')
         .select('id', { count: 'exact', head: true })
         .neq('status', 'completed'),
       supabase
-        .from('work_items')
+        .from('unified_work_items')
         .select('id', { count: 'exact', head: true })
         .eq('status', 'completed')
         .gte('updated_at', monthStart.toISOString()),
       supabase
-        .from('work_items')
+        .from('unified_work_items')
         .select('id', { count: 'exact', head: true })
         .lt('deadline', now.toISOString())
         .neq('status', 'completed'),

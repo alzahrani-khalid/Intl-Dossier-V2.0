@@ -290,8 +290,13 @@ export function useMilestonePlanning({
             : m,
         ),
       )
-      // Invalidate calendar queries to show the new event
-      queryClient.invalidateQueries({ queryKey: ['calendar-entries', dossierId] })
+      // Invalidate the real calendar producers so the new entry shows up:
+      // ['calendar-events',filters] (useCalendarEvents) and
+      // ['engagement-calendar-entries',id] (useEngagementCalendarEntries).
+      // ['calendar-entries', dossierId] had no producer. The ['timeline', id]
+      // prefix still matches useUnifiedTimeline's ['timeline',id,type,filters].
+      queryClient.invalidateQueries({ queryKey: ['calendar-events'] })
+      queryClient.invalidateQueries({ queryKey: ['engagement-calendar-entries', dossierId] })
       queryClient.invalidateQueries({ queryKey: ['timeline', dossierId] })
       toast.success(t('convert.success'))
     },

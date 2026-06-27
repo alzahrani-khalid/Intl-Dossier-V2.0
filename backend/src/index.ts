@@ -80,7 +80,7 @@ app.get('/health', (_req, res) => {
 // where they would expose a fixed-token admin surface (e.g. GET /audit/logs) on the
 // deployed backend. Contract tests run against a non-production server, so they are
 // unaffected.
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
   app.use('/auth/mfa', mfaContractRouter)
   app.use('/monitoring', monitoringContractRouter)
   app.use('/export', exportContractRouter)

@@ -171,10 +171,14 @@ function StakeholderInfluencePage() {
         )}
         actions={
           <div className="flex gap-2">
+            {/* Stub-backed: useCalculateInfluenceScores resolves a fake
+                {success:true} with no real computation. Disabled for honesty
+                until backed; handler kept wired for re-enable. */}
             <Button
               variant="outline"
               onClick={handleCalculateScores}
-              disabled={calculateScores.isPending}
+              disabled
+              title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
             >
               {calculateScores.isPending ? (
                 <Loader2 className="h-4 w-4 me-2 animate-spin" />
@@ -255,7 +259,15 @@ function StakeholderInfluencePage() {
                     <DialogClose asChild>
                       <Button variant="outline">{t('cancel', 'Cancel')}</Button>
                     </DialogClose>
-                    <Button type="submit" disabled={createReport.isPending}>
+                    {/* Stub-backed: useCreateInfluenceReport fakes success.
+                        Disabled for honesty until a real endpoint exists. */}
+                    <Button
+                      type="submit"
+                      disabled
+                      title={t('common:common.notYetAvailable', {
+                        defaultValue: 'Not yet available',
+                      })}
+                    >
                       {createReport.isPending && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
                       {t('generate', 'Generate Report')}
                     </Button>

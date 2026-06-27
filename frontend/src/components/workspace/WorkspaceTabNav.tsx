@@ -89,7 +89,9 @@ export function WorkspaceTabNav({ engagementId }: WorkspaceTabNavProps): ReactEl
               className={cn(
                 'min-h-11 min-w-11 px-3 py-2 text-sm font-medium whitespace-nowrap snap-center rounded-t-md transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring',
                 isActive
-                  ? 'border-b-2 border-primary text-primary bg-background'
+                  ? // Text uses --accent-ink for WCAG AA — raw --primary/--accent
+                    // (#bf5542) is 4.23:1 on bg-background. Underline keeps brand accent.
+                    'border-b-2 border-primary text-[var(--accent-ink)] bg-background'
                   : 'text-muted-foreground hover:text-foreground',
               )}
             >

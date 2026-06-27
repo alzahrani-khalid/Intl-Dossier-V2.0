@@ -94,7 +94,11 @@ serve(async (req) => {
       .select('*')
       .eq('entity_id', entity_id)
       .is('deleted_at', null)
-      .order('last_refreshed_at', { ascending: false });
+      .order('last_refreshed_at', { ascending: false })
+      // N18: bound the per-entity result set. Cached intelligence reports are
+      // few per entity, so this caps a pathological unbounded read without
+      // truncating realistic responses.
+      .limit(200);
 
     // Apply intelligence type filter if specified
     if (intelligence_type) {

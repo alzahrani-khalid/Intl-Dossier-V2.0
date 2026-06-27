@@ -53,7 +53,7 @@ export function ContactSearch({
 }: ContactSearchProps) {
   const { t } = useTranslation('contacts')
   const { isRTL } = useDirection()
-const [searchTerm, setSearchTerm] = useState(defaultParams?.query || '')
+  const [searchTerm, setSearchTerm] = useState(defaultParams?.query || '')
   const [organizationId, setOrganizationId] = useState(defaultParams?.organization_id || '')
   const [selectedTags, setSelectedTags] = useState<string[]>(defaultParams?.tags || [])
   const [sortBy, setSortBy] = useState<'name' | 'organization' | 'created_at' | 'updated_at'>(
@@ -123,6 +123,7 @@ const [searchTerm, setSearchTerm] = useState(defaultParams?.query || '')
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="h-11 w-11 sm:h-10 sm:w-10 md:hidden">
               <SlidersHorizontal className="h-4 w-4" />
+              <span className="sr-only">{t('contactDirectory.search.filters')}</span>
             </Button>
           </SheetTrigger>
           <SheetContent side={isRTL ? 'left' : 'right'} className="w-full sm:max-w-md">

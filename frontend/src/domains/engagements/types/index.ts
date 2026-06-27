@@ -38,20 +38,18 @@ export type {
 // Kanban Types (from useEngagementKanban)
 // ============================================================================
 
+// Matches the AssignmentCard the engagements-kanban-get Edge Function returns
+// (id, work_item_id, work_item_type, assignee, priority, overall_sla_deadline,
+// current_stage_sla_deadline, created_at). The board buckets by column
+// server-side, so client cards never read workflow_stage/status/etc.
 export interface KanbanAssignment {
   id: string
   work_item_id: string
   work_item_type: string
-  assignee_id: string
-  workflow_stage: 'todo' | 'in_progress' | 'review' | 'done' | 'cancelled'
   priority: string
-  status: string
-  sla_deadline: string | null
   overall_sla_deadline: string | null
   current_stage_sla_deadline: string | null
-  engagement_id: string
   created_at: string
-  updated_at: string
   assignee?: {
     id: string
     full_name: string

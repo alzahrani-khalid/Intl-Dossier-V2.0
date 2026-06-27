@@ -13,15 +13,19 @@ import type { CreatePositionRequest, Position } from '@/types/position'
 /**
  * Hook to create a new position
  */
-export const useCreatePosition = (): ReturnType<typeof useMutation<Position, Error, CreatePositionRequest>> => {
+export const useCreatePosition = (): ReturnType<
+  typeof useMutation<Position, Error, CreatePositionRequest>
+> => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: CreatePositionRequest): Promise<Position> => {
       return positionsRepo.createPosition(data)
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['positions', 'list'] })
+      // Create produces an initial version server-side — refresh the version-history tab.
+      queryClient.invalidateQueries({ queryKey: ['positions', 'versions', data.id] })
     },
   })
 }

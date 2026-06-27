@@ -259,7 +259,7 @@ export function TourOverlay() {
           onClick={currentStep.disableBackdropClick ? undefined : skipTour}
         >
           {/* Dark overlay */}
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-ink/60" />
 
           {/* Spotlight cutout for target element */}
           {targetRect && currentStep.highlightTarget && (
@@ -293,9 +293,8 @@ export function TourOverlay() {
           <Card
             className={cn(
               'w-[calc(100vw-2rem)] sm:w-[400px] max-w-md',
-              'bg-white/95 backdrop-blur-xl border-white/20',
-              'shadow-[0_20px_50px_rgba(0,0,0,0.3)]',
-              'rounded-2xl overflow-hidden',
+              'bg-surface border border-line',
+              'rounded-[var(--radius-lg)] overflow-hidden',
             )}
           >
             <CardContent className="p-0">
@@ -313,7 +312,7 @@ export function TourOverlay() {
                     variant="ghost"
                     size="sm"
                     onClick={skipTour}
-                    className="h-8 w-8 p-0 rounded-full hover:bg-black/5"
+                    className="h-8 w-8 p-0 rounded-full hover:bg-muted"
                     aria-label={t('common.closeTour')}
                   >
                     <X className="h-4 w-4" />
@@ -353,7 +352,7 @@ export function TourOverlay() {
               </div>
 
               {/* Actions */}
-              <div className="px-4 sm:px-6 pb-4 sm:pb-5 pt-2 border-t border-black/5 bg-black/[0.02]">
+              <div className="px-4 sm:px-6 pb-4 sm:pb-5 pt-2 border-t border-line bg-muted/30">
                 <div className="flex items-center justify-between gap-2 sm:gap-3">
                   {/* Back button */}
                   <Button

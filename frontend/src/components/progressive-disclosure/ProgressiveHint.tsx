@@ -283,8 +283,8 @@ function CardHint({
       exit={{ opacity: 0, scale: 0.95 }}
     >
       <Card className={cn('relative overflow-hidden', className)}>
-        {/* Gradient accent */}
-        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-primary/70 to-primary/40" />
+        {/* Accent bar */}
+        <div className="absolute inset-x-0 top-0 h-1 bg-primary" />
 
         <CardContent className={cn('pt-5', sizes.container)}>
           {showDismiss && (

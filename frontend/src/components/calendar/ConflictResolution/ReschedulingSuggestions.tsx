@@ -130,7 +130,13 @@ export function ReschedulingSuggestions({
             {t('suggestions.title')}
           </CardTitle>
           {onRefresh && (
-            <Button variant="ghost" size="icon" onClick={onRefresh} className="h-8 w-8">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onRefresh}
+              className="h-8 w-8"
+              aria-label={t('common:common.actions.refresh', { defaultValue: 'Refresh' })}
+            >
               <RefreshCw className="h-4 w-4" />
             </Button>
           )}

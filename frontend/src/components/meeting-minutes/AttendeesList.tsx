@@ -78,7 +78,7 @@ export function AttendeesList({
 }: AttendeesListProps) {
   const { t } = useTranslation('meeting-minutes')
   const { isRTL } = useDirection()
-// Sort attendees by role
+  // Sort attendees by role
   const sortedAttendees = [...attendees].sort((a, b) => {
     const aIndex = roleOrder.indexOf(a.role)
     const bIndex = roleOrder.indexOf(b.role)
@@ -204,6 +204,7 @@ export function AttendeesList({
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
                       <MoreVertical className="h-4 w-4" />
+                      <span className="sr-only">{t('common:common.actions.openMenu')}</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align={isRTL ? 'start' : 'end'}>

@@ -188,6 +188,7 @@ export function ElectedOfficialListTable(): ReactElement {
           className="max-w-xs min-h-11"
         />
         <select
+          aria-label={t('filters.officeType')}
           value={filters.office_type ?? ''}
           onChange={(e) => handleOfficeTypeChange(e.target.value)}
           className="min-h-11 rounded-md border bg-background px-3 py-2 text-sm"
@@ -200,6 +201,7 @@ export function ElectedOfficialListTable(): ReactElement {
           ))}
         </select>
         <select
+          aria-label={t('filters.termStatus')}
           value={
             filters.is_current_term === true
               ? 'current'

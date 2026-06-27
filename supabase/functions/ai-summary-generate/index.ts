@@ -525,20 +525,27 @@ async function fetchContextData(
 
   // Fetch commitments if needed
   if (shouldFetch('commitments')) {
-    const { data: commitments } = await supabase
-      .from('commitments')
-      .select('id, dossier_id, description_en, description_ar, status, priority, deadline, created_at, updated_at')
+    const { data: commitments, error: commitmentsError } = await supabase
+      .from('aa_commitments')
+      .select('id, dossier_id, title, title_ar, description, status, priority, due_date, created_at, updated_at')
       .eq('dossier_id', entityId)
-      .order('deadline', { ascending: true })
+      .order('due_date', { ascending: true })
       .limit(10);
 
-    if (commitments) {
-      context.commitments = commitments;
+    if (commitmentsError) {
+      console.error('Error fetching commitments:', commitmentsError);
+    } else if (commitments) {
+      context.commitments = commitments.map((c: any) => ({
+        ...c,
+        description_en: c.description || c.title,
+        description_ar: c.title_ar,
+        deadline: c.due_date,
+      }));
       context.sources.push(
-        ...commitments.map((c: any) => ({
+        ...context.commitments.map((c: any) => ({
           type: 'commitment',
           id: c.id,
-          title: c.description_en || c.description_ar || 'Commitment',
+          title: c.description_en || c.description_ar || c.title || 'Commitment',
           date: c.deadline,
         }))
       );

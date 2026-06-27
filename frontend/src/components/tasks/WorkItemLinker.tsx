@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { X, Plus, FileText, Briefcase, Ticket } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -21,6 +21,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useDirection } from '@/hooks/useDirection'
+import { getQuickSwitcherSearch } from '@/domains/dossiers/repositories/dossiers.repository'
 
 type WorkItemType = 'dossier' | 'position' | 'ticket'
 
@@ -43,24 +44,59 @@ export function WorkItemLinker({
 }: WorkItemLinkerProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const [selectedType, setSelectedType] = useState<WorkItemType>('dossier')
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<WorkItem[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+  const searchRequestRef = useRef(0)
 
-  // Mock search function - replace with actual API call
-  const handleSearch = async (query: string, type: WorkItemType) => {
-    // TODO: Replace with actual API call
-    const mockResults = (
-      [
-        { type: 'dossier' as const, id: '1', title: 'Australia Population Data Initiative' },
-        { type: 'dossier' as const, id: '2', title: 'Canada Trade Agreement Review' },
-        { type: 'position' as const, id: '3', title: 'Senior Analyst Position' },
-        { type: 'ticket' as const, id: '4', title: 'Intake #25' },
-      ] satisfies WorkItem[]
-    ).filter((item) => item.type === type && item.title.toLowerCase().includes(query.toLowerCase()))
+  const handleSearch = async (query: string, type: WorkItemType): Promise<void> => {
+    const trimmedQuery = query.trim()
+    const requestId = searchRequestRef.current + 1
+    searchRequestRef.current = requestId
 
-    setSearchResults(mockResults)
+    if (trimmedQuery.length < 2) {
+      setSearchResults([])
+      setIsSearching(false)
+      return
+    }
+
+    setIsSearching(true)
+    try {
+      const response = await getQuickSwitcherSearch(trimmedQuery, 20)
+      if (requestId !== searchRequestRef.current) return
+
+      const results: WorkItem[] =
+        type === 'dossier'
+          ? response.dossiers.map((dossier) => ({
+              type: 'dossier',
+              id: dossier.id,
+              title: isRTL
+                ? dossier.name_ar || dossier.name_en
+                : dossier.name_en || dossier.name_ar,
+            }))
+          : response.related_work
+              .filter((item) =>
+                type === 'position' ? item.type === 'position' : item.type === 'intake',
+              )
+              .map((item) => ({
+                type,
+                id: item.id,
+                title: isRTL ? item.title_ar || item.title_en : item.title_en || item.title_ar,
+              }))
+
+      setSearchResults(results)
+    } catch (error) {
+      if (requestId === searchRequestRef.current) {
+        console.warn('Work item search failed:', error)
+        setSearchResults([])
+      }
+    } finally {
+      if (requestId === searchRequestRef.current) {
+        setIsSearching(false)
+      }
+    }
   }
 
   const handleAddItem = (item: WorkItem) => {
@@ -142,7 +178,15 @@ const [isOpen, setIsOpen] = useState(false)
               <Label className="text-sm sm:text-base">{t('tasks.itemType')}</Label>
               <Select
                 value={selectedType}
-                onValueChange={(value) => setSelectedType(value as WorkItemType)}
+                onValueChange={(value) => {
+                  const nextType = value as WorkItemType
+                  setSelectedType(nextType)
+                  if (searchQuery.trim().length >= 2) {
+                    void handleSearch(searchQuery, nextType)
+                  } else {
+                    setSearchResults([])
+                  }
+                }}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue />
@@ -180,7 +224,7 @@ const [isOpen, setIsOpen] = useState(false)
                 onChange={(e) => {
                   setSearchQuery(e.target.value)
                   if (e.target.value.length >= 2) {
-                    handleSearch(e.target.value, selectedType)
+                    void handleSearch(e.target.value, selectedType)
                   } else {
                     setSearchResults([])
                   }
@@ -190,6 +234,12 @@ const [isOpen, setIsOpen] = useState(false)
             </div>
 
             {/* Search results */}
+            {isSearching && (
+              <p className="text-sm text-muted-foreground text-start">
+                {t('common.loading', 'Loading...')}
+              </p>
+            )}
+
             {searchResults.length > 0 && (
               <div className="max-h-48 space-y-2 overflow-y-auto rounded-lg border p-2">
                 {searchResults.map((result) => (
@@ -208,7 +258,7 @@ const [isOpen, setIsOpen] = useState(false)
               </div>
             )}
 
-            {searchQuery.length >= 2 && searchResults.length === 0 && (
+            {searchQuery.length >= 2 && !isSearching && searchResults.length === 0 && (
               <p className="text-sm text-muted-foreground text-start">{t('tasks.noResults')}</p>
             )}
           </div>

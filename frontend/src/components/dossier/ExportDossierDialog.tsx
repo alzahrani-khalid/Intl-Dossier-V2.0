@@ -127,16 +127,20 @@ export function ExportDossierDialog({
     setPopupBlocked(false)
 
     // MUST open the tab synchronously before any await (popup-blocker constraint).
-    const newTab = window.open('', '_blank')
+    const newTab = window.open('', '_blank', 'noopener,noreferrer')
+    if (newTab) {
+      newTab.opener = null
+    }
 
     // Write a quiet placeholder so the user never stares at a blank tab.
     if (newTab) {
       const dir = language === 'ar' ? 'rtl' : 'ltr'
       newTab.document.write(
         `<!doctype html><html dir="${dir}" lang="${language}"><head><meta charset="utf-8">` +
+          `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline';">` +
           `<title>${t('newTab.generating')}</title></head>` +
           `<body style="margin:0;display:flex;align-items:center;justify-content:center;` +
-          `min-height:100vh;background:#f7f6f4;color:#6b6459;font-family:system-ui;font-size:14px;">` +
+          `min-height:100vh;background:var(--bg,Canvas);color:var(--ink-mute,CanvasText);font-family:system-ui;font-size:14px;">` +
           `<p>${t('newTab.generating')}</p></body></html>`,
       )
     }

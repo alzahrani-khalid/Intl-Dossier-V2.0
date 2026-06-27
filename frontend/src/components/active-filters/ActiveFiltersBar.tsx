@@ -200,7 +200,7 @@ export function ActiveFiltersBar({
         className={cn(
           'rounded-xl',
           'border border-border/50',
-          'bg-background/95 backdrop-blur-sm',
+          'bg-background',
           'shadow-sm',
           'transition-all duration-200',
         )}

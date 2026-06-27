@@ -134,7 +134,7 @@ export function MyAssignmentsPage() {
                         className={`size-4 ${
                           assignment.time_remaining_seconds < 0
                             ? 'text-danger'
-                            : assignment.warning_sent
+                            : assignment.warning_sent_at
                               ? 'text-warning'
                               : 'text-success'
                         }`}
@@ -143,7 +143,7 @@ export function MyAssignmentsPage() {
                         className={`font-semibold ${
                           assignment.time_remaining_seconds < 0
                             ? 'text-danger'
-                            : assignment.warning_sent
+                            : assignment.warning_sent_at
                               ? 'text-warning'
                               : 'text-success'
                         }`}

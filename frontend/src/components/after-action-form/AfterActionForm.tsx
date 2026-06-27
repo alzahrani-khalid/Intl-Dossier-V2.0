@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { HeroUIChip } from '@/components/ui/heroui-chip'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Separator } from '@/components/ui/separator'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Save, Send, Loader2, AlertCircle, Shield } from 'lucide-react'
+import { Save, Send, Loader2, AlertCircle, Shield, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DecisionList, type Decision } from '../decision-list/DecisionList'
 import { CommitmentEditor, type Commitment } from '../commitment-editor/CommitmentEditor'
@@ -36,6 +37,7 @@ export interface AfterActionFormData {
   commitments: Commitment[]
   risks: Risk[]
   follow_ups: FollowUpAction[]
+  attachment_ids: string[]
   notes?: string
   version?: number
 }
@@ -78,26 +80,52 @@ export function AfterActionForm({
     commitments: initialData?.commitments || [],
     risks: initialData?.risks || [],
     follow_ups: initialData?.follow_ups || [],
+    attachment_ids: initialData?.attachment_ids || [],
     notes: initialData?.notes || '',
     version: initialData?.version,
     ...(initialData?.id && { id: initialData.id }),
   })
 
-  const [attendeesInput, setAttendeesInput] = useState(initialData?.attendees?.join(', ') || '')
+  // attendeesInput holds only the in-progress name; committed attendees live in
+  // formData.attendees (string[]). Typing a name and pressing Enter/comma (or
+  // blurring) commits it as a removable chip.
+  const [attendeesInput, setAttendeesInput] = useState('')
   const [saving, setSaving] = useState(false)
   const [publishing, setPublishing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isDirty, setIsDirty] = useState(false)
 
-  // Update attendees array when input changes
-  useEffect(() => {
-    const attendeesList = attendeesInput
-      .split(',')
-      .map((name) => name.trim())
-      .filter((name) => name.length > 0)
+  const addAttendee = (raw: string): void => {
+    const name = raw.trim()
+    if (name.length === 0) return
+    setFormData((prev) => {
+      const isDuplicate = prev.attendees.some((a) => a.toLowerCase() === name.toLowerCase())
+      if (isDuplicate || prev.attendees.length >= 100) return prev
+      return { ...prev, attendees: [...prev.attendees, name] }
+    })
+    setAttendeesInput('')
+  }
 
-    setFormData((prev) => ({ ...prev, attendees: attendeesList }))
-  }, [attendeesInput])
+  const removeAttendee = (index: number): void => {
+    setFormData((prev) => ({
+      ...prev,
+      attendees: prev.attendees.filter((_, i) => i !== index),
+    }))
+  }
+
+  const handleAttendeeKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault()
+      addAttendee(attendeesInput)
+    } else if (
+      e.key === 'Backspace' &&
+      attendeesInput.length === 0 &&
+      formData.attendees.length > 0
+    ) {
+      // Backspace on an empty input removes the last chip (standard tag-input affordance).
+      removeAttendee(formData.attendees.length - 1)
+    }
+  }
 
   // Mark form as dirty when changes occur
   useEffect(() => {
@@ -112,20 +140,24 @@ export function AfterActionForm({
   useEffect(() => {
     if (!onDirtyChange) return
     const hasContent =
+      formData.attendees.length > 0 ||
       attendeesInput.trim().length > 0 ||
       (formData.notes ?? '').trim().length > 0 ||
       formData.decisions.length > 0 ||
       formData.commitments.length > 0 ||
       formData.risks.length > 0 ||
-      formData.follow_ups.length > 0
+      formData.follow_ups.length > 0 ||
+      formData.attachment_ids.length > 0
     onDirtyChange(hasContent)
   }, [
+    formData.attendees,
     attendeesInput,
     formData.notes,
     formData.decisions,
     formData.commitments,
     formData.risks,
     formData.follow_ups,
+    formData.attachment_ids,
     onDirtyChange,
   ])
 
@@ -292,17 +324,43 @@ export function AfterActionForm({
           {/* Attendees */}
           <div className="space-y-2">
             <Label htmlFor="attendees">{t('afterActions.form.attendees')} *</Label>
+            {formData.attendees.length > 0 && (
+              <ul className="flex flex-wrap gap-2" aria-label={t('afterActions.form.attendees')}>
+                {formData.attendees.map((name, index) => (
+                  <li key={`${name}-${index}`}>
+                    <HeroUIChip
+                      variant="secondary"
+                      className="inline-flex items-center gap-1 ps-2.5 pe-1 py-1"
+                    >
+                      <span className="truncate">{name}</span>
+                      {!readOnly && (
+                        <button
+                          type="button"
+                          onClick={() => removeAttendee(index)}
+                          aria-label={t('afterActions.form.removeAttendee', { name })}
+                          className="inline-flex size-5 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--accent)]"
+                        >
+                          <X className="size-3" />
+                        </button>
+                      )}
+                    </HeroUIChip>
+                  </li>
+                ))}
+              </ul>
+            )}
             <Input
               id="attendees"
               type="text"
               value={attendeesInput}
               onChange={(e) => setAttendeesInput(e.target.value)}
+              onKeyDown={handleAttendeeKeyDown}
+              onBlur={() => addAttendee(attendeesInput)}
               placeholder={t('afterActions.form.attendeesPlaceholder')}
               disabled={readOnly}
-              required
               aria-required="true"
+              aria-describedby="attendees-help"
             />
-            <p className="text-xs text-muted-foreground">
+            <p id="attendees-help" className="text-xs text-muted-foreground">
               {t('afterActions.form.attendeesHelp')} ({formData.attendees.length}/100)
             </p>
           </div>
@@ -390,8 +448,8 @@ export function AfterActionForm({
 
       {/* Attachments */}
       <AttachmentUploader
-        attachmentIds={[]}
-        onChange={() => {}}
+        attachmentIds={formData.attachment_ids}
+        onChange={(attachment_ids) => setFormData((prev) => ({ ...prev, attachment_ids }))}
         maxFiles={10}
         maxFileSize={100 * 1024 * 1024} // 100MB
       />

@@ -18,7 +18,14 @@ import {
   useSensors,
 } from '@dnd-kit/core'
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import { createContext, useState, type ReactElement, type ReactNode } from 'react'
+import {
+  createContext,
+  useCallback,
+  useMemo,
+  useState,
+  type ReactElement,
+  type ReactNode,
+} from 'react'
 
 import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
@@ -42,12 +49,39 @@ export type KanbanContextProps<
 > = {
   columns: C[]
   data: T[]
+  itemsByColumn: Record<string, T[]>
+  getColumnItems: (columnId: string) => T[]
   activeCardId: string | null
 }
+
+export type KanbanDataContextProps<
+  T extends KanbanItemProps = KanbanItemProps,
+  C extends KanbanColumnProps = KanbanColumnProps,
+> = Omit<KanbanContextProps<T, C>, 'activeCardId'>
+
+export type KanbanActiveDragContextProps = {
+  activeCardId: string | null
+}
+
+const EMPTY_ITEMS_BY_COLUMN: Record<string, KanbanItemProps[]> = {}
+const getEmptyColumnItems = (): KanbanItemProps[] => []
 
 export const KanbanContext = createContext<KanbanContextProps>({
   columns: [],
   data: [],
+  itemsByColumn: EMPTY_ITEMS_BY_COLUMN,
+  getColumnItems: getEmptyColumnItems,
+  activeCardId: null,
+})
+
+export const KanbanDataContext = createContext<KanbanDataContextProps>({
+  columns: [],
+  data: [],
+  itemsByColumn: EMPTY_ITEMS_BY_COLUMN,
+  getColumnItems: getEmptyColumnItems,
+})
+
+export const KanbanActiveDragContext = createContext<KanbanActiveDragContextProps>({
   activeCardId: null,
 })
 
@@ -106,6 +140,49 @@ export const KanbanProvider = <
 
   const activeOverlayItem =
     activeCardId === null ? undefined : data.find((item) => item.id === activeCardId)
+
+  const itemsByColumn = useMemo<Record<string, T[]>>(() => {
+    const grouped = Object.fromEntries(columns.map((column) => [column.id, [] as T[]]))
+    data.forEach((item) => {
+      const columnItems = grouped[item.column] ?? []
+      columnItems.push(item)
+      grouped[item.column] = columnItems
+    })
+    return grouped
+  }, [columns, data])
+
+  const getColumnItems = useCallback(
+    (columnId: string): T[] => itemsByColumn[columnId] ?? [],
+    [itemsByColumn],
+  )
+
+  const dataContextValue = useMemo<KanbanDataContextProps<T, C>>(
+    () => ({
+      columns,
+      data,
+      itemsByColumn,
+      getColumnItems,
+    }),
+    [columns, data, itemsByColumn, getColumnItems],
+  )
+
+  const activeDragContextValue = useMemo<KanbanActiveDragContextProps>(
+    () => ({ activeCardId }),
+    [activeCardId],
+  )
+
+  const legacyContextValue = useMemo<KanbanContextProps<T, C>>(
+    () => ({
+      ...dataContextValue,
+      activeCardId,
+    }),
+    [dataContextValue, activeCardId],
+  )
+
+  const renderedColumns = useMemo(
+    () => columns.map((column) => children(column)),
+    [columns, children],
+  )
 
   const handleDragStart = (event: DragStartEvent): void => {
     const activeId = String(event.active.id)
@@ -201,23 +278,29 @@ export const KanbanProvider = <
   }
 
   return (
-    <KanbanContext.Provider value={{ columns, data, activeCardId }}>
-      <DndContext
-        accessibility={{ announcements }}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-        onDragOver={handleDragOver}
-        onDragStart={handleDragStart}
-        sensors={sensors}
-        {...props}
-      >
-        <div className={cn('grid size-full auto-cols-fr grid-flow-col gap-4', className)}>
-          {columns.map((column) => children(column))}
-        </div>
-        <DragOverlay>
-          {activeOverlayItem !== undefined ? <DragOverlayCard item={activeOverlayItem} /> : null}
-        </DragOverlay>
-      </DndContext>
-    </KanbanContext.Provider>
+    <KanbanDataContext.Provider value={dataContextValue}>
+      <KanbanActiveDragContext.Provider value={activeDragContextValue}>
+        <KanbanContext.Provider value={legacyContextValue}>
+          <DndContext
+            accessibility={{ announcements }}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+            onDragOver={handleDragOver}
+            onDragStart={handleDragStart}
+            sensors={sensors}
+            {...props}
+          >
+            <div className={cn('grid size-full auto-cols-fr grid-flow-col gap-4', className)}>
+              {renderedColumns}
+            </div>
+            <DragOverlay>
+              {activeOverlayItem !== undefined ? (
+                <DragOverlayCard item={activeOverlayItem} />
+              ) : null}
+            </DragOverlay>
+          </DndContext>
+        </KanbanContext.Provider>
+      </KanbanActiveDragContext.Provider>
+    </KanbanDataContext.Provider>
   )
 }

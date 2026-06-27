@@ -272,6 +272,7 @@ export function GeographicVisualizationPage() {
                           <TableCell>
                             <Button variant="ghost" size="icon" className="h-8 w-8">
                               <ChevronRight className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+                              <span className="sr-only">{t('common:common.view')}</span>
                             </Button>
                           </TableCell>
                         </TableRow>

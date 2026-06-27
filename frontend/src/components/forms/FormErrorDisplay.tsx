@@ -284,6 +284,9 @@ export function ErrorSummary({
               className="h-6 w-6 text-danger hover:text-danger hover:bg-danger/10 dark:hover:bg-danger/50"
             >
               <X className="h-4 w-4" />
+              <span className="sr-only">
+                {t('common:common.actions.dismiss', { defaultValue: 'Dismiss' })}
+              </span>
             </Button>
           )}
         </div>
@@ -453,6 +456,7 @@ export function ToastError({
               size="icon"
               onClick={onClose}
               className="h-6 w-6 shrink-0"
+              aria-label="Close"
             >
               <X className="h-4 w-4" />
             </Button>

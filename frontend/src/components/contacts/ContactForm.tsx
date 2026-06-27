@@ -98,7 +98,7 @@ export function ContactForm({
 }: ContactFormProps) {
   const { t } = useTranslation('contacts')
   const { isRTL } = useDirection()
-// Render OCR confidence badge
+  // Render OCR confidence badge
   const renderConfidenceBadge = (fieldName: keyof OCRFieldConfidence) => {
     if (!ocrConfidence || ocrConfidence[fieldName] === undefined) return null
 
@@ -196,10 +196,7 @@ export function ContactForm({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleSubmit)}
-        className="space-y-4 sm:space-y-6"
-      >
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 sm:space-y-6">
         {/* Full Name - Required */}
         <FormField
           control={form.control}
@@ -320,6 +317,7 @@ export function ContactForm({
                   variant="outline"
                   size="icon"
                   onClick={() => removeEmail(index)}
+                  aria-label={t('common:common.actions.remove', { defaultValue: 'Remove' })}
                   className=" sm:h-10 sm:w-10"
                 >
                   <X className="h-4 w-4" />
@@ -372,6 +370,7 @@ export function ContactForm({
                   variant="outline"
                   size="icon"
                   onClick={() => removePhone(index)}
+                  aria-label={t('common:common.actions.remove', { defaultValue: 'Remove' })}
                   className=" sm:h-10 sm:w-10"
                 >
                   <X className="h-4 w-4" />

@@ -185,6 +185,7 @@ export function TagSelector({
               {!disabled && (
                 <button
                   type="button"
+                  aria-label={t('common:common.actions.remove')}
                   className="ms-1 rounded-full hover:bg-muted/50 p-0.5"
                   onClick={(e) => {
                     e.stopPropagation()

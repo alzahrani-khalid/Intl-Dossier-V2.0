@@ -374,7 +374,7 @@ export function AddToDossierFAB({
       <AnimatePresence>
         {isExpanded && (
           <m.div
-            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-[2px]"
+            className="fixed inset-0 z-40 bg-ink/20"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

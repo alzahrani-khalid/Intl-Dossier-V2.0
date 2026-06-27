@@ -145,6 +145,7 @@ export function NotificationItem({
                 onClick={(e) => e.stopPropagation()}
               >
                 <MoreHorizontal className="h-4 w-4" />
+                <span className="sr-only">{t('common:common.actions.openMenu')}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align={isRTL ? 'start' : 'end'}>

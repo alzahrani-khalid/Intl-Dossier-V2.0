@@ -23,6 +23,7 @@ import {
   AlertCircle,
   Database,
   Download,
+  Lightbulb,
 } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 
@@ -457,15 +458,15 @@ function AdminSystemPage() {
 
           {/* Help Text */}
           <div className="text-xs text-muted-foreground space-y-1 pt-2 border-t">
-            <p>
-              💡{' '}
+            <p className="flex items-start gap-1.5">
+              <Lightbulb className="size-3.5 shrink-0 mt-0.5" aria-hidden="true" />
               {t(
                 'system.populateCountries.tip1',
                 'This operation is safe to run multiple times - it will update existing countries.',
               )}
             </p>
-            <p>
-              💡{' '}
+            <p className="flex items-start gap-1.5">
+              <Lightbulb className="size-3.5 shrink-0 mt-0.5" aria-hidden="true" />
               {t(
                 'system.populateCountries.tip2',
                 'Run this annually to keep population and area data up to date.',

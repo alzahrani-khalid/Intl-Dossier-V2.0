@@ -86,15 +86,15 @@ function FindingCard({
   type?: 'info' | 'warning' | 'success'
 }) {
   const { isRTL } = useDirection()
-const icons = {
+  const icons = {
     info: AlertCircle,
     warning: AlertCircle,
     success: CheckCircle,
   }
   const colors = {
-    info: 'text-blue-600',
-    warning: 'text-amber-600',
-    success: 'text-green-600',
+    info: 'text-info',
+    warning: 'text-warning',
+    success: 'text-success',
   }
 
   const Icon = icons[type]

@@ -93,7 +93,7 @@ export const PositionCard: React.FC<PositionCardProps> = ({
 
   return (
     <Card
-      className="h-full transition-shadow hover:shadow-md flex flex-col"
+      className="h-full transition-colors hover:bg-line-soft flex flex-col"
       role="article"
       aria-label={title}
     >
