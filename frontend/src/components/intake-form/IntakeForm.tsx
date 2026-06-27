@@ -57,15 +57,10 @@ const createIntakeSchema = (t: any, tDossier: any) =>
 
 interface IntakeFormProps {
   initialData?: Partial<IntakeFormData>
-  mode?: 'create' | 'edit'
   onSuccess?: (ticketId: string, ticketNumber: string) => void
 }
 
-export const IntakeForm: React.FC<IntakeFormProps> = ({
-  initialData,
-  mode: _mode = 'create',
-  onSuccess,
-}) => {
+export const IntakeForm: React.FC<IntakeFormProps> = ({ initialData, onSuccess }) => {
   const { t } = useTranslation('intake')
   const { t: tDossier } = useTranslation('dossier-context')
   const navigate = useNavigate()
