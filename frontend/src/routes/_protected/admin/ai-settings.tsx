@@ -98,6 +98,28 @@ const MODELS: Record<string, Array<{ value: string; label: string }>> = {
 const NONE = '__none__'
 
 /**
+ * DB-matching policy fallback (D-28). The `organization_llm_policies` columns
+ * default to openai/gpt-4o; the UI must mirror that so an org without a saved
+ * row shows the real default instead of a phantom anthropic/claude pair — which
+ * editing one field would otherwise persist under a "saved" toast.
+ */
+const DEFAULT_LLM_POLICY: Partial<LLMPolicy> = {
+  default_provider: 'openai',
+  default_model: 'gpt-4o',
+  arabic_provider: null,
+  arabic_model: null,
+  allow_cloud_for_confidential: false,
+  private_provider: null,
+  private_model: null,
+  private_endpoint_url: null,
+  monthly_spend_cap_usd: null,
+  alert_threshold_percent: 80,
+  brief_generation_enabled: true,
+  chat_enabled: true,
+  entity_linking_enabled: true,
+}
+
+/**
  * Resolve the caller's organization from a SERVER-TRUSTED source (N7 fix).
  *
  * Reads `public.users.default_organization_id` (service-role-written, never
@@ -180,13 +202,19 @@ function AISettingsPage() {
 
       if (!orgId) throw new Error('No organization')
 
+      // Merge the existing policy (or DB-matching defaults) with the edited
+      // fields so a partial edit never blanks untouched columns, and conflict
+      // on the org key so the existing row is UPDATED rather than rejected.
+      const payload = {
+        ...(policy ?? DEFAULT_LLM_POLICY),
+        ...updates,
+        organization_id: orgId,
+        updated_at: new Date().toISOString(),
+      }
+
       const { data, error } = await supabase
         .from('organization_llm_policies')
-        .upsert({
-          organization_id: orgId,
-          ...updates,
-          updated_at: new Date().toISOString(),
-        })
+        .upsert(payload, { onConflict: 'organization_id' })
         .select()
         .single()
 
@@ -195,6 +223,9 @@ function AISettingsPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['llm-policy'] })
+      // Drop the local draft so the freshly-saved policy (refetched) becomes the
+      // source of truth — otherwise a stale partial formState keeps shadowing it.
+      setFormState(null)
       setHasChanges(false)
       toast({
         title: t('settings.saved', 'Settings saved'),
@@ -210,23 +241,8 @@ function AISettingsPage() {
     },
   })
 
-  // Initialize form state from policy
-  const currentState: Partial<LLMPolicy> = formState ||
-    policy || {
-      default_provider: 'anthropic',
-      default_model: 'claude-sonnet-4-20250514',
-      arabic_provider: null,
-      arabic_model: null,
-      allow_cloud_for_confidential: false,
-      private_provider: null,
-      private_model: null,
-      private_endpoint_url: null,
-      monthly_spend_cap_usd: null,
-      alert_threshold_percent: 80,
-      brief_generation_enabled: true,
-      chat_enabled: true,
-      entity_linking_enabled: true,
-    }
+  // Initialize form state from policy (DB-matching fallback — D-28)
+  const currentState: Partial<LLMPolicy> = formState || policy || DEFAULT_LLM_POLICY
 
   const updateField = <K extends keyof LLMPolicy>(field: K, value: LLMPolicy[K]) => {
     setFormState((prev) => ({
@@ -419,7 +435,7 @@ function AISettingsPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {MODELS[currentState.default_provider || 'anthropic']?.map((m) => (
+                      {MODELS[currentState.default_provider || 'openai']?.map((m) => (
                         <SelectItem key={m.value} value={m.value}>
                           {m.label}
                         </SelectItem>
