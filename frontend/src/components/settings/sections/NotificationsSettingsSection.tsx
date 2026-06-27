@@ -98,6 +98,7 @@ export function NotificationsSettingsSection({ form }: NotificationsSettingsSect
                   form.setValue(setting.key, checked, { shouldDirty: true })
                 }
                 className="shrink-0"
+                aria-label={setting.label}
               />
             </SettingsItem>
           )
