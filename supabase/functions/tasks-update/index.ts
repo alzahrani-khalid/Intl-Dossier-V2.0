@@ -169,8 +169,24 @@ Deno.serve(async (req) => {
     if (body.completed_by !== undefined) updateData.completed_by = body.completed_by || null;
     if (body.completed_at !== undefined) updateData.completed_at = body.completed_at || null;
 
-    // Auto-set completed_at if status changes to completed
-    if (body.status === 'completed' && !body.completed_at) {
+    // B-3: workflow_stage is the single source of truth for lifecycle. When the
+    // stage changes and the client did not send an explicit status, derive the
+    // status from the stage so they never desync (e.g. stage=done previously
+    // left status='pending', keeping SLA/overdue indicators firing forever).
+    if (body.workflow_stage !== undefined && body.status === undefined) {
+      const STAGE_TO_STATUS: Record<string, string> = {
+        todo: 'pending',
+        in_progress: 'in_progress',
+        review: 'review',
+        done: 'completed',
+        cancelled: 'cancelled',
+      };
+      updateData.status = STAGE_TO_STATUS[body.workflow_stage] ?? 'in_progress';
+    }
+
+    // Auto-set completion stamps when the resolved status (explicit OR derived
+    // from workflow_stage) is 'completed' and the client didn't supply them.
+    if (updateData.status === 'completed' && !updateData.completed_at) {
       updateData.completed_at = new Date().toISOString();
       updateData.completed_by = user.id;
     }
