@@ -412,6 +412,17 @@ export function StepUpMFA({
           </div>
         )}
 
+        {/* Initiation error: shown when no challenge is active (e.g. initiate
+            failed), since the in-form error renderer below requires challengeData. */}
+        {error && !challengeData && !isInitiating && (
+          <div
+            className="rounded-md border border-destructive/20 bg-destructive/10 p-3"
+            role="alert"
+          >
+            <p className="text-sm text-destructive">{error}</p>
+          </div>
+        )}
+
         {/* Challenge form */}
         {challengeData && !isInitiating && (
           <form onSubmit={verifyCode} className="space-y-4">
