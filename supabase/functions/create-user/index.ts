@@ -26,6 +26,7 @@ interface CreateUserRequest {
   user_type?: 'employee' | 'guest'
   expires_at?: string
   allowed_resources?: string[]
+  clearance?: number
 }
 
 interface CreateUserResponse {
@@ -75,6 +76,22 @@ function validateRole(role: string): string | null {
   }
   if (!['admin', 'editor', 'viewer'].includes(role)) {
     return 'Role must be one of: admin, editor, viewer'
+  }
+  return null
+}
+
+// Clearance is optional; when supplied it must be an integer 1-4 (profiles.clearance_level).
+function validateClearance(clearance: unknown): string | null {
+  if (clearance === undefined || clearance === null) {
+    return null
+  }
+  if (
+    typeof clearance !== 'number' ||
+    !Number.isInteger(clearance) ||
+    clearance < 1 ||
+    clearance > 4
+  ) {
+    return 'Clearance must be an integer between 1 and 4'
   }
   return null
 }
@@ -229,6 +246,9 @@ serve(async (req) => {
     const roleError = validateRole(body.role)
     if (roleError) validationErrors.push(roleError)
 
+    const clearanceError = validateClearance(body.clearance)
+    if (clearanceError) validationErrors.push(clearanceError)
+
     const userType = body.user_type || 'employee'
     const guestError = validateGuestAccount(userType, body.expires_at, body.allowed_resources)
     if (guestError) validationErrors.push(guestError)
@@ -370,6 +390,22 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         },
       )
+    }
+
+    // Persist the requested clearance level onto the profiles row created by the
+    // on_auth_user_created_profile trigger (keyed on user_id; profiles has no id).
+    // Clearance is a security attribute so the write uses the service-role client.
+    // The column defaults to 1 (least privilege) in the DB, so a failed write is
+    // non-fatal — log it and leave the safe default.
+    if (typeof body.clearance === 'number') {
+      const { error: clearanceError } = await supabaseAdmin
+        .from('profiles')
+        .update({ clearance_level: body.clearance })
+        .eq('user_id', newUser.user.id)
+
+      if (clearanceError) {
+        console.error('Clearance level write error:', clearanceError)
+      }
     }
 
     // Generate activation token (expires in 48 hours)
