@@ -298,15 +298,22 @@ async function getPreferences(supabase: ReturnType<typeof createClient>, userId:
     .select('*')
     .eq('user_id', userId);
 
-  // Get email preferences
+  // Get email preferences.
+  // D-18: a user with no email-pref row is normal; `.single()` turned that into
+  // a PGRST116 error, and `emailError` was never inspected. `.maybeSingle()`
+  // returns null for 0 rows, and both errors are now checked.
   const { data: emailPrefs, error: emailError } = await supabase
     .from('email_notification_preferences')
     .select('*')
     .eq('user_id', userId)
-    .single();
+    .maybeSingle();
 
   if (catError && catError.code !== 'PGRST116') {
     console.error('Error fetching category preferences:', catError);
+  }
+
+  if (emailError && emailError.code !== 'PGRST116') {
+    console.error('Error fetching email preferences:', emailError);
   }
 
   return new Response(
