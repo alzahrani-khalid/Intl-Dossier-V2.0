@@ -727,6 +727,7 @@ export function DossierListPage() {
               onValueChange={(value) => handleFilterChange('sort_by', value)}
             >
               <SelectTrigger
+                aria-label={t('list.sortBy')}
                 className={cn(
                   'h-12',
                   'bg-background/40 border border-border',
@@ -752,6 +753,7 @@ export function DossierListPage() {
               onValueChange={(value) => handleFilterChange('sort_order', value as 'asc' | 'desc')}
             >
               <SelectTrigger
+                aria-label={t('list.sortOrder')}
                 className={cn(
                   'h-12',
                   'bg-background/40 border border-border',

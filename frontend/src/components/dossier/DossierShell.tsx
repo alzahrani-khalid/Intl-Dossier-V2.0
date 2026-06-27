@@ -143,6 +143,7 @@ export function DossierShell({
         >
           <Link
             to="/dashboard"
+            aria-label={t('header.home', { defaultValue: 'Home' })}
             className="flex min-h-9 shrink-0 items-center gap-1 text-[var(--ink-mute)] transition-colors hover:text-[var(--ink)]"
           >
             <Home className="h-4 w-4" />

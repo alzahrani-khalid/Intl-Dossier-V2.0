@@ -915,7 +915,9 @@ html[dir='rtl'] .icon-flip {
 }
 .tab.active,
 .tab[aria-selected='true'] {
-  color: var(--accent);
+  /* Text uses --accent-ink for WCAG AA (raw --accent #bf5542 is 4.23:1 on
+     --surface); the underline keeps brand --accent (non-text indicator). */
+  color: var(--accent-ink);
   border-bottom-color: var(--accent);
   font-weight: 600;
 }

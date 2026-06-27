@@ -21,24 +21,29 @@ export type DossierType =
   | 'forum'
   | 'working_group'
 
-// Test dossier IDs - these should match existing test data in the database
+// Real seeded dossier IDs from the staging database (the local dev server the
+// a11y suite boots points at staging Supabase). Fake fixture IDs render a 404
+// page, so axe was scanning the 404 glyph instead of the real dossier — these
+// are real rows verified live so the detail routes resolve.
 export const testDossierIds: Record<DossierType, string> = {
-  country: 'test-country-001',
-  organization: 'test-org-001',
-  person: 'test-person-001',
-  engagement: 'test-engagement-001',
-  forum: 'test-forum-001',
-  working_group: 'test-wg-001',
+  country: '9b9a04af-50b0-408c-878d-9d07f77a74ab',
+  organization: 'b0000001-0000-0000-0000-000000000006',
+  person: 'a0000000-0000-0000-0000-000000000501',
+  engagement: 'b0000002-0000-0000-0000-000000000003',
+  forum: 'b0000001-0000-0000-0000-000000000003',
+  working_group: 'a0000000-0000-0000-0000-000000000403',
 } as const
 
-// Route paths for each dossier type
+// Route paths for each dossier type. Segments must match the live router
+// (getDossierRouteSegment in @/lib/dossier-routes): working_group → working_groups
+// (underscore), NOT working-groups (hyphen → 404).
 export const dossierRoutes: Record<DossierType, string> = {
   country: '/dossiers/countries',
   organization: '/dossiers/organizations',
   person: '/dossiers/persons',
   engagement: '/dossiers/engagements',
   forum: '/dossiers/forums',
-  working_group: '/dossiers/working-groups',
+  working_group: '/dossiers/working_groups',
 } as const
 
 /**

@@ -342,7 +342,7 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run Accessibility tests
-        run: pnpm exec playwright test tests/a11y/ --reporter=html
+        run: pnpm exec playwright test --project=a11y --reporter=html
         working-directory: ./frontend
 
       - name: Upload Accessibility test report
