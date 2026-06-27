@@ -35,5 +35,20 @@
   "deleted_success": "تم حذف المهمة.",
   "delete_failed": "تعذر حذف المهمة",
   "conflict_title": "تم تعديل المهمة في مكان آخر",
-  "conflict_message": "قام مستخدم آخر بتحديث هذه المهمة. لم يتم حفظ تغييراتك."
+  "conflict_message": "قام مستخدم آخر بتحديث هذه المهمة. لم يتم حفظ تغييراتك.",
+  "editTask": "تعديل المهمة",
+  "editTaskDescription": "حدّث تفاصيل المهمة",
+  "deleteTask": "حذف المهمة",
+  "deleteTaskConfirmation": "هل أنت متأكد من حذف \"{{title}}\"؟ يمكن التراجع عن هذا الإجراء.",
+  "form": {
+    "title": "العنوان",
+    "titlePlaceholder": "عنوان المهمة…",
+    "description": "الوصف",
+    "descriptionPlaceholder": "وصف المهمة…",
+    "assignee": "المكلَّف",
+    "priority": "الأولوية",
+    "workflowStage": "المرحلة",
+    "deadline": "الموعد النهائي",
+    "selectDeadline": "اختر الموعد النهائي"
+  }
 }

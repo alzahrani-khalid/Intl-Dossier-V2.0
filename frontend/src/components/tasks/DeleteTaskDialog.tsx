@@ -52,15 +52,9 @@ export function DeleteTaskDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-start">
-            {t('tasks.deleteTask', 'Delete Task')}
-          </AlertDialogTitle>
+          <AlertDialogTitle className="text-start">{t('tasks-page:deleteTask')}</AlertDialogTitle>
           <AlertDialogDescription className="text-start">
-            {t(
-              'tasks.deleteTaskConfirmation',
-              'Are you sure you want to delete "{{title}}"? This action can be undone.',
-              { title: taskTitle },
-            )}
+            {t('tasks-page:deleteTaskConfirmation', { title: taskTitle })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="flex flex-col-reverse sm:flex-row gap-2">

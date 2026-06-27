@@ -35,5 +35,20 @@
   "deleted_success": "The task was deleted.",
   "delete_failed": "Could not delete task",
   "conflict_title": "Task changed elsewhere",
-  "conflict_message": "This task was updated by someone else. Your changes were not saved."
+  "conflict_message": "This task was updated by someone else. Your changes were not saved.",
+  "editTask": "Edit task",
+  "editTaskDescription": "Update the task details",
+  "deleteTask": "Delete task",
+  "deleteTaskConfirmation": "Are you sure you want to delete \"{{title}}\"? This action can be undone.",
+  "form": {
+    "title": "Title",
+    "titlePlaceholder": "Task title…",
+    "description": "Description",
+    "descriptionPlaceholder": "Task description…",
+    "assignee": "Assignee",
+    "priority": "Priority",
+    "workflowStage": "Stage",
+    "deadline": "Deadline",
+    "selectDeadline": "Select deadline"
+  }
 }
