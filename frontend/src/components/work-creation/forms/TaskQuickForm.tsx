@@ -173,7 +173,8 @@ export function TaskQuickForm({
         }
       }
 
-      toast.success(t('form.taskCreated', 'Task created successfully'))
+      // Success is toasted once by WorkCreationProvider.handleSuccess; the form
+      // must not toast too (B-28 — avoids a duplicate success toast).
       form.reset()
       onSuccess?.(data)
     },

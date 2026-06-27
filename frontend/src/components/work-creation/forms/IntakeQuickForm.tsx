@@ -163,7 +163,8 @@ export function IntakeQuickForm({
             toast.warning(t('dossier-context:errors.create_link_failed'))
           }
         }
-        toast.success(t('form.intakeCreated', 'Intake request created successfully'))
+        // Success is toasted once by WorkCreationProvider.handleSuccess; the form
+        // must not toast too (B-28 — avoids a duplicate success toast).
         form.reset()
         onSuccess?.(data)
       },
