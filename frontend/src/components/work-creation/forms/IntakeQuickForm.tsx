@@ -35,6 +35,7 @@ import { Badge } from '@/components/ui/badge'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useCreateTicket } from '@/domains/intake/hooks/useIntakeApi'
+import { useCreateWorkItemDossierLinks } from '@/hooks/useCreateWorkItemDossierLinks'
 import type { CreationContext } from '../hooks/useCreationContext'
 import type { CreateTicketRequest } from '@/types/intake'
 import { DossierContextBadge, DossierSelector, type SelectedDossier } from '@/components/dossier'
@@ -109,7 +110,17 @@ export function IntakeQuickForm({
   // Maps camelCase → snake_case (request) and snake_case → camelCase (response), replacing
   // the previous raw fetch that hit a nonexistent endpoint with a camelCase body.
   const createMutation = useCreateTicket()
-  const isPending = createMutation.isPending
+
+  // Link the created intake to its dossier via the work_item_dossiers junction.
+  // Intake has no DB backstop trigger (only commitments do), so without this the
+  // palette-created intake is absent from junction-based dossier surfaces.
+  const createDossierLinksMutation = useCreateWorkItemDossierLinks({
+    onError: (error) => {
+      // Logged here; the create flow surfaces a soft warning to the user.
+      console.warn('Failed to create dossier links:', error)
+    },
+  })
+  const isPending = createMutation.isPending || createDossierLinksMutation.isPending
 
   const onSubmit = (values: IntakeQuickFormValues) => {
     // Validate dossier is selected
@@ -133,8 +144,23 @@ export function IntakeQuickForm({
     }
 
     createMutation.mutate(request, {
-      onSuccess: (data) => {
+      onSuccess: async (data) => {
         void queryClient.invalidateQueries({ queryKey: ['unified-work'] })
+        // Create the work_item_dossiers junction row so the intake surfaces on
+        // dossier activity timelines and junction-based queries.
+        if (data?.id) {
+          try {
+            await createDossierLinksMutation.mutateAsync({
+              work_item_type: 'intake',
+              work_item_id: data.id,
+              dossier_ids: [effectiveDossierId],
+              inheritance_source: 'direct',
+              is_primary: true,
+            })
+          } catch {
+            // Failure logged in the hook onError; surfaced to the user in B-8.
+          }
+        }
         toast.success(t('form.intakeCreated', 'Intake request created successfully'))
         form.reset()
         onSuccess?.(data)
