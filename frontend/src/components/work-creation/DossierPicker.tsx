@@ -309,6 +309,7 @@ export function DossierPicker({
             type="button"
             variant="outline"
             role="combobox"
+            aria-haspopup="listbox"
             aria-controls={listboxId}
             aria-expanded={open}
             aria-required={required ? true : undefined}
@@ -336,34 +337,36 @@ export function DossierPicker({
             />
             <CommandList id={listboxId} aria-label={t('form.dossierResults', 'Dossier results')}>
               <CommandEmpty>
-                {isSearching ? (
-                  t('form.searching', 'Searching...')
-                ) : searchQuery.length < MIN_SEARCH_CHARS ? (
-                  t('form.typeToSearch', 'Type at least 2 characters to search')
-                ) : (
-                  <div className="flex flex-col items-center gap-2 py-2">
-                    <span className="text-muted-foreground">
-                      {t('form.noDossiersFound', 'No dossiers found')}
-                    </span>
-                    {allowQuickAdd && searchQuery.length >= MIN_SEARCH_CHARS && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        className="min-h-9 gap-2"
-                        onClick={() => {
-                          if (onQuickAdd) {
-                            onQuickAdd(searchQuery)
-                          }
-                          setOpen(false)
-                        }}
-                      >
-                        <Plus className="size-4" />
-                        {t('form.createNew', 'Create "{{name}}"', { name: searchQuery })}
-                      </Button>
-                    )}
-                  </div>
-                )}
+                <div role="status" aria-live="polite">
+                  {isSearching ? (
+                    t('form.searching', 'Searching...')
+                  ) : searchQuery.length < MIN_SEARCH_CHARS ? (
+                    t('form.typeToSearch', 'Type at least 2 characters to search')
+                  ) : (
+                    <div className="flex flex-col items-center gap-2 py-2">
+                      <span className="text-muted-foreground">
+                        {t('form.noDossiersFound', 'No dossiers found')}
+                      </span>
+                      {allowQuickAdd && searchQuery.length >= MIN_SEARCH_CHARS && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="min-h-9 gap-2"
+                          onClick={() => {
+                            if (onQuickAdd) {
+                              onQuickAdd(searchQuery)
+                            }
+                            setOpen(false)
+                          }}
+                        >
+                          <Plus className="size-4" />
+                          {t('form.createNew', 'Create "{{name}}"', { name: searchQuery })}
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </CommandEmpty>
 
               {/* Search results */}
