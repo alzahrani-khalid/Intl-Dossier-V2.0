@@ -243,7 +243,6 @@ serve(async (req) => {
         JSON.stringify({
           error: 'Internal Server Error',
           message: 'Failed to update ticket',
-          details: updateError,
         }),
         {
           status: 500,

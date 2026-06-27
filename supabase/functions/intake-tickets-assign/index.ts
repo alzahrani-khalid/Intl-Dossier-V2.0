@@ -182,7 +182,6 @@ serve(async (req) => {
         JSON.stringify({
           error: "Internal Server Error",
           message: "Failed to assign ticket",
-          details: updateError,
         }),
         {
           status: 500,

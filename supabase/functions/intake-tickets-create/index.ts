@@ -231,7 +231,6 @@ serve(async (req) => {
         JSON.stringify({
           error: "Internal Server Error",
           message: "Failed to create ticket",
-          details: ticketError,
         }),
         {
           status: 500,
