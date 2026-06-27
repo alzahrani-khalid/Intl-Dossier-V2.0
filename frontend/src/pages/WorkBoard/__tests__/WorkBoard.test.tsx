@@ -32,6 +32,17 @@ vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => navigateMock,
 }))
 
+// ── Work-creation palette mock ────────────────────────────────────────────
+// B-24: WorkBoard's +Add / +New now call useWorkCreation().openPalette('task')
+// instead of navigating to /tasks. Mock the barrel at the boundary so the real
+// WorkCreationProvider (which transitively imports language-provider → @/i18n,
+// incompatible with this file's minimal react-i18next mock) never loads, and so
+// the palette open can be asserted directly.
+const openPaletteMock = vi.fn()
+vi.mock('@/components/work-creation', () => ({
+  useWorkCreation: () => ({ openPalette: openPaletteMock, closePalette: vi.fn(), isOpen: false }),
+}))
+
 // ── Skeleton mock — keep tests deterministic ──────────────────────────────
 vi.mock('@/components/ui/skeleton', () => ({
   Skeleton: ({ className }: { className?: string }): ReactElement => (
@@ -364,6 +375,7 @@ function makeBoardItems(): WI[] {
 beforeEach(() => {
   currentLang = 'en'
   navigateMock.mockReset()
+  openPaletteMock.mockReset()
   mutateMock.mockReset()
   mockUseUnifiedKanban.mockReset()
   lastKanbanProviderProps = {}
@@ -472,14 +484,16 @@ describe('WorkBoard', () => {
     expect(navigateMock).toHaveBeenCalledWith({ to: '/commitments' })
   })
 
-  it('per-column +Add invokes navigate to /tasks with the workflow stage', async () => {
+  it('per-column +Add opens the work-creation palette prefilled to Task (B-24)', async () => {
     mockUseUnifiedKanban.mockReturnValue({ items: makeBoardItems(), isLoading: false })
     const { WorkBoard } = await importFresh()
     render(<WorkBoard />)
     fireEvent.click(screen.getByTestId('add-review'))
-    expect(navigateMock).toHaveBeenCalledTimes(1)
-    const call = navigateMock.mock.calls[0]?.[0] as { to: string }
-    expect(call.to).toContain('/tasks')
+    // B-24: +Add no longer navigates to the (formless) /tasks list with an
+    // unconsumed defaultWorkflowStage param; it opens the unified palette.
+    expect(openPaletteMock).toHaveBeenCalledTimes(1)
+    expect(openPaletteMock).toHaveBeenCalledWith('task')
+    expect(navigateMock).not.toHaveBeenCalled()
   })
 
   it('renders Skeleton placeholders shape-matching 4 columns × 3 kcards when isLoading', async () => {
