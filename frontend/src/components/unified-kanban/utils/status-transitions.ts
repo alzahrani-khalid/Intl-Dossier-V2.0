@@ -434,7 +434,6 @@ export function getTransitionErrorMessage(
 
   return msg.invalid
 }
-
 // ============================================
 // Validation Helpers
 // ============================================
