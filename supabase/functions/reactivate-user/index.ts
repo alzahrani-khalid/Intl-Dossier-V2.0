@@ -67,10 +67,11 @@ serve(async (req) => {
     // Parse request
     const { userId, securityReviewApproval, reason }: ReactivateUserRequest = await req.json();
 
-    // Get target user details
+    // Get target user details. The users table has no `status` column; account
+    // state is tracked by the `is_active` boolean.
     const { data: targetUser } = await supabaseClient
       .from("users")
-      .select("status, role, email")
+      .select("is_active, role, email")
       .eq("id", userId)
       .single();
 
@@ -81,7 +82,7 @@ serve(async (req) => {
       );
     }
 
-    if (targetUser.status !== "deactivated") {
+    if (targetUser.is_active !== false) {
       return new Response(
         JSON.stringify({ success: false, error: "User is not deactivated" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -103,7 +104,7 @@ serve(async (req) => {
     const { error: reactivateError } = await supabaseClient
       .from("users")
       .update({
-        status: "active",
+        is_active: true,
         updated_at: new Date().toISOString(),
       })
       .eq("id", userId);
@@ -123,7 +124,7 @@ serve(async (req) => {
       resource_type: "user",
       resource_id: userId,
       changes: {
-        status: "active",
+        is_active: true,
         role_restored: targetUser.role,
         reason: reason || "No reason provided",
         security_review_approval: securityReviewApproval || null,
