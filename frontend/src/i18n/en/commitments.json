@@ -47,6 +47,8 @@
     "ownerType": "Owner Type",
     "owner": "Owner",
     "selectOwner": "Select owner",
+    "ownerInternalHelp": "Select the responsible user",
+    "ownerExternalHelp": "Enter the external contact ID",
     "proofRequired": "Proof Required",
     "proofRequiredDescription": "Evidence upload required for completion",
     "trackingMode": "Tracking Mode",

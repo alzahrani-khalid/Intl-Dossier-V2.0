@@ -389,8 +389,8 @@ export function CommitmentForm({
               )}
               <FormDescription className="text-start">
                 {watchOwnerType === 'internal'
-                  ? 'Enter internal user ID'
-                  : 'Enter external contact ID'}
+                  ? t('form.ownerInternalHelp')
+                  : t('form.ownerExternalHelp')}
               </FormDescription>
               <FormMessage>{ownerError?.message && t(ownerError.message)}</FormMessage>
             </FormItem>
