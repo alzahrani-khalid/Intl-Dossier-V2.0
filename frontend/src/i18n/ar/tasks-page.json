@@ -50,5 +50,29 @@
     "workflowStage": "المرحلة",
     "deadline": "الموعد النهائي",
     "selectDeadline": "اختر الموعد النهائي"
+  },
+  "conflict": {
+    "title": "تعارض في التحديث",
+    "description": "تم تعديل هذه المهمة من قبل شخص آخر أثناء تحريرك لها. اختر طريقة الحل.",
+    "conflictingFields": "الحقول المتعارضة",
+    "yourChange": "تغييرك",
+    "theirChange": "تغييرهم",
+    "reloadOption": "إعادة تحميل الأحدث",
+    "reloadOptionDescription": "تجاهل تعديلاتك وتحميل النسخة الحالية.",
+    "forceSaveOption": "الكتابة فوقها",
+    "forceSaveOptionDescription": "حفظ تعديلاتك فوق تغييرات الشخص الآخر.",
+    "cancelOption": "متابعة التحرير",
+    "cancelOptionDescription": "إغلاق هذا المربع والاحتفاظ بتعديلاتك غير المحفوظة.",
+    "reload": "إعادة تحميل",
+    "forceSave": "الكتابة فوقها"
+  },
+  "field": {
+    "title": "العنوان",
+    "description": "الوصف",
+    "assignee_id": "المكلَّف",
+    "priority": "الأولوية",
+    "workflow_stage": "المرحلة",
+    "status": "الحالة",
+    "sla_deadline": "الموعد النهائي"
   }
 }

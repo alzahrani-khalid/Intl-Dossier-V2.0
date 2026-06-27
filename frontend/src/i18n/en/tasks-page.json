@@ -50,5 +50,29 @@
     "workflowStage": "Stage",
     "deadline": "Deadline",
     "selectDeadline": "Select deadline"
+  },
+  "conflict": {
+    "title": "Update conflict",
+    "description": "This task was changed by someone else while you were editing. Choose how to resolve it.",
+    "conflictingFields": "Conflicting fields",
+    "yourChange": "Your change",
+    "theirChange": "Their change",
+    "reloadOption": "Reload latest",
+    "reloadOptionDescription": "Discard your edits and load the current version.",
+    "forceSaveOption": "Overwrite",
+    "forceSaveOptionDescription": "Save your edits over the other person's changes.",
+    "cancelOption": "Keep editing",
+    "cancelOptionDescription": "Close this dialog and keep your unsaved edits.",
+    "reload": "Reload",
+    "forceSave": "Overwrite"
+  },
+  "field": {
+    "title": "Title",
+    "description": "Description",
+    "assignee_id": "Assignee",
+    "priority": "Priority",
+    "workflow_stage": "Stage",
+    "status": "Status",
+    "sla_deadline": "Deadline"
   }
 }
