@@ -45,8 +45,8 @@ describe('ConflictDialog', () => {
     renderDialog()
 
     expect(screen.getByRole('alertdialog')).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: /conflict detected/i })).toBeInTheDocument()
-    expect(screen.getByText('Conflicting Fields')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /update conflict/i })).toBeInTheDocument()
+    expect(screen.getByText('Conflicting fields')).toBeInTheDocument()
     expect(screen.getByText(/Server Title/i)).toBeInTheDocument()
     expect(screen.getByText(/Local Title/i)).toBeInTheDocument()
     expect(screen.getByText('user-789')).toBeInTheDocument()
@@ -62,7 +62,7 @@ describe('ConflictDialog', () => {
     renderDialog({ onReload, onForceOverwrite, onCancel, onOpenChange })
 
     fireEvent.click(screen.getByRole('button', { name: /reload/i }))
-    fireEvent.click(screen.getByRole('button', { name: /force save/i }))
+    fireEvent.click(screen.getByRole('button', { name: /overwrite/i }))
     fireEvent.click(screen.getByRole('button', { name: /cancel/i }))
 
     expect(onReload).toHaveBeenCalledTimes(1)

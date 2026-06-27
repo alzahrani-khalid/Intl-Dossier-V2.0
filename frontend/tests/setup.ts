@@ -285,6 +285,34 @@ vi.mock('react-i18next', async () => {
           'tasks.conflict.theirChange': 'Their Change',
           'tasks.conflict.title': 'Conflict Detected',
           'tasks.conflict.yourChange': 'Your Change',
+          // tasks-page namespace (ConflictDialog migrated from the default `tasks.*`
+          // dot-keys to the colon-namespaced `tasks-page:conflict.*` form; copy
+          // mirrors src/i18n/en/tasks-page.json). Keyed in normalized dot form
+          // because the mock does key.replace(':', '.') before lookup.
+          'tasks-page.conflict.title': 'Update conflict',
+          'tasks-page.conflict.description':
+            'This task was changed by someone else while you were editing. Choose how to resolve it.',
+          'tasks-page.conflict.conflictingFields': 'Conflicting fields',
+          'tasks-page.conflict.yourChange': 'Your change',
+          'tasks-page.conflict.theirChange': 'Their change',
+          'tasks-page.conflict.reloadOption': 'Reload latest',
+          'tasks-page.conflict.reloadOptionDescription':
+            'Discard your edits and load the current version.',
+          'tasks-page.conflict.forceSaveOption': 'Overwrite',
+          'tasks-page.conflict.forceSaveOptionDescription':
+            "Save your edits over the other person's changes.",
+          'tasks-page.conflict.cancelOption': 'Keep editing',
+          'tasks-page.conflict.cancelOptionDescription':
+            'Close this dialog and keep your unsaved edits.',
+          'tasks-page.conflict.reload': 'Reload',
+          'tasks-page.conflict.forceSave': 'Overwrite',
+          'tasks-page.field.title': 'Title',
+          'tasks-page.field.description': 'Description',
+          'tasks-page.field.assignee_id': 'Assignee',
+          'tasks-page.field.priority': 'Priority',
+          'tasks-page.field.workflow_stage': 'Stage',
+          'tasks-page.field.status': 'Status',
+          'tasks-page.field.sla_deadline': 'Deadline',
           'tasks.noContributors': 'No contributors yet',
           'tasks.removeContributor': 'Remove contributor',
           'tasks.sla.approaching': 'Approaching',
