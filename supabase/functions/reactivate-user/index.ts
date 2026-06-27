@@ -1,11 +1,7 @@
-// @deno-types="npm:@types/node"
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+import { getCorsHeaders, handleCorsPreflightRequest } from "../_shared/cors.ts";
+import { withRateLimit, ADMIN_RATE_LIMIT } from "../_shared/rate-limiter.ts";
 
 interface ReactivateUserRequest {
   userId: string;
@@ -20,13 +16,21 @@ interface ReactivateUserResponse {
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
+  }
+
+  // Rate limit this admin action (10 req/min per IP)
+  const rateLimitResponse = await withRateLimit(req, ADMIN_RATE_LIMIT, corsHeaders);
+  if (rateLimitResponse) {
+    return rateLimitResponse;
   }
 
   try {
-    // Initialize Supabase client
+    // Anon + bearer client: used ONLY to authenticate the requester.
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_ANON_KEY") ?? "",
@@ -34,6 +38,16 @@ serve(async (req) => {
         global: {
           headers: { Authorization: req.headers.get("Authorization")! },
         },
+      }
+    );
+
+    // Service-role client: privileged cross-user reads/writes. Bypasses RLS and
+    // satisfies the D-1/D-2 audit triggers for the is_active change.
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      {
+        auth: { autoRefreshToken: false, persistSession: false },
       }
     );
 
@@ -50,8 +64,8 @@ serve(async (req) => {
       );
     }
 
-    // Verify admin role
-    const { data: adminUser } = await supabaseClient
+    // Verify admin role (service-role read)
+    const { data: adminUser } = await supabaseAdmin
       .from("users")
       .select("role")
       .eq("id", user.id)
@@ -69,7 +83,7 @@ serve(async (req) => {
 
     // Get target user details. The users table has no `status` column; account
     // state is tracked by the `is_active` boolean.
-    const { data: targetUser } = await supabaseClient
+    const { data: targetUser } = await supabaseAdmin
       .from("users")
       .select("is_active, role, email")
       .eq("id", userId)
@@ -100,8 +114,8 @@ serve(async (req) => {
       );
     }
 
-    // Reactivate user account
-    const { error: reactivateError } = await supabaseClient
+    // Reactivate user account (service-role write)
+    const { error: reactivateError } = await supabaseAdmin
       .from("users")
       .update({
         is_active: true,
@@ -118,7 +132,7 @@ serve(async (req) => {
     }
 
     // Log audit trail with reactivation reason
-    await supabaseClient.from("audit_logs").insert({
+    await supabaseAdmin.from("audit_logs").insert({
       user_id: user.id,
       action: "user_reactivated",
       resource_type: "user",
