@@ -193,7 +193,7 @@ serve(async (req) => {
 
     // Check if requester has admin role
     const { data: requesterData, error: requesterError } = await supabaseAdmin
-      .from('auth.users')
+      .from('users')
       .select('role')
       .eq('id', requester.id)
       .single()
@@ -249,7 +249,7 @@ serve(async (req) => {
 
     // Check if email already exists
     const { data: existingEmail, error: emailCheckError } = await supabaseAdmin
-      .from('auth.users')
+      .from('users')
       .select('id')
       .eq('email', body.email.toLowerCase())
       .maybeSingle()
@@ -273,7 +273,7 @@ serve(async (req) => {
 
     // Check if username already exists
     const { data: existingUsername, error: usernameCheckError } = await supabaseAdmin
-      .from('auth.users')
+      .from('users')
       .select('id')
       .eq('username', body.username.toLowerCase())
       .maybeSingle()
@@ -339,22 +339,13 @@ serve(async (req) => {
 
     // Update auth.users table with extended fields
     const { error: updateError } = await supabaseAdmin
-      .from('auth.users')
+      .from('users')
       .update({
         username: body.username.toLowerCase(),
         full_name: body.full_name,
         role: body.role,
-        user_type: userType,
-        status: 'inactive',
-        preferences: {
-          language: 'en',
-          timezone: 'UTC',
-          notifications_enabled: true,
-          email_notifications: true,
-        },
+        is_active: false,
         mfa_enabled: false,
-        allowed_resources: body.allowed_resources || [],
-        expires_at: body.expires_at || null,
         created_by: requester.id,
       })
       .eq('id', newUser.user.id)

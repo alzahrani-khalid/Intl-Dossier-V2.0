@@ -126,10 +126,10 @@ serve(async (req) => {
 
     // Look up user by email
     const { data: user, error: userError } = await supabase
-      .from('auth.users')
-      .select('id, email, full_name, mfa_enabled, preferences')
+      .from('users')
+      .select('id, email, full_name, mfa_enabled, language_preference')
       .eq('email', email)
-      .eq('status', 'active')
+      .eq('is_active', true)
       .single()
 
     // Don't reveal if email exists (security best practice)
@@ -143,7 +143,7 @@ serve(async (req) => {
       )
     }
 
-    const language = user.preferences?.language || 'en'
+    const language = user.language_preference || 'en'
 
     // Generate reset token
     const resetToken = generateResetToken()
