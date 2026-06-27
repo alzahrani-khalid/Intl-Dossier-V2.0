@@ -46,7 +46,9 @@ import { useDirection } from '@/hooks/useDirection'
 const intakeQuickFormSchema = z.object({
   requestType: z.enum(['engagement', 'position', 'mou_action', 'foresight'] as const),
   title: z.string().min(1, 'validation:titleRequired').max(200, 'validation:titleMaxLength'),
+  titleAr: z.string().min(1, 'validation:titleRequired').max(200, 'validation:titleMaxLength'),
   description: z.string().min(1, 'validation:descriptionRequired'),
+  descriptionAr: z.string().min(1, 'validation:descriptionRequired'),
   urgency: z.enum(['low', 'medium', 'high', 'critical'] as const),
 })
 
@@ -101,7 +103,9 @@ export function IntakeQuickForm({
     defaultValues: {
       requestType: 'engagement',
       title: '',
+      titleAr: '',
       description: '',
+      descriptionAr: '',
       urgency: 'medium',
     },
   })
@@ -133,12 +137,9 @@ export function IntakeQuickForm({
     const request: CreateTicketRequest = {
       requestType: values.requestType,
       title: values.title,
-      // This palette form is single-language; mirror the English text into the
-      // Arabic columns so the NOT NULL title_ar/description_ar constraints are
-      // satisfied. The full IntakeForm collects Arabic separately.
-      titleAr: values.title,
+      titleAr: values.titleAr,
       description: values.description,
-      descriptionAr: values.description,
+      descriptionAr: values.descriptionAr,
       urgency: values.urgency,
       dossierId: effectiveDossierId,
     }
@@ -295,6 +296,28 @@ export function IntakeQuickForm({
           )}
         />
 
+        {/* Title (Arabic) — stored in the NOT NULL title_ar column */}
+        <FormField
+          control={form.control}
+          name="titleAr"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-start block">
+                {t('intake:form.titleAr.label', 'Title (Arabic)')} *
+              </FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder={t('intake:form.titleAr.placeholder', 'موجز طلبك')}
+                  className="min-h-11"
+                  dir="rtl"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         {/* Description */}
         <FormField
           control={form.control}
@@ -309,6 +332,28 @@ export function IntakeQuickForm({
                   {...field}
                   placeholder={t('intake:form.descriptionPlaceholder', 'Describe your request')}
                   className="min-h-24 resize-none"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Description (Arabic) — stored in the NOT NULL description_ar column */}
+        <FormField
+          control={form.control}
+          name="descriptionAr"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-start block">
+                {t('intake:form.descriptionAr.label', 'Description (Arabic)')} *
+              </FormLabel>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  placeholder={t('intake:form.descriptionAr.placeholder', 'صف طلبك')}
+                  className="min-h-24 resize-none"
+                  dir="rtl"
                 />
               </FormControl>
               <FormMessage />
