@@ -114,6 +114,17 @@ serve(async (req: Request) => {
       );
     }
 
+    // Only the author may restore a version of their own draft
+    if (currentPosition.author_id !== user.id) {
+      return new Response(
+        JSON.stringify({
+          error: 'Only the author can restore versions of this position',
+          error_ar: 'فقط المؤلف يمكنه استعادة إصدارات هذا الموقف',
+        }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Only allow restore on draft positions
     if (currentPosition.status !== 'draft') {
       return new Response(
