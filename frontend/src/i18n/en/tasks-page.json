@@ -24,5 +24,16 @@
   "error": {
     "list": "Could not load tasks. Try refreshing the page.",
     "update": "Could not update task. Changes were reverted."
-  }
+  },
+  "created": "Task created",
+  "created_success": "The task was created successfully.",
+  "create_failed": "Could not create task",
+  "updated": "Task updated",
+  "updated_success": "The task was updated successfully.",
+  "update_failed": "Could not update task",
+  "deleted": "Task deleted",
+  "deleted_success": "The task was deleted.",
+  "delete_failed": "Could not delete task",
+  "conflict_title": "Task changed elsewhere",
+  "conflict_message": "This task was updated by someone else. Your changes were not saved."
 }
