@@ -101,6 +101,59 @@ serve(async (req) => {
       ? body.target_ticket_ids
       : [...body.target_ticket_ids.filter(id => id !== finalPrimaryId), primaryTicketId];
 
+    // SECURITY (N2 IDOR): merge_tickets is SECURITY DEFINER and bypasses RLS, so
+    // any authenticated caller could otherwise merge arbitrary tickets by id.
+    // Build a CALLER-scoped client (anon key + caller JWT) so RLS applies, then
+    // confirm the caller can SELECT every ticket this request will touch BEFORE
+    // invoking the privileged RPC. If any id is invisible under RLS → 403.
+    const callerClient = createClient(supabaseUrl, Deno.env.get('SUPABASE_ANON_KEY')!, {
+      global: {
+        headers: { Authorization: authHeader },
+      },
+    });
+
+    const involvedTicketIds = Array.from(
+      new Set<string>([
+        primaryTicketId,
+        finalPrimaryId,
+        ...body.target_ticket_ids,
+        ...ticketsToMerge,
+      ])
+    );
+
+    const { data: visibleTickets, error: visibilityError } = await callerClient
+      .from('intake_tickets')
+      .select('id')
+      .in('id', involvedTicketIds);
+
+    if (visibilityError) {
+      console.error('Authorization pre-read failed:', visibilityError);
+      return new Response(
+        JSON.stringify({ error: 'forbidden', message: 'Not authorized to merge these tickets' }),
+        {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    const visibleIds = new Set<string>(
+      (visibleTickets ?? []).map((row: { id: string }) => row.id)
+    );
+    const unauthorizedIds = involvedTicketIds.filter((id) => !visibleIds.has(id));
+    if (unauthorizedIds.length > 0) {
+      return new Response(
+        JSON.stringify({
+          error: 'forbidden',
+          message: 'Not authorized to merge one or more of the specified tickets',
+        }),
+        {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     // Generate correlation ID
     const correlationId = `merge_${Date.now()}_${Math.random()
       .toString(36)

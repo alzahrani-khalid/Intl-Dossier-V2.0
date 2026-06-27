@@ -77,6 +77,55 @@ Deno.serve(async (req) => {
       );
     }
 
+    // SECURITY (N6 IDOR + authz): convert_ticket_to_artifact is SECURITY DEFINER
+    // and bypasses RLS. Build a CALLER-scoped client (anon key + caller JWT) so
+    // RLS applies, confirm the caller can SELECT this ticket, then require the
+    // caller to be a privileged editor/admin OR the ticket assignee BEFORE
+    // invoking the privileged conversion RPC.
+    const callerClient = createClient(supabaseUrl, Deno.env.get('SUPABASE_ANON_KEY')!, {
+      global: {
+        headers: { Authorization: authHeader },
+      },
+    });
+
+    const { data: callerTicket, error: callerTicketError } = await callerClient
+      .from('intake_tickets')
+      .select('id, assigned_to')
+      .eq('id', ticketId)
+      .maybeSingle();
+
+    if (callerTicketError) {
+      console.error('Authorization pre-read failed:', callerTicketError);
+    }
+
+    if (!callerTicket) {
+      // Invisible under RLS (or nonexistent) → caller is not authorized.
+      return new Response(
+        JSON.stringify({ error: 'forbidden', message: 'Not authorized to convert this ticket' }),
+        { status: 403, headers }
+      );
+    }
+
+    // Role from public.users (never client-settable user_metadata).
+    const { data: callerRecord } = await callerClient
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+    const callerRole = callerRecord?.role;
+    const isAssignee = callerTicket.assigned_to === user.id;
+    const isPrivileged = ['admin', 'editor'].includes(callerRole);
+
+    if (!isAssignee && !isPrivileged) {
+      return new Response(
+        JSON.stringify({
+          error: 'forbidden',
+          message: 'Only an editor, admin, or the ticket assignee can convert this ticket',
+        }),
+        { status: 403, headers }
+      );
+    }
+
     // Get ticket to check sensitivity
     const { data: ticket, error: ticketError } = await supabase
       .from('intake_tickets')
