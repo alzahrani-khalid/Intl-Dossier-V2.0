@@ -132,7 +132,10 @@ export function getColumnsForMode(mode: KanbanColumnMode): KanbanColumn[] {
  */
 export function getColumnOrder(mode: KanbanColumnMode, isRTL = false): string[] {
   const columns = getColumnsForMode(mode)
-  const order = columns.sort((a, b) => a.sortOrder - b.sortOrder).map((c) => c.key)
+  // B-37: copy before sorting — getColumnsForMode returns the shared constant
+  // array (STATUS_COLUMNS, …), and Array.prototype.sort mutates in place, which
+  // would permanently reorder the module-level definition.
+  const order = [...columns].sort((a, b) => a.sortOrder - b.sortOrder).map((c) => c.key)
   return isRTL ? [...order].reverse() : order
 }
 
