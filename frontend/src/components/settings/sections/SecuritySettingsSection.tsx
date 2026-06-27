@@ -123,7 +123,12 @@ export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) 
       icon={Lock}
     >
       <div className="space-y-6">
-        {/* Two-Factor Authentication */}
+        {/* Two-Factor Authentication — status is read-only here (D-6).
+            Enabling MFA requires a verified secret (setup-mfa → QR →
+            verify-mfa-setup), a flow this settings surface does not yet run, so
+            the toggle is disabled and `mfa_enabled` is never written from here
+            (SettingsPage also omits it from the save). The badge reflects the
+            real stored status. */}
         <SettingsGroup>
           <SettingsItem
             label={t('security.twoFactor')}
@@ -141,34 +146,9 @@ export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) 
               >
                 {mfaEnabled ? t('security.twoFactorEnabled') : t('security.twoFactorDisabled')}
               </Badge>
-              <Switch
-                checked={mfaEnabled}
-                onCheckedChange={(checked) =>
-                  form.setValue('mfa_enabled', checked, { shouldDirty: true })
-                }
-              />
+              <Switch checked={mfaEnabled} disabled aria-label={t('security.twoFactor')} />
             </div>
           </SettingsItem>
-
-          {mfaEnabled && (
-            <Card className="border-warning/20 bg-warning/5 dark:bg-warning/20 dark:border-warning/70">
-              <CardContent className="p-4">
-                <div className="flex items-start gap-3">
-                  <AlertCircle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
-                  <div className="text-sm">
-                    <p className="font-medium text-warning mb-1">
-                      {t('security.mfaSetupRequired')}
-                    </p>
-                    <p className="text-warning">{t('security.mfaSetupInstructions')}</p>
-                    <Button size="sm" className="mt-3" variant="outline">
-                      <Key className="h-4 w-4 me-2" />
-                      {t('security.setupTwoFactor')}
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
         </SettingsGroup>
 
         {/* Session Timeout */}
