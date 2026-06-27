@@ -198,6 +198,11 @@ export async function createCommitment(input: CreateCommitmentInput): Promise<Co
       status: input.status ?? 'pending',
       tracking_mode,
       proof_required: input.proof_required ?? false,
+      // B-17/E-22: persist the audit context the form already sends. Both
+      // columns exist on aa_commitments (created_from_route text,
+      // created_from_entity jsonb) and were silently dropped before.
+      created_from_route: input.created_from_route ?? null,
+      created_from_entity: input.created_from_entity ?? null,
       created_by: user.id,
       updated_by: user.id,
     })
