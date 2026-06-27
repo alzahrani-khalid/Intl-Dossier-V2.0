@@ -167,7 +167,9 @@ export function TaskQuickForm({
             is_primary: true,
           })
         } catch {
-          // Error already handled in hook - continue with success
+          // Tasks have no DB backstop trigger, so a failed link is a silent
+          // orphan. Surface a soft warning instead of claiming clean success.
+          toast.warning(t('dossier-context:errors.create_link_failed'))
         }
       }
 

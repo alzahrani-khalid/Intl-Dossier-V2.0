@@ -158,7 +158,9 @@ export function IntakeQuickForm({
               is_primary: true,
             })
           } catch {
-            // Failure logged in the hook onError; surfaced to the user in B-8.
+            // Intake has no DB backstop trigger, so a failed link is a silent
+            // orphan. Surface a soft warning instead of claiming clean success.
+            toast.warning(t('dossier-context:errors.create_link_failed'))
           }
         }
         toast.success(t('form.intakeCreated', 'Intake request created successfully'))
