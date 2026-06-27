@@ -91,11 +91,16 @@ describe('apiClient', () => {
     expect(capturedRequests[0]?.body).toEqual(body)
   })
 
-  it('apiGet throws Error with status code and statusText when response.ok is false', async () => {
+  it('apiGet throws ApiError surfacing the server error body and HTTP status when response.ok is false', async () => {
     mockJsonResponse('get', `${edgeBase()}/missing`, { error: 'missing' }, { status: 404 })
 
-    const { apiGet } = await import('@/lib/api-client')
-    await expect(apiGet('/missing')).rejects.toThrow('API error 404: Not Found')
+    const { apiGet, ApiError } = await import('@/lib/api-client')
+    // The client now prefers the server's localized message/error over the bare
+    // `API error <status>` status line and carries the status code on the error.
+    const error = await apiGet('/missing').catch((e: unknown) => e)
+    expect(error).toBeInstanceOf(ApiError)
+    expect((error as ApiError).message).toBe('missing')
+    expect((error as ApiError).status).toBe(404)
   })
 
   it('apiGet uses Edge Functions base URL by default (VITE_SUPABASE_URL + /functions/v1)', async () => {
