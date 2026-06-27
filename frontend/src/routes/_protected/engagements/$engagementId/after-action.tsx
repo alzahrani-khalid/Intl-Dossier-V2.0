@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { createFileRoute, useNavigate, Link } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
 import { useEngagement } from '@/hooks/useEngagement'
 import { useCreateAfterAction } from '@/hooks/useAfterAction'
 import type { ConflictError } from '@/hooks/useAfterAction'
@@ -29,6 +31,25 @@ function AfterActionFormPage(): React.ReactNode {
 
   const { data: engagement, isLoading: loadingEngagement } = useEngagement(engagementId)
   const createAfterAction = useCreateAfterAction()
+
+  // B-6: the internal-owner <Select> in CommitmentEditor needs a real user list.
+  // Without it the picker is empty, owner_user_id stays undefined and the
+  // commitment insert fails the valid_owner CHECK. Fetch active org users once.
+  const { data: availableUsers = [] } = useQuery({
+    queryKey: ['org-users', 'active'],
+    queryFn: async (): Promise<Array<{ id: string; name: string }>> => {
+      const { data, error } = await supabase
+        .from('users')
+        .select('id, full_name, email')
+        .eq('is_active', true)
+        .order('full_name', { ascending: true })
+        .limit(500)
+      if (error) throw error
+      return (data ?? []).map((u) => ({ id: u.id, name: u.full_name || u.email || u.id }))
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  })
 
   if (loadingEngagement) {
     return (
@@ -135,6 +156,7 @@ function AfterActionFormPage(): React.ReactNode {
           <AfterActionForm
             engagementId={engagementId}
             dossierId={(engagement as any).dossier_id ?? engagement.id}
+            availableUsers={availableUsers}
             onSave={handleSaveDraft}
             onDirtyChange={setFormDirty}
           />
