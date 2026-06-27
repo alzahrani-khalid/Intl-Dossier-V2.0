@@ -289,12 +289,16 @@ export async function updateCommitmentStatus(
     updated_at: new Date().toISOString(),
   }
 
-  // If marking as completed, set completed_at
+  // If marking as completed, set completed_at; otherwise clear it so a
+  // commitment moved back out of 'completed' (e.g. reopened) does not keep a
+  // stale completion timestamp (B-38).
   if (input.status === 'completed') {
     updateData.completed_at = new Date().toISOString()
     if (input.notes) {
       updateData.completion_notes = input.notes
     }
+  } else {
+    updateData.completed_at = null
   }
 
   const { data, error } = await supabase
