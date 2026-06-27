@@ -388,15 +388,12 @@ export function DossierPicker({
                         <Check
                           className={cn(
                             'size-4 shrink-0',
-                            isRTL ? 'ms-2' : 'me-2',
+                            'me-2',
                             isSelected ? 'opacity-100' : 'opacity-0',
                           )}
                         />
                         <DossierIcon
-                          className={cn(
-                            'size-4 shrink-0 text-muted-foreground',
-                            isRTL ? 'ms-2' : 'me-2',
-                          )}
+                          className={cn('size-4 shrink-0 text-muted-foreground', 'me-2')}
                         />
                         <span className="flex-1 truncate">{name}</span>
                         <Badge variant="outline" className="text-xs ms-2">
@@ -423,7 +420,7 @@ export function DossierPicker({
                       }}
                       className="min-h-11 text-primary"
                     >
-                      <Plus className={cn('size-4 shrink-0', isRTL ? 'ms-2' : 'me-2')} />
+                      <Plus className={cn('size-4 shrink-0', 'me-2')} />
                       <span className="flex-1">
                         {t('form.createNew', 'Create "{{name}}"', { name: searchQuery })}
                       </span>
@@ -458,15 +455,12 @@ export function DossierPicker({
                           <Check
                             className={cn(
                               'size-4 shrink-0',
-                              isRTL ? 'ms-2' : 'me-2',
+                              'me-2',
                               isSelected ? 'opacity-100' : 'opacity-0',
                             )}
                           />
                           <DossierIcon
-                            className={cn(
-                              'size-4 shrink-0 text-muted-foreground',
-                              isRTL ? 'ms-2' : 'me-2',
-                            )}
+                            className={cn('size-4 shrink-0 text-muted-foreground', 'me-2')}
                           />
                           <span className="flex-1 truncate">{name}</span>
                           <Badge variant="outline" className="text-xs ms-2">
