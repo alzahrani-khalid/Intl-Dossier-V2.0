@@ -774,7 +774,11 @@ export class AuthService {
   /**
    * Check user permissions
    */
-  async checkPermission(userId: string, permission: string, _resourceId?: string): Promise<boolean> {
+  async checkPermission(
+    userId: string,
+    permission: string,
+    _resourceId?: string,
+  ): Promise<boolean> {
     try {
       const { data: user } = await supabaseAdmin
         .from('users')
@@ -860,9 +864,23 @@ export class AuthService {
 
   // Helper methods
 
-  private verifyMFACode(_secret: string, _code: string): boolean {
-    // For now, return true for testing - implement proper MFA verification later
-    return true
+  private verifyMFACode(secret: string, code: string): boolean {
+    // Real TOTP verification. Secrets are stored base32 (see setupMFA →
+    // speakeasy.generateSecret().base32). Fail closed when either input is
+    // missing, and tolerate a ±1 step (±30s) clock skew.
+    if (!secret || !code) {
+      return false
+    }
+    try {
+      return speakeasy.totp.verify({
+        secret,
+        encoding: 'base32',
+        token: code,
+        window: 1,
+      })
+    } catch {
+      return false
+    }
   }
 
   /**
