@@ -218,31 +218,61 @@ serve(async (req) => {
       )
     }
 
-    // Get active delegations (not expired)
+    // allowed_resources is not a public.users column — it is stored on the auth
+    // user's metadata (written by create-user). Read it from there.
+    let allowedResources: string[] = []
+    {
+      const { data: authUserData, error: authUserError } =
+        await supabaseAdmin.auth.admin.getUserById(targetUserId)
+      if (authUserError) {
+        console.error('Auth user lookup error:', authUserError)
+      } else {
+        const meta = authUserData.user?.user_metadata?.allowed_resources
+        if (Array.isArray(meta)) {
+          allowedResources = meta as string[]
+        }
+      }
+    }
+
+    // Get active delegations from permission_delegations (the real table). A
+    // delegation is active when not revoked and not past valid_until. The grantor
+    // email is resolved via a separate public.users lookup — auth.users is not
+    // PostgREST-embeddable from this table, so the previous embed always errored
+    // and left delegations silently empty.
     const { data: delegations, error: delegationsError } = await supabaseAdmin
-      .from('delegations')
-      .select(
-        `
-        id,
-        grantor_id,
-        resource_type,
-        resource_id,
-        valid_until,
-        grantor:auth.users!delegations_grantor_id_fkey(email)
-      `,
-      )
+      .from('permission_delegations')
+      .select('id, grantor_id, resource_type, resource_id, valid_until')
       .eq('grantee_id', targetUserId)
-      .eq('status', 'active')
+      .eq('revoked', false)
       .gte('valid_until', new Date().toISOString())
 
     if (delegationsError) {
       console.error('Delegations query error:', delegationsError)
     }
 
+    const delegationRows = delegations ?? []
+
+    // Resolve grantor emails in a single public.users lookup.
+    const grantorEmailById = new Map<string, string>()
+    const grantorIds = [...new Set(delegationRows.map((d) => d.grantor_id).filter(Boolean))]
+    if (grantorIds.length > 0) {
+      const { data: grantors, error: grantorsError } = await supabaseAdmin
+        .from('users')
+        .select('id, email')
+        .in('id', grantorIds)
+      if (grantorsError) {
+        console.error('Grantor lookup error:', grantorsError)
+      } else {
+        for (const grantor of grantors ?? []) {
+          grantorEmailById.set(grantor.id, grantor.email)
+        }
+      }
+    }
+
     // Format delegations
-    const activeDelegations: DelegationSummary[] = (delegations || []).map((d) => ({
+    const activeDelegations: DelegationSummary[] = delegationRows.map((d) => ({
       id: d.id,
-      grantor_email: d.grantor?.email || 'unknown',
+      grantor_email: grantorEmailById.get(d.grantor_id) || 'unknown',
       resource_type: d.resource_type,
       resource_id: d.resource_id,
       valid_until: d.valid_until,
@@ -252,18 +282,17 @@ serve(async (req) => {
     const rolePermissions = getRolePermissions(targetUser.role)
 
     // Collect accessible resources from role and delegations
-    const accessibleResources = new Set<string>(targetUser.allowed_resources || [])
+    const accessibleResources = new Set<string>(allowedResources)
 
     // Add delegated resources
-    delegations?.forEach((d) => {
+    for (const d of delegationRows) {
       if (d.resource_id) {
         accessibleResources.add(d.resource_id)
       }
-    })
+    }
 
     // Check if delegations grant additional permissions
-    const hasDelegatedEditPermissions =
-      delegations?.some((d) => d.resource_type === 'dossier') || false
+    const hasDelegatedEditPermissions = delegationRows.some((d) => d.resource_type === 'dossier')
 
     const effectivePermissions: EffectivePermissions = {
       can_create_dossiers: rolePermissions.can_create_dossiers || false,
