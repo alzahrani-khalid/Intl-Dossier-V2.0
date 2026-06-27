@@ -172,14 +172,16 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Get user's tenant_id from profile or metadata
+    // Get user's tenant from profile. `profiles` is keyed by `user_id` and has
+    // `organization_id` but no `id`/`tenant_id` column (see supabase/CLAUDE.md);
+    // querying `.eq('id', ...)` 400s and silently fell back to user.id on every task.
     const { data: profile } = await supabase
       .from('profiles')
-      .select('tenant_id, organization_id')
-      .eq('id', user.id)
+      .select('organization_id')
+      .eq('user_id', user.id)
       .single();
 
-    const tenantId = profile?.tenant_id || profile?.organization_id || user.id;
+    const tenantId = profile?.organization_id ?? user.id;
 
     // Prepare task data
     const taskData = {
