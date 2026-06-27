@@ -108,12 +108,29 @@ export function DataPrivacySettingsSection() {
       } = await supabase.auth.getUser()
       if (!user) throw new Error('User not found')
 
-      // Fetch user data from various tables
-      const [{ data: profile }, { data: settings }, { data: activity }] = await Promise.all([
-        supabase.from('users').select('*').eq('id', user.id).single(),
-        supabase.from('user_settings').select('*').eq('user_id', user.id).single(),
-        supabase.from('activity_log').select('*').eq('user_id', user.id).limit(100),
+      // D-7: query the REAL tables. `user_settings` and `activity_log` do not
+      // exist on staging — the prior code swallowed those errors and still
+      // showed a success toast over an incomplete export. The real homes are
+      // `user_preferences` and `activity_stream` (filtered by `actor_id`). Each
+      // query's error is checked so the export never claims success over a
+      // failed read.
+      const [profileRes, preferencesRes, activityRes] = await Promise.all([
+        supabase.from('users').select('*').eq('id', user.id).maybeSingle(),
+        supabase.from('user_preferences').select('*').eq('user_id', user.id).maybeSingle(),
+        supabase
+          .from('activity_stream')
+          .select('*')
+          .eq('actor_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(100),
       ])
+
+      if (profileRes.error) throw profileRes.error
+      if (preferencesRes.error) throw preferencesRes.error
+      if (activityRes.error) throw activityRes.error
+      if (!profileRes.data) {
+        throw new Error(t('dataPrivacy.exportNoData', 'No data available to export.'))
+      }
 
       // Compile export data
       const exportData = {
@@ -123,9 +140,9 @@ export function DataPrivacySettingsSection() {
           email: user.email,
           createdAt: user.created_at,
         },
-        profile: profile || {},
-        settings: settings || {},
-        recentActivity: activity || [],
+        profile: profileRes.data,
+        preferences: preferencesRes.data ?? {},
+        recentActivity: activityRes.data ?? [],
       }
 
       // Create and download JSON file
