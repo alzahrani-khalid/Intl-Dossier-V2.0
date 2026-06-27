@@ -50,21 +50,46 @@ import type {
 } from '@/types/commitment.types'
 import { useCreateCommitment, useUpdateCommitment } from '@/hooks/useCommitments'
 import { useDirection } from '@/hooks/useDirection'
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
+
+// B-19/E-18: owner ids are UUID FKs. Validate before submit so a typed name can
+// never reach the FK / valid_owner constraint as free text.
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 // T029: Zod validation schema
-const commitmentFormSchema = z.object({
-  title: z.string().min(1, 'validation:titleRequired').max(200, 'validation:titleMaxLength'),
-  description: z.string().min(1, 'validation:descriptionRequired'),
-  due_date: z.date({
-    error: 'validation:dueDateRequired',
-  }),
-  priority: z.enum(['low', 'medium', 'high', 'urgent'] as const),
-  owner_type: z.enum(['internal', 'external'] as const),
-  owner_user_id: z.string().optional().nullable(),
-  owner_contact_id: z.string().optional().nullable(),
-  tracking_mode: z.enum(['manual', 'automatic'] as const),
-  proof_required: z.boolean(),
-})
+const commitmentFormSchema = z
+  .object({
+    title: z.string().min(1, 'validation:titleRequired').max(200, 'validation:titleMaxLength'),
+    description: z.string().min(1, 'validation:descriptionRequired'),
+    due_date: z.date({
+      error: 'validation:dueDateRequired',
+    }),
+    priority: z.enum(['low', 'medium', 'high', 'urgent'] as const),
+    owner_type: z.enum(['internal', 'external'] as const),
+    owner_user_id: z.string().optional().nullable(),
+    owner_contact_id: z.string().optional().nullable(),
+    tracking_mode: z.enum(['manual', 'automatic'] as const),
+    proof_required: z.boolean(),
+  })
+  .superRefine((val, ctx) => {
+    // Require a UUID for whichever owner field is active for this owner_type.
+    if (val.owner_type === 'internal') {
+      if (val.owner_user_id == null || !UUID_RE.test(val.owner_user_id)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['owner_user_id'],
+          message: 'commitments:validation.ownerRequired',
+        })
+      }
+    } else if (val.owner_contact_id == null || !UUID_RE.test(val.owner_contact_id)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['owner_contact_id'],
+        message: 'commitments:validation.ownerRequired',
+      })
+    }
+  })
 
 type CommitmentFormValues = z.infer<typeof commitmentFormSchema>
 
@@ -110,6 +135,29 @@ export function CommitmentForm({
   })
 
   const watchOwnerType = form.watch('owner_type')
+
+  // B-19/E-18: internal owners pick from the active user list instead of typing a
+  // raw UUID. Shares the ['org-users','active'] cache with the after-action route.
+  const { data: availableUsers = [] } = useQuery({
+    queryKey: ['org-users', 'active'],
+    queryFn: async (): Promise<Array<{ id: string; name: string }>> => {
+      const { data, error } = await supabase
+        .from('users')
+        .select('id, full_name, email')
+        .eq('is_active', true)
+        .order('full_name', { ascending: true })
+        .limit(500)
+      if (error) throw error
+      return (data ?? []).map((u) => ({ id: u.id, name: u.full_name || u.email || u.id }))
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  })
+
+  const ownerError =
+    watchOwnerType === 'internal'
+      ? form.formState.errors.owner_user_id
+      : form.formState.errors.owner_contact_id
 
   const onSubmit = (values: CommitmentFormValues) => {
     if (isEditMode && commitment) {
@@ -305,27 +353,46 @@ export function CommitmentForm({
           />
         </div>
 
-        {/* Owner Selection - TODO: Replace with actual user/contact picker */}
+        {/* Owner Selection — internal owners pick a user from the active list;
+            external owners enter a contact UUID. Both are UUID-validated by the
+            schema so no free-text value reaches the FK / valid_owner constraint. */}
         <FormField
           control={form.control}
           name={watchOwnerType === 'internal' ? 'owner_user_id' : 'owner_contact_id'}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">{t('form.owner')}</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  value={field.value ?? ''}
-                  placeholder={t('form.selectOwner')}
-                  className="min-h-11"
-                />
-              </FormControl>
+              <FormLabel className="text-start block">{t('form.owner')} *</FormLabel>
+              {watchOwnerType === 'internal' ? (
+                <Select onValueChange={field.onChange} value={field.value ?? undefined}>
+                  <FormControl>
+                    <SelectTrigger className="min-h-11">
+                      <SelectValue placeholder={t('form.selectOwner')} />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {availableUsers.map((u) => (
+                      <SelectItem key={u.id} value={u.id}>
+                        {u.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <FormControl>
+                  <Input
+                    {...field}
+                    value={field.value ?? ''}
+                    placeholder={t('form.selectOwner')}
+                    className="min-h-11"
+                  />
+                </FormControl>
+              )}
               <FormDescription className="text-start">
                 {watchOwnerType === 'internal'
                   ? 'Enter internal user ID'
                   : 'Enter external contact ID'}
               </FormDescription>
-              <FormMessage />
+              <FormMessage>{ownerError?.message && t(ownerError.message)}</FormMessage>
             </FormItem>
           )}
         />
