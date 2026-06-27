@@ -74,5 +74,19 @@
     "workflow_stage": "Stage",
     "status": "Status",
     "sla_deadline": "Deadline"
+  },
+  "status": {
+    "pending": "Pending",
+    "in_progress": "In progress",
+    "review": "Review",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+  "workflow_stage": {
+    "todo": "To do",
+    "in_progress": "In progress",
+    "review": "Review",
+    "done": "Done",
+    "cancelled": "Cancelled"
   }
 }

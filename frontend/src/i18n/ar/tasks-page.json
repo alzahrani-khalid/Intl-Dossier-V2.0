@@ -74,5 +74,19 @@
     "workflow_stage": "المرحلة",
     "status": "الحالة",
     "sla_deadline": "الموعد النهائي"
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "in_progress": "قيد التنفيذ",
+    "review": "قيد المراجعة",
+    "completed": "مكتملة",
+    "cancelled": "ملغاة"
+  },
+  "workflow_stage": {
+    "todo": "للتنفيذ",
+    "in_progress": "قيد التنفيذ",
+    "review": "مراجعة",
+    "done": "مكتمل",
+    "cancelled": "ملغى"
   }
 }
