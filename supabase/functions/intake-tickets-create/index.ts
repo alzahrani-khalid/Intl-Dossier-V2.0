@@ -100,6 +100,36 @@ serve(async (req) => {
       );
     }
 
+    // Validate enums against the DB allow-lists. Truthiness alone let invalid
+    // values reach the insert and surface as a 500 instead of a clean 400.
+    const VALID_REQUEST_TYPES = ["engagement", "position", "mou_action", "foresight"];
+    if (!VALID_REQUEST_TYPES.includes(body.request_type)) {
+      return new Response(
+        JSON.stringify({
+          error: "Bad Request",
+          message: `Invalid request_type. Must be one of: ${VALID_REQUEST_TYPES.join(", ")}`,
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const VALID_URGENCIES = ["low", "medium", "high", "critical"];
+    if (body.urgency !== undefined && !VALID_URGENCIES.includes(body.urgency)) {
+      return new Response(
+        JSON.stringify({
+          error: "Bad Request",
+          message: `Invalid urgency. Must be one of: ${VALID_URGENCIES.join(", ")}`,
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
     // Validate field lengths
     if (body.title.length > 200 || (body.title_ar && body.title_ar.length > 200)) {
       return new Response(
