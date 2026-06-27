@@ -90,6 +90,10 @@ export const engagementWizardConfig: WizardConfig<EngagementFormData> = {
         engagementId: newDossierId,
         rows,
       })
+      // A-4: rethrow so useCreateDossierWizard's postCreate catch fires the
+      // participants warning toast. Without this, an RLS/CHECK failure here is
+      // swallowed and the dropped participants hide under the success toast.
+      throw error
     }
   },
 }
