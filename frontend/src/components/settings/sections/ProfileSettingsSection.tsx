@@ -41,6 +41,12 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
     form.setValue('avatar_url', null, { shouldDirty: true })
   }, [form])
 
+  // D-20: surface Zod validation errors so a blocked submit isn't silent.
+  const fieldError = (name: string): string | undefined => {
+    const message = form.formState.errors[name]?.message
+    return typeof message === 'string' ? message : undefined
+  }
+
   return (
     <SettingsSectionCard
       title={t('profile.title')}
@@ -78,7 +84,22 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
             <Label htmlFor="display_name" className="text-start block">
               {t('profile.displayName')}
             </Label>
-            <Input id="display_name" {...form.register('display_name')} className="max-w-md" />
+            <Input
+              id="display_name"
+              {...form.register('display_name')}
+              aria-invalid={!!fieldError('display_name')}
+              aria-describedby={fieldError('display_name') ? 'display_name-error' : undefined}
+              className="max-w-md"
+            />
+            {fieldError('display_name') && (
+              <p
+                id="display_name-error"
+                role="alert"
+                className="text-xs text-destructive text-start"
+              >
+                {fieldError('display_name')}
+              </p>
+            )}
             <p className="text-xs text-muted-foreground text-start">
               {t('profile.displayNameHint')}
             </p>
@@ -102,8 +123,15 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
               id="job_title"
               {...form.register('job_title')}
               placeholder={t('profile.jobTitlePlaceholder')}
+              aria-invalid={!!fieldError('job_title')}
+              aria-describedby={fieldError('job_title') ? 'job_title-error' : undefined}
               className="max-w-md"
             />
+            {fieldError('job_title') && (
+              <p id="job_title-error" role="alert" className="text-xs text-destructive text-start">
+                {fieldError('job_title')}
+              </p>
+            )}
           </div>
 
           {/* Department */}
@@ -115,8 +143,15 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
               id="department"
               {...form.register('department')}
               placeholder={t('profile.departmentPlaceholder')}
+              aria-invalid={!!fieldError('department')}
+              aria-describedby={fieldError('department') ? 'department-error' : undefined}
               className="max-w-md"
             />
+            {fieldError('department') && (
+              <p id="department-error" role="alert" className="text-xs text-destructive text-start">
+                {fieldError('department')}
+              </p>
+            )}
           </div>
 
           {/* Phone */}
@@ -129,9 +164,16 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
               type="tel"
               {...form.register('phone')}
               placeholder={t('profile.phonePlaceholder')}
+              aria-invalid={!!fieldError('phone')}
+              aria-describedby={fieldError('phone') ? 'phone-error' : undefined}
               className="max-w-md"
               dir="ltr"
             />
+            {fieldError('phone') && (
+              <p id="phone-error" role="alert" className="text-xs text-destructive text-start">
+                {fieldError('phone')}
+              </p>
+            )}
           </div>
 
           {/* Bio */}
@@ -143,10 +185,17 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
               id="bio"
               {...form.register('bio')}
               placeholder={t('profile.bioPlaceholder')}
+              aria-invalid={!!fieldError('bio')}
+              aria-describedby={fieldError('bio') ? 'bio-error' : undefined}
               className="max-w-md resize-none"
               rows={3}
               maxLength={200}
             />
+            {fieldError('bio') && (
+              <p id="bio-error" role="alert" className="text-xs text-destructive text-start">
+                {fieldError('bio')}
+              </p>
+            )}
             <p className="text-xs text-muted-foreground text-start">{t('profile.bioHint')}</p>
           </div>
         </SettingsGroup>
