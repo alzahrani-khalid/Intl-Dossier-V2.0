@@ -117,7 +117,10 @@ export function CommitmentForm({
       const updateInput: UpdateCommitmentInput = {
         title: values.title,
         description: values.description,
-        due_date: values.due_date.toISOString().split('T')[0]!,
+        // E-6: format in local tz. toISOString() converts local-midnight to UTC,
+        // which in GST (UTC+4) rolls back to the previous calendar day, persisting
+        // due_date one day early. date-fns format keeps the picked local date.
+        due_date: format(values.due_date, 'yyyy-MM-dd'),
         priority: values.priority,
         owner_type: values.owner_type,
         owner_user_id: values.owner_type === 'internal' ? values.owner_user_id : null,
@@ -141,7 +144,10 @@ export function CommitmentForm({
         after_action_id: afterActionId ?? null,
         title: values.title,
         description: values.description,
-        due_date: values.due_date.toISOString().split('T')[0]!,
+        // E-6: format in local tz. toISOString() converts local-midnight to UTC,
+        // which in GST (UTC+4) rolls back to the previous calendar day, persisting
+        // due_date one day early. date-fns format keeps the picked local date.
+        due_date: format(values.due_date, 'yyyy-MM-dd'),
         priority: values.priority,
         owner_type: values.owner_type,
         owner_user_id: values.owner_type === 'internal' ? values.owner_user_id : null,
