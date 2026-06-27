@@ -26,8 +26,6 @@ export function LoginPage(): React.JSX.Element {
   const navigate = useNavigate()
   const { login, resetPassword, isLoading, error } = useAuthStore()
   const [showPassword, setShowPassword] = useState(false)
-  const [showMfaInput, setShowMfaInput] = useState(false)
-  const [mfaCode, setMfaCode] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
 
   const {
@@ -41,14 +39,11 @@ export function LoginPage(): React.JSX.Element {
 
   const onSubmit = async (data: LoginFormData): Promise<void> => {
     try {
-      await login(data.email, data.password, showMfaInput ? mfaCode : undefined)
+      await login(data.email, data.password)
       navigate({ to: '/dashboard' })
-    } catch (err) {
-      if (err instanceof Error && err.message.includes('MFA')) {
-        setShowMfaInput(true)
-      } else {
-        toast.error(t('auth.invalidCredentials'))
-      }
+    } catch {
+      // login() re-throws on failure, so navigation only runs on success.
+      toast.error(t('auth.invalidCredentials'))
     }
   }
 
@@ -142,23 +137,6 @@ export function LoginPage(): React.JSX.Element {
                 </p>
               )}
             </div>
-
-            {/* MFA code (only when required) */}
-            {showMfaInput && (
-              <div className="space-y-2">
-                <Label htmlFor="mfaCode">{t('auth.mfaCode')}</Label>
-                <Input
-                  id="mfaCode"
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={6}
-                  placeholder="123456"
-                  value={mfaCode}
-                  onChange={(event) => setMfaCode(event.target.value)}
-                />
-                <p className="text-start text-sm text-ink-mute">{t('auth.enterMfaCode')}</p>
-              </div>
-            )}
 
             {/* Remember me + forgot password */}
             <div className="flex items-center justify-between gap-2">
