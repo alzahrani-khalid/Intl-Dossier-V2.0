@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Shield, Download, Monitor, Trash2, Loader2, LogOut, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
@@ -43,8 +41,6 @@ export function DataPrivacySettingsSection() {
 
   const [isExporting, setIsExporting] = useState(false)
   const [isSigningOutAll, setIsSigningOutAll] = useState(false)
-  const [isDeleting, setIsDeleting] = useState(false)
-  const [deleteConfirmText, setDeleteConfirmText] = useState('')
   const [sessions, setSessions] = useState<Session[]>([])
   const [_isLoadingSessions, setIsLoadingSessions] = useState(true)
 
@@ -189,47 +185,13 @@ export function DataPrivacySettingsSection() {
     }
   }
 
-  const handleDeleteAccount = async () => {
-    if (deleteConfirmText !== 'DELETE') return
-
-    setIsDeleting(true)
-
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) throw new Error('User not found')
-
-      // Soft delete: Update user status to 'deleted' and anonymize data
-      const { error: updateError } = await supabase
-        .from('users')
-        .update({
-          status: 'deleted',
-          deleted_at: new Date().toISOString(),
-          email: `deleted-${user.id}@deleted.local`,
-          full_name: 'Deleted User',
-          avatar_url: null,
-        })
-        .eq('id', user.id)
-
-      if (updateError) throw updateError
-
-      // Sign out the user
-      await supabase.auth.signOut()
-
-      toast.success(t('dataPrivacy.accountDeleted'))
-
-      // Redirect to login
-      setTimeout(() => {
-        window.location.href = '/login'
-      }, 1500)
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Account deletion failed'
-      toast.error(message)
-    } finally {
-      setIsDeleting(false)
-    }
-  }
+  // D-8: self-service account deletion is intentionally not wired here. The
+  // prior client-side `users` update targeted columns that do not exist
+  // (`status`, `deleted_at`) and performed a destructive self-delete from the
+  // browser — it threw at runtime yet the UI implied it worked. Until a server
+  // edge function (admin authz + confirmation) exists, the action is disabled
+  // and the user is directed to an administrator. No broken write, no false
+  // success toast.
 
   return (
     <SettingsSectionCard
@@ -367,58 +329,17 @@ export function DataPrivacySettingsSection() {
                     {t('dataPrivacy.deleteWarning')}
                   </p>
 
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="destructive" size="sm" className="mt-4 min-h-10">
-                        <Trash2 className="h-4 w-4 me-2" />
-                        {t('dataPrivacy.deleteButton')}
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="text-start text-destructive">
-                          {t('dataPrivacy.deleteConfirmTitle')}
-                        </AlertDialogTitle>
-                        <AlertDialogDescription className="text-start">
-                          {t('dataPrivacy.deleteConfirmDesc')}
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <div className="py-4">
-                        <Label
-                          htmlFor="delete-confirm"
-                          className="text-sm text-muted-foreground block text-start mb-2"
-                        >
-                          {t('dataPrivacy.typeToConfirm')}
-                        </Label>
-                        <Input
-                          id="delete-confirm"
-                          value={deleteConfirmText}
-                          onChange={(e) => setDeleteConfirmText(e.target.value)}
-                          placeholder="DELETE"
-                          className="font-mono"
-                        />
-                      </div>
-                      <AlertDialogFooter className="flex-row-reverse sm:flex-row gap-2">
-                        <AlertDialogCancel onClick={() => setDeleteConfirmText('')}>
-                          {t('cancel')}
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={handleDeleteAccount}
-                          disabled={deleteConfirmText !== 'DELETE' || isDeleting}
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        >
-                          {isDeleting ? (
-                            <>
-                              <Loader2 className="h-4 w-4 me-2 animate-spin" />
-                              {t('dataPrivacy.deleting')}
-                            </>
-                          ) : (
-                            t('dataPrivacy.deleteButton')
-                          )}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-3">
+                    {t(
+                      'dataPrivacy.deleteContactAdmin',
+                      'To delete your account, please contact your administrator.',
+                    )}
+                  </p>
+
+                  <Button variant="destructive" size="sm" className="mt-4 min-h-10" disabled>
+                    <Trash2 className="h-4 w-4 me-2" />
+                    {t('dataPrivacy.deleteButton')}
+                  </Button>
                 </div>
               </div>
             </CardContent>
