@@ -25,6 +25,12 @@ interface CreateTaskRequest {
   source?: Record<string, any>;
 }
 
+// Allow-lists for enum fields. The request body is otherwise a bare cast, so
+// validate before insert to reject malformed values with a clean 400 rather
+// than letting the DB enum reject them and leaking the raw Postgres error.
+const VALID_PRIORITIES = ['low', 'medium', 'high', 'urgent'];
+const VALID_WORKFLOW_STAGES = ['todo', 'in_progress', 'review', 'done', 'cancelled'];
+
 Deno.serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -99,6 +105,30 @@ Deno.serve(async (req) => {
     if (body.title.length > 500) {
       return new Response(
         JSON.stringify({ error: 'Title cannot exceed 500 characters' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Validate enum fields against allow-lists (body is a bare cast).
+    if (body.priority !== undefined && !VALID_PRIORITIES.includes(body.priority)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid priority value' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    if (
+      body.workflow_stage !== undefined &&
+      !VALID_WORKFLOW_STAGES.includes(body.workflow_stage)
+    ) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid workflow_stage value' }),
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -216,7 +246,7 @@ Deno.serve(async (req) => {
     if (insertError) {
       console.error('Error creating task:', insertError);
       return new Response(
-        JSON.stringify({ error: insertError.message }),
+        JSON.stringify({ error: 'Failed to create task' }),
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },

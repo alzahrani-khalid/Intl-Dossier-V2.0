@@ -30,6 +30,13 @@ interface UpdateTaskRequest {
   last_known_updated_at?: string; // For optimistic locking
 }
 
+// Allow-lists for enum fields. The request body is otherwise a bare cast, so
+// validate before update to reject malformed values with a clean 400 rather
+// than letting the DB enum reject them and leaking the raw Postgres error.
+const VALID_PRIORITIES = ['low', 'medium', 'high', 'urgent'];
+const VALID_WORKFLOW_STAGES = ['todo', 'in_progress', 'review', 'done', 'cancelled'];
+const VALID_STATUSES = ['pending', 'in_progress', 'review', 'completed', 'cancelled'];
+
 Deno.serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -98,6 +105,40 @@ Deno.serve(async (req) => {
     if (body.title && body.title.length > 500) {
       return new Response(
         JSON.stringify({ error: 'Title cannot exceed 500 characters' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Validate enum fields against allow-lists (body is a bare cast).
+    if (body.priority !== undefined && !VALID_PRIORITIES.includes(body.priority)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid priority value' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    if (
+      body.workflow_stage !== undefined &&
+      !VALID_WORKFLOW_STAGES.includes(body.workflow_stage)
+    ) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid workflow_stage value' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    if (body.status !== undefined && !VALID_STATUSES.includes(body.status)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid status value' }),
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -203,7 +244,7 @@ Deno.serve(async (req) => {
     if (updateError) {
       console.error('Error updating task:', updateError);
       return new Response(
-        JSON.stringify({ error: updateError.message }),
+        JSON.stringify({ error: 'Failed to update task' }),
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
