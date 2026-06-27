@@ -100,6 +100,45 @@ function generateThreadId(messageId: string, inReplyTo?: string, references?: st
   return messageId;
 }
 
+// Verify an inbound webhook signature: HMAC-SHA256 of the RAW request body keyed
+// with EMAIL_WEBHOOK_SECRET, constant-time compared to the provider signature
+// header (hex digest; tolerates a leading "sha256=" prefix).
+async function verifyWebhookSignature(
+  rawBody: string,
+  secret: string,
+  signatureHeader: string
+): Promise<boolean> {
+  try {
+    const key = await crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(secret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    );
+    const macBytes = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(rawBody));
+    const expectedHex = Array.from(new Uint8Array(macBytes))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
+    const provided = signatureHeader.trim().replace(/^sha256=/i, '').toLowerCase();
+    return constantTimeEqual(expectedHex, provided);
+  } catch {
+    return false;
+  }
+}
+
+// Length-and-content constant-time string comparison (avoids early-exit timing leaks).
+function constantTimeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+  let mismatch = 0;
+  for (let i = 0; i < a.length; i++) {
+    mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return mismatch === 0;
+}
+
 serve(async (req) => {
   // Handle CORS
   if (req.method === 'OPTIONS') {
@@ -107,14 +146,32 @@ serve(async (req) => {
   }
 
   try {
-    // Verify webhook signature (depends on email provider)
+    // Verify webhook signature — fail CLOSED. This endpoint service-role-inserts
+    // attacker-supplied content into intake_tickets / email_messages /
+    // intake_attachments, so an unsigned or forged request must never reach the DB.
     const webhookSecret = Deno.env.get('EMAIL_WEBHOOK_SECRET');
-    if (webhookSecret) {
-      const signature =
-        req.headers.get('X-Webhook-Signature') ||
-        req.headers.get('X-SendGrid-Signature') ||
-        req.headers.get('X-Mailgun-Signature');
-      // TODO: Implement signature verification based on provider
+    if (!webhookSecret) {
+      console.error('EMAIL_WEBHOOK_SECRET is not set; rejecting inbound webhook (fail closed)');
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized', message: 'Webhook verification is not configured' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // HMAC-SHA256 over the RAW body. Read the body text ONCE and reuse it for both
+    // signature verification and JSON parsing (never consume req.json() twice).
+    const signature =
+      req.headers.get('X-Webhook-Signature') ||
+      req.headers.get('X-SendGrid-Signature') ||
+      req.headers.get('X-Mailgun-Signature');
+    const rawBody = await req.text();
+
+    if (!signature || !(await verifyWebhookSignature(rawBody, webhookSecret, signature))) {
+      console.warn('Inbound webhook signature verification failed; rejecting');
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized', message: 'Invalid webhook signature' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     // Create admin client for database operations
@@ -123,8 +180,16 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // Parse request body
-    const body: InboundEmailPayload = await req.json();
+    // Parse request body (reuse the raw body already read for HMAC verification)
+    let body: InboundEmailPayload;
+    try {
+      body = JSON.parse(rawBody) as InboundEmailPayload;
+    } catch {
+      return new Response(
+        JSON.stringify({ error: 'Bad Request', message: 'Invalid JSON body' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Validate required fields
     if (!body.from || !body.subject || !body.message_id) {
