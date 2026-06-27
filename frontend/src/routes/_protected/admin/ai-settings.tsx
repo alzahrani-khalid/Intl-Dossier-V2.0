@@ -103,6 +103,38 @@ const MODELS: Record<string, Array<{ value: string; label: string }>> = {
   ],
 }
 
+/**
+ * Resolve the caller's organization from a SERVER-TRUSTED source (N7 fix).
+ *
+ * Reads `public.users.default_organization_id` (service-role-written, never
+ * client-writable) keyed on the authenticated user id — mirroring the signals
+ * domain hooks (useSignalMutations / useDigests / useAlertRules). This replaces
+ * the previous `session.user.user_metadata.organization_id`, which is
+ * client-writable via `supabase.auth.updateUser()` and therefore spoofable.
+ *
+ * Tenant isolation is enforced independently at the DB layer by the
+ * `organization_llm_policies` RLS policies (organization_members membership),
+ * so even a tampered client value can never read or write another org's row.
+ * The user's `default_organization_id` is expected to be an org they are an
+ * active member of (admin/owner for writes) — the same assumption the signals
+ * hooks rely on.
+ */
+async function resolveTrustedOrgId(): Promise<string | null> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return null
+
+  const { data: profile, error } = await supabase
+    .from('users')
+    .select('default_organization_id')
+    .eq('id', user.id)
+    .single()
+  if (error) throw error
+
+  return (profile?.default_organization_id as string | null) ?? null
+}
+
 function AISettingsPage() {
   const { t, i18n } = useTranslation('ai-admin')
   const isRTL = i18n.language === 'ar'
@@ -116,10 +148,7 @@ function AISettingsPage() {
   const { data: policy, isLoading: policyLoading } = useQuery({
     queryKey: ['llm-policy'],
     queryFn: async (): Promise<LLMPolicy | null> => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-      const orgId = session?.user?.user_metadata?.organization_id
+      const orgId = await resolveTrustedOrgId()
 
       if (!orgId) return null
 
@@ -153,10 +182,7 @@ function AISettingsPage() {
   // Update policy mutation
   const updatePolicyMutation = useMutation({
     mutationFn: async (updates: Partial<LLMPolicy>) => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-      const orgId = session?.user?.user_metadata?.organization_id
+      const orgId = await resolveTrustedOrgId()
 
       if (!orgId) throw new Error('No organization')
 
