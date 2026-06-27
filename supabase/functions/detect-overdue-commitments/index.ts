@@ -11,7 +11,10 @@ interface OverdueCommitment {
   dossier_id: string
   description: string
   due_date: string
-  owner_id: string
+  // aa_commitments has no owner_id column; ownership splits across these two
+  // (valid_owner CHECK: internal -> owner_user_id, external -> owner_contact_id).
+  owner_user_id: string | null
+  owner_contact_id: string | null
   status: string
 }
 
@@ -32,7 +35,7 @@ interface OverdueDetectionResponse {
     dossierId: string
     description: string
     dueDate: string
-    ownerId: string
+    ownerId: string | null
     previousStatus: string
     newStatus: string
   }>
@@ -83,7 +86,7 @@ serve(async (req) => {
     // Query for overdue commitments
     let query = supabaseClient
       .from('aa_commitments')
-      .select('id, dossier_id, description, due_date, owner_id, status')
+      .select('id, dossier_id, description, due_date, owner_user_id, owner_contact_id, status')
       .lt('due_date', new Date().toISOString().split('T')[0])
       .in('status', ['pending', 'in_progress'])
 
@@ -120,7 +123,7 @@ serve(async (req) => {
       dossierId: c.dossier_id,
       description: c.description,
       dueDate: c.due_date,
-      ownerId: c.owner_id,
+      ownerId: c.owner_user_id ?? c.owner_contact_id,
       previousStatus: c.status,
       newStatus: 'overdue' as const
     }))
@@ -161,18 +164,22 @@ serve(async (req) => {
           if (dossier) {
             const notificationMessage = `${commitment.description} is overdue (due ${commitment.due_date}). Dossier: ${dossier.name}. Recommended: Update status or extend deadline.`
 
-            // Send notification to commitment owner
-            await sendNotification(
-              supabaseClient,
-              commitment.owner_id,
-              'Commitment Overdue',
-              notificationMessage,
-              { commitmentId: commitment.id, dossierId: commitment.dossier_id, type: 'overdue_commitment' }
-            )
-            notificationsSent++
+            // Notify the commitment owner only when it is an internal user;
+            // external contacts (owner_contact_id) have no user account and no
+            // notifications row to target.
+            if (commitment.owner_user_id) {
+              await sendNotification(
+                supabaseClient,
+                commitment.owner_user_id,
+                'Commitment Overdue',
+                notificationMessage,
+                { commitmentId: commitment.id, dossierId: commitment.dossier_id, type: 'overdue_commitment' }
+              )
+              notificationsSent++
+            }
 
             // Send notification to dossier owner if different from commitment owner
-            if (dossier.owner_id && dossier.owner_id !== commitment.owner_id) {
+            if (dossier.owner_id && dossier.owner_id !== commitment.owner_user_id) {
               await sendNotification(
                 supabaseClient,
                 dossier.owner_id,
