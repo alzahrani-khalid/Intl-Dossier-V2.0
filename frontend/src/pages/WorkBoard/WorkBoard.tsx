@@ -44,6 +44,7 @@ import {
 } from '@/components/kanban'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useUnifiedKanban, useUnifiedKanbanStatusUpdate } from '@/hooks/useUnifiedKanban'
+import { useWorkCreation } from '@/components/work-creation'
 import type { KanbanColumnMode, WorkflowStage, WorkSource } from '@/types/work-item.types'
 
 import { BoardColumn } from './BoardColumn'
@@ -107,6 +108,8 @@ function matchesSearch(item: KCardItem, q: string): boolean {
 export function WorkBoard(): ReactElement {
   const { t, i18n } = useTranslation('unified-kanban')
   const navigate = useNavigate()
+
+  const { openPalette } = useWorkCreation()
 
   const [mode, setMode] = useState<KanbanColumnMode>('status')
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -247,19 +250,19 @@ export function WorkBoard(): ReactElement {
     [navigate],
   )
 
-  // D-12 — per-column +Add and toolbar +New both route into the existing TaskCreate flow.
-  // /tasks/new accepting `defaultWorkflowStage` is verified in 39-09; today we navigate to
-  // /tasks with a query param so the prefill arrives once the route picks it up.
-  const handleAddItem = useCallback(
-    (stage: WorkflowStage): void => {
-      void navigate({ to: '/tasks', search: { defaultWorkflowStage: stage } })
-    },
-    [navigate],
-  )
+  // B-24: the per-column +Add and toolbar +New open the unified work-creation
+  // palette (prefilled to the Task form) instead of navigating to /tasks. The old
+  // target was the "My desk" list — no create form — and the `defaultWorkflowStage`
+  // search param it passed was never consumed, so the +Add looked broken. The
+  // palette provider's openPalette API takes a work-item TYPE, not a stage, so the
+  // column's stage can't be prefilled without changing work-creation (L5-owned).
+  const handleAddItem = useCallback((): void => {
+    openPalette('task')
+  }, [openPalette])
 
   const handleNewItem = useCallback((): void => {
-    void navigate({ to: '/tasks' })
-  }, [navigate])
+    openPalette('task')
+  }, [openPalette])
 
   const isRTL = i18n.language === 'ar'
 
