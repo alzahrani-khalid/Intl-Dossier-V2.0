@@ -10,6 +10,11 @@ import { useAuthStore } from '@/store/authStore'
 import { switchLanguage } from '@/i18n'
 import { useMode } from '@/design-system/hooks/useMode'
 import {
+  applySettingsTogglesToCategoryPrefs,
+  type CategoryPreference,
+  type SettingsNotificationToggles,
+} from '@/hooks/useNotificationCenter'
+import {
   SettingsLayout,
   SettingsSectionWrapper,
   SettingsSectionSkeleton,
@@ -75,6 +80,38 @@ const settingsSchema = z.object({
 })
 
 type SettingsFormValues = z.infer<typeof settingsSchema>
+
+/**
+ * Local-only settings (D-4). These have NO column in `public.users`:
+ * accessibility prefs, bio, date_format, start_of_week, session_timeout.
+ * Server-side persistence for them is a separate, out-of-scope decision, so
+ * they are kept in localStorage (durable per-browser) rather than upserted to
+ * phantom columns. Appearance is handled separately by DesignProvider.
+ */
+const LOCAL_SETTINGS_KEY = 'id.settings.local'
+
+type LocalSettingsSubset = Pick<
+  SettingsFormValues,
+  | 'bio'
+  | 'date_format'
+  | 'start_of_week'
+  | 'session_timeout'
+  | 'high_contrast'
+  | 'large_text'
+  | 'reduce_motion'
+  | 'keyboard_only'
+  | 'focus_indicators'
+  | 'screen_reader'
+>
+
+function writeLocalSettings(values: LocalSettingsSubset): void {
+  if (typeof window === 'undefined') return
+  try {
+    window.localStorage.setItem(LOCAL_SETTINGS_KEY, JSON.stringify(values))
+  } catch {
+    // localStorage unavailable (private mode / quota) — non-fatal.
+  }
+}
 
 /**
  * Main Settings Page component
@@ -169,29 +206,30 @@ export function SettingsPage() {
     mutationFn: async (values: SettingsFormValues) => {
       if (!user?.id) throw new Error('Not authenticated')
 
+      // 1) Persist ONLY real `users` columns (profile + general). The prior
+      //    upsert sent ~23 columns absent from the table, so PostgREST rejected
+      //    the whole write (PGRST204) and every Save silently no-oped.
+      //    `mfa_enabled` is intentionally NOT written here (D-6 — no enablement
+      //    without a verified secret). Appearance is owned by DesignProvider.
       const { error } = await supabase.from('users').upsert({
         id: user.id,
-
-        // Profile
-        display_name: values.display_name,
-        job_title: values.job_title,
-        department: values.department,
-        phone: values.phone,
-        bio: values.bio,
-        avatar_url: values.avatar_url,
-
-        // General
+        full_name: values.display_name,
+        job_title_en: values.job_title ?? null,
+        department: values.department ?? null,
+        phone: values.phone ?? null,
+        avatar_url: values.avatar_url ?? null,
         language_preference: values.language_preference,
         timezone: values.timezone,
-        date_format: values.date_format,
-        start_of_week: values.start_of_week,
+        updated_at: new Date().toISOString(),
+      })
 
-        // Appearance
-        color_mode: values.color_mode,
-        theme: values.theme,
-        display_density: values.display_density,
+      if (error) throw error
 
-        // Notifications
+      // 2) Route the 8 notification toggles to the shared
+      //    `notification_category_preferences` table (the surface the
+      //    Notifications page uses) via the D-30 bridge. Read-modify-write so
+      //    channels a user set on the Notifications page are preserved.
+      const toggles: SettingsNotificationToggles = {
         notifications_push: values.notifications_push,
         notifications_email: values.notifications_email,
         notifications_mou_expiry: values.notifications_mou_expiry,
@@ -200,23 +238,49 @@ export function SettingsPage() {
         notifications_assignment_updates: values.notifications_assignment_updates,
         notifications_commitment_deadlines: values.notifications_commitment_deadlines,
         notifications_mentions: values.notifications_mentions,
+      }
+      const { data: existingPrefs, error: prefsReadError } = await supabase
+        .from('notification_category_preferences')
+        .select('*')
+        .eq('user_id', user.id)
+      if (prefsReadError && prefsReadError.code !== 'PGRST116') throw prefsReadError
 
-        // Accessibility
+      const prefRows = applySettingsTogglesToCategoryPrefs(
+        toggles,
+        existingPrefs as CategoryPreference[] | null,
+      )
+      for (const pref of prefRows) {
+        const { error: prefError } = await supabase
+          .from('notification_category_preferences')
+          .upsert(
+            {
+              user_id: user.id,
+              category: pref.category,
+              email_enabled: pref.email_enabled,
+              push_enabled: pref.push_enabled,
+              in_app_enabled: pref.in_app_enabled,
+              sms_enabled: pref.sms_enabled,
+              sound_enabled: pref.sound_enabled,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: 'user_id,category' },
+          )
+        if (prefError) throw prefError
+      }
+
+      // 3) Persist local-only prefs (no server column exists for these).
+      writeLocalSettings({
+        bio: values.bio ?? null,
+        date_format: values.date_format,
+        start_of_week: values.start_of_week,
+        session_timeout: values.session_timeout,
         high_contrast: values.high_contrast,
         large_text: values.large_text,
         reduce_motion: values.reduce_motion,
         keyboard_only: values.keyboard_only,
         focus_indicators: values.focus_indicators,
         screen_reader: values.screen_reader,
-
-        // Security
-        mfa_enabled: values.mfa_enabled,
-        session_timeout: values.session_timeout,
-
-        updated_at: new Date().toISOString(),
       })
-
-      if (error) throw error
 
       return values
     },
@@ -242,8 +306,10 @@ export function SettingsPage() {
       // Apply accessibility settings
       applyAccessibilitySettings(values)
 
-      // Invalidate and reset form
+      // Invalidate and reset form (also refresh the Notifications page cache so
+      // both surfaces agree on the category preferences just written).
       queryClient.invalidateQueries({ queryKey: ['user-settings'] })
+      queryClient.invalidateQueries({ queryKey: ['notifications'] })
       form.reset(values)
 
       toast.success(t('savedSuccessfully'))
