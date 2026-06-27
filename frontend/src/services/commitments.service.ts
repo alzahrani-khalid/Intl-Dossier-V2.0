@@ -230,13 +230,24 @@ export async function updateCommitment(
     throw new Error('User must be authenticated to update a commitment')
   }
 
+  // B-7: tracking_mode is strictly coupled to owner_type by the valid_tracking
+  // CHECK (internal -> automatic, external -> manual). The form exposes both as
+  // independent inputs, so changing owner_type without flipping tracking_mode
+  // would violate the constraint. Recompute tracking_mode from owner_type
+  // whenever owner_type is part of this update (exactly as createCommitment does)
+  // instead of trusting the raw value.
+  const updatePayload: UpdateCommitmentInput & { updated_by: string; updated_at: string } = {
+    ...input,
+    updated_by: user.id,
+    updated_at: new Date().toISOString(),
+  }
+  if (input.owner_type != null) {
+    updatePayload.tracking_mode = input.owner_type === 'internal' ? 'automatic' : 'manual'
+  }
+
   const { data, error } = await supabase
     .from('aa_commitments')
-    .update({
-      ...input,
-      updated_by: user.id,
-      updated_at: new Date().toISOString(),
-    })
+    .update(updatePayload)
     .eq('id', commitmentId)
     .select()
     .single()
