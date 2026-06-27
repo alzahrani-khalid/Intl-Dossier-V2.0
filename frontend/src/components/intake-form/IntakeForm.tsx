@@ -184,7 +184,10 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {/* Request Type */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">
+                <label
+                  htmlFor="requestType"
+                  className="mb-2 block text-sm font-medium text-foreground"
+                >
                   {t('form.requestType.label')}
                   <span className="ms-1 text-destructive">*</span>
                 </label>
@@ -198,6 +201,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                   }
                 >
                   <SelectTrigger
+                    id="requestType"
                     className="h-12"
                     aria-invalid={!!errors.requestType}
                     aria-describedby={errors.requestType ? 'requestType-error' : undefined}
@@ -228,11 +232,12 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
 
               {/* Title (English) */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">
+                <label htmlFor="title" className="mb-2 block text-sm font-medium text-foreground">
                   {t('form.title.label')}
                   <span className="ms-1 text-destructive">*</span>
                 </label>
                 <Input
+                  id="title"
                   type="text"
                   {...register('title')}
                   placeholder={t('form.title.placeholder')}
@@ -249,11 +254,12 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
 
               {/* Title (Arabic) */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">
+                <label htmlFor="titleAr" className="mb-2 block text-sm font-medium text-foreground">
                   {t('form.titleAr.label')}
                   <span className="ms-1 text-destructive">*</span>
                 </label>
                 <Input
+                  id="titleAr"
                   type="text"
                   {...register('titleAr')}
                   placeholder={t('form.titleAr.placeholder')}
@@ -271,11 +277,15 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
 
               {/* Description (English) */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">
+                <label
+                  htmlFor="description"
+                  className="mb-2 block text-sm font-medium text-foreground"
+                >
                   {t('form.description.label')}
                   <span className="ms-1 text-destructive">*</span>
                 </label>
                 <Textarea
+                  id="description"
                   {...register('description')}
                   placeholder={t('form.description.placeholder')}
                   rows={5}
@@ -292,11 +302,15 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
 
               {/* Description (Arabic) */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">
+                <label
+                  htmlFor="descriptionAr"
+                  className="mb-2 block text-sm font-medium text-foreground"
+                >
                   {t('form.descriptionAr.label')}
                   <span className="ms-1 text-destructive">*</span>
                 </label>
                 <Textarea
+                  id="descriptionAr"
                   {...register('descriptionAr')}
                   placeholder={t('form.descriptionAr.placeholder')}
                   rows={5}
@@ -314,7 +328,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
 
               {/* Urgency Level */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">
+                <label htmlFor="urgency" className="mb-2 block text-sm font-medium text-foreground">
                   {t('form.urgency.label')}
                   <span className="ms-1 text-destructive">*</span>
                 </label>
@@ -328,6 +342,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                   }
                 >
                   <SelectTrigger
+                    id="urgency"
                     className="h-12"
                     aria-invalid={!!errors.urgency}
                     aria-describedby={errors.urgency ? 'urgency-error' : undefined}
