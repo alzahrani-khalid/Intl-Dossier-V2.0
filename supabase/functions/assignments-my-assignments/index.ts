@@ -102,6 +102,19 @@ serve(async (req) => {
     const status = url.searchParams.get('status');
     const includeCompleted = url.searchParams.get('include_completed') === 'true';
 
+    // N18: bound the result set so `?include_completed=true` cannot return the
+    // user's entire assignment history. Default to 100 rows, allow an explicit
+    // limit up to 200, and support offset-based pagination — all default-capped.
+    const DEFAULT_LIMIT = 100;
+    const MAX_LIMIT = 200;
+    const requestedLimit = parseInt(url.searchParams.get('limit') ?? '', 10);
+    const limit =
+      Number.isFinite(requestedLimit) && requestedLimit > 0
+        ? Math.min(requestedLimit, MAX_LIMIT)
+        : DEFAULT_LIMIT;
+    const requestedOffset = parseInt(url.searchParams.get('offset') ?? '', 10);
+    const offset = Number.isFinite(requestedOffset) && requestedOffset > 0 ? requestedOffset : 0;
+
     // Build query
     let query = supabaseClient
       .from('tasks')
@@ -116,6 +129,10 @@ serve(async (req) => {
       // Default: exclude completed and cancelled
       query = query.in('status', ['pending', 'in_progress']);
     }
+
+    // N18: apply the bounded, default-capped range before executing. For the
+    // typical case (fewer than the limit) this returns the same rows as before.
+    query = query.range(offset, offset + limit - 1);
 
     // Execute query
     const { data: assignments, error: queryError } = await query;

@@ -919,17 +919,26 @@ async function getRelatedTerms(
   const queryWords = normalizedQuery.split(/\s+/);
 
   try {
-    // Search for items with partial word matches
-    for (const word of queryWords) {
-      if (word.length < 3) continue;
+    // N5: run the per-word dossier lookups concurrently instead of awaiting one
+    // sequential round-trip per word. Each word keeps its own ilike + limit(5)
+    // so per-word weighting is unchanged; results are merged in the same word
+    // order with the same first-seen dedupe as before. Cap the words considered
+    // to bound work on long queries.
+    const MAX_WORDS = 6;
+    const wordsToSearch = queryWords.filter((word) => word.length >= 3).slice(0, MAX_WORDS);
 
-      const { data } = await supabase
-        .from('dossiers')
-        .select('name_en, name_ar, type')
-        .or(`name_en.ilike.%${word}%,name_ar.ilike.%${word}%`)
-        .neq('name_en', query)
-        .limit(5);
+    const perWordResults = await Promise.all(
+      wordsToSearch.map((word) =>
+        supabase
+          .from('dossiers')
+          .select('name_en, name_ar, type')
+          .or(`name_en.ilike.%${word}%,name_ar.ilike.%${word}%`)
+          .neq('name_en', query)
+          .limit(5)
+      )
+    );
 
+    for (const { data } of perWordResults) {
       if (data) {
         for (const item of data) {
           if (item.name_en && !terms.some((t) => t.term === item.name_en)) {
