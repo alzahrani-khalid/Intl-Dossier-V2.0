@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -11,6 +11,7 @@ import { switchLanguage } from '@/i18n'
 import { useMode } from '@/design-system/hooks/useMode'
 import {
   applySettingsTogglesToCategoryPrefs,
+  mapCategoryPrefsToSettingsToggles,
   type CategoryPreference,
   type SettingsNotificationToggles,
 } from '@/hooks/useNotificationCenter'
@@ -113,12 +114,22 @@ function writeLocalSettings(values: LocalSettingsSubset): void {
   }
 }
 
+function readLocalSettings(): Partial<LocalSettingsSubset> {
+  if (typeof window === 'undefined') return {}
+  try {
+    const raw = window.localStorage.getItem(LOCAL_SETTINGS_KEY)
+    return raw ? (JSON.parse(raw) as Partial<LocalSettingsSubset>) : {}
+  } catch {
+    return {}
+  }
+}
+
 /**
  * Main Settings Page component
  * Provides a comprehensive settings management interface with multiple sections
  */
 export function SettingsPage() {
-  const { t } = useTranslation('settings')
+  const { t, i18n } = useTranslation('settings')
   const { user } = useAuthStore()
   const { setMode: setColorMode } = useMode()
   const queryClient = useQueryClient()
@@ -132,61 +143,47 @@ export function SettingsPage() {
     queryFn: async () => {
       if (!user?.id) throw new Error('Not authenticated')
 
+      // Read only the real `users` columns (D-5). The prior code selected '*'
+      // and read columns that do not exist (display_name, notifications_*, …) as
+      // undefined, then fabricated values (display_name from the email, every
+      // toggle `?? true`). Read the genuine stored values instead.
       const { data, error } = await supabase
         .from('users')
-        .select('*')
+        .select(
+          'full_name, job_title_en, department, phone, avatar_url, language_preference, timezone, mfa_enabled',
+        )
         .eq('id', user.id)
         .maybeSingle()
 
       if (error) throw error
 
-      // Row doesn't exist yet — return defaults, form will create on first save
-      if (data === null) {
-        return defaultUserSettings as SettingsFormValues
-      }
+      // Notification toggles come from the shared category-preference table.
+      const { data: catRows, error: catError } = await supabase
+        .from('notification_category_preferences')
+        .select('*')
+        .eq('user_id', user.id)
+      if (catError && catError.code !== 'PGRST116') throw catError
+      const toggles = mapCategoryPrefsToSettingsToggles(catRows as CategoryPreference[] | null)
 
-      // Map database fields to form fields with defaults
+      // Local-only prefs (no server column exists — see writeLocalSettings).
+      const local = readLocalSettings()
+
       return {
-        // Profile
-        display_name: data.display_name || data.email?.split('@')[0] || '',
-        job_title: data.job_title || null,
-        department: data.department || null,
-        phone: data.phone || null,
-        bio: data.bio || null,
-        avatar_url: data.avatar_url || null,
-
-        // General
-        language_preference: data.language_preference || 'en',
-        timezone: data.timezone || 'UTC',
-        date_format: data.date_format || 'DD/MM/YYYY',
-        start_of_week: data.start_of_week || 'sunday',
-
-        // Appearance
-        color_mode: data.color_mode || 'system',
-        theme: data.theme || 'chancery',
-        display_density: data.display_density || 'comfortable',
-
-        // Notifications
-        notifications_push: data.notifications_push ?? true,
-        notifications_email: data.notifications_email ?? true,
-        notifications_mou_expiry: data.notifications_mou_expiry ?? true,
-        notifications_event_reminders: data.notifications_event_reminders ?? true,
-        notifications_report_generation: data.notifications_report_generation ?? true,
-        notifications_assignment_updates: data.notifications_assignment_updates ?? true,
-        notifications_commitment_deadlines: data.notifications_commitment_deadlines ?? true,
-        notifications_mentions: data.notifications_mentions ?? true,
-
-        // Accessibility
-        high_contrast: data.high_contrast ?? false,
-        large_text: data.large_text ?? false,
-        reduce_motion: data.reduce_motion ?? false,
-        keyboard_only: data.keyboard_only ?? false,
-        focus_indicators: data.focus_indicators || 'default',
-        screen_reader: data.screen_reader ?? false,
-
-        // Security
-        mfa_enabled: data.mfa_enabled ?? false,
-        session_timeout: data.session_timeout ?? 30,
+        ...defaultUserSettings,
+        ...local,
+        // Real `users` columns — genuine stored values, no fabrication:
+        display_name: data?.full_name ?? '',
+        job_title: data?.job_title_en ?? null,
+        department: data?.department ?? null,
+        phone: data?.phone ?? null,
+        avatar_url: data?.avatar_url ?? null,
+        language_preference:
+          (data?.language_preference as 'en' | 'ar' | null) ??
+          (i18n.language === 'ar' ? 'ar' : 'en'),
+        timezone: data?.timezone ?? 'UTC',
+        mfa_enabled: data?.mfa_enabled ?? false,
+        // Notification toggles from the category-preference table:
+        ...toggles,
       } as SettingsFormValues
     },
     enabled: !!user?.id,
@@ -339,6 +336,12 @@ export function SettingsPage() {
     // Focus indicators
     root.dataset.focusIndicators = values.focus_indicators
   }, [])
+
+  // Apply the persisted accessibility prefs to the document on load (D-5) so the
+  // localStorage-backed toggles take effect on reload, not only after a save.
+  useEffect(() => {
+    if (settings) applyAccessibilitySettings(settings)
+  }, [settings, applyAccessibilitySettings])
 
   // Handle save
   const handleSave = useCallback(() => {
