@@ -29,6 +29,7 @@ import {
 import { supabase } from '@/lib/supabase'
 import { requireAdmin } from '@/lib/auth/require-admin'
 import { PageHeader } from '@/components/layout/PageHeader'
+import type { Database } from '@/types/database.types'
 import {
   Bot,
   Brain,
@@ -50,25 +51,16 @@ export const Route = createFileRoute('/_protected/admin/ai-settings')({
   beforeLoad: requireAdmin,
 })
 
-interface LLMPolicy {
-  id: string
-  organization_id: string
-  default_provider: string
-  default_model: string
-  fallback_provider: string | null
-  fallback_model: string | null
-  max_tokens_per_request: number
-  max_requests_per_minute: number
-  max_requests_per_day: number
-  monthly_spend_cap: number | null
-  features_enabled: {
-    brief_generation: boolean
-    chat: boolean
-    entity_linking: boolean
-  }
-  created_at: string
-  updated_at: string
-}
+/**
+ * Local types are derived from the generated database schema so the page's
+ * read/upsert payload can never drift from the real `organization_llm_policies`
+ * columns again. The previous hand-written shape referenced several fields that
+ * do not exist in the table (a fallback provider/model pair, per-request and
+ * per-window rate limits, an un-suffixed spend cap, and a nested feature-flag
+ * JSON object), so the page could neither read nor persist correctly.
+ */
+type LLMPolicy = Database['public']['Tables']['organization_llm_policies']['Row']
+type AIProvider = Database['public']['Enums']['ai_provider']
 
 interface AIModelPricing {
   model_id: string
@@ -80,7 +72,7 @@ interface AIModelPricing {
   is_active: boolean
 }
 
-const PROVIDERS = [
+const PROVIDERS: Array<{ value: AIProvider; label: string }> = [
   { value: 'anthropic', label: 'Anthropic' },
   { value: 'openai', label: 'OpenAI' },
   { value: 'google', label: 'Google' },
@@ -102,6 +94,8 @@ const MODELS: Record<string, Array<{ value: string; label: string }>> = {
     { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
   ],
 }
+
+const NONE = '__none__'
 
 /**
  * Resolve the caller's organization from a SERVER-TRUSTED source (N7 fix).
@@ -217,21 +211,21 @@ function AISettingsPage() {
   })
 
   // Initialize form state from policy
-  const currentState = formState ||
+  const currentState: Partial<LLMPolicy> = formState ||
     policy || {
       default_provider: 'anthropic',
       default_model: 'claude-sonnet-4-20250514',
-      fallback_provider: null,
-      fallback_model: null,
-      max_tokens_per_request: 8192,
-      max_requests_per_minute: 10,
-      max_requests_per_day: 500,
-      monthly_spend_cap: null,
-      features_enabled: {
-        brief_generation: true,
-        chat: true,
-        entity_linking: true,
-      },
+      arabic_provider: null,
+      arabic_model: null,
+      allow_cloud_for_confidential: false,
+      private_provider: null,
+      private_model: null,
+      private_endpoint_url: null,
+      monthly_spend_cap_usd: null,
+      alert_threshold_percent: 80,
+      brief_generation_enabled: true,
+      chat_enabled: true,
+      entity_linking_enabled: true,
     }
 
   const updateField = <K extends keyof LLMPolicy>(field: K, value: LLMPolicy[K]) => {
@@ -240,20 +234,6 @@ function AISettingsPage() {
       [field]: value,
     }))
     setHasChanges(true)
-  }
-
-  const updateFeature = (feature: keyof LLMPolicy['features_enabled'], enabled: boolean) => {
-    const defaultFeatures: LLMPolicy['features_enabled'] = {
-      brief_generation: true,
-      chat: true,
-      entity_linking: true,
-    }
-    const features: LLMPolicy['features_enabled'] = {
-      ...defaultFeatures,
-      ...currentState.features_enabled,
-      [feature]: enabled,
-    }
-    updateField('features_enabled', features)
   }
 
   const handleSave = () => {
@@ -270,6 +250,8 @@ function AISettingsPage() {
   const getModelPricingInfo = (modelId: string) => {
     return modelPricing?.find((m) => m.model_id === modelId)
   }
+
+  const hasSpendCap = (currentState.monthly_spend_cap_usd ?? 0) > 0
 
   return (
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -341,8 +323,8 @@ function AISettingsPage() {
                     </div>
                   </div>
                   <Switch
-                    checked={currentState.features_enabled?.brief_generation ?? true}
-                    onCheckedChange={(checked) => updateFeature('brief_generation', checked)}
+                    checked={currentState.brief_generation_enabled ?? true}
+                    onCheckedChange={(checked) => updateField('brief_generation_enabled', checked)}
                   />
                 </div>
 
@@ -359,8 +341,8 @@ function AISettingsPage() {
                     </div>
                   </div>
                   <Switch
-                    checked={currentState.features_enabled?.chat ?? true}
-                    onCheckedChange={(checked) => updateFeature('chat', checked)}
+                    checked={currentState.chat_enabled ?? true}
+                    onCheckedChange={(checked) => updateField('chat_enabled', checked)}
                   />
                 </div>
 
@@ -377,8 +359,8 @@ function AISettingsPage() {
                     </div>
                   </div>
                   <Switch
-                    checked={currentState.features_enabled?.entity_linking ?? true}
-                    onCheckedChange={(checked) => updateFeature('entity_linking', checked)}
+                    checked={currentState.entity_linking_enabled ?? true}
+                    onCheckedChange={(checked) => updateField('entity_linking_enabled', checked)}
                   />
                 </div>
               </>
@@ -394,7 +376,7 @@ function AISettingsPage() {
               {t('settings.modelConfig', 'Model Configuration')}
             </CardTitle>
             <CardDescription>
-              {t('settings.modelConfigDesc', 'Select default and fallback AI models')}
+              {t('settings.modelConfigDesc', 'Select default and Arabic-routing AI models')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -410,7 +392,7 @@ function AISettingsPage() {
                   <Select
                     value={currentState.default_provider}
                     onValueChange={(v) => {
-                      updateField('default_provider', v)
+                      updateField('default_provider', v as AIProvider)
                       updateField('default_model', MODELS[v]?.[0]?.value || '')
                     }}
                   >
@@ -462,14 +444,20 @@ function AISettingsPage() {
                 <Separator />
 
                 <div className="space-y-2">
-                  <Label>{t('settings.fallbackProvider', 'Fallback Provider (Optional)')}</Label>
+                  <Label>{t('settings.arabicProvider', 'Arabic Provider (Optional)')}</Label>
+                  <p className="text-xs text-muted-foreground">
+                    {t(
+                      'settings.arabicRoutingDesc',
+                      'Route Arabic-language requests to a dedicated provider.',
+                    )}
+                  </p>
                   <Select
-                    value={currentState.fallback_provider || '__none__'}
+                    value={currentState.arabic_provider || NONE}
                     onValueChange={(v) => {
-                      const provider = v === '__none__' ? null : v
-                      updateField('fallback_provider', provider)
+                      const provider = v === NONE ? null : (v as AIProvider)
+                      updateField('arabic_provider', provider)
                       updateField(
-                        'fallback_model',
+                        'arabic_model',
                         provider ? MODELS[provider]?.[0]?.value || null : null,
                       )
                     }}
@@ -478,7 +466,7 @@ function AISettingsPage() {
                       <SelectValue placeholder={t('settings.none', 'None')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="__none__">{t('settings.none', 'None')}</SelectItem>
+                      <SelectItem value={NONE}>{t('settings.none', 'None')}</SelectItem>
                       {PROVIDERS.filter((p) => p.value !== currentState.default_provider).map(
                         (p) => (
                           <SelectItem key={p.value} value={p.value}>
@@ -490,18 +478,18 @@ function AISettingsPage() {
                   </Select>
                 </div>
 
-                {currentState.fallback_provider && (
+                {currentState.arabic_provider != null && (
                   <div className="space-y-2">
-                    <Label>{t('settings.fallbackModel', 'Fallback Model')}</Label>
+                    <Label>{t('settings.arabicModel', 'Arabic Model')}</Label>
                     <Select
-                      value={currentState.fallback_model || ''}
-                      onValueChange={(v) => updateField('fallback_model', v || null)}
+                      value={currentState.arabic_model || ''}
+                      onValueChange={(v) => updateField('arabic_model', v || null)}
                     >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {MODELS[currentState.fallback_provider]?.map((m) => (
+                        {MODELS[currentState.arabic_provider]?.map((m) => (
                           <SelectItem key={m.value} value={m.value}>
                             {m.label}
                           </SelectItem>
@@ -515,15 +503,18 @@ function AISettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Rate Limits */}
+        {/* Privacy & Routing */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5" />
-              {t('settings.rateLimits', 'Rate Limits')}
+              {t('settings.privacyRouting', 'Privacy & Routing')}
             </CardTitle>
             <CardDescription>
-              {t('settings.rateLimitsDesc', 'Control API usage limits')}
+              {t(
+                'settings.privacyRoutingDesc',
+                'Control how confidential content is routed to AI providers',
+              )}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -535,46 +526,101 @@ function AISettingsPage() {
               </div>
             ) : (
               <>
-                <div className="space-y-2">
-                  <Label>{t('settings.maxTokens', 'Max Tokens per Request')}</Label>
-                  <Input
-                    type="number"
-                    value={currentState.max_tokens_per_request}
-                    onChange={(e) =>
-                      updateField('max_tokens_per_request', parseInt(e.target.value) || 0)
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Shield className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium">
+                        {t('settings.allowCloudConfidential', 'Allow cloud for confidential')}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {t(
+                          'settings.allowCloudConfidentialDesc',
+                          'Permit confidential content to be sent to cloud providers.',
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={currentState.allow_cloud_for_confidential ?? false}
+                    onCheckedChange={(checked) =>
+                      updateField('allow_cloud_for_confidential', checked)
                     }
-                    min={1000}
-                    max={128000}
+                  />
+                </div>
+
+                <Separator />
+
+                <div className="space-y-2">
+                  <Label>{t('settings.privateProvider', 'Private Provider (Optional)')}</Label>
+                  <p className="text-xs text-muted-foreground">
+                    {t(
+                      'settings.privateRoutingDesc',
+                      'Self-hosted provider for confidential content.',
+                    )}
+                  </p>
+                  <Select
+                    value={currentState.private_provider || NONE}
+                    onValueChange={(v) => {
+                      const provider = v === NONE ? null : (v as AIProvider)
+                      updateField('private_provider', provider)
+                      updateField(
+                        'private_model',
+                        provider ? MODELS[provider]?.[0]?.value || null : null,
+                      )
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder={t('settings.none', 'None')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={NONE}>{t('settings.none', 'None')}</SelectItem>
+                      {PROVIDERS.map((p) => (
+                        <SelectItem key={p.value} value={p.value}>
+                          {p.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {currentState.private_provider != null && (
+                  <div className="space-y-2">
+                    <Label>{t('settings.privateModel', 'Private Model')}</Label>
+                    <Select
+                      value={currentState.private_model || ''}
+                      onValueChange={(v) => updateField('private_model', v || null)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {MODELS[currentState.private_provider]?.map((m) => (
+                          <SelectItem key={m.value} value={m.value}>
+                            {m.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <Label>{t('settings.privateEndpoint', 'Private Endpoint URL')}</Label>
+                  <Input
+                    type="url"
+                    value={currentState.private_endpoint_url ?? ''}
+                    onChange={(e) =>
+                      updateField('private_endpoint_url', e.target.value ? e.target.value : null)
+                    }
+                    placeholder="https://llm.internal.example.gov"
                   />
                   <p className="text-xs text-muted-foreground">
-                    {t('settings.maxTokensDesc', 'Maximum tokens allowed in a single AI request')}
+                    {t(
+                      'settings.privateEndpointDesc',
+                      'Base URL of the self-hosted inference endpoint.',
+                    )}
                   </p>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>{t('settings.maxPerMinute', 'Max Requests per Minute')}</Label>
-                  <Input
-                    type="number"
-                    value={currentState.max_requests_per_minute}
-                    onChange={(e) =>
-                      updateField('max_requests_per_minute', parseInt(e.target.value) || 0)
-                    }
-                    min={1}
-                    max={100}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label>{t('settings.maxPerDay', 'Max Requests per Day')}</Label>
-                  <Input
-                    type="number"
-                    value={currentState.max_requests_per_day}
-                    onChange={(e) =>
-                      updateField('max_requests_per_day', parseInt(e.target.value) || 0)
-                    }
-                    min={1}
-                    max={10000}
-                  />
                 </div>
               </>
             )}
@@ -594,17 +640,20 @@ function AISettingsPage() {
           </CardHeader>
           <CardContent className="space-y-6">
             {policyLoading ? (
-              <Skeleton className="h-12 w-full" />
+              <div className="space-y-4">
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+              </div>
             ) : (
               <>
                 <div className="space-y-2">
                   <Label>{t('settings.monthlyCap', 'Monthly Spend Cap (USD)')}</Label>
                   <Input
                     type="number"
-                    value={currentState.monthly_spend_cap || ''}
+                    value={currentState.monthly_spend_cap_usd ?? ''}
                     onChange={(e) =>
                       updateField(
-                        'monthly_spend_cap',
+                        'monthly_spend_cap_usd',
                         e.target.value ? parseFloat(e.target.value) : null,
                       )
                     }
@@ -620,7 +669,30 @@ function AISettingsPage() {
                   </p>
                 </div>
 
-                {currentState.monthly_spend_cap && (
+                <div className="space-y-2">
+                  <Label>{t('settings.alertThreshold', 'Alert Threshold (%)')}</Label>
+                  <Input
+                    type="number"
+                    value={currentState.alert_threshold_percent ?? ''}
+                    onChange={(e) =>
+                      updateField(
+                        'alert_threshold_percent',
+                        e.target.value ? parseInt(e.target.value) : null,
+                      )
+                    }
+                    min={1}
+                    max={100}
+                    step={5}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {t(
+                      'settings.alertThresholdDesc',
+                      'Send an alert when spending reaches this percentage of the monthly cap.',
+                    )}
+                  </p>
+                </div>
+
+                {hasSpendCap && (
                   <Alert>
                     <AlertTriangle className="h-4 w-4" />
                     <AlertDescription>
@@ -647,28 +719,24 @@ function AISettingsPage() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-3">
-            <Badge
-              variant={currentState.features_enabled?.brief_generation ? 'default' : 'secondary'}
-            >
+            <Badge variant={currentState.brief_generation_enabled ? 'default' : 'secondary'}>
               <FileText className="h-3 w-3 me-1" />
               {t('settings.briefGeneration', 'Brief Generation')}:{' '}
-              {currentState.features_enabled?.brief_generation
+              {currentState.brief_generation_enabled
                 ? t('settings.enabled', 'Enabled')
                 : t('settings.disabled', 'Disabled')}
             </Badge>
-            <Badge variant={currentState.features_enabled?.chat ? 'default' : 'secondary'}>
+            <Badge variant={currentState.chat_enabled ? 'default' : 'secondary'}>
               <MessageSquare className="h-3 w-3 me-1" />
               {t('settings.chat', 'Chat')}:{' '}
-              {currentState.features_enabled?.chat
+              {currentState.chat_enabled
                 ? t('settings.enabled', 'Enabled')
                 : t('settings.disabled', 'Disabled')}
             </Badge>
-            <Badge
-              variant={currentState.features_enabled?.entity_linking ? 'default' : 'secondary'}
-            >
+            <Badge variant={currentState.entity_linking_enabled ? 'default' : 'secondary'}>
               <Link2 className="h-3 w-3 me-1" />
               {t('settings.entityLinking', 'Entity Linking')}:{' '}
-              {currentState.features_enabled?.entity_linking
+              {currentState.entity_linking_enabled
                 ? t('settings.enabled', 'Enabled')
                 : t('settings.disabled', 'Disabled')}
             </Badge>
