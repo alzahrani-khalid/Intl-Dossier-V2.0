@@ -12,21 +12,45 @@
  */
 import type { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { UseFormReturn } from 'react-hook-form'
+import type { Control, UseFormReturn } from 'react-hook-form'
 
 import { FormWizardStep } from '@/components/ui/form-wizard'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { DossierPicker } from '@/components/work-creation/DossierPicker'
 import { useDirection } from '@/hooks/useDirection'
 import type { PersonFormData } from '../schemas/person.schema'
+
+// Allowed persons.office_type values (DB CHECK, migration 20260202000001).
+const OFFICE_TYPES = [
+  'head_of_state',
+  'head_of_government',
+  'cabinet_minister',
+  'legislature_upper',
+  'legislature_lower',
+  'regional_executive',
+  'regional_legislature',
+  'local_executive',
+  'local_legislature',
+  'judiciary',
+  'ambassador',
+  'international_org',
+  'other',
+] as const
 
 interface OfficeTermStepProps {
   form: UseFormReturn<PersonFormData>
 }
 
 export function OfficeTermStep({ form }: OfficeTermStepProps): ReactElement {
-  const { t } = useTranslation(['form-wizard'])
+  const { t } = useTranslation(['form-wizard', 'elected-officials'])
   const { direction } = useDirection()
 
   return (
@@ -80,6 +104,34 @@ export function OfficeTermStep({ form }: OfficeTermStepProps): ReactElement {
             )}
           />
         </div>
+
+        {/* Office type (optional — persisted to persons.office_type; A-6).
+            office_type lives outside PersonFormData (no Zod rule), so register
+            it through a locally-widened control. */}
+        <FormField
+          control={form.control as unknown as Control<PersonFormData & { office_type?: string }>}
+          name="office_type"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t('elected-officials:filters.officeType')}</FormLabel>
+              <Select value={field.value ?? ''} onValueChange={field.onChange}>
+                <FormControl>
+                  <SelectTrigger className="min-h-11">
+                    <SelectValue placeholder={t('form-wizard:engagement.type_placeholder')} />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {OFFICE_TYPES.map((value) => (
+                    <SelectItem key={value} value={value}>
+                      {t(`elected-officials:officeTypes.${value}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         {/* Country picker (required) */}
         <FormField
