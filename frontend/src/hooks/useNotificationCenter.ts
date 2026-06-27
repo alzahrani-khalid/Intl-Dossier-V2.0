@@ -58,6 +58,93 @@ export interface CategoryPreference {
   custom_sound?: string
 }
 
+/**
+ * Settings ↔ category-preference bridge (D-30).
+ *
+ * The Settings page (`SettingsPage`) exposes 8 boolean notification toggles, but
+ * the working persistence surface — shared with the Notifications page
+ * (`NotificationPreferences`) — is `notification_category_preferences`, a
+ * per-category row of channel flags. These helpers translate between the two
+ * representations so both surfaces read and write the SAME table and never
+ * diverge. Each toggle maps to one fixed, distinct (category, channel) cell,
+ * which keeps the round-trip lossless.
+ */
+export type SettingsNotificationToggleKey =
+  | 'notifications_push'
+  | 'notifications_email'
+  | 'notifications_mou_expiry'
+  | 'notifications_event_reminders'
+  | 'notifications_report_generation'
+  | 'notifications_assignment_updates'
+  | 'notifications_commitment_deadlines'
+  | 'notifications_mentions'
+
+export type SettingsNotificationToggles = Record<SettingsNotificationToggleKey, boolean>
+
+type CategoryChannelField = 'email_enabled' | 'push_enabled' | 'in_app_enabled'
+
+export const SETTINGS_NOTIFICATION_PREF_MAP: ReadonlyArray<{
+  key: SettingsNotificationToggleKey
+  category: NotificationCategory
+  field: CategoryChannelField
+}> = [
+  // The two channel-style toggles plus the MoU-expiry alert ride on the `system`
+  // category's distinct channel cells; the rest map to their category's in-app flag.
+  { key: 'notifications_email', category: 'system', field: 'email_enabled' },
+  { key: 'notifications_push', category: 'system', field: 'push_enabled' },
+  { key: 'notifications_mou_expiry', category: 'system', field: 'in_app_enabled' },
+  { key: 'notifications_assignment_updates', category: 'assignments', field: 'in_app_enabled' },
+  { key: 'notifications_event_reminders', category: 'calendar', field: 'in_app_enabled' },
+  { key: 'notifications_commitment_deadlines', category: 'deadlines', field: 'in_app_enabled' },
+  { key: 'notifications_report_generation', category: 'workflow', field: 'in_app_enabled' },
+  { key: 'notifications_mentions', category: 'mentions', field: 'in_app_enabled' },
+]
+
+/** Channel defaults for a brand-new category row — mirrors NotificationPreferences. */
+const DEFAULT_CATEGORY_CHANNELS: Omit<CategoryPreference, 'category'> = {
+  email_enabled: true,
+  push_enabled: true,
+  in_app_enabled: true,
+  sms_enabled: false,
+  sound_enabled: true,
+}
+
+/** Read the 8 Settings toggles out of stored category rows (absence → false). */
+export function mapCategoryPrefsToSettingsToggles(
+  rows: CategoryPreference[] | null | undefined,
+): SettingsNotificationToggles {
+  const byCategory = new Map((rows ?? []).map((row) => [row.category, row]))
+  const toggles = {} as SettingsNotificationToggles
+  for (const { key, category, field } of SETTINGS_NOTIFICATION_PREF_MAP) {
+    toggles[key] = byCategory.get(category)?.[field] ?? false
+  }
+  return toggles
+}
+
+/**
+ * Apply the 8 Settings toggles onto existing category rows (read-modify-write),
+ * returning ONLY the categories the Settings page controls. Channels a user set
+ * on the Notifications page (e.g. `assignments.email_enabled`) are preserved
+ * because each row starts from its stored values before the mapped cell is set.
+ */
+export function applySettingsTogglesToCategoryPrefs(
+  toggles: SettingsNotificationToggles,
+  existingRows: CategoryPreference[] | null | undefined,
+): CategoryPreference[] {
+  const existingByCategory = new Map((existingRows ?? []).map((row) => [row.category, row]))
+  const touched = new Map<NotificationCategory, CategoryPreference>()
+  for (const { key, category, field } of SETTINGS_NOTIFICATION_PREF_MAP) {
+    const base =
+      touched.get(category) ??
+      (existingByCategory.has(category)
+        ? { ...(existingByCategory.get(category) as CategoryPreference) }
+        : ({ ...DEFAULT_CATEGORY_CHANNELS, category } as CategoryPreference))
+    base[field] = toggles[key]
+    touched.set(category, base)
+  }
+  return Array.from(touched.values())
+}
+
 export interface PushDevice {
   id: string
   device_token: string
