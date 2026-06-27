@@ -138,8 +138,9 @@ export function CommitmentQuickForm({
       return
     }
 
-    // Format due_date as ISO date string (YYYY-MM-DD)
-    const dueDateStr = values.due_date.toISOString().split('T')[0] as string
+    // Format due_date as a local-tz date string (YYYY-MM-DD). toISOString()
+    // converts to UTC first, which rolls the date back a day for GST evenings.
+    const dueDateStr = format(values.due_date, 'yyyy-MM-dd')
 
     const input: CreateCommitmentInput = {
       dossier_id: effectiveDossierId,
