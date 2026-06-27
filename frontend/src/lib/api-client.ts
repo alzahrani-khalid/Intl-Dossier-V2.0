@@ -16,6 +16,34 @@ export interface ApiClientOptions {
 }
 
 /**
+ * Structured error body returned by Edge Functions and the Express API:
+ * `{ message_en, message, error?, details: [...] }`.
+ */
+interface ApiErrorBody {
+  message?: string
+  message_en?: string
+  error?: string
+  details?: unknown
+}
+
+/**
+ * Error thrown by the API client on a non-2xx response. Carries the parsed
+ * server body so consumers (forms, toasts) can surface the localized message
+ * and per-field `details` instead of a bare `API error 400` status line.
+ */
+export class ApiError extends Error {
+  status: number
+  details?: unknown
+
+  constructor(message: string, status: number, details?: unknown) {
+    super(message)
+    this.name = 'ApiError'
+    this.status = status
+    this.details = details
+  }
+}
+
+/**
  * Retrieves auth headers from the current Supabase session
  */
 async function getAuthHeaders(): Promise<Record<string, string>> {
@@ -54,11 +82,25 @@ function resolveUrl(path: string, options?: ApiClientOptions): string {
 }
 
 /**
+ * Builds an ApiError from a failed response, reading the JSON error body when
+ * present and preferring the server's localized message over the status line.
+ */
+async function toApiError(response: Response): Promise<ApiError> {
+  const body = (await response.json().catch(() => null)) as ApiErrorBody | null
+  const message =
+    body?.message ??
+    body?.message_en ??
+    body?.error ??
+    `API error ${response.status}: ${response.statusText}`
+  return new ApiError(message, response.status, body?.details)
+}
+
+/**
  * Handles response checking and JSON parsing
  */
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
-    throw new Error(`API error ${response.status}: ${response.statusText}`)
+    throw await toApiError(response)
   }
   return response.json() as Promise<T>
 }
@@ -86,7 +128,7 @@ export async function apiGetBlob(path: string, options?: ApiClientOptions): Prom
     headers,
   })
   if (!response.ok) {
-    throw new Error(`API error ${response.status}: ${response.statusText}`)
+    throw await toApiError(response)
   }
   return response.blob()
 }
