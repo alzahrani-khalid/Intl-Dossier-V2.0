@@ -23,6 +23,24 @@ interface DeactivateUserResponse {
   error?: string;
 }
 
+/**
+ * A query against a table that does not exist in this environment returns a
+ * Postgres 42P01 / PostgREST PGRST205 error rather than throwing. Treat those as
+ * "table absent" so optional cleanup steps skip instead of failing the request.
+ */
+function isMissingTable(error: { code?: string; message?: string } | null): boolean {
+  if (!error) {
+    return false;
+  }
+  const message = (error.message ?? "").toLowerCase();
+  return (
+    error.code === "42P01" ||
+    error.code === "PGRST205" ||
+    message.includes("does not exist") ||
+    message.includes("could not find the table")
+  );
+}
+
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
 
@@ -138,62 +156,94 @@ serve(async (req) => {
       // Table might not exist yet
     }
 
-    // Count pending delegations granted by user
-    const { count: delegationCount } = await supabaseClient
-      .from("delegations")
-      .select("*", { count: "exact", head: true })
-      .eq("grantor_id", userId)
-      .eq("status", "active");
-    orphanedItems.delegations = delegationCount || 0;
-
-    // Count pending role approvals
-    const { count: approvalCount } = await supabaseClient
-      .from("pending_role_approvals")
-      .select("*", { count: "exact", head: true })
-      .or(`requestor_id.eq.${userId},approver_1_id.eq.${userId},approver_2_id.eq.${userId}`)
-      .eq("status", "pending");
-    orphanedItems.approvals = approvalCount || 0;
-
-    // Terminate all active sessions
-    const { data: sessions } = await supabaseClient
-      .from("user_sessions")
-      .select("id")
-      .eq("user_id", userId)
-      .eq("is_active", true);
-
-    const sessionsTerminated = sessions?.length || 0;
-
-    if (sessionsTerminated > 0) {
-      await supabaseClient
-        .from("user_sessions")
-        .update({
-          is_active: false,
-          terminated_at: new Date().toISOString(),
-          termination_reason: "user_deactivated",
-        })
-        .eq("user_id", userId)
-        .eq("is_active", true);
+    // Count active delegations granted by the user. The delegations table is not
+    // present in every environment — skip gracefully when it is absent.
+    {
+      const { count, error } = await supabaseAdmin
+        .from("delegations")
+        .select("*", { count: "exact", head: true })
+        .eq("grantor_id", userId)
+        .eq("status", "active");
+      if (error && !isMissingTable(error)) {
+        console.error("Delegation count error:", error);
+      }
+      orphanedItems.delegations = count || 0;
     }
 
-    // Revoke all active delegations (both granted and received)
-    const { data: activeDelegations } = await supabaseClient
-      .from("delegations")
-      .select("id")
-      .or(`grantor_id.eq.${userId},grantee_id.eq.${userId}`)
-      .eq("status", "active");
+    // Count pending role approvals involving this user. Real columns are
+    // requested_by / first_approver_id / second_approver_id.
+    {
+      const { count, error } = await supabaseAdmin
+        .from("pending_role_approvals")
+        .select("*", { count: "exact", head: true })
+        .or(
+          `requested_by.eq.${userId},first_approver_id.eq.${userId},second_approver_id.eq.${userId}`,
+        )
+        .eq("status", "pending");
+      if (error && !isMissingTable(error)) {
+        console.error("Pending approvals count error:", error);
+      }
+      orphanedItems.approvals = count || 0;
+    }
 
-    const delegationsRevoked = activeDelegations?.length || 0;
+    // Terminate active sessions, when the user_sessions table exists.
+    let sessionsTerminated = 0;
+    {
+      const { data: sessions, error } = await supabaseAdmin
+        .from("user_sessions")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("is_active", true);
+      if (error) {
+        if (!isMissingTable(error)) {
+          console.error("Session lookup error:", error);
+        }
+      } else if (sessions && sessions.length > 0) {
+        const { error: terminateError } = await supabaseAdmin
+          .from("user_sessions")
+          .update({
+            is_active: false,
+            terminated_at: new Date().toISOString(),
+            termination_reason: "user_deactivated",
+          })
+          .eq("user_id", userId)
+          .eq("is_active", true);
+        if (terminateError && !isMissingTable(terminateError)) {
+          console.error("Session termination error:", terminateError);
+        } else if (!terminateError) {
+          sessionsTerminated = sessions.length;
+        }
+      }
+    }
 
-    if (delegationsRevoked > 0) {
-      await supabaseClient
+    // Revoke active delegations (granted and received), when the table exists.
+    let delegationsRevoked = 0;
+    {
+      const { data: activeDelegations, error } = await supabaseAdmin
         .from("delegations")
-        .update({
-          status: "revoked",
-          revoked_at: new Date().toISOString(),
-          revocation_reason: "user_deactivated",
-        })
+        .select("id")
         .or(`grantor_id.eq.${userId},grantee_id.eq.${userId}`)
         .eq("status", "active");
+      if (error) {
+        if (!isMissingTable(error)) {
+          console.error("Delegation lookup error:", error);
+        }
+      } else if (activeDelegations && activeDelegations.length > 0) {
+        const { error: revokeError } = await supabaseAdmin
+          .from("delegations")
+          .update({
+            status: "revoked",
+            revoked_at: new Date().toISOString(),
+            revocation_reason: "user_deactivated",
+          })
+          .or(`grantor_id.eq.${userId},grantee_id.eq.${userId}`)
+          .eq("status", "active");
+        if (revokeError && !isMissingTable(revokeError)) {
+          console.error("Delegation revoke error:", revokeError);
+        } else if (!revokeError) {
+          delegationsRevoked = activeDelegations.length;
+        }
+      }
     }
 
     // Mark work items as orphaned (if dossiers table exists)
