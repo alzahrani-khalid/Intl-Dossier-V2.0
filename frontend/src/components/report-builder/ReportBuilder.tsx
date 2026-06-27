@@ -257,28 +257,46 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
             {t('actions.reset')}
           </Button>
 
+          {/* Stub-backed: useReportPreview resolves an empty {} no-op (no real
+              preview endpoint). Disabled for honesty until backed; handler kept
+              wired for re-enable. */}
           <Button
             variant="outline"
             size="sm"
             onClick={handlePreview}
-            disabled={configuration.entities.length === 0}
+            disabled
+            title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
           >
             <Play className="h-4 w-4 me-2" />
             {t('actions.preview')}
           </Button>
 
+          {/* Stub-backed: Save opens a dialog whose submit calls
+              useCreateReport/useUpdateReport, both fake {success:true}/{id:''}
+              no-ops. Disabled for honesty until backed; handler kept wired. */}
           <Button
             variant="default"
             size="sm"
             onClick={() => setIsSaveDialogOpen(true)}
-            disabled={configuration.entities.length === 0}
+            disabled
+            title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
           >
             <Save className="h-4 w-4 me-2" />
             {t('actions.save')}
           </Button>
 
+          {/* Stub-backed: Schedule opens a dialog whose submit calls the fake
+              useCreateSchedule (resolves {id:''}). NOTE: this is the report-builder
+              fake schedule path, NOT the real useScheduledReports one used by the
+              /reports/scheduled manager. Disabled for honesty; handler kept wired. */}
           {savedReportId && (
-            <Button variant="outline" size="sm" onClick={() => setIsScheduleDialogOpen(true)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsScheduleDialogOpen(true)}
+              disabled
+              title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
+            >
               <Calendar className="h-4 w-4 me-2" />
               {t('actions.schedule')}
             </Button>

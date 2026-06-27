@@ -268,7 +268,14 @@ export function SaveReportDialog({
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 {t('savedReports.confirmDelete.cancel')}
               </Button>
-              <Button type="submit" disabled={isSaving}>
+              {/* Stub-backed: onSave calls useCreateReport/useUpdateReport, both
+                  fake no-ops ({id:''}/{success:true}) with no persistence.
+                  Disabled for honesty until backed; handler kept wired. */}
+              <Button
+                type="submit"
+                disabled
+                title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
+              >
                 {isSaving && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
                 {existingReport ? t('save.updateButton') : t('save.saveButton')}
               </Button>
