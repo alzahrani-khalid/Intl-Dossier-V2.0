@@ -139,14 +139,24 @@ function AIUsageDashboard() {
         })
       })
 
-      // Get user emails
+      // Get user emails (D-17). `profiles` has neither `id` nor `email`
+      // (its key is `user_id`), so the old query threw 42703 and every email
+      // silently rendered "Unknown". Read from `users`, which has both, and
+      // check the error instead of swallowing it.
       const userIds = Array.from(userMap.keys())
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id, email')
-        .in('id', userIds)
+      const emailMap = new Map<string, string>()
+      if (userIds.length > 0) {
+        const { data: userRows, error: usersError } = await supabase
+          .from('users')
+          .select('id, email')
+          .in('id', userIds)
 
-      const emailMap = new Map(profiles?.map((p) => [p.id, p.email]) || [])
+        if (usersError) throw usersError
+
+        for (const row of userRows ?? []) {
+          emailMap.set(row.id, row.email)
+        }
+      }
 
       const topUsers = Array.from(userMap.entries())
         .map(([user_id, data]) => ({
