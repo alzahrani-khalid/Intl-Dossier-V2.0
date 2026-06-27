@@ -10,50 +10,47 @@
  * - Supports partial updates
  */
 
-import { createClient } from 'jsr:@supabase/supabase-js@2';
-import { corsHeaders } from '../_shared/cors.ts';
+import { createClient } from 'jsr:@supabase/supabase-js@2'
+import { corsHeaders } from '../_shared/cors.ts'
 
 interface UpdateTaskRequest {
-  title?: string;
-  description?: string;
-  assignee_id?: string;
-  engagement_id?: string;
-  priority?: 'low' | 'medium' | 'high' | 'urgent';
-  workflow_stage?: 'todo' | 'in_progress' | 'review' | 'done' | 'cancelled';
-  status?: 'pending' | 'in_progress' | 'review' | 'completed' | 'cancelled';
-  sla_deadline?: string;
-  work_item_type?: 'dossier' | 'position' | 'ticket' | 'generic';
-  work_item_id?: string;
-  source?: Record<string, any>;
-  completed_by?: string;
-  completed_at?: string;
-  last_known_updated_at?: string; // For optimistic locking
+  title?: string
+  description?: string
+  assignee_id?: string
+  engagement_id?: string
+  priority?: 'low' | 'medium' | 'high' | 'urgent'
+  workflow_stage?: 'todo' | 'in_progress' | 'review' | 'done' | 'cancelled'
+  status?: 'pending' | 'in_progress' | 'review' | 'completed' | 'cancelled'
+  sla_deadline?: string
+  work_item_type?: 'dossier' | 'position' | 'ticket' | 'generic'
+  work_item_id?: string
+  source?: Record<string, any>
+  completed_by?: string
+  completed_at?: string
+  last_known_updated_at?: string // For optimistic locking
 }
 
 // Allow-lists for enum fields. The request body is otherwise a bare cast, so
 // validate before update to reject malformed values with a clean 400 rather
 // than letting the DB enum reject them and leaking the raw Postgres error.
-const VALID_PRIORITIES = ['low', 'medium', 'high', 'urgent'];
-const VALID_WORKFLOW_STAGES = ['todo', 'in_progress', 'review', 'done', 'cancelled'];
-const VALID_STATUSES = ['pending', 'in_progress', 'review', 'completed', 'cancelled'];
+const VALID_PRIORITIES = ['low', 'medium', 'high', 'urgent']
+const VALID_WORKFLOW_STAGES = ['todo', 'in_progress', 'review', 'done', 'cancelled']
+const VALID_STATUSES = ['pending', 'in_progress', 'review', 'completed', 'cancelled']
 
 Deno.serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders })
   }
 
   try {
     // Get authorization header
-    const authHeader = req.headers.get('Authorization');
+    const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: 'Missing authorization header' }),
-        {
-          status: 401,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     // Initialize Supabase client with user's token
@@ -64,86 +61,65 @@ Deno.serve(async (req) => {
         global: {
           headers: { Authorization: authHeader },
         },
-      }
-    );
+      },
+    )
 
     // Verify user authentication
     const {
       data: { user },
       error: authError,
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        {
-          status: 401,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     // Get task ID from URL path
-    const url = new URL(req.url);
-    const pathParts = url.pathname.split('/');
-    const taskId = pathParts[pathParts.length - 1];
+    const url = new URL(req.url)
+    const pathParts = url.pathname.split('/')
+    const taskId = pathParts[pathParts.length - 1]
 
     if (!taskId) {
-      return new Response(
-        JSON.stringify({ error: 'Task ID is required' }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Task ID is required' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     // Parse request body
-    const body: UpdateTaskRequest = await req.json();
+    const body: UpdateTaskRequest = await req.json()
 
     // Validate title length if provided
     if (body.title && body.title.length > 500) {
-      return new Response(
-        JSON.stringify({ error: 'Title cannot exceed 500 characters' }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Title cannot exceed 500 characters' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     // Validate enum fields against allow-lists (body is a bare cast).
     if (body.priority !== undefined && !VALID_PRIORITIES.includes(body.priority)) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid priority value' }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Invalid priority value' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
-    if (
-      body.workflow_stage !== undefined &&
-      !VALID_WORKFLOW_STAGES.includes(body.workflow_stage)
-    ) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid workflow_stage value' }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+    if (body.workflow_stage !== undefined && !VALID_WORKFLOW_STAGES.includes(body.workflow_stage)) {
+      return new Response(JSON.stringify({ error: 'Invalid workflow_stage value' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     if (body.status !== undefined && !VALID_STATUSES.includes(body.status)) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid status value' }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Invalid status value' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     // Fetch current task for optimistic locking check
@@ -152,23 +128,20 @@ Deno.serve(async (req) => {
       .select('*')
       .eq('id', taskId)
       .eq('is_deleted', false)
-      .single();
+      .single()
 
     if (fetchError || !currentTask) {
-      return new Response(
-        JSON.stringify({ error: 'Task not found' }),
-        {
-          status: 404,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Task not found' }), {
+        status: 404,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     // Optimistic locking check (if last_known_updated_at provided)
     if (body.last_known_updated_at) {
-      const clientTimestamp = new Date(body.last_known_updated_at).getTime();
-      const serverTimestamp = new Date(currentTask.updated_at).getTime();
-      const CLOCK_SKEW_MS = 100;
+      const clientTimestamp = new Date(body.last_known_updated_at).getTime()
+      const serverTimestamp = new Date(currentTask.updated_at).getTime()
+      const CLOCK_SKEW_MS = 100
 
       if (Math.abs(serverTimestamp - clientTimestamp) > CLOCK_SKEW_MS) {
         // Timestamps don't match - return 409 Conflict with current state
@@ -183,8 +156,8 @@ Deno.serve(async (req) => {
           {
             status: 409,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          }
-        );
+          },
+        )
       }
     }
 
@@ -193,22 +166,22 @@ Deno.serve(async (req) => {
       updated_by: user.id,
       last_modified_by: user.id,
       updated_at: new Date().toISOString(),
-    };
+    }
 
     // Apply partial updates
-    if (body.title !== undefined) updateData.title = body.title.trim();
-    if (body.description !== undefined) updateData.description = body.description?.trim() || null;
-    if (body.assignee_id !== undefined) updateData.assignee_id = body.assignee_id;
-    if (body.engagement_id !== undefined) updateData.engagement_id = body.engagement_id || null;
-    if (body.priority !== undefined) updateData.priority = body.priority;
-    if (body.workflow_stage !== undefined) updateData.workflow_stage = body.workflow_stage;
-    if (body.status !== undefined) updateData.status = body.status;
-    if (body.sla_deadline !== undefined) updateData.sla_deadline = body.sla_deadline || null;
-    if (body.work_item_type !== undefined) updateData.work_item_type = body.work_item_type || null;
-    if (body.work_item_id !== undefined) updateData.work_item_id = body.work_item_id || null;
-    if (body.source !== undefined) updateData.source = body.source;
-    if (body.completed_by !== undefined) updateData.completed_by = body.completed_by || null;
-    if (body.completed_at !== undefined) updateData.completed_at = body.completed_at || null;
+    if (body.title !== undefined) updateData.title = body.title.trim()
+    if (body.description !== undefined) updateData.description = body.description?.trim() || null
+    if (body.assignee_id !== undefined) updateData.assignee_id = body.assignee_id
+    if (body.engagement_id !== undefined) updateData.engagement_id = body.engagement_id || null
+    if (body.priority !== undefined) updateData.priority = body.priority
+    if (body.workflow_stage !== undefined) updateData.workflow_stage = body.workflow_stage
+    if (body.status !== undefined) updateData.status = body.status
+    if (body.sla_deadline !== undefined) updateData.sla_deadline = body.sla_deadline || null
+    if (body.work_item_type !== undefined) updateData.work_item_type = body.work_item_type || null
+    if (body.work_item_id !== undefined) updateData.work_item_id = body.work_item_id || null
+    if (body.source !== undefined) updateData.source = body.source
+    if (body.completed_by !== undefined) updateData.completed_by = body.completed_by || null
+    if (body.completed_at !== undefined) updateData.completed_at = body.completed_at || null
 
     // B-3: workflow_stage is the single source of truth for lifecycle. When the
     // stage changes and the client did not send an explicit status, derive the
@@ -221,15 +194,15 @@ Deno.serve(async (req) => {
         review: 'review',
         done: 'completed',
         cancelled: 'cancelled',
-      };
-      updateData.status = STAGE_TO_STATUS[body.workflow_stage] ?? 'in_progress';
+      }
+      updateData.status = STAGE_TO_STATUS[body.workflow_stage] ?? 'in_progress'
     }
 
     // Auto-set completion stamps when the resolved status (explicit OR derived
     // from workflow_stage) is 'completed' and the client didn't supply them.
     if (updateData.status === 'completed' && !updateData.completed_at) {
-      updateData.completed_at = new Date().toISOString();
-      updateData.completed_by = user.id;
+      updateData.completed_at = new Date().toISOString()
+      updateData.completed_by = user.id
     }
 
     // Update task
@@ -239,29 +212,23 @@ Deno.serve(async (req) => {
       .eq('id', taskId)
       .eq('is_deleted', false)
       .select()
-      .single();
+      .single()
 
     if (updateError) {
-      console.error('Error updating task:', updateError);
-      return new Response(
-        JSON.stringify({ error: 'Failed to update task' }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      console.error('Error updating task:', updateError)
+      return new Response(JSON.stringify({ error: 'Failed to update task' }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     // Return updated task
-    return new Response(
-      JSON.stringify({ task: updatedTask }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+    return new Response(JSON.stringify({ task: updatedTask }), {
+      status: 200,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
   } catch (error) {
-    console.error('Unexpected error:', error);
+    console.error('Unexpected error:', error)
     return new Response(
       JSON.stringify({
         error: 'Internal server error',
@@ -270,7 +237,7 @@ Deno.serve(async (req) => {
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+      },
+    )
   }
-});
+})
