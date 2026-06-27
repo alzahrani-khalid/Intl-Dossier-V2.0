@@ -347,6 +347,7 @@ export function TimelineAnnotationBadge({
   className?: string
 }) {
   const { isRTL } = useDirection()
+  const { t } = useTranslation('dossier')
   const TypeIcon = annotationTypes.find((t) => t.type === annotation.type)?.icon || MessageSquare
 
   const colorClass = colorOptions.find((c) => c.color === annotation.color)?.class || 'bg-info'
@@ -368,6 +369,7 @@ export function TimelineAnnotationBadge({
       {onDelete && (
         <button
           type="button"
+          aria-label={t('common:common.delete')}
           onClick={(e) => {
             e.stopPropagation()
             onDelete()

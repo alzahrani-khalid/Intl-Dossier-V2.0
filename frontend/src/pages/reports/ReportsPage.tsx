@@ -298,9 +298,10 @@ export function ReportsPage() {
 
                   {template.parameters.map((param) => (
                     <div key={param.name}>
-                      <Label>{param.label}</Label>
+                      <Label htmlFor={param.name}>{param.label}</Label>
                       {param.type === 'date' ? (
                         <Input
+                          id={param.name}
                           type="date"
                           value={parameters[param.name] || ''}
                           onChange={(e) =>
@@ -313,6 +314,7 @@ export function ReportsPage() {
                         />
                       ) : param.type === 'select' ? (
                         <select
+                          id={param.name}
                           value={parameters[param.name] || ''}
                           onChange={(e) =>
                             setParameters((prev) => ({

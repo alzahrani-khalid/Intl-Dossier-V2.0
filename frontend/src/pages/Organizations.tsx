@@ -200,10 +200,14 @@ export default function Organizations() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-foreground">
+            <label
+              htmlFor="org-type-filter"
+              className="mb-1 block text-sm font-medium text-foreground"
+            >
               {t('organizations.filters.type', 'Type')}
             </label>
             <select
+              id="org-type-filter"
               value={typeFilter}
               onChange={(event) => setTypeFilter(event.target.value as typeof typeFilter)}
               className="w-48 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
@@ -217,10 +221,14 @@ export default function Organizations() {
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-foreground">
+            <label
+              htmlFor="org-status-filter"
+              className="mb-1 block text-sm font-medium text-foreground"
+            >
               {t('organizations.filters.status', 'Status')}
             </label>
             <select
+              id="org-status-filter"
               value={statusFilter}
               onChange={(event) => setStatusFilter(event.target.value as typeof statusFilter)}
               className="w-40 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"

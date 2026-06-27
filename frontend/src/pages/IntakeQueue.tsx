@@ -465,6 +465,7 @@ export function IntakeQueuePage() {
                     <div className="flex flex-1 items-start gap-3">
                       <input
                         type="checkbox"
+                        aria-label={`${t('common:common.select')} ${displayTitle}`}
                         checked={selectedTickets.includes(ticket.id)}
                         onChange={(e) => {
                           if (e.target.checked) {

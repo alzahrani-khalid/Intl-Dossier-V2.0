@@ -122,6 +122,7 @@ function SortableSectionItem({
     >
       <button
         type="button"
+        aria-label={t('common:common.reorder')}
         {...attributes}
         {...listeners}
         className="cursor-grab touch-none text-muted-foreground hover:text-foreground"

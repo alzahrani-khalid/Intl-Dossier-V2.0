@@ -303,6 +303,7 @@ export function MilestonesCelebration({
           {/* Close button */}
           <button
             onClick={handleDismiss}
+            aria-label={t('common:common.close')}
             className="absolute top-3 end-3 sm:top-4 sm:end-4 p-1.5 rounded-full hover:bg-muted transition-colors"
           >
             <X className="w-4 h-4 text-muted-foreground" />
