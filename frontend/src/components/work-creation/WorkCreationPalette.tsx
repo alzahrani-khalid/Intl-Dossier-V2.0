@@ -153,6 +153,10 @@ export function WorkCreationPalette({
   const handleDossierSelect = useCallback((dossierId: string | null, dossier?: DossierOption) => {
     if (dossierId && dossier) {
       setSelectedDossier(dossier)
+    } else if (!dossierId) {
+      // Picker reset (X button calls onChange(null)) — clear the stale dossier
+      // so "Continue" disables instead of advancing with a removed selection.
+      setSelectedDossier(undefined)
     }
   }, [])
 
