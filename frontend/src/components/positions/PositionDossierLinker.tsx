@@ -18,6 +18,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { Plus, X, Link as LinkIcon } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
+import { toast } from 'sonner'
 import type { PositionDossierLinkType } from '@/domains/positions/types'
 
 interface PositionDossierLinkerProps {
@@ -63,10 +64,13 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
       setIsAdding(false)
     } catch (err) {
       console.error('Failed to create link:', err)
+      toast.error(t('position_dossier_links.create_error'))
     }
   }
 
   const handleDeleteLink = async (dossierId: string) => {
+    if (!window.confirm(t('position_dossier_links.confirm_delete'))) return
+
     try {
       await deleteLink.mutateAsync({
         positionId,
@@ -74,6 +78,7 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
       })
     } catch (err) {
       console.error('Failed to delete link:', err)
+      toast.error(t('position_dossier_links.delete_error'))
     }
   }
 

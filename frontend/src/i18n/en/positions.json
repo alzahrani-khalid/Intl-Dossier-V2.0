@@ -76,7 +76,10 @@
       "opposed_by": "Opposed by"
     },
     "notes_optional": "Notes (Optional)",
-    "notes_placeholder": "Add any notes about this link..."
+    "notes_placeholder": "Add any notes about this link...",
+    "confirm_delete": "Remove this dossier link?",
+    "create_error": "Failed to add the link. Please try again.",
+    "delete_error": "Failed to remove the link. Please try again."
   },
   "consistency": {
     "title": "Consistency Analysis",
