@@ -33,7 +33,7 @@ import { useDraftMigration } from './useDraftMigration'
  * step adds last-name + nationality on top of the universal name fields, while
  * other wizards only validate the names.
  */
-const STEP_VALIDATION_FIELDS: Record<string, string[]> = {
+export const STEP_VALIDATION_FIELDS: Record<string, string[]> = {
   basic: ['name_en', 'name_ar', 'last_name_en', 'last_name_ar', 'nationality_id'],
   'engagement-details': ['engagement_type', 'engagement_category', 'start_date', 'end_date'],
   'office-term': ['office_name_en', 'office_name_ar', 'country_id', 'term_start', 'term_end'],
