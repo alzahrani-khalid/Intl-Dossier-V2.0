@@ -48,12 +48,12 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
   const validateFile = (file: File): string | null => {
     // Check file type
     if (!ALLOWED_MIME_TYPES.includes(file.type as any)) {
-      return t('positions:attachments.errors.unsupportedType')
+      return t('positions:attachments_uploader.errors.unsupportedType')
     }
 
     // Check file size
     if (file.size > MAX_FILE_SIZE) {
-      return t('positions:attachments.errors.fileTooLarge', {
+      return t('positions:attachments_uploader.errors.fileTooLarge', {
         maxSize: formatFileSize(MAX_FILE_SIZE),
       })
     }
@@ -182,7 +182,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
   const handleDeleteExisting = async (attachmentId: string) => {
     if (disabled) return
 
-    if (window.confirm(t('positions:attachments.confirmDelete'))) {
+    if (window.confirm(t('positions:attachments_uploader.confirmDelete'))) {
       try {
         await deleteMutation.mutateAsync(attachmentId)
       } catch (error: any) {
@@ -210,10 +210,10 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
     <div className="space-y-4">
       <div>
         <label className="block text-sm font-medium text-foreground dark:text-muted-foreground mb-2">
-          {t('positions:attachments.label')}
+          {t('positions:attachments_uploader.label')}
         </label>
         <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-3">
-          {t('positions:attachments.description')}
+          {t('positions:attachments_uploader.description')}
         </p>
       </div>
 
@@ -232,7 +232,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
         onDrop={handleDrop}
         role="button"
         tabIndex={disabled ? -1 : 0}
-        aria-label={t('positions:attachments.dropzoneAriaLabel')}
+        aria-label={t('positions:attachments_uploader.dropzoneAriaLabel')}
         onKeyDown={(e) => {
           if ((e.key === 'Enter' || e.key === ' ') && !disabled) {
             e.preventDefault()
@@ -282,15 +282,15 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
                   : 'text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300 focus:outline-none focus:underline'
               }`}
             >
-              {t('positions:attachments.dropzone')}
+              {t('positions:attachments_uploader.dropzone')}
             </button>
           </div>
 
           <p className="text-xs text-muted-foreground dark:text-muted-foreground">
-            {t('positions:attachments.maxSize', { size: formatFileSize(MAX_FILE_SIZE) })}
+            {t('positions:attachments_uploader.maxSize', { size: formatFileSize(MAX_FILE_SIZE) })}
           </p>
           <p className="text-xs text-muted-foreground dark:text-muted-foreground">
-            {t('positions:attachments.supportedFormats')}
+            {t('positions:attachments_uploader.supportedFormats')}
           </p>
         </div>
       </div>
@@ -315,7 +315,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
       {!isLoading && allAttachments.length > 0 && (
         <div className="space-y-2">
           <h3 className="text-sm font-medium text-foreground dark:text-muted-foreground">
-            {t('positions:attachments.listTitle')} ({existingAttachments.length})
+            {t('positions:attachments_uploader.listTitle')} ({existingAttachments.length})
           </h3>
 
           {/* Existing Attachments */}
@@ -364,7 +364,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
                       ? 'text-muted-foreground dark:text-muted-foreground cursor-not-allowed'
                       : 'text-muted-foreground hover:text-danger dark:text-muted-foreground dark:hover:text-danger transition-colors'
                   }`}
-                  aria-label={t('positions:attachments.deleteButton', {
+                  aria-label={t('positions:attachments_uploader.deleteButton', {
                     fileName: attachment.file_name,
                   })}
                 >
@@ -480,7 +480,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
                   type="button"
                   onClick={() => handleDeleteUploading(attachmentFile.id)}
                   className="ms-3 flex-shrink-0 text-muted-foreground hover:text-danger dark:text-muted-foreground dark:hover:text-danger transition-colors"
-                  aria-label={t('positions:attachments.removeButton')}
+                  aria-label={t('positions:attachments_uploader.removeButton')}
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                     <path
@@ -498,7 +498,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
 
       {!isLoading && existingAttachments.length === 0 && uploadingFiles.length === 0 && (
         <p className="text-sm text-muted-foreground dark:text-muted-foreground text-center py-4">
-          {t('positions:attachments.noAttachments')}
+          {t('positions:attachments_uploader.noAttachments')}
         </p>
       )}
     </div>

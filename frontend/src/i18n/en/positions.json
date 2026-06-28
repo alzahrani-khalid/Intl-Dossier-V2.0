@@ -246,6 +246,23 @@
   "submit": "Submit for Review",
   "publish": "Publish",
   "attachments": "Attachments",
+  "attachments_uploader": {
+    "label": "Attachments",
+    "description": "Upload supporting documents for this position.",
+    "dropzone": "Click to upload or drag and drop",
+    "dropzoneAriaLabel": "Upload attachments by clicking or dropping files here",
+    "maxSize": "Maximum file size: {{size}}",
+    "supportedFormats": "Supported formats: PDF, Word, Excel, PowerPoint, and images",
+    "listTitle": "Uploaded files",
+    "confirmDelete": "Delete this attachment?",
+    "deleteButton": "Delete {{fileName}}",
+    "removeButton": "Remove",
+    "noAttachments": "No attachments yet",
+    "errors": {
+      "unsupportedType": "Unsupported file type",
+      "fileTooLarge": "File exceeds the maximum size of {{maxSize}}"
+    }
+  },
   "approvalChain": "Approval Progress",
   "versions": {
     "description": "View version history and compare changes",

@@ -217,6 +217,23 @@
   "submit": "تقديم للمراجعة",
   "publish": "نشر",
   "attachments": "المرفقات",
+  "attachments_uploader": {
+    "label": "المرفقات",
+    "description": "ارفع المستندات الداعمة لهذا الموقف.",
+    "dropzone": "انقر للرفع أو اسحب الملفات وأفلتها",
+    "dropzoneAriaLabel": "ارفع المرفقات بالنقر أو بإفلات الملفات هنا",
+    "maxSize": "الحد الأقصى لحجم الملف: {{size}}",
+    "supportedFormats": "الصيغ المدعومة: PDF وWord وExcel وPowerPoint والصور",
+    "listTitle": "الملفات المرفوعة",
+    "confirmDelete": "حذف هذا المرفق؟",
+    "deleteButton": "حذف {{fileName}}",
+    "removeButton": "إزالة",
+    "noAttachments": "لا توجد مرفقات بعد",
+    "errors": {
+      "unsupportedType": "نوع الملف غير مدعوم",
+      "fileTooLarge": "الملف يتجاوز الحد الأقصى للحجم {{maxSize}}"
+    }
+  },
   "approvalChain": "تقدم الموافقة",
   "versions": {
     "description": "عرض سجل الإصدارات ومقارنة التغييرات",
