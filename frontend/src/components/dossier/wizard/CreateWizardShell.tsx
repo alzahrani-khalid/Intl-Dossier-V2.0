@@ -13,12 +13,16 @@ interface CreateWizardShellProps<T extends FieldValues> {
   wizard: CreateWizardReturn<T>
   children: React.ReactNode
   className?: string
+  // Overrides the final-step button label. Defaults to the create label; the
+  // edit surface passes "Save changes" so it can reuse this same shell (DRY).
+  completeButtonText?: string
 }
 
 export function CreateWizardShell<T extends FieldValues>({
   wizard,
   children,
   className,
+  completeButtonText,
 }: CreateWizardShellProps<T>): ReactElement {
   const { t } = useTranslation(['dossier', 'form-wizard'])
 
@@ -69,7 +73,7 @@ export function CreateWizardShell<T extends FieldValues>({
             isDraftSaving={wizard.isDraftSaving}
             hasDraft={wizard.hasDraft}
             canComplete={wizard.canComplete}
-            completeButtonText={t('dossier:form.create')}
+            completeButtonText={completeButtonText ?? t('dossier:form.create')}
             allowStepNavigation={true}
             namespace="form-wizard"
             actionBarMode="auto"

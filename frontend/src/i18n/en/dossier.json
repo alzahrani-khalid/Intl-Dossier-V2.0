@@ -348,6 +348,11 @@
     "success": "Dossier '{{name}}' updated successfully",
     "error": "Failed to update dossier: {{message}}"
   },
+  "edit": {
+    "title": "Edit {{name}}",
+    "back": "Back to dossier",
+    "loadError": "Could not load this dossier for editing."
+  },
   "delete": {
     "title": "Delete Dossier",
     "confirm": "Are you sure you want to delete this dossier? This action cannot be undone.",

@@ -222,6 +222,7 @@ import { Route as ProtectedDossiersElectedOfficialsIdDocsRouteImport } from './r
 import { Route as ProtectedDossiersElectedOfficialsIdDigestsRouteImport } from './routes/_protected/dossiers/elected-officials/$id/digests'
 import { Route as ProtectedDossiersElectedOfficialsIdCommitteesRouteImport } from './routes/_protected/dossiers/elected-officials/$id/committees'
 import { Route as ProtectedDossiersElectedOfficialsIdAuditRouteImport } from './routes/_protected/dossiers/elected-officials/$id/audit'
+import { Route as ProtectedDossiersEditTypeIdRouteImport } from './routes/_protected/dossiers/edit/$type/$id'
 import { Route as ProtectedDossiersCountriesIdTimelineRouteImport } from './routes/_protected/dossiers/countries/$id/timeline'
 import { Route as ProtectedDossiersCountriesIdTasksRouteImport } from './routes/_protected/dossiers/countries/$id/tasks'
 import { Route as ProtectedDossiersCountriesIdSignalsRouteImport } from './routes/_protected/dossiers/countries/$id/signals'
@@ -1433,6 +1434,12 @@ const ProtectedDossiersElectedOfficialsIdAuditRoute =
     path: '/audit',
     getParentRoute: () => ProtectedDossiersElectedOfficialsIdRoute,
   } as any)
+const ProtectedDossiersEditTypeIdRoute =
+  ProtectedDossiersEditTypeIdRouteImport.update({
+    id: '/dossiers/edit/$type/$id',
+    path: '/dossiers/edit/$type/$id',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedDossiersCountriesIdTimelineRoute =
   ProtectedDossiersCountriesIdTimelineRouteImport.update({
     id: '/timeline',
@@ -1652,6 +1659,7 @@ export interface FileRoutesByFullPath {
   '/dossiers/countries/$id/signals': typeof ProtectedDossiersCountriesIdSignalsRoute
   '/dossiers/countries/$id/tasks': typeof ProtectedDossiersCountriesIdTasksRoute
   '/dossiers/countries/$id/timeline': typeof ProtectedDossiersCountriesIdTimelineRoute
+  '/dossiers/edit/$type/$id': typeof ProtectedDossiersEditTypeIdRoute
   '/dossiers/elected-officials/$id/audit': typeof ProtectedDossiersElectedOfficialsIdAuditRoute
   '/dossiers/elected-officials/$id/committees': typeof ProtectedDossiersElectedOfficialsIdCommitteesRoute
   '/dossiers/elected-officials/$id/digests': typeof ProtectedDossiersElectedOfficialsIdDigestsRoute
@@ -1861,6 +1869,7 @@ export interface FileRoutesByTo {
   '/dossiers/countries/$id/signals': typeof ProtectedDossiersCountriesIdSignalsRoute
   '/dossiers/countries/$id/tasks': typeof ProtectedDossiersCountriesIdTasksRoute
   '/dossiers/countries/$id/timeline': typeof ProtectedDossiersCountriesIdTimelineRoute
+  '/dossiers/edit/$type/$id': typeof ProtectedDossiersEditTypeIdRoute
   '/dossiers/elected-officials/$id/audit': typeof ProtectedDossiersElectedOfficialsIdAuditRoute
   '/dossiers/elected-officials/$id/committees': typeof ProtectedDossiersElectedOfficialsIdCommitteesRoute
   '/dossiers/elected-officials/$id/digests': typeof ProtectedDossiersElectedOfficialsIdDigestsRoute
@@ -2086,6 +2095,7 @@ export interface FileRoutesById {
   '/_protected/dossiers/countries/$id/signals': typeof ProtectedDossiersCountriesIdSignalsRoute
   '/_protected/dossiers/countries/$id/tasks': typeof ProtectedDossiersCountriesIdTasksRoute
   '/_protected/dossiers/countries/$id/timeline': typeof ProtectedDossiersCountriesIdTimelineRoute
+  '/_protected/dossiers/edit/$type/$id': typeof ProtectedDossiersEditTypeIdRoute
   '/_protected/dossiers/elected-officials/$id/audit': typeof ProtectedDossiersElectedOfficialsIdAuditRoute
   '/_protected/dossiers/elected-officials/$id/committees': typeof ProtectedDossiersElectedOfficialsIdCommitteesRoute
   '/_protected/dossiers/elected-officials/$id/digests': typeof ProtectedDossiersElectedOfficialsIdDigestsRoute
@@ -2311,6 +2321,7 @@ export interface FileRouteTypes {
     | '/dossiers/countries/$id/signals'
     | '/dossiers/countries/$id/tasks'
     | '/dossiers/countries/$id/timeline'
+    | '/dossiers/edit/$type/$id'
     | '/dossiers/elected-officials/$id/audit'
     | '/dossiers/elected-officials/$id/committees'
     | '/dossiers/elected-officials/$id/digests'
@@ -2520,6 +2531,7 @@ export interface FileRouteTypes {
     | '/dossiers/countries/$id/signals'
     | '/dossiers/countries/$id/tasks'
     | '/dossiers/countries/$id/timeline'
+    | '/dossiers/edit/$type/$id'
     | '/dossiers/elected-officials/$id/audit'
     | '/dossiers/elected-officials/$id/committees'
     | '/dossiers/elected-officials/$id/digests'
@@ -2744,6 +2756,7 @@ export interface FileRouteTypes {
     | '/_protected/dossiers/countries/$id/signals'
     | '/_protected/dossiers/countries/$id/tasks'
     | '/_protected/dossiers/countries/$id/timeline'
+    | '/_protected/dossiers/edit/$type/$id'
     | '/_protected/dossiers/elected-officials/$id/audit'
     | '/_protected/dossiers/elected-officials/$id/committees'
     | '/_protected/dossiers/elected-officials/$id/digests'
@@ -4306,6 +4319,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDossiersElectedOfficialsIdAuditRouteImport
       parentRoute: typeof ProtectedDossiersElectedOfficialsIdRoute
     }
+    '/_protected/dossiers/edit/$type/$id': {
+      id: '/_protected/dossiers/edit/$type/$id'
+      path: '/dossiers/edit/$type/$id'
+      fullPath: '/dossiers/edit/$type/$id'
+      preLoaderRoute: typeof ProtectedDossiersEditTypeIdRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/dossiers/countries/$id/timeline': {
       id: '/_protected/dossiers/countries/$id/timeline'
       path: '/timeline'
@@ -4990,6 +5010,7 @@ interface ProtectedRouteChildren {
   ProtectedDossiersPersonsIndexRoute: typeof ProtectedDossiersPersonsIndexRoute
   ProtectedDossiersTopicsIndexRoute: typeof ProtectedDossiersTopicsIndexRoute
   ProtectedDossiersWorking_groupsIndexRoute: typeof ProtectedDossiersWorking_groupsIndexRoute
+  ProtectedDossiersEditTypeIdRoute: typeof ProtectedDossiersEditTypeIdRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
@@ -5109,6 +5130,7 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedDossiersTopicsIndexRoute: ProtectedDossiersTopicsIndexRoute,
   ProtectedDossiersWorking_groupsIndexRoute:
     ProtectedDossiersWorking_groupsIndexRoute,
+  ProtectedDossiersEditTypeIdRoute: ProtectedDossiersEditTypeIdRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
