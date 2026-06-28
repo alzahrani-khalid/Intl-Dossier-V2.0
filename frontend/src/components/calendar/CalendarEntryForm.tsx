@@ -118,9 +118,6 @@ export function CalendarEntryForm({
   const [endDatetime, setEndDatetime] = useState(initialData?.end_datetime || '')
   const [allDay, setAllDay] = useState(initialData?.all_day || false)
   const [location, setLocation] = useState(initialData?.location || '')
-  const [reminderMinutes, setReminderMinutes] = useState(
-    initialData?.reminder_minutes?.toString() || '15',
-  )
   const [participants] = useState<
     Array<{
       participant_type: 'person_dossier' | 'organization_dossier'
@@ -309,7 +306,6 @@ export function CalendarEntryForm({
       location: location || undefined,
       linked_item_type: linkedItemId ? linkedItemType : 'dossier',
       linked_item_id: effectiveDossierId,
-      reminder_minutes: parseInt(reminderMinutes) || 15,
       participants: participants.map((p) => ({
         participant_type: p.participant_type,
         participant_id: p.participant_id,
@@ -511,24 +507,6 @@ export function CalendarEntryForm({
               disabled={isPending}
             />
           </div>
-        </div>
-
-        {/* Reminder */}
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="reminder">{t('form.reminder')}</Label>
-          <Select value={reminderMinutes} onValueChange={setReminderMinutes} disabled={isPending}>
-            <SelectTrigger id="reminder">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="0">{t('form.no_reminder')}</SelectItem>
-              <SelectItem value="5">5 {t('form.minutes_before')}</SelectItem>
-              <SelectItem value="15">15 {t('form.minutes_before')}</SelectItem>
-              <SelectItem value="30">30 {t('form.minutes_before')}</SelectItem>
-              <SelectItem value="60">1 {t('form.hour_before')}</SelectItem>
-              <SelectItem value="1440">1 {t('form.day_before')}</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
 
         {/* Recurrence Pattern (only for new events) */}
