@@ -298,13 +298,13 @@
     "addMou": "إضافة مذكرة تفاهم",
     "statuses": {
       "draft": "مسودة",
-      "internal_review": "مراجعة داخلية",
-      "external_review": "مراجعة خارجية",
       "negotiation": "تفاوض",
+      "pending_approval": "بانتظار الموافقة",
       "signed": "موقعة",
       "active": "نشطة",
-      "renewed": "مجددة",
-      "expired": "منتهية"
+      "suspended": "معلّقة",
+      "expired": "منتهية",
+      "terminated": "مُنهاة"
     }
   },
   "forums": {

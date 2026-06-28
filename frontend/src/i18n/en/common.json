@@ -298,13 +298,13 @@
     "addMou": "Add MOU",
     "statuses": {
       "draft": "Draft",
-      "internal_review": "Internal Review",
-      "external_review": "External Review",
       "negotiation": "Negotiation",
+      "pending_approval": "Pending approval",
       "signed": "Signed",
       "active": "Active",
-      "renewed": "Renewed",
-      "expired": "Expired"
+      "suspended": "Suspended",
+      "expired": "Expired",
+      "terminated": "Terminated"
     }
   },
   "forums": {
