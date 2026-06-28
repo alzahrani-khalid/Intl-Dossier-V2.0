@@ -9,6 +9,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -183,7 +184,7 @@ function AIUsageDashboard() {
   })
 
   const formatCost = (cost: number) => {
-    return new Intl.NumberFormat(i18n.language, {
+    return new Intl.NumberFormat(toFormatLocale(i18n.language), {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 4,
@@ -191,7 +192,7 @@ function AIUsageDashboard() {
   }
 
   const formatNumber = (num: number) => {
-    return new Intl.NumberFormat(i18n.language).format(num)
+    return new Intl.NumberFormat(toFormatLocale(i18n.language)).format(num)
   }
 
   const RUN_TYPE_ICONS: Record<string, typeof FileText> = {

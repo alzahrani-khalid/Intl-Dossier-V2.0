@@ -6,6 +6,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -85,7 +86,7 @@ async function reassignApproval(approvalId: string, newApproverId: string, reaso
 }
 
 function AdminApprovalsPage() {
-  const { t } = useTranslation('admin')
+  const { t, i18n } = useTranslation('admin')
   const queryClient = useQueryClient()
   const [isReassignDialogOpen, setIsReassignDialogOpen] = useState(false)
   const [selectedPosition, setSelectedPosition] = useState<any>(null)
@@ -208,7 +209,9 @@ function AdminApprovalsPage() {
                   </TableCell>
                   <TableCell>{position.thematic_category || '-'}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">
-                    {new Date(position.created_at).toLocaleDateString()}
+                    {new Date(position.created_at).toLocaleDateString(
+                      toFormatLocale(i18n.language),
+                    )}
                   </TableCell>
                   <TableCell>
                     <Button variant="outline" size="sm" onClick={() => handleReassign(position)}>

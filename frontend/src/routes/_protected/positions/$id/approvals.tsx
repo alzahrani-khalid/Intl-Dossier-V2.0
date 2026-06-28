@@ -5,6 +5,7 @@
 
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -50,7 +51,7 @@ async function fetchApprovals(positionId: string) {
 
 function ApprovalTrackingPage() {
   const { id } = Route.useParams()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   const { data: position, isLoading } = useQuery({
     queryKey: ['positions', 'detail', id],
@@ -164,7 +165,7 @@ function ApprovalTrackingPage() {
                 </TableCell>
                 <TableCell className="max-w-xs truncate">{approval.comments || '-'}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">
-                  {new Date(approval.created_at).toLocaleString()}
+                  {new Date(approval.created_at).toLocaleString(toFormatLocale(i18n.language))}
                 </TableCell>
               </TableRow>
             ))}
