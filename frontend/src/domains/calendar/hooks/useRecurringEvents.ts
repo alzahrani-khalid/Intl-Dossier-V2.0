@@ -198,17 +198,20 @@ export function useIsRecurringEvent(
     queryFn: async (): Promise<{ is_recurring: boolean; series_id?: string }> => {
       if (!eventId) return { is_recurring: false }
 
+      // Operational entries live in calendar_entries, which stores recurrence
+      // inline (is_recurring / recurrence_pattern). It has no series_id, and the
+      // forum-model calendar_events table is empty — querying it always reported
+      // false. maybeSingle() tolerates ids that are not calendar_entries rows.
       const { data, error } = await supabase
-        .from('calendar_events')
-        .select('series_id')
+        .from('calendar_entries')
+        .select('is_recurring, recurrence_pattern')
         .eq('id', eventId)
-        .single()
+        .maybeSingle()
 
       if (error) throw error
 
       return {
-        is_recurring: !!data?.series_id,
-        series_id: data?.series_id,
+        is_recurring: !!data?.is_recurring || !!data?.recurrence_pattern,
       }
     },
     enabled: !!eventId,
