@@ -70,9 +70,8 @@ function WorkflowIndicator({ state }: { state: string }) {
           size="sm"
           variant="ghost"
           className="h-6 px-2"
-          onClick={() => {
-            /* handle transition */
-          }}
+          disabled
+          title={t('common.notYetAvailable')}
         >
           <ChevronRight className={`h-3 w-3 ${isRTL ? 'rotate-180' : ''}`} />
           {t(`mous.statuses.${stateConfig.next}`)}
@@ -207,7 +206,7 @@ export function MousPage() {
     <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{t('navigation.mous')}</h1>
-        <Button>
+        <Button disabled title={t('common.notYetAvailable')}>
           <Plus className="h-4 w-4 me-2" />
           {t('mous.addMou')}
         </Button>
