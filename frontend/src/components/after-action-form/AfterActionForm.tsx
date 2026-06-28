@@ -70,12 +70,6 @@ export function AfterActionForm({
 }: AfterActionFormProps) {
   const { t } = useTranslation()
   const { toast } = useToast()
-  // B-18: editing an existing record (initialData carries a persisted id) only
-  // saves top-level scalar fields via after-actions-update. Nested decisions /
-  // commitments / risks / follow-ups / attachments are NOT persisted on update,
-  // so their editors are hidden in edit mode to avoid implying a save that never
-  // happens. Create mode (no persisted id) keeps every editor.
-  const isEditMode = initialData?.id != null && initialData.id !== ''
   // Form state
   const [formData, setFormData] = useState<AfterActionFormData>({
     engagement_id: engagementId,
@@ -326,9 +320,7 @@ export function AfterActionForm({
               {t('afterActions.form.title')}
               {formData.is_confidential && <Shield className="size-5 text-warning" />}
             </CardTitle>
-            {!readOnly && !isEditMode && (
-              <AIExtractionButton onExtract={handleAIExtraction as any} />
-            )}
+            {!readOnly && <AIExtractionButton onExtract={handleAIExtraction as any} />}
           </div>
         </CardHeader>
       </Card>
@@ -435,62 +427,50 @@ export function AfterActionForm({
 
       <Separator />
 
-      {/* B-18: nested decisions/commitments/risks/follow-ups/attachments are not
-          persisted by after-actions-update. Show the editors only in create mode;
-          in edit mode surface an honest note instead of editors that can't save. */}
-      {isEditMode ? (
-        <Alert>
-          <AlertCircle className="size-4" />
-          <AlertDescription>{t('common:afterActions.form.nestedEditDisabled')}</AlertDescription>
-        </Alert>
-      ) : (
-        <>
-          {/* Decisions */}
-          <DecisionList
-            decisions={formData.decisions}
-            onChange={(decisions) => setFormData((prev) => ({ ...prev, decisions }))}
-            readOnly={readOnly}
-          />
+      {/* Decisions */}
+      <DecisionList
+        decisions={formData.decisions}
+        onChange={(decisions) => setFormData((prev) => ({ ...prev, decisions }))}
+        readOnly={readOnly}
+      />
 
-          <Separator />
+      <Separator />
 
-          {/* Commitments */}
-          <CommitmentEditor
-            commitments={formData.commitments}
-            onChange={(commitments) => setFormData((prev) => ({ ...prev, commitments }))}
-            readOnly={readOnly}
-            availableUsers={availableUsers}
-          />
+      {/* Commitments */}
+      <CommitmentEditor
+        commitments={formData.commitments}
+        onChange={(commitments) => setFormData((prev) => ({ ...prev, commitments }))}
+        readOnly={readOnly}
+        availableUsers={availableUsers}
+      />
 
-          <Separator />
+      <Separator />
 
-          {/* Risks */}
-          <RiskList
-            risks={formData.risks}
-            onChange={(risks) => setFormData((prev) => ({ ...prev, risks }))}
-            readOnly={readOnly}
-          />
+      {/* Risks */}
+      <RiskList
+        risks={formData.risks}
+        onChange={(risks) => setFormData((prev) => ({ ...prev, risks }))}
+        readOnly={readOnly}
+      />
 
-          <Separator />
+      <Separator />
 
-          {/* Follow-up Actions */}
-          <FollowUpList
-            followUpActions={formData.follow_ups}
-            onChange={(follow_ups) => setFormData((prev) => ({ ...prev, follow_ups }))}
-            readOnly={readOnly}
-          />
+      {/* Follow-up Actions */}
+      <FollowUpList
+        followUpActions={formData.follow_ups}
+        onChange={(follow_ups) => setFormData((prev) => ({ ...prev, follow_ups }))}
+        readOnly={readOnly}
+      />
 
-          <Separator />
+      <Separator />
 
-          {/* Attachments */}
-          <AttachmentUploader
-            attachmentIds={formData.attachment_ids}
-            onChange={(attachment_ids) => setFormData((prev) => ({ ...prev, attachment_ids }))}
-            maxFiles={10}
-            maxFileSize={100 * 1024 * 1024} // 100MB
-          />
-        </>
-      )}
+      {/* Attachments */}
+      <AttachmentUploader
+        attachmentIds={formData.attachment_ids}
+        onChange={(attachment_ids) => setFormData((prev) => ({ ...prev, attachment_ids }))}
+        maxFiles={10}
+        maxFileSize={100 * 1024 * 1024} // 100MB
+      />
 
       {/* Action Buttons */}
       {!readOnly && (

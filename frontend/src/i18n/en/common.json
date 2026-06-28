@@ -598,8 +598,7 @@
       "publish": "Publish",
       "publishing": "Publishing...",
       "publishFailed": "Failed to publish",
-      "publishRequirements": "Add at least one decision, commitment, risk, or follow-up action to publish",
-      "nestedEditDisabled": "Decisions, commitments, risks, follow-ups, and attachments can't be edited here yet, so those sections are hidden. Manage them from their own views."
+      "publishRequirements": "Add at least one decision, commitment, risk, or follow-up action to publish"
     },
     "ai": {
       "extractButton": "AI Extract",
