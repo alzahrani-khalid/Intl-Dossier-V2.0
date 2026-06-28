@@ -7,6 +7,8 @@
  */
 
 import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -52,6 +54,25 @@ interface RelationshipFormValues {
 }
 
 /**
+ * Validation schema — a relationship needs a target contact and a type.
+ * Without a resolver the setValue-managed fields never validated, so an empty
+ * relationship could be submitted and the error block below was dead.
+ */
+const relationshipSchema = z.object({
+  to_contact_id: z.string().min(1, 'contacts:contactDirectory.relationships.form.contact_required'),
+  relationship_type: z.enum([
+    'reports_to',
+    'collaborates_with',
+    'partner',
+    'colleague',
+    'other',
+  ] as const),
+  notes: z.string().optional(),
+  start_date: z.string().optional(),
+  end_date: z.string().optional(),
+})
+
+/**
  * RelationshipForm Component
  */
 export function RelationshipForm({
@@ -63,13 +84,14 @@ export function RelationshipForm({
 }: RelationshipFormProps) {
   const { t } = useTranslation('contacts')
   const { isRTL } = useDirection()
-const {
+  const {
     register,
     handleSubmit,
     setValue,
     watch,
     formState: { errors },
   } = useForm<RelationshipFormValues>({
+    resolver: zodResolver(relationshipSchema),
     defaultValues: {
       to_contact_id: toContactId || '',
       relationship_type: 'colleague',
@@ -127,7 +149,7 @@ const {
             </SelectContent>
           </Select>
           {errors.to_contact_id && (
-            <p className="text-sm text-destructive text-start">
+            <p role="alert" className="text-sm text-destructive text-start">
               {t('contactDirectory.relationships.form.contact_required')}
             </p>
           )}
