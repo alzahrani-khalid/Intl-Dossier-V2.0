@@ -39,7 +39,6 @@ import type {
   ReschedulingSuggestionResponse,
 } from '@/types/calendar-conflict.types'
 import type { CreateRecurrenceRuleInput } from '@/types/recurrence.types'
-import { useDirection } from '@/hooks/useDirection'
 import { toast } from 'sonner'
 
 interface CalendarEntryFormProps {
@@ -106,7 +105,6 @@ export function CalendarEntryForm({
   onCancel,
 }: CalendarEntryFormProps) {
   const { t } = useTranslation('calendar')
-  const { isRTL } = useDirection()
   const [entryType, setEntryType] = useState<CalendarEntryType>(
     toCalendarEntryType(initialData?.entry_type),
   )
