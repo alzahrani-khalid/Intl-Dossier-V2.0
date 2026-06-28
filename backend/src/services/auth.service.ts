@@ -333,6 +333,9 @@ export class AuthService {
       }
 
       // Update user with MFA secret and backup codes
+      // D-19: mfa_secret is stored as plaintext base32. Encrypting it at rest
+      // (pgsodium/Vault/KMS) is a PRE-GA GATING REQUIREMENT before MFA ships to
+      // real users. See docs/adr/0002-data-entry-deferred-decisions.md.
       const { error } = await supabaseAdmin
         .from('users')
         .update({
