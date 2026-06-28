@@ -7,6 +7,7 @@
 
 import { useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import {
   CheckCircle2,
   Circle,
@@ -133,7 +134,7 @@ function FilterOption({ option, isSelected, onClick, isRTL, isLoading }: FilterO
           variant={isSelected ? 'default' : 'secondary'}
           className={cn('text-xs px-2', option.count === 0 && 'opacity-50')}
         >
-          {option.count.toLocaleString()}
+          {option.count.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
         </Badge>
       )}
     </button>

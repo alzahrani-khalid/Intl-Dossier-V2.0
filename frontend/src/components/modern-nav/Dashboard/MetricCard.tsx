@@ -3,6 +3,7 @@ import { ArrowUp, ArrowDown, ArrowRight } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { toFormatLocale } from '@/lib/format-locale'
 
 export interface TrendData {
   /** Trend value (percentage) */
@@ -63,8 +64,8 @@ export function MetricCard({
   className,
   onLinkClick,
 }: MetricCardProps) {
-const { isRTL } = useDirection()
-const [displayValue, setDisplayValue] = useState(0)
+  const { isRTL } = useDirection()
+  const [displayValue, setDisplayValue] = useState(0)
   const [hasAnimated, setHasAnimated] = useState(false)
 
   // Animated counter effect
@@ -130,7 +131,9 @@ const [displayValue, setDisplayValue] = useState(0)
       <CardContent className="space-y-4">
         {/* Large Metric Value */}
         <div className="flex items-baseline gap-3">
-          <span className="metric-value">{displayValue.toLocaleString()}</span>
+          <span className="metric-value">
+            {displayValue.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
+          </span>
 
           {/* Trend Indicator */}
           {trend && (

@@ -19,6 +19,7 @@
 
 import React, { useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { useAllIntelligence, useRefreshIntelligence } from '@/hooks/useIntelligence'
 import { EconomicDashboard } from '@/components/intelligence/EconomicDashboard'
 import { PoliticalAnalysis } from '@/components/intelligence/PoliticalAnalysis'
@@ -372,7 +373,9 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
                 </p>
                 <p className="text-sm font-semibold truncate">
                   {dossier.extension.population
-                    ? dossier.extension.population.toLocaleString()
+                    ? dossier.extension.population.toLocaleString(
+                        toFormatLocale(isRTL ? 'ar' : 'en'),
+                      )
                     : 'N/A'}
                 </p>
               </div>
@@ -387,7 +390,9 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
                 </p>
                 <p className="text-sm font-semibold truncate">
                   {dossier.extension.area_sq_km
-                    ? dossier.extension.area_sq_km.toLocaleString()
+                    ? dossier.extension.area_sq_km.toLocaleString(
+                        toFormatLocale(isRTL ? 'ar' : 'en'),
+                      )
                     : 'N/A'}
                 </p>
               </div>
