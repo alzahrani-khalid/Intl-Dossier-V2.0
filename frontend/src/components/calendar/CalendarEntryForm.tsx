@@ -288,6 +288,13 @@ export function CalendarEntryForm({
       return
     }
 
+    // title_en is NOT NULL in calendar_entries; require at least one language so a
+    // blank-title submit fails fast in the form instead of 500ing at the DB.
+    if (!titleEn.trim() && !titleAr.trim()) {
+      toast.error(t('form.title_required'))
+      return
+    }
+
     const eventData: CalendarEventFormInput = {
       entry_type: entryType,
       // title_en is NOT NULL in calendar_entries; fall back to the Arabic title so
@@ -396,7 +403,10 @@ export function CalendarEntryForm({
         {/* Titles */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="title-en">{t('form.title_en')}</Label>
+            <Label htmlFor="title-en" className="flex items-center gap-1">
+              {t('form.title_en')}
+              <span className="text-destructive">*</span>
+            </Label>
             <Input
               id="title-en"
               value={titleEn}
