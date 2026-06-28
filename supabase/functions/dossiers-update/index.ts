@@ -2,18 +2,9 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
 import { corsHeaders } from '../_shared/cors.ts'
 
-// Class-Table-Inheritance extension table per dossier type. Mirrors
-// dossiers-create exactly — engagement extends `engagement_dossiers` (NOT
-// `engagements`); elected_official is a person_subtype, not a distinct type.
-const EXTENSION_TABLE_BY_TYPE: Record<string, string> = {
-  country: 'countries',
-  organization: 'organizations',
-  forum: 'forums',
-  engagement: 'engagement_dossiers',
-  topic: 'topics',
-  working_group: 'working_groups',
-  person: 'persons',
-}
+// The base dossier + Class-Table-Inheritance extension write now runs inside a
+// single transactional RPC (update_dossier_with_extension); the per-type table
+// mapping lives in that function's SQL (engagement -> engagement_dossiers, etc.).
 
 const VALID_STATUSES = ['active', 'inactive', 'archived'] as const
 
@@ -212,18 +203,28 @@ serve(async (req) => {
     if (body.tags !== undefined) updateData.tags = body.tags
     if (body.metadata !== undefined) updateData.metadata = body.metadata
 
-    const { data: updatedDossier, error: updateError } = await supabaseClient
-      .from('dossiers')
-      .update(updateData)
-      .eq('id', body.id)
-      .select()
-      .single()
+    // Single transactional write: base dossier + type extension in ONE RPC, so a
+    // partial failure can no longer leave the base row updated behind a 500.
+    // SECURITY INVOKER keeps the caller's RLS in force on both tables. The RPC
+    // returns the merged { ...dossier, extension? } shape this endpoint already
+    // emitted, and raises SQLSTATEs that map to the same envelopes as before.
+    const { data: result, error: rpcError } = await supabaseClient.rpc(
+      'update_dossier_with_extension',
+      {
+        p_id: body.id,
+        p_base: updateData,
+        p_extension:
+          body.extensionData && Object.keys(body.extensionData).length > 0
+            ? body.extensionData
+            : null,
+      },
+    )
 
-    if (updateError) {
-      console.error('Error updating dossier:', updateError)
+    if (rpcError) {
+      console.error('Error updating dossier:', rpcError)
 
       // Unique name+type constraint (idx_dossiers_unique_name_type)
-      if (updateError.code === '23505') {
+      if (rpcError.code === '23505') {
         return new Response(
           JSON.stringify({
             error: {
@@ -239,8 +240,8 @@ serve(async (req) => {
         )
       }
 
-      // RLS denial
-      if (updateError.code === '42501') {
+      // RLS denial (base UPDATE filtered out, or extension WITH CHECK violation)
+      if (rpcError.code === '42501') {
         return new Response(
           JSON.stringify({
             error: {
@@ -256,13 +257,30 @@ serve(async (req) => {
         )
       }
 
+      // Dossier vanished / not visible between the pre-fetch and the write.
+      if (rpcError.code === 'P0002') {
+        return new Response(
+          JSON.stringify({
+            error: {
+              code: 'NOT_FOUND',
+              message_en: 'Dossier not found',
+              message_ar: 'الملف غير موجود',
+            },
+          }),
+          {
+            status: 404,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          },
+        )
+      }
+
       return new Response(
         JSON.stringify({
           error: {
             code: 'UPDATE_ERROR',
             message_en: 'Failed to update dossier',
             message_ar: 'فشل في تحديث الملف',
-            details: updateError,
+            details: rpcError,
           },
         }),
         {
@@ -272,49 +290,12 @@ serve(async (req) => {
       )
     }
 
-    // Update the type-specific extension row (Class Table Inheritance). Upsert on
-    // the shared id keeps the write idempotent and self-heals a missing row.
-    let extensionResult: Record<string, unknown> | null = null
-    if (body.extensionData && Object.keys(body.extensionData).length > 0) {
-      const extensionTable = EXTENSION_TABLE_BY_TYPE[existing.type]
-      if (extensionTable) {
-        const { data: extData, error: extError } = await supabaseClient
-          .from(extensionTable)
-          .upsert({ id: body.id, ...body.extensionData }, { onConflict: 'id' })
-          .select()
-          .single()
-
-        if (extError) {
-          console.error(`Failed to update extension data for ${existing.type}:`, extError)
-          return new Response(
-            JSON.stringify({
-              error: {
-                code: 'EXTENSION_UPDATE_ERROR',
-                message_en: `Failed to update ${existing.type} details.`,
-                message_ar: `فشل في تحديث تفاصيل ${existing.type}.`,
-                details: extError,
-              },
-            }),
-            {
-              status: 500,
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            },
-          )
-        }
-        extensionResult = extData
-      }
-    }
-
     // Refresh the dossier list materialized view (non-blocking; needs elevated perms).
     supabaseAdmin.rpc('refresh_dossier_list_mv').then(({ error }) => {
       if (error) {
         console.warn('Failed to refresh materialized view (non-critical):', error)
       }
     })
-
-    const result = extensionResult
-      ? { ...updatedDossier, extension: extensionResult }
-      : updatedDossier
 
     return new Response(JSON.stringify(result), {
       status: 200,

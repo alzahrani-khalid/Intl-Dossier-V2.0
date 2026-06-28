@@ -13,11 +13,17 @@ import { useTranslation } from 'react-i18next'
 import type { FieldValues } from 'react-hook-form'
 
 import type { DossierWithExtension } from '@/services/dossier-api'
+import {
+  useEngagement,
+  useEngagementParticipants,
+} from '@/domains/engagements/hooks/useEngagements'
+import type { EngagementParticipant } from '@/types/engagement.types'
+import { Skeleton } from '@/components/ui/skeleton'
 
 import { CreateWizardShell } from '../CreateWizardShell'
 import type { CreateWizardReturn, WizardConfig } from '../config/types'
 import { useEditDossierWizard } from './useEditDossierWizard'
-import { buildEditInitialValues } from './build-edit-initial-values'
+import { buildEditInitialValues, type EngagementEditExtras } from './build-edit-initial-values'
 
 // Configs (reused verbatim from the create flow)
 import { countryWizardConfig } from '../config/country.config'
@@ -79,6 +85,87 @@ function EditWizardRunner<T extends FieldValues>({
     <CreateWizardShell wizard={wizard} completeButtonText={completeLabel}>
       {renderSteps(wizard)}
     </CreateWizardShell>
+  )
+}
+
+/**
+ * Group reloaded engagement participants into the per-type dossier-id arrays the
+ * participants step binds to. Mirrors the create-flow split (country /
+ * organization / person); `external`-typed participants have no dossier id and
+ * are skipped (the wizard only edits dossier-linked participants).
+ */
+function groupParticipantDossierIds(
+  participants: readonly EngagementParticipant[],
+): Pick<
+  EngagementEditExtras,
+  'participantCountryIds' | 'participantOrganizationIds' | 'participantPersonIds'
+> {
+  const participantCountryIds: string[] = []
+  const participantOrganizationIds: string[] = []
+  const participantPersonIds: string[] = []
+  for (const participant of participants) {
+    const dossierId = participant.participant_dossier_id
+    if (dossierId == null || dossierId === '') continue
+    if (participant.participant_type === 'country') participantCountryIds.push(dossierId)
+    else if (participant.participant_type === 'organization')
+      participantOrganizationIds.push(dossierId)
+    else if (participant.participant_type === 'person') participantPersonIds.push(dossierId)
+  }
+  return { participantCountryIds, participantOrganizationIds, participantPersonIds }
+}
+
+/**
+ * Engagement edit branch (A-2). Engagement dates live in `engagement_dossiers`
+ * and participants in `engagement_participants` — neither is on the dossier
+ * extension `dossiers-get` returns — so this branch reloads both via the
+ * engagement domain hooks before seeding the wizard. RHF reads defaultValues
+ * once at mount, so the form is held behind a skeleton until they resolve.
+ */
+function EngagementEditWizardBranch({
+  dossier,
+  completeLabel,
+}: {
+  dossier: DossierWithExtension
+  completeLabel: string
+}): ReactElement {
+  const dossierId = dossier.id
+  const { data: profile, isLoading: isEngagementLoading } = useEngagement(dossierId)
+  const { data: participantsData, isLoading: isParticipantsLoading } =
+    useEngagementParticipants(dossierId)
+
+  if (isEngagementLoading || isParticipantsLoading) {
+    return (
+      <div className="mx-auto w-full max-w-2xl space-y-3 px-4 sm:px-6 lg:px-8">
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-2/3" />
+      </div>
+    )
+  }
+
+  const engagement = profile?.engagement
+  const extras: EngagementEditExtras = {
+    startDate: engagement?.start_date ?? null,
+    endDate: engagement?.end_date ?? null,
+    ...groupParticipantDossierIds(participantsData?.data ?? []),
+  }
+  const { initialValues } = buildEditInitialValues(dossier, extras)
+
+  return (
+    <EditWizardRunner<EngagementFormData>
+      config={engagementWizardConfig}
+      dossierId={dossierId}
+      initialValues={initialValues}
+      completeLabel={completeLabel}
+      renderSteps={(w): ReactNode => (
+        <>
+          <SharedBasicInfoStep form={w.form} dossierType="engagement" />
+          <EngagementDetailsStep form={w.form} />
+          <EngagementParticipantsStep form={w.form} />
+          <EngagementReviewStep form={w.form} onEditStep={w.setCurrentStep} />
+        </>
+      )}
+    />
   )
 }
 
@@ -173,22 +260,8 @@ export function DossierEditWizard({ dossier }: DossierEditWizardProps): ReactEle
         />
       )
     case 'engagement':
-      return (
-        <EditWizardRunner<EngagementFormData>
-          config={engagementWizardConfig}
-          dossierId={dossierId}
-          initialValues={initialValues}
-          completeLabel={completeLabel}
-          renderSteps={(w): ReactNode => (
-            <>
-              <SharedBasicInfoStep form={w.form} dossierType="engagement" />
-              <EngagementDetailsStep form={w.form} />
-              <EngagementParticipantsStep form={w.form} />
-              <EngagementReviewStep form={w.form} onEditStep={w.setCurrentStep} />
-            </>
-          )}
-        />
-      )
+      // Engagement dates + participants are reloaded inside the branch (A-2).
+      return <EngagementEditWizardBranch dossier={dossier} completeLabel={completeLabel} />
     case 'person':
       return (
         <EditWizardRunner<PersonFormData>

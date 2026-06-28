@@ -33273,6 +33273,10 @@ export type Database = {
       }
     }
     Functions: {
+      update_dossier_with_extension: {
+        Args: { p_id: string; p_base: Json; p_extension?: Json }
+        Returns: Json
+      }
       accept_recommendation: {
         Args: { p_recommendation_id: string; p_user_id: string }
         Returns: undefined

@@ -7,12 +7,14 @@
  * established_date ⇄ founding_date; forum.organizing_body ⇄ organizing_body_id;
  * person.nationality_country_id ⇄ nationality_id) — mirror those here.
  *
+ * Engagement dates + participants (A-1/A-2 follow-up): `dossiers-get` reads the
+ * engagement extension from `engagements` (no date columns), while the real
+ * dates live in `engagement_dossiers` and participants in
+ * `engagement_participants`. Neither is on `dossier.extension`, so the caller
+ * fetches them via the engagement domain hooks and passes them in as
+ * `engagementExtras`; when present they override the (empty) extension values.
+ *
  * Known partial-prefill gaps (documented, not silent):
- *  - engagement participants are NOT reloaded (they live in
- *    engagement_participants, not the extension row) — they start empty on edit.
- *  - engagement start/end dates depend on the extension row dossiers-get returns;
- *    that read currently targets `engagements` (no date columns), so dates may be
- *    blank until re-entered.
  *  - honorific_selection is reverse-resolved from honorific_en (curated label →
  *    that label; any other non-empty value → "Other").
  */
@@ -25,9 +27,26 @@ import { CURATED_HONORIFICS, HONORIFIC_OTHER } from '../steps/honorific-map'
 // keys its config/step registry on this widened union.
 export type WizardConfigKey = DossierType | 'elected_official'
 
+// Engagement dates + participants reloaded from the live tables (engagement_dossiers
+// / engagement_participants) by the caller, since dossiers-get cannot supply them.
+export interface EngagementEditExtras {
+  startDate?: string | null
+  endDate?: string | null
+  participantCountryIds: string[]
+  participantOrganizationIds: string[]
+  participantPersonIds: string[]
+}
+
 type ExtRecord = Record<string, unknown>
 
 const str = (value: unknown): string => (typeof value === 'string' ? value : '')
+
+// <input type="date"> needs a YYYY-MM-DD value; the DB columns are timestamptz
+// (ISO strings). Slice the date part; pass through anything already short.
+const toDateInputValue = (value: unknown): string => {
+  const value_ = str(value)
+  return value_.length >= 10 ? value_.slice(0, 10) : value_
+}
 
 /**
  * Resolve which wizard config/steps to render for a loaded dossier. Persons split
@@ -70,7 +89,11 @@ function buildPersonExtensionValues(ext: ExtRecord): Record<string, unknown> {
   }
 }
 
-function buildExtensionValues(key: WizardConfigKey, ext: ExtRecord): Record<string, unknown> {
+function buildExtensionValues(
+  key: WizardConfigKey,
+  ext: ExtRecord,
+  engagementExtras?: EngagementEditExtras,
+): Record<string, unknown> {
   switch (key) {
     case 'country':
       return {
@@ -111,12 +134,14 @@ function buildExtensionValues(key: WizardConfigKey, ext: ExtRecord): Record<stri
         engagement_category: ext.engagement_category ?? '',
         location_en: str(ext.location_en),
         location_ar: str(ext.location_ar),
-        start_date: str(ext.start_date),
-        end_date: str(ext.end_date),
-        // Participants are not reloaded (see file header) — start empty.
-        participant_country_ids: [],
-        participant_organization_ids: [],
-        participant_person_ids: [],
+        // Dates + participants come from engagement_dossiers /
+        // engagement_participants via engagementExtras (see file header); the
+        // ext fallback covers the case where the caller did not supply them.
+        start_date: toDateInputValue(engagementExtras?.startDate ?? ext.start_date),
+        end_date: toDateInputValue(engagementExtras?.endDate ?? ext.end_date),
+        participant_country_ids: engagementExtras?.participantCountryIds ?? [],
+        participant_organization_ids: engagementExtras?.participantOrganizationIds ?? [],
+        participant_person_ids: engagementExtras?.participantPersonIds ?? [],
       }
     case 'person':
       return buildPersonExtensionValues(ext)
@@ -146,7 +171,10 @@ function buildExtensionValues(key: WizardConfigKey, ext: ExtRecord): Record<stri
  * type defaults first (so every registered field renders a controlled input),
  * then overlays the base dossier fields and the reverse-mapped extension fields.
  */
-export function buildEditInitialValues(dossier: DossierWithExtension): {
+export function buildEditInitialValues(
+  dossier: DossierWithExtension,
+  engagementExtras?: EngagementEditExtras,
+): {
   configKey: WizardConfigKey
   initialValues: Record<string, unknown>
 } {
@@ -174,7 +202,7 @@ export function buildEditInitialValues(dossier: DossierWithExtension): {
     initialValues: {
       ...defaults,
       ...base,
-      ...buildExtensionValues(configKey, ext),
+      ...buildExtensionValues(configKey, ext, engagementExtras),
     },
   }
 }
