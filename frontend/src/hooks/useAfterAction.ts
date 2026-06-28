@@ -152,7 +152,17 @@ export interface CreateAfterActionRequest {
   follow_up_actions?: CreateFollowUpAction[]
 }
 
-export interface UpdateAfterActionRequest extends CreateAfterActionRequest {
+// B-18: update only persists top-level scalar fields. The `after-actions-update`
+// edge function writes engagement_id / is_confidential / attendees / notes and
+// nothing else, so this request type deliberately omits the nested arrays
+// (decisions / commitments / risks / follow_up_actions / attachments) that
+// CreateAfterActionRequest carries. Advertising them here implied a nested save
+// the endpoint never performs. Manage nested entities on their own surfaces.
+export interface UpdateAfterActionRequest {
+  engagement_id?: string
+  is_confidential?: boolean
+  attendees?: string[]
+  notes?: string
   version: number
   updated_at?: string
 }
