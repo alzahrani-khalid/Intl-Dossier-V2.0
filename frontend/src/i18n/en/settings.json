@@ -42,7 +42,7 @@
     "description": "Manage your personal information and profile picture",
     "avatar": "Profile Picture",
     "avatarHint": "Click to upload a new photo",
-    "avatarFormats": "JPG, PNG or GIF. Max 2MB",
+    "avatarFormats": "JPG, PNG, GIF or WebP. Max 5MB",
     "removeAvatar": "Remove Photo",
     "displayName": "Display Name",
     "displayNameHint": "This is how your name appears across the application",
@@ -59,7 +59,9 @@
     "bioHint": "Maximum 200 characters",
     "invalidFileType": "Invalid file type. Only JPG, PNG, GIF, and WebP are supported.",
     "fileTooLarge": "File is too large. Maximum size is 5MB.",
-    "avatarUploaded": "Avatar uploaded successfully"
+    "avatarUploaded": "Avatar uploaded successfully",
+    "avatarUploadError": "Could not upload the image. Please try again.",
+    "uploadAvatar": "Upload Photo"
   },
 
   "general": {

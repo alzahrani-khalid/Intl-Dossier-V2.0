@@ -1,13 +1,27 @@
-import { useCallback } from 'react'
+import { useCallback, useRef, useState, type ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { User, Trash2 } from 'lucide-react'
+import { User, Trash2, Upload, Loader2 } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Label } from '@/components/ui/label'
+import { supabase } from '@/lib/supabase'
+import { useAuthStore } from '@/store/authStore'
 import { SettingsSectionCard, SettingsGroup } from '../SettingsSectionCard'
+
+// D-9: avatar upload constraints. Mirror the i18n copy (`avatarFormats`,
+// `invalidFileType`, `fileTooLarge`) and the `avatars` bucket RLS.
+const ACCEPTED_AVATAR_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+const MAX_AVATAR_BYTES = 5 * 1024 * 1024
+const AVATAR_EXTENSION_BY_TYPE: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/gif': 'gif',
+  'image/webp': 'webp',
+}
 
 interface ProfileSettingsSectionProps {
   form: UseFormReturn<any>
@@ -33,13 +47,69 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
         .slice(0, 2)
     : 'U'
 
-  // D-9: avatar upload targets a non-existent `avatars` Storage bucket, so it
-  // always errored. The upload control is hidden until the bucket exists; the
-  // avatar is shown read-only and can still be cleared (avatar_url is a real
-  // `users` column). Re-introduce upload once the bucket is provisioned.
+  // D-9: avatar upload targets the `avatars` Storage bucket (public read,
+  // owner-scoped writes under `<user_id>/`). On success the public URL is staged
+  // into the form; the page's existing Save mutation persists `avatar_url` to the
+  // `users` row. Clearing also stages a dirty change for the same Save path.
+  const userId = useAuthStore((state) => state.user?.id)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isUploading, setIsUploading] = useState(false)
+
   const handleRemoveAvatar = useCallback(() => {
     form.setValue('avatar_url', null, { shouldDirty: true })
   }, [form])
+
+  const handleUploadClick = useCallback(() => {
+    fileInputRef.current?.click()
+  }, [])
+
+  const handleFileSelect = useCallback(
+    async (event: ChangeEvent<HTMLInputElement>): Promise<void> => {
+      const file = event.target.files?.[0]
+      // Allow re-selecting the same file after a failed/cleared attempt.
+      event.target.value = ''
+      if (file == null) return
+
+      if (!ACCEPTED_AVATAR_TYPES.includes(file.type)) {
+        toast.error(t('profile.invalidFileType'))
+        return
+      }
+      if (file.size > MAX_AVATAR_BYTES) {
+        toast.error(t('profile.fileTooLarge'))
+        return
+      }
+      if (userId == null) {
+        toast.error(t('profile.avatarUploadError'))
+        return
+      }
+
+      setIsUploading(true)
+      try {
+        const extension = AVATAR_EXTENSION_BY_TYPE[file.type] ?? 'jpg'
+        // Unique name busts the public-URL CDN cache; first segment must equal
+        // the user id to satisfy the bucket's owner-scoped INSERT policy.
+        const path = `${userId}/avatar-${Date.now()}.${extension}`
+
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(path, file, { contentType: file.type, upsert: true })
+        if (uploadError) throw uploadError
+
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from('avatars').getPublicUrl(path)
+
+        form.setValue('avatar_url', publicUrl, { shouldDirty: true })
+        toast.success(t('profile.avatarUploaded'))
+      } catch (error: unknown) {
+        console.error('Avatar upload failed', error)
+        toast.error(t('profile.avatarUploadError'))
+      } finally {
+        setIsUploading(false)
+      }
+    },
+    [form, t, userId],
+  )
 
   // D-20: surface Zod validation errors so a blocked submit isn't silent.
   const fieldError = (name: string): string | undefined => {
@@ -54,26 +124,53 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
       icon={User}
     >
       <div className="space-y-6">
-        {/* Avatar Section — display + clear only (upload hidden until bucket exists, D-9) */}
+        {/* Avatar Section — upload, display, and clear (D-9) */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <Avatar className="h-20 w-20 sm:h-24 sm:w-24">
             <AvatarImage src={avatarUrl || undefined} alt={displayName} />
             <AvatarFallback className="text-lg sm:text-xl">{initials}</AvatarFallback>
           </Avatar>
-          <div className="space-y-1">
+          <div className="space-y-2">
             <p className="text-sm font-medium text-start">{t('profile.avatar')}</p>
-            {avatarUrl && (
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept={ACCEPTED_AVATAR_TYPES.join(',')}
+              className="sr-only"
+              onChange={handleFileSelect}
+              tabIndex={-1}
+              aria-hidden="true"
+            />
+            <div className="flex flex-wrap items-center gap-2">
               <Button
                 type="button"
-                variant="ghost"
+                variant="secondary"
                 size="sm"
-                onClick={handleRemoveAvatar}
-                className="text-destructive hover:text-destructive"
+                onClick={handleUploadClick}
+                disabled={isUploading}
               >
-                <Trash2 className="h-3 w-3 me-1" />
-                {t('profile.removeAvatar')}
+                {isUploading ? (
+                  <Loader2 className="h-3 w-3 me-1 animate-spin" />
+                ) : (
+                  <Upload className="h-3 w-3 me-1" />
+                )}
+                {t('profile.uploadAvatar')}
               </Button>
-            )}
+              {avatarUrl && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleRemoveAvatar}
+                  disabled={isUploading}
+                  className="text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="h-3 w-3 me-1" />
+                  {t('profile.removeAvatar')}
+                </Button>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground text-start">{t('profile.avatarFormats')}</p>
           </div>
         </div>
 

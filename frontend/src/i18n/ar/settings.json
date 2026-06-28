@@ -42,7 +42,7 @@
     "description": "إدارة معلوماتك الشخصية وصورة الملف الشخصي",
     "avatar": "صورة الملف الشخصي",
     "avatarHint": "انقر لتحميل صورة جديدة",
-    "avatarFormats": "JPG أو PNG أو GIF. الحد الأقصى 2 ميجابايت",
+    "avatarFormats": "JPG أو PNG أو GIF أو WebP. الحد الأقصى 5 ميجابايت",
     "removeAvatar": "إزالة الصورة",
     "displayName": "الاسم المعروض",
     "displayNameHint": "هذه هي الطريقة التي يظهر بها اسمك في التطبيق",
@@ -59,7 +59,9 @@
     "bioHint": "الحد الأقصى 200 حرف",
     "invalidFileType": "نوع الملف غير صالح. يُدعم فقط JPG و PNG و GIF و WebP.",
     "fileTooLarge": "حجم الملف كبير جداً. الحد الأقصى 5 ميجابايت.",
-    "avatarUploaded": "تم تحميل الصورة الشخصية بنجاح"
+    "avatarUploaded": "تم تحميل الصورة الشخصية بنجاح",
+    "avatarUploadError": "تعذّر تحميل الصورة. يرجى المحاولة مرة أخرى.",
+    "uploadAvatar": "تحميل صورة"
   },
 
   "general": {

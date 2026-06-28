@@ -134,6 +134,11 @@ const DEFAULT_LLM_POLICY: Partial<LLMPolicy> = {
  * The user's `default_organization_id` is expected to be an org they are an
  * active member of (admin/owner for writes) — the same assumption the signals
  * hooks rely on.
+ *
+ * D-15: multi-admin scoping is deferred — the write-org is today's sole admin's
+ * default_organization_id. A 2nd admin is provisioned by seeding
+ * organization_members + default_organization_id, NOT by deriving from
+ * users.role. See docs/adr/0002-data-entry-deferred-decisions.md.
  */
 async function resolveTrustedOrgId(): Promise<string | null> {
   const {
