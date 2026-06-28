@@ -40,6 +40,7 @@ import type {
 } from '@/types/calendar-conflict.types'
 import type { CreateRecurrenceRuleInput } from '@/types/recurrence.types'
 import { useDirection } from '@/hooks/useDirection'
+import { toast } from 'sonner'
 
 interface CalendarEntryFormProps {
   entryId?: string
@@ -283,7 +284,7 @@ export function CalendarEntryForm({
     e.preventDefault()
 
     if (!startDatetime) {
-      alert(t('form.start_datetime_required'))
+      toast.error(t('form.start_datetime_required'))
       return
     }
 
@@ -339,7 +340,7 @@ export function CalendarEntryForm({
       onSuccess?.()
     } catch (err) {
       console.error('Failed to save calendar entry:', err)
-      alert(t('form.save_failed'))
+      toast.error(t('form.save_failed'))
     }
   }
 
