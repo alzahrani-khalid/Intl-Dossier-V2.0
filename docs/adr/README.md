@@ -38,6 +38,7 @@ with the following section order:
 
 ## Index
 
-| Number | Title                             | Status                |
-| ------ | --------------------------------- | --------------------- |
-| 0001   | Mobile DnD scope-out for TasksTab | Accepted (2026-05-18) |
+| Number | Title                                     | Status                |
+| ------ | ----------------------------------------- | --------------------- |
+| 0001   | Mobile DnD scope-out for TasksTab         | Accepted (2026-05-18) |
+| 0002   | Deferred data-entry decisions (A-7/15/19) | Accepted (2026-06-28) |
