@@ -18,6 +18,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { Plus, X, Link as LinkIcon } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
+import { toast } from 'sonner'
 import type { PositionDossierLinkType } from '@/domains/positions/types'
 
 interface PositionDossierLinkerProps {
@@ -63,10 +64,13 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
       setIsAdding(false)
     } catch (err) {
       console.error('Failed to create link:', err)
+      toast.error(t('position_dossier_links.create_error'))
     }
   }
 
   const handleDeleteLink = async (dossierId: string) => {
+    if (!window.confirm(t('position_dossier_links.confirm_delete'))) return
+
     try {
       await deleteLink.mutateAsync({
         positionId,
@@ -74,6 +78,7 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
       })
     } catch (err) {
       console.error('Failed to delete link:', err)
+      toast.error(t('position_dossier_links.delete_error'))
     }
   }
 
@@ -103,7 +108,7 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
         </h3>
         {!isAdding && (
           <Button size="sm" onClick={() => setIsAdding(true)} className="w-full sm:w-auto">
-            <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            <Plus className="h-4 w-4 me-2" />
             {t('position_dossier_links.add_link')}
           </Button>
         )}
@@ -115,11 +120,11 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
           <div className="flex flex-col gap-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium">
+                <label htmlFor="pdl-dossier" className="text-sm font-medium">
                   {t('position_dossier_links.select_dossier')}
                 </label>
                 <Select value={selectedDossierId} onValueChange={setSelectedDossierId}>
-                  <SelectTrigger>
+                  <SelectTrigger id="pdl-dossier" aria-required={true}>
                     <SelectValue placeholder={t('position_dossier_links.select_placeholder')} />
                   </SelectTrigger>
                   <SelectContent>
@@ -145,11 +150,11 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium">
+                <label htmlFor="pdl-link-type" className="text-sm font-medium">
                   {t('position_dossier_links.link_type')}
                 </label>
                 <Select value={linkType} onValueChange={(v) => setLinkType(v as typeof linkType)}>
-                  <SelectTrigger>
+                  <SelectTrigger id="pdl-link-type">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -171,10 +176,11 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium">
+              <label htmlFor="pdl-notes" className="text-sm font-medium">
                 {t('position_dossier_links.notes_optional')}
               </label>
               <Textarea
+                id="pdl-notes"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder={t('position_dossier_links.notes_placeholder')}
@@ -199,7 +205,9 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
                 disabled={!selectedDossierId || createLink.isPending}
                 className="w-full sm:w-auto"
               >
-                {createLink.isPending ? t('common.saving') : t('position_dossier_links.add_link')}
+                {createLink.isPending
+                  ? t('common:common.saving')
+                  : t('position_dossier_links.add_link')}
               </Button>
             </div>
           </div>

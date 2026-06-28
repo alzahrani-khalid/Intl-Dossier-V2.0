@@ -101,7 +101,7 @@ export function useContributedTasks(filters: Omit<TaskFilters, 'filter'> = {}) {
  * Includes optimistic updates for instant UI feedback
  */
 export function useCreateTask() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('tasks-page')
   const { toast } = useToast()
   const queryClient = useQueryClient()
 
@@ -126,14 +126,14 @@ export function useCreateTask() {
       }
 
       toast({
-        title: t('tasks.created'),
-        description: t('tasks.created_success'),
+        title: t('created'),
+        description: t('created_success'),
       })
     },
 
     onError: (error: any) => {
       toast({
-        title: t('tasks.create_failed'),
+        title: t('create_failed'),
         description: error.message,
         variant: 'destructive',
       })
@@ -149,7 +149,7 @@ export function useCreateTask() {
 export function useUpdateTask(options?: {
   onConflictDetected?: (error: OptimisticLockConflictError, localChanges: UpdateTaskRequest) => void
 }) {
-  const { t } = useTranslation()
+  const { t } = useTranslation('tasks-page')
   const { toast } = useToast()
   const queryClient = useQueryClient()
 
@@ -204,14 +204,14 @@ export function useUpdateTask(options?: {
         } else {
           // Fallback: show toast notification
           toast({
-            title: t('tasks.conflict'),
-            description: t('tasks.conflict_message'),
+            title: t('conflict_title'),
+            description: t('conflict_message'),
             variant: 'default',
           })
         }
       } else {
         toast({
-          title: t('tasks.update_failed'),
+          title: t('update_failed'),
           description: error.message,
           variant: 'destructive',
         })
@@ -239,8 +239,8 @@ export function useUpdateTask(options?: {
       }
 
       toast({
-        title: t('tasks.updated'),
-        description: t('tasks.updated_success'),
+        title: t('updated'),
+        description: t('updated_success'),
       })
     },
   })
@@ -250,7 +250,7 @@ export function useUpdateTask(options?: {
  * Hook to delete a task (soft delete)
  */
 export function useDeleteTask() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('tasks-page')
   const { toast } = useToast()
   const queryClient = useQueryClient()
 
@@ -263,14 +263,14 @@ export function useDeleteTask() {
       queryClient.removeQueries({ queryKey: tasksKeys.detail(taskId) })
 
       toast({
-        title: t('tasks.deleted'),
-        description: t('tasks.deleted_success'),
+        title: t('deleted'),
+        description: t('deleted_success'),
       })
     },
 
     onError: (error: any) => {
       toast({
-        title: t('tasks.delete_failed'),
+        title: t('delete_failed'),
         description: error.message,
         variant: 'destructive',
       })

@@ -1,5 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import {
   CheckCircle,
   Circle,
@@ -257,7 +258,7 @@ export function ApprovalChain({
                                     {t('approval.delegatedUntil', {
                                       date: new Date(
                                         lastApproval.delegated_until,
-                                      ).toLocaleDateString(i18n.language),
+                                      ).toLocaleDateString(toFormatLocale(i18n.language)),
                                     })}
                                   </p>
                                 )}
@@ -314,11 +315,14 @@ export function ApprovalChain({
 
                         {/* Timestamp */}
                         <div className="text-xs text-muted-foreground">
-                          {new Date(lastApproval.created_at).toLocaleDateString(i18n.language, {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                          })}
+                          {new Date(lastApproval.created_at).toLocaleDateString(
+                            toFormatLocale(i18n.language),
+                            {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                            },
+                          )}
                         </div>
 
                         {/* Multiple actions indicator */}
@@ -344,7 +348,7 @@ export function ApprovalChain({
                                       </div>
                                       <div className="text-muted-foreground">
                                         {new Date(approval.created_at).toLocaleString(
-                                          i18n.language,
+                                          toFormatLocale(i18n.language),
                                         )}
                                       </div>
                                       {idx < stageApprovals.length - 1 && <hr className="my-2" />}

@@ -6,6 +6,7 @@
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -139,7 +140,7 @@ export function ReportPreview({
   const formatCellValue = (value: unknown): string => {
     if (value === null || value === undefined) return '-'
     if (typeof value === 'boolean') return value ? t('common:yes') : t('common:no')
-    if (value instanceof Date) return value.toLocaleDateString()
+    if (value instanceof Date) return value.toLocaleDateString(toFormatLocale(isRTL ? 'ar' : 'en'))
     if (typeof value === 'object') return JSON.stringify(value)
     return String(value)
   }

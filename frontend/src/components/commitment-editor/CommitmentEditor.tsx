@@ -23,6 +23,7 @@ import { ConfirmRemoveButton } from '@/components/ui/confirm-remove-button'
 
 export interface Commitment {
   id?: string
+  title?: string
   description: string
   priority: 'low' | 'medium' | 'high' | 'urgent'
   status?: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'overdue'
@@ -64,6 +65,7 @@ export function CommitmentEditor({
     onChange([
       ...commitments,
       {
+        title: '',
         description: '',
         priority: 'medium',
         status: 'pending',
@@ -146,6 +148,20 @@ export function CommitmentEditor({
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor={`commitment-title-${index}`}>{t('commitments:form.title')} *</Label>
+              <Input
+                id={`commitment-title-${index}`}
+                value={commitment.title ?? ''}
+                onChange={(e) => updateCommitment(index, 'title', e.target.value)}
+                placeholder={t('commitments:form.titlePlaceholder')}
+                maxLength={200}
+                disabled={readOnly}
+                required
+                aria-required="true"
+              />
+            </div>
+
             <div>
               <Label htmlFor={`commitment-description-${index}`}>
                 {t('afterActions.commitments.description')} *

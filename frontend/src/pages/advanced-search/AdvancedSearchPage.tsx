@@ -6,6 +6,7 @@
 
 import { useState, useCallback, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Link } from '@tanstack/react-router'
 import {
   Search,
@@ -205,7 +206,9 @@ export function AdvancedSearchPage() {
             <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
-                {new Date(result.updated_at).toLocaleDateString()}
+                {new Date(result.updated_at).toLocaleDateString(
+                  toFormatLocale(isRTL ? 'ar' : 'en'),
+                )}
               </span>
               {result.rank_score && (
                 <span className="flex items-center gap-1">

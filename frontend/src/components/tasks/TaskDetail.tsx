@@ -107,13 +107,15 @@ export function TaskDetail({
         {/* Status Badges */}
         <div className="flex flex-wrap gap-2">
           <Badge className={getPriorityBadgeClass(task.priority)}>
-            {t(`priority.${task.priority}`, task.priority)}
+            {t(`tasks-page:priority.${task.priority}`, { defaultValue: task.priority })}
           </Badge>
           <Badge className={getStatusBadgeClass(task.status)}>
-            {t(`status.${task.status}`, task.status)}
+            {t(`tasks-page:status.${task.status}`, { defaultValue: task.status })}
           </Badge>
           <Badge variant="outline">
-            {t(`workflow_stage.${task.workflow_stage}`, task.workflow_stage)}
+            {t(`tasks-page:workflow_stage.${task.workflow_stage}`, {
+              defaultValue: task.workflow_stage,
+            })}
           </Badge>
           {task.work_item_type && (
             <Badge variant="outline">
@@ -195,7 +197,9 @@ export function TaskDetail({
               <p className="text-sm font-medium">{t('workflow_stage', 'Workflow Stage')}</p>
             </div>
             <Badge variant="outline">
-              {t(`workflow_stage.${task.workflow_stage}`, task.workflow_stage)}
+              {t(`tasks-page:workflow_stage.${task.workflow_stage}`, {
+                defaultValue: task.workflow_stage,
+              })}
             </Badge>
           </div>
 
@@ -309,7 +313,7 @@ export function TaskDetail({
       <Card>
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <CardTitle className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+            <CardTitle className="flex items-center gap-2">
               <Users className="h-5 w-5" />
               {t('contributors', 'Contributors')}
               {contributors.length > 0 && (
@@ -354,7 +358,7 @@ export function TaskDetail({
       {/* Linked Work Items Section (US4 - Task T070) */}
       <Card>
         <CardHeader>
-          <CardTitle className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <CardTitle className="flex items-center gap-2">
             <LinkIcon className="h-5 w-5" />
             {t('linked_work_items', 'Linked Work Items')}
             {(() => {

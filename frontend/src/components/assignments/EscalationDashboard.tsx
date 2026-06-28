@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { supabase } from '@/lib/supabase'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -224,7 +225,11 @@ export function EscalationDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {isLoading ? '...' : report?.summary.total_escalations.toLocaleString()}
+              {isLoading
+                ? '...'
+                : report?.summary.total_escalations.toLocaleString(
+                    toFormatLocale(isRTL ? 'ar' : 'en'),
+                  )}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
               {!isLoading && trend && (
@@ -282,7 +287,11 @@ export function EscalationDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {isLoading ? '...' : report?.summary.affected_assignments.toLocaleString()}
+              {isLoading
+                ? '...'
+                : report?.summary.affected_assignments.toLocaleString(
+                    toFormatLocale(isRTL ? 'ar' : 'en'),
+                  )}
             </div>
           </CardContent>
         </Card>

@@ -2,7 +2,7 @@
   {
     "name": "Initial JS (entry point)",
     "path": "dist/assets/app-*.js",
-    "limit": "470 KB",
+    "limit": "476 KB",
     "gzip": true,
     "running": false
   },

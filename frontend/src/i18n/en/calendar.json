@@ -41,6 +41,7 @@
     "start_datetime": "Start Date & Time",
     "end_datetime": "End Date & Time",
     "start_datetime_required": "Start date and time is required",
+    "title_required": "A title in English or Arabic is required",
     "all_day": "All Day Event",
     "location": "Location",
     "location_placeholder": "Enter location or venue",

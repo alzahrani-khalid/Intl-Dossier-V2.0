@@ -58,6 +58,7 @@
     "unsavedChanges": "Unsaved changes",
     "conflictTitle": "Version Conflict Detected",
     "conflictDescription": "This position has been modified by another user. Your version: {{current}}, Server version: {{server}}. Please reload the page to see the latest version.",
+    "conflictReloadWarning": "Reloading discards your unsaved local changes. Copy any text you need before reloading.",
     "reloadPage": "Reload Page",
     "linkedDossiers": "Linked Dossiers"
   },
@@ -76,7 +77,10 @@
       "opposed_by": "Opposed by"
     },
     "notes_optional": "Notes (Optional)",
-    "notes_placeholder": "Add any notes about this link..."
+    "notes_placeholder": "Add any notes about this link...",
+    "confirm_delete": "Remove this dossier link?",
+    "create_error": "Failed to add the link. Please try again.",
+    "delete_error": "Failed to remove the link. Please try again."
   },
   "consistency": {
     "title": "Consistency Analysis",
@@ -246,6 +250,23 @@
   "submit": "Submit for Review",
   "publish": "Publish",
   "attachments": "Attachments",
+  "attachments_uploader": {
+    "label": "Attachments",
+    "description": "Upload supporting documents for this position.",
+    "dropzone": "Click to upload or drag and drop",
+    "dropzoneAriaLabel": "Upload attachments by clicking or dropping files here",
+    "maxSize": "Maximum file size: {{size}}",
+    "supportedFormats": "Supported formats: PDF, Word, Excel, PowerPoint, and images",
+    "listTitle": "Uploaded files",
+    "confirmDelete": "Delete this attachment?",
+    "deleteButton": "Delete {{fileName}}",
+    "removeButton": "Remove",
+    "noAttachments": "No attachments yet",
+    "errors": {
+      "unsupportedType": "Unsupported file type",
+      "fileTooLarge": "File exceeds the maximum size of {{maxSize}}"
+    }
+  },
   "approvalChain": "Approval Progress",
   "versions": {
     "description": "View version history and compare changes",
@@ -389,7 +410,8 @@
     "attachSelected": "Attach {{count}} Position(s)",
     "attaching": "Attaching...",
     "attachSuccess": "Attached {{count}} position(s)",
-    "attachPartialError": "Failed to attach {{failed}} of {{total}} positions"
+    "attachPartialError": "Failed to attach {{failed}} of {{total}} positions",
+    "attachError": "Failed to attach positions. Please try again."
   },
   "briefing": {
     "title": "Generate Briefing Pack",

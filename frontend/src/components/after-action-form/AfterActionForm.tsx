@@ -161,7 +161,20 @@ export function AfterActionForm({
     onDirtyChange,
   ])
 
+  // B-6: an internal commitment with no assignee leaves owner_user_id undefined,
+  // which violates the aa_commitments valid_owner CHECK on insert. Block the
+  // submit before it reaches the edge function so the user fixes it inline.
+  const hasInternalCommitmentWithoutOwner = (): boolean =>
+    formData.commitments.some(
+      (c) => c.owner_type === 'internal' && (c.owner_user_id == null || c.owner_user_id === ''),
+    )
+
   const handleSaveDraft = async () => {
+    if (hasInternalCommitmentWithoutOwner()) {
+      setError(t('commitments:validation.ownerRequired'))
+      return
+    }
+
     setSaving(true)
     setError(null)
 
@@ -186,6 +199,11 @@ export function AfterActionForm({
 
     if (formData.attendees.length > 100) {
       setError(t('afterActions.form.attendeesMax'))
+      return
+    }
+
+    if (hasInternalCommitmentWithoutOwner()) {
+      setError(t('commitments:validation.ownerRequired'))
       return
     }
 

@@ -24,5 +24,69 @@
   "error": {
     "list": "Could not load tasks. Try refreshing the page.",
     "update": "Could not update task. Changes were reverted."
+  },
+  "created": "Task created",
+  "created_success": "The task was created successfully.",
+  "create_failed": "Could not create task",
+  "updated": "Task updated",
+  "updated_success": "The task was updated successfully.",
+  "update_failed": "Could not update task",
+  "deleted": "Task deleted",
+  "deleted_success": "The task was deleted.",
+  "delete_failed": "Could not delete task",
+  "conflict_title": "Task changed elsewhere",
+  "conflict_message": "This task was updated by someone else. Your changes were not saved.",
+  "editTask": "Edit task",
+  "editTaskDescription": "Update the task details",
+  "deleteTask": "Delete task",
+  "deleteTaskConfirmation": "Are you sure you want to delete \"{{title}}\"? This action can be undone.",
+  "form": {
+    "title": "Title",
+    "titlePlaceholder": "Task title…",
+    "description": "Description",
+    "descriptionPlaceholder": "Task description…",
+    "assignee": "Assignee",
+    "priority": "Priority",
+    "workflowStage": "Stage",
+    "deadline": "Deadline",
+    "selectDeadline": "Select deadline"
+  },
+  "conflict": {
+    "title": "Update conflict",
+    "description": "This task was changed by someone else while you were editing. Choose how to resolve it.",
+    "conflictingFields": "Conflicting fields",
+    "yourChange": "Your change",
+    "theirChange": "Their change",
+    "reloadOption": "Reload latest",
+    "reloadOptionDescription": "Discard your edits and load the current version.",
+    "forceSaveOption": "Overwrite",
+    "forceSaveOptionDescription": "Save your edits over the other person's changes.",
+    "cancelOption": "Keep editing",
+    "cancelOptionDescription": "Close this dialog and keep your unsaved edits.",
+    "reload": "Reload",
+    "forceSave": "Overwrite"
+  },
+  "field": {
+    "title": "Title",
+    "description": "Description",
+    "assignee_id": "Assignee",
+    "priority": "Priority",
+    "workflow_stage": "Stage",
+    "status": "Status",
+    "sla_deadline": "Deadline"
+  },
+  "status": {
+    "pending": "Pending",
+    "in_progress": "In progress",
+    "review": "Review",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+  "workflow_stage": {
+    "todo": "To do",
+    "in_progress": "In progress",
+    "review": "Review",
+    "done": "Done",
+    "cancelled": "Cancelled"
   }
 }

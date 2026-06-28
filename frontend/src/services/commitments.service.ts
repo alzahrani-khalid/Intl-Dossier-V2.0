@@ -198,6 +198,11 @@ export async function createCommitment(input: CreateCommitmentInput): Promise<Co
       status: input.status ?? 'pending',
       tracking_mode,
       proof_required: input.proof_required ?? false,
+      // B-17/E-22: persist the audit context the form already sends. Both
+      // columns exist on aa_commitments (created_from_route text,
+      // created_from_entity jsonb) and were silently dropped before.
+      created_from_route: input.created_from_route ?? null,
+      created_from_entity: input.created_from_entity ?? null,
       created_by: user.id,
       updated_by: user.id,
     })
@@ -230,13 +235,24 @@ export async function updateCommitment(
     throw new Error('User must be authenticated to update a commitment')
   }
 
+  // B-7: tracking_mode is strictly coupled to owner_type by the valid_tracking
+  // CHECK (internal -> automatic, external -> manual). The form exposes both as
+  // independent inputs, so changing owner_type without flipping tracking_mode
+  // would violate the constraint. Recompute tracking_mode from owner_type
+  // whenever owner_type is part of this update (exactly as createCommitment does)
+  // instead of trusting the raw value.
+  const updatePayload: UpdateCommitmentInput & { updated_by: string; updated_at: string } = {
+    ...input,
+    updated_by: user.id,
+    updated_at: new Date().toISOString(),
+  }
+  if (input.owner_type != null) {
+    updatePayload.tracking_mode = input.owner_type === 'internal' ? 'automatic' : 'manual'
+  }
+
   const { data, error } = await supabase
     .from('aa_commitments')
-    .update({
-      ...input,
-      updated_by: user.id,
-      updated_at: new Date().toISOString(),
-    })
+    .update(updatePayload)
     .eq('id', commitmentId)
     .select()
     .single()
@@ -273,12 +289,16 @@ export async function updateCommitmentStatus(
     updated_at: new Date().toISOString(),
   }
 
-  // If marking as completed, set completed_at
+  // If marking as completed, set completed_at; otherwise clear it so a
+  // commitment moved back out of 'completed' (e.g. reopened) does not keep a
+  // stale completion timestamp (B-38).
   if (input.status === 'completed') {
     updateData.completed_at = new Date().toISOString()
     if (input.notes) {
       updateData.completion_notes = input.notes
     }
+  } else {
+    updateData.completed_at = null
   }
 
   const { data, error } = await supabase

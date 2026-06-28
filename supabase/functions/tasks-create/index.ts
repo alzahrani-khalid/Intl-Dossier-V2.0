@@ -9,39 +9,42 @@
  * - Returns created task with all fields
  */
 
-import { createClient } from 'jsr:@supabase/supabase-js@2';
-import { corsHeaders } from '../_shared/cors.ts';
+import { createClient } from 'jsr:@supabase/supabase-js@2'
+import { corsHeaders } from '../_shared/cors.ts'
 
 interface CreateTaskRequest {
-  title: string;
-  description?: string;
-  assignee_id: string;
-  engagement_id?: string;
-  priority?: 'low' | 'medium' | 'high' | 'urgent';
-  workflow_stage?: 'todo' | 'in_progress' | 'review' | 'done' | 'cancelled';
-  sla_deadline?: string;
-  work_item_type?: 'dossier' | 'position' | 'ticket' | 'generic';
-  work_item_id?: string;
-  source?: Record<string, any>;
+  title: string
+  description?: string
+  assignee_id: string
+  engagement_id?: string
+  priority?: 'low' | 'medium' | 'high' | 'urgent'
+  workflow_stage?: 'todo' | 'in_progress' | 'review' | 'done' | 'cancelled'
+  sla_deadline?: string
+  work_item_type?: 'dossier' | 'position' | 'ticket' | 'generic'
+  work_item_id?: string
+  source?: Record<string, any>
 }
+
+// Allow-lists for enum fields. The request body is otherwise a bare cast, so
+// validate before insert to reject malformed values with a clean 400 rather
+// than letting the DB enum reject them and leaking the raw Postgres error.
+const VALID_PRIORITIES = ['low', 'medium', 'high', 'urgent']
+const VALID_WORKFLOW_STAGES = ['todo', 'in_progress', 'review', 'done', 'cancelled']
 
 Deno.serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders })
   }
 
   try {
     // Get authorization header
-    const authHeader = req.headers.get('Authorization');
+    const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: 'Missing authorization header' }),
-        {
-          status: 401,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     // Initialize Supabase client with user's token
@@ -52,62 +55,68 @@ Deno.serve(async (req) => {
         global: {
           headers: { Authorization: authHeader },
         },
-      }
-    );
+      },
+    )
 
     // Verify user authentication
     const {
       data: { user },
       error: authError,
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser()
 
     if (authError || !user) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        {
-          status: 401,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     // Parse request body
-    const body: CreateTaskRequest = await req.json();
+    const body: CreateTaskRequest = await req.json()
 
     // Validate required fields
     if (!body.title || body.title.trim().length === 0) {
-      return new Response(
-        JSON.stringify({ error: 'Title is required and cannot be empty' }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Title is required and cannot be empty' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     if (!body.assignee_id) {
-      return new Response(
-        JSON.stringify({ error: 'Assignee ID is required' }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Assignee ID is required' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     // Validate title length
     if (body.title.length > 500) {
-      return new Response(
-        JSON.stringify({ error: 'Title cannot exceed 500 characters' }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Title cannot exceed 500 characters' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
+    // Validate enum fields against allow-lists (body is a bare cast).
+    if (body.priority !== undefined && !VALID_PRIORITIES.includes(body.priority)) {
+      return new Response(JSON.stringify({ error: 'Invalid priority value' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
+    if (body.workflow_stage !== undefined && !VALID_WORKFLOW_STAGES.includes(body.workflow_stage)) {
+      return new Response(JSON.stringify({ error: 'Invalid workflow_stage value' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     // Validate work item linking (must have both type and id, or neither)
-    if ((body.work_item_type && !body.work_item_id) || (!body.work_item_type && body.work_item_id)) {
+    if (
+      (body.work_item_type && !body.work_item_id) ||
+      (!body.work_item_type && body.work_item_id)
+    ) {
       return new Response(
         JSON.stringify({
           error: 'Both work_item_type and work_item_id must be provided together',
@@ -115,71 +124,64 @@ Deno.serve(async (req) => {
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+        },
+      )
     }
 
     // Validate source JSONB structure for multiple work items
     if (body.source && typeof body.source === 'object') {
-      const { dossier_ids, position_ids, ticket_ids } = body.source;
+      const { dossier_ids, position_ids, ticket_ids } = body.source
 
       // Validate array types
       if (dossier_ids && !Array.isArray(dossier_ids)) {
-        return new Response(
-          JSON.stringify({ error: 'source.dossier_ids must be an array' }),
-          {
-            status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          }
-        );
+        return new Response(JSON.stringify({ error: 'source.dossier_ids must be an array' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        })
       }
       if (position_ids && !Array.isArray(position_ids)) {
-        return new Response(
-          JSON.stringify({ error: 'source.position_ids must be an array' }),
-          {
-            status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          }
-        );
+        return new Response(JSON.stringify({ error: 'source.position_ids must be an array' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        })
       }
       if (ticket_ids && !Array.isArray(ticket_ids)) {
-        return new Response(
-          JSON.stringify({ error: 'source.ticket_ids must be an array' }),
-          {
-            status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          }
-        );
+        return new Response(JSON.stringify({ error: 'source.ticket_ids must be an array' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        })
       }
 
       // Prevent conflicting work_item_id when source is used for multiple items
-      const hasMultipleWorkItems = (
+      const hasMultipleWorkItems =
         (dossier_ids && dossier_ids.length > 0) ||
         (position_ids && position_ids.length > 0) ||
         (ticket_ids && ticket_ids.length > 0)
-      );
 
       if (hasMultipleWorkItems && body.work_item_id) {
         return new Response(
           JSON.stringify({
-            error: 'Cannot specify both work_item_id and source with multiple work items. Use source field for multiple items or work_item_id for single item.',
+            error:
+              'Cannot specify both work_item_id and source with multiple work items. Use source field for multiple items or work_item_id for single item.',
           }),
           {
             status: 400,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          }
-        );
+          },
+        )
       }
     }
 
-    // Get user's tenant_id from profile or metadata
+    // Get user's tenant from profile. `profiles` is keyed by `user_id` and has
+    // `organization_id` but no `id`/`tenant_id` column (see supabase/CLAUDE.md);
+    // querying `.eq('id', ...)` 400s and silently fell back to user.id on every task.
     const { data: profile } = await supabase
       .from('profiles')
-      .select('tenant_id, organization_id')
-      .eq('id', user.id)
-      .single();
+      .select('organization_id')
+      .eq('user_id', user.id)
+      .single()
 
-    const tenantId = profile?.tenant_id || profile?.organization_id || user.id;
+    const tenantId = profile?.organization_id ?? user.id
 
     // Prepare task data
     const taskData = {
@@ -202,36 +204,30 @@ Deno.serve(async (req) => {
       tenant_id: tenantId,
       type: 'action_item', // Default task type (matches tasks.service.ts)
       version: 1,
-    };
+    }
 
     // Insert task
     const { data: task, error: insertError } = await supabase
       .from('tasks')
       .insert(taskData)
       .select()
-      .single();
+      .single()
 
     if (insertError) {
-      console.error('Error creating task:', insertError);
-      return new Response(
-        JSON.stringify({ error: insertError.message }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      console.error('Error creating task:', insertError)
+      return new Response(JSON.stringify({ error: 'Failed to create task' }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     // Return created task
-    return new Response(
-      JSON.stringify({ task }),
-      {
-        status: 201,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+    return new Response(JSON.stringify({ task }), {
+      status: 201,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
   } catch (error) {
-    console.error('Unexpected error:', error);
+    console.error('Unexpected error:', error)
     return new Response(
       JSON.stringify({
         error: 'Internal server error',
@@ -240,7 +236,7 @@ Deno.serve(async (req) => {
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+      },
+    )
   }
-});
+})

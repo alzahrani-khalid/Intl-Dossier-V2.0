@@ -11,6 +11,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { m } from 'framer-motion'
 import {
   Target,
@@ -117,10 +118,13 @@ export function DeliverableCard({ deliverable, commitmentId, onEdit }: Deliverab
   const getDueDateLabel = () => {
     if (isCompleted) {
       return t('timeline.completed', {
-        date: new Date(deliverable.completed_at!).toLocaleDateString(i18n.language, {
-          month: 'short',
-          day: 'numeric',
-        }),
+        date: new Date(deliverable.completed_at!).toLocaleDateString(
+          toFormatLocale(i18n.language),
+          {
+            month: 'short',
+            day: 'numeric',
+          },
+        ),
       })
     }
     if (daysUntilDue < 0) {

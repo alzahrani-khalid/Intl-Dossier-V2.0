@@ -327,11 +327,19 @@ export function getUpdatePayload(
   workflow_stage?: string
 } {
   if (source === 'task') {
-    // Tasks update workflow_stage and derive status
+    // Tasks update workflow_stage and derive status 1:1 where the task_status
+    // enum allows (B-26 — consistent with tasks-update + column-definitions so
+    // 'todo'→'pending' and 'review'→'review' are written, not 'in_progress').
     const workflowStage = targetColumnKey
     let status: string
 
     switch (workflowStage) {
+      case 'todo':
+        status = 'pending'
+        break
+      case 'review':
+        status = 'review'
+        break
       case 'done':
         status = 'completed'
         break
@@ -426,8 +434,6 @@ export function getTransitionErrorMessage(
 
   return msg.invalid
 }
-
 // ============================================
 // Validation Helpers
 // ============================================
-

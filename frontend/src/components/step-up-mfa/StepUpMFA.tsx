@@ -52,10 +52,18 @@ interface ChallengeData {
   challenge_id: string
   challenge_type: ChallengeType
   expires_at: string
+  factor_id: string
+}
+
+// Shape returned by the initiate endpoint (challenge_id + available MFA factors).
+interface InitiateResponse {
+  challenge_id: string
+  factors?: Array<{ id: string; friendly_name?: string; factor_type?: string }>
+  expires_at: string
 }
 
 interface VerificationResponse {
-  elevated_token: string
+  step_up_token: string
   valid_until: string
 }
 
@@ -170,9 +178,20 @@ export function StepUpMFA({
         throw new Error(errorData.message || 'Failed to initiate step-up challenge')
       }
 
-      const data: ChallengeData = await response.json()
-      setChallengeData(data)
-      startTimer(data.expires_at)
+      const data: InitiateResponse = await response.json()
+      const factorId = data.factors?.[0]?.id
+      if (!factorId) {
+        throw new Error(t('stepUp.errors.networkError'))
+      }
+      const challenge: ChallengeData = {
+        challenge_id: data.challenge_id,
+        // The initiate endpoint only returns verified TOTP factors.
+        challenge_type: 'totp',
+        expires_at: data.expires_at,
+        factor_id: factorId,
+      }
+      setChallengeData(challenge)
+      startTimer(challenge.expires_at)
 
       // Focus input after challenge is initiated
       setTimeout(() => {
@@ -225,14 +244,16 @@ export function StepUpMFA({
           },
           body: JSON.stringify({
             challenge_id: challengeData.challenge_id,
-            verification_code: verificationCode,
+            factor_id: challengeData.factor_id,
+            totp_code: verificationCode,
           }),
         },
       )
 
       if (!response.ok) {
         const errorData = await response.json()
-        if (response.status === 401) {
+        // The complete endpoint returns 403 on an invalid TOTP code.
+        if (response.status === 403) {
           throw new Error(t('stepUp.errors.invalidCode'))
         }
         throw new Error(errorData.message || 'Verification failed')
@@ -240,12 +261,12 @@ export function StepUpMFA({
 
       const data: VerificationResponse = await response.json()
 
-      // Store elevated token in sessionStorage for this session only
-      sessionStorage.setItem('elevated_token', data.elevated_token)
+      // Store the step-up token in sessionStorage for this session only.
+      sessionStorage.setItem('elevated_token', data.step_up_token)
       sessionStorage.setItem('elevated_token_valid_until', data.valid_until)
 
       // Call success callback
-      onSuccess(data.elevated_token, data.valid_until)
+      onSuccess(data.step_up_token, data.valid_until)
 
       // Reset state
       resetState()
@@ -388,6 +409,17 @@ export function StepUpMFA({
           <div className="flex items-center justify-center py-8">
             <div className="size-8 animate-spin rounded-full border-b-2 border-primary"></div>
             <span className="ms-3 text-sm text-muted-foreground">{t('stepUp.initiating')}</span>
+          </div>
+        )}
+
+        {/* Initiation error: shown when no challenge is active (e.g. initiate
+            failed), since the in-form error renderer below requires challengeData. */}
+        {error && !challengeData && !isInitiating && (
+          <div
+            className="rounded-md border border-destructive/20 bg-destructive/10 p-3"
+            role="alert"
+          >
+            <p className="text-sm text-destructive">{error}</p>
           </div>
         )}
 

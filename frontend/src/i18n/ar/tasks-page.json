@@ -24,5 +24,69 @@
   "error": {
     "list": "تعذر تحميل المهام. حاول تحديث الصفحة.",
     "update": "تعذر تحديث المهمة. تم التراجع عن التغييرات."
+  },
+  "created": "تم إنشاء المهمة",
+  "created_success": "تم إنشاء المهمة بنجاح.",
+  "create_failed": "تعذر إنشاء المهمة",
+  "updated": "تم تحديث المهمة",
+  "updated_success": "تم تحديث المهمة بنجاح.",
+  "update_failed": "تعذر تحديث المهمة",
+  "deleted": "تم حذف المهمة",
+  "deleted_success": "تم حذف المهمة.",
+  "delete_failed": "تعذر حذف المهمة",
+  "conflict_title": "تم تعديل المهمة في مكان آخر",
+  "conflict_message": "قام مستخدم آخر بتحديث هذه المهمة. لم يتم حفظ تغييراتك.",
+  "editTask": "تعديل المهمة",
+  "editTaskDescription": "حدّث تفاصيل المهمة",
+  "deleteTask": "حذف المهمة",
+  "deleteTaskConfirmation": "هل أنت متأكد من حذف \"{{title}}\"؟ يمكن التراجع عن هذا الإجراء.",
+  "form": {
+    "title": "العنوان",
+    "titlePlaceholder": "عنوان المهمة…",
+    "description": "الوصف",
+    "descriptionPlaceholder": "وصف المهمة…",
+    "assignee": "المكلَّف",
+    "priority": "الأولوية",
+    "workflowStage": "المرحلة",
+    "deadline": "الموعد النهائي",
+    "selectDeadline": "اختر الموعد النهائي"
+  },
+  "conflict": {
+    "title": "تعارض في التحديث",
+    "description": "تم تعديل هذه المهمة من قبل شخص آخر أثناء تحريرك لها. اختر طريقة الحل.",
+    "conflictingFields": "الحقول المتعارضة",
+    "yourChange": "تغييرك",
+    "theirChange": "تغييرهم",
+    "reloadOption": "إعادة تحميل الأحدث",
+    "reloadOptionDescription": "تجاهل تعديلاتك وتحميل النسخة الحالية.",
+    "forceSaveOption": "الكتابة فوقها",
+    "forceSaveOptionDescription": "حفظ تعديلاتك فوق تغييرات الشخص الآخر.",
+    "cancelOption": "متابعة التحرير",
+    "cancelOptionDescription": "إغلاق هذا المربع والاحتفاظ بتعديلاتك غير المحفوظة.",
+    "reload": "إعادة تحميل",
+    "forceSave": "الكتابة فوقها"
+  },
+  "field": {
+    "title": "العنوان",
+    "description": "الوصف",
+    "assignee_id": "المكلَّف",
+    "priority": "الأولوية",
+    "workflow_stage": "المرحلة",
+    "status": "الحالة",
+    "sla_deadline": "الموعد النهائي"
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "in_progress": "قيد التنفيذ",
+    "review": "قيد المراجعة",
+    "completed": "مكتملة",
+    "cancelled": "ملغاة"
+  },
+  "workflow_stage": {
+    "todo": "للتنفيذ",
+    "in_progress": "قيد التنفيذ",
+    "review": "مراجعة",
+    "done": "مكتمل",
+    "cancelled": "ملغى"
   }
 }

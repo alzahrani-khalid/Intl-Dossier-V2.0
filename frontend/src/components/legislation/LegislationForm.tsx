@@ -162,14 +162,17 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
   })
 
   const onSubmit = async (values: LegislationFormValues) => {
-    // Clean up empty optional fields
-    const cleanedValues = Object.fromEntries(
-      Object.entries(values).filter(([_, v]) => v !== '' && v !== undefined),
-    )
-
     if (isEditing && legislation) {
+      // In edit mode, send null for fields the user cleared so the update
+      // overwrites the previous value. Stripping empties (the create-path
+      // behavior) would omit the field and silently keep the old value, so
+      // optional fields could never be blanked.
+      const editValues = Object.fromEntries(
+        Object.entries(values).map(([key, value]) => [key, value === '' ? null : value]),
+      )
+
       const input: LegislationUpdateInput = {
-        ...cleanedValues,
+        ...editValues,
         version: legislation.version,
       } as LegislationUpdateInput
 
@@ -182,6 +185,10 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
         },
       )
     } else {
+      // Create: omit empty optional fields so column defaults apply.
+      const cleanedValues = Object.fromEntries(
+        Object.entries(values).filter(([_, v]) => v !== '' && v !== undefined),
+      )
       const input = cleanedValues as unknown as LegislationCreateInput
 
       createMutation.mutate(input, {

@@ -7,7 +7,7 @@
  * needed to render and control the wizard.
  */
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { useForm, type FieldValues, type DefaultValues } from 'react-hook-form'
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
@@ -21,8 +21,23 @@ import { useAIFieldAssist } from '@/hooks/useAIFieldAssist'
 import { useDossierNameSimilarity } from '@/hooks/useDossierNameSimilarity'
 import type { DossierType, CreateDossierRequest } from '@/services/dossier-api'
 
-import type { WizardConfig, CreateWizardReturn } from '../config/types'
+import type { WizardConfig, CreateWizardReturn, WizardStepConfig } from '../config/types'
 import { useDraftMigration } from './useDraftMigration'
+
+/**
+ * Per-step required-field map for "Next" validation (A-3/E-5/A-5). Keyed by the
+ * step `id`; the hook injects `validate: () => form.trigger(fields)` onto each
+ * matching step so advancing surfaces that step's errors. Triggering a field the
+ * active form doesn't register is a harmless no-op, so this single shared map
+ * safely covers every wizard variant — the person / elected-official `basic`
+ * step adds last-name + nationality on top of the universal name fields, while
+ * other wizards only validate the names.
+ */
+const STEP_VALIDATION_FIELDS: Record<string, string[]> = {
+  basic: ['name_en', 'name_ar', 'last_name_en', 'last_name_ar', 'nationality_id'],
+  'engagement-details': ['engagement_type', 'engagement_category', 'start_date', 'end_date'],
+  'office-term': ['office_name_en', 'office_name_ar', 'country_id', 'term_start', 'term_end'],
+}
 
 export function useCreateDossierWizard<T extends FieldValues>(
   config: WizardConfig<T>,
@@ -73,6 +88,12 @@ export function useCreateDossierWizard<T extends FieldValues>(
 
   const handleComplete = useCallback(async (): Promise<void> => {
     if (createMutation.isPending) return
+
+    // A-3/E-5/A-5: enforce the full per-type Zod schema before building the
+    // payload. Abort (letting RHF surface field errors) when invalid so an
+    // incomplete record can't persist or 500 at the DB.
+    const isFormValid = await form.trigger()
+    if (!isFormValid) return
 
     try {
       const values = form.getValues()
@@ -142,15 +163,36 @@ export function useCreateDossierWizard<T extends FieldValues>(
     window.history.back()
   }, [])
 
-  // 10. canComplete -- minimum name lengths
-  const canComplete = (nameEn?.length ?? 0) >= 2 && (nameAr != null ? nameAr.length >= 2 : false)
+  // 10. canComplete -- valid form + minimum name lengths (A-3/E-5)
+  const canComplete =
+    form.formState.isValid &&
+    (nameEn?.length ?? 0) >= 2 &&
+    (nameAr != null ? nameAr.length >= 2 : false)
+
+  // 11. Per-step "Next" validation (A-3/E-5/A-5): inject a validate() that
+  // triggers the current step's required fields so "Next" surfaces that step's
+  // errors instead of deferring everything to Complete. Steps with no field
+  // mapping (or that already supply a validate) pass through unchanged.
+  const steps = useMemo<WizardStepConfig[]>(
+    () =>
+      config.steps.map((step) => {
+        if (step.validate != null) return step
+        const fields = STEP_VALIDATION_FIELDS[step.id]
+        if (fields == null) return step
+        return {
+          ...step,
+          validate: (): Promise<boolean> => form.trigger(fields as never),
+        }
+      }),
+    [config.steps, form],
+  )
 
   return {
     type: config.type,
     form,
     currentStep,
     setCurrentStep,
-    steps: config.steps,
+    steps,
     hasDraft,
     isDraftSaving,
     handleComplete,

@@ -140,8 +140,8 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
     <AdaptiveDialog
       open={open}
       onOpenChange={onOpenChange}
-      title={t('tasks.editTask', 'Edit Task')}
-      description={t('tasks.editTaskDescription', 'Update the task details')}
+      title={t('tasks-page:editTask')}
+      description={t('tasks-page:editTaskDescription')}
       snapPreset="large"
       footer={formFooter}
     >
@@ -157,12 +157,12 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-start">{t('tasks.title', 'Title')}</FormLabel>
+                <FormLabel className="text-start">{t('tasks-page:form.title')}</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
                     className="h-11"
-                    placeholder={t('tasks.titlePlaceholder', 'Task title...')}
+                    placeholder={t('tasks-page:form.titlePlaceholder')}
                   />
                 </FormControl>
                 <FormMessage />
@@ -176,15 +176,13 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-start">
-                  {t('tasks.description', 'Description')}
-                </FormLabel>
+                <FormLabel className="text-start">{t('tasks-page:form.description')}</FormLabel>
                 <FormControl>
                   <Textarea
                     {...field}
                     rows={3}
                     className="resize-none"
-                    placeholder={t('tasks.descriptionPlaceholder', 'Task description...')}
+                    placeholder={t('tasks-page:form.descriptionPlaceholder')}
                   />
                 </FormControl>
                 <FormMessage />
@@ -198,7 +196,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
             name="assignee_id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-start">{t('tasks.assignee', 'Assignee')}</FormLabel>
+                <FormLabel className="text-start">{t('tasks-page:form.assignee')}</FormLabel>
                 <FormControl>
                   <UserPicker value={field.value} onChange={field.onChange} />
                 </FormControl>
@@ -214,7 +212,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
               name="priority"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-start">{t('tasks.priority', 'Priority')}</FormLabel>
+                  <FormLabel className="text-start">{t('tasks-page:form.priority')}</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="h-11">
@@ -244,7 +242,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
               name="workflow_stage"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-start">{t('tasks.workflowStage', 'Stage')}</FormLabel>
+                  <FormLabel className="text-start">{t('tasks-page:form.workflowStage')}</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="h-11">
@@ -281,7 +279,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
             name="sla_deadline"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-start">{t('tasks.deadline', 'Deadline')}</FormLabel>
+                <FormLabel className="text-start">{t('tasks-page:form.deadline')}</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -295,7 +293,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
                         <CalendarIcon className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
                         {field.value
                           ? format(field.value, 'PPP', { locale: isRTL ? ar : enUS })
-                          : t('tasks.selectDeadline', 'Select deadline')}
+                          : t('tasks-page:form.selectDeadline')}
                       </Button>
                     </FormControl>
                   </PopoverTrigger>

@@ -7,6 +7,7 @@
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { TrendingUp, TrendingDown, Minus, Target } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Progress } from '@/components/ui/progress'
@@ -125,13 +126,15 @@ function TargetProgress({
   target: number
   progress: number
 }) {
+  const { i18n } = useTranslation('dashboard-widgets')
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between text-xs text-muted-foreground">
         <div className="flex items-center gap-1">
           <Target className="h-3 w-3" />
           <span>
-            {current.toLocaleString()} / {target.toLocaleString()}
+            {current.toLocaleString(toFormatLocale(i18n.language))} /{' '}
+            {target.toLocaleString(toFormatLocale(i18n.language))}
           </span>
         </div>
         <span>{progress.toFixed(0)}%</span>

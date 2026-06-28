@@ -9,6 +9,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { useNavigate } from '@tanstack/react-router'
 import {
   CheckSquare,
@@ -92,7 +93,7 @@ export function ActivityTimelineItem({
   // Format date
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return null
-    return new Date(dateStr).toLocaleDateString(i18n.language, {
+    return new Date(dateStr).toLocaleDateString(toFormatLocale(i18n.language), {
       month: 'short',
       day: 'numeric',
       year: 'numeric',

@@ -56,7 +56,11 @@ const commitmentQuickFormSchema = z.object({
     error: 'validation:dueDateRequired',
   }),
   priority: z.enum(['low', 'medium', 'high', 'urgent'] as const),
-  owner_type: z.enum(['internal', 'external'] as const),
+  // Quick form is internal-only: it collects no external contact, so an
+  // 'external' owner would set owner_contact_id=null and violate the
+  // commitments valid_owner constraint (always 500). External ownership is
+  // handled by the full CommitmentForm, which validates a contact id.
+  owner_type: z.enum(['internal'] as const),
 })
 
 type CommitmentQuickFormValues = z.infer<typeof commitmentQuickFormSchema>
@@ -134,8 +138,9 @@ export function CommitmentQuickForm({
       return
     }
 
-    // Format due_date as ISO date string (YYYY-MM-DD)
-    const dueDateStr = values.due_date.toISOString().split('T')[0] as string
+    // Format due_date as a local-tz date string (YYYY-MM-DD). toISOString()
+    // converts to UTC first, which rolls the date back a day for GST evenings.
+    const dueDateStr = format(values.due_date, 'yyyy-MM-dd')
 
     const input: CreateCommitmentInput = {
       dossier_id: effectiveDossierId,
@@ -393,7 +398,6 @@ export function CommitmentQuickForm({
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="internal">{t('commitments:ownerType.internal')}</SelectItem>
-                  <SelectItem value="external">{t('commitments:ownerType.external')}</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />

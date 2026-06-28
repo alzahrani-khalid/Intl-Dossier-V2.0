@@ -9,6 +9,7 @@
 
 import { useState, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Search, X, Loader2, CheckCircle2, AlertTriangle } from 'lucide-react'
 import {
   Dialog,
@@ -582,7 +583,9 @@ export function EntitySearchDialog({
                                 <span className="flex items-center gap-1">
                                   <span className="font-medium">Last used:</span>
                                   <span>
-                                    {new Date(entity.last_linked_at).toLocaleDateString()}
+                                    {new Date(entity.last_linked_at).toLocaleDateString(
+                                      toFormatLocale(isRTL ? 'ar' : 'en'),
+                                    )}
                                   </span>
                                 </span>
                               )}

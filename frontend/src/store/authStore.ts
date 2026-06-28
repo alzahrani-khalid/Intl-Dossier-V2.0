@@ -96,6 +96,9 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false,
             isAuthenticated: false,
           })
+          // Re-throw so the caller's navigation gates on success (a swallowed
+          // error previously let LoginPage navigate to /dashboard on failure).
+          throw error instanceof Error ? error : new Error('Login failed')
         }
       },
 

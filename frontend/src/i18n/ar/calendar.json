@@ -41,6 +41,7 @@
     "start_datetime": "تاريخ ووقت البدء",
     "end_datetime": "تاريخ ووقت الانتهاء",
     "start_datetime_required": "تاريخ ووقت البدء مطلوب",
+    "title_required": "العنوان بالإنجليزية أو العربية مطلوب",
     "all_day": "فعالية طوال اليوم",
     "location": "الموقع",
     "location_placeholder": "أدخل الموقع أو القاعة",

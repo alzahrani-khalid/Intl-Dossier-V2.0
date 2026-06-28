@@ -58,6 +58,7 @@
     "unsavedChanges": "تغييرات غير محفوظة",
     "conflictTitle": "تم اكتشاف تعارض في الإصدار",
     "conflictDescription": "تم تعديل هذا الموقف من قبل مستخدم آخر. الإصدار الخاص بك: {{current}}، إصدار الخادم: {{server}}. يرجى إعادة تحميل الصفحة لرؤية أحدث إصدار.",
+    "conflictReloadWarning": "ستؤدي إعادة التحميل إلى فقدان تغييراتك المحلية غير المحفوظة. انسخ أي نص تحتاجه قبل إعادة التحميل.",
     "reloadPage": "إعادة تحميل الصفحة",
     "linkedDossiers": "الدوسيهات المرتبطة"
   },
@@ -76,7 +77,10 @@
       "opposed_by": "معارَض من"
     },
     "notes_optional": "ملاحظات (اختياري)",
-    "notes_placeholder": "أضف أي ملاحظات عن هذا الرابط..."
+    "notes_placeholder": "أضف أي ملاحظات عن هذا الرابط...",
+    "confirm_delete": "إزالة رابط الدوسيه هذا؟",
+    "create_error": "تعذّر إضافة الرابط. يرجى المحاولة مرة أخرى.",
+    "delete_error": "تعذّر إزالة الرابط. يرجى المحاولة مرة أخرى."
   },
   "consistency": {
     "title": "تحليل الاتساق",
@@ -217,6 +221,23 @@
   "submit": "تقديم للمراجعة",
   "publish": "نشر",
   "attachments": "المرفقات",
+  "attachments_uploader": {
+    "label": "المرفقات",
+    "description": "ارفع المستندات الداعمة لهذا الموقف.",
+    "dropzone": "انقر للرفع أو اسحب الملفات وأفلتها",
+    "dropzoneAriaLabel": "ارفع المرفقات بالنقر أو بإفلات الملفات هنا",
+    "maxSize": "الحد الأقصى لحجم الملف: {{size}}",
+    "supportedFormats": "الصيغ المدعومة: PDF وWord وExcel وPowerPoint والصور",
+    "listTitle": "الملفات المرفوعة",
+    "confirmDelete": "حذف هذا المرفق؟",
+    "deleteButton": "حذف {{fileName}}",
+    "removeButton": "إزالة",
+    "noAttachments": "لا توجد مرفقات بعد",
+    "errors": {
+      "unsupportedType": "نوع الملف غير مدعوم",
+      "fileTooLarge": "الملف يتجاوز الحد الأقصى للحجم {{maxSize}}"
+    }
+  },
   "approvalChain": "تقدم الموافقة",
   "versions": {
     "description": "عرض سجل الإصدارات ومقارنة التغييرات",
@@ -360,7 +381,8 @@
     "attachSelected": "إرفاق {{count}} موقف",
     "attaching": "جاري الإرفاق...",
     "attachSuccess": "تم إرفاق {{count}} موقف",
-    "attachPartialError": "تعذّر إرفاق {{failed}} من {{total}} موقف"
+    "attachPartialError": "تعذّر إرفاق {{failed}} من {{total}} موقف",
+    "attachError": "تعذّر إرفاق المواقف. يرجى المحاولة مرة أخرى."
   },
   "briefing": {
     "title": "إنشاء حزمة إحاطة",

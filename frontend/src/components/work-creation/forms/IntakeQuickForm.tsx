@@ -35,6 +35,7 @@ import { Badge } from '@/components/ui/badge'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useCreateTicket } from '@/domains/intake/hooks/useIntakeApi'
+import { useCreateWorkItemDossierLinks } from '@/hooks/useCreateWorkItemDossierLinks'
 import type { CreationContext } from '../hooks/useCreationContext'
 import type { CreateTicketRequest } from '@/types/intake'
 import { DossierContextBadge, DossierSelector, type SelectedDossier } from '@/components/dossier'
@@ -45,7 +46,9 @@ import { useDirection } from '@/hooks/useDirection'
 const intakeQuickFormSchema = z.object({
   requestType: z.enum(['engagement', 'position', 'mou_action', 'foresight'] as const),
   title: z.string().min(1, 'validation:titleRequired').max(200, 'validation:titleMaxLength'),
+  titleAr: z.string().min(1, 'validation:titleRequired').max(200, 'validation:titleMaxLength'),
   description: z.string().min(1, 'validation:descriptionRequired'),
+  descriptionAr: z.string().min(1, 'validation:descriptionRequired'),
   urgency: z.enum(['low', 'medium', 'high', 'critical'] as const),
 })
 
@@ -100,7 +103,9 @@ export function IntakeQuickForm({
     defaultValues: {
       requestType: 'engagement',
       title: '',
+      titleAr: '',
       description: '',
+      descriptionAr: '',
       urgency: 'medium',
     },
   })
@@ -109,7 +114,17 @@ export function IntakeQuickForm({
   // Maps camelCase → snake_case (request) and snake_case → camelCase (response), replacing
   // the previous raw fetch that hit a nonexistent endpoint with a camelCase body.
   const createMutation = useCreateTicket()
-  const isPending = createMutation.isPending
+
+  // Link the created intake to its dossier via the work_item_dossiers junction.
+  // Intake has no DB backstop trigger (only commitments do), so without this the
+  // palette-created intake is absent from junction-based dossier surfaces.
+  const createDossierLinksMutation = useCreateWorkItemDossierLinks({
+    onError: (error) => {
+      // Logged here; the create flow surfaces a soft warning to the user.
+      console.warn('Failed to create dossier links:', error)
+    },
+  })
+  const isPending = createMutation.isPending || createDossierLinksMutation.isPending
 
   const onSubmit = (values: IntakeQuickFormValues) => {
     // Validate dossier is selected
@@ -122,20 +137,35 @@ export function IntakeQuickForm({
     const request: CreateTicketRequest = {
       requestType: values.requestType,
       title: values.title,
-      // This palette form is single-language; mirror the English text into the
-      // Arabic columns so the NOT NULL title_ar/description_ar constraints are
-      // satisfied. The full IntakeForm collects Arabic separately.
-      titleAr: values.title,
+      titleAr: values.titleAr,
       description: values.description,
-      descriptionAr: values.description,
+      descriptionAr: values.descriptionAr,
       urgency: values.urgency,
       dossierId: effectiveDossierId,
     }
 
     createMutation.mutate(request, {
-      onSuccess: (data) => {
+      onSuccess: async (data) => {
         void queryClient.invalidateQueries({ queryKey: ['unified-work'] })
-        toast.success(t('form.intakeCreated', 'Intake request created successfully'))
+        // Create the work_item_dossiers junction row so the intake surfaces on
+        // dossier activity timelines and junction-based queries.
+        if (data?.id) {
+          try {
+            await createDossierLinksMutation.mutateAsync({
+              work_item_type: 'intake',
+              work_item_id: data.id,
+              dossier_ids: [effectiveDossierId],
+              inheritance_source: 'direct',
+              is_primary: true,
+            })
+          } catch {
+            // Intake has no DB backstop trigger, so a failed link is a silent
+            // orphan. Surface a soft warning instead of claiming clean success.
+            toast.warning(t('dossier-context:errors.create_link_failed'))
+          }
+        }
+        // Success is toasted once by WorkCreationProvider.handleSuccess; the form
+        // must not toast too (B-28 — avoids a duplicate success toast).
         form.reset()
         onSuccess?.(data)
       },
@@ -266,6 +296,28 @@ export function IntakeQuickForm({
           )}
         />
 
+        {/* Title (Arabic) — stored in the NOT NULL title_ar column */}
+        <FormField
+          control={form.control}
+          name="titleAr"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-start block">
+                {t('intake:form.titleAr.label', 'Title (Arabic)')} *
+              </FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder={t('intake:form.titleAr.placeholder', 'موجز طلبك')}
+                  className="min-h-11"
+                  dir="rtl"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         {/* Description */}
         <FormField
           control={form.control}
@@ -280,6 +332,28 @@ export function IntakeQuickForm({
                   {...field}
                   placeholder={t('intake:form.descriptionPlaceholder', 'Describe your request')}
                   className="min-h-24 resize-none"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Description (Arabic) — stored in the NOT NULL description_ar column */}
+        <FormField
+          control={form.control}
+          name="descriptionAr"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-start block">
+                {t('intake:form.descriptionAr.label', 'Description (Arabic)')} *
+              </FormLabel>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  placeholder={t('intake:form.descriptionAr.placeholder', 'صف طلبك')}
+                  className="min-h-24 resize-none"
+                  dir="rtl"
                 />
               </FormControl>
               <FormMessage />

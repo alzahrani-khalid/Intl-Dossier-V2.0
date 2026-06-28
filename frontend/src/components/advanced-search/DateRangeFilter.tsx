@@ -6,6 +6,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Calendar, ChevronDown, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -67,8 +68,12 @@ export function DateRangeFilter({ value, onChange, className }: DateRangeFilterP
         : DATE_PRESET_LABELS[value.preset].label_en
     }
     if (value.from || value.to) {
-      const from = value.from ? new Date(value.from).toLocaleDateString() : '...'
-      const to = value.to ? new Date(value.to).toLocaleDateString() : '...'
+      const from = value.from
+        ? new Date(value.from).toLocaleDateString(toFormatLocale(isRTL ? 'ar' : 'en'))
+        : '...'
+      const to = value.to
+        ? new Date(value.to).toLocaleDateString(toFormatLocale(isRTL ? 'ar' : 'en'))
+        : '...'
       return `${from} - ${to}`
     }
     return t('dateRange.preset')

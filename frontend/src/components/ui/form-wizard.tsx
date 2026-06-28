@@ -191,6 +191,9 @@ export function FormWizard({
   const goNext = React.useCallback(async () => {
     if (isLastStep) return
 
+    // Run the step's validate() before advancing. The dossier create-wizard
+    // injects `() => form.trigger(stepFields)` per step (A-3/E-5) so "Next"
+    // surfaces the current step's errors instead of deferring them to Complete.
     const currentStepConfig = steps[currentStep]
     if (currentStepConfig?.validate) {
       setIsValidating(true)
@@ -200,7 +203,7 @@ export function FormWizard({
           setIsValidating(false)
           return
         }
-      } catch (error) {
+      } catch {
         setIsValidating(false)
         return
       }

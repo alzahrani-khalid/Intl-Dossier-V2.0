@@ -179,13 +179,23 @@ serve(async (req) => {
       });
     }
 
+    // The app role lives in public.users — auth.users.role is the Postgres auth
+    // role ('authenticated'), never the app role, so the privileged checks below
+    // were dead. Read it from public.users (mirrors convert/index.ts).
+    const { data: callerRecord } = await supabaseClient
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+    const callerRole = callerRecord?.role;
+
     // Check if user can update the ticket
-    // User must be the creator, assignee, or have supervisor role
+    // User must be the creator, assignee, or have supervisor/admin role
     const canUpdate =
       existingTicket.created_by === user.id ||
       existingTicket.assigned_to === user.id ||
-      user.role === 'supervisor' ||
-      user.role === 'admin';
+      callerRole === 'supervisor' ||
+      callerRole === 'admin';
 
     if (!canUpdate) {
       return new Response(
@@ -243,7 +253,6 @@ serve(async (req) => {
         JSON.stringify({
           error: 'Internal Server Error',
           message: 'Failed to update ticket',
-          details: updateError,
         }),
         {
           status: 500,

@@ -13,6 +13,7 @@
 
 import { useMemo, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import type { FilterChipConfig } from './ActiveFiltersBar'
 
 /**
@@ -91,7 +92,7 @@ export function useActiveFilters<T extends Record<string, unknown>>({
     (dateStr: string) => {
       try {
         const date = new Date(dateStr)
-        return date.toLocaleDateString(i18n.language, {
+        return date.toLocaleDateString(toFormatLocale(i18n.language), {
           month: 'short',
           day: 'numeric',
           year: 'numeric',

@@ -48,6 +48,7 @@
     },
     "appTitle": "GASTAT International Dossier System",
     "save": "Save",
+    "saving": "Saving...",
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
@@ -236,7 +237,8 @@
     "themeLoadFailed": "Failed to load theme. Using default theme.",
     "languageLoadFailed": "Failed to load language. Using English.",
     "networkError": "Network error. Please check your connection.",
-    "unknownError": "An unknown error occurred. Please try again."
+    "unknownError": "An unknown error occurred. Please try again.",
+    "generic": "Something went wrong. Please try again."
   },
   "error": {
     "failedToLoadData": "Failed to load data",
@@ -296,13 +298,13 @@
     "addMou": "Add MOU",
     "statuses": {
       "draft": "Draft",
-      "internal_review": "Internal Review",
-      "external_review": "External Review",
       "negotiation": "Negotiation",
+      "pending_approval": "Pending approval",
       "signed": "Signed",
       "active": "Active",
-      "renewed": "Renewed",
-      "expired": "Expired"
+      "suspended": "Suspended",
+      "expired": "Expired",
+      "terminated": "Terminated"
     }
   },
   "forums": {

@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { useNavigate } from '@tanstack/react-router'
 import { useMyAssignments } from '../hooks/useMyAssignments'
 import { Alert, AlertDescription } from '../components/ui/alert'
@@ -7,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { AlertCircle, Clock, CheckCircle2 } from 'lucide-react'
 
 export function MyAssignmentsPage() {
-  const { t } = useTranslation('assignments')
+  const { t, i18n } = useTranslation('assignments')
   const navigate = useNavigate()
   const { data, isLoading, error } = useMyAssignments()
 
@@ -125,7 +126,10 @@ export function MyAssignmentsPage() {
                       {assignment.work_item_title || assignment.work_item_id}
                     </h3>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      Assigned: {new Date(assignment.assigned_at).toLocaleString()}
+                      Assigned:{' '}
+                      {new Date(assignment.assigned_at).toLocaleString(
+                        toFormatLocale(i18n.language),
+                      )}
                     </p>
                   </div>
                   <div className="text-end">
@@ -152,7 +156,10 @@ export function MyAssignmentsPage() {
                       </span>
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      Due: {new Date(assignment.sla_deadline).toLocaleString()}
+                      Due:{' '}
+                      {new Date(assignment.sla_deadline).toLocaleString(
+                        toFormatLocale(i18n.language),
+                      )}
                     </p>
                   </div>
                 </div>

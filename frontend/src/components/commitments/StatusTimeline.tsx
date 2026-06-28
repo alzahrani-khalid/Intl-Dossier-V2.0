@@ -11,6 +11,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Clock,
@@ -48,7 +49,7 @@ export function StatusTimeline({ commitmentId, createdAt, createdBy }: StatusTim
   // Format date/time
   const formatDateTime = (dateStr: string) => {
     const date = new Date(dateStr)
-    return date.toLocaleString(i18n.language, {
+    return date.toLocaleString(toFormatLocale(i18n.language), {
       year: 'numeric',
       month: 'short',
       day: 'numeric',

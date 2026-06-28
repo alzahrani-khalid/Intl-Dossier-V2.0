@@ -56,11 +56,12 @@ serve(async (req) => {
       linked_item_id,
     } = body;
 
-    // Validate required fields
-    if (!entry_type || !start_datetime) {
+    // Validate required fields. title_en is NOT NULL in calendar_entries; require a
+    // title in at least one language (the Arabic title is used as the fallback below).
+    if (!entry_type || !start_datetime || (!title_en && !title_ar)) {
       return new Response(
         JSON.stringify({
-          error: 'Missing required fields: entry_type, start_datetime',
+          error: 'Missing required fields: entry_type, start_datetime, and a title (title_en or title_ar)',
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -116,7 +117,8 @@ serve(async (req) => {
       .from('calendar_entries')
       .insert({
         dossier_id,
-        title_en,
+        // title_en is NOT NULL; fall back to the Arabic title for Arabic-first entries.
+        title_en: title_en || title_ar,
         title_ar,
         description_en,
         description_ar,

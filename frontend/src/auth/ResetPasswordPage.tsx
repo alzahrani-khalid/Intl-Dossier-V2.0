@@ -52,7 +52,7 @@ export function ResetPasswordPage() {
 
     if (newPassword.length < MIN_PASSWORD_LENGTH) {
       toast.error(
-        t('validation.minLength', { min: MIN_PASSWORD_LENGTH, current: newPassword.length }),
+        t('validation:minLength', { min: MIN_PASSWORD_LENGTH, current: newPassword.length }),
       )
       return
     }

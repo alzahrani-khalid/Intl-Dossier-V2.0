@@ -12,6 +12,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -102,7 +103,7 @@ export function CommitmentCard({
 
   // Format date
   const dueDate = new Date(commitment.due_date)
-  const formattedDate = dueDate.toLocaleDateString(i18n.language, {
+  const formattedDate = dueDate.toLocaleDateString(toFormatLocale(i18n.language), {
     year: 'numeric',
     month: 'short',
     day: 'numeric',

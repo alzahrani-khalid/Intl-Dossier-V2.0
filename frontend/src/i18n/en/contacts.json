@@ -322,7 +322,8 @@
         "attachments_description": "Attach meeting notes, presentations, or other related documents (max 10MB per file)",
         "cancel": "Cancel",
         "create_note": "Create Note",
-        "save_changes": "Save Changes"
+        "save_changes": "Save Changes",
+        "attachments_partial_failure": "The note was saved, but some attachments failed to upload. Submit again to retry the uploads."
       },
 
       "hooks": {

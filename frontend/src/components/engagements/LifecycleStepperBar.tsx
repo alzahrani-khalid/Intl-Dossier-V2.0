@@ -15,6 +15,7 @@
 
 import { type ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { cva } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
@@ -22,7 +23,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Button } from '@/components/ui/button'
 import type { LifecycleStage, LifecycleTransition } from '@/types/lifecycle.types'
 import { LIFECYCLE_STAGES } from '@/types/lifecycle.types'
-import { useLifecycleHistory, useLifecycleTransition } from '@/domains/engagements/hooks/useLifecycle'
+import {
+  useLifecycleHistory,
+  useLifecycleTransition,
+} from '@/domains/engagements/hooks/useLifecycle'
 
 // ============================================================================
 // Props
@@ -79,9 +83,9 @@ const connectorVariants = cva('h-0.5 flex-shrink-0 w-4 sm:w-6 self-center rounde
 // Helpers
 // ============================================================================
 
-function formatEntryDate(dateStr: string): string {
+function formatEntryDate(dateStr: string, locale: string): string {
   const date = new Date(dateStr)
-  return date.toLocaleDateString(undefined, {
+  return date.toLocaleDateString(toFormatLocale(locale), {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -122,7 +126,7 @@ export function LifecycleStepperBar({
   compact = false,
   disabled = false,
 }: LifecycleStepperBarProps): ReactElement {
-  const { t } = useTranslation('lifecycle')
+  const { t, i18n } = useTranslation('lifecycle')
   const [pendingStage, setPendingStage] = useState<LifecycleStage | null>(null)
   const [noteValue, setNoteValue] = useState('')
   const [isRevert, setIsRevert] = useState(false)
@@ -142,10 +146,7 @@ export function LifecycleStepperBar({
     if (historyData == null) return map
     for (const tr of historyData) {
       const existing = map.get(tr.to_stage)
-      if (
-        existing == null ||
-        new Date(tr.transitioned_at) > new Date(existing.transitioned_at)
-      ) {
+      if (existing == null || new Date(tr.transitioned_at) > new Date(existing.transitioned_at)) {
         map.set(tr.to_stage, tr)
       }
     }
@@ -232,9 +233,7 @@ export function LifecycleStepperBar({
 
   // Next stage for suggestion chip
   const nextStage: LifecycleStage | null =
-    currentIndex < LIFECYCLE_STAGES.length - 1
-      ? LIFECYCLE_STAGES[currentIndex + 1] ?? null
-      : null
+    currentIndex < LIFECYCLE_STAGES.length - 1 ? (LIFECYCLE_STAGES[currentIndex + 1] ?? null) : null
 
   return (
     <div className="w-full space-y-2">
@@ -255,10 +254,7 @@ export function LifecycleStepperBar({
               <button
                 key={stage}
                 type="button"
-                className={cn(
-                  stageButtonVariants({ state, disabled }),
-                  'snap-center',
-                )}
+                className={cn(stageButtonVariants({ state, disabled }), 'snap-center')}
                 aria-current={isCurrent ? 'step' : undefined}
                 disabled={disabled}
                 onClick={(): void => handleStageClick(stage, index)}
@@ -287,19 +283,16 @@ export function LifecycleStepperBar({
                     <PopoverTrigger asChild>{stageButton}</PopoverTrigger>
                     <PopoverContent className="w-64 p-3">
                       <div className="space-y-2">
-                        <p className="text-sm font-semibold">
-                          {t(`stages.${stage}`)}
-                        </p>
-                        {transition.user_name != null &&
-                          transition.user_name !== '' && (
-                            <p className="text-sm text-muted-foreground">
-                              {t('stepper.transitionedBy', {
-                                name: transition.user_name,
-                              })}
-                            </p>
-                          )}
+                        <p className="text-sm font-semibold">{t(`stages.${stage}`)}</p>
+                        {transition.user_name != null && transition.user_name !== '' && (
+                          <p className="text-sm text-muted-foreground">
+                            {t('stepper.transitionedBy', {
+                              name: transition.user_name,
+                            })}
+                          </p>
+                        )}
                         <p className="text-sm text-muted-foreground">
-                          {formatEntryDate(transition.transitioned_at)}
+                          {formatEntryDate(transition.transitioned_at, i18n.language)}
                         </p>
                         {transition.note != null && transition.note !== '' && (
                           <p className="text-sm italic">{transition.note}</p>
@@ -308,9 +301,7 @@ export function LifecycleStepperBar({
                           transition.duration_in_stage_seconds > 0 && (
                             <p className="text-sm text-muted-foreground">
                               {t('stepper.timeInStage', {
-                                duration: formatDuration(
-                                  transition.duration_in_stage_seconds,
-                                ),
+                                duration: formatDuration(transition.duration_in_stage_seconds),
                               })}
                             </p>
                           )}
@@ -358,9 +349,7 @@ export function LifecycleStepperBar({
           onKeyDown={handleNoteKeyDown}
         >
           {isRevert && (
-            <p className="text-sm text-destructive font-medium">
-              {t('stepper.backwardWarning')}
-            </p>
+            <p className="text-sm text-destructive font-medium">{t('stepper.backwardWarning')}</p>
           )}
           <label className="sr-only" htmlFor="lifecycle-transition-note">
             {t('stepper.transitionNote')}
@@ -375,12 +364,7 @@ export function LifecycleStepperBar({
             className="w-full min-h-[60px] rounded-md border border-base-200 bg-background px-3 py-2 text-sm placeholder:text-base-400 focus:outline-none focus:ring-2 focus:ring-ring resize-y"
           />
           <div className="flex items-center gap-2 justify-end">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="min-h-11"
-              onClick={handleCancelTransition}
-            >
+            <Button variant="ghost" size="sm" className="min-h-11" onClick={handleCancelTransition}>
               {t('transition.cancel')}
             </Button>
             <Button

@@ -9,7 +9,6 @@ import {
   type CreateCalendarEventInput,
 } from '@/hooks/useCreateCalendarEvent'
 import { useUpdateCalendarEvent } from '@/hooks/useUpdateCalendarEvent'
-import { useDossiers } from '@/hooks/useDossier'
 import { useConflictCheck, useGenerateSuggestions } from '@/hooks/useCalendarConflicts'
 import { useCreateRecurringEvent } from '@/hooks/useRecurringEvents'
 import { Card } from '@/components/ui/card'
@@ -25,26 +24,7 @@ import {
 } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import {
-  CalendarIcon,
-  Clock,
-  Users,
-  X,
-  Building2,
-  Check,
-  AlertTriangle,
-  Repeat,
-} from 'lucide-react'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from '@/components/ui/command'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { CalendarIcon, Clock, AlertTriangle, Repeat } from 'lucide-react'
 import {
   ConflictResolutionPanel,
   ReschedulingSuggestions,
@@ -59,7 +39,7 @@ import type {
   ReschedulingSuggestionResponse,
 } from '@/types/calendar-conflict.types'
 import type { CreateRecurrenceRuleInput } from '@/types/recurrence.types'
-import { useDirection } from '@/hooks/useDirection'
+import { toast } from 'sonner'
 
 interface CalendarEntryFormProps {
   entryId?: string
@@ -116,30 +96,6 @@ function toCalendarEntryType(value: string | undefined): CalendarEntryType {
     : 'internal_meeting'
 }
 
-function getStringField(source: unknown, key: string): string | undefined {
-  if (source === null || typeof source !== 'object') {
-    return undefined
-  }
-
-  const value = (source as Record<string, unknown>)[key]
-  return typeof value === 'string' ? value : undefined
-}
-
-/**
- * Extract initials from name (handles both English and Arabic)
- */
-function getInitials(name: string): string {
-  const words = name
-    .trim()
-    .split(/\s+/)
-    .filter((w) => w.length > 0)
-  if (words.length === 0) return '??'
-  if (words.length === 1) {
-    return words[0]!.slice(0, 2).toUpperCase()
-  }
-  return (words[0]!.charAt(0) + words[words.length - 1]!.charAt(0)).toUpperCase()
-}
-
 export function CalendarEntryForm({
   entryId,
   initialData,
@@ -149,7 +105,6 @@ export function CalendarEntryForm({
   onCancel,
 }: CalendarEntryFormProps) {
   const { t } = useTranslation('calendar')
-  const { isRTL } = useDirection()
   const [entryType, setEntryType] = useState<CalendarEntryType>(
     toCalendarEntryType(initialData?.entry_type),
   )
@@ -161,10 +116,7 @@ export function CalendarEntryForm({
   const [endDatetime, setEndDatetime] = useState(initialData?.end_datetime || '')
   const [allDay, setAllDay] = useState(initialData?.all_day || false)
   const [location, setLocation] = useState(initialData?.location || '')
-  const [reminderMinutes, setReminderMinutes] = useState(
-    initialData?.reminder_minutes?.toString() || '15',
-  )
-  const [participants, setParticipants] = useState<
+  const [participants] = useState<
     Array<{
       participant_type: 'person_dossier' | 'organization_dossier'
       participant_id: string
@@ -172,7 +124,6 @@ export function CalendarEntryForm({
       participant_photo?: string
     }>
   >(initialData?.participants || [])
-  const [participantPopoverOpen, setParticipantPopoverOpen] = useState(false)
   const [showConflicts, setShowConflicts] = useState(true)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [showSideBySideComparison, setShowSideBySideComparison] = useState(true)
@@ -187,10 +138,6 @@ export function CalendarEntryForm({
   const updateEvent = useUpdateCalendarEvent()
   const createRecurringEvent = useCreateRecurringEvent()
   const generateSuggestions = useGenerateSuggestions()
-
-  // Query for person and organization dossiers for participant selection
-  const { data: personDossiers } = useDossiers({ type: 'person', status: 'active' })
-  const { data: orgDossiers } = useDossiers({ type: 'organization', status: 'active' })
 
   const isEditing = !!entryId
   // Show the dossier picker only on standalone creation (no contextual link,
@@ -332,7 +279,14 @@ export function CalendarEntryForm({
     e.preventDefault()
 
     if (!startDatetime) {
-      alert(t('form.start_datetime_required'))
+      toast.error(t('form.start_datetime_required'))
+      return
+    }
+
+    // title_en is NOT NULL in calendar_entries; require at least one language so a
+    // blank-title submit fails fast in the form instead of 500ing at the DB.
+    if (!titleEn.trim() && !titleAr.trim()) {
+      toast.error(t('form.title_required'))
       return
     }
 
@@ -350,7 +304,6 @@ export function CalendarEntryForm({
       location: location || undefined,
       linked_item_type: linkedItemId ? linkedItemType : 'dossier',
       linked_item_id: effectiveDossierId,
-      reminder_minutes: parseInt(reminderMinutes) || 15,
       participants: participants.map((p) => ({
         participant_type: p.participant_type,
         participant_id: p.participant_id,
@@ -388,7 +341,7 @@ export function CalendarEntryForm({
       onSuccess?.()
     } catch (err) {
       console.error('Failed to save calendar entry:', err)
-      alert(t('form.save_failed'))
+      toast.error(t('form.save_failed'))
     }
   }
 
@@ -444,7 +397,10 @@ export function CalendarEntryForm({
         {/* Titles */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="title-en">{t('form.title_en')}</Label>
+            <Label htmlFor="title-en" className="flex items-center gap-1">
+              {t('form.title_en')}
+              <span className="text-destructive">*</span>
+            </Label>
             <Input
               id="title-en"
               value={titleEn}
@@ -549,202 +505,6 @@ export function CalendarEntryForm({
               disabled={isPending}
             />
           </div>
-        </div>
-
-        {/* Participants (T128: Support for person_dossier and organization_dossier) */}
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            <Label>{t('form.participants')}</Label>
-          </div>
-
-          {/* Selected participants */}
-          {participants.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-2">
-              {participants.map((participant) => (
-                <Badge
-                  key={participant.participant_id}
-                  variant="secondary"
-                  className="flex items-center gap-2 ps-2 pe-1 py-1"
-                >
-                  {participant.participant_type === 'person_dossier' &&
-                  participant.participant_photo ? (
-                    <Avatar className="h-5 w-5">
-                      <AvatarImage
-                        src={participant.participant_photo}
-                        alt={participant.participant_name || ''}
-                      />
-                      <AvatarFallback className="text-xs">
-                        {getInitials(participant.participant_name || participant.participant_id)}
-                      </AvatarFallback>
-                    </Avatar>
-                  ) : (
-                    <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
-                      {participant.participant_type === 'person_dossier' ? (
-                        <Users className="h-3 w-3" />
-                      ) : (
-                        <Building2 className="h-3 w-3" />
-                      )}
-                    </div>
-                  )}
-                  <span className="text-xs">
-                    {participant.participant_name || participant.participant_id}
-                  </span>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="min-h-11 min-w-11 p-0 hover:bg-transparent"
-                    aria-label={t('form.remove_participant', {
-                      name: participant.participant_name || participant.participant_id,
-                    })}
-                    onClick={() => {
-                      setParticipants(
-                        participants.filter((p) => p.participant_id !== participant.participant_id),
-                      )
-                    }}
-                    disabled={isPending}
-                  >
-                    <X className="h-3 w-3" aria-hidden="true" />
-                  </Button>
-                </Badge>
-              ))}
-            </div>
-          )}
-
-          {/* Add participant popover */}
-          <Popover open={participantPopoverOpen} onOpenChange={setParticipantPopoverOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full justify-start"
-                disabled={isPending}
-              >
-                <Users className="h-4 w-4 me-2" />
-                {t('form.add_participant')}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-full sm:w-80 p-0" align={isRTL ? 'end' : 'start'}>
-              <Command>
-                <CommandInput placeholder={t('form.search_participants')} />
-                <CommandEmpty>{t('form.no_participants_found')}</CommandEmpty>
-
-                {/* Person dossiers */}
-                {personDossiers?.data && personDossiers.data.length > 0 && (
-                  <CommandGroup heading={t('form.people')}>
-                    {personDossiers.data.map((person) => {
-                      const displayName = isRTL ? person.name_ar : person.name_en
-                      const isSelected = participants.some((p) => p.participant_id === person.id)
-                      const photoUrl = getStringField(person.extension, 'photo_url')
-                      const title = getStringField(person.extension, 'title')
-
-                      return (
-                        <CommandItem
-                          key={person.id}
-                          value={displayName || person.id}
-                          onSelect={() => {
-                            if (!isSelected) {
-                              setParticipants([
-                                ...participants,
-                                {
-                                  participant_type: 'person_dossier',
-                                  participant_id: person.id,
-                                  participant_name: displayName || person.id,
-                                  participant_photo: photoUrl,
-                                },
-                              ])
-                            }
-                            setParticipantPopoverOpen(false)
-                          }}
-                          disabled={isSelected}
-                        >
-                          <div className="flex items-center gap-2 flex-1">
-                            {photoUrl ? (
-                              <Avatar className="h-6 w-6">
-                                <AvatarImage src={photoUrl} alt={displayName || ''} />
-                                <AvatarFallback className="text-xs">
-                                  {displayName ? getInitials(displayName) : 'VIP'}
-                                </AvatarFallback>
-                              </Avatar>
-                            ) : (
-                              <div className="h-6 w-6 rounded-full bg-success/10 dark:bg-success/30 flex items-center justify-center">
-                                <Users className="h-3 w-3 text-success" />
-                              </div>
-                            )}
-                            <div className="flex flex-col">
-                              <span className="text-sm">{displayName}</span>
-                              {title && (
-                                <span className="text-xs text-muted-foreground">{title}</span>
-                              )}
-                            </div>
-                          </div>
-                          {isSelected && <Check className="h-4 w-4" />}
-                        </CommandItem>
-                      )
-                    })}
-                  </CommandGroup>
-                )}
-
-                {/* Organization dossiers */}
-                {orgDossiers?.data && orgDossiers.data.length > 0 && (
-                  <CommandGroup heading={t('form.organizations')}>
-                    {orgDossiers.data.map((org) => {
-                      const displayName = isRTL ? org.name_ar : org.name_en
-                      const isSelected = participants.some((p) => p.participant_id === org.id)
-
-                      return (
-                        <CommandItem
-                          key={org.id}
-                          value={displayName || org.id}
-                          onSelect={() => {
-                            if (!isSelected) {
-                              setParticipants([
-                                ...participants,
-                                {
-                                  participant_type: 'organization_dossier',
-                                  participant_id: org.id,
-                                  participant_name: displayName || org.id,
-                                },
-                              ])
-                            }
-                            setParticipantPopoverOpen(false)
-                          }}
-                          disabled={isSelected}
-                        >
-                          <div className="flex items-center gap-2 flex-1">
-                            <div className="h-6 w-6 rounded-full bg-secondary dark:bg-secondary/30 flex items-center justify-center">
-                              <Building2 className="h-3 w-3 text-secondary-foreground" />
-                            </div>
-                            <span className="text-sm">{displayName}</span>
-                          </div>
-                          {isSelected && <Check className="h-4 w-4" />}
-                        </CommandItem>
-                      )
-                    })}
-                  </CommandGroup>
-                )}
-              </Command>
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        {/* Reminder */}
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="reminder">{t('form.reminder')}</Label>
-          <Select value={reminderMinutes} onValueChange={setReminderMinutes} disabled={isPending}>
-            <SelectTrigger id="reminder">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="0">{t('form.no_reminder')}</SelectItem>
-              <SelectItem value="5">5 {t('form.minutes_before')}</SelectItem>
-              <SelectItem value="15">15 {t('form.minutes_before')}</SelectItem>
-              <SelectItem value="30">30 {t('form.minutes_before')}</SelectItem>
-              <SelectItem value="60">1 {t('form.hour_before')}</SelectItem>
-              <SelectItem value="1440">1 {t('form.day_before')}</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
 
         {/* Recurrence Pattern (only for new events) */}

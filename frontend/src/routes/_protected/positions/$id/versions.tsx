@@ -6,6 +6,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -43,7 +44,7 @@ async function fetchVersions(positionId: string) {
 
 function VersionHistoryPage() {
   const { id } = Route.useParams()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [selectedVersions, setSelectedVersions] = useState<[number | null, number | null]>([
     null,
     null,
@@ -125,7 +126,7 @@ function VersionHistoryPage() {
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {new Date(version.created_at).toLocaleString()}
+                        {new Date(version.created_at).toLocaleString(toFormatLocale(i18n.language))}
                       </p>
                     </div>
                   </div>

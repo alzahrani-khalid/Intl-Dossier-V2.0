@@ -186,6 +186,10 @@ export const electedOfficialWizardConfig: WizardConfig<PersonFormData> = {
   ],
   filterExtensionData: (data: PersonFormData) => {
     const identity = composePersonExtension(data)
+    // A-6: office_type is collected by OfficeTermStep but lives outside
+    // PersonFormData (no Zod rule), so read it via a narrow cast and forward it
+    // to persons.office_type (NULL when unset).
+    const officeType = (data as { office_type?: string }).office_type
     return {
       // Person shared fields
       title_en: data.title_en !== '' ? data.title_en : undefined,
@@ -203,6 +207,7 @@ export const electedOfficialWizardConfig: WizardConfig<PersonFormData> = {
         data.office_name_ar !== undefined && data.office_name_ar !== ''
           ? data.office_name_ar
           : undefined,
+      office_type: officeType !== undefined && officeType !== '' ? officeType : undefined,
       district_en:
         data.district_en !== undefined && data.district_en !== '' ? data.district_en : undefined,
       district_ar:

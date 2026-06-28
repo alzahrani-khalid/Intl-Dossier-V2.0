@@ -103,8 +103,18 @@ serve(async (req) => {
       );
     }
 
+    // The app role lives in public.users — auth.users.role is the Postgres auth
+    // role ('authenticated'), never the app role. Read it from public.users
+    // (mirrors convert/index.ts); without this no one could ever assign.
+    const { data: callerRecord } = await supabaseClient
+      .from("users")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+    const callerRole = callerRecord?.role;
+
     // Check permissions - only supervisors and admins can assign
-    if (user.role !== "supervisor" && user.role !== "admin") {
+    if (callerRole !== "supervisor" && callerRole !== "admin") {
       return new Response(
         JSON.stringify({
           error: "Forbidden",
@@ -182,7 +192,6 @@ serve(async (req) => {
         JSON.stringify({
           error: "Internal Server Error",
           message: "Failed to assign ticket",
-          details: updateError,
         }),
         {
           status: 500,

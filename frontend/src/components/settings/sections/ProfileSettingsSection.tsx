@@ -1,6 +1,6 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { User, Camera, Trash2, Loader2 } from 'lucide-react'
+import { User, Trash2 } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,9 +8,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Label } from '@/components/ui/label'
 import { SettingsSectionCard, SettingsGroup } from '../SettingsSectionCard'
-import { cn } from '@/lib/utils'
-import { supabase } from '@/lib/supabase'
-import { toast } from 'sonner'
 
 interface ProfileSettingsSectionProps {
   form: UseFormReturn<any>
@@ -23,8 +20,6 @@ interface ProfileSettingsSectionProps {
  */
 export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionProps) {
   const { t } = useTranslation('settings')
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
-  const [isUploading, setIsUploading] = useState(false)
 
   const displayName = form.watch('display_name')
   const avatarUrl = form.watch('avatar_url')
@@ -38,87 +33,19 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
         .slice(0, 2)
     : 'U'
 
-  const handleAvatarUpload = useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0]
-      if (!file) return
-
-      // Validate file type
-      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
-      if (!validTypes.includes(file.type)) {
-        toast.error(t('profile.invalidFileType'))
-        return
-      }
-
-      // Validate file size (max 5MB)
-      const maxSize = 5 * 1024 * 1024
-      if (file.size > maxSize) {
-        toast.error(t('profile.fileTooLarge'))
-        return
-      }
-
-      // Show preview immediately
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setAvatarPreview(reader.result as string)
-      }
-      reader.readAsDataURL(file)
-
-      setIsUploading(true)
-
-      try {
-        // Get current user
-        const {
-          data: { user },
-        } = await supabase.auth.getUser()
-        if (!user) {
-          throw new Error('User not found')
-        }
-
-        // Generate unique filename
-        const fileExt = file.name.split('.').pop()
-        const fileName = `${user.id}/avatar-${Date.now()}.${fileExt}`
-
-        // Upload to Supabase Storage
-        const { error: uploadError } = await supabase.storage
-          .from('avatars')
-          .upload(fileName, file, {
-            cacheControl: '3600',
-            upsert: true,
-          })
-
-        if (uploadError) {
-          // If bucket doesn't exist, show helpful error
-          if (uploadError.message.includes('not found')) {
-            throw new Error('Avatar storage not configured. Please contact administrator.')
-          }
-          throw uploadError
-        }
-
-        // Get public URL
-        const {
-          data: { publicUrl },
-        } = supabase.storage.from('avatars').getPublicUrl(fileName)
-
-        // Update form with new avatar URL
-        form.setValue('avatar_url', publicUrl, { shouldDirty: true })
-        toast.success(t('profile.avatarUploaded'))
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'Failed to upload avatar'
-        toast.error(message)
-        // Clear preview on error
-        setAvatarPreview(null)
-      } finally {
-        setIsUploading(false)
-      }
-    },
-    [form, t],
-  )
-
+  // D-9: avatar upload targets a non-existent `avatars` Storage bucket, so it
+  // always errored. The upload control is hidden until the bucket exists; the
+  // avatar is shown read-only and can still be cleared (avatar_url is a real
+  // `users` column). Re-introduce upload once the bucket is provisioned.
   const handleRemoveAvatar = useCallback(() => {
     form.setValue('avatar_url', null, { shouldDirty: true })
-    setAvatarPreview(null)
   }, [form])
+
+  // D-20: surface Zod validation errors so a blocked submit isn't silent.
+  const fieldError = (name: string): string | undefined => {
+    const message = form.formState.errors[name]?.message
+    return typeof message === 'string' ? message : undefined
+  }
 
   return (
     <SettingsSectionCard
@@ -127,44 +54,15 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
       icon={User}
     >
       <div className="space-y-6">
-        {/* Avatar Section */}
+        {/* Avatar Section — display + clear only (upload hidden until bucket exists, D-9) */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <div className="relative">
-            <Avatar className="h-20 w-20 sm:h-24 sm:w-24">
-              <AvatarImage src={avatarPreview || avatarUrl || undefined} alt={displayName} />
-              <AvatarFallback className="text-lg sm:text-xl">{initials}</AvatarFallback>
-            </Avatar>
-            <label
-              htmlFor="avatar-upload"
-              className={cn(
-                'absolute bottom-0 end-0',
-                'flex items-center justify-center',
-                'h-8 w-8 rounded-full',
-                'bg-primary text-primary-foreground',
-                'transition-colors',
-                isUploading ? 'cursor-wait' : 'cursor-pointer hover:bg-primary/90',
-              )}
-            >
-              {isUploading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Camera className="h-4 w-4" />
-              )}
-              <input
-                id="avatar-upload"
-                type="file"
-                accept="image/jpeg,image/png,image/gif,image/webp"
-                className="sr-only"
-                onChange={handleAvatarUpload}
-                disabled={isUploading}
-                aria-label={t('profile.avatar')}
-              />
-            </label>
-          </div>
+          <Avatar className="h-20 w-20 sm:h-24 sm:w-24">
+            <AvatarImage src={avatarUrl || undefined} alt={displayName} />
+            <AvatarFallback className="text-lg sm:text-xl">{initials}</AvatarFallback>
+          </Avatar>
           <div className="space-y-1">
             <p className="text-sm font-medium text-start">{t('profile.avatar')}</p>
-            <p className="text-xs text-muted-foreground text-start">{t('profile.avatarFormats')}</p>
-            {(avatarUrl || avatarPreview) && (
+            {avatarUrl && (
               <Button
                 type="button"
                 variant="ghost"
@@ -186,7 +84,22 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
             <Label htmlFor="display_name" className="text-start block">
               {t('profile.displayName')}
             </Label>
-            <Input id="display_name" {...form.register('display_name')} className="max-w-md" />
+            <Input
+              id="display_name"
+              {...form.register('display_name')}
+              aria-invalid={!!fieldError('display_name')}
+              aria-describedby={fieldError('display_name') ? 'display_name-error' : undefined}
+              className="max-w-md"
+            />
+            {fieldError('display_name') && (
+              <p
+                id="display_name-error"
+                role="alert"
+                className="text-xs text-destructive text-start"
+              >
+                {fieldError('display_name')}
+              </p>
+            )}
             <p className="text-xs text-muted-foreground text-start">
               {t('profile.displayNameHint')}
             </p>
@@ -210,8 +123,15 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
               id="job_title"
               {...form.register('job_title')}
               placeholder={t('profile.jobTitlePlaceholder')}
+              aria-invalid={!!fieldError('job_title')}
+              aria-describedby={fieldError('job_title') ? 'job_title-error' : undefined}
               className="max-w-md"
             />
+            {fieldError('job_title') && (
+              <p id="job_title-error" role="alert" className="text-xs text-destructive text-start">
+                {fieldError('job_title')}
+              </p>
+            )}
           </div>
 
           {/* Department */}
@@ -223,8 +143,15 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
               id="department"
               {...form.register('department')}
               placeholder={t('profile.departmentPlaceholder')}
+              aria-invalid={!!fieldError('department')}
+              aria-describedby={fieldError('department') ? 'department-error' : undefined}
               className="max-w-md"
             />
+            {fieldError('department') && (
+              <p id="department-error" role="alert" className="text-xs text-destructive text-start">
+                {fieldError('department')}
+              </p>
+            )}
           </div>
 
           {/* Phone */}
@@ -237,9 +164,16 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
               type="tel"
               {...form.register('phone')}
               placeholder={t('profile.phonePlaceholder')}
+              aria-invalid={!!fieldError('phone')}
+              aria-describedby={fieldError('phone') ? 'phone-error' : undefined}
               className="max-w-md"
               dir="ltr"
             />
+            {fieldError('phone') && (
+              <p id="phone-error" role="alert" className="text-xs text-destructive text-start">
+                {fieldError('phone')}
+              </p>
+            )}
           </div>
 
           {/* Bio */}
@@ -251,10 +185,17 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
               id="bio"
               {...form.register('bio')}
               placeholder={t('profile.bioPlaceholder')}
+              aria-invalid={!!fieldError('bio')}
+              aria-describedby={fieldError('bio') ? 'bio-error' : undefined}
               className="max-w-md resize-none"
               rows={3}
               maxLength={200}
             />
+            {fieldError('bio') && (
+              <p id="bio-error" role="alert" className="text-xs text-destructive text-start">
+                {fieldError('bio')}
+              </p>
+            )}
             <p className="text-xs text-muted-foreground text-start">{t('profile.bioHint')}</p>
           </div>
         </SettingsGroup>

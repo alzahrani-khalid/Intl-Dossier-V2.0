@@ -28,6 +28,7 @@ import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import type { Position } from '@/types/position'
 import { useDirection } from '@/hooks/useDirection'
+import { toast } from 'sonner'
 
 export interface AttachPositionDialogProps {
   engagementId: string
@@ -122,7 +123,9 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
       setPreviewPosition(null)
       setOpen(false)
     } catch (error) {
+      // Surface the failure and keep the dialog open so the selection is not lost.
       console.error('Failed to attach positions:', error)
+      toast.error(t('positions:attach.attachError'))
     } finally {
       setIsAttaching(false)
     }

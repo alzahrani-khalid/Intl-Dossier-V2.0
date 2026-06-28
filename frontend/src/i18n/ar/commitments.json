@@ -47,6 +47,8 @@
     "ownerType": "نوع المسؤول",
     "owner": "المسؤول",
     "selectOwner": "اختر المسؤول",
+    "ownerInternalHelp": "اختر المستخدم المسؤول",
+    "ownerExternalHelp": "أدخل معرّف جهة الاتصال الخارجية",
     "proofRequired": "الدليل مطلوب",
     "proofRequiredDescription": "مطلوب رفع دليل للإكمال",
     "trackingMode": "وضع التتبع",

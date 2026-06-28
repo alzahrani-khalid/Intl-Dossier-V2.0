@@ -334,13 +334,32 @@ export function useUnifiedKanbanStatusUpdate() {
     mutationFn: async ({ itemId, source, newStatus, newWorkflowStage }: StatusUpdateParams) => {
       // Update based on source type
       if (source === 'task') {
+        const taskUpdate: Record<string, unknown> = {
+          status: newStatus,
+          workflow_stage: newWorkflowStage,
+          updated_at: new Date().toISOString(),
+        }
+
+        // B-21: stamp completion so SLAIndicator can compute on-time vs late.
+        // Dragging to Done writes status='completed' but previously left
+        // completed_at/completed_by null. Set them when completing, and clear
+        // them when an item is dragged back out of a completed state so the
+        // stamp never goes stale.
+        const isCompleting = newStatus === 'completed' || newWorkflowStage === 'done'
+        if (isCompleting) {
+          const {
+            data: { user },
+          } = await supabase.auth.getUser()
+          taskUpdate.completed_at = new Date().toISOString()
+          taskUpdate.completed_by = user?.id ?? null
+        } else {
+          taskUpdate.completed_at = null
+          taskUpdate.completed_by = null
+        }
+
         const { data, error } = await supabase
           .from('tasks')
-          .update({
-            status: newStatus,
-            workflow_stage: newWorkflowStage,
-            updated_at: new Date().toISOString(),
-          })
+          .update(taskUpdate)
           .eq('id', itemId)
           .select()
           .single()

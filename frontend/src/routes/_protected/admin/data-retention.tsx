@@ -10,6 +10,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -429,7 +430,9 @@ function DataRetentionPage() {
                               {log.execution_type}
                             </Badge>
                             <span className="text-sm text-muted-foreground">
-                              {new Date(log.started_at).toLocaleDateString()}
+                              {new Date(log.started_at).toLocaleDateString(
+                                toFormatLocale(i18n.language),
+                              )}
                             </span>
                           </div>
                           <p className="text-sm mt-1">
@@ -638,7 +641,11 @@ function DataRetentionPage() {
                           )}
                         </TableCell>
                         <TableCell>{hold.legal_matter || '-'}</TableCell>
-                        <TableCell>{new Date(hold.effective_date).toLocaleDateString()}</TableCell>
+                        <TableCell>
+                          {new Date(hold.effective_date).toLocaleDateString(
+                            toFormatLocale(i18n.language),
+                          )}
+                        </TableCell>
                         <TableCell>
                           <Badge className={getStatusColor(hold.status)}>{hold.status}</Badge>
                         </TableCell>
@@ -812,7 +819,9 @@ function DataRetentionPage() {
                   <TableBody>
                     {executionLog.map((log) => (
                       <TableRow key={log.id}>
-                        <TableCell>{new Date(log.started_at).toLocaleString()}</TableCell>
+                        <TableCell>
+                          {new Date(log.started_at).toLocaleString(toFormatLocale(i18n.language))}
+                        </TableCell>
                         <TableCell>
                           <Badge variant={log.execution_type === 'dry_run' ? 'outline' : 'default'}>
                             {log.execution_type}

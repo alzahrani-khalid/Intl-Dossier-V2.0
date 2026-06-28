@@ -12,6 +12,7 @@
 
 import React, { useState, useRef, useCallback, useEffect, forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { useSearchUsersForMention } from '@/hooks/useComments'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Textarea } from '@/components/ui/textarea'
@@ -237,7 +238,8 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
           )}
           data-testid="comment-char-count"
         >
-          {charCount.toLocaleString()} / {maxLength.toLocaleString()}
+          {charCount.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))} /{' '}
+          {maxLength.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
         </div>
 
         {/* Mention autocomplete dropdown */}

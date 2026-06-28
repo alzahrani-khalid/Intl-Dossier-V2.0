@@ -319,6 +319,7 @@ describe('CommitmentEditor', () => {
 
       expect(mockOnChange).toHaveBeenCalledWith([
         {
+          title: '',
           description: '',
           priority: 'medium',
           status: 'pending',

@@ -5,9 +5,10 @@ import { corsHeaders } from "../_shared/cors.ts";
 interface CreateTicketRequest {
   request_type: "engagement" | "position" | "mou_action" | "foresight";
   title: string;
-  title_ar?: string;
+  // Required: the DB columns title_ar/description_ar are NOT NULL.
+  title_ar: string;
   description: string;
-  description_ar?: string;
+  description_ar: string;
   type_specific_fields?: Record<string, any>;
   dossier_id?: string;
   urgency?: "low" | "medium" | "high" | "critical";
@@ -76,12 +77,51 @@ serve(async (req) => {
     // Parse request body
     const body: CreateTicketRequest = await req.json();
 
-    // Validate required fields
-    if (!body.request_type || !body.title || !body.description) {
+    // Validate required fields. title_ar/description_ar are NOT NULL in the DB,
+    // so a missing value must be a clean 400 here — never coerced to null below
+    // (which can never satisfy the constraint and would 500 instead).
+    if (
+      !body.request_type ||
+      !body.title ||
+      !body.description ||
+      !body.title_ar ||
+      !body.description_ar
+    ) {
       return new Response(
         JSON.stringify({
           error: "Bad Request",
-          message: "Missing required fields: request_type, title, description",
+          message:
+            "Missing required fields: request_type, title, title_ar, description, description_ar",
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Validate enums against the DB allow-lists. Truthiness alone let invalid
+    // values reach the insert and surface as a 500 instead of a clean 400.
+    const VALID_REQUEST_TYPES = ["engagement", "position", "mou_action", "foresight"];
+    if (!VALID_REQUEST_TYPES.includes(body.request_type)) {
+      return new Response(
+        JSON.stringify({
+          error: "Bad Request",
+          message: `Invalid request_type. Must be one of: ${VALID_REQUEST_TYPES.join(", ")}`,
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const VALID_URGENCIES = ["low", "medium", "high", "critical"];
+    if (body.urgency !== undefined && !VALID_URGENCIES.includes(body.urgency)) {
+      return new Response(
+        JSON.stringify({
+          error: "Bad Request",
+          message: `Invalid urgency. Must be one of: ${VALID_URGENCIES.join(", ")}`,
         }),
         {
           status: 400,
@@ -160,9 +200,9 @@ serve(async (req) => {
       ticket_number: ticketNumber,
       request_type: body.request_type,
       title: body.title,
-      title_ar: body.title_ar || null,
+      title_ar: body.title_ar,
       description: body.description,
-      description_ar: body.description_ar || null,
+      description_ar: body.description_ar,
       type_specific_fields: body.type_specific_fields || {},
       dossier_id: body.dossier_id || null,
       urgency,
@@ -191,7 +231,6 @@ serve(async (req) => {
         JSON.stringify({
           error: "Internal Server Error",
           message: "Failed to create ticket",
-          details: ticketError,
         }),
         {
           status: 500,
