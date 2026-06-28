@@ -177,12 +177,15 @@ export function InteractionNoteForm({
       }
 
       // Upload attachments if any
-      if (selectedFiles.length > 0) {
+      if (selectedFiles.length > 0 && noteId) {
         setUploadingFiles(true)
+        // Capture the now non-null id in a const so the upload closure keeps the
+        // narrowed type (a `let` loses its narrowing inside a nested closure).
+        const resolvedNoteId = noteId
         const uploadPromises = selectedFiles.map((file) =>
           uploadAttachmentMutation.mutateAsync({
             contactId,
-            noteId,
+            noteId: resolvedNoteId,
             file,
           }),
         )
