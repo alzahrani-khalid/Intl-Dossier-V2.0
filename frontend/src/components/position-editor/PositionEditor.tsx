@@ -292,7 +292,8 @@ export function PositionEditor({
 
   // Manual save handler
   const handleManualSave = async () => {
-    if (saving) return
+    // Guard against both manual and in-flight auto-save to prevent a concurrent double-write.
+    if (saving || autoSaving) return
 
     setSaving(true)
     setError(null)
@@ -410,7 +411,7 @@ export function PositionEditor({
 
       {/* Error message */}
       {error && (
-        <Card className="border-danger/30 bg-danger/10">
+        <Card role="alert" className="border-danger/30 bg-danger/10">
           <CardContent className="pt-4">
             <div className="flex items-center gap-2 text-danger">
               <AlertCircle className="size-4" />
@@ -541,9 +542,12 @@ export function PositionEditor({
               })}
             </DialogDescription>
           </DialogHeader>
+          <p className="text-sm text-danger" role="alert">
+            {t('editor.conflictReloadWarning')}
+          </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowConflictDialog(false)}>
-              {t('common.cancel')}
+              {t('common:common.cancel')}
             </Button>
             <Button onClick={handleConflictReload} className="gap-2">
               <RefreshCw className="size-4" />

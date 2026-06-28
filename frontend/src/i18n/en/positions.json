@@ -58,6 +58,7 @@
     "unsavedChanges": "Unsaved changes",
     "conflictTitle": "Version Conflict Detected",
     "conflictDescription": "This position has been modified by another user. Your version: {{current}}, Server version: {{server}}. Please reload the page to see the latest version.",
+    "conflictReloadWarning": "Reloading discards your unsaved local changes. Copy any text you need before reloading.",
     "reloadPage": "Reload Page",
     "linkedDossiers": "Linked Dossiers"
   },
