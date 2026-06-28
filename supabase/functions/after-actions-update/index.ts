@@ -51,6 +51,28 @@ serve(async (req) => {
       );
     }
 
+    // B-18: this endpoint only persists scalar fields (engagement_id,
+    // is_confidential, attendees, notes). It does NOT write nested entities, so
+    // accepting them would return a misleading 200 implying a save that never
+    // happened. Reject any nested payload explicitly instead of silently dropping
+    // it — nested entities are managed on their own surfaces.
+    const rawBody = body as unknown as Record<string, unknown>;
+    const nestedKeys = ['decisions', 'commitments', 'risks', 'follow_up_actions', 'attachments'];
+    const suppliedNested = nestedKeys.filter((key) => {
+      const value = rawBody[key];
+      return Array.isArray(value) && value.length > 0;
+    });
+    if (suppliedNested.length > 0) {
+      return new Response(
+        JSON.stringify({
+          error: 'unsupported_fields',
+          message: `Nested entities cannot be updated via this endpoint: ${suppliedNested.join(', ')}. Manage them from their own surfaces.`,
+          fields: suppliedNested
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Validate version is provided for optimistic locking
     if (typeof body.version !== 'number') {
       return new Response(

@@ -164,7 +164,7 @@ function PersonCreatePage() {
                       <FormItem>
                         <FormLabel>{t('form.nameEn', 'Name (English)')} *</FormLabel>
                         <FormControl>
-                          <Input placeholder="John Doe" {...field} />
+                          <Input placeholder={t('persons:form.namePlaceholderEn')} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -178,7 +178,11 @@ function PersonCreatePage() {
                       <FormItem>
                         <FormLabel>{t('form.nameAr', 'Name (Arabic)')} *</FormLabel>
                         <FormControl>
-                          <Input placeholder="جون دو" dir="rtl" {...field} />
+                          <Input
+                            placeholder={t('persons:form.namePlaceholderAr')}
+                            dir="rtl"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -194,7 +198,7 @@ function PersonCreatePage() {
                       <FormItem>
                         <FormLabel>{t('form.titleEn', 'Title (English)')}</FormLabel>
                         <FormControl>
-                          <Input placeholder="Director of Operations" {...field} />
+                          <Input placeholder={t('persons:form.titlePlaceholderEn')} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -208,7 +212,11 @@ function PersonCreatePage() {
                       <FormItem>
                         <FormLabel>{t('form.titleAr', 'Title (Arabic)')}</FormLabel>
                         <FormControl>
-                          <Input placeholder="مدير العمليات" dir="rtl" {...field} />
+                          <Input
+                            placeholder={t('persons:form.titlePlaceholderAr')}
+                            dir="rtl"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -356,7 +364,7 @@ function PersonCreatePage() {
                         {t('form.languages', 'Languages')}
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="English, Arabic, French" {...field} />
+                        <Input placeholder={t('persons:form.languagesPlaceholder')} {...field} />
                       </FormControl>
                       <FormDescription>
                         {t('form.languagesDescription', 'Comma-separated list of languages')}
@@ -373,7 +381,7 @@ function PersonCreatePage() {
                     <FormItem>
                       <FormLabel>{t('form.expertiseAreas', 'Expertise Areas')}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Statistics, Data Analysis, Policy" {...field} />
+                        <Input placeholder={t('persons:form.expertisePlaceholder')} {...field} />
                       </FormControl>
                       <FormDescription>
                         {t(
@@ -404,7 +412,7 @@ function PersonCreatePage() {
                       <FormLabel>{t('form.biographyEn', 'Biography (English)')}</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Professional background and achievements..."
+                          placeholder={t('persons:form.biographyPlaceholderEn')}
                           className="min-h-[100px]"
                           {...field}
                         />
@@ -422,7 +430,7 @@ function PersonCreatePage() {
                       <FormLabel>{t('form.biographyAr', 'Biography (Arabic)')}</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="السيرة المهنية والإنجازات..."
+                          placeholder={t('persons:form.biographyPlaceholderAr')}
                           className="min-h-[100px]"
                           dir="rtl"
                           {...field}
