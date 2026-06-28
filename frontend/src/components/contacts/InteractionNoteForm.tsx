@@ -49,6 +49,7 @@ import { useSearchPersonDossiers } from '@/hooks/usePersonDossiers'
 import type { InteractionNoteResponse } from '@/services/interaction-api'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { toast } from 'sonner'
 
 interface InteractionNoteFormProps {
   contactId: string
@@ -91,6 +92,9 @@ export function InteractionNoteForm({
   const [uploadingFiles, setUploadingFiles] = useState(false)
   const [attendeeSearch, setAttendeeSearch] = useState('')
   const [selectedAttendees, setSelectedAttendees] = useState<string[]>([])
+  // Tracks a note already created in a prior submit so a retry after a partial
+  // attachment failure does not create a duplicate note.
+  const [createdNoteId, setCreatedNoteId] = useState<string | null>(null)
 
   // Search contacts for attendees
   const { data: contactsData } = useSearchPersonDossiers({
@@ -114,6 +118,14 @@ export function InteractionNoteForm({
       setSelectedAttendees(note.attendees)
     }
   }, [note])
+
+  // Reset the in-flight note id whenever the dialog closes so reopening starts a
+  // fresh note instead of reusing a previously-created one.
+  useEffect(() => {
+    if (!open) {
+      setCreatedNoteId(null)
+    }
+  }, [open])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
@@ -146,15 +158,23 @@ export function InteractionNoteForm({
   }
 
   const onSubmit = async (values: FormValues) => {
+    // Reuse an already-created note id (from a prior partial-failure submit) so a
+    // retry uploads attachments to the same note instead of duplicating it. The
+    // local variable is set synchronously so the catch below sees it regardless
+    // of the createdNoteId state update timing.
+    let noteId = createdNoteId
     try {
-      // Create the note first
-      const noteData = await createNoteMutation.mutateAsync({
-        contact_id: contactId,
-        date: format(values.date, 'yyyy-MM-dd'),
-        type: values.type,
-        details: values.details,
-        attendees: selectedAttendees.length > 0 ? selectedAttendees : undefined,
-      })
+      if (!noteId) {
+        const noteData = await createNoteMutation.mutateAsync({
+          contact_id: contactId,
+          date: format(values.date, 'yyyy-MM-dd'),
+          type: values.type,
+          details: values.details,
+          attendees: selectedAttendees.length > 0 ? selectedAttendees : undefined,
+        })
+        noteId = noteData.id
+        setCreatedNoteId(noteData.id)
+      }
 
       // Upload attachments if any
       if (selectedFiles.length > 0) {
@@ -162,7 +182,7 @@ export function InteractionNoteForm({
         const uploadPromises = selectedFiles.map((file) =>
           uploadAttachmentMutation.mutateAsync({
             contactId,
-            noteId: noteData.id,
+            noteId,
             file,
           }),
         )
@@ -175,10 +195,16 @@ export function InteractionNoteForm({
       form.reset()
       setSelectedFiles([])
       setSelectedAttendees([])
+      setCreatedNoteId(null)
       onOpenChange(false)
     } catch (error) {
-      console.error('Failed to create note:', error)
+      console.error('Failed to save note:', error)
       setUploadingFiles(false)
+      // If the note already exists, the failure was in the attachments. Warn the
+      // user and keep the note id so resubmitting retries only the uploads.
+      if (noteId) {
+        toast.warning(t('contactDirectory.interactions.form.attachments_partial_failure'))
+      }
     }
   }
 
