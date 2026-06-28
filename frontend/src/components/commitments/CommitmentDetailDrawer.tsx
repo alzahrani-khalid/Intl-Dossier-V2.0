@@ -14,6 +14,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -93,7 +94,7 @@ export function CommitmentDetailDrawer({
   // Format dates
   const formatDate = (dateStr: string | null | undefined) => {
     if (!dateStr) return '-'
-    return new Date(dateStr).toLocaleDateString(i18n.language, {
+    return new Date(dateStr).toLocaleDateString(toFormatLocale(i18n.language), {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -102,7 +103,7 @@ export function CommitmentDetailDrawer({
 
   const formatDateTime = (dateStr: string | null | undefined) => {
     if (!dateStr) return '-'
-    return new Date(dateStr).toLocaleString(i18n.language, {
+    return new Date(dateStr).toLocaleString(toFormatLocale(i18n.language), {
       year: 'numeric',
       month: 'short',
       day: 'numeric',

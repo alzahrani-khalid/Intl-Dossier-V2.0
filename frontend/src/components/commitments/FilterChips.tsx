@@ -10,6 +10,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
@@ -40,7 +41,7 @@ export function FilterChips({ filters, onRemoveFilter, onClearAll }: FilterChips
   // Format date for display
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr)
-    return date.toLocaleDateString(i18n.language, {
+    return date.toLocaleDateString(toFormatLocale(i18n.language), {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
