@@ -1,10 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toFormatLocale } from '@/lib/format-locale'
-import { useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { PageHeader } from '@/components/layout/PageHeader'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -32,7 +30,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-import { Search, UserPlus, Users, Eye, CheckCircle, Loader2, AlertCircle } from 'lucide-react'
+import { Search, Users, CheckCircle, Loader2, AlertCircle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -68,7 +66,6 @@ type User = {
  */
 export function UsersListPage() {
   const { t } = useTranslation('user-management')
-  const navigate = useNavigate()
   const { isRTL } = useDirection()
   // Filter & Search State
   const [searchQuery, setSearchQuery] = useState('')
@@ -186,14 +183,6 @@ export function UsersListPage() {
     }
   }
 
-  const handleViewUser = (userId: string) => {
-    navigate({ to: `/users/${userId}` })
-  }
-
-  const handleCreateUser = () => {
-    navigate({ to: '/users/create' })
-  }
-
   if (isLoading) {
     return (
       <div className="space-y-6">
@@ -229,15 +218,6 @@ export function UsersListPage() {
           to: Math.min(currentPage * pageSize, usersData?.total || 0),
           total: usersData?.total || 0,
         })}
-        actions={
-          <Button
-            onClick={handleCreateUser}
-            className={`w-full sm:w-auto min-h-11 ${isRTL ? 'flex-row-reverse' : ''}`}
-          >
-            <UserPlus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-            {t('userOnboarding.createUser')}
-          </Button>
-        }
       />
 
       {/* Search & Filters */}
@@ -323,7 +303,6 @@ export function UsersListPage() {
                 <TableHead className="text-start">{t('userProfile.userType')}</TableHead>
                 <TableHead className="text-start">{t('userProfile.status')}</TableHead>
                 <TableHead className="text-start">{t('userProfile.lastLoginAt')}</TableHead>
-                <TableHead className="text-end">{t('usersList.actionsColumn')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -360,17 +339,6 @@ export function UsersListPage() {
                           toFormatLocale(isRTL ? 'ar' : 'en'),
                         )
                       : '-'}
-                  </TableCell>
-                  <TableCell className="text-end">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleViewUser(user.id)}
-                      className={isRTL ? 'flex-row-reverse' : ''}
-                    >
-                      <Eye className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                      {t('actions.viewDetails')}
-                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -419,19 +387,6 @@ export function UsersListPage() {
                       toFormatLocale(isRTL ? 'ar' : 'en'),
                     )
                   : '-'}
-              </div>
-
-              {/* Actions */}
-              <div className="pt-2 border-t">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleViewUser(user.id)}
-                  className={`w-full min-h-9 ${isRTL ? 'flex-row-reverse' : ''}`}
-                >
-                  <Eye className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                  {t('actions.viewDetails')}
-                </Button>
               </div>
             </CardContent>
           </Card>
