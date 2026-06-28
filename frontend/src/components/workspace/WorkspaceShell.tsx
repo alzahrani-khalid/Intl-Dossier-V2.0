@@ -12,6 +12,7 @@
 import type { ReactElement, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useMatchRoute } from '@tanstack/react-router'
+import { Pencil } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
 import { useEngagement } from '@/domains/engagements/hooks/useEngagements'
 import { LifecycleStepperBar } from '@/components/engagements/LifecycleStepperBar'
@@ -86,6 +87,24 @@ export function WorkspaceShell({ engagementId, children }: WorkspaceShellProps):
 
           {/* Action buttons */}
           <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Edit affordance — engagement detail uses this workspace (not
+                DossierShell), so its Edit entry point lives here. Opens the
+                dossier edit wizard at /dossiers/edit/engagements/$id, mirroring
+                the DossierShell Edit button treatment (A-1 follow-up). */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="min-h-11 min-w-11 text-xs sm:text-sm"
+              asChild
+            >
+              <Link
+                to="/dossiers/edit/$type/$id"
+                params={{ type: 'engagements', id: engagementId }}
+              >
+                <Pencil className="h-4 w-4 sm:me-2" />
+                <span className="hidden sm:inline">{t('workspace:actions.edit')}</span>
+              </Link>
+            </Button>
             <Button
               variant="outline"
               size="sm"
