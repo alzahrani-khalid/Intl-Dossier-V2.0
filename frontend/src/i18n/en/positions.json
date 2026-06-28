@@ -406,7 +406,8 @@
     "attachSelected": "Attach {{count}} Position(s)",
     "attaching": "Attaching...",
     "attachSuccess": "Attached {{count}} position(s)",
-    "attachPartialError": "Failed to attach {{failed}} of {{total}} positions"
+    "attachPartialError": "Failed to attach {{failed}} of {{total}} positions",
+    "attachError": "Failed to attach positions. Please try again."
   },
   "briefing": {
     "title": "Generate Briefing Pack",

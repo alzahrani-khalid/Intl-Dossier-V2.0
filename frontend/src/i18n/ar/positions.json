@@ -377,7 +377,8 @@
     "attachSelected": "إرفاق {{count}} موقف",
     "attaching": "جاري الإرفاق...",
     "attachSuccess": "تم إرفاق {{count}} موقف",
-    "attachPartialError": "تعذّر إرفاق {{failed}} من {{total}} موقف"
+    "attachPartialError": "تعذّر إرفاق {{failed}} من {{total}} موقف",
+    "attachError": "تعذّر إرفاق المواقف. يرجى المحاولة مرة أخرى."
   },
   "briefing": {
     "title": "إنشاء حزمة إحاطة",
