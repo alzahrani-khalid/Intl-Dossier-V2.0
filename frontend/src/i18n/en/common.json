@@ -236,7 +236,8 @@
     "themeLoadFailed": "Failed to load theme. Using default theme.",
     "languageLoadFailed": "Failed to load language. Using English.",
     "networkError": "Network error. Please check your connection.",
-    "unknownError": "An unknown error occurred. Please try again."
+    "unknownError": "An unknown error occurred. Please try again.",
+    "generic": "Something went wrong. Please try again."
   },
   "error": {
     "failedToLoadData": "Failed to load data",

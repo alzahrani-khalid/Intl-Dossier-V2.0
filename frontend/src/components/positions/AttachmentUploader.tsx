@@ -105,7 +105,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
             ? {
                 ...f,
                 status: 'error',
-                error: error.message || t('common:error'),
+                error: error.message || t('common:errors.generic'),
               }
             : f,
         ),
@@ -186,7 +186,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
       try {
         await deleteMutation.mutateAsync(attachmentId)
       } catch (error: any) {
-        alert(error.message || t('common:error'))
+        alert(error.message || t('common:errors.generic'))
       }
     }
   }
@@ -395,7 +395,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
                         className="h-5 w-5 text-success dark:text-success"
                         fill="currentColor"
                         viewBox="0 0 20 20"
-                        aria-label={t('common:success')}
+                        aria-label={t('common:accessibility.success')}
                       >
                         <path
                           fillRule="evenodd"
@@ -408,7 +408,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
                         className="h-5 w-5 text-danger dark:text-danger"
                         fill="currentColor"
                         viewBox="0 0 20 20"
-                        aria-label={t('common:error')}
+                        aria-label={t('common:accessibility.error')}
                       >
                         <path
                           fillRule="evenodd"
@@ -420,7 +420,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
                       <svg
                         className="animate-spin h-5 w-5 text-primary-500 dark:text-primary-400"
                         viewBox="0 0 24 24"
-                        aria-label={t('common:loading')}
+                        aria-label={t('common:accessibility.loading')}
                       >
                         <circle
                           className="opacity-25"
