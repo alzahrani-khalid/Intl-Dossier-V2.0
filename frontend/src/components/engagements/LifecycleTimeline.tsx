@@ -14,13 +14,10 @@
 
 import { type ReactElement, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import type { LifecycleStage, LifecycleTransition } from '@/types/lifecycle.types'
 
 // ============================================================================
@@ -59,9 +56,9 @@ export function formatDuration(seconds: number): string {
   return `${String(d)}d ${String(h)}h`
 }
 
-function formatTransitionDate(dateStr: string): string {
+function formatTransitionDate(dateStr: string, locale: string): string {
   const date = new Date(dateStr)
-  return date.toLocaleDateString(undefined, {
+  return date.toLocaleDateString(toFormatLocale(locale), {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -87,15 +84,14 @@ export function LifecycleTimeline({
   transitions,
   isLoading = false,
 }: LifecycleTimelineProps): ReactElement {
-  const { t } = useTranslation('lifecycle')
+  const { t, i18n } = useTranslation('lifecycle')
   const [open, setOpen] = useState<boolean>(getDefaultOpen)
 
   // Sort transitions by transitioned_at descending (most recent first)
   const sortedTransitions = useMemo(
     (): LifecycleTransition[] =>
       [...transitions].sort(
-        (a, b) =>
-          new Date(b.transitioned_at).getTime() - new Date(a.transitioned_at).getTime(),
+        (a, b) => new Date(b.transitioned_at).getTime() - new Date(a.transitioned_at).getTime(),
       ),
     [transitions],
   )
@@ -132,9 +128,7 @@ export function LifecycleTimeline({
 
           {/* Empty state */}
           {!isLoading && sortedTransitions.length === 0 && (
-            <p className="text-sm text-base-400 text-start">
-              {t('timeline.empty')}
-            </p>
+            <p className="text-sm text-base-400 text-start">{t('timeline.empty')}</p>
           )}
 
           {/* Timeline entries */}
@@ -166,10 +160,7 @@ export function LifecycleTimeline({
                       />
                       {/* Vertical connector line (not on last entry) */}
                       {!isLast && (
-                        <div
-                          className="w-px flex-1 min-h-4 bg-base-200"
-                          aria-hidden="true"
-                        />
+                        <div className="w-px flex-1 min-h-4 bg-base-200" aria-hidden="true" />
                       )}
                     </div>
 
@@ -181,12 +172,10 @@ export function LifecycleTimeline({
                           {t(`stages.${transition.to_stage as LifecycleStage}`)}
                         </span>
                         {transition.user_name != null && transition.user_name !== '' && (
-                          <span className="text-xs text-base-500">
-                            {transition.user_name}
-                          </span>
+                          <span className="text-xs text-base-500">{transition.user_name}</span>
                         )}
                         <span className="text-xs text-base-400">
-                          {formatTransitionDate(transition.transitioned_at)}
+                          {formatTransitionDate(transition.transitioned_at, i18n.language)}
                         </span>
                       </div>
 
@@ -211,9 +200,7 @@ export function LifecycleTimeline({
                             duration: formatDuration(
                               transition.duration_in_stage_seconds as number,
                             ),
-                            stage: t(
-                              `stages.${transition.from_stage as LifecycleStage}`,
-                            ),
+                            stage: t(`stages.${transition.from_stage as LifecycleStage}`),
                           })}
                         </span>
                       )}

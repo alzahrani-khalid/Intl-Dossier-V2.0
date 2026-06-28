@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
@@ -134,7 +135,7 @@ export function ConsistencyPanel({
   // Format date
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString)
-    return new Intl.DateTimeFormat(i18n.language, {
+    return new Intl.DateTimeFormat(toFormatLocale(i18n.language), {
       dateStyle: 'medium',
       timeStyle: 'short',
     }).format(date)

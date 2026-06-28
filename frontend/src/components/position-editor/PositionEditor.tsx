@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { useEditor, EditorContent, Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
@@ -160,7 +161,7 @@ export function PositionEditor({
   autoSaveInterval = 30000,
   className,
 }: PositionEditorProps) {
-  const { t } = useTranslation('positions')
+  const { t, i18n } = useTranslation('positions')
 
   // Form state
   const [formData, setFormData] = useState<PositionEditorData>({
@@ -384,7 +385,9 @@ export function PositionEditor({
           )}
           {!autoSaving && lastSaved && (
             <Badge variant="outline">
-              {t('editor.lastSaved', { time: lastSaved.toLocaleTimeString() })}
+              {t('editor.lastSaved', {
+                time: lastSaved.toLocaleTimeString(toFormatLocale(i18n.language)),
+              })}
             </Badge>
           )}
           {isDirty && !autoSaving && (

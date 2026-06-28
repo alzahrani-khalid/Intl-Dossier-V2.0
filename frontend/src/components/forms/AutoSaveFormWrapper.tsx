@@ -16,6 +16,7 @@
 
 import { useEffect, useCallback, useState, createContext, useContext, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { motion, AnimatePresence } from 'motion/react'
 import { useBlocker } from '@tanstack/react-router'
 import { Save, RotateCcw, X, Clock, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react'
@@ -242,7 +243,7 @@ interface SaveStatusIndicatorProps {
 }
 
 function SaveStatusIndicator({ status }: SaveStatusIndicatorProps) {
-  const { t } = useTranslation('common')
+  const { t, i18n } = useTranslation('common')
 
   if (status.error) {
     return (
@@ -278,7 +279,10 @@ function SaveStatusIndicator({ status }: SaveStatusIndicatorProps) {
         <CheckCircle2 className="h-4 w-4" />
         <span className="text-xs">
           {t('forms.saved_at', {
-            time: savedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            time: savedDate.toLocaleTimeString(toFormatLocale(i18n.language), {
+              hour: '2-digit',
+              minute: '2-digit',
+            }),
           })}
         </span>
       </div>

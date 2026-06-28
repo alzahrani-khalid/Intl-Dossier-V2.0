@@ -11,6 +11,7 @@
 
 import type { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { useParams } from '@tanstack/react-router'
 import { ClipboardList, Clock } from 'lucide-react'
 import { useLifecycleHistory } from '@/domains/engagements/hooks/useLifecycle'
@@ -20,7 +21,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { LifecycleStage } from '@/types/lifecycle.types'
 
 export default function AuditTab(): ReactElement {
-  const { t } = useTranslation('workspace')
+  const { t, i18n } = useTranslation('workspace')
   const { t: tLifecycle } = useTranslation('lifecycle')
   const { isRTL } = useDirection()
   const { engagementId } = useParams({
@@ -92,7 +93,7 @@ export default function AuditTab(): ReactElement {
                   : tLifecycle(`stages.${transition.from_stage as LifecycleStage}`)
                 const toLabel = tLifecycle(`stages.${transition.to_stage as LifecycleStage}`)
                 const date = new Date(transition.transitioned_at)
-                const timeStr = date.toLocaleDateString(undefined, {
+                const timeStr = date.toLocaleDateString(toFormatLocale(i18n.language), {
                   month: 'short',
                   day: 'numeric',
                   hour: '2-digit',

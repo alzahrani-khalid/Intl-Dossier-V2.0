@@ -2,6 +2,7 @@ import { type ReactElement } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 
 import { useAuth } from '@/hooks/useAuth'
 
@@ -27,7 +28,7 @@ export function DashboardHero(): ReactElement {
   // abbreviated weekday + month, year omitted (current year is implied),
   // no comma. Spec source: design-system/inteldossier_handoff_design/README.md
   // (Content fundamentals → Numbers & dates).
-  const dateLabel = new Intl.DateTimeFormat(i18n.language, {
+  const dateLabel = new Intl.DateTimeFormat(toFormatLocale(i18n.language), {
     weekday: 'short',
     day: 'numeric',
     month: 'short',

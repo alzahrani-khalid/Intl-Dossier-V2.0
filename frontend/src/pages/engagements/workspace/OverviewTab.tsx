@@ -52,7 +52,7 @@ function computeDaysInStage(transitions: LifecycleTransition[] | undefined): num
 function formatDate(dateStr: string | undefined | null, locale: string): string {
   if (dateStr == null || dateStr === '') return '--'
   try {
-    return new Intl.DateTimeFormat(locale, {
+    return new Intl.DateTimeFormat(toFormatLocale(locale), {
       year: 'numeric',
       month: 'short',
       day: 'numeric',

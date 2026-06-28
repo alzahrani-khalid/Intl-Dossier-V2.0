@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toFormatLocale } from '@/lib/format-locale'
 import { useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -355,7 +356,9 @@ export function UsersListPage() {
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {user.last_login_at
-                      ? new Date(user.last_login_at).toLocaleDateString(isRTL ? 'ar' : 'en')
+                      ? new Date(user.last_login_at).toLocaleDateString(
+                          toFormatLocale(isRTL ? 'ar' : 'en'),
+                        )
                       : '-'}
                   </TableCell>
                   <TableCell className="text-end">
@@ -412,7 +415,9 @@ export function UsersListPage() {
               <div className="text-sm text-muted-foreground">
                 {t('userProfile.lastLoginAt')}:{' '}
                 {user.last_login_at
-                  ? new Date(user.last_login_at).toLocaleDateString(isRTL ? 'ar' : 'en')
+                  ? new Date(user.last_login_at).toLocaleDateString(
+                      toFormatLocale(isRTL ? 'ar' : 'en'),
+                    )
                   : '-'}
               </div>
 
