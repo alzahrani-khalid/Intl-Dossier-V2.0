@@ -22,7 +22,6 @@ import {
   ApprovalChain,
   type ApprovalChainConfig as ComponentApprovalChainConfig,
 } from '@/components/approval-chain/ApprovalChain'
-import { ConsistencyPanel } from '@/components/consistency-panel/ConsistencyPanel'
 import { AttachmentUploader } from '@/components/positions/AttachmentUploader'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -210,15 +209,8 @@ function PositionDetailPage() {
             </div>
 
             <div className="space-y-6">
-              {position.consistency_score !== undefined && (
-                <Card className="p-6">
-                  <h3 className="text-lg font-semibold mb-4">
-                    {t('consistency.title', 'Consistency Check')}
-                  </h3>
-                  <ConsistencyPanel consistencyCheck={null} />
-                </Card>
-              )}
-
+              {/* Consistency panel hidden until the check query + action handlers
+                  are wired; it rendered inert modify/accept/escalate controls (E-8). */}
               {(position.status === 'under_review' || position.status === 'approved') && (
                 <Card className="p-6">
                   <h3 className="text-lg font-semibold mb-4">
