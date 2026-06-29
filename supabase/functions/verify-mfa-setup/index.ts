@@ -2,6 +2,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import * as OTPAuth from 'https://esm.sh/otpauth@9.1.4'
+import { decryptMfaSecret } from '../_shared/mfa-crypto.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -94,8 +95,11 @@ serve(async (req) => {
 
     // Verify TOTP code against public.users.mfa_secret (base32), matching the
     // reset-password verification (otpauth, SHA1 / 6 digits / 30s, ±1 window).
+    // The stored secret is encrypted at rest (D-19); decrypt before use. Legacy
+    // plaintext secrets pass through decrypt unchanged.
+    const decryptedSecret = await decryptMfaSecret(targetUser.mfa_secret)
     const totp = new OTPAuth.TOTP({
-      secret: OTPAuth.Secret.fromBase32(targetUser.mfa_secret),
+      secret: OTPAuth.Secret.fromBase32(decryptedSecret),
       algorithm: 'SHA1',
       digits: 6,
       period: 30,

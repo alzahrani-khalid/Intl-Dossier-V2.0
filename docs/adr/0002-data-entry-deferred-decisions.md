@@ -146,35 +146,65 @@ no encryption is applied anywhere in the code, and the runtime path uses
 `public.users.mfa_secret`, not `auth.users`. Do not read that comment as
 evidence the secret is encrypted.
 
-### Decision
+### Decision — IMPLEMENTED (2026-06-29)
 
-Adopt envelope / at-rest encryption for the MFA secret (pgsodium, Supabase
-Vault, or an external KMS) **before MFA goes GA to real production users**.
-This is a PRE-GA GATING REQUIREMENT — a blocker that must be resolved before
-MFA ships to production users, not a nice-to-have.
+The MFA secret is now encrypted at rest with **application-layer AES-256-GCM**
+applied symmetrically across both runtimes that touch the column. The PRE-GA
+gate above is **closed**.
 
-It is acceptable to defer this short-term _only while MFA is not yet GA_. The
-verification path must read the secret through a decrypt step (or a
-verify-without-exposing primitive) so the plaintext base32 value never lands in
-`public.users.mfa_secret`.
+Scheme:
+
+- **AES-256-GCM via the WebCrypto API** (`crypto.subtle`), chosen because it
+  exists in BOTH the Node 22 backend (`globalThis.crypto.subtle`) and the Deno
+  edge runtime, so backend- and edge-produced ciphertext round-trip each other
+  byte-for-byte. (pgsodium/Vault were not used: the same column is written and
+  read by two separate runtimes, and an app-layer key shared by both is the
+  simplest interoperable primitive that keeps plaintext out of the row, the
+  logs, and backups.)
+- **Stored format:** `v1.<base64url(iv, 12 bytes)>.<base64url(ciphertext || authTag)>`.
+  WebCrypto AES-GCM appends the 16-byte auth tag to the ciphertext.
+- **Key:** 32 bytes, supplied as base64 in the `MFA_SECRET_ENCRYPTION_KEY`
+  secret. The **same value** must be set in BOTH the backend environment
+  (`process.env`) and as a Supabase secret (`Deno.env.get`, available to the
+  edge functions). The key is read and validated lazily on first use; it is
+  never hardcoded or generated in code.
+- **Backward compatibility (no lockout, no backfill):** on READ, a value that
+  does not start with `v1.` is treated as a legacy plaintext base32 secret and
+  returned unchanged, so already-enrolled users keep verifying. On WRITE the
+  secret is always encrypted; an existing plaintext secret is transparently
+  re-encrypted on the next enroll. No migration is required.
+
+Implementation:
+
+- Helpers: `backend/src/utils/mfa-crypto.ts` and the byte-compatible Deno port
+  `supabase/functions/_shared/mfa-crypto.ts`, each exporting
+  `encryptMfaSecret` / `decryptMfaSecret`.
+- Write sites (encrypt before store): `auth.service.ts` `verifyAndEnableMFA`
+  and `supabase/functions/setup-mfa/index.ts`.
+- Read sites (decrypt after fetch): `auth.service.ts` login + `verifyMFA`,
+  `supabase/functions/verify-mfa-setup/index.ts`, and
+  `supabase/functions/reset-password/index.ts`.
+- The disable path that sets `mfa_secret: null` stays null (nulls are not
+  encrypted).
+- Round-trip unit test: `backend/tests/unit/mfa-crypto.test.ts`.
 
 ### Consequences
 
-- Closing this turns the `users` row from "holds a usable second factor" into
-  "holds an opaque ciphertext", so a row/key/backup leak no longer yields
-  working TOTP codes.
-- The write sites (`auth.service.ts:340`, `setup-mfa/index.ts:164`) and the
-  read/verify sites (`auth.service.ts:138,632-640`,
-  `verify-mfa-setup/index.ts:98`, `reset-password/index.ts:108`) must all route
-  through the chosen encryption primitive together — a partial rollout that
-  encrypts on write but reads the old plaintext path breaks verification.
-- The misleading `auth.users.mfa_secret` "(encrypted)" comment should be
-  corrected or removed when this work lands so it stops implying a guarantee
-  the schema never provided.
+- The `users` row now holds an opaque ciphertext rather than a usable second
+  factor: a row/key/backup/SQL-log leak no longer yields working TOTP codes
+  (so long as `MFA_SECRET_ENCRYPTION_KEY` itself is not also leaked).
+- Backend and edge functions must be **deployed together** with the **same**
+  `MFA_SECRET_ENCRYPTION_KEY`. If one runtime has a different/absent key,
+  cross-runtime verification of a freshly enrolled secret fails (a partial
+  rollout breaks verification). Legacy plaintext secrets keep working
+  regardless, because they bypass decryption.
+- Losing/rotating the key without a re-enroll invalidates every `v1.`-encrypted
+  secret (users must re-enroll); plaintext legacy secrets are unaffected.
 
-Reopen clause: this is not "reopen if" — it is "must close before MFA GA". The
-gate is lifted only when the secret is encrypted at rest end-to-end (write,
-read, verify) and the misleading column comment is corrected.
+Operational requirement: provision `MFA_SECRET_ENCRYPTION_KEY` (a base64-encoded
+32-byte random value) as both a Supabase secret and a backend env var, identical
+in both, before deploying. Generate with e.g.
+`node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"`.
 
 ## References
 
