@@ -1,10 +1,10 @@
 ---
 gsd_state_version: 1.0
 milestone: v7.0
-milestone_name: Intelligence Engine
+milestone_name: milestone
 status: Awaiting next milestone
-last_updated: '2026-06-24T12:27:23.874Z'
-last_activity: 2026-06-24 — Milestone v7.0 completed and archived
+last_updated: '2026-06-27T09:44:57.587Z'
+last_activity: '2026-06-26 — Completed quick task 260626-fdj: persistent copilot conversation memory (Mac-local mastra-pg + MASTRA_PG_URL); AG-UI threadId already plumbed to Mastra memory by @ag-ui/mastra — no code fix; e2e incl. cross-restart recall PASS'
 progress:
   total_phases: 7
   completed_phases: 7
