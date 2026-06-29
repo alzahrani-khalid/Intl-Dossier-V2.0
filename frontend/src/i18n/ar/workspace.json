@@ -36,7 +36,8 @@
     "schedulePoll": "جدولة استطلاع",
     "linkDossier": "ربط ملف",
     "logAfterAction": "تسجيل التقييم",
-    "createTask": "إنشاء مهمة"
+    "createTask": "إنشاء مهمة",
+    "edit": "تعديل"
   },
   "overview": {
     "whatsNext": "ما التالي",

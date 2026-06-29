@@ -15,6 +15,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { Redis } from 'https://esm.sh/@upstash/redis@1'
 import * as bcrypt from 'https://deno.land/x/bcrypt@v0.4.1/mod.ts'
 import * as OTPAuth from 'https://esm.sh/otpauth@9.1.4'
+import { decryptMfaSecret } from '../_shared/mfa-crypto.ts'
 
 // Initialize Supabase client
 const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
@@ -102,10 +103,14 @@ async function verifyTOTP(userId: string, totpCode: string): Promise<boolean> {
     return false
   }
 
+  // The stored secret is encrypted at rest (D-19); decrypt before use. Legacy
+  // plaintext secrets pass through decrypt unchanged.
+  const decryptedSecret = await decryptMfaSecret(user.mfa_secret)
+
   let totp: OTPAuth.TOTP
   try {
     totp = new OTPAuth.TOTP({
-      secret: OTPAuth.Secret.fromBase32(user.mfa_secret),
+      secret: OTPAuth.Secret.fromBase32(decryptedSecret),
       algorithm: 'SHA1',
       digits: 6,
       period: 30,

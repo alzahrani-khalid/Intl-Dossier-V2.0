@@ -1,294 +1,321 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
-import { corsHeaders } from "../_shared/cors.ts";
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
+import { corsHeaders } from '../_shared/cors.ts'
+
+// The base dossier + Class-Table-Inheritance extension write now runs inside a
+// single transactional RPC (update_dossier_with_extension); the per-type table
+// mapping lives in that function's SQL (engagement -> engagement_dossiers, etc.).
+
+const VALID_STATUSES = ['active', 'inactive', 'archived'] as const
+
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 interface DossierUpdateRequest {
-  version: number;
-  name_en?: string;
-  name_ar?: string;
-  status?: "active" | "inactive" | "archived";
-  sensitivity_level?: "low" | "medium" | "high";
-  summary_en?: string;
-  summary_ar?: string;
-  tags?: string[];
-  review_cadence?: string;
-  last_review_date?: string;
+  id: string
+  name_en?: string
+  name_ar?: string
+  abbreviation?: string
+  description_en?: string
+  description_ar?: string
+  status?: 'active' | 'inactive' | 'archived'
+  // 1-4: 1=Public, 2=Internal, 3=Confidential, 4=Secret (integer column).
+  sensitivity_level?: number
+  tags?: string[]
+  metadata?: Record<string, unknown>
+  extensionData?: Record<string, unknown>
 }
 
 serve(async (req) => {
   // Handle CORS
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
   }
 
-  if (req.method !== "PUT") {
+  // Contract: POST { id, ...fields } — matches services/dossier-api.ts updateDossier().
+  if (req.method !== 'POST') {
     return new Response(
       JSON.stringify({
         error: {
-          code: "METHOD_NOT_ALLOWED",
-          message_en: "Method not allowed",
-          message_ar: "الطريقة غير مسموح بها",
+          code: 'METHOD_NOT_ALLOWED',
+          message_en: 'Method not allowed',
+          message_ar: 'الطريقة غير مسموح بها',
         },
       }),
       {
         status: 405,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
-    );
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      },
+    )
   }
 
   try {
     // Get auth token
-    const authHeader = req.headers.get("Authorization");
+    const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
       return new Response(
         JSON.stringify({
           error: {
-            code: "UNAUTHORIZED",
-            message_en: "Missing authorization header",
-            message_ar: "رأس التفويض مفقود",
+            code: 'UNAUTHORIZED',
+            message_en: 'Missing authorization header',
+            message_ar: 'رأس التفويض مفقود',
           },
         }),
         {
           status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        },
+      )
     }
 
-    // Create Supabase client with user context
+    // User-scoped client: every dossiers/extension mutation runs through RLS, so
+    // a caller can only update dossiers their policies allow (authz mirrors the
+    // read/create paths — no service-role escalation for the writes).
     const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       {
         global: {
           headers: { Authorization: authHeader },
         },
-      }
-    );
+      },
+    )
 
-    // Get current user
+    // Service-role client is used ONLY for the non-critical MV refresh.
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    )
+
+    // Resolve the current user from the JWT (passed directly, matching
+    // dossiers-create/get — a bare getUser() 401s valid tokens on @2.39).
+    const token = authHeader.replace('Bearer ', '')
     const {
       data: { user },
       error: userError,
-    } = await supabaseClient.auth.getUser();
+    } = await supabaseClient.auth.getUser(token)
 
     if (userError || !user) {
       return new Response(
         JSON.stringify({
           error: {
-            code: "UNAUTHORIZED",
-            message_en: "Invalid user session",
-            message_ar: "جلسة مستخدم غير صالحة",
+            code: 'UNAUTHORIZED',
+            message_en: 'Invalid user session',
+            message_ar: 'جلسة مستخدم غير صالحة',
           },
         }),
         {
           status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    // Extract dossier ID from URL
-    const url = new URL(req.url);
-    const pathParts = url.pathname.split("/");
-    const dossierId = pathParts[pathParts.length - 1];
-
-    if (!dossierId) {
-      return new Response(
-        JSON.stringify({
-          error: {
-            code: "MISSING_ID",
-            message_en: "Dossier ID is required",
-            message_ar: "معرف الملف مطلوب",
-          },
-        }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        },
+      )
     }
 
     // Parse and validate request body
-    const body: DossierUpdateRequest = await req.json();
+    const body: DossierUpdateRequest = await req.json()
 
-    // Validation
-    const validationErrors: string[] = [];
+    const validationErrors: string[] = []
 
-    if (typeof body.version !== "number") {
-      validationErrors.push("version is required for optimistic locking");
+    if (!body.id || !UUID_REGEX.test(body.id)) {
+      validationErrors.push('id is required and must be a valid UUID')
     }
-    if (body.name_en && body.name_en.length > 200) {
-      validationErrors.push("name_en must be <= 200 characters");
+    if (body.name_en !== undefined && (body.name_en.length < 2 || body.name_en.length > 200)) {
+      validationErrors.push('name_en must be between 2 and 200 characters')
     }
-    if (body.name_ar && body.name_ar.length > 200) {
-      validationErrors.push("name_ar must be <= 200 characters");
+    if (body.name_ar !== undefined && (body.name_ar.length < 2 || body.name_ar.length > 200)) {
+      validationErrors.push('name_ar must be between 2 and 200 characters')
     }
-    if (body.status && !["active", "inactive", "archived"].includes(body.status)) {
-      validationErrors.push("status must be one of: active, inactive, archived");
+    if (body.abbreviation !== undefined && body.abbreviation.length > 20) {
+      validationErrors.push('abbreviation must be <= 20 characters')
     }
-    if (body.sensitivity_level && !["low", "medium", "high"].includes(body.sensitivity_level)) {
-      validationErrors.push("sensitivity_level must be one of: low, medium, high");
+    if (
+      body.status !== undefined &&
+      !VALID_STATUSES.includes(body.status as (typeof VALID_STATUSES)[number])
+    ) {
+      validationErrors.push(`status must be one of: ${VALID_STATUSES.join(', ')}`)
     }
-    if (body.tags && (body.tags.length > 20 || body.tags.some(tag => tag.length > 50))) {
-      validationErrors.push("tags must have max 20 items, each <= 50 characters");
+    if (
+      body.sensitivity_level !== undefined &&
+      (typeof body.sensitivity_level !== 'number' ||
+        !Number.isInteger(body.sensitivity_level) ||
+        body.sensitivity_level < 1 ||
+        body.sensitivity_level > 4)
+    ) {
+      validationErrors.push('sensitivity_level must be an integer between 1 and 4')
+    }
+    if (
+      body.tags !== undefined &&
+      (body.tags.length > 20 || body.tags.some((tag) => tag.length > 50))
+    ) {
+      validationErrors.push('tags must have max 20 items, each <= 50 characters')
     }
 
     if (validationErrors.length > 0) {
       return new Response(
         JSON.stringify({
           error: {
-            code: "VALIDATION_ERROR",
-            message_en: "Validation failed",
-            message_ar: "فشل التحقق من الصحة",
+            code: 'VALIDATION_ERROR',
+            message_en: 'Validation failed',
+            message_ar: 'فشل التحقق من الصحة',
             details: validationErrors,
           },
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        },
+      )
     }
 
-    // Check current version first (optimistic lock check)
-    const { data: currentDossier, error: fetchError } = await supabaseClient
-      .from("dossiers")
-      .select("version")
-      .eq("id", dossierId)
-      .single();
+    // Fetch the existing dossier (RLS applies) — needed to resolve `type` for the
+    // extension table and to return a clean 404 before any write.
+    const { data: existing, error: fetchError } = await supabaseClient
+      .from('dossiers')
+      .select('id, type')
+      .eq('id', body.id)
+      .single()
 
-    if (fetchError || !currentDossier) {
+    if (fetchError || !existing) {
       return new Response(
         JSON.stringify({
           error: {
-            code: "NOT_FOUND",
-            message_en: "Dossier not found",
-            message_ar: "الملف غير موجود",
+            code: 'NOT_FOUND',
+            message_en: 'Dossier not found',
+            message_ar: 'الملف غير موجود',
           },
         }),
         {
           status: 404,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        },
+      )
     }
 
-    // Version mismatch = conflict
-    if (currentDossier.version !== body.version) {
-      return new Response(
-        JSON.stringify({
-          error: {
-            code: "VERSION_CONFLICT",
-            message_en: "Dossier was modified by another user. Please refresh and try again.",
-            message_ar: "تم تعديل الملف من قبل مستخدم آخر. يرجى التحديث والمحاولة مرة أخرى.",
-            current_version: currentDossier.version,
-          },
-        }),
-        {
-          status: 409,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
+    // Build the base update object — only the fields the caller actually sent.
+    const updateData: Record<string, unknown> = { updated_by: user.id }
+    if (body.name_en !== undefined) updateData.name_en = body.name_en.trim()
+    if (body.name_ar !== undefined) updateData.name_ar = body.name_ar.trim()
+    if (body.abbreviation !== undefined)
+      updateData.abbreviation = body.abbreviation.trim() || null
+    if (body.description_en !== undefined) updateData.description_en = body.description_en || null
+    if (body.description_ar !== undefined) updateData.description_ar = body.description_ar || null
+    if (body.status !== undefined) updateData.status = body.status
+    if (body.sensitivity_level !== undefined) updateData.sensitivity_level = body.sensitivity_level
+    if (body.tags !== undefined) updateData.tags = body.tags
+    if (body.metadata !== undefined) updateData.metadata = body.metadata
 
-    // Build update object (only include provided fields)
-    const updateData: Record<string, unknown> = {};
-    if (body.name_en !== undefined) updateData.name_en = body.name_en;
-    if (body.name_ar !== undefined) updateData.name_ar = body.name_ar;
-    if (body.status !== undefined) updateData.status = body.status;
-    if (body.sensitivity_level !== undefined) updateData.sensitivity_level = body.sensitivity_level;
-    if (body.summary_en !== undefined) updateData.summary_en = body.summary_en;
-    if (body.summary_ar !== undefined) updateData.summary_ar = body.summary_ar;
-    if (body.tags !== undefined) updateData.tags = body.tags;
-    if (body.review_cadence !== undefined) updateData.review_cadence = body.review_cadence;
-    if (body.last_review_date !== undefined) updateData.last_review_date = body.last_review_date;
+    // Single transactional write: base dossier + type extension in ONE RPC, so a
+    // partial failure can no longer leave the base row updated behind a 500.
+    // SECURITY INVOKER keeps the caller's RLS in force on both tables. The RPC
+    // returns the merged { ...dossier, extension? } shape this endpoint already
+    // emitted, and raises SQLSTATEs that map to the same envelopes as before.
+    const { data: result, error: rpcError } = await supabaseClient.rpc(
+      'update_dossier_with_extension',
+      {
+        p_id: body.id,
+        p_base: updateData,
+        p_extension:
+          body.extensionData && Object.keys(body.extensionData).length > 0
+            ? body.extensionData
+            : null,
+      },
+    )
 
-    // Update dossier (RLS + trigger auto-increments version)
-    const { data: updatedDossier, error: updateError } = await supabaseClient
-      .from("dossiers")
-      .update(updateData)
-      .eq("id", dossierId)
-      .eq("version", body.version) // Double-check version in query
-      .select()
-      .single();
+    if (rpcError) {
+      console.error('Error updating dossier:', rpcError)
 
-    if (updateError) {
-      console.error("Error updating dossier:", updateError);
-
-      // Check if it's a permission error
-      if (updateError.code === "42501") {
+      // Unique name+type constraint (idx_dossiers_unique_name_type)
+      if (rpcError.code === '23505') {
         return new Response(
           JSON.stringify({
             error: {
-              code: "FORBIDDEN",
-              message_en: "You do not have permission to update this dossier",
-              message_ar: "ليس لديك إذن لتحديث هذا الملف",
-            },
-          }),
-          {
-            status: 403,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          }
-        );
-      }
-
-      // Check for concurrent update (race condition)
-      if (updateError.code === "PGRST116") {
-        return new Response(
-          JSON.stringify({
-            error: {
-              code: "VERSION_CONFLICT",
-              message_en: "Dossier was modified during the update. Please refresh and try again.",
-              message_ar: "تم تعديل الملف أثناء التحديث. يرجى التحديث والمحاولة مرة أخرى.",
+              code: 'DUPLICATE_DOSSIER',
+              message_en: `A ${existing.type} dossier with this name already exists.`,
+              message_ar: 'يوجد ملف بهذا الاسم بالفعل.',
             },
           }),
           {
             status: 409,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          }
-        );
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          },
+        )
+      }
+
+      // RLS denial (base UPDATE filtered out, or extension WITH CHECK violation)
+      if (rpcError.code === '42501') {
+        return new Response(
+          JSON.stringify({
+            error: {
+              code: 'FORBIDDEN',
+              message_en: 'You do not have permission to update this dossier',
+              message_ar: 'ليس لديك إذن لتحديث هذا الملف',
+            },
+          }),
+          {
+            status: 403,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          },
+        )
+      }
+
+      // Dossier vanished / not visible between the pre-fetch and the write.
+      if (rpcError.code === 'P0002') {
+        return new Response(
+          JSON.stringify({
+            error: {
+              code: 'NOT_FOUND',
+              message_en: 'Dossier not found',
+              message_ar: 'الملف غير موجود',
+            },
+          }),
+          {
+            status: 404,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          },
+        )
       }
 
       return new Response(
         JSON.stringify({
           error: {
-            code: "UPDATE_ERROR",
-            message_en: "Failed to update dossier",
-            message_ar: "فشل في تحديث الملف",
-            details: updateError,
+            code: 'UPDATE_ERROR',
+            message_en: 'Failed to update dossier',
+            message_ar: 'فشل في تحديث الملف',
+            details: rpcError,
           },
         }),
         {
           status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        },
+      )
     }
 
-    return new Response(JSON.stringify(updatedDossier), {
+    // Refresh the dossier list materialized view (non-blocking; needs elevated perms).
+    supabaseAdmin.rpc('refresh_dossier_list_mv').then(({ error }) => {
+      if (error) {
+        console.warn('Failed to refresh materialized view (non-critical):', error)
+      }
+    })
+
+    return new Response(JSON.stringify(result), {
       status: 200,
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "application/json",
-      },
-    });
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
   } catch (error) {
-    console.error("Unexpected error:", error);
+    console.error('Unexpected error:', error)
     return new Response(
       JSON.stringify({
         error: {
-          code: "INTERNAL_ERROR",
-          message_en: "An unexpected error occurred",
-          message_ar: "حدث خطأ غير متوقع",
+          code: 'INTERNAL_ERROR',
+          message_en: 'An unexpected error occurred',
+          message_ar: 'حدث خطأ غير متوقع',
           correlation_id: crypto.randomUUID(),
         },
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
-    );
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      },
+    )
   }
-});
+})

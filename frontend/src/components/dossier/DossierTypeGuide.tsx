@@ -214,7 +214,7 @@ function GuideContent({
         <div className="space-y-1.5">
           <div className="flex items-center gap-2 text-sm font-medium">
             <Lightbulb className={cn('h-4 w-4', colors.text)} />
-            <span>{isRTL ? 'متى تستخدم' : 'When to Use'}</span>
+            <span>{t('dossier:typeGuide.whenToUse')}</span>
           </div>
           <p className="text-sm text-muted-foreground ps-6">{whenToUse}</p>
         </div>
@@ -225,7 +225,7 @@ function GuideContent({
         <div className="space-y-1.5">
           <div className="flex items-center gap-2 text-sm font-medium">
             <Check className="h-4 w-4 text-success" />
-            <span>{isRTL ? 'أمثلة' : 'Examples'}</span>
+            <span>{t('dossier:typeGuide.examples')}</span>
           </div>
           <div className="flex flex-wrap gap-1.5 ps-6">
             {examples.slice(0, 5).map((example) => (
@@ -242,7 +242,7 @@ function GuideContent({
         <div className="space-y-1.5">
           <div className="flex items-center gap-2 text-sm font-medium">
             <Link2 className={cn('h-4 w-4', colors.text)} />
-            <span>{isRTL ? 'روابط شائعة' : 'Common Links'}</span>
+            <span>{t('dossier:typeGuide.commonLinks')}</span>
           </div>
           <ul className="text-sm text-muted-foreground ps-6 space-y-0.5">
             {commonLinks.slice(0, 4).map((link) => (
@@ -262,7 +262,7 @@ function GuideContent({
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 text-sm font-medium text-warning">
               <X className="h-4 w-4" />
-              <span>{isRTL ? 'لا تستخدم لـ' : 'Not For'}</span>
+              <span>{t('dossier:typeGuide.notFor')}</span>
             </div>
             <p className="text-sm text-muted-foreground ps-6">{notFor}</p>
           </div>
@@ -274,7 +274,7 @@ function GuideContent({
         <>
           <Separator />
           <Button onClick={() => onSelect(type)} className="w-full" size="sm">
-            {isRTL ? `إنشاء دوسيه ${t(`type.${type}`)}` : `Create ${t(`type.${type}`)} Dossier`}
+            {t('dossier:typeGuide.createDossier', { type: t(`dossier:type.${type}`) })}
           </Button>
         </>
       )}

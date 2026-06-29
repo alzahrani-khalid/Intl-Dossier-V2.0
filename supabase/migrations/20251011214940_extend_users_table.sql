@@ -80,7 +80,7 @@ COMMENT ON COLUMN auth.users.user_type IS 'User type (employee or guest)';
 COMMENT ON COLUMN auth.users.status IS 'User account status (active, inactive, deactivated, pending)';
 COMMENT ON COLUMN auth.users.preferences IS 'User preferences (language, timezone, notifications)';
 COMMENT ON COLUMN auth.users.mfa_enabled IS 'Whether MFA is enabled for this user';
-COMMENT ON COLUMN auth.users.mfa_secret IS 'MFA TOTP secret (encrypted)';
+COMMENT ON COLUMN auth.users.mfa_secret IS 'Unused legacy column — NOT the runtime MFA path. The live TOTP secret is public.users.mfa_secret, encrypted at rest via app-layer AES-256-GCM (see docs/adr/0002 D-19, backend/src/utils/mfa-crypto.ts).';
 COMMENT ON COLUMN auth.users.backup_codes IS 'Array of hashed backup codes for MFA recovery';
 COMMENT ON COLUMN auth.users.last_login_at IS 'Timestamp of last login';
 COMMENT ON COLUMN auth.users.last_login_ip IS 'IP address of last login';

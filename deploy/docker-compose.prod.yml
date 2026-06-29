@@ -82,6 +82,8 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       # Other
       FRONTEND_URL: ${FRONTEND_URL}
+      # MFA secret at-rest encryption (D-19) — must match the Supabase secret of the same name
+      MFA_SECRET_ENCRYPTION_KEY: ${MFA_SECRET_ENCRYPTION_KEY}
     depends_on:
       redis:
         condition: service_healthy

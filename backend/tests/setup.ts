@@ -15,6 +15,11 @@ config({ path: path.resolve(__dirname, '../.env.test') })
 // Set NODE_ENV to test
 process.env.NODE_ENV = 'test'
 
+// D-19: MFA secret encryption needs a key. Provide a deterministic 32-byte
+// base64 test key so MFA flows (encrypt/decrypt) work under the global mocks.
+// A real key from .env.test (loaded above) takes precedence.
+process.env.MFA_SECRET_ENCRYPTION_KEY ??= Buffer.from(new Uint8Array(32).fill(7)).toString('base64')
+
 vi.mock('@/config/supabase', () => {
   const terminal = { data: null, error: null }
   const makeChain = (): any => {

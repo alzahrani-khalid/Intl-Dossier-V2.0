@@ -32,7 +32,8 @@
     "schedulePoll": "Schedule Poll",
     "linkDossier": "Link Dossier",
     "logAfterAction": "Log After-Action",
-    "createTask": "Create task"
+    "createTask": "Create task",
+    "edit": "Edit"
   },
   "overview": {
     "whatsNext": "What's Next",

@@ -87,7 +87,15 @@
     "expertiseAreas": "Expertise Areas",
     "expertiseAreasDescription": "Comma-separated list of expertise areas",
     "biographyEn": "Biography (English)",
-    "biographyAr": "Biography (Arabic)"
+    "biographyAr": "Biography (Arabic)",
+    "namePlaceholderEn": "John Doe",
+    "namePlaceholderAr": "جون دو",
+    "titlePlaceholderEn": "Director of Operations",
+    "titlePlaceholderAr": "مدير العمليات",
+    "languagesPlaceholder": "English, Arabic, French",
+    "expertisePlaceholder": "Statistics, Data Analysis, Policy",
+    "biographyPlaceholderEn": "Professional background and achievements...",
+    "biographyPlaceholderAr": "السيرة المهنية والإنجازات..."
   },
   "empty": {
     "title": "No persons yet",

@@ -10,6 +10,7 @@
   "saveDraft": "Save Draft",
   "saving": "Saving...",
   "draftSaved": "Draft saved",
+  "postUpdateWarning": "Dossier updated, but some related records (e.g. participants) failed to save.",
   "draftRestored": "Draft restored from your previous session",
   "clearDraft": "Clear Draft",
   "discardDraft": "Discard Draft",

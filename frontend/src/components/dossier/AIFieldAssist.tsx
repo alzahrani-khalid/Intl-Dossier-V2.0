@@ -27,6 +27,7 @@ import {
   Wand2,
 } from 'lucide-react'
 import { m, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -54,6 +55,7 @@ export function AIFieldAssist({
   disabled = false,
   className,
 }: AIFieldAssistProps) {
+  const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
   // State
   const [isExpanded, setIsExpanded] = useState(false)
@@ -136,19 +138,15 @@ export function AIFieldAssist({
             />
           </div>
           <div className="text-start">
-            <p className="font-medium text-sm sm:text-base">
-              {isRTL ? 'مساعد الذكاء الاصطناعي' : 'AI Assistant'}
-            </p>
+            <p className="font-medium text-sm sm:text-base">{t('dossier:aiAssist.title')}</p>
             <p className="text-xs sm:text-sm text-muted-foreground">
-              {isRTL
-                ? 'صف ما تريد تتبعه لتعبئة الحقول تلقائياً'
-                : 'Describe what you want to track to auto-fill fields'}
+              {t('dossier:aiAssist.subtitle')}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="secondary" className="text-xs hidden sm:inline-flex">
-            {isRTL ? 'اختياري' : 'Optional'}
+            {t('dossier:aiAssist.optional')}
           </Badge>
           {isExpanded ? (
             <ChevronUp className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
@@ -176,31 +174,23 @@ export function AIFieldAssist({
                   htmlFor="ai-description"
                   className="text-sm font-medium text-muted-foreground"
                 >
-                  {isRTL ? 'صف ما تريد تتبعه:' : 'Describe what you want to track:'}
+                  {t('dossier:aiAssist.describeLabel')}
                 </label>
                 <Textarea
                   id="ai-description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder={
-                    isRTL
-                      ? 'مثال: تتبع العلاقات الثنائية مع فرنسا بما في ذلك الاتفاقيات التجارية والتعاون الثقافي...'
-                      : 'e.g., Track bilateral relations with France including trade agreements and cultural cooperation...'
-                  }
+                  placeholder={t('dossier:aiAssist.placeholder')}
                   className="min-h-[80px] sm:min-h-[100px] text-sm sm:text-base resize-none"
                   disabled={isGenerating || disabled}
                 />
                 <p className="text-xs text-muted-foreground">
                   {description.length < 10 ? (
                     <span className="text-warning">
-                      {isRTL
-                        ? `أدخل ${10 - description.length} حرف إضافي على الأقل`
-                        : `Enter at least ${10 - description.length} more characters`}
+                      {t('dossier:aiAssist.minCharsHint', { count: 10 - description.length })}
                     </span>
                   ) : (
-                    <span className="text-success">
-                      {isRTL ? 'جاهز للتوليد' : 'Ready to generate'}
-                    </span>
+                    <span className="text-success">{t('dossier:aiAssist.ready')}</span>
                   )}
                 </p>
               </div>
@@ -216,12 +206,12 @@ export function AIFieldAssist({
                   {isGenerating ? (
                     <>
                       <Loader2 className="h-4 w-4 me-2 animate-spin" />
-                      {isRTL ? 'جارٍ التوليد...' : 'Generating...'}
+                      {t('dossier:aiAssist.generating')}
                     </>
                   ) : (
                     <>
                       <Wand2 className="h-4 w-4 me-2" />
-                      {isRTL ? 'توليد الحقول' : 'Generate Fields'}
+                      {t('dossier:aiAssist.generate')}
                     </>
                   )}
                 </Button>
@@ -233,7 +223,7 @@ export function AIFieldAssist({
                     className="min-h-11"
                     disabled={isGenerating}
                   >
-                    {isRTL ? 'مسح' : 'Clear'}
+                    {t('dossier:aiAssist.clear')}
                   </Button>
                 )}
               </div>
@@ -252,7 +242,7 @@ export function AIFieldAssist({
                       className="min-h-8 shrink-0"
                     >
                       <RefreshCw className="h-3 w-3 me-1" />
-                      {isRTL ? 'إعادة' : 'Retry'}
+                      {t('dossier:aiAssist.retry')}
                     </Button>
                   </AlertDescription>
                 </Alert>
@@ -268,11 +258,11 @@ export function AIFieldAssist({
                   <div className="flex items-center justify-between gap-2">
                     <h4 className="font-medium text-sm flex items-center gap-2">
                       <Check className="h-4 w-4 text-success" />
-                      {isRTL ? 'الحقول المولدة:' : 'Generated Fields:'}
+                      {t('dossier:aiAssist.generatedFields')}
                     </h4>
                     {hasApplied && (
                       <Badge variant="secondary" className="text-xs bg-success/10 text-success">
-                        {isRTL ? 'تم التطبيق' : 'Applied'}
+                        {t('dossier:aiAssist.applied')}
                       </Badge>
                     )}
                   </div>
@@ -283,13 +273,13 @@ export function AIFieldAssist({
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <div className="p-2 bg-muted/50 rounded">
                         <p className="text-xs text-muted-foreground mb-1">
-                          {isRTL ? 'الاسم (إنجليزي)' : 'Name (English)'}
+                          {t('dossier:aiAssist.nameEn')}
                         </p>
                         <p className="font-medium truncate">{generatedFields.name_en}</p>
                       </div>
                       <div className="p-2 bg-muted/50 rounded" dir="rtl">
                         <p className="text-xs text-muted-foreground mb-1">
-                          {isRTL ? 'الاسم (عربي)' : 'Name (Arabic)'}
+                          {t('dossier:aiAssist.nameAr')}
                         </p>
                         <p className="font-medium truncate">{generatedFields.name_ar}</p>
                       </div>
@@ -300,13 +290,13 @@ export function AIFieldAssist({
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <div className="p-2 bg-muted/50 rounded">
                           <p className="text-xs text-muted-foreground mb-1">
-                            {isRTL ? 'الوصف (إنجليزي)' : 'Description (English)'}
+                            {t('dossier:aiAssist.descriptionEn')}
                           </p>
                           <p className="text-xs line-clamp-2">{generatedFields.description_en}</p>
                         </div>
                         <div className="p-2 bg-muted/50 rounded" dir="rtl">
                           <p className="text-xs text-muted-foreground mb-1">
-                            {isRTL ? 'الوصف (عربي)' : 'Description (Arabic)'}
+                            {t('dossier:aiAssist.descriptionAr')}
                           </p>
                           <p className="text-xs line-clamp-2">{generatedFields.description_ar}</p>
                         </div>
@@ -317,7 +307,7 @@ export function AIFieldAssist({
                     {generatedFields.suggested_tags.length > 0 && (
                       <div className="p-2 bg-muted/50 rounded">
                         <p className="text-xs text-muted-foreground mb-2">
-                          {isRTL ? 'العلامات المقترحة' : 'Suggested Tags'}
+                          {t('dossier:aiAssist.suggestedTags')}
                         </p>
                         <div className="flex flex-wrap gap-1">
                           {generatedFields.suggested_tags.map((tag) => (
@@ -341,12 +331,12 @@ export function AIFieldAssist({
                     {hasApplied ? (
                       <>
                         <Check className="h-4 w-4 me-2" />
-                        {isRTL ? 'تم تطبيق الحقول' : 'Fields Applied'}
+                        {t('dossier:aiAssist.fieldsApplied')}
                       </>
                     ) : (
                       <>
                         <Check className="h-4 w-4 me-2" />
-                        {isRTL ? 'تطبيق على النموذج' : 'Apply to Form'}
+                        {t('dossier:aiAssist.applyToForm')}
                       </>
                     )}
                   </Button>

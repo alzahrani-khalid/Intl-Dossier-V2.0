@@ -87,7 +87,15 @@
     "expertiseAreas": "مجالات الخبرة",
     "expertiseAreasDescription": "قائمة مجالات الخبرة مفصولة بفواصل",
     "biographyEn": "السيرة الذاتية (بالإنجليزية)",
-    "biographyAr": "السيرة الذاتية (بالعربية)"
+    "biographyAr": "السيرة الذاتية (بالعربية)",
+    "namePlaceholderEn": "John Doe",
+    "namePlaceholderAr": "جون دو",
+    "titlePlaceholderEn": "Director of Operations",
+    "titlePlaceholderAr": "مدير العمليات",
+    "languagesPlaceholder": "الإنجليزية، العربية، الفرنسية",
+    "expertisePlaceholder": "الإحصاء، تحليل البيانات، السياسات",
+    "biographyPlaceholderEn": "Professional background and achievements...",
+    "biographyPlaceholderAr": "السيرة المهنية والإنجازات..."
   },
   "empty": {
     "title": "لا يوجد أشخاص حتى الآن",

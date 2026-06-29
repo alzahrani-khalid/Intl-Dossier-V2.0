@@ -34,7 +34,8 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
-import { ChevronRight, FileDown, Home, Link2, Wifi, WifiOff } from 'lucide-react'
+import { getDossierRouteSegment } from '@/lib/dossier-routes'
+import { ChevronRight, FileDown, Home, Link2, Pencil, Wifi, WifiOff } from 'lucide-react'
 
 // ============================================================================
 // Constants
@@ -218,6 +219,18 @@ export function DossierShell({
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
+
+            {/* Edit affordance — opens the dossier in the create wizard's edit
+                mode (A-1). Segment maps both person→persons and
+                elected_official→elected-officials via getDossierRouteSegment. */}
+            <Button asChild variant="outline" size="sm" className="min-h-10 min-w-10">
+              <Link to={`/dossiers/edit/${getDossierRouteSegment(dossierType)}/${dossierId}`}>
+                <Pencil className="h-4 w-4 sm:me-2" />
+                <span className="hidden sm:inline">
+                  {t('action.edit', { ns: 'dossier', defaultValue: 'Edit' })}
+                </span>
+              </Link>
+            </Button>
 
             {/* Analyze affordance (D-04, third entry point) — deep-links to the
                 Network panel Analyze mode with this dossier pre-filled (.btn-ghost,

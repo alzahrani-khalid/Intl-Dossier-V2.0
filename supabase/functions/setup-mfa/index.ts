@@ -3,6 +3,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import * as OTPAuth from 'https://esm.sh/otpauth@9.1.4'
 import { QRCode } from 'https://deno.land/x/qrcode@v2.0.0/mod.ts'
+import { encryptMfaSecret } from '../_shared/mfa-crypto.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -152,16 +153,18 @@ serve(async (req) => {
       }),
     )
 
-    // Persist the TOTP secret (base32) to public.users.mfa_secret — the same
-    // column and format reset-password reads via OTPAuth.Secret.fromBase32.
-    // Hashed backup codes go to the mfa_backup_codes array column.
-    // mfa_enabled is intentionally NOT set here: enrollment is only confirmed
-    // once verify-mfa-setup validates a TOTP code (mfa_secret set + mfa_enabled
-    // false = setup pending).
+    // Persist the TOTP secret to public.users.mfa_secret, encrypted at rest
+    // (D-19: AES-256-GCM, v1. format — see ../_shared/mfa-crypto.ts). The same
+    // column is read by reset-password / verify-mfa-setup / the backend, which
+    // all decrypt before OTPAuth.Secret.fromBase32. Hashed backup codes go to
+    // the mfa_backup_codes array column. mfa_enabled is intentionally NOT set
+    // here: enrollment is only confirmed once verify-mfa-setup validates a TOTP
+    // code (mfa_secret set + mfa_enabled false = setup pending).
+    const encryptedSecret = await encryptMfaSecret(secret)
     const { error: updateError } = await supabaseClient
       .from('users')
       .update({
-        mfa_secret: secret,
+        mfa_secret: encryptedSecret,
         mfa_backup_codes: hashedBackupCodes,
         updated_at: new Date().toISOString(),
       })
