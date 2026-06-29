@@ -120,7 +120,39 @@
     "headquarters_ar": "المقر الرئيسي (العربية)",
     "headquarters_ar_ph": "مثال: جنيف، سويسرا",
     "founding_date": "تاريخ التأسيس",
-    "founding_date_ph": "اختر تاريخ التأسيس"
+    "founding_date_ph": "اختر تاريخ التأسيس",
+    "engagement_profile": "ملف الارتباط",
+    "membership_type": "نوع العضوية",
+    "membership_type_ph": "اختر نوع العضوية",
+    "membership_types": {
+      "board_of_directors": "مجلس الإدارة",
+      "member": "عضو",
+      "participant": "مشارك",
+      "counterpart_agency": "جهة نظيرة"
+    },
+    "importance": "الأهمية",
+    "importance_ph": "اختر مستوى الأهمية",
+    "importances": {
+      "high": "عالية",
+      "medium": "متوسطة",
+      "low": "منخفضة"
+    },
+    "representation_level": "مستوى التمثيل",
+    "representation_level_ph": "اختر مستوى التمثيل",
+    "representation_levels": {
+      "president": "رئيس",
+      "specialist": "مختص"
+    },
+    "focal_points": "منسقو الهيئة",
+    "focal_responsible": "المنسق المسؤول",
+    "focal_alternate": "المنسق البديل",
+    "focal_support": "منسق الدعم",
+    "focal_name_en": "الاسم (الإنجليزية)",
+    "focal_name_ar": "الاسم (العربية)",
+    "focal_user": "المستخدم المرتبط",
+    "focal_name_en_ph": "اسم المنسق بالإنجليزية",
+    "focal_name_ar_ph": "اسم المنسق بالعربية",
+    "focal_user_ph": "ابحث عن مستخدم"
   },
   "topic": {
     "page_title": "إنشاء موضوع",

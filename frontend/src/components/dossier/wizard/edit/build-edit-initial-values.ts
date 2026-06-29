@@ -103,7 +103,14 @@ function buildExtensionValues(
         capital_ar: str(ext.capital_ar),
         region: str(ext.region),
       }
-    case 'organization':
+    case 'organization': {
+      // 260629-jkn: decompose the gastat_focal_points jsonb back into the nine
+      // flat officer form fields (guarding for missing roles / sub-fields).
+      const focal = (ext.gastat_focal_points ?? {}) as {
+        responsible?: { name_en?: string; name_ar?: string; user_id?: string }
+        alternate?: { name_en?: string; name_ar?: string; user_id?: string }
+        support?: { name_en?: string; name_ar?: string; user_id?: string }
+      }
       return {
         org_type: ext.org_type ?? '',
         org_code: str(ext.org_code),
@@ -111,7 +118,20 @@ function buildExtensionValues(
         headquarters_en: str(ext.address_en),
         headquarters_ar: str(ext.address_ar),
         founding_date: str(ext.established_date),
+        membership_type: ext.membership_type ?? '',
+        importance: ext.importance ?? '',
+        representation_level: ext.representation_level ?? '',
+        responsible_name_en: str(focal.responsible?.name_en),
+        responsible_name_ar: str(focal.responsible?.name_ar),
+        responsible_user_id: str(focal.responsible?.user_id),
+        alternate_name_en: str(focal.alternate?.name_en),
+        alternate_name_ar: str(focal.alternate?.name_ar),
+        alternate_user_id: str(focal.alternate?.user_id),
+        support_name_en: str(focal.support?.name_en),
+        support_name_ar: str(focal.support?.name_ar),
+        support_user_id: str(focal.support?.user_id),
       }
+    }
     case 'forum':
       return {
         organizing_body_id: str(ext.organizing_body) || str(ext.organizing_body_id),

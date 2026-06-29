@@ -61,6 +61,15 @@ export interface OrganizationExtension {
   address_ar?: string
   logo_url?: string
   established_date?: string
+  // 260629-jkn: membership & representation profile (additive, nullable columns)
+  membership_type?: 'board_of_directors' | 'member' | 'participant' | 'counterpart_agency'
+  importance?: 'high' | 'medium' | 'low'
+  representation_level?: 'president' | 'specialist'
+  gastat_focal_points?: {
+    responsible?: { name_en?: string; name_ar?: string; user_id?: string }
+    alternate?: { name_en?: string; name_ar?: string; user_id?: string }
+    support?: { name_en?: string; name_ar?: string; user_id?: string }
+  }
 }
 
 export interface ForumExtension {
