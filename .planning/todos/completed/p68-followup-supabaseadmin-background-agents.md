@@ -31,3 +31,24 @@ Investigate each call site: is it user-triggered (clearance-gate via caller JWT)
 or background/automated (service-role legitimate)? Remediate the user-triggered
 read paths; document the background ones as accepted. Consider a future REMED in
 the v7.0 milestone.
+
+## Resolution — CLOSED 2026-06-29 (quick task 260629-gb4)
+
+Already resolved during the v7.0 milestone; this todo was stale bookkeeping.
+
+Both agents were remediated in **P72 (D-10)** and **P74**, exactly as REMED-03
+did for the interactive assistant:
+
+- `backend/src/ai/agents/brief-generator.ts:25` now builds a per-request
+  `createUserClient(authHeader)` (ANON_KEY + caller's Bearer JWT). Both read and
+  write call sites use it. Call-graph confirmed brief generation is user-triggered
+  only (no background/cron caller) — no service-role carve-out needed. (P74 also
+  retired external-LLM brief generation in Express; new AI briefs use the on-prem
+  copilot `propose_brief` HITL flow → `persist_brief` SECURITY INVOKER RPC.)
+- `backend/src/ai/agents/intake-linker.ts:28` likewise runs under the caller's
+  identity via a JWT-scoped anon client; the service-role admin client is retired.
+
+RLS (`sensitivity_level <= clearance_level`) now enforces clearance on every
+read/write in both agents, closing the clearance-leak vector. A dir-wide grep of
+`backend/src/ai/agents/` returns **zero** `supabaseAdmin` / `service_role`
+usages (only comments noting the retirement). No further action required.
