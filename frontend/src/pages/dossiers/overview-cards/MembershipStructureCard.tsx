@@ -22,7 +22,7 @@ export function MembershipStructureCard({
   const isRTL = i18n.language === 'ar'
 
   const { data, isLoading, isError } = useDossierOverview(dossierId, {
-    includeSections: ['related_dossiers'],
+    includeSections: ['related_dossiers', 'organization_profile'],
   })
 
   if (isLoading) {
@@ -55,6 +55,37 @@ export function MembershipStructureCard({
     )
   }
 
+  const profile = data?.organization_profile ?? null
+
+  const profileRows: { label: string; value: string }[] = [
+    profile?.membership_type
+      ? {
+          label: t('overview.membership.membershipType', { defaultValue: 'Membership type' }),
+          value: t(`overview.membership.membershipTypes.${profile.membership_type}`, {
+            defaultValue: profile.membership_type,
+          }),
+        }
+      : null,
+    profile?.importance
+      ? {
+          label: t('overview.membership.importance', { defaultValue: 'Importance' }),
+          value: t(`overview.membership.importances.${profile.importance}`, {
+            defaultValue: profile.importance,
+          }),
+        }
+      : null,
+    profile?.representation_level
+      ? {
+          label: t('overview.membership.representationLevel', {
+            defaultValue: 'Representation level',
+          }),
+          value: t(`overview.membership.representationLevels.${profile.representation_level}`, {
+            defaultValue: profile.representation_level,
+          }),
+        }
+      : null,
+  ].filter((r): r is { label: string; value: string } => r !== null)
+
   const members = data?.related_dossiers?.by_relationship_type?.has_member ?? []
   const memberOf = data?.related_dossiers?.by_relationship_type?.member_of ?? []
   const children = data?.related_dossiers?.by_relationship_type?.child ?? []
@@ -85,12 +116,22 @@ export function MembershipStructureCard({
         {t('overview.membership.title', { defaultValue: 'Membership Structure' })}
       </h3>
 
-      {sections.length === 0 ? (
+      {profileRows.length === 0 && sections.length === 0 ? (
         <p className="text-muted-foreground text-sm text-center py-8">
           {t('overview.membership.empty', { defaultValue: 'No membership data available' })}
         </p>
       ) : (
         <div className="space-y-3">
+          {profileRows.length > 0 && (
+            <div className="space-y-2">
+              {profileRows.map((row) => (
+                <div key={row.label} className="flex items-center gap-3">
+                  <span className="text-sm text-muted-foreground flex-1">{row.label}</span>
+                  <span className="text-sm font-semibold text-end">{row.value}</span>
+                </div>
+              ))}
+            </div>
+          )}
           {sections.map((section) => (
             <div key={section.label} className="flex items-center gap-3">
               {section.icon}

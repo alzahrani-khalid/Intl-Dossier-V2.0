@@ -1136,7 +1136,32 @@
       "memberOf": "Member Of",
       "subUnits": "Sub-Units",
       "totalRelated": "{{count}} total related dossiers",
-      "empty": "No membership data available"
+      "empty": "No membership data available",
+      "membershipType": "Membership type",
+      "importance": "Importance",
+      "representationLevel": "Representation level",
+      "membershipTypes": {
+        "board_of_directors": "Board of directors",
+        "member": "Member",
+        "participant": "Participant",
+        "counterpart_agency": "Counterpart agency"
+      },
+      "importances": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "representationLevels": {
+        "president": "President",
+        "specialist": "Specialist"
+      }
+    },
+    "focalPoints": {
+      "title": "GASTAT focal points",
+      "responsible": "Responsible officer",
+      "alternate": "Alternate officer",
+      "support": "Support officer",
+      "empty": "No focal points recorded"
     },
     "mou": {
       "title": "MoU Status",
