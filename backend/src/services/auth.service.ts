@@ -1,6 +1,7 @@
 import { supabaseAdmin, supabaseAnon } from '../config/supabase'
 import { cacheHelpers } from '../config/redis'
 import { logAuthEvent, logError } from '../utils/logger'
+import { encryptMfaSecret, decryptMfaSecret } from '../utils/mfa-crypto'
 import dotenv from 'dotenv'
 import * as speakeasy from 'speakeasy'
 import * as qrcode from 'qrcode'
@@ -135,7 +136,10 @@ export class AuthService {
 
       // Verify MFA code if provided
       if (userData.mfa_enabled && mfaCode) {
-        const mfaValid = this.verifyMFACode(userData.mfa_secret, mfaCode)
+        // mfa_secret is encrypted at rest (D-19); decrypt before verifying.
+        // Legacy plaintext secrets pass through decrypt unchanged.
+        const decryptedSecret = await decryptMfaSecret(userData.mfa_secret ?? '')
+        const mfaValid = this.verifyMFACode(decryptedSecret, mfaCode)
         if (!mfaValid) {
           logAuthEvent('Login failed - invalid MFA code', data.user.id)
           throw new Error('Invalid MFA code')
@@ -332,15 +336,16 @@ export class AuthService {
         return false
       }
 
-      // Update user with MFA secret and backup codes
-      // D-19: mfa_secret is stored as plaintext base32. Encrypting it at rest
-      // (pgsodium/Vault/KMS) is a PRE-GA GATING REQUIREMENT before MFA ships to
-      // real users. See docs/adr/0002-data-entry-deferred-decisions.md.
+      // Update user with MFA secret and backup codes.
+      // D-19: mfa_secret is encrypted at rest (AES-256-GCM, v1. format) before
+      // storage. See docs/adr/0002-data-entry-deferred-decisions.md and
+      // utils/mfa-crypto.ts.
+      const encryptedSecret = await encryptMfaSecret(setupData.secret)
       const { error } = await supabaseAdmin
         .from('users')
         .update({
           mfa_enabled: true,
-          mfa_secret: setupData.secret,
+          mfa_secret: encryptedSecret,
           mfa_backup_codes: setupData.backupCodes,
           updated_at: new Date().toISOString(),
         })
@@ -640,7 +645,10 @@ export class AuthService {
 
       if (!user?.mfa_secret) return false
 
-      return this.verifyMFACode(user.mfa_secret, code)
+      // mfa_secret is encrypted at rest (D-19); decrypt before verifying.
+      // Legacy plaintext secrets pass through decrypt unchanged.
+      const decryptedSecret = await decryptMfaSecret(user.mfa_secret)
+      return this.verifyMFACode(decryptedSecret, code)
     } catch {
       return false
     }
