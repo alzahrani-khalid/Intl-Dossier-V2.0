@@ -16,6 +16,8 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useForm, type DefaultValues, type FieldValues } from 'react-hook-form'
 import { useNavigate } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 import { zodResolver } from '@/lib/form-resolver'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
@@ -25,16 +27,22 @@ import type { DossierType, UpdateDossierRequest } from '@/services/dossier-api'
 import type { CreateWizardReturn, WizardConfig, WizardStepConfig } from '../config/types'
 import { STEP_VALIDATION_FIELDS } from '../hooks/useCreateDossierWizard'
 
-interface EditWizardParams {
+interface EditWizardParams<T extends FieldValues> {
   dossierId: string
   // Form values reverse-mapped from the loaded dossier + its extension row.
   initialValues: Record<string, unknown>
+  // Optional hook run AFTER the dossier update succeeds and BEFORE navigation,
+  // mirroring the create flow's postCreate. Used by the engagement branch to
+  // sync participant rows that don't live on the dossier extension. Failures are
+  // surfaced as a warning toast and never roll back the dossier update.
+  onAfterUpdate?: (values: T) => Promise<void>
 }
 
 export function useEditDossierWizard<T extends FieldValues>(
   config: WizardConfig<T>,
-  { dossierId, initialValues }: EditWizardParams,
+  { dossierId, initialValues, onAfterUpdate }: EditWizardParams<T>,
 ): CreateWizardReturn<T> {
+  const { t } = useTranslation(['form-wizard'])
   const navigate = useNavigate()
 
   // Form state seeded from the existing dossier (same resolver as create).
@@ -76,6 +84,23 @@ export function useEditDossierWizard<T extends FieldValues>(
 
       const updated = await updateMutation.mutateAsync({ id: dossierId, request })
 
+      // Run the optional post-update hook AFTER the dossier update succeeds and
+      // BEFORE navigation (mirrors create's postCreate). A participant-sync
+      // failure is surfaced as a warning toast and never rolls back the update.
+      if (onAfterUpdate != null) {
+        try {
+          await onAfterUpdate(values)
+        } catch (err) {
+          console.warn('edit post-update hook failed', err)
+          toast.warning(
+            t('form-wizard:postUpdateWarning', {
+              defaultValue:
+                'Dossier updated, but some related records (e.g. participants) failed to save.',
+            }),
+          )
+        }
+      }
+
       // Subtype wizards (elected officials submit as DB type 'person') override
       // the detail route so save lands on the correct shell, mirroring create.
       if (config.detailRouteSegment != null) {
@@ -88,7 +113,7 @@ export function useEditDossierWizard<T extends FieldValues>(
     } catch {
       // Error toast handled by useUpdateDossier onError.
     }
-  }, [updateMutation, form, config, dossierId, navigate])
+  }, [updateMutation, form, config, dossierId, navigate, onAfterUpdate, t])
 
   // Edit has no draft; cancel returns to the previous screen.
   const handleCancel = useCallback((): void => {

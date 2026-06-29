@@ -8,7 +8,7 @@
  * types with no casts; the runner owns the single useEditDossierWizard() call.
  */
 
-import type { ReactElement, ReactNode } from 'react'
+import { useCallback, type ReactElement, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { FieldValues } from 'react-hook-form'
 
@@ -17,6 +17,7 @@ import {
   useEngagement,
   useEngagementParticipants,
 } from '@/domains/engagements/hooks/useEngagements'
+import { syncEngagementParticipants } from '@/domains/engagements/repositories/engagement-participants.repository'
 import type { EngagementParticipant } from '@/types/engagement.types'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -71,6 +72,9 @@ interface EditWizardRunnerProps<T extends FieldValues> {
   initialValues: Record<string, unknown>
   completeLabel: string
   renderSteps: (wizard: CreateWizardReturn<T>) => ReactNode
+  // Optional post-update sync (engagement participants); undefined for the
+  // other dossier types whose edits are fully covered by the dossier update.
+  onAfterUpdate?: (values: T) => Promise<void>
 }
 
 function EditWizardRunner<T extends FieldValues>({
@@ -79,8 +83,9 @@ function EditWizardRunner<T extends FieldValues>({
   initialValues,
   completeLabel,
   renderSteps,
+  onAfterUpdate,
 }: EditWizardRunnerProps<T>): ReactElement {
-  const wizard = useEditDossierWizard<T>(config, { dossierId, initialValues })
+  const wizard = useEditDossierWizard<T>(config, { dossierId, initialValues, onAfterUpdate })
   return (
     <CreateWizardShell wizard={wizard} completeButtonText={completeLabel}>
       {renderSteps(wizard)}
@@ -133,6 +138,28 @@ function EngagementEditWizardBranch({
   const { data: participantsData, isLoading: isParticipantsLoading } =
     useEngagementParticipants(dossierId)
 
+  // The originally-loaded participant set the save-time diff runs against. Only
+  // dossier-linked rows are editable; external rows are preserved by the sync.
+  const originalParticipants = participantsData?.data ?? []
+
+  // Sync the wizard's participant selection on SAVE (A-2 follow-up): edited
+  // participants are not part of the dossier extension, so the dossier update
+  // alone never writes them. Run AFTER the update succeeds via onAfterUpdate.
+  const handleAfterUpdate = useCallback(
+    async (values: EngagementFormData): Promise<void> => {
+      await syncEngagementParticipants(
+        dossierId,
+        {
+          countryIds: values.participant_country_ids ?? [],
+          organizationIds: values.participant_organization_ids ?? [],
+          personIds: values.participant_person_ids ?? [],
+        },
+        originalParticipants,
+      )
+    },
+    [dossierId, originalParticipants],
+  )
+
   if (isEngagementLoading || isParticipantsLoading) {
     return (
       <div className="mx-auto w-full max-w-2xl space-y-3 px-4 sm:px-6 lg:px-8">
@@ -147,7 +174,7 @@ function EngagementEditWizardBranch({
   const extras: EngagementEditExtras = {
     startDate: engagement?.start_date ?? null,
     endDate: engagement?.end_date ?? null,
-    ...groupParticipantDossierIds(participantsData?.data ?? []),
+    ...groupParticipantDossierIds(originalParticipants),
   }
   const { initialValues } = buildEditInitialValues(dossier, extras)
 
@@ -157,6 +184,7 @@ function EngagementEditWizardBranch({
       dossierId={dossierId}
       initialValues={initialValues}
       completeLabel={completeLabel}
+      onAfterUpdate={handleAfterUpdate}
       renderSteps={(w): ReactNode => (
         <>
           <SharedBasicInfoStep form={w.form} dossierType="engagement" />
