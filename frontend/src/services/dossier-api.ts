@@ -156,6 +156,13 @@ export interface PersonExtension {
   known_as_ar?: string | null
   date_of_birth?: string | null
   gender?: 'female' | 'male' | null
+  // Contact fields (persons.* columns) forwarded verbatim by dossiers-create.
+  // Used by the contact-directory create flow so a real persons extension row is
+  // written (no orphan person dossiers). email/phone are singular text columns.
+  email?: string | null
+  phone?: string | null
+  notes?: string | null
+  importance_level?: number | null
 }
 
 /**

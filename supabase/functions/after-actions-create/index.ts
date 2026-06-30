@@ -77,11 +77,17 @@ serve(async (req) => {
       })
     }
 
-    // Validate engagement exists and get dossier_id
+    // Validate the engagement exists. An engagement IS a dossier of type
+    // 'engagement' (the engagements / engagement_dossiers tables are extensions
+    // keyed by the dossier id), so the engagement's dossier_id is its own id.
+    // The previous code selected engagements.dossier_id — a column that does NOT
+    // exist — so this 404'd for every engagement and after-action creation never
+    // worked (after_action_records had 0 rows).
     const { data: engagement, error: engagementError } = await supabaseClient
-      .from('engagements')
-      .select('dossier_id')
+      .from('dossiers')
+      .select('id')
       .eq('id', body.engagement_id)
+      .eq('type', 'engagement')
       .single()
 
     if (engagementError || !engagement) {
@@ -91,13 +97,16 @@ serve(async (req) => {
       })
     }
 
-    // Check dossier access via RLS
+    const engagementDossierId = engagement.id
+
+    // Check dossier access (the engagement's own dossier). after_action_records
+    // RLS also enforces ownership; this yields a clean 403 for non-owners.
     const { data: dossierAccess } = await supabaseClient
       .from('dossier_owners')
       .select('dossier_id, user_id')
-      .eq('dossier_id', engagement.dossier_id)
+      .eq('dossier_id', engagementDossierId)
       .eq('user_id', user.user.id)
-      .single()
+      .maybeSingle()
 
     if (!dossierAccess) {
       return new Response(JSON.stringify({ error: 'Forbidden: No access to dossier' }), {
@@ -119,7 +128,7 @@ serve(async (req) => {
       .from('after_action_records')
       .insert({
         engagement_id: body.engagement_id,
-        dossier_id: engagement.dossier_id,
+        dossier_id: engagementDossierId,
         publication_status: 'draft',
         is_confidential: body.is_confidential,
         attendees: body.attendees || [],
@@ -174,7 +183,7 @@ serve(async (req) => {
           const { data: existingContact } = await supabaseClient
             .from('external_contacts')
             .select('id')
-            .eq('dossier_id', engagement.dossier_id)
+            .eq('dossier_id', engagementDossierId)
             .eq('email', commitment.owner_contact_email)
             .single()
 
@@ -185,7 +194,7 @@ serve(async (req) => {
             const { data: newContact, error: contactError } = await supabaseClient
               .from('external_contacts')
               .insert({
-                dossier_id: engagement.dossier_id,
+                dossier_id: engagementDossierId,
                 name: commitment.owner_contact_name || commitment.owner_contact_email,
                 email: commitment.owner_contact_email,
                 source: 'after_action',
@@ -209,7 +218,7 @@ serve(async (req) => {
 
         const { error: commitmentError } = await supabaseClient.from('aa_commitments').insert({
           after_action_id: afterActionId,
-          dossier_id: engagement.dossier_id,
+          dossier_id: engagementDossierId,
           // aa_commitments.title is NOT NULL with no default and no INSERT
           // trigger (B-1/C-1). Fall back to a truncated description so a
           // commitment without an explicit title still satisfies the column
@@ -303,7 +312,7 @@ serve(async (req) => {
         decisions (id, after_action_id, description, rationale, decision_maker, decision_date, created_at),
         aa_commitments (id, after_action_id, dossier_id, description, priority, status, owner_type, owner_user_id, owner_contact_id, tracking_mode, due_date, ai_confidence, created_at, updated_at, completed_at),
         aa_risks (id, after_action_id, description, severity, likelihood, mitigation_strategy, owner, ai_confidence, created_at),
-        aa_follow_up_actions (id, after_action_id, description, assigned_to, target_date, completed, created_at, completed_at)
+        aa_follow_up_actions (id, after_action_id, description, assigned_to, target_date, completed, created_at, updated_at)
       `,
       )
       .eq('id', afterActionId)

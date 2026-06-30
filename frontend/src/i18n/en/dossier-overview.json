@@ -213,6 +213,7 @@
 
   "keyContacts": {
     "title": "Key Contacts",
+    "addContact": "Add key contact",
     "lastInteraction": "Last interaction",
     "linkedDossier": "Linked",
     "viewDossier": "View Dossier",

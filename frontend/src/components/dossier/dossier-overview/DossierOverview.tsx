@@ -401,7 +401,12 @@ export function DossierOverview({
         </TabsContent>
 
         <TabsContent value="contacts" className="mt-0">
-          <KeyContactsSection data={data.key_contacts} isRTL={isRTL} />
+          <KeyContactsSection
+            data={data.key_contacts}
+            dossierId={dossierId}
+            dossierType={dossier.type}
+            isRTL={isRTL}
+          />
         </TabsContent>
 
         <TabsContent value="activity" className="mt-0">

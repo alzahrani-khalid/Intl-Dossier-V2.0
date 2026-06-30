@@ -213,6 +213,7 @@
 
   "keyContacts": {
     "title": "جهات الاتصال الرئيسية",
+    "addContact": "إضافة جهة اتصال",
     "lastInteraction": "آخر تفاعل",
     "linkedDossier": "مرتبط",
     "viewDossier": "عرض الملف",

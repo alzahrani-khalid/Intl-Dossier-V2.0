@@ -95,7 +95,11 @@
     "languagesPlaceholder": "الإنجليزية، العربية، الفرنسية",
     "expertisePlaceholder": "الإحصاء، تحليل البيانات، السياسات",
     "biographyPlaceholderEn": "Professional background and achievements...",
-    "biographyPlaceholderAr": "السيرة المهنية والإنجازات..."
+    "biographyPlaceholderAr": "السيرة المهنية والإنجازات...",
+    "organization": "المنظمة",
+    "organizationPlaceholder": "اختر المنظمة",
+    "organizationSearchPlaceholder": "ابحث عن المنظمات…",
+    "organizationDescription": "المنظمة التي يمثلها هذا الشخص أو يعمل بها"
   },
   "empty": {
     "title": "لا يوجد أشخاص حتى الآن",
