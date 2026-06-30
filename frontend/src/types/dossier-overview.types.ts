@@ -442,6 +442,11 @@ export interface CalendarEventsSectionProps extends OverviewSectionProps {
 
 export interface KeyContactsSectionProps extends OverviewSectionProps {
   data: KeyContactsSection | null
+  // Current dossier context. When dossierType === 'organization', the section
+  // shows an "Add key contact" action that deep-links to the person create flow
+  // pre-linked to this organization (?organization_id=<dossierId>).
+  dossierId?: string
+  dossierType?: DossierType
 }
 
 export interface ActivityTimelineSectionProps extends OverviewSectionProps {

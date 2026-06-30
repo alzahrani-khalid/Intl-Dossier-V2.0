@@ -6,9 +6,19 @@
  * Mobile-first, RTL-supported.
  */
 
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
-import { Users, Mail, Phone, Building2, Calendar, ExternalLink, UserCircle } from 'lucide-react'
+import {
+  Users,
+  Mail,
+  Phone,
+  Building2,
+  Calendar,
+  ExternalLink,
+  UserCircle,
+  UserPlus,
+} from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -167,7 +177,7 @@ function ContactCard({ contact, isRTL }: { contact: DossierKeyContact; isRTL: bo
 /**
  * Empty state component
  */
-function EmptyState() {
+function EmptyState({ action }: { action?: ReactNode }) {
   const { t } = useTranslation('dossier-overview')
 
   return (
@@ -179,6 +189,7 @@ function EmptyState() {
       <p className="text-sm text-muted-foreground max-w-md mx-auto">
         {t('keyContacts.empty.description')}
       </p>
+      {action && <div className="mt-4 flex justify-center">{action}</div>}
     </div>
   )
 }
@@ -191,8 +202,21 @@ export function KeyContactsSection({
   isLoading,
   isRTL = false,
   className = '',
+  dossierId,
+  dossierType,
 }: KeyContactsSectionProps) {
   const { t } = useTranslation('dossier-overview')
+
+  // From an organization dossier, offer adding a key contact pre-linked to it.
+  const addContactButton =
+    dossierType === 'organization' && dossierId ? (
+      <Button variant="outline" size="sm" className="min-h-9 gap-2 shrink-0" asChild>
+        <Link to="/persons/create" search={{ organization_id: dossierId }}>
+          <UserPlus className="h-4 w-4" />
+          {t('keyContacts.addContact')}
+        </Link>
+      </Button>
+    ) : null
 
   if (isLoading) {
     return (
@@ -218,7 +242,7 @@ export function KeyContactsSection({
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4 sm:p-6 pt-0">
-          <EmptyState />
+          <EmptyState action={addContactButton} />
         </CardContent>
       </Card>
     )
@@ -227,11 +251,14 @@ export function KeyContactsSection({
   return (
     <Card className={className}>
       <CardHeader className="pb-2 sm:pb-4">
-        <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-          <Users className="h-5 w-5" />
-          {t('keyContacts.title')}
-          <Badge variant="secondary">{data.total_count}</Badge>
-        </CardTitle>
+        <div className="flex items-center justify-between gap-2">
+          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+            <Users className="h-5 w-5" />
+            {t('keyContacts.title')}
+            <Badge variant="secondary">{data.total_count}</Badge>
+          </CardTitle>
+          {addContactButton}
+        </div>
       </CardHeader>
 
       <CardContent className="p-4 sm:p-6 pt-0">

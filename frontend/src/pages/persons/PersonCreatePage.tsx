@@ -6,7 +6,8 @@
  * Mobile-first design with RTL support.
  */
 
-import { useNavigate } from '@tanstack/react-router'
+import { useMemo, useState } from 'react'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@/lib/form-resolver'
@@ -20,6 +21,7 @@ import {
   Globe,
   Languages,
   Briefcase,
+  Building2,
   Star,
   Loader2,
 } from 'lucide-react'
@@ -44,7 +46,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { SearchableSelect, type SelectOption } from '@/components/forms/SearchableSelect'
 import { useCreatePerson } from '@/hooks/usePersons'
+import { useOrganizations } from '@/hooks/useOrganizations'
 import type { ImportanceLevel } from '@/types/person.types'
 import { IMPORTANCE_LEVEL_LABELS } from '@/types/person.types'
 import { useDirection } from '@/hooks/useDirection'
@@ -57,7 +61,7 @@ const personFormSchema = z.object({
   title_ar: z.string().max(200).optional(),
   email: z.string().email('Invalid email').optional().or(z.literal('')),
   phone: z.string().max(50).optional(),
-  organization_name: z.string().max(200).optional(),
+  organization_id: z.string().optional(),
   biography_en: z.string().max(5000).optional(),
   biography_ar: z.string().max(5000).optional(),
   linkedin_url: z.string().url('Invalid URL').optional().or(z.literal('')),
@@ -74,7 +78,24 @@ function PersonCreatePage() {
   const { isRTL } = useDirection()
   const navigate = useNavigate()
 
+  // Deep-link prefill: e.g. an org dossier's "Add key contact" action navigates
+  // here with ?organization_id=<id> to pre-link the new person to that org.
+  const search = useSearch({ strict: false }) as { organization_id?: string }
+
   const createPerson = useCreatePerson()
+
+  // Organization picker options (searchable). Server-filtered by name; the
+  // SearchableSelect also filters client-side over the loaded set.
+  const [orgSearch, setOrgSearch] = useState('')
+  const organizationsQuery = useOrganizations({ search: orgSearch, limit: 50 })
+  const organizationOptions = useMemo<SelectOption[]>(
+    () =>
+      (organizationsQuery.data?.data ?? []).map((org) => ({
+        value: org.id,
+        label: isRTL ? org.name_ar : org.name_en,
+      })),
+    [organizationsQuery.data, isRTL],
+  )
 
   const form = useForm<PersonFormValues, unknown, PersonFormValues>({
     resolver: zodResolver(personFormSchema),
@@ -85,7 +106,7 @@ function PersonCreatePage() {
       title_ar: '',
       email: '',
       phone: '',
-      organization_name: '',
+      organization_id: search.organization_id ?? '',
       biography_en: '',
       biography_ar: '',
       linkedin_url: '',
@@ -103,6 +124,7 @@ function PersonCreatePage() {
         name_ar: data.name_ar,
         title_en: data.title_en || undefined,
         title_ar: data.title_ar || undefined,
+        organization_id: data.organization_id || undefined,
         email: data.email || undefined,
         phone: data.phone || undefined,
         biography_en: data.biography_en || undefined,
@@ -354,6 +376,39 @@ function PersonCreatePage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="organization_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2">
+                        <Building2 className="h-4 w-4" />
+                        {t('form.organization', 'Organization')}
+                      </FormLabel>
+                      <FormControl>
+                        <SearchableSelect
+                          options={organizationOptions}
+                          value={field.value || undefined}
+                          onChange={(value) =>
+                            field.onChange(typeof value === 'string' ? value : '')
+                          }
+                          onSearchChange={setOrgSearch}
+                          loading={organizationsQuery.isFetching}
+                          placeholder={t('form.organizationPlaceholder', 'Select organization')}
+                          searchPlaceholder={t('persons:form.organizationSearchPlaceholder')}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        {t(
+                          'form.organizationDescription',
+                          'The organization this person represents or works for',
+                        )}
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="languages"

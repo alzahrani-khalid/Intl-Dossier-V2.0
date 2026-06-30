@@ -17,6 +17,7 @@ import {
   type CreateDossierRequest,
   type DossierWithExtension,
   type DossiersListResponse,
+  type PersonExtension,
   DossierAPIError,
 } from '@/services/dossier-api'
 import { dossierKeys } from './useDossier'
@@ -110,6 +111,23 @@ export function useCreatePersonDossier() {
       metadata: PersonMetadata
       tags?: string[]
     }) => {
+      // Map person fields onto the persons extension row so dossiers-create
+      // inserts a real persons.* record. Without extensionData the edge fn skips
+      // the extension insert and leaves an orphan person dossier (no persons row,
+      // invisible to persons search). importance_level is always set so
+      // extensionData is never empty. persons.email/phone are singular columns —
+      // the full arrays remain in metadata.
+      const meta = data.metadata
+      const extensionData: PersonExtension = {
+        title_en: meta.title_en || undefined,
+        title_ar: meta.title_ar || undefined,
+        organization_id: meta.organization_id || undefined,
+        email: meta.email?.[0] || undefined,
+        phone: meta.phone?.[0] || undefined,
+        notes: meta.notes || undefined,
+        importance_level: 1,
+      }
+
       const request: CreateDossierRequest = {
         type: 'person',
         name_en: data.name_en,
@@ -120,6 +138,7 @@ export function useCreatePersonDossier() {
         sensitivity_level: 1, // 1=Public (valid range is 1-4)
         tags: data.tags || [],
         metadata: data.metadata as Record<string, unknown>,
+        extensionData,
       }
       return createDossier(request)
     },
