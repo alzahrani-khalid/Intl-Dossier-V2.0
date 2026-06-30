@@ -1136,7 +1136,32 @@
       "memberOf": "عضو في",
       "subUnits": "الوحدات الفرعية",
       "totalRelated": "{{count}} ملفات مرتبطة إجمالًا",
-      "empty": "لا تتوفر بيانات عضوية"
+      "empty": "لا تتوفر بيانات عضوية",
+      "membershipType": "نوع العضوية",
+      "importance": "الأهمية",
+      "representationLevel": "مستوى التمثيل",
+      "membershipTypes": {
+        "board_of_directors": "مجلس الإدارة",
+        "member": "عضو",
+        "participant": "مشارك",
+        "counterpart_agency": "جهة نظيرة"
+      },
+      "importances": {
+        "high": "عالية",
+        "medium": "متوسطة",
+        "low": "منخفضة"
+      },
+      "representationLevels": {
+        "president": "رئيس",
+        "specialist": "مختص"
+      }
+    },
+    "focalPoints": {
+      "title": "ضباط الاتصال في الهيئة",
+      "responsible": "الضابط المسؤول",
+      "alternate": "الضابط البديل",
+      "support": "ضابط الدعم",
+      "empty": "لا يوجد ضباط اتصال مسجلون"
     },
     "mou": {
       "title": "حالة مذكرات التفاهم",

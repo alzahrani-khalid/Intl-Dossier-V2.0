@@ -120,7 +120,39 @@
     "headquarters_ar": "Headquarters (Arabic)",
     "headquarters_ar_ph": "e.g. Geneva, Switzerland",
     "founding_date": "Founding Date",
-    "founding_date_ph": "Select founding date"
+    "founding_date_ph": "Select founding date",
+    "engagement_profile": "Engagement profile",
+    "membership_type": "Membership type",
+    "membership_type_ph": "Select membership type",
+    "membership_types": {
+      "board_of_directors": "Board of directors",
+      "member": "Member",
+      "participant": "Participant",
+      "counterpart_agency": "Counterpart agency"
+    },
+    "importance": "Importance",
+    "importance_ph": "Select importance",
+    "importances": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "representation_level": "Representation level",
+    "representation_level_ph": "Select representation level",
+    "representation_levels": {
+      "president": "President",
+      "specialist": "Specialist"
+    },
+    "focal_points": "GASTAT focal points",
+    "focal_responsible": "Responsible officer",
+    "focal_alternate": "Alternate officer",
+    "focal_support": "Support officer",
+    "focal_name_en": "Name (English)",
+    "focal_name_ar": "Name (Arabic)",
+    "focal_user": "Linked user",
+    "focal_name_en_ph": "Officer name in English",
+    "focal_name_ar_ph": "Officer name in Arabic",
+    "focal_user_ph": "Search users"
   },
   "topic": {
     "page_title": "Create Topic",
