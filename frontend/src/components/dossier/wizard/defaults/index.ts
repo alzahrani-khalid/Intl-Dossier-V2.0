@@ -27,6 +27,19 @@ const organizationDefaults: OrganizationFormData = {
   headquarters_en: '',
   headquarters_ar: '',
   founding_date: '',
+  // 260629-jkn: membership & representation profile defaults (controlled inputs).
+  membership_type: '' as OrganizationFormData['membership_type'],
+  importance: '' as OrganizationFormData['importance'],
+  representation_level: '' as OrganizationFormData['representation_level'],
+  responsible_name_en: '',
+  responsible_name_ar: '',
+  responsible_user_id: '',
+  alternate_name_en: '',
+  alternate_name_ar: '',
+  alternate_user_id: '',
+  support_name_en: '',
+  support_name_ar: '',
+  support_user_id: '',
 }
 
 const topicDefaults: TopicFormData = {

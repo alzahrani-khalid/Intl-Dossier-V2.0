@@ -288,6 +288,35 @@ export interface DossierOverviewStats {
 }
 
 // =============================================
+// ORGANIZATION PROFILE (membership & representation)
+// =============================================
+
+/**
+ * A single GASTAT focal-point officer on an organization dossier
+ */
+export interface OrganizationFocalPoint {
+  name_en: string | null
+  name_ar: string | null
+  user_id: string | null
+}
+
+/**
+ * Organization-specific membership & representation profile, read from the
+ * organizations extension row. Only fetched for organization dossiers (opt-in
+ * via the 'organization_profile' section).
+ */
+export interface OrganizationProfileSection {
+  membership_type: 'board_of_directors' | 'member' | 'participant' | 'counterpart_agency' | null
+  importance: 'high' | 'medium' | 'low' | null
+  representation_level: 'president' | 'specialist' | null
+  focal_points: {
+    responsible: OrganizationFocalPoint | null
+    alternate: OrganizationFocalPoint | null
+    support: OrganizationFocalPoint | null
+  }
+}
+
+// =============================================
 // FULL OVERVIEW RESPONSE
 // =============================================
 
@@ -303,6 +332,7 @@ export interface DossierOverviewResponse {
   calendar_events: CalendarEventsSection
   key_contacts: KeyContactsSection
   activity_timeline: ActivityTimelineSection
+  organization_profile: OrganizationProfileSection | null
   generated_at: string
 }
 
@@ -332,6 +362,7 @@ export type DossierOverviewSection =
   | 'calendar_events'
   | 'key_contacts'
   | 'activity_timeline'
+  | 'organization_profile'
 
 // =============================================
 // EXPORT TYPES

@@ -30,6 +30,8 @@ import type {
   KeyContactsSection,
   DossierKeyContact,
   ActivityTimelineSection,
+  OrganizationProfileSection,
+  OrganizationFocalPoint,
   DossierExportRequest,
   DossierExportResponse,
   DossierRelationshipType,
@@ -243,6 +245,31 @@ interface KeyContactRow {
   phone: string | null
   last_interaction_date: string | null
   notes: string | null
+}
+
+/**
+ * Raw focal-point officer shape stored inside the gastat_focal_points jsonb —
+ * all sub-fields optional (free-form import data may omit any of them).
+ */
+interface FocalPointRaw {
+  name_en?: string | null
+  name_ar?: string | null
+  user_id?: string | null
+}
+
+/**
+ * Raw organizations extension row for the membership & representation profile.
+ * gastat_focal_points is free-form jsonb keyed by role.
+ */
+interface OrganizationProfileRow {
+  membership_type: string | null
+  importance: string | null
+  representation_level: string | null
+  gastat_focal_points: {
+    responsible?: FocalPointRaw | null
+    alternate?: FocalPointRaw | null
+    support?: FocalPointRaw | null
+  } | null
 }
 
 // =============================================================================
@@ -988,6 +1015,82 @@ async function fetchKeyContacts(dossierId: string): Promise<KeyContactsSection> 
 }
 
 // =============================================================================
+// Fetch Organization Profile (membership & representation)
+// =============================================================================
+
+/**
+ * Normalizes a raw jsonb focal-point officer into the typed shape, defaulting
+ * every sub-field to null. Returns null when the role is absent or has no data.
+ */
+function normalizeFocalPoint(raw: FocalPointRaw | null | undefined): OrganizationFocalPoint | null {
+  if (!raw) return null
+  const name_en = raw.name_en ?? null
+  const name_ar = raw.name_ar ?? null
+  const user_id = raw.user_id ?? null
+  if (name_en === null && name_ar === null && user_id === null) return null
+  return { name_en, name_ar, user_id }
+}
+
+const ORGANIZATION_MEMBERSHIP_TYPES = new Set([
+  'board_of_directors',
+  'member',
+  'participant',
+  'counterpart_agency',
+])
+const ORGANIZATION_IMPORTANCES = new Set(['high', 'medium', 'low'])
+const ORGANIZATION_REPRESENTATION_LEVELS = new Set(['president', 'specialist'])
+
+/**
+ * Reads the organizations extension row for an organization dossier and
+ * normalizes the membership/representation fields. Returns null when there is
+ * no organizations row (e.g. a non-organization dossier). Throws
+ * DossierOverviewAPIError on a real PostgREST error (OVRERR-01 contract).
+ */
+async function fetchOrganizationProfile(
+  dossierId: string,
+): Promise<OrganizationProfileSection | null> {
+  const { data, error } = await supabase
+    .from('organizations')
+    .select('membership_type, importance, representation_level, gastat_focal_points')
+    .eq('id', dossierId)
+    .maybeSingle()
+
+  if (error) {
+    throw new DossierOverviewAPIError(
+      'Failed to fetch organization profile',
+      500,
+      'ORGANIZATION_PROFILE_FETCH_FAILED',
+      error.message,
+    )
+  }
+
+  if (!data) return null
+
+  const row = data as OrganizationProfileRow
+  const focalPoints = row.gastat_focal_points ?? {}
+
+  return {
+    membership_type:
+      row.membership_type && ORGANIZATION_MEMBERSHIP_TYPES.has(row.membership_type)
+        ? (row.membership_type as OrganizationProfileSection['membership_type'])
+        : null,
+    importance:
+      row.importance && ORGANIZATION_IMPORTANCES.has(row.importance)
+        ? (row.importance as OrganizationProfileSection['importance'])
+        : null,
+    representation_level:
+      row.representation_level && ORGANIZATION_REPRESENTATION_LEVELS.has(row.representation_level)
+        ? (row.representation_level as OrganizationProfileSection['representation_level'])
+        : null,
+    focal_points: {
+      responsible: normalizeFocalPoint(focalPoints.responsible),
+      alternate: normalizeFocalPoint(focalPoints.alternate),
+      support: normalizeFocalPoint(focalPoints.support),
+    },
+  }
+}
+
+// =============================================================================
 // Fetch Activity Timeline
 // =============================================================================
 
@@ -1070,73 +1173,85 @@ export async function fetchDossierOverview(
   const dossier = await fetchDossierCore(dossier_id)
 
   // Fetch sections in parallel
-  const [relatedDossiers, documents, workItems, calendarEvents, keyContacts, activityTimeline] =
-    await Promise.all([
-      include_sections.includes('related_dossiers')
-        ? fetchRelatedDossiers(dossier_id)
-        : Promise.resolve({
-            total_count: 0,
-            by_relationship_type: {
-              parent: [],
-              child: [],
-              bilateral: [],
-              member_of: [],
-              has_member: [],
-              partner: [],
-              related_to: [],
-              predecessor: [],
-              successor: [],
-            } as Record<DossierRelationshipType, RelatedDossier[]>,
-            by_dossier_type: {
-              country: [],
-              organization: [],
-              forum: [],
-              engagement: [],
-              topic: [],
-              working_group: [],
-              person: [],
-            } as Record<DossierType, RelatedDossier[]>,
-          }),
-      include_sections.includes('documents')
-        ? fetchDocuments(dossier_id)
-        : Promise.resolve({
-            total_count: 0,
-            positions: [],
-            mous: [],
-            briefs: [],
-            attachments: [],
-          }),
-      include_sections.includes('work_items')
-        ? fetchWorkItems(dossier_id, work_items_limit)
-        : Promise.resolve({
-            total_count: 0,
-            status_breakdown: {
-              pending: 0,
-              in_progress: 0,
-              review: 0,
-              completed: 0,
-              cancelled: 0,
-              overdue: 0,
-            },
-            by_source: { tasks: [], commitments: [], intakes: [] },
-            urgent_items: [],
-            overdue_items: [],
-          }),
-      include_sections.includes('calendar_events')
-        ? fetchCalendarEvents(dossier_id, calendar_days_ahead, calendar_days_behind)
-        : Promise.resolve({ total_count: 0, upcoming: [], past: [], today: [] }),
-      include_sections.includes('key_contacts')
-        ? fetchKeyContacts(dossier_id)
-        : Promise.resolve({ total_count: 0, contacts: [] }),
-      include_sections.includes('activity_timeline')
-        ? fetchActivityTimeline(dossier_id, activity_limit)
-        : Promise.resolve({
-            total_count: 0,
-            recent_activities: [],
-            has_more: false,
-            next_cursor: null,
-          }),
-    ])
+  const [
+    relatedDossiers,
+    documents,
+    workItems,
+    calendarEvents,
+    keyContacts,
+    activityTimeline,
+    organizationProfile,
+  ] = await Promise.all([
+    include_sections.includes('related_dossiers')
+      ? fetchRelatedDossiers(dossier_id)
+      : Promise.resolve({
+          total_count: 0,
+          by_relationship_type: {
+            parent: [],
+            child: [],
+            bilateral: [],
+            member_of: [],
+            has_member: [],
+            partner: [],
+            related_to: [],
+            predecessor: [],
+            successor: [],
+          } as Record<DossierRelationshipType, RelatedDossier[]>,
+          by_dossier_type: {
+            country: [],
+            organization: [],
+            forum: [],
+            engagement: [],
+            topic: [],
+            working_group: [],
+            person: [],
+          } as Record<DossierType, RelatedDossier[]>,
+        }),
+    include_sections.includes('documents')
+      ? fetchDocuments(dossier_id)
+      : Promise.resolve({
+          total_count: 0,
+          positions: [],
+          mous: [],
+          briefs: [],
+          attachments: [],
+        }),
+    include_sections.includes('work_items')
+      ? fetchWorkItems(dossier_id, work_items_limit)
+      : Promise.resolve({
+          total_count: 0,
+          status_breakdown: {
+            pending: 0,
+            in_progress: 0,
+            review: 0,
+            completed: 0,
+            cancelled: 0,
+            overdue: 0,
+          },
+          by_source: { tasks: [], commitments: [], intakes: [] },
+          urgent_items: [],
+          overdue_items: [],
+        }),
+    include_sections.includes('calendar_events')
+      ? fetchCalendarEvents(dossier_id, calendar_days_ahead, calendar_days_behind)
+      : Promise.resolve({ total_count: 0, upcoming: [], past: [], today: [] }),
+    include_sections.includes('key_contacts')
+      ? fetchKeyContacts(dossier_id)
+      : Promise.resolve({ total_count: 0, contacts: [] }),
+    include_sections.includes('activity_timeline')
+      ? fetchActivityTimeline(dossier_id, activity_limit)
+      : Promise.resolve({
+          total_count: 0,
+          recent_activities: [],
+          has_more: false,
+          next_cursor: null,
+        }),
+    // organization_profile is opt-in only (never in the DEFAULT include list)
+    // so non-organization dossiers never query the organizations table.
+    include_sections.includes('organization_profile')
+      ? fetchOrganizationProfile(dossier_id)
+      : Promise.resolve(null),
+  ])
 
   // Calculate stats
   const stats = calculateStats(
@@ -1157,6 +1272,7 @@ export async function fetchDossierOverview(
     calendar_events: calendarEvents,
     key_contacts: keyContacts,
     activity_timeline: activityTimeline,
+    organization_profile: organizationProfile,
     generated_at: new Date().toISOString(),
   }
 }
