@@ -1176,7 +1176,9 @@
     "representatives": {
       "title": "Key Representatives",
       "empty": "No representatives linked",
-      "total": "{{count}} representatives total"
+      "total": "{{count}} representatives total",
+      "add": "Add representative",
+      "more": "Showing first {{count}}"
     },
     "forum": {
       "title": "Forum Details",

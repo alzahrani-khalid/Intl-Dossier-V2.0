@@ -41,6 +41,20 @@ vi.mock('@/hooks/useDossierOverview', () => ({
   }),
 }))
 
+// --- usePersons mock (KeyRepresentativesCard reads org-affiliated persons) ------
+const repsState = vi.hoisted(() => ({
+  data: null as unknown,
+  isLoading: false,
+  isError: false,
+}))
+vi.mock('@/domains/persons/hooks/usePersons', () => ({
+  usePersons: () => ({
+    data: repsState.data,
+    isLoading: repsState.isLoading,
+    isError: repsState.isError,
+  }),
+}))
+
 // --- useDossierActivityTimeline mock (SharedRecentActivityCard) -----------------
 const timelineState = vi.hoisted(() => ({
   activities: [] as unknown[],
@@ -135,6 +149,9 @@ beforeEach(() => {
   timelineState.isLoading = false
   timelineState.isError = false
   mouState.shouldError = false
+  repsState.data = null
+  repsState.isLoading = false
+  repsState.isError = false
 })
 
 // --- Parameterized forced-error suite for the 6 useDossierOverview cards --------
@@ -158,11 +175,6 @@ const overviewCards: ReadonlyArray<{
     name: 'EngagementsByStageCard',
     Component: EngagementsByStageCard,
     emptyCopy: /no engagements linked/i,
-  },
-  {
-    name: 'KeyRepresentativesCard',
-    Component: KeyRepresentativesCard,
-    emptyCopy: /no representatives linked/i,
   },
   {
     name: 'MembershipStructureCard',
@@ -203,6 +215,18 @@ describe('Overview card forced-error states (OVRERR-01)', () => {
 
     expect(screen.queryByRole('alert')).toBeNull()
     expect(screen.getByText(/no data available/i)).toBeTruthy()
+  })
+})
+
+describe('KeyRepresentativesCard forced-error state (OVRERR-01)', () => {
+  it('renders error state, not the empty copy, on persons-query failure', () => {
+    repsState.isError = true
+    repsState.data = null
+
+    render(<KeyRepresentativesCard dossierId="d1" />)
+
+    expect(screen.getByRole('alert').textContent).toMatch(SECTION_ERROR)
+    expect(screen.queryByText(/no representatives linked/i)).toBeNull()
   })
 })
 
