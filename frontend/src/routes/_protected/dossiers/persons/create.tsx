@@ -4,7 +4,7 @@
  * Composes PersonBasicInfoStep, PersonDetailsStep, and PersonReviewStep
  * into a 3-step wizard via useCreateDossierWizard + CreateWizardShell.
  */
-import type { ReactElement } from 'react'
+import { useEffect, type ReactElement } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { ChevronLeft } from 'lucide-react'
@@ -19,11 +19,25 @@ import type { PersonFormData } from '@/components/dossier/wizard/schemas/person.
 
 export const Route = createFileRoute('/_protected/dossiers/persons/create')({
   component: CreatePersonPage,
+  // Callers (e.g. an organization dossier's Key Representatives / Key Contacts
+  // card) may arrive with ?organization_id=<id> to pre-link the new person.
+  validateSearch: (search: Record<string, unknown>): { organization_id?: string } => ({
+    organization_id:
+      typeof search.organization_id === 'string' ? search.organization_id : undefined,
+  }),
 })
 
 function CreatePersonPage(): ReactElement {
   const { t } = useTranslation('form-wizard')
+  const { organization_id } = Route.useSearch()
   const wizard = useCreateDossierWizard<PersonFormData>(personWizardConfig)
+
+  // Pre-fill the organization when launched from an org dossier.
+  useEffect(() => {
+    if (organization_id !== undefined && organization_id !== '') {
+      wizard.form.setValue('organization_id', organization_id)
+    }
+  }, [organization_id, wizard.form])
 
   return (
     <div className="space-y-4">

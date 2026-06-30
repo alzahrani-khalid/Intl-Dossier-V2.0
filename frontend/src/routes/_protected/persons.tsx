@@ -1,13 +1,15 @@
 /**
- * Persons Layout Route
- * Feature: persons-entity-management
+ * Persons route — redirects to the canonical dossier surface.
  *
- * Layout route for persons feature.
- * Renders child routes via Outlet.
+ * Persons are managed as dossiers under `/dossiers/persons`. This alias keeps
+ * the legacy `/persons` URL working by redirecting to the dossier list, mirroring
+ * the countries / organizations / forums pattern.
  */
 
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/persons')({
-  component: () => <Outlet />,
+  beforeLoad: () => {
+    throw redirect({ to: '/dossiers/persons' })
+  },
 })

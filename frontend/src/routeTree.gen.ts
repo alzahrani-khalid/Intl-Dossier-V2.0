@@ -18,9 +18,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProtectedWorkingGroupsRouteImport } from './routes/_protected/working-groups'
 import { Route as ProtectedWorkflowAutomationRouteImport } from './routes/_protected/workflow-automation'
 import { Route as ProtectedWordAssistantRouteImport } from './routes/_protected/word-assistant'
-import { Route as ProtectedValidationDemoRouteImport } from './routes/_protected/validation-demo'
 import { Route as ProtectedUsersRouteImport } from './routes/_protected/users'
-import { Route as ProtectedThemesRouteImport } from './routes/_protected/themes'
 import { Route as ProtectedTagsRouteImport } from './routes/_protected/tags'
 import { Route as ProtectedStakeholderInfluenceRouteImport } from './routes/_protected/stakeholder-influence'
 import { Route as ProtectedSlaMonitoringRouteImport } from './routes/_protected/sla-monitoring'
@@ -29,54 +27,37 @@ import { Route as ProtectedSearchRouteImport } from './routes/_protected/search'
 import { Route as ProtectedScenarioSandboxRouteImport } from './routes/_protected/scenario-sandbox'
 import { Route as ProtectedResponsiveDemoRouteImport } from './routes/_protected/responsive-demo'
 import { Route as ProtectedReportsRouteImport } from './routes/_protected/reports'
-import { Route as ProtectedProgressiveFormDemoRouteImport } from './routes/_protected/progressive-form-demo'
 import { Route as ProtectedPositionsRouteImport } from './routes/_protected/positions'
-import { Route as ProtectedPluginDemoRouteImport } from './routes/_protected/plugin-demo'
 import { Route as ProtectedPersonsRouteImport } from './routes/_protected/persons'
 import { Route as ProtectedOrganizationsRouteImport } from './routes/_protected/organizations'
 import { Route as ProtectedNotificationsRouteImport } from './routes/_protected/notifications'
 import { Route as ProtectedMyWorkRouteImport } from './routes/_protected/my-work'
 import { Route as ProtectedMousRouteImport } from './routes/_protected/mous'
 import { Route as ProtectedMonitoringRouteImport } from './routes/_protected/monitoring'
-import { Route as ProtectedModernNavDemoRouteImport } from './routes/_protected/modern-nav-demo'
-import { Route as ProtectedMeetingMinutesDemoRouteImport } from './routes/_protected/meeting-minutes-demo'
 import { Route as ProtectedLegislationRouteImport } from './routes/_protected/legislation'
 import { Route as ProtectedKanbanRouteImport } from './routes/_protected/kanban'
 import { Route as ProtectedIntelligenceRouteImport } from './routes/_protected/intelligence'
 import { Route as ProtectedIntakeRouteImport } from './routes/_protected/intake'
 import { Route as ProtectedGeographicVisualizationRouteImport } from './routes/_protected/geographic-visualization'
 import { Route as ProtectedForumsRouteImport } from './routes/_protected/forums'
-import { Route as ProtectedFormAutoSaveDemoRouteImport } from './routes/_protected/form-auto-save-demo'
-import { Route as ProtectedFieldHistoryDemoRouteImport } from './routes/_protected/field-history-demo'
-import { Route as ProtectedExportImportRouteImport } from './routes/_protected/export-import'
-import { Route as ProtectedExportRouteImport } from './routes/_protected/export'
 import { Route as ProtectedEventsRouteImport } from './routes/_protected/events'
-import { Route as ProtectedEntityTemplatesDemoRouteImport } from './routes/_protected/entity-templates-demo'
 import { Route as ProtectedEngagementsRouteImport } from './routes/_protected/engagements'
-import { Route as ProtectedDuplicateDetectionDemoRouteImport } from './routes/_protected/duplicate-detection-demo'
 import { Route as ProtectedDelegationsRouteImport } from './routes/_protected/delegations'
 import { Route as ProtectedDataLibraryRouteImport } from './routes/_protected/data-library'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedCustomDashboardRouteImport } from './routes/_protected/custom-dashboard'
 import { Route as ProtectedCountriesRouteImport } from './routes/_protected/countries'
 import { Route as ProtectedContactsRouteImport } from './routes/_protected/contacts'
-import { Route as ProtectedComplianceDemoRouteImport } from './routes/_protected/compliance-demo'
 import { Route as ProtectedCompareRouteImport } from './routes/_protected/compare'
 import { Route as ProtectedCommitmentsRouteImport } from './routes/_protected/commitments'
 import { Route as ProtectedCalendarRouteImport } from './routes/_protected/calendar'
-import { Route as ProtectedBulkActionsDemoRouteImport } from './routes/_protected/bulk-actions-demo'
 import { Route as ProtectedBriefsRouteImport } from './routes/_protected/briefs'
-import { Route as ProtectedBriefingBooksRouteImport } from './routes/_protected/briefing-books'
-import { Route as ProtectedAvailabilityPollingRouteImport } from './routes/_protected/availability-polling'
 import { Route as ProtectedAuditLogsRouteImport } from './routes/_protected/audit-logs'
 import { Route as ProtectedAnalyticsRouteImport } from './routes/_protected/analytics'
-import { Route as ProtectedAdvancedSearchRouteImport } from './routes/_protected/advanced-search'
 import { Route as ProtectedActivityRouteImport } from './routes/_protected/activity'
-import { Route as ProtectedActionableErrorsDemoRouteImport } from './routes/_protected/actionable-errors-demo'
 import { Route as ProtectedTasksIndexRouteImport } from './routes/_protected/tasks/index'
 import { Route as ProtectedReportsIndexRouteImport } from './routes/_protected/reports/index'
 import { Route as ProtectedPositionsIndexRouteImport } from './routes/_protected/positions/index'
-import { Route as ProtectedPersonsIndexRouteImport } from './routes/_protected/persons/index'
 import { Route as ProtectedMyWorkIndexRouteImport } from './routes/_protected/my-work/index'
 import { Route as ProtectedIntakeIndexRouteImport } from './routes/_protected/intake/index'
 import { Route as ProtectedHelpIndexRouteImport } from './routes/_protected/help/index'
@@ -98,8 +79,6 @@ import { Route as ProtectedReportsReportIdRouteImport } from './routes/_protecte
 import { Route as ProtectedRelationshipsGraphRouteImport } from './routes/_protected/relationships/graph'
 import { Route as ProtectedPositionsPositionIdRouteImport } from './routes/_protected/positions/$positionId'
 import { Route as ProtectedPositionsIdRouteImport } from './routes/_protected/positions/$id'
-import { Route as ProtectedPersonsCreateRouteImport } from './routes/_protected/persons/create'
-import { Route as ProtectedPersonsPersonIdRouteImport } from './routes/_protected/persons/$personId'
 import { Route as ProtectedMyWorkWaitingRouteImport } from './routes/_protected/my-work/waiting'
 import { Route as ProtectedMyWorkIntakeRouteImport } from './routes/_protected/my-work/intake'
 import { Route as ProtectedMyWorkBoardRouteImport } from './routes/_protected/my-work/board'
@@ -278,19 +257,9 @@ const ProtectedWordAssistantRoute = ProtectedWordAssistantRouteImport.update({
   path: '/word-assistant',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedValidationDemoRoute = ProtectedValidationDemoRouteImport.update({
-  id: '/validation-demo',
-  path: '/validation-demo',
-  getParentRoute: () => ProtectedRoute,
-} as any)
 const ProtectedUsersRoute = ProtectedUsersRouteImport.update({
   id: '/users',
   path: '/users',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedThemesRoute = ProtectedThemesRouteImport.update({
-  id: '/themes',
-  path: '/themes',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedTagsRoute = ProtectedTagsRouteImport.update({
@@ -335,20 +304,9 @@ const ProtectedReportsRoute = ProtectedReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedProgressiveFormDemoRoute =
-  ProtectedProgressiveFormDemoRouteImport.update({
-    id: '/progressive-form-demo',
-    path: '/progressive-form-demo',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
 const ProtectedPositionsRoute = ProtectedPositionsRouteImport.update({
   id: '/positions',
   path: '/positions',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedPluginDemoRoute = ProtectedPluginDemoRouteImport.update({
-  id: '/plugin-demo',
-  path: '/plugin-demo',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedPersonsRoute = ProtectedPersonsRouteImport.update({
@@ -381,17 +339,6 @@ const ProtectedMonitoringRoute = ProtectedMonitoringRouteImport.update({
   path: '/monitoring',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedModernNavDemoRoute = ProtectedModernNavDemoRouteImport.update({
-  id: '/modern-nav-demo',
-  path: '/modern-nav-demo',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedMeetingMinutesDemoRoute =
-  ProtectedMeetingMinutesDemoRouteImport.update({
-    id: '/meeting-minutes-demo',
-    path: '/meeting-minutes-demo',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
 const ProtectedLegislationRoute = ProtectedLegislationRouteImport.update({
   id: '/legislation',
   path: '/legislation',
@@ -423,50 +370,16 @@ const ProtectedForumsRoute = ProtectedForumsRouteImport.update({
   path: '/forums',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedFormAutoSaveDemoRoute =
-  ProtectedFormAutoSaveDemoRouteImport.update({
-    id: '/form-auto-save-demo',
-    path: '/form-auto-save-demo',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedFieldHistoryDemoRoute =
-  ProtectedFieldHistoryDemoRouteImport.update({
-    id: '/field-history-demo',
-    path: '/field-history-demo',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedExportImportRoute = ProtectedExportImportRouteImport.update({
-  id: '/export-import',
-  path: '/export-import',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedExportRoute = ProtectedExportRouteImport.update({
-  id: '/export',
-  path: '/export',
-  getParentRoute: () => ProtectedRoute,
-} as any)
 const ProtectedEventsRoute = ProtectedEventsRouteImport.update({
   id: '/events',
   path: '/events',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedEntityTemplatesDemoRoute =
-  ProtectedEntityTemplatesDemoRouteImport.update({
-    id: '/entity-templates-demo',
-    path: '/entity-templates-demo',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
 const ProtectedEngagementsRoute = ProtectedEngagementsRouteImport.update({
   id: '/engagements',
   path: '/engagements',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedDuplicateDetectionDemoRoute =
-  ProtectedDuplicateDetectionDemoRouteImport.update({
-    id: '/duplicate-detection-demo',
-    path: '/duplicate-detection-demo',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
 const ProtectedDelegationsRoute = ProtectedDelegationsRouteImport.update({
   id: '/delegations',
   path: '/delegations',
@@ -498,11 +411,6 @@ const ProtectedContactsRoute = ProtectedContactsRouteImport.update({
   path: '/contacts',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedComplianceDemoRoute = ProtectedComplianceDemoRouteImport.update({
-  id: '/compliance-demo',
-  path: '/compliance-demo',
-  getParentRoute: () => ProtectedRoute,
-} as any)
 const ProtectedCompareRoute = ProtectedCompareRouteImport.update({
   id: '/compare',
   path: '/compare',
@@ -518,28 +426,11 @@ const ProtectedCalendarRoute = ProtectedCalendarRouteImport.update({
   path: '/calendar',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedBulkActionsDemoRoute =
-  ProtectedBulkActionsDemoRouteImport.update({
-    id: '/bulk-actions-demo',
-    path: '/bulk-actions-demo',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
 const ProtectedBriefsRoute = ProtectedBriefsRouteImport.update({
   id: '/briefs',
   path: '/briefs',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedBriefingBooksRoute = ProtectedBriefingBooksRouteImport.update({
-  id: '/briefing-books',
-  path: '/briefing-books',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedAvailabilityPollingRoute =
-  ProtectedAvailabilityPollingRouteImport.update({
-    id: '/availability-polling',
-    path: '/availability-polling',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
 const ProtectedAuditLogsRoute = ProtectedAuditLogsRouteImport.update({
   id: '/audit-logs',
   path: '/audit-logs',
@@ -550,22 +441,11 @@ const ProtectedAnalyticsRoute = ProtectedAnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedAdvancedSearchRoute = ProtectedAdvancedSearchRouteImport.update({
-  id: '/advanced-search',
-  path: '/advanced-search',
-  getParentRoute: () => ProtectedRoute,
-} as any)
 const ProtectedActivityRoute = ProtectedActivityRouteImport.update({
   id: '/activity',
   path: '/activity',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedActionableErrorsDemoRoute =
-  ProtectedActionableErrorsDemoRouteImport.update({
-    id: '/actionable-errors-demo',
-    path: '/actionable-errors-demo',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
 const ProtectedTasksIndexRoute = ProtectedTasksIndexRouteImport.update({
   id: '/tasks/',
   path: '/tasks/',
@@ -580,11 +460,6 @@ const ProtectedPositionsIndexRoute = ProtectedPositionsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ProtectedPositionsRoute,
-} as any)
-const ProtectedPersonsIndexRoute = ProtectedPersonsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ProtectedPersonsRoute,
 } as any)
 const ProtectedMyWorkIndexRoute = ProtectedMyWorkIndexRouteImport.update({
   id: '/',
@@ -703,17 +578,6 @@ const ProtectedPositionsIdRoute = ProtectedPositionsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ProtectedPositionsRoute,
 } as any)
-const ProtectedPersonsCreateRoute = ProtectedPersonsCreateRouteImport.update({
-  id: '/create',
-  path: '/create',
-  getParentRoute: () => ProtectedPersonsRoute,
-} as any)
-const ProtectedPersonsPersonIdRoute =
-  ProtectedPersonsPersonIdRouteImport.update({
-    id: '/$personId',
-    path: '/$personId',
-    getParentRoute: () => ProtectedPersonsRoute,
-  } as any)
 const ProtectedMyWorkWaitingRoute = ProtectedMyWorkWaitingRouteImport.update({
   id: '/waiting',
   path: '/waiting',
@@ -1501,50 +1365,34 @@ export interface FileRoutesByFullPath {
   '/modern-nav-standalone': typeof ModernNavStandaloneRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/actionable-errors-demo': typeof ProtectedActionableErrorsDemoRoute
   '/activity': typeof ProtectedActivityRoute
-  '/advanced-search': typeof ProtectedAdvancedSearchRoute
   '/analytics': typeof ProtectedAnalyticsRoute
   '/audit-logs': typeof ProtectedAuditLogsRoute
-  '/availability-polling': typeof ProtectedAvailabilityPollingRoute
-  '/briefing-books': typeof ProtectedBriefingBooksRoute
   '/briefs': typeof ProtectedBriefsRoute
-  '/bulk-actions-demo': typeof ProtectedBulkActionsDemoRoute
   '/calendar': typeof ProtectedCalendarRouteWithChildren
   '/commitments': typeof ProtectedCommitmentsRoute
   '/compare': typeof ProtectedCompareRoute
-  '/compliance-demo': typeof ProtectedComplianceDemoRoute
   '/contacts': typeof ProtectedContactsRouteWithChildren
   '/countries': typeof ProtectedCountriesRoute
   '/custom-dashboard': typeof ProtectedCustomDashboardRoute
   '/dashboard': typeof ProtectedDashboardRouteWithChildren
   '/data-library': typeof ProtectedDataLibraryRoute
   '/delegations': typeof ProtectedDelegationsRoute
-  '/duplicate-detection-demo': typeof ProtectedDuplicateDetectionDemoRoute
   '/engagements': typeof ProtectedEngagementsRouteWithChildren
-  '/entity-templates-demo': typeof ProtectedEntityTemplatesDemoRoute
   '/events': typeof ProtectedEventsRoute
-  '/export': typeof ProtectedExportRoute
-  '/export-import': typeof ProtectedExportImportRoute
-  '/field-history-demo': typeof ProtectedFieldHistoryDemoRoute
-  '/form-auto-save-demo': typeof ProtectedFormAutoSaveDemoRoute
   '/forums': typeof ProtectedForumsRoute
   '/geographic-visualization': typeof ProtectedGeographicVisualizationRoute
   '/intake': typeof ProtectedIntakeRouteWithChildren
   '/intelligence': typeof ProtectedIntelligenceRoute
   '/kanban': typeof ProtectedKanbanRoute
   '/legislation': typeof ProtectedLegislationRouteWithChildren
-  '/meeting-minutes-demo': typeof ProtectedMeetingMinutesDemoRoute
-  '/modern-nav-demo': typeof ProtectedModernNavDemoRoute
   '/monitoring': typeof ProtectedMonitoringRoute
   '/mous': typeof ProtectedMousRoute
   '/my-work': typeof ProtectedMyWorkRouteWithChildren
   '/notifications': typeof ProtectedNotificationsRoute
   '/organizations': typeof ProtectedOrganizationsRoute
-  '/persons': typeof ProtectedPersonsRouteWithChildren
-  '/plugin-demo': typeof ProtectedPluginDemoRoute
+  '/persons': typeof ProtectedPersonsRoute
   '/positions': typeof ProtectedPositionsRouteWithChildren
-  '/progressive-form-demo': typeof ProtectedProgressiveFormDemoRoute
   '/reports': typeof ProtectedReportsRouteWithChildren
   '/responsive-demo': typeof ProtectedResponsiveDemoRoute
   '/scenario-sandbox': typeof ProtectedScenarioSandboxRoute
@@ -1553,9 +1401,7 @@ export interface FileRoutesByFullPath {
   '/sla-monitoring': typeof ProtectedSlaMonitoringRoute
   '/stakeholder-influence': typeof ProtectedStakeholderInfluenceRoute
   '/tags': typeof ProtectedTagsRoute
-  '/themes': typeof ProtectedThemesRoute
   '/users': typeof ProtectedUsersRoute
-  '/validation-demo': typeof ProtectedValidationDemoRoute
   '/word-assistant': typeof ProtectedWordAssistantRoute
   '/workflow-automation': typeof ProtectedWorkflowAutomationRoute
   '/working-groups': typeof ProtectedWorkingGroupsRoute
@@ -1582,8 +1428,6 @@ export interface FileRoutesByFullPath {
   '/my-work/board': typeof ProtectedMyWorkBoardRoute
   '/my-work/intake': typeof ProtectedMyWorkIntakeRoute
   '/my-work/waiting': typeof ProtectedMyWorkWaitingRoute
-  '/persons/$personId': typeof ProtectedPersonsPersonIdRoute
-  '/persons/create': typeof ProtectedPersonsCreateRoute
   '/positions/$id': typeof ProtectedPositionsIdRouteWithChildren
   '/positions/$positionId': typeof ProtectedPositionsPositionIdRoute
   '/relationships/graph': typeof ProtectedRelationshipsGraphRoute
@@ -1605,7 +1449,6 @@ export interface FileRoutesByFullPath {
   '/help/': typeof ProtectedHelpIndexRoute
   '/intake/': typeof ProtectedIntakeIndexRoute
   '/my-work/': typeof ProtectedMyWorkIndexRoute
-  '/persons/': typeof ProtectedPersonsIndexRoute
   '/positions/': typeof ProtectedPositionsIndexRoute
   '/reports/': typeof ProtectedReportsIndexRoute
   '/tasks/': typeof ProtectedTasksIndexRoute
@@ -1725,45 +1568,30 @@ export interface FileRoutesByTo {
   '/modern-nav-standalone': typeof ModernNavStandaloneRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/actionable-errors-demo': typeof ProtectedActionableErrorsDemoRoute
   '/activity': typeof ProtectedActivityRoute
-  '/advanced-search': typeof ProtectedAdvancedSearchRoute
   '/analytics': typeof ProtectedAnalyticsRoute
   '/audit-logs': typeof ProtectedAuditLogsRoute
-  '/availability-polling': typeof ProtectedAvailabilityPollingRoute
-  '/briefing-books': typeof ProtectedBriefingBooksRoute
   '/briefs': typeof ProtectedBriefsRoute
-  '/bulk-actions-demo': typeof ProtectedBulkActionsDemoRoute
   '/calendar': typeof ProtectedCalendarRouteWithChildren
   '/commitments': typeof ProtectedCommitmentsRoute
   '/compare': typeof ProtectedCompareRoute
-  '/compliance-demo': typeof ProtectedComplianceDemoRoute
   '/contacts': typeof ProtectedContactsRouteWithChildren
   '/countries': typeof ProtectedCountriesRoute
   '/custom-dashboard': typeof ProtectedCustomDashboardRoute
   '/dashboard': typeof ProtectedDashboardRouteWithChildren
   '/data-library': typeof ProtectedDataLibraryRoute
   '/delegations': typeof ProtectedDelegationsRoute
-  '/duplicate-detection-demo': typeof ProtectedDuplicateDetectionDemoRoute
-  '/entity-templates-demo': typeof ProtectedEntityTemplatesDemoRoute
   '/events': typeof ProtectedEventsRoute
-  '/export': typeof ProtectedExportRoute
-  '/export-import': typeof ProtectedExportImportRoute
-  '/field-history-demo': typeof ProtectedFieldHistoryDemoRoute
-  '/form-auto-save-demo': typeof ProtectedFormAutoSaveDemoRoute
   '/forums': typeof ProtectedForumsRoute
   '/geographic-visualization': typeof ProtectedGeographicVisualizationRoute
   '/intelligence': typeof ProtectedIntelligenceRoute
   '/kanban': typeof ProtectedKanbanRoute
   '/legislation': typeof ProtectedLegislationRouteWithChildren
-  '/meeting-minutes-demo': typeof ProtectedMeetingMinutesDemoRoute
-  '/modern-nav-demo': typeof ProtectedModernNavDemoRoute
   '/monitoring': typeof ProtectedMonitoringRoute
   '/mous': typeof ProtectedMousRoute
   '/notifications': typeof ProtectedNotificationsRoute
   '/organizations': typeof ProtectedOrganizationsRoute
-  '/plugin-demo': typeof ProtectedPluginDemoRoute
-  '/progressive-form-demo': typeof ProtectedProgressiveFormDemoRoute
+  '/persons': typeof ProtectedPersonsRoute
   '/responsive-demo': typeof ProtectedResponsiveDemoRoute
   '/scenario-sandbox': typeof ProtectedScenarioSandboxRoute
   '/search': typeof ProtectedSearchRoute
@@ -1771,9 +1599,7 @@ export interface FileRoutesByTo {
   '/sla-monitoring': typeof ProtectedSlaMonitoringRoute
   '/stakeholder-influence': typeof ProtectedStakeholderInfluenceRoute
   '/tags': typeof ProtectedTagsRoute
-  '/themes': typeof ProtectedThemesRoute
   '/users': typeof ProtectedUsersRoute
-  '/validation-demo': typeof ProtectedValidationDemoRoute
   '/word-assistant': typeof ProtectedWordAssistantRoute
   '/workflow-automation': typeof ProtectedWorkflowAutomationRoute
   '/working-groups': typeof ProtectedWorkingGroupsRoute
@@ -1799,8 +1625,6 @@ export interface FileRoutesByTo {
   '/my-work/board': typeof ProtectedMyWorkBoardRoute
   '/my-work/intake': typeof ProtectedMyWorkIntakeRoute
   '/my-work/waiting': typeof ProtectedMyWorkWaitingRoute
-  '/persons/$personId': typeof ProtectedPersonsPersonIdRoute
-  '/persons/create': typeof ProtectedPersonsCreateRoute
   '/positions/$id': typeof ProtectedPositionsIdRouteWithChildren
   '/positions/$positionId': typeof ProtectedPositionsPositionIdRoute
   '/relationships/graph': typeof ProtectedRelationshipsGraphRoute
@@ -1822,7 +1646,6 @@ export interface FileRoutesByTo {
   '/help': typeof ProtectedHelpIndexRoute
   '/intake': typeof ProtectedIntakeIndexRoute
   '/my-work': typeof ProtectedMyWorkIndexRoute
-  '/persons': typeof ProtectedPersonsIndexRoute
   '/positions': typeof ProtectedPositionsIndexRoute
   '/reports': typeof ProtectedReportsIndexRoute
   '/tasks': typeof ProtectedTasksIndexRoute
@@ -1937,50 +1760,34 @@ export interface FileRoutesById {
   '/modern-nav-standalone': typeof ModernNavStandaloneRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/_protected/actionable-errors-demo': typeof ProtectedActionableErrorsDemoRoute
   '/_protected/activity': typeof ProtectedActivityRoute
-  '/_protected/advanced-search': typeof ProtectedAdvancedSearchRoute
   '/_protected/analytics': typeof ProtectedAnalyticsRoute
   '/_protected/audit-logs': typeof ProtectedAuditLogsRoute
-  '/_protected/availability-polling': typeof ProtectedAvailabilityPollingRoute
-  '/_protected/briefing-books': typeof ProtectedBriefingBooksRoute
   '/_protected/briefs': typeof ProtectedBriefsRoute
-  '/_protected/bulk-actions-demo': typeof ProtectedBulkActionsDemoRoute
   '/_protected/calendar': typeof ProtectedCalendarRouteWithChildren
   '/_protected/commitments': typeof ProtectedCommitmentsRoute
   '/_protected/compare': typeof ProtectedCompareRoute
-  '/_protected/compliance-demo': typeof ProtectedComplianceDemoRoute
   '/_protected/contacts': typeof ProtectedContactsRouteWithChildren
   '/_protected/countries': typeof ProtectedCountriesRoute
   '/_protected/custom-dashboard': typeof ProtectedCustomDashboardRoute
   '/_protected/dashboard': typeof ProtectedDashboardRouteWithChildren
   '/_protected/data-library': typeof ProtectedDataLibraryRoute
   '/_protected/delegations': typeof ProtectedDelegationsRoute
-  '/_protected/duplicate-detection-demo': typeof ProtectedDuplicateDetectionDemoRoute
   '/_protected/engagements': typeof ProtectedEngagementsRouteWithChildren
-  '/_protected/entity-templates-demo': typeof ProtectedEntityTemplatesDemoRoute
   '/_protected/events': typeof ProtectedEventsRoute
-  '/_protected/export': typeof ProtectedExportRoute
-  '/_protected/export-import': typeof ProtectedExportImportRoute
-  '/_protected/field-history-demo': typeof ProtectedFieldHistoryDemoRoute
-  '/_protected/form-auto-save-demo': typeof ProtectedFormAutoSaveDemoRoute
   '/_protected/forums': typeof ProtectedForumsRoute
   '/_protected/geographic-visualization': typeof ProtectedGeographicVisualizationRoute
   '/_protected/intake': typeof ProtectedIntakeRouteWithChildren
   '/_protected/intelligence': typeof ProtectedIntelligenceRoute
   '/_protected/kanban': typeof ProtectedKanbanRoute
   '/_protected/legislation': typeof ProtectedLegislationRouteWithChildren
-  '/_protected/meeting-minutes-demo': typeof ProtectedMeetingMinutesDemoRoute
-  '/_protected/modern-nav-demo': typeof ProtectedModernNavDemoRoute
   '/_protected/monitoring': typeof ProtectedMonitoringRoute
   '/_protected/mous': typeof ProtectedMousRoute
   '/_protected/my-work': typeof ProtectedMyWorkRouteWithChildren
   '/_protected/notifications': typeof ProtectedNotificationsRoute
   '/_protected/organizations': typeof ProtectedOrganizationsRoute
-  '/_protected/persons': typeof ProtectedPersonsRouteWithChildren
-  '/_protected/plugin-demo': typeof ProtectedPluginDemoRoute
+  '/_protected/persons': typeof ProtectedPersonsRoute
   '/_protected/positions': typeof ProtectedPositionsRouteWithChildren
-  '/_protected/progressive-form-demo': typeof ProtectedProgressiveFormDemoRoute
   '/_protected/reports': typeof ProtectedReportsRouteWithChildren
   '/_protected/responsive-demo': typeof ProtectedResponsiveDemoRoute
   '/_protected/scenario-sandbox': typeof ProtectedScenarioSandboxRoute
@@ -1989,9 +1796,7 @@ export interface FileRoutesById {
   '/_protected/sla-monitoring': typeof ProtectedSlaMonitoringRoute
   '/_protected/stakeholder-influence': typeof ProtectedStakeholderInfluenceRoute
   '/_protected/tags': typeof ProtectedTagsRoute
-  '/_protected/themes': typeof ProtectedThemesRoute
   '/_protected/users': typeof ProtectedUsersRoute
-  '/_protected/validation-demo': typeof ProtectedValidationDemoRoute
   '/_protected/word-assistant': typeof ProtectedWordAssistantRoute
   '/_protected/workflow-automation': typeof ProtectedWorkflowAutomationRoute
   '/_protected/working-groups': typeof ProtectedWorkingGroupsRoute
@@ -2018,8 +1823,6 @@ export interface FileRoutesById {
   '/_protected/my-work/board': typeof ProtectedMyWorkBoardRoute
   '/_protected/my-work/intake': typeof ProtectedMyWorkIntakeRoute
   '/_protected/my-work/waiting': typeof ProtectedMyWorkWaitingRoute
-  '/_protected/persons/$personId': typeof ProtectedPersonsPersonIdRoute
-  '/_protected/persons/create': typeof ProtectedPersonsCreateRoute
   '/_protected/positions/$id': typeof ProtectedPositionsIdRouteWithChildren
   '/_protected/positions/$positionId': typeof ProtectedPositionsPositionIdRoute
   '/_protected/relationships/graph': typeof ProtectedRelationshipsGraphRoute
@@ -2041,7 +1844,6 @@ export interface FileRoutesById {
   '/_protected/help/': typeof ProtectedHelpIndexRoute
   '/_protected/intake/': typeof ProtectedIntakeIndexRoute
   '/_protected/my-work/': typeof ProtectedMyWorkIndexRoute
-  '/_protected/persons/': typeof ProtectedPersonsIndexRoute
   '/_protected/positions/': typeof ProtectedPositionsIndexRoute
   '/_protected/reports/': typeof ProtectedReportsIndexRoute
   '/_protected/tasks/': typeof ProtectedTasksIndexRoute
@@ -2163,50 +1965,34 @@ export interface FileRouteTypes {
     | '/modern-nav-standalone'
     | '/register'
     | '/reset-password'
-    | '/actionable-errors-demo'
     | '/activity'
-    | '/advanced-search'
     | '/analytics'
     | '/audit-logs'
-    | '/availability-polling'
-    | '/briefing-books'
     | '/briefs'
-    | '/bulk-actions-demo'
     | '/calendar'
     | '/commitments'
     | '/compare'
-    | '/compliance-demo'
     | '/contacts'
     | '/countries'
     | '/custom-dashboard'
     | '/dashboard'
     | '/data-library'
     | '/delegations'
-    | '/duplicate-detection-demo'
     | '/engagements'
-    | '/entity-templates-demo'
     | '/events'
-    | '/export'
-    | '/export-import'
-    | '/field-history-demo'
-    | '/form-auto-save-demo'
     | '/forums'
     | '/geographic-visualization'
     | '/intake'
     | '/intelligence'
     | '/kanban'
     | '/legislation'
-    | '/meeting-minutes-demo'
-    | '/modern-nav-demo'
     | '/monitoring'
     | '/mous'
     | '/my-work'
     | '/notifications'
     | '/organizations'
     | '/persons'
-    | '/plugin-demo'
     | '/positions'
-    | '/progressive-form-demo'
     | '/reports'
     | '/responsive-demo'
     | '/scenario-sandbox'
@@ -2215,9 +2001,7 @@ export interface FileRouteTypes {
     | '/sla-monitoring'
     | '/stakeholder-influence'
     | '/tags'
-    | '/themes'
     | '/users'
-    | '/validation-demo'
     | '/word-assistant'
     | '/workflow-automation'
     | '/working-groups'
@@ -2244,8 +2028,6 @@ export interface FileRouteTypes {
     | '/my-work/board'
     | '/my-work/intake'
     | '/my-work/waiting'
-    | '/persons/$personId'
-    | '/persons/create'
     | '/positions/$id'
     | '/positions/$positionId'
     | '/relationships/graph'
@@ -2267,7 +2049,6 @@ export interface FileRouteTypes {
     | '/help/'
     | '/intake/'
     | '/my-work/'
-    | '/persons/'
     | '/positions/'
     | '/reports/'
     | '/tasks/'
@@ -2387,45 +2168,30 @@ export interface FileRouteTypes {
     | '/modern-nav-standalone'
     | '/register'
     | '/reset-password'
-    | '/actionable-errors-demo'
     | '/activity'
-    | '/advanced-search'
     | '/analytics'
     | '/audit-logs'
-    | '/availability-polling'
-    | '/briefing-books'
     | '/briefs'
-    | '/bulk-actions-demo'
     | '/calendar'
     | '/commitments'
     | '/compare'
-    | '/compliance-demo'
     | '/contacts'
     | '/countries'
     | '/custom-dashboard'
     | '/dashboard'
     | '/data-library'
     | '/delegations'
-    | '/duplicate-detection-demo'
-    | '/entity-templates-demo'
     | '/events'
-    | '/export'
-    | '/export-import'
-    | '/field-history-demo'
-    | '/form-auto-save-demo'
     | '/forums'
     | '/geographic-visualization'
     | '/intelligence'
     | '/kanban'
     | '/legislation'
-    | '/meeting-minutes-demo'
-    | '/modern-nav-demo'
     | '/monitoring'
     | '/mous'
     | '/notifications'
     | '/organizations'
-    | '/plugin-demo'
-    | '/progressive-form-demo'
+    | '/persons'
     | '/responsive-demo'
     | '/scenario-sandbox'
     | '/search'
@@ -2433,9 +2199,7 @@ export interface FileRouteTypes {
     | '/sla-monitoring'
     | '/stakeholder-influence'
     | '/tags'
-    | '/themes'
     | '/users'
-    | '/validation-demo'
     | '/word-assistant'
     | '/workflow-automation'
     | '/working-groups'
@@ -2461,8 +2225,6 @@ export interface FileRouteTypes {
     | '/my-work/board'
     | '/my-work/intake'
     | '/my-work/waiting'
-    | '/persons/$personId'
-    | '/persons/create'
     | '/positions/$id'
     | '/positions/$positionId'
     | '/relationships/graph'
@@ -2484,7 +2246,6 @@ export interface FileRouteTypes {
     | '/help'
     | '/intake'
     | '/my-work'
-    | '/persons'
     | '/positions'
     | '/reports'
     | '/tasks'
@@ -2598,50 +2359,34 @@ export interface FileRouteTypes {
     | '/modern-nav-standalone'
     | '/register'
     | '/reset-password'
-    | '/_protected/actionable-errors-demo'
     | '/_protected/activity'
-    | '/_protected/advanced-search'
     | '/_protected/analytics'
     | '/_protected/audit-logs'
-    | '/_protected/availability-polling'
-    | '/_protected/briefing-books'
     | '/_protected/briefs'
-    | '/_protected/bulk-actions-demo'
     | '/_protected/calendar'
     | '/_protected/commitments'
     | '/_protected/compare'
-    | '/_protected/compliance-demo'
     | '/_protected/contacts'
     | '/_protected/countries'
     | '/_protected/custom-dashboard'
     | '/_protected/dashboard'
     | '/_protected/data-library'
     | '/_protected/delegations'
-    | '/_protected/duplicate-detection-demo'
     | '/_protected/engagements'
-    | '/_protected/entity-templates-demo'
     | '/_protected/events'
-    | '/_protected/export'
-    | '/_protected/export-import'
-    | '/_protected/field-history-demo'
-    | '/_protected/form-auto-save-demo'
     | '/_protected/forums'
     | '/_protected/geographic-visualization'
     | '/_protected/intake'
     | '/_protected/intelligence'
     | '/_protected/kanban'
     | '/_protected/legislation'
-    | '/_protected/meeting-minutes-demo'
-    | '/_protected/modern-nav-demo'
     | '/_protected/monitoring'
     | '/_protected/mous'
     | '/_protected/my-work'
     | '/_protected/notifications'
     | '/_protected/organizations'
     | '/_protected/persons'
-    | '/_protected/plugin-demo'
     | '/_protected/positions'
-    | '/_protected/progressive-form-demo'
     | '/_protected/reports'
     | '/_protected/responsive-demo'
     | '/_protected/scenario-sandbox'
@@ -2650,9 +2395,7 @@ export interface FileRouteTypes {
     | '/_protected/sla-monitoring'
     | '/_protected/stakeholder-influence'
     | '/_protected/tags'
-    | '/_protected/themes'
     | '/_protected/users'
-    | '/_protected/validation-demo'
     | '/_protected/word-assistant'
     | '/_protected/workflow-automation'
     | '/_protected/working-groups'
@@ -2679,8 +2422,6 @@ export interface FileRouteTypes {
     | '/_protected/my-work/board'
     | '/_protected/my-work/intake'
     | '/_protected/my-work/waiting'
-    | '/_protected/persons/$personId'
-    | '/_protected/persons/create'
     | '/_protected/positions/$id'
     | '/_protected/positions/$positionId'
     | '/_protected/relationships/graph'
@@ -2702,7 +2443,6 @@ export interface FileRouteTypes {
     | '/_protected/help/'
     | '/_protected/intake/'
     | '/_protected/my-work/'
-    | '/_protected/persons/'
     | '/_protected/positions/'
     | '/_protected/reports/'
     | '/_protected/tasks/'
@@ -2891,25 +2631,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedWordAssistantRouteImport
       parentRoute: typeof ProtectedRoute
     }
-    '/_protected/validation-demo': {
-      id: '/_protected/validation-demo'
-      path: '/validation-demo'
-      fullPath: '/validation-demo'
-      preLoaderRoute: typeof ProtectedValidationDemoRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
     '/_protected/users': {
       id: '/_protected/users'
       path: '/users'
       fullPath: '/users'
       preLoaderRoute: typeof ProtectedUsersRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/themes': {
-      id: '/_protected/themes'
-      path: '/themes'
-      fullPath: '/themes'
-      preLoaderRoute: typeof ProtectedThemesRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/tags': {
@@ -2968,25 +2694,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedReportsRouteImport
       parentRoute: typeof ProtectedRoute
     }
-    '/_protected/progressive-form-demo': {
-      id: '/_protected/progressive-form-demo'
-      path: '/progressive-form-demo'
-      fullPath: '/progressive-form-demo'
-      preLoaderRoute: typeof ProtectedProgressiveFormDemoRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
     '/_protected/positions': {
       id: '/_protected/positions'
       path: '/positions'
       fullPath: '/positions'
       preLoaderRoute: typeof ProtectedPositionsRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/plugin-demo': {
-      id: '/_protected/plugin-demo'
-      path: '/plugin-demo'
-      fullPath: '/plugin-demo'
-      preLoaderRoute: typeof ProtectedPluginDemoRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/persons': {
@@ -3031,20 +2743,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedMonitoringRouteImport
       parentRoute: typeof ProtectedRoute
     }
-    '/_protected/modern-nav-demo': {
-      id: '/_protected/modern-nav-demo'
-      path: '/modern-nav-demo'
-      fullPath: '/modern-nav-demo'
-      preLoaderRoute: typeof ProtectedModernNavDemoRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/meeting-minutes-demo': {
-      id: '/_protected/meeting-minutes-demo'
-      path: '/meeting-minutes-demo'
-      fullPath: '/meeting-minutes-demo'
-      preLoaderRoute: typeof ProtectedMeetingMinutesDemoRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
     '/_protected/legislation': {
       id: '/_protected/legislation'
       path: '/legislation'
@@ -3087,34 +2785,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedForumsRouteImport
       parentRoute: typeof ProtectedRoute
     }
-    '/_protected/form-auto-save-demo': {
-      id: '/_protected/form-auto-save-demo'
-      path: '/form-auto-save-demo'
-      fullPath: '/form-auto-save-demo'
-      preLoaderRoute: typeof ProtectedFormAutoSaveDemoRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/field-history-demo': {
-      id: '/_protected/field-history-demo'
-      path: '/field-history-demo'
-      fullPath: '/field-history-demo'
-      preLoaderRoute: typeof ProtectedFieldHistoryDemoRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/export-import': {
-      id: '/_protected/export-import'
-      path: '/export-import'
-      fullPath: '/export-import'
-      preLoaderRoute: typeof ProtectedExportImportRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/export': {
-      id: '/_protected/export'
-      path: '/export'
-      fullPath: '/export'
-      preLoaderRoute: typeof ProtectedExportRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
     '/_protected/events': {
       id: '/_protected/events'
       path: '/events'
@@ -3122,25 +2792,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedEventsRouteImport
       parentRoute: typeof ProtectedRoute
     }
-    '/_protected/entity-templates-demo': {
-      id: '/_protected/entity-templates-demo'
-      path: '/entity-templates-demo'
-      fullPath: '/entity-templates-demo'
-      preLoaderRoute: typeof ProtectedEntityTemplatesDemoRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
     '/_protected/engagements': {
       id: '/_protected/engagements'
       path: '/engagements'
       fullPath: '/engagements'
       preLoaderRoute: typeof ProtectedEngagementsRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/duplicate-detection-demo': {
-      id: '/_protected/duplicate-detection-demo'
-      path: '/duplicate-detection-demo'
-      fullPath: '/duplicate-detection-demo'
-      preLoaderRoute: typeof ProtectedDuplicateDetectionDemoRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/delegations': {
@@ -3185,13 +2841,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedContactsRouteImport
       parentRoute: typeof ProtectedRoute
     }
-    '/_protected/compliance-demo': {
-      id: '/_protected/compliance-demo'
-      path: '/compliance-demo'
-      fullPath: '/compliance-demo'
-      preLoaderRoute: typeof ProtectedComplianceDemoRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
     '/_protected/compare': {
       id: '/_protected/compare'
       path: '/compare'
@@ -3213,32 +2862,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedCalendarRouteImport
       parentRoute: typeof ProtectedRoute
     }
-    '/_protected/bulk-actions-demo': {
-      id: '/_protected/bulk-actions-demo'
-      path: '/bulk-actions-demo'
-      fullPath: '/bulk-actions-demo'
-      preLoaderRoute: typeof ProtectedBulkActionsDemoRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
     '/_protected/briefs': {
       id: '/_protected/briefs'
       path: '/briefs'
       fullPath: '/briefs'
       preLoaderRoute: typeof ProtectedBriefsRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/briefing-books': {
-      id: '/_protected/briefing-books'
-      path: '/briefing-books'
-      fullPath: '/briefing-books'
-      preLoaderRoute: typeof ProtectedBriefingBooksRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/availability-polling': {
-      id: '/_protected/availability-polling'
-      path: '/availability-polling'
-      fullPath: '/availability-polling'
-      preLoaderRoute: typeof ProtectedAvailabilityPollingRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/audit-logs': {
@@ -3255,25 +2883,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedAnalyticsRouteImport
       parentRoute: typeof ProtectedRoute
     }
-    '/_protected/advanced-search': {
-      id: '/_protected/advanced-search'
-      path: '/advanced-search'
-      fullPath: '/advanced-search'
-      preLoaderRoute: typeof ProtectedAdvancedSearchRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
     '/_protected/activity': {
       id: '/_protected/activity'
       path: '/activity'
       fullPath: '/activity'
       preLoaderRoute: typeof ProtectedActivityRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/actionable-errors-demo': {
-      id: '/_protected/actionable-errors-demo'
-      path: '/actionable-errors-demo'
-      fullPath: '/actionable-errors-demo'
-      preLoaderRoute: typeof ProtectedActionableErrorsDemoRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/tasks/': {
@@ -3296,13 +2910,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/positions/'
       preLoaderRoute: typeof ProtectedPositionsIndexRouteImport
       parentRoute: typeof ProtectedPositionsRoute
-    }
-    '/_protected/persons/': {
-      id: '/_protected/persons/'
-      path: '/'
-      fullPath: '/persons/'
-      preLoaderRoute: typeof ProtectedPersonsIndexRouteImport
-      parentRoute: typeof ProtectedPersonsRoute
     }
     '/_protected/my-work/': {
       id: '/_protected/my-work/'
@@ -3450,20 +3057,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/positions/$id'
       preLoaderRoute: typeof ProtectedPositionsIdRouteImport
       parentRoute: typeof ProtectedPositionsRoute
-    }
-    '/_protected/persons/create': {
-      id: '/_protected/persons/create'
-      path: '/create'
-      fullPath: '/persons/create'
-      preLoaderRoute: typeof ProtectedPersonsCreateRouteImport
-      parentRoute: typeof ProtectedPersonsRoute
-    }
-    '/_protected/persons/$personId': {
-      id: '/_protected/persons/$personId'
-      path: '/$personId'
-      fullPath: '/persons/$personId'
-      preLoaderRoute: typeof ProtectedPersonsPersonIdRouteImport
-      parentRoute: typeof ProtectedPersonsRoute
     }
     '/_protected/my-work/waiting': {
       id: '/_protected/my-work/waiting'
@@ -4538,21 +4131,6 @@ const ProtectedMyWorkRouteWithChildren = ProtectedMyWorkRoute._addFileChildren(
   ProtectedMyWorkRouteChildren,
 )
 
-interface ProtectedPersonsRouteChildren {
-  ProtectedPersonsPersonIdRoute: typeof ProtectedPersonsPersonIdRoute
-  ProtectedPersonsCreateRoute: typeof ProtectedPersonsCreateRoute
-  ProtectedPersonsIndexRoute: typeof ProtectedPersonsIndexRoute
-}
-
-const ProtectedPersonsRouteChildren: ProtectedPersonsRouteChildren = {
-  ProtectedPersonsPersonIdRoute: ProtectedPersonsPersonIdRoute,
-  ProtectedPersonsCreateRoute: ProtectedPersonsCreateRoute,
-  ProtectedPersonsIndexRoute: ProtectedPersonsIndexRoute,
-}
-
-const ProtectedPersonsRouteWithChildren =
-  ProtectedPersonsRoute._addFileChildren(ProtectedPersonsRouteChildren)
-
 interface ProtectedPositionsIdRouteChildren {
   ProtectedPositionsIdApprovalsRoute: typeof ProtectedPositionsIdApprovalsRoute
   ProtectedPositionsIdVersionsRoute: typeof ProtectedPositionsIdVersionsRoute
@@ -4907,50 +4485,34 @@ const ProtectedDossiersWorking_groupsIdRouteWithChildren =
   )
 
 interface ProtectedRouteChildren {
-  ProtectedActionableErrorsDemoRoute: typeof ProtectedActionableErrorsDemoRoute
   ProtectedActivityRoute: typeof ProtectedActivityRoute
-  ProtectedAdvancedSearchRoute: typeof ProtectedAdvancedSearchRoute
   ProtectedAnalyticsRoute: typeof ProtectedAnalyticsRoute
   ProtectedAuditLogsRoute: typeof ProtectedAuditLogsRoute
-  ProtectedAvailabilityPollingRoute: typeof ProtectedAvailabilityPollingRoute
-  ProtectedBriefingBooksRoute: typeof ProtectedBriefingBooksRoute
   ProtectedBriefsRoute: typeof ProtectedBriefsRoute
-  ProtectedBulkActionsDemoRoute: typeof ProtectedBulkActionsDemoRoute
   ProtectedCalendarRoute: typeof ProtectedCalendarRouteWithChildren
   ProtectedCommitmentsRoute: typeof ProtectedCommitmentsRoute
   ProtectedCompareRoute: typeof ProtectedCompareRoute
-  ProtectedComplianceDemoRoute: typeof ProtectedComplianceDemoRoute
   ProtectedContactsRoute: typeof ProtectedContactsRouteWithChildren
   ProtectedCountriesRoute: typeof ProtectedCountriesRoute
   ProtectedCustomDashboardRoute: typeof ProtectedCustomDashboardRoute
   ProtectedDashboardRoute: typeof ProtectedDashboardRouteWithChildren
   ProtectedDataLibraryRoute: typeof ProtectedDataLibraryRoute
   ProtectedDelegationsRoute: typeof ProtectedDelegationsRoute
-  ProtectedDuplicateDetectionDemoRoute: typeof ProtectedDuplicateDetectionDemoRoute
   ProtectedEngagementsRoute: typeof ProtectedEngagementsRouteWithChildren
-  ProtectedEntityTemplatesDemoRoute: typeof ProtectedEntityTemplatesDemoRoute
   ProtectedEventsRoute: typeof ProtectedEventsRoute
-  ProtectedExportRoute: typeof ProtectedExportRoute
-  ProtectedExportImportRoute: typeof ProtectedExportImportRoute
-  ProtectedFieldHistoryDemoRoute: typeof ProtectedFieldHistoryDemoRoute
-  ProtectedFormAutoSaveDemoRoute: typeof ProtectedFormAutoSaveDemoRoute
   ProtectedForumsRoute: typeof ProtectedForumsRoute
   ProtectedGeographicVisualizationRoute: typeof ProtectedGeographicVisualizationRoute
   ProtectedIntakeRoute: typeof ProtectedIntakeRouteWithChildren
   ProtectedIntelligenceRoute: typeof ProtectedIntelligenceRoute
   ProtectedKanbanRoute: typeof ProtectedKanbanRoute
   ProtectedLegislationRoute: typeof ProtectedLegislationRouteWithChildren
-  ProtectedMeetingMinutesDemoRoute: typeof ProtectedMeetingMinutesDemoRoute
-  ProtectedModernNavDemoRoute: typeof ProtectedModernNavDemoRoute
   ProtectedMonitoringRoute: typeof ProtectedMonitoringRoute
   ProtectedMousRoute: typeof ProtectedMousRoute
   ProtectedMyWorkRoute: typeof ProtectedMyWorkRouteWithChildren
   ProtectedNotificationsRoute: typeof ProtectedNotificationsRoute
   ProtectedOrganizationsRoute: typeof ProtectedOrganizationsRoute
-  ProtectedPersonsRoute: typeof ProtectedPersonsRouteWithChildren
-  ProtectedPluginDemoRoute: typeof ProtectedPluginDemoRoute
+  ProtectedPersonsRoute: typeof ProtectedPersonsRoute
   ProtectedPositionsRoute: typeof ProtectedPositionsRouteWithChildren
-  ProtectedProgressiveFormDemoRoute: typeof ProtectedProgressiveFormDemoRoute
   ProtectedReportsRoute: typeof ProtectedReportsRouteWithChildren
   ProtectedResponsiveDemoRoute: typeof ProtectedResponsiveDemoRoute
   ProtectedScenarioSandboxRoute: typeof ProtectedScenarioSandboxRoute
@@ -4959,9 +4521,7 @@ interface ProtectedRouteChildren {
   ProtectedSlaMonitoringRoute: typeof ProtectedSlaMonitoringRoute
   ProtectedStakeholderInfluenceRoute: typeof ProtectedStakeholderInfluenceRoute
   ProtectedTagsRoute: typeof ProtectedTagsRoute
-  ProtectedThemesRoute: typeof ProtectedThemesRoute
   ProtectedUsersRoute: typeof ProtectedUsersRoute
-  ProtectedValidationDemoRoute: typeof ProtectedValidationDemoRoute
   ProtectedWordAssistantRoute: typeof ProtectedWordAssistantRoute
   ProtectedWorkflowAutomationRoute: typeof ProtectedWorkflowAutomationRoute
   ProtectedWorkingGroupsRoute: typeof ProtectedWorkingGroupsRoute
@@ -5014,50 +4574,34 @@ interface ProtectedRouteChildren {
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
-  ProtectedActionableErrorsDemoRoute: ProtectedActionableErrorsDemoRoute,
   ProtectedActivityRoute: ProtectedActivityRoute,
-  ProtectedAdvancedSearchRoute: ProtectedAdvancedSearchRoute,
   ProtectedAnalyticsRoute: ProtectedAnalyticsRoute,
   ProtectedAuditLogsRoute: ProtectedAuditLogsRoute,
-  ProtectedAvailabilityPollingRoute: ProtectedAvailabilityPollingRoute,
-  ProtectedBriefingBooksRoute: ProtectedBriefingBooksRoute,
   ProtectedBriefsRoute: ProtectedBriefsRoute,
-  ProtectedBulkActionsDemoRoute: ProtectedBulkActionsDemoRoute,
   ProtectedCalendarRoute: ProtectedCalendarRouteWithChildren,
   ProtectedCommitmentsRoute: ProtectedCommitmentsRoute,
   ProtectedCompareRoute: ProtectedCompareRoute,
-  ProtectedComplianceDemoRoute: ProtectedComplianceDemoRoute,
   ProtectedContactsRoute: ProtectedContactsRouteWithChildren,
   ProtectedCountriesRoute: ProtectedCountriesRoute,
   ProtectedCustomDashboardRoute: ProtectedCustomDashboardRoute,
   ProtectedDashboardRoute: ProtectedDashboardRouteWithChildren,
   ProtectedDataLibraryRoute: ProtectedDataLibraryRoute,
   ProtectedDelegationsRoute: ProtectedDelegationsRoute,
-  ProtectedDuplicateDetectionDemoRoute: ProtectedDuplicateDetectionDemoRoute,
   ProtectedEngagementsRoute: ProtectedEngagementsRouteWithChildren,
-  ProtectedEntityTemplatesDemoRoute: ProtectedEntityTemplatesDemoRoute,
   ProtectedEventsRoute: ProtectedEventsRoute,
-  ProtectedExportRoute: ProtectedExportRoute,
-  ProtectedExportImportRoute: ProtectedExportImportRoute,
-  ProtectedFieldHistoryDemoRoute: ProtectedFieldHistoryDemoRoute,
-  ProtectedFormAutoSaveDemoRoute: ProtectedFormAutoSaveDemoRoute,
   ProtectedForumsRoute: ProtectedForumsRoute,
   ProtectedGeographicVisualizationRoute: ProtectedGeographicVisualizationRoute,
   ProtectedIntakeRoute: ProtectedIntakeRouteWithChildren,
   ProtectedIntelligenceRoute: ProtectedIntelligenceRoute,
   ProtectedKanbanRoute: ProtectedKanbanRoute,
   ProtectedLegislationRoute: ProtectedLegislationRouteWithChildren,
-  ProtectedMeetingMinutesDemoRoute: ProtectedMeetingMinutesDemoRoute,
-  ProtectedModernNavDemoRoute: ProtectedModernNavDemoRoute,
   ProtectedMonitoringRoute: ProtectedMonitoringRoute,
   ProtectedMousRoute: ProtectedMousRoute,
   ProtectedMyWorkRoute: ProtectedMyWorkRouteWithChildren,
   ProtectedNotificationsRoute: ProtectedNotificationsRoute,
   ProtectedOrganizationsRoute: ProtectedOrganizationsRoute,
-  ProtectedPersonsRoute: ProtectedPersonsRouteWithChildren,
-  ProtectedPluginDemoRoute: ProtectedPluginDemoRoute,
+  ProtectedPersonsRoute: ProtectedPersonsRoute,
   ProtectedPositionsRoute: ProtectedPositionsRouteWithChildren,
-  ProtectedProgressiveFormDemoRoute: ProtectedProgressiveFormDemoRoute,
   ProtectedReportsRoute: ProtectedReportsRouteWithChildren,
   ProtectedResponsiveDemoRoute: ProtectedResponsiveDemoRoute,
   ProtectedScenarioSandboxRoute: ProtectedScenarioSandboxRoute,
@@ -5066,9 +4610,7 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedSlaMonitoringRoute: ProtectedSlaMonitoringRoute,
   ProtectedStakeholderInfluenceRoute: ProtectedStakeholderInfluenceRoute,
   ProtectedTagsRoute: ProtectedTagsRoute,
-  ProtectedThemesRoute: ProtectedThemesRoute,
   ProtectedUsersRoute: ProtectedUsersRoute,
-  ProtectedValidationDemoRoute: ProtectedValidationDemoRoute,
   ProtectedWordAssistantRoute: ProtectedWordAssistantRoute,
   ProtectedWorkflowAutomationRoute: ProtectedWorkflowAutomationRoute,
   ProtectedWorkingGroupsRoute: ProtectedWorkingGroupsRoute,

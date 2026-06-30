@@ -38,7 +38,7 @@ export function KeyRepresentativesCard({
 
   const AddLink = (): React.ReactElement => (
     <Link
-      to="/persons/create"
+      to="/dossiers/persons/create"
       search={{ organization_id: dossierId }}
       className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline min-h-11 px-1"
       aria-label={addLabel}

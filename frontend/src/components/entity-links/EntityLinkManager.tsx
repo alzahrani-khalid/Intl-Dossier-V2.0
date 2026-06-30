@@ -197,7 +197,7 @@ export function EntityLinkManager({
         navigate({ to: `/positions/${entityId}` as string })
         break
       case 'person':
-        navigate({ to: `/persons/${entityId}` as string })
+        navigate({ to: `/dossiers/persons/${entityId}` as string })
         break
       case 'engagement':
         navigate({ to: `/engagements/${entityId}` as string })

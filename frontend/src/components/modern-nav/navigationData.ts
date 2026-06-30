@@ -24,7 +24,6 @@ import {
   TrendingUp,
   Lightbulb,
   Activity,
-  Download,
   Database,
   FileEdit,
   HelpCircle,
@@ -261,13 +260,6 @@ export const navigationCategories: NavigationCategory[] = [
         labelKey: 'navigation.monitoring',
         icon: Activity,
         path: '/monitoring',
-      },
-      {
-        id: 'export',
-        label: 'Export',
-        labelKey: 'navigation.export',
-        icon: Download,
-        path: '/export',
       },
       {
         id: 'data-library',
