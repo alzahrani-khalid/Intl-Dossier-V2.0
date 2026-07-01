@@ -133,9 +133,7 @@ export function useContextAwareFAB(
     if (config.onCreatePerson) {
       config.onCreatePerson()
     } else {
-      void navigate({ to: '/persons', search: () => ({ create: true }) } as unknown as Parameters<
-        typeof navigate
-      >[0])
+      void navigate({ to: '/dossiers/persons/create' })
     }
   }, [config.onCreatePerson, navigate])
 
@@ -255,17 +253,6 @@ export function useContextAwareFAB(
         label: t('contexts.forums.primary'),
         onClick: handleCreateForum,
         ariaLabel: t('contexts.forums.description'),
-      },
-      // Briefing Books
-      '/briefing-books': {
-        icon: Plus,
-        label: t('speedDialActions.newBrief'),
-        onClick: () =>
-          void navigate({
-            to: '/briefing-books',
-            search: () => ({ create: true }),
-          } as unknown as Parameters<typeof navigate>[0]),
-        ariaLabel: t('speedDialActions.newBrief'),
       },
       // Intake Queue
       '/intake': {

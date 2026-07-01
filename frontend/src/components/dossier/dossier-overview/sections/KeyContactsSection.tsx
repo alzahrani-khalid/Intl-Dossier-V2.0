@@ -211,7 +211,7 @@ export function KeyContactsSection({
   const addContactButton =
     dossierType === 'organization' && dossierId ? (
       <Button variant="outline" size="sm" className="min-h-9 gap-2 shrink-0" asChild>
-        <Link to="/persons/create" search={{ organization_id: dossierId }}>
+        <Link to="/dossiers/persons/create" search={{ organization_id: dossierId }}>
           <UserPlus className="h-4 w-4" />
           {t('keyContacts.addContact')}
         </Link>
