@@ -90,9 +90,6 @@ import { Route as ProtectedHelpCommitmentsRouteImport } from './routes/_protecte
 import { Route as ProtectedEngagementsEngagementIdRouteImport } from './routes/_protected/engagements/$engagementId'
 import { Route as ProtectedDossiersCreateRouteImport } from './routes/_protected/dossiers/create'
 import { Route as ProtectedDashboardProjectManagementRouteImport } from './routes/_protected/dashboard.project-management'
-import { Route as ProtectedContactsNotesSearchRouteImport } from './routes/_protected/contacts/notes-search'
-import { Route as ProtectedContactsCreateRouteImport } from './routes/_protected/contacts/create'
-import { Route as ProtectedContactsContactIdRouteImport } from './routes/_protected/contacts/$contactId'
 import { Route as ProtectedCalendarNewRouteImport } from './routes/_protected/calendar/new'
 import { Route as ProtectedAfterActionsAfterActionIdRouteImport } from './routes/_protected/after-actions/$afterActionId'
 import { Route as ProtectedAdminSystemRouteImport } from './routes/_protected/admin/system'
@@ -636,23 +633,6 @@ const ProtectedDashboardProjectManagementRoute =
     id: '/project-management',
     path: '/project-management',
     getParentRoute: () => ProtectedDashboardRoute,
-  } as any)
-const ProtectedContactsNotesSearchRoute =
-  ProtectedContactsNotesSearchRouteImport.update({
-    id: '/notes-search',
-    path: '/notes-search',
-    getParentRoute: () => ProtectedContactsRoute,
-  } as any)
-const ProtectedContactsCreateRoute = ProtectedContactsCreateRouteImport.update({
-  id: '/create',
-  path: '/create',
-  getParentRoute: () => ProtectedContactsRoute,
-} as any)
-const ProtectedContactsContactIdRoute =
-  ProtectedContactsContactIdRouteImport.update({
-    id: '/$contactId',
-    path: '/$contactId',
-    getParentRoute: () => ProtectedContactsRoute,
   } as any)
 const ProtectedCalendarNewRoute = ProtectedCalendarNewRouteImport.update({
   id: '/new',
@@ -1372,7 +1352,7 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof ProtectedCalendarRouteWithChildren
   '/commitments': typeof ProtectedCommitmentsRoute
   '/compare': typeof ProtectedCompareRoute
-  '/contacts': typeof ProtectedContactsRouteWithChildren
+  '/contacts': typeof ProtectedContactsRoute
   '/countries': typeof ProtectedCountriesRoute
   '/custom-dashboard': typeof ProtectedCustomDashboardRoute
   '/dashboard': typeof ProtectedDashboardRouteWithChildren
@@ -1414,9 +1394,6 @@ export interface FileRoutesByFullPath {
   '/admin/system': typeof ProtectedAdminSystemRoute
   '/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
   '/calendar/new': typeof ProtectedCalendarNewRoute
-  '/contacts/$contactId': typeof ProtectedContactsContactIdRoute
-  '/contacts/create': typeof ProtectedContactsCreateRoute
-  '/contacts/notes-search': typeof ProtectedContactsNotesSearchRoute
   '/dashboard/project-management': typeof ProtectedDashboardProjectManagementRoute
   '/dossiers/create': typeof ProtectedDossiersCreateRoute
   '/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdRouteWithChildren
@@ -1575,7 +1552,7 @@ export interface FileRoutesByTo {
   '/calendar': typeof ProtectedCalendarRouteWithChildren
   '/commitments': typeof ProtectedCommitmentsRoute
   '/compare': typeof ProtectedCompareRoute
-  '/contacts': typeof ProtectedContactsRouteWithChildren
+  '/contacts': typeof ProtectedContactsRoute
   '/countries': typeof ProtectedCountriesRoute
   '/custom-dashboard': typeof ProtectedCustomDashboardRoute
   '/dashboard': typeof ProtectedDashboardRouteWithChildren
@@ -1612,9 +1589,6 @@ export interface FileRoutesByTo {
   '/admin/system': typeof ProtectedAdminSystemRoute
   '/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
   '/calendar/new': typeof ProtectedCalendarNewRoute
-  '/contacts/$contactId': typeof ProtectedContactsContactIdRoute
-  '/contacts/create': typeof ProtectedContactsCreateRoute
-  '/contacts/notes-search': typeof ProtectedContactsNotesSearchRoute
   '/dashboard/project-management': typeof ProtectedDashboardProjectManagementRoute
   '/dossiers/create': typeof ProtectedDossiersCreateRoute
   '/help/commitments': typeof ProtectedHelpCommitmentsRoute
@@ -1767,7 +1741,7 @@ export interface FileRoutesById {
   '/_protected/calendar': typeof ProtectedCalendarRouteWithChildren
   '/_protected/commitments': typeof ProtectedCommitmentsRoute
   '/_protected/compare': typeof ProtectedCompareRoute
-  '/_protected/contacts': typeof ProtectedContactsRouteWithChildren
+  '/_protected/contacts': typeof ProtectedContactsRoute
   '/_protected/countries': typeof ProtectedCountriesRoute
   '/_protected/custom-dashboard': typeof ProtectedCustomDashboardRoute
   '/_protected/dashboard': typeof ProtectedDashboardRouteWithChildren
@@ -1809,9 +1783,6 @@ export interface FileRoutesById {
   '/_protected/admin/system': typeof ProtectedAdminSystemRoute
   '/_protected/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
   '/_protected/calendar/new': typeof ProtectedCalendarNewRoute
-  '/_protected/contacts/$contactId': typeof ProtectedContactsContactIdRoute
-  '/_protected/contacts/create': typeof ProtectedContactsCreateRoute
-  '/_protected/contacts/notes-search': typeof ProtectedContactsNotesSearchRoute
   '/_protected/dashboard/project-management': typeof ProtectedDashboardProjectManagementRoute
   '/_protected/dossiers/create': typeof ProtectedDossiersCreateRoute
   '/_protected/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdRouteWithChildren
@@ -2014,9 +1985,6 @@ export interface FileRouteTypes {
     | '/admin/system'
     | '/after-actions/$afterActionId'
     | '/calendar/new'
-    | '/contacts/$contactId'
-    | '/contacts/create'
-    | '/contacts/notes-search'
     | '/dashboard/project-management'
     | '/dossiers/create'
     | '/engagements/$engagementId'
@@ -2212,9 +2180,6 @@ export interface FileRouteTypes {
     | '/admin/system'
     | '/after-actions/$afterActionId'
     | '/calendar/new'
-    | '/contacts/$contactId'
-    | '/contacts/create'
-    | '/contacts/notes-search'
     | '/dashboard/project-management'
     | '/dossiers/create'
     | '/help/commitments'
@@ -2408,9 +2373,6 @@ export interface FileRouteTypes {
     | '/_protected/admin/system'
     | '/_protected/after-actions/$afterActionId'
     | '/_protected/calendar/new'
-    | '/_protected/contacts/$contactId'
-    | '/_protected/contacts/create'
-    | '/_protected/contacts/notes-search'
     | '/_protected/dashboard/project-management'
     | '/_protected/dossiers/create'
     | '/_protected/engagements/$engagementId'
@@ -3134,27 +3096,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/project-management'
       preLoaderRoute: typeof ProtectedDashboardProjectManagementRouteImport
       parentRoute: typeof ProtectedDashboardRoute
-    }
-    '/_protected/contacts/notes-search': {
-      id: '/_protected/contacts/notes-search'
-      path: '/notes-search'
-      fullPath: '/contacts/notes-search'
-      preLoaderRoute: typeof ProtectedContactsNotesSearchRouteImport
-      parentRoute: typeof ProtectedContactsRoute
-    }
-    '/_protected/contacts/create': {
-      id: '/_protected/contacts/create'
-      path: '/create'
-      fullPath: '/contacts/create'
-      preLoaderRoute: typeof ProtectedContactsCreateRouteImport
-      parentRoute: typeof ProtectedContactsRoute
-    }
-    '/_protected/contacts/$contactId': {
-      id: '/_protected/contacts/$contactId'
-      path: '/$contactId'
-      fullPath: '/contacts/$contactId'
-      preLoaderRoute: typeof ProtectedContactsContactIdRouteImport
-      parentRoute: typeof ProtectedContactsRoute
     }
     '/_protected/calendar/new': {
       id: '/_protected/calendar/new'
@@ -3996,21 +3937,6 @@ const ProtectedCalendarRouteChildren: ProtectedCalendarRouteChildren = {
 const ProtectedCalendarRouteWithChildren =
   ProtectedCalendarRoute._addFileChildren(ProtectedCalendarRouteChildren)
 
-interface ProtectedContactsRouteChildren {
-  ProtectedContactsContactIdRoute: typeof ProtectedContactsContactIdRoute
-  ProtectedContactsCreateRoute: typeof ProtectedContactsCreateRoute
-  ProtectedContactsNotesSearchRoute: typeof ProtectedContactsNotesSearchRoute
-}
-
-const ProtectedContactsRouteChildren: ProtectedContactsRouteChildren = {
-  ProtectedContactsContactIdRoute: ProtectedContactsContactIdRoute,
-  ProtectedContactsCreateRoute: ProtectedContactsCreateRoute,
-  ProtectedContactsNotesSearchRoute: ProtectedContactsNotesSearchRoute,
-}
-
-const ProtectedContactsRouteWithChildren =
-  ProtectedContactsRoute._addFileChildren(ProtectedContactsRouteChildren)
-
 interface ProtectedDashboardRouteChildren {
   ProtectedDashboardProjectManagementRoute: typeof ProtectedDashboardProjectManagementRoute
 }
@@ -4492,7 +4418,7 @@ interface ProtectedRouteChildren {
   ProtectedCalendarRoute: typeof ProtectedCalendarRouteWithChildren
   ProtectedCommitmentsRoute: typeof ProtectedCommitmentsRoute
   ProtectedCompareRoute: typeof ProtectedCompareRoute
-  ProtectedContactsRoute: typeof ProtectedContactsRouteWithChildren
+  ProtectedContactsRoute: typeof ProtectedContactsRoute
   ProtectedCountriesRoute: typeof ProtectedCountriesRoute
   ProtectedCustomDashboardRoute: typeof ProtectedCustomDashboardRoute
   ProtectedDashboardRoute: typeof ProtectedDashboardRouteWithChildren
@@ -4581,7 +4507,7 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedCalendarRoute: ProtectedCalendarRouteWithChildren,
   ProtectedCommitmentsRoute: ProtectedCommitmentsRoute,
   ProtectedCompareRoute: ProtectedCompareRoute,
-  ProtectedContactsRoute: ProtectedContactsRouteWithChildren,
+  ProtectedContactsRoute: ProtectedContactsRoute,
   ProtectedCountriesRoute: ProtectedCountriesRoute,
   ProtectedCustomDashboardRoute: ProtectedCustomDashboardRoute,
   ProtectedDashboardRoute: ProtectedDashboardRouteWithChildren,
