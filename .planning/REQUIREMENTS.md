@@ -76,7 +76,32 @@ Explicitly excluded. Documented to prevent scope creep.
 
 ## Traceability
 
-Filled by roadmapper.
+Every v8.0 requirement maps to exactly one phase. Coverage: 23/23.
 
-| Requirement | Phase | Status |
-| ----------- | ----- | ------ |
+| Requirement | Phase    | Status  |
+| ----------- | -------- | ------- |
+| AUDIT-01    | Phase 75 | Pending |
+| AUDIT-02    | Phase 75 | Pending |
+| AUDIT-03    | Phase 75 | Pending |
+| AUDIT-04    | Phase 75 | Pending |
+| RTLB-01     | Phase 76 | Pending |
+| RTLB-02     | Phase 76 | Pending |
+| SRTL-01     | Phase 76 | Pending |
+| SRTL-02     | Phase 76 | Pending |
+| SRTL-03     | Phase 76 | Pending |
+| TOKEN-01    | Phase 77 | Pending |
+| TOKEN-02    | Phase 77 | Pending |
+| TOKEN-03    | Phase 77 | Pending |
+| TOKEN-04    | Phase 77 | Pending |
+| TOKEN-05    | Phase 77 | Pending |
+| TOKEN-06    | Phase 77 | Pending |
+| FOUC-01     | Phase 77 | Pending |
+| HEROUI-01   | Phase 78 | Pending |
+| HEROUI-02   | Phase 78 | Pending |
+| ACET-01     | Phase 79 | Pending |
+| ACET-02     | Phase 79 | Pending |
+| VERIFY-01   | Phase 80 | Pending |
+| VERIFY-02   | Phase 80 | Pending |
+| FOUC-02     | Phase 80 | Pending |
+
+**Note:** VERIFY-01 spans two moments — the pre-token baseline capture is executed as a gating step of Phase 77 (before any `directions.ts` literal moves), and the post-migration re-comparison completes in Phase 80. The requirement is owned by Phase 80 where it closes.
