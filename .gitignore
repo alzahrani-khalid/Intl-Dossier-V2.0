@@ -171,3 +171,6 @@ skills-lock.json
 # Python bytecode in local skill scripts
 __pycache__/
 *.pyc
+
+# Local source-data working files (GASTAT spreadsheets/CSVs for manual data entry)
+data_legacy/
