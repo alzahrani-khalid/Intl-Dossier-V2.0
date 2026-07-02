@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { buildTokens } from '@/design-system/tokens/buildTokens'
+import { PALETTES } from '@/design-system/tokens/directions'
 import type { Density, Direction, Mode } from '@/design-system/tokens/types'
 
 /**
@@ -395,4 +396,105 @@ describe('buildTokens — Phase 35 per-direction font triplet (TYPO-01)', () => 
       expect(a['--font-mono']).toBe(b['--font-mono'])
     })
   }
+})
+
+describe('buildTokens — Phase 77 linear palette-literal preference (TOKEN-01/03)', () => {
+  const MODES_LINEAR: readonly Mode[] = ['light', 'dark'] as const
+
+  for (const mode of MODES_LINEAR) {
+    describe(`linear/${mode}`, () => {
+      const tokens = buildTokens({ direction: 'linear', mode, hue: 275, density: 'comfortable' })
+      const p = PALETTES.linear[mode]
+
+      it('core surface/ink/line vars equal the palette literals', () => {
+        expect(tokens['--bg']).toBe(p.bg)
+        expect(tokens['--surface']).toBe(p.surface)
+        expect(tokens['--surface-raised']).toBe(p.surfaceRaised)
+        expect(tokens['--ink']).toBe(p.ink)
+        expect(tokens['--ink-mute']).toBe(p.inkMute)
+        expect(tokens['--ink-faint']).toBe(p.inkFaint)
+        expect(tokens['--line']).toBe(p.line)
+        expect(tokens['--line-soft']).toBe(p.lineSoft)
+        expect(tokens['--sidebar-bg']).toBe(p.sidebar)
+        expect(tokens['--sidebar-ink']).toBe(p.sidebarInk)
+      })
+
+      it('accent is the Linear brand literal, hue-independent (two hue inputs → identical --accent)', () => {
+        const a = buildTokens({ direction: 'linear', mode, hue: 32, density: 'comfortable' })
+        const b = buildTokens({ direction: 'linear', mode, hue: 200, density: 'dense' })
+        expect(a['--accent']).toBe('#5e6ad2')
+        expect(b['--accent']).toBe('#5e6ad2')
+        expect(tokens['--accent']).toBe('#5e6ad2')
+      })
+
+      it('emits --accent-hover from the palette literal', () => {
+        expect(tokens['--accent-hover']).toBe('#828fff')
+      })
+
+      it('emits --accent-ink/-soft/-fg from the palette literals', () => {
+        expect(tokens['--accent-ink']).toBe(p.accent?.ink)
+        expect(tokens['--accent-soft']).toBe(p.accent?.soft)
+        expect(tokens['--accent-fg']).toBe(p.accent?.fg)
+      })
+
+      it('emits the semantic family from the palette literals', () => {
+        expect(tokens['--danger']).toBe(p.semantic?.danger)
+        expect(tokens['--danger-soft']).toBe(p.semantic?.dangerSoft)
+        expect(tokens['--warn']).toBe(p.semantic?.warn)
+        expect(tokens['--warn-soft']).toBe(p.semantic?.warnSoft)
+        expect(tokens['--ok']).toBe(p.semantic?.ok)
+        expect(tokens['--ok-soft']).toBe(p.semantic?.okSoft)
+        expect(tokens['--info']).toBe(p.semantic?.info)
+        expect(tokens['--info-soft']).toBe(p.semantic?.infoSoft)
+      })
+
+      it('emits the SLA family from the palette literals', () => {
+        expect(tokens['--sla-ok']).toBe(p.sla?.ok)
+        expect(tokens['--sla-risk']).toBe(p.sla?.risk)
+        expect(tokens['--sla-bad']).toBe(p.sla?.bad)
+      })
+
+      it('emits the new surface-3/4 + ink-tertiary + line-strong tiers', () => {
+        expect(tokens['--surface-3']).toBe(p.surface3)
+        expect(tokens['--surface-4']).toBe(p.surface4)
+        expect(tokens['--ink-tertiary']).toBe(p.inkTertiary)
+        expect(tokens['--line-strong']).toBe(p.lineStrong)
+      })
+
+      it('emits all 12 status-tag vars (--status-1..6 + softs) from the six pairs', () => {
+        for (let i = 1; i <= 6; i++) {
+          expect(tokens[`--status-${i}`]).toBeDefined()
+          expect(tokens[`--status-${i}-soft`]).toBeDefined()
+        }
+        expect(tokens['--status-1']).toBe(p.status?.[0]?.fg)
+        expect(tokens['--status-1-soft']).toBe(p.status?.[0]?.soft)
+        expect(tokens['--status-6']).toBe(p.status?.[5]?.fg)
+        expect(tokens['--status-6-soft']).toBe(p.status?.[5]?.soft)
+      })
+
+      it('--shadow-card is none for linear (Q2 — no card shadows)', () => {
+        expect(tokens['--shadow-card']).toBe('none')
+      })
+    })
+  }
+})
+
+describe('buildTokens — Phase 77 legacy directions keep hue-math (no linear leakage)', () => {
+  it('bureau emits no --accent-hover / tier / status vars and keeps the card shadow + hue-math accent', () => {
+    const tokens = buildTokens({
+      direction: 'bureau',
+      mode: 'light',
+      hue: 32,
+      density: 'comfortable',
+    })
+    expect(tokens['--accent-hover']).toBeUndefined()
+    expect(tokens['--surface-3']).toBeUndefined()
+    expect(tokens['--surface-4']).toBeUndefined()
+    expect(tokens['--ink-tertiary']).toBeUndefined()
+    expect(tokens['--line-strong']).toBeUndefined()
+    expect(tokens['--status-1']).toBeUndefined()
+    expect(tokens['--status-6-soft']).toBeUndefined()
+    expect(tokens['--shadow-card']).toBe('0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04)')
+    expect(tokens['--accent']).toBe('oklch(58% 0.14 32)')
+  })
 })
