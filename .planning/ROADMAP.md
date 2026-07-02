@@ -263,7 +263,7 @@ Plans:
 
 **Wave 1**
 
-- [ ] 76-01-PLAN.md — RTLB-01 single direction owner (ui/direction.tsx + unit test), demote 4 legacy setters, delete RTLWrapper (wave 1)
+- [x] 76-01-PLAN.md — RTLB-01 single direction owner (ui/direction.tsx + unit test), demote 4 legacy setters, delete RTLWrapper (wave 1)
 
 **Wave 2** _(blocked on Wave 1)_
 
@@ -357,7 +357,7 @@ Plans:
 | 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
 | 68-74 | v7.0 | 49/49 | Shipped | 2026-06-24 |
 | 75 | v8.0 | 4/4 | Complete    | 2026-07-02 |
-| 76 | v8.0 | 0/? | Not started | - |
+| 76 | v8.0 | 1/5 | In Progress|  |
 | 77 | v8.0 | 0/? | Not started | - |
 | 78 | v8.0 | 0/? | Not started | - |
 | 79 | v8.0 | 0/? | Not started | - |
