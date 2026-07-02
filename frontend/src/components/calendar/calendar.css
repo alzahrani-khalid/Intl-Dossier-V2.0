@@ -46,10 +46,6 @@
   font-family: var(--font-mono);
 }
 
-.dir-chancery .cal-d {
-  font-size: 17px;
-}
-
 .cal-cell.today .cal-d {
   color: var(--accent-ink);
   font-weight: 700;

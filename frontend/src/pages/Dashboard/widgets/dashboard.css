@@ -231,9 +231,6 @@
   .kpi-value {
     font-size: 28px;
   }
-  .dir-chancery .kpi-value {
-    font-size: 34px;
-  }
   .week-row {
     grid-template-columns: 1fr;
     grid-template-areas: 'date' 'body' 'right';
@@ -253,9 +250,6 @@
   }
   .week-dd {
     font-size: 18px;
-  }
-  .dir-chancery .week-dd {
-    font-size: 20px;
   }
   .week-body {
     grid-area: body;
@@ -817,29 +811,29 @@
   flex-wrap: wrap;
 }
 
-/* ----- Phase 41: .dir-bureau KPI + page-head overrides (handoff app.css 575-655) -----
+/* ----- Phase 41: .dir-linear KPI + page-head overrides (handoff app.css 575-655) -----
    Bureau is the design's default direction. Without these the KPI strip renders
    as a single bordered grid (Phase 33 default) instead of the design's gapped
    white cards on the warm canvas. */
-.dir-bureau .kpi-strip {
+.dir-linear .kpi-strip {
   background: transparent;
   border: 0;
   gap: 12px;
   border-radius: 0;
 }
-.dir-bureau .kpi {
+.dir-linear .kpi {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 12px;
   /* No card drop-shadows — IntelDossier reserves shadow for drawers and
      hovered list rows (inspection 2026-06-09 Finding 14). */
 }
-.dir-bureau .kpi-value {
+.dir-linear .kpi-value {
   font-weight: 600;
   font-size: 30px;
   letter-spacing: -0.02em;
 }
-.dir-bureau .kpi-label {
+.dir-linear .kpi-label {
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 11px;
@@ -847,19 +841,19 @@
   letter-spacing: 0.08em;
   color: var(--ink-mute);
 }
-.dir-bureau .page-head::after {
+.dir-linear .page-head::after {
   display: none;
 }
-.dir-bureau .page-head {
+.dir-linear .page-head {
   border-bottom: 0;
   padding-bottom: 0;
 }
 
-/* ----- Phase 41: .dir-bureau widget primitives (handoff app.css 565-625) -----
+/* ----- Phase 41: .dir-linear widget primitives (handoff app.css 565-625) -----
    Chip pill restyle, label restyle, list/row container reset, avatar tint,
    kanban-card shadow. These are the small details that turn the page from
    "tokens applied" into "looks like the design". */
-.dir-bureau .chip {
+.dir-linear .chip {
   border-radius: 6px;
   font-family: var(--font-body);
   font-size: 11px;
@@ -868,7 +862,7 @@
   letter-spacing: normal;
   padding: 3px 8px;
 }
-.dir-bureau .label {
+.dir-linear .label {
   font-family: var(--font-body);
   font-style: normal;
   font-weight: 600;
@@ -877,7 +871,7 @@
   letter-spacing: 0.08em;
   color: var(--ink-faint);
 }
-.dir-bureau .tbl th {
+.dir-linear .tbl th {
   font-family: var(--font-body);
   text-transform: none;
   font-weight: 600;
@@ -885,25 +879,25 @@
   letter-spacing: normal;
   color: var(--ink-mute);
 }
-.dir-bureau .week-list {
+.dir-linear .week-list {
   border-radius: 10px;
 }
-.dir-bureau .week-row,
-.dir-bureau .vip-row,
-.dir-bureau .task-row,
-.dir-bureau .forum-row,
-.dir-bureau .recent-row {
+.dir-linear .week-row,
+.dir-linear .vip-row,
+.dir-linear .task-row,
+.dir-linear .forum-row,
+.dir-linear .recent-row {
   border-radius: 0;
 }
-.dir-bureau .week-title {
+.dir-linear .week-title {
   font-weight: 500;
   font-size: 14px;
 }
-.dir-bureau .avatar {
+.dir-linear .avatar {
   background: var(--accent);
   color: var(--accent-fg);
 }
-.dir-bureau .kcard {
+.dir-linear .kcard {
   border-radius: 10px;
   /* Shadow removed — flat cards per design system (Finding 14). */
 }
@@ -914,13 +908,13 @@
    .drawer + .drawer-title — DossierDrawer component surface.
    .cls-ribbon — bureau renders a more restrained ribbon (lighter weight, less
    tracking, slightly tinted accent). */
-.dir-bureau .tabs {
+.dir-linear .tabs {
   display: flex;
   gap: 24px;
   border-bottom: 1px solid var(--line);
   margin-bottom: 20px;
 }
-.dir-bureau .tab {
+.dir-linear .tab {
   padding: 10px 0;
   font-size: 13.5px;
   font-weight: 500;
@@ -931,10 +925,10 @@
   cursor: pointer;
   margin-bottom: -1px;
 }
-.dir-bureau .tab:hover {
+.dir-linear .tab:hover {
   color: var(--ink);
 }
-.dir-bureau .tab.active {
+.dir-linear .tab.active {
   /* Text uses --accent-ink (the darker accent-for-text token); raw --accent
      (#bf5542) is 4.23:1 on --surface, just below WCAG AA. The 2px underline
      keeps brand --accent (non-text, 3:1 suffices). */
@@ -942,15 +936,15 @@
   border-bottom-color: var(--accent);
   font-weight: 600;
 }
-.dir-bureau .drawer {
+.dir-linear .drawer {
   background: var(--surface);
   border-inline-start: 1px solid var(--line);
 }
-.dir-bureau .drawer-title {
+.dir-linear .drawer-title {
   font-weight: 600;
   font-size: 24px;
 }
-.dir-bureau .cls-ribbon {
+.dir-linear .cls-ribbon {
   background: color-mix(in srgb, var(--accent) 92%, black);
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -988,9 +982,6 @@
   }
   .week-dd {
     font-size: 18px;
-  }
-  .dir-chancery .week-dd {
-    font-size: 20px;
   }
   .week-body {
     grid-area: body;

@@ -45,16 +45,21 @@
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-raised: var(--surface-raised);
+  --color-surface-3: var(--surface-3);
+  --color-surface-4: var(--surface-4);
   --color-ink: var(--ink);
   --color-ink-mute: var(--ink-mute);
   --color-ink-faint: var(--ink-faint);
+  --color-ink-tertiary: var(--ink-tertiary);
   --color-line: var(--line);
   --color-line-soft: var(--line-soft);
+  --color-line-strong: var(--line-strong);
   --color-sidebar: var(--sidebar-bg);
   --color-sidebar-ink: var(--sidebar-ink);
 
   /* Accent family */
   --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
   --color-accent-ink: var(--accent-ink);
   --color-accent-soft: var(--accent-soft);
   --color-accent-fg: var(--accent-fg);
@@ -76,6 +81,20 @@
   --color-sla-ok: var(--sla-ok);
   --color-sla-risk: var(--sla-risk);
   --color-sla-bad: var(--sla-bad);
+
+  /* Status-tag palette (Phase 77 TOKEN-03) — status-1..6 fg + soft wash */
+  --color-status-1: var(--status-1);
+  --color-status-1-soft: var(--status-1-soft);
+  --color-status-2: var(--status-2);
+  --color-status-2-soft: var(--status-2-soft);
+  --color-status-3: var(--status-3);
+  --color-status-3-soft: var(--status-3-soft);
+  --color-status-4: var(--status-4);
+  --color-status-4-soft: var(--status-4-soft);
+  --color-status-5: var(--status-5);
+  --color-status-5-soft: var(--status-5-soft);
+  --color-status-6: var(--status-6);
+  --color-status-6-soft: var(--status-6-soft);
 
   /* Legacy semantic REMAP — load-bearing for 1,437 existing usages
      (bg-primary, text-foreground, border-border, bg-card, bg-popover, etc.) */
@@ -123,54 +142,76 @@
    `success`, `warning`, `danger`) onto our token vars written by DesignProvider
    (33-02) and the FOUC bootstrap (33-03). Zero per-component overrides needed. */
 :root {
-  /* Defense-in-depth fallbacks for 33-03 FOUC bootstrap.
-     Literal Bureau-light values (NOT var() refs) so that if the inline
-     bootstrap's try/catch swallows an error (e.g. localStorage blocked in
-     sandboxed iframe) these kick in at first paint instead of unset vars.
-     Must match PALETTES.bureau.light in tokens/directions.ts. Phase-41
-     migration: default direction switched from chancery to bureau. */
-  --bg: #f7f6f4;
-  --surface: #ffffff;
-  --surface-raised: #ffffff;
-  --ink: #1a1714;
-  --line: #e8e4dc;
-  --accent: oklch(58% 0.14 32);
-  --accent-fg: oklch(99% 0.01 32);
-  --ink-mute: #6b6459;
-  --ink-faint: #9a9082;
-  --line-soft: #efece3;
-  --sidebar-bg: #ffffff;
-  --sidebar-ink: #2a2520;
-  --accent-ink: oklch(42% 0.15 32);
-  --accent-soft: oklch(92% 0.05 32);
-  --danger: oklch(52% 0.18 25);
-  --danger-soft: oklch(95% 0.04 25);
-  /* Plan 40-15 (G2 close): light-mode chip foregrounds darkened so chip-warn /
-     chip-ok / chip-info meet WCAG AA 4.5:1 over their soft backgrounds. */
-  --ok: oklch(49% 0.12 155);
-  --ok-soft: oklch(94% 0.04 155);
-  --warn: oklch(51% 0.14 75);
-  --warn-soft: oklch(95% 0.05 75);
-  --info: oklch(48% 0.14 230);
-  --info-soft: oklch(94% 0.04 230);
-  --sla-ok: oklch(58% 0.14 32);
-  --sla-risk: oklch(60% 0.13 87);
-  /* Plan 41-09 (G3/G4 close): darkened from oklch(54% 0.2 25) to
-     oklch(46% 0.18 25) so that white text (#fff9f8) on this bg meets
-     WCAG AA 4.5:1. The original 54% lightness landed at 4.38 — 0.12
-     short. Same darkening pattern as Plan 40-15 G2 close (--ok / --warn /
-     --info). Dark-mode --sla-bad in buildTokens.ts is UNCHANGED at 68%
-     (already passes on dark surface). Token byte-synced to:
-       frontend/src/design-system/tokens/buildTokens.ts line 71 (light branch)
-       frontend/design-system/inteldossier_handoff_design/colors_and_type.css line 93
-       frontend/design-system/inteldossier_handoff_design/handoff/app.css line 110 */
-  --sla-bad: oklch(46% 0.18 25);
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
+  /* Defense-in-depth fallbacks for the 77-04 FOUC bootstrap. Literal Linear-DARK
+     values (NOT var() refs, NOT the retired Bureau set) so that if the inline
+     bootstrap's try/catch swallows an error (e.g. localStorage blocked in a
+     sandboxed iframe) these paint the canonical dark first frame instead of unset
+     vars. This is the THIRD literal copy — it MUST byte-match PALETTES.linear.dark
+     / FONTS.linear in tokens/directions.ts and is ENFORCED by
+     scripts/check-bootstrap-parity.mjs (guard v2 :root check). Do not hand-edit a
+     value here without updating directions.ts + bootstrap.js in the same commit. */
+  --bg: #010102;
+  --surface: #0f1011;
+  --surface-raised: #141516;
+  --ink: #f7f8f8;
+  --ink-mute: #d0d6e0;
+  --ink-faint: #8a8f98;
+  --line: #23252a;
+  --line-soft: #1d1e21;
+  --sidebar-bg: #0f1011;
+  --sidebar-ink: #d0d6e0;
+  /* Linear extended tiers */
+  --surface-3: #18191a;
+  --surface-4: #191a1b;
+  --ink-tertiary: #62666d;
+  --line-strong: #34343a;
+  /* Accent family (verbatim Linear literals + derived --accent-ink) */
+  --accent: #5e6ad2;
+  --accent-hover: #828fff;
+  --accent-fg: #ffffff;
+  --accent-ink: #98a6ea;
+  --accent-soft: #5e69d1;
+  /* Semantic family (TOKEN-03 derived + verbatim ok) */
+  --danger: #e86154;
+  --danger-soft: #3c1713;
+  --warn: #e1af4a;
+  --warn-soft: #302103;
+  --ok: #27a644;
+  --ok-soft: #102b17;
+  --info: #66a0ee;
+  --info-soft: #0f2440;
+  /* SLA family (derived in the Linear accent band) */
+  --sla-ok: #8998e9;
+  --sla-ok-soft: #1c2141;
+  --sla-risk: #e1af4a;
+  --sla-risk-soft: #302103;
+  --sla-bad: #e86154;
+  --sla-bad-soft: #3c1713;
+  /* 6-value status-tag palette (--status-1..6 + softs) */
+  --status-1: #87adfa;
+  --status-1-soft: #16233f;
+  --status-2: #2ac4cc;
+  --status-2-soft: #002c2e;
+  --status-3: #6ac48c;
+  --status-3-soft: #082c18;
+  --status-4: #cbaa4b;
+  --status-4-soft: #2e2200;
+  --status-5: #ef9179;
+  --status-5-soft: #3a1911;
+  --status-6: #d991d2;
+  --status-6-soft: #331931;
+  /* Fonts — REGISTERED @fontsource-variable families (FONTS.linear). Plain
+     'Inter'/'JetBrains Mono' are unregistered → silent system-ui fallback. */
+  --font-display: 'Inter Variable', system-ui, sans-serif;
+  --font-body: 'Inter Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+  /* Linear has no card shadows (--shadow-card none); drawer shadow kept. */
+  --shadow-card: none;
   --shadow-drawer: -24px 0 60px rgba(0, 0, 0, 0.25);
   --focus-ring: 0 0 0 3px color-mix(in oklch, var(--accent) 40%, transparent);
-  --radius-sm: 8px;
-  --radius: 12px;
-  --radius-lg: 16px;
+  --radius-sm: 6px;
+  --radius: 8px;
+  --radius-lg: 12px;
   --pad: 20px;
   --pad-inline: 20px;
   --pad-block: 16px;
@@ -215,8 +256,9 @@
   --space-12: 48px;
 
   /* Elevation triplet (handoff naming; --shadow-card/drawer kept above for
-     existing consumers). */
-  --shadow-sm: 0 1px 2px rgba(20, 18, 15, 0.04);
+     existing consumers). Linear: no card shadows (--shadow-sm none); the
+     hovered-row (--shadow) and drawer (--shadow-lg) shadows are kept. */
+  --shadow-sm: none;
   --shadow: 0 4px 12px rgba(20, 18, 15, 0.06);
   --shadow-lg: -12px 0 40px rgba(20, 18, 15, 0.15);
 
@@ -436,10 +478,10 @@
 /* the Arabic-ع button (which is LTR by default) and Latin glyphs mixed in. */
 html[dir='rtl'],
 html[dir='rtl'] body {
-  font-family: 'Tajawal', 'Inter', system-ui, sans-serif;
+  font-family: 'Tajawal', 'Inter Variable', system-ui, sans-serif;
 }
 html[dir='rtl'] * {
-  font-family: 'Tajawal', 'Inter', system-ui, sans-serif;
+  font-family: 'Tajawal', 'Inter Variable', system-ui, sans-serif;
 }
 /* Defeat inline fontFamily:'var(--font-display)' in RTL (Fraunces lacks Arabic) */
 html[dir='rtl'] [style*='--font-display'] {
@@ -453,10 +495,7 @@ html[dir='rtl'] .kpi-value,
 html[dir='rtl'] .week-dd,
 html[dir='rtl'] .label,
 html[dir='rtl'] .sb-group,
-html[dir='rtl'] .dir-chancery,
-html[dir='rtl'] .dir-situation,
-html[dir='rtl'] .dir-ministerial,
-html[dir='rtl'] .dir-bureau {
+html[dir='rtl'] .dir-linear {
   font-family: 'Tajawal', system-ui, sans-serif;
 }
 /* Let mono stay mono for non-Arabic tokens (⌘K, T−3), but when inside RTL
@@ -467,12 +506,12 @@ html[dir='rtl'] .mono:not([dir='ltr']) {
 /* Keep the tiny LTR-isolated spans (kbd, T−3 etc.) in mono */
 html[dir='rtl'] [dir='ltr'].mono,
 html[dir='rtl'] kbd[dir='ltr'] {
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-family: 'JetBrains Mono Variable', ui-monospace, monospace;
 }
 
 /* Force Tajawal on chips/labels/tags in RTL — these have direction-class overrides */
-/* (.dir-bureau .chip, .dir-situation .chip etc.) which would otherwise win and  */
-/* show Arabic glyphs in Inter/JetBrains Mono (no Arabic coverage → tofu).        */
+/* (.dir-linear .chip etc.) which would otherwise win and show Arabic glyphs in     */
+/* Inter Variable / JetBrains Mono Variable (no Arabic coverage → tofu).            */
 html[dir='rtl'] .chip,
 html[dir='rtl'] .chip *,
 html[dir='rtl'] .label,
@@ -489,8 +528,8 @@ html[dir='rtl'] .cls-chip {
   font-family: 'Tajawal', system-ui, sans-serif !important;
 }
 
-/* Force Tajawal on .btn-* variants in RTL — .dir-bureau/.dir-situation .btn-primary  */
-/* set font-family: var(--font-body)/var(--font-mono) (Latin, no Arabic glyphs) and    */
+/* Force Tajawal on .btn-* variants in RTL — .dir-linear .btn-primary sets            */
+/* font-family: var(--font-body)/var(--font-mono) (Latin, no Arabic glyphs) and        */
 /* win on (0,2,0) specificity over the universal html[dir='rtl'] * rule. Outline/ghost */
 /* buttons set no font-family so they already inherit Tajawal correctly.               */
 html[dir='rtl'] .btn,

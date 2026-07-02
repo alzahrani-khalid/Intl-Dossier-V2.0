@@ -23,15 +23,22 @@ import { useDesignTokens } from '@/design-system/hooks/useDesignTokens'
 import { useHue } from '@/design-system/hooks/useHue'
 import { useMode } from '@/design-system/hooks/useMode'
 
+// Plan 77-04: direction is a constant 'linear' regardless of initialDirection/
+// stored id.dir. initialMode="light" here exercises the light Linear token set;
+// the dark-default and light-preservation cases use a bare provider below.
 const wrapper = ({ children }: { children: ReactNode }) => (
   <DesignProvider
-    initialDirection="chancery"
+    initialDirection="linear"
     initialMode="light"
     initialHue={22}
     initialDensity="comfortable"
   >
     {children}
   </DesignProvider>
+)
+
+const bareWrapper = ({ children }: { children: ReactNode }) => (
+  <DesignProvider>{children}</DesignProvider>
 )
 
 const resetRoot = (): void => {
@@ -69,20 +76,34 @@ describe('DesignProvider — initial render', () => {
     expect(getByTestId('design-provider').textContent).toBe('child')
   })
 
-  it('reads direction from localStorage when present', () => {
+  it('coerces any stored (retired) id.dir to linear on init (TOKEN-04)', () => {
     localStorage.setItem('id.dir', 'bureau')
 
     const { result } = renderHook(() => useDesignDirection(), { wrapper })
 
-    expect(result.current.direction).toBe('bureau')
+    expect(result.current.direction).toBe('linear')
   })
 
-  it('falls back to initialDirection when localStorage value is invalid', () => {
+  it('initializes to linear regardless of an invalid stored id.dir', () => {
     localStorage.setItem('id.dir', 'not-a-direction')
 
     const { result } = renderHook(() => useDesignDirection(), { wrapper })
 
-    expect(result.current.direction).toBe('chancery')
+    expect(result.current.direction).toBe('linear')
+  })
+
+  it('defaults to dark mode when id.theme is unset (Linear-canonical)', () => {
+    const { result } = renderHook(() => useMode(), { wrapper: bareWrapper })
+
+    expect(result.current.mode).toBe('dark')
+  })
+
+  it('preserves an explicitly persisted id.theme="light"', () => {
+    localStorage.setItem('id.theme', 'light')
+
+    const { result } = renderHook(() => useMode(), { wrapper: bareWrapper })
+
+    expect(result.current.mode).toBe('light')
   })
 })
 
@@ -136,8 +157,8 @@ describe('DesignProvider — setters', () => {
     expect(document.documentElement.classList.contains('dark')).toBe(false)
   })
 
-  it('setHue(200) recomputes --sla-risk with hue+55 wrapped at 360', () => {
-    // hue=200 → (200+55) % 360 = 255, so --sla-risk should contain "255"
+  it('setHue does not reparameterize --sla-risk on linear (hue-independent literal)', () => {
+    // Plan 77-04: linear SLA colors are verbatim palette literals, not hue-math.
     const hookResult = renderHook(
       () => ({
         hue: useHue(),
@@ -146,11 +167,14 @@ describe('DesignProvider — setters', () => {
       { wrapper },
     )
 
+    const before = hookResult.result.current.tokens['--sla-risk']
+
     act(() => {
       hookResult.result.current.hue.setHue(200)
     })
 
-    expect(hookResult.result.current.tokens['--sla-risk']).toContain('255')
+    expect(hookResult.result.current.tokens['--sla-risk']).toBe(before)
+    expect(hookResult.result.current.tokens['--sla-risk']).not.toContain('oklch')
   })
 
   it('setDensity("dense") updates --row-h to 32px and data-density attribute', () => {
@@ -192,9 +216,9 @@ describe('DesignProvider — cross-tab storage sync', () => {
     localStorage.clear()
   })
 
-  it('updates direction when another tab writes id.dir', () => {
+  it('ignores cross-tab id.dir events for retired directions (guard accepts only linear)', () => {
     const { result } = renderHook(() => useDesignDirection(), { wrapper })
-    expect(result.current.direction).toBe('chancery')
+    expect(result.current.direction).toBe('linear')
 
     act(() => {
       window.dispatchEvent(
@@ -205,7 +229,8 @@ describe('DesignProvider — cross-tab storage sync', () => {
       )
     })
 
-    expect(result.current.direction).toBe('bureau')
+    // Plan 77-04: a legacy id.dir written by an old tab must not switch us off Linear.
+    expect(result.current.direction).toBe('linear')
   })
 
   it('ignores storage events with invalid values', () => {
@@ -220,7 +245,7 @@ describe('DesignProvider — cross-tab storage sync', () => {
       )
     })
 
-    expect(result.current.direction).toBe('chancery')
+    expect(result.current.direction).toBe('linear')
   })
 
   it('syncs mode across tabs', () => {

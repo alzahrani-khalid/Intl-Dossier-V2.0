@@ -31,13 +31,13 @@ function App() {
         <AuthProvider>
           <AuthListenerManager />
           <ThemeErrorBoundary
-            fallbackDirection="bureau"
-            fallbackColorMode="light"
+            fallbackDirection="linear"
+            fallbackColorMode="dark"
             fallbackLanguage="en"
           >
             <DesignProvider
-              initialDirection="bureau"
-              initialMode="light"
+              initialDirection="linear"
+              initialMode="dark"
               initialHue={32}
               initialDensity="comfortable"
             >

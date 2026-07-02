@@ -47,8 +47,11 @@ const isLocale = (value: unknown): value is Locale => value === 'en' || value ==
 // ----------------------------------------------------------------------------
 // Narrow runtime guards (localStorage returns `string | null`).
 // ----------------------------------------------------------------------------
-const isDirection = (value: unknown): value is Direction =>
-  value === 'chancery' || value === 'situation' || value === 'ministerial' || value === 'bureau'
+// TOKEN-04 (Plan 77-04): Linear is the sole direction. Any other (legacy/retired)
+// value is rejected — the cross-tab `storage` listener only accepts a `'linear'`
+// id.dir event, and first-paint coercion (bootstrap + the write-back effect below)
+// guarantees the stored value converges to 'linear'.
+const isDirection = (value: unknown): value is Direction => value === 'linear'
 
 const isMode = (value: unknown): value is Mode => value === 'light' || value === 'dark'
 
@@ -149,19 +152,26 @@ export const DesignContext = createContext<DesignContextValue | undefined>(undef
 // ----------------------------------------------------------------------------
 export function DesignProvider({
   children,
-  initialDirection = 'bureau',
-  initialMode = 'light',
+  // `initialDirection` stays in DesignProviderProps for API compatibility (App.tsx
+  // passes "linear"), but direction is coerced to a constant 'linear' below — a
+  // stored/passed retired direction must never reach first paint (TOKEN-04). It is
+  // intentionally not destructured so it cannot be read by mistake.
+  initialMode = 'dark',
   initialHue = 32,
   initialDensity = 'comfortable',
   initialClassif = false,
   initialLocale = 'en',
 }: DesignProviderProps): React.ReactElement {
+  // TOKEN-04 (Plan 77-04): Linear is the sole direction. Every existing user holds
+  // a retired id.dir; the direction state is therefore a constant 'linear' (the
+  // stored value is deliberately NOT read here — reading it would re-introduce the
+  // vanished-fallback trap). The WR-10 write-back effect below rewrites the stored
+  // key to 'linear' once, so raw id.dir readers converge. `setDirectionState` is
+  // retained so the (soon-to-be-removed) switcher setter keeps working.
+  const [direction, setDirectionState] = useState<Direction>(() => 'linear')
+
   // Lazy initialisers read from localStorage once per mount, falling back to
   // the prop defaults when the stored value is missing or malformed.
-  const [direction, setDirectionState] = useState<Direction>(() => {
-    const stored = safeGetItem(LS_DIR)
-    return isDirection(stored) ? stored : initialDirection
-  })
 
   const [mode, setModeState] = useState<Mode>(() => {
     const stored = safeGetItem(LS_MODE)
@@ -197,6 +207,15 @@ export function DesignProvider({
     if (safeGetItem(LS_DENSITY) === 'spacious') safeSetItem(LS_DENSITY, 'dense')
   }, [])
 
+  // WR-10 (TOKEN-04, Plan 77-04): coerce a legacy/absent id.dir to 'linear' ONCE
+  // on mount — mirrors the bootstrap coercion so a stale value written by an old
+  // tab does not survive, and raw id.dir readers see 'linear'. Kept OUT of the
+  // lazy initializer (StrictMode double-invokes it — no writes in initializers).
+  // Idempotent: re-reading 'linear' is a no-op.
+  useEffect(() => {
+    if (safeGetItem(LS_DIR) !== 'linear') safeSetItem(LS_DIR, 'linear')
+  }, [])
+
   // Pure derivation — one `TokenSet` per {direction, mode, hue, density}.
   const tokens = useMemo<TokenSet>(
     () => buildTokens({ direction, mode, hue, density }),
@@ -223,14 +242,17 @@ export function DesignProvider({
     }
   }, [mode])
 
-  // Expose direction + density on the root element so CSS selectors (e.g.
-  // `[data-direction="situation"] .foo` OR `.dir-situation .foo`) can reach
-  // them. The handoff CSS (app.css lines 461-664) uses `.dir-{direction}`
-  // class selectors, so we apply both forms here for verbatim portability.
+  // Expose direction on the root element so CSS selectors (e.g.
+  // `[data-direction="linear"] .foo` OR `.dir-linear .foo`) can reach it. The
+  // handoff CSS keys off `.dir-{direction}` class selectors. Any prior `dir-*`
+  // class is stripped dynamically (no retired literals) before the current one
+  // is applied, so a stale bootstrap-emitted class is cleaned up on change.
   useEffect(() => {
     const root = document.documentElement
     root.setAttribute('data-direction', direction)
-    root.classList.remove('dir-chancery', 'dir-situation', 'dir-ministerial', 'dir-bureau')
+    Array.from(root.classList)
+      .filter((cls) => cls.startsWith('dir-'))
+      .forEach((cls) => root.classList.remove(cls))
     root.classList.add(`dir-${direction}`)
   }, [direction])
 
