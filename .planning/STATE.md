@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
 status: executing
-last_updated: '2026-07-02T18:26:18.801Z'
-last_activity: 2026-07-02 -- Phase 77 execution started
+last_updated: '2026-07-02T22:20:00.000Z'
+last_activity: 2026-07-02 -- Plan 77-01 complete (VERIFY-01 pre-swap visual baseline)
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 17
-  completed_plans: 9
+  completed_plans: 10
   percent: 33
 ---
 
@@ -25,10 +25,12 @@ See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section
 ## Current Position
 
 Phase: 77 (linear-token-system) — EXECUTING
-Plan: 1 of 8
+Plan: 2 of 8 complete (77-01, 77-02); next: 77-03
 Status: Executing Phase 77
-Last activity: 2026-07-02 -- Plan 77-02 complete (FOUC-01 byte-match CI guard: scripts/check-bootstrap-parity.mjs + bad-bootstrap.js fixture, wired into pnpm lint + CI Lint job; both polarities proven, 24 combos green)
+Last activity: 2026-07-02 -- Plan 77-01 complete (VERIFY-01 pre-swap visual baseline: 12 specs theme+locale-pinned [dfef0dd3]; 43 Bureau/light PNGs recaptured across 10 specs + human-reviewed + committed [14191cb8] BEFORE any directions.ts change; replay-reproducible 43/43. Rule-3 fixes: dashboard-widgets FROZEN_TIME→today + pathTemplate un-orphan. calendar-visual/dashboard-visual excluded as non-baselined stubs. TOKEN-01 still OPEN — only gated, not delivered here).
+Prev: 2026-07-02 -- Plan 77-02 complete (FOUC-01 byte-match CI guard: scripts/check-bootstrap-parity.mjs + bad-bootstrap.js fixture, wired into pnpm lint + CI Lint job; both polarities proven, 24 combos green)
 Follow-ups (P76 advisory, still open): LO-01 check-duplicate-rtl.mjs empty-root guard; LO-03 latent render-time document.dir reader (MD-01/LO-02 now owned by 77-08 DOC-01).
+Follow-up (77-01): dashboard-widgets FROZEN_TIME tracks the capture date — a future recapture must re-align it with a re-refreshed b0000002-\* seed (inherent 46-era fragility).
 
 ## Quick Tasks Completed
 
