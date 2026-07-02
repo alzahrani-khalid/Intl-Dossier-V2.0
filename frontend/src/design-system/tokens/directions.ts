@@ -43,8 +43,8 @@ export const PALETTES: Record<Direction, DirectionPalette> = {
         base: '#5e6ad2', // primary (verbatim)
         hover: '#828fff', // primary-hover (verbatim)
         fg: '#ffffff', // on-primary (verbatim) — 4.70:1 on base
-        soft: '#5e69d1', // primary-focus (verbatim)
-        ink: '#98a6ea', // DERIVED — accent-tinted text, AA on surface-1
+        soft: '#242947', // DERIVED — dark accent-tinted wash (indigo band h275), mirrors light's #e8edff role; accent.ink AA on it (6.05:1). WAS #5e69d1 (primary-focus mid-tone) → only 2.03:1 (review H1)
+        ink: '#98a6ea', // DERIVED — accent-tinted text, AA on surface-1 (8.14:1) AND on accent.soft (6.05:1)
       },
       semantic: {
         danger: '#e86154', // DERIVED (h28) — 4.73:1 on dangerSoft

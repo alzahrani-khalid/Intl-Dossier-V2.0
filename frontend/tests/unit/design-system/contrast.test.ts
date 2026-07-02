@@ -58,6 +58,41 @@ describe.each(['dark', 'light'] as const)('Linear TOKEN-03 contrast — %s mode'
     it('accent.fg clears AA on accent.base', () => {
       expect(contrast(p.accent.fg, p.accent.base)).toBeGreaterThanOrEqual(AA)
     })
+    // review M1 + H1: accent.ink is a DERIVED text role and must clear AA in BOTH
+    // of its roles — as text on the plain surface AND as text on accent.soft (the
+    // active-nav / secondary-button / chip background). The accent.soft pairing is
+    // the exact gap that let H1 through (dark accent.ink on the old #5e69d1 soft was
+    // 2.03:1); it is now a dark accent-tinted wash and must stay >= 4.5:1.
+    it('accent.ink clears AA on surface', () => {
+      expect(contrast(p.accent.ink, p.surface)).toBeGreaterThanOrEqual(AA)
+    })
+    it('accent.ink clears AA on accent.soft', () => {
+      expect(contrast(p.accent.ink, p.accent.soft)).toBeGreaterThanOrEqual(AA)
+    })
+  })
+
+  describe('sidebar', () => {
+    // review M1: sidebarInk's directions.ts comment asserts "13.0:1 on sidebar" but
+    // was never gated. Lock it so a future palette edit can't silently drop it.
+    it('sidebarInk clears AA on sidebar', () => {
+      expect(contrast(p.sidebarInk, p.sidebar)).toBeGreaterThanOrEqual(AA)
+    })
+  })
+
+  describe('sla family (ok/risk/bad) on surface AND own soft', () => {
+    // review M1: the SLA fg tokens are used as indicator/text colors but were
+    // ungated. Lock each fg on the plain surface AND on its own soft wash.
+    const slaPairs: Array<[string, string, string]> = [
+      ['ok', p.sla.ok, p.sla.okSoft],
+      ['risk', p.sla.risk, p.sla.riskSoft],
+      ['bad', p.sla.bad, p.sla.badSoft],
+    ]
+    it.each(slaPairs)('sla.%s fg clears AA on surface', (_name, fg) => {
+      expect(contrast(fg, p.surface)).toBeGreaterThanOrEqual(AA)
+    })
+    it.each(slaPairs)('sla.%s fg clears AA on its own soft wash', (_name, fg, soft) => {
+      expect(contrast(fg, soft)).toBeGreaterThanOrEqual(AA)
+    })
   })
 
   describe('semantic family (danger/warn/ok/info) on surface AND own soft', () => {

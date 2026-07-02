@@ -168,12 +168,12 @@
   --surface-4: #191a1b;
   --ink-tertiary: #62666d;
   --line-strong: #34343a;
-  /* Accent family (verbatim Linear literals + derived --accent-ink) */
+  /* Accent family (verbatim Linear base/hover/fg + derived --accent-ink / --accent-soft) */
   --accent: #5e6ad2;
   --accent-hover: #828fff;
   --accent-fg: #ffffff;
   --accent-ink: #98a6ea;
-  --accent-soft: #5e69d1;
+  --accent-soft: #242947;
   /* Semantic family (TOKEN-03 derived + verbatim ok) */
   --danger: #e86154;
   --danger-soft: #3c1713;
