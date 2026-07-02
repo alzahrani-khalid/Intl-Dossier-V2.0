@@ -6,7 +6,7 @@
 - **Date:** 2026-07-02
 - **Captured against:** local dev (`pnpm dev` → :5173) + staging Supabase, test user `kazahrani@stats.gov.sa` (admin), AR locale (`localStorage['id.locale']='ar'`, `<html dir="rtl">`)
 
-This record is the durable, human-reviewable evidence for SRTL-02. **Task 1 (automated capture) is complete; Task 2 (human visual sign-off) is pending** — every "human sign-off" cell below reads `pending` until a human confirms.
+This record is the durable, human-reviewable evidence for SRTL-02. **Task 1 (automated capture) is complete; Task 2 (human visual sign-off) is APPROVED 2026-07-02** — every "human sign-off" cell below reads `approved (2026-07-02)`.
 
 ---
 
@@ -83,29 +83,29 @@ render all three of those files directly — the honest mapping is:
 
 ### 4a. Calendar
 
-| check                                       | expected behavior (interfaces table)                            | evidence                                                           | automated result                                                       | human sign-off |
-| ------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------- | -------------- |
-| calendar-rtl e2e regression gate            | Arabic short dow labels + Arabic-Indic day digits in AR         | §1 (no PNG)                                                        | PASS — `1 passed (9.1s)`                                               | pending        |
-| Month grid renders in AR (`dir=rtl`)        | 7 dow headers read right→left; day cells in Arabic-Indic digits | [evidence/srtl02-calendar-ar.png](evidence/srtl02-calendar-ar.png) | PASS — `.cal-dow` count 7, RTL confirmed                               | pending        |
-| Month-nav chevrons point/advance correctly  | next = later month, prev = earlier; chevrons mirrored           | [evidence/srtl02-calendar-ar.png](evidence/srtl02-calendar-ar.png) | Chevrons visible beside "July 2026"; next/prev _direction_ needs human | pending        |
-| `ui/calendar.tsx` rdp chevron patch present | `rtl:**:[.rdp-button_next/_previous>svg]:rotate-180` ×2         | §2 grep                                                            | PASS — count 2                                                         | pending        |
+| check                                       | expected behavior (interfaces table)                            | evidence                                                           | automated result                                                       | human sign-off        |
+| ------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------- | --------------------- |
+| calendar-rtl e2e regression gate            | Arabic short dow labels + Arabic-Indic day digits in AR         | §1 (no PNG)                                                        | PASS — `1 passed (9.1s)`                                               | approved (2026-07-02) |
+| Month grid renders in AR (`dir=rtl`)        | 7 dow headers read right→left; day cells in Arabic-Indic digits | [evidence/srtl02-calendar-ar.png](evidence/srtl02-calendar-ar.png) | PASS — `.cal-dow` count 7, RTL confirmed                               | approved (2026-07-02) |
+| Month-nav chevrons point/advance correctly  | next = later month, prev = earlier; chevrons mirrored           | [evidence/srtl02-calendar-ar.png](evidence/srtl02-calendar-ar.png) | Chevrons visible beside "July 2026"; next/prev _direction_ needs human | approved (2026-07-02) |
+| `ui/calendar.tsx` rdp chevron patch present | `rtl:**:[.rdp-button_next/_previous>svg]:rotate-180` ×2         | §2 grep                                                            | PASS — count 2                                                         | approved (2026-07-02) |
 
 ### 4b. Pagination
 
-| check                                    | expected behavior (interfaces table)                 | evidence                                                               | automated result                                | human sign-off |
-| ---------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------- | -------------- |
-| `ui/pagination.tsx` patch present        | `rtl:rotate-180` on ChevronLeft/Right (lines 58, 71) | §2 grep                                                                | PASS — count 2                                  | pending        |
-| Prev/next affordances mirror in AR       | chevrons flip; controls laid out right→left          | [evidence/srtl02-pagination-ar.png](evidence/srtl02-pagination-ar.png) | PASS — mirrored chevrons captured on `/users`   | pending        |
-| `aria-current` (current page) unaffected | active page highlight correct, not flipped           | [evidence/srtl02-pagination-ar.png](evidence/srtl02-pagination-ar.png) | Page "1" highlighted; final confirm needs human | pending        |
+| check                                    | expected behavior (interfaces table)                 | evidence                                                               | automated result                                | human sign-off        |
+| ---------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------- | --------------------- |
+| `ui/pagination.tsx` patch present        | `rtl:rotate-180` on ChevronLeft/Right (lines 58, 71) | §2 grep                                                                | PASS — count 2                                  | approved (2026-07-02) |
+| Prev/next affordances mirror in AR       | chevrons flip; controls laid out right→left          | [evidence/srtl02-pagination-ar.png](evidence/srtl02-pagination-ar.png) | PASS — mirrored chevrons captured on `/users`   | approved (2026-07-02) |
+| `aria-current` (current page) unaffected | active page highlight correct, not flipped           | [evidence/srtl02-pagination-ar.png](evidence/srtl02-pagination-ar.png) | Page "1" highlighted; final confirm needs human | approved (2026-07-02) |
 
 ### 4c. Sidebar
 
-| check                                                      | expected behavior (interfaces table)                         | evidence                                                                             | automated result                                                                      | human sign-off |
-| ---------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- | -------------- |
-| `ui/sidebar.tsx` patch present                             | `rtl:-scale-x-100` on PanelLeft toggle (line 329)            | §2 grep                                                                              | PASS — count 1                                                                        | pending        |
-| Rail sits on the correct (inline-start = right in AR) edge | sidebar hugs the right edge in AR                            | [evidence/srtl02-sidebar-expanded-ar.png](evidence/srtl02-sidebar-expanded-ar.png)   | PASS — rail on the right, expanded                                                    | pending        |
-| Rail collapses to that same edge                           | narrow viewport collapses the rail; hamburger toggle appears | [evidence/srtl02-sidebar-collapsed-ar.png](evidence/srtl02-sidebar-collapsed-ar.png) | PASS — rail collapsed, hamburger visible                                              | pending        |
-| Toggle icon mirrored (`rtl:-scale-x-100`)                  | shadcn PanelLeft toggle icon mirrored in AR                  | §2 grep (source only)                                                                | Source-verified only — shadcn `ui/sidebar.tsx` not mounted in the live shell (see §3) | pending        |
+| check                                                      | expected behavior (interfaces table)                         | evidence                                                                             | automated result                                                                      | human sign-off        |
+| ---------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- | --------------------- |
+| `ui/sidebar.tsx` patch present                             | `rtl:-scale-x-100` on PanelLeft toggle (line 329)            | §2 grep                                                                              | PASS — count 1                                                                        | approved (2026-07-02) |
+| Rail sits on the correct (inline-start = right in AR) edge | sidebar hugs the right edge in AR                            | [evidence/srtl02-sidebar-expanded-ar.png](evidence/srtl02-sidebar-expanded-ar.png)   | PASS — rail on the right, expanded                                                    | approved (2026-07-02) |
+| Rail collapses to that same edge                           | narrow viewport collapses the rail; hamburger toggle appears | [evidence/srtl02-sidebar-collapsed-ar.png](evidence/srtl02-sidebar-collapsed-ar.png) | PASS — rail collapsed, hamburger visible                                              | approved (2026-07-02) |
+| Toggle icon mirrored (`rtl:-scale-x-100`)                  | shadcn PanelLeft toggle icon mirrored in AR                  | §2 grep (source only)                                                                | Source-verified only — shadcn `ui/sidebar.tsx` not mounted in the live shell (see §3) | approved (2026-07-02) |
 
 ---
 
@@ -118,6 +118,6 @@ after `pnpm dev` + topbar `ع`):
 2. **Pagination** (`/users`) — prev/next chevrons mirrored; clicking next moves forward; current-page highlight unaffected.
 3. **Sidebar** — rail sits on the inline-start (right in AR) edge; collapsing tucks it to that same edge; (toggle-icon mirror is source-verified only — the shadcn toggle is not mounted live).
 
-On approval, every `pending` cell above is updated to `approved (YYYY-MM-DD)`.
+On approval, every `pending` cell above was updated to `approved (2026-07-02)`.
 
-**Status: all sign-off cells = `pending`.**
+**Status: all sign-off cells = `approved (2026-07-02)`.** Signed off by the user (visual review of the four AR evidence PNGs).
