@@ -110,22 +110,10 @@
     "comfortableDesc": "مسافات متوازنة",
     "spacious": "واسع",
     "spaciousDesc": "مساحة تنفس أكبر",
-    "direction": {
-      "label": "اتجاه التصميم",
-      "help": "اختر الطابع البصري.",
-      "bureau": "Bureau",
-      "chancery": "Chancery",
-      "situation": "Situation Room",
-      "ministerial": "Ministerial"
-    },
     "mode": {
       "label": "النمط",
       "light": "فاتح",
       "dark": "داكن"
-    },
-    "hue": {
-      "label": "درجة اللون",
-      "help": "0–360°"
     },
     "density": {
       "label": "الكثافة",

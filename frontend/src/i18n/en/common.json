@@ -1202,32 +1202,10 @@
     "subtitle": "Live-configure this prototype",
     "open": "Open tweaks",
     "close": "Close tweaks",
-    "direction": {
-      "label": "Design direction",
-      "chancery": {
-        "name": "Chancery",
-        "tagline": "Editorial · serif · composed"
-      },
-      "situation": {
-        "name": "Situation Room",
-        "tagline": "Intelligence terminal · dense · mono"
-      },
-      "ministerial": {
-        "name": "Ministerial",
-        "tagline": "Government-formal · clean · restrained"
-      },
-      "bureau": {
-        "name": "Bureau",
-        "tagline": "Warm neutrals · document-forward · SaaS-clean"
-      }
-    },
     "mode": {
       "label": "Theme",
       "light": "Light",
       "dark": "Dark"
-    },
-    "hue": {
-      "label": "Accent hue"
     },
     "density": {
       "label": "Density",
@@ -1271,12 +1249,6 @@
     "search": {
       "placeholder": "Search dossiers, tasks, people…",
       "kbd": "⌘K"
-    },
-    "direction": {
-      "chancery": "Chancery",
-      "situation": "Situation Room",
-      "ministerial": "Ministerial",
-      "bureau": "Bureau"
     },
     "theme": {
       "toggle": "Toggle theme"

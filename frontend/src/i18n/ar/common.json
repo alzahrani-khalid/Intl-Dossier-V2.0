@@ -1216,32 +1216,10 @@
     "subtitle": "اضبط هذا النموذج مباشرةً",
     "open": "فتح التعديلات",
     "close": "إغلاق التعديلات",
-    "direction": {
-      "label": "الاتجاه التصميمي",
-      "chancery": {
-        "name": "المستشارية",
-        "tagline": "Editorial · serif · composed"
-      },
-      "situation": {
-        "name": "غرفة العمليات",
-        "tagline": "Intelligence terminal · dense · mono"
-      },
-      "ministerial": {
-        "name": "وزاري",
-        "tagline": "Government-formal · clean · restrained"
-      },
-      "bureau": {
-        "name": "مكتب",
-        "tagline": "Warm neutrals · document-forward · SaaS-clean"
-      }
-    },
     "mode": {
       "label": "السمة",
       "light": "فاتح",
       "dark": "داكن"
-    },
-    "hue": {
-      "label": "درجة اللون المميّز"
     },
     "density": {
       "label": "الكثافة",
@@ -1285,12 +1263,6 @@
     "search": {
       "placeholder": "ابحث في الملفات والمهام والأشخاص…",
       "kbd": "⌘K"
-    },
-    "direction": {
-      "chancery": "دواوين",
-      "situation": "غرفة العمليات",
-      "ministerial": "وزاري",
-      "bureau": "مكتب"
     },
     "theme": {
       "toggle": "تبديل المظهر"
