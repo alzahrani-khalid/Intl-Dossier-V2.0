@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
-status: Roadmap approved — ready to plan Phase 75
-last_updated: '2026-07-01T00:00:00.000Z'
-last_activity: '2026-07-01 — v8.0 Linear Design System Migration scoped & roadmapped. 6 phases (75-80), 23 requirements, 100% coverage. Sequencing hard-locked: audit → RTL bridge → Linear tokens → HeroUI v3 bump → Aceternity removal → full-route visual/a11y verification. VERIFY-01 baseline captured as a gating step of Phase 77; re-compared in Phase 80.'
+status: Re-scoped after pre-execution review — ready to plan Phase 75
+last_updated: '2026-07-02T00:00:00.000Z'
+last_activity: '2026-07-02 — v8.0 re-scoped after a pre-execution review (24 requirements, 100% coverage). Verified reality folded into PROJECT/REQUIREMENTS/ROADMAP: HeroUI already on the v3 compound-API + no v3-removed components used → Phase 78 is a bump + regression sweep; RTLB-01 keeps the 68 per-field dir=rtl inputs; VERIFY-01 scoped to baselined surfaces; TOKEN-05 preserves Tajawal; DOC-01 added for the design source-of-truth. Sequencing unchanged: audit → RTL bridge → Linear tokens → HeroUI bump → Aceternity removal → verification.'
 progress:
   total_phases: 6
   completed_phases: 0
@@ -17,17 +17,17 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-24 after v7.0 milestone completion)
+See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section added)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** v8.0 Linear Design System Migration (Phases 75-80). Replace the IntelDossier prototype design language with a Linear-derived one on bridged shadcn RTL infra + HeroUI v3 (3.0.5→3.2.1), Aceternity fully removed, Arabic RTL correct on all four axes (dark/light × LTR/RTL). Next step: plan Phase 75 (UI Component & Migration Audit).
+**Current focus:** v8.0 Linear Design System Migration (Phases 75-80). Replace the IntelDossier prototype design language with a Linear-derived one on bridged shadcn RTL infra + HeroUI v3 (3.0.5→3.2.1), Aceternity fully removed, Arabic RTL correct on all four axes (dark/light × LTR/RTL). Re-scoped 2026-07-02 after a pre-execution review (24 reqs). Next step: plan Phase 75 (UI Component & Migration Audit).
 
 ## Current Position
 
 Phase: 75 — UI Component & Migration Audit (not started)
 Plan: —
-Status: Roadmap approved — ready to plan Phase 75
-Last activity: 2026-07-01 — v8.0 roadmap created (Phases 75-80, 23 requirements, 100% coverage). REQUIREMENTS.md traceability filled.
+Status: Re-scoped after pre-execution review — ready to plan Phase 75
+Last activity: 2026-07-02 — v8.0 re-scoped after pre-execution review (24 requirements, 100% coverage): Phase 78 reduced to a bump + regression sweep, RTL dir=rtl carve-out clarified, Tajawal preservation + DOC-01 (design source-of-truth) added.
 
 ## Quick Tasks Completed
 

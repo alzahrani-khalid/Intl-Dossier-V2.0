@@ -56,9 +56,17 @@ Unified intelligence management for diplomatic operations — every relationship
 
 **Held out of scope (→ v7.1):** external feed ingestion (RSS/public APIs — the untrusted-content/indirect-injection surface); multi-GPU horizontal model-serving scale-out; advanced quarantine/dual-LLM rigor. Plus the standing exclusions: net-new design directions, mobile native app (cancelled), OAuth/social login, real-time chat, video content.
 
-## Next Milestone
+## Current Milestone: v8.0 Linear Design System Migration
 
-Not yet defined — run `/gsd:new-milestone` to scope the next version (questioning → research → requirements → roadmap). Candidate carry-ins: stand up the on-prem GPU/TEI stack to close the deploy-gated EVAL-01/02/03 + AGENT/INFRA live verification; v7.1 feed ingestion (FEED-01/02) + quarantine posture; GAP-2 (graph/digest card renderers) and GAP-3 (retire `dossiers-briefs-generate`).
+**Status:** Scoped & roadmapped (Phases 75–80). Re-scoped 2026-07-02 after a pre-execution review. Not yet started.
+
+**Goal:** Replace the multi-direction IntelDossier/Bureau design language with a single Linear-derived visual direction — on the **existing** token engine (a re-skin, not a rebuild), properly-bridged shadcn RTL infrastructure, and HeroUI v3 (already at 3.0.5, bumped to 3.2.1) — with Aceternity's 8 form components rebuilt on HeroUI v3/Radix and Arabic RTL preserved on all four axes (dark/light × LTR/RTL).
+
+**Why:** _Product decision to standardize on the Linear visual language as the app's single design direction, retiring the four Bureau/Chancery/Situation/Ministerial variants and the Tweaks-drawer switcher. This is a large, primarily-visual milestone that revisits the recent (v6.0) design investment — detailed rationale and cost/benefit to be recorded by the product owner before Phase 77 (the token swap)._
+
+**Verified scope reality (from the 2026-07-02 review):** smaller than a four-part migration. HeroUI is **already** on the v3 compound-component API; **none** of the "v3-removed" components (Navbar/Snippet/User/Spacer/Image/Code/Autocomplete/DateInput) are imported; the Latin fonts are **already** Inter + JetBrains Mono. The genuine work concentrates in the Linear palette re-skin (P77), the 8-component Aceternity rebuild (P79), and RTL direction-source consolidation (P76). Phase 78 reduces to a version bump + regression sweep. See `.planning/REQUIREMENTS.md` + `.planning/ROADMAP.md`.
+
+**Deferred candidates (not v8.0):** stand up the on-prem GPU/TEI stack to close the deploy-gated EVAL-01/02/03 + AGENT/INFRA live verification; v7.1 feed ingestion (FEED-01/02) + quarantine posture; GAP-2 (graph/digest card renderers) and GAP-3 (retire `dossiers-briefs-generate`).
 
 ## Requirements
 
@@ -171,7 +179,7 @@ Not yet defined — run `/gsd:new-milestone` to scope the next version (question
 
 ### Active
 
-**v7.0 Intelligence Engine (phases 68–74).** Scoped requirements in `.planning/REQUIREMENTS.md`; phase decomposition in `.planning/ROADMAP.md`. Headline scope: AI-foundations remediation (canonical clearance scale, embedding integrity, JWT keystone), structured Signals, Digests + Alerts across channels, clearance-aware analytic graph queries, the on-prem Mastra + CopilotKit agent platform (reads → HITL writes + generative UI), and a bilingual eval CI gate that retires AnythingLLM. See `## Current Milestone` above for detail.
+**v8.0 Linear Design System Migration (phases 75–80).** Scoped requirements in `.planning/REQUIREMENTS.md`; phase decomposition in `.planning/ROADMAP.md`. Headline scope: replace the Bureau/IntelDossier design language with a single Linear direction (re-skin of the existing OKLCH token engine + `bootstrap.js` byte-match), bridge the RTL direction source into Radix, run shadcn's one-shot `migrate rtl`, bump HeroUI 3.0.5 → 3.2.1, rebuild the 8 Aceternity form components on HeroUI v3/Radix preserving RHF/ARIA/keyboard contracts, and verify all baselined surfaces across dark/light × LTR/RTL with axe. See `## Current Milestone` above for the verified scope reality.
 
 ### Out of Scope
 
@@ -289,4 +297,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-06-24 — v7.0 Intelligence Engine shipped & archived (phases 68–74, 49 plans). Next milestone not yet defined (run /gsd:new-milestone)._
+_Last updated: 2026-07-02 — v8.0 Linear Design System Migration scoped (phases 75–80) and re-scoped after a pre-execution review (PROJECT/REQUIREMENTS/ROADMAP reconciled to verified codebase reality)._
