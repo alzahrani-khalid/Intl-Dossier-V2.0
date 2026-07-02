@@ -76,7 +76,7 @@ export const DesktopSidebar = ({
   return (
     <m.div
       className={cn(
-        'group/sidebar-btn relative m-2 hidden h-full w-[300px] flex-shrink-0 rounded-xl bg-white px-4 py-4 md:flex md:flex-col dark:bg-neutral-900',
+        'group/sidebar-btn relative m-2 hidden h-full w-[300px] flex-shrink-0 rounded-xl bg-surface px-4 py-4 md:flex md:flex-col',
         className,
       )}
       animate={{ width: open ? '300px' : '70px' }}
@@ -85,11 +85,11 @@ export const DesktopSidebar = ({
       <button
         onClick={() => setOpen(!open)}
         className={cn(
-          'absolute -end-2 top-4 z-40 hidden h-5 w-5 transform items-center justify-center rounded-sm border border-neutral-200 bg-white transition duration-200 group-hover/sidebar-btn:flex dark:border-neutral-700 dark:bg-neutral-900',
+          'absolute -end-2 top-4 z-40 hidden h-5 w-5 transform items-center justify-center rounded-sm border border-line bg-surface transition duration-200 group-hover/sidebar-btn:flex',
           open ? 'rotate-0' : 'rotate-180',
         )}
       >
-        <IconArrowNarrowLeft className="text-black dark:text-white" />
+        <IconArrowNarrowLeft className="text-ink" />
       </button>
       {children as React.ReactNode}
     </m.div>
@@ -105,15 +105,12 @@ export const MobileSidebar = ({
   return (
     <m.div
       className={cn(
-        'flex h-10 w-full flex-row items-center justify-between bg-neutral-100 px-4 py-4 md:hidden dark:bg-neutral-800',
+        'flex h-10 w-full flex-row items-center justify-between bg-surface-raised px-4 py-4 md:hidden',
       )}
       {...props}
     >
       <div className="z-20 flex w-full justify-end">
-        <IconMenu2
-          className="text-neutral-800 dark:text-neutral-200"
-          onClick={() => setOpen(!open)}
-        />
+        <IconMenu2 className="text-ink" onClick={() => setOpen(!open)} />
       </div>
       <AnimatePresence>
         {open && (
@@ -123,14 +120,11 @@ export const MobileSidebar = ({
             exit={{ x: '-100%', opacity: 0 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className={cn(
-              'fixed inset-0 z-[100] flex h-full w-full flex-col justify-between bg-white p-10 dark:bg-neutral-900',
+              'fixed inset-0 z-[100] flex h-full w-full flex-col justify-between bg-surface p-10',
               className,
             )}
           >
-            <div
-              className="absolute end-10 top-10 z-50 text-neutral-800 dark:text-neutral-200"
-              onClick={() => setOpen(!open)}
-            >
+            <div className="absolute end-10 top-10 z-50 text-ink" onClick={() => setOpen(!open)}>
               <IconX />
             </div>
             {children as React.ReactNode}
@@ -155,7 +149,7 @@ export const SidebarLink = ({
     <Link
       to={link.href}
       className={cn(
-        'group/sidebar flex items-center justify-start gap-2 rounded-sm px-2 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-700',
+        'group/sidebar flex items-center justify-start gap-2 rounded-sm px-2 py-2 hover:bg-line-soft',
         className,
       )}
       {...props}
@@ -167,7 +161,7 @@ export const SidebarLink = ({
           display: open ? 'inline-block' : 'none',
           opacity: open ? 1 : 0,
         }}
-        className="!m-0 inline-block whitespace-pre !p-0 text-sm text-neutral-700 transition duration-150 dark:text-neutral-200"
+        className="!m-0 inline-block whitespace-pre !p-0 text-sm text-ink-mute transition duration-150"
       >
         {link.label}
       </m.span>

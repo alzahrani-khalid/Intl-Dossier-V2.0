@@ -294,9 +294,9 @@ export function FormWizard({
 
         {/* Draft indicator */}
         {hasDraft && (
-          <div className="flex items-center gap-2 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg text-sm">
-            <AlertCircle className="h-4 w-4 text-amber-600 shrink-0" />
-            <span className="text-amber-700 dark:text-amber-400">{t('draftRestored')}</span>
+          <div className="flex items-center gap-2 p-3 bg-warn/10 border border-warn/20 rounded-lg text-sm">
+            <AlertCircle className="h-4 w-4 text-warn shrink-0" />
+            <span className="text-warn">{t('draftRestored')}</span>
           </div>
         )}
 

@@ -56,7 +56,7 @@ export function PullToRefreshIndicator({
 }: PullToRefreshIndicatorProps) {
   const { t } = useTranslation('common')
   const { isRTL } = useDirection()
-// Format relative time
+  // Format relative time
   const formatLastSync = (time: string | Date | null | undefined) => {
     if (!time) return null
 
@@ -120,7 +120,7 @@ export function PullToRefreshIndicator({
               ? t('pullToRefresh.updatedItems', 'Updated {{count}} items', { count: itemsSynced })
               : t('pullToRefresh.updated', 'Updated'),
           icon: Check,
-          iconClass: 'text-green-500',
+          iconClass: 'text-ok',
         }
       default:
         return {
@@ -213,10 +213,10 @@ export function PullToRefreshIndicator({
             <m.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="mt-2 flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-1 dark:bg-amber-900/30"
+              className="mt-2 flex items-center gap-1.5 rounded-full bg-warn/10 px-2.5 py-1"
             >
-              <WifiOff className="h-3 w-3 text-amber-600 dark:text-amber-400" />
-              <span className="text-xs font-medium text-amber-700 dark:text-amber-300">
+              <WifiOff className="h-3 w-3 text-warn" />
+              <span className="text-xs font-medium text-warn">
                 {t('pullToRefresh.offlineQueue', '{{count}} pending sync', {
                   count: offlineQueueCount,
                 })}
@@ -300,9 +300,9 @@ export function SyncStatusBar({
       <div className="flex items-center gap-2">
         {/* Offline queue indicator */}
         {offlineQueueCount > 0 && (
-          <div className="flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 dark:bg-amber-900/30">
-            <WifiOff className="h-3 w-3 text-amber-600 dark:text-amber-400" />
-            <span className="text-amber-700 dark:text-amber-300">{offlineQueueCount}</span>
+          <div className="flex items-center gap-1 rounded-full bg-warn/10 px-2 py-0.5">
+            <WifiOff className="h-3 w-3 text-warn" />
+            <span className="text-warn">{offlineQueueCount}</span>
           </div>
         )}
 

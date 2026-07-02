@@ -63,24 +63,24 @@ const STATUS_CONFIG = {
   idle: { icon: null, color: 'bg-muted', textColor: 'text-muted-foreground' },
   pending: {
     icon: Loader2,
-    color: 'bg-blue-500',
-    textColor: 'text-blue-600 dark:text-blue-400',
+    color: 'bg-info',
+    textColor: 'text-info',
     animate: true,
   },
   processing: {
     icon: Loader2,
-    color: 'bg-blue-500',
-    textColor: 'text-blue-600 dark:text-blue-400',
+    color: 'bg-info',
+    textColor: 'text-info',
     animate: true,
   },
-  paused: { icon: Pause, color: 'bg-amber-500', textColor: 'text-amber-600 dark:text-amber-400' },
+  paused: { icon: Pause, color: 'bg-warn', textColor: 'text-warn' },
   completed: {
     icon: CheckCircle2,
-    color: 'bg-green-500',
-    textColor: 'text-green-600 dark:text-green-400',
+    color: 'bg-ok',
+    textColor: 'text-ok',
   },
-  error: { icon: AlertCircle, color: 'bg-red-500', textColor: 'text-red-600 dark:text-red-400' },
-  cancelled: { icon: X, color: 'bg-gray-500', textColor: 'text-gray-600 dark:text-gray-400' },
+  error: { icon: AlertCircle, color: 'bg-danger', textColor: 'text-danger' },
+  cancelled: { icon: X, color: 'bg-ink-faint', textColor: 'text-ink-mute' },
 } as const
 
 const SIZE_CONFIG = {
