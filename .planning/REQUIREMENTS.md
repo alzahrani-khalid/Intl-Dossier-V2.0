@@ -9,10 +9,10 @@ Replace the IntelDossier prototype design system with a Linear-derived design la
 
 ### UI Component Audit
 
-- [ ] **AUDIT-01**: Every hand-rolled UI surface in `frontend/src/components/**` is classified as replace-with-shadcn-primitive, keep-custom (domain-specific), or replace-with-shadcn-block
-- [ ] **AUDIT-02**: HeroUI usage is confirmed already on the v3 compound-component API (spot-verified across Card/Checkbox/Switch/Modal wrappers); any residual pre-3.x flat-prop call site is listed — expected: none
-- [ ] **AUDIT-03**: Confirm none of the HeroUI v3-removed components (Navbar, Snippet, User, Spacer, Image, Code, Autocomplete, DateInput) are imported (review verified 0 usages); any regression found gets a replacement plan per hit
-- [ ] **AUDIT-04**: The 8 Aceternity-styled form components (a `variant="aceternity"` style + `motion/react`, not a library import) are inventoried with their RHF/Zod/ARIA/keyboard-focus behavioral contracts captured before rebuild
+- [x] **AUDIT-01**: Every hand-rolled UI surface in `frontend/src/components/**` is classified as replace-with-shadcn-primitive, keep-custom (domain-specific), or replace-with-shadcn-block
+- [x] **AUDIT-02**: HeroUI usage is confirmed already on the v3 compound-component API (spot-verified across Card/Checkbox/Switch/Modal wrappers); any residual pre-3.x flat-prop call site is listed — expected: none
+- [x] **AUDIT-03**: Confirm none of the HeroUI v3-removed components (Navbar, Snippet, User, Spacer, Image, Code, Autocomplete, DateInput) are imported (review verified 0 usages); any regression found gets a replacement plan per hit
+- [x] **AUDIT-04**: The 8 Aceternity-styled form components (a `variant="aceternity"` style + `motion/react`, not a library import) are inventoried with their RHF/Zod/ARIA/keyboard-focus behavioral contracts captured before rebuild
 
 ### RTL Infrastructure Bridge
 
@@ -82,31 +82,31 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Every v8.0 requirement maps to exactly one phase. Coverage: 24/24.
 
-| Requirement | Phase    | Status  |
-| ----------- | -------- | ------- |
-| AUDIT-01    | Phase 75 | Pending |
-| AUDIT-02    | Phase 75 | Pending |
-| AUDIT-03    | Phase 75 | Pending |
-| AUDIT-04    | Phase 75 | Pending |
-| RTLB-01     | Phase 76 | Pending |
-| RTLB-02     | Phase 76 | Pending |
-| SRTL-01     | Phase 76 | Pending |
-| SRTL-02     | Phase 76 | Pending |
-| SRTL-03     | Phase 76 | Pending |
-| TOKEN-01    | Phase 77 | Pending |
-| TOKEN-02    | Phase 77 | Pending |
-| TOKEN-03    | Phase 77 | Pending |
-| TOKEN-04    | Phase 77 | Pending |
-| TOKEN-05    | Phase 77 | Pending |
-| TOKEN-06    | Phase 77 | Pending |
-| FOUC-01     | Phase 77 | Pending |
-| DOC-01      | Phase 77 | Pending |
-| HEROUI-01   | Phase 78 | Pending |
-| HEROUI-02   | Phase 78 | Pending |
-| ACET-01     | Phase 79 | Pending |
-| ACET-02     | Phase 79 | Pending |
-| VERIFY-01   | Phase 80 | Pending |
-| VERIFY-02   | Phase 80 | Pending |
-| FOUC-02     | Phase 80 | Pending |
+| Requirement | Phase    | Status   |
+| ----------- | -------- | -------- |
+| AUDIT-01    | Phase 75 | Complete |
+| AUDIT-02    | Phase 75 | Complete |
+| AUDIT-03    | Phase 75 | Complete |
+| AUDIT-04    | Phase 75 | Complete |
+| RTLB-01     | Phase 76 | Pending  |
+| RTLB-02     | Phase 76 | Pending  |
+| SRTL-01     | Phase 76 | Pending  |
+| SRTL-02     | Phase 76 | Pending  |
+| SRTL-03     | Phase 76 | Pending  |
+| TOKEN-01    | Phase 77 | Pending  |
+| TOKEN-02    | Phase 77 | Pending  |
+| TOKEN-03    | Phase 77 | Pending  |
+| TOKEN-04    | Phase 77 | Pending  |
+| TOKEN-05    | Phase 77 | Pending  |
+| TOKEN-06    | Phase 77 | Pending  |
+| FOUC-01     | Phase 77 | Pending  |
+| DOC-01      | Phase 77 | Pending  |
+| HEROUI-01   | Phase 78 | Pending  |
+| HEROUI-02   | Phase 78 | Pending  |
+| ACET-01     | Phase 79 | Pending  |
+| ACET-02     | Phase 79 | Pending  |
+| VERIFY-01   | Phase 80 | Pending  |
+| VERIFY-02   | Phase 80 | Pending  |
+| FOUC-02     | Phase 80 | Pending  |
 
 **Note:** VERIFY-01 spans two moments — the pre-token baseline capture is executed as a gating step of Phase 77 (before any `directions.ts` literal moves), and the post-migration re-comparison completes in Phase 80. The requirement is owned by Phase 80 where it closes.
