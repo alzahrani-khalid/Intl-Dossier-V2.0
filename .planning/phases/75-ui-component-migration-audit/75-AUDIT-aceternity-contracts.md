@@ -114,12 +114,13 @@ it.
   are the seam a parent `useForm({ resolver: zodResolver(schema) })` would bind to; a rebuild
   must keep that seam (register-name + FieldError) intact.
 - **ARIA:** 4 attributes/roles. On `<input>`: `aria-invalid={!!error}` (line 128),
-  `aria-required={required ? true : undefined}` (line 129),
-  `aria-describedby={error ? \`${name}-error\` : helpText ? \`${name}-help\` : undefined}`(line 130). On the required-marker span:`aria-hidden="true"`(line 98). Error announcement:
-the error`<m.p id={\`${name}-error\`}>`is linked **only via`aria-describedby`** — there is
-**no `role="alert"`and no`aria-live`**, so the error is announced on focus, not
-  live-announced on appearance. **Contract gap Phase 79 should close\*\* (add a live region) —
-  record as a preserve-or-improve item, not a preserve-as-is.
+  `aria-required={required ? true : undefined}` (line 129), and `aria-describedby` (line 130)
+  which points at the error element id `{name}-error` when in error, else the help id
+  `{name}-help`. On the required-marker span: `aria-hidden="true"` (line 98). Error
+  announcement: the error paragraph carries `id="{name}-error"` and is linked **only via
+  `aria-describedby`** — there is **no `role="alert"` and no `aria-live`**, so the error is
+  announced on focus, not live-announced on appearance. This is a contract gap Phase 79 should
+  close by adding a live region — record it as a preserve-or-improve item, not preserve-as-is.
 - **Keyboard/focus:** Native `<input>` tab order; `focus:ring-2 focus:border-transparent`
   focus-visible treatment, error-conditional ring color (`focus:ring-danger/30` vs
   `focus:ring-primary-500`). `onFocus`/`onBlur` toggle an `isFocused` state that only drives the
@@ -228,8 +229,11 @@ the error`<m.p id={\`${name}-error\`}>`is linked **only via`aria-describedby`** 
 - **Zod linkage:** No live call site → no schema binds today; `register`/`error` are the seam.
 - **ARIA:** 3 attributes/roles. On `<RadioGroup>`: `aria-invalid={!!error}` (line 107),
   `aria-describedby={...}` (line 108). On the required-marker span:
-  `aria-label={t('validation.required')}` (line 95). Each option uses
-  `<Label htmlFor={\`${name}-${option.value}\`}>`for per-option association. Error linked via`aria-describedby`only — **no`role="alert"`/`aria-live`**. The group label is an `m.label`with no`id`/`aria-labelledby` tie to the group (an association gap to fix on rebuild).
+  `aria-label={t('validation.required')}` (line 95). Each option uses a `<Label>` whose
+  `htmlFor` is the per-option id `{name}-{option.value}` for per-option association (line 135).
+  Error linked via `aria-describedby` only — **no `role="alert"`/`aria-live`**. The group label
+  is an `m.label` with no `id`/`aria-labelledby` tie to the group (an association gap to fix on
+  rebuild).
 - **Keyboard/focus:** Radix `RadioGroup` supplies arrow-key roving tab index and space/enter
   selection; the group label is not focus-linked. No Escape handling.
 - **RTL:** Group is `isRTL && layout === 'horizontal' && 'flex-row-reverse'` (line 54); each
@@ -242,13 +246,98 @@ the error`<m.p id={\`${name}-error\`}>`is linked **only via`aria-describedby`** 
 
 ---
 
-## FormFieldWithValidation — contract (Task 2)
+## FormFieldWithValidation — contract
 
-_Placeholder — filled by Task 2._
+**Source:** `frontend/src/components/forms/FormFieldWithValidation.tsx`
+**Aceternity marker:** `variant?: 'default' | 'aceternity'` prop (not a named `*Aceternity`
+file) — the aceternity path only adds shadow/focus styling; the validation wrapper behavior is
+variant-independent.
 
-## SmartInput — contract (Task 2)
+This is the densest validation wrapper in the set — it composes label + control + trailing
+validation icon + error/help/char-count/password-strength regions, and is the only component
+(besides SmartInput) with a live-region error announcement.
 
-_Placeholder — filled by Task 2._
+- **Liveness:** 0 external call sites — dead code, barrel-only export.
+  `grep -rl "\bFormFieldWithValidation\b" --include="*.tsx" --include="*.ts" frontend/src tests | grep -v "frontend/src/components/forms/" | wc -l` → `0`.
+- **RHF wiring:** Does **not** take `register`. It is controlled internally (`useState('')` for
+  `value`) and exposes `onChange?: (value: string) => void`; RHF errors arrive through a dedicated
+  `externalError?: FieldError` prop. A live RHF binding would therefore be via `Controller`
+  (bind `externalError={fieldState.error}` + `onChange={field.onChange}`), not `register`. The
+  component also runs its own real-time validation via the `useFieldValidation` hook
+  (300ms debounce, `instantFeedback: true`). **Error display path (client vs. server):**
+  `displayResult = hasExternalError ? { isValid: false, messageKey: externalError.message || 'validation.required' } : validationResult` — the **external (RHF/server) error takes precedence**
+  over the hook's client-side result, and `shouldShowValidation = (isTouched && displayResult) || hasExternalError` so an external error shows immediately (before touch) while the client result
+  waits for blur (`setTouched`). A rebuild MUST preserve this precedence and the touched-gating.
+- **Zod linkage:** No live call site → no schema binds today. Two seams a rebuild must keep:
+  the `externalError: FieldError` seam (RHF+zodResolver errors) and the `validation:
+UseFieldValidationOptions` seam (the internal hook's own rules). Server-echoed errors flow
+  through `externalError.message` as an i18n key.
+- **ARIA:** 8 attribute/role occurrences (matches research). `aria-label` on the required marker
+  (line 253); on BOTH the `<input>` and `<textarea>` branches: `aria-invalid` (lines 292/308),
+  `aria-describedby` (293/309), `aria-required` (294/310); and `role="alert"` on the validation
+  feedback container (line 365). Ids are `useId()`-scoped: input `{name}-{uniqueId}`, error
+  `{name}-error-{uniqueId}`, help `{name}-help-{uniqueId}`, char-count `{name}-charcount-{uniqueId}`.
+  **`aria-describedby` chains multiple targets** — it is a space-joined list of
+  `[errorId, helpId, charCountId]` filtered for the active ones (lines 179-185), so a screen
+  reader hears the error, the help, and the char count together. **Error announcement mechanism:
+  `role="alert"`** (line 365) — a real live region, so errors ARE announced on appearance
+  (unlike the 5 simple components which only link via `aria-describedby`). A rebuild must keep
+  both the multi-target describedby chaining and the `role="alert"` live region.
+- **Keyboard/focus:** Native `<input>`/`<textarea>` tab order; `handleBlur` sets `isFocused=false`
+  AND `setTouched()` (validation only surfaces after first blur); `handleFocus` sets focus state
+  for the aceternity shadow. Error-conditional focus-ring color (danger/warning/primary). No
+  Escape handling.
+- **RTL:** Leading icon spacing `isRTL ? 'pe-12' : 'ps-12'` (line 196); trailing validation-icon
+  spacing `isRTL ? 'ps-12' : 'pe-12'` (line 198); leading icon position `isRTL ? 'end-3' : 'start-3'` (line 273); trailing validation icon `isRTL ? 'start-3' : 'end-3'` (line 321). Mobile
+  char-count uses `text-end`; labels/messages use `text-start`.
+- **Animation-only (non-contractual):** Label entrance transform, leading-icon scale-in, trailing
+  validation-icon `AnimatePresence` scale, height-auto reveal on the error/warning regions. The
+  `role="alert"` container's _motion_ is non-contractual, but its _presence_ (the live region) is
+  contractual. Password-strength meter and character-count _values_ are real features; their
+  animations are droppable.
+
+## SmartInput — contract
+
+**Source:** `frontend/src/components/forms/SmartInput.tsx`
+**Aceternity marker:** `variant?: 'default' | 'aceternity'` prop (not a named `*Aceternity`
+file) — the aceternity path adds shadow/focus styling only.
+
+SmartInput's distinguishing behavior is **type-driven mobile-keyboard optimization + input
+masking** (phone/creditcard/currency/date/otp), exposed as a `forwardRef` input.
+
+- **Liveness:** 0 external call sites — dead code, barrel-only export.
+  `grep -rl "\bSmartInput\b" --include="*.tsx" --include="*.ts" frontend/src tests | grep -v "frontend/src/components/forms/" | wc -l` → `0`.
+- **RHF wiring:** Does **not** take `register`; it is a `forwardRef<HTMLInputElement>` so a
+  `ref` (e.g. RHF's `register().ref`) can be attached. Controlled/uncontrolled dual-mode
+  (`isControlled = controlledValue !== undefined`; internal `useState` otherwise). It exposes a
+  **two-argument** `onChange?: (value: string, rawValue: string) => void` — `value` is the masked
+  display string, `rawValue` is the unmasked value. **This is a contract hazard for RHF:** RHF's
+  registered `onChange` expects a DOM event, not `(value, rawValue)`, and the field should store
+  `rawValue` not the masked `value`; a live binding must adapt (Controller mapping `rawValue` into
+  `field.onChange`). Error is a plain `error?: string` prop (already-resolved message), NOT a
+  `FieldError` — so unlike the other components it does not run `t()` on the message; the caller
+  passes a resolved string.
+- **Zod linkage:** No live call site → no schema binds today. The rebuild seam is the `ref` +
+  `(value, rawValue)` onChange + resolved `error: string`; a Zod form must validate `rawValue`.
+- **ARIA:** 5 attribute/role occurrences (research measured 6 — **the fresh count is 5**; recorded
+  as actual). `aria-label` on the required marker (line 521); on `<input>`: `aria-invalid={!!error}`
+  (line 562), `aria-describedby` (line 563), `aria-required={required}` (line 564); `role="alert"`
+  on the error `<m.p>` (line 596). `aria-describedby` is a space-joined `[errorId, helpId]` list
+  (line 455) with ids `{inputId}-error` / `{inputId}-help` (inputId = `props.id` or
+  `smart-input-{uniqueId}`). **Error announcement mechanism: `role="alert"`** (line 596) — a real
+  live region, like FormFieldWithValidation and unlike the 5 simple components.
+- **Keyboard/focus:** Native `<input>` with type-specific `inputMode`/`pattern`/`autoComplete`
+  from `INPUT_TYPE_CONFIG` (drives the mobile soft keyboard). `handleBlur` optionally reformats
+  (`formatOnBlur`) and clears focus; `handleFocus` sets focus state. OTP type limits length and
+  applies centered mono tracking. No Escape handling.
+- **RTL:** Icon spacing `isRTL ? 'pe-4 ps-12' : 'ps-12 pe-4'` (line 466) reserving leading-icon
+  room; leading icon position `isRTL ? 'end-3' : 'start-3'` (line 537). Labels/messages
+  `text-start`. Note: masking/formatting operates on Latin digits — RTL affects layout, not the
+  numeric formatting.
+- **Animation-only (non-contractual):** Label entrance transform, leading-icon scale-in,
+  help/error `AnimatePresence` fade/height reveal. The `role="alert"` motion is non-contractual;
+  its presence is contractual. The masking/keyboard-optimization behavior is functional, not
+  animation — it is fully contractual if Phase 79 keeps SmartInput's role.
 
 ## SearchableSelect — contract (Task 3)
 
