@@ -256,8 +256,27 @@ Plans:
 3. `pnpm dlx shadcn@latest migrate rtl` has been run once against `components/ui/**` and committed as a single diff; the repo has no second application.
 4. Calendar, Pagination, and Sidebar (the CLI-exempt components) are manually verified RTL-correct in Arabic.
 5. A CI check fails the build if any `className` string contains a duplicated `rtl:*` utility.
-   **Plans**: TBD
+   **Plans**: 5 plans
    **UI hint**: yes
+
+Plans:
+
+**Wave 1**
+
+- [ ] 76-01-PLAN.md — RTLB-01 single direction owner (ui/direction.tsx + unit test), demote 4 legacy setters, delete RTLWrapper (wave 1)
+
+**Wave 2** _(blocked on Wave 1)_
+
+- [ ] 76-02-PLAN.md — SRTL-03 duplicate-`rtl:` guard script + fixture, lint-chain + CI positive-failure wiring (wave 2)
+- [ ] 76-03-PLAN.md — RTLB-01/02 drop stale getDocDir() wrapper defaults; direction-portals same-frame + portal-edge e2e (wave 2)
+
+**Wave 3** _(blocked on Wave 2)_
+
+- [ ] 76-04-PLAN.md — SRTL-01 one-shot `migrate rtl` (reviewed, isolated commit) + components.json `rtl: true` (wave 3)
+
+**Wave 4** _(blocked on Wave 3)_
+
+- [ ] 76-05-PLAN.md — SRTL-02 Calendar/Pagination/Sidebar AR verification record + human sign-off checkpoint (wave 4)
 
 ### Phase 77: Linear Token System
 
