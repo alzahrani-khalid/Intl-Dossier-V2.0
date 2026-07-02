@@ -16,8 +16,8 @@ Replace the IntelDossier prototype design system with a Linear-derived design la
 
 ### RTL Infrastructure Bridge
 
-- [ ] **RTLB-01**: layout/portal `dir` has exactly one owner (derived from `i18n.language`/`useDirection()`), consolidating today's 4 scattered setters (LanguageProvider, `i18n/index.ts` side-effects, RTLWrapper, DesignProvider) and bridged into both `<html>` and Radix's direction context — no dual-mechanism double-flip. The 68 per-field `dir="rtl"` inputs on Arabic-only (`_ar`) fields are explicitly retained (they are correct, not violations)
-- [ ] **RTLB-02**: Portal-based components (Popover/Tooltip/Dropdown/Sheet/dossier drawer) animate from the correct edge in both EN and AR
+- [x] **RTLB-01**: layout/portal `dir` has exactly one owner (derived from `i18n.language`/`useDirection()`), consolidating today's 4 scattered setters (LanguageProvider, `i18n/index.ts` side-effects, RTLWrapper, DesignProvider) and bridged into both `<html>` and Radix's direction context — no dual-mechanism double-flip. The 68 per-field `dir="rtl"` inputs on Arabic-only (`_ar`) fields are explicitly retained (they are correct, not violations)
+- [x] **RTLB-02**: Portal-based components (Popover/Tooltip/Dropdown/Sheet/dossier drawer) animate from the correct edge in both EN and AR
 
 ### shadcn RTL Logical Properties
 
@@ -88,8 +88,8 @@ Every v8.0 requirement maps to exactly one phase. Coverage: 24/24.
 | AUDIT-02    | Phase 75 | Complete |
 | AUDIT-03    | Phase 75 | Complete |
 | AUDIT-04    | Phase 75 | Complete |
-| RTLB-01     | Phase 76 | Pending  |
-| RTLB-02     | Phase 76 | Pending  |
+| RTLB-01     | Phase 76 | Complete |
+| RTLB-02     | Phase 76 | Complete |
 | SRTL-01     | Phase 76 | Pending  |
 | SRTL-02     | Phase 76 | Pending  |
 | SRTL-03     | Phase 76 | Complete |
