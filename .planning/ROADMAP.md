@@ -228,8 +228,16 @@ Full detail: [milestones/v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md). Audit: [m
 3. The v3-removed components (Navbar, Snippet, User, Spacer, Image, Code, Autocomplete, DateInput) are confirmed unused (review found 0 imports); the audit records the confirmation and flags any regression with a replacement plan.
 4. Each of the 8 Aceternity-based components has its RHF/Zod validation wiring, ARIA attributes, and keyboard-focus contract captured in writing before any rebuild starts.
 5. Every component touching clearance, RTL directionality, flags/glyphs, or dossier-type logic defaults to keep-custom (or shadcn-block-with-domain-wrapper), never primitive-replace.
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 4 plans
+
+Plans:
+
+- [ ] 75-01-PLAN.md — AUDIT-01 classification artifact: rulebook header, evidence baseline, per-directory tier (wave 1)
+- [ ] 75-02-PLAN.md — AUDIT-02/03 HeroUI v3 confirmation artifact with Phase 78 re-run protocol (wave 1)
+- [ ] 75-03-PLAN.md — AUDIT-04 Aceternity behavioral contracts + UserPicker facade + Phase 79 rescope input (wave 1)
+- [ ] 75-04-PLAN.md — AUDIT-01 per-file tier (ui/ + forms/), enforcement sweep, coverage reconciliation (wave 2)
+
+**UI hint**: yes
 
 ### Phase 76: RTL Infrastructure Bridge & shadcn Logical Properties
 
