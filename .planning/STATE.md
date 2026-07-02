@@ -24,10 +24,11 @@ See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section
 
 ## Current Position
 
-Phase: 76 (rtl-infrastructure-bridge-shadcn-logical-properties) — EXECUTING
-Plan: 5 of 5 complete (all plans done — phase verification pending)
-Status: Phase 76 all 5 plans complete — 76-05 SRTL-02 verified with human sign-off (approved 2026-07-02). Running phase-level verification next.
-Last activity: 2026-07-02 -- Plan 76-05 complete (SRTL-02 Calendar/Pagination/Sidebar AR verified; 4 evidence screenshots; human sign-off approved)
+Phase: 76 (rtl-infrastructure-bridge-shadcn-logical-properties) — COMPLETE (verified, not transitioned)
+Plan: 5 of 5 complete
+Status: Phase 76 COMPLETE — goal-backward verification PASSED 5/5 (RTLB-01/02, SRTL-01/02/03), integration type-check clean, SRTL-02 human sign-off approved. Code review advisory: 0 CRITICAL / 0 HIGH / 1 MEDIUM / 3 LOW (see 76-REVIEW.md). Held at phase 76 (--no-transition); Phase 77 not started.
+Last activity: 2026-07-02 -- Phase 76 verified (76-VERIFICATION.md PASS) + advisory code review (76-REVIEW.md, 0C/0H/1M/3L)
+Follow-ups (advisory, non-blocking): MD-01 stale frontend/CLAUDE.md provider-tree prose (RTLWrapper→DirectionProvider) + LO-02 useLocale.ts comment → Phase 77 DOC-01; LO-01 check-duplicate-rtl.mjs empty-root guard; LO-03 latent render-time document.dir reader.
 
 ## Quick Tasks Completed
 
