@@ -23,7 +23,7 @@ Replace the IntelDossier prototype design system with a Linear-derived design la
 
 - [ ] **SRTL-01**: `pnpm dlx shadcn@latest migrate rtl` runs once against `components/ui/**` (the only ESLint-exempt surface — app code is already logical-only, so yield is limited, and on the repo's `new-york` style the output is best-effort to review, not trusted), is committed, and is never blindly re-run (upstream idempotency bug)
 - [ ] **SRTL-02**: Calendar, Pagination, and Sidebar (CLI-exempt components) are manually verified RTL-correct
-- [ ] **SRTL-03**: A CI check prevents duplicate `rtl:*` utility classes from re-appearing
+- [x] **SRTL-03**: A CI check prevents duplicate `rtl:*` utility classes from re-appearing
 
 ### Linear Token System
 
@@ -92,7 +92,7 @@ Every v8.0 requirement maps to exactly one phase. Coverage: 24/24.
 | RTLB-02     | Phase 76 | Pending  |
 | SRTL-01     | Phase 76 | Pending  |
 | SRTL-02     | Phase 76 | Pending  |
-| SRTL-03     | Phase 76 | Pending  |
+| SRTL-03     | Phase 76 | Complete |
 | TOKEN-01    | Phase 77 | Pending  |
 | TOKEN-02    | Phase 77 | Pending  |
 | TOKEN-03    | Phase 77 | Pending  |

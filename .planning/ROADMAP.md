@@ -267,7 +267,7 @@ Plans:
 
 **Wave 2** _(blocked on Wave 1)_
 
-- [ ] 76-02-PLAN.md — SRTL-03 duplicate-`rtl:` guard script + fixture, lint-chain + CI positive-failure wiring (wave 2)
+- [x] 76-02-PLAN.md — SRTL-03 duplicate-`rtl:` guard script + fixture, lint-chain + CI positive-failure wiring (wave 2)
 - [ ] 76-03-PLAN.md — RTLB-01/02 drop stale getDocDir() wrapper defaults; direction-portals same-frame + portal-edge e2e (wave 2)
 
 **Wave 3** _(blocked on Wave 2)_
@@ -357,7 +357,7 @@ Plans:
 | 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
 | 68-74 | v7.0 | 49/49 | Shipped | 2026-06-24 |
 | 75 | v8.0 | 4/4 | Complete    | 2026-07-02 |
-| 76 | v8.0 | 1/5 | In Progress|  |
+| 76 | v8.0 | 2/5 | In Progress|  |
 | 77 | v8.0 | 0/? | Not started | - |
 | 78 | v8.0 | 0/? | Not started | - |
 | 79 | v8.0 | 0/? | Not started | - |
