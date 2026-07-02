@@ -72,6 +72,15 @@ jobs:
           set -e
           ! node scripts/check-edge-fn-schema-refs.mjs tools/edge-fn-fixtures/bad-schema-ref
 
+      - name: Check duplicate rtl utilities
+        run: node scripts/check-duplicate-rtl.mjs frontend/src
+
+      - name: Assert duplicate-rtl check fails on bad fixture (positive-failure)
+        shell: bash
+        run: |
+          set -e
+          ! node scripts/check-duplicate-rtl.mjs tools/rtl-fixtures
+
   design-token-check:
     name: Design Token Check
     runs-on: ubuntu-latest
