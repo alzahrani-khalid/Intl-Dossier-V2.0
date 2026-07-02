@@ -68,6 +68,14 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+    // Radix's direction context is a singleton: ui/direction.tsx DirectionProvider
+    // publishes it and every Radix portal (dropdown/select/menu/…) consumes it via
+    // `useDirection()`. Without deduping, Vite's dep pre-bundling can load
+    // `@radix-ui/react-direction` twice (once standalone, once bundled inside
+    // `@radix-ui/react-dropdown-menu` et al), creating TWO DirectionContext
+    // objects — the provider writes to one, the portal reads the other and falls
+    // back to 'ltr', so RTL portals silently render LTR (RTLB-01/02 regression).
+    dedupe: ['@radix-ui/react-direction'],
   },
   server: {
     host: true, // Expose on network (shows both localhost and network IP)
