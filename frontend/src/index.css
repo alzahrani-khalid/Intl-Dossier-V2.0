@@ -107,7 +107,10 @@
   --color-background: var(--bg);
   --color-card: var(--surface);
   --color-card-foreground: var(--ink);
-  --color-popover: var(--surface-raised);
+  /* Surface ladder (Linear TOKEN-06): popover/menu/dropdown content sits on
+     surface-3; drawers/modals on surface-4 (see .dir-linear .drawer /
+     .id-dialog-content in styles/list-pages.css). Cards stay on --surface. */
+  --color-popover: var(--surface-3);
   --color-popover-foreground: var(--ink);
   --color-destructive: var(--danger);
   --color-destructive-foreground: var(--accent-fg);
@@ -548,14 +551,15 @@ html[dir='rtl'] .tb-locale-btn,
 }
 
 @layer components {
-  /* Card component */
+  /* Card component — Linear recipe: hairline border, flat (no shadow) */
   .card {
-    @apply rounded-lg border bg-card text-card-foreground shadow-sm;
+    @apply rounded-lg border bg-card text-card-foreground;
   }
 
-  /* Button variants */
+  /* Button variants — accent hover uses the Linear --accent-hover token
+     (no opacity/filter hack). */
   .btn-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+    @apply bg-primary text-primary-foreground hover:bg-accent-hover;
   }
 
   .btn-secondary {

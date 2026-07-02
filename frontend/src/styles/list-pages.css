@@ -91,8 +91,7 @@ html[dir='rtl'] .page-sub {
   padding: var(--pad);
 }
 .dir-linear .card {
-  border-radius: 12px;
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-lg);
 }
 .card-head {
   display: flex;
@@ -395,7 +394,7 @@ html[dir='rtl'] .page-sub {
    all swap to --accent. This is the per-direction visual identity, not a
    theme tweak — the design files explicitly call it out. */
 .dir-linear .btn {
-  border-radius: 8px;
+  border-radius: var(--radius);
   background: var(--surface);
   color: var(--ink);
   border: 1px solid var(--line);
@@ -410,15 +409,14 @@ html[dir='rtl'] .page-sub {
   background: var(--accent);
   border-color: var(--accent);
   color: var(--accent-fg);
-  box-shadow: 0 1px 2px rgba(190, 80, 30, 0.15);
   text-transform: none;
   font-family: var(--font-body);
   font-size: 13px;
   letter-spacing: normal;
 }
 .dir-linear .btn-primary:hover {
-  background: color-mix(in srgb, var(--accent) 88%, black);
-  border-color: color-mix(in srgb, var(--accent) 88%, black);
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 .dir-linear .btn-ghost {
   background: transparent;
@@ -938,12 +936,14 @@ html[dir='rtl'] .icon-flip {
 }
 .id-dialog-content {
   border-radius: var(--radius);
-  background: var(--surface);
+  /* Surface ladder (Linear TOKEN-06): modals sit on surface-4 (top tier). */
+  background: var(--surface-4);
   color: var(--ink);
   box-shadow: var(--shadow);
 }
 .dir-linear .drawer {
-  background: var(--surface);
+  /* Surface ladder (Linear TOKEN-06): drawers sit on surface-4 (top tier). */
+  background: var(--surface-4);
 }
 .dir-linear .drawer-title {
   font-size: 24px;
