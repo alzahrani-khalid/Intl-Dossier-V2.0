@@ -24,11 +24,11 @@ See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section
 
 ## Current Position
 
-Phase: 76 (rtl-infrastructure-bridge-shadcn-logical-properties) — COMPLETE (verified, not transitioned)
-Plan: 5 of 5 complete
-Status: Phase 76 COMPLETE — goal-backward verification PASSED 5/5 (RTLB-01/02, SRTL-01/02/03), integration type-check clean, SRTL-02 human sign-off approved. Code review advisory: 0 CRITICAL / 0 HIGH / 1 MEDIUM / 3 LOW (see 76-REVIEW.md). Held at phase 76 (--no-transition); Phase 77 not started.
-Last activity: 2026-07-02 -- Phase 76 verified (76-VERIFICATION.md PASS) + advisory code review (76-REVIEW.md, 0C/0H/1M/3L)
-Follow-ups (advisory, non-blocking): MD-01 stale frontend/CLAUDE.md provider-tree prose (RTLWrapper→DirectionProvider) + LO-02 useLocale.ts comment → Phase 77 DOC-01; LO-01 check-duplicate-rtl.mjs empty-root guard; LO-03 latent render-time document.dir reader.
+Phase: 77 (linear-token-system) — PLANNED (ready to execute)
+Plan: 0 of 8 executed (8 plans, 6 waves; plan-checker PASS)
+Status: Phase 76 COMPLETE (verified 5/5). Phase 77 PLANNED — research (fable) + 8 PLAN.md files (fable) + Nyquist VALIDATION.md; opus plan-checker verdict PASS (0 blocking, 4 advisory). Wave graph: W1 {77-01 VERIFY-01 baseline gate [autonomous:false], 77-02 FOUC byte-match guard} → W2 {77-03 Linear token sets + TOKEN-03 palettes} → W3 {77-04 the atomic switch: id.dir dual-layer coercion + bootstrap byte-match + fonts} → W4 {77-05 switcher retirement, 77-06 ui/\* re-skin} → W5 {77-07} → W6 {77-08 DOC-01}. Ready for /gsd:execute-phase 77.
+Last activity: 2026-07-02 -- Phase 77 planned (8 plans/6 waves, checker PASS); DOC-01 (77-08) folds in the P76 doc-drift carryover (MD-01 RTLWrapper prose + LO-02 useLocale comment).
+Follow-ups (P76 advisory, still open): LO-01 check-duplicate-rtl.mjs empty-root guard; LO-03 latent render-time document.dir reader (MD-01/LO-02 now owned by 77-08 DOC-01).
 
 ## Quick Tasks Completed
 
