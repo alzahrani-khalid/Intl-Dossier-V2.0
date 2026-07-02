@@ -30,12 +30,16 @@
  *   5. Route change   → `useEffect` on `useRouterState().location.pathname`.
  *
  * RTL contract (CLAUDE.md rule 1–5 + Pitfall 1 in 36-RESEARCH.md):
- *   - Drawer `placement` flips between `'left'` (LTR) and `'right'` (RTL) via
- *     `document.documentElement.dir`. HeroUI v3 Drawer treats placement as a
- *     PHYSICAL edge, so we have to compute the flip ourselves — same pattern
- *     as TweaksDrawer. We read `document.dir` instead of `i18n.dir()` because
- *     the test-env i18n mock omits `dir()`; LanguageProvider keeps the DOM and
- *     the i18n runtime in lockstep in production.
+ *   - Drawer `placement` flips between `'left'` (LTR) and `'right'` (RTL). HeroUI
+ *     v3 Drawer treats placement as a PHYSICAL edge, so we compute the flip
+ *     ourselves — same pattern as TweaksDrawer. Direction comes from the Radix
+ *     direction context supplied by `ui/direction.tsx` DirectionProvider (the
+ *     single direction owner), read via `useDirection()`. That context is set
+ *     during the owner's render, so it is same-commit fresh — a render-time
+ *     `document.dir` read would be one frame stale now that the DOM write lives
+ *     in the owner's layout effect. It is test-safe because Radix `useDirection()`
+ *     defaults to `'ltr'` without a provider and the RTL-matrix tests wrap the
+ *     shell in `RadixDirectionProvider`.
  *   - Zero physical-property Tailwind. Only logical utilities: `border-e`,
  *     `ms-auto`, `ps-*`/`pe-*`, etc.
  *   - Sidebar has `border-e` (inline-end) which flips automatically.
@@ -57,8 +61,8 @@
  *     avoid collision with the DOM-level `@/hooks/useDirection` which only
  *     reads `document.dir`. We consume `useDesignDirection` here so the
  *     Phase-33 direction (chancery/situation/…) flows into downstream
- *     children via React context, and `i18n.dir()` independently feeds the
- *     physical-placement flip.
+ *     children via React context, and the Radix direction context
+ *     (`ui/direction.tsx`) independently feeds the physical-placement flip.
  *
  * Pitfall 2 mitigation (FOUC/flash on direction switch):
  *   - The inner tree (Sidebar + Topbar + ClassificationBar + main) stays
@@ -81,24 +85,13 @@ import {
 import { useRouterState } from '@tanstack/react-router'
 import { Drawer, useOverlayState } from '@heroui/react'
 import { useTranslation } from 'react-i18next'
+import { useDirection as useRadixDirection } from '@radix-ui/react-direction'
 
 import { cn } from '@/lib/utils'
 import { FullscreenLoader } from '@/components/signature-visuals'
 import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
 import { ClassificationBar } from './ClassificationBar'
-
-/**
- * Read the current document direction. We intentionally read `document.dir`
- * directly rather than calling `i18n.dir()` because the test-env i18n mock
- * (frontend/tests/setup.ts) only stubs `t` + `language` — `dir()` is absent.
- * In production, `LanguageProvider` keeps `document.dir` and the i18n runtime
- * in lockstep, so reading from the DOM is equivalent and test-safe.
- */
-function readDocumentDir(): 'ltr' | 'rtl' {
-  if (typeof document === 'undefined') return 'ltr'
-  return document.documentElement.dir === 'rtl' ? 'rtl' : 'ltr'
-}
 
 export interface AppShellProps {
   children: ReactNode
@@ -120,7 +113,10 @@ function getStoredSidebarOpen(): boolean {
 
 export function AppShell({ children }: AppShellProps): ReactElement {
   const { t } = useTranslation()
-  const isRTL = readDocumentDir() === 'rtl'
+  // Same-commit fresh: the Radix direction context is supplied by the single
+  // direction owner (ui/direction.tsx DirectionProvider). Defaults to 'ltr'
+  // without a provider (test-safe).
+  const isRTL = useRadixDirection() === 'rtl'
   const pathname = useRouterState({ select: (s) => s.location.pathname })
 
   // Plain React boolean for drawer openness. We bridge it into HeroUI's

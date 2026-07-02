@@ -21,6 +21,7 @@ import type { ReactElement } from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render } from '@testing-library/react'
 import { axe, toHaveNoViolations } from 'jest-axe'
+import { DirectionProvider as RadixDirectionProvider } from '@radix-ui/react-direction'
 
 expect.extend(toHaveNoViolations)
 
@@ -97,8 +98,16 @@ function renderMatrix(direction: Direction, locale: Locale): ReturnType<typeof r
   document.documentElement.setAttribute('lang', locale)
   document.documentElement.setAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr')
 
+  // AppShell derives drawer placement from the Radix direction context (supplied
+  // in production by ui/direction.tsx DirectionProvider). Wrap so the RTL matrix
+  // rows exercise the rtl branch; the setAttribute lines above stay because axe
+  // reads the DOM attributes.
   const child = (<div data-testid="page-content">Shell axe-core matrix</div>) as ReactElement
-  return render(<AppShell>{child}</AppShell>)
+  return render(
+    <RadixDirectionProvider dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+      <AppShell>{child}</AppShell>
+    </RadixDirectionProvider>,
+  )
 }
 
 describe('AppShell axe-core', () => {

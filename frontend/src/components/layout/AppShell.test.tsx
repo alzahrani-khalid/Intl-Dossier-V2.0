@@ -22,6 +22,7 @@ import type { ReactElement } from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { DirectionProvider as RadixDirectionProvider } from '@radix-ui/react-direction'
 
 // ---- Module mocks (declared BEFORE SUT import so vi.mock hoist wins) ----
 
@@ -181,12 +182,22 @@ describe('AppShell', () => {
   it('drawer rtl flip — html[dir=rtl] flips translateX sign', () => {
     document.documentElement.setAttribute('dir', 'rtl')
     mockViewport(900)
-    const { container } = renderShell()
+    // AppShell now derives placement from the Radix direction context (supplied
+    // in production by ui/direction.tsx DirectionProvider), so the RTL branch is
+    // exercised by wrapping in RadixDirectionProvider dir="rtl". The document
+    // setAttribute above stays — it feeds `[dir=rtl]` CSS selectors.
+    const { container } = render(
+      <RadixDirectionProvider dir="rtl">
+        <AppShell>
+          <div data-testid="page">page</div>
+        </AppShell>
+      </RadixDirectionProvider>,
+    )
 
     // The root `.appshell` mounts cleanly under dir=rtl. HeroUI Drawer resolves
-    // placement="right" (which AppShell flips to when `i18n.dir() === 'rtl'`)
-    // against the physical RIGHT edge — the physical-placement flip is what the
-    // UI-SPEC calls "translateX sign flip". jsdom can't assert computed
+    // placement="right" (which AppShell flips to when the Radix direction context
+    // is 'rtl') against the physical RIGHT edge — the physical-placement flip is
+    // what the UI-SPEC calls "translateX sign flip". jsdom can't assert computed
     // transforms, so we verify the AppShell root mounts without error under
     // dir=rtl and leave the visual flip to Playwright (phase-36-shell-smoke).
     expect(container.querySelector('.appshell')).not.toBeNull()

@@ -283,12 +283,12 @@ export function DesignProvider({
   const setLocale = useCallback((l: Locale): void => {
     setLocaleState(l)
     safeSetItem(LS_LOCALE, l)
-    if (typeof document !== 'undefined') {
-      document.documentElement.lang = l
-      document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr'
-    }
-    // Defer i18next call to runtime; dynamic import avoids a circular
-    // dependency between DesignProvider and the i18n bootstrap module.
+    // The single direction owner (ui/direction.tsx DirectionProvider) derives
+    // dir/lang from i18n.language and performs the only runtime <html dir/lang>
+    // writes. Keeping a synchronous write here would re-open the one-frame
+    // disagreement window (RESEARCH Pitfall 4) — so setLocale only persists and
+    // delegates. Defer the i18next call to runtime; the dynamic import avoids a
+    // circular dependency between DesignProvider and the i18n bootstrap module.
     void import('@/i18n')
       .then(({ default: i18n }) => i18n.changeLanguage(l))
       .catch((err: unknown) => {

@@ -580,21 +580,11 @@ export const getDirection = (lang: string = i18n.language): 'rtl' | 'ltr' => {
   return isRTL(lang) ? 'rtl' : 'ltr'
 }
 
-// Function to switch language and update document direction
+// Function to switch language. The single direction owner (ui/direction.tsx
+// DirectionProvider) derives dir/lang from i18n.language and performs the only
+// runtime <html dir/lang> writes, so this helper just delegates to i18next.
 export const switchLanguage = async (lang: SupportedLanguage): Promise<void> => {
   await i18n.changeLanguage(lang)
-  document.documentElement.dir = getDirection(lang)
-  document.documentElement.lang = lang
 }
-
-// Set initial direction
-document.documentElement.dir = getDirection()
-document.documentElement.lang = i18n.language
-
-// Listen for language changes
-i18n.on('languageChanged', (lng) => {
-  document.documentElement.dir = getDirection(lng)
-  document.documentElement.lang = lng
-})
 
 export default i18n
