@@ -20,41 +20,39 @@ git-ignored (local only).
 
 ## Visual Design Source of Truth (READ BEFORE ANY UI WORK)
 
-The canonical visual design is the **IntelDossier prototype** at:
+The canonical visual design is the **Linear design system**, specified in:
 
 ```
-frontend/design-system/inteldossier_handoff_design/
-├── README.md             <-- voice, content rules, visual foundations
-├── colors_and_type.css   <-- foundational tokens (Bureau light)
-├── handoff/app.css       <-- production stylesheet (the prototype)
-└── src/
-    ├── themes.jsx        <-- token builder (4 directions × theme × density × hue)
-    ├── app.css           <-- production stylesheet (full prototype)
-    ├── icons.jsx         <-- 38-glyph stroked icon set
-    ├── glyph.jsx         <-- DossierGlyph (circular flag system)
-    ├── loader.jsx        <-- GlobeSpinner / GlobeLoader
-    ├── dashboard.jsx     <-- canonical Card / KPI / list patterns
-    ├── pages.jsx         <-- canonical page templates
-    └── shell.jsx         <-- topbar, sidebar, layout
+frontend/DESIGN.md   <-- the Linear spec: dark-canonical token tables
+                         (dark verbatim + derived light), the accent + semantic
+                         + status palettes, type stack, radii (6/8/12), the
+                         recipe rules, and the engine contract
 ```
 
 The runtime port lives at **`frontend/src/design-system/`**
 (`DesignProvider.tsx`, `tokens/{directions,densities,buildTokens,applyTokens}.ts`,
-hooks). The FOUC bootstrap that paints first-frame tokens is at
-`frontend/public/bootstrap.js` — its palette/font literals must byte-match
-`tokens/directions.ts`.
+hooks) and is documented in `frontend/src/design-system/CLAUDE.md`. The FOUC
+bootstrap that paints first-frame tokens is at `frontend/public/bootstrap.js`.
+The Linear palette/font literals exist in **three copies that must byte-match** —
+`tokens/directions.ts` (`PALETTES.linear` / `FONTS.linear`), `public/bootstrap.js`
+(the ES5 first-paint table), and the `frontend/src/index.css` `:root` fallback —
+enforced on every build by `scripts/check-bootstrap-parity.mjs` (lint + CI). Change
+all three in the same edit.
 
-**Default direction: Bureau.** Ignore Chancery, Situation, and Ministerial
-unless a task explicitly references them.
+**Default: Linear, dark mode.** Linear is the only direction — the four legacy
+directions (Bureau, Chancery, Situation, Ministerial) and the accent-hue axis were
+collapsed away in Phase 77. Any persisted `id.dir` coerces to `linear`.
+
+The **IntelDossier prototype** at
+`frontend/design-system/inteldossier_handoff_design/` is **historical reference
+(superseded 2026-07)** — it predates the Linear migration and is no longer a source
+of truth. Do not point new work at it (see its `README.md` supersession banner).
 
 ### Required reading order before building or modifying any UI
 
-1. `frontend/design-system/inteldossier_handoff_design/README.md` — voice,
-   content rules, visual foundations
-2. `frontend/design-system/inteldossier_handoff_design/colors_and_type.css` —
-   token names and exact values
-3. The closest matching component in
-   `frontend/design-system/inteldossier_handoff_design/src/`
+1. `frontend/DESIGN.md` — the Linear spec: token tables, type, radii, recipes
+2. `frontend/src/design-system/CLAUDE.md` — the runtime token engine
+3. The closest matching existing component under `frontend/src/components/`
 
 If you cannot identify a closest match, **ask before inventing**.
 
@@ -63,15 +61,19 @@ If you cannot identify a closest match, **ask before inventing**.
 - All colors via `var(--*)` tokens or the `@theme`-mapped Tailwind utilities
   (`bg-bg`, `bg-surface`, `text-ink`, `border-line`, `bg-accent`, etc.).
   **No raw hex. No Tailwind color literals** like `text-blue-500`.
-- Borders are `1px solid var(--line)`. **No drop-shadows on cards.**
-  Shadow is reserved for drawers (`var(--shadow-lg)`) and hovered list rows.
-- **No gradient backgrounds.** Surfaces are flat.
-- Buttons follow `.btn-primary` / `.btn-ghost` from the prototype's `app.css`.
-  Do not introduce new button variants without an explicit ask.
+- Borders are `1px solid var(--line)`, with `var(--line-strong)` for emphasis.
+  **No drop-shadows on cards.** Shadow is reserved for drawers
+  (`var(--shadow-drawer)` / `var(--shadow-lg)`) and hovered list rows.
+- **No gradient backgrounds.** Surfaces are flat, layered via the surface ladder
+  `--surface` / `--surface-raised` / `--surface-3` / `--surface-4` (cards on
+  `--surface`, popovers/menus on `--surface-3`, drawers/modals on `--surface-4`).
+- Buttons follow `.btn-primary` / `.btn-ghost` from the runtime recipes
+  (`src/index.css` + `src/styles/list-pages.css`). Do not introduce new button
+  variants without an explicit ask.
 - Row heights use `var(--row-h)` (density-aware). Tables and lists must
   obey it.
-- Corner radii come from `--radius-sm / --radius / --radius-lg`. Bureau
-  radii are 8/12/16. Do not hard-code px.
+- Corner radii come from `--radius-sm / --radius / --radius-lg` — Linear values
+  are **6/8/12**. Do not hard-code px.
 - **No emoji in user-visible copy.** Emoji is allowed only as data input
   (e.g. flag codepoints).
 - **No marketing voice.** Banned: "Discover", "Easily", "Unleash",
@@ -86,9 +88,10 @@ If you cannot identify a closest match, **ask before inventing**.
 Before declaring any UI task complete:
 
 - [ ] All colors resolve to design tokens (no raw hex; no `text-blue-500`)
-- [ ] Borders are `1px solid var(--line)`; no card shadows
+- [ ] Borders are `1px solid var(--line)` (`--line-strong` for emphasis); no card shadows
+- [ ] Surfaces use the ladder (`--surface`/`--surface-raised`/`--surface-3`/`--surface-4`); radii are token-driven (Linear 6/8/12)
 - [ ] Row heights use `var(--row-h)`
-- [ ] Buttons mirror prototype `.btn-primary` / `.btn-ghost`
+- [ ] Buttons mirror the `.btn-primary` / `.btn-ghost` recipes
 - [ ] Logical properties for spacing (`ms-*`, `ps-*`, `text-start`)
 - [ ] No emoji in copy; no marketing voice
 - [ ] Tested at 1024px and 1400px (the actual analyst-workstation widths)

@@ -17,8 +17,13 @@ specific to `frontend/src` and does not repeat the root.
 
 `src/main.tsx` → `src/App.tsx`. `App.tsx` is the canonical provider order; if you
 add a global provider, place it here, not in a route. The chain is:
-`QueryClientProvider` → `AuthProvider` → `ThemeErrorBoundary` → `DesignProvider`
-(`initialDirection="bureau"`) → `LanguageProvider` → `RTLWrapper` → `AppRouter`.
+`ErrorBoundary` → `QueryClientProvider` → `AuthProvider` → `ThemeErrorBoundary`
+(`fallbackDirection="linear"`, `fallbackColorMode="dark"`) → `DesignProvider`
+(`initialDirection="linear"`, `initialMode="dark"`, `initialDensity="comfortable"`)
+→ `TweaksDisclosureProvider` → `LanguageProvider` (`initialLanguage="en"`) →
+`LazyMotion` → `DirectionProvider` → `AppRouter`. Phase 76 introduced the
+`DirectionProvider` bridge (`components/ui/direction`) — now the single owner of the
+runtime `<html dir/lang>` writes — replacing the earlier RTL-wrapper component.
 `import './i18n'` runs i18next init as a side effect from `App.tsx`.
 
 ## Routing (TanStack Router, file-based)
@@ -118,6 +123,14 @@ All color comes from `var(--*)` tokens or the `@theme`-mapped Tailwind utilities
 on Tailwind palette literals (`text-blue-500`, `bg-red-600`, etc.) anywhere in
 `frontend/src`, including inside template strings. There is a narrow carve-out for
 token-definition files and chart palettes (listed in `eslint.config.mjs`).
+
+The Phase-77 Linear ladder added more mapped utilities: `bg-surface-3` /
+`bg-surface-4` (popover/menu and drawer/modal surface tiers; `--color-popover`
+also points at `--surface-3`), `border-line-strong` (the emphasis hairline
+`var(--line-strong)`), `bg-accent-hover` (primary-button hover, `var(--accent-hover)`),
+and the six status-tag pairs `text-status-1`…`text-status-6` (+ their
+`--status-N-soft` washes). Semantic soft washes are applied with opacity modifiers
+on the base token (`bg-warn/10`, `bg-ok/10`) rather than `-soft` utilities.
 
 ## ESLint per-directory filename case (enforced, CI-blocking)
 
