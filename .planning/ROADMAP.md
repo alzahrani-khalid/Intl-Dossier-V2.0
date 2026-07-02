@@ -234,9 +234,9 @@ Plans:
 
 **Wave 1**
 
-- [ ] 75-01-PLAN.md — AUDIT-01 classification artifact: rulebook header, evidence baseline, per-directory tier (wave 1)
-- [ ] 75-02-PLAN.md — AUDIT-02/03 HeroUI v3 confirmation artifact with Phase 78 re-run protocol (wave 1)
-- [ ] 75-03-PLAN.md — AUDIT-04 Aceternity behavioral contracts + UserPicker facade + Phase 79 rescope input (wave 1)
+- [x] 75-01-PLAN.md — AUDIT-01 classification artifact: rulebook header, evidence baseline, per-directory tier (wave 1)
+- [x] 75-02-PLAN.md — AUDIT-02/03 HeroUI v3 confirmation artifact with Phase 78 re-run protocol (wave 1)
+- [x] 75-03-PLAN.md — AUDIT-04 Aceternity behavioral contracts + UserPicker facade + Phase 79 rescope input (wave 1)
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
@@ -337,7 +337,7 @@ Plans:
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
 | 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
 | 68-74 | v7.0 | 49/49 | Shipped | 2026-06-24 |
-| 75 | v8.0 | 0/? | Not started | - |
+| 75 | v8.0 | 3/4 | In Progress|  |
 | 76 | v8.0 | 0/? | Not started | - |
 | 77 | v8.0 | 0/? | Not started | - |
 | 78 | v8.0 | 0/? | Not started | - |
