@@ -1,331 +1,171 @@
-# Technology Stack — v7.0 Intelligence Engine (New Additions Only)
+# Stack Research
 
-**Project:** Intl-Dossier v7.0
-**Researched:** 2026-06-13
-**Scope:** Packages, versions, and container images for the v7.0 NET-NEW stack additions only. Existing validated stack (React 19, TanStack, Express, Supabase, Redis, Turborepo) is not repeated here.
+**Domain:** Design-system migration (shadcn/ui RTL + Linear token system + HeroUI v3 + Aceternity removal) on an existing React 19 + Vite + Tailwind v4 + Supabase app
+**Researched:** 2026-07-01
+**Confidence:** HIGH (verified against live `frontend/` deps, npm registry, and official shadcn/HeroUI/React-Aria docs)
 
----
+## Executive correction (read first)
 
-## Verified Package Versions (Context7 + npm registry, 2026-06-13)
+The milestone brief describes several things that are **already true in the codebase** or **stated wrong**. Verifying against `frontend/package.json` and the live docs changes the plan materially:
 
-| Package                      | Version            | Source       | Confidence |
-| ---------------------------- | ------------------ | ------------ | ---------- |
-| `@mastra/core`               | 1.42.0 (v1 stable) | npm registry | HIGH       |
-| `@mastra/pg`                 | 1.13.0             | npm registry | HIGH       |
-| `@mastra/memory`             | 1.20.3             | npm registry | HIGH       |
-| `mastra` (CLI)               | 1.13.0             | npm registry | HIGH       |
-| `@ag-ui/core`                | 0.0.57             | npm registry | HIGH       |
-| `@ag-ui/client`              | 0.0.57             | npm registry | HIGH       |
-| `@ag-ui/mastra`              | 1.0.3              | npm registry | HIGH       |
-| `@copilotkit/runtime`        | 1.60.1             | npm registry | HIGH       |
-| `@copilotkit/react-core`     | 1.60.1             | npm registry | HIGH       |
-| `@copilotkit/react-ui`       | 1.60.1             | npm registry | HIGH       |
-| `@assistant-ui/react`        | 0.14.18            | npm registry | HIGH       |
-| `@assistant-ui/react-ag-ui`  | 0.0.38             | npm registry | HIGH       |
-| `langfuse` (Node.js SDK)     | 3.38.20            | npm registry | HIGH       |
-| `@traceloop/node-server-sdk` | 0.27.0             | npm registry | HIGH       |
-| `@opentelemetry/sdk-node`    | 0.219.0            | npm registry | HIGH       |
+| Brief claim                                                                            | Verified reality                                                                                                                                                                                                                                                                                | Impact                                                                                                                                                                                                                                                                |
+| -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| "migrating from HeroUI **v2** to **v3** (beta), no v2 migration tool"                  | `@heroui/react@3.0.5` + `@heroui/styles@3.0.5` are **already installed**; there is **no HeroUI v2** and **no `HeroUIProvider`** anywhere in `src/`. v3 is **GA** (npm `latest: 3.2.1`), not beta.                                                                                               | This is **not** a v2→v3 migration. It is a **3.0.5 → 3.2.1 minor bump** plus adopting v3's compound-component API where wrappers still use old shapes. No mass rewrite, no provider to remove.                                                                        |
+| "shadcn RTL shipped Jan 2026 — enable `rtl: true` + `migrate rtl` + DirectionProvider" | Correct and current. But the repo's `components.json` uses `"style": "new-york"`; **automatic CLI RTL transforms are only guaranteed for the new `*-nova` styles**. On `new-york`, `migrate rtl` still runs but you must treat its output as a **first pass to review**, not a trusted rewrite. | The app **already enforces logical properties via ESLint** (`rtl-friendly`, zero physical classes in `frontend/**`). So `migrate rtl`'s main value here is limited to the `components/ui/**` wrappers (which are ESLint-exempt) — most app code is already RTL-clean. |
+| "derive a token system ... plus a bootstrap.js FOUC script"                            | `public/bootstrap.js` (7.9 KB) and the `@theme` block in `src/index.css` **already exist** from v6.0. The FOUC bootstrap **byte-mirror invariant** (literals must match `tokens/directions.ts`) is an established, load-bearing constraint.                                                     | You are **re-skinning an existing token engine to the Linear palette**, not building one. Add a new `linear` (or renamed `bureau`) direction to `tokens/directions.ts` + mirror it in `bootstrap.js`. Do not introduce a parallel system.                             |
+| "removing Aceternity from 5 form components"                                           | **8** files import Aceternity (`SmartInput`, `SearchableSelect`, `FormFieldWithValidation`, + 5 `Form*Aceternity.tsx`). Aceternity is **already ESLint-banned** via `no-restricted-imports`; the `@aceternity-pro` registry is still in `components.json`.                                      | Scope is 8 files, not 5. The ban already exists — removal closes the last live imports and drops the registry entry.                                                                                                                                                  |
+| "tw-animate-css if it's still broken for RTL"                                          | `tw-animate-css@1.4.0` is installed and imported in `index.css`. The RTL bug is **real and current** (shadcn docs: logical slide utilities don't work).                                                                                                                                         | Keep `tw-animate-css` (don't rip it out — it's wired into HeroUI's CSS composition), but apply the documented workaround: pass `dir="rtl"` directly to portal content (`PopoverContent`, `TooltipContent`, dialog/drawer portals).                                    |
 
----
+**Net:** this milestone is a **re-skin + minor version bumps + dead-import removal**, not four large migrations. The stack additions below are small.
 
-## Container Images
+## Recommended Stack
 
-| Service                            | Image                                           | Tag                        | Port        | Why                                                                                                         |
-| ---------------------------------- | ----------------------------------------------- | -------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------- |
-| vLLM (GPU)                         | `vllm/vllm-openai`                              | `v0.23.0`                  | 8000        | OpenAI-compatible `/v1`, native Gemma 4 tool parser (`gemma4_utils` merged in v0.23.0), continuous batching |
-| llama.cpp / Ollama (dev/airgapped) | `ollama/ollama`                                 | `latest`                   | 11434       | Identical OpenAI-compatible surface; already wired in `backend/src/ai/config.ts` as `ollama` provider       |
-| TEI — embeddings                   | `ghcr.io/huggingface/text-embeddings-inference` | `1.9.3`                    | 8080        | Serves `bge-m3` 1024-dim; fastest on-prem inference for small encoders                                      |
-| TEI — reranker                     | `ghcr.io/huggingface/text-embeddings-inference` | `1.9.3`                    | 8081        | Same image, separate container for `bge-reranker-v2-m3`; `--re-ranker` flag                                 |
-| Langfuse web                       | `langfuse/langfuse:3`                           | `v3.185.0` (image tag `3`) | 3000        | Self-hosted LLM observability; satisfies "prompt registry + audit trail"                                    |
-| Langfuse worker                    | `langfuse/langfuse-worker:3`                    | `v3.185.0`                 | 3030        | Async trace processing                                                                                      |
-| ClickHouse                         | `clickhouse/clickhouse-server`                  | `latest`                   | 8123 / 9000 | Required by Langfuse v3 for trace storage (no external egress)                                              |
-| MinIO                              | `minio/minio`                                   | `latest`                   | 9000        | Required by Langfuse v3 for S3-compatible event + media storage                                             |
-| Arize Phoenix                      | `arizephoenix/phoenix`                          | `version-17.5.0`           | 6006        | Offline bilingual eval rubrics (EN/AR); `arize-phoenix-v17.5.0` confirmed in GitHub releases                |
+### Core Technologies
 
----
+| Technology                               | Version                                                   | Purpose                                                          | Why Recommended                                                                                                                                                                                                                                                  |
+| ---------------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@heroui/react` + `@heroui/styles`       | `3.2.1` (bump from `3.0.5`)                               | Accessible primitives on React Aria Components                   | Already the primary primitive layer. `3.2.x` has the improved RTL fixes across Table/pickers/MenuItem (v3 release notes). Bump both in lockstep — they are version-coupled.                                                                                      |
+| `shadcn` (CLI, dev-only, via `pnpm dlx`) | `4.12.0` (`latest`)                                       | RTL migration + `direction` component scaffolding                | The Jan-2026 RTL feature (`migrate rtl`, `add direction`, `rtl: true`) lives in current CLI. Never pin as a dep — invoke with `pnpm dlx shadcn@latest`.                                                                                                          |
+| `tailwindcss` + `@tailwindcss/vite`      | `4.3.0` (no change)                                       | CSS-first `@theme` token layer                                   | Already installed; HeroUI v3 and shadcn RTL both **require** v4. No upgrade needed. Linear tokens go into the existing `@theme` block in `src/index.css`.                                                                                                        |
+| `@react-aria/i18n` (`I18nProvider`)      | `3.13.0` (transitive, **re-exported by `@heroui/react`**) | Set React Aria locale → derives RTL for all HeroUI v3 components | Verified: `require('@heroui/react').I18nProvider` resolves. HeroUI v3 has **no provider**, but React Aria components need a locale source for RTL. Wrapping in `<I18nProvider locale="ar">` is the single switch that makes every HeroUI picker/table/menu flip. |
 
-## New Turborepo Workspace: `agent-runtime`
+### Supporting Libraries
 
-The agent runtime is a **fourth Turborepo workspace** (alongside `backend`, `frontend`, `shared`) — a dedicated Express server hosting the Mastra instance, mounting CopilotKit/AG-UI SSE routes, and calling the local model via OpenAI-compatible HTTP. It keeps long SSE streams and model latency entirely off the transactional Express API.
+| Library                               | Version                                        | Purpose                                                                             | When to Use                                                                                                                                                                                                                                              |
+| ------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@radix-ui/react-direction`           | `^1.1.x` (pulled in by `shadcn add direction`) | Backs the shadcn `DirectionProvider`/`useDirection`                                 | Only if you adopt shadcn's generated `direction` component. Given the app already has `useDesignDirection`/`useLocale` in `design-system/hooks`, you likely **bridge existing hooks into a thin DirectionProvider** rather than adopt shadcn's verbatim. |
+| `@fontsource-variable/inter`          | `^5.2.8` (**already installed**)               | Linear body/display font (Inter is the closest OSS analog to "Linear Display/Text") | Already present. Linear's own fonts are proprietary; Inter Variable is the standard substitute. Wire into `--font-body`/`--font-display`.                                                                                                                |
+| `@fontsource-variable/jetbrains-mono` | `^5.2.8` (**already installed**)               | Linear Mono analog                                                                  | Already present. Wire into `--font-mono`. Keep `@fontsource/tajawal` for the Arabic cascade — Inter has no Arabic coverage.                                                                                                                              |
+| `tw-animate-css`                      | `1.4.0` (no change, **keep**)                  | Enter/exit animations for shadcn + composed into HeroUI CSS                         | Keep it. Apply the `dir="rtl"` portal workaround for its broken logical slide utilities — do **not** remove it.                                                                                                                                          |
 
-### Phase: P72
+### Development Tools
+
+| Tool                                                        | Purpose                                                 | Notes                                                                                                                                                                                                       |
+| ----------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm dlx shadcn@latest migrate rtl "src/components/ui/**"` | One-shot logical-property conversion of the ui wrappers | Scope it to `components/ui/**` (the ESLint-exempt wrappers). App code is already logical-only, so a repo-wide run is noise. **Review the diff** — on `new-york` style it is best-effort, not authoritative. |
+| `pnpm dlx shadcn@latest add direction`                      | Scaffolds `components/ui/direction.tsx` (Radix-backed)  | Optional. Prefer bridging your existing `useLocale` into it so there's one direction source, not two.                                                                                                       |
+| ESLint `rtl-friendly` + `no-restricted-imports`             | Already-live gates                                      | The Aceternity ban and physical-class ban already exist. They will fail CI the moment a Linear re-skin reintroduces a raw hex or `ml-*` — lean on them as the regression net.                               |
+
+## Installation
 
 ```bash
-# agent-runtime — server-side installs
-pnpm add @mastra/core@latest @mastra/pg@latest @mastra/memory@latest
-pnpm add @ag-ui/core@latest @ag-ui/client@latest @ag-ui/mastra@latest
-pnpm add @copilotkit/runtime@latest
-pnpm add openai@latest          # OpenAI-compatible client for vLLM/Ollama
-pnpm add @mastra/express@latest  # MastraServer adapter for Express
+# HeroUI minor bump (lockstep — both packages)
+pnpm --filter frontend up @heroui/react@3.2.1 @heroui/styles@3.2.1
+
+# shadcn RTL is CLI-only — never add as a dependency
+pnpm dlx shadcn@latest migrate rtl "src/components/ui/**"   # review the diff
+pnpm dlx shadcn@latest add direction                        # optional; bridge to existing hooks
+
+# No new runtime deps required for tokens/fonts/i18n:
+#   - Inter/JetBrains-Mono/Tajawal @fontsource already installed
+#   - @react-aria/i18n (I18nProvider) already transitive + re-exported by @heroui/react
+#   - tailwindcss v4 + @theme already present
 ```
 
-The Mastra instance uses `registerCopilotKit()` from `@ag-ui/mastra/copilotkit` to mount a single `/chat` SSE route. Source from the verified Context7 snippet:
+## Concrete integration details (for the downstream implementer)
 
-```typescript
-import { Mastra } from '@mastra/core/mastra'
-import { registerCopilotKit } from '@ag-ui/mastra/copilotkit'
+### 1. Linear tokens in the existing Tailwind v4 `@theme` (CSS-first)
 
-export const mastra = new Mastra({
-  server: {
-    cors: { origin: ALLOWED_ORIGINS_ENV, allowMethods: ['*'], allowHeaders: ['*'] },
-    apiRoutes: [registerCopilotKit({ path: '/chat', resourceId: 'dossierAgent' })],
-  },
-})
+The `@theme` block in `src/index.css` maps semantic names to `var(--*)` runtime vars written by `DesignProvider` + `bootstrap.js`. **Do not put Linear hex directly in `@theme`** — put it in `tokens/directions.ts` (a new `linear` direction, dark-canonical) and byte-mirror it in `bootstrap.js`. The `@theme` remap layer stays as-is (it already remaps `--color-*` → `var(--bg/--surface/--ink/...)`, preserving ~1,437 existing call sites).
+
+Runtime var values for the Linear dark direction (verbatim from `shadcn.io/design/linear/raw`):
+
+```css
+/* tokens/directions.ts → PALETTES.linear.dark (mirror in bootstrap.js literally) */
+--bg: #010102; /* canvas */
+--surface: #0f1011; /* surface-1 */
+--surface-raised: #141516; /* surface-2 (drawers/popovers → #18191a / #191a1b for 3/4) */
+--ink: #f7f8f8; /* primary text */
+--ink-mute: #d0d6e0; /* muted */
+--ink-faint: #8a8f98; /* subtle  (tertiary #62666d for the faintest tier) */
+--line: #23252a; /* hairline */
+--line-soft: #34343a; /* hairline-strong */
+--accent: #5e6ad2; /* Linear lavender-blue */
+--accent-fg: #ffffff; /* on-primary */
+--accent-soft: #5e69d1; /* primary-focus (or a low-alpha 5e6ad2 wash) */
+--ok: #27a644; /* semantic-success */
 ```
 
-Port: use an env var (e.g. `AGENT_RUNTIME_PORT=4111`) — never 5000 (macOS AirPlay conflict, documented in project memory).
+The `@theme` block **already exposes** `bg-bg / bg-surface / text-ink / border-line / bg-accent` etc. against these vars — so re-skinning to Linear is _setting new values in `directions.ts` + `bootstrap.js`_, with **zero churn** at the ~1,437 utility call sites. Radius (`--radius-sm/--radius/--radius-lg`) → Linear's `6/8/12` (pull the fuller `4/16/24/9999` ladder in only where components need it). Fonts: `--font-body`/`--font-display` → `'Inter Variable'`, `--font-mono` → `'JetBrains Mono Variable'`, keeping the Tajawal Arabic cascade for `dir="rtl"`.
 
-**Existing code to lift, not rewrite:** `backend/src/ai/mastra-config.ts` (`MastraRegistry`, `defineAgent`, `createAgentTools`) and `backend/src/ai/llm-router.ts` move into this workspace. The `@mastra/core` version in `backend/package.json` is currently `^1.36.0` — bump to `1.42.0` in both `backend` and `agent-runtime` simultaneously to avoid version skew in the monorepo.
+**FOUC invariant (non-negotiable):** every literal above must byte-match between `tokens/directions.ts` and `public/bootstrap.js`. This is an established v6.0 constraint (`bootstrap.js` paints first-frame tokens synchronously before React mounts). A mismatch = a flash of the wrong palette.
 
----
+**Linear type scale gap-fill** (from DESIGN.md, not yet in the token engine): the milestone brief flags "form errors + status-tag palette" as gaps. Linear ships `semantic-success #27a644` but **no error/warning hex** — you must derive a red/amber pair that sits in the same dark-surface luminance band (do not borrow a light-mode `--danger`). Status-tag palette (dossier status chips) likewise needs bespoke values keyed off the surface ladder.
 
-## Frontend: Chat Shell Additions
+### 2. HeroUI v3 RTL — `I18nProvider`, not a Provider
 
-### Phase: P72
-
-```bash
-# frontend — client-side installs
-pnpm add @assistant-ui/react@latest @assistant-ui/react-ag-ui@latest @ag-ui/client@latest
-pnpm add @copilotkit/react-core@latest @copilotkit/react-ui@latest
-```
-
-**Chat shell decision: verified approach.** The `CopilotKit` provider is mounted with `runtimeUrl` (self-hosted) and no `publicApiKey`:
+HeroUI v3 removed the v2 `HeroUIProvider` (already absent here). React Aria components derive RTL from **locale**, so mount `I18nProvider` inside the existing `App.tsx` chain, driven by the current language state:
 
 ```tsx
-<CopilotKit runtimeUrl="/api/copilotkit">{children}</CopilotKit>
+// import from @heroui/react (re-exported) — no new dependency
+import { I18nProvider } from '@heroui/react'
+// ...inside LanguageProvider, wrapping RTLWrapper/AppRouter:
+;<I18nProvider locale={isArabic ? 'ar' : 'en'}>
+  <RTLWrapper>{/* … */}</RTLWrapper>
+</I18nProvider>
 ```
 
-The headless `useFrontendTool` + `renderAndWaitForResponse` HITL pattern is a **core free feature** of `@copilotkit/react-core` — not gated by Copilot Cloud. The AG-UI `HttpAgent` + `useAgUiRuntime` from `@assistant-ui/react-ag-ui` is the pure-headless alternative that uses zero CopilotKit runtime.
+Locale `'ar'` → React Aria flips Table, pickers, MenuItem, Calendar automatically. This complements (does not replace) the existing `<html dir>` sync from `i18n/index.ts` and the `DesignProvider` direction. Place it inside `LanguageProvider` so it re-renders on language switch.
 
----
+### 3. shadcn `DirectionProvider` on Vite (not Next.js)
 
-## CopilotKit Air-Gap / Self-Host-Without-Cloud-Key — CRITICAL RULING
+The shadcn Vite/TanStack pattern is `<DirectionProvider direction="rtl">` from `@/components/ui/direction` (Radix-backed), with `dir`/`lang` set on `<html>` separately. **This app already sets `<html dir>` and has `useLocale`/`useDesignDirection`.** Recommendation: `shadcn add direction`, then edit the generated component so `direction` comes from the existing `useLocale()` hook rather than a static prop — one direction source, wired into the `App.tsx` chain alongside `I18nProvider`. Avoid mounting two independent direction contexts that can disagree.
 
-**Verdict: FULLY SELF-HOSTABLE WITHOUT A CLOUD KEY for the core agentic layer.** The `runtimeUrl`-based path is explicitly documented as the self-hosted flow and needs no `publicApiKey` or `publicLicenseKey`.
+### 4. tw-animate-css RTL workaround (keep, patch usage)
 
-**However, one confirmed premium gate exists:**
+Known-current bug: `tw-animate-css` logical slide utilities (`slide-in-from-end`) don't resolve under RTL. Workaround from shadcn docs: pass `dir="rtl"` **directly to portal content** — `PopoverContent`, `TooltipContent`, and the dialog/drawer portals. Do not remove `tw-animate-css` (it's composed into `index.css` alongside `@heroui/styles`).
 
-> "The Fully Headless UI is an Early Access Premium feature. To unlock it, users need to obtain a free `publicLicenseKey` from Copilot Cloud." — verified via Context7 from `showcase/shell-docs/src/content/docs/premium/headless-ui.mdx`
+### 5. Manual RTL patches: Calendar, Pagination, Sidebar
 
-This means:
+shadcn's auto-migration explicitly does **not** cover these three. The app has `react-day-picker@9.14.0` (shadcn Calendar's dep) — the Calendar patch is the RDP `dir` prop plus chevron flip. Budget explicit manual work for each per the component-specific RTL guides.
 
-- `useFrontendTool` (core HITL hook) — **FREE, no cloud key needed.** Confirmed via `@copilotkit/react-core` and docs.
-- `renderAndWaitForResponse` HITL pattern — **FREE** when used via the headless promise-based approach or the standard `render` callback in `useFrontendTool`.
-- `CopilotSidebar` / `CopilotChat` built-in UI chrome — **FREE** but shadcn-flavored (hostile to our token system).
-- **"Fully Headless UI"** (a specific premium capability name in the docs, referring to `useCopilotChatHeadless_c`) — **PREMIUM; requires a free `publicLicenseKey` from cloud.copilotkit.ai.** The license key is described as "free" to obtain but requires account registration. This is the license verifier package (`@copilotkit/license-verifier@0.4.2`) included in `@copilotkit/runtime`'s dependencies — it will ping cloud for license validation even in a self-hosted deployment.
+### 6. Aceternity removal (8 files, ban already live)
 
-**Architectural consequence for v7.0:** The Phase-72 Option-C spike must empirically test two paths:
+Rebuild on the primitive cascade (HeroUI v3 → Radix → custom): the 5 `Form*Aceternity.tsx` + `SmartInput` + `SearchableSelect` + `FormFieldWithValidation`. Then delete the `@aceternity-pro` registry entry from `components.json`. The `no-restricted-imports` ban already fails CI on any Aceternity import, so removal is verifiable by the existing gate. `validation-demo/ValidationDemoPage.tsx` also consumes these — migrate or delete it in the same pass.
 
-| Path                                                | What it uses                                                                              | Cloud key?             | Air-gap?                                                             |
-| --------------------------------------------------- | ----------------------------------------------------------------------------------------- | ---------------------- | -------------------------------------------------------------------- |
-| **Path A — CopilotKit runtime + `useFrontendTool`** | `@copilotkit/runtime`, `@copilotkit/react-core`, rendered with OUR token-bound components | No (uses `runtimeUrl`) | Yes for tool use; license-verifier ping for premium headless UI only |
-| **Path B — `assistant-ui` + `@ag-ui/client`**       | `@assistant-ui/react`, `@assistant-ui/react-ag-ui`, `HttpAgent`                           | Never                  | Fully air-gapped, zero cloud dependency                              |
+## Alternatives Considered
 
-**Recommendation:** Start the Option-C spike on **Path A** (faster ergonomics for `useFrontendTool` + `useCopilotReadable` on dossier-detail pages) and confirm that the free core features are sufficient. If the license-verifier requirement turns out to be a network-egress blocker in the sovereign deployment environment, fall through to **Path B** (`assistant-ui`) — same AG-UI wire contract, same Mastra backend, pure headless with documented first-class RTL support. Decision is empirical in Phase 72.
+| Recommended                                                      | Alternative                                                          | When to Use Alternative                                                                                                                                |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Bridge existing `useLocale` into a thin `DirectionProvider`      | Adopt shadcn's verbatim `direction.tsx` with static `direction` prop | Only for a greenfield app with no existing direction state. Here it would create a second, desyncable direction source.                                |
+| Re-skin the existing `@theme` + `directions.ts` engine to Linear | Build a fresh Linear token file / drop the OKLCH engine              | Never — the FOUC bootstrap, 1,437 call sites, and Tweaks drawer all depend on the current engine. A parallel system guarantees drift.                  |
+| `I18nProvider` from `@heroui/react` for HeroUI RTL               | Install `@react-aria/i18n` directly                                  | The re-export is already resolvable; adding the direct dep is redundant weight and risks a version split from HeroUI's pinned React Aria.              |
+| Keep `tw-animate-css` + `dir="rtl"` portal workaround            | Rip out `tw-animate-css`, hand-roll animations                       | Removing it would break the HeroUI CSS composition in `index.css` and lose shadcn's enter/exit conventions for more risk than the one-line portal fix. |
 
----
+## What NOT to Use
 
-## Model Fleet
+| Avoid                                                 | Why                                                                                                                        | Use Instead                                                                                                  |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Treating this as a HeroUI **v2→v3** migration         | v3.0.5 is already installed; there is no v2 and no `HeroUIProvider`. A "migration" plan wastes phases on work that's done. | A `3.0.5 → 3.2.1` minor bump + adopt compound API (`Card.Header`) where wrappers lag.                        |
+| Re-adding `HeroUIProvider`                            | Removed in v3; does not exist in this package.                                                                             | `I18nProvider locale=…` for RTL; theming is CSS-only via `@heroui/styles`.                                   |
+| Removing `tw-animate-css`                             | It's composed into `index.css` with `@heroui/styles`; its RTL bug is fixable, not fatal.                                   | `dir="rtl"` on portal content (`PopoverContent`/`TooltipContent`/dialog/drawer).                             |
+| Raw Linear hex in the `@theme` block or in components | Breaks the FOUC byte-mirror invariant and the ESLint no-raw-hex gate (CI-blocking).                                        | Hex lives only in `directions.ts` + `bootstrap.js`; components use `bg-bg`/`text-ink`/`bg-accent` utilities. |
+| Repo-wide `migrate rtl`                               | App code is already logical-only (ESLint-enforced); a global run is churn/noise and best-effort on `new-york` style.       | Scope to `src/components/ui/**` and review the diff.                                                         |
+| `pnpm dlx shadcn@canary`/`@beta`                      | Unstable; RTL landed in stable `4.x`.                                                                                      | `pnpm dlx shadcn@latest` (4.12.0).                                                                           |
+| Pinning `shadcn` as a project dependency              | It's a scaffolding CLI, not a runtime lib.                                                                                 | `pnpm dlx shadcn@latest …` per invocation.                                                                   |
 
-### Production GPU (P72 parallel infra track)
+## Version Compatibility
 
-| Model               | HuggingFace ID                        | vLLM flag                   | Role                                           | License                                        |
-| ------------------- | ------------------------------------- | --------------------------- | ---------------------------------------------- | ---------------------------------------------- |
-| **Gemma 4 12B IT**  | `google/gemma-4-12b-it`               | `--tool-call-parser gemma4` | Primary brain (eval-gated)                     | Google Gemma Terms of Use (custom, not Apache) |
-| Qwen3.5 MoE 30B-A3B | `Qwen/Qwen3.5-30B-A3B-Instruct`       | `--tool-call-parser hermes` | High-concurrency dispatch                      | Apache-2.0                                     |
-| ALLaM-7B            | `humain-ai/ALLaM-7B-Instruct-preview` | standard                    | Sovereignty signal (short AR, no tool-calling) | Apache-2.0                                     |
-
-vLLM confirmed native Gemma 4 support: the `gemma4_utils` tool parser and `Gemma 4 Unified encoder-free` architecture were both merged in v0.23.0 release notes. Run flag: `--enable-auto-tool-choice --tool-call-parser gemma4`.
-
-### Dev / Airgapped (Option-C spike and offline fallback)
-
-`ollama/ollama:latest` already wired as `ollama` provider in `backend/src/ai/config.ts` (line 113). The `OLLAMA_BASE_URL` env var enables it. Start the Option-C spike here before GPU provisioning.
-
----
-
-## Embeddings + Retrieval
-
-### Models served via TEI (P72 parallel infra track)
-
-| Model                     | TEI container port | Dimensions                     | License |
-| ------------------------- | ------------------ | ------------------------------ | ------- |
-| `BAAI/bge-m3`             | 8080               | 1024 (native; do NOT truncate) | MIT     |
-| `BAAI/bge-reranker-v2-m3` | 8081               | N/A (cross-encoder)            | MIT     |
-
-Both already the project's local ONNX dev path (`backend/src/ai/embeddings-service.ts` line 94: `Xenova/bge-m3`). TEI replaces the ONNX runtime in production with proper batching and GPU acceleration.
-
-TEI run example for embedder:
-
-```bash
-docker run --gpus all -p 8080:80 \
-  ghcr.io/huggingface/text-embeddings-inference:1.9.3 \
-  --model-id BAAI/bge-m3 --dtype float16
-```
-
-TEI run example for reranker:
-
-```bash
-docker run --gpus all -p 8081:80 \
-  ghcr.io/huggingface/text-embeddings-inference:1.9.3 \
-  --model-id BAAI/bge-reranker-v2-m3 --dtype float16
-```
-
-### pgvector halfvec at 1024-dim + HNSW (P68 — remediation; gates everything)
-
-pgvector **v0.8.2** is the current latest release (GitHub tags verified). halfvec is supported from v0.7.0+; HNSW on halfvec supports up to 4,000 dimensions (our 1024-dim is well within limit).
-
-**Supabase PG17 status (MEDIUM confidence):** Supabase docs reference pgvector 0.7.0+ and halfvec HNSW explicitly (source: `supabase.com/docs/guides/ai/vector-indexes`). The project is on PG17 (confirmed in `CLAUDE.md`: "PostgreSQL 17.6.1.008"). Verify the exact extension version active on the staging project via:
-
-```sql
-SELECT extversion FROM pg_extension WHERE extname = 'vector';
-```
-
-If below 0.7.0, request an upgrade via Supabase dashboard before Phase 68. Above 0.7.0, halfvec HNSW at 1024-dim is available.
-
-Target DDL for `rag_chunks`:
-
-```sql
-ALTER TABLE rag_chunks
-  ALTER COLUMN embedding TYPE halfvec(1024)
-  USING embedding::halfvec(1024);
-
-CREATE INDEX ON rag_chunks
-  USING hnsw (embedding halfvec_cosine_ops)
-  WITH (m = 16, ef_construction = 128);
-```
-
-Enable iterative scan to prevent RLS post-filter from collapsing recall:
-
-```sql
-SET hnsw.iterative_scan = 'relaxed_order';
-SET hnsw.max_scan_tuples = 50000;
-```
-
----
-
-## Observability Stack (P68 scaffolding)
-
-### Langfuse Self-Host
-
-Images verified: `langfuse/langfuse:3` + `langfuse/langfuse-worker:3` (current release v3.185.0 — tag `3` is floating latest of the v3 major). Requires ClickHouse + MinIO + Redis + Postgres. Redis is already in the project's `docker-compose.prod.yml`. ClickHouse and MinIO are new additions.
-
-Node.js SDK instrumentation:
-
-```bash
-# agent-runtime workspace
-pnpm add langfuse@latest
-```
-
-OpenTelemetry / OpenLLMetry bridge (vendor-neutral instrumentation):
-
-```bash
-pnpm add @traceloop/node-server-sdk@latest
-pnpm add @opentelemetry/sdk-node@latest
-```
-
-### Arize Phoenix
-
-Image: `arizephoenix/phoenix:version-17.5.0` (confirmed GitHub release `arize-phoenix-v17.5.0`). Runs standalone on port 6006. Used for offline bilingual eval rubrics (EN/AR) — no egress. Feed traces via OTel exporter pointing to both Phoenix and Langfuse.
-
----
-
-## Environment Variables (New in v7.0)
-
-```dotenv
-# agent-runtime service
-AGENT_RUNTIME_PORT=4111
-ALLOWED_ORIGINS=http://localhost:5173,https://your-production-domain.com
-
-# vLLM / Ollama
-VLLM_BASE_URL=http://vllm:8000          # production GPU
-OLLAMA_BASE_URL=http://ollama:11434     # dev / airgap fallback
-VLLM_MODEL=google/gemma-4-12b-it       # update aiConfig.providers.vllm.defaultModel
-
-# TEI
-TEI_EMBED_URL=http://tei-embed:8080
-TEI_RERANK_URL=http://tei-rerank:8081
-
-# Langfuse
-LANGFUSE_SECRET_KEY=...
-LANGFUSE_PUBLIC_KEY=...
-LANGFUSE_HOST=http://langfuse-web:3000  # self-hosted; zero egress
-
-# Arize Phoenix
-PHOENIX_ENDPOINT=http://phoenix:6006/v1/traces
-
-# Embeddings (switch from text-embedding-3-small → bge-m3 via TEI)
-AI_EMBEDDING_MODEL=BAAI/bge-m3
-AI_EMBEDDING_DIMENSIONS=1024
-AI_EMBEDDINGS_USE_EDGE_FUNCTION=false   # retire OpenAI path
-AI_EMBEDDINGS_USE_LOCAL=false           # retire ONNX path; use TEI
-TEI_EMBED_URL=http://tei-embed:8080     # new strategy in embeddings-service.ts
-```
-
----
-
-## Licenses
-
-| Component                                   | License                       | Note                                                                         |
-| ------------------------------------------- | ----------------------------- | ---------------------------------------------------------------------------- |
-| `@mastra/core` et al.                       | Apache-2.0                    | Fully sovereign                                                              |
-| `@ag-ui/*`                                  | MIT                           | Fully sovereign                                                              |
-| `@copilotkit/runtime` + react packages      | MIT                           | Core features sovereign; premium headless UI requires free cloud license key |
-| `@assistant-ui/react` et al.                | MIT                           | Fully sovereign, zero cloud dependency                                       |
-| `langfuse` SDK                              | MIT                           | Self-host is OSS                                                             |
-| `@traceloop/node-server-sdk`                | Apache-2.0                    |                                                                              |
-| vLLM                                        | Apache-2.0                    | Serving engine                                                               |
-| Gemma 4 12B                                 | **Google Gemma Terms of Use** | NOT Apache/MIT; custom Google terms; eval-gated and swappable                |
-| BAAI/bge-m3                                 | MIT                           |                                                                              |
-| BAAI/bge-reranker-v2-m3                     | MIT                           |                                                                              |
-| Qwen3.5                                     | Apache-2.0                    |                                                                              |
-| ALLaM-7B                                    | Apache-2.0                    |                                                                              |
-| LangGraph (langgraph-api production server) | **EL-2.0 — REJECTED**         | Production server requires paid Enterprise key; sovereignty blocker          |
-
----
-
-## Do NOT Add (Explicit Exclusion List)
-
-| What                                                                 | Why                                                                                                                                                                                                             |
-| -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Qdrant / Weaviate / Milvus / LanceDB (any dedicated vector DB)       | Would force reimplementing and continuously syncing the RLS clearance model outside Postgres. pgvector HNSW at 1024-dim halfvec is sufficient to well beyond any projected chunk volume. Single-datastore rule. |
-| LangGraph (`langgraph-api`)                                          | EL-2.0 production-server license requires paid Enterprise key — hard sovereignty/licensing blocker.                                                                                                             |
-| Python agent service (LangGraph / CrewAI / Pydantic AI / LlamaIndex) | Forces a second runtime language alongside Node/Express, doubling deploy/observability/security surface. Mastra covers the capability in TS.                                                                    |
-| Vercel AI SDK `streamUI` / RSC patterns                              | This project is a TanStack Router SPA — RSC is inapplicable. AI SDK may be used as an internal streaming primitive on the agent-runtime server side if needed, but not for frontend rendering.                  |
-| SGLang (speculative parallel second model pool)                      | Only add if benchmarking on the actual GPU hardware proves RadixAttention prefix-caching advantage on the AG-UI/RAG traffic shape. Do not add speculatively.                                                    |
-| Aceternity UI / Kibo UI / shadcn defaults on agent surface           | Banned per CLAUDE.md; incompatible with IntelDossier design token system.                                                                                                                                       |
-
----
-
-## Phase Mapping
-
-| Package / Service                                                     | First needed              | Phase                                          |
-| --------------------------------------------------------------------- | ------------------------- | ---------------------------------------------- |
-| `langfuse` + `@traceloop/node-server-sdk` + `@opentelemetry/sdk-node` | Eval harness scaffolding  | **P68** (gates rest)                           |
-| pgvector halfvec(1024) HNSW schema migration                          | clearance-RLS foundation  | **P68**                                        |
-| `ollama/ollama` (dev serve)                                           | Option-C thin-slice spike | **P72** (parallel infra starts P68)            |
-| `@ag-ui/core`, `@ag-ui/client`, `@ag-ui/mastra` (agent-runtime)       | agent-runtime workspace   | **P72**                                        |
-| `@mastra/core@1.42.0` bump + `@mastra/pg` + `@mastra/memory`          | agent-runtime workspace   | **P72**                                        |
-| `@copilotkit/runtime`                                                 | agent-runtime SSE route   | **P72**                                        |
-| `@assistant-ui/react` + `@assistant-ui/react-ag-ui`                   | frontend chat shell       | **P72**                                        |
-| `@copilotkit/react-core` + `@copilotkit/react-ui`                     | frontend HITL hooks       | **P72**                                        |
-| `vllm/vllm-openai:v0.23.0`                                            | production GPU serving    | **P72** (parallel infra)                       |
-| TEI containers (`bge-m3` + `bge-reranker-v2-m3`)                      | re-embed + hybrid RPC     | **P72** (parallel infra)                       |
-| Langfuse docker-compose services                                      | self-hosted observability | **P68** (scaffolding); full production **P74** |
-| Arize Phoenix                                                         | offline bilingual eval    | **P68** (scaffolding); CI gate **P74**         |
-| HITL write tools (`renderAndWaitForResponse`)                         | agentic writes            | **P73**                                        |
-
----
+| Package A                                  | Compatible With                       | Notes                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@heroui/react@3.2.1`                      | `@heroui/styles@3.2.1`                | **Must** move in lockstep — version-coupled. Repo currently shows a `tailwind-merge` dedupe split (`3.4.0` vs `3.6.0`) across the two styles copies; bumping both cleans it.                                                                                                          |
+| `@heroui/react@3.x`                        | `tailwindcss@4.3.0`                   | v3 **requires** Tailwind v4. Import order matters: `@import 'tailwindcss'` **before** `@heroui/styles`. Repo composes `@heroui/styles` sub-paths manually (the `@plugin '@heroui/styles'` JS shim crashes on Tailwind 4.x — documented in `index.css`); keep that manual composition. |
+| shadcn RTL (`rtl: true`)                   | `components.json "style": "new-york"` | Auto-transform is **guaranteed** only for `*-nova` styles; on `new-york` `migrate rtl` runs best-effort — review output.                                                                                                                                                              |
+| `I18nProvider` (`@react-aria/i18n@3.13.0`) | `@heroui/react@3.2.1`                 | Re-exported by HeroUI; use the re-export to avoid a version split.                                                                                                                                                                                                                    |
+| `tw-animate-css@1.4.0`                     | RTL portals                           | Logical slide utils broken under RTL → `dir="rtl"` portal workaround required.                                                                                                                                                                                                        |
 
 ## Sources
 
-- Context7 `/mastra-ai/mastra` — `registerCopilotKit`, server adapter, v1 migration guide
-- Context7 `/copilotkit/copilotkit` — `useFrontendTool`, `renderAndWaitForResponse`, `runtimeUrl` self-host, premium headless UI gating
-- Context7 `/ag-ui-protocol/ag-ui` — `MastraAgent`, `HttpAgent`, package install
-- Context7 `/assistant-ui/assistant-ui` — AG-UI runtime, `useAgUiRuntime`, RTL docs
-- Context7 `/pgvector/pgvector` — halfvec HNSW, cosine ops, iterative scan
-- Context7 `/langfuse/langfuse-docs` — docker-compose v3 self-host with ClickHouse + MinIO
-- npm registry direct: all version numbers verified 2026-06-13
-- GitHub releases: vLLM v0.23.0 release notes (Gemma 4 native tool parser confirmed); TEI v1.9.3; Arize Phoenix v17.5.0; pgvector tags (v0.8.2 latest)
-- `backend/src/ai/config.ts` — existing `vllm` + `ollama` provider config (lines 105-123)
-- `backend/src/ai/embeddings-service.ts` — existing `Xenova/bge-m3` ONNX path (line 94)
-- `backend/package.json` — existing `@mastra/core@^1.36.0` (needs bump to 1.42.0)
+- Live repo `frontend/package.json` + `pnpm ls` — verified HeroUI `3.0.5`, Tailwind `4.3.0`, Radix set, CVA, `tw-animate-css 1.4.0`, Inter/JetBrains/Tajawal `@fontsource`, `@react-aria/i18n 3.13.0` transitive; no `HeroUIProvider` in `src/` — HIGH
+- `node -e "require('@heroui/react').I18nProvider"` → resolves — HIGH (empirical)
+- npm registry (`npm view`) — `@heroui/react latest 3.2.1`; `shadcn latest 4.12.0`; `tw-animate-css 1.4.0` — HIGH
+- https://www.shadcn.io/design/linear/raw — Linear palette/type/spacing/radius verbatim — HIGH
+- https://ui.shadcn.com/docs/rtl + /rtl/start + /docs/changelog/2026-01-rtl — `rtl:true`, `migrate rtl`, `add direction`, tw-animate-css workaround, Calendar/Pagination/Sidebar manual patches, `*-nova` limitation — HIGH
+- https://heroui.com/docs/react/releases/v3-0-0 + frameworks — v3 GA, no provider, compound components, `@heroui/styles` split, Tailwind v4 requirement, RTL improvements — HIGH
+- https://react-aria.adobe.com/I18nProvider — `<I18nProvider locale="ar">` derives RTL from locale — HIGH
+- `frontend/src/index.css`, `App.tsx`, `components.json`, `frontend/CLAUDE.md`, root `CLAUDE.md` — existing `@theme`/`bootstrap.js`/token engine, Aceternity ESLint ban, RTL logical-property gate — HIGH
+
+---
+
+_Stack research for: Linear design-system migration on React 19 + Vite + Tailwind v4 + HeroUI v3_
+_Researched: 2026-07-01_

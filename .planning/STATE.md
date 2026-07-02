@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v7.0
-milestone_name: milestone
-status: Awaiting next milestone
-last_updated: '2026-06-29T12:50:00.000Z'
-last_activity: '2026-06-30 — ONS data-entry full-slice exercise (contacts→intake→engagement→after-action→tasks→signal) on the ONS org dossier; fixed persons org-isolation RLS + the 4-bug after-action create stack (after_action_records 0 rows → working) + FE contact org-link. intake/tasks/signal clean. branch feat/ons-slice-flows (PR pending).'
+milestone: v8.0
+milestone_name: Linear Design System Migration
+status: Roadmap approved — ready to plan Phase 75
+last_updated: '2026-07-01T00:00:00.000Z'
+last_activity: '2026-07-01 — v8.0 Linear Design System Migration scoped & roadmapped. 6 phases (75-80), 23 requirements, 100% coverage. Sequencing hard-locked: audit → RTL bridge → Linear tokens → HeroUI v3 bump → Aceternity removal → full-route visual/a11y verification. VERIFY-01 baseline captured as a gating step of Phase 77; re-compared in Phase 80.'
 progress:
-  total_phases: 7
-  completed_phases: 7
-  total_plans: 49
-  completed_plans: 49
-  percent: 100
+  total_phases: 6
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-24 after v7.0 milestone completion)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Planning next milestone (run /gsd:new-milestone). Carry-in: stand up the on-prem GPU/TEI stack to close the deploy-gated EVAL-01/02/03 + AGENT/INFRA live verification.
+**Current focus:** v8.0 Linear Design System Migration (Phases 75-80). Replace the IntelDossier prototype design language with a Linear-derived one on bridged shadcn RTL infra + HeroUI v3 (3.0.5→3.2.1), Aceternity fully removed, Arabic RTL correct on all four axes (dark/light × LTR/RTL). Next step: plan Phase 75 (UI Component & Migration Audit).
 
 ## Current Position
 
-Phase: Milestone v7.0 complete
+Phase: 75 — UI Component & Migration Audit (not started)
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-06-30 — ONS data-entry full-slice exercise; fixed persons org-isolation RLS + FE contact org-link + the 4-bug after-action create stack. branch feat/ons-slice-flows (PR pending).
+Status: Roadmap approved — ready to plan Phase 75
+Last activity: 2026-07-01 — v8.0 roadmap created (Phases 75-80, 23 requirements, 100% coverage). REQUIREMENTS.md traceability filled.
 
 ## Quick Tasks Completed
 

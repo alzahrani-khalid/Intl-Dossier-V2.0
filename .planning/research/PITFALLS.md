@@ -1,403 +1,257 @@
 # Pitfalls Research
 
-**Domain:** On-prem agentic LLM + clearance-based RLS layer on top of a shipped Supabase/Postgres diplomatic dossier app
-**Researched:** 2026-06-13
-**Confidence:** HIGH — all three remediation targets verified in the live codebase; framework/security claims verified against spec + architecture research docs + direct file inspection
+**Domain:** v8.0 Linear Design System Migration on an existing Arabic-first RTL React 19 + Vite + Tailwind v4 + Supabase app (shadcn RTL infra + Linear token replacement + HeroUI v2→v3 + Aceternity removal + FOUC bootstrap sync)
+**Researched:** 2026-07-01
+**Confidence:** HIGH (shadcn RTL docs + changelog verified; HeroUI v3 migration docs verified; project's own v6.0 FOUC-invariant and dual-RTL history verified from PROJECT.md/CLAUDE.md/MEMORY.md)
 
----
+> Scope note: this is a **migration onto an existing system**, not a greenfield build. Every pitfall below is about the _collision_ between what already ships (a working `useDirection()` / `i18n.language === 'ar'` RTL mechanism, an OKLCH IntelDossier token engine, a byte-matched `bootstrap.js`, a partial HeroUI v3 adoption, and an already-purged-then-reintroduced Aceternity surface) and what v8.0 layers on top.
 
 ## Critical Pitfalls
 
-### Pitfall 1: supabaseAdmin (service-role) in the interactive agent path — the live data-exposure gap
+### Pitfall 1: Dual RTL mechanism → double-flip (shadcn `dir` + existing `useDirection()`/`I18nManager`)
 
 **What goes wrong:**
-`backend/src/ai/agents/chat-assistant.ts` imports and uses `supabaseAdmin` (service-role) at lines 158, 171, 202, 235, 269, 307, and 338. Service-role **bypasses RLS entirely**. The agent can therefore exfiltrate above-clearance dossiers silently — no error, no indication to the caller. A prompt-injection attack, a logic bug, or a tool-call mistake all exploit the same gap: the clearance ceiling is not enforced at the DB layer at all. The same pattern also exists in `backend/src/ai/agents/brief-generator.ts` (lines 413, 444, 472) and `backend/src/ai/agents/intake-linker.ts` (lines 194, 243, 264, 392, 422, 452), meaning the contamination scope is wider than chat-assistant alone.
+The app already computes direction from `i18n.language === 'ar'` and drives it through `useDirection()` + `LtrIsolate` + `eslint-plugin-rtl-friendly` (zero physical CSS). shadcn's RTL model expects a single `DirectionProvider direction="rtl"` (Radix) plus `dir="rtl"` on `<html>`. If you wire shadcn's `DirectionProvider` **in addition to** the existing setter without making one the single source of truth, you get two independent direction owners. Symptoms: Radix portals (Popover/Tooltip/Dropdown) render LTR while the page is RTL (or vice-versa), and any component that reads the _nearest_ `dir` gets a stale value. Worse, if a container already has `dir="rtl"` and a child logical-flip class _also_ flips, content double-flips back to visual LTR — the exact class of bug the global RTL rules (Rule 4: never `.reverse()`, `forceRTL` already flips) warn about.
 
 **Why it happens:**
-service-role clients are convenient in backend Node.js code because they avoid JWT extraction/forwarding boilerplate. Developers reach for `supabaseAdmin` by default when a DB call is "behind auth" at the Express middleware level, wrongly assuming the auth check at the route level is sufficient. It is not — the query still runs as postgres superuser.
+Teams treat `DirectionProvider` as "just another provider to add" and mount it high in `main.tsx` with a hard-coded `direction="rtl"`, ignoring that `useDirection()`/i18n is already the authority and that direction must be _reactive_ to the language toggle (topbar ع), not static.
 
 **How to avoid:**
-Every interactive agent DB call (any path reachable by a human user's request) must use a per-request scoped client:
-
-```ts
-createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  global: { headers: { Authorization: `Bearer ${jwt}` } },
-  auth: { persistSession: false, autoRefreshToken: false },
-})
-```
-
-The JWT is extracted from the incoming AG-UI SSE POST (`properties.authorization`) and forwarded into every Mastra tool's `execute()`. **Never pass `supabaseAdmin` into a Mastra tool.** Keep `supabaseAdmin` strictly for cron/no-user paths (scheduled digest generation, signal ingestion) with explicit app-layer authz guards.
+Bridge, don't duplicate. Make `DesignProvider.tsx` (or the existing direction owner) the single source: derive one `dir` value from `i18n.language`, set it on `<html dir=…>` **and** feed the _same_ value into Radix `DirectionProvider direction={dir}`. Do not hard-code `direction="rtl"` — the app is bilingual and switches at runtime under `localStorage id.locale`. Add a smoke assertion: toggle to EN, confirm `document.dir==='ltr'` AND a mounted Radix Popover reports LTR in the same frame.
 
 **Warning signs:**
+A Popover/Tooltip/Dropdown whose arrow/offset sits on the wrong side while the page body is correct; content that looks correct in AR but the _menu_ opens from the wrong edge; anything that flips correctly once but not after a language toggle.
 
-- Any file in `backend/src/ai/agents/` importing `supabaseAdmin` from `../../config/supabase.js` is a candidate for audit.
-- A non-cleared test user can retrieve a `sensitivity_level = 'high'` dossier via the chat assistant.
-- The Langfuse trace shows DB queries running as the `service_role` instead of `anon` + JWT headers.
-
-**Phase to address:** Phase 68 (AI Foundations Remediation) — this is item 3 of the three mandatory pre-work items; it gates every downstream phase. Fix this before any new intelligence table is wired.
+**Phase to address:** RTL infra (DirectionProvider bridge into DesignProvider) — this is the phase's central risk.
 
 ---
 
-### Pitfall 2: Prompt injection misusing intent — and the wrong mitigation response
+### Pitfall 2: `shadcn migrate rtl` run twice → duplicated `rtl:*` / `rtl:translate-x-*` classes
 
 **What goes wrong:**
-A prompt-injection attack in a dossier text field, a user-provided name, or an agent-authored card causes the agent to issue unexpected tool calls — e.g., extracting all signals, generating and emailing a digest to an external address, or creating spurious work items. The instinct is to add an application-layer clearance check inside each tool's `execute()`. This is the wrong fix.
+The upstream `migrate rtl` transform is **not idempotent** (shadcn-ui/ui #9891). A second run appends duplicate logical/`rtl:` variants — e.g. `rtl:translate-x-*` stacked twice, or `space-x-4 rtl:space-x-reverse rtl:space-x-reverse`. Duplicate `rtl:` utilities produce non-deterministic cascade wins and subtle mis-offsets that are painful to trace because the class list _looks_ plausible.
 
 **Why it happens:**
-Developers treat injection as a "check before acting" problem. They add something like `if (jwt.clearance < required) return null` inside the tool. This check is application code — it can be forgotten for new tools, bypassed if the tool is refactored, or silently skipped if the inject causes the tool to be called with forged arguments.
+The migration touches `components/ui/*` files that are also under active edit during the token re-skin. A developer re-runs `migrate rtl` "to be safe" after adding a new shadcn component, re-transforming already-logical files. Because the app _already_ uses logical properties everywhere (zero physical CSS per v2.0 Phase 4), some files are already logical and the transform's "already migrated?" detection is unreliable.
 
 **How to avoid:**
-The correct mitigation is the JWT keystone: since every DB read runs under the caller's JWT and RLS enforces `sensitivity_level <= clearance_level` at the Postgres level, injection can misuse **intent** (cause unwanted tool calls) but **cannot exceed clearance** (the query returns what the user is allowed to see regardless). This is why service-role must be retired first (Pitfall 1) — without it, injection exploits the service-role gap, not just intent. Defense-in-depth layers on top: (a) typed narrow tools — no generic `execute_sql` tool; (b) intent-vs-action guardrail: evaluate each proposed tool call against the original user task before executing; (c) HITL on all write tools; (d) Langfuse trace logging for audit.
+Run `migrate rtl` **exactly once**, on a dedicated commit, against a clean `components/ui` tree, then commit the diff immediately and never re-run it. For components added _after_ the migration, install with `rtl: true` in `components.json` (install-time transform) instead of re-running the bulk migrate. Add a lint/grep guard in CI that fails if any `rtl:` utility appears twice in one `className` string.
 
 **Warning signs:**
+`grep -rE 'rtl:[a-z-]+ .*rtl:' frontend/src/components/ui` returns lines with a repeated utility; git diff on a re-run shows growth in already-migrated files.
 
-- Any tool that accepts a free-text parameter and passes it unquoted into a SQL `WHERE` clause.
-- A tool called `run_query`, `execute_sql`, or anything accepting arbitrary SQL or filter expressions.
-- Agent trace shows a tool being called with arguments that don't match the user's stated task.
-
-**Phase to address:** Phase 68 (establish keystone) + Phase 72 (tool definitions) + Phase 73 (HITL write tools). The keystone (P68) is the structural fix; tool scope (P72) and HITL (P73) are the defense-in-depth layers.
+**Phase to address:** RTL infra.
 
 ---
 
-### Pitfall 3: Three incompatible clearance scales — silent gating breakage on new intelligence tables
+### Pitfall 3: `tw-animate-css` logical slide utilities silently broken in RTL (shadcn's own flagged bug)
 
 **What goes wrong:**
-The codebase has three incompatible clearance representations in active use:
-
-- `profiles.clearance_level` — INTEGER 1–4 (`CHECK (clearance_level >= 1 AND clearance_level <= 4)`), documented "1=Basic to 4=Top Secret"
-- `get_user_clearance_level(user_id)` — returns INTEGER 1–3 (reads from `user_roles`, documented "1=low, 2=medium, 3=high")
-- `dossiers.sensitivity_level` — TEXT enum `'low'|'medium'|'high'`, compared via a CASE mapping to 1–3
-
-Most existing RLS policies on dossiers use `get_user_clearance_level()` (range 1–3) with the CASE-mapped sensitivity integers (also 1–3), but `profiles.clearance_level` can be 4, which the existing `CASE` mappings don't cover. Adding new intelligence tables (signals, rag_chunks) that key off `profiles.clearance_level` directly (range 1–4) while existing tables key off `get_user_clearance_level()` (1–3) creates a **permanently broken gating layer**: a user with clearance_level=4 sees level 3 signals but not level 4 signals if the new RLS uses one function; a user with clearance_level=3 in profiles but the function-derived 3 may see inconsistent results.
+shadcn's RTL docs explicitly flag that with `tw-animate-css` the **logical slide utilities do not work as expected** — `slide-in-from-start`/`slide-in-from-end` don't respect direction inside portalled content. Popovers, Tooltips, Dropdowns, Sheets, and the 720px dossier drawer will slide in from the physically wrong edge in Arabic even after a correct `migrate rtl`. This looks like the migration "didn't work" and sends people down a false-trail chasing token/class bugs.
 
 **Why it happens:**
-The function was written first (returning 1–3 from user_roles) before the profile column was added (1–4). New migrations inconsistently reference one or the other. The mismatch is invisible until an analyst with clearance_level=4 can't see content they should be cleared for, or — worse — can see content they shouldn't.
+Portal content mounts outside the `dir` context, so the logical slide direction resolves against the document default, not the trigger's direction. It's a library-level gap, not a class mistake — so no amount of class fixing helps.
 
 **How to avoid:**
-Phase 68 must pick ONE canonical scale and migrate everything to it before wiring any new RLS. Recommended: keep `profiles.clearance_level` as the canonical source (1–4), deprecate `get_user_clearance_level()` or rewrite it to read profiles directly, extend the sensitivity CASE mapping to cover level 4, and write a migration that backfills/aligns any rows where `get_user_clearance_level()` was returning a different value. All new tables (intelligence_signal, rag_chunks) wire their RLS directly to `profiles.clearance_level` via a single subquery, not the function.
-
-Verification: run a cross-join test on staging — for each clearance level (1–4), confirm the set of accessible dossiers exactly matches expectation both before and after the migration. The eval harness should include a clearance-boundary probe.
+Apply the documented workaround: pass `dir="rtl"` (reactive to language) directly to every portal element — Popover, Tooltip, Dropdown, Sheet, Dialog content, and the dossier drawer — not just to the page root. Audit the existing v6.0 drawer's "RTL slide flip" (DRAWER-03) and calendar/kanban pill animations against this; they may already hand-roll the correct behavior and _conflict_ with shadcn's logical slide once migrated. Note the project's own MEMORY fact: Tailwind v4 `translate-x/y` is a standalone `translate` prop that `transform:none` won't clear — inline DialogContent needs `translate:'none'`. Add one EN+AR animation smoke per portal type.
 
 **Warning signs:**
+A menu/tooltip/drawer that opens from the correct edge in EN but the wrong edge in AR; animation direction correct on non-portalled elements but wrong on portalled ones.
 
-- Any RLS policy that uses `get_user_clearance_level()` on a table that also references `profiles.clearance_level` in another policy.
-- A user with `profiles.clearance_level = 4` cannot retrieve `sensitivity_level = 'high'` content.
-- RLS coverage differs between `check_clearance_level()` (a third function also in the migrations) and the primary path.
-
-**Phase to address:** Phase 68 — this is item 1 of the three mandatory pre-work items, must be resolved before any new clearance-bearing table is created.
+**Phase to address:** RTL infra (portal `dir` propagation), re-verified in Aceternity removal (the 5 rebuilt form components use Radix/HeroUI portals).
 
 ---
 
-### Pitfall 4: Embedding dimension corruption — the existing pad/truncate bug and the re-embed migration hazard
+### Pitfall 4: Wholesale token swap with no per-route EN+AR visual baseline → silent regressions across 150+ routes
 
 **What goes wrong:**
-`supabase/functions/search-semantic/index.ts` calls `normalizeEmbedding(data.embedding, 1536)`, which pads vectors shorter than 1536 with zeros or truncates vectors longer than 1536. The local bge-m3 ONNX model (already the dev-path embedder in `backend/src/ai/embeddings-service.ts`) produces 1024-dimensional vectors. Padding from 1024 to 1536 with 512 zeros **corrupts cosine geometry**: the padded zero-tail dominates the magnitude calculation, causing similarity scores to converge toward zero and making the vector store effectively useless for semantic retrieval. Results may appear to "work" (they return rows) while actually being random.
-
-The second hazard is the one-time re-embed migration to bge-m3 1024-dim halfvec: if the migration job runs while the edge function is still padding to 1536, you end up with a mixed-dimension store (some chunks at halfvec(1024), some at vector(1536)) that makes the HNSW index unusable.
+Replacing the entire IntelDossier OKLCH token set with Linear-derived tokens changes every surface at once. Without a locked visual baseline, contrast failures, broken status-tag/form-error palettes (explicitly called out as gap-fill work), and RTL-specific spacing drift ship undetected across ~150 route files. The app already has WCAG AA bidirectional requirements and axe gates — a token swap can quietly drop a color pair below AA in _one_ direction/mode combination (dark-AR is the usual casualty) while the other three pass.
 
 **Why it happens:**
-The normalizeEmbedding helper was written as a defensive shim when AnythingLLM's embedding dimension was uncertain. It looks safe (it handles both cases) but is geometrically destructive for the common case where the model output is shorter than 1536.
+The token file is one seam; the blast radius is the whole app. Teams verify a handful of "representative" pages, but Linear's dark-canonical palette interacts differently with RTL Tajawal/Inter cascades than the old Bureau light default. Four axes (dark/light × LTR/RTL) multiply the surface.
 
 **How to avoid:**
-
-1. Phase 68: remove the `normalizeEmbedding(..., 1536)` call and replace with a hard assertion (`if (embedding.length !== 1024) throw new Error(...)`) so padding is impossible.
-2. The re-embed migration job must be atomic for any given chunk (delete old row, insert new halfvec(1024) row in a transaction) and must run only after the `rag_chunks` table schema has been migrated to `halfvec(1024)`. Freeze all embedding writes during the migration window.
-3. After migration, drop the old `vector(1536)` column. The HNSW index on `halfvec(1024)` (`halfvec_cosine_ops`) must be rebuilt, not reused from the old schema.
-4. Add a CI-level assertion: embed a known sentence with bge-m3, assert the dimension is exactly 1024.
+Snapshot **every route in EN and AR, in both dark and light**, _before_ touching `tokens/directions.ts` — reuse the existing Playwright visual-baseline harness (v6.0 Phase 46 regenerated EN/AR list/drawer/widget baselines; extend it to full route coverage). Gate the token PR on that baseline replay. Run axe-core across all four axis combinations, not just default Bureau. Treat the status-tag and form-error palette gap-fill as first-class token work with its own contrast check, not an afterthought.
 
 **Warning signs:**
+Visual-baseline job "passes" because baselines were regenerated _after_ the token change (baseline laundering); axe run only covers one mode/direction; only EN screenshots exist.
 
-- Cosine similarity scores all cluster near 0 (pad effect) or near 1 (truncation effect producing near-duplicate vectors).
-- The semantic search edge function returns results with similarity_score < 0.1 for queries that should have strong matches.
-- `pg_vector_dims(embedding)` returns inconsistent values across `entity_embeddings` rows.
-- The AnythingLLM embedding endpoint returns a dimension other than 1024 (indicating it is using a different model internally).
-
-**Phase to address:** Phase 68 (stop the bleeding — remove pad/truncate) + Phase 72 (the full re-embed to bge-m3 1024-dim halfvec and HNSW rebuild).
+**Phase to address:** Tokens (Linear migration) — this is the phase's defining risk.
 
 ---
 
-### Pitfall 5: SECURITY DEFINER on retrieval/analytic RPCs — the silent clearance bypass
+### Pitfall 5: `bootstrap.js` FOUC script drifts from `tokens/directions.ts` during token churn
 
 **What goes wrong:**
-`vector_similarity_search` (migration `20251017100000_create_vector_similarity_search_function.sql`) is `SECURITY DEFINER`. So are all functions in `20260111500001_semantic_search_expansion.sql` (lines 163, 247), `20260112950002_enhanced_search_suggestions.sql` (lines 134, 206, 252, 284), `20260113700001_saved_searches_with_sharing_alerts.sql`, and `20260110200001_advanced_search_filters.sql`. A `SECURITY DEFINER` function **executes as its definer** (postgres or the migration role), not as the calling user. Any RLS predicate on tables the function queries is evaluated as the definer — meaning RLS is bypassed even when the caller is a low-clearance user. The `vector_similarity_search` function does enforce clearance via an inline `AND classification_level <= user_clearance` parameter, but this is app-level filtering, not RLS — it can be called with `user_clearance = 99` from any SQL context that has EXECUTE on the function.
+`frontend/public/bootstrap.js` paints first-frame tokens synchronously and its palette/font literals **must byte-match** `tokens/directions.ts` (a locked v6.0 invariant). During heavy Linear token churn, `directions.ts` gets updated repeatedly while `bootstrap.js` lags. Result: a first-paint flash of _old_ colors/fonts before React hydrates the new ones — a visible FOUC that's intermittent (only on cold loads / slow networks) and therefore easy to miss in dev.
 
 **Why it happens:**
-`SECURITY DEFINER` is needed for audit triggers and auth helpers (so they can read `auth.users` or write to protected tables). Developers copy-paste the pattern for performance-sensitive search functions without realizing RLS is bypassed. The inline clearance check looks like it works (it filters rows) but it isn't enforced by the database's access control system — it's just a WHERE clause that the caller can influence via the function argument.
+The two files are edited in different phases by different concerns (token author vs. FOUC maintainer). `bootstrap.js` is plain JS in `public/` — outside TypeScript's type graph, so a mismatch never fails `type-check` or `lint`. Nothing forces them to stay in lockstep except memory.
 
 **How to avoid:**
-All new analytic RPCs in Phase 71 (graph queries) and all new retrieval RPCs in Phase 72 (hybrid RAG) must be `SECURITY INVOKER`. Existing `SECURITY DEFINER` search functions that touch clearance-bearing tables must be audited and either: (a) rewritten as `SECURITY INVOKER` so RLS applies automatically, or (b) kept `SECURITY DEFINER` with the inline clearance check replaced by `SET LOCAL ROLE authenticated; SET LOCAL "request.jwt.claims" = ...` so RLS sees the real caller. Option (a) is strongly preferred.
-
-Migration checklist: for each new function, verify `SECURITY INVOKER` in the CREATE OR REPLACE statement. Add a `rls-audit.test.ts` probe that calls the function as a low-clearance user and asserts it cannot read high-sensitivity chunks.
+Add a CI byte-match assertion: extract the palette/font literals from both files and fail the build if they diverge (a small node script comparing the Bureau→Linear literal set). Change both files in the **same commit** every time a first-paint token changes. Verify FOUC on a throttled cold load (DevTools "Slow 3G" + disable cache) in dark-AR specifically, since that's the combination most visible against a light default flash. Also confirm the switch from Tajawal-default to Inter/JetBrains Mono is reflected in _both_ files' `--font-*` literals.
 
 **Warning signs:**
+A color/font flash on hard reload that disappears after hydration; the byte-match CI check absent; `bootstrap.js` last-modified far behind `directions.ts`.
 
-- `\df+ function_name` in psql shows `security: definer` on any function called by the agent or by the hybrid search RPC.
-- A low-clearance user can call `SELECT * FROM vector_similarity_search(...)` with `user_clearance = 3` and retrieve sensitivity_level=3 content they shouldn't have.
-- The function touches `dossiers`, `rag_chunks`, `intelligence_signal`, or any RLS-protected table.
-
-**Phase to address:** Phase 68 (interim RLS fix on existing vector search) + Phase 71 (analytic RPCs must be `SECURITY INVOKER` by spec) + Phase 72 (hybrid RAG RPC must be `SECURITY INVOKER`).
+**Phase to address:** Tokens (Linear migration) — add the CI guard at phase start, before token literals move.
 
 ---
 
-### Pitfall 6: CopilotKit cloud-key dependency breaking sovereign self-host
+### Pitfall 6: HeroUI v2→v3 attempted mid-token-churn or with v2+v3 coexisting
 
 **What goes wrong:**
-CopilotKit's built-in shell components (`CopilotSidebar`, `CopilotChat`, `CopilotPopup`) communicate with **Copilot Cloud** by default for features like LangGraph-to-CopilotKit streaming, session persistence, and the premium headless mode. The `publicApiKey` prop (or `NEXT_PUBLIC_COPILOT_CLOUD_API_KEY` env var) gates these paths. If the key is absent, certain AG-UI streaming paths 404 silently, HITL events may not surface, and the agent appears to hang or produce empty responses. The v7.0 sovereign requirement is zero data egress — any path through Copilot Cloud violates it.
-
-The second dimension: the `@copilotkit/react-ui` chrome does not document RTL support and its CSS vars (`--copilot-kit-*`) do not map to the IntelDossier token system without per-element overrides — making the built-in shell a poor fit regardless of the air-gap question.
+HeroUI's own docs state **v2 and v3 cannot coexist without special setup** and that during full migration "the project will be broken." There is **no first-party codemod/CLI** — only an MCP server and per-component guides. v3 is beta (breaking changes expected). If v3 migration runs _before_ Linear tokens are stable on v2, you're debugging two moving targets at once: is the visual break a token issue or a v3 API/design-overhaul issue? v3 also completely overhauls its own design system (new color tokens/shadows), which will fight the Linear `@theme` bridge unless the semantic mapping (accent→primary, established in v6.0) is re-derived for v3.
 
 **Why it happens:**
-CopilotKit's docs default to the cloud path because it gives the best out-of-box experience. Developers who install the package and follow the quickstart inadvertently wire cloud dependencies.
+Enthusiasm to "do it all at once." Also, the project already has _partial_ v3 adoption (Kanban migrated in v6.3, drop-in re-export pattern) so teams assume the rest is mechanical — but the remaining components hit the harder breaking changes: compound `.Root` API, `HeroUIProvider` removal, `useDisclosure`→`useOverlayState`, `useSwitch`/`useInput` hooks removed, collection items now `id`+`textValue`, Framer Motion removed, and renamed/removed components (Autocomplete→ComboBox, DateInput→DateField; Navbar/Snippet/User/Spacer/Image/Code/Ripple removed).
 
 **How to avoid:**
-The Phase 72 Option-C spike must empirically settle the chat-shell choice. The self-hosted path:
-
-- Use `CopilotRuntime` on the `agent-runtime` service with `self-hosted` mode (no `publicApiKey`, no `remoteActions` pointing to cloud). Verify in the spike that all AG-UI events (text delta, tool-call, STATE_SNAPSHOT, HITL `renderAndWaitForResponse`) arrive correctly without a cloud key.
-- For the React surface: prefer `assistant-ui` with `@assistant-ui/react-ag-ui` (headless, RTL-documented, IntelDossier token-bindable) over CopilotKit's built-in chrome. Use CopilotKit **hooks only** (`useCopilotReadable`, `useCopilotAction`) if their ergonomics beat the build cost, but render with your own components.
-- Never set `NEXT_PUBLIC_COPILOT_CLOUD_API_KEY` in any environment. Block the cloud URL in production network policy.
+Sequence HeroUI v3 **last**, only after Linear tokens are stable on the current HeroUI baseline (as the milestone plan already states). Migrate on a feature branch, convert _all_ remaining HeroUI component code before flipping the dependency — never ship a half-flipped tree. Inventory every removed/renamed component (Navbar, Snippet, User, Spacer, Image, Code, Autocomplete, DateInput) against the codebase _first_ and plan replacements; those aren't renames, they're deletions needing new implementations. Re-derive the accent→primary semantic token bridge for v3's overhauled token system. Use the HeroUI Migration MCP server for per-component API deltas rather than guessing.
 
 **Warning signs:**
+A commit where both `@heroui/*` v2 and v3 packages resolve; visual breaks appearing simultaneously with token changes; `useDisclosure`/`useSwitch`/`useInput` imports still present; references to removed components (Navbar/Snippet/User).
 
-- Network tab shows outbound connections to `*.copilotkit.ai` or `cloud.copilotkit.ai`.
-- Agent responses arrive only after a cloud round-trip or produce CORS errors when the cloud URL is blocked.
-- `CopilotKitCSSProperties` overrides don't cover all token bindings; `var(--copilot-kit-primary-color)` appears in styles.
-
-**Phase to address:** Phase 72 — settled empirically in the Option-C spike before committing to the full CopilotKit/Mastra wiring.
+**Phase to address:** HeroUI v3 (sequenced after Tokens).
 
 ---
 
-### Pitfall 7: HITL write tools committing under service-role — silent clearance and authz bypass on writes
+### Pitfall 7: Removing Aceternity from form components breaks validation/a11y wiring, not just visuals
 
 **What goes wrong:**
-A write tool (create work item, publish digest, create signal, generate brief) that uses `supabaseAdmin` to commit the write bypasses two guarantees simultaneously: (a) RLS does not gate the write (a low-clearance user can write to a high-sensitivity dossier), and (b) the audit trail records the action as the service account, not the user. Since HITL gates the action (the user must confirm), developers assume the confirmation step is the auth. It is not — the DB write must also carry the user's JWT.
+The 5 Aceternity-based form components carry more than animation: focus management, ARIA attributes, label association, and the React Hook Form + Zod validation wiring often thread through the animated wrapper (error message reveal, aria-invalid, aria-describedby on the animated input). Ripping out Aceternity and dropping in a HeroUI v3/Radix primitive without re-threading these breaks form error announcement (screen readers stop reading errors), keyboard focus order, and sometimes the RHF register/ref chain — while the form _looks_ fine and still submits, so it passes casual QA.
 
 **Why it happens:**
-Write tools are often scaffolded by copying the existing `chat-assistant.ts` pattern, which already uses `supabaseAdmin`. The HITL confirmation UI creates a false sense of security.
+The visual layer is the obvious part; the invisible a11y/validation contract is easy to overlook. Also this app has a _history_ of Aceternity being purged (v6.2) then partially reintroduced — so the current 5 components may already be inconsistent, and a blind swap propagates that inconsistency. ESLint already bans Aceternity via inverted `no-restricted-imports`, so the removal is enforced, but enforcement doesn't guarantee behavioral parity.
 
 **How to avoid:**
-Every Mastra write tool's `execute()` must:
-
-1. Build a scoped JWT client from the forwarded `jwt` parameter (same pattern as read tools).
-2. Call the insert/update/delete via that scoped client.
-3. Wrap the action in Mastra's `suspend()`/`resume()` HITL with `renderAndWaitForResponse` sending a bilingual token-bound confirmation card.
-4. Only commit (`resume()`) if the user's `respond()` is `approved`.
-
-The commit is not a separate service-role step after HITL approval — the entire insert runs under the user's JWT inside the `resume()` handler.
-
-Verification: create a work item via the agent as a low-clearance user targeting a high-sensitivity dossier. The DB insert must be rejected by the `work_item_dossiers` RLS policy, not by an application check.
+For each of the 5 components, first capture the _behavioral contract_: which ARIA attributes, which RHF `register`/`Controller` wiring, which error-reveal path, focus-trap/focus-order, and RTL error-message placement. Rebuild on HeroUI v3/Radix preserving that contract, then verify with axe-core AND keyboard traversal AND a screen-reader error-announcement check in EN+AR — not a visual diff. Write/extend a form-error-announcement test per component (assert `role="alert"` / `aria-live` fires on invalid submit) before touching the component, following the project's established `role="alert"` error-contract pattern.
 
 **Warning signs:**
+Form submits and looks right but invalid fields don't announce; `aria-invalid`/`aria-describedby` missing after the swap; focus jumps or skips on Tab; error text renders on the wrong side in AR.
 
-- Write tools imported from `../../config/supabase.js` import `supabaseAdmin`.
-- Audit logs show work items created by `service_role` rather than the user's UUID.
-- A low-clearance user can successfully create a work item on a `sensitivity_level = 'high'` dossier via the agent.
-
-**Phase to address:** Phase 73 (write tools + generative UI) — every write tool spec must require JWT-scoped client before `suspend()` in the phase plan.
+**Phase to address:** Aceternity removal (last phase, on HeroUI v3).
 
 ---
 
-### Pitfall 8: Bilingual silent-English-fallback — unregistered i18n namespace breaks Arabic copy in agent surfaces
+### Pitfall 8: Audit mislabels domain-specific bespoke components as "replace with shadcn primitive"
 
 **What goes wrong:**
-`frontend/src/i18n/index.ts` is a static bundle: every namespace is imported at compile time and registered in the `resources` object. An unregistered namespace silently falls back to the `defaultNS` (`common`) which is English-dominated. The result is: the surface **looks correct in English** (common.json has a fallback key or `t()` returns the key string which happens to be readable) but **silently shows English strings in Arabic mode** — the RTL layout is correct, Tajawal renders, but the copy is in the wrong language. This is the trap that caused the v6.5/v6.6 timeline-stayed-English regression.
-
-For v7.0, every new surface (signals triage, digests UI, copilot chat, agent HITL confirmation cards, eval dashboard) needs new i18n namespaces. If those namespaces are not registered in `index.ts` before the component ships, Arabic users see English copy.
+The audit phase maps every hand-rolled surface to replace-with-shadcn / keep-custom / replace-with-block. The trap: classifying a component as a generic primitive when it actually encodes domain logic (clearance-aware rendering, RTL chevron/flag logic, DossierGlyph flag system, GlobeLoader, clearance-filtered lists). Replacing these with a stock shadcn primitive silently drops the domain behavior — e.g. a clearance filter, an RTL-correct chevron, or the `sensitivity_level <= clearance` visual gating from v7.0.
 
 **Why it happens:**
-Developers create the JSON translation files, wire `useTranslation('signals')` in the component, but forget the import + registration in `index.ts`. The missing registration produces no error — it silently downgrades to the fallback.
+Components look generic on the surface (a card, a list row, a badge) but carry invisible domain contracts. Auditors optimize for "reduce bespoke count" and over-classify toward shadcn.
 
 **How to avoid:**
-
-1. Any PR that adds a new `useTranslation('namespace')` or `useTranslation(['namespace'])` call must include the corresponding import + registration in `frontend/src/i18n/index.ts` in the same commit.
-2. Add a test (extend the existing `vi.importActual` pattern from Phase 50) that checks the `resources` object contains every namespace referenced in `useTranslation` calls across the codebase (a grep + assertion is sufficient).
-3. Agent-authored copy (model output) must be generated in the caller's language: thread `language: i18n.language` from the AG-UI `properties` object into every system prompt and tool description. Verify this in the Phase 69/72 live UAT: switch to Arabic mode, issue a query, assert the agent response is in Arabic.
+The audit's default for any component touching clearance, RTL directionality, flags/glyphs, or dossier-type logic is **keep-custom (or shadcn-block-with-domain-wrapper)**, not primitive-replace. Require each "replace with primitive" classification to explicitly list the behaviors the primitive must preserve; if the list is non-trivial, downgrade to keep-custom. Cross-check against the CLAUDE.md primitive cascade (HeroUI v3 → Radix → custom) which already says primitives are for _interactive behavior only_, with all visual styling from tokens.
 
 **Warning signs:**
+Audit output has a high "replace with primitive" ratio with empty "behaviors to preserve" columns; clearance/RTL/flag components marked primitive.
 
-- `t('signals:triage.title')` returns `'signals:triage.title'` (raw key) in English mode, indicating a namespace miss.
-- Arabic mode shows the same text as English mode on a new surface.
-- `localStorage['id.locale']` is `'ar'` but model-generated copy in the copilot is in English.
-
-**Phase to address:** Phase 69 (signals UI — first new namespace) sets the pattern; every subsequent phase (70 digests, 71 graph, 72 copilot surface, 73 HITL cards) must follow it. The test assertion should be part of Phase 68's eval harness scaffolding.
-
----
-
-### Pitfall 9: Cron/digest pipeline using service-role without explicit app-layer authz
-
-**What goes wrong:**
-The digest pipeline (Phase 70) is a scheduled cron job that generates digests for subscribers. It legitimately cannot carry a user JWT (there is no interactive user). Using `supabaseAdmin` here is correct. The pitfall is leaving the pipeline without **explicit app-layer authz**: if the cron is misconfigured (wrong timing, double-fired, triggered via an API endpoint accidentally left open), it generates and delivers digests to subscribers who may have been deprovisioned, changed clearance, or whose subscription should have been paused. Since service-role bypasses RLS, the pipeline can deliver above-clearance content to a subscriber if the subscriber model is not itself clearance-checked at delivery time.
-
-**Why it happens:**
-Developers reason "it's a background job, it's fine to use service-role." The subscriber's clearance level at delivery time is not re-checked because it was checked at subscribe time.
-
-**How to avoid:**
-
-1. The cron pipeline must re-check `profiles.clearance_level` for each subscriber at **delivery time** (not subscription time) and filter out any digest items above the subscriber's current clearance before delivery.
-2. Expose the cron trigger endpoint only internally (no public route); protect it with a shared secret header (`Authorization: Bearer CRON_SECRET`) checked before any processing.
-3. The `intelligence_digest` rows written by the cron must carry the generating user's (or system's) clearance ceiling as a `max_sensitivity_level` field so the delivery path can skip items the subscriber can't see.
-4. Add a Phase 70 UAT check: deprovision a subscriber mid-run, verify the next digest does not deliver above their (now-reduced) clearance.
-
-**Warning signs:**
-
-- The digest trigger route is mounted on the public Express router.
-- The digest pipeline fetches all signals without filtering by recipient clearance.
-- A deprovisioned user continues to receive digests.
-
-**Phase to address:** Phase 70 — bake explicit authz into the subscriber model and delivery path before any channel adapters are wired.
-
----
-
-### Pitfall 10: vLLM single-GPU sizing — Gemma 4 12B OOM and the Arabic adequacy trap
-
-**What goes wrong:**
-Two linked risks on the model tier. (a) GPU sizing: Gemma 4 12B (the approved starting brain) requires approximately 16–24GB VRAM at FP16, or ~8–12GB with INT4 QAT. Concurrent vLLM requests for multi-user scenarios add KV-cache pressure. If the actual datacenter GPU is a 16GB card (consumer class), Gemma 4 12B at FP16 will OOM; INT4 is required, which may degrade Arabic quality. (b) Arabic adequacy: Gemma 4 12B lists Arabic as "one of 140+ supported languages" — it is not an Arabic-first model. It may produce grammatically acceptable but diplomatically imprecise Arabic, miss formal register conventions, or produce transliterated reasoning artifacts.
-
-**Why it happens:**
-The design correctly identifies these as risks (spec §7 open risk register) but without an eval-gate in CI, the risks are only discovered during live analyst UAT — expensive to recover from.
-
-**How to avoid:**
-
-1. **Before Phase 72 begins**: confirm the actual GPU spec in the target datacenter. If it is a 16GB card, plan for Gemma 4 12B at INT4 or plan for Qwen3-14B (smaller, better tool-calling, ~8–10GB at FP16) as the Phase 72 starting model.
-2. **Phase 68 eval harness** (Langfuse + Phoenix): wire the Arabic-quality rubrics (formal register, diplomatic vocabulary, RTL coherence) and the tool-calling accuracy rubrics as CI gates. The eval harness must run against the actual vLLM endpoint (not mocked) with a fixed test suite of Arabic diplomatic queries.
-3. **Fallback path must be config-level**: the model URL in `backend/src/ai/config.ts` (already has `vllm`/`ollama`/`anythingllm` providers) must require only an env var swap to switch from Gemma to Qwen3-14B or Fanar-2. Do not hardcode the model name anywhere except the config file.
-4. Phase 74 eval gate must fail CI if the Arabic-quality score drops below the baseline established in Phase 68.
-
-**Warning signs:**
-
-- vLLM crashes with CUDA out-of-memory on the first concurrent request.
-- Arabic eval rubric scores < 70% for formal register on the Phase 68 baseline suite.
-- Model-generated Arabic copy contains transliterated terms where Arabic equivalents exist.
-- The config file has `model: 'gemma-4-12b'` as a hardcoded string outside the config abstraction.
-
-**Phase to address:** Phase 68 (confirm GPU spec + wire eval harness) gates Phase 72 (model standing up). Phase 74 (eval CI gate) locks in the regression protection.
+**Phase to address:** UI component audit (first phase) — sets the blast radius for every later phase.
 
 ---
 
 ## Technical Debt Patterns
 
-| Shortcut                                                                                | Immediate Benefit                                                               | Long-term Cost                                                                                                      | When Acceptable                                                                                               |
-| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Keep `supabaseAdmin` in `chat-assistant.ts` during Phase 68 while building new features | Faster to ship signals/digests without refactoring the existing agent           | Every above-clearance data query is a live exposure; Phase 68 deadline for fix is firm                              | Never — this is the keystone fix                                                                              |
-| Use `SECURITY DEFINER` on new analytic RPCs for convenience                             | Avoids the boilerplate of setting `search_path` in `SECURITY INVOKER` functions | Silently bypasses RLS; clearance guarantee broken on any table the function reads                                   | Only for auth triggers and audit logging — never for data-access RPCs                                         |
-| Skip the clearance-scale migration and add a new 1–4 scale in parallel                  | Avoids touching existing RLS policies                                           | Permanent dual-scale confusion; new intelligence tables gate inconsistently with existing dossier tables            | Never — the migration is Phase 68 gate work                                                                   |
-| Do the re-embed after Phase 72 ships (defer migration)                                  | Avoids the re-embed downtime window                                             | Mixed-dimension store causes HNSW index failures; semantic search breaks post-migration if embedder is already live | Acceptable ONLY if the interim fix (pad/truncate removal + clearance-RLS on existing store) is in place first |
-| Use CopilotKit's built-in chrome and restyle via CSS vars                               | Faster to a working UI demo                                                     | Cannot achieve IntelDossier token fidelity; RTL not documented; cloud-key dependency risk                           | Never for the production surface — use headless client                                                        |
-| Generate agent copy in English only and display to Arabic users                         | Avoids bilingual system-prompt complexity                                       | Arabic users see English copy in Arabic layout — a trust and usability failure in a sovereign government app        | Never                                                                                                         |
-
----
+| Shortcut                                                                  | Immediate Benefit           | Long-term Cost                                                | When Acceptable                                                        |
+| ------------------------------------------------------------------------- | --------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Hard-code `DirectionProvider direction="rtl"` instead of bridging to i18n | RTL works immediately in AR | EN toggle breaks all Radix portals; a runtime bilingual bug   | Never — app is bilingual with a live toggle                            |
+| Re-run `migrate rtl` "to be safe" after adding a component                | Feels thorough              | Duplicated `rtl:` classes (#9891), non-deterministic cascade  | Never — install new components with `rtl:true` instead                 |
+| Regenerate visual baselines _after_ the token swap                        | Green CI, no red diffs      | Baseline laundering hides every regression                    | Never for the token phase; only after human review of intended changes |
+| Skip the `bootstrap.js`/`directions.ts` byte-match CI check               | One less CI job to write    | Intermittent cold-load FOUC that only appears in prod dark-AR | Never — the invariant is load-bearing per v6.0                         |
+| Migrate HeroUI v3 in parallel with tokens                                 | Fewer phases                | Two moving targets; can't attribute breaks                    | Never — sequence v3 strictly after tokens stabilize                    |
+| Blind visual-only swap of Aceternity form components                      | Fast removal                | Broken a11y/validation contract that passes visual QA         | Never for form components; maybe for pure-decoration surfaces          |
 
 ## Integration Gotchas
 
-| Integration                     | Common Mistake                                                                         | Correct Approach                                                                                                                                                                |
-| ------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mastra tool execute()           | Import `supabaseAdmin` from config (copy pattern from existing agents)                 | Build per-request scoped client from forwarded `jwt` inside `execute()`; never import `supabaseAdmin`                                                                           |
-| pgvector HNSW + RLS post-filter | High-clearance users get poor recall because RLS filters out most HNSW candidates      | Enable `hnsw.iterative_scan = 'relaxed_order'` + `hnsw.max_scan_tuples`; consider partial indexes per sensitivity tier                                                          |
-| vLLM tool calling               | Don't set `--tool-call-parser` for Gemma/Qwen models; tool calls come back as raw text | Set `--enable-auto-tool-choice` + the correct `--tool-call-parser` per model family; test with a single structured tool call before wiring full agent                           |
-| AG-UI SSE + Express             | Mount AG-UI SSE endpoint on the same Express server as the transactional API           | AG-UI streams are long-lived (seconds to minutes); keep them on the dedicated `agent-runtime` service to avoid blocking the transactional API's connection pool                 |
-| Supabase access token TTL       | Pass the JWT at session start; it expires (~1h) mid-run for long agent tasks           | Bind run duration to JWT TTL or implement server-side refresh; `persistSession: false, autoRefreshToken: false` on per-request clients means the caller must pass a fresh token |
-| bge-m3 via TEI                  | Run bge-m3 + bge-reranker-v2-m3 as two separate services                               | Use one TEI container that can host both; they share the HuggingFace model cache                                                                                                |
-| CopilotKit self-hosted runtime  | Set `publicApiKey` from example code                                                   | Never set `publicApiKey` in self-hosted mode; this triggers cloud routing                                                                                                       |
-| i18n namespace registration     | Create translation JSON files and wire `useTranslation('signals')`                     | Also add the import + resource entry in `frontend/src/i18n/index.ts` in the same commit                                                                                         |
-
----
+| Integration                                                              | Common Mistake                                 | Correct Approach                                                                                                 |
+| ------------------------------------------------------------------------ | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Radix `DirectionProvider` ↔ existing `useDirection()`/i18n               | Two direction owners, static `direction="rtl"` | Single source: derive `dir` from `i18n.language`, feed both `<html dir>` and `DirectionProvider direction={dir}` |
+| `tw-animate-css` logical slides ↔ Radix portals                          | Assume `migrate rtl` fixes portal animations   | Pass reactive `dir` to every portal (Popover/Tooltip/Dropdown/Sheet/Dialog/drawer)                               |
+| `shadcn migrate rtl` ↔ already-logical codebase (v2.0 zero-physical-CSS) | Re-run bulk migrate over logical files         | Run once, commit, then `rtl:true` install for new components only                                                |
+| Linear `@theme` tokens ↔ HeroUI v3 overhauled token system               | Reuse v6.0 accent→primary mapping unchanged    | Re-derive the semantic bridge for v3's new color/shadow tokens                                                   |
+| `bootstrap.js` (plain JS, `public/`) ↔ `tokens/directions.ts` (TS)       | Rely on type-check to catch drift (it can't)   | Dedicated CI byte-match script comparing literal sets                                                            |
+| HeroUI v2 packages ↔ v3 packages                                         | Let both resolve during incremental migration  | Convert all component code on a branch, flip dependency once; no coexistence                                     |
+| shadcn auto-migrate ↔ Calendar/Pagination/Sidebar                        | Assume bulk migrate covers them                | These 3 require manual RTL patching per their individual guides                                                  |
 
 ## Performance Traps
 
-| Trap                                            | Symptoms                                                                                                                   | Prevention                                                                                                                                      | When It Breaks                                                                                        |
-| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| Full HNSW scan on high-sensitivity users        | A `clearance_level = 3` user's semantic search is 5–10x slower than a `clearance_level = 1` user                           | Partial HNSW indexes per sensitivity tier; iterative scan; increase `ef_search` proportionally to expected RLS filter ratio                     | When the user can see >50% of chunks but HNSW returns only top-k before RLS filters, recall collapses |
-| halfvec re-embed blocking VACUUM                | Re-embed job inserts millions of rows causing autovacuum to lag; HNSW build stalls                                         | Run re-embed in batches of 1000 with explicit `pg_sleep(0.1)` between batches; schedule for off-hours; monitor `pg_stat_user_tables.n_dead_tup` | On staging with <10K rows, invisible; on production with 50K+ rows, can lock the table for minutes    |
-| Agent memory/thread storage on Supabase main DB | Mastra `@mastra/pg` persists agent threads to the same Postgres instance; heavy agent usage adds contention on the primary | Use a separate Postgres schema (`agent_memory`) or separate DB connection pool for Mastra persistence; cap thread retention to 30 days          | >100 concurrent agent sessions                                                                        |
-| Reranker cross-encoder latency                  | Reranking top-50 candidates with bge-reranker-v2-m3 adds 200–800ms per query                                               | Cap rerank candidates at 30; cache rerank results for identical query+doc pairs (TTL 5m); route summary queries to keyword-only path            | Every RAG query in production with no caching                                                         |
-
----
+| Trap                                                                  | Symptoms                                                    | Prevention                                                                                                           | When It Breaks                     |
+| --------------------------------------------------------------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| Font swap (Tajawal→Inter/JetBrains Mono) not self-hosted/preloaded    | CLS + FOUT on first paint; bundle regresses past size-limit | Self-host via @fontsource (existing v6.0 pattern), preload critical weight only, mirror `--font-*` in `bootstrap.js` | First cold load / slow network     |
+| HeroUI v3 + Radix + shadcn primitives all bundled without chunk audit | `heroui-vendor` chunk blows the `===1` size-limit assertion | Re-audit manualChunks after each library swap; keep the sub-vendor decomposition (heroui/radix/dnd) budgets green    | At the PR-blocking size-limit gate |
+| Duplicate `rtl:` utilities from double-migrate                        | Larger CSS, cascade churn                                   | Idempotency guard (Pitfall 2)                                                                                        | Compounds silently per re-run      |
 
 ## Security Mistakes
 
-| Mistake                                                      | Risk                                                                                            | Prevention                                                                                                                   |
-| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Using `supabaseAdmin` in any interactive agent tool          | Service-role bypasses RLS; any clearance level can read any content                             | Per-request JWT-scoped client in every tool `execute()`; see Pitfall 1                                                       |
-| `SECURITY DEFINER` on data-access RPCs                       | RLS is evaluated as the definer (postgres), not the caller; clearance guarantee silently broken | `SECURITY INVOKER` on all analytic/retrieval RPCs; reserve `SECURITY DEFINER` for audit triggers                             |
-| Generic `execute_sql` or `run_query` Mastra tool             | Allows injection to escalate to arbitrary SQL execution                                         | Narrow typed tools only (one operation per tool); no free-text SQL tools                                                     |
-| Write tools committing without HITL                          | Unauthorized state changes; no user confirmation                                                | Every write tool must `suspend()` before the DB insert and only `resume()` on user `respond()`                               |
-| Cron pipeline delivering above-clearance content             | Subscriber receives content above their current clearance                                       | Re-check clearance at delivery time; filter digest items by `profiles.clearance_level` at send                               |
-| Agent-authored content injected into existing dossier fields | Content appears trusted in the dossier record without flagging AI origin                        | Stamp all AI-authored content with `source_type = 'ai_generated'` (the `signal_source_type` enum already has this value)     |
-| CopilotKit cloud routing                                     | Data egress violates sovereign on-prem requirement                                              | Never set `publicApiKey`; block cloud URLs in network policy; verify with Langfuse trace that no SSE frames route externally |
-
----
+| Mistake                                                              | Risk                                                                                           | Prevention                                                                                 |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Audit swaps a clearance-aware list/card for a stock shadcn primitive | Drops `sensitivity_level <= clearance` visual gating from v7.0; over-clearance content renders | Default clearance-touching components to keep-custom; list preserved behaviors (Pitfall 8) |
+| Aceternity form rebuild drops server-echoed validation display       | Client shows success while server rejected; user acts on stale state                           | Preserve the RHF+Zod error path and server-error surface, not just client validation       |
+| Token/`bootstrap.js` change ships raw hex bypassing token gate       | Reintroduces the banned raw-hex/`text-blue-500` literals the ESLint D-05 gate cleared to 0     | Keep the Design Token Check CI context green; all Linear colors as `var(--*)` tokens       |
 
 ## UX Pitfalls
 
-| Pitfall                                               | User Impact                                                                                                          | Better Approach                                                                                                                                              |
-| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Agent-authored Arabic copy in wrong register          | Diplomatic analysts see informal or incorrectly gendered Arabic in official dossier text                             | Use the formal Arabic system prompt; include genre-specific few-shot examples (diplomatic communiqué register); gate on Arabic rubric score in Phase 68 eval |
-| HITL confirmation card in LTR layout inside RTL shell | Confirmation card text reads left-to-right while the surrounding UI reads right-to-left — jarring and unprofessional | Set `dir="rtl"` on every `renderAndWaitForResponse` card; use logical properties; test in Arabic mode before merge                                           |
-| Copilot surface using shadcn defaults                 | Out-of-place visual language in a sovereign analytic workstation; looks like a demo app                              | Headless client only; every element via `var(--*)` tokens; `1px solid var(--line)` borders; no card shadows                                                  |
-| Streaming text appearing char-by-char in Arabic       | RTL text rendering during streaming can produce left-to-right flicker as tokens arrive                               | Buffer entire sentences or set `word-break: keep-all` + `unicode-bidi: isolate` on the streaming container; test Arabic streaming in Phase 72 spike          |
-| Signal triage surface not keyboard-navigable          | Analysts lose keyboard-first workflow on the most-used intelligence surface                                          | Design Phase 69 signal triage with `aria-keyshortcuts`, arrow-key navigation, and keyboard marks per the QA-gate pattern established in Phase 43             |
-
----
+| Pitfall                                                               | User Impact                                                                                   | Better Approach                                                                                                                  |
+| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Directional icons not given `rtl:rotate-180` after migrate            | Chevrons/arrows point the wrong way in AR (drill-in looks like go-back)                       | Verify `migrate rtl` applied `rtl:rotate-180` to supported icons; manually add for custom icons; cross-check `docs/rtl-icons.md` |
+| Calendar/Pagination/Sidebar shipped as auto-migrated                  | These 3 require **manual** RTL patching per shadcn docs; auto-migrate leaves them wrong in AR | Hand-patch Calendar, Pagination, Sidebar against their individual RTL guides; don't trust the bulk migrate for them              |
+| Dark-canonical Linear palette applied without light-mode parity check | Light mode (or one direction) becomes an afterthought with worse contrast                     | Verify all four axes (dark/light × LTR/RTL) reach WCAG AA before merge                                                           |
+| Status-tag / form-error palette gap left to default                   | Semantic colors read wrong or fail contrast in one mode                                       | Treat gap-fill palette as first-class token work with its own contrast pass                                                      |
 
 ## "Looks Done But Isn't" Checklist
 
-- [ ] **JWT keystone:** Service-role client is retired from all interactive paths — verify no `supabaseAdmin` import in any file under `backend/src/ai/agents/` that handles a user request; also check `brief-generator.ts` and `intake-linker.ts` for the same pattern
-- [ ] **Clearance-scale unification:** `get_user_clearance_level()` returns the same value as `profiles.clearance_level` for all test users at clearance levels 1–4 — run a cross-check query on staging
-- [ ] **Embedding integrity:** `pg_vector_dims(embedding)` returns 1024 for every row in `rag_chunks` after migration; no row has dimension 1536 or 512
-- [ ] **SECURITY INVOKER on retrieval RPCs:** `\df+ hybrid_search` and `\df+ vector_similarity_search` both show `security: invoker` in psql — not definer
-- [ ] **CopilotKit air-gap:** No network request to `*.copilotkit.ai` or `cloud.copilotkit.ai` appears in the browser network tab during any agent interaction
-- [ ] **HITL write safety:** Agent write action (e.g., create work item) captured in network tab shows the insert committing with the user's JWT bearer token, not service-role headers
-- [ ] **Arabic namespace registration:** Every new namespace used in Phase 69–74 components appears in `frontend/src/i18n/index.ts` resources block for both `en` and `ar`
-- [ ] **Agent Arabic language:** Switching to Arabic (`localStorage['id.locale'] = 'ar'`) and sending a query to the copilot produces an Arabic response, not English
-- [ ] **Cron authz gate:** The digest trigger endpoint returns 401 when called without `Authorization: Bearer CRON_SECRET`; a deprovisioned subscriber receives no digest on the next run
-- [ ] **Eval CI gate active:** A deliberately bad Arabic response injected into the eval test suite causes the Phase 74 CI job to fail
-
----
+- [ ] **RTL infra:** Language toggle works — verify EN toggle flips `document.dir` AND every Radix portal in the _same_ frame (not just page load in AR)
+- [ ] **RTL infra:** Portal animations — verify Popover/Tooltip/Dropdown/Sheet/drawer slide from the correct edge in **AR**, not just EN (tw-animate-css bug, Pitfall 3)
+- [ ] **RTL infra:** Calendar, Pagination, Sidebar manually patched — auto-migrate does NOT cover them
+- [ ] **RTL infra:** No duplicate `rtl:*` classes — grep guard passes after migrate
+- [ ] **Tokens:** Full-route EN+AR baselines captured _before_ the swap, not regenerated after
+- [ ] **Tokens:** axe-core AA passes on all four axes (dark/light × LTR/RTL), not just Bureau/EN
+- [ ] **Tokens:** `bootstrap.js` byte-matches `directions.ts` (font literals too) — CI check present and green
+- [ ] **Tokens:** No cold-load FOUC on throttled dark-AR reload
+- [ ] **HeroUI v3:** Removed components (Navbar/Snippet/User/Spacer/Image/Code/Autocomplete/DateInput) inventoried and re-implemented, not just renamed
+- [ ] **HeroUI v3:** No v2+v3 coexistence in the shipped tree
+- [ ] **Aceternity removal:** Each rebuilt form component announces errors (`role="alert"`/`aria-live`) on invalid submit in EN+AR
+- [ ] **Aceternity removal:** Keyboard focus order and `aria-invalid`/`aria-describedby` preserved
+- [ ] **Audit:** Every "replace with primitive" row lists the behaviors the primitive must preserve
 
 ## Recovery Strategies
 
-| Pitfall                                                          | Recovery Cost                                                                                                  | Recovery Steps                                                                                                                                                        |
-| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| supabaseAdmin in interactive agent discovered post-Phase 68      | HIGH — every interaction since launch is a potential data exposure event                                       | Immediate: swap to JWT-scoped client; rotate SUPABASE_SERVICE_ROLE_KEY; audit Langfuse traces for above-clearance queries; notify security team                       |
-| Clearance-scale mismatch discovered on a live intelligence table | HIGH — some intelligence rows are inaccessible to users who should see them, or visible to users who shouldn't | Write a migration that re-evaluates each row's visibility under the canonical scale; re-test all clearance-boundary probes; may require manual triage of exposed rows |
-| Mixed-dimension embedding store (1536 + 1024 rows)               | MEDIUM — semantic search returns degraded results                                                              | Freeze embedding writes; run a targeted re-embed of all 1536-dim rows; rebuild HNSW index                                                                             |
-| SECURITY DEFINER retrieval RPC discovered post-Phase 71          | HIGH — all analytic graph queries returned unclearance-gated data                                              | Alter function to SECURITY INVOKER; invalidate all cached query results; audit who queried which data                                                                 |
-| CopilotKit cloud egress discovered in production                 | CRITICAL — data-sovereignty breach                                                                             | Block cloud URLs in network policy immediately; switch to pure headless `@ag-ui/client`; audit what data left in SSE frames                                           |
-| Unregistered i18n namespace causing English fallback             | LOW — cosmetic, no security impact                                                                             | Add import + registration in `index.ts`; deploy; Arabic users see correct copy in next session                                                                        |
-
----
+| Pitfall                                             | Recovery Cost | Recovery Steps                                                                                                                                                    |
+| --------------------------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Double-run `migrate rtl` duplicated classes         | LOW           | `git revert` the second run; if committed together, grep-and-dedupe `rtl:` utilities per file                                                                     |
+| Dual-RTL double-flip in production                  | MEDIUM        | Consolidate to single direction source in DesignProvider; add toggle smoke test; re-verify all portals                                                            |
+| Token swap shipped visual regressions (no baseline) | HIGH          | Retro-capture baselines from last-known-good tag; diff current against it; triage per-route; expensive because blast radius is 150+ routes                        |
+| `bootstrap.js` drift shipped FOUC                   | LOW           | Sync literals in one commit; add the byte-match CI guard to prevent recurrence                                                                                    |
+| HeroUI v3 half-flipped tree                         | HIGH          | Branch is broken by design mid-migration; only recovery is finishing all component conversions before re-flipping the dependency — do not attempt to ship partial |
+| Aceternity swap broke a11y silently                 | MEDIUM        | Re-derive behavioral contract from git history of the pre-swap component; re-thread ARIA/RHF; add the announcement test that should have gated it                 |
 
 ## Pitfall-to-Phase Mapping
 
-| Pitfall                              | Prevention Phase                                                    | Verification                                                                                                                                                       |
-| ------------------------------------ | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| supabaseAdmin in interactive agent   | Phase 68 (item 3 of remediation, gates the rest)                    | Non-cleared user cannot retrieve `sensitivity_level = 'high'` dossier via chat; Langfuse trace shows `anon` client not service-role                                |
-| Prompt injection exceeding clearance | Phase 68 (JWT keystone) + Phase 72 (tool scope) + Phase 73 (HITL)   | Injected payload in a dossier field causes unexpected tool call but returns only clearance-appropriate results                                                     |
-| Three incompatible clearance scales  | Phase 68 (item 1 of remediation)                                    | Cross-join test: clearance_level 1–4 each return exactly the expected dossier set; `get_user_clearance_level()` and `profiles.clearance_level` agree for all users |
-| Embedding pad/truncate corruption    | Phase 68 (stop pad/truncate) + Phase 72 (re-embed)                  | `pg_vector_dims(embedding) = 1024` for all `rag_chunks`; semantic similarity > 0.5 for known-relevant pairs                                                        |
-| SECURITY DEFINER on retrieval RPCs   | Phase 68 (audit existing) + Phase 71 + Phase 72 (new RPCs)          | `\df+` shows `security: invoker` on all data-access RPCs; low-clearance user cannot retrieve high-sensitivity via any RPC                                          |
-| CopilotKit cloud-key dependency      | Phase 72 (Option-C spike empirically settles chat shell)            | No egress to `*.copilotkit.ai` in prod network policy audit                                                                                                        |
-| HITL write tools under service-role  | Phase 73                                                            | Agent write insert carries `Authorization: Bearer <user_jwt>` in DB headers; RLS rejects above-clearance insert                                                    |
-| Bilingual silent-English-fallback    | Phases 69–74 (each adds a namespace) + Phase 68 (eval harness test) | Switch to Arabic; new surface renders Arabic copy; CI namespace-coverage test passes                                                                               |
-| Cron pipeline without explicit authz | Phase 70                                                            | Deprovisioned subscriber excluded from next digest; endpoint returns 401 without CRON_SECRET                                                                       |
-| vLLM GPU sizing + Arabic adequacy    | Phase 68 (confirm GPU + wire eval harness) gates Phase 72           | Arabic rubric score >= Phase 68 baseline in Phase 74 CI gate; vLLM starts without OOM on target GPU                                                                |
-
----
+| Pitfall                                           | Prevention Phase   | Verification                                                                           |
+| ------------------------------------------------- | ------------------ | -------------------------------------------------------------------------------------- |
+| P8: Over-classify domain components as primitives | UI component audit | Each primitive-replace row lists preserved behaviors; clearance/RTL/flag → keep-custom |
+| P1: Dual RTL double-flip                          | RTL infra          | EN↔AR toggle flips page + all portals in one frame                                     |
+| P2: Double `migrate rtl`                          | RTL infra          | One-commit migrate; duplicate-`rtl:` grep guard green                                  |
+| P3: tw-animate-css portal slides                  | RTL infra          | AR portal-animation smoke per portal type                                              |
+| P4: Token swap w/o baseline                       | Tokens (Linear)    | Full-route EN+AR+dark/light baseline replay + 4-axis axe                               |
+| P5: bootstrap.js drift                            | Tokens (Linear)    | CI byte-match guard; throttled dark-AR cold-load                                       |
+| P6: HeroUI v3 mid-churn / coexistence             | HeroUI v3          | Sequenced after stable tokens; single-version tree; removed-component inventory        |
+| P7: Aceternity a11y/validation break              | Aceternity removal | Per-component error-announcement + keyboard + EN/AR test                               |
 
 ## Sources
 
-- `docs/superpowers/specs/2026-06-13-v7.0-intelligence-engine-design.md` §3 (remediation items), §5 (cross-cutting guarantees), §7 (open risk register) — HIGH confidence
-- `docs/research/v7.0-ai-architecture-research-2026-06-13.md` §2.5 (JWT keystone), §2.4 (SECURITY INVOKER requirement), §4.4 (i18n trap) — HIGH confidence
-- `backend/src/ai/agents/chat-assistant.ts` — direct inspection; `supabaseAdmin` confirmed at lines 158, 171, 202, 235, 269, 307, 338 — HIGH confidence
-- `supabase/functions/search-semantic/index.ts` — direct inspection; `normalizeEmbedding(..., 1536)` pad/truncate confirmed — HIGH confidence
-- `supabase/migrations/20251017100000_create_vector_similarity_search_function.sql` — `SECURITY DEFINER` confirmed on vector_similarity_search — HIGH confidence
-- `supabase/migrations/20251017030000_create_profiles.sql` — `profiles.clearance_level` INTEGER 1–4 confirmed — HIGH confidence
-- `supabase/migrations/20250930001_helper_functions.sql` — `get_user_clearance_level()` returns 1–3 confirmed — HIGH confidence
-- `supabase/migrations/20250930002_create_dossiers_table.sql` — `dossiers.sensitivity_level` TEXT `low|medium|high` confirmed — HIGH confidence
-- `frontend/src/i18n/index.ts` — static bundle confirmed; namespace registration pattern confirmed — HIGH confidence
-- OWASP AI Agent Security Cheat Sheet (cited in architecture research §7) — MEDIUM confidence (general LLM security)
-- CopilotKit GitHub issue #3170 (A2A header-forwarding bug, cited in architecture research §2.5) — MEDIUM confidence
+- [RTL - shadcn/ui](https://ui.shadcn.com/docs/rtl) — tw-animate-css logical-slide bug + `dir` portal workaround; Calendar/Pagination/Sidebar manual migration; `rtl:rotate-180` for icons; base-nova/radix-nova style requirement (HIGH)
+- [January 2026 RTL Support changelog - shadcn/ui](https://ui.shadcn.com/docs/changelog/2026-01-rtl) — `migrate rtl` class transforms (slide-in-from-left→start, ml→ms, text-left→text-start) (HIGH)
+- [Vite RTL setup - shadcn/ui](https://ui.shadcn.com/docs/rtl/vite) — DirectionProvider placement in main.tsx, components.json rtl:true, html dir/lang (HIGH)
+- [shadcn-ui/ui #9891 — migrate rtl not idempotent / duplicated rtl: classes](https://github.com/shadcn-ui/ui) — run-once guidance (MEDIUM — issue referenced via WebSearch)
+- [HeroUI v3 Migration](https://heroui.com/docs/react/migration) — no first-party codemod; v2/v3 cannot coexist; project broken during full migration; provider removal; removed/renamed components (HIGH)
+- [Introducing HeroUI v3 / v3-0-0-beta.1 changelog](https://v3.heroui.com/docs/changelog/v3-0-0-beta-1) — beta status, compound `.Root`, hooks removed, collection id/textValue, design-system overhaul (MEDIUM — beta, subject to change)
+- Project docs: `.planning/PROJECT.md`, `CLAUDE.md` (FOUC byte-mirror invariant, primitive cascade, RTL rules), MEMORY.md (dual-RTL history, i18n static-bundle, Tailwind v4 translate gotcha, Aceternity purge/reintro) (HIGH)
 
 ---
 
-_Pitfalls research for: v7.0 Intelligence Engine — on-prem agentic LLM + clearance RLS on existing Supabase/Postgres diplomatic dossier app_
-_Researched: 2026-06-13_
+_Pitfalls research for: v8.0 Linear Design System Migration (shadcn RTL infra + Linear tokens + HeroUI v3 + Aceternity removal, on an existing Arabic-first RTL app)_
+_Researched: 2026-07-01_
+</content>
