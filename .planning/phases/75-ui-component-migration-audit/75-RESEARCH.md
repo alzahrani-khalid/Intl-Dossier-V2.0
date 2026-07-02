@@ -360,21 +360,24 @@ done   # all 0 except world-map: 1
 
 All other claims in this document are `[VERIFIED: session commands]` or `[CITED]` as tagged inline.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Does the 7-of-8-dead finding change AUDIT-04's deliverable?**
    - What we know: the requirement mandates contract capture for all 8; 7 have zero consumers; Phase 79's ROADMAP still says "rebuilt on HeroUI v3/Radix."
    - What's unclear: whether Phase 79 becomes delete-not-rebuild for the dead 7.
    - Recommendation: capture all 8 contracts as required, lead each with liveness evidence, and add an explicit "Phase 79 rescope input" note in the artifact. Do NOT rescope Phase 79 in this phase — that is a user decision at Phase 79 planning.
+   - RESOLVED: adopted by plan 75-03 — every contract leads with liveness evidence and Task 3 writes the exact-heading "Phase 79 rescope input" section; Phase 79 rescoping stays a user decision at Phase 79 planning.
 
 2. **RTL keep-custom trigger breadth.**
    - What we know: literal reading → 397/799 files default keep-custom; narrow reading (direction-owners) → 94 files + infra.
    - What's unclear: which reading the success-criterion author intended.
    - Recommendation: planner adopts the narrow reading, states it in the artifact header, and routes consumed-RTL behavior into the "behaviors to preserve" cells. This preserves criterion-5 safety intent without collapsing the audit. If the plan-checker objects, the fallback is the literal reading with a "keep-custom (RTL-consumer)" sub-label so Phases 76/77 can still see the real surface.
+   - RESOLVED: adopted by plan 75-01 — the classification artifact header states the narrow direction-owner reading (rulebook item d) with an explicit note that it resolves this question, and consumed-RTL behavior routes into the "Behaviors to preserve" cells.
 
 3. **Classification of the 8 dead Aceternity-derived `ui/` primitives** (moving-border, background-boxes, …).
    - What we know: 0 importers each (world-map has 1); some are path-banned in ESLint already.
    - Recommendation: classify as keep-custom-pending-deletion or a fourth advisory label `dead — delete candidate` in the notes column (taxonomy itself is fixed at 3; use the notes column, don't extend the taxonomy).
+   - RESOLVED: adopted by plans 75-01 (row schema: advisory labels live in Notes only, taxonomy never extended) and 75-04 (dead Aceternity-derived primitives classified keep-custom with a "dead — delete candidate" Notes advisory backed by fresh 0-importer evidence; world-map excepted with 1 importer).
 
 ## Environment Availability
 
