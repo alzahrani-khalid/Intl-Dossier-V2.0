@@ -3,7 +3,7 @@
  * Palette literals MUST byte-match frontend/src/design-system/tokens/directions.ts (PALETTES.linear).
  * Keys: id.dir / id.theme / id.density / id.classif / id.locale (with legacy i18nextLng migration).
  * TOKEN-04 (load-bearing migration): every existing user holds a retired id.dir
- *   (bureau/chancery/situation/ministerial); the old per-direction fallback vanished
+ *   (any of the four legacy directions); the old per-direction fallback vanished
  *   with the Linear swap, so id.dir is COERCED to 'linear' here (with a try-guarded
  *   one-time write-back) AND in DesignProvider — first paint would otherwise lose ALL
  *   tokens. Default id.theme = 'dark' (Linear-canonical, USER DECISION); an explicitly

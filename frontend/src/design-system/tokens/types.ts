@@ -9,16 +9,13 @@
  *   - 33-03 bootstrap (SSR-safe pre-hydration application)
  */
 
-export type Direction = 'chancery' | 'situation' | 'ministerial' | 'bureau' | 'linear'
+// Phase 77 (linear-token-system) — the engine is single-direction. The four
+// legacy directions (chancery/situation/ministerial/bureau) and the hue axis
+// were deleted in 77-07; `Direction` is retained as a one-value union for API
+// stability (buildTokens/PALETTES still key off it).
+export type Direction = 'linear'
 
 export type Mode = 'light' | 'dark'
-
-/**
- * Hue in OKLCH (0..360, inclusive). Caller is responsible for clamping /
- * normalising; the engine passes the value through unchanged (SLA math wraps
- * with `% 360`).
- */
-export type Hue = number
 
 export type Density = 'comfortable' | 'compact' | 'dense'
 
@@ -28,7 +25,6 @@ export type TokenSet = Record<string, string>
 export interface BuildInput {
   direction: Direction
   mode: Mode
-  hue: Hue
   density: Density
 }
 
@@ -45,22 +41,21 @@ export interface DirectionModePalette {
   sidebarInk: string
   radius: { sm: string; base: string; lg: string }
 
-  // Phase 77 (linear-token-system) — OPTIONAL extended tiers. Present only on the
-  // `linear` direction; the four legacy directions omit them and keep their
-  // hue-math / mode-branched semantic output in buildTokens. When present,
-  // buildTokens prefers these palette LITERALS over the legacy math.
+  // Phase 77 (linear-token-system) — Linear extended tiers. The engine is
+  // single-direction now (the four legacy directions were deleted in 77-07), so
+  // these are REQUIRED and buildTokens reads them unconditionally.
   /** surface-3 tier (drawers/popovers in the Linear ladder). */
-  surface3?: string
+  surface3: string
   /** surface-4 tier (elevated overlays). */
-  surface4?: string
+  surface4: string
   /** Faintest ink tier (ink-tertiary). Not gated on WCAG AA — decorative/faint. */
-  inkTertiary?: string
+  inkTertiary: string
   /** hairline-strong divider. Not gated on WCAG AA — a stronger line, not text. */
-  lineStrong?: string
+  lineStrong: string
   /** Accent family literals (verbatim Linear brand + a derived accent-tinted text `ink`). */
-  accent?: { base: string; hover: string; fg: string; ink: string; soft: string }
+  accent: { base: string; hover: string; fg: string; ink: string; soft: string }
   /** Semantic family literals — TOKEN-03 derived error/warning + verbatim/derived ok/info, each with a soft wash. */
-  semantic?: {
+  semantic: {
     danger: string
     dangerSoft: string
     warn: string
@@ -71,9 +66,9 @@ export interface DirectionModePalette {
     infoSoft: string
   }
   /** SLA family literals (derived in the Linear accent band). */
-  sla?: { ok: string; okSoft: string; risk: string; riskSoft: string; bad: string; badSoft: string }
+  sla: { ok: string; okSoft: string; risk: string; riskSoft: string; bad: string; badSoft: string }
   /** 6-value status-tag palette (TOKEN-03). Exactly 6 { fg, soft } entries; each fg passes AA on surface AND on its own soft. */
-  status?: { fg: string; soft: string }[]
+  status: { fg: string; soft: string }[]
 }
 
 export interface DirectionPalette {
