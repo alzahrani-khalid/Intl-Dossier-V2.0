@@ -8,6 +8,38 @@
 
 ---
 
+## 0. Consumer hand-off summary (Phases 76 / 77 / 79)
+
+_Added by plan 75-04 once both classification tiers were complete and the enforcement sweep
+(Section 7.1) passed. Addressed to the three downstream consumers of AUDIT-01._
+
+- **Phase 76 (RTL bridge / portal surface):** preserve every direction-owner. In the per-file
+  tier that is the 12 `ui/` rows that set `dir=` or are RTL infrastructure — `accordion`,
+  `adaptive-dialog`, `context-menu`, `dropdown-menu`, `heroui-tabs`, `tabs`, `ltr-isolate`,
+  `navigation-menu`, `scroll-area`, `select`, `slider`, `toggle-group` — plus the 42
+  direction-owning feature directories from the Tier-1 summary. `ui/ltr-isolate.tsx` is the
+  explicit LTR-isolation boundary. All are keep-custom; none may collapse to a bare primitive.
+- **Phase 77 (TOKEN-06 re-skin scope):** the actionable re-skin verdicts live in the per-file
+  tier — 28 `replace-with-shadcn-primitive` rows (26 `ui/` + 2 `forms/`) that a shadcn/Radix/HeroUI
+  primitive can stand in behind the tokens, each carrying the token/RTL/focus/ARIA behaviors it
+  must preserve, plus 1 `replace-with-shadcn-block` (`ui/sidebar.tsx`). The `heroui-chip.tsx`
+  stale-docstring and `heroui-switch.tsx` / `heroui-tabs.tsx` lookalike flags are Phase 78 cleanup
+  notes carried in the rows. The `components/ui/**` color-literal ESLint carve-out keep-or-migrate
+  decision keys off these primitive rows.
+- **Phase 79 (dead-primitive / forms rebuild):** the 8 Aceternity-derived `ui/` primitives with
+  0 importers carry `dead — delete candidate` in Notes (`animated-tooltip`, `background-boxes`,
+  `expandable-card`, `floating-dock`, `layout-grid`, `moving-border`,
+  `placeholders-and-vanish-input`, `text-generate-effect`); `world-map.tsx` is excepted (1 named
+  importer). The 8 Aceternity-styled `forms/` rows cross-reference
+  `75-AUDIT-aceternity-contracts.md` (7 of 8 dead; `SearchableSelect` live via `UserPicker`); the
+  `forms/index.ts` barrel is dead (0 importers).
+
+**Final label tallies.** Per-file tier (`ui/` + `forms/`, 95 rows): 66 keep-custom,
+28 replace-with-shadcn-primitive, 1 replace-with-shadcn-block. Whole artifact (209 rows, both
+tiers): 175 keep-custom, 28 replace-with-shadcn-primitive, 6 replace-with-shadcn-block.
+
+---
+
 ## 1. Header / rulebook
 
 These rules are fixed. Both classification tiers (per-directory below, and the per-file
@@ -533,4 +565,66 @@ components and is imported by nothing). The 8 Aceternity-styled forms cross-refe
 _Reconciles per-directory + per-file row coverage against the live tree file count. Filled by
 plan 75-04._
 
-<!-- FILLED BY PLAN 75-04 -->
+### 7.1 Enforcement sweep (mechanical, over the whole artifact)
+
+1. **Downgrade-rule sweep** — every `replace-with-shadcn-primitive` row checked for an
+   empty/dash-only "Behaviors" cell:
+
+   ```bash
+   awk -F'|' '$3 ~ /replace-with-shadcn-primitive/ { c=$5; gsub(/[ \t—–-]/, "", c); if (c=="") bad++ } END { print bad+0 }' 75-AUDIT-classification.md
+   ```
+
+   Result (2026-07-02): `0` empty-behaviors primitive rows — **PASS**. No row required
+   downgrading; every one of the 28 primitive rows names at least one concrete behavior.
+
+2. **Domain-signal cross-check (criterion-5)** — each clearance/flags file resolves to a
+   keep-custom covering row; every `ui/` direction-owner is keep-custom:
+   - clearance: **10/10** files covered keep-custom (dirs calendar, copilot, dossier,
+     entity-links, intelligence, positions, relationships, signals) — **PASS**
+   - flags/glyphs: **13/13** files covered keep-custom (dirs calendar, dossier, intelligence,
+     list-page, signature-visuals) — **PASS**
+   - ui/ direction-owners: **12/12** keep-custom (accordion, adaptive-dialog, context-menu,
+     dropdown-menu, heroui-tabs, ltr-isolate, navigation-menu, scroll-area, select, slider,
+     toggle-group, tabs) — **PASS**; `ui/ltr-isolate.tsx` = keep-custom (awk gate) — **PASS**
+
+### 7.2 Coverage reconciliation (dated arithmetic)
+
+Commands run from repo root, **2026-07-02**:
+
+```bash
+find frontend/src/components       -type f \( -name '*.tsx' -o -name '*.ts' \) ! -name '*.test.*' | wc -l   # 700
+find frontend/src/components/ui    -type f \( -name '*.tsx' -o -name '*.ts' \) ! -name '*.test.*' | wc -l   # 73
+find frontend/src/components/forms -type f \( -name '*.tsx' -o -name '*.ts' \) ! -name '*.test.*' | wc -l   # 22
+```
+
+Raw output (2026-07-02):
+
+```text
+total non-test files under components/:  700
+components/ui non-test files:             73
+components/forms non-test files:          22
+per-file rows (ui + forms):               95   (73 + 22)
+per-directory rows (Section 5):          114   (all top-level dirs except ui/ + forms/, incl. __tests__/ and editor/)
+```
+
+Arithmetic:
+
+- Per-file rows cover the 95 files in `ui/` (73) and `forms/` (22) one-to-one.
+- The 114 per-directory rows cover the remaining **605** non-test files
+  (700 − 73 − 22 = 605) across those directories. Two of the 114 rows (`__tests__/` and
+  `editor/`) cover directories with 0 non-test source files (test-only / disabled-only).
+- Total: 95 (per-file) + 605 (per-directory-covered) = **700** = the live non-test file
+  count. Reconciled — no gap.
+
+### 7.3 Label tallies
+
+<!-- prettier-ignore -->
+| Tier | keep-custom | replace-with-shadcn-primitive | replace-with-shadcn-block | rows |
+| --- | --- | --- | --- | --- |
+| Per-file (ui + forms) | 66 | 28 | 1 | 95 |
+| Per-directory (Section 5) | 109 | 0 | 5 | 114 |
+| Whole artifact | 175 | 28 | 6 | 209 |
+
+The single per-file block is `ui/sidebar.tsx`; the 5 per-directory blocks are `table/` (bare)
+plus `layout/`, `modern-nav/`, `dashboard-widgets/`, `empty-states/` (+ domain-wrapper). No
+directory row and no domain-signal file classifies a bare `replace-with-shadcn-primitive`.
