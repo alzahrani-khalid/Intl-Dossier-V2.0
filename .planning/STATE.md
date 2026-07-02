@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
 status: executing
-last_updated: '2026-07-02T21:01:42.000Z'
-last_activity: 2026-07-02 -- Plan 77-05 complete (retired 4-direction switcher + accent-hue controls from Topbar/TweaksDrawer/AppearanceSettings; pruned direction/hue i18n keys en+ar; theme/density intact, label-parity green)
+last_updated: '2026-07-02T21:29:48.000Z'
+last_activity: 2026-07-02 -- Plan 77-06 complete (TOKEN-06 — Linear primitive re-skin + carve-out resolution; flat cards/buttons, terracotta button shadow removed, hairline borders, token radii, surface-1..4 ladder; 6 live components/ui files migrated to semantic tokens, chart/map kept, 6 dead files skipped; lint + type-check + 319/319 unit + contract 6/6 green)
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 17
-  completed_plans: 14
+  completed_plans: 15
   percent: 33
 ---
 
@@ -25,8 +25,12 @@ See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section
 ## Current Position
 
 Phase: 77 (linear-token-system) — EXECUTING
-Plan: 5 of 8 complete (77-01, 77-02, 77-03, 77-04, 77-05); next: 77-06
+Plan: 6 of 8 complete (77-01, 77-02, 77-03, 77-04, 77-05, 77-06); next: 77-07
 Status: Executing Phase 77
+Last activity: 2026-07-02 -- Plan 77-06 complete (TOKEN-06 — primitive re-skin + carve-out). Task 1: re-skinned the primitive recipes to Linear — flat cards/buttons (removed the terracotta rgba(190,80,30,.15) Bureau-residue drop shadow on .dir-linear .btn-primary carried through the 77-04 dir-class rename), primary-button hover → var(--accent-hover), tokenised hard-coded recipe radii (.dir-linear .card 12px→--radius-lg, .dir-linear .btn 8px→--radius), surface ladder wired (popover/menu → --surface-3 via --color-popover, drawer/modal → --surface-4 on .dir-linear .drawer + .id-dialog-content). Effective recipes live in styles/list-pages.css (side-effect import), so both it AND index.css were edited (Rule-2 deviation vs the index.css-only files_modified). Task 2: re-counted the carve-out (74 palette-literal lines / 12 files + 20 hex / 4 files — exact match to research), migrated the 6 LIVE files to semantic tokens (blue→info, amber→warn, green→ok, red→danger, grays→ink/surface/line; soft washes via bg-\*/10 opacity), kept chart.tsx + world-map.tsx byte-unchanged (data-viz), skipped the 6 Phase-79-dead animated primitives with annotations, left the eslint carve-out block intact. Full per-item decision table (14 rows) embedded in 77-06-SUMMARY. Carve-out tally 6 migrate / 2 keep / 6 skip — the brief's "7 skipped" is a documented off-by-one (research prose "7 dead files" vs its own arithmetic 25 palette + 10 hex = 6 files). Commits: 385b59ca (recipe CSS), 715c0a97 (component migration). lint (Design Token Check + bootstrap parity) + type-check + vitest unit 319/319 + handoff-css-contract 6/6 all green.
+
+### (superseded) 77-05 activity
+
 Last activity: 2026-07-02 -- Plan 77-05 complete (TOKEN-04 UI half). Retired the 4-direction switcher (Bureau/Chancery/Situation/Ministerial) AND the accent-hue control (slider + presets) from all three surfaces — Topbar, TweaksDrawer, AppearanceSettingsSection — since 77-04 made both inert (accent is a verbatim literal, every id.dir coerces to linear). Kept theme (light/dark) + density controls fully functional on every surface. Pruned the retired keys (tweaks.direction, tweaks.hue, shell.direction, appearance.direction, appearance.hue) symmetrically from en+ar common.json + settings.json; left every unrelated "direction" key (tweaks.locale "Reading direction", nav.dashboard "Situation") untouched (Pitfall 3). Direction TYPE stays 4+1-wide and useHue/DesignProvider hue state stays live — 77-07 owns the type/plumbing collapse. Commits: 1ccc4216 (components+tests), 08b2440b (i18n prune). 44/44 component tests + 8/8 i18n/parity tests + full lint + type-check green. DoD grep item 3 returns 1 (pre-existing nav.dashboard "Situation" false positive, documented).
 Prev: 2026-07-02 -- Plan 77-04 complete (Linear ACTIVATED — dual-layer id.dir coercion + dark default + :root re-sync + .dir-linear rename; guard v2 + coercion 8/8 + font probe)
 Follow-ups (P76 advisory, still open): LO-01 check-duplicate-rtl.mjs empty-root guard; LO-03 latent render-time document.dir reader (MD-01/LO-02 now owned by 77-08 DOC-01).
