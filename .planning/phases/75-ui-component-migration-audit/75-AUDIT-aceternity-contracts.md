@@ -23,6 +23,22 @@ The 8 components in scope (all under `frontend/src/components/forms/`):
 `FormCheckboxAceternity`, `FormRadioAceternity`, `FormFieldWithValidation`,
 `SmartInput`, `SearchableSelect`.
 
+## Component summary (read this first)
+
+| Component               | Liveness                             | ARIA count                                      | Rebuild-relevant notes                                                                                                           |
+| ----------------------- | ------------------------------------ | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| FormInputAceternity     | dead — 0 external call sites         | 4                                               | `register`-based; error linked via `aria-describedby` only (no live region); rotating placeholder is decoration                  |
+| FormTextareaAceternity  | dead — 0 external call sites         | 3                                               | `register`-based; no live region; char-count feature; missing `aria-required`                                                    |
+| FormSelectAceternity    | dead — 0 external call sites         | 3                                               | `register`-based native `<select>`; custom chevron; no live region                                                               |
+| FormCheckboxAceternity  | dead — 0 external call sites         | 3                                               | `register`-vs-controlled tension (Radix `Checkbox`); no live region                                                              |
+| FormRadioAceternity     | dead — 0 external call sites         | 3                                               | `register`-vs-controlled tension (Radix `RadioGroup`); group-label association gap; no live region                               |
+| FormFieldWithValidation | dead — 0 external call sites         | 8                                               | controlled + `externalError`; **`role="alert"` live region**; multi-target `aria-describedby`; client-vs-server error precedence |
+| SmartInput              | dead — 0 external call sites         | 5 (research said 6)                             | `forwardRef`; `(value, rawValue)` onChange + masking; **`role="alert"`**; `error` is a resolved string, not `FieldError`         |
+| SearchableSelect        | **LIVE via `UserPicker`** (0 direct) | 12 explicit (+cmdk internals; research said 13) | full ARIA combobox (cmdk + Radix Popover); **`role="alert"`**; preserve the **UserPicker facade**, internals free                |
+
+7 of 8 are dead code (see the "Phase 79 rescope input" section); only SearchableSelect is live,
+and only behind the UserPicker facade.
+
 ## Liveness evidence (authority: symbol-level grep, not barrel presence)
 
 Barrel presence is NOT liveness. `frontend/src/components/forms/index.ts` exports
@@ -339,6 +355,119 @@ masking** (phone/creditcard/currency/date/otp), exposed as a `forwardRef` input.
   its presence is contractual. The masking/keyboard-optimization behavior is functional, not
   animation — it is fully contractual if Phase 79 keeps SmartInput's role.
 
-## SearchableSelect — contract (Task 3)
+## SearchableSelect — contract
 
-_Placeholder — filled by Task 3._
+**Source:** `frontend/src/components/forms/SearchableSelect.tsx`
+**Aceternity marker:** `variant?: 'default' | 'aceternity'` prop (not a named `*Aceternity`
+file) — the aceternity path adds trigger shadow styling only.
+
+This is the **only transitively-live** component in the set. It is a full ARIA combobox built
+on the app's cmdk `Command` primitives inside a Radix `Popover`, and it is the richest a11y
+surface of the eight.
+
+- **Liveness:** **0 direct external call sites, but LIVE via `UserPicker`.** Direct-import
+  evidence:
+  `grep -rl "\bSearchableSelect\b" --include="*.tsx" --include="*.ts" frontend/src tests | grep -v "frontend/src/components/forms/" | wc -l` → `0`. It is imported only by
+  `frontend/src/components/forms/UserPicker.tsx` (same directory, excluded by the loop), and
+  UserPicker has 4 live production consumers (see the UserPicker facade subsection). So a Phase 79
+  rebuild of SearchableSelect only matters behind the UserPicker facade — the facade contract is
+  what must be preserved.
+- **RHF wiring:** Does **not** take `register`. `forwardRef<HTMLButtonElement>` (the ref lands on
+  the trigger `<Button>`). Controlled: `value?: string | string[]` + `onChange?: (value: string | string[] | null) => void` (multi-select emits an array, single emits a string, cleared emits
+  `null`). Error is a plain resolved `error?: string`, not a `FieldError`. Live RHF binding is via
+  the consumer's `Controller`, mapping `field.value`/`field.onChange` through UserPicker.
+- **Zod linkage:** No direct call site; the live binding validates the selected user id through the
+  consumer's own RHF+Zod schema (e.g. `assignee_id`), passed down via UserPicker.
+- **ARIA:** 12 explicit attribute/role occurrences in source (research measured 13 — the 13th is
+  the `role="listbox"`/`role="option"`/`aria-selected`/`aria-activedescendant` set that the cmdk
+  `Command`/`CommandList`/`CommandItem` primitives supply internally on the `CommandList
+id={listboxId}`, not literal in this file). Explicit combobox pattern on the trigger `<Button>`:
+  `role="combobox"` (line 434), `aria-controls={listboxId}` (435), `aria-expanded={open}` (436),
+  `aria-haspopup="listbox"` (437), `aria-labelledby` → label id when a label is present (438),
+  `aria-describedby` → space-joined `[errorId, helpId]` (439), `aria-invalid={!!error}` (440),
+  `aria-required` (441). Plus the clear affordance `role="button"` + `aria-label` (450-451), the
+  required-marker `aria-label` (420), and **`role="alert"` on the error `<m.p>` (line 564)** — a
+  real live region. The listbox is `CommandList id="{selectId}-...listbox"` wired via
+  `aria-controls`. A rebuild must preserve the whole combobox contract: combobox role + expanded
+  state + controls/labelledby/describedby wiring + the option/listbox/activedescendant semantics
+  cmdk provides + the `role="alert"` error region.
+- **Keyboard/focus:** Trigger opens the popover on click/Enter/Space. **On open, focus moves to the
+  search input** (`useEffect` → `inputRef.current?.focus()` after a 0ms timeout, lines 287-293).
+  **Arrow Up/Down** move the active option (cmdk-managed `aria-activedescendant`); **Enter**
+  selects (`onSelect` → `handleSelect`) — single-select closes the popover and clears the query,
+  multi-select toggles and stays open; **Escape** closes the popover and returns focus to the
+  trigger (Radix `Popover`). **Type-ahead** is manual: `Command` runs with `shouldFilter={false}`,
+  so typing drives `searchQuery` → `filterOptions` fuzzy match over label/value/description
+  (lines 112-123), and `onSearchChange` fires for async loading. A clear button and a
+  `creatable` "+ create" item are additional keyboard-reachable affordances.
+- **RTL:** Chevron flips with `isRTL && 'rotate-180'` plus `open && 'rotate-180'` (lines 459-464);
+  `PopoverContent align="start"`; search icon uses `me-2`, clear/chevron cluster uses `ms-2`;
+  labels/messages `text-start`. Popover width binds to the trigger via
+  `--radix-popover-trigger-width`.
+- **Animation-only (non-contractual):** Label entrance transform, help/error `AnimatePresence`
+  fade/height reveal, chevron rotation, trigger shadow on open. The `role="alert"` motion is
+  non-contractual; its presence is contractual. The combobox _behavior_ (filter, keyboard nav,
+  focus management, multi/creatable) is fully functional and contractual behind the facade.
+
+### UserPicker facade contract
+
+**Source:** `frontend/src/components/forms/UserPicker.tsx` — the live wrapper around
+SearchableSelect. **Phase 79 must preserve THIS facade's contract; SearchableSelect internals may
+change freely behind it.**
+
+- **Facade props surface (what the 4 consumers bind to):** `value?: string` (a single user id),
+  `onChange?: (userId: string | null) => void`, `label?`, `placeholder?`, `error?: string`,
+  `required?`, `disabled?`, `className?`. It is single-select only — it never exposes
+  SearchableSelect's array/multiple surface.
+- **What it maps down into SearchableSelect:** loads `options` from the `users` table
+  (`is_active = true`, ordered by `full_name`, `limit 20`) on mount; wires `onSearchChange` to a
+  300ms-debounced Supabase `full_name/email ilike` search (min 2 chars); narrows
+  SearchableSelect's `string | string[] | null` onChange down to a single `userId | null`; passes
+  `label`/`placeholder`/`error`/`required`/`disabled`/`className` through; sets `loading`; maps
+  each user row to `{ value: id, label: full_name||email||id, description: email, icon: avatar }`.
+- **The 4 live consumers (one line each):**
+  - `frontend/src/components/tasks/TaskEditDialog.tsx` (line 201): RHF `Controller` on
+    `assignee_id` — `<UserPicker value={field.value} onChange={field.onChange} />`; error surfaced
+    via RHF `<FormMessage>`, not UserPicker's `error` prop.
+  - `frontend/src/components/dossier/AddToDossierDialogs.tsx` (line 448): plain `useState`
+    (`assigneeId`/`setAssigneeId`) — binds `label`, `placeholder`, `required`, `className`;
+    `onChange={(userId) => setAssigneeId(userId ?? '')}`.
+  - `frontend/src/components/dossier/wizard/steps/OrgDetailsStep.tsx` (line 291): RHF `Controller`
+    on the organization focal-user field — `value={field.value}`, `onChange={(id) => field.onChange(id ?? '')}`, `placeholder`.
+  - `frontend/src/components/work-creation/forms/TaskQuickForm.tsx` (line 327): RHF `Controller`
+    on `assignee_id` — `value={field.value}`, `onChange={(userId) => field.onChange(userId ?? '')}`,
+    `placeholder`, `className`.
+- **Facade-preservation rule for Phase 79:** keep the single-string `value` / `onChange(userId | null)` seam, the `?? ''` null-coalescing consumers rely on, and the `label`/`placeholder`/
+  `required`/`disabled`/`error`/`className` pass-throughs. The `users`-table query + 300ms debounce
+  is behavior consumers depend on (async user search); the combobox internals (cmdk/Radix) are free
+  to be rebuilt on HeroUI v3/Radix as long as the facade props and keyboard/focus behavior hold.
+
+---
+
+## Phase 79 rescope input
+
+**This section supplies evidence only. It does NOT rescope Phase 79.** The rebuild-vs-delete
+decision for the dead components is a **user decision at Phase 79 planning** (RESEARCH Open
+Question 1 resolution).
+
+- **7 of 8 components are dead code.** `FormInputAceternity`, `FormTextareaAceternity`,
+  `FormSelectAceternity`, `FormCheckboxAceternity`, `FormRadioAceternity`,
+  `FormFieldWithValidation`, and `SmartInput` each have **zero external call sites** (see the
+  liveness loop above, dated 2026-07-02). The forms barrel `frontend/src/components/forms/index.ts`
+  exports all of them and **is itself imported by nothing**.
+- **Only `SearchableSelect` is live**, and only **transitively via the `UserPicker` facade** (4
+  production consumers). Its real preservation target is the UserPicker facade contract, not
+  SearchableSelect's own prop surface.
+- **The "ValidationDemoPage consumes these" claim is stale.** Milestone research
+  (`.planning/research/STACK.md`) noted `ValidationDemoPage.tsx` as a consumer; that page was
+  **deleted in the PR #88/#89 demo-page cleanup**. Fresh evidence:
+  `grep -rln "ValidationDemoPage" frontend/src tests` → **0 references**. The demo consumer no
+  longer exists, which is why the 7 are now dead.
+- **Phase 79's ROADMAP still says "8 form components rebuilt on HeroUI v3/Radix"**
+  (`.planning/ROADMAP.md` line 212; success criterion 4 verifies RHF/Zod + ARIA + keyboard-focus
+  contracts against THIS document). That target predates the 7-of-8-dead finding.
+- **Decision deferred to the user at Phase 79 planning.** The options this evidence opens up —
+  (a) rebuild all 8 as written; (b) rebuild only the live `SearchableSelect`/`UserPicker` path and
+  **delete** the dead 7; (c) some middle ground — are a scoping call for the user when Phase 79 is
+  planned. This audit does not choose. Every contract above is captured as required so that
+  whichever path is chosen, the RHF/Zod/ARIA/keyboard baseline exists.
