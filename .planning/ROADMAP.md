@@ -205,7 +205,7 @@ Full detail: [milestones/v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md). Audit: [m
 
 **Hard sequencing (from research):** audit → RTL infrastructure bridge + shadcn logical properties → Linear tokens → HeroUI v3 API audit/bump → Aceternity removal → visual/a11y verification across all baselined surfaces. Visual baselines (VERIFY-01) are captured **before** the token phase runs (gating step of Phase 77) and re-compared in the final phase (Phase 80). The `bootstrap.js`/`directions.ts` byte-match CI guard (FOUC-01) is added at the **start** of Phase 77, before any token literal moves.
 
-- [ ] **Phase 75: UI Component & Migration Audit** — classify every hand-rolled surface; confirm HeroUI v3 API conformance (compound API, no v3-removed components — both review-verified); inventory the 8 Aceternity components with their behavioral contracts
+- [x] **Phase 75: UI Component & Migration Audit** — classify every hand-rolled surface; confirm HeroUI v3 API conformance (compound API, no v3-removed components — both review-verified); inventory the 8 Aceternity components with their behavioral contracts (completed 2026-07-02)
 - [ ] **Phase 76: RTL Infrastructure Bridge & shadcn Logical Properties** — single `dir` owner bridged into `<html>` + Radix; portal edge-correct animations; one-shot `migrate rtl`; manual Calendar/Pagination/Sidebar patch; duplicate-`rtl:` CI guard
 - [ ] **Phase 77: Linear Token System** — dark+light Linear tokens wired through `directions.ts`/`buildTokens.ts`/`applyTokens.ts`; gap-filled error/status palette; 4-direction switcher retired; Inter + JetBrains Mono (Tajawal preserved); re-skinned primitives; design source-of-truth docs updated to Linear (DOC-01); `bootstrap.js` byte-match CI guard (gated by pre-swap baseline capture)
 - [ ] **Phase 78: HeroUI v3 API Audit & Bump** — `@heroui/react`/`@heroui/styles` 3.0.5 → 3.2.1 (light phase: the tree is already on the v3 compound API and no v2 exists — audit-confirmed, so this is a bump + regression sweep)
@@ -240,7 +240,7 @@ Plans:
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
-- [ ] 75-04-PLAN.md — AUDIT-01 per-file tier (ui/ + forms/), enforcement sweep, coverage reconciliation (wave 2)
+- [x] 75-04-PLAN.md — AUDIT-01 per-file tier (ui/ + forms/), enforcement sweep, coverage reconciliation (wave 2)
 
 **UI hint**: yes
 
@@ -337,7 +337,7 @@ Plans:
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
 | 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
 | 68-74 | v7.0 | 49/49 | Shipped | 2026-06-24 |
-| 75 | v8.0 | 3/4 | In Progress|  |
+| 75 | v8.0 | 4/4 | Complete   | 2026-07-02 |
 | 76 | v8.0 | 0/? | Not started | - |
 | 77 | v8.0 | 0/? | Not started | - |
 | 78 | v8.0 | 0/? | Not started | - |
