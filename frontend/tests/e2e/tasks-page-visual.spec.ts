@@ -12,6 +12,16 @@ import {
 
 test.describe('Phase 42 — Tasks visual', () => {
   test.beforeEach(async ({ page }) => {
+    // Phase 77-01 (VERIFY-01): pin id.theme=light so this pre-swap baseline
+    // stays light after the default flips to dark; Phase 80 re-compares
+    // like-for-like. Registered before setupPhase42Test's login navigation.
+    await page.addInitScript(() => {
+      try {
+        window.localStorage.setItem('id.theme', 'light')
+      } catch {
+        /* storage may be denied in some configs */
+      }
+    })
     await setupPhase42Test({ page })
     await page.setViewportSize({ width: 1280, height: 800 })
   })

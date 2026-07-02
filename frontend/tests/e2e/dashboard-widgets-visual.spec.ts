@@ -39,6 +39,17 @@ const READY_SELECTORS: Record<(typeof WIDGETS)[number][0], string> = {
 }
 
 test.beforeEach(async ({ page }) => {
+  // Phase 77-01 (VERIFY-01): pin id.theme=light so this pre-swap baseline stays
+  // light after the Phase-77 default flips to dark; Phase 80 re-compares
+  // like-for-like. Runs before every navigation, before bootstrap.js reads
+  // id.theme. Locale is pinned to EN via loginForListPages(page, 'en') below.
+  await page.addInitScript(() => {
+    try {
+      window.localStorage.setItem('id.theme', 'light')
+    } catch {
+      /* storage may be denied in some configs */
+    }
+  })
   await page.clock.install({ time: FROZEN_TIME })
   await page.addInitScript((css) => {
     const apply = (): void => {

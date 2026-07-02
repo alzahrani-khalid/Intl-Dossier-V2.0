@@ -11,6 +11,20 @@ const SEEDED_ENGAGEMENT_ID =
   process.env.PHASE_52_FIXTURE_ENGAGEMENT_ID ?? '00000000-0000-0052-0000-000000000001'
 
 test.describe('Phase 52: Tasks tab Kanban visual regression', () => {
+  // Phase 77-01 (VERIFY-01): pin id.theme=light so this pre-swap baseline stays
+  // light after the Phase-77 default flips to dark; Phase 80 re-compares
+  // like-for-like. Runs before each test's goto, before bootstrap.js reads
+  // id.theme. Locale is pinned per-test via `?lng=`.
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      try {
+        window.localStorage.setItem('id.theme', 'light')
+      } catch {
+        /* storage may be denied in some configs */
+      }
+    })
+  })
+
   for (const { dir, viewport } of matrix) {
     test(`tasks-tab ${dir} @ ${viewport.width}x${viewport.height}`, async ({
       page,

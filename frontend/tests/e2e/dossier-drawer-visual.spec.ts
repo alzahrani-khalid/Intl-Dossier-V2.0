@@ -18,6 +18,16 @@ test.describe.configure({ retries: 1 })
 
 test.describe('DossierDrawer — visual regression (D-12)', () => {
   test.beforeEach(async ({ page }) => {
+    // Phase 77-01 (VERIFY-01): pin id.theme=light so this pre-swap baseline
+    // stays light after the Phase-77 default flips to dark; Phase 80
+    // re-compares like-for-like. Locale is pinned per-test via loginForListPages.
+    await page.addInitScript(() => {
+      try {
+        window.localStorage.setItem('id.theme', 'light')
+      } catch {
+        /* storage may be denied in some configs */
+      }
+    })
     await page.clock.install({ time: new Date('2026-04-26T12:00:00Z') })
     await page.setViewportSize({ width: 1280, height: 800 })
   })
