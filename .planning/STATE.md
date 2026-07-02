@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
 status: executing
-last_updated: '2026-07-02T21:29:48.000Z'
-last_activity: 2026-07-02 -- Plan 77-06 complete (TOKEN-06 — Linear primitive re-skin + carve-out resolution; flat cards/buttons, terracotta button shadow removed, hairline borders, token radii, surface-1..4 ladder; 6 live components/ui files migrated to semantic tokens, chart/map kept, 6 dead files skipped; lint + type-check + 319/319 unit + contract 6/6 green)
+last_updated: '2026-07-03T01:20:00.000Z'
+last_activity: 2026-07-03 -- Plan 77-07 complete (TOKEN-04/01/05 — engine collapsed to Linear-only: Direction type → 'linear', extended palette fields promoted to REQUIRED, hue axis fully retired (useHue + directionDefaults deleted, BuildInput.hue + Hue type removed, id.hue removeItem write-back), fonts pruned to 3-family (Inter Variable + JetBrains Mono Variable + Tajawal), ClassificationBar switch → single Linear chip, ThemeErrorBoundary/settings enums/preference-sync fallback → linear, direction-matrix visual spec → linear × {light,dark} (8 PNGs → 2). Commits: 2a084acc/7e1fc845/229a39c8. parity 6 combos + fixture exit 1; type-check + lint + 224 unit + 144 ds/bootstrap + 2/2 playwright replay green; size-limit green)
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 17
-  completed_plans: 15
+  completed_plans: 16
   percent: 33
 ---
 
@@ -25,9 +25,10 @@ See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section
 ## Current Position
 
 Phase: 77 (linear-token-system) — EXECUTING
-Plan: 6 of 8 complete (77-01, 77-02, 77-03, 77-04, 77-05, 77-06); next: 77-07
+Plan: 7 of 8 complete (77-01, 77-02, 77-03, 77-04, 77-05, 77-06, 77-07); next: 77-08
 Status: Executing Phase 77
-Last activity: 2026-07-02 -- Plan 77-06 complete (TOKEN-06 — primitive re-skin + carve-out). Task 1: re-skinned the primitive recipes to Linear — flat cards/buttons (removed the terracotta rgba(190,80,30,.15) Bureau-residue drop shadow on .dir-linear .btn-primary carried through the 77-04 dir-class rename), primary-button hover → var(--accent-hover), tokenised hard-coded recipe radii (.dir-linear .card 12px→--radius-lg, .dir-linear .btn 8px→--radius), surface ladder wired (popover/menu → --surface-3 via --color-popover, drawer/modal → --surface-4 on .dir-linear .drawer + .id-dialog-content). Effective recipes live in styles/list-pages.css (side-effect import), so both it AND index.css were edited (Rule-2 deviation vs the index.css-only files_modified). Task 2: re-counted the carve-out (74 palette-literal lines / 12 files + 20 hex / 4 files — exact match to research), migrated the 6 LIVE files to semantic tokens (blue→info, amber→warn, green→ok, red→danger, grays→ink/surface/line; soft washes via bg-\*/10 opacity), kept chart.tsx + world-map.tsx byte-unchanged (data-viz), skipped the 6 Phase-79-dead animated primitives with annotations, left the eslint carve-out block intact. Full per-item decision table (14 rows) embedded in 77-06-SUMMARY. Carve-out tally 6 migrate / 2 keep / 6 skip — the brief's "7 skipped" is a documented off-by-one (research prose "7 dead files" vs its own arithmetic 25 palette + 10 hex = 6 files). Commits: 385b59ca (recipe CSS), 715c0a97 (component migration). lint (Design Token Check + bootstrap parity) + type-check + vitest unit 319/319 + handoff-css-contract 6/6 all green.
+Last activity: 2026-07-03 -- Plan 77-07 complete (TOKEN-04/01/05 — collapse engine to Linear-only). Task 1 (2a084acc): types.ts Direction → single 'linear' literal, extended palette fields (surface3/4, inkTertiary, lineStrong, accent, semantic, sla, status) promoted to REQUIRED, Hue type + BuildInput.hue removed; directions.ts deleted the 4 retired PALETTES/FONTS + rewrote the header; buildTokens.ts reads literals unconditionally (all hue-math/mode-branch fallbacks gone, --shadow-card unconditionally 'none'); fonts.ts pruned to 5 fontsource imports (Inter Variable + JetBrains Mono Variable + Tajawal 400/500/700); bootstrap.js comment de-named (P/F tables were already linear-only from 77-04); buildTokens.test.ts rewritten (6-case linear matrix). Task 2 (7e1fc845): DesignProvider hue state/LS_HUE/context/setHue removed + safeRemoveItem('id.hue') added to the write-back effect; deleted useHue.ts + directionDefaults.ts (+tests, zero code importers); ThemeErrorBoundary/settings.types/SettingsPage enums + preference-sync:75 fallback → linear; ClassificationBar switch → single Linear .cls-chip (dropped useDesignDirection); comment touch-ups (AppShell/WidgetHeader/preference-storage); DesignProvider/ClassificationBar/AppShell(+a11y) tests updated. Task 3 (229a39c8): qa-sweep-focus-outline.spec → linear × {light,dark} (2 shots, id.theme pinned via hatch.setMode); 8 direction PNGs deleted, 2 linear PNGs captured locally (dark 10.94:1, light 5.53:1) + replayed green without --update-snapshots. Deviations (Rule 2, atomic Direction collapse): App.tsx initialHue prop, applyTokens.test.ts + fonts.test.ts (buildTokens caller + drift guard, not in file list) edited to keep type-check/vitest green. parity 6 combos + coercion probes (fixture exit 1); type-check + full lint + 224 (layout+unit) + 144 (ds/bootstrap) vitest + size-limit all green. Engagement-domain 'ministerial' (engagement.types.ts:62/490 + engagements i18n) verified untouched (Pitfall 3). id.hue/Bureau-prose residuals in design-system/CLAUDE.md deferred to 77-08 DOC-01.
+Prev: 2026-07-02 -- Plan 77-06 complete (TOKEN-06 — primitive re-skin + carve-out; commits 385b59ca/715c0a97; 6 migrate / 2 keep / 6 skip).
 
 ### (superseded) 77-05 activity
 
