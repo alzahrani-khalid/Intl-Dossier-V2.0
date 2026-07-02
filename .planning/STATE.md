@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
 status: executing
-last_updated: '2026-07-03T01:20:00.000Z'
-last_activity: 2026-07-03 -- Plan 77-07 complete (TOKEN-04/01/05 — engine collapsed to Linear-only: Direction type → 'linear', extended palette fields promoted to REQUIRED, hue axis fully retired (useHue + directionDefaults deleted, BuildInput.hue + Hue type removed, id.hue removeItem write-back), fonts pruned to 3-family (Inter Variable + JetBrains Mono Variable + Tajawal), ClassificationBar switch → single Linear chip, ThemeErrorBoundary/settings enums/preference-sync fallback → linear, direction-matrix visual spec → linear × {light,dark} (8 PNGs → 2). Commits: 2a084acc/7e1fc845/229a39c8. parity 6 combos + fixture exit 1; type-check + lint + 224 unit + 144 ds/bootstrap + 2/2 playwright replay green; size-limit green)
+last_updated: '2026-07-02T22:39:29.925Z'
+last_activity: 2026-07-02
 progress:
   total_phases: 6
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 17
-  completed_plans: 16
-  percent: 33
+  completed_plans: 17
+  percent: 50
 ---
 
 # Project State
@@ -24,11 +24,11 @@ See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section
 
 ## Current Position
 
-Phase: 77 (linear-token-system) — EXECUTING
-Plan: 7 of 8 complete (77-01, 77-02, 77-03, 77-04, 77-05, 77-06, 77-07); next: 77-08
-Status: Executing Phase 77
-Last activity: 2026-07-03 -- Plan 77-07 complete (TOKEN-04/01/05 — collapse engine to Linear-only). Task 1 (2a084acc): types.ts Direction → single 'linear' literal, extended palette fields (surface3/4, inkTertiary, lineStrong, accent, semantic, sla, status) promoted to REQUIRED, Hue type + BuildInput.hue removed; directions.ts deleted the 4 retired PALETTES/FONTS + rewrote the header; buildTokens.ts reads literals unconditionally (all hue-math/mode-branch fallbacks gone, --shadow-card unconditionally 'none'); fonts.ts pruned to 5 fontsource imports (Inter Variable + JetBrains Mono Variable + Tajawal 400/500/700); bootstrap.js comment de-named (P/F tables were already linear-only from 77-04); buildTokens.test.ts rewritten (6-case linear matrix). Task 2 (7e1fc845): DesignProvider hue state/LS_HUE/context/setHue removed + safeRemoveItem('id.hue') added to the write-back effect; deleted useHue.ts + directionDefaults.ts (+tests, zero code importers); ThemeErrorBoundary/settings.types/SettingsPage enums + preference-sync:75 fallback → linear; ClassificationBar switch → single Linear .cls-chip (dropped useDesignDirection); comment touch-ups (AppShell/WidgetHeader/preference-storage); DesignProvider/ClassificationBar/AppShell(+a11y) tests updated. Task 3 (229a39c8): qa-sweep-focus-outline.spec → linear × {light,dark} (2 shots, id.theme pinned via hatch.setMode); 8 direction PNGs deleted, 2 linear PNGs captured locally (dark 10.94:1, light 5.53:1) + replayed green without --update-snapshots. Deviations (Rule 2, atomic Direction collapse): App.tsx initialHue prop, applyTokens.test.ts + fonts.test.ts (buildTokens caller + drift guard, not in file list) edited to keep type-check/vitest green. parity 6 combos + coercion probes (fixture exit 1); type-check + full lint + 224 (layout+unit) + 144 (ds/bootstrap) vitest + size-limit all green. Engagement-domain 'ministerial' (engagement.types.ts:62/490 + engagements i18n) verified untouched (Pitfall 3). id.hue/Bureau-prose residuals in design-system/CLAUDE.md deferred to 77-08 DOC-01.
-Prev: 2026-07-02 -- Plan 77-06 complete (TOKEN-06 — primitive re-skin + carve-out; commits 385b59ca/715c0a97; 6 migrate / 2 keep / 6 skip).
+Phase: 77 (linear-token-system) — COMPLETE (8 of 8 plans)
+Plan: 8 of 8 complete (77-01 … 77-08); phase 77 done (DOC-01 closed)
+Status: Phase 77 complete — ready for verify-work / milestone next steps
+Last activity: 2026-07-03 -- Plan 77-08 complete (DOC-01 — design source-of-truth migrated to Linear). Task 1 (63abab7b): rewrote the three CLAUDE.md design sections off Bureau — root /CLAUDE.md Visual Design Source of Truth repointed to frontend/DESIGN.md (handoff dir demoted to historical/superseded, required-reading order → DESIGN.md → src/design-system/CLAUDE.md → closest component, radii 6/8/12, surface-1..4 ladder, line/line-strong hairlines, voice/emoji/date rules kept verbatim); frontend/CLAUDE.md provider tree fixed to live App.tsx (ErrorBoundary→…→DesignProvider(initialDirection="linear",initialMode="dark")→…→DirectionProvider→AppRouter, no RTLWrapper — closes MD-01) + surface-3/4/line-strong/accent-hover/status-1..6 utilities added; frontend/src/design-system/CLAUDE.md rewritten to Linear-single-direction (coercion invariant both layers, three-copy invariant directions.ts↔bootstrap.js↔index.css:root + check-bootstrap-parity guard, file inventory sans directionDefaults/useHue, dark default); useLocale.ts doc comment fixed to the delegated setLocale (closes LO-02). Task 2 (9bc0f3a3): rewrote frontend/DESIGN.md as the Linear spec (321 lines — dark + derived-light token tables transcribed verbatim from directions.ts, semantic/SLA/6-status palettes with measured AA ratios, hairline-strong mapping decision, reserved unmapped extras, Inter/JetBrains Variable type stack + Tajawal RTL cascade, radius 6/8/12, recipe rules, engine contract) + supersession banner atop inteldossier_handoff_design/README.md (only change in that dir). Verify all green: forbidden-token grep 0 across 3 CLAUDE.md; DOC-01 phase-map grep 0; DESIGN.md #5e6ad2 + Inter Variable + dark/light tables + status ratios present, zero "bureau"; 31 DESIGN.md hex match directions.ts (≥10 needed); pre-commit build passed both commits. lint-staged/prettier MM churn reconciled to a clean fixpoint (stale index entries reset; committed HEAD holds canonical prettier versions).
+Prev: 2026-07-03 -- Plan 77-07 complete (TOKEN-04/01/05 — engine collapsed to Linear-only: Direction type → 'linear', hue axis retired, useHue + directionDefaults deleted, 3-family fonts. Commits 2a084acc/7e1fc845/229a39c8).
 
 ### (superseded) 77-05 activity
 

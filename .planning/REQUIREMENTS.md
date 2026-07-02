@@ -56,7 +56,7 @@ Replace the IntelDossier prototype design system with a Linear-derived design la
 
 ### Documentation & Source-of-Truth
 
-- [ ] **DOC-01**: The design source-of-truth is migrated off Bureau — root `/CLAUDE.md` and `frontend/CLAUDE.md` design-system sections are updated to Linear (Bureau-specific rules retired), `frontend/DESIGN.md` (currently the Bureau spec) is rewritten as the Linear spec, and `frontend/design-system/inteldossier_handoff_design/` is retired or repointed so future work follows Linear, not the old prototype
+- [x] **DOC-01**: The design source-of-truth is migrated off Bureau — root `/CLAUDE.md` and `frontend/CLAUDE.md` design-system sections are updated to Linear (Bureau-specific rules retired), `frontend/DESIGN.md` (currently the Bureau spec) is rewritten as the Linear spec, and `frontend/design-system/inteldossier_handoff_design/` is retired or repointed so future work follows Linear, not the old prototype
 
 ## Future Requirements
 
@@ -100,7 +100,7 @@ Every v8.0 requirement maps to exactly one phase. Coverage: 24/24.
 | TOKEN-05    | Phase 77 | Complete |
 | TOKEN-06    | Phase 77 | Complete |
 | FOUC-01     | Phase 77 | Complete |
-| DOC-01      | Phase 77 | Pending  |
+| DOC-01      | Phase 77 | Complete |
 | HEROUI-01   | Phase 78 | Pending  |
 | HEROUI-02   | Phase 78 | Pending  |
 | ACET-01     | Phase 79 | Pending  |
