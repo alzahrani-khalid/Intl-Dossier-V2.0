@@ -10,6 +10,8 @@ Unified intelligence management for diplomatic operations — every relationship
 
 ## Current State
 
+**In progress: v8.0 Linear Design System Migration — Phase 75 complete (2026-07-02).** UI Component & Migration Audit verified 5/5 success criteria: 209 classification rows reconcile to the live 700 non-test component files (175 keep-custom / 28 primitive-replace / 6 block), HeroUI confirmed v3-compound with zero removed-name imports (type-check exit 0), and all 8 Aceternity form components have written behavioral contracts — 7 of 8 found dead (0 external call sites; only SearchableSelect lives, via the UserPicker facade), recorded as Phase 79 rescope input. Next: Phase 76 (RTL Infrastructure Bridge & shadcn Logical Properties).
+
 **Shipped: v7.0 Intelligence Engine — all 7 phases (2026-06-24).** Turned dossiers into a sovereign, Arabic-first intelligence layer: signals triage, clearance-filtered digests + multi-channel alerts (in-app / on-prem SMTP / webhook), a clearance-aware analytic graph (Cmd+K + Network panel), and an on-prem agentic copilot (Mastra + CopilotKit/AG-UI over vLLM/Gemma-4-12B + TEI) that reads and HITL-writes under the caller's JWT — RLS enforcing `sensitivity_level <= clearance` so the agent is incapable by construction of reading above the caller's clearance. AnythingLLM fully retired from the critical path. Audit `gaps_found` with **zero code blockers** (keystone uniform across 11 agent tools, 18/18 cross-phase wirings intact); GAP-1 (digest clearance watermark) fixed at close; EVAL-01/02/03 + AGENT/INFRA live verification carried as deploy-gated deferred items pending the on-prem GPU/TEI stack. 213 commits / 11 days. See `milestones/v7.0-ROADMAP.md` + `milestones/v7.0-MILESTONE-AUDIT.md`.
 
 **Shipped: v6.6 Dossier Workflow Completion — all 6 phases (2026-06-13).** Phase 67 (final) wired per-type Engagements tabs to canonical tables: an org Hosted-engagements section on engagement_dossiers.host_organization_id, a person/EO Participation section on engagement_participants (with the get_person_full recent_engagements RPC repointed off the dead person_engagements plane and the wizard created_by RLS write-drop fixed), and deleted ~42 dead legacy \*DossierDetail files (~9,200 lines). Live-verified on staging (seed→observe→restore, EN+AR), exhaustively code-reviewed (0 critical; 2 warnings + grant least-privilege hardening fixed). Shipped via PRs #56-#60; milestone archived.
@@ -72,6 +74,7 @@ Unified intelligence management for diplomatic operations — every relationship
 
 ### Validated
 
+- ✓ **v8.0 Phase 75 — UI Component & Migration Audit (2026-07-02)** — AUDIT-01..04 validated: full component classification (rulebook + per-directory + per-file tiers, coverage reconciled), HeroUI v3 compound-API confirmation with Phase 78 re-run protocol, v3-removed-names zero-imports confirmation, and 8 Aceternity behavioral contracts + UserPicker facade contract (7/8 dead-code finding feeds Phase 79 rescope). Verification passed 5/5 — see `phases/75-ui-component-migration-audit/75-VERIFICATION.md`.
 - ✓ **v7.0 Intelligence Engine (2026-06-24)** — 38/41 requirements validated: REMED-01..06, SIGNAL-01..06, DIGEST-01..04, ALERT-01..04, GRAPH-01..04, AGENT-01..06, INFRA-01..03, GENUI-01..04, EVAL-04 (AnythingLLM retired). EVAL-01/02/03 (live CI eval thresholds) + AGENT/INFRA live verification remain deploy-gated on the on-prem GPU/TEI stack — see `milestones/v7.0-REQUIREMENTS.md`.
 - ✓ 8 dossier types with CRUD — existing
 - ✓ Dossier-to-dossier relationships and polymorphic documents — existing
@@ -297,4 +300,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-07-02 — v8.0 Linear Design System Migration scoped (phases 75–80) and re-scoped after a pre-execution review (PROJECT/REQUIREMENTS/ROADMAP reconciled to verified codebase reality)._
+_Last updated: 2026-07-02 — Phase 75 (UI Component & Migration Audit) executed and verified 5/5; AUDIT-01..04 validated._
