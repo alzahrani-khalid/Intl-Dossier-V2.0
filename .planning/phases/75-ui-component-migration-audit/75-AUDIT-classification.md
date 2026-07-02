@@ -378,7 +378,86 @@ _One row per top-level directory under `frontend/src/components/` except `ui/` a
 
 _Per-file rows for the two primitive-plausible directories. Filled by plan 75-04._
 
-<!-- FILLED BY PLAN 75-04 -->
+### 6.0 Evidence appendix — Aceternity-derived `ui/` primitive liveness (dated)
+
+Aceternity-derived-liveness loop from RESEARCH "Code Examples", run verbatim from
+`frontend/src`, **2026-07-02**:
+
+```bash
+for c in animated-tooltip background-boxes moving-border floating-dock layout-grid \
+         placeholders-and-vanish-input text-generate-effect world-map expandable-card; do
+  echo -n "$c: "; grep -rl "ui/$c" --include="*.tsx" --include="*.ts" . | grep -v "components/ui/$c" | wc -l | tr -d ' '
+done
+```
+
+Raw output (2026-07-02):
+
+```text
+animated-tooltip: 0
+background-boxes: 0
+moving-border: 0
+floating-dock: 0
+layout-grid: 0
+placeholders-and-vanish-input: 0
+text-generate-effect: 0
+world-map: 1
+expandable-card: 0
+world-map importer: components/geographic-visualization/WorldMapVisualization.tsx
+```
+
+Interpretation: 8 of the 9 Aceternity-derived `ui/` primitives have **0 importers** →
+classified keep-custom with the `dead — delete candidate` Notes advisory (taxonomy never
+extended; RESEARCH Open Question 3). `world-map.tsx` has **1** importer
+(`geographic-visualization/WorldMapVisualization.tsx`) → keep-custom, not a delete candidate.
+
+### 6.1 components/ui/ (73 files)
+
+Sorted per `find frontend/src/components/ui -type f \( -name '*.tsx' -o -name '*.ts' \) ! -name '*.test.*' | sort`.
+Classification keys on imports and rendered output, never on the `heroui-`/`ui/` filename or docstring
+(rulebook e). Direction-owner files (set `dir=`) are keep-custom (rulebook d).
+
+<!-- prettier-ignore -->
+| Surface | Classification | Domain signals (clearance/RTL/flags/dossier-type) | Behaviors the primitive must preserve | Evidence | Notes |
+| --- | --- | --- | --- | --- | --- |
+| components/ui/accordion.tsx | keep-custom (domain-specific) | RTL: direction-owner (dir=) | Radix dir wiring (dir={dir ?? getDocDir()}) must survive reskin | dir= at accordion.tsx:7; @radix-ui/react-accordion | — |
+| components/ui/adaptive-dialog.tsx | keep-custom (domain-specific) | RTL: direction-owner (dir=) | direction-conditional dialog/sheet switch (dir={isRTL?...}) must survive reskin | dir= at adaptive-dialog.tsx:107; useTranslation isRTL; 7 importers | responsive dialog↔sheet composition |
+| components/ui/alert-dialog.tsx | replace-with-shadcn-primitive | none | Radix AlertDialog a11y (role=alertdialog, focus trap, Escape); portal; token overlay/surface | @radix-ui/react-alert-dialog | — |
+| components/ui/alert.tsx | replace-with-shadcn-primitive | none | cva status variants bound to --danger/--warn/--info tokens; role=alert; icon slot | cva import; var()=3 | — |
+| components/ui/animated-tooltip.tsx | keep-custom (domain-specific) | none | — | Aceternity liveness loop 2026-07-02: 0 importers | dead — delete candidate (0 importers; Phase 79/77 input) |
+| components/ui/avatar.tsx | replace-with-shadcn-primitive | none | Radix image/fallback load states; token ring/size variants; radius token | @radix-ui/react-avatar + cva | — |
+| components/ui/background-boxes.tsx | keep-custom (domain-specific) | none | — | Aceternity liveness loop 2026-07-02: 0 importers | dead — delete candidate (0 importers; Phase 79/77 input) |
+| components/ui/badge.tsx | replace-with-shadcn-primitive | none | cva status palette bound to --danger/--warn/--ok/--info @theme utilities; asChild (Slot); badgeVariants export | re-export of HeroUIChip from ./heroui-chip | shim → heroui-chip.tsx (CVA lookalike, no HeroUI) |
+| components/ui/bottom-sheet.tsx | keep-custom (domain-specific) | RTL: consumer (useDirection) | direction-aware drag/position; token surface (var(--*)) must survive reskin | useDirection import; var()=8; 3 importers | mobile sheet composition; no generic HeroUI analog |
+| components/ui/button.tsx | keep-custom (domain-specific) | none | HeroUI v3 Button API + buttonVariants (250+ consumers) — Phase 78 bump target | re-export of HeroUIButton from ./heroui-button | shim → heroui-button.tsx (HeroUI v3 wrapper); Phase 78 surface, not a shadcn target |
+| components/ui/calendar.tsx | replace-with-shadcn-primitive | none | DayPicker month nav; RTL chevron direction; token day/selected states | react-day-picker DayPicker import | — |
+| components/ui/card.tsx | keep-custom (domain-specific) | none | HeroUI v3 Card compound API (Header/Title/Content/Footer) — Phase 78 bump target | re-export from ./heroui-card | shim → heroui-card.tsx (HeroUI v3 wrapper); Phase 78 surface, not a shadcn target |
+| components/ui/chart.tsx | keep-custom (domain-specific) | none | recharts token CSS-var injection (theming layer) must survive reskin | recharts import; ChartContainer/ChartTooltip; 0 importers | token-theming layer; no generic swap target |
+| components/ui/checkbox.tsx | replace-with-shadcn-primitive | none | Radix checked/indeterminate a11y; focus-visible ring token; --accent check color | @radix-ui/react-checkbox; focus-visible + aria | — |
+| components/ui/collapsible.tsx | replace-with-shadcn-primitive | none | Radix open/close a11y + animation state; token | @radix-ui/react-collapsible | — |
+| components/ui/command.tsx | replace-with-shadcn-primitive | none | cmdk keyboard filtering/nav; Radix dialog portal a11y; token surface | @radix-ui/react-dialog + VisuallyHidden | domain CommandPalette lives in keyboard-shortcuts/ (kept there) |
+| components/ui/confirm-remove-button.tsx | keep-custom (domain-specific) | none | AlertDialog confirm flow + i18n copy | imports AlertDialog* from ./alert-dialog; 4 importers | composed confirm pattern; no generic analog |
+| components/ui/content-skeletons.tsx | keep-custom (domain-specific) | none | content-aware skeleton shapes | docstring Content-Aware Skeletons; 2 importers | Skeleton composition; no generic analog |
+| components/ui/context-aware-fab.tsx | keep-custom (domain-specific) | RTL: consumer (useDirection) | direction-aware speed-dial positioning must survive reskin | useDirection import; 1 importer | FAB + speed-dial composition |
+| components/ui/context-menu.tsx | keep-custom (domain-specific) | RTL: direction-owner (dir=) | Radix dir wiring (dir={dir}) must survive reskin | dir= at context-menu.tsx:134; @radix-ui/react-context-menu | — |
+| components/ui/dialog.tsx | replace-with-shadcn-primitive | RTL: consumer (useTranslation) | Radix dialog focus-trap/Escape/portal a11y; RTL close-button side (logical); token overlay | @radix-ui/react-dialog; useTranslation | — |
+| components/ui/drawer.tsx | replace-with-shadcn-primitive | none | vaul drag-dismiss + snap points; portal a11y; token surface | vaul Drawer import; var()=2 | — |
+| components/ui/dropdown-menu.tsx | keep-custom (domain-specific) | RTL: direction-owner (dir=) | Radix dir wiring (dir={dir ?? getDocDir()}) must survive reskin | dir= at dropdown-menu.tsx:9 | — |
+| components/ui/enhanced-progress.tsx | keep-custom (domain-specific) | none | labeled/multi-step progress presentation | docstring Enhanced Progress; 0 importers | composition; no generic analog |
+| components/ui/expandable-card.tsx | keep-custom (domain-specific) | none | — | Aceternity liveness loop 2026-07-02: 0 importers | dead — delete candidate (0 importers; Phase 79/77 input) |
+| components/ui/file-upload.tsx | keep-custom (domain-specific) | none | drag-drop upload + preview state | motion/react import; 0 importers | upload composition; no generic analog |
+| components/ui/floating-action-button.tsx | keep-custom (domain-specific) | RTL: consumer (useDirection) | direction-aware FAB placement must survive reskin | useDirection import; 1 importer | FAB composition |
+| components/ui/floating-dock.tsx | keep-custom (domain-specific) | none | — | Aceternity liveness loop 2026-07-02: 0 importers | dead — delete candidate (0 importers; Phase 79/77 input) |
+| components/ui/form-wizard.tsx | keep-custom (domain-specific) | dossier field: sensitivity_level; RTL: consumer (useDirection) | sensitivity_level field branching + direction-aware step nav must survive reskin | sensitivity_level at form-wizard.tsx:469,564; 31 importers | domain field handling (sensitivity_level) |
+| components/ui/form.tsx | replace-with-shadcn-primitive | none | RHF Controller context; aria-describedby/aria-invalid wiring; FormMessage error announce | @radix-ui/react-label + react-hook-form; aria=3 | shadcn Form primitive |
+| components/ui/heroui-button.tsx | keep-custom (domain-specific) | none | HeroUI v3 Button primitive + cva variant/size/asChild API — Phase 78 bump target | @heroui/react Button import | HeroUI v3 wrapper — Phase 78 surface, not a shadcn target |
+| components/ui/heroui-card.tsx | keep-custom (domain-specific) | none | HeroUI v3 Card primitive — Phase 78 bump target | @heroui/react Card import | HeroUI v3 wrapper — Phase 78 surface, not a shadcn target |
+| components/ui/heroui-chip.tsx | replace-with-shadcn-primitive | none | cva status palette bound to --danger/--warn/--ok/--info @theme utilities; asChild (Slot); badgeVariants API | cva + @radix-ui/react-slot; NO @heroui import | lookalike — stale docstring claims Real @heroui/react Chip; actually CVA+Slot (Phase 78 docstring cleanup) |
+| components/ui/heroui-forms.tsx | keep-custom (domain-specific) | RTL: consumer | HeroUI v3 compound fields (TextField/Input/Checkbox.Control/Switch.Thumb) — Phase 78 bump target | @heroui/react import (TextField/Input/Select/Checkbox/Switch) | HeroUI v3 wrapper — Phase 78 surface, not a shadcn target |
+| components/ui/heroui-modal.tsx | keep-custom (domain-specific) | RTL: consumer | HeroUI v3 Modal compound (Backdrop/Container/Dialog/Header/Body/Footer) + useOverlayState — Phase 78 bump target | @heroui/react Modal import | HeroUI v3 wrapper — Phase 78 surface, not a shadcn target |
+| components/ui/heroui-skeleton.tsx | keep-custom (domain-specific) | none | HeroUI v3 Skeleton primitive + preset compositions — Phase 78 bump target | @heroui/react Skeleton import | HeroUI v3 wrapper — Phase 78 surface, not a shadcn target |
+| components/ui/heroui-switch.tsx | replace-with-shadcn-primitive | RTL: consumer (logical margins) | checked/onCheckedChange controlled API (51 consumers); RTL-aware thumb positioning (ms- logical margins); token track/thumb colors (var(--*)) | plain button+span; NO @heroui import; var()=4 | lookalike — docstring notes "no @heroui/react dependency" |
+
+<!-- UI ROWS 38-73 + FORMS TIER: PLAN 75-04 TASK 2 -->
 
 ---
 
