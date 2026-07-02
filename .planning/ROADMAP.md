@@ -358,7 +358,7 @@ Plans:
 | 68-74 | v7.0 | 49/49 | Shipped | 2026-06-24 |
 | 75 | v8.0 | 4/4 | Complete    | 2026-07-02 |
 | 76 | v8.0 | 5/5 | Complete   | 2026-07-02 |
-| 77 | v8.0 | 0/? | Not started | - |
+| 77 | v8.0 | 1/8 | In Progress|  |
 | 78 | v8.0 | 0/? | Not started | - |
 | 79 | v8.0 | 0/? | Not started | - |
 | 80 | v8.0 | 0/? | Not started | - |

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
 status: executing
-last_updated: '2026-07-02T14:52:12.428Z'
-last_activity: 2026-07-02 -- Plan 76-03 complete (RTLB-01/02 Radix wrappers inherit direction context; portal e2e proof; react-direction dedupe fix)
+last_updated: '2026-07-02T18:26:18.801Z'
+last_activity: 2026-07-02 -- Phase 77 execution started
 progress:
   total_phases: 6
-  completed_phases: 1
-  total_plans: 9
-  completed_plans: 7
-  percent: 17
+  completed_phases: 2
+  total_plans: 17
+  completed_plans: 9
+  percent: 33
 ---
 
 # Project State
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section added)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 76 — rtl-infrastructure-bridge-shadcn-logical-properties
+**Current focus:** Phase 77 — linear-token-system
 
 ## Current Position
 
-Phase: 77 (linear-token-system) — PLANNED (ready to execute)
-Plan: 0 of 8 executed (8 plans, 6 waves; plan-checker PASS)
-Status: Phase 76 COMPLETE (verified 5/5). Phase 77 PLANNED — research (fable) + 8 PLAN.md files (fable) + Nyquist VALIDATION.md; opus plan-checker verdict PASS (0 blocking, 4 advisory). Wave graph: W1 {77-01 VERIFY-01 baseline gate [autonomous:false], 77-02 FOUC byte-match guard} → W2 {77-03 Linear token sets + TOKEN-03 palettes} → W3 {77-04 the atomic switch: id.dir dual-layer coercion + bootstrap byte-match + fonts} → W4 {77-05 switcher retirement, 77-06 ui/\* re-skin} → W5 {77-07} → W6 {77-08 DOC-01}. Ready for /gsd:execute-phase 77.
-Last activity: 2026-07-02 -- Phase 77 planned (8 plans/6 waves, checker PASS); DOC-01 (77-08) folds in the P76 doc-drift carryover (MD-01 RTLWrapper prose + LO-02 useLocale comment).
+Phase: 77 (linear-token-system) — EXECUTING
+Plan: 1 of 8
+Status: Executing Phase 77
+Last activity: 2026-07-02 -- Plan 77-02 complete (FOUC-01 byte-match CI guard: scripts/check-bootstrap-parity.mjs + bad-bootstrap.js fixture, wired into pnpm lint + CI Lint job; both polarities proven, 24 combos green)
 Follow-ups (P76 advisory, still open): LO-01 check-duplicate-rtl.mjs empty-root guard; LO-03 latent render-time document.dir reader (MD-01/LO-02 now owned by 77-08 DOC-01).
 
 ## Quick Tasks Completed
