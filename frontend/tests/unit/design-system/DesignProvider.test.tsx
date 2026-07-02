@@ -1,13 +1,12 @@
 /**
  * Phase 33 plan 33-02 — DesignProvider unit tests.
  *
- * Exercises the six behaviours listed in the plan's test plan:
+ * Exercises the provider behaviours (Phase 77: hue axis retired):
  *   1. Initial render writes tokens to :root
- *   2. setDirection → data-direction + localStorage persist
+ *   2. setDirection → data-direction + localStorage persist (Linear-only)
  *   3. setMode → .dark class toggles on <html>
- *   4. setHue → --sla-risk re-derives with (h+55)%360
- *   5. setDensity → --row-h reflects density preset
- *   6. `storage` event from another tab updates state
+ *   4. setDensity → --row-h reflects density preset
+ *   5. `storage` event from another tab updates state
  *
  * Tests also verify each hook throws when used outside the provider.
  */
@@ -20,19 +19,13 @@ import { DesignProvider } from '@/design-system/DesignProvider'
 import { useDensity } from '@/design-system/hooks/useDensity'
 import { useDesignDirection } from '@/design-system/hooks/useDesignDirection'
 import { useDesignTokens } from '@/design-system/hooks/useDesignTokens'
-import { useHue } from '@/design-system/hooks/useHue'
 import { useMode } from '@/design-system/hooks/useMode'
 
 // Plan 77-04: direction is a constant 'linear' regardless of initialDirection/
 // stored id.dir. initialMode="light" here exercises the light Linear token set;
 // the dark-default and light-preservation cases use a bare provider below.
 const wrapper = ({ children }: { children: ReactNode }) => (
-  <DesignProvider
-    initialDirection="linear"
-    initialMode="light"
-    initialHue={22}
-    initialDensity="comfortable"
-  >
+  <DesignProvider initialDirection="linear" initialMode="light" initialDensity="comfortable">
     {children}
   </DesignProvider>
 )
@@ -92,6 +85,14 @@ describe('DesignProvider — initial render', () => {
     expect(result.current.direction).toBe('linear')
   })
 
+  it('removes a retired id.hue key on mount (Phase 77 — hue axis retired)', () => {
+    localStorage.setItem('id.hue', '200')
+
+    renderHook(() => useDesignTokens(), { wrapper })
+
+    expect(localStorage.getItem('id.hue')).toBeNull()
+  })
+
   it('defaults to dark mode when id.theme is unset (Linear-canonical)', () => {
     const { result } = renderHook(() => useMode(), { wrapper: bareWrapper })
 
@@ -118,16 +119,16 @@ describe('DesignProvider — setters', () => {
     localStorage.clear()
   })
 
-  it('setDirection updates state, data-direction attribute, and localStorage', () => {
+  it('setDirection persists the Linear direction + data-direction attribute', () => {
     const { result } = renderHook(() => useDesignDirection(), { wrapper })
 
     act(() => {
-      result.current.setDirection('situation')
+      result.current.setDirection('linear')
     })
 
-    expect(result.current.direction).toBe('situation')
-    expect(document.documentElement.getAttribute('data-direction')).toBe('situation')
-    expect(localStorage.getItem('id.dir')).toBe('situation')
+    expect(result.current.direction).toBe('linear')
+    expect(document.documentElement.getAttribute('data-direction')).toBe('linear')
+    expect(localStorage.getItem('id.dir')).toBe('linear')
   })
 
   it('setMode("dark") adds .dark class to <html> and persists id.theme', () => {
@@ -157,24 +158,10 @@ describe('DesignProvider — setters', () => {
     expect(document.documentElement.classList.contains('dark')).toBe(false)
   })
 
-  it('setHue does not reparameterize --sla-risk on linear (hue-independent literal)', () => {
-    // Plan 77-04: linear SLA colors are verbatim palette literals, not hue-math.
-    const hookResult = renderHook(
-      () => ({
-        hue: useHue(),
-        tokens: useDesignTokens(),
-      }),
-      { wrapper },
-    )
-
-    const before = hookResult.result.current.tokens['--sla-risk']
-
-    act(() => {
-      hookResult.result.current.hue.setHue(200)
-    })
-
-    expect(hookResult.result.current.tokens['--sla-risk']).toBe(before)
-    expect(hookResult.result.current.tokens['--sla-risk']).not.toContain('oklch')
+  it('linear SLA colors are verbatim palette literals, not hue-math', () => {
+    const { result } = renderHook(() => useDesignTokens(), { wrapper })
+    expect(result.current['--sla-risk']).not.toContain('oklch')
+    expect(result.current['--sla-risk']).toMatch(/^#[0-9a-f]{6}$/i)
   })
 
   it('setDensity("dense") updates --row-h to 32px and data-density attribute', () => {
@@ -194,10 +181,10 @@ describe('DesignProvider — setters', () => {
     const listener = vi.fn()
     window.addEventListener('designChange', listener)
 
-    const { result } = renderHook(() => useDesignDirection(), { wrapper })
+    const { result } = renderHook(() => useDensity(), { wrapper })
 
     act(() => {
-      result.current.setDirection('ministerial')
+      result.current.setDensity('dense')
     })
 
     expect(listener).toHaveBeenCalled()
@@ -274,10 +261,6 @@ describe('DesignProvider — hook guards', () => {
 
   it('useMode throws outside provider', () => {
     expect(() => renderHook(() => useMode())).toThrow(/useMode must be used within/)
-  })
-
-  it('useHue throws outside provider', () => {
-    expect(() => renderHook(() => useHue())).toThrow(/useHue must be used within/)
   })
 
   it('useDensity throws outside provider', () => {

@@ -6,7 +6,7 @@
  *
  *   <Sidebar />           — 256px column at ≥1025px; overlay drawer below
  *   <Topbar />            — 56px horizontal row, 7 slots, hamburger below lg
- *   <ClassificationBar /> — chancery/situation banner OR ministerial/bureau chip
+ *   <ClassificationBar /> — Linear classification chip (accent dot + label)
  *
  * Layout contract (UI-SPEC §"Layout Tokens — Grid" + §"Responsive Contracts"):
  *
@@ -60,7 +60,7 @@
  *     design-system hook is `useDesignDirection` — Phase 33 renamed it to
  *     avoid collision with the DOM-level `@/hooks/useDirection` which only
  *     reads `document.dir`. We consume `useDesignDirection` here so the
- *     Phase-33 direction (chancery/situation/…) flows into downstream
+ *     Phase-33 direction (Linear) flows into downstream
  *     children via React context, and the Radix direction context
  *     (`ui/direction.tsx`) independently feeds the physical-placement flip.
  *

@@ -1,18 +1,16 @@
 /**
- * ClassificationBar.test.tsx — Phase 36 SHELL-03 Wave 1 GREEN implementation.
+ * ClassificationBar.test.tsx — Phase 77 (linear-token-system) collapsed reality.
  *
- * Titles match VALIDATION.md substrings:
- *   - 'visibility gate'
- *   - 'chancery marginalia'
- *   - 'situation ribbon'
- *   - 'chip variants'
+ * The former direction-matrix (chancery marginalia / situation ribbon /
+ * ministerial+bureau chip) is gone — the single-direction engine renders the
+ * one Linear `.cls-chip` variant. These tests cover the visibility gate, the
+ * chip shape, and the classification-level marker.
  *
  * NOTES ON MOCKING:
  *   - The global `tests/setup.ts` stubs `react-i18next` so `t(key)` returns
  *     the raw key (identity fallback). Good enough for structural assertions.
- *   - `useClassification` / `useDesignDirection` are mocked at the module
- *     level so each test controls its own slice of state without a full
- *     `<DesignProvider>` tree.
+ *   - `useClassification` is mocked at the module level so each test controls
+ *     the gate without a full `<DesignProvider>` tree.
  *   - `useAuthStore` is mocked to supply a minimal user so `getInitials`
  *     has something to chew on.
  */
@@ -24,7 +22,6 @@ import { render } from '@testing-library/react'
 // Module mocks — MUST be declared before `import { ClassificationBar }`.
 vi.mock('@/design-system/hooks', () => ({
   useClassification: vi.fn(() => ({ classif: true, setClassif: vi.fn() })),
-  useDesignDirection: vi.fn(() => ({ direction: 'chancery', setDirection: vi.fn() })),
 }))
 
 vi.mock('@/store/authStore', () => ({
@@ -33,19 +30,15 @@ vi.mock('@/store/authStore', () => ({
   ),
 }))
 
-import { useClassification, useDesignDirection } from '@/design-system/hooks'
+import { useClassification } from '@/design-system/hooks'
 import { ClassificationBar } from './ClassificationBar'
 
 beforeEach(() => {
   vi.clearAllMocks()
   // Ensure html[data-classification] is set so readLevel returns a deterministic value.
   document.documentElement.dataset.classification = 'restricted'
-  // Default: gate is open + chancery direction (individual tests override as needed).
+  // Default: gate is open (individual tests override as needed).
   vi.mocked(useClassification).mockReturnValue({ classif: true, setClassif: vi.fn() })
-  vi.mocked(useDesignDirection).mockReturnValue({
-    direction: 'chancery',
-    setDirection: vi.fn(),
-  })
 })
 
 function renderBar(): ReturnType<typeof render> {
@@ -59,55 +52,20 @@ describe('ClassificationBar', () => {
     expect(container.firstChild).toBeNull()
   })
 
-  it('chancery marginalia — italic em-dash-wrapped serif line', () => {
-    vi.mocked(useDesignDirection).mockReturnValue({
-      direction: 'chancery',
-      setDirection: vi.fn(),
-    })
+  it('linear chip — renders .cls-chip with an accent dot in normal flow', () => {
     const { container } = renderBar()
-    const el = container.querySelector('.cls-marginalia')
-    expect(el).not.toBeNull()
-    expect(el!.className).toMatch(/\bitalic\b/)
-    expect(el!.textContent ?? '').toMatch(/^—[\s\S]+—$/)
-  })
-
-  it('situation ribbon — full-width accent banner with uppercase mono text', () => {
-    vi.mocked(useDesignDirection).mockReturnValue({
-      direction: 'situation',
-      setDirection: vi.fn(),
-    })
-    const { container } = renderBar()
-    const el = container.querySelector('.cls-ribbon')
-    expect(el).not.toBeNull()
-    expect(el!.className).toMatch(/bg-\[var\(--accent\)\]/)
-    expect(el!.className).toMatch(/\buppercase\b/)
-    expect(el!.className).toMatch(/font-mono/)
+    const chip = container.querySelector('.cls-chip')
+    expect(chip).not.toBeNull()
+    expect(chip!.className).not.toMatch(/\babsolute\b/)
+    const dot = chip!.querySelector('span.bg-\\[var\\(--accent\\)\\]')
+    expect(dot).not.toBeNull()
   })
 
   it('classification bootstrap marker — show/hide toggles do not render as levels', () => {
     document.documentElement.dataset.classification = 'show'
-    vi.mocked(useDesignDirection).mockReturnValue({
-      direction: 'situation',
-      setDirection: vi.fn(),
-    })
     const { container } = renderBar()
     const text = container.textContent ?? ''
     expect(text).toContain('RESTRICTED')
     expect(text).not.toContain('SHOW')
-  })
-
-  it('chip variants — ministerial and bureau both render .cls-chip with accent dot', () => {
-    for (const direction of ['ministerial', 'bureau'] as const) {
-      vi.mocked(useDesignDirection).mockReturnValue({ direction, setDirection: vi.fn() })
-      const { container, unmount } = renderBar()
-      const chip = container.querySelector('.cls-chip')
-      expect(chip, `chip missing for ${direction}`).not.toBeNull()
-      expect(chip!.className, `chip should remain in normal document flow for ${direction}`).not.toMatch(
-        /\babsolute\b/,
-      )
-      const dot = chip!.querySelector('span.bg-\\[var\\(--accent\\)\\]')
-      expect(dot, `accent dot missing for ${direction}`).not.toBeNull()
-      unmount()
-    }
   })
 })

@@ -72,7 +72,7 @@ export function usePreferenceSync(userId?: string) {
       // Then sync to Supabase
       const upsertData: Partial<UserPreference> = {
         user_id: userId,
-        theme: preferences.theme || 'chancery',
+        theme: preferences.theme || 'linear',
         color_mode: preferences.colorMode || 'light',
         language: preferences.language || 'en',
       }

@@ -38,7 +38,6 @@ function App() {
             <DesignProvider
               initialDirection="linear"
               initialMode="dark"
-              initialHue={32}
               initialDensity="comfortable"
             >
               <TweaksDisclosureProvider>

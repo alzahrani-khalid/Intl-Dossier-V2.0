@@ -50,7 +50,7 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 vi.mock('@/design-system/hooks', () => ({
-  useDesignDirection: vi.fn(() => ({ direction: 'chancery', setDirection: vi.fn() })),
+  useDesignDirection: vi.fn(() => ({ direction: 'linear', setDirection: vi.fn() })),
   useMode: vi.fn(() => ({ mode: 'light', setMode: vi.fn() })),
   useLocale: vi.fn(() => ({ locale: 'en', setLocale: vi.fn() })),
   useClassification: vi.fn(() => ({ classif: true, setClassif: vi.fn() })),

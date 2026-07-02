@@ -2,9 +2,10 @@
  * DesignProvider — runtime wiring for the Phase 33 token engine.
  *
  * Responsibilities (see plan 33-02):
- *   1. Holds the four design-state primitives: direction, mode, hue, density.
+ *   1. Holds the design-state primitives: direction, mode, density (Phase 77
+ *      retired the hue axis — accent is a verbatim Linear literal).
  *   2. Persists each change to `localStorage` under the canonical keys
- *      `id.dir`, `id.theme`, `id.hue`, `id.density` (33-03 bootstrap reads these).
+ *      `id.dir`, `id.theme`, `id.density` (33-03 bootstrap reads these).
  *   3. Re-derives the full `TokenSet` via the pure `buildTokens` whenever any
  *      primitive changes, then calls `applyTokens` to flush to `:root`.
  *   4. Toggles the `.dark` class on `document.documentElement` so HeroUI v3's
@@ -24,7 +25,7 @@ import React, { createContext, useCallback, useEffect, useMemo, useState } from 
 
 import { applyTokens } from './tokens/applyTokens'
 import { buildTokens } from './tokens/buildTokens'
-import type { Density, Direction, Hue, Mode, TokenSet } from './tokens/types'
+import type { Density, Direction, Mode, TokenSet } from './tokens/types'
 import { wipeLegacyThemeKeys } from '@/utils/storage/preference-storage'
 
 // ----------------------------------------------------------------------------
@@ -32,7 +33,6 @@ import { wipeLegacyThemeKeys } from '@/utils/storage/preference-storage'
 // ----------------------------------------------------------------------------
 const LS_DIR = 'id.dir'
 const LS_MODE = 'id.theme'
-const LS_HUE = 'id.hue'
 const LS_DENSITY = 'id.density'
 const LS_CLASSIF = 'id.classif'
 const LS_LOCALE = 'id.locale'
@@ -58,13 +58,6 @@ const isMode = (value: unknown): value is Mode => value === 'light' || value ===
 const isDensity = (value: unknown): value is Density =>
   value === 'comfortable' || value === 'compact' || value === 'dense'
 
-const parseHue = (value: string | null): number | null => {
-  if (value === null || value === '') return null
-  const n = Number(value)
-  if (!Number.isFinite(n)) return null
-  return n
-}
-
 const safeGetItem = (key: string): string | null => {
   try {
     return typeof localStorage !== 'undefined' ? localStorage.getItem(key) : null
@@ -80,6 +73,16 @@ const safeSetItem = (key: string, value: string): void => {
     }
   } catch (err) {
     console.warn('DesignProvider: failed to persist', key, err)
+  }
+}
+
+const safeRemoveItem = (key: string): void => {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem(key)
+    }
+  } catch (err) {
+    console.warn('DesignProvider: failed to remove', key, err)
   }
 }
 
@@ -112,24 +115,21 @@ function readDensityValue(): Density | null {
 export interface DesignTestHatch {
   setDirection: (d: Direction) => void
   setMode: (m: Mode) => void
-  setHue: (h: Hue) => void
   setDensity: (d: Density) => void
 }
 
 // ----------------------------------------------------------------------------
-// Context shape — consumed by hooks in ./hooks/use{Direction,Mode,Hue,Density,Tokens}.ts
+// Context shape — consumed by hooks in ./hooks/use{Direction,Mode,Density,Tokens}.ts
 // ----------------------------------------------------------------------------
 export interface DesignContextValue {
   direction: Direction
   mode: Mode
-  hue: Hue
   density: Density
   classif: boolean
   locale: Locale
   tokens: TokenSet
   setDirection: (d: Direction) => void
   setMode: (m: Mode) => void
-  setHue: (h: Hue) => void
   setDensity: (d: Density) => void
   setClassif: (v: boolean) => void
   setLocale: (l: Locale) => void
@@ -139,7 +139,6 @@ export interface DesignProviderProps {
   children: React.ReactNode
   initialDirection?: Direction
   initialMode?: Mode
-  initialHue?: Hue
   initialDensity?: Density
   initialClassif?: boolean
   initialLocale?: Locale
@@ -157,7 +156,6 @@ export function DesignProvider({
   // stored/passed retired direction must never reach first paint (TOKEN-04). It is
   // intentionally not destructured so it cannot be read by mistake.
   initialMode = 'dark',
-  initialHue = 32,
   initialDensity = 'comfortable',
   initialClassif = false,
   initialLocale = 'en',
@@ -176,11 +174,6 @@ export function DesignProvider({
   const [mode, setModeState] = useState<Mode>(() => {
     const stored = safeGetItem(LS_MODE)
     return isMode(stored) ? stored : initialMode
-  })
-
-  const [hue, setHueState] = useState<Hue>(() => {
-    const parsed = parseHue(safeGetItem(LS_HUE))
-    return parsed === null ? initialHue : parsed
   })
 
   const [density, setDensityState] = useState<Density>(() => {
@@ -212,14 +205,17 @@ export function DesignProvider({
   // tab does not survive, and raw id.dir readers see 'linear'. Kept OUT of the
   // lazy initializer (StrictMode double-invokes it — no writes in initializers).
   // Idempotent: re-reading 'linear' is a no-op.
+  // Also drop the retired hue localStorage key (Phase 77 — the hue axis is gone;
+  // accent is a verbatim Linear literal). One-time try-guarded stale-key cleanup.
   useEffect(() => {
     if (safeGetItem(LS_DIR) !== 'linear') safeSetItem(LS_DIR, 'linear')
+    safeRemoveItem('id.hue')
   }, [])
 
-  // Pure derivation — one `TokenSet` per {direction, mode, hue, density}.
+  // Pure derivation — one `TokenSet` per {direction, mode, density}.
   const tokens = useMemo<TokenSet>(
-    () => buildTokens({ direction, mode, hue, density }),
-    [direction, mode, hue, density],
+    () => buildTokens({ direction, mode, density }),
+    [direction, mode, density],
   )
 
   // Flush tokens to :root whenever they change. Disposer restores prior values
@@ -284,12 +280,6 @@ export function DesignProvider({
     window.dispatchEvent(new CustomEvent('designChange', { detail: { mode: m } }))
   }, [])
 
-  const setHue = useCallback((h: Hue): void => {
-    setHueState(h)
-    safeSetItem(LS_HUE, String(h))
-    window.dispatchEvent(new CustomEvent('designChange', { detail: { hue: h } }))
-  }, [])
-
   const setDensity = useCallback((d: Density): void => {
     setDensityState(d)
     safeSetItem(LS_DENSITY, d)
@@ -327,7 +317,6 @@ export function DesignProvider({
     ;(window as unknown as { __design: DesignTestHatch }).__design = {
       setDirection,
       setMode,
-      setHue,
       setDensity,
     }
     return (): void => {
@@ -337,7 +326,7 @@ export function DesignProvider({
         /* ignore */
       }
     }
-  }, [setDirection, setMode, setHue, setDensity])
+  }, [setDirection, setMode, setDensity])
 
   // --------------------------------------------------------------------------
   // Cross-tab sync — mirror localStorage writes from other tabs into state.
@@ -348,9 +337,6 @@ export function DesignProvider({
         setDirectionState(event.newValue)
       } else if (event.key === LS_MODE && isMode(event.newValue)) {
         setModeState(event.newValue)
-      } else if (event.key === LS_HUE) {
-        const parsed = parseHue(event.newValue)
-        if (parsed !== null) setHueState(parsed)
       } else if (event.key === LS_DENSITY && isDensity(event.newValue)) {
         setDensityState(event.newValue)
       } else if (event.key === LS_CLASSIF) {
@@ -371,14 +357,12 @@ export function DesignProvider({
     () => ({
       direction,
       mode,
-      hue,
       density,
       classif,
       locale,
       tokens,
       setDirection,
       setMode,
-      setHue,
       setDensity,
       setClassif,
       setLocale,
@@ -386,14 +370,12 @@ export function DesignProvider({
     [
       direction,
       mode,
-      hue,
       density,
       classif,
       locale,
       tokens,
       setDirection,
       setMode,
-      setHue,
       setDensity,
       setClassif,
       setLocale,

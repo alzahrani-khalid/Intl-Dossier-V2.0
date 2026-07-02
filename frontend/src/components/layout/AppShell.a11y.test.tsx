@@ -51,7 +51,7 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 vi.mock('@/design-system/hooks', () => ({
-  useDesignDirection: vi.fn(() => ({ direction: 'chancery', setDirection: vi.fn() })),
+  useDesignDirection: vi.fn(() => ({ direction: 'linear', setDirection: vi.fn() })),
   useMode: vi.fn(() => ({ mode: 'light', setMode: vi.fn() })),
   useLocale: vi.fn(() => ({ locale: 'en', setLocale: vi.fn() })),
   useClassification: vi.fn(() => ({ classif: true, setClassif: vi.fn() })),
@@ -78,7 +78,7 @@ vi.mock('@/store/authStore', () => ({
 import { useDesignDirection, useLocale, useClassification } from '@/design-system/hooks'
 import { AppShell } from './AppShell'
 
-type Direction = 'chancery' | 'situation' | 'ministerial' | 'bureau'
+type Direction = 'linear'
 type Locale = 'en' | 'ar'
 
 beforeEach(() => {
@@ -111,15 +111,10 @@ function renderMatrix(direction: Direction, locale: Locale): ReturnType<typeof r
 }
 
 describe('AppShell axe-core', () => {
+  // Phase 77 — single-direction engine; the a11y matrix is Linear × {en, ar}.
   const combos: Array<[Direction, Locale]> = [
-    ['chancery', 'en'],
-    ['chancery', 'ar'],
-    ['situation', 'en'],
-    ['situation', 'ar'],
-    ['ministerial', 'en'],
-    ['ministerial', 'ar'],
-    ['bureau', 'en'],
-    ['bureau', 'ar'],
+    ['linear', 'en'],
+    ['linear', 'ar'],
   ]
 
   it.each(combos)('has no serious/critical violations in %s × %s', async (direction, locale) => {

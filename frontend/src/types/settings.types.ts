@@ -80,7 +80,8 @@ export const generalSettingsSchema = z.object({
  */
 export const appearanceSettingsSchema = z.object({
   color_mode: z.enum(['light', 'dark', 'system']),
-  theme: z.enum(['chancery', 'situation', 'ministerial', 'bureau', 'linear']),
+  // Phase 77 — single-direction engine; `theme` is Linear-only (Direction = 'linear').
+  theme: z.literal('linear'),
   display_density: z.enum(['compact', 'comfortable', 'dense']),
 })
 
@@ -193,7 +194,7 @@ export const defaultUserSettings: UserSettings = {
 
   // Appearance
   color_mode: 'system',
-  theme: 'chancery',
+  theme: 'linear',
   display_density: 'comfortable',
 
   // Notifications

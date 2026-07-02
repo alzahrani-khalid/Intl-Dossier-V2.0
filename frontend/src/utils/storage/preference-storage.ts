@@ -6,8 +6,8 @@
  *   - `wipeLegacyThemeKeys()` is run once on DesignProvider mount (D-10) to
  *     clear keys written by the removed legacy theme system (`theme`,
  *     `colorMode`, `theme-preference`, `dossier.theme`). The D-16 engine
- *     writes its own canonical keys (`id.dir`, `id.theme`, `id.hue`,
- *     `id.density`) directly from DesignProvider. The `user-preferences`
+ *     writes its own canonical keys (`id.dir`, `id.theme`, `id.density`)
+ *     directly from DesignProvider. The `user-preferences`
  *     blob here is owned by preference-sync and is NOT touched by the wipe.
  */
 
@@ -32,9 +32,9 @@ export function wipeLegacyThemeKeys(): void {
 }
 
 export interface StoredPreferences {
-  // `theme` kept as plain string: legacy blobs may hold old names (canvas/azure/…);
-  // new blobs hold Direction values (chancery/situation/ministerial/bureau). The
-  // design-system layer owns interpretation. Phase 33 D-10 wipe (below) removes
+  // `theme` kept as plain string: legacy blobs may hold old names (canvas/azure/…
+  // or the four retired directions); new blobs hold the Direction value ('linear').
+  // The design-system layer owns interpretation. Phase 33 D-10 wipe (below) removes
   // the old keys on first load after deploy.
   theme: string
   colorMode: 'light' | 'dark'

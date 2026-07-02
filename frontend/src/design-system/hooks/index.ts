@@ -7,7 +7,6 @@
 
 export { useDesignDirection } from './useDesignDirection'
 export { useMode } from './useMode'
-export { useHue } from './useHue'
 export { useDensity } from './useDensity'
 export { useDesignTokens } from './useDesignTokens'
 export { useClassification } from './useClassification'
