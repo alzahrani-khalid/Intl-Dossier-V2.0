@@ -2,15 +2,16 @@
 gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
-status: executing
-last_updated: '2026-07-03T02:50:00.000Z'
+status: ready_to_plan
+last_updated: 2026-07-02T23:51:18.665Z
 last_activity: 2026-07-03
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 17
-  completed_plans: 17
+  completed_plans: 67
   percent: 50
+stopped_at: Phase 77 complete (9/8) — ready to discuss Phase 78
 ---
 
 # Project State
@@ -20,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section added)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 77 — linear-token-system
+**Current focus:** Phase 78 — heroui v3 api audit & bump
 
 ## Current Position
 
-Phase: 77 (linear-token-system) — COMPLETE (8 of 8 plans)
-Plan: 8 of 8 complete (77-01 … 77-08); phase 77 done (DOC-01 closed)
-Status: Phase 77 complete + code-review gap fixes applied (H1/M1/M2) — ready for verify-work / milestone next steps
-Last activity: 2026-07-03 -- Phase 77 code-review gap fix (advisory 77-REVIEW.md — dark-accent WCAG AA). H1: dark `--accent-soft` was the verbatim primary-focus mid-tone `#5e69d1` used as a text background with `--accent-ink #98a6ea` on it = only 2.03:1; re-derived with culori to `#242947` (accent-tinted dark wash, oklch L0.29 C0.06 h275) → 6.05:1 (AA), changed in all three byte-matched copies (directions.ts + bootstrap.js + index.css :root), `--accent-ink` kept verbatim (8.14:1 on surface), parity guard stays green. M1: extended contrast.test.ts to gate accent.ink-on-{surface,accent.soft}, sidebarInk-on-sidebar, and sla.{ok,risk,bad} on {surface,own-soft} in BOTH modes (68 assertions). M2: `--accent #5e6ad2` (4.05:1 dark / 4.34:1 light on surface) rerouted to `text-accent-ink` for 69 genuine body-text/link/selected-label usages across 49 files; badge chips, icon-tint maps, large headings, and fill step indicators left on `--accent` (verbatim brand fill unchanged). Gates green: contrast+design-system+bootstrap tests (162), parity exit 0 / fixture exit 1, lint, type-check, size-limit. Commits 925c0b3a (H1+M1), c123a6c1 (M2). See 77-GAPFIX-SUMMARY.md.
+Phase: 78 of 8 (heroui v3 api audit & bump)
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-07-02
 Prev: 2026-07-03 -- Plan 77-08 complete (DOC-01 — design source-of-truth migrated to Linear). Task 1 (63abab7b): rewrote the three CLAUDE.md design sections off Bureau — root /CLAUDE.md Visual Design Source of Truth repointed to frontend/DESIGN.md (handoff dir demoted to historical/superseded, required-reading order → DESIGN.md → src/design-system/CLAUDE.md → closest component, radii 6/8/12, surface-1..4 ladder, line/line-strong hairlines, voice/emoji/date rules kept verbatim); frontend/CLAUDE.md provider tree fixed to live App.tsx (ErrorBoundary→…→DesignProvider(initialDirection="linear",initialMode="dark")→…→DirectionProvider→AppRouter, no RTLWrapper — closes MD-01) + surface-3/4/line-strong/accent-hover/status-1..6 utilities added; frontend/src/design-system/CLAUDE.md rewritten to Linear-single-direction (coercion invariant both layers, three-copy invariant directions.ts↔bootstrap.js↔index.css:root + check-bootstrap-parity guard, file inventory sans directionDefaults/useHue, dark default); useLocale.ts doc comment fixed to the delegated setLocale (closes LO-02). Task 2 (9bc0f3a3): rewrote frontend/DESIGN.md as the Linear spec (321 lines — dark + derived-light token tables transcribed verbatim from directions.ts, semantic/SLA/6-status palettes with measured AA ratios, hairline-strong mapping decision, reserved unmapped extras, Inter/JetBrains Variable type stack + Tajawal RTL cascade, radius 6/8/12, recipe rules, engine contract) + supersession banner atop inteldossier_handoff_design/README.md (only change in that dir). Verify all green: forbidden-token grep 0 across 3 CLAUDE.md; DOC-01 phase-map grep 0; DESIGN.md #5e6ad2 + Inter Variable + dark/light tables + status ratios present, zero "bureau"; 31 DESIGN.md hex match directions.ts (≥10 needed); pre-commit build passed both commits. lint-staged/prettier MM churn reconciled to a clean fixpoint (stale index entries reset; committed HEAD holds canonical prettier versions).
 Prev: 2026-07-03 -- Plan 77-07 complete (TOKEN-04/01/05 — engine collapsed to Linear-only: Direction type → 'linear', hue axis retired, useHue + directionDefaults deleted, 3-family fonts. Commits 2a084acc/7e1fc845/229a39c8).
 
