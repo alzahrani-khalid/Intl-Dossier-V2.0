@@ -464,17 +464,20 @@ git add src/components/ui && git diff --cached --stat        # review EVERY hunk
 | A3  | i18next `languageChanged` fires within the same task as `changeLanguage` resolution for static-bundled resources (no async backend), so the React update batches into one commit | Pattern 2        | MEDIUM — if an extra tick sneaks in, the same-frame spec catches it; mitigation is deriving owner state synchronously from the entry-point click instead          |
 | A4  | Radix `DirectionProvider` context propagation reaches portal-rendered content (portals are React-tree children even when DOM-mounted on body)                                    | Pattern 1        | LOW — this is standard React portal semantics and Radix's documented usage; the e2e spec verifies it live                                                         |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Delete RTLWrapper entirely, or reduce to a passthrough?**
    - What we know: sole importer is `App.tsx`; no CSS/test keys off its attributes; Phase 75 audit lists `rtl-wrapper/` keep-custom as infrastructure ("direction source … must survive reskin") — but this phase IS the sanctioned consolidation of that source.
    - What's unclear: whether any snapshot/visual baseline encodes the wrapper div in the DOM tree.
    - Recommendation: replace its slot in `App.tsx` with the new `DirectionProvider`; delete the component in the same plan with a grep-proof of zero remaining importers. If a visual baseline diff appears, a passthrough fragment is the fallback.
+   - RESOLVED: adopted by Plan 76-01 — RTLWrapper is deleted outright; its App.tsx slot is replaced by `ui/direction.tsx` DirectionProvider, gated by a source-scoped grep proving zero remaining ts/tsx references.
 2. **Simplify the 8 per-component `dir={dir ?? getDocDir()}` wirings this phase, or leave them?**
    - What we know: after the provider mounts they're redundant defaults (Radix prop overrides context); audit requires direction correctness to survive.
    - Recommendation: keep the `dir` prop passthrough, drop only the `?? getDocDir()` default resolution where it duplicates context — low-risk cleanup, but acceptable to defer to keep this phase's diff minimal. Planner's call; either satisfies RTLB-01 as long as no second _owner_ remains.
+   - RESOLVED: adopted by Plan 76-03 — all 8 wrappers drop the `?? getDocDir()` default (required for same-frame correctness per Pitfall 7, not deferred); the `dir` prop passthrough survives for per-instance overrides and the orphaned helper is deleted from lib/utils.ts.
 3. **Scope of the duplicate-`rtl:` scan (frontend/src vs components/ui only)?**
    - Recommendation: all of `frontend/src` — duplicates can be introduced anywhere by future codemods/copy-paste; the exact-token rule has no false positives on the current tree (16 `rtl:` occurrences repo-wide, all distinct per string).
+   - RESOLVED: adopted by Plan 76-02 — `scripts/check-duplicate-rtl.mjs` scans all of `frontend/src` (both locally and in the CI lint job).
 
 ## Environment Availability
 
