@@ -80,7 +80,7 @@ export const generalSettingsSchema = z.object({
  */
 export const appearanceSettingsSchema = z.object({
   color_mode: z.enum(['light', 'dark', 'system']),
-  theme: z.enum(['chancery', 'situation', 'ministerial', 'bureau']),
+  theme: z.enum(['chancery', 'situation', 'ministerial', 'bureau', 'linear']),
   display_density: z.enum(['compact', 'comfortable', 'dense']),
 })
 

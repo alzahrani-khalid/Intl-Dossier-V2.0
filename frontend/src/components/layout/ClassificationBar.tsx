@@ -122,6 +122,10 @@ export function ClassificationBar(): JSX.Element | null {
 
     case 'ministerial':
     case 'bureau':
+    // Phase 77 — linear takes the neutral chip (its flat modern aesthetic).
+    // Required for switch exhaustiveness after widening the Direction union;
+    // linear is not the app default this plan, so this branch is inert for now.
+    case 'linear':
       return (
         <div className="cls-chip">
           <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />

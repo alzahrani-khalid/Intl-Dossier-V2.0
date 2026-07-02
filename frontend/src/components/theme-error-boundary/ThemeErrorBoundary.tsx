@@ -3,7 +3,7 @@ import { Component, ReactNode, ErrorInfo } from 'react'
 interface Props {
   children: ReactNode
   /** Direction to apply on error; renamed from the legacy `fallbackTheme`. */
-  fallbackDirection?: 'chancery' | 'situation' | 'ministerial' | 'bureau'
+  fallbackDirection?: 'chancery' | 'situation' | 'ministerial' | 'bureau' | 'linear'
   fallbackColorMode?: 'light' | 'dark'
   fallbackLanguage?: 'en' | 'ar'
 }

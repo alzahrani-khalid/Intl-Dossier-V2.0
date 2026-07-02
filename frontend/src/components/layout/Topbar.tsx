@@ -51,6 +51,10 @@ const DIRECTION_SHORT_LABELS: Record<Direction, { en: string; ar: string }> = {
   situation: { en: 'S', ar: 'ع' },
   ministerial: { en: 'M', ar: 'و' },
   bureau: { en: 'B', ar: 'م' },
+  // Phase 77 — required for Record<Direction> exhaustiveness after widening the
+  // union. `linear` is NOT in the DIRECTIONS switcher list above (activation is
+  // Plan 77-04), so this label is never rendered yet.
+  linear: { en: 'L', ar: 'ل' },
 }
 
 // Phase-42 will swap this for a real notification feed; design-handoff stub.

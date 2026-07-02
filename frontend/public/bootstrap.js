@@ -36,6 +36,14 @@
       bureau: {
         light:{bg:'#f7f6f4',surface:'#ffffff',surfaceRaised:'#ffffff',ink:'#1a1714',inkMute:'#6b6459',inkFaint:'#736b60',line:'#e8e4dc',lineSoft:'#efece3',sidebar:'#ffffff',sidebarInk:'#2a2520',rSm:'8px',r:'12px',rLg:'16px'},
         dark:{bg:'#161310',surface:'#1d1915',surfaceRaised:'#24201b',ink:'#f2ece3',inkMute:'#b8ac9c',inkFaint:'#857c6e',line:'#2a2520',lineSoft:'#201c18',sidebar:'#100d0a',sidebarInk:'#ddd3c4',rSm:'8px',r:'12px',rLg:'16px'}
+      },
+      /* Phase 77 — linear direction. Core keys byte-match tokens/directions.ts
+         PALETTES.linear; nested extended groups (surface3/4, inkTertiary,
+         lineStrong, accent, semantic, sla, status) mirror the same leaf strings
+         so Plan 77-04 can wire them into the paint loop + parity table. */
+      linear: {
+        light:{bg:'#ffffff',surface:'#f5f6f6',surfaceRaised:'#f6f7f7',ink:'#000000',inkMute:'#4f5359',inkFaint:'#656970',line:'#dddee1',lineSoft:'#eaebed',sidebar:'#f5f6f6',sidebarInk:'#14161a',rSm:'6px',r:'8px',rLg:'12px',surface3:'#eff0f2',surface4:'#e6e8eb',inkTertiary:'#83868e',lineStrong:'#ccced1',accent:{base:'#5e6ad2',hover:'#828fff',fg:'#ffffff',soft:'#e8edff',ink:'#4d57b7'},semantic:{danger:'#be241f',dangerSoft:'#ffeae6',warn:'#8c5500',warnSoft:'#fceed6',ok:'#137738',okSoft:'#e4f6e6',info:'#1664bf',infoSoft:'#e4f1ff'},sla:{ok:'#4d57b7',okSoft:'#eaefff',risk:'#8c5500',riskSoft:'#fceed6',bad:'#be241f',badSoft:'#ffeae6'},status:[{fg:'#3458ac',soft:'#e6f1ff'},{fg:'#00737c',soft:'#daf7f8'},{fg:'#007338',soft:'#e1f7e7'},{fg:'#7c5700',soft:'#f8f0da'},{fg:'#9d381f',soft:'#ffeae3'},{fg:'#873a82',soft:'#fce9fa'}]},
+        dark:{bg:'#010102',surface:'#0f1011',surfaceRaised:'#141516',ink:'#f7f8f8',inkMute:'#d0d6e0',inkFaint:'#8a8f98',line:'#23252a',lineSoft:'#1d1e21',sidebar:'#0f1011',sidebarInk:'#d0d6e0',rSm:'6px',r:'8px',rLg:'12px',surface3:'#18191a',surface4:'#191a1b',inkTertiary:'#62666d',lineStrong:'#34343a',accent:{base:'#5e6ad2',hover:'#828fff',fg:'#ffffff',soft:'#5e69d1',ink:'#98a6ea'},semantic:{danger:'#e86154',dangerSoft:'#3c1713',warn:'#e1af4a',warnSoft:'#302103',ok:'#27a644',okSoft:'#102b17',info:'#66a0ee',infoSoft:'#0f2440'},sla:{ok:'#8998e9',okSoft:'#1c2141',risk:'#e1af4a',riskSoft:'#302103',bad:'#e86154',badSoft:'#3c1713'},status:[{fg:'#87adfa',soft:'#16233f'},{fg:'#2ac4cc',soft:'#002c2e'},{fg:'#6ac48c',soft:'#082c18'},{fg:'#cbaa4b',soft:'#2e2200'},{fg:'#ef9179',soft:'#3a1911'},{fg:'#d991d2',soft:'#331931'}]}
       }
     };
     /* Per-direction font triplets — MUST byte-match
@@ -45,7 +53,8 @@
       chancery:    {display:"'Fraunces', serif",                      body:"'Inter', system-ui, sans-serif",       mono:"'JetBrains Mono', ui-monospace, monospace"},
       situation:   {display:"'Space Grotesk', system-ui, sans-serif", body:"'IBM Plex Sans', system-ui, sans-serif", mono:"'IBM Plex Mono', ui-monospace, monospace"},
       ministerial: {display:"'Public Sans', system-ui, sans-serif",   body:"'Public Sans', system-ui, sans-serif",  mono:"'JetBrains Mono', ui-monospace, monospace"},
-      bureau:      {display:"'Inter', system-ui, sans-serif",         body:"'Inter', system-ui, sans-serif",        mono:"'JetBrains Mono', ui-monospace, monospace"}
+      bureau:      {display:"'Inter', system-ui, sans-serif",         body:"'Inter', system-ui, sans-serif",        mono:"'JetBrains Mono', ui-monospace, monospace"},
+      linear:      {display:"'Inter Variable', system-ui, sans-serif", body:"'Inter Variable', system-ui, sans-serif", mono:"'JetBrains Mono Variable', ui-monospace, monospace"}
     };
     var r = document.documentElement;
     r.classList.toggle('dark', m === 'dark');
