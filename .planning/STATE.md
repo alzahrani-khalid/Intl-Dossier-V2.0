@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
 status: executing
-last_updated: '2026-07-02T22:55:00.000Z'
-last_activity: 2026-07-02 -- Plan 77-03 complete (Linear token DATA widen — 5th direction + AA-proven palettes)
+last_updated: '2026-07-02T20:41:23.843Z'
+last_activity: 2026-07-02 -- Plan 77-04 complete (Linear ACTIVATED — dual-layer id.dir coercion + dark default + :root re-sync + .dir-linear rename; guard v2 + coercion 8/8 + font probe)
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 17
-  completed_plans: 11
+  completed_plans: 13
   percent: 33
 ---
 
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section
 ## Current Position
 
 Phase: 77 (linear-token-system) — EXECUTING
-Plan: 3 of 8 complete (77-01, 77-02, 77-03); next: 77-04
+Plan: 4 of 8 complete (77-01, 77-02, 77-03, 77-04); next: 77-05
 Status: Executing Phase 77
-Last activity: 2026-07-02 -- Plan 77-03 complete (Linear token DATA widen — TOKEN-01/03/02). Added 'linear' as a 5th Direction across the union + every exhaustive Record<Direction>/switch/z.enum; landed the verbatim Linear dark palette + fully-derived light set + TOKEN-03 gap palettes (semantic danger/warn/info + softs, 6-value status-tag palette) as palette LITERALS, byte-mirrored into bootstrap.js in the SAME commit (parity guard 24→30 combos). buildTokens now prefers palette literals (accent #5e6ad2 hue-independent + new --accent-hover, new --surface-3/4/--ink-tertiary/--line-strong tiers, --status-1..6+softs, --shadow-card 'none') with legacy hue-math byte-identical (235 design-system tests green). Committed AA proof contrast.test.ts (52 wcagContrast assertions, dark+light, all ≥4.70). VISUALLY INERT — defaults stay bureau/light (activation is 77-04). Commits: 0ba9c904 (widen+data), 53591495 (engine). Hairline deviation: --line=#23252a, --line-soft=DERIVED softer, verbatim hairline-strong #34343a → NEW lineStrong tier. Reserved unmapped extras: hairline-tertiary #3e3e44, semantic-overlay #000000, brand-secure #7a7fad.
-Prev: 2026-07-02 -- Plan 77-02 complete (FOUC-01 byte-match CI guard: scripts/check-bootstrap-parity.mjs + bad-bootstrap.js fixture, wired into pnpm lint + CI Lint job; both polarities proven, 24 combos green)
+Last activity: 2026-07-02 -- Plan 77-04 complete (Linear ACTIVATED — the highest-risk flip). One atomic commit coerces every legacy id.dir → 'linear' in bootstrap.js AND DesignProvider (try-guarded write-back), defaults unset id.theme → dark (explicit light preserved), re-syncs the index.css :root third copy to Linear-dark literals (retired the drifted #9a9082/oklch(99% 0.01 32)), and renames .dir-bureau → .dir-linear (chancery/situation/ministerial rule blocks deleted) across 4 stylesheets. App.tsx = linear/dark/linear. Guard v2 (linear byte-match + 5 coercion probes + ENFORCED :root check) makes every invariant build-breaking; coercion.test.ts 8/8; font-registration.spec.ts proves Inter Variable/JetBrains Mono Variable resolve (LTR) + Tajawal wins (RTL). Commits: 2f04f9f4 (flip), 23ad61d9 (guard v2), 45917772 (font probe). DoD 12/12 + full frontend lint green. Direction locked via constant 'linear' init (setDirection kept functional — switcher removal is a later plan).
+Prev: 2026-07-02 -- Plan 77-03 complete (Linear token DATA widen — TOKEN-01/03/02: verbatim dark + derived light + gap palettes as literals, byte-mirrored in bootstrap.js; VISUALLY INERT until 77-04)
 Follow-ups (P76 advisory, still open): LO-01 check-duplicate-rtl.mjs empty-root guard; LO-03 latent render-time document.dir reader (MD-01/LO-02 now owned by 77-08 DOC-01).
 Follow-up (77-01): dashboard-widgets FROZEN_TIME tracks the capture date — a future recapture must re-align it with a re-refreshed b0000002-\* seed (inherent 46-era fragility).
 
