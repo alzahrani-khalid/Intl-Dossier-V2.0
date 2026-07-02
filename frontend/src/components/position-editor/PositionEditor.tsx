@@ -209,7 +209,7 @@ export function PositionEditor({
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-accent underline',
+          class: 'text-accent-ink underline',
         },
       }),
     ],
@@ -235,7 +235,7 @@ export function PositionEditor({
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-accent underline',
+          class: 'text-accent-ink underline',
         },
       }),
     ],

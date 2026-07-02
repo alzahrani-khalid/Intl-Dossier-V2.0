@@ -182,7 +182,7 @@ function EventCard({
                     href={event.meeting_link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary hover:underline flex items-center gap-1"
+                    className="text-accent-ink hover:underline flex items-center gap-1"
                   >
                     {t('calendarEvents.joinMeeting')}
                     <ExternalLink className="h-3 w-3" />

@@ -421,15 +421,15 @@ function WaitingQueuePageInner() {
             <div className="flex items-center gap-3">
               <Loader2 className="size-4 animate-spin text-accent" />
               <div className="flex-1">
-                <p className="text-sm font-medium text-accent">
+                <p className="text-sm font-medium text-accent-ink">
                   {t('waitingQueue.bulkActions.sending')}
                 </p>
-                <p className="text-xs text-accent">
+                <p className="text-xs text-accent-ink">
                   {bulkJobStatus.processed_items} / {bulkJobStatus.total_items}{' '}
                   {t('waitingQueue.bulkActions.completed')}
                 </p>
               </div>
-              <div className="text-sm text-accent">
+              <div className="text-sm text-accent-ink">
                 {Math.round((bulkJobStatus.processed_items / bulkJobStatus.total_items) * 100)}%
               </div>
             </div>
@@ -565,13 +565,13 @@ function WaitingQueuePageInner() {
                                   {engagement && (
                                     <div className="flex items-center gap-2 rounded-md bg-accent/5 px-3 py-1.5 text-sm dark:bg-accent/20">
                                       <UserCheck className="size-4 text-accent" />
-                                      <span className="font-medium text-accent">
+                                      <span className="font-medium text-accent-ink">
                                         {engagement.title}
                                       </span>
                                       {engagement.dossiers && (
                                         <>
-                                          <span className="text-accent">•</span>
-                                          <span className="text-xs text-accent">
+                                          <span className="text-accent-ink">•</span>
+                                          <span className="text-xs text-accent-ink">
                                             {isRTL
                                               ? engagement.dossiers.name_ar
                                               : engagement.dossiers.name_en}
@@ -726,13 +726,13 @@ function WaitingQueuePageInner() {
                                       {engagement && (
                                         <div className="flex items-center gap-2 rounded-md bg-accent/5 px-3 py-1.5 text-sm dark:bg-accent/20">
                                           <UserCheck className="size-4 text-accent" />
-                                          <span className="font-medium text-accent">
+                                          <span className="font-medium text-accent-ink">
                                             {engagement.title}
                                           </span>
                                           {engagement.dossiers && (
                                             <>
-                                              <span className="text-accent">•</span>
-                                              <span className="text-xs text-accent">
+                                              <span className="text-accent-ink">•</span>
+                                              <span className="text-xs text-accent-ink">
                                                 {isRTL
                                                   ? engagement.dossiers.name_ar
                                                   : engagement.dossiers.name_en}

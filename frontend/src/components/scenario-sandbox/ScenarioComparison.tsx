@@ -128,7 +128,9 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
                   <td key={scenario.id} className="py-3 px-4">
                     <span
                       className={
-                        scenario.variable_count === maxVariables ? 'font-semibold text-primary' : ''
+                        scenario.variable_count === maxVariables
+                          ? 'font-semibold text-accent-ink'
+                          : ''
                       }
                     >
                       {scenario.variable_count}
@@ -228,7 +230,7 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
                           <span
                             className={
                               probability === maxProbability && maxProbability > 0
-                                ? 'font-semibold text-primary'
+                                ? 'font-semibold text-accent-ink'
                                 : ''
                             }
                           >

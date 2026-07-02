@@ -247,7 +247,7 @@ export function GeographicVisualizationPage() {
                             <span
                               className={
                                 country.upcomingEngagements > 0
-                                  ? 'text-accent font-medium'
+                                  ? 'text-accent-ink font-medium'
                                   : 'text-muted-foreground'
                               }
                             >

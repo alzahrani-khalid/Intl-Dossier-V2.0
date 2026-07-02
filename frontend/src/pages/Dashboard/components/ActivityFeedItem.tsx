@@ -72,7 +72,7 @@ export function ActivityFeedItem({ item }: ActivityFeedItemProps): React.ReactEl
           <span className="font-semibold">{item.actor_name}</span>{' '}
           <span className="text-muted-foreground">{item.action_type}</span>{' '}
           <span
-            className="font-semibold text-primary cursor-pointer hover:underline"
+            className="font-semibold text-accent-ink cursor-pointer hover:underline"
             role="link"
             tabIndex={0}
             onClick={handleEntityClick}

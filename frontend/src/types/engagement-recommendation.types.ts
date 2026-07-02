@@ -305,7 +305,7 @@ export interface RecommendationStats {
  */
 export function getUrgencyColor(urgency: RecommendationUrgency): string {
   const colors: Record<RecommendationUrgency, string> = {
-    low: 'text-accent',
+    low: 'text-accent-ink',
     normal: 'text-muted-foreground',
     high: 'text-warning',
     critical: 'text-destructive',

@@ -128,7 +128,7 @@ function InlineHint({
           <Button
             variant="link"
             size="sm"
-            className="mt-2 h-auto p-0 text-primary"
+            className="mt-2 h-auto p-0 text-accent-ink"
             onClick={onAction}
           >
             {t(hint.actionKey)}

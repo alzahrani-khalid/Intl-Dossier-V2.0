@@ -335,7 +335,7 @@ export function EnhancedVerticalTimelineCard({
                             href={event.metadata.virtual_link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-primary hover:underline inline-flex items-center gap-1 text-sm mt-2 font-medium"
+                            className="text-accent-ink hover:underline inline-flex items-center gap-1 text-sm mt-2 font-medium"
                           >
                             {t('timeline.join_virtual')}
                             <ExternalLink className="h-3.5 w-3.5" />

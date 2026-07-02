@@ -109,7 +109,7 @@ export function ContextualHelp({
   children,
 }: ContextualHelpProps) {
   const { isRTL } = useDirection()
-// Suppress unused variable warning
+  // Suppress unused variable warning
   void _position
 
   const [isExpanded, setIsExpanded] = useState(false)
@@ -215,11 +215,7 @@ export function ContextualHelp({
             </TooltipContent>
           )}
         </Tooltip>
-        <PopoverContent
-          side={isRTL ? 'left' : 'right'}
-          align="start"
-          className="w-80 sm:w-96"
-        >
+        <PopoverContent side={isRTL ? 'left' : 'right'} align="start" className="w-80 sm:w-96">
           <div className="space-y-3">
             {title && (
               <div className="flex items-center gap-2">
@@ -263,9 +259,7 @@ function ExpandableHelpContent({
   const { t } = useTranslation('contextual-help')
 
   return (
-    <div
-      className={cn('rounded-md border bg-muted/50 p-3 space-y-3', 'text-sm')}
-    >
+    <div className={cn('rounded-md border bg-muted/50 p-3 space-y-3', 'text-sm')}>
       {/* Description */}
       {description && <p className="text-muted-foreground">{description}</p>}
 
@@ -294,7 +288,7 @@ function ExpandableHelpContent({
           <div className="space-y-2">
             {examples.map((example, index) => (
               <div key={index} className="bg-background rounded px-2 py-1.5 border">
-                <code className="text-xs font-mono text-primary">{example.value}</code>
+                <code className="text-xs font-mono text-accent-ink">{example.value}</code>
                 {example.description && (
                   <p className="text-xs text-muted-foreground mt-1">{example.description}</p>
                 )}
@@ -318,7 +312,7 @@ function ExpandableHelpContent({
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
-                  'flex items-center gap-1 text-sm text-primary hover:underline',
+                  'flex items-center gap-1 text-sm text-accent-ink hover:underline',
                   'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded',
                 )}
               >

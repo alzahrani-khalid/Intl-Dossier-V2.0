@@ -418,7 +418,7 @@ export function DossierPicker({
                         }
                         setOpen(false)
                       }}
-                      className="min-h-11 text-primary"
+                      className="min-h-11 text-accent-ink"
                     >
                       <Plus className={cn('size-4 shrink-0', 'me-2')} />
                       <span className="flex-1">

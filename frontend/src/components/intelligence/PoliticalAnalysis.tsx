@@ -155,7 +155,7 @@ export function PoliticalAnalysis({ reports, dossierId }: PoliticalAnalysisProps
             </h4>
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="text-xs text-accent hover:underline"
+              className="text-xs text-accent-ink hover:underline"
             >
               {isExpanded
                 ? t('intelligence.showLess', 'Show Less')

@@ -95,7 +95,7 @@ export function VisualizationSelector({
 }: VisualizationSelectorProps) {
   const { t } = useTranslation('report-builder')
   const { isRTL } = useDirection()
-const showAxisConfig = AXIS_VISUALIZATIONS.includes(visualization.type)
+  const showAxisConfig = AXIS_VISUALIZATIONS.includes(visualization.type)
   const showLegendConfig = LEGEND_VISUALIZATIONS.includes(visualization.type)
   const showGridConfig =
     visualization.type !== 'table' && visualization.type !== 'card' && visualization.type !== 'kpi'
@@ -129,13 +129,13 @@ const showAxisConfig = AXIS_VISUALIZATIONS.includes(visualization.type)
                 <Icon
                   className={cn(
                     'h-5 w-5 sm:h-6 sm:w-6',
-                    isSelected ? 'text-primary' : 'text-muted-foreground',
+                    isSelected ? 'text-accent-ink' : 'text-muted-foreground',
                   )}
                 />
                 <span
                   className={cn(
                     'text-[10px] sm:text-xs text-center leading-tight',
-                    isSelected ? 'text-primary font-medium' : 'text-muted-foreground',
+                    isSelected ? 'text-accent-ink font-medium' : 'text-muted-foreground',
                   )}
                 >
                   {t(`visualization.types.${type}`)}

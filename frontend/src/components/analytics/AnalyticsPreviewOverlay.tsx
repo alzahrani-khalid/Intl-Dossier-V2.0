@@ -102,7 +102,7 @@ export function AnalyticsPreviewOverlay({
       <Alert className={cn('border-dashed border-2 border-accent/40 bg-accent/5', className)}>
         <Sparkles className="h-4 w-4 text-accent" />
         <AlertDescription className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <span className="text-sm text-accent">{t('preview.sampleDataActive')}</span>
+          <span className="text-sm text-accent-ink">{t('preview.sampleDataActive')}</span>
           <Button
             variant="outline"
             size="sm"

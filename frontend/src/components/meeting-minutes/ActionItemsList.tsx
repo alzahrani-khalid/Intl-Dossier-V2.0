@@ -236,7 +236,7 @@ export function ActionItemsList({
 
                         {/* Linked to Commitment */}
                         {item.linked_commitment_id && (
-                          <span className="flex items-center gap-1 text-xs text-accent">
+                          <span className="flex items-center gap-1 text-xs text-accent-ink">
                             <Link2 className="h-3 w-3" />
                             {t('actionItems.linkedCommitment')}
                           </span>
@@ -308,7 +308,7 @@ export function ActionItemsList({
                     <div className="mt-2">
                       <button
                         onClick={() => toggleExpanded(item.id)}
-                        className="text-xs text-primary hover:underline"
+                        className="text-xs text-accent-ink hover:underline"
                       >
                         {isExpanded ? t('actions.view') : t('actions.view')}
                       </button>

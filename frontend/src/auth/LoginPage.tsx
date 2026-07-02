@@ -151,7 +151,7 @@ export function LoginPage(): React.JSX.Element {
               <button
                 type="button"
                 onClick={() => void handleForgotPassword()}
-                className="text-sm text-accent hover:underline"
+                className="text-sm text-accent-ink hover:underline"
               >
                 {t('auth.forgotPassword')}
               </button>
@@ -182,7 +182,7 @@ export function LoginPage(): React.JSX.Element {
             {t('auth.dontHaveAccount')}{' '}
             <a
               href="/register"
-              className="text-accent hover:underline"
+              className="text-accent-ink hover:underline"
               onClick={(event) => {
                 event.preventDefault()
                 navigate({ to: '/register' })

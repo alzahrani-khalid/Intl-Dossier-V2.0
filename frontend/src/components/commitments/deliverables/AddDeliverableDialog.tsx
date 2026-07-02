@@ -323,7 +323,7 @@ export function AddDeliverableDialog({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label className="text-start">{t('form.weight')}</Label>
-              <span className="text-sm font-medium text-primary">{currentWeight}</span>
+              <span className="text-sm font-medium text-accent-ink">{currentWeight}</span>
             </div>
             <Slider
               value={[currentWeight]}

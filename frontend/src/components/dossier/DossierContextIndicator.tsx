@@ -114,7 +114,7 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
 }: DossierContextIndicatorProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const { activeDossier, activeInheritance, hasDossierContext, reset, setActiveDossier } =
+  const { activeDossier, activeInheritance, hasDossierContext, reset, setActiveDossier } =
     useDossierContext()
 
   const [changePopoverOpen, setChangePopoverOpen] = useState(false)
@@ -262,7 +262,7 @@ const { activeDossier, activeInheritance, hasDossierContext, reset, setActiveDos
                     to={getDossierDetailPath(activeDossier.id, dossierType)}
                     className={cn(
                       'flex items-center gap-1.5 min-w-0',
-                      'text-primary hover:underline',
+                      'text-accent-ink hover:underline',
                       'font-medium truncate max-w-[120px] sm:max-w-[200px] md:max-w-[300px]',
                       sizeClasses.text,
                     )}

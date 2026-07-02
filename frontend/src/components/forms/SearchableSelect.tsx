@@ -501,7 +501,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
                       onSelect={handleCreate}
                       className="flex items-center gap-2 cursor-pointer min-h-11 sm:min-h-10"
                     >
-                      <span className="text-primary">+</span>
+                      <span className="text-accent-ink">+</span>
                       <span>
                         {createOptionText || t('smart-input:select.create', { value: searchQuery })}
                       </span>

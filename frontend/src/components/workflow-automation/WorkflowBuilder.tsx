@@ -67,7 +67,7 @@ interface WorkflowBuilderProps {
 export function WorkflowBuilder({ rule, onSave, onCancel }: WorkflowBuilderProps) {
   const { t } = useTranslation('workflow-automation')
   const { isRTL } = useDirection()
-const isEditing = !!rule
+  const isEditing = !!rule
 
   // Step state
   const [currentStep, setCurrentStep] = useState<BuilderStep>('trigger')
@@ -411,7 +411,7 @@ const isEditing = !!rule
                 className={cn(
                   'flex items-center gap-2 p-2 rounded-lg transition-colors',
                   isActive && 'bg-primary text-primary-foreground',
-                  isCompleted && !isActive && 'text-primary',
+                  isCompleted && !isActive && 'text-accent-ink',
                   !isActive && !isCompleted && 'text-muted-foreground',
                   isClickable && 'cursor-pointer hover:bg-muted',
                   !isClickable && 'cursor-not-allowed opacity-50',

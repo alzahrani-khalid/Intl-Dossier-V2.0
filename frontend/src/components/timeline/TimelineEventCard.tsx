@@ -228,7 +228,7 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
                         href={event.metadata.virtual_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary hover:underline inline-flex items-center gap-1"
+                        className="text-accent-ink hover:underline inline-flex items-center gap-1"
                       >
                         {t('timeline.join_virtual')}
                         <ExternalLink className="h-3 w-3" />

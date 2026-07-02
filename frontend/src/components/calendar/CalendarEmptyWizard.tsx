@@ -510,7 +510,7 @@ export function CalendarEmptyWizard({
               <div className="flex items-start gap-3 p-3 rounded-lg bg-primary/5 border border-primary/20">
                 <MessageSquare className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                 <div className="text-sm">
-                  <p className="font-medium text-primary">{t('wizard.quickCreate.tip')}</p>
+                  <p className="font-medium text-accent-ink">{t('wizard.quickCreate.tip')}</p>
                   <p className="text-muted-foreground mt-1">{t('wizard.quickCreate.tipDesc')}</p>
                 </div>
               </div>
