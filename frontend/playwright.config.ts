@@ -82,7 +82,14 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
       expect: {
         toHaveScreenshot: {
-          pathTemplate: '{testDir}/__snapshots__/dashboard-widgets/{arg}{ext}',
+          // Phase 77-01 (VERIFY-01) fix: was `{testDir}/__snapshots__/...`.
+          // `testDir` was widened from `frontend/tests/e2e` to `frontend/tests`
+          // (for a11y discovery), which silently moved this template's output to
+          // frontend/tests/__snapshots__/ and orphaned the committed baselines at
+          // frontend/tests/e2e/__snapshots__/. `{testDir}/{testFileDir}` (=
+          // frontend/tests + e2e) pins the output back to that committed,
+          // git-tracked location.
+          pathTemplate: '{testDir}/{testFileDir}/__snapshots__/dashboard-widgets/{arg}{ext}',
           maxDiffPixelRatio: 0.02,
           threshold: 0.2,
           animations: 'disabled',
