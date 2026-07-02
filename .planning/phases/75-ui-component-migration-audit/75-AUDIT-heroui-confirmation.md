@@ -8,6 +8,15 @@
 
 **Docs-only phase:** no production code changes. The stale `heroui-chip.tsx` docstring is FLAGGED here for Phase 78 cleanup — not edited in Phase 75.
 
+## Findings summary (read this first)
+
+| Audit    | Verdict                                                                                                                                                                                                        | Machine-readable line                         |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| AUDIT-02 | **Confirmed on the v3 compound API.** 8 import sites, type-check exit 0, compound usage verified in Card/Checkbox/Switch/Modal. Residual flat-prop (v2 monolith) call sites: **none**.                         | `Import-site count: 8` / `Type-check: exit 0` |
+| AUDIT-03 | **Confirmed unused.** 0 imports of any of the 9 checked v3-removed names (Navbar, Snippet, User, Spacer, Image, Code, Autocomplete, DateInput, Ripple). Regressions: **none** — no replacement plans required. | `Removed-name import hits: 0 (exit 1)`        |
+
+Both verdicts are re-derivable by re-running the commands in the **Phase 78 re-run protocol** section below. Two nuances are documented so the Phase 78 sweep does not false-positive: flat-named Drawer exports are v3 (Nuance 1), and `Autocomplete` still exists as a 3.0.5 export (AUDIT-03 nuance).
+
 <!-- FINDINGS-SUMMARY-ANCHOR -->
 
 ---
@@ -201,3 +210,63 @@ grep -rln "@heroui-pro/react" --include="*.tsx" --include="*.ts" frontend/src | 
 ```
 
 The **first** import of a Pro component will require `HEROUI_AUTH_TOKEN` in CI (Pro packages are delivered via an authenticated registry). Phase 78/79 must wire that secret before any Pro import lands, or CI will fail on install.
+
+---
+
+## AUDIT-03 — v3-removed component names confirmed unused
+
+### Command (RESEARCH Code Examples, AUDIT-03 block, verbatim)
+
+```bash
+grep -rnE "import\s*\{[^}]*\b(Navbar|Snippet|User|Spacer|Image|Code|Autocomplete|DateInput|Ripple)\b[^}]*\}\s*from\s*['\"]@heroui/react['\"]" \
+  --include='*.tsx' --include='*.ts' frontend/src ; echo "exit=$? (1 = confirmed unused)"
+```
+
+### Raw output (2026-07-02)
+
+```
+exit=1 (1 = confirmed unused)
+```
+
+(No matching lines — grep printed nothing and exited 1.)
+
+**Removed-name import hits: 0 (exit 1)**
+
+The grep covers the 8 requirement names (Navbar, Snippet, User, Spacer, Image, Code, Autocomplete, DateInput) plus Ripple — 9 names total. Zero imports of any of them. There are no regressions and therefore **no per-hit replacement plans required**. (If a future re-run surfaces a hit, the ROADMAP criterion-3 path is: replace with native HTML per the official incremental-migration docs, or with the v3 `ComboBox` / `DateField` primitive for `Autocomplete` / `DateInput` respectively.)
+
+### AUDIT-03 nuance — the recorded claim is import-evidence, not a removal claim
+
+Two facts must travel with this confirmation so Phase 78 does not chase a stale removal claim:
+
+1. **The official v3-removed list is 7 names, not 8.** Per the HeroUI incremental-migration docs [heroui.com/en/docs/react/migration/incremental-migration], the removed components are **Code, Image, Navbar, Ripple, Snippet, Spacer, User** — each replaced with native HTML. The project requirement's 8-name list **adds** `Autocomplete` + `DateInput` and **omits** `Ripple` (this artifact checks all 9 = the union).
+
+2. **`Autocomplete` still EXISTS as an export in installed `@heroui/react` 3.0.5** — an import of it would compile. So "removed in v3" is stale for that name. Evidence:
+
+   ```bash
+   # dist path (pnpm store): node_modules/.pnpm/@heroui+react@3.0.5_.../node_modules/@heroui/react/dist/components/autocomplete/index.d.ts
+   grep -nE "Autocomplete" <dist>/components/autocomplete/index.d.ts
+   ```
+
+   ```
+   2:import { AutocompleteClearButton, AutocompleteFilter, AutocompleteIndicator, AutocompletePopover, AutocompleteRoot, AutocompleteTrigger, AutocompleteValue } from "./autocomplete";
+   3:export declare const Autocomplete: (<T extends object = object, M extends "single" | "multiple" = "single">(...) => JSX.Element) & { ... }
+   ```
+
+   The `autocomplete/index.d.ts` file exists and declares `Autocomplete`. Therefore the recorded conclusion is precisely **"0 imports of any of the 9 checked names"** — an import-evidence statement, not a claim that all 9 names were removed from the package.
+
+---
+
+## Phase 78 re-run protocol
+
+Phase 78 bumps `@heroui/react` 3.0.5 → 3.2.1 and re-runs exactly these commands as its regression sweep. Expected outputs are the AUDIT-02/03 records above.
+
+| #   | Command (run from repo root)                                                                                                                                                                            | Expected output                                                                                                             |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| 1   | `grep -rlnE "from ['\"]@heroui/react['\"]" --include='*.tsx' --include='*.ts' frontend/src`                                                                                                             | The same 8-file import list (`Import-site count: 8`). **Never** the `@heroui` text match — it over-counts to 12.            |
+| 2   | `grep -rnE "import\s*\{[^}]*\b(Navbar\|Snippet\|User\|Spacer\|Image\|Code\|Autocomplete\|DateInput\|Ripple)\b[^}]*\}\s*from\s*['\"]@heroui/react['\"]" --include='*.tsx' --include='*.ts' frontend/src` | 0 hits, **exit 1**. Any hit → replacement plan per criterion-3.                                                             |
+| 3   | `pnpm --dir frontend type-check`                                                                                                                                                                        | **exit 0** (matches the AUDIT-02 record). A new non-zero exit that traces to a HeroUI call site is a real 3.2.1 regression. |
+| 4   | `grep -rn "Modal\.\|Checkbox\.\|Switch\.\|Card\." frontend/src/components/ui/heroui-modal.tsx frontend/src/components/ui/heroui-forms.tsx frontend/src/components/ui/heroui-card.tsx`                   | Compound dot-notation still present in all three wrappers.                                                                  |
+
+**Version coupling:** `@heroui/react` and `@heroui/styles` bump in **lockstep** — bump both to the same version or the theme layer and component layer desync. **Latest confirmed:** `npm view @heroui/react version` returned **3.2.1** on 2026-07-02 (Phase 78's bump target still current). If Phase 78 introduces the first `@heroui-pro/react` import, wire `HEROUI_AUTH_TOKEN` in CI first (see the `@heroui-pro/react` section above).
+
+**Two nuances to carry into the sweep** so it does not false-positive: (1) flat-named Drawer exports (`DrawerBackdrop`, etc.) are v3-conformant — do not flag `TweaksDrawer.tsx`; (2) the three `heroui-*` lookalike files (`heroui-chip.tsx`, `heroui-switch.tsx`, `heroui-tabs.tsx`) contain no `@heroui/react` import — the stale `heroui-chip.tsx` docstring ("Real @heroui/react Chip primitive") is a Phase 78 cleanup candidate.
