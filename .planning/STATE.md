@@ -25,9 +25,9 @@ See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section
 ## Current Position
 
 Phase: 76 (rtl-infrastructure-bridge-shadcn-logical-properties) — EXECUTING
-Plan: 4 of 5
-Status: Executing Phase 76 — Plan 76-03 complete (RTLB-01/02: Radix wrappers inherit direction context, portal e2e proof, react-direction dedupe); Wave 2 plan 76-04 next
-Last activity: 2026-07-02 -- Plan 76-03 complete (Radix wrappers inherit direction context; portal e2e proof; react-direction dedupe fix)
+Plan: 5 of 5 (76-01..76-04 complete; 76-05 next)
+Status: Executing Phase 76 — Plan 76-04 complete (SRTL-01: migrate rtl run once, output reviewed hunk-by-hunk and rejected in full as destructive comment-stripping + centering corruption; components.json rtl:true set); Wave 4 plan 76-05 (SRTL-02 verify Calendar/Pagination/Sidebar) next
+Last activity: 2026-07-02 -- Plan 76-04 complete (migrate rtl one-shot reviewed & rejected; rtl:true flag; SRTL-01 satisfied via recorded run + Plan-02 guard)
 
 ## Quick Tasks Completed
 

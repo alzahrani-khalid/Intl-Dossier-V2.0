@@ -272,7 +272,7 @@ Plans:
 
 **Wave 3** _(blocked on Wave 2)_
 
-- [ ] 76-04-PLAN.md — SRTL-01 one-shot `migrate rtl` (reviewed, isolated commit) + components.json `rtl: true` (wave 3)
+- [x] 76-04-PLAN.md — SRTL-01 one-shot `migrate rtl` (reviewed, isolated commit) + components.json `rtl: true` (wave 3)
 
 **Wave 4** _(blocked on Wave 3)_
 
@@ -357,7 +357,7 @@ Plans:
 | 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
 | 68-74 | v7.0 | 49/49 | Shipped | 2026-06-24 |
 | 75 | v8.0 | 4/4 | Complete    | 2026-07-02 |
-| 76 | v8.0 | 3/5 | In Progress|  |
+| 76 | v8.0 | 4/5 | In Progress|  |
 | 77 | v8.0 | 0/? | Not started | - |
 | 78 | v8.0 | 0/? | Not started | - |
 | 79 | v8.0 | 0/? | Not started | - |
