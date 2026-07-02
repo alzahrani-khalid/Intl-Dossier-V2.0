@@ -13,8 +13,8 @@
  *     key strings in fallback mode: `aria-label="shell.tweaks"` etc.).
  *   - `useTweaksOpen` is mocked at the module level so the third test can spy
  *     on the trigger without wiring a full `<TweaksDisclosureProvider>`.
- *   - `useDesignDirection` / `useMode` / `useLocale` are mocked likewise so the
- *     Topbar renders without needing a `<DesignProvider>` tree.
+ *   - `useMode` / `useLocale` are mocked likewise so the Topbar renders without
+ *     needing a `<DesignProvider>` tree.
  */
 
 import type { ReactElement } from 'react'
@@ -33,7 +33,6 @@ vi.mock('@/components/tweaks', () => ({
 }))
 
 vi.mock('@/design-system/hooks', () => ({
-  useDesignDirection: vi.fn(() => ({ direction: 'chancery', setDirection: vi.fn() })),
   useMode: vi.fn(() => ({ mode: 'light', setMode: vi.fn() })),
   useLocale: vi.fn(() => ({ locale: 'en', setLocale: vi.fn() })),
 }))
@@ -56,7 +55,7 @@ beforeEach(() => {
 })
 
 describe('Topbar', () => {
-  it('item order — 7 controls in LTR JSX: menu, search, direction, bell, theme, locale, tweaks', () => {
+  it('item order — 6 controls in LTR JSX: menu, search, bell, theme, locale, tweaks', () => {
     const { container } = renderTopbar()
     const topbar = container.querySelector('.tb')
     expect(topbar).not.toBeNull()
@@ -66,33 +65,25 @@ describe('Topbar', () => {
     expect(topbar!.querySelector('.tb-menu')).not.toBeNull()
     expect(topbar!.querySelector('.tb-search')).not.toBeNull()
 
-    // Slots 3–7 live inside `.tb-right`.
+    // Slots 3–6 live inside `.tb-right`.
     const right = topbar!.querySelector('.tb-right')
     expect(right).not.toBeNull()
-    expect(right!.querySelector('.tb-dir')).not.toBeNull()
-    // `.tb-icon-btn` covers both bell (slot 4) and theme (slot 5).
+    // The retired design-direction switcher no longer renders (Plan 77-05).
+    expect(right!.querySelector('.tb-dir')).toBeNull()
+    // `.tb-icon-btn` covers the bell (slot 3) and theme (slot 4).
     expect(right!.querySelectorAll('.tb-icon-btn').length).toBeGreaterThanOrEqual(2)
     expect(right!.querySelector('.tb-locale')).not.toBeNull()
     expect(right!.querySelector('.tb-tweaks')).not.toBeNull()
-
-    // Direction switcher carries 4 radio buttons (chancery/situation/ministerial/bureau).
-    const dirRadios = right!.querySelectorAll('.tb-dir [role="radio"]')
-    expect(dirRadios.length).toBe(4)
 
     // Locale switcher carries 2 radio buttons (EN/ع).
     const localeRadios = right!.querySelectorAll('.tb-locale [role="radio"]')
     expect(localeRadios.length).toBe(2)
   })
 
-  it('handoff class hooks — active direction and locale controls expose .active', () => {
+  it('handoff class hooks — active locale control exposes .active', () => {
     const { container } = renderTopbar()
-    const activeDirection = container.querySelector('.tb-dir-btn.active')
     const activeLocale = container.querySelector('.tb-locale-btn.active')
 
-    expect(activeDirection).not.toBeNull()
-    expect(activeDirection?.querySelector('.tb-dir-label')?.textContent).toBe(
-      'shell.direction.chancery',
-    )
     expect(activeLocale).not.toBeNull()
     expect(activeLocale?.textContent).toBe('EN')
   })
@@ -103,15 +94,6 @@ describe('Topbar', () => {
     expect(kbd).not.toBeNull()
     expect(kbd!.className).toMatch(/\bhidden\b/)
     expect(kbd!.className).toMatch(/\blg:inline\b/)
-  })
-
-  it('phone direction switcher — exposes compact mobile initials for all four directions', () => {
-    const { container } = renderTopbar()
-    const initials = Array.from(container.querySelectorAll('.tb-dir-short')).map((el) =>
-      el.textContent?.trim(),
-    )
-
-    expect(initials).toEqual(['C', 'S', 'M', 'B'])
   })
 
   it('tweaks trigger — clicking Tweaks calls useTweaksOpen().open()', async () => {

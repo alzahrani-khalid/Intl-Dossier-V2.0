@@ -55,20 +55,23 @@ describe('TweaksDrawer (THEME-01)', () => {
     )
     await user.click(screen.getByText('open'))
     // `findByText`/`getByText` throw if no match; asserting truthy is enough
-    // in a repo without @testing-library/jest-dom installed.
-    expect(await screen.findByText('Design direction')).toBeTruthy()
+    // in a repo without @testing-library/jest-dom installed. Await a surviving
+    // section (Theme) as the "drawer opened" gate.
+    expect(await screen.findByText('Theme')).toBeTruthy()
     expect(document.querySelector('.drawer__backdrop')).toBeTruthy()
     expect(document.querySelector('.drawer__dialog')).toBeTruthy()
     expect(screen.getByText('Live-configure this prototype')).toBeTruthy()
-    expect(screen.getByText('Theme')).toBeTruthy()
     expect(screen.getByText('Density')).toBeTruthy()
     expect(screen.getByText('Dense')).toBeTruthy()
     expect(screen.getByText('Reading direction')).toBeTruthy()
-    expect(screen.getByText(/Accent hue/)).toBeTruthy()
     expect(screen.getByText('Classification ribbon')).toBeTruthy()
     expect(screen.getByText('Shortcuts')).toBeTruthy()
     expect(screen.getByText('Loading state')).toBeTruthy()
     expect(screen.getByText('Preview for 2s')).toBeTruthy()
+    // Retired controls (Plan 77-05): design-direction switcher + accent-hue
+    // slider no longer render. "Reading direction" (locale) is unaffected.
+    expect(screen.queryByText('Design direction')).toBeNull()
+    expect(screen.queryByText(/Accent hue/)).toBeNull()
   })
 
   it('renders handoff sections in Arabic once opened', async () => {
@@ -81,15 +84,17 @@ describe('TweaksDrawer (THEME-01)', () => {
       </Harness>,
     )
     await user.click(screen.getByText('open'))
-    expect(await screen.findByText('الاتجاه التصميمي')).toBeTruthy()
+    // Await a surviving section (Theme) as the "drawer opened" gate.
+    expect(await screen.findByText('السمة')).toBeTruthy()
     expect(screen.getByText('اضبط هذا النموذج مباشرةً')).toBeTruthy()
-    expect(screen.getByText('السمة')).toBeTruthy()
     expect(screen.getByText('الكثافة')).toBeTruthy()
     expect(screen.getByText('كثيف')).toBeTruthy()
     expect(screen.getByText('اتجاه القراءة')).toBeTruthy()
-    expect(screen.getByText(/درجة اللون المميّز/)).toBeTruthy()
     expect(screen.getByText('شريط التصنيف')).toBeTruthy()
     expect(screen.getByText('الاختصارات')).toBeTruthy()
     expect(screen.getByText('شاشة التحميل')).toBeTruthy()
+    // Retired controls (Plan 77-05): design-direction + accent-hue no longer render.
+    expect(screen.queryByText('الاتجاه التصميمي')).toBeNull()
+    expect(screen.queryByText(/درجة اللون المميّز/)).toBeNull()
   })
 })
