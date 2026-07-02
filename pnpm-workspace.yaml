@@ -5,3 +5,8 @@ packages:
   # NOTE: exact 'agent-runtime' (NOT 'agent-runtime/*') so the throwaway
   # agent-runtime/spike standalone package stays OUT of the workspace.
   - 'agent-runtime'
+
+allowBuilds:
+  '@heroui-pro/react': true
+  heroui-native-pro: true
+  heroui-pro: true
