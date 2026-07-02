@@ -232,9 +232,14 @@ Full detail: [milestones/v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md). Audit: [m
 
 Plans:
 
+**Wave 1**
+
 - [ ] 75-01-PLAN.md — AUDIT-01 classification artifact: rulebook header, evidence baseline, per-directory tier (wave 1)
 - [ ] 75-02-PLAN.md — AUDIT-02/03 HeroUI v3 confirmation artifact with Phase 78 re-run protocol (wave 1)
 - [ ] 75-03-PLAN.md — AUDIT-04 Aceternity behavioral contracts + UserPicker facade + Phase 79 rescope input (wave 1)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
 - [ ] 75-04-PLAN.md — AUDIT-01 per-file tier (ui/ + forms/), enforcement sweep, coverage reconciliation (wave 2)
 
 **UI hint**: yes

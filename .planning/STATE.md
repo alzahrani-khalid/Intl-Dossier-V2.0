@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
-status: Re-scoped after pre-execution review — ready to plan Phase 75
-last_updated: '2026-07-02T00:00:00.000Z'
-last_activity: '2026-07-02 — v8.0 re-scoped after a pre-execution review (24 requirements, 100% coverage). Verified reality folded into PROJECT/REQUIREMENTS/ROADMAP: HeroUI already on the v3 compound-API + no v3-removed components used → Phase 78 is a bump + regression sweep; RTLB-01 keeps the 68 per-field dir=rtl inputs; VERIFY-01 scoped to baselined surfaces; TOKEN-05 preserves Tajawal; DOC-01 added for the design source-of-truth. Sequencing unchanged: audit → RTL bridge → Linear tokens → HeroUI bump → Aceternity removal → verification.'
+status: executing
+last_updated: '2026-07-02T10:28:58.510Z'
+last_activity: 2026-07-02 -- Phase 75 planning complete
 progress:
   total_phases: 6
   completed_phases: 0
-  total_plans: 0
+  total_plans: 4
   completed_plans: 0
   percent: 0
 ---
@@ -26,8 +26,8 @@ See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section
 
 Phase: 75 — UI Component & Migration Audit (not started)
 Plan: —
-Status: Re-scoped after pre-execution review — ready to plan Phase 75
-Last activity: 2026-07-02 — v8.0 re-scoped after pre-execution review (24 requirements, 100% coverage): Phase 78 reduced to a bump + regression sweep, RTL dir=rtl carve-out clarified, Tajawal preservation + DOC-01 (design source-of-truth) added.
+Status: Ready to execute
+Last activity: 2026-07-02 -- Phase 75 planning complete
 
 ## Quick Tasks Completed
 
