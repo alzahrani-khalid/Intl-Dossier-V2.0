@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
 status: executing
-last_updated: '2026-07-02T10:28:58.510Z'
-last_activity: 2026-07-02 -- Phase 75 planning complete
+last_updated: '2026-07-02T10:36:32.778Z'
+last_activity: 2026-07-02 -- Phase 75 execution started
 progress:
   total_phases: 6
   completed_phases: 0
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section added)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** v8.0 Linear Design System Migration (Phases 75-80). Replace the IntelDossier prototype design language with a Linear-derived one on bridged shadcn RTL infra + HeroUI v3 (3.0.5→3.2.1), Aceternity fully removed, Arabic RTL correct on all four axes (dark/light × LTR/RTL). Re-scoped 2026-07-02 after a pre-execution review (24 reqs). Next step: plan Phase 75 (UI Component & Migration Audit).
+**Current focus:** Phase 75 — ui-component-migration-audit
 
 ## Current Position
 
-Phase: 75 — UI Component & Migration Audit (not started)
-Plan: —
-Status: Ready to execute
-Last activity: 2026-07-02 -- Phase 75 planning complete
+Phase: 75 (ui-component-migration-audit) — EXECUTING
+Plan: 1 of 4
+Status: Executing Phase 75
+Last activity: 2026-07-02 -- Phase 75 execution started
 
 ## Quick Tasks Completed
 
