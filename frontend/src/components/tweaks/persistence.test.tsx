@@ -69,8 +69,11 @@ describe('Tweaks persistence (THEME-02)', () => {
     const probe = (globalThis as { __probe: { setLocale: (l: 'en' | 'ar') => void } }).__probe
     act(() => probe.setLocale('ar'))
     expect(storage.get('id.locale')).toBe('ar')
-    expect(document.documentElement.dir).toBe('rtl')
-    expect(document.documentElement.lang).toBe('ar')
+    // setLocale persists id.locale and delegates to i18n; as of Plan 76-01 it no
+    // longer writes <html dir/lang> (RESEARCH Pitfall 4). The single direction
+    // owner (ui/direction.tsx DirectionProvider, not mounted here) performs that
+    // write in one commit off i18n.language — the same-commit dir/lang flip is
+    // covered by ui/__tests__/direction.test.tsx.
   })
 
   it('T-34-01 sanitize: junk id.locale falls back to en', () => {
