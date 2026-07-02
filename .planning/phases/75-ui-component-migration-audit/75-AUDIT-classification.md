@@ -456,8 +456,75 @@ Classification keys on imports and rendered output, never on the `heroui-`/`ui/`
 | components/ui/heroui-modal.tsx | keep-custom (domain-specific) | RTL: consumer | HeroUI v3 Modal compound (Backdrop/Container/Dialog/Header/Body/Footer) + useOverlayState — Phase 78 bump target | @heroui/react Modal import | HeroUI v3 wrapper — Phase 78 surface, not a shadcn target |
 | components/ui/heroui-skeleton.tsx | keep-custom (domain-specific) | none | HeroUI v3 Skeleton primitive + preset compositions — Phase 78 bump target | @heroui/react Skeleton import | HeroUI v3 wrapper — Phase 78 surface, not a shadcn target |
 | components/ui/heroui-switch.tsx | replace-with-shadcn-primitive | RTL: consumer (logical margins) | checked/onCheckedChange controlled API (51 consumers); RTL-aware thumb positioning (ms- logical margins); token track/thumb colors (var(--*)) | plain button+span; NO @heroui import; var()=4 | lookalike — docstring notes "no @heroui/react dependency" |
+| components/ui/heroui-tabs.tsx | keep-custom (domain-specific) | RTL: direction-owner (dir=) | Radix Tabs dir wiring (dir={dir ?? getDocDir()}) must survive reskin | @radix-ui/react-tabs; dir= at heroui-tabs.tsx:22; NO @heroui import | lookalike — Radix tabs, not HeroUI (filename misleads) |
+| components/ui/input.tsx | replace-with-shadcn-primitive | none | token bg/border/placeholder (--accent/--ink/--danger); focus-visible ring; aria-invalid border; min-h-11 touch target | var()=5; focus-visible + aria-invalid in input.tsx | — |
+| components/ui/label.tsx | replace-with-shadcn-primitive | none | Radix label association (htmlFor); peer-disabled state; token | @radix-ui/react-label + cva | — |
+| components/ui/layout-grid.tsx | keep-custom (domain-specific) | none | — | Aceternity liveness loop 2026-07-02: 0 importers | dead — delete candidate (0 importers; Phase 79/77 input) |
+| components/ui/ltr-isolate.tsx | keep-custom (domain-specific) | RTL: infrastructure | LTR-isolation boundary (dir="ltr") must survive reskin | dir="ltr" at ltr-isolate.tsx:10 | RTL infrastructure — Phase 76 surface |
+| components/ui/mobile-action-bar.tsx | keep-custom (domain-specific) | RTL: consumer | direction-aware action-bar layout must survive reskin | isRTL usage; 1 importer | mobile composition |
+| components/ui/moving-border.tsx | keep-custom (domain-specific) | none | — | Aceternity liveness loop 2026-07-02: 0 importers | dead — delete candidate (0 importers; Phase 79/77 input) |
+| components/ui/navigation-menu.tsx | keep-custom (domain-specific) | RTL: direction-owner (dir=) | Radix dir wiring (dir={dir ?? getDocDir()}) must survive reskin | dir= at navigation-menu.tsx:14 | — |
+| components/ui/pagination.tsx | replace-with-shadcn-primitive | RTL: consumer | RTL prev/next chevron direction; buttonVariants token styling; aria-current page | ChevronLeft/Right icons + buttonVariants | — |
+| components/ui/placeholders-and-vanish-input.tsx | keep-custom (domain-specific) | none | — | Aceternity liveness loop 2026-07-02: 0 importers | dead — delete candidate (0 importers; Phase 79/77 input) |
+| components/ui/popover.tsx | replace-with-shadcn-primitive | none | Radix positioning/collision; portal a11y; token surface | @radix-ui/react-popover | — |
+| components/ui/progress.tsx | replace-with-shadcn-primitive | none | Radix value/max a11y (role=progressbar); RTL fill direction; token indicator (--accent) | @radix-ui/react-progress | — |
+| components/ui/pull-to-refresh-container.tsx | keep-custom (domain-specific) | none | pull gesture + refresh trigger state | motion import; 0 importers | mobile composition; no generic analog |
+| components/ui/pull-to-refresh-indicator.tsx | keep-custom (domain-specific) | none | pull progress indicator presentation | 5 importers | mobile composition; no generic analog |
+| components/ui/radio-group.tsx | replace-with-shadcn-primitive | none | Radix roving-tabindex keyboard nav; checked a11y; token indicator | @radix-ui/react-radio-group | — |
+| components/ui/related-entity-carousel.tsx | keep-custom (domain-specific) | RTL: consumer | RTL horizontal-scroll direction; renderItem generic slot | docstring (dossiers/persons/orgs carousel); isRTL; 0 importers | scroll composition; no generic analog |
+| components/ui/scroll-area.tsx | keep-custom (domain-specific) | RTL: direction-owner (dir=) | Radix dir wiring (dir={dir ?? getDocDir()}) must survive reskin | dir= at scroll-area.tsx:12 | — |
+| components/ui/select.tsx | keep-custom (domain-specific) | RTL: direction-owner (dir=) | Radix dir wiring (dir={dir ?? getDocDir()}) must survive reskin | dir= at select.tsx:8; @radix-ui/react-select | — |
+| components/ui/separator.tsx | replace-with-shadcn-primitive | none | Radix orientation a11y (role=separator); token color | @radix-ui/react-separator | — |
+| components/ui/sheet.tsx | replace-with-shadcn-primitive | RTL: consumer | Radix dialog focus-trap/portal; RTL side mapping (logical); token surface | @radix-ui/react-dialog + cva sides | — |
+| components/ui/sidebar-collapsible.tsx | keep-custom (domain-specific) | none | tanstack-router Link nav + collapse state | @tanstack/react-router Link; 0 importers | router-coupled nav composition |
+| components/ui/sidebar.tsx | replace-with-shadcn-block | RTL: consumer | collapsible rail state + mobile sheet + keyboard toggle + RTL side | Slot + cva; 4 importers | shadcn sidebar block candidate (Phase 77) |
+| components/ui/skeleton.tsx | keep-custom (domain-specific) | none | HeroUI v3 Skeleton API + presets (existing call sites) — Phase 78 bump target | re-export from ./heroui-skeleton | shim → heroui-skeleton.tsx (HeroUI v3 wrapper); Phase 78 surface, not a shadcn target |
+| components/ui/slider.tsx | keep-custom (domain-specific) | RTL: direction-owner (dir=) | Radix dir wiring (dir={dir ?? getDocDir()}) must survive reskin | dir= at slider.tsx:12; @radix-ui/react-slider | — |
+| components/ui/switch.tsx | replace-with-shadcn-primitive | RTL: consumer (logical margins) | checked/onCheckedChange controlled API (51 consumers); RTL-aware thumb positioning (ms- logical margins); token track/thumb colors | re-export of Switch from ./heroui-switch | shim → heroui-switch.tsx (plain lookalike, no HeroUI) |
+| components/ui/table.tsx | replace-with-shadcn-primitive | none | semantic thead/tbody/row/cell; TableContainer horizontal-overflow scroll; token borders (var(--*)) | plain table + TableContainer; var()=2 | atomic table elements (DataTable block lives in table/) |
+| components/ui/tabs.tsx | keep-custom (domain-specific) | RTL: direction-owner (dir=) | Radix Tabs dir wiring (via heroui-tabs) must survive reskin | re-export from ./heroui-tabs | shim → heroui-tabs.tsx (Radix direction-owner, not HeroUI) |
+| components/ui/text-generate-effect.tsx | keep-custom (domain-specific) | none | — | Aceternity liveness loop 2026-07-02: 0 importers | dead — delete candidate (0 importers; Phase 79/77 input) |
+| components/ui/textarea.tsx | replace-with-shadcn-primitive | none | token bg/border/placeholder; focus-visible ring; aria-invalid | var()=1; focus-visible in textarea.tsx | — |
+| components/ui/thumb-zone-safe-area.tsx | keep-custom (domain-specific) | none | thumb-reachability safe-area insets (mobile) | 0 importers | mobile layout util; no generic analog |
+| components/ui/timeline.tsx | keep-custom (domain-specific) | none | scroll-driven motion timeline | motion useScroll/useTransform; 0 importers | motion composition; no generic analog |
+| components/ui/toggle-group.tsx | keep-custom (domain-specific) | RTL: direction-owner (dir=) | Radix dir wiring (dir={dir ?? getDocDir()}) must survive reskin | dir= at toggle-group.tsx:28 | — |
+| components/ui/toggle.tsx | replace-with-shadcn-primitive | none | Radix pressed a11y (aria-pressed); token variants; focus-visible | @radix-ui/react-toggle + cva | — |
+| components/ui/tooltip.tsx | replace-with-shadcn-primitive | none | Radix positioning/delay; portal a11y; token surface | @radix-ui/react-tooltip | — |
+| components/ui/touch-target.tsx | keep-custom (domain-specific) | none | 44x44 minimum touch-target enforcement (mobile a11y) | 0 importers | mobile a11y util; no generic analog |
+| components/ui/world-map.tsx | keep-custom (domain-specific) | none | interactive world-map dotted projection | Aceternity liveness loop 2026-07-02: 1 importer (geographic-visualization/WorldMapVisualization.tsx) | single importer; not a delete candidate without Phase 77 review |
 
-<!-- UI ROWS 38-73 + FORMS TIER: PLAN 75-04 TASK 2 -->
+### 6.2 components/forms/ (22 files)
+
+Sorted per `find frontend/src/components/forms -type f \( -name '*.tsx' -o -name '*.ts' \) ! -name '*.test.*' | sort`.
+Liveness is symbol-level grep (never barrel presence — `forms/index.ts` exports the 8 Aceternity
+components and is imported by nothing). The 8 Aceternity-styled forms cross-reference
+`75-AUDIT-aceternity-contracts.md` (AUDIT-04) rather than duplicating contracts here.
+
+<!-- prettier-ignore -->
+| Surface | Classification | Domain signals (clearance/RTL/flags/dossier-type) | Behaviors the primitive must preserve | Evidence | Notes |
+| --- | --- | --- | --- | --- | --- |
+| components/forms/ArrayFieldManager.tsx | keep-custom (domain-specific) | RTL: consumer | RHF field-array add/remove/reorder; direction-aware layout | react-hook-form (useFieldArray); 0 importers | RHF composition; no generic analog |
+| components/forms/AutoSaveFormWrapper.tsx | keep-custom (domain-specific) | RTL: consumer | debounced autosave lifecycle + status | 0 importers | autosave composition; no generic analog |
+| components/forms/ContextualHelp.tsx | keep-custom (domain-specific) | RTL: consumer (isRTL) | FieldLabelWithHelp label+popover; direction-aware help placement | consumers dossier/wizard/SharedBasicInfoStep, steps/PersonBasicInfoStep | LIVE (2 wizard consumers); ui/-primitive-only, no Aceternity |
+| components/forms/FormCheckboxAceternity.tsx | keep-custom (domain-specific) | none | RHF register + motion error reveal (contract in aceternity-contracts) | 0 importers; variant=aceternity | AUDIT-04 contract captured in 75-AUDIT-aceternity-contracts.md; 7 of 8 dead — Phase 79 rescope input |
+| components/forms/FormCompletionProgress.tsx | keep-custom (domain-specific) | none | form-completion percentage presentation | motion; 0 importers | composition; no generic analog |
+| components/forms/FormErrorDisplay.tsx | keep-custom (domain-specific) | RTL: consumer | RHF error aggregation + aria-live announcement | react-hook-form; aria=3; 0 importers | error-announcement composition |
+| components/forms/FormFieldGroup.tsx | keep-custom (domain-specific) | RTL: consumer | grouped field layout + legend | aria=2; 0 importers | layout composition |
+| components/forms/FormFieldWithValidation.tsx | keep-custom (domain-specific) | none | RHF register/FieldError + 8 aria attrs + motion reveal (contract in aceternity-contracts) | 0 importers; variant aceternity | AUDIT-04 contract captured in 75-AUDIT-aceternity-contracts.md; 7 of 8 dead — Phase 79 rescope input |
+| components/forms/FormInput.tsx | replace-with-shadcn-primitive | RTL: consumer | RHF register/FieldError contract; aria-invalid/describedby; RTL ps/pe icon spacing; token border/focus | UseFormRegister/FieldError import; aria=3; 0 importers | generic RHF input wrapper (Phase 79 → HeroUI TextField) |
+| components/forms/FormInputAceternity.tsx | keep-custom (domain-specific) | none | RHF register + rotating-placeholder + 4 aria + motion reveal (contract in aceternity-contracts) | 0 importers; variant aceternity | AUDIT-04 contract captured in 75-AUDIT-aceternity-contracts.md; 7 of 8 dead — Phase 79 rescope input |
+| components/forms/FormRadioAceternity.tsx | keep-custom (domain-specific) | none | RHF register + motion selection (contract in aceternity-contracts) | 0 importers; variant aceternity | AUDIT-04 contract captured in 75-AUDIT-aceternity-contracts.md; 7 of 8 dead — Phase 79 rescope input |
+| components/forms/FormSection.tsx | keep-custom (domain-specific) | none | collapsible form-section layout + heading a11y | aria=4; 0 importers | layout composition |
+| components/forms/FormSelect.tsx | replace-with-shadcn-primitive | RTL: consumer | RHF register/FieldError; aria-invalid/describedby; token; RTL | UseFormRegister/FieldError import; aria=3; 0 importers | generic RHF select wrapper (Phase 79 → HeroUI Select) |
+| components/forms/FormSelectAceternity.tsx | keep-custom (domain-specific) | none | RHF register + motion dropdown (contract in aceternity-contracts) | 0 importers; variant aceternity | AUDIT-04 contract captured in 75-AUDIT-aceternity-contracts.md; 7 of 8 dead — Phase 79 rescope input |
+| components/forms/FormTextareaAceternity.tsx | keep-custom (domain-specific) | none | RHF register + motion reveal (contract in aceternity-contracts) | 0 importers; variant aceternity | AUDIT-04 contract captured in 75-AUDIT-aceternity-contracts.md; 7 of 8 dead — Phase 79 rescope input |
+| components/forms/ProgressiveFormField.tsx | keep-custom (domain-specific) | none | progressive-disclosure field reveal | motion; 0 importers | progressive-disclosure composition |
+| components/forms/SearchableSelect.tsx | keep-custom (domain-specific) | RTL: consumer | combobox keyboard nav + 13 aria; RHF value contract (contract in aceternity-contracts) | LIVE via UserPicker (4 consumers) | AUDIT-04 contract captured in 75-AUDIT-aceternity-contracts.md; live via UserPicker façade — the 1 of 8 not dead |
+| components/forms/SmartInput.tsx | keep-custom (domain-specific) | none | RHF register + 6 aria + suggestion motion (contract in aceternity-contracts) | 0 importers; variant aceternity | AUDIT-04 contract captured in 75-AUDIT-aceternity-contracts.md; 7 of 8 dead — Phase 79 rescope input |
+| components/forms/UnifiedFileUpload.tsx | keep-custom (domain-specific) | none | multi-file upload + progress + preview | motion; 0 importers | upload composition; no generic analog |
+| components/forms/UserPicker.tsx | keep-custom (domain-specific) | none | assignee selection façade over SearchableSelect; consumer prop contract | consumers tasks/TaskEditDialog, dossier/AddToDossierDialogs, dossier/wizard/steps/OrgDetailsStep, work-creation/forms/TaskQuickForm | LIVE (4 consumers); the live SearchableSelect façade |
+| components/forms/ValidationIndicator.tsx | keep-custom (domain-specific) | RTL: consumer | validation status pips + direction-aware layout | isRTL; 0 importers | validation-status composition |
+| components/forms/index.ts | keep-custom (domain-specific) | none | — | barrel exports the 8 Aceternity components; 0 barrel importers | dead barrel (0 importers); Phase 79 delete input |
 
 ---
 
