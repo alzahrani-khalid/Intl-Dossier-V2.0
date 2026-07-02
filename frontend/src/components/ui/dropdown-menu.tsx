@@ -2,12 +2,10 @@ import * as React from 'react'
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 import { Check, ChevronRight, Circle } from 'lucide-react'
 
-import { cn, getDocDir } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 
 function DropdownMenu({ dir, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
-  return (
-    <DropdownMenuPrimitive.Root data-slot="dropdown-menu" dir={dir ?? getDocDir()} {...props} />
-  )
+  return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" dir={dir} {...props} />
 }
 
 function DropdownMenuTrigger({
