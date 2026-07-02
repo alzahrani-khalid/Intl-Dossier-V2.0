@@ -1,3 +1,12 @@
+> ## ⚠ SUPERSEDED (2026-07) — historical reference only
+>
+> The design source of truth is now **`frontend/DESIGN.md`** (the Linear spec).
+> This prototype predates the v8.0 Phase 77 Linear migration, which collapsed the
+> four directions and the accent-hue axis to a single dark-canonical Linear
+> direction. It is kept for provenance and is **not** a source of truth for new
+> work — do not consult it when building or modifying UI. See `frontend/DESIGN.md`
+> and `frontend/src/design-system/CLAUDE.md`.
+
 # IntelDossier Design System
 
 A foreign-affairs intelligence workspace: dossiers, engagements, forums, MoUs, and SLA tracking. The system spans **four interchangeable visual directions** that share semantic tokens and components but project very different personalities — from editorial paper-document (Chancery) to dense intelligence terminal (Situation) to government-formal (Ministerial) to warm SaaS (Bureau, the default).
@@ -10,28 +19,29 @@ A foreign-affairs intelligence workspace: dossiers, engagements, forums, MoUs, a
 
 ## Index
 
-| File | Purpose |
-|---|---|
-| `README.md` | This file — overview, content fundamentals, visual foundations, iconography, manifest |
-| `colors_and_type.css` | Foundational tokens (Bureau light) — copy-paste starting point |
-| `SKILL.md` | Cross-compatible skill for Claude Code |
-| `src/themes.jsx` | Full token builder — all directions, themes, densities |
-| `src/app.css` | Production stylesheet (the prototype) |
-| `src/icons.jsx` | 38-glyph stroked icon set |
-| `src/glyph.jsx` | DossierGlyph — circular flag system + non-country fallbacks |
-| `src/loader.jsx` | GlobeSpinner + GlobeLoader (d3-based) |
-| `preview/` | Design-system tab cards (colors, type, spacing, components, brand) |
-| `ui_kits/web/` | Click-thru web UI kit |
+| File                  | Purpose                                                                               |
+| --------------------- | ------------------------------------------------------------------------------------- |
+| `README.md`           | This file — overview, content fundamentals, visual foundations, iconography, manifest |
+| `colors_and_type.css` | Foundational tokens (Bureau light) — copy-paste starting point                        |
+| `SKILL.md`            | Cross-compatible skill for Claude Code                                                |
+| `src/themes.jsx`      | Full token builder — all directions, themes, densities                                |
+| `src/app.css`         | Production stylesheet (the prototype)                                                 |
+| `src/icons.jsx`       | 38-glyph stroked icon set                                                             |
+| `src/glyph.jsx`       | DossierGlyph — circular flag system + non-country fallbacks                           |
+| `src/loader.jsx`      | GlobeSpinner + GlobeLoader (d3-based)                                                 |
+| `preview/`            | Design-system tab cards (colors, type, spacing, components, brand)                    |
+| `ui_kits/web/`        | Click-thru web UI kit                                                                 |
 
 ## Content fundamentals
 
 **Voice.** Restrained, professional, never breezy. The reader is a senior analyst or director — write as a peer, not a tour guide. Avoid product-marketing tropes ("Discover", "Unleash", exclamation marks, "you're in!"). No emoji in copy.
 
 **Examples (from the prototype):**
-- Page subtitle: *"42 upcoming engagements this week"* — count first, declarative.
-- Empty state: *"No overdue commitments."* — full stop, no encouragement.
-- Section header: *"Week ahead"* not "What's Next?"
-- Action labels: *"Publish brief"*, *"Mark resolved"*, *"Open dossier"* — verb + noun, no "Quick", no "Easily".
+
+- Page subtitle: _"42 upcoming engagements this week"_ — count first, declarative.
+- Empty state: _"No overdue commitments."_ — full stop, no encouragement.
+- Section header: _"Week ahead"_ not "What's Next?"
+- Action labels: _"Publish brief"_, _"Mark resolved"_, _"Open dossier"_ — verb + noun, no "Quick", no "Easily".
 
 **Casing.** Sentence case for titles and buttons. UPPERCASE only for: classification ribbons, mono labels, situation-direction page-titles, table-column headers.
 
@@ -46,6 +56,7 @@ A foreign-affairs intelligence workspace: dossiers, engagements, forums, MoUs, a
 **Color system.** Hue-driven OKLCH. A single `--accent` hue propagates to buttons, charts, the SLA on-track slice, link states, and KPI rules. Each direction ships a default hue (Bureau 32° terracotta, Chancery 22° warm, Situation 190° cyan, Ministerial 158° green) but the tweak panel lets the user dial any hue 0–360°. Surfaces stay warm (Bureau/Chancery) or cool (Situation) regardless of accent. Never raw black/white — `--ink` is `#1a1714`, `--bg` is `#f7f6f4`.
 
 **Typography.** Per-direction trios:
+
 - Bureau — Inter / Inter / JetBrains Mono (default)
 - Chancery — Fraunces (serif display) / Inter / JetBrains Mono — italics live here
 - Situation — Space Grotesk / IBM Plex Sans / IBM Plex Mono — uppercase mono headers
@@ -85,7 +96,7 @@ RTL forces Tajawal globally — Fraunces, Plex and Space Grotesk lack Arabic cov
 
 ## Caveats
 
-- The four directions share components but their CSS overrides are scattered across `src/app.css` (`.dir-chancery .card`, `.dir-situation .btn-primary` etc). The token system handles colors and shape; per-direction *type & casing* shifts live in CSS, not tokens.
+- The four directions share components but their CSS overrides are scattered across `src/app.css` (`.dir-chancery .card`, `.dir-situation .btn-primary` etc). The token system handles colors and shape; per-direction _type & casing_ shifts live in CSS, not tokens.
 - Flag set is hand-drawn, simplified — not heraldically exact. 24 countries cover all current dossier data; expand `FlagSVG` in `src/glyph.jsx` to add more.
 - No dark-mode preview cards yet — the design system tokens support it (set `--theme: dark`) but cards in `preview/` show light only.
 
