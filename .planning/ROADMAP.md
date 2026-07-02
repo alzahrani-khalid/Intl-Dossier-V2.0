@@ -203,9 +203,9 @@ Full detail: [milestones/v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md). Audit: [m
 
 **Goal:** Replace the IntelDossier prototype design language with a Linear-derived one — on properly-bridged shadcn/ui RTL infrastructure and HeroUI v3 (already at 3.0.5, bumped to 3.2.1), with Aceternity fully removed — while preserving Arabic RTL correctness on all four axes (dark/light × LTR/RTL) throughout.
 
-**Hard sequencing (from research):** audit → RTL infrastructure bridge + shadcn logical properties → Linear tokens → HeroUI v3 API audit/bump → Aceternity removal → full-route visual/a11y verification. Visual baselines (VERIFY-01) are captured **before** the token phase runs (gating step of Phase 77) and re-compared in the final phase (Phase 80). The `bootstrap.js`/`directions.ts` byte-match CI guard (FOUC-01) is added at the **start** of Phase 77, before any token literal moves.
+**Hard sequencing (from research):** audit → RTL infrastructure bridge + shadcn logical properties → Linear tokens → HeroUI v3 API audit/bump → Aceternity removal → visual/a11y verification across all baselined surfaces. Visual baselines (VERIFY-01) are captured **before** the token phase runs (gating step of Phase 77) and re-compared in the final phase (Phase 80). The `bootstrap.js`/`directions.ts` byte-match CI guard (FOUC-01) is added at the **start** of Phase 77, before any token literal moves.
 
-- [ ] **Phase 75: UI Component & Migration Audit** — classify every hand-rolled surface; inventory pre-3.x HeroUI patterns, v3-removed components, and the 8 Aceternity components with their behavioral contracts
+- [ ] **Phase 75: UI Component & Migration Audit** — classify every hand-rolled surface; confirm HeroUI v3 API conformance (compound API, no v3-removed components — both review-verified); inventory the 8 Aceternity components with their behavioral contracts
 - [ ] **Phase 76: RTL Infrastructure Bridge & shadcn Logical Properties** — single `dir` owner bridged into `<html>` + Radix; portal edge-correct animations; one-shot `migrate rtl`; manual Calendar/Pagination/Sidebar patch; duplicate-`rtl:` CI guard
 - [ ] **Phase 77: Linear Token System** — dark+light Linear tokens wired through `directions.ts`/`buildTokens.ts`/`applyTokens.ts`; gap-filled error/status palette; 4-direction switcher retired; Inter + JetBrains Mono (Tajawal preserved); re-skinned primitives; design source-of-truth docs updated to Linear (DOC-01); `bootstrap.js` byte-match CI guard (gated by pre-swap baseline capture)
 - [ ] **Phase 78: HeroUI v3 API Audit & Bump** — `@heroui/react`/`@heroui/styles` 3.0.5 → 3.2.1 (light phase: the tree is already on the v3 compound API and no v2 exists — audit-confirmed, so this is a bump + regression sweep)
@@ -251,15 +251,15 @@ Full detail: [milestones/v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md). Audit: [m
 **Goal**: Linear is the sole visual direction — dark and light token sets derived from the Linear spec, wired end-to-end (bootstrap → tokens → primitives), with the FOUC byte-match invariant and the pre-swap visual baseline both enforced as gates.
 **Depends on**: Phase 76 (stable RTL infrastructure so token changes are the only moving variable)
 **Requirements**: TOKEN-01, TOKEN-02, TOKEN-03, TOKEN-04, TOKEN-05, TOKEN-06, FOUC-01, DOC-01
-**Gating step (VERIFY-01 baseline capture)**: Before any literal in `directions.ts` changes, capture visual baselines for all currently-baselined surfaces (EN+AR × dark+light) using the existing Playwright harness (~15–20 route/widget specs today; any coverage expansion is called out explicitly). The token PR is gated on this baseline existing first (no baseline laundering). The re-comparison against this baseline is owned by Phase 80.
+**Gating step (VERIFY-01 baseline capture)**: Before any literal in `directions.ts` changes, capture visual baselines for all currently-baselined surfaces (EN+AR × dark+light) using the existing Playwright harness (~15–20 route/widget specs today; any coverage expansion is called out explicitly). Harness reality: the `Visual Regression (Phase 46)` CI job is currently red on `main` (8/8 widget specs failing — the e2e.yml deployed-app/stale-secret class, issue #31), so capture/replay follows the Phase-46 precedent (seeded dev machine + human review) unless that job is repaired first. The token PR is gated on this baseline existing first (no baseline laundering). The re-comparison against this baseline is owned by Phase 80.
 **Success Criteria** (what must be TRUE):
 
-1. The app renders with Linear dark (canonical) and light token sets sourced from the Linear DESIGN.md spec and wired through `directions.ts`/`buildTokens.ts`/`applyTokens.ts` — with zero raw hex or Tailwind color literals (Design Token Check stays green).
+1. The app renders with Linear dark (canonical) and light token sets sourced from the Linear reference values in `.planning/research/STACK.md` (NOT `frontend/DESIGN.md`, which is the outgoing Bureau spec) and wired through `directions.ts`/`buildTokens.ts`/`applyTokens.ts` — with zero raw hex or Tailwind color literals (Design Token Check stays green).
 2. A CI guard fails the build if `bootstrap.js` palette/font literals diverge from `directions.ts` (byte-match, not just type-check), and the two files are changed in the same commit.
 3. Form-error/warning colors and a 6-value status-tag palette exist in Linear's dark-surface luminance band and pass WCAG AA contrast.
-4. The 4-direction switcher (Bureau/Chancery/Situation/Ministerial) is gone from `tokens/types.ts`, `TweaksDrawer`, `Topbar`, and `AppearanceSettingsSection`; Linear is the only selectable visual direction.
+4. The 4-direction switcher (Bureau/Chancery/Situation/Ministerial) is gone from `tokens/types.ts`, `TweaksDrawer`, `Topbar`, and `AppearanceSettingsSection`; Linear is the only selectable visual direction — and legacy persisted `id.dir` values (every existing user has one of the four retired directions) are coerced to `linear` in both `bootstrap.js` and `DesignProvider`, with an explicit default-`id.theme` decision (dark-canonical vs today's `light`), so first paint never silently loses tokens.
 5. Inter (500/600/700) and JetBrains Mono render across the Latin UI (self-hosted, mirrored in `bootstrap.js`) while the Tajawal Arabic cascade is preserved for `dir="rtl"`, and `components/ui/*` primitives follow Linear's button/card/input recipes (no drop shadows, hairline borders, `surface-1..4` ladder); the ~74 color literals in the `components/ui` ESLint carve-out get an explicit keep-or-migrate decision.
-6. The design source-of-truth is updated to Linear (DOC-01): root `/CLAUDE.md` and `frontend/CLAUDE.md` design-system sections no longer declare Bureau canonical, and `inteldossier_handoff_design/` is retired or repointed.
+6. The design source-of-truth is updated to Linear (DOC-01): root `/CLAUDE.md` and `frontend/CLAUDE.md` design-system sections no longer declare Bureau canonical, `frontend/DESIGN.md` is rewritten as the Linear spec, and `inteldossier_handoff_design/` is retired or repointed.
    **Plans**: TBD
    **UI hint**: yes
 
@@ -297,8 +297,8 @@ Full detail: [milestones/v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md). Audit: [m
 **Success Criteria** (what must be TRUE):
 
 1. All baselined surfaces (the existing Playwright specs, EN+AR × dark+light) are re-compared against the pre-token baseline captured in Phase 77, and every diff is either an intended Linear change (human-reviewed) or fixed — no unexplained regressions. Any coverage expansion beyond today's specs is noted, not silently assumed.
-2. An axe-core sweep passes across all four axes (dark/light × LTR/RTL) with no new violations versus the pre-migration state.
-3. CI runs portal-animation RTL smoke tests (Popover/Tooltip/Dropdown/Sheet/drawer open from the correct edge in AR) plus Calendar/Pagination/Sidebar RTL smoke tests, and they gate the build.
+2. An axe-core sweep passes across all four axes (dark/light × LTR/RTL) with no new violations versus a RECORDED pre-migration baseline (the a11y CI job currently has 2 hard failures + 8 flaky on `main` — fixed or recorded before comparison).
+3. CI runs portal-animation RTL smoke tests (Popover/Tooltip/Dropdown/Sheet/drawer open from the correct edge in AR) plus Calendar/Pagination/Sidebar RTL smoke tests, and they gate the build — which first requires bringing the currently-red visual/a11y verification jobs to green (or scoping the new smokes as a separate, green-from-birth job).
    **Plans**: TBD
    **UI hint**: yes
 

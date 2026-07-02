@@ -27,10 +27,10 @@ Replace the IntelDossier prototype design system with a Linear-derived design la
 
 ### Linear Token System
 
-- [ ] **TOKEN-01**: Dark (canonical) and light token sets are derived from the Linear DESIGN.md spec and wired into `directions.ts`/`buildTokens.ts`/`applyTokens.ts`
+- [ ] **TOKEN-01**: Dark (canonical) and light token sets are derived from the Linear reference values in `.planning/research/STACK.md` (verbatim from shadcn.io/design/linear) and wired into `directions.ts`/`buildTokens.ts`/`applyTokens.ts` — do NOT anchor to `frontend/DESIGN.md`, which is the outgoing Bureau spec (updated under DOC-01)
 - [ ] **TOKEN-02**: `bootstrap.js` byte-matches the new `directions.ts` literals, enforced by a CI guard (not just type-check)
 - [ ] **TOKEN-03**: Form-error/warning colors and a 6-value status-tag palette are derived (gap-filled) in Linear's dark-surface luminance band
-- [ ] **TOKEN-04**: The 4-direction switcher (Bureau/Chancery/Situation/Ministerial) is retired from all sites — `tokens/types.ts`, `TweaksDrawer`, `Topbar`, and `AppearanceSettingsSection`; Linear is the sole visual direction
+- [ ] **TOKEN-04**: The 4-direction switcher (Bureau/Chancery/Situation/Ministerial) is retired from all sites — `tokens/types.ts`, `TweaksDrawer`, `Topbar`, and `AppearanceSettingsSection`; Linear is the sole visual direction. Legacy persisted state is migrated: `bootstrap.js` + `DesignProvider` coerce stored `id.dir` values from the four retired directions to `linear` (every existing user has one; the current `P.bureau.light` fallback literal vanishes with the old palette map — without coercion, first paint silently loses ALL tokens), and the default `id.theme` is explicitly decided (Linear is dark-canonical; today's default is `light`)
 - [ ] **TOKEN-05**: The Latin stack is Inter (500/600/700) + JetBrains Mono as the Linear analog (Bureau already uses these — verify weights/wiring; no proprietary Linear fonts are added), and the **Tajawal Arabic cascade is preserved** for `dir="rtl"` (Inter has no Arabic coverage)
 - [ ] **TOKEN-06**: `components/ui/*` primitives are re-skinned per Linear's button/card/input recipes (no drop shadows, hairline borders, `surface-1..4` ladder); the ~74 pre-existing color literals in the `components/ui` ESLint carve-out (charts/maps/animated primitives) get an explicit keep-as-is vs. migrate decision (they are not caught by the Design Token Check)
 
@@ -47,7 +47,7 @@ Replace the IntelDossier prototype design system with a Linear-derived design la
 ### Full-Route Visual + A11y Verification
 
 - [ ] **VERIFY-01**: All Playwright-baselined surfaces (the existing ~15–20 route/widget specs, EN+AR × dark+light) are re-captured before the token phase begins and re-compared after; any expansion to additional routes is called out explicitly rather than assumed
-- [ ] **VERIFY-02**: axe-core accessibility sweep passes across all 4 axes with no new violations
+- [ ] **VERIFY-02**: axe-core accessibility sweep passes across all 4 axes with no new violations — against a RECORDED pre-migration baseline: the a11y CI job currently fails on `main` (2 hard failures: engagement ARIA + intake landmark/h1, plus 8 flaky specs); these are fixed or explicitly recorded as the baseline before comparison
 
 ### Bootstrap CI Guard + Smoke Suite
 
@@ -56,7 +56,7 @@ Replace the IntelDossier prototype design system with a Linear-derived design la
 
 ### Documentation & Source-of-Truth
 
-- [ ] **DOC-01**: The design source-of-truth is migrated off Bureau — root `/CLAUDE.md` and `frontend/CLAUDE.md` design-system sections are updated to Linear (Bureau-specific rules retired), and `frontend/design-system/inteldossier_handoff_design/` is retired or repointed so future work follows Linear, not the old prototype
+- [ ] **DOC-01**: The design source-of-truth is migrated off Bureau — root `/CLAUDE.md` and `frontend/CLAUDE.md` design-system sections are updated to Linear (Bureau-specific rules retired), `frontend/DESIGN.md` (currently the Bureau spec) is rewritten as the Linear spec, and `frontend/design-system/inteldossier_handoff_design/` is retired or repointed so future work follows Linear, not the old prototype
 
 ## Future Requirements
 
