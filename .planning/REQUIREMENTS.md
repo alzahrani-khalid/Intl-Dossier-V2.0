@@ -27,9 +27,9 @@ Replace the IntelDossier prototype design system with a Linear-derived design la
 
 ### Linear Token System
 
-- [ ] **TOKEN-01**: Dark (canonical) and light token sets are derived from the Linear reference values in `.planning/research/STACK.md` (verbatim from shadcn.io/design/linear) and wired into `directions.ts`/`buildTokens.ts`/`applyTokens.ts` — do NOT anchor to `frontend/DESIGN.md`, which is the outgoing Bureau spec (updated under DOC-01)
-- [ ] **TOKEN-02**: `bootstrap.js` byte-matches the new `directions.ts` literals, enforced by a CI guard (not just type-check)
-- [ ] **TOKEN-03**: Form-error/warning colors and a 6-value status-tag palette are derived (gap-filled) in Linear's dark-surface luminance band
+- [x] **TOKEN-01**: Dark (canonical) and light token sets are derived from the Linear reference values in `.planning/research/STACK.md` (verbatim from shadcn.io/design/linear) and wired into `directions.ts`/`buildTokens.ts`/`applyTokens.ts` — do NOT anchor to `frontend/DESIGN.md`, which is the outgoing Bureau spec (updated under DOC-01)
+- [x] **TOKEN-02**: `bootstrap.js` byte-matches the new `directions.ts` literals, enforced by a CI guard (not just type-check)
+- [x] **TOKEN-03**: Form-error/warning colors and a 6-value status-tag palette are derived (gap-filled) in Linear's dark-surface luminance band
 - [ ] **TOKEN-04**: The 4-direction switcher (Bureau/Chancery/Situation/Ministerial) is retired from all sites — `tokens/types.ts`, `TweaksDrawer`, `Topbar`, and `AppearanceSettingsSection`; Linear is the sole visual direction. Legacy persisted state is migrated: `bootstrap.js` + `DesignProvider` coerce stored `id.dir` values from the four retired directions to `linear` (every existing user has one; the current `P.bureau.light` fallback literal vanishes with the old palette map — without coercion, first paint silently loses ALL tokens), and the default `id.theme` is explicitly decided (Linear is dark-canonical; today's default is `light`)
 - [ ] **TOKEN-05**: The Latin stack is Inter (500/600/700) + JetBrains Mono as the Linear analog (Bureau already uses these — verify weights/wiring; no proprietary Linear fonts are added), and the **Tajawal Arabic cascade is preserved** for `dir="rtl"` (Inter has no Arabic coverage)
 - [ ] **TOKEN-06**: `components/ui/*` primitives are re-skinned per Linear's button/card/input recipes (no drop shadows, hairline borders, `surface-1..4` ladder); the ~74 pre-existing color literals in the `components/ui` ESLint carve-out (charts/maps/animated primitives) get an explicit keep-as-is vs. migrate decision (they are not caught by the Design Token Check)
@@ -93,9 +93,9 @@ Every v8.0 requirement maps to exactly one phase. Coverage: 24/24.
 | SRTL-01     | Phase 76 | Pending  |
 | SRTL-02     | Phase 76 | Pending  |
 | SRTL-03     | Phase 76 | Complete |
-| TOKEN-01    | Phase 77 | Pending  |
-| TOKEN-02    | Phase 77 | Pending  |
-| TOKEN-03    | Phase 77 | Pending  |
+| TOKEN-01    | Phase 77 | Complete |
+| TOKEN-02    | Phase 77 | Complete |
+| TOKEN-03    | Phase 77 | Complete |
 | TOKEN-04    | Phase 77 | Pending  |
 | TOKEN-05    | Phase 77 | Pending  |
 | TOKEN-06    | Phase 77 | Pending  |
