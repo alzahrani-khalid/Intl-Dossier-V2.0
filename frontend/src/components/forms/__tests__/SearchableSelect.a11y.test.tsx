@@ -75,11 +75,12 @@ const options = [
   { value: 'u2', label: 'Badr Khalid', description: 'badr@example.com' },
 ]
 
-// The trigger's current runtime role is `button` (T-79-02: React Aria Button
-// strips the JSX role="combobox"). Locate it by its label-derived accessible
-// name. 79-04's rebuild will make `getByRole('combobox')` resolve here (unskip
-// the T-79-02 test below).
-const getTrigger = (): HTMLElement => screen.getByRole('button', { name: /assignee/i })
+// After 79-04's rebuild the trigger exposes role="combobox" at runtime (the
+// plain <button> under `Button asChild` forwards it, where the React-Aria
+// Button element had dropped it — T-79-02). Locate it by its label-derived
+// accessible name. `getByRole('combobox')` is unambiguous while CLOSED (the
+// cmdk search input, also role=combobox, only exists once the popover opens).
+const getTrigger = (): HTMLElement => screen.getByRole('combobox', { name: /assignee/i })
 
 describe('SearchableSelect — Phase 75 contract (Wave 0 baseline)', () => {
   // ---- Group A: trigger contract attrs 2–6 that survive today (closed → open) ----
@@ -106,15 +107,21 @@ describe('SearchableSelect — Phase 75 contract (Wave 0 baseline)', () => {
   //      Aria Button strips at runtime. 79-04's rebuild MUST restore role=combobox
   //      + aria-invalid + aria-required on the trigger AND wire aria-controls to
   //      the real listbox id, then unskip this test. ----
-  it.skip('T-79-02 (79-04 must restore + unskip): full combobox trigger contract (attrs 1,2,7,8)', async () => {
+  it('T-79-02 (79-04 restored): full combobox trigger contract (attrs 1,2,7,8)', async () => {
     const user = userEvent.setup()
     render(<SearchableSelect options={options} label="Assignee" required error="Required" />)
-    const trigger = screen.getByRole('combobox') // attr 1 (role=combobox)
-    expect(trigger).toHaveAttribute('aria-invalid', 'true') // attr 7
-    expect(trigger).toHaveAttribute('aria-required', 'true') // attr 8
-    const controls = trigger.getAttribute('aria-controls') // attr 2
+    const trigger = screen.getByRole('combobox') // attr 1 (role=combobox restored to the DOM)
+    expect(trigger).toHaveAttribute('aria-invalid', 'true') // attr 7 (restored)
+    expect(trigger).toHaveAttribute('aria-required', 'true') // attr 8 (restored)
+    expect(trigger.getAttribute('aria-controls')).toBeTruthy() // attr 2 present while closed
+
     await user.click(trigger)
-    expect(await screen.findByRole('listbox')).toHaveAttribute('id', controls as string)
+    // attr 2 link: once open, aria-controls resolves to the REAL listbox id.
+    // cmdk hardcodes/overrides the CommandList id, so the component mirrors the
+    // actually-rendered id back onto the trigger (SearchableSelect open effect)
+    // — a valid reference, not the historically-dangling one.
+    const listbox = await screen.findByRole('listbox')
+    await waitFor(() => expect(trigger).toHaveAttribute('aria-controls', listbox.id))
   })
 
   // ---- Group B: clear / required-marker / alert contract, attrs 9–12 ----
@@ -214,7 +221,7 @@ describe('SearchableSelect — Phase 75 contract (Wave 0 baseline)', () => {
   // introduced here. `region` is disabled — it is a page-level landmark rule that
   // is inapplicable to an isolated component render (harness noise, not a defect).
   // 79-04 names the popover (or drops the dialog role) and unskips this test.
-  it.skip('T-79-03 (79-04 must fix + unskip): no axe violations — open state', async () => {
+  it('T-79-03 (79-04 fixed): no axe violations — open state', async () => {
     const user = userEvent.setup()
     render(<SearchableSelect options={options} label="Assignee" value="u1" required />)
     await user.click(getTrigger())

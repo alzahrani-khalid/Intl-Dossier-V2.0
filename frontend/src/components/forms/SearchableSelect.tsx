@@ -6,7 +6,6 @@
 
 import { useTranslation } from 'react-i18next'
 import { forwardRef, useCallback, useState, useId, useMemo, useRef, useEffect } from 'react'
-import { m, AnimatePresence } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { Check, ChevronDown, Search, X, Loader2 } from 'lucide-react'
 import {
@@ -88,8 +87,6 @@ export interface SearchableSelectProps {
   onSearchChange?: (query: string) => void
   /** Callback when creating new option */
   onCreate?: (value: string) => void
-  /** Visual variant */
-  variant?: 'default' | 'aceternity'
   /** Additional container classes */
   containerClassName?: string
   /** Additional trigger button classes */
@@ -183,7 +180,6 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
       onChange,
       onSearchChange,
       onCreate,
-      variant = 'default',
       containerClassName,
       className,
       renderOption,
@@ -201,6 +197,11 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
     const listboxId = useId()
     const [searchQuery, setSearchQuery] = useState('')
     const inputRef = useRef<HTMLInputElement>(null)
+    // cmdk's CommandList hardcodes its own generated id (overriding any `id`
+    // prop), so `listboxId` alone never matches the real listbox. Mirror the
+    // actual rendered id onto the trigger's aria-controls when open.
+    const listRef = useRef<HTMLDivElement>(null)
+    const [liveListboxId, setLiveListboxId] = useState<string | null>(null)
 
     // Generate IDs for accessibility
     const selectId = `searchable-select-${uniqueId}`
@@ -283,13 +284,20 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
       [multiple, onChange],
     )
 
-    // Focus search input when popover opens
+    // Focus the search input when the popover opens, and mirror the real
+    // (cmdk-owned) listbox id onto the trigger so aria-controls references the
+    // actual listbox while open.
     useEffect(() => {
-      if (open) {
-        setTimeout(() => {
-          inputRef.current?.focus()
-        }, 0)
+      if (!open) {
+        setLiveListboxId(null)
+        return
       }
+      const timer = setTimeout(() => {
+        inputRef.current?.focus()
+        const realId = listRef.current?.id
+        if (realId) setLiveListboxId(realId)
+      }, 0)
+      return () => clearTimeout(timer)
     }, [open])
 
     // Render selected value(s)
@@ -389,21 +397,11 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
       disabled && 'opacity-50 cursor-not-allowed',
     )
 
-    const aceternityTriggerClasses = cn(
-      triggerBaseClasses,
-      'bg-background',
-      'shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)]',
-      open &&
-        'shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.2),_0px_1px_0px_0px_rgba(25,28,33,0.04),_0px_0px_0px_2px_rgba(var(--primary),0.3)]',
-    )
-
-    const triggerClasses = variant === 'aceternity' ? aceternityTriggerClasses : triggerBaseClasses
-
     return (
       <div className={cn('space-y-2', containerClassName)}>
         {/* Label */}
         {label && (
-          <m.label
+          <label
             id={labelId}
             className={cn(
               'block font-medium text-start',
@@ -411,9 +409,6 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
               'text-ink',
               error && 'text-danger',
             )}
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
           >
             {label}
             {required && (
@@ -421,49 +416,56 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
                 *
               </span>
             )}
-          </m.label>
+          </label>
         )}
 
         {/* Select trigger */}
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <Button
-              ref={ref}
-              type="button"
-              variant="outline"
-              role="combobox"
-              aria-controls={listboxId}
-              aria-expanded={open}
-              aria-haspopup="listbox"
-              aria-labelledby={label ? labelId : undefined}
-              aria-describedby={describedBy || undefined}
-              aria-invalid={!!error}
-              aria-required={required}
-              disabled={disabled}
-              className={cn(triggerClasses, className)}
-            >
-              <span className="flex-1 truncate text-start">{renderSelectedValue()}</span>
-              <div className="flex items-center gap-1 ms-2">
-                {/* Clear button */}
-                {selectedValues.length > 0 && !disabled && (
-                  <span
-                    role="button"
-                    aria-label={t('smart-input:select.clear')}
-                    onClick={handleClear}
-                    className="p-0.5 hover:bg-muted rounded-sm"
-                  >
-                    <X className="h-4 w-4 text-muted-foreground" />
-                  </span>
-                )}
-                {/* Chevron */}
-                <ChevronDown
-                  className={cn(
-                    'h-4 w-4 text-muted-foreground transition-transform',
-                    open && 'rotate-180',
-                    isRTL && 'rotate-180',
+            {/*
+              Trigger is a HeroUI v3 Button recipe applied to a real DOM <button>
+              via `asChild`. Going through the plain button (not the React-Aria
+              Button element) is required so role="combobox"/aria-invalid/
+              aria-required actually reach the DOM — @heroui/react Button's
+              filterDOMProps drops them (Wave-0 finding T-79-02).
+            */}
+            <Button asChild variant="outline" className={cn(triggerBaseClasses, className)}>
+              <button
+                ref={ref}
+                type="button"
+                role="combobox"
+                aria-controls={liveListboxId ?? listboxId}
+                aria-expanded={open}
+                aria-haspopup="listbox"
+                aria-labelledby={label ? labelId : undefined}
+                aria-describedby={describedBy || undefined}
+                aria-invalid={!!error}
+                aria-required={required}
+                disabled={disabled}
+              >
+                <span className="flex-1 truncate text-start">{renderSelectedValue()}</span>
+                <div className="flex items-center gap-1 ms-2">
+                  {/* Clear button */}
+                  {selectedValues.length > 0 && !disabled && (
+                    <span
+                      role="button"
+                      aria-label={t('smart-input:select.clear')}
+                      onClick={handleClear}
+                      className="p-0.5 hover:bg-muted rounded-sm"
+                    >
+                      <X className="h-4 w-4 text-muted-foreground" />
+                    </span>
                   )}
-                />
-              </div>
+                  {/* Chevron */}
+                  <ChevronDown
+                    className={cn(
+                      'h-4 w-4 text-muted-foreground transition-transform',
+                      open && 'rotate-180',
+                      isRTL && 'rotate-180',
+                    )}
+                  />
+                </div>
+              </button>
             </Button>
           </PopoverTrigger>
 
@@ -471,6 +473,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
             className="w-[var(--radix-popover-trigger-width)] p-0"
             align="start"
             sideOffset={4}
+            aria-label={label || t('smart-input:select.search')}
           >
             <Command shouldFilter={false}>
               {/* Search input */}
@@ -486,7 +489,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
                 {loading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground ms-2" />}
               </div>
 
-              <CommandList id={listboxId} className="max-h-[300px] overflow-y-auto">
+              <CommandList ref={listRef} className="max-h-[300px] overflow-y-auto">
                 {/* Empty state */}
                 {filteredOptions.length === 0 && !canCreate && (
                   <CommandEmpty className="py-6 text-center text-sm">
@@ -536,37 +539,18 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
         </Popover>
 
         {/* Help text */}
-        <AnimatePresence mode="wait">
-          {helpText && !error && (
-            <m.p
-              id={helpId}
-              key="help-text"
-              className="text-sm text-ink-mute text-start"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              {helpText}
-            </m.p>
-          )}
+        {helpText && !error && (
+          <p id={helpId} className="text-sm text-ink-mute text-start">
+            {helpText}
+          </p>
+        )}
 
-          {/* Error message */}
-          {error && (
-            <m.p
-              id={errorId}
-              key="error"
-              className="text-sm text-danger text-start"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              role="alert"
-            >
-              {error}
-            </m.p>
-          )}
-        </AnimatePresence>
+        {/* Error message */}
+        {error && (
+          <p id={errorId} className="text-sm text-danger text-start" role="alert">
+            {error}
+          </p>
+        )}
       </div>
     )
   },
