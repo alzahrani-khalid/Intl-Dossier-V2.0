@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
 status: executing
-last_updated: '2026-07-03T20:33:26.544Z'
+last_updated: '2026-07-03T20:49:36.000Z'
 last_activity: 2026-07-03
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 31
-  completed_plans: 30
+  completed_plans: 31
   percent: 83
 ---
 
@@ -25,9 +25,10 @@ See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section
 ## Current Position
 
 Phase: 80 (full-route-visual-a11y-verification-smoke-suite) — IN PROGRESS
-Plan: 80-04 complete (4 of 6) — VERIFY-01 (visual re-compare) HUMAN diff-triage COMPLETE + APPROVED 2026-07-03 via the overseer's blocking checkpoint. Scribed all 43 §5 verdicts into 80-VISUAL-RECOMPARE.md: 39 intended-Linear (rows 16/17 also dynamic-content, seed-date shift to 2026-07-03), 4 within-tolerance passes (rows 18/20/21/22), ZERO regressions → "Regressions to fix" list EMPTY. Anti-laundering control held: no baseline PNG touched, no --update-snapshots run (recapture = Plan 80-05). FROZEN_TIME already realigned to 2026-07-03 in Task 2 (d412b7518). Scribe commit eb37e766. VERIFY-01 requirement stays OPEN — closes in 80-05 after recapture.
+Plan: 80-05 complete (5 of 6) — VERIFY-01 CLOSED. Recaptured the 43 human-ratified visual baselines as the new Linear lineage via `--update-snapshots` (gated on the 80-04 §10 approval; hard-gate T-80-13 verified present before the run): 39 PNGs rewritten (the 39 intended-Linear diffs) + 4 byte-identical (the within-tolerance dashboard widgets digest/vip-visits/my-tasks/recent-dossiers) = 43 full coverage. Replay-proof — same 10 specs at `--retries=2` WITHOUT `--update-snapshots` = 43/43 pass (33.8s), zero snapshot writes → byte-stable, no fonts/clock/seed nondeterminism leak. `playwright.config.ts` thresholds untouched (T-80-14, not in the commit diff); FROZEN_TIME left at 2026-07-03T12:00:00Z (seed current 2026-07-03 — no re-seed); ZERO `frontend/src` changes (0 regression verdicts → nothing to fix). Bureau lineage recoverable at 14191cb85 (T-80-15). Ledger §11 closed; baseline commit 799ef3c4 (39 PNGs + ledger only, `git show --stat` verified — config absent). VERIFY-01 flipped [x] + traceability → Complete.
+Prev(80-04): VERIFY-01 (visual re-compare) HUMAN diff-triage COMPLETE + APPROVED 2026-07-03 via the overseer's blocking checkpoint. Scribed all 43 §5 verdicts into 80-VISUAL-RECOMPARE.md: 39 intended-Linear (rows 16/17 also dynamic-content, seed-date shift to 2026-07-03), 4 within-tolerance passes (rows 18/20/21/22), ZERO regressions → "Regressions to fix" list EMPTY. Anti-laundering control held: no baseline PNG touched, no --update-snapshots run (recapture = Plan 80-05). FROZEN_TIME already realigned to 2026-07-03 in Task 2 (d412b7518). Scribe commit eb37e766. VERIFY-01 requirement stays OPEN — closes in 80-05 after recapture.
 Prev(80-03): VERIFY-02 closed locally. **FIXED** the 4 NEW-on-HEAD Linear-light `color-contrast` scans (MF-1 organizations en/ar, MF-2 topics en, MF-3 tasks en) at the shared `.chip` recipe: the 4 semantic status chips (`.chip-danger/-warn/-ok/-info`) swapped their ad-hoc `color-mix(<hue> 15%, transparent)` wash (composited 4.23–4.38:1) for the AA-proven opaque `var(--*-soft)` token used by the passing `.chip-accent` (light 5.00–5.37:1 / dark 4.73–7.76:1). **NO palette literal touched** → three-copy bootstrap parity holds. Same one-recipe fix also cleared the pre-existing countries+working_groups light contrast (discretionary, §10.6). **RECORDED** engagements `aria-required-parent/children` x4 (both themes/locales, structural `role="list"` w/o `role="listitem"`, present in set A) via per-scan `test.fixme('80: recorded pre-migration baseline …')` + TRACKED APP A11Y DEBT in `qa-sweep-axe-4axis.spec.ts` — fixme-count == ledger recorded-count == 4 (T-80-07). Dead `test:a11y` script repointed to `playwright test --project=a11y`. Green: `--project=a11y --retries=2` 87 pass/10 skip/0 fail; 4-axis `--workers=2` (CI parity) 56 pass/4 skip/**0 axe violations** (default-worker login `waitForURL` timeout is the known §8.3 test-infra flake, 0 axe findings). Commits 556f20705 (fix) + b3283a9c9 (test). Ledger §11 decision table + §12 gate-green.
-Status: executing — Wave 4 done (80-04 VERIFY-01 replay + APPROVED human diff-triage); next 80-05 (VERIFY-01 recapture — `--update-snapshots` now UNBLOCKED by the approved triage; re-baseline the 39 intended-Linear diffs to Linear, then 80-06). 2 plans remain (80-05, 80-06); VERIFY-01 stays open until 80-05 recaptures.
+Status: executing — Wave 5 done (80-05 VERIFY-01 recapture + replay-proof + lineage commit; VERIFY-01 CLOSED). Next 80-06 (FOUC-02 — rtl-component-smokes + calendar clock-freeze + `test-rtl-smokes` ci.yml job + branch-protection checkpoint, wave 6). 1 plan remains (80-06); phase 80 closes when 80-06 lands.
 Last activity: 2026-07-03
 
 Phase 79 (aceternity-removal) — COMPLETE (verified passed, inline). Carried-forward follow-up below still applies.

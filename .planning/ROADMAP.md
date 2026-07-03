@@ -383,7 +383,7 @@ Plans:
 
 **Wave 5** _(blocked on Wave 4 completion)_
 
-- [ ] 80-05-PLAN.md — VERIFY-01: regression fixes + Linear baseline recapture + replay proof + lineage commit (wave 5)
+- [x] 80-05-PLAN.md — VERIFY-01: regression fixes + Linear baseline recapture + replay proof + lineage commit (wave 5)
 
 **Wave 6** _(blocked on Wave 5 completion)_
 
@@ -417,7 +417,7 @@ Plans:
 | 77 | v8.0 | 9/8 | Complete    | 2026-07-02 |
 | 78 | v8.0 | 4/4 | Complete   | 2026-07-03 |
 | 79 | v8.0 | 4/4 | Complete   | 2026-07-03 |
-| 80 | v8.0 | 4/6 | In Progress|  |
+| 80 | v8.0 | 5/6 | In Progress|  |
 
 <!-- gsd:progress:end -->
 
