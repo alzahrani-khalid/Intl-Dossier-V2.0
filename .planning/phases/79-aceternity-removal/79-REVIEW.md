@@ -234,3 +234,40 @@ PostgREST metacharacters `,()%` before interpolation.
 _Reviewed: 2026-07-03T16:41:45Z_
 _Reviewer: Claude (gsd-code-reviewer)_
 _Depth: standard_
+
+---
+
+## Orchestrator triage & resolution — 2026-07-03 (evening, post-reset)
+
+Dispositioned by the orchestrator under delegated authority: fix Critical/High as
+atomic commits, record Info. Verdict was 0 Critical / 5 Warning / 4 Info.
+
+### Warnings — ALL FIXED
+
+| ID    | Fix                                                                                                                  | Commit      |
+| ----- | -------------------------------------------------------------------------------------------------------------------- | ----------- |
+| WR-01 | Removed the redundant search-row wrapper + lucide icon; `CommandInput` owns the row (loading spinner overlaid)       | `8319cfbb6` |
+| WR-02 | Dropped `isRTL && rotate-180` (a vertical caret is not RTL-mirrored); removed the now-unused `useDirection`/`Search` | `8319cfbb6` |
+| WR-03 | Gated `helpId` on `helpText && !error` so `aria-describedby` matches the render guard                                | `8319cfbb6` |
+| WR-04 | Wrapped custom `renderOption` output in `CommandItem` (role/keyboard/onSelect/key); latent, hardened                 | `8319cfbb6` |
+| WR-05 | Deleted `add-component.sh` + its `pnpm add:component` entry — completes the Aceternity purge                         | `15a79de4e` |
+
+Post-fix verification: SearchableSelect a11y **9/9**, `tsc --noEmit` clean, eslint clean.
+
+### Info — RECORDED (deferred; no code change this phase)
+
+- **IN-01** keyboard-inaccessible clear control — accepted/pre-existing. The Wave-0
+  a11y baseline documents the clear `span[role=button]` as axe-clean (no tabindex);
+  changing it is a separate a11y decision, not a Phase-79 regression.
+- **IN-02** legacy-vs-Linear token mix — style-only; deferred to avoid token churn
+  mid-endgame (part of the broader root-CLAUDE.md token migration).
+- **IN-03** truncation count uses the unfiltered total during search — cosmetic;
+  deferred.
+- **IN-04** UserPicker PostgREST `.or()` filter-string interpolation —
+  **security-adjacent, pre-existing, out of Phase-79 scope, RLS-bounded** (AND-ed with
+  `.eq('is_active', true)` under RLS → worst case is a malformed filter within the
+  caller's own scope, not an authz bypass). Surfaced to the overseer; flagged for a
+  future UserPicker-scoped security pass. Corroborates the inline review's
+  carried-forward T-79-S2 flag.
+
+_Triage by: orchestrator (Opus) — queue item 1 of the v8.0 endgame._
