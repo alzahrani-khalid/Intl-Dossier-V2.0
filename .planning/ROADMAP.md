@@ -343,7 +343,7 @@ Plans:
 
 **Wave 1**
 
-- [ ] 79-01-PLAN.md — Wave 0 a11y contract test for SearchableSelect (C1 role="alert" EN+AR, C2a keyboard order, C2b 12-attr ARIA + axe; T-79-01 triage)
+- [x] 79-01-PLAN.md — Wave 0 a11y contract test for SearchableSelect (C1 role="alert" EN+AR, C2a keyboard order, C2b 12-attr ARIA + axe; T-79-01 triage)
 - [ ] 79-02-PLAN.md — Delete the 7 dead Aceternity components + barrel prune + orphaned useFieldValidation (smart-input i18n namespace preserved)
 - [ ] 79-03-PLAN.md — ACET-02 registry removal from components.json + repo residue purge (.aceternity/ docs, README, 4 comments, dead ui/timeline.tsx)
 
@@ -390,7 +390,7 @@ Plans:
 | 76 | v8.0 | 5/5 | Complete   | 2026-07-02 |
 | 77 | v8.0 | 9/8 | Complete    | 2026-07-02 |
 | 78 | v8.0 | 4/4 | Complete   | 2026-07-03 |
-| 79 | v8.0 | 0/? | Not started | - |
+| 79 | v8.0 | 1/4 | In Progress|  |
 | 80 | v8.0 | 0/? | Not started | - |
 
 <!-- gsd:progress:end -->
