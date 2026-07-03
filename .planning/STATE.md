@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
 status: executing
-last_updated: '2026-07-03T18:06:11.857Z'
-last_activity: 2026-07-03 -- Phase 80 planning complete
+last_updated: '2026-07-03T18:40:13.899Z'
+last_activity: '2026-07-03 -- 80-01 complete (commits 66b7cb4a docs baseline, 350d91f6 test 4-axis sweep). a11y gate GREEN on reference env (87/10/0); set B recorded RED (13 fail: 8 light-theme color-contrast + 4 engagements aria-required + 1 login-timeout; 6 flaky login-timeout). VERIFY-02 NOT complete (spans 80-02/80-03).'
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 31
-  completed_plans: 26
+  completed_plans: 27
   percent: 83
 ---
 
@@ -20,14 +20,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section added)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 79 — aceternity-removal
+**Current focus:** Phase 80 — full-route-visual-a11y-verification-smoke-suite
 
 ## Current Position
 
-Phase: 79 (aceternity-removal) — COMPLETE (verified passed, inline)
-Plan: 4 of 4 (all SUMMARYs landed)
-Status: Ready to execute
-Last activity: 2026-07-03 -- Phase 80 planning complete
+Phase: 80 (full-route-visual-a11y-verification-smoke-suite) — IN PROGRESS
+Plan: 80-01 complete (1 of 6) — VERIFY-02 a11y baseline + explicit 4-axis axe sweep (set B)
+Status: executing — Wave 1 done; next 80-02 (pre-token A-leg at 14191cb85 → B ⊆ A verdict)
+Last activity: 2026-07-03 -- 80-01 complete (commits 66b7cb4a docs baseline, 350d91f6 test 4-axis sweep). a11y gate GREEN on reference env (87/10/0); set B recorded RED (13 fail: 8 light-theme color-contrast + 4 engagements aria-required + 1 login-timeout; 6 flaky login-timeout). VERIFY-02 NOT complete (spans 80-02/80-03).
+
+Phase 79 (aceternity-removal) — COMPLETE (verified passed, inline). Carried-forward follow-up below still applies.
 
 ### ⚠ REQUIRED post-reset follow-up (Phase 79)
 

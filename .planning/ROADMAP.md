@@ -367,7 +367,7 @@ Plans:
 
 **Wave 1**
 
-- [ ] 80-01-PLAN.md — VERIFY-02: fixture-liveness probe + a11y characterization + 4-axis axe sweep spec (HEAD leg, set B) (wave 1)
+- [x] 80-01-PLAN.md — VERIFY-02: fixture-liveness probe + a11y characterization + 4-axis axe sweep spec (HEAD leg, set B) (wave 1)
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
@@ -417,7 +417,7 @@ Plans:
 | 77 | v8.0 | 9/8 | Complete    | 2026-07-02 |
 | 78 | v8.0 | 4/4 | Complete   | 2026-07-03 |
 | 79 | v8.0 | 4/4 | Complete   | 2026-07-03 |
-| 80 | v8.0 | 0/? | Not started | - |
+| 80 | v8.0 | 1/6 | In Progress | - |
 
 <!-- gsd:progress:end -->
 
