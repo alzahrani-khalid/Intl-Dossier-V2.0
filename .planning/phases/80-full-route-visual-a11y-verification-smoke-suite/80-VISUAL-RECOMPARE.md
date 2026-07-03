@@ -284,3 +284,93 @@ the `556f20705` chip-contrast fix (intended, list-pages) + today-shift dynamic c
 - Reviewer: **the user** — via the overseer's blocking checkpoint
 - Date: **2026-07-03**
 - Statement: **Triage complete and APPROVED by the user via the overseer's blocking checkpoint, 2026-07-03. Provenance: overseer evidence review sampled 10/39 shots across every component family — zero structural anomalies; all 39 diffs classified intended-Linear (rows 16/17 also dynamic-content). Zero regressions → Plan 80-05 proceeds straight to recapture.**
+
+---
+
+## 11. Plan 80-05 — recapture + replay-proof + new Linear lineage (CLOSED 2026-07-03)
+
+**Executed:** 2026-07-03 (this Mac — `-chromium-darwin`). HEAD at recapture: `4927c7513`
+(`docs(80-04): complete VERIFY-01 visual re-compare plan …`). This section closes the ledger:
+the `--update-snapshots` recapture — gated on the §10 human approval — is done, proven
+byte-stable, and committed as the new baseline lineage.
+
+### 11.1 Task 1 — seed-currency gate (orchestrator)
+
+**seed current 2026-07-03.** The staging `b0000002-*` rows were seeded today-anchored on the
+Plan 80-04 seed date (§2), and this recapture ran the same calendar day (`date -u +%F` =
+`2026-07-03`). No re-seed was needed or performed. `FROZEN_TIME` in
+`dashboard-widgets-visual.spec.ts` stays `2026-07-03T12:00:00Z` (already realigned in 80-04
+`d412b7518` — §3); it was **not** touched in this plan. Non-empty sanity held across both
+runs: WeekAhead/VipVisits rendered rows (the recapture wrote a non-empty `week-ahead.png`; all
+8 widget shots captured — no readiness-wait crash).
+
+### 11.2 Task 2 — regression fixes
+
+**No regression verdicts — nothing to fix.** The §10 human triage recorded **0 `regression`**
+verdicts (39 `intended-Linear` + 4 within-tolerance passes); the "Regressions to fix" list is
+EMPTY. Accordingly, Plan 80-05 made **zero `frontend/src` changes** — `git status` over the
+whole tree showed only the recaptured PNGs dirty (no source, no spec, no config). `pnpm -C
+frontend type-check`/`lint` were therefore not re-triggered by any src edit (none existed).
+
+### 11.3 Task 3 — recapture (the ONLY sanctioned `--update-snapshots`)
+
+Preconditions verified before the run: §10 approval line present (hard gate T-80-13);
+`E2E_BASE_URL` unset; darwin host; `:5173` free (Playwright auto-booted `pnpm dev`).
+
+Recapture command (the §1 replay command + `--update-snapshots`):
+
+```bash
+pnpm -C frontend exec playwright test \
+  list-pages-visual.spec.ts dashboard-widgets-visual.spec.ts kanban-visual.spec.ts \
+  tasks-tab-visual.spec.ts tasks-page-visual.spec.ts activity-page-visual.spec.ts \
+  after-actions-page-visual.spec.ts briefs-page-visual.spec.ts settings-page-visual.spec.ts \
+  dossier-drawer-visual.spec.ts --update-snapshots --reporter=line
+```
+
+Result: **43 passed (34.7s).** On disk: **39 PNGs rewritten** (the 39 `intended-Linear` diffs)
+
+- **4 byte-identical, unchanged** — `digest`, `vip-visits`, `my-tasks`, `recent-dossiers`, the
+  exact four within-tolerance widgets from §5 rows 18/20/21/22; their re-render matched the prior
+  bytes, so `--update-snapshots` left them untouched. 39 + 4 = 43, full coverage. This mirrors
+  the 77-01 §3 pattern (42 changed + 1 byte-identical). Default-path shots keep the
+  `-chromium-darwin` names; the dashboard-widgets set keeps its bare-name `pathTemplate`
+  (deliberately preserved per 77-01 §6 — **not** "fixed").
+
+### 11.4 Task 3 — replay-proof (byte-stability, 77-01 §4 discipline)
+
+Immediately re-ran the same 10 specs **WITHOUT** `--update-snapshots` at `--retries=2` (CI
+parity), the just-written Linear PNGs as the oracle:
+
+```bash
+pnpm -C frontend exec playwright test \
+  list-pages-visual.spec.ts dashboard-widgets-visual.spec.ts kanban-visual.spec.ts \
+  tasks-tab-visual.spec.ts tasks-page-visual.spec.ts activity-page-visual.spec.ts \
+  after-actions-page-visual.spec.ts briefs-page-visual.spec.ts settings-page-visual.spec.ts \
+  dossier-drawer-visual.spec.ts --retries=2 --reporter=line
+```
+
+Result: **43 passed (33.8s). Exit 0.** Post-proof `git status --porcelain` over both snapshot
+roots was still **exactly 39 `M` PNGs** — the proof wrote **zero** snapshots, proving the new
+baselines are byte-stable under re-render (no fonts/clock/seed nondeterminism leak). No
+threshold in `playwright.config.ts` was loosened or touched (T-80-14); it is **not** in the
+baseline-commit diff.
+
+### 11.5 Lineage statement (T-80-15)
+
+- **New lineage:** the 43 Linear baselines committed by Plan 80-05 are the reference for all
+  future visual-regression work — Bureau-light → Linear-light.
+- **Old lineage recoverable:** the superseded Bureau/default-light baseline set remains fully
+  recoverable at commit **`14191cb85`** (`test(77-01): commit VERIFY-01 pre-swap visual
+baseline + capture log`) — untouched by this plan;
+  `git checkout 14191cb85 -- frontend/tests/e2e/*-snapshots frontend/tests/e2e/__snapshots__/dashboard-widgets`
+  restores it.
+- **Seed ↔ FROZEN_TIME coupling (carried forward — inherent 46-era fragility):** the
+  dashboard-widgets baselines are valid only while `FROZEN_TIME` (`2026-07-03T12:00:00Z`)
+  shares the calendar date of the today-anchored `b0000002-*` seed. A future recapture MUST
+  re-refresh that seed (77-01 §2 SQL, via Supabase MCP) **and** realign `FROZEN_TIME` to the
+  new date **before** running, or WeekAhead renders empty and the capture crashes at the
+  readiness wait.
+
+**Ledger CLOSED — VERIFY-01 satisfied: 43 human-ratified Linear baselines captured, proven
+reproducible (43/43 at `--retries=2`), and committed; Bureau lineage preserved at
+`14191cb85`; `playwright.config.ts` thresholds untouched.**
