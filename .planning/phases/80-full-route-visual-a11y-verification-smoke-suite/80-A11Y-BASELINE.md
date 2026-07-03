@@ -499,3 +499,130 @@ Plan 80-03 reads §10.2 + §10.3 as its fix-vs-record contract: **FIX** MF-1/MF-
 - `TRACKED APP A11Y DEBT` convention, OR fix them as discretionary genuine debt —
   but they carry no laundering risk either way because set A proves they pre-date the
   migration.
+
+---
+
+## 11. Plan 80-03 execution — per-failure decision ledger (fixed | recorded)
+
+Executed 2026-07-03 on the §1 reference environment. Every genuine hard-failure
+row from §10.2 carries an explicit decision below — zero undecided rows.
+Root-cause evidence was captured by re-running the failing scans with `--retries=0`
+and reading the axe violation detail (not hypothesised): all 8 `color-contrast`
+failures were on list-row **status chips** (`.chip-info/-danger/-ok/-warn`), and
+all 4 engagements failures were `aria-required-parent`/`-children` on a
+`<div role="list">` with non-`listitem` children.
+
+### 11.1 Decision table (all 12 genuine set-B findings)
+
+<!-- prettier-ignore-start -->
+| # | Finding (scan) | axe rule / impact | §10.2 class | Decision | Rationale |
+| --- | --- | --- | --- | --- | --- |
+| 1 | countries [en] light | color-contrast / serious | pre-existing | **fixed** | Same `.chip` `-soft` recipe fix — cleared for free by the MF token change; discretionary per §10.6 (fixing pre-existing debt carries no laundering risk) |
+| 2 | countries [ar] light | color-contrast / serious | pre-existing | **fixed** | Same shared chip recipe |
+| 3 | working_groups [en] light | color-contrast / serious | pre-existing | **fixed** | Same shared chip recipe |
+| 4 | working_groups [ar] light | color-contrast / serious | pre-existing | **fixed** | Same shared chip recipe |
+| 5 | organizations [en] light | color-contrast / serious | **NEW-on-HEAD** | **fixed** | **MF-1** (mandatory) — chip `.chip-*` bg → AA-proven `var(--*-soft)` |
+| 6 | organizations [ar] light | color-contrast / serious | **NEW-on-HEAD** | **fixed** | **MF-1** (mandatory) |
+| 7 | topics [en] light | color-contrast / serious | **NEW-on-HEAD** | **fixed** | **MF-2** (mandatory) |
+| 8 | tasks [en] light | color-contrast / serious | **NEW-on-HEAD** | **fixed** | **MF-3** (mandatory) |
+| 9 | engagements [en] light | aria-required-parent/children / critical | pre-existing | **recorded** | Structural `role="list"` w/o `role="listitem"` children; set A trips it too; fix is a DOM/role change out of this token-fix plan's scope |
+| 10 | engagements [en] dark | aria-required-parent/children / critical | pre-existing | **recorded** | Same structural defect (theme-independent) |
+| 11 | engagements [ar] light | aria-required-parent/children / critical | pre-existing | **recorded** | Same structural defect (locale-independent) |
+| 12 | engagements [ar] dark | aria-required-parent/children / critical | pre-existing | **recorded** | Same structural defect |
+<!-- prettier-ignore-end -->
+
+**Tally: 8 fixed (4 NEW-on-HEAD mandatory + 4 pre-existing discretionary) · 4 recorded.**
+Zero `recorded` decisions on NEW-on-HEAD items (T-80-07 satisfied). The 4 recorded
+rows equal the 4 `80: recorded pre-migration baseline` fixme strings in
+`qa-sweep-axe-4axis.spec.ts` exactly (record-count parity).
+
+### 11.2 The fix (MF-1/2/3, applied — clears rows 1–8)
+
+`frontend/src/styles/list-pages.css` — the 4 semantic chips switched from an ad-hoc
+`background: color-mix(in srgb, var(--<hue>) 15%, transparent)` wash (which
+composited to a darker, never-contrast-verified background, e.g. danger →
+`#edd6d6`, ratio 4.38:1) to the designed opaque `-soft` token used by the already
+-passing `.chip-accent`:
+
+```css
+.chip-danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.chip-warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.chip-ok {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+.chip-info {
+  background: var(--info-soft);
+  color: var(--info);
+}
+```
+
+- **Token(s) changed:** none — no palette LITERAL was edited. Only the CSS
+  _reference_ changed (from `color-mix` to the existing `var(--*-soft)` token).
+  The three byte-matched copies (`tokens/directions.ts`, `public/bootstrap.js`,
+  `index.css` `:root`) are **untouched**; `scripts/check-bootstrap-parity.mjs`
+  passes.
+- **AA proof (both modes, from `tests/unit/design-system/contrast.test.ts` /
+  DESIGN.md):** light on-soft — danger 5.25, warn 5.37, ok 5.00, info 5.08; dark
+  on-soft — danger 4.73, warn 7.76, ok 4.80, info 5.81. All ≥ 4.5:1.
+- **No dark regression:** the 4-axis sweep is 0 axe violations across all 30 dark
+  scans (§12).
+- **Pixel effect (for the 80-04 human triage):** semantic chip backgrounds render
+  a touch paler (the designed soft wash vs the former 15% mix). Subtle, in-family,
+  and the correct design-system rendering; flagged here per T-80-09.
+
+### 11.3 The record (rows 9–12)
+
+`frontend/tests/e2e/qa-sweep-axe-4axis.spec.ts` — a per-scan `RECORDED_BASELINE`
+map keyed `route|locale|theme` with 4 entries (the engagements list, en/ar ×
+light/dark), each carrying `test.fixme(true, '80: recorded pre-migration baseline
+— …')`, plus one `TRACKED APP A11Y DEBT` block. Per-scan, never a blanket skip —
+all other 56 scans stay live. Mirrors the `intake-accessibility.spec.ts` precedent
+(the in-repo convention; no new allowlist file).
+
+### 11.4 Non-axe test-infra note (not gated, not an axe finding)
+
+The §8.2 briefs [ar] login timeout and the §8.3 flaky class are `page.waitForURL`
+15s timeouts in `loginForListPages` under **high default-worker concurrency** on
+this many-core Mac (the page never loads → axe never runs → not a pass or a fail of
+the axe gate). CI runs `workers: 2` and is unaffected; the authoritative §12 proof
+was therefore run at `--workers=2` (CI parity), which is anti-laundering (lower
+concurrency yields **more** real axe readings, never fewer — the same rationale as
+the §9.3 serialized set-A run). No `frontend/src` or shared-login change was made
+for this test-infra flake (out of scope; deterministic-wait discipline preserved).
+
+---
+
+## 12. Gate green — final reference-env proof (Plan 80-03 close)
+
+Reference env (§1): local seeded dev on `:5173` serving **main**, `E2E_BASE_URL`
+unset, staging Supabase data. Date **2026-07-03**, HEAD after the two 80-03 code
+commits (`556f20705` fix + `b3283a9c9` test).
+
+<!-- prettier-ignore-start -->
+| # | Command | Result | Exit |
+| --- | --- | --- | --- |
+| 1 | `pnpm -C frontend exec playwright test --project=a11y --retries=2` | **87 passed / 10 skipped / 0 failed** (97 tests) | **0** |
+| 2 | `pnpm -C frontend exec playwright test qa-sweep-axe-4axis.spec.ts --project=chromium --workers=2 --retries=1` | **56 passed / 4 skipped / 0 failed**, `serious/critical a11y violations: 0` | **0** |
+| — | `grep -q "playwright test --project=a11y" frontend/package.json` (dead `test:a11y` repointed) | match | 0 |
+| — | `node scripts/check-bootstrap-parity.mjs` | byte-match OK (no palette literal changed) | 0 |
+| — | `pnpm -C frontend type-check` · `pnpm -C frontend lint` | both clean | 0 |
+<!-- prettier-ignore-end -->
+
+The 4 `qa-sweep-axe-4axis` skips are exactly the recorded engagements scans
+(§11.3). Command 2's default-worker variant reds only on the §11.4 login-timeout
+flake (0 axe findings in that run too); the CI-parity `--workers=2` measurement is
+the reproducible authoritative reading.
+
+**CI follow-on:** the CI job `Accessibility Tests (RTL + WCAG AA)`
+(`.github/workflows/ci.yml`, `--project=a11y`) greens itself on the next push/PR —
+its prior redness was assertion-level, now resolved (0 hard failures on this tree).
+The CI job was **not** modified (it already exists and needs no change); the 4-axis
+sweep is a LOCAL baseline vehicle (60 scans exceed the CI smoke budget) and is not
+wired into CI. VERIFY-02 is locally green with a fully honest paper trail.

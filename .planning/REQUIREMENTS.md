@@ -47,7 +47,7 @@ Replace the IntelDossier prototype design system with a Linear-derived design la
 ### Full-Route Visual + A11y Verification
 
 - [ ] **VERIFY-01**: All Playwright-baselined surfaces (the existing ~15–20 route/widget specs, EN+AR × dark+light) are re-captured before the token phase begins and re-compared after; any expansion to additional routes is called out explicitly rather than assumed
-- [ ] **VERIFY-02**: axe-core accessibility sweep passes across all 4 axes with no new violations — against a RECORDED pre-migration baseline: the a11y CI job currently fails on `main` (2 hard failures: engagement ARIA + intake landmark/h1, plus 8 flaky specs); these are fixed or explicitly recorded as the baseline before comparison
+- [x] **VERIFY-02**: axe-core accessibility sweep passes across all 4 axes with no new violations — against a RECORDED pre-migration baseline: the a11y CI job currently fails on `main` (2 hard failures: engagement ARIA + intake landmark/h1, plus 8 flaky specs); these are fixed or explicitly recorded as the baseline before comparison
 
 ### Bootstrap CI Guard + Smoke Suite
 
@@ -106,7 +106,7 @@ Every v8.0 requirement maps to exactly one phase. Coverage: 24/24.
 | ACET-01     | Phase 79 | Pending  |
 | ACET-02     | Phase 79 | Pending  |
 | VERIFY-01   | Phase 80 | Pending  |
-| VERIFY-02   | Phase 80 | Pending  |
+| VERIFY-02   | Phase 80 | Complete |
 | FOUC-02     | Phase 80 | Pending  |
 
 **Note:** VERIFY-01 spans two moments — the pre-token baseline capture is executed as a gating step of Phase 77 (before any `directions.ts` literal moves), and the post-migration re-comparison completes in Phase 80. The requirement is owned by Phase 80 where it closes.

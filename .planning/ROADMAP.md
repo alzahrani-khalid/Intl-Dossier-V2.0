@@ -375,7 +375,7 @@ Plans:
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
-- [ ] 80-03-PLAN.md — VERIFY-02: per-failure fix-vs-record (test.fixme + TRACKED APP A11Y DEBT) + a11y gate green (wave 3)
+- [x] 80-03-PLAN.md — VERIFY-02: per-failure fix-vs-record (test.fixme + TRACKED APP A11Y DEBT) + a11y gate green (wave 3)
 
 **Wave 4** _(blocked on Wave 3 completion)_
 
@@ -417,7 +417,7 @@ Plans:
 | 77 | v8.0 | 9/8 | Complete    | 2026-07-02 |
 | 78 | v8.0 | 4/4 | Complete   | 2026-07-03 |
 | 79 | v8.0 | 4/4 | Complete   | 2026-07-03 |
-| 80 | v8.0 | 2/6 | In Progress|  |
+| 80 | v8.0 | 3/6 | In Progress|  |
 
 <!-- gsd:progress:end -->
 
