@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
 status: executing
-last_updated: '2026-07-03T18:40:13.899Z'
-last_activity: '2026-07-03 -- 80-01 complete (commits 66b7cb4a docs baseline, 350d91f6 test 4-axis sweep). a11y gate GREEN on reference env (87/10/0); set B recorded RED (13 fail: 8 light-theme color-contrast + 4 engagements aria-required + 1 login-timeout; 6 flaky login-timeout). VERIFY-02 NOT complete (spans 80-02/80-03).'
+last_updated: '2026-07-03T19:07:58.578Z'
+last_activity: 2026-07-03
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 31
-  completed_plans: 27
+  completed_plans: 28
   percent: 83
 ---
 
@@ -25,9 +25,9 @@ See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section
 ## Current Position
 
 Phase: 80 (full-route-visual-a11y-verification-smoke-suite) — IN PROGRESS
-Plan: 80-01 complete (1 of 6) — VERIFY-02 a11y baseline + explicit 4-axis axe sweep (set B)
-Status: executing — Wave 1 done; next 80-02 (pre-token A-leg at 14191cb85 → B ⊆ A verdict)
-Last activity: 2026-07-03 -- 80-01 complete (commits 66b7cb4a docs baseline, 350d91f6 test 4-axis sweep). a11y gate GREEN on reference env (87/10/0); set B recorded RED (13 fail: 8 light-theme color-contrast + 4 engagements aria-required + 1 login-timeout; 6 flaky login-timeout). VERIFY-02 NOT complete (spans 80-02/80-03).
+Plan: 80-02 complete (2 of 6) — VERIFY-02 RECORDED pre-token baseline (set A @14191cb85) + finalized A/B verdict. **B ⊆ A: FALSE** — 4 NEW-on-HEAD Linear-light `color-contrast` scans (organizations en/ar, topics en, tasks en) → Plan 80-03 must-fix (MF-1/2/3, never recordable). pre-existing/recorded: countries+working_groups light contrast + engagements `aria-required-*` x4 (both themes). Set A a11y gate = 0 hard fail (matches set B). Worktree removed; no frontend/ code changes.
+Status: executing — Wave 2 done; next 80-03 (fix-vs-record: FIX the 4 NEW-on-HEAD light color-contrast, RECORD the pre-existing set). VERIFY-02 stays OPEN until 80-03 greens the a11y CI job.
+Last activity: 2026-07-03
 
 Phase 79 (aceternity-removal) — COMPLETE (verified passed, inline). Carried-forward follow-up below still applies.
 
