@@ -521,20 +521,26 @@ html[dir='rtl'] .page-sub {
   background: var(--accent-soft);
   color: var(--accent-ink);
 }
+/* Semantic chips mirror .chip-accent: the designed, WCAG-AA-proven `-soft` wash
+ * as background (opaque, contrast-verified in tests/unit/design-system/contrast.test.ts
+ * — light 5.00–5.37:1, dark 4.73–7.76:1). The former `color-mix(<hue> 15%, transparent)`
+ * wash composited to a darker, never-contrast-checked bg that fell just under 4.5:1 in
+ * the Linear light theme (Phase 80 VERIFY-02 MF-1/2/3: color-contrast 4.23–4.38 on the
+ * list-row status chips). Using the `-soft` token is theme-correct in both modes. */
 .chip-danger {
-  background: color-mix(in srgb, var(--danger) 15%, transparent);
+  background: var(--danger-soft);
   color: var(--danger);
 }
 .chip-warn {
-  background: color-mix(in srgb, var(--warn) 15%, transparent);
+  background: var(--warn-soft);
   color: var(--warn);
 }
 .chip-ok {
-  background: color-mix(in srgb, var(--ok) 15%, transparent);
+  background: var(--ok-soft);
   color: var(--ok);
 }
 .chip-info {
-  background: color-mix(in srgb, var(--info) 15%, transparent);
+  background: var(--info-soft);
   color: var(--info);
 }
 .chip-default {
