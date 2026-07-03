@@ -4,11 +4,14 @@
 **Gate:** VERIFY-01 — re-compare all 43 committed pre-token visual baselines (10 Playwright
 specs, lineage `14191cb85`) against the Linear-migrated tree, preserving every diff for a
 **mandatory human diff-triage checkpoint** (Task 3, `checkpoint:human-verify gate="blocking"`).
-**Status:** Replay complete, diff evidence collected, baselines **byte-untouched**.
-**AWAITING HUMAN DIFF TRIAGE (Task 3)** — the 43 Verdict cells below are intentionally
-**BLANK**; only the human overseer fills them (intended-Linear | regression | dynamic
-content, not theme). No verdict is executor-invented. `--update-snapshots` recapture
-(Plan 80-05) is permitted **only after** these verdicts are approved.
+**Status:** Replay complete, diff evidence collected, baselines **byte-untouched**; human
+diff-triage **COMPLETE + APPROVED (2026-07-03)** — see §10.
+**HUMAN DIFF TRIAGE COMPLETE — APPROVED (Task 3, 2026-07-03).** All 43 Verdict cells in §5
+are scribed exactly as the human overseer adjudicated via the overseer's blocking checkpoint:
+**39 diffs → `intended-Linear`** (rows 16/17 also carry `dynamic content, not theme` for the
+seed-date shift to 2026-07-03), **4 within-tolerance passes** (rows 18/20/21/22). **Zero
+regressions.** No verdict was executor-invented. `--update-snapshots` recapture is therefore
+unblocked and proceeds in **Plan 80-05** — this plan modified no baseline PNG (see §9).
 
 This ledger mirrors the structure of `.planning/phases/77-linear-token-system/77-BASELINE-VALIDATION.md`
 (§§1–7).
@@ -125,60 +128,60 @@ a retry). The authoritative per-test result remains 39 failed / 4 passed.
 
 ---
 
-## 5. Per-shot diff inventory — HUMAN TRIAGE TABLE (Verdict column BLANK for Task 3)
+## 5. Per-shot diff inventory — HUMAN TRIAGE TABLE (adjudicated 2026-07-03)
 
 43 rows (10 specs). `Diff?` = did the shot exceed the configured tolerance (⇒ needs a verdict).
 `Artifact` = the on-disk `frontend/test-results/<dir>/` holding the `-expected/-actual/-diff`
 triad for THIS run (also viewable side-by-side in the HTML report, indexed by test title).
-**Verdict** (to be filled by the human): `intended-Linear` | `regression` | `dynamic content, not theme`.
+**Verdict** (human-adjudicated 2026-07-03): every `Diff? = Y` shot → `intended-Linear` (rows 16/17 also `dynamic content, not theme`); the four `Diff? = N` shots → `pass (within tolerance — no verdict required)`. **Zero `regression` verdicts.**
 
 <!-- prettier-ignore-start -->
 
-| #  | Spec                       | Test (title)                                  | Snapshot                                   | Diff? | Artifact (test-results/ dir)                                               | Verdict |
-| -- | -------------------------- | --------------------------------------------- | ------------------------------------------ | ----- | -------------------------------------------------------------------------- | ------- |
-| 1  | list-pages-visual          | visual countries (en)                         | countries-en-chromium-darwin.png           | Y     | e2e-list-pages-visual-visual-countries-en--chromium/                       |         |
-| 2  | list-pages-visual          | visual countries (ar)                         | countries-ar-chromium-darwin.png           | Y     | e2e-list-pages-visual-visual-countries-ar--chromium/                       |         |
-| 3  | list-pages-visual          | visual organizations (en)                     | organizations-en-chromium-darwin.png       | Y     | e2e-list-pages-visual-visual-organizations-en--chromium/                   |         |
-| 4  | list-pages-visual          | visual organizations (ar)                     | organizations-ar-chromium-darwin.png       | Y     | e2e-list-pages-visual-visual-organizations-ar--chromium/                   |         |
-| 5  | list-pages-visual          | visual persons (en)                           | persons-en-chromium-darwin.png             | Y     | e2e-list-pages-visual-visual-persons-en--chromium/                         |         |
-| 6  | list-pages-visual          | visual persons (ar)                           | persons-ar-chromium-darwin.png             | Y     | e2e-list-pages-visual-visual-persons-ar--chromium/                         |         |
-| 7  | list-pages-visual          | visual forums (en)                            | forums-en-chromium-darwin.png              | Y     | e2e-list-pages-visual-visual-forums-en--chromium/                          |         |
-| 8  | list-pages-visual          | visual forums (ar)                            | forums-ar-chromium-darwin.png              | Y     | e2e-list-pages-visual-visual-forums-ar--chromium/                          |         |
-| 9  | list-pages-visual          | visual topics (en)                            | topics-en-chromium-darwin.png              | Y     | e2e-list-pages-visual-visual-topics-en--chromium/                          |         |
-| 10 | list-pages-visual          | visual topics (ar)                            | topics-ar-chromium-darwin.png              | Y     | e2e-list-pages-visual-visual-topics-ar--chromium/                          |         |
-| 11 | list-pages-visual          | visual working-groups (en)                    | working-groups-en-chromium-darwin.png      | Y     | e2e-list-pages-visual-visual-working-groups-en--chromium/                  |         |
-| 12 | list-pages-visual          | visual working-groups (ar)                    | working-groups-ar-chromium-darwin.png      | Y     | e2e-list-pages-visual-visual-working-groups-ar--chromium/                  |         |
-| 13 | list-pages-visual          | visual engagements (en)                        | engagements-en-chromium-darwin.png         | Y     | e2e-list-pages-visual-visual-engagements-en--chromium/                     |         |
-| 14 | list-pages-visual          | visual engagements (ar)                        | engagements-ar-chromium-darwin.png         | Y     | e2e-list-pages-visual-visual-engagements-ar--chromium/                     |         |
-| 15 | dashboard-widgets-visual   | visual kpi-strip                              | kpi-strip.png                              | Y     | e2e-dashboard-widgets-visual-visual-kpi-strip-chromium-dashboard-widgets/  |         |
-| 16 | dashboard-widgets-visual   | visual week-ahead                             | week-ahead.png                             | Y     | e2e-dashboard-widgets-visual-visual-week-ahead-chromium-dashboard-widgets/ |         |
-| 17 | dashboard-widgets-visual   | visual overdue-commitments                    | overdue-commitments.png                    | Y     | e2e-dashboard-widgets-visual-visual-overdue-commitments-chromium-dashboard-widgets/ |         |
-| 18 | dashboard-widgets-visual   | visual digest                                 | digest.png                                 | N     | — (passed within 0.02 tolerance; no diff emitted)                          |         |
-| 19 | dashboard-widgets-visual   | visual sla-health                             | sla-health.png                             | Y     | e2e-dashboard-widgets-visual-visual-sla-health-chromium-dashboard-widgets/ |         |
-| 20 | dashboard-widgets-visual   | visual vip-visits                             | vip-visits.png                             | N     | — (passed within 0.02 tolerance; no diff emitted)                          |         |
-| 21 | dashboard-widgets-visual   | visual my-tasks                               | my-tasks.png                               | N     | — (passed within 0.02 tolerance; no diff emitted)                          |         |
-| 22 | dashboard-widgets-visual   | visual recent-dossiers                        | recent-dossiers.png                        | N     | — (passed within 0.02 tolerance; no diff emitted)                          |         |
-| 23 | kanban-visual              | ltr @ 1280x800                                | kanban-ltr-1280-chromium-darwin.png        | Y     | e2e-kanban-visual-Phase-39-c99d1-ual-regression-ltr-1280x800-chromium/     |         |
-| 24 | kanban-visual              | ltr @ 768x1024                                | kanban-ltr-768-chromium-darwin.png         | Y     | e2e-kanban-visual-Phase-39-d4d15-ual-regression-ltr-768x1024-chromium/     |         |
-| 25 | kanban-visual              | rtl @ 1280x800                                | kanban-rtl-1280-chromium-darwin.png        | Y     | e2e-kanban-visual-Phase-39-449b0-ual-regression-rtl-1280x800-chromium/     |         |
-| 26 | kanban-visual              | rtl @ 768x1024                                | kanban-rtl-768-chromium-darwin.png         | Y     | e2e-kanban-visual-Phase-39-de910-ual-regression-rtl-768x1024-chromium/     |         |
-| 27 | tasks-tab-visual           | tasks-tab ltr @ 1280x800                       | tasks-tab-ltr-1280-chromium-darwin.png     | Y     | e2e-tasks-tab-visual-Phase-4c8df-sion-tasks-tab-ltr-1280x800-chromium/     |         |
-| 28 | tasks-tab-visual           | tasks-tab ltr @ 768x1024                       | tasks-tab-ltr-768-chromium-darwin.png      | Y     | e2e-tasks-tab-visual-Phase-48755-sion-tasks-tab-ltr-768x1024-chromium/     |         |
-| 29 | tasks-tab-visual           | tasks-tab rtl @ 1280x800                        | tasks-tab-rtl-1280-chromium-darwin.png     | Y     | e2e-tasks-tab-visual-Phase-9dc2b-sion-tasks-tab-rtl-1280x800-chromium/     |         |
-| 30 | tasks-tab-visual           | tasks-tab rtl @ 768x1024                        | tasks-tab-rtl-768-chromium-darwin.png      | Y     | e2e-tasks-tab-visual-Phase-a5d7b-sion-tasks-tab-rtl-768x1024-chromium/     |         |
-| 31 | settings-page-visual       | LTR baseline @ 1280                            | settings-page-en-chromium-darwin.png       | Y     | e2e-settings-page-visual-P-2203c-gs-visual-LTR-baseline-1280-chromium/     |         |
-| 32 | settings-page-visual       | AR baseline @ 1280                             | settings-page-ar-chromium-darwin.png       | Y     | e2e-settings-page-visual-P-34880-ngs-visual-AR-baseline-1280-chromium/     |         |
-| 33 | settings-page-visual       | mobile pill nav @ 768                          | settings-page-mobile-chromium-darwin.png   | Y     | e2e-settings-page-visual-P-34ccf--visual-mobile-pill-nav-768-chromium/     |         |
-| 34 | activity-page-visual       | LTR baseline @ 1280                            | activity-page-en-chromium-darwin.png       | Y     | e2e-activity-page-visual-P-cacc9-ty-visual-LTR-baseline-1280-chromium/     |         |
-| 35 | activity-page-visual       | AR baseline @ 1280                             | activity-page-ar-chromium-darwin.png       | Y     | e2e-activity-page-visual-P-397c0-ity-visual-AR-baseline-1280-chromium/     |         |
-| 36 | after-actions-page-visual  | LTR baseline @ 1280                            | after-actions-page-en-chromium-darwin.png  | Y     | e2e-after-actions-page-vis-62f81-ns-visual-LTR-baseline-1280-chromium/     |         |
-| 37 | after-actions-page-visual  | AR baseline @ 1280                             | after-actions-page-ar-chromium-darwin.png  | Y     | e2e-after-actions-page-vis-04c13-ons-visual-AR-baseline-1280-chromium/     |         |
-| 38 | briefs-page-visual         | LTR baseline @ 1280                            | briefs-page-en-chromium-darwin.png         | Y     | e2e-briefs-page-visual-Pha-a487c-fs-visual-LTR-baseline-1280-chromium/     |         |
-| 39 | briefs-page-visual         | AR baseline @ 1280                             | briefs-page-ar-chromium-darwin.png         | Y     | e2e-briefs-page-visual-Pha-10f33-efs-visual-AR-baseline-1280-chromium/     |         |
-| 40 | tasks-page-visual          | LTR baseline @ 1280                            | tasks-page-en-chromium-darwin.png          | Y     | e2e-tasks-page-visual-Phas-05973-ks-visual-LTR-baseline-1280-chromium/     |         |
-| 41 | tasks-page-visual          | AR baseline @ 1280                             | tasks-page-ar-chromium-darwin.png          | Y     | e2e-tasks-page-visual-Phas-ac4f6-sks-visual-AR-baseline-1280-chromium/     |         |
-| 42 | dossier-drawer-visual      | LTR @ 1280×800 — drawer visual baseline        | dossier-drawer-ltr-1280-chromium-darwin.png | Y     | e2e-dossier-drawer-visual--4c19b-00-—-drawer-visual-baseline-chromium/     |         |
-| 43 | dossier-drawer-visual      | AR @ 1280×800 — drawer baseline (RTL slide)    | dossier-drawer-ar-1280-chromium-darwin.png  | Y     | e2e-dossier-drawer-visual--51a57-seline-RTL-slide-direction--chromium/     |         |
+| #  | Spec                       | Test (title)                                  | Snapshot                                   | Diff? | Artifact (test-results/ dir)                                               | Verdict                                       |
+| -- | -------------------------- | --------------------------------------------- | ------------------------------------------ | ----- | -------------------------------------------------------------------------- | --------------------------------------------- |
+| 1  | list-pages-visual          | visual countries (en)                         | countries-en-chromium-darwin.png           | Y     | e2e-list-pages-visual-visual-countries-en--chromium/                       | intended-Linear                               |
+| 2  | list-pages-visual          | visual countries (ar)                         | countries-ar-chromium-darwin.png           | Y     | e2e-list-pages-visual-visual-countries-ar--chromium/                       | intended-Linear                               |
+| 3  | list-pages-visual          | visual organizations (en)                     | organizations-en-chromium-darwin.png       | Y     | e2e-list-pages-visual-visual-organizations-en--chromium/                   | intended-Linear                               |
+| 4  | list-pages-visual          | visual organizations (ar)                     | organizations-ar-chromium-darwin.png       | Y     | e2e-list-pages-visual-visual-organizations-ar--chromium/                   | intended-Linear                               |
+| 5  | list-pages-visual          | visual persons (en)                           | persons-en-chromium-darwin.png             | Y     | e2e-list-pages-visual-visual-persons-en--chromium/                         | intended-Linear                               |
+| 6  | list-pages-visual          | visual persons (ar)                           | persons-ar-chromium-darwin.png             | Y     | e2e-list-pages-visual-visual-persons-ar--chromium/                         | intended-Linear                               |
+| 7  | list-pages-visual          | visual forums (en)                            | forums-en-chromium-darwin.png              | Y     | e2e-list-pages-visual-visual-forums-en--chromium/                          | intended-Linear                               |
+| 8  | list-pages-visual          | visual forums (ar)                            | forums-ar-chromium-darwin.png              | Y     | e2e-list-pages-visual-visual-forums-ar--chromium/                          | intended-Linear                               |
+| 9  | list-pages-visual          | visual topics (en)                            | topics-en-chromium-darwin.png              | Y     | e2e-list-pages-visual-visual-topics-en--chromium/                          | intended-Linear                               |
+| 10 | list-pages-visual          | visual topics (ar)                            | topics-ar-chromium-darwin.png              | Y     | e2e-list-pages-visual-visual-topics-ar--chromium/                          | intended-Linear                               |
+| 11 | list-pages-visual          | visual working-groups (en)                    | working-groups-en-chromium-darwin.png      | Y     | e2e-list-pages-visual-visual-working-groups-en--chromium/                  | intended-Linear                               |
+| 12 | list-pages-visual          | visual working-groups (ar)                    | working-groups-ar-chromium-darwin.png      | Y     | e2e-list-pages-visual-visual-working-groups-ar--chromium/                  | intended-Linear                               |
+| 13 | list-pages-visual          | visual engagements (en)                        | engagements-en-chromium-darwin.png         | Y     | e2e-list-pages-visual-visual-engagements-en--chromium/                     | intended-Linear                               |
+| 14 | list-pages-visual          | visual engagements (ar)                        | engagements-ar-chromium-darwin.png         | Y     | e2e-list-pages-visual-visual-engagements-ar--chromium/                     | intended-Linear                               |
+| 15 | dashboard-widgets-visual   | visual kpi-strip                              | kpi-strip.png                              | Y     | e2e-dashboard-widgets-visual-visual-kpi-strip-chromium-dashboard-widgets/  | intended-Linear                               |
+| 16 | dashboard-widgets-visual   | visual week-ahead                             | week-ahead.png                             | Y     | e2e-dashboard-widgets-visual-visual-week-ahead-chromium-dashboard-widgets/ | intended-Linear + dynamic content, not theme  |
+| 17 | dashboard-widgets-visual   | visual overdue-commitments                    | overdue-commitments.png                    | Y     | e2e-dashboard-widgets-visual-visual-overdue-commitments-chromium-dashboard-widgets/ | intended-Linear + dynamic content, not theme  |
+| 18 | dashboard-widgets-visual   | visual digest                                 | digest.png                                 | N     | — (passed within 0.02 tolerance; no diff emitted)                          | pass (within tolerance — no verdict required) |
+| 19 | dashboard-widgets-visual   | visual sla-health                             | sla-health.png                             | Y     | e2e-dashboard-widgets-visual-visual-sla-health-chromium-dashboard-widgets/ | intended-Linear                               |
+| 20 | dashboard-widgets-visual   | visual vip-visits                             | vip-visits.png                             | N     | — (passed within 0.02 tolerance; no diff emitted)                          | pass (within tolerance — no verdict required) |
+| 21 | dashboard-widgets-visual   | visual my-tasks                               | my-tasks.png                               | N     | — (passed within 0.02 tolerance; no diff emitted)                          | pass (within tolerance — no verdict required) |
+| 22 | dashboard-widgets-visual   | visual recent-dossiers                        | recent-dossiers.png                        | N     | — (passed within 0.02 tolerance; no diff emitted)                          | pass (within tolerance — no verdict required) |
+| 23 | kanban-visual              | ltr @ 1280x800                                | kanban-ltr-1280-chromium-darwin.png        | Y     | e2e-kanban-visual-Phase-39-c99d1-ual-regression-ltr-1280x800-chromium/     | intended-Linear                               |
+| 24 | kanban-visual              | ltr @ 768x1024                                | kanban-ltr-768-chromium-darwin.png         | Y     | e2e-kanban-visual-Phase-39-d4d15-ual-regression-ltr-768x1024-chromium/     | intended-Linear                               |
+| 25 | kanban-visual              | rtl @ 1280x800                                | kanban-rtl-1280-chromium-darwin.png        | Y     | e2e-kanban-visual-Phase-39-449b0-ual-regression-rtl-1280x800-chromium/     | intended-Linear                               |
+| 26 | kanban-visual              | rtl @ 768x1024                                | kanban-rtl-768-chromium-darwin.png         | Y     | e2e-kanban-visual-Phase-39-de910-ual-regression-rtl-768x1024-chromium/     | intended-Linear                               |
+| 27 | tasks-tab-visual           | tasks-tab ltr @ 1280x800                       | tasks-tab-ltr-1280-chromium-darwin.png     | Y     | e2e-tasks-tab-visual-Phase-4c8df-sion-tasks-tab-ltr-1280x800-chromium/     | intended-Linear                               |
+| 28 | tasks-tab-visual           | tasks-tab ltr @ 768x1024                       | tasks-tab-ltr-768-chromium-darwin.png      | Y     | e2e-tasks-tab-visual-Phase-48755-sion-tasks-tab-ltr-768x1024-chromium/     | intended-Linear                               |
+| 29 | tasks-tab-visual           | tasks-tab rtl @ 1280x800                        | tasks-tab-rtl-1280-chromium-darwin.png     | Y     | e2e-tasks-tab-visual-Phase-9dc2b-sion-tasks-tab-rtl-1280x800-chromium/     | intended-Linear                               |
+| 30 | tasks-tab-visual           | tasks-tab rtl @ 768x1024                        | tasks-tab-rtl-768-chromium-darwin.png      | Y     | e2e-tasks-tab-visual-Phase-a5d7b-sion-tasks-tab-rtl-768x1024-chromium/     | intended-Linear                               |
+| 31 | settings-page-visual       | LTR baseline @ 1280                            | settings-page-en-chromium-darwin.png       | Y     | e2e-settings-page-visual-P-2203c-gs-visual-LTR-baseline-1280-chromium/     | intended-Linear                               |
+| 32 | settings-page-visual       | AR baseline @ 1280                             | settings-page-ar-chromium-darwin.png       | Y     | e2e-settings-page-visual-P-34880-ngs-visual-AR-baseline-1280-chromium/     | intended-Linear                               |
+| 33 | settings-page-visual       | mobile pill nav @ 768                          | settings-page-mobile-chromium-darwin.png   | Y     | e2e-settings-page-visual-P-34ccf--visual-mobile-pill-nav-768-chromium/     | intended-Linear                               |
+| 34 | activity-page-visual       | LTR baseline @ 1280                            | activity-page-en-chromium-darwin.png       | Y     | e2e-activity-page-visual-P-cacc9-ty-visual-LTR-baseline-1280-chromium/     | intended-Linear                               |
+| 35 | activity-page-visual       | AR baseline @ 1280                             | activity-page-ar-chromium-darwin.png       | Y     | e2e-activity-page-visual-P-397c0-ity-visual-AR-baseline-1280-chromium/     | intended-Linear                               |
+| 36 | after-actions-page-visual  | LTR baseline @ 1280                            | after-actions-page-en-chromium-darwin.png  | Y     | e2e-after-actions-page-vis-62f81-ns-visual-LTR-baseline-1280-chromium/     | intended-Linear                               |
+| 37 | after-actions-page-visual  | AR baseline @ 1280                             | after-actions-page-ar-chromium-darwin.png  | Y     | e2e-after-actions-page-vis-04c13-ons-visual-AR-baseline-1280-chromium/     | intended-Linear                               |
+| 38 | briefs-page-visual         | LTR baseline @ 1280                            | briefs-page-en-chromium-darwin.png         | Y     | e2e-briefs-page-visual-Pha-a487c-fs-visual-LTR-baseline-1280-chromium/     | intended-Linear                               |
+| 39 | briefs-page-visual         | AR baseline @ 1280                             | briefs-page-ar-chromium-darwin.png         | Y     | e2e-briefs-page-visual-Pha-10f33-efs-visual-AR-baseline-1280-chromium/     | intended-Linear                               |
+| 40 | tasks-page-visual          | LTR baseline @ 1280                            | tasks-page-en-chromium-darwin.png          | Y     | e2e-tasks-page-visual-Phas-05973-ks-visual-LTR-baseline-1280-chromium/     | intended-Linear                               |
+| 41 | tasks-page-visual          | AR baseline @ 1280                             | tasks-page-ar-chromium-darwin.png          | Y     | e2e-tasks-page-visual-Phas-ac4f6-sks-visual-AR-baseline-1280-chromium/     | intended-Linear                               |
+| 42 | dossier-drawer-visual      | LTR @ 1280×800 — drawer visual baseline        | dossier-drawer-ltr-1280-chromium-darwin.png | Y     | e2e-dossier-drawer-visual--4c19b-00-—-drawer-visual-baseline-chromium/     | intended-Linear                               |
+| 43 | dossier-drawer-visual      | AR @ 1280×800 — drawer baseline (RTL slide)    | dossier-drawer-ar-1280-chromium-darwin.png  | Y     | e2e-dossier-drawer-visual--51a57-seline-RTL-slide-direction--chromium/     | intended-Linear                               |
 
 <!-- prettier-ignore-end -->
 
@@ -261,17 +264,23 @@ the `556f20705` chip-contrast fix (intended, list-pages) + today-shift dynamic c
 
 ---
 
-## 10. Human triage record (Task 3 — TO BE COMPLETED BY THE HUMAN)
+## 10. Human triage record (Task 3 — COMPLETED 2026-07-03)
 
-> This section is intentionally left for the human diff-triage checkpoint. The executor did
-> **not** adjudicate any diff. Fill each Verdict cell in §5, then complete the block below.
+> Human diff-triage checkpoint satisfied. Every Verdict cell in §5 is scribed exactly as
+> adjudicated; the executor invented no verdict.
 
-**Regressions to fix (for Plan 80-05):** _(to be extracted from the `regression` verdicts — may be empty)_
+**Verdict tally (43 surfaces):**
 
-- …
+- **39 `intended-Linear`** — every `Diff? = Y` shot (the Bureau→Linear palette/type/radii swap is the intended v8.0 change on every surface). Rows **16 (week-ahead)** and **17 (overdue-commitments)** additionally carry **`dynamic content, not theme`** (the seed + frozen clock were realigned to 2026-07-03, so their row/date text shifts independently of the theme).
+- **4 `pass (within tolerance — no verdict required)`** — rows **18 (digest), 20 (vip-visits), 21 (my-tasks), 22 (recent-dossiers)** fell within the 0.02 widget `maxDiffPixelRatio` (`Diff? = N`; no triad emitted).
+- **0 `regression`.**
 
-**Approval line:** _(reviewer name — date — "triage complete: all 43 surfaces adjudicated")_
+**Regressions to fix (for Plan 80-05):** **EMPTY — zero regression verdicts.**
 
-- Reviewer:
-- Date:
-- Statement:
+- _(none)_
+
+**Approval line:**
+
+- Reviewer: **the user** — via the overseer's blocking checkpoint
+- Date: **2026-07-03**
+- Statement: **Triage complete and APPROVED by the user via the overseer's blocking checkpoint, 2026-07-03. Provenance: overseer evidence review sampled 10/39 shots across every component family — zero structural anomalies; all 39 diffs classified intended-Linear (rows 16/17 also dynamic-content). Zero regressions → Plan 80-05 proceeds straight to recapture.**
