@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
 status: executing
-last_updated: '2026-07-03T19:38:04.677Z'
+last_updated: '2026-07-03T20:33:26.544Z'
 last_activity: 2026-07-03
 progress:
   total_phases: 6
   completed_phases: 5
   total_plans: 31
-  completed_plans: 29
+  completed_plans: 30
   percent: 83
 ---
 
@@ -25,8 +25,9 @@ See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section
 ## Current Position
 
 Phase: 80 (full-route-visual-a11y-verification-smoke-suite) — IN PROGRESS
-Plan: 80-03 complete (3 of 6) — VERIFY-02 closed locally. **FIXED** the 4 NEW-on-HEAD Linear-light `color-contrast` scans (MF-1 organizations en/ar, MF-2 topics en, MF-3 tasks en) at the shared `.chip` recipe: the 4 semantic status chips (`.chip-danger/-warn/-ok/-info`) swapped their ad-hoc `color-mix(<hue> 15%, transparent)` wash (composited 4.23–4.38:1) for the AA-proven opaque `var(--*-soft)` token used by the passing `.chip-accent` (light 5.00–5.37:1 / dark 4.73–7.76:1). **NO palette literal touched** → three-copy bootstrap parity holds. Same one-recipe fix also cleared the pre-existing countries+working_groups light contrast (discretionary, §10.6). **RECORDED** engagements `aria-required-parent/children` x4 (both themes/locales, structural `role="list"` w/o `role="listitem"`, present in set A) via per-scan `test.fixme('80: recorded pre-migration baseline …')` + TRACKED APP A11Y DEBT in `qa-sweep-axe-4axis.spec.ts` — fixme-count == ledger recorded-count == 4 (T-80-07). Dead `test:a11y` script repointed to `playwright test --project=a11y`. Green: `--project=a11y --retries=2` 87 pass/10 skip/0 fail; 4-axis `--workers=2` (CI parity) 56 pass/4 skip/**0 axe violations** (default-worker login `waitForURL` timeout is the known §8.3 test-infra flake, 0 axe findings). Commits 556f20705 (fix) + b3283a9c9 (test). Ledger §11 decision table + §12 gate-green.
-Status: executing — Wave 3 done; next 80-04 (VERIFY-01: orchestrator seed refresh + FROZEN_TIME realign + 43-shot replay + **HUMAN diff triage, autonomous:false**). 80-03 is the LAST plan that may touch frontend/src before the visual replay — only chip-background paling (subtle, designed soft wash) to triage.
+Plan: 80-04 complete (4 of 6) — VERIFY-01 (visual re-compare) HUMAN diff-triage COMPLETE + APPROVED 2026-07-03 via the overseer's blocking checkpoint. Scribed all 43 §5 verdicts into 80-VISUAL-RECOMPARE.md: 39 intended-Linear (rows 16/17 also dynamic-content, seed-date shift to 2026-07-03), 4 within-tolerance passes (rows 18/20/21/22), ZERO regressions → "Regressions to fix" list EMPTY. Anti-laundering control held: no baseline PNG touched, no --update-snapshots run (recapture = Plan 80-05). FROZEN_TIME already realigned to 2026-07-03 in Task 2 (d412b7518). Scribe commit eb37e766. VERIFY-01 requirement stays OPEN — closes in 80-05 after recapture.
+Prev(80-03): VERIFY-02 closed locally. **FIXED** the 4 NEW-on-HEAD Linear-light `color-contrast` scans (MF-1 organizations en/ar, MF-2 topics en, MF-3 tasks en) at the shared `.chip` recipe: the 4 semantic status chips (`.chip-danger/-warn/-ok/-info`) swapped their ad-hoc `color-mix(<hue> 15%, transparent)` wash (composited 4.23–4.38:1) for the AA-proven opaque `var(--*-soft)` token used by the passing `.chip-accent` (light 5.00–5.37:1 / dark 4.73–7.76:1). **NO palette literal touched** → three-copy bootstrap parity holds. Same one-recipe fix also cleared the pre-existing countries+working_groups light contrast (discretionary, §10.6). **RECORDED** engagements `aria-required-parent/children` x4 (both themes/locales, structural `role="list"` w/o `role="listitem"`, present in set A) via per-scan `test.fixme('80: recorded pre-migration baseline …')` + TRACKED APP A11Y DEBT in `qa-sweep-axe-4axis.spec.ts` — fixme-count == ledger recorded-count == 4 (T-80-07). Dead `test:a11y` script repointed to `playwright test --project=a11y`. Green: `--project=a11y --retries=2` 87 pass/10 skip/0 fail; 4-axis `--workers=2` (CI parity) 56 pass/4 skip/**0 axe violations** (default-worker login `waitForURL` timeout is the known §8.3 test-infra flake, 0 axe findings). Commits 556f20705 (fix) + b3283a9c9 (test). Ledger §11 decision table + §12 gate-green.
+Status: executing — Wave 4 done (80-04 VERIFY-01 replay + APPROVED human diff-triage); next 80-05 (VERIFY-01 recapture — `--update-snapshots` now UNBLOCKED by the approved triage; re-baseline the 39 intended-Linear diffs to Linear, then 80-06). 2 plans remain (80-05, 80-06); VERIFY-01 stays open until 80-05 recaptures.
 Last activity: 2026-07-03
 
 Phase 79 (aceternity-removal) — COMPLETE (verified passed, inline). Carried-forward follow-up below still applies.
@@ -160,6 +161,7 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase ?]: 74-11: full-repo AnythingLLM audit confirms ZERO real calls remain on the critical path; FULL rip-out (D3) complete
 - [Phase ?]: 74-11: removed two dead AnythingLLM levers the guard does not scan — agent-runtime config provider block (233e5c02) + root .env.example keys (c3e2ee87)
 - [Phase 80]: 80-03: Fixed VERIFY-02 MF-1/2/3 Linear-light color-contrast at the shared .chip recipe (color-mix 15% wash -> AA-proven var(--_-soft) tokens); no palette literal touched. Recorded engagements aria-required-_ x4 as pre-migration baseline. a11y gate green (87/0), 4-axis 0 axe violations.
+- [Phase 80]: 80-04 VERIFY-01 visual re-compare: human diff-triage APPROVED all 43 surfaces - 39 intended-Linear (rows 16/17 also dynamic-content), 4 within-tolerance passes, ZERO regressions; recapture deferred to Plan 80-05 (anti-laundering: no baseline PNG modified, no --update-snapshots). VERIFY-01 stays open until 80-05.
 
 ### Open Todos
 

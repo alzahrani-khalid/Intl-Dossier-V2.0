@@ -379,7 +379,7 @@ Plans:
 
 **Wave 4** _(blocked on Wave 3 completion)_
 
-- [ ] 80-04-PLAN.md — VERIFY-01: orchestrator seed refresh + FROZEN_TIME realign + 43-shot replay + HUMAN diff triage (autonomous:false) (wave 4)
+- [x] 80-04-PLAN.md — VERIFY-01: orchestrator seed refresh + FROZEN_TIME realign + 43-shot replay + HUMAN diff triage (autonomous:false) (wave 4)
 
 **Wave 5** _(blocked on Wave 4 completion)_
 
@@ -417,7 +417,7 @@ Plans:
 | 77 | v8.0 | 9/8 | Complete    | 2026-07-02 |
 | 78 | v8.0 | 4/4 | Complete   | 2026-07-03 |
 | 79 | v8.0 | 4/4 | Complete   | 2026-07-03 |
-| 80 | v8.0 | 3/6 | In Progress|  |
+| 80 | v8.0 | 4/6 | In Progress|  |
 
 <!-- gsd:progress:end -->
 
