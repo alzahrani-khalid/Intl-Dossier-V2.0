@@ -178,6 +178,95 @@ is NOT chased in Phase 80.
 
 ---
 
-## 8. HEAD leg (set B) — 4-axis axe sweep
+## 8. HEAD leg (set B) — explicit 4-axis axe sweep
 
-_Recorded by Task 2 below (spec `frontend/tests/e2e/qa-sweep-axe-4axis.spec.ts`)._
+**Called-out coverage extension (no silent expansion).** `qa-sweep-axe.spec.ts`
+scans 15 routes × {en, ar} but is theme-implicit — post-Phase-77 it scans DARK
+ONLY. VERIFY-02 requires all four axes, so `qa-sweep-axe-4axis.spec.ts` adds the
+theme dimension: **15 routes × {en, ar} × {light, dark} = 60 scans**. This is an
+EXPLICIT extension called out per the CONTEXT no-silent-expansion discipline, and
+it is deliberately NOT wired into the FOUC-02 CI smoke job (60 scans exceed that
+job's runtime budget) — it stays a LOCAL baseline vehicle. It uses the same
+`runAxe` gate (serious/critical, `<main>`-scoped); the theme is pinned via
+`page.addInitScript` seeding `id.theme` before first paint.
+
+**This is set B (HEAD / post-migration).** It is intentionally recorded RED — a red
+run here is DATA, not a failure. The A-leg (pre-token worktree `14191cb85`)
+comparison that decides "no NEW violations vs recorded baseline" (B ⊆ A per
+route/locale/axis) is Plan 80-02's job; this section records set B so 80-02 has its
+post-migration operand.
+
+<!-- prettier-ignore-start -->
+| Field | Value |
+| --- | --- |
+| Spec | `frontend/tests/e2e/qa-sweep-axe-4axis.spec.ts` (chromium project, auto-discovered) |
+| Command | `pnpm -C frontend exec playwright test qa-sweep-axe-4axis.spec.ts --project=chromium --retries=1` (`E2E_BASE_URL` unset) |
+| Reference env / date / HEAD | local seeded dev vs staging Supabase / 2026-07-03 / `b5ad1ac3f` |
+| Axis count | 15 routes × 2 locales × 2 themes = **60 scans** (all 15 V6_ROUTES are dual-locale) |
+| Raw log | scratchpad `qa-sweep-4axis-headleg.log` (1.4m wall) |
+| Tally | **41 passed / 13 failed / 6 flaky** |
+<!-- prettier-ignore-end -->
+
+### 8.1 Per-scan result matrix (one cell per scan = 60 scans)
+
+Cell legend: `pass` · `CC` = serious `color-contrast` · `ARIA` = critical
+`aria-required-parent` + `aria-required-children` · `timeout` = login
+`page.waitForURL` 15s timeout (not an axe finding) · `flaky→pass` = failed first
+attempt on a login timeout, passed on retry.
+
+<!-- prettier-ignore-start -->
+| Route | en · light | en · dark | ar · light | ar · dark |
+| --- | --- | --- | --- | --- |
+| dashboard | pass | pass | pass | pass |
+| kanban | pass | pass | pass | pass |
+| calendar | pass | pass | pass | pass |
+| countries | **CC** | pass | **CC** | pass |
+| organizations | **CC** | pass | **CC** | pass |
+| persons | pass | pass | pass | pass |
+| forums | pass | pass | pass | pass |
+| topics | **CC** | pass | pass | pass |
+| working_groups | **CC** | pass | **CC** | pass |
+| engagements | **ARIA** | **ARIA** | **ARIA** | **ARIA** |
+| briefs | flaky→pass | pass | **timeout** | pass |
+| after_actions | pass | pass | pass | pass |
+| tasks | **CC** | flaky→pass | flaky→pass | flaky→pass |
+| activity | pass | pass | pass | flaky→pass |
+| settings | pass | pass | flaky→pass | pass |
+<!-- prettier-ignore-end -->
+
+### 8.2 The 13 hard failures, classified
+
+<!-- prettier-ignore-start -->
+| Scan(s) | Axe rule(s) | Impact | Root-cause class | Note |
+| --- | --- | --- | --- | --- |
+| countries [en/ar] [light], organizations [en/ar] [light], topics [en] [light], working_groups [en/ar] [light], tasks [en] [light] (8 scans) | `color-contrast` | serious | app-bug (light-palette contrast) — NEW-vs-pre-existing TBD in 80-02 | ALL light-theme; invisible to the dark-only implicit sweep. This is the headline 4th-axis finding: the Linear light theme (derived from dark per DESIGN.md) trips WCAG AA contrast on list-route `<main>` |
+| engagements [en/ar] [light] + [en/ar] [dark] (4 scans) | `aria-required-parent`, `aria-required-children` | critical | app-bug (structural ARIA nesting on the engagements list) | Fails in BOTH themes → theme-independent → almost certainly pre-existing (the existing dark-only `qa-sweep-axe` scans engagements in dark and would already trip this); confirm in 80-02 |
+| briefs [ar] [light] (1 scan) | — (none) | — | test-bug (login `waitForURL` 15s timeout under 9-worker concurrency) | Not an a11y finding; a session-race timeout, same class as the 6 flakies below but it also timed out on retry |
+<!-- prettier-ignore-end -->
+
+### 8.3 The 6 flaky scans (failed first attempt, passed on retry)
+
+All six are the same login-redirect timing flake (`page.waitForURL: Timeout
+15000ms` in `loginForListPages`) under 9-worker concurrency — **test-bug**, not an
+a11y finding: briefs [en] [light], settings [ar] [light], activity [ar] [dark],
+tasks [en] [dark], tasks [ar] [light], tasks [ar] [dark]. Serializing the sweep
+(fewer workers) or raising the login timeout would remove them; irrelevant to the
+axe baseline.
+
+### 8.4 Set B summary for 80-02
+
+- **Genuine axe findings on HEAD (set B):** 2 rule classes — `color-contrast`
+  (serious, **light-theme only**, 8 scans across countries/organizations/topics/
+  working_groups/tasks list routes) and `aria-required-parent`/`-children`
+  (critical, engagements list, **both themes**, 4 scans).
+- **Non-axe noise:** 1 hard + 6 flaky login-timeout scans (test-bug); exclude from
+  the a11y A/B comparison.
+- **Distinct surface from §3–§4:** the a11y gate (§3) scans dossier **detail**
+  pages (real IDs) and is green; this sweep scans the 15 v6 **route/list** `<main>`
+  surfaces — so "gate green" and "sweep red" are not contradictory, they cover
+  different DOM.
+- **Next (Plan 80-02):** run this same spec on the pre-token worktree `14191cb85`
+  (set A), same day/same staging, then decide NEW vs pre-existing per rule×route×
+  axis. Expectation from the theme skew: `color-contrast` (light) is the candidate
+  NEW class; `aria-required-*` (engagements, present in dark) is the candidate
+  pre-existing class. Do not assume — the A-leg proves it.
