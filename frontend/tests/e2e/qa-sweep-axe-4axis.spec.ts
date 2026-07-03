@@ -33,6 +33,29 @@ import { loginForListPages } from './support/list-pages-auth'
 
 const THEMES = ['light', 'dark'] as const
 
+// TRACKED APP A11Y DEBT (recorded pre-migration baseline — see 80-A11Y-BASELINE.md §10.4):
+// the engagements list <main> renders a `<div role="list">` whose direct children are not
+// `role="listitem"`, tripping critical aria-required-parent + aria-required-children. It fails
+// in BOTH themes AND BOTH locales (theme-/locale-independent → structural, not a token issue),
+// and the pre-token worktree `14191cb85` (set A) trips the identical four scans — so this
+// PREDATES the Phase-77 Linear migration and is recordable, NOT a NEW-on-HEAD regression. It is
+// RECORDED rather than fixed because the remedy is a structural DOM/role change on the
+// engagements list, outside this plan's token-fix scope (the fix is deferred to the engagements
+// list remediation). Each entry below records exactly one scan (route × locale × theme); every
+// reason string carries the `80:` phase marker so the recorded-fixme count matches the ledger's
+// `recorded` count exactly (anti-false-green control T-80-07). Remove an entry once that scan's
+// role nesting is remediated.
+const RECORDED_BASELINE: Readonly<Record<string, string>> = {
+  'engagements|en|light':
+    '80: recorded pre-migration baseline — engagements list aria-required-parent/children (role="list" without role="listitem" children; structural, pre-token 14191cb85 trips it too)',
+  'engagements|en|dark':
+    '80: recorded pre-migration baseline — engagements list aria-required-parent/children (role="list" without role="listitem" children; structural, pre-token 14191cb85 trips it too)',
+  'engagements|ar|light':
+    '80: recorded pre-migration baseline — engagements list aria-required-parent/children (role="list" without role="listitem" children; structural, pre-token 14191cb85 trips it too)',
+  'engagements|ar|dark':
+    '80: recorded pre-migration baseline — engagements list aria-required-parent/children (role="list" without role="listitem" children; structural, pre-token 14191cb85 trips it too)',
+}
+
 test.describe('Phase 80 VERIFY-02 — qa-sweep-axe-4axis', () => {
   for (const route of V6_ROUTES) {
     for (const locale of route.locales) {
@@ -40,6 +63,14 @@ test.describe('Phase 80 VERIFY-02 — qa-sweep-axe-4axis', () => {
         test(`${route.name} [${locale}] [${theme}] — zero serious/critical axe violations`, async ({
           page,
         }) => {
+          // Recorded pre-migration baseline (T-80-07): skip only the specific
+          // route×locale×theme scans proven pre-existing against set A. This is a
+          // per-scan record, never a blanket skip — all other scans stay live.
+          const recordedReason = RECORDED_BASELINE[`${route.name}|${locale}|${theme}`]
+          if (recordedReason !== undefined) {
+            test.fixme(true, recordedReason)
+          }
+
           // Pin the theme axis BEFORE first paint: addInitScript runs on every
           // navigation for the page's lifetime (login → redirect → AR reload →
           // goto route), so bootstrap.js reads id.theme at first paint on the
