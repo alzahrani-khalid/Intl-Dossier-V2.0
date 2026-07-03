@@ -196,15 +196,15 @@ export function HeroUIFormCheckbox({
       isRequired={isRequired}
       isDisabled={isDisabled}
       isIndeterminate={isIndeterminate}
-      className={cn('flex items-start gap-3', 'min-h-11 sm:min-h-10', className)}
+      className={cn('min-h-11 sm:min-h-10', className)}
     >
-      <HeroUICheckbox.Control className="mt-0.5">
-        <HeroUICheckbox.Indicator />
-      </HeroUICheckbox.Control>
-      <div className="flex flex-col">
-        <HeroUILabel>{label}</HeroUILabel>
-        {description && <HeroUIDescription className="text-xs">{description}</HeroUIDescription>}
-      </div>
+      <HeroUICheckbox.Content className="flex items-start gap-3">
+        <HeroUICheckbox.Control className="mt-0.5">
+          <HeroUICheckbox.Indicator />
+        </HeroUICheckbox.Control>
+        {label}
+      </HeroUICheckbox.Content>
+      {description && <HeroUIDescription className="text-xs">{description}</HeroUIDescription>}
     </HeroUICheckbox>
   )
 }
@@ -248,15 +248,15 @@ export function HeroUIFormSwitch({
       defaultSelected={defaultSelected}
       onChange={onChange}
       isDisabled={isDisabled}
-      className={cn('flex items-center justify-between gap-3', 'min-h-11 sm:min-h-10', className)}
+      className={cn('min-h-11 sm:min-h-10', className)}
     >
-      <div className="flex flex-col">
-        <HeroUILabel>{label}</HeroUILabel>
-        {description && <HeroUIDescription className="text-xs">{description}</HeroUIDescription>}
-      </div>
-      <HeroUISwitch.Control>
-        <HeroUISwitch.Thumb />
-      </HeroUISwitch.Control>
+      <HeroUISwitch.Content className="flex items-center justify-between gap-3">
+        {label}
+        <HeroUISwitch.Control>
+          <HeroUISwitch.Thumb />
+        </HeroUISwitch.Control>
+      </HeroUISwitch.Content>
+      {description && <HeroUIDescription className="text-xs">{description}</HeroUIDescription>}
     </HeroUISwitch>
   )
 }
