@@ -209,7 +209,7 @@ Full detail: [milestones/v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md). Audit: [m
 - [x] **Phase 76: RTL Infrastructure Bridge & shadcn Logical Properties** — single `dir` owner bridged into `<html>` + Radix; portal edge-correct animations; one-shot `migrate rtl`; manual Calendar/Pagination/Sidebar patch; duplicate-`rtl:` CI guard (completed 2026-07-02)
 - [x] **Phase 77: Linear Token System** — dark+light Linear tokens wired through `directions.ts`/`buildTokens.ts`/`applyTokens.ts`; gap-filled error/status palette; 4-direction switcher retired; Inter + JetBrains Mono (Tajawal preserved); re-skinned primitives; design source-of-truth docs updated to Linear (DOC-01); `bootstrap.js` byte-match CI guard (gated by pre-swap baseline capture) (completed 2026-07-02)
 - [x] **Phase 78: HeroUI v3 API Audit & Bump** — `@heroui/react`/`@heroui/styles` 3.0.5 → 3.2.1 (light phase: the tree is already on the v3 compound API and no v2 exists — audit-confirmed, so this is a bump + regression sweep) (completed 2026-07-03)
-- [ ] **Phase 79: Aceternity Removal** — 8 form components rebuilt on HeroUI v3/Radix preserving RHF/Zod validation, ARIA, and keyboard-focus; `@aceternity-pro` registry entry removed from `components.json`
+- [x] **Phase 79: Aceternity Removal** — 8 form components rebuilt on HeroUI v3/Radix preserving RHF/Zod validation, ARIA, and keyboard-focus; `@aceternity-pro` registry entry removed from `components.json` (completed 2026-07-03)
 - [ ] **Phase 80: Full-Route Visual + A11y Verification & Smoke Suite** — re-compare all baselined surfaces (EN+AR × dark+light) against the pre-token baseline; axe-core clean across all 4 axes; portal-animation + Calendar/Pagination/Sidebar RTL smoke tests in CI
 
 ---
@@ -349,7 +349,7 @@ Plans:
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
-- [ ] 79-04-PLAN.md — Rebuild SearchableSelect in place (strip variant/motion/shadows, preserve Phase 75 contract) + fully-gone grep proof + lint/suite/bundle gates
+- [x] 79-04-PLAN.md — Rebuild SearchableSelect in place (strip variant/motion/shadows, preserve Phase 75 contract) + fully-gone grep proof + lint/suite/bundle gates
 
 ### Phase 80: Full-Route Visual + A11y Verification & Smoke Suite
 
@@ -390,7 +390,7 @@ Plans:
 | 76 | v8.0 | 5/5 | Complete   | 2026-07-02 |
 | 77 | v8.0 | 9/8 | Complete    | 2026-07-02 |
 | 78 | v8.0 | 4/4 | Complete   | 2026-07-03 |
-| 79 | v8.0 | 3/4 | In Progress|  |
+| 79 | v8.0 | 4/4 | Complete   | 2026-07-03 |
 | 80 | v8.0 | 0/? | Not started | - |
 
 <!-- gsd:progress:end -->
