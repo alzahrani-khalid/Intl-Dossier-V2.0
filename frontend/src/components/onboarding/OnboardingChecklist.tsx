@@ -485,7 +485,7 @@ export function OnboardingChecklist({
                 <span className="text-muted-foreground">
                   {t('checklist.progress', { completed: completedCount, total: totalCount })}
                 </span>
-                <span className="font-medium text-primary">
+                <span className="font-medium text-accent-ink">
                   {t('checklist.progressPercentage', { percentage: completionPercentage })}
                 </span>
               </div>
@@ -610,7 +610,7 @@ export function OnboardingChecklist({
             <span className="text-muted-foreground">
               {t('checklist.progress', { completed: completedCount, total: totalCount })}
             </span>
-            <span className="font-medium text-primary">
+            <span className="font-medium text-accent-ink">
               {t('checklist.progressPercentage', { percentage: completionPercentage })}
             </span>
           </div>

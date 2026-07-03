@@ -13,11 +13,11 @@ const cssBlock = (css: string, selector: string): string => {
 }
 
 describe('handoff CSS contract', () => {
-  it('keeps Bureau labels and table headers on body typography, not mono', () => {
+  it('keeps Linear labels and table headers on body typography, not mono', () => {
     const css = readCss('src/styles/list-pages.css')
 
-    const label = cssBlock(css, '.dir-bureau .label')
-    const tableHeader = cssBlock(css, '.dir-bureau .tbl th')
+    const label = cssBlock(css, '.dir-linear .label')
+    const tableHeader = cssBlock(css, '.dir-linear .tbl th')
 
     expect(label).toContain('font-family: var(--font-body)')
     expect(label).not.toContain('font-family: var(--font-mono)')

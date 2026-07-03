@@ -17,7 +17,5 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "registries": {
-    "@aceternity-pro": "https://pro.aceternity.com/registry/{name}.json"
-  }
+  "rtl": true
 }

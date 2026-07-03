@@ -2,7 +2,7 @@
  * EnhancedVerticalTimelineCard Component
  *
  * Timeline card using react-vertical-timeline-component with:
- * - Expandable modal overlay (Aceternity UI inspired)
+ * - Expandable modal overlay
  * - Mobile-first responsive design
  * - RTL support with logical properties
  * - Dark/light mode theming
@@ -335,7 +335,7 @@ export function EnhancedVerticalTimelineCard({
                             href={event.metadata.virtual_link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-primary hover:underline inline-flex items-center gap-1 text-sm mt-2 font-medium"
+                            className="text-accent-ink hover:underline inline-flex items-center gap-1 text-sm mt-2 font-medium"
                           >
                             {t('timeline.join_virtual')}
                             <ExternalLink className="h-3.5 w-3.5" />

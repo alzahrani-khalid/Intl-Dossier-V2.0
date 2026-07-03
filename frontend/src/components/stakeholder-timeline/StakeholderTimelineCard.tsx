@@ -280,7 +280,7 @@ export function StakeholderTimelineCard({
                 href={event.metadata.virtual_link as string}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-xs text-primary hover:underline"
+                className="flex items-center gap-1 text-xs text-accent-ink hover:underline"
               >
                 <Video className="h-3 w-3" />
                 <span>{t('join_virtual')}</span>

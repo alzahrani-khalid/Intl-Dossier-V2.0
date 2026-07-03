@@ -46,10 +46,10 @@ export function BulkActionToolbar({
     >
       {/* Selection Count */}
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-accent sm:text-base">
+        <span className="text-sm font-medium text-accent-ink sm:text-base">
           {t('waitingQueue.bulkActions.selectedCount', { count: selectedCount })}
         </span>
-        <span className="text-xs text-accent sm:text-sm">
+        <span className="text-xs text-accent-ink sm:text-sm">
           {t('waitingQueue.bulkActions.maxItems', { max: 100 })}
         </span>
       </div>

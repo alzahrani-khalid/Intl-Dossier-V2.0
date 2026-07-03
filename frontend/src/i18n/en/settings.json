@@ -110,22 +110,10 @@
     "comfortableDesc": "Balanced spacing",
     "spacious": "Spacious",
     "spaciousDesc": "More breathing room",
-    "direction": {
-      "label": "Design direction",
-      "help": "Choose the visual character.",
-      "bureau": "Bureau",
-      "chancery": "Chancery",
-      "situation": "Situation Room",
-      "ministerial": "Ministerial"
-    },
     "mode": {
       "label": "Mode",
       "light": "Light",
       "dark": "Dark"
-    },
-    "hue": {
-      "label": "Accent hue",
-      "help": "0–360°"
     },
     "density": {
       "label": "Density",

@@ -150,7 +150,7 @@ export function MeetingMinutesCard({ minutes, onClick, className }: MeetingMinut
         <div
           className={cn(
             'flex items-center justify-end mt-3 pt-3 border-t border-border/50',
-            'text-sm text-primary font-medium',
+            'text-sm text-accent-ink font-medium',
           )}
         >
           <span>{t('actions.view')}</span>

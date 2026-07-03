@@ -1,5 +1,33 @@
 # Milestones
 
+## v8.0 Linear Design System Migration (Shipped: 2026-07-04)
+
+**Phases:** 6 (75–80) · **Plans:** 32 · **Timeline:** 2026-07-01 → 2026-07-04 (3 days) · **Scope:** 173 commits, 350 files (+25,583 / −9,321)
+
+**Delivered:** Retired the four-direction Bureau/Chancery/Situation/Ministerial design language (and the accent-hue axis) in favor of a single **Linear** visual direction — a re-skin of the existing OKLCH token engine, not a rebuild — on consolidated shadcn RTL infrastructure bridged into Radix, with HeroUI bumped 3.0.5 → 3.2.1 and Aceternity fully removed. Arabic RTL correctness preserved on all four axes (dark/light × LTR/RTL), proven by a full-route visual re-compare (human-approved, 0 regressions) + an honest recorded axe baseline + RTL portal/component smoke tests locked into CI.
+
+**Key accomplishments:**
+
+- **UI component & migration audit (P75):** classified every hand-rolled surface (rulebook + per-directory + per-file tiers, coverage reconciled), confirmed HeroUI was already on the v3 compound API with none of the v3-removed components imported, and captured the RHF/Zod/ARIA/keyboard contracts of the Aceternity form components before any rebuild — turning the "migration" into a scoped re-skin.
+- **RTL infrastructure bridge + shadcn logical properties (P76):** consolidated 4 scattered `dir` setters into a single owner (`ui/direction.tsx` + a DirectionProvider Radix bridge) so `document.dir` and every mounted portal flip in the same frame; ran shadcn's one-shot `migrate rtl`; manually verified Calendar/Pagination/Sidebar in Arabic; added a duplicate-`rtl:` CI guard. The 68 per-field Arabic-only `dir="rtl"` inputs were explicitly retained.
+- **Linear token system (P77):** dark-canonical + derived-light Linear token sets transcribed verbatim from research and wired bootstrap→tokens→primitives; the 4-direction switcher + hue axis fully retired (`Direction` type → `'linear'`, dual-layer `id.dir`→linear coercion so no legacy profile loses first paint); gap-filled AA error/status palette; Inter + JetBrains Mono with the Tajawal RTL cascade preserved; `components/ui/*` re-skinned to Linear recipes; three-copy `bootstrap.js` byte-match CI guard; design source-of-truth (DESIGN.md + 3× CLAUDE.md) repointed off Bureau (DOC-01).
+- **HeroUI v3 API audit & bump (P78):** `@heroui/react`/`@heroui/styles` bumped 3.0.5 → 3.2.1 in lockstep (a bump + regression sweep, not a migration), heroui-forms toggles moved to the v3.2 `*.Content` composition with a behavioral vitest oracle, size-limit REQUIRED gate + EN/AR drawer smoke green.
+- **Aceternity removal (P79):** the audit-verified reality was 1 live component (SearchableSelect, rebuilt on HeroUI v3/Radix preserving the Phase 75 role="alert"/keyboard/ARIA contract) + 7 dead (deleted); `@aceternity-pro` registry entry removed from `components.json` and all repo residue purged; the inverted `no-restricted-imports` ban stays green. Independent `/gsd-code-review 79`: 0 critical, 5 warnings (all fixed).
+- **Full-route visual + a11y verification & smoke suite (P80):** re-compared 43 baselines (EN+AR × dark+light) against the pre-token Bureau baseline via a HUMAN blocking diff-triage — 39 intended-Linear + 4 within-tolerance + 0 regressions (approved 2026-07-03) — then recaptured Linear baselines byte-stable; axe-core green across all 4 axes vs a recorded pre-migration baseline (the migration-caused light-contrast chips fixed via AA `-soft` tokens); RTL portal/component + calendar smokes wired as a green-from-birth `test-rtl-smokes` CI job.
+
+**Audit:** status **passed** — 24/24 requirements, 6/6 phases, cross-phase integration + E2E flows proven by Phase 80, `threats_open: 0` (Phase 80 SECURED 20/20). See `milestones/v8.0-MILESTONE-AUDIT.md`.
+
+**Known deferred items at close (non-blocking, recorded in the audit):**
+
+- **`test-rtl-smokes` branch-protection promotion** deferred pending repo-admin (job ships advisory; confirmed NOT silently claimed among main's 8 required contexts).
+- **CI "birth certificate"** (first green GitHub Actions run of the a11y + rtl-smokes jobs) deferred to the v8.0 PR — main is local-only ahead; local green is the phase-exit proof.
+- **IN-04** (from /gsd-code-review 79): `UserPicker` raw-query interpolation into a PostgREST `.or()` filter — pre-existing, RLS-bounded; recorded for a future UserPicker-scoped security pass.
+- **`TEST_USER_PASSWORD` 6-char literal** in ~19 tracked files that PREDATE v8.0 (staging test creds, not prod) — flagged for a future credential-hygiene sweep; v8.0 added no new occurrence.
+
+**Archive:** `.planning/milestones/v8.0-ROADMAP.md` · `.planning/milestones/v8.0-REQUIREMENTS.md` · `.planning/milestones/v8.0-MILESTONE-AUDIT.md`
+
+---
+
 ## v7.0 Intelligence Engine (Shipped: 2026-06-24)
 
 **Phases:** 7 (68–74) · **Plans:** 49 · **Timeline:** 2026-06-13 → 2026-06-24 (11 days) · **Scope:** 213 commits, 576 files (+75,365 / −31,333)

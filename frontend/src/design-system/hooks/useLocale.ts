@@ -1,10 +1,16 @@
 /**
  * Reads the current locale + setter from `DesignProvider`.
  *
- * Persisted under localStorage key `id.locale` as `'en'` or `'ar'`. Setting
- * locale also:
- *   - mirrors to `document.documentElement.lang` and `dir` (`rtl` for ar)
- *   - calls `i18n.changeLanguage` so react-i18next consumers re-render
+ * `locale` is persisted under localStorage key `id.locale` as `'en'` or `'ar'`.
+ * `setLocale` is the DesignProvider setter, which DELEGATES rather than mutating
+ * the document directly: it updates state, persists `id.locale`, and defers the
+ * language switch to runtime via a dynamic `import('@/i18n')` → `i18n.changeLanguage`
+ * (avoiding a circular dependency) — it does NOT call `i18n.changeLanguage`
+ * synchronously and does NOT write `<html dir/lang>` itself. The single owner of
+ * the runtime `<html dir/lang>` writes is the `DirectionProvider`
+ * (`components/ui/direction`), which derives them from `i18n.language`; keeping a
+ * synchronous mirror here would re-open the one-frame disagreement window. This
+ * hook only surfaces the value + delegated setter.
  *
  * T-34-01: unknown persisted values deserialise to `'en'`.
  */

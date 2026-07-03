@@ -198,7 +198,7 @@ export function RegisterPage(): React.JSX.Element {
             {t('auth.alreadyHaveAccount')}{' '}
             <a
               href="/login"
-              className="text-accent hover:underline"
+              className="text-accent-ink hover:underline"
               onClick={(event) => {
                 event.preventDefault()
                 navigate({ to: '/login' })

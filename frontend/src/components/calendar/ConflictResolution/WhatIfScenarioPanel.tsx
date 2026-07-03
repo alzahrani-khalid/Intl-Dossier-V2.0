@@ -314,7 +314,7 @@ export function WhatIfScenarioPanel({
                           <div className="flex items-start gap-2">
                             <AlertTriangle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                             <div>
-                              <p className="text-xs font-medium text-primary mb-1">
+                              <p className="text-xs font-medium text-accent-ink mb-1">
                                 {t('scenarios.aiRecommendation')}
                               </p>
                               <p className="text-xs text-muted-foreground">

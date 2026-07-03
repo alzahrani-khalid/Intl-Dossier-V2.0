@@ -63,6 +63,16 @@ for (const direction of DIRECTIONS) {
   for (const theme of THEMES) {
     for (const vp of VIEWPORTS) {
       test(`dashboard visual — ${direction}-${theme}-${vp.tag}`, async ({ page }) => {
+        // Phase 77-01 (VERIFY-01): pin id.theme via the canonical localStorage key
+        // (setTheme below uses the legacy 'theme' key + a class flip) so first paint
+        // matches the shot's intended theme before bootstrap.js reads id.theme.
+        await page.addInitScript((t) => {
+          try {
+            window.localStorage.setItem('id.theme', t)
+          } catch {
+            /* storage may be denied in some configs */
+          }
+        }, theme)
         await page.setViewportSize({ width: vp.width, height: vp.height })
         await loginAndWaitForDashboard(page, direction === 'rtl' ? 'ar' : 'en')
         await setTheme(page, theme)

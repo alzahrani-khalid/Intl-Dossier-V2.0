@@ -87,12 +87,11 @@ export function LanguageProvider({ children, initialLanguage = 'en' }: LanguageP
     }
   }, [i18n])
 
-  // Apply language direction
+  // Track language direction in context state. The single direction owner
+  // (ui/direction.tsx DirectionProvider) performs the runtime <html dir/lang>
+  // writes; useDirection consumers read this state.
   useEffect(() => {
-    const dir = getDirection(language)
-    setDirection(dir)
-    document.documentElement.dir = dir
-    document.documentElement.lang = language
+    setDirection(getDirection(language))
   }, [language])
 
   const setLanguage = useCallback(
@@ -107,11 +106,9 @@ export function LanguageProvider({ children, initialLanguage = 'en' }: LanguageP
       // Change i18n language
       await i18n.changeLanguage(newLanguage)
 
-      // Apply direction
+      // Apply direction to context state (owner writes runtime <html dir/lang>).
       const dir = getDirection(newLanguage)
       setDirection(dir)
-      document.documentElement.dir = dir
-      document.documentElement.lang = newLanguage
 
       // Save to localStorage
       const stored = localStorage.getItem('user-preferences')

@@ -8,7 +8,7 @@
 import * as React from 'react'
 import * as TabsPrimitive from '@radix-ui/react-tabs'
 
-import { cn, getDocDir } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 
 function HeroUITabs({
   className,
@@ -19,7 +19,7 @@ function HeroUITabs({
   return (
     <TabsPrimitive.Root
       data-slot="tabs"
-      dir={dir ?? getDocDir()}
+      dir={dir}
       className={cn('flex gap-2', orientation === 'vertical' ? 'flex-row' : 'flex-col', className)}
       orientation={orientation}
       {...props}

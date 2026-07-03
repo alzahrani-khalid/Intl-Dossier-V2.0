@@ -230,7 +230,7 @@ export function ComplianceViolationAlert({
                   ? violation.rule.remediation_instructions_ar
                   : violation.rule.remediation_instructions_en) && (
                   <div className="rounded-md bg-accent/5 dark:bg-accent/20 p-3 border border-accent/20 dark:border-accent/70">
-                    <p className="text-sm text-accent">
+                    <p className="text-sm text-accent-ink">
                       {isRTL
                         ? violation.rule.remediation_instructions_ar
                         : violation.rule.remediation_instructions_en}

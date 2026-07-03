@@ -69,7 +69,7 @@ export function ConsistencyPanel({
   // Get consistency score color and label
   const getScoreColor = (score: number): string => {
     if (score >= 90) return 'text-success'
-    if (score >= 75) return 'text-accent'
+    if (score >= 75) return 'text-accent-ink'
     if (score >= 60) return 'text-warning'
     if (score >= 40) return 'text-warning'
     return 'text-danger'
@@ -319,10 +319,10 @@ export function ConsistencyPanel({
 
                         {/* Suggested Resolution */}
                         <div className="rounded-md border border-accent/20 bg-accent/5 p-3">
-                          <p className="mb-1 text-xs font-medium text-accent">
+                          <p className="mb-1 text-xs font-medium text-accent-ink">
                             {t('consistency.conflict.suggestedResolution')}
                           </p>
-                          <p className="text-sm text-accent">{conflict.suggested_resolution}</p>
+                          <p className="text-sm text-accent-ink">{conflict.suggested_resolution}</p>
                         </div>
 
                         {/* Action Buttons */}

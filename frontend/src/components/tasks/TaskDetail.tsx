@@ -180,7 +180,7 @@ export function TaskDetail({
               {(task as any).assignee_email && (
                 <a
                   href={`mailto:${(task as any).assignee_email}`}
-                  className="text-xs text-primary hover:underline"
+                  className="text-xs text-accent-ink hover:underline"
                 >
                   {(task as any).assignee_email}
                 </a>

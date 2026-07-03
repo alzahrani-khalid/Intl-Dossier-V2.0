@@ -21,6 +21,7 @@ import type { ReactElement } from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render } from '@testing-library/react'
 import { axe, toHaveNoViolations } from 'jest-axe'
+import { DirectionProvider as RadixDirectionProvider } from '@radix-ui/react-direction'
 
 expect.extend(toHaveNoViolations)
 
@@ -50,7 +51,7 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 vi.mock('@/design-system/hooks', () => ({
-  useDesignDirection: vi.fn(() => ({ direction: 'chancery', setDirection: vi.fn() })),
+  useDesignDirection: vi.fn(() => ({ direction: 'linear', setDirection: vi.fn() })),
   useMode: vi.fn(() => ({ mode: 'light', setMode: vi.fn() })),
   useLocale: vi.fn(() => ({ locale: 'en', setLocale: vi.fn() })),
   useClassification: vi.fn(() => ({ classif: true, setClassif: vi.fn() })),
@@ -77,7 +78,7 @@ vi.mock('@/store/authStore', () => ({
 import { useDesignDirection, useLocale, useClassification } from '@/design-system/hooks'
 import { AppShell } from './AppShell'
 
-type Direction = 'chancery' | 'situation' | 'ministerial' | 'bureau'
+type Direction = 'linear'
 type Locale = 'en' | 'ar'
 
 beforeEach(() => {
@@ -97,20 +98,23 @@ function renderMatrix(direction: Direction, locale: Locale): ReturnType<typeof r
   document.documentElement.setAttribute('lang', locale)
   document.documentElement.setAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr')
 
+  // AppShell derives drawer placement from the Radix direction context (supplied
+  // in production by ui/direction.tsx DirectionProvider). Wrap so the RTL matrix
+  // rows exercise the rtl branch; the setAttribute lines above stay because axe
+  // reads the DOM attributes.
   const child = (<div data-testid="page-content">Shell axe-core matrix</div>) as ReactElement
-  return render(<AppShell>{child}</AppShell>)
+  return render(
+    <RadixDirectionProvider dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+      <AppShell>{child}</AppShell>
+    </RadixDirectionProvider>,
+  )
 }
 
 describe('AppShell axe-core', () => {
+  // Phase 77 — single-direction engine; the a11y matrix is Linear × {en, ar}.
   const combos: Array<[Direction, Locale]> = [
-    ['chancery', 'en'],
-    ['chancery', 'ar'],
-    ['situation', 'en'],
-    ['situation', 'ar'],
-    ['ministerial', 'en'],
-    ['ministerial', 'ar'],
-    ['bureau', 'en'],
-    ['bureau', 'ar'],
+    ['linear', 'en'],
+    ['linear', 'ar'],
   ]
 
   it.each(combos)('has no serious/critical violations in %s × %s', async (direction, locale) => {

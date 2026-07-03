@@ -8,7 +8,7 @@ export interface WidgetCardProps {
 
 /**
  * Phase-41 design alignment: uses the canonical `.card` class so direction-
- * specific overrides (e.g. `.dir-bureau .card { border-radius: 12px }`) apply
+ * scoped overrides (e.g. `.dir-linear .card { border-radius: 12px }`) apply
  * automatically. The previous Tailwind utility build (`rounded-lg p-4`) was
  * hardcoded and didn't respond to direction/density tokens.
  */

@@ -146,7 +146,7 @@ export function CommentItem({
           <Tooltip>
             <TooltipTrigger asChild>
               <span
-                className="text-primary font-medium cursor-pointer hover:underline"
+                className="text-accent-ink font-medium cursor-pointer hover:underline"
                 data-testid="mention-link"
               >
                 @{username}

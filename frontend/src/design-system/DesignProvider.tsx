@@ -2,9 +2,10 @@
  * DesignProvider — runtime wiring for the Phase 33 token engine.
  *
  * Responsibilities (see plan 33-02):
- *   1. Holds the four design-state primitives: direction, mode, hue, density.
+ *   1. Holds the design-state primitives: direction, mode, density (Phase 77
+ *      retired the hue axis — accent is a verbatim Linear literal).
  *   2. Persists each change to `localStorage` under the canonical keys
- *      `id.dir`, `id.theme`, `id.hue`, `id.density` (33-03 bootstrap reads these).
+ *      `id.dir`, `id.theme`, `id.density` (33-03 bootstrap reads these).
  *   3. Re-derives the full `TokenSet` via the pure `buildTokens` whenever any
  *      primitive changes, then calls `applyTokens` to flush to `:root`.
  *   4. Toggles the `.dark` class on `document.documentElement` so HeroUI v3's
@@ -24,7 +25,7 @@ import React, { createContext, useCallback, useEffect, useMemo, useState } from 
 
 import { applyTokens } from './tokens/applyTokens'
 import { buildTokens } from './tokens/buildTokens'
-import type { Density, Direction, Hue, Mode, TokenSet } from './tokens/types'
+import type { Density, Direction, Mode, TokenSet } from './tokens/types'
 import { wipeLegacyThemeKeys } from '@/utils/storage/preference-storage'
 
 // ----------------------------------------------------------------------------
@@ -32,7 +33,6 @@ import { wipeLegacyThemeKeys } from '@/utils/storage/preference-storage'
 // ----------------------------------------------------------------------------
 const LS_DIR = 'id.dir'
 const LS_MODE = 'id.theme'
-const LS_HUE = 'id.hue'
 const LS_DENSITY = 'id.density'
 const LS_CLASSIF = 'id.classif'
 const LS_LOCALE = 'id.locale'
@@ -47,20 +47,16 @@ const isLocale = (value: unknown): value is Locale => value === 'en' || value ==
 // ----------------------------------------------------------------------------
 // Narrow runtime guards (localStorage returns `string | null`).
 // ----------------------------------------------------------------------------
-const isDirection = (value: unknown): value is Direction =>
-  value === 'chancery' || value === 'situation' || value === 'ministerial' || value === 'bureau'
+// TOKEN-04 (Plan 77-04): Linear is the sole direction. Any other (legacy/retired)
+// value is rejected — the cross-tab `storage` listener only accepts a `'linear'`
+// id.dir event, and first-paint coercion (bootstrap + the write-back effect below)
+// guarantees the stored value converges to 'linear'.
+const isDirection = (value: unknown): value is Direction => value === 'linear'
 
 const isMode = (value: unknown): value is Mode => value === 'light' || value === 'dark'
 
 const isDensity = (value: unknown): value is Density =>
   value === 'comfortable' || value === 'compact' || value === 'dense'
-
-const parseHue = (value: string | null): number | null => {
-  if (value === null || value === '') return null
-  const n = Number(value)
-  if (!Number.isFinite(n)) return null
-  return n
-}
 
 const safeGetItem = (key: string): string | null => {
   try {
@@ -77,6 +73,16 @@ const safeSetItem = (key: string, value: string): void => {
     }
   } catch (err) {
     console.warn('DesignProvider: failed to persist', key, err)
+  }
+}
+
+const safeRemoveItem = (key: string): void => {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem(key)
+    }
+  } catch (err) {
+    console.warn('DesignProvider: failed to remove', key, err)
   }
 }
 
@@ -109,24 +115,21 @@ function readDensityValue(): Density | null {
 export interface DesignTestHatch {
   setDirection: (d: Direction) => void
   setMode: (m: Mode) => void
-  setHue: (h: Hue) => void
   setDensity: (d: Density) => void
 }
 
 // ----------------------------------------------------------------------------
-// Context shape — consumed by hooks in ./hooks/use{Direction,Mode,Hue,Density,Tokens}.ts
+// Context shape — consumed by hooks in ./hooks/use{Direction,Mode,Density,Tokens}.ts
 // ----------------------------------------------------------------------------
 export interface DesignContextValue {
   direction: Direction
   mode: Mode
-  hue: Hue
   density: Density
   classif: boolean
   locale: Locale
   tokens: TokenSet
   setDirection: (d: Direction) => void
   setMode: (m: Mode) => void
-  setHue: (h: Hue) => void
   setDensity: (d: Density) => void
   setClassif: (v: boolean) => void
   setLocale: (l: Locale) => void
@@ -136,7 +139,6 @@ export interface DesignProviderProps {
   children: React.ReactNode
   initialDirection?: Direction
   initialMode?: Mode
-  initialHue?: Hue
   initialDensity?: Density
   initialClassif?: boolean
   initialLocale?: Locale
@@ -149,28 +151,29 @@ export const DesignContext = createContext<DesignContextValue | undefined>(undef
 // ----------------------------------------------------------------------------
 export function DesignProvider({
   children,
-  initialDirection = 'bureau',
-  initialMode = 'light',
-  initialHue = 32,
+  // `initialDirection` stays in DesignProviderProps for API compatibility (App.tsx
+  // passes "linear"), but direction is coerced to a constant 'linear' below — a
+  // stored/passed retired direction must never reach first paint (TOKEN-04). It is
+  // intentionally not destructured so it cannot be read by mistake.
+  initialMode = 'dark',
   initialDensity = 'comfortable',
   initialClassif = false,
   initialLocale = 'en',
 }: DesignProviderProps): React.ReactElement {
+  // TOKEN-04 (Plan 77-04): Linear is the sole direction. Every existing user holds
+  // a retired id.dir; the direction state is therefore a constant 'linear' (the
+  // stored value is deliberately NOT read here — reading it would re-introduce the
+  // vanished-fallback trap). The WR-10 write-back effect below rewrites the stored
+  // key to 'linear' once, so raw id.dir readers converge. `setDirectionState` is
+  // retained so the (soon-to-be-removed) switcher setter keeps working.
+  const [direction, setDirectionState] = useState<Direction>(() => 'linear')
+
   // Lazy initialisers read from localStorage once per mount, falling back to
   // the prop defaults when the stored value is missing or malformed.
-  const [direction, setDirectionState] = useState<Direction>(() => {
-    const stored = safeGetItem(LS_DIR)
-    return isDirection(stored) ? stored : initialDirection
-  })
 
   const [mode, setModeState] = useState<Mode>(() => {
     const stored = safeGetItem(LS_MODE)
     return isMode(stored) ? stored : initialMode
-  })
-
-  const [hue, setHueState] = useState<Hue>(() => {
-    const parsed = parseHue(safeGetItem(LS_HUE))
-    return parsed === null ? initialHue : parsed
   })
 
   const [density, setDensityState] = useState<Density>(() => {
@@ -197,10 +200,22 @@ export function DesignProvider({
     if (safeGetItem(LS_DENSITY) === 'spacious') safeSetItem(LS_DENSITY, 'dense')
   }, [])
 
-  // Pure derivation — one `TokenSet` per {direction, mode, hue, density}.
+  // WR-10 (TOKEN-04, Plan 77-04): coerce a legacy/absent id.dir to 'linear' ONCE
+  // on mount — mirrors the bootstrap coercion so a stale value written by an old
+  // tab does not survive, and raw id.dir readers see 'linear'. Kept OUT of the
+  // lazy initializer (StrictMode double-invokes it — no writes in initializers).
+  // Idempotent: re-reading 'linear' is a no-op.
+  // Also drop the retired hue localStorage key (Phase 77 — the hue axis is gone;
+  // accent is a verbatim Linear literal). One-time try-guarded stale-key cleanup.
+  useEffect(() => {
+    if (safeGetItem(LS_DIR) !== 'linear') safeSetItem(LS_DIR, 'linear')
+    safeRemoveItem('id.hue')
+  }, [])
+
+  // Pure derivation — one `TokenSet` per {direction, mode, density}.
   const tokens = useMemo<TokenSet>(
-    () => buildTokens({ direction, mode, hue, density }),
-    [direction, mode, hue, density],
+    () => buildTokens({ direction, mode, density }),
+    [direction, mode, density],
   )
 
   // Flush tokens to :root whenever they change. Disposer restores prior values
@@ -223,14 +238,17 @@ export function DesignProvider({
     }
   }, [mode])
 
-  // Expose direction + density on the root element so CSS selectors (e.g.
-  // `[data-direction="situation"] .foo` OR `.dir-situation .foo`) can reach
-  // them. The handoff CSS (app.css lines 461-664) uses `.dir-{direction}`
-  // class selectors, so we apply both forms here for verbatim portability.
+  // Expose direction on the root element so CSS selectors (e.g.
+  // `[data-direction="linear"] .foo` OR `.dir-linear .foo`) can reach it. The
+  // handoff CSS keys off `.dir-{direction}` class selectors. Any prior `dir-*`
+  // class is stripped dynamically (no retired literals) before the current one
+  // is applied, so a stale bootstrap-emitted class is cleaned up on change.
   useEffect(() => {
     const root = document.documentElement
     root.setAttribute('data-direction', direction)
-    root.classList.remove('dir-chancery', 'dir-situation', 'dir-ministerial', 'dir-bureau')
+    Array.from(root.classList)
+      .filter((cls) => cls.startsWith('dir-'))
+      .forEach((cls) => root.classList.remove(cls))
     root.classList.add(`dir-${direction}`)
   }, [direction])
 
@@ -262,12 +280,6 @@ export function DesignProvider({
     window.dispatchEvent(new CustomEvent('designChange', { detail: { mode: m } }))
   }, [])
 
-  const setHue = useCallback((h: Hue): void => {
-    setHueState(h)
-    safeSetItem(LS_HUE, String(h))
-    window.dispatchEvent(new CustomEvent('designChange', { detail: { hue: h } }))
-  }, [])
-
   const setDensity = useCallback((d: Density): void => {
     setDensityState(d)
     safeSetItem(LS_DENSITY, d)
@@ -283,12 +295,12 @@ export function DesignProvider({
   const setLocale = useCallback((l: Locale): void => {
     setLocaleState(l)
     safeSetItem(LS_LOCALE, l)
-    if (typeof document !== 'undefined') {
-      document.documentElement.lang = l
-      document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr'
-    }
-    // Defer i18next call to runtime; dynamic import avoids a circular
-    // dependency between DesignProvider and the i18n bootstrap module.
+    // The single direction owner (ui/direction.tsx DirectionProvider) derives
+    // dir/lang from i18n.language and performs the only runtime <html dir/lang>
+    // writes. Keeping a synchronous write here would re-open the one-frame
+    // disagreement window (RESEARCH Pitfall 4) — so setLocale only persists and
+    // delegates. Defer the i18next call to runtime; the dynamic import avoids a
+    // circular dependency between DesignProvider and the i18n bootstrap module.
     void import('@/i18n')
       .then(({ default: i18n }) => i18n.changeLanguage(l))
       .catch((err: unknown) => {
@@ -305,7 +317,6 @@ export function DesignProvider({
     ;(window as unknown as { __design: DesignTestHatch }).__design = {
       setDirection,
       setMode,
-      setHue,
       setDensity,
     }
     return (): void => {
@@ -315,7 +326,7 @@ export function DesignProvider({
         /* ignore */
       }
     }
-  }, [setDirection, setMode, setHue, setDensity])
+  }, [setDirection, setMode, setDensity])
 
   // --------------------------------------------------------------------------
   // Cross-tab sync — mirror localStorage writes from other tabs into state.
@@ -326,9 +337,6 @@ export function DesignProvider({
         setDirectionState(event.newValue)
       } else if (event.key === LS_MODE && isMode(event.newValue)) {
         setModeState(event.newValue)
-      } else if (event.key === LS_HUE) {
-        const parsed = parseHue(event.newValue)
-        if (parsed !== null) setHueState(parsed)
       } else if (event.key === LS_DENSITY && isDensity(event.newValue)) {
         setDensityState(event.newValue)
       } else if (event.key === LS_CLASSIF) {
@@ -349,14 +357,12 @@ export function DesignProvider({
     () => ({
       direction,
       mode,
-      hue,
       density,
       classif,
       locale,
       tokens,
       setDirection,
       setMode,
-      setHue,
       setDensity,
       setClassif,
       setLocale,
@@ -364,14 +370,12 @@ export function DesignProvider({
     [
       direction,
       mode,
-      hue,
       density,
       classif,
       locale,
       tokens,
       setDirection,
       setMode,
-      setHue,
       setDensity,
       setClassif,
       setLocale,

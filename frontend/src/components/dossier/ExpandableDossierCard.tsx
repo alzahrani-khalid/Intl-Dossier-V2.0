@@ -1,6 +1,6 @@
 /**
  * ExpandableDossierCard Component
- * Combines DossierAceternityCard design (map/flag) with Aceternity expandable card behavior
+ * Combines the map/flag dossier card design with an expandable-card interaction pattern
  *
  * Features:
  * - Clickable collapsed state showing map/flag, name, and brief info

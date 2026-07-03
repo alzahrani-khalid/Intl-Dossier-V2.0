@@ -44,7 +44,7 @@ export function ConvertedTicketBanner({
       </p>
       <Link
         to={`/dossiers/engagements/${convertedToId}`}
-        className="min-h-11 inline-flex items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
+        className="min-h-11 inline-flex items-center text-sm font-medium text-accent-ink underline-offset-4 hover:underline"
       >
         {t('converted.link')}
       </Link>

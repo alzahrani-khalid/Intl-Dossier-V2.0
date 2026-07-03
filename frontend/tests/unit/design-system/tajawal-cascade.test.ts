@@ -21,7 +21,9 @@ describe('Phase 35 — Tajawal RTL cascade drift guard (TYPO-03)', () => {
 
   it('index.css contains the [dir="ltr"].mono JetBrains Mono carve-out (TYPO-04)', () => {
     const css = readFileSync(INDEX_CSS, 'utf8')
-    expect(css).toMatch(/html\[dir='rtl'\]\s*\[dir='ltr'\]\.mono[\s\S]*?'JetBrains Mono'/)
+    // Plan 77-04: the registered variable-font family is 'JetBrains Mono Variable'
+    // (plain 'JetBrains Mono' is unregistered → silent ui-monospace fallback).
+    expect(css).toMatch(/html\[dir='rtl'\]\s*\[dir='ltr'\]\.mono[\s\S]*?'JetBrains Mono Variable'/)
   })
 
   it('index.css contains the !important chip/label/tag Tajawal override block', () => {

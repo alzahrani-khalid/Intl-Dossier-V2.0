@@ -72,6 +72,24 @@ jobs:
           set -e
           ! node scripts/check-edge-fn-schema-refs.mjs tools/edge-fn-fixtures/bad-schema-ref
 
+      - name: Check duplicate rtl utilities
+        run: node scripts/check-duplicate-rtl.mjs frontend/src
+
+      - name: Assert duplicate-rtl check fails on bad fixture (positive-failure)
+        shell: bash
+        run: |
+          set -e
+          ! node scripts/check-duplicate-rtl.mjs tools/rtl-fixtures
+
+      - name: Check bootstrap token parity
+        run: node scripts/check-bootstrap-parity.mjs
+
+      - name: Assert bootstrap parity check fails on bad fixture (positive-failure)
+        shell: bash
+        run: |
+          set -e
+          ! node scripts/check-bootstrap-parity.mjs tools/bootstrap-fixtures/bad-bootstrap.js
+
   design-token-check:
     name: Design Token Check
     runs-on: ubuntu-latest
@@ -350,6 +368,53 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: a11y-report
+          path: frontend/playwright-report/
+          retention-days: 30
+
+  # CONTEXT decision "CI smoke gating (FOUC-02)": ship the RTL/portal smokes as a
+  # SEPARATE, green-from-birth job on the proven test-a11y local-dev-server pattern —
+  # never coupled to the pre-existing red visual/a11y jobs, and never the e2e.yml
+  # deployed-app pattern (the issue-#31 red class). Verbatim copy of test-a11y with
+  # 3 deltas: name, admin creds (pagination /users is admin-gated), and the
+  # smoke-run command. The dev server auto-starts on :5173 (base URL never overridden).
+  test-rtl-smokes:
+    name: RTL Portal + Component Smokes
+    runs-on: ubuntu-latest
+    needs: [lint, type-check]
+    env:
+      # See E2E Tests job — local dev server authenticates against staging Supabase.
+      # Admin creds: the pagination smoke's /users route is admin-gated (requireAdmin).
+      TEST_USER_EMAIL: ${{ secrets.E2E_ADMIN_EMAIL }}
+      TEST_USER_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
+      VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run RTL portal + component smokes
+        run: pnpm exec playwright test direction-portals.spec.ts calendar-rtl.spec.ts rtl-component-smokes.spec.ts --project=chromium --reporter=html
+        working-directory: ./frontend
+
+      - name: Upload RTL smokes report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rtl-smokes-report
           path: frontend/playwright-report/
           retention-days: 30
 

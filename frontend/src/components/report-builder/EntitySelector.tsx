@@ -82,13 +82,13 @@ export function EntitySelector({ selectedEntities, onToggleEntity }: EntitySelec
                 <Icon
                   className={cn(
                     'h-6 w-6 sm:h-8 sm:w-8',
-                    isSelected ? 'text-primary' : 'text-muted-foreground',
+                    isSelected ? 'text-accent-ink' : 'text-muted-foreground',
                   )}
                 />
                 <span
                   className={cn(
                     'text-xs sm:text-sm font-medium text-center',
-                    isSelected ? 'text-primary' : 'text-foreground',
+                    isSelected ? 'text-accent-ink' : 'text-foreground',
                   )}
                 >
                   {t(`entities.${entity}`)}

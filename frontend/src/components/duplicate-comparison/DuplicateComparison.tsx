@@ -322,7 +322,7 @@ function DuplicateCandidateCard({
         <div className="flex-1">
           <Link
             to={`/intake/tickets/${candidate.target_ticket_id}`}
-            className="font-medium text-accent hover:underline"
+            className="font-medium text-accent-ink hover:underline"
             target="_blank"
           >
             {candidate.target_ticket.ticket_number} ↗

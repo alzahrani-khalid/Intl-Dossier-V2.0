@@ -1,16 +1,15 @@
 /**
  * Topbar.tsx — Phase 36 SHELL-02 implementation.
  *
- * 56px horizontal row with 7 slots in LTR JSX order (forceRTL via `<html dir>`
+ * 56px horizontal row with 6 slots in LTR JSX order (forceRTL via `<html dir>`
  * flips the visual row at render time — see CLAUDE.md RTL rule 1):
  *
  *   1. Hamburger         (.tb-menu) — hidden ≥1024px via `lg:hidden`
  *   2. Search pill       (.tb-search) — includes inner ⌘K kbd hint (hidden ≤1024px)
- *   3. Direction switch  (.tb-dir) — segmented radio group, 4 buttons
- *   4. Notification bell (.tb-icon-btn) — Phase-42 will wire real count; here hardcoded
- *   5. Theme toggle      (.tb-icon-btn) — Sun/Moon swap driven by useMode()
- *   6. Locale switcher   (.tb-locale) — segmented radio group, EN/ع
- *   7. Tweaks button     (.tb-tweaks) — opens the Phase-34 drawer via useTweaksOpen()
+ *   3. Notification bell (.tb-icon-btn) — Phase-42 will wire real count; here hardcoded
+ *   4. Theme toggle      (.tb-icon-btn) — Sun/Moon swap driven by useMode()
+ *   5. Locale switcher   (.tb-locale) — segmented radio group, EN/ع
+ *   6. Tweaks button     (.tb-tweaks) — opens the Phase-34 drawer via useTweaksOpen()
  *
  * Responsive contract (UI-SPEC §"Responsive Contracts", lines 383-395):
  *   - Hamburger: `lg:hidden`     — visible ≤1024px, hidden above
@@ -24,11 +23,6 @@
  *   - Notification badge uses `end-0.5` (logical inset)
  *   - `<kbd dir="ltr">` isolates the ⌘K glyph inside Arabic topbar so it reads
  *     per Pitfall 6 in LTR order
- *
- * Deviation from 36-03 PLAN interfaces (Rule 3 — plan hook names are stale):
- *   - Plan referenced `useDirection` → actual hook is `useDesignDirection`
- *     (Phase 33 renamed to avoid collision with the DOM-level `@/hooks/useDirection`
- *     which reads document.dir — Comment in useDesignDirection.ts confirms).
  */
 
 import type { JSX } from 'react'
@@ -38,19 +32,10 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { useTweaksOpen } from '@/components/tweaks'
 import { useCopilotDrawer } from '@/components/copilot/useCopilotDrawer'
-import { useDesignDirection, useMode, useLocale } from '@/design-system/hooks'
-import type { Direction } from '@/design-system/tokens/types'
+import { useMode, useLocale } from '@/design-system/hooks'
 
 export interface TopbarProps {
   onOpenDrawer: () => void
-}
-
-const DIRECTIONS: readonly Direction[] = ['chancery', 'situation', 'ministerial', 'bureau'] as const
-const DIRECTION_SHORT_LABELS: Record<Direction, { en: string; ar: string }> = {
-  chancery: { en: 'C', ar: 'د' },
-  situation: { en: 'S', ar: 'ع' },
-  ministerial: { en: 'M', ar: 'و' },
-  bureau: { en: 'B', ar: 'م' },
 }
 
 // Phase-42 will swap this for a real notification feed; design-handoff stub.
@@ -59,7 +44,6 @@ const NOTIFICATION_COUNT = 3
 export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
   const { t } = useTranslation()
   const { t: tCopilot } = useTranslation('copilot')
-  const { direction, setDirection } = useDesignDirection()
   const { mode, setMode } = useMode()
   const { locale, setLocale } = useLocale()
   const { open: openTweaks } = useTweaksOpen()
@@ -138,42 +122,7 @@ export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
           <Sparkles size={16} />
         </button>
 
-        {/* 3 — Direction switcher */}
-        <div
-          className="tb-dir inline-flex overflow-hidden border border-[var(--line)] rounded-[var(--radius-sm)]"
-          role="radiogroup"
-          aria-label={t('shell.direction.chancery')}
-        >
-          {DIRECTIONS.map((d) => {
-            const isActive = direction === d
-            return (
-              <button
-                key={d}
-                type="button"
-                role="radio"
-                aria-checked={isActive}
-                onClick={() => setDirection(d)}
-                className={cn(
-                  'tb-dir-btn h-9 min-h-11 min-w-11 px-2.5 font-body text-[11.5px] font-medium',
-                  'text-[var(--ink-mute)] hover:text-[var(--ink)]',
-                  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
-                  'max-sm:min-w-11 max-sm:px-1 max-sm:text-[10.5px]',
-                  isActive && 'active',
-                  isActive && d === 'situation' && 'bg-[var(--accent)] text-[var(--accent-fg)]',
-                  isActive && d !== 'situation' && 'bg-[var(--ink)] text-[var(--surface)]',
-                )}
-                aria-label={t(`shell.direction.${d}`)}
-              >
-                <span className="tb-dir-label max-sm:hidden">{t(`shell.direction.${d}`)}</span>
-                <span className="tb-dir-short hidden max-sm:inline" aria-hidden="true">
-                  {DIRECTION_SHORT_LABELS[d][locale]}
-                </span>
-              </button>
-            )
-          })}
-        </div>
-
-        {/* 4 — Notification bell (trigger only; dropdown lands in Phase 42) */}
+        {/* 3 — Notification bell (trigger only; dropdown lands in Phase 42) */}
         <button
           type="button"
           className={cn(
@@ -200,7 +149,7 @@ export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
           )}
         </button>
 
-        {/* 5 — Theme toggle */}
+        {/* 4 — Theme toggle */}
         <button
           type="button"
           className={cn(
@@ -216,7 +165,7 @@ export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
           {mode === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
         </button>
 
-        {/* 6 — Locale switcher */}
+        {/* 5 — Locale switcher */}
         <div
           className="tb-locale inline-flex overflow-hidden border border-[var(--line)] rounded-[var(--radius-sm)]"
           role="radiogroup"
@@ -252,7 +201,7 @@ export function Topbar({ onOpenDrawer }: TopbarProps): JSX.Element {
           </button>
         </div>
 
-        {/* 7 — Tweaks button (Phase-34 API re-hosted here) */}
+        {/* 6 — Tweaks button (Phase-34 API re-hosted here) */}
         <button
           type="button"
           className={cn(

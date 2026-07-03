@@ -1,8 +1,11 @@
 /**
  * HeroUI Chip Wrapper (Badge replacement) — Phase 33-05 (Wave 3)
  *
- * Real @heroui/react Chip primitive. Preserves the shadcn-style `badgeVariants`
- * cva API and `asChild` branch used by existing Badge call sites.
+ * Despite the `heroui-` filename, this is NOT a HeroUI primitive and imports
+ * nothing from `@heroui/react`. It is a Badge replacement built on `cva`
+ * (class-variance-authority) + `@radix-ui/react-slot`, preserving the
+ * shadcn-style `badgeVariants` cva API and the `asChild` branch used by
+ * existing Badge call sites.
  *
  * Token model (SC-5): the cva strings use semantic Tailwind utilities only —
  * `bg-destructive`, `text-destructive-foreground`, `bg-warn`, `text-ok`,

@@ -6,35 +6,27 @@ const FRONTEND_ROOT = resolve(__dirname, '../../..')
 const PACKAGE_JSON = resolve(FRONTEND_ROOT, 'package.json')
 const FONTS_TS = resolve(FRONTEND_ROOT, 'src/fonts.ts')
 
+// Phase 77 (linear-token-system) — the engine is single-direction (Linear).
+// The four retired directions' per-direction fonts (Fraunces, Public Sans,
+// Space Grotesk, IBM Plex Sans/Mono) were dropped from fonts.ts in 77-07. Only
+// Inter Variable (display + body) + JetBrains Mono Variable (mono) + the Tajawal
+// Arabic RTL cascade remain. The retired @fontsource packages may still linger
+// in package.json (unused, tree-shaken) — this guard only pins what we import.
 const REQUIRED_DEPS = [
   '@fontsource-variable/inter',
-  '@fontsource-variable/public-sans',
-  '@fontsource-variable/space-grotesk',
-  '@fontsource-variable/fraunces',
   '@fontsource-variable/jetbrains-mono',
-  '@fontsource/ibm-plex-sans',
-  '@fontsource/ibm-plex-mono',
   '@fontsource/tajawal',
 ] as const
 
 const REQUIRED_IMPORTS = [
   '@fontsource-variable/inter/wght.css',
-  '@fontsource-variable/public-sans/wght.css',
-  '@fontsource-variable/space-grotesk/wght.css',
-  '@fontsource-variable/fraunces/wght.css',
   '@fontsource-variable/jetbrains-mono/wght.css',
-  '@fontsource/ibm-plex-sans/400.css',
-  '@fontsource/ibm-plex-sans/500.css',
-  '@fontsource/ibm-plex-sans/600.css',
-  '@fontsource/ibm-plex-sans/700.css',
-  '@fontsource/ibm-plex-mono/400.css',
-  '@fontsource/ibm-plex-mono/500.css',
   '@fontsource/tajawal/400.css',
   '@fontsource/tajawal/500.css',
   '@fontsource/tajawal/700.css',
 ] as const
 
-describe('Phase 35 — fontsource dependency drift guard (TYPO-02)', () => {
+describe('Phase 77 — Linear font drift guard (TYPO-02)', () => {
   const pkg = JSON.parse(readFileSync(PACKAGE_JSON, 'utf8')) as {
     dependencies: Record<string, string>
   }

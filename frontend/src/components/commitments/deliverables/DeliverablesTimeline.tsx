@@ -168,7 +168,7 @@ export function DeliverablesTimeline({
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm font-medium">{t('progress.title')}</span>
               </div>
-              <span className="text-sm font-semibold text-primary">{summary.progress}%</span>
+              <span className="text-sm font-semibold text-accent-ink">{summary.progress}%</span>
             </div>
             <Progress value={summary.progress} className="h-2" />
             {summary.progress === 100 && (

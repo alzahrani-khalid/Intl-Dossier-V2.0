@@ -133,7 +133,7 @@ export function AIFieldAssist({
             <Sparkles
               className={cn(
                 'h-4 w-4 sm:h-5 sm:w-5',
-                isExpanded ? 'text-primary' : 'text-muted-foreground',
+                isExpanded ? 'text-accent-ink' : 'text-muted-foreground',
               )}
             />
           </div>

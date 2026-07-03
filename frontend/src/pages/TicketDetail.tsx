@@ -290,7 +290,7 @@ export function TicketDetail() {
                             </p>
                           </div>
                         </div>
-                        <Button variant="link" size="sm" className="text-primary">
+                        <Button variant="link" size="sm" className="text-accent-ink">
                           {t('common.download', 'Download')}
                         </Button>
                       </div>

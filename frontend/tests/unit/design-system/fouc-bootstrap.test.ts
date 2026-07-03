@@ -28,7 +28,9 @@ type BootstrapPalette = {
   line: string
 }
 
-const DIRECTIONS: readonly Direction[] = ['chancery', 'situation', 'ministerial', 'bureau'] as const
+// Plan 77-04: Linear is the sole direction painted by bootstrap.js (all legacy
+// id.dir values are coerced to 'linear'), so parity is asserted for linear only.
+const DIRECTIONS: readonly Direction[] = ['linear'] as const
 const MODES: readonly Mode[] = ['light', 'dark'] as const
 
 const BOOTSTRAP_PATH = resolve(__dirname, '../../../public/bootstrap.js')
@@ -78,8 +80,11 @@ describe('FOUC bootstrap palette drift guard', () => {
     },
   )
 
-  it('writes --accent + --accent-fg from hue', () => {
-    expect(source).toMatch(/--accent['"]\s*,\s*'oklch\(58% 0\.14 ' \+ h/)
-    expect(source).toMatch(/--accent-fg['"]\s*,\s*'oklch\(100% 0 0\)'/)
+  it('paints the Linear accent from palette literals, not oklch(hue)', () => {
+    // Plan 77-04: accent is a verbatim Linear literal (p.accent.base/fg), no longer
+    // parameterized off id.hue. The retired hue-math paint must be gone.
+    expect(source).toContain("setProperty('--accent', p.accent.base)")
+    expect(source).toContain("setProperty('--accent-fg', p.accent.fg)")
+    expect(source).not.toMatch(/'oklch\(58% 0\.14 '/)
   })
 })

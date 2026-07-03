@@ -2,7 +2,13 @@ import { test, expect } from '@playwright/test'
 import { loginForListPages } from './support/list-pages-auth'
 import { seedRecentDossierStore } from './support/dossier-drawer-fixture'
 
-const FROZEN_TIME = new Date('2026-05-08T12:00:00Z')
+// Phase 77-01 (VERIFY-01): the frozen clock MUST align with the today-anchored
+// staging seed (b0000002-* engagement_dossiers refreshed to today-relative). The
+// WeekAhead widget buckets events by the browser clock (today/tomorrow/this_week/
+// next_week) and drops anything outside that window; get_upcoming_events filters
+// server-side by real NOW(). Both only overlap when the frozen clock is "today",
+// so this constant tracks the capture date (was 2026-05-08 for the 46-01 capture).
+const FROZEN_TIME = new Date('2026-07-03T12:00:00Z')
 
 const SUPPRESS_TRANSITIONS_CSS = `
   *, *::before, *::after {
@@ -39,6 +45,17 @@ const READY_SELECTORS: Record<(typeof WIDGETS)[number][0], string> = {
 }
 
 test.beforeEach(async ({ page }) => {
+  // Phase 77-01 (VERIFY-01): pin id.theme=light so this pre-swap baseline stays
+  // light after the Phase-77 default flips to dark; Phase 80 re-compares
+  // like-for-like. Runs before every navigation, before bootstrap.js reads
+  // id.theme. Locale is pinned to EN via loginForListPages(page, 'en') below.
+  await page.addInitScript(() => {
+    try {
+      window.localStorage.setItem('id.theme', 'light')
+    } catch {
+      /* storage may be denied in some configs */
+    }
+  })
   await page.clock.install({ time: FROZEN_TIME })
   await page.addInitScript((css) => {
     const apply = (): void => {

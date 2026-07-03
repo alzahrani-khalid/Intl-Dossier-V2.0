@@ -53,19 +53,7 @@
   line-height: 1.1;
   overflow-wrap: anywhere;
 }
-.dir-chancery .page-title {
-  font-weight: 400;
-  font-size: 34px;
-  letter-spacing: -0.025em;
-}
-.dir-situation .page-title {
-  font-family: var(--font-mono);
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.dir-bureau .page-title {
+.dir-linear .page-title {
   font-weight: 600;
   font-size: 26px;
   letter-spacing: -0.015em;
@@ -76,12 +64,7 @@
   margin-top: 4px;
   overflow-wrap: anywhere;
 }
-.dir-chancery .page-sub {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 15px;
-}
-.dir-bureau .page-sub {
+.dir-linear .page-sub {
   font-family: var(--font-body);
   font-style: normal;
   font-size: 13px;
@@ -107,20 +90,8 @@ html[dir='rtl'] .page-sub {
   color: var(--ink);
   padding: var(--pad);
 }
-.dir-chancery .card {
-  border-radius: 2px;
-}
-.dir-situation .card {
-  border-radius: 3px;
-}
-.dir-ministerial .card {
-  box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.02),
-    0 4px 12px -8px rgba(0, 0, 0, 0.06);
-}
-.dir-bureau .card {
-  border-radius: 12px;
-  box-shadow: var(--shadow-sm);
+.dir-linear .card {
+  border-radius: var(--radius-lg);
 }
 .card-head {
   display: flex;
@@ -135,20 +106,7 @@ html[dir='rtl'] .page-sub {
   font-weight: 600;
   letter-spacing: -0.01em;
 }
-.dir-chancery .card-title {
-  font-weight: 500;
-  font-size: 18px;
-  letter-spacing: -0.02em;
-}
-.dir-situation .card-title {
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  font-weight: 600;
-  color: var(--ink-mute);
-}
-.dir-bureau .card-title {
+.dir-linear .card-title {
   font-weight: 600;
   font-size: 15px;
   letter-spacing: -0.005em;
@@ -249,10 +207,6 @@ html[dir='rtl'] .page-sub {
   background: var(--ink);
   color: var(--surface);
 }
-.dir-situation .tb-dir-btn.active {
-  background: var(--accent);
-  color: var(--accent-fg);
-}
 .tb-search kbd {
   padding: 2px 6px;
   border: 1px solid var(--line);
@@ -311,49 +265,27 @@ html[dir='rtl'] .page-sub {
   border-top: 1px solid color-mix(in srgb, var(--sidebar-ink) 12%, transparent);
 }
 
-.dir-chancery .sb-group {
-  font-family: var(--font-display);
-  font-style: italic;
-  letter-spacing: 0.03em;
-  text-transform: none;
-  font-weight: 400;
-  font-size: 12px;
-  opacity: 0.45;
-}
-.dir-situation .sb-item {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 6px 10px;
-  border-radius: 0;
-}
-.dir-situation .sb-item.active {
-  background: var(--accent-soft);
-  color: var(--accent-ink);
-}
-
-.dir-bureau .appshell-aside,
-.dir-bureau .sb.sidebar {
+.dir-linear .appshell-aside,
+.dir-linear .sb.sidebar {
   background: var(--sidebar-bg);
   border-inline-end: 1px solid var(--line);
 }
-.dir-bureau .topbar {
+.dir-linear .topbar {
   background: var(--surface);
   border-bottom: 1px solid var(--line);
 }
-.dir-bureau .tb-search {
+.dir-linear .tb-search {
   background: var(--bg);
   border: 1px solid transparent;
 }
-.dir-bureau .tb-search:focus-within {
+.dir-linear .tb-search:focus-within {
   border-color: var(--accent);
   background: var(--surface);
 }
-.dir-bureau .tb-search input::placeholder {
+.dir-linear .tb-search input::placeholder {
   color: var(--ink-faint);
 }
-.dir-bureau .sb-item {
+.dir-linear .sb-item {
   color: var(--ink-mute);
   opacity: 1;
   font-weight: 500;
@@ -362,27 +294,27 @@ html[dir='rtl'] .page-sub {
   border-radius: 8px;
   letter-spacing: normal;
 }
-.dir-bureau .sb-item > svg {
+.dir-linear .sb-item > svg {
   opacity: 0.6;
 }
-.dir-bureau .sb-item:hover {
+.dir-linear .sb-item:hover {
   background: var(--line-soft);
   color: var(--ink);
 }
-.dir-bureau .sb-item:hover > svg {
+.dir-linear .sb-item:hover > svg {
   opacity: 1;
 }
-.dir-bureau .sb-item.active {
+.dir-linear .sb-item.active {
   background: var(--accent-soft);
   color: var(--accent-ink);
   font-weight: 600;
   opacity: 1;
 }
-.dir-bureau .sb-item.active > svg {
+.dir-linear .sb-item.active > svg {
   opacity: 1;
   color: var(--accent);
 }
-.dir-bureau .sb-item.active::before {
+.dir-linear .sb-item.active::before {
   content: '';
   position: absolute;
   inset-inline-start: 0;
@@ -392,7 +324,7 @@ html[dir='rtl'] .page-sub {
   background: var(--accent);
   border-radius: 2px;
 }
-.dir-bureau .sb-group {
+.dir-linear .sb-group {
   font-family: var(--font-body);
   font-size: 10.5px;
   font-weight: 600;
@@ -402,13 +334,13 @@ html[dir='rtl'] .page-sub {
   opacity: 1;
   padding: 10px 12px 6px;
 }
-.dir-bureau .sb-brand {
+.dir-linear .sb-brand {
   border-bottom: 1px solid var(--line);
 }
-.dir-bureau .sb-user {
+.dir-linear .sb-user {
   background: var(--line-soft);
 }
-.dir-bureau .sb-foot {
+.dir-linear .sb-foot {
   border-top: 1px solid var(--line);
   color: var(--ink-faint);
   opacity: 1;
@@ -416,8 +348,8 @@ html[dir='rtl'] .page-sub {
 
 /* --- Buttons (handoff lines 222-225 + RESEARCH §6 LOCK on btn-primary) ---
    `.btn-primary` background is --ink (matches handoff verbatim).
-   Direction overrides (.dir-situation, .dir-chancery) are intentionally
-   omitted per plan must_haves. */
+   Per-direction button overrides were retired with the Linear activation
+   (Plan 77-04); `.dir-linear` is the sole direction scope. */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -461,55 +393,37 @@ html[dir='rtl'] .page-sub {
    .btn-primary stays --ink only for ministerial; chancery/situation/bureau
    all swap to --accent. This is the per-direction visual identity, not a
    theme tweak — the design files explicitly call it out. */
-.dir-chancery .btn {
-  border-radius: 2px;
-}
-.dir-chancery .btn-primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--accent-fg);
-}
-.dir-situation .btn-primary {
-  background: var(--accent);
-  color: var(--accent-fg);
-  border-color: var(--accent);
-  text-transform: uppercase;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-}
-.dir-bureau .btn {
-  border-radius: 8px;
+.dir-linear .btn {
+  border-radius: var(--radius);
   background: var(--surface);
   color: var(--ink);
   border: 1px solid var(--line);
   font-weight: 500;
   padding: 8px 14px;
 }
-.dir-bureau .btn:hover {
+.dir-linear .btn:hover {
   border-color: var(--ink-faint);
   background: var(--line-soft);
 }
-.dir-bureau .btn-primary {
+.dir-linear .btn-primary {
   background: var(--accent);
   border-color: var(--accent);
   color: var(--accent-fg);
-  box-shadow: 0 1px 2px rgba(190, 80, 30, 0.15);
   text-transform: none;
   font-family: var(--font-body);
   font-size: 13px;
   letter-spacing: normal;
 }
-.dir-bureau .btn-primary:hover {
-  background: color-mix(in srgb, var(--accent) 88%, black);
-  border-color: color-mix(in srgb, var(--accent) 88%, black);
+.dir-linear .btn-primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
-.dir-bureau .btn-ghost {
+.dir-linear .btn-ghost {
   background: transparent;
   border-color: transparent;
   color: var(--ink-mute);
 }
-.dir-bureau .btn-ghost:hover {
+.dir-linear .btn-ghost:hover {
   background: var(--line-soft);
   color: var(--ink);
 }
@@ -607,40 +521,32 @@ html[dir='rtl'] .page-sub {
   background: var(--accent-soft);
   color: var(--accent-ink);
 }
+/* Semantic chips mirror .chip-accent: the designed, WCAG-AA-proven `-soft` wash
+ * as background (opaque, contrast-verified in tests/unit/design-system/contrast.test.ts
+ * — light 5.00–5.37:1, dark 4.73–7.76:1). The former `color-mix(<hue> 15%, transparent)`
+ * wash composited to a darker, never-contrast-checked bg that fell just under 4.5:1 in
+ * the Linear light theme (Phase 80 VERIFY-02 MF-1/2/3: color-contrast 4.23–4.38 on the
+ * list-row status chips). Using the `-soft` token is theme-correct in both modes. */
 .chip-danger {
-  background: color-mix(in srgb, var(--danger) 15%, transparent);
+  background: var(--danger-soft);
   color: var(--danger);
 }
 .chip-warn {
-  background: color-mix(in srgb, var(--warn) 15%, transparent);
+  background: var(--warn-soft);
   color: var(--warn);
 }
 .chip-ok {
-  background: color-mix(in srgb, var(--ok) 15%, transparent);
+  background: var(--ok-soft);
   color: var(--ok);
 }
 .chip-info {
-  background: color-mix(in srgb, var(--info) 15%, transparent);
+  background: var(--info-soft);
   color: var(--info);
 }
 .chip-default {
   background: var(--surface-raised);
   color: var(--ink-mute);
   border: 1px solid var(--line);
-}
-.dir-situation .chip {
-  border-radius: 2px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 1px 6px;
-}
-.dir-chancery .chip {
-  border-radius: 2px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.05em;
 }
 
 .label {
@@ -650,15 +556,7 @@ html[dir='rtl'] .page-sub {
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
-.dir-chancery .label {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 500;
-  text-transform: none;
-  letter-spacing: 0;
-  font-size: 13px;
-}
-.dir-bureau .label {
+.dir-linear .label {
   font-family: var(--font-body);
   font-style: normal;
   font-weight: 600;
@@ -694,24 +592,13 @@ table.tbl {
 .tbl tr:hover td {
   background: var(--line-soft);
 }
-.dir-chancery .tbl th {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 12px;
-  letter-spacing: 0;
-  text-transform: none;
-}
-.dir-bureau .tbl th {
+.dir-linear .tbl th {
   font-family: var(--font-body);
   text-transform: none;
   font-weight: 600;
   font-size: 12px;
   letter-spacing: normal;
   color: var(--ink-mute);
-}
-.dir-situation .tbl th,
-.dir-situation .tbl td {
-  font-family: var(--font-mono);
 }
 
 /* --- Week list (handoff lines 309-322) ----------------------------------- */
@@ -756,11 +643,7 @@ table.tbl {
   line-height: 1;
   letter-spacing: -0.02em;
 }
-.dir-chancery .week-dd {
-  font-weight: 400;
-  font-size: 26px;
-}
-.dir-bureau .week-dd {
+.dir-linear .week-dd {
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 20px;
@@ -771,7 +654,7 @@ table.tbl {
   font-family: var(--font-mono);
   margin-top: 2px;
 }
-.dir-bureau .week-time {
+.dir-linear .week-time {
   font-family: var(--font-body);
   font-size: 11px;
 }
@@ -784,11 +667,7 @@ table.tbl {
   letter-spacing: -0.005em;
   margin-bottom: 2px;
 }
-.dir-chancery .week-title {
-  font-family: var(--font-display);
-  font-size: 16px;
-}
-.dir-bureau .week-title {
+.dir-linear .week-title {
   font-size: 14px;
   font-weight: 500;
 }
@@ -921,12 +800,6 @@ html[dir='rtl'] .icon-flip {
   border-bottom-color: var(--accent);
   font-weight: 600;
 }
-.dir-situation .tab {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
 
 /* --- DossierTable row (canonicalized — primitive consumer) --------------- */
 .dossier-row {
@@ -1030,14 +903,13 @@ html[dir='rtl'] .icon-flip {
   letter-spacing: 0.04em;
   line-height: 1.3;
 }
-.dir-bureau .cls-ribbon {
+.dir-linear .cls-ribbon {
   background: color-mix(in srgb, var(--accent) 92%, black);
   font-size: 10.5px;
   font-weight: 500;
   letter-spacing: 0.1em;
 }
-.dir-bureau .cls-chip,
-.dir-ministerial .cls-chip {
+.dir-linear .cls-chip {
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   background: var(--surface);
@@ -1070,54 +942,27 @@ html[dir='rtl'] .icon-flip {
 }
 .id-dialog-content {
   border-radius: var(--radius);
-  background: var(--surface);
+  /* Surface ladder (Linear TOKEN-06): modals sit on surface-4 (top tier). */
+  background: var(--surface-4);
   color: var(--ink);
   box-shadow: var(--shadow);
 }
-.dir-chancery .drawer-title {
-  font-size: 34px;
-  font-weight: 400;
+.dir-linear .drawer {
+  /* Surface ladder (Linear TOKEN-06): drawers sit on surface-4 (top tier). */
+  background: var(--surface-4);
 }
-.dir-bureau .drawer {
-  background: var(--surface);
-}
-.dir-bureau .drawer-title {
+.dir-linear .drawer-title {
   font-size: 24px;
   font-weight: 600;
 }
 
 /* --- Direction-specific surface personality -------------------------------- */
-.dir-chancery .page-head {
-  position: relative;
-  border-bottom: 1px solid var(--ink);
-  padding-bottom: 18px;
-}
-.dir-chancery .page-head::after {
-  content: '';
-  position: absolute;
-  inset-inline-start: 0;
-  bottom: -2px;
-  width: 40%;
-  height: 1px;
-  background: var(--ink);
-}
-.dir-bureau .page-head,
-.dir-situation .page-head,
-.dir-ministerial .page-head {
+.dir-linear .page-head {
   border-bottom: 0;
   padding-bottom: 0;
 }
-.dir-bureau .page-head::after,
-.dir-situation .page-head::after,
-.dir-ministerial .page-head::after {
+.dir-linear .page-head::after {
   display: none;
-}
-.dir-situation .kcard {
-  border-radius: 2px;
-  font-family: var(--font-body);
-}
-.dir-situation .week-row {
-  padding: 8px 12px;
 }
 
 /* --- legacy-tailwind-token-bridge -----------------------------------------
@@ -1544,18 +1389,12 @@ body :is([class~='shadow-md'], [class~='shadow-lg'], [class~='shadow-xl'], [clas
     font-size: 20px;
     line-height: 1.15;
   }
-  .dir-chancery .page-title {
-    font-size: 22px;
-  }
-  .dir-bureau .page-title {
+  .dir-linear .page-title {
     font-size: 20px;
   }
   .page-sub {
     font-size: 12px;
     margin-top: 2px;
-  }
-  .dir-chancery .page-sub {
-    font-size: 13px;
   }
   html[dir='rtl'] .page-sub {
     font-size: 12.5px;

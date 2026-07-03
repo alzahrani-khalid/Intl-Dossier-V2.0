@@ -417,7 +417,7 @@ export function getStatusColor(status: ScenarioStatus): string {
 export function getImpactLevelColor(level: ImpactLevel): string {
   const colors: Record<ImpactLevel, string> = {
     minimal: 'text-muted-foreground',
-    low: 'text-accent',
+    low: 'text-accent-ink',
     moderate: 'text-warning',
     high: 'text-warning',
     critical: 'text-destructive',

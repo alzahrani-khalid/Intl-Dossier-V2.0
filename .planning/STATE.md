@@ -2,32 +2,54 @@
 gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
-status: Re-scoped after pre-execution review — ready to plan Phase 75
-last_updated: '2026-07-02T00:00:00.000Z'
-last_activity: '2026-07-02 — v8.0 re-scoped after a pre-execution review (24 requirements, 100% coverage). Verified reality folded into PROJECT/REQUIREMENTS/ROADMAP: HeroUI already on the v3 compound-API + no v3-removed components used → Phase 78 is a bump + regression sweep; RTLB-01 keeps the 68 per-field dir=rtl inputs; VERIFY-01 scoped to baselined surfaces; TOKEN-05 preserves Tajawal; DOC-01 added for the design source-of-truth. Sequencing unchanged: audit → RTL bridge → Linear tokens → HeroUI bump → Aceternity removal → verification.'
+status: complete
+last_updated: '2026-07-04T00:00:00.000Z'
+last_activity: 2026-07-04
 progress:
   total_phases: 6
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  completed_phases: 6
+  total_plans: 32
+  completed_plans: 32
+  percent: 100
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section added)
+See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Milestone + Next Milestone sections)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** v8.0 Linear Design System Migration (Phases 75-80). Replace the IntelDossier prototype design language with a Linear-derived one on bridged shadcn RTL infra + HeroUI v3 (3.0.5→3.2.1), Aceternity fully removed, Arabic RTL correct on all four axes (dark/light × LTR/RTL). Re-scoped 2026-07-02 after a pre-execution review (24 reqs). Next step: plan Phase 75 (UI Component & Migration Audit).
+**Current focus:** Planning next milestone — v8.0 Linear Design System Migration SHIPPED + archived + annotated-tagged locally (2026-07-04). PR to protected `origin/main` + tag push are the remaining ship step (orchestrator-owned; nothing pushed yet).
 
 ## Current Position
 
-Phase: 75 — UI Component & Migration Audit (not started)
-Plan: —
-Status: Re-scoped after pre-execution review — ready to plan Phase 75
-Last activity: 2026-07-02 — v8.0 re-scoped after pre-execution review (24 requirements, 100% coverage): Phase 78 reduced to a bump + regression sweep, RTL dir=rtl carve-out clarified, Tajawal preservation + DOC-01 (design source-of-truth) added.
+**v8.0 MILESTONE CLOSED (2026-07-04):** archived to `.planning/milestones/v8.0-{ROADMAP,REQUIREMENTS,MILESTONE-AUDIT}.md`; `.planning/REQUIREMENTS.md` removed (archived first); ROADMAP collapsed to a one-line + `<details>` with archive links; PROJECT.md + MILESTONES.md evolved; annotated tag `v8.0` created locally. **Nothing pushed** — the v8.0 PR to protected `origin/main` and the tag push are the orchestrator's remaining ship step. Phase-execution detail below is retained for history.
+
+Phase: 80 (full-route-visual-a11y-verification-smoke-suite) — COMPLETE (6 of 6)
+Plan: 80-06 complete (6 of 6) — FOUC-02 CLOSED. Added `rtl-component-smokes.spec.ts` (Popover `/audit-logs`, Pagination `/users`, Sidebar `aside.appshell-aside` — DOM/computed-style ONLY, zero `toHaveScreenshot`) + CI-proofed `calendar-rtl.spec.ts` with a constructor-only `Date` override (freezes no-arg `new Date()`→July 2026 while `Date.now()` stays REAL, so the Supabase storageState token is never seen as expired → no refresh storm → the SRTL-02 grid renders; defuses the 2026-08-01 cliff). Wired a green-from-birth `test-rtl-smokes` ci.yml job (name "RTL Portal + Component Smokes", verbatim `test-a11y` + 3 deltas, `E2E_BASE_URL`=0, e2e.yml untouched). Local green proof: `direction-portals + calendar-rtl + rtl-component-smokes --project=chromium` = 9/9 (13.8s). DEVIATION (Rule 1): the plan's `page.clock.install` mechanism was empirically superseded — clock APIs faking `Date.now()` forward starve the authed month query → empty grid; documented in 80-06-SUMMARY. Branch-protection promotion DEFERRED (not applied) per the overseer pre-decision — job ships advisory; `gh api` confirms "RTL Portal + Component Smokes" is NOT among main's 8 required checks. Commit 7014fdba1.
+Prev(80-05): VERIFY-01 CLOSED — recaptured the 43 human-ratified Linear baselines (799ef3c4), replay-proven byte-stable at `--retries=2` (43/43), Bureau lineage recoverable at 14191cb85; ZERO `frontend/src` changes.
+Prev(80-04): VERIFY-01 (visual re-compare) HUMAN diff-triage COMPLETE + APPROVED 2026-07-03 via the overseer's blocking checkpoint. Scribed all 43 §5 verdicts into 80-VISUAL-RECOMPARE.md: 39 intended-Linear (rows 16/17 also dynamic-content, seed-date shift to 2026-07-03), 4 within-tolerance passes (rows 18/20/21/22), ZERO regressions → "Regressions to fix" list EMPTY. Anti-laundering control held: no baseline PNG touched, no --update-snapshots run (recapture = Plan 80-05). FROZEN_TIME already realigned to 2026-07-03 in Task 2 (d412b7518). Scribe commit eb37e766. VERIFY-01 requirement stays OPEN — closes in 80-05 after recapture.
+Prev(80-03): VERIFY-02 closed locally. **FIXED** the 4 NEW-on-HEAD Linear-light `color-contrast` scans (MF-1 organizations en/ar, MF-2 topics en, MF-3 tasks en) at the shared `.chip` recipe: the 4 semantic status chips (`.chip-danger/-warn/-ok/-info`) swapped their ad-hoc `color-mix(<hue> 15%, transparent)` wash (composited 4.23–4.38:1) for the AA-proven opaque `var(--*-soft)` token used by the passing `.chip-accent` (light 5.00–5.37:1 / dark 4.73–7.76:1). **NO palette literal touched** → three-copy bootstrap parity holds. Same one-recipe fix also cleared the pre-existing countries+working_groups light contrast (discretionary, §10.6). **RECORDED** engagements `aria-required-parent/children` x4 (both themes/locales, structural `role="list"` w/o `role="listitem"`, present in set A) via per-scan `test.fixme('80: recorded pre-migration baseline …')` + TRACKED APP A11Y DEBT in `qa-sweep-axe-4axis.spec.ts` — fixme-count == ledger recorded-count == 4 (T-80-07). Dead `test:a11y` script repointed to `playwright test --project=a11y`. Green: `--project=a11y --retries=2` 87 pass/10 skip/0 fail; 4-axis `--workers=2` (CI parity) 56 pass/4 skip/**0 axe violations** (default-worker login `waitForURL` timeout is the known §8.3 test-infra flake, 0 axe findings). Commits 556f20705 (fix) + b3283a9c9 (test). Ledger §11 decision table + §12 gate-green.
+Status: Phase 80 COMPLETE — all 6 waves landed. v8.0 (Linear Design System Migration) execution complete: 6/6 phases, 32/32 plans, 100%. All three Phase-80 requirements delivered (VERIFY-01, VERIFY-02, FOUC-02). Milestone closeout (archive + phase-base tag + PR to protected main) is the remaining user-initiated step. Deferred to the v8.0 PR: the CI birth-certificate (test-rtl-smokes' first green GitHub run) and the branch-protection promotion (repo-admin) — local 9/9 smoke green is the phase-exit proof.
+Last activity: 2026-07-03
+
+Phase 79 (aceternity-removal) — COMPLETE (verified passed, inline). Carried-forward follow-up below still applies.
+
+### ⚠ REQUIRED post-reset follow-up (Phase 79)
+
+- **Run an INDEPENDENT `/gsd-code-review 79` after 15:00 Asia/Riyadh (session-limit reset).** The committed `79-REVIEW.md` (status: clean) is an orchestrator SELF-review — the independent gsd-code-reviewer pass is the REAL advisory gate and has NOT run (its agent was killed by the session limit before writing). Frontmatter `reviewed_by: orchestrator-inline` marks this.
+- Optionally re-confirm with an independent `gsd-verifier` (or `/gsd:verify-work 79`) and `/gsd:secure-phase 79`. The inline `79-VERIFICATION.md` (passed) and `79-SECURITY.md` (passed) are evidence-backed with reproducible commands, so these are confirmations, not blockers.
+- Carried-forward hardening (NOT Phase 79): T-79-S2 `UserPicker.handleSearch` PostgREST filter-string interpolation (facade frozen this phase; future `.ilike()` builder or sanitize `,().`).
+  Prev: 2026-07-03 -- Plan 77-08 complete (DOC-01 — design source-of-truth migrated to Linear). Task 1 (63abab7b): rewrote the three CLAUDE.md design sections off Bureau — root /CLAUDE.md Visual Design Source of Truth repointed to frontend/DESIGN.md (handoff dir demoted to historical/superseded, required-reading order → DESIGN.md → src/design-system/CLAUDE.md → closest component, radii 6/8/12, surface-1..4 ladder, line/line-strong hairlines, voice/emoji/date rules kept verbatim); frontend/CLAUDE.md provider tree fixed to live App.tsx (ErrorBoundary→…→DesignProvider(initialDirection="linear",initialMode="dark")→…→DirectionProvider→AppRouter, no RTLWrapper — closes MD-01) + surface-3/4/line-strong/accent-hover/status-1..6 utilities added; frontend/src/design-system/CLAUDE.md rewritten to Linear-single-direction (coercion invariant both layers, three-copy invariant directions.ts↔bootstrap.js↔index.css:root + check-bootstrap-parity guard, file inventory sans directionDefaults/useHue, dark default); useLocale.ts doc comment fixed to the delegated setLocale (closes LO-02). Task 2 (9bc0f3a3): rewrote frontend/DESIGN.md as the Linear spec (321 lines — dark + derived-light token tables transcribed verbatim from directions.ts, semantic/SLA/6-status palettes with measured AA ratios, hairline-strong mapping decision, reserved unmapped extras, Inter/JetBrains Variable type stack + Tajawal RTL cascade, radius 6/8/12, recipe rules, engine contract) + supersession banner atop inteldossier_handoff_design/README.md (only change in that dir). Verify all green: forbidden-token grep 0 across 3 CLAUDE.md; DOC-01 phase-map grep 0; DESIGN.md #5e6ad2 + Inter Variable + dark/light tables + status ratios present, zero "bureau"; 31 DESIGN.md hex match directions.ts (≥10 needed); pre-commit build passed both commits. lint-staged/prettier MM churn reconciled to a clean fixpoint (stale index entries reset; committed HEAD holds canonical prettier versions).
+  Prev: 2026-07-03 -- Plan 77-07 complete (TOKEN-04/01/05 — engine collapsed to Linear-only: Direction type → 'linear', hue axis retired, useHue + directionDefaults deleted, 3-family fonts. Commits 2a084acc/7e1fc845/229a39c8).
+
+### (superseded) 77-05 activity
+
+Last activity: 2026-07-02 -- Plan 77-05 complete (TOKEN-04 UI half). Retired the 4-direction switcher (Bureau/Chancery/Situation/Ministerial) AND the accent-hue control (slider + presets) from all three surfaces — Topbar, TweaksDrawer, AppearanceSettingsSection — since 77-04 made both inert (accent is a verbatim literal, every id.dir coerces to linear). Kept theme (light/dark) + density controls fully functional on every surface. Pruned the retired keys (tweaks.direction, tweaks.hue, shell.direction, appearance.direction, appearance.hue) symmetrically from en+ar common.json + settings.json; left every unrelated "direction" key (tweaks.locale "Reading direction", nav.dashboard "Situation") untouched (Pitfall 3). Direction TYPE stays 4+1-wide and useHue/DesignProvider hue state stays live — 77-07 owns the type/plumbing collapse. Commits: 1ccc4216 (components+tests), 08b2440b (i18n prune). 44/44 component tests + 8/8 i18n/parity tests + full lint + type-check green. DoD grep item 3 returns 1 (pre-existing nav.dashboard "Situation" false positive, documented).
+Prev: 2026-07-02 -- Plan 77-04 complete (Linear ACTIVATED — dual-layer id.dir coercion + dark default + :root re-sync + .dir-linear rename; guard v2 + coercion 8/8 + font probe)
+Follow-ups (P76 advisory, still open): LO-01 check-duplicate-rtl.mjs empty-root guard; LO-03 latent render-time document.dir reader (MD-01/LO-02 now owned by 77-08 DOC-01).
+Follow-up (77-01): dashboard-widgets FROZEN_TIME tracks the capture date — a future recapture must re-align it with a re-refreshed b0000002-\* seed (inherent 46-era fragility).
 
 ## Quick Tasks Completed
 
@@ -82,19 +104,13 @@ Last activity: 2026-07-02 — v8.0 re-scoped after pre-execution review (24 requ
 
 ## Next Action
 
-Phase 70 closed (2026-06-16): UAT 10/10 pass (`70-UAT.md`), `70-VERIFICATION.md` status=passed (human-accepted), `70-SECURITY.md` threats_open=0. Carry-forward: on-prem SMTP **drain worker** + external webhook URL are customer-config (RF-1) — alerts enqueue to `intelligence_email_queue` and the webhook adapter is built/tested, but live SMTP/webhook delivery is not exercisable on staging. Phase 70 work is local-only (UNPUSHED; main protected → needs PR).
+**v8.0 shipped + archived + tagged locally (2026-07-04).** The milestone close is done on local `main`: archives written (`milestones/v8.0-ROADMAP.md`, `-REQUIREMENTS.md`, `-MILESTONE-AUDIT.md`), `REQUIREMENTS.md` removed, ROADMAP collapsed, PROJECT/MILESTONES/STATE evolved, annotated `v8.0` tag created. **Nothing pushed.**
 
-Phase 71 shipped (2026-06-17): analytic-graph RPC + edge-fn live on staging, 3-entry Analyze surface, UAT 4/4 EN+AR; phase execution complete (commit 63397cda).
+Next (orchestrator-owned ship step): open the v8.0 PR from local `main` to protected `origin/main`, watch the 8 required checks, merge, then push the `v8.0` tag. Deferred-to-PR: the CI "birth certificate" (first green GitHub run of the a11y + `test-rtl-smokes` jobs) and the `test-rtl-smokes` branch-protection promotion (repo-admin).
 
-Phase 72 context gathered (2026-06-18): `72-CONTEXT.md` committed (a4a8c071). Decisions — Gemma 4 12B on vLLM (1×16–24GB GPU, no ALLaM in v1); throwaway Option-C spike then rebuild on Mastra+vLLM; responsive app-wide copilot drawer (desktop slide-over + mobile sheet) + Cmd+K/FAB, context-aware; corpus = core intel text + documents/OCR re-embedded to bge-m3 1024; tools = hybrid-RAG + read_signals + query_graph + dossier/work-item lookups + generate_digest preview-only; persistent user-private Mastra threads; **CopilotKit-first** (spike must prove RTL/token + air-gap; headless fallback); fold + audit supabaseAdmin in brief-generator + intake-linker; standing OSS-survey mandate.
+Then: `/gsd:new-milestone` to scope the next cycle. Carried-forward candidates (v7.0 GPU/TEI deploy-gated EVAL/AGENT/INFRA, v7.1 feed ingestion, GAP-2/GAP-3, DESIGNOPS-01/02, and the v8.0 follow-ups) are listed under `## Next Milestone` in PROJECT.md.
 
-Phase 72 UI-SPEC approved (2026-06-18): `72-UI-SPEC.md` committed (5d916bbe), gsd-ui-checker 6/6 dimensions PASS (1 non-blocking FLAG fixed — single-word "Stop"/"Retry" → "Stop response"/"Retry question", EN+AR). Contract locks the responsive copilot drawer (desktop slide-over mirroring the 720px dossier drawer + mobile BottomSheet), CopilotKit token-theming (`--copilot-kit-*` → IntelDossier tokens, RTL/Tajawal, no raw hex/no card shadows), indistinguishable-empty copy (no clearance/filtered/restricted anywhere), 60/30/10 color with a 4-item accent reserve, 4-size/2-weight type, justified spacing exceptions, and the full token-bound component inventory (CopilotDrawer/Sheet, Composer, MessageList, CitationCard, ThreadList, states).
-
-Phase 72 executing (8/9 plans done as of 2026-06-19): 72-08 copilot drawer SHIPPED + human-verify APPROVED — the user-facing AGENT-01/06 deliverable (responsive token-bound drawer + FAB + Cmd+K on the assistant-ui shell, EN+AR/RTL, indistinguishable-empty) is in place; AGENT-03 reinforced. The 72-01 spike's pending "AR visual" gate is now closed by the 72-08 human sign-off.
-
-Next: `/gsd:execute-phase 72` to run 72-09 (the LIVE UAT deploy gate — boot agent-runtime + vLLM/TEI serving substrate, run the 5 milestone proofs: clearance-reduction, EN+AR RTL @1024/1400, INVOKER+RLS, e2e smoke; re-embed live run + `set_config('hnsw.iterative_scan',true)` RPC fold + `mastra_threads` RLS re-apply land here). 72-09 is the only remaining plan in phase 72.
-
-Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/middleware/auth.ts`) deployed — elected-official detail and other Express-backed routes stay 401 in production until deployed (staging is correct).
+Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/middleware/auth.ts`) deployed — pre-existing, unrelated to v8.0.
 
 ## Accumulated Context
 
@@ -142,6 +158,8 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase ?]: 74-05: omit (not null) legacy anythingllm\_\* upsert columns — nullable in intelligence_reports; on-prem generation via shared \_shared/onprem-llm.ts generateStructuredJson (VLLM_BASE_URL /v1/chat/completions JSON mode), reusable by 74-06
 - [Phase ?]: 74-11: full-repo AnythingLLM audit confirms ZERO real calls remain on the critical path; FULL rip-out (D3) complete
 - [Phase ?]: 74-11: removed two dead AnythingLLM levers the guard does not scan — agent-runtime config provider block (233e5c02) + root .env.example keys (c3e2ee87)
+- [Phase 80]: 80-03: Fixed VERIFY-02 MF-1/2/3 Linear-light color-contrast at the shared .chip recipe (color-mix 15% wash -> AA-proven var(--_-soft) tokens); no palette literal touched. Recorded engagements aria-required-_ x4 as pre-migration baseline. a11y gate green (87/0), 4-axis 0 axe violations.
+- [Phase 80]: 80-04 VERIFY-01 visual re-compare: human diff-triage APPROVED all 43 surfaces - 39 intended-Linear (rows 16/17 also dynamic-content), 4 within-tolerance passes, ZERO regressions; recapture deferred to Plan 80-05 (anti-laundering: no baseline PNG modified, no --update-snapshots). VERIFY-01 stays open until 80-05.
 
 ### Open Todos
 
@@ -263,4 +281,6 @@ file. Bookkeeping debt only — no open functional work.
 
 ## Operator Next Steps
 
-- Start the next milestone with /gsd-new-milestone
+- Ship v8.0: open the PR from local `main` → protected `origin/main`, watch the 8 required checks, merge, then push the `v8.0` tag (nothing has been pushed yet).
+- Promote the `test-rtl-smokes` CI job to a required check once the first green GitHub run lands (repo-admin).
+- Then start the next milestone with /gsd-new-milestone.

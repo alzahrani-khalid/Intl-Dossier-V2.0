@@ -11,7 +11,7 @@ import { OfflineIndicator } from './components/offline-indicator/OfflineIndicato
 import { RealtimeStatus } from './components/realtime-status/RealtimeStatus'
 import { AuthProvider, useAuth } from './contexts/auth.context'
 import { AuthListenerManager } from './components/auth/AuthListenerManager'
-import { RTLWrapper } from './components/rtl-wrapper/RTLWrapper'
+import { DirectionProvider } from './components/ui/direction'
 import { LanguageProvider } from './components/language-provider/language-provider'
 import { ThemeErrorBoundary } from './components/theme-error-boundary/ThemeErrorBoundary'
 import { DesignProvider } from './design-system/DesignProvider'
@@ -31,27 +31,26 @@ function App() {
         <AuthProvider>
           <AuthListenerManager />
           <ThemeErrorBoundary
-            fallbackDirection="bureau"
-            fallbackColorMode="light"
+            fallbackDirection="linear"
+            fallbackColorMode="dark"
             fallbackLanguage="en"
           >
             <DesignProvider
-              initialDirection="bureau"
-              initialMode="light"
-              initialHue={32}
+              initialDirection="linear"
+              initialMode="dark"
               initialDensity="comfortable"
             >
               <TweaksDisclosureProvider>
                 <LanguageProvider initialLanguage="en">
                   <LazyMotion features={domAnimation}>
-                    <RTLWrapper>
+                    <DirectionProvider>
                       <AppRouter />
                       <OfflineIndicator />
                       <RealtimeStatus />
                       <Toaster position="top-right" />
                       <SonnerToaster position="top-right" richColors closeButton />
                       <TweaksDrawer />
-                    </RTLWrapper>
+                    </DirectionProvider>
                   </LazyMotion>
                 </LanguageProvider>
               </TweaksDisclosureProvider>

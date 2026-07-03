@@ -8,9 +8,8 @@ export interface WidgetHeaderProps {
 }
 
 /**
- * Phase-41 design alignment: uses canonical `.card-head` + `.card-title` so
- * direction-specific typography (Inter 16/600 in bureau, Fraunces 18/500 in
- * chancery, mono 11/600 uppercase in situation) applies via app.css overrides.
+ * Phase-41 design alignment: uses canonical `.card-head` + `.card-title` so the
+ * Linear card typography (Inter 16/600) applies via app.css overrides.
  * Optional `subtitle` renders the design's `.card-sub` line below the title.
  */
 export function WidgetHeader({

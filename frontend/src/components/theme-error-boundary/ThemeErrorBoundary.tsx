@@ -3,7 +3,7 @@ import { Component, ReactNode, ErrorInfo } from 'react'
 interface Props {
   children: ReactNode
   /** Direction to apply on error; renamed from the legacy `fallbackTheme`. */
-  fallbackDirection?: 'chancery' | 'situation' | 'ministerial' | 'bureau'
+  fallbackDirection?: 'linear'
   fallbackColorMode?: 'light' | 'dark'
   fallbackLanguage?: 'en' | 'ar'
 }
@@ -38,7 +38,7 @@ export class ThemeErrorBoundary extends Component<Props, State> {
 
   applyFallbackTheme(): void {
     const {
-      fallbackDirection = 'chancery',
+      fallbackDirection = 'linear',
       fallbackColorMode = 'light',
       fallbackLanguage = 'en',
     } = this.props

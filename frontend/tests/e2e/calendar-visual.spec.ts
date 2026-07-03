@@ -10,15 +10,25 @@ const matrix = [
 test.describe('Phase 39: Calendar visual regression', () => {
   for (const { dir, viewport } of matrix) {
     test(`${dir} @ ${viewport.width}x${viewport.height}`, async ({ page }): Promise<void> => {
-      await page.addInitScript((d: string): void => {
-        localStorage.setItem('i18nextLng', d === 'rtl' ? 'ar' : 'en')
-      }, dir)
+      const lng = dir === 'rtl' ? 'ar' : 'en'
+      // Phase 77-01 (VERIFY-01): pin id.theme=light + id.locale deterministically
+      // (the prior i18nextLng seed is a dead key — i18next reads id.locale first,
+      // then the `?lng=` querystring below wins at first paint). Keeps this
+      // pre-swap baseline light after the Phase-77 default flips to dark.
+      await page.addInitScript((seedLng: string): void => {
+        try {
+          window.localStorage.setItem('id.theme', 'light')
+          window.localStorage.setItem('id.locale', seedLng)
+        } catch {
+          /* storage may be denied in some configs */
+        }
+      }, lng)
       await page.setViewportSize(viewport)
       await page.addStyleTag({
         content:
           '*, *::before, *::after { animation-duration: 0s !important; transition-duration: 0s !important; }',
       })
-      await page.goto('/calendar')
+      await page.goto(`/calendar?lng=${lng}`)
       await page.waitForLoadState('networkidle')
       await page.evaluate((): Promise<FontFaceSet> => document.fonts.ready)
 

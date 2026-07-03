@@ -6,7 +6,7 @@
  * - Mobile-first responsive design
  * - RTL support with logical properties
  * - Dark/light mode theming
- * - Aceternity-inspired animations
+ * - Layered scroll-reveal animations
  * - Empty and loading states
  */
 

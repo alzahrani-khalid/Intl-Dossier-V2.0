@@ -40,7 +40,7 @@ export function KeyRepresentativesCard({
     <Link
       to="/dossiers/persons/create"
       search={{ organization_id: dossierId }}
-      className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline min-h-11 px-1"
+      className="inline-flex items-center gap-1 text-sm font-medium text-accent-ink hover:underline min-h-11 px-1"
       aria-label={addLabel}
     >
       <Plus className="h-4 w-4" aria-hidden="true" />

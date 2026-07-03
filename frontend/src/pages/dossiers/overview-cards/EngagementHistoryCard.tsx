@@ -117,7 +117,7 @@ export function EngagementHistoryCard({
           </div>
 
           {hasMore && (
-            <p className="text-xs text-primary cursor-pointer hover:underline pt-3 ps-6">
+            <p className="text-xs text-accent-ink cursor-pointer hover:underline pt-3 ps-6">
               {t('overview.engagementHistory.viewAll', {
                 defaultValue: 'View all engagements',
               })}

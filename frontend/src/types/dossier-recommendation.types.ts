@@ -216,7 +216,7 @@ export interface DossierRecommendationUpdateParams {
  */
 export function getReasonColor(reason: DossierRecommendationReason): string {
   const colors: Record<DossierRecommendationReason, string> = {
-    similar_content: 'text-accent',
+    similar_content: 'text-accent-ink',
     shared_relationships: 'text-secondary-foreground',
     topic_overlap: 'text-success',
     recent_activity: 'text-warning',
@@ -258,7 +258,7 @@ export function getReasonBgColor(reason: DossierRecommendationReason): string {
  */
 export function getSimilarityColor(score: number): string {
   if (score >= 0.9) return 'text-success'
-  if (score >= 0.8) return 'text-accent'
+  if (score >= 0.8) return 'text-accent-ink'
   if (score >= 0.7) return 'text-warning'
   return 'text-muted-foreground'
 }

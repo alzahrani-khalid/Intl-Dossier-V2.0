@@ -1,16 +1,12 @@
 /**
  * ClassificationBar.tsx — Phase 36 SHELL-03 implementation.
  *
- * Single component with an internal `switch(direction)` that produces three
- * distinct DOM shapes per UI-SPEC §"Classification Chrome — Component Shape
- * Decision" (lines 190-222). Plan 36-04 (AppShell) mounts exactly ONE
- * `<ClassificationBar />` between `<Topbar />` and `<main>`; this file owns
- * the shape-by-direction branching.
- *
- *   - chancery   → `.cls-marginalia` italic serif line (em-dash wrapped)
- *   - situation  → `.cls-ribbon` full-width accent banner (uppercase mono)
- *   - ministerial→ `.cls-chip` inline pill (accent dot + label)
- *   - bureau     → same chip variant as ministerial (both use `.cls-chip`)
+ * Phase 77 (linear-token-system): the engine is single-direction now, so the
+ * former `switch(direction)` (chancery marginalia / situation ribbon /
+ * ministerial+bureau chip) collapsed to the single Linear chip variant — the
+ * `.cls-chip` inline pill (accent dot + label) that ministerial/bureau used.
+ * Plan 36-04 (AppShell) mounts exactly ONE `<ClassificationBar />` between
+ * `<Topbar />` and `<main>`.
  *
  * Visibility gate (T-36-05 disposition + UI-SPEC line 219):
  *   - Returns `null` when `useClassification().classif === false` so the
@@ -24,21 +20,16 @@
  * RTL contract (CLAUDE.md rule 1 + rule 2):
  *   - Chip spacing is owned by `.cls-chip` logical margin styles so the inline
  *     anchor edge flips automatically between LTR and RTL.
- *   - Ribbon is center-aligned — no inline start/end concerns.
- *   - Marginalia is center-aligned; no directional positioning needed.
  *
- * Deviation from 36-03 PLAN interfaces (Rule 3 — plan hook names are stale):
- *   - Plan referenced `useDirection`/`useClassification` returning
- *     `{direction, setDirection}` / `{classification, setClassification}`.
- *     Real hooks are `useDesignDirection` and `useClassification` returning
- *     `{classif, setClassif}` (Phase 33/34 naming). This file uses the real
- *     shapes. AuthUser has `name` not `full_name` — getInitials adapts.
+ * Hook shapes (Rule 3 — plan hook names were stale): the real hook is
+ * `useClassification` returning `{classif, setClassif}` (Phase 33/34 naming).
+ * AuthUser has `name` not `full_name` — getInitials adapts.
  */
 
 import type { JSX } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useClassification, useDesignDirection } from '@/design-system/hooks'
+import { useClassification } from '@/design-system/hooks'
 import { useAuthStore } from '@/store/authStore'
 
 /**
@@ -74,7 +65,6 @@ function readLevel(): string {
 
 export function ClassificationBar(): JSX.Element | null {
   const { classif } = useClassification()
-  const { direction } = useDesignDirection()
   const { t, i18n } = useTranslation()
   const user = useAuthStore((s) => s.user)
 
@@ -94,39 +84,11 @@ export function ClassificationBar(): JSX.Element | null {
   const sessionLabel = t('shell.classification.session')
   const content = `${workspace} · ${level} · ${handleSecurely} · ${sessionLabel} ${dateLabel} · ${initials}`
 
-  switch (direction) {
-    case 'chancery':
-      return (
-        <div
-          className={
-            'cls-marginalia text-center pt-1.5 px-5 pb-0 ' +
-            'font-display italic text-[11px] leading-[1.4] tracking-[0.02em] text-[var(--ink-mute)]'
-          }
-        >
-          — {content} —
-        </div>
-      )
-
-    case 'situation':
-      return (
-        <div
-          className={
-            'cls-ribbon py-1 px-5 bg-[var(--accent)] text-[var(--accent-fg)] ' +
-            'font-mono text-[10.5px] font-semibold uppercase tracking-[0.15em] leading-[1.3] text-center ' +
-            'max-md:py-1 max-md:px-3 max-sm:px-3 max-sm:text-[9.5px]'
-          }
-        >
-          {content.toUpperCase()}
-        </div>
-      )
-
-    case 'ministerial':
-    case 'bureau':
-      return (
-        <div className="cls-chip">
-          <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
-          {content}
-        </div>
-      )
-  }
+  // Phase 77 — the neutral Linear chip is the sole classification variant.
+  return (
+    <div className="cls-chip">
+      <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
+      {content}
+    </div>
+  )
 }

@@ -299,7 +299,7 @@ export function ApprovalChain({
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <div className="flex cursor-help items-center justify-center gap-1 text-xs text-accent">
+                                <div className="flex cursor-help items-center justify-center gap-1 text-xs text-accent-ink">
                                   <MessageSquare className="size-3" />
                                   <span>{t('approval.hasComments')}</span>
                                 </div>

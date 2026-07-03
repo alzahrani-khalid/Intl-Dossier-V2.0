@@ -295,7 +295,7 @@ export function ImportValidationResults({
                       )}
                     </div>
                   ) : row.status === 'conflict' ? (
-                    <div className="text-sm text-accent">
+                    <div className="text-sm text-accent-ink">
                       {t('errors.conflict_detected')}
                       {row.existingId && (
                         <span className="text-muted-foreground ms-2">
