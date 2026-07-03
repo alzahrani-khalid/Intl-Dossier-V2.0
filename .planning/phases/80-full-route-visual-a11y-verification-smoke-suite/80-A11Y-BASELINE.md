@@ -1,10 +1,16 @@
-# Phase 80-01 — VERIFY-02 A11y Baseline (recorded characterization)
+# Phase 80 — VERIFY-02 A11y Baseline (RECORDED + finalized A/B verdict)
 
 **Purpose:** The single recorded, honest a11y baseline for VERIFY-02. Every
 fix-vs-record decision in Plan 80-03 derives from this document. No baseline
 laundering: the failure set is characterized on ONE stated reference environment,
 with date + commit SHA, and every classification is gated behind proven-live
 fixtures.
+
+**Status:** §1–§8 recorded by Plan 80-01 (set B, HEAD). §9–§10 added by Plan 80-02:
+the RECORDED pre-token leg (set A, worktree `14191cb85`) + the finalized **B ⊆ A**
+verdict and the Plan 80-03 must-fix list. **Verdict: B ⊆ A is FALSE — 4 NEW-on-HEAD
+`color-contrast` scans (organizations en/ar, topics en, tasks en — all Linear
+light).** See §10.
 
 ---
 
@@ -270,3 +276,226 @@ axe baseline.
   axis. Expectation from the theme skew: `color-contrast` (light) is the candidate
   NEW class; `aria-required-*` (engagements, present in dark) is the candidate
   pre-existing class. Do not assume — the A-leg proves it.
+
+---
+
+## 9. Pre-token leg (set A) — the RECORDED pre-migration baseline (Plan 80-02)
+
+This is the honest pre-migration operand: both suites re-run on a **git worktree
+pinned to the immutable pre-token commit `14191cb85`** ("test(77-01): commit
+VERIFY-01 pre-swap visual baseline", 2026-07-02 — the last commit before the
+Phase-77 Linear token swap; an ancestor of HEAD). Set A is a REAL run, not an
+inference (anti-laundering control T-80-04).
+
+### 9.1 Run provenance (which tree served each leg — T-80-05 poison guard)
+
+<!-- prettier-ignore-start -->
+| Field | Value |
+| --- | --- |
+| Worktree | `git worktree add ../intl-pre-token 14191cb85` (detached HEAD, read-only lineage — never committed to) |
+| Build | `pnpm install --frozen-lockfile` at the worktree root (lockfileVersion 9.0, pnpm 10.29.1) — resolved the historical committed lockfile, 0 new packages (T-80-SC), done in 14.7s |
+| Env | gitignored `.env.test` (repo-root) + `frontend/.env.development` copied into the worktree; `TEST_USER_EMAIL`/`TEST_USER_PASSWORD` present (login succeeded → not the "incomplete copy" error) |
+| Overlay | `qa-sweep-axe-4axis.spec.ts` copied from main into the worktree (absent at `14191cb85`; test-only overlay — its helpers `qa-sweep.ts` / `v6-routes.ts` and `support/list-pages-auth.ts` all exist at `14191cb85`) |
+| Poison guard | `:5173` verified DOWN before EACH leg (`lsof -ti:5173`) so Playwright's `reuseExistingServer:!CI` booted the **WORKTREE** dev server, not main's — every set-A leg was served by the `14191cb85` tree |
+| Date | 2026-07-03 (**same day** as set B; see §9.4 fairness) |
+| Cleanup | worktree dev server killed; `git worktree remove ../intl-pre-token --force`; `git worktree list` shows no `intl-pre-token`; main tree `git status` clean |
+<!-- prettier-ignore-end -->
+
+**Test-harness parity (the only variable is `frontend/src` app code).** Diffed
+`14191cb85`..HEAD: `playwright.config.ts` (the `a11y` project + webServer),
+`helpers/v6-routes.ts` (`V6_ROUTES`), `helpers/qa-sweep.ts` (`runAxe`/`settlePage`/
+`waitForRouteReady`), `support/list-pages-auth.ts`, `global-setup.ts`, and **all 5
+`a11y`-project specs are byte-identical**; `@playwright/test` `^1.60.0` and
+`@axe-core/playwright` `^4.11.3` are identical in both trees (same browser
+binaries, same axe rule engine). So A vs B isolates the Bureau→Linear migration of
+`frontend/src` — nothing test- or axe-version-driven can leak into the diff.
+
+### 9.2 Leg 1 — a11y project (5 specs) at `14191cb85`
+
+<!-- prettier-ignore-start -->
+| Field | Value |
+| --- | --- |
+| Command | `pnpm -C frontend exec playwright test --project=a11y --retries=1` (`E2E_BASE_URL` unset; worktree served) |
+| Raw log | scratchpad `setA-a11y-14191cb85.log` (1.1m wall) |
+| Tally | **85 passed / 2 flaky→pass / 10 skipped / 0 hard failed** (= 97 tests) |
+| Flaky | `dossiers-a11y.spec.ts:108` collapsible-keyboard + `:307` images-have-alt-text — both `page.waitForLoadState('networkidle')` 30s timeouts that passed on retry → **test-bug** (dev-server concurrency timing), NOT an app/axe finding |
+<!-- prettier-ignore-end -->
+
+**Set A a11y gate = 0 hard failures**, identical outcome to set B (§3, 0 hard
+failures). The pre-token tree ALSO passes the a11y gate cleanly — the 2 set-A flakes
+are the same networkidle-timing class recorded in §5 and are excluded from the
+axe baseline. Since set B's a11y-gate hard-failure set is **empty**, B ⊆ A holds
+trivially on this axis regardless of set A (no a11y-project scan can be NEW-on-HEAD).
+
+### 9.3 Leg 2 — 4-axis sweep (60 scans) at `14191cb85`
+
+Bootstrap check: `frontend/public/bootstrap.js` at `14191cb85` DOES honor
+`id.theme` (`localStorage.getItem('id.theme')||'light'`), so the theme pin is
+**real** — set A light = **Bureau light**, set A dark = **Bureau dark** (only
+`id.dir` defaults to `bureau`; the theme axis is measured, the palette _family_ is
+the migration variable Bureau→Linear). The parallel run carried login-concurrency
+`waitForURL` flake (same class as set B §8.3); a second **serialized `--workers=1`**
+run of the 6 comparison-relevant routes produced flake-free axe readings that are
+authoritative for the verdict.
+
+<!-- prettier-ignore-start -->
+| Field | Value |
+| --- | --- |
+| Command (parallel) | `pnpm -C frontend exec playwright test qa-sweep-axe-4axis.spec.ts --project=chromium --retries=1` → **32 passed / 24 failed / 4 flaky** (raw log `setA-4axis-14191cb85.log`, 1.6m) |
+| Command (serialized, authoritative) | `… qa-sweep-axe-4axis.spec.ts --project=chromium --workers=1 --retries=1 -g "(tasks\|engagements\|organizations\|topics\|countries\|working_groups) \["` → **11 passed / 13 failed / 0 flaky, 0 login-timeouts** (raw log `setA-4axis-resolve.log`, 2.7m) |
+| Purpose of serialized run | eliminate the login-concurrency flake so every previously login-timed-out cell (tasks[light], engagements[ar][dark]) gets a REAL axe reading — resolving indeterminacy by measurement, not inference |
+<!-- prettier-ignore-end -->
+
+**Set A 4-axis matrix (authoritative, clean serialized readings for the 6
+comparison routes; parallel-run readings for the other 9, with login-timeouts
+marked as test-bug not axe).** Legend: `pass` · `CC` = serious `color-contrast` ·
+`ARIA` = critical `aria-required-parent`+`-children` · `t/o` = login `waitForURL`
+timeout (test-bug, axe did not run — NOT an axe finding).
+
+<!-- prettier-ignore-start -->
+| Route (theme family = Bureau) | en · light | en · dark | ar · light | ar · dark | reading |
+| --- | --- | --- | --- | --- | --- |
+| dashboard | pass | pass | pass | **CC** | parallel |
+| kanban | pass | pass | pass | pass | parallel |
+| calendar | pass | pass | pass | **CC** | parallel |
+| countries | **CC** | **CC** | **CC** | **CC** | serialized |
+| organizations | pass | **CC** | pass | pass | serialized |
+| persons | pass | pass | pass | pass | parallel |
+| forums | pass | pass | pass | pass | parallel |
+| topics | pass | pass | pass | pass | serialized |
+| working_groups | **CC** | pass | **CC** | **CC** | serialized |
+| engagements | **ARIA** | **ARIA** | **ARIA** | **ARIA** | serialized |
+| briefs | t/o | t/o | t/o | pass | parallel (all test-bug) |
+| after_actions | pass | pass | t/o | t/o | parallel |
+| tasks | pass | pass | pass | **CC** | serialized |
+| activity | t/o | **CC** | pass | **CC** | parallel |
+| settings | pass | **CC** | t/o | **CC** | parallel |
+<!-- prettier-ignore-end -->
+
+**Set A genuine axe findings** (excluding all `t/o` test-bug cells): `color-contrast`
+(serious) on countries (all 4 Bureau cells), working_groups (3 cells), organizations
+[en][dark], tasks [ar][dark], plus the non-list dark cells dashboard/calendar/
+activity/settings [dark]; and `aria-required-parent`/`-children` (critical) on
+engagements (all 4 cells). Note countries/working_groups trip contrast in **both**
+Bureau themes — theme-independent list-chrome contrast debt that predates the Linear
+palette.
+
+### 9.4 Same-day fairness (key_link: same staging DB, code is the only variable)
+
+Set A (`14191cb85`) and set B (HEAD `b5ad1ac3f`) both ran **2026-07-03** against
+the **same staging Supabase** (`zkrcjzdemdmwhearhfgg`) via a local dev server, with
+byte-identical test harness + Playwright/axe versions (§9.1). The set-B legs were
+therefore NOT re-run — the ledger's set-B date is already today, and the only
+`frontend/` change since `b5ad1ac3f` is the test-only `qa-sweep-axe-4axis.spec.ts`
+overlay (no `frontend/src` change). Code (Bureau→Linear) is the sole variable.
+
+---
+
+## 10. A/B comparison — the recorded baseline verdict + Plan 80-03 must-fix list
+
+Classification vocabulary (exactly one per finding): **pre-existing** (in A and B —
+the recorded baseline), **fixed-on-HEAD** (in A, not B — improvement, note only),
+**NEW-on-HEAD** (in B, not A — migration-caused; **FIX-mandatory, may NEVER be
+recorded-as-baseline** per the locked no-laundering decision).
+
+### 10.1 Verdict
+
+> **B ⊆ A: FALSE — 4 migration-caused (NEW-on-HEAD) `color-contrast` scans are
+> present on HEAD but ABSENT at `14191cb85`.** They are enumerated in the §10.3
+> must-fix list and are FIX-mandatory for Plan 80-03. All other set-B findings
+> (4 `color-contrast` + 4 `aria-required-*`) are pre-existing and pass through as
+> the recorded baseline.
+
+### 10.2 Per-scan classification of every set-B genuine finding
+
+Each set-B genuine axe finding vs the **same scan (route × locale × theme)** in set A:
+
+<!-- prettier-ignore-start -->
+| # | set-B finding (scan) | axe rule / impact | set A same-scan | Classification |
+| --- | --- | --- | --- | --- |
+| 1 | countries [en] [light] | color-contrast / serious | CC (Bureau light) | **pre-existing** |
+| 2 | countries [ar] [light] | color-contrast / serious | CC (Bureau light) | **pre-existing** |
+| 3 | working_groups [en] [light] | color-contrast / serious | CC (Bureau light) | **pre-existing** |
+| 4 | working_groups [ar] [light] | color-contrast / serious | CC (Bureau light) | **pre-existing** |
+| 5 | organizations [en] [light] | color-contrast / serious | **pass** (Bureau light clean) | **NEW-on-HEAD** |
+| 6 | organizations [ar] [light] | color-contrast / serious | **pass** (Bureau light clean) | **NEW-on-HEAD** |
+| 7 | topics [en] [light] | color-contrast / serious | **pass** (Bureau, all 4 clean) | **NEW-on-HEAD** |
+| 8 | tasks [en] [light] | color-contrast / serious | **pass** (Bureau light clean, serialized) | **NEW-on-HEAD** |
+| 9 | engagements [en] [light] | aria-required-parent/children / critical | ARIA | **pre-existing** |
+| 10 | engagements [en] [dark] | aria-required-parent/children / critical | ARIA | **pre-existing** |
+| 11 | engagements [ar] [light] | aria-required-parent/children / critical | ARIA | **pre-existing** |
+| 12 | engagements [ar] [dark] | aria-required-parent/children / critical | ARIA (confirmed clean serialized) | **pre-existing** |
+<!-- prettier-ignore-end -->
+
+**fixed-on-HEAD (in A, not B — improvements, recorded for completeness, NOT
+actionable):** the Bureau→Linear **dark** migration removed multiple Bureau-dark
+`color-contrast` violations that HEAD no longer trips — countries [en/ar] [dark],
+organizations [en] [dark], working_groups [ar] [dark], tasks [ar] [dark] (clean
+serialized), plus dashboard/calendar/activity/settings [dark] (parallel run). Net
+migration effect: dark improved broadly; **light regressed on 3 list routes.**
+
+### 10.3 Plan 80-03 must-fix list (NEW-on-HEAD — FIX-mandatory, NEVER recordable)
+
+The Linear **light** palette (derived from the dark-canonical tokens per
+`frontend/DESIGN.md`) trips WCAG AA `color-contrast` (serious) on 3 list-route
+`<main>` surfaces that the pre-token **Bureau light** palette rendered clean. These
+are migration-caused and MUST be fixed (a token/contrast repair in the Linear light
+derivation), NOT recorded:
+
+<!-- prettier-ignore-start -->
+| Must-fix item | Route `<main>` | Axe rule | Impact | Theme | Scans (locale) | Why NEW |
+| --- | --- | --- | --- | --- | --- | --- |
+| MF-1 | organizations (list) | color-contrast | serious | Linear light | en + ar (2) | Bureau light passed both; Linear light fails both |
+| MF-2 | topics (list) | color-contrast | serious | Linear light | en (1) | Bureau passed all 4 cells; Linear light [en] fails |
+| MF-3 | tasks (list) | color-contrast | serious | Linear light | en (1) | Bureau light passed (serialized clean); Linear light [en] fails |
+<!-- prettier-ignore-end -->
+
+**4 scans across 3 routes.** All serious `color-contrast` on the **Linear light**
+palette only (dark passes on all three in set B). Likely a single shared list-page
+`<main>` chrome token (`list-pages.css` / surface-vs-ink pairing) under-contrasting
+in the light derivation — fix once, re-verify all three. Recording any of MF-1/2/3
+as baseline would be laundering (they did not exist pre-migration).
+
+### 10.4 Recorded pre-migration baseline (pre-existing — passes the B ⊆ A test)
+
+These set-B findings ARE in set A → recorded baseline, NOT chased in Plan 80-03
+(they predate the Linear migration):
+
+- `color-contrast` (serious, Linear light): **countries** [en/ar] [light],
+  **working_groups** [en/ar] [light] — Bureau light trips the same; the list-chrome
+  contrast debt predates the token swap (Bureau also fails these in dark).
+- `aria-required-parent` / `aria-required-children` (critical): **engagements**
+  list, **all 4** [en/ar] [light/dark] — Bureau trips all 4 too; a structural
+  `role`-nesting defect on the engagements list `<main>`, theme- and
+  locale-independent, present in both eras. (Plan 80-03 MAY still fix it as genuine
+  app debt, but it is recordable, not migration-caused.)
+
+### 10.5 Disposition reminders carried forward (unchanged by this plan)
+
+- **`best-practice` tag divergence (do NOT unify):** the `a11y`-project spec
+  `dossiers-rtl-a11y` includes the axe `best-practice` tag; the sweep's `runAxe`
+  (`helpers/qa-sweep.ts`) uses only `wcag2a/2aa/21a/21aa` (serious/critical, no
+  `best-practice`). Set A and set B were both scanned with each spec's own tag set —
+  the deltas above are recorded **as-is per spec**; the tag sets are deliberately
+  NOT reconciled (a `best-practice`-only node is out of the sweep's serious/critical
+  gate by design).
+- **8 quarantined specs** (`playwright.config.ts:118-131`: editor-keyboard-nav,
+  positions-keyboard-nav, positions-screen-reader-bilingual, screen-reader-en,
+  screen-reader-ar, keyboard-navigation, color-contrast, wcag-aa-comprehensive-audit)
+  keep their recorded quarantine disposition (issue-#31 class) — out of the gate,
+  not re-included, not repaired by this plan.
+- **vitest `waiting-queue-a11y` T091-07** keeps its §7 disposition: pre-existing
+  local-only baseline failure; required CI `Tests (frontend)` is green; NOT chased
+  in Phase 80.
+- **10 `test.fixme` skips** (§6) remain the recorded app-debt baseline, unchanged.
+
+### 10.6 Consequence for Plan 80-03 (one table to read)
+
+Plan 80-03 reads §10.2 + §10.3 as its fix-vs-record contract: **FIX** MF-1/MF-2/MF-3
+(the 4 NEW-on-HEAD light `color-contrast` scans — never record). **RECORD** the
+6 pre-existing scans (countries/working_groups light contrast + engagements ARIA
+×4) via the established `test.fixme(true, '80: recorded pre-migration baseline — …')`
+
+- `TRACKED APP A11Y DEBT` convention, OR fix them as discretionary genuine debt —
+  but they carry no laundering risk either way because set A proves they pre-date the
+  migration.
