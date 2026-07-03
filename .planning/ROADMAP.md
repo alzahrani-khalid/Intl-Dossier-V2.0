@@ -210,7 +210,7 @@ Full detail: [milestones/v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md). Audit: [m
 - [x] **Phase 77: Linear Token System** — dark+light Linear tokens wired through `directions.ts`/`buildTokens.ts`/`applyTokens.ts`; gap-filled error/status palette; 4-direction switcher retired; Inter + JetBrains Mono (Tajawal preserved); re-skinned primitives; design source-of-truth docs updated to Linear (DOC-01); `bootstrap.js` byte-match CI guard (gated by pre-swap baseline capture) (completed 2026-07-02)
 - [x] **Phase 78: HeroUI v3 API Audit & Bump** — `@heroui/react`/`@heroui/styles` 3.0.5 → 3.2.1 (light phase: the tree is already on the v3 compound API and no v2 exists — audit-confirmed, so this is a bump + regression sweep) (completed 2026-07-03)
 - [x] **Phase 79: Aceternity Removal** — 8 form components rebuilt on HeroUI v3/Radix preserving RHF/Zod validation, ARIA, and keyboard-focus; `@aceternity-pro` registry entry removed from `components.json` (completed 2026-07-03)
-- [ ] **Phase 80: Full-Route Visual + A11y Verification & Smoke Suite** — re-compare all baselined surfaces (EN+AR × dark+light) against the pre-token baseline; axe-core clean across all 4 axes; portal-animation + Calendar/Pagination/Sidebar RTL smoke tests in CI
+- [x] **Phase 80: Full-Route Visual + A11y Verification & Smoke Suite** — re-compare all baselined surfaces (EN+AR × dark+light) against the pre-token baseline; axe-core clean across all 4 axes; portal-animation + Calendar/Pagination/Sidebar RTL smoke tests in CI
 
 ---
 
@@ -387,7 +387,7 @@ Plans:
 
 **Wave 6** _(blocked on Wave 5 completion)_
 
-- [ ] 80-06-PLAN.md — FOUC-02: rtl-component-smokes + calendar clock-freeze + test-rtl-smokes ci.yml job + branch-protection checkpoint (wave 6)
+- [x] 80-06-PLAN.md — FOUC-02: rtl-component-smokes + calendar clock-freeze + test-rtl-smokes ci.yml job + branch-protection checkpoint (wave 6)
       **UI hint**: yes
 
 ---
@@ -417,7 +417,7 @@ Plans:
 | 77 | v8.0 | 9/8 | Complete    | 2026-07-02 |
 | 78 | v8.0 | 4/4 | Complete   | 2026-07-03 |
 | 79 | v8.0 | 4/4 | Complete   | 2026-07-03 |
-| 80 | v8.0 | 5/6 | In Progress|  |
+| 80 | v8.0 | 6/6 | Complete   | 2026-07-04 |
 
 <!-- gsd:progress:end -->
 

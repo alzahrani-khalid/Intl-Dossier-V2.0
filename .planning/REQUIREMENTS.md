@@ -52,7 +52,7 @@ Replace the IntelDossier prototype design system with a Linear-derived design la
 ### Bootstrap CI Guard + Smoke Suite
 
 - [x] **FOUC-01**: A CI script fails the build if `bootstrap.js` and `directions.ts` literals diverge
-- [ ] **FOUC-02**: Portal-animation and Calendar/Pagination/Sidebar RTL smoke tests run in CI
+- [x] **FOUC-02**: Portal-animation and Calendar/Pagination/Sidebar RTL smoke tests run in CI
 
 ### Documentation & Source-of-Truth
 
@@ -107,6 +107,6 @@ Every v8.0 requirement maps to exactly one phase. Coverage: 24/24.
 | ACET-02     | Phase 79 | Pending  |
 | VERIFY-01   | Phase 80 | Complete |
 | VERIFY-02   | Phase 80 | Complete |
-| FOUC-02     | Phase 80 | Pending  |
+| FOUC-02     | Phase 80 | Complete |
 
 **Note:** VERIFY-01 spans two moments — the pre-token baseline capture is executed as a gating step of Phase 77 (before any `directions.ts` literal moves), and the post-migration re-comparison completes in Phase 80. The requirement is owned by Phase 80 where it closes.
