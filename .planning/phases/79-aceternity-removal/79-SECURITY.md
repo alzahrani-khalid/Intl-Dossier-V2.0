@@ -1,8 +1,8 @@
 ---
 status: passed
 phase: 79-aceternity-removal
-audited_by: orchestrator-inline
-auditor_agent_blocked: 'gsd-security-auditor spawn blocked by session limit (resets 15:00 Asia/Riyadh); authored inline from reproducible evidence — all mitigations are simple and grep/git-verifiable'
+audited_by: gsd-security-auditor (independent, 2026-07-03) — confirms prior orchestrator-inline audit
+auditor_independently_confirmed: true
 audited: 2026-07-03
 ---
 
@@ -10,7 +10,7 @@ audited: 2026-07-03
 
 **Verdict: PASSED.** All threats from the phase threat models (79-01…79-04, ASVS V5 scope only) are accounted for. No high-severity NEW threat is introduced — the phase strictly _shrinks_ the attack surface (deletes 7 components + `motion/react`, removes a scaffold-time registry ingress). Every mitigation below is verified with a reproducible command.
 
-> **Provenance:** the independent `gsd-security-auditor` spawn was blocked by a session/usage limit (resets 15:00 Asia/Riyadh). This audit was authored inline; each threat mitigation here is trivially reproducible (grep / `git diff --quiet`), so the inline-with-disclosure path is appropriate. Re-running `/gsd:secure-phase 79` after reset is an optional confirmation.
+> **Provenance:** first authored inline on 2026-07-03 because the `gsd-security-auditor` spawn was blocked by a session limit. **The independent `gsd-security-auditor` pass has since run (2026-07-03) and CONFIRMS this audit** — every reproducible command below matches the auditor's results; no gap, no refutation. Verdict `## SECURED`, 4/4 threats CLOSED. The auditor additionally confirmed all 10 pre-existing `motion/react` UI components are byte-unchanged since the phase base (not a re-introduction under T-79-S3) and that the phase's only `components/ui/*.tsx` change is the deletion of `timeline.tsx`.
 
 ## Threat register vs. code (mitigations confirmed present)
 
@@ -30,7 +30,22 @@ audited: 2026-07-03
 - **Reduced** attack surface: 7 dead components + an orphan hook + a dead demo file deleted; `motion/react` usage removed from the live path; a scaffold-time registry URL removed from `components.json`.
 - No new inputs, HTML sinks, auth/authz changes, or dependencies added.
 
+## Security Audit 2026-07-03 (independent gsd-security-auditor)
+
+| Metric        | Count |
+| ------------- | ----- |
+| Threats found | 4     |
+| Closed        | 4     |
+| Open          | 0     |
+
+Register origin: authored at plan time (all four 79-0N-PLAN files carry a
+`<threat_model>` block) → verify-mitigations mode. Independent auditor verdict:
+`## SECURED`. Every declared mitigation reproduced exactly (grep / `git diff
+--quiet`). No unregistered flags; the single 79-04-SUMMARY security flag maps to
+the already-registered T-79-S2. ASVS scope V5 (Input Validation), `block_on:
+high` — no high-severity threat open.
+
 ---
 
 _Phase: 79-aceternity-removal — status: passed_
-_Audited: 2026-07-03_
+_Audited: 2026-07-03 (inline) · independently confirmed 2026-07-03 (gsd-security-auditor)_
