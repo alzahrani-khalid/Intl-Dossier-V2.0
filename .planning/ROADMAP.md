@@ -361,8 +361,34 @@ Plans:
 1. All baselined surfaces (the existing Playwright specs, EN+AR × dark+light) are re-compared against the pre-token baseline captured in Phase 77, and every diff is either an intended Linear change (human-reviewed) or fixed — no unexplained regressions. Any coverage expansion beyond today's specs is noted, not silently assumed.
 2. An axe-core sweep passes across all four axes (dark/light × LTR/RTL) with no new violations versus a RECORDED pre-migration baseline (the a11y CI job currently has 2 hard failures + 8 flaky on `main` — fixed or recorded before comparison).
 3. CI runs portal-animation RTL smoke tests (Popover/Tooltip/Dropdown/Sheet/drawer open from the correct edge in AR) plus Calendar/Pagination/Sidebar RTL smoke tests, and they gate the build — which first requires bringing the currently-red visual/a11y verification jobs to green (or scoping the new smokes as a separate, green-from-birth job).
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 6 plans
+
+Plans:
+
+**Wave 1**
+
+- [ ] 80-01-PLAN.md — VERIFY-02: fixture-liveness probe + a11y characterization + 4-axis axe sweep spec (HEAD leg, set B) (wave 1)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [ ] 80-02-PLAN.md — VERIFY-02: pre-token worktree A/B at 14191cb85 — the RECORDED baseline + B ⊆ A verdict (wave 2)
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
+- [ ] 80-03-PLAN.md — VERIFY-02: per-failure fix-vs-record (test.fixme + TRACKED APP A11Y DEBT) + a11y gate green (wave 3)
+
+**Wave 4** _(blocked on Wave 3 completion)_
+
+- [ ] 80-04-PLAN.md — VERIFY-01: orchestrator seed refresh + FROZEN_TIME realign + 43-shot replay + HUMAN diff triage (autonomous:false) (wave 4)
+
+**Wave 5** _(blocked on Wave 4 completion)_
+
+- [ ] 80-05-PLAN.md — VERIFY-01: regression fixes + Linear baseline recapture + replay proof + lineage commit (wave 5)
+
+**Wave 6** _(blocked on Wave 5 completion)_
+
+- [ ] 80-06-PLAN.md — FOUC-02: rtl-component-smokes + calendar clock-freeze + test-rtl-smokes ci.yml job + branch-protection checkpoint (wave 6)
+      **UI hint**: yes
 
 ---
 

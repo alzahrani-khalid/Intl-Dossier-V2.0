@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
 status: executing
-last_updated: '2026-07-03T08:05:28.969Z'
-last_activity: 2026-07-03 -- Phase 79 complete (inline); independent /gsd-code-review 79 REQUIRED after 15:00 Asia/Riyadh reset
+last_updated: '2026-07-03T18:06:11.857Z'
+last_activity: 2026-07-03 -- Phase 80 planning complete
 progress:
   total_phases: 6
-  completed_phases: 4
-  total_plans: 25
-  completed_plans: 22
-  percent: 67
+  completed_phases: 5
+  total_plans: 31
+  completed_plans: 26
+  percent: 83
 ---
 
 # Project State
@@ -26,8 +26,8 @@ See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section
 
 Phase: 79 (aceternity-removal) — COMPLETE (verified passed, inline)
 Plan: 4 of 4 (all SUMMARYs landed)
-Status: Phase 79 complete — v8.0 has only Phase 80 (final full-route verification) remaining
-Last activity: 2026-07-03 -- Phase 79 executed INLINE (sequential fallback: the first `claude -p` pane worker stalled at 0% CPU under heavy concurrent-Claude machine load; finished as the visible foreground orchestrator). 4 plans, all gates green: a11y 9/9 zero skips, tsc 0, `pnpm lint` 0, full suite (only the pre-existing waiting-queue-a11y T091-07 baseline failure), build + size-limit 0 exceeded. Aceternity provably gone (`grep -rni aceternity frontend/src --include=*.tsx --include=*.ts` = 0); SearchableSelect rebuilt (variant/motion/rgba stripped) AND the Phase-78-broken ARIA contract RESTORED (T-79-02 role=combobox/aria-invalid/required via `Button asChild`→plain button; T-79-03 popover aria-label; aria-controls mirrors cmdk's real listbox id). UserPicker facade / smart-input i18n / eslint.config.mjs byte-untouched. VERIFICATION passed + SECURITY passed + REVIEW clean — ALL authored ORCHESTRATOR-INLINE (see ⚠ below).
+Status: Ready to execute
+Last activity: 2026-07-03 -- Phase 80 planning complete
 
 ### ⚠ REQUIRED post-reset follow-up (Phase 79)
 
