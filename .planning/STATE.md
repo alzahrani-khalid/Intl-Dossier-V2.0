@@ -17,12 +17,14 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section added)
+See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Milestone + Next Milestone sections)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** v8.0 milestone closeout — Phase 80 COMPLETE (6/6 phases); milestone archive/tag/PR to protected main pending
+**Current focus:** Planning next milestone — v8.0 Linear Design System Migration SHIPPED + archived + annotated-tagged locally (2026-07-04). PR to protected `origin/main` + tag push are the remaining ship step (orchestrator-owned; nothing pushed yet).
 
 ## Current Position
+
+**v8.0 MILESTONE CLOSED (2026-07-04):** archived to `.planning/milestones/v8.0-{ROADMAP,REQUIREMENTS,MILESTONE-AUDIT}.md`; `.planning/REQUIREMENTS.md` removed (archived first); ROADMAP collapsed to a one-line + `<details>` with archive links; PROJECT.md + MILESTONES.md evolved; annotated tag `v8.0` created locally. **Nothing pushed** — the v8.0 PR to protected `origin/main` and the tag push are the orchestrator's remaining ship step. Phase-execution detail below is retained for history.
 
 Phase: 80 (full-route-visual-a11y-verification-smoke-suite) — COMPLETE (6 of 6)
 Plan: 80-06 complete (6 of 6) — FOUC-02 CLOSED. Added `rtl-component-smokes.spec.ts` (Popover `/audit-logs`, Pagination `/users`, Sidebar `aside.appshell-aside` — DOM/computed-style ONLY, zero `toHaveScreenshot`) + CI-proofed `calendar-rtl.spec.ts` with a constructor-only `Date` override (freezes no-arg `new Date()`→July 2026 while `Date.now()` stays REAL, so the Supabase storageState token is never seen as expired → no refresh storm → the SRTL-02 grid renders; defuses the 2026-08-01 cliff). Wired a green-from-birth `test-rtl-smokes` ci.yml job (name "RTL Portal + Component Smokes", verbatim `test-a11y` + 3 deltas, `E2E_BASE_URL`=0, e2e.yml untouched). Local green proof: `direction-portals + calendar-rtl + rtl-component-smokes --project=chromium` = 9/9 (13.8s). DEVIATION (Rule 1): the plan's `page.clock.install` mechanism was empirically superseded — clock APIs faking `Date.now()` forward starve the authed month query → empty grid; documented in 80-06-SUMMARY. Branch-protection promotion DEFERRED (not applied) per the overseer pre-decision — job ships advisory; `gh api` confirms "RTL Portal + Component Smokes" is NOT among main's 8 required checks. Commit 7014fdba1.
@@ -102,19 +104,13 @@ Follow-up (77-01): dashboard-widgets FROZEN_TIME tracks the capture date — a f
 
 ## Next Action
 
-Phase 70 closed (2026-06-16): UAT 10/10 pass (`70-UAT.md`), `70-VERIFICATION.md` status=passed (human-accepted), `70-SECURITY.md` threats_open=0. Carry-forward: on-prem SMTP **drain worker** + external webhook URL are customer-config (RF-1) — alerts enqueue to `intelligence_email_queue` and the webhook adapter is built/tested, but live SMTP/webhook delivery is not exercisable on staging. Phase 70 work is local-only (UNPUSHED; main protected → needs PR).
+**v8.0 shipped + archived + tagged locally (2026-07-04).** The milestone close is done on local `main`: archives written (`milestones/v8.0-ROADMAP.md`, `-REQUIREMENTS.md`, `-MILESTONE-AUDIT.md`), `REQUIREMENTS.md` removed, ROADMAP collapsed, PROJECT/MILESTONES/STATE evolved, annotated `v8.0` tag created. **Nothing pushed.**
 
-Phase 71 shipped (2026-06-17): analytic-graph RPC + edge-fn live on staging, 3-entry Analyze surface, UAT 4/4 EN+AR; phase execution complete (commit 63397cda).
+Next (orchestrator-owned ship step): open the v8.0 PR from local `main` to protected `origin/main`, watch the 8 required checks, merge, then push the `v8.0` tag. Deferred-to-PR: the CI "birth certificate" (first green GitHub run of the a11y + `test-rtl-smokes` jobs) and the `test-rtl-smokes` branch-protection promotion (repo-admin).
 
-Phase 72 context gathered (2026-06-18): `72-CONTEXT.md` committed (a4a8c071). Decisions — Gemma 4 12B on vLLM (1×16–24GB GPU, no ALLaM in v1); throwaway Option-C spike then rebuild on Mastra+vLLM; responsive app-wide copilot drawer (desktop slide-over + mobile sheet) + Cmd+K/FAB, context-aware; corpus = core intel text + documents/OCR re-embedded to bge-m3 1024; tools = hybrid-RAG + read_signals + query_graph + dossier/work-item lookups + generate_digest preview-only; persistent user-private Mastra threads; **CopilotKit-first** (spike must prove RTL/token + air-gap; headless fallback); fold + audit supabaseAdmin in brief-generator + intake-linker; standing OSS-survey mandate.
+Then: `/gsd:new-milestone` to scope the next cycle. Carried-forward candidates (v7.0 GPU/TEI deploy-gated EVAL/AGENT/INFRA, v7.1 feed ingestion, GAP-2/GAP-3, DESIGNOPS-01/02, and the v8.0 follow-ups) are listed under `## Next Milestone` in PROJECT.md.
 
-Phase 72 UI-SPEC approved (2026-06-18): `72-UI-SPEC.md` committed (5d916bbe), gsd-ui-checker 6/6 dimensions PASS (1 non-blocking FLAG fixed — single-word "Stop"/"Retry" → "Stop response"/"Retry question", EN+AR). Contract locks the responsive copilot drawer (desktop slide-over mirroring the 720px dossier drawer + mobile BottomSheet), CopilotKit token-theming (`--copilot-kit-*` → IntelDossier tokens, RTL/Tajawal, no raw hex/no card shadows), indistinguishable-empty copy (no clearance/filtered/restricted anywhere), 60/30/10 color with a 4-item accent reserve, 4-size/2-weight type, justified spacing exceptions, and the full token-bound component inventory (CopilotDrawer/Sheet, Composer, MessageList, CitationCard, ThreadList, states).
-
-Phase 72 executing (8/9 plans done as of 2026-06-19): 72-08 copilot drawer SHIPPED + human-verify APPROVED — the user-facing AGENT-01/06 deliverable (responsive token-bound drawer + FAB + Cmd+K on the assistant-ui shell, EN+AR/RTL, indistinguishable-empty) is in place; AGENT-03 reinforced. The 72-01 spike's pending "AR visual" gate is now closed by the 72-08 human sign-off.
-
-Next: `/gsd:execute-phase 72` to run 72-09 (the LIVE UAT deploy gate — boot agent-runtime + vLLM/TEI serving substrate, run the 5 milestone proofs: clearance-reduction, EN+AR RTL @1024/1400, INVOKER+RLS, e2e smoke; re-embed live run + `set_config('hnsw.iterative_scan',true)` RPC fold + `mastra_threads` RLS re-apply land here). 72-09 is the only remaining plan in phase 72.
-
-Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/middleware/auth.ts`) deployed — elected-official detail and other Express-backed routes stay 401 in production until deployed (staging is correct).
+Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/middleware/auth.ts`) deployed — pre-existing, unrelated to v8.0.
 
 ## Accumulated Context
 
@@ -285,4 +281,6 @@ file. Bookkeeping debt only — no open functional work.
 
 ## Operator Next Steps
 
-- Start the next milestone with /gsd-new-milestone
+- Ship v8.0: open the PR from local `main` → protected `origin/main`, watch the 8 required checks, merge, then push the `v8.0` tag (nothing has been pushed yet).
+- Promote the `test-rtl-smokes` CI job to a required check once the first green GitHub run lands (repo-admin).
+- Then start the next milestone with /gsd-new-milestone.

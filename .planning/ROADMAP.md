@@ -15,7 +15,7 @@
 - ✅ **v6.5 Escalated Backlog Hardening** — Phases 60-61 (shipped 2026-06-11) — [archive](milestones/v6.5-ROADMAP.md)
 - ✅ **v6.6 Dossier Workflow Completion** — Phases 62-67 (shipped 2026-06-13) — [archive](milestones/v6.6-ROADMAP.md)
 - ✅ **v7.0 Intelligence Engine** — Phases 68-74 (shipped 2026-06-24) — [archive](milestones/v7.0-ROADMAP.md)
-- 🔄 **v8.0 Linear Design System Migration** — Phases 75-80 (in progress)
+- ✅ **v8.0 Linear Design System Migration** — Phases 75-80 (shipped 2026-07-04) — [archive](milestones/v8.0-ROADMAP.md)
 
 ## Phases
 
@@ -199,196 +199,21 @@ Full detail: [milestones/v7.0-ROADMAP.md](milestones/v7.0-ROADMAP.md). Audit: [m
 
 </details>
 
-### 🔄 v8.0 Linear Design System Migration (Phases 75-80) — IN PROGRESS
+<details>
+<summary>✅ v8.0 Linear Design System Migration (Phases 75-80) — SHIPPED 2026-07-04</summary>
 
-**Goal:** Replace the IntelDossier prototype design language with a Linear-derived one — on properly-bridged shadcn/ui RTL infrastructure and HeroUI v3 (already at 3.0.5, bumped to 3.2.1), with Aceternity fully removed — while preserving Arabic RTL correctness on all four axes (dark/light × LTR/RTL) throughout.
+**Goal:** Replace the multi-direction IntelDossier/Bureau design language with a single Linear-derived visual direction — a re-skin of the existing OKLCH token engine on consolidated shadcn RTL infrastructure + HeroUI v3 (3.0.5 → 3.2.1), with Aceternity's form components rebuilt on HeroUI v3/Radix — preserving Arabic RTL on all four axes (dark/light × LTR/RTL).
 
-**Hard sequencing (from research):** audit → RTL infrastructure bridge + shadcn logical properties → Linear tokens → HeroUI v3 API audit/bump → Aceternity removal → visual/a11y verification across all baselined surfaces. Visual baselines (VERIFY-01) are captured **before** the token phase runs (gating step of Phase 77) and re-compared in the final phase (Phase 80). The `bootstrap.js`/`directions.ts` byte-match CI guard (FOUC-01) is added at the **start** of Phase 77, before any token literal moves.
+- [x] Phase 75: UI Component & Migration Audit (4/4 plans) — completed 2026-07-02
+- [x] Phase 76: RTL Infrastructure Bridge & shadcn Logical Properties (5/5 plans) — completed 2026-07-02
+- [x] Phase 77: Linear Token System (9/8 plans, incl. GAPFIX) — completed 2026-07-02
+- [x] Phase 78: HeroUI v3 API Audit & Bump (4/4 plans) — completed 2026-07-03
+- [x] Phase 79: Aceternity Removal (4/4 plans) — completed 2026-07-03
+- [x] Phase 80: Full-Route Visual + A11y Verification & Smoke Suite (6/6 plans) — completed 2026-07-04
 
-- [x] **Phase 75: UI Component & Migration Audit** — classify every hand-rolled surface; confirm HeroUI v3 API conformance (compound API, no v3-removed components — both review-verified); inventory the 8 Aceternity components with their behavioral contracts (completed 2026-07-02)
-- [x] **Phase 76: RTL Infrastructure Bridge & shadcn Logical Properties** — single `dir` owner bridged into `<html>` + Radix; portal edge-correct animations; one-shot `migrate rtl`; manual Calendar/Pagination/Sidebar patch; duplicate-`rtl:` CI guard (completed 2026-07-02)
-- [x] **Phase 77: Linear Token System** — dark+light Linear tokens wired through `directions.ts`/`buildTokens.ts`/`applyTokens.ts`; gap-filled error/status palette; 4-direction switcher retired; Inter + JetBrains Mono (Tajawal preserved); re-skinned primitives; design source-of-truth docs updated to Linear (DOC-01); `bootstrap.js` byte-match CI guard (gated by pre-swap baseline capture) (completed 2026-07-02)
-- [x] **Phase 78: HeroUI v3 API Audit & Bump** — `@heroui/react`/`@heroui/styles` 3.0.5 → 3.2.1 (light phase: the tree is already on the v3 compound API and no v2 exists — audit-confirmed, so this is a bump + regression sweep) (completed 2026-07-03)
-- [x] **Phase 79: Aceternity Removal** — 8 form components rebuilt on HeroUI v3/Radix preserving RHF/Zod validation, ARIA, and keyboard-focus; `@aceternity-pro` registry entry removed from `components.json` (completed 2026-07-03)
-- [x] **Phase 80: Full-Route Visual + A11y Verification & Smoke Suite** — re-compare all baselined surfaces (EN+AR × dark+light) against the pre-token baseline; axe-core clean across all 4 axes; portal-animation + Calendar/Pagination/Sidebar RTL smoke tests in CI
+Full detail: [milestones/v8.0-ROADMAP.md](milestones/v8.0-ROADMAP.md). Audit: [milestones/v8.0-MILESTONE-AUDIT.md](milestones/v8.0-MILESTONE-AUDIT.md) — status passed, 24/24 requirements, 6/6 phases.
 
----
-
-## Phase Details
-
-### Phase 75: UI Component & Migration Audit
-
-**Goal**: Every UI surface and every library migration target is classified and inventoried, so later phases know exactly what to replace, rebuild, or keep-custom — with domain behavior explicitly protected.
-**Depends on**: Phase 74 (v7.0 complete — the current design system and component tree)
-**Requirements**: AUDIT-01, AUDIT-02, AUDIT-03, AUDIT-04
-**Success Criteria** (what must be TRUE):
-
-1. Every hand-rolled surface in `frontend/src/components/**` is labeled replace-with-shadcn-primitive, keep-custom (domain-specific), or replace-with-shadcn-block — and every "replace-with-primitive" row lists the behaviors the primitive must preserve (empty behavior lists are downgraded to keep-custom).
-2. HeroUI usage is confirmed already on the v3 compound-component API; the audit records any residual flat-prop call site (verified expectation: none) — a confirmation, not a hunt.
-3. The v3-removed components (Navbar, Snippet, User, Spacer, Image, Code, Autocomplete, DateInput) are confirmed unused (review found 0 imports); the audit records the confirmation and flags any regression with a replacement plan.
-4. Each of the 8 Aceternity-based components has its RHF/Zod validation wiring, ARIA attributes, and keyboard-focus contract captured in writing before any rebuild starts.
-5. Every component touching clearance, RTL directionality, flags/glyphs, or dossier-type logic defaults to keep-custom (or shadcn-block-with-domain-wrapper), never primitive-replace.
-   **Plans**: 4 plans
-
-Plans:
-
-**Wave 1**
-
-- [x] 75-01-PLAN.md — AUDIT-01 classification artifact: rulebook header, evidence baseline, per-directory tier (wave 1)
-- [x] 75-02-PLAN.md — AUDIT-02/03 HeroUI v3 confirmation artifact with Phase 78 re-run protocol (wave 1)
-- [x] 75-03-PLAN.md — AUDIT-04 Aceternity behavioral contracts + UserPicker facade + Phase 79 rescope input (wave 1)
-
-**Wave 2** _(blocked on Wave 1 completion)_
-
-- [x] 75-04-PLAN.md — AUDIT-01 per-file tier (ui/ + forms/), enforcement sweep, coverage reconciliation (wave 2)
-
-**UI hint**: yes
-
-### Phase 76: RTL Infrastructure Bridge & shadcn Logical Properties
-
-**Goal**: One direction authority drives both the document and Radix, every portal opens from the correct edge in both languages, and the shadcn logical-property migration is applied exactly once with a guard against re-introduction.
-**Depends on**: Phase 75 (audit sets the surface that migrate rtl touches)
-**Requirements**: RTLB-01, RTLB-02, SRTL-01, SRTL-02, SRTL-03
-**Success Criteria** (what must be TRUE):
-
-1. Toggling the topbar language control flips `document.dir` AND every mounted Radix portal (Popover/Tooltip/Dropdown/Sheet/drawer) in the same frame — verified in both directions, from a single direction owner (today's 4 scattered setters consolidated), with no hard-coded `direction="rtl"` used for layout/portal direction. The 68 per-field `dir="rtl"` inputs on Arabic-only fields are explicitly retained.
-2. A user in Arabic sees Popover/Tooltip/Dropdown/Sheet and the dossier drawer animate in from the correct (inline-start) edge, matching English behavior mirrored.
-3. `pnpm dlx shadcn@latest migrate rtl` has been run once against `components/ui/**` and committed as a single diff; the repo has no second application.
-4. Calendar, Pagination, and Sidebar (the CLI-exempt components) are manually verified RTL-correct in Arabic.
-5. A CI check fails the build if any `className` string contains a duplicated `rtl:*` utility.
-   **Plans**: 5 plans
-   **UI hint**: yes
-
-Plans:
-
-**Wave 1**
-
-- [x] 76-01-PLAN.md — RTLB-01 single direction owner (ui/direction.tsx + unit test), demote 4 legacy setters, delete RTLWrapper (wave 1)
-
-**Wave 2** _(blocked on Wave 1)_
-
-- [x] 76-02-PLAN.md — SRTL-03 duplicate-`rtl:` guard script + fixture, lint-chain + CI positive-failure wiring (wave 2)
-- [x] 76-03-PLAN.md — RTLB-01/02 drop stale getDocDir() wrapper defaults; direction-portals same-frame + portal-edge e2e (wave 2)
-
-**Wave 3** _(blocked on Wave 2)_
-
-- [x] 76-04-PLAN.md — SRTL-01 one-shot `migrate rtl` (reviewed, isolated commit) + components.json `rtl: true` (wave 3)
-
-**Wave 4** _(blocked on Wave 3)_
-
-- [x] 76-05-PLAN.md — SRTL-02 Calendar/Pagination/Sidebar AR verification record + human sign-off checkpoint (wave 4)
-
-### Phase 77: Linear Token System
-
-**Goal**: Linear is the sole visual direction — dark and light token sets derived from the Linear spec, wired end-to-end (bootstrap → tokens → primitives), with the FOUC byte-match invariant and the pre-swap visual baseline both enforced as gates.
-**Depends on**: Phase 76 (stable RTL infrastructure so token changes are the only moving variable)
-**Requirements**: TOKEN-01, TOKEN-02, TOKEN-03, TOKEN-04, TOKEN-05, TOKEN-06, FOUC-01, DOC-01
-**Gating step (VERIFY-01 baseline capture)**: Before any literal in `directions.ts` changes, capture visual baselines for all currently-baselined surfaces (EN+AR × dark+light) using the existing Playwright harness (~15–20 route/widget specs today; any coverage expansion is called out explicitly). Harness reality: the `Visual Regression (Phase 46)` CI job is currently red on `main` (8/8 widget specs failing — the e2e.yml deployed-app/stale-secret class, issue #31), so capture/replay follows the Phase-46 precedent (seeded dev machine + human review) unless that job is repaired first. The token PR is gated on this baseline existing first (no baseline laundering). The re-comparison against this baseline is owned by Phase 80.
-**Success Criteria** (what must be TRUE):
-
-1. The app renders with Linear dark (canonical) and light token sets sourced from the Linear reference values in `.planning/research/STACK.md` (NOT `frontend/DESIGN.md`, which is the outgoing Bureau spec) and wired through `directions.ts`/`buildTokens.ts`/`applyTokens.ts` — with zero raw hex or Tailwind color literals (Design Token Check stays green).
-2. A CI guard fails the build if `bootstrap.js` palette/font literals diverge from `directions.ts` (byte-match, not just type-check), and the two files are changed in the same commit.
-3. Form-error/warning colors and a 6-value status-tag palette exist in Linear's dark-surface luminance band and pass WCAG AA contrast.
-4. The 4-direction switcher (Bureau/Chancery/Situation/Ministerial) is gone from `tokens/types.ts`, `TweaksDrawer`, `Topbar`, and `AppearanceSettingsSection`; Linear is the only selectable visual direction — and legacy persisted `id.dir` values (every existing user has one of the four retired directions) are coerced to `linear` in both `bootstrap.js` and `DesignProvider`, with an explicit default-`id.theme` decision (dark-canonical vs today's `light`), so first paint never silently loses tokens.
-5. Inter (500/600/700) and JetBrains Mono render across the Latin UI (self-hosted, mirrored in `bootstrap.js`) while the Tajawal Arabic cascade is preserved for `dir="rtl"`, and `components/ui/*` primitives follow Linear's button/card/input recipes (no drop shadows, hairline borders, `surface-1..4` ladder); the ~74 color literals in the `components/ui` ESLint carve-out get an explicit keep-or-migrate decision.
-6. The design source-of-truth is updated to Linear (DOC-01): root `/CLAUDE.md` and `frontend/CLAUDE.md` design-system sections no longer declare Bureau canonical, `frontend/DESIGN.md` is rewritten as the Linear spec, and `inteldossier_handoff_design/` is retired or repointed.
-   **Plans**: TBD
-   **UI hint**: yes
-
-### Phase 78: HeroUI v3 API Audit & Bump
-
-**Goal**: HeroUI is bumped 3.0.5 → 3.2.1 with no visual/behavioral regression. **Light phase** — the Phase 75 audit confirmed the tree is already on the v3 compound-component API and no v2 package exists, so this is a version bump + regression sweep, not an API migration.
-**Depends on**: Phase 77 (Linear tokens stable on the current HeroUI baseline, so a visual break is attributable to v3, not tokens)
-**Requirements**: HEROUI-01, HEROUI-02
-**Success Criteria** (what must be TRUE):
-
-1. `@heroui/react` and `@heroui/styles` resolve to 3.2.1 in lockstep (they are version-coupled), with no v2 package anywhere (there is none today).
-2. The Phase 75 confirmation holds — zero flat-prop call sites remain; if AUDIT-02 surfaced any straggler, it is converted.
-3. All routes that use HeroUI components render without regression in both EN and AR after the bump.
-   **Plans**: 4 plans
-   **UI hint**: yes
-
-Plans:
-
-**Wave 1**
-
-- [x] 78-01-PLAN.md — Lockstep bump @heroui/react + @heroui/styles 3.0.5 → 3.2.1 (atomic, independently revertible)
-
-**Wave 2** _(blocked on Wave 1 completion)_
-
-- [x] 78-02-PLAN.md — Migrate heroui-forms toggles to the v3.2 \*.Content composition + behavioral vitest oracle + heroui-chip docstring fix
-
-**Wave 3** _(blocked on Wave 2 completion)_
-
-- [x] 78-03-PLAN.md — Phase 75 protocol re-run + diff vs recorded outputs (HEROUI-02 evidence artifact)
-
-**Wave 4** _(blocked on Wave 3 completion)_
-
-- [x] 78-04-PLAN.md — Build + size-limit REQUIRED gate + EN/AR drawer render smoke
-
-### Phase 79: Aceternity Removal
-
-**Goal**: Aceternity is fully gone — its 8 form components rebuilt on HeroUI v3/Radix with their accessibility and validation contracts provably preserved, and its registry entry removed.
-**Depends on**: Phase 78 (rebuilds target the final HeroUI v3 primitives)
-**Requirements**: ACET-01, ACET-02
-**Success Criteria** (what must be TRUE):
-
-1. Each of the 8 rebuilt form components announces validation errors (`role="alert"`/`aria-live`) on invalid submit in both EN and AR, matching the Phase 75 captured contract.
-2. Keyboard focus order and `aria-invalid`/`aria-describedby` are preserved on every rebuilt component (verified by keyboard traversal + axe, not visual diff).
-3. The `@aceternity-pro` registry entry is removed from `components.json` and no Aceternity import remains (the inverted `no-restricted-imports` ban stays green).
-   **Plans**: 4 plans
-   **UI hint**: yes
-
-Plans:
-
-**Wave 1**
-
-- [x] 79-01-PLAN.md — Wave 0 a11y contract test for SearchableSelect (C1 role="alert" EN+AR, C2a keyboard order, C2b 12-attr ARIA + axe; T-79-01 triage)
-- [x] 79-02-PLAN.md — Delete the 7 dead Aceternity components + barrel prune + orphaned useFieldValidation (smart-input i18n namespace preserved)
-- [x] 79-03-PLAN.md — ACET-02 registry removal from components.json + repo residue purge (.aceternity/ docs, README, 4 comments, dead ui/timeline.tsx)
-
-**Wave 2** _(blocked on Wave 1 completion)_
-
-- [x] 79-04-PLAN.md — Rebuild SearchableSelect in place (strip variant/motion/shadows, preserve Phase 75 contract) + fully-gone grep proof + lint/suite/bundle gates
-
-### Phase 80: Full-Route Visual + A11y Verification & Smoke Suite
-
-**Goal**: The whole migration is proven correct across every baselined surface and all four axes, with the RTL/portal/FOUC guarantees locked into CI so they cannot silently regress.
-**Depends on**: Phase 79 (all visual and component work complete)
-**Requirements**: VERIFY-01, VERIFY-02, FOUC-02
-**Success Criteria** (what must be TRUE):
-
-1. All baselined surfaces (the existing Playwright specs, EN+AR × dark+light) are re-compared against the pre-token baseline captured in Phase 77, and every diff is either an intended Linear change (human-reviewed) or fixed — no unexplained regressions. Any coverage expansion beyond today's specs is noted, not silently assumed.
-2. An axe-core sweep passes across all four axes (dark/light × LTR/RTL) with no new violations versus a RECORDED pre-migration baseline (the a11y CI job currently has 2 hard failures + 8 flaky on `main` — fixed or recorded before comparison).
-3. CI runs portal-animation RTL smoke tests (Popover/Tooltip/Dropdown/Sheet/drawer open from the correct edge in AR) plus Calendar/Pagination/Sidebar RTL smoke tests, and they gate the build — which first requires bringing the currently-red visual/a11y verification jobs to green (or scoping the new smokes as a separate, green-from-birth job).
-   **Plans**: 6 plans
-
-Plans:
-
-**Wave 1**
-
-- [x] 80-01-PLAN.md — VERIFY-02: fixture-liveness probe + a11y characterization + 4-axis axe sweep spec (HEAD leg, set B) (wave 1)
-
-**Wave 2** _(blocked on Wave 1 completion)_
-
-- [x] 80-02-PLAN.md — VERIFY-02: pre-token worktree A/B at 14191cb85 — the RECORDED baseline + B ⊆ A verdict (wave 2)
-
-**Wave 3** _(blocked on Wave 2 completion)_
-
-- [x] 80-03-PLAN.md — VERIFY-02: per-failure fix-vs-record (test.fixme + TRACKED APP A11Y DEBT) + a11y gate green (wave 3)
-
-**Wave 4** _(blocked on Wave 3 completion)_
-
-- [x] 80-04-PLAN.md — VERIFY-01: orchestrator seed refresh + FROZEN_TIME realign + 43-shot replay + HUMAN diff triage (autonomous:false) (wave 4)
-
-**Wave 5** _(blocked on Wave 4 completion)_
-
-- [x] 80-05-PLAN.md — VERIFY-01: regression fixes + Linear baseline recapture + replay proof + lineage commit (wave 5)
-
-**Wave 6** _(blocked on Wave 5 completion)_
-
-- [x] 80-06-PLAN.md — FOUC-02: rtl-component-smokes + calendar clock-freeze + test-rtl-smokes ci.yml job + branch-protection checkpoint (wave 6)
-      **UI hint**: yes
+</details>
 
 ---
 
@@ -412,15 +237,10 @@ Plans:
 | 60-61 | v6.5 | 7/7 | Shipped | 2026-06-11 |
 | 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
 | 68-74 | v7.0 | 49/49 | Shipped | 2026-06-24 |
-| 75 | v8.0 | 4/4 | Complete    | 2026-07-02 |
-| 76 | v8.0 | 5/5 | Complete   | 2026-07-02 |
-| 77 | v8.0 | 9/8 | Complete    | 2026-07-02 |
-| 78 | v8.0 | 4/4 | Complete   | 2026-07-03 |
-| 79 | v8.0 | 4/4 | Complete   | 2026-07-03 |
-| 80 | v8.0 | 6/6 | Complete   | 2026-07-04 |
+| 75-80 | v8.0 | 32/32 | Shipped | 2026-07-04 |
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-07-02 — v8.0 re-scoped after a pre-execution review (Phases 75-80, 24 requirements). Verified reality folded in: HeroUI already on the v3 compound API + no v3-removed components in use → Phase 78 is a bump + regression sweep; RTLB-01 retains the 68 per-field `dir="rtl"` inputs; VERIFY-01 scoped to baselined surfaces; TOKEN-05 preserves Tajawal; DOC-01 added for the design source-of-truth. Sequencing unchanged: audit → RTL bridge → tokens → HeroUI bump → Aceternity removal → verification. VERIFY-01 baseline captured as a gating step of Phase 77; re-compared in Phase 80._
+_Roadmap last updated: 2026-07-04 — v8.0 Linear Design System Migration (Phases 75-80) SHIPPED and archived. Full phase detail → [milestones/v8.0-ROADMAP.md](milestones/v8.0-ROADMAP.md); requirements → [milestones/v8.0-REQUIREMENTS.md](milestones/v8.0-REQUIREMENTS.md); audit → [milestones/v8.0-MILESTONE-AUDIT.md](milestones/v8.0-MILESTONE-AUDIT.md). 6/6 phases, 32/32 plans, 24/24 requirements. Next: `/gsd:new-milestone`._
