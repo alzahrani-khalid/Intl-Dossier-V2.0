@@ -8,7 +8,7 @@ import { seedRecentDossierStore } from './support/dossier-drawer-fixture'
 // next_week) and drops anything outside that window; get_upcoming_events filters
 // server-side by real NOW(). Both only overlap when the frozen clock is "today",
 // so this constant tracks the capture date (was 2026-05-08 for the 46-01 capture).
-const FROZEN_TIME = new Date('2026-07-02T12:00:00Z')
+const FROZEN_TIME = new Date('2026-07-03T12:00:00Z')
 
 const SUPPRESS_TRANSITIONS_CSS = `
   *, *::before, *::after {
