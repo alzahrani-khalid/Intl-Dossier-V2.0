@@ -543,15 +543,17 @@ cd frontend && pnpm build && pnpm exec size-limit   # grep output for EVERY 'exc
 
 All other claims in this document are [VERIFIED] against the live repo (source reads, greps, node_modules inspection) or [CITED] from the Phase 75 audit artifact.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Does the "fully gone" proof include comments and the dead `ui/timeline.tsx`?**
    - What we know: 4 live files carry "Aceternity-inspired" comments; `ui/timeline.tsx` (0 importers) contains Aceternity demo copy; `frontend/.aceternity/` (10 git-tracked docs) and `frontend/README.md` lines 52/291 reference it. None violate ACET-02's letter (imports/variant/registry).
    - What's unclear: whether the plan spends ~15 minutes on the comment/doc purge or scopes the grep proof to code patterns only.
    - Recommendation: include the purge (delete `.aceternity/`, edit README ×2, reword 4 comments) — it makes the verifier's grep unconditional and the phase title honest. Deleting `ui/timeline.tsx` is defensible (0 importers) but is the one item worth a one-line planner note rather than silent inclusion.
+   - RESOLVED: Yes — encoded in plan 79-03 (Task 2: `.aceternity/` deleted, README ×2 edited, the 4 comments reworded, dead `ui/timeline.tsx` importer-gated then deleted), making 79-04 Task 2's unconditional case-insensitive grep proof possible.
 2. **Trim SearchableSelect's unused prop surface (`multiple`/`creatable`/`groupBy`/renderers)?**
    - What we know: UserPicker (sole consumer) never passes them; CONTEXT grants internals freedom; the audit calls the combobox behavior contractual _behind the facade_.
    - Recommendation: planner's discretion; trimming is contract-safe and KISS-aligned but increases diff size and test surface. If in doubt, keep the surface and only remove variant/motion/shadows (smallest verifiable diff).
+   - RESOLVED: Keep the surface — encoded in plan 79-04 Task 1 step 6 (prop surface NOT trimmed: `multiple`/`creatable`/`groupBy`/renderers and `forwardRef` all stay), per this recommendation's smallest-verifiable-diff option.
 
 ## Environment Availability
 
