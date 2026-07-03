@@ -336,8 +336,20 @@ Plans:
 1. Each of the 8 rebuilt form components announces validation errors (`role="alert"`/`aria-live`) on invalid submit in both EN and AR, matching the Phase 75 captured contract.
 2. Keyboard focus order and `aria-invalid`/`aria-describedby` are preserved on every rebuilt component (verified by keyboard traversal + axe, not visual diff).
 3. The `@aceternity-pro` registry entry is removed from `components.json` and no Aceternity import remains (the inverted `no-restricted-imports` ban stays green).
-   **Plans**: TBD
+   **Plans**: 4 plans
    **UI hint**: yes
+
+Plans:
+
+**Wave 1**
+
+- [ ] 79-01-PLAN.md — Wave 0 a11y contract test for SearchableSelect (C1 role="alert" EN+AR, C2a keyboard order, C2b 12-attr ARIA + axe; T-79-01 triage)
+- [ ] 79-02-PLAN.md — Delete the 7 dead Aceternity components + barrel prune + orphaned useFieldValidation (smart-input i18n namespace preserved)
+- [ ] 79-03-PLAN.md — ACET-02 registry removal from components.json + repo residue purge (.aceternity/ docs, README, 4 comments, dead ui/timeline.tsx)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [ ] 79-04-PLAN.md — Rebuild SearchableSelect in place (strip variant/motion/shadows, preserve Phase 75 contract) + fully-gone grep proof + lint/suite/bundle gates
 
 ### Phase 80: Full-Route Visual + A11y Verification & Smoke Suite
 
