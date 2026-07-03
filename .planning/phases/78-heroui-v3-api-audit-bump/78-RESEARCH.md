@@ -374,9 +374,10 @@ Phase 75 noted GSD worktrees share no `frontend/node_modules`. Protocol command 
 
 All other claims are `[VERIFIED]` against dist diffs, npm registry, GitHub releases, official docs, or the live codebase.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Should the toggles migration + docstring fix land even though the module is unconsumed?**
+   - RESOLVED: yes, land it (separate commit). Implemented by plan 78-02.
    - What we know: 0 consumers; module exists "for new forms"; HEROUI-02 expects conversion of stragglers that surface.
    - Recommendation: yes — it's the honest close of HEROUI-02, ~15 lines across one file plus one small test, and it prevents the next consumer inheriting a broken pattern. Keep it a separate commit from the bump.
 

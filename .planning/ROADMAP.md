@@ -310,9 +310,20 @@ Plans:
 
 Plans:
 
+**Wave 1**
+
 - [ ] 78-01-PLAN.md — Lockstep bump @heroui/react + @heroui/styles 3.0.5 → 3.2.1 (atomic, independently revertible)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
 - [ ] 78-02-PLAN.md — Migrate heroui-forms toggles to the v3.2 \*.Content composition + behavioral vitest oracle + heroui-chip docstring fix
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
 - [ ] 78-03-PLAN.md — Phase 75 protocol re-run + diff vs recorded outputs (HEROUI-02 evidence artifact)
+
+**Wave 4** _(blocked on Wave 3 completion)_
+
 - [ ] 78-04-PLAN.md — Build + size-limit REQUIRED gate + EN/AR drawer render smoke
 
 ### Phase 79: Aceternity Removal
