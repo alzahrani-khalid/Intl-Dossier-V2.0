@@ -305,8 +305,15 @@ Plans:
 1. `@heroui/react` and `@heroui/styles` resolve to 3.2.1 in lockstep (they are version-coupled), with no v2 package anywhere (there is none today).
 2. The Phase 75 confirmation holds — zero flat-prop call sites remain; if AUDIT-02 surfaced any straggler, it is converted.
 3. All routes that use HeroUI components render without regression in both EN and AR after the bump.
-   **Plans**: TBD
+   **Plans**: 4 plans
    **UI hint**: yes
+
+Plans:
+
+- [ ] 78-01-PLAN.md — Lockstep bump @heroui/react + @heroui/styles 3.0.5 → 3.2.1 (atomic, independently revertible)
+- [ ] 78-02-PLAN.md — Migrate heroui-forms toggles to the v3.2 \*.Content composition + behavioral vitest oracle + heroui-chip docstring fix
+- [ ] 78-03-PLAN.md — Phase 75 protocol re-run + diff vs recorded outputs (HEROUI-02 evidence artifact)
+- [ ] 78-04-PLAN.md — Build + size-limit REQUIRED gate + EN/AR drawer render smoke
 
 ### Phase 79: Aceternity Removal
 
