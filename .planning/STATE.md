@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v8.0
 milestone_name: Linear Design System Migration
 status: executing
-last_updated: '2026-07-03T00:32:56.074Z'
-last_activity: 2026-07-03 -- Phase 78 planning complete
+last_updated: '2026-07-03T00:39:53.575Z'
+last_activity: 2026-07-03 -- Phase 78 execution started
 progress:
   total_phases: 6
   completed_phases: 3
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-02 — v8.0 current-milestone section added)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 78 — heroui v3 api audit & bump
+**Current focus:** Phase 78 — heroui-v3-api-audit-bump
 
 ## Current Position
 
-Phase: 78 of 8 (heroui v3 api audit & bump)
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-07-03 -- Phase 78 planning complete
+Phase: 78 (heroui-v3-api-audit-bump) — EXECUTING
+Plan: 1 of 4
+Status: Executing Phase 78
+Last activity: 2026-07-03 -- Phase 78 execution started
 Prev: 2026-07-03 -- Plan 77-08 complete (DOC-01 — design source-of-truth migrated to Linear). Task 1 (63abab7b): rewrote the three CLAUDE.md design sections off Bureau — root /CLAUDE.md Visual Design Source of Truth repointed to frontend/DESIGN.md (handoff dir demoted to historical/superseded, required-reading order → DESIGN.md → src/design-system/CLAUDE.md → closest component, radii 6/8/12, surface-1..4 ladder, line/line-strong hairlines, voice/emoji/date rules kept verbatim); frontend/CLAUDE.md provider tree fixed to live App.tsx (ErrorBoundary→…→DesignProvider(initialDirection="linear",initialMode="dark")→…→DirectionProvider→AppRouter, no RTLWrapper — closes MD-01) + surface-3/4/line-strong/accent-hover/status-1..6 utilities added; frontend/src/design-system/CLAUDE.md rewritten to Linear-single-direction (coercion invariant both layers, three-copy invariant directions.ts↔bootstrap.js↔index.css:root + check-bootstrap-parity guard, file inventory sans directionDefaults/useHue, dark default); useLocale.ts doc comment fixed to the delegated setLocale (closes LO-02). Task 2 (9bc0f3a3): rewrote frontend/DESIGN.md as the Linear spec (321 lines — dark + derived-light token tables transcribed verbatim from directions.ts, semantic/SLA/6-status palettes with measured AA ratios, hairline-strong mapping decision, reserved unmapped extras, Inter/JetBrains Variable type stack + Tajawal RTL cascade, radius 6/8/12, recipe rules, engine contract) + supersession banner atop inteldossier_handoff_design/README.md (only change in that dir). Verify all green: forbidden-token grep 0 across 3 CLAUDE.md; DOC-01 phase-map grep 0; DESIGN.md #5e6ad2 + Inter Variable + dark/light tables + status ratios present, zero "bureau"; 31 DESIGN.md hex match directions.ts (≥10 needed); pre-commit build passed both commits. lint-staged/prettier MM churn reconciled to a clean fixpoint (stale index entries reset; committed HEAD holds canonical prettier versions).
 Prev: 2026-07-03 -- Plan 77-07 complete (TOKEN-04/01/05 — engine collapsed to Linear-only: Direction type → 'linear', hue axis retired, useHue + directionDefaults deleted, 3-family fonts. Commits 2a084acc/7e1fc845/229a39c8).
 
