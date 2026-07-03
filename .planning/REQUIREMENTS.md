@@ -21,8 +21,8 @@ Replace the IntelDossier prototype design system with a Linear-derived design la
 
 ### shadcn RTL Logical Properties
 
-- [ ] **SRTL-01**: `pnpm dlx shadcn@latest migrate rtl` runs once against `components/ui/**` (the only ESLint-exempt surface — app code is already logical-only, so yield is limited, and on the repo's `new-york` style the output is best-effort to review, not trusted), is committed, and is never blindly re-run (upstream idempotency bug)
-- [ ] **SRTL-02**: Calendar, Pagination, and Sidebar (CLI-exempt components) are manually verified RTL-correct
+- [x] **SRTL-01**: `pnpm dlx shadcn@latest migrate rtl` runs once against `components/ui/**` (the only ESLint-exempt surface — app code is already logical-only, so yield is limited, and on the repo's `new-york` style the output is best-effort to review, not trusted), is committed, and is never blindly re-run (upstream idempotency bug)
+- [x] **SRTL-02**: Calendar, Pagination, and Sidebar (CLI-exempt components) are manually verified RTL-correct
 - [x] **SRTL-03**: A CI check prevents duplicate `rtl:*` utility classes from re-appearing
 
 ### Linear Token System
@@ -36,13 +36,13 @@ Replace the IntelDossier prototype design system with a Linear-derived design la
 
 ### HeroUI v3 API Audit + Bump
 
-- [ ] **HEROUI-01**: `@heroui/react`/`@heroui/styles` bump from 3.0.5 → 3.2.1
-- [ ] **HEROUI-02**: Any residual flat-prop HeroUI call site from AUDIT-02 is converted to the compound-component pattern (review verified the tree is already compound-API — expected to close on confirmation, not a mass conversion)
+- [x] **HEROUI-01**: `@heroui/react`/`@heroui/styles` bump from 3.0.5 → 3.2.1
+- [x] **HEROUI-02**: Any residual flat-prop HeroUI call site from AUDIT-02 is converted to the compound-component pattern (review verified the tree is already compound-API — expected to close on confirmation, not a mass conversion)
 
 ### Aceternity Removal
 
-- [ ] **ACET-01**: The 8 Aceternity-based form components are rebuilt on HeroUI v3/Radix primitives, preserving existing RHF validation, ARIA, and keyboard-focus behavior
-- [ ] **ACET-02**: The `@aceternity-pro` registry entry is removed from `components.json`
+- [x] **ACET-01**: The 8 Aceternity-based form components are rebuilt on HeroUI v3/Radix primitives, preserving existing RHF validation, ARIA, and keyboard-focus behavior
+- [x] **ACET-02**: The `@aceternity-pro` registry entry is removed from `components.json`
 
 ### Full-Route Visual + A11y Verification
 
@@ -90,8 +90,8 @@ Every v8.0 requirement maps to exactly one phase. Coverage: 24/24.
 | AUDIT-04    | Phase 75 | Complete |
 | RTLB-01     | Phase 76 | Complete |
 | RTLB-02     | Phase 76 | Complete |
-| SRTL-01     | Phase 76 | Pending  |
-| SRTL-02     | Phase 76 | Pending  |
+| SRTL-01     | Phase 76 | Complete |
+| SRTL-02     | Phase 76 | Complete |
 | SRTL-03     | Phase 76 | Complete |
 | TOKEN-01    | Phase 77 | Complete |
 | TOKEN-02    | Phase 77 | Complete |
@@ -101,10 +101,10 @@ Every v8.0 requirement maps to exactly one phase. Coverage: 24/24.
 | TOKEN-06    | Phase 77 | Complete |
 | FOUC-01     | Phase 77 | Complete |
 | DOC-01      | Phase 77 | Complete |
-| HEROUI-01   | Phase 78 | Pending  |
-| HEROUI-02   | Phase 78 | Pending  |
-| ACET-01     | Phase 79 | Pending  |
-| ACET-02     | Phase 79 | Pending  |
+| HEROUI-01   | Phase 78 | Complete |
+| HEROUI-02   | Phase 78 | Complete |
+| ACET-01     | Phase 79 | Complete |
+| ACET-02     | Phase 79 | Complete |
 | VERIFY-01   | Phase 80 | Complete |
 | VERIFY-02   | Phase 80 | Complete |
 | FOUC-02     | Phase 80 | Complete |
