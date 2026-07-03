@@ -49,7 +49,7 @@ VITE_ENABLE_COMMITMENT_TRACKING=true
 frontend/
 ├── src/
 │   ├── components/          # Reusable UI components
-│   │   ├── ui/              # shadcn/ui + Aceternity UI components
+│   │   ├── ui/              # HeroUI v3 + token-bound primitives
 │   │   ├── DossierStats.tsx # Dossier statistics panel (User Story 1)
 │   │   ├── commitments/
 │   │   │   ├── CommitmentsList.tsx           # Commitment list with status badges (US3)
@@ -88,6 +88,7 @@ frontend/
 #### User Story 1: View Accurate Dossier Stats
 
 **Components**:
+
 - `DossierStats.tsx`: Displays real-time statistics panel
   - Active commitments count
   - Overdue commitments (with warning indicator)
@@ -96,6 +97,7 @@ frontend/
   - Health score with color-coded indicator (green/yellow/orange/red)
 
 **Hooks**:
+
 - `useDossierStats(dossierId)`: Fetches single dossier stats with 5-minute cache
   - Query key: `['dossierStats', dossierId]`
   - Stale time: 5 minutes
@@ -107,28 +109,31 @@ frontend/
   - Stale time: 5 minutes
 
 **API Service**:
+
 - `dossier-stats.service.ts`:
   - `getStats(dossierId, include?)`: GET single dossier stats
   - `calculateHealthScore(dossierId, forceRecalculation?)`: POST health calculation
 
 **Usage Example**:
+
 ```tsx
-import { useDossierStats } from '@/hooks/useDossierStats';
-import { DossierStats } from '@/components/DossierStats';
+import { useDossierStats } from '@/hooks/useDossierStats'
+import { DossierStats } from '@/components/DossierStats'
 
 function DossierDetailPage({ dossierId }: { dossierId: string }) {
-  const { data: stats, isLoading, error } = useDossierStats(dossierId);
+  const { data: stats, isLoading, error } = useDossierStats(dossierId)
 
-  if (isLoading) return <SkeletonLoader />;
-  if (error) return <ErrorMessage error={error} />;
+  if (isLoading) return <SkeletonLoader />
+  if (error) return <ErrorMessage error={error} />
 
-  return <DossierStats stats={stats} />;
+  return <DossierStats stats={stats} />
 }
 ```
 
 #### User Story 2: Monitor Relationship Health Across Partners
 
 **Components**:
+
 - `RelationshipHealthChart.tsx`: Dashboard health aggregations
   - Grouped by region/bloc/classification
   - Health distribution breakdown (excellent/good/fair/poor)
@@ -136,6 +141,7 @@ function DossierDetailPage({ dossierId }: { dossierId: string }) {
   - Click-through navigation to filtered dossier list
 
 **Hooks**:
+
 - `useBulkDossierStats(dossierIds)`: Bulk stats query (max 100 dossiers)
   - Query key: `['bulkDossierStats', dossierIds]`
   - Stale time: 5 minutes
@@ -147,25 +153,28 @@ function DossierDetailPage({ dossierId }: { dossierId: string }) {
   - Background refetch: Every 5 minutes (via `refetchInterval`)
 
 **API Service**:
+
 - `dossier-stats.service.ts`:
   - `getBulkStats(dossierIds, include?)`: POST bulk stats query
   - `getDashboardAggregations(groupBy, filter?)`: POST dashboard aggregations
 
 **Usage Example**:
+
 ```tsx
-import { useDashboardHealthAggregations } from '@/hooks/useDashboardHealthAggregations';
-import { RelationshipHealthChart } from '@/pages/Dashboard/components/RelationshipHealthChart';
+import { useDashboardHealthAggregations } from '@/hooks/useDashboardHealthAggregations'
+import { RelationshipHealthChart } from '@/pages/Dashboard/components/RelationshipHealthChart'
 
 function Dashboard() {
-  const { data: aggregations, isLoading } = useDashboardHealthAggregations('region');
+  const { data: aggregations, isLoading } = useDashboardHealthAggregations('region')
 
-  return <RelationshipHealthChart aggregations={aggregations} loading={isLoading} />;
+  return <RelationshipHealthChart aggregations={aggregations} loading={isLoading} />
 }
 ```
 
 #### User Story 3: Track Commitment Fulfillment
 
 **Components**:
+
 - `CommitmentsList.tsx`: Commitment list with visual indicators
   - Status badges (pending, in_progress, completed, overdue, cancelled)
   - Upcoming commitments (due within 30 days) - yellow badge
@@ -180,33 +189,36 @@ function Dashboard() {
   - Quick status update actions
 
 **Features**:
+
 - TanStack Query mutation for status updates
 - Automatic `useDossierStats()` cache invalidation after update
 - Health score recalculation triggered via backend job (within 2 minutes)
 
 **Usage Example**:
+
 ```tsx
-import { CommitmentsList } from '@/components/commitments/CommitmentsList';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { CommitmentsList } from '@/components/commitments/CommitmentsList'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 function CommitmentsPage() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   const updateStatusMutation = useMutation({
     mutationFn: (data) => updateCommitmentStatus(data),
     onSuccess: (_, variables) => {
       // Invalidate dossier stats cache to refetch latest data
-      queryClient.invalidateQueries({ queryKey: ['dossierStats', variables.dossierId] });
+      queryClient.invalidateQueries({ queryKey: ['dossierStats', variables.dossierId] })
     },
-  });
+  })
 
-  return <CommitmentsList onStatusUpdate={updateStatusMutation.mutate} />;
+  return <CommitmentsList onStatusUpdate={updateStatusMutation.mutate} />
 }
 ```
 
 #### User Story 4: Receive Real-Time Health Updates
 
 **Components**:
+
 - `NotificationBell.tsx`: Notification center
   - Unread count badge
   - Notification dropdown
@@ -216,6 +228,7 @@ function CommitmentsPage() {
   - Cache invalidation on navigation
 
 **Hooks**:
+
 - `useNotifications(userId)`: Real-time notification polling
   - Query key: `['notifications', userId]`
   - Stale time: 0 (always refetch)
@@ -223,20 +236,22 @@ function CommitmentsPage() {
   - Refetch on window focus: Enabled
 
 **API Service**:
+
 - `notification.service.ts`:
   - `getNotifications(userId, unreadOnly?)`: GET user notifications
   - `markAsRead(notificationId)`: PATCH mark notification as read
 
 **Usage Example**:
+
 ```tsx
-import { NotificationBell } from '@/components/notifications/NotificationBell';
-import { useNotifications } from '@/hooks/useNotifications';
+import { NotificationBell } from '@/components/notifications/NotificationBell'
+import { useNotifications } from '@/hooks/useNotifications'
 
 function AppHeader() {
-  const { data: notifications, isLoading } = useNotifications(userId);
-  const unreadCount = notifications?.filter(n => !n.read).length || 0;
+  const { data: notifications, isLoading } = useNotifications(userId)
+  const unreadCount = notifications?.filter((n) => !n.read).length || 0
 
-  return <NotificationBell unreadCount={unreadCount} notifications={notifications} />;
+  return <NotificationBell unreadCount={unreadCount} notifications={notifications} />
 }
 ```
 
@@ -264,10 +279,10 @@ Components invalidate relevant caches on user actions:
 
 ```typescript
 // After commitment status update
-queryClient.invalidateQueries({ queryKey: ['dossierStats', dossierId] });
+queryClient.invalidateQueries({ queryKey: ['dossierStats', dossierId] })
 
 // After notification read
-queryClient.invalidateQueries({ queryKey: ['notifications', userId] });
+queryClient.invalidateQueries({ queryKey: ['notifications', userId] })
 ```
 
 ### Performance Benefits
@@ -288,37 +303,35 @@ All components use Tailwind CSS for styling with shadcn/ui components for consis
 **Configuration**: `tailwind.config.js` + `components.json`
 
 **Component Libraries (in priority order)**:
-1. **Aceternity UI** (primary): https://ui.aceternity.com
-2. **Kibo-UI** (secondary fallback): https://www.kibo-ui.com
-3. **shadcn/ui** (last resort): https://ui.shadcn.com
+
+1. **HeroUI v3** (primary): https://www.heroui.com
+2. **Radix UI** (headless primitives): https://www.radix-ui.com
+3. Build it yourself, mirroring a prototype component, if no primitive fits
 
 ### Mobile-First & RTL Requirements
 
 **Every component MUST**:
+
 1. **Be Mobile-First**: Start with base styles (320-640px), scale up with breakpoints
 2. **Support Arabic RTL**: Use logical properties (`ms-*`, `me-*`, `ps-*`, `pe-*`)
 3. **Touch-Friendly**: Minimum 44x44px touch targets (`min-h-11 min-w-11`)
 
 **Example**:
+
 ```tsx
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next'
 
 export function ResponsiveRTLComponent() {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
 
   return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       <h1 className="text-2xl sm:text-3xl md:text-4xl text-start">{t('title')}</h1>
-      <button className="h-11 min-w-11 px-4 sm:px-6 ms-4 rounded-s-lg">
-        {t('action')}
-      </button>
+      <button className="h-11 min-w-11 px-4 sm:px-6 ms-4 rounded-s-lg">{t('action')}</button>
       <ChevronRight className={isRTL ? 'rotate-180' : ''} />
     </div>
-  );
+  )
 }
 ```
 
@@ -361,6 +374,7 @@ All components meet WCAG AA standards:
 - **RTL Support**: Proper directionality for Arabic language
 
 **Example**:
+
 ```tsx
 <button
   aria-label={`Active commitments: ${activeCount}`}
@@ -398,6 +412,7 @@ All components meet WCAG AA standards:
 ### Issue: Stats display zeros instead of real data
 
 **Solution**:
+
 1. Check Supabase environment variables in `.env.local`
 2. Verify Edge Functions are deployed: `supabase functions list`
 3. Check network tab for API errors
@@ -406,6 +421,7 @@ All components meet WCAG AA standards:
 ### Issue: Health score returns null (insufficient data)
 
 **Solution**:
+
 1. Check dossier has >= 3 engagements (last 365 days)
 2. Check dossier has >= 1 commitment (non-cancelled)
 3. Use "Insufficient Data" message component
@@ -413,6 +429,7 @@ All components meet WCAG AA standards:
 ### Issue: Dashboard health chart shows stale data
 
 **Solution**:
+
 1. Verify `refetchInterval: 5 * 60 * 1000` in `useDashboardHealthAggregations()` hook
 2. Manually refetch: `queryClient.invalidateQueries({ queryKey: ['dashboardHealthAggregations'] })`
 3. Check backend scheduled job logs for materialized view refresh
@@ -454,6 +471,7 @@ All components meet WCAG AA standards:
 ## Support
 
 For issues or questions:
+
 1. Check troubleshooting section above
 2. Review feature documentation in `specs/030-health-commitment/`
 3. Contact team: Slack #intl-dossier-dev channel

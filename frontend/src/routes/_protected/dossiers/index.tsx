@@ -3,7 +3,7 @@
  *
  * Enhanced dossier list view with:
  * - Header statistics cards with click-to-filter functionality
- * - Expandable dossier cards combining map/flag with Aceternity expandable behavior
+ * - Expandable dossier cards combining map/flag with an expandable-card interaction pattern
  * - Mobile-first, RTL-compatible, WCAG AA compliant
  */
 
