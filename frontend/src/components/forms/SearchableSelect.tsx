@@ -7,7 +7,7 @@
 import { useTranslation } from 'react-i18next'
 import { forwardRef, useCallback, useState, useId, useMemo, useRef, useEffect } from 'react'
 import { cn } from '@/lib/utils'
-import { Check, ChevronDown, Search, X, Loader2 } from 'lucide-react'
+import { Check, ChevronDown, X, Loader2 } from 'lucide-react'
 import {
   Command,
   CommandEmpty,
@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
-import { useDirection } from '@/hooks/useDirection'
 
 // =============================================================================
 // TYPES
@@ -189,7 +188,6 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
     ref,
   ) => {
     const { t } = useTranslation(['smart-input', 'common'])
-    const { isRTL } = useDirection()
     const uniqueId = useId()
 
     // State
@@ -348,8 +346,20 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
     const renderSingleOption = (option: SelectOption) => {
       const isSelected = selectedValues.includes(option.value)
 
+      // Custom renderers are still wrapped in CommandItem so they keep the
+      // option role, keyboard navigation, onSelect, and a stable key.
       if (renderOption) {
-        return renderOption(option, isSelected)
+        return (
+          <CommandItem
+            key={option.value}
+            value={option.value}
+            disabled={option.disabled}
+            onSelect={() => handleSelect(option.value)}
+            className={cn('cursor-pointer min-h-11 sm:min-h-10', isSelected && 'bg-primary/10')}
+          >
+            {renderOption(option, isSelected)}
+          </CommandItem>
+        )
       }
 
       return (
@@ -386,7 +396,11 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
     }
 
     // Build aria-describedby
-    const describedBy = [error ? errorId : null, helpText ? helpId : null].filter(Boolean).join(' ')
+    // helpId is referenced only when the help text actually renders (helpText &&
+    // !error); otherwise aria-describedby would dangle to a non-existent element.
+    const describedBy = [error ? errorId : null, helpText && !error ? helpId : null]
+      .filter(Boolean)
+      .join(' ')
 
     // Base trigger classes
     const triggerBaseClasses = cn(
@@ -457,11 +471,12 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
                     </span>
                   )}
                   {/* Chevron */}
+                  {/* Vertical expand/collapse caret — up/down does not flip in
+                      RTL, so only the open state rotates it. */}
                   <ChevronDown
                     className={cn(
                       'h-4 w-4 text-muted-foreground transition-transform',
                       open && 'rotate-180',
-                      isRTL && 'rotate-180',
                     )}
                   />
                 </div>
@@ -476,17 +491,19 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
             aria-label={label || t('smart-input:select.search')}
           >
             <Command shouldFilter={false}>
-              {/* Search input */}
-              <div className="flex items-center border-b px-3">
-                <Search className="h-4 w-4 text-muted-foreground me-2 shrink-0" />
+              {/* Search input — CommandInput already renders its own bordered
+                  row + search icon, so it is not wrapped again. */}
+              <div className="relative">
                 <CommandInput
                   ref={inputRef}
                   placeholder={searchPlaceholder || t('smart-input:select.search')}
                   value={searchQuery}
                   onValueChange={handleSearchChange}
-                  className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                  className="h-11"
                 />
-                {loading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground ms-2" />}
+                {loading && (
+                  <Loader2 className="absolute end-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+                )}
               </div>
 
               <CommandList ref={listRef} className="max-h-[300px] overflow-y-auto">
