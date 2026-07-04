@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
-status: ready_to_plan
-last_updated: 2026-07-04T12:12:57.500Z
-last_activity: "2026-07-04 — Plan 81-03 complete (BUG-04 raw enum status pills + BUG-05 KPI label wrap @1024) — closes Phase 81 (3/3 plans). Commits 99ea30b4 (i18n keys + coverage test) + 19a39bdd (KPI label CSS). BUG-04 was an i18n key gap: WeekAhead t('weekAhead.status.'+stage,{defaultValue:stage}) leaked raw snake_case (preparation/follow_up) because the namespace lacked the six LifecycleStage keys; added intake/preparation/briefing/execution/follow_up/closed to weekAhead.status in en+ar dashboard-widgets.json (mirroring lifecycle.json), kept the defaultValue net, WeekAhead.tsx untouched. Added WeekAheadStatusKeys.test.ts (real JSON + LIFECYCLE_STAGES, no mocked t) — 12 assertions. BUG-05: .kpi-label nowrap+ellipsis + a @media(max-width:1024px) 10px/0.05em reduction (declared last to beat .dir-linear base); uppercase kept; long AR SLA label fit single-line so no AR copy shortened. Live DOM-verified 1024+1400 × EN/AR: pills Preparation/Follow-up (التحضير/المتابعة), raw-enum regex []; all 4 KPI labels single-line. Widgets vitest 83/83; tokens/carve-outs byte-untouched (D-81-06)."
+status: in_progress
+last_updated: '2026-07-04T16:40:00.000Z'
+last_activity: 2026-07-04
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 84
-  percent: 25
-stopped_at: Phase 81 complete (3/3) — ready to discuss Phase 82
+  total_plans: 10
+  completed_plans: 4
+  percent: 40
+stopped_at: Phase 82 plan 01 complete (lib foundations — Latin-digit lynchpin)
 ---
 
 # Project State
@@ -26,11 +26,13 @@ See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Mil
 ## Current Position
 
 Phase: 82 of 4 (date/number formatting)
-Plan: Not started
-Status: Ready to plan
+Plan: 1 of 7 (82-01 complete)
+Status: In Progress
 Last activity: 2026-07-04
 
-Progress: [██████████] 100%
+Progress: [████░░░░░░] 40%
+
+Last activity: 2026-07-04 — Plan 82-01 complete (lib foundations, Latin-digit lynchpin). The 3 `lib/` formatting modules corrected to policy D (Latin digits in BOTH locales) + `format-date.ts` extended to its 4-helper surface. `format-date.ts`: dropped the `toArDigits` pipe + `normalizeLocale`; `formatDayFirst`/`formatTime` now byte-identical for en/ar; added `formatDayFirstYear` (`28 Apr 2026`) + `formatDateTime` (`Tue 28 Apr 14:30 GST`). `format-locale.ts`: `toFormatLocale('ar')` → `'ar-u-nu-latn'` (was `'ar-SA'`/arab) — the lynchpin flipping ~10 Intl consumers to Latin at once (verified `numberingSystem === 'latn'`). `relativeTime.ts`: dropped all 3 `toArDigits` wraps → Latin digits with localized `ي` unit + date-fns month name kept. New `format-date.test.ts` (16 assertions) + flipped `relativeTime.test.ts` to Latin. Commits: 186f5e20f (test) / 9dd86e482 (format-date) / 5457cc445 (test) / 5508825c9 (locale+relativeTime) / 9ffc1c82 (SUMMARY). 1 deviation (Rule 3): reworded the format-locale doc to drop the literal `ar-SA` so the plan's `! grep -q ar-SA` guard passes. Full `src/lib/` vitest 99/99 green; `pnpm type-check` exit 0 (all 13 positional-locale callers + ~10 toFormatLocale consumers compile). `toArDigits.ts` still live (13 downstream consumers — removal is 82-05+ scope).
 
 ### ⚠ REQUIRED post-reset follow-up (Phase 79)
 
