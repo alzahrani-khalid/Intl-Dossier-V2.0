@@ -29,6 +29,7 @@ import type { InfluenceReport } from '@/types/stakeholder-influence.types'
 import { NODE_COLORS, REPORT_TYPE_LABELS } from '@/types/stakeholder-influence.types'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirst, formatDayFirstYear } from '@/lib/format-date'
 
 // ============================================================================
 // Types
@@ -228,9 +229,7 @@ export function InfluenceReportView({
           {description && <p className="text-muted-foreground mt-1">{description}</p>}
           <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
             <Calendar className="h-4 w-4" />
-            {new Date(report.generated_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-              dateStyle: 'medium',
-            })}
+            {formatDayFirstYear(report.generated_at)}
           </div>
         </div>
 
@@ -397,11 +396,9 @@ export function InfluenceReportView({
       {(report.period_start || report.period_end) && (
         <div className="text-sm text-muted-foreground text-end">
           {t('analysis_period', 'Analysis Period')}:{' '}
-          {report.period_start &&
-            new Date(report.period_start).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
+          {report.period_start && formatDayFirst(report.period_start)}
           {report.period_start && report.period_end && ' - '}
-          {report.period_end &&
-            new Date(report.period_end).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
+          {report.period_end && formatDayFirst(report.period_end)}
         </div>
       )}
     </div>

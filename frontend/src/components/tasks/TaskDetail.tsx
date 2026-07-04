@@ -40,6 +40,7 @@ import { useUpdateTask } from '@/hooks/useTasks'
 import { DossierLinksWidget } from '@/components/dossier'
 import { useTaskContributors, useRemoveContributor } from '@/hooks/useContributors'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDateTime, formatDayFirstYear } from '@/lib/format-date'
 import { getPriorityBadgeClass, getStatusBadgeClass } from '@/lib/semantic-colors'
 
 type Task = Database['public']['Tables']['tasks']['Row']
@@ -212,9 +213,7 @@ export function TaskDetail({
                 <Calendar className="h-4 w-4 text-muted-foreground" />
                 <p className="text-sm font-medium">{t('created', 'Created')}</p>
               </div>
-              <p className="text-sm text-muted-foreground">
-                {new Date(task.created_at).toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
-              </p>
+              <p className="text-sm text-muted-foreground">{formatDateTime(task.created_at)}</p>
             </div>
 
             <div className="flex items-center justify-between">
@@ -222,9 +221,7 @@ export function TaskDetail({
                 <Calendar className="h-4 w-4 text-muted-foreground" />
                 <p className="text-sm font-medium">{t('updated', 'Last Updated')}</p>
               </div>
-              <p className="text-sm text-muted-foreground">
-                {new Date(task.updated_at).toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
-              </p>
+              <p className="text-sm text-muted-foreground">{formatDateTime(task.updated_at)}</p>
             </div>
 
             {task.completed_at && (
@@ -233,9 +230,7 @@ export function TaskDetail({
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                   <p className="text-sm font-medium">{t('completed', 'Completed')}</p>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {new Date(task.completed_at).toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
-                </p>
+                <p className="text-sm text-muted-foreground">{formatDateTime(task.completed_at)}</p>
               </div>
             )}
           </div>
@@ -269,10 +264,7 @@ export function TaskDetail({
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">{t('date', 'Date')}</p>
                     <p className="text-sm">
-                      {new Date((task as any).engagement.engagement_date).toLocaleDateString(
-                        isRTL ? 'ar-SA' : 'en-US',
-                        { year: 'numeric', month: 'long', day: 'numeric' },
-                      )}
+                      {formatDayFirstYear((task as any).engagement.engagement_date)}
                     </p>
                   </div>
                 </div>

@@ -37,6 +37,7 @@ import {
 } from '@/types/stakeholder-influence.types'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirst } from '@/lib/format-date'
 
 // ============================================================================
 // Types
@@ -139,7 +140,7 @@ export function InfluenceMetricsPanel({
 }: InfluenceMetricsPanelProps) {
   const { t } = useTranslation('stakeholder-influence')
   const { isRTL } = useDirection()
-// Loading state
+  // Loading state
   if (isLoading) {
     return (
       <Card className={cn('animate-pulse', className)}>
@@ -385,8 +386,7 @@ export function InfluenceMetricsPanel({
 
         {/* Calculated timestamp */}
         <p className="text-xs text-muted-foreground text-end">
-          {t('calculated_at', 'Calculated')}:{' '}
-          {new Date(data.calculated_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
+          {t('calculated_at', 'Calculated')}: {formatDayFirst(data.calculated_at)}
         </p>
       </CardContent>
     </Card>

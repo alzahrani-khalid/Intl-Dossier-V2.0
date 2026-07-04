@@ -64,6 +64,8 @@ import {
   ENTITY_TYPE_DISPLAY,
 } from '@/types/field-history.types'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDateTime } from '@/lib/format-date'
+import { toFormatLocale } from '@/lib/format-locale'
 
 // =============================================
 // ICON MAPPING
@@ -90,7 +92,7 @@ function formatValue(value: unknown, isRTL: boolean): string {
   }
 
   if (typeof value === 'number') {
-    return new Intl.NumberFormat(isRTL ? 'ar-SA' : 'en-US').format(value)
+    return new Intl.NumberFormat(toFormatLocale(isRTL ? 'ar' : 'en')).format(value)
   }
 
   if (Array.isArray(value)) {
@@ -104,18 +106,7 @@ function formatValue(value: unknown, isRTL: boolean): string {
 
   // Check if it's a date string
   if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value)) {
-    try {
-      const date = new Date(value)
-      return date.toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      })
-    } catch {
-      return String(value)
-    }
+    return formatDateTime(value)
   }
 
   return String(value)
@@ -130,7 +121,7 @@ function getRelativeTime(dateString: string, isRTL: boolean): string {
   const now = new Date()
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
 
-  const rtf = new Intl.RelativeTimeFormat(isRTL ? 'ar' : 'en', { numeric: 'auto' })
+  const rtf = new Intl.RelativeTimeFormat(toFormatLocale(isRTL ? 'ar' : 'en'), { numeric: 'auto' })
 
   if (diffInSeconds < 60) {
     return rtf.format(-diffInSeconds, 'second')
@@ -224,9 +215,7 @@ const FieldHistoryEntryCard = memo(function FieldHistoryEntryCard({
                           {getRelativeTime(entry.created_at, isRTL)}
                         </span>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        {new Date(entry.created_at).toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
-                      </TooltipContent>
+                      <TooltipContent>{formatDateTime(entry.created_at)}</TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                   {isExpanded ? (

@@ -45,6 +45,7 @@ import type {
   TimelineAnnotation,
 } from '@/types/stakeholder-interaction.types'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirst, formatTime } from '@/lib/format-date'
 
 // Icon mapping for event types
 const eventIcons: Record<string, React.ElementType> = {
@@ -162,15 +163,8 @@ export function StakeholderTimelineCard({
 
   // Format date
   const eventDate = new Date(event.event_date)
-  const formattedDate = eventDate.toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
-  const formattedTime = eventDate.toLocaleTimeString(isRTL ? 'ar-SA' : 'en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+  const formattedDate = formatDayFirst(eventDate)
+  const formattedTime = formatTime(eventDate)
 
   // Get sentiment styling
   const sentiment = event.metadata?.sentiment as string

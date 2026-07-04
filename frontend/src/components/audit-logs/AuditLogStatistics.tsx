@@ -17,6 +17,8 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAuditLogStatistics } from '@/hooks/useAuditLogs'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirst } from '@/lib/format-date'
+import { toFormatLocale } from '@/lib/format-locale'
 
 // =============================================
 // CONFIGURATION
@@ -123,20 +125,15 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
         </CardTitle>
         <p className="text-sm text-muted-foreground">
           {t('statistics.period')}:{' '}
-          {statistics.period?.from
-            ? new Date(statistics.period.from).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')
-            : '-'}{' '}
-          -{' '}
-          {statistics.period?.to
-            ? new Date(statistics.period.to).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')
-            : '-'}
+          {statistics.period?.from ? formatDayFirst(statistics.period.from) : '-'} -{' '}
+          {statistics.period?.to ? formatDayFirst(statistics.period.to) : '-'}
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Total Events */}
         <div className="text-center p-4 bg-muted/50 rounded-lg">
           <div className="text-3xl font-bold text-primary">
-            {(statistics.total_events ?? 0).toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+            {(statistics.total_events ?? 0).toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
           </div>
           <div className="text-sm text-muted-foreground">{t('statistics.total_events')}</div>
         </div>
@@ -156,7 +153,7 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
                 >
                   <Icon className="h-5 w-5 mb-1" />
                   <div className="text-lg font-bold">
-                    {item.count.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+                    {item.count.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
                   </div>
                   <div className="text-xs">
                     {String(t(`operations.${item.operation}`, { defaultValue: item.operation }))}
@@ -196,7 +193,7 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
                     />
                   </div>
                   <span className="text-sm font-mono min-w-[60px] text-end">
-                    {item.count.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+                    {item.count.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
                   </span>
                 </div>
               ))}
