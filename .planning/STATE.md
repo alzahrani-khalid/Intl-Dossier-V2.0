@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v8.0
-milestone_name: Linear Design System Migration
-status: complete
-last_updated: '2026-07-04T00:00:00.000Z'
+milestone: v8.1
+milestone_name: Linear Design Refinement
+status: planning
+last_updated: '2026-07-04T08:36:11.787Z'
 last_activity: 2026-07-04
 progress:
-  total_phases: 6
-  completed_phases: 6
-  total_plans: 32
-  completed_plans: 32
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -24,17 +24,10 @@ See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Mil
 
 ## Current Position
 
-**v8.0 MILESTONE CLOSED (2026-07-04):** archived to `.planning/milestones/v8.0-{ROADMAP,REQUIREMENTS,MILESTONE-AUDIT}.md`; `.planning/REQUIREMENTS.md` removed (archived first); ROADMAP collapsed to a one-line + `<details>` with archive links; PROJECT.md + MILESTONES.md evolved; annotated tag `v8.0` created locally. **Nothing pushed** — the v8.0 PR to protected `origin/main` and the tag push are the orchestrator's remaining ship step. Phase-execution detail below is retained for history.
-
-Phase: 80 (full-route-visual-a11y-verification-smoke-suite) — COMPLETE (6 of 6)
-Plan: 80-06 complete (6 of 6) — FOUC-02 CLOSED. Added `rtl-component-smokes.spec.ts` (Popover `/audit-logs`, Pagination `/users`, Sidebar `aside.appshell-aside` — DOM/computed-style ONLY, zero `toHaveScreenshot`) + CI-proofed `calendar-rtl.spec.ts` with a constructor-only `Date` override (freezes no-arg `new Date()`→July 2026 while `Date.now()` stays REAL, so the Supabase storageState token is never seen as expired → no refresh storm → the SRTL-02 grid renders; defuses the 2026-08-01 cliff). Wired a green-from-birth `test-rtl-smokes` ci.yml job (name "RTL Portal + Component Smokes", verbatim `test-a11y` + 3 deltas, `E2E_BASE_URL`=0, e2e.yml untouched). Local green proof: `direction-portals + calendar-rtl + rtl-component-smokes --project=chromium` = 9/9 (13.8s). DEVIATION (Rule 1): the plan's `page.clock.install` mechanism was empirically superseded — clock APIs faking `Date.now()` forward starve the authed month query → empty grid; documented in 80-06-SUMMARY. Branch-protection promotion DEFERRED (not applied) per the overseer pre-decision — job ships advisory; `gh api` confirms "RTL Portal + Component Smokes" is NOT among main's 8 required checks. Commit 7014fdba1.
-Prev(80-05): VERIFY-01 CLOSED — recaptured the 43 human-ratified Linear baselines (799ef3c4), replay-proven byte-stable at `--retries=2` (43/43), Bureau lineage recoverable at 14191cb85; ZERO `frontend/src` changes.
-Prev(80-04): VERIFY-01 (visual re-compare) HUMAN diff-triage COMPLETE + APPROVED 2026-07-03 via the overseer's blocking checkpoint. Scribed all 43 §5 verdicts into 80-VISUAL-RECOMPARE.md: 39 intended-Linear (rows 16/17 also dynamic-content, seed-date shift to 2026-07-03), 4 within-tolerance passes (rows 18/20/21/22), ZERO regressions → "Regressions to fix" list EMPTY. Anti-laundering control held: no baseline PNG touched, no --update-snapshots run (recapture = Plan 80-05). FROZEN_TIME already realigned to 2026-07-03 in Task 2 (d412b7518). Scribe commit eb37e766. VERIFY-01 requirement stays OPEN — closes in 80-05 after recapture.
-Prev(80-03): VERIFY-02 closed locally. **FIXED** the 4 NEW-on-HEAD Linear-light `color-contrast` scans (MF-1 organizations en/ar, MF-2 topics en, MF-3 tasks en) at the shared `.chip` recipe: the 4 semantic status chips (`.chip-danger/-warn/-ok/-info`) swapped their ad-hoc `color-mix(<hue> 15%, transparent)` wash (composited 4.23–4.38:1) for the AA-proven opaque `var(--*-soft)` token used by the passing `.chip-accent` (light 5.00–5.37:1 / dark 4.73–7.76:1). **NO palette literal touched** → three-copy bootstrap parity holds. Same one-recipe fix also cleared the pre-existing countries+working_groups light contrast (discretionary, §10.6). **RECORDED** engagements `aria-required-parent/children` x4 (both themes/locales, structural `role="list"` w/o `role="listitem"`, present in set A) via per-scan `test.fixme('80: recorded pre-migration baseline …')` + TRACKED APP A11Y DEBT in `qa-sweep-axe-4axis.spec.ts` — fixme-count == ledger recorded-count == 4 (T-80-07). Dead `test:a11y` script repointed to `playwright test --project=a11y`. Green: `--project=a11y --retries=2` 87 pass/10 skip/0 fail; 4-axis `--workers=2` (CI parity) 56 pass/4 skip/**0 axe violations** (default-worker login `waitForURL` timeout is the known §8.3 test-infra flake, 0 axe findings). Commits 556f20705 (fix) + b3283a9c9 (test). Ledger §11 decision table + §12 gate-green.
-Status: Phase 80 COMPLETE — all 6 waves landed. v8.0 (Linear Design System Migration) execution complete: 6/6 phases, 32/32 plans, 100%. All three Phase-80 requirements delivered (VERIFY-01, VERIFY-02, FOUC-02). Milestone closeout (archive + phase-base tag + PR to protected main) is the remaining user-initiated step. Deferred to the v8.0 PR: the CI birth-certificate (test-rtl-smokes' first green GitHub run) and the branch-protection promotion (repo-admin) — local 9/9 smoke green is the phase-exit proof.
-Last activity: 2026-07-03
-
-Phase 79 (aceternity-removal) — COMPLETE (verified passed, inline). Carried-forward follow-up below still applies.
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-07-04 — Milestone v8.1 started
 
 ### ⚠ REQUIRED post-reset follow-up (Phase 79)
 

@@ -58,11 +58,22 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-## Next Milestone
+## Current Milestone: v8.1 Linear Design Refinement
 
-**Status:** TBD — not yet scoped. Run `/gsd:new-milestone` to define it (questioning → research → requirements → roadmap).
+**Status:** In progress (started 2026-07-04) — Phases 81–84.
 
-**Deferred candidates (carried forward — not yet committed to a milestone):** stand up the on-prem GPU/TEI stack to close the v7.0 deploy-gated EVAL-01/02/03 + AGENT/INFRA live verification; v7.1 feed ingestion (FEED-01/02) + quarantine posture; GAP-2 (graph/digest card renderers) and GAP-3 (retire `dossiers-briefs-generate`); design-ops tooling (DESIGNOPS-01 Figma/token sync, DESIGNOPS-02 Storybook visual diffing); and the v8.0 close-out follow-ups (RTL-smokes branch-protection promotion, UserPicker security pass, credential-hygiene sweep).
+**Goal:** Land the signed-off corrective design-refinement workstream (visible bugs + Linear spec-compliance) with zero regressions across dark-canonical + light and EN/LTR + AR/RTL. Source of truth: `DESIGN-REFINEMENT-PLAN-260704.md` §7 (user sign-off recorded 2026-07-04).
+
+**Target features:**
+
+- Fix the visible design bugs surfaced by the 6-route Linear audit — kanban 4-column overflow (Done clipped @1400 & 1024, RTL too), duplicated settings header, duplicated calendar create button, raw enum status pills (`follow_up`), KPI label wrap at 1024.
+- Centralize date/number formatting on the spec's day-first no-comma + GST rule, migrate the 66 ad-hoc `toLocaleDateString` sites, add a lint/grep guard, and fix the mixed-script Arabic overdue unit under the locked **Latin-digit policy** (unit text localized `يوم`, via `lib/format-locale`).
+- Consolidate systemic token debt in charts/graphs/aceternity-kit — shared chart-palette token module, Tailwind color literals → `@theme` utils, strip banned card shadows, hardcoded radii → `--radius-sm/--radius/--radius-lg` (6/8/12), flatten gradients, delete the bespoke parallel token ladders (`modern-nav-tokens.css` + `copilot-theme.css`), row heights → `var(--row-h)`, user-visible emoji → lucide.
+- Copy-edit `i18n/en` off marketing voice (Discover / Easily / Let us… / exclamation marks); `en` drives `ar`.
+
+**Explicitly excluded (Plan §6 + §3E/§3F):** F16–F21 taste calls (separate previews-only lane, product sign-off pending — none pre-approved), F23–F26 affordance enhancements (later milestone), data-gap empty states (seed/RLS, not design), and verified carve-outs that must NOT be touched (`styles/list-pages.css` `[class~=…]` compat shim, `types/*` migration comments, `design-system/tokens/` + `index.css` `:root` fallback + `public/bootstrap.js` literal palette holders — parity-checked in CI).
+
+**Deferred candidates (carried forward — not committed to this corrective milestone):** stand up the on-prem GPU/TEI stack to close the v7.0 deploy-gated EVAL-01/02/03 + AGENT/INFRA live verification; v7.1 feed ingestion (FEED-01/02) + quarantine posture; GAP-2 (graph/digest card renderers) and GAP-3 (retire `dossiers-briefs-generate`); design-ops tooling (DESIGNOPS-01 Figma/token sync, DESIGNOPS-02 Storybook visual diffing); and the v8.0 close-out follow-ups (RTL-smokes branch-protection promotion, UserPicker security pass, credential-hygiene sweep).
 
 ## Requirements
 
@@ -300,4 +311,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-07-04 after v8.0 milestone — Linear Design System Migration (Phases 75-80) SHIPPED: 6/6 phases, 32/32 plans, 24/24 requirements, audit passed. All v8.0 requirements moved to Validated; v7.0 folded into shipped history; next milestone TBD (`/gsd:new-milestone`)._
+_Last updated: 2026-07-04 — v8.1 Linear Design Refinement started (Phases 81–84). Corrective design-refinement workstream (findings F1–F15 + F22 from `DESIGN-REFINEMENT-PLAN-260704.md`, user sign-off §7); v8.0 folded into Last Shipped. Requirements defined in `REQUIREMENTS.md`._
