@@ -27,6 +27,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
+import { formatDayFirst, formatTime } from '@/lib/format-date'
 import type {
   EventConflict,
   ConflictSeverity,
@@ -211,22 +212,6 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
   const SeverityIcon = SEVERITY_ICONS[conflict.severity] || Info
   const colors = SEVERITY_COLORS[conflict.severity]
 
-  const formatTime = (datetime: string) => {
-    const date = new Date(datetime)
-    return date.toLocaleTimeString(isRTL ? 'ar-SA' : 'en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  }
-
-  const formatDate = (datetime: string) => {
-    const date = new Date(datetime)
-    return date.toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-      month: 'short',
-      day: 'numeric',
-    })
-  }
-
   return (
     <m.div
       initial={{ opacity: 0, y: -10 }}
@@ -264,7 +249,7 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Clock className="h-3 w-3" />
               <span>
-                {formatDate(conflict.overlap_start)} {formatTime(conflict.overlap_start)} -{' '}
+                {formatDayFirst(conflict.overlap_start)} {formatTime(conflict.overlap_start)} -{' '}
                 {formatTime(conflict.overlap_end)}
               </span>
               {conflict.overlap_minutes && (
@@ -284,7 +269,7 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
                   : conflict.conflicting_event.title_en || conflict.conflicting_event.title_ar}
               </p>
               <p className="text-muted-foreground">
-                {formatDate(conflict.conflicting_event.start_datetime)}{' '}
+                {formatDayFirst(conflict.conflicting_event.start_datetime)}{' '}
                 {formatTime(conflict.conflicting_event.start_datetime)} -{' '}
                 {formatTime(conflict.conflicting_event.end_datetime)}
               </p>

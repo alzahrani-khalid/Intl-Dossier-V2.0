@@ -11,27 +11,13 @@
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { Icon } from '@/components/signature-visuals'
-import { toArDigits } from '@/lib/i18n/toArDigits'
+import { formatDayFirst } from '@/lib/format-date'
 import type { AfterActionRecordWithJoins } from '@/hooks/useAfterAction'
 
 export interface AfterActionsTableProps {
   rows: AfterActionRecordWithJoins[]
   isLoading: boolean
   error: Error | null
-}
-
-function formatDayFirst(date: string | null | undefined): string {
-  if (date === null || date === undefined || date === '') return '—'
-  const d = new Date(date)
-  if (Number.isNaN(d.getTime())) return '—'
-  // Day-first format: "Tue 28 Apr". Always use en-GB locale to keep the
-  // mono numeric/short-month format identical regardless of UI language;
-  // toArDigits later swaps Western digits to Arabic-Indic when needed.
-  return d.toLocaleDateString('en-GB', {
-    weekday: 'short',
-    day: '2-digit',
-    month: 'short',
-  })
 }
 
 export function AfterActionsTable({
@@ -115,11 +101,8 @@ export function AfterActionsTable({
                     {engagementTitle}
                   </Link>
                 </td>
-                <td
-                  dir="ltr"
-                  style={{ fontFamily: 'var(--font-mono)', color: 'var(--ink-mute)' }}
-                >
-                  {toArDigits(formatDayFirst(r.engagement?.engagement_date), locale)}
+                <td dir="ltr" style={{ fontFamily: 'var(--font-mono)', color: 'var(--ink-mute)' }}>
+                  {formatDayFirst(r.engagement?.engagement_date ?? '')}
                 </td>
                 <td>
                   <span
@@ -133,10 +116,10 @@ export function AfterActionsTable({
                   </span>
                 </td>
                 <td className="text-end" style={{ fontFamily: 'var(--font-mono)' }}>
-                  {toArDigits(r.decisions?.length ?? 0, locale)}
+                  {r.decisions?.length ?? 0}
                 </td>
                 <td className="text-end" style={{ fontFamily: 'var(--font-mono)' }}>
-                  {toArDigits(r.commitments?.length ?? 0, locale)}
+                  {r.commitments?.length ?? 0}
                 </td>
                 <td aria-hidden="true">
                   <Icon name="chevron-right" size={16} className="icon-flip" aria-hidden />

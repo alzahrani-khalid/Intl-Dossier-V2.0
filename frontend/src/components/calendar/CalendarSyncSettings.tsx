@@ -63,6 +63,7 @@ import {
   type ICalFeedSubscription,
 } from '@/types/calendar-sync.types'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDateTime } from '@/lib/format-date'
 
 interface ExternalCalendarShape {
   id: string
@@ -405,8 +406,7 @@ function ConnectionCard({
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Clock className="h-4 w-4" />
                 <span>
-                  {t('lastSync')}:{' '}
-                  {new Date(connection.last_sync_at).toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+                  {t('lastSync')}: {formatDateTime(connection.last_sync_at)}
                 </span>
               </div>
             )}
@@ -655,7 +655,6 @@ interface ConflictCardProps {
 
 function ConflictCard({ conflict, onResolve, isResolving }: ConflictCardProps) {
   const { t } = useTranslation('calendar-sync')
-  const { isRTL } = useDirection()
 
   return (
     <Card className="w-full border-warning">
@@ -670,18 +669,14 @@ function ConflictCard({ conflict, onResolve, isResolving }: ConflictCardProps) {
             <p className="text-sm font-medium">{t('conflicts.internal')}</p>
             <p className="text-sm">{conflict.internal_snapshot.title}</p>
             <p className="text-xs text-muted-foreground">
-              {new Date(conflict.internal_snapshot.start_datetime).toLocaleString(
-                isRTL ? 'ar-SA' : 'en-US',
-              )}
+              {formatDateTime(conflict.internal_snapshot.start_datetime)}
             </p>
           </div>
           <div className="space-y-2 p-3 rounded-lg bg-muted/50">
             <p className="text-sm font-medium">{t('conflicts.external')}</p>
             <p className="text-sm">{conflict.external_snapshot.title}</p>
             <p className="text-xs text-muted-foreground">
-              {new Date(conflict.external_snapshot.start_datetime).toLocaleString(
-                isRTL ? 'ar-SA' : 'en-US',
-              )}
+              {formatDateTime(conflict.external_snapshot.start_datetime)}
             </p>
           </div>
         </div>

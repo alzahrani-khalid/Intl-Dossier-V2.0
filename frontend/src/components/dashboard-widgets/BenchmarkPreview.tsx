@@ -26,6 +26,7 @@ import {
   Users,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -160,7 +161,7 @@ function BenchmarkStatCard({
           )}
           dir="ltr"
         >
-          {category.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+          {category.value.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
         </p>
         <p
           className={cn(

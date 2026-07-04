@@ -12,7 +12,6 @@ import { TrendingUp, TrendingDown, Minus, Target } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Progress } from '@/components/ui/progress'
 import type { KpiWidgetConfig, KpiData, TrendDirection } from '@/types/dashboard-widget.types'
-import { useDirection } from '@/hooks/useDirection'
 
 interface KpiWidgetProps {
   config: KpiWidgetConfig
@@ -145,8 +144,7 @@ function TargetProgress({
 }
 
 export function KpiWidget({ config, data, isLoading }: KpiWidgetProps) {
-  const { t } = useTranslation('dashboard-widgets')
-  const { isRTL } = useDirection()
+  const { t, i18n } = useTranslation('dashboard-widgets')
   const {
     settings: { metric, showTrend, showSparkline, comparisonPeriod },
   } = config
@@ -161,8 +159,8 @@ export function KpiWidget({ config, data, isLoading }: KpiWidgetProps) {
     if (metric === 'response-rate' || metric === 'sla-compliance') {
       return `${value.toFixed(1)}%`
     }
-    return value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')
-  }, [data, metric, isRTL])
+    return value.toLocaleString(toFormatLocale(i18n.language))
+  }, [data, metric, i18n.language])
 
   // Loading skeleton
   if (isLoading || !data) {

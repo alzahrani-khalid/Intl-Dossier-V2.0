@@ -18,11 +18,12 @@ import {
   ListTodo,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { formatDayFirst } from '@/lib/format-date'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Checkbox } from '@/components/ui/checkbox'
 import type { TaskListWidgetConfig } from '@/types/dashboard-widget.types'
-import { useDirection } from '@/hooks/useDirection'
 
 // Task item type (simplified from UnifiedWorkItem)
 interface TaskItem {
@@ -121,7 +122,7 @@ function formatDeadline(deadline: string, locale: string): string {
   } else if (diffDays <= 7) {
     return new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(diffDays, 'day')
   } else {
-    return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' })
+    return formatDayFirst(date)
   }
 }
 
@@ -234,9 +235,8 @@ function GroupHeader({ label, count }: { label: string; count: number }) {
 }
 
 export function TaskListWidget({ config, data, isLoading, onTaskToggle }: TaskListWidgetProps) {
-  const { t } = useTranslation('dashboard-widgets')
-  const { isRTL } = useDirection()
-  const locale = isRTL ? 'ar-SA' : 'en-US'
+  const { t, i18n } = useTranslation('dashboard-widgets')
+  const locale = toFormatLocale(i18n.language)
 
   const { settings } = config
 

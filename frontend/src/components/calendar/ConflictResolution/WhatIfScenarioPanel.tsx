@@ -47,6 +47,7 @@ import {
 } from '@/components/ui/accordion'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
+import { formatDayFirstYear } from '@/lib/format-date'
 import type {
   WhatIfScenario,
   ProposedChange,
@@ -109,14 +110,7 @@ export function WhatIfScenarioPanel({
     }
   }
 
-  const formatDate = (datetime: string) => {
-    const date = new Date(datetime)
-    return date.toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    })
-  }
+  const formatDate = (datetime: string) => formatDayFirstYear(datetime)
 
   const getImpactIndicator = (scenario: WhatIfScenario) => {
     const diff = scenario.conflicts_before - scenario.conflicts_after

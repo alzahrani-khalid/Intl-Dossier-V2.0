@@ -18,6 +18,8 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { formatDayFirst } from '@/lib/format-date'
+import { toFormatLocale } from '@/lib/format-locale'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import type {
   NotificationsWidgetConfig,
@@ -113,7 +115,7 @@ function formatRelativeTime(dateString: string, locale: string): string {
   } else if (diffDays < 7) {
     return rtf.format(-diffDays, 'day')
   } else {
-    return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' })
+    return formatDayFirst(date)
   }
 }
 
@@ -187,9 +189,9 @@ export function NotificationsWidget({
   isLoading,
   onMarkAsRead,
 }: NotificationsWidgetProps) {
-  const { t } = useTranslation('dashboard-widgets')
+  const { t, i18n } = useTranslation('dashboard-widgets')
   const { isRTL } = useDirection()
-  const locale = isRTL ? 'ar-SA' : 'en-US'
+  const locale = toFormatLocale(i18n.language)
 
   const { settings } = config
 

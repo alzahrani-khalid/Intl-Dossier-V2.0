@@ -9,6 +9,8 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Calendar, Clock, Users, FileText, AlertCircle, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { formatDayFirst, formatTime } from '@/lib/format-date'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import type { EventsWidgetConfig, EventData, EventType } from '@/types/dashboard-widget.types'
@@ -98,10 +100,7 @@ function formatRelativeDate(dateString: string, locale: string): string {
 
   if (diffDays === 0) {
     // Same day - show time
-    return date.toLocaleTimeString(locale, {
-      hour: '2-digit',
-      minute: '2-digit',
-    })
+    return formatTime(date)
   } else if (diffDays === 1) {
     return rtf.format(1, 'day')
   } else if (diffDays === -1) {
@@ -112,10 +111,7 @@ function formatRelativeDate(dateString: string, locale: string): string {
     return rtf.format(diffDays, 'day')
   } else {
     // Show date
-    return date.toLocaleDateString(locale, {
-      month: 'short',
-      day: 'numeric',
-    })
+    return formatDayFirst(date)
   }
 }
 
@@ -178,9 +174,9 @@ function EventItem({ event, locale, isRTL }: { event: EventData; locale: string;
 }
 
 export function EventsWidget({ config, data, isLoading }: EventsWidgetProps) {
-  const { t } = useTranslation('dashboard-widgets')
+  const { t, i18n } = useTranslation('dashboard-widgets')
   const { isRTL } = useDirection()
-  const locale = isRTL ? 'ar-SA' : 'en-US'
+  const locale = toFormatLocale(i18n.language)
 
   const { settings } = config
 
