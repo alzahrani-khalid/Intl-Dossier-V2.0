@@ -16,6 +16,7 @@
 - ✅ **v6.6 Dossier Workflow Completion** — Phases 62-67 (shipped 2026-06-13) — [archive](milestones/v6.6-ROADMAP.md)
 - ✅ **v7.0 Intelligence Engine** — Phases 68-74 (shipped 2026-06-24) — [archive](milestones/v7.0-ROADMAP.md)
 - ✅ **v8.0 Linear Design System Migration** — Phases 75-80 (shipped 2026-07-04) — [archive](milestones/v8.0-ROADMAP.md)
+- 🚧 **v8.1 Linear Design Refinement** — Phases 81-84 (in progress, started 2026-07-04)
 
 ## Phases
 
@@ -215,6 +216,77 @@ Full detail: [milestones/v8.0-ROADMAP.md](milestones/v8.0-ROADMAP.md). Audit: [m
 
 </details>
 
+### 🚧 v8.1 Linear Design Refinement (Phases 81-84) — IN PROGRESS
+
+**Milestone Goal:** Land the signed-off corrective design-refinement workstream (visible bugs + Linear spec-compliance) with zero regressions across dark-canonical + light and EN/LTR + AR/RTL. Source of truth: `DESIGN-REFINEMENT-PLAN-260704.md` (findings F1–F15 + F22; user sign-off §7). Corrective only — F16–F21 taste calls (separate previews-only lane, none pre-approved) and F23–F26 affordance enhancements (later milestone) are explicitly OUT.
+
+- [ ] **Phase 81: Visible Bugs** - Fix the 5 visible design bugs from the 6-route Linear audit (kanban 4-column clipping, duplicate settings header, duplicate calendar create button, raw enum status pills, KPI label wrap)
+- [ ] **Phase 82: Date/Number Formatting** - Centralize date/time on the spec's day-first no-comma + GST rule, migrate the ~66 ad-hoc `toLocaleDateString` sites, add a regression guard, fix the mixed-script Arabic overdue unit
+- [ ] **Phase 83: Token-Debt Consolidation** - Consolidate systemic token debt in charts/graphs/aceternity-kit onto design-system tokens (verified carve-outs untouched)
+- [ ] **Phase 84: Copy / Marketing Voice** - Copy-edit `i18n/en` off marketing voice; `en` drives `ar`
+
+### Phase 81: Visible Bugs
+
+**Goal**: Fix the visible design bugs from the 6-route Linear audit with zero regressions, dark+light, EN/LTR + AR/RTL
+**Depends on**: Nothing (first phase of v8.1)
+**Requirements**: BUG-01, BUG-02, BUG-03, BUG-04, BUG-05
+**Success Criteria** (what must be TRUE):
+
+1. All four kanban columns (incl. "Done"/"مكتمل") are fully reachable and unclipped at 1400px and 1024px, in EN/LTR and AR/RTL; empty columns still show header + `0`
+2. The settings page shows exactly one "Profile Settings" title + description
+3. The calendar view exposes exactly one primary create-event action
+4. No raw DB enum strings render as user-visible labels — the dashboard "Week Ahead" status pills (`preparation`, `follow_up`) read as human, sentence-case labels in both languages
+5. KPI labels render on a single line at 1024px (e.g. "ACTIVE ENGAGEMENTS" no longer wraps)
+   **Plans**: TBD
+   **UI hint**: yes
+
+### Phase 82: Date/Number Formatting
+
+**Goal**: Centralize date/time on the spec's day-first no-comma + GST rule, migrate the ~66 ad-hoc `toLocaleDateString` sites, add a regression guard, and fix the mixed-script Arabic overdue unit under the LOCKED Latin-digit policy (unit localized `يوم`, via `lib/format-locale`)
+**Depends on**: Nothing (independent bucket; milestone order only)
+**Requirements**: FMT-01, FMT-02, FMT-03, FMT-04
+**Success Criteria** (what must be TRUE):
+
+1. The dashboard greeting and Intelligence Digest read day-first no-comma dates (e.g. "Sat 4 Jul") with `14:30 GST` times, emitted by `lib/format-date.ts` as the single formatter
+2. Grep finds no ad-hoc `toLocaleDateString` outside the central formatter (incl. the two direct format-string offenders in `meeting-minutes/MeetingMinutesCard.tsx` and `Briefs/BriefsPage.tsx`) — the app is internally consistent with list rows
+3. A lint/grep guard is active and fails on new raw `toLocaleDateString` usage outside the central formatter
+4. Arabic kanban cards show a localized unit (`يوم`/`ي`) after Latin digits — no bare Latin `d`; digits stay Latin per the locked policy (§7.4)
+   **Plans**: TBD
+   **UI hint**: yes
+
+### Phase 83: Token-Debt Consolidation
+
+**Goal**: Consolidate systemic token debt in charts, relationship graphs, and the aceternity `components/ui/` kit onto design-system tokens
+**Depends on**: Nothing (independent bucket; milestone order only)
+**Requirements**: DEBT-01, DEBT-02, DEBT-03, DEBT-04, DEBT-05, DEBT-06, DEBT-07, DEBT-08
+**Success Criteria** (what must be TRUE):
+
+1. A spec-audit re-run shows the systemic classes — raw hex, Tailwind color literals, banned card shadows, hardcoded radii, gradients, bespoke token ladders, `!important` row heights, user-visible emoji — drop to clean/minor
+2. Chart and graph series colors resolve through a shared `--chart-1…n` semantic token module (recharts fills + graph node palettes; no raw hex)
+3. The bespoke parallel token ladders in `styles/modern-nav-tokens.css` and `components/copilot/copilot-theme.css` are deleted as ladders — those files consume design-system tokens; row heights obey `var(--row-h)` (no `!important` px overrides)
+4. The verified carve-outs are byte-untouched and the three-copy CI parity guard stays green (see carve-outs below)
+5. Zero visual regressions across dark+light × EN/AR
+   **Plans**: TBD
+   **UI hint**: yes
+
+**Carve-outs (DO NOT TOUCH — verified, Plan §6):**
+
+- `styles/list-pages.css` `[class~=…]` compat shim (251 Tailwind-literal matches) — deliberate compat infra; "normalizing" it breaks working infra
+- `types/*` migration comments (`// was #…` / `gradient →`) — provenance comments, not live style
+- `design-system/tokens/` + `index.css` `:root` fallback + `public/bootstrap.js` literal palette holders — legitimately hold the Linear palette; parity-checked in CI (three-copy byte-match)
+
+### Phase 84: Copy / Marketing Voice
+
+**Goal**: Copy-edit `i18n/en` off marketing voice; `en` drives `ar`
+**Depends on**: Nothing (independent bucket; milestone order only)
+**Requirements**: COPY-01
+**Success Criteria** (what must be TRUE):
+
+1. Grep of `i18n/en` JSON for `Discover|Easily|Unleash|!` returns only false positives (e.g. destructive "cannot be easily undone" warnings)
+2. `empty-states.json` + `guided-tours.json` read as sentence-case, no-exclamation prose ("Let us show you around" and marketing phrasing removed)
+3. The `ar` strings follow the corrected `en` source
+   **Plans**: TBD
+
 ---
 
 ## Progress
@@ -238,9 +310,10 @@ Full detail: [milestones/v8.0-ROADMAP.md](milestones/v8.0-ROADMAP.md). Audit: [m
 | 62-67 | v6.6 | 34/34 | Shipped | 2026-06-13 |
 | 68-74 | v7.0 | 49/49 | Shipped | 2026-06-24 |
 | 75-80 | v8.0 | 32/32 | Shipped | 2026-07-04 |
+| 81-84 | v8.1 | 0/TBD | Not started | - |
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-07-04 — v8.0 Linear Design System Migration (Phases 75-80) SHIPPED and archived. Full phase detail → [milestones/v8.0-ROADMAP.md](milestones/v8.0-ROADMAP.md); requirements → [milestones/v8.0-REQUIREMENTS.md](milestones/v8.0-REQUIREMENTS.md); audit → [milestones/v8.0-MILESTONE-AUDIT.md](milestones/v8.0-MILESTONE-AUDIT.md). 6/6 phases, 32/32 plans, 24/24 requirements. Next: `/gsd:new-milestone`._
+_Roadmap last updated: 2026-07-04 — v8.1 Linear Design Refinement roadmap created (Phases 81-84; 18/18 v1 requirements mapped 1:1 per `DESIGN-REFINEMENT-PLAN-260704.md` sign-off §7). Next: `/gsd:plan-phase 81`._

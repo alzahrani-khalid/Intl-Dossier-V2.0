@@ -2,11 +2,11 @@
 gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
-status: planning
-last_updated: '2026-07-04T08:36:11.787Z'
+status: roadmap_created
+last_updated: '2026-07-04T12:00:00.000Z'
 last_activity: 2026-07-04
 progress:
-  total_phases: 0
+  total_phases: 4
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -20,14 +20,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Milestone + Next Milestone sections)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Planning next milestone — v8.0 Linear Design System Migration SHIPPED + archived + annotated-tagged locally (2026-07-04). PR to protected `origin/main` + tag push are the remaining ship step (orchestrator-owned; nothing pushed yet).
+**Current focus:** v8.1 Linear Design Refinement (Phases 81-84) — roadmap created 2026-07-04; next: plan Phase 81 (Visible Bugs). Source of truth: `DESIGN-REFINEMENT-PLAN-260704.md` (F1–F15 + F22; sign-off §7).
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-07-04 — Milestone v8.1 started
+Phase: 81 (Visible Bugs) — first of 4 (Phases 81-84)
+Plan: — (not yet planned)
+Status: Roadmap created — ready to plan
+Last activity: 2026-07-04 — v8.1 roadmap created (Phases 81-84; 18/18 requirements mapped)
+
+Progress: [░░░░░░░░░░] 0%
 
 ### ⚠ REQUIRED post-reset follow-up (Phase 79)
 
@@ -97,13 +99,11 @@ Follow-up (77-01): dashboard-widgets FROZEN_TIME tracks the capture date — a f
 
 ## Next Action
 
-**v8.0 shipped + archived + tagged locally (2026-07-04).** The milestone close is done on local `main`: archives written (`milestones/v8.0-ROADMAP.md`, `-REQUIREMENTS.md`, `-MILESTONE-AUDIT.md`), `REQUIREMENTS.md` removed, ROADMAP collapsed, PROJECT/MILESTONES/STATE evolved, annotated `v8.0` tag created. **Nothing pushed.**
+**v8.1 roadmap created (2026-07-04)** — Phases 81-84, 18/18 v1 requirements mapped 1:1 (BUG-01..05 → 81, FMT-01..04 → 82, DEBT-01..08 → 83, COPY-01 → 84). Source of truth: `DESIGN-REFINEMENT-PLAN-260704.md` (findings F1–F15 + F22; user sign-off §7) — the requirement→phase mapping was pre-decided at sign-off and transcribed exactly. Phase 83 carries the verified DO-NOT-TOUCH carve-outs in its ROADMAP notes.
 
-Next (orchestrator-owned ship step): open the v8.0 PR from local `main` to protected `origin/main`, watch the 8 required checks, merge, then push the `v8.0` tag. Deferred-to-PR: the CI "birth certificate" (first green GitHub run of the a11y + `test-rtl-smokes` jobs) and the `test-rtl-smokes` branch-protection promotion (repo-admin).
+Next: `/gsd:plan-phase 81` (Visible Bugs).
 
-Then: `/gsd:new-milestone` to scope the next cycle. Carried-forward candidates (v7.0 GPU/TEI deploy-gated EVAL/AGENT/INFRA, v7.1 feed ingestion, GAP-2/GAP-3, DESIGNOPS-01/02, and the v8.0 follow-ups) are listed under `## Next Milestone` in PROJECT.md.
-
-Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/middleware/auth.ts`) deployed — pre-existing, unrelated to v8.0.
+Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/middleware/auth.ts`) deployed — pre-existing, unrelated to v8.1. The v8.0 close-out deferred items (rtl-smokes branch-protection promotion + CI birth certificate, IN-04 UserPicker pass, TEST_USER_PASSWORD hygiene) remain tracked in MILESTONES.md.
 
 ## Accumulated Context
 

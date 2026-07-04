@@ -122,4 +122,4 @@ Explicitly excluded. Documented to prevent scope creep.
 ---
 
 _Requirements defined: 2026-07-04_
-_Last updated: 2026-07-04 after v8.1 milestone definition (findings F1–F15 + F22 from `DESIGN-REFINEMENT-PLAN-260704.md`)_
+_Last updated: 2026-07-04 — roadmap created; all 18 v1 requirements mapped 1:1 to Phases 81-84 (findings F1–F15 + F22 from `DESIGN-REFINEMENT-PLAN-260704.md`)_
