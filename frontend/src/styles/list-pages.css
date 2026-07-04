@@ -291,7 +291,7 @@ html[dir='rtl'] .page-sub {
   font-weight: 500;
   font-size: 13px;
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   letter-spacing: normal;
 }
 .dir-linear .sb-item > svg {

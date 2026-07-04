@@ -168,7 +168,7 @@ export function GridPattern() {
           return (
             <div
               key={`${col}-${row}`}
-              className={`w-10 h-10 flex shrink-0 rounded-[2px] ${
+              className={`w-10 h-10 flex shrink-0 rounded-xs ${
                 index % 2 === 0
                   ? 'bg-bg'
                   : 'bg-bg shadow-[0px_0px_1px_3px_rgba(255,255,255,1)_inset] dark:shadow-[0px_0px_1px_3px_rgba(0,0,0,1)_inset]'

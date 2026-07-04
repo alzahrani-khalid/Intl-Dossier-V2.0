@@ -831,7 +831,7 @@
 .dir-linear .kpi {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   /* No card drop-shadows — IntelDossier reserves shadow for drawers and
      hovered list rows (inspection 2026-06-09 Finding 14). */
 }
@@ -861,7 +861,7 @@
    kanban-card shadow. These are the small details that turn the page from
    "tokens applied" into "looks like the design". */
 .dir-linear .chip {
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 500;
@@ -887,7 +887,7 @@
   color: var(--ink-mute);
 }
 .dir-linear .week-list {
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
 }
 .dir-linear .week-row,
 .dir-linear .vip-row,
@@ -905,7 +905,7 @@
   color: var(--accent-fg);
 }
 .dir-linear .kcard {
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   /* Shadow removed — flat cards per design system (Finding 14). */
 }
 

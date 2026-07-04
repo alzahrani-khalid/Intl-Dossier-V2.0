@@ -293,7 +293,7 @@
 .workboard-skeleton-head {
   height: 28px;
   margin-bottom: 8px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 
 .workboard-skeleton-card {
@@ -314,13 +314,13 @@
 .workboard-skeleton-head-title {
   height: 14px;
   width: 80px;
-  border-radius: 4px;
+  border-radius: calc(var(--radius) * 0.5);
 }
 
 .workboard-skeleton-head-count {
   height: 12px;
   width: 24px;
-  border-radius: 4px;
+  border-radius: calc(var(--radius) * 0.5);
 }
 
 .kcard-skeleton {
