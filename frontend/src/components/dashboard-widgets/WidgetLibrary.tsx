@@ -312,7 +312,7 @@ export function WidgetLibrary({
 }: WidgetLibraryProps) {
   const { t } = useTranslation('dashboard-widgets')
   const { isRTL } = useDirection()
-const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<WidgetCategory>('all')
 
   // Filter widgets by search and category
@@ -349,10 +349,7 @@ const [searchQuery, setSearchQuery] = useState('')
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent
-        side={isRTL ? 'left' : 'right'}
-        className="w-full sm:max-w-md"
-      >
+      <SheetContent side="right" className="w-full sm:max-w-md">
         <SheetHeader className="mb-4">
           <SheetTitle>{t('widgetLibrary.title')}</SheetTitle>
           <SheetDescription>{t('widgetLibrary.description')}</SheetDescription>

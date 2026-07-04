@@ -98,7 +98,10 @@ SheetContent.displayName = SheetPrimitive.Content.displayName
 
 const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn('drawer-head -m-[var(--pad)] mb-0 flex flex-col gap-2 text-start', className)}
+    className={cn(
+      'drawer-head -m-[var(--pad)] mb-0 p-[var(--pad)] pe-12 flex flex-col gap-2 text-start',
+      className,
+    )}
     {...props}
   />
 )

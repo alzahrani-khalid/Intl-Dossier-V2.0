@@ -641,10 +641,7 @@ function StakeholderInfluencePage() {
 
       {/* Detail Sheet */}
       <Sheet open={detailsSheetOpen} onOpenChange={setDetailsSheetOpen}>
-        <SheetContent
-          side={isRTL ? 'left' : 'right'}
-          className="w-full sm:max-w-md overflow-y-auto"
-        >
+        <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
           <SheetHeader>
             <SheetTitle>{t('stakeholder_details', 'Stakeholder Details')}</SheetTitle>
             <SheetDescription>

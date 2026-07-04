@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next'
 import { LegislationDetail, LegislationForm } from '@/components/legislation'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { useLegislation } from '@/hooks/useLegislation'
-import { useDirection } from '@/hooks/useDirection'
 
 export const Route = createFileRoute('/_protected/legislation/$id')({
   component: LegislationDetailPage,
@@ -17,8 +16,7 @@ export const Route = createFileRoute('/_protected/legislation/$id')({
 
 function LegislationDetailPage() {
   const { t } = useTranslation('legislation')
-  const { isRTL } = useDirection()
-const navigate = useNavigate()
+  const navigate = useNavigate()
   const { id } = Route.useParams()
 
   const [isEditOpen, setIsEditOpen] = useState(false)
@@ -43,10 +41,7 @@ const navigate = useNavigate()
 
       {/* Edit Legislation Sheet */}
       <Sheet open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <SheetContent
-          side={isRTL ? 'left' : 'right'}
-          className="w-full sm:max-w-2xl overflow-y-auto"
-        >
+        <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto">
           <SheetHeader>
             <SheetTitle className="text-start">{t('form.title.edit')}</SheetTitle>
           </SheetHeader>

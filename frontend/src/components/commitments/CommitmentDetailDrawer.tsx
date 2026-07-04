@@ -120,7 +120,7 @@ export function CommitmentDetailDrawer({
     <>
       <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetContent
-          side={isRTL ? 'left' : 'right'}
+          side="right"
           className="w-full sm:max-w-lg overflow-y-auto"
           accessibleTitle={t('detail.title', 'Commitment Details')}
         >

@@ -126,7 +126,7 @@ export function ContactSearch({
               <span className="sr-only">{t('contactDirectory.search.filters')}</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side={isRTL ? 'left' : 'right'} className="w-full sm:max-w-md">
+          <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
             <SheetHeader>
               <SheetTitle>{t('contactDirectory.search.filters')}</SheetTitle>
               <SheetDescription>{t('contactDirectory.search.refine_search')}</SheetDescription>

@@ -55,7 +55,7 @@ export function CommitmentFilterDrawer({
 }: CommitmentFilterDrawerProps) {
   const { t } = useTranslation('commitments')
   const { isRTL } = useDirection()
-// Local state for form values
+  // Local state for form values
   const [localFilters, setLocalFilters] = useState<CommitmentFilters>(filters)
 
   // Sync local state with props when drawer opens
@@ -124,10 +124,7 @@ export function CommitmentFilterDrawer({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side={isRTL ? 'left' : 'right'}
-        className="w-full sm:max-w-md overflow-y-auto"
-      >
+      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="text-start">{t('filters.title')}</SheetTitle>
         </SheetHeader>

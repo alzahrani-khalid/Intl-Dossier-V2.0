@@ -64,7 +64,7 @@ export function CommitmentsList({
 }: CommitmentsListProps) {
   const { t } = useTranslation('commitments')
   const { isRTL } = useDirection()
-// State for create/edit dialogs
+  // State for create/edit dialogs
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [editingCommitment, setEditingCommitment] = useState<Commitment | null>(null)
   const [showFilterDrawer, setShowFilterDrawer] = useState(false)
@@ -329,9 +329,7 @@ export function CommitmentsList({
         {/* Create Dialog */}
         {dossierId && (
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-            <DialogContent
-              className="max-w-lg max-h-[90vh] overflow-y-auto"
-            >
+            <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="text-start">{t('actions.create')}</DialogTitle>
               </DialogHeader>
@@ -455,9 +453,7 @@ export function CommitmentsList({
       {/* Create Dialog */}
       {dossierId && (
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-          <DialogContent
-            className="max-w-lg max-h-[90vh] overflow-y-auto"
-          >
+          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-start">{t('actions.create')}</DialogTitle>
             </DialogHeader>
@@ -475,10 +471,7 @@ export function CommitmentsList({
         open={!!editingCommitment}
         onOpenChange={(open) => !open && setEditingCommitment(null)}
       >
-        <SheetContent
-          side={isRTL ? 'left' : 'right'}
-          className="w-full sm:max-w-lg overflow-y-auto"
-        >
+        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
           <SheetHeader>
             <SheetTitle className="text-start">{t('actions.edit')}</SheetTitle>
           </SheetHeader>
