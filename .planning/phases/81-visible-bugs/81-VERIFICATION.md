@@ -1,7 +1,8 @@
 ---
 phase: 81-visible-bugs
 verified: 2026-07-04T13:05:00Z
-status: human_needed
+status: passed
+human_signoff: 2026-07-04 — user approved both visual glances (BUG-01 kanban unclipped @1400/1024 LTR+RTL; BUG-05 KPI single-line @1024); see 81-HUMAN-UAT.md (status: passed)
 score: 5/5 must-haves verified
 overrides_applied: 0
 human_verification:
