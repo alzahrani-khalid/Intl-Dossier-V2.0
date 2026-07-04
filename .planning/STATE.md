@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
 status: executing
-last_updated: '2026-07-04T13:54:59.947Z'
+last_updated: '2026-07-04T15:00:54.221Z'
 last_activity: 2026-07-04
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 10
-  completed_plans: 5
+  completed_plans: 8
   percent: 25
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Mil
 ## Current Position
 
 Phase: 82 of 4 (date/number formatting)
-Plan: 3 of 7 (82-01, 82-02, 82-03 complete)
-Status: In Progress
+Plan: 4 of 7 (82-01, 82-02, 82-03 complete)
+Status: Ready to execute
 Last activity: 2026-07-04
 
-Progress: [██████░░░░] 57%
+Progress: [████████░░] 80%
 
 Last activity: 2026-07-04 — Plan 82-03 complete (Wave-2 migration slice: 30 component files — calendar/dashboard-widgets/dossier/commitments/engagements + AfterActionsTable overlap). All ad-hoc `toLocaleDateString/Time/String` render sites routed onto the `lib/format-date` 4-helper surface (`formatDayFirst`/`formatTime`/`formatDayFirstYear`/`formatDateTime`); dashboard widgets' `Intl.RelativeTimeFormat` + `KpiWidget`/`BenchmarkPreview` numbers routed through `toFormatLocale` (Latin digits on the AR dashboard); `AfterActionsTable` overlap fully resolved (local en-GB shadow + all 3 `toArDigits` wraps + doc-comment mention removed). Re-keyed the hand-rolled `locale === 'ar-SA'` AR language branches in KeyContactsSection/ActivityTimelineSection to `isRTL`. Zero `'ar-SA'`/ad-hoc date sites across all 30 files; `type-check` exit 0; touched-area vitest 275/275 green; ESLint clean. Commits: 46e94345 (calendar+widgets+AfterActions) / 270dfe8c (dossier+commitments+engagements+rest). Requirements FMT-02, FMT-04 complete. `StatusTimeline.tsx` (another wave-2 plan's file) left untouched — its `toLocaleString` uses the already-Latin-safe `toFormatLocale`.
 
