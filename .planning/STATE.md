@@ -2,16 +2,15 @@
 gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
-status: in_progress
-last_updated: '2026-07-04T16:40:00.000Z'
+status: executing
+last_updated: '2026-07-04T13:54:59.947Z'
 last_activity: 2026-07-04
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 10
-  completed_plans: 4
-  percent: 40
-stopped_at: Phase 82 plan 01 complete (lib foundations — Latin-digit lynchpin)
+  completed_plans: 5
+  percent: 25
 ---
 
 # Project State
@@ -30,7 +29,7 @@ Plan: 1 of 7 (82-01 complete)
 Status: In Progress
 Last activity: 2026-07-04
 
-Progress: [████░░░░░░] 40%
+Progress: [█████░░░░░] 50%
 
 Last activity: 2026-07-04 — Plan 82-01 complete (lib foundations, Latin-digit lynchpin). The 3 `lib/` formatting modules corrected to policy D (Latin digits in BOTH locales) + `format-date.ts` extended to its 4-helper surface. `format-date.ts`: dropped the `toArDigits` pipe + `normalizeLocale`; `formatDayFirst`/`formatTime` now byte-identical for en/ar; added `formatDayFirstYear` (`28 Apr 2026`) + `formatDateTime` (`Tue 28 Apr 14:30 GST`). `format-locale.ts`: `toFormatLocale('ar')` → `'ar-u-nu-latn'` (was `'ar-SA'`/arab) — the lynchpin flipping ~10 Intl consumers to Latin at once (verified `numberingSystem === 'latn'`). `relativeTime.ts`: dropped all 3 `toArDigits` wraps → Latin digits with localized `ي` unit + date-fns month name kept. New `format-date.test.ts` (16 assertions) + flipped `relativeTime.test.ts` to Latin. Commits: 186f5e20f (test) / 9dd86e482 (format-date) / 5457cc445 (test) / 5508825c9 (locale+relativeTime) / 9ffc1c82 (SUMMARY). 1 deviation (Rule 3): reworded the format-locale doc to drop the literal `ar-SA` so the plan's `! grep -q ar-SA` guard passes. Full `src/lib/` vitest 99/99 green; `pnpm type-check` exit 0 (all 13 positional-locale callers + ~10 toFormatLocale consumers compile). `toArDigits.ts` still live (13 downstream consumers — removal is 82-05+ scope).
 

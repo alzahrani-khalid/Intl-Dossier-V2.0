@@ -259,7 +259,7 @@ Plans:
 4. Arabic kanban cards show a localized unit (`يوم`/`ي`) after Latin digits — no bare Latin `d`; digits stay Latin per the locked policy (§7.4)
    **Plans**: 7 plans
    - [x] 82-01-PLAN.md — lib foundations: format-date correction + formatDayFirstYear/formatDateTime, toFormatLocale → 'ar-u-nu-latn', relativeTime Latin digits (Wave 1)
-   - [ ] 82-02-PLAN.md — date-site migration, components slice 1: analytics/sla-monitoring/audit/tasks/stakeholder + chart and SLA 'ar-SA' numbers (Wave 2)
+   - [x] 82-02-PLAN.md — date-site migration, components slice 1: analytics/sla-monitoring/audit/tasks/stakeholder + chart and SLA 'ar-SA' numbers (Wave 2)
    - [ ] 82-03-PLAN.md — date-site migration, components slice 2: calendar/dashboard-widgets/dossier/commitments + AfterActionsTable overlap (Wave 2)
    - [ ] 82-04-PLAN.md — date-site migration, pages/routes: dashboard greeting + Digest, WeekAhead, my-work numbers, BriefsPage/MyTasks overlaps (Wave 2)
    - [ ] 82-05-PLAN.md — digit policy sweep: KCard card.overdueBy key, toArDigits deletion, 12 Indic test flips (Wave 3)
