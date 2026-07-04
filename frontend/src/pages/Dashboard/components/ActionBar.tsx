@@ -11,10 +11,9 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import { Plus, Command } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { formatDayFirst } from '@/lib/format-date'
 import { useAuthStore } from '@/store/authStore'
 import { useWorkCreation } from '@/components/work-creation/WorkCreationProvider'
 import { RoleSwitcher } from './RoleSwitcher'
@@ -51,8 +50,7 @@ export function ActionBar({ role, onRoleChange }: ActionBarProps): React.ReactEl
       ? `${t(getGreetingKey())}, ${displayName}`
       : t(getGreetingKey())
 
-  const dateLocale = isRTL ? ar : enUS
-  const formattedDate = format(new Date(), 'EEEE, MMMM d, yyyy', { locale: dateLocale })
+  const formattedDate = formatDayFirst(new Date())
 
   const handleCmdK = (): void => {
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true }))

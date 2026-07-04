@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/select'
 import { supabase } from '@/lib/supabase'
 import { cn } from '@/lib/utils'
-import { toArDigits } from '@/lib/i18n/toArDigits'
+import { formatDayFirst } from '@/lib/format-date'
 import { BriefGenerationPanel } from '@/components/ai/BriefGenerationPanel'
 import { BriefViewer } from '@/components/ai/BriefViewer'
 import type { BriefContent } from '@/hooks/useGenerateBrief'
@@ -86,13 +86,6 @@ const AI_BRIEFS_API_BASE: string =
   (import.meta.env.VITE_API_URL?.trim() ?? '') !== ''
     ? (import.meta.env.VITE_API_URL as string).trim()
     : '/api'
-
-function formatDayFirst(date: string | null | undefined): string {
-  if (date == null || date === '') return '—'
-  const d = new Date(date)
-  if (Number.isNaN(d.getTime())) return '—'
-  return d.toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: 'short' })
-}
 
 function pageCountFor(b: MergedBrief): string {
   const content = b.full_content_en ?? b.summary_en ?? ''
@@ -420,7 +413,7 @@ export function BriefsPage(): React.JSX.Element {
                     }}
                     dir="ltr"
                   >
-                    {toArDigits(`${pageCountFor(b)} pp`, locale)}
+                    {`${pageCountFor(b)} pp`}
                   </span>
                 </div>
                 <h3
@@ -442,7 +435,7 @@ export function BriefsPage(): React.JSX.Element {
                 >
                   <span>{b.author?.full_name ?? '—'}</span>
                   <span style={{ fontFamily: 'var(--font-mono)' }} dir="ltr">
-                    {toArDigits(dateStr, locale)}
+                    {dateStr}
                   </span>
                 </div>
               </li>

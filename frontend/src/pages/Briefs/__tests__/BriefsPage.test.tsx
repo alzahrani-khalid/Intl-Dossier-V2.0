@@ -6,7 +6,7 @@
  *   2. card count matches the merged briefs length
  *   3. status chip mapping: is_published=true -> chip-ok; false -> bare chip
  *   4. empty state heading renders when merged result is empty
- *   5. AR locale renders Arabic-Indic digits via toArDigits in the page-count mono span
+ *   5. AR locale renders Latin digits (no Arabic-Indic) in the page-count mono span
  *
  * Mocks Supabase and react-i18next. The dual-table fetch is replaced by a
  * single useQuery mock that returns the merged-briefs fixture; we only need
@@ -194,13 +194,15 @@ describe('BriefsPage', () => {
     expect(screen.queryByTestId('briefs-card-grid')).toBeNull()
   })
 
-  it('Test 5: AR locale renders Arabic-Indic digits via toArDigits in the page-count mono span', () => {
+  it('Test 5: AR locale renders Latin digits (no Arabic-Indic) in the page-count mono span', () => {
     langFixture.current = 'ar'
     briefsFixture.current = [FIX_PUBLISHED]
     const { container } = renderWithQuery(<BriefsPage />)
     const monoSpans = Array.from(container.querySelectorAll('span[dir="ltr"]')) as HTMLElement[]
     const joined = monoSpans.map((s) => s.textContent ?? '').join(' ')
-    // Expect at least one Arabic-Indic digit (٠–٩, U+0660–U+0669) in the mono content.
-    expect(joined).toMatch(/[٠-٩]/)
+    // Latin-digit policy D: no Arabic-Indic digit (٠–٩, U+0660–U+0669) may appear.
+    expect(joined).not.toMatch(/[٠-٩]/)
+    // The page-count mono span still renders a Latin digit.
+    expect(joined).toMatch(/[0-9]/)
   })
 })

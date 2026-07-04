@@ -11,6 +11,7 @@ import { Progress } from '@/components/ui/progress'
 import type { UserProductivityMetrics } from '@/types/unified-work.types'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { toFormatLocale } from '@/lib/format-locale'
 
 interface ProductivityMetricsProps {
   metrics?: UserProductivityMetrics
@@ -43,7 +44,7 @@ export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsP
     )
   }
 
-  const numberLocale = isRTL ? 'ar-SA' : 'en-US'
+  const numberLocale = toFormatLocale(isRTL ? 'ar' : 'en')
 
   // Format completion time to hours/days (localized digits + unit)
   const formatCompletionTime = (hours: number): string => {

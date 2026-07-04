@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import type { UserWorkSummary } from '@/types/unified-work.types'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { toFormatLocale } from '@/lib/format-locale'
 
 interface WorkSummaryHeaderProps {
   summary?: UserWorkSummary
@@ -101,7 +102,7 @@ export function WorkSummaryHeader({
                     {stat.label}
                   </p>
                   <p className="text-base sm:text-lg font-bold text-start leading-tight">
-                    {stat.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+                    {stat.value.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
                   </p>
                 </div>
               </div>

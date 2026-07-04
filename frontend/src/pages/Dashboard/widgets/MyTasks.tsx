@@ -68,7 +68,7 @@ function dueLabel(deadline: string | null, t: (k: string) => string, lang: strin
     return { text: t('myTasks.due.today'), intent: 'default' }
   }
   const locale = lang === 'ar' ? ar : enUS
-  return { text: format(d, 'MMM d', { locale }), intent: 'default' }
+  return { text: format(d, 'd MMM', { locale }), intent: 'default' }
 }
 
 export function MyTasks(): ReactElement {

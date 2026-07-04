@@ -111,7 +111,7 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
     }
 
     return {
-      text: format(date, 'MMM d', { locale }),
+      text: format(date, 'd MMM', { locale }),
       urgent: false,
     }
   }

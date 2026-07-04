@@ -9,6 +9,7 @@
 import { useTranslation } from 'react-i18next'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
+import { formatDayFirst } from '@/lib/format-date'
 import { Badge } from '@/components/ui/badge'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import type {
@@ -91,13 +92,7 @@ export function AttentionItem({ item, onClick }: AttentionItemProps): React.Reac
           stage: t(`stages.${item.lifecycle_stage ?? 'intake'}`),
         })
       : item.deadline != null
-        ? (() => {
-            const deadlineDate = new Date(item.deadline)
-            return deadlineDate.toLocaleDateString(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
-              month: 'short',
-              day: 'numeric',
-            })
-          })()
+        ? formatDayFirst(item.deadline)
         : null
 
   return (

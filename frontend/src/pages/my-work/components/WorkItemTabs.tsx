@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { FileCheck, ListChecks, Inbox, LayoutList } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { toFormatLocale } from '@/lib/format-locale'
 
 interface WorkItemTabsProps {
   activeTab: string
@@ -22,7 +23,7 @@ interface WorkItemTabsProps {
 
 export function WorkItemTabs({ activeTab, onTabChange, counts }: WorkItemTabsProps) {
   const { t, i18n } = useTranslation('my-work')
-  const nf = new Intl.NumberFormat(i18n.language === 'ar' ? 'ar-SA' : 'en')
+  const nf = new Intl.NumberFormat(toFormatLocale(i18n.language))
   const tabs = [
     {
       id: 'all',
