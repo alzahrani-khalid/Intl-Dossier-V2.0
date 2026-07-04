@@ -34,12 +34,14 @@ describe('handoff CSS contract', () => {
 
   it('keeps drawer and dialog overlays blur-free', () => {
     const css = readCss('src/styles/list-pages.css')
-    const drawerSource = readCss('src/components/ui/drawer.tsx')
+    const sheetSource = readCss('src/components/ui/sheet.tsx')
+    const bottomSheetSource = readCss('src/components/ui/bottom-sheet.tsx')
     const overlayBlock = cssBlock(css, '.id-dialog-content')
 
     expect(css).not.toContain('backdrop-filter: blur')
     expect(overlayBlock).not.toContain('backdrop-filter')
-    expect(drawerSource).not.toContain('backdrop-blur')
+    expect(sheetSource).not.toContain('backdrop-blur')
+    expect(bottomSheetSource).not.toContain('backdrop-blur')
   })
 
   it('exposes legacy semantic Tailwind aliases through handoff tokens', () => {
