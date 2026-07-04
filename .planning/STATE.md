@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
 status: executing
-last_updated: '2026-07-04T09:36:05.360Z'
-last_activity: '2026-07-04 — Plan 81-02 complete (BUG-02 + BUG-03). Commits d8839f16 (settings) + 9168a444 (calendar). SettingsSectionCard.title made optional + CardHeader gated on it, so a titleless card renders body-only; dropped the verbatim title/description/icon header from Profile/General/Appearance/DataPrivacy/Accessibility/Notifications (page-level SettingsLayout header is now the single title render) — Security excluded (its security.title differs from the page-level accessAndSecurity header). Removed the UnifiedCalendar toolbar Create Event button (kept the PageHeader Link→/calendar/new as the single primary action; showCreateForm + inline form preserved for the empty-state wizard). Browser-verified 1400+1024 × EN/AR: settings shows exactly one title, calendar exactly one create button reaching /calendar/new. tsc clean; settings vitest 8/8; removals only, tokens/carve-outs untouched (D-81-06).'
+last_updated: '2026-07-04T12:47:30.000Z'
+last_activity: "2026-07-04 — Plan 81-03 complete (BUG-04 raw enum status pills + BUG-05 KPI label wrap @1024) — closes Phase 81 (3/3 plans). Commits 99ea30b4 (i18n keys + coverage test) + 19a39bdd (KPI label CSS). BUG-04 was an i18n key gap: WeekAhead t('weekAhead.status.'+stage,{defaultValue:stage}) leaked raw snake_case (preparation/follow_up) because the namespace lacked the six LifecycleStage keys; added intake/preparation/briefing/execution/follow_up/closed to weekAhead.status in en+ar dashboard-widgets.json (mirroring lifecycle.json), kept the defaultValue net, WeekAhead.tsx untouched. Added WeekAheadStatusKeys.test.ts (real JSON + LIFECYCLE_STAGES, no mocked t) — 12 assertions. BUG-05: .kpi-label nowrap+ellipsis + a @media(max-width:1024px) 10px/0.05em reduction (declared last to beat .dir-linear base); uppercase kept; long AR SLA label fit single-line so no AR copy shortened. Live DOM-verified 1024+1400 × EN/AR: pills Preparation/Follow-up (التحضير/المتابعة), raw-enum regex []; all 4 KPI labels single-line. Widgets vitest 83/83; tokens/carve-outs byte-untouched (D-81-06)."
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
-  percent: 67
+  completed_plans: 3
+  percent: 25
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Mil
 
 ## Current Position
 
-Phase: 81 (Visible Bugs) — first of 4 (Phases 81-84)
-Plan: 81-02 complete (BUG-02 settings duplicate header + BUG-03 calendar duplicate create button); next: 81-03
-Status: Phase 81 in progress
-Last activity: 2026-07-04 — Plan 81-02 complete (BUG-02 + BUG-03). Commits d8839f16 (settings) + 9168a444 (calendar). SettingsSectionCard.title made optional + CardHeader gated on it (titleless card = body only); dropped the verbatim title/description/icon header from Profile/General/Appearance/DataPrivacy/Accessibility/Notifications so the page-level SettingsLayout header is the single title render — Security excluded (its `security.title` differs from the page-level `accessAndSecurity` header, not a duplicate). Removed the UnifiedCalendar toolbar Create Event button; kept the PageHeader Link→/calendar/new as the single primary action (showCreateForm + inline CalendarEntryForm preserved for the empty-state wizard). Browser-verified 1400+1024 × EN/AR: settings shows exactly one title (+ AR RTL), calendar exactly one create button reaching /calendar/new (Today + month nav + type filter intact). tsc --noEmit clean; settings vitest 8/8; removals only, tokens/carve-outs byte-untouched (D-81-06).
+Phase: 81 (Visible Bugs) — COMPLETE (3/3 plans); first of 4 (Phases 81-84)
+Plan: 81-03 complete (BUG-04 raw enum status pills + BUG-05 KPI label wrap @1024) — closes Phase 81 (3/3 plans); next: plan Phase 82
+Status: Phase 81 complete
+Last activity: 2026-07-04 — Plan 81-03 complete (BUG-04 + BUG-05). Commits 99ea30b4 (i18n keys + coverage test) + 19a39bdd (KPI label CSS). BUG-04 was an i18n key gap: WeekAhead t('weekAhead.status.'+stage,{defaultValue:stage}) leaked raw snake_case (preparation/follow_up) because the loaded namespace lacked the six real LifecycleStage keys. Added intake/preparation/briefing/execution/follow_up/closed to weekAhead.status in en+ar dashboard-widgets.json (mirroring the canonical lifecycle.json labels), kept the six pre-existing keys + the defaultValue net; WeekAhead.tsx untouched. Added WeekAheadStatusKeys.test.ts — imports LIFECYCLE_STAGES + the real JSON bundles (no mocked t) and asserts every stage has a non-raw label in both langs (12 assertions). BUG-05: .kpi-label gets white-space:nowrap + min-width:0 + ellipsis fallback and a @media(max-width:1024px) block reducing .kpi-label AND .dir-linear .kpi-label to 10px/0.05em (declared last to win on source order over the default .dir-linear base); uppercase mono affordance kept. Live DOM-measured at 1024+1400 × EN/AR: pills render Preparation/Follow-up (التحضير/المتابعة), body raw-enum regex returned []; all 4 KPI labels single-line incl. the long AR SLA-at-risk label (truncated:false → no AR copy shortened). Widgets vitest 83/83 (incl. new guard); tokens/logical-properties only, carve-outs byte-untouched (D-81-06).
 
-Progress: [███████░░░] 67%
+Progress: [██████████] 100%
 
 ### ⚠ REQUIRED post-reset follow-up (Phase 79)
 

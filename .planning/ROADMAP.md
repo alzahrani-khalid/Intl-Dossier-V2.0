@@ -220,7 +220,7 @@ Full detail: [milestones/v8.0-ROADMAP.md](milestones/v8.0-ROADMAP.md). Audit: [m
 
 **Milestone Goal:** Land the signed-off corrective design-refinement workstream (visible bugs + Linear spec-compliance) with zero regressions across dark-canonical + light and EN/LTR + AR/RTL. Source of truth: `DESIGN-REFINEMENT-PLAN-260704.md` (findings F1–F15 + F22; user sign-off §7). Corrective only — F16–F21 taste calls (separate previews-only lane, none pre-approved) and F23–F26 affordance enhancements (later milestone) are explicitly OUT.
 
-- [ ] **Phase 81: Visible Bugs** - Fix the 5 visible design bugs from the 6-route Linear audit (kanban 4-column clipping, duplicate settings header, duplicate calendar create button, raw enum status pills, KPI label wrap)
+- [x] **Phase 81: Visible Bugs** - Fix the 5 visible design bugs from the 6-route Linear audit (kanban 4-column clipping, duplicate settings header, duplicate calendar create button, raw enum status pills, KPI label wrap) (completed 2026-07-04)
 - [ ] **Phase 82: Date/Number Formatting** - Centralize date/time on the spec's day-first no-comma + GST rule, migrate the ~66 ad-hoc `toLocaleDateString` sites, add a regression guard, fix the mixed-script Arabic overdue unit
 - [ ] **Phase 83: Token-Debt Consolidation** - Consolidate systemic token debt in charts/graphs/aceternity-kit onto design-system tokens (verified carve-outs untouched)
 - [ ] **Phase 84: Copy / Marketing Voice** - Copy-edit `i18n/en` off marketing voice; `en` drives `ar`
@@ -243,7 +243,7 @@ Plans:
 
 - [x] 81-01-PLAN.md — BUG-01 kanban 4-column overflow: flexible column basis + visible logical inline-scroll affordance
 - [x] 81-02-PLAN.md — BUG-02 settings duplicate header + BUG-03 calendar duplicate create button (removals, keepers: page-level title / PageHeader action)
-- [ ] 81-03-PLAN.md — BUG-04 Week Ahead lifecycle status i18n keys (EN+AR, coverage test) + BUG-05 KPI single-line labels at 1024
+- [x] 81-03-PLAN.md — BUG-04 Week Ahead lifecycle status i18n keys (EN+AR, coverage test) + BUG-05 KPI single-line labels at 1024
       **UI hint**: yes
 
 ### Phase 82: Date/Number Formatting
