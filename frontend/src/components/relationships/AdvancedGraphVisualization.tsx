@@ -15,7 +15,7 @@
 
 import { useCallback, useMemo, useState, useRef, useEffect, memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 import {
   ReactFlow,
   Node,
@@ -763,7 +763,7 @@ interface TimeAnimationPanelProps {
 }
 
 function TimeAnimationPanel({ edges, onTimeChange }: TimeAnimationPanelProps) {
-  const { t, i18n } = useTranslation('graph')
+  const { t } = useTranslation('graph')
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentDate, setCurrentDate] = useState<Date | null>(null)
   const [playbackSpeed, setPlaybackSpeed] = useState(1)
@@ -904,13 +904,11 @@ function TimeAnimationPanel({ edges, onTimeChange }: TimeAnimationPanelProps) {
         />
 
         <div className="flex justify-between text-xs text-muted-foreground">
-          <span>{dateRange.min.toLocaleDateString(toFormatLocale(i18n.language))}</span>
+          <span>{formatDayFirstYear(dateRange.min)}</span>
           {currentDate && (
-            <span className="font-medium text-foreground">
-              {currentDate.toLocaleDateString(toFormatLocale(i18n.language))}
-            </span>
+            <span className="font-medium text-foreground">{formatDayFirstYear(currentDate)}</span>
           )}
-          <span>{dateRange.max.toLocaleDateString(toFormatLocale(i18n.language))}</span>
+          <span>{formatDayFirstYear(dateRange.max)}</span>
         </div>
 
         <div className="flex items-center gap-2">

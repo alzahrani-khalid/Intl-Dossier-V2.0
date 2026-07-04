@@ -8,6 +8,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { m } from 'framer-motion'
+import { format } from 'date-fns'
 import {
   Send,
   Reply,
@@ -161,16 +162,9 @@ function ConfidenceIndicator({ score }: { score: number }) {
 }
 
 function OptimalTimingBadge({ startDate, endDate }: { startDate?: string; endDate?: string }) {
-  const { isRTL } = useDirection()
-
   if (!startDate && !endDate) return null
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-      month: 'short',
-      day: 'numeric',
-    })
-  }
+  const formatDate = (date: string): string => format(new Date(date), 'd MMM')
 
   return (
     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">

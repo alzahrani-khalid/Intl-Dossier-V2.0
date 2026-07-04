@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { useRef, useState } from 'react'
 import { m } from 'motion/react'
 import { IconUpload } from '@tabler/icons-react'
@@ -110,7 +111,7 @@ export const FileUpload = ({ onChange }: { onChange?: (files: File[]) => void })
                     </m.p>
 
                     <m.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} layout>
-                      modified {new Date(file.lastModified).toLocaleDateString()}
+                      modified {formatDayFirstYear(file.lastModified)}
                     </m.p>
                   </div>
                 </m.div>

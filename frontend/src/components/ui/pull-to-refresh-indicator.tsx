@@ -25,8 +25,8 @@ import { useTranslation } from 'react-i18next'
 import { m, AnimatePresence } from 'framer-motion'
 import { RefreshCw, Check, WifiOff, Clock, Package } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { formatDateTime, formatTime as formatGstTime } from '@/lib/format-date'
 import type { PullToRefreshState } from '@/hooks/usePullToRefresh'
-import { useDirection } from '@/hooks/useDirection'
 
 export interface PullToRefreshIndicatorProps {
   /** Current pull distance in pixels */
@@ -55,7 +55,6 @@ export function PullToRefreshIndicator({
   className,
 }: PullToRefreshIndicatorProps) {
   const { t } = useTranslation('common')
-  const { isRTL } = useDirection()
   // Format relative time
   const formatLastSync = (time: string | Date | null | undefined) => {
     if (!time) return null
@@ -74,12 +73,7 @@ export function PullToRefreshIndicator({
     } else if (diffHours < 24) {
       return t('pullToRefresh.hoursAgo', '{{count}}h ago', { count: diffHours })
     } else {
-      return date.toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      })
+      return formatDateTime(date)
     }
   }
 
@@ -253,7 +247,6 @@ export function SyncStatusBar({
   className,
 }: SyncStatusBarProps) {
   const { t } = useTranslation('common')
-  const { isRTL } = useDirection()
 
   // Format relative time
   const formatTime = (time: string | Date | null | undefined) => {
@@ -270,10 +263,7 @@ export function SyncStatusBar({
     } else if (diffMinutes < 60) {
       return t('pullToRefresh.minutesAgo', '{{count}}m ago', { count: diffMinutes })
     } else {
-      return date.toLocaleTimeString(isRTL ? 'ar-SA' : 'en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-      })
+      return formatGstTime(date)
     }
   }
 

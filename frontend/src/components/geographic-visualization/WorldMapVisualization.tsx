@@ -12,6 +12,7 @@
 import { useMemo, useState, useCallback, Suspense, lazy } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GlobeSpinner } from '@/components/signature-visuals'
+import { formatDayFirstYear } from '@/lib/format-date'
 // Phase 49 D-06: WorldMap pulls in dotted-map (~112 KB gz). Lazy-loaded so
 // it only enters the chunk graph when geographic visualization actually renders.
 const WorldMap = lazy(() => import('@/components/ui/world-map'))
@@ -261,9 +262,7 @@ export function WorldMapVisualization({
                     <Calendar className="h-3 w-3" />
                     <span>
                       {t('country.lastEngagement', 'Last')}:{' '}
-                      {new Date(selectedCountry.lastEngagementDate).toLocaleDateString(
-                        isRTL ? 'ar-SA' : 'en-US',
-                      )}
+                      {formatDayFirstYear(selectedCountry.lastEngagementDate)}
                     </span>
                   </div>
                 )}

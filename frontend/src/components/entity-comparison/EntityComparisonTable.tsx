@@ -21,6 +21,8 @@ import {
   ArrowLeftRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { formatDayFirstYear } from '@/lib/format-date'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -88,7 +90,7 @@ function formatValue(value: unknown, isRTL: boolean): string {
   }
 
   if (typeof value === 'number') {
-    return new Intl.NumberFormat(isRTL ? 'ar-SA' : 'en-US').format(value)
+    return new Intl.NumberFormat(toFormatLocale(isRTL ? 'ar' : 'en')).format(value)
   }
 
   if (Array.isArray(value)) {
@@ -110,12 +112,7 @@ function formatValue(value: unknown, isRTL: boolean): string {
   // Check if it's a date string
   if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value)) {
     try {
-      const date = new Date(value)
-      return date.toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      })
+      return formatDayFirstYear(value)
     } catch {
       return String(value)
     }
