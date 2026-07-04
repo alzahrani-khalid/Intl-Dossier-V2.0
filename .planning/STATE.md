@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
 status: executing
-last_updated: '2026-07-04T15:18:15.839Z'
+last_updated: '2026-07-04T15:39:28.523Z'
 last_activity: 2026-07-04
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 10
-  completed_plans: 9
-  percent: 25
+  completed_plans: 10
+  percent: 50
 ---
 
 # Project State
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Mil
 ## Current Position
 
 Phase: 82 of 4 (date/number formatting)
-Plan: 5 of 7 (82-01, 82-02, 82-03 complete)
+Plan: 6 of 7 (82-01, 82-02, 82-03 complete)
 Status: Ready to execute
 Last activity: 2026-07-04
 
-Progress: [█████████░] 90%
+Progress: [██████████] 100%
 
 Last activity: 2026-07-04 — Plan 82-03 complete (Wave-2 migration slice: 30 component files — calendar/dashboard-widgets/dossier/commitments/engagements + AfterActionsTable overlap). All ad-hoc `toLocaleDateString/Time/String` render sites routed onto the `lib/format-date` 4-helper surface (`formatDayFirst`/`formatTime`/`formatDayFirstYear`/`formatDateTime`); dashboard widgets' `Intl.RelativeTimeFormat` + `KpiWidget`/`BenchmarkPreview` numbers routed through `toFormatLocale` (Latin digits on the AR dashboard); `AfterActionsTable` overlap fully resolved (local en-GB shadow + all 3 `toArDigits` wraps + doc-comment mention removed). Re-keyed the hand-rolled `locale === 'ar-SA'` AR language branches in KeyContactsSection/ActivityTimelineSection to `isRTL`. Zero `'ar-SA'`/ad-hoc date sites across all 30 files; `type-check` exit 0; touched-area vitest 275/275 green; ESLint clean. Commits: 46e94345 (calendar+widgets+AfterActions) / 270dfe8c (dossier+commitments+engagements+rest). Requirements FMT-02, FMT-04 complete. `StatusTimeline.tsx` (another wave-2 plan's file) left untouched — its `toLocaleString` uses the already-Latin-safe `toFormatLocale`.
 
@@ -157,6 +157,7 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase ?]: 74-11: removed two dead AnythingLLM levers the guard does not scan — agent-runtime config provider block (233e5c02) + root .env.example keys (c3e2ee87)
 - [Phase 80]: 80-03: Fixed VERIFY-02 MF-1/2/3 Linear-light color-contrast at the shared .chip recipe (color-mix 15% wash -> AA-proven var(--_-soft) tokens); no palette literal touched. Recorded engagements aria-required-_ x4 as pre-migration baseline. a11y gate green (87/0), 4-axis 0 axe violations.
 - [Phase 80]: 80-04 VERIFY-01 visual re-compare: human diff-triage APPROVED all 43 surfaces - 39 intended-Linear (rows 16/17 also dynamic-content), 4 within-tolerance passes, ZERO regressions; recapture deferred to Plan 80-05 (anti-laundering: no baseline PNG modified, no --update-snapshots). VERIFY-01 stays open until 80-05.
+- [Phase ?]: FMT-03 guard is a node:fs script (not ESLint) wired into pnpm lint; render-verified AR acceptance caught 2 grep-invisible D-82-01/05 stragglers
 
 ### Open Todos
 

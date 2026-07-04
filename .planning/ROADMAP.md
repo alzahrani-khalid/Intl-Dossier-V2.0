@@ -221,7 +221,7 @@ Full detail: [milestones/v8.0-ROADMAP.md](milestones/v8.0-ROADMAP.md). Audit: [m
 **Milestone Goal:** Land the signed-off corrective design-refinement workstream (visible bugs + Linear spec-compliance) with zero regressions across dark-canonical + light and EN/LTR + AR/RTL. Source of truth: `DESIGN-REFINEMENT-PLAN-260704.md` (findings F1–F15 + F22; user sign-off §7). Corrective only — F16–F21 taste calls (separate previews-only lane, none pre-approved) and F23–F26 affordance enhancements (later milestone) are explicitly OUT.
 
 - [x] **Phase 81: Visible Bugs** - Fix the 5 visible design bugs from the 6-route Linear audit (kanban 4-column clipping, duplicate settings header, duplicate calendar create button, raw enum status pills, KPI label wrap) (completed 2026-07-04)
-- [ ] **Phase 82: Date/Number Formatting** - Centralize date/time on the spec's day-first no-comma + GST rule, migrate the ~66 ad-hoc `toLocaleDateString` sites, add a regression guard, fix the mixed-script Arabic overdue unit
+- [x] **Phase 82: Date/Number Formatting** - Centralize date/time on the spec's day-first no-comma + GST rule, migrate the ~66 ad-hoc `toLocaleDateString` sites, add a regression guard, fix the mixed-script Arabic overdue unit (completed 2026-07-04)
 - [ ] **Phase 83: Token-Debt Consolidation** - Consolidate systemic token debt in charts/graphs/aceternity-kit onto design-system tokens (verified carve-outs untouched)
 - [ ] **Phase 84: Copy / Marketing Voice** - Copy-edit `i18n/en` off marketing voice; `en` drives `ar`
 
@@ -263,7 +263,7 @@ Plans:
    - [x] 82-03-PLAN.md — date-site migration, components slice 2: calendar/dashboard-widgets/dossier/commitments + AfterActionsTable overlap (Wave 2)
    - [x] 82-04-PLAN.md — date-site migration, pages/routes: dashboard greeting + Digest, WeekAhead, my-work numbers, BriefsPage/MyTasks overlaps (Wave 2)
    - [x] 82-05-PLAN.md — digit policy sweep: KCard card.overdueBy key, toArDigits deletion, 12 Indic test flips (Wave 3)
-   - [ ] 82-06-PLAN.md — regression guard scripts/check-date-formatting.mjs + lint wiring + AR render verification (Wave 4)
+   - [x] 82-06-PLAN.md — regression guard scripts/check-date-formatting.mjs + lint wiring + AR render verification (Wave 4)
    - [x] 82-07-PLAN.md — date-site migration, components slice 2 of 4: legislation/timeline/compliance/meeting-minutes + ClassificationBar + MeetingMinutesCard + month-first stragglers (Wave 2)
          **UI hint**: yes
 
