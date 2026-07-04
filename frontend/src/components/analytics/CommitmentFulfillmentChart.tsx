@@ -85,16 +85,16 @@ interface CommitmentFulfillmentChartProps {
 }
 
 const STATUS_COLORS = {
-  completedOnTime: '#10B981',
-  completedLate: '#F59E0B',
-  overdue: '#EF4444',
-  pending: '#9CA3AF',
+  completedOnTime: 'var(--ok)',
+  completedLate: 'var(--warn)',
+  overdue: 'var(--danger)',
+  pending: 'var(--ink-faint)',
 }
 
 const SOURCE_COLORS = {
-  commitment: '#3B82F6',
-  task: '#8B5CF6',
-  intake: '#EC4899',
+  commitment: 'var(--chart-1)',
+  task: 'var(--chart-7)',
+  intake: 'var(--chart-6)',
 }
 
 export function CommitmentFulfillmentChart({
@@ -151,7 +151,7 @@ export function CommitmentFulfillmentChart({
     return data.bySource.map((item) => ({
       ...item,
       name: t(`commitments.sources.${item.source}`),
-      fill: SOURCE_COLORS[item.source] || '#9CA3AF',
+      fill: SOURCE_COLORS[item.source] || 'var(--ink-faint)',
     }))
   }, [data?.bySource, t])
 
@@ -270,7 +270,7 @@ export function CommitmentFulfillmentChart({
                     type="monotone"
                     dataKey="value"
                     name={t('commitments.fulfillmentRate')}
-                    stroke="#3B82F6"
+                    stroke="var(--chart-1)"
                     strokeWidth={2}
                     dot={{ r: 3 }}
                     activeDot={{ r: 5 }}
@@ -300,13 +300,13 @@ export function CommitmentFulfillmentChart({
                   <Bar
                     dataKey="total"
                     name={t('commitments.total')}
-                    fill="#9CA3AF"
+                    fill="var(--ink-faint)"
                     radius={[4, 4, 0, 0]}
                   />
                   <Bar
                     dataKey="completed"
                     name={t('commitments.completed')}
-                    fill="#10B981"
+                    fill="var(--ok)"
                     radius={[4, 4, 0, 0]}
                   />
                 </BarChart>
@@ -317,34 +317,32 @@ export function CommitmentFulfillmentChart({
 
         {/* Summary stats */}
         <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 text-center">
-          <div className="p-2 sm:p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20">
-            <div className="text-lg sm:text-xl font-bold text-blue-600 dark:text-blue-400">
+          <div className="p-2 sm:p-3 rounded-lg bg-status-1-soft">
+            <div className="text-lg sm:text-xl font-bold text-status-1">
               {data.fulfillmentRate.toFixed(1)}%
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('commitments.fulfillmentRate')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/20">
-            <div className="text-lg sm:text-xl font-bold text-emerald-600 dark:text-emerald-400">
+          <div className="p-2 sm:p-3 rounded-lg bg-ok/10">
+            <div className="text-lg sm:text-xl font-bold text-ok">
               {data.onTimeRate.toFixed(1)}%
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('commitments.onTimeRate')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20">
-            <div className="text-lg sm:text-xl font-bold text-amber-600 dark:text-amber-400">
+          <div className="p-2 sm:p-3 rounded-lg bg-warn/10">
+            <div className="text-lg sm:text-xl font-bold text-warn">
               {data.avgCompletionDays.toFixed(1)}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('commitments.avgDays')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-red-50 dark:bg-red-900/20">
-            <div className="text-lg sm:text-xl font-bold text-red-600 dark:text-red-400">
-              {data.overdue}
-            </div>
+          <div className="p-2 sm:p-3 rounded-lg bg-danger/10">
+            <div className="text-lg sm:text-xl font-bold text-danger">{data.overdue}</div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('commitments.overdue')}
             </div>

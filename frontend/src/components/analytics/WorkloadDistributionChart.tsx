@@ -108,7 +108,7 @@ export function WorkloadDistributionChart({
     return data.byPriority.map((item) => ({
       ...item,
       name: t(`workload.priorities.${item.priority}`),
-      fill: PRIORITY_COLORS[item.priority] || '#9CA3AF',
+      fill: PRIORITY_COLORS[item.priority] || 'var(--ink-faint)',
     }))
   }, [data?.byPriority, t])
 
@@ -208,14 +208,14 @@ export function WorkloadDistributionChart({
                     <Bar
                       dataKey="totalItems"
                       name={t('workload.totalItems')}
-                      fill="#3B82F6"
+                      fill="var(--chart-1)"
                       radius={[0, 4, 4, 0]}
                       stackId="a"
                     />
                     <Bar
                       dataKey="overdueItems"
                       name={t('workload.overdueItems')}
-                      fill="#EF4444"
+                      fill="var(--danger)"
                       radius={[0, 4, 4, 0]}
                       stackId="b"
                     />
@@ -272,7 +272,7 @@ export function WorkloadDistributionChart({
                 <Bar
                   dataKey="count"
                   name={t('workload.count')}
-                  fill="#8B5CF6"
+                  fill="var(--chart-7)"
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>
@@ -282,34 +282,30 @@ export function WorkloadDistributionChart({
 
         {/* Summary stats */}
         <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 text-center">
-          <div className="p-2 sm:p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20">
-            <div className="text-lg sm:text-xl font-bold text-blue-600 dark:text-blue-400">
+          <div className="p-2 sm:p-3 rounded-lg bg-status-1-soft">
+            <div className="text-lg sm:text-xl font-bold text-status-1">
               {data.totalActiveItems}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('workload.totalActive')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-violet-50 dark:bg-violet-900/20">
-            <div className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">
+          <div className="p-2 sm:p-3 rounded-lg bg-chart-7/10">
+            <div className="text-lg sm:text-xl font-bold text-chart-7">
               {data.avgItemsPerUser.toFixed(1)}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('workload.avgPerUser')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-red-50 dark:bg-red-900/20">
-            <div className="text-lg sm:text-xl font-bold text-red-600 dark:text-red-400">
-              {data.overloadedUsers}
-            </div>
+          <div className="p-2 sm:p-3 rounded-lg bg-danger/10">
+            <div className="text-lg sm:text-xl font-bold text-danger">{data.overloadedUsers}</div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('workload.overloaded')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-            <div className="text-lg sm:text-xl font-bold text-gray-600 dark:text-gray-400">
-              {data.idleUsers}
-            </div>
+          <div className="p-2 sm:p-3 rounded-lg bg-surface-raised">
+            <div className="text-lg sm:text-xl font-bold text-ink-mute">{data.idleUsers}</div>
             <div className="text-xs sm:text-sm text-muted-foreground">{t('workload.idle')}</div>
           </div>
         </div>
@@ -334,7 +330,7 @@ export function WorkloadDistributionChart({
                   <div className="flex items-center gap-2 text-sm">
                     <span className="font-medium">{user.totalItems}</span>
                     {user.overdueItems > 0 && (
-                      <span className="text-red-500">({user.overdueItems})</span>
+                      <span className="text-danger">({user.overdueItems})</span>
                     )}
                   </div>
                 </div>

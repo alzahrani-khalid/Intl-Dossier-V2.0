@@ -107,7 +107,7 @@ export function RelationshipHealthChart({
     return data.byHealthLevel.map((item) => ({
       ...item,
       name: t(`relationships.healthLevels.${item.level}`),
-      fill: HEALTH_LEVEL_COLORS[item.level] || '#9CA3AF',
+      fill: HEALTH_LEVEL_COLORS[item.level] || 'var(--ink-faint)',
     }))
   }, [data?.byHealthLevel, t])
 
@@ -116,7 +116,7 @@ export function RelationshipHealthChart({
     return data.byTrend.map((item) => ({
       ...item,
       name: t(`relationships.trends.${item.trend}`),
-      fill: TREND_COLORS[item.trend] || '#9CA3AF',
+      fill: TREND_COLORS[item.trend] || 'var(--ink-faint)',
     }))
   }, [data?.byTrend, t])
 
@@ -234,7 +234,7 @@ export function RelationshipHealthChart({
                     type="monotone"
                     dataKey="value"
                     name={t('relationships.avgScore')}
-                    stroke="#10B981"
+                    stroke="var(--ok)"
                     strokeWidth={2}
                     dot={{ r: 3 }}
                     activeDot={{ r: 5 }}
@@ -273,24 +273,24 @@ export function RelationshipHealthChart({
 
         {/* Summary stats */}
         <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-4 text-center">
-          <div className="p-2 sm:p-3 rounded-lg bg-red-50 dark:bg-red-900/20">
-            <div className="text-lg sm:text-xl font-bold text-red-600 dark:text-red-400">
+          <div className="p-2 sm:p-3 rounded-lg bg-danger/10">
+            <div className="text-lg sm:text-xl font-bold text-danger">
               {data.criticalRelationships}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('relationships.critical')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/20">
-            <div className="text-lg sm:text-xl font-bold text-emerald-600 dark:text-emerald-400">
+          <div className="p-2 sm:p-3 rounded-lg bg-ok/10">
+            <div className="text-lg sm:text-xl font-bold text-ok">
               {data.improvingRelationships}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('relationships.improving')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20">
-            <div className="text-lg sm:text-xl font-bold text-orange-600 dark:text-orange-400">
+          <div className="p-2 sm:p-3 rounded-lg bg-status-5-soft">
+            <div className="text-lg sm:text-xl font-bold text-status-5">
               {data.decliningRelationships}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
