@@ -16,7 +16,7 @@ Requirements for this milestone. Each maps to exactly one roadmap phase.
 
 Fast, high-impact fixes from the 6-route Linear audit (Plan §3A).
 
-- [ ] **BUG-01**: All four kanban columns (incl. "Done"/"مكتمل") are fully reachable and unclipped at 1400px and 1024px, in EN/LTR and AR/RTL — via a column min-width + logical inline-scroll container with a visible overflow affordance, or reduced column width so 4 fit. Empty columns still show header + `0`. _(F1, HIGH)_
+- [x] **BUG-01**: All four kanban columns (incl. "Done"/"مكتمل") are fully reachable and unclipped at 1400px and 1024px, in EN/LTR and AR/RTL — via a column min-width + logical inline-scroll container with a visible overflow affordance, or reduced column width so 4 fit. Empty columns still show header + `0`. _(F1, HIGH)_
 - [ ] **BUG-02**: The settings page shows exactly one "Profile Settings" title + description — the duplicated inner card header is removed (page-level title kept). _(F2, HIGH)_
 - [ ] **BUG-03**: The calendar view exposes exactly one primary create-event action — the redundant second "Create Event" button is dropped. _(F3, MEDIUM)_
 - [ ] **BUG-04**: No raw DB enum strings render as user-visible labels — dashboard "Week Ahead" status pills (`preparation`, `follow_up`) map through i18n to human, sentence-case labels in both languages. _(F6, MEDIUM)_
@@ -92,26 +92,26 @@ Explicitly excluded. Documented to prevent scope creep.
 
 ## Traceability
 
-| Requirement | Phase    | Status  |
-| ----------- | -------- | ------- |
-| BUG-01      | Phase 81 | Pending |
-| BUG-02      | Phase 81 | Pending |
-| BUG-03      | Phase 81 | Pending |
-| BUG-04      | Phase 81 | Pending |
-| BUG-05      | Phase 81 | Pending |
-| FMT-01      | Phase 82 | Pending |
-| FMT-02      | Phase 82 | Pending |
-| FMT-03      | Phase 82 | Pending |
-| FMT-04      | Phase 82 | Pending |
-| DEBT-01     | Phase 83 | Pending |
-| DEBT-02     | Phase 83 | Pending |
-| DEBT-03     | Phase 83 | Pending |
-| DEBT-04     | Phase 83 | Pending |
-| DEBT-05     | Phase 83 | Pending |
-| DEBT-06     | Phase 83 | Pending |
-| DEBT-07     | Phase 83 | Pending |
-| DEBT-08     | Phase 83 | Pending |
-| COPY-01     | Phase 84 | Pending |
+| Requirement | Phase    | Status   |
+| ----------- | -------- | -------- |
+| BUG-01      | Phase 81 | Complete |
+| BUG-02      | Phase 81 | Pending  |
+| BUG-03      | Phase 81 | Pending  |
+| BUG-04      | Phase 81 | Pending  |
+| BUG-05      | Phase 81 | Pending  |
+| FMT-01      | Phase 82 | Pending  |
+| FMT-02      | Phase 82 | Pending  |
+| FMT-03      | Phase 82 | Pending  |
+| FMT-04      | Phase 82 | Pending  |
+| DEBT-01     | Phase 83 | Pending  |
+| DEBT-02     | Phase 83 | Pending  |
+| DEBT-03     | Phase 83 | Pending  |
+| DEBT-04     | Phase 83 | Pending  |
+| DEBT-05     | Phase 83 | Pending  |
+| DEBT-06     | Phase 83 | Pending  |
+| DEBT-07     | Phase 83 | Pending  |
+| DEBT-08     | Phase 83 | Pending  |
+| COPY-01     | Phase 84 | Pending  |
 
 **Coverage:**
 

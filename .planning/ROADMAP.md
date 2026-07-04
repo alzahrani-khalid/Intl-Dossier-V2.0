@@ -241,7 +241,7 @@ Full detail: [milestones/v8.0-ROADMAP.md](milestones/v8.0-ROADMAP.md). Audit: [m
 
 Plans:
 
-- [ ] 81-01-PLAN.md — BUG-01 kanban 4-column overflow: flexible column basis + visible logical inline-scroll affordance
+- [x] 81-01-PLAN.md — BUG-01 kanban 4-column overflow: flexible column basis + visible logical inline-scroll affordance
 - [ ] 81-02-PLAN.md — BUG-02 settings duplicate header + BUG-03 calendar duplicate create button (removals, keepers: page-level title / PageHeader action)
 - [ ] 81-03-PLAN.md — BUG-04 Week Ahead lifecycle status i18n keys (EN+AR, coverage test) + BUG-05 KPI single-line labels at 1024
       **UI hint**: yes

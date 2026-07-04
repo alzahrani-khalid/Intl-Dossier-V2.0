@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
-status: roadmap_created
-last_updated: '2026-07-04T12:00:00.000Z'
-last_activity: 2026-07-04
+status: planning
+last_updated: '2026-07-04T09:22:11.536Z'
+last_activity: 2026-07-04 — v8.1 roadmap created (Phases 81-84; 18/18 requirements mapped)
 progress:
   total_phases: 4
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_plans: 3
+  completed_plans: 1
+  percent: 33
 ---
 
 # Project State
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Mil
 ## Current Position
 
 Phase: 81 (Visible Bugs) — first of 4 (Phases 81-84)
-Plan: — (not yet planned)
-Status: Roadmap created — ready to plan
-Last activity: 2026-07-04 — v8.1 roadmap created (Phases 81-84; 18/18 requirements mapped)
+Plan: 81-01 complete (BUG-01 — kanban 4-column overflow); next: 81-02
+Status: Phase 81 in progress
+Last activity: 2026-07-04 — Plan 81-01 complete (BUG-01). Commit 2bea8cd0: board.css `.col` rigid 300px → `flex: 1 1 250px` / `min-width: 260px` so all four workflow columns fit the ~1096px content at 1400px (measured 265px each, no overflow, Done/مكتمل unclipped LTR+RTL); `.board-columns` gains a token-styled logical inline-scroll affordance (scrollbar-width/color + ::-webkit-scrollbar, `--line-strong`/`--radius-sm`) for 1024 overflow (720→1076, Done reachable — right in LTR, left in RTL); `@media (max-width:640px)` re-asserts `flex: 0 0 auto` to preserve mobile snap. 42/42 WorkBoard tests green; grep gates pass (no left/right, no hex, scrollbar present); browser-verified at 1400/1024 × LTR/RTL. Carve-outs (D-81-06) byte-untouched.
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [███░░░░░░░] 33%
 
 ### ⚠ REQUIRED post-reset follow-up (Phase 79)
 
