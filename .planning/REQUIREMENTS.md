@@ -37,7 +37,7 @@ Latin digits app-wide in Arabic UI; unit text localized (`يوم`), consistent w
 Systemic code-level token debt in charts, relationship graphs, and the aceternity `components/ui/`
 kit (Plan §3C). **Do NOT touch the verified carve-outs** (see Out of Scope).
 
-- [ ] **DEBT-01**: A shared chart-palette token module (`--chart-1…n` semantic series colors) exists; recharts fills (`analytics/*Chart.tsx`, `dashboard-widgets/ChartWidget`) and graph node palettes (`MiniRelationshipGraph`, `relationships/RelationshipGraph`) consume tokens instead of ~100 raw hex across ~22 files. _(F7, MEDIUM)_
+- [x] **DEBT-01**: A shared chart-palette token module (`--chart-1…n` semantic series colors) exists; recharts fills (`analytics/*Chart.tsx`, `dashboard-widgets/ChartWidget`) and graph node palettes (`MiniRelationshipGraph`, `relationships/RelationshipGraph`) consume tokens instead of ~100 raw hex across ~22 files. _(F7, MEDIUM)_
 - [ ] **DEBT-02**: Tailwind color literals (~51 across ~11 chart/aceternity files) map to `@theme` utilities (`bg-bg`, `text-ink`, `border-line`, `bg-accent`). _(F8, MEDIUM)_
 - [ ] **DEBT-03**: Banned card shadows (`shadow-sm/md/xl/2xl`) are stripped from cards/graph/detail components; shadow reserved for drawers/modals/hover rows (`--shadow-drawer`/`--shadow-lg`). _(F9, MEDIUM)_
 - [ ] **DEBT-04**: Hardcoded radii (`rounded-[…]` + px literals) are replaced with `--radius-sm`/`--radius`/`--radius-lg` (6/8/12), including the shadcn/HeroUI primitive re-skin. _(F10, MEDIUM)_
@@ -103,7 +103,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | FMT-02      | Phase 82 | Complete |
 | FMT-03      | Phase 82 | Complete |
 | FMT-04      | Phase 82 | Complete |
-| DEBT-01     | Phase 83 | Pending  |
+| DEBT-01     | Phase 83 | Complete |
 | DEBT-02     | Phase 83 | Pending  |
 | DEBT-03     | Phase 83 | Pending  |
 | DEBT-04     | Phase 83 | Pending  |
