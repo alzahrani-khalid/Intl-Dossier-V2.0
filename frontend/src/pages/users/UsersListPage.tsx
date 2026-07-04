@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { useQuery } from '@tanstack/react-query'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Input } from '@/components/ui/input'
@@ -334,11 +334,7 @@ export function UsersListPage() {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {user.last_login_at
-                      ? new Date(user.last_login_at).toLocaleDateString(
-                          toFormatLocale(isRTL ? 'ar' : 'en'),
-                        )
-                      : '-'}
+                    {user.last_login_at ? formatDayFirstYear(user.last_login_at) : '-'}
                   </TableCell>
                 </TableRow>
               ))}
@@ -382,11 +378,7 @@ export function UsersListPage() {
               {/* Last Login */}
               <div className="text-sm text-muted-foreground">
                 {t('userProfile.lastLoginAt')}:{' '}
-                {user.last_login_at
-                  ? new Date(user.last_login_at).toLocaleDateString(
-                      toFormatLocale(isRTL ? 'ar' : 'en'),
-                    )
-                  : '-'}
+                {user.last_login_at ? formatDayFirstYear(user.last_login_at) : '-'}
               </div>
             </CardContent>
           </Card>

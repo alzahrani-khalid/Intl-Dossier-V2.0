@@ -70,7 +70,7 @@ export default function CalendarTab(): ReactElement {
     error: entriesError,
   } = useEngagementCalendarEntries(engagementId)
 
-  const locale = i18n.language === 'ar' ? 'ar-SA' : 'en-US'
+  const locale = toFormatLocale(i18n.language)
   const dateFormatter = useMemo(
     () =>
       new Intl.DateTimeFormat(locale, {

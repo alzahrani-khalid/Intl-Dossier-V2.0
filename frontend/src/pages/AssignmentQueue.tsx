@@ -13,10 +13,10 @@ import {
   SelectValue,
 } from '../components/ui/select'
 import { AlertCircle, Clock, UserPlus } from 'lucide-react'
+import { formatDateTime } from '@/lib/format-date'
 
 export function AssignmentQueuePage() {
-  const { t, i18n } = useTranslation('assignments')
-  const dateLocale = i18n.language === 'ar' ? 'ar-SA' : 'en-US'
+  const { t } = useTranslation('assignments')
   const [priorityFilter, setPriorityFilter] = useState<string | undefined>()
   const [typeFilter, setTypeFilter] = useState<string | undefined>()
 
@@ -176,7 +176,7 @@ export function AssignmentQueuePage() {
                       {t('queue.workItemId')}: {item.work_item_id}
                     </p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {t('queue.createdAt')}: {new Date(item.created_at).toLocaleString(dateLocale)}
+                      {t('queue.createdAt')}: {formatDateTime(item.created_at)}
                     </p>
                     {item.required_skills && item.required_skills.length > 0 && (
                       <div className="mt-2">

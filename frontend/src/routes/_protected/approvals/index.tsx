@@ -5,6 +5,7 @@
 
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -42,8 +43,7 @@ async function fetchMyApprovals() {
 }
 
 function MyApprovalsPage() {
-  const { t, i18n } = useTranslation('approvals')
-  const dateLocale = i18n.language === 'ar' ? 'ar-SA' : 'en-US'
+  const { t } = useTranslation('approvals')
 
   const { data: positions, isLoading } = useQuery({
     queryKey: ['approvals', 'my'],
@@ -114,7 +114,7 @@ function MyApprovalsPage() {
                   <div className="flex flex-col items-end gap-2">
                     <Badge>{position.thematic_category || t('uncategorized')}</Badge>
                     <span className="text-xs text-muted-foreground">
-                      {new Date(position.created_at).toLocaleDateString(dateLocale)}
+                      {formatDayFirstYear(position.created_at)}
                     </span>
                   </div>
                 </div>

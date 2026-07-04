@@ -10,6 +10,7 @@ import { useParams } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { FileText, Sparkles, Loader2, Clock, CheckCircle2, AlertCircle, Quote } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirstYear } from '@/lib/format-date'
 import {
   useEngagementBriefs,
   useGenerateEngagementBrief,
@@ -52,14 +53,10 @@ function StatusIcon({ status }: { status: string }): ReactElement {
 }
 
 /**
- * Format a date string for display respecting locale.
+ * Format a brief date as day-first `28 Apr 2026` (Latin, locale-agnostic per policy D).
  */
-function formatBriefDate(dateStr: string, isRTL: boolean): string {
-  return new Date(dateStr).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+function formatBriefDate(dateStr: string): string {
+  return formatDayFirstYear(dateStr)
 }
 
 export default function DocsTab(): ReactElement {
@@ -167,7 +164,7 @@ export default function DocsTab(): ReactElement {
       {/* Brief cards list */}
       <div className="space-y-3">
         {briefs.map((brief) => (
-          <BriefCard key={brief.id} brief={brief} isRTL={isRTL} />
+          <BriefCard key={brief.id} brief={brief} />
         ))}
       </div>
     </div>
@@ -177,7 +174,7 @@ export default function DocsTab(): ReactElement {
 /**
  * Individual brief card -- displays title, status, type, date, and summary.
  */
-function BriefCard({ brief, isRTL }: { brief: EngagementBrief; isRTL: boolean }): ReactElement {
+function BriefCard({ brief }: { brief: EngagementBrief }): ReactElement {
   const { t } = useTranslation('workspace')
   return (
     <div className="rounded-lg border bg-card p-4 hover:border-accent transition-colors">
@@ -229,7 +226,7 @@ function BriefCard({ brief, isRTL }: { brief: EngagementBrief; isRTL: boolean })
           {/* Date */}
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <Clock className="size-3" />
-            <span>{formatBriefDate(brief.created_at, isRTL)}</span>
+            <span>{formatBriefDate(brief.created_at)}</span>
           </div>
         </div>
 
