@@ -29,7 +29,6 @@ import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { differenceInCalendarDays } from 'date-fns'
 import type { DossierOverviewResponse, DossierWorkItem } from '@/types/dossier-overview.types'
-import { toArDigits } from '@/lib/i18n/toArDigits'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import { useCommitmentDrawer } from '@/hooks/useCommitmentDrawer'
 
@@ -55,18 +54,14 @@ function ownerInitials(name: string | null | undefined): string {
     .join('')
 }
 
-function daysLabel(
-  deadline: string | null | undefined,
-  lang: string,
-  now: Date = new Date(),
-): string {
+function daysLabel(deadline: string | null | undefined, now: Date = new Date()): string {
   if (deadline === null || deadline === undefined) return '—'
   const d = new Date(deadline)
   if (Number.isNaN(d.getTime())) return '—'
   const days = differenceInCalendarDays(d, now)
   const sign = days < 0 ? '-' : '+'
   const abs = Math.abs(days)
-  return `T${sign}${toArDigits(abs, lang)}`
+  return `T${sign}${abs}`
 }
 
 function isOpenStatus(status: DossierWorkItem['status']): boolean {
@@ -148,7 +143,7 @@ export function OpenCommitmentsSection({
                         color: 'var(--ink-mute)',
                       }}
                     >
-                      {daysLabel(it.deadline, lang)}
+                      {daysLabel(it.deadline)}
                     </span>
                   </LtrIsolate>
                   <LtrIsolate>

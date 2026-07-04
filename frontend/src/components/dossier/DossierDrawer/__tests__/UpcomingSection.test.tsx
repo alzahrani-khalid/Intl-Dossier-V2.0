@@ -28,10 +28,7 @@ vi.mock('react-i18next', () => ({
 }))
 
 import { UpcomingSection } from '../UpcomingSection'
-import type {
-  DossierOverviewResponse,
-  DossierCalendarEvent,
-} from '@/types/dossier-overview.types'
+import type { DossierOverviewResponse, DossierCalendarEvent } from '@/types/dossier-overview.types'
 
 function buildEvent(overrides: Partial<DossierCalendarEvent>): DossierCalendarEvent {
   return {
@@ -56,7 +53,12 @@ function buildEvent(overrides: Partial<DossierCalendarEvent>): DossierCalendarEv
 function buildOverview(events: DossierCalendarEvent[]): DossierOverviewResponse {
   return {
     calendar_events: { upcoming: events, past: [], today: [], total_count: events.length },
-    activity_timeline: { recent_activities: [], has_more: false, next_cursor: null, total_count: 0 },
+    activity_timeline: {
+      recent_activities: [],
+      has_more: false,
+      next_cursor: null,
+      total_count: 0,
+    },
   } as unknown as DossierOverviewResponse
 }
 
@@ -99,7 +101,7 @@ describe('UpcomingSection', () => {
     expect(screen.getByText(expected)).toBeTruthy()
   })
 
-  it('renders Arabic day-of-week + Arabic-Indic digits under AR', () => {
+  it('renders Arabic day-of-week + Latin digits under AR (policy D)', () => {
     i18nState.language = 'ar'
     const event = buildEvent({
       id: 'evt-1',
@@ -108,11 +110,10 @@ describe('UpcomingSection', () => {
       start_datetime: '2026-04-28T14:30:00Z',
     })
     render(<UpcomingSection overview={buildOverview([event])} />)
+    // date-fns ar locale: Arabic month/weekday names, Latin digits (no conversion)
     const formatted = format(new Date(event.start_datetime), 'EEE d MMM', { locale: ar })
-    // Convert any ASCII digits to Arabic-Indic digits
-    const AR_DIGITS = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩']
-    const expected = formatted.replace(/[0-9]/g, (d) => AR_DIGITS[Number(d)])
-    expect(screen.getByText(expected)).toBeTruthy()
+    expect(screen.getByText(formatted)).toBeTruthy()
+    expect(/[٠-٩]/.test(formatted)).toBe(false)
     expect(screen.getByText('اجتماع ألفا')).toBeTruthy()
   })
 

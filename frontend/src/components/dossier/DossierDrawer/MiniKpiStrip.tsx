@@ -7,13 +7,12 @@
  *   overdue     → stats.overdue_work_items
  *   documents   → stats.documents_count
  *
- * Numeric values pass through toArDigits and are wrapped in LtrIsolate so that
- * digits stay LTR inside the RTL drawer column.
+ * Numeric values render Latin digits (policy D §7.4) and are wrapped in
+ * LtrIsolate so that digits stay LTR inside the RTL drawer column.
  */
 import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import type { DossierOverviewResponse } from '@/types/dossier-overview.types'
-import { toArDigits } from '@/lib/i18n/toArDigits'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 export interface MiniKpiStripProps {
@@ -23,8 +22,7 @@ export interface MiniKpiStripProps {
 type KpiKey = 'engagements' | 'commitments' | 'overdue' | 'documents'
 
 export function MiniKpiStrip({ overview }: MiniKpiStripProps): React.JSX.Element {
-  const { t, i18n } = useTranslation('dossier-drawer')
-  const lang = i18n.language
+  const { t } = useTranslation('dossier-drawer')
 
   const engagements = overview?.stats.calendar_events_count ?? 0
   const commitments = overview?.work_items.by_source.commitments?.length ?? 0
@@ -43,7 +41,7 @@ export function MiniKpiStrip({ overview }: MiniKpiStripProps): React.JSX.Element
       {cells.map((c) => (
         <div key={c.key} className="kpi-mini">
           <span className="kpi-mini-val">
-            <LtrIsolate>{toArDigits(c.val, lang)}</LtrIsolate>
+            <LtrIsolate>{c.val}</LtrIsolate>
           </span>
           <span className="kpi-mini-label">{t(`kpi.${c.key}`)}</span>
         </div>

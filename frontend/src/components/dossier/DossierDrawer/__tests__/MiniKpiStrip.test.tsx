@@ -7,14 +7,14 @@
  *   overdue     → stats.overdue_work_items
  *   documents   → stats.documents_count
  *
- * Each value is rendered through toArDigits and wrapped in LtrIsolate.
+ * Each value renders Latin digits (policy D) and is wrapped in LtrIsolate.
  */
 import { render, cleanup, within } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { DossierOverviewResponse } from '@/types/dossier-overview.types'
 
 // Per-file override of the global react-i18next mock so we can flip language
-// to 'ar' for the toArDigits assertion (Test 11).
+// to 'ar' for the AR Latin-digit assertion (Test 11).
 const i18nLanguageHolder: { value: string } = { value: 'en' }
 
 vi.mock('react-i18next', () => ({
@@ -105,28 +105,28 @@ describe('MiniKpiStrip (Phase 41-03)', () => {
     expect(cells[3].querySelector('.kpi-mini-label')?.textContent).toBe('kpi.documents')
   })
 
-  it('engagements cell value === toArDigits(stats.calendar_events_count)', () => {
+  it('engagements cell renders Latin stats.calendar_events_count', () => {
     const overview = makeOverview({ calendar_events_count: 22 })
     const { container } = render(<MiniKpiStrip overview={overview} />)
     const cell = container.querySelectorAll('.kpi-mini')[0] as HTMLElement
     expect(within(cell).getByText('22')).toBeTruthy()
   })
 
-  it('commitments cell value === toArDigits(work_items.by_source.commitments.length)', () => {
+  it('commitments cell renders Latin work_items.by_source.commitments.length', () => {
     const overview = makeOverview({ commitments_count: 4 })
     const { container } = render(<MiniKpiStrip overview={overview} />)
     const cell = container.querySelectorAll('.kpi-mini')[1] as HTMLElement
     expect(within(cell).getByText('4')).toBeTruthy()
   })
 
-  it('overdue cell value === toArDigits(stats.overdue_work_items)', () => {
+  it('overdue cell renders Latin stats.overdue_work_items', () => {
     const overview = makeOverview({ overdue_work_items: 9 })
     const { container } = render(<MiniKpiStrip overview={overview} />)
     const cell = container.querySelectorAll('.kpi-mini')[2] as HTMLElement
     expect(within(cell).getByText('9')).toBeTruthy()
   })
 
-  it('documents cell value === toArDigits(stats.documents_count)', () => {
+  it('documents cell renders Latin stats.documents_count', () => {
     const overview = makeOverview({ documents_count: 13 })
     const { container } = render(<MiniKpiStrip overview={overview} />)
     const cell = container.querySelectorAll('.kpi-mini')[3] as HTMLElement
@@ -139,12 +139,7 @@ describe('MiniKpiStrip (Phase 41-03)', () => {
     const labels = Array.from(container.querySelectorAll('.kpi-mini-label')).map(
       (el) => el.textContent,
     )
-    expect(labels).toEqual([
-      'kpi.engagements',
-      'kpi.commitments',
-      'kpi.overdue',
-      'kpi.documents',
-    ])
+    expect(labels).toEqual(['kpi.engagements', 'kpi.commitments', 'kpi.overdue', 'kpi.documents'])
   })
 
   it('each value span uses class kpi-mini-val and is wrapped in LtrIsolate (dir="ltr")', () => {
@@ -182,11 +177,11 @@ describe('MiniKpiStrip (Phase 41-03)', () => {
     expect(within(cell).getByText('0')).toBeTruthy()
   })
 
-  it('under AR locale, engagements cell of value 22 renders as "٢٢"', () => {
+  it('under AR locale, engagements cell of value 22 renders Latin "22" (policy D)', () => {
     i18nLanguageHolder.value = 'ar'
     const overview = makeOverview({ calendar_events_count: 22 })
     const { container } = render(<MiniKpiStrip overview={overview} />)
     const cell = container.querySelectorAll('.kpi-mini')[0] as HTMLElement
-    expect(within(cell).getByText('٢٢')).toBeTruthy()
+    expect(within(cell).getByText('22')).toBeTruthy()
   })
 })

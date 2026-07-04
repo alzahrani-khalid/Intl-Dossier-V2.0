@@ -12,11 +12,7 @@ import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
-import type {
-  DossierOverviewResponse,
-  DossierCalendarEvent,
-} from '@/types/dossier-overview.types'
-import { toArDigits } from '@/lib/i18n/toArDigits'
+import type { DossierOverviewResponse, DossierCalendarEvent } from '@/types/dossier-overview.types'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 export interface UpcomingSectionProps {
@@ -69,37 +65,24 @@ function UpcomingRow({
   locale: typeof ar | typeof enUS
 }): React.JSX.Element {
   const start = new Date(event.start_datetime)
-  const dayLine = toArDigits(format(start, 'EEE d MMM', { locale }), lang)
-  const timeStr =
-    !event.is_all_day
-      ? toArDigits(
-          `${String(start.getHours()).padStart(2, '0')}:${String(start.getMinutes()).padStart(2, '0')}`,
-          lang,
-        )
-      : null
+  const dayLine = format(start, 'EEE d MMM', { locale })
+  const timeStr = !event.is_all_day
+    ? `${String(start.getHours()).padStart(2, '0')}:${String(start.getMinutes()).padStart(2, '0')}`
+    : null
   const title = lang === 'ar' && event.title_ar !== null ? event.title_ar : event.title_en
   const location =
     lang === 'ar' && event.location_ar !== null ? event.location_ar : event.location_en
 
   return (
-    <li
-      className="week-row flex items-center gap-2"
-      data-testid="dossier-drawer-upcoming-row"
-    >
+    <li className="week-row flex items-center gap-2" data-testid="dossier-drawer-upcoming-row">
       <LtrIsolate>
-        <span
-          className="week-date"
-          style={{ fontFamily: 'var(--font-mono)', fontSize: 11 }}
-        >
+        <span className="week-date" style={{ fontFamily: 'var(--font-mono)', fontSize: 11 }}>
           {dayLine}
         </span>
       </LtrIsolate>
       {timeStr !== null ? (
         <LtrIsolate>
-          <span
-            className="week-time"
-            style={{ fontFamily: 'var(--font-mono)', fontSize: 11 }}
-          >
+          <span className="week-time" style={{ fontFamily: 'var(--font-mono)', fontSize: 11 }}>
             {timeStr}
           </span>
         </LtrIsolate>

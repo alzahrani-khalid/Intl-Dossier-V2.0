@@ -25,7 +25,6 @@ import type { ReactElement } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { Icon, type IconName } from '@/components/signature-visuals'
-import { toArDigits } from '@/lib/i18n/toArDigits'
 import { resolveTimelineNavUrl } from '@/lib/timeline-navigation'
 import type { ActivityActionType, ActivityItem } from '@/types/activity-feed.types'
 
@@ -71,9 +70,9 @@ function iconForAction(t: ActivityActionType | string): IconName {
  * Compact relative-time formatter for the .act-t mono column.
  *
  * Returns short suffixed forms (e.g. `5m`, `2h`, `3d`) using EN suffixes;
- * AR locale gets compact Arabic suffixes (`ث`/`د`/`س`/`ي`). Numeric
- * digits are converted via `toArDigits` at the call site so this function
- * stays pure and locale-suffix-only.
+ * AR locale gets compact Arabic suffixes (`ث`/`د`/`س`/`ي`). Digits are
+ * Latin in both locales (policy D §7.4) — the numeric value is emitted
+ * directly here.
  */
 function formatRelativeTime(iso: string, locale: 'en' | 'ar'): string {
   const now = Date.now()
@@ -146,7 +145,7 @@ export function ActivityList({ activities }: ActivityListProps): ReactElement {
             onKeyDown={onKeyDownHandler}
           >
             <span className="act-t" dir="ltr">
-              {toArDigits(formatRelativeTime(a.created_at, locale), locale)}
+              {formatRelativeTime(a.created_at, locale)}
             </span>
             <Icon name={iconForAction(a.action_type)} size={16} aria-hidden />
             <span>

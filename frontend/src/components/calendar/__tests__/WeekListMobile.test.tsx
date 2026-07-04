@@ -1,7 +1,7 @@
 // Phase 39 Plan 39-07: WeekListMobile unit tests
 //
 // Mobile (<640px) week-list view: 7 day rows for the active week, prev/next/today
-// nav, RTL-friendly bilingual labels, Arabic-Indic day numbers, touch-friendly nav
+// nav, RTL-friendly bilingual labels, Latin day numbers, touch-friendly nav
 // buttons (≥44×44), today receives aria-current="date", events stack into the row
 // for the matching day via <CalendarEventPill>.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
@@ -86,17 +86,16 @@ describe('WeekListMobile', (): void => {
     expect(text.includes('Sat')).toBeTruthy()
   })
 
-  it('renders Arabic-Indic day numbers in ar locale', async (): Promise<void> => {
+  it('renders Latin day numbers in ar locale (policy D)', async (): Promise<void> => {
     i18nState.language = 'ar'
     const { WeekListMobile } = await import('../WeekListMobile')
     const { container } = render(<WeekListMobile events={[]} onEventClick={(): void => {}} />)
     const text = container.textContent ?? ''
-    // The active week (Sun 2026-04-19 .. Sat 2026-04-25) contains digits
-    // 19, 20, 21, 22, 23, 24, 25 — so '٢' must appear.
-    expect(text.includes('٢')).toBeTruthy()
-    // And no Western digits 19/25
-    expect(text.includes('19')).toBeFalsy()
-    expect(text.includes('25')).toBeFalsy()
+    // The active week (Sun 2026-04-19 .. Sat 2026-04-25) renders Latin digits.
+    expect(text.includes('19')).toBeTruthy()
+    expect(text.includes('25')).toBeTruthy()
+    // And no Arabic-Indic digits anywhere.
+    expect(/[٠-٩]/.test(text)).toBeFalsy()
   })
 
   it('stacks CalendarEventPill instances for events that fall on a day in the week', async (): Promise<void> => {

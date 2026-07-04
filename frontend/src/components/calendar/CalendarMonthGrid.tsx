@@ -1,12 +1,12 @@
 // Phase 39 Plan 39-05: CalendarMonthGrid — verbatim handoff .cal-grid 7×N layout
 // with bilingual day-of-week header, today highlight, other-month dim, and
-// Arabic-Indic digit rendering for day numbers.
+// Latin day-number rendering (policy D §7.4).
 //
 // Hard rules (CLAUDE.md + 39-CONTEXT D-02):
 //  - NEVER .reverse() — RTL handled by document dir
 //  - NEVER textAlign: 'right'
 //  - Day-of-week labels are static const arrays (handoff verbatim)
-//  - Day numbers go through toArDigits in ar locale
+//  - Day numbers are Latin digits in both locales
 import { useMemo, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -21,7 +21,6 @@ import {
   addMonths,
 } from 'date-fns'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
-import { toArDigits } from '@/lib/i18n/toArDigits'
 import { cn } from '@/lib/utils'
 import { CalendarEventPill } from './CalendarEventPill'
 import type { CalendarEvent } from '@/hooks/useCalendarEvents'
@@ -98,7 +97,7 @@ export function CalendarMonthGrid({
           >
             <LtrIsolate>
               <span className="cal-d" data-testid="cal-d">
-                {toArDigits(format(day, 'd'), lang)}
+                {format(day, 'd')}
               </span>
             </LtrIsolate>
             {dayEvents.map((event) => (

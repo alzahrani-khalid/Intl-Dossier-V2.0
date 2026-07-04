@@ -85,9 +85,7 @@ describe('CalendarMonthGrid', () => {
   it("today's cell has class `today` and the day number renders with computed font-weight 700", () => {
     // Use today's actual date so isSameDay matches
     const today = new Date()
-    render(
-      <CalendarMonthGrid currentMonth={today} events={[]} onEventClick={(): void => {}} />,
-    )
+    render(<CalendarMonthGrid currentMonth={today} events={[]} onEventClick={(): void => {}} />)
     const todays = document.querySelectorAll('.cal-cell.today')
     expect(todays.length).toBeGreaterThanOrEqual(1)
     const todayD = todays[0].querySelector('.cal-d')
@@ -104,18 +102,18 @@ describe('CalendarMonthGrid', () => {
     expect(others.length).toBeGreaterThanOrEqual(1)
   })
 
-  it('day numbers in `ar` locale use Arabic-Indic digits (e.g. ٢٥ not 25)', () => {
+  it('day numbers in `ar` locale render Latin digits (e.g. 25, policy D)', () => {
     i18nState.language = 'ar'
     render(
       <CalendarMonthGrid currentMonth={APRIL_2026} events={[]} onEventClick={(): void => {}} />,
     )
     const dayCells = screen.getAllByTestId('cal-d')
     const allText = dayCells.map((el) => el.textContent ?? '').join('')
-    // Must contain at least one Arabic-Indic digit
-    expect(/[٠-٩]/.test(allText)).toBe(true)
-    // Must NOT contain Western digits in any cell text
-    const hasWesternDigit = dayCells.some((el) => /[0-9]/.test(el.textContent ?? ''))
-    expect(hasWesternDigit).toBe(false)
+    // Must contain Latin digits
+    expect(/[0-9]/.test(allText)).toBe(true)
+    // Must NOT contain any Arabic-Indic digit
+    const hasIndicDigit = dayCells.some((el) => /[٠-٩]/.test(el.textContent ?? ''))
+    expect(hasIndicDigit).toBe(false)
   })
 
   it('clicking an other-month cell fires onMonthChange with the target month', () => {
@@ -158,11 +156,7 @@ describe('CalendarMonthGrid', () => {
       makeEvent({ id: 'c', start_datetime: '2026-04-26T09:00:00.000Z' }),
     ]
     render(
-      <CalendarMonthGrid
-        currentMonth={APRIL_2026}
-        events={events}
-        onEventClick={(): void => {}}
-      />,
+      <CalendarMonthGrid currentMonth={APRIL_2026} events={events} onEventClick={(): void => {}} />,
     )
     // 39-06 replaced the 39-05 stub; real CalendarEventPill renders as <button class="cal-ev">.
     const pills = document.querySelectorAll('button.cal-ev')
