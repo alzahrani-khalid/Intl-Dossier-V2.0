@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
 status: executing
-last_updated: '2026-07-04T17:20:48.145Z'
-last_activity: 2026-07-04 -- Phase 83 planning complete
+last_updated: '2026-07-04T17:35:44.743Z'
+last_activity: 2026-07-04
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 17
-  completed_plans: 10
+  completed_plans: 11
   percent: 50
 ---
 
@@ -20,18 +20,20 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Milestone + Next Milestone sections)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 83 — token debt consolidation
+**Current focus:** Phase 83 — token-debt-consolidation
 
 ## Current Position
 
-Phase: 83 of 4 (token debt consolidation)
-Plan: Not started
+Phase: 83 (token-debt-consolidation) — EXECUTING
+Plan: 2 of 7
 Status: Ready to execute
-Last activity: 2026-07-04 -- Phase 83 planning complete
+Last activity: 2026-07-04 — Plan 83-01 complete (dead-code deletion)
 
-Progress: [██████████] 100%
+Progress: [███████░░░] 65%
 
-Last activity: 2026-07-04 — Plan 82-03 complete (Wave-2 migration slice: 30 component files — calendar/dashboard-widgets/dossier/commitments/engagements + AfterActionsTable overlap). All ad-hoc `toLocaleDateString/Time/String` render sites routed onto the `lib/format-date` 4-helper surface (`formatDayFirst`/`formatTime`/`formatDayFirstYear`/`formatDateTime`); dashboard widgets' `Intl.RelativeTimeFormat` + `KpiWidget`/`BenchmarkPreview` numbers routed through `toFormatLocale` (Latin digits on the AR dashboard); `AfterActionsTable` overlap fully resolved (local en-GB shadow + all 3 `toArDigits` wraps + doc-comment mention removed). Re-keyed the hand-rolled `locale === 'ar-SA'` AR language branches in KeyContactsSection/ActivityTimelineSection to `isRTL`. Zero `'ar-SA'`/ad-hoc date sites across all 30 files; `type-check` exit 0; touched-area vitest 275/275 green; ESLint clean. Commits: 46e94345 (calendar+widgets+AfterActions) / 270dfe8c (dossier+commitments+engagements+rest). Requirements FMT-02, FMT-04 complete. `StatusTimeline.tsx` (another wave-2 plan's file) left untouched — its `toLocaleString` uses the already-Latin-safe `toFormatLocale`.
+Last activity: 2026-07-04 — Plan 83-01 complete (token-debt dead-code deletion — Wave 1). Deleted 20 verified-dead frontend files: 8 zero-importer aceternity/shadcn `components/ui/` orphans (`background-boxes`, `floating-dock`, `animated-tooltip`, `moving-border`, `placeholders-and-vanish-input`, `related-entity-carousel`, `enhanced-progress`, `chart`), the whole `components/timeline/` dir (8 components + `__tests__` + `index.ts`), `styles/vertical-timeline.css`, and `App.css` (Vite leftover). Dropped `react-vertical-timeline-component` + `@types/...` from package.json; regenerated pnpm-lock (47 lines). Per-file liveness re-grep run before every `git rm`. **Deviation (Rule 1 / plan STOP-directive):** the `world-map` chain that RESEARCH marked dead is actually LIVE — `routes/_protected/geographic-visualization.tsx` → `GeographicVisualizationPage` → `WorldMapVisualization` → lazy `ui/world-map`; both files LEFT IN PLACE per the plan's stop-on-real-importer rule (their token debt falls to a Wave-2 slice). Closed DEBT-07's `!important` row-height half (`rg` gate → 0); ~35 hex / ~25 Tailwind literals / ~8 gradients removed from DEBT-01/02/05. Added a Phase-83 regression-guard block to `check-deleted-components.sh` (excludes world-map). Carve-outs (list-pages.css, tokens/, bootstrap.js, index.css :root, types/\*) byte-untouched. Verify all green: type-check exit 0, build exit 0, full vitest 194 files / 1452 tests pass, check-deleted-components exit 0. Commits: ca13490a (deletions + registry + guard) / d7002b96 (dep drop). Requirements DEBT-07/DEBT-01/DEBT-02/DEBT-05 advanced.
+
+Prior — 2026-07-04 — Plan 82-03 complete (Wave-2 migration slice: 30 component files — calendar/dashboard-widgets/dossier/commitments/engagements + AfterActionsTable overlap). All ad-hoc `toLocaleDateString/Time/String` render sites routed onto the `lib/format-date` 4-helper surface (`formatDayFirst`/`formatTime`/`formatDayFirstYear`/`formatDateTime`); dashboard widgets' `Intl.RelativeTimeFormat` + `KpiWidget`/`BenchmarkPreview` numbers routed through `toFormatLocale` (Latin digits on the AR dashboard); `AfterActionsTable` overlap fully resolved (local en-GB shadow + all 3 `toArDigits` wraps + doc-comment mention removed). Re-keyed the hand-rolled `locale === 'ar-SA'` AR language branches in KeyContactsSection/ActivityTimelineSection to `isRTL`. Zero `'ar-SA'`/ad-hoc date sites across all 30 files; `type-check` exit 0; touched-area vitest 275/275 green; ESLint clean. Commits: 46e94345 (calendar+widgets+AfterActions) / 270dfe8c (dossier+commitments+engagements+rest). Requirements FMT-02, FMT-04 complete. `StatusTimeline.tsx` (another wave-2 plan's file) left untouched — its `toLocaleString` uses the already-Latin-safe `toFormatLocale`.
 
 Prior — 2026-07-04: Plan 82-01 complete (lib foundations, Latin-digit lynchpin). The 3 `lib/` formatting modules corrected to policy D (Latin digits in BOTH locales) + `format-date.ts` extended to its 4-helper surface. `format-date.ts`: dropped the `toArDigits` pipe + `normalizeLocale`; `formatDayFirst`/`formatTime` now byte-identical for en/ar; added `formatDayFirstYear` (`28 Apr 2026`) + `formatDateTime` (`Tue 28 Apr 14:30 GST`). `format-locale.ts`: `toFormatLocale('ar')` → `'ar-u-nu-latn'` (was `'ar-SA'`/arab) — the lynchpin flipping ~10 Intl consumers to Latin at once (verified `numberingSystem === 'latn'`). `relativeTime.ts`: dropped all 3 `toArDigits` wraps → Latin digits with localized `ي` unit + date-fns month name kept. New `format-date.test.ts` (16 assertions) + flipped `relativeTime.test.ts` to Latin. Commits: 186f5e20f (test) / 9dd86e482 (format-date) / 5457cc445 (test) / 5508825c9 (locale+relativeTime) / 9ffc1c82 (SUMMARY). 1 deviation (Rule 3): reworded the format-locale doc to drop the literal `ar-SA` so the plan's `! grep -q ar-SA` guard passes. Full `src/lib/` vitest 99/99 green; `pnpm type-check` exit 0 (all 13 positional-locale callers + ~10 toFormatLocale consumers compile). `toArDigits.ts` still live (13 downstream consumers — removal is 82-05+ scope).
 

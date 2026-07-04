@@ -280,7 +280,7 @@ Plans:
 4. The verified carve-outs are byte-untouched and the three-copy CI parity guard stays green (see carve-outs below)
 5. Zero visual regressions across dark+light × EN/AR
    **Plans**: 7 plans
-   - [ ] 83-01-PLAN.md — dead-code deletion: 9 zero-importer ui files + timeline dir + vertical-timeline.css + App.css + dep removal (closes DEBT-07 !important half) (Wave 1)
+   - [x] 83-01-PLAN.md — dead-code deletion: 9 zero-importer ui files + timeline dir + vertical-timeline.css + App.css + dep removal (closes DEBT-07 !important half) (Wave 1)
    - [ ] 83-02-PLAN.md — chart-palette token module: --chart-1..8 across all three holders + parity-guard extension + contrast tests (Wave 1)
    - [ ] 83-03-PLAN.md — analytics + widgets slice: recharts hex→tokens, tile literals→@theme, shadows, BenchmarkPreview flattens (Wave 2)
    - [ ] 83-04-PLAN.md — graphs + dossier slice: React Flow palettes→tokens, graph shadows/gradient, emoji→lucide (DEBT-08) (Wave 2)
