@@ -85,7 +85,7 @@ const TYPE_ICONS: Record<string, typeof User> = {
 
 function InfluenceNode({ data }: { data: Record<string, unknown> }) {
   const { isRTL } = useDirection()
-const isCenter = data.isCenter as boolean
+  const isCenter = data.isCenter as boolean
   const tier = data.tier as InfluenceTier
   const role = data.role as StakeholderRole
   const type = data.type as string
@@ -119,7 +119,7 @@ const isCenter = data.isCenter as boolean
       {/* Role badge */}
       {RoleIcon && (
         <div
-          className="absolute -bottom-1 -end-1 bg-white rounded-full p-0.5 shadow-md"
+          className="absolute -bottom-1 -end-1 bg-white rounded-full p-0.5"
           style={{ borderColor: tierColor, borderWidth: 2 }}
         >
           <RoleIcon className="w-3 h-3" style={{ color: tierColor }} />
@@ -127,9 +127,7 @@ const isCenter = data.isCenter as boolean
       )}
 
       {/* Tooltip with name */}
-      <div
-        className="absolute -bottom-8 start-1/2 -translate-x-1/2 px-2 py-1 bg-background border rounded shadow-sm whitespace-nowrap text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-      >
+      <div className="absolute -bottom-8 start-1/2 -translate-x-1/2 px-2 py-1 bg-background border rounded whitespace-nowrap text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
         {name}
         <span className="ms-1 text-muted-foreground">({influenceScore})</span>
       </div>
@@ -350,7 +348,10 @@ export function InfluenceNetworkGraph({
   }
 
   return (
-    <LtrIsolate className={`rounded-lg border overflow-hidden bg-background ${className}`} style={{ height: typeof height === 'number' ? `${height}px` : height }}>
+    <LtrIsolate
+      className={`rounded-lg border overflow-hidden bg-background ${className}`}
+      style={{ height: typeof height === 'number' ? `${height}px` : height }}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
