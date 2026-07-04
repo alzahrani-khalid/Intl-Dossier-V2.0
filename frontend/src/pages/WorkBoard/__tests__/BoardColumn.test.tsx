@@ -127,11 +127,10 @@ describe('BoardColumn', () => {
     expect(count.className).toContain('font-mono')
   })
 
-  it('renders mono count through toArDigits in ar locale', () => {
+  it('renders mono count with Latin digits in ar locale', () => {
     currentLang = 'ar'
     render(<BoardColumn {...baseProps} items={buildItems(12)} />)
-    // 12 → ١٢
-    expect(screen.getByText('١٢')).toBeTruthy()
+    expect(screen.getByText('12')).toBeTruthy()
   })
 
   it('per-column + button has accessible name from t(actions.addToColumn)', () => {

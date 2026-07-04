@@ -6,7 +6,7 @@
  *  - Overdue + done state classes on root <article>
  *  - DossierGlyph rendering when dossier.flag truthy
  *  - Owner-initials computation (first + last word initials, fallback "?")
- *  - Due-text formatter (overdue / today / future + Arabic-Indic digit conversion)
+ *  - Due-text formatter (overdue / today / future — Latin digits, localized unit per policy D)
  *  - onItemClick fires on click; cursor reflects dndEnabled
  *  - Accessible name on the article element
  *  - Priority chip class mapping (urgent/high → chip-danger, medium → chip-warn, low → bare)
@@ -23,8 +23,17 @@ import type { WorkItem } from '@/types/work-item.types'
 let currentLang = 'en'
 
 vi.mock('react-i18next', () => ({
-  useTranslation: (): { t: (k: string) => string; i18n: { language: string } } => ({
-    t: (key: string): string => (key === 'card.overdue' ? 'Overdue' : key),
+  useTranslation: (): {
+    t: (k: string, opts?: { days?: number }) => string
+    i18n: { language: string }
+  } => ({
+    t: (key: string, opts?: { days?: number }): string => {
+      if (key === 'card.overdueBy') {
+        const days = opts?.days ?? 0
+        return currentLang === 'ar' ? `متأخر ${days} يوم` : `Overdue ${days}d`
+      }
+      return key
+    },
     i18n: { language: currentLang },
   }),
 }))
@@ -158,12 +167,12 @@ describe('KCard', () => {
     expect(screen.getByText('10 May')).toBeTruthy()
   })
 
-  it('converts due-text digits to Arabic-Indic in ar locale', () => {
+  it('renders overdue chip with Latin digits and localized unit in ar locale', () => {
     currentLang = 'ar'
     render(
       <KCard item={makeItem({ is_overdue: true, days_until_due: -62 })} onItemClick={vi.fn()} />,
     )
-    expect(screen.getByText(/Overdue ٦٢d/)).toBeTruthy()
+    expect(screen.getByText(/متأخر 62 يوم/)).toBeTruthy()
   })
 
   it('fires onItemClick when card is clicked', () => {
