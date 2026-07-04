@@ -28,7 +28,7 @@ Systemic, spec-defined formatting consistency (Plan §3B). **Digit policy (locke
 Latin digits app-wide in Arabic UI; unit text localized (`يوم`), consistent with `lib/format-locale`.
 
 - [x] **FMT-01**: `lib/format-date.ts` is the single date/time formatter, emitting day-first no-comma dates (`Tue 28 Apr`) and GST times (`14:30 GST`); the dashboard greeting and Intelligence Digest read day-first no-comma. _(F4, HIGH)_
-- [ ] **FMT-02**: The ~66 ad-hoc `toLocaleDateString` call sites (plus the two direct format-string offenders `meeting-minutes/MeetingMinutesCard.tsx` `'MMM d, yyyy'` and `Briefs/BriefsPage.tsx` `en-GB`) are migrated to the central formatter — the app is internally consistent with list rows. _(F4, HIGH)_
+- [x] **FMT-02**: The ~66 ad-hoc `toLocaleDateString` call sites (plus the two direct format-string offenders `meeting-minutes/MeetingMinutesCard.tsx` `'MMM d, yyyy'` and `Briefs/BriefsPage.tsx` `en-GB`) are migrated to the central formatter — the app is internally consistent with list rows. _(F4, HIGH)_
 - [ ] **FMT-03**: A lint/grep guard fails on new raw `toLocaleDateString` usage outside the central formatter. _(F4, HIGH)_
 - [x] **FMT-04**: Arabic overdue units no longer mix scripts — kanban cards show a localized unit (`يوم`/`ي`) after Latin digits (no bare Latin `d`), applied via `lib/format-locale` `toFormatLocale` under the locked Latin-digit policy. _(F5, MEDIUM)_
 
@@ -100,7 +100,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | BUG-04      | Phase 81 | Complete |
 | BUG-05      | Phase 81 | Complete |
 | FMT-01      | Phase 82 | Complete |
-| FMT-02      | Phase 82 | Pending  |
+| FMT-02      | Phase 82 | Complete |
 | FMT-03      | Phase 82 | Pending  |
 | FMT-04      | Phase 82 | Complete |
 | DEBT-01     | Phase 83 | Pending  |
