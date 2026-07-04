@@ -193,7 +193,7 @@ function ChecklistItem({
         !isCompleted &&
           !isSkipped &&
           !isLocked &&
-          'border-border hover:border-primary/50 hover:shadow-sm cursor-pointer',
+          'border-border hover:border-primary/50 cursor-pointer',
       )}
       onClick={handleClick}
     >

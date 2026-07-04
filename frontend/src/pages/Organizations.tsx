@@ -210,7 +210,7 @@ export default function Organizations() {
               id="org-type-filter"
               value={typeFilter}
               onChange={(event) => setTypeFilter(event.target.value as typeof typeFilter)}
-              className="w-48 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-48 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
             >
               <option value="all">{t('organizations.filters.allTypes', 'All types')}</option>
               {Object.entries(organizationTypes).map(([value, label]) => (
@@ -231,7 +231,7 @@ export default function Organizations() {
               id="org-status-filter"
               value={statusFilter}
               onChange={(event) => setStatusFilter(event.target.value as typeof statusFilter)}
-              className="w-40 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-40 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
             >
               <option value="all">{t('organizations.filters.allStatuses', 'All statuses')}</option>
               <option value="active">{t('organizations.status.active', 'Active')}</option>

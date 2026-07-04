@@ -75,7 +75,7 @@ export function DuplicateCandidateCard({
   return (
     <Card
       className={cn(
-        'relative overflow-hidden transition-shadow hover:shadow-md',
+        'relative overflow-hidden transition-shadow',
         isLoading && 'opacity-50 pointer-events-none',
       )}
     >

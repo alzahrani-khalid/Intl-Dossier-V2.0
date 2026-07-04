@@ -244,7 +244,6 @@ export function RecommendationCard({
       <Card
         className={cn(
           'relative overflow-hidden transition-all duration-200',
-          'hover:shadow-md',
           recommendation.urgency === 'critical' && 'border-danger/30 dark:border-danger/70',
           recommendation.urgency === 'high' && 'border-warning/30 dark:border-warning/70',
           !isActionable && 'opacity-70',

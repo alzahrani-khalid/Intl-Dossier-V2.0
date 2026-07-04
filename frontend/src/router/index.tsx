@@ -10,7 +10,7 @@ function NotFoundComponent() {
   const { isRTL } = useDirection()
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4 sm:p-8">
-      <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-center shadow-xl sm:p-8">
+      <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-center sm:p-8">
         <div className="mb-4 inline-flex size-16 items-center justify-center rounded-full bg-warning/10 dark:bg-warning/30 sm:mb-6 sm:size-20">
           <span className="text-3xl font-bold text-warning sm:text-4xl">404</span>
         </div>
@@ -38,7 +38,7 @@ function NotFoundComponent() {
           <button
             type="button"
             onClick={() => window.history.back()}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-muted sm:px-6 sm:py-3"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted sm:px-6 sm:py-3"
           >
             <ArrowLeft className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
             {t('common.notFound.goBack', 'Go Back')}
@@ -68,7 +68,7 @@ export const router = createRouter({
   },
   defaultErrorComponent: ({ error, reset }: { error: Error; reset: () => void }) => (
     <div className="flex min-h-screen items-center justify-center bg-background p-4 sm:p-8">
-      <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-center shadow-xl sm:p-8">
+      <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-center sm:p-8">
         <h2 className="text-xl font-semibold text-destructive sm:text-2xl">
           {error?.name ?? 'Application error'}
         </h2>

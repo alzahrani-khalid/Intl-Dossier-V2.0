@@ -195,7 +195,7 @@ export function StakeholderTimelineCard({
         {/* Event icon */}
         <div
           className={cn(
-            'flex items-center justify-center h-11 w-11 rounded-full text-white shadow-md',
+            'flex items-center justify-center h-11 w-11 rounded-full text-white',
             bgColor,
           )}
         >

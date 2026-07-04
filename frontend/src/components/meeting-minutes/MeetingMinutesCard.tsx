@@ -51,7 +51,7 @@ export function MeetingMinutesCard({ minutes, onClick, className }: MeetingMinut
     <Card
       className={cn(
         'cursor-pointer transition-all duration-200',
-        'hover:shadow-md hover:border-primary/30',
+        'hover:border-primary/30',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
         className,
       )}

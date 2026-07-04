@@ -112,7 +112,7 @@ export function LinkCard({
           isDeleted && 'opacity-60 bg-muted dark:bg-muted',
 
           // Hover effects (desktop only)
-          !isDeleted && 'hover:shadow-md',
+          !isDeleted && '',
 
           // Custom classes
           className,

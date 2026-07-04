@@ -46,7 +46,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           value={value.partnerName || ''}
           onChange={(e) => handleFieldChange('partnerName', e.target.value)}
           placeholder={t('typeSpecific.engagement.partnerName.placeholder')}
-          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
+          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
         />
       </div>
 
@@ -119,7 +119,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           value={value.expectedDuration || ''}
           onChange={(e) => handleFieldChange('expectedDuration', e.target.value)}
           placeholder={t('typeSpecific.engagement.expectedDuration.placeholder')}
-          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
+          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
         />
       </div>
     </div>
@@ -147,7 +147,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           value={value.positionTitle || ''}
           onChange={(e) => handleFieldChange('positionTitle', e.target.value)}
           placeholder={t('typeSpecific.position.positionTitle.placeholder')}
-          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
+          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
         />
       </div>
 
@@ -165,7 +165,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           value={value.department || ''}
           onChange={(e) => handleFieldChange('department', e.target.value)}
           placeholder={t('typeSpecific.position.department.placeholder')}
-          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
+          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
         />
       </div>
 
@@ -183,7 +183,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           onChange={(e) => handleFieldChange('requiredSkills', e.target.value)}
           placeholder={t('typeSpecific.position.requiredSkills.placeholder')}
           rows={3}
-          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
+          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
         />
       </div>
     </div>
@@ -211,7 +211,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           value={value.mouReference || ''}
           onChange={(e) => handleFieldChange('mouReference', e.target.value)}
           placeholder={t('typeSpecific.mou_action.mouReference.placeholder')}
-          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
+          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
         />
       </div>
 
@@ -227,7 +227,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           id="tsf-actionType"
           value={value.actionType || ''}
           onChange={(e) => handleFieldChange('actionType', e.target.value)}
-          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
+          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
         >
           <option value="">
             {t('typeSpecific.mou_action.actionType.placeholder', 'Select action type...')}
@@ -256,7 +256,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           type="date"
           value={value.deadline || ''}
           onChange={(e) => handleFieldChange('deadline', e.target.value)}
-          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
+          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
         />
       </div>
     </div>
@@ -281,7 +281,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           value={value.topic || ''}
           onChange={(e) => handleFieldChange('topic', e.target.value)}
           placeholder={t('typeSpecific.foresight.topic.placeholder')}
-          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
+          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
         />
       </div>
 
@@ -297,7 +297,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           id="tsf-timeHorizon"
           value={value.timeHorizon || ''}
           onChange={(e) => handleFieldChange('timeHorizon', e.target.value)}
-          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
+          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
         >
           <option value="">
             {t('typeSpecific.foresight.timeHorizon.placeholder', 'Select time horizon...')}
@@ -322,7 +322,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           onChange={(e) => handleFieldChange('stakeholders', e.target.value)}
           placeholder={t('typeSpecific.foresight.stakeholders.placeholder')}
           rows={3}
-          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
+          className="w-full rounded border border-input bg-transparent px-3 py-2 text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
         />
       </div>
     </div>

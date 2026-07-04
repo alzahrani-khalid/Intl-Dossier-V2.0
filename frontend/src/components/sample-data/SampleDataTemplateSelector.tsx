@@ -92,7 +92,7 @@ export function SampleDataTemplateSelector({
                 disabled={isPopulating}
                 className={cn(
                   'relative flex flex-col items-start p-4 rounded-lg border-2 transition-all text-start',
-                  'hover:shadow-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+                  'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
                   'min-h-[120px] sm:min-h-[140px]',
                   isSelected
                     ? `${colorClasses} border-2`

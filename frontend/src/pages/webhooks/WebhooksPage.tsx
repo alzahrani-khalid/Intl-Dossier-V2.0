@@ -511,7 +511,7 @@ function TemplateCard({ template, onUse }: TemplateCardProps) {
   const description = isRTL ? template.description_ar : template.description_en
 
   return (
-    <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={onUse}>
+    <Card className="transition-shadow cursor-pointer" onClick={onUse}>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
           {template.icon_url && (

@@ -211,7 +211,6 @@ export function FormCompletionProgress({
         'rounded-xl',
         'bg-white dark:bg-muted',
         'border border-line dark:border-line',
-        'shadow-sm',
         'overflow-hidden',
         className,
       )}

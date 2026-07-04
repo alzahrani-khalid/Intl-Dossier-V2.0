@@ -155,7 +155,7 @@ export function MilestoneCard({
     >
       <Card
         className={cn(
-          'transition-all duration-200 hover:shadow-md',
+          'transition-all duration-200',
           isOverdue && 'border-destructive/20 dark:border-destructive/70',
           milestone.status === 'completed' && 'opacity-75',
         )}

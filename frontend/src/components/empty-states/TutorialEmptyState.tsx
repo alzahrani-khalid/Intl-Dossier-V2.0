@@ -341,7 +341,7 @@ export function TutorialEmptyState({
           ) : (
             /* Compact tutorial preview card */
             <Card
-              className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+              className="overflow-hidden cursor-pointer transition-shadow"
               onClick={() => setExpandedVideo(true)}
               data-testid={`${testId}-preview`}
             >

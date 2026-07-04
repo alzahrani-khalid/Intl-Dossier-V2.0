@@ -202,7 +202,7 @@ export function WorldMapVisualization({
 
           {/* Legend */}
           {showLegend && !isLoading && (
-            <div className="absolute bottom-2 start-2 sm:bottom-4 sm:start-4 bg-background/90 backdrop-blur-sm rounded-lg p-2 sm:p-3 border shadow-sm">
+            <div className="absolute bottom-2 start-2 sm:bottom-4 sm:start-4 bg-background/90 backdrop-blur-sm rounded-lg p-2 sm:p-3 border">
               <p className="text-xs font-medium mb-2">
                 {t('legend.intensity', 'Engagement Intensity')}
               </p>

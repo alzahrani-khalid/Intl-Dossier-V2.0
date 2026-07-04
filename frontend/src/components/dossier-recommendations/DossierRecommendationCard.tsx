@@ -325,7 +325,6 @@ export function DossierRecommendationCard({
       <Card
         className={cn(
           'relative overflow-hidden transition-all duration-200',
-          'hover:shadow-md',
           recommendation.priority >= 4 && 'border-warning/30',
           !isActionable && 'opacity-60',
           className,

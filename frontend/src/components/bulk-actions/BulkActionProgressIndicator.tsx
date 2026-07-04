@@ -87,7 +87,7 @@ export function BulkActionProgressIndicator({
 
   return (
     <div
-      className={cn('p-4 bg-surface rounded-lg border shadow-sm', 'space-y-3', className)}
+      className={cn('p-4 bg-surface rounded-lg border', 'space-y-3', className)}
       role="progressbar"
       aria-valuenow={progress}
       aria-valuemin={0}

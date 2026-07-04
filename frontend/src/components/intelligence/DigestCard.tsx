@@ -130,7 +130,7 @@ export function DigestCard({
 
   return (
     <article
-      className="rounded-[var(--radius)] border border-line bg-surface transition-[background-color,box-shadow] duration-[var(--dur-fast)] ease-out hover:bg-line-soft hover:shadow-sm"
+      className="rounded-[var(--radius)] border border-line bg-surface transition-[background-color,box-shadow] duration-[var(--dur-fast)] ease-out hover:bg-line-soft"
       style={{ minHeight: 'var(--row-h)' }}
       dir={isRTL ? 'rtl' : 'ltr'}
     >

@@ -201,7 +201,6 @@ export function ActiveFiltersBar({
           'rounded-xl',
           'border border-border/50',
           'bg-background',
-          'shadow-sm',
           'transition-all duration-200',
         )}
       >

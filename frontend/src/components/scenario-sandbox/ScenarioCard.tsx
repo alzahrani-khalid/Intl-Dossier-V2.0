@@ -87,7 +87,7 @@ export function ScenarioCard({
   const negativeOutcomes = scenario.negative_outcomes || 0
 
   return (
-    <Card className="group hover:shadow-md transition-shadow duration-200">
+    <Card className="group transition-shadow duration-200">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3 min-w-0 flex-1">

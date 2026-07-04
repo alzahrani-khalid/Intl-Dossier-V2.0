@@ -54,7 +54,7 @@ function HeroUITabsTrigger({
         'disabled:pointer-events-none disabled:opacity-50',
         'h-[calc(100%-1px)]',
         'border border-transparent',
-        'data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm',
+        'data-[state=active]:bg-background data-[state=active]:text-foreground',
         'dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30',
         'data-[state=inactive]:text-muted-foreground',
         'cursor-pointer select-none',

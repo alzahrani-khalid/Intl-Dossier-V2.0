@@ -55,7 +55,7 @@ export function ZoneCollapsible({
   const skipAnimation = prefersReducedMotion()
 
   return (
-    <div className="rounded-[var(--radius)] border bg-card text-card-foreground shadow-sm">
+    <div className="rounded-[var(--radius)] border bg-card text-card-foreground">
       {/* Header button */}
       <button
         id={triggerId}

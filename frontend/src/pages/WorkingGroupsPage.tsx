@@ -398,7 +398,7 @@ export default function WorkingGroupsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
-              <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="h-full transition-shadow cursor-pointer">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">

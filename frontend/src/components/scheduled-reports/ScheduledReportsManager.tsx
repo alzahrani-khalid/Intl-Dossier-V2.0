@@ -59,7 +59,7 @@ import { useDirection } from '@/hooks/useDirection'
 export function ScheduledReportsManager() {
   const { t } = useTranslation('scheduled-reports')
   const { isRTL } = useDirection()
-const locale = isRTL ? ar : enUS
+  const locale = isRTL ? ar : enUS
   const { toast } = useToast()
 
   const { data: schedules, isLoading, error, fetchStatus } = useScheduledReports()
@@ -228,7 +228,7 @@ const locale = isRTL ? ar : enUS
         {schedules?.map((schedule) => (
           <Card
             key={schedule.id}
-            className="hover:shadow-md transition-shadow cursor-pointer"
+            className="transition-shadow cursor-pointer"
             onClick={() => handleEdit(schedule)}
           >
             <CardHeader className="pb-2">

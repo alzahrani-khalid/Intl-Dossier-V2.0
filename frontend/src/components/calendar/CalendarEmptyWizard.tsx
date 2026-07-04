@@ -287,7 +287,7 @@ export function CalendarEmptyWizard({
                         key={template.id}
                         onClick={() => handleTemplateSelect(template)}
                         className={cn(
-                          'flex items-center gap-2 px-3 py-2 min-h-11 rounded-lg border transition-all hover:shadow-sm',
+                          'flex items-center gap-2 px-3 py-2 min-h-11 rounded-lg border transition-all',
                           template.bgColor,
                           'hover:ring-2 hover:ring-primary/20',
                         )}
@@ -361,7 +361,7 @@ export function CalendarEmptyWizard({
                     onClick={() => handleTemplateSelect(template)}
                     className={cn(
                       'w-full flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border transition-all text-start',
-                      'hover:shadow-md hover:border-primary/50',
+                      'hover:border-primary/50',
                       isRecommended && 'ring-2 ring-primary/20',
                     )}
                   >

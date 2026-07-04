@@ -64,7 +64,7 @@ export function WorkItemTabs({ activeTab, onTabChange, counts }: WorkItemTabsPro
               value={tab.id}
               className={cn(
                 'flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2 min-h-10',
-                'data-[state=active]:bg-background data-[state=active]:shadow-sm',
+                'data-[state=active]:bg-background',
               )}
             >
               <Icon className="h-4 w-4 shrink-0" />

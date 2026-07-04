@@ -55,7 +55,7 @@ export function WorkflowRuleCard({
 
   return (
     <Card
-      className={`group transition-all hover:shadow-md ${
+      className={`group transition-all ${
         rule.is_active ? 'border-s-4 border-s-success' : 'opacity-60'
       }`}
     >

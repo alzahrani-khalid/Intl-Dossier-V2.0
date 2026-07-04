@@ -311,7 +311,7 @@ export function EntitySearchDialog({
                         'touch-manipulation',
                         'whitespace-nowrap',
                         'transition-all duration-200',
-                        isSelected && 'shadow-sm',
+                        isSelected && '',
                       )}
                       onClick={() => toggleEntityType(type)}
                       aria-label={t(`entityLinks.entityTypes.${type}`)}

@@ -294,7 +294,7 @@ export function MilestonesCelebration({
 
         {/* Content card */}
         <m.div
-          className="relative z-10 bg-card rounded-[var(--radius-lg)] p-6 sm:p-8 mx-4 max-w-sm w-full text-center shadow-2xl"
+          className="relative z-10 bg-card rounded-[var(--radius-lg)] p-6 sm:p-8 mx-4 max-w-sm w-full text-center"
           initial={{ scale: 0.8, y: 20 }}
           animate={{ scale: 1, y: 0 }}
           exit={{ scale: 0.8, y: 20 }}

@@ -96,7 +96,7 @@ export function TemplateCard({
       }}
       className={cn(
         'group relative flex cursor-pointer flex-col gap-2 rounded-lg border p-3 transition-all',
-        'hover:border-primary hover:shadow-sm',
+        'hover:border-primary',
         'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
         isSelected && 'border-primary ring-2 ring-primary ring-offset-2',
         'min-h-[6rem] sm:min-h-[7rem]',

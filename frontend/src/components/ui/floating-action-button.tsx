@@ -86,8 +86,8 @@ export function FloatingActionButton({
   className,
   ...props
 }: FloatingActionButtonProps) {
-const { isRTL } = useDirection()
-const [isScrollingDown, setIsScrollingDown] = React.useState(false)
+  const { isRTL } = useDirection()
+  const [isScrollingDown, setIsScrollingDown] = React.useState(false)
   const [isHovered, setIsHovered] = React.useState(false)
   const lastScrollY = React.useRef(0)
 
@@ -169,7 +169,7 @@ const [isScrollingDown, setIsScrollingDown] = React.useState(false)
             size="lg"
             className={cn(
               // Base FAB styles
-              'rounded-full shadow-lg hover:shadow-xl',
+              'rounded-full shadow-lg',
               'transition-all duration-200',
               // Size
               sizeClasses,

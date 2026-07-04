@@ -358,7 +358,7 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
     daysUntilCommentEnd >= 0
 
   return (
-    <Card className="transition-shadow hover:shadow-md">
+    <Card className="transition-shadow">
       <CardContent className="p-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
           {/* Icon */}

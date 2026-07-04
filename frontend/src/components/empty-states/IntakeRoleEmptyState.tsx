@@ -242,7 +242,7 @@ function RequesterContent({
         {exampleRequests.map((example) => (
           <Card
             key={example.title}
-            className="cursor-pointer transition-all hover:shadow-md hover:border-primary/50"
+            className="cursor-pointer transition-all hover:border-primary/50"
             onClick={onCreateRequest}
           >
             <CardContent className="p-3 sm:p-4">

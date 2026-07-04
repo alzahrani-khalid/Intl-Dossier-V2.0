@@ -109,7 +109,7 @@ export function MyAssignmentsPage() {
           data.assignments.map((assignment) => (
             <Card
               key={assignment.id}
-              className="cursor-pointer transition-shadow hover:shadow-md"
+              className="cursor-pointer transition-shadow"
               onClick={() => handleAssignmentClick(assignment)}
             >
               <CardContent className="p-6">

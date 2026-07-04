@@ -685,7 +685,7 @@ function QuickNavCard({
   isRTL: boolean
 }) {
   return (
-    <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={onClick}>
+    <Card className="cursor-pointer transition-shadow" onClick={onClick}>
       <CardContent className="pt-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
