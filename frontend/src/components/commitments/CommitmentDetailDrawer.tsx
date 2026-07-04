@@ -14,7 +14,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear, formatDateTime as formatDateTimeGst } from '@/lib/format-date'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -53,7 +53,7 @@ export function CommitmentDetailDrawer({
   open,
   onOpenChange,
 }: CommitmentDetailDrawerProps) {
-  const { t, i18n } = useTranslation('commitments')
+  const { t } = useTranslation('commitments')
   // State
   const [isEditing, setIsEditing] = useState(false)
   const [showUploadDialog, setShowUploadDialog] = useState(false)
@@ -92,22 +92,12 @@ export function CommitmentDetailDrawer({
   // Format dates
   const formatDate = (dateStr: string | null | undefined) => {
     if (!dateStr) return '-'
-    return new Date(dateStr).toLocaleDateString(toFormatLocale(i18n.language), {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    })
+    return formatDayFirstYear(dateStr)
   }
 
   const formatDateTime = (dateStr: string | null | undefined) => {
     if (!dateStr) return '-'
-    return new Date(dateStr).toLocaleString(toFormatLocale(i18n.language), {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
+    return formatDateTimeGst(dateStr)
   }
 
   // Calculate overdue status

@@ -26,6 +26,7 @@ import type {
   DossierCalendarEvent,
   CalendarEventType,
 } from '@/types/dossier-overview.types'
+import { formatDayFirst, formatTime } from '@/lib/format-date'
 
 /**
  * Get icon for event type
@@ -72,35 +73,18 @@ function formatEventTime(
   startDatetime: string,
   endDatetime: string | null,
   isAllDay: boolean,
-  locale: string,
 ): string {
   const start = new Date(startDatetime)
 
   if (isAllDay) {
-    return start.toLocaleDateString(locale, {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-    })
+    return formatDayFirst(start)
   }
 
-  const timeFormat: Intl.DateTimeFormatOptions = {
-    hour: '2-digit',
-    minute: '2-digit',
-  }
-
-  const dateFormat: Intl.DateTimeFormatOptions = {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-  }
-
-  const formattedDate = start.toLocaleDateString(locale, dateFormat)
-  const formattedStart = start.toLocaleTimeString(locale, timeFormat)
+  const formattedDate = formatDayFirst(start)
+  const formattedStart = formatTime(start)
 
   if (endDatetime) {
-    const end = new Date(endDatetime)
-    const formattedEnd = end.toLocaleTimeString(locale, timeFormat)
+    const formattedEnd = formatTime(new Date(endDatetime))
     return `${formattedDate}, ${formattedStart} - ${formattedEnd}`
   }
 
@@ -121,7 +105,6 @@ function EventCard({
 }) {
   const { t } = useTranslation('dossier-overview')
   const Icon = getEventTypeIcon(event.event_type)
-  const locale = isRTL ? 'ar-SA' : 'en-US'
 
   const variantStyles = {
     default: '',
@@ -161,12 +144,7 @@ function EventCard({
               <div className="flex items-center gap-2">
                 <Clock className="h-3 w-3 shrink-0" />
                 <span>
-                  {formatEventTime(
-                    event.start_datetime,
-                    event.end_datetime,
-                    event.is_all_day,
-                    locale,
-                  )}
+                  {formatEventTime(event.start_datetime, event.end_datetime, event.is_all_day)}
                 </span>
               </div>
               {(event.location_en || event.location_ar) && (

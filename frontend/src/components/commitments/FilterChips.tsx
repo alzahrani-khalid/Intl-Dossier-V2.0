@@ -10,7 +10,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
@@ -23,7 +23,7 @@ export interface FilterChipsProps {
 }
 
 export function FilterChips({ filters, onRemoveFilter, onClearAll }: FilterChipsProps) {
-  const { t, i18n } = useTranslation('commitments')
+  const { t } = useTranslation('commitments')
   // Count active filters
   const activeFilterCount =
     (filters.status?.length || 0) +
@@ -39,14 +39,7 @@ export function FilterChips({ filters, onRemoveFilter, onClearAll }: FilterChips
   }
 
   // Format date for display
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
-    return date.toLocaleDateString(toFormatLocale(i18n.language), {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    })
-  }
+  const formatDate = (dateStr: string) => formatDayFirstYear(dateStr)
 
   return (
     <div className="flex flex-wrap items-center gap-2 py-2">

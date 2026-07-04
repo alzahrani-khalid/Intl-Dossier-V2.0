@@ -14,7 +14,7 @@
 
 import { type ReactElement, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDateTime } from '@/lib/format-date'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
@@ -56,15 +56,8 @@ export function formatDuration(seconds: number): string {
   return `${String(d)}d ${String(h)}h`
 }
 
-function formatTransitionDate(dateStr: string, locale: string): string {
-  const date = new Date(dateStr)
-  return date.toLocaleDateString(toFormatLocale(locale), {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+function formatTransitionDate(dateStr: string): string {
+  return formatDateTime(dateStr)
 }
 
 /**
@@ -84,7 +77,7 @@ export function LifecycleTimeline({
   transitions,
   isLoading = false,
 }: LifecycleTimelineProps): ReactElement {
-  const { t, i18n } = useTranslation('lifecycle')
+  const { t } = useTranslation('lifecycle')
   const [open, setOpen] = useState<boolean>(getDefaultOpen)
 
   // Sort transitions by transitioned_at descending (most recent first)
@@ -175,7 +168,7 @@ export function LifecycleTimeline({
                           <span className="text-xs text-base-500">{transition.user_name}</span>
                         )}
                         <span className="text-xs text-base-400">
-                          {formatTransitionDate(transition.transitioned_at, i18n.language)}
+                          {formatTransitionDate(transition.transitioned_at)}
                         </span>
                       </div>
 

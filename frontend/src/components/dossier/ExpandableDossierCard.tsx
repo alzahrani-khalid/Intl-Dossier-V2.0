@@ -14,7 +14,7 @@
 
 import { useEffect, useId, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { AnimatePresence, m } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -217,7 +217,7 @@ export function ExpandableDossierCard({
   onMouseEnter,
   className,
 }: ExpandableDossierCardProps) {
-  const { t, i18n } = useTranslation('dossier')
+  const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
   const id = useId()
   const ref = useRef<HTMLDivElement>(null)
@@ -475,14 +475,7 @@ export function ExpandableDossierCard({
                             {t('detail.updated')}
                           </span>
                           <span className="text-sm text-start">
-                            {new Date(dossier.updated_at).toLocaleDateString(
-                              toFormatLocale(i18n.language),
-                              {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                              },
-                            )}
+                            {formatDayFirstYear(dossier.updated_at)}
                           </span>
                         </div>
                       </div>

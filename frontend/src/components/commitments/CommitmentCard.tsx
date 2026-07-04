@@ -12,7 +12,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -71,7 +71,7 @@ export function CommitmentCard({
   showDossierContext = false,
   compact = false,
 }: CommitmentCardProps) {
-  const { t, i18n } = useTranslation('commitments')
+  const { t } = useTranslation('commitments')
   const navigate = useNavigate()
   const { isRTL } = useDirection()
   const [showCancelDialog, setShowCancelDialog] = useState(false)
@@ -102,12 +102,7 @@ export function CommitmentCard({
   const daysUntilDue = getDaysUntilDue(commitment.due_date)
 
   // Format date
-  const dueDate = new Date(commitment.due_date)
-  const formattedDate = dueDate.toLocaleDateString(toFormatLocale(i18n.language), {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
+  const formattedDate = formatDayFirstYear(commitment.due_date)
 
   // Get style classes
   const priorityColors = PRIORITY_COLORS[commitment.priority]

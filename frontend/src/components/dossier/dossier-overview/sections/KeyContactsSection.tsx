@@ -24,6 +24,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
+import { formatDayFirstYear } from '@/lib/format-date'
 import type { KeyContactsSectionProps, DossierKeyContact } from '@/types/dossier-overview.types'
 
 /**
@@ -40,25 +41,21 @@ function getInitials(name: string): string {
 /**
  * Format last interaction date
  */
-function formatLastInteraction(date: string | null, locale: string): string | null {
+function formatLastInteraction(date: string | null, isRTL: boolean): string | null {
   if (!date) return null
   const interactionDate = new Date(date)
   const now = new Date()
   const diffDays = Math.floor((now.getTime() - interactionDate.getTime()) / (1000 * 60 * 60 * 24))
 
-  if (diffDays === 0) return locale === 'ar-SA' ? 'اليوم' : 'Today'
-  if (diffDays === 1) return locale === 'ar-SA' ? 'أمس' : 'Yesterday'
-  if (diffDays < 7) return locale === 'ar-SA' ? `${diffDays} أيام` : `${diffDays} days ago`
+  if (diffDays === 0) return isRTL ? 'اليوم' : 'Today'
+  if (diffDays === 1) return isRTL ? 'أمس' : 'Yesterday'
+  if (diffDays < 7) return isRTL ? `${diffDays} أيام` : `${diffDays} days ago`
   if (diffDays < 30) {
     const weeks = Math.floor(diffDays / 7)
-    return locale === 'ar-SA' ? `${weeks} أسابيع` : `${weeks} weeks ago`
+    return isRTL ? `${weeks} أسابيع` : `${weeks} weeks ago`
   }
 
-  return interactionDate.toLocaleDateString(locale, {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+  return formatDayFirstYear(interactionDate)
 }
 
 /**
@@ -66,13 +63,12 @@ function formatLastInteraction(date: string | null, locale: string): string | nu
  */
 function ContactCard({ contact, isRTL }: { contact: DossierKeyContact; isRTL: boolean }) {
   const { t } = useTranslation('dossier-overview')
-  const locale = isRTL ? 'ar-SA' : 'en-US'
   const displayName = isRTL && contact.name_ar ? contact.name_ar : contact.name
   const displayTitle = isRTL && contact.title_ar ? contact.title_ar : contact.title_en
   const displayOrg =
     isRTL && contact.organization_ar ? contact.organization_ar : contact.organization_en
 
-  const lastInteraction = formatLastInteraction(contact.last_interaction_date, locale)
+  const lastInteraction = formatLastInteraction(contact.last_interaction_date, isRTL)
 
   const cardContent = (
     <Card className="transition-colors hover:bg-line-soft h-full">

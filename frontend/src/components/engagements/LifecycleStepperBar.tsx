@@ -15,7 +15,7 @@
 
 import { type ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { cva } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
@@ -83,13 +83,8 @@ const connectorVariants = cva('h-0.5 flex-shrink-0 w-4 sm:w-6 self-center rounde
 // Helpers
 // ============================================================================
 
-function formatEntryDate(dateStr: string, locale: string): string {
-  const date = new Date(dateStr)
-  return date.toLocaleDateString(toFormatLocale(locale), {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+function formatEntryDate(dateStr: string): string {
+  return formatDayFirstYear(dateStr)
 }
 
 function formatDuration(seconds: number): string {
@@ -126,7 +121,7 @@ export function LifecycleStepperBar({
   compact = false,
   disabled = false,
 }: LifecycleStepperBarProps): ReactElement {
-  const { t, i18n } = useTranslation('lifecycle')
+  const { t } = useTranslation('lifecycle')
   const [pendingStage, setPendingStage] = useState<LifecycleStage | null>(null)
   const [noteValue, setNoteValue] = useState('')
   const [isRevert, setIsRevert] = useState(false)
@@ -292,7 +287,7 @@ export function LifecycleStepperBar({
                           </p>
                         )}
                         <p className="text-sm text-muted-foreground">
-                          {formatEntryDate(transition.transitioned_at, i18n.language)}
+                          {formatEntryDate(transition.transitioned_at)}
                         </p>
                         {transition.note != null && transition.note !== '' && (
                           <p className="text-sm italic">{transition.note}</p>

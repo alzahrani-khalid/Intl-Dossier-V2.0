@@ -20,6 +20,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { formatDayFirstYear } from '@/lib/format-date'
 import type {
   DocumentsSectionProps,
   DossierDocument,
@@ -98,7 +99,7 @@ function DocumentCard({ document, isRTL }: { document: DossierDocument; isRTL: b
             </div>
             <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
               <Calendar className="h-3 w-3" />
-              {new Date(document.created_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
+              {formatDayFirstYear(document.created_at)}
               {document.size_bytes && (
                 <>
                   <span>•</span>

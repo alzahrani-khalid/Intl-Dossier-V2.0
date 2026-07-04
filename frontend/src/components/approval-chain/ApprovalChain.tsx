@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear, formatDateTime } from '@/lib/format-date'
 import {
   CheckCircle,
   Circle,
@@ -122,7 +122,7 @@ export function ApprovalChain({
   status,
   className,
 }: ApprovalChainProps) {
-  const { t, i18n } = useTranslation('positions')
+  const { t } = useTranslation('positions')
   const { isRTL } = useDirection()
   // Extract stages from config
   const stages = approvalChainConfig?.stages || []
@@ -256,9 +256,7 @@ export function ApprovalChain({
                                 {lastApproval.delegated_until && (
                                   <p className="mt-1 text-xs">
                                     {t('approval.delegatedUntil', {
-                                      date: new Date(
-                                        lastApproval.delegated_until,
-                                      ).toLocaleDateString(toFormatLocale(i18n.language)),
+                                      date: formatDayFirstYear(lastApproval.delegated_until),
                                     })}
                                   </p>
                                 )}
@@ -315,14 +313,7 @@ export function ApprovalChain({
 
                         {/* Timestamp */}
                         <div className="text-xs text-muted-foreground">
-                          {new Date(lastApproval.created_at).toLocaleDateString(
-                            toFormatLocale(i18n.language),
-                            {
-                              month: 'short',
-                              day: 'numeric',
-                              year: 'numeric',
-                            },
-                          )}
+                          {formatDayFirstYear(lastApproval.created_at)}
                         </div>
 
                         {/* Multiple actions indicator */}
@@ -347,9 +338,7 @@ export function ApprovalChain({
                                         {approval.approver_name || approval.approver_id}
                                       </div>
                                       <div className="text-muted-foreground">
-                                        {new Date(approval.created_at).toLocaleString(
-                                          toFormatLocale(i18n.language),
-                                        )}
+                                        {formatDateTime(approval.created_at)}
                                       </div>
                                       {idx < stageApprovals.length - 1 && <hr className="my-2" />}
                                     </div>

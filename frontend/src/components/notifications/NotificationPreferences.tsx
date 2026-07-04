@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { Bell, Mail, Smartphone, Volume2, Monitor, Trash2, Loader2, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
@@ -37,7 +37,7 @@ const DEFAULT_PREFERENCES: CategoryPreference = {
 }
 
 export function NotificationPreferences() {
-  const { t, i18n } = useTranslation('notification-center')
+  const { t } = useTranslation('notification-center')
   const { toast } = useToast()
 
   // Hooks
@@ -284,11 +284,7 @@ export function NotificationPreferences() {
                       </p>
                       <p className="text-xs text-muted-foreground">
                         {t('preferences.lastUsed')}:{' '}
-                        {device.last_used_at
-                          ? new Date(device.last_used_at).toLocaleDateString(
-                              toFormatLocale(i18n.language),
-                            )
-                          : '-'}
+                        {device.last_used_at ? formatDayFirstYear(device.last_used_at) : '-'}
                       </p>
                     </div>
                   </div>
