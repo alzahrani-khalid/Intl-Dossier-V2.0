@@ -144,4 +144,54 @@ for f in "${PHASE_52_DELETED_FILES[@]}"; do
   fi
 done
 
+# ============================================================================
+# Phase 83 Plan 01 token-debt dead-code deletion (DEBT-07/01/02/05).
+# 9 zero-importer aceternity/shadcn ui files + the whole components/timeline/
+# dir + vertical-timeline.css + App.css. world-map.tsx is NOT here — it stays
+# live (lazy-loaded by geographic-visualization/WorldMapVisualization).
+# ============================================================================
+PHASE_83_PATTERNS=(
+  "from.*components/ui/background-boxes"
+  "from.*components/ui/floating-dock"
+  "from.*components/ui/animated-tooltip"
+  "from.*components/ui/moving-border"
+  "from.*components/ui/placeholders-and-vanish-input"
+  "from.*components/ui/related-entity-carousel"
+  "from.*components/ui/enhanced-progress"
+  "from.*components/ui/chart"
+  "from.*components/timeline['\"/]"
+  "vertical-timeline"
+)
+PHASE_83_DELETED_FILES=(
+  "frontend/src/components/ui/background-boxes.tsx"
+  "frontend/src/components/ui/floating-dock.tsx"
+  "frontend/src/components/ui/animated-tooltip.tsx"
+  "frontend/src/components/ui/moving-border.tsx"
+  "frontend/src/components/ui/placeholders-and-vanish-input.tsx"
+  "frontend/src/components/ui/related-entity-carousel.tsx"
+  "frontend/src/components/ui/enhanced-progress.tsx"
+  "frontend/src/components/ui/chart.tsx"
+  "frontend/src/styles/vertical-timeline.css"
+  "frontend/src/App.css"
+  "frontend/src/components/timeline/index.ts"
+)
+for p in "${PHASE_83_PATTERNS[@]}"; do
+  MATCH=$(grep -rn --include="*.ts" --include="*.tsx" --include="*.css" -E "$p" frontend/src 2>/dev/null || true)
+  if [ -n "$MATCH" ]; then
+    echo "FAIL: Phase-83 deleted import/path pattern reappeared: $p" >&2
+    echo "$MATCH" >&2
+    FAIL=1
+  fi
+done
+for f in "${PHASE_83_DELETED_FILES[@]}"; do
+  if [ -f "$f" ]; then
+    echo "FAIL: Phase-83 deleted file reappeared: $f" >&2
+    FAIL=1
+  fi
+done
+if [ -d "frontend/src/components/timeline" ]; then
+  echo "FAIL: Phase-83 deleted dir reappeared: frontend/src/components/timeline/" >&2
+  FAIL=1
+fi
+
 exit "$FAIL"

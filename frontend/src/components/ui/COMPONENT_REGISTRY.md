@@ -85,13 +85,11 @@ Project-specific components built for the IntelDossier design system, mobile-fir
 | Bottom Sheet              | `bottom-sheet.tsx`              | Mobile bottom sheet pattern       |
 | Content Skeletons         | `content-skeletons.tsx`         | Loading skeleton patterns         |
 | Context-Aware FAB         | `context-aware-fab.tsx`         | Smart floating action button      |
-| Enhanced Progress         | `enhanced-progress.tsx`         | Progress with percentage display  |
 | Floating Action Button    | `floating-action-button.tsx`    | Material-style FAB                |
 | Form Wizard               | `form-wizard.tsx`               | Multi-step form container         |
 | Mobile Action Bar         | `mobile-action-bar.tsx`         | Bottom action bar for mobile      |
 | Pull to Refresh Container | `pull-to-refresh-container.tsx` | Mobile pull-to-refresh            |
 | Pull to Refresh Indicator | `pull-to-refresh-indicator.tsx` | PTR spinner indicator             |
-| Related Entity Carousel   | `related-entity-carousel.tsx`   | Entity card carousel              |
 | Swipeable Card            | `swipeable-card.tsx`            | Card with swipe gestures          |
 | Thumb Zone Safe Area      | `thumb-zone-safe-area.tsx`      | Safe area for thumb reach         |
 | Touch Target              | `touch-target.tsx`              | 44px minimum touch target wrapper |
@@ -104,22 +102,16 @@ These files exist on disk for historical reasons. **Do not import them in new co
 
 ### Aceternity UI (BANNED)
 
-Phase 48 deleted three orphan wrappers (`3d-card.tsx`, `bento-grid.tsx`, `floating-navbar.tsx`). The remaining files below are legacy and will be removed as their call sites migrate to HeroUI / Radix.
+Phase 48 deleted three orphan wrappers (`3d-card.tsx`, `bento-grid.tsx`, `floating-navbar.tsx`). Phase 83 deleted five zero-importer orphans (`animated-tooltip.tsx`, `background-boxes.tsx`, `floating-dock.tsx`, `moving-border.tsx`, `placeholders-and-vanish-input.tsx`). The remaining files below are legacy and will be removed as their call sites migrate to HeroUI / Radix. `world-map.tsx` stays live — it is lazy-loaded by `geographic-visualization/WorldMapVisualization.tsx` off the `/geographic-visualization` route.
 
-| Component                   | File                                |
-| --------------------------- | ----------------------------------- |
-| Animated Tooltip            | `animated-tooltip.tsx`              |
-| Background Boxes            | `background-boxes.tsx`              |
-| Expandable Card             | `expandable-card.tsx`               |
-| File Upload                 | `file-upload.tsx`                   |
-| Floating Dock               | `floating-dock.tsx`                 |
-| Layout Grid                 | `layout-grid.tsx`                   |
-| Link Preview                | `link-preview.tsx`                  |
-| Moving Border               | `moving-border.tsx`                 |
-| Placeholders & Vanish Input | `placeholders-and-vanish-input.tsx` |
-| Text Generate Effect        | `text-generate-effect.tsx`          |
-| Timeline                    | `timeline.tsx`                      |
-| World Map                   | `world-map.tsx`                     |
+| Component            | File                       |
+| -------------------- | -------------------------- |
+| Expandable Card      | `expandable-card.tsx`      |
+| File Upload          | `file-upload.tsx`          |
+| Layout Grid          | `layout-grid.tsx`          |
+| Link Preview         | `link-preview.tsx`         |
+| Text Generate Effect | `text-generate-effect.tsx` |
+| World Map            | `world-map.tsx`            |
 
 ### Kibo-UI (BANNED)
 
