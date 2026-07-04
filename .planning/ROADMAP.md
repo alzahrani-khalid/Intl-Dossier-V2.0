@@ -237,8 +237,14 @@ Full detail: [milestones/v8.0-ROADMAP.md](milestones/v8.0-ROADMAP.md). Audit: [m
 3. The calendar view exposes exactly one primary create-event action
 4. No raw DB enum strings render as user-visible labels — the dashboard "Week Ahead" status pills (`preparation`, `follow_up`) read as human, sentence-case labels in both languages
 5. KPI labels render on a single line at 1024px (e.g. "ACTIVE ENGAGEMENTS" no longer wraps)
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 3 plans
+
+Plans:
+
+- [ ] 81-01-PLAN.md — BUG-01 kanban 4-column overflow: flexible column basis + visible logical inline-scroll affordance
+- [ ] 81-02-PLAN.md — BUG-02 settings duplicate header + BUG-03 calendar duplicate create button (removals, keepers: page-level title / PageHeader action)
+- [ ] 81-03-PLAN.md — BUG-04 Week Ahead lifecycle status i18n keys (EN+AR, coverage test) + BUG-05 KPI single-line labels at 1024
+      **UI hint**: yes
 
 ### Phase 82: Date/Number Formatting
 
