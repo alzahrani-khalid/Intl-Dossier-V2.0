@@ -40,7 +40,7 @@ export function AppearanceSettingsSection(
   const { density, setDensity } = useDensity()
 
   return (
-    <SettingsSectionCard title={t('appearance.title')} description={t('appearance.description')}>
+    <SettingsSectionCard>
       <div className="space-y-8">
         <SettingsGroup title={t('appearance.mode.label')}>
           <RadioGroup value={mode} onValueChange={(v) => setMode(v as Mode)} className="space-y-2">

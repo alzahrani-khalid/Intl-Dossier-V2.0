@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Accessibility, Contrast, Type, Sparkles, Keyboard, Focus, Monitor } from 'lucide-react'
+import { Contrast, Type, Sparkles, Keyboard, Focus, Monitor } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
@@ -31,11 +31,7 @@ export function AccessibilitySettingsSection({ form }: AccessibilitySettingsSect
   ]
 
   return (
-    <SettingsSectionCard
-      title={t('accessibility.title')}
-      description={t('accessibility.description')}
-      icon={Accessibility}
-    >
+    <SettingsSectionCard>
       <div className="space-y-8">
         {/* Visual Settings */}
         <SettingsGroup title={t('accessibility.visual')}>

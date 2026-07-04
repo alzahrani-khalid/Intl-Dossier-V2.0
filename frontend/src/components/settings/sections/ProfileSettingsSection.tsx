@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState, type ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { User, Trash2, Upload, Loader2 } from 'lucide-react'
+import { Trash2, Upload, Loader2 } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -118,11 +118,7 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
   }
 
   return (
-    <SettingsSectionCard
-      title={t('profile.title')}
-      description={t('profile.description')}
-      icon={User}
-    >
+    <SettingsSectionCard>
       <div className="space-y-6">
         {/* Avatar Section — upload, display, and clear (D-9) */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">

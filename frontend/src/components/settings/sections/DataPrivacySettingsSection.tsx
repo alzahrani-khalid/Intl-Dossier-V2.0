@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Shield, Download, Monitor, Trash2, Loader2, LogOut, AlertTriangle } from 'lucide-react'
+import { Download, Monitor, Trash2, Loader2, LogOut, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -194,11 +194,7 @@ export function DataPrivacySettingsSection() {
   // success toast.
 
   return (
-    <SettingsSectionCard
-      title={t('dataPrivacy.title')}
-      description={t('dataPrivacy.description')}
-      icon={Shield}
-    >
+    <SettingsSectionCard>
       <div className="space-y-8">
         {/* Data Export */}
         <SettingsGroup>

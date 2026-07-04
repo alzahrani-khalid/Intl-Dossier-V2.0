@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Settings2, Globe, Clock, Calendar } from 'lucide-react'
+import { Globe, Clock, Calendar } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -41,11 +41,7 @@ export function GeneralSettingsSection({ form }: GeneralSettingsSectionProps) {
   ]
 
   return (
-    <SettingsSectionCard
-      title={t('general.title')}
-      description={t('general.description')}
-      icon={Settings2}
-    >
+    <SettingsSectionCard>
       <div className="space-y-6">
         {/* Language Selection */}
         <SettingsGroup>

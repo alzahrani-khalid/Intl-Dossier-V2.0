@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import {
-  Bell,
   Mail,
   Smartphone,
   AlertTriangle,
@@ -75,11 +74,7 @@ export function NotificationsSettingsSection({ form }: NotificationsSettingsSect
   ]
 
   return (
-    <SettingsSectionCard
-      title={t('notifications.title')}
-      description={t('notifications.description')}
-      icon={Bell}
-    >
+    <SettingsSectionCard>
       <div className="space-y-3">
         {notificationSettings.map((setting) => {
           const Icon = setting.icon
