@@ -81,8 +81,15 @@ week-list day numbers, dates) so AR renders Latin digits **consistently**. Mecha
 planner's call (neutralize `toArDigits` at source as a no-op, or remove call sites) — but the
 observable outcome is: no Arabic-Indic digits (`٠-٩`) surface anywhere in the AR UI's numeric
 display. Update the affected tests (`toArDigits.test.ts`, `BoardColumn/BoardToolbar/MiniKpiStrip`
-tests, etc.) to expect Latin. Number formatting that needs locale-awareness uses
-`toFormatLocale` (Latin-safe), never `('ar-SA')` / `('ar')` that reintroduces Indic digits.
+tests, etc.) to expect Latin.
+**CORRECTION (verified in 82-RESEARCH.md — RESEARCH supersedes this doc on this point):**
+`toFormatLocale` currently returns `'ar-SA'` which yields **Indic** digits (not Latin as an
+earlier draft of this CONTEXT stated). The lynchpin fix is to change it to `'ar-u-nu-latn'` so it
+becomes genuinely Latin-safe — that one edit flips ~10 number/time consumers to Latin at once.
+Locale-aware number formatting must go through the corrected `toFormatLocale`, never a bare
+`('ar-SA')` / `('ar')` / `('ar-SA-u-nu-arab')` that reintroduces Indic digits. Per RESEARCH, also
+neutralize the non-`toArDigits` Indic sources it lists (`Intl.RelativeTimeFormat('ar-SA')` in 3
+widgets, chart `toLocaleString('ar-SA')`, `ClassificationBar.tsx:74`).
 
 ### D-82-06 — Design/carve-out discipline
 
@@ -127,9 +134,11 @@ remove call sites; the relative-time unit wording (`يوم` full vs `ي` short);
 <specifics>
 ## Specific Ideas
 
-- **`toFormatLocale` is the Latin-safe number locale** (Round-11 lesson: `Intl.NumberFormat('ar')`
-  already yields Latin in Chrome; `'ar-SA'` yields Indic). The 13 sites using
-  `isRTL?'ar-SA':'en-US'` are the Indic-producing offenders to reconcile.
+- **`toFormatLocale` must be CORRECTED to be Latin-safe** — it currently returns `'ar-SA'` =
+  Indic (verified in 82-RESEARCH.md, Node 22). Fix it to `'ar-u-nu-latn'`, then route locale-aware
+  number/date formatting through it. Per RESEARCH the `'ar-SA'` inventory is **~53 lines** (Group A),
+  not 13 — the inline-ternary `isRTL?'ar-SA':'en-US'`, multi-line, and local-`locale`-var forms are
+  the Indic-producing offenders to reconcile.
 - **Verify by rendering, not just grep.** After migration: the dashboard greeting reads day-first
   no-comma; a grep finds no ad-hoc `toLocaleDateString` outside `format-date.ts`; and the AR UI
   shows **no `٠-٩` Arabic-Indic digits** and no bare Latin `d` overdue unit — at 1400 & 1024.
