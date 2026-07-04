@@ -2,21 +2,21 @@
   "title": "Deliverables",
   "subtitle": "Track milestones and progress",
   "emptyState": {
-    "title": "Break This Down Into Milestones",
-    "description": "Commitments without clear milestones are harder to track. Break this commitment into concrete deliverables to ensure nothing falls through the cracks.",
-    "hint": "Use templates to quickly set up a structured timeline, or add custom milestones one by one.",
-    "cta": "Add First Milestone",
-    "selectTemplate": "Or choose a template to get started"
+    "title": "Break this commitment into milestones",
+    "description": "Commitments without clear milestones are harder to track. Break this commitment into concrete deliverables so progress stays visible.",
+    "hint": "Use a template for a structured timeline, or add milestones one by one.",
+    "cta": "Add first milestone",
+    "selectTemplate": "Or choose a template"
   },
   "templates": {
-    "title": "Quick Templates",
-    "standardDelivery": "Standard Delivery",
+    "title": "Quick templates",
+    "standardDelivery": "Standard delivery",
     "standardDeliveryDesc": "Review, draft, and submission milestones",
-    "meetingFocused": "Meeting & Engagement",
+    "meetingFocused": "Meeting & engagement",
     "meetingFocusedDesc": "Stakeholder meetings and follow-up actions",
-    "documentHeavy": "Document-Heavy",
+    "documentHeavy": "Document-heavy",
     "documentHeavyDesc": "Extensive documentation workflow",
-    "quickTask": "Quick Task",
+    "quickTask": "Quick task",
     "quickTaskDesc": "Simple review and submission"
   },
   "types": {
@@ -45,8 +45,8 @@
     "cancelled": "Cancelled"
   },
   "form": {
-    "addDeliverable": "Add Milestone",
-    "editDeliverable": "Edit Milestone",
+    "addDeliverable": "Add milestone",
+    "editDeliverable": "Edit milestone",
     "titleEn": "Title (English)",
     "titleAr": "Title (Arabic)",
     "titleEnPlaceholder": "Enter milestone title",
@@ -56,7 +56,7 @@
     "descriptionPlaceholder": "Describe the milestone",
     "type": "Type",
     "selectType": "Select type",
-    "dueDate": "Due Date",
+    "dueDate": "Due date",
     "weight": "Weight",
     "weightDescription": "Higher weight = more impact on overall progress (1-10)",
     "notes": "Notes",
@@ -69,9 +69,9 @@
   "actions": {
     "edit": "Edit",
     "delete": "Delete",
-    "markComplete": "Mark Complete",
-    "markInProgress": "Start Progress",
-    "viewDetails": "View Details",
+    "markComplete": "Mark complete",
+    "markInProgress": "Start progress",
+    "viewDetails": "View details",
     "reorder": "Reorder"
   },
   "stats": {
@@ -92,9 +92,9 @@
     "completed": "Completed {{date}}"
   },
   "progress": {
-    "title": "Overall Progress",
+    "title": "Overall progress",
     "noDeliverables": "No milestones defined",
-    "allComplete": "All milestones complete!"
+    "allComplete": "All milestones complete"
   },
   "messages": {
     "createSuccess": "Milestone created successfully",
