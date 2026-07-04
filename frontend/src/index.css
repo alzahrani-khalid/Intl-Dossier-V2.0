@@ -96,6 +96,17 @@
   --color-status-6: var(--status-6);
   --color-status-6-soft: var(--status-6-soft);
 
+  /* 8-slot categorical chart palette (DEBT-01) → text-chart-N / bg-chart-N /
+     fill-chart-N / stroke-chart-N utilities (same mechanism as --color-status-N). */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --color-chart-7: var(--chart-7);
+  --color-chart-8: var(--chart-8);
+
   /* Legacy semantic REMAP — load-bearing for 1,437 existing usages
      (bg-primary, text-foreground, border-border, bg-card, bg-popover, etc.) */
   --color-primary: var(--accent);
@@ -203,6 +214,16 @@
   --status-5-soft: #3a1911;
   --status-6: #d991d2;
   --status-6-soft: #331931;
+  /* 8-slot categorical chart palette (DEBT-01, Plan 83-02) — dark literals,
+     byte-matching PALETTES.linear.dark.chart (enforced by the guard's :root check). */
+  --chart-1: #87adfa;
+  --chart-2: #2ac4cc;
+  --chart-3: #6ac48c;
+  --chart-4: #cbaa4b;
+  --chart-5: #ef9179;
+  --chart-6: #d991d2;
+  --chart-7: #ba9cef;
+  --chart-8: #e86154;
   /* Fonts — REGISTERED @fontsource-variable families (FONTS.linear). Plain
      'Inter'/'JetBrains Mono' are unregistered → silent system-ui fallback. */
   --font-display: 'Inter Variable', system-ui, sans-serif;

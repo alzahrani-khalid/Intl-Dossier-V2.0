@@ -110,6 +110,11 @@ for (let i = 0; i < 6; i += 1) {
     (p) => p.status && p.status[i] && p.status[i].soft,
   ])
 }
+// 8-slot categorical chart palette (DEBT-01, Plan 83-02) — enforce the three-copy
+// invariant for --chart-1..8 across bootstrap.js, index.css :root, and directions.ts.
+for (let i = 0; i < 8; i += 1) {
+  EXTENDED_PALETTE.push([`--chart-${i + 1}`, (p) => p.chart && p.chart[i]])
+}
 
 const FONT_COMPARE = [
   ['--font-display', (f) => f.display],

@@ -40,8 +40,8 @@
        scripts/check-bootstrap-parity.mjs (guard v2). */
     var P = {
       linear: {
-        light:{bg:'#ffffff',surface:'#f5f6f6',surfaceRaised:'#f6f7f7',ink:'#000000',inkMute:'#4f5359',inkFaint:'#656970',line:'#dddee1',lineSoft:'#eaebed',sidebar:'#f5f6f6',sidebarInk:'#14161a',rSm:'6px',r:'8px',rLg:'12px',surface3:'#eff0f2',surface4:'#e6e8eb',inkTertiary:'#83868e',lineStrong:'#ccced1',accent:{base:'#5e6ad2',hover:'#828fff',fg:'#ffffff',soft:'#e8edff',ink:'#4d57b7'},semantic:{danger:'#be241f',dangerSoft:'#ffeae6',warn:'#8c5500',warnSoft:'#fceed6',ok:'#137738',okSoft:'#e4f6e6',info:'#1664bf',infoSoft:'#e4f1ff'},sla:{ok:'#4d57b7',okSoft:'#eaefff',risk:'#8c5500',riskSoft:'#fceed6',bad:'#be241f',badSoft:'#ffeae6'},status:[{fg:'#3458ac',soft:'#e6f1ff'},{fg:'#00737c',soft:'#daf7f8'},{fg:'#007338',soft:'#e1f7e7'},{fg:'#7c5700',soft:'#f8f0da'},{fg:'#9d381f',soft:'#ffeae3'},{fg:'#873a82',soft:'#fce9fa'}]},
-        dark:{bg:'#010102',surface:'#0f1011',surfaceRaised:'#141516',ink:'#f7f8f8',inkMute:'#d0d6e0',inkFaint:'#8a8f98',line:'#23252a',lineSoft:'#1d1e21',sidebar:'#0f1011',sidebarInk:'#d0d6e0',rSm:'6px',r:'8px',rLg:'12px',surface3:'#18191a',surface4:'#191a1b',inkTertiary:'#62666d',lineStrong:'#34343a',accent:{base:'#5e6ad2',hover:'#828fff',fg:'#ffffff',soft:'#242947',ink:'#98a6ea'},semantic:{danger:'#e86154',dangerSoft:'#3c1713',warn:'#e1af4a',warnSoft:'#302103',ok:'#27a644',okSoft:'#102b17',info:'#66a0ee',infoSoft:'#0f2440'},sla:{ok:'#8998e9',okSoft:'#1c2141',risk:'#e1af4a',riskSoft:'#302103',bad:'#e86154',badSoft:'#3c1713'},status:[{fg:'#87adfa',soft:'#16233f'},{fg:'#2ac4cc',soft:'#002c2e'},{fg:'#6ac48c',soft:'#082c18'},{fg:'#cbaa4b',soft:'#2e2200'},{fg:'#ef9179',soft:'#3a1911'},{fg:'#d991d2',soft:'#331931'}]}
+        light:{bg:'#ffffff',surface:'#f5f6f6',surfaceRaised:'#f6f7f7',ink:'#000000',inkMute:'#4f5359',inkFaint:'#656970',line:'#dddee1',lineSoft:'#eaebed',sidebar:'#f5f6f6',sidebarInk:'#14161a',rSm:'6px',r:'8px',rLg:'12px',surface3:'#eff0f2',surface4:'#e6e8eb',inkTertiary:'#83868e',lineStrong:'#ccced1',accent:{base:'#5e6ad2',hover:'#828fff',fg:'#ffffff',soft:'#e8edff',ink:'#4d57b7'},semantic:{danger:'#be241f',dangerSoft:'#ffeae6',warn:'#8c5500',warnSoft:'#fceed6',ok:'#137738',okSoft:'#e4f6e6',info:'#1664bf',infoSoft:'#e4f1ff'},sla:{ok:'#4d57b7',okSoft:'#eaefff',risk:'#8c5500',riskSoft:'#fceed6',bad:'#be241f',badSoft:'#ffeae6'},status:[{fg:'#3458ac',soft:'#e6f1ff'},{fg:'#00737c',soft:'#daf7f8'},{fg:'#007338',soft:'#e1f7e7'},{fg:'#7c5700',soft:'#f8f0da'},{fg:'#9d381f',soft:'#ffeae3'},{fg:'#873a82',soft:'#fce9fa'}],chart:['#3458ac','#00737c','#007338','#7c5700','#9d381f','#873a82','#6b46a0','#be241f']},
+        dark:{bg:'#010102',surface:'#0f1011',surfaceRaised:'#141516',ink:'#f7f8f8',inkMute:'#d0d6e0',inkFaint:'#8a8f98',line:'#23252a',lineSoft:'#1d1e21',sidebar:'#0f1011',sidebarInk:'#d0d6e0',rSm:'6px',r:'8px',rLg:'12px',surface3:'#18191a',surface4:'#191a1b',inkTertiary:'#62666d',lineStrong:'#34343a',accent:{base:'#5e6ad2',hover:'#828fff',fg:'#ffffff',soft:'#242947',ink:'#98a6ea'},semantic:{danger:'#e86154',dangerSoft:'#3c1713',warn:'#e1af4a',warnSoft:'#302103',ok:'#27a644',okSoft:'#102b17',info:'#66a0ee',infoSoft:'#0f2440'},sla:{ok:'#8998e9',okSoft:'#1c2141',risk:'#e1af4a',riskSoft:'#302103',bad:'#e86154',badSoft:'#3c1713'},status:[{fg:'#87adfa',soft:'#16233f'},{fg:'#2ac4cc',soft:'#002c2e'},{fg:'#6ac48c',soft:'#082c18'},{fg:'#cbaa4b',soft:'#2e2200'},{fg:'#ef9179',soft:'#3a1911'},{fg:'#d991d2',soft:'#331931'}],chart:['#87adfa','#2ac4cc','#6ac48c','#cbaa4b','#ef9179','#d991d2','#ba9cef','#e86154']}
       }
     };
     /* Linear font triplet — REGISTERED @fontsource-variable family names (plain
@@ -100,6 +100,10 @@
     for (var si = 0; si < p.status.length; si++) {
       r.style.setProperty('--status-' + (si + 1), p.status[si].fg);
       r.style.setProperty('--status-' + (si + 1) + '-soft', p.status[si].soft);
+    }
+    /* 8-slot categorical chart palette (DEBT-01) → --chart-1..8 */
+    for (var ci = 0; ci < p.chart.length; ci++) {
+      r.style.setProperty('--chart-' + (ci + 1), p.chart[ci]);
     }
     r.style.setProperty('--radius-sm', p.rSm);
     r.style.setProperty('--radius', p.r);
