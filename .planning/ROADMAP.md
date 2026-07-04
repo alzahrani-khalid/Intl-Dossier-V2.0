@@ -279,8 +279,15 @@ Plans:
 3. The bespoke parallel token ladders in `styles/modern-nav-tokens.css` and `components/copilot/copilot-theme.css` are deleted as ladders — those files consume design-system tokens; row heights obey `var(--row-h)` (no `!important` px overrides)
 4. The verified carve-outs are byte-untouched and the three-copy CI parity guard stays green (see carve-outs below)
 5. Zero visual regressions across dark+light × EN/AR
-   **Plans**: TBD
-   **UI hint**: yes
+   **Plans**: 7 plans
+   - [ ] 83-01-PLAN.md — dead-code deletion: 9 zero-importer ui files + timeline dir + vertical-timeline.css + App.css + dep removal (closes DEBT-07 !important half) (Wave 1)
+   - [ ] 83-02-PLAN.md — chart-palette token module: --chart-1..8 across all three holders + parity-guard extension + contrast tests (Wave 1)
+   - [ ] 83-03-PLAN.md — analytics + widgets slice: recharts hex→tokens, tile literals→@theme, shadows, BenchmarkPreview flattens (Wave 2)
+   - [ ] 83-04-PLAN.md — graphs + dossier slice: React Flow palettes→tokens, graph shadows/gradient, emoji→lucide (DEBT-08) (Wave 2)
+   - [ ] 83-05-PLAN.md — shadow/radius/gradient long-tail + expandable-card literals (surgical list-pages.css :294 only) (Wave 2)
+   - [ ] 83-06-PLAN.md — modern-nav + copilot: bespoke ladder deletion, consumers→DS tokens, demo flatten (DEBT-06) (Wave 2)
+   - [ ] 83-07-PLAN.md — eslint carve-out tightening + all re-audit gates + Playwright/re-baseline + render-parity checkpoint (Wave 3)
+         **UI hint**: yes
 
 **Carve-outs (DO NOT TOUCH — verified, Plan §6):**
 
