@@ -619,14 +619,14 @@ partial delete. **How to avoid:** delete the whole directory including `__tests_
 | ------- | ---------------------------------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | DEBT-01 | chart tokens defined, three-copy parity, AA contrast | unit + guard           | `node scripts/check-bootstrap-parity.mjs` + `pnpm --dir frontend exec vitest run tests/unit/design-system/contrast.test.ts`                                                                                 | ✅ guard exists (needs table extension); ❌ Wave 0: chart cases in contrast.test.ts                          |
 | DEBT-01 | no raw hex outside carve-out                         | lint (post-tightening) | `pnpm --dir frontend lint` (eslint `--max-warnings 0`)                                                                                                                                                      | ✅ (carve-out edit makes it bite)                                                                            |
-| DEBT-01 | grep gate                                            | grep                   | `rg -n "#[0-9a-fA-F]{6}\b" frontend/src --type-add 'src:*.{tsx,ts,css}' -tsrc -g'!design-system/tokens/*' -g'!index.css' -g'!**/signature-visuals/flags/**'` → comment-only remainder                       | ✅                                                                                                           |
-| DEBT-02 | no palette literals outside shim/tests               | lint + grep            | eslint rule (errors) + `rg '\b(text\|bg\|border\|fill\|stroke\|from\|to\|via)-(gray\|neutral\|…)-[0-9]{2,3}\b' frontend/src -g'!styles/list-pages.css' -g'!**/__tests__/**'` → 0                            | ✅                                                                                                           |
+| DEBT-01 | grep gate                                            | grep                   | `rg -n "#[0-9a-fA-F]{6}\b" frontend/src --type-add 'src:*.{tsx,ts,css}' -tsrc -g'!**/design-system/tokens/**' -g'!index.css' -g'!**/signature-visuals/flags/**'` → comment-only remainder                   | ✅                                                                                                           |
+| DEBT-02 | no palette literals outside shim/tests               | lint + grep            | eslint rule (errors) + `rg '\b(text\|bg\|border\|fill\|stroke\|from\|to\|via)-(gray\|neutral\|…)-[0-9]{2,3}\b' frontend/src -g'!**/styles/list-pages.css' -g'!**/__tests__/**'` → 0                         | ✅                                                                                                           |
 | DEBT-03 | banned shadows gone                                  | grep                   | `rg -n '\bshadow-(sm\|md\|xl\|2xl)\b' frontend/src -g'!index.css'` → 0                                                                                                                                      | ✅                                                                                                           |
 | DEBT-04 | no numeric arbitrary radii                           | grep                   | `rg -n 'rounded-(s-\|e-\|t-\|b-)?\[[0-9]' frontend/src` → 0; `rg -n 'border-radius:\s*(6\|8\|10\|12)px' frontend/src` → 0 (micro ≤4px + pills allowlisted)                                                  | ✅                                                                                                           |
 | DEBT-05 | decorative gradients gone                            | grep                   | `rg -n 'bg-gradient-\|linear-gradient\|radial-gradient' frontend/src` → only the 4 allowlisted sites (masks, tweaks hue track, globe-loader, NavigationShell tint)                                          | ✅                                                                                                           |
 | DEBT-06 | ladders deleted                                      | grep                   | `rg -n -- '--shadow-(xs\|sm\|md\|lg\|xl):' frontend/src/styles/modern-nav-tokens.css` → 0 (file may be gone-or-thin); external `var()` consumers resolve (per-var zero-consumer greps in task verification) | ✅                                                                                                           |
 | DEBT-07 | no !important px heights                             | grep                   | `rg -n '(min-)?height:\s*[0-9]+px\s*!important' frontend/src/styles/` → 0                                                                                                                                   | ✅ (via deletion)                                                                                            |
-| DEBT-08 | no emoji-as-UI                                       | grep                   | `rg -n '[\x{2600}-\x{27BF}\x{1F300}-\x{1FAFF}]' frontend/src/components frontend/src/routes -g'!**/comments/**' -g'!**/__tests__/**'` → only data/JSDoc carve-outs                                          | ✅                                                                                                           |
+| DEBT-08 | no emoji-as-UI                                       | grep                   | `rg -n '[\x{2300}-\x{27BF}\x{FE0F}\x{1F300}-\x{1FAFF}]' frontend/src/components frontend/src/routes -g'!**/comments/**' -g'!**/__tests__/**'` → only data/JSDoc carve-outs                                  | ✅                                                                                                           |
 | ALL     | zero regressions on live chrome                      | e2e visual             | `pnpm --dir frontend exec playwright test dashboard-visual dashboard-widgets-visual list-pages-visual dossier-drawer-visual analytics-dashboard rtl-component-smokes --reporter=list`                       | ✅ suites exist; chart-color changes require a deliberate re-baseline commit for dashboard-widgets snapshots |
 | ALL     | build integrity                                      | build                  | `pnpm --dir frontend build` (also gates bundle size in CI)                                                                                                                                                  | ✅                                                                                                           |
 
@@ -698,16 +698,24 @@ analytics files (hex + literals + tile washes) → 83-03; `expandable-card` (lit
 
 All other claims are `[VERIFIED]` against the working tree or built CSS this session.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Delete the modern-nav demo entirely instead of re-skinning it?** Route-hygiene (Phase ~74) deliberately
    kept `/modern-nav-standalone`; D-83-06 locks re-point+delete-ladders, not feature deletion. Default: follow
    the locked decision. If the user would rather delete the demo + `components/modern-nav/**` outright, 83-06
    shrinks to a deletion plan — worth one question at plan sign-off.
+   **RESOLVED (D-83-06, locked):** re-skin, not delete. 83-06 re-points the modern-nav CSS to
+   consume design-system tokens and deletes the bespoke ladder; the `/modern-nav-standalone` demo
+   route stays (zero functional change — consistent with the milestone's corrective /
+   zero-regressions constraint).
 2. **`--chart-7` exact hexes** — derivation task (culori, h≈300, ≥3:1 both modes vs `--surface`/`--bg`) is
    deterministic but the literal values don't exist yet; the 83-02 task computes and locks them, contrast tests
    prove them.
+   **RESOLVED:** `--chart-7` is derived deterministically in 83-02 (culori, h≈300, ≥3:1 both modes
+   vs `--surface`/`--bg`); the contrast tests lock the exact values.
 3. **dashboard.css:890/908 10px radii** — snap direction (8 vs 12px) decided by eyeball at execution.
+   **RESOLVED:** 83-05 snaps the 10px radii by selector role (card/panel surface → `var(--radius-lg)`,
+   control → `var(--radius)`), records the choice, and eyeballs it at the 83-07 render-parity gate.
 
 ## Sources
 
