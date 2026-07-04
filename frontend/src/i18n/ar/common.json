@@ -137,6 +137,8 @@
     "connectionLost": "انقطع الاتصال"
   },
   "navigation": {
+    "title": "التنقل",
+    "menu": "القائمة",
     "dossiersHub": "مركز الدوسيهات",
     "allDossiers": "جميع الدوسيهات",
     "workingGroups": "مجموعات العمل",

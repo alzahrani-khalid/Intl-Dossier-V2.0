@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -9,7 +10,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../u
 import { Button } from '../ui/button'
 import { useResponsive } from '../../hooks/useResponsive'
 import { cn } from '../../lib/utils'
-import { Menu } from 'lucide-react'
+import { ChevronDown, Menu } from 'lucide-react'
 
 export interface NavItem {
   id: string
@@ -40,6 +41,7 @@ export function ResponsiveNav({
   mobileBreakpoint = 'md',
   position = 'top',
 }: ResponsiveNavProps) {
+  const { t } = useTranslation('common')
   const { viewport, isMobile, isTablet } = useResponsive()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -86,13 +88,13 @@ export function ResponsiveNav({
 
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Menu">
+              <Button variant="ghost" size="icon" aria-label={t('navigation.menu', 'Menu')}>
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[280px] overflow-y-auto">
               <SheetHeader>
-                <SheetTitle>Navigation</SheetTitle>
+                <SheetTitle>{t('navigation.title', 'Navigation')}</SheetTitle>
               </SheetHeader>
               <nav className="mt-6 space-y-1">
                 {visibleItems.map((item) => (
@@ -191,9 +193,9 @@ function MobileNavItem({ item, depth = 0, onItemClick }: MobileNavItemProps) {
           )}
         </div>
         {hasChildren && (
-          <span className={cn('transition-transform duration-200', expanded && 'rotate-180')}>
-            ▼
-          </span>
+          <ChevronDown
+            className={cn('size-4 transition-transform duration-200', expanded && 'rotate-180')}
+          />
         )}
       </button>
 

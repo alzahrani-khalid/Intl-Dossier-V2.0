@@ -137,6 +137,8 @@
     "connectionLost": "Connection Lost"
   },
   "navigation": {
+    "title": "Navigation",
+    "menu": "Menu",
     "dossiersHub": "Dossiers Hub",
     "allDossiers": "All Dossiers",
     "workingGroups": "Working Groups",
