@@ -1,5 +1,7 @@
+import type { ReactElement } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { Check } from 'lucide-react'
 import { NavigationShell, MetricCard, ExecutionsTabs } from '@/components/modern-nav'
 import { devModeGuard } from '@/lib/dev-mode-guard'
 
@@ -16,6 +18,47 @@ export const Route = createFileRoute('/modern-nav-standalone')({
   beforeLoad: devModeGuard,
   component: StandaloneDemo,
 })
+
+const ICON_RAIL_CHECKS = [
+  '56px width',
+  'Dark background (sidebar-bg token)',
+  'Icon-only buttons',
+  'Green active indicator',
+  'Settings at bottom',
+]
+
+const PANEL_CHECKS = [
+  '280px width',
+  'Light gray background',
+  'User profile at top',
+  'Projects with badges',
+  'Status (New 3, Updates 2)',
+  'Document tree',
+]
+
+const CONTENT_CHECKS = [
+  'White background',
+  'Dashboard title',
+  'Executions: 340 +23%',
+  'Animated counter',
+  'Tabs with search',
+]
+
+function ReferenceColumn({ title, items }: { title: string; items: string[] }): ReactElement {
+  return (
+    <div>
+      <h3 className="font-medium text-content-text mb-2">{title}</h3>
+      <ul className="space-y-1 text-content-text-muted">
+        {items.map((item) => (
+          <li key={item} className="flex items-center gap-1.5">
+            <Check className="h-3.5 w-3.5 shrink-0 text-[var(--ink-mute)]" aria-hidden="true" />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
 
 function StandaloneDemo() {
   const { t } = useTranslation()
@@ -88,41 +131,14 @@ function StandaloneDemo() {
 
           {/* Reference Comparison */}
           <div className="mt-12 p-6 bg-panel rounded-lg border border-panel-border">
-            <h2 className="text-lg font-semibold text-content-text mb-4">
-              ✅ Reference Design Match
+            <h2 className="text-lg font-semibold text-content-text mb-4 flex items-center gap-2">
+              <Check className="h-5 w-5 shrink-0 text-[var(--ok)]" aria-hidden="true" />
+              Reference Design Match
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div>
-                <h3 className="font-medium text-content-text mb-2">Icon Rail (Left)</h3>
-                <ul className="space-y-1 text-content-text-muted">
-                  <li>✓ 56px width</li>
-                  <li>✓ Dark background (#1A1D26)</li>
-                  <li>✓ Icon-only buttons</li>
-                  <li>✓ Green active indicator</li>
-                  <li>✓ Settings at bottom</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-medium text-content-text mb-2">Expanded Panel (Middle)</h3>
-                <ul className="space-y-1 text-content-text-muted">
-                  <li>✓ 280px width</li>
-                  <li>✓ Light gray background</li>
-                  <li>✓ User profile at top</li>
-                  <li>✓ Projects with badges</li>
-                  <li>✓ Status (New 3, Updates 2)</li>
-                  <li>✓ Document tree</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-medium text-content-text mb-2">Content Area (Right)</h3>
-                <ul className="space-y-1 text-content-text-muted">
-                  <li>✓ White background</li>
-                  <li>✓ Dashboard title</li>
-                  <li>✓ Executions: 340 +23%</li>
-                  <li>✓ Animated counter</li>
-                  <li>✓ Tabs with search</li>
-                </ul>
-              </div>
+              <ReferenceColumn title="Icon Rail (Left)" items={ICON_RAIL_CHECKS} />
+              <ReferenceColumn title="Expanded Panel (Middle)" items={PANEL_CHECKS} />
+              <ReferenceColumn title="Content Area (Right)" items={CONTENT_CHECKS} />
             </div>
           </div>
         </div>

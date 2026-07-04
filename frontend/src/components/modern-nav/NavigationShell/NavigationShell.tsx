@@ -235,7 +235,7 @@ export function NavigationShell({
           'my-2 me-2 h-[calc(100vh-16px)]',
 
           // Rounded corners only on the right side (end side for RTL)
-          'rounded-e-[12px]',
+          'rounded-e-[var(--radius-lg)]',
         )}
         style={{
           backgroundColor: 'var(--bg)',
