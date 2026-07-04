@@ -103,9 +103,11 @@
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 0;
-  width: 300px;
-  min-width: 300px;
-  flex-shrink: 0;
+  /* Flexible basis so four columns fit the ~1096px content width at a 1400px
+     viewport (256px sidebar): 4 × 260 + 3 × 12 gap = 1076 ≤ 1090. Columns grow
+     to fill spare width; below that the .board-columns row scrolls (see below). */
+  flex: 1 1 250px;
+  min-width: 260px;
   display: flex;
   flex-direction: column;
   max-height: 78vh;
@@ -261,10 +263,30 @@
 .board-columns {
   display: flex;
   gap: 12px;
+  /* overflow-x IS the logical inline-axis scroll in horizontal writing mode —
+     it is not anchored to a physical side and scrolls correctly under dir=rtl
+     (Done reachable on the left in RTL, on the right in LTR). */
   overflow-x: auto;
   scroll-behavior: smooth;
   padding-bottom: 8px;
   min-width: 0;
+  /* Always-visible overflow affordance so the scroll is discoverable at widths
+     where the board still overflows (1024). Tokens only (D-81-06). */
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+.board-columns::-webkit-scrollbar {
+  height: 8px;
+}
+
+.board-columns::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.board-columns::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: var(--radius-sm);
 }
 
 /* Skeleton shape-match — column-head + 3 kcard rows per column. */
@@ -329,6 +351,9 @@
     -webkit-overflow-scrolling: touch;
   }
   .col {
+    /* Re-assert fixed, viewport-derived column width on mobile — override the
+       desktop `flex: 1 1 250px` grow so snap columns stay one-per-viewport. */
+    flex: 0 0 auto;
     width: min(300px, calc(100vw - 28px));
     min-width: min(300px, calc(100vw - 28px));
     scroll-snap-align: start;
