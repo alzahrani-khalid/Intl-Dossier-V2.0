@@ -167,7 +167,7 @@ export function CommitmentDeliverablesEmptyState({
 
         {/* Primary CTA */}
         <Button size="lg" className="mt-6 min-h-11" onClick={() => handleOpenDialog()}>
-          <Plus className={cn('h-5 w-5', isRTL ? 'ms-2' : 'me-2')} />
+          <Plus className="h-5 w-5 me-2" />
           {t('emptyState.cta')}
         </Button>
       </m.div>

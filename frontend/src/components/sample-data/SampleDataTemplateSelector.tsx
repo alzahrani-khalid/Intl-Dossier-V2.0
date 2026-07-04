@@ -59,7 +59,7 @@ export function SampleDataTemplateSelector({
 }: SampleDataTemplateSelectorProps) {
   const { t } = useTranslation('sample-data')
   const { isRTL } = useDirection()
-const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
 
   // Use sheet on mobile, dialog on desktop
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640
@@ -155,7 +155,7 @@ const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
       >
         {isPopulating ? (
           <>
-            <Loader2 className={cn('h-4 w-4 animate-spin', isRTL ? 'ms-2' : 'me-2')} />
+            <Loader2 className="h-4 w-4 animate-spin me-2" />
             {t('loading.populating')}
           </>
         ) : (

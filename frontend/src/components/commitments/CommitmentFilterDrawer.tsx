@@ -223,7 +223,7 @@ export function CommitmentFilterDrawer({
                         !localFilters.dueDateFrom && 'text-muted-foreground',
                       )}
                     >
-                      <CalendarIcon className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                      <CalendarIcon className="size-4 me-2" />
                       {localFilters.dueDateFrom ? (
                         format(new Date(localFilters.dueDateFrom), 'PPP', {
                           locale: isRTL ? ar : enUS,
@@ -233,7 +233,7 @@ export function CommitmentFilterDrawer({
                       )}
                       {localFilters.dueDateFrom && (
                         <X
-                          className={`size-4 ${isRTL ? 'me-auto ms-2' : 'ms-auto me-2'} opacity-50 hover:opacity-100`}
+                          className="size-4 ms-auto me-2 opacity-50 hover:opacity-100"
                           onClick={(e) => {
                             e.stopPropagation()
                             handleDateFromChange(undefined)
@@ -268,7 +268,7 @@ export function CommitmentFilterDrawer({
                         !localFilters.dueDateTo && 'text-muted-foreground',
                       )}
                     >
-                      <CalendarIcon className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                      <CalendarIcon className="size-4 me-2" />
                       {localFilters.dueDateTo ? (
                         format(new Date(localFilters.dueDateTo), 'PPP', {
                           locale: isRTL ? ar : enUS,
@@ -278,7 +278,7 @@ export function CommitmentFilterDrawer({
                       )}
                       {localFilters.dueDateTo && (
                         <X
-                          className={`size-4 ${isRTL ? 'me-auto ms-2' : 'ms-auto me-2'} opacity-50 hover:opacity-100`}
+                          className="size-4 ms-auto me-2 opacity-50 hover:opacity-100"
                           onClick={(e) => {
                             e.stopPropagation()
                             handleDateToChange(undefined)

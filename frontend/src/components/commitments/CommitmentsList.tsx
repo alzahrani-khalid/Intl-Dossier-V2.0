@@ -35,7 +35,6 @@ import type {
   Commitment,
   CommitmentFilters,
 } from '@/types/commitment.types'
-import { useDirection } from '@/hooks/useDirection'
 
 export interface CommitmentsListProps {
   dossierId?: string
@@ -63,7 +62,6 @@ export function CommitmentsList({
   onFiltersChange,
 }: CommitmentsListProps) {
   const { t } = useTranslation('commitments')
-  const { isRTL } = useDirection()
   // State for create/edit dialogs
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [editingCommitment, setEditingCommitment] = useState<Commitment | null>(null)
@@ -254,7 +252,7 @@ export function CommitmentsList({
                 className="min-h-11"
                 onClick={() => setShowFilterDrawer(true)}
               >
-                <Filter className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                <Filter className="size-4 me-2" />
                 {t('filters.title')}
                 {hasActiveFilters && (
                   <span className="ms-1 px-1.5 py-0.5 bg-primary text-primary-foreground rounded-full text-xs">
@@ -270,7 +268,7 @@ export function CommitmentsList({
               </Button>
               {showCreateButton && dossierId && (
                 <Button onClick={() => setShowCreateDialog(true)} size="sm" className="min-h-11">
-                  <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Plus className="size-4 me-2" />
                   {t('actions.create')}
                 </Button>
               )}
@@ -308,7 +306,7 @@ export function CommitmentsList({
               <p className="text-sm text-muted-foreground max-w-md mb-6">{t('list.empty')}</p>
               {showCreateButton && dossierId && (
                 <Button onClick={() => setShowCreateDialog(true)} className="min-h-11">
-                  <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Plus className="size-4 me-2" />
                   {t('actions.create')}
                 </Button>
               )}
@@ -379,7 +377,7 @@ export function CommitmentsList({
               className="min-h-11"
               onClick={() => setShowFilterDrawer(true)}
             >
-              <Filter className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+              <Filter className="size-4 me-2" />
               {t('filters.title')}
               {hasActiveFilters && (
                 <span className="ms-1 px-1.5 py-0.5 bg-primary text-primary-foreground rounded-full text-xs">
@@ -395,7 +393,7 @@ export function CommitmentsList({
           )}
           {showCreateButton && dossierId && (
             <Button onClick={() => setShowCreateDialog(true)} size="sm" className="min-h-11">
-              <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+              <Plus className="size-4 me-2" />
               {t('actions.create')}
             </Button>
           )}
