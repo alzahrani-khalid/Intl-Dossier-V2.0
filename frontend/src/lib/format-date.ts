@@ -2,7 +2,10 @@
  * Shared day-first date formatting per the IntelDossier content rules
  * (`CLAUDE.md`): dates render as `Tue 28 Apr` (day-first, no comma) and times as
  * `14:30 GST`. Always formatted with the `en-GB` locale so the mono numeric /
- * short-month shape is byte-identical regardless of UI language.
+ * short-month shape is byte-identical regardless of UI language, and always in
+ * the app's canonical GST zone (`Asia/Dubai`) so date-only DB values never render
+ * off-by-one in a non-GST host and `formatDateTime`'s date + time stay on the same
+ * calendar day.
  *
  * Policy D (Phase 82, DESIGN §7.4): Latin digits in BOTH English and Arabic.
  * The `locale` parameter is retained (13 consumer files pass it positionally)
@@ -30,6 +33,7 @@ export function formatDayFirst(date: Date | string | number, _locale?: string): 
     weekday: 'short',
     day: '2-digit',
     month: 'short',
+    timeZone: 'Asia/Dubai',
   })
 }
 
@@ -64,6 +68,7 @@ export function formatDayFirstYear(date: Date | string | number, _locale?: strin
     day: '2-digit',
     month: 'short',
     year: 'numeric',
+    timeZone: 'Asia/Dubai',
   })
 }
 

@@ -63,16 +63,18 @@ describe('formatDayFirstYear', () => {
 })
 
 describe('formatDateTime', () => {
-  it('composes day-first + time (TZ-robust shape)', () => {
-    expect(formatDateTime('2026-04-28T10:30:00Z')).toMatch(
-      /^[A-Z][a-z]{2} \d{2} [A-Z][a-z]{2} \d{2}:\d{2} GST$/,
-    )
+  it('composes day-first + GST time deterministically (Asia/Dubai)', () => {
+    // 10:30 UTC + 4h = 14:30 GST on the same GST calendar day (28 Apr).
+    expect(formatDateTime('2026-04-28T10:30:00Z')).toBe('Tue 28 Apr 14:30 GST')
+  })
+
+  it('keeps date and time on the SAME GST calendar day near midnight (WR-01)', () => {
+    // 21:00 UTC = 01:00 GST on 29 Apr — date part must roll to 29 Apr, not stay 28.
+    expect(formatDateTime('2026-04-28T21:00:00Z')).toBe('Wed 29 Apr 01:00 GST')
   })
 
   it('is byte-identical for ar', () => {
-    expect(formatDateTime('2026-04-28T10:30:00Z', 'ar')).toMatch(
-      /^[A-Z][a-z]{2} \d{2} [A-Z][a-z]{2} \d{2}:\d{2} GST$/,
-    )
+    expect(formatDateTime('2026-04-28T10:30:00Z', 'ar')).toBe('Tue 28 Apr 14:30 GST')
   })
 
   it('returns the em-dash placeholder for nullish / invalid input', () => {
@@ -80,6 +82,19 @@ describe('formatDateTime', () => {
     expect(formatDateTime(undefined as unknown as string)).toBe('—')
     expect(formatDateTime('')).toBe('—')
     expect(formatDateTime('not-a-date')).toBe('—')
+  })
+})
+
+describe('GST-zone pinning (WR-01 regression — no off-by-one in a non-GST host)', () => {
+  it('renders a date-only value on its GST calendar day', () => {
+    // new Date('2026-04-28') = UTC midnight → 04:00 GST → still 28 Apr, on ANY host TZ.
+    expect(formatDayFirst('2026-04-28')).toBe('Tue 28 Apr')
+    expect(formatDayFirstYear('2026-04-28')).toBe('28 Apr 2026')
+  })
+
+  it('rolls a late-UTC instant to the next GST day', () => {
+    // 22:00 UTC on 28 Apr = 02:00 GST on 29 Apr.
+    expect(formatDayFirst('2026-04-28T22:00:00Z')).toBe('Wed 29 Apr')
   })
 })
 
