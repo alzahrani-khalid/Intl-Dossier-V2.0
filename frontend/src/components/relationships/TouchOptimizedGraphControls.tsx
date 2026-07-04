@@ -86,7 +86,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
 }: TouchOptimizedGraphControlsProps) {
   const { t } = useTranslation('relationships')
   const { isRTL } = useDirection()
-// Calculate zoom percentage if not provided
+  // Calculate zoom percentage if not provided
   const displayPercentage = zoomPercentage || `${Math.round(zoomLevel * 100)}%`
 
   // Check if at zoom limits
@@ -105,9 +105,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
   }, [position, isRTL])
 
   return (
-    <div
-      className={cn('absolute z-20', getPositionClasses(), className)}
-    >
+    <div className={cn('absolute z-20', getPositionClasses(), className)}>
       <m.div
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -144,7 +142,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
         </AnimatePresence>
 
         {/* Main Control Panel */}
-        <div className="bg-card/95 backdrop-blur-md rounded-xl shadow-xl border border-border p-2 sm:p-3">
+        <div className="bg-card/95 backdrop-blur-md rounded-xl border border-border p-2 sm:p-3">
           {/* Zoom Level Indicator */}
           <div className="flex items-center justify-center mb-2 pb-2 border-b border-border">
             <m.div
@@ -166,7 +164,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
           <div className="mb-3 px-1">
             <div className="relative h-2 bg-muted rounded-full overflow-hidden">
               <m.div
-                className="absolute inset-y-0 start-0 bg-gradient-to-r from-primary to-primary/70 rounded-full"
+                className="absolute inset-y-0 start-0 bg-accent rounded-full"
                 style={{ width: `${((zoomLevel - minZoom) / (maxZoom - minZoom)) * 100}%` }}
                 layout
                 transition={{ duration: 0.2 }}
@@ -284,7 +282,6 @@ export const FloatingZoomIndicator = memo(function FloatingZoomIndicator({
   isVisible: boolean
   className?: string
 }) {
-
   return (
     <AnimatePresence>
       {isVisible && (
@@ -294,7 +291,7 @@ export const FloatingZoomIndicator = memo(function FloatingZoomIndicator({
           exit={{ opacity: 0, scale: 0.8 }}
           className={cn(
             'absolute top-1/2 start-1/2 -translate-x-1/2 -translate-y-1/2 z-30',
-            'bg-black/70 text-white px-6 py-4 rounded-2xl backdrop-blur-sm shadow-2xl',
+            'bg-black/70 text-white px-6 py-4 rounded-2xl backdrop-blur-sm',
             className,
           )}
         >
@@ -337,7 +334,7 @@ export const MobileTouchControls = memo(function MobileTouchControls({
     <div
       className={cn(
         'absolute bottom-4 start-1/2 -translate-x-1/2 z-20',
-        'bg-card/95 backdrop-blur-md rounded-full shadow-xl border border-border',
+        'bg-card/95 backdrop-blur-md rounded-full border border-border',
         'flex items-center gap-1 p-1',
         className,
       )}

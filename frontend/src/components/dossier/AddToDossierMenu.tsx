@@ -416,7 +416,7 @@ export function AddToDossierFAB({
                   {/* Label */}
                   <m.span
                     className={cn(
-                      'rounded-md bg-popover px-2 py-1 text-sm font-medium text-popover-foreground shadow-md',
+                      'rounded-md border border-line bg-popover px-2 py-1 text-sm font-medium text-popover-foreground',
                       'whitespace-nowrap',
                       isRTL ? 'order-2' : 'order-1',
                     )}
@@ -431,7 +431,7 @@ export function AddToDossierFAB({
                   <Button
                     variant="secondary"
                     className={cn(
-                      'rounded-full shadow-md hover:shadow-lg transition-shadow',
+                      'rounded-full shadow-lg',
                       miniSize[size],
                       isRTL ? 'order-1' : 'order-2',
                     )}
@@ -449,7 +449,7 @@ export function AddToDossierFAB({
         {/* Main FAB */}
         <Button
           variant="default"
-          className={cn('rounded-full shadow-lg hover:shadow-xl transition-all', fabSize[size])}
+          className={cn('rounded-full shadow-lg transition-all', fabSize[size])}
           onClick={() => setIsExpanded(!isExpanded)}
           aria-label={isExpanded ? t('addToDossier.close') : t('addToDossier.title')}
           aria-expanded={isExpanded}
@@ -504,7 +504,7 @@ export function AddToDossierCard({
   }
 
   return (
-    <div className={cn('rounded-lg border bg-card text-card-foreground shadow-sm', className)}>
+    <div className={cn('rounded-lg border bg-card text-card-foreground', className)}>
       {/* Header */}
       <div className="px-4 py-3 border-b">
         <h3 className="text-sm font-semibold">{t('addToDossier.title')}</h3>

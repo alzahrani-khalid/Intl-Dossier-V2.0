@@ -159,8 +159,6 @@ export function CountryMapImage({
           className={cn(
             'object-contain w-full h-full transition-opacity duration-300',
             isLoading ? 'opacity-0' : 'opacity-100',
-            // Add subtle filter for better visual integration
-            'filter drop-shadow-sm',
           )}
           style={{
             // Ensure map doesn't exceed container

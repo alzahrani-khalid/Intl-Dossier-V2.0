@@ -353,7 +353,7 @@ export function RelationshipGraph({
 
       {/* Network Graph - Enhanced Responsive with Touch Controls - Theme aware */}
       <LtrIsolate>
-        <Card className="relative h-[700px] sm:h-[800px] md:h-[900px] overflow-hidden shadow-xl border-2 border-border">
+        <Card className="relative h-[700px] sm:h-[800px] md:h-[900px] overflow-hidden border-2 border-border">
           {/* Touch gesture container */}
           <div
             className="absolute inset-0 z-10 pointer-events-none"

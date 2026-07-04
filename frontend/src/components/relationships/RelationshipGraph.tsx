@@ -74,7 +74,7 @@ function ContactNode({ data }: { data: any }) {
 
   return (
     <Card
-      className={`p-3 min-w-[180px] sm:min-w-[200px] cursor-pointer transition-shadow hover:shadow-md ${
+      className={`p-3 min-w-[180px] sm:min-w-[200px] cursor-pointer ${
         isCenter ? 'ring-2 ring-primary' : ''
       }`}
     >

@@ -49,7 +49,7 @@ function RelatedDossierCard({ dossier, isRTL }: { dossier: RelatedDossier; isRTL
 
   return (
     <Link to={getDossierDetailPath(dossier.id, dossier.type)}>
-      <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
+      <Card className="cursor-pointer h-full">
         <CardContent className="p-3 sm:p-4">
           <div className="flex items-start gap-3">
             <div className="p-2 rounded-lg bg-primary/10 shrink-0">

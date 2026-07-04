@@ -113,7 +113,7 @@ function EventCard({
   }
 
   return (
-    <Card className={`hover:shadow-md transition-shadow ${variantStyles[variant]}`}>
+    <Card className={variantStyles[variant]}>
       <CardContent className="p-3 sm:p-4">
         <div className="flex items-start gap-3">
           <div className={`p-2 rounded-lg ${getEventTypeColor(event.event_type)} shrink-0`}>
