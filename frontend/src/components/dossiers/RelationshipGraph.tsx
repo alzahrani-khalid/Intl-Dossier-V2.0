@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Loader2 } from 'lucide-react'
+import { Loader2, TriangleAlert, Link2 } from 'lucide-react'
 import { CenterNode, RelatedNode } from './CustomNodes'
 import { CustomEdge } from './CustomEdges'
 import {
@@ -296,7 +296,7 @@ export function RelationshipGraph({
       <Card className="p-12 text-center bg-destructive/10 border-destructive/20">
         <div className="flex flex-col items-center gap-3">
           <div className="h-12 w-12 rounded-full bg-destructive/20 flex items-center justify-center">
-            <span className="text-2xl">⚠️</span>
+            <TriangleAlert className="h-6 w-6 text-destructive" />
           </div>
           <p className="text-destructive font-medium">{t('relationships.errors.loadFailed')}</p>
         </div>
@@ -309,7 +309,7 @@ export function RelationshipGraph({
       <Card className="p-12 text-center bg-muted/30">
         <div className="flex flex-col items-center gap-3">
           <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center">
-            <span className="text-3xl">🔗</span>
+            <Link2 className="h-8 w-8 text-muted-foreground" />
           </div>
           <p className="text-muted-foreground text-lg">{t('relationships.no_relationships')}</p>
         </div>
