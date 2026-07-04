@@ -12,7 +12,7 @@
 
   "metrics": {
     "title": "إنتاجيتك",
-    "completed30d": "مكتملة (٣٠ يوم)",
+    "completed30d": "مكتملة (30 يوم)",
     "onTimeRate": "نسبة الالتزام",
     "avgCompletionTime": "متوسط الإنجاز",
     "hoursShort": "{{value}} س",
