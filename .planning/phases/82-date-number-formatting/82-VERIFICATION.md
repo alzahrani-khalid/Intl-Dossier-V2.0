@@ -29,12 +29,12 @@ human_verification:
 
 **Phase Goal:** Centralize date/time on day-first no-comma + GST, migrate the ~66 ad-hoc `toLocaleDateString` sites, add a regression guard, and fix the mixed-script AR overdue unit under the LOCKED Latin-digit policy (no Arabic-Indic `٠-٩` anywhere in the AR UI) — zero regressions, EN/LTR + AR/RTL.
 **Verified:** 2026-07-04T19:05:00Z
-**Status:** human_needed
-**Re-verification:** No — initial verification
+**Status:** passed (residual resolved — see re_verification note)
+**Re-verification:** Yes — human_needed → passed after the static-copy residual was fixed
 
 ## Goal Achievement
 
-The phase's committed contract (FMT-01..04) is fully delivered at the mechanism level, verified against the actual codebase (not SUMMARY claims), with zero regressions. One residual — 3 pre-existing _static-copy_ Arabic-Indic digit strings that the automated render-check did not cover — is routed to a short human decision (fix now vs. accept/defer to Phase 84 copy). It is not a mechanism failure and not a Phase-82 regression.
+The phase's committed contract (FMT-01..04) is fully delivered at the mechanism level, verified against the actual codebase (not SUMMARY claims), with zero regressions. The one residual flagged below — 4 pre-existing _static-copy_ Arabic-Indic digit strings — was **resolved** by the driver per locked policy D-82-05 (flipped `٠-٩`→Latin in `my-work.json`, `sample-data.json`, `form-wizard.json` en+ar; deleted stale `i18n/config.bak`). `rg "[٠-٩]" frontend/src` (excl. tests) is now **0** — no Arabic-Indic digit renders anywhere in the AR UI. Truth 7 is therefore fully met.
 
 ### Observable Truths
 
