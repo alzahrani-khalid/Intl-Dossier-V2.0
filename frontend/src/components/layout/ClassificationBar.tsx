@@ -30,6 +30,7 @@ import type { JSX } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useClassification } from '@/design-system/hooks'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { useAuthStore } from '@/store/authStore'
 
 /**
@@ -65,17 +66,13 @@ function readLevel(): string {
 
 export function ClassificationBar(): JSX.Element | null {
   const { classif } = useClassification()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const user = useAuthStore((s) => s.user)
 
   if (!classif) return null
 
   const level = readLevel()
-  const dateLabel = new Intl.DateTimeFormat(i18n.language === 'ar' ? 'ar-SA-u-nu-arab' : 'en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }).format(new Date())
+  const dateLabel = formatDayFirstYear(new Date())
   const nameSource = user?.name ?? user?.email ?? ''
   const initials = getInitials(nameSource)
 

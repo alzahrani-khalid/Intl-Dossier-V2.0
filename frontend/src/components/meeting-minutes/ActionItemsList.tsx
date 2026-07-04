@@ -218,7 +218,7 @@ export function ActionItemsList({
                             )}
                           >
                             <Calendar className="h-3 w-3" />
-                            {format(new Date(item.due_date), 'MMM d')}
+                            {format(new Date(item.due_date), 'd MMM')}
                           </span>
                         )}
 

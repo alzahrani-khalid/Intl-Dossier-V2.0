@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GlobeSpinner } from '@/components/signature-visuals'
 import { getISOWeek } from '@/lib/date/getISOWeek'
+import { formatDateTime } from '@/lib/format-date'
 import { FilterPill } from './FilterPill'
 import { ToolbarSearch } from './ToolbarSearch'
 
@@ -156,16 +157,7 @@ export function EngagementsList({
                   >
                     <div className="font-medium truncate min-w-0">{title}</div>
                     <div className="text-sm text-muted-foreground truncate min-w-0">
-                      {new Date(row.starts_at).toLocaleString(
-                        i18n.language === 'ar' ? 'ar-SA' : 'en-US',
-                        {
-                          weekday: 'short',
-                          month: 'short',
-                          day: 'numeric',
-                          hour: 'numeric',
-                          minute: '2-digit',
-                        },
-                      )}
+                      {formatDateTime(row.starts_at)}
                       {row.location !== undefined && row.location !== ''
                         ? ` · ${row.location}`
                         : ''}

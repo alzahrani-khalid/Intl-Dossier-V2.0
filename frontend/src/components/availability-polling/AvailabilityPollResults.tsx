@@ -10,6 +10,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { format, parseISO } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
+import { formatDayFirst } from '@/lib/format-date'
 import {
   Check,
   X,
@@ -217,7 +218,7 @@ export function AvailabilityPollResults({
                       {/* Date & Time */}
                       <div className="flex-1 min-w-0">
                         <div className="font-medium flex items-center gap-2">
-                          {format(startDate, 'EEEE, MMMM d', { locale: dateLocale })}
+                          {formatDayFirst(startDate)}
                           {isSelected && (
                             <Badge variant="outline" className="text-success border-success">
                               {t('slots.selectedSlot')}
@@ -389,7 +390,7 @@ export function AvailabilityPollResults({
                     {slots.slice(0, 5).map((slot) => (
                       <TableHead key={slot.id} className="text-center min-w-[100px]">
                         <div className="text-xs">
-                          {format(parseISO(slot.slot_start), 'MMM d', { locale: dateLocale })}
+                          {format(parseISO(slot.slot_start), 'd MMM', { locale: dateLocale })}
                         </div>
                         <div className="text-xs text-muted-foreground">
                           {format(parseISO(slot.slot_start), 'h:mm a', { locale: dateLocale })}

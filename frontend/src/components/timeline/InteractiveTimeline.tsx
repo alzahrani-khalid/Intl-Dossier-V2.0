@@ -19,6 +19,7 @@ import { StickyNote, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
+import { toFormatLocale } from '@/lib/format-locale'
 import { UnifiedVerticalTimeline } from './UnifiedVerticalTimeline'
 import { TimelineFilters } from './TimelineFilters'
 import { TimelineZoomControls, useTimelineZoom } from './TimelineZoomControls'
@@ -187,7 +188,7 @@ function formatDateLabel(date: Date, zoomLevel: TimelineZoomLevel, locale: strin
       return locale === 'ar' ? 'كل الوقت' : 'All Time'
   }
 
-  return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-SA' : 'en-US', options).format(date)
+  return new Intl.DateTimeFormat(toFormatLocale(locale), options).format(date)
 }
 
 export function InteractiveTimeline({

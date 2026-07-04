@@ -33,6 +33,7 @@ import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useOutsideClick } from '@/hooks/useOutsideClick'
 import { cn } from '@/lib/utils'
+import { formatDayFirstYear, formatTime } from '@/lib/format-date'
 import { resolveTimelineNavUrl } from '@/lib/timeline-navigation'
 import type { UnifiedTimelineEvent } from '@/types/timeline.types'
 import { useDirection } from '@/hooks/useDirection'
@@ -105,29 +106,6 @@ const getStatusColor = (status: string): string => {
 }
 
 /**
- * Format date for display
- */
-const formatEventDate = (dateString: string, locale: string): string => {
-  const date = new Date(dateString)
-  return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-SA' : 'en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  }).format(date)
-}
-
-/**
- * Format time for display
- */
-const formatEventTime = (dateString: string, locale: string): string => {
-  const date = new Date(dateString)
-  return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-SA' : 'en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(date)
-}
-
-/**
  * Close icon component
  */
 function CloseIcon() {
@@ -158,7 +136,7 @@ export function EnhancedVerticalTimelineCard({
   event,
   index: _index,
 }: EnhancedVerticalTimelineCardProps) {
-  const { t, i18n } = useTranslation('dossier')
+  const { t } = useTranslation('dossier')
   const navigate = useNavigate()
   const { isRTL } = useDirection()
   const [isActive, setIsActive] = useState(false)
@@ -169,8 +147,8 @@ export function EnhancedVerticalTimelineCard({
   const eventColorClass = getEventColor(event.event_type)
   const title = isRTL ? event.title_ar : event.title_en
   const description = isRTL ? event.description_ar : event.description_en
-  const formattedDate = formatEventDate(event.event_date, i18n.language)
-  const formattedTime = formatEventTime(event.event_date, i18n.language)
+  const formattedDate = formatDayFirstYear(event.event_date)
+  const formattedTime = formatTime(event.event_date)
 
   // OVRERR-02: gate navigation on the shared mounted-route guard. When the
   // server/DB-sourced navigation_url is unmounted or unsafe, navUrl is null and

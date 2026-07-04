@@ -35,6 +35,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
+import { formatDateTime } from '@/lib/format-date'
 import { resolveTimelineNavUrl } from '@/lib/timeline-navigation'
 import type { UnifiedTimelineEvent } from '@/types/timeline.types'
 import { useDirection } from '@/hooks/useDirection'
@@ -90,22 +91,8 @@ const getStatusColor = (status: string): string => {
   return colorMap[status] || colorMap.planned!
 }
 
-/**
- * Format date for display
- */
-const formatEventDate = (dateString: string, locale: string): string => {
-  const date = new Date(dateString)
-  return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-SA' : 'en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(date)
-}
-
 export function TimelineEventCard({ event, isFirst, isLast, className }: TimelineEventCardProps) {
-  const { t, i18n } = useTranslation('dossier')
+  const { t } = useTranslation('dossier')
   const navigate = useNavigate()
   const { isRTL } = useDirection()
   const [isExpanded, setIsExpanded] = useState(false)
@@ -113,7 +100,7 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
   const EventIcon = getEventIcon(event.event_type)
   const title = isRTL ? event.title_ar : event.title_en
   const description = isRTL ? event.description_ar : event.description_en
-  const formattedDate = formatEventDate(event.event_date, i18n.language)
+  const formattedDate = formatDateTime(event.event_date)
 
   // OVRERR-02: gate navigation on the shared mounted-route guard. When the
   // server/DB-sourced navigation_url is unmounted or unsafe, navUrl is null and
