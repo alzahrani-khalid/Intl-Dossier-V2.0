@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
 status: executing
-last_updated: '2026-07-04T17:52:32.952Z'
+last_updated: '2026-07-04T18:14:19.734Z'
 last_activity: 2026-07-04
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 17
-  completed_plans: 12
+  completed_plans: 13
   percent: 50
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Mil
 ## Current Position
 
 Phase: 83 (token-debt-consolidation) — EXECUTING
-Plan: 3 of 7
+Plan: 4 of 7
 Status: Ready to execute
 Last activity: 2026-07-04
 
-Progress: [███████░░░] 71%
+Progress: [████████░░] 76%
 
 Last activity: 2026-07-04 — Plan 83-01 complete (token-debt dead-code deletion — Wave 1). Deleted 20 verified-dead frontend files: 8 zero-importer aceternity/shadcn `components/ui/` orphans (`background-boxes`, `floating-dock`, `animated-tooltip`, `moving-border`, `placeholders-and-vanish-input`, `related-entity-carousel`, `enhanced-progress`, `chart`), the whole `components/timeline/` dir (8 components + `__tests__` + `index.ts`), `styles/vertical-timeline.css`, and `App.css` (Vite leftover). Dropped `react-vertical-timeline-component` + `@types/...` from package.json; regenerated pnpm-lock (47 lines). Per-file liveness re-grep run before every `git rm`. **Deviation (Rule 1 / plan STOP-directive):** the `world-map` chain that RESEARCH marked dead is actually LIVE — `routes/_protected/geographic-visualization.tsx` → `GeographicVisualizationPage` → `WorldMapVisualization` → lazy `ui/world-map`; both files LEFT IN PLACE per the plan's stop-on-real-importer rule (their token debt falls to a Wave-2 slice). Closed DEBT-07's `!important` row-height half (`rg` gate → 0); ~35 hex / ~25 Tailwind literals / ~8 gradients removed from DEBT-01/02/05. Added a Phase-83 regression-guard block to `check-deleted-components.sh` (excludes world-map). Carve-outs (list-pages.css, tokens/, bootstrap.js, index.css :root, types/\*) byte-untouched. Verify all green: type-check exit 0, build exit 0, full vitest 194 files / 1452 tests pass, check-deleted-components exit 0. Commits: ca13490a (deletions + registry + guard) / d7002b96 (dep drop). Requirements DEBT-07/DEBT-01/DEBT-02/DEBT-05 advanced.
 
@@ -161,6 +161,8 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase 80]: 80-04 VERIFY-01 visual re-compare: human diff-triage APPROVED all 43 surfaces - 39 intended-Linear (rows 16/17 also dynamic-content), 4 within-tolerance passes, ZERO regressions; recapture deferred to Plan 80-05 (anti-laundering: no baseline PNG modified, no --update-snapshots). VERIFY-01 stays open until 80-05.
 - [Phase ?]: FMT-03 guard is a node:fs script (not ESLint) wired into pnpm lint; render-verified AR acceptance caught 2 grep-invisible D-82-01/05 stragglers
 - [Phase 83]: 83-02: DEBT-01 chart-palette module shipped additively — --chart-1..8 in all three byte-matched holders + guard extended (three-copy invariant now CI-enforced for chart vars). chart-7 violet h300 the only new hue (dark #ba9cef, light #6b46a0); 7/8 byte-copy AA-proven status/danger fgs. Zero consumer migration (Wave-2 consumes).
+- [Phase ?]: 83-03: recharts fills/props consume var(--chart-N)/semantic-token strings; color-mix(in srgb, <token> 12.5%, transparent) replaces the ${hex}20 alpha concat (breaks with var() tokens)
+- [Phase ?]: 83-03: analytics.types.ts hex color constants left unmigrated (outside slice + not in any 83-0X files_modified) — flagged for phase to assign ownership before DEBT-01 fully closes for analytics
 
 ### Open Todos
 
