@@ -35,6 +35,7 @@ import { SLA_STATUS_CONFIG } from '@/types/sla.types'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDateTime } from '@/lib/format-date'
 
 function StatusBadge({ status, isRTL }: { status: SLAEscalationStatus; isRTL: boolean }) {
   const config = SLA_STATUS_CONFIG[status]
@@ -114,15 +115,7 @@ export function SLAEscalationsList({
     )
   }
 
-  const formatTimestamp = (timestamp: string) => {
-    const date = new Date(timestamp)
-    return date.toLocaleString(isRTL ? 'ar-SA' : 'en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  }
+  const formatTimestamp = (timestamp: string): string => formatDateTime(timestamp)
 
   return (
     <Card className={className}>

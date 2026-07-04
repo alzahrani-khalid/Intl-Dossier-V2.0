@@ -7,6 +7,7 @@
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { format } from 'date-fns'
 import {
   LineChart,
   Line,
@@ -31,6 +32,7 @@ import { DEFAULT_CHART_COLORS } from '@/types/analytics.types'
 import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
+import { toFormatLocale } from '@/lib/format-locale'
 
 function EngagementCustomTooltip({ active, payload, label, isRTL }: any) {
   if (active && payload && payload.length) {
@@ -42,7 +44,7 @@ function EngagementCustomTooltip({ active, payload, label, isRTL }: any) {
             <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.color }} />
             <span className="text-muted-foreground">{entry.name}:</span>
             <span className="font-medium">
-              {entry.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+              {entry.value.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
             </span>
           </div>
         ))}
@@ -62,7 +64,7 @@ function EngagementPieTooltip({ active, payload, isRTL }: any) {
           <span className="font-medium">{item.name}</span>
         </div>
         <div className="text-sm text-muted-foreground mt-1">
-          {item.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')} (
+          {item.value.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))} (
           {item.payload.percentage?.toFixed(1)}%)
         </div>
       </div>
@@ -101,12 +103,9 @@ export function EngagementMetricsChart({
     if (!data?.engagementTrend) return []
     return data.engagementTrend.map((point) => ({
       ...point,
-      dateLabel: new Date(point.date).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-        month: 'short',
-        day: 'numeric',
-      }),
+      dateLabel: format(new Date(point.date), 'd MMM'),
     }))
-  }, [data?.engagementTrend, isRTL])
+  }, [data?.engagementTrend])
 
   const typeData = useMemo(() => {
     if (!data?.engagementsByType) return []

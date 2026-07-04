@@ -30,6 +30,7 @@ import { PRIORITY_COLORS } from '@/types/analytics.types'
 import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
+import { toFormatLocale } from '@/lib/format-locale'
 
 function WorkloadCustomTooltip({ active, payload, label, isRTL }: any) {
   if (active && payload && payload.length) {
@@ -41,7 +42,7 @@ function WorkloadCustomTooltip({ active, payload, label, isRTL }: any) {
             <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.color }} />
             <span className="text-muted-foreground">{entry.name}:</span>
             <span className="font-medium">
-              {entry.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+              {entry.value.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
             </span>
           </div>
         ))}
@@ -61,7 +62,7 @@ function WorkloadPieTooltip({ active, payload, isRTL }: any) {
           <span className="font-medium">{item.name}</span>
         </div>
         <div className="text-sm text-muted-foreground mt-1">
-          {item.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')} (
+          {item.value.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))} (
           {item.payload.percentage?.toFixed(1)}%)
         </div>
       </div>
@@ -89,7 +90,7 @@ export function WorkloadDistributionChart({
 }: WorkloadDistributionChartProps) {
   const { t } = useTranslation('analytics')
   const { isRTL } = useDirection()
-const userWorkloadData = useMemo(() => {
+  const userWorkloadData = useMemo(() => {
     if (!data?.byUser) return []
     return data.byUser.slice(0, 10).map((user) => ({
       ...user,
@@ -180,40 +181,47 @@ const userWorkloadData = useMemo(() => {
 
           <TabsContent value="users" className="h-64 sm:h-80">
             {userWorkloadData.length > 0 ? (
-              <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={userWorkloadData}
-                  layout="vertical"
-                  margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 100, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                  <XAxis type="number" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
-                  <YAxis
-                    type="category"
-                    dataKey="name"
-                    tick={{ fontSize: 12 }}
-                    tickLine={false}
-                    axisLine={false}
-                    width={90}
-                  />
-                  <Tooltip content={<WorkloadCustomTooltip isRTL={isRTL} />} />
-                  <Legend />
-                  <Bar
-                    dataKey="totalItems"
-                    name={t('workload.totalItems')}
-                    fill="#3B82F6"
-                    radius={[0, 4, 4, 0]}
-                    stackId="a"
-                  />
-                  <Bar
-                    dataKey="overdueItems"
-                    name={t('workload.overdueItems')}
-                    fill="#EF4444"
-                    radius={[0, 4, 4, 0]}
-                    stackId="b"
-                  />
-                </BarChart>
-              </ResponsiveContainer></LtrIsolate>
+              <LtrIsolate className="h-full w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={userWorkloadData}
+                    layout="vertical"
+                    margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 100, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 12 }}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="name"
+                      tick={{ fontSize: 12 }}
+                      tickLine={false}
+                      axisLine={false}
+                      width={90}
+                    />
+                    <Tooltip content={<WorkloadCustomTooltip isRTL={isRTL} />} />
+                    <Legend />
+                    <Bar
+                      dataKey="totalItems"
+                      name={t('workload.totalItems')}
+                      fill="#3B82F6"
+                      radius={[0, 4, 4, 0]}
+                      stackId="a"
+                    />
+                    <Bar
+                      dataKey="overdueItems"
+                      name={t('workload.overdueItems')}
+                      fill="#EF4444"
+                      radius={[0, 4, 4, 0]}
+                      stackId="b"
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </LtrIsolate>
             ) : (
               <div className="h-full flex items-center justify-center text-muted-foreground">
                 {t('errors.noData')}

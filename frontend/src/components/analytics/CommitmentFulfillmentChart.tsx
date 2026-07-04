@@ -7,6 +7,7 @@
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { format } from 'date-fns'
 import {
   LineChart,
   Line,
@@ -30,6 +31,7 @@ import type { CommitmentFulfillment } from '@/types/analytics.types'
 import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
+import { toFormatLocale } from '@/lib/format-locale'
 
 function CommitmentCustomTooltip({ active, payload, label, isRTL }: any) {
   if (active && payload && payload.length) {
@@ -43,7 +45,7 @@ function CommitmentCustomTooltip({ active, payload, label, isRTL }: any) {
             <span className="font-medium">
               {entry.dataKey === 'value'
                 ? `${entry.value.toFixed(1)}%`
-                : entry.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+                : entry.value.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
             </span>
           </div>
         ))}
@@ -63,7 +65,7 @@ function CommitmentPieTooltip({ active, payload, isRTL }: any) {
           <span className="font-medium">{item.name}</span>
         </div>
         <div className="text-sm text-muted-foreground mt-1">
-          {item.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')} (
+          {item.value.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))} (
           {item.payload.percentage?.toFixed(1)}%)
         </div>
       </div>
@@ -104,16 +106,13 @@ export function CommitmentFulfillmentChart({
 }: CommitmentFulfillmentChartProps) {
   const { t } = useTranslation('analytics')
   const { isRTL } = useDirection()
-const trendData = useMemo(() => {
+  const trendData = useMemo(() => {
     if (!data?.fulfillmentTrend) return []
     return data.fulfillmentTrend.map((point) => ({
       ...point,
-      dateLabel: new Date(point.date).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-        month: 'short',
-        day: 'numeric',
-      }),
+      dateLabel: format(new Date(point.date), 'd MMM'),
     }))
-  }, [data?.fulfillmentTrend, isRTL])
+  }, [data?.fulfillmentTrend])
 
   const statusData = useMemo(() => {
     if (!data) return []
@@ -216,97 +215,103 @@ const trendData = useMemo(() => {
           </TabsList>
 
           <TabsContent value="status" className="h-64 sm:h-72">
-            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={statusData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={80}
-                  paddingAngle={2}
-                  dataKey="value"
-                  nameKey="name"
-                  label={(props: any) => `${props.name}: ${props.percentage?.toFixed(0) ?? 0}%`}
-                  labelLine={{ strokeWidth: 1 }}
-                >
-                  {statusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.fill} />
-                  ))}
-                </Pie>
-                <Tooltip content={<CommitmentPieTooltip isRTL={isRTL} />} />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer></LtrIsolate>
+            <LtrIsolate className="h-full w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={statusData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={80}
+                    paddingAngle={2}
+                    dataKey="value"
+                    nameKey="name"
+                    label={(props: any) => `${props.name}: ${props.percentage?.toFixed(0) ?? 0}%`}
+                    labelLine={{ strokeWidth: 1 }}
+                  >
+                    {statusData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<CommitmentPieTooltip isRTL={isRTL} />} />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </LtrIsolate>
           </TabsContent>
 
           <TabsContent value="trend" className="h-64 sm:h-72">
-            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={trendData}
-                margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis
-                  dataKey="dateLabel"
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  reversed={isRTL}
-                />
-                <YAxis
-                  domain={[0, 100]}
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(value) => `${value}%`}
-                  orientation={isRTL ? 'right' : 'left'}
-                />
-                <Tooltip content={<CommitmentCustomTooltip isRTL={isRTL} />} />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  name={t('commitments.fulfillmentRate')}
-                  stroke="#3B82F6"
-                  strokeWidth={2}
-                  dot={{ r: 3 }}
-                  activeDot={{ r: 5 }}
-                />
-              </LineChart>
-            </ResponsiveContainer></LtrIsolate>
+            <LtrIsolate className="h-full w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={trendData}
+                  margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis
+                    dataKey="dateLabel"
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                    reversed={isRTL}
+                  />
+                  <YAxis
+                    domain={[0, 100]}
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(value) => `${value}%`}
+                    orientation={isRTL ? 'right' : 'left'}
+                  />
+                  <Tooltip content={<CommitmentCustomTooltip isRTL={isRTL} />} />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    name={t('commitments.fulfillmentRate')}
+                    stroke="#3B82F6"
+                    strokeWidth={2}
+                    dot={{ r: 3 }}
+                    activeDot={{ r: 5 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </LtrIsolate>
           </TabsContent>
 
           <TabsContent value="source" className="h-64 sm:h-72">
-            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={sourceData}
-                margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis dataKey="name" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
-                <YAxis
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  orientation={isRTL ? 'right' : 'left'}
-                />
-                <Tooltip content={<CommitmentCustomTooltip isRTL={isRTL} />} />
-                <Legend />
-                <Bar
-                  dataKey="total"
-                  name={t('commitments.total')}
-                  fill="#9CA3AF"
-                  radius={[4, 4, 0, 0]}
-                />
-                <Bar
-                  dataKey="completed"
-                  name={t('commitments.completed')}
-                  fill="#10B981"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer></LtrIsolate>
+            <LtrIsolate className="h-full w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={sourceData}
+                  margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis dataKey="name" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                  <YAxis
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                    orientation={isRTL ? 'right' : 'left'}
+                  />
+                  <Tooltip content={<CommitmentCustomTooltip isRTL={isRTL} />} />
+                  <Legend />
+                  <Bar
+                    dataKey="total"
+                    name={t('commitments.total')}
+                    fill="#9CA3AF"
+                    radius={[4, 4, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="completed"
+                    name={t('commitments.completed')}
+                    fill="#10B981"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </LtrIsolate>
           </TabsContent>
         </Tabs>
 

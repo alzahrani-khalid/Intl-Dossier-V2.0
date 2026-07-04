@@ -13,6 +13,7 @@ import type { SLADashboardOverview } from '@/types/sla.types'
 import { getComplianceThreshold, formatSLADuration, formatSLADurationAr } from '@/types/sla.types'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { toFormatLocale } from '@/lib/format-locale'
 
 interface SLAOverviewCardsProps {
   data?: SLADashboardOverview
@@ -73,14 +74,14 @@ export function SLAOverviewCards({ data, isLoading, className }: SLAOverviewCard
     },
     {
       title: t('overview.totalItems'),
-      value: data.total_items.toLocaleString(isRTL ? 'ar-SA' : 'en-US'),
+      value: data.total_items.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en')),
       icon: <Clock className="h-5 w-5 text-info" />,
       subtitle: t('overview.processed'),
       subtitleColor: 'text-muted-foreground',
     },
     {
       title: t('overview.atRisk'),
-      value: data.at_risk_count.toLocaleString(isRTL ? 'ar-SA' : 'en-US'),
+      value: data.at_risk_count.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en')),
       icon: <AlertTriangle className="h-5 w-5 text-warning" />,
       subtitle: t('overview.approachingDeadline'),
       subtitleColor: data.at_risk_count > 0 ? 'text-warning' : 'text-muted-foreground',
@@ -88,7 +89,7 @@ export function SLAOverviewCards({ data, isLoading, className }: SLAOverviewCard
     },
     {
       title: t('overview.breached'),
-      value: data.breached_count.toLocaleString(isRTL ? 'ar-SA' : 'en-US'),
+      value: data.breached_count.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en')),
       icon: <XCircle className="h-5 w-5 text-danger" />,
       subtitle: t('overview.requiresAttention'),
       subtitleColor: data.breached_count > 0 ? 'text-danger' : 'text-muted-foreground',
