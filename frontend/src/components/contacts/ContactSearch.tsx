@@ -27,6 +27,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import type { TFunction } from 'i18next'
 import type { ContactSearchParams } from '@/services/contact-api'
 import type { Database } from '@/types/contact-directory.types'
 import { useDirection } from '@/hooks/useDirection'
@@ -126,7 +127,7 @@ export function ContactSearch({
               <span className="sr-only">{t('contactDirectory.search.filters')}</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side={isRTL ? 'left' : 'right'} className="w-full sm:max-w-md">
+          <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
             <SheetHeader>
               <SheetTitle>{t('contactDirectory.search.filters')}</SheetTitle>
               <SheetDescription>{t('contactDirectory.search.refine_search')}</SheetDescription>
@@ -143,7 +144,6 @@ export function ContactSearch({
                 setSortBy={setSortBy}
                 sortOrder={sortOrder}
                 setSortOrder={setSortOrder}
-                isRTL={isRTL}
                 t={t}
               />
               <div className="flex gap-2 pt-4">
@@ -172,7 +172,6 @@ export function ContactSearch({
           setSortBy={setSortBy}
           sortOrder={sortOrder}
           setSortOrder={setSortOrder}
-          isRTL={isRTL}
           t={t}
         />
       </div>
@@ -206,6 +205,20 @@ export function ContactSearch({
 }
 
 // Filter content component (shared between desktop and mobile)
+interface FilterContentProps {
+  organizations: Organization[]
+  tags: Array<{ id: string; name: string; color?: string; category?: string }>
+  organizationId: string
+  setOrganizationId: (value: string) => void
+  selectedTags: string[]
+  toggleTag: (tagId: string) => void
+  sortBy: 'name' | 'organization' | 'created_at' | 'updated_at'
+  setSortBy: (value: 'name' | 'organization' | 'created_at' | 'updated_at') => void
+  sortOrder: 'asc' | 'desc'
+  setSortOrder: (value: 'asc' | 'desc') => void
+  t: TFunction
+}
+
 function FilterContent({
   organizations,
   tags,
@@ -218,7 +231,7 @@ function FilterContent({
   sortOrder,
   setSortOrder,
   t,
-}: any) {
+}: FilterContentProps) {
   return (
     <>
       {/* Organization Filter */}
@@ -279,7 +292,12 @@ function FilterContent({
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-2">
           <label className="text-sm font-medium">{t('contactDirectory.search.sort_by')}</label>
-          <Select value={sortBy} onValueChange={setSortBy}>
+          <Select
+            value={sortBy}
+            onValueChange={(value) =>
+              setSortBy(value as 'name' | 'organization' | 'created_at' | 'updated_at')
+            }
+          >
             <SelectTrigger className="h-10">
               <SelectValue />
             </SelectTrigger>
@@ -297,7 +315,10 @@ function FilterContent({
 
         <div className="space-y-2">
           <label className="text-sm font-medium">{t('contactDirectory.search.order')}</label>
-          <Select value={sortOrder} onValueChange={setSortOrder}>
+          <Select
+            value={sortOrder}
+            onValueChange={(value) => setSortOrder(value as 'asc' | 'desc')}
+          >
             <SelectTrigger className="h-10">
               <SelectValue />
             </SelectTrigger>

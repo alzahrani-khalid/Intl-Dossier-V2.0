@@ -41,7 +41,6 @@ import { CommitmentForm } from './CommitmentForm'
 import { EvidenceUpload } from './EvidenceUpload'
 import { DeliverablesTimeline } from './deliverables'
 import { DossierLinksWidget } from '@/components/dossier'
-import { useDirection } from '@/hooks/useDirection'
 
 export interface CommitmentDetailDrawerProps {
   commitmentId: string | null
@@ -55,7 +54,6 @@ export function CommitmentDetailDrawer({
   onOpenChange,
 }: CommitmentDetailDrawerProps) {
   const { t, i18n } = useTranslation('commitments')
-  const { isRTL } = useDirection()
   // State
   const [isEditing, setIsEditing] = useState(false)
   const [showUploadDialog, setShowUploadDialog] = useState(false)
@@ -120,7 +118,7 @@ export function CommitmentDetailDrawer({
     <>
       <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetContent
-          side={isRTL ? 'left' : 'right'}
+          side="right"
           className="w-full sm:max-w-lg overflow-y-auto"
           accessibleTitle={t('detail.title', 'Commitment Details')}
         >
@@ -179,7 +177,7 @@ export function CommitmentDetailDrawer({
                           onClick={() => setIsEditing(true)}
                           className="min-h-11 shrink-0"
                         >
-                          <Edit className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                          <Edit className="size-4 me-2" />
                           {t('actions.edit')}
                         </Button>
                       )}
@@ -321,11 +319,9 @@ export function CommitmentDetailDrawer({
                             className="min-h-11"
                           >
                             {isDownloading ? (
-                              <Loader2
-                                className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`}
-                              />
+                              <Loader2 className="size-4 animate-spin me-2" />
                             ) : (
-                              <Download className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                              <Download className="size-4 me-2" />
                             )}
                             {t('actions.downloadEvidence')}
                           </Button>
@@ -345,7 +341,7 @@ export function CommitmentDetailDrawer({
                                 onClick={() => setShowUploadDialog(true)}
                                 className="min-h-11"
                               >
-                                <Upload className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                                <Upload className="size-4 me-2" />
                                 {t('actions.uploadEvidence')}
                               </Button>
                             )}

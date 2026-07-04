@@ -55,7 +55,7 @@ export function CommitmentFilterDrawer({
 }: CommitmentFilterDrawerProps) {
   const { t } = useTranslation('commitments')
   const { isRTL } = useDirection()
-// Local state for form values
+  // Local state for form values
   const [localFilters, setLocalFilters] = useState<CommitmentFilters>(filters)
 
   // Sync local state with props when drawer opens
@@ -124,10 +124,7 @@ export function CommitmentFilterDrawer({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side={isRTL ? 'left' : 'right'}
-        className="w-full sm:max-w-md overflow-y-auto"
-      >
+      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="text-start">{t('filters.title')}</SheetTitle>
         </SheetHeader>
@@ -182,7 +179,7 @@ export function CommitmentFilterDrawer({
                 className="min-h-11"
                 onClick={() => handleOwnerTypeChange(undefined)}
               >
-                {t('actions.clearFilters').split(' ')[0]} {/* "All" or similar */}
+                {t('filters.all')}
               </Button>
               {OWNER_TYPE_OPTIONS.map((ownerType) => (
                 <Button
@@ -226,7 +223,7 @@ export function CommitmentFilterDrawer({
                         !localFilters.dueDateFrom && 'text-muted-foreground',
                       )}
                     >
-                      <CalendarIcon className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                      <CalendarIcon className="size-4 me-2" />
                       {localFilters.dueDateFrom ? (
                         format(new Date(localFilters.dueDateFrom), 'PPP', {
                           locale: isRTL ? ar : enUS,
@@ -236,7 +233,7 @@ export function CommitmentFilterDrawer({
                       )}
                       {localFilters.dueDateFrom && (
                         <X
-                          className={`size-4 ${isRTL ? 'me-auto ms-2' : 'ms-auto me-2'} opacity-50 hover:opacity-100`}
+                          className="size-4 ms-auto me-2 opacity-50 hover:opacity-100"
                           onClick={(e) => {
                             e.stopPropagation()
                             handleDateFromChange(undefined)
@@ -271,7 +268,7 @@ export function CommitmentFilterDrawer({
                         !localFilters.dueDateTo && 'text-muted-foreground',
                       )}
                     >
-                      <CalendarIcon className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                      <CalendarIcon className="size-4 me-2" />
                       {localFilters.dueDateTo ? (
                         format(new Date(localFilters.dueDateTo), 'PPP', {
                           locale: isRTL ? ar : enUS,
@@ -281,7 +278,7 @@ export function CommitmentFilterDrawer({
                       )}
                       {localFilters.dueDateTo && (
                         <X
-                          className={`size-4 ${isRTL ? 'me-auto ms-2' : 'ms-auto me-2'} opacity-50 hover:opacity-100`}
+                          className="size-4 ms-auto me-2 opacity-50 hover:opacity-100"
                           onClick={(e) => {
                             e.stopPropagation()
                             handleDateToChange(undefined)

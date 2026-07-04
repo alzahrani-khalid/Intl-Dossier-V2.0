@@ -60,6 +60,7 @@
     "status": "Status",
     "priority": "Priority",
     "ownerType": "Owner Type",
+    "all": "All",
     "overdue": "Overdue Only",
     "overdueDescription": "Show only overdue commitments",
     "dueDate": "Due Date",

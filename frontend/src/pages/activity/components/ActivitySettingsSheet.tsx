@@ -27,7 +27,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useActivityPreferences } from '@/hooks/useActivityFeed'
-import { useDirection } from '@/hooks/useDirection'
 
 interface ActivitySettingsSheetProps {
   open: boolean
@@ -36,8 +35,7 @@ interface ActivitySettingsSheetProps {
 
 export function ActivitySettingsSheet({ open, onOpenChange }: ActivitySettingsSheetProps) {
   const { t } = useTranslation('activity-feed')
-  const { isRTL } = useDirection()
-const { preferences, isLoading, updatePreferences, isUpdating } = useActivityPreferences()
+  const { preferences, isLoading, updatePreferences, isUpdating } = useActivityPreferences()
 
   const handleNotificationsChange = async (enabled: boolean) => {
     await updatePreferences({
@@ -53,10 +51,7 @@ const { preferences, isLoading, updatePreferences, isUpdating } = useActivityPre
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side={isRTL ? 'left' : 'right'}
-        className="w-full sm:max-w-md"
-      >
+      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
         <SheetHeader>
           <SheetTitle>{t('settings.title')}</SheetTitle>
           <SheetDescription>{t('settings.description')}</SheetDescription>

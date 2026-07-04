@@ -59,7 +59,7 @@ export function SampleDataTemplateSelector({
 }: SampleDataTemplateSelectorProps) {
   const { t } = useTranslation('sample-data')
   const { isRTL } = useDirection()
-const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
 
   // Use sheet on mobile, dialog on desktop
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640
@@ -82,7 +82,7 @@ const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
             const Icon = iconMap[template.icon] || Package
             const isSelected = selectedTemplate === template.slug
             const colorClasses = templateColors[template.color] || templateColors.blue
-            const iconColorClass = (templateIconColors[template.color] || templateIconColors.blue)!
+            const iconColors = (templateIconColors[template.color] || templateIconColors.blue)!
 
             return (
               <button
@@ -105,10 +105,10 @@ const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
                     <div
                       className={cn(
                         'h-5 w-5 rounded-full flex items-center justify-center',
-                        iconColorClass.replace('text-', 'bg-').replace('-600', '-500'),
+                        iconColors.iconBg,
                       )}
                     >
-                      <Check className="h-3 w-3 text-white" />
+                      <Check className="h-3 w-3 text-accent-foreground" />
                     </div>
                   </div>
                 )}
@@ -120,7 +120,7 @@ const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
                     isSelected ? 'bg-background/50' : 'bg-muted',
                   )}
                 >
-                  <Icon className={cn('h-5 w-5', iconColorClass)} />
+                  <Icon className={cn('h-5 w-5', iconColors.icon)} />
                 </div>
 
                 {/* Text */}
@@ -155,7 +155,7 @@ const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
       >
         {isPopulating ? (
           <>
-            <Loader2 className={cn('h-4 w-4 animate-spin', isRTL ? 'ms-2' : 'me-2')} />
+            <Loader2 className="h-4 w-4 animate-spin me-2" />
             {t('loading.populating')}
           </>
         ) : (

@@ -116,22 +116,15 @@ export function CommitmentDeliverablesEmptyState({
       <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col items-center justify-center py-6 sm:py-8 text-center px-4"
+        className="flex flex-col items-center justify-center py-4 text-center px-4"
       >
         {/* Hero Icon */}
-        <div className="relative mb-4 sm:mb-6">
-          <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
-            <Target className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
-          </div>
-          <div className="absolute -bottom-1 -end-1 h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-primary flex items-center justify-center">
-            <Plus className="h-4 w-4 text-primary-foreground" />
-          </div>
+        <div className="mb-3 h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+          <Target className="h-6 w-6 text-primary" />
         </div>
 
         {/* Title and Description */}
-        <h3 className="text-base sm:text-lg md:text-xl font-semibold text-foreground mb-2">
-          {t('emptyState.title')}
-        </h3>
+        <h3 className="text-base font-semibold text-foreground mb-2">{t('emptyState.title')}</h3>
         <p className="text-sm text-muted-foreground max-w-md mb-4">{t('emptyState.description')}</p>
 
         {/* Hint */}
@@ -174,7 +167,7 @@ export function CommitmentDeliverablesEmptyState({
 
         {/* Primary CTA */}
         <Button size="lg" className="mt-6 min-h-11" onClick={() => handleOpenDialog()}>
-          <Plus className={cn('h-5 w-5', isRTL ? 'ms-2' : 'me-2')} />
+          <Plus className="h-5 w-5 me-2" />
           {t('emptyState.cta')}
         </Button>
       </m.div>
