@@ -59,11 +59,11 @@ interface RelationshipGraphProps {
  * Relationship type colors
  */
 const RELATIONSHIP_COLORS = {
-  reports_to: '#ef4444', // red
-  collaborates_with: '#3b82f6', // blue
-  partner: '#10b981', // green
-  colleague: '#f59e0b', // amber
-  other: '#6b7280', // gray
+  reports_to: 'var(--danger)', // red
+  collaborates_with: 'var(--chart-1)', // blue
+  partner: 'var(--chart-3)', // green
+  colleague: 'var(--chart-4)', // amber
+  other: 'var(--ink-faint)', // gray
 } as const
 
 /**
@@ -114,7 +114,7 @@ export function RelationshipGraph({
 }: RelationshipGraphProps) {
   const { t } = useTranslation('contacts')
   const { isRTL } = useDirection()
-const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[])
+  const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[])
   const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[])
 
   /**
@@ -189,7 +189,7 @@ const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[])
       labelBgPadding: [8, 4],
       labelBgBorderRadius: 4,
       labelBgStyle: {
-        fill: '#ffffff',
+        fill: 'var(--accent-fg)',
         opacity: 0.9,
       },
       style: {
@@ -279,7 +279,10 @@ const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[])
   }
 
   return (
-    <LtrIsolate className={`rounded-lg border overflow-hidden ${className}`} style={{ height: typeof height === 'number' ? `${height}px` : height }}>
+    <LtrIsolate
+      className={`rounded-lg border overflow-hidden ${className}`}
+      style={{ height: typeof height === 'number' ? `${height}px` : height }}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
