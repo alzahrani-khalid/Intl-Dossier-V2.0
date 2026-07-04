@@ -179,7 +179,7 @@ export function CommitmentFilterDrawer({
                 className="min-h-11"
                 onClick={() => handleOwnerTypeChange(undefined)}
               >
-                {t('actions.clearFilters').split(' ')[0]} {/* "All" or similar */}
+                {t('filters.all')}
               </Button>
               {OWNER_TYPE_OPTIONS.map((ownerType) => (
                 <Button
