@@ -285,7 +285,7 @@ Plans:
    - [x] 83-03-PLAN.md — analytics + widgets slice: recharts hex→tokens, tile literals→@theme, shadows, BenchmarkPreview flattens (Wave 2)
    - [x] 83-04-PLAN.md — graphs + dossier slice: React Flow palettes→tokens, graph shadows/gradient, emoji→lucide (DEBT-08) (Wave 2)
    - [x] 83-05-PLAN.md — shadow/radius/gradient long-tail + expandable-card literals (surgical list-pages.css :294 only) (Wave 2)
-   - [ ] 83-06-PLAN.md — modern-nav + copilot: bespoke ladder deletion, consumers→DS tokens, demo flatten (DEBT-06) (Wave 2)
+   - [x] 83-06-PLAN.md — modern-nav + copilot: bespoke ladder deletion, consumers→DS tokens, demo flatten (DEBT-06) (Wave 2)
    - [ ] 83-07-PLAN.md — eslint carve-out tightening + all re-audit gates + Playwright/re-baseline + render-parity checkpoint (Wave 3)
          **UI hint**: yes
 

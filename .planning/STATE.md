@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
 status: executing
-last_updated: '2026-07-04T19:03:06.138Z'
+last_updated: '2026-07-04T19:27:12.271Z'
 last_activity: 2026-07-04
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 17
-  completed_plans: 15
+  completed_plans: 16
   percent: 50
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Mil
 ## Current Position
 
 Phase: 83 (token-debt-consolidation) — EXECUTING
-Plan: 6 of 7
+Plan: 7 of 7
 Status: Ready to execute
 Last activity: 2026-07-04
 
-Progress: [█████████░] 88%
+Progress: [█████████░] 94%
 
 Last activity: 2026-07-04 — Plan 83-01 complete (token-debt dead-code deletion — Wave 1). Deleted 20 verified-dead frontend files: 8 zero-importer aceternity/shadcn `components/ui/` orphans (`background-boxes`, `floating-dock`, `animated-tooltip`, `moving-border`, `placeholders-and-vanish-input`, `related-entity-carousel`, `enhanced-progress`, `chart`), the whole `components/timeline/` dir (8 components + `__tests__` + `index.ts`), `styles/vertical-timeline.css`, and `App.css` (Vite leftover). Dropped `react-vertical-timeline-component` + `@types/...` from package.json; regenerated pnpm-lock (47 lines). Per-file liveness re-grep run before every `git rm`. **Deviation (Rule 1 / plan STOP-directive):** the `world-map` chain that RESEARCH marked dead is actually LIVE — `routes/_protected/geographic-visualization.tsx` → `GeographicVisualizationPage` → `WorldMapVisualization` → lazy `ui/world-map`; both files LEFT IN PLACE per the plan's stop-on-real-importer rule (their token debt falls to a Wave-2 slice). Closed DEBT-07's `!important` row-height half (`rg` gate → 0); ~35 hex / ~25 Tailwind literals / ~8 gradients removed from DEBT-01/02/05. Added a Phase-83 regression-guard block to `check-deleted-components.sh` (excludes world-map). Carve-outs (list-pages.css, tokens/, bootstrap.js, index.css :root, types/\*) byte-untouched. Verify all green: type-check exit 0, build exit 0, full vitest 194 files / 1452 tests pass, check-deleted-components exit 0. Commits: ca13490a (deletions + registry + guard) / d7002b96 (dep drop). Requirements DEBT-07/DEBT-01/DEBT-02/DEBT-05 advanced.
 
@@ -166,6 +166,8 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase ?]: 83-04: graph palettes → var(--chart-N); A1 var()-in-SVG relied on Phase-58 precedent (dossiers/RelationshipGraph markerEnd var(--accent)); DEBT-03/05 partial (slice share), DEBT-08 closed
 - [Phase ?]: 83-05: world-map data-URI SVG cannot resolve var() — literals kept with ponytail; lineColor default -> var(--accent); functional arc gradient preserved
 - [Phase ?]: 83-05: rounded-xs=2px CONFIRMED in dist CSS (.rounded-xs{calc(var(--radius)\*.25)}); used named form. DEBT-03/04/05 closed for ALL slices except 83-06 (modern-nav/copilot) — NOT marked complete
+- [Phase ?]: 83-06: modern-nav re-skinned onto Linear DS tokens; bespoke shadow/radius/space/hsl ladders + glassmorphism deleted (613->190 lines); demo route kept, restyled flat
+- [Phase ?]: 83-06: bg-panel/text-content-text/bg-badge/text-icon-rail-\* are undefined no-op Tailwind classes (no @theme or config mapping); real var() consumers were the tokens-file recipes + IconButton.tsx only — deletion proven safe
 
 ### Open Todos
 
