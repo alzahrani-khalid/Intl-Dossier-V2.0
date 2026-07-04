@@ -52,14 +52,14 @@ interface ReportPreviewProps {
 }
 
 const CHART_COLORS = [
-  '#3b82f6', // blue
-  '#22c55e', // green
-  '#f59e0b', // amber
-  '#ef4444', // red
-  '#8b5cf6', // violet
-  '#06b6d4', // cyan
-  '#f97316', // orange
-  '#ec4899', // pink
+  'var(--chart-1)',
+  'var(--chart-3)',
+  'var(--chart-4)',
+  'var(--chart-8)',
+  'var(--chart-7)',
+  'var(--chart-2)',
+  'var(--chart-5)',
+  'var(--chart-6)',
 ]
 
 export function ReportPreview({
