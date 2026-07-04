@@ -262,7 +262,7 @@ Plans:
    - [x] 82-02-PLAN.md — date-site migration, components slice 1: analytics/sla-monitoring/audit/tasks/stakeholder + chart and SLA 'ar-SA' numbers (Wave 2)
    - [x] 82-03-PLAN.md — date-site migration, components slice 2: calendar/dashboard-widgets/dossier/commitments + AfterActionsTable overlap (Wave 2)
    - [x] 82-04-PLAN.md — date-site migration, pages/routes: dashboard greeting + Digest, WeekAhead, my-work numbers, BriefsPage/MyTasks overlaps (Wave 2)
-   - [ ] 82-05-PLAN.md — digit policy sweep: KCard card.overdueBy key, toArDigits deletion, 12 Indic test flips (Wave 3)
+   - [x] 82-05-PLAN.md — digit policy sweep: KCard card.overdueBy key, toArDigits deletion, 12 Indic test flips (Wave 3)
    - [ ] 82-06-PLAN.md — regression guard scripts/check-date-formatting.mjs + lint wiring + AR render verification (Wave 4)
    - [x] 82-07-PLAN.md — date-site migration, components slice 2 of 4: legislation/timeline/compliance/meeting-minutes + ClassificationBar + MeetingMinutesCard + month-first stragglers (Wave 2)
          **UI hint**: yes
