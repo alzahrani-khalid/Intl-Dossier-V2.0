@@ -13,6 +13,8 @@ describe('formatRelativeTimeShort', () => {
     sameDay.setHours(9, 42, 0, 0)
     const got = formatRelativeTimeShort(sameDay, 'en', now)
     expect(got).toBe('09:42')
+    // Latin digits in ar too (policy D — no Arabic-Indic swap).
+    expect(formatRelativeTimeShort(sameDay, 'ar', now)).toBe('09:42')
   })
 
   it('returns yday/أمس for 1 day ago', () => {
@@ -28,7 +30,7 @@ describe('formatRelativeTimeShort', () => {
     const threeDaysAgo = new Date(now)
     threeDaysAgo.setDate(now.getDate() - 3)
     expect(formatRelativeTimeShort(threeDaysAgo, 'en', now)).toBe('3d')
-    expect(formatRelativeTimeShort(threeDaysAgo, 'ar', now)).toBe('٣ي')
+    expect(formatRelativeTimeShort(threeDaysAgo, 'ar', now)).toBe('3ي')
   })
 
   it('returns localized "d MMM" for > 7 days ago in en', () => {
@@ -39,15 +41,14 @@ describe('formatRelativeTimeShort', () => {
     expect(got).toMatch(/^\d+ \w{3}$/)
   })
 
-  it('returns Arabic-Indic digits for "d MMM" in ar', () => {
+  it('returns Latin digits for "d MMM" in ar (localized month kept)', () => {
     const now = new Date('2026-05-10T12:00:00Z')
     const tenDaysAgo = new Date(now)
     tenDaysAgo.setDate(now.getDate() - 10)
     const got = formatRelativeTimeShort(tenDaysAgo, 'ar', now)
-    // No Western digits should remain.
-    expect(/[0-9]/.test(got)).toBe(false)
-    // Should contain at least one Arabic-Indic digit.
-    expect(/[٠-٩]/.test(got)).toBe(true)
+    // Policy D: Latin digits, never Arabic-Indic.
+    expect(/[0-9]/.test(got)).toBe(true)
+    expect(/[٠-٩]/.test(got)).toBe(false)
   })
 
   it('returns em-dash placeholder for invalid input', () => {
