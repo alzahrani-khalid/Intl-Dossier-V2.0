@@ -44,7 +44,7 @@ kit (Plan §3C). **Do NOT touch the verified carve-outs** (see Out of Scope).
 - [ ] **DEBT-05**: Real gradients (`modern-nav-tokens.css`, aceternity `ui/`, `dashboard-widgets/BenchmarkPreview`) are flattened to flat surface tokens. _(F11, LOW-MED)_
 - [ ] **DEBT-06**: The bespoke parallel token ladders in `styles/modern-nav-tokens.css` and `components/copilot/copilot-theme.css` are deleted; those files consume design-system tokens. _(F12, MEDIUM)_
 - [ ] **DEBT-07**: Row heights are driven by `var(--row-h)` — the `!important` pixel overrides in `styles/vertical-timeline.css` and `styles/list-pages.css` are removed. _(F13, MEDIUM)_
-- [ ] **DEBT-08**: User-visible emoji-as-UI (`sla-countdown/SLACountdown.tsx` `⚠️🔴⚡✓`, `dossiers/RelationshipGraph.tsx` empty-state `⚠️`/`🔗`) are replaced with lucide icons (legitimate data emoji — flags, reaction sets — left untouched). _(F14, LOW)_
+- [x] **DEBT-08**: User-visible emoji-as-UI (`sla-countdown/SLACountdown.tsx` `⚠️🔴⚡✓`, `dossiers/RelationshipGraph.tsx` empty-state `⚠️`/`🔗`) are replaced with lucide icons (legitimate data emoji — flags, reaction sets — left untouched). _(F14, LOW)_
 
 ### Copy / Marketing Voice (Phase 84)
 
@@ -110,7 +110,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | DEBT-05     | Phase 83 | Pending  |
 | DEBT-06     | Phase 83 | Pending  |
 | DEBT-07     | Phase 83 | Pending  |
-| DEBT-08     | Phase 83 | Pending  |
+| DEBT-08     | Phase 83 | Complete |
 | COPY-01     | Phase 84 | Pending  |
 
 **Coverage:**
