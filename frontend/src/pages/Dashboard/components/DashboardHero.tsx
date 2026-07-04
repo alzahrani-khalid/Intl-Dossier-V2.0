@@ -2,7 +2,7 @@ import { type ReactElement } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirst } from '@/lib/format-date'
 
 import { useAuth } from '@/hooks/useAuth'
 
@@ -20,19 +20,16 @@ function firstName(name: string | null | undefined, fallback: string): string {
 }
 
 export function DashboardHero(): ReactElement {
-  const { t, i18n } = useTranslation('dashboard-widgets')
+  const { t } = useTranslation('dashboard-widgets')
   const { user } = useAuth()
   const now = new Date()
 
-  // Phase-41 design voice: dates display as `Tue 28 Apr` — day-first,
-  // abbreviated weekday + month, year omitted (current year is implied),
-  // no comma. Spec source: design-system/inteldossier_handoff_design/README.md
-  // (Content fundamentals → Numbers & dates).
-  const dateLabel = new Intl.DateTimeFormat(toFormatLocale(i18n.language), {
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-  }).format(now)
+  // Dates display as `Tue 28 Apr` — day-first, abbreviated weekday + month, no
+  // comma, Latin digits in both en and ar (D-82-01). Route through the single
+  // canonical formatter so the hero matches list rows / digest timestamps; the
+  // prior ad-hoc Intl.DateTimeFormat(toFormatLocale('en')) resolved to en-US and
+  // rendered the month-first `Sat, Jul 4` shape this phase exists to eliminate.
+  const dateLabel = formatDayFirst(now)
 
   const name = firstName(user?.name, t('hero.fallbackName'))
   const greeting = t(`hero.greeting.${greetingKey(now)}`, { name })
