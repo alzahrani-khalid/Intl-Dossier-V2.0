@@ -20,7 +20,6 @@ import { format, isToday } from 'date-fns'
 
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import { DossierGlyph } from '@/components/signature-visuals'
-import { toArDigits } from '@/lib/i18n/toArDigits'
 import { cn } from '@/lib/utils'
 import type { WorkItem } from '@/types/work-item.types'
 
@@ -64,10 +63,14 @@ function kindChipClass(source: WorkItem['source']): string {
   return source === 'commitment' ? 'chip chip-accent' : 'chip chip-info'
 }
 
-function buildDueText(item: KCardItem, lang: string, t: (key: string) => string): string {
+function buildDueText(
+  item: KCardItem,
+  lang: string,
+  t: (key: string, opts?: { days?: number }) => string,
+): string {
   if (item.is_overdue && typeof item.days_until_due === 'number') {
     const n = Math.abs(item.days_until_due)
-    return `${t('card.overdue')} ${toArDigits(`${n}d`, lang)}`
+    return t('card.overdueBy', { days: n })
   }
   if (item.deadline == null) return ''
   const date = new Date(item.deadline)
@@ -75,8 +78,7 @@ function buildDueText(item: KCardItem, lang: string, t: (key: string) => string)
   if (isToday(date)) {
     return lang === 'ar' ? 'اليوم' : 'Today'
   }
-  const formatted = format(date, 'd MMM')
-  return toArDigits(formatted, lang)
+  return format(date, 'd MMM')
 }
 
 export function KCard({ item, onItemClick, dndEnabled = false }: KCardProps): ReactElement {

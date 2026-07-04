@@ -67,6 +67,7 @@
   },
   "card": {
     "overdue": "Overdue",
+    "overdueBy": "Overdue {{days}}d",
     "dueToday": "Due today",
     "dueTomorrow": "Due tomorrow",
     "dueIn": "Due in {{count}} day",

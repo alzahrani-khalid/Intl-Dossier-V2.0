@@ -16,7 +16,6 @@
 import { type ChangeEvent, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
-import { toArDigits } from '@/lib/i18n/toArDigits'
 import type { KanbanColumnMode } from '@/types/work-item.types'
 
 interface BoardToolbarProps {
@@ -36,8 +35,7 @@ export function BoardToolbar({
   onSearchChange,
   onNewItem,
 }: BoardToolbarProps): ReactElement {
-  const { t, i18n } = useTranslation('unified-kanban')
-  const lang = i18n.language
+  const { t } = useTranslation('unified-kanban')
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>): void => {
     onSearchChange(e.target.value)
@@ -50,7 +48,7 @@ export function BoardToolbar({
   // Stable noop for the visual-stub pills — D-06 mandates they NEVER call onModeChange.
   const noop = (): void => {}
 
-  const overdueLabel = t('overdueChip', { count: toArDigits(overdueCount, lang) })
+  const overdueLabel = t('overdueChip', { count: overdueCount })
   const newItemLabel = t('actions.newItem')
   const searchLabel = t('filters.search')
   const comingSoon = t('filters.comingSoon')

@@ -15,7 +15,7 @@
  *
  * RTL-correct via:
  *  - LtrIsolate around the mono count digit
- *  - useTranslation().i18n.language → toArDigits for AR digit shaping
+ *  - Latin digits app-wide (policy D §7.4); the count renders as a raw number
  *  - No physical-direction Tailwind; all spacing comes from board.css logical rules
  *
  * XSS mitigation (T-39-02-XSS): React JSX escapes `title`. No raw-HTML APIs.
@@ -26,7 +26,6 @@ import { useTranslation } from 'react-i18next'
 
 import { KanbanCards, KanbanCard, useDroppable, type KanbanItemProps } from '@/components/kanban'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
-import { toArDigits } from '@/lib/i18n/toArDigits'
 import type { WorkflowStage } from '@/types/work-item.types'
 
 import { KCard, type KCardItem } from './KCard'
@@ -44,8 +43,7 @@ export interface BoardColumnProps {
 
 export function BoardColumn(props: BoardColumnProps): ReactElement {
   const { title, stage, items, dndEnabled, onItemClick, onAddItem } = props
-  const { t, i18n } = useTranslation('unified-kanban')
-  const lang = i18n.language
+  const { t } = useTranslation('unified-kanban')
   const titleId = useId()
   // D-21: column is the droppable target for cross-column DnD. Plays the same
   // role KanbanBoard does inside the shared primitive — but we keep `<section
@@ -64,7 +62,7 @@ export function BoardColumn(props: BoardColumnProps): ReactElement {
       <header className="col-head">
         <h3 id={titleId}>{title}</h3>
         <LtrIsolate>
-          <span className="col-count font-mono">{toArDigits(items.length, lang)}</span>
+          <span className="col-count font-mono">{items.length}</span>
         </LtrIsolate>
         <button
           type="button"
