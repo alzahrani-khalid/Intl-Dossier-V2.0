@@ -81,11 +81,13 @@ export const templateColors: Record<string, string> = {
   blue: 'bg-accent/10 text-accent border-accent/20 dark:bg-accent/30 dark:border-accent/80',
 }
 
-export const templateIconColors: Record<string, string> = {
-  emerald: 'text-success',
-  purple: 'text-secondary-foreground',
-  red: 'text-destructive',
-  blue: 'text-accent',
+// Icon foreground token + its matching solid background token (the selected-state
+// check badge). Explicit pairs so consumers never string-munge one class into another.
+export const templateIconColors: Record<string, { icon: string; iconBg: string }> = {
+  emerald: { icon: 'text-success', iconBg: 'bg-success' },
+  purple: { icon: 'text-secondary-foreground', iconBg: 'bg-secondary-foreground' },
+  red: { icon: 'text-destructive', iconBg: 'bg-destructive' },
+  blue: { icon: 'text-accent', iconBg: 'bg-accent' },
 }
 
 export const templateBannerColors: Record<string, string> = {
