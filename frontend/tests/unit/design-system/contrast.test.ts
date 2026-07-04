@@ -128,3 +128,37 @@ describe.each(['dark', 'light'] as const)('Linear TOKEN-03 contrast — %s mode'
     )
   })
 })
+
+/**
+ * DEBT-01 (Plan 83-02) — chart-palette non-text contrast proof.
+ *
+ * The 8-slot categorical chart palette (--chart-1..8) must clear WCAG 1.4.11
+ * non-text (graphical object) contrast >= 3:1 against BOTH --surface and --bg in
+ * each mode — chart series/graph nodes are graphics, not text, so 3:1 is the
+ * governing threshold (7 of 8 clear it comfortably since they are byte-copies of
+ * the AA-proven status fgs / semantic danger).
+ *
+ * chart-7 is the only newly derived hue: violet ~h300 (sits between chart-1
+ * indigo h264 and chart-6 magenta h330), derived with culori in the Linear
+ * surface band and matched to the sibling status L/C band —
+ *   dark  #ba9cef (oklch L0.75 C0.12 h300 -> 8.24:1 min vs surface/bg)
+ *   light #6b46a0 (oklch L0.48 C0.14 h300 -> 6.45:1 min vs surface/bg)
+ * Values are read from PALETTES.linear (the directions.ts source), not hardcoded
+ * duplicates, so this suite doubles as a drift guard like the cases above.
+ */
+const GRAPHICS = 3 // WCAG 1.4.11 non-text (UI component / graphical object) contrast
+
+describe.each(['dark', 'light'] as const)('Linear chart-palette contrast — %s mode', (mode) => {
+  const p = PALETTES.linear[mode] as DirectionModePalette & { chart?: string[] }
+  const slots = [1, 2, 3, 4, 5, 6, 7, 8] as const
+
+  it('has exactly 8 chart slots', () => {
+    expect(p.chart).toHaveLength(8)
+  })
+  it.each(slots)('chart-%i clears 3:1 (non-text) on --surface', (i) => {
+    expect(contrast(p.chart?.[i - 1] as string, p.surface)).toBeGreaterThanOrEqual(GRAPHICS)
+  })
+  it.each(slots)('chart-%i clears 3:1 (non-text) on --bg', (i) => {
+    expect(contrast(p.chart?.[i - 1] as string, p.bg)).toBeGreaterThanOrEqual(GRAPHICS)
+  })
+})
