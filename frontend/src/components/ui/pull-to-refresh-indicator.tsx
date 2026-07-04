@@ -141,7 +141,7 @@ export function PullToRefreshIndicator({
           transition={{ type: 'spring', damping: 20, stiffness: 300 }}
           className={cn(
             'flex flex-col items-center justify-center overflow-hidden',
-            'bg-gradient-to-b from-muted/50 to-transparent',
+            'bg-muted/30',
             className,
           )}
         >

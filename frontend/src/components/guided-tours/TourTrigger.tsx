@@ -94,7 +94,7 @@ export function TourTrigger({
             <div
               className={cn(
                 'relative overflow-hidden rounded-2xl',
-                'bg-gradient-to-r from-primary/10 via-primary/5 to-transparent',
+                'bg-accent/5',
                 'border border-primary/20',
                 'p-4 sm:p-5',
               )}
@@ -203,7 +203,7 @@ export function TourTrigger({
           transition={{ duration: 0.3, ease: 'easeOut' }}
           className={cn('w-full max-w-sm', className)}
         >
-          <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+          <Card className="overflow-hidden border-primary/20 bg-accent/5">
             <CardContent className="p-4 sm:p-5">
               {/* Close button */}
               <button
