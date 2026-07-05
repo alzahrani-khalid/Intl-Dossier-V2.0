@@ -343,8 +343,8 @@ Plans:
 
 ### Phase 85: Linear taste refinements (F16-F21)
 
-**Goal:** [To be planned]
-**Requirements**: TBD
+**Goal:** Land the six user-signed-off Linear-taste refinements (F16–F21) — kanban overdue reframing (drop the full-height edge bar for a red due-date chip + optional priority glyph), neutral active-nav fill, settings single-nav with back-to-app, sentence-case form labels, grouped settings sub-nav, and colored kanban column-header glyphs — with zero regressions across dark-canonical + light and EN/LTR + AR/RTL, every change on logical properties.
+**Requirements**: TASTE-01, TASTE-02, TASTE-03, TASTE-04, TASTE-05, TASTE-06
 **Depends on:** Phase 84
 **Plans:** 0 plans
 

@@ -52,21 +52,22 @@ Copy-edit pass on `i18n/en`; `en` drives `ar` (Plan §3D).
 
 - [x] **COPY-01**: Marketing voice is removed from `i18n/en` — "Discover" (`guided-tours`, `relationships`, `progressive-disclosure`), "easily accessible" (`empty-states`), "Let us show you around" (`guided-tours`), and exclamation marks across `empty-states.json` + `guided-tours.json` are copy-edited to sentence-case, no-`!` prose; the source `en` is fixed so `ar` follows. _(F15, MEDIUM)_
 
+### Linear-Taste Refinements (Phase 85)
+
+Spec-compliant-but-not-Linear taste calls (Plan §3E). **User signed off on all six (2026-07-04
+SCOPE ADDENDUM);** built as previewed in `/tmp/design-review-260704/p5-previews/INDEX.md`. Each
+stays on logical properties (`inline-start`, `ms/me`, `text-start`) for RTL parity.
+
+- [ ] **TASTE-01**: Kanban cards drop the `.kcard.overdue` full-height inline-start edge bar; overdue is carried on a red due-date chip (+ optional inline priority-bars glyph) — NOT a priority accent. Current bar correctly flips to inline-start; the replacement preserves logical-property parity. _(F16, MEDIUM)_
+- [ ] **TASTE-02**: Active-nav fill is neutralized from indigo (`--accent-soft`) to `--surface-raised` gray; the thin 2px accent stripe is kept; indigo reserved for primary buttons/on-toggles. _(F17, LOW-MED)_
+- [ ] **TASTE-03**: On `/settings` routes, the app sidebar is replaced by the settings sub-nav + a "‹ Back to app" affordance (one nav column, not two). _(F18, MEDIUM)_
+- [ ] **TASTE-04**: Form field labels are sentence-case (`DISPLAY NAME` → `Display name`); scoped to form fields — the shared `.t-label` recipe is untouched. _(F19, MEDIUM)_
+- [ ] **TASTE-05**: The settings sub-nav is grouped under muted section headers (proposed Account / Privacy & access / Connected — grouping is the user's call). _(F20, LOW)_
+- [ ] **TASTE-06**: Each kanban column header shows a colored status glyph before the name (empty ring · amber in-progress · dashed review · green-check done). _(F21, LOW)_
+
 ## v2 Requirements
 
 Deferred to future milestones — tracked, not in this roadmap.
-
-### Linear-Taste Refinements (product sign-off required — Plan §3E/§7.2)
-
-Spec-compliant but not what Linear does. Each is a design opinion requiring a before/after
-preview and the user's individual call. Handled by a separate previews-only lane; **none pre-approved.**
-
-- **TASTE-01**: Kanban priority signal — replace full-height inline-start accent bar with an inline priority glyph. _(F16)_
-- **TASTE-02**: Neutralize active-nav fill to `--surface-raised` gray (indigo reserved for primary actions/on-toggles). _(F17)_
-- **TASTE-03**: Settings single-nav — replace the app sidebar with the settings sub-nav + back-to-app on settings routes. _(F18)_
-- **TASTE-04**: Sentence-case all form field labels (not UPPERCASE). _(F19)_
-- **TASTE-05**: Group the settings sub-nav under muted section headers. _(F20)_
-- **TASTE-06**: Add a colored status glyph to each kanban column header. _(F21)_
 
 ### Linear Affordance Opportunities (later milestone — Plan §3F/§7.3)
 
@@ -87,7 +88,6 @@ Explicitly excluded. Documented to prevent scope creep.
 | `types/*.ts` `// was #…` / `gradient →` migration comments                                           | Migration provenance comments, not live style — carve-out                                      |
 | `design-system/tokens/`, `index.css` `:root` fallback, `public/bootstrap.js` literal palette holders | Legitimately hold the Linear palette; parity-checked in CI (three-copy byte-match) — carve-out |
 | Data-gap empty states ("No data available" ×6, `0` engagement counts)                                | Seed/RLS data gaps, not design defects — layouts render correctly                              |
-| F16–F21 taste calls                                                                                  | Opinion, not defect; separate previews-only lane, product sign-off pending (v2 TASTE-\*)       |
 | F23–F26 affordance enhancements                                                                      | New capability, not correction; later milestone (v2 AFFORD-\*)                                 |
 
 ## Traceability
@@ -112,14 +112,20 @@ Explicitly excluded. Documented to prevent scope creep.
 | DEBT-07     | Phase 83 | Complete |
 | DEBT-08     | Phase 83 | Complete |
 | COPY-01     | Phase 84 | Complete |
+| TASTE-01    | Phase 85 | Pending  |
+| TASTE-02    | Phase 85 | Pending  |
+| TASTE-03    | Phase 85 | Pending  |
+| TASTE-04    | Phase 85 | Pending  |
+| TASTE-05    | Phase 85 | Pending  |
+| TASTE-06    | Phase 85 | Pending  |
 
 **Coverage:**
 
-- v1 requirements: 18 total
-- Mapped to phases: 18
+- v1 requirements: 24 total (18 corrective + 6 taste)
+- Mapped to phases: 24
 - Unmapped: 0 ✓
 
 ---
 
 _Requirements defined: 2026-07-04_
-_Last updated: 2026-07-04 — roadmap created; all 18 v1 requirements mapped 1:1 to Phases 81-84 (findings F1–F15 + F22 from `DESIGN-REFINEMENT-PLAN-260704.md`)_
+_Last updated: 2026-07-05 — Phase 85 added; the six Linear-taste refinements (F16–F21) promoted from v2/deferred to active v1 (TASTE-01..06) after the 2026-07-04 user sign-off (SCOPE ADDENDUM). All 24 v1 requirements mapped 1:1 to Phases 81-85._
