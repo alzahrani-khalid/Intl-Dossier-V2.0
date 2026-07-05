@@ -1,5 +1,25 @@
 # Milestones
 
+## v8.1 Linear Design Refinement (Shipped: 2026-07-05)
+
+**Phases:** 5 (81–85) · **Plans:** 22 · **Tasks:** 39 · **Timeline:** 2026-07-04 → 2026-07-05 (2 days) · **Scope:** 116 commits, 354 files (+13,631 / −7,795)
+
+**Delivered:** The corrective + taste-refinement pass over the freshly-migrated Linear design system — fixing visible bugs, systematizing date/number formatting, consolidating token debt, de-marketing the copy, and landing six user-signed-off Linear taste calls — with zero regressions across dark-canonical + light and EN/LTR + AR/RTL. Source of truth: `DESIGN-REFINEMENT-PLAN-260704.md` (findings F1–F26; user sign-off §7 + the F16–F21 SCOPE ADDENDUM).
+
+**Key accomplishments:**
+
+- **Visible bugs (P81):** the four kanban columns fit unclipped at 1400/1024 in LTR+RTL via a flexible `flex: 1 1 250px` / `min-width: 260px` basis + a logical inline-scroll affordance; removed the duplicate settings header and the redundant calendar create-button; mapped raw DB enum pills (`follow_up`) through i18n; and stopped KPI labels wrapping at 1024.
+- **Date/number formatting (P82):** centralized all date/time on `lib/format-date` (day-first no-comma `Tue 28 Apr` + `14:30 GST`), migrated the ~66 ad-hoc `toLocaleDateString` sites, flipped the AR UI to the locked Latin-digit policy (`toFormatLocale('ar') → 'ar-u-nu-latn'`), deleted the `toArDigits` module, and wired a CI-blocking `check-date-formatting.mjs` guard.
+- **Token-debt consolidation (P83):** a shared `--chart-1..8` palette module + recharts/React-Flow migration off ~100 raw hex, Tailwind color literals → `@theme` utilities, banned card shadows / hardcoded radii / gradients stripped, row heights on `var(--row-h)`, emoji-as-UI → lucide, and 20 verified-dead files deleted — with the parity-checked carve-outs left byte-identical.
+- **Copy / marketing voice (P84):** removed 21 exclamation marks + "Discover / easily / Let us show you around" from four `en` i18n namespaces and mirrored the calm register into their `ar` counterparts (values only, keys byte-identical).
+- **Linear taste refinements (P85, F16–F21):** kanban overdue moved off the wall-of-red edge bar onto a red due chip + stage status glyphs on column headers; active-nav fill neutralized to `--surface-raised` (accent reserved for primary actions); settings collapsed to a single grouped sub-nav + "Back to app"; and form-field labels set to true sentence case via a scoped `.label-field` variant (global `.label` untouched). Human render-parity sign-off APPROVED across dark/light × EN/AR.
+
+**Known deferred items at close (non-blocking, pre-existing):** 57 open artifacts acknowledged at close — 48 historical "missing" quick-task dirs, 6 gaps from the already-archived v7.0 phases (68–74), and 1 stale UAT flag on the shipped-and-verified Phase 81. None are v8.1 deliverables. Carried v8.0 items remain: `test-rtl-smokes` branch-protection promotion, IN-04 (`UserPicker` PostgREST interpolation), and the `TEST_USER_PASSWORD` credential-hygiene sweep.
+
+**Archive:** `.planning/milestones/v8.1-ROADMAP.md` · `.planning/milestones/v8.1-REQUIREMENTS.md`. No MILESTONE-AUDIT for v8.1 — the phase-level `85-VERIFICATION` (passed 6/6) + human render sign-off + PR #96 merge are the ship proof.
+
+---
+
 ## v8.0 Linear Design System Migration (Shipped: 2026-07-04)
 
 **Phases:** 6 (75–80) · **Plans:** 32 · **Timeline:** 2026-07-01 → 2026-07-04 (3 days) · **Scope:** 173 commits, 350 files (+25,583 / −9,321)

@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
-status: 'Phase 85 COMPLETE — all six Linear-taste refinements (F16-F21 / TASTE-01..06) shipped and GSD-verified (85-VERIFICATION.md status: passed, 6/6). Human render-parity sign-off APPROVED across dark/light x EN/AR; F19 corrected to true sentence case (58eb38b6). Milestone v8.1 = 5/5 phases complete; v8.1 refinement workstream done.'
-last_updated: '2026-07-05T12:00:00.000Z'
-last_activity: 2026-07-05 -- Phase 85 COMPLETE + GSD-verified; v8.1 workstream done
+status: Awaiting next milestone
+last_updated: '2026-07-05T09:27:01.989Z'
+last_activity: 2026-07-05 — Milestone v8.1 completed and archived
 progress:
   total_phases: 5
   completed_phases: 5
@@ -24,12 +24,10 @@ See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Mil
 
 ## Current Position
 
-Phase: 85 — Linear taste refinements (F16-F21) — COMPLETE (GSD-verified, human render-parity APPROVED)
-Plan: 4 of 4 (85-01, 85-02, 85-03, 85-04 complete)
-Status: Phase 85 COMPLETE — TASTE-01..06 all verified (85-VERIFICATION.md passed, 6/6); F19 corrected to true sentence case; milestone v8.1 = 5/5 phases done.
-Last activity: 2026-07-05 -- Phase 85 COMPLETE + verified; v8.1 workstream done
-
-Progress: [██████████] 100%
+Phase: Milestone v8.1 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-07-05 — Milestone v8.1 completed and archived
 
 ### Roadmap Evolution
 
@@ -296,6 +294,4 @@ file. Bookkeeping debt only — no open functional work.
 
 ## Operator Next Steps
 
-- Ship v8.0: open the PR from local `main` → protected `origin/main`, watch the 8 required checks, merge, then push the `v8.0` tag (nothing has been pushed yet).
-- Promote the `test-rtl-smokes` CI job to a required check once the first green GitHub run lands (repo-admin).
-- Then start the next milestone with /gsd-new-milestone.
+- Start the next milestone with /gsd-new-milestone
