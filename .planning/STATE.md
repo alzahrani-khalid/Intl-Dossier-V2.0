@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
 status: in_progress
-last_updated: '2026-07-05T07:15:00.000Z'
-last_activity: 2026-07-05 -- Phase 85 (Linear taste refinements F16-F21) added to roadmap
+last_updated: '2026-07-05T08:01:28.124Z'
+last_activity: 2026-07-05 -- Phase 85 Plan 01 complete (F16 overdue chip + F21 stage glyphs)
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 18
-  completed_plans: 18
+  total_plans: 22
+  completed_plans: 19
   percent: 80
 ---
 
@@ -24,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Mil
 
 ## Current Position
 
-Phase: 85 — Linear taste refinements (F16-F21) — NOT PLANNED YET
-Plan: 0 of 0
-Status: Phase 85 added (SCOPE ADDENDUM — user accepted all six P5 taste calls F16-F21); next `/gsd-plan-phase 85`
-Last activity: 2026-07-05 -- Phase 85 added to roadmap
+Phase: 85 — Linear taste refinements (F16-F21) — IN PROGRESS
+Plan: 1 of 4 (85-01 complete)
+Status: 85-01 shipped (F16 kanban overdue → red due chip; F21 column-header stage glyphs). Task 3 human render-parity sign-off deferred to the orchestrator's consolidated post-merge walk. Next: 85-02..04.
+Last activity: 2026-07-05 -- Phase 85 Plan 01 complete (F16 overdue chip + F21 stage glyphs)
 
 Progress: [████████░░] 80% (4/5 phases)
 
