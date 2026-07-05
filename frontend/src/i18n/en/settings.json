@@ -33,6 +33,14 @@
     "integrations": "Integrations"
   },
 
+  "backToApp": "Back to app",
+
+  "navGroups": {
+    "account": "Account",
+    "privacyAccess": "Privacy & access",
+    "connected": "Connected"
+  },
+
   "errors": {
     "save": "Could not save changes. Review the highlighted fields and try again."
   },
