@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
-status: "85-04 shipped (F19/TASTE-04 — scoped .label-field modifier: settings form-field labels render sentence-case 13px/500 var(--ink-mute); global .label/.dir-linear .label/.t-label/labelVariants byte-unchanged so uppercase meta labels (KPI strips, table headers, topbar) are untouched; AR unaffected — Tajawal rules key off .label). All 4 Phase-85 plans (85-01..85-04) implemented; phase IN PROGRESS pending the orchestrator's SINGLE consolidated human render-parity sign-off (post-merge, EN/AR × dark/light) across all Phase-85 plans."
-last_updated: '2026-07-05T11:30:00.000Z'
-last_activity: 2026-07-05 -- Phase 85 Plan 04 complete (F19 sentence-case settings form-field labels)
+status: 'Phase 85 COMPLETE — all six Linear-taste refinements (F16-F21 / TASTE-01..06) shipped and GSD-verified (85-VERIFICATION.md status: passed, 6/6). Human render-parity sign-off APPROVED across dark/light x EN/AR; F19 corrected to true sentence case (58eb38b6). Milestone v8.1 = 5/5 phases complete; v8.1 refinement workstream done.'
+last_updated: '2026-07-05T12:00:00.000Z'
+last_activity: 2026-07-05 -- Phase 85 COMPLETE + GSD-verified; v8.1 workstream done
 progress:
   total_phases: 5
   completed_phases: 5
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Milestone + Next Milestone sections)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 83 — token-debt-consolidation
+**Current focus:** Phase 85 — linear-taste-refinements (COMPLETE); v8.1 milestone 5/5
 
 ## Current Position
 
-Phase: 85 — Linear taste refinements (F16-F21) — IN PROGRESS (all 4 plans implemented; awaiting consolidated human render-parity sign-off)
+Phase: 85 — Linear taste refinements (F16-F21) — COMPLETE (GSD-verified, human render-parity APPROVED)
 Plan: 4 of 4 (85-01, 85-02, 85-03, 85-04 complete)
-Status: 85-04 shipped (F19/TASTE-04 — scoped .label-field modifier: settings form-field labels render sentence-case 13px/500 var(--ink-mute); global .label/.t-label/labelVariants byte-unchanged so uppercase meta labels (KPI/table/topbar) untouched; AR unaffected). Human render-parity sign-off for all Phase-85 plans deferred to the orchestrator's single consolidated post-merge walk.
-Last activity: 2026-07-05 -- Phase 85 Plan 04 complete (F19 sentence-case settings form-field labels)
+Status: Phase 85 COMPLETE — TASTE-01..06 all verified (85-VERIFICATION.md passed, 6/6); F19 corrected to true sentence case; milestone v8.1 = 5/5 phases done.
+Last activity: 2026-07-05 -- Phase 85 COMPLETE + verified; v8.1 workstream done
 
 Progress: [██████████] 100%
 
