@@ -566,6 +566,22 @@ html[dir='rtl'] .page-sub {
   color: var(--ink-faint);
 }
 
+/* F19/TASTE-04: sentence-case form-field labels. Scoped suffix modifier — the
+ * base .label rule and its dir-linear override above stay byte-unchanged (they
+ * still style the uppercase meta labels on KPI strips, table headers, the
+ * topbar, etc.). The dir-linear-scoped compound selector below (specificity
+ * 0,3,0), placed AFTER the dir-linear override, out-specifies it (0,2,0) under
+ * the active dir-linear root. AR is unaffected: the Tajawal-forcing rules key
+ * off the base class, not this suffix. */
+.label.label-field,
+.dir-linear .label.label-field {
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-mute);
+}
+
 /* --- Table (handoff lines 260-265) --------------------------------------- */
 table.tbl {
   width: 100%;
