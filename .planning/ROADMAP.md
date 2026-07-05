@@ -305,7 +305,11 @@ Plans:
 1. Grep of `i18n/en` JSON for `Discover|Easily|Unleash|!` returns only false positives (e.g. destructive "cannot be easily undone" warnings)
 2. `empty-states.json` + `guided-tours.json` read as sentence-case, no-exclamation prose ("Let us show you around" and marketing phrasing removed)
 3. The `ar` strings follow the corrected `en` source
-   **Plans**: TBD
+   **Plans**: 1 plan
+
+Plans:
+
+- [ ] 84-01-PLAN.md — Copy-edit 4 en namespaces off marketing voice + mirror calm register into ar (values only, D-84-09 carve-out)
 
 ---
 
