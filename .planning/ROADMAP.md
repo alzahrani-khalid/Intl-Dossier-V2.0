@@ -332,7 +332,8 @@ Plans:
 | 75-80 | v8.0 | 32/32 | Shipped | 2026-07-04 |
 | 81 | v8.1 | 3/3 | Complete | 2026-07-04 |
 | 82 | v8.1 | 7/7 | Complete | 2026-07-04 |
-| 83-84 | v8.1 | 0/2 phases | In progress | - |
+| 83 | v8.1 | 7/7 | Complete | 2026-07-05 |
+| 84 | v8.1 | 0/1 phases | In progress | - |
 
 <!-- gsd:progress:end -->
 
