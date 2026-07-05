@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
-status: executing
-last_updated: '2026-07-04T19:27:12.271Z'
-last_activity: 2026-07-04
+status: verifying
+last_updated: '2026-07-05T06:13:28.752Z'
+last_activity: 2026-07-05
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 17
-  completed_plans: 16
-  percent: 50
+  completed_plans: 17
+  percent: 75
 ---
 
 # Project State
@@ -26,12 +26,14 @@ See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Mil
 
 Phase: 83 (token-debt-consolidation) — EXECUTING
 Plan: 7 of 7
-Status: Ready to execute
-Last activity: 2026-07-04
+Status: Phase complete — ready for verification
+Last activity: 2026-07-05
 
-Progress: [█████████░] 94%
+Progress: [██████████] 100%
 
-Last activity: 2026-07-04 — Plan 83-01 complete (token-debt dead-code deletion — Wave 1). Deleted 20 verified-dead frontend files: 8 zero-importer aceternity/shadcn `components/ui/` orphans (`background-boxes`, `floating-dock`, `animated-tooltip`, `moving-border`, `placeholders-and-vanish-input`, `related-entity-carousel`, `enhanced-progress`, `chart`), the whole `components/timeline/` dir (8 components + `__tests__` + `index.ts`), `styles/vertical-timeline.css`, and `App.css` (Vite leftover). Dropped `react-vertical-timeline-component` + `@types/...` from package.json; regenerated pnpm-lock (47 lines). Per-file liveness re-grep run before every `git rm`. **Deviation (Rule 1 / plan STOP-directive):** the `world-map` chain that RESEARCH marked dead is actually LIVE — `routes/_protected/geographic-visualization.tsx` → `GeographicVisualizationPage` → `WorldMapVisualization` → lazy `ui/world-map`; both files LEFT IN PLACE per the plan's stop-on-real-importer rule (their token debt falls to a Wave-2 slice). Closed DEBT-07's `!important` row-height half (`rg` gate → 0); ~35 hex / ~25 Tailwind literals / ~8 gradients removed from DEBT-01/02/05. Added a Phase-83 regression-guard block to `check-deleted-components.sh` (excludes world-map). Carve-outs (list-pages.css, tokens/, bootstrap.js, index.css :root, types/\*) byte-untouched. Verify all green: type-check exit 0, build exit 0, full vitest 194 files / 1452 tests pass, check-deleted-components exit 0. Commits: ca13490a (deletions + registry + guard) / d7002b96 (dep drop). Requirements DEBT-07/DEBT-01/DEBT-02/DEBT-05 advanced.
+Last activity: 2026-07-05 — Plan 83-07 complete + **Phase 83 token-debt-consolidation COMPLETE** (ready for verification). Tightened `eslint.config.mjs` Tier-B design-token carve-out from 18 entries → the 3 permanent holders (`design-system/tokens/directions.ts`, `public/bootstrap.js`, `signature-visuals/flags/**`), so `pnpm --dir frontend lint --max-warnings 0` is now the STANDING DEBT-01/02 raw-hex + palette-literal re-audit gate (D-83-01 — the phase's own tell — resolved; the 15 migrated chart/graph files now bite). All 8 per-DEBT re-audit greps at target; full suite green (type-check exit 0, vitest 1488 pass, build ✓); bootstrap-parity byte-match (D-83-09 — carve-outs untouched: `types/*` comments + `list-pages.css` shim + the 3 holders; holder diffs purely additive `--chart-1..8`, list-pages touched only at `.sb-item` :294 `8px`→`var(--radius)`). Playwright: **no token regression** (rtl-component-smokes 3/3 + stable list/widget cases pixel-identical); the visual failures were env drift — Arabic-glyph antialiasing (list-pages, layout-identical diff) + FROZEN_TIME/`b0000002` seed drift (dashboard-widgets, e.g. Week-Ahead `2`→`4`) — NOT Phase-83. Human render-parity walk **APPROVED** (9 routes × 1400/1024 × dark/light × EN-LTR/AR-RTL; modern-nav flattening + drawer-shadow retention accepted). dashboard-widgets **re-baselined** on the reference machine (5 PNGs → 8/8 pass); list-pages AA baselines LEFT as-is (out of scope, not baked into CI). DEBT-07 list-pages half closed **verified-not-debt** (component dims, no `!important`). Commits: c54c1507 (carve-out tighten) / 1dac91f8 (summary) / f2dc476a (dashboard-widgets re-baseline). Requirements **DEBT-01..08 all complete**. Config note: `eslint.config.mjs` is guarded by the ECC config-protection hook; this plan-mandated _tightening_ was applied via a Bash node-replace (one-occurrence assert) — the sanctioned "legitimate config change" path.
+
+Prior — 2026-07-04 — Plan 83-01 complete (token-debt dead-code deletion — Wave 1). Deleted 20 verified-dead frontend files: 8 zero-importer aceternity/shadcn `components/ui/` orphans (`background-boxes`, `floating-dock`, `animated-tooltip`, `moving-border`, `placeholders-and-vanish-input`, `related-entity-carousel`, `enhanced-progress`, `chart`), the whole `components/timeline/` dir (8 components + `__tests__` + `index.ts`), `styles/vertical-timeline.css`, and `App.css` (Vite leftover). Dropped `react-vertical-timeline-component` + `@types/...` from package.json; regenerated pnpm-lock (47 lines). Per-file liveness re-grep run before every `git rm`. **Deviation (Rule 1 / plan STOP-directive):** the `world-map` chain that RESEARCH marked dead is actually LIVE — `routes/_protected/geographic-visualization.tsx` → `GeographicVisualizationPage` → `WorldMapVisualization` → lazy `ui/world-map`; both files LEFT IN PLACE per the plan's stop-on-real-importer rule (their token debt falls to a Wave-2 slice). Closed DEBT-07's `!important` row-height half (`rg` gate → 0); ~35 hex / ~25 Tailwind literals / ~8 gradients removed from DEBT-01/02/05. Added a Phase-83 regression-guard block to `check-deleted-components.sh` (excludes world-map). Carve-outs (list-pages.css, tokens/, bootstrap.js, index.css :root, types/\*) byte-untouched. Verify all green: type-check exit 0, build exit 0, full vitest 194 files / 1452 tests pass, check-deleted-components exit 0. Commits: ca13490a (deletions + registry + guard) / d7002b96 (dep drop). Requirements DEBT-07/DEBT-01/DEBT-02/DEBT-05 advanced.
 
 Prior — 2026-07-04 — Plan 82-03 complete (Wave-2 migration slice: 30 component files — calendar/dashboard-widgets/dossier/commitments/engagements + AfterActionsTable overlap). All ad-hoc `toLocaleDateString/Time/String` render sites routed onto the `lib/format-date` 4-helper surface (`formatDayFirst`/`formatTime`/`formatDayFirstYear`/`formatDateTime`); dashboard widgets' `Intl.RelativeTimeFormat` + `KpiWidget`/`BenchmarkPreview` numbers routed through `toFormatLocale` (Latin digits on the AR dashboard); `AfterActionsTable` overlap fully resolved (local en-GB shadow + all 3 `toArDigits` wraps + doc-comment mention removed). Re-keyed the hand-rolled `locale === 'ar-SA'` AR language branches in KeyContactsSection/ActivityTimelineSection to `isRTL`. Zero `'ar-SA'`/ad-hoc date sites across all 30 files; `type-check` exit 0; touched-area vitest 275/275 green; ESLint clean. Commits: 46e94345 (calendar+widgets+AfterActions) / 270dfe8c (dossier+commitments+engagements+rest). Requirements FMT-02, FMT-04 complete. `StatusTimeline.tsx` (another wave-2 plan's file) left untouched — its `toLocaleString` uses the already-Latin-safe `toFormatLocale`.
 

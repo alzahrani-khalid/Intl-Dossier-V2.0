@@ -222,7 +222,7 @@ Full detail: [milestones/v8.0-ROADMAP.md](milestones/v8.0-ROADMAP.md). Audit: [m
 
 - [x] **Phase 81: Visible Bugs** - Fix the 5 visible design bugs from the 6-route Linear audit (kanban 4-column clipping, duplicate settings header, duplicate calendar create button, raw enum status pills, KPI label wrap) (completed 2026-07-04)
 - [x] **Phase 82: Date/Number Formatting** - Centralize date/time on the spec's day-first no-comma + GST rule, migrate the ~66 ad-hoc `toLocaleDateString` sites, add a regression guard, fix the mixed-script Arabic overdue unit (completed 2026-07-04)
-- [ ] **Phase 83: Token-Debt Consolidation** - Consolidate systemic token debt in charts/graphs/aceternity-kit onto design-system tokens (verified carve-outs untouched)
+- [x] **Phase 83: Token-Debt Consolidation** - Consolidate systemic token debt in charts/graphs/aceternity-kit onto design-system tokens (verified carve-outs untouched) (completed 2026-07-05)
 - [ ] **Phase 84: Copy / Marketing Voice** - Copy-edit `i18n/en` off marketing voice; `en` drives `ar`
 
 ### Phase 81: Visible Bugs
@@ -286,7 +286,7 @@ Plans:
    - [x] 83-04-PLAN.md — graphs + dossier slice: React Flow palettes→tokens, graph shadows/gradient, emoji→lucide (DEBT-08) (Wave 2)
    - [x] 83-05-PLAN.md — shadow/radius/gradient long-tail + expandable-card literals (surgical list-pages.css :294 only) (Wave 2)
    - [x] 83-06-PLAN.md — modern-nav + copilot: bespoke ladder deletion, consumers→DS tokens, demo flatten (DEBT-06) (Wave 2)
-   - [ ] 83-07-PLAN.md — eslint carve-out tightening + all re-audit gates + Playwright/re-baseline + render-parity checkpoint (Wave 3)
+   - [x] 83-07-PLAN.md — eslint carve-out tightening + all re-audit gates + Playwright/re-baseline + render-parity checkpoint (Wave 3)
          **UI hint**: yes
 
 **Carve-outs (DO NOT TOUCH — verified, Plan §6):**

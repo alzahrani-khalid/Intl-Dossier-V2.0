@@ -2,7 +2,7 @@
 phase: 83
 plan: 07
 subsystem: design-system / lint-gate
-status: automated-portion-complete-pending-human-render-parity
+status: complete
 tags: [eslint, design-tokens, DEBT-01, DEBT-02, re-audit-gate, visual-regression, render-parity]
 requires:
   - 83-02 (--chart-1..8 token module + three-copy parity guard)
@@ -25,12 +25,13 @@ key-files:
     - eslint.config.mjs
 decisions:
   - "D-83-01 resolved: the eslint.config.mjs carve-out (the phase's own tell) is tightened to exactly 3 entries; lint IS the DEBT-01/02 re-audit gate"
-  - "Deliberate dashboard-widgets re-baseline DEFERRED to the human/reference machine — the executor environment's baselines are stale on FROZEN_TIME/seed + Arabic-text antialiasing, so an automated re-baseline here would poison CI and cannot isolate the chart-hue controlled change"
+  - 'Human render-parity walk APPROVED (orchestrator relay) across all 9 routes × 1400/1024 × dark/light × EN-LTR/AR-RTL; modern-nav flattening + drawer-shadow retention accepted; env-drift failures accepted as NOT Phase-83 regressions'
+  - 'dashboard-widgets re-baselined on the reference machine (5 PNGs) as a standalone knowing commit (f2dc476a); list-pages Arabic-glyph antialiasing LEFT as-is (pure text-edge AA, layout identical, out of scope — not baked into CI)'
 metrics:
-  duration: ~25m
-  automated-tasks-completed: 2
-  files-modified: 1
-  completed-date: 2026-07-04
+  duration: ~35m
+  tasks-completed: 3
+  files-modified: 6
+  completed-date: 2026-07-05
 ---
 
 # Phase 83 Plan 07: Carve-out Tightening + Phase Re-audit Gate Summary
@@ -42,9 +43,9 @@ gathered Playwright evidence that the token migration introduced zero layout/bor
 regression — with the deliberate chart-hue re-baseline + the human render-parity matrix walk left as
 the phase's final HUMAN gate.
 
-> **STATUS: automated portion complete; plan LEFT IN-PROGRESS pending the human render-parity walk
-> (Task 3) and the reference-machine dashboard-widgets re-baseline.** No roadmap-complete, no
-> plan-advance. See the CHECKPOINT section below.
+> **STATUS: COMPLETE.** All 3 tasks done. Human render-parity walk APPROVED (orchestrator relay);
+> the dashboard-widgets re-baseline landed on the reference machine (`f2dc476a`). Standing gates
+> re-confirmed green post-rebaseline. See the RENDER-PARITY SIGN-OFF section below.
 
 ## What shipped (Task 1 — automated, committed)
 
@@ -199,18 +200,40 @@ Everything OUTSIDE this list must be pixel-unchanged:
    dark-mode bug — visible), `dashboard.css` 10px→8/12px radius snaps, analytics tile soft-washes
    (near-match, not byte-match).
 
-## PENDING — human render-parity walk (Task 3, blocking)
+## Render-parity sign-off (Task 3 — APPROVED)
 
-The plan's final gate is a HUMAN visual sign-off (`autonomous: false`) that cannot be self-certified.
-The render-parity matrix is returned to the orchestrator as a CHECKPOINT. Until the human types
-"approved": plan stays **in-progress**; no `roadmap.update-plan-progress 83 83-07 complete`; the
-dashboard-widgets re-baseline is done on the reference machine as part of that walk.
+The plan's final gate is a HUMAN visual sign-off (`autonomous: false`). The render-parity matrix was
+returned to the orchestrator as a CHECKPOINT and **APPROVED by the user** (orchestrator relay): parity
+holds across all 9 routes × 1400/1024 × dark/light × EN-LTR/AR-RTL; the modern-nav demo flattening is
+accepted; drawer-shadow retention (`--shadow-drawer`) is correct; and the two environmental-failure
+claims — list-pages Arabic-glyph antialiasing on macOS, and dashboard-widgets FROZEN_TIME seed drift
+(only Week-Ahead `2`→`4`) — are accepted as **NOT Phase-83 regressions**.
+
+**Re-baseline outcome:** this machine is the reference/dev machine (same env that captured the prior
+committed baselines). Post-approval, `pnpm --dir frontend exec playwright test
+--project=chromium-dashboard-widgets --update-snapshots` refreshed **5 widget baselines** (digest,
+kpi-strip, my-tasks, overdue-commitments, week-ahead); the other 3 (recent-dossiers, vip-visits,
+sla-health) were already passing and untouched. The project now passes **8/8** against the refreshed
+baselines. Committed standalone as **`f2dc476a`** `test(83-07): re-baseline dashboard-widgets after
+chart-token migration (approved render-parity)`.
+
+**list-pages call (explicit): LEFT as-is.** The list-pages failures are pure Arabic-glyph
+antialiasing — the `engagements-ar` diff shows differing pixels only on Arabic subtitle glyph edges,
+with layout/borders/color/content pixel-identical. It is not a Phase-83 change and is outside the
+plan's declared re-baseline scope (dashboard-widgets only). Refreshing it would bake transient
+macOS-font-state AA into the committed CI reference PNGs (the stated anti-goal), so it stays untouched;
+any future flag is a separate font/OS-baseline-hygiene task.
+
+**Post-rebaseline standing gates (re-confirmed):** `pnpm --dir frontend type-check` exit 0; full
+`pnpm --dir frontend lint` clean at `--max-warnings 0` (eslint + i18n + duplicate-rtl +
+bootstrap-parity + date-formatting all OK); dashboard-widgets project 8/8 green.
 
 ## Self-Check
 
 - `eslint.config.mjs` Tier-B carve-out has exactly 3 entries — VERIFIED (rg + read).
-- Commit `c54c1507` exists on `gsd/v8.1-linear-design-refinement` — VERIFIED (git log).
-- `pnpm --dir frontend lint` GREEN, `type-check` exit 0, vitest 1488 pass, build ✓, parity guard OK —
-  VERIFIED (command output above).
+- Commits `c54c1507` (carve-out), `1dac91f8` (summary), `f2dc476a` (re-baseline) exist on
+  `gsd/v8.1-linear-design-refinement` — VERIFIED (git log).
+- `pnpm --dir frontend lint` GREEN, `type-check` exit 0, vitest 1488 pass, build ✓, parity guard OK,
+  dashboard-widgets 8/8 — VERIFIED (command output above).
 
-## Self-Check: PASSED (automated portion)
+## Self-Check: PASSED

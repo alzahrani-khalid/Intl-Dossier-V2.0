@@ -38,12 +38,12 @@ Systemic code-level token debt in charts, relationship graphs, and the aceternit
 kit (Plan §3C). **Do NOT touch the verified carve-outs** (see Out of Scope).
 
 - [x] **DEBT-01**: A shared chart-palette token module (`--chart-1…n` semantic series colors) exists; recharts fills (`analytics/*Chart.tsx`, `dashboard-widgets/ChartWidget`) and graph node palettes (`MiniRelationshipGraph`, `relationships/RelationshipGraph`) consume tokens instead of ~100 raw hex across ~22 files. _(F7, MEDIUM)_
-- [ ] **DEBT-02**: Tailwind color literals (~51 across ~11 chart/aceternity files) map to `@theme` utilities (`bg-bg`, `text-ink`, `border-line`, `bg-accent`). _(F8, MEDIUM)_
-- [ ] **DEBT-03**: Banned card shadows (`shadow-sm/md/xl/2xl`) are stripped from cards/graph/detail components; shadow reserved for drawers/modals/hover rows (`--shadow-drawer`/`--shadow-lg`). _(F9, MEDIUM)_
+- [x] **DEBT-02**: Tailwind color literals (~51 across ~11 chart/aceternity files) map to `@theme` utilities (`bg-bg`, `text-ink`, `border-line`, `bg-accent`). _(F8, MEDIUM)_
+- [x] **DEBT-03**: Banned card shadows (`shadow-sm/md/xl/2xl`) are stripped from cards/graph/detail components; shadow reserved for drawers/modals/hover rows (`--shadow-drawer`/`--shadow-lg`). _(F9, MEDIUM)_
 - [x] **DEBT-04**: Hardcoded radii (`rounded-[…]` + px literals) are replaced with `--radius-sm`/`--radius`/`--radius-lg` (6/8/12), including the shadcn/HeroUI primitive re-skin. _(F10, MEDIUM)_
 - [x] **DEBT-05**: Real gradients (`modern-nav-tokens.css`, aceternity `ui/`, `dashboard-widgets/BenchmarkPreview`) are flattened to flat surface tokens. _(F11, LOW-MED)_
 - [x] **DEBT-06**: The bespoke parallel token ladders in `styles/modern-nav-tokens.css` and `components/copilot/copilot-theme.css` are deleted; those files consume design-system tokens. _(F12, MEDIUM)_
-- [ ] **DEBT-07**: Row heights are driven by `var(--row-h)` — the `!important` pixel overrides in `styles/vertical-timeline.css` and `styles/list-pages.css` are removed. _(F13, MEDIUM)_
+- [x] **DEBT-07**: Row heights are driven by `var(--row-h)` — the `!important` pixel overrides in `styles/vertical-timeline.css` and `styles/list-pages.css` are removed. _(F13, MEDIUM)_
 - [x] **DEBT-08**: User-visible emoji-as-UI (`sla-countdown/SLACountdown.tsx` `⚠️🔴⚡✓`, `dossiers/RelationshipGraph.tsx` empty-state `⚠️`/`🔗`) are replaced with lucide icons (legitimate data emoji — flags, reaction sets — left untouched). _(F14, LOW)_
 
 ### Copy / Marketing Voice (Phase 84)
@@ -104,12 +104,12 @@ Explicitly excluded. Documented to prevent scope creep.
 | FMT-03      | Phase 82 | Complete |
 | FMT-04      | Phase 82 | Complete |
 | DEBT-01     | Phase 83 | Complete |
-| DEBT-02     | Phase 83 | Pending  |
-| DEBT-03     | Phase 83 | Pending  |
+| DEBT-02     | Phase 83 | Complete |
+| DEBT-03     | Phase 83 | Complete |
 | DEBT-04     | Phase 83 | Complete |
 | DEBT-05     | Phase 83 | Complete |
 | DEBT-06     | Phase 83 | Complete |
-| DEBT-07     | Phase 83 | Pending  |
+| DEBT-07     | Phase 83 | Complete |
 | DEBT-08     | Phase 83 | Complete |
 | COPY-01     | Phase 84 | Pending  |
 
