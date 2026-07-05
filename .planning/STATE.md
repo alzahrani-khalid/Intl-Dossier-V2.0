@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
-status: "85-03 shipped (F17/TASTE-02 — .settings-nav.active fill neutralized to var(--surface-raised)/var(--ink); 2px var(--accent) ::before stripe kept verbatim; Sidebar.tsx left untouched per plan default — its active pill is already a neutral color-mix and var(--surface-raised) would be near-invisible on the light sidebar). Human render-parity sign-off deferred to the orchestrator's consolidated post-merge walk. Next: 85-04."
-last_updated: '2026-07-05T09:00:00.000Z'
-last_activity: 2026-07-05 -- Phase 85 Plan 03 complete (F17 neutral active-nav fill)
+status: "85-04 shipped (F19/TASTE-04 — scoped .label-field modifier: settings form-field labels render sentence-case 13px/500 var(--ink-mute); global .label/.dir-linear .label/.t-label/labelVariants byte-unchanged so uppercase meta labels (KPI strips, table headers, topbar) are untouched; AR unaffected — Tajawal rules key off .label). All 4 Phase-85 plans (85-01..85-04) implemented; phase IN PROGRESS pending the orchestrator's SINGLE consolidated human render-parity sign-off (post-merge, EN/AR × dark/light) across all Phase-85 plans."
+last_updated: '2026-07-05T11:30:00.000Z'
+last_activity: 2026-07-05 -- Phase 85 Plan 04 complete (F19 sentence-case settings form-field labels)
 progress:
   total_phases: 5
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 22
-  completed_plans: 21
-  percent: 84
+  completed_plans: 22
+  percent: 100
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Mil
 
 ## Current Position
 
-Phase: 85 — Linear taste refinements (F16-F21) — IN PROGRESS
-Plan: 3 of 4 (85-01, 85-02, 85-03 complete)
-Status: 85-03 shipped (F17/TASTE-02 — .settings-nav.active neutralized to var(--surface-raised)/var(--ink); 2px var(--accent) ::before stripe kept verbatim; Sidebar.tsx untouched per plan default). Human render-parity sign-off deferred to the orchestrator's consolidated post-merge walk. Next: 85-04.
-Last activity: 2026-07-05 -- Phase 85 Plan 03 complete (F17 neutral active-nav fill)
+Phase: 85 — Linear taste refinements (F16-F21) — IN PROGRESS (all 4 plans implemented; awaiting consolidated human render-parity sign-off)
+Plan: 4 of 4 (85-01, 85-02, 85-03, 85-04 complete)
+Status: 85-04 shipped (F19/TASTE-04 — scoped .label-field modifier: settings form-field labels render sentence-case 13px/500 var(--ink-mute); global .label/.t-label/labelVariants byte-unchanged so uppercase meta labels (KPI/table/topbar) untouched; AR unaffected). Human render-parity sign-off for all Phase-85 plans deferred to the orchestrator's single consolidated post-merge walk.
+Last activity: 2026-07-05 -- Phase 85 Plan 04 complete (F19 sentence-case settings form-field labels)
 
-Progress: [█████████░] 91%
+Progress: [██████████] 100%
 
 ### Roadmap Evolution
 

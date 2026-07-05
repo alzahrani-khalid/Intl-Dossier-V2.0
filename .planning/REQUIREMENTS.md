@@ -61,7 +61,7 @@ stays on logical properties (`inline-start`, `ms/me`, `text-start`) for RTL pari
 - [x] **TASTE-01**: Kanban cards drop the `.kcard.overdue` full-height inline-start edge bar; overdue is carried on a red due-date chip (+ optional inline priority-bars glyph) — NOT a priority accent. Current bar correctly flips to inline-start; the replacement preserves logical-property parity. _(F16, MEDIUM)_
 - [ ] **TASTE-02**: Active-nav fill is neutralized from indigo (`--accent-soft`) to `--surface-raised` gray; the thin 2px accent stripe is kept; indigo reserved for primary buttons/on-toggles. _(F17, LOW-MED)_
 - [x] **TASTE-03**: On `/settings` routes, the app sidebar is replaced by the settings sub-nav + a "‹ Back to app" affordance (one nav column, not two). _(F18, MEDIUM)_
-- [ ] **TASTE-04**: Form field labels are sentence-case (`DISPLAY NAME` → `Display name`); scoped to form fields — the shared `.t-label` recipe is untouched. _(F19, MEDIUM)_
+- [x] **TASTE-04**: Form field labels are sentence-case (`DISPLAY NAME` → `Display name`); scoped to form fields — the shared `.t-label` recipe is untouched. _(F19, MEDIUM)_
 - [x] **TASTE-05**: The settings sub-nav is grouped under muted section headers (proposed Account / Privacy & access / Connected — grouping is the user's call). _(F20, LOW)_
 - [x] **TASTE-06**: Each kanban column header shows a colored status glyph before the name (empty ring · amber in-progress · dashed review · green-check done). _(F21, LOW)_
 
@@ -115,7 +115,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | TASTE-01    | Phase 85 | Complete |
 | TASTE-02    | Phase 85 | Pending  |
 | TASTE-03    | Phase 85 | Complete |
-| TASTE-04    | Phase 85 | Pending  |
+| TASTE-04    | Phase 85 | Complete |
 | TASTE-05    | Phase 85 | Complete |
 | TASTE-06    | Phase 85 | Complete |
 
