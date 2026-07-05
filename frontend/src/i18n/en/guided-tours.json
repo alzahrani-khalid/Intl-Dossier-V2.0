@@ -11,10 +11,10 @@
     "startCreating": "Start Creating",
     "uploadFirst": "Upload First",
     "generateFirst": "Generate First",
-    "letsGo": "Let's Go!"
+    "letsGo": "Get started"
   },
   "trigger": {
-    "title": "New here? Let us show you around!",
+    "title": "New here? Start with a quick tour.",
     "cardTitle": "Need help getting started?",
     "startTour": "Start Tour",
     "takeQuickTour": "Take a quick tour",
@@ -33,7 +33,7 @@
       "name": "Welcome Tour",
       "description": "Learn how everything is organized around Dossiers - your central hub for managing international relations.",
       "welcome": {
-        "title": "Welcome to GASTAT Dossier!",
+        "title": "Welcome to GASTAT Dossier",
         "description": "Let's take a quick tour to help you understand how everything is organized around Dossiers - your central hub for managing international relations."
       },
       "replay": "Replay onboarding tour",
@@ -56,13 +56,13 @@
         "relationshipGraph": {
           "title": "See the Connections",
           "content": "Dossiers can be connected to show relationships - like which organizations a country is a member of, or which people attended which forums. The relationship graph visualizes these connections.",
-          "hint": "Explore the network to discover hidden connections and understand how entities relate to each other."
+          "hint": "Explore the network to find hidden connections and understand how entities relate to each other."
         },
         "findWhatYouNeed": {
           "title": "Dossier-First Search",
           "content": "When you search, results are grouped by dossier. This helps you find not just a document, but the full context of what you're looking for.",
           "hint": "Use the search bar or press ⌘K / Ctrl+K to quickly find any dossier, document, or person.",
-          "action": "Let's Go!"
+          "action": "Get started"
         }
       }
     },
@@ -71,7 +71,7 @@
       "description": "Learn how to create and organize dossiers for countries, organizations, and more.",
       "steps": {
         "welcome": {
-          "title": "Welcome to Dossiers!",
+          "title": "Welcome to Dossiers",
           "content": "Dossiers are your central hub for organizing information about countries, organizations, forums, and other key entities. Let's walk through creating your first one.",
           "hint": "Dossiers can contain documents, relationships, engagements, and intelligence signals."
         },
@@ -91,14 +91,14 @@
           "hint": "Arabic names are displayed when the interface is in Arabic mode."
         },
         "finish": {
-          "title": "You're Ready to Go!",
-          "content": "That's all the basics! Once created, you can add documents, track relationships, and build a complete picture of your subject."
+          "title": "You're ready to go",
+          "content": "That's all the basics. Once created, you can add documents, track relationships, and build a complete picture of your subject."
         }
       }
     },
     "relationship": {
       "name": "Connecting Your Data",
-      "description": "Discover how to create relationships between dossiers and visualize your network.",
+      "description": "See how to create relationships between dossiers and visualize your network.",
       "steps": {
         "intro": {
           "title": "Understanding Relationships",
@@ -121,7 +121,7 @@
           "hint": "Click on nodes to navigate to dossiers, or drag to rearrange the layout."
         },
         "finish": {
-          "title": "Start Building Your Network!",
+          "title": "Start building your network",
           "content": "You now know how to create and visualize relationships. Start connecting your dossiers to build a comprehensive network."
         }
       }
@@ -146,7 +146,7 @@
           "hint": "Follow your organization's data classification guidelines."
         },
         "finish": {
-          "title": "Keep Your Documents Organized!",
+          "title": "Keep your documents organized",
           "content": "Upload documents as you work to keep all relevant files in one place. You can preview, download, or delete them anytime."
         }
       }
@@ -176,7 +176,7 @@
           "hint": "Participants can be linked to person dossiers for detailed tracking."
         },
         "finish": {
-          "title": "Start Logging Engagements!",
+          "title": "Start logging engagements",
           "content": "After creating an engagement, add after-action records to capture outcomes, decisions, and commitments."
         }
       }
@@ -201,7 +201,7 @@
           "hint": "Briefs can be exported as PDF or Word documents."
         },
         "finish": {
-          "title": "Generate Your First Brief!",
+          "title": "Generate your first brief",
           "content": "AI briefs save hours of preparation time. The more data in your dossier, the richer the generated brief."
         }
       }
@@ -226,7 +226,7 @@
           "hint": "Include context on when this position was established and by whom."
         },
         "finish": {
-          "title": "Document Your Positions!",
+          "title": "Document your positions",
           "content": "Well-documented positions ensure your team speaks with one voice. Reference them during engagement preparation."
         }
       }
@@ -251,7 +251,7 @@
           "hint": "Renewal reminders are sent 90, 60, and 30 days before expiration."
         },
         "finish": {
-          "title": "Start Tracking MOUs!",
+          "title": "Start tracking MOUs",
           "content": "Keep your agreements organized and never miss a renewal. Attach the signed document for easy reference."
         }
       }
@@ -276,7 +276,7 @@
           "hint": "Overdue commitments are highlighted in your work dashboard."
         },
         "finish": {
-          "title": "Track Your Commitments!",
+          "title": "Track your commitments",
           "content": "Commitments flow to your 'My Work' dashboard. Stay on top of promises and build trust with partners."
         }
       }

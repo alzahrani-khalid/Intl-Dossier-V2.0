@@ -34,7 +34,7 @@
       "title": "No Documents",
       "firstTitle": "Add Your First Document",
       "description": "No documents have been added to this section yet.",
-      "firstDescription": "Upload documents to keep all your important files organized and easily accessible.",
+      "firstDescription": "Upload documents to keep all your important files organized and accessible.",
       "hint": "Supported formats: PDF, DOCX, XLSX, images, and more",
       "create": "Upload Document",
       "createFirst": "Upload First Document",
@@ -198,7 +198,7 @@
     },
     "notifications": {
       "title": "No Notifications",
-      "description": "You're all caught up! New notifications will appear here.",
+      "description": "You're all caught up. New notifications will appear here.",
       "hint": "Notifications include reminders, updates, and alerts from the system",
       "action": "Notification Settings"
     },
@@ -210,7 +210,7 @@
     },
     "tasks": {
       "title": "No Pending Tasks",
-      "description": "Great work! You have no pending tasks.",
+      "description": "Great work. You have no pending tasks.",
       "hint": "Tasks from commitments and assignments will appear here",
       "action": "Create Task"
     },
@@ -284,7 +284,7 @@
           "transcript": {
             "0": "Uploading documents is simple and keeps your files organized.",
             "1": "Click 'Upload Document' and drag files or browse your computer.",
-            "2": "Add tags and link to relevant dossiers for easy discovery.",
+            "2": "Add tags and link to relevant dossiers to make them easier to find.",
             "3": "Your documents are now searchable and linked to your dossiers."
           }
         }
@@ -405,7 +405,7 @@
     "assignee": {
       "badge": "Assignee",
       "title": "No Assigned Tasks",
-      "description": "Great work! You currently have no pending assignments. When requests are assigned to you, they'll appear here with all the details you need to take action.",
+      "description": "Great work. You currently have no pending assignments. When requests are assigned to you, they'll appear here with all the details you need to take action.",
       "workflowTitle": "How Your Tasks Will Appear",
       "hint": "You'll receive notifications when new tasks are assigned. Priority tasks will be highlighted for immediate attention.",
       "steps": {
@@ -446,7 +446,7 @@
   },
   "collaboration": {
     "teamActivity": {
-      "title": "Your Team is Active!",
+      "title": "Your team is active",
       "description": "Others on your team have created {{entityType}}. Consider collaborating to share knowledge and best practices.",
       "statsLabel": "Team Activity",
       "totalCreated": "{{count}} {{entityType}} created by team",
@@ -479,16 +479,16 @@
       "subtitle": "Send an invitation to collaborate on {{entityType}}",
       "cancel": "Cancel",
       "send": "Send Invitation",
-      "success": "Invitation sent successfully!",
+      "success": "Invitation sent.",
       "error": "Failed to send invitation"
     },
     "emptyTeam": {
-      "title": "Be the First!",
+      "title": "Be the first to contribute",
       "description": "You'll be the first to create {{entityType}} in your team. Start building and invite others to contribute."
     },
     "encouragement": {
       "title": "Build Together",
-      "description": "Collaboration strengthens your organization's knowledge base. Every contribution counts!"
+      "description": "Collaboration strengthens your organization's knowledge base. Every contribution counts."
     }
   }
 }
