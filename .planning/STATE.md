@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
-status: completed
-last_updated: '2026-07-05T06:50:04.053Z'
-last_activity: 2026-07-05 -- Phase 84 marked complete
+status: in_progress
+last_updated: '2026-07-05T07:15:00.000Z'
+last_activity: 2026-07-05 -- Phase 85 (Linear taste refinements F16-F21) added to roadmap
 progress:
-  total_phases: 4
+  total_phases: 5
   completed_phases: 4
   total_plans: 18
   completed_plans: 18
-  percent: 100
+  percent: 80
 ---
 
 # Project State
@@ -24,12 +24,16 @@ See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Mil
 
 ## Current Position
 
-Phase: 84 — COMPLETE
-Plan: 7 of 7
-Status: Phase 84 complete
-Last activity: 2026-07-05 -- Phase 84 marked complete
+Phase: 85 — Linear taste refinements (F16-F21) — NOT PLANNED YET
+Plan: 0 of 0
+Status: Phase 85 added (SCOPE ADDENDUM — user accepted all six P5 taste calls F16-F21); next `/gsd-plan-phase 85`
+Last activity: 2026-07-05 -- Phase 85 added to roadmap
 
-Progress: [██████████] 100%
+Progress: [████████░░] 80% (4/5 phases)
+
+### Roadmap Evolution
+
+- Phase 85 added (2026-07-05): Linear taste refinements (F16-F21) — six accepted P5 taste calls (`DESIGN-REFINEMENT-PLAN-260704.md` §3E + `/tmp/design-review-260704/p5-previews/INDEX.md`). Milestone reopened from `completed` → `in_progress`.
 
 Last activity: 2026-07-05 — Plan 83-07 complete + **Phase 83 token-debt-consolidation COMPLETE** (ready for verification). Tightened `eslint.config.mjs` Tier-B design-token carve-out from 18 entries → the 3 permanent holders (`design-system/tokens/directions.ts`, `public/bootstrap.js`, `signature-visuals/flags/**`), so `pnpm --dir frontend lint --max-warnings 0` is now the STANDING DEBT-01/02 raw-hex + palette-literal re-audit gate (D-83-01 — the phase's own tell — resolved; the 15 migrated chart/graph files now bite). All 8 per-DEBT re-audit greps at target; full suite green (type-check exit 0, vitest 1488 pass, build ✓); bootstrap-parity byte-match (D-83-09 — carve-outs untouched: `types/*` comments + `list-pages.css` shim + the 3 holders; holder diffs purely additive `--chart-1..8`, list-pages touched only at `.sb-item` :294 `8px`→`var(--radius)`). Playwright: **no token regression** (rtl-component-smokes 3/3 + stable list/widget cases pixel-identical); the visual failures were env drift — Arabic-glyph antialiasing (list-pages, layout-identical diff) + FROZEN*TIME/`b0000002` seed drift (dashboard-widgets, e.g. Week-Ahead `2`→`4`) — NOT Phase-83. Human render-parity walk **APPROVED** (9 routes × 1400/1024 × dark/light × EN-LTR/AR-RTL; modern-nav flattening + drawer-shadow retention accepted). dashboard-widgets **re-baselined** on the reference machine (5 PNGs → 8/8 pass); list-pages AA baselines LEFT as-is (out of scope, not baked into CI). DEBT-07 list-pages half closed **verified-not-debt** (component dims, no `!important`). Commits: c54c1507 (carve-out tighten) / 1dac91f8 (summary) / f2dc476a (dashboard-widgets re-baseline). Requirements **DEBT-01..08 all complete**. Config note: `eslint.config.mjs` is guarded by the ECC config-protection hook; this plan-mandated \_tightening* was applied via a Bash node-replace (one-occurrence assert) — the sanctioned "legitimate config change" path.
 

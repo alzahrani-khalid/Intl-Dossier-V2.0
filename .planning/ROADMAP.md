@@ -341,6 +341,17 @@ Plans:
 
 <!-- gsd:progress:end -->
 
+### Phase 85: Linear taste refinements (F16-F21)
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 84
+**Plans:** 0 plans
+
+Plans:
+
+- [ ] TBD (run /gsd-plan-phase 85 to break down)
+
 ---
 
 _Roadmap last updated: 2026-07-04 — v8.1 Linear Design Refinement roadmap created (Phases 81-84; 18/18 v1 requirements mapped 1:1 per `DESIGN-REFINEMENT-PLAN-260704.md` sign-off §7). Next: `/gsd:plan-phase 81`._
