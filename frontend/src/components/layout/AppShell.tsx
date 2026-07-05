@@ -118,6 +118,11 @@ export function AppShell({ children }: AppShellProps): ReactElement {
   // without a provider (test-safe).
   const isRTL = useRadixDirection() === 'rtl'
   const pathname = useRouterState({ select: (s) => s.location.pathname })
+  // F18 (D-85-03): on /settings the SettingsLayout renders its own 240px nav
+  // column, so the global Sidebar is suppressed to leave a single nav column.
+  // Both Sidebar mounts (desktop aside + mobile drawer) gate off this flag, and
+  // the empty desktop rail collapses to 0px so content occupies the freed space.
+  const isSettingsRoute = pathname.startsWith('/settings')
 
   // Plain React boolean for drawer openness. We bridge it into HeroUI's
   // `UseOverlayStateReturn` shape via `useOverlayState({ isOpen, onOpenChange })`
@@ -170,23 +175,27 @@ export function AppShell({ children }: AppShellProps): ReactElement {
       className={cn(
         'app appshell relative min-h-screen w-full',
         'grid grid-rows-[auto_auto_1fr]',
-        'lg:grid-cols-[16rem_1fr]',
+        isSettingsRoute ? 'lg:grid-cols-[0px_1fr]' : 'lg:grid-cols-[16rem_1fr]',
         'bg-[var(--bg)] text-[var(--ink)]',
       )}
       data-sidebar-default={storedOpenRef.current ? 'open' : 'closed'}
     >
-      {/* Desktop sidebar column — hidden below lg breakpoint; drawer replaces it. */}
-      <aside
-        className={cn(
-          'sidebar appshell-aside',
-          'hidden lg:block',
-          'lg:col-start-1 lg:row-span-full',
-          'border-e border-[var(--line)]',
-          'bg-[var(--sidebar-bg)]',
-        )}
-      >
-        <Sidebar />
-      </aside>
+      {/* Desktop sidebar column — hidden below lg breakpoint; drawer replaces it.
+          Suppressed entirely on /settings (F18) so the settings sub-nav is the
+          single nav column. */}
+      {!isSettingsRoute && (
+        <aside
+          className={cn(
+            'sidebar appshell-aside',
+            'hidden lg:block',
+            'lg:col-start-1 lg:row-span-full',
+            'border-e border-[var(--line)]',
+            'bg-[var(--sidebar-bg)]',
+          )}
+        >
+          <Sidebar />
+        </aside>
+      )}
 
       {/* Topbar — row 1 of main column on desktop, row 1 full-width on mobile. */}
       <div className="appshell-top lg:col-start-2 lg:row-start-1">
@@ -223,27 +232,31 @@ export function AppShell({ children }: AppShellProps): ReactElement {
       {/* Mobile overlay drawer — only engages below lg. HeroUI Drawer renders
           into a portal, so the `lg:hidden` guard goes on its root class via
           `classNames.wrapper` + `classNames.base`. Placement flips between
-          'left' (LTR) and 'right' (RTL) via `document.dir` (Pitfall 1). */}
-      <Drawer state={overlayState}>
-        <Drawer.Backdrop>
-          <Drawer.Content placement={isRTL ? 'right' : 'left'}>
-            <Drawer.Dialog
-              aria-label={t('shell.menu.open')}
-              className={cn('w-[280px] max-sm:w-screen lg:hidden p-0')}
-            >
-              <Drawer.Body className="p-0">
-                <div
-                  className="appshell-drawer-panel h-full w-full"
-                  onClick={handlePanelClick}
-                  role="presentation"
-                >
-                  <Sidebar />
-                </div>
-              </Drawer.Body>
-            </Drawer.Dialog>
-          </Drawer.Content>
-        </Drawer.Backdrop>
-      </Drawer>
+          'left' (LTR) and 'right' (RTL) via `document.dir` (Pitfall 1).
+          Not mounted on /settings (F18) — the global Sidebar never appears
+          there, and no empty drawer is reachable. */}
+      {!isSettingsRoute && (
+        <Drawer state={overlayState}>
+          <Drawer.Backdrop>
+            <Drawer.Content placement={isRTL ? 'right' : 'left'}>
+              <Drawer.Dialog
+                aria-label={t('shell.menu.open')}
+                className={cn('w-[280px] max-sm:w-screen lg:hidden p-0')}
+              >
+                <Drawer.Body className="p-0">
+                  <div
+                    className="appshell-drawer-panel h-full w-full"
+                    onClick={handlePanelClick}
+                    role="presentation"
+                  >
+                    <Sidebar />
+                  </div>
+                </Drawer.Body>
+              </Drawer.Dialog>
+            </Drawer.Content>
+          </Drawer.Backdrop>
+        </Drawer>
+      )}
     </div>
   )
 }
