@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
-status: "85-02 shipped (F18 settings single-nav + back-to-app; F20 grouped settings sub-nav under Account / Privacy & access / Connected headers). Task 3 human render-parity sign-off (incl. bucket confirmation) deferred to the orchestrator's consolidated post-merge walk. Next: 85-03..04."
-last_updated: '2026-07-05T08:17:01.709Z'
-last_activity: 2026-07-05 -- Phase 85 Plan 02 complete (F18 settings single-nav + F20 grouped sub-nav)
+status: "85-03 shipped (F17/TASTE-02 — .settings-nav.active fill neutralized to var(--surface-raised)/var(--ink); 2px var(--accent) ::before stripe kept verbatim; Sidebar.tsx left untouched per plan default — its active pill is already a neutral color-mix and var(--surface-raised) would be near-invisible on the light sidebar). Human render-parity sign-off deferred to the orchestrator's consolidated post-merge walk. Next: 85-04."
+last_updated: '2026-07-05T09:00:00.000Z'
+last_activity: 2026-07-05 -- Phase 85 Plan 03 complete (F17 neutral active-nav fill)
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 22
-  completed_plans: 20
-  percent: 80
+  completed_plans: 21
+  percent: 84
 ---
 
 # Project State
@@ -25,9 +25,9 @@ See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Mil
 ## Current Position
 
 Phase: 85 — Linear taste refinements (F16-F21) — IN PROGRESS
-Plan: 2 of 4 (85-01, 85-02 complete)
-Status: 85-02 shipped (F18 settings single-nav + back-to-app; F20 grouped settings sub-nav under Account / Privacy & access / Connected headers). Task 3 human render-parity sign-off (incl. bucket confirmation) deferred to the orchestrator's consolidated post-merge walk. Next: 85-03..04.
-Last activity: 2026-07-05 -- Phase 85 Plan 02 complete (F18 settings single-nav + F20 grouped sub-nav)
+Plan: 3 of 4 (85-01, 85-02, 85-03 complete)
+Status: 85-03 shipped (F17/TASTE-02 — .settings-nav.active neutralized to var(--surface-raised)/var(--ink); 2px var(--accent) ::before stripe kept verbatim; Sidebar.tsx untouched per plan default). Human render-parity sign-off deferred to the orchestrator's consolidated post-merge walk. Next: 85-04.
+Last activity: 2026-07-05 -- Phase 85 Plan 03 complete (F17 neutral active-nav fill)
 
 Progress: [█████████░] 91%
 
