@@ -793,8 +793,8 @@ html[dir='rtl'] .tb-locale-btn,
   background: var(--line-soft);
 }
 .settings-nav.active {
-  background: var(--accent-soft);
-  color: var(--accent-ink);
+  background: var(--surface-raised);
+  color: var(--ink);
 }
 .settings-nav.active::before {
   content: '';
