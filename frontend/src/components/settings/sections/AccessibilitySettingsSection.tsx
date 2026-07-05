@@ -122,7 +122,10 @@ export function AccessibilitySettingsSection({ form }: AccessibilitySettingsSect
                 >
                   <RadioGroupItem value={option.value} id={option.value} />
                   {/* Label carries the click target (a11y) — no div onClick */}
-                  <Label htmlFor={option.value} className="text-sm cursor-pointer flex-1">
+                  <Label
+                    htmlFor={option.value}
+                    className="label-field text-sm cursor-pointer flex-1"
+                  >
                     {option.label}
                   </Label>
                 </div>

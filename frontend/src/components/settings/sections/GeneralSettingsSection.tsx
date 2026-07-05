@@ -47,7 +47,7 @@ export function GeneralSettingsSection({ form }: GeneralSettingsSectionProps) {
         <SettingsGroup>
           <div className="space-y-3">
             <div>
-              <Label className="text-start block">
+              <Label className="label-field text-start block">
                 <span className="flex items-center gap-2">
                   <Globe className="h-4 w-4" />
                   {t('general.language')}
@@ -84,7 +84,7 @@ export function GeneralSettingsSection({ form }: GeneralSettingsSectionProps) {
         <SettingsGroup>
           <div className="space-y-3">
             <div>
-              <Label className="text-start block">
+              <Label className="label-field text-start block">
                 <span className="flex items-center gap-2">
                   <Clock className="h-4 w-4" />
                   {t('general.timezone')}
@@ -116,7 +116,7 @@ export function GeneralSettingsSection({ form }: GeneralSettingsSectionProps) {
         <SettingsGroup>
           <div className="space-y-3">
             <div>
-              <Label className="text-start block">
+              <Label className="label-field text-start block">
                 <span className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
                   {t('general.dateFormat')}
@@ -147,7 +147,7 @@ export function GeneralSettingsSection({ form }: GeneralSettingsSectionProps) {
         <SettingsGroup>
           <div className="space-y-3">
             <div>
-              <Label className="text-start block">{t('general.startOfWeek')}</Label>
+              <Label className="label-field text-start block">{t('general.startOfWeek')}</Label>
               <p className="text-xs text-muted-foreground mt-1 text-start">
                 {t('general.startOfWeekHint')}
               </p>
