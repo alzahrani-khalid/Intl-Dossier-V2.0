@@ -16,7 +16,7 @@
 - ✅ **v6.6 Dossier Workflow Completion** — Phases 62-67 (shipped 2026-06-13) — [archive](milestones/v6.6-ROADMAP.md)
 - ✅ **v7.0 Intelligence Engine** — Phases 68-74 (shipped 2026-06-24) — [archive](milestones/v7.0-ROADMAP.md)
 - ✅ **v8.0 Linear Design System Migration** — Phases 75-80 (shipped 2026-07-04) — [archive](milestones/v8.0-ROADMAP.md)
-- 🚧 **v8.1 Linear Design Refinement** — Phases 81-84 (in progress, started 2026-07-04)
+- 🚧 **v8.1 Linear Design Refinement** — Phases 81-85 (in progress, started 2026-07-04)
 
 ## Phases
 
@@ -216,14 +216,15 @@ Full detail: [milestones/v8.0-ROADMAP.md](milestones/v8.0-ROADMAP.md). Audit: [m
 
 </details>
 
-### 🚧 v8.1 Linear Design Refinement (Phases 81-84) — IN PROGRESS
+### 🚧 v8.1 Linear Design Refinement (Phases 81-85) — IN PROGRESS
 
-**Milestone Goal:** Land the signed-off corrective design-refinement workstream (visible bugs + Linear spec-compliance) with zero regressions across dark-canonical + light and EN/LTR + AR/RTL. Source of truth: `DESIGN-REFINEMENT-PLAN-260704.md` (findings F1–F15 + F22; user sign-off §7). Corrective only — F16–F21 taste calls (separate previews-only lane, none pre-approved) and F23–F26 affordance enhancements (later milestone) are explicitly OUT.
+**Milestone Goal:** Land the signed-off corrective design-refinement workstream (visible bugs + Linear spec-compliance) with zero regressions across dark-canonical + light and EN/LTR + AR/RTL. Source of truth: `DESIGN-REFINEMENT-PLAN-260704.md` (findings F1–F15 + F22; user sign-off §7). Corrective phases 81–84 plus Phase 85 — the six F16–F21 taste calls the user individually signed off on (2026-07-04 SCOPE ADDENDUM). F23–F26 affordance enhancements (later milestone) remain explicitly OUT.
 
 - [x] **Phase 81: Visible Bugs** - Fix the 5 visible design bugs from the 6-route Linear audit (kanban 4-column clipping, duplicate settings header, duplicate calendar create button, raw enum status pills, KPI label wrap) (completed 2026-07-04)
 - [x] **Phase 82: Date/Number Formatting** - Centralize date/time on the spec's day-first no-comma + GST rule, migrate the ~66 ad-hoc `toLocaleDateString` sites, add a regression guard, fix the mixed-script Arabic overdue unit (completed 2026-07-04)
 - [x] **Phase 83: Token-Debt Consolidation** - Consolidate systemic token debt in charts/graphs/aceternity-kit onto design-system tokens (verified carve-outs untouched) (completed 2026-07-05)
 - [x] **Phase 84: Copy / Marketing Voice** - Copy-edit `i18n/en` off marketing voice; `en` drives `ar` (completed 2026-07-05)
+- [ ] **Phase 85: Linear Taste Refinements (F16-F21)** - Land the six user-signed-off taste calls: kanban overdue reframing, neutral active-nav fill, settings single-nav + back-to-app, sentence-case form labels, grouped settings sub-nav, colored kanban column-header glyphs
 
 ### Phase 81: Visible Bugs
 
@@ -346,11 +347,14 @@ Plans:
 **Goal:** Land the six user-signed-off Linear-taste refinements (F16–F21) — kanban overdue reframing (drop the full-height edge bar for a red due-date chip + optional priority glyph), neutral active-nav fill, settings single-nav with back-to-app, sentence-case form labels, grouped settings sub-nav, and colored kanban column-header glyphs — with zero regressions across dark-canonical + light and EN/LTR + AR/RTL, every change on logical properties.
 **Requirements**: TASTE-01, TASTE-02, TASTE-03, TASTE-04, TASTE-05, TASTE-06
 **Depends on:** Phase 84
-**Plans:** 0 plans
+**Plans:** 4 plans
 
 Plans:
 
-- [ ] TBD (run /gsd-plan-phase 85 to break down)
+- [ ] 85-01-PLAN.md — F16 kanban overdue reframing + F21 column-header status glyphs (TASTE-01, TASTE-06)
+- [ ] 85-02-PLAN.md — F18 settings single-nav + back-to-app, F20 grouped settings sub-nav (TASTE-03, TASTE-05)
+- [ ] 85-03-PLAN.md — F17 neutralize .settings-nav.active fill, keep accent stripe (TASTE-02)
+- [ ] 85-04-PLAN.md — F19 sentence-case form-field labels via scoped .label-field (TASTE-04)
 
 ---
 
