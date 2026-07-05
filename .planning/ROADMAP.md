@@ -347,12 +347,12 @@ Plans:
 **Goal:** Land the six user-signed-off Linear-taste refinements (F16–F21) — kanban overdue reframing (drop the full-height edge bar for a red due-date chip + optional priority glyph), neutral active-nav fill, settings single-nav with back-to-app, sentence-case form labels, grouped settings sub-nav, and colored kanban column-header glyphs — with zero regressions across dark-canonical + light and EN/LTR + AR/RTL, every change on logical properties.
 **Requirements**: TASTE-01, TASTE-02, TASTE-03, TASTE-04, TASTE-05, TASTE-06
 **Depends on:** Phase 84
-**Plans:** 1/4 plans executed
+**Plans:** 2/4 plans executed
 
 Plans:
 
 - [x] 85-01-PLAN.md — F16 kanban overdue reframing + F21 column-header status glyphs (TASTE-01, TASTE-06)
-- [ ] 85-02-PLAN.md — F18 settings single-nav + back-to-app, F20 grouped settings sub-nav (TASTE-03, TASTE-05)
+- [x] 85-02-PLAN.md — F18 settings single-nav + back-to-app, F20 grouped settings sub-nav (TASTE-03, TASTE-05)
 - [ ] 85-03-PLAN.md — F17 neutralize .settings-nav.active fill, keep accent stripe (TASTE-02)
 - [ ] 85-04-PLAN.md — F19 sentence-case form-field labels via scoped .label-field (TASTE-04)
 
