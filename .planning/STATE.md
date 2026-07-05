@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v8.1
 milestone_name: Linear Design Refinement
-status: executing
-last_updated: '2026-07-05T06:36:47.079Z'
-last_activity: 2026-07-05 -- Phase 84 planning complete
+status: verifying
+last_updated: '2026-07-05T06:47:26.208Z'
+last_activity: 2026-07-05
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 18
-  completed_plans: 17
-  percent: 75
+  completed_plans: 18
+  percent: 100
 ---
 
 # Project State
@@ -26,8 +26,8 @@ See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Mil
 
 Phase: 83 — COMPLETE
 Plan: 7 of 7
-Status: Ready to execute
-Last activity: 2026-07-05 -- Phase 84 planning complete
+Status: Phase complete — ready for verification
+Last activity: 2026-07-05
 
 Progress: [██████████] 100%
 
@@ -170,6 +170,7 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase ?]: 83-05: rounded-xs=2px CONFIRMED in dist CSS (.rounded-xs{calc(var(--radius)\*.25)}); used named form. DEBT-03/04/05 closed for ALL slices except 83-06 (modern-nav/copilot) — NOT marked complete
 - [Phase ?]: 83-06: modern-nav re-skinned onto Linear DS tokens; bespoke shadow/radius/space/hsl ladders + glassmorphism deleted (613->190 lines); demo route kept, restyled flat
 - [Phase ?]: 83-06: bg-panel/text-content-text/bg-badge/text-icon-rail-\* are undefined no-op Tailwind classes (no @theme or config mapping); real var() consumers were the tokens-file recipes + IconButton.tsx only — deletion proven safe
+- [Phase 84]: COPY-01: marketing voice removed from 4 en i18n namespaces (21 '!', 6 Discover/easily, 'Let us show you around'); ar mirrored en (D-84-05); duplicate-detection.json + ar 'اكتشاف التعارضات' left untouched (D-84-09). Values-only, en/ar key parity + label-parity green.
 
 ### Open Todos
 

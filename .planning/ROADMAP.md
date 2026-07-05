@@ -223,7 +223,7 @@ Full detail: [milestones/v8.0-ROADMAP.md](milestones/v8.0-ROADMAP.md). Audit: [m
 - [x] **Phase 81: Visible Bugs** - Fix the 5 visible design bugs from the 6-route Linear audit (kanban 4-column clipping, duplicate settings header, duplicate calendar create button, raw enum status pills, KPI label wrap) (completed 2026-07-04)
 - [x] **Phase 82: Date/Number Formatting** - Centralize date/time on the spec's day-first no-comma + GST rule, migrate the ~66 ad-hoc `toLocaleDateString` sites, add a regression guard, fix the mixed-script Arabic overdue unit (completed 2026-07-04)
 - [x] **Phase 83: Token-Debt Consolidation** - Consolidate systemic token debt in charts/graphs/aceternity-kit onto design-system tokens (verified carve-outs untouched) (completed 2026-07-05)
-- [ ] **Phase 84: Copy / Marketing Voice** - Copy-edit `i18n/en` off marketing voice; `en` drives `ar`
+- [x] **Phase 84: Copy / Marketing Voice** - Copy-edit `i18n/en` off marketing voice; `en` drives `ar` (completed 2026-07-05)
 
 ### Phase 81: Visible Bugs
 
@@ -309,7 +309,7 @@ Plans:
 
 Plans:
 
-- [ ] 84-01-PLAN.md — Copy-edit 4 en namespaces off marketing voice + mirror calm register into ar (values only, D-84-09 carve-out)
+- [x] 84-01-PLAN.md — Copy-edit 4 en namespaces off marketing voice + mirror calm register into ar (values only, D-84-09 carve-out)
 
 ---
 
@@ -337,7 +337,7 @@ Plans:
 | 81 | v8.1 | 3/3 | Complete | 2026-07-04 |
 | 82 | v8.1 | 7/7 | Complete | 2026-07-04 |
 | 83 | v8.1 | 7/7 | Complete | 2026-07-05 |
-| 84 | v8.1 | 0/1 phases | In progress | - |
+| 84 | v8.1 | 1/1 | Complete   | 2026-07-05 |
 
 <!-- gsd:progress:end -->
 

@@ -50,7 +50,7 @@ kit (Plan §3C). **Do NOT touch the verified carve-outs** (see Out of Scope).
 
 Copy-edit pass on `i18n/en`; `en` drives `ar` (Plan §3D).
 
-- [ ] **COPY-01**: Marketing voice is removed from `i18n/en` — "Discover" (`guided-tours`, `relationships`, `progressive-disclosure`), "easily accessible" (`empty-states`), "Let us show you around" (`guided-tours`), and exclamation marks across `empty-states.json` + `guided-tours.json` are copy-edited to sentence-case, no-`!` prose; the source `en` is fixed so `ar` follows. _(F15, MEDIUM)_
+- [x] **COPY-01**: Marketing voice is removed from `i18n/en` — "Discover" (`guided-tours`, `relationships`, `progressive-disclosure`), "easily accessible" (`empty-states`), "Let us show you around" (`guided-tours`), and exclamation marks across `empty-states.json` + `guided-tours.json` are copy-edited to sentence-case, no-`!` prose; the source `en` is fixed so `ar` follows. _(F15, MEDIUM)_
 
 ## v2 Requirements
 
@@ -111,7 +111,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | DEBT-06     | Phase 83 | Complete |
 | DEBT-07     | Phase 83 | Complete |
 | DEBT-08     | Phase 83 | Complete |
-| COPY-01     | Phase 84 | Pending  |
+| COPY-01     | Phase 84 | Complete |
 
 **Coverage:**
 
