@@ -135,6 +135,11 @@
   flex-grow: 1;
 }
 
+/* Phase 85 D-85-06 — stage status glyph never compresses at narrow widths. */
+.col-glyph {
+  flex-shrink: 0;
+}
+
 .col-count {
   font-family: var(--font-mono);
   font-size: 11px;
