@@ -7,7 +7,6 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
 import {
   Calendar,
   MapPin,
@@ -21,6 +20,7 @@ import {
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { formatDayFirstYear } from '@/lib/format-date'
 import type { MeetingMinutesListItem, MeetingMinutesStatus } from '@/types/meeting-minutes.types'
 import { STATUS_COLORS } from '@/types/meeting-minutes.types'
 import { useDirection } from '@/hooks/useDirection'
@@ -51,7 +51,7 @@ export function MeetingMinutesCard({ minutes, onClick, className }: MeetingMinut
     <Card
       className={cn(
         'cursor-pointer transition-all duration-200',
-        'hover:shadow-md hover:border-primary/30',
+        'hover:border-primary/30',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
         className,
       )}
@@ -92,7 +92,7 @@ export function MeetingMinutesCard({ minutes, onClick, className }: MeetingMinut
           {/* Date */}
           <div className="flex items-center gap-1.5">
             <Calendar className="h-4 w-4 shrink-0" />
-            <span>{format(new Date(minutes.meeting_date), 'MMM d, yyyy')}</span>
+            <span>{formatDayFirstYear(minutes.meeting_date)}</span>
           </div>
 
           {/* Location or Virtual */}

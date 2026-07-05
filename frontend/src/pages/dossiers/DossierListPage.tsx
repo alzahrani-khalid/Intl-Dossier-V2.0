@@ -512,11 +512,7 @@ export function DossierListPage() {
             }
           >
             <Button
-              className={cn(
-                'w-full sm:w-auto',
-                'shadow-md hover:shadow-lg',
-                'transition-all duration-200',
-              )}
+              className={cn('w-full sm:w-auto', 'hover:shadow-lg', 'transition-all duration-200')}
             >
               <Plus className={cn('h-5 w-5', isRTL ? 'ms-2' : 'me-2')} />
               {t('list.createNew')}
@@ -619,9 +615,7 @@ export function DossierListPage() {
                   'bg-background/40 border border-border',
                   'rounded-2xl',
                   'text-sm placeholder:text-muted-foreground/40',
-                  'shadow-sm',
                   'focus-visible:bg-background/60 focus-visible:border-input',
-                  'focus-visible:shadow-md',
                   'transition-all duration-150',
                 )}
               />
@@ -632,7 +626,7 @@ export function DossierListPage() {
             className={cn(
               'w-full sm:w-auto px-6',
               'rounded-xl',
-              'shadow-md hover:shadow-lg',
+              'hover:shadow-lg',
               'transition-all duration-200',
             )}
           >
@@ -657,7 +651,6 @@ export function DossierListPage() {
                       'h-12 justify-between w-full',
                       'bg-background/40 border border-border',
                       'rounded-xl',
-                      'shadow-sm',
                       'hover:bg-background/60 hover:border-input',
                       'transition-all duration-150',
                     )}
@@ -732,7 +725,6 @@ export function DossierListPage() {
                   'h-12',
                   'bg-background/40 border border-border',
                   'rounded-xl',
-                  'shadow-sm',
                   'hover:bg-background/60 hover:border-input',
                   'transition-all duration-150',
                 )}
@@ -758,7 +750,6 @@ export function DossierListPage() {
                   'h-12',
                   'bg-background/40 border border-border',
                   'rounded-xl',
-                  'shadow-sm',
                   'hover:bg-background/60 hover:border-input',
                   'transition-all duration-150',
                 )}
@@ -958,7 +949,6 @@ export function DossierListPage() {
                       'bg-background/40 border border-border',
                       'hover:bg-background/60 hover:border-input',
                       'disabled:opacity-40 disabled:cursor-not-allowed',
-                      'shadow-sm hover:shadow-md',
                       'transition-all duration-150',
                     )}
                   >
@@ -978,7 +968,6 @@ export function DossierListPage() {
                       'bg-background/40 border border-border',
                       'hover:bg-background/60 hover:border-input',
                       'disabled:opacity-40 disabled:cursor-not-allowed',
-                      'shadow-sm hover:shadow-md',
                       'transition-all duration-150',
                     )}
                   >

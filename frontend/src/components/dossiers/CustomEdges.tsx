@@ -126,7 +126,7 @@ export const CustomEdge = memo((({
             }}
             className="nodrag nopan"
           >
-            <div className="bg-card border-2 border-border px-2.5 py-1 rounded-md shadow-md">
+            <div className="bg-card border-2 border-border px-2.5 py-1 rounded-md">
               <span className="text-xs font-medium text-card-foreground whitespace-nowrap">
                 {label}
               </span>

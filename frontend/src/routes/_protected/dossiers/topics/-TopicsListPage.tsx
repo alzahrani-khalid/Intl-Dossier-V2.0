@@ -7,6 +7,7 @@
 import { useCallback, useMemo, type ReactElement } from 'react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { BookOpen } from 'lucide-react'
 import { ListPageShell, GenericListPage, ToolbarSearch } from '@/components/list-page'
 import type { GenericListPageItem } from '@/components/list-page'
@@ -63,13 +64,7 @@ export function TopicsListPage(): ReactElement {
       const nameAr = typeof row.name_ar === 'string' ? row.name_ar : ''
       const primary = isRTL && nameAr.length > 0 ? nameAr : nameEn
       const updated =
-        typeof row.updated_at === 'string'
-          ? new Intl.DateTimeFormat(isRTL ? 'ar-SA' : 'en-US', {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric',
-            }).format(new Date(row.updated_at))
-          : undefined
+        typeof row.updated_at === 'string' ? formatDayFirstYear(row.updated_at) : undefined
       return {
         id: String(row.id),
         primary,

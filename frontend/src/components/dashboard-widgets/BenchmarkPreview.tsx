@@ -26,6 +26,7 @@ import {
   Users,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { toFormatLocale } from '@/lib/format-locale'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -137,9 +138,9 @@ function BenchmarkStatCard({
     <div
       className={cn(
         'flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg',
-        'bg-gradient-to-br from-primary/5 to-primary/10',
+        'bg-accent/5',
         'border border-primary/10',
-        'transition-all duration-200 hover:shadow-md hover:border-primary/20',
+        'transition-all duration-200 hover:border-primary/20',
         compact ? 'p-2 sm:p-3' : 'p-3 sm:p-4',
       )}
     >
@@ -160,7 +161,7 @@ function BenchmarkStatCard({
           )}
           dir="ltr"
         >
-          {category.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+          {category.value.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
         </p>
         <p
           className={cn(
@@ -267,13 +268,7 @@ export function BenchmarkPreview({
   }
 
   return (
-    <Card
-      className={cn(
-        'relative overflow-hidden border-primary/20',
-        'bg-gradient-to-br from-background via-background to-primary/5',
-        className,
-      )}
-    >
+    <Card className={cn('relative overflow-hidden border-primary/20', 'bg-bg', className)}>
       {/* Decorative background elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-24 -end-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl" />

@@ -6,7 +6,7 @@
  *   2. Row child order: .act-t (mono time) → <Icon/> → sentence span
  *   3. Icon mapping per action_type (6+ glyphs from Wave 0 IconName union)
  *   4. .act-where element renders inside the sentence (CSS class drives color)
- *   5. AR locale converts time digits via toArDigits
+ *   5. AR locale renders Latin time digits with a localized Arabic suffix (policy D)
  *   6. R-05 conditional click: relative `/...` URLs are interactive; absent → not interactive
  *   7. R-05 open-redirect guard: external/protocol-relative/javascript:/empty URLs render NON-interactive
  *
@@ -149,18 +149,18 @@ describe('ActivityList', () => {
     expect(container.querySelector('.act-where')).not.toBeNull()
   })
 
-  it('Test 5 — AR locale converts time digits via toArDigits', () => {
+  it('Test 5 — AR locale renders Latin time digits with Arabic suffix', () => {
     i18nLanguage = 'ar'
-    // 5 minutes ago → "5m" in EN, "٥د" in AR (formatRelativeTime branches on locale)
+    // 5 minutes ago → "5m" in EN, "5د" in AR (formatRelativeTime branches on locale)
     const activities = [
       makeActivity({ created_at: new Date(Date.now() - 5 * 60_000).toISOString() }),
     ]
     const { container } = render(<ActivityList activities={activities} />)
     const t = container.querySelector('.act-t')
     expect(t).not.toBeNull()
-    // AR digits 0-9: ٠١٢٣٤٥٦٧٨٩ — assert the literal "5" was replaced with "٥".
-    expect(t!.textContent ?? '').toMatch(/٥/)
-    expect(t!.textContent ?? '').not.toMatch(/[0-9]/)
+    // Policy D: Latin digit "5" with the localized Arabic minute suffix "د".
+    expect(t!.textContent ?? '').toMatch(/5د/)
+    expect(t!.textContent ?? '').not.toMatch(/[٠-٩]/)
   })
 
   it('Test 6 — R-05 row click: relative path is interactive; absent metadata is not', async () => {

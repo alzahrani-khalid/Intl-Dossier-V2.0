@@ -111,7 +111,7 @@ export function AvailabilityPollingPage() {
       <Card
         key={poll.id}
         className={cn(
-          'transition-all hover:shadow-md cursor-pointer',
+          'transition-all cursor-pointer',
           viewMode === 'list' && 'flex flex-row items-center',
         )}
       >

@@ -128,10 +128,10 @@ describe('BoardToolbar — Phase 39 Plan 03', () => {
     expect(chip.className).toContain('font-mono')
   })
 
-  it('Test 4 (ar): overdue chip renders Arabic-Indic digits via toArDigits', () => {
+  it('Test 4 (ar): overdue chip renders Latin digits with Arabic label', () => {
     currentLang = 'ar'
     renderToolbar({ overdueCount: 27 })
-    const chip = screen.getByText(/٢٧ متأخر/)
+    const chip = screen.getByText(/27 متأخر/)
     expect(chip).toBeTruthy()
   })
 

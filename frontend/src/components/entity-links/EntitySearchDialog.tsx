@@ -9,7 +9,7 @@
 
 import { useState, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { Search, X, Loader2, CheckCircle2, AlertTriangle } from 'lucide-react'
 import {
   Dialog,
@@ -311,7 +311,7 @@ export function EntitySearchDialog({
                         'touch-manipulation',
                         'whitespace-nowrap',
                         'transition-all duration-200',
-                        isSelected && 'shadow-sm',
+                        isSelected && '',
                       )}
                       onClick={() => toggleEntityType(type)}
                       aria-label={t(`entityLinks.entityTypes.${type}`)}
@@ -582,11 +582,7 @@ export function EntitySearchDialog({
                               {entity.last_linked_at && (
                                 <span className="flex items-center gap-1">
                                   <span className="font-medium">Last used:</span>
-                                  <span>
-                                    {new Date(entity.last_linked_at).toLocaleDateString(
-                                      toFormatLocale(isRTL ? 'ar' : 'en'),
-                                    )}
-                                  </span>
+                                  <span>{formatDayFirstYear(entity.last_linked_at)}</span>
                                 </span>
                               )}
                             </div>

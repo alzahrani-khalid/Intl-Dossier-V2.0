@@ -70,7 +70,7 @@ const DossierNode = memo(({ data }: { data: NodeData }) => {
   const name = isRTL ? data.name_ar : data.name_en
 
   return (
-    <Card className="min-w-[200px] px-4 py-3 border-2 shadow-md">
+    <Card className="min-w-[200px] px-4 py-3 border-2">
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-2">
           <span className="text-sm font-semibold truncate">{name}</span>
@@ -283,7 +283,7 @@ function GraphVisualizationInner({
         {(enableTypeFilter || enableRelationshipFilter) && (
           <Panel
             position={isRTL ? 'top-left' : 'top-right'}
-            className="bg-background/95 p-3 rounded-lg border shadow-sm flex flex-col gap-3"
+            className="bg-background/95 p-3 rounded-lg border flex flex-col gap-3"
           >
             <div className="flex items-center gap-2 text-sm font-semibold">
               <Filter className="h-4 w-4" />
@@ -346,7 +346,7 @@ function GraphVisualizationInner({
 
         <Panel
           position={isRTL ? 'top-right' : 'top-left'}
-          className="bg-background/95 p-3 rounded-lg border shadow-sm"
+          className="bg-background/95 p-3 rounded-lg border"
         >
           <div className="flex flex-col gap-2">
             <div className="text-sm font-semibold">{t('graph.legend', 'Legend')}</div>

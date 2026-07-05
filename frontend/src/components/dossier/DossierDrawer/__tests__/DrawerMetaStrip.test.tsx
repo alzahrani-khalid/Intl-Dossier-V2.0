@@ -5,7 +5,7 @@
  *   1. renders 4 segments separated by U+00B7 (·)
  *   2. location: metadata.region or t('meta.location_fallback')
  *   3. lead: metadata.lead_name prefixed with t('meta.lead_prefix') + ': '; em-dash when missing
- *   4. engagement count uses toArDigits + t('meta.engagements_suffix')
+ *   4. engagement count renders Latin digits + t('meta.engagements_suffix')
  *   5. last touched: same-day → today key; 1 day → yesterday key; N>=2 → relative key
  *   6. container has class "drawer-meta"
  */
@@ -120,7 +120,7 @@ describe('DrawerMetaStrip (Wave 1)', () => {
     expect(container.textContent).toContain('22 meta.engagements_suffix')
   })
 
-  it('engagement count uses Arabic-Indic digits in AR', () => {
+  it('engagement count renders Latin digits in AR (policy D)', () => {
     currentLang = 'ar'
     const { container } = render(
       <DrawerMetaStrip
@@ -130,7 +130,8 @@ describe('DrawerMetaStrip (Wave 1)', () => {
         engagementCount={22}
       />,
     )
-    expect(container.textContent).toContain('٢٢')
+    expect(container.textContent).toContain('22')
+    expect(/[٠-٩]/.test(container.textContent ?? '')).toBe(false)
   })
 
   it('last touched today renders t("meta.last_touched_today") for same-day updatedAt', () => {
@@ -161,7 +162,7 @@ describe('DrawerMetaStrip (Wave 1)', () => {
     expect(container.textContent).toContain('meta.last_touched_yesterday')
   })
 
-  it('last touched N>=2 days renders relative key with toArDigits-formatted N', () => {
+  it('last touched N>=2 days renders relative key with Latin-digit N', () => {
     const fiveDaysAgo = new Date()
     fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5)
     const { container } = render(

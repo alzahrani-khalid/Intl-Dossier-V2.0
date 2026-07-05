@@ -27,6 +27,7 @@ import {
   MessageSquare,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { formatDayFirstYear, formatDateTime } from '@/lib/format-date'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -414,9 +415,7 @@ function OverviewTab({ legislation }: { legislation: LegislationWithDetails }) {
                       {t('commentPeriod.startDate')}
                     </p>
                     <p className="font-medium text-start">
-                      {new Date(legislation.comment_period_start).toLocaleDateString(
-                        isRTL ? 'ar-SA' : 'en-US',
-                      )}
+                      {formatDayFirstYear(legislation.comment_period_start)}
                     </p>
                   </div>
                 )}
@@ -426,9 +425,7 @@ function OverviewTab({ legislation }: { legislation: LegislationWithDetails }) {
                       {t('commentPeriod.endDate')}
                     </p>
                     <p className="font-medium text-start">
-                      {new Date(legislation.comment_period_end).toLocaleDateString(
-                        isRTL ? 'ar-SA' : 'en-US',
-                      )}
+                      {formatDayFirstYear(legislation.comment_period_end)}
                     </p>
                   </div>
                 )}
@@ -466,9 +463,7 @@ function OverviewTab({ legislation }: { legislation: LegislationWithDetails }) {
                     {t('detail.introducedDate')}
                   </p>
                   <p className="font-medium text-start">
-                    {new Date(legislation.introduced_date).toLocaleDateString(
-                      isRTL ? 'ar-SA' : 'en-US',
-                    )}
+                    {formatDayFirstYear(legislation.introduced_date)}
                   </p>
                 </div>
               </div>
@@ -481,9 +476,7 @@ function OverviewTab({ legislation }: { legislation: LegislationWithDetails }) {
                     {t('detail.effectiveDate')}
                   </p>
                   <p className="font-medium text-start">
-                    {new Date(legislation.effective_date).toLocaleDateString(
-                      isRTL ? 'ar-SA' : 'en-US',
-                    )}
+                    {formatDayFirstYear(legislation.effective_date)}
                   </p>
                 </div>
               </div>
@@ -496,9 +489,7 @@ function OverviewTab({ legislation }: { legislation: LegislationWithDetails }) {
                     {t('detail.expirationDate')}
                   </p>
                   <p className="font-medium text-start">
-                    {new Date(legislation.expiration_date).toLocaleDateString(
-                      isRTL ? 'ar-SA' : 'en-US',
-                    )}
+                    {formatDayFirstYear(legislation.expiration_date)}
                   </p>
                 </div>
               </div>
@@ -602,7 +593,7 @@ function OverviewTab({ legislation }: { legislation: LegislationWithDetails }) {
               <div>
                 <p className="text-muted-foreground text-start">{t('detail.lastUpdated')}</p>
                 <p className="font-medium text-start">
-                  {new Date(legislation.updated_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
+                  {formatDayFirstYear(legislation.updated_at)}
                 </p>
               </div>
             </div>
@@ -690,11 +681,7 @@ function DeadlinesTab({
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="text-end">
-                    <p className="font-medium">
-                      {new Date(deadline.deadline_date).toLocaleDateString(
-                        isRTL ? 'ar-SA' : 'en-US',
-                      )}
-                    </p>
+                    <p className="font-medium">{formatDayFirstYear(deadline.deadline_date)}</p>
                     <p
                       className={cn(
                         'text-sm',
@@ -767,8 +754,7 @@ function AmendmentsTab({ amendments }: { amendments: LegislationAmendment[] }) {
               )}
               {amendment.proposed_date && (
                 <p className="text-sm text-muted-foreground text-start">
-                  {t('amendments.form.proposedDate')}:{' '}
-                  {new Date(amendment.proposed_date).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
+                  {t('amendments.form.proposedDate')}: {formatDayFirstYear(amendment.proposed_date)}
                 </p>
               )}
             </div>
@@ -957,7 +943,7 @@ function HistoryTab({ statusHistory }: { statusHistory: LegislationStatusHistory
                   </Badge>
                 </div>
                 <p className="text-sm text-muted-foreground text-start">
-                  {new Date(entry.changed_at).toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+                  {formatDateTime(entry.changed_at)}
                 </p>
                 {entry.change_reason && (
                   <p className="text-sm mt-2 text-start">

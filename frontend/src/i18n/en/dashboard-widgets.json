@@ -33,7 +33,13 @@
       "pending": "Pending",
       "in_progress": "In progress",
       "completed": "Completed",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "intake": "Intake",
+      "preparation": "Preparation",
+      "briefing": "Briefing",
+      "execution": "Execution",
+      "follow_up": "Follow-up",
+      "closed": "Closed"
     }
   },
   "overdue": {

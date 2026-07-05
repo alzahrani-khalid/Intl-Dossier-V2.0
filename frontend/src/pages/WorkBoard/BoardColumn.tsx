@@ -15,7 +15,7 @@
  *
  * RTL-correct via:
  *  - LtrIsolate around the mono count digit
- *  - useTranslation().i18n.language → toArDigits for AR digit shaping
+ *  - Latin digits app-wide (policy D §7.4); the count renders as a raw number
  *  - No physical-direction Tailwind; all spacing comes from board.css logical rules
  *
  * XSS mitigation (T-39-02-XSS): React JSX escapes `title`. No raw-HTML APIs.
@@ -26,12 +26,97 @@ import { useTranslation } from 'react-i18next'
 
 import { KanbanCards, KanbanCard, useDroppable, type KanbanItemProps } from '@/components/kanban'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
-import { toArDigits } from '@/lib/i18n/toArDigits'
 import type { WorkflowStage } from '@/types/work-item.types'
 
 import { KCard, type KCardItem } from './KCard'
 
 type WorkBoardKanbanItem = KCardItem & KanbanItemProps
+
+/**
+ * Phase 85 D-85-06 — stage status glyph rendered before each column name.
+ * Decorative inline SVG (aria-hidden — the adjacent <h3> already names the
+ * stage); tokens only (--ink-faint / --warn / --ok). Shape technique borrowed
+ * from signature-visuals/Donut.tsx (plain <circle>/<path>, strokeDasharray,
+ * no motion library). `cancelled` is filtered out of the board (WorkBoard.tsx)
+ * — it reuses the todo ring purely for Record<WorkflowStage> totality.
+ */
+const STAGE_GLYPHS: Record<WorkflowStage, ReactElement> = {
+  todo: (
+    <svg
+      className="col-glyph"
+      width={14}
+      height={14}
+      viewBox="0 0 14 14"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle cx="7" cy="7" r="5" fill="none" stroke="var(--ink-faint)" strokeWidth="1.5" />
+    </svg>
+  ),
+  in_progress: (
+    <svg
+      className="col-glyph"
+      width={14}
+      height={14}
+      viewBox="0 0 14 14"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle cx="7" cy="7" r="5" fill="var(--warn)" />
+    </svg>
+  ),
+  review: (
+    <svg
+      className="col-glyph"
+      width={14}
+      height={14}
+      viewBox="0 0 14 14"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle
+        cx="7"
+        cy="7"
+        r="5"
+        fill="none"
+        stroke="var(--ink-faint)"
+        strokeWidth="1.5"
+        strokeDasharray="2 2"
+      />
+    </svg>
+  ),
+  done: (
+    <svg
+      className="col-glyph"
+      width={14}
+      height={14}
+      viewBox="0 0 14 14"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M3.5 7.5 L6 10 L10.5 4"
+        fill="none"
+        stroke="var(--ok)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  cancelled: (
+    <svg
+      className="col-glyph"
+      width={14}
+      height={14}
+      viewBox="0 0 14 14"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle cx="7" cy="7" r="5" fill="none" stroke="var(--ink-faint)" strokeWidth="1.5" />
+    </svg>
+  ),
+}
 
 export interface BoardColumnProps {
   title: string
@@ -44,8 +129,7 @@ export interface BoardColumnProps {
 
 export function BoardColumn(props: BoardColumnProps): ReactElement {
   const { title, stage, items, dndEnabled, onItemClick, onAddItem } = props
-  const { t, i18n } = useTranslation('unified-kanban')
-  const lang = i18n.language
+  const { t } = useTranslation('unified-kanban')
   const titleId = useId()
   // D-21: column is the droppable target for cross-column DnD. Plays the same
   // role KanbanBoard does inside the shared primitive — but we keep `<section
@@ -62,9 +146,10 @@ export function BoardColumn(props: BoardColumnProps): ReactElement {
       data-droppable-id={stage}
     >
       <header className="col-head">
+        {STAGE_GLYPHS[stage]}
         <h3 id={titleId}>{title}</h3>
         <LtrIsolate>
-          <span className="col-count font-mono">{toArDigits(items.length, lang)}</span>
+          <span className="col-count font-mono">{items.length}</span>
         </LtrIsolate>
         <button
           type="button"

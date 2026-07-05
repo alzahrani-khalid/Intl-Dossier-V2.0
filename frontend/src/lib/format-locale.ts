@@ -1,10 +1,9 @@
 /**
- * Map an i18n language code to a BCP-47 locale safe for Intl number formatting.
- *
- * Bare 'ar' resolves to the `latn` numbering system in Chrome
- * (Intl.NumberFormat('ar').resolvedOptions().numberingSystem === 'latn'),
- * which silently drops Arabic-Indic digits in the Arabic UI. 'ar-SA'
- * resolves to `arab` (verified Chrome 148, round-11 UAT 2026-06-10).
+ * Map an i18n language to a BCP-47 locale whose Intl numbering system is
+ * ALWAYS Latin (policy D, Phase 82 / DESIGN §7.4). '-u-nu-latn' pins latn
+ * explicitly — bare 'ar' happens to resolve latn in Chrome 148 / Node 22,
+ * but the Unicode extension is CLDR-drift-proof. Never return the Arabic-Indic
+ * ('arab') locale. Arabic month/unit names are preserved for non-digit consumers.
  */
 export const toFormatLocale = (language: string): string =>
-  language === 'ar' || language.startsWith('ar-') ? 'ar-SA' : language
+  language === 'ar' || language.startsWith('ar-') ? 'ar-u-nu-latn' : language

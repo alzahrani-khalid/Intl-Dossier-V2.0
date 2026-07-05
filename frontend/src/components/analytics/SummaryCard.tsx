@@ -7,6 +7,7 @@
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { toFormatLocale } from '@/lib/format-locale'
 
 interface SummaryCardProps {
   title: string
@@ -36,7 +37,7 @@ export function SummaryCard({
       case 'score':
         return val.toFixed(0)
       default:
-        return val.toLocaleString(isRTL ? 'ar-SA' : 'en-US')
+        return val.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))
     }
   }
 

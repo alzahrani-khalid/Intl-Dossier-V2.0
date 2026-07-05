@@ -29,6 +29,7 @@ import type { InfluenceReport } from '@/types/stakeholder-influence.types'
 import { NODE_COLORS, REPORT_TYPE_LABELS } from '@/types/stakeholder-influence.types'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirst, formatDayFirstYear } from '@/lib/format-date'
 
 // ============================================================================
 // Types
@@ -66,7 +67,11 @@ function StatCard({
     <div className="flex items-center gap-3 p-3 sm:p-4 rounded-lg border bg-card">
       <div
         className="p-2 sm:p-2.5 rounded-lg"
-        style={{ backgroundColor: color ? `${color}20` : 'var(--muted)' }}
+        style={{
+          backgroundColor: color
+            ? `color-mix(in srgb, ${color} 12.5%, transparent)`
+            : 'var(--muted)',
+        }}
       >
         <Icon className="h-4 w-4 sm:h-5 sm:w-5" style={{ color: color || 'currentColor' }} />
       </div>
@@ -228,9 +233,7 @@ export function InfluenceReportView({
           {description && <p className="text-muted-foreground mt-1">{description}</p>}
           <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
             <Calendar className="h-4 w-4" />
-            {new Date(report.generated_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-              dateStyle: 'medium',
-            })}
+            {formatDayFirstYear(report.generated_at)}
           </div>
         </div>
 
@@ -261,25 +264,25 @@ export function InfluenceReportView({
             label={t('total_stakeholders', 'Total Stakeholders')}
             value={stats.total_stakeholders}
             icon={Users}
-            color="#3b82f6"
+            color="var(--chart-1)"
           />
           <StatCard
             label={t('total_relationships', 'Relationships')}
             value={stats.total_relationships}
             icon={GitBranch}
-            color="#8b5cf6"
+            color="var(--chart-7)"
           />
           <StatCard
             label={t('key_influencers', 'Key Influencers')}
             value={stats.key_influencers}
             icon={TrendingUp}
-            color="#9333ea"
+            color="var(--chart-6)"
           />
           <StatCard
             label={t('avg_influence', 'Avg Influence')}
             value={stats.avg_influence_score.toFixed(1)}
             icon={BarChart3}
-            color="#22c55e"
+            color="var(--ok)"
           />
         </div>
       </section>
@@ -397,11 +400,9 @@ export function InfluenceReportView({
       {(report.period_start || report.period_end) && (
         <div className="text-sm text-muted-foreground text-end">
           {t('analysis_period', 'Analysis Period')}:{' '}
-          {report.period_start &&
-            new Date(report.period_start).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
+          {report.period_start && formatDayFirst(report.period_start)}
           {report.period_start && report.period_end && ' - '}
-          {report.period_end &&
-            new Date(report.period_end).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
+          {report.period_end && formatDayFirst(report.period_end)}
         </div>
       )}
     </div>

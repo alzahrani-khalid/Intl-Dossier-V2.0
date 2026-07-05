@@ -39,6 +39,7 @@ import {
   WEEK_POSITION_LABELS,
 } from '@/types/recurrence.types'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 interface RecurrencePatternEditorProps {
   /** Initial recurrence pattern (for editing) */
@@ -146,14 +147,7 @@ function generateRecurrenceSummary(
 
   // Add end condition
   if (pattern.end_date) {
-    const endDate = new Date(pattern.end_date).toLocaleDateString(
-      lang === 'ar' ? 'ar-SA' : 'en-US',
-      {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      },
-    )
+    const endDate = formatDayFirstYear(pattern.end_date)
     longText += ` ${t('calendar.recurrence.summaryText.until', { date: endDate })}`
   } else if (pattern.occurrence_count) {
     if (pattern.occurrence_count === 1) {
@@ -181,7 +175,7 @@ export function RecurrencePatternEditor({
 }: RecurrencePatternEditorProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const lang = isRTL ? 'ar' : 'en'
+  const lang = isRTL ? 'ar' : 'en'
 
   // State for recurrence enabled
   const [isEnabled, setIsEnabled] = useState(!!initialPattern)

@@ -172,16 +172,9 @@ export function IconRail({
           <img src="/GASTAT_LOGO.svg" alt="GASTAT Logo" className="w-10 h-10 object-contain" />
         </div>
 
-        {/* Separator Line - Engraved Effect */}
+        {/* Separator Line - flat hairline (1px solid var(--line)) */}
         <div className="w-full px-3 pb-3">
-          <div
-            className="h-px relative"
-            style={{
-              background:
-                'linear-gradient(to right, transparent, rgba(0,0,0,0.4) 50%, transparent)',
-              boxShadow: '0 1px 0 rgba(255,255,255,0.1)',
-            }}
-          />
+          <div className="w-full border-t border-line" />
         </div>
 
         {/* Navigation Items */}
@@ -228,14 +221,13 @@ export function IconRail({
       <div
         className={cn(
           'flex flex-col items-center gap-3 py-3 px-2',
-          // ULTRA DARK background matching top section
-          'bg-gradient-to-b from-[hsl(220,15%,2%)] via-[hsl(220,15%,4%)] to-[hsl(220,15%,6%)]',
+          // Flat token surface (was raw HSL gradient + arbitrary shadows — design
+          // rules: no gradients, no card shadows)
+          'bg-sidebar border border-line',
           // Margins on all sides
           'mx-1 mb-1',
           // Top and bottom rounded corners
           'rounded-t-xl rounded-b-xl',
-          // Moderate shadows
-          'shadow-[0_3px_12px_rgba(0,0,0,0.35),0_1px_4px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.05)]',
         )}
       >
         {/* Language Switcher */}

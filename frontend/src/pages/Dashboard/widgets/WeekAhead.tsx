@@ -17,6 +17,7 @@
 
 import { type ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { format } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
@@ -27,6 +28,7 @@ import type {
   TimelineEvent,
   TimelineGroup,
 } from '@/domains/operations-hub/types/operations-hub.types'
+import { formatTime } from '@/lib/format-date'
 import { WidgetSkeleton } from './WidgetSkeleton'
 
 const DAY_GROUP_ORDER: readonly TimelineGroup[] = [
@@ -38,38 +40,26 @@ const DAY_GROUP_ORDER: readonly TimelineGroup[] = [
 
 const MAX_VISIBLE_EVENTS = 5
 
-function formatTimeRange(startIso: string, endIso: string | null, language: string): string {
-  const locale = language === 'ar' ? 'ar-SA' : 'en-US'
-  const start = new Date(startIso).toLocaleTimeString(locale, {
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+function formatTimeRange(startIso: string, endIso: string | null): string {
+  const start = formatTime(startIso)
   if (endIso === null) {
     return start
   }
-  const end = new Date(endIso).toLocaleTimeString(locale, {
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-  return `${start} — ${end}`
+  return `${start} — ${formatTime(endIso)}`
 }
 
-function formatDayDate(iso: string, language: string): { weekday: string; day: string } {
-  const locale = language === 'ar' ? 'ar-SA' : 'en-US'
+function formatDayDate(iso: string): { weekday: string; day: string } {
   const date = new Date(iso)
-  const weekday = date.toLocaleDateString(locale, { weekday: 'short' })
-  const day = date.toLocaleDateString(locale, { day: '2-digit' })
-  return { weekday, day }
+  return { weekday: format(date, 'EEE'), day: format(date, 'dd') }
 }
 
 interface WeekRowProps {
   event: TimelineEvent
-  language: string
   statusLabel: (stage: string) => string
 }
 
-function WeekRow({ event, language, statusLabel }: WeekRowProps): ReactElement {
-  const { weekday, day } = formatDayDate(event.start_date, language)
+function WeekRow({ event, statusLabel }: WeekRowProps): ReactElement {
+  const { weekday, day } = formatDayDate(event.start_date)
   const dossierName = event.engagement_name ?? event.title
   return (
     <div className="week-row">
@@ -79,7 +69,7 @@ function WeekRow({ event, language, statusLabel }: WeekRowProps): ReactElement {
           <LtrIsolate>{day}</LtrIsolate>
         </div>
         <LtrIsolate className="week-time">
-          {formatTimeRange(event.start_date, event.end_date, language)}
+          {formatTimeRange(event.start_date, event.end_date)}
         </LtrIsolate>
       </div>
       <div className="week-body flex items-center gap-3 min-w-0">
@@ -105,7 +95,7 @@ function WeekRow({ event, language, statusLabel }: WeekRowProps): ReactElement {
 }
 
 export function WeekAhead(): ReactElement {
-  const { t, i18n } = useTranslation('dashboard-widgets')
+  const { t } = useTranslation('dashboard-widgets')
   const { user } = useAuth()
   const { data, isLoading, isError } = useWeekAhead(user?.id)
   const [expanded, setExpanded] = useState<Record<TimelineGroup, boolean>>({
@@ -186,12 +176,7 @@ export function WeekAhead(): ReactElement {
             <div className="week-list">
               {visible.map(
                 (event): ReactElement => (
-                  <WeekRow
-                    key={event.id}
-                    event={event}
-                    language={i18n.language}
-                    statusLabel={statusLabel}
-                  />
+                  <WeekRow key={event.id} event={event} statusLabel={statusLabel} />
                 ),
               )}
             </div>

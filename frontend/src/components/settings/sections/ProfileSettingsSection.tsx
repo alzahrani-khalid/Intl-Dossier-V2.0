@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState, type ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { User, Trash2, Upload, Loader2 } from 'lucide-react'
+import { Trash2, Upload, Loader2 } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -118,11 +118,7 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
   }
 
   return (
-    <SettingsSectionCard
-      title={t('profile.title')}
-      description={t('profile.description')}
-      icon={User}
-    >
+    <SettingsSectionCard>
       <div className="space-y-6">
         {/* Avatar Section — upload, display, and clear (D-9) */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -178,7 +174,7 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
         <SettingsGroup>
           {/* Display Name */}
           <div className="space-y-2">
-            <Label htmlFor="display_name" className="text-start block">
+            <Label htmlFor="display_name" className="label-field text-start block">
               {t('profile.displayName')}
             </Label>
             <Input
@@ -204,7 +200,7 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
 
           {/* Email (read-only) */}
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-start block">
+            <Label htmlFor="email" className="label-field text-start block">
               {t('profile.email')}
             </Label>
             <Input id="email" value={email || ''} disabled className="max-w-md bg-muted" />
@@ -213,7 +209,7 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
 
           {/* Job Title */}
           <div className="space-y-2">
-            <Label htmlFor="job_title" className="text-start block">
+            <Label htmlFor="job_title" className="label-field text-start block">
               {t('profile.jobTitle')}
             </Label>
             <Input
@@ -233,7 +229,7 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
 
           {/* Department */}
           <div className="space-y-2">
-            <Label htmlFor="department" className="text-start block">
+            <Label htmlFor="department" className="label-field text-start block">
               {t('profile.department')}
             </Label>
             <Input
@@ -253,7 +249,7 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
 
           {/* Phone */}
           <div className="space-y-2">
-            <Label htmlFor="phone" className="text-start block">
+            <Label htmlFor="phone" className="label-field text-start block">
               {t('profile.phone')}
             </Label>
             <Input
@@ -275,7 +271,7 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
 
           {/* Bio */}
           <div className="space-y-2">
-            <Label htmlFor="bio" className="text-start block">
+            <Label htmlFor="bio" className="label-field text-start block">
               {t('profile.bio')}
             </Label>
             <Textarea

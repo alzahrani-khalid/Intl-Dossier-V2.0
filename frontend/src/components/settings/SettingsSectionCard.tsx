@@ -5,8 +5,10 @@ import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
 
 interface SettingsSectionCardProps {
-  /** Section title translation key or string */
-  title: string
+  /** Section title. Omit it to render the card body only — the page-level
+   *  SettingsLayout header already shows the active section's title, so an
+   *  inner title here would duplicate it (BUG-02 / D-81-02). */
+  title?: string
   /** Section description translation key or string */
   description?: string
   /** Icon component to display */
@@ -28,8 +30,8 @@ export function SettingsSectionCard({
   children,
   className,
 }: SettingsSectionCardProps) {
-const { isRTL } = useDirection()
-return (
+  const { isRTL } = useDirection()
+  return (
     <Card
       className={cn(
         'overflow-hidden',
@@ -38,15 +40,19 @@ return (
         className,
       )}
     >
-      <CardHeader className="px-4 py-4 sm:px-6 sm:py-5">
-        <CardTitle className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl text-start">
-          {Icon && <Icon className={cn('h-5 w-5 shrink-0 text-primary', isRTL && 'order-first')} />}
-          <span>{title}</span>
-        </CardTitle>
-        {description && (
-          <CardDescription className="text-start text-sm mt-1">{description}</CardDescription>
-        )}
-      </CardHeader>
+      {title && (
+        <CardHeader className="px-4 py-4 sm:px-6 sm:py-5">
+          <CardTitle className="flex items-center gap-2 sm:gap-3 text-lg sm:text-xl text-start">
+            {Icon && (
+              <Icon className={cn('h-5 w-5 shrink-0 text-primary', isRTL && 'order-first')} />
+            )}
+            <span>{title}</span>
+          </CardTitle>
+          {description && (
+            <CardDescription className="text-start text-sm mt-1">{description}</CardDescription>
+          )}
+        </CardHeader>
+      )}
       <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">{children}</CardContent>
     </Card>
   )
@@ -75,7 +81,6 @@ export function SettingsItem({
   children,
   className,
 }: SettingsItemProps) {
-
   return (
     <div
       className={cn(
@@ -110,7 +115,6 @@ interface SettingsGroupProps {
  * Group of related settings with optional title
  */
 export function SettingsGroup({ title, children, className }: SettingsGroupProps) {
-
   return (
     <div className={cn('space-y-3 sm:space-y-4', className)}>
       {title && (

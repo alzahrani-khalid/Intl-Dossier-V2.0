@@ -256,7 +256,7 @@ export function OnboardingTourTrigger({
                   'flex items-center justify-center',
                   'h-12 w-12 rounded-full',
                   'bg-primary text-primary-foreground',
-                  'shadow-lg hover:shadow-xl',
+                  'shadow-lg',
                   'transition-all duration-200',
                   'hover:scale-105 active:scale-95',
                   className,

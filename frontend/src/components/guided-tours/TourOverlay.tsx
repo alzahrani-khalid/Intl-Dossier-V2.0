@@ -385,7 +385,7 @@ export function TourOverlay() {
                     onClick={handleNext}
                     className={cn(
                       'h-10 sm:h-11 px-4 sm:px-6 rounded-xl',
-                      'shadow-md hover:shadow-lg',
+                      'hover:shadow-lg',
                       'transition-all duration-150',
                     )}
                   >

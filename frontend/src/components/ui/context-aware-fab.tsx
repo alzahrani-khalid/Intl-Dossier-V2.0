@@ -250,7 +250,7 @@ function SpeedDialItem({
       {/* Label - positioned before button in RTL, after in LTR */}
       <m.span
         className={cn(
-          'rounded-md bg-popover px-2 py-1 text-sm font-medium text-popover-foreground shadow-md',
+          'rounded-md bg-popover px-2 py-1 text-sm font-medium text-popover-foreground',
           'whitespace-nowrap',
           isRTL ? 'order-2' : 'order-1',
         )}
@@ -268,7 +268,7 @@ function SpeedDialItem({
       <Button
         variant={action.variant === 'destructive' ? 'destructive' : 'secondary'}
         className={cn(
-          'rounded-full shadow-md hover:shadow-lg',
+          'rounded-full shadow-lg',
           'transition-shadow duration-200',
           sizeClasses,
           isRTL ? 'order-1' : 'order-2',
@@ -302,7 +302,7 @@ export function ContextAwareFAB({
 }: ContextAwareFABProps) {
   const { t } = useTranslation('fab')
   const { isRTL } = useDirection()
-// State
+  // State
   const [isScrollingDown, setIsScrollingDown] = React.useState(false)
   const [isSpeedDialOpen, setIsSpeedDialOpen] = React.useState(false)
   const [isLongPressing, setIsLongPressing] = React.useState(false)
@@ -499,7 +499,7 @@ export function ContextAwareFAB({
             <Button
               variant={currentAction?.variant === 'destructive' ? 'destructive' : 'default'}
               className={cn(
-                'rounded-full shadow-lg hover:shadow-xl',
+                'rounded-full shadow-lg',
                 'transition-all duration-200',
                 'touch-manipulation',
                 sizeClasses,
@@ -520,10 +520,7 @@ export function ContextAwareFAB({
               aria-expanded={isSpeedDialOpen}
               aria-haspopup={speedDialActions.length > 0 ? 'menu' : undefined}
             >
-              <m.div
-                animate={{ rotate: isSpeedDialOpen ? 45 : 0 }}
-                transition={{ duration: 0.2 }}
-              >
+              <m.div animate={{ rotate: isSpeedDialOpen ? 45 : 0 }} transition={{ duration: 0.2 }}>
                 <CurrentIcon className={cn(iconSizeClasses, 'shrink-0')} />
               </m.div>
             </Button>
@@ -533,7 +530,7 @@ export function ContextAwareFAB({
               <m.div
                 className={cn(
                   'absolute bottom-full mb-2 whitespace-nowrap',
-                  'rounded-md bg-popover px-2 py-1 text-xs text-muted-foreground shadow-sm',
+                  'rounded-md bg-popover px-2 py-1 text-xs text-muted-foreground',
                   'pointer-events-none',
                   isRTL ? 'start-0' : 'end-0',
                 )}

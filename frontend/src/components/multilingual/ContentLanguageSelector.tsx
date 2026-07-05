@@ -65,7 +65,7 @@ export function ContentLanguageSelector({
   size = 'default',
 }: ContentLanguageSelectorProps) {
   const { i18n } = useTranslation('multilingual')
-// Determine which languages to show
+  // Determine which languages to show
   const languages = useMemo(() => {
     if (showAllLanguages) {
       return Object.keys(LANGUAGE_METADATA) as ContentLanguage[]
@@ -94,9 +94,7 @@ export function ContentLanguageSelector({
 
   return (
     <Select value={value} onValueChange={handleChange} disabled={disabled}>
-      <SelectTrigger
-        className={cn('min-w-[140px]', sizeClasses[size], className)}
-      >
+      <SelectTrigger className={cn('min-w-[140px]', sizeClasses[size], className)}>
         <SelectValue>
           <span className="flex items-center gap-2">
             {showFlag && selectedMeta.flag_emoji && (
@@ -151,12 +149,8 @@ export function ContentLanguageTabs({
   disabled = false,
   className,
 }: ContentLanguageTabsProps) {
-
   return (
-    <div
-      className={cn('flex flex-wrap gap-1 p-1 bg-muted rounded-lg', className)}
-      role="tablist"
-    >
+    <div className={cn('flex flex-wrap gap-1 p-1 bg-muted rounded-lg', className)} role="tablist">
       {availableLanguages.map((code) => {
         const meta = LANGUAGE_METADATA[code]
         const isSelected = value === code
@@ -173,7 +167,7 @@ export function ContentLanguageTabs({
               'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium',
               'transition-colors min-h-9 min-w-9',
               isSelected
-                ? 'bg-background text-foreground shadow-sm'
+                ? 'bg-background text-foreground'
                 : 'text-muted-foreground hover:text-foreground hover:bg-background/50',
               disabled && 'opacity-50 cursor-not-allowed',
             )}

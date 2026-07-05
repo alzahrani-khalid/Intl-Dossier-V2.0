@@ -11,6 +11,7 @@
 import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -611,9 +612,7 @@ function StakeholderInfluencePage() {
                             {isRTL ? report.title_ar : report.title_en}
                           </p>
                           <p className="text-xs text-muted-foreground mt-1">
-                            {new Date(report.generated_at).toLocaleDateString(
-                              isRTL ? 'ar-SA' : 'en-US',
-                            )}
+                            {formatDayFirstYear(report.generated_at)}
                           </p>
                         </button>
                       ))}

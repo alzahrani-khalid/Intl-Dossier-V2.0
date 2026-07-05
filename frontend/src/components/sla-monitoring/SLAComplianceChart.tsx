@@ -7,6 +7,7 @@
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { format } from 'date-fns'
 import {
   LineChart,
   Line,
@@ -25,6 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { SLATrendDataPoint } from '@/types/sla.types'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
+import { toFormatLocale } from '@/lib/format-locale'
 
 function SLACustomTooltip({ active, payload, label, isRTL, complianceLabel }: any) {
   if (active && payload && payload.length) {
@@ -38,7 +40,7 @@ function SLACustomTooltip({ active, payload, label, isRTL, complianceLabel }: an
             <span className="font-medium">
               {entry.name === complianceLabel
                 ? `${entry.value}%`
-                : entry.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+                : entry.value.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
             </span>
           </div>
         ))}
@@ -65,13 +67,10 @@ export function SLAComplianceChart({ data, isLoading, className }: SLACompliance
 
     return data.map((point) => ({
       ...point,
-      date: new Date(point.date).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-        month: 'short',
-        day: 'numeric',
-      }),
+      date: format(new Date(point.date), 'd MMM'),
       compliance: point.compliance_pct,
     }))
-  }, [data, isRTL])
+  }, [data])
 
   if (isLoading) {
     return (

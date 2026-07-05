@@ -9,7 +9,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { useNavigate } from '@tanstack/react-router'
 import {
   CheckSquare,
@@ -82,7 +82,7 @@ export function ActivityTimelineItem({
   isLast = false,
   className,
 }: ActivityTimelineItemProps) {
-  const { t, i18n } = useTranslation('dossier-context')
+  const { t } = useTranslation('dossier-context')
   const navigate = useNavigate()
   const { isRTL } = useDirection()
   // Get icon for type
@@ -93,11 +93,7 @@ export function ActivityTimelineItem({
   // Format date
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return null
-    return new Date(dateStr).toLocaleDateString(toFormatLocale(i18n.language), {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    })
+    return formatDayFirstYear(dateStr)
   }
 
   // Format relative time

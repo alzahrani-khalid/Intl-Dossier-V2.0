@@ -1,6 +1,9 @@
 /* Phase 39 — kanban board styles ported verbatim from
    /tmp/inteldossier-handoff/.../app.css#L390-411
-   BOARD-02: .kcard.overdue uses border-inline-start (RTL-correct).
+   Phase 85 D-85-01: overdue is carried on the red mono due chip (see the
+   is-overdue due rule below), not the old .kcard.overdue inline-start edge bar
+   (removed). The .kcard.overdue class stays on the article (Playwright/unit
+   selectors depend on it).
    Use only logical-direction CSS properties here so RTL flips automatically. */
 
 .kcard {
@@ -23,10 +26,6 @@
 .kcard:hover {
   border-color: var(--ink-faint);
   transform: translateY(-1px);
-}
-
-.kcard.overdue {
-  border-inline-start: 3px solid var(--danger);
 }
 
 .kcard.done {
@@ -74,6 +73,11 @@
   color: var(--ink-mute);
 }
 
+.kcard-foot .kdue.is-overdue {
+  color: var(--danger);
+  font-weight: 600;
+}
+
 .kcard-owner {
   width: 20px;
   height: 20px;
@@ -103,9 +107,11 @@
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 0;
-  width: 300px;
-  min-width: 300px;
-  flex-shrink: 0;
+  /* Flexible basis so four columns fit the ~1096px content width at a 1400px
+     viewport (256px sidebar): 4 × 260 + 3 × 12 gap = 1076 ≤ 1090. Columns grow
+     to fill spare width; below that the .board-columns row scrolls (see below). */
+  flex: 1 1 250px;
+  min-width: 260px;
   display: flex;
   flex-direction: column;
   max-height: 78vh;
@@ -127,6 +133,11 @@
   color: var(--ink);
   margin: 0;
   flex-grow: 1;
+}
+
+/* Phase 85 D-85-06 — stage status glyph never compresses at narrow widths. */
+.col-glyph {
+  flex-shrink: 0;
 }
 
 .col-count {
@@ -261,17 +272,37 @@
 .board-columns {
   display: flex;
   gap: 12px;
+  /* overflow-x IS the logical inline-axis scroll in horizontal writing mode —
+     it is not anchored to a physical side and scrolls correctly under dir=rtl
+     (Done reachable on the left in RTL, on the right in LTR). */
   overflow-x: auto;
   scroll-behavior: smooth;
   padding-bottom: 8px;
   min-width: 0;
+  /* Always-visible overflow affordance so the scroll is discoverable at widths
+     where the board still overflows (1024). Tokens only (D-81-06). */
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+.board-columns::-webkit-scrollbar {
+  height: 8px;
+}
+
+.board-columns::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.board-columns::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: var(--radius-sm);
 }
 
 /* Skeleton shape-match — column-head + 3 kcard rows per column. */
 .workboard-skeleton-head {
   height: 28px;
   margin-bottom: 8px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 
 .workboard-skeleton-card {
@@ -292,13 +323,13 @@
 .workboard-skeleton-head-title {
   height: 14px;
   width: 80px;
-  border-radius: 4px;
+  border-radius: calc(var(--radius) * 0.5);
 }
 
 .workboard-skeleton-head-count {
   height: 12px;
   width: 24px;
-  border-radius: 4px;
+  border-radius: calc(var(--radius) * 0.5);
 }
 
 .kcard-skeleton {
@@ -329,6 +360,9 @@
     -webkit-overflow-scrolling: touch;
   }
   .col {
+    /* Re-assert fixed, viewport-derived column width on mobile — override the
+       desktop `flex: 1 1 250px` grow so snap columns stay one-per-viewport. */
+    flex: 0 0 auto;
     width: min(300px, calc(100vw - 28px));
     min-width: min(300px, calc(100vw - 28px));
     scroll-snap-align: start;

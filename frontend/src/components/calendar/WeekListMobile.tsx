@@ -1,7 +1,7 @@
 // Phase 39 Plan 39-07: WeekListMobile — mobile (<640px) week-row view replacing
 // the 7×5 cal-grid. Renders 7 day rows for the active week with prev/next/today
 // nav. Bilingual labels reuse the same DOW arrays as CalendarMonthGrid (39-05).
-// Day numbers go through toArDigits() so AR locale renders Indic glyphs.
+// Day numbers render Latin digits in both locales (policy D §7.4).
 //
 // Hard rules (RTL/CLAUDE.md):
 //   - NEVER textAlign: 'right' (forceRTL flips it to LEFT)
@@ -12,7 +12,6 @@ import { type ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { format, startOfWeek, addDays, isSameDay, addWeeks } from 'date-fns'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
-import { toArDigits } from '@/lib/i18n/toArDigits'
 import { CalendarEventPill } from './CalendarEventPill'
 import type { CalendarEvent } from '@/hooks/useCalendarEvents'
 
@@ -84,7 +83,7 @@ export function WeekListMobile({ events, onEventClick }: WeekListMobileProps): R
               <span className="day-row-label">
                 <span>{labels[d.getDay()]}</span>{' '}
                 <LtrIsolate>
-                  <span className="font-mono">{toArDigits(format(d, 'd'), lang)}</span>
+                  <span className="font-mono">{format(d, 'd')}</span>
                 </LtrIsolate>
               </span>
               <div className="day-row-events">

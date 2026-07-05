@@ -67,6 +67,7 @@
   },
   "card": {
     "overdue": "متأخر",
+    "overdueBy": "متأخر {{days}} يوم",
     "dueToday": "مستحق اليوم",
     "dueTomorrow": "مستحق غداً",
     "dueIn": "مستحق خلال {{count}} يوم",

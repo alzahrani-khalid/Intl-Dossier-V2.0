@@ -66,9 +66,9 @@ export function IconButton({
               // Focus visible for keyboard navigation
               'focus-visible:outline-none',
               'focus-visible:ring-2',
-              'focus-visible:ring-[var(--icon-rail-active-indicator)]',
+              'focus-visible:ring-[var(--accent)]',
               'focus-visible:ring-offset-2',
-              'focus-visible:ring-offset-[var(--icon-rail-bg)]',
+              'focus-visible:ring-offset-[var(--sidebar-bg)]',
 
               // Custom classes
               className,
@@ -83,7 +83,7 @@ export function IconButton({
                 className={cn(
                   'absolute -top-1 flex items-center justify-center',
                   'h-4 min-w-4 px-1',
-                  'bg-[var(--icon-rail-active-indicator)] text-white',
+                  'bg-[var(--accent)] text-white',
                   'text-[10px] font-semibold leading-none',
                   'rounded-full',
                   // Position based on text direction

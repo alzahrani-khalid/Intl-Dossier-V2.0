@@ -216,7 +216,7 @@ function SuggestionItem({ suggestion, size, variant, isRTL }: SuggestionItemProp
 
   if (variant === 'card') {
     return (
-      <Card className="overflow-hidden hover:shadow-md transition-shadow">
+      <Card className="overflow-hidden transition-shadow">
         <CardContent className={cn('flex items-start gap-3', sizes.card)}>{content}</CardContent>
       </Card>
     )

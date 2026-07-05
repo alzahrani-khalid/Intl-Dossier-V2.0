@@ -29,6 +29,12 @@ export const buildTokens = ({ direction, mode, density }: BuildInput): TokenSet 
     statusVars[`--status-${i + 1}-soft`] = s.soft
   })
 
+  // Chart palette (DEBT-01) — 8 categorical hexes → --chart-1..8. Mirrors statusVars.
+  const chartVars: TokenSet = {}
+  palette.chart.forEach((hex, i) => {
+    chartVars[`--chart-${i + 1}`] = hex
+  })
+
   return {
     // Surfaces / ink / lines
     '--bg': palette.bg,
@@ -75,6 +81,9 @@ export const buildTokens = ({ direction, mode, density }: BuildInput): TokenSet 
 
     // Status-tag palette (--status-1..6 + softs)
     ...statusVars,
+
+    // Chart palette (--chart-1..8) — categorical series colors (DEBT-01)
+    ...chartVars,
 
     // Density (row heights + logical-property paddings + gap)
     '--row-h': den.rowH,

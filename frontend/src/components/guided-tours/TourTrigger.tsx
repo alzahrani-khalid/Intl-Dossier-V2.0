@@ -45,7 +45,7 @@ export function TourTrigger({
 }: TourTriggerProps) {
   const { t } = useTranslation('guided-tours')
   const { isRTL } = useDirection()
-const { startTour, dismissTourPrompt, toursEnabled } = useTour()
+  const { startTour, dismissTourPrompt, toursEnabled } = useTour()
   const shouldShow = useShouldShowTour(tourId, isEmpty)
   const [isVisible, setIsVisible] = useState(false)
   const [isDismissing, setIsDismissing] = useState(false)
@@ -94,7 +94,7 @@ const { startTour, dismissTourPrompt, toursEnabled } = useTour()
             <div
               className={cn(
                 'relative overflow-hidden rounded-2xl',
-                'bg-gradient-to-r from-primary/10 via-primary/5 to-transparent',
+                'bg-accent/5',
                 'border border-primary/20',
                 'p-4 sm:p-5',
               )}
@@ -130,7 +130,7 @@ const { startTour, dismissTourPrompt, toursEnabled } = useTour()
                     onClick={handleStartTour}
                     className={cn(
                       'flex-1 sm:flex-none h-10 sm:h-11 px-4 sm:px-5 rounded-xl',
-                      'shadow-md hover:shadow-lg',
+                      'hover:shadow-lg',
                       'transition-all duration-150',
                     )}
                   >
@@ -203,7 +203,7 @@ const { startTour, dismissTourPrompt, toursEnabled } = useTour()
           transition={{ duration: 0.3, ease: 'easeOut' }}
           className={cn('w-full max-w-sm', className)}
         >
-          <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+          <Card className="overflow-hidden border-primary/20 bg-accent/5">
             <CardContent className="p-4 sm:p-5">
               {/* Close button */}
               <button
@@ -232,7 +232,7 @@ const { startTour, dismissTourPrompt, toursEnabled } = useTour()
               )}
 
               {/* Action */}
-              <Button onClick={handleStartTour} className="w-full h-10 rounded-xl shadow-sm">
+              <Button onClick={handleStartTour} className="w-full h-10 rounded-xl">
                 <PlayCircle className={cn('w-4 h-4', isRTL ? 'ms-2' : 'me-2')} />
                 {t('trigger.startTour')}
               </Button>

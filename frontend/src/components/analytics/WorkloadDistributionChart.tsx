@@ -30,6 +30,7 @@ import { PRIORITY_COLORS } from '@/types/analytics.types'
 import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
+import { toFormatLocale } from '@/lib/format-locale'
 
 function WorkloadCustomTooltip({ active, payload, label, isRTL }: any) {
   if (active && payload && payload.length) {
@@ -41,7 +42,7 @@ function WorkloadCustomTooltip({ active, payload, label, isRTL }: any) {
             <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.color }} />
             <span className="text-muted-foreground">{entry.name}:</span>
             <span className="font-medium">
-              {entry.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+              {entry.value.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
             </span>
           </div>
         ))}
@@ -61,7 +62,7 @@ function WorkloadPieTooltip({ active, payload, isRTL }: any) {
           <span className="font-medium">{item.name}</span>
         </div>
         <div className="text-sm text-muted-foreground mt-1">
-          {item.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')} (
+          {item.value.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))} (
           {item.payload.percentage?.toFixed(1)}%)
         </div>
       </div>
@@ -89,7 +90,7 @@ export function WorkloadDistributionChart({
 }: WorkloadDistributionChartProps) {
   const { t } = useTranslation('analytics')
   const { isRTL } = useDirection()
-const userWorkloadData = useMemo(() => {
+  const userWorkloadData = useMemo(() => {
     if (!data?.byUser) return []
     return data.byUser.slice(0, 10).map((user) => ({
       ...user,
@@ -107,7 +108,7 @@ const userWorkloadData = useMemo(() => {
     return data.byPriority.map((item) => ({
       ...item,
       name: t(`workload.priorities.${item.priority}`),
-      fill: PRIORITY_COLORS[item.priority] || '#9CA3AF',
+      fill: PRIORITY_COLORS[item.priority] || 'var(--ink-faint)',
     }))
   }, [data?.byPriority, t])
 
@@ -180,40 +181,47 @@ const userWorkloadData = useMemo(() => {
 
           <TabsContent value="users" className="h-64 sm:h-80">
             {userWorkloadData.length > 0 ? (
-              <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={userWorkloadData}
-                  layout="vertical"
-                  margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 100, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                  <XAxis type="number" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
-                  <YAxis
-                    type="category"
-                    dataKey="name"
-                    tick={{ fontSize: 12 }}
-                    tickLine={false}
-                    axisLine={false}
-                    width={90}
-                  />
-                  <Tooltip content={<WorkloadCustomTooltip isRTL={isRTL} />} />
-                  <Legend />
-                  <Bar
-                    dataKey="totalItems"
-                    name={t('workload.totalItems')}
-                    fill="#3B82F6"
-                    radius={[0, 4, 4, 0]}
-                    stackId="a"
-                  />
-                  <Bar
-                    dataKey="overdueItems"
-                    name={t('workload.overdueItems')}
-                    fill="#EF4444"
-                    radius={[0, 4, 4, 0]}
-                    stackId="b"
-                  />
-                </BarChart>
-              </ResponsiveContainer></LtrIsolate>
+              <LtrIsolate className="h-full w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={userWorkloadData}
+                    layout="vertical"
+                    margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 100, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                    <XAxis
+                      type="number"
+                      tick={{ fontSize: 12 }}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="name"
+                      tick={{ fontSize: 12 }}
+                      tickLine={false}
+                      axisLine={false}
+                      width={90}
+                    />
+                    <Tooltip content={<WorkloadCustomTooltip isRTL={isRTL} />} />
+                    <Legend />
+                    <Bar
+                      dataKey="totalItems"
+                      name={t('workload.totalItems')}
+                      fill="var(--chart-1)"
+                      radius={[0, 4, 4, 0]}
+                      stackId="a"
+                    />
+                    <Bar
+                      dataKey="overdueItems"
+                      name={t('workload.overdueItems')}
+                      fill="var(--danger)"
+                      radius={[0, 4, 4, 0]}
+                      stackId="b"
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </LtrIsolate>
             ) : (
               <div className="h-full flex items-center justify-center text-muted-foreground">
                 {t('errors.noData')}
@@ -264,7 +272,7 @@ const userWorkloadData = useMemo(() => {
                 <Bar
                   dataKey="count"
                   name={t('workload.count')}
-                  fill="#8B5CF6"
+                  fill="var(--chart-7)"
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>
@@ -274,34 +282,30 @@ const userWorkloadData = useMemo(() => {
 
         {/* Summary stats */}
         <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 text-center">
-          <div className="p-2 sm:p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20">
-            <div className="text-lg sm:text-xl font-bold text-blue-600 dark:text-blue-400">
+          <div className="p-2 sm:p-3 rounded-lg bg-status-1-soft">
+            <div className="text-lg sm:text-xl font-bold text-status-1">
               {data.totalActiveItems}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('workload.totalActive')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-violet-50 dark:bg-violet-900/20">
-            <div className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">
+          <div className="p-2 sm:p-3 rounded-lg bg-chart-7/10">
+            <div className="text-lg sm:text-xl font-bold text-chart-7">
               {data.avgItemsPerUser.toFixed(1)}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('workload.avgPerUser')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-red-50 dark:bg-red-900/20">
-            <div className="text-lg sm:text-xl font-bold text-red-600 dark:text-red-400">
-              {data.overloadedUsers}
-            </div>
+          <div className="p-2 sm:p-3 rounded-lg bg-danger/10">
+            <div className="text-lg sm:text-xl font-bold text-danger">{data.overloadedUsers}</div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('workload.overloaded')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-            <div className="text-lg sm:text-xl font-bold text-gray-600 dark:text-gray-400">
-              {data.idleUsers}
-            </div>
+          <div className="p-2 sm:p-3 rounded-lg bg-surface-raised">
+            <div className="text-lg sm:text-xl font-bold text-ink-mute">{data.idleUsers}</div>
             <div className="text-xs sm:text-sm text-muted-foreground">{t('workload.idle')}</div>
           </div>
         </div>
@@ -326,7 +330,7 @@ const userWorkloadData = useMemo(() => {
                   <div className="flex items-center gap-2 text-sm">
                     <span className="font-medium">{user.totalItems}</span>
                     {user.overdueItems > 0 && (
-                      <span className="text-red-500">({user.overdueItems})</span>
+                      <span className="text-danger">({user.overdueItems})</span>
                     )}
                   </div>
                 </div>

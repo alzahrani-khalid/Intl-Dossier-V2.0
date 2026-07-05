@@ -13,7 +13,7 @@
 
 import { useMemo, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 import type { FilterChipConfig } from './ActiveFiltersBar'
 
 /**
@@ -82,27 +82,13 @@ export function useActiveFilters<T extends Record<string, unknown>>({
   onFiltersChange,
   defaultFilters = {} as Partial<T>,
 }: UseActiveFiltersOptions<T>): UseActiveFiltersReturn {
-  const { t, i18n } = useTranslation(namespace)
+  const { t } = useTranslation(namespace)
   const [collapsed, setCollapsed] = useState(false)
 
   /**
    * Format date for display
    */
-  const formatDate = useCallback(
-    (dateStr: string) => {
-      try {
-        const date = new Date(dateStr)
-        return date.toLocaleDateString(toFormatLocale(i18n.language), {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-        })
-      } catch {
-        return dateStr
-      }
-    },
-    [i18n.language],
-  )
+  const formatDate = useCallback((dateStr: string) => formatDayFirstYear(dateStr), [])
 
   /**
    * Convert filters to chip configurations

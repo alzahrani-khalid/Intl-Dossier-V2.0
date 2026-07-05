@@ -11,7 +11,13 @@ export default function ClusterVisualization({ points, labels }: Props) {
   const { isRTL } = useDirection()
   const data = points.map((p, i) => ({ x: p[0], y: p[1], cluster: labels[i] }))
   const clusters = Array.from(new Set(labels))
-  const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
+  const colors = [
+    'var(--chart-1)',
+    'var(--chart-5)',
+    'var(--chart-3)',
+    'var(--chart-8)',
+    'var(--chart-7)',
+  ]
   return (
     <LtrIsolate>
       <ScatterChart width={480} height={360} margin={{ top: 16, right: 16, bottom: 16, left: 16 }}>

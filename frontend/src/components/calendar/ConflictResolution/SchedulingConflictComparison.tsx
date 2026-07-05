@@ -37,6 +37,7 @@ import { Badge } from '@/components/ui/badge'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
+import { formatDayFirst, formatTime } from '@/lib/format-date'
 import type {
   EventConflict,
   ConflictCheckResponse,
@@ -94,24 +95,6 @@ export function SchedulingConflictComparison({
   const { isRTL } = useDirection()
   const [expandedConflictIndex, setExpandedConflictIndex] = useState<number | null>(0)
   const [showDurationOptions, setShowDurationOptions] = useState(false)
-
-  // Format datetime for display
-  const formatDate = (datetime: string) => {
-    const date = new Date(datetime)
-    return date.toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-    })
-  }
-
-  const formatTime = (datetime: string) => {
-    const date = new Date(datetime)
-    return date.toLocaleTimeString(isRTL ? 'ar-SA' : 'en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  }
 
   // Calculate duration in minutes
   const getDurationMinutes = (start: string, end: string) => {
@@ -250,7 +233,7 @@ export function SchedulingConflictComparison({
                   setExpandedConflictIndex(expandedConflictIndex === index ? null : index)
                 }
                 isRTL={isRTL}
-                formatDate={formatDate}
+                formatDate={formatDayFirst}
                 formatTime={formatTime}
                 t={t}
               />

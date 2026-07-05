@@ -8,6 +8,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { formatDateTime } from '@/lib/format-date'
 import {
   AlertTriangle,
   AlertCircle,
@@ -81,12 +82,7 @@ export function ComplianceViolationAlert({
     return violation.rule_code
   }
 
-  const formatDate = (dateString: string) => {
-    return new Intl.DateTimeFormat(isRTL ? 'ar-SA' : 'en-US', {
-      dateStyle: 'medium',
-      timeStyle: 'short',
-    }).format(new Date(dateString))
-  }
+  const formatDate = (dateString: string): string => formatDateTime(dateString)
 
   if (compact) {
     return (

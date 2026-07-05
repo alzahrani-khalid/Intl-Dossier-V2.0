@@ -28,7 +28,7 @@ export function CloseIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-4 w-4 text-black"
+      className="h-4 w-4 text-ink"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M18 6l-12 12" />
@@ -80,7 +80,7 @@ export function ExpandableCard({ cards }: ExpandableCardProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 h-full w-full z-10"
+            className="fixed inset-0 bg-bg/60 h-full w-full z-10"
           />
         )}
       </AnimatePresence>
@@ -102,7 +102,7 @@ export function ExpandableCard({ cards }: ExpandableCardProps) {
                   duration: 0.05,
                 },
               }}
-              className="flex absolute top-2 end-2 lg:hidden items-center justify-center bg-white rounded-full h-6 w-6"
+              className="flex absolute top-2 end-2 lg:hidden items-center justify-center bg-surface-4 rounded-full h-6 w-6"
               onClick={() => setActive(null)}
             >
               <CloseIcon />
@@ -110,7 +110,7 @@ export function ExpandableCard({ cards }: ExpandableCardProps) {
             <m.div
               layoutId={`card-${active.title}-${id}`}
               ref={ref}
-              className="w-full max-w-[500px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
+              className="w-full max-w-[500px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-surface-4 sm:rounded-3xl overflow-hidden"
             >
               <m.div layoutId={`image-${active.title}-${id}`}>
                 <img
@@ -127,13 +127,13 @@ export function ExpandableCard({ cards }: ExpandableCardProps) {
                   <div className="">
                     <m.h3
                       layoutId={`title-${active.title}-${id}`}
-                      className="font-medium text-neutral-700 dark:text-neutral-200 text-base"
+                      className="font-medium text-ink text-base"
                     >
                       {active.title}
                     </m.h3>
                     <m.p
                       layoutId={`description-${active.description}-${id}`}
-                      className="text-neutral-600 dark:text-neutral-400 text-base"
+                      className="text-ink-mute text-base"
                     >
                       {active.description}
                     </m.p>
@@ -146,7 +146,7 @@ export function ExpandableCard({ cards }: ExpandableCardProps) {
                     exit={{ opacity: 0 }}
                     href={active.ctaLink}
                     target="_blank"
-                    className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 text-white"
+                    className="px-4 py-3 text-sm rounded-full font-bold bg-accent text-accent-fg"
                   >
                     {active.ctaText}
                   </m.a>
@@ -157,7 +157,7 @@ export function ExpandableCard({ cards }: ExpandableCardProps) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="text-neutral-600 text-xs md:text-sm lg:text-base h-40 md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
+                    className="text-ink-mute text-xs md:text-sm lg:text-base h-40 md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
                   >
                     {typeof active.content === 'function' ? active.content() : active.content}
                   </m.div>
@@ -173,7 +173,7 @@ export function ExpandableCard({ cards }: ExpandableCardProps) {
             layoutId={`card-${card.title}-${id}`}
             key={card.title}
             onClick={() => setActive(card)}
-            className="p-4 flex flex-col  hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer"
+            className="p-4 flex flex-col  hover:bg-surface-raised rounded-xl cursor-pointer"
           >
             <div className="flex gap-4 flex-col  w-full">
               <m.div layoutId={`image-${card.title}-${id}`}>
@@ -188,13 +188,13 @@ export function ExpandableCard({ cards }: ExpandableCardProps) {
               <div className="flex justify-center items-center flex-col">
                 <m.h3
                   layoutId={`title-${card.title}-${id}`}
-                  className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-start text-base"
+                  className="font-medium text-ink text-center md:text-start text-base"
                 >
                   {card.title}
                 </m.h3>
                 <m.p
                   layoutId={`description-${card.description}-${id}`}
-                  className="text-neutral-600 dark:text-neutral-400 text-center md:text-start text-base"
+                  className="text-ink-mute text-center md:text-start text-base"
                 >
                   {card.description}
                 </m.p>

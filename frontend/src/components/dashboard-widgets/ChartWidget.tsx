@@ -16,13 +16,13 @@ interface ChartWidgetProps {
   isLoading?: boolean
 }
 
-// Fallback colors if CSS variables not available
+// Default chart series colors (design-system chart tokens)
 const FALLBACK_COLORS = [
-  '#3b82f6', // blue
-  '#10b981', // emerald
-  '#f59e0b', // amber
-  '#ef4444', // red
-  '#8b5cf6', // violet
+  'var(--chart-1)',
+  'var(--chart-3)',
+  'var(--chart-4)',
+  'var(--chart-8)',
+  'var(--chart-7)',
 ]
 
 /**
@@ -404,7 +404,7 @@ function LineChart({
 export function ChartWidget({ config, data, isLoading }: ChartWidgetProps) {
   const { t } = useTranslation('dashboard-widgets')
   const { isRTL } = useDirection()
-const {
+  const {
     settings: { chartType, showLegend, showGrid, colors: customColors },
   } = config
 

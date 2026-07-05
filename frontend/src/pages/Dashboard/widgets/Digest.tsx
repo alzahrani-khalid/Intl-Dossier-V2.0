@@ -23,6 +23,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { GlobeSpinner } from '@/components/signature-visuals'
 import { useDashboardDigest, type DashboardDigestRow } from '@/hooks/useDashboardDigest'
+import { formatDateTime } from '@/lib/format-date'
 import { WidgetSkeleton } from './WidgetSkeleton'
 
 interface DigestRow {
@@ -136,10 +137,7 @@ export function Digest(): ReactElement {
                 <div className="digest-source text-xs text-ink-mute text-start">
                   {r.source}
                   {' · '}
-                  {new Date(r.timestamp).toLocaleString(
-                    i18n.language === 'ar' ? 'ar-SA' : 'en-US',
-                    { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' },
-                  )}
+                  {formatDateTime(r.timestamp)}
                 </div>
               </div>
             </li>

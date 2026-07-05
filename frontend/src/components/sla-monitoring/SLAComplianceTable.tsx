@@ -25,6 +25,7 @@ import type { SLAComplianceByType, SLAComplianceByAssignee } from '@/types/sla.t
 import { getComplianceThreshold, formatSLADuration, formatSLADurationAr } from '@/types/sla.types'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { toFormatLocale } from '@/lib/format-locale'
 
 function ComplianceBadge({ rate }: { rate: number }) {
   const threshold = getComplianceThreshold(rate)
@@ -106,18 +107,18 @@ export function SLAComplianceTable({
                           </div>
                         </TableCell>
                         <TableCell className="text-center">
-                          {row.total_items.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+                          {row.total_items.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
                         </TableCell>
                         <TableCell className="text-center">
                           <span className="flex items-center justify-center gap-1 text-success">
                             <CheckCircle className="h-4 w-4" />
-                            {row.met_count.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+                            {row.met_count.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
                           </span>
                         </TableCell>
                         <TableCell className="text-center">
                           <span className="flex items-center justify-center gap-1 text-danger">
                             <XCircle className="h-4 w-4" />
-                            {row.breached_count.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+                            {row.breached_count.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
                           </span>
                         </TableCell>
                         <TableCell className="text-center">
@@ -174,7 +175,7 @@ export function SLAComplianceTable({
                           </div>
                         </TableCell>
                         <TableCell className="text-center">
-                          {row.total_items.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+                          {row.total_items.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))}
                         </TableCell>
                         <TableCell className="text-center">
                           <ComplianceBadge rate={row.compliance_rate} />

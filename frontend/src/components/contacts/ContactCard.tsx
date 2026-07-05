@@ -51,8 +51,8 @@ export function ContactCard({
   onClick,
   className = '',
 }: ContactCardProps) {
-const { isRTL } = useDirection()
-// Get relationship stats
+  const { isRTL } = useDirection()
+  // Get relationship stats
   const { data: relationshipStats } = useRelationshipStats(contact.id)
 
   // Derive full name from first_name + last_name
@@ -77,10 +77,7 @@ const { isRTL } = useDirection()
   const orgDisplayName = contact.organization?.org_code || ''
 
   return (
-    <Card
-      className={`cursor-pointer transition-shadow hover:shadow-md ${className}`}
-      onClick={onClick}
-    >
+    <Card className={`cursor-pointer transition-shadow ${className}`} onClick={onClick}>
       <CardHeader className="pb-3">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex-1 min-w-0">

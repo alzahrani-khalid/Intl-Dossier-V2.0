@@ -50,6 +50,7 @@ import { KeyContactsSection } from './sections/KeyContactsSection'
 import { ActivityTimelineSection } from './sections/ActivityTimelineSection'
 import type { DossierOverviewProps, ExportFormat } from '@/types/dossier-overview.types'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDateTime } from '@/lib/format-date'
 import { statVariantStyles } from '@/lib/semantic-colors'
 
 /**
@@ -421,7 +422,7 @@ export function DossierOverview({
       {/* Generated timestamp */}
       <footer className="mt-6 sm:mt-8 pt-4 border-t text-xs sm:text-sm text-muted-foreground">
         {t('footer.generatedAt', {
-          date: new Date(data.generated_at).toLocaleString(isRTL ? 'ar-SA' : 'en-US'),
+          date: formatDateTime(data.generated_at),
         })}
       </footer>
     </div>

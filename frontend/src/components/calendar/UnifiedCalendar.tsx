@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { format, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns'
 import { CalendarEmptyWizard, type EventTemplate } from './CalendarEmptyWizard'
 import { CalendarEntryForm } from './CalendarEntryForm'
@@ -219,16 +219,6 @@ export function UnifiedCalendar({
           <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
             <Button variant="outline" size="sm" onClick={handleToday} className="w-full sm:w-auto">
               {t('today')}
-            </Button>
-
-            <Button
-              variant="default"
-              size="sm"
-              onClick={() => setShowCreateForm(true)}
-              className="w-full sm:w-auto"
-            >
-              <Plus className="h-4 w-4 me-1" />
-              {t('form.create_event')}
             </Button>
 
             <Select

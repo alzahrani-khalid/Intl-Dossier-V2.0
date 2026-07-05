@@ -164,7 +164,7 @@ function SidebarNavItem({ item, pathname }: SidebarNavItemProps): ReactElement {
           'hover:bg-[color-mix(in_srgb,var(--sidebar-ink)_8%,transparent)] hover:opacity-100',
           'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
           isActive &&
-            'active bg-[color-mix(in_srgb,var(--sidebar-ink)_10%,transparent)] font-medium opacity-100 before:absolute before:start-0 before:top-1.5 before:bottom-1.5 before:w-0.5 before:rounded-[2px] before:bg-[var(--accent)] before:content-[""]',
+            'active bg-[color-mix(in_srgb,var(--sidebar-ink)_10%,transparent)] font-medium opacity-100 before:absolute before:start-0 before:top-1.5 before:bottom-1.5 before:w-0.5 before:rounded-xs before:bg-[var(--accent)] before:content-[""]',
         )}
       >
         <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />

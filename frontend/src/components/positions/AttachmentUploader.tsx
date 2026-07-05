@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 import {
   usePositionAttachments,
   useUploadPositionAttachment,
@@ -32,7 +32,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
   disabled = false,
   onUploadComplete,
 }) => {
-  const { t, i18n } = useTranslation(['positions', 'common'])
+  const { t } = useTranslation(['positions', 'common'])
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [uploadingFiles, setUploadingFiles] = useState<AttachmentFile[]>([])
@@ -340,16 +340,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
                     <div className="flex items-center space-x-2 text-xs text-muted-foreground dark:text-muted-foreground">
                       <span>{formatFileSize(attachment.file_size)}</span>
                       <span>•</span>
-                      <span>
-                        {new Date(attachment.created_at).toLocaleDateString(
-                          toFormatLocale(i18n.language),
-                          {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                          },
-                        )}
-                      </span>
+                      <span>{formatDayFirstYear(attachment.created_at)}</span>
                     </div>
                   </div>
                 </div>

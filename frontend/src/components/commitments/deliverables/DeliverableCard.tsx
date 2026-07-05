@@ -11,7 +11,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirst } from '@/lib/format-date'
 import { m } from 'framer-motion'
 import {
   Target,
@@ -70,7 +70,7 @@ interface DeliverableCardProps {
 }
 
 export function DeliverableCard({ deliverable, commitmentId, onEdit }: DeliverableCardProps) {
-  const { t, i18n } = useTranslation('commitment-deliverables')
+  const { t } = useTranslation('commitment-deliverables')
   const { isRTL } = useDirection()
   const updateStatusMutation = useUpdateDeliverableStatus()
   const deleteMutation = useDeleteDeliverable()
@@ -118,13 +118,7 @@ export function DeliverableCard({ deliverable, commitmentId, onEdit }: Deliverab
   const getDueDateLabel = () => {
     if (isCompleted) {
       return t('timeline.completed', {
-        date: new Date(deliverable.completed_at!).toLocaleDateString(
-          toFormatLocale(i18n.language),
-          {
-            month: 'short',
-            day: 'numeric',
-          },
-        ),
+        date: formatDayFirst(deliverable.completed_at!),
       })
     }
     if (daysUntilDue < 0) {

@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import type { TeamMemberWorkload } from '@/types/unified-work.types'
 import { cn } from '@/lib/utils'
+import { toFormatLocale } from '@/lib/format-locale'
 
 interface TeamWorkloadPanelProps {
   teamMembers: TeamMemberWorkload[]
@@ -27,7 +28,7 @@ export function TeamWorkloadPanel({
   selectedMemberId,
 }: TeamWorkloadPanelProps) {
   const { t, i18n } = useTranslation('my-work')
-  const nf = new Intl.NumberFormat(i18n.language === 'ar' ? 'ar-SA' : 'en')
+  const nf = new Intl.NumberFormat(toFormatLocale(i18n.language))
   if (isLoading) {
     return (
       <Card className="mb-4 sm:mb-6">

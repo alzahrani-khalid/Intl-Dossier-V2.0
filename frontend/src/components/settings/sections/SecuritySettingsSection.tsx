@@ -155,7 +155,7 @@ export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) 
         <SettingsGroup>
           <div className="space-y-3">
             <div>
-              <Label className="text-start block">
+              <Label className="label-field text-start block">
                 <span className="flex items-center gap-2">
                   <Clock className="h-4 w-4" />
                   {t('security.sessionTimeout')}
@@ -193,7 +193,7 @@ export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) 
         <SettingsGroup title={t('security.passwordChange')}>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="current-password" className="text-start block">
+              <Label htmlFor="current-password" className="label-field text-start block">
                 {t('security.currentPassword')}
               </Label>
               <Input
@@ -206,7 +206,7 @@ export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) 
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="new-password" className="text-start block">
+              <Label htmlFor="new-password" className="label-field text-start block">
                 {t('security.newPassword')}
               </Label>
               <Input
@@ -222,7 +222,7 @@ export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) 
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirm-password" className="text-start block">
+              <Label htmlFor="confirm-password" className="label-field text-start block">
                 {t('security.confirmPassword')}
               </Label>
               <Input

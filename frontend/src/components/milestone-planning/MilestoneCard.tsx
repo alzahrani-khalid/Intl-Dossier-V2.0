@@ -38,6 +38,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
+import { formatDayFirstYear } from '@/lib/format-date'
 import type { PlannedMilestone, MilestoneType } from '@/types/milestone-planning.types'
 import type { TimelinePriority } from '@/types/timeline.types'
 import { useDirection } from '@/hooks/useDirection'
@@ -98,15 +99,6 @@ function getDaysUntil(targetDate: string): number {
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 }
 
-function formatDate(dateString: string, locale: string): string {
-  const date = new Date(dateString)
-  return date.toLocaleDateString(locale === 'ar' ? 'ar-SA' : 'en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
-}
-
 export function MilestoneCard({
   milestone,
   onEdit,
@@ -114,7 +106,7 @@ export function MilestoneCard({
   onMarkComplete,
   onConvertToEvent,
 }: MilestoneCardProps) {
-  const { t, i18n } = useTranslation('milestone-planning')
+  const { t } = useTranslation('milestone-planning')
   const { isRTL } = useDirection()
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -163,7 +155,7 @@ export function MilestoneCard({
     >
       <Card
         className={cn(
-          'transition-all duration-200 hover:shadow-md',
+          'transition-all duration-200',
           isOverdue && 'border-destructive/20 dark:border-destructive/70',
           milestone.status === 'completed' && 'opacity-75',
         )}
@@ -253,7 +245,7 @@ export function MilestoneCard({
               <div className="flex flex-wrap items-center gap-3 mt-3 text-xs sm:text-sm text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <Calendar className="h-3.5 w-3.5" />
-                  {formatDate(milestone.target_date, i18n.language)}
+                  {formatDayFirstYear(milestone.target_date)}
                 </span>
                 {milestone.target_time && (
                   <span className="flex items-center gap-1">

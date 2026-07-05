@@ -69,6 +69,8 @@ export interface DirectionModePalette {
   sla: { ok: string; okSoft: string; risk: string; riskSoft: string; bad: string; badSoft: string }
   /** 6-value status-tag palette (TOKEN-03). Exactly 6 { fg, soft } entries; each fg passes AA on surface AND on its own soft. */
   status: { fg: string; soft: string }[]
+  /** 8-slot categorical chart palette (DEBT-01, Plan 83-02). Exactly 8 hex entries → --chart-1..8; each clears WCAG 1.4.11 non-text >=3:1 on surface AND bg. Categorical series only; meaning-bearing series use the semantic tokens (--ok/--warn/--danger/--info). */
+  chart: string[]
 }
 
 export interface DirectionPalette {

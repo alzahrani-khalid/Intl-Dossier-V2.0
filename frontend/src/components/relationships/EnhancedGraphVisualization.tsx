@@ -167,7 +167,7 @@ const EnhancedDossierNode = memo(
         {/* Node circle */}
         <div
           className={cn(
-            'absolute inset-0 rounded-full border-2 shadow-md transition-all duration-200',
+            'absolute inset-0 rounded-full border-2 transition-all duration-200',
             data.dimmed && 'opacity-50',
           )}
           style={{
@@ -186,14 +186,14 @@ const EnhancedDossierNode = memo(
 
         {/* Degree badge */}
         {data.degree > 0 && (
-          <div className="absolute -top-1 -end-1 bg-background rounded-full px-1 text-[10px] border shadow-sm">
+          <div className="absolute -top-1 -end-1 bg-background rounded-full px-1 text-[10px] border">
             {data.degree}°
           </div>
         )}
 
         {/* Connection count badge */}
         {(data.connectionCount || 0) > 2 && (
-          <div className="absolute -bottom-1 -end-1 bg-primary text-primary-foreground rounded-full px-1.5 text-[10px] shadow-sm">
+          <div className="absolute -bottom-1 -end-1 bg-primary text-primary-foreground rounded-full px-1.5 text-[10px]">
             {data.connectionCount}
           </div>
         )}
@@ -746,7 +746,7 @@ function EnhancedGraphVisualizationInner({
         {/* Layout & Controls Panel */}
         <Panel position={isRTL ? 'top-left' : 'top-right'} className="flex flex-col gap-2">
           {/* Layout Selector */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm">
+          <div className="bg-background/95 p-3 rounded-lg border">
             <div className="text-xs font-semibold mb-2 flex items-center gap-2">
               <GitBranch className="h-3.5 w-3.5" />
               {t('layout.title', 'Layout')}
@@ -779,7 +779,7 @@ function EnhancedGraphVisualizationInner({
           </div>
 
           {/* Filters */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm">
+          <div className="bg-background/95 p-3 rounded-lg border">
             <div className="text-xs font-semibold mb-2">{t('filters', 'Filters')}</div>
 
             <div className="space-y-2">
@@ -814,7 +814,7 @@ function EnhancedGraphVisualizationInner({
           </div>
 
           {/* Cluster Controls */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm">
+          <div className="bg-background/95 p-3 rounded-lg border">
             <div className="text-xs font-semibold mb-2 flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <Layers className="h-3.5 w-3.5" />
@@ -886,7 +886,7 @@ function EnhancedGraphVisualizationInner({
           </div>
 
           {/* Stats */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm text-xs text-muted-foreground">
+          <div className="bg-background/95 p-3 rounded-lg border text-xs text-muted-foreground">
             {filteredNodes.length} {t('nodesShown', 'nodes')} · {filteredEdges.length}{' '}
             {t('edgesShown', 'edges')}
           </div>
@@ -894,7 +894,7 @@ function EnhancedGraphVisualizationInner({
 
         {/* Zoom & View Controls */}
         <Panel position={isRTL ? 'bottom-right' : 'bottom-left'} className="flex gap-2">
-          <div className="bg-background/95 p-2 rounded-lg border shadow-sm flex gap-1">
+          <div className="bg-background/95 p-2 rounded-lg border flex gap-1">
             <Button
               size="icon"
               variant="ghost"
@@ -991,7 +991,7 @@ function EnhancedGraphVisualizationInner({
         {/* Legend */}
         <Panel
           position={isRTL ? 'top-right' : 'top-left'}
-          className="bg-background/95 p-3 rounded-lg border shadow-sm"
+          className="bg-background/95 p-3 rounded-lg border"
         >
           <div className="text-xs font-semibold mb-2">{t('legend', 'Legend')}</div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">

@@ -50,6 +50,7 @@ import { useLastSyncInfo } from '../hooks/useLastSyncInfo'
 import { PullToRefreshIndicator, SyncStatusBar } from '../components/ui/pull-to-refresh-indicator'
 import { useDirection } from '@/hooks/useDirection'
 import { intakeKeys } from '@/hooks/useIntakeApi'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 /**
  * Valid ticket_status enum values from database
@@ -523,11 +524,7 @@ export function IntakeQueuePage() {
                         <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                           <span>{ticket.source}</span>
                           <span>•</span>
-                          <span>
-                            {new Date(ticket.created_at).toLocaleDateString(
-                              isRTL ? 'ar-SA' : 'en-US',
-                            )}
-                          </span>
+                          <span>{formatDayFirstYear(ticket.created_at)}</span>
                           <span>•</span>
                           <div className={`flex items-center gap-1 ${waitingStatus.color}`}>
                             <WaitingIcon className="size-3" />

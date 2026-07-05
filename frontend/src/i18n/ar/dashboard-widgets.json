@@ -33,7 +33,13 @@
       "pending": "قيد الانتظار",
       "in_progress": "قيد التنفيذ",
       "completed": "مكتملة",
-      "cancelled": "ملغاة"
+      "cancelled": "ملغاة",
+      "intake": "الاستقبال",
+      "preparation": "التحضير",
+      "briefing": "الإحاطة",
+      "execution": "التنفيذ",
+      "follow_up": "المتابعة",
+      "closed": "مغلق"
     }
   },
   "overdue": {

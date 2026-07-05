@@ -124,12 +124,12 @@ export function generateSampleRelationshipHealthTrends(): RelationshipHealthTren
     previousAverageScore: 71.2,
     scoreTrend,
     byHealthLevel: [
-      { level: 'excellent', count: 12, percentage: 13.6, color: '#10B981' },
-      { level: 'good', count: 35, percentage: 39.8, color: '#34D399' },
-      { level: 'fair', count: 28, percentage: 31.8, color: '#FBBF24' },
-      { level: 'poor', count: 8, percentage: 9.1, color: '#F97316' },
-      { level: 'critical', count: 3, percentage: 3.4, color: '#EF4444' },
-      { level: 'unknown', count: 2, percentage: 2.3, color: '#9CA3AF' },
+      { level: 'excellent', count: 12, percentage: 13.6, color: 'var(--ok)' },
+      { level: 'good', count: 35, percentage: 39.8, color: 'var(--chart-3)' },
+      { level: 'fair', count: 28, percentage: 31.8, color: 'var(--warn)' },
+      { level: 'poor', count: 8, percentage: 9.1, color: 'var(--chart-5)' },
+      { level: 'critical', count: 3, percentage: 3.4, color: 'var(--danger)' },
+      { level: 'unknown', count: 2, percentage: 2.3, color: 'var(--ink-faint)' },
     ],
     byTrend: [
       { trend: 'improving', count: 28, percentage: 31.8 },
@@ -282,10 +282,10 @@ export function generateSampleWorkloadDistribution(): WorkloadDistribution {
       },
     ],
     byPriority: [
-      { priority: 'low', count: 45, percentage: 24.1, color: '#9CA3AF' },
-      { priority: 'medium', count: 78, percentage: 41.7, color: '#3B82F6' },
-      { priority: 'high', count: 48, percentage: 25.7, color: '#F59E0B' },
-      { priority: 'urgent', count: 16, percentage: 8.6, color: '#EF4444' },
+      { priority: 'low', count: 45, percentage: 24.1, color: 'var(--ink-faint)' },
+      { priority: 'medium', count: 78, percentage: 41.7, color: 'var(--info)' },
+      { priority: 'high', count: 48, percentage: 25.7, color: 'var(--warn)' },
+      { priority: 'urgent', count: 16, percentage: 8.6, color: 'var(--danger)' },
     ],
     byStatus: [
       { status: 'pending', count: 62, percentage: 33.2 },

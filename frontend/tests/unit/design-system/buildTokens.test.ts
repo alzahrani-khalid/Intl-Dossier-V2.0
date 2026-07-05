@@ -68,6 +68,15 @@ const REQUIRED_KEYS = [
   '--status-5-soft',
   '--status-6',
   '--status-6-soft',
+  // Chart palette (DEBT-01)
+  '--chart-1',
+  '--chart-2',
+  '--chart-3',
+  '--chart-4',
+  '--chart-5',
+  '--chart-6',
+  '--chart-7',
+  '--chart-8',
   // Density
   '--row-h',
   '--pad-inline',
@@ -200,6 +209,13 @@ describe('buildTokens — Linear palette-literal fidelity (TOKEN-01/03)', () => 
         for (let i = 1; i <= 6; i += 1) {
           expect(tokens[`--status-${i}`]).toBe(p.status[i - 1]?.fg)
           expect(tokens[`--status-${i}-soft`]).toBe(p.status[i - 1]?.soft)
+        }
+      })
+
+      it('emits all 8 chart-palette vars from the palette (DEBT-01)', () => {
+        expect(p.chart).toHaveLength(8)
+        for (let i = 1; i <= 8; i += 1) {
+          expect(tokens[`--chart-${i}`]).toBe(p.chart[i - 1])
         }
       })
 

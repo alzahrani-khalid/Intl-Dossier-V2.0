@@ -754,9 +754,6 @@
   cursor: pointer;
   text-align: start;
 }
-.copilot-thread-row:hover {
-  box-shadow: var(--shadow-sm);
-}
 .copilot-thread-row[data-active='true'] .copilot-thread-row__dot {
   background: var(--accent);
 }

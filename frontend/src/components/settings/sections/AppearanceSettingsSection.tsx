@@ -40,7 +40,7 @@ export function AppearanceSettingsSection(
   const { density, setDensity } = useDensity()
 
   return (
-    <SettingsSectionCard title={t('appearance.title')} description={t('appearance.description')}>
+    <SettingsSectionCard>
       <div className="space-y-8">
         <SettingsGroup title={t('appearance.mode.label')}>
           <RadioGroup value={mode} onValueChange={(v) => setMode(v as Mode)} className="space-y-2">
@@ -51,7 +51,7 @@ export function AppearanceSettingsSection(
                 style={{ border: '1px solid var(--line)', minHeight: 44 }}
               >
                 <RadioGroupItem id={`mode-${m}`} value={m} />
-                <Label htmlFor={`mode-${m}`} className="text-sm cursor-pointer">
+                <Label htmlFor={`mode-${m}`} className="label-field text-sm cursor-pointer">
                   {t(`appearance.mode.${m}`)}
                 </Label>
               </div>
@@ -72,7 +72,7 @@ export function AppearanceSettingsSection(
                 style={{ border: '1px solid var(--line)', minHeight: 44 }}
               >
                 <RadioGroupItem id={`density-${d}`} value={d} />
-                <Label htmlFor={`density-${d}`} className="text-sm cursor-pointer">
+                <Label htmlFor={`density-${d}`} className="label-field text-sm cursor-pointer">
                   {t(`appearance.density.${d}`)}
                 </Label>
               </div>

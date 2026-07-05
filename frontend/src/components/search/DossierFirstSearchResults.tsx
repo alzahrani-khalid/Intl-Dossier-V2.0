@@ -250,7 +250,7 @@ function DossierCard({ dossier, searchQuery, onClick }: DossierCardProps) {
       onClick={handleClick}
       className={cn(
         'w-full text-start rounded-lg border border-border p-4 transition-all',
-        'hover:border-accent hover:shadow-md',
+        'hover:border-accent',
         'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
       )}
     >
@@ -403,7 +403,7 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
       onClick={handleClick}
       className={cn(
         'w-full text-start rounded-lg border border-border p-3 transition-all',
-        'hover:border-accent hover:shadow-md',
+        'hover:border-accent',
         'focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2',
       )}
     >

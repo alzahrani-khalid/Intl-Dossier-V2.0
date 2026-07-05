@@ -61,12 +61,10 @@ export function LinkedItemsList({ items, emptyMessage }: LinkedItemsListProps) {
   }
 
   return (
-    <div
-      className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
-    >
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((item) => (
         <Link key={`${item.type}-${item.id}`} to={getLink(item)} className="group">
-          <Card className="h-full transition-all hover:shadow-md hover:border-primary/50">
+          <Card className="h-full transition-all hover:border-primary/50">
             <CardContent className="flex flex-col gap-3 p-4">
               {/* Icon and type */}
               <div className="flex items-center justify-between">

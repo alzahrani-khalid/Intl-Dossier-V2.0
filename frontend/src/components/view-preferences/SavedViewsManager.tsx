@@ -255,7 +255,6 @@ export function SavedViewsManager({
               'rounded-xl',
               'bg-white/40 border border-black/5',
               'hover:bg-white/60 hover:border-black/10',
-              'shadow-sm hover:shadow-md',
               'transition-all duration-150',
             )}
             disabled={isLoading}

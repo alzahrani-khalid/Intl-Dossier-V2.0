@@ -10,6 +10,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { formatDateTime } from '@/lib/format-date'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -627,9 +628,7 @@ function FieldPermissionsPage() {
                           </Badge>
                         </TableCell>
                         <TableCell>{log.performed_by_email || 'System'}</TableCell>
-                        <TableCell>
-                          {new Date(log.created_at).toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
-                        </TableCell>
+                        <TableCell>{formatDateTime(log.created_at)}</TableCell>
                         <TableCell>
                           {log.old_values ? (
                             <code className="text-xs bg-muted px-2 py-1 rounded block max-w-xs truncate">

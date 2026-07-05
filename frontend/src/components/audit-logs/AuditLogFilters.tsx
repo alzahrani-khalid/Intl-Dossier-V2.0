@@ -46,6 +46,7 @@ import type {
   DateRangePreset,
 } from '@/types/audit-log.types'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirst } from '@/lib/format-date'
 
 // =============================================
 // CONFIGURATION
@@ -494,10 +495,8 @@ export function AuditLogFilters({
           {(filters.date_from || filters.date_to) && (
             <Badge variant="secondary" className="gap-1 px-2 py-1">
               <Calendar className="h-3 w-3" />
-              {filters.date_from &&
-                new Date(filters.date_from).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
-              {filters.date_to &&
-                ` - ${new Date(filters.date_to).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}`}
+              {filters.date_from && formatDayFirst(filters.date_from)}
+              {filters.date_to && ` - ${formatDayFirst(filters.date_to)}`}
               <Button
                 variant="ghost"
                 size="sm"

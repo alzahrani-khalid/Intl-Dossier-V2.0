@@ -37,6 +37,7 @@ import {
 } from '@/types/stakeholder-influence.types'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirst } from '@/lib/format-date'
 
 // ============================================================================
 // Types
@@ -114,7 +115,11 @@ function MetricCard({
     <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
       <div
         className="p-2 rounded-lg"
-        style={{ backgroundColor: color ? `${color}20` : 'var(--muted)' }}
+        style={{
+          backgroundColor: color
+            ? `color-mix(in srgb, ${color} 12.5%, transparent)`
+            : 'var(--muted)',
+        }}
       >
         <Icon className="h-4 w-4" style={{ color: color || 'currentColor' }} />
       </div>
@@ -139,7 +144,7 @@ export function InfluenceMetricsPanel({
 }: InfluenceMetricsPanelProps) {
   const { t } = useTranslation('stakeholder-influence')
   const { isRTL } = useDirection()
-// Loading state
+  // Loading state
   if (isLoading) {
     return (
       <Card className={cn('animate-pulse', className)}>
@@ -243,7 +248,7 @@ export function InfluenceMetricsPanel({
                   : METRIC_LABELS.betweenness_centrality.en
               }
               value={data.metrics.betweenness_centrality}
-              color="#6366f1"
+              color="var(--accent-ink)"
             />
             {!compact && (
               <>
@@ -254,7 +259,7 @@ export function InfluenceMetricsPanel({
                       : METRIC_LABELS.closeness_centrality.en
                   }
                   value={data.metrics.closeness_centrality}
-                  color="#8b5cf6"
+                  color="var(--chart-7)"
                 />
                 <MetricBar
                   label={
@@ -263,7 +268,7 @@ export function InfluenceMetricsPanel({
                       : METRIC_LABELS.eigenvector_centrality.en
                   }
                   value={data.metrics.eigenvector_centrality}
-                  color="#a855f7"
+                  color="var(--chart-6)"
                 />
               </>
             )}
@@ -288,14 +293,14 @@ export function InfluenceMetricsPanel({
               }
               value={data.metrics.engagement_frequency}
               sublabel={`/ 100`}
-              color="#f59e0b"
+              color="var(--chart-4)"
             />
             <MetricCard
               icon={Users}
               label={isRTL ? METRIC_LABELS.engagement_reach.ar : METRIC_LABELS.engagement_reach.en}
               value={data.metrics.engagement_reach}
               sublabel={`${data.raw_metrics.unique_engagement_partners} ${t('partners', 'partners')}`}
-              color="#3b82f6"
+              color="var(--chart-1)"
             />
           </div>
         </div>
@@ -318,7 +323,7 @@ export function InfluenceMetricsPanel({
               }
               value={data.metrics.avg_relationship_health}
               sublabel={`/ 100`}
-              color="#22c55e"
+              color="var(--ok)"
             />
             <div className="flex flex-col gap-2">
               <MetricCard
@@ -329,7 +334,7 @@ export function InfluenceMetricsPanel({
                     : METRIC_LABELS.strong_relationships.en
                 }
                 value={data.metrics.strong_relationships}
-                color="#22c55e"
+                color="var(--ok)"
               />
               {!compact && (
                 <MetricCard
@@ -340,7 +345,7 @@ export function InfluenceMetricsPanel({
                       : METRIC_LABELS.weak_relationships.en
                   }
                   value={data.metrics.weak_relationships}
-                  color="#ef4444"
+                  color="var(--danger)"
                 />
               )}
             </div>
@@ -385,8 +390,7 @@ export function InfluenceMetricsPanel({
 
         {/* Calculated timestamp */}
         <p className="text-xs text-muted-foreground text-end">
-          {t('calculated_at', 'Calculated')}:{' '}
-          {new Date(data.calculated_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
+          {t('calculated_at', 'Calculated')}: {formatDayFirst(data.calculated_at)}
         </p>
       </CardContent>
     </Card>

@@ -1,106 +1,20 @@
 /**
  * Modern Navigation Design Tokens
- * Based on Material Design 3 Navigation Rail pattern
- * Extracted from reference design for pixel-perfect matching
+ *
+ * Consumes the Linear design-system tokens defined in index.css :root
+ * (--sidebar-bg / --surface-3 / --surface / --surface-raised / --line /
+ * --line-strong / --ink / --ink-mute / --ok / --danger / --accent / --radius-lg).
+ *
+ * Phase 83 (DEBT-06) deleted the bespoke parallel ladders this file used to
+ * carry — the --shadow-* / --radius-* / --space-* scales and the raw HSL color
+ * tables — plus the glassmorphism radials, panel shines, text-shadows and MD3
+ * elevation shadows. What remains is the modern-nav LAYOUT constants and flat,
+ * token-driven component recipes for the /modern-nav-standalone demo route.
  */
 
 @layer base {
   :root {
-    /* ============================================
-       ICON RAIL (Left Sidebar - 56px width)
-       ============================================ */
-
-    /* Icon Rail (Primary from reference) */
-    --icon-rail-bg: hsl(220 15% 10%); /* #1A1D26 */
-    --icon-rail-hover: hsl(220 15% 15%); /* #23262F */
-    --icon-rail-active-bg: hsl(220 15% 13%); /* #1E2129 */
-    --icon-rail-active-indicator: var(--heroui-accent); /* Theme accent from HeroUI */
-    --icon-rail-icon: hsl(220 5% 65%); /* #9CA3AF - Default */
-    --icon-rail-icon-active: hsl(0 0% 100%); /* #FFFFFF - Active */
-    --icon-rail-border: hsl(220 13% 15%); /* Subtle separator */
-
-    /* ============================================
-       EXPANDED PANEL (Middle Section - 280px)
-       ============================================ */
-
-    /* Panel Background - Light Mode */
-    --panel-bg: hsl(240 10% 97%); /* #F7F9FA */
-    --panel-border: hsl(220 13% 91%); /* #E5E7EB */
-    --panel-text: hsl(220 13% 18%); /* #1F2937 */
-    --panel-text-muted: hsl(220 9% 46%); /* #6B7280 */
-    --panel-hover: hsl(220 13% 94%); /* #F3F4F6 */
-    --panel-active: hsl(0 0% 98%); /* Nearly white */
-    --panel-active-text: hsl(220 13% 18%); /* Same as panel-text */
-
-    /* Panel Background - Dark Mode */
-    --panel-bg-dark: hsl(220 15% 12%); /* #1C1F26 */
-    --panel-border-dark: hsl(220 13% 20%); /* #2A2E37 */
-    --panel-text-dark: hsl(0 0% 95%); /* #F2F2F2 */
-    --panel-text-muted-dark: hsl(220 5% 65%); /* #9CA3AF */
-    --panel-hover-dark: hsl(220 15% 16%); /* #23262F */
-
-    /* ============================================
-       BADGES & INDICATORS
-       ============================================ */
-
-    --badge-bg: hsl(220 13% 91%); /* #E5E7EB */
-    --badge-text: hsl(220 13% 46%); /* #6B7280 */
-    --badge-bg-dark: hsl(220 13% 20%); /* #2A2E37 */
-    --badge-text-dark: hsl(220 5% 75%); /* #B8BDC5 */
-
-    /* Success/Growth Indicator - Uses theme primary for consistency */
-    --success-indicator: var(--heroui-success); /* Theme success */
-    --success-bg: color-mix(in oklch, var(--heroui-success) 10%, transparent); /* Success 10% */
-    --success-text: var(--heroui-accent-foreground); /* Dark accent text */
-
-    /* Warning/Decline Indicator */
-    --warning-indicator: hsl(0 84% 60%); /* #F87171 - Red */
-    --warning-bg: hsl(0 84% 60% / 0.1); /* Red 10% */
-    --warning-text: hsl(0 84% 50%); /* Darker red */
-
-    /* ============================================
-       CONTENT AREA (Main Dashboard)
-       ============================================ */
-
-    /* Content - Light Mode */
-    --content-bg: hsl(0 0% 100%); /* #FFFFFF */
-    --content-card-bg: hsl(0 0% 100%); /* #FFFFFF */
-    --content-border: hsl(220 13% 91%); /* #E5E7EB */
-    --content-text: hsl(220 13% 18%); /* #1F2937 */
-    --content-text-muted: hsl(220 9% 46%); /* #6B7280 */
-
-    /* Content - Dark Mode */
-    --content-bg-dark: hsl(220 15% 18%); /* Lighter dark background */
-    --content-card-bg-dark: hsl(220 15% 20%); /* Lighter card background */
-    --content-border-dark: hsl(220 13% 24%); /* Lighter border */
-    --content-text-dark: hsl(0 0% 95%); /* #F2F2F2 */
-    --content-text-muted-dark: hsl(220 5% 65%); /* #9CA3AF */
-
-    /* ============================================
-       NOTE: Typography scale is defined in index.css
-       to avoid duplicate/conflicting values.
-       Font sizes, weights, and line heights use:
-       --text-3xs through --text-metric (index.css)
-       --font-light through --font-bold (index.css)
-       ============================================ */
-
-    /* ============================================
-       SPACING SYSTEM (4px base)
-       ============================================ */
-
-    --space-0: 0;
-    --space-1: 0.25rem; /* 4px */
-    --space-2: 0.5rem; /* 8px */
-    --space-3: 0.75rem; /* 12px */
-    --space-4: 1rem; /* 16px */
-    --space-5: 1.25rem; /* 20px */
-    --space-6: 1.5rem; /* 24px */
-    --space-8: 2rem; /* 32px */
-    --space-10: 2.5rem; /* 40px */
-    --space-12: 3rem; /* 48px */
-    --space-16: 4rem; /* 64px */
-
-    /* Component-specific spacing */
+    /* Component layout constants (local — no design-system parallel) */
     --icon-rail-width: 56px;
     --panel-width: 240px;
     --icon-size: 24px;
@@ -109,102 +23,6 @@
     --active-indicator-width: 3px;
     --active-indicator-height: 20px;
     --panel-indent: 24px;
-
-    /* ============================================
-       SHADOWS
-       ============================================ */
-
-    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px 0 rgb(0 0 0 / 0.06);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
-
-    /* Dark mode shadows (more prominent) */
-    --shadow-xs-dark: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-    --shadow-sm-dark: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px 0 rgb(0 0 0 / 0.3);
-    --shadow-md-dark: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -1px rgb(0 0 0 / 0.3);
-    --shadow-lg-dark: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -2px rgb(0 0 0 / 0.3);
-    --shadow-xl-dark: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 10px 10px -5px rgb(0 0 0 / 0.3);
-
-    /* ============================================
-       BORDER RADIUS
-       ============================================ */
-
-    /* Derived from --radius (set per-theme in index.css)
-       HeroUI v3 multiplicative scale: all collapse to 0 when --radius: 0 */
-    --radius-xs: calc(var(--radius) * 0.25);
-    --radius-sm: calc(var(--radius) * 0.5);
-    --radius-DEFAULT: var(--radius);
-    --radius-md: calc(var(--radius) * 0.75);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.5);
-    --radius-2xl: calc(var(--radius) * 2);
-    --radius-3xl: calc(var(--radius) * 3);
-    --radius-full: 9999px; /* Fully rounded */
-
-    /* ============================================
-       TRANSITIONS & ANIMATIONS
-       ============================================ */
-
-    --transition-fast: 150ms;
-    --transition-base: 250ms;
-    --transition-slow: 350ms;
-    --transition-slower: 500ms;
-
-    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-    --ease-out: cubic-bezier(0, 0, 0.2, 1);
-    --ease-in: cubic-bezier(0.4, 0, 1, 1);
-    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-
-    /* ============================================
-       Z-INDEX LAYERS
-       ============================================ */
-
-    --z-base: 0;
-    --z-dropdown: 1000;
-    --z-sticky: 1020;
-    --z-fixed: 1030;
-    --z-modal-backdrop: 1040;
-    --z-modal: 1050;
-    --z-popover: 1060;
-    --z-tooltip: 1070;
-  }
-
-  /* ============================================
-     DARK MODE OVERRIDES
-     Apply dark mode colors when class is present
-     ============================================ */
-
-  .dark {
-    /* Icon Rail remains dark (it's primary design) */
-    --icon-rail-bg: hsl(220 15% 10%);
-    --icon-rail-hover: hsl(220 15% 15%);
-
-    /* Panel switches to dark */
-    --panel-bg: var(--panel-bg-dark);
-    --panel-border: var(--panel-border-dark);
-    --panel-text: var(--panel-text-dark);
-    --panel-text-muted: var(--panel-text-muted-dark);
-    --panel-hover: var(--panel-hover-dark);
-
-    /* Badges in dark mode */
-    --badge-bg: var(--badge-bg-dark);
-    --badge-text: var(--badge-text-dark);
-
-    /* Content area switches to dark */
-    --content-bg: var(--content-bg-dark);
-    --content-card-bg: var(--content-card-bg-dark);
-    --content-border: var(--content-border-dark);
-    --content-text: var(--content-text-dark);
-    --content-text-muted: var(--content-text-muted-dark);
-
-    /* Use dark shadows */
-    --shadow-xs: var(--shadow-xs-dark);
-    --shadow-sm: var(--shadow-sm-dark);
-    --shadow-md: var(--shadow-md-dark);
-    --shadow-lg: var(--shadow-lg-dark);
-    --shadow-xl: var(--shadow-xl-dark);
   }
 }
 
@@ -213,27 +31,15 @@
    ============================================ */
 
 @layer components {
-  /* Icon Rail - Floating Rounded Container */
+  /* Icon Rail - Floating Rounded Container (flat surface) */
   .icon-rail {
     width: var(--icon-rail-width);
-
-    /* Floating rounded panel effect */
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-lg);
     margin: 8px;
     height: calc(100vh - 16px); /* Account for top+bottom margin */
     overflow: hidden;
-
-    /* Brighter greyish background */
-    background: hsl(220, 10%, 93%);
-
-    /* Moderate floating shadows */
-    box-shadow:
-      0 6px 20px rgba(0, 0, 0, 0.25),
-      0 2px 6px rgba(0, 0, 0, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
-
-    /* All-around border for definition */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--sidebar-bg);
+    border: 1px solid var(--line);
   }
 
   /* Hide engraved text section when viewport height is too small */
@@ -251,63 +57,27 @@
     height: var(--icon-button-size);
     min-width: var(--icon-button-touch-target);
     min-height: var(--icon-button-touch-target);
-    color: var(--icon-rail-icon);
+    color: var(--ink-mute);
     transition: all var(--transition-fast) var(--ease-out);
     position: relative;
     overflow: visible;
-
-    /* Transparent - blend with container */
     background: transparent;
-    border-radius: var(--radius-xl);
-  }
-
-  /* Glass highlight hover effect for icon buttons */
-  .icon-button::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.15) 0%,
-      rgba(255, 255, 255, 0.1) 30%,
-      rgba(255, 255, 255, 0.06) 50%,
-      rgba(255, 255, 255, 0.03) 70%,
-      rgba(255, 255, 255, 0.01) 85%,
-      transparent 100%
-    );
-    opacity: 0;
-    transition: opacity var(--transition-fast) var(--ease-out);
-    pointer-events: none;
-    z-index: 1;
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-lg);
   }
 
   .icon-button:hover {
-    color: var(--icon-rail-icon-active);
-  }
-
-  .icon-button:hover::after {
-    opacity: 1;
+    color: var(--ink);
+    background: var(--surface-3);
   }
 
   .icon-button.active {
-    background: radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.1) 0%,
-      rgba(255, 255, 255, 0.07) 30%,
-      rgba(255, 255, 255, 0.05) 50%,
-      rgba(255, 255, 255, 0.03) 70%,
-      rgba(255, 255, 255, 0.01) 85%,
-      transparent 100%
-    );
-    color: var(--icon-rail-icon-active);
+    color: var(--ink);
+    background: var(--surface-3);
     position: relative;
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-lg);
   }
 
+  /* Active indicator bar keeps the accent */
   .icon-button.active::before {
     content: '';
     position: absolute;
@@ -316,9 +86,9 @@
     transform: translateY(-50%);
     width: var(--active-indicator-width);
     height: var(--active-indicator-height);
-    background-color: var(--icon-rail-active-indicator);
-    border-start-end-radius: var(--radius-full);
-    border-end-end-radius: var(--radius-full);
+    background-color: var(--accent);
+    border-start-end-radius: 9999px;
+    border-end-end-radius: 9999px;
   }
 
   /* RTL support for active indicator */
@@ -327,273 +97,81 @@
     inset-inline-end: 0;
     border-start-end-radius: 0;
     border-end-end-radius: 0;
-    border-start-start-radius: var(--radius-full);
-    border-end-start-radius: var(--radius-full);
+    border-start-start-radius: 9999px;
+    border-end-start-radius: 9999px;
   }
 
-  /* Panel specific styles with ENHANCED glassmorphism */
+  /* Expanded panel (flat surface) */
   .expanded-panel {
     width: var(--panel-width);
-    /* Lighter grey background */
-    background: hsl(220, 10%, 96%);
-    /* Left side rounded corners - matches icon rail */
-    border-start-start-radius: var(--radius-xl);
-    border-end-start-radius: var(--radius-xl);
-    /* Subtle border */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    /* Reduced shadows for subtler appearance */
-    box-shadow:
-      0 2px 8px rgba(0, 0, 0, 0.08),
-      0 1px 3px rgba(0, 0, 0, 0.06),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    transition: transform var(--transition-base) var(--ease-in-out);
-    /* Ensure content isn't clipped */
+    background: var(--surface-3);
+    border-start-start-radius: var(--radius-lg);
+    border-end-start-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    transition: transform var(--transition-base) cubic-bezier(0.4, 0, 0.2, 1);
     overflow: visible;
-    /* Match IconRail height with margin */
     margin-top: 8px;
     margin-bottom: 8px;
     height: calc(100vh - 16px);
   }
 
-  /* Dark mode for panel */
-  .dark .expanded-panel {
-    background: hsl(220, 10%, 25%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow:
-      0 2px 8px rgba(0, 0, 0, 0.15),
-      0 1px 3px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  }
-
   .panel-item {
-    color: var(--panel-text);
+    color: var(--ink);
     transition: all var(--transition-fast) var(--ease-out);
     position: relative;
     overflow: hidden;
   }
 
-  /* Permanent subtle glass shine on panel items */
-  .panel-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(255, 255, 255, 0.06) 50%,
-      transparent 100%
-    );
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* ULTRA DRAMATIC Glass highlight for panel items on hover */
-  .panel-item::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.5) 50%,
-      transparent 100%
-    );
-    opacity: 0;
-    transition: opacity var(--transition-fast) var(--ease-out);
-    pointer-events: none;
-    z-index: 1;
-  }
-
   .panel-item:hover {
-    background-color: var(--panel-hover);
-    box-shadow:
-      inset 0 2px 0 rgba(255, 255, 255, 0.5),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.15),
-      0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-
-  .panel-item:hover::after {
-    opacity: 1;
+    background-color: var(--surface-3);
   }
 
   .panel-item.active {
-    background-color: var(--panel-active);
-    color: var(--panel-active-text);
-    /* More pronounced glass effect with stronger shadows */
-    box-shadow:
-      inset 0 2px 0 rgba(255, 255, 255, 0.6),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.1),
-      0 2px 8px rgba(0, 0, 0, 0.15),
-      0 4px 16px rgba(0, 0, 0, 0.1);
+    background-color: var(--surface-3);
+    color: var(--ink);
   }
 
-  /* Badge styles with subtle depth */
-  .badge-count {
-    background-color: var(--badge-bg);
-    color: var(--badge-text);
-    font-size: var(--text-xs);
-    font-weight: var(--font-medium);
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-full);
-    min-width: 1.25rem;
-    height: 1.25rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    /* Subtle shadow for depth */
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    /* Subtle text emboss */
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
-  }
-
-  /* Metric card styles with ENHANCED elevation - more dramatic */
+  /* Metric card (flat, hairline border — no elevation shadow) */
   .metric-card {
-    background: var(--content-card-bg);
-    border: 1px solid var(--content-border);
+    background: var(--surface);
+    border: 1px solid var(--line);
     border-radius: var(--radius-lg);
-    /* ENHANCED Material Design 3 elevation shadow - more pronounced */
-    /* !important needed to override shadcn Card default shadow */
-    box-shadow:
-      0 2px 4px 0 rgba(0, 0, 0, 0.1),
-      0 4px 8px 0 rgba(0, 0, 0, 0.15),
-      0 0 0 1px rgba(255, 255, 255, 0.1) inset !important;
-    transition: box-shadow var(--transition-base) var(--ease-out);
+    transition: border-color var(--transition-base) var(--ease-out);
   }
 
   .metric-card:hover {
-    /* ENHANCED elevated shadow on hover - more dramatic lift */
-    box-shadow:
-      0 4px 8px 0 rgba(0, 0, 0, 0.15),
-      0 8px 16px 0 rgba(0, 0, 0, 0.2),
-      0 0 0 1px rgba(255, 255, 255, 0.15) inset !important;
+    border-color: var(--line-strong);
   }
 
   .metric-value {
     font-size: var(--text-metric);
     font-weight: var(--font-bold);
     line-height: var(--leading-tight);
-    color: var(--content-text);
+    color: var(--ink);
     font-variant-numeric: tabular-nums;
-    /* ENHANCED emboss effect for large numbers - more dramatic */
-    text-shadow:
-      0 2px 4px rgba(0, 0, 0, 0.15),
-      0 -1px 0 rgba(255, 255, 255, 0.8),
-      0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
-  .trend-indicator {
-    font-size: var(--text-sm);
-    font-weight: var(--font-semibold);
-  }
-
-  .trend-indicator.positive {
-    color: var(--success-indicator);
-  }
-
-  .trend-indicator.negative {
-    color: var(--warning-indicator);
-  }
-
-  /* Section header styles with ENHANCED emboss for visibility */
+  /* Section header */
   .section-header {
     font-size: var(--text-2xs);
     font-weight: var(--font-semibold);
     text-transform: uppercase;
     letter-spacing: var(--tracking-wider);
-    color: var(--panel-text-muted);
-    /* ENHANCED emboss effect - more pronounced */
-    text-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.9),
-      0 2px 4px rgba(255, 255, 255, 0.3);
+    color: var(--ink-mute);
   }
 
-  .dark .section-header {
-    color: var(--panel-text-muted);
-    /* ENHANCED engrave for dark mode */
-    text-shadow:
-      0 -1px 0 rgba(0, 0, 0, 0.8),
-      0 1px 0 rgba(255, 255, 255, 0.15),
-      0 2px 4px rgba(0, 0, 0, 0.3);
-  }
-
-  /* Engraved text effect (like "REMAKE 2025") */
+  /* Engraved text label (e.g. "Dossier 2025") — flattened */
   .text-engraved {
     font-size: var(--text-xs);
     font-weight: var(--font-bold);
     text-transform: uppercase;
     letter-spacing: var(--tracking-wider);
-    color: rgba(0, 0, 0, 0.4);
-    /* Engraved effect for light background - text appears carved in */
-    text-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.8),
-      0 -1px 0 rgba(0, 0, 0, 0.2);
-    opacity: 1;
+    color: var(--ink-mute);
   }
 
-  .dark .text-engraved {
-    color: rgba(255, 255, 255, 0.25);
-    text-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.15),
-      0 -1px 0 rgba(0, 0, 0, 0.8),
-      0 2px 4px rgba(0, 0, 0, 0.5);
-  }
-
-  /* Highlight/glass shine effect */
+  /* Glass-highlight wrapper — shine removed; positioning context only */
   .glass-highlight {
     position: relative;
-  }
-
-  .glass-highlight::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.1) 0%,
-      rgba(255, 255, 255, 0) 100%
-    );
-    border-radius: inherit;
-    pointer-events: none;
-  }
-
-  /* Smooth animations */
-  .animate-slide-in {
-    animation: slideIn var(--transition-base) var(--ease-out);
-  }
-
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translateX(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  [dir='rtl'] .animate-slide-in {
-    animation: slideInRTL var(--transition-base) var(--ease-out);
-  }
-
-  @keyframes slideInRTL {
-    from {
-      opacity: 0;
-      transform: translateX(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
   }
 }
 

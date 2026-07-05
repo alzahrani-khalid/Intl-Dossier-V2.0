@@ -84,6 +84,7 @@ import type {
   MeetingFrequency,
 } from '@/types/working-group.types'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 const WORKING_GROUP_TYPES: WorkingGroupType[] = [
   'committee',
@@ -397,7 +398,7 @@ export default function WorkingGroupsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
-              <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="h-full transition-shadow cursor-pointer">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
@@ -442,7 +443,7 @@ export default function WorkingGroupsPage() {
                       {/* Next meeting / Updated */}
                       <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
                         <Clock className="size-3" />
-                        {new Date(wg.updated_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
+                        {formatDayFirstYear(wg.updated_at)}
                       </div>
                     </div>
 

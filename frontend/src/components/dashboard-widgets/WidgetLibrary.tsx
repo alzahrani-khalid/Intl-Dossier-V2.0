@@ -260,7 +260,7 @@ function WidgetCard({
     <div
       className={cn(
         'p-3 sm:p-4 rounded-lg border bg-card',
-        'hover:border-primary/50 hover:shadow-sm transition-all',
+        'hover:border-primary/50 transition-all',
         isAdded && 'opacity-50',
       )}
     >

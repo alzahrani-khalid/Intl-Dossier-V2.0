@@ -57,7 +57,7 @@ import { Icon, DossierGlyph } from '@/components/signature-visuals'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { useMyTasks, useContributedTasks, useUpdateTask } from '@/hooks/useTasks'
 import { useWorkCreation } from '@/components/work-creation'
-import { toArDigits } from '@/lib/i18n/toArDigits'
+import { formatDayFirst } from '@/lib/format-date'
 import { cn } from '@/lib/utils'
 import type { Database } from '../../../backend/src/types/database.types'
 
@@ -86,17 +86,6 @@ function isToday(deadline: string | null | undefined): boolean {
   }
   const now = new Date()
   return d.toDateString() === now.toDateString()
-}
-
-function formatDueDate(deadline: string | null | undefined): string {
-  if (deadline === null || deadline === undefined || deadline === '') {
-    return '—'
-  }
-  const d = new Date(deadline)
-  if (Number.isNaN(d.getTime())) {
-    return '—'
-  }
-  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })
 }
 
 function dossierIsoHint(task: Task): string | undefined {
@@ -229,11 +218,11 @@ export function MyTasksPage(): ReactElement {
               const titleId = `task-title-${task.id}`
 
               // Done rows: line-through + muted color (NOT opacity).
-                  // opacity: 0.45 washed every child into <3:1 contrast — five
-                  // axe-core color-contrast failures (chip-danger, task-due,
-                  // task-title, subtitle, checkbox glyph). Using --ink-mute
-                  // (6.0:1 on white) keeps all child elements at WCAG AA while
-                  // still visually de-emphasising completed tasks.
+              // opacity: 0.45 washed every child into <3:1 contrast — five
+              // axe-core color-contrast failures (chip-danger, task-due,
+              // task-title, subtitle, checkbox glyph). Using --ink-mute
+              // (6.0:1 on white) keeps all child elements at WCAG AA while
+              // still visually de-emphasising completed tasks.
               const rowStyle: CSSProperties | undefined = isDone
                 ? { color: 'var(--ink-mute)', textDecoration: 'line-through' }
                 : undefined
@@ -272,12 +261,7 @@ export function MyTasksPage(): ReactElement {
                     )}
                   </button>
 
-                  <DossierGlyph
-                    type="country"
-                    iso={iso}
-                    name={task.title}
-                    size={18}
-                  />
+                  <DossierGlyph type="country" iso={iso} name={task.title} size={18} />
 
                   {/* Keyboard activation lives on this title button (mouse
                       users still get whole-row click via the parent <li>). */}
@@ -315,7 +299,7 @@ export function MyTasksPage(): ReactElement {
                     )}
                     dir="ltr"
                   >
-                    {toArDigits(formatDueDate(task.sla_deadline), locale)}
+                    {formatDayFirst(task.sla_deadline ?? '')}
                   </span>
                 </li>
               )

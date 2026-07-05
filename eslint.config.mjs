@@ -240,29 +240,19 @@ export default tseslint.config(
     },
   },
 
-  // ── Design-token Tier-B carve-out (Phase 51 D-03 / D-13) ─────────
-  // Permanent design statements: token-definition and bootstrap files where
-  // raw hex is the design value, signature-visual flag SVGs, and chart / graph
-  // palettes that need a future chart-token phase rather than ad hoc swaps.
+  // ── Design-token Tier-B carve-out (Phase 51 D-03 / D-13; tightened Phase 83 D-83-01) ─────────
+  // Permanent design statements ONLY: the token-definition source (directions.ts),
+  // the ES5 first-paint bootstrap, and the signature-visual flag SVGs — the three
+  // places where a raw hex IS the design value. The 15 chart / graph palette files
+  // that previously lived here were migrated onto the --chart-1..8 tokens in Phase 83
+  // (the "future chart-token phase" the old comment anticipated landed in this phase),
+  // so `pnpm --dir frontend lint --max-warnings 0` now bites on every chart/graph file
+  // and IS the standing DEBT-01/02 raw-hex + palette-literal re-audit gate.
   {
     files: [
       'frontend/src/design-system/tokens/directions.ts',
       'frontend/public/bootstrap.js',
       'frontend/src/components/signature-visuals/flags/**/*.{tsx,ts}',
-      'frontend/src/components/analytics/CommitmentFulfillmentChart.tsx',
-      'frontend/src/components/analytics/RelationshipHealthChart.tsx',
-      'frontend/src/components/analytics/WorkloadDistributionChart.tsx',
-      'frontend/src/components/analytics/EngagementMetricsChart.tsx',
-      'frontend/src/components/analytics/AnalyticsPreviewOverlay.tsx',
-      'frontend/src/components/analytics/ClusterVisualization.tsx',
-      'frontend/src/components/analytics/sample-data.ts',
-      'frontend/src/components/dashboard-widgets/ChartWidget.tsx',
-      'frontend/src/components/sla-monitoring/SLAComplianceChart.tsx',
-      'frontend/src/components/stakeholder-influence/InfluenceMetricsPanel.tsx',
-      'frontend/src/components/stakeholder-influence/InfluenceReport.tsx',
-      'frontend/src/components/relationships/RelationshipGraph.tsx',
-      'frontend/src/components/dossier/MiniRelationshipGraph.tsx',
-      'frontend/src/components/report-builder/ReportPreview.tsx',
     ],
     rules: {
       'no-restricted-syntax': 'off',

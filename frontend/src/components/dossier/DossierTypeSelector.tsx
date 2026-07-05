@@ -92,7 +92,7 @@ export function DossierTypeSelector({
             key={option.type}
             className={cn(
               'relative cursor-pointer transition-all',
-              'hover:shadow-md hover:border-primary',
+              'hover:border-primary',
               'min-h-[140px] sm:min-h-[160px]',
               isSelected && 'border-primary ring-2 ring-primary ring-offset-2',
               disabled && 'opacity-50 cursor-not-allowed',

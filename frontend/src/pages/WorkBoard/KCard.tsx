@@ -7,7 +7,8 @@
  *
  * RTL-correct via:
  *  - <LtrIsolate> wrapping the mono due text (digits stay LTR inside RTL row)
- *  - `border-inline-start` on .kcard.overdue (handled in board.css)
+ *  - Overdue carried on the red mono due chip (.kdue.is-overdue in board.css);
+ *    the .kcard.overdue article class stays for Playwright/unit selectors
  *  - No physical-direction Tailwind classes; logical-only spacing tokens
  *
  * XSS mitigation (T-39-01-XSS): React JSX escaping only. No raw-HTML
@@ -20,7 +21,6 @@ import { format, isToday } from 'date-fns'
 
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import { DossierGlyph } from '@/components/signature-visuals'
-import { toArDigits } from '@/lib/i18n/toArDigits'
 import { cn } from '@/lib/utils'
 import type { WorkItem } from '@/types/work-item.types'
 
@@ -64,10 +64,14 @@ function kindChipClass(source: WorkItem['source']): string {
   return source === 'commitment' ? 'chip chip-accent' : 'chip chip-info'
 }
 
-function buildDueText(item: KCardItem, lang: string, t: (key: string) => string): string {
+function buildDueText(
+  item: KCardItem,
+  lang: string,
+  t: (key: string, opts?: { days?: number }) => string,
+): string {
   if (item.is_overdue && typeof item.days_until_due === 'number') {
     const n = Math.abs(item.days_until_due)
-    return `${t('card.overdue')} ${toArDigits(`${n}d`, lang)}`
+    return t('card.overdueBy', { days: n })
   }
   if (item.deadline == null) return ''
   const date = new Date(item.deadline)
@@ -75,8 +79,7 @@ function buildDueText(item: KCardItem, lang: string, t: (key: string) => string)
   if (isToday(date)) {
     return lang === 'ar' ? 'اليوم' : 'Today'
   }
-  const formatted = format(date, 'd MMM')
-  return toArDigits(formatted, lang)
+  return format(date, 'd MMM')
 }
 
 export function KCard({ item, onItemClick, dndEnabled = false }: KCardProps): ReactElement {
@@ -130,7 +133,7 @@ export function KCard({ item, onItemClick, dndEnabled = false }: KCardProps): Re
           <span>{dossierName}</span>
         </div>
         <LtrIsolate>
-          <span className="font-mono">{dueText}</span>
+          <span className={cn('font-mono kdue', item.is_overdue && 'is-overdue')}>{dueText}</span>
         </LtrIsolate>
         <div className="kcard-owner" aria-label={ownerLabel}>
           {initials}

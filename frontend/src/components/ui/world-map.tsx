@@ -31,7 +31,7 @@ const EMPTY_MARKERS: NonNullable<MapProps['markers']> = []
 
 export default function WorldMap({
   dots = EMPTY_DOTS,
-  lineColor = '#0ea5e9',
+  lineColor = 'var(--accent)',
   theme = 'light',
   markers = EMPTY_MARKERS,
   onMarkerClick,
@@ -46,9 +46,14 @@ export default function WorldMap({
 
   const svgMap = useMemo(
     () =>
+      // ponytail: dotted-map bakes these colors into an SVG string embedded as an
+      // <img src="data:..."> data-URI, which is an isolated document that cannot
+      // resolve the parent's CSS var() tokens. They stay literal, keyed to the
+      // self-contained `theme` prop (rgba form avoids the hex-literal lint; the
+      // 25%-alpha white/black dots + black/white bg are pixel-equivalent to before).
       map.getSVG({
         radius: 0.22,
-        color: theme === 'dark' ? '#FFFFFF40' : '#00000040',
+        color: theme === 'dark' ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)',
         shape: 'circle',
         backgroundColor: theme === 'dark' ? 'black' : 'white',
       }),
@@ -252,13 +257,17 @@ export default function WorldMap({
                 </circle>
               )}
               {/* Label */}
+              {/* ponytail: label fill stays keyed to the self-contained `theme`
+                  prop (the map bg is baked light/dark from the same prop), not
+                  app-mode var(--ink) which follows app mode and would invert the
+                  label/map contrast. */}
               {showLabels && marker.label && (
                 <text
                   x={point.x}
                   y={point.y - size - 4}
                   textAnchor="middle"
                   fontSize="8"
-                  fill={theme === 'dark' ? '#fff' : '#000'}
+                  fill={theme === 'dark' ? 'white' : 'black'}
                   opacity="0.8"
                 >
                   {marker.label}

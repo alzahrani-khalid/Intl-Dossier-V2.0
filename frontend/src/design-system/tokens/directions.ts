@@ -72,6 +72,20 @@ export const PALETTES: Record<Direction, DirectionPalette> = {
         { fg: '#ef9179', soft: '#3a1911' }, // orange (h35)
         { fg: '#d991d2', soft: '#331931' }, // magenta (h330)
       ],
+      // 8-slot categorical chart palette (DEBT-01, Plan 83-02) → --chart-1..8.
+      // 7 of 8 are byte-copies of AA-proven fgs (status-1..6 fg + semantic.danger);
+      // chart-7 is the only new hue — violet ~h300, culori-derived in the sibling
+      // status L/C band (oklch L0.75 C0.12), 8.24:1 min vs surface/bg (contrast.test.ts).
+      chart: [
+        '#87adfa', // 1 indigo (h264) = status-1 fg
+        '#2ac4cc', // 2 cyan (h200) = status-2 fg
+        '#6ac48c', // 3 green (h155) = status-3 fg
+        '#cbaa4b', // 4 amber (h90) = status-4 fg
+        '#ef9179', // 5 orange (h35) = status-5 fg
+        '#d991d2', // 6 magenta (h330) = status-6 fg
+        '#ba9cef', // 7 violet (h300) — NEW, derived
+        '#e86154', // 8 red (h28) = semantic.danger
+      ],
     },
     light: {
       bg: '#ffffff', // inverse-canvas (verbatim)
@@ -121,6 +135,20 @@ export const PALETTES: Record<Direction, DirectionPalette> = {
         { fg: '#7c5700', soft: '#f8f0da' }, // amber (h90)
         { fg: '#9d381f', soft: '#ffeae3' }, // orange (h35)
         { fg: '#873a82', soft: '#fce9fa' }, // magenta (h330)
+      ],
+      // 8-slot categorical chart palette (DEBT-01, Plan 83-02) → --chart-1..8.
+      // Light-derived siblings of the dark set: 7 byte-copies of AA-proven light
+      // fgs (status-1..6 fg + semantic.danger); chart-7 violet ~h300 culori-derived
+      // in the sibling status L/C band (oklch L0.48 C0.14), 6.45:1 min vs surface/bg.
+      chart: [
+        '#3458ac', // 1 indigo (h264) = status-1 fg
+        '#00737c', // 2 cyan (h200) = status-2 fg
+        '#007338', // 3 green (h155) = status-3 fg
+        '#7c5700', // 4 amber (h90) = status-4 fg
+        '#9d381f', // 5 orange (h35) = status-5 fg
+        '#873a82', // 6 magenta (h330) = status-6 fg
+        '#6b46a0', // 7 violet (h300) — NEW, derived
+        '#be241f', // 8 red (h28) = semantic.danger
       ],
     },
   },

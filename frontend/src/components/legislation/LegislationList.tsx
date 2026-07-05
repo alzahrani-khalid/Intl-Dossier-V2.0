@@ -20,6 +20,7 @@ import {
   X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { Input } from '@/components/ui/input'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/button'
@@ -357,7 +358,7 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
     daysUntilCommentEnd >= 0
 
   return (
-    <Card className="transition-shadow hover:shadow-md">
+    <Card className="transition-shadow">
       <CardContent className="p-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
           {/* Icon */}
@@ -393,9 +394,7 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
               {legislation.introduced_date && (
                 <span className="flex items-center gap-1">
                   <Calendar className="h-3.5 w-3.5" />
-                  {new Date(legislation.introduced_date).toLocaleDateString(
-                    isRTL ? 'ar-SA' : 'en-US',
-                  )}
+                  {formatDayFirstYear(legislation.introduced_date)}
                 </span>
               )}
               {hasOpenCommentPeriod && (

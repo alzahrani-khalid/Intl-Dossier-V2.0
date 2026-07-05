@@ -1,5 +1,6 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { TriangleAlert, CirclePause, Check, Zap, CircleAlert, Pause, Play } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
 import { usePauseSLA, useResumeSLA } from '@/hooks/useIntakeApi'
 import { InputDialog } from '../input-dialog/InputDialog'
@@ -141,14 +142,14 @@ export function SLACountdown({
   }
 
   // Get status icon
-  const getStatusIcon = (): string => {
-    if (isBreached) return '⚠️'
-    if (isPaused) return '⏸️'
+  const getStatusIcon = (): ReactNode => {
+    if (isBreached) return <TriangleAlert className="h-3.5 w-3.5 inline-block" />
+    if (isPaused) return <CirclePause className="h-3.5 w-3.5 inline-block" />
 
     const percentRemaining = (remainingMinutes / targetMinutes) * 100
-    if (percentRemaining > 25) return '✓'
-    if (percentRemaining > 10) return '⚡'
-    return '🔴'
+    if (percentRemaining > 25) return <Check className="h-3.5 w-3.5 inline-block" />
+    if (percentRemaining > 10) return <Zap className="h-3.5 w-3.5 inline-block" />
+    return <CircleAlert className="h-3.5 w-3.5 inline-block" />
   }
 
   // Get progress bar width
@@ -205,11 +206,12 @@ export function SLACountdown({
           {isPaused && <span className="text-xs text-muted-foreground">{t('sla.paused')}</span>}
         </div>
         <span
-          className={`rounded-full px-3 py-1 text-xs font-semibold ${getStatusColor()}`}
+          className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${getStatusColor()}`}
           role="status"
           aria-live="polite"
         >
-          {getStatusIcon()} {formatTimeRemaining(remainingMinutes)}
+          {getStatusIcon()}
+          {formatTimeRemaining(remainingMinutes)}
         </span>
       </div>
 
@@ -253,9 +255,15 @@ export function SLACountdown({
             {pauseMutation.isPending || resumeMutation.isPending ? (
               <span className="inline-block size-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
             ) : isPaused ? (
-              <>▶ {t('sla.resume')}</>
+              <span className="inline-flex items-center gap-1">
+                <Play className="h-3 w-3" />
+                {t('sla.resume')}
+              </span>
             ) : (
-              <>⏸ {t('sla.pause')}</>
+              <span className="inline-flex items-center gap-1">
+                <Pause className="h-3 w-3" />
+                {t('sla.pause')}
+              </span>
             )}
           </button>
         )}

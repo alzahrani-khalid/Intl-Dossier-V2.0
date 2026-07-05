@@ -10,6 +10,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { format, parseISO, isAfter } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
+import { formatDayFirst } from '@/lib/format-date'
 import { Check, X, HelpCircle, Clock, MapPin, Calendar, Send } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -281,9 +282,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                 <div className="flex items-center gap-3 flex-wrap">
                   {/* Date & Time */}
                   <div className="flex-1 min-w-0">
-                    <div className="font-medium">
-                      {format(startDate, 'EEEE, MMMM d', { locale: dateLocale })}
-                    </div>
+                    <div className="font-medium">{formatDayFirst(startDate)}</div>
                     <div className="text-sm text-muted-foreground">
                       {format(startDate, 'h:mm a', { locale: dateLocale })} -{' '}
                       {format(endDate, 'h:mm a', { locale: dateLocale })}

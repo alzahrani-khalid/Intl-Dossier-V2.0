@@ -13,6 +13,7 @@
 
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { useCallback, useMemo } from 'react'
 import {
   ListPageShell,
@@ -66,14 +67,7 @@ function ForumsListPage(): React.ReactNode {
     return list.map((f) => {
       const status = typeof f.status === 'string' ? f.status : 'active'
       const chipClass = FORUM_STATUS_CHIP[status] ?? 'chip-default'
-      const meta =
-        typeof f.updated_at === 'string'
-          ? new Intl.DateTimeFormat(isRTL ? 'ar-SA' : 'en-US', {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric',
-            }).format(new Date(f.updated_at))
-          : undefined
+      const meta = typeof f.updated_at === 'string' ? formatDayFirstYear(f.updated_at) : undefined
       const primary = (isRTL ? f.name_ar : f.name_en) ?? f.name_en ?? ''
       return {
         id: String(f.id),

@@ -184,7 +184,6 @@ function FileItem({ uploadedFile, onRemove, disabled }: FileItemProps) {
         'bg-white dark:bg-muted',
         'border border-line dark:border-line',
         'rounded-lg',
-        'shadow-sm',
         uploadedFile.status === 'error' &&
           'border-danger/30 dark:border-danger bg-danger/10 dark:bg-danger/30',
         uploadedFile.status === 'success' && 'border-success/30 dark:border-success',

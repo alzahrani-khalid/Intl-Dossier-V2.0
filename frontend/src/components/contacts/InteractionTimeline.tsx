@@ -121,13 +121,7 @@ function InteractionNoteItem({
     note.details.length > 150 ? `${note.details.substring(0, 150)}...` : note.details
 
   return (
-    <Card
-      className={cn(
-        'p-4 hover:shadow-md transition-shadow',
-        'border border-border',
-        isRTL && 'text-end',
-      )}
-    >
+    <Card className={cn('p-4 transition-shadow', 'border border-border', isRTL && 'text-end')}>
       <div className="flex flex-col gap-3 sm:gap-4">
         {/* Header: Icon, Type, Date, Actions */}
         <div className="flex items-start justify-between gap-3">

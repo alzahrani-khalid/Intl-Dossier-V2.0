@@ -100,24 +100,24 @@ export interface MiniRelationshipGraphProps {
 // ============================================================================
 
 const NODE_COLORS: Record<string, string> = {
-  country: '#3b82f6',
-  organization: '#8b5cf6',
-  person: '#10b981',
-  forum: '#f59e0b',
-  engagement: '#ec4899',
-  working_group: '#14b8a6',
-  topic: '#6366f1',
+  country: 'var(--chart-1)',
+  organization: 'var(--chart-7)',
+  person: 'var(--chart-3)',
+  forum: 'var(--chart-4)',
+  engagement: 'var(--chart-6)',
+  working_group: 'var(--chart-2)',
+  topic: 'var(--accent-ink)',
 }
 
 const EDGE_COLORS: Record<string, string> = {
-  member_of: '#3b82f6',
-  participates_in: '#8b5cf6',
-  cooperates_with: '#10b981',
-  bilateral_relation: '#f59e0b',
-  partnership: '#ec4899',
-  parent_of: '#14b8a6',
-  subsidiary_of: '#6366f1',
-  related_to: '#9ca3af',
+  member_of: 'var(--chart-1)',
+  participates_in: 'var(--chart-7)',
+  cooperates_with: 'var(--chart-3)',
+  bilateral_relation: 'var(--chart-4)',
+  partnership: 'var(--chart-6)',
+  parent_of: 'var(--chart-2)',
+  subsidiary_of: 'var(--accent-ink)',
+  related_to: 'var(--ink-faint)',
 }
 
 // ============================================================================
@@ -139,7 +139,7 @@ const MiniDossierNode = memo(({ data }: { data: MiniNodeData }) => {
   const { isRTL } = useDirection()
   const name = isRTL ? data.name_ar || data.name_en : data.name_en
 
-  const nodeColor = NODE_COLORS[data.type] || '#6b7280'
+  const nodeColor = NODE_COLORS[data.type] || 'var(--ink-faint)'
   const size = data.isCenter ? 50 : 36
 
   return (
@@ -181,9 +181,9 @@ const MiniDossierNode = memo(({ data }: { data: MiniNodeData }) => {
 
       {/* Node circle */}
       <div
-        className="absolute inset-0 rounded-full border-2 shadow-md transition-all"
+        className="absolute inset-0 rounded-full border-2 transition-all"
         style={{
-          backgroundColor: `${nodeColor}20`,
+          backgroundColor: `color-mix(in srgb, ${nodeColor} 12.5%, transparent)`,
           borderColor: nodeColor,
         }}
       />
@@ -362,19 +362,19 @@ function MiniGraphInner({ centerDossier, nodes, edges, height, isRTL, t }: MiniG
         target: edge.target_id,
         type: 'smoothstep',
         style: {
-          stroke: EDGE_COLORS[edge.relationship_type] || '#9ca3af',
+          stroke: EDGE_COLORS[edge.relationship_type] || 'var(--ink-faint)',
           strokeWidth: 1.5,
         },
         markerEnd: {
           type: MarkerType.ArrowClosed,
           width: 10,
           height: 10,
-          color: EDGE_COLORS[edge.relationship_type] || '#9ca3af',
+          color: EDGE_COLORS[edge.relationship_type] || 'var(--ink-faint)',
         },
         label: edge.relationship_type.replace(/_/g, ' '),
         labelStyle: {
           fontSize: 8,
-          fill: '#6b7280',
+          fill: 'var(--ink-faint)',
         },
         labelBgStyle: {
           fill: 'white',
@@ -449,7 +449,7 @@ function MiniGraphInner({ centerDossier, nodes, edges, height, isRTL, t }: MiniG
           attributionPosition={isRTL ? 'bottom-left' : 'bottom-right'}
           proOptions={{ hideAttribution: true }}
         >
-          <Background variant={BackgroundVariant.Dots} gap={12} size={0.5} color="#e5e7eb" />
+          <Background variant={BackgroundVariant.Dots} gap={12} size={0.5} color="var(--line)" />
 
           {/* Stats Panel */}
           <Panel

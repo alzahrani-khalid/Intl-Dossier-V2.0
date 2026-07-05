@@ -8,6 +8,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { m } from 'framer-motion'
+import { format } from 'date-fns'
 import {
   Send,
   Reply,
@@ -161,16 +162,9 @@ function ConfidenceIndicator({ score }: { score: number }) {
 }
 
 function OptimalTimingBadge({ startDate, endDate }: { startDate?: string; endDate?: string }) {
-  const { isRTL } = useDirection()
-
   if (!startDate && !endDate) return null
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-      month: 'short',
-      day: 'numeric',
-    })
-  }
+  const formatDate = (date: string): string => format(new Date(date), 'd MMM')
 
   return (
     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -250,7 +244,6 @@ export function RecommendationCard({
       <Card
         className={cn(
           'relative overflow-hidden transition-all duration-200',
-          'hover:shadow-md',
           recommendation.urgency === 'critical' && 'border-danger/30 dark:border-danger/70',
           recommendation.urgency === 'high' && 'border-warning/30 dark:border-warning/70',
           !isActionable && 'opacity-70',

@@ -33,6 +33,14 @@
     "integrations": "Integrations"
   },
 
+  "backToApp": "Back to app",
+
+  "navGroups": {
+    "account": "Account",
+    "privacyAccess": "Privacy & access",
+    "connected": "Connected"
+  },
+
   "errors": {
     "save": "Could not save changes. Review the highlighted fields and try again."
   },
@@ -44,15 +52,15 @@
     "avatarHint": "Click to upload a new photo",
     "avatarFormats": "JPG, PNG, GIF or WebP. Max 5MB",
     "removeAvatar": "Remove Photo",
-    "displayName": "Display Name",
+    "displayName": "Display name",
     "displayNameHint": "This is how your name appears across the application",
-    "email": "Email Address",
+    "email": "Email address",
     "emailHint": "Your email is managed through your organization",
-    "jobTitle": "Job Title",
+    "jobTitle": "Job title",
     "jobTitlePlaceholder": "e.g. Policy Analyst",
     "department": "Department",
     "departmentPlaceholder": "e.g. International Relations",
-    "phone": "Phone Number",
+    "phone": "Phone number",
     "phonePlaceholder": "+966 5XX XXX XXXX",
     "bio": "Bio",
     "bioPlaceholder": "A brief description about yourself",
@@ -71,9 +79,9 @@
     "languageHint": "Choose your preferred language",
     "timezone": "Timezone",
     "timezoneHint": "Used for scheduling and displaying times",
-    "dateFormat": "Date Format",
+    "dateFormat": "Date format",
     "dateFormatHint": "How dates are displayed throughout the app",
-    "startOfWeek": "Start of Week",
+    "startOfWeek": "Start of week",
     "startOfWeekHint": "First day shown on calendars",
     "sunday": "Sunday",
     "monday": "Monday",
@@ -221,9 +229,9 @@
     "hour": "hour",
     "hours": "hours",
     "passwordChange": "Change Password",
-    "currentPassword": "Current Password",
-    "newPassword": "New Password",
-    "confirmPassword": "Confirm New Password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
     "passwordRequirements": "Password must be at least 8 characters with a mix of letters, numbers, and symbols",
     "changePasswordButton": "Update Password",
     "passwordChanged": "Password updated successfully",

@@ -13,6 +13,7 @@
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 import {
   Plus,
   Search,
@@ -358,7 +359,7 @@ function WebhookCard({
   onCopyUrl,
   isTestLoading,
 }: WebhookCardProps) {
-  const { t, i18n } = useTranslation('webhooks')
+  const { t } = useTranslation('webhooks')
   const { isRTL } = useDirection()
 
   const name = isRTL ? webhook.name_ar : webhook.name_en
@@ -431,11 +432,7 @@ function WebhookCard({
           {webhook.last_triggered_at && (
             <div className="flex items-center gap-1">
               <Clock className="h-3.5 w-3.5" />
-              <span>
-                {new Date(webhook.last_triggered_at).toLocaleDateString(
-                  toFormatLocale(i18n.language),
-                )}
-              </span>
+              <span>{formatDayFirstYear(webhook.last_triggered_at)}</span>
             </div>
           )}
         </div>
@@ -514,7 +511,7 @@ function TemplateCard({ template, onUse }: TemplateCardProps) {
   const description = isRTL ? template.description_ar : template.description_en
 
   return (
-    <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={onUse}>
+    <Card className="transition-shadow cursor-pointer" onClick={onUse}>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
           {template.icon_url && (

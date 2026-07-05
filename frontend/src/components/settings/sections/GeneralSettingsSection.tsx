@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Settings2, Globe, Clock, Calendar } from 'lucide-react'
+import { Globe, Clock, Calendar } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -41,17 +41,13 @@ export function GeneralSettingsSection({ form }: GeneralSettingsSectionProps) {
   ]
 
   return (
-    <SettingsSectionCard
-      title={t('general.title')}
-      description={t('general.description')}
-      icon={Settings2}
-    >
+    <SettingsSectionCard>
       <div className="space-y-6">
         {/* Language Selection */}
         <SettingsGroup>
           <div className="space-y-3">
             <div>
-              <Label className="text-start block">
+              <Label className="label-field text-start block">
                 <span className="flex items-center gap-2">
                   <Globe className="h-4 w-4" />
                   {t('general.language')}
@@ -88,7 +84,7 @@ export function GeneralSettingsSection({ form }: GeneralSettingsSectionProps) {
         <SettingsGroup>
           <div className="space-y-3">
             <div>
-              <Label className="text-start block">
+              <Label className="label-field text-start block">
                 <span className="flex items-center gap-2">
                   <Clock className="h-4 w-4" />
                   {t('general.timezone')}
@@ -120,7 +116,7 @@ export function GeneralSettingsSection({ form }: GeneralSettingsSectionProps) {
         <SettingsGroup>
           <div className="space-y-3">
             <div>
-              <Label className="text-start block">
+              <Label className="label-field text-start block">
                 <span className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
                   {t('general.dateFormat')}
@@ -151,7 +147,7 @@ export function GeneralSettingsSection({ form }: GeneralSettingsSectionProps) {
         <SettingsGroup>
           <div className="space-y-3">
             <div>
-              <Label className="text-start block">{t('general.startOfWeek')}</Label>
+              <Label className="label-field text-start block">{t('general.startOfWeek')}</Label>
               <p className="text-xs text-muted-foreground mt-1 text-start">
                 {t('general.startOfWeekHint')}
               </p>

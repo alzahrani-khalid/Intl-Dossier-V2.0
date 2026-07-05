@@ -7,6 +7,7 @@
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { format } from 'date-fns'
 import {
   LineChart,
   Line,
@@ -31,6 +32,7 @@ import { HEALTH_LEVEL_COLORS, TREND_COLORS } from '@/types/analytics.types'
 import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
+import { toFormatLocale } from '@/lib/format-locale'
 
 function RelationshipCustomTooltip({ active, payload, label, isRTL }: any) {
   if (active && payload && payload.length) {
@@ -43,7 +45,7 @@ function RelationshipCustomTooltip({ active, payload, label, isRTL }: any) {
             <span className="text-muted-foreground">{entry.name}:</span>
             <span className="font-medium">
               {typeof entry.value === 'number'
-                ? entry.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')
+                ? entry.value.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))
                 : entry.value}
             </span>
           </div>
@@ -64,7 +66,7 @@ function RelationshipPieTooltip({ active, payload, isRTL }: any) {
           <span className="font-medium">{item.name}</span>
         </div>
         <div className="text-sm text-muted-foreground mt-1">
-          {item.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')} (
+          {item.value.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en'))} (
           {item.payload.percentage?.toFixed(1)}%)
         </div>
       </div>
@@ -92,23 +94,20 @@ export function RelationshipHealthChart({
 }: RelationshipHealthChartProps) {
   const { t } = useTranslation('analytics')
   const { isRTL } = useDirection()
-const trendData = useMemo(() => {
+  const trendData = useMemo(() => {
     if (!data?.scoreTrend) return []
     return data.scoreTrend.map((point) => ({
       ...point,
-      dateLabel: new Date(point.date).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-        month: 'short',
-        day: 'numeric',
-      }),
+      dateLabel: format(new Date(point.date), 'd MMM'),
     }))
-  }, [data?.scoreTrend, isRTL])
+  }, [data?.scoreTrend])
 
   const healthLevelData = useMemo(() => {
     if (!data?.byHealthLevel) return []
     return data.byHealthLevel.map((item) => ({
       ...item,
       name: t(`relationships.healthLevels.${item.level}`),
-      fill: HEALTH_LEVEL_COLORS[item.level] || '#9CA3AF',
+      fill: HEALTH_LEVEL_COLORS[item.level] || 'var(--ink-faint)',
     }))
   }, [data?.byHealthLevel, t])
 
@@ -117,7 +116,7 @@ const trendData = useMemo(() => {
     return data.byTrend.map((item) => ({
       ...item,
       name: t(`relationships.trends.${item.trend}`),
-      fill: TREND_COLORS[item.trend] || '#9CA3AF',
+      fill: TREND_COLORS[item.trend] || 'var(--ink-faint)',
     }))
   }, [data?.byTrend, t])
 
@@ -181,111 +180,117 @@ const trendData = useMemo(() => {
           </TabsList>
 
           <TabsContent value="distribution" className="h-64 sm:h-72">
-            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={healthLevelData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={80}
-                  paddingAngle={2}
-                  dataKey="count"
-                  nameKey="name"
-                  label={(props: any) => `${props.name}: ${props.percentage?.toFixed(0) ?? 0}%`}
-                  labelLine={{ strokeWidth: 1 }}
-                >
-                  {healthLevelData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.fill} />
-                  ))}
-                </Pie>
-                <Tooltip content={<RelationshipPieTooltip isRTL={isRTL} />} />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer></LtrIsolate>
+            <LtrIsolate className="h-full w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={healthLevelData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={80}
+                    paddingAngle={2}
+                    dataKey="count"
+                    nameKey="name"
+                    label={(props: any) => `${props.name}: ${props.percentage?.toFixed(0) ?? 0}%`}
+                    labelLine={{ strokeWidth: 1 }}
+                  >
+                    {healthLevelData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<RelationshipPieTooltip isRTL={isRTL} />} />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </LtrIsolate>
           </TabsContent>
 
           <TabsContent value="trend" className="h-64 sm:h-72">
-            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={trendData}
-                margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis
-                  dataKey="dateLabel"
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  reversed={isRTL}
-                />
-                <YAxis
-                  domain={[0, 100]}
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  orientation={isRTL ? 'right' : 'left'}
-                />
-                <Tooltip content={<RelationshipCustomTooltip isRTL={isRTL} />} />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  name={t('relationships.avgScore')}
-                  stroke="#10B981"
-                  strokeWidth={2}
-                  dot={{ r: 3 }}
-                  activeDot={{ r: 5 }}
-                />
-              </LineChart>
-            </ResponsiveContainer></LtrIsolate>
+            <LtrIsolate className="h-full w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={trendData}
+                  margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis
+                    dataKey="dateLabel"
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                    reversed={isRTL}
+                  />
+                  <YAxis
+                    domain={[0, 100]}
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                    orientation={isRTL ? 'right' : 'left'}
+                  />
+                  <Tooltip content={<RelationshipCustomTooltip isRTL={isRTL} />} />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    name={t('relationships.avgScore')}
+                    stroke="var(--ok)"
+                    strokeWidth={2}
+                    dot={{ r: 3 }}
+                    activeDot={{ r: 5 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </LtrIsolate>
           </TabsContent>
 
           <TabsContent value="trendType" className="h-64 sm:h-72">
-            <LtrIsolate className="h-full w-full"><ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={trendDistributionData}
-                margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis dataKey="name" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
-                <YAxis
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  orientation={isRTL ? 'right' : 'left'}
-                />
-                <Tooltip content={<RelationshipCustomTooltip isRTL={isRTL} />} />
-                <Bar dataKey="count" name={t('relationships.count')} radius={[4, 4, 0, 0]}>
-                  {trendDistributionData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.fill} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer></LtrIsolate>
+            <LtrIsolate className="h-full w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={trendDistributionData}
+                  margin={{ top: 5, right: isRTL ? 20 : 30, left: isRTL ? 30 : 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis dataKey="name" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                  <YAxis
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                    orientation={isRTL ? 'right' : 'left'}
+                  />
+                  <Tooltip content={<RelationshipCustomTooltip isRTL={isRTL} />} />
+                  <Bar dataKey="count" name={t('relationships.count')} radius={[4, 4, 0, 0]}>
+                    {trendDistributionData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </LtrIsolate>
           </TabsContent>
         </Tabs>
 
         {/* Summary stats */}
         <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-4 text-center">
-          <div className="p-2 sm:p-3 rounded-lg bg-red-50 dark:bg-red-900/20">
-            <div className="text-lg sm:text-xl font-bold text-red-600 dark:text-red-400">
+          <div className="p-2 sm:p-3 rounded-lg bg-danger/10">
+            <div className="text-lg sm:text-xl font-bold text-danger">
               {data.criticalRelationships}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('relationships.critical')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/20">
-            <div className="text-lg sm:text-xl font-bold text-emerald-600 dark:text-emerald-400">
+          <div className="p-2 sm:p-3 rounded-lg bg-ok/10">
+            <div className="text-lg sm:text-xl font-bold text-ok">
               {data.improvingRelationships}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
               {t('relationships.improving')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20">
-            <div className="text-lg sm:text-xl font-bold text-orange-600 dark:text-orange-400">
+          <div className="p-2 sm:p-3 rounded-lg bg-status-5-soft">
+            <div className="text-lg sm:text-xl font-bold text-status-5">
               {data.decliningRelationships}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">

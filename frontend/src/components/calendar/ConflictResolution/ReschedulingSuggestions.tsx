@@ -29,6 +29,7 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { cn } from '@/lib/utils'
+import { formatDayFirst, formatTime } from '@/lib/format-date'
 import type {
   ReschedulingSuggestion,
   ReschedulingSuggestionResponse,
@@ -60,15 +61,8 @@ export function ReschedulingSuggestions({
   const formatDateTime = (datetime: string) => {
     const date = new Date(datetime)
     return {
-      date: date.toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-      }),
-      time: date.toLocaleTimeString(isRTL ? 'ar-SA' : 'en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
+      date: formatDayFirst(date),
+      time: formatTime(date),
     }
   }
 

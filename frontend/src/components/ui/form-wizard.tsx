@@ -122,7 +122,7 @@ function StepIndicator({
       aria-disabled={!canNavigate}
       className={cn(
         'flex items-center gap-2 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm whitespace-nowrap min-h-11 transition-all flex-1 justify-center',
-        isActive && 'bg-primary text-primary-foreground shadow-md',
+        isActive && 'bg-primary text-primary-foreground',
         isCompleted && 'bg-primary/10 text-primary hover:bg-primary/20',
         !isActive && !isCompleted && 'bg-muted text-muted-foreground',
         canNavigate && !isActive && 'cursor-pointer',

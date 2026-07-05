@@ -17,7 +17,6 @@ import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { differenceInCalendarDays } from 'date-fns'
 import { MapPin } from 'lucide-react'
-import { toArDigits } from '@/lib/i18n/toArDigits'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 export interface DrawerMetaStripProps {
@@ -37,8 +36,7 @@ function readString(metadata: Record<string, unknown> | undefined, key: string):
 
 export function DrawerMetaStrip(props: DrawerMetaStripProps): React.JSX.Element {
   const { metadata, updatedAt, engagementCount = 0 } = props
-  const { t, i18n } = useTranslation('dossier-drawer')
-  const lang = i18n.language
+  const { t } = useTranslation('dossier-drawer')
 
   const region = readString(metadata, 'region')
   const location = region ?? t('meta.location_fallback')
@@ -46,7 +44,7 @@ export function DrawerMetaStrip(props: DrawerMetaStripProps): React.JSX.Element 
   const leadName = readString(metadata, 'lead_name')
   const leadSegment = leadName !== null ? `${t('meta.lead_prefix')}: ${leadName}` : '—'
 
-  const engagementSegment = `${toArDigits(engagementCount, lang)} ${t('meta.engagements_suffix')}`
+  const engagementSegment = `${engagementCount} ${t('meta.engagements_suffix')}`
 
   let lastTouched: string
   if (typeof updatedAt === 'string' && updatedAt.length > 0) {
@@ -56,7 +54,7 @@ export function DrawerMetaStrip(props: DrawerMetaStripProps): React.JSX.Element 
     } else if (days === 1) {
       lastTouched = t('meta.last_touched_yesterday')
     } else {
-      lastTouched = t('meta.last_touched_relative', { n: toArDigits(days, lang) })
+      lastTouched = t('meta.last_touched_relative', { n: days })
     }
   } else {
     lastTouched = t('meta.last_touched_today')

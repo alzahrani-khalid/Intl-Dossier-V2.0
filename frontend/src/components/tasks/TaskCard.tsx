@@ -13,6 +13,7 @@ import { Badge } from '../ui/badge'
 import { SLAIndicator } from './SLAIndicator'
 import type { Database } from '../../../../backend/src/types/database.types'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDateTime } from '@/lib/format-date'
 import { getPriorityBadgeClass, getStatusBadgeClass } from '@/lib/semantic-colors'
 
 type Task = Database['public']['Tables']['tasks']['Row']
@@ -89,13 +90,11 @@ export function TaskCard({
           className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-muted-foreground ${isRTL ? 'text-end' : 'text-start'}`}
         >
           <div>
-            {t('created', 'Created')}:{' '}
-            {new Date(task.created_at).toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+            {t('created', 'Created')}: {formatDateTime(task.created_at)}
           </div>
           {task.sla_deadline && (
             <div>
-              {t('due', 'Due')}:{' '}
-              {new Date(task.sla_deadline).toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+              {t('due', 'Due')}: {formatDateTime(task.sla_deadline)}
             </div>
           )}
         </div>

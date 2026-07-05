@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { supabase } from '@/lib/supabase'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -180,7 +181,7 @@ export function EscalationDashboard() {
                 <CalendarIcon className="me-2 h-4 w-4" />
                 {dateRange.start && dateRange.end ? (
                   <>
-                    {format(dateRange.start, 'MMM dd')} - {format(dateRange.end, 'MMM dd, yyyy')}
+                    {format(dateRange.start, 'd MMM')} - {formatDayFirstYear(dateRange.end)}
                   </>
                 ) : (
                   <span>{t('escalation_dashboard.select_date_range')}</span>
@@ -327,7 +328,7 @@ export function EscalationDashboard() {
                       className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors"
                     >
                       <div className="w-24 text-sm font-medium">
-                        {format(new Date(item.date), 'MMM dd')}
+                        {format(new Date(item.date), 'd MMM')}
                       </div>
                       <div className="flex-1">
                         <div

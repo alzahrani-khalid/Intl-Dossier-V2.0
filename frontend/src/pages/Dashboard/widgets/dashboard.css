@@ -132,6 +132,13 @@
   letter-spacing: 0.1em;
   color: var(--ink-faint);
   font-weight: 600;
+  white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* BUG-05 (D-81-05): the wrap is the defect; the uppercase mono affordance
+     stays. Ellipsis is the controlled fallback — the ≤1024 block below reduces
+     the size so real labels fit on one line without truncating. */
 }
 .kpi-value {
   font-family: var(--font-display);
@@ -824,7 +831,7 @@
 .dir-linear .kpi {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   /* No card drop-shadows — IntelDossier reserves shadow for drawers and
      hovered list rows (inspection 2026-06-09 Finding 14). */
 }
@@ -854,7 +861,7 @@
    kanban-card shadow. These are the small details that turn the page from
    "tokens applied" into "looks like the design". */
 .dir-linear .chip {
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 500;
@@ -880,7 +887,7 @@
   color: var(--ink-mute);
 }
 .dir-linear .week-list {
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
 }
 .dir-linear .week-row,
 .dir-linear .vip-row,
@@ -898,7 +905,7 @@
   color: var(--accent-fg);
 }
 .dir-linear .kcard {
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   /* Shadow removed — flat cards per design system (Finding 14). */
 }
 
@@ -1063,5 +1070,19 @@
   .recent-when {
     grid-area: when;
     text-align: start;
+  }
+}
+
+/* BUG-05 (D-81-05): at the 1024 analyst width the 4-col KPI strip is tight and
+   the longest labels ("ACTIVE ENGAGEMENTS", AR "SLA at Risk") wrapped to two
+   lines. Nudge the label size/tracking down just enough that all four fit on a
+   single line. Declared last so it overrides both .kpi-label and the
+   .dir-linear .kpi-label base (default active direction) on source order.
+   The ≤767 two-column strip inherits this harmlessly (roomier there). */
+@media (max-width: 1024px) {
+  .kpi-label,
+  .dir-linear .kpi-label {
+    font-size: 10px;
+    letter-spacing: 0.05em;
   }
 }

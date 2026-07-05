@@ -6,7 +6,7 @@
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -52,14 +52,14 @@ interface ReportPreviewProps {
 }
 
 const CHART_COLORS = [
-  '#3b82f6', // blue
-  '#22c55e', // green
-  '#f59e0b', // amber
-  '#ef4444', // red
-  '#8b5cf6', // violet
-  '#06b6d4', // cyan
-  '#f97316', // orange
-  '#ec4899', // pink
+  'var(--chart-1)',
+  'var(--chart-3)',
+  'var(--chart-4)',
+  'var(--chart-8)',
+  'var(--chart-7)',
+  'var(--chart-2)',
+  'var(--chart-5)',
+  'var(--chart-6)',
 ]
 
 export function ReportPreview({
@@ -140,7 +140,7 @@ export function ReportPreview({
   const formatCellValue = (value: unknown): string => {
     if (value === null || value === undefined) return '-'
     if (typeof value === 'boolean') return value ? t('common:yes') : t('common:no')
-    if (value instanceof Date) return value.toLocaleDateString(toFormatLocale(isRTL ? 'ar' : 'en'))
+    if (value instanceof Date) return formatDayFirstYear(value)
     if (typeof value === 'object') return JSON.stringify(value)
     return String(value)
   }

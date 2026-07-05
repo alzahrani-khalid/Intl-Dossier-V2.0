@@ -36,6 +36,7 @@ import type {
   UnifiedActivityAction,
 } from '@/types/unified-dossier-activity.types'
 import { getActivityTypeBadgeClass, getActivityActionTextClass } from '@/lib/semantic-colors'
+import { formatDayFirst } from '@/lib/format-date'
 
 /**
  * Get icon for activity type
@@ -99,7 +100,7 @@ function getInitials(name: string | null): string {
 /**
  * Format relative time
  */
-function formatRelativeTime(timestamp: string, locale: string): string {
+function formatRelativeTime(timestamp: string, isRTL: boolean): string {
   const date = new Date(timestamp)
   const now = new Date()
   const diffMs = now.getTime() - date.getTime()
@@ -107,13 +108,13 @@ function formatRelativeTime(timestamp: string, locale: string): string {
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
 
-  if (locale === 'ar-SA') {
+  if (isRTL) {
     if (diffMins < 1) return 'الآن'
     if (diffMins < 60) return `منذ ${diffMins} دقيقة`
     if (diffHours < 24) return `منذ ${diffHours} ساعة`
     if (diffDays === 1) return 'أمس'
     if (diffDays < 7) return `منذ ${diffDays} أيام`
-    return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' })
+    return formatDayFirst(date)
   }
 
   if (diffMins < 1) return 'Just now'
@@ -121,7 +122,7 @@ function formatRelativeTime(timestamp: string, locale: string): string {
   if (diffHours < 24) return `${diffHours}h ago`
   if (diffDays === 1) return 'Yesterday'
   if (diffDays < 7) return `${diffDays}d ago`
-  return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' })
+  return formatDayFirst(date)
 }
 
 /**
@@ -137,7 +138,6 @@ function ActivityItem({
   isLast: boolean
 }) {
   const { t } = useTranslation('dossier-overview')
-  const locale = isRTL ? 'ar-SA' : 'en-US'
   const TypeIcon = getActivityTypeIcon(activity.activity_type)
   const ActionIcon = getActionIcon(activity.action)
 
@@ -193,7 +193,7 @@ function ActivityItem({
 
           {/* Time */}
           <span className="text-xs text-muted-foreground shrink-0">
-            {formatRelativeTime(activity.timestamp, locale)}
+            {formatRelativeTime(activity.timestamp, isRTL)}
           </span>
         </div>
 

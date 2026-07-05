@@ -3,6 +3,7 @@ import { Clock, AlertCircle, AlertTriangle, CheckCircle2, XCircle } from 'lucide
 import { cn } from '@/lib/utils'
 import { calculateSLAStatus, type SLAStatus } from '@/utils/sla-calculator'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDateTime } from '@/lib/format-date'
 
 interface SLAIndicatorProps {
   /**
@@ -169,12 +170,7 @@ function DetailedMode({
       <div className="flex flex-col gap-1 text-sm sm:text-base">
         <div className={cn('flex items-center gap-2', isRTL ? 'flex-row-reverse' : 'flex-row')}>
           <Clock className={cn('size-4', isRTL ? 'rotate-180' : '')} aria-hidden="true" />
-          <span>
-            {new Date(deadline).toLocaleString(isRTL ? 'ar-SA' : 'en-US', {
-              dateStyle: 'medium',
-              timeStyle: 'short',
-            })}
-          </span>
+          <span>{formatDateTime(deadline)}</span>
         </div>
 
         {status.timeRemaining && (

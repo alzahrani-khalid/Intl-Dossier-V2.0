@@ -193,10 +193,8 @@ export function ProgressiveFormField({
     // Background
     'bg-white dark:bg-muted',
     // Shadow for elevation
-    'shadow-sm',
     // Hover effect
     'transition-all duration-200',
-    'hover:shadow-md',
     className,
   )
 

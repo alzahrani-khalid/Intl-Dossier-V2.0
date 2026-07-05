@@ -21,6 +21,14 @@ import { SettingsLayout } from '../SettingsLayout'
 import { SettingsNavigation } from '../SettingsNavigation'
 import type { SettingsSectionId } from '@/types/settings.types'
 
+// SettingsNavigation now mounts a `useNavigate`-driven "Back to app" link (F18).
+// These are bare renders with no RouterProvider, so stub `useNavigate` to keep
+// the router out of scope — the section-list assertions below are router-agnostic.
+vi.mock('@tanstack/react-router', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@tanstack/react-router')>()),
+  useNavigate: () => vi.fn(),
+}))
+
 function renderLayout(activeSection: SettingsSectionId = 'profile'): ReturnType<typeof render> {
   return render(
     (
@@ -56,9 +64,7 @@ describe('SettingsLayout (Phase 42-09)', () => {
 
 describe('SettingsNavigation (Phase 42-09)', () => {
   it('renders exactly 9 nav rows in canonical R-02 order', () => {
-    const { container } = render(
-      <SettingsNavigation activeSection="profile" onChange={vi.fn()} />,
-    )
+    const { container } = render(<SettingsNavigation activeSection="profile" onChange={vi.fn()} />)
     const rows = Array.from(container.querySelectorAll('button.settings-nav'))
     expect(rows.length).toBe(9)
     const ids = rows.map((r) => r.getAttribute('data-testid'))
@@ -91,9 +97,7 @@ describe('SettingsNavigation (Phase 42-09)', () => {
   })
 
   it('every nav row has min-height: 44px (touch target)', () => {
-    const { container } = render(
-      <SettingsNavigation activeSection="profile" onChange={vi.fn()} />,
-    )
+    const { container } = render(<SettingsNavigation activeSection="profile" onChange={vi.fn()} />)
     const rows = Array.from(container.querySelectorAll<HTMLElement>('button.settings-nav'))
     for (const row of rows) {
       expect(row.style.minHeight).toBe('44px')
@@ -101,9 +105,7 @@ describe('SettingsNavigation (Phase 42-09)', () => {
   })
 
   it('Security row uses i18n key `nav.accessAndSecurity` (D-09 rename)', () => {
-    const { container } = render(
-      <SettingsNavigation activeSection="security" onChange={vi.fn()} />,
-    )
+    const { container } = render(<SettingsNavigation activeSection="security" onChange={vi.fn()} />)
     const securityRow = container.querySelector(
       'button[data-testid="settings-nav-security"]',
     ) as HTMLElement
@@ -114,9 +116,7 @@ describe('SettingsNavigation (Phase 42-09)', () => {
   })
 
   it('renders inside a `.settings-nav-card` shell (mobile pill row target)', () => {
-    const { container } = render(
-      <SettingsNavigation activeSection="profile" onChange={vi.fn()} />,
-    )
+    const { container } = render(<SettingsNavigation activeSection="profile" onChange={vi.fn()} />)
     // The @media (max-width: 768px) rule in index.css turns this card into the
     // horizontal pill row — the component must expose the className target.
     const navCard = container.querySelector('nav.settings-nav-card') as HTMLElement

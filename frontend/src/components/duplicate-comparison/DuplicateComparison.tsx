@@ -205,7 +205,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
       {/* Merge Dialog */}
       {selectedCandidate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-surface shadow-xl">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-surface">
             <div className="p-6">
               <h2 className="mb-4 text-2xl font-bold text-ink">
                 {t('duplicates.mergDialog.title', 'Merge Tickets')}

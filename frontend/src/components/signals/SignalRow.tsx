@@ -42,7 +42,7 @@ export function SignalRow({ signal, isFocused, t, onClick }: SignalRowProps): Re
       onClick={onClick}
       className={[
         'border-b border-line last:border-0 px-[var(--pad)] py-[var(--space-3)] cursor-pointer',
-        'transition-colors hover:bg-line-soft hover:shadow-sm',
+        'transition-colors hover:bg-line-soft',
         isFocused
           ? 'outline outline-2 outline-offset-[-2px] outline-[var(--accent)] bg-accent-soft'
           : '',

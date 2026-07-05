@@ -170,7 +170,7 @@ export function EnhancedUndoToast({
     >
       <div
         className={cn(
-          'bg-muted dark:bg-muted text-white dark:text-foreground rounded-lg shadow-2xl overflow-hidden',
+          'bg-muted dark:bg-muted text-white dark:text-foreground rounded-lg overflow-hidden',
           'border border-line dark:border-line',
         )}
       >
