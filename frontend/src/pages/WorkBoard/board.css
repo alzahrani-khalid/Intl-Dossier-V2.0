@@ -1,6 +1,9 @@
 /* Phase 39 — kanban board styles ported verbatim from
    /tmp/inteldossier-handoff/.../app.css#L390-411
-   BOARD-02: .kcard.overdue uses border-inline-start (RTL-correct).
+   Phase 85 D-85-01: overdue is carried on the red mono due chip (see the
+   is-overdue due rule below), not the old .kcard.overdue inline-start edge bar
+   (removed). The .kcard.overdue class stays on the article (Playwright/unit
+   selectors depend on it).
    Use only logical-direction CSS properties here so RTL flips automatically. */
 
 .kcard {
@@ -23,10 +26,6 @@
 .kcard:hover {
   border-color: var(--ink-faint);
   transform: translateY(-1px);
-}
-
-.kcard.overdue {
-  border-inline-start: 3px solid var(--danger);
 }
 
 .kcard.done {
@@ -72,6 +71,11 @@
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--ink-mute);
+}
+
+.kcard-foot .kdue.is-overdue {
+  color: var(--danger);
+  font-weight: 600;
 }
 
 .kcard-owner {

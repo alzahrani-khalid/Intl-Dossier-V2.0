@@ -1,15 +1,20 @@
 /**
- * Phase 39 Plan 04 — Kanban RTL activation (BOARD-02 inline-start = right edge in RTL).
+ * Phase 39 Plan 04 — Kanban RTL activation (logical-property parity).
  *
- * Forces the page to RTL via the document `dir` attribute and confirms the
- * inline-start border on `.kcard.overdue` resolves to a non-zero RIGHT-side
- * physical border (because logical inline-start maps to right in RTL).
+ * Phase 85 D-85-01: the overdue edge bar is gone, so there is no longer a
+ * directional border to check. This spec now asserts logical-property parity
+ * a different way: under dir=rtl the overdue card's physical left/right borders
+ * are SYMMETRIC (the plain 1px .kcard hairline — no leftover physical bias),
+ * and the red due chip (.kdue.is-overdue) still renders in RTL (digits stay LTR
+ * via the untouched LtrIsolate wrapper).
  */
 
 import { test, expect } from '@playwright/test'
 
 test.describe('Phase 39: Kanban RTL', () => {
-  test('overdue kcard inline-start border lands on the right edge in rtl', async ({ page }) => {
+  test('overdue kcard has symmetric borders and renders the red due chip in rtl', async ({
+    page,
+  }) => {
     await page.goto('/kanban')
     await page.evaluate(() => document.documentElement.setAttribute('dir', 'rtl'))
     await page.waitForLoadState('networkidle')
@@ -23,7 +28,11 @@ test.describe('Phase 39: Kanban RTL', () => {
       const cs = getComputedStyle(el)
       return { borderRight: cs.borderRightWidth, borderLeft: cs.borderLeftWidth }
     })
-    // In RTL, inline-start = physical right edge.
-    expect(parseInt(offsets.borderRight, 10)).toBeGreaterThan(0)
+    // No physical bias left over — the removed inline-start bar means both
+    // horizontal borders are the same 1px hairline in RTL.
+    expect(offsets.borderRight).toBe(offsets.borderLeft)
+
+    // The red due chip renders in RTL too (one chip per overdue card).
+    await expect(overdueCard.locator('.kdue.is-overdue')).toHaveCount(1)
   })
 })

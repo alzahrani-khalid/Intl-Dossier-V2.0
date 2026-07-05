@@ -7,7 +7,8 @@
  *
  * RTL-correct via:
  *  - <LtrIsolate> wrapping the mono due text (digits stay LTR inside RTL row)
- *  - `border-inline-start` on .kcard.overdue (handled in board.css)
+ *  - Overdue carried on the red mono due chip (.kdue.is-overdue in board.css);
+ *    the .kcard.overdue article class stays for Playwright/unit selectors
  *  - No physical-direction Tailwind classes; logical-only spacing tokens
  *
  * XSS mitigation (T-39-01-XSS): React JSX escaping only. No raw-HTML
@@ -132,7 +133,7 @@ export function KCard({ item, onItemClick, dndEnabled = false }: KCardProps): Re
           <span>{dossierName}</span>
         </div>
         <LtrIsolate>
-          <span className="font-mono">{dueText}</span>
+          <span className={cn('font-mono kdue', item.is_overdue && 'is-overdue')}>{dueText}</span>
         </LtrIsolate>
         <div className="kcard-owner" aria-label={ownerLabel}>
           {initials}
