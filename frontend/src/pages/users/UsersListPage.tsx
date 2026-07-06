@@ -31,7 +31,7 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination'
 import { Search, Users, CheckCircle, Loader2, AlertCircle, UserPlus } from 'lucide-react'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase'
 import { useDirection } from '@/hooks/useDirection'
@@ -69,6 +69,14 @@ type User = {
 export function UsersListPage() {
   const { t } = useTranslation('user-management')
   const { isRTL } = useDirection()
+  const navigate = useNavigate()
+
+  // Navigate to the admin-gated detail view. Typed route + params (never an
+  // interpolated path) so the router owns the id.
+  const openUser = (id: string): void => {
+    void navigate({ to: '/users/$id', params: { id } })
+  }
+
   // Filter & Search State
   const [searchQuery, setSearchQuery] = useState('')
   const [roleFilter, setRoleFilter] = useState<string>('all')
@@ -317,7 +325,16 @@ export function UsersListPage() {
             </TableHeader>
             <TableBody>
               {usersData?.users?.map((user) => (
-                <TableRow key={user.id}>
+                <TableRow
+                  key={user.id}
+                  role="link"
+                  tabIndex={0}
+                  onClick={() => openUser(user.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') openUser(user.id)
+                  }}
+                  className="cursor-pointer"
+                >
                   <TableCell className="font-medium">
                     <div className="flex flex-row items-center gap-2">
                       {user.mfa_enabled && (
@@ -356,7 +373,16 @@ export function UsersListPage() {
       {/* Users Cards - Mobile */}
       <div className="md:hidden space-y-4">
         {usersData?.users?.map((user) => (
-          <Card key={user.id}>
+          <Card
+            key={user.id}
+            role="link"
+            tabIndex={0}
+            onClick={() => openUser(user.id)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') openUser(user.id)
+            }}
+            className="cursor-pointer"
+          >
             <CardHeader className="pb-3">
               <div className="flex flex-row items-start justify-between">
                 <div className="flex-1">

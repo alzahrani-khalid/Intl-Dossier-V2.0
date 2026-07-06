@@ -34,6 +34,7 @@
     "mfaEnabled": "MFA Enabled",
     "lastLoginAt": "Last Login",
     "lastLoginIp": "Last Login IP",
+    "department": "Department",
     "allowedResources": "Allowed Resources",
     "expiresAt": "Expires At"
   },
@@ -60,6 +61,7 @@
     "viewer": "Viewer",
     "assignRole": "Assign Role",
     "roleAssigned": "Role assigned successfully",
+    "sessionsTerminatedCount": "{{count}} active sessions terminated",
     "roleRequiresApproval": "Admin role assignment requires dual approval",
     "pendingApproval": "Pending Approval",
     "approveRole": "Approve Role Change",

@@ -34,6 +34,7 @@
     "mfaEnabled": "المصادقة الثنائية مفعلة",
     "lastLoginAt": "آخر تسجيل دخول",
     "lastLoginIp": "عنوان IP لآخر تسجيل دخول",
+    "department": "القسم",
     "allowedResources": "الموارد المسموح بها",
     "expiresAt": "تنتهي في"
   },
@@ -60,6 +61,7 @@
     "viewer": "مشاهد",
     "assignRole": "تعيين الدور",
     "roleAssigned": "تم تعيين الدور بنجاح",
+    "sessionsTerminatedCount": "تم إنهاء {{count}} جلسة نشطة",
     "roleRequiresApproval": "تعيين دور المدير يتطلب موافقة مزدوجة",
     "pendingApproval": "بانتظار الموافقة",
     "approveRole": "الموافقة على تغيير الدور",
