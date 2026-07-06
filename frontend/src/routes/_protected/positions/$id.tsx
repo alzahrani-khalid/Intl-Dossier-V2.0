@@ -209,8 +209,6 @@ function PositionDetailPage() {
             </div>
 
             <div className="space-y-6">
-              {/* Consistency panel hidden until the check query + action handlers
-                  are wired; it rendered inert modify/accept/escalate controls (E-8). */}
               {(position.status === 'under_review' || position.status === 'approved') && (
                 <Card className="p-6">
                   <h3 className="text-lg font-semibold mb-4">
