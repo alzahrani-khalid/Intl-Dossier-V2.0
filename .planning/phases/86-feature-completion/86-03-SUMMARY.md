@@ -135,6 +135,13 @@ None - deletion-only plan introduces no new endpoints, auth paths, file access, 
 - **Orchestrator action required:** append the STATE.md "Decisions Made" entry referencing ADR-008 (deferred from this agent per the isolation rule).
 - Phase 91 (LIVE-01) is the revisit point if position consistency is re-scoped as LLM-backed review with an embeddings backfill.
 
+## Self-Check: PASSED
+
+- Created files exist: `ADR-008-consistency-panel-retirement.md`, `86-03-SUMMARY.md` (FOUND)
+- Deleted files gone: `ConsistencyPanel.tsx`, `ConsistencyPanel.test.tsx` (GONE)
+- Task commits exist: `e4e937d6` (Task 1), `98f26ebb` (Task 2), `22351e0a` (summary) (FOUND)
+- Worktree clean; no untracked files
+
 ---
 
 _Phase: 86-feature-completion_
