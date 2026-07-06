@@ -251,6 +251,40 @@ describe('CreateMouDialog', () => {
     await waitFor(() => expect(toast.success).toHaveBeenCalled())
   })
 
+  it('accepts a non-RFC-4122 seed-uuid signatory (regression: MoU "Invalid UUID")', async () => {
+    // Real dossier ids include "pretty" seed UUIDs (e.g. UAE
+    // `b0000001-0000-0000-0000-000000000008`) whose version/variant nibbles are not
+    // RFC-4122 — strict z.string().uuid() rejected them and wrongly disabled submit.
+    // The picker only ever emits a real dossier id, so a bare string is correct.
+    const user = userEvent.setup()
+    createMock.mockResolvedValue({ id: 'mou-1' })
+    pickReturns['First signatory'] = {
+      id: 'b0000001-0000-0000-0000-000000000008',
+      name_en: 'United Arab Emirates',
+      name_ar: 'الإمارات',
+      type: 'country' as const,
+      status: 'active',
+    }
+
+    renderDialog()
+    await user.type(screen.getByLabelText('Title (English)', { exact: false }), 'Seed MoU')
+    await user.type(screen.getByLabelText('Title (Arabic)', { exact: false }), 'مذكرة')
+    await user.click(screen.getByRole('button', { name: 'pick-First signatory' }))
+    await user.click(screen.getByRole('button', { name: 'pick-Second signatory' }))
+
+    const submit = screen.getByRole('button', { name: 'Create MoU' })
+    await waitFor(() => expect(submit).toBeEnabled())
+    await user.click(submit)
+
+    await waitFor(() =>
+      expect(createMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          signatory_1_dossier_id: 'b0000001-0000-0000-0000-000000000008',
+        }),
+      ),
+    )
+  })
+
   it('keeps the dialog open with input intact and shows the error toast on rejection', async () => {
     const user = userEvent.setup()
     createMock.mockRejectedValue(new Error('boom'))

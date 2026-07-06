@@ -25,10 +25,11 @@ const SIGNATORY_QUERY = process.env.E2E_MOU_QUERY ?? 'united'
 // result at `resultIndex`. Returns the selected dossier's display name so the
 // caller can assert it renders in the list row's parties cell.
 async function pickSignatory(page: Page, pickerName: RegExp, resultIndex: number): Promise<string> {
-  await page.getByRole('combobox', { name: pickerName }).click()
-  await page.getByPlaceholder(/search dossiers/i).fill(SIGNATORY_QUERY)
+  await page.getByRole('button', { name: pickerName }).click()
+  const picker = page.getByRole('dialog').last()
+  await picker.getByPlaceholder(/^search dossiers\.\.\.$/i).fill(SIGNATORY_QUERY)
 
-  const option = page.getByRole('option').nth(resultIndex)
+  const option = picker.getByRole('option').nth(resultIndex)
   await expect(option).toBeVisible()
   const name = (await option.innerText()).split('\n')[0].trim()
   await option.click()

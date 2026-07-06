@@ -79,8 +79,14 @@ const createMouSchema = z
     type: z.enum(MOU_TYPES),
     mou_category: z.enum(MOU_CATEGORIES),
     lifecycle_state: z.enum(MOU_STATES),
-    signatory_1_dossier_id: z.string().uuid().nullable().optional(),
-    signatory_2_dossier_id: z.string().uuid().nullable().optional(),
+    // NOT z.string().uuid(): the app's dossier id space includes non-RFC-4122
+    // "pretty" seed UUIDs (e.g. countries like `b0000001-0000-0000-0000-000000000008`)
+    // that strict .uuid() rejects, which wrongly blocked selecting real signatories
+    // (UAE et al.). The value is always picker-supplied (a real dossier row) or null,
+    // and the `mous` edge fn re-validates the FK server-side — so a bare string is the
+    // correct client-side shape here.
+    signatory_1_dossier_id: z.string().nullable().optional(),
+    signatory_2_dossier_id: z.string().nullable().optional(),
     effective_date: z.string().nullable().optional(),
     expiry_date: z.string().nullable().optional(),
     description: z.string().optional(),
