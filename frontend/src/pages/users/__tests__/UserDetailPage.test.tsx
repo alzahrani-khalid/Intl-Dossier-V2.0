@@ -1,5 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import type { ReactNode } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
@@ -38,6 +39,7 @@ const enCopy: Record<string, string> = {
   'errors.loadFailed': 'Failed to load user data',
   'errors.saveFailed': 'Failed to save user data',
   'actions.cancel': 'Cancel',
+  'actions.deactivate': 'Deactivate',
 }
 
 function interpolate(key: string, opts?: Record<string, unknown>): string {
@@ -107,6 +109,15 @@ const ACTIVE_EDITOR = {
   avatar_url: null,
 }
 
+const ACTIVE_VIEWER = { ...ACTIVE_EDITOR, role: 'viewer' }
+
+// Radix Select + AlertDialog need these jsdom stubs to open their portals.
+beforeAll(() => {
+  Element.prototype.hasPointerCapture = (): boolean => false
+  Element.prototype.releasePointerCapture = (): void => undefined
+  Element.prototype.scrollIntoView = (): void => undefined
+})
+
 function renderPage(): void {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
@@ -159,5 +170,100 @@ describe('UserDetailPage', () => {
       const alert = screen.getByRole('alert')
       expect(alert).toHaveTextContent('Failed to load user data')
     })
+  })
+
+  it('the role picker offers exactly admin, editor, viewer', async () => {
+    const user = userEvent.setup()
+    singleMock.mockResolvedValue({ data: ACTIVE_VIEWER, error: null })
+    renderPage()
+
+    await waitFor(() => expect(screen.getByRole('combobox')).toBeInTheDocument())
+    await user.click(screen.getByRole('combobox'))
+    const options = await screen.findAllByRole('option')
+    expect(options.map((o) => o.textContent)).toEqual(['Admin', 'Editor', 'Viewer'])
+  })
+
+  it('changes role to editor (immediate response): invalidates, toasts success, and the displayed role updates', async () => {
+    const user = userEvent.setup()
+    singleMock.mockResolvedValue({ data: ACTIVE_VIEWER, error: null })
+    assignRoleMock.mockResolvedValue({
+      success: true,
+      role_changed: true,
+      new_role: 'editor',
+      sessions_terminated: 2,
+    })
+    renderPage()
+
+    await waitFor(() => expect(screen.getByRole('combobox')).toBeInTheDocument())
+    await user.click(screen.getByRole('combobox'))
+    await user.click(await screen.findByRole('option', { name: 'Editor' }))
+    await user.click(screen.getByRole('button', { name: 'Assign Role' }))
+
+    await waitFor(() =>
+      expect(assignRoleMock).toHaveBeenCalledWith(
+        expect.objectContaining({ user_id: 'user-1', new_role: 'editor' }),
+      ),
+    )
+    // Displayed role badge updates from Viewer to Editor (server already applied).
+    await waitFor(() => expect(screen.queryByText('Viewer')).toBeNull())
+    expect(vi.mocked(toast.success)).toHaveBeenCalled()
+  })
+
+  it('changes role to admin (requires_approval): surfaces the approval toast and does NOT change the displayed role', async () => {
+    const user = userEvent.setup()
+    singleMock.mockResolvedValue({ data: ACTIVE_VIEWER, error: null })
+    assignRoleMock.mockResolvedValue({
+      success: true,
+      requires_approval: true,
+      approval_request_id: 'req-1',
+      pending_approvals: 1,
+    })
+    renderPage()
+
+    await waitFor(() => expect(screen.getByRole('combobox')).toBeInTheDocument())
+    await user.click(screen.getByRole('combobox'))
+    await user.click(await screen.findByRole('option', { name: 'Admin' }))
+    await user.click(screen.getByRole('button', { name: 'Assign Role' }))
+
+    await waitFor(() =>
+      expect(vi.mocked(toast.info)).toHaveBeenCalledWith(
+        'Admin role assignment requires dual approval',
+      ),
+    )
+    // The response is surfaced, never masked, and the role display stays Viewer.
+    expect(screen.getByText('Viewer')).toBeInTheDocument()
+    expect(vi.mocked(toast.success)).not.toHaveBeenCalled()
+  })
+
+  it('deactivate (with confirm) flips the badge to inactive and surfaces orphanedItems; reactivate restores active', async () => {
+    const user = userEvent.setup()
+    singleMock.mockResolvedValue({ data: ACTIVE_EDITOR, error: null })
+    deactivateUserMock.mockResolvedValue({
+      success: true,
+      orphanedItems: { dossiers: 3, assignments: 0, delegations: 0, approvals: 0 },
+      sessionsTerminated: 5,
+    })
+    reactivateUserMock.mockResolvedValue({ success: true })
+    renderPage()
+
+    await waitFor(() => expect(screen.getByText('Active')).toBeInTheDocument())
+
+    // Deactivate → confirm dialog → confirm.
+    await user.click(screen.getByRole('button', { name: 'Deactivate User' }))
+    await user.click(await screen.findByRole('button', { name: 'Deactivate' }))
+
+    await waitFor(() => expect(deactivateUserMock).toHaveBeenCalledWith({ userId: 'user-1' }))
+    await waitFor(() => expect(screen.getByText('Inactive')).toBeInTheDocument())
+    expect(vi.mocked(toast.success)).toHaveBeenCalledWith(
+      'User deactivated successfully',
+      expect.objectContaining({
+        description: expect.stringContaining('3 dossiers will be marked as orphaned'),
+      }),
+    )
+
+    // Reactivate restores active.
+    await user.click(screen.getByRole('button', { name: 'Reactivate User' }))
+    await waitFor(() => expect(reactivateUserMock).toHaveBeenCalledWith({ userId: 'user-1' }))
+    await waitFor(() => expect(screen.getByText('Active')).toBeInTheDocument())
   })
 })
