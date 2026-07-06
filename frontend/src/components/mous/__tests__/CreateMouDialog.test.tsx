@@ -170,8 +170,9 @@ describe('CreateMouDialog', () => {
     expect(screen.getByRole('button', { name: 'pick-First signatory' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'pick-Second signatory' })).toBeInTheDocument()
 
-    // Lifecycle defaults to draft (trigger shows the Draft label).
-    expect(screen.getByText('Draft')).toBeInTheDocument()
+    // Lifecycle defaults to draft (trigger shows the Draft label; Radix also
+    // mirrors it into a hidden native <option>, so allow more than one match).
+    expect(screen.getAllByText('Draft').length).toBeGreaterThan(0)
   })
 
   it('blocks submit and surfaces the Arabic-title-required error when title_ar is empty', async () => {
