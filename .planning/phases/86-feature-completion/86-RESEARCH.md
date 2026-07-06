@@ -434,12 +434,12 @@ See Pattern 3 above — `supabase.functions.invoke('create-user', { body })`; ty
 
 All other claims are `[VERIFIED: codebase/migrations/STATE.md]` from direct reads this session.
 
-## Open Questions
+## Open Questions (RESOLVED during planning — 2026-07-06)
 
-1. **FEAT-04 final call (user decision).** Research recommends DELETE with a post-Phase-91 revisit trigger; the build-scoped alternative is documented above. The planner should carry the recommendation but the decision record must note the user delegated it to research → plan.
-2. **Signatory dossier type filter** — restrict DossierPicker to `country`/`organization`, or allow all 8 types? (Claude's discretion; fn accepts any. Recommend country+organization to match MoU semantics.)
-3. **`user_type: guest` support in the create form** — the fn supports it (with expires_at + allowed_resources), i18n exists, but it adds conditional-field complexity. Recommend employee-only for this phase (omit the picker or hardcode `employee`), noting guest creation as follow-up.
-4. **MoU dialog vs route** — recommendation is dialog (NewPositionDialog precedent); a `/mous/new` route is acceptable if the planner wants URL-addressable create.
+1. **FEAT-04 final call (user decision).** Research recommends DELETE with a post-Phase-91 revisit trigger; the build-scoped alternative is documented above. The planner should carry the recommendation but the decision record must note the user delegated it to research → plan. **(RESOLVED → DELETE; plan 86-03, recorded as ADR-008 + STATE.md with post-LIVE-01 revisit trigger. User delegated the call to research+plan.)**
+2. **Signatory dossier type filter** — restrict DossierPicker to `country`/`organization`, or allow all 8 types? (Claude's discretion; fn accepts any. Recommend country+organization to match MoU semantics.) **(RESOLVED → country+organization; plan 86-01 Task 2.)**
+3. **`user_type: guest` support in the create form** — the fn supports it (with expires_at + allowed_resources), i18n exists, but it adds conditional-field complexity. Recommend employee-only for this phase (omit the picker or hardcode `employee`), noting guest creation as follow-up. **(RESOLVED → employee-only this phase; plan 86-02 Task 3. Guest creation is a follow-up.)**
+4. **MoU dialog vs route** — recommendation is dialog (NewPositionDialog precedent); a `/mous/new` route is acceptable if the planner wants URL-addressable create. **(RESOLVED → dialog; plan 86-01.)**
 
 ## Environment Availability
 

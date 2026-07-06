@@ -53,10 +53,18 @@
 
 Plans:
 
+**Wave 1**
+
 - [ ] 86-01-PLAN.md — MoU create dialog + domains/mous wiring (FEAT-01, wave 1)
 - [ ] 86-02-PLAN.md — Users foundation: assign-role verify, invoke methods, layout routes, /users/create (FEAT-02, wave 1)
 - [ ] 86-03-PLAN.md — ConsistencyPanel formal retirement + ADR-008 decision record (FEAT-04, wave 1)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
 - [ ] 86-04-PLAN.md — /users/:id detail (role/status/profile) + combined user-management E2E (FEAT-03, wave 2)
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
 - [ ] 86-05-PLAN.md — Phase gate battery + consolidated EN/AR render sign-off (wave 3)
 
 ### Phase 87: Linear Affordances
