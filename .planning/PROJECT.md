@@ -57,11 +57,20 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-## Current Milestone: none — planning next
+## Current Milestone: v9.0 Platform Completion & Live Verification
 
-**Status:** No active milestone. v8.1 Linear Design Refinement shipped 2026-07-05 (see Last Shipped above). Run `/gsd:new-milestone` to scope the next one; a fresh `.planning/REQUIREMENTS.md` is created at kickoff.
+**Goal:** Close every carried-forward gap between what the platform advertises and what is built, verified, and enforced — the last honest-disabled features become real, the red test suites become green gates, all 272 edge functions leave the deprecated CORS wildcard, and the v7.0 intelligence stack is finally live-verified on real GPU inference.
 
-**Deferred candidates (carried forward):** stand up the on-prem GPU/TEI stack to close the v7.0 deploy-gated EVAL-01/02/03 + AGENT/INFRA live verification; v7.1 feed ingestion (FEED-01/02) + quarantine posture; GAP-2 (graph/digest card renderers) and GAP-3 (retire `dossiers-briefs-generate`); design-ops tooling (DESIGNOPS-01 Figma/token sync, DESIGNOPS-02 Storybook visual diffing); the v8.0 close-out follow-ups (RTL-smokes branch-protection promotion, UserPicker security pass, credential-hygiene sweep); and the v8.1-deferred F23–F26 Linear affordance enhancements (peek panel with prev/next paging, filter/display popovers with live counts, ⌘K menu audit, richer empty states).
+**Target features:**
+
+- **Feature completion** — build the three honest-disabled data-entry features: MoU create (C-3, `MousPage` "Add MoU"), user-management routes `/users/create` + `/users/:id` (D-10, against the L1-hardened edge fns), and ConsistencyPanel wired-or-retired (E-8)
+- **Linear affordances (F23–F26)** — right-peek panel with prev/next paging, filter/display split popovers with live counts, ⌘K command-menu audit, rich empty states
+- **Security/hygiene tail** — IN-04 UserPicker PostgREST filter-interpolation fix (T-79-S2), `TEST_USER_PASSWORD` credential-hygiene sweep
+- **CI & test-debt burn-down** — the red non-required suites (E2E, integration tests, a11y RTL+WCAG, visual regression) brought green or honestly quarantined; `test-rtl-smokes` promoted to a required branch-protection context
+- **CORS edge-fn migration** — staged A/B/C migration of the 272 edge functions off the deprecated wildcard `corsHeaders` (ALLOWED_ORIGINS secret verified in staging + prod first)
+- **v7.0 live verification** — stand up the on-prem GPU/TEI stack (vLLM/Gemma-4-12B + TEI) and close the deploy-gated EVAL-01/02/03 + AGENT/INFRA live verification
+
+**Still deferred (not this milestone):** v7.1 feed ingestion (FEED-01/02) + quarantine posture; GAP-2 (graph/digest card renderers) and GAP-3 (retire `dossiers-briefs-generate`); design-ops tooling (DESIGNOPS-01 Figma/token sync, DESIGNOPS-02 Storybook visual diffing); EMAIL_WEBHOOK_SECRET provisioning + `email-inbound` deploy (ops, user-only).
 
 ## Requirements
 
@@ -176,7 +185,7 @@ Unified intelligence management for diplomatic operations — every relationship
 
 ### Active
 
-_No active milestone — v8.1 Linear Design Refinement shipped 2026-07-05 (merged via PR #96). Run `/gsd:new-milestone` to scope the next one; carried-forward candidates are listed under `## Current Milestone` above; a fresh `.planning/REQUIREMENTS.md` is created at the next milestone kickoff._
+See `.planning/REQUIREMENTS.md` for the scoped v9.0 requirement list (FEAT / AFF / SEC / CI / CORS / LIVE categories) — defined at milestone kickoff 2026-07-06.
 
 ### Out of Scope
 
@@ -300,4 +309,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-07-05 — v8.1 Linear Design Refinement SHIPPED (Phases 81–85, 22 plans; merged via PR #96, merge `46e259fb`); folded into Last Shipped. No active milestone; run `/gsd:new-milestone` to scope the next. A fresh `.planning/REQUIREMENTS.md` is created at kickoff._
+_Last updated: 2026-07-06 — Milestone v9.0 Platform Completion & Live Verification started: feature completion (MoU create, user management, ConsistencyPanel), F23–F26 Linear affordances, security/hygiene tail, CI test-debt burn-down, CORS edge-fn migration, and the v7.0 GPU/TEI live verification._
