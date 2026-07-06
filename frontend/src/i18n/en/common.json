@@ -307,6 +307,42 @@
       "suspended": "Suspended",
       "expired": "Expired",
       "terminated": "Terminated"
+    },
+    "form": {
+      "dialogTitle": "Create MoU",
+      "dialogDescription": "Record a memorandum of understanding between two parties.",
+      "title": "Title (English)",
+      "titleAr": "Title (Arabic)",
+      "type": "Type",
+      "category": "Category",
+      "lifecycleState": "Lifecycle state",
+      "signatory1": "First signatory",
+      "signatory2": "Second signatory",
+      "effectiveDate": "Effective date",
+      "expiryDate": "Expiry date",
+      "description": "Description",
+      "cancel": "Cancel",
+      "submit": "Create MoU",
+      "toastSuccess": "MoU created",
+      "toastError": "Failed to create MoU. Try again.",
+      "errors": {
+        "titleRequired": "English title is required",
+        "titleArRequired": "Arabic title is required",
+        "signatoriesMustDiffer": "The two signatories must be different",
+        "expiryAfterEffective": "Expiry date must be after the effective date"
+      },
+      "types": {
+        "bilateral": "Bilateral",
+        "multilateral": "Multilateral",
+        "framework": "Framework",
+        "technical": "Technical"
+      },
+      "categories": {
+        "data_exchange": "Data exchange",
+        "capacity_building": "Capacity building",
+        "strategic": "Strategic",
+        "technical": "Technical"
+      }
     }
   },
   "forums": {

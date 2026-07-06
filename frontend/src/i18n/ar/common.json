@@ -307,6 +307,42 @@
       "suspended": "معلّقة",
       "expired": "منتهية",
       "terminated": "مُنهاة"
+    },
+    "form": {
+      "dialogTitle": "إنشاء مذكرة تفاهم",
+      "dialogDescription": "تسجيل مذكرة تفاهم بين طرفين.",
+      "title": "العنوان (بالإنجليزية)",
+      "titleAr": "العنوان (بالعربية)",
+      "type": "النوع",
+      "category": "الفئة",
+      "lifecycleState": "حالة المذكرة",
+      "signatory1": "الطرف الموقّع الأول",
+      "signatory2": "الطرف الموقّع الثاني",
+      "effectiveDate": "تاريخ السريان",
+      "expiryDate": "تاريخ الانتهاء",
+      "description": "الوصف",
+      "cancel": "إلغاء",
+      "submit": "إنشاء مذكرة التفاهم",
+      "toastSuccess": "تم إنشاء مذكرة التفاهم",
+      "toastError": "تعذّر إنشاء مذكرة التفاهم. حاول مرة أخرى.",
+      "errors": {
+        "titleRequired": "العنوان بالإنجليزية مطلوب",
+        "titleArRequired": "العنوان بالعربية مطلوب",
+        "signatoriesMustDiffer": "يجب أن يكون الطرفان الموقّعان مختلفين",
+        "expiryAfterEffective": "يجب أن يكون تاريخ الانتهاء بعد تاريخ السريان"
+      },
+      "types": {
+        "bilateral": "ثنائية",
+        "multilateral": "متعددة الأطراف",
+        "framework": "إطارية",
+        "technical": "تقنية"
+      },
+      "categories": {
+        "data_exchange": "تبادل البيانات",
+        "capacity_building": "بناء القدرات",
+        "strategic": "استراتيجية",
+        "technical": "تقنية"
+      }
     }
   },
   "forums": {
