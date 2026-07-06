@@ -1,8 +1,8 @@
 ---
 phase: 86
 slug: feature-completion
-status: draft
-nyquist_compliant: false
+status: planned
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-07-06
 ---
@@ -40,21 +40,23 @@ created: 2026-07-06
 > Task IDs are assigned by the planner. This map is seeded from the requirement→test map in
 > `86-RESEARCH.md`; the executor fills `Task ID` / `Status` as plans are written and run.
 
-| Task ID | Plan               | Wave | Requirement         | Threat Ref             | Secure Behavior                                                                                                                               | Test Type                       | Automated Command                                                                                         | File Exists | Status     |
-| ------- | ------------------ | ---- | ------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------- | ----------- | ---------- |
-| TBD     | mous               | 1    | FEAT-01             | —                      | Create dialog validates bilingual titles + enum/date/signatory refines; submits payload incl. `parties` jsonb                                 | unit/component                  | `pnpm --dir frontend test -- run src/components/mous/__tests__/CreateMouDialog.test.tsx`                  | ❌ W0       | ⬜ pending |
-| TBD     | mous               | 1    | FEAT-01             | —                      | Click Add MoU → fill → submit → new row visible in list                                                                                       | e2e                             | `pnpm --dir frontend exec playwright test tests/e2e/mou-create.spec.ts`                                   | ❌ W0       | ⬜ pending |
-| TBD     | users              | 1    | FEAT-02             | T-86-idor / self-grant | Create form mirrors edge validators (username regex, role set `admin/editor/viewer`, clearance 1–4); invokes `create-user`, navigates to list | unit/component                  | `pnpm --dir frontend test -- run src/pages/users/__tests__/UserCreatePage.test.tsx`                       | ❌ W0       | ⬜ pending |
-| TBD     | users              | 1    | FEAT-02             | idor                   | Admin creates user → 201 → row appears (inactive) in list                                                                                     | e2e/smoke                       | `pnpm --dir frontend exec playwright test tests/e2e/user-management.spec.ts`                              | ❌ W0       | ⬜ pending |
-| TBD     | users              | 1    | FEAT-03             | self-grant             | Detail renders fields; role change handles immediate + `requires_approval`; deactivate/reactivate flips status badge                          | unit/component                  | `pnpm --dir frontend test -- run src/pages/users/__tests__/UserDetailPage.test.tsx`                       | ❌ W0       | ⬜ pending |
-| TBD     | consistency-delete | 1    | FEAT-04             | —                      | Repo grep for `ConsistencyPanel` + `consistency.` i18n keys returns 0 in live code; full vitest green post-deletion                           | integration (grep gate + suite) | `rg -l "ConsistencyPanel" frontend/src --glob '!**/.understand-anything/**'` (expect empty) + full vitest | gate cmd    | ⬜ pending |
-| TBD     | (all UI)           | —    | EN/AR (criterion 5) | —                      | New dialog/pages render in `dir="rtl"` with AR strings + logical properties                                                                   | e2e (`?lng=ar`) + manual render | Playwright `?lng=ar` + screenshot; human render sign-off                                                  | ❌ W0       | ⬜ pending |
+| Task ID     | Plan               | Wave | Requirement         | Threat Ref    | Secure Behavior                                                                                                                               | Test Type                       | Automated Command                                                                                         | File Exists | Status     |
+| ----------- | ------------------ | ---- | ------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------- | ----------- | ---------- |
+| 86-01/T2    | mous               | 1    | FEAT-01             | —             | Create dialog validates bilingual titles + enum/date/signatory refines; submits payload incl. `parties` jsonb                                 | unit/component                  | `pnpm --dir frontend test -- run src/components/mous/__tests__/CreateMouDialog.test.tsx`                  | ❌ W0       | ⬜ pending |
+| 86-01/T3    | mous               | 1    | FEAT-01             | —             | Click Add MoU → fill → submit → new row visible in list                                                                                       | e2e                             | `pnpm --dir frontend exec playwright test tests/e2e/mou-create.spec.ts`                                   | ❌ W0       | ⬜ pending |
+| 86-02/T3    | users              | 1    | FEAT-02             | T-86-05/06/07 | Create form mirrors edge validators (username regex, role set `admin/editor/viewer`, clearance 1–4); invokes `create-user`, navigates to list | unit/component                  | `pnpm --dir frontend test -- run src/pages/users/__tests__/UserCreatePage.test.tsx`                       | ❌ W0       | ⬜ pending |
+| 86-04/T3    | users              | 2    | FEAT-02             | T-86-12       | Admin creates user → 201 → row appears (inactive) in list                                                                                     | e2e/smoke                       | `pnpm --dir frontend exec playwright test tests/e2e/user-management.spec.ts`                              | ❌ W0       | ⬜ pending |
+| 86-04/T1+T2 | users              | 2    | FEAT-03             | T-86-13       | Detail renders fields; role change handles immediate + `requires_approval`; deactivate/reactivate flips status badge                          | unit/component                  | `pnpm --dir frontend test -- run src/pages/users/__tests__/UserDetailPage.test.tsx`                       | ❌ W0       | ⬜ pending |
+| 86-03/T1    | consistency-delete | 1    | FEAT-04             | —             | Repo grep for `ConsistencyPanel` + `consistency.` i18n keys returns 0 in live code; full vitest green post-deletion                           | integration (grep gate + suite) | `rg -l "ConsistencyPanel" frontend/src --glob '!**/.understand-anything/**'` (expect empty) + full vitest | gate cmd    | ⬜ pending |
+| 86-05/T2    | (all UI)           | 3    | EN/AR (criterion 5) | —             | New dialog/pages render in `dir="rtl"` with AR strings + logical properties                                                                   | e2e (`?lng=ar`) + manual render | Playwright `?lng=ar` + screenshot; human render sign-off                                                  | ❌ W0       | ⬜ pending |
 
 _Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
 
 ---
 
 ## Wave 0 Requirements
+
+> Planner note: each test file below is created INSIDE the tdd task that builds the code it covers (behavior-first, same commit) — 86-01/T2, 86-01/T3, 86-02/T3, 86-04/T1-T2, 86-04/T3. No standalone Wave-0 plan needed.
 
 - [ ] `frontend/src/components/mous/__tests__/CreateMouDialog.test.tsx` — FEAT-01 unit
 - [ ] `frontend/tests/e2e/mou-create.spec.ts` — FEAT-01 e2e (auth via `.env.test` credentials; profile-org pitfall)

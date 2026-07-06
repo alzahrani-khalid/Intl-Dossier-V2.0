@@ -48,8 +48,16 @@
 3. Admin can open `/users/:id` from the users list and view/manage role, status, and profile (closes D-10 detail half)
 4. ConsistencyPanel either runs a real consistency-check query with working modify/accept/escalate/view actions, or is fully deleted (component + i18n keys) with the decision recorded (closes E-8)
 5. All new/changed surfaces work correctly in both EN/LTR and AR/RTL
-   **Plans**: TBD
+   **Plans**: 5 plans
    **UI hint**: yes
+
+Plans:
+
+- [ ] 86-01-PLAN.md — MoU create dialog + domains/mous wiring (FEAT-01, wave 1)
+- [ ] 86-02-PLAN.md — Users foundation: assign-role verify, invoke methods, layout routes, /users/create (FEAT-02, wave 1)
+- [ ] 86-03-PLAN.md — ConsistencyPanel formal retirement + ADR-008 decision record (FEAT-04, wave 1)
+- [ ] 86-04-PLAN.md — /users/:id detail (role/status/profile) + combined user-management E2E (FEAT-03, wave 2)
+- [ ] 86-05-PLAN.md — Phase gate battery + consolidated EN/AR render sign-off (wave 3)
 
 ### Phase 87: Linear Affordances
 
