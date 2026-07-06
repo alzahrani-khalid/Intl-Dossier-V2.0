@@ -9,7 +9,6 @@
 import type {
   Position as PositionType,
   UpdatePositionRequest as UpdatePositionRequestType,
-  ConsistencyCheck as ConsistencyCheckType,
 } from '@/types/position'
 
 // Re-export core position types from shared types
@@ -19,7 +18,6 @@ export type {
   PositionListResponse,
   CreatePositionRequest,
   UpdatePositionRequest,
-  ConsistencyCheck,
 } from '@/types/position'
 
 // ============================================================================
@@ -188,5 +186,4 @@ export interface UpdatePositionVariables {
 
 export interface SubmitPositionResponse {
   position: PositionType
-  consistency_check: ConsistencyCheckType
 }
