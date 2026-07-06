@@ -30,7 +30,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-import { Search, Users, CheckCircle, Loader2, AlertCircle } from 'lucide-react'
+import { Search, Users, CheckCircle, Loader2, AlertCircle, UserPlus } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -218,6 +220,14 @@ export function UsersListPage() {
           to: Math.min(currentPage * pageSize, usersData?.total || 0),
           total: usersData?.total || 0,
         })}
+        actions={
+          <Button asChild className="min-h-11">
+            <Link to="/users/create">
+              <UserPlus className="h-4 w-4 me-2" />
+              {t('userOnboarding.createUser')}
+            </Link>
+          </Button>
+        }
       />
 
       {/* Search & Filters */}

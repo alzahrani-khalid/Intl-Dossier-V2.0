@@ -38,8 +38,23 @@
     "expiresAt": "Expires At"
   },
 
+  "createForm": {
+    "subtitle": "Add a new user account. New users are inactive until they activate.",
+    "clearance": "Clearance level",
+    "submit": "Create user",
+    "created": "User created. An activation email has been sent.",
+    "submitFailed": "Could not create the user. Try again.",
+    "errors": {
+      "emailInvalid": "Enter a valid email address",
+      "usernameFormat": "Username must be 3-50 characters: lowercase letters, numbers, underscore or hyphen",
+      "fullNameLength": "Full name must be 2-100 characters",
+      "clearanceRange": "Clearance must be an integer between 1 and 4"
+    }
+  },
+
   "roles": {
     "admin": "Admin",
+    "editor": "Editor",
     "manager": "Manager",
     "staff": "Staff",
     "viewer": "Viewer",
