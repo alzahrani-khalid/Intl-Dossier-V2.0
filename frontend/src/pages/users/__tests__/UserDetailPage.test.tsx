@@ -150,7 +150,8 @@ describe('UserDetailPage', () => {
     )
     expect(screen.getByText('jane_doe')).toBeInTheDocument()
     expect(screen.getAllByText('Jane Doe').length).toBeGreaterThan(0)
-    expect(screen.getByText('Editor')).toBeInTheDocument()
+    // 'Editor' shows in both the overview role badge and the role-change picker.
+    expect(screen.getAllByText('Editor').length).toBeGreaterThan(0)
     expect(screen.getByText('Active')).toBeInTheDocument()
   })
 

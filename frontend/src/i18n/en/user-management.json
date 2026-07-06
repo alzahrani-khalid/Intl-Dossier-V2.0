@@ -61,6 +61,7 @@
     "viewer": "Viewer",
     "assignRole": "Assign Role",
     "roleAssigned": "Role assigned successfully",
+    "sessionsTerminatedCount": "{{count}} active sessions terminated",
     "roleRequiresApproval": "Admin role assignment requires dual approval",
     "pendingApproval": "Pending Approval",
     "approveRole": "Approve Role Change",
