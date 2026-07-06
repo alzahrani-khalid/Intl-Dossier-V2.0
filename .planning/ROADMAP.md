@@ -61,7 +61,7 @@ Plans:
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
-- [ ] 86-04-PLAN.md — /users/:id detail (role/status/profile) + combined user-management E2E (FEAT-03, wave 2)
+- [x] 86-04-PLAN.md — /users/:id detail (role/status/profile) + combined user-management E2E (FEAT-03, wave 2)
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
@@ -365,7 +365,7 @@ Full detail: [milestones/v8.1-ROADMAP.md](milestones/v8.1-ROADMAP.md).
 | 68-74 | v7.0 | 49/49 | Shipped | 2026-06-24 |
 | 75-80 | v8.0 | 32/32 | Shipped | 2026-07-04 |
 | 81-85 | v8.1 | 22/22 | Shipped | 2026-07-05 |
-| 86. Feature Completion | v9.0 | 3/5 | In Progress|  |
+| 86. Feature Completion | v9.0 | 4/5 | In Progress|  |
 | 87. Linear Affordances | v9.0 | 0/TBD | Not started | — |
 | 88. Security & Hygiene Tail | v9.0 | 0/TBD | Not started | — |
 | 89. CI & Test-Debt Burn-Down | v9.0 | 0/TBD | Not started | — |
