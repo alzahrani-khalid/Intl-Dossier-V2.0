@@ -163,6 +163,10 @@ None — no security surface introduced beyond the plan's threat_model. Routes a
 - Foundation ready for plan **86-04** (user detail page): `/users` layout family, the four service invoke methods (assignRole/deactivateUser/reactivateUser typed and ready), and verified assign-role v2 deployment are all in place. The `/users/:id` route can attach as a child of the existing admin-gated layout with no extra beforeLoad.
 - Live E2E create→list→detail smoke lands in plan 86-04's combined spec.
 
+## Self-Check: PASSED
+
+All 4 created files present (index.tsx, create.tsx, UserCreatePage.tsx, UserCreatePage.test.tsx) and all 5 commits verified in git log (608f9855, 17a615a0, 3308c65b, 8c188e63, 47c4121d).
+
 ---
 
 _Phase: 86-feature-completion_
