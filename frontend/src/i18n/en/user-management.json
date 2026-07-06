@@ -40,6 +40,7 @@
 
   "roles": {
     "admin": "Admin",
+    "editor": "Editor",
     "manager": "Manager",
     "staff": "Staff",
     "viewer": "Viewer",
