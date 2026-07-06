@@ -2,11 +2,11 @@
 gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Platform Completion & Live Verification
-status: planning
-last_updated: '2026-07-06T09:20:27.623Z'
+status: in_progress
+last_updated: '2026-07-06T00:00:00.000Z'
 last_activity: 2026-07-06
 progress:
-  total_phases: 0
+  total_phases: 6
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -17,17 +17,19 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-07-04 — v8.0 shipped; Last Shipped Milestone + Next Milestone sections)
+See: .planning/PROJECT.md (updated 2026-07-06 — v9.0 Platform Completion & Live Verification started)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 85 — linear-taste-refinements (COMPLETE); v8.1 milestone 5/5
+**Current focus:** Phase 86 — Feature Completion (ready to plan); v9.0 milestone 0/6
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-07-06 — Milestone v9.0 started
+Phase: 86 of 86-91 (Feature Completion)
+Plan: — (not yet planned)
+Status: Ready to plan
+Last activity: 2026-07-06 — v9.0 roadmap created: 6 phases (86-91), 21/21 v1 requirements mapped
+
+Progress: [..........] 0% (0/6 phases, 0 plans)
 
 ### Roadmap Evolution
 
@@ -109,11 +111,11 @@ Follow-up (77-01): dashboard-widgets FROZEN_TIME tracks the capture date — a f
 
 ## Next Action
 
-**v8.1 roadmap created (2026-07-04)** — Phases 81-84, 18/18 v1 requirements mapped 1:1 (BUG-01..05 → 81, FMT-01..04 → 82, DEBT-01..08 → 83, COPY-01 → 84). Source of truth: `DESIGN-REFINEMENT-PLAN-260704.md` (findings F1–F15 + F22; user sign-off §7) — the requirement→phase mapping was pre-decided at sign-off and transcribed exactly. Phase 83 carries the verified DO-NOT-TOUCH carve-outs in its ROADMAP notes.
+**v9.0 roadmap created (2026-07-06)** — Phases 86-91, 21/21 v1 requirements mapped 1:1 (FEAT-01..04 -> 86, AFF-01..04 -> 87, SEC-01..02 -> 88, CI-01..05 -> 89, CORS-01..03 -> 90, LIVE-01..03 -> 91). Sequencing: SEC (88) lands before the CI burn-down (89) so E2E fixes target the final credential pattern; CI-05 rtl-smokes promotion is last within 89 (after CI-01..04) so promotion never blocks on red suites; CORS-01 secret verification gates the A/B/C batches inside 90; LIVE (91) is last and HARDWARE-GATED (on-prem GPU decision pending; 4GB droplet cannot host vLLM/TEI; Mac-local stack from v7.0 Phase 72 is the proven fallback target).
 
-Next: `/gsd:plan-phase 81` (Visible Bugs).
+Next: `/gsd:plan-phase 86` (Feature Completion).
 
-Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/middleware/auth.ts`) deployed — pre-existing, unrelated to v8.1. The v8.0 close-out deferred items (rtl-smokes branch-protection promotion + CI birth certificate, IN-04 UserPicker pass, TEST_USER_PASSWORD hygiene) remain tracked in MILESTONES.md.
+Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/middleware/auth.ts`) deployed — pre-existing, tracked separately. The v8.0 close-out deferred items are now IN-SCOPE this milestone: rtl-smokes promotion = CI-05, IN-04 UserPicker = SEC-01, TEST_USER_PASSWORD hygiene = SEC-02.
 
 ## Accumulated Context
 

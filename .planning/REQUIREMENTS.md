@@ -82,37 +82,37 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase | Status  |
-| ----------- | ----- | ------- |
-| FEAT-01     | —     | Pending |
-| FEAT-02     | —     | Pending |
-| FEAT-03     | —     | Pending |
-| FEAT-04     | —     | Pending |
-| AFF-01      | —     | Pending |
-| AFF-02      | —     | Pending |
-| AFF-03      | —     | Pending |
-| AFF-04      | —     | Pending |
-| SEC-01      | —     | Pending |
-| SEC-02      | —     | Pending |
-| CI-01       | —     | Pending |
-| CI-02       | —     | Pending |
-| CI-03       | —     | Pending |
-| CI-04       | —     | Pending |
-| CI-05       | —     | Pending |
-| CORS-01     | —     | Pending |
-| CORS-02     | —     | Pending |
-| CORS-03     | —     | Pending |
-| LIVE-01     | —     | Pending |
-| LIVE-02     | —     | Pending |
-| LIVE-03     | —     | Pending |
+| Requirement | Phase    | Status  |
+| ----------- | -------- | ------- |
+| FEAT-01     | Phase 86 | Pending |
+| FEAT-02     | Phase 86 | Pending |
+| FEAT-03     | Phase 86 | Pending |
+| FEAT-04     | Phase 86 | Pending |
+| AFF-01      | Phase 87 | Pending |
+| AFF-02      | Phase 87 | Pending |
+| AFF-03      | Phase 87 | Pending |
+| AFF-04      | Phase 87 | Pending |
+| SEC-01      | Phase 88 | Pending |
+| SEC-02      | Phase 88 | Pending |
+| CI-01       | Phase 89 | Pending |
+| CI-02       | Phase 89 | Pending |
+| CI-03       | Phase 89 | Pending |
+| CI-04       | Phase 89 | Pending |
+| CI-05       | Phase 89 | Pending |
+| CORS-01     | Phase 90 | Pending |
+| CORS-02     | Phase 90 | Pending |
+| CORS-03     | Phase 90 | Pending |
+| LIVE-01     | Phase 91 | Pending |
+| LIVE-02     | Phase 91 | Pending |
+| LIVE-03     | Phase 91 | Pending |
 
 **Coverage:**
 
 - v1 requirements: 21 total
-- Mapped to phases: 0 (roadmap pending)
-- Unmapped: 21 ⚠️
+- Mapped to phases: 21 ✓
+- Unmapped: 0
 
 ---
 
 _Requirements defined: 2026-07-06_
-_Last updated: 2026-07-06 after initial definition_
+_Last updated: 2026-07-06 — roadmap created; all 21 v1 requirements mapped to Phases 86-91_
