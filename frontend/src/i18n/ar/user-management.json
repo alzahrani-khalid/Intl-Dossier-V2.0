@@ -34,6 +34,7 @@
     "mfaEnabled": "المصادقة الثنائية مفعلة",
     "lastLoginAt": "آخر تسجيل دخول",
     "lastLoginIp": "عنوان IP لآخر تسجيل دخول",
+    "department": "القسم",
     "allowedResources": "الموارد المسموح بها",
     "expiresAt": "تنتهي في"
   },

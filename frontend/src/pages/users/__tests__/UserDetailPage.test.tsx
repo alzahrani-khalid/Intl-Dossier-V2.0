@@ -133,7 +133,10 @@ describe('UserDetailPage', () => {
     singleMock.mockResolvedValue({ data: ACTIVE_EDITOR, error: null })
     renderPage()
 
-    await waitFor(() => expect(screen.getByText('jane.doe@example.com')).toBeInTheDocument())
+    // Email renders in both the header subtitle and the Email field.
+    await waitFor(() =>
+      expect(screen.getAllByText('jane.doe@example.com').length).toBeGreaterThan(0),
+    )
     expect(screen.getByText('jane_doe')).toBeInTheDocument()
     expect(screen.getAllByText('Jane Doe').length).toBeGreaterThan(0)
     expect(screen.getByText('Editor')).toBeInTheDocument()
