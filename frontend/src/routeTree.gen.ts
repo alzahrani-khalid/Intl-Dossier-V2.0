@@ -67,6 +67,7 @@ import { Route as ProtectedDossiersIndexRouteImport } from './routes/_protected/
 import { Route as ProtectedApprovalsIndexRouteImport } from './routes/_protected/approvals/index'
 import { Route as ProtectedAfterActionsIndexRouteImport } from './routes/_protected/after-actions/index'
 import { Route as ProtectedAdminIndexRouteImport } from './routes/_protected/admin/index'
+import { Route as ProtectedUsersCreateRouteImport } from './routes/_protected/users/create'
 import { Route as ProtectedTasksQueueRouteImport } from './routes/_protected/tasks/queue'
 import { Route as ProtectedTasksEscalationsRouteImport } from './routes/_protected/tasks/escalations'
 import { Route as ProtectedTasksIdRouteImport } from './routes/_protected/tasks/$id'
@@ -505,6 +506,11 @@ const ProtectedAdminIndexRoute = ProtectedAdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
   getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedUsersCreateRoute = ProtectedUsersCreateRouteImport.update({
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => ProtectedUsersRoute,
 } as any)
 const ProtectedTasksQueueRoute = ProtectedTasksQueueRouteImport.update({
   id: '/tasks/queue',
@@ -1424,6 +1430,7 @@ export interface FileRoutesByFullPath {
   '/tasks/$id': typeof ProtectedTasksIdRoute
   '/tasks/escalations': typeof ProtectedTasksEscalationsRoute
   '/tasks/queue': typeof ProtectedTasksQueueRoute
+  '/users/create': typeof ProtectedUsersCreateRoute
   '/admin/': typeof ProtectedAdminIndexRoute
   '/after-actions/': typeof ProtectedAfterActionsIndexRoute
   '/approvals/': typeof ProtectedApprovalsIndexRoute
@@ -1618,6 +1625,7 @@ export interface FileRoutesByTo {
   '/tasks/$id': typeof ProtectedTasksIdRoute
   '/tasks/escalations': typeof ProtectedTasksEscalationsRoute
   '/tasks/queue': typeof ProtectedTasksQueueRoute
+  '/users/create': typeof ProtectedUsersCreateRoute
   '/admin': typeof ProtectedAdminIndexRoute
   '/after-actions': typeof ProtectedAfterActionsIndexRoute
   '/approvals': typeof ProtectedApprovalsIndexRoute
@@ -1814,6 +1822,7 @@ export interface FileRoutesById {
   '/_protected/tasks/$id': typeof ProtectedTasksIdRoute
   '/_protected/tasks/escalations': typeof ProtectedTasksEscalationsRoute
   '/_protected/tasks/queue': typeof ProtectedTasksQueueRoute
+  '/_protected/users/create': typeof ProtectedUsersCreateRoute
   '/_protected/admin/': typeof ProtectedAdminIndexRoute
   '/_protected/after-actions/': typeof ProtectedAfterActionsIndexRoute
   '/_protected/approvals/': typeof ProtectedApprovalsIndexRoute
@@ -2017,6 +2026,7 @@ export interface FileRouteTypes {
     | '/tasks/$id'
     | '/tasks/escalations'
     | '/tasks/queue'
+    | '/users/create'
     | '/admin/'
     | '/after-actions/'
     | '/approvals/'
@@ -2211,6 +2221,7 @@ export interface FileRouteTypes {
     | '/tasks/$id'
     | '/tasks/escalations'
     | '/tasks/queue'
+    | '/users/create'
     | '/admin'
     | '/after-actions'
     | '/approvals'
@@ -2406,6 +2417,7 @@ export interface FileRouteTypes {
     | '/_protected/tasks/$id'
     | '/_protected/tasks/escalations'
     | '/_protected/tasks/queue'
+    | '/_protected/users/create'
     | '/_protected/admin/'
     | '/_protected/after-actions/'
     | '/_protected/approvals/'
@@ -2945,6 +2957,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof ProtectedAdminIndexRouteImport
       parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/users/create': {
+      id: '/_protected/users/create'
+      path: '/create'
+      fullPath: '/users/create'
+      preLoaderRoute: typeof ProtectedUsersCreateRouteImport
+      parentRoute: typeof ProtectedUsersRoute
     }
     '/_protected/tasks/queue': {
       id: '/_protected/tasks/queue'
@@ -4140,10 +4159,12 @@ const ProtectedSettingsRouteWithChildren =
   ProtectedSettingsRoute._addFileChildren(ProtectedSettingsRouteChildren)
 
 interface ProtectedUsersRouteChildren {
+  ProtectedUsersCreateRoute: typeof ProtectedUsersCreateRoute
   ProtectedUsersIndexRoute: typeof ProtectedUsersIndexRoute
 }
 
 const ProtectedUsersRouteChildren: ProtectedUsersRouteChildren = {
+  ProtectedUsersCreateRoute: ProtectedUsersCreateRoute,
   ProtectedUsersIndexRoute: ProtectedUsersIndexRoute,
 }
 
