@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Platform Completion & Live Verification
 status: executing
-last_updated: '2026-07-07T11:22:26Z'
-last_activity: '2026-07-07 -- Plan 87-04 complete (F26 empty-state infra, AFF-04): EmptyState Linear reskin (surface-raised icon wash, ink-mute/ink-faint text, .btn-primary/.btn-ghost recipes replacing ui/button); ListEmptyState extended to all 9 core entities (+topic/working_group/elected_official/work_item) + filtered-empty branch (filtered/onClearFilters props — wins over create, never disabled-accent); empty-states.json copy matrix EN+AR (list.<entity>.title/description/cta + list.filtered.*) voice-purged; 6 dossier-overview tab empties conformed to Pattern B (glyph + one line, zero legacy bg-muted/text-muted-foreground; RelatedDossiers .description dropped). 13/13 empty-states + 228 dossier tests, tsc + lint exit 0. No deviations. AFF-04 complete; visual/RTL render sign-off rolls into 87-10 (no live consumer until Wave 2).'
+last_updated: '2026-07-07T11:47:00.046Z'
+last_activity: 2026-07-07
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 15
-  completed_plans: 9
+  completed_plans: 10
   percent: 17
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-07-06 — v9.0 Platform Completion & Liv
 ## Current Position
 
 Phase: 87 (linear-affordances) — EXECUTING
-Plan: 5 of 10
+Plan: 6 of 10
 Status: Ready to execute
-Last activity: 2026-07-07 -- Plan 87-04 complete (F26 empty-state infra, AFF-04). **EmptyState** reskinned to Linear tokens across all 4 variants (bg-muted→bg-surface-raised icon wash, text-muted-foreground→text-ink-mute/text-ink-faint, text-foreground→text-ink; the one accent CTA renders `.btn-primary` and secondary/recovery actions `.btn-ghost`, dropping the ui/button variant chrome while keeping the QuickAction prop API). **ListEmptyState** union+entityConfig extended with topic/working_group/elected_official/work_item (Tag/Users/Landmark/ListTodo glyphs) and gained `filtered`/`onClearFilters` props → a filtered-empty branch that renders `list.filtered.*` + a ghost "Clear filters", never the create CTA (filtered wins over create); no onCreate → zero accent buttons (never disabled-accent); primary label now reads `list.<entity>.cta` with legacy `.create` fallback (TourableEmptyState still reads `.create`, test green). **empty-states.json** (EN+AR): UI-SPEC §F26 copy matrix transcribed for the 9 core surfaces (title/description/cta) + `list.filtered.{title,description,clear}`; Title-Case/"we" debt purged on touched keys; parity proven. **6 dossier-overview tab empties** (Activity/KeyContacts/Calendar/Documents/RelatedDossiers/WorkItems) retokenized to Pattern B (single non-directional glyph h-5 text-ink-faint + one line text-ink-mute) — zero legacy tokens in every EmptyState body; RelatedDossiers collapsed its two-tier empty to "No relationships mapped for this dossier." (dropped .description); WorkItems copy aligned to the dossier-tab register. New `ListEmptyState.test.tsx` (9 cases) locks the contract. Verify: 13/13 empty-states + 228 dossier tests, tsc exit 0, lint exit 0 (i18n parity + token + rtl + bootstrap + date gates). Commits 82c82dce/4d382441/7c7ee633. No deviations. AFF-04 complete; visual/RTL render sign-off rolls into the 87-10 consolidated sign-off (no consumer wires ListEmptyState until Wave 2).
+Last activity: 2026-07-07 -- Plan 87-05 complete (URL-state normalization for the 3 bespoke non-kanban surfaces; AFF-01/AFF-02 **enabler only**). Persons, engagements, and elected-officials lifted their local `useState` search/filter state onto the countries `validateSearch` + `Route.useSearch`/`useNavigate`-reducer idiom (replace:true, page reset on filter change) — pure state relocation, zero user-visible behavior change. **Persons**: activated the dead `validateSearch` shell in `persons/index.tsx`; `-PersonsListPage` made presentational (`search`/`onSearchChange`/`onPersonClick` props, no useState); `ToolbarSearch`'s built-in 300ms debounce debounces the URL write, `useDebouncedValue` still debounces the `usePersons` query → byte-identical timing. **Engagements**: `EngagementsListPage` made controlled (`search`/`filter`/`onSearchChange`/`onFilterChange` props); a shared `validateEngagementsListSearch` (exported from the page) whitelists the `type` param against the non-`all` FilterPill values (`satisfies EngagementTypeParam[]` drift guard); **both mounts** — `/dossiers/engagements` + the intentional `/engagements` double-mount — wrap the page over that one validator (**Rule 1 deviation**: the 2nd mount wasn't in the plan file list but had to migrate or the build wouldn't compile). **Elected-officials**: `ElectedOfficialListTable` made controlled (`filters` + 5 change handlers via props; internal useState/useCallback removed, sorting/enrichment/empty/error branches untouched); route `validateSearch` whitelists page/search/`office_type` (against exported `OFFICE_TYPES`) + `term` (current|expired → is_current_term); PageHeader kept (no ListPageShell migration — planner call). Verify all green: `vitest` src/routes/.../persons + src/components/elected-officials + src/pages/engagements exit 0 (39 pass \| 6 todo), `tsc --noEmit` exit 0, `lint --max-warnings 0` exit 0 (eslint+i18n+rtl+bootstrap+date gates). Commits: 5b7ea4e4 (persons) / e0544408 (engagements) / c1528f45 (elected-officials). **AFF-01/AFF-02 left Pending in REQUIREMENTS.md** — this plan delivers only the URL-state seam; the F23 peek panel + F24 popovers those requirements describe land in 87-08.
 
-Progress: [██████░░░░] 60%
+Progress: [███████░░░] 67%
 
 ### Roadmap Evolution
 
