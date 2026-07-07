@@ -13,20 +13,22 @@
   },
 
   "createActions": {
-    "title": "إنشاء جديد",
-    "newTask": "إنشاء مهمة جديدة",
-    "newIntake": "إنشاء طلب استقبال جديد",
-    "newDossier": "إنشاء ملف جديد",
-    "newCommitment": "إنشاء التزام جديد",
-    "newPosition": "إنشاء موقف جديد",
-    "newCountry": "إنشاء ملف دولة جديد",
-    "newOrganization": "إنشاء ملف منظمة جديد",
-    "newForum": "إنشاء ملف منتدى جديد",
-    "newEngagement": "إنشاء مشاركة جديدة",
-    "newPerson": "إنشاء ملف شخص جديد",
-    "newTopic": "إنشاء ملف موضوع جديد",
-    "newWorkingGroup": "إنشاء مجموعة عمل جديدة",
-    "newElectedOfficial": "إنشاء ملف مسؤول منتخب جديد"
+    "title": "إنشاء",
+    "newTask": "إنشاء مهمة",
+    "newIntake": "إنشاء طلب استقبال",
+    "newDossier": "إنشاء ملف",
+    "newCommitment": "إنشاء التزام",
+    "newMou": "إنشاء مذكرة تفاهم",
+    "newUser": "إنشاء مستخدم",
+    "newPosition": "إنشاء موقف",
+    "newCountry": "إنشاء ملف دولة",
+    "newOrganization": "إنشاء ملف منظمة",
+    "newForum": "إنشاء ملف منتدى",
+    "newEngagement": "إنشاء مشاركة",
+    "newPerson": "إنشاء ملف شخص",
+    "newTopic": "إنشاء ملف موضوع",
+    "newWorkingGroup": "إنشاء مجموعة عمل",
+    "newElectedOfficial": "إنشاء مسؤول منتخب"
   },
 
   "contextSuggestions": {
@@ -35,7 +37,7 @@
   },
 
   "quickActions": {
-    "title": "التنقل السريع",
+    "title": "التنقل",
     "dashboard": "الانتقال إلى لوحة المعلومات",
     "myWork": "الانتقال إلى أعمالي",
     "dossiers": "الانتقال إلى الملفات",
@@ -60,6 +62,11 @@
     "analyzeShortestPath": "تحليل: كيف يرتبط هذان الكيانان"
   },
 
+  "commands": {
+    "toggleTheme": "تبديل السمة",
+    "switchLanguage": "تبديل اللغة"
+  },
+
   "shortcuts": {
     "goToDashboard": "الانتقال إلى لوحة المعلومات",
     "goToMyWork": "الانتقال إلى أعمالي",
@@ -70,7 +77,7 @@
     "goToSettings": "الانتقال إلى الإعدادات",
     "goBack": "الرجوع",
     "goForward": "التقدم",
-    "newTask": "إنشاء مهمة جديدة",
+    "newTask": "إنشاء مهمة",
     "save": "حفظ",
     "delete": "حذف",
     "edit": "تحرير",

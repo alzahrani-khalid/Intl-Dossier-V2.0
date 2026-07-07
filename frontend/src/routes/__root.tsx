@@ -58,9 +58,11 @@ export const Route = createRootRoute({
             <DossierContextProvider>
               <WorkCreationProvider>
                 <Outlet />
+                {/* Inside WorkCreationProvider so the ⌘K palette can call
+                    useWorkCreation().openPalette for create-task/intake/commitment (F25). */}
+                <CommandPalette />
               </WorkCreationProvider>
             </DossierContextProvider>
-            <CommandPalette />
             <TourOverlay />
           </TourProvider>
         </KeyboardShortcutProvider>
