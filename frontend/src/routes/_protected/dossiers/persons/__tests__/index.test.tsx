@@ -78,7 +78,7 @@ describe('PersonsListPage (Phase 40 LIST-02)', () => {
       isError: false,
     })
 
-    render(<PersonsListPage />)
+    render(<PersonsListPage search="" onSearchChange={vi.fn()} onPersonClick={vi.fn()} />)
 
     expect(screen.getByText('Persons')).toBeTruthy()
     expect(screen.getByText('Dr. Khalid')).toBeTruthy()
@@ -110,7 +110,9 @@ describe('PersonsListPage (Phase 40 LIST-02)', () => {
       isError: false,
     })
 
-    const { container } = render(<PersonsListPage />)
+    const { container } = render(
+      <PersonsListPage search="" onSearchChange={vi.fn()} onPersonClick={vi.fn()} />,
+    )
     const avatar = container.querySelector('.size-11.rounded-full')
     expect(avatar).toBeTruthy()
   })
@@ -122,7 +124,7 @@ describe('PersonsListPage (Phase 40 LIST-02)', () => {
       isError: false,
     })
 
-    render(<PersonsListPage />)
+    render(<PersonsListPage search="" onSearchChange={vi.fn()} onPersonClick={vi.fn()} />)
     expect(screen.getByText('No persons yet')).toBeTruthy()
   })
 
@@ -142,7 +144,7 @@ describe('PersonsListPage (Phase 40 LIST-02)', () => {
       isError: false,
     })
 
-    render(<PersonsListPage />)
+    render(<PersonsListPage search="" onSearchChange={vi.fn()} onPersonClick={vi.fn()} />)
     expect(screen.getByText('Solo')).toBeTruthy()
     expect(screen.queryAllByTestId('vip-chip').length).toBe(0)
   })

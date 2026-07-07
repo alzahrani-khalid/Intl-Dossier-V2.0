@@ -7,8 +7,7 @@
  * - VIP detection: importance_level >= 4 (PersonListItem)
  */
 
-import { useMemo, useState, type ReactElement } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { useMemo, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListPageShell, PersonsGrid, ToolbarSearch, type PersonCard } from '@/components/list-page'
 import { usePersons } from '@/hooks/usePersons'
@@ -61,12 +60,23 @@ const extractList = (raw: unknown): PersonRecord[] => {
   return []
 }
 
-function PersonsListPage(): ReactElement {
+export interface PersonsListPageProps {
+  /** Search term from the route's validated URL params. */
+  search?: string
+  /** Writes the search term back to the URL (debounced by ToolbarSearch). */
+  onSearchChange: (next: string) => void
+  /** Navigates to a person dossier (owned by the route wrapper). */
+  onPersonClick: (person: PersonCard) => void
+}
+
+function PersonsListPage({
+  search,
+  onSearchChange,
+  onPersonClick,
+}: PersonsListPageProps): ReactElement {
   const { t } = useTranslation(['persons', 'list-pages'])
   const { isRTL } = useDirection()
-  const navigate = useNavigate()
-  const [search, setSearch] = useState('')
-  const debouncedSearch = useDebouncedValue(search, 250)
+  const debouncedSearch = useDebouncedValue(search ?? '', 250)
   const query = usePersons({ search: debouncedSearch !== '' ? debouncedSearch : undefined })
 
   const items: PersonCard[] = useMemo(
@@ -74,18 +84,14 @@ function PersonsListPage(): ReactElement {
     [query.data, isRTL],
   )
 
-  const handlePersonClick = (person: PersonCard): void => {
-    void navigate({ to: '/dossiers/persons/$id', params: { id: person.id } })
-  }
-
   return (
     <ListPageShell
       title={t('persons:title')}
       subtitle={t('persons:subtitle')}
       toolbar={
         <ToolbarSearch
-          value={search}
-          onChange={setSearch}
+          value={search ?? ''}
+          onChange={onSearchChange}
           placeholder={t('list-pages:search.placeholder', { defaultValue: 'Search...' })}
         />
       }
@@ -98,7 +104,7 @@ function PersonsListPage(): ReactElement {
         </div>
       }
     >
-      <PersonsGrid persons={items} onPersonClick={handlePersonClick} />
+      <PersonsGrid persons={items} onPersonClick={onPersonClick} />
     </ListPageShell>
   )
 }
