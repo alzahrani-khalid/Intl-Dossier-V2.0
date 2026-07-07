@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Platform Completion & Live Verification
 status: executing
-last_updated: '2026-07-07T10:09:15.407Z'
-last_activity: 2026-07-07 -- Plan 87-01 complete (peek-paging foundation)
+last_updated: '2026-07-07T10:35:22.475Z'
+last_activity: '2026-07-07 -- Plan 87-02 complete (F24 foundation: list-controls i18n ns + useListControls URL-param engine + FilterPopover/useFacetCounts/FilterChipsRow + DisplayPopover; 3 test files / 14 cases green; tsc + lint exit 0). AFF-02 left Pending — multi-plan requirement, Wave-2 (87-06..09) wires the popovers into the nine core surfaces; the foundation is surface-agnostic and does not deliver AFF-02 end-to-end.'
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 15
-  completed_plans: 6
+  completed_plans: 7
   percent: 17
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-07-06 — v9.0 Platform Completion & Liv
 ## Current Position
 
 Phase: 87 (linear-affordances) — EXECUTING
-Plan: 2 of 10
+Plan: 3 of 10
 Status: Ready to execute
-Last activity: 2026-07-07 -- Plan 87-01 complete (peekStore + usePeekPaging cross-page hook + DrawerHead counter/chevrons; drawer peek-capable, list wiring is Wave 2). AFF-01 left Pending — multi-plan requirement, not delivered end-to-end by the foundation.
+Last activity: 2026-07-07 -- Plan 87-02 complete (F24 foundation: list-controls i18n ns + useListControls URL-param engine + FilterPopover/useFacetCounts/FilterChipsRow + DisplayPopover; 3 test files / 14 cases green; tsc + lint exit 0). AFF-02 left Pending — multi-plan requirement, Wave-2 (87-06..09) wires the popovers into the nine core surfaces; the foundation is surface-agnostic and does not deliver AFF-02 end-to-end.
 
-Progress: [████░░░░░░] 40%
+Progress: [█████░░░░░] 47%
 
 ### Roadmap Evolution
 
