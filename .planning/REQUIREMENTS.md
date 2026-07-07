@@ -9,10 +9,10 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Feature Completion (honest-disables → real features)
 
-- [ ] **FEAT-01**: User can create a MoU from the MoUs page — a create form/route writing `mous` (`type`, `mou_category`, dates, parties, `lifecycle_state`); the disabled "Add MoU" button (`MousPage.tsx`) becomes live (closes C-3)
-- [ ] **FEAT-02**: Admin can create a user via a `/users/create` route implemented against the L1-hardened user-management edge functions (closes D-10 create half)
-- [ ] **FEAT-03**: Admin can open a user detail/management view at `/users/:id` (role, status, profile) from the users list (closes D-10 detail half)
-- [ ] **FEAT-04**: ConsistencyPanel is either wired to a real consistency-check query with working modify/accept/escalate/view actions, or formally retired (component + i18n keys deleted, decision recorded) — no permanently-dead UI remains (closes E-8)
+- [x] **FEAT-01**: User can create a MoU from the MoUs page — a create form/route writing `mous` (`type`, `mou_category`, dates, parties, `lifecycle_state`); the disabled "Add MoU" button (`MousPage.tsx`) becomes live (closes C-3)
+- [x] **FEAT-02**: Admin can create a user via a `/users/create` route implemented against the L1-hardened user-management edge functions (closes D-10 create half)
+- [x] **FEAT-03**: Admin can open a user detail/management view at `/users/:id` (role, status, profile) from the users list (closes D-10 detail half)
+- [x] **FEAT-04**: ConsistencyPanel is either wired to a real consistency-check query with working modify/accept/escalate/view actions, or formally retired (component + i18n keys deleted, decision recorded) — no permanently-dead UI remains (closes E-8)
 
 ### Linear Affordances (F23–F26, from DESIGN-REFINEMENT-PLAN-260704 §Phase 6)
 
@@ -82,29 +82,29 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase    | Status  |
-| ----------- | -------- | ------- |
-| FEAT-01     | Phase 86 | Pending |
-| FEAT-02     | Phase 86 | Pending |
-| FEAT-03     | Phase 86 | Pending |
-| FEAT-04     | Phase 86 | Pending |
-| AFF-01      | Phase 87 | Pending |
-| AFF-02      | Phase 87 | Pending |
-| AFF-03      | Phase 87 | Pending |
-| AFF-04      | Phase 87 | Pending |
-| SEC-01      | Phase 88 | Pending |
-| SEC-02      | Phase 88 | Pending |
-| CI-01       | Phase 89 | Pending |
-| CI-02       | Phase 89 | Pending |
-| CI-03       | Phase 89 | Pending |
-| CI-04       | Phase 89 | Pending |
-| CI-05       | Phase 89 | Pending |
-| CORS-01     | Phase 90 | Pending |
-| CORS-02     | Phase 90 | Pending |
-| CORS-03     | Phase 90 | Pending |
-| LIVE-01     | Phase 91 | Pending |
-| LIVE-02     | Phase 91 | Pending |
-| LIVE-03     | Phase 91 | Pending |
+| Requirement | Phase    | Status   |
+| ----------- | -------- | -------- |
+| FEAT-01     | Phase 86 | Complete |
+| FEAT-02     | Phase 86 | Complete |
+| FEAT-03     | Phase 86 | Complete |
+| FEAT-04     | Phase 86 | Complete |
+| AFF-01      | Phase 87 | Pending  |
+| AFF-02      | Phase 87 | Pending  |
+| AFF-03      | Phase 87 | Pending  |
+| AFF-04      | Phase 87 | Pending  |
+| SEC-01      | Phase 88 | Pending  |
+| SEC-02      | Phase 88 | Pending  |
+| CI-01       | Phase 89 | Pending  |
+| CI-02       | Phase 89 | Pending  |
+| CI-03       | Phase 89 | Pending  |
+| CI-04       | Phase 89 | Pending  |
+| CI-05       | Phase 89 | Pending  |
+| CORS-01     | Phase 90 | Pending  |
+| CORS-02     | Phase 90 | Pending  |
+| CORS-03     | Phase 90 | Pending  |
+| LIVE-01     | Phase 91 | Pending  |
+| LIVE-02     | Phase 91 | Pending  |
+| LIVE-03     | Phase 91 | Pending  |
 
 **Coverage:**
 
