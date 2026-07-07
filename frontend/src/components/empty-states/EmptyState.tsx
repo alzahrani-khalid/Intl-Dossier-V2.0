@@ -1,5 +1,3 @@
-
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { LucideIcon, HelpCircle } from 'lucide-react'
@@ -110,8 +108,8 @@ export function EmptyState({
   className = '',
   testId = 'empty-state',
 }: EmptyStateProps) {
-const { isRTL } = useDirection()
-const sizes = sizeClasses[size]
+  const { isRTL } = useDirection()
+  const sizes = sizeClasses[size]
 
   const content = (
     <div
@@ -124,55 +122,53 @@ const sizes = sizeClasses[size]
     >
       {/* Icon */}
       <div
-        className={cn('flex items-center justify-center rounded-full bg-muted', sizes.iconWrapper)}
+        className={cn(
+          'flex items-center justify-center rounded-full bg-surface-raised',
+          sizes.iconWrapper,
+        )}
       >
-        <Icon className={cn('text-muted-foreground', sizes.icon)} />
+        <Icon className={cn('text-ink-faint', sizes.icon)} />
       </div>
 
       {/* Title */}
-      <h3 className={cn('text-foreground', sizes.title)}>{title}</h3>
+      <h3 className={cn('text-ink', sizes.title)}>{title}</h3>
 
       {/* Description */}
-      <p className={cn('text-muted-foreground max-w-md', sizes.description)}>{description}</p>
+      <p className={cn('text-ink-mute max-w-md', sizes.description)}>{description}</p>
 
       {/* Hint */}
       {hint && (
-        <p
-          className={cn(
-            'text-muted-foreground/70 max-w-sm italic flex items-center gap-1',
-            sizes.hint,
-          )}
-        >
+        <p className={cn('text-ink-faint max-w-sm italic flex items-center gap-1', sizes.hint)}>
           <HelpCircle className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
           {hint}
         </p>
       )}
 
-      {/* Actions */}
+      {/* Actions — one .btn-primary CTA, recovery/secondary via .btn-ghost */}
       {(primaryAction || secondaryActions.length > 0) && (
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
           {primaryAction && (
-            <Button
+            <button
+              type="button"
               onClick={primaryAction.onClick}
-              variant={primaryAction.variant || 'default'}
-              className={cn('min-h-11 min-w-11', sizes.button)}
+              className={cn('btn-primary inline-flex items-center justify-center', sizes.button)}
             >
               {primaryAction.icon && (
                 <primaryAction.icon className={cn('w-4 h-4', isRTL ? 'ms-2' : 'me-2')} />
               )}
               {primaryAction.label}
-            </Button>
+            </button>
           )}
           {secondaryActions.map((action, index) => (
-            <Button
+            <button
               key={index}
+              type="button"
               onClick={action.onClick}
-              variant={action.variant || 'outline'}
-              className={cn('min-h-11 min-w-11', sizes.button)}
+              className={cn('btn-ghost inline-flex items-center justify-center', sizes.button)}
             >
               {action.icon && <action.icon className={cn('w-4 h-4', isRTL ? 'ms-2' : 'me-2')} />}
               {action.label}
-            </Button>
+            </button>
           ))}
         </div>
       )}
@@ -191,26 +187,25 @@ const sizes = sizeClasses[size]
     return (
       <div
         className={cn(
-          'flex items-center gap-3 py-4 px-3 sm:px-4 rounded-lg bg-muted/50',
+          'flex items-center gap-3 py-4 px-3 sm:px-4 rounded-lg bg-surface-raised',
           className,
         )}
         data-testid={testId}
       >
-        <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground flex-shrink-0" />
+        <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-ink-faint flex-shrink-0" />
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-foreground truncate">{title}</p>
-          <p className="text-xs sm:text-sm text-muted-foreground">{description}</p>
+          <p className="text-sm font-medium text-ink truncate">{title}</p>
+          <p className="text-xs sm:text-sm text-ink-mute">{description}</p>
         </div>
         {primaryAction && (
-          <Button
+          <button
+            type="button"
             onClick={primaryAction.onClick}
-            variant={primaryAction.variant || 'outline'}
-            size="sm"
-            className="min-h-9 min-w-9 flex-shrink-0"
+            className="btn-ghost inline-flex items-center min-h-9 min-w-9 flex-shrink-0"
           >
             {primaryAction.icon && <primaryAction.icon className="w-4 h-4" />}
             <span className="hidden sm:inline ms-2">{primaryAction.label}</span>
-          </Button>
+          </button>
         )}
       </div>
     )
@@ -222,20 +217,19 @@ const sizes = sizeClasses[size]
         className={cn('flex flex-col items-center justify-center text-center py-6 px-4', className)}
         data-testid={testId}
       >
-        <Icon className="w-8 h-8 text-muted-foreground mb-2" />
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <Icon className="w-8 h-8 text-ink-faint mb-2" />
+        <p className="text-sm text-ink-mute">{description}</p>
         {primaryAction && (
-          <Button
+          <button
+            type="button"
             onClick={primaryAction.onClick}
-            variant={primaryAction.variant || 'ghost'}
-            size="sm"
-            className="mt-2"
+            className="btn-ghost inline-flex items-center mt-2"
           >
             {primaryAction.icon && (
               <primaryAction.icon className={cn('w-4 h-4', isRTL ? 'ms-1' : 'me-1')} />
             )}
             {primaryAction.label}
-          </Button>
+          </button>
         )}
       </div>
     )

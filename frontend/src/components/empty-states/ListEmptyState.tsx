@@ -10,6 +10,9 @@ import {
   FolderOpen,
   Plus,
   Upload,
+  Tag,
+  Landmark,
+  ListTodo,
   LucideIcon,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -31,13 +34,24 @@ export type EntityType =
   | 'person'
   | 'position'
   | 'mou'
+  | 'topic'
+  | 'working_group'
+  | 'elected_official'
+  | 'work_item'
   | 'generic'
 
 interface ListEmptyStateProps {
   /** Type of entity the list is for */
   entityType: EntityType
-  /** Callback to create new item */
+  /** Callback to create new item. Absent → NO CTA rendered (never a disabled accent button). */
   onCreate?: () => void
+  /**
+   * Filtered-empty branch: data exists but the active filters exclude every row.
+   * Renders `list.filtered.*` copy + a ghost recovery action — never the create CTA.
+   */
+  filtered?: boolean
+  /** Ghost "Clear filters" recovery action for the filtered branch. */
+  onClearFilters?: () => void
   /** Callback to import items */
   onImport?: () => void
   /** Whether this is the first item (affects messaging) */
@@ -84,6 +98,14 @@ const entityConfig: Record<
   person: { icon: Users, translationKey: 'person', suggestionContext: 'global' },
   position: { icon: Users, translationKey: 'position', suggestionContext: 'global' },
   mou: { icon: FileText, translationKey: 'mou', suggestionContext: 'dossier' },
+  topic: { icon: Tag, translationKey: 'topic', suggestionContext: 'dossier' },
+  working_group: { icon: Users, translationKey: 'working_group', suggestionContext: 'dossier' },
+  elected_official: {
+    icon: Landmark,
+    translationKey: 'elected_official',
+    suggestionContext: 'global',
+  },
+  work_item: { icon: ListTodo, translationKey: 'work_item', suggestionContext: 'task' },
   generic: { icon: FolderOpen, translationKey: 'generic', suggestionContext: 'global' },
 }
 
@@ -122,6 +144,8 @@ const entityConfig: Record<
 export function ListEmptyState({
   entityType,
   onCreate,
+  filtered = false,
+  onClearFilters,
   onImport,
   isFirstItem = false,
   title: customTitle,
@@ -136,6 +160,33 @@ export function ListEmptyState({
   const { t } = useTranslation('empty-states')
   const config = entityConfig[entityType]
   const translationKey = config.translationKey
+
+  // Filtered-empty wins over create: clearing filters is recovery, not creation.
+  if (filtered) {
+    const clearAction: QuickAction | undefined = onClearFilters
+      ? {
+          label: t('list.filtered.clear', { defaultValue: 'Clear filters' }),
+          onClick: onClearFilters,
+          variant: 'ghost',
+        }
+      : undefined
+
+    return (
+      <div className={cn('flex flex-col', className)}>
+        <EmptyState
+          icon={config.icon}
+          title={t('list.filtered.title', { defaultValue: 'No matching rows' })}
+          description={t('list.filtered.description', {
+            defaultValue: 'No rows match the current filters.',
+          })}
+          secondaryActions={clearAction ? [clearAction] : []}
+          variant={variant}
+          size={size}
+          testId={`list-empty-state-${entityType}-filtered`}
+        />
+      </div>
+    )
+  }
 
   const title =
     customTitle ||
@@ -157,11 +208,13 @@ export function ListEmptyState({
     defaultValue: t('list.generic.hint'),
   })
 
-  const primaryActionLabel = isFirstItem
-    ? t(`list.${translationKey}.createFirst`, {
-        defaultValue: t('list.generic.createFirst'),
-      })
-    : t(`list.${translationKey}.create`, { defaultValue: t('list.generic.create') })
+  // F26 copy matrix defines the accent CTA under `.cta`; fall back to the legacy
+  // `.create`/`.createFirst` keys so out-of-matrix entities still resolve a label.
+  const primaryActionLabel = t(`list.${translationKey}.cta`, {
+    defaultValue: isFirstItem
+      ? t(`list.${translationKey}.createFirst`, { defaultValue: t('list.generic.createFirst') })
+      : t(`list.${translationKey}.create`, { defaultValue: t('list.generic.create') }),
+  })
 
   const primaryAction: QuickAction | undefined = onCreate
     ? {
