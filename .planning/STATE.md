@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Platform Completion & Live Verification
 status: executing
-last_updated: '2026-07-07T09:45:10.168Z'
-last_activity: 2026-07-07 -- Phase 87 execution started
+last_updated: '2026-07-07T10:09:15.407Z'
+last_activity: 2026-07-07 -- Plan 87-01 complete (peek-paging foundation)
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 15
-  completed_plans: 5
+  completed_plans: 6
   percent: 17
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-07-06 — v9.0 Platform Completion & Liv
 ## Current Position
 
 Phase: 87 (linear-affordances) — EXECUTING
-Plan: 1 of 10
-Status: Executing Phase 87
-Last activity: 2026-07-07 -- Phase 87 execution started
+Plan: 2 of 10
+Status: Ready to execute
+Last activity: 2026-07-07 -- Plan 87-01 complete (peekStore + usePeekPaging cross-page hook + DrawerHead counter/chevrons; drawer peek-capable, list wiring is Wave 2). AFF-01 left Pending — multi-plan requirement, not delivered end-to-end by the foundation.
 
-Progress: [..........] 0% (0/6 phases, 0 plans)
+Progress: [████░░░░░░] 40%
 
 ### Roadmap Evolution
 

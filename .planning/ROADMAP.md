@@ -85,7 +85,7 @@ Plans:
 
 **Wave 1** _(foundations + URL normalization, parallel)_
 
-- [ ] 87-01-PLAN.md — F23 peek foundation: peekStore + usePeekPaging + DrawerHead counter/chevrons (AFF-01)
+- [x] 87-01-PLAN.md — F23 peek foundation: peekStore + usePeekPaging + DrawerHead counter/chevrons (AFF-01)
 - [ ] 87-02-PLAN.md — F24 foundation: Filter/Display popovers, useListControls, list-controls i18n ns (AFF-02)
 - [ ] 87-03-PLAN.md — F25 ⌘K audit: fix/remove 9 findings, 5 new commands, sentence-case pass, MousPage ?action=create (AFF-03)
 - [ ] 87-04-PLAN.md — F26 infra: EmptyState reskin, ListEmptyState extension, copy matrix, Pattern-B tab audit (AFF-04)
@@ -387,7 +387,7 @@ Full detail: [milestones/v8.1-ROADMAP.md](milestones/v8.1-ROADMAP.md).
 | 75-80 | v8.0 | 32/32 | Shipped | 2026-07-04 |
 | 81-85 | v8.1 | 22/22 | Shipped | 2026-07-05 |
 | 86. Feature Completion | v9.0 | 5/5 | Complete    | 2026-07-07 |
-| 87. Linear Affordances | v9.0 | 0/TBD | Not started | — |
+| 87. Linear Affordances | v9.0 | 1/10 | In Progress|  |
 | 88. Security & Hygiene Tail | v9.0 | 0/TBD | Not started | — |
 | 89. CI & Test-Debt Burn-Down | v9.0 | 0/TBD | Not started | — |
 | 90. CORS Edge-Function Migration | v9.0 | 0/TBD | Not started | — |
