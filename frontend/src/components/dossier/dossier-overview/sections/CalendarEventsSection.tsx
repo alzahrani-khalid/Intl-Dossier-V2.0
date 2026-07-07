@@ -187,11 +187,9 @@ function EmptyState({ type }: { type?: 'upcoming' | 'today' | 'past' | 'all' }) 
   const { t } = useTranslation('dossier-overview')
 
   return (
-    <div className="text-center py-6 sm:py-8">
-      <div className="p-3 rounded-full bg-muted inline-block mb-3">
-        <Calendar className="h-6 w-6 text-muted-foreground" />
-      </div>
-      <p className="text-sm text-muted-foreground">
+    <div className="flex flex-col items-center justify-center gap-2 py-6 sm:py-8 text-center">
+      <Calendar className="h-5 w-5 text-ink-faint" />
+      <p className="text-sm text-ink-mute">
         {type ? t(`calendarEvents.empty.${type}`) : t('calendarEvents.empty.all')}
       </p>
     </div>
