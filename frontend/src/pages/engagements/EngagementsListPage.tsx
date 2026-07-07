@@ -12,7 +12,7 @@
  */
 
 import type { ReactNode } from 'react'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
@@ -23,6 +23,39 @@ import {
 } from '@/components/list-page'
 import { useEngagementsInfinite } from '@/hooks/useEngagementsInfinite'
 import type { EngagementListItem, EngagementType, EngagementStatus } from '@/types/engagement.types'
+
+/**
+ * URL search contract for the engagements list (Phase 87-05, AFF-02). Shared by
+ * both mounts (`/dossiers/engagements` and `/engagements`) so the tampering
+ * whitelist has a single source. The `type` param whitelists the non-'all'
+ * FilterPill values ('all' clears the param); `satisfies` anchors the
+ * enumeration to the EngagementFilter contract so it errors if the union drifts.
+ */
+export type EngagementTypeParam = Exclude<EngagementFilter, 'all'>
+
+const ENGAGEMENT_TYPE_VALUES = [
+  'meeting',
+  'call',
+  'travel',
+  'event',
+] as const satisfies readonly EngagementTypeParam[]
+
+export interface EngagementsListSearch {
+  search?: string
+  type?: EngagementTypeParam
+}
+
+export function validateEngagementsListSearch(
+  search: Record<string, unknown>,
+): EngagementsListSearch {
+  return {
+    search:
+      typeof search.search === 'string' && search.search.length > 0 ? search.search : undefined,
+    type: ENGAGEMENT_TYPE_VALUES.includes(search.type as EngagementTypeParam)
+      ? (search.type as EngagementTypeParam)
+      : undefined,
+  }
+}
 
 /**
  * Map the real `engagement_type` enum onto the primitive's narrow union
@@ -87,13 +120,26 @@ const toEngagementRow = (item: EngagementListItem, isRTL: boolean): EngagementRo
   }
 }
 
-export default function EngagementsListPage(): ReactNode {
+export interface EngagementsListPageProps {
+  /** Search term from the route's validated URL params. */
+  search: string
+  /** Type filter from the route's validated URL params ('all' = no `type` param). */
+  filter: EngagementFilter
+  /** Writes the search term back to the URL (debounced by ToolbarSearch). */
+  onSearchChange: (next: string) => void
+  /** Writes the FilterPill selection back to the URL. */
+  onFilterChange: (next: EngagementFilter) => void
+}
+
+export default function EngagementsListPage({
+  search,
+  filter,
+  onSearchChange,
+  onFilterChange,
+}: EngagementsListPageProps): ReactNode {
   const { t, i18n } = useTranslation(['engagements', 'list-pages'])
   const navigate = useNavigate()
   const isRTL = i18n.language === 'ar'
-
-  const [search, setSearch] = useState<string>('')
-  const [filter, setFilter] = useState<EngagementFilter>('all')
 
   const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useEngagementsInfinite({ search: search.length > 0 ? search : undefined })
@@ -136,9 +182,9 @@ export default function EngagementsListPage(): ReactNode {
       <EngagementsList
         engagements={engagements}
         search={search}
-        onSearchChange={setSearch}
+        onSearchChange={onSearchChange}
         filter={filter}
-        onFilterChange={setFilter}
+        onFilterChange={onFilterChange}
         onEngagementClick={handleEngagementClick}
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
