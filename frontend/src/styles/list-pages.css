@@ -850,7 +850,12 @@ html[dir='rtl'] .icon-flip {
 }
 @media (min-width: 768px) {
   .dossier-row {
-    grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+    /* Desktop column count is driven by DossierTable's computed --dossier-cols
+       (F23/F24 column visibility). Falls back to the full 5-column template so
+       every existing consumer that sets no columns is byte-identical. Mobile
+       keeps the base 3-column template above (optional columns are display:none
+       there regardless). */
+    grid-template-columns: var(--dossier-cols, auto minmax(0, 1fr) auto auto auto);
   }
 }
 
