@@ -1,0 +1,19 @@
+{
+  "filter": {
+    "trigger": "Filter",
+    "trigger_active": "Filter · {{count}}",
+    "search_placeholder": "Filter by...",
+    "option_count": "{{count}}",
+    "no_matches": "No filters match"
+  },
+  "display": {
+    "trigger": "Display",
+    "grouping": "Group by",
+    "grouping_none": "No grouping",
+    "ordering": "Sort by",
+    "asc": "Ascending",
+    "desc": "Descending",
+    "properties": "Display properties",
+    "reset": "Reset to default"
+  }
+}

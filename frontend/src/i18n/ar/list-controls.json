@@ -1,0 +1,19 @@
+{
+  "filter": {
+    "trigger": "تصفية",
+    "trigger_active": "تصفية · {{count}}",
+    "search_placeholder": "التصفية حسب...",
+    "option_count": "{{count}}",
+    "no_matches": "لا توجد عوامل تصفية مطابقة"
+  },
+  "display": {
+    "trigger": "العرض",
+    "grouping": "تجميع حسب",
+    "grouping_none": "بدون تجميع",
+    "ordering": "ترتيب حسب",
+    "asc": "تصاعدي",
+    "desc": "تنازلي",
+    "properties": "خصائص العرض",
+    "reset": "إعادة التعيين إلى الافتراضي"
+  }
+}
