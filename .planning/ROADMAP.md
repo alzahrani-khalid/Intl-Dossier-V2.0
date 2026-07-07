@@ -93,7 +93,7 @@ Plans:
 
 **Wave 2** _(per-surface wiring, parallel — blocked on Wave 1)_
 
-- [ ] 87-06-PLAN.md — Countries + organizations wiring + DossierTable column visibility (AFF-01/02/04)
+- [x] 87-06-PLAN.md — Countries + organizations wiring + DossierTable column visibility (AFF-01/02/04)
 - [ ] 87-07-PLAN.md — Forums + topics + working-groups wiring + GenericListPage property toggles (AFF-01/02/04)
 - [ ] 87-08-PLAN.md — Persons + engagements + elected-officials wiring + exact engagements total (AFF-01/02/04)
 - [ ] 87-09-PLAN.md — Kanban: URL normalization, popover fold-in, commitment peek, board empties (AFF-01/02/04)
@@ -387,7 +387,7 @@ Full detail: [milestones/v8.1-ROADMAP.md](milestones/v8.1-ROADMAP.md).
 | 75-80 | v8.0 | 32/32 | Shipped | 2026-07-04 |
 | 81-85 | v8.1 | 22/22 | Shipped | 2026-07-05 |
 | 86. Feature Completion | v9.0 | 5/5 | Complete    | 2026-07-07 |
-| 87. Linear Affordances | v9.0 | 5/10 | In Progress|  |
+| 87. Linear Affordances | v9.0 | 6/10 | In Progress|  |
 | 88. Security & Hygiene Tail | v9.0 | 0/TBD | Not started | — |
 | 89. CI & Test-Debt Burn-Down | v9.0 | 0/TBD | Not started | — |
 | 90. CORS Edge-Function Migration | v9.0 | 0/TBD | Not started | — |

@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Platform Completion & Live Verification
 status: executing
-last_updated: '2026-07-07T11:47:00.046Z'
+last_updated: '2026-07-07T12:25:36.060Z'
 last_activity: 2026-07-07
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 15
-  completed_plans: 10
+  completed_plans: 11
   percent: 17
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-07-06 — v9.0 Platform Completion & Liv
 ## Current Position
 
 Phase: 87 (linear-affordances) — EXECUTING
-Plan: 6 of 10
+Plan: 7 of 10
 Status: Ready to execute
-Last activity: 2026-07-07 -- Plan 87-05 complete (URL-state normalization for the 3 bespoke non-kanban surfaces; AFF-01/AFF-02 **enabler only**). Persons, engagements, and elected-officials lifted their local `useState` search/filter state onto the countries `validateSearch` + `Route.useSearch`/`useNavigate`-reducer idiom (replace:true, page reset on filter change) — pure state relocation, zero user-visible behavior change. **Persons**: activated the dead `validateSearch` shell in `persons/index.tsx`; `-PersonsListPage` made presentational (`search`/`onSearchChange`/`onPersonClick` props, no useState); `ToolbarSearch`'s built-in 300ms debounce debounces the URL write, `useDebouncedValue` still debounces the `usePersons` query → byte-identical timing. **Engagements**: `EngagementsListPage` made controlled (`search`/`filter`/`onSearchChange`/`onFilterChange` props); a shared `validateEngagementsListSearch` (exported from the page) whitelists the `type` param against the non-`all` FilterPill values (`satisfies EngagementTypeParam[]` drift guard); **both mounts** — `/dossiers/engagements` + the intentional `/engagements` double-mount — wrap the page over that one validator (**Rule 1 deviation**: the 2nd mount wasn't in the plan file list but had to migrate or the build wouldn't compile). **Elected-officials**: `ElectedOfficialListTable` made controlled (`filters` + 5 change handlers via props; internal useState/useCallback removed, sorting/enrichment/empty/error branches untouched); route `validateSearch` whitelists page/search/`office_type` (against exported `OFFICE_TYPES`) + `term` (current|expired → is_current_term); PageHeader kept (no ListPageShell migration — planner call). Verify all green: `vitest` src/routes/.../persons + src/components/elected-officials + src/pages/engagements exit 0 (39 pass \| 6 todo), `tsc --noEmit` exit 0, `lint --max-warnings 0` exit 0 (eslint+i18n+rtl+bootstrap+date gates). Commits: 5b7ea4e4 (persons) / e0544408 (engagements) / c1528f45 (elected-officials). **AFF-01/AFF-02 left Pending in REQUIREMENTS.md** — this plan delivers only the URL-state seam; the F23 peek panel + F24 popovers those requirements describe land in 87-08.
+Last activity: 2026-07-07 -- Plan 87-06 complete (F23/F24/F26 wired into the 2 DossierTable surfaces — countries as the template, organizations mirroring it). **DossierTable** gained a `visibleColumns` prop driving a computed grid template via a `--dossier-cols` custom property read only by the `@768` `.dossier-row` rule (mobile + every no-prop consumer byte-identical — zero default-case regression). **Countries** (the template): `validateSearch` extended via `parseListControlsSearch` whitelist (status/sensitivity/sort/dir/cols); row click now `usePeekStore.register({ids,type,total,pageOffset,fetchPage,pageSize})` + `openDossier` (detail navigate gone); toolbar = `ToolbarSearch + FilterPopover + DisplayPopover`, `FilterChipsRow` above the table; `ListEmptyState` (rich create + filtered-empty) replaces the bare `empty-hint`. **Organizations** mirrors it (no ISO merge). **Hooks**: `useCountries`/`useOrganizations` extracted a module-level fetcher (`fetch{Countries,Organizations}Page`) + `status`/`sensitivity`/`orderBy`/`dir`/`nameColumn` params into the single `.order()` seam (default keeps legacy `updated_at DESC`); the peek `fetchPage` re-invokes that fetcher through `queryClient.fetchQuery` with the SAME key family (no divergent query). New `lib/dossier-facet-count.ts` (shared RLS-scoped head-count). **Deviations**: fixed the shared `useListControls.formatValue` to translate the chip option label (was leaking the raw i18n key — benefits all Wave-2 surfaces); extracted the facet helper to `lib/` (filename-case gate); rewrote both route tests to render the wired route (QueryClient + LanguageProvider + router mock). Verify all green: frontend `tsc --noEmit` 0, `pnpm lint --max-warnings 0` 0, plan `<verification>` vitest 32 files / 222 tests pass. Commits: 6f7791dd (DossierTable) / 47b2480f (countries) / 8198c453 (organizations). **AFF-04** re-exercised live; **AFF-01/AFF-02 stay Pending** — 2 of 9 core surfaces wired; they complete when 87-07/08/09 wire the rest + 87-10 consolidated render sign-off (live visual/RTL sign-off of these 2 surfaces also rolls into 87-10).
 
-Progress: [███████░░░] 67%
+Progress: [███████░░░] 73%
 
 ### Roadmap Evolution
 
