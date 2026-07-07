@@ -5,7 +5,7 @@
  */
 
 import type { ReactElement } from 'react'
-import { useState, useMemo, useCallback } from 'react'
+import { useMemo } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useDirection } from '@/hooks/useDirection'
@@ -35,7 +35,7 @@ import { usePersonIdentityEnrichment } from '@/domains/persons/hooks/usePersonId
 // Filter chips
 // ============================================================================
 
-const OFFICE_TYPES: OfficeType[] = [
+export const OFFICE_TYPES: OfficeType[] = [
   'head_of_state',
   'head_of_government',
   'cabinet_minister',
@@ -55,13 +55,26 @@ const OFFICE_TYPES: OfficeType[] = [
 // Component
 // ============================================================================
 
-export function ElectedOfficialListTable(): ReactElement {
+export interface ElectedOfficialListTableProps {
+  /** Filter + pagination state, owned by the route as validated URL params. */
+  filters: ElectedOfficialFilters
+  onSearchChange: (value: string) => void
+  onOfficeTypeChange: (value: string) => void
+  onTermStatusChange: (value: string) => void
+  onPrevPage: () => void
+  onNextPage: () => void
+}
+
+export function ElectedOfficialListTable({
+  filters,
+  onSearchChange,
+  onOfficeTypeChange,
+  onTermStatusChange,
+  onPrevPage,
+  onNextPage,
+}: ElectedOfficialListTableProps): ReactElement {
   const { t } = useTranslation('elected-officials')
   const { isRTL } = useDirection()
-  const [filters, setFilters] = useState<ElectedOfficialFilters>({
-    page: 1,
-    limit: 20,
-  })
 
   const { data, isLoading, error } = useElectedOfficials(filters)
 
@@ -71,34 +84,6 @@ export function ElectedOfficialListTable(): ReactElement {
   const visibleIds = useMemo(() => (data?.data ?? []).map((item) => item.id), [data?.data])
   const { data: identityMap } = usePersonIdentityEnrichment(visibleIds)
   const locale: 'en' | 'ar' = isRTL ? 'ar' : 'en'
-
-  const handleSearchChange = useCallback((value: string): void => {
-    setFilters((prev) => ({ ...prev, search: value, page: 1 }))
-  }, [])
-
-  const handleOfficeTypeChange = useCallback((value: string): void => {
-    setFilters((prev) => ({
-      ...prev,
-      office_type: value !== '' ? (value as OfficeType) : undefined,
-      page: 1,
-    }))
-  }, [])
-
-  const handleTermStatusChange = useCallback((value: string): void => {
-    setFilters((prev) => ({
-      ...prev,
-      is_current_term: value === 'current' ? true : value === 'expired' ? false : undefined,
-      page: 1,
-    }))
-  }, [])
-
-  const handlePrevPage = useCallback((): void => {
-    setFilters((prev) => ({ ...prev, page: Math.max(1, (prev.page ?? 1) - 1) }))
-  }, [])
-
-  const handleNextPage = useCallback((): void => {
-    setFilters((prev) => ({ ...prev, page: (prev.page ?? 1) + 1 }))
-  }, [])
 
   const currentPage = filters.page ?? 1
   const pageSize = filters.limit ?? 20
@@ -184,13 +169,13 @@ export function ElectedOfficialListTable(): ReactElement {
           type="text"
           placeholder={t('columns.name')}
           value={filters.search ?? ''}
-          onChange={(e) => handleSearchChange(e.target.value)}
+          onChange={(e) => onSearchChange(e.target.value)}
           className="max-w-xs min-h-11"
         />
         <select
           aria-label={t('filters.officeType')}
           value={filters.office_type ?? ''}
-          onChange={(e) => handleOfficeTypeChange(e.target.value)}
+          onChange={(e) => onOfficeTypeChange(e.target.value)}
           className="min-h-11 rounded-md border bg-background px-3 py-2 text-sm"
         >
           <option value="">{t('filters.allOfficeTypes')}</option>
@@ -209,7 +194,7 @@ export function ElectedOfficialListTable(): ReactElement {
                 ? 'expired'
                 : ''
           }
-          onChange={(e) => handleTermStatusChange(e.target.value)}
+          onChange={(e) => onTermStatusChange(e.target.value)}
           className="min-h-11 rounded-md border bg-background px-3 py-2 text-sm"
         >
           <option value="">{t('filters.allTerms')}</option>
@@ -336,7 +321,7 @@ export function ElectedOfficialListTable(): ReactElement {
           <Button
             variant="outline"
             disabled={currentPage === 1}
-            onClick={handlePrevPage}
+            onClick={onPrevPage}
             className="min-h-11 min-w-11 w-full sm:w-auto"
           >
             {t('common.previous', { ns: 'common', defaultValue: 'Previous' })}
@@ -347,7 +332,7 @@ export function ElectedOfficialListTable(): ReactElement {
           <Button
             variant="outline"
             disabled={currentPage >= totalPages}
-            onClick={handleNextPage}
+            onClick={onNextPage}
             className="min-h-11 min-w-11 w-full sm:w-auto"
           >
             {t('common.next', { ns: 'common', defaultValue: 'Next' })}
