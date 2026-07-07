@@ -38,6 +38,8 @@
   "property": {
     "engagements": "Engagements",
     "lastTouch": "Last touch",
-    "sensitivity": "Sensitivity"
+    "sensitivity": "Sensitivity",
+    "secondary": "Secondary line",
+    "status": "Status"
   }
 }

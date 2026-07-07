@@ -38,6 +38,8 @@
   "property": {
     "engagements": "المشاركات",
     "lastTouch": "آخر تحديث",
-    "sensitivity": "الحساسية"
+    "sensitivity": "الحساسية",
+    "secondary": "السطر الثانوي",
+    "status": "الحالة"
   }
 }

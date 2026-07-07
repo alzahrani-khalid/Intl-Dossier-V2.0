@@ -1,165 +1,138 @@
 /**
- * Phase 40 LIST-03 — Forums list page render-assertion tests.
+ * Forums list route test (Phase 40 LIST-03 · Phase 87 F23/F24/F26).
  *
- * Verifies the route renders <GenericListPage> with the canonical
- * forum-row anatomy (DossierGlyph + meta + status chip + chevron),
- * and that the status tone map is applied: active→chip-ok,
- * cancelled→chip-danger.
+ * Renders the wired route component with a mocked router + useForums adapter.
+ * Asserts: title, populated rows + status chip tones (active→chip-ok,
+ * cancelled→chip-danger), F23 peek registration on row click, and the F26 rich
+ * empty state when there are no rows.
  */
-import { describe, it, expect, vi } from 'vitest'
-import { renderWithProviders as render, screen } from '@tests/utils/render'
+
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { render, screen, cleanup, fireEvent } from '@testing-library/react'
+import type { ReactElement, ReactNode } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import {
-  createMemoryHistory,
-  createRootRoute,
-  createRoute,
-  createRouter,
-  Outlet,
-  RouterProvider,
-} from '@tanstack/react-router'
-import type { ReactElement } from 'react'
+import { LanguageProvider } from '@/components/language-provider/language-provider'
+import { usePeekStore } from '@/store/peekStore'
 
-// Per-file react-i18next mock (project pattern — global mock is feature-scoped).
-vi.mock('react-i18next', async () => {
-  const actual = await vi.importActual<typeof import('react-i18next')>('react-i18next')
+// --- Router mock (createFileRoute + useNavigate/useSearch for useDossierDrawer) ---
 
-  return {
-    ...actual,
-    useTranslation: (): {
-      i18n: { language: string; changeLanguage: () => Promise<void> }
-      t: (k: string, opts?: Record<string, unknown>) => string
-    } => ({
-      i18n: { language: 'en', changeLanguage: vi.fn().mockResolvedValue(undefined) },
-      t: (k: string, opts?: Record<string, unknown>): string => {
-        // Translate explicit forum keys first (they override defaultValue).
-        if (k === 'forums:status.active') return 'Active'
-        if (k === 'forums:status.cancelled') return 'Cancelled'
-        if (k === 'forums:pageTitle') return 'Forums'
-        if (k === 'forums:pageSubtitle') return 'Multi-party conferences'
-        if (k === 'forums:empty.title') return 'No forums yet'
-        if (k === 'forums:empty.description') return 'Forum dossiers will appear here.'
-        // Fall back to defaultValue for unknown keys.
-        if (
-          opts !== undefined &&
-          typeof opts === 'object' &&
-          'defaultValue' in opts &&
-          typeof opts.defaultValue === 'string'
-        ) {
-          return opts.defaultValue
-        }
-        return k
-      },
-    }),
-    Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
-  }
-})
+let currentSearch: Record<string, unknown> = { page: 1 }
+const navigateSpy = vi.fn()
 
-// Mock useDirection — LTR for these tests.
-vi.mock('@/hooks/useDirection', () => ({
-  useDirection: (): { isRTL: boolean; dir: 'ltr' } => ({ isRTL: false, dir: 'ltr' }),
-}))
-
-// Mock useForums hook with two forum dossiers covering active + cancelled.
-const mockForums = [
-  {
-    id: 'f1',
-    name_en: 'G20',
-    name_ar: 'مجموعة العشرين',
-    status: 'active',
-    updated_at: '2026-04-15T00:00:00Z',
-  },
-  {
-    id: 'f2',
-    name_en: 'OPEC',
-    name_ar: 'أوبك',
-    status: 'cancelled',
-    updated_at: '2026-03-20T00:00:00Z',
-  },
-]
-
-vi.mock('@/hooks/useForums', () => ({
-  useForums: (): {
-    data: {
-      data: typeof mockForums
-      pagination: { page: number; limit: number; total: number; totalPages: number }
-    }
-    isLoading: boolean
-    isError: boolean
-  } => ({
-    data: {
-      data: mockForums,
-      pagination: { page: 1, limit: 20, total: 2, totalPages: 1 },
-    },
-    isLoading: false,
-    isError: false,
+vi.mock('@tanstack/react-router', () => ({
+  createFileRoute: (_path: string) => (config: Record<string, unknown>) => ({
+    ...config,
+    useSearch: (): Record<string, unknown> => currentSearch,
+    useNavigate: (): typeof navigateSpy => navigateSpy,
   }),
+  useNavigate: (): typeof navigateSpy => navigateSpy,
+  useSearch: (): Record<string, unknown> => ({}),
 }))
 
-async function renderRoute(): Promise<ReactElement> {
-  // Lazy-import the route module so the mocks above are applied first.
-  const { Route } = (await import('../index')) as {
-    Route: ReturnType<typeof createRoute>
-  }
+// useForums adapter + its extracted fetcher.
+const useForumsMock = vi.fn()
+vi.mock('@/hooks/useForums', () => ({
+  useForums: (...args: unknown[]): unknown => useForumsMock(...args),
+  fetchForumsPage: vi.fn(),
+}))
 
-  // Re-parent the route under a synthetic root for isolated testing.
-  const rootRoute = createRootRoute({ component: () => <Outlet /> })
-  const child = createRoute({
-    getParentRoute: () => rootRoute,
-    path: '/_protected/dossiers/forums/',
-    component: (Route.options as { component: () => ReactElement }).component,
-    validateSearch: (
-      Route.options as {
-        validateSearch: (s: Record<string, unknown>) => unknown
-      }
-    ).validateSearch,
-  })
+// DossierGlyph pulls in heavy signature-visuals; stub for test isolation (no text
+// so the row's accessible name stays the primary label).
+vi.mock('@/components/signature-visuals/DossierGlyph', () => ({
+  DossierGlyph: (): ReactNode => <span data-testid="dossier-glyph" aria-hidden="true" />,
+}))
 
-  const router = createRouter({
-    routeTree: rootRoute.addChildren([child]),
-    history: createMemoryHistory({ initialEntries: ['/_protected/dossiers/forums/'] }),
-  })
+import { Route } from '../index'
 
-  const qc = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
-  })
+const ForumsRoute = (Route as unknown as { component: () => ReactElement }).component
 
-  return (
-    <QueryClientProvider client={qc}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+const renderRoute = (): ReturnType<typeof render> => {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+  return render(
+    <QueryClientProvider client={client}>
+      <LanguageProvider initialLanguage="en">
+        <ForumsRoute />
+      </LanguageProvider>
+    </QueryClientProvider>,
   )
 }
 
-describe('ForumsListPage (LIST-03)', () => {
-  it('renders Forums title', async () => {
-    render(await renderRoute())
-    expect(await screen.findByText('Forums')).toBeTruthy()
+const forumRow = {
+  id: 'f1',
+  name_en: 'G20',
+  name_ar: 'مجموعة العشرين',
+  status: 'active',
+  updated_at: '2026-04-15T00:00:00Z',
+}
+const cancelledRow = {
+  id: 'f2',
+  name_en: 'OPEC',
+  name_ar: 'أوبك',
+  status: 'cancelled',
+  updated_at: '2026-03-20T00:00:00Z',
+}
+
+describe('Forums list route (Phase 87 wiring)', () => {
+  beforeEach(() => {
+    cleanup()
+    useForumsMock.mockReset()
+    navigateSpy.mockReset()
+    currentSearch = { page: 1 }
+    usePeekStore.getState().clear()
   })
 
-  it('renders one row per forum (2 rows total)', async () => {
-    render(await renderRoute())
-    await screen.findByText('Forums')
+  it('renders the title and one row per forum with status chip tones', () => {
+    useForumsMock.mockReturnValue({
+      data: {
+        data: [forumRow, cancelledRow],
+        pagination: { page: 1, limit: 20, total: 2, totalPages: 1 },
+      },
+      isLoading: false,
+      isError: false,
+    })
+
+    const { container } = renderRoute()
+
+    expect(screen.getByRole('heading', { name: 'Forums' })).toBeTruthy()
     const rows = screen.getAllByTestId('generic-list-page-row')
     expect(rows.length).toBe(2)
+
+    expect(container.querySelector('.chip.chip-ok')).toBeTruthy()
+    expect(container.querySelector('.chip.chip-danger')).toBeTruthy()
   })
 
-  it('maps active → chip-ok', async () => {
-    const { container } = render(await renderRoute())
-    await screen.findByText('Forums')
-    const chips = container.querySelectorAll('[data-testid="generic-list-page-status"]')
-    // First row (G20, active) → chip-ok
-    const g20Chip = Array.from(chips).find((c) => c.textContent === 'Active')
-    expect(g20Chip).toBeTruthy()
-    expect(g20Chip?.className.includes('chip-ok')).toBe(true)
+  it('registers a peek window and opens the drawer on row click (F23, no detail navigate)', () => {
+    useForumsMock.mockReturnValue({
+      data: {
+        data: [forumRow, cancelledRow],
+        pagination: { page: 1, limit: 20, total: 2, totalPages: 1 },
+      },
+      isLoading: false,
+      isError: false,
+    })
+
+    renderRoute()
+
+    fireEvent.click(screen.getAllByTestId('generic-list-page-row')[0])
+
+    const peek = usePeekStore.getState()
+    expect(peek.ids).toEqual(['f1', 'f2'])
+    expect(peek.type).toBe('forum')
+    expect(peek.total).toBe(2)
+    expect(navigateSpy).toHaveBeenCalled()
+    const navArg = navigateSpy.mock.calls[0]?.[0] as { to?: string }
+    expect(navArg.to).toBeUndefined()
   })
 
-  it('maps cancelled → chip-danger', async () => {
-    const { container } = render(await renderRoute())
-    await screen.findByText('Forums')
-    const chips = container.querySelectorAll('[data-testid="generic-list-page-status"]')
-    // Second row (OPEC, cancelled) → chip-danger
-    const opecChip = Array.from(chips).find((c) => c.textContent === 'Cancelled')
-    expect(opecChip).toBeTruthy()
-    expect(opecChip?.className.includes('chip-danger')).toBe(true)
+  it('renders the rich empty state when the adapter returns no rows', () => {
+    useForumsMock.mockReturnValue({
+      data: { data: [], pagination: { page: 1, limit: 20, total: 0, totalPages: 0 } },
+      isLoading: false,
+      isError: false,
+    })
+
+    renderRoute()
+
+    expect(screen.getByTestId('list-empty-state-forum')).toBeTruthy()
   })
 })

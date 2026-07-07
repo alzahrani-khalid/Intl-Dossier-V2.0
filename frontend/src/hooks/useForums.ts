@@ -19,78 +19,112 @@ const FORUMS_QUERY_KEY = 'forums'
 const FORUM_QUERY_KEY = 'forum'
 
 /**
+ * Phase 87 F23/F24 — forums list filters extended with sensitivity + sort params.
+ * The extra fields are optional, so existing `ForumFilters` callers are unaffected.
+ */
+export interface ForumsFilters extends ForumFilters {
+  /** Numeric sensitivity_level (1–4). */
+  sensitivity?: number
+  /** 'name' → name_en/name_ar (via nameColumn); 'updated' → updated_at. */
+  orderBy?: 'name' | 'updated'
+  dir?: 'asc' | 'desc'
+  /** Resolved name column for the 'name' sort (locale-dependent). */
+  nameColumn?: 'name_en' | 'name_ar'
+}
+
+/**
+ * Fetch one page of forum dossiers. Shared by the hook's `queryFn` and by the
+ * route's peek `fetchPage` (via `queryClient.fetchQuery` with the same key).
+ */
+export async function fetchForumsPage(filters: ForumsFilters): Promise<ForumListResponse> {
+  const { search, status, sensitivity, orderBy, dir, nameColumn, page = 1, limit = 20 } = filters
+  const offset = (page - 1) * limit
+
+  // Query base dossier table with forum type
+  let query = supabase
+    .from('dossiers')
+    .select('*', { count: 'exact' })
+    .eq('type', 'forum')
+    .neq('status', 'deleted')
+
+  // Apply search filter
+  if (search) {
+    query = query.or(
+      `name_en.ilike.%${search}%,name_ar.ilike.%${search}%,description_en.ilike.%${search}%,description_ar.ilike.%${search}%`,
+    )
+  }
+
+  // Apply status filter
+  if (status) {
+    query = query.eq('status', status)
+  }
+
+  // Apply sensitivity filter
+  if (typeof sensitivity === 'number') {
+    query = query.eq('sensitivity_level', sensitivity)
+  }
+
+  // Sort seam: default (no orderBy) preserves the legacy name_en ASC ordering;
+  // explicit sorts default to ascending unless dir='desc'. Column names come from
+  // a fixed map, never raw param interpolation (T-87-17).
+  const orderColumn =
+    orderBy === 'updated'
+      ? 'updated_at'
+      : orderBy === 'name'
+        ? (nameColumn ?? 'name_en')
+        : 'name_en'
+  const ascending = orderBy === undefined ? true : dir !== 'desc'
+  query = query.order(orderColumn, { ascending }).range(offset, offset + limit - 1)
+
+  const { data: dossiers, error, count } = await query
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  // Get forum extension data for all dossiers
+  const forumIds = (dossiers || []).map((d) => d.id)
+  let extensions: Record<string, ForumExtension> = {}
+
+  if (forumIds.length > 0) {
+    const { data: forumExts } = await supabase.from('forums').select('*').in('id', forumIds)
+
+    if (forumExts) {
+      extensions = forumExts.reduce(
+        (acc, ext) => {
+          acc[ext.id] = ext
+          return acc
+        },
+        {} as Record<string, ForumExtension>,
+      )
+    }
+  }
+
+  // Combine dossier and extension data
+  const forums: Forum[] = (dossiers || []).map((d) => ({
+    ...d,
+    type: 'forum' as const,
+    extension: extensions[d.id] || {},
+  }))
+
+  return {
+    data: forums,
+    pagination: {
+      page,
+      limit,
+      total: count,
+      totalPages: Math.ceil((count || 0) / limit),
+    },
+  }
+}
+
+/**
  * Fetch paginated list of forums
  */
-export function useForums(filters: ForumFilters = {}) {
+export function useForums(filters: ForumsFilters = {}) {
   return useQuery<ForumListResponse, Error>({
     queryKey: [FORUMS_QUERY_KEY, filters],
-    queryFn: async () => {
-      const { search, status, page = 1, limit = 20 } = filters
-      const offset = (page - 1) * limit
-
-      // Query base dossier table with forum type
-      let query = supabase
-        .from('dossiers')
-        .select('*', { count: 'exact' })
-        .eq('type', 'forum')
-        .neq('status', 'deleted')
-
-      // Apply search filter
-      if (search) {
-        query = query.or(
-          `name_en.ilike.%${search}%,name_ar.ilike.%${search}%,description_en.ilike.%${search}%,description_ar.ilike.%${search}%`,
-        )
-      }
-
-      // Apply status filter
-      if (status) {
-        query = query.eq('status', status)
-      }
-
-      // Apply pagination and ordering
-      query = query.order('name_en', { ascending: true }).range(offset, offset + limit - 1)
-
-      const { data: dossiers, error, count } = await query
-
-      if (error) {
-        throw new Error(error.message)
-      }
-
-      // Get forum extension data for all dossiers
-      const forumIds = (dossiers || []).map((d) => d.id)
-      let extensions: Record<string, ForumExtension> = {}
-
-      if (forumIds.length > 0) {
-        const { data: forumExts } = await supabase.from('forums').select('*').in('id', forumIds)
-
-        if (forumExts) {
-          extensions = forumExts.reduce(
-            (acc, ext) => {
-              acc[ext.id] = ext
-              return acc
-            },
-            {} as Record<string, ForumExtension>,
-          )
-        }
-      }
-
-      // Combine dossier and extension data
-      const forums: Forum[] = (dossiers || []).map((d) => ({
-        ...d,
-        type: 'forum' as const,
-        extension: extensions[d.id] || {},
-      }))
-
-      return {
-        data: forums,
-        pagination: {
-          page,
-          limit,
-          total: count,
-          totalPages: Math.ceil((count || 0) / limit),
-        },
-      }
-    },
+    queryFn: () => fetchForumsPage(filters),
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 }
