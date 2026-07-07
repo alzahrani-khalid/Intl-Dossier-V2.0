@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Platform Completion & Live Verification
 status: executing
-last_updated: '2026-07-07T10:35:22.475Z'
-last_activity: '2026-07-07 -- Plan 87-02 complete (F24 foundation: list-controls i18n ns + useListControls URL-param engine + FilterPopover/useFacetCounts/FilterChipsRow + DisplayPopover; 3 test files / 14 cases green; tsc + lint exit 0). AFF-02 left Pending — multi-plan requirement, Wave-2 (87-06..09) wires the popovers into the nine core surfaces; the foundation is surface-agnostic and does not deliver AFF-02 end-to-end.'
+last_updated: '2026-07-07T10:59:17.289Z'
+last_activity: '2026-07-07 -- Plan 87-03 complete (F25 Cmd+K command-menu audit, AFF-03): all 9 dead/broken findings fixed/removed, 5 commands added (create-mou/user/elected-official, toggle-theme, switch-language) EN+AR, sentence-case pass across keyboard-shortcuts EN+AR+inline fallbacks, MousPage ?action=create seam, CommandPalette.audit.test.tsx regression lock. 9/9 palette tests, tsc+lint exit 0. Deviation: moved <CommandPalette/> inside <WorkCreationProvider> so useWorkCreation resolves (plan mis-stated it was already inside). AFF-03 complete; manual AR-RTL glyph check deferred to 87-10.'
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 15
-  completed_plans: 7
+  completed_plans: 8
   percent: 17
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-07-06 — v9.0 Platform Completion & Liv
 ## Current Position
 
 Phase: 87 (linear-affordances) — EXECUTING
-Plan: 3 of 10
+Plan: 4 of 10
 Status: Ready to execute
-Last activity: 2026-07-07 -- Plan 87-02 complete (F24 foundation: list-controls i18n ns + useListControls URL-param engine + FilterPopover/useFacetCounts/FilterChipsRow + DisplayPopover; 3 test files / 14 cases green; tsc + lint exit 0). AFF-02 left Pending — multi-plan requirement, Wave-2 (87-06..09) wires the popovers into the nine core surfaces; the foundation is surface-agnostic and does not deliver AFF-02 end-to-end.
+Last activity: 2026-07-07 -- Plan 87-03 complete (F25 Cmd+K command-menu audit, AFF-03): all 9 dead/broken findings fixed/removed (create-task/intake/commitment → openPalette; create-position + cmd-export-dossiers removed; cmd-view-network → /relationships/graph; nav-analytics → /analytics; unbound ⌘N/⇧⌘I/⇧⌘D glyphs dropped; 8 dead routeContexts ids pruned); 5 commands added (create-mou/user/elected-official, toggle-theme, switch-language) with EN+AR labels; sentence-case pass across keyboard-shortcuts EN+AR + inline t() fallbacks; MousPage ?action=create seam (validateSearch → CreateMouDialog, param stripped); CommandPalette.audit.test.tsx regression lock (6 cases). 9/9 palette tests, tsc + lint exit 0. **Deviation:** moved <CommandPalette/> inside <WorkCreationProvider> (was a sibling AFTER the provider closed — plan's "already inside" claim was wrong) so useWorkCreation().openPalette resolves. AFF-03 complete; manual AR-RTL glyph check deferred to the 87-10 consolidated sign-off.
 
-Progress: [█████░░░░░] 47%
+Progress: [█████░░░░░] 53%
 
 ### Roadmap Evolution
 
