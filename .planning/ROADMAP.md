@@ -78,8 +78,29 @@ Plans:
 2. User can filter and adjust display via split Filter and Display popovers that show live result counts on list pages (F24)
 3. Every command advertised in the ⌘K menu works, high-value missing commands are added, and the menu is correct in both EN and AR (F25)
 4. Empty states across list pages and dossier tabs explain the surface and offer a primary action — no bare "no data" text remains (F26)
-   **Plans**: TBD
+   **Plans**: 10 plans
    **UI hint**: yes
+
+Plans:
+
+**Wave 1** _(foundations + URL normalization, parallel)_
+
+- [ ] 87-01-PLAN.md — F23 peek foundation: peekStore + usePeekPaging + DrawerHead counter/chevrons (AFF-01)
+- [ ] 87-02-PLAN.md — F24 foundation: Filter/Display popovers, useListControls, list-controls i18n ns (AFF-02)
+- [ ] 87-03-PLAN.md — F25 ⌘K audit: fix/remove 9 findings, 5 new commands, sentence-case pass, MousPage ?action=create (AFF-03)
+- [ ] 87-04-PLAN.md — F26 infra: EmptyState reskin, ListEmptyState extension, copy matrix, Pattern-B tab audit (AFF-04)
+- [ ] 87-05-PLAN.md — URL-state normalization: persons + engagements + elected-officials (AFF-01, AFF-02 enabler)
+
+**Wave 2** _(per-surface wiring, parallel — blocked on Wave 1)_
+
+- [ ] 87-06-PLAN.md — Countries + organizations wiring + DossierTable column visibility (AFF-01/02/04)
+- [ ] 87-07-PLAN.md — Forums + topics + working-groups wiring + GenericListPage property toggles (AFF-01/02/04)
+- [ ] 87-08-PLAN.md — Persons + engagements + elected-officials wiring + exact engagements total (AFF-01/02/04)
+- [ ] 87-09-PLAN.md — Kanban: URL normalization, popover fold-in, commitment peek, board empties (AFF-01/02/04)
+
+**Wave 3** _(gate)_
+
+- [ ] 87-10-PLAN.md — Phase gate battery + consolidated EN/AR human render sign-off (all AFF)
 
 ### Phase 88: Security & Hygiene Tail
 
