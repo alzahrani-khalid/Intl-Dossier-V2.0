@@ -51,6 +51,20 @@ describe('useDossierDrawer', () => {
     expect(next).toEqual({ foo: 'bar', dossier: 'x', dossierType: 'organization' })
   })
 
+  it('pageDossier merges dossier/dossierType with replace=true (no history spam per step)', () => {
+    searchValue = { dossier: 'old', dossierType: 'country', other: 'keep' }
+    const { result } = renderHook(() => useDossierDrawer())
+    result.current.pageDossier({ id: 'next', type: 'country' })
+    expect(navigateMock).toHaveBeenCalledTimes(1)
+    const call = navigateMock.mock.calls[0][0] as {
+      search: (prev: Record<string, unknown>) => Record<string, unknown>
+      replace: boolean
+    }
+    expect(call.replace).toBe(true)
+    const next = call.search({ dossier: 'old', dossierType: 'country', other: 'keep' })
+    expect(next).toEqual({ dossier: 'next', dossierType: 'country', other: 'keep' })
+  })
+
   it('closeDossier strips dossier and dossierType, preserves rest, replace=true', () => {
     searchValue = { dossier: 'abc', dossierType: 'country', other: 'keep' }
     const { result } = renderHook(() => useDossierDrawer())

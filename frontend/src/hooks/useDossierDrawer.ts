@@ -23,6 +23,8 @@ export interface UseDossierDrawerResult {
   dossierId: string | null
   dossierType: DossierDrawerType | null
   openDossier: (args: { id: string; type: DossierDrawerType }) => void
+  /** Swap the open drawer to a sibling row with `replace: true` (F23 peek paging — no history spam per step). */
+  pageDossier: (args: { id: string; type: DossierDrawerType }) => void
   closeDossier: () => void
 }
 
@@ -48,6 +50,19 @@ export function useDossierDrawer(): UseDossierDrawerResult {
     } as unknown as Parameters<typeof navigate>[0])
   }
 
+  // F23 peek paging: identical reducer to openDossier but replace:true so stepping
+  // prev/next through a list does not push a history entry per row (UI-SPEC F23).
+  const pageDossier = ({ id, type }: { id: string; type: DossierDrawerType }): void => {
+    void navigate({
+      search: (prev: Record<string, unknown>) => ({
+        ...prev,
+        dossier: id,
+        dossierType: type,
+      }),
+      replace: true,
+    } as unknown as Parameters<typeof navigate>[0])
+  }
+
   const closeDossier = (): void => {
     void navigate({
       search: (prev: Record<string, unknown>) => {
@@ -63,6 +78,7 @@ export function useDossierDrawer(): UseDossierDrawerResult {
     dossierId: open ? (search.dossier as string) : null,
     dossierType: open ? (search.dossierType ?? null) : null,
     openDossier,
+    pageDossier,
     closeDossier,
   }
 }
