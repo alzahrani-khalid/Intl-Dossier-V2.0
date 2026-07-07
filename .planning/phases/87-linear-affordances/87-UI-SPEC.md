@@ -1,7 +1,7 @@
 ---
 phase: 87
 slug: linear-affordances
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: 2026-07-07
@@ -274,11 +274,11 @@ No new dependencies are authorized by this contract. If a primitive gap appears 
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: FLAG (non-blocking — reused `error.*` "Retry" is a single-word CTA; verbatim infra reuse, not new Phase-87 copy)
+- [x] Dimension 2 Visuals: PASS
+- [x] Dimension 3 Color: PASS (surface-ladder + accent #5e6ad2 verified byte-for-byte against frontend/DESIGN.md)
+- [x] Dimension 4 Typography: PASS (4 sizes / 2 weights, within thresholds)
+- [x] Dimension 5 Spacing: PASS (density tokens sourced from densities.ts; non-4 exceptions declared as upstream literals)
+- [x] Dimension 6 Registry Safety: PASS (no third-party registries; shadcn banned + not initialized)
 
-**Approval:** pending
+**Approval:** approved 2026-07-07 (gsd-ui-checker — 5 PASS / 1 non-blocking FLAG)
