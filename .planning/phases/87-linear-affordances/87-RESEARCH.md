@@ -269,14 +269,12 @@ frontend/src/
 ```tsx
 // Source: codebase precedent — hooks/useDossierDrawer.ts + components/copilot/useCopilotDrawer (zustand)
 // list page, on row click:
-peekStore
-  .getState()
-  .register({
-    ids: rows.map((r) => r.id),
-    type: 'country',
-    total: pagination.total ?? rows.length,
-    pageOffset: (page - 1) * 20,
-  })
+peekStore.getState().register({
+  ids: rows.map((r) => r.id),
+  type: 'country',
+  total: pagination.total ?? rows.length,
+  pageOffset: (page - 1) * 20,
+})
 openDossier({ id: row.id, type: 'country' })
 // drawer paging (spec: replace:true — no history spam):
 void navigate({ search: (prev) => ({ ...prev, dossier: nextId }), replace: true } as never)
@@ -487,18 +485,22 @@ Phase is frontend-code-only against the existing dev stack. No new external tool
 | A3  | No create-permission model exists for dossier lists (no gate found on any list page), so F26 CTAs will render for all authenticated users unless the planner adds a role check [ASSUMED]                                                 | F26           | CTA might violate "respects permissions" spec row if some roles cannot create; needs a decision                                                                 |
 | A4  | `useEngagementsInfinite` exposes no numeric grand total (none found in the hook read) — engagements peek counter may need `count:'exact'` added or a "n / many" degradation [ASSUMED — hook read, response type not exhaustively traced] | F23           | Counter total wrong/absent on one surface; small hook change fixes it                                                                                           |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Peek paging across page boundaries** — page-bounded (chevrons disable at row 20 even when `total` > 20) vs neighbor-page fetch?
    - What we know: spec says counter total = full filtered list; boundary rule says "first/last row" disable without defining scope; all uniform lists can prefetch via queryClient.
    - Recommendation: cross-page fetch with prefetch-at-edge (matches the counter's full-list semantics); accept page-bounded as a fallback if plan-checker flags complexity.
+   - **RESOLVED (87-01):** cross-page fetch with prefetch-at-edge — `usePeekPaging` computes position/canPrev/canNext from the GLOBAL total and fires a guarded neighbor-page fetch when within 2 rows of the loaded window edge.
 2. **Kanban peek scope** — commitments-only via `CommitmentDrawer` (tasks/intakes keep navigation)?
    - What we know: only commitments have drawer infra; building task/intake drawers violates "extend, don't invent"; current commitment click goes to a LIST (broken-ish UX worth fixing regardless).
    - Recommendation: commitment cards → CommitmentDrawer with counter; task/intake cards unchanged; document as a spec-conformant narrowing.
+   - **RESOLVED (87-09):** commitments-only via the existing CommitmentDrawer (`?commitment=` param); task/intake cards keep their navigation — documented spec-conformant narrowing of UI-SPEC §F23's work-item row.
 3. **Display "properties" scope on GenericListPage surfaces** — DossierTable has 5 real columns; GenericListPage rows have only primary/secondary/status. What do property toggles control there?
    - Recommendation: DossierTable surfaces get column toggles; GenericListPage surfaces get secondary-line + status-chip toggles only (or omit the section where <2 toggleable properties exist).
+   - **RESOLVED (87-02 + 87-07):** as recommended — DossierTable surfaces get column toggles; GenericListPage surfaces get secondary-line + status-chip toggles; the Display-properties section is omitted whenever a config has < 2 PropertyDef entries (enforced in the DisplayPopover contract).
 4. **MoU-create seam for the ⌘K command** — URL param the MousPage consumes vs navigate-only.
    - Recommendation: add `?action=create` handling INSIDE MousPage (finally giving one page the pattern the palette always assumed) — smallest diff, and it template-fixes the four half-dead create commands if the planner extends the same treatment to tasks/intake/commitments/positions pages (or re-targets those commands at surfaces that already have create UIs, e.g. work-creation palette `openPalette('task')` used by WorkBoard:259-265).
+   - **RESOLVED (87-03):** MousPage consumes `?action=create` (the palette's Create MoU command targets it); task/intake/commitment create commands are re-targeted at the unified work-creation palette (`useWorkCreation().openPalette`); `create-position` is removed (no positions create route or dialog exists — positions are created from dossier context only).
 
 ## Sources
 
