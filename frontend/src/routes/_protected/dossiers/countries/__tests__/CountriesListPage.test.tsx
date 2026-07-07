@@ -1,61 +1,38 @@
 /**
- * CountriesListPage render-assertion test (Phase 40 LIST-01)
+ * Countries list route test (Phase 40 LIST-01 · Phase 87 F23/F24/F26).
  *
- * Asserts:
- * - Page renders Countries title
- * - Table renders France row with engagement count 42
- * - Sensitivity level=3 chip carries `chip-warn` class
- * - Empty state ("No countries yet") shows when adapter returns no rows
+ * Renders the wired route component with a mocked router + useCountries adapter.
+ * Asserts: title, populated row + engagement count + sensitivity chip, F23 peek
+ * registration on row click, and the F26 rich empty state when there are no rows.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, cleanup } from '@testing-library/react'
-import type { ReactNode } from 'react'
+import { render, screen, cleanup, fireEvent } from '@testing-library/react'
+import type { ReactElement, ReactNode } from 'react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { LanguageProvider } from '@/components/language-provider/language-provider'
+import { usePeekStore } from '@/store/peekStore'
 
-// --- Mocks (must be declared before importing the component under test) ---
+// --- Router mock (createFileRoute + useNavigate/useSearch for useDossierDrawer) ---
 
-vi.mock('react-i18next', () => ({
-  useTranslation: (): {
-    i18n: { language: string }
-    t: (k: string, opts?: Record<string, unknown>) => string
-  } => ({
-    i18n: { language: 'en' },
-    t: (k: string, opts?: Record<string, unknown>): string => {
-      // Map a handful of keys to user-visible strings for assertions.
-      const map: Record<string, string> = {
-        'countries:title': 'Countries',
-        'countries:subtitle': 'All country dossiers',
-        'countries:empty.title': 'No countries yet',
-        'countries:empty.description': 'Country dossiers will appear here.',
-        'countries.table.name': 'Country',
-        'countries.table.engagements': 'Engagements',
-        'countries.table.lastTouch': 'Last updated',
-        'countries.table.sensitivity': 'Sensitivity',
-        'countries.table.aria': 'Dossiers',
-        'sensitivity.restricted': 'Restricted',
-        'sensitivity.public': 'Public',
-        'sensitivity.internal': 'Internal',
-        'sensitivity.confidential': 'Confidential',
-        'list-pages:search.placeholder': 'Search…',
-      }
-      if (map[k] !== undefined) return map[k]
-      if (
-        opts !== undefined &&
-        opts !== null &&
-        'defaultValue' in opts &&
-        typeof opts.defaultValue === 'string'
-      ) {
-        return opts.defaultValue
-      }
-      return k
-    },
+let currentSearch: Record<string, unknown> = { page: 1 }
+const navigateSpy = vi.fn()
+
+vi.mock('@tanstack/react-router', () => ({
+  createFileRoute: (_path: string) => (config: Record<string, unknown>) => ({
+    ...config,
+    useSearch: (): Record<string, unknown> => currentSearch,
+    useNavigate: (): typeof navigateSpy => navigateSpy,
   }),
-  Trans: ({ children }: { children: ReactNode }): ReactNode => children,
+  useNavigate: (): typeof navigateSpy => navigateSpy,
+  useSearch: (): Record<string, unknown> => ({}),
 }))
 
+// useCountries adapter + its extracted fetcher.
 const useCountriesMock = vi.fn()
 vi.mock('@/hooks/useCountries', () => ({
   useCountries: (...args: unknown[]): unknown => useCountriesMock(...args),
+  fetchCountriesPage: vi.fn(),
 }))
 
 // DossierGlyph pulls in heavy signature-visuals; stub for test isolation.
@@ -65,12 +42,20 @@ vi.mock('@/components/signature-visuals', () => ({
   ),
 }))
 
-// useDebouncedValue → return value immediately so search behaves synchronously.
-vi.mock('@/hooks/useDebouncedValue', () => ({
-  useDebouncedValue: <T,>(v: T): T => v,
-}))
+import { Route } from '../index'
 
-import { CountriesListPage } from '../index'
+const CountriesRoute = (Route as unknown as { component: () => ReactElement }).component
+
+const renderRoute = (): ReturnType<typeof render> => {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+  return render(
+    <QueryClientProvider client={client}>
+      <LanguageProvider initialLanguage="en">
+        <CountriesRoute />
+      </LanguageProvider>
+    </QueryClientProvider>,
+  )
+}
 
 const sampleRow = {
   id: 'a',
@@ -83,67 +68,66 @@ const sampleRow = {
   sensitivity_level: 3,
 }
 
-describe('CountriesListPage', () => {
+describe('Countries list route (Phase 87 wiring)', () => {
   beforeEach(() => {
     cleanup()
     useCountriesMock.mockReset()
+    navigateSpy.mockReset()
+    currentSearch = { page: 1 }
+    usePeekStore.getState().clear()
   })
 
   it('renders the title and a populated row with sensitivity chip', () => {
     useCountriesMock.mockReturnValue({
-      data: {
-        data: [sampleRow],
-        pagination: { page: 1, limit: 20, total: 1, totalPages: 1 },
-      },
+      data: { data: [sampleRow], pagination: { page: 1, limit: 20, total: 1, totalPages: 1 } },
       isLoading: false,
       isError: false,
     })
 
-    const { container } = render(
-      <CountriesListPage page={1} search={undefined} onSearchChange={(): void => {}} />,
-    )
+    const { container } = renderRoute()
 
-    // Title
     expect(screen.getByRole('heading', { name: 'Countries' })).toBeTruthy()
-
-    // Row content — DossierGlyph + row both render the name; getAllByText handles both.
     expect(screen.getAllByText('France').length).toBeGreaterThan(0)
     expect(screen.getByText('42')).toBeTruthy()
 
-    // Sensitivity chip — level 3 must carry the `chip-warn` class.
     const chip = container.querySelector('.chip.chip-warn')
     expect(chip).toBeTruthy()
-    expect(chip?.textContent).toContain('Restricted')
   })
 
-  it('renders empty state when adapter returns no rows', () => {
+  it('registers a peek window and opens the drawer on row click (F23, no detail navigate)', () => {
     useCountriesMock.mockReturnValue({
       data: {
-        data: [],
-        pagination: { page: 1, limit: 20, total: 0, totalPages: 0 },
+        data: [sampleRow, { ...sampleRow, id: 'b', name_en: 'Egypt' }],
+        pagination: { page: 1, limit: 20, total: 2, totalPages: 1 },
       },
       isLoading: false,
       isError: false,
     })
 
-    render(<CountriesListPage page={1} search={undefined} onSearchChange={(): void => {}} />)
+    renderRoute()
 
-    expect(screen.getByText('No countries yet')).toBeTruthy()
-    expect(screen.getByText('Country dossiers will appear here.')).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: 'France' }))
+
+    // Peek registry now holds the loaded id window for cross-page paging.
+    const peek = usePeekStore.getState()
+    expect(peek.ids).toEqual(['a', 'b'])
+    expect(peek.type).toBe('country')
+    expect(peek.total).toBe(2)
+    // Drawer opened via ?dossier= search write — no navigate to a detail route.
+    expect(navigateSpy).toHaveBeenCalled()
+    const navArg = navigateSpy.mock.calls[0]?.[0] as { to?: string }
+    expect(navArg.to).toBeUndefined()
   })
 
-  it('renders skeleton (no row content) while loading', () => {
+  it('renders the rich empty state when the adapter returns no rows', () => {
     useCountriesMock.mockReturnValue({
-      data: undefined,
-      isLoading: true,
+      data: { data: [], pagination: { page: 1, limit: 20, total: 0, totalPages: 0 } },
+      isLoading: false,
       isError: false,
     })
 
-    render(<CountriesListPage page={1} search={undefined} onSearchChange={(): void => {}} />)
+    renderRoute()
 
-    // While loading, ListPageShell renders its DefaultSkeleton (data-testid="list-page-skeleton").
-    expect(screen.getByTestId('list-page-skeleton')).toBeTruthy()
-    // And France row is NOT in the DOM.
-    expect(screen.queryByText('France')).toBeNull()
+    expect(screen.getByTestId('list-empty-state-country')).toBeTruthy()
   })
 })

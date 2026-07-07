@@ -17,6 +17,7 @@
  */
 
 import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   useActiveFilters,
   type FilterFieldConfig,
@@ -150,6 +151,10 @@ export function useListControls(
   search: Record<string, unknown>,
   setSearch: SetSearch,
 ): UseListControlsReturn {
+  // Bound to list-controls so bare option keys resolve; colon-qualified keys
+  // (e.g. `list-controls:sensitivity.3`) resolve regardless of the binding.
+  const { t } = useTranslation('list-controls')
+
   const filters = useMemo<Record<string, string | undefined>>(() => {
     const f: Record<string, string | undefined> = {}
     for (const field of config.filters) {
@@ -179,7 +184,8 @@ export function useListControls(
   }, [config, search.cols])
 
   // Chip derivation reuses useActiveFilters wholesale (UI-free). Each config filter
-  // maps to a single-value string field; formatValue resolves the option label.
+  // maps to a single-value string field; formatValue resolves the option label to
+  // its translated string so chips never leak the raw i18n key.
   const fieldConfigs = useMemo<FilterFieldConfig[]>(
     () =>
       config.filters.map((field) => ({
@@ -188,10 +194,10 @@ export function useListControls(
         type: 'string' as const,
         formatValue: (value: unknown): string => {
           const opt = field.options.find((o) => o.value === value)
-          return opt ? opt.labelKey : String(value)
+          return opt ? t(opt.labelKey) : String(value)
         },
       })),
-    [config.filters],
+    [config.filters, t],
   )
 
   const onFiltersChange = useCallback(

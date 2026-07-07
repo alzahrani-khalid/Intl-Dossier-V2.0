@@ -15,5 +15,29 @@
     "desc": "Descending",
     "properties": "Display properties",
     "reset": "Reset to default"
+  },
+  "field": {
+    "status": "Status",
+    "sensitivity": "Sensitivity"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "archived": "Archived"
+  },
+  "sensitivity": {
+    "1": "Public",
+    "2": "Internal",
+    "3": "Restricted",
+    "4": "Confidential"
+  },
+  "sort": {
+    "name": "Name",
+    "updated": "Last updated"
+  },
+  "property": {
+    "engagements": "Engagements",
+    "lastTouch": "Last touch",
+    "sensitivity": "Sensitivity"
   }
 }
