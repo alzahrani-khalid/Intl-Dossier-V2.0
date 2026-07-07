@@ -16,6 +16,10 @@ export interface GenericListPageProps {
   onItemClick?: (item: GenericListPageItem) => void
   isLoading?: boolean
   emptyState?: ReactNode
+  /** Show the per-row secondary line (default true). Maps to the F24 `secondary` property toggle. */
+  showSecondary?: boolean
+  /** Show the per-row status chip (default true). Maps to the F24 `status` property toggle. */
+  showStatus?: boolean
 }
 
 const RowSkeleton = (): ReactNode => (
@@ -39,6 +43,8 @@ export function GenericListPage({
   onItemClick,
   isLoading = false,
   emptyState,
+  showSecondary = true,
+  showStatus = true,
 }: GenericListPageProps): ReactNode {
   const { i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
@@ -58,7 +64,11 @@ export function GenericListPage({
   }
 
   return (
-    <ul className="card flex flex-col overflow-hidden p-0" role="list" data-testid="generic-list-page">
+    <ul
+      className="card flex flex-col overflow-hidden p-0"
+      role="list"
+      data-testid="generic-list-page"
+    >
       {items.map((item) => {
         const interactive = typeof onItemClick === 'function'
         return (
@@ -97,19 +107,16 @@ export function GenericListPage({
                 <span className="text-sm font-medium text-foreground text-start truncate w-full">
                   {item.primary}
                 </span>
-                {item.secondary !== undefined && item.secondary !== '' ? (
+                {showSecondary && item.secondary !== undefined && item.secondary !== '' ? (
                   <span className="text-xs text-muted-foreground text-start truncate w-full">
                     {item.secondary}
                   </span>
                 ) : null}
               </div>
 
-              {item.statusLabel !== undefined && item.statusLabel !== '' ? (
+              {showStatus && item.statusLabel !== undefined && item.statusLabel !== '' ? (
                 <span
-                  className={[
-                    'chip',
-                    item.statusChipClass ?? 'chip-default',
-                  ].join(' ')}
+                  className={['chip', item.statusChipClass ?? 'chip-default'].join(' ')}
                   data-testid="generic-list-page-status"
                 >
                   {item.statusLabel}
