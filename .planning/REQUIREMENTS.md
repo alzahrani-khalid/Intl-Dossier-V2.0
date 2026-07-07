@@ -19,7 +19,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 - [ ] **AFF-01**: User can open a list row in a right-peek panel with prev/next paging without leaving the list (F23)
 - [ ] **AFF-02**: User can use split Filter and Display popovers with live result counts on list pages (F24)
 - [x] **AFF-03**: ⌘K command menu passes an audit — every advertised command works, missing high-value commands added, EN+AR (F25)
-- [ ] **AFF-04**: Empty states across list pages and dossier tabs are rich (explain the surface + primary action), replacing bare "no data" text (F26)
+- [x] **AFF-04**: Empty states across list pages and dossier tabs are rich (explain the surface + primary action), replacing bare "no data" text (F26)
 
 ### Security & Hygiene Tail
 
@@ -91,7 +91,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AFF-01      | Phase 87 | Pending  |
 | AFF-02      | Phase 87 | Pending  |
 | AFF-03      | Phase 87 | Complete |
-| AFF-04      | Phase 87 | Pending  |
+| AFF-04      | Phase 87 | Complete |
 | SEC-01      | Phase 88 | Pending  |
 | SEC-02      | Phase 88 | Pending  |
 | CI-01       | Phase 89 | Pending  |

@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Platform Completion & Live Verification
 status: executing
-last_updated: '2026-07-07T10:59:17.289Z'
-last_activity: '2026-07-07 -- Plan 87-03 complete (F25 Cmd+K command-menu audit, AFF-03): all 9 dead/broken findings fixed/removed, 5 commands added (create-mou/user/elected-official, toggle-theme, switch-language) EN+AR, sentence-case pass across keyboard-shortcuts EN+AR+inline fallbacks, MousPage ?action=create seam, CommandPalette.audit.test.tsx regression lock. 9/9 palette tests, tsc+lint exit 0. Deviation: moved <CommandPalette/> inside <WorkCreationProvider> so useWorkCreation resolves (plan mis-stated it was already inside). AFF-03 complete; manual AR-RTL glyph check deferred to 87-10.'
+last_updated: '2026-07-07T11:22:26Z'
+last_activity: '2026-07-07 -- Plan 87-04 complete (F26 empty-state infra, AFF-04): EmptyState Linear reskin (surface-raised icon wash, ink-mute/ink-faint text, .btn-primary/.btn-ghost recipes replacing ui/button); ListEmptyState extended to all 9 core entities (+topic/working_group/elected_official/work_item) + filtered-empty branch (filtered/onClearFilters props — wins over create, never disabled-accent); empty-states.json copy matrix EN+AR (list.<entity>.title/description/cta + list.filtered.*) voice-purged; 6 dossier-overview tab empties conformed to Pattern B (glyph + one line, zero legacy bg-muted/text-muted-foreground; RelatedDossiers .description dropped). 13/13 empty-states + 228 dossier tests, tsc + lint exit 0. No deviations. AFF-04 complete; visual/RTL render sign-off rolls into 87-10 (no live consumer until Wave 2).'
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 15
-  completed_plans: 8
+  completed_plans: 9
   percent: 17
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-07-06 — v9.0 Platform Completion & Liv
 ## Current Position
 
 Phase: 87 (linear-affordances) — EXECUTING
-Plan: 4 of 10
+Plan: 5 of 10
 Status: Ready to execute
-Last activity: 2026-07-07 -- Plan 87-03 complete (F25 Cmd+K command-menu audit, AFF-03): all 9 dead/broken findings fixed/removed (create-task/intake/commitment → openPalette; create-position + cmd-export-dossiers removed; cmd-view-network → /relationships/graph; nav-analytics → /analytics; unbound ⌘N/⇧⌘I/⇧⌘D glyphs dropped; 8 dead routeContexts ids pruned); 5 commands added (create-mou/user/elected-official, toggle-theme, switch-language) with EN+AR labels; sentence-case pass across keyboard-shortcuts EN+AR + inline t() fallbacks; MousPage ?action=create seam (validateSearch → CreateMouDialog, param stripped); CommandPalette.audit.test.tsx regression lock (6 cases). 9/9 palette tests, tsc + lint exit 0. **Deviation:** moved <CommandPalette/> inside <WorkCreationProvider> (was a sibling AFTER the provider closed — plan's "already inside" claim was wrong) so useWorkCreation().openPalette resolves. AFF-03 complete; manual AR-RTL glyph check deferred to the 87-10 consolidated sign-off.
+Last activity: 2026-07-07 -- Plan 87-04 complete (F26 empty-state infra, AFF-04). **EmptyState** reskinned to Linear tokens across all 4 variants (bg-muted→bg-surface-raised icon wash, text-muted-foreground→text-ink-mute/text-ink-faint, text-foreground→text-ink; the one accent CTA renders `.btn-primary` and secondary/recovery actions `.btn-ghost`, dropping the ui/button variant chrome while keeping the QuickAction prop API). **ListEmptyState** union+entityConfig extended with topic/working_group/elected_official/work_item (Tag/Users/Landmark/ListTodo glyphs) and gained `filtered`/`onClearFilters` props → a filtered-empty branch that renders `list.filtered.*` + a ghost "Clear filters", never the create CTA (filtered wins over create); no onCreate → zero accent buttons (never disabled-accent); primary label now reads `list.<entity>.cta` with legacy `.create` fallback (TourableEmptyState still reads `.create`, test green). **empty-states.json** (EN+AR): UI-SPEC §F26 copy matrix transcribed for the 9 core surfaces (title/description/cta) + `list.filtered.{title,description,clear}`; Title-Case/"we" debt purged on touched keys; parity proven. **6 dossier-overview tab empties** (Activity/KeyContacts/Calendar/Documents/RelatedDossiers/WorkItems) retokenized to Pattern B (single non-directional glyph h-5 text-ink-faint + one line text-ink-mute) — zero legacy tokens in every EmptyState body; RelatedDossiers collapsed its two-tier empty to "No relationships mapped for this dossier." (dropped .description); WorkItems copy aligned to the dossier-tab register. New `ListEmptyState.test.tsx` (9 cases) locks the contract. Verify: 13/13 empty-states + 228 dossier tests, tsc exit 0, lint exit 0 (i18n parity + token + rtl + bootstrap + date gates). Commits 82c82dce/4d382441/7c7ee633. No deviations. AFF-04 complete; visual/RTL render sign-off rolls into the 87-10 consolidated sign-off (no consumer wires ListEmptyState until Wave 2).
 
-Progress: [█████░░░░░] 53%
+Progress: [██████░░░░] 60%
 
 ### Roadmap Evolution
 
