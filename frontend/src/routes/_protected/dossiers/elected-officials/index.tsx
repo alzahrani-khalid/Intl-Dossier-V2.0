@@ -11,6 +11,7 @@
 
 import type { ReactElement } from 'react'
 import { useCallback, useMemo } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { Crown, Plus } from 'lucide-react'
@@ -29,6 +30,10 @@ import {
   ElectedOfficialListTable,
   OFFICE_TYPES,
 } from '@/components/elected-officials/ElectedOfficialListTable'
+import {
+  electedOfficialKeys,
+  fetchElectedOfficialsPage,
+} from '@/domains/elected-officials/hooks/useElectedOfficials'
 import { useDossierDrawer } from '@/hooks/useDossierDrawer'
 import { usePeekStore, type PeekRegistration } from '@/store/peekStore'
 import type {
@@ -92,6 +97,7 @@ function ElectedOfficialsListPage(): ReactElement {
   const { t } = useTranslation('elected-officials')
   const { page, search, office_type, term } = Route.useSearch()
   const navigate = Route.useNavigate()
+  const queryClient = useQueryClient()
   const { openDossier } = useDossierDrawer()
 
   const setSearch = useCallback(
@@ -166,12 +172,25 @@ function ElectedOfficialsListPage(): ReactElement {
     })
   }, [navigate])
 
+  const fetchPage = useCallback(
+    async (page: number): Promise<string[]> => {
+      const pageFilters: ElectedOfficialFilters = { ...filters, page }
+      const res = await queryClient.fetchQuery({
+        queryKey: electedOfficialKeys.list(pageFilters),
+        queryFn: () => fetchElectedOfficialsPage(pageFilters),
+        staleTime: 30_000,
+      })
+      return res.data.map((row) => row.id)
+    },
+    [filters, queryClient],
+  )
+
   const onOpenElectedOfficial = useCallback(
     (item: ElectedOfficialListItem, registration: PeekRegistration): void => {
-      usePeekStore.getState().register(registration)
+      usePeekStore.getState().register({ ...registration, fetchPage })
       openDossier({ id: item.id, type: 'elected_official' })
     },
-    [openDossier],
+    [fetchPage, openDossier],
   )
 
   return (

@@ -165,8 +165,10 @@ export function ElectedOfficialListTable({
     onOpenElectedOfficial?.(item, {
       ids: rows.map((row) => row.id),
       type: 'elected_official',
-      total: rows.length,
-      pageOffset: 0,
+      // Server total + real page offset so the peek counter spans the FULL
+      // filtered set, not just the loaded page (the route wires fetchPage).
+      total,
+      pageOffset: (currentPage - 1) * pageSize,
       pageSize,
     })
   }
