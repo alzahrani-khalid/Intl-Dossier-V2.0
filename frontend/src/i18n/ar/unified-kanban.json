@@ -88,10 +88,6 @@
     "clear": "مسح التصفية",
     "clearFilters": "مسح جميع التصفيات",
     "searchPlaceholder": "البحث في عناصر العمل...",
-    "byStatus": "بالحالة",
-    "byDossier": "بالملف",
-    "byOwner": "بالمالك",
-    "comingSoon": "قريباً",
     "search": "البحث في عناصر العمل…"
   },
   "overdueChip": "{{count}} متأخر",

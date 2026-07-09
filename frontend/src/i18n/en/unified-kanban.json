@@ -88,10 +88,6 @@
     "clear": "Clear filters",
     "clearFilters": "Clear all filters",
     "searchPlaceholder": "Search work items...",
-    "byStatus": "By status",
-    "byDossier": "By dossier",
-    "byOwner": "By owner",
-    "comingSoon": "Coming soon",
     "search": "Search work items…"
   },
   "overdueChip": "{{count}} overdue",

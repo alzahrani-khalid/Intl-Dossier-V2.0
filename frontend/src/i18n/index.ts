@@ -193,6 +193,8 @@ import arDossierShell from './ar/dossier-shell.json'
 // Phase 41 Wave 0: dossier quick-look drawer namespace
 import enDossierDrawer from './en/dossier-drawer.json'
 import arDossierDrawer from './ar/dossier-drawer.json'
+import enCommitmentDrawer from './en/commitment-drawer.json'
+import arCommitmentDrawer from './ar/commitment-drawer.json'
 // Phase 87 F24: filter/display list-controls namespace
 import enListControls from './en/list-controls.json'
 import arListControls from './ar/list-controls.json'
@@ -365,6 +367,7 @@ const resources = {
     workspace: enWorkspace,
     'dossier-shell': enDossierShell,
     'dossier-drawer': enDossierDrawer,
+    'commitment-drawer': enCommitmentDrawer,
     'list-controls': enListControls,
     'elected-officials': enElectedOfficials,
     // Plan 31-02: per-type wizard guidance namespaces (D-13)
@@ -500,6 +503,7 @@ const resources = {
     workspace: arWorkspace,
     'dossier-shell': arDossierShell,
     'dossier-drawer': arDossierDrawer,
+    'commitment-drawer': arCommitmentDrawer,
     'list-controls': arListControls,
     'elected-officials': arElectedOfficials,
     // Plan 31-02: per-type wizard guidance namespaces (D-13)

@@ -1,37 +1,36 @@
 /**
  * Phase 39 Plan 03 — BoardToolbar widget.
  *
- * Renders the WorkBoard toolbar:
- *  - Three filter pills: 'By status' (wired) + 'By dossier' / 'By owner' (visual stubs,
- *    aria-disabled with "Coming soon" tooltip per CONTEXT D-06).
- *  - Mono '{n} overdue' chip (LtrIsolate-wrapped so digits render LTR in RTL pages).
- *  - Search input (controlled — parent owns state; client-side filter happens upstream).
- *  - '+ New item' button.
+ * Phase 87 Plan 09 — Filter + Display popovers replace the legacy pill row.
+ * Search input, overdue chip, and + New item are unchanged.
  *
  * RTL discipline: only logical Tailwind / CSS properties; no physical text alignment.
- * XSS posture: search value is bound via a controlled React input — no unsafe-HTML APIs
- * are used; `.includes()` filtering downstream operates on plain strings.
  */
 
 import { type ChangeEvent, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
-import type { KanbanColumnMode } from '@/types/work-item.types'
+import { FilterPopover } from '@/components/list-controls/FilterPopover'
+import { DisplayPopover } from '@/components/list-controls/DisplayPopover'
+import type {
+  ListControlsConfig,
+  UseListControlsReturn,
+} from '@/components/list-controls/useListControls'
 
 interface BoardToolbarProps {
-  mode: KanbanColumnMode
+  config: ListControlsConfig
+  controls: UseListControlsReturn
   searchQuery: string
   overdueCount: number
-  onModeChange: (mode: KanbanColumnMode) => void
   onSearchChange: (q: string) => void
   onNewItem: () => void
 }
 
 export function BoardToolbar({
-  mode,
+  config,
+  controls,
   searchQuery,
   overdueCount,
-  onModeChange,
   onSearchChange,
   onNewItem,
 }: BoardToolbarProps): ReactElement {
@@ -41,48 +40,31 @@ export function BoardToolbar({
     onSearchChange(e.target.value)
   }
 
-  const handleByStatusClick = (): void => {
-    onModeChange('status')
-  }
-
-  // Stable noop for the visual-stub pills — D-06 mandates they NEVER call onModeChange.
-  const noop = (): void => {}
-
   const overdueLabel = t('overdueChip', { count: overdueCount })
   const newItemLabel = t('actions.newItem')
   const searchLabel = t('filters.search')
-  const comingSoon = t('filters.comingSoon')
 
   return (
-    <div className="board-toolbar" role="toolbar" aria-label={t('filters.byStatus')}>
-      <div className="filter-pills" role="group">
-        <button
-          type="button"
-          className="filter-pill"
-          aria-pressed={mode === 'status'}
-          onClick={handleByStatusClick}
-        >
-          {t('filters.byStatus')}
-        </button>
-        <button
-          type="button"
-          className="filter-pill"
-          aria-disabled="true"
-          title={comingSoon}
-          onClick={noop}
-        >
-          {t('filters.byDossier')}
-        </button>
-        <button
-          type="button"
-          className="filter-pill"
-          aria-disabled="true"
-          title={comingSoon}
-          onClick={noop}
-        >
-          {t('filters.byOwner')}
-        </button>
-      </div>
+    <div className="board-toolbar" role="toolbar" aria-label={t('columnModes.label')}>
+      <FilterPopover
+        config={config}
+        surfaceKey="kanban"
+        activeFilters={controls.filters}
+        activeFilterCount={controls.activeFilterCount}
+        onFilterChange={controls.setFilter}
+      />
+      <DisplayPopover
+        config={config}
+        sort={controls.sort}
+        dir={controls.dir}
+        visibleProperties={controls.visibleProperties}
+        group={controls.group}
+        onSetSort={controls.setSort}
+        onSetDir={controls.setDir}
+        onToggleProperty={controls.toggleProperty}
+        onSetGroup={controls.setGroup}
+        onReset={controls.resetDisplay}
+      />
 
       <LtrIsolate>
         <span className="overdue-chip font-mono">{overdueLabel}</span>

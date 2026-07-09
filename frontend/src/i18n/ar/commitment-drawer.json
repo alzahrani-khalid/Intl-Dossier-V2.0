@@ -1,0 +1,7 @@
+{
+  "peek": {
+    "counter": "{{position}} / {{total}}",
+    "prev": "الصف السابق",
+    "next": "الصف التالي"
+  }
+}
