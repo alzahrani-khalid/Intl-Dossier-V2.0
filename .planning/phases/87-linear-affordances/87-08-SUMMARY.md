@@ -65,6 +65,54 @@ tech-stack:
 - The elected-official drawer type was already accepted by the protected route validator and `useDossierDrawer`, so no validator expansion was needed.
 - Facet counts were not added to these bespoke popovers because the available list-control surface renders correctly without them and the scoped data-layer capabilities differ by surface.
 
+## Final state — review fixes + operator-directed salvage (2026-07-09)
+
+Three review findings from the drover review gate were fixed on top of the wiring
+commits (`96666b3b` engagements peek head-count, `13aaed28` persons visible-Set memo +
+debounced search, `56903e9b` EO server total + fetchPage), and one remaining finding was
+fixed during the salvage:
+
+- **`fix(87-08)` — type-filtered engagements now route through `search_engagements_advanced`.**
+  The bucketed type filter used a direct PostgREST query whose `dossier:id (...)` embed is
+  invalid (`id` is the FK column, not the `dossiers` relation), so PostgREST **400s** as soon
+  as `type=meeting|travel|event` is selected. It also bypassed the RPC's archived-dossier
+  exclusion and dossier-name search, so the peek total could disagree with the visible rows.
+  The RPC's `p_engagement_type` is a single equality and **cannot express a bucket**
+  (`meeting` = 4 `engagement_type` values), so migration
+  `20260709180000_add_p_engagement_types_to_search_engagements_advanced.sql` adds
+  `p_engagement_types TEXT[]` as a **strict superset** (`NULL` reproduces prior behavior;
+  `p_engagement_type` retained — the `engagement-dossiers` edge function passes it).
+  Both the bucketed rows **and** the exact head-count now come from that one RPC — a single
+  predicate path, so the counter can never disagree with the rows. Deleted the divergent
+  path: `fetchBucketedEngagementsPage`, the PostgREST query, `quoteOrValue`, `escapeLike`,
+  and the `EngagementJoinedRow` embed shape.
+
+### Migration verification (staging, via Supabase MCP)
+
+- `fn_count = 1` after the atomic DROP+CREATE — no overload ambiguity.
+- ACL unchanged (`anon`/`authenticated`/`service_role` EXECUTE); owner `postgres`; `STABLE`.
+- Legacy 9-named-arg call (the edge function's shape) returns rows unaffected.
+- `p_engagement_type := 'meeting'` → **0 rows** (reproduces the reported bug);
+  `p_engagement_types := ARRAY[...meeting bucket...]` → rows returned.
+
+### Gates (hand-run in the task worktree)
+
+- `pnpm --dir frontend exec tsc --noEmit` → exit 0
+- `pnpm --dir frontend lint --max-warnings 0` → exit 0 (incl. i18n, RTL, bootstrap-parity, date-format)
+- `pnpm --dir frontend exec vitest run` over engagements/persons/EO/kanban + `useEngagementsInfinite.test.ts`
+  → **10 files passed, 1 skipped; 82 tests passed, 6 todo**
+- New hook tests pin the fix: they **pass on the fix and fail (2/5) on the pre-fix hook**.
+
+### Provenance (honest)
+
+P87-08 was **not** completed by a drover `task-done`. Two drover runs parked it `human`
+(harness defects, not code): a consult-parse failure under `visibility.llm: pane`, and a
+worker that ended trailer-less without committing. Each attempt's worktree reset destroyed
+the prior attempt's work. This deliverable was recovered from dangling git objects
+(`b895c430` codex chain → a3 fixes `96666b3b`/`13aaed28`/`56903e9b`) and completed manually
+under an operator-directed salvage brief. The last review finding (`dossier:id` embed) was
+re-implemented from scratch — the a4 fix that once existed was destroyed by a worktree reset.
+
 ---
 
 _Phase: 87-linear-affordances_
