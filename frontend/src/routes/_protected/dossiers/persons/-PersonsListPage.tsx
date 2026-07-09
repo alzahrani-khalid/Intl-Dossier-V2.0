@@ -135,7 +135,11 @@ function PersonsListPage({
     () => extractList(query.data).map((p) => toCard(p, isRTL)),
     [query.data, isRTL],
   )
-  const visible = new Set(controls?.visibleProperties ?? ['role', 'organization', 'vip'])
+  const visibleProperties = controls?.visibleProperties
+  const visible = useMemo(
+    () => new Set(visibleProperties ?? ['role', 'organization', 'vip']),
+    [visibleProperties],
+  )
   const visibleItems = useMemo(
     () =>
       items.map((item) => ({

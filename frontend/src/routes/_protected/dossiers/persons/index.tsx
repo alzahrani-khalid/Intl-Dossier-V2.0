@@ -8,6 +8,7 @@ import {
 } from '@/components/list-controls/useListControls'
 import { personKeys } from '@/domains/persons/hooks/usePersons'
 import { getPersons } from '@/domains/persons/repositories/persons.repository'
+import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { useDossierDrawer } from '@/hooks/useDossierDrawer'
 import { usePeekStore, type PeekRegistration } from '@/store/peekStore'
 import PersonsListPage, { PERSONS_PAGE_SIZE, personsListConfig } from './-PersonsListPage'
@@ -71,10 +72,14 @@ function PersonsListRoute(): ReactElement {
       ? (Number(controls.filters.importance) as ImportanceLevel)
       : undefined
 
+  // Same debounce as -PersonsListPage.tsx so neighbor-page fetches use the SAME
+  // effective search term as the visible rows the peek window registered from.
+  const debouncedSearch = useDebouncedValue(search.search ?? '', 250)
+
   const fetchPage = useCallback(
     async (page: number): Promise<string[]> => {
       const params = {
-        search: search.search,
+        search: debouncedSearch !== '' ? debouncedSearch : undefined,
         importance_level: importance,
         limit: PERSONS_PAGE_SIZE,
         offset: (page - 1) * PERSONS_PAGE_SIZE,
@@ -86,7 +91,7 @@ function PersonsListRoute(): ReactElement {
       })
       return res.data.map((person) => person.id)
     },
-    [queryClient, search.search, importance],
+    [queryClient, debouncedSearch, importance],
   )
 
   const onPersonOpen = useCallback(
