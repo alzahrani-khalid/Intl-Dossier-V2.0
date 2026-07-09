@@ -89,13 +89,19 @@ async function countEngagements(
   search: string | undefined,
   type: EngagementTypeBucket | undefined,
 ): Promise<number> {
+  const term = toSearchTerm(search)
+  // `head: true` makes supabase-js issue a GET, so every argument is serialized into
+  // the URL — a `null` becomes the literal string "null". Postgres then rejects
+  // `p_engagement_types=null` with `malformed array literal: "null"` (400), and a null
+  // `p_search_term` silently searches for the text 'null'. Omit absent arguments and
+  // let the RPC's own DEFAULT NULL apply.
   const { count, error } = await supabase.rpc(
     'search_engagements_advanced',
     {
-      p_search_term: toSearchTerm(search),
-      p_engagement_types: type !== undefined ? ENGAGEMENT_TYPE_BUCKETS[type] : null,
       p_limit: COUNT_CEILING,
       p_offset: 0,
+      ...(term !== null ? { p_search_term: term } : {}),
+      ...(type !== undefined ? { p_engagement_types: ENGAGEMENT_TYPE_BUCKETS[type] } : {}),
     },
     { count: 'exact', head: true },
   )

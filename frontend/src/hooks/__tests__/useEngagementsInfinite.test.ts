@@ -44,13 +44,30 @@ const buildPage = (size: number): { data: Array<{ id: string }>; pagination: unk
   pagination: { page: 1, limit: 20, total: size, totalPages: 1, has_more: false },
 })
 
-/** head-count call → `{ count }`; row call → `{ data }`. */
+/**
+ * Emulates the transport supabase-js actually uses, which is where the live "n / 0"
+ * bug came from: with `head: true` the client issues a **GET** and serializes every
+ * argument into the URL, so a `null` arrives at Postgres as the literal string
+ * `"null"` — `p_engagement_types=null` 400s with `malformed array literal: "null"`.
+ * A mock that just hands back `{ count }` regardless of the arguments cannot catch
+ * that, which is exactly how it shipped. This one fails the same way the server does.
+ */
 const mockRpc = (rows: Array<{ id: string }>, total: number): void => {
   rpcMock.mockImplementation(
-    (_fn: string, _args: unknown, opts?: { head?: boolean }): Promise<unknown> =>
-      opts?.head === true
-        ? Promise.resolve({ count: total, error: null })
-        : Promise.resolve({ data: rows, error: null }),
+    (_fn: string, args: Record<string, unknown>, opts?: { head?: boolean }): Promise<unknown> => {
+      if (opts?.head === true) {
+        const nullArg = Object.entries(args).find(([, v]) => v === null || v === undefined)
+        if (nullArg !== undefined) {
+          // PostgREST/Postgres reject the URL-serialized "null" literal.
+          return Promise.resolve({
+            count: null,
+            error: { message: `malformed array literal: "null" (arg ${nullArg[0]})` },
+          })
+        }
+        return Promise.resolve({ count: total, error: null })
+      }
+      return Promise.resolve({ data: rows, error: null })
+    },
   )
 }
 
@@ -156,7 +173,11 @@ describe('useEngagementsInfinite — Plan 40-02b adapter', () => {
     })
   })
 
-  it('counts the unbucketed stream through the same RPC with a null type array', async () => {
+  // Live defect (87-10 render walk): the peek counter rendered "2 / 0" because the
+  // head-count call passed `p_engagement_types: null` / `p_search_term: null`, which the
+  // GET transport turns into the string "null" → 400 → count 0. Absent arguments must be
+  // OMITTED so the RPC's own DEFAULT NULL applies.
+  it('omits absent args from the head-count call so the exact total actually resolves', async () => {
     getEngagementsMock.mockResolvedValueOnce(buildPage(3))
     mockRpc([], 42)
 
@@ -170,6 +191,28 @@ describe('useEngagementsInfinite — Plan 40-02b adapter', () => {
     const countCall = rpcMock.mock.calls.find(
       (c) => (c[2] as { head?: boolean } | undefined)?.head === true,
     )
-    expect(countCall?.[1]).toMatchObject({ p_engagement_types: null })
+    const countArgs = countCall?.[1] as Record<string, unknown>
+    expect(countArgs).not.toHaveProperty('p_engagement_types')
+    expect(countArgs).not.toHaveProperty('p_search_term')
+    expect(Object.values(countArgs)).not.toContain(null)
+  })
+
+  it('sends the bucket array (never null) on the head-count call and maps count → total', async () => {
+    mockRpc([{ id: 'e0' }], 7)
+
+    const { wrapper } = createWrapper()
+    const { result } = renderHook(() => useEngagementsInfinite({ type: 'travel', limit: 20 }), {
+      wrapper,
+    })
+
+    await waitFor(() => {
+      expect(result.current.total).toBe(7)
+    })
+
+    const countArgs = rpcMock.mock.calls.find(
+      (c) => (c[2] as { head?: boolean } | undefined)?.head === true,
+    )?.[1] as Record<string, unknown>
+    expect(countArgs.p_engagement_types).toEqual(['mission', 'delegation', 'official_visit'])
+    expect(Object.values(countArgs)).not.toContain(null)
   })
 })
