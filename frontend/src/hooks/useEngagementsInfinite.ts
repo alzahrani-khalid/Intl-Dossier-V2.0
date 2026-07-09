@@ -12,37 +12,196 @@
 
 import {
   useInfiniteQuery,
+  useQuery,
   type InfiniteData,
   type UseInfiniteQueryResult,
 } from '@tanstack/react-query'
 import { engagementsRepo } from '@/domains/engagements'
-import type { EngagementListResponse } from '@/types/engagement.types'
+import { supabase } from '@/lib/supabase'
+import type {
+  EngagementCategory,
+  EngagementListItem,
+  EngagementListResponse,
+  EngagementStatus,
+  EngagementType,
+} from '@/types/engagement.types'
 
 export interface EngagementsInfiniteParams {
   search?: string
+  type?: EngagementTypeBucket
   limit?: number
 }
 
 const ENGAGEMENTS_INFINITE_QUERY_KEY = 'engagements-infinite'
+const ENGAGEMENTS_TOTAL_QUERY_KEY = 'engagements-total'
+
+export type EngagementTypeBucket = 'meeting' | 'travel' | 'event'
+
+const ENGAGEMENT_TYPE_BUCKETS: Record<EngagementTypeBucket, EngagementType[]> = {
+  meeting: ['bilateral_meeting', 'consultation', 'working_group', 'roundtable'],
+  travel: ['mission', 'delegation', 'official_visit'],
+  event: ['summit', 'forum_session'],
+}
+
+interface EngagementJoinedRow {
+  id: string
+  engagement_type: EngagementType
+  engagement_category: EngagementCategory | null
+  engagement_status: EngagementStatus | null
+  start_date: string | null
+  end_date: string | null
+  location_en: string | null
+  location_ar: string | null
+  is_virtual: boolean | null
+  host_country_id: string | null
+  dossier:
+    | {
+        id: string
+        name_en: string | null
+        name_ar: string | null
+      }
+    | Array<{
+        id: string
+        name_en: string | null
+        name_ar: string | null
+      }>
+    | null
+}
+
+export type EngagementsInfiniteResult = UseInfiniteQueryResult<
+  InfiniteData<EngagementListResponse, number>,
+  Error
+> & {
+  total: number
+}
+
+async function countEngagements(params: EngagementsInfiniteParams): Promise<number> {
+  let query = supabase.from('engagement_dossiers').select('*', { count: 'exact', head: true })
+
+  const types = params.type !== undefined ? ENGAGEMENT_TYPE_BUCKETS[params.type] : undefined
+  if (types !== undefined) {
+    query = query.in('engagement_type', types)
+  }
+
+  if (params.search !== undefined && params.search.trim() !== '') {
+    const escaped = params.search.replaceAll('%', '\\%').replaceAll('_', '\\_')
+    query = query.or(
+      `location_en.ilike.%${escaped}%,location_ar.ilike.%${escaped}%,objectives_en.ilike.%${escaped}%`,
+    )
+  }
+
+  const { count, error } = await query
+  if (error != null) throw new Error(error.message)
+  return count ?? 0
+}
+
+function toListItem(row: EngagementJoinedRow): EngagementListItem {
+  const dossier = Array.isArray(row.dossier) ? (row.dossier[0] ?? null) : row.dossier
+  return {
+    id: row.id,
+    name_en: dossier?.name_en ?? row.location_en ?? row.engagement_type,
+    name_ar: dossier?.name_ar ?? row.location_ar ?? row.engagement_type,
+    engagement_type: row.engagement_type,
+    engagement_category: row.engagement_category ?? 'other',
+    engagement_status: row.engagement_status ?? 'planned',
+    start_date: row.start_date ?? '',
+    end_date: row.end_date ?? row.start_date ?? '',
+    location_en: row.location_en ?? undefined,
+    location_ar: row.location_ar ?? undefined,
+    is_virtual: row.is_virtual ?? false,
+    host_country_id: row.host_country_id ?? undefined,
+    participant_count: 0,
+  }
+}
+
+async function fetchBucketedEngagementsPage(
+  params: EngagementsInfiniteParams,
+  page: number,
+  limit: number,
+): Promise<EngagementListResponse> {
+  const type = params.type
+  if (type === undefined) {
+    return engagementsRepo.getEngagements({ page, limit, search: params.search })
+  }
+
+  const offset = (page - 1) * limit
+  let query = supabase
+    .from('engagement_dossiers')
+    .select(
+      `
+        id,
+        engagement_type,
+        engagement_category,
+        engagement_status,
+        start_date,
+        end_date,
+        location_en,
+        location_ar,
+        is_virtual,
+        host_country_id,
+        dossier:id (
+          id,
+          name_en,
+          name_ar
+        )
+      `,
+      { count: 'exact' },
+    )
+    .in('engagement_type', ENGAGEMENT_TYPE_BUCKETS[type])
+    .order('start_date', { ascending: false })
+    .range(offset, offset + limit - 1)
+
+  if (params.search !== undefined && params.search.trim() !== '') {
+    const escaped = params.search.replaceAll('%', '\\%').replaceAll('_', '\\_')
+    query = query.or(
+      `location_en.ilike.%${escaped}%,location_ar.ilike.%${escaped}%,objectives_en.ilike.%${escaped}%`,
+    )
+  }
+
+  const { data, count, error } = await query
+  if (error != null) throw new Error(error.message)
+
+  const total = count ?? 0
+  return {
+    data: ((data ?? []) as unknown as EngagementJoinedRow[]).map(toListItem),
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+      has_more: offset + limit < total,
+    },
+  }
+}
 
 export function useEngagementsInfinite(
   params: EngagementsInfiniteParams = {},
-): UseInfiniteQueryResult<InfiniteData<EngagementListResponse, number>, Error> {
+): EngagementsInfiniteResult {
   const limit = params.limit ?? 20
   const search = params.search
+  const type = params.type
 
-  return useInfiniteQuery<
+  const totalQuery = useQuery({
+    queryKey: [ENGAGEMENTS_TOTAL_QUERY_KEY, { search, type }] as const,
+    queryFn: () => countEngagements({ search, type }),
+    staleTime: 1000 * 30,
+  })
+
+  const infiniteQuery = useInfiniteQuery<
     EngagementListResponse,
     Error,
     InfiniteData<EngagementListResponse, number>,
-    readonly [string, { search: string | undefined; limit: number }],
+    readonly [
+      string,
+      { search: string | undefined; type: EngagementTypeBucket | undefined; limit: number },
+    ],
     number
   >({
-    queryKey: [ENGAGEMENTS_INFINITE_QUERY_KEY, { search, limit }],
+    queryKey: [ENGAGEMENTS_INFINITE_QUERY_KEY, { search, type, limit }],
     initialPageParam: 1,
     queryFn: ({ pageParam }): Promise<EngagementListResponse> => {
       const page = typeof pageParam === 'number' ? pageParam : 1
-      return engagementsRepo.getEngagements({ page, limit, search })
+      return fetchBucketedEngagementsPage({ search, type }, page, limit)
     },
     getNextPageParam: (lastPage, allPages): number | undefined => {
       if (lastPage.data.length < limit) {
@@ -52,4 +211,9 @@ export function useEngagementsInfinite(
     },
     staleTime: 1000 * 30,
   })
+
+  return {
+    ...infiniteQuery,
+    total: totalQuery.data ?? infiniteQuery.data?.pages[0]?.pagination.total ?? 0,
+  }
 }

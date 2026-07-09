@@ -12,20 +12,49 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useCallback, type ReactElement } from 'react'
 import type { EngagementFilter } from '@/components/list-page'
+import {
+  parseListControlsSearch,
+  useListControls,
+} from '@/components/list-controls/useListControls'
+import { useDossierDrawer } from '@/hooks/useDossierDrawer'
+import { usePeekStore, type PeekRegistration } from '@/store/peekStore'
 import EngagementsListPage, {
+  engagementsListConfig,
   validateEngagementsListSearch,
   type EngagementsListSearch,
 } from '@/pages/engagements/EngagementsListPage'
+import type { EngagementRow } from '@/components/list-page'
 
 export const Route = createFileRoute('/_protected/dossiers/engagements/')({
   component: EngagementsListRoute,
-  validateSearch: validateEngagementsListSearch,
+  validateSearch: (raw: Record<string, unknown>): EngagementsListSearch => ({
+    ...validateEngagementsListSearch(raw),
+    ...parseListControlsSearch(raw, engagementsListConfig),
+  }),
 })
 
 function EngagementsListRoute(): ReactElement {
-  const { search, type } = Route.useSearch()
+  const routeSearch = Route.useSearch()
   const navigate = Route.useNavigate()
+  const { openDossier } = useDossierDrawer()
+  const { search, type } = routeSearch
   const filter: EngagementFilter = type ?? 'all'
+
+  const setSearch = useCallback(
+    (reducer: (prev: Record<string, unknown>) => Record<string, unknown>): void => {
+      void navigate({
+        search: (prev: Record<string, unknown>) => reducer(prev),
+        replace: true,
+      } as unknown as Parameters<typeof navigate>[0])
+    },
+    [navigate],
+  )
+
+  const controls = useListControls(
+    engagementsListConfig,
+    routeSearch as Record<string, unknown>,
+    setSearch,
+  )
 
   const onSearchChange = useCallback(
     (next: string): void => {
@@ -42,15 +71,32 @@ function EngagementsListRoute(): ReactElement {
 
   const onFilterChange = useCallback(
     (next: EngagementFilter): void => {
-      void navigate({
-        search: (prev: EngagementsListSearch) => ({
-          ...prev,
-          type: next === 'all' ? undefined : next,
-        }),
-        replace: true,
-      })
+      controls.setFilter('type', next === 'all' ? undefined : next)
     },
-    [navigate],
+    [controls],
+  )
+
+  const onClearFilters = useCallback((): void => {
+    void navigate({
+      search: (prev: EngagementsListSearch) => ({
+        ...prev,
+        search: undefined,
+        type: undefined,
+      }),
+      replace: true,
+    })
+  }, [navigate])
+
+  const onCreate = useCallback((): void => {
+    void navigate({ to: '/dossiers/engagements/create' })
+  }, [navigate])
+
+  const onEngagementOpen = useCallback(
+    (row: EngagementRow, registration: PeekRegistration): void => {
+      usePeekStore.getState().register(registration)
+      openDossier({ id: row.id, type: 'engagement' })
+    },
+    [openDossier],
   )
 
   return (
@@ -59,6 +105,10 @@ function EngagementsListRoute(): ReactElement {
       filter={filter}
       onSearchChange={onSearchChange}
       onFilterChange={onFilterChange}
+      controls={controls}
+      onClearFilters={onClearFilters}
+      onCreate={onCreate}
+      onEngagementOpen={onEngagementOpen}
     />
   )
 }
