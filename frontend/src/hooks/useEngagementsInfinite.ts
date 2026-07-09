@@ -43,8 +43,11 @@ const ENGAGEMENT_TYPE_BUCKETS: Record<EngagementTypeBucket, EngagementType[]> = 
   event: ['summit', 'forum_session'],
 }
 
-interface EngagementJoinedRow {
+/** Row shape returned by the `search_engagements_advanced` RPC. */
+interface EngagementRpcRow {
   id: string
+  name_en: string | null
+  name_ar: string | null
   engagement_type: EngagementType
   engagement_category: EngagementCategory | null
   engagement_status: EngagementStatus | null
@@ -54,18 +57,7 @@ interface EngagementJoinedRow {
   location_ar: string | null
   is_virtual: boolean | null
   host_country_id: string | null
-  dossier:
-    | {
-        id: string
-        name_en: string | null
-        name_ar: string | null
-      }
-    | Array<{
-        id: string
-        name_en: string | null
-        name_ar: string | null
-      }>
-    | null
+  participant_count: number | string | null
 }
 
 export type EngagementsInfiniteResult = UseInfiniteQueryResult<
@@ -79,17 +71,29 @@ export type EngagementsInfiniteResult = UseInfiniteQueryResult<
 // head-count saturates here; raise if engagements ever approach this volume.
 const COUNT_CEILING = 100_000
 
+/** `null` when the term is blank, so the RPC's `IS NULL` short-circuit applies. */
+const toSearchTerm = (search: string | undefined): string | null =>
+  search !== undefined && search.trim() !== '' ? search : null
+
 /**
- * Exact filtered total for the unbucketed stream via a `head: true` count on the
- * SAME `search_engagements_advanced` RPC the engagement-dossiers edge function
- * serves the visible rows from — the count predicate matches the list by
- * construction (the edge function's own `pagination.total` is unfiltered).
+ * Exact filtered total via a `head: true` count on the SAME
+ * `search_engagements_advanced` RPC that serves the visible rows — the count
+ * predicate matches the list by construction (the edge function's own
+ * `pagination.total` is unfiltered).
+ *
+ * The RPC applies LIMIT/OFFSET internally, so an `{ count: 'exact' }` on a paged
+ * call would count the page, not the filter. Counting is therefore its own
+ * head-only call at `COUNT_CEILING`.
  */
-async function countEngagements(search: string | undefined): Promise<number> {
+async function countEngagements(
+  search: string | undefined,
+  type: EngagementTypeBucket | undefined,
+): Promise<number> {
   const { count, error } = await supabase.rpc(
     'search_engagements_advanced',
     {
-      p_search_term: search !== undefined && search.trim() !== '' ? search : null,
+      p_search_term: toSearchTerm(search),
+      p_engagement_types: type !== undefined ? ENGAGEMENT_TYPE_BUCKETS[type] : null,
       p_limit: COUNT_CEILING,
       p_offset: 0,
     },
@@ -99,23 +103,11 @@ async function countEngagements(search: string | undefined): Promise<number> {
   return count ?? 0
 }
 
-/** Escape LIKE wildcards so user input matches literally. */
-const escapeLike = (term: string): string =>
-  term.replaceAll('\\', '\\\\').replaceAll('%', '\\%').replaceAll('_', '\\_')
-
-/**
- * Double-quote a value for a PostgREST `.or()` filter so reserved characters
- * (commas, parentheses) in the search term cannot break the filter grammar.
- */
-const quoteOrValue = (value: string): string =>
-  `"${value.replaceAll('\\', '\\\\').replaceAll('"', '\\"')}"`
-
-function toListItem(row: EngagementJoinedRow): EngagementListItem {
-  const dossier = Array.isArray(row.dossier) ? (row.dossier[0] ?? null) : row.dossier
+function toListItem(row: EngagementRpcRow): EngagementListItem {
   return {
     id: row.id,
-    name_en: dossier?.name_en ?? row.location_en ?? row.engagement_type,
-    name_ar: dossier?.name_ar ?? row.location_ar ?? row.engagement_type,
+    name_en: row.name_en ?? row.location_en ?? row.engagement_type,
+    name_ar: row.name_ar ?? row.location_ar ?? row.engagement_type,
     engagement_type: row.engagement_type,
     engagement_category: row.engagement_category ?? 'other',
     engagement_status: row.engagement_status ?? 'planned',
@@ -125,11 +117,22 @@ function toListItem(row: EngagementJoinedRow): EngagementListItem {
     location_ar: row.location_ar ?? undefined,
     is_virtual: row.is_virtual ?? false,
     host_country_id: row.host_country_id ?? undefined,
-    participant_count: 0,
+    participant_count: Number(row.participant_count ?? 0),
   }
 }
 
-async function fetchBucketedEngagementsPage(
+/**
+ * A type-bucket ("meeting" = 4 `engagement_type` values) is served by the same
+ * `search_engagements_advanced` RPC as the unbucketed stream, via its
+ * `p_engagement_types TEXT[]` parameter. This keeps ONE predicate path for the
+ * rows and the count — including the RPC's archived-dossier exclusion and its
+ * dossier-name search, neither of which a hand-rolled PostgREST query can express.
+ *
+ * ponytail: `pagination.total` is a per-page lower bound; the authoritative
+ * filtered total is the hook's `total` (the cached `countEngagements` head-count).
+ * Nothing outside this hook reads `pagination.total`.
+ */
+async function fetchEngagementsPage(
   params: EngagementsInfiniteParams,
   page: number,
   limit: number,
@@ -140,51 +143,23 @@ async function fetchBucketedEngagementsPage(
   }
 
   const offset = (page - 1) * limit
-  let query = supabase
-    .from('engagement_dossiers')
-    .select(
-      `
-        id,
-        engagement_type,
-        engagement_category,
-        engagement_status,
-        start_date,
-        end_date,
-        location_en,
-        location_ar,
-        is_virtual,
-        host_country_id,
-        dossier:id (
-          id,
-          name_en,
-          name_ar
-        )
-      `,
-      { count: 'exact' },
-    )
-    .in('engagement_type', ENGAGEMENT_TYPE_BUCKETS[type])
-    .order('start_date', { ascending: false })
-    .range(offset, offset + limit - 1)
-
-  if (params.search !== undefined && params.search.trim() !== '') {
-    const pattern = quoteOrValue(`%${escapeLike(params.search)}%`)
-    query = query.or(
-      `location_en.ilike.${pattern},location_ar.ilike.${pattern},objectives_en.ilike.${pattern}`,
-    )
-  }
-
-  const { data, count, error } = await query
+  const { data, error } = await supabase.rpc('search_engagements_advanced', {
+    p_search_term: toSearchTerm(params.search),
+    p_engagement_types: ENGAGEMENT_TYPE_BUCKETS[type],
+    p_limit: limit,
+    p_offset: offset,
+  })
   if (error != null) throw new Error(error.message)
 
-  const total = count ?? 0
+  const rows = (data ?? []) as unknown as EngagementRpcRow[]
   return {
-    data: ((data ?? []) as unknown as EngagementJoinedRow[]).map(toListItem),
+    data: rows.map(toListItem),
     pagination: {
       page,
       limit,
-      total,
-      totalPages: Math.ceil(total / limit),
-      has_more: offset + limit < total,
+      total: offset + rows.length,
+      totalPages: page,
+      has_more: rows.length === limit,
     },
   }
 }
@@ -196,13 +171,12 @@ export function useEngagementsInfinite(
   const search = params.search
   const type = params.type
 
-  // Bucketed streams count inside fetchBucketedEngagementsPage (`count: 'exact'`
-  // on the same filtered query), so the RPC head-count only serves the
-  // unbucketed stream — where the edge function's total is unfiltered.
+  // One head-count serves BOTH streams: it hits the same RPC (and the same
+  // predicates) the rows come from, so the peek counter can never disagree with
+  // the visible rows — bucketed or not.
   const totalQuery = useQuery({
-    queryKey: [ENGAGEMENTS_TOTAL_QUERY_KEY, { search }] as const,
-    queryFn: () => countEngagements(search),
-    enabled: type === undefined,
+    queryKey: [ENGAGEMENTS_TOTAL_QUERY_KEY, { search, type }] as const,
+    queryFn: () => countEngagements(search, type),
     staleTime: 1000 * 30,
   })
 
@@ -220,7 +194,7 @@ export function useEngagementsInfinite(
     initialPageParam: 1,
     queryFn: ({ pageParam }): Promise<EngagementListResponse> => {
       const page = typeof pageParam === 'number' ? pageParam : 1
-      return fetchBucketedEngagementsPage({ search, type }, page, limit)
+      return fetchEngagementsPage({ search, type }, page, limit)
     },
     getNextPageParam: (lastPage, allPages): number | undefined => {
       if (lastPage.data.length < limit) {
@@ -233,9 +207,6 @@ export function useEngagementsInfinite(
 
   return {
     ...infiniteQuery,
-    total:
-      type !== undefined
-        ? (infiniteQuery.data?.pages[0]?.pagination.total ?? 0)
-        : (totalQuery.data ?? 0),
+    total: totalQuery.data ?? 0,
   }
 }
