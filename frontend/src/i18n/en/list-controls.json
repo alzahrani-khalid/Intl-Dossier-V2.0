@@ -18,7 +18,9 @@
   },
   "field": {
     "status": "Status",
-    "sensitivity": "Sensitivity"
+    "sensitivity": "Sensitivity",
+    "importance": "Importance",
+    "type": "Type"
   },
   "status": {
     "active": "Active",
@@ -31,6 +33,13 @@
     "3": "Restricted",
     "4": "Confidential"
   },
+  "importance": {
+    "1": "Regular",
+    "2": "Important",
+    "3": "Key contact",
+    "4": "VIP",
+    "5": "Critical"
+  },
   "sort": {
     "name": "Name",
     "updated": "Last updated"
@@ -40,6 +49,11 @@
     "lastTouch": "Last touch",
     "sensitivity": "Sensitivity",
     "secondary": "Secondary line",
-    "status": "Status"
+    "status": "Status",
+    "role": "Role",
+    "organization": "Organization",
+    "vip": "VIP",
+    "type": "Type",
+    "location": "Location"
   }
 }
