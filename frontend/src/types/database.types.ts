@@ -37560,6 +37560,7 @@ export type Database = {
           p_engagement_category?: string
           p_engagement_status?: string
           p_engagement_type?: string
+          p_engagement_types?: string[]
           p_host_country_id?: string
           p_limit?: number
           p_offset?: number
