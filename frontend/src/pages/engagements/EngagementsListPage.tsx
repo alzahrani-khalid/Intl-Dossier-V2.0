@@ -218,10 +218,20 @@ export default function EngagementsListPage({
           pageOffset: 0,
           pageSize: 20,
           fetchPage: async (page: number): Promise<string[]> => {
-            const result = await fetchNextPage()
-            const nextPage = result.data?.pages[page - 1]
-            if (nextPage === undefined) return []
-            return nextPage.data
+            // Serve already-loaded pages from the cache; otherwise advance the
+            // infinite window one fetch at a time until the requested page is in
+            // (handles requests 2+ pages past the loaded edge). The no-progress
+            // guard breaks at the end of the stream or on a failed fetch.
+            let pages = data?.pages ?? []
+            while (pages.length < page) {
+              const result = await fetchNextPage()
+              const nextPages = result.data?.pages ?? []
+              if (nextPages.length <= pages.length) break
+              pages = nextPages
+            }
+            const targetPage = pages[page - 1]
+            if (targetPage === undefined) return []
+            return targetPage.data
               .map((item) => toEngagementRow(item, isRTL))
               .filter((engagement) => filter === 'all' || engagement.type === filter)
               .map((engagement) => engagement.id)
@@ -234,16 +244,7 @@ export default function EngagementsListPage({
         params: { engagementId: row.id },
       })
     },
-    [
-      data?.pages.length,
-      engagements,
-      fetchNextPage,
-      filter,
-      isRTL,
-      navigate,
-      onEngagementOpen,
-      total,
-    ],
+    [data, engagements, fetchNextPage, filter, isRTL, navigate, onEngagementOpen, total],
   )
 
   const handleLoadMore = useCallback((): void => {

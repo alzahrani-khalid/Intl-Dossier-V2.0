@@ -75,25 +75,40 @@ export type EngagementsInfiniteResult = UseInfiniteQueryResult<
   total: number
 }
 
-async function countEngagements(params: EngagementsInfiniteParams): Promise<number> {
-  let query = supabase.from('engagement_dossiers').select('*', { count: 'exact', head: true })
+// ponytail: counting ceiling — the RPC applies its LIMIT internally, so the exact
+// head-count saturates here; raise if engagements ever approach this volume.
+const COUNT_CEILING = 100_000
 
-  const types = params.type !== undefined ? ENGAGEMENT_TYPE_BUCKETS[params.type] : undefined
-  if (types !== undefined) {
-    query = query.in('engagement_type', types)
-  }
-
-  if (params.search !== undefined && params.search.trim() !== '') {
-    const escaped = params.search.replaceAll('%', '\\%').replaceAll('_', '\\_')
-    query = query.or(
-      `location_en.ilike.%${escaped}%,location_ar.ilike.%${escaped}%,objectives_en.ilike.%${escaped}%`,
-    )
-  }
-
-  const { count, error } = await query
+/**
+ * Exact filtered total for the unbucketed stream via a `head: true` count on the
+ * SAME `search_engagements_advanced` RPC the engagement-dossiers edge function
+ * serves the visible rows from — the count predicate matches the list by
+ * construction (the edge function's own `pagination.total` is unfiltered).
+ */
+async function countEngagements(search: string | undefined): Promise<number> {
+  const { count, error } = await supabase.rpc(
+    'search_engagements_advanced',
+    {
+      p_search_term: search !== undefined && search.trim() !== '' ? search : null,
+      p_limit: COUNT_CEILING,
+      p_offset: 0,
+    },
+    { count: 'exact', head: true },
+  )
   if (error != null) throw new Error(error.message)
   return count ?? 0
 }
+
+/** Escape LIKE wildcards so user input matches literally. */
+const escapeLike = (term: string): string =>
+  term.replaceAll('\\', '\\\\').replaceAll('%', '\\%').replaceAll('_', '\\_')
+
+/**
+ * Double-quote a value for a PostgREST `.or()` filter so reserved characters
+ * (commas, parentheses) in the search term cannot break the filter grammar.
+ */
+const quoteOrValue = (value: string): string =>
+  `"${value.replaceAll('\\', '\\\\').replaceAll('"', '\\"')}"`
 
 function toListItem(row: EngagementJoinedRow): EngagementListItem {
   const dossier = Array.isArray(row.dossier) ? (row.dossier[0] ?? null) : row.dossier
@@ -152,9 +167,9 @@ async function fetchBucketedEngagementsPage(
     .range(offset, offset + limit - 1)
 
   if (params.search !== undefined && params.search.trim() !== '') {
-    const escaped = params.search.replaceAll('%', '\\%').replaceAll('_', '\\_')
+    const pattern = quoteOrValue(`%${escapeLike(params.search)}%`)
     query = query.or(
-      `location_en.ilike.%${escaped}%,location_ar.ilike.%${escaped}%,objectives_en.ilike.%${escaped}%`,
+      `location_en.ilike.${pattern},location_ar.ilike.${pattern},objectives_en.ilike.${pattern}`,
     )
   }
 
@@ -181,9 +196,13 @@ export function useEngagementsInfinite(
   const search = params.search
   const type = params.type
 
+  // Bucketed streams count inside fetchBucketedEngagementsPage (`count: 'exact'`
+  // on the same filtered query), so the RPC head-count only serves the
+  // unbucketed stream — where the edge function's total is unfiltered.
   const totalQuery = useQuery({
-    queryKey: [ENGAGEMENTS_TOTAL_QUERY_KEY, { search, type }] as const,
-    queryFn: () => countEngagements({ search, type }),
+    queryKey: [ENGAGEMENTS_TOTAL_QUERY_KEY, { search }] as const,
+    queryFn: () => countEngagements(search),
+    enabled: type === undefined,
     staleTime: 1000 * 30,
   })
 
@@ -214,6 +233,9 @@ export function useEngagementsInfinite(
 
   return {
     ...infiniteQuery,
-    total: totalQuery.data ?? infiniteQuery.data?.pages[0]?.pagination.total ?? 0,
+    total:
+      type !== undefined
+        ? (infiniteQuery.data?.pages[0]?.pagination.total ?? 0)
+        : (totalQuery.data ?? 0),
   }
 }
