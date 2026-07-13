@@ -10,6 +10,7 @@
 import { useQuery, useMutation, useQueryClient, type UseQueryOptions } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { quotePostgrestValue } from '@/lib/postgrest-escape'
 import { supabase } from '@/lib/supabase'
 import type {
   WorkingGroup,
@@ -92,7 +93,8 @@ export async function fetchWorkingGroupsPage(
     countQuery = countQuery.eq('status', status)
   }
   if (search) {
-    countQuery = countQuery.or(`name_en.ilike.%${search}%,name_ar.ilike.%${search}%`)
+    const pattern = quotePostgrestValue(`%${search}%`)
+    countQuery = countQuery.or(`name_en.ilike.${pattern},name_ar.ilike.${pattern}`)
   }
 
   const { count } = await countQuery

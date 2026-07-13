@@ -7,6 +7,7 @@
  */
 
 import { supabase } from '@/lib/supabase'
+import { quotePostgrestValue } from '@/lib/postgrest-escape'
 import { COLUMNS } from '@/lib/query-columns'
 import type {
   Commitment,
@@ -88,7 +89,8 @@ export async function getCommitments(
 
   // Apply search filter
   if (filters?.search) {
-    query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`)
+    const pattern = quotePostgrestValue(`%${filters.search}%`)
+    query = query.or(`title.ilike.${pattern},description.ilike.${pattern}`)
   }
 
   // Apply cursor-based pagination
