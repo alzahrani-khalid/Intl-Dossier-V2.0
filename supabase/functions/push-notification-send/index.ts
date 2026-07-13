@@ -2,6 +2,7 @@
 // Handles real push notification delivery to mobile devices with priority levels and deep linking
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // ===================================
 // TYPES
@@ -871,16 +872,15 @@ async function updateDeviceTokenStatus(supabase: any, result: SendResult): Promi
 // ===================================
 
 serve(async (req: Request): Promise<Response> => {
-  // CORS headers
+  const corsHeaders = getCorsHeaders(req);
   const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    ...corsHeaders,
     'Content-Type': 'application/json',
   };
 
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
