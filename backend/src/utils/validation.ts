@@ -42,7 +42,13 @@ export const validate = (schema: {
 
       if (schema.query) {
         const result = await schema.query.parseAsync(req.query)
-        req.query = result as any
+        // Express 5 exposes req.query as a getter-only prototype property; shadow it per request.
+        Object.defineProperty(req, 'query', {
+          value: result,
+          writable: true,
+          enumerable: true,
+          configurable: true,
+        })
       }
 
       if (schema.params) {
