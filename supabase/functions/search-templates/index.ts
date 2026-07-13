@@ -17,7 +17,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // Types
 interface SearchTemplate {
@@ -81,9 +81,11 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
 
 serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
@@ -138,12 +140,12 @@ serve(async (req: Request) => {
     switch (req.method) {
       case 'GET':
         if (templateId && templateId !== 'search-templates') {
-          return await getTemplate(supabase, templateId);
+          return await getTemplate(supabase, templateId, corsHeaders);
         }
-        return await listTemplates(supabase, url, user.id);
+        return await listTemplates(supabase, url, user.id, corsHeaders);
 
       case 'POST':
-        return await createTemplate(supabase, req, user.id);
+        return await createTemplate(supabase, req, user.id, corsHeaders);
 
       case 'PUT':
         if (!templateId) {
@@ -159,7 +161,7 @@ serve(async (req: Request) => {
             }
           );
         }
-        return await updateTemplate(supabase, templateId, req, user.id);
+        return await updateTemplate(supabase, templateId, req, user.id, corsHeaders);
 
       case 'DELETE':
         if (!templateId) {
@@ -175,7 +177,7 @@ serve(async (req: Request) => {
             }
           );
         }
-        return await deleteTemplate(supabase, templateId, user.id);
+        return await deleteTemplate(supabase, templateId, user.id, corsHeaders);
 
       default:
         return new Response(
@@ -206,7 +208,12 @@ serve(async (req: Request) => {
   }
 });
 
-async function listTemplates(supabase: ReturnType<typeof createClient>, url: URL, userId: string) {
+async function listTemplates(
+  supabase: ReturnType<typeof createClient>,
+  url: URL,
+  userId: string,
+  corsHeaders: Record<string, string>
+) {
   const category = url.searchParams.get('category');
   const limit = Math.min(Math.max(1, parseInt(url.searchParams.get('limit') || '50')), 100);
   const offset = Math.max(0, parseInt(url.searchParams.get('offset') || '0'));
@@ -281,7 +288,11 @@ async function listTemplates(supabase: ReturnType<typeof createClient>, url: URL
   );
 }
 
-async function getTemplate(supabase: ReturnType<typeof createClient>, templateId: string) {
+async function getTemplate(
+  supabase: ReturnType<typeof createClient>,
+  templateId: string,
+  corsHeaders: Record<string, string>
+) {
   const { data, error } = await supabase
     .from('search_templates')
     .select('*')
@@ -327,7 +338,8 @@ async function getTemplate(supabase: ReturnType<typeof createClient>, templateId
 async function createTemplate(
   supabase: ReturnType<typeof createClient>,
   req: Request,
-  userId: string
+  userId: string,
+  corsHeaders: Record<string, string>
 ) {
   const body: CreateTemplateRequest = await req.json();
 
@@ -450,7 +462,8 @@ async function updateTemplate(
   supabase: ReturnType<typeof createClient>,
   templateId: string,
   req: Request,
-  userId: string
+  userId: string,
+  corsHeaders: Record<string, string>
 ) {
   // First check if template exists and user owns it
   const { data: existing, error: fetchError } = await supabase
@@ -607,7 +620,8 @@ async function updateTemplate(
 async function deleteTemplate(
   supabase: ReturnType<typeof createClient>,
   templateId: string,
-  userId: string
+  userId: string,
+  corsHeaders: Record<string, string>
 ) {
   // First check if template exists and user owns it
   const { data: existing, error: fetchError } = await supabase
