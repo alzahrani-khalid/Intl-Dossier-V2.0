@@ -398,7 +398,7 @@ Full detail: [milestones/v8.1-ROADMAP.md](milestones/v8.1-ROADMAP.md).
 | 87. Linear Affordances | v9.0 | 6/10 | In Progress|  |
 | 88. Security & Hygiene Tail | v9.0 | 0/TBD | Not started | — |
 | 89. CI & Test-Debt Burn-Down | v9.0 | 0/TBD | Not started | — |
-| 90. CORS Edge-Function Migration | v9.0 | 0/TBD | Not started | — |
+| 90. CORS Edge-Function Migration | v9.0 | 36/36 | Awaiting operator sign-off | — |
 | 91. v7.0 Live Verification | v9.0 | 0/TBD | Not started | — |
 
 <!-- gsd:progress:end -->

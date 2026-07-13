@@ -20,7 +20,7 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-06 — v9.0 Platform Completion & Live Verification started)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 88 — Security & Hygiene Tail (IN PROGRESS; P88-02 rotation pending operator)
+**Current focus:** Phase 88 — Security & Hygiene Tail (IN PROGRESS; P88-02 rotation pending operator). Phase 90 (CORS) ran in parallel: 36/36 plans executed + deployed to staging, SC-4 repo-wide grep=0, PARKED on 90-33/34 operator sign-off (not closed).
 
 ## Current Position
 
