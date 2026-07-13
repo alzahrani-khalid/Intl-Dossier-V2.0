@@ -19,7 +19,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // Types
 interface CheckComplianceRequest {
@@ -78,9 +78,11 @@ interface CreateExemptionRequest {
 }
 
 serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
@@ -111,7 +113,7 @@ serve(async (req: Request) => {
       pathSegments.includes('rules') &&
       !pathSegments[pathSegments.indexOf('rules') + 1]
     ) {
-      return await handleListRules(supabaseClient, url);
+      return await handleListRules(supabaseClient, url, corsHeaders);
     }
 
     // Route: GET /compliance/rules/:id
@@ -121,26 +123,26 @@ serve(async (req: Request) => {
       pathSegments[pathSegments.indexOf('rules') + 1]
     ) {
       const ruleId = pathSegments[pathSegments.indexOf('rules') + 1];
-      return await handleGetRule(supabaseClient, ruleId);
+      return await handleGetRule(supabaseClient, ruleId, corsHeaders);
     }
 
     // Route: POST /compliance/rules
     if (req.method === 'POST' && pathSegments.includes('rules')) {
       const body: CreateRuleRequest = await req.json();
-      return await handleCreateRule(supabaseClient, body, user.id);
+      return await handleCreateRule(supabaseClient, body, user.id, corsHeaders);
     }
 
     // Route: PATCH /compliance/rules/:id
     if (req.method === 'PATCH' && pathSegments.includes('rules')) {
       const ruleId = pathSegments[pathSegments.indexOf('rules') + 1];
       const body = await req.json();
-      return await handleUpdateRule(supabaseClient, ruleId, body);
+      return await handleUpdateRule(supabaseClient, ruleId, body, corsHeaders);
     }
 
     // Route: DELETE /compliance/rules/:id
     if (req.method === 'DELETE' && pathSegments.includes('rules')) {
       const ruleId = pathSegments[pathSegments.indexOf('rules') + 1];
-      return await handleDeleteRule(supabaseClient, ruleId);
+      return await handleDeleteRule(supabaseClient, ruleId, corsHeaders);
     }
 
     // Route: GET /compliance/violations
@@ -149,7 +151,7 @@ serve(async (req: Request) => {
       pathSegments.includes('violations') &&
       !pathSegments[pathSegments.indexOf('violations') + 1]
     ) {
-      return await handleListViolations(supabaseClient, url);
+      return await handleListViolations(supabaseClient, url, corsHeaders);
     }
 
     // Route: GET /compliance/violations/:id
@@ -159,19 +161,19 @@ serve(async (req: Request) => {
       pathSegments[pathSegments.indexOf('violations') + 1]
     ) {
       const violationId = pathSegments[pathSegments.indexOf('violations') + 1];
-      return await handleGetViolation(supabaseClient, violationId);
+      return await handleGetViolation(supabaseClient, violationId, corsHeaders);
     }
 
     // Route: POST /compliance/check
     if (req.method === 'POST' && pathSegments.includes('check')) {
       const body: CheckComplianceRequest = await req.json();
-      return await handleCheckCompliance(supabaseClient, body);
+      return await handleCheckCompliance(supabaseClient, body, corsHeaders);
     }
 
     // Route: POST /compliance/signoff
     if (req.method === 'POST' && pathSegments.includes('signoff')) {
       const body: SignoffRequest = await req.json();
-      return await handleSignoff(supabaseClient, body);
+      return await handleSignoff(supabaseClient, body, corsHeaders);
     }
 
     // Route: GET /compliance/summary/:entityType/:entityId
@@ -179,18 +181,18 @@ serve(async (req: Request) => {
       const summaryIndex = pathSegments.indexOf('summary');
       const entityType = pathSegments[summaryIndex + 1];
       const entityId = pathSegments[summaryIndex + 2];
-      return await handleGetSummary(supabaseClient, entityType, entityId);
+      return await handleGetSummary(supabaseClient, entityType, entityId, corsHeaders);
     }
 
     // Route: GET /compliance/templates
     if (req.method === 'GET' && pathSegments.includes('templates')) {
-      return await handleListTemplates(supabaseClient);
+      return await handleListTemplates(supabaseClient, corsHeaders);
     }
 
     // Route: POST /compliance/exemptions
     if (req.method === 'POST' && pathSegments.includes('exemptions')) {
       const body: CreateExemptionRequest = await req.json();
-      return await handleCreateExemption(supabaseClient, body, user.id);
+      return await handleCreateExemption(supabaseClient, body, user.id, corsHeaders);
     }
 
     // Route not found
@@ -208,7 +210,7 @@ serve(async (req: Request) => {
 });
 
 // Handler: List compliance rules
-async function handleListRules(supabaseClient: ReturnType<typeof createClient>, url: URL) {
+async function handleListRules(supabaseClient: ReturnType<typeof createClient>, url: URL, corsHeaders: Record<string, string>) {
   const params = url.searchParams;
   const is_active = params.get('is_active');
   const rule_type = params.get('rule_type');
@@ -261,7 +263,7 @@ async function handleListRules(supabaseClient: ReturnType<typeof createClient>, 
 }
 
 // Handler: Get single rule
-async function handleGetRule(supabaseClient: ReturnType<typeof createClient>, ruleId: string) {
+async function handleGetRule(supabaseClient: ReturnType<typeof createClient>, ruleId: string, corsHeaders: Record<string, string>) {
   const { data, error } = await supabaseClient
     .from('compliance_rules')
     .select('*')
@@ -285,7 +287,8 @@ async function handleGetRule(supabaseClient: ReturnType<typeof createClient>, ru
 async function handleCreateRule(
   supabaseClient: ReturnType<typeof createClient>,
   body: CreateRuleRequest,
-  userId: string
+  userId: string,
+  corsHeaders: Record<string, string>
 ) {
   // Validate required fields
   if (!body.rule_code || !body.name_en || !body.name_ar || !body.rule_type) {
@@ -328,7 +331,8 @@ async function handleCreateRule(
 async function handleUpdateRule(
   supabaseClient: ReturnType<typeof createClient>,
   ruleId: string,
-  body: Partial<CreateRuleRequest>
+  body: Partial<CreateRuleRequest>,
+  corsHeaders: Record<string, string>
 ) {
   const { data, error } = await supabaseClient
     .from('compliance_rules')
@@ -354,7 +358,7 @@ async function handleUpdateRule(
 }
 
 // Handler: Delete (deactivate) rule
-async function handleDeleteRule(supabaseClient: ReturnType<typeof createClient>, ruleId: string) {
+async function handleDeleteRule(supabaseClient: ReturnType<typeof createClient>, ruleId: string, corsHeaders: Record<string, string>) {
   const { data, error } = await supabaseClient
     .from('compliance_rules')
     .update({
@@ -379,7 +383,7 @@ async function handleDeleteRule(supabaseClient: ReturnType<typeof createClient>,
 }
 
 // Handler: List violations
-async function handleListViolations(supabaseClient: ReturnType<typeof createClient>, url: URL) {
+async function handleListViolations(supabaseClient: ReturnType<typeof createClient>, url: URL, corsHeaders: Record<string, string>) {
   const params = url.searchParams;
   const entity_type = params.get('entity_type');
   const entity_id = params.get('entity_id');
@@ -446,7 +450,8 @@ async function handleListViolations(supabaseClient: ReturnType<typeof createClie
 // Handler: Get single violation
 async function handleGetViolation(
   supabaseClient: ReturnType<typeof createClient>,
-  violationId: string
+  violationId: string,
+  corsHeaders: Record<string, string>
 ) {
   const { data: violation, error } = await supabaseClient
     .from('compliance_violations')
@@ -483,7 +488,8 @@ async function handleGetViolation(
 // Handler: Check compliance
 async function handleCheckCompliance(
   supabaseClient: ReturnType<typeof createClient>,
-  body: CheckComplianceRequest
+  body: CheckComplianceRequest,
+  corsHeaders: Record<string, string>
 ) {
   // Validate required fields
   if (!body.entity_type || !body.entity_id || !body.action_type) {
@@ -523,7 +529,8 @@ async function handleCheckCompliance(
 // Handler: Sign off on violation
 async function handleSignoff(
   supabaseClient: ReturnType<typeof createClient>,
-  body: SignoffRequest
+  body: SignoffRequest,
+  corsHeaders: Record<string, string>
 ) {
   // Validate required fields
   if (!body.violation_id || !body.action || !body.justification) {
@@ -565,7 +572,8 @@ async function handleSignoff(
 async function handleGetSummary(
   supabaseClient: ReturnType<typeof createClient>,
   entityType: string,
-  entityId: string
+  entityId: string,
+  corsHeaders: Record<string, string>
 ) {
   if (!entityType || !entityId) {
     return new Response(
@@ -600,7 +608,7 @@ async function handleGetSummary(
 }
 
 // Handler: List rule templates
-async function handleListTemplates(supabaseClient: ReturnType<typeof createClient>) {
+async function handleListTemplates(supabaseClient: ReturnType<typeof createClient>, corsHeaders: Record<string, string>) {
   const { data, error } = await supabaseClient
     .from('compliance_rule_templates')
     .select('*')
@@ -625,7 +633,8 @@ async function handleListTemplates(supabaseClient: ReturnType<typeof createClien
 async function handleCreateExemption(
   supabaseClient: ReturnType<typeof createClient>,
   body: CreateExemptionRequest,
-  userId: string
+  userId: string,
+  corsHeaders: Record<string, string>
 ) {
   // Validate required fields
   if (!body.reason) {
