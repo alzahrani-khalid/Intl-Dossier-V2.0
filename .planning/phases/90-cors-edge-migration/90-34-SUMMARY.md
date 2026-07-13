@@ -2,15 +2,16 @@
 phase: 90-cors-edge-migration
 plan: 34
 type: checkpoint
-status: AWAITING-OPERATOR-SIGNOFF
+status: complete
 requirements: [CORS-03]
+signed_off: 2026-07-13
 ---
 
 # 90-34 — Deploy batch C (Group-C + Group-D) to staging + FINAL SC-4 gate
 
-**Status: evidence complete, AWAITING OPERATOR SIGN-OFF (plan is `autonomous: false`;
-this is the LAST Phase-90 checkpoint and closes SC-4).** Orchestrator does not
-self-approve (ORCH-BRIEF rule 2).
+**Status: COMPLETE — `OPERATOR VERDICT 90-33/34: signed` (2026-07-13, relayed by overseer).
+This was the LAST Phase-90 checkpoint; its sign-off closes SC-4 and Phase 90.**
+Orchestrator did not self-approve (ORCH-BRIEF rule 2).
 
 ## Precondition
 

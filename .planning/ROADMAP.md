@@ -31,7 +31,7 @@
 - [x] **Phase 87: Linear Affordances** - Right-peek panel with paging, filter/display split popovers with live counts, ⌘K command-menu audit, rich empty states (F23–F26)
 - [ ] **Phase 88: Security & Hygiene Tail** - UserPicker PostgREST filter-interpolation fix (IN-04) + credential-hygiene sweep (TEST_USER_PASSWORD-class values externalized)
 - [ ] **Phase 89: CI & Test-Debt Burn-Down** - E2E / integration / a11y / visual-regression suites green or honestly quarantined; test-rtl-smokes promoted to a required branch-protection context
-- [ ] **Phase 90: CORS Edge-Function Migration** - All 272 edge functions migrated off the deprecated wildcard corsHeaders in staged A/B/C batches, each deployed and smoke-checked
+- [x] **Phase 90: CORS Edge-Function Migration** - All 272 edge functions migrated off the deprecated wildcard corsHeaders in staged A/B/C batches, each deployed and smoke-checked
 - [ ] **Phase 91: v7.0 Live Verification** - GPU/TEI stack stood up and the deploy-gated EVAL-01/02/03 + AGENT/INFRA verification closed (hardware-gated)
 
 ## Phase Details
@@ -398,7 +398,7 @@ Full detail: [milestones/v8.1-ROADMAP.md](milestones/v8.1-ROADMAP.md).
 | 87. Linear Affordances | v9.0 | 6/10 | In Progress|  |
 | 88. Security & Hygiene Tail | v9.0 | 0/TBD | Not started | — |
 | 89. CI & Test-Debt Burn-Down | v9.0 | 0/TBD | Not started | — |
-| 90. CORS Edge-Function Migration | v9.0 | 36/36 | Awaiting operator sign-off | — |
+| 90. CORS Edge-Function Migration | v9.0 | 36/36 | Complete    | 2026-07-13 |
 | 91. v7.0 Live Verification | v9.0 | 0/TBD | Not started | — |
 
 <!-- gsd:progress:end -->
