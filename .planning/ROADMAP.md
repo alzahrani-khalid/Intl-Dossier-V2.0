@@ -28,7 +28,7 @@
 ## Phases
 
 - [ ] **Phase 86: Feature Completion** - The three honest-disabled data-entry features become real or are formally retired: MoU create, user-management routes, ConsistencyPanel
-- [ ] **Phase 87: Linear Affordances** - Right-peek panel with paging, filter/display split popovers with live counts, ⌘K command-menu audit, rich empty states (F23–F26)
+- [x] **Phase 87: Linear Affordances** - Right-peek panel with paging, filter/display split popovers with live counts, ⌘K command-menu audit, rich empty states (F23–F26)
 - [ ] **Phase 88: Security & Hygiene Tail** - UserPicker PostgREST filter-interpolation fix (IN-04) + credential-hygiene sweep (TEST_USER_PASSWORD-class values externalized)
 - [ ] **Phase 89: CI & Test-Debt Burn-Down** - E2E / integration / a11y / visual-regression suites green or honestly quarantined; test-rtl-smokes promoted to a required branch-protection context
 - [ ] **Phase 90: CORS Edge-Function Migration** - All 272 edge functions migrated off the deprecated wildcard corsHeaders in staged A/B/C batches, each deployed and smoke-checked
@@ -94,13 +94,13 @@ Plans:
 **Wave 2** _(per-surface wiring, parallel — blocked on Wave 1)_
 
 - [x] 87-06-PLAN.md — Countries + organizations wiring + DossierTable column visibility (AFF-01/02/04)
-- [ ] 87-07-PLAN.md — Forums + topics + working-groups wiring + GenericListPage property toggles (AFF-01/02/04)
-- [ ] 87-08-PLAN.md — Persons + engagements + elected-officials wiring + exact engagements total (AFF-01/02/04)
-- [ ] 87-09-PLAN.md — Kanban: URL normalization, popover fold-in, commitment peek, board empties (AFF-01/02/04)
+- [x] 87-07-PLAN.md — Forums + topics + working-groups wiring + GenericListPage property toggles (AFF-01/02/04)
+- [x] 87-08-PLAN.md — Persons + engagements + elected-officials wiring + exact engagements total (AFF-01/02/04)
+- [x] 87-09-PLAN.md — Kanban: URL normalization, popover fold-in, commitment peek, board empties (AFF-01/02/04)
 
 **Wave 3** _(gate)_
 
-- [ ] 87-10-PLAN.md — Phase gate battery + consolidated EN/AR human render sign-off (all AFF)
+- [x] 87-10-PLAN.md — Phase gate battery + consolidated EN/AR human render sign-off (all AFF) — operator signed 2026-07-13
 
 ### Phase 88: Security & Hygiene Tail
 

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v9.0
 milestone_name: Platform Completion & Live Verification
 status: executing
-last_updated: '2026-07-07T12:25:36.060Z'
-last_activity: 2026-07-07
+last_updated: '2026-07-13T09:50:00.000Z'
+last_activity: 2026-07-13
 progress:
   total_phases: 6
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 15
-  completed_plans: 14
-  percent: 18
+  completed_plans: 15
+  percent: 33
 ---
 
 # Project State
@@ -20,20 +20,21 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-06 — v9.0 Platform Completion & Live Verification started)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 87 — linear-affordances
+**Current focus:** Phase 88 — Security & Hygiene Tail (next; Phase 87 CLOSED)
 
 ## Current Position
 
-Phase: 87 (linear-affordances) — EXECUTING
-Plan: 9 of 10
-Status: 87-08 + 87-09 COMPLETE; only 87-10 remains (designed human render sign-off gate)
-Last activity: 2026-07-09 -- **Plans 87-08 + 87-09 COMPLETE** (drover run-20260709-104447 on `milestone/v9.0-drover`). **87-09 (kanban)** merged by drover as a clean `task-done` (1 attempt; build/test/lint/evidence/scope/acceptance/review all green): kanban state normalized to URL search params, toolbar pills replaced by Filter/Display popovers, commitment-card peek via `CommitmentDrawer`, board empty states. **87-08 (persons / engagements / elected-officials)** completed by an **operator-directed manual salvage**, NOT a drover task-done: two runs parked it `human` on harness defects (consult-parse failure under `visibility.llm: pane`; a worker ending trailer-less without committing), and each attempt's worktree reset destroyed the prior attempt's work. Recovered from dangling git objects (`b895c430` codex chain + a3 review-fix commits `96666b3b`/`13aaed28`/`56903e9b`) and finished by hand. The last review finding was re-implemented from scratch: the bucketed engagement type filter used a direct PostgREST query whose `dossier:id(...)` embed is invalid (`id` is the FK column) → **400s on type=meeting|travel|event**, and it bypassed the RPC's archived-exclusion + dossier-name search. Since `p_engagement_type` is a single equality and cannot express a bucket (`meeting` = 4 types), migration `20260709180000_add_p_engagement_types_to_search_engagements_advanced.sql` adds `p_engagement_types TEXT[]` as a strict superset (staging-applied via Supabase MCP; `fn_count=1`, ACL preserved, legacy 9-arg call unaffected); bucketed rows **and** the exact head-count now share one predicate path. Gates hand-run green: `tsc --noEmit` 0, `lint --max-warnings 0` 0, vitest 82 pass / 10 files. Commits: `64a4690a` (RPC fix) merged as `bbc57390`. **87-10 is the designed human render sign-off gate — parked for the operator, never auto-answered.**
+Phase: 87 (linear-affordances) — **COMPLETE** (operator-signed render gate, merged to milestone)
+Plan: 10 of 10
+Status: Phase 87 CLOSED — next is Phase 88 (Security & Hygiene Tail)
+Last activity: 2026-07-13 -- **PHASE 87 CLOSED.** Operator signed the 87-10 consolidated EN/AR render gate (`OPERATOR VERDICT 87-10: signed`, relayed by overseer; the gate is `autonomous: false` and was never self-approved). Merged integration branch `drover/run-20260709-104447` → `milestone/v9.0-drover` at `26f3780a` (--no-ff, no conflicts; brings 87-08/09/10 + the `p_engagement_types` migration + head-count fix `e5dea1f1` + grid-contract pin `34cd297e`). Re-gated the merged tree: `tsc --noEmit` 0, `lint --max-warnings 0` 0 (i18n/RTL/bootstrap-parity/date-format sub-gates all green), targeted vitest 27 pass incl. the `useEngagementsInfinite` head-count test. Authored `87-10-SUMMARY.md` from git evidence (NOT re-executed); `87-08`/`87-09` SUMMARYs already present from the salvage. Stamped `87-VALIDATION.md` → `nyquist_compliant: true` + `wave_0_complete: true` + approval recorded (T-87-26 mitigated). AFF-01..04 all complete, demonstrated live EN+AR. Deferred out-of-scope backend bug (`validation.ts:45` EO API 500) routed to Phase 88/89 per ORCH-BRIEF §0e.
+Prior — 2026-07-09 -- **Plans 87-08 + 87-09 COMPLETE** (drover run-20260709-104447 on `milestone/v9.0-drover`). **87-09 (kanban)** merged by drover as a clean `task-done` (1 attempt; build/test/lint/evidence/scope/acceptance/review all green): kanban state normalized to URL search params, toolbar pills replaced by Filter/Display popovers, commitment-card peek via `CommitmentDrawer`, board empty states. **87-08 (persons / engagements / elected-officials)** completed by an **operator-directed manual salvage**, NOT a drover task-done: two runs parked it `human` on harness defects (consult-parse failure under `visibility.llm: pane`; a worker ending trailer-less without committing), and each attempt's worktree reset destroyed the prior attempt's work. Recovered from dangling git objects (`b895c430` codex chain + a3 review-fix commits `96666b3b`/`13aaed28`/`56903e9b`) and finished by hand. The last review finding was re-implemented from scratch: the bucketed engagement type filter used a direct PostgREST query whose `dossier:id(...)` embed is invalid (`id` is the FK column) → **400s on type=meeting|travel|event**, and it bypassed the RPC's archived-exclusion + dossier-name search. Since `p_engagement_type` is a single equality and cannot express a bucket (`meeting` = 4 types), migration `20260709180000_add_p_engagement_types_to_search_engagements_advanced.sql` adds `p_engagement_types TEXT[]` as a strict superset (staging-applied via Supabase MCP; `fn_count=1`, ACL preserved, legacy 9-arg call unaffected); bucketed rows **and** the exact head-count now share one predicate path. Gates hand-run green: `tsc --noEmit` 0, `lint --max-warnings 0` 0, vitest 82 pass / 10 files. Commits: `64a4690a` (RPC fix) merged as `bbc57390`. **87-10 is the designed human render sign-off gate — parked for the operator, never auto-answered.**
 
 Prior — 2026-07-09 -- **Plan 87-07 complete + sync-back reconciled** (drover-auto run on `milestone/v9.0-drover`). Prior orchestrator (workspace wH, gone) committed the forums+working-groups slices (`ad4a4222` GenericListPage showSecondary/showStatus props, `db6dbc9d` forums+WG surfaces) with NO SUMMARY, and left the topics slice uncommitted in-flight. This run verified the topics slice green (tsc 0 / eslint 0 / topics vitest 3/3), committed it as `644821ef`, and authored 87-07-SUMMARY.md from git evidence — 87-07 NOT re-executed. F23 peek + F24 Filter/Display popovers + F26 rich empty states now wired on all 3 GenericListPage surfaces (working-groups-empty testid preserved); GenericListPage showSecondary/showStatus visibility props (default true) drive Display-property toggles. 5 of 9 core surfaces wired (countries, organizations, forums, working-groups, topics). AFF-01/AFF-02 stay Pending until 87-08/09 wire the rest + 87-10 consolidated render sign-off.
 
 Prior — 2026-07-07 -- Plan 87-06 complete (F23/F24/F26 wired into the 2 DossierTable surfaces — countries as the template, organizations mirroring it). **DossierTable** gained a `visibleColumns` prop driving a computed grid template via a `--dossier-cols` custom property read only by the `@768` `.dossier-row` rule (mobile + every no-prop consumer byte-identical — zero default-case regression). **Countries** (the template): `validateSearch` extended via `parseListControlsSearch` whitelist (status/sensitivity/sort/dir/cols); row click now `usePeekStore.register({ids,type,total,pageOffset,fetchPage,pageSize})` + `openDossier` (detail navigate gone); toolbar = `ToolbarSearch + FilterPopover + DisplayPopover`, `FilterChipsRow` above the table; `ListEmptyState` (rich create + filtered-empty) replaces the bare `empty-hint`. **Organizations** mirrors it (no ISO merge). **Hooks**: `useCountries`/`useOrganizations` extracted a module-level fetcher (`fetch{Countries,Organizations}Page`) + `status`/`sensitivity`/`orderBy`/`dir`/`nameColumn` params into the single `.order()` seam (default keeps legacy `updated_at DESC`); the peek `fetchPage` re-invokes that fetcher through `queryClient.fetchQuery` with the SAME key family (no divergent query). New `lib/dossier-facet-count.ts` (shared RLS-scoped head-count). **Deviations**: fixed the shared `useListControls.formatValue` to translate the chip option label (was leaking the raw i18n key — benefits all Wave-2 surfaces); extracted the facet helper to `lib/` (filename-case gate); rewrote both route tests to render the wired route (QueryClient + LanguageProvider + router mock). Verify all green: frontend `tsc --noEmit` 0, `pnpm lint --max-warnings 0` 0, plan `<verification>` vitest 32 files / 222 tests pass. Commits: 6f7791dd (DossierTable) / 47b2480f (countries) / 8198c453 (organizations). **AFF-04** re-exercised live; **AFF-01/AFF-02 stay Pending** — 2 of 9 core surfaces wired; they complete when 87-07/08/09 wire the rest + 87-10 consolidated render sign-off (live visual/RTL sign-off of these 2 surfaces also rolls into 87-10).
 
-Progress: [███████░░░] 73%
+Progress: [██████████] 100% (Phase 87 — 10/10 plans, closed)
 
 ### Roadmap Evolution
 
