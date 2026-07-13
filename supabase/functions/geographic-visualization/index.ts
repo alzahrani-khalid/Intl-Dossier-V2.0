@@ -10,24 +10,22 @@
  */
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
-
-// CORS headers for cross-origin requests
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-};
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // Response helpers
-function jsonResponse(data: unknown, status = 200): Response {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  });
-}
+function createResponseHelpers(corsHeaders: Record<string, string>) {
+  function jsonResponse(data: unknown, status = 200): Response {
+    return new Response(JSON.stringify(data), {
+      status,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
 
-function errorResponse(message: string, code: string, status = 400): Response {
-  return jsonResponse({ success: false, error: { code, message } }, status);
+  function errorResponse(message: string, code: string, status = 400): Response {
+    return jsonResponse({ success: false, error: { code, message } }, status);
+  }
+
+  return { jsonResponse, errorResponse };
 }
 
 // Types
@@ -43,9 +41,13 @@ interface GeoVisualizationFilters {
 
 // Main handler
 Deno.serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req);
+  const responseHelpers = createResponseHelpers(corsHeaders);
+  const { errorResponse } = responseHelpers;
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
@@ -85,13 +87,13 @@ Deno.serve(async (req: Request) => {
     // Route to appropriate handler
     switch (endpoint) {
       case 'countries':
-        return await handleCountries(supabase, filters);
+        return await handleCountries(supabase, filters, responseHelpers);
       case 'relationships':
-        return await handleRelationships(supabase, filters);
+        return await handleRelationships(supabase, filters, responseHelpers);
       case 'summary':
-        return await handleSummary(supabase, filters);
+        return await handleSummary(supabase, filters, responseHelpers);
       case 'data':
-        return await handleFullData(supabase, filters);
+        return await handleFullData(supabase, filters, responseHelpers);
       default:
         return errorResponse('Invalid endpoint', 'INVALID_ENDPOINT', 400);
     }
@@ -110,7 +112,8 @@ Deno.serve(async (req: Request) => {
  */
 async function handleCountries(
   supabase: ReturnType<typeof createClient>,
-  filters: GeoVisualizationFilters
+  filters: GeoVisualizationFilters,
+  { jsonResponse, errorResponse }: ReturnType<typeof createResponseHelpers>
 ): Promise<Response> {
   let query = supabase.from('v_country_engagement_metrics').select('*');
 
@@ -180,7 +183,8 @@ async function handleCountries(
  */
 async function handleRelationships(
   supabase: ReturnType<typeof createClient>,
-  filters: GeoVisualizationFilters
+  filters: GeoVisualizationFilters,
+  { jsonResponse, errorResponse }: ReturnType<typeof createResponseHelpers>
 ): Promise<Response> {
   let query = supabase.from('v_country_relationship_flows').select('*');
 
@@ -240,7 +244,8 @@ async function handleRelationships(
  */
 async function handleSummary(
   supabase: ReturnType<typeof createClient>,
-  filters: GeoVisualizationFilters
+  filters: GeoVisualizationFilters,
+  { jsonResponse, errorResponse }: ReturnType<typeof createResponseHelpers>
 ): Promise<Response> {
   // Get regional breakdown
   const { data: regionalData, error: regionalError } = await supabase
@@ -315,7 +320,8 @@ async function handleSummary(
  */
 async function handleFullData(
   supabase: ReturnType<typeof createClient>,
-  filters: GeoVisualizationFilters
+  filters: GeoVisualizationFilters,
+  { jsonResponse, errorResponse }: ReturnType<typeof createResponseHelpers>
 ): Promise<Response> {
   const { data, error } = await supabase.rpc('get_geographic_visualization_data', {
     p_time_range: filters.timeRange || '90d',

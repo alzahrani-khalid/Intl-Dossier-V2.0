@@ -21,7 +21,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // ============================================================================
 // Types
@@ -102,7 +102,8 @@ interface HistoryResponse {
 // Helper Functions
 // ============================================================================
 
-function errorResponse(
+function errorResponseWithCors(
+  corsHeaders: Record<string, string>,
   code: string,
   message_en: string,
   message_ar: string,
@@ -120,7 +121,7 @@ function errorResponse(
   );
 }
 
-function successResponse(data: unknown, status = 200) {
+function successResponseWithCors(corsHeaders: Record<string, string>, data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -316,9 +317,13 @@ async function generateAlerts(
 // ============================================================================
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+  const errorResponse = errorResponseWithCors.bind(null, corsHeaders);
+  const successResponse = successResponseWithCors.bind(null, corsHeaders);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
