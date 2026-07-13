@@ -112,7 +112,15 @@ Plans:
 1. `UserPicker.handleSearch` no longer interpolates user input into PostgREST filter strings — search input containing `,().` characters cannot alter the query, via `.ilike()` builder or sanitization (closes IN-04 / T-79-S2)
 2. No real secrets remain in tracked files — `TEST_USER_PASSWORD`-class values are rotated or externalized and the `.env.test.example` pattern is enforced
 3. Test suites and browser-automation flows still authenticate and pass after credential externalization (no silently broken login paths)
-   **Plans**: TBD
+   **Plans**: 3 plans
+
+Plans:
+
+**Wave 1**
+
+- [ ] 88-01-PLAN.md — SEC-01: quotePostgrestValue helper + UserPicker fix + 5-site sibling sweep
+- [ ] 88-02-PLAN.md — SEC-02: redact leaked credential, rotate staging password, GH-secret checkpoint, login smoke
+- [ ] 88-03-PLAN.md — Hygiene: Express 5 getter-only req.query fix in shared validate() helper (ORCH-BRIEF §0e)
 
 ### Phase 89: CI & Test-Debt Burn-Down
 
