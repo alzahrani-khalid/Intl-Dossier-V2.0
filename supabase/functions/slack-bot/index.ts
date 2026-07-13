@@ -2,7 +2,7 @@
 // Handles OAuth callbacks, slash commands, and interactive components
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // Types
 interface SlackEvent {
@@ -471,7 +471,7 @@ function buildBriefingBlocks(
 }
 
 // Handle slash commands
-async function handleSlashCommand(command: SlackSlashCommand): Promise<Response> {
+async function handleSlashCommand(command: SlackSlashCommand, corsHeaders: Record<string, string>): Promise<Response> {
   const supabase = getSupabaseClient();
   const startTime = Date.now();
   const appUrl = Deno.env.get('APP_URL') || 'https://intl-dossier.app';
@@ -841,7 +841,7 @@ async function handleOAuthCallback(code: string, state: string): Promise<Respons
 }
 
 // Handle events from Slack
-async function handleEvent(event: SlackEvent): Promise<Response> {
+async function handleEvent(event: SlackEvent, corsHeaders: Record<string, string>): Promise<Response> {
   // URL verification challenge
   if (event.type === 'url_verification' && event.challenge) {
     return new Response(event.challenge, {
@@ -876,9 +876,11 @@ async function handleEvent(event: SlackEvent): Promise<Response> {
 
 // Main handler
 Deno.serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   const url = new URL(req.url);
@@ -913,13 +915,13 @@ Deno.serve(async (req: Request) => {
         trigger_id: formData.get('trigger_id') as string,
       };
 
-      return handleSlashCommand(command);
+      return handleSlashCommand(command, corsHeaders);
     }
 
     // Event API (JSON)
     if (contentType.includes('application/json')) {
       const event: SlackEvent = await req.json();
-      return handleEvent(event);
+      return handleEvent(event, corsHeaders);
     }
 
     return new Response(JSON.stringify({ error: 'Unsupported request type' }), {
