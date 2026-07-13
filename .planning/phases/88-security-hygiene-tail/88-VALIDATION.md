@@ -1,8 +1,8 @@
 ---
 phase: 88
 slug: security-hygiene-tail
-status: draft
-nyquist_compliant: false
+status: approved
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-07-13
 ---
@@ -52,7 +52,7 @@ created: 2026-07-13
 ## Wave 0 Requirements
 
 - [ ] `frontend/src/components/forms/__tests__/UserPicker.test.tsx` — asserts reserved-char search input is quoted/escaped, filter tree unchanged (SEC-01)
-- [ ] `backend/src/utils/__tests__/validation.test.ts` — asserts `validate({ query })` middleware coerces `req.query` without throwing on Express 5 getter (hygiene)
+- [ ] `backend/src/utils/__tests__/validation.test.ts` — asserts `validate({ query })` middleware coerces `req.query` without throwing on Express 5 getter (hygiene). NOTE: 88-03 must first add the narrow `src/utils/__tests__/**/*.test.ts` glob to `backend/vitest.config.ts` `test.include` (currently `tests/**` only) or this test never runs.
 - [ ] Login smoke (Playwright existing global-setup) — proves credential externalization did not break auth (SEC-02)
 
 *Secret-value absence (SEC-02) is a grep assertion, not a framework test.*
@@ -71,11 +71,11 @@ created: 2026-07-13
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 90s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references (incl. the 88-03 vitest include-glob prerequisite)
+- [x] No watch-mode flags
+- [x] Feedback latency < 90s
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** approved 2026-07-13 (plan-time; wave_0_complete flips at execution)
