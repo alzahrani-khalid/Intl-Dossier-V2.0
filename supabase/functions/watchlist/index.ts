@@ -3,7 +3,7 @@
 // Feature: personal-watchlist
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -113,9 +113,11 @@ const entityNameFieldMap: Record<EntityType, string> = {
 };
 
 Deno.serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
@@ -228,8 +230,6 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
-});
-
 // Get user's watchlist with optional filtering and pagination
 async function getWatchlist(
   supabase: ReturnType<typeof createClient>,
@@ -781,3 +781,4 @@ async function getWatchEvents(
     { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
   );
 }
+});
