@@ -11,6 +11,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query'
+import { quotePostgrestValue } from '@/lib/postgrest-escape'
 import { supabase } from '@/lib/supabase'
 import type { Dossier } from '@/types/dossier'
 
@@ -66,7 +67,8 @@ export async function fetchOrganizationsPage(
     .neq('status', 'deleted')
 
   if (safeSearch.length > 0) {
-    query = query.or(`name_en.ilike.%${safeSearch}%,name_ar.ilike.%${safeSearch}%`)
+    const pattern = quotePostgrestValue(`%${safeSearch}%`)
+    query = query.or(`name_en.ilike.${pattern},name_ar.ilike.${pattern}`)
   }
 
   if (typeof status === 'string' && status.length > 0) {

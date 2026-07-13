@@ -89,6 +89,19 @@ describe('useOrganizations — Plan 40-02b adapter', () => {
     expect(result.current.data?.pagination.totalPages).toBe(3)
   })
 
+  it('quotes reserved search characters without stripping dots', async () => {
+    buildBuilder({ data: [], error: null, count: 0 })
+
+    const { wrapper } = createWrapper()
+    const { result } = renderHook(() => useOrganizations({ search: 'a,b(c).d' }), { wrapper })
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true)
+    })
+
+    expect(orMock).toHaveBeenCalledWith('name_en.ilike."%a,b(c).d%",name_ar.ilike."%a,b(c).d%"')
+  })
+
   it('throws when Supabase returns an error', async () => {
     buildBuilder({ data: null, error: { message: 'org-fail' }, count: null })
 
