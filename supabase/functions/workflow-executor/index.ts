@@ -5,7 +5,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient, SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 // =============================================================================
 // Types
@@ -77,7 +77,7 @@ interface ExecutionContext {
 function jsonResponse(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
   });
 }
 
@@ -114,7 +114,7 @@ function getTableName(entityType: WorkflowEntityType): string {
 // Main Handler
 // =============================================================================
 
-serve(async (req) => {
+async function handleRequest(req: Request, corsHeaders: Record<string, string>) {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
@@ -171,6 +171,14 @@ serve(async (req) => {
       error instanceof Error ? error.message : 'Unknown error'
     );
   }
+}
+
+serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+  const response = await handleRequest(req, corsHeaders);
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(corsHeaders)) headers.set(name, value);
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 });
 
 // =============================================================================
