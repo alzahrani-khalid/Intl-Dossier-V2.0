@@ -132,7 +132,7 @@ await supabase.auth.getSession()
       "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
       "user": {
         "id": "...",
-        "email": "kazahrani@stats.gov.sa"
+        "email": <see .env.test — TEST_USER_EMAIL>
       }
     }
   },
