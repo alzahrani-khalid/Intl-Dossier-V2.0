@@ -15,7 +15,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // =============================================
 // TYPES
@@ -113,7 +113,8 @@ function validateQuery(params: FieldHistoryQuery): string | null {
 
 async function handleGetFieldHistory(
   supabaseClient: ReturnType<typeof createClient>,
-  params: FieldHistoryQuery
+  params: FieldHistoryQuery,
+  corsHeaders: Record<string, string>
 ): Promise<Response> {
   // Validate parameters
   const validationError = validateQuery(params);
@@ -213,7 +214,8 @@ async function handleGetFieldHistory(
 
 async function handleGetFieldHistoryGrouped(
   supabaseClient: ReturnType<typeof createClient>,
-  params: FieldHistoryQuery
+  params: FieldHistoryQuery,
+  corsHeaders: Record<string, string>
 ): Promise<Response> {
   // Validate parameters
   const validationError = validateQuery(params);
@@ -278,7 +280,8 @@ async function handleGetFieldHistoryGrouped(
 
 async function handleRollback(
   supabaseClient: ReturnType<typeof createClient>,
-  body: RollbackRequest
+  body: RollbackRequest,
+  corsHeaders: Record<string, string>
 ): Promise<Response> {
   // Validate request
   if (!body.field_history_id) {
@@ -343,9 +346,11 @@ async function handleRollback(
 // =============================================
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   // Validate authorization
@@ -396,10 +401,10 @@ serve(async (req) => {
     };
 
     if (action === 'grouped') {
-      return handleGetFieldHistoryGrouped(supabaseClient, params);
+      return handleGetFieldHistoryGrouped(supabaseClient, params, corsHeaders);
     }
 
-    return handleGetFieldHistory(supabaseClient, params);
+    return handleGetFieldHistory(supabaseClient, params, corsHeaders);
   }
 
   if (req.method === 'POST' && action === 'rollback') {
@@ -412,7 +417,7 @@ serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
-    return handleRollback(supabaseClient, body);
+    return handleRollback(supabaseClient, body, corsHeaders);
   }
 
   // Method not allowed
