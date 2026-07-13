@@ -518,5 +518,7 @@ async function handleRequest(req: Request, corsHeaders: Record<string, string>) 
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
   const response = await handleRequest(req, corsHeaders);
-  return new Response(response.body, { status: response.status, statusText: response.statusText, headers: { ...Object.fromEntries(response.headers), ...corsHeaders } });
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(corsHeaders)) headers.set(name, value);
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 });
