@@ -1,4 +1,5 @@
 import express, { type Request, type Response } from 'express'
+import { request, type Server } from 'node:http'
 import { describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
 import { paginationSchema, validate } from '../validation'
@@ -40,5 +41,45 @@ describe('validate', () => {
     expect(next).toHaveBeenCalledWith()
     expect(req.body).toEqual({ count: 2 })
     expect(req.params).toEqual({ id: 3 })
+  })
+
+  it('passes the coerced query through a real Express route', async () => {
+    const app = express()
+    app.get('/validated', validate({ query: paginationSchema }), (req, res) => res.json(req.query))
+    const server = await new Promise<Server>((resolve) => {
+      const listener = app.listen(0, () => resolve(listener))
+    })
+
+    try {
+      const address = server.address()
+      if (address == null || typeof address === 'string') throw new Error('Expected a TCP address')
+
+      const response = await new Promise<{ status: number; body: string }>((resolve, reject) => {
+        const clientRequest = request(
+          {
+            hostname: '127.0.0.1',
+            port: address.port,
+            path: '/validated?page=2&limit=5',
+          },
+          (serverResponse) => {
+            let body = ''
+            serverResponse.setEncoding('utf8')
+            serverResponse.on('data', (chunk) => (body += chunk))
+            serverResponse.on('end', () =>
+              resolve({ status: serverResponse.statusCode ?? 0, body }),
+            )
+          },
+        )
+        clientRequest.on('error', reject)
+        clientRequest.end()
+      })
+
+      expect(response.status).toBe(200)
+      expect(JSON.parse(response.body)).toEqual({ page: 2, limit: 5, order: 'asc' })
+    } finally {
+      await new Promise<void>((resolve, reject) =>
+        server.close((error) => (error == null ? resolve() : reject(error))),
+      )
+    }
   })
 })
