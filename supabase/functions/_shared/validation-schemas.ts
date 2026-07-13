@@ -7,6 +7,7 @@
  */
 
 import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
+import { getCorsHeaders } from './cors.ts';
 
 // ============================================================================
 // Base Enums and Primitives
@@ -308,6 +309,7 @@ export async function parseRequestBody<T extends z.ZodSchema>(
  * Creates a standardized error response
  */
 export function createErrorResponse(
+  req: Request,
   code: string,
   message_en: string,
   message_ar: string,
@@ -325,11 +327,7 @@ export function createErrorResponse(
     },
   };
 
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-  };
+  const corsHeaders = getCorsHeaders(req);
 
   return new Response(JSON.stringify(errorBody), {
     status,

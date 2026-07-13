@@ -1,5 +1,6 @@
 // Shared utilities for Edge Functions
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
+import { getCorsHeaders } from './cors.ts';
 
 export interface ErrorResponse {
   error: string;
@@ -14,10 +15,10 @@ export interface SuccessResponse<T = any> {
 }
 
 /**
- * CORS headers for mobile clients
+ * Base CORS headers (no Access-Control-Allow-Origin — that is injected per-request
+ * by createHandler via getCorsHeaders(req) so responses never emit a wildcard origin).
  */
 export const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Max-Age': '86400',
@@ -171,13 +172,26 @@ export function createHandler(
   handler: (req: Request) => Promise<Response>
 ): (req: Request) => Promise<Response> {
   return async (req: Request) => {
+    // Origin-validated CORS headers, injected onto every response below so the
+    // shared builders never emit a wildcard Access-Control-Allow-Origin.
+    const cors = getCorsHeaders(req);
+    const withCors = (res: Response): Response => {
+      const headers = new Headers(res.headers);
+      for (const [name, value] of Object.entries(cors)) headers.set(name, value);
+      return new Response(res.body, {
+        status: res.status,
+        statusText: res.statusText,
+        headers,
+      });
+    };
+
     // Handle CORS preflight
     if (req.method === 'OPTIONS') {
-      return handleOptions();
+      return withCors(handleOptions());
     }
 
     try {
-      return await handler(req);
+      return withCors(await handler(req));
     } catch (error) {
       const correlationId = crypto.randomUUID();
 
@@ -191,14 +205,16 @@ export function createHandler(
       // SECURITY FIX: Only expose error details in development
       // In production, return generic error with correlation ID for support
       if (isDevelopment()) {
-        return errorResponse(error.message || 'Internal server error', 500, 'INTERNAL_ERROR', {
-          error: error.message,
-          stack: error.stack,
-        });
+        return withCors(
+          errorResponse(error.message || 'Internal server error', 500, 'INTERNAL_ERROR', {
+            error: error.message,
+            stack: error.stack,
+          })
+        );
       }
 
       // Production: Generic error message with correlation ID
-      return errorResponse('Internal server error', 500, 'INTERNAL_ERROR', { correlationId });
+      return withCors(errorResponse('Internal server error', 500, 'INTERNAL_ERROR', { correlationId }));
     }
   };
 }

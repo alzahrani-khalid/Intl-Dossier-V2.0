@@ -39,7 +39,7 @@ serve(async (req) => {
 
   // Only allow POST requests
   if (req.method !== 'POST') {
-    return createErrorResponse(
+    return createErrorResponse(req,
       'METHOD_NOT_ALLOWED',
       'Method not allowed',
       'الطريقة غير مسموح بها',
@@ -54,7 +54,7 @@ serve(async (req) => {
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
     if (!authHeader || !authHeader.includes(serviceRoleKey || '')) {
-      return createErrorResponse(
+      return createErrorResponse(req,
         'UNAUTHORIZED',
         'Service role authentication required',
         'مطلوب مصادقة دور الخدمة',
@@ -72,7 +72,7 @@ serve(async (req) => {
     try {
       requestBody = await parseRequestBody(BatchUpdateRequestSchema, req);
     } catch (error) {
-      return createErrorResponse(
+      return createErrorResponse(req,
         'VALIDATION_ERROR',
         `Invalid request body: ${error.message}`,
         `نص الطلب غير صالح: ${error.message}`,
@@ -111,7 +111,7 @@ serve(async (req) => {
 
     if (queryError) {
       console.error(`[Batch ${batchId}] Query error:`, queryError);
-      return createErrorResponse(
+      return createErrorResponse(req,
         'QUERY_ERROR',
         'Failed to fetch expired intelligence items',
         'فشل في جلب عناصر المعلومات الاستخباراتية المنتهية الصلاحية',
@@ -326,7 +326,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Unexpected error in intelligence-batch-update:', error);
 
-    return createErrorResponse(
+    return createErrorResponse(req,
       'INTERNAL_ERROR',
       'An unexpected error occurred',
       'حدث خطأ غير متوقع',

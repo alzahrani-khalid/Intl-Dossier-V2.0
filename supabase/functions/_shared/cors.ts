@@ -89,14 +89,3 @@ export function handleCorsPreflightRequest(request: Request): Response {
     headers: getCorsHeaders(request),
   })
 }
-
-/**
- * @deprecated Use getCorsHeaders(request) for proper origin validation
- * This static version with wildcard origin is kept for backwards compatibility
- * but should be migrated to getCorsHeaders() in all Edge Functions
- */
-export const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-}
