@@ -8,7 +8,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // ============================================================================
 // Types
@@ -149,7 +149,7 @@ interface AgendaItemRequest {
 // Helper Functions
 // ============================================================================
 
-function errorResponse(status: number, code: string, messageEn: string, messageAr: string) {
+function errorResponse(status: number, code: string, messageEn: string, messageAr: string, corsHeaders: Record<string, string>) {
   return new Response(
     JSON.stringify({
       error: {
@@ -210,8 +210,10 @@ function getSubResource(pathname: string): string | null {
 // ============================================================================
 
 serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
@@ -232,7 +234,8 @@ serve(async (req: Request) => {
         401,
         'UNAUTHORIZED',
         authError || 'Authentication required',
-        'المصادقة مطلوبة'
+        'المصادقة مطلوبة',
+        corsHeaders
       );
     }
 
@@ -242,41 +245,42 @@ serve(async (req: Request) => {
 
     // Route to sub-resource handlers
     if (id && subResource === 'participants') {
-      return handleParticipants(req, supabaseClient, user, id, url);
+      return handleParticipants(req, supabaseClient, user, id, url, corsHeaders);
     }
     if (id && subResource === 'agenda') {
-      return handleAgenda(req, supabaseClient, user, id, url);
+      return handleAgenda(req, supabaseClient, user, id, url, corsHeaders);
     }
     if (id && subResource === 'lifecycle') {
-      return handleLifecycle(req, supabaseClient, user, id);
+      return handleLifecycle(req, supabaseClient, user, id, corsHeaders);
     }
 
     // Top-level action routes (no ID required)
     if (!id && url.pathname.endsWith('/promote-intake') && req.method === 'POST') {
-      return handlePromoteIntake(req, supabaseClient, user);
+      return handlePromoteIntake(req, supabaseClient, user, corsHeaders);
     }
 
     // Main engagement CRUD
     switch (req.method) {
       case 'GET':
-        return id ? getEngagement(supabaseClient, id) : listEngagements(supabaseClient, url);
+        return id ? getEngagement(supabaseClient, id, corsHeaders) : listEngagements(supabaseClient, url, corsHeaders);
       case 'POST':
-        return createEngagement(req, supabaseClient, user);
+        return createEngagement(req, supabaseClient, user, corsHeaders);
       case 'PUT':
       case 'PATCH':
         if (!id)
-          return errorResponse(400, 'BAD_REQUEST', 'Engagement ID required', 'معرف المشاركة مطلوب');
-        return updateEngagement(req, supabaseClient, user, id);
+          return errorResponse(400, 'BAD_REQUEST', 'Engagement ID required', 'معرف المشاركة مطلوب', corsHeaders);
+        return updateEngagement(req, supabaseClient, user, id, corsHeaders);
       case 'DELETE':
         if (!id)
-          return errorResponse(400, 'BAD_REQUEST', 'Engagement ID required', 'معرف المشاركة مطلوب');
-        return archiveEngagement(supabaseClient, user, id);
+          return errorResponse(400, 'BAD_REQUEST', 'Engagement ID required', 'معرف المشاركة مطلوب', corsHeaders);
+        return archiveEngagement(supabaseClient, user, id, corsHeaders);
       default:
         return errorResponse(
           405,
           'METHOD_NOT_ALLOWED',
           'Method not allowed',
-          'الطريقة غير مسموح بها'
+          'الطريقة غير مسموح بها',
+          corsHeaders
         );
     }
   } catch (error) {
@@ -285,7 +289,8 @@ serve(async (req: Request) => {
       500,
       'INTERNAL_ERROR',
       error.message || 'Internal server error',
-      'خطأ داخلي في الخادم'
+      'خطأ داخلي في الخادم',
+      corsHeaders
     );
   }
 });
@@ -294,7 +299,7 @@ serve(async (req: Request) => {
 // Engagement CRUD Handlers
 // ============================================================================
 
-async function listEngagements(supabaseClient: any, url: URL) {
+async function listEngagements(supabaseClient: any, url: URL, corsHeaders: Record<string, string>) {
   const searchParams = url.searchParams;
   const search = searchParams.get('search');
   const engagementType = searchParams.get('engagement_type');
@@ -381,7 +386,7 @@ async function listEngagements(supabaseClient: any, url: URL) {
   );
 }
 
-async function getEngagement(supabaseClient: any, id: string) {
+async function getEngagement(supabaseClient: any, id: string, corsHeaders: Record<string, string>) {
   // Use RPC function for full engagement data
   const { data, error } = await supabaseClient.rpc('get_engagement_full', {
     p_engagement_id: id,
@@ -393,7 +398,7 @@ async function getEngagement(supabaseClient: any, id: string) {
   }
 
   if (!data || !data.engagement) {
-    return errorResponse(404, 'NOT_FOUND', 'Engagement not found', 'المشاركة غير موجودة');
+    return errorResponse(404, 'NOT_FOUND', 'Engagement not found', 'المشاركة غير موجودة', corsHeaders);
   }
 
   return new Response(JSON.stringify(data), {
@@ -401,7 +406,7 @@ async function getEngagement(supabaseClient: any, id: string) {
   });
 }
 
-async function createEngagement(req: Request, supabaseClient: any, user: any) {
+async function createEngagement(req: Request, supabaseClient: any, user: any, corsHeaders: Record<string, string>) {
   const body: EngagementRequest = await req.json();
 
   // Validate required fields
@@ -410,7 +415,8 @@ async function createEngagement(req: Request, supabaseClient: any, user: any) {
       400,
       'VALIDATION_ERROR',
       'name_en and name_ar are required',
-      'الاسم بالعربية والإنجليزية مطلوب'
+      'الاسم بالعربية والإنجليزية مطلوب',
+      corsHeaders
     );
   }
   if (!body.extension?.engagement_type) {
@@ -418,7 +424,8 @@ async function createEngagement(req: Request, supabaseClient: any, user: any) {
       400,
       'VALIDATION_ERROR',
       'engagement_type is required',
-      'نوع المشاركة مطلوب'
+      'نوع المشاركة مطلوب',
+      corsHeaders
     );
   }
   if (!body.extension?.engagement_category) {
@@ -426,7 +433,8 @@ async function createEngagement(req: Request, supabaseClient: any, user: any) {
       400,
       'VALIDATION_ERROR',
       'engagement_category is required',
-      'فئة المشاركة مطلوبة'
+      'فئة المشاركة مطلوبة',
+      corsHeaders
     );
   }
   if (!body.extension?.start_date || !body.extension?.end_date) {
@@ -434,7 +442,8 @@ async function createEngagement(req: Request, supabaseClient: any, user: any) {
       400,
       'VALIDATION_ERROR',
       'start_date and end_date are required',
-      'تاريخ البداية والنهاية مطلوب'
+      'تاريخ البداية والنهاية مطلوب',
+      corsHeaders
     );
   }
 
@@ -463,7 +472,8 @@ async function createEngagement(req: Request, supabaseClient: any, user: any) {
       500,
       'CREATE_ERROR',
       'Failed to create engagement',
-      'فشل في إنشاء المشاركة'
+      'فشل في إنشاء المشاركة',
+      corsHeaders
     );
   }
 
@@ -505,7 +515,8 @@ async function createEngagement(req: Request, supabaseClient: any, user: any) {
       500,
       'CREATE_ERROR',
       'Failed to create engagement details',
-      'فشل في إنشاء تفاصيل المشاركة'
+      'فشل في إنشاء تفاصيل المشاركة',
+      corsHeaders
     );
   }
 
@@ -520,7 +531,7 @@ async function createEngagement(req: Request, supabaseClient: any, user: any) {
   );
 }
 
-async function updateEngagement(req: Request, supabaseClient: any, user: any, id: string) {
+async function updateEngagement(req: Request, supabaseClient: any, user: any, id: string, corsHeaders: Record<string, string>) {
   const body: Partial<EngagementRequest> = await req.json();
 
   // Update base dossier fields
@@ -544,7 +555,7 @@ async function updateEngagement(req: Request, supabaseClient: any, user: any, id
     .single();
 
   if (dossierError || !dossier) {
-    return errorResponse(404, 'NOT_FOUND', 'Engagement not found', 'المشاركة غير موجودة');
+    return errorResponse(404, 'NOT_FOUND', 'Engagement not found', 'المشاركة غير موجودة', corsHeaders);
   }
 
   // Update extension if provided
@@ -593,7 +604,7 @@ async function updateEngagement(req: Request, supabaseClient: any, user: any, id
   });
 }
 
-async function archiveEngagement(supabaseClient: any, user: any, id: string) {
+async function archiveEngagement(supabaseClient: any, user: any, id: string, corsHeaders: Record<string, string>) {
   // Soft delete - set status to archived
   const { error } = await supabaseClient
     .from('dossiers')
@@ -610,7 +621,8 @@ async function archiveEngagement(supabaseClient: any, user: any, id: string) {
       500,
       'DELETE_ERROR',
       'Failed to archive engagement',
-      'فشل في أرشفة المشاركة'
+      'فشل في أرشفة المشاركة',
+      corsHeaders
     );
   }
 
@@ -633,30 +645,32 @@ async function handleParticipants(
   supabaseClient: any,
   user: any,
   engagementId: string,
-  url: URL
+  url: URL,
+  corsHeaders: Record<string, string>
 ) {
   const participantId = url.searchParams.get('participant_id');
 
   switch (req.method) {
     case 'GET':
-      return listParticipants(supabaseClient, engagementId);
+      return listParticipants(supabaseClient, engagementId, corsHeaders);
     case 'POST':
-      return addParticipant(req, supabaseClient, user, engagementId);
+      return addParticipant(req, supabaseClient, user, engagementId, corsHeaders);
     case 'DELETE':
       if (!participantId)
-        return errorResponse(400, 'BAD_REQUEST', 'participant_id required', 'معرف المشارك مطلوب');
-      return removeParticipant(supabaseClient, user, participantId);
+        return errorResponse(400, 'BAD_REQUEST', 'participant_id required', 'معرف المشارك مطلوب', corsHeaders);
+      return removeParticipant(supabaseClient, user, participantId, corsHeaders);
     default:
       return errorResponse(
         405,
         'METHOD_NOT_ALLOWED',
         'Method not allowed',
-        'الطريقة غير مسموح بها'
+        'الطريقة غير مسموح بها',
+        corsHeaders
       );
   }
 }
 
-async function listParticipants(supabaseClient: any, engagementId: string) {
+async function listParticipants(supabaseClient: any, engagementId: string, corsHeaders: Record<string, string>) {
   const { data, error } = await supabaseClient
     .from('engagement_participants')
     .select(
@@ -676,19 +690,20 @@ async function listParticipants(supabaseClient: any, engagementId: string) {
   });
 }
 
-async function addParticipant(req: Request, supabaseClient: any, user: any, engagementId: string) {
+async function addParticipant(req: Request, supabaseClient: any, user: any, engagementId: string, corsHeaders: Record<string, string>) {
   const body: ParticipantRequest = await req.json();
 
   // Validate
   if (!body.role) {
-    return errorResponse(400, 'VALIDATION_ERROR', 'role is required', 'الدور مطلوب');
+    return errorResponse(400, 'VALIDATION_ERROR', 'role is required', 'الدور مطلوب', corsHeaders);
   }
   if (body.participant_type !== 'external' && !body.participant_dossier_id) {
     return errorResponse(
       400,
       'VALIDATION_ERROR',
       'participant_dossier_id required for non-external participants',
-      'معرف الملف مطلوب للمشاركين غير الخارجيين'
+      'معرف الملف مطلوب للمشاركين غير الخارجيين',
+      corsHeaders
     );
   }
   if (body.participant_type === 'external' && !body.external_name_en && !body.external_name_ar) {
@@ -696,7 +711,8 @@ async function addParticipant(req: Request, supabaseClient: any, user: any, enga
       400,
       'VALIDATION_ERROR',
       'external name required for external participants',
-      'الاسم مطلوب للمشاركين الخارجيين'
+      'الاسم مطلوب للمشاركين الخارجيين',
+      corsHeaders
     );
   }
 
@@ -722,7 +738,7 @@ async function addParticipant(req: Request, supabaseClient: any, user: any, enga
 
   if (error) {
     console.error('Error adding participant:', error);
-    return errorResponse(500, 'CREATE_ERROR', 'Failed to add participant', 'فشل في إضافة المشارك');
+    return errorResponse(500, 'CREATE_ERROR', 'Failed to add participant', 'فشل في إضافة المشارك', corsHeaders);
   }
 
   return new Response(JSON.stringify(data), {
@@ -731,7 +747,7 @@ async function addParticipant(req: Request, supabaseClient: any, user: any, enga
   });
 }
 
-async function removeParticipant(supabaseClient: any, user: any, participantId: string) {
+async function removeParticipant(supabaseClient: any, user: any, participantId: string, corsHeaders: Record<string, string>) {
   const { error } = await supabaseClient
     .from('engagement_participants')
     .delete()
@@ -744,7 +760,8 @@ async function removeParticipant(supabaseClient: any, user: any, participantId: 
       500,
       'DELETE_ERROR',
       'Failed to remove participant',
-      'فشل في إزالة المشارك'
+      'فشل في إزالة المشارك',
+      corsHeaders
     );
   }
 
@@ -762,34 +779,36 @@ async function handleAgenda(
   supabaseClient: any,
   user: any,
   engagementId: string,
-  url: URL
+  url: URL,
+  corsHeaders: Record<string, string>
 ) {
   const agendaId = url.searchParams.get('agenda_id');
 
   switch (req.method) {
     case 'GET':
-      return listAgendaItems(supabaseClient, engagementId);
+      return listAgendaItems(supabaseClient, engagementId, corsHeaders);
     case 'POST':
-      return addAgendaItem(req, supabaseClient, user, engagementId);
+      return addAgendaItem(req, supabaseClient, user, engagementId, corsHeaders);
     case 'PATCH':
       if (!agendaId)
-        return errorResponse(400, 'BAD_REQUEST', 'agenda_id required', 'معرف بند الأجندة مطلوب');
-      return updateAgendaItem(req, supabaseClient, user, agendaId);
+        return errorResponse(400, 'BAD_REQUEST', 'agenda_id required', 'معرف بند الأجندة مطلوب', corsHeaders);
+      return updateAgendaItem(req, supabaseClient, user, agendaId, corsHeaders);
     case 'DELETE':
       if (!agendaId)
-        return errorResponse(400, 'BAD_REQUEST', 'agenda_id required', 'معرف بند الأجندة مطلوب');
-      return removeAgendaItem(supabaseClient, user, agendaId);
+        return errorResponse(400, 'BAD_REQUEST', 'agenda_id required', 'معرف بند الأجندة مطلوب', corsHeaders);
+      return removeAgendaItem(supabaseClient, user, agendaId, corsHeaders);
     default:
       return errorResponse(
         405,
         'METHOD_NOT_ALLOWED',
         'Method not allowed',
-        'الطريقة غير مسموح بها'
+        'الطريقة غير مسموح بها',
+        corsHeaders
       );
   }
 }
 
-async function listAgendaItems(supabaseClient: any, engagementId: string) {
+async function listAgendaItems(supabaseClient: any, engagementId: string, corsHeaders: Record<string, string>) {
   const { data, error } = await supabaseClient
     .from('engagement_agenda')
     .select('*')
@@ -803,7 +822,7 @@ async function listAgendaItems(supabaseClient: any, engagementId: string) {
   });
 }
 
-async function addAgendaItem(req: Request, supabaseClient: any, user: any, engagementId: string) {
+async function addAgendaItem(req: Request, supabaseClient: any, user: any, engagementId: string, corsHeaders: Record<string, string>) {
   const body: AgendaItemRequest = await req.json();
 
   if (!body.title_en) {
@@ -811,7 +830,8 @@ async function addAgendaItem(req: Request, supabaseClient: any, user: any, engag
       400,
       'VALIDATION_ERROR',
       'title_en is required',
-      'العنوان بالإنجليزية مطلوب'
+      'العنوان بالإنجليزية مطلوب',
+      corsHeaders
     );
   }
 
@@ -856,7 +876,8 @@ async function addAgendaItem(req: Request, supabaseClient: any, user: any, engag
       500,
       'CREATE_ERROR',
       'Failed to add agenda item',
-      'فشل في إضافة بند الأجندة'
+      'فشل في إضافة بند الأجندة',
+      corsHeaders
     );
   }
 
@@ -866,7 +887,7 @@ async function addAgendaItem(req: Request, supabaseClient: any, user: any, engag
   });
 }
 
-async function updateAgendaItem(req: Request, supabaseClient: any, user: any, agendaId: string) {
+async function updateAgendaItem(req: Request, supabaseClient: any, user: any, agendaId: string, corsHeaders: Record<string, string>) {
   const body: Partial<AgendaItemRequest> = await req.json();
 
   const update: Record<string, unknown> = {};
@@ -898,7 +919,8 @@ async function updateAgendaItem(req: Request, supabaseClient: any, user: any, ag
       500,
       'UPDATE_ERROR',
       'Failed to update agenda item',
-      'فشل في تحديث بند الأجندة'
+      'فشل في تحديث بند الأجندة',
+      corsHeaders
     );
   }
 
@@ -907,7 +929,7 @@ async function updateAgendaItem(req: Request, supabaseClient: any, user: any, ag
   });
 }
 
-async function removeAgendaItem(supabaseClient: any, user: any, agendaId: string) {
+async function removeAgendaItem(supabaseClient: any, user: any, agendaId: string, corsHeaders: Record<string, string>) {
   const { error } = await supabaseClient
     .from('engagement_agenda')
     .delete()
@@ -920,7 +942,8 @@ async function removeAgendaItem(supabaseClient: any, user: any, agendaId: string
       500,
       'DELETE_ERROR',
       'Failed to remove agenda item',
-      'فشل في إزالة بند الأجندة'
+      'فشل في إزالة بند الأجندة',
+      corsHeaders
     );
   }
 
@@ -937,19 +960,21 @@ async function handleLifecycle(
   req: Request,
   supabaseClient: any,
   user: any,
-  engagementId: string
+  engagementId: string,
+  corsHeaders: Record<string, string>
 ) {
   switch (req.method) {
     case 'GET':
-      return getLifecycleHistory(supabaseClient, engagementId);
+      return getLifecycleHistory(supabaseClient, engagementId, corsHeaders);
     case 'POST':
-      return transitionLifecycleStage(req, supabaseClient, user, engagementId);
+      return transitionLifecycleStage(req, supabaseClient, user, engagementId, corsHeaders);
     default:
       return errorResponse(
         405,
         'METHOD_NOT_ALLOWED',
         'Method not allowed',
-        'الطريقة غير مسموح بها'
+        'الطريقة غير مسموح بها',
+        corsHeaders
       );
   }
 }
@@ -958,7 +983,7 @@ async function handleLifecycle(
  * GET /engagement-dossiers/:id/lifecycle
  * Returns the transition history for an engagement.
  */
-async function getLifecycleHistory(supabaseClient: any, engagementId: string) {
+async function getLifecycleHistory(supabaseClient: any, engagementId: string, corsHeaders: Record<string, string>) {
   const { data, error } = await supabaseClient
     .from('lifecycle_transitions')
     .select(`
@@ -1015,7 +1040,8 @@ async function transitionLifecycleStage(
   req: Request,
   supabaseClient: any,
   user: any,
-  engagementId: string
+  engagementId: string,
+  corsHeaders: Record<string, string>
 ) {
   const body = await req.json();
   const toStage = body.to_stage as string;
@@ -1027,7 +1053,8 @@ async function transitionLifecycleStage(
       400,
       'VALIDATION_ERROR',
       `Invalid lifecycle stage. Must be one of: ${VALID_LIFECYCLE_STAGES.join(', ')}`,
-      `مرحلة دورة الحياة غير صالحة. يجب أن تكون واحدة من: ${VALID_LIFECYCLE_STAGES.join(', ')}`
+      `مرحلة دورة الحياة غير صالحة. يجب أن تكون واحدة من: ${VALID_LIFECYCLE_STAGES.join(', ')}`,
+      corsHeaders
     );
   }
 
@@ -1043,7 +1070,8 @@ async function transitionLifecycleStage(
       404,
       'NOT_FOUND',
       'Engagement not found',
-      'المشاركة غير موجودة'
+      'المشاركة غير موجودة',
+      corsHeaders
     );
   }
 
@@ -1055,7 +1083,8 @@ async function transitionLifecycleStage(
       400,
       'VALIDATION_ERROR',
       'Engagement is already at this stage',
-      'المشاركة في هذه المرحلة بالفعل'
+      'المشاركة في هذه المرحلة بالفعل',
+      corsHeaders
     );
   }
 
@@ -1078,7 +1107,8 @@ async function transitionLifecycleStage(
       500,
       'TRANSITION_ERROR',
       'Failed to record lifecycle transition',
-      'فشل في تسجيل انتقال دورة الحياة'
+      'فشل في تسجيل انتقال دورة الحياة',
+      corsHeaders
     );
   }
 
@@ -1094,7 +1124,8 @@ async function transitionLifecycleStage(
       500,
       'UPDATE_ERROR',
       'Failed to update lifecycle stage',
-      'فشل في تحديث مرحلة دورة الحياة'
+      'فشل في تحديث مرحلة دورة الحياة',
+      corsHeaders
     );
   }
 
@@ -1117,26 +1148,27 @@ async function transitionLifecycleStage(
  * POST /engagement-dossiers/promote-intake
  * Creates a new engagement from an intake ticket and marks ticket as converted.
  */
-async function handlePromoteIntake(req: Request, supabaseClient: any, user: any) {
+async function handlePromoteIntake(req: Request, supabaseClient: any, user: any, corsHeaders: Record<string, string>) {
   const body: IntakePromotionBody = await req.json();
 
   // Validate required fields
   if (!body.ticket_id) {
-    return errorResponse(400, 'VALIDATION_ERROR', 'ticket_id is required', 'معرف التذكرة مطلوب');
+    return errorResponse(400, 'VALIDATION_ERROR', 'ticket_id is required', 'معرف التذكرة مطلوب', corsHeaders);
   }
   if (!body.title_en || !body.title_ar) {
     return errorResponse(
       400,
       'VALIDATION_ERROR',
       'title_en and title_ar are required',
-      'العنوان بالعربية والإنجليزية مطلوب'
+      'العنوان بالعربية والإنجليزية مطلوب',
+      corsHeaders
     );
   }
   if (!body.engagement_type) {
-    return errorResponse(400, 'VALIDATION_ERROR', 'engagement_type is required', 'نوع المشاركة مطلوب');
+    return errorResponse(400, 'VALIDATION_ERROR', 'engagement_type is required', 'نوع المشاركة مطلوب', corsHeaders);
   }
   if (!body.engagement_category) {
-    return errorResponse(400, 'VALIDATION_ERROR', 'engagement_category is required', 'فئة المشاركة مطلوبة');
+    return errorResponse(400, 'VALIDATION_ERROR', 'engagement_category is required', 'فئة المشاركة مطلوبة', corsHeaders);
   }
 
   // Validate ticket exists and is promotable
@@ -1147,7 +1179,7 @@ async function handlePromoteIntake(req: Request, supabaseClient: any, user: any)
     .single();
 
   if (ticketError || !ticket) {
-    return errorResponse(404, 'NOT_FOUND', 'Intake ticket not found', 'تذكرة الاستقبال غير موجودة');
+    return errorResponse(404, 'NOT_FOUND', 'Intake ticket not found', 'تذكرة الاستقبال غير موجودة', corsHeaders);
   }
 
   if (ticket.request_type !== 'engagement') {
@@ -1155,7 +1187,8 @@ async function handlePromoteIntake(req: Request, supabaseClient: any, user: any)
       400,
       'VALIDATION_ERROR',
       'Ticket request_type must be "engagement" to promote',
-      'يجب أن يكون نوع طلب التذكرة "engagement" للترقية'
+      'يجب أن يكون نوع طلب التذكرة "engagement" للترقية',
+      corsHeaders
     );
   }
 
@@ -1164,7 +1197,8 @@ async function handlePromoteIntake(req: Request, supabaseClient: any, user: any)
       400,
       'VALIDATION_ERROR',
       'Ticket has already been converted',
-      'التذكرة تم تحويلها بالفعل'
+      'التذكرة تم تحويلها بالفعل',
+      corsHeaders
     );
   }
 
@@ -1191,7 +1225,8 @@ async function handlePromoteIntake(req: Request, supabaseClient: any, user: any)
       500,
       'CREATE_ERROR',
       'Failed to create engagement dossier',
-      'فشل في إنشاء ملف المشاركة'
+      'فشل في إنشاء ملف المشاركة',
+      corsHeaders
     );
   }
 
@@ -1216,7 +1251,8 @@ async function handlePromoteIntake(req: Request, supabaseClient: any, user: any)
       500,
       'CREATE_ERROR',
       'Failed to create engagement details',
-      'فشل في إنشاء تفاصيل المشاركة'
+      'فشل في إنشاء تفاصيل المشاركة',
+      corsHeaders
     );
   }
 

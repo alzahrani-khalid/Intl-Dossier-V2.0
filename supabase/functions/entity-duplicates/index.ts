@@ -16,7 +16,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // Types
 type EntityType = 'person' | 'organization';
@@ -68,25 +68,6 @@ interface SettingsUpdateRequest {
   is_enabled?: boolean;
 }
 
-// Helper to create error response
-function errorResponse(
-  code: string,
-  message_en: string,
-  message_ar: string,
-  status: number,
-  details?: unknown
-) {
-  return new Response(
-    JSON.stringify({
-      error: { code, message_en, message_ar, details },
-    }),
-    {
-      status,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    }
-  );
-}
-
 // Helper to get authenticated user
 async function getAuthUser(req: Request, supabase: ReturnType<typeof createClient>) {
   const authHeader = req.headers.get('Authorization');
@@ -108,9 +89,30 @@ async function getAuthUser(req: Request, supabase: ReturnType<typeof createClien
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
+  // Helper to create error response
+  function errorResponse(
+    code: string,
+    message_en: string,
+    message_ar: string,
+    status: number,
+    details?: unknown
+  ) {
+    return new Response(
+      JSON.stringify({
+        error: { code, message_en, message_ar, details },
+      }),
+      {
+        status,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
