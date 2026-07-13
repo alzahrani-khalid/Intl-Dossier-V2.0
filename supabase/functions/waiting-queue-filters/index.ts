@@ -476,8 +476,13 @@ async function fetchLegacyWorkItemDetails(supabase: any, assignments: any[]): Pr
  * Add CORS headers to response
  */
 function corsHeaders(req: Request, additionalHeaders: Record<string, string> = {}): Record<string, string> {
+  const headers = getCorsHeaders(req);
+  if (headers['Access-Control-Allow-Origin'] !== 'null') {
+    headers['Access-Control-Allow-Headers'] += ', if-none-match';
+  }
+
   return {
-    ...getCorsHeaders(req),
+    ...headers,
     ...additionalHeaders
   };
 }
