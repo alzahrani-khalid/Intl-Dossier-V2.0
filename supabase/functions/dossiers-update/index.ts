@@ -1,6 +1,6 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
-import { corsHeaders } from '../_shared/cors.ts'
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 
 // The base dossier + Class-Table-Inheritance extension write now runs inside a
 // single transactional RPC (update_dossier_with_extension); the per-type table
@@ -26,9 +26,11 @@ interface DossierUpdateRequest {
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req)
+
   // Handle CORS
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return handleCorsPreflightRequest(req)
   }
 
   // Contract: POST { id, ...fields } — matches services/dossier-api.ts updateDossier().

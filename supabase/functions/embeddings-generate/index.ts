@@ -15,7 +15,7 @@
  * - GET /embeddings-generate/health - Health check
  */
 
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 import { createServiceClient, validateJWT } from '../_shared/auth.ts';
 
 // Types
@@ -484,9 +484,11 @@ async function checkProviderHealth(): Promise<{
 
 // Main handler
 Deno.serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   const url = new URL(req.url);
