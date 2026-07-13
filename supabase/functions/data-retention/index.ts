@@ -1,6 +1,6 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
-import { corsHeaders } from '../_shared/cors.ts'
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 
 interface RetentionPolicy {
   id?: string
@@ -47,9 +47,11 @@ interface LegalHold {
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req)
+
   // Handle CORS
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return handleCorsPreflightRequest(req)
   }
 
   try {
@@ -122,7 +124,7 @@ serve(async (req) => {
     // Route based on method and path
     switch (req.method) {
       case 'GET':
-        return handleGet(supabaseClient, url, resource, resourceId)
+        return handleGet(supabaseClient, url, resource, resourceId, corsHeaders)
 
       case 'POST':
         if (!isAdmin) {
@@ -140,7 +142,7 @@ serve(async (req) => {
             },
           )
         }
-        return handlePost(supabaseClient, req, url, resource, user.id)
+        return handlePost(supabaseClient, req, url, resource, user.id, corsHeaders)
 
       case 'PUT':
       case 'PATCH':
@@ -159,7 +161,7 @@ serve(async (req) => {
             },
           )
         }
-        return handleUpdate(supabaseClient, req, resourceId, resource, user.id)
+        return handleUpdate(supabaseClient, req, resourceId, resource, user.id, corsHeaders)
 
       case 'DELETE':
         if (!isAdmin) {
@@ -177,7 +179,7 @@ serve(async (req) => {
             },
           )
         }
-        return handleDelete(supabaseClient, resourceId, resource)
+        return handleDelete(supabaseClient, resourceId, resource, corsHeaders)
 
       default:
         return new Response(
@@ -218,6 +220,7 @@ async function handleGet(
   url: URL,
   resource: string,
   resourceId: string | null,
+  corsHeaders: Record<string, string>,
 ) {
   const searchParams = url.searchParams
 
@@ -503,6 +506,7 @@ async function handlePost(
   url: URL,
   resource: string,
   userId: string,
+  corsHeaders: Record<string, string>,
 ) {
   const body = await req.json()
 
@@ -719,6 +723,7 @@ async function handleUpdate(
   resourceId: string | null,
   resource: string,
   userId: string,
+  corsHeaders: Record<string, string>,
 ) {
   if (!resourceId) {
     return new Response(
@@ -823,6 +828,7 @@ async function handleDelete(
   supabase: ReturnType<typeof createClient>,
   resourceId: string | null,
   resource: string,
+  corsHeaders: Record<string, string>,
 ) {
   if (!resourceId) {
     return new Response(
