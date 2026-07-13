@@ -9,7 +9,7 @@
  */
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
@@ -52,9 +52,11 @@ interface DossierReference {
 }
 
 Deno.serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
@@ -140,8 +142,6 @@ Deno.serve(async (req: Request) => {
       }
     );
   }
-});
-
 /**
  * POST: Create work item dossier links
  */
@@ -505,3 +505,4 @@ async function handleDelete(supabase: any, url: URL, userId: string): Promise<Re
     headers: corsHeaders,
   });
 }
+});
