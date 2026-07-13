@@ -19,12 +19,9 @@
 
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-};
+type CorsHeaders = ReturnType<typeof getCorsHeaders>;
 
 interface SLAPolicyInput {
   name: string;
@@ -52,9 +49,11 @@ interface SLAPolicyInput {
 }
 
 Deno.serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
@@ -92,31 +91,31 @@ Deno.serve(async (req: Request) => {
       switch (endpoint) {
         case 'dashboard':
         case 'sla-monitoring':
-          return await getDashboardOverview(supabase, url);
+          return await getDashboardOverview(supabase, url, corsHeaders);
 
         case 'type':
-          return await getComplianceByType(supabase, url);
+          return await getComplianceByType(supabase, url, corsHeaders);
 
         case 'assignee':
-          return await getComplianceByAssignee(supabase, url);
+          return await getComplianceByAssignee(supabase, url, corsHeaders);
 
         case 'at-risk':
-          return await getAtRiskItems(supabase, url);
+          return await getAtRiskItems(supabase, url, corsHeaders);
 
         case 'policies':
-          return await listPolicies(supabase);
+          return await listPolicies(supabase, corsHeaders);
 
         case 'escalations':
-          return await listEscalations(supabase, url);
+          return await listEscalations(supabase, url, corsHeaders);
 
         case 'breached':
-          return await getBreachedItems(supabase);
+          return await getBreachedItems(supabase, corsHeaders);
 
         default:
           // Check if it's a specific policy request
           if (pathParts.includes('policies') && pathParts.length > 1) {
             const policyId = pathParts[pathParts.length - 1];
-            return await getPolicy(supabase, policyId);
+            return await getPolicy(supabase, policyId, corsHeaders);
           }
           return new Response(JSON.stringify({ error: 'Not found' }), {
             status: 404,
@@ -129,21 +128,21 @@ Deno.serve(async (req: Request) => {
       const body = await req.json();
 
       if (endpoint === 'policies') {
-        return await createPolicy(supabase, body as SLAPolicyInput);
+        return await createPolicy(supabase, body as SLAPolicyInput, corsHeaders);
       }
 
       if (endpoint === 'check-breaches') {
-        return await checkBreaches(supabase);
+        return await checkBreaches(supabase, corsHeaders);
       }
 
       if (endpoint === 'acknowledge') {
         const escalationId = pathParts[pathParts.length - 2];
-        return await acknowledgeEscalation(supabase, escalationId, user.id);
+        return await acknowledgeEscalation(supabase, escalationId, user.id, corsHeaders);
       }
 
       if (endpoint === 'resolve') {
         const escalationId = pathParts[pathParts.length - 2];
-        return await resolveEscalation(supabase, escalationId, user.id, body.notes);
+        return await resolveEscalation(supabase, escalationId, user.id, body.notes, corsHeaders);
       }
 
       return new Response(JSON.stringify({ error: 'Not found' }), {
@@ -156,14 +155,14 @@ Deno.serve(async (req: Request) => {
       if (pathParts.includes('policies')) {
         const policyId = pathParts[pathParts.length - 1];
         const body = await req.json();
-        return await updatePolicy(supabase, policyId, body as Partial<SLAPolicyInput>);
+        return await updatePolicy(supabase, policyId, body as Partial<SLAPolicyInput>, corsHeaders);
       }
     }
 
     if (method === 'DELETE') {
       if (pathParts.includes('policies')) {
         const policyId = pathParts[pathParts.length - 1];
-        return await deletePolicy(supabase, policyId);
+        return await deletePolicy(supabase, policyId, corsHeaders);
       }
     }
 
@@ -190,7 +189,7 @@ Deno.serve(async (req: Request) => {
 // Dashboard & Metrics
 // ============================================
 
-async function getDashboardOverview(supabase: ReturnType<typeof createClient>, url: URL) {
+async function getDashboardOverview(supabase: ReturnType<typeof createClient>, url: URL, corsHeaders: CorsHeaders) {
   const entityType = url.searchParams.get('entity_type') || 'ticket';
   const startDate = url.searchParams.get('start_date') || null;
   const endDate = url.searchParams.get('end_date') || null;
@@ -208,7 +207,7 @@ async function getDashboardOverview(supabase: ReturnType<typeof createClient>, u
   });
 }
 
-async function getComplianceByType(supabase: ReturnType<typeof createClient>, url: URL) {
+async function getComplianceByType(supabase: ReturnType<typeof createClient>, url: URL, corsHeaders: CorsHeaders) {
   const entityType = url.searchParams.get('entity_type') || 'ticket';
   const startDate = url.searchParams.get('start_date') || null;
   const endDate = url.searchParams.get('end_date') || null;
@@ -226,7 +225,7 @@ async function getComplianceByType(supabase: ReturnType<typeof createClient>, ur
   });
 }
 
-async function getComplianceByAssignee(supabase: ReturnType<typeof createClient>, url: URL) {
+async function getComplianceByAssignee(supabase: ReturnType<typeof createClient>, url: URL, corsHeaders: CorsHeaders) {
   const startDate = url.searchParams.get('start_date') || null;
   const endDate = url.searchParams.get('end_date') || null;
   const limit = parseInt(url.searchParams.get('limit') || '20');
@@ -244,7 +243,7 @@ async function getComplianceByAssignee(supabase: ReturnType<typeof createClient>
   });
 }
 
-async function getAtRiskItems(supabase: ReturnType<typeof createClient>, url: URL) {
+async function getAtRiskItems(supabase: ReturnType<typeof createClient>, url: URL, corsHeaders: CorsHeaders) {
   const entityType = url.searchParams.get('entity_type') || 'ticket';
   const threshold = parseInt(url.searchParams.get('threshold') || '75');
   const limit = parseInt(url.searchParams.get('limit') || '50');
@@ -262,7 +261,7 @@ async function getAtRiskItems(supabase: ReturnType<typeof createClient>, url: UR
   });
 }
 
-async function getBreachedItems(supabase: ReturnType<typeof createClient>) {
+async function getBreachedItems(supabase: ReturnType<typeof createClient>, corsHeaders: CorsHeaders) {
   const { data, error } = await supabase.rpc('get_sla_breached_tickets');
 
   if (error) throw error;
@@ -276,7 +275,7 @@ async function getBreachedItems(supabase: ReturnType<typeof createClient>) {
 // Policy Management
 // ============================================
 
-async function listPolicies(supabase: ReturnType<typeof createClient>) {
+async function listPolicies(supabase: ReturnType<typeof createClient>, corsHeaders: CorsHeaders) {
   const { data, error } = await supabase
     .from('sla_policies')
     .select('*')
@@ -289,7 +288,7 @@ async function listPolicies(supabase: ReturnType<typeof createClient>) {
   });
 }
 
-async function getPolicy(supabase: ReturnType<typeof createClient>, policyId: string) {
+async function getPolicy(supabase: ReturnType<typeof createClient>, policyId: string, corsHeaders: CorsHeaders) {
   const { data, error } = await supabase
     .from('sla_policies')
     .select('*')
@@ -303,7 +302,7 @@ async function getPolicy(supabase: ReturnType<typeof createClient>, policyId: st
   });
 }
 
-async function createPolicy(supabase: ReturnType<typeof createClient>, input: SLAPolicyInput) {
+async function createPolicy(supabase: ReturnType<typeof createClient>, input: SLAPolicyInput, corsHeaders: CorsHeaders) {
   const { data, error } = await supabase
     .from('sla_policies')
     .insert({
@@ -339,7 +338,8 @@ async function createPolicy(supabase: ReturnType<typeof createClient>, input: SL
 async function updatePolicy(
   supabase: ReturnType<typeof createClient>,
   policyId: string,
-  input: Partial<SLAPolicyInput>
+  input: Partial<SLAPolicyInput>,
+  corsHeaders: CorsHeaders
 ) {
   const updateData: Record<string, unknown> = {
     updated_at: new Date().toISOString(),
@@ -383,7 +383,7 @@ async function updatePolicy(
   });
 }
 
-async function deletePolicy(supabase: ReturnType<typeof createClient>, policyId: string) {
+async function deletePolicy(supabase: ReturnType<typeof createClient>, policyId: string, corsHeaders: CorsHeaders) {
   // Soft delete by setting is_active to false
   const { error } = await supabase
     .from('sla_policies')
@@ -404,7 +404,7 @@ async function deletePolicy(supabase: ReturnType<typeof createClient>, policyId:
 // Escalations
 // ============================================
 
-async function listEscalations(supabase: ReturnType<typeof createClient>, url: URL) {
+async function listEscalations(supabase: ReturnType<typeof createClient>, url: URL, corsHeaders: CorsHeaders) {
   const status = url.searchParams.get('status');
   const entityType = url.searchParams.get('entity_type');
   const limit = parseInt(url.searchParams.get('limit') || '50');
@@ -435,7 +435,8 @@ async function listEscalations(supabase: ReturnType<typeof createClient>, url: U
 async function acknowledgeEscalation(
   supabase: ReturnType<typeof createClient>,
   escalationId: string,
-  userId: string
+  userId: string,
+  corsHeaders: CorsHeaders
 ) {
   const { data, error } = await supabase
     .from('sla_escalations')
@@ -460,7 +461,8 @@ async function resolveEscalation(
   supabase: ReturnType<typeof createClient>,
   escalationId: string,
   userId: string,
-  notes?: string
+  notes: string | undefined,
+  corsHeaders: CorsHeaders
 ) {
   const { data, error } = await supabase
     .from('sla_escalations')
@@ -485,7 +487,7 @@ async function resolveEscalation(
 // Breach Checking
 // ============================================
 
-async function checkBreaches(supabase: ReturnType<typeof createClient>) {
+async function checkBreaches(supabase: ReturnType<typeof createClient>, corsHeaders: CorsHeaders) {
   const { data, error } = await supabase.rpc('check_sla_breaches');
 
   if (error) throw error;

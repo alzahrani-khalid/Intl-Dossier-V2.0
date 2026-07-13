@@ -14,13 +14,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-// CORS headers
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-};
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // Types
 interface SearchSuggestion {
@@ -148,9 +142,11 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
 
 serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
@@ -237,6 +233,8 @@ async function handleSuggestions(
   supabase: ReturnType<typeof createClient>,
   userId: string
 ): Promise<Response> {
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method !== 'GET') {
     return new Response(
       JSON.stringify({
@@ -345,13 +343,15 @@ async function handleHistory(
   supabase: ReturnType<typeof createClient>,
   userId: string
 ): Promise<Response> {
+  const corsHeaders = getCorsHeaders(req);
+
   switch (req.method) {
     case 'GET':
       return getHistory(supabase, userId, req);
     case 'POST':
       return addHistory(supabase, userId, req);
     case 'DELETE':
-      return clearHistory(supabase, userId);
+      return clearHistory(supabase, userId, req);
     default:
       return new Response(
         JSON.stringify({ error: 'method_not_allowed', message: 'Method not allowed' }),
@@ -368,6 +368,7 @@ async function getHistory(
   userId: string,
   req: Request
 ): Promise<Response> {
+  const corsHeaders = getCorsHeaders(req);
   const url = new URL(req.url);
   const limit = Math.min(Math.max(1, parseInt(url.searchParams.get('limit') || '10', 10)), 50);
   const typesParam = url.searchParams.get('types');
@@ -403,6 +404,7 @@ async function addHistory(
   userId: string,
   req: Request
 ): Promise<Response> {
+  const corsHeaders = getCorsHeaders(req);
   let body: AddHistoryRequest;
   try {
     body = await req.json();
@@ -458,8 +460,10 @@ async function addHistory(
  */
 async function clearHistory(
   supabase: ReturnType<typeof createClient>,
-  userId: string
+  userId: string,
+  req: Request
 ): Promise<Response> {
+  const corsHeaders = getCorsHeaders(req);
   const { data, error } = await supabase.rpc('clear_user_search_history', { p_user_id: userId });
 
   if (error) {
@@ -483,6 +487,8 @@ async function handleFilterCounts(
   req: Request,
   supabase: ReturnType<typeof createClient>
 ): Promise<Response> {
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method !== 'POST') {
     return new Response(
       JSON.stringify({ error: 'method_not_allowed', message: 'Only POST method allowed' }),
@@ -772,6 +778,8 @@ async function handleNoResultsSuggestions(
   supabase: ReturnType<typeof createClient>,
   userId: string
 ): Promise<Response> {
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method !== 'GET') {
     return new Response(
       JSON.stringify({ error: 'method_not_allowed', message: 'Only GET method allowed' }),
