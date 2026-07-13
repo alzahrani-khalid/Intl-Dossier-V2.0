@@ -25,6 +25,7 @@ export default defineConfig({
       'tests/security/**/*.test.ts',
       'tests/intelligence/**/*.test.ts',
       'tests/{deadline-checker,digest-scheduler,email-notifications,notification-queue,push-notifications}.test.ts',
+      'src/utils/__tests__/**/*.test.ts',
     ],
     exclude: [
       'node_modules/',
