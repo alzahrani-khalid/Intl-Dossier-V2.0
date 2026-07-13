@@ -45,7 +45,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { corsHeaders } from '../_shared/cors.ts'
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 
 // Types
 interface JoinSessionRequest {
@@ -371,9 +371,11 @@ function matchRoute(
 }
 
 serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req)
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders })
+    return handleCorsPreflightRequest(req)
   }
 
   try {
