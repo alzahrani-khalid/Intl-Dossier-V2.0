@@ -16,12 +16,7 @@
 
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 import { createClient } from 'jsr:@supabase/supabase-js@2';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
-};
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 // Types
 interface TimelineFilters {
@@ -104,7 +99,7 @@ interface UpdateAnnotationRequest {
 function jsonResponse(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
   });
 }
 
@@ -120,7 +115,7 @@ function errorResponse(message: string, status = 400) {
   );
 }
 
-Deno.serve(async (req: Request) => {
+async function handleRequest(req: Request, corsHeaders: Record<string, string>) {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -193,6 +188,14 @@ Deno.serve(async (req: Request) => {
     console.error('Stakeholder timeline error:', error);
     return errorResponse(error instanceof Error ? error.message : 'Internal server error', 500);
   }
+}
+
+Deno.serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req);
+  const response = await handleRequest(req, corsHeaders);
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(corsHeaders)) headers.set(name, value);
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 });
 
 // Handler: Get timeline events

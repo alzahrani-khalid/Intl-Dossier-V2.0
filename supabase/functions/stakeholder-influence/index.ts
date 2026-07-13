@@ -18,7 +18,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 // ============================================================================
 // Types
@@ -132,7 +132,7 @@ function errorResponse(
     }),
     {
       status,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
     }
   );
 }
@@ -140,7 +140,7 @@ function errorResponse(
 function successResponse(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
   });
 }
 
@@ -204,7 +204,7 @@ function getStakeholderRoleLabel(role: string): { en: string; ar: string } {
 // Main Handler
 // ============================================================================
 
-serve(async (req) => {
+async function handleRequest(req: Request, corsHeaders: Record<string, string>) {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -1023,4 +1023,12 @@ serve(async (req) => {
       { correlation_id: crypto.randomUUID() }
     );
   }
+}
+
+serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+  const response = await handleRequest(req, corsHeaders);
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(corsHeaders)) headers.set(name, value);
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 });
