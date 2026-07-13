@@ -31,6 +31,8 @@ export type EngagementsListProps = {
   onLoadMore?: () => void
   isLoading?: boolean
   emptyState?: ReactNode
+  showToolbar?: boolean
+  visibleProperties?: string[]
 }
 
 const FILTERS: ReadonlyArray<{ value: EngagementFilter; labelKey: string }> = [
@@ -60,9 +62,12 @@ export function EngagementsList({
   onLoadMore,
   isLoading = false,
   emptyState,
+  showToolbar = true,
+  visibleProperties,
 }: EngagementsListProps): ReactNode {
   const { t, i18n } = useTranslation(['engagements', 'list-pages'])
   const isRTL = i18n.language === 'ar'
+  const visible = new Set(visibleProperties ?? ['type', 'status', 'location'])
 
   const groupedByWeek = useMemo(() => {
     const map = new Map<
@@ -86,28 +91,29 @@ export function EngagementsList({
 
   return (
     <div className="flex flex-col gap-4 min-w-0">
-      {/* Toolbar: search + filter pills */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between min-w-0">
-        <ToolbarSearch
-          value={search}
-          onChange={onSearchChange}
-          placeholder={t('search.placeholder', { defaultValue: 'Search engagements…' })}
-        />
-        <div
-          role="group"
-          aria-label={t('filter.aria', { defaultValue: 'Filter engagements' })}
-          className="flex flex-wrap gap-2"
-        >
-          {FILTERS.map((f) => (
-            <FilterPill
-              key={f.value}
-              active={filter === f.value}
-              label={t(f.labelKey, { ns: 'engagements', defaultValue: f.value })}
-              onClick={(): void => onFilterChange(f.value)}
-            />
-          ))}
+      {showToolbar ? (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between min-w-0">
+          <ToolbarSearch
+            value={search}
+            onChange={onSearchChange}
+            placeholder={t('search.placeholder', { defaultValue: 'Search engagements…' })}
+          />
+          <div
+            role="group"
+            aria-label={t('filter.aria', { defaultValue: 'Filter engagements' })}
+            className="flex flex-wrap gap-2"
+          >
+            {FILTERS.map((f) => (
+              <FilterPill
+                key={f.value}
+                active={filter === f.value}
+                label={t(f.labelKey, { ns: 'engagements', defaultValue: f.value })}
+                onClick={(): void => onFilterChange(f.value)}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      ) : null}
 
       {/* Body */}
       {isLoading ? (
@@ -157,10 +163,14 @@ export function EngagementsList({
                   >
                     <div className="font-medium truncate min-w-0">{title}</div>
                     <div className="text-sm text-muted-foreground truncate min-w-0">
-                      {formatDateTime(row.starts_at)}
-                      {row.location !== undefined && row.location !== ''
-                        ? ` · ${row.location}`
-                        : ''}
+                      {[
+                        formatDateTime(row.starts_at),
+                        visible.has('type') && row.type !== undefined ? row.type : undefined,
+                        visible.has('status') && row.status !== undefined ? row.status : undefined,
+                        visible.has('location') ? row.location : undefined,
+                      ]
+                        .filter((value): value is string => value !== undefined && value !== '')
+                        .join(' · ')}
                     </div>
                   </button>
                 )

@@ -28,8 +28,63 @@ vi.mock('react-i18next', () => ({
 
 // ── Router mock ───────────────────────────────────────────────────────────
 const navigateMock = vi.fn()
+const routeNavigateMock = vi.fn()
+let kanbanSearch: Record<string, unknown> = {}
+
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => navigateMock,
+}))
+
+vi.mock('@/routes/_protected/kanban', () => ({
+  Route: {
+    useSearch: () => kanbanSearch,
+    useNavigate: () => routeNavigateMock,
+  },
+  kanbanListConfig: {
+    filters: [
+      { key: 'source', labelKey: 'unified-kanban:filters.source', options: [] },
+      { key: 'priority', labelKey: 'unified-kanban:filters.priority', options: [] },
+    ],
+    sortFields: [],
+    grouping: [{ id: 'status', labelKey: 'unified-kanban:columnModes.status' }],
+  },
+}))
+
+routeNavigateMock.mockImplementation(
+  (opts: { search: (prev: Record<string, unknown>) => Record<string, unknown> }) => {
+    if (typeof opts.search === 'function') {
+      kanbanSearch = opts.search(kanbanSearch)
+    }
+  },
+)
+
+const openCommitmentMock = vi.fn()
+vi.mock('@/hooks/useCommitmentDrawer', () => ({
+  useCommitmentDrawer: () => ({
+    openCommitment: openCommitmentMock,
+    closeCommitment: vi.fn(),
+    open: false,
+    commitmentId: null,
+  }),
+}))
+
+const peekRegisterMock = vi.fn()
+vi.mock('@/store/peekStore', () => ({
+  usePeekStore: Object.assign(
+    (selector: (s: { positionOf: (id: string) => number | null }) => unknown) =>
+      selector({ positionOf: () => null }),
+    { getState: () => ({ register: peekRegisterMock, clear: vi.fn() }) },
+  ),
+}))
+
+vi.mock('@/components/list-controls/FilterChipsRow', () => ({
+  FilterChipsRow: (): ReactElement => <div data-testid="filter-chips" />,
+}))
+
+vi.mock('@/components/empty-states/ListEmptyState', () => ({
+  ListEmptyState: ({ filtered }: { filtered?: boolean }): ReactElement => (
+    <div data-testid={filtered ? 'empty-filtered' : 'empty-board'} />
+  ),
 }))
 
 // ── Work-creation palette mock ────────────────────────────────────────────
@@ -374,8 +429,12 @@ function makeBoardItems(): WI[] {
 // ── tests ─────────────────────────────────────────────────────────────────
 beforeEach(() => {
   currentLang = 'en'
+  kanbanSearch = {}
   navigateMock.mockReset()
+  routeNavigateMock.mockReset()
   openPaletteMock.mockReset()
+  openCommitmentMock.mockReset()
+  peekRegisterMock.mockReset()
   mutateMock.mockReset()
   mockUseUnifiedKanban.mockReset()
   lastKanbanProviderProps = {}
@@ -412,8 +471,10 @@ describe('WorkBoard', () => {
   it('search query filters by title (EN locale)', async () => {
     mockUseUnifiedKanban.mockReturnValue({ items: makeBoardItems(), isLoading: false })
     const { WorkBoard } = await importFresh()
-    render(<WorkBoard />)
+    const { rerender } = render(<WorkBoard />)
     fireEvent.change(screen.getByTestId('toolbar-search'), { target: { value: 'briefing' } })
+    kanbanSearch = { search: 'briefing' }
+    rerender(<WorkBoard />)
     expect(screen.getByTestId('column-done').getAttribute('data-count')).toBe('1')
     expect(screen.getByTestId('column-todo').getAttribute('data-count')).toBe('0')
     expect(screen.getByTestId('column-in_progress').getAttribute('data-count')).toBe('0')
@@ -423,8 +484,10 @@ describe('WorkBoard', () => {
     currentLang = 'ar'
     mockUseUnifiedKanban.mockReturnValue({ items: makeBoardItems(), isLoading: false })
     const { WorkBoard } = await importFresh()
-    render(<WorkBoard />)
+    const { rerender } = render(<WorkBoard />)
     fireEvent.change(screen.getByTestId('toolbar-search'), { target: { value: 'مصر' } })
+    kanbanSearch = { search: 'مصر' }
+    rerender(<WorkBoard />)
     // t7 has dossier.name_ar === 'مصر' and is in todo
     expect(screen.getByTestId('column-todo').getAttribute('data-count')).toBe('1')
     expect(screen.getByTestId('column-in_progress').getAttribute('data-count')).toBe('0')
@@ -439,7 +502,7 @@ describe('WorkBoard', () => {
   })
 
   it('passes sensors=undefined (KanbanProvider internal sensors active) when columnMode==="status"', async () => {
-    mockUseUnifiedKanban.mockReturnValue({ items: [], isLoading: false })
+    mockUseUnifiedKanban.mockReturnValue({ items: makeBoardItems(), isLoading: false })
     const { WorkBoard } = await importFresh()
     render(<WorkBoard />)
     // D-03: in 'status' mode, no `sensors` prop is forwarded so the
@@ -451,7 +514,7 @@ describe('WorkBoard', () => {
   })
 
   it('passes columns descriptor with the 4 expected stages to KanbanProvider', async () => {
-    mockUseUnifiedKanban.mockReturnValue({ items: [], isLoading: false })
+    mockUseUnifiedKanban.mockReturnValue({ items: makeBoardItems(), isLoading: false })
     const { WorkBoard } = await importFresh()
     render(<WorkBoard />)
     expect(lastKanbanProviderProps.columns).toBeTruthy()
@@ -474,14 +537,16 @@ describe('WorkBoard', () => {
     expect(call.newWorkflowStage).toBe('in_progress')
   })
 
-  it('onItemClick routes by source — task → /tasks/{id}; commitment → /commitments', async () => {
+  it('onItemClick routes by source — task → /tasks/{id}; commitment opens drawer peek', async () => {
     mockUseUnifiedKanban.mockReturnValue({ items: makeBoardItems(), isLoading: false })
     const { WorkBoard } = await importFresh()
     render(<WorkBoard />)
     fireEvent.click(screen.getByTestId('item-t1').querySelector('button')!)
     expect(navigateMock).toHaveBeenCalledWith({ to: '/tasks/t1' })
     fireEvent.click(screen.getByTestId('item-t3').querySelector('button')!)
-    expect(navigateMock).toHaveBeenCalledWith({ to: '/commitments' })
+    expect(peekRegisterMock).toHaveBeenCalled()
+    expect(openCommitmentMock).toHaveBeenCalledWith('t3')
+    expect(navigateMock).not.toHaveBeenCalledWith({ to: '/commitments' })
   })
 
   it('per-column +Add opens the work-creation palette prefilled to Task (B-24)', async () => {

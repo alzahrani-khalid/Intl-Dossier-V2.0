@@ -11,15 +11,18 @@
  * instead of importing @dnd-kit/core directly. Surface-swap, not absorb:
  * BoardColumn / BoardToolbar / KCard / board.css all preserved.
  *
+ * Phase 87 Plan 09 — URL state (group/search/source/priority/sort/dir), Filter + Display
+ * popovers, commitment-card peek via CommitmentDrawer, board-level empty states.
+ *
  * Decisions enforced here:
  *  - D-03: DnD enabled only when columnMode === 'status'. Sensors empty otherwise
  *    (passed via KanbanProvider `sensors={[]}` override of the primitive's defaults).
  *  - D-05: contextType: 'personal', sourceFilter: ['commitment','task']
- *  - D-06: 'By dossier' / 'By owner' visual stubs in the toolbar — never reach this page state.
+ *  - D-06: only 'status' grouping is wired — Display popover owns the single control.
  *  - D-07: Search filters client-side over the ALREADY-LOADED items (no `searchQuery` prop
  *          is passed to the hook even though the hook supports it server-side).
  *  - D-08: column counts + overdue chip computed client-side from the response.
- *  - D-09: kcard click → existing detail surface routed by `item.source`.
+ *  - D-09: kcard click → existing detail surface routed by `item.source`; commitments peek.
  *  - Confirmation #8: items with `workflow_stage === 'cancelled'` OR `status === 'cancelled'`
  *    are filtered OUT of the visible board.
  *
@@ -32,7 +35,7 @@
  * children KCards; no raw-HTML APIs are referenced anywhere in this file.
  */
 
-import { type ReactElement, useCallback, useMemo, useState } from 'react'
+import { type ReactElement, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 
@@ -43,9 +46,18 @@ import {
   type SensorDescriptor,
 } from '@/components/kanban'
 import { Skeleton } from '@/components/ui/skeleton'
+import { FilterChipsRow } from '@/components/list-controls/FilterChipsRow'
+import {
+  useListControls,
+  type ListControlsConfig,
+} from '@/components/list-controls/useListControls'
+import { ListEmptyState } from '@/components/empty-states/ListEmptyState'
 import { useUnifiedKanban, useUnifiedKanbanStatusUpdate } from '@/hooks/useUnifiedKanban'
+import { useCommitmentDrawer } from '@/hooks/useCommitmentDrawer'
 import { useWorkCreation } from '@/components/work-creation'
-import type { KanbanColumnMode, WorkflowStage, WorkSource } from '@/types/work-item.types'
+import { usePeekStore } from '@/store/peekStore'
+import { Route, kanbanListConfig } from '@/routes/_protected/kanban'
+import type { KanbanColumnMode, Priority, WorkflowStage, WorkSource } from '@/types/work-item.types'
 
 import { BoardColumn } from './BoardColumn'
 import { BoardToolbar } from './BoardToolbar'
@@ -55,9 +67,14 @@ import './board.css'
 const STAGES: WorkflowStage[] = ['todo', 'in_progress', 'review', 'done']
 const SOURCE_FILTER: WorkSource[] = ['commitment', 'task']
 
+const PRIORITY_RANK: Record<Priority, number> = {
+  urgent: 4,
+  high: 3,
+  medium: 2,
+  low: 1,
+}
+
 // Map workflow stage → task_status enum value (per useUnifiedKanban DB notes).
-// B-26: 1:1 where the task_status enum allows — 'review' has its own enum value,
-// so it must not collapse into 'in_progress' (that hid tasks from review filters).
 const STAGE_TO_STATUS: Record<WorkflowStage, string> = {
   todo: 'pending',
   in_progress: 'in_progress',
@@ -72,9 +89,6 @@ function isCancelled(item: KCardItem): boolean {
   return item.workflow_stage === 'cancelled' || item.status === 'cancelled'
 }
 
-// Board columns are workflow stages, but commitments/intakes carry their state in
-// `status` (workflow_stage is null from the RPC). Resolve a board column for any
-// source so non-task items don't all collapse into To Do. Tasks keep workflow_stage.
 function resolveBoardStage(item: KCardItem): WorkflowStage {
   if (item.source === 'task') return (item.workflow_stage as WorkflowStage | null) ?? 'todo'
   switch (item.status) {
@@ -87,8 +101,6 @@ function resolveBoardStage(item: KCardItem): WorkflowStage {
     case 'cancelled':
       return 'cancelled'
     default:
-      // 'overdue' / 'pending' / null → To Do (the board has no overdue column;
-      // KCard still shows the overdue indicator via styling).
       return 'todo'
   }
 }
@@ -105,17 +117,80 @@ function matchesSearch(item: KCardItem, q: string): boolean {
   return candidates.some((s) => typeof s === 'string' && s.toLowerCase().includes(q))
 }
 
+function matchesFacetFilters(
+  item: KCardItem,
+  active: Record<string, string | undefined>,
+  excludeKey: string,
+  searchQ: string,
+): boolean {
+  if (!matchesSearch(item, searchQ)) return false
+  if (excludeKey !== 'source' && active.source !== undefined && item.source !== active.source) {
+    return false
+  }
+  if (
+    excludeKey !== 'priority' &&
+    active.priority !== undefined &&
+    item.priority !== active.priority
+  ) {
+    return false
+  }
+  return true
+}
+
+function countBoardFacet(
+  items: KCardItem[],
+  fieldKey: string,
+  value: string,
+  active: Record<string, string | undefined>,
+  searchQ: string,
+): number {
+  return items.filter((item) => {
+    if (fieldKey === 'source' && item.source !== value) return false
+    if (fieldKey === 'priority' && item.priority !== value) return false
+    return matchesFacetFilters(item, active, fieldKey, searchQ)
+  }).length
+}
+
+function sortBoardItems(items: KCardItem[], sort?: string, dir?: 'asc' | 'desc'): KCardItem[] {
+  if (sort === undefined) return items
+  const mult = dir === 'desc' ? -1 : 1
+  return [...items].sort((a, b) => {
+    let cmp = 0
+    if (sort === 'deadline') {
+      const da = a.deadline != null ? new Date(a.deadline).getTime() : Number.POSITIVE_INFINITY
+      const db = b.deadline != null ? new Date(b.deadline).getTime() : Number.POSITIVE_INFINITY
+      cmp = da - db
+    } else if (sort === 'created_at') {
+      cmp = new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    } else if (sort === 'priority') {
+      cmp = PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority]
+    }
+    return cmp * mult
+  })
+}
+
 export function WorkBoard(): ReactElement {
   const { t, i18n } = useTranslation('unified-kanban')
   const navigate = useNavigate()
+  const search = Route.useSearch()
+  const routeNavigate = Route.useNavigate()
 
   const { openPalette } = useWorkCreation()
+  const { openCommitment } = useCommitmentDrawer()
 
-  const [mode, setMode] = useState<KanbanColumnMode>('status')
-  const [searchQuery, setSearchQuery] = useState<string>('')
+  const mode: KanbanColumnMode = search.group ?? 'status'
+  const searchQuery = search.search ?? ''
 
-  // REAL hook signature: { contextType, columnMode, sourceFilter } — NOT { context, mode, sources }
-  // D-07: do NOT pass searchQuery (client-side filter only).
+  const setSearch = useCallback(
+    (reducer: (prev: Record<string, unknown>) => Record<string, unknown>): void => {
+      void routeNavigate({
+        search: (prev: Record<string, unknown>) => reducer(prev),
+        replace: true,
+      } as unknown as Parameters<typeof routeNavigate>[0])
+    },
+    [routeNavigate],
+  )
+
   const { items, isLoading } = useUnifiedKanban({
     contextType: 'personal',
     columnMode: mode,
@@ -124,25 +199,42 @@ export function WorkBoard(): ReactElement {
 
   const update = useUnifiedKanbanStatusUpdate()
 
-  // Confirmation #8 — drop cancelled items from view (no cancelled column rendered).
   const visibleItems = useMemo(
     () => (Array.isArray(items) ? items.filter((it) => !isCancelled(it)) : []),
     [items],
   )
 
-  // D-07 — client-side search across EN + AR title, dossier, assignee.
+  const boardListConfig = useMemo((): ListControlsConfig => {
+    const searchQ = searchQuery.toLowerCase().trim()
+    return {
+      ...kanbanListConfig,
+      filters: kanbanListConfig.filters.map((field) => ({
+        ...field,
+        buildCountQuery: (value, active) =>
+          Promise.resolve(countBoardFacet(visibleItems, field.key, value, active, searchQ)),
+      })),
+    }
+  }, [searchQuery, visibleItems])
+
+  const controls = useListControls(boardListConfig, search as Record<string, unknown>, setSearch)
+
   const filtered = useMemo(() => {
     const q = searchQuery.toLowerCase().trim()
-    return visibleItems.filter((it) => matchesSearch(it, q))
-  }, [visibleItems, searchQuery])
+    let next = visibleItems.filter((it) => matchesSearch(it, q))
+    if (search.source !== undefined) {
+      next = next.filter((it) => it.source === search.source)
+    }
+    if (search.priority !== undefined) {
+      next = next.filter((it) => it.priority === search.priority)
+    }
+    return sortBoardItems(next, search.sort, search.dir)
+  }, [visibleItems, searchQuery, search.source, search.priority, search.sort, search.dir])
 
-  // D-08 — overdue chip count uses unfiltered visibleItems so the chip is stable while typing.
   const overdueCount = useMemo(
     () => visibleItems.filter((it) => it.is_overdue).length,
     [visibleItems],
   )
 
-  // Group by stage for column rendering. We never .reverse() — RTL is handled by `dir`.
   const byStage = useMemo<Record<WorkflowStage, KCardItem[]>>(() => {
     const empty: Record<WorkflowStage, KCardItem[]> = {
       todo: [],
@@ -158,8 +250,16 @@ export function WorkBoard(): ReactElement {
     return empty
   }, [filtered])
 
-  // Project filtered items into the shared primitive's KanbanItemProps shape.
-  // `column` is the workflow_stage so KanbanCards can filter per-column.
+  const visibleCommitmentIds = useMemo((): string[] => {
+    const ids: string[] = []
+    for (const stage of STAGES) {
+      for (const item of byStage[stage]) {
+        if (item.source === 'commitment') ids.push(item.id)
+      }
+    }
+    return ids
+  }, [byStage])
+
   const kanbanItems = useMemo<WorkBoardKanbanItem[]>(
     () =>
       filtered.map((it) => ({
@@ -170,19 +270,11 @@ export function WorkBoard(): ReactElement {
     [filtered],
   )
 
-  // Column descriptors for KanbanProvider — id maps to workflow_stage so
-  // kanban-dnd.spec.ts can target `[data-droppable-id="<stage>"]`.
   const columnDescriptors = useMemo(
     () => STAGES.map((stage) => ({ id: stage, name: t(`columns.${stage}`) })),
     [t],
   )
 
-  // D-03 sensor gating — when mode !== 'status' the cards are visually present
-  // but un-draggable. KanbanProvider wires its own MouseSensor/TouchSensor/
-  // KeyboardSensor internally; passing `sensors={[]}` overrides the defaults
-  // at the DndContext spread (KanbanProvider.tsx:211 `{...props}` runs AFTER
-  // the internal `sensors={sensors}` so spread wins). In 'status' mode we
-  // omit the prop entirely so the internal sensors stay active.
   const dndExtraProps: { sensors?: SensorDescriptor<object>[] } =
     mode === 'status' ? {} : { sensors: [] }
 
@@ -192,17 +284,9 @@ export function WorkBoard(): ReactElement {
       const over = event.over
       if (activeId == null || over == null) return
 
-      // Resolve source item from current visible set.
       const item = visibleItems.find((it) => it.id === String(activeId))
       if (!item) return
 
-      // Resolve target stage. Under closestCenter collision detection the
-      // `over` target may be the column-section (useDroppable id=stage) OR a
-      // sibling card sortable (id=cardUuid). D-21 (#3072): WorkBoard's
-      // onDragEnd must handle BOTH:
-      //  1. over.data.current.stage — if a future consumer attaches stage data
-      //  2. over.id matches a STAGE — when dropped on empty column area
-      //  3. over.id is a card uuid — resolve to that card's workflow_stage
       type OverData = { stage?: WorkflowStage } | undefined
       const overData = (over.data?.current as OverData) ?? undefined
       let targetStage: WorkflowStage | undefined = overData?.stage
@@ -212,8 +296,6 @@ export function WorkBoard(): ReactElement {
         if ((STAGES as string[]).includes(stripped)) {
           targetStage = stripped as WorkflowStage
         } else {
-          // Sibling-card path: closestCenter often lands on a card in the
-          // target column rather than the column-droppable itself.
           const overCard = visibleItems.find((it) => it.id === overIdStr)
           if (overCard !== undefined) {
             targetStage = resolveBoardStage(overCard)
@@ -232,30 +314,31 @@ export function WorkBoard(): ReactElement {
     [visibleItems, update],
   )
 
-  // D-09 — route by source. Per open-question 3 we reuse today's existing detail surfaces.
   const handleItemClick = useCallback(
     (item: KCardItem): void => {
       switch (item.source) {
         case 'task':
           void navigate({ to: `/tasks/${item.id}` })
           break
-        case 'commitment':
-          void navigate({ to: '/commitments' })
+        case 'commitment': {
+          usePeekStore.getState().register({
+            ids: visibleCommitmentIds,
+            type: 'commitment',
+            total: visibleCommitmentIds.length,
+            pageOffset: 0,
+            pageSize: visibleCommitmentIds.length,
+          })
+          openCommitment(item.id)
           break
+        }
         case 'intake':
           void navigate({ to: `/intake/tickets/${item.id}` })
           break
       }
     },
-    [navigate],
+    [navigate, openCommitment, visibleCommitmentIds],
   )
 
-  // B-24: the per-column +Add and toolbar +New open the unified work-creation
-  // palette (prefilled to the Task form) instead of navigating to /tasks. The old
-  // target was the "My desk" list — no create form — and the `defaultWorkflowStage`
-  // search param it passed was never consumed, so the +Add looked broken. The
-  // palette provider's openPalette API takes a work-item TYPE, not a stage, so the
-  // column's stage can't be prefilled without changing work-creation (L5-owned).
   const handleAddItem = useCallback((): void => {
     openPalette('task')
   }, [openPalette])
@@ -264,7 +347,27 @@ export function WorkBoard(): ReactElement {
     openPalette('task')
   }, [openPalette])
 
+  const handleSearchChange = useCallback(
+    (q: string): void => {
+      void routeNavigate({
+        search: (prev: Record<string, unknown>) => ({
+          ...prev,
+          search: q.length > 0 ? q : undefined,
+        }),
+        replace: true,
+      } as unknown as Parameters<typeof routeNavigate>[0])
+    },
+    [routeNavigate],
+  )
+
+  const handleClearFilters = useCallback((): void => {
+    controls.clearAll()
+    handleSearchChange('')
+  }, [controls, handleSearchChange])
+
   const isRTL = i18n.language === 'ar'
+  const isBoardEmpty = !isLoading && visibleItems.length === 0
+  const isFilteredEmpty = !isLoading && visibleItems.length > 0 && filtered.length === 0
 
   if (isLoading) {
     return (
@@ -298,34 +401,51 @@ export function WorkBoard(): ReactElement {
     <div className="workboard-page" dir={isRTL ? 'rtl' : 'ltr'}>
       <h1 className="sr-only">{t('title', { defaultValue: 'Work Board' })}</h1>
       <BoardToolbar
-        mode={mode}
+        config={boardListConfig}
+        controls={controls}
         searchQuery={searchQuery}
         overdueCount={overdueCount}
-        onModeChange={setMode}
-        onSearchChange={setSearchQuery}
+        onSearchChange={handleSearchChange}
         onNewItem={handleNewItem}
       />
-      <div className="board-columns">
-        <KanbanProvider<WorkBoardKanbanItem, { id: WorkflowStage; name: string }>
-          columns={columnDescriptors}
-          data={kanbanItems}
-          onDragEnd={handleDragEnd}
-          className="contents"
-          {...dndExtraProps}
-        >
-          {(column) => (
-            <BoardColumn
-              key={column.id}
-              title={column.name}
-              stage={column.id}
-              items={byStage[column.id]}
-              dndEnabled={mode === 'status'}
-              onItemClick={handleItemClick}
-              onAddItem={handleAddItem}
-            />
-          )}
-        </KanbanProvider>
-      </div>
+      <FilterChipsRow
+        chips={controls.filterChips}
+        onRemove={controls.removeFilter}
+        onClearAll={controls.clearAll}
+        showing={filtered.length}
+        total={visibleItems.length}
+      />
+      {isBoardEmpty ? (
+        <div className="board-empty flex flex-1 items-center justify-center py-16">
+          <ListEmptyState entityType="work_item" onCreate={(): void => openPalette('task')} />
+        </div>
+      ) : isFilteredEmpty ? (
+        <div className="board-empty flex flex-1 items-center justify-center py-16">
+          <ListEmptyState entityType="work_item" filtered onClearFilters={handleClearFilters} />
+        </div>
+      ) : (
+        <div className="board-columns">
+          <KanbanProvider<WorkBoardKanbanItem, { id: WorkflowStage; name: string }>
+            columns={columnDescriptors}
+            data={kanbanItems}
+            onDragEnd={handleDragEnd}
+            className="contents"
+            {...dndExtraProps}
+          >
+            {(column) => (
+              <BoardColumn
+                key={column.id}
+                title={column.name}
+                stage={column.id}
+                items={byStage[column.id]}
+                dndEnabled={mode === 'status'}
+                onItemClick={handleItemClick}
+                onAddItem={handleAddItem}
+              />
+            )}
+          </KanbanProvider>
+        </div>
+      )}
     </div>
   )
 }
