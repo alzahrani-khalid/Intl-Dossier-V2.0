@@ -9,7 +9,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 import { generateText } from '../_shared/onprem-llm.ts';
 import {
   createAIInteractionLogger,
@@ -171,9 +171,11 @@ function generateFallbackTranslation(
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   if (req.method !== 'POST') {
@@ -494,6 +496,7 @@ async function handleBatchTranslation(
   supabaseClient: any,
   user: any
 ): Promise<Response> {
+  const corsHeaders = getCorsHeaders(req);
   const body: BatchTranslateRequest = await req.json();
 
   if (!body.items || body.items.length === 0) {
