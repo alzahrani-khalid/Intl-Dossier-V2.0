@@ -1,6 +1,6 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // Types
 type FieldPermissionEntityType =
@@ -103,7 +103,8 @@ interface CheckPermissionsRequest {
 }
 
 // Helpers
-function createErrorResponse(
+function createErrorResponseWithCors(
+  corsHeaders: Record<string, string>,
   code: string,
   messageEn: string,
   messageAr: string,
@@ -126,7 +127,7 @@ function createErrorResponse(
   );
 }
 
-function createSuccessResponse(data: unknown, status = 200) {
+function createSuccessResponseWithCors(corsHeaders: Record<string, string>, data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -134,9 +135,13 @@ function createSuccessResponse(data: unknown, status = 200) {
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+  const createErrorResponse = createErrorResponseWithCors.bind(null, corsHeaders);
+  const createSuccessResponse = createSuccessResponseWithCors.bind(null, corsHeaders);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {

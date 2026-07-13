@@ -13,7 +13,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // ============================================================================
 // Types
@@ -76,31 +76,6 @@ interface StatsResponse {
 // Helper Functions
 // ============================================================================
 
-function errorResponse(
-  code: string,
-  message_en: string,
-  message_ar: string,
-  status: number,
-  details?: unknown
-) {
-  return new Response(
-    JSON.stringify({
-      error: { code, message_en, message_ar, details },
-    }),
-    {
-      status,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    }
-  );
-}
-
-function successResponse(data: unknown, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  });
-}
-
 async function getAuthUser(req: Request, supabase: ReturnType<typeof createClient>) {
   const authHeader = req.headers.get('Authorization');
   if (!authHeader) {
@@ -133,9 +108,36 @@ function parseArrayParam(value: string | null): string[] | undefined {
 // ============================================================================
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
+  function errorResponse(
+    code: string,
+    message_en: string,
+    message_ar: string,
+    status: number,
+    details?: unknown
+  ) {
+    return new Response(
+      JSON.stringify({
+        error: { code, message_en, message_ar, details },
+      }),
+      {
+        status,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
+  function successResponse(data: unknown, status = 200) {
+    return new Response(JSON.stringify(data), {
+      status,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {

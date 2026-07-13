@@ -12,12 +12,9 @@
 
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
 import { createClient } from 'jsr:@supabase/supabase-js@2'
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-}
+type JsonResponse = (data: unknown, status?: number) => Response
 
 interface TagCategory {
   id?: string
@@ -61,9 +58,16 @@ interface RenameRequest {
 }
 
 Deno.serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req)
+  const jsonResponse: JsonResponse = (data, status = 200) =>
+    new Response(JSON.stringify(data), {
+      status,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return handleCorsPreflightRequest(req)
   }
 
   try {
@@ -103,18 +107,18 @@ Deno.serve(async (req: Request) => {
     // Route based on method and action
     switch (req.method) {
       case 'GET': {
-        return await handleGet(supabase, url, action)
+        return await handleGet(supabase, url, action, jsonResponse)
       }
       case 'POST': {
         const body = await req.json()
-        return await handlePost(supabase, url, action, body, user.id)
+        return await handlePost(supabase, url, action, body, user.id, jsonResponse)
       }
       case 'PUT': {
         const body = await req.json()
-        return await handlePut(supabase, url, action, body, user.id)
+        return await handlePut(supabase, url, action, body, user.id, jsonResponse)
       }
       case 'DELETE': {
-        return await handleDelete(supabase, url, action, user.id)
+        return await handleDelete(supabase, url, action, user.id, jsonResponse)
       }
       default:
         return new Response(JSON.stringify({ error: 'Method not allowed' }), {
@@ -138,7 +142,12 @@ Deno.serve(async (req: Request) => {
 // GET Handlers
 // ============================================================================
 
-async function handleGet(supabase: ReturnType<typeof createClient>, url: URL, action: string) {
+async function handleGet(
+  supabase: ReturnType<typeof createClient>,
+  url: URL,
+  action: string,
+  jsonResponse: JsonResponse,
+) {
   const params = url.searchParams
 
   switch (action) {
@@ -330,6 +339,7 @@ async function handlePost(
   action: string,
   body: Record<string, unknown>,
   userId: string,
+  jsonResponse: JsonResponse,
 ) {
   switch (action) {
     case 'create':
@@ -463,6 +473,7 @@ async function handlePut(
   action: string,
   body: Record<string, unknown>,
   userId: string,
+  jsonResponse: JsonResponse,
 ) {
   const params = url.searchParams
   const tagId = params.get('id') || (body as { id?: string }).id
@@ -528,6 +539,7 @@ async function handleDelete(
   url: URL,
   action: string,
   userId: string,
+  jsonResponse: JsonResponse,
 ) {
   const params = url.searchParams
 
@@ -597,15 +609,4 @@ async function handleDelete(
       return jsonResponse({ success: true })
     }
   }
-}
-
-// ============================================================================
-// Helpers
-// ============================================================================
-
-function jsonResponse(data: unknown, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  })
 }

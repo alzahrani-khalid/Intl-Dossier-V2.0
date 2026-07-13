@@ -13,7 +13,7 @@
  */
 
 import { createClient } from 'jsr:@supabase/supabase-js@2'
-import { corsHeaders } from '../_shared/cors.ts'
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 
 // Escape DB/user-supplied strings before interpolating them into HTML (XSS sink).
 function escapeHtml(s: unknown): string {
@@ -861,9 +861,11 @@ async function fetchEntityData(
 
 // Main handler
 Deno.serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req)
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders })
+    return handleCorsPreflightRequest(req)
   }
 
   try {

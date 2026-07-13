@@ -3,12 +3,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-};
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 interface ReportConfiguration {
   entities: string[];
@@ -109,7 +104,7 @@ function errorResponse(
     }),
     {
       status,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
     }
   );
 }
@@ -117,7 +112,7 @@ function errorResponse(
 function successResponse(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
   });
 }
 
@@ -333,7 +328,7 @@ function buildReportQuery(
 }
 
 // Main handler
-serve(async (req) => {
+async function handleRequest(req: Request, corsHeaders: Record<string, string>) {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -402,6 +397,14 @@ serve(async (req) => {
     console.error('Error:', error);
     return errorResponse(500, 'INTERNAL_ERROR', 'An internal error occurred', 'حدث خطأ داخلي');
   }
+}
+
+serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+  const response = await handleRequest(req, corsHeaders);
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(corsHeaders)) headers.set(name, value);
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 });
 
 // Report CRUD handlers

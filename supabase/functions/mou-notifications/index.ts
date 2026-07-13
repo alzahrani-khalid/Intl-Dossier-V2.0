@@ -3,10 +3,11 @@
 // Feature: mou-notification-hooks
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+type CorsHeaders = Record<string, string>;
 
 // Types
 interface MouNotificationPreferences {
@@ -65,9 +66,10 @@ interface NotificationSummary {
 }
 
 Deno.serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
@@ -76,11 +78,11 @@ Deno.serve(async (req) => {
 
     // Service-level endpoints (no auth required for scheduled jobs)
     if (path === 'process-queue' && req.method === 'POST') {
-      return await processNotificationQueue();
+      return await processNotificationQueue(corsHeaders);
     }
 
     if (path === 'check-due-dates' && req.method === 'POST') {
-      return await checkDeliverableDueDates();
+      return await checkDeliverableDueDates(corsHeaders);
     }
 
     // User-level endpoints (auth required)
@@ -114,35 +116,35 @@ Deno.serve(async (req) => {
     switch (path) {
       case 'preferences':
         if (req.method === 'GET') {
-          return await getPreferences(supabaseClient, user.id);
+          return await getPreferences(supabaseClient, user.id, corsHeaders);
         } else if (req.method === 'PATCH' || req.method === 'PUT') {
           const body = await req.json();
-          return await updatePreferences(supabaseClient, user.id, body);
+          return await updatePreferences(supabaseClient, user.id, body, corsHeaders);
         }
         break;
 
       case 'summary':
         if (req.method === 'GET') {
-          return await getNotificationSummary(supabaseClient, user.id);
+          return await getNotificationSummary(supabaseClient, user.id, corsHeaders);
         }
         break;
 
       case 'queue':
         if (req.method === 'GET') {
-          return await getQueuedNotifications(supabaseClient, user.id, url.searchParams);
+          return await getQueuedNotifications(supabaseClient, user.id, url.searchParams, corsHeaders);
         }
         break;
 
       case 'history':
         if (req.method === 'GET') {
-          return await getNotificationHistory(supabaseClient, user.id, url.searchParams);
+          return await getNotificationHistory(supabaseClient, user.id, url.searchParams, corsHeaders);
         }
         break;
 
       default:
         // Default: Get preferences
         if (req.method === 'GET') {
-          return await getPreferences(supabaseClient, user.id);
+          return await getPreferences(supabaseClient, user.id, corsHeaders);
         }
     }
 
@@ -162,7 +164,7 @@ Deno.serve(async (req) => {
 /**
  * Get user's MoU notification preferences
  */
-async function getPreferences(supabase: ReturnType<typeof createClient>, userId: string) {
+async function getPreferences(supabase: ReturnType<typeof createClient>, userId: string, corsHeaders: CorsHeaders) {
   const { data, error } = await supabase
     .from('mou_notification_preferences')
     .select('*')
@@ -209,7 +211,8 @@ async function getPreferences(supabase: ReturnType<typeof createClient>, userId:
 async function updatePreferences(
   supabase: ReturnType<typeof createClient>,
   userId: string,
-  preferences: Partial<MouNotificationPreferences>
+  preferences: Partial<MouNotificationPreferences>,
+  corsHeaders: CorsHeaders
 ) {
   // Validate batch_frequency
   if (
@@ -282,7 +285,7 @@ async function updatePreferences(
 /**
  * Get notification summary for user
  */
-async function getNotificationSummary(supabase: ReturnType<typeof createClient>, userId: string) {
+async function getNotificationSummary(supabase: ReturnType<typeof createClient>, userId: string, corsHeaders: CorsHeaders) {
   const { data, error } = await supabase.rpc('get_user_mou_notification_summary', {
     p_user_id: userId,
   });
@@ -315,7 +318,8 @@ async function getNotificationSummary(supabase: ReturnType<typeof createClient>,
 async function getQueuedNotifications(
   supabase: ReturnType<typeof createClient>,
   userId: string,
-  params: URLSearchParams
+  params: URLSearchParams,
+  corsHeaders: CorsHeaders
 ) {
   const status = params.get('status') || 'pending';
   const limit = Math.min(parseInt(params.get('limit') || '20'), 50);
@@ -361,7 +365,8 @@ async function getQueuedNotifications(
 async function getNotificationHistory(
   supabase: ReturnType<typeof createClient>,
   userId: string,
-  params: URLSearchParams
+  params: URLSearchParams,
+  corsHeaders: CorsHeaders
 ) {
   const limit = Math.min(parseInt(params.get('limit') || '20'), 50);
   const offset = parseInt(params.get('offset') || '0');
@@ -414,7 +419,7 @@ async function getNotificationHistory(
 /**
  * Process notification queue (scheduled job)
  */
-async function processNotificationQueue() {
+async function processNotificationQueue(corsHeaders: CorsHeaders) {
   const serviceClient = createClient(supabaseUrl, supabaseServiceKey);
 
   const { data, error } = await serviceClient.rpc('process_mou_notification_queue', {
@@ -451,7 +456,7 @@ async function processNotificationQueue() {
 /**
  * Check deliverable due dates and queue notifications (scheduled job)
  */
-async function checkDeliverableDueDates() {
+async function checkDeliverableDueDates(corsHeaders: CorsHeaders) {
   const serviceClient = createClient(supabaseUrl, supabaseServiceKey);
 
   const { data, error } = await serviceClient.rpc('check_mou_deliverable_due_dates');

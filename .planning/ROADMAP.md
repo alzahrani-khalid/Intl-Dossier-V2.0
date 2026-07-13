@@ -147,7 +147,7 @@ Plans:
 2. All ~171 handler-scope edge functions (batch A) are migrated off the deprecated wildcard, deployed, and smoke-checked — requests from allowed origins succeed unchanged
 3. All ~101 module-scope edge functions, including the 83 local `const corsHeaders = '*'` copies (batches B/C), are migrated, deployed, and smoke-checked
 4. A repo-wide grep for the deprecated wildcard pattern returns 0 matches
-   **Plans**: TBD
+   **Plans**: 36 — 90-01 CORS-01 secret verify (orchestrator, gates deploys); 90-02..18 Group A (169 import-static handler-scope, deploy-batch A); 90-19..26 Group B (75 local-wildcard handler-scope, deploy-batch B); 90-27..31 Group C (26 module-scope careful, deploy-batch C); 90-35/36 Group D (8 inline hard-coded wildcard, deploy-batch C); 90-32/33/34 deploy+smoke checkpoints (orchestrator, staging-only, 90-34 deploys C+D and runs the final repo-wide grep gate). 278 files migrated total (variable-based A/B/C + inline-wildcard D). Migration plans are code-only (worker-suitable), capped ≤10 files/≤120 lines each for judge parseability; routing floor:frontier on all.
 
 ### Phase 91: v7.0 Live Verification
 

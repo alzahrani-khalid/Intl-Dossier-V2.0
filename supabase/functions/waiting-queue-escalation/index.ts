@@ -10,6 +10,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 import {
   validateAssignmentId,
   validateUUIDArray,
@@ -51,16 +52,11 @@ const bulkJobs = new Map<string, {
 }>();
 
 serve(async (req: Request) => {
-  // CORS headers
+  const corsHeaders = getCorsHeaders(req);
+
+  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'authorization, content-type',
-      },
-    });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
@@ -74,7 +70,7 @@ serve(async (req: Request) => {
     if (!authHeader) {
       return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
@@ -85,7 +81,7 @@ serve(async (req: Request) => {
     if (authError || !user) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
@@ -94,37 +90,37 @@ serve(async (req: Request) => {
 
     // Route handlers
     if (req.method === 'POST' && path === '/escalate') {
-      return await handleEscalate(req, supabase, user.id);
+      return await handleEscalate(req, supabase, user.id, corsHeaders);
     }
 
     if (req.method === 'POST' && path === '/escalate-bulk') {
-      return await handleEscalateBulk(req, supabase, user.id);
+      return await handleEscalateBulk(req, supabase, user.id, corsHeaders);
     }
 
     if (req.method === 'GET' && path.startsWith('/status/')) {
       const jobId = path.replace('/status/', '');
-      return handleGetJobStatus(jobId);
+      return handleGetJobStatus(jobId, corsHeaders);
     }
 
     if (req.method === 'POST' && path.match(/^\/[\w-]+\/acknowledge$/)) {
       const escalationId = path.split('/')[1];
-      return await handleAcknowledge(req, supabase, user.id, escalationId);
+      return await handleAcknowledge(req, supabase, user.id, escalationId, corsHeaders);
     }
 
     if (req.method === 'POST' && path.match(/^\/[\w-]+\/resolve$/)) {
       const escalationId = path.split('/')[1];
-      return await handleResolve(req, supabase, user.id, escalationId);
+      return await handleResolve(req, supabase, user.id, escalationId, corsHeaders);
     }
 
     return new Response(JSON.stringify({ error: 'Not found' }), {
       status: 404,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
     const safeError = createSafeErrorResponse(error, 'Failed to process escalation request');
     return new Response(JSON.stringify(safeError), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 });
@@ -132,12 +128,17 @@ serve(async (req: Request) => {
 /**
  * POST /escalate - Escalate single assignment
  */
-async function handleEscalate(req: Request, supabase: any, userId: string) {
+async function handleEscalate(
+  req: Request,
+  supabase: any,
+  userId: string,
+  corsHeaders: Record<string, string>
+) {
   // Validate Content-Type
   if (!validateContentType(req)) {
     return new Response(JSON.stringify({ error: 'Content-Type must be application/json' }), {
       status: 415,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -148,7 +149,7 @@ async function handleEscalate(req: Request, supabase: any, userId: string) {
   if (!idValidation.valid) {
     return new Response(JSON.stringify({ error: idValidation.error }), {
       status: 400,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -157,7 +158,7 @@ async function handleEscalate(req: Request, supabase: any, userId: string) {
   if (!reasonValidation.valid) {
     return new Response(JSON.stringify({ error: reasonValidation.error }), {
       status: 400,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -171,7 +172,7 @@ async function handleEscalate(req: Request, supabase: any, userId: string) {
   if (assignmentError || !assignment) {
     return new Response(JSON.stringify({ error: 'ASSIGNMENT_NOT_FOUND' }), {
       status: 404,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -179,7 +180,7 @@ async function handleEscalate(req: Request, supabase: any, userId: string) {
   if (assignment.status === 'completed') {
     return new Response(JSON.stringify({ error: 'CANNOT_ESCALATE_COMPLETED' }), {
       status: 409,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -190,7 +191,7 @@ async function handleEscalate(req: Request, supabase: any, userId: string) {
   if (pathError) {
     return new Response(JSON.stringify({ error: 'Failed to resolve escalation path', details: pathError.message }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -203,7 +204,7 @@ async function handleEscalate(req: Request, supabase: any, userId: string) {
       message: 'No escalation path configured for this user'
     }), {
       status: 400,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -224,7 +225,7 @@ async function handleEscalate(req: Request, supabase: any, userId: string) {
   if (escalationError) {
     return new Response(JSON.stringify({ error: 'Failed to create escalation record', details: escalationError.message }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -238,19 +239,24 @@ async function handleEscalate(req: Request, supabase: any, userId: string) {
     message: `Assignment escalated to ${nextLevel.full_name} (${nextLevel.position_title})`,
   }), {
     status: 200,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 }
 
 /**
  * POST /escalate-bulk - Escalate multiple assignments
  */
-async function handleEscalateBulk(req: Request, supabase: any, userId: string) {
+async function handleEscalateBulk(
+  req: Request,
+  supabase: any,
+  userId: string,
+  corsHeaders: Record<string, string>
+) {
   // Validate Content-Type
   if (!validateContentType(req)) {
     return new Response(JSON.stringify({ error: 'Content-Type must be application/json' }), {
       status: 415,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -261,7 +267,7 @@ async function handleEscalateBulk(req: Request, supabase: any, userId: string) {
   if (!idsValidation.valid) {
     return new Response(JSON.stringify({ error: idsValidation.error }), {
       status: 400,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -270,7 +276,7 @@ async function handleEscalateBulk(req: Request, supabase: any, userId: string) {
   if (!reasonValidation.valid) {
     return new Response(JSON.stringify({ error: reasonValidation.error }), {
       status: 400,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -296,7 +302,7 @@ async function handleEscalateBulk(req: Request, supabase: any, userId: string) {
     message: 'Bulk escalation started',
   }), {
     status: 200,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 }
 
@@ -366,13 +372,13 @@ async function processBulkEscalations(
 /**
  * GET /status/:job_id - Get bulk escalation job status
  */
-function handleGetJobStatus(jobId: string) {
+function handleGetJobStatus(jobId: string, corsHeaders: Record<string, string>) {
   const job = bulkJobs.get(jobId);
 
   if (!job) {
     return new Response(JSON.stringify({ error: 'Job not found' }), {
       status: 404,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -388,19 +394,25 @@ function handleGetJobStatus(jobId: string) {
     results: job.results,
   }), {
     status: 200,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 }
 
 /**
  * POST /:escalation_id/acknowledge - Acknowledge escalation
  */
-async function handleAcknowledge(req: Request, supabase: any, userId: string, escalationId: string) {
+async function handleAcknowledge(
+  req: Request,
+  supabase: any,
+  userId: string,
+  escalationId: string,
+  corsHeaders: Record<string, string>
+) {
   // Validate Content-Type
   if (!validateContentType(req)) {
     return new Response(JSON.stringify({ error: 'Content-Type must be application/json' }), {
       status: 415,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -409,7 +421,7 @@ async function handleAcknowledge(req: Request, supabase: any, userId: string, es
   if (!idValidation.valid) {
     return new Response(JSON.stringify({ error: 'Invalid escalation_id' }), {
       status: 400,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -420,7 +432,7 @@ async function handleAcknowledge(req: Request, supabase: any, userId: string, es
   if (!notesValidation.valid) {
     return new Response(JSON.stringify({ error: notesValidation.error }), {
       status: 400,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -434,7 +446,7 @@ async function handleAcknowledge(req: Request, supabase: any, userId: string, es
   if (escalationError || !escalation) {
     return new Response(JSON.stringify({ error: 'ESCALATION_NOT_FOUND' }), {
       status: 404,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -452,7 +464,7 @@ async function handleAcknowledge(req: Request, supabase: any, userId: string, es
   if (updateError) {
     return new Response(JSON.stringify({ error: 'Failed to acknowledge escalation' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -461,19 +473,25 @@ async function handleAcknowledge(req: Request, supabase: any, userId: string, es
     message: 'Escalation acknowledged successfully',
   }), {
     status: 200,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 }
 
 /**
  * POST /:escalation_id/resolve - Resolve escalation
  */
-async function handleResolve(req: Request, supabase: any, userId: string, escalationId: string) {
+async function handleResolve(
+  req: Request,
+  supabase: any,
+  userId: string,
+  escalationId: string,
+  corsHeaders: Record<string, string>
+) {
   // Validate Content-Type
   if (!validateContentType(req)) {
     return new Response(JSON.stringify({ error: 'Content-Type must be application/json' }), {
       status: 415,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -482,7 +500,7 @@ async function handleResolve(req: Request, supabase: any, userId: string, escala
   if (!idValidation.valid) {
     return new Response(JSON.stringify({ error: 'Invalid escalation_id' }), {
       status: 400,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -493,7 +511,7 @@ async function handleResolve(req: Request, supabase: any, userId: string, escala
   if (!resolutionValidation.valid) {
     return new Response(JSON.stringify({ error: resolutionValidation.error }), {
       status: 400,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -507,7 +525,7 @@ async function handleResolve(req: Request, supabase: any, userId: string, escala
   if (escalationError || !escalation) {
     return new Response(JSON.stringify({ error: 'ESCALATION_NOT_FOUND' }), {
       status: 404,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -525,7 +543,7 @@ async function handleResolve(req: Request, supabase: any, userId: string, escala
   if (updateError) {
     return new Response(JSON.stringify({ error: 'Failed to resolve escalation' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -534,7 +552,7 @@ async function handleResolve(req: Request, supabase: any, userId: string, escala
     message: 'Escalation resolved successfully',
   }), {
     status: 200,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 }
 

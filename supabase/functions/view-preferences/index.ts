@@ -15,7 +15,7 @@
 
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 import { createClient } from 'jsr:@supabase/supabase-js@2';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // Types
 type EntityViewType =
@@ -71,9 +71,11 @@ function isValidEntityType(type: string): type is EntityViewType {
 }
 
 Deno.serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
@@ -161,8 +163,6 @@ Deno.serve(async (req: Request) => {
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
-});
-
 // Handler: Get preferences and saved views
 async function handleGetPreferences(
   supabase: ReturnType<typeof createClient>,
@@ -484,3 +484,4 @@ async function handleTogglePin(
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 }
+});

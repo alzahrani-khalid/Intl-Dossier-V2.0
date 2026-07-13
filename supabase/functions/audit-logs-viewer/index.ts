@@ -19,13 +19,8 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
-import {
-  corsHeaders,
-  errorResponse,
-  successResponse,
-  handleOptions,
-  log,
-} from '../_shared/utils.ts'
+import { errorResponse, successResponse, log } from '../_shared/utils.ts'
+import { getCorsHeaders } from '../_shared/cors.ts'
 
 // Types
 interface AuditLogFilters {
@@ -249,7 +244,6 @@ async function handleExportAuditLogs(
     return new Response(csv, {
       status: 200,
       headers: {
-        ...corsHeaders,
         'Content-Type': 'text/csv',
         'Content-Disposition': `attachment; filename="audit_logs_${new Date().toISOString().split('T')[0]}.csv"`,
       },
@@ -260,7 +254,6 @@ async function handleExportAuditLogs(
   return new Response(JSON.stringify(data || [], null, 2), {
     status: 200,
     headers: {
-      ...corsHeaders,
       'Content-Type': 'application/json',
       'Content-Disposition': `attachment; filename="audit_logs_${new Date().toISOString().split('T')[0]}.json"`,
     },
@@ -361,10 +354,10 @@ async function handleDistinctValues(supabase: any, field: string): Promise<Respo
 }
 
 // Main handler
-serve(async (req) => {
+async function handleRequest(req: Request, corsHeaders: Record<string, string>) {
   // Handle CORS
   if (req.method === 'OPTIONS') {
-    return handleOptions()
+    return new Response(null, { status: 204, headers: corsHeaders })
   }
 
   try {
@@ -466,4 +459,13 @@ serve(async (req) => {
     log('error', 'Unexpected error in audit-logs-viewer', { error: error.message })
     return errorResponse('An unexpected error occurred', 500, 'INTERNAL_ERROR')
   }
+}
+
+serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req)
+  const response = await handleRequest(req, corsHeaders)
+  const headers = new Headers(response.headers)
+  headers.delete('Access-Control-Max-Age')
+  for (const [name, value] of Object.entries(corsHeaders)) headers.set(name, value)
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers })
 })
