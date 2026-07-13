@@ -13,6 +13,7 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { Redis } from 'https://esm.sh/@upstash/redis@1'
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 
 // Initialize Supabase client
 const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
@@ -117,17 +118,15 @@ function isValidTokenFormat(token: string): boolean {
 }
 
 serve(async (req) => {
-  // CORS headers
+  const corsHeaders = getCorsHeaders(req)
   const headers = {
+    ...corsHeaders,
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
   }
 
   // Handle OPTIONS request
   if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 204, headers })
+    return handleCorsPreflightRequest(req)
   }
 
   // Only allow POST requests
