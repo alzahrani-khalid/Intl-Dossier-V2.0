@@ -114,17 +114,15 @@ export default defineConfig({
     // testMatch so `--project=a11y` discovers and runs them. It inherits the
     // shared baseURL, webServer, and pre-authenticated storageState from `use`.
     //
-    // The gate runs the repaired, verified-green specs listed below. The
-    // remaining specs under tests/a11y/ are QUARANTINED (not yet listed) — they
-    // share the SAME stale-login root cause (a manual /login form fill that never
-    // matched the real `#email` form, so every test 30s-timed-out in beforeEach)
-    // plus genuine app a11y debt (the position rich-text editor and the intake
-    // form). Quarantined, to be repaired the same way (drop the manual login —
-    // the project already inherits an authenticated storageState — point at real
-    // routes, and `test.fixme` any genuine component debt):
-    //   editor-keyboard-nav, positions-keyboard-nav,
-    //   positions-screen-reader-bilingual, screen-reader-en, screen-reader-ar,
-    //   keyboard-navigation, color-contrast, wcag-aa-comprehensive-audit.
+    // The gate now admits all 13 intended specs: the five originally verified
+    // specs below plus the eight specs whose repairs land later in this same
+    // run. Admission here is a gating/configuration change, not evidence that
+    // those eight specs have already been repaired; their repair work must be
+    // read alongside this change. They share the SAME stale-login root cause
+    // (a manual /login form fill that never matched the real `#email` form, so
+    // every test 30s-timed-out in beforeEach) plus genuine app a11y debt (the
+    // position rich-text editor and the intake form). The repaired specs are
+    // admitted so the full intended gate is visible while that work lands.
     // (focus-indicators passes standalone but is kept out of the gate: adding it
     // raised dev-server concurrency enough to flake two `networkidle` waits in
     // dossiers-a11y. Re-include it — and any quarantined spec — once verified
@@ -137,6 +135,14 @@ export default defineConfig({
         'a11y/positions-a11y-en.spec.ts',
         'a11y/positions-a11y-ar.spec.ts',
         'a11y/intake-accessibility.spec.ts',
+        'a11y/editor-keyboard-nav.spec.ts',
+        'a11y/positions-keyboard-nav.spec.ts',
+        'a11y/positions-screen-reader-bilingual.spec.ts',
+        'a11y/screen-reader-en.spec.ts',
+        'a11y/screen-reader-ar.spec.ts',
+        'a11y/keyboard-navigation.spec.ts',
+        'a11y/color-contrast.spec.ts',
+        'a11y/wcag-aa-comprehensive-audit.spec.ts',
       ],
       use: { ...devices['Desktop Chrome'] },
     },
