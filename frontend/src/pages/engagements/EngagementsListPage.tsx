@@ -12,7 +12,7 @@
  */
 
 import type { ReactNode } from 'react'
-import { lazy, Suspense, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
@@ -25,6 +25,7 @@ import {
 import { DisplayPopover } from '@/components/list-controls/DisplayPopover'
 import { FilterChipsRow } from '@/components/list-controls/FilterChipsRow'
 import { FilterPopover } from '@/components/list-controls/FilterPopover'
+import { ListEmptyState } from '@/components/empty-states'
 import type {
   ListControlsConfig,
   UseListControlsReturn,
@@ -47,11 +48,6 @@ const ENGAGEMENT_TYPE_VALUES = [
   'travel',
   'event',
 ] as const satisfies readonly EngagementTypeBucket[]
-
-const EngagementListEmptyState = lazy(async () => {
-  const mod = await import('@/components/empty-states/ListEmptyState')
-  return { default: mod.ListEmptyState }
-})
 
 export const engagementsListConfig: ListControlsConfig = {
   filters: [
@@ -316,14 +312,12 @@ export default function EngagementsListPage({
         showToolbar={controls === undefined}
         visibleProperties={controls?.visibleProperties}
         emptyState={
-          <Suspense fallback={null}>
-            <EngagementListEmptyState
-              entityType="engagement"
-              onCreate={onCreate}
-              filtered={filtered}
-              onClearFilters={clearFilters}
-            />
-          </Suspense>
+          <ListEmptyState
+            entityType="engagement"
+            onCreate={onCreate}
+            filtered={filtered}
+            onClearFilters={clearFilters}
+          />
         }
       />
     </ListPageShell>

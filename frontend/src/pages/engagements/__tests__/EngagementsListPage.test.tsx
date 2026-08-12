@@ -12,6 +12,20 @@ import { useState, type ReactElement } from 'react'
 import EngagementsListPage from '../EngagementsListPage'
 import type { EngagementFilter } from '@/components/list-page'
 
+const emptyStateSpy = vi.hoisted(() => vi.fn())
+
+vi.mock('@/components/empty-states', () => ({
+  ListEmptyState: (props: {
+    entityType: string
+    filtered?: boolean
+    onCreate?: () => void
+    onClearFilters?: () => void
+  }): ReactElement => {
+    emptyStateSpy(props)
+    return <div data-testid="engagement-list-empty-state">Engagement empty state</div>
+  },
+}))
+
 /**
  * Stateful harness: the page is now controlled (search + filter lifted to the
  * route's URL params in Phase 87-05). This mirrors the route wrapper's state so
@@ -124,6 +138,7 @@ const samplePage = {
 beforeEach(() => {
   i18nLanguageRef.current = 'en'
   navigateSpy.mockReset()
+  emptyStateSpy.mockClear()
   mockReturn.data = { pages: [samplePage], pageParams: [1] }
   mockReturn.hasNextPage = true
   mockReturn.isFetchingNextPage = false
@@ -210,5 +225,20 @@ describe('EngagementsListPage', () => {
     i18nLanguageRef.current = 'ar'
     render(<Harness />)
     expect(screen.getByText('قمة جنيف')).toBeTruthy()
+  })
+
+  it('the engagements list page renders the same empty state under the same conditions as before, and its test file gains mock coverage for the now-static import while every assertion it already made remains intact', () => {
+    mockReturn.data = { pages: [{ data: [], pagination: {} }], pageParams: [1] }
+    mockReturn.hasNextPage = false
+
+    render(<Harness />)
+
+    expect(screen.getByTestId('engagement-list-empty-state')).toBeTruthy()
+    expect(emptyStateSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        entityType: 'engagement',
+        filtered: false,
+      }),
+    )
   })
 })
