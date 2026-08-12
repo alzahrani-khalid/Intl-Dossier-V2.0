@@ -234,6 +234,7 @@ describe('EngagementsListPage', () => {
     render(<Harness />)
 
     expect(screen.getByTestId('engagement-list-empty-state')).toBeTruthy()
+    expect(emptyStateSpy).toHaveBeenCalledTimes(1)
     expect(emptyStateSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         entityType: 'engagement',
