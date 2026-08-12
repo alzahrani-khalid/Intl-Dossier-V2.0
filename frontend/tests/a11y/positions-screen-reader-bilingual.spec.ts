@@ -1,14 +1,6 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Bilingual Screen Reader Support', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
-    await page.fill('input[name="email"]', 'collaborator@gastat.sa');
-    await page.fill('input[name="password"]', 'Test@12345');
-    await page.click('button[type="submit"]');
-    await page.waitForURL('/dossiers');
-  });
-
   test('should have proper lang attribute in Arabic', async ({ page }) => {
     // Switch to Arabic
     await page.click('[data-testid="language-switcher"]');
