@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { getDossierRoute, testDossierIds } from '../fixtures/dossier-fixtures';
 
 /**
  * Accessibility Test: Color Contrast
@@ -8,12 +9,7 @@ import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Accessibility: Color Contrast', () => {
   test('should pass WCAG AA color contrast requirements', async ({ page }) => {
-    await page.goto('/login');
-    await page.fill('input[name="email"]', 'test-staff@gastat.gov.sa');
-    await page.fill('input[name="password"]', 'Test123!@#');
-    await page.click('button[type="submit"]');
-
-    await page.goto('/_protected/engagements/22222222-2222-2222-2222-222222222222/after-action');
+    await page.goto(`/_protected/engagements/${testDossierIds.engagement}/after-action`);
 
     const accessibilityScanResults = await new AxeBuilder({ page })
       .withTags(['wcag2aa'])
@@ -29,12 +25,7 @@ test.describe('Accessibility: Color Contrast', () => {
   });
 
   test('should have readable status badges', async ({ page }) => {
-    await page.goto('/login');
-    await page.fill('input[name="email"]', 'test-staff@gastat.gov.sa');
-    await page.fill('input[name="password"]', 'Test123!@#');
-    await page.click('button[type="submit"]');
-
-    await page.goto('/_protected/dossiers/11111111-1111-1111-1111-111111111111/after-actions');
+    await page.goto(getDossierRoute('country', testDossierIds.country));
 
     // Verify status badges visible
     const badges = page.locator('.badge, [data-status]');
