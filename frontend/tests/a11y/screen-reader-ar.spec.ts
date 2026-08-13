@@ -9,6 +9,7 @@ import { testDossierIds } from '../fixtures/dossier-fixtures';
 
 test.describe('Accessibility: Screen Reader (Arabic)', () => {
   test('should pass axe accessibility scan in Arabic', async ({ page }) => {
+    test.fixme(true, 'SPEC DEBT: two causes - navigates to /_protected/... (a route ID, not a URL; real path omits the pathless layout) AND clicks [data-testid="language-switcher"], which does not exist in frontend/src (0 files).')
     await page.goto(`/_protected/engagements/${testDossierIds.engagement}/after-action`);
 
     // Switch to Arabic
@@ -30,6 +31,7 @@ test.describe('Accessibility: Screen Reader (Arabic)', () => {
   });
 
   test('should have proper Arabic labels', async ({ page }) => {
+    test.fixme(true, 'SPEC DEBT: two causes - navigates to /_protected/... (a route ID, not a URL; real path omits the pathless layout) AND clicks [data-testid="language-switcher"], which does not exist in frontend/src (0 files).')
     await page.goto(`/_protected/engagements/${testDossierIds.engagement}/after-action`);
 
     // Switch to Arabic

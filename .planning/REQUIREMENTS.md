@@ -34,6 +34,23 @@ Requirements for this milestone. Each maps to roadmap phases.
 - [ ] **CI-04**: Visual-regression baselines regenerated post-flatten on the reference machine and the suite green
 - [ ] **CI-05**: `test-rtl-smokes` promoted from advisory to a required branch-protection context on `main` (with a smoke-PR BLOCKED proof)
 
+### Accessibility Defects (filed 2026-08-13 from ORCH-2 execution evidence)
+
+Real WCAG violations found by executing assertions, not by discovery. Each is annotated in its spec as
+`APP DEFECT` with its id so a reader cannot mistake the `fixme` for spec debt. **Fixing them is out of
+scope for Phase 89 (a CI burn-down); they are filed so they stay visible rather than silenced.**
+
+- [ ] **A11Y-01**: `screen-reader-en.spec.ts:11` — axe reports **58 WCAG AA violations** on the
+  after-action route, first being *"Ensure the contrast between foreground and background colors meets
+  WCAG 2 AA minimum contrast ratio thresholds"*. Evidence: ORCH-2 run 2026-08-13, tree `d8c102df`,
+  pinned v24.5.0, bracket 1.90.8 → 1.90.8. See `.tickmarkr/overseer/ORCH-2-RESULT.md`.
+- [ ] **A11Y-02**: `wcag-aa-comprehensive-audit.spec.ts:339` — **a keyboard trap exists**
+  (`expect(trapDetected).toBe(false)` received `true`; WCAG 2.1.2 No Keyboard Trap). Same run/evidence.
+- [ ] **A11Y-03**: `positions-keyboard-nav.spec.ts:8` — Tab from `/positions` leaves focus on `BODY`
+  (expected one of `BUTTON`/`A`/`INPUT`): no reachable first focusable and no skip link, WCAG 2.4.1
+  Bypass Blocks. Independently corroborated by T4's annotation *"the real positions page does not render
+  a skip link targeting #main-content"*. Same run/evidence.
+
 ### CORS Edge-Function Migration
 
 - [ ] **CORS-01**: `ALLOWED_ORIGINS` secret verified present and correct in staging + prod before any batch ships

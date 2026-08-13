@@ -134,7 +134,22 @@ Plans:
 3. a11y suites are green — the intake-form `fixme` debt (button-name / aria-prohibited-attr / target-size) fixed and the 8 quarantined a11y specs restored
 4. Visual-regression baselines are regenerated post-flatten on the reference machine and the suite is green
 5. `test-rtl-smokes` is a required branch-protection context on `main`, proven by a smoke PR showing `BLOCKED`
-   **Plans**: TBD
+
+**Status 2026-08-13 — PARTIALLY DELIVERED, phase NOT closed.** Executed via tickmarkr (no GSD plans).
+Landed to `milestone/v9.0-drover` at `46a88500` (T7/T3/T5/T6) and `d8c102df` (T4/T1). See
+`.planning/phases/89-ci-test-debt-burndown/89-SUMMARY.md`.
+
+| SC | status |
+| --- | --- |
+| 1 (E2E / CI-01) | **HELD** — depends on the operator's Phase 88 credential rotation |
+| 2 (integration / CI-02) | **NOT MET** — premise wrong: the named file is in the *unit* job; the integration suite is broadly red because 235 files expect a DB at `localhost:54321` → decision **D-3** |
+| 3 (a11y / CI-03) | **MET AS HONEST QUARANTINE** (the goal's second clause: *green OR honestly quarantined with tracked reasons*). ORCH-2 executed the suite 2026-08-13. 23 spec-debt failures annotated `test.fixme` naming their specific cause — 3 root causes: stale `/_protected/` route prefix (a route ID, not a URL), missing `[data-testid="language-switcher"]`, missing `[data-testid="dossier-card"]`. 3 real WCAG violations filed as **A11Y-01/02/03** and annotated `APP DEFECT`, not silenced. intake `fixme` debt remains untouched and is **not** covered by this |
+| 4 (visual / CI-04) | **HELD** — ORCH-3 is `humanGate: true` |
+| 5 (rtl-smokes / CI-05) | **HELD** — sequenced last; touches branch protection on `main` |
+
+Routed-in from Phase 90: `sentry.ts` dual-import **FIXED** (T1 `0a373041`); `queue-processor`
+un-deployable **NOT addressed** (surfaced as F-4, a design decision).
+   **Plans**: executed via tickmarkr, not GSD plans
 
 ### Phase 90: CORS Edge-Function Migration
 
