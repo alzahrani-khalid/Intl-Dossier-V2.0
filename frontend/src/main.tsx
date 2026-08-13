@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import './styles/list-pages.css'
 import App from './App.tsx'
+import { initSentry, initWebVitalsReporting } from './lib/sentry'
 
 // Dev-only: suppress upstream HeroUI v3 (BETA) false-positive warning that
 // originates inside @heroui/react's overlay components (PressResponder wraps
@@ -12,22 +13,22 @@ import App from './App.tsx'
 if (import.meta.env.DEV) {
   const originalWarn = console.warn
   console.warn = (...args: unknown[]) => {
-    if (typeof args[0] === 'string' && args[0].startsWith('A PressResponder was rendered without a pressable child')) {
+    if (
+      typeof args[0] === 'string' &&
+      args[0].startsWith('A PressResponder was rendered without a pressable child')
+    ) {
       return
     }
     originalWarn(...args)
   }
 }
 
-// Defer Sentry initialization to after first paint (per D-06)
-// This removes @sentry/react from the critical rendering path
+// Defer Sentry's initialization work until the browser is idle after first paint (per D-06).
 requestIdleCallback(() => {
-  import('./lib/sentry')
-    .then(({ initSentry, initWebVitalsReporting }) => {
-      initSentry()
-      initWebVitalsReporting()
-    })
+  Promise.resolve()
+    .then(() => initSentry())
     .catch((err) => console.error('Sentry init failed:', err))
+    .then(() => initWebVitalsReporting())
 })
 
 // Register service worker for push notifications
