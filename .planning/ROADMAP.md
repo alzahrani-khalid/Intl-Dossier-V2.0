@@ -18,6 +18,7 @@
 - ✅ **v8.0 Linear Design System Migration** — Phases 75-80 (shipped 2026-07-04) — [archive](milestones/v8.0-ROADMAP.md)
 - ✅ **v8.1 Linear Design Refinement** — Phases 81-85 (shipped 2026-07-05) — [archive](milestones/v8.1-ROADMAP.md)
 - ⚠️ **v9.0 Platform Completion & Live Verification** — Phases 86-91 (partial: 3/6 phases, closed 2026-08-15) — [archive](milestones/v9.0-ROADMAP.md)
+- 🚧 **v10.0 Trust & Correctness** — Phases 92-104 (in progress, started 2026-08-15)
 
 <details>
 <summary>✅ v2.0 Production Quality (Phases 1-7) — SHIPPED 2026-03-28</summary>
@@ -245,6 +246,238 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 
 </details>
 
+## Current Milestone: v10.0 Trust & Correctness
+
+**Goal:** Close the gap between what the app appears to do and what it actually does — every failure admits it failed, every advertised write path works, and every surface tells the truth about its data.
+
+**Scope input:** `.planning/audits/live-audit-2026-08-15/INDEX.md` — a six-lane live-app audit (190 route/tab URLs, EN + AR, 370 screenshots, 144 findings, 19 ship-blockers), plus the v9.0 carry-forward table.
+
+**Coverage:** 58/58 v1 requirements mapped (AUTH-01..05, TRUST-01..04, WRITE-01..06, DEAD-01..08, COUNT-01..03, NAV-01..04, COPY-01..05, AR-01..04, DATA-01..02, DBSEC-01..05, CARRY-01..09, LIVE-01..03).
+
+**Sequencing rationale:** Phase 92 first because edge-function JWT rejection (AUTH-02) is the root cause behind several surfaces that look empty, and because you cannot verify anything as a second user without a working logout. Phase 93 next because TRUST-01 — repositories no longer swallowing rejections — is the seam every later error state renders through. The operator-only credential rotation (CARRY-01) is pulled forward into Phase 92 rather than sitting in the CI phase it gates, so it has eleven phases of slack instead of blocking the milestone tail the way it blocked v9.0. Copy and Arabic follow the surface work because you cannot fix the wording of a page that does not render. Database security lands after the frontend is correct so a query regression is attributable to the view change. Test suites go green only once the app under test is correct.
+
+## Phases
+
+- [ ] **Phase 92: Session Integrity & Edge-Function Auth** - A user can sign out, a valid session is accepted by every edge function, and a dead session bounces the tab
+- [ ] **Phase 93: Failure Visibility** - No surface renders a confident empty state over a request that failed
+- [ ] **Phase 94: Write Paths** - Every advertised write path — after-actions, intake, kanban, settings, reports — actually writes
+- [ ] **Phase 95: Routes That Don't Render** - Every route either renders its page or says why it can't; the route tree has one file per slot
+- [ ] **Phase 96: Real Numbers** - Every count, chart and trend comes from real data and agrees with every other surface
+- [ ] **Phase 97: Reachability** - Nothing built is unreachable and nothing in the route tree is unowned
+- [ ] **Phase 98: Copy Truth** - No database values, no i18n keys, no seed instructions, one date format, project voice rules obeyed
+- [ ] **Phase 99: Arabic Coverage** - An Arabic session reads as Arabic: one glossary, localized dates, no English leakage
+- [ ] **Phase 100: Database Security Posture** - RLS is a real boundary for the 207 frontend files that depend on it
+- [ ] **Phase 101: CI Gates Green** - The suites tell the truth about `main`, and the ones that matter block merges
+- [ ] **Phase 102: Staging Data & Debt Tail** - Staging looks like a diplomatic system; the last v9.0 debts are closed
+- [ ] **Phase 103: Audit Re-Sweep** - The 2026-08-15 findings are proven closed by re-running the audit that found them
+- [ ] **Phase 104: v7.0 Live Verification (HARDWARE-GATED)** - The intelligence stack verified against real GPU inference — does not start until an operator names the host
+
+## Phase Details
+
+### Phase 92: Session Integrity & Edge-Function Auth
+
+**Goal**: A user can sign out, a valid session is accepted by every edge function, and an invalidated session visibly ends.
+**Depends on**: Nothing (first phase of v10.0)
+**Requirements**: AUTH-01, AUTH-02, AUTH-03, AUTH-04, AUTH-05, CARRY-01
+**Success Criteria** (what must be TRUE):
+
+1. A signed-in user can sign out — from the sidebar user card and from `/settings` — and lands on `/login` with the session cleared.
+2. A valid session is accepted by every edge function: the 133 of 303 functions pinning `supabase-js@2.3x` with bare `getUser()` are on `@supabase/supabase-js@2` + `getUser(token)`, and no audited route renders empty because of a 401.
+3. Invalidating the session bounces the open tab to `/login` instead of decaying into a "Member/Member" ghost shell with the admin nav silently removed.
+4. `/delegations` renders an error state when its `my-delegations` calls are rejected, and renders real delegations when they are not.
+5. The P88-02 credentials are rotated by the operator, with the GitHub Actions secret and `.env.test` updated and a login smoke passing — the gate CARRY-02 and CARRY-05 wait on in Phase 101.
+
+**Plans**: TBD
+**UI hint**: yes
+
+> Criterion 5 is an operator act, not code. It is scheduled here — ten phases ahead of the work it gates — precisely because it held v9.0's Phase 88 open. The other four criteria do not depend on it and must not wait for it.
+
+### Phase 93: Failure Visibility
+
+**Goal**: No surface renders a confident empty state over a request that failed.
+**Depends on**: Phase 92 (many "empty" surfaces are 401s; they must stop being auth failures before their error states can be judged)
+**Requirements**: TRUST-01, TRUST-02, TRUST-03, TRUST-04
+**Success Criteria** (what must be TRUE):
+
+1. A rejected query reaches the caller as a rejection: repositories (e.g. `analytics.repository.ts`) no longer catch-and-return `{ data: null }`, so the `isError` branches already written in the pages stop being dead code.
+2. `/admin/field-permissions` shows the 19 rules the database holds, and shows an error — never "0 Permissions" — when its query fails; the same holds for `/admin/data-retention`, Tag Analytics, and position attachments.
+3. A well-formed but nonexistent record ID renders a page-level not-found state on dossier detail, engagement detail and report builder — not "Check your connection and try again" after 24 skeletons.
+4. An engagement dossier whose extension row is missing renders a named, degraded state rather than a titleless chrome shell.
+5. No user-facing error contains an internal string — `/tasks/queue` no longer prints the raw supabase-js message.
+
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 94: Write Paths
+
+**Goal**: Every advertised write path actually writes, and a failed write says so.
+**Depends on**: Phase 92 (JWT), Phase 93 (a failed write must surface as a failure)
+**Requirements**: WRITE-01, WRITE-02, WRITE-03, WRITE-04, WRITE-05, WRITE-06
+**Success Criteria** (what must be TRUE):
+
+1. An after-action record can be created, saved and published from the engagement UI — `AfterActionForm.tsx:131`'s `if (!initialData) return` no longer pins `isDirty` false in create mode, and the route passes `canPublish` + `onPublish`.
+2. `/after-actions` lists records and a detail page renders translated copy instead of the raw `afterActions.loadError` key.
+3. `/intake/new` submits: the dossier picker writes to the field the schema reads, so "Linked to: OECD" and "At least one dossier is required" cannot appear together.
+4. A commitment dragged on the kanban board persists against `aa_commitments`' own lifecycle (`pending`/`in_progress`/`completed`/`cancelled`), and a rejected drag shows the real message — never "Operation completed successfully" on a no-op.
+5. Every `/settings` tab saves and the value survives a reload; a report generates and a scheduled report is created without a `42P17`.
+
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 95: Routes That Don't Render
+
+**Goal**: Every route either renders its page or says why it can't, and the route tree has one owner per slot.
+**Depends on**: Phase 92, Phase 93
+**Requirements**: DEAD-01, DEAD-02, DEAD-03, DEAD-04, DEAD-08
+**Success Criteria** (what must be TRUE):
+
+1. `/search` returns results for a typed query and for each of its own suggestion chips, with no `Cannot read properties of undefined (reading 'forEach')`.
+2. `/tasks/queue` renders its queue against a deployed `assignments-queue` function.
+3. `/scenario-sandbox` either loads or shows an error — a backend 500 is never pixel-identical to "still loading".
+4. `/monitoring` resolves to the SPA route rather than raw proxy JSON, or the route is removed from the tree with the decision recorded.
+5. `/positions/:id` and the legislation detail page are reachable: one route file per slot (`$id.tsx` vs `$positionId.tsx` resolved), `legislation.tsx` renders an `<Outlet/>`, and the positions `approvals`/`versions` children drive tab state.
+
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 96: Real Numbers
+
+**Goal**: Every count, chart and trend on screen comes from real data and agrees with every other surface.
+**Depends on**: Phase 93, Phase 94 (the kanban mutation seam is where `status`/`workflow_stage` diverge), Phase 95
+**Requirements**: DEAD-05, DEAD-06, DEAD-07, COUNT-01, COUNT-02, COUNT-03
+**Success Criteria** (what must be TRUE):
+
+1. `/analytics` shows real data or is honestly disabled — no fabricated sparklines, donuts or "Insights you'll gain" over a backend endpoint that does not exist.
+2. `/custom-dashboard` queries columns that exist (`calendar_entries.event_date`), renders its chart, and shows trend deltas computed from completed requests rather than "0.0%" from aborted ones.
+3. `/calendar` renders a grid, `/calendar/new` mounts the create form, `/events` pads the month by the real weekday offset with working month navigation, and `/word-assistant`'s status badge reflects a live probe.
+4. The dashboard KPI, the `/my-work` badge, footer and rendered rows, the `/commitments` tabs and the kanban board report the same number for the same work.
+5. A dossier without an extension row appears in both its type list and the hub count (persons 16/16, engagements 5/5), and a completed task leaves the dashboard's Overdue widget and lands in kanban Done.
+
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 97: Reachability
+
+**Goal**: Nothing built is unreachable, and nothing in the route tree is unowned.
+**Depends on**: Phase 92 (settings nav), Phase 95 (`/monitoring` keep-or-delete decision)
+**Requirements**: NAV-01, NAV-02, NAV-03, NAV-04
+**Success Criteria** (what must be TRUE):
+
+1. All 8 declared dossier types — Elected Officials included — appear in the sidebar, the dossier hub type cards, `/dossiers/create` and `/compare`.
+2. Every `/settings/*` page renders navigation: the prefix check that hides the global sidebar and the exact-match check that renders the settings nav agree.
+3. The engagement Digests tab appears in the tab bar, and every list page exposes a create affordance (currently 7 of 8 have none).
+4. Every route with no inbound link is resolved — the 9 admin routes and `/monitoring` each get a nav entry or are deleted, with the decision recorded per route.
+
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 98: Copy Truth
+
+**Goal**: The UI speaks to users, not to developers — one vocabulary, one date format, the project's own voice.
+**Depends on**: Phase 95, Phase 96, Phase 97 (copy is judged on surfaces that render)
+**Requirements**: COPY-01, COPY-02, COPY-03, COPY-04, COPY-05
+**Success Criteria** (what must be TRUE):
+
+1. No database value renders as user copy — `in_progress`, `action_item`, `follow_up`, `email`, `human_entered`, `WEEK OF 2026-W27` all resolve through display labels.
+2. No raw i18n key reaches the screen in either locale — `regions.Europe`, `afterActions.loadError`, `CALENDAR.RECURRENCE.TITLE`, `common.loading` and the five `entityLinks.*` keys included.
+3. No seed or test instruction ships as user copy: the 4 `dashboard-widgets.json` strings are rewritten in both locales.
+4. Copy obeys the project's voice rules — sentence case, zero exclamation marks (46 today), zero first-person plural (8 today), no retired terminology such as the `"Deadline / Due Date"` chip.
+5. Every date renders `Tue 28 Apr` and every time `14:30 GST` from the one shared formatter — the seven competing formats are gone — and dev affordances like "Fill with Mock Data" are absent from a production build.
+
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 99: Arabic Coverage
+
+**Goal**: An Arabic session reads as Arabic — one glossary, localized dates, no English leakage. (RTL layout infrastructure is already verified sound and is out of scope.)
+**Depends on**: Phase 98 (the EN namespaces settle first; `ar` mirrors them)
+**Requirements**: AR-01, AR-02, AR-03, AR-04
+**Success Criteria** (what must be TRUE):
+
+1. Each core object has exactly one Arabic term across every namespace — dossier is one word, not دوسيه / ملف / دوسييه — and a nav label matches the title of the page it opens.
+2. Dates and times render in Arabic with no English weekday or month names inside Arabic sentences (Latin digits remain deliberate policy).
+3. No English string renders under `dir="rtl"` on an otherwise-Arabic screen — the 404 page, intake queue header and primary button, position read-only banner and search suggestion chips included.
+4. No `t()` call resolves through a dot-form key with an English default, so a missing Arabic key shows as missing rather than silently rendering English in both languages.
+
+**Plans**: TBD
+**UI hint**: yes
+
+### Phase 100: Database Security Posture
+
+**Goal**: RLS is a real authorization boundary for the 207 frontend files that rely on it as the only one.
+**Depends on**: Phase 94 (the `custom_reports` ↔ `report_shares` recursion is fixed there); otherwise independent — sequenced late so a query regression is attributable to the view change, not the frontend.
+**Requirements**: DBSEC-01, DBSEC-02, DBSEC-03, DBSEC-04, DBSEC-05
+**Success Criteria** (what must be TRUE):
+
+1. Every client-reachable `SECURITY DEFINER` view is converted to `security_invoker`, restricted, or justified in writing — including `unified_work_items`, whose 10 frontend consumers still return the caller's correct rows afterwards.
+2. No view exposes `auth.users` to `anon` or `authenticated` — `upcoming_milestones` and the frontend-queried `entity_comments_with_details` included.
+3. No materialized view is selectable by `anon` or `authenticated`; the 12 are revoked or moved behind a gated RPC.
+4. `intelligence_email_queue` and `events.idempotency_keys` have policies matching intent instead of RLS-enabled-with-no-policies denying everything.
+5. Leaked-password protection is enabled and the 548 mutable-`search_path` functions are pinned; Supabase advisors report clean on these classes.
+
+**Plans**: TBD
+
+### Phase 101: CI Gates Green
+
+**Goal**: The test suites tell the truth about `main`, and the ones that matter block merges.
+**Depends on**: Phase 92 (CARRY-01 rotation gates CARRY-02 and CARRY-05), Phase 100 (the app under test is correct before the suites are made green)
+**Requirements**: CARRY-02, CARRY-03, CARRY-04, CARRY-05, CARRY-09
+**Success Criteria** (what must be TRUE):
+
+1. The E2E suite runs green against the deployed app, or each failing spec carries an in-spec quarantine with a tracked reason.
+2. The integration suite runs green, with decision D-3 (the missing local Supabase DB at `localhost:54321`) resolved and recorded.
+3. At least one a11y spec is demonstrated PASSING with its run evidence — not skipped, not annotated. No a11y spec has ever been shown green.
+4. `test-rtl-smokes` is a required branch-protection context on `main`, proven by a smoke PR observed `BLOCKED`.
+5. Every currently-red non-required suite on `main` — E2E, integration, Accessibility (RTL + WCAG AA), RTL Portal + Component Smokes, RTL + Responsive, Docker Build — is green or honestly quarantined with a reason.
+
+**Plans**: TBD
+
+### Phase 102: Staging Data & Debt Tail
+
+**Goal**: Staging reads as a diplomatic system rather than test residue, and the last v9.0 debts are closed.
+**Depends on**: Phase 101 (purge the fixtures after the suites are green, then re-run them — purging first would fight the stabilization)
+**Requirements**: DATA-01, DATA-02, CARRY-06, CARRY-07, CARRY-08
+**Success Criteria** (what must be TRUE):
+
+1. `/users` lists real staff: the ~415 `*@example.com` / `*@gastat.test` fixture accounts are gone and the E2E suite deletes the accounts it creates.
+2. No record visible in the UI names an internal artifact — "Phase 70 staging verification digest", "Phase 52 Kanban Fixture Engagement", "E2E MoU 1783364705954", "UAT round-11 commitment".
+3. Dashboard visual snapshots survive a date change: the frozen-clock vs server-`NOW()` divergence is removed. Regenerating baselines is explicitly not a fix.
+4. The entry chunk is back under the 476 KB budget and the budget is lowered to match (raised to 500 KB at v9.0 close; actual 493.71 kB gzipped).
+5. The three data-entry quick tasks `260530-w2/w3/w4` are completed or formally retired, each with a SUMMARY.
+
+**Plans**: TBD
+
+### Phase 103: Audit Re-Sweep
+
+**Goal**: The 2026-08-15 findings are proven closed by re-running the audit that found them, rather than assumed closed by the phases that touched them.
+**Depends on**: Phase 102 (every other v10.0 phase is complete)
+**Requirements**: none new — this phase re-verifies all 55 non-LIVE v10.0 requirements against live observation
+**Success Criteria** (what must be TRUE):
+
+1. `.planning/audits/live-audit-2026-08-15/probe.mjs` has been re-run over the audited route set in EN and AR under `00-BRIEF.md`'s method, and its output sits beside the original audit.
+2. Each of the 19 ship-blockers is re-checked at its cited route and recorded closed, still-open, or deliberately deferred with a named reason.
+3. The re-sweep produces no new P0 finding; any new P0 is filed as a phase or quick task before the milestone closes.
+4. Every v10.0 requirement outside LIVE is marked verified against a named observation from the re-sweep, or carried with a reason — no requirement closes on assertion alone.
+
+**Plans**: TBD
+
+### Phase 104: v7.0 Live Verification (HARDWARE-GATED)
+
+**Goal**: The v7.0 intelligence stack is verified against real GPU inference under the caller's own clearance.
+**Depends on**: an operator-confirmed on-prem GPU host. Depends on no v10.0 phase, and no v10.0 phase depends on it.
+**Requirements**: LIVE-01, LIVE-02, LIVE-03
+**Success Criteria** (what must be TRUE):
+
+1. vLLM (Gemma-4-12B) and TEI (BGE-M3) serve with passing health checks and the agent-runtime on `:4100` reaches both.
+2. The v7.0 eval harness runs against live inference and meets its CI thresholds (EVAL-01/02/03).
+3. The copilot reads and HITL-writes under the caller's JWT against the live stack, with an L1 caller's results demonstrably a strict subset of an L3 caller's.
+
+**Plans**: TBD
+
+> **GATE — read before planning this phase.** These three requirements have no code blocker; they are blocked on hardware that does not exist yet. They blocked v9.0's Phase 91 for 40 days without a single plan being written. `/gsd:plan-phase 104` must not run until an operator has named a target GPU host with a date.
+>
+> **Recommendation: do not hold v10.0 for this.** If the host is still undecided when Phase 103 closes, ship v10.0 at 55/58 and carry LIVE-01/02/03 to v11.0. Nothing else in this milestone depends on them, and every prior milestone that waited on this hardware paid for the wait with a partial close.
+
 ## Progress
 
 <!-- gsd:progress:start -->
@@ -268,9 +501,23 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 | 75-80 | v8.0 | 32/32 | Shipped | 2026-07-04 |
 | 81-85 | v8.1 | 22/22 | Shipped | 2026-07-05 |
 | 86-91 | v9.0 | 54/57 | Partial (3/6 phases) | 2026-08-15 |
+| 92-104 | v10.0 | 0/TBD | In progress | - |
+| 92. Session Integrity & Edge-Function Auth | v10.0 | 0/TBD | Not started | — |
+| 93. Failure Visibility | v10.0 | 0/TBD | Not started | — |
+| 94. Write Paths | v10.0 | 0/TBD | Not started | — |
+| 95. Routes That Don't Render | v10.0 | 0/TBD | Not started | — |
+| 96. Real Numbers | v10.0 | 0/TBD | Not started | — |
+| 97. Reachability | v10.0 | 0/TBD | Not started | — |
+| 98. Copy Truth | v10.0 | 0/TBD | Not started | — |
+| 99. Arabic Coverage | v10.0 | 0/TBD | Not started | — |
+| 100. Database Security Posture | v10.0 | 0/TBD | Not started | — |
+| 101. CI Gates Green | v10.0 | 0/TBD | Not started | — |
+| 102. Staging Data & Debt Tail | v10.0 | 0/TBD | Not started | — |
+| 103. Audit Re-Sweep | v10.0 | 0/TBD | Not started | — |
+| 104. v7.0 Live Verification (HARDWARE-GATED) | v10.0 | 0/TBD | Not started | — |
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-08-15 — v9.0 closed as PARTIAL (3/6 phases) and archived; open items carried into v10.0 Trust & Correctness._
+_Roadmap last updated: 2026-08-15 — v10.0 Trust & Correctness roadmapped: 13 phases (92-104), 58/58 v1 requirements mapped, scoped from the 2026-08-15 live-app audit (144 findings, 19 ship-blockers) plus the v9.0 carry-forward table._

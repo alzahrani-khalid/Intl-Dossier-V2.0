@@ -42,6 +42,29 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
+## Current Milestone: v10.0 Trust & Correctness
+
+**Goal:** Close the gap between what the app appears to do and what it actually does — every failure admits it failed, every advertised write path works, and every surface tells the truth about its data.
+
+**Scope input:** `.planning/audits/live-audit-2026-08-15/INDEX.md` — a six-lane live-app audit (190 route/tab URLs, EN + AR, 370 screenshots) producing **144 findings, 19 ship-blockers**. Findings marked **[V]** were independently re-verified against source or the live database.
+
+**Governing pattern:** _failure is rendered as emptiness._ A request fails (401/404/500/malformed) and the UI shows a calm empty state, so the user cannot tell "nothing here" from "this broke". The sharpest instance: `/admin/field-permissions` reports "0 Permissions · No permission rules configured" while the database holds 19 active rules. This is one fix repeated, not N bugs.
+
+**Target outcomes:**
+
+- **AUTH** — a user can log out (no logout exists anywhere today); edge functions validate JWTs (133 of 303 do not); session invalidation redirects instead of decaying into a half-authenticated ghost page.
+- **TRUST** — repositories stop swallowing failures, so the `isError` branches that already exist stop being dead code; bad IDs render not-found, not "check your connection".
+- **WRITE** — after-action records can be created, intake can be submitted, kanban accepts commitment drags, `/settings` saves (it never has), reports generate and can be scheduled.
+- **DEAD** — no surface lies: `/search` stops throwing, `/analytics` stops drawing fabricated charts over a backend that does not exist, dead routes are fixed or deleted.
+- **COUNT / NAV** — one source of truth for work counts; nothing built stays unreachable (Elected Officials, the Digests tab, the whole `/settings/*` subtree).
+- **COPY / AR** — no DB enum, i18n key, or seed instruction ships as user copy; one Arabic glossary and localized dates. RTL layout infrastructure is already sound and is explicitly not re-done.
+- **DATA / DBSEC** — staging stops showing test residue as diplomatic records; the 33 RLS-bypassing views are resolved against 207 frontend files that rely on RLS alone.
+- **CARRY** — v9.0's unfinished items, including the owed ORCH-2 a11y green proof and the entry-bundle diet.
+
+**Requirements:** 54 across 12 groups — see `.planning/REQUIREMENTS.md`.
+
+**Explicitly out of scope** (verified correct, will not be re-opened): dossier overview tabs, `devModeGuard`-gated demo routes, design-token discipline, RTL layout infrastructure.
+
 ## Last Milestone: v9.0 Platform Completion & Live Verification
 
 **Status: CLOSED PARTIAL 2026-08-15** — 6 phases (86–91), 3 complete; 54/57 plans + 6 tickmarkr tasks; 251 commits, 946 files. Merged to `main` via PR #98 (`e990ed84`), all 8 required checks green. Closed deliberately at 3/6 rather than held open; every unfinished item was carried into v10.0.
