@@ -89,4 +89,36 @@ describe('DossierTable', () => {
     const chip = document.querySelector(`.${sensitivityChipClass(4)}`)
     expect(chip).not.toBeNull()
   })
+
+  const optionalAutoCount = (el: Element): number => {
+    // Read the computed --dossier-cols custom property; count optional `auto`
+    // tracks (total autos minus the always-present glyph `auto`).
+    const cols = (el as HTMLElement).style.getPropertyValue('--dossier-cols')
+    const autos = (cols.match(/\bauto\b/g) ?? []).length
+    return Math.max(0, autos - 1)
+  }
+
+  it('renders all optional columns (5-track template) when visibleColumns is absent', () => {
+    render(<DossierTable rows={[sampleRow()]} />)
+    // Desktop header carries the glyph placeholder + name + 3 optional columns = 5 cells.
+    const header = document.querySelector('.dossier-row.label')
+    expect(header).not.toBeNull()
+    expect(header!.children).toHaveLength(5)
+    // The template is computed onto --dossier-cols (3 optional autos → 5 tracks).
+    expect(optionalAutoCount(header!)).toBe(3)
+    // Engagement count + sensitivity chip both present.
+    expect(screen.getByText('12')).toBeTruthy()
+    expect(document.querySelector(`.${sensitivityChipClass(2)}`)).not.toBeNull()
+  })
+
+  it('renders only the requested optional columns (3-track template) with visibleColumns', () => {
+    render(<DossierTable rows={[sampleRow()]} visibleColumns={['sensitivity']} />)
+    const header = document.querySelector('.dossier-row.label')
+    // glyph placeholder + name + sensitivity = 3 cells; engagements/last-touch hidden.
+    expect(header!.children).toHaveLength(3)
+    expect(optionalAutoCount(header!)).toBe(1)
+    // Engagement count is no longer rendered; sensitivity chip still is.
+    expect(screen.queryByText('12')).toBeNull()
+    expect(document.querySelector(`.${sensitivityChipClass(2)}`)).not.toBeNull()
+  })
 })

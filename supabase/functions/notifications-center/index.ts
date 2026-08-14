@@ -3,10 +3,11 @@
 // Feature: notification-center
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0'
-import { corsHeaders } from '../_shared/cors.ts'
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+type CorsHeaders = Record<string, string>
 
 interface NotificationFilters {
   category?: string
@@ -38,9 +39,10 @@ interface DeviceTokenRequest {
 }
 
 Deno.serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req)
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return handleCorsPreflightRequest(req)
   }
 
   try {
@@ -79,46 +81,46 @@ Deno.serve(async (req) => {
     switch (req.method) {
       case 'GET':
         if (path === 'notifications' || path === 'notifications-center') {
-          return await getNotifications(supabaseClient, user.id, url.searchParams)
+          return await getNotifications(supabaseClient, user.id, url.searchParams, corsHeaders)
         } else if (path === 'counts') {
-          return await getNotificationCounts(supabaseClient, user.id)
+          return await getNotificationCounts(supabaseClient, user.id, corsHeaders)
         } else if (path === 'preferences') {
-          return await getPreferences(supabaseClient, user.id)
+          return await getPreferences(supabaseClient, user.id, corsHeaders)
         } else if (path === 'devices') {
-          return await getDevices(supabaseClient, user.id)
+          return await getDevices(supabaseClient, user.id, corsHeaders)
         }
         break
 
       case 'POST':
         const body = await req.json()
         if (path === 'mark-read') {
-          return await markAsRead(supabaseClient, user.id, body as MarkReadRequest)
+          return await markAsRead(supabaseClient, user.id, body as MarkReadRequest, corsHeaders)
         } else if (path === 'devices') {
-          return await registerDevice(supabaseClient, user.id, body as DeviceTokenRequest)
+          return await registerDevice(supabaseClient, user.id, body as DeviceTokenRequest, corsHeaders)
         }
         break
 
       case 'PATCH':
         const patchBody = await req.json()
         if (path === 'preferences') {
-          return await updatePreferences(supabaseClient, user.id, patchBody as CategoryPreference[])
+          return await updatePreferences(supabaseClient, user.id, patchBody as CategoryPreference[], corsHeaders)
         }
         break
 
       case 'DELETE':
         if (path === 'devices') {
           const deleteBody = await req.json()
-          return await removeDevice(supabaseClient, user.id, deleteBody.deviceToken)
+          return await removeDevice(supabaseClient, user.id, deleteBody.deviceToken, corsHeaders)
         } else if (path?.startsWith('notification-')) {
           const notificationId = path.replace('notification-', '')
-          return await deleteNotification(supabaseClient, user.id, notificationId)
+          return await deleteNotification(supabaseClient, user.id, notificationId, corsHeaders)
         }
         break
     }
 
     // Default: Get notifications list
     if (req.method === 'GET') {
-      return await getNotifications(supabaseClient, user.id, url.searchParams)
+      return await getNotifications(supabaseClient, user.id, url.searchParams, corsHeaders)
     }
 
     return new Response(JSON.stringify({ error: 'Not found' }), {
@@ -138,6 +140,7 @@ async function getNotifications(
   supabase: ReturnType<typeof createClient>,
   userId: string,
   params: URLSearchParams,
+  corsHeaders: CorsHeaders,
 ) {
   const category = params.get('category') || null
   const unreadOnly = params.get('unreadOnly') === 'true'
@@ -191,7 +194,7 @@ async function getNotifications(
   )
 }
 
-async function getNotificationCounts(supabase: ReturnType<typeof createClient>, userId: string) {
+async function getNotificationCounts(supabase: ReturnType<typeof createClient>, userId: string, corsHeaders: CorsHeaders) {
   // Get counts by category
   const { data, error } = await supabase.rpc('get_notification_counts', {
     p_user_id: userId,
@@ -241,6 +244,7 @@ async function markAsRead(
   supabase: ReturnType<typeof createClient>,
   userId: string,
   request: MarkReadRequest,
+  corsHeaders: CorsHeaders,
 ) {
   if (request.markAll) {
     // Mark all notifications as read
@@ -287,7 +291,7 @@ async function markAsRead(
   })
 }
 
-async function getPreferences(supabase: ReturnType<typeof createClient>, userId: string) {
+async function getPreferences(supabase: ReturnType<typeof createClient>, userId: string, corsHeaders: CorsHeaders) {
   // Get category preferences
   const { data: categoryPrefs, error: catError } = await supabase
     .from('notification_category_preferences')
@@ -325,6 +329,7 @@ async function updatePreferences(
   supabase: ReturnType<typeof createClient>,
   userId: string,
   preferences: CategoryPreference[],
+  corsHeaders: CorsHeaders,
 ) {
   // Upsert each preference
   for (const pref of preferences) {
@@ -358,7 +363,7 @@ async function updatePreferences(
   })
 }
 
-async function getDevices(supabase: ReturnType<typeof createClient>, userId: string) {
+async function getDevices(supabase: ReturnType<typeof createClient>, userId: string, corsHeaders: CorsHeaders) {
   const { data, error } = await supabase
     .from('push_device_tokens')
     .select('*')
@@ -383,6 +388,7 @@ async function registerDevice(
   supabase: ReturnType<typeof createClient>,
   userId: string,
   request: DeviceTokenRequest,
+  corsHeaders: CorsHeaders,
 ) {
   const { error } = await supabase.from('push_device_tokens').upsert(
     {
@@ -418,6 +424,7 @@ async function removeDevice(
   supabase: ReturnType<typeof createClient>,
   userId: string,
   deviceToken: string,
+  corsHeaders: CorsHeaders,
 ) {
   const { error } = await supabase
     .from('push_device_tokens')
@@ -442,6 +449,7 @@ async function deleteNotification(
   supabase: ReturnType<typeof createClient>,
   userId: string,
   notificationId: string,
+  corsHeaders: CorsHeaders,
 ) {
   const { error } = await supabase
     .from('notifications')

@@ -55,6 +55,7 @@ import { Route as ProtectedBriefsRouteImport } from './routes/_protected/briefs'
 import { Route as ProtectedAuditLogsRouteImport } from './routes/_protected/audit-logs'
 import { Route as ProtectedAnalyticsRouteImport } from './routes/_protected/analytics'
 import { Route as ProtectedActivityRouteImport } from './routes/_protected/activity'
+import { Route as ProtectedUsersIndexRouteImport } from './routes/_protected/users/index'
 import { Route as ProtectedTasksIndexRouteImport } from './routes/_protected/tasks/index'
 import { Route as ProtectedReportsIndexRouteImport } from './routes/_protected/reports/index'
 import { Route as ProtectedPositionsIndexRouteImport } from './routes/_protected/positions/index'
@@ -66,6 +67,8 @@ import { Route as ProtectedDossiersIndexRouteImport } from './routes/_protected/
 import { Route as ProtectedApprovalsIndexRouteImport } from './routes/_protected/approvals/index'
 import { Route as ProtectedAfterActionsIndexRouteImport } from './routes/_protected/after-actions/index'
 import { Route as ProtectedAdminIndexRouteImport } from './routes/_protected/admin/index'
+import { Route as ProtectedUsersCreateRouteImport } from './routes/_protected/users/create'
+import { Route as ProtectedUsersIdRouteImport } from './routes/_protected/users/$id'
 import { Route as ProtectedTasksQueueRouteImport } from './routes/_protected/tasks/queue'
 import { Route as ProtectedTasksEscalationsRouteImport } from './routes/_protected/tasks/escalations'
 import { Route as ProtectedTasksIdRouteImport } from './routes/_protected/tasks/$id'
@@ -443,6 +446,11 @@ const ProtectedActivityRoute = ProtectedActivityRouteImport.update({
   path: '/activity',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedUsersIndexRoute = ProtectedUsersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProtectedUsersRoute,
+} as any)
 const ProtectedTasksIndexRoute = ProtectedTasksIndexRouteImport.update({
   id: '/tasks/',
   path: '/tasks/',
@@ -499,6 +507,16 @@ const ProtectedAdminIndexRoute = ProtectedAdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
   getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedUsersCreateRoute = ProtectedUsersCreateRouteImport.update({
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => ProtectedUsersRoute,
+} as any)
+const ProtectedUsersIdRoute = ProtectedUsersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ProtectedUsersRoute,
 } as any)
 const ProtectedTasksQueueRoute = ProtectedTasksQueueRouteImport.update({
   id: '/tasks/queue',
@@ -1381,7 +1399,7 @@ export interface FileRoutesByFullPath {
   '/sla-monitoring': typeof ProtectedSlaMonitoringRoute
   '/stakeholder-influence': typeof ProtectedStakeholderInfluenceRoute
   '/tags': typeof ProtectedTagsRoute
-  '/users': typeof ProtectedUsersRoute
+  '/users': typeof ProtectedUsersRouteWithChildren
   '/word-assistant': typeof ProtectedWordAssistantRoute
   '/workflow-automation': typeof ProtectedWorkflowAutomationRoute
   '/working-groups': typeof ProtectedWorkingGroupsRoute
@@ -1418,6 +1436,8 @@ export interface FileRoutesByFullPath {
   '/tasks/$id': typeof ProtectedTasksIdRoute
   '/tasks/escalations': typeof ProtectedTasksEscalationsRoute
   '/tasks/queue': typeof ProtectedTasksQueueRoute
+  '/users/$id': typeof ProtectedUsersIdRoute
+  '/users/create': typeof ProtectedUsersCreateRoute
   '/admin/': typeof ProtectedAdminIndexRoute
   '/after-actions/': typeof ProtectedAfterActionsIndexRoute
   '/approvals/': typeof ProtectedApprovalsIndexRoute
@@ -1429,6 +1449,7 @@ export interface FileRoutesByFullPath {
   '/positions/': typeof ProtectedPositionsIndexRoute
   '/reports/': typeof ProtectedReportsIndexRoute
   '/tasks/': typeof ProtectedTasksIndexRoute
+  '/users/': typeof ProtectedUsersIndexRoute
   '/after-actions/$afterActionId/versions': typeof ProtectedAfterActionsAfterActionIdVersionsRoute
   '/dossiers/$id/overview': typeof ProtectedDossiersIdOverviewRoute
   '/dossiers/countries/$id': typeof ProtectedDossiersCountriesIdRouteWithChildren
@@ -1576,7 +1597,6 @@ export interface FileRoutesByTo {
   '/sla-monitoring': typeof ProtectedSlaMonitoringRoute
   '/stakeholder-influence': typeof ProtectedStakeholderInfluenceRoute
   '/tags': typeof ProtectedTagsRoute
-  '/users': typeof ProtectedUsersRoute
   '/word-assistant': typeof ProtectedWordAssistantRoute
   '/workflow-automation': typeof ProtectedWorkflowAutomationRoute
   '/working-groups': typeof ProtectedWorkingGroupsRoute
@@ -1612,6 +1632,8 @@ export interface FileRoutesByTo {
   '/tasks/$id': typeof ProtectedTasksIdRoute
   '/tasks/escalations': typeof ProtectedTasksEscalationsRoute
   '/tasks/queue': typeof ProtectedTasksQueueRoute
+  '/users/$id': typeof ProtectedUsersIdRoute
+  '/users/create': typeof ProtectedUsersCreateRoute
   '/admin': typeof ProtectedAdminIndexRoute
   '/after-actions': typeof ProtectedAfterActionsIndexRoute
   '/approvals': typeof ProtectedApprovalsIndexRoute
@@ -1623,6 +1645,7 @@ export interface FileRoutesByTo {
   '/positions': typeof ProtectedPositionsIndexRoute
   '/reports': typeof ProtectedReportsIndexRoute
   '/tasks': typeof ProtectedTasksIndexRoute
+  '/users': typeof ProtectedUsersIndexRoute
   '/after-actions/$afterActionId/versions': typeof ProtectedAfterActionsAfterActionIdVersionsRoute
   '/dossiers/$id/overview': typeof ProtectedDossiersIdOverviewRoute
   '/dossiers/countries/create': typeof ProtectedDossiersCountriesCreateRoute
@@ -1770,7 +1793,7 @@ export interface FileRoutesById {
   '/_protected/sla-monitoring': typeof ProtectedSlaMonitoringRoute
   '/_protected/stakeholder-influence': typeof ProtectedStakeholderInfluenceRoute
   '/_protected/tags': typeof ProtectedTagsRoute
-  '/_protected/users': typeof ProtectedUsersRoute
+  '/_protected/users': typeof ProtectedUsersRouteWithChildren
   '/_protected/word-assistant': typeof ProtectedWordAssistantRoute
   '/_protected/workflow-automation': typeof ProtectedWorkflowAutomationRoute
   '/_protected/working-groups': typeof ProtectedWorkingGroupsRoute
@@ -1807,6 +1830,8 @@ export interface FileRoutesById {
   '/_protected/tasks/$id': typeof ProtectedTasksIdRoute
   '/_protected/tasks/escalations': typeof ProtectedTasksEscalationsRoute
   '/_protected/tasks/queue': typeof ProtectedTasksQueueRoute
+  '/_protected/users/$id': typeof ProtectedUsersIdRoute
+  '/_protected/users/create': typeof ProtectedUsersCreateRoute
   '/_protected/admin/': typeof ProtectedAdminIndexRoute
   '/_protected/after-actions/': typeof ProtectedAfterActionsIndexRoute
   '/_protected/approvals/': typeof ProtectedApprovalsIndexRoute
@@ -1818,6 +1843,7 @@ export interface FileRoutesById {
   '/_protected/positions/': typeof ProtectedPositionsIndexRoute
   '/_protected/reports/': typeof ProtectedReportsIndexRoute
   '/_protected/tasks/': typeof ProtectedTasksIndexRoute
+  '/_protected/users/': typeof ProtectedUsersIndexRoute
   '/_protected/after-actions/$afterActionId/versions': typeof ProtectedAfterActionsAfterActionIdVersionsRoute
   '/_protected/dossiers/$id/overview': typeof ProtectedDossiersIdOverviewRoute
   '/_protected/dossiers/countries/$id': typeof ProtectedDossiersCountriesIdRouteWithChildren
@@ -2009,6 +2035,8 @@ export interface FileRouteTypes {
     | '/tasks/$id'
     | '/tasks/escalations'
     | '/tasks/queue'
+    | '/users/$id'
+    | '/users/create'
     | '/admin/'
     | '/after-actions/'
     | '/approvals/'
@@ -2020,6 +2048,7 @@ export interface FileRouteTypes {
     | '/positions/'
     | '/reports/'
     | '/tasks/'
+    | '/users/'
     | '/after-actions/$afterActionId/versions'
     | '/dossiers/$id/overview'
     | '/dossiers/countries/$id'
@@ -2167,7 +2196,6 @@ export interface FileRouteTypes {
     | '/sla-monitoring'
     | '/stakeholder-influence'
     | '/tags'
-    | '/users'
     | '/word-assistant'
     | '/workflow-automation'
     | '/working-groups'
@@ -2203,6 +2231,8 @@ export interface FileRouteTypes {
     | '/tasks/$id'
     | '/tasks/escalations'
     | '/tasks/queue'
+    | '/users/$id'
+    | '/users/create'
     | '/admin'
     | '/after-actions'
     | '/approvals'
@@ -2214,6 +2244,7 @@ export interface FileRouteTypes {
     | '/positions'
     | '/reports'
     | '/tasks'
+    | '/users'
     | '/after-actions/$afterActionId/versions'
     | '/dossiers/$id/overview'
     | '/dossiers/countries/create'
@@ -2397,6 +2428,8 @@ export interface FileRouteTypes {
     | '/_protected/tasks/$id'
     | '/_protected/tasks/escalations'
     | '/_protected/tasks/queue'
+    | '/_protected/users/$id'
+    | '/_protected/users/create'
     | '/_protected/admin/'
     | '/_protected/after-actions/'
     | '/_protected/approvals/'
@@ -2408,6 +2441,7 @@ export interface FileRouteTypes {
     | '/_protected/positions/'
     | '/_protected/reports/'
     | '/_protected/tasks/'
+    | '/_protected/users/'
     | '/_protected/after-actions/$afterActionId/versions'
     | '/_protected/dossiers/$id/overview'
     | '/_protected/dossiers/countries/$id'
@@ -2852,6 +2886,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedActivityRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/users/': {
+      id: '/_protected/users/'
+      path: '/'
+      fullPath: '/users/'
+      preLoaderRoute: typeof ProtectedUsersIndexRouteImport
+      parentRoute: typeof ProtectedUsersRoute
+    }
     '/_protected/tasks/': {
       id: '/_protected/tasks/'
       path: '/tasks'
@@ -2928,6 +2969,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof ProtectedAdminIndexRouteImport
       parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/users/create': {
+      id: '/_protected/users/create'
+      path: '/create'
+      fullPath: '/users/create'
+      preLoaderRoute: typeof ProtectedUsersCreateRouteImport
+      parentRoute: typeof ProtectedUsersRoute
+    }
+    '/_protected/users/$id': {
+      id: '/_protected/users/$id'
+      path: '/$id'
+      fullPath: '/users/$id'
+      preLoaderRoute: typeof ProtectedUsersIdRouteImport
+      parentRoute: typeof ProtectedUsersRoute
     }
     '/_protected/tasks/queue': {
       id: '/_protected/tasks/queue'
@@ -4122,6 +4177,22 @@ const ProtectedSettingsRouteChildren: ProtectedSettingsRouteChildren = {
 const ProtectedSettingsRouteWithChildren =
   ProtectedSettingsRoute._addFileChildren(ProtectedSettingsRouteChildren)
 
+interface ProtectedUsersRouteChildren {
+  ProtectedUsersIdRoute: typeof ProtectedUsersIdRoute
+  ProtectedUsersCreateRoute: typeof ProtectedUsersCreateRoute
+  ProtectedUsersIndexRoute: typeof ProtectedUsersIndexRoute
+}
+
+const ProtectedUsersRouteChildren: ProtectedUsersRouteChildren = {
+  ProtectedUsersIdRoute: ProtectedUsersIdRoute,
+  ProtectedUsersCreateRoute: ProtectedUsersCreateRoute,
+  ProtectedUsersIndexRoute: ProtectedUsersIndexRoute,
+}
+
+const ProtectedUsersRouteWithChildren = ProtectedUsersRoute._addFileChildren(
+  ProtectedUsersRouteChildren,
+)
+
 interface ProtectedAfterActionsAfterActionIdRouteChildren {
   ProtectedAfterActionsAfterActionIdVersionsRoute: typeof ProtectedAfterActionsAfterActionIdVersionsRoute
 }
@@ -4447,7 +4518,7 @@ interface ProtectedRouteChildren {
   ProtectedSlaMonitoringRoute: typeof ProtectedSlaMonitoringRoute
   ProtectedStakeholderInfluenceRoute: typeof ProtectedStakeholderInfluenceRoute
   ProtectedTagsRoute: typeof ProtectedTagsRoute
-  ProtectedUsersRoute: typeof ProtectedUsersRoute
+  ProtectedUsersRoute: typeof ProtectedUsersRouteWithChildren
   ProtectedWordAssistantRoute: typeof ProtectedWordAssistantRoute
   ProtectedWorkflowAutomationRoute: typeof ProtectedWorkflowAutomationRoute
   ProtectedWorkingGroupsRoute: typeof ProtectedWorkingGroupsRoute
@@ -4536,7 +4607,7 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedSlaMonitoringRoute: ProtectedSlaMonitoringRoute,
   ProtectedStakeholderInfluenceRoute: ProtectedStakeholderInfluenceRoute,
   ProtectedTagsRoute: ProtectedTagsRoute,
-  ProtectedUsersRoute: ProtectedUsersRoute,
+  ProtectedUsersRoute: ProtectedUsersRouteWithChildren,
   ProtectedWordAssistantRoute: ProtectedWordAssistantRoute,
   ProtectedWorkflowAutomationRoute: ProtectedWorkflowAutomationRoute,
   ProtectedWorkingGroupsRoute: ProtectedWorkingGroupsRoute,

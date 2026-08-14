@@ -14,7 +14,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // Types
 type AggregateType =
@@ -68,33 +68,6 @@ interface CreateSnapshotRequest {
   aggregate_type: AggregateType;
   aggregate_id: string;
   state: Record<string, unknown>;
-}
-
-// Helper to create error response
-function errorResponse(
-  code: string,
-  message_en: string,
-  message_ar: string,
-  status: number,
-  details?: unknown
-) {
-  return new Response(
-    JSON.stringify({
-      error: { code, message_en, message_ar, details },
-    }),
-    {
-      status,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    }
-  );
-}
-
-// Helper to create success response
-function successResponse(data: unknown, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  });
 }
 
 // Helper to get authenticated user
@@ -157,9 +130,38 @@ function isValidUUID(str: string): boolean {
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
+  // Helper to create error response
+  function errorResponse(
+    code: string,
+    message_en: string,
+    message_ar: string,
+    status: number,
+    details?: unknown
+  ) {
+    return new Response(
+      JSON.stringify({
+        error: { code, message_en, message_ar, details },
+      }),
+      {
+        status,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
+  // Helper to create success response
+  function successResponse(data: unknown, status = 200) {
+    return new Response(JSON.stringify(data), {
+      status,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {

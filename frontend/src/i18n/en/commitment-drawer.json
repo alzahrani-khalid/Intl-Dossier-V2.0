@@ -1,0 +1,7 @@
+{
+  "peek": {
+    "counter": "{{position}} / {{total}}",
+    "prev": "Previous row",
+    "next": "Next row"
+  }
+}

@@ -16,7 +16,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 import { validateJWT, createUserClient } from '../_shared/auth.ts';
 import {
   GetIntelligenceQuerySchema,
@@ -30,14 +30,15 @@ import {
 } from '../_shared/validation-schemas.ts';
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   // Only allow GET requests
   if (req.method !== 'GET') {
-    return createErrorResponse(
+    return createErrorResponse(req,
       'METHOD_NOT_ALLOWED',
       'Method not allowed',
       'الطريقة غير مسموح بها',
@@ -50,7 +51,7 @@ serve(async (req) => {
     // Validate authentication
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      return createErrorResponse(
+      return createErrorResponse(req,
         'UNAUTHORIZED',
         'Missing authorization header',
         'رأس التفويض مفقود',
@@ -72,7 +73,7 @@ serve(async (req) => {
     try {
       queryParams = parseQueryParams(GetIntelligenceQuerySchema, url.searchParams);
     } catch (error) {
-      return createErrorResponse(
+      return createErrorResponse(req,
         'VALIDATION_ERROR',
         `Invalid query parameters: ${error.message}`,
         `معلمات الاستعلام غير صالحة: ${error.message}`,
@@ -115,7 +116,7 @@ serve(async (req) => {
 
     if (queryError) {
       console.error('Query error:', queryError);
-      return createErrorResponse(
+      return createErrorResponse(req,
         'QUERY_ERROR',
         'Failed to fetch intelligence data',
         'فشل في جلب بيانات المعلومات الاستخباراتية',
@@ -126,7 +127,7 @@ serve(async (req) => {
 
     // Handle not found case
     if (!intelligenceReports || intelligenceReports.length === 0) {
-      return createErrorResponse(
+      return createErrorResponse(req,
         'NOT_FOUND',
         'No intelligence data found for the specified entity',
         'لم يتم العثور على بيانات استخباراتية للكيان المحدد',
@@ -216,7 +217,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Unexpected error in intelligence-get:', error);
 
-    return createErrorResponse(
+    return createErrorResponse(req,
       'INTERNAL_ERROR',
       'An unexpected error occurred',
       'حدث خطأ غير متوقع',

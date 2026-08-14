@@ -1,8 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { UsersPage } from '../../pages/users/UsersPage'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { requireAdmin } from '@/lib/auth/require-admin'
 
 export const Route = createFileRoute('/_protected/users')({
-  component: UsersPage,
+  component: () => <Outlet />,
   beforeLoad: requireAdmin,
 })

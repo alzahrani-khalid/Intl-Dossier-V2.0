@@ -1,0 +1,195 @@
+# Requirements: Intl-Dossier v9.0 Platform Completion & Live Verification
+
+**Defined:** 2026-07-06
+**Core Value:** Unified intelligence management for diplomatic operations — every relationship, commitment, and signal tracked in one secure, bilingual platform.
+
+## v1 Requirements
+
+Requirements for this milestone. Each maps to roadmap phases.
+
+### Feature Completion (honest-disables → real features)
+
+- [x] **FEAT-01**: User can create a MoU from the MoUs page — a create form/route writing `mous` (`type`, `mou_category`, dates, parties, `lifecycle_state`); the disabled "Add MoU" button (`MousPage.tsx`) becomes live (closes C-3)
+- [x] **FEAT-02**: Admin can create a user via a `/users/create` route implemented against the L1-hardened user-management edge functions (closes D-10 create half)
+- [x] **FEAT-03**: Admin can open a user detail/management view at `/users/:id` (role, status, profile) from the users list (closes D-10 detail half)
+- [x] **FEAT-04**: ConsistencyPanel is either wired to a real consistency-check query with working modify/accept/escalate/view actions, or formally retired (component + i18n keys deleted, decision recorded) — no permanently-dead UI remains (closes E-8)
+
+### Linear Affordances (F23–F26, from DESIGN-REFINEMENT-PLAN-260704 §Phase 6)
+
+- [ ] **AFF-01**: User can open a list row in a right-peek panel with prev/next paging without leaving the list (F23)
+- [ ] **AFF-02**: User can use split Filter and Display popovers with live result counts on list pages (F24)
+- [x] **AFF-03**: ⌘K command menu passes an audit — every advertised command works, missing high-value commands added, EN+AR (F25)
+- [x] **AFF-04**: Empty states across list pages and dossier tabs are rich (explain the surface + primary action), replacing bare "no data" text (F26)
+
+### Security & Hygiene Tail
+
+- [ ] **SEC-01**: `UserPicker.handleSearch` no longer interpolates user input into PostgREST filter strings — `.ilike()` builder or sanitized `,().` input (closes IN-04 / T-79-S2)
+- [ ] **SEC-02**: Credential-hygiene sweep complete — no real secrets in tracked files; `TEST_USER_PASSWORD`-class values rotated or externalized; `.env.test.example` pattern enforced
+
+### CI & Test-Debt Burn-Down
+
+- [ ] **CI-01**: E2E suite green against the deployed app (stale-login/global-setup debt fixed; genuinely-broken specs repaired, not skipped) or explicitly quarantined with a tracked reason per spec
+- [ ] **CI-02**: Integration test suite green (including the 2 pre-existing interaction-note backend failures)
+- [ ] **CI-03**: a11y suites green — the intake-form `fixme` debt (button-name / aria-prohibited-attr / target-size) fixed and the 8 quarantined a11y specs restored
+- [x] **CI-04**: Visual-regression baselines regenerated post-flatten on the reference machine and the
+      suite green **— or honestly quarantined with tracked reasons**. Reworded 2026-08-13 under ruling
+      RUL120 to the phase goal's own second clause, on the same basis CI-03 closed: the criterion as first
+      written demanded unqualified green, which would have forced either a false green or an indefinite
+      hold over two tests that cannot execute their assertion at all. **Closed as honest quarantine**: 18
+      of 24 baselines regenerated on the macOS reference machine (pinned Node v24.5.0); gated suite now
+      **26 passed / 2 quarantined / 0 failed** under CI-equivalent settings (`--workers=2 --retries=2`,
+      no retry consumed), both quarantines annotated in-spec and tracked as FIXTURE-01 + VISUAL-DEBT-01.
+      Also under RUL120: 19 baselines that no job executed were resolved per spec — `tasks-tab-visual`
+      **promoted** into the `visual-regression-phase-46` job (+4, the only RTL-at-768 visual coverage in
+      CI, fixture-pinned, needing no re-baseline), the other 6 specs and their 15 baselines **deleted**.
+      Evidence: `.tickmarkr/overseer/CI-04-FINAL.md`. Landing the 18 regenerated images remains gated on
+      the operator's ORCH-3 visual sign-off.
+- [ ] **CI-05**: `test-rtl-smokes` promoted from advisory to a required branch-protection context on `main` (with a smoke-PR BLOCKED proof)
+
+### Accessibility Defects (filed 2026-08-13 from ORCH-2 execution evidence)
+
+Real WCAG violations found by executing assertions, not by discovery. Each is annotated in its spec as
+`APP DEFECT` with its id so a reader cannot mistake the `fixme` for spec debt. **Fixing them is out of
+scope for Phase 89 (a CI burn-down); they are filed so they stay visible rather than silenced.**
+
+- [ ] **A11Y-01**: `screen-reader-en.spec.ts:11` — axe reports **58 WCAG AA violations** on the
+      after-action route, first being _"Ensure the contrast between foreground and background colors meets
+      WCAG 2 AA minimum contrast ratio thresholds"_. Evidence: ORCH-2 run 2026-08-13, tree `d8c102df`,
+      pinned v24.5.0, bracket 1.90.8 → 1.90.8. See `.tickmarkr/overseer/ORCH-2-RESULT.md`.
+- [ ] **A11Y-02**: `wcag-aa-comprehensive-audit.spec.ts:339` — **a keyboard trap exists**
+      (`expect(trapDetected).toBe(false)` received `true`; WCAG 2.1.2 No Keyboard Trap). Same run/evidence.
+- [ ] **A11Y-03**: `positions-keyboard-nav.spec.ts:8` — Tab from `/positions` leaves focus on `BODY`
+      (expected one of `BUTTON`/`A`/`INPUT`): no reachable first focusable and no skip link, WCAG 2.4.1
+      Bypass Blocks. Independently corroborated by T4's annotation _"the real positions page does not render
+      a skip link targeting #main-content"_. Same run/evidence.
+
+Filed 2026-08-13 from CI-04 execution evidence. The intake debt below was named in CI-03's own text but
+was **not** covered by the honest-quarantine close — it sat as `test.fixme(true, …)` with no tracked
+item, the exact pattern RULING-P89-ORCH2 identified as how the T4 false-green happened.
+
+- [ ] **A11Y-04**: `tests/a11y/intake-accessibility.spec.ts` — intake form/list/queue report
+      serious/critical axe violations: **button-name** (icon / request-type buttons without accessible
+      names), **aria-prohibited-attr**, **target-size**. Quarantined by three `test.fixme(true, …)` at
+      lines 38 (EN), 137 (AR), 146 (forced-colors) — the same debt on all three surfaces, so RTL is not a
+      separate cause. Evidence: verbatim fixme reasons as written at `ba746d78`.
+- [ ] **A11Y-05**: `tests/a11y/intake-accessibility.spec.ts:112` — intake form **skips a heading level
+      (h1 → h3)**, annotated in-spec as _"Real structural bug"_. A **fourth** fixme in that file and a
+      distinct defect from A11Y-04; it is **not** named in CI-03's wording, so closing CI-03 as worded
+      would have left it untracked. Same evidence.
+
+### Test Infrastructure Debt (filed 2026-08-13 from CI-02 / CI-04 execution evidence)
+
+- [ ] **TEST-INFRA-01**: Provision a database for the integration suite — **235 test files expect a
+      DB at `localhost:54321`** and there is none, which is why CI-02 is broadly red. This is decision
+      **D-3**, referenced at `ROADMAP.md:145` and `STATE.md:23/29` but never filed as an item until now.
+      Blocks CI-02; not fixable by any per-spec repair.
+- [ ] **FIXTURE-01**: Dashboard seed data absent for two visual widgets, so their specs cannot reach
+      their screenshot assertion (they fail at the readiness gate, `dashboard-widgets-visual.spec.ts:87`).
+      Not baseline drift — regeneration provably cannot fix them (survived `--update-snapshots`
+      unchanged). (a) **week-ahead**: renders _"No upcoming events"_; KPI strip reads `WEEK AHEAD 0` at the
+      spec's frozen clock `2026-07-03T12:00:00Z`. (b) **vip-visits**: renders _"No VIP visits with country
+      data. Add VIP participant data to the dashboard seed, then refresh the widget."_ — the empty state
+      names its own fix. Their committed baselines (`week-ahead.png`, `vip-visits.png`, captured
+      2026-07-05 at `f2dc476a` when the seed existed) are now **stale and unreachable**. Evidence:
+      `.tickmarkr/overseer/CI-04-RESULT.md`, pinned Node v24.5.0, bracket v24.5.0 → v24.5.0.
+      **Ruled 2026-08-13 (RUL120): annotate-and-track, seed deliberately NOT restored** — reseeding
+      deepens the dependency tracked as VISUAL-DEBT-01 rather than removing it. Both specs are annotated
+      `test.fixme` at `dashboard-widgets-visual.spec.ts` naming the absent widget data and citing this id.
+- [ ] **VISUAL-DEBT-01**: **Design smell — visual baselines are pinned to mutable staging content, so
+      they rot regardless of who reseeds.** This is the generalisation of FIXTURE-01 and is why RUL120
+      declined the reseed. Two independent mechanisms, both observed on 2026-08-13:
+      (a) **Mutable row content.** `list-pages-visual` baselines capture live staging rows; the
+      `countries-en` re-baseline changed row _order_ because UAE and UK acquired a `Mon 06 Jul` last-touch
+      after the previous capture. The list sorts on a mutable column, so any staging write re-reds the
+      suite with no UI change at all.
+      (b) **Double-clock divergence.** `dashboard-widgets-visual.spec.ts` freezes the _browser_ clock to a
+      hard-coded `FROZEN_TIME` while `get_upcoming_events` filters _server_-side by real `NOW()`. The file's
+      own header comment states they "only overlap when the frozen clock is today", so the `week-ahead`
+      baseline is correct only on/near its capture date and decays by construction — `FROZEN_TIME` has
+      already been re-pinned once (`2026-05-08` → `2026-07-03`).
+      Fixing this means decoupling visual baselines from live data (deterministic fixture/seeded
+      route-level mocking, or masking the data regions), not repointing them at fresher data. Until then
+      every visual green is a snapshot of one moment in staging.
+
+### CORS Edge-Function Migration
+
+- [ ] **CORS-01**: `ALLOWED_ORIGINS` secret verified present and correct in staging + prod before any batch ships
+- [ ] **CORS-02**: All ~171 handler-scope edge functions migrated off deprecated wildcard `corsHeaders` (batch A), deployed and smoke-checked
+- [ ] **CORS-03**: All ~101 module-scope edge functions (including the 83 local `const corsHeaders = '*'`) migrated (batches B/C), deployed and smoke-checked; repo-wide grep for the deprecated pattern returns 0
+
+### v7.0 Live Verification (deploy-gated closeout)
+
+- [ ] **LIVE-01**: On-prem GPU/TEI stack stood up — vLLM (Gemma-4-12B) + TEI (BGE-M3) serving with health checks, reachable by the agent-runtime
+- [ ] **LIVE-02**: EVAL-01/02/03 closed — the v7.0 eval harness runs against live inference and meets its CI thresholds
+- [ ] **LIVE-03**: AGENT/INFRA live verification complete — copilot reads/HITL-writes under caller JWT against the live stack, clearance ceiling verified end-to-end
+
+## v2 Requirements
+
+Deferred to future milestones. Tracked but not in current roadmap.
+
+### Intelligence Feed Ingestion
+
+- **FEED-01**: Automated feed ingestion into `intelligence_event` (v7.1)
+- **FEED-02**: Quarantine posture for untrusted feed content (v7.1)
+
+### Intelligence UI Gaps
+
+- **GAP-2**: Graph/digest generative card renderers
+- **GAP-3**: Retire legacy `dossiers-briefs-generate` path
+
+### Design Ops
+
+- **DESIGNOPS-01**: Figma/token sync tooling
+- **DESIGNOPS-02**: Storybook visual diffing
+
+## Out of Scope
+
+Explicitly excluded. Documented to prevent scope creep.
+
+| Feature                                                      | Reason                                                                          |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| `EMAIL_WEBHOOK_SECRET` provisioning + `email-inbound` deploy | Ops task requiring provider-side HMAC alignment — user/ops-only, not code       |
+| Dossier edit surface (A-1/A-2)                               | Shipped via PRs #77/#78 (2026-06-28) including transactional RPC                |
+| MFA secret at-rest encryption (D-19)                         | Shipped via PRs #79/#81 (2026-06-29), live on prod                              |
+| Avatars bucket (D-9)                                         | Shipped via PR #74                                                              |
+| AA nested-edit persistence (B-18)                            | Trimmed by decision — edit mode not wired anywhere; hardening shipped in PR #75 |
+| Mobile native app / OAuth / real-time chat / video           | Standing exclusions from PROJECT.md                                             |
+
+## Traceability
+
+Which phases cover which requirements. Updated during roadmap creation.
+
+| Requirement | Phase    | Status   |
+| ----------- | -------- | -------- |
+| FEAT-01     | Phase 86 | Complete |
+| FEAT-02     | Phase 86 | Complete |
+| FEAT-03     | Phase 86 | Complete |
+| FEAT-04     | Phase 86 | Complete |
+| AFF-01      | Phase 87 | Pending  |
+| AFF-02      | Phase 87 | Pending  |
+| AFF-03      | Phase 87 | Complete |
+| AFF-04      | Phase 87 | Complete |
+| SEC-01      | Phase 88 | Pending  |
+| SEC-02      | Phase 88 | Pending  |
+| CI-01       | Phase 89 | Pending  |
+| CI-02       | Phase 89 | Pending  |
+| CI-03       | Phase 89 | Pending  |
+| CI-04       | Phase 89 | Pending  |
+| CI-05       | Phase 89 | Pending  |
+| CORS-01     | Phase 90 | Pending  |
+| CORS-02     | Phase 90 | Pending  |
+| CORS-03     | Phase 90 | Pending  |
+| LIVE-01     | Phase 91 | Pending  |
+| LIVE-02     | Phase 91 | Pending  |
+| LIVE-03     | Phase 91 | Pending  |
+
+**Coverage:**
+
+- v1 requirements: 21 total
+- Mapped to phases: 21 ✓
+- Unmapped: 0
+
+---
+
+_Requirements defined: 2026-07-06_
+_Last updated: 2026-07-06 — roadmap created; all 21 v1 requirements mapped to Phases 86-91_

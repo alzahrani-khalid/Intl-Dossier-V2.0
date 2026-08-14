@@ -174,3 +174,7 @@ __pycache__/
 
 # Local source-data working files (GASTAT spreadsheets/CSVs for manual data entry)
 data_legacy/
+
+# tickmarkr / drover local run state (not project source)
+.tickmarkr/
+.drover/

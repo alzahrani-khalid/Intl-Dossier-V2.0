@@ -10,6 +10,7 @@
 import { useQuery, useMutation, useQueryClient, type UseQueryOptions } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { quotePostgrestValue } from '@/lib/postgrest-escape'
 import { supabase } from '@/lib/supabase'
 import type {
   WorkingGroup,
@@ -38,6 +39,12 @@ export const workingGroupKeys = {
   stats: () => [...workingGroupKeys.all, 'stats'] as const,
 }
 
+/**
+ * Phase 87 F23/F24 — the list-surface filter shape. Aliases `WorkingGroupFilters`
+ * (the RPC accepts no sensitivity/sort params, so no extra fields are added).
+ */
+export type WorkingGroupsFilters = WorkingGroupFilters
+
 // ============================================================================
 // HELPER FUNCTIONS
 // ============================================================================
@@ -45,6 +52,64 @@ export const workingGroupKeys = {
 // ============================================================================
 // WORKING GROUP HOOKS
 // ============================================================================
+
+/**
+ * Fetch one page of working groups. Shared by the hook's `queryFn` and by the
+ * route's peek `fetchPage` (via `queryClient.fetchQuery` with the same key family).
+ *
+ * The list is served by the `search_working_groups` RPC, which accepts a status
+ * filter (`p_status`) but no sensitivity or sort parameter — so those surface
+ * controls are intentionally omitted (Phase 87 config-driven narrowing). The RPC
+ * returns rows in its own fixed order; a client-side re-sort would only reorder one
+ * 20-row window, not the full result set, so no sort section is offered.
+ */
+export async function fetchWorkingGroupsPage(
+  filters: WorkingGroupFilters = {},
+): Promise<WorkingGroupListResponse> {
+  const { search, status, wg_type, parent_forum_id, lead_org_id, page = 1, limit = 20 } = filters
+  const offset = (page - 1) * limit
+
+  // Use RPC function for advanced search
+  const { data, error } = await supabase.rpc('search_working_groups', {
+    p_search_term: search || null,
+    p_status: status && status !== 'all' ? status : null,
+    p_wg_type: wg_type && wg_type !== 'all' ? wg_type : null,
+    p_parent_forum_id: parent_forum_id || null,
+    p_lead_org_id: lead_org_id || null,
+    p_limit: limit,
+    p_offset: offset,
+  })
+
+  if (error) throw new Error(error.message)
+
+  // Get total count for pagination
+  let countQuery = supabase
+    .from('dossiers')
+    .select('*', { count: 'exact', head: true })
+    .eq('type', 'working_group')
+    .neq('status', 'archived')
+
+  if (status && status !== 'all') {
+    countQuery = countQuery.eq('status', status)
+  }
+  if (search) {
+    const pattern = quotePostgrestValue(`%${search}%`)
+    countQuery = countQuery.or(`name_en.ilike.${pattern},name_ar.ilike.${pattern}`)
+  }
+
+  const { count } = await countQuery
+
+  return {
+    data: (data || []) as WorkingGroup[],
+    pagination: {
+      page,
+      limit,
+      total: count || 0,
+      totalPages: Math.ceil((count || 0) / limit),
+      has_more: (data?.length || 0) === limit,
+    },
+  }
+}
 
 /**
  * Hook to list working groups with optional filters
@@ -55,58 +120,7 @@ export function useWorkingGroups(
 ) {
   return useQuery({
     queryKey: workingGroupKeys.list(filters as WorkingGroupSearchParams),
-    queryFn: async (): Promise<WorkingGroupListResponse> => {
-      const {
-        search,
-        status,
-        wg_type,
-        parent_forum_id,
-        lead_org_id,
-        page = 1,
-        limit = 20,
-      } = filters
-      const offset = (page - 1) * limit
-
-      // Use RPC function for advanced search
-      const { data, error } = await supabase.rpc('search_working_groups', {
-        p_search_term: search || null,
-        p_status: status && status !== 'all' ? status : null,
-        p_wg_type: wg_type && wg_type !== 'all' ? wg_type : null,
-        p_parent_forum_id: parent_forum_id || null,
-        p_lead_org_id: lead_org_id || null,
-        p_limit: limit,
-        p_offset: offset,
-      })
-
-      if (error) throw new Error(error.message)
-
-      // Get total count for pagination
-      let countQuery = supabase
-        .from('dossiers')
-        .select('*', { count: 'exact', head: true })
-        .eq('type', 'working_group')
-        .neq('status', 'archived')
-
-      if (status && status !== 'all') {
-        countQuery = countQuery.eq('status', status)
-      }
-      if (search) {
-        countQuery = countQuery.or(`name_en.ilike.%${search}%,name_ar.ilike.%${search}%`)
-      }
-
-      const { count } = await countQuery
-
-      return {
-        data: (data || []) as WorkingGroup[],
-        pagination: {
-          page,
-          limit,
-          total: count || 0,
-          totalPages: Math.ceil((count || 0) / limit),
-          has_more: (data?.length || 0) === limit,
-        },
-      }
-    },
+    queryFn: (): Promise<WorkingGroupListResponse> => fetchWorkingGroupsPage(filters),
     staleTime: 30_000,
     gcTime: 5 * 60_000,
     ...options,

@@ -1,0 +1,59 @@
+{
+  "filter": {
+    "trigger": "Filter",
+    "trigger_active": "Filter · {{count}}",
+    "search_placeholder": "Filter by...",
+    "option_count": "{{count}}",
+    "no_matches": "No filters match"
+  },
+  "display": {
+    "trigger": "Display",
+    "grouping": "Group by",
+    "grouping_none": "No grouping",
+    "ordering": "Sort by",
+    "asc": "Ascending",
+    "desc": "Descending",
+    "properties": "Display properties",
+    "reset": "Reset to default"
+  },
+  "field": {
+    "status": "Status",
+    "sensitivity": "Sensitivity",
+    "importance": "Importance",
+    "type": "Type"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "archived": "Archived"
+  },
+  "sensitivity": {
+    "1": "Public",
+    "2": "Internal",
+    "3": "Restricted",
+    "4": "Confidential"
+  },
+  "importance": {
+    "1": "Regular",
+    "2": "Important",
+    "3": "Key contact",
+    "4": "VIP",
+    "5": "Critical"
+  },
+  "sort": {
+    "name": "Name",
+    "updated": "Last updated"
+  },
+  "property": {
+    "engagements": "Engagements",
+    "lastTouch": "Last touch",
+    "sensitivity": "Sensitivity",
+    "secondary": "Secondary line",
+    "status": "Status",
+    "role": "Role",
+    "organization": "Organization",
+    "vip": "VIP",
+    "type": "Type",
+    "location": "Location"
+  }
+}

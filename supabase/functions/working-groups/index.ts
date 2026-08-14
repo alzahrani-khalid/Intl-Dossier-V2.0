@@ -26,12 +26,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
-};
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 interface ErrorResponse {
   code: string;
@@ -39,14 +34,24 @@ interface ErrorResponse {
   message_ar: string;
 }
 
-function jsonResponse(data: unknown, status = 200) {
+function jsonResponseWithCors(
+  corsHeaders: Record<string, string>,
+  data: unknown,
+  status = 200
+) {
   return new Response(JSON.stringify(data), {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 }
 
-function errorResponse(code: string, message_en: string, message_ar: string, status: number) {
+function errorResponseWithCors(
+  corsHeaders: Record<string, string>,
+  code: string,
+  message_en: string,
+  message_ar: string,
+  status: number
+) {
   const error: ErrorResponse = { code, message_en, message_ar };
   return new Response(JSON.stringify({ error }), {
     status,
@@ -67,9 +72,13 @@ async function getAuthUser(req: Request, supabase: ReturnType<typeof createClien
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+  const jsonResponse = jsonResponseWithCors.bind(null, corsHeaders);
+  const errorResponse = errorResponseWithCors.bind(null, corsHeaders);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {

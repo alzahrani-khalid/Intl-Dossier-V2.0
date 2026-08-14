@@ -123,11 +123,9 @@ function EmptyState({ type }: { type?: DossierDocumentType | 'all' }) {
   const { t } = useTranslation('dossier-overview')
 
   return (
-    <div className="text-center py-6 sm:py-8">
-      <div className="p-3 rounded-full bg-muted inline-block mb-3">
-        <FileStack className="h-6 w-6 text-muted-foreground" />
-      </div>
-      <p className="text-sm text-muted-foreground">
+    <div className="flex flex-col items-center justify-center gap-2 py-6 sm:py-8 text-center">
+      <FileStack className="h-5 w-5 text-ink-faint" />
+      <p className="text-sm text-ink-mute">
         {type && type !== 'all' ? t(`documents.empty.${type}`) : t('documents.empty.all')}
       </p>
     </div>

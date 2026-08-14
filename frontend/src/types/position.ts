@@ -102,25 +102,6 @@ export interface UpdatePositionPayload {
   version: number // Required for optimistic locking
 }
 
-// Consistency check result from AI processing
-export interface ConsistencyCheck {
-  id: string
-  position_id: string
-  consistency_score: number
-  conflicts: Array<{
-    conflict_id: string
-    conflicting_position_id: string
-    conflicting_position_title: string
-    conflict_type: string
-    description: string
-    severity: 'low' | 'medium' | 'high'
-    resolved: boolean
-    resolution_notes?: string
-  }>
-  recommendations: string[]
-  checked_at: string
-}
-
 // Aliases for request/response types used by hooks
 export type CreatePositionRequest = CreatePositionPayload
 export type UpdatePositionRequest = UpdatePositionPayload

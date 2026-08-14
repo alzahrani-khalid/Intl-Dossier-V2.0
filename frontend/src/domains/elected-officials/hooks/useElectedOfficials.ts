@@ -28,12 +28,12 @@ export const electedOfficialKeys = {
 }
 
 /**
- * Hook to fetch a paginated list of elected officials with filters
- *
- * @param filters - Optional filters (party, office_type, is_current_term, country_id, search, page, limit)
- * @returns TanStack Query result with paginated elected official list
+ * Fetch a single page of elected officials. Shared by the list hook and the
+ * peek drawer's neighbor-page loader (87-08) so both use the same URL contract.
  */
-export function useElectedOfficials(filters?: ElectedOfficialFilters) {
+export function fetchElectedOfficialsPage(
+  filters?: ElectedOfficialFilters,
+): Promise<ElectedOfficialListResponse> {
   const params = new URLSearchParams()
 
   if (filters != null) {
@@ -51,9 +51,19 @@ export function useElectedOfficials(filters?: ElectedOfficialFilters) {
   const queryString = params.toString()
   const path = `/api/elected-officials${queryString !== '' ? `?${queryString}` : ''}`
 
+  return apiGet<ElectedOfficialListResponse>(path, { baseUrl: 'express' })
+}
+
+/**
+ * Hook to fetch a paginated list of elected officials with filters
+ *
+ * @param filters - Optional filters (party, office_type, is_current_term, country_id, search, page, limit)
+ * @returns TanStack Query result with paginated elected official list
+ */
+export function useElectedOfficials(filters?: ElectedOfficialFilters) {
   return useQuery({
     queryKey: electedOfficialKeys.list(filters),
-    queryFn: () => apiGet<ElectedOfficialListResponse>(path, { baseUrl: 'express' }),
+    queryFn: () => fetchElectedOfficialsPage(filters),
   })
 }
 

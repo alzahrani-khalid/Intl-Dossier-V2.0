@@ -16,12 +16,11 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
 import {
-  corsHeaders,
   errorResponse,
   successResponse,
-  handleOptions,
   parseBody,
 } from '../_shared/utils.ts';
+import { getCorsHeaders } from '../_shared/cors.ts';
 import { createLogger } from '../_shared/logger.ts';
 import {
   createAIInteractionLogger,
@@ -46,10 +45,10 @@ interface ListQueryParams {
   offset?: number;
 }
 
-serve(async (req: Request) => {
+async function handleRequest(req: Request, corsHeaders: Record<string, string>) {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return handleOptions();
+    return new Response(null, { status: 204, headers: corsHeaders });
   }
 
   const logger = createLogger(FUNCTION_NAME, req);
@@ -144,6 +143,15 @@ serve(async (req: Request) => {
       'INTERNAL_ERROR'
     );
   }
+}
+
+serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req);
+  const response = await handleRequest(req, corsHeaders);
+  const headers = new Headers(response.headers);
+  headers.delete('Access-Control-Max-Age');
+  for (const [name, value] of Object.entries(corsHeaders)) headers.set(name, value);
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 });
 
 // Handler functions

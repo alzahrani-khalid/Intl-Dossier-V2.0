@@ -5,7 +5,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // =============================================================================
 // Types
@@ -139,26 +139,30 @@ interface ListParams {
 // Helpers
 // =============================================================================
 
-function jsonResponse(data: unknown, status = 200): Response {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  });
-}
+function createResponseHelpers(corsHeaders: Record<string, string>) {
+  function jsonResponse(data: unknown, status = 200): Response {
+    return new Response(JSON.stringify(data), {
+      status,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
 
-function errorResponse(
-  message_en: string,
-  message_ar: string,
-  status = 400,
-  details?: unknown
-): Response {
-  return jsonResponse(
-    {
-      error: { message_en, message_ar, details },
-      correlation_id: crypto.randomUUID(),
-    },
-    status
-  );
+  function errorResponse(
+    message_en: string,
+    message_ar: string,
+    status = 400,
+    details?: unknown
+  ): Response {
+    return jsonResponse(
+      {
+        error: { message_en, message_ar, details },
+        correlation_id: crypto.randomUUID(),
+      },
+      status
+    );
+  }
+
+  return { jsonResponse, errorResponse };
 }
 
 // =============================================================================
@@ -166,9 +170,13 @@ function errorResponse(
 // =============================================================================
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+  const responseHelpers = createResponseHelpers(corsHeaders);
+  const { errorResponse } = responseHelpers;
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
@@ -206,34 +214,34 @@ serve(async (req) => {
     switch (req.method) {
       case 'GET':
         if (isExecutionsEndpoint) {
-          return await getExecutions(supabaseClient, url, ruleId);
+          return await getExecutions(supabaseClient, url, responseHelpers, ruleId);
         }
         if (isTemplatesEndpoint) {
-          return await getNotificationTemplates(supabaseClient);
+          return await getNotificationTemplates(supabaseClient, responseHelpers);
         }
         if (ruleId && ruleId !== 'workflow-rules') {
-          return await getRule(supabaseClient, ruleId);
+          return await getRule(supabaseClient, ruleId, responseHelpers);
         }
-        return await listRules(supabaseClient, url);
+        return await listRules(supabaseClient, url, responseHelpers);
 
       case 'POST':
         if (isTestEndpoint) {
-          return await testRule(supabaseClient, req, user.id);
+          return await testRule(supabaseClient, req, user.id, responseHelpers);
         }
-        return await createRule(supabaseClient, req, user.id);
+        return await createRule(supabaseClient, req, user.id, responseHelpers);
 
       case 'PUT':
       case 'PATCH':
         if (!ruleId || ruleId === 'workflow-rules') {
           return errorResponse('Rule ID required', 'معرف القاعدة مطلوب', 400);
         }
-        return await updateRule(supabaseClient, ruleId, req);
+        return await updateRule(supabaseClient, ruleId, req, responseHelpers);
 
       case 'DELETE':
         if (!ruleId || ruleId === 'workflow-rules') {
           return errorResponse('Rule ID required', 'معرف القاعدة مطلوب', 400);
         }
-        return await deleteRule(supabaseClient, ruleId);
+        return await deleteRule(supabaseClient, ruleId, responseHelpers);
 
       default:
         return errorResponse('Method not allowed', 'الطريقة غير مسموحة', 405);
@@ -253,7 +261,11 @@ serve(async (req) => {
 // Route Handlers
 // =============================================================================
 
-async function listRules(supabase: ReturnType<typeof createClient>, url: URL): Promise<Response> {
+async function listRules(
+  supabase: ReturnType<typeof createClient>,
+  url: URL,
+  { jsonResponse, errorResponse }: ReturnType<typeof createResponseHelpers>
+): Promise<Response> {
   const params = Object.fromEntries(url.searchParams) as ListParams;
   const page = Number(params.page) || 1;
   const limit = Math.min(Number(params.limit) || 20, 100);
@@ -306,7 +318,8 @@ async function listRules(supabase: ReturnType<typeof createClient>, url: URL): P
 
 async function getRule(
   supabase: ReturnType<typeof createClient>,
-  ruleId: string
+  ruleId: string,
+  { jsonResponse, errorResponse }: ReturnType<typeof createResponseHelpers>
 ): Promise<Response> {
   const { data, error } = await supabase
     .from('workflow_rules')
@@ -333,7 +346,8 @@ async function getRule(
 async function createRule(
   supabase: ReturnType<typeof createClient>,
   req: Request,
-  userId: string
+  userId: string,
+  { jsonResponse, errorResponse }: ReturnType<typeof createResponseHelpers>
 ): Promise<Response> {
   const body = (await req.json()) as WorkflowRule;
 
@@ -393,7 +407,8 @@ async function createRule(
 async function updateRule(
   supabase: ReturnType<typeof createClient>,
   ruleId: string,
-  req: Request
+  req: Request,
+  { jsonResponse, errorResponse }: ReturnType<typeof createResponseHelpers>
 ): Promise<Response> {
   const body = (await req.json()) as Partial<WorkflowRule>;
 
@@ -443,7 +458,8 @@ async function updateRule(
 
 async function deleteRule(
   supabase: ReturnType<typeof createClient>,
-  ruleId: string
+  ruleId: string,
+  { jsonResponse, errorResponse }: ReturnType<typeof createResponseHelpers>
 ): Promise<Response> {
   // Soft delete
   const { error } = await supabase
@@ -467,6 +483,7 @@ async function deleteRule(
 async function getExecutions(
   supabase: ReturnType<typeof createClient>,
   url: URL,
+  { jsonResponse, errorResponse }: ReturnType<typeof createResponseHelpers>,
   ruleId?: string
 ): Promise<Response> {
   const params = Object.fromEntries(url.searchParams);
@@ -519,7 +536,8 @@ async function getExecutions(
 }
 
 async function getNotificationTemplates(
-  supabase: ReturnType<typeof createClient>
+  supabase: ReturnType<typeof createClient>,
+  { jsonResponse, errorResponse }: ReturnType<typeof createResponseHelpers>
 ): Promise<Response> {
   const { data, error } = await supabase
     .from('workflow_notification_templates')
@@ -542,7 +560,8 @@ async function getNotificationTemplates(
 async function testRule(
   supabase: ReturnType<typeof createClient>,
   req: Request,
-  userId: string
+  userId: string,
+  { jsonResponse, errorResponse }: ReturnType<typeof createResponseHelpers>
 ): Promise<Response> {
   const body = await req.json();
   const { rule_id, entity_id, dry_run = true } = body;

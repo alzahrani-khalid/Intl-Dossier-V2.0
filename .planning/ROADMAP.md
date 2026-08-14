@@ -17,8 +17,164 @@
 - ✅ **v7.0 Intelligence Engine** — Phases 68-74 (shipped 2026-06-24) — [archive](milestones/v7.0-ROADMAP.md)
 - ✅ **v8.0 Linear Design System Migration** — Phases 75-80 (shipped 2026-07-04) — [archive](milestones/v8.0-ROADMAP.md)
 - ✅ **v8.1 Linear Design Refinement** — Phases 81-85 (shipped 2026-07-05) — [archive](milestones/v8.1-ROADMAP.md)
+- 🚧 **v9.0 Platform Completion & Live Verification** — Phases 86-91 (in progress)
+
+## Current Milestone: v9.0 Platform Completion & Live Verification
+
+**Goal:** Close every carried-forward gap between what the platform advertises and what is built, verified, and enforced — the last honest-disabled features become real, the red test suites become green gates, all 272 edge functions leave the deprecated CORS wildcard, and the v7.0 intelligence stack is finally live-verified on real GPU inference.
+
+**Coverage:** 21/21 v1 requirements mapped (FEAT-01..04, AFF-01..04, SEC-01..02, CI-01..05, CORS-01..03, LIVE-01..03).
 
 ## Phases
+
+- [ ] **Phase 86: Feature Completion** - The three honest-disabled data-entry features become real or are formally retired: MoU create, user-management routes, ConsistencyPanel
+- [x] **Phase 87: Linear Affordances** - Right-peek panel with paging, filter/display split popovers with live counts, ⌘K command-menu audit, rich empty states (F23–F26)
+- [ ] **Phase 88: Security & Hygiene Tail** - UserPicker PostgREST filter-interpolation fix (IN-04) + credential-hygiene sweep (TEST_USER_PASSWORD-class values externalized)
+- [ ] **Phase 89: CI & Test-Debt Burn-Down** - E2E / integration / a11y / visual-regression suites green or honestly quarantined; test-rtl-smokes promoted to a required branch-protection context
+- [x] **Phase 90: CORS Edge-Function Migration** - All 272 edge functions migrated off the deprecated wildcard corsHeaders in staged A/B/C batches, each deployed and smoke-checked
+- [ ] **Phase 91: v7.0 Live Verification** - GPU/TEI stack stood up and the deploy-gated EVAL-01/02/03 + AGENT/INFRA verification closed (hardware-gated)
+
+## Phase Details
+
+### Phase 86: Feature Completion
+
+**Goal**: No permanently-dead UI remains — the three honest-disabled data-entry features (MoU create, user management, ConsistencyPanel) are either fully working or formally retired
+**Depends on**: Nothing (first phase of milestone; independent frontend/edge track following existing creation-wizard, list-page, and DossierShell patterns)
+**Requirements**: FEAT-01, FEAT-02, FEAT-03, FEAT-04
+**Success Criteria** (what must be TRUE):
+
+1. User can create a MoU from the MoUs page — the "Add MoU" button opens a working form (type, mou_category, dates, parties, lifecycle_state) that writes `mous`, and the new MoU appears in the list (closes C-3)
+2. Admin can create a user at `/users/create` against the L1-hardened user-management edge functions and sees the new user in the users list (closes D-10 create half)
+3. Admin can open `/users/:id` from the users list and view/manage role, status, and profile (closes D-10 detail half)
+4. ConsistencyPanel either runs a real consistency-check query with working modify/accept/escalate/view actions, or is fully deleted (component + i18n keys) with the decision recorded (closes E-8)
+5. All new/changed surfaces work correctly in both EN/LTR and AR/RTL
+   **Plans**: 5 plans
+   **UI hint**: yes
+
+Plans:
+
+**Wave 1**
+
+- [x] 86-01-PLAN.md — MoU create dialog + domains/mous wiring (FEAT-01, wave 1)
+- [x] 86-02-PLAN.md — Users foundation: assign-role verify, invoke methods, layout routes, /users/create (FEAT-02, wave 1)
+- [x] 86-03-PLAN.md — ConsistencyPanel formal retirement + ADR-008 decision record (FEAT-04, wave 1)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [x] 86-04-PLAN.md — /users/:id detail (role/status/profile) + combined user-management E2E (FEAT-03, wave 2)
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
+- [x] 86-05-PLAN.md — Phase gate battery + consolidated EN/AR render sign-off (wave 3)
+
+### Phase 87: Linear Affordances
+
+**Goal**: List pages and navigation gain the four Linear-grade affordances from DESIGN-REFINEMENT-PLAN-260704 §Phase 6 (F23–F26)
+**Depends on**: Phase 86 (same list-page surfaces — sequenced to avoid churn; no hard dependency)
+**Requirements**: AFF-01, AFF-02, AFF-03, AFF-04
+**Success Criteria** (what must be TRUE):
+
+1. User can open a list row in a right-peek panel and page prev/next through rows without leaving the list (F23)
+2. User can filter and adjust display via split Filter and Display popovers that show live result counts on list pages (F24)
+3. Every command advertised in the ⌘K menu works, high-value missing commands are added, and the menu is correct in both EN and AR (F25)
+4. Empty states across list pages and dossier tabs explain the surface and offer a primary action — no bare "no data" text remains (F26)
+   **Plans**: 10 plans
+   **UI hint**: yes
+
+Plans:
+
+**Wave 1** _(foundations + URL normalization, parallel)_
+
+- [x] 87-01-PLAN.md — F23 peek foundation: peekStore + usePeekPaging + DrawerHead counter/chevrons (AFF-01)
+- [x] 87-02-PLAN.md — F24 foundation: Filter/Display popovers, useListControls, list-controls i18n ns (AFF-02)
+- [x] 87-03-PLAN.md — F25 ⌘K audit: fix/remove 9 findings, 5 new commands, sentence-case pass, MousPage ?action=create (AFF-03)
+- [x] 87-04-PLAN.md — F26 infra: EmptyState reskin, ListEmptyState extension, copy matrix, Pattern-B tab audit (AFF-04)
+- [x] 87-05-PLAN.md — URL-state normalization: persons + engagements + elected-officials (AFF-01, AFF-02 enabler)
+
+**Wave 2** _(per-surface wiring, parallel — blocked on Wave 1)_
+
+- [x] 87-06-PLAN.md — Countries + organizations wiring + DossierTable column visibility (AFF-01/02/04)
+- [x] 87-07-PLAN.md — Forums + topics + working-groups wiring + GenericListPage property toggles (AFF-01/02/04)
+- [x] 87-08-PLAN.md — Persons + engagements + elected-officials wiring + exact engagements total (AFF-01/02/04)
+- [x] 87-09-PLAN.md — Kanban: URL normalization, popover fold-in, commitment peek, board empties (AFF-01/02/04)
+
+**Wave 3** _(gate)_
+
+- [x] 87-10-PLAN.md — Phase gate battery + consolidated EN/AR human render sign-off (all AFF) — operator signed 2026-07-13
+
+### Phase 88: Security & Hygiene Tail
+
+**Goal**: The two carried-forward security items from v8.0 close are shut — no PostgREST filter injection surface in UserPicker and no real secrets in tracked files
+**Depends on**: Nothing (small, independent; sequenced before Phase 89 so the E2E burn-down runs against the final credential pattern)
+**Requirements**: SEC-01, SEC-02
+**Success Criteria** (what must be TRUE):
+
+1. `UserPicker.handleSearch` no longer interpolates user input into PostgREST filter strings — search input containing `,().` characters cannot alter the query, via `.ilike()` builder or sanitization (closes IN-04 / T-79-S2)
+2. No real secrets remain in tracked files — `TEST_USER_PASSWORD`-class values are rotated or externalized and the `.env.test.example` pattern is enforced
+3. Test suites and browser-automation flows still authenticate and pass after credential externalization (no silently broken login paths)
+   **Plans**: 3 plans
+
+Plans:
+
+**Wave 1**
+
+- [ ] 88-01-PLAN.md — SEC-01: quotePostgrestValue helper + UserPicker fix + 5-site sibling sweep
+- [ ] 88-02-PLAN.md — SEC-02: redact leaked credential, rotate staging password, GH-secret checkpoint, login smoke
+- [ ] 88-03-PLAN.md — Hygiene: Express 5 getter-only req.query fix in shared validate() helper (ORCH-BRIEF §0e)
+
+### Phase 89: CI & Test-Debt Burn-Down
+
+**Goal**: The red non-required suites become trustworthy green gates (or honestly quarantined with tracked reasons), and test-rtl-smokes graduates to a required branch-protection context
+**Depends on**: Phase 88 (credential externalization lands first so E2E/global-setup fixes target the final pattern). CI-05 promotion is sequenced last within the phase, after CI-01..04, so promotion never blocks on red suites.
+**Requirements**: CI-01, CI-02, CI-03, CI-04, CI-05
+**Success Criteria** (what must be TRUE):
+
+1. E2E suite is green against the deployed app — stale-login/global-setup debt fixed and genuinely-broken specs repaired, or each remaining spec explicitly quarantined with a tracked reason
+2. Integration test suite is green, including the 2 pre-existing interaction-note backend failures
+3. a11y suites are green — the intake-form `fixme` debt (button-name / aria-prohibited-attr / target-size) fixed and the 8 quarantined a11y specs restored
+4. Visual-regression baselines are regenerated post-flatten on the reference machine and the suite is green
+5. `test-rtl-smokes` is a required branch-protection context on `main`, proven by a smoke PR showing `BLOCKED`
+
+**Status 2026-08-13 — PARTIALLY DELIVERED, phase NOT closed.** Executed via tickmarkr (no GSD plans).
+Landed to `milestone/v9.0-drover` at `46a88500` (T7/T3/T5/T6) and `d8c102df` (T4/T1). See
+`.planning/phases/89-ci-test-debt-burndown/89-SUMMARY.md`.
+
+| SC                      | status                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1 (E2E / CI-01)         | **HELD** — depends on the operator's Phase 88 credential rotation                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| 2 (integration / CI-02) | **NOT MET** — premise wrong: the named file is in the _unit_ job; the integration suite is broadly red because 235 files expect a DB at `localhost:54321` → decision **D-3**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| 3 (a11y / CI-03)        | **MET AS HONEST QUARANTINE** (the goal's second clause: _green OR honestly quarantined with tracked reasons_). ORCH-2 executed the suite 2026-08-13. 23 spec-debt failures annotated `test.fixme` naming their specific cause — 3 root causes: stale `/_protected/` route prefix (a route ID, not a URL), missing `[data-testid="language-switcher"]`, missing `[data-testid="dossier-card"]`. 3 real WCAG violations filed as **A11Y-01/02/03** and annotated `APP DEFECT`, not silenced. intake `fixme` debt remains untouched and is **not** covered by this                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| 4 (visual / CI-04)      | **MET AS HONEST QUARANTINE** (the goal's second clause, same basis CI-03 closed on; SC-4's wording was reworded under RUL120 because as written it demanded unqualified green). Executed 2026-08-13 on the macOS reference machine, pinned Node v24.5.0, bracket v24.5.0 → v24.5.0. 18 of 24 baselines regenerated; drift was Phase 87-02's `Filter`/`Display` toolbar plus mutable staging content. Gated suite **26 passed / 2 quarantined / 0 failed** under CI-equivalent `--workers=2 --retries=2` with no retry consumed. The 2 quarantines (`week-ahead`, `vip-visits`) fail at the readiness gate BEFORE their screenshot assertion, so `--update-snapshots` provably cannot repair them; annotated in-spec and tracked as **FIXTURE-01**, seed deliberately not restored. The generalised smell — visual baselines pinned to mutable staging content — is **VISUAL-DEBT-01**. 19 baselines no job executed were resolved per spec: `tasks-tab-visual` **promoted** (+4; only RTL-at-768 visual coverage in CI, fixture-pinned, no re-baseline needed), 6 specs / 15 baselines **deleted**. ⚠ **Landing the 18 regenerated images is still gated on ORCH-3, the operator's visual sign-off** — before/after staged at `.tickmarkr/overseer/CI04-review/` |
+| 5 (rtl-smokes / CI-05)  | **HELD** — sequenced last; touches branch protection on `main`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+
+Routed-in from Phase 90: `sentry.ts` dual-import **FIXED** (T1 `0a373041`); `queue-processor`
+un-deployable **NOT addressed** (surfaced as F-4, a design decision).
+**Plans**: executed via tickmarkr, not GSD plans
+
+### Phase 90: CORS Edge-Function Migration
+
+**Goal**: All 272 edge functions leave the deprecated wildcard `corsHeaders` — origin allow-listing enforced everywhere, with zero functional regression from allowed origins
+**Depends on**: Nothing (independent track; CORS-01 secret verification gates CORS-02/03 within the phase — no batch ships before it). Batches are mechanical but wide; each batch needs deploy + smoke.
+**Requirements**: CORS-01, CORS-02, CORS-03
+**Success Criteria** (what must be TRUE):
+
+1. `ALLOWED_ORIGINS` secret is verified present and correct in both staging and prod before any batch ships
+2. All ~171 handler-scope edge functions (batch A) are migrated off the deprecated wildcard, deployed, and smoke-checked — requests from allowed origins succeed unchanged
+3. All ~101 module-scope edge functions, including the 83 local `const corsHeaders = '*'` copies (batches B/C), are migrated, deployed, and smoke-checked
+4. A repo-wide grep for the deprecated wildcard pattern returns 0 matches
+   **Plans**: 36 — 90-01 CORS-01 secret verify (orchestrator, gates deploys); 90-02..18 Group A (169 import-static handler-scope, deploy-batch A); 90-19..26 Group B (75 local-wildcard handler-scope, deploy-batch B); 90-27..31 Group C (26 module-scope careful, deploy-batch C); 90-35/36 Group D (8 inline hard-coded wildcard, deploy-batch C); 90-32/33/34 deploy+smoke checkpoints (orchestrator, staging-only, 90-34 deploys C+D and runs the final repo-wide grep gate). 278 files migrated total (variable-based A/B/C + inline-wildcard D). Migration plans are code-only (worker-suitable), capped ≤10 files/≤120 lines each for judge parseability; routing floor:frontier on all.
+
+### Phase 91: v7.0 Live Verification
+
+**Goal**: The v7.0 Intelligence Engine's deploy-gated closeout is done — real GPU inference serving, eval thresholds met, and the copilot's clearance ceiling verified end-to-end live
+**Depends on**: Nothing in-repo — **HARDWARE-GATED**: the on-prem GPU hardware decision is pending. The DigitalOcean droplet (4GB, no GPU) cannot host vLLM/TEI. The Mac-local stack (proven in v7.0 Phase 72 bring-up) is the fallback verification target if dedicated hardware does not land. Plan-phase must surface this dependency before committing to a target environment.
+**Requirements**: LIVE-01, LIVE-02, LIVE-03
+**Success Criteria** (what must be TRUE):
+
+1. vLLM (Gemma-4-12B) + TEI (BGE-M3) are serving with passing health checks and are reachable by the agent-runtime (:4100)
+2. The v7.0 eval harness (briefing / correlation / Arabic-quality rubrics) runs against live inference and meets its CI thresholds — EVAL-01/02/03 closed
+3. The copilot reads and HITL-writes under the caller's JWT against the live stack, and the clearance ceiling is verified end-to-end (an L1 caller's results are a strict subset of an L3 caller's, zero above-clearance rows)
+   **Plans**: TBD
 
 <details>
 <summary>✅ v2.0 Production Quality (Phases 1-7) — SHIPPED 2026-03-28</summary>
@@ -253,9 +409,15 @@ Full detail: [milestones/v8.1-ROADMAP.md](milestones/v8.1-ROADMAP.md).
 | 68-74 | v7.0 | 49/49 | Shipped | 2026-06-24 |
 | 75-80 | v8.0 | 32/32 | Shipped | 2026-07-04 |
 | 81-85 | v8.1 | 22/22 | Shipped | 2026-07-05 |
+| 86. Feature Completion | v9.0 | 5/5 | Complete    | 2026-07-07 |
+| 87. Linear Affordances | v9.0 | 6/10 | In Progress|  |
+| 88. Security & Hygiene Tail | v9.0 | 0/TBD | Not started | — |
+| 89. CI & Test-Debt Burn-Down | v9.0 | 0/TBD | Not started | — |
+| 90. CORS Edge-Function Migration | v9.0 | 36/36 | Complete    | 2026-07-13 |
+| 91. v7.0 Live Verification | v9.0 | 0/TBD | Not started | — |
 
 <!-- gsd:progress:end -->
 
 ---
 
-_Roadmap last updated: 2026-07-05 — v8.1 Linear Design Refinement SHIPPED (Phases 81-85; 24/24 v1 requirements complete; merged to main via PR #96; milestone archived to milestones/v8.1-ROADMAP.md)._
+_Roadmap last updated: 2026-07-06 — v9.0 Platform Completion & Live Verification roadmap created (Phases 86-91; 21/21 v1 requirements mapped)._

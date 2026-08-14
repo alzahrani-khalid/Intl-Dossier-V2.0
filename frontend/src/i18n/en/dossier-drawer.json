@@ -42,5 +42,10 @@
     "load_failed_heading": "Could not load this dossier",
     "load_failed_body": "Try refreshing the page or open the full dossier.",
     "retry": "Retry"
+  },
+  "peek": {
+    "counter": "{{position}} / {{total}}",
+    "prev": "Previous row",
+    "next": "Next row"
   }
 }

@@ -7,13 +7,45 @@
  * - VIP detection: importance_level >= 4 (PersonListItem)
  */
 
-import { useMemo, useState, type ReactElement } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { useMemo, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListPageShell, PersonsGrid, ToolbarSearch, type PersonCard } from '@/components/list-page'
+import { DisplayPopover } from '@/components/list-controls/DisplayPopover'
+import { FilterChipsRow } from '@/components/list-controls/FilterChipsRow'
+import { FilterPopover } from '@/components/list-controls/FilterPopover'
+import type {
+  ListControlsConfig,
+  UseListControlsReturn,
+} from '@/components/list-controls/useListControls'
+import { ListEmptyState } from '@/components/empty-states/ListEmptyState'
 import { usePersons } from '@/hooks/usePersons'
 import { useDirection } from '@/hooks/useDirection'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
+import type { PeekRegistration } from '@/store/peekStore'
+import type { ImportanceLevel } from '@/types/person.types'
+
+export const PERSONS_PAGE_SIZE = 20
+
+export const personsListConfig: ListControlsConfig = {
+  filters: [
+    {
+      key: 'importance',
+      labelKey: 'list-controls:field.importance',
+      options: [
+        { value: '1', labelKey: 'list-controls:importance.1' },
+        { value: '2', labelKey: 'list-controls:importance.2' },
+        { value: '3', labelKey: 'list-controls:importance.3' },
+        { value: '4', labelKey: 'list-controls:importance.4' },
+        { value: '5', labelKey: 'list-controls:importance.5' },
+      ],
+    },
+  ],
+  properties: [
+    { id: 'role', labelKey: 'list-controls:property.role', defaultVisible: true },
+    { id: 'organization', labelKey: 'list-controls:property.organization', defaultVisible: true },
+    { id: 'vip', labelKey: 'list-controls:property.vip', defaultVisible: true },
+  ],
+}
 
 interface PersonRecord {
   id?: unknown
@@ -61,44 +93,144 @@ const extractList = (raw: unknown): PersonRecord[] => {
   return []
 }
 
-function PersonsListPage(): ReactElement {
+export interface PersonsListPageProps {
+  /** Search term from the route's validated URL params. */
+  search?: string
+  page?: number
+  controls?: UseListControlsReturn
+  /** Writes the search term back to the URL (debounced by ToolbarSearch). */
+  onSearchChange: (next: string) => void
+  onClearFilters?: () => void
+  onCreate?: () => void
+  /** Navigates to a person dossier (owned by the route wrapper). */
+  onPersonClick?: (person: PersonCard) => void
+  onPersonOpen?: (person: PersonCard, registration: PeekRegistration) => void
+}
+
+function PersonsListPage({
+  search,
+  page = 1,
+  controls,
+  onSearchChange,
+  onClearFilters,
+  onCreate,
+  onPersonClick,
+  onPersonOpen,
+}: PersonsListPageProps): ReactElement {
   const { t } = useTranslation(['persons', 'list-pages'])
   const { isRTL } = useDirection()
-  const navigate = useNavigate()
-  const [search, setSearch] = useState('')
-  const debouncedSearch = useDebouncedValue(search, 250)
-  const query = usePersons({ search: debouncedSearch !== '' ? debouncedSearch : undefined })
+  const debouncedSearch = useDebouncedValue(search ?? '', 250)
+  const importance =
+    controls?.filters.importance !== undefined
+      ? (Number(controls.filters.importance) as ImportanceLevel)
+      : undefined
+  const query = usePersons({
+    search: debouncedSearch !== '' ? debouncedSearch : undefined,
+    importance_level: importance,
+    limit: PERSONS_PAGE_SIZE,
+    offset: (page - 1) * PERSONS_PAGE_SIZE,
+  })
 
   const items: PersonCard[] = useMemo(
     () => extractList(query.data).map((p) => toCard(p, isRTL)),
     [query.data, isRTL],
   )
+  const visibleProperties = controls?.visibleProperties
+  const visible = useMemo(
+    () => new Set(visibleProperties ?? ['role', 'organization', 'vip']),
+    [visibleProperties],
+  )
+  const visibleItems = useMemo(
+    () =>
+      items.map((item) => ({
+        ...item,
+        role: visible.has('role') ? item.role : undefined,
+        organization: visible.has('organization') ? item.organization : undefined,
+        is_vip: visible.has('vip') ? item.is_vip : false,
+      })),
+    [items, visible],
+  )
+
+  const total =
+    query.data !== undefined && !Array.isArray(query.data) && 'pagination' in query.data
+      ? query.data.pagination.total
+      : items.length
+  const filtered = Boolean((search ?? '') !== '' || controls?.hasActiveFilters)
+  const clearFilters = onClearFilters ?? controls?.clearAll
 
   const handlePersonClick = (person: PersonCard): void => {
-    void navigate({ to: '/dossiers/persons/$id', params: { id: person.id } })
+    const registration: PeekRegistration = {
+      ids: items.map((item) => item.id),
+      type: 'person',
+      total,
+      pageOffset: (page - 1) * PERSONS_PAGE_SIZE,
+      pageSize: PERSONS_PAGE_SIZE,
+    }
+    if (onPersonOpen !== undefined) {
+      onPersonOpen(person, registration)
+      return
+    }
+    onPersonClick?.(person)
   }
+
+  const toolbar = (
+    <>
+      <ToolbarSearch
+        value={search ?? ''}
+        onChange={onSearchChange}
+        placeholder={t('list-pages:search.placeholder', { defaultValue: 'Search...' })}
+      />
+      {controls !== undefined ? (
+        <>
+          <FilterPopover
+            config={personsListConfig}
+            surfaceKey="persons"
+            activeFilters={controls.filters}
+            activeFilterCount={controls.activeFilterCount}
+            onFilterChange={controls.setFilter}
+          />
+          <DisplayPopover
+            config={personsListConfig}
+            sort={controls.sort}
+            dir={controls.dir}
+            visibleProperties={controls.visibleProperties}
+            onSetSort={controls.setSort}
+            onSetDir={controls.setDir}
+            onToggleProperty={controls.toggleProperty}
+            onSetGroup={controls.setGroup}
+            onReset={controls.resetDisplay}
+          />
+        </>
+      ) : null}
+    </>
+  )
 
   return (
     <ListPageShell
       title={t('persons:title')}
       subtitle={t('persons:subtitle')}
-      toolbar={
-        <ToolbarSearch
-          value={search}
-          onChange={setSearch}
-          placeholder={t('list-pages:search.placeholder', { defaultValue: 'Search...' })}
-        />
-      }
+      toolbar={toolbar}
       isLoading={query.isLoading}
       isEmpty={!query.isLoading && items.length === 0}
       emptyState={
-        <div className="flex flex-col items-center gap-1 py-8 text-center">
-          <p className="text-base font-medium">{t('persons:empty.title')}</p>
-          <p className="text-sm text-muted-foreground">{t('persons:empty.description')}</p>
-        </div>
+        <ListEmptyState
+          entityType="person"
+          onCreate={onCreate}
+          filtered={filtered}
+          onClearFilters={clearFilters}
+          title={t('persons:empty.title')}
+          description={t('persons:empty.description')}
+        />
       }
     >
-      <PersonsGrid persons={items} onPersonClick={handlePersonClick} />
+      {controls !== undefined ? (
+        <FilterChipsRow
+          chips={controls.filterChips}
+          onRemove={controls.removeFilter}
+          onClearAll={controls.clearAll}
+        />
+      ) : null}
+      <PersonsGrid persons={visibleItems} onPersonClick={handlePersonClick} />
     </ListPageShell>
   )
 }

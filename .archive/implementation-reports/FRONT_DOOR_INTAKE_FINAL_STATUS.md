@@ -160,7 +160,7 @@ cd frontend && npm run test:e2e
 # Get JWT token
 curl -X POST https://zkrcjzdemdmwhearhfgg.supabase.co/auth/v1/token \\
   -H "apikey: $SUPABASE_ANON_KEY" \\
-  -d '{"email":"kazahrani@stats.gov.sa","password":"itisme"}'
+  -d '{"email":<see .env.test — TEST_USER_EMAIL>,"password":<see .env.test — TEST_USER_PASSWORD>}'
 
 # Use token to call Edge Functions
 curl -X POST https://zkrcjzdemdmwhearhfgg.supabase.co/functions/v1/intake-tickets-create \\

@@ -14,7 +14,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 import { validateJWT, createUserClient, createServiceClient } from '../_shared/auth.ts';
 import { generateStructuredJson } from '../_shared/onprem-llm.ts';
 import {
@@ -29,14 +29,15 @@ import {
 } from '../_shared/validation-schemas.ts';
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   // Only allow POST requests
   if (req.method !== 'POST') {
-    return createErrorResponse(
+    return createErrorResponse(req,
       'METHOD_NOT_ALLOWED',
       'Method not allowed',
       'الطريقة غير مسموح بها',
@@ -49,7 +50,7 @@ serve(async (req) => {
     // Validate authentication
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      return createErrorResponse(
+      return createErrorResponse(req,
         'UNAUTHORIZED',
         'Missing authorization header',
         'رأس التفويض مفقود',
@@ -71,7 +72,7 @@ serve(async (req) => {
     try {
       requestBody = await parseRequestBody(RefreshIntelligenceRequestSchema, req);
     } catch (error) {
-      return createErrorResponse(
+      return createErrorResponse(req,
         'VALIDATION_ERROR',
         `Invalid request body: ${error.message}`,
         `نص الطلب غير صالح: ${error.message}`,
@@ -98,7 +99,7 @@ serve(async (req) => {
       .single();
 
     if (entityError || !entity) {
-      return createErrorResponse(
+      return createErrorResponse(req,
         'NOT_FOUND',
         'Entity not found or access denied',
         'الكيان غير موجود أو تم رفض الوصول',
@@ -261,7 +262,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Unexpected error in intelligence-refresh:', error);
 
-    return createErrorResponse(
+    return createErrorResponse(req,
       'INTERNAL_ERROR',
       'An unexpected error occurred',
       'حدث خطأ غير متوقع',

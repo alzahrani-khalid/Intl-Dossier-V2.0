@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
 import { Plus, FileText, AlertCircle, ChevronRight, Clock } from 'lucide-react'
@@ -10,6 +11,9 @@ import { DataTable } from '@/components/table/DataTable'
 import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
 import { useDirection } from '@/hooks/useDirection'
+import { CreateMouDialog } from '@/components/mous/CreateMouDialog'
+
+const mousRoute = getRouteApi('/_protected/mous')
 
 interface MoU {
   id: string
@@ -83,9 +87,21 @@ function WorkflowIndicator({ state }: { state: string }) {
 
 export function MousPage() {
   const { t } = useTranslation()
+  const { action } = mousRoute.useSearch()
+  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
   const [filterState, setFilterState] = useState<string>('all')
+  const [createOpen, setCreateOpen] = useState(false)
   const { isRTL } = useDirection()
+
+  // The ⌘K "Create MoU" command deep-links to ?action=create. Open the dialog,
+  // then strip the param (replace: true) so close/reopen behaves normally.
+  useEffect(() => {
+    if (action === 'create') {
+      setCreateOpen(true)
+      void navigate({ to: '/mous', search: {}, replace: true })
+    }
+  }, [action, navigate])
   const {
     data: mous,
     isLoading,
@@ -206,11 +222,13 @@ export function MousPage() {
     <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{t('navigation.mous')}</h1>
-        <Button disabled title={t('common.notYetAvailable')}>
+        <Button onClick={() => setCreateOpen(true)}>
           <Plus className="h-4 w-4 me-2" />
           {t('mous.addMou')}
         </Button>
       </div>
+
+      <CreateMouDialog isOpen={createOpen} onClose={() => setCreateOpen(false)} isRTL={isRTL} />
 
       <div className="grid gap-4 md:grid-cols-4 mb-6">
         <Card>

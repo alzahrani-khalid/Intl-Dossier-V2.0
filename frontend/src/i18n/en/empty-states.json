@@ -7,7 +7,7 @@
     },
     "noResults": {
       "title": "No Results Found",
-      "description": "We couldn't find anything matching your search criteria.",
+      "description": "Nothing matches your search criteria.",
       "descriptionWithQuery": "No results found for \"{{query}}\"",
       "hint": "Try using different keywords or check your spelling",
       "hintWithFilters": "You have {{count}} active filters that may be limiting results",
@@ -15,7 +15,7 @@
     },
     "error": {
       "title": "Search Failed",
-      "description": "We encountered an error while searching. Please try again.",
+      "description": "Something went wrong while searching. Try again.",
       "retry": "Retry Search"
     }
   },
@@ -51,14 +51,15 @@
       "import": "Import Dossiers"
     },
     "engagement": {
-      "title": "No Engagements",
-      "firstTitle": "Log Your First Engagement",
-      "description": "No engagements have been recorded yet.",
-      "firstDescription": "Track meetings, conferences, workshops, and other international engagements.",
-      "hint": "Add after-action records to engagements to capture decisions and commitments",
-      "create": "Create Engagement",
-      "createFirst": "Create First Engagement",
-      "import": "Import Engagements"
+      "title": "No engagements",
+      "firstTitle": "Log your first engagement",
+      "description": "Engagements record meetings, consultations, and visits, and feed after-action commitments.",
+      "firstDescription": "Engagements record meetings, consultations, and visits, and feed after-action commitments.",
+      "hint": "Engagements record meetings, consultations, and visits",
+      "cta": "Log engagement",
+      "create": "Log engagement",
+      "createFirst": "Log engagement",
+      "import": "Import engagements"
     },
     "commitment": {
       "title": "No Commitments",
@@ -71,34 +72,37 @@
       "import": "Import Commitments"
     },
     "organization": {
-      "title": "No Organizations",
-      "firstTitle": "Add Your First Organization",
-      "description": "Organizations you work with will appear here.",
-      "firstDescription": "Add international organizations, government bodies, and partner institutions.",
-      "hint": "Organizations can be linked to dossiers, MOUs, and engagements",
-      "create": "Add Organization",
-      "createFirst": "Add First Organization",
-      "import": "Import Organizations"
+      "title": "No organization dossiers",
+      "firstTitle": "Add your first organization dossier",
+      "description": "Organization dossiers cover international bodies, agencies, and ministries.",
+      "firstDescription": "Organization dossiers cover international bodies, agencies, and ministries.",
+      "hint": "Organization dossiers cover bodies, agencies, and ministries",
+      "cta": "Add organization",
+      "create": "Add organization",
+      "createFirst": "Add organization",
+      "import": "Import organizations"
     },
     "country": {
-      "title": "No Countries",
-      "firstTitle": "Add Your First Country",
-      "description": "Countries in your portfolio will be displayed here.",
-      "firstDescription": "Add countries to track relationships, agreements, and engagement history.",
-      "hint": "Each country can have its own dossier with detailed information",
-      "create": "Add Country",
-      "createFirst": "Add First Country",
-      "import": "Import Countries"
+      "title": "No country dossiers",
+      "firstTitle": "Add your first country dossier",
+      "description": "Country dossiers track diplomatic relations, engagements, and commitments per state.",
+      "firstDescription": "Country dossiers track diplomatic relations, engagements, and commitments per state.",
+      "hint": "Each country dossier tracks relations, engagements, and commitments",
+      "cta": "Add country",
+      "create": "Add country",
+      "createFirst": "Add country",
+      "import": "Import countries"
     },
     "forum": {
-      "title": "No Forums",
-      "firstTitle": "Add Your First Forum",
-      "description": "International forums and conferences will appear here.",
-      "firstDescription": "Track recurring international forums, working groups, and conferences.",
-      "hint": "Link forums to engagements to track participation over time",
-      "create": "Add Forum",
-      "createFirst": "Add First Forum",
-      "import": "Import Forums"
+      "title": "No forum dossiers",
+      "firstTitle": "Add your first forum dossier",
+      "description": "Forum dossiers track multi-party conferences and summits.",
+      "firstDescription": "Forum dossiers track multi-party conferences and summits.",
+      "hint": "Forum dossiers track conferences and summits",
+      "cta": "Add forum",
+      "create": "Add forum",
+      "createFirst": "Add forum",
+      "import": "Import forums"
     },
     "event": {
       "title": "No Events",
@@ -121,14 +125,15 @@
       "import": "Import Tasks"
     },
     "person": {
-      "title": "No Contacts",
-      "firstTitle": "Add Your First Contact",
-      "description": "Key contacts and personnel will appear here.",
-      "firstDescription": "Add contacts to track relationships with important individuals.",
-      "hint": "Contacts can be linked to organizations and engagements",
-      "create": "Add Contact",
-      "createFirst": "Add First Contact",
-      "import": "Import Contacts"
+      "title": "No person dossiers",
+      "firstTitle": "Add your first person dossier",
+      "description": "Person dossiers track VIPs and key contacts.",
+      "firstDescription": "Person dossiers track VIPs and key contacts.",
+      "hint": "Person dossiers track VIPs and key contacts",
+      "cta": "Add person",
+      "create": "Add person",
+      "createFirst": "Add person",
+      "import": "Import persons"
     },
     "position": {
       "title": "No Positions",
@@ -149,6 +154,31 @@
       "create": "Add MOU",
       "createFirst": "Add First MOU",
       "import": "Import MOUs"
+    },
+    "topic": {
+      "title": "No topic dossiers",
+      "description": "Topic dossiers follow policy areas and strategic initiatives.",
+      "cta": "Add topic"
+    },
+    "working_group": {
+      "title": "No working groups",
+      "description": "Working-group dossiers track committees and task forces.",
+      "cta": "Add working group"
+    },
+    "elected_official": {
+      "title": "No elected officials",
+      "description": "Elected-official dossiers hold office and term details for government contacts.",
+      "cta": "Add elected official"
+    },
+    "work_item": {
+      "title": "No work items",
+      "description": "Work items collect tasks, commitments, and intake requests across dossiers.",
+      "cta": "Create work item"
+    },
+    "filtered": {
+      "title": "No matching rows",
+      "description": "No rows match the current filters.",
+      "clear": "Clear filters"
     },
     "relationship": {
       "title": "No Relationships",

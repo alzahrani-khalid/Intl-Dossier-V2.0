@@ -71,7 +71,12 @@ describe('handoff CSS contract', () => {
   it('keeps dossier table rows on the desktop five-column grid with fitted chips', () => {
     const css = readCss('src/styles/list-pages.css')
 
-    expect(css).toContain('grid-template-columns: auto minmax(0, 1fr) auto auto auto;')
+    // 87-06 made the desktop column count driven by DossierTable's computed
+    // `--dossier-cols` (F24 column visibility). The five-column template survives
+    // as the fallback, so every consumer that sets no columns stays byte-identical.
+    expect(css).toContain(
+      'grid-template-columns: var(--dossier-cols, auto minmax(0, 1fr) auto auto auto);',
+    )
     expect(cssBlock(css, '.dossier-row > .chip')).toContain('width: fit-content')
   })
 })

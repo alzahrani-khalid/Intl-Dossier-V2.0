@@ -8,17 +8,13 @@ export { GenericListPage } from './GenericListPage'
 export type { GenericListPageProps, GenericListPageItem } from './GenericListPage'
 
 export { DossierTable } from './DossierTable'
-export type { DossierTableProps, DossierTableRow } from './DossierTable'
+export type { DossierTableProps, DossierTableRow, DossierTableColumn } from './DossierTable'
 
 export { PersonsGrid } from './PersonsGrid'
 export type { PersonsGridProps, PersonCard } from './PersonsGrid'
 
 export { EngagementsList } from './EngagementsList'
-export type {
-  EngagementsListProps,
-  EngagementRow,
-  EngagementFilter,
-} from './EngagementsList'
+export type { EngagementsListProps, EngagementRow, EngagementFilter } from './EngagementsList'
 
 export { FilterPill } from './FilterPill'
 export type { FilterPillProps } from './FilterPill'
@@ -33,9 +29,5 @@ export {
   EngagementsListSkeleton,
 } from './ListPageShell.skeleton'
 
-export {
-  SENSITIVITY_CHIP,
-  sensitivityChipClass,
-  sensitivityLabelKey,
-} from './sensitivity'
+export { SENSITIVITY_CHIP, sensitivityChipClass, sensitivityLabelKey } from './sensitivity'
 export type { SensitivityLevel } from './sensitivity'

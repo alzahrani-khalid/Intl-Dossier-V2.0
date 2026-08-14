@@ -14,7 +14,7 @@
     "gsd-ai-researcher": "fable",
     "gsd-advisor-researcher": "fable",
     "gsd-plan-checker": "opus",
-    "gsd-verifier": "opus",
+    "gsd-verifier": "fable",
     "gsd-code-reviewer": "opus"
   },
   "commit_docs": true,

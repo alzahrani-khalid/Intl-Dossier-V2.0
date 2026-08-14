@@ -4,12 +4,7 @@
 
 import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-};
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 interface SetExpirationRequest {
   entity_type: 'dossier' | 'brief' | 'ai_brief' | 'position';
@@ -45,9 +40,11 @@ interface RequestReviewRequest {
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
@@ -86,11 +83,11 @@ serve(async (req) => {
     // Route handling
     switch (req.method) {
       case 'GET':
-        return handleGet(supabase, url, user.id);
+        return handleGet(supabase, url, user.id, corsHeaders);
       case 'POST':
-        return handlePost(supabase, path, await req.json(), user.id);
+        return handlePost(supabase, path, await req.json(), user.id, corsHeaders);
       case 'PUT':
-        return handlePut(supabase, path, await req.json(), user.id);
+        return handlePut(supabase, path, await req.json(), user.id, corsHeaders);
       default:
         return new Response(JSON.stringify({ error: 'Method not allowed' }), {
           status: 405,
@@ -106,7 +103,7 @@ serve(async (req) => {
   }
 });
 
-async function handleGet(supabase: any, url: URL, userId: string) {
+async function handleGet(supabase: any, url: URL, userId: string, corsHeaders: Record<string, string>) {
   const action = url.searchParams.get('action') || 'list';
 
   switch (action) {
@@ -236,7 +233,7 @@ async function handleGet(supabase: any, url: URL, userId: string) {
   }
 }
 
-async function handlePost(supabase: any, path: string | undefined, body: any, userId: string) {
+async function handlePost(supabase: any, path: string | undefined, body: any, userId: string, corsHeaders: Record<string, string>) {
   switch (path) {
     case 'set': {
       // Set expiration for content
@@ -488,7 +485,7 @@ async function handlePost(supabase: any, path: string | undefined, body: any, us
   }
 }
 
-async function handlePut(supabase: any, path: string | undefined, body: any, userId: string) {
+async function handlePut(supabase: any, path: string | undefined, body: any, userId: string, corsHeaders: Record<string, string>) {
   switch (path) {
     case 'rule': {
       // Update an expiration rule (admin only)

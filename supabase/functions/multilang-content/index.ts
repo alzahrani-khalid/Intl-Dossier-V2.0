@@ -7,13 +7,8 @@
 
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 import { generateText } from '../_shared/onprem-llm.ts';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
 
 // Supported actions
 type Action = 'translate' | 'bulk_translate' | 'get_translations' | 'upsert' | 'bulk_upsert';
@@ -179,9 +174,11 @@ Provide ONLY the translated text, without any explanations or notes.`;
  * Main handler
  */
 Deno.serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {

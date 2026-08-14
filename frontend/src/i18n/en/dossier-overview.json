@@ -84,8 +84,7 @@
       "type": "By Type"
     },
     "empty": {
-      "title": "No Related Dossiers",
-      "description": "This dossier has no relationships with other dossiers yet. Add relationships to connect related entities."
+      "title": "No relationships mapped for this dossier."
     }
   },
 
@@ -171,10 +170,10 @@
       "intakes": "Intakes"
     },
     "empty": {
-      "all": "No work items found",
-      "task": "No tasks found",
-      "commitment": "No commitments found",
-      "intake": "No intake tickets found"
+      "all": "No work items linked to this dossier.",
+      "task": "No tasks linked to this dossier.",
+      "commitment": "No commitments linked to this dossier.",
+      "intake": "No intake requests linked to this dossier."
     }
   },
 
@@ -218,7 +217,7 @@
     "linkedDossier": "Linked",
     "viewDossier": "View Dossier",
     "empty": {
-      "title": "No Key Contacts",
+      "title": "No key contacts for this dossier.",
       "description": "No contacts have been added to this dossier yet. Add contacts to keep track of important people."
     }
   },
@@ -248,7 +247,7 @@
     "title": "Activity Timeline",
     "loadMore": "Load More Activities",
     "empty": {
-      "title": "No Recent Activity",
+      "title": "No recent activity for this dossier.",
       "description": "There hasn't been any activity on this dossier recently."
     }
   },

@@ -1,0 +1,59 @@
+{
+  "filter": {
+    "trigger": "تصفية",
+    "trigger_active": "تصفية · {{count}}",
+    "search_placeholder": "التصفية حسب...",
+    "option_count": "{{count}}",
+    "no_matches": "لا توجد عوامل تصفية مطابقة"
+  },
+  "display": {
+    "trigger": "العرض",
+    "grouping": "تجميع حسب",
+    "grouping_none": "بدون تجميع",
+    "ordering": "ترتيب حسب",
+    "asc": "تصاعدي",
+    "desc": "تنازلي",
+    "properties": "خصائص العرض",
+    "reset": "إعادة التعيين إلى الافتراضي"
+  },
+  "field": {
+    "status": "الحالة",
+    "sensitivity": "الحساسية",
+    "importance": "الأهمية",
+    "type": "النوع"
+  },
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "archived": "مؤرشف"
+  },
+  "sensitivity": {
+    "1": "عام",
+    "2": "داخلي",
+    "3": "مقيّد",
+    "4": "سري"
+  },
+  "importance": {
+    "1": "عادي",
+    "2": "مهم",
+    "3": "جهة اتصال رئيسية",
+    "4": "شخصية هامة",
+    "5": "حرج"
+  },
+  "sort": {
+    "name": "الاسم",
+    "updated": "آخر تحديث"
+  },
+  "property": {
+    "engagements": "المشاركات",
+    "lastTouch": "آخر تحديث",
+    "sensitivity": "الحساسية",
+    "secondary": "السطر الثانوي",
+    "status": "الحالة",
+    "role": "الدور",
+    "organization": "المنظمة",
+    "vip": "شخصية هامة",
+    "type": "النوع",
+    "location": "الموقع"
+  }
+}

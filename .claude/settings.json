@@ -2,6 +2,7 @@
   "enabledPlugins": {
     "agent-browser@agent-browser": true
   },
+  "disabledMcpjsonServers": ["filesystem", "docker", "shadcn", "anythingllm", "heroui-react"],
   "hooks": {
     "PreToolUse": [
       {

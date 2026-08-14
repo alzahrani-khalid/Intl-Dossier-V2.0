@@ -15,7 +15,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 import { createServiceClient } from '../_shared/auth.ts';
 import { generateStructuredJson } from '../_shared/onprem-llm.ts';
 import {
@@ -30,14 +30,16 @@ import {
 } from '../_shared/validation-schemas.ts';
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   // Only allow POST requests
   if (req.method !== 'POST') {
-    return createErrorResponse(
+    return createErrorResponse(req,
       'METHOD_NOT_ALLOWED',
       'Method not allowed',
       'الطريقة غير مسموح بها',
@@ -52,7 +54,7 @@ serve(async (req) => {
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
     if (!authHeader || !authHeader.includes(serviceRoleKey || '')) {
-      return createErrorResponse(
+      return createErrorResponse(req,
         'UNAUTHORIZED',
         'Service role authentication required',
         'مطلوب مصادقة دور الخدمة',
@@ -70,7 +72,7 @@ serve(async (req) => {
     try {
       requestBody = await parseRequestBody(BatchUpdateRequestSchema, req);
     } catch (error) {
-      return createErrorResponse(
+      return createErrorResponse(req,
         'VALIDATION_ERROR',
         `Invalid request body: ${error.message}`,
         `نص الطلب غير صالح: ${error.message}`,
@@ -109,7 +111,7 @@ serve(async (req) => {
 
     if (queryError) {
       console.error(`[Batch ${batchId}] Query error:`, queryError);
-      return createErrorResponse(
+      return createErrorResponse(req,
         'QUERY_ERROR',
         'Failed to fetch expired intelligence items',
         'فشل في جلب عناصر المعلومات الاستخباراتية المنتهية الصلاحية',
@@ -324,7 +326,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Unexpected error in intelligence-batch-update:', error);
 
-    return createErrorResponse(
+    return createErrorResponse(req,
       'INTERNAL_ERROR',
       'An unexpected error occurred',
       'حدث خطأ غير متوقع',

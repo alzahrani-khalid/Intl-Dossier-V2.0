@@ -5,6 +5,7 @@ import { Calendar as CalendarIcon, MapPin, Users, Video, List, Building2, Flag }
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { quotePostgrestValue } from '@/lib/postgrest-escape'
 import { supabase } from '@/lib/supabase'
 import {
   format,
@@ -269,7 +270,8 @@ export function EventsPage() {
         .order('start_datetime', { ascending: true })
 
       if (searchTerm) {
-        query = query.or(`title_en.ilike.%${searchTerm}%,title_ar.ilike.%${searchTerm}%`)
+        const pattern = quotePostgrestValue(`%${searchTerm}%`)
+        query = query.or(`title_en.ilike.${pattern},title_ar.ilike.${pattern}`)
       }
 
       if (filterType !== 'all') {

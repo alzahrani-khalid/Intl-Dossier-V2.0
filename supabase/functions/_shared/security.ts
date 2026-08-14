@@ -214,7 +214,7 @@ export function getSecureCorsHeaders(req: Request): Record<string, string> {
 
   if (isAllowedOrigin(origin)) {
     return {
-      'Access-Control-Allow-Origin': origin || '*',
+      'Access-Control-Allow-Origin': origin || '',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'authorization, content-type, x-client-info, apikey, if-none-match',
       'Access-Control-Max-Age': '86400', // 24 hours

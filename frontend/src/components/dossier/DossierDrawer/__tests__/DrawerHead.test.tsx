@@ -19,10 +19,12 @@ let currentLang = 'en'
 
 vi.mock('react-i18next', () => ({
   useTranslation: (): {
-    t: (k: string) => string
+    t: (k: string, opts?: Record<string, unknown>) => string
     i18n: { language: string }
   } => ({
-    t: (k: string): string => k,
+    // Interpolate peek.counter so tests can assert the rendered '3 / 15'; keys otherwise.
+    t: (k: string, opts?: Record<string, unknown>): string =>
+      k === 'peek.counter' && opts !== undefined ? `${opts.position} / ${opts.total}` : k,
     i18n: { language: currentLang },
   }),
   Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
@@ -199,5 +201,79 @@ describe('DrawerHead (Wave 1)', () => {
     )
     expect(container.querySelector('.drawer-head')).not.toBeNull()
     expect(container.querySelector('.drawer-title')).not.toBeNull()
+  })
+
+  // F23 peek paging (Phase 87 plan 01 Task 3)
+  const peekDossier = {
+    id: 'd1',
+    name_en: 'Saudi Arabia',
+    name_ar: null,
+    type: 'country',
+    sensitivity_level: 1,
+    updated_at: '2026-05-01T00:00:00Z',
+  }
+
+  it('renders a dir="ltr" font-mono "3 / 15" counter + chevrons when position is set', () => {
+    dossierState.data = peekDossier
+    render(
+      <DrawerHead
+        dossierId="d1"
+        dossierType="country"
+        onClose={vi.fn()}
+        position={3}
+        total={15}
+        canPrev
+        canNext
+        goPrev={vi.fn()}
+        goNext={vi.fn()}
+      />,
+    )
+    const counter = screen.getByTestId('dossier-drawer-peek-counter')
+    expect(counter.getAttribute('dir')).toBe('ltr')
+    expect(counter.className).toContain('font-mono')
+    expect(counter.textContent).toBe('3 / 15')
+    expect(screen.getByTestId('dossier-drawer-peek-prev')).toBeTruthy()
+    expect(screen.getByTestId('dossier-drawer-peek-next')).toBeTruthy()
+  })
+
+  it('renders NO peek testids when position is null (byte-identical to a non-list open)', () => {
+    dossierState.data = peekDossier
+    render(
+      <DrawerHead
+        dossierId="d1"
+        dossierType="country"
+        onClose={vi.fn()}
+        position={null}
+        total={0}
+      />,
+    )
+    expect(screen.queryByTestId('dossier-drawer-peek-counter')).toBeNull()
+    expect(screen.queryByTestId('dossier-drawer-peek-prev')).toBeNull()
+    expect(screen.queryByTestId('dossier-drawer-peek-next')).toBeNull()
+    // close button still present and functional
+    expect(screen.getByRole('button', { name: 'cta.close' })).toBeTruthy()
+  })
+
+  it('disables prev at the first row (aria-disabled) and calls goNext once on click', () => {
+    dossierState.data = peekDossier
+    const goNext = vi.fn()
+    render(
+      <DrawerHead
+        dossierId="d1"
+        dossierType="country"
+        onClose={vi.fn()}
+        position={1}
+        total={15}
+        canPrev={false}
+        canNext
+        goPrev={vi.fn()}
+        goNext={goNext}
+      />,
+    )
+    const prev = screen.getByTestId('dossier-drawer-peek-prev') as HTMLButtonElement
+    expect(prev.getAttribute('aria-disabled')).toBe('true')
+    expect(prev.disabled).toBe(true)
+    fireEvent.click(screen.getByTestId('dossier-drawer-peek-next'))
+    expect(goNext).toHaveBeenCalledTimes(1)
   })
 })

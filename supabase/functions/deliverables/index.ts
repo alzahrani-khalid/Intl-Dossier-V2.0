@@ -7,12 +7,7 @@
  */
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-};
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 interface DeliverableInput {
   mou_id: string;
@@ -49,8 +44,10 @@ interface BulkStatusInput {
 }
 
 serve(async (req: Request) => {
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {
@@ -88,7 +85,7 @@ serve(async (req: Request) => {
 
     // Handle special routes
     if (subResource === 'bulk-status' && req.method === 'POST') {
-      return handleBulkStatusUpdate(supabaseClient, req, userId);
+      return handleBulkStatusUpdate(supabaseClient, req, userId, corsHeaders);
     }
 
     if (subResource === 'health' && req.method === 'GET') {
@@ -99,30 +96,30 @@ serve(async (req: Request) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
-      return handleGetMouHealth(supabaseClient, mouId);
+      return handleGetMouHealth(supabaseClient, mouId, corsHeaders);
     }
 
     // Handle milestone routes
     if (id && subResource === 'milestones') {
-      return handleMilestones(supabaseClient, req, id, subResourceId, userId);
+      return handleMilestones(supabaseClient, req, id, subResourceId, userId, corsHeaders);
     }
 
     // Handle documents routes
     if (id && subResource === 'documents') {
-      return handleDocuments(supabaseClient, req, id, subResourceId, userId);
+      return handleDocuments(supabaseClient, req, id, subResourceId, userId, corsHeaders);
     }
 
     // Handle history routes
     if (id && subResource === 'history') {
-      return handleHistory(supabaseClient, id);
+      return handleHistory(supabaseClient, id, corsHeaders);
     }
 
     // Main deliverable CRUD
     switch (req.method) {
       case 'GET':
-        return id ? getDeliverable(supabaseClient, id) : listDeliverables(supabaseClient, url);
+        return id ? getDeliverable(supabaseClient, id, corsHeaders) : listDeliverables(supabaseClient, url, corsHeaders);
       case 'POST':
-        return createDeliverable(supabaseClient, req, userId);
+        return createDeliverable(supabaseClient, req, userId, corsHeaders);
       case 'PUT':
       case 'PATCH':
         if (!id) {
@@ -131,7 +128,7 @@ serve(async (req: Request) => {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           });
         }
-        return updateDeliverable(supabaseClient, req, id, userId);
+        return updateDeliverable(supabaseClient, req, id, userId, corsHeaders);
       case 'DELETE':
         if (!id) {
           return new Response(JSON.stringify({ error: 'Deliverable ID required' }), {
@@ -139,7 +136,7 @@ serve(async (req: Request) => {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           });
         }
-        return deleteDeliverable(supabaseClient, id);
+        return deleteDeliverable(supabaseClient, id, corsHeaders);
       default:
         return new Response(JSON.stringify({ error: 'Method not allowed' }), {
           status: 405,
@@ -155,7 +152,7 @@ serve(async (req: Request) => {
   }
 });
 
-async function listDeliverables(supabase: any, url: URL) {
+async function listDeliverables(supabase: any, url: URL, corsHeaders: Record<string, string>) {
   const searchParams = url.searchParams;
   const mouId = searchParams.get('mou_id');
   const status = searchParams.get('status');
@@ -222,7 +219,7 @@ async function listDeliverables(supabase: any, url: URL) {
   );
 }
 
-async function getDeliverable(supabase: any, id: string) {
+async function getDeliverable(supabase: any, id: string, corsHeaders: Record<string, string>) {
   const { data, error } = await supabase
     .from('mou_deliverables')
     .select(
@@ -253,7 +250,7 @@ async function getDeliverable(supabase: any, id: string) {
   });
 }
 
-async function createDeliverable(supabase: any, req: Request, userId: string) {
+async function createDeliverable(supabase: any, req: Request, userId: string, corsHeaders: Record<string, string>) {
   const body: DeliverableInput = await req.json();
 
   // Validate required fields
@@ -318,7 +315,7 @@ async function createDeliverable(supabase: any, req: Request, userId: string) {
   });
 }
 
-async function updateDeliverable(supabase: any, req: Request, id: string, userId: string) {
+async function updateDeliverable(supabase: any, req: Request, id: string, userId: string, corsHeaders: Record<string, string>) {
   const body = await req.json();
 
   // Validate responsible party if being updated
@@ -377,7 +374,7 @@ async function updateDeliverable(supabase: any, req: Request, id: string, userId
   });
 }
 
-async function deleteDeliverable(supabase: any, id: string) {
+async function deleteDeliverable(supabase: any, id: string, corsHeaders: Record<string, string>) {
   const { error } = await supabase.from('mou_deliverables').delete().eq('id', id);
 
   if (error) throw error;
@@ -387,7 +384,7 @@ async function deleteDeliverable(supabase: any, id: string) {
   });
 }
 
-async function handleBulkStatusUpdate(supabase: any, req: Request, userId: string) {
+async function handleBulkStatusUpdate(supabase: any, req: Request, userId: string, corsHeaders: Record<string, string>) {
   const body: BulkStatusInput = await req.json();
 
   if (
@@ -422,7 +419,7 @@ async function handleBulkStatusUpdate(supabase: any, req: Request, userId: strin
   });
 }
 
-async function handleGetMouHealth(supabase: any, mouId: string) {
+async function handleGetMouHealth(supabase: any, mouId: string, corsHeaders: Record<string, string>) {
   const { data, error } = await supabase.rpc('calculate_mou_deliverables_health', {
     p_mou_id: mouId,
   });
@@ -439,7 +436,8 @@ async function handleMilestones(
   req: Request,
   deliverableId: string,
   milestoneId: string | undefined,
-  userId: string
+  userId: string,
+  corsHeaders: Record<string, string>
 ) {
   switch (req.method) {
     case 'GET': {
@@ -559,7 +557,8 @@ async function handleDocuments(
   req: Request,
   deliverableId: string,
   documentId: string | undefined,
-  userId: string
+  userId: string,
+  corsHeaders: Record<string, string>
 ) {
   switch (req.method) {
     case 'GET': {
@@ -651,7 +650,7 @@ async function handleDocuments(
   }
 }
 
-async function handleHistory(supabase: any, deliverableId: string) {
+async function handleHistory(supabase: any, deliverableId: string, corsHeaders: Record<string, string>) {
   const { data, error } = await supabase
     .from('deliverable_status_history')
     .select(

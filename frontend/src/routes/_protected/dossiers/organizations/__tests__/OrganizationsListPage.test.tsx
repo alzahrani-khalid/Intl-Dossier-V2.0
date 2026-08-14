@@ -1,111 +1,124 @@
 /**
- * Phase 40 / Plan 04 — OrganizationsListPage render-assertion test (LIST-01).
+ * Organizations list route test (Phase 40 LIST-01 · Phase 87 F23/F24/F26).
  *
- * Mocks `useOrganizations`, the route helpers, and `useNavigate` so the page
- * can be rendered standalone (no router/QueryClient wrapping required).
+ * Mirrors the countries route test: mocked router + useOrganizations adapter,
+ * QueryClient + LanguageProvider wrappers. Asserts title, populated row, F23 peek
+ * registration on row click, and the F26 rich empty state.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, cleanup } from '@testing-library/react'
-import { sensitivityChipClass } from '@/components/list-page'
+import { render, screen, cleanup, fireEvent } from '@testing-library/react'
+import type { ReactElement, ReactNode } from 'react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { LanguageProvider } from '@/components/language-provider/language-provider'
+import { usePeekStore } from '@/store/peekStore'
 
-// Project test pattern — per-file react-i18next mock (jest-dom is NOT registered).
-vi.mock('react-i18next', () => ({
-  useTranslation: (): {
-    i18n: { language: string }
-    t: (k: string, opts?: Record<string, unknown>) => string
-  } => ({
-    i18n: { language: 'en' },
-    t: (k: string, opts?: Record<string, unknown>): string => {
-      if (
-        opts !== undefined &&
-        opts !== null &&
-        'defaultValue' in opts &&
-        typeof opts.defaultValue === 'string'
-      ) {
-        return opts.defaultValue
-      }
-      return k
-    },
-  }),
-  Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
-}))
+let currentSearch: Record<string, unknown> = { page: 1 }
+const navigateSpy = vi.fn()
 
-// Mock the hook — its return shape mirrors useQuery output.
-const mockUseOrganizations = vi.fn()
-vi.mock('@/hooks/useOrganizations', () => ({
-  useOrganizations: (filters: unknown): unknown => mockUseOrganizations(filters),
-}))
-
-// Mock TanStack Router — Route.useSearch / useNavigate / useNavigate root.
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: (_path: string) => (config: Record<string, unknown>) => ({
     ...config,
-    useSearch: (): { page: number; search?: string } => ({ page: 1, search: undefined }),
-    useNavigate: (): (() => void) => vi.fn(),
+    useSearch: (): Record<string, unknown> => currentSearch,
+    useNavigate: (): typeof navigateSpy => navigateSpy,
   }),
-  useNavigate: (): (() => void) => vi.fn(),
+  useNavigate: (): typeof navigateSpy => navigateSpy,
+  useSearch: (): Record<string, unknown> => ({}),
 }))
 
-// Import AFTER mocks are registered so Route.useSearch resolves to the mock factory.
+const useOrganizationsMock = vi.fn()
+vi.mock('@/hooks/useOrganizations', () => ({
+  useOrganizations: (...args: unknown[]): unknown => useOrganizationsMock(...args),
+  fetchOrganizationsPage: vi.fn(),
+}))
+
+vi.mock('@/components/signature-visuals', () => ({
+  DossierGlyph: ({ name }: { name: string }): ReactNode => (
+    <span data-testid="dossier-glyph">{name}</span>
+  ),
+}))
+
 import { Route } from '../index'
 
-const Component = (Route as unknown as { component: () => JSX.Element }).component
+const OrganizationsRoute = (Route as unknown as { component: () => ReactElement }).component
 
-const buildResponse = (
-  rows: Array<Record<string, unknown>>,
-): {
-  data: { data: Array<Record<string, unknown>>; pagination: Record<string, unknown> }
-  isLoading: boolean
-  isError: boolean
-} => ({
-  data: {
-    data: rows,
-    pagination: { page: 1, limit: 20, total: rows.length, totalPages: 1 },
-  },
-  isLoading: false,
-  isError: false,
-})
+const renderRoute = (): ReturnType<typeof render> => {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+  return render(
+    <QueryClientProvider client={client}>
+      <LanguageProvider initialLanguage="en">
+        <OrganizationsRoute />
+      </LanguageProvider>
+    </QueryClientProvider>,
+  )
+}
 
-describe('OrganizationsListPage (Phase 40 / Plan 04)', () => {
+const sampleRow = {
+  id: 'b',
+  type: 'organization',
+  name_en: 'WHO',
+  name_ar: 'منظمة الصحة العالمية',
+  engagement_count: 17,
+  updated_at: '2026-04-10T00:00:00Z',
+  sensitivity_level: 2,
+}
+
+describe('Organizations list route (Phase 87 wiring)', () => {
   beforeEach(() => {
     cleanup()
-    mockUseOrganizations.mockReset()
+    useOrganizationsMock.mockReset()
+    navigateSpy.mockReset()
+    currentSearch = { page: 1 }
+    usePeekStore.getState().clear()
   })
 
-  it('renders Organizations title + WHO row + engagement count + level-2 sensitivity chip', () => {
-    mockUseOrganizations.mockReturnValue(
-      buildResponse([
-        {
-          id: 'b',
-          name_en: 'WHO',
-          name_ar: 'منظمة الصحة العالمية',
-          engagement_count: 17,
-          updated_at: '2026-04-10T00:00:00Z',
-          sensitivity_level: 2,
-        },
-      ]),
-    )
+  it('renders the title and a populated row with sensitivity chip', () => {
+    useOrganizationsMock.mockReturnValue({
+      data: { data: [sampleRow], pagination: { page: 1, limit: 20, total: 1, totalPages: 1 } },
+      isLoading: false,
+      isError: false,
+    })
 
-    render(<Component />)
+    const { container } = renderRoute()
 
-    expect(screen.getByText('Organizations')).toBeTruthy()
-
-    // Row contents.
-    expect(screen.getByText('WHO')).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'Organizations' })).toBeTruthy()
+    expect(screen.getAllByText('WHO').length).toBeGreaterThan(0)
     expect(screen.getByText('17')).toBeTruthy()
-
-    // Sensitivity chip uses sensitivityChipClass(2) === 'chip-default'.
-    const chip = document.querySelector(`.${sensitivityChipClass(2)}`)
-    expect(chip).not.toBeNull()
+    expect(container.querySelector('.chip')).toBeTruthy()
   })
 
-  it('renders empty hint when there are no organizations', () => {
-    mockUseOrganizations.mockReturnValue(buildResponse([]))
+  it('registers a peek window and opens the drawer on row click (F23, no detail navigate)', () => {
+    useOrganizationsMock.mockReturnValue({
+      data: {
+        data: [sampleRow, { ...sampleRow, id: 'c', name_en: 'UNESCO' }],
+        pagination: { page: 1, limit: 20, total: 2, totalPages: 1 },
+      },
+      isLoading: false,
+      isError: false,
+    })
 
-    render(<Component />)
+    renderRoute()
 
-    expect(screen.getByText('No organizations yet')).toBeTruthy()
-    expect(screen.getByText('Organization dossiers will appear here.')).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: 'WHO' }))
+
+    const peek = usePeekStore.getState()
+    expect(peek.ids).toEqual(['b', 'c'])
+    expect(peek.type).toBe('organization')
+    expect(peek.total).toBe(2)
+    expect(navigateSpy).toHaveBeenCalled()
+    const navArg = navigateSpy.mock.calls[0]?.[0] as { to?: string }
+    expect(navArg.to).toBeUndefined()
+  })
+
+  it('renders the rich empty state when the adapter returns no rows', () => {
+    useOrganizationsMock.mockReturnValue({
+      data: { data: [], pagination: { page: 1, limit: 20, total: 0, totalPages: 0 } },
+      isLoading: false,
+      isError: false,
+    })
+
+    renderRoute()
+
+    expect(screen.getByTestId('list-empty-state-organization')).toBeTruthy()
   })
 })

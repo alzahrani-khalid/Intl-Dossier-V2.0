@@ -82,7 +82,8 @@ import {
   BarChart3,
   Gauge,
   CalendarClock,
-  Download,
+  SunMoon,
+  Languages,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getAnalyzeCommandActions, type AnalyticQueryType } from './analyze-commands'
@@ -103,6 +104,9 @@ import { useRecentNavigation } from '@/hooks/useRecentNavigation'
 import { createNavigationGroups, type NavigationItem } from '@/components/layout/navigation-config'
 import { useResponsive } from '@/hooks/useResponsive'
 import { getDossierTypeBadgeClass, getActivityTypeBadgeClass } from '@/lib/semantic-colors'
+import { useWorkCreation } from '@/components/work-creation'
+import { useMode } from '@/design-system/hooks'
+import { switchLanguage } from '@/i18n'
 
 interface CommandPaletteProps {
   /** Additional class names */
@@ -214,21 +218,24 @@ interface RouteContext {
   suggestedActions: string[]
 }
 
-const routeContexts: RouteContext[] = [
+// Exported for the F25 audit regression lock (CommandPalette.audit.test.tsx):
+// every suggested-action id here MUST resolve through the contextSuggestions
+// resolver — no silently-dropped ids (audit finding #9).
+export const routeContexts: RouteContext[] = [
   {
     pattern: /^\/dossiers\/countries/,
     contextType: 'dossier',
-    suggestedActions: ['create-country', 'view-relationships', 'cmd-analyze-forum-membership'],
+    suggestedActions: ['create-country', 'cmd-analyze-forum-membership'],
   },
   {
     pattern: /^\/dossiers\/organizations/,
     contextType: 'dossier',
-    suggestedActions: ['create-organization', 'view-relationships', 'cmd-analyze-forum-membership'],
+    suggestedActions: ['create-organization', 'cmd-analyze-forum-membership'],
   },
   {
     pattern: /^\/dossiers\/forums/,
     contextType: 'dossier',
-    suggestedActions: ['create-forum', 'view-relationships', 'cmd-analyze-forum-membership'],
+    suggestedActions: ['create-forum', 'cmd-analyze-forum-membership'],
   },
   {
     pattern: /^\/dossiers\/engagements/,
@@ -238,22 +245,18 @@ const routeContexts: RouteContext[] = [
   {
     pattern: /^\/dossiers\/persons/,
     contextType: 'dossier',
-    suggestedActions: ['create-person', 'view-relationships', 'cmd-analyze-shortest-path'],
+    suggestedActions: ['create-person', 'cmd-analyze-shortest-path'],
   },
   { pattern: /^\/dossiers\/topics/, contextType: 'dossier', suggestedActions: ['create-topic'] },
   {
     pattern: /^\/dossiers\/working_groups/,
     contextType: 'dossier',
-    suggestedActions: [
-      'create-working-group',
-      'view-relationships',
-      'cmd-analyze-shared-committees',
-    ],
+    suggestedActions: ['create-working-group', 'cmd-analyze-shared-committees'],
   },
   {
     pattern: /^\/dossiers/,
     contextType: 'dossier',
-    suggestedActions: ['create-dossier', 'view-relationships', 'cmd-analyze-forum-membership'],
+    suggestedActions: ['create-dossier', 'cmd-analyze-forum-membership'],
   },
   { pattern: /^\/tasks/, contextType: 'task', suggestedActions: ['create-task', 'view-my-work'] },
   {
@@ -264,22 +267,22 @@ const routeContexts: RouteContext[] = [
   {
     pattern: /^\/calendar/,
     contextType: 'calendar',
-    suggestedActions: ['create-event', 'create-engagement'],
+    suggestedActions: ['create-engagement'],
   },
   {
     pattern: /^\/analytics/,
     contextType: 'analytics',
-    suggestedActions: ['export-report', 'view-dashboard'],
+    suggestedActions: ['view-dashboard'],
   },
   {
     pattern: /^\/settings/,
     contextType: 'settings',
-    suggestedActions: ['view-profile', 'view-help'],
+    suggestedActions: [],
   },
   {
     pattern: /^\/admin/,
     contextType: 'admin',
-    suggestedActions: ['view-users', 'view-monitoring'],
+    suggestedActions: [],
   },
   {
     pattern: /^\/commitments/,
@@ -289,12 +292,12 @@ const routeContexts: RouteContext[] = [
   {
     pattern: /^\/positions/,
     contextType: 'dossier',
-    suggestedActions: ['create-position', 'view-dossiers'],
+    suggestedActions: ['view-dossiers'],
   },
   {
     pattern: /^\/briefs/,
     contextType: 'general',
-    suggestedActions: ['create-brief'],
+    suggestedActions: [],
   },
 ]
 
@@ -423,7 +426,7 @@ function searchQueryCache(
 }
 
 export function CommandPalette({ className }: CommandPaletteProps): React.ReactElement | null {
-  const { t } = useTranslation('keyboard-shortcuts')
+  const { t, i18n } = useTranslation('keyboard-shortcuts')
   const { t: tQs } = useTranslation('quickswitcher')
   const { t: tCommon } = useTranslation('common')
   const { t: tCopilot } = useTranslation('copilot')
@@ -435,6 +438,8 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
   const queryClient = useQueryClient()
   const { isCommandPaletteOpen, closeCommandPalette, getAllShortcuts, formatShortcut, isMac } =
     useKeyboardShortcutContext()
+  const { openPalette } = useWorkCreation()
+  const { mode, setMode } = useMode()
 
   const [searchQuery, setSearchQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
@@ -613,98 +618,121 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
     [navigate, closeCommandPalette],
   )
 
-  // Create actions for power users
-  const createActions = useMemo(
+  // Create actions for power users. task/intake/commitment open the unified
+  // work-creation palette (they navigated to consumed-nowhere query targets
+  // before — F25 audit findings 1-3); the positions create entry was removed
+  // (no create UI exists — finding 4).
+  const createActions = useMemo<QuickActionItem[]>(
     () => [
       {
         id: 'create-task',
-        label: t('createActions.newTask', 'Create New Task'),
+        label: t('createActions.newTask', 'Create task'),
         icon: CheckSquare,
-        action: () => navigateTo('/tasks?action=create'),
-        shortcut: formatShortcut('n', isMac ? ['meta'] : ['ctrl']),
+        action: (): void => {
+          openPalette('task')
+          closeCommandPalette()
+        },
         category: 'create',
       },
       {
         id: 'create-intake',
-        label: t('createActions.newIntake', 'Create New Intake Request'),
+        label: t('createActions.newIntake', 'Create intake request'),
         icon: Inbox,
-        action: () => navigateTo('/my-work/intake?action=create'),
-        shortcut: formatShortcut('i', isMac ? ['meta', 'shift'] : ['ctrl', 'shift']),
+        action: (): void => {
+          openPalette('intake')
+          closeCommandPalette()
+        },
         category: 'create',
       },
       {
         id: 'create-dossier',
-        label: t('createActions.newDossier', 'Create New Dossier'),
+        label: t('createActions.newDossier', 'Create dossier'),
         icon: FolderPlus,
         action: () => navigateTo('/dossiers/create'),
-        shortcut: formatShortcut('d', isMac ? ['meta', 'shift'] : ['ctrl', 'shift']),
         category: 'create',
       },
       {
         id: 'create-commitment',
-        label: t('createActions.newCommitment', 'Create New Commitment'),
+        label: t('createActions.newCommitment', 'Create commitment'),
         icon: FileCheck,
-        action: () => navigateTo('/commitments?action=create'),
+        action: (): void => {
+          openPalette('commitment')
+          closeCommandPalette()
+        },
         category: 'create',
       },
       {
-        id: 'create-position',
-        label: t('createActions.newPosition', 'Create New Position'),
-        icon: MessageSquare,
-        action: () => navigateTo('/positions?action=create'),
+        id: 'create-mou',
+        label: t('createActions.newMou', 'Create MoU'),
+        icon: FileSignature,
+        action: () => navigateTo('/mous?action=create'),
+        category: 'create',
+      },
+      {
+        id: 'create-user',
+        label: t('createActions.newUser', 'Create user'),
+        icon: UserPlus,
+        action: () => navigateTo('/users/create'),
         category: 'create',
       },
       {
         id: 'create-country',
-        label: t('createActions.newCountry', 'Create New Country Dossier'),
+        label: t('createActions.newCountry', 'Create country dossier'),
         icon: Globe,
         action: () => navigateTo('/dossiers/countries/create'),
         category: 'create-dossier',
       },
       {
         id: 'create-organization',
-        label: t('createActions.newOrganization', 'Create New Organization Dossier'),
+        label: t('createActions.newOrganization', 'Create organization dossier'),
         icon: Building2,
         action: () => navigateTo('/dossiers/organizations/create'),
         category: 'create-dossier',
       },
       {
         id: 'create-forum',
-        label: t('createActions.newForum', 'Create New Forum Dossier'),
+        label: t('createActions.newForum', 'Create forum dossier'),
         icon: UsersRound,
         action: () => navigateTo('/dossiers/forums/create'),
         category: 'create-dossier',
       },
       {
         id: 'create-engagement',
-        label: t('createActions.newEngagement', 'Create New Engagement'),
+        label: t('createActions.newEngagement', 'Create engagement'),
         icon: CalendarDays,
         action: () => navigateTo('/dossiers/engagements/create'),
         category: 'create-dossier',
       },
       {
         id: 'create-person',
-        label: t('createActions.newPerson', 'Create New Person Dossier'),
+        label: t('createActions.newPerson', 'Create person dossier'),
         icon: UserPlus,
         action: () => navigateTo('/dossiers/persons/create'),
         category: 'create-dossier',
       },
       {
         id: 'create-topic',
-        label: t('createActions.newTopic', 'Create New Topic Dossier'),
+        label: t('createActions.newTopic', 'Create topic dossier'),
         icon: Tag,
         action: () => navigateTo('/dossiers/topics/create'),
         category: 'create-dossier',
       },
       {
         id: 'create-working-group',
-        label: t('createActions.newWorkingGroup', 'Create New Working Group'),
+        label: t('createActions.newWorkingGroup', 'Create working group'),
         icon: Briefcase,
         action: () => navigateTo('/dossiers/working_groups/create'),
         category: 'create-dossier',
       },
+      {
+        id: 'create-elected-official',
+        label: t('createActions.newElectedOfficial', 'Create elected official'),
+        icon: UserPlus,
+        action: () => navigateTo('/dossiers/elected-officials/create'),
+        category: 'create-dossier',
+      },
     ],
-    [t, navigateTo, formatShortcut, isMac],
+    [t, navigateTo, openPalette, closeCommandPalette],
   )
 
   // Quick actions for common navigation
@@ -712,65 +740,58 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
     () => [
       {
         id: 'nav-dashboard',
-        label: t('quickActions.dashboard', 'Go to Dashboard'),
+        label: t('quickActions.dashboard', 'Go to dashboard'),
         icon: LayoutDashboard,
         action: () => navigateTo('/dashboard'),
         shortcut: formatShortcut('d', ['alt']),
       },
       {
         id: 'nav-my-work',
-        label: t('quickActions.myWork', 'Go to My Work'),
+        label: t('quickActions.myWork', 'Go to my work'),
         icon: Briefcase,
         action: () => navigateTo('/my-work'),
         shortcut: formatShortcut('w', ['alt']),
       },
       {
         id: 'nav-dossiers',
-        label: t('quickActions.dossiers', 'Go to Dossiers'),
+        label: t('quickActions.dossiers', 'Go to dossiers'),
         icon: Folder,
         action: () => navigateTo('/dossiers'),
         shortcut: formatShortcut('o', ['alt']),
       },
       {
         id: 'nav-calendar',
-        label: t('quickActions.calendar', 'Go to Calendar'),
+        label: t('quickActions.calendar', 'Go to calendar'),
         icon: CalendarDays,
         action: () => navigateTo('/calendar'),
         shortcut: formatShortcut('c', ['alt']),
       },
       {
         id: 'nav-tasks',
-        label: t('quickActions.tasks', 'Go to Tasks'),
+        label: t('quickActions.tasks', 'Go to tasks'),
         icon: CheckSquare,
         action: () => navigateTo('/tasks'),
         shortcut: formatShortcut('t', ['alt']),
       },
       {
         id: 'nav-analytics',
-        label: t('quickActions.analytics', 'Go to Analytics'),
+        label: t('quickActions.analytics', 'Go to analytics'),
         icon: TrendingUp,
-        action: () => navigateTo('/dashboard'),
+        action: () => navigateTo('/analytics'),
         shortcut: formatShortcut('a', ['alt']),
       },
       {
         id: 'nav-settings',
-        label: t('quickActions.settings', 'Go to Settings'),
+        label: t('quickActions.settings', 'Go to settings'),
         icon: Settings,
         action: () => navigateTo('/settings'),
         shortcut: formatShortcut('s', ['alt']),
       },
       {
         id: 'cmd-view-network',
-        label: t('quickActions.viewNetwork', 'View Network'),
+        label: t('quickActions.viewNetwork', 'View network'),
         icon: Network,
-        action: (): void => {
-          const pathname = location.pathname
-          if (pathname.startsWith('/dossiers/')) {
-            navigateTo(pathname)
-          } else {
-            navigateTo('/dossiers')
-          }
-        },
+        action: () => navigateTo('/relationships/graph'),
       },
       // Cmd+K "Analyze:" entries (GRAPH-02, D-02/D-03/D-04). Surfaced only on a
       // dossier route, where the entity pre-fills from the pathname; each deep-links
@@ -806,19 +827,19 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       })(),
       {
         id: 'nav-activity',
-        label: t('quickActions.recentActivity', 'Recent Activity'),
+        label: t('quickActions.recentActivity', 'Recent activity'),
         icon: History,
         action: () => navigateTo('/activity'),
       },
       {
         id: 'nav-briefs',
-        label: t('quickActions.briefs', 'Go to Briefs'),
+        label: t('quickActions.briefs', 'Go to briefs'),
         icon: ScrollText,
         action: () => navigateTo('/briefs'),
       },
       {
         id: 'cmd-generate-briefing',
-        label: t('quickActions.generateBriefing', 'Generate Briefing'),
+        label: t('quickActions.generateBriefing', 'Generate briefing'),
         icon: FileText,
         action: (): void => {
           const engagementMatch = /\/engagements\/([^/]+)/.exec(location.pathname)
@@ -831,7 +852,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
       },
       {
         id: 'cmd-schedule-poll',
-        label: t('quickActions.schedulePoll', 'Schedule Poll'),
+        label: t('quickActions.schedulePoll', 'Schedule poll'),
         icon: CalendarClock,
         action: (): void => {
           const engagementMatch = /\/engagements\/([^/]+)/.exec(location.pathname)
@@ -843,33 +864,54 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
         },
       },
       {
-        id: 'cmd-export-dossiers',
-        label: t('quickActions.exportDossiers', 'Export Dossiers'),
-        icon: Download,
-        action: (): void => {
-          navigateTo('/dossiers?action=export')
-        },
-      },
-      {
         id: 'nav-intelligence',
-        label: t('quickActions.intelligence', 'Go to Intelligence'),
+        label: t('quickActions.intelligence', 'Go to intelligence'),
         icon: Brain,
         action: () => navigateTo('/intelligence'),
       },
       {
         id: 'nav-reports',
-        label: t('quickActions.reports', 'Go to Reports'),
+        label: t('quickActions.reports', 'Go to reports'),
         icon: BarChart3,
         action: () => navigateTo('/reports'),
       },
       {
         id: 'nav-sla',
-        label: t('quickActions.slaMonitoring', 'SLA Monitoring'),
+        label: t('quickActions.slaMonitoring', 'SLA monitoring'),
         icon: Gauge,
         action: () => navigateTo('/sla-monitoring'),
       },
+      {
+        id: 'toggle-theme',
+        label: t('commands.toggleTheme', 'Toggle theme'),
+        icon: SunMoon,
+        action: (): void => {
+          setMode(mode === 'dark' ? 'light' : 'dark')
+          closeCommandPalette()
+        },
+      },
+      {
+        id: 'switch-language',
+        label: t('commands.switchLanguage', 'Switch language'),
+        icon: Languages,
+        action: (): void => {
+          void switchLanguage(i18n.language === 'ar' ? 'en' : 'ar')
+          closeCommandPalette()
+        },
+      },
     ],
-    [t, tCopilot, formatShortcut, navigateTo, location.pathname, openCopilot, closeCommandPalette],
+    [
+      t,
+      i18n,
+      tCopilot,
+      formatShortcut,
+      navigateTo,
+      location.pathname,
+      openCopilot,
+      closeCommandPalette,
+      mode,
+      setMode,
+    ],
   )
 
   // Most-used commands for empty state (D-03)
@@ -1243,7 +1285,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
               {/* Create Actions (empty query) */}
               {filteredCreateActions.length > 0 && (
                 <>
-                  <CommandGroup heading={t('createActions.title', 'Create New')}>
+                  <CommandGroup heading={t('createActions.title', 'Create')}>
                     {filteredCreateActions.map((action) => {
                       const CreateIcon = action.icon
                       return (
@@ -1273,7 +1315,7 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
               {/* Quick Navigation (empty query) */}
               {filteredQuickActions.length > 0 && (
                 <>
-                  <CommandGroup heading={t('quickActions.title', 'Quick Navigation')}>
+                  <CommandGroup heading={t('quickActions.title', 'Navigate')}>
                     {filteredQuickActions.map((action) => {
                       const QuickIcon = action.icon
                       return (
@@ -1605,7 +1647,7 @@ export function ShortcutGuide({
   return (
     <div className={cn('flex flex-col gap-1 text-xs text-muted-foreground', className)}>
       <div className="mb-1 font-medium text-foreground">
-        {t('guide.title', 'Keyboard Shortcuts')}
+        {t('guide.title', 'Keyboard shortcuts')}
       </div>
       {shortcuts.map((shortcut) => (
         <div key={shortcut.id} className="flex items-center justify-between gap-2">

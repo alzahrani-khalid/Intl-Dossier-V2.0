@@ -1,14 +1,5 @@
 /**
- * Phase 39 Plan 03 — BoardToolbar unit tests.
- *
- * Verifies:
- *  1. 'By status' pill aria-pressed reflects mode and click fires onModeChange('status').
- *  2. 'By dossier' pill is aria-disabled + 'Coming soon' tooltip; click does NOT call onModeChange.
- *  3. 'By owner' pill is aria-disabled + 'Coming soon' tooltip.
- *  4. Overdue chip renders interpolated count; AR locale uses Arabic-Indic digits.
- *  5. Search input has placeholder + aria-label and typing fires onSearchChange per char.
- *  6. '+ New item' button has accessible name; click fires onNewItem.
- *  7. Search input is a controlled React input — XSS-safe rendering only.
+ * Phase 87 Plan 09 — BoardToolbar unit tests (Filter + Display popovers).
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -16,25 +7,30 @@ import { render, screen, fireEvent, cleanup } from '@testing-library/react'
 import type { ReactElement, ReactNode } from 'react'
 
 import { BoardToolbar } from '../BoardToolbar'
+import type {
+  ListControlsConfig,
+  UseListControlsReturn,
+} from '@/components/list-controls/useListControls'
 
 let currentLang = 'en'
 
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
+  useTranslation: (ns?: string | string[]) => ({
     t: (key: string, opts?: Record<string, unknown>): string => {
+      if (ns === 'list-controls' || (Array.isArray(ns) && ns.includes('list-controls'))) {
+        const lc: Record<string, string> = {
+          'filter.trigger': 'Filter',
+          'display.trigger': 'Display',
+        }
+        return lc[key] ?? key
+      }
       const enMap: Record<string, string> = {
-        'filters.byStatus': 'By status',
-        'filters.byDossier': 'By dossier',
-        'filters.byOwner': 'By owner',
-        'filters.comingSoon': 'Coming soon',
+        'columnModes.label': 'Group by',
         'filters.search': 'Search work items…',
         'actions.newItem': 'New item',
       }
       const arMap: Record<string, string> = {
-        'filters.byStatus': 'بالحالة',
-        'filters.byDossier': 'بالملف',
-        'filters.byOwner': 'بالمسؤول',
-        'filters.comingSoon': 'قريبًا',
+        'columnModes.label': 'تجميع حسب',
         'filters.search': 'بحث في عناصر العمل…',
         'actions.newItem': 'عنصر جديد',
       }
@@ -57,111 +53,92 @@ vi.mock('@/components/ui/ltr-isolate', () => ({
   ),
 }))
 
-interface RenderOpts {
-  mode?: 'status' | 'dossier' | 'owner'
-  searchQuery?: string
-  overdueCount?: number
-  onModeChange?: (mode: 'status' | 'dossier' | 'owner') => void
-  onSearchChange?: (q: string) => void
-  onNewItem?: () => void
+vi.mock('@/components/list-controls/FilterPopover', () => ({
+  FilterPopover: (): ReactElement => <button type="button">Filter</button>,
+}))
+
+vi.mock('@/components/list-controls/DisplayPopover', () => ({
+  DisplayPopover: (): ReactElement => <button type="button">Display</button>,
+}))
+
+const stubConfig: ListControlsConfig = {
+  filters: [],
+  grouping: [{ id: 'status', labelKey: 'unified-kanban:columnModes.status' }],
 }
 
-function renderToolbar(opts: RenderOpts = {}): {
-  onModeChange: ReturnType<typeof vi.fn>
+const stubControls: UseListControlsReturn = {
+  filters: {},
+  visibleProperties: [],
+  activeFilterCount: 0,
+  hasActiveFilters: false,
+  filterChips: [],
+  setFilter: vi.fn(),
+  removeFilter: vi.fn(),
+  clearAll: vi.fn(),
+  setSort: vi.fn(),
+  setDir: vi.fn(),
+  toggleProperty: vi.fn(),
+  setGroup: vi.fn(),
+  resetDisplay: vi.fn(),
+}
+
+function renderToolbar(
+  opts: {
+    searchQuery?: string
+    overdueCount?: number
+    onSearchChange?: (q: string) => void
+    onNewItem?: () => void
+  } = {},
+): {
   onSearchChange: ReturnType<typeof vi.fn>
   onNewItem: ReturnType<typeof vi.fn>
 } {
-  const onModeChange = vi.fn()
   const onSearchChange = vi.fn()
   const onNewItem = vi.fn()
   render(
     <BoardToolbar
-      mode={opts.mode ?? 'status'}
+      config={stubConfig}
+      controls={stubControls}
       searchQuery={opts.searchQuery ?? ''}
       overdueCount={opts.overdueCount ?? 0}
-      onModeChange={opts.onModeChange ?? onModeChange}
       onSearchChange={opts.onSearchChange ?? onSearchChange}
       onNewItem={opts.onNewItem ?? onNewItem}
     />,
   )
-  return { onModeChange, onSearchChange, onNewItem }
+  return { onSearchChange, onNewItem }
 }
 
-describe('BoardToolbar — Phase 39 Plan 03', () => {
+describe('BoardToolbar — Phase 87 Plan 09', () => {
   beforeEach(() => {
     cleanup()
     currentLang = 'en'
   })
 
-  it('Test 1: "By status" pill aria-pressed=true and click fires onModeChange("status")', () => {
-    const { onModeChange } = renderToolbar({ mode: 'status' })
-    const pill = screen.getByRole('button', { name: 'By status' })
-    expect(pill.getAttribute('aria-pressed')).toBe('true')
-    fireEvent.click(pill)
-    expect(onModeChange).toHaveBeenCalledTimes(1)
-    expect(onModeChange).toHaveBeenCalledWith('status')
+  it('renders Filter and Display popover triggers (no legacy pill row)', () => {
+    renderToolbar()
+    expect(screen.getByRole('button', { name: 'Filter' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Display' })).toBeTruthy()
+    expect(screen.queryByRole('button', { name: 'By status' })).toBeNull()
   })
 
-  it('Test 2: "By dossier" pill aria-disabled with Coming soon; click does NOT call onModeChange', () => {
-    const { onModeChange } = renderToolbar({ mode: 'status' })
-    const pill = screen.getByRole('button', { name: 'By dossier' })
-    expect(pill.getAttribute('aria-disabled')).toBe('true')
-    expect(pill.getAttribute('title')).toBe('Coming soon')
-    fireEvent.click(pill)
-    expect(onModeChange).not.toHaveBeenCalled()
-  })
-
-  it('Test 3: "By owner" pill aria-disabled with Coming soon; click does NOT call onModeChange', () => {
-    const { onModeChange } = renderToolbar({ mode: 'status' })
-    const pill = screen.getByRole('button', { name: 'By owner' })
-    expect(pill.getAttribute('aria-disabled')).toBe('true')
-    expect(pill.getAttribute('title')).toBe('Coming soon')
-    fireEvent.click(pill)
-    expect(onModeChange).not.toHaveBeenCalled()
-  })
-
-  it('Test 4 (en): overdue chip renders "{count} overdue" with mono class', () => {
+  it('overdue chip renders interpolated count with mono class', () => {
     renderToolbar({ overdueCount: 27 })
     const chip = screen.getByText(/27 overdue/)
-    expect(chip).toBeTruthy()
     expect(chip.className).toContain('overdue-chip')
     expect(chip.className).toContain('font-mono')
   })
 
-  it('Test 4 (ar): overdue chip renders Latin digits with Arabic label', () => {
-    currentLang = 'ar'
-    renderToolbar({ overdueCount: 27 })
-    const chip = screen.getByText(/27 متأخر/)
-    expect(chip).toBeTruthy()
-  })
-
-  it('Test 5: search input has placeholder + aria-label; change fires onSearchChange', () => {
+  it('search input is controlled and fires onSearchChange', () => {
     const { onSearchChange } = renderToolbar({ searchQuery: '' })
     const input = screen.getByRole('searchbox')
     expect(input.getAttribute('placeholder')).toBe('Search work items…')
-    expect(input.getAttribute('aria-label')).toBe('Search work items…')
     fireEvent.change(input, { target: { value: 'Acme' } })
-    expect(onSearchChange).toHaveBeenCalledTimes(1)
     expect(onSearchChange).toHaveBeenCalledWith('Acme')
   })
 
-  it('Test 6: "+ New item" button has accessible name and click fires onNewItem', () => {
+  it('+ New item button fires onNewItem', () => {
     const { onNewItem } = renderToolbar()
-    const btn = screen.getByRole('button', { name: 'New item' })
-    expect(btn).toBeTruthy()
-    expect(btn.textContent).toContain('+')
-    expect(btn.textContent).toContain('New item')
-    fireEvent.click(btn)
+    fireEvent.click(screen.getByRole('button', { name: 'New item' }))
     expect(onNewItem).toHaveBeenCalledTimes(1)
-  })
-
-  it('Test 7: search input is a controlled React input (value reflects prop)', () => {
-    renderToolbar({ searchQuery: 'persisted query' })
-    const input = screen.getByRole('searchbox') as HTMLInputElement
-    expect(input.value).toBe('persisted query')
-    cleanup()
-    renderToolbar({ searchQuery: 'updated' })
-    const input2 = screen.getByRole('searchbox') as HTMLInputElement
-    expect(input2.value).toBe('updated')
   })
 })

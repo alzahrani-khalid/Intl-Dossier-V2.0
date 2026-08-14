@@ -118,6 +118,25 @@ jobs:
         run: pnpm -C frontend exec playwright test dashboard-widgets --project=chromium-dashboard-widgets
       - name: Run list and drawer visual baselines
         run: pnpm -C frontend exec playwright test list-pages-visual.spec.ts dossier-drawer-visual.spec.ts --project=chromium
+      # Promoted 2026-08-13 under ruling RUL120 (CI-04). This spec held committed
+      # `-chromium-darwin.png` baselines that NO job executed; six sibling ungated specs were deleted
+      # rather than promoted. It earns its gate on three counts: (1) it is the only visual coverage of
+      # RTL at the 768 breakpoint anywhere in CI — its matrix is ltr/rtl x 1280/768, where the rest of
+      # the visual suite is 1280-only; (2) it pins a PURPOSE-BUILT fixture record
+      # (PHASE_52_FIXTURE_ENGAGEMENT_ID, default 00000000-0000-0052-0000-000000000001 — identical to
+      # the .env.test value, so this job's fallback resolves it without extra secrets) instead of
+      # whatever rows staging happens to hold, which is what VISUAL-DEBT-01 asks visual specs to do;
+      # (3) it passes against its ALREADY-COMMITTED baselines on the macOS reference machine
+      # (2026-08-13, pinned Node v24.5.0), so promotion needs no re-baseline and does not widen the
+      # ORCH-3 sign-off set.
+      # Measured honestly, not rounded up: 4/4 in FOUR of FIVE full-spec runs. One run failed
+      # `ltr @ 768x1024` alone; that test then passed 3/3 in isolation and the full spec passed 4/4 in
+      # three consecutive reruns, and the error text was lost to artifact overwrite before capture — so
+      # the RATE is known (1 test-execution in 20) and the MECHANISM is not. This job sets `retries: 2`
+      # via playwright.config.ts (`process.env.CI ? 2 : 0`), which covers a flake of that rate. If this
+      # step reds in CI, suspect that 768 test first and read the trace before re-baselining anything.
+      - name: Run tasks-tab visual baselines (RTL + 768 breakpoint coverage)
+        run: pnpm -C frontend exec playwright test tasks-tab-visual.spec.ts --project=chromium
 
   merge-reports:
     name: Merge Playwright reports

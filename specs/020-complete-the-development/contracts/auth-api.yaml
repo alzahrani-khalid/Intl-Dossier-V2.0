@@ -34,12 +34,12 @@ paths:
                 email:
                   type: string
                   format: email
-                  example: "kazahrani@stats.gov.sa"
+                  example: <see .env.test — TEST_USER_EMAIL>
                 password:
                   type: string
                   format: password
                   minLength: 8
-                  example: "itisme"
+                  example: <see .env.test — TEST_USER_PASSWORD>
                 device_id:
                   type: string
                   description: Unique device identifier (UUID) for tracking sessions
@@ -90,7 +90,7 @@ paths:
                 refresh_token: "v1.eyJpZCI6IjEyMzQ1Njc4OTAiLCJ..."
                 user:
                   id: "user-uuid-1234"
-                  email: "kazahrani@stats.gov.sa"
+                  email: <see .env.test — TEST_USER_EMAIL>
                   name_ar: "خالد الزهراني"
                   name_en: "Khalid Alzahrani"
                   role: "analyst"
@@ -348,7 +348,7 @@ paths:
                 valid: true
                 user:
                   id: "user-uuid-1234"
-                  email: "kazahrani@stats.gov.sa"
+                  email: <see .env.test — TEST_USER_EMAIL>
                   role: "analyst"
                   permissions: ["intake:submit", "dossier:read"]
                 expires_at: "2025-10-12T11:00:00Z"

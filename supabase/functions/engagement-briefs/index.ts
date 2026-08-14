@@ -23,15 +23,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-
-// CORS headers are inlined (rather than importing ../_shared/cors.ts) so the
-// function deploys as a single self-contained module. Mirrors the shared
-// wildcard policy used by sibling functions.
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-}
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 
 interface GenerateBriefRequest {
   custom_prompt?: string
@@ -89,6 +81,7 @@ function errorResponse(
   messageEn: string,
   messageAr: string,
   status: number,
+  corsHeaders: Record<string, string>,
 ): Response {
   return new Response(
     JSON.stringify({ error: { code, message_en: messageEn, message_ar: messageAr } }),
@@ -118,16 +111,18 @@ function parseUrl(url: URL): {
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req)
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return handleCorsPreflightRequest(req)
   }
 
   try {
     // Get auth token
     const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
-      return errorResponse('UNAUTHORIZED', 'Missing authorization header', 'رأس التفويض مفقود', 401)
+      return errorResponse('UNAUTHORIZED', 'Missing authorization header', 'رأس التفويض مفقود', 401, corsHeaders)
     }
     // Pass the JWT explicitly to getUser so validation does not depend on the
     // client library threading the global Authorization header (a bare
@@ -149,7 +144,7 @@ serve(async (req) => {
     } = await supabaseClient.auth.getUser(token)
 
     if (userError || !user) {
-      return errorResponse('UNAUTHORIZED', 'Invalid user session', 'جلسة مستخدم غير صالحة', 401)
+      return errorResponse('UNAUTHORIZED', 'Invalid user session', 'جلسة مستخدم غير صالحة', 401, corsHeaders)
     }
 
     // Parse URL
@@ -157,7 +152,7 @@ serve(async (req) => {
     const { engagementId, action, briefId } = parseUrl(url)
 
     if (!engagementId) {
-      return errorResponse('MISSING_ID', 'Engagement ID is required', 'معرف الارتباط مطلوب', 400)
+      return errorResponse('MISSING_ID', 'Engagement ID is required', 'معرف الارتباط مطلوب', 400, corsHeaders)
     }
 
     // Verify engagement exists / the user can access it (RLS-scoped read).
@@ -189,6 +184,7 @@ serve(async (req) => {
         'Engagement not found or access denied',
         'الارتباط غير موجود أو الوصول مرفوض',
         404,
+        corsHeaders,
       )
     }
 
@@ -196,9 +192,9 @@ serve(async (req) => {
     switch (req.method) {
       case 'GET':
         if (action === 'context') {
-          return handleGetContext(supabaseClient, engagementId)
+          return handleGetContext(supabaseClient, engagementId, corsHeaders)
         }
-        return handleListBriefs(supabaseClient, engagementId, url)
+        return handleListBriefs(supabaseClient, engagementId, url, corsHeaders)
 
       case 'POST':
         if (action === 'generate') {
@@ -209,18 +205,19 @@ serve(async (req) => {
             token,
             engagementId,
             engagement as unknown as EngagementRow,
+            corsHeaders,
           )
         }
         if (action === 'link' && briefId) {
-          return handleLinkBrief(req, supabaseClient, engagementId, briefId)
+          return handleLinkBrief(req, supabaseClient, engagementId, briefId, corsHeaders)
         }
-        return errorResponse('INVALID_ACTION', 'Invalid action', 'إجراء غير صالح', 400)
+        return errorResponse('INVALID_ACTION', 'Invalid action', 'إجراء غير صالح', 400, corsHeaders)
 
       case 'DELETE':
         if (action === 'link' && briefId) {
-          return handleUnlinkBrief(req, supabaseClient, engagementId, briefId)
+          return handleUnlinkBrief(req, supabaseClient, engagementId, briefId, corsHeaders)
         }
-        return errorResponse('INVALID_ACTION', 'Invalid action', 'إجراء غير صالح', 400)
+        return errorResponse('INVALID_ACTION', 'Invalid action', 'إجراء غير صالح', 400, corsHeaders)
 
       default:
         return errorResponse(
@@ -228,11 +225,12 @@ serve(async (req) => {
           'Method not allowed',
           'الطريقة غير مسموح بها',
           405,
+          corsHeaders,
         )
     }
   } catch (error) {
     console.error('Unexpected error:', error)
-    return errorResponse('INTERNAL_ERROR', 'An unexpected error occurred', 'حدث خطأ غير متوقع', 500)
+    return errorResponse('INTERNAL_ERROR', 'An unexpected error occurred', 'حدث خطأ غير متوقع', 500, corsHeaders)
   }
 })
 
@@ -322,6 +320,7 @@ async function handleListBriefs(
   supabase: ReturnType<typeof createClient>,
   engagementId: string,
   url: URL,
+  corsHeaders: Record<string, string>,
 ): Promise<Response> {
   const briefType = url.searchParams.get('type') // 'all', 'legacy', 'ai'
   const status = url.searchParams.get('status')
@@ -334,7 +333,7 @@ async function handleListBriefs(
 
   if (error) {
     console.error('Error fetching briefs:', error)
-    return errorResponse('FETCH_ERROR', 'Failed to fetch briefs', 'فشل في جلب الموجزات', 500)
+    return errorResponse('FETCH_ERROR', 'Failed to fetch briefs', 'فشل في جلب الموجزات', 500, corsHeaders)
   }
 
   let filteredBriefs = briefs || []
@@ -368,6 +367,7 @@ async function handleListBriefs(
 async function handleGetContext(
   supabase: ReturnType<typeof createClient>,
   engagementId: string,
+  corsHeaders: Record<string, string>,
 ): Promise<Response> {
   const { data: context, error } = await supabase.rpc('get_engagement_brief_context', {
     p_engagement_id: engagementId,
@@ -380,6 +380,7 @@ async function handleGetContext(
       'Failed to fetch brief context',
       'فشل في جلب سياق الموجز',
       500,
+      corsHeaders,
     )
   }
 
@@ -401,6 +402,7 @@ async function handleCreateManualBrief(
   token: string,
   engagementId: string,
   engagement: EngagementRow,
+  corsHeaders: Record<string, string>,
 ): Promise<Response> {
   const body: GenerateBriefRequest = await req.json().catch(() => ({}))
   const lang: 'en' | 'ar' = body.language === 'ar' ? 'ar' : 'en'
@@ -431,6 +433,7 @@ async function handleCreateManualBrief(
       'Could not determine your organization',
       'تعذّر تحديد منظمتك',
       400,
+      corsHeaders,
     )
   }
   const tenantId = orgId
@@ -468,6 +471,7 @@ async function handleCreateManualBrief(
       `Failed to save brief: ${insertError.message}`,
       'فشل في حفظ الموجز',
       500,
+      corsHeaders,
     )
   }
 
@@ -489,6 +493,7 @@ async function handleLinkBrief(
   supabase: ReturnType<typeof createClient>,
   engagementId: string,
   briefId: string,
+  corsHeaders: Record<string, string>,
 ): Promise<Response> {
   const body: LinkBriefRequest = await req.json().catch(() => ({ brief_type: 'legacy' }))
   const briefType = body.brief_type || 'legacy'
@@ -506,6 +511,7 @@ async function handleLinkBrief(
       'Failed to link brief to engagement',
       'فشل في ربط الموجز بالارتباط',
       500,
+      corsHeaders,
     )
   }
 
@@ -515,6 +521,7 @@ async function handleLinkBrief(
       'Brief is already linked or does not exist',
       'الموجز مرتبط بالفعل أو غير موجود',
       400,
+      corsHeaders,
     )
   }
 
@@ -539,6 +546,7 @@ async function handleUnlinkBrief(
   supabase: ReturnType<typeof createClient>,
   engagementId: string,
   briefId: string,
+  corsHeaders: Record<string, string>,
 ): Promise<Response> {
   const url = new URL(req.url)
   const briefType = url.searchParams.get('brief_type') || 'legacy'
@@ -555,6 +563,7 @@ async function handleUnlinkBrief(
       'Failed to unlink brief from engagement',
       'فشل في إلغاء ربط الموجز من الارتباط',
       500,
+      corsHeaders,
     )
   }
 
@@ -564,6 +573,7 @@ async function handleUnlinkBrief(
       'Brief is not linked to this engagement',
       'الموجز غير مرتبط بهذا الارتباط',
       400,
+      corsHeaders,
     )
   }
 

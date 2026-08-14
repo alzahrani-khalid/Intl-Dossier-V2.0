@@ -11,7 +11,7 @@
  */
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 // Types
 interface TeamStatsResponse {
@@ -76,7 +76,8 @@ function getSupabaseClient(authHeader: string) {
 async function handleGet(
   req: Request,
   supabase: ReturnType<typeof createClient>,
-  userId: string
+  userId: string,
+  corsHeaders: Record<string, string>
 ): Promise<Response> {
   const url = new URL(req.url);
   const pathParts = url.pathname.split('/').filter(Boolean);
@@ -84,12 +85,12 @@ async function handleGet(
   // GET /team-collaboration/templates
   if (pathParts.includes('templates')) {
     const entityType = url.searchParams.get('entityType') || 'generic';
-    return getTemplates(supabase, entityType);
+    return getTemplates(supabase, entityType, corsHeaders);
   }
 
   // GET /team-collaboration/invitations
   if (pathParts.includes('invitations')) {
-    return getInvitations(supabase, userId);
+    return getInvitations(supabase, userId, corsHeaders);
   }
 
   // GET /team-collaboration?entityType=dossier (default: get stats)
@@ -101,14 +102,15 @@ async function handleGet(
     );
   }
 
-  return getTeamStats(supabase, userId, entityType);
+  return getTeamStats(supabase, userId, entityType, corsHeaders);
 }
 
 // Get team stats for empty state
 async function getTeamStats(
   supabase: ReturnType<typeof createClient>,
   userId: string,
-  entityType: string
+  entityType: string,
+  corsHeaders: Record<string, string>
 ): Promise<Response> {
   try {
     // Call the database function
@@ -141,7 +143,8 @@ async function getTeamStats(
 // Get invitation templates
 async function getTemplates(
   supabase: ReturnType<typeof createClient>,
-  entityType: string
+  entityType: string,
+  corsHeaders: Record<string, string>
 ): Promise<Response> {
   try {
     const { data, error } = await supabase
@@ -175,7 +178,8 @@ async function getTemplates(
 // Get user's invitations
 async function getInvitations(
   supabase: ReturnType<typeof createClient>,
-  userId: string
+  userId: string,
+  corsHeaders: Record<string, string>
 ): Promise<Response> {
   try {
     // Get user's email for matching invitations
@@ -222,7 +226,8 @@ async function getInvitations(
 async function handlePost(
   req: Request,
   supabase: ReturnType<typeof createClient>,
-  userId: string
+  userId: string,
+  corsHeaders: Record<string, string>
 ): Promise<Response> {
   const url = new URL(req.url);
   const pathParts = url.pathname.split('/').filter(Boolean);
@@ -230,7 +235,7 @@ async function handlePost(
   // POST /team-collaboration/invite
   if (pathParts.includes('invite')) {
     const body: SendInvitationRequest = await req.json();
-    return sendInvitation(supabase, userId, body);
+    return sendInvitation(supabase, userId, body, corsHeaders);
   }
 
   return new Response(JSON.stringify({ error: { message_en: 'Invalid endpoint' } }), {
@@ -243,7 +248,8 @@ async function handlePost(
 async function sendInvitation(
   supabase: ReturnType<typeof createClient>,
   userId: string,
-  body: SendInvitationRequest
+  body: SendInvitationRequest,
+  corsHeaders: Record<string, string>
 ): Promise<Response> {
   try {
     const { inviteeEmail, entityType, entityId, templateId, customMessage } = body;
@@ -290,7 +296,8 @@ async function sendInvitation(
 async function handlePatch(
   req: Request,
   supabase: ReturnType<typeof createClient>,
-  userId: string
+  userId: string,
+  corsHeaders: Record<string, string>
 ): Promise<Response> {
   const url = new URL(req.url);
   const pathParts = url.pathname.split('/').filter(Boolean);
@@ -306,7 +313,7 @@ async function handlePatch(
     }
 
     const body = await req.json();
-    return respondToInvitation(supabase, userId, invitationId, body.status);
+    return respondToInvitation(supabase, userId, invitationId, body.status, corsHeaders);
   }
 
   return new Response(JSON.stringify({ error: { message_en: 'Invalid endpoint' } }), {
@@ -320,7 +327,8 @@ async function respondToInvitation(
   supabase: ReturnType<typeof createClient>,
   userId: string,
   invitationId: string,
-  status: 'accepted' | 'declined'
+  status: 'accepted' | 'declined',
+  corsHeaders: Record<string, string>
 ): Promise<Response> {
   try {
     if (!['accepted', 'declined'].includes(status)) {
@@ -380,6 +388,7 @@ async function respondToInvitation(
 
 // Main handler
 Deno.serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -413,11 +422,11 @@ Deno.serve(async (req) => {
     // Route based on method
     switch (req.method) {
       case 'GET':
-        return handleGet(req, supabase, user.id);
+        return handleGet(req, supabase, user.id, corsHeaders);
       case 'POST':
-        return handlePost(req, supabase, user.id);
+        return handlePost(req, supabase, user.id, corsHeaders);
       case 'PATCH':
-        return handlePatch(req, supabase, user.id);
+        return handlePatch(req, supabase, user.id, corsHeaders);
       default:
         return new Response(JSON.stringify({ error: { message_en: 'Method not allowed' } }), {
           status: 405,

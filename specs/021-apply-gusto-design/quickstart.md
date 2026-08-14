@@ -489,9 +489,9 @@ appId: com.stats.intldossier
 ---
 - launchApp
 - tapOn: "Login"
-- inputText: "kazahrani@stats.gov.sa"
+- inputText: <see .env.test — TEST_USER_EMAIL>
 - tapOn: "Password"
-- inputText: "itisme"
+- inputText: <see .env.test — TEST_USER_PASSWORD>
 - tapOn: "Sign In"
 - assertVisible: "Home"
 - assertVisible: "Dossiers"

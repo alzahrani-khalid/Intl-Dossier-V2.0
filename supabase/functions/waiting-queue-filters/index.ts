@@ -10,6 +10,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 // Security utilities (embedded to avoid import issues)
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -474,11 +475,14 @@ async function fetchLegacyWorkItemDetails(supabase: any, assignments: any[]): Pr
 /**
  * Add CORS headers to response
  */
-function corsHeaders(additionalHeaders: Record<string, string> = {}): Record<string, string> {
+function corsHeaders(req: Request, additionalHeaders: Record<string, string> = {}): Record<string, string> {
+  const headers = getCorsHeaders(req);
+  if (headers['Access-Control-Allow-Origin'] !== 'null') {
+    headers['Access-Control-Allow-Headers'] += ', if-none-match';
+  }
+
   return {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'authorization, content-type, x-client-info, apikey, if-none-match',
+    ...headers,
     ...additionalHeaders
   };
 }
@@ -532,7 +536,7 @@ async function handleGetAssignments(req: Request, supabase: any, userId: string)
   if (!validation.valid) {
     return new Response(JSON.stringify({ error: validation.error }), {
       status: 400,
-      headers: corsHeaders({ 'Content-Type': 'application/json' })
+      headers: corsHeaders(req, { 'Content-Type': 'application/json' })
     });
   }
 
@@ -546,7 +550,7 @@ async function handleGetAssignments(req: Request, supabase: any, userId: string)
     console.error('Filter query error:', error);
     return new Response(JSON.stringify({ error: 'Failed to retrieve assignments' }), {
       status: 500,
-      headers: corsHeaders({ 'Content-Type': 'application/json' })
+      headers: corsHeaders(req, { 'Content-Type': 'application/json' })
     });
   }
 
@@ -601,7 +605,7 @@ async function handleGetAssignments(req: Request, supabase: any, userId: string)
 
   return new Response(JSON.stringify(result), {
     status: 200,
-    headers: corsHeaders({
+    headers: corsHeaders(req, {
       'Content-Type': 'application/json',
       'ETag': etag,
       'Cache-Control': 'max-age=60', // 1 minute (short cache since no Redis)
@@ -624,13 +628,13 @@ async function handleGetPreferences(req: Request, supabase: any, userId: string)
   if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
     return new Response(JSON.stringify({ error: 'Failed to retrieve preferences' }), {
       status: 500,
-      headers: corsHeaders({ 'Content-Type': 'application/json' })
+      headers: corsHeaders(req, { 'Content-Type': 'application/json' })
     });
   }
 
   return new Response(JSON.stringify(data?.preferences || {}), {
     status: 200,
-    headers: corsHeaders({ 'Content-Type': 'application/json' })
+    headers: corsHeaders(req, { 'Content-Type': 'application/json' })
   });
 }
 
@@ -642,7 +646,7 @@ async function handleSavePreferences(req: Request, supabase: any, userId: string
   if (!validateContentType(req)) {
     return new Response(JSON.stringify({ error: 'Content-Type must be application/json' }), {
       status: 415,
-      headers: corsHeaders({ 'Content-Type': 'application/json' })
+      headers: corsHeaders(req, { 'Content-Type': 'application/json' })
     });
   }
 
@@ -654,7 +658,7 @@ async function handleSavePreferences(req: Request, supabase: any, userId: string
   if (preferencesString.length > 10000) {
     return new Response(JSON.stringify({ error: 'Preferences data too large (max 10KB)' }), {
       status: 400,
-      headers: corsHeaders({ 'Content-Type': 'application/json' })
+      headers: corsHeaders(req, { 'Content-Type': 'application/json' })
     });
   }
 
@@ -671,13 +675,13 @@ async function handleSavePreferences(req: Request, supabase: any, userId: string
     console.error('Save preferences error:', error);
     return new Response(JSON.stringify({ error: 'Failed to save preferences' }), {
       status: 500,
-      headers: corsHeaders({ 'Content-Type': 'application/json' })
+      headers: corsHeaders(req, { 'Content-Type': 'application/json' })
     });
   }
 
   return new Response(JSON.stringify({ success: true }), {
     status: 200,
-    headers: corsHeaders({ 'Content-Type': 'application/json' })
+    headers: corsHeaders(req, { 'Content-Type': 'application/json' })
   });
 }
 
@@ -689,7 +693,7 @@ serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, {
       status: 204,
-      headers: corsHeaders()
+      headers: corsHeaders(req)
     });
   }
 
@@ -699,7 +703,7 @@ serve(async (req: Request) => {
     if (!authHeader) {
       return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
         status: 401,
-        headers: corsHeaders({ 'Content-Type': 'application/json' })
+        headers: corsHeaders(req, { 'Content-Type': 'application/json' })
       });
     }
 
@@ -713,7 +717,7 @@ serve(async (req: Request) => {
     if (authError || !user) {
       return new Response(JSON.stringify({ error: 'Invalid authentication' }), {
         status: 401,
-        headers: corsHeaders({ 'Content-Type': 'application/json' })
+        headers: corsHeaders(req, { 'Content-Type': 'application/json' })
       });
     }
 
@@ -734,14 +738,14 @@ serve(async (req: Request) => {
 
     return new Response(JSON.stringify({ error: 'Not found' }), {
       status: 404,
-      headers: corsHeaders({ 'Content-Type': 'application/json' })
+      headers: corsHeaders(req, { 'Content-Type': 'application/json' })
     });
 
   } catch (error) {
     const safeError = createSafeErrorResponse(error, 'Failed to process filter request');
     return new Response(JSON.stringify(safeError), {
       status: 500,
-      headers: corsHeaders({ 'Content-Type': 'application/json' })
+      headers: corsHeaders(req, { 'Content-Type': 'application/json' })
     });
   }
 });

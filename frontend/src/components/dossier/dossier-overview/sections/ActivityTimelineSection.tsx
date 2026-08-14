@@ -247,14 +247,9 @@ function EmptyState() {
   const { t } = useTranslation('dossier-overview')
 
   return (
-    <div className="text-center py-8 sm:py-12">
-      <div className="p-4 rounded-full bg-muted inline-block mb-4">
-        <Activity className="h-8 w-8 text-muted-foreground" />
-      </div>
-      <h3 className="text-base font-medium mb-2">{t('activityTimeline.empty.title')}</h3>
-      <p className="text-sm text-muted-foreground max-w-md mx-auto">
-        {t('activityTimeline.empty.description')}
-      </p>
+    <div className="flex flex-col items-center justify-center gap-2 py-8 sm:py-12 text-center">
+      <Activity className="h-5 w-5 text-ink-faint" />
+      <p className="text-sm text-ink-mute">{t('activityTimeline.empty.title')}</p>
     </div>
   )
 }

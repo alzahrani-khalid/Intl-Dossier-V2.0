@@ -8,7 +8,41 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { useState, type ReactElement } from 'react'
 import EngagementsListPage from '../EngagementsListPage'
+import type { EngagementFilter } from '@/components/list-page'
+
+const emptyStateSpy = vi.hoisted(() => vi.fn())
+
+vi.mock('@/components/empty-states', () => ({
+  ListEmptyState: (props: {
+    entityType: string
+    filtered?: boolean
+    onCreate?: () => void
+    onClearFilters?: () => void
+  }): ReactElement => {
+    emptyStateSpy(props)
+    return <div data-testid="engagement-list-empty-state">Engagement empty state</div>
+  },
+}))
+
+/**
+ * Stateful harness: the page is now controlled (search + filter lifted to the
+ * route's URL params in Phase 87-05). This mirrors the route wrapper's state so
+ * the pill-filtering assertions below exercise the same behavior as production.
+ */
+function Harness(): ReactElement {
+  const [search, setSearch] = useState('')
+  const [filter, setFilter] = useState<EngagementFilter>('all')
+  return (
+    <EngagementsListPage
+      search={search}
+      filter={filter}
+      onSearchChange={setSearch}
+      onFilterChange={setFilter}
+    />
+  )
+}
 
 // react-i18next: project-wide pattern for per-file mock (prevents global afterActions-only map).
 const i18nLanguageRef = { current: 'en' }
@@ -104,6 +138,7 @@ const samplePage = {
 beforeEach(() => {
   i18nLanguageRef.current = 'en'
   navigateSpy.mockReset()
+  emptyStateSpy.mockClear()
   mockReturn.data = { pages: [samplePage], pageParams: [1] }
   mockReturn.hasNextPage = true
   mockReturn.isFetchingNextPage = false
@@ -113,25 +148,25 @@ beforeEach(() => {
 
 describe('EngagementsListPage', () => {
   it('renders the Engagements title from ListPageShell', () => {
-    render(<EngagementsListPage />)
+    render(<Harness />)
     expect(screen.getByRole('heading', { name: /Engagements/i, level: 1 })).toBeTruthy()
   })
 
   it('renders 3 filter pills (no call pill — nothing maps to it)', () => {
-    render(<EngagementsListPage />)
+    render(<Harness />)
     const group = screen.getByRole('group', { name: /Filter engagements/i })
     expect(group.querySelectorAll('button').length).toBe(3)
   })
 
   it('renders engagement rows from the mock data', () => {
-    render(<EngagementsListPage />)
+    render(<Harness />)
     expect(screen.getByText('Geneva Summit')).toBeTruthy()
     expect(screen.getByText('Paris Mission')).toBeTruthy()
     expect(screen.getByText('Bilateral Call')).toBeTruthy()
   })
 
   it('clicking the Travel pill filters to mission/delegation/official_visit only', () => {
-    render(<EngagementsListPage />)
+    render(<Harness />)
     const group = screen.getByRole('group', { name: /Filter engagements/i })
     const buttons = group.querySelectorAll('button')
     // Order: 0=all, 1=meeting, 2=travel (call pill removed in round 7)
@@ -142,7 +177,7 @@ describe('EngagementsListPage', () => {
   })
 
   it('clicking All restores all rows', () => {
-    render(<EngagementsListPage />)
+    render(<Harness />)
     const group = screen.getByRole('group', { name: /Filter engagements/i })
     const buttons = group.querySelectorAll('button')
     fireEvent.click(buttons[2]!) // travel
@@ -153,7 +188,7 @@ describe('EngagementsListPage', () => {
   })
 
   it('clicking a row navigates to /engagements/$engagementId/overview', () => {
-    render(<EngagementsListPage />)
+    render(<Harness />)
     const button = screen.getByText('Geneva Summit').closest('button')
     expect(button).not.toBeNull()
     fireEvent.click(button!)
@@ -165,12 +200,12 @@ describe('EngagementsListPage', () => {
   })
 
   it('shows the load-more CTA when hasNextPage is true', () => {
-    render(<EngagementsListPage />)
+    render(<Harness />)
     expect(screen.getByText(/Load more/i)).toBeTruthy()
   })
 
   it('clicking load-more triggers fetchNextPage', () => {
-    render(<EngagementsListPage />)
+    render(<Harness />)
     const cta = screen.getByText(/Load more/i)
     fireEvent.click(cta.closest('button')!)
     expect(mockReturn.fetchNextPage).toHaveBeenCalledTimes(1)
@@ -178,7 +213,7 @@ describe('EngagementsListPage', () => {
 
   it('renders the GlobeSpinner + bilingual loading text in EN during isFetchingNextPage', () => {
     mockReturn.isFetchingNextPage = true
-    render(<EngagementsListPage />)
+    render(<Harness />)
     // GlobeSpinner SVG carries `.globe-spinner` class.
     expect(document.querySelector('.globe-spinner')).not.toBeNull()
     // Loading… default value used by the primitive (translation key `engagements.loadMore.loading`).
@@ -188,7 +223,23 @@ describe('EngagementsListPage', () => {
 
   it('uses Arabic title (name_ar) when i18n.language is ar', () => {
     i18nLanguageRef.current = 'ar'
-    render(<EngagementsListPage />)
+    render(<Harness />)
     expect(screen.getByText('قمة جنيف')).toBeTruthy()
+  })
+
+  it('the engagements list page renders the same empty state under the same conditions as before, and its test file gains mock coverage for the now-static import while every assertion it already made remains intact', () => {
+    mockReturn.data = { pages: [{ data: [], pagination: {} }], pageParams: [1] }
+    mockReturn.hasNextPage = false
+
+    render(<Harness />)
+
+    expect(screen.getByTestId('engagement-list-empty-state')).toBeTruthy()
+    expect(emptyStateSpy).toHaveBeenCalledTimes(1)
+    expect(emptyStateSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        entityType: 'engagement',
+        filtered: false,
+      }),
+    )
   })
 })

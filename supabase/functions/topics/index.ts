@@ -14,12 +14,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
-};
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 interface ErrorResponse {
   code: string;
@@ -30,7 +25,7 @@ interface ErrorResponse {
 function jsonResponse(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
   });
 }
 
@@ -38,7 +33,7 @@ function errorResponse(code: string, message_en: string, message_ar: string, sta
   const error: ErrorResponse = { code, message_en, message_ar };
   return new Response(JSON.stringify({ error }), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
   });
 }
 
@@ -54,7 +49,7 @@ async function getAuthUser(req: Request, supabase: ReturnType<typeof createClien
   return { user, error: error?.message };
 }
 
-serve(async (req) => {
+async function handleRequest(req: Request, corsHeaders: Record<string, string>) {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -409,4 +404,12 @@ serve(async (req) => {
       500
     );
   }
+}
+
+serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+  const response = await handleRequest(req, corsHeaders);
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(corsHeaders)) headers.set(name, value);
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 });

@@ -4,10 +4,18 @@ import { GenericListPage, type GenericListPageItem } from '../GenericListPage'
 
 // Per-file react-i18next mock (project pattern — global mock has afterActions-only map).
 vi.mock('react-i18next', () => ({
-  useTranslation: (): { i18n: { language: string }; t: (k: string, opts?: Record<string, unknown>) => string } => ({
+  useTranslation: (): {
+    i18n: { language: string }
+    t: (k: string, opts?: Record<string, unknown>) => string
+  } => ({
     i18n: { language: 'en' },
     t: (k: string, opts?: Record<string, unknown>): string => {
-      if (opts && typeof opts === 'object' && 'defaultValue' in opts && typeof opts.defaultValue === 'string') {
+      if (
+        opts &&
+        typeof opts === 'object' &&
+        'defaultValue' in opts &&
+        typeof opts.defaultValue === 'string'
+      ) {
         return opts.defaultValue
       }
       return k
@@ -16,9 +24,14 @@ vi.mock('react-i18next', () => ({
   Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
 }))
 
-
 const sampleItems: GenericListPageItem[] = [
-  { id: '1', primary: 'Alpha', secondary: 'sub-a', statusLabel: 'Active', statusChipClass: 'chip-info' },
+  {
+    id: '1',
+    primary: 'Alpha',
+    secondary: 'sub-a',
+    statusLabel: 'Active',
+    statusChipClass: 'chip-info',
+  },
   { id: '2', primary: 'Beta' },
 ]
 
@@ -45,12 +58,7 @@ describe('GenericListPage', () => {
   })
 
   it('renders empty state when items=[]', () => {
-    render(
-      <GenericListPage
-        items={[]}
-        emptyState={<div data-testid="empty">Nothing here</div>}
-      />,
-    )
+    render(<GenericListPage items={[]} emptyState={<div data-testid="empty">Nothing here</div>} />)
     expect(screen.getByTestId('empty')).toBeTruthy()
   })
 
@@ -66,5 +74,17 @@ describe('GenericListPage', () => {
     render(<GenericListPage items={sampleItems} />)
     const rows = screen.getAllByTestId('generic-list-page-row')
     expect(rows[0].className).toContain('dossier-row')
+  })
+
+  it('hides the secondary line when showSecondary={false} (F24 property toggle)', () => {
+    render(<GenericListPage items={sampleItems} showSecondary={false} />)
+    expect(screen.getByText('Alpha')).toBeTruthy()
+    expect(screen.queryByText('sub-a')).toBeNull()
+  })
+
+  it('hides the status chip when showStatus={false} (F24 property toggle)', () => {
+    render(<GenericListPage items={sampleItems} showStatus={false} />)
+    expect(screen.getByText('Alpha')).toBeTruthy()
+    expect(screen.queryByTestId('generic-list-page-status')).toBeNull()
   })
 })

@@ -14,6 +14,7 @@ export interface CreateUserRequest {
   username: string
   full_name: string
   role: 'admin' | 'editor' | 'viewer'
+  clearance?: number // Optional clearance level, integer 1-4 (profiles.clearance_level)
   user_type?: 'employee' | 'guest'
   expires_at?: string // ISO date string (required for guest)
   allowed_resources?: string[] // Array of resource UUIDs (required for guest)
@@ -244,6 +245,122 @@ export interface MyDelegationsResponse {
 // ============================================================================
 // API Client Methods
 // ============================================================================
+
+/**
+ * Create a new user account with an initial role assignment
+ *
+ * Invokes the admin-only create-user edge function. The requester must be an admin
+ * (server-enforced via public.users.role). Created users are inactive pending activation.
+ *
+ * @param data - User creation request data
+ * @returns Promise with creation response
+ * @throws Error if creation fails (e.g. 400 DUPLICATE_EMAIL / DUPLICATE_USERNAME)
+ */
+export async function createUser(data: CreateUserRequest): Promise<CreateUserResponse> {
+  const { data: result, error } = await supabase.functions.invoke<CreateUserResponse>(
+    'create-user',
+    {
+      body: data,
+    },
+  )
+
+  if (error) {
+    throw error
+  }
+
+  if (!result) {
+    throw new Error('No response from create-user function')
+  }
+
+  return result
+}
+
+/**
+ * Assign or change a user's role
+ *
+ * Invokes the admin-only assign-role edge function. Non-admin role changes take effect
+ * immediately; admin role changes route through dual approval (see AssignRoleResponse union).
+ *
+ * @param data - Role assignment request data
+ * @returns Promise with the immediate or approval-pending response
+ * @throws Error if assignment fails
+ */
+export async function assignRole(data: AssignRoleRequest): Promise<AssignRoleResponse> {
+  const { data: result, error } = await supabase.functions.invoke<AssignRoleResponse>(
+    'assign-role',
+    {
+      body: data,
+    },
+  )
+
+  if (error) {
+    throw error
+  }
+
+  if (!result) {
+    throw new Error('No response from assign-role function')
+  }
+
+  return result
+}
+
+/**
+ * Deactivate a user account
+ *
+ * Invokes the admin-only deactivate-user edge function. Flips is_active to false,
+ * terminates sessions, revokes delegations, and reports orphaned items.
+ *
+ * @param data - Deactivation request data
+ * @returns Promise with deactivation response
+ * @throws Error if deactivation fails
+ */
+export async function deactivateUser(data: DeactivateUserRequest): Promise<DeactivateUserResponse> {
+  const { data: result, error } = await supabase.functions.invoke<DeactivateUserResponse>(
+    'deactivate-user',
+    {
+      body: data,
+    },
+  )
+
+  if (error) {
+    throw error
+  }
+
+  if (!result) {
+    throw new Error('No response from deactivate-user function')
+  }
+
+  return result
+}
+
+/**
+ * Reactivate a previously deactivated user account
+ *
+ * Invokes the admin-only reactivate-user edge function. Flips is_active to true and
+ * optionally restores the prior role subject to security review approval.
+ *
+ * @param data - Reactivation request data
+ * @returns Promise with reactivation response
+ * @throws Error if reactivation fails
+ */
+export async function reactivateUser(data: ReactivateUserRequest): Promise<ReactivateUserResponse> {
+  const { data: result, error } = await supabase.functions.invoke<ReactivateUserResponse>(
+    'reactivate-user',
+    {
+      body: data,
+    },
+  )
+
+  if (error) {
+    throw error
+  }
+
+  if (!result) {
+    throw new Error('No response from reactivate-user function')
+  }
+
+  return result
+}
 
 /**
  * Delegate permissions to another user for a time period

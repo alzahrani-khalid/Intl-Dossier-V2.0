@@ -18,7 +18,7 @@
  */
 import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import { X } from 'lucide-react'
+import { X, ChevronUp, ChevronDown } from 'lucide-react'
 import { useDossier } from '@/hooks/useDossier'
 import { useDossierOverview } from '@/hooks/useDossierOverview'
 import { DrawerMetaStrip } from './DrawerMetaStrip'
@@ -28,6 +28,14 @@ export interface DrawerHeadProps {
   dossierId: string
   dossierType: string
   onClose: () => void
+  // F23 peek paging (optional — absent when the drawer is opened from a non-list context,
+  // e.g. a dashboard widget or a deep link, in which case no counter/chevrons render).
+  position?: number | null
+  total?: number
+  canPrev?: boolean
+  canNext?: boolean
+  goPrev?: () => void
+  goNext?: () => void
 }
 
 interface DossierLite {
@@ -48,6 +56,12 @@ export function DrawerHead({
   dossierId,
   dossierType,
   onClose,
+  position,
+  total,
+  canPrev,
+  canNext,
+  goPrev,
+  goNext,
 }: DrawerHeadProps): React.JSX.Element {
   const { t, i18n } = useTranslation('dossier-drawer')
   const { data: dossierRaw, isError: dossierIsError } = useDossier(dossierId, undefined, {
@@ -81,6 +95,22 @@ export function DrawerHead({
       ? overview.stats.calendar_events_count
       : 0
 
+  // F23: the peek counter + chevrons render only when a list registered a pageable window.
+  const showPeek = position != null && total != null
+
+  const closeButton = (
+    <button
+      type="button"
+      className="btn-ghost"
+      style={{ minBlockSize: 44, minInlineSize: 44 }}
+      onClick={onClose}
+      aria-label={t('cta.close')}
+      data-testid="dossier-drawer-close"
+    >
+      <X size={14} />
+    </button>
+  )
+
   return (
     <div className="drawer-head">
       <div className="flex items-center justify-between mb-2">
@@ -92,16 +122,46 @@ export function DrawerHead({
             </span>
           )}
         </div>
-        <button
-          type="button"
-          className="btn-ghost"
-          style={{ minBlockSize: 44, minInlineSize: 44 }}
-          onClick={onClose}
-          aria-label={t('cta.close')}
-          data-testid="dossier-drawer-close"
-        >
-          <X size={14} />
-        </button>
+        {showPeek ? (
+          <div className="flex items-center gap-1" data-testid="dossier-drawer-peek">
+            {/* Mono, Latin-digit, dir=ltr-isolated counter (inline span — NOT LtrIsolate,
+                which is a block div and would break this flex row; DESIGN.md §RTL cascade). */}
+            <span
+              dir="ltr"
+              className="font-mono text-sm text-ink-mute"
+              data-testid="dossier-drawer-peek-counter"
+            >
+              {t('peek.counter', { position, total })}
+            </span>
+            <button
+              type="button"
+              className="btn-ghost"
+              style={{ minBlockSize: 44, minInlineSize: 44 }}
+              onClick={goPrev}
+              disabled={canPrev !== true}
+              aria-disabled={canPrev !== true}
+              aria-label={t('peek.prev')}
+              data-testid="dossier-drawer-peek-prev"
+            >
+              <ChevronUp size={14} />
+            </button>
+            <button
+              type="button"
+              className="btn-ghost"
+              style={{ minBlockSize: 44, minInlineSize: 44 }}
+              onClick={goNext}
+              disabled={canNext !== true}
+              aria-disabled={canNext !== true}
+              aria-label={t('peek.next')}
+              data-testid="dossier-drawer-peek-next"
+            >
+              <ChevronDown size={14} />
+            </button>
+            {closeButton}
+          </div>
+        ) : (
+          closeButton
+        )}
       </div>
 
       <h2 className="drawer-title">{name}</h2>

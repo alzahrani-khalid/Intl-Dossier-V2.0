@@ -1,7 +1,7 @@
 // T049: Supabase Edge Function for attachments CRUD
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 const ALLOWED_MIME_TYPES = [
   'application/pdf',
@@ -17,8 +17,10 @@ const ALLOWED_MIME_TYPES = [
 const MAX_FILE_SIZE = 104857600; // 100MB in bytes
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return handleCorsPreflightRequest(req);
   }
 
   try {

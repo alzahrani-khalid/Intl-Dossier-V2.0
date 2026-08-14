@@ -7,6 +7,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { quotePostgrestValue } from '@/lib/postgrest-escape'
 import { supabase } from '@/lib/supabase'
 import { SearchableSelect, type SelectOption } from './SearchableSelect'
 
@@ -79,11 +80,12 @@ export function UserPicker({
       if (!query || query.length < 2) return
       setLoading(true)
       try {
+        const pattern = quotePostgrestValue(`%${query}%`)
         const { data, error: err } = await supabase
           .from('users')
           .select('id, full_name, email, avatar_url')
           .eq('is_active', true)
-          .or(`full_name.ilike.%${query}%,email.ilike.%${query}%`)
+          .or(`full_name.ilike.${pattern},email.ilike.${pattern}`)
           .order('full_name', { ascending: true })
           .limit(20)
 

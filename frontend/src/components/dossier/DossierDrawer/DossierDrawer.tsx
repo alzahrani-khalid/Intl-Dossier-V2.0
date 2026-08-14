@@ -13,11 +13,13 @@
  *   - D-10: mobile = full-screen (border-0 + shadow-none); desktop = min(720px, 92vw)
  */
 import type * as React from 'react'
-import { useSyncExternalStore } from 'react'
+import { useEffect, useSyncExternalStore } from 'react'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { useTranslation } from 'react-i18next'
 import { useDossierDrawer } from '@/hooks/useDossierDrawer'
+import { usePeekPaging } from '@/hooks/usePeekPaging'
+import { usePeekStore } from '@/store/peekStore'
 import { useDossier } from '@/hooks/useDossier'
 import { useDossierOverview } from '@/hooks/useDossierOverview'
 import { DrawerHead } from './DrawerHead'
@@ -29,8 +31,21 @@ import { OpenCommitmentsSection } from './OpenCommitmentsSection'
 import { DrawerSkeleton } from './DrawerSkeleton'
 
 export function DossierDrawer(): React.JSX.Element | null {
-  const { open, dossierId, dossierType, closeDossier } = useDossierDrawer()
+  const { open, dossierId, dossierType, closeDossier, pageDossier } = useDossierDrawer()
   const { t } = useTranslation('dossier-drawer')
+
+  // F23 peek paging: usePeekPaging reads the list-registered peekStore window and drives
+  // the DrawerHead counter/chevrons. navigateToId is injected (param-agnostic) — here it
+  // pages the ?dossier= param in place. dossierType is set whenever the drawer is open.
+  const peek = usePeekPaging(dossierId ?? undefined, (id) => {
+    if (dossierType !== null) pageDossier({ id, type: dossierType })
+  })
+
+  // Clear the registry when the drawer closes so a later open from a non-list context
+  // (dashboard widget, deep link) finds an empty window and renders no counter.
+  useEffect(() => {
+    if (!open) usePeekStore.getState().clear()
+  }, [open])
 
   // Conditional fetch: only fire when the drawer is open with a valid dossier id.
   // useDossier signature: (id, include?, options?) — pass empty string when closed
@@ -100,7 +115,17 @@ export function DossierDrawer(): React.JSX.Element | null {
         className="drawer w-[min(720px,92vw)] max-md:w-screen max-md:border-0 max-md:shadow-none p-0 gap-0"
         style={{ boxShadow: isMobileNarrow ? 'none' : undefined }}
       >
-        <DrawerHead dossierId={dossierId} dossierType={dossierType} onClose={closeDossier} />
+        <DrawerHead
+          dossierId={dossierId}
+          dossierType={dossierType}
+          onClose={closeDossier}
+          position={peek.position}
+          total={peek.total}
+          canPrev={peek.canPrev}
+          canNext={peek.canNext}
+          goPrev={peek.goPrev}
+          goNext={peek.goNext}
+        />
         <div className="drawer-body" data-loading={overviewLoading && !overview ? 'true' : 'false'}>
           {overviewFailed ? (
             <div role="alert" className="px-4 py-16 text-center space-y-2">
