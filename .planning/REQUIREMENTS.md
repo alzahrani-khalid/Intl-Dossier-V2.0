@@ -31,7 +31,19 @@ Requirements for this milestone. Each maps to roadmap phases.
 - [ ] **CI-01**: E2E suite green against the deployed app (stale-login/global-setup debt fixed; genuinely-broken specs repaired, not skipped) or explicitly quarantined with a tracked reason per spec
 - [ ] **CI-02**: Integration test suite green (including the 2 pre-existing interaction-note backend failures)
 - [ ] **CI-03**: a11y suites green — the intake-form `fixme` debt (button-name / aria-prohibited-attr / target-size) fixed and the 8 quarantined a11y specs restored
-- [ ] **CI-04**: Visual-regression baselines regenerated post-flatten on the reference machine and the suite green
+- [x] **CI-04**: Visual-regression baselines regenerated post-flatten on the reference machine and the
+      suite green **— or honestly quarantined with tracked reasons**. Reworded 2026-08-13 under ruling
+      RUL120 to the phase goal's own second clause, on the same basis CI-03 closed: the criterion as first
+      written demanded unqualified green, which would have forced either a false green or an indefinite
+      hold over two tests that cannot execute their assertion at all. **Closed as honest quarantine**: 18
+      of 24 baselines regenerated on the macOS reference machine (pinned Node v24.5.0); gated suite now
+      **26 passed / 2 quarantined / 0 failed** under CI-equivalent settings (`--workers=2 --retries=2`,
+      no retry consumed), both quarantines annotated in-spec and tracked as FIXTURE-01 + VISUAL-DEBT-01.
+      Also under RUL120: 19 baselines that no job executed were resolved per spec — `tasks-tab-visual`
+      **promoted** into the `visual-regression-phase-46` job (+4, the only RTL-at-768 visual coverage in
+      CI, fixture-pinned, needing no re-baseline), the other 6 specs and their 15 baselines **deleted**.
+      Evidence: `.tickmarkr/overseer/CI-04-FINAL.md`. Landing the 18 regenerated images remains gated on
+      the operator's ORCH-3 visual sign-off.
 - [ ] **CI-05**: `test-rtl-smokes` promoted from advisory to a required branch-protection context on `main` (with a smoke-PR BLOCKED proof)
 
 ### Accessibility Defects (filed 2026-08-13 from ORCH-2 execution evidence)
@@ -41,15 +53,63 @@ Real WCAG violations found by executing assertions, not by discovery. Each is an
 scope for Phase 89 (a CI burn-down); they are filed so they stay visible rather than silenced.**
 
 - [ ] **A11Y-01**: `screen-reader-en.spec.ts:11` — axe reports **58 WCAG AA violations** on the
-  after-action route, first being *"Ensure the contrast between foreground and background colors meets
-  WCAG 2 AA minimum contrast ratio thresholds"*. Evidence: ORCH-2 run 2026-08-13, tree `d8c102df`,
-  pinned v24.5.0, bracket 1.90.8 → 1.90.8. See `.tickmarkr/overseer/ORCH-2-RESULT.md`.
+      after-action route, first being _"Ensure the contrast between foreground and background colors meets
+      WCAG 2 AA minimum contrast ratio thresholds"_. Evidence: ORCH-2 run 2026-08-13, tree `d8c102df`,
+      pinned v24.5.0, bracket 1.90.8 → 1.90.8. See `.tickmarkr/overseer/ORCH-2-RESULT.md`.
 - [ ] **A11Y-02**: `wcag-aa-comprehensive-audit.spec.ts:339` — **a keyboard trap exists**
-  (`expect(trapDetected).toBe(false)` received `true`; WCAG 2.1.2 No Keyboard Trap). Same run/evidence.
+      (`expect(trapDetected).toBe(false)` received `true`; WCAG 2.1.2 No Keyboard Trap). Same run/evidence.
 - [ ] **A11Y-03**: `positions-keyboard-nav.spec.ts:8` — Tab from `/positions` leaves focus on `BODY`
-  (expected one of `BUTTON`/`A`/`INPUT`): no reachable first focusable and no skip link, WCAG 2.4.1
-  Bypass Blocks. Independently corroborated by T4's annotation *"the real positions page does not render
-  a skip link targeting #main-content"*. Same run/evidence.
+      (expected one of `BUTTON`/`A`/`INPUT`): no reachable first focusable and no skip link, WCAG 2.4.1
+      Bypass Blocks. Independently corroborated by T4's annotation _"the real positions page does not render
+      a skip link targeting #main-content"_. Same run/evidence.
+
+Filed 2026-08-13 from CI-04 execution evidence. The intake debt below was named in CI-03's own text but
+was **not** covered by the honest-quarantine close — it sat as `test.fixme(true, …)` with no tracked
+item, the exact pattern RULING-P89-ORCH2 identified as how the T4 false-green happened.
+
+- [ ] **A11Y-04**: `tests/a11y/intake-accessibility.spec.ts` — intake form/list/queue report
+      serious/critical axe violations: **button-name** (icon / request-type buttons without accessible
+      names), **aria-prohibited-attr**, **target-size**. Quarantined by three `test.fixme(true, …)` at
+      lines 38 (EN), 137 (AR), 146 (forced-colors) — the same debt on all three surfaces, so RTL is not a
+      separate cause. Evidence: verbatim fixme reasons as written at `ba746d78`.
+- [ ] **A11Y-05**: `tests/a11y/intake-accessibility.spec.ts:112` — intake form **skips a heading level
+      (h1 → h3)**, annotated in-spec as _"Real structural bug"_. A **fourth** fixme in that file and a
+      distinct defect from A11Y-04; it is **not** named in CI-03's wording, so closing CI-03 as worded
+      would have left it untracked. Same evidence.
+
+### Test Infrastructure Debt (filed 2026-08-13 from CI-02 / CI-04 execution evidence)
+
+- [ ] **TEST-INFRA-01**: Provision a database for the integration suite — **235 test files expect a
+      DB at `localhost:54321`** and there is none, which is why CI-02 is broadly red. This is decision
+      **D-3**, referenced at `ROADMAP.md:145` and `STATE.md:23/29` but never filed as an item until now.
+      Blocks CI-02; not fixable by any per-spec repair.
+- [ ] **FIXTURE-01**: Dashboard seed data absent for two visual widgets, so their specs cannot reach
+      their screenshot assertion (they fail at the readiness gate, `dashboard-widgets-visual.spec.ts:87`).
+      Not baseline drift — regeneration provably cannot fix them (survived `--update-snapshots`
+      unchanged). (a) **week-ahead**: renders _"No upcoming events"_; KPI strip reads `WEEK AHEAD 0` at the
+      spec's frozen clock `2026-07-03T12:00:00Z`. (b) **vip-visits**: renders _"No VIP visits with country
+      data. Add VIP participant data to the dashboard seed, then refresh the widget."_ — the empty state
+      names its own fix. Their committed baselines (`week-ahead.png`, `vip-visits.png`, captured
+      2026-07-05 at `f2dc476a` when the seed existed) are now **stale and unreachable**. Evidence:
+      `.tickmarkr/overseer/CI-04-RESULT.md`, pinned Node v24.5.0, bracket v24.5.0 → v24.5.0.
+      **Ruled 2026-08-13 (RUL120): annotate-and-track, seed deliberately NOT restored** — reseeding
+      deepens the dependency tracked as VISUAL-DEBT-01 rather than removing it. Both specs are annotated
+      `test.fixme` at `dashboard-widgets-visual.spec.ts` naming the absent widget data and citing this id.
+- [ ] **VISUAL-DEBT-01**: **Design smell — visual baselines are pinned to mutable staging content, so
+      they rot regardless of who reseeds.** This is the generalisation of FIXTURE-01 and is why RUL120
+      declined the reseed. Two independent mechanisms, both observed on 2026-08-13:
+      (a) **Mutable row content.** `list-pages-visual` baselines capture live staging rows; the
+      `countries-en` re-baseline changed row _order_ because UAE and UK acquired a `Mon 06 Jul` last-touch
+      after the previous capture. The list sorts on a mutable column, so any staging write re-reds the
+      suite with no UI change at all.
+      (b) **Double-clock divergence.** `dashboard-widgets-visual.spec.ts` freezes the _browser_ clock to a
+      hard-coded `FROZEN_TIME` while `get_upcoming_events` filters _server_-side by real `NOW()`. The file's
+      own header comment states they "only overlap when the frozen clock is today", so the `week-ahead`
+      baseline is correct only on/near its capture date and decays by construction — `FROZEN_TIME` has
+      already been re-pinned once (`2026-05-08` → `2026-07-03`).
+      Fixing this means decoupling visual baselines from live data (deterministic fixture/seeded
+      route-level mocking, or masking the data regions), not repointing them at fresher data. Until then
+      every visual green is a snapshot of one moment in staging.
 
 ### CORS Edge-Function Migration
 

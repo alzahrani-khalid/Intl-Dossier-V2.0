@@ -79,8 +79,38 @@ test.beforeEach(async ({ page }) => {
   await page.clock.runFor(100)
 })
 
+// FIXTURE-01 (CI-04, 2026-08-13, ruling RUL120) — HONEST QUARANTINE. The seed is deliberately NOT
+// restored: these baselines pin mutable staging content, so reseeding deepens the dependency rather
+// than removing it (tracked separately as VISUAL-DEBT-01).
+//
+// Both widgets below render their real empty state, so the readiness assertion on the `.first()`
+// row locator fails and the test never reaches `toHaveScreenshot`. That is why `--update-snapshots`
+// leaves their baselines byte-unchanged and cannot repair them — verified 2026-08-13 on the macOS
+// reference machine, pinned Node v24.5.0. Their committed baselines (captured 2026-07-05 at
+// `f2dc476a`, when both widgets had data) are stale and unreachable.
+//
+// These are DATA/CLOCK debt, not spec debt: `.week-row` still exists at
+// `src/pages/Dashboard/widgets/WeekAhead.tsx:65` and `.vip-row` at `VipVisits.tsx:45`. Nothing was
+// renamed. Evidence: `.tickmarkr/overseer/CI-04-RESULT.md`.
+const FIXTURE_BLOCKED: Partial<Record<(typeof WIDGETS)[number][1], string>> = {
+  'week-ahead':
+    'FIXTURE-01 — no `.week-row` renders. The widget shows its empty state "No upcoming events" and ' +
+    'the KPI strip reads WEEK AHEAD 0. Cause is the double-clock divergence documented at the top of ' +
+    'this file: the browser clock is frozen to FROZEN_TIME (2026-07-03) while get_upcoming_events ' +
+    'filters SERVER-side by real NOW(), so the rows the server returns fall outside the window the ' +
+    'frozen browser clock buckets on, and every one is dropped. The two only overlap when FROZEN_TIME ' +
+    'is "today". Reseeding therefore does NOT fix this — re-pinning FROZEN_TIME to the capture date ' +
+    'does, and it re-rots the next day. Tracked as VISUAL-DEBT-01.',
+  'vip-visits':
+    'FIXTURE-01 — no `.vip-row` renders. The widget shows its empty state, which names its own fix ' +
+    'verbatim: "No VIP visits with country data. Add VIP participant data to the dashboard seed, then ' +
+    'refresh the widget." The dashboard seed carries no VIP participant rows with country data.',
+}
+
 for (const [selector, name] of WIDGETS) {
   test(`visual ${name}`, async ({ page }) => {
+    const blockedReason = FIXTURE_BLOCKED[name]
+    test.fixme(blockedReason !== undefined, blockedReason ?? '')
     await page.waitForSelector(`[data-testid="${selector}"]`)
     const widget = page.getByTestId(selector)
     await expect(widget).toBeVisible()

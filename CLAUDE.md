@@ -97,30 +97,6 @@ Before declaring any UI task complete:
 - [ ] Tested at 1024px and 1400px (the actual analyst-workstation widths)
 - [ ] RTL: rendered with `dir="rtl"` and verified Tajawal applies
 
-## Core Tech Stack
-
-- **Frontend**: React 19+, TypeScript 5.0+ (strict mode), TanStack Router/Query v5, Tailwind CSS v4, IntelDossier Design System (`frontend/design-system/inteldossier_handoff_design/`), i18next, React Flow (network graphs)
-- **Backend**: Node.js 22.22.0+, Supabase (PostgreSQL 15+, Auth, RLS, Realtime, Storage), Redis 7.x
-- **Database**: PostgreSQL 15+ with pgvector, pg_trgm, pg_tsvector extensions
-- **AI/ML**: AnythingLLM (self-hosted), vector embeddings (1536 dimensions)
-- **Additional**: @dnd-kit/core (drag-and-drop), Vite (build tool)
-
-## Project Structure
-
-```
-backend/          # Express + TypeScript API
-frontend/         # React 19 + Vite app
-tests/            # Unit, integration, E2E tests
-supabase/         # Migrations, seed data, Edge Functions
-```
-
-## Commands
-
-- **Dev**: `pnpm dev` (monorepo via Turborepo)
-- **Build**: `pnpm build`
-- **Test**: `pnpm test`, `pnpm lint`, `pnpm typecheck`
-- **DB**: `pnpm db:migrate`, `pnpm db:seed`, `pnpm db:reset`
-
 ## Responsive Design
 
 IntelDossier is a **desktop-primary analyst workstation**. The default
@@ -173,31 +149,6 @@ const isRTL = i18n.language === 'ar'
 | `text-right`  | `text-end`     | Text align end      |
 | `rounded-l-*` | `rounded-s-*`  | Border radius start |
 | `rounded-r-*` | `rounded-e-*`  | Border radius end   |
-
-### RTL Component Template
-
-```tsx
-import { useTranslation } from 'react-i18next'
-
-export function ResponsiveRTLComponent() {
-  const { t, i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
-
-  return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row gap-4"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
-      <h1 className="text-2xl sm:text-3xl md:text-4xl text-start">{t('title')}</h1>
-      <button className="h-11 min-w-11 px-4 sm:px-6 ms-4 sm:ms-6 rounded-s-lg rounded-e-lg">
-        {t('action')}
-      </button>
-      {/* Flip directional icons */}
-      <ChevronRight className={isRTL ? 'rotate-180' : ''} />
-    </div>
-  )
-}
-```
 
 ## Component Library Strategy
 
@@ -282,22 +233,6 @@ Kanban board positions for tasks:
 | `done`        | Successfully completed   |
 | `cancelled`   | Explicitly cancelled     |
 
-### Code Usage
-
-```typescript
-// Always use unified types from work-item.types.ts
-import type { WorkItem, WorkSource, Priority, TrackingType } from '@/types/work-item.types'
-
-// Always use unified i18n namespace
-import { useTranslation } from 'react-i18next'
-const { t } = useTranslation('unified-kanban')
-
-// Correct terminology
-t('priority.urgent') // NOT 'priority.critical'
-t('status.in_progress') // Consistent naming
-t('columns.todo') // Workflow stage for display
-```
-
 ### Database Column Naming
 
 | Field           | Type        | Description                                        |
@@ -356,57 +291,6 @@ The system is built around **dossiers** as the central organizing concept. All f
 | `person`           | VIPs requiring tracking                       |
 | `elected_official` | Government contacts with office/term metadata |
 
-### Key Utilities & Functions
-
-```typescript
-// URL generation for dossier routes
-import { getDossierRouteSegment } from '@/lib/dossier-routes'
-const route = getDossierRouteSegment('country') // Returns 'countries'
-
-// Type validation
-import { isValidDossierType } from '@/lib/dossier-type-guards'
-if (isValidDossierType(type)) {
-  /* type-safe usage */
-}
-
-// Dossier context inheritance hook
-import { useResolveDossierContext } from '@/hooks/useResolveDossierContext'
-const { dossiers, inheritanceSource } = useResolveDossierContext(parentType, parentId)
-```
-
-### Component Usage
-
-```tsx
-// Display dossier context badge on work items
-import { DossierContextBadge } from '@/components/Dossier/DossierContextBadge'
-;<DossierContextBadge
-  dossier={dossier}
-  inheritanceSource="direct" // or 'engagement', 'after_action', etc.
-/>
-
-// Universal card for any dossier type
-import { UniversalDossierCard } from '@/components/Dossier/UniversalDossierCard'
-;<UniversalDossierCard dossier={dossier} />
-
-// Type selector for dossier creation
-import { DossierTypeSelector } from '@/components/Dossier/DossierTypeSelector'
-;<DossierTypeSelector value={type} onChange={setType} />
-```
-
-### Database Linking Pattern
-
-Work items connect to dossiers via the `work_item_dossiers` junction table:
-
-```sql
--- Link work items to dossiers with inheritance tracking
-INSERT INTO work_item_dossiers (work_item_id, dossier_id, inheritance_source)
-VALUES (
-  'task-uuid',
-  'country-dossier-uuid',
-  'direct'  -- or 'engagement', 'after_action', 'position', 'mou'
-);
-```
-
 ### Architecture Documentation
 
 For comprehensive details, see:
@@ -458,32 +342,6 @@ When testing the application using browser automation tools (Chrome MCP, Playwri
 
 For local development, set these in `.env.test` (not committed to git).
 
-### Tag signing setup
-
-Phase 53 (BUNDLE-06) introduced SSH-signed phase-base tags so `git tag -v <name>` succeeds for `phase-47-base`, `phase-48-base`, `phase-49-base`, and every `phase-NN-base` tag created from Phase 54 onward.
-
-The signing config is user-local (`~/.gitconfig` and `~/.ssh/allowed_signers`) and is NOT committed to the repo. Run these three commands once per machine to enable signing:
-
-```bash
-git config --global gpg.format ssh
-git config --global user.signingkey ~/.ssh/<your-github-enrolled-key>.pub
-git config --global gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers
-```
-
-Then create `~/.ssh/allowed_signers` (chmod 600) with one line per signer:
-
-```
-alzahrani.khalid@gmail.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA<rest-of-pubkey-blob>
-```
-
-The first field is the email used by `git config user.email`; the rest is the literal contents of the corresponding `~/.ssh/id_*.pub`. Verify with:
-
-```bash
-git tag -v phase-49-base   # MUST exit 0 and print "Good \"git\" signature"
-```
-
-For GitHub's "Verified" tag badge to appear, the SSH key must be enrolled on github.com as a **Signing Key** (separate enrollment from Authentication Keys). Local `git tag -v` works against `allowed_signers` regardless of the GitHub enrollment.
-
 ## Browser Automation
 
 Use `agent-browser` for web automation. Run `agent-browser --help` for all commands.
@@ -518,60 +376,7 @@ A diplomatic dossier management system for tracking countries, organizations, fo
 
 <!-- GSD:stack-start source:codebase/STACK.md -->
 
-## Technology Stack
-
-- **Runtime**: Node.js 22.22.0+, pnpm 10.29.1+ (monorepo via Turbo)
-- **Languages**: TypeScript 5.5+ (backend) / 5.9+ (frontend) strict mode, SQL, Bash
-- **Testing**: Vitest (unit/integration), Playwright (E2E), @testing-library/react, axe-core (a11y)
-
-<!-- Dependencies, config, and platform requirements: see package.json, .env.example, and .backend/.env.example -->
-<!-- GSD:stack-end -->
-
-<!-- GSD:conventions-start source:CONVENTIONS.md -->
-
 ## Conventions
-
-## Naming Patterns
-
-- **React Components**: PascalCase with `.tsx` extension (e.g., `ConsistencyPanel.tsx`, `UniversalDossierCard.tsx`)
-- **Hooks**: Prefix with `use`, camelCase (e.g., `useAuth.ts`, `useDossiers.ts`, `use-compliance.ts`)
-- **Utilities**: camelCase with `.ts` extension (e.g., `api-helpers.ts`)
-- **Middleware**: hyphenated or camelCase with `.ts` extension (e.g., `rate-limit.middleware.ts`, `errorHandler.ts`)
-- **Types/Interfaces**: Suffix with `.types.ts` (e.g., `work-item.types.ts`, `common.types.ts`, `ai-extraction.types.ts`)
-- **Test files**: `*.test.ts` or `*.test.tsx` (e.g., `Country.test.ts`, `ConsistencyPanel.test.tsx`)
-- camelCase for all function names
-- Explicitly typed return types (required by ESLint rule `@typescript-eslint/explicit-function-return-type`)
-- Example: `const calculateRelationshipHealthScore = (): number => { ... }`
-- camelCase for variables: `const testCountry = { ... }`
-- camelCase for functions: `const getClientMessage = (): string => { ... }`
-- CONSTANT_CASE only when necessary (rare in modern codebase)
-- PascalCase for interfaces and type aliases (e.g., `ConsistencyCheck`, `Country`, `WorkItem`)
-- Enum values: CONSTANT_CASE (e.g., `conflict_type: 'contradiction' as const`)
-
-## Code Style
-
-- **Semicolons**: Off (configured as `"semi": false`)
-- **Trailing Commas**: All (ES5 compatible, `"trailingComma": "all"`)
-- **Quotes**: Single quotes for strings (`"singleQuote": true`)
-- **JSX Quotes**: Double quotes for JSX attributes (`"jsxSingleQuote": false`)
-- **Print Width**: 100 characters per line
-- **Tab Width**: 2 spaces (not tabs)
-- **Line Endings**: LF only (`"endOfLine": "lf"`)
-- **Arrow Parentheses**: Always include (e.g., `(x) => x + 1`)
-- **Explicit Return Types**: Required on all functions (`@typescript-eslint/explicit-function-return-type`)
-- **No Explicit `any`**: Error-level (`@typescript-eslint/no-explicit-any: error`)
-- **No Unused Variables**: Error-level (`@typescript-eslint/no-unused-vars: error`)
-- **No Floating Promises**: Error-level (`@typescript-eslint/no-floating-promises: error`)
-- **Console Usage**: Warn, but allow `console.warn()` and `console.error()`
-- **React**: React 19+ (no need for `React` import in JSX files)
-- **Strict Boolean Expressions**: Enforced (`@typescript-eslint/strict-boolean-expressions: error`)
-
-<!-- RTL enforcement: see "Arabic RTL Support Guidelines" section above -->
-
-## Import Organization
-
-- `@`: Root of `src/` directory (e.g., `@/components`, `@/hooks`, `@/types`)
-- `@tests`: Test utilities directory (for test files)
 
 ## Error Handling
 
@@ -591,53 +396,6 @@ A diplomatic dossier management system for tracking countries, organizations, fo
 <!-- GSD:conventions-end -->
 
 <!-- GSD:architecture-start source:ARCHITECTURE.md -->
-
-## Architecture
-
-## Pattern Overview
-
-- Monorepo structure (Turborepo) with 3 workspaces: `backend`, `frontend`, `shared`
-- Express.js backend with domain-driven design layers (core domain, ports, adapters)
-- React 19 + TanStack Router v5 for URL-driven state management
-- Supabase PostgreSQL as primary data store with Realtime subscriptions
-- API-first architecture with separate auth and protected routes
-- Error-tracked via Sentry on both frontend and backend
-
-## Key Layers
-
-| Layer          | Location                                            | Purpose                                                             |
-| -------------- | --------------------------------------------------- | ------------------------------------------------------------------- |
-| Domain         | `backend/src/core/domain/`                          | Business logic, entities (framework-agnostic)                       |
-| Ports/Adapters | `backend/src/core/ports/`, `backend/src/adapters/`  | Contracts + Supabase/AI/email implementations                       |
-| API            | `backend/src/api/` (60+ files)                      | Express routers, feature-based                                      |
-| Middleware     | `backend/src/middleware/`                           | Auth, rate-limit, security headers                                  |
-| Routes         | `frontend/src/routes/` (100+ files)                 | TanStack Router, `__root.tsx` → `_protected.tsx` → feature routes   |
-| Domains        | `frontend/src/domains/{feature}/`                   | Types, repositories, hooks, services per feature                    |
-| Components     | `frontend/src/components/ui/`                       | App component primitives bound to IntelDossier Design System tokens |
-| State          | `frontend/src/contexts/`, `frontend/src/providers/` | Auth/theme/language contexts                                        |
-
-## Data Flow
-
-- **URL State:** TanStack Router manages search params, pagination, filters
-- **Server State:** TanStack Query caches API responses, handles refetch logic
-- **Client State:** React Context for auth, theme, language; Zustand for complex client state
-- **Realtime:** Supabase Realtime subscriptions for live updates
-
-## Entry Points
-
-- Backend: `backend/src/index.ts` | Frontend: `frontend/src/main.tsx` → `App.tsx`
-
-## Cross-Cutting
-
-- **Auth**: JWT via `authenticateToken` middleware + Supabase Auth; `_protected` route wrapper
-- **Validation**: express-validator (backend), React Hook Form + Zod (frontend)
-- **Error tracking**: Sentry (both), Winston logger (backend), ErrorBoundary (frontend)
-- **Rate limiting**: `rate-limit.middleware.ts` — `apiLimiter`, `authLimiter`, `uploadLimiter`, `aiLimiter`
-- **Caching**: Redis/ioredis (backend), TanStack Query stale-while-revalidate (frontend)
-- **Realtime**: Supabase Realtime subscriptions auto-update query cache
-<!-- GSD:architecture-end -->
-
-<!-- GSD:workflow-start source:GSD defaults -->
 
 ## GSD Workflow Enforcement
 
@@ -662,83 +420,6 @@ Do not make direct repo edits outside a GSD workflow unless the user explicitly 
 
 <!-- GSD:profile-end -->
 
-<!-- Karpathy-Skills:start -->
-
-## Karpathy Coding Principles
-
-Source: https://github.com/forrestchang/andrej-karpathy-skills (CLAUDE.md)
-
-Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
-
-**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
-
-### 1. Think Before Coding
-
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
-
-Before implementing:
-
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
-
-### 2. Simplicity First
-
-**Minimum code that solves the problem. Nothing speculative.**
-
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
-
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
-
-### 3. Surgical Changes
-
-**Touch only what you must. Clean up only your own mess.**
-
-When editing existing code:
-
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
-
-When your changes create orphans:
-
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
-
-The test: Every changed line should trace directly to the user's request.
-
-### 4. Goal-Driven Execution
-
-**Define success criteria. Loop until verified.**
-
-Transform tasks into verifiable goals:
-
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Refactor X" → "Ensure tests pass before and after"
-
-For multi-step tasks, state a brief plan:
-
-```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-```
-
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
-
----
-
-**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
-
-<!-- Karpathy-Skills:end -->
-
 # graphify
 
 This project has a graphify knowledge graph at graphify-out/.
@@ -748,3 +429,88 @@ Rules:
 - Before answering architecture or codebase questions, read graphify-out/GRAPH_REPORT.md for god nodes and community structure
 - If graphify-out/wiki/index.md exists, navigate it instead of reading raw files
 - After modifying code files in this session, run `graphify update .` to keep the graph current (AST-only, no API cost)
+
+<!-- tickmarkr:agent-docs begin -->
+
+## tickmarkr
+
+tickmarkr compiles repository specs into isolated, independently verified agent work.
+
+### Invariants
+
+- Never run two tickmarkr runs in the same repository concurrently.
+- Never let tickmarkr merge work to main; new runs consolidate on `tickmarkr/<runId>`.
+- Do not edit compiled graphs to force outcomes; fix source specs and recompile.
+- Gates verify commits, diffs, acceptance criteria, and reviews independently — never trust a worker's completion claim.
+- Treat missing or unparseable machine results and verdicts as failures.
+
+### Commands
+
+- `tickmarkr compile <spec>` — spec → RunGraph
+- `tickmarkr plan` — routing table and human gates
+- `tickmarkr run` — execute the graph
+- `tickmarkr status <runId>` — run progress
+- `tickmarkr resume <runId>` — continue a paused or failed run
+- `tickmarkr approve <runId> <taskId>` — release a human gate
+- `tickmarkr report <runId> --md` — execution record beside the spec
+- `tickmarkr verify --base <ref>` — run the gate battery standalone against merge-base(base, HEAD)..HEAD: no daemon, no retries, one fail-closed verdict (`--criteria <file>` or `--task <id>` adds the semantic gates; `--no-review` for deterministic-only)
+
+Loop: compile → plan → run → report. Watch the journal for run-end rather than polling workers.
+
+### Role check (multi-agent environments)
+
+- **Orchestrator:** run the loop in your session; do not start a second run.
+- **Supervisor with a live orchestrator:** relay the mission via verified handoff (below), then supervise — do not duplicate the loop.
+- **Primary session without an orchestrator:** spawn one child orchestration session, give it the mission and these rules, then supervise.
+
+Outside multi-agent environments, run the loop directly.
+
+### Version preflight
+
+Before `tickmarkr compile` or `tickmarkr run`: run `tickmarkr version`, read `package.json` version, and if the binary is older on major.minor, stop and tell the operator to update. Never proceed on hope — stale binaries silently skip daemon gates. Also verify no run is live before starting one: `pgrep -f "tickmarkr (run|resume)"` must be empty — match the process, not one install path (`dist/cli/index.js` alone misses global and homebrew installs), and treat a held `.tickmarkr/graph.lock` as a live run until its holder pid is proven dead.
+
+### Tip-verify-before-green
+
+A run is green only when the run-end event exists in the journal AND tip verify is not "failed". Never report green to the operator, tab titles, or records until both hold.
+
+### Verified handoffs
+
+When relaying missions between agents, never use bare send-text (`herdr agent send` / pane send-text) — it omits Enter. Use `herdr pane run <pane> "<message>"` or `herdr notification show "<message>"`. Confirm delivery by reading the target pane afterward; never report "relayed" without read-back.
+
+### Orient before you act — this block may be the ONLY guidance your host loaded
+
+These same bytes are written into EVERY repository guidance file this project has, because hosts disagree
+about which one they read: some load only `AGENTS.md`, some also load a repo-level guidance file, some load
+a user-level one instead. **Anything stated in only one file is invisible to some agent.** So do not assume
+you were handed the whole picture — list the repository root, open every guidance file present, and then:
+
+- **Read your host's PROJECT MEMORY before starting.** Hosts that keep one store it under a per-project
+  state directory keyed by the absolute working-directory path; find it and read its index plus every entry
+  whose name concerns METHOD or DISCIPLINE. It holds rules that cost real defects to learn. Entries may
+  predate a project rename, so **search by CONCEPT, not by the current product name.** A memory nobody opens
+  is worse than none: every seat assumes the lesson is recorded somewhere and no seat looks.
+- **The gates are the product.** Seven, defined in `src/graph/schema.ts`:
+  `build test lint evidence scope acceptance review`. **That is DECLARATION order, not execution order** —
+  the first five run as a battery that stops at its first red, then `acceptance` and `review` run
+  CONCURRENTLY (`run-gates.ts:39`, _"judge ‖ review"_). The first five are MANDATORY; only `acceptance` and
+  `review` may be omitted per task. Implementations are in `src/gates/` — `baseline.ts` (build/test/lint,
+  diffed against a recorded baseline so pre-existing failures are forgiven), `evidence.ts`, `scope.ts`,
+  `acceptance.ts` (its judge reads the DIFF and every criterion must cite a changed hunk), `review.ts`
+  (cross-vendor). `run-gates.ts` drives them. **A declared gate is not a passed gate, and a gate that
+  returned zero findings is not the same as a gate that ran.**
+- **Spec-authoring law ships in the spec template** that `tickmarkr init` writes: the hard bounds and which
+  direction each moves, what makes a criterion real, and why an absence or a source-text grep is never a
+  criterion. Read it before authoring or repairing acceptance items.
+- **Editing `src/gates/`, `src/compile/` or `src/graph/`?** Read `docs/codebase/ARCHITECTURE.md` first.
+- **EVERY fix gets a ship/no-ship decision, recorded, at the moment it is made.** Ask one question of each
+one: _does a user hit this defect?_ If yes, the fix belongs in `src/**` or `skills/**` — the only trees
+the package carries (`files: [dist, schema, skills, fixtures]`). A script, overlay, config entry or
+operator-side workaround that resolves the symptom **locally is not the fix; it is a decision to leave
+every other user broken**, and it must say so in writing and name the condition that removes it.
+**The default answer is SHIP.** A local remedy is the exception and carries the burden of proof.
+Watch for the three shapes this hides in: a fix applied where you happened to be standing rather than
+where the defect lives; an observation filed with a product fix named in its own text and queued
+nowhere; and a local tool that quietly grows into a product feature nobody shipped. **A defect and its
+fix must be recorded in the same place, or the queue silently becomes a list of things everyone assumed
+someone else had shipped.**
+<!-- tickmarkr:agent-docs end -->
