@@ -1,5 +1,21 @@
 # Milestones
 
+## v9.0 Platform Completion & Live Verification (Closed PARTIAL: 2026-08-15)
+
+**Phases:** 6 (86–91), 3 complete · **Plans:** 54/57 (+6 tickmarkr tasks) · **Timeline:** 2026-07-06 → 2026-08-15 (40 days) · **Scope:** 251 commits, 946 files
+
+**Delivered:** The three honest-disabled data-entry features became real or were formally retired (P86); list pages and navigation gained the four Linear-grade affordances F23–F26 (P87); and every edge function left the deprecated wildcard CORS for the origin-validated helper (P90, 36/36, operator verdict signed). SEC-01 (UserPicker PostgREST interpolation) closed, and six tickmarkr tasks burned down a11y and import debt.
+
+**Closed partial, deliberately.** Phases 88, 89 and 91 did not finish. Rather than hold the milestone open, the delivered work merged to `main` via PR #98 (`e990ed84`, all 8 required checks green) and every open item was carried into v10.0 — Trust & Correctness: P88-02 credential rotation (operator-only, gates CI-01+CI-05), CI-01/02/04/05, the owed ORCH-2 a11y green proof, LIVE-01/02/03 (hardware-gated on an undecided GPU host), the entry-bundle diet (budget raised 476 → 500 KB), and VISUAL-DEBT-01.
+
+**Audit at close:** a six-lane live-app sweep across 190 routes in EN + AR produced **144 findings, 19 of them ship-blockers** — including no logout anywhere in the app, 133 of 303 edge functions failing to validate JWTs, and `/settings` never having saved. See `.planning/audits/live-audit-2026-08-15/INDEX.md`. This audit is the substance of v10.0.
+
+**Known deferred at close:** 3 data-entry quick tasks (260530-w2/w3/w4) lack SUMMARYs. The artifact audit reported 20 open quick tasks; 17 were verified complete on disk (unparseable status field, not real debt). `main` remains red on non-required CI (E2E, integration, a11y RTL+WCAG, RTL Portal, RTL+Responsive, Docker Build) — pre-dating v9.0.
+
+**Archive:** `.planning/milestones/v9.0-ROADMAP.md` · `.planning/milestones/v9.0-REQUIREMENTS.md`
+
+---
+
 ## v8.1 Linear Design Refinement (Shipped: 2026-07-05)
 
 **Phases:** 5 (81–85) · **Plans:** 22 · **Tasks:** 39 · **Timeline:** 2026-07-04 → 2026-07-05 (2 days) · **Scope:** 116 commits, 354 files (+13,631 / −7,795)

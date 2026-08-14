@@ -10,6 +10,8 @@ Unified intelligence management for diplomatic operations — every relationship
 
 ## Current State
 
+**Closed PARTIAL: v9.0 Platform Completion & Live Verification — 3 of 6 phases (2026-08-15).** Merged to `main` via PR #98 (`e990ed84`) with all 8 required checks green. Delivered: the three honest-disabled data-entry features resolved (MoU create, user-management routes, ConsistencyPanel retired via ADR-008); the four Linear affordances F23–F26 (peek panel + cross-page paging, split Filter/Display popovers with live counts, ⌘K audit, rich empty states) with operator render sign-off; and every edge function migrated off the deprecated wildcard CORS onto the origin-validated helper (36/36, SC-4 repo-wide grep = 0, verdict signed). SEC-01 closed; 6 tickmarkr tasks burned down a11y and mixed-import debt. **Not delivered, carried to v10.0:** P88-02 credential rotation (operator-only; gates CI-01 + CI-05), CI-01/02/04/05, the owed ORCH-2 a11y green proof, LIVE-01/02/03 (hardware-gated), the entry-bundle diet, VISUAL-DEBT-01. A six-lane live-app audit at close (190 routes, EN + AR) found **144 findings including 19 ship-blockers** — no logout anywhere in the app, 133 of 303 edge functions not validating JWTs, `/settings` never having saved — recorded at `.planning/audits/live-audit-2026-08-15/INDEX.md` and forming the scope of v10.0. See `milestones/v9.0-ROADMAP.md`.
+
 **Shipped: v8.1 Linear Design Refinement — all 5 phases (2026-07-05).** The corrective + taste pass over the v8.0 Linear migration, merged to main via PR #96 (`46e259fb`): visible audit bugs fixed (kanban four-column fit @1400/1024 LTR+RTL, dup settings header, redundant calendar button, raw enum pills, KPI wrap); date/number formatting centralized on `lib/format-date` (day-first no-comma + GST, ~66 sites migrated, AR locked to Latin digits via `toFormatLocale('ar') → 'ar-u-nu-latn'`, `toArDigits` deleted, CI date-format guard); token debt consolidated (shared `--chart-1..8` palette, Tailwind literals → `@theme`, banned shadows/radii/gradients stripped, `var(--row-h)`, emoji → lucide, 20 dead files deleted, carve-outs byte-identical); marketing voice removed from four `en` i18n namespaces (`ar` mirrored); and six user-signed-off Linear taste calls landed (F16–F21: kanban overdue chip + stage glyphs, neutral active-nav fill, settings single-nav + back-to-app, true sentence-case form labels, grouped sub-nav) with a human render-parity sign-off across dark/light × EN/AR. All 24 v1 requirements complete; Phase-85 verification passed 6/6. See `milestones/v8.1-ROADMAP.md`.
 
 **Shipped: v8.0 Linear Design System Migration — all 6 phases (2026-07-04).** Retired the four-direction Bureau/Chancery/Situation/Ministerial design language (and the accent-hue axis) for a single **Linear** visual direction — a re-skin of the existing OKLCH token engine, not a rebuild. Dark-canonical + derived-light Linear tokens wired bootstrap→tokens→primitives with the three-copy byte-match CI guard (`directions.ts` ↔ `bootstrap.js` ↔ `index.css :root`) and dual-layer `id.dir`→linear coercion so no legacy profile loses first paint (P77); the RTL direction source consolidated into one owner bridged into Radix, shadcn `migrate rtl` applied once, duplicate-`rtl:` CI guard (P76); HeroUI bumped 3.0.5 → 3.2.1 (P78); Aceternity fully removed — 1 live component (SearchableSelect) rebuilt on HeroUI v3/Radix preserving its RHF/ARIA/keyboard contract + 7 dead deleted (P79). Proven correct by a human-approved full-route visual re-compare (43 baselines, EN+AR × dark+light, 0 regressions), an honest recorded axe baseline across all 4 axes, and RTL portal/component smoke tests wired into CI (P80). Design source-of-truth (DESIGN.md + 3× CLAUDE.md) repointed off Bureau to Linear (DOC-01). Audit passed 24/24 requirements, 6/6 phases; `threats_open: 0`. See `milestones/v8.0-ROADMAP.md` + `milestones/v8.0-MILESTONE-AUDIT.md`.
@@ -40,7 +42,18 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-## Last Shipped Milestone: v8.1 Linear Design Refinement
+## Last Milestone: v9.0 Platform Completion & Live Verification
+
+**Status: CLOSED PARTIAL 2026-08-15** — 6 phases (86–91), 3 complete; 54/57 plans + 6 tickmarkr tasks; 251 commits, 946 files. Merged to `main` via PR #98 (`e990ed84`), all 8 required checks green. Closed deliberately at 3/6 rather than held open; every unfinished item was carried into v10.0.
+
+**Delivered:** P86 resolved the three honest-disabled data-entry features (MoU create, user-management routes, ConsistencyPanel retired via ADR-008). P87 landed the four Linear affordances F23–F26 (peek panel + cross-page paging, split Filter/Display popovers with live counts, ⌘K audit, rich empty states) with operator render sign-off. P90 migrated every edge function off wildcard CORS onto the origin-validated helper (36/36, SC-4 grep = 0, verdict signed). P88 closed SEC-01; P89 burned down a11y and import debt across 6 tickmarkr tasks.
+
+**Not delivered — carried to v10.0:** P88-02 credential rotation (operator-only; gates CI-01 + CI-05), CI-01/02/04/05, the owed ORCH-2 a11y green proof, LIVE-01/02/03 (hardware-gated on an undecided GPU host), the entry-bundle diet, and VISUAL-DEBT-01.
+
+**Audit at close:** a six-lane live-app sweep (190 routes, EN + AR, 370 screenshots) found **144 findings, 19 ship-blockers** — no logout anywhere in the app, 133 of 303 edge functions not validating JWTs, `/settings` never having saved, after-action records uncreatable. Full record: `.planning/audits/live-audit-2026-08-15/INDEX.md`. This is the substance of v10.0.
+
+<details>
+<summary>Previously: v8.1 Linear Design Refinement (shipped 2026-07-05)</summary>
 
 **Status: SHIPPED 2026-07-05** — 5 phases (81–85), 22 plans, 39 tasks; merged to main via PR #96 (merge `46e259fb`). Phase-85 verification passed (6/6) + human render-parity sign-off across dark/light × EN/AR; all 24 v1 requirements complete. No milestone-level audit (corrective/refinement milestone — phase verification + human sign-off are the ship proof).
 
@@ -57,20 +70,7 @@ Unified intelligence management for diplomatic operations — every relationship
 
 </details>
 
-## Current Milestone: v9.0 Platform Completion & Live Verification
-
-**Goal:** Close every carried-forward gap between what the platform advertises and what is built, verified, and enforced — the last honest-disabled features become real, the red test suites become green gates, all 272 edge functions leave the deprecated CORS wildcard, and the v7.0 intelligence stack is finally live-verified on real GPU inference.
-
-**Target features:**
-
-- **Feature completion** — build the three honest-disabled data-entry features: MoU create (C-3, `MousPage` "Add MoU"), user-management routes `/users/create` + `/users/:id` (D-10, against the L1-hardened edge fns), and ConsistencyPanel wired-or-retired (E-8)
-- **Linear affordances (F23–F26)** — right-peek panel with prev/next paging, filter/display split popovers with live counts, ⌘K command-menu audit, rich empty states
-- **Security/hygiene tail** — IN-04 UserPicker PostgREST filter-interpolation fix (T-79-S2), `TEST_USER_PASSWORD` credential-hygiene sweep
-- **CI & test-debt burn-down** — the red non-required suites (E2E, integration tests, a11y RTL+WCAG, visual regression) brought green or honestly quarantined; `test-rtl-smokes` promoted to a required branch-protection context
-- **CORS edge-fn migration** — staged A/B/C migration of the 272 edge functions off the deprecated wildcard `corsHeaders` (ALLOWED_ORIGINS secret verified in staging + prod first)
-- **v7.0 live verification** — stand up the on-prem GPU/TEI stack (vLLM/Gemma-4-12B + TEI) and close the deploy-gated EVAL-01/02/03 + AGENT/INFRA live verification
-
-**Still deferred (not this milestone):** v7.1 feed ingestion (FEED-01/02) + quarantine posture; GAP-2 (graph/digest card renderers) and GAP-3 (retire `dossiers-briefs-generate`); design-ops tooling (DESIGNOPS-01 Figma/token sync, DESIGNOPS-02 Storybook visual diffing); EMAIL_WEBHOOK_SECRET provisioning + `email-inbound` deploy (ops, user-only).
+</details>
 
 ## Requirements
 
@@ -185,7 +185,7 @@ Unified intelligence management for diplomatic operations — every relationship
 
 ### Active
 
-See `.planning/REQUIREMENTS.md` for the scoped v9.0 requirement list (FEAT / AFF / SEC / CI / CORS / LIVE categories) — defined at milestone kickoff 2026-07-06.
+v9.0 requirements are archived at `.planning/milestones/v9.0-REQUIREMENTS.md` (12 of 21 met at close). A fresh `.planning/REQUIREMENTS.md` is created by `/gsd:new-milestone` for v10.0.
 
 ### Out of Scope
 
@@ -309,4 +309,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-07-06 — Milestone v9.0 Platform Completion & Live Verification started: feature completion (MoU create, user management, ConsistencyPanel), F23–F26 Linear affordances, security/hygiene tail, CI test-debt burn-down, CORS edge-fn migration, and the v7.0 GPU/TEI live verification._
+_Last updated: 2026-08-15 — v9.0 closed PARTIAL (3/6 phases) and archived; open items carried into v10.0 Trust & Correctness, scoped from the 2026-08-15 live-app audit (144 findings, 19 ship-blockers)._
