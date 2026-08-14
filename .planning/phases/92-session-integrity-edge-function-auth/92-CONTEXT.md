@@ -61,10 +61,28 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
   `validateJWT()` helper (used by 10 of 303 functions) and it pins
   `@supabase/supabase-js@2.39.3` at line 2 — the exact deprecated pin this requirement retires. It
   already uses the correct `getUser(token)` call, so this is a pin bump, not a rewrite.
-- **D-07:** **`[PARKED — PARK-1]`** The migration _population_ is not settled. `ROADMAP.md:285`'s
-  number (`133`) and its wording ("pinning `2.3x` **with** bare `getUser()`") select different sets —
-  133 vs 53 — and 110 further functions call bare `getUser()` while already on `@2`. Planning proceeds
-  on everything except this task's file list.
+- **D-07:** **DECIDED by the operator** (`RULING-P92-02`, PARK-1 → option A): the migration population
+  is **all 133 `index.ts` files pinning `supabase-js@2.3x`**. Each is moved to
+  `@supabase/supabase-js@2` and its `getUser()` converted to `getUser(token)` **in the same edit**.
+  All 53 genuinely-both files are inside the 133. Phase 90's 36/36 CORS sweep is the shape to reuse.
+  The 110 bare-`getUser()` functions already on `@2` are **out of scope** unless D-16's probe says
+  otherwise.
+- **D-16:** The AUTH-02 probe task **states its verdict rule in its acceptance criteria before it
+  collects any data** — otherwise the reading is free to drift toward the scope already chosen. The
+  rule: call one function from each of A∩B (53), B\A (110) and A\B (83) with a valid JWT, then —
+  _all three 200_ → the 110 are healthy on `@2`, AUTH-02 closes at 133, nothing carries forward;
+  _B\A returns 401_ → bare `getUser()` fails independently of the pin, the 110 are real work and land
+  in Phase 93 (which already declares `Depends on: Phase 92`); _only A∩B returns 401_ → the pin is
+  the sole failure mode, confirming the premise by measurement rather than assumption. Record the
+  **actual status codes** in the plan's evidence, not a summary of them.
+- **D-17:** The criterion's false wording is **corrected, not stretched** — done during planning, not
+  deferred to execution. `ROADMAP.md:285` said "the 133 … pinning `2.3x` **with** bare `getUser()`";
+  no single set satisfies that (133 pin, 163 are bare, 53 are both), so it was a criterion
+  verify-phase could not honestly close. Swept in the same edit: `ROADMAP.md:285`,
+  `REQUIREMENTS.md AUTH-02`, `STATE.md`, `PROJECT.md`, and the audit's `INDEX.md` ship-blocker 2
+  (annotated with a dated correction rather than silently rewritten — the audit's source lane,
+  `adminops.md:97`, used the pin-only command and was correct; the conjunction was introduced during
+  consolidation).
 - **D-08:** The plan carries the **derivation command**, never the count. This is a count over a
   population the phase's own work mutates, so a frozen number is self-invalidating by construction and
   verify-phase must re-derive it. Under the recommended scope the check is
@@ -86,9 +104,11 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
   produce**, not an independent defect. `services/auth.ts:637-650` already clears user/session/
   isAuthenticated on `SIGNED_OUT` but performs no navigation — the page keeps rendering with
   `role` gone, which is exactly the ghost state described. Route away, do not merely null the state.
-- **D-12:** **`[PARKED — PARK-2]`** Whether the forced redirect preserves a return path
-  (`redirectTo`) is unsettled by the documents. Recommendation on file is a plain redirect, to avoid
-  opening an open-redirect surface inside a security phase.
+- **D-12:** **DECIDED by the operator** (`RULING-P92-02`, PARK-2 → option A): a **plain redirect to
+  `/login`**. No return path, no `redirectTo` param — a security-hardening phase does not open an
+  open-redirect surface. Consequence for the planner: **`/login` stays out of this phase's
+  `files_modified`.** A return path is a later, self-contained improvement and would need an explicit
+  allowlist-against-the-route-tree task; do not add a half-version of it here.
 
 ### `/delegations` (AUTH-04)
 

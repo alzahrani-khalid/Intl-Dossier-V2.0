@@ -37,7 +37,7 @@ rules configured" while the DB holds **19 active rules**.
 | #   | Finding                                                                                                                                                                                                                                                                                                            | Source            |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------- |
 | 1   | **No way to log out anywhere in the app.** Sidebar user card is a plain `<div>`; no topbar menu; `/settings` has no sign-out and isn't in the nav. A working dropdown exists at `components/layout/nav-user.tsx` and is imported nowhere. **[V]**                                                                  | sweeper F6        |
-| 2   | **133 of 303 edge functions pin `supabase-js@2.3x`** and call bare `getUser()`, so they 401 against a valid session. Root cause behind several "empty" admin pages. **[V]**                                                                                                                                        | adminops F2       |
+| 2   | **133 of 303 edge functions pin `supabase-js@2.3x`.** ~~and call bare `getUser()`, so they 401 against a valid session~~ — see correction below. Root cause behind several "empty" admin pages. **[V]**                                                                                                            | adminops F2       |
 | 3   | **Every `/settings` tab fails to save, and always has.** `.upsert()` on `users` omits NOT NULL `email` → `23502`. Code comment documents a _previous_ failed fix. **[V]**                                                                                                                                          | adminops F3       |
 | 4   | `/delegations` renders "You haven't granted any delegations" over two 401s                                                                                                                                                                                                                                         | engagements F4    |
 | 5   | **After-action records cannot be created.** `AfterActionForm.tsx:131` `if (!initialData) return` → never dirty → Save permanently disabled; Publish never rendered (route passes neither `canPublish` nor `onPublish`). List 500s on a bad PostgREST embed; detail shows raw key `afterActions.loadError`. **[V]** | engagements F1–F3 |
@@ -55,6 +55,29 @@ rules configured" while the DB holds **19 active rules**.
 | 17  | `/monitoring` serves raw JSON — Vite proxy shadows the SPA route                                                                                                                                                                                                                                                   | adminops F7       |
 | 18  | Session invalidation doesn't bounce; page decays to a "Member/Member" ghost state                                                                                                                                                                                                                                  | sweeper F7        |
 | 19  | `/custom-dashboard` queries `calendar_entries.start_datetime`; column doesn't exist (`event_date`). **[V]**                                                                                                                                                                                                        | sweeper F5        |
+
+### Correction to ship-blocker 2 — logged 2026-08-15, Phase 92 planning
+
+Re-derived against the live tree during Phase 92 planning (`RULING-P92-02`). The finding conflated two
+selectors that this consolidation joined with "and"; the source lane did not.
+
+| Set                         |  Count | Command                                                                                        |
+| --------------------------- | -----: | ---------------------------------------------------------------------------------------------- |
+| pins `2.3x` (`index.ts`)    |    133 | `grep -rlE '@supabase/supabase-js@2\.3[0-9]' supabase/functions --include='index.ts' \| wc -l` |
+| calls bare `auth.getUser()` |    163 | `grep -rlE 'auth\.getUser\(\s*\)' supabase/functions --include='*.ts' \| wc -l`                |
+| **both**                    | **53** | `comm -12` of the two sorted lists                                                             |
+
+`adminops.md:97` — the lane this came from — used the pin-only command and was correct at 133. The
+`and call bare getUser()` clause was added here, during consolidation.
+
+**"so they 401 against a valid session" is not established.** 161 of the 163 bare-`getUser()` functions
+build their client as `createClient(url, ANON_KEY, { global: { headers: { Authorization: authHeader } } })`
+and then call `getUser()`, which authenticates because the header rides on the client (specimen:
+`supabase/functions/access-review-detail/index.ts:83-97`). Bare `getUser()` is therefore not a defect by
+shape — it is a defect on the deprecated pin. Phase 92 carries a runtime probe that measures this rather
+than assuming it; whatever it returns is recorded in that phase's evidence.
+
+The remediation scope was unaffected: the operator chose to migrate all 133.
 
 ---
 

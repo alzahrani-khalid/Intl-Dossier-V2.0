@@ -52,7 +52,7 @@ Unified intelligence management for diplomatic operations — every relationship
 
 **Target outcomes:**
 
-- **AUTH** — a user can log out (no logout exists anywhere today); edge functions validate JWTs (133 of 303 do not); session invalidation redirects instead of decaying into a half-authenticated ghost page.
+- **AUTH** — a user can log out (no logout exists anywhere today); edge functions validate JWTs (133 of 303 pin a deprecated `supabase-js@2.3x`; 53 of those also call bare `getUser()` — wording corrected 2026-08-15, see `REQUIREMENTS.md AUTH-02`); session invalidation redirects instead of decaying into a half-authenticated ghost page.
 - **TRUST** — repositories stop swallowing failures, so the `isError` branches that already exist stop being dead code; bad IDs render not-found, not "check your connection".
 - **WRITE** — after-action records can be created, intake can be submitted, kanban accepts commitment drags, `/settings` saves (it never has), reports generate and can be scheduled.
 - **DEAD** — no surface lies: `/search` stops throwing, `/analytics` stops drawing fabricated charts over a backend that does not exist, dead routes are fixed or deleted.

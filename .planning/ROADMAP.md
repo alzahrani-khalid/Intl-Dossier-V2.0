@@ -282,7 +282,7 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 **Success Criteria** (what must be TRUE):
 
 1. A signed-in user can sign out — from the sidebar user card and from `/settings` — and lands on `/login` with the session cleared.
-2. A valid session is accepted by every edge function: the 133 of 303 functions pinning `supabase-js@2.3x` with bare `getUser()` are on `@supabase/supabase-js@2` + `getUser(token)`, and no audited route renders empty because of a 401.
+2. A valid session is accepted by every edge function: the 133 `index.ts` files pinning `supabase-js@2.3x` are on `@supabase/supabase-js@2` and pass the caller's token explicitly via `getUser(token)`, and no audited route renders empty because of a 401. Closed by re-deriving the population, never by re-quoting the count — `grep -rlE '@supabase/supabase-js@2\.3[0-9]' supabase/functions --include='index.ts' | wc -l` → `0`.
 3. Invalidating the session bounces the open tab to `/login` instead of decaying into a "Member/Member" ghost shell with the admin nav silently removed.
 4. `/delegations` renders an error state when its `my-delegations` calls are rejected, and renders real delegations when they are not.
 5. The P88-02 credentials are rotated by the operator, with the GitHub Actions secret and `.env.test` updated and a login smoke passing — the gate CARRY-02 and CARRY-05 wait on in Phase 101.

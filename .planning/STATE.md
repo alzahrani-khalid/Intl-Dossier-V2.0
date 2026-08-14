@@ -19,7 +19,7 @@ progress:
 See: .planning/PROJECT.md (updated 2026-08-15 — v9.0 closed PARTIAL; v10.0 Trust & Correctness started)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 92 — Session Integrity & Edge-Function Auth. Root-cause-first: AUTH-02 (133 of 303 edge functions rejecting valid JWTs) and the operator-only P88-02 credential rotation (CARRY-01) both land in Phase 92 so no later phase inherits them.
+**Current focus:** Phase 92 — Session Integrity & Edge-Function Auth. Root-cause-first: AUTH-02 (133 of 303 edge functions pinning a deprecated `supabase-js@2.3x`; 53 of those also call bare `getUser()` — wording corrected 2026-08-15, see `REQUIREMENTS.md AUTH-02`) and the operator-only P88-02 credential rotation (CARRY-01) both land in Phase 92 so no later phase inherits them.
 **Prior focus (v9.0, closed partial):** Phase 89 — CI & Test-Debt Burn-Down (PARTIALLY DELIVERED 2026-08-13; CI-01/04/05 held, CI-02 blocked on D-3, ORCH-2 owed). Phase 88 still IN PROGRESS (P88-02 rotation pending operator — it also gates CI-01/CI-05). **Phase 90 (CORS) — COMPLETE 2026-07-13** (36/36 plans; SC-4 repo-wide grep=0; `OPERATOR VERDICT 90-33/34: signed`; 90-VALIDATION stamped).
 
 ## Current Position
