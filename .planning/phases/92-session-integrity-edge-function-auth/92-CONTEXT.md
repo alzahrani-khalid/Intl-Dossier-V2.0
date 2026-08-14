@@ -26,7 +26,10 @@ design-token discipline, and RTL layout infrastructure.
 
 **Answering policy for this CONTEXT.** Questions the governing documents settle were answered from
 them, with the source line cited on each decision. Two genuine forks the documents do not settle were
-parked to the operator in `.tickmarkr/overseer/PARK-P92.md` and are marked `[PARKED]` below.
+parked to the operator in `.tickmarkr/overseer/PARK-P92.md`; **both have since been decided by the
+operator** in `.tickmarkr/overseer/RULING-P92-02-PARKS.md` and are recorded at D-07 (AUTH-02
+population → all 133) and D-12 (forced redirect → plain, no return path). Nothing in this file is
+still open.
 
 </domain>
 
