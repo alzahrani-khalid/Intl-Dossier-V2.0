@@ -251,6 +251,26 @@ None.
   rows, because none exist to return. Only the failure path is proven. `data-retention`'s Arabic
   bodies were verified as JSON bytes over the wire, not as rendered pixels.
 
+## Self-Check: PASSED
+
+All four files present on disk; all four commits present in `git log --all`:
+
+| item                                                      | result           |
+| --------------------------------------------------------- | ---------------- |
+| `supabase/functions/my-delegations/index.ts`              | FOUND            |
+| `supabase/functions/data-retention/index.ts`              | FOUND            |
+| `tests/e2e/92-delegations-error.spec.ts`                  | FOUND            |
+| `.planning/phases/93-failure-visibility/93-02-SUMMARY.md` | FOUND            |
+| `1b0ff7f5` / `7387cda3` / `cb81e0ee` / `7f4b6294`         | FOUND (all four) |
+
+All three `<acceptance_criteria>` re-run after the final commit: `93-02_g1` exit 0, `93-02_g2`
+exit 0, `93-02_g3` exit 0 (`my-delegations -> 500`, `2 passed`). The spec file at HEAD is
+byte-identical to the working tree the Playwright run executed against, so the green is valid at HEAD.
+
+`.planning/STATE.md` and `.planning/ROADMAP.md` were deliberately NOT touched — the orchestrator
+owns them. No `<automated>` gate text was edited. No PR opened, no branch switched, no worktree
+created.
+
 ---
 
 _Phase: 93-failure-visibility_
