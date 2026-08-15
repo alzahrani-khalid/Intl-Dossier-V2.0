@@ -185,6 +185,28 @@ verified sound across six lanes).
 - [ ] **DBSEC-03**: The 12 materialized views selectable by `anon`/`authenticated` are revoked or moved behind a gated RPC.
 - [ ] **DBSEC-04**: Tables with RLS enabled and no policies are resolved — `intelligence_email_queue` and `events.idempotency_keys` currently deny everything.
 - [ ] **DBSEC-05**: Leaked-password protection is enabled and the 548 functions with mutable `search_path` are pinned.
+- [ ] **DBSEC-06**: **Sign-out clears client-side residue.** Signing out leaves the previous user's
+      data on the machine: `localStorage` is never wiped, so on a shared analyst workstation the next
+      user inherits it — in a product whose access model is `sensitivity_level <= clearance`.
+      Verified 2026-08-15 (Phase 92 planning); **nothing wipes any of this on logout**:
+      persisted zustand stores `auth-storage` (`store/authStore.ts:253`), a duplicate `auth-storage` in
+      the dead module (`services/auth.ts:624`, see NAV-04), `entity-history-storage`
+      (`store/entityHistoryStore.ts:114`), `ui-storage` (`store/uiStore.ts:139`),
+      `pinned-entities-storage` (`store/pinnedEntitiesStore.ts:132`), `dossier-store`
+      (`store/dossierStore.ts:501`); raw writers `advanced-search-history`
+      (`domains/search/hooks/useAdvancedSearch.ts:67`) and `quickswitcher_recent_items`
+      (`domains/dossiers/hooks/useQuickSwitcherSearch.ts:19`).
+      **The sensitive part is not settings — it is history.** Entity history, recent items and search
+      history record _which dossiers the previous analyst opened and what they searched for_;
+      `entityHistoryStore`'s own docstring states it "persists the last 10 entities viewed", so the
+      retention is the store's **stated purpose**, not an accident.
+      **Lead:** `utils/storage/preference-storage.ts:15` already defines `WIPE_GUARD_KEY`
+      (`id.legacy-wipe.v1`, used `:24`/`:28`) — check its semantics before writing a new wipe.
+      **Relationship to Phase 92:** that phase adds `queryClient.clear()` at the single sign-out seam
+      because it would otherwise _introduce_ an in-memory cache regression on three new soft-navigating
+      paths. This requirement is the **pre-existing, persisted** half and was deliberately not swept
+      there. Phase 92's "query cache empty after sign-out" criterion establishes the in-memory cache and
+      says nothing about `localStorage`.
 
 ### CARRY — v9.0 carry-forward (see `.planning/STATE.md` → "v9.0 Carried Forward")
 
@@ -305,6 +327,7 @@ Every v1 requirement maps to exactly one phase. 58/58 mapped, 0 orphaned, 0 dupl
 | DBSEC-03 | Phase 100 — Database Security Posture | Pending |
 | DBSEC-04 | Phase 100 — Database Security Posture | Pending |
 | DBSEC-05 | Phase 100 — Database Security Posture | Pending |
+| DBSEC-06 | UNASSIGNED — filed 2026-08-15 from Phase 92; owning phase is an open scope question with the operator (currently listed under Deferred) | Pending |
 | CARRY-01 | Phase 92 — Session Integrity & Edge-Function Auth | Pending |
 | CARRY-02 | Phase 101 — CI Gates Green | Pending |
 | CARRY-03 | Phase 101 — CI Gates Green | Pending |
