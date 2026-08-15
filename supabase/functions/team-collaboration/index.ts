@@ -10,7 +10,7 @@
  * - PATCH /team-collaboration/invitations/:id - Respond to invitation
  */
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { getCorsHeaders } from '../_shared/cors.ts';
 
 // Types
@@ -408,10 +408,11 @@ Deno.serve(async (req) => {
     const supabase = getSupabaseClient(authHeader);
 
     // Get authenticated user
+    const token = authHeader.replace('Bearer ', '');
     const {
       data: { user },
       error: authError,
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser(token);
     if (authError || !user) {
       return new Response(JSON.stringify({ error: { message_en: 'Unauthorized' } }), {
         status: 401,
