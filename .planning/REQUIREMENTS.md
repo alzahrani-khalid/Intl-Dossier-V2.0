@@ -92,27 +92,46 @@ verified sound across six lanes).
 - [ ] **AR-01**: One Arabic glossary for core objects, applied across all namespaces — dossier is one term (not دوسيه / ملف / دوسييه), and a nav label always matches the title of the page it opens (currently الارتباطات → المشاركات, البلدان → الدول).
 - [ ] **AR-02**: Dates and times localize in Arabic — no English weekday/month names inside Arabic sentences. (Latin digits remain the deliberate project policy.)
 - [ ] **AR-03**: No English string renders under `dir="rtl"` on an otherwise-Arabic screen — including the 404 page, the intake queue header and its primary button, the position read-only banner, and search suggestion chips.
-- [ ] **AR-04**: Dot-form `t()` keys with English defaults are eliminated in favour of colon namespaces, so a missing Arabic key cannot silently render English in both languages.
-  > **Population sized during Phase 92 planning, 2026-08-15** (`RULING-P92-06`). The second argument
-  > is the masking mechanism: when a key is missing, `t('some.key', 'English default')` renders
-  > plausible English rather than leaking a raw key, so nothing looks broken and the gap is invisible
-  > in both locales. Derive the population — **do not quote a stale count**, it moves as the codebase
-  > moves, and the figure varies with the regex (two independent derivations gave 1683 and 1716):
+- [ ] **AR-04**: A missing Arabic key cannot silently render English in both languages. **This is two
+      independent fixes with separate acceptance — neither implies the other, and they must not be
+      collapsed back into one clause.**
+  - [ ] **AR-04a — remove the MASK.** No `t()` call passes an English default as its second argument.
+        The second argument is what makes the gap invisible: when a key is missing,
+        `t('some.key', 'English default')` renders plausible English instead of leaking a raw key, so
+        nothing looks broken in either locale and no one notices. **This is the clause that closes
+        Phase 99's criterion 4.** Acceptance:
+
+        ```bash
+        grep -rhoE "t\(\s*'[^']+'\s*,\s*'[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l   # -> 0
+        grep -rlE  "t\(\s*'[^']+'\s*,\s*'[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l   # files touched
+        ```
+
+  - [ ] **AR-04b — fix namespace RESOLUTION.** Keys resolve through explicit colon namespaces rather
+        than dot form, so a key lands in the namespace it names. Acceptance:
+
+        ```bash
+        grep -rhoE "t\(\s*'[^']*\.[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l  # dot-form
+        grep -rhoE "t\(\s*'[^']*:[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l   # colon-form
+        ```
+
+  > **Why the split (Phase 92 planning, 2026-08-15, `RULING-P92-07`).** This requirement previously
+  > read "dot-form `t()` keys with English defaults are eliminated in favour of colon namespaces" —
+  > one sentence fusing two orthogonal fixes. **Masking and resolution are independent:**
+  > `t('common:logout', 'Logout')` is fully colon-form and **still renders "Logout"** when the key
+  > misses. As written, a planner could convert every key to colon form, pass AR-04, and leave every
+  > mask standing — closing the requirement without closing the defect.
   >
-  > ```bash
-  > # call sites passing an English default
-  > grep -rhoE "t\(\s*'[^']+'\s*,\s*'[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l
-  > # files containing them
-  > grep -rlE "t\(\s*'[^']+'\s*,\s*'[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l
-  > # dot-form vs colon-form key usage (the repo is overwhelmingly dot-form)
-  > grep -rhoE "t\(\s*'[^']*\.[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l
-  > grep -rhoE "t\(\s*'[^']*:[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l
-  > ```
+  > **The populations differ, so the two clauses cannot share a check.** Derived 2026-08-15 with the
+  > commands above: **1716 mask sites across 179 files**; dot-form **8003** vs colon-form **992**.
+  > Do not quote these as the target — they move as the codebase moves; re-derive. (An earlier
+  > cross-check reported 1683 / 3587 / 391 from a narrower regex containing a bad backreference;
+  > those figures are superseded, not an equally-valid second reading.)
   >
-  > **Known instance already fixed:** Phase 92 repoints `navigation.logout` → `common.logout` in
-  > `nav-user.tsx:94` (AUTH-01's sign-out label, which rendered English under `dir="rtl"`). That one
-  > fix deliberately uses the **dot** form to match the surrounding code; Phase 99 sweeps it along
-  > with the rest and should not treat it as an exception.
+  > **Known instance already fixed:** Phase 92 repoints `navigation.logout` -> `common.logout` at
+  > `nav-user.tsx:94` **and drops the second argument** — AUTH-01's sign-out label, which rendered
+  > English under `dir="rtl"`. It deliberately keeps the **dot** form to match surrounding code, so it
+  > satisfies AR-04a while remaining inside AR-04b's population; Phase 99 sweeps that line with the
+  > rest rather than treating it as an exception.
 
 ### DATA — Staging data is plausible, not test residue
 

@@ -182,6 +182,13 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
   the dead `Header.tsx:101` already used that exact path, and matching the surrounding code is the
   smaller change. Phase 99 converts the whole codebase and will sweep this line with the rest; it is
   not an exception to be preserved.
+  **DROP THE SECOND ARGUMENT** (`RULING-P92-07`). The final call is `t('common.logout')` — **not**
+  `t('common.logout', 'Logout')`. `common.logout` exists in both locales, so the English default has
+  no function except masking a future regression: if that key is ever removed or renamed, the second
+  argument silently renders "Logout" in Arabic again instead of surfacing the miss. Leaving it would
+  ship a site that is still an instance of the exact class this phase just filed as `AR-04a`.
+  Masking (the second argument) and resolution (dot vs colon) are **independent** defects — fixing
+  the key path does not fix the mask, and this phase fixes both on this one line.
   **Scope fence (`RULING-P92-06` condition 11):** this is one instance of a **class** — every
   `t('key', 'English default')` call site, where the second argument masks a missing key by rendering
   plausible English in both locales instead of leaking a raw key. **Phase 92 repoints this one key
