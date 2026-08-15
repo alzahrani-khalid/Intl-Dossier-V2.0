@@ -2,7 +2,7 @@
 // Processes pending notification deliveries for Slack and Teams
 // Can be triggered by cron job or webhook
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // Types
