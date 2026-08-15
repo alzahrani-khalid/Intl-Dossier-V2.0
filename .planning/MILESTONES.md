@@ -10,6 +10,8 @@
 
 **Audit at close:** a six-lane live-app sweep across 190 routes in EN + AR produced **144 findings, 19 of them ship-blockers** — including no logout anywhere in the app, 133 of 303 edge functions failing to validate JWTs, and `/settings` never having saved. See `.planning/audits/live-audit-2026-08-15/INDEX.md`. This audit is the substance of v10.0.
 
+> _Corrected 2026-08-15 (Phase 92 planning): "133 … failing to validate JWTs" overstates the finding. The 133 is a `supabase-js@2.3x` pin count; 161 of 163 bare-`getUser()` functions forward the caller's Authorization header and do authenticate. Left as written on purpose — this is a closed-milestone record, and that v9.0 closed on this mischaracterization is itself the fact a retrospective needs to see. Correction block: `audits/live-audit-2026-08-15/INDEX.md`._
+
 **Known deferred at close:** 3 data-entry quick tasks (260530-w2/w3/w4) lack SUMMARYs. The artifact audit reported 20 open quick tasks; 17 were verified complete on disk (unparseable status field, not real debt). `main` remains red on non-required CI (E2E, integration, a11y RTL+WCAG, RTL Portal, RTL+Responsive, Docker Build) — pre-dating v9.0.
 
 **Archive:** `.planning/milestones/v9.0-ROADMAP.md` · `.planning/milestones/v9.0-REQUIREMENTS.md`

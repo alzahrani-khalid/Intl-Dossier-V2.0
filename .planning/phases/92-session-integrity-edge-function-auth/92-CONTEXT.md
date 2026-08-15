@@ -45,10 +45,17 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
   `useAuth().logout()` at `nav-user.tsx:92`; the defect is purely that nothing imports it.
 - **D-02:** `/settings` exposes a second, independent sign-out control. `ROADMAP.md:284` requires
   sign-out "from the sidebar user card **and** from `/settings`" — two surfaces, not one.
-- **D-03:** `/settings` is reachable from navigation, per `REQUIREMENTS.md AUTH-05`. The known cause is
-  a disagreement between `AppShell.tsx:125` (`pathname.startsWith('/settings')`, which hides the global
-  sidebar for the whole subtree) and `routes/_protected/settings.tsx:14` (an exact-match check that
-  only renders the settings nav on `/settings` itself). Fix the disagreement; do not add a third nav.
+- **D-03:** `/settings` is reachable from navigation, per `REQUIREMENTS.md AUTH-05` — and that is
+  **all** AUTH-05 asks: an inbound nav entry plus a sign-out control on the page. `NavUser` already
+  links to `/settings` (`nav-user.tsx:80,86`), so D-01's mount satisfies the reachability half; D-02
+  supplies the control. **Scope fence:** the `/settings/*` subtree rendering with no navigation at all
+  is `NAV-02`, a _later_ phase, and must not be pulled in here. Evidence for that phase, recorded now
+  so it is not re-earned: `AppShell.tsx:125` suppresses the global sidebar across the whole subtree via
+  `pathname.startsWith('/settings')`, justified by a comment asserting "the SettingsLayout renders its
+  own 240px nav column" — but `routes/_protected/settings.tsx:9-30` renders that column only when the
+  last match is exactly `/settings`, and returns a bare `<Outlet/>` for every child route. The
+  suppression is predicated on a promise the layout does not keep on children. That is the whole
+  mechanism, in one sentence, for whoever plans `NAV-02`.
 - **D-04:** Sign-out lands the user on `/login` with the session cleared (`ROADMAP.md:284`). Clearing
   is asserted, not assumed — the acceptance check must show the session gone, not just the route
   changed.
