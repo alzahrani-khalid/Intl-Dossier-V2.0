@@ -287,8 +287,21 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 4. `/delegations` renders an error state when its `my-delegations` calls are rejected, and renders real delegations when they are not.
 5. The P88-02 credentials are rotated by the operator, with the GitHub Actions secret and `.env.test` updated and a login smoke passing — the gate CARRY-02 and CARRY-05 wait on in Phase 101.
 
-**Plans**: TBD
+**Plans**: 10 plans
 **UI hint**: yes
+
+Plans:
+
+- [ ] 92-01-PLAN.md — Wave 0: probe script + baseline (D-16), sign-out spec, delegations forced-error spec
+- [ ] 92-02-PLAN.md — Mount NavUser, one SIGNED_OUT navigation seam, /settings sign-out row (AUTH-01/03/05)
+- [ ] 92-03-PLAN.md — /delegations error state distinct from empty (AUTH-04 UI half)
+- [ ] 92-04-PLAN.md — AUTH-02 core: 3 confirmed-broken + my-delegations + \_shared/auth.ts, deployed + probe flip
+- [ ] 92-05-PLAN.md — AUTH-02 sweep slice A (access-review-detail → document-versions, 33 files, code-only)
+- [ ] 92-06-PLAN.md — AUTH-02 sweep slice B (dossier-activity-timeline → inactive-users, 33 files, code-only)
+- [ ] 92-07-PLAN.md — AUTH-02 sweep slice C (intake-audit-logs → push-device-register, 33 files, code-only)
+- [ ] 92-08-PLAN.md — AUTH-02 sweep slice D (push-notification-send → working-groups, 30 files, code-only)
+- [ ] 92-09-PLAN.md — Batch deploy + ledger + two-sided verification (grep → 0 AND live probe)
+- [ ] 92-10-PLAN.md — CARRY-01 operator credential rotation + login smoke (blocks nothing)
 
 > Criterion 5 is an operator act, not code. It is scheduled here — ten phases ahead of the work it gates — precisely because it held v9.0's Phase 88 open. The other four criteria do not depend on it and must not wait for it.
 
