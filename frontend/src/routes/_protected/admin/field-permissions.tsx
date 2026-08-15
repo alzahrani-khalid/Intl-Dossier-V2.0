@@ -46,6 +46,7 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { requireAdmin } from '@/lib/auth/require-admin'
 import { PageHeader } from '@/components/layout/PageHeader'
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import {
   Shield,
   FileText,
@@ -113,18 +114,49 @@ function FieldPermissionsPage() {
   const [filterEntityType, setFilterEntityType] = useState<string>('')
   const [filterScopeType, setFilterScopeType] = useState<string>('')
 
-  // Hooks
+  // Hooks.
+  //
+  // TRUST-02: every one of these three queries used to be destructured as `data: x = []` with no
+  // `isError` anywhere in the file, so a REJECTION rendered as an empty list and a stats strip
+  // reading "0 Permissions" over a database that holds 19 rules. The `[]` default is kept — it is
+  // the correct loading/idle placeholder — but `isError` now gates every render that could turn
+  // that placeholder into a claim.
+  //
+  // NOT FIXED HERE, and deliberately so (D-25): `fetchFieldPermissions` builds `searchParams` from
+  // entity_type/scope_type and never appends them to the invoke URL
+  // (hooks/useFieldPermissions.ts:41-52), so the two filter Selects below are dead — they refetch
+  // an identical unfiltered list. That is a separate defect from this phase's confident-emptiness
+  // class; it is recorded in 93-09-SUMMARY.md rather than repaired in passing.
   const {
     data: permissions = [],
     isLoading: permissionsLoading,
+    isError: permissionsIsError,
+    isFetching: permissionsFetching,
     refetch: refetchPermissions,
   } = useFieldPermissions({
     entity_type: filterEntityType as FieldPermissionEntityType | undefined,
     scope_type: filterScopeType as FieldPermissionScope | undefined,
   })
-  const { data: definitions = [], isLoading: definitionsLoading } = useFieldDefinitions({})
-  const { data: auditData, isLoading: auditLoading } = useFieldPermissionAudit({ limit: 50 })
+  const {
+    data: definitions = [],
+    isLoading: definitionsLoading,
+    isError: definitionsIsError,
+    isFetching: definitionsFetching,
+    refetch: refetchDefinitions,
+  } = useFieldDefinitions({})
+  const {
+    data: auditData,
+    isLoading: auditLoading,
+    isError: auditIsError,
+    isFetching: auditFetching,
+    refetch: refetchAudit,
+  } = useFieldPermissionAudit({ limit: 50 })
   const auditLogs = auditData?.data || []
+
+  // A failed load knows nothing — the count is unknown, not zero. Mirrors the shipped em-dash
+  // idiom at pages/delegations/DelegationManagementPage.tsx:112-113.
+  const statFigure = (value: number): string => (permissionsIsError ? '—' : String(value))
+  const statAria = permissionsIsError ? t('common:errors.countUnavailable') : undefined
 
   // Mutations
   const createPermission = useCreateFieldPermission()
@@ -238,7 +270,9 @@ function FieldPermissionsPage() {
                 <Shield className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats.totalPermissions}</p>
+                <p className="text-2xl font-bold" aria-label={statAria}>
+                  {statFigure(stats.totalPermissions)}
+                </p>
                 <p className="text-sm text-muted-foreground">{t('tabs.permissions')}</p>
               </div>
             </div>
@@ -252,7 +286,9 @@ function FieldPermissionsPage() {
                 <CheckCircle2 className="h-5 w-5 text-success" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats.activePermissions}</p>
+                <p className="text-2xl font-bold" aria-label={statAria}>
+                  {statFigure(stats.activePermissions)}
+                </p>
                 <p className="text-sm text-muted-foreground">Active</p>
               </div>
             </div>
@@ -266,7 +302,9 @@ function FieldPermissionsPage() {
                 <Users className="h-5 w-5 text-accent" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats.rolePermissions}</p>
+                <p className="text-2xl font-bold" aria-label={statAria}>
+                  {statFigure(stats.rolePermissions)}
+                </p>
                 <p className="text-sm text-muted-foreground">{t('scope_types.role')}</p>
               </div>
             </div>
@@ -280,7 +318,9 @@ function FieldPermissionsPage() {
                 <User className="h-5 w-5 text-secondary" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats.userPermissions}</p>
+                <p className="text-2xl font-bold" aria-label={statAria}>
+                  {statFigure(stats.userPermissions)}
+                </p>
                 <p className="text-sm text-muted-foreground">{t('scope_types.user')}</p>
               </div>
             </div>
@@ -294,7 +334,9 @@ function FieldPermissionsPage() {
                 <Lock className="h-5 w-5 text-danger" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats.restrictedFields}</p>
+                <p className="text-2xl font-bold" aria-label={statAria}>
+                  {statFigure(stats.restrictedFields)}
+                </p>
                 <p className="text-sm text-muted-foreground">Restricted</p>
               </div>
             </div>
@@ -302,360 +344,392 @@ function FieldPermissionsPage() {
         </Card>
       </div>
 
-      {/* Main Content Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 h-auto">
-          <TabsTrigger value="permissions" className="gap-2 py-2">
-            <Shield className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('tabs.permissions')}</span>
-          </TabsTrigger>
-          <TabsTrigger value="definitions" className="gap-2 py-2">
-            <Settings className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('tabs.definitions')}</span>
-          </TabsTrigger>
-          <TabsTrigger value="audit" className="gap-2 py-2">
-            <History className="h-4 w-4" />
-            <span className="hidden sm:inline">{t('tabs.audit')}</span>
-          </TabsTrigger>
-        </TabsList>
+      {/* Main Content Tabs.
 
-        {/* Permissions Tab */}
-        <TabsContent value="permissions">
-          <Card>
-            <CardHeader>
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                  <CardTitle>{t('permissions.title')}</CardTitle>
-                  <CardDescription>{t('permissions.description')}</CardDescription>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  {/* Search */}
-                  <div className="relative">
-                    <Search className="absolute start-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder={t('filters.search', 'Search...')}
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="ps-10 w-full sm:w-64"
-                    />
+          The whole tab strip is replaced when the PRIMARY query (permissions) is rejected: three
+          tabs over a failed load are three views of nothing, and the permissions tab's own
+          "No field permissions configured" empty state would be an outright lie about a database
+          holding 19 rules. Secondary queries (definitions, audit) fail alone and are handled
+          inline inside their own tab, so one 403 on the audit feed never blanks the page. */}
+      {permissionsIsError ? (
+        <QueryErrorState
+          variant="page"
+          onRetry={() => void refetchPermissions()}
+          isRetrying={permissionsFetching}
+        />
+      ) : (
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3 h-auto">
+            <TabsTrigger value="permissions" className="gap-2 py-2">
+              <Shield className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('tabs.permissions')}</span>
+            </TabsTrigger>
+            <TabsTrigger value="definitions" className="gap-2 py-2">
+              <Settings className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('tabs.definitions')}</span>
+            </TabsTrigger>
+            <TabsTrigger value="audit" className="gap-2 py-2">
+              <History className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('tabs.audit')}</span>
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Permissions Tab */}
+          <TabsContent value="permissions">
+            <Card>
+              <CardHeader>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div>
+                    <CardTitle>{t('permissions.title')}</CardTitle>
+                    <CardDescription>{t('permissions.description')}</CardDescription>
                   </div>
-
-                  {/* Entity Type Filter */}
-                  <Select
-                    value={filterEntityType || 'all'}
-                    onValueChange={(v) => setFilterEntityType(v === 'all' ? '' : v)}
-                  >
-                    <SelectTrigger className="w-full sm:w-48">
-                      <SelectValue placeholder={t('filters.entity_type')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Entity Types</SelectItem>
-                      {ENTITY_TYPE_CONFIG.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {isRTL ? type.label_ar : type.label_en}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  {/* Scope Filter */}
-                  <Select
-                    value={filterScopeType || 'all'}
-                    onValueChange={(v) => setFilterScopeType(v === 'all' ? '' : v)}
-                  >
-                    <SelectTrigger className="w-full sm:w-40">
-                      <SelectValue placeholder={t('filters.scope_type')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Scopes</SelectItem>
-                      {SCOPE_TYPE_CONFIG.map((scope) => (
-                        <SelectItem key={scope.value} value={scope.value}>
-                          {isRTL ? scope.label_ar : scope.label_en}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {permissionsLoading ? (
-                <div className="space-y-3">
-                  {[0, 1, 2, 3, 4].map((n) => (
-                    <Skeleton key={n} className="h-16 w-full" />
-                  ))}
-                </div>
-              ) : filteredPermissions.length === 0 ? (
-                <div className="text-center py-12">
-                  <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-lg font-medium">{t('permissions.empty')}</p>
-                  <p className="text-muted-foreground mb-4">{t('permissions.empty_description')}</p>
-                  <Button onClick={() => setShowPermissionDialog(true)}>
-                    <Plus className="h-4 w-4 me-2" />
-                    {t('permissions.create')}
-                  </Button>
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>{t('permissions.fields.scope_type')}</TableHead>
-                      <TableHead>{t('permissions.fields.scope_value')}</TableHead>
-                      <TableHead>{t('permissions.fields.entity_type')}</TableHead>
-                      <TableHead>{t('permissions.fields.field_name')}</TableHead>
-                      <TableHead className="text-center">
-                        {t('permissions.fields.can_view')}
-                      </TableHead>
-                      <TableHead className="text-center">
-                        {t('permissions.fields.can_edit')}
-                      </TableHead>
-                      <TableHead>{t('permissions.fields.is_active')}</TableHead>
-                      <TableHead className="text-end">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredPermissions.map((permission) => (
-                      <TableRow key={permission.id}>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            {getScopeIcon(permission.scope_type)}
-                            <span className="capitalize">
-                              {t(`scope_types.${permission.scope_type}`)}
-                            </span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">{permission.scope_value}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <span className="capitalize">
-                            {t(`entity_types.${permission.entity_type}`)}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          <code className="text-sm bg-muted px-2 py-1 rounded">
-                            {permission.field_name}
-                          </code>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          {permission.can_view ? (
-                            <Eye className="h-4 w-4 text-success mx-auto" />
-                          ) : (
-                            <EyeOff className="h-4 w-4 text-danger mx-auto" />
-                          )}
-                        </TableCell>
-                        <TableCell className="text-center">
-                          {permission.can_edit ? (
-                            <Edit3 className="h-4 w-4 text-success mx-auto" />
-                          ) : (
-                            <Lock className="h-4 w-4 text-danger mx-auto" />
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant={permission.is_active ? 'default' : 'secondary'}>
-                            {permission.is_active ? 'Active' : 'Inactive'}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-end">
-                          <div className="flex items-center justify-end gap-2">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => {
-                                setSelectedPermission(permission)
-                                setShowPermissionDialog(true)
-                              }}
-                            >
-                              <Edit3 className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleDeletePermission(permission.id)}
-                            >
-                              <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Field Definitions Tab */}
-        <TabsContent value="definitions">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('definitions.title')}</CardTitle>
-              <CardDescription>{t('definitions.description')}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {definitionsLoading ? (
-                <div className="space-y-3">
-                  {[0, 1, 2].map((n) => (
-                    <Skeleton key={n} className="h-20 w-full" />
-                  ))}
-                </div>
-              ) : Object.keys(definitionsByEntity).length === 0 ? (
-                <div className="text-center py-12">
-                  <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-lg font-medium">{t('definitions.empty')}</p>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  {Object.entries(definitionsByEntity).map(([entityType, fields]) => (
-                    <div key={entityType} className="space-y-4">
-                      <h3 className="text-lg font-semibold capitalize flex items-center gap-2">
-                        <FileText className="h-5 w-5" />
-                        {t(`entity_types.${entityType}`)}
-                        <Badge variant="secondary">{fields.length} fields</Badge>
-                      </h3>
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>{t('definitions.fields.field_name')}</TableHead>
-                            <TableHead>{t('definitions.fields.field_label_en')}</TableHead>
-                            <TableHead>{t('definitions.fields.field_category')}</TableHead>
-                            <TableHead>{t('definitions.fields.data_type')}</TableHead>
-                            <TableHead>{t('definitions.fields.sensitivity_level')}</TableHead>
-                            <TableHead>{t('definitions.fields.default_visible')}</TableHead>
-                            <TableHead>{t('definitions.fields.default_editable')}</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {fields.map((field) => (
-                            <TableRow key={field.id}>
-                              <TableCell>
-                                <code className="text-sm bg-muted px-2 py-1 rounded">
-                                  {field.field_name}
-                                </code>
-                              </TableCell>
-                              <TableCell>
-                                {isRTL ? field.field_label_ar : field.field_label_en}
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant="outline">
-                                  {t(`definitions.categories.${field.field_category}`)}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                <span className="text-muted-foreground">
-                                  {t(`definitions.data_types.${field.data_type}`)}
-                                </span>
-                              </TableCell>
-                              <TableCell>
-                                <span className={getSensitivityColor(field.sensitivity_level)}>
-                                  {t(`definitions.sensitivity.${field.sensitivity_level}`)}
-                                </span>
-                              </TableCell>
-                              <TableCell>
-                                {field.default_visible ? (
-                                  <Eye className="h-4 w-4 text-success" />
-                                ) : (
-                                  <EyeOff className="h-4 w-4 text-danger" />
-                                )}
-                              </TableCell>
-                              <TableCell>
-                                {field.default_editable ? (
-                                  <Edit3 className="h-4 w-4 text-success" />
-                                ) : (
-                                  <Lock className="h-4 w-4 text-danger" />
-                                )}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    {/* Search */}
+                    <div className="relative">
+                      <Search className="absolute start-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder={t('filters.search', 'Search...')}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="ps-10 w-full sm:w-64"
+                      />
                     </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
 
-        {/* Audit Tab */}
-        <TabsContent value="audit">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <History className="h-5 w-5" />
-                {t('audit.title')}
-              </CardTitle>
-              <CardDescription>{t('audit.description')}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {auditLoading ? (
-                <div className="space-y-3">
-                  {[0, 1, 2, 3, 4].map((n) => (
-                    <Skeleton key={n} className="h-16 w-full" />
-                  ))}
+                    {/* Entity Type Filter */}
+                    <Select
+                      value={filterEntityType || 'all'}
+                      onValueChange={(v) => setFilterEntityType(v === 'all' ? '' : v)}
+                    >
+                      <SelectTrigger className="w-full sm:w-48">
+                        <SelectValue placeholder={t('filters.entity_type')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Entity Types</SelectItem>
+                        {ENTITY_TYPE_CONFIG.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {isRTL ? type.label_ar : type.label_en}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    {/* Scope Filter */}
+                    <Select
+                      value={filterScopeType || 'all'}
+                      onValueChange={(v) => setFilterScopeType(v === 'all' ? '' : v)}
+                    >
+                      <SelectTrigger className="w-full sm:w-40">
+                        <SelectValue placeholder={t('filters.scope_type')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Scopes</SelectItem>
+                        {SCOPE_TYPE_CONFIG.map((scope) => (
+                          <SelectItem key={scope.value} value={scope.value}>
+                            {isRTL ? scope.label_ar : scope.label_en}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-              ) : auditLogs.length === 0 ? (
-                <div className="text-center py-12">
-                  <History className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-lg font-medium">{t('audit.empty')}</p>
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>{t('audit.fields.action')}</TableHead>
-                      <TableHead>{t('audit.fields.performed_by')}</TableHead>
-                      <TableHead>{t('audit.fields.created_at')}</TableHead>
-                      <TableHead>{t('audit.fields.old_values')}</TableHead>
-                      <TableHead>{t('audit.fields.new_values')}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {auditLogs.map((log) => (
-                      <TableRow key={log.id}>
-                        <TableCell>
-                          <Badge
-                            variant={
-                              log.action === 'create'
-                                ? 'default'
-                                : log.action === 'delete'
-                                  ? 'destructive'
-                                  : 'secondary'
-                            }
-                          >
-                            {t(`audit.actions.${log.action}`)}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{log.performed_by_email || 'System'}</TableCell>
-                        <TableCell>{formatDateTime(log.created_at)}</TableCell>
-                        <TableCell>
-                          {log.old_values ? (
-                            <code className="text-xs bg-muted px-2 py-1 rounded block max-w-xs truncate">
-                              {JSON.stringify(log.old_values).slice(0, 50)}...
-                            </code>
-                          ) : (
-                            '-'
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {log.new_values ? (
-                            <code className="text-xs bg-muted px-2 py-1 rounded block max-w-xs truncate">
-                              {JSON.stringify(log.new_values).slice(0, 50)}...
-                            </code>
-                          ) : (
-                            '-'
-                          )}
-                        </TableCell>
-                      </TableRow>
+              </CardHeader>
+              <CardContent>
+                {permissionsLoading ? (
+                  <div className="space-y-3">
+                    {[0, 1, 2, 3, 4].map((n) => (
+                      <Skeleton key={n} className="h-16 w-full" />
                     ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                  </div>
+                ) : filteredPermissions.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-lg font-medium">{t('permissions.empty')}</p>
+                    <p className="text-muted-foreground mb-4">
+                      {t('permissions.empty_description')}
+                    </p>
+                    <Button onClick={() => setShowPermissionDialog(true)}>
+                      <Plus className="h-4 w-4 me-2" />
+                      {t('permissions.create')}
+                    </Button>
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>{t('permissions.fields.scope_type')}</TableHead>
+                        <TableHead>{t('permissions.fields.scope_value')}</TableHead>
+                        <TableHead>{t('permissions.fields.entity_type')}</TableHead>
+                        <TableHead>{t('permissions.fields.field_name')}</TableHead>
+                        <TableHead className="text-center">
+                          {t('permissions.fields.can_view')}
+                        </TableHead>
+                        <TableHead className="text-center">
+                          {t('permissions.fields.can_edit')}
+                        </TableHead>
+                        <TableHead>{t('permissions.fields.is_active')}</TableHead>
+                        <TableHead className="text-end">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredPermissions.map((permission) => (
+                        <TableRow key={permission.id}>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              {getScopeIcon(permission.scope_type)}
+                              <span className="capitalize">
+                                {t(`scope_types.${permission.scope_type}`)}
+                              </span>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{permission.scope_value}</Badge>
+                          </TableCell>
+                          <TableCell>
+                            <span className="capitalize">
+                              {t(`entity_types.${permission.entity_type}`)}
+                            </span>
+                          </TableCell>
+                          <TableCell>
+                            <code className="text-sm bg-muted px-2 py-1 rounded">
+                              {permission.field_name}
+                            </code>
+                          </TableCell>
+                          <TableCell className="text-center">
+                            {permission.can_view ? (
+                              <Eye className="h-4 w-4 text-success mx-auto" />
+                            ) : (
+                              <EyeOff className="h-4 w-4 text-danger mx-auto" />
+                            )}
+                          </TableCell>
+                          <TableCell className="text-center">
+                            {permission.can_edit ? (
+                              <Edit3 className="h-4 w-4 text-success mx-auto" />
+                            ) : (
+                              <Lock className="h-4 w-4 text-danger mx-auto" />
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={permission.is_active ? 'default' : 'secondary'}>
+                              {permission.is_active ? 'Active' : 'Inactive'}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-end">
+                            <div className="flex items-center justify-end gap-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedPermission(permission)
+                                  setShowPermissionDialog(true)
+                                }}
+                              >
+                                <Edit3 className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleDeletePermission(permission.id)}
+                              >
+                                <Trash2 className="h-4 w-4 text-destructive" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Field Definitions Tab */}
+          <TabsContent value="definitions">
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('definitions.title')}</CardTitle>
+                <CardDescription>{t('definitions.description')}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {definitionsLoading ? (
+                  <div className="space-y-3">
+                    {[0, 1, 2].map((n) => (
+                      <Skeleton key={n} className="h-20 w-full" />
+                    ))}
+                  </div>
+                ) : definitionsIsError ? (
+                  /* A rejected definitions read is not "no fields are defined". */
+                  <QueryErrorState
+                    variant="inline"
+                    onRetry={() => void refetchDefinitions()}
+                    isRetrying={definitionsFetching}
+                  />
+                ) : Object.keys(definitionsByEntity).length === 0 ? (
+                  <div className="text-center py-12">
+                    <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-lg font-medium">{t('definitions.empty')}</p>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {Object.entries(definitionsByEntity).map(([entityType, fields]) => (
+                      <div key={entityType} className="space-y-4">
+                        <h3 className="text-lg font-semibold capitalize flex items-center gap-2">
+                          <FileText className="h-5 w-5" />
+                          {t(`entity_types.${entityType}`)}
+                          <Badge variant="secondary">{fields.length} fields</Badge>
+                        </h3>
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>{t('definitions.fields.field_name')}</TableHead>
+                              <TableHead>{t('definitions.fields.field_label_en')}</TableHead>
+                              <TableHead>{t('definitions.fields.field_category')}</TableHead>
+                              <TableHead>{t('definitions.fields.data_type')}</TableHead>
+                              <TableHead>{t('definitions.fields.sensitivity_level')}</TableHead>
+                              <TableHead>{t('definitions.fields.default_visible')}</TableHead>
+                              <TableHead>{t('definitions.fields.default_editable')}</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {fields.map((field) => (
+                              <TableRow key={field.id}>
+                                <TableCell>
+                                  <code className="text-sm bg-muted px-2 py-1 rounded">
+                                    {field.field_name}
+                                  </code>
+                                </TableCell>
+                                <TableCell>
+                                  {isRTL ? field.field_label_ar : field.field_label_en}
+                                </TableCell>
+                                <TableCell>
+                                  <Badge variant="outline">
+                                    {t(`definitions.categories.${field.field_category}`)}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <span className="text-muted-foreground">
+                                    {t(`definitions.data_types.${field.data_type}`)}
+                                  </span>
+                                </TableCell>
+                                <TableCell>
+                                  <span className={getSensitivityColor(field.sensitivity_level)}>
+                                    {t(`definitions.sensitivity.${field.sensitivity_level}`)}
+                                  </span>
+                                </TableCell>
+                                <TableCell>
+                                  {field.default_visible ? (
+                                    <Eye className="h-4 w-4 text-success" />
+                                  ) : (
+                                    <EyeOff className="h-4 w-4 text-danger" />
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  {field.default_editable ? (
+                                    <Edit3 className="h-4 w-4 text-success" />
+                                  ) : (
+                                    <Lock className="h-4 w-4 text-danger" />
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Audit Tab */}
+          <TabsContent value="audit">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <History className="h-5 w-5" />
+                  {t('audit.title')}
+                </CardTitle>
+                <CardDescription>{t('audit.description')}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {auditLoading ? (
+                  <div className="space-y-3">
+                    {[0, 1, 2, 3, 4].map((n) => (
+                      <Skeleton key={n} className="h-16 w-full" />
+                    ))}
+                  </div>
+                ) : auditIsError ? (
+                  /* The audit feed 403s for a non-admin. That rejection used to render as
+                   "No audit history" — a claim that nothing has ever been changed, made by a
+                   caller who was not allowed to look. */
+                  <QueryErrorState
+                    variant="inline"
+                    onRetry={() => void refetchAudit()}
+                    isRetrying={auditFetching}
+                  />
+                ) : auditLogs.length === 0 ? (
+                  <div className="text-center py-12">
+                    <History className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-lg font-medium">{t('audit.empty')}</p>
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>{t('audit.fields.action')}</TableHead>
+                        <TableHead>{t('audit.fields.performed_by')}</TableHead>
+                        <TableHead>{t('audit.fields.created_at')}</TableHead>
+                        <TableHead>{t('audit.fields.old_values')}</TableHead>
+                        <TableHead>{t('audit.fields.new_values')}</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {auditLogs.map((log) => (
+                        <TableRow key={log.id}>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                log.action === 'create'
+                                  ? 'default'
+                                  : log.action === 'delete'
+                                    ? 'destructive'
+                                    : 'secondary'
+                              }
+                            >
+                              {t(`audit.actions.${log.action}`)}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{log.performed_by_email || 'System'}</TableCell>
+                          <TableCell>{formatDateTime(log.created_at)}</TableCell>
+                          <TableCell>
+                            {log.old_values ? (
+                              <code className="text-xs bg-muted px-2 py-1 rounded block max-w-xs truncate">
+                                {JSON.stringify(log.old_values).slice(0, 50)}...
+                              </code>
+                            ) : (
+                              '-'
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {log.new_values ? (
+                              <code className="text-xs bg-muted px-2 py-1 rounded block max-w-xs truncate">
+                                {JSON.stringify(log.new_values).slice(0, 50)}...
+                              </code>
+                            ) : (
+                              '-'
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      )}
 
       {/* Permission Dialog */}
       <PermissionDialog
