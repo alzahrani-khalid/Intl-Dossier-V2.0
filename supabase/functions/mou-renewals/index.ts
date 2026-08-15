@@ -1,5 +1,5 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 type RenewalStatus =
@@ -89,6 +89,8 @@ serve(async (req: Request) => {
         },
       }
     );
+
+    const token = (req.headers.get('Authorization') ?? '').replace('Bearer ', '');
 
     const url = new URL(req.url);
     const pathParts = url.pathname.split('/').filter(Boolean);
@@ -525,7 +527,7 @@ serve(async (req: Request) => {
           const {
             data: { user },
             error: userError,
-          } = await supabaseClient.auth.getUser();
+          } = await supabaseClient.auth.getUser(token);
           if (userError || !user) {
             return new Response(JSON.stringify({ error: 'Authentication required' }), {
               status: 401,
@@ -579,7 +581,7 @@ serve(async (req: Request) => {
           const {
             data: { user },
             error: userError,
-          } = await supabaseClient.auth.getUser();
+          } = await supabaseClient.auth.getUser(token);
           if (userError || !user) {
             return new Response(JSON.stringify({ error: 'Authentication required' }), {
               status: 401,

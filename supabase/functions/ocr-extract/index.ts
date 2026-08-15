@@ -8,7 +8,7 @@
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { multiParser } from 'https://deno.land/x/multiparser@0.114.0/mod.ts';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
