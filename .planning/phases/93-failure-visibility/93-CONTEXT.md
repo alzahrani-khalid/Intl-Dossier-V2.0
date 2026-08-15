@@ -223,6 +223,72 @@ contacts, documents, intelligence, mous, relationships, tasks, thematic_areas, w
   did: Playwright `--no-deps` plus inline auth. Every code criterion in this phase must be closeable
   without the rotation.
 
+### Resolved after research — `93-RESEARCH.md` closed its own open questions here
+
+- **D-21: Deleting the swallow is NOT sufficient, and at one of the six sites it does nothing at
+  all.** Research widened D-02's scan (brace-matched bodies, `pages/` added, `.catch(…)` expression
+  bodies, catch-and-assign, `throwOnError`, `select`, `placeholderData`) to **45 catch-and-return
+  sites of the SHAPE**, triaged 39 out by category, and confirmed **the defect class is still exactly
+  the 6 sites D-02 named**. But it found **three swallow classes a catch-scan structurally cannot
+  see**, all live today:
+  1. **supabase-js results whose `.error` is never checked.** PostgREST builders resolve
+     `{data, error, count}` — they do not reject. `hooks/useWidgetDashboard.ts:697-742`
+     (`fetchStatsSummary`) reads `activeDossiers.count || 0` from four sub-queries without
+     destructuring `error`, so **deleting the `catch` at `:726` changes nothing**: an RLS-denied query
+     still resolves and still renders `0`. The repair for site 6 is to destructure `error` from each
+     sub-query and `if (error) throw error` FIRST, then delete the outer catch. The file's own
+     siblings already do this (`:597,628,656,685`), so the convention exists in-place.
+  2. **Aggregation that discards `isError`.** `useWidgetDashboard`'s `widgetData` memo maps
+     `widgetQueries[i]?.data` into a record and drops error state; `CustomDashboardPage` receives only
+     `widgetData`. The KPI/chart/events fetchers **already throw today**, so widget rejections
+     **already** render as zeros through this seam — this is a live instance, not a hypothetical.
+  3. **`data: x = []` default destructuring with no `isError` consumed** — 26 sites by
+     `grep -rnE "data: [A-Za-z]+ = \[\]"` over `frontend/src/{routes,pages,components,hooks,domains}`
+     excluding tests. **This is criterion 2's actual mechanism** — all four named surfaces are
+     instances. **Population boundary:** `= {}` / `= 0` defaults and `?? []` masks at use sites were
+     NOT searched, so 26 is a floor for the shape, and not all 26 are defects (many sit beside a real
+     `isError` branch). **This phase fixes only the criterion-named instances**; the shape is on the
+     record so the closing derivation can state what it did not sweep.
+
+  **The rule this yields, and it governs every TRUST-01 task:** a swallow-deletion and its consumer's
+  error branch land in the SAME task. Split across plans, the deletion moves the lie one layer up —
+  `DossierListPage` renders seven zero-cards from `typeStatsMap?.[type] ?? {count: 0}` the moment the
+  counts query rejects. **Trading a lying screen for a blank one, or for a differently-lying one, is
+  not this phase's goal.**
+
+- **D-22: Criterion 5's fix targets three seams, not a per-boundary sweep.** Population: (a) the
+  JSX `error.message` sites whose `error` originates from a query/transport rejection — the D-08
+  partition, exemplar `pages/AssignmentQueue.tsx:48`; plus (b) `router/index.tsx`'s
+  `defaultErrorComponent`; plus (c) the global mutation `onError` fallback. Rationale: those three are
+  where an internal string reaches a user by DEFAULT, so fixing them is the root-cause set rather
+  than a per-file sweep. **Outside the population, stated:** per-boundary error renders and the two
+  toast sites that print `error.message` (`BotIntegrationsSettings.tsx:154` among them) are NOT swept
+  by this phase — they are named here so the closing derivation says so instead of implying total
+  coverage.
+
+- **D-23: The required anti-grant gate lands as a repo guard plus labelled live evidence.** No
+  Postgres DSN exists (`.env.test` carries only `SUPABASE_URL`, `SUPABASE_ANON_KEY`,
+  `SUPABASE_SERVICE_ROLE_KEY`, `TEST_USER_EMAIL`, `TEST_USER_PASSWORD`) and `information_schema` is
+  unreachable through PostgREST, so the assertion cannot be a live psql gate. It becomes: (1) an
+  `<automated>` gate asserting no file under `supabase/migrations` (483 files) or `backend/migrations`
+  matches `grant[[:space:]]+select[^;]*auth\.users` — a **regression guard**, currently zero matches,
+  whose RED direction is constructed by dropping the forbidden statement into a scratch migration and
+  whose GREEN is the clean tree, so **both directions are observable without any credential**; and
+  (2) the live `information_schema.table_privileges` check recorded in the gate-drill table as
+  `CANNOT CONSTRUCT (no DSN; MCP-only)` per `GATE-STANDARD` C1 — never folded into a pass.
+  **What the pair does not establish:** a grant applied by hand outside the migrations directory is
+  invisible to (1), and (2) is point-in-time, not standing. Full reasoning: `PARK-P93-05`.
+
+- **D-24: The four rewritten policies use `public.is_platform_admin(auth.uid())` — pending
+  `PARK-P93-04`.** Measured: `public.users.role` holds **1** admin, `public.user_roles` holds **7**
+  active admin grants, so the ruling's literal inline predicate and the project's own helper admit
+  different sets. `is_platform_admin` is `STABLE SECURITY DEFINER` with `search_path` pinned, and its
+  first arm **is** `public.users.role` keyed on the uid — it satisfies `RULING-P93-01` order 1's
+  intent and adds the `user_roles` arm, while sidestepping any RLS-recursion question against
+  `public.users`' own policies. `super_admin` exists in neither store, so research's variant question
+  is moot. If the ruling is read literally instead, the inline predicate is a one-token substitution
+  per policy and under-grants rather than over-grants — the correct direction to err.
+
 ### Claude's Discretion
 
 Plan decomposition and task ordering; the internal shape of the shared error component; whether the
