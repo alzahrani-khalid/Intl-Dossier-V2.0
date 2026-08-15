@@ -250,11 +250,16 @@ verified sound across six lanes).
       `playwright.config.ts:36` gives `chromium-en` `dependencies: ['setup']`, and `--grep` does not
       exempt a dependency project, so **any** non-`--no-deps` run of a `chromium-en` spec fails at
       setup with `3 failed / N did not run` before reaching its subject.
-      The `--no-deps` escape is also dead: the saved state at
-      `tests/e2e/support/storage/admin.json` holds a token with `expires_at: 1780606280` =
-      **2026-06-04**, 72 days stale. Both routes into an authenticated browser are therefore closed,
-      and the recovery the specs themselves prescribe ("re-run the `setup` project first") is
-      circular.
+      The `--no-deps` escape is **degraded, and possibly also closed — this is measured only in
+      part.** The saved state at `tests/e2e/support/storage/admin.json` holds an ACCESS token with
+      `expires_at: 1780606280` = **2026-06-04**, 72 days stale. What was NOT measured: the same file
+      holds a `refresh_token`, and Supabase refresh tokens carry no absolute expiry by default, so a
+      refresh at app load may still mint a valid session. **The accurate claim is "the access token
+      is 72 days stale", not "the stored session is dead"** — the latter was an overclaim, corrected
+      2026-08-15 per `RULING-P92-39`, and no plan or requirement should be built on it. Settling it
+      takes one run of a `--no-deps` spec against staging.
+      Either way the recovery the specs themselves prescribe ("re-run the `setup` project first")
+      is circular, because that is the route the six missing keys close.
       **Suspected contributor to `main` being chronically red on E2E** — the condition has held since
       at least June, which predates every Phase 92 change.
       Phase 92 does NOT fix this. It routes around it for one spec only (92-01 T2 authenticates
