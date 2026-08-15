@@ -137,10 +137,41 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
   `frontend/src/auth/ResetPasswordPage.tsx:25`. A sixth subscription firing alongside five that
   already fire is a new bug, not a fix. The plan must enumerate all five and state, per site, what it
   does on an invalidated session today and what it must do instead.
-- **D-11:** The "Member/Member" ghost shell in `ROADMAP.md:286` is the **symptom these handlers
-  produce**, not an independent defect. `services/auth.ts:637-650` already clears user/session/
-  isAuthenticated on `SIGNED_OUT` but performs no navigation — the page keeps rendering with
-  `role` gone, which is exactly the ghost state described. Route away, do not merely null the state.
+- **D-11:** **CORRECTED 2026-08-15 — the earlier text blamed a module that never runs.** The "Member/
+  Member" ghost shell in `ROADMAP.md:286` is the symptom of the **live** handler, and this decision
+  originally attributed it to `services/auth.ts:637-650`. That module is **imported by zero files** —
+  verified repo-wide — so its `onAuthStateChange` never registers and its clearing code never
+  executes. A plan built on the original wording would have edited dead code and shipped nothing.
+  The ghost state is produced by the **live** seam: `authStore.handleAuthStateChange`, reached via
+  `subscribeToAuthChanges()` (`authStore.ts:264-270`). Route away there, do not merely null the state.
+  **Latent hazard worth one line in the plan:** `services/auth.ts:624` persists a _second_ zustand
+  store under the **same `'auth-storage'` key** as the live `authStore.ts:253`. It is inert only
+  because nothing imports it; anything that imports that module later gets two stores fighting over
+  one persist key. Do not "revive" it — the correct disposal is deletion, which belongs to the `DEAD`
+  group, not here.
+- **D-22:** **The five sites are not five fix sites.** Per the researcher's map, verified: **1 live fix
+  site** (`authStore.handleAuthStateChange`), **3 benign no-ops**
+  (`useUnifiedWorkRealtime.ts:166`, `useActivityFeed.ts:44`, `ResetPasswordPage.tsx:25` — each
+  re-subscribes its own concern on session change and is correct as-is), and **1 dead module**
+  (`services/auth.ts:635`). The fix is **one navigation line at the `SIGNED_OUT` seam in
+  `authStore`**, which covers deliberate logout (AUTH-01) and forced invalidation (AUTH-03) with the
+  same edit. `router` is exported at `router/index.tsx:62`. Touch the three no-ops only to confirm
+  they are no-ops; do not refactor them.
+- **D-23:** **Mounting `NavUser` is not a one-line import — it has an unsatisfied provider
+  dependency.** `nav-user.tsx:15,27` imports `useSidebar` from `@/components/ui/sidebar` and reads
+  `isMobile`, but **`SidebarProvider` is rendered nowhere in the app** (verified repo-wide; the live
+  `Sidebar.tsx` does not use that provider). Mounting it as-is throws or yields `undefined`. **Adapt
+  the consumer** — drop or replace the `isMobile` dependency with the shell's own responsive signal —
+  and do **not** wrap the live shell in a foreign provider to satisfy one component. The mount seam is
+  the static user card at `Sidebar.tsx:101-114`.
+- **D-24:** **The sign-out label currently renders English in Arabic too, and the Arabic string
+  already exists.** `nav-user.tsx:94` calls `t('navigation.logout', 'Logout')`, but no
+  `navigation.logout` key exists in either locale — so it falls back to its inline English default in
+  **both** languages, which is this project's recurring i18n trap. The translation is already present
+  at **`common.logout`** (`en` "Logout" / `ar` "تسجيل الخروج"), and the dead `Header.tsx:101` uses that
+  correct path. **Repoint the key rather than adding new ones**; if the spec's "Sign out" wording is
+  kept, change the `en` value at `common.logout` and leave `ar` untouched. Adding a parallel key would
+  leave two logout strings to drift apart.
 - **D-18:** **The route guard already works — do not touch it.** The source lane is more precise than
   its restatement: `sweeper.md` F7 records that after a programmatic `signOut()` on `/dashboard` the
   open tab stayed put for 3s and decayed, **but a _fresh_ navigation to `/dashboard` correctly bounced
