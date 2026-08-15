@@ -157,12 +157,32 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
   `authStore`**, which covers deliberate logout (AUTH-01) and forced invalidation (AUTH-03) with the
   same edit. `router` is exported at `router/index.tsx:62`. Touch the three no-ops only to confirm
   they are no-ops; do not refactor them.
+  **D-25 — the navigation must use a LAZY import, or it closes a cycle.** `92-RESEARCH.md`'s
+  Pattern 1 shows a module-level `import { router } from '@/router'` inside `authStore`. That is a
+  **cycle**: `router/index.tsx:2` imports `routeTree`, `routeTree.gen` imports the routes, and both
+  `routes/_protected.tsx:4` and `routes/index.tsx:2` import `authStore` — verified 2026-08-15. This
+  repo has already shipped a production white-screen from a module cycle (the Vite `react-vendor`
+  `manualChunks` incident), so it is a live hazard, not a theoretical one. Use
+  `void import('@/router').then(({ router }) => router.navigate({ to: '/login' }))`.
+  **Where RESEARCH.md and PATTERNS.md disagree here, PATTERNS.md wins** — and the task must say so,
+  so nobody "simplifies" it back to a static import.
+
+  **D-26 — an e2e sign-out test already exists and already targets this control.**
+  `tests/e2e/01-login.spec.ts:30-41` opens `getByTestId('user-menu')`, falls back to a role-regex
+  button matching `sign out|logout|تسجيل الخروج`, and asserts `toHaveURL(/\/login/)`. Therefore
+  **`data-testid="user-menu"` on the mounted `NavUser` is load-bearing for an existing test**, not
+  decoration, and belongs in the mount task's acceptance criteria. AUTH-01 needs no new spec; the
+  Wave-0 spec narrows to what the existing one does not cover — the AUTH-03 storage-invalidation
+  bounce, the `/settings` second surface, and the assertion that the session is genuinely _cleared_
+  (D-04) rather than merely navigated away from.
+
   **Hard constraints (`RULING-P92-06` amended acceptance condition 5′):** a task that edits
   `services/auth.ts`'s handler is a **REJECT** — that module is dead, so such a task ships nothing
   while looking thorough. A task that adds a sixth subscription is a **REJECT**. The five-site
   classification (live / no-op / dead) must still appear in the plan, because it is the _evidence_
   for why exactly one site is touched — without it, "we only changed one line" is indistinguishable
   from an incomplete fix.
+
 - **D-23:** **Mounting `NavUser` is not a one-line import — it has an unsatisfied provider
   dependency.** `nav-user.tsx:15,27` imports `useSidebar` from `@/components/ui/sidebar` and reads
   `isMobile`, but **`SidebarProvider` is rendered nowhere in the app** (verified repo-wide; the live
