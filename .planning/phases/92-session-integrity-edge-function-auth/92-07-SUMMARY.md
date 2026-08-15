@@ -292,6 +292,14 @@ Honest boundaries of what I observed:
   whether `intelligence-batch-update`'s string-comparison auth is sound. Both are outside this
   plan's edit surface and I left them exactly as base had them.
 
+## Self-Check: PASSED
+
+- `FOUND: .planning/phases/92-session-integrity-edge-function-auth/92-07-SUMMARY.md`
+- `FOUND: 65f878e6` (Task 1) · `FOUND: 5116f622` (Task 2) · `FOUND: b4d38f0f` (SUMMARY)
+- `git status --short -- supabase/functions/` → empty (no uncommitted source changes from this lane)
+
+STATE.md and ROADMAP.md were deliberately NOT updated — the orchestrator owns those in this phase.
+
 ---
 
 _Phase: 92-session-integrity-edge-function-auth_
