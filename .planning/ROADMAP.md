@@ -292,8 +292,8 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 
 Plans:
 
-- [ ] 92-01-PLAN.md — Wave 0: probe script + baseline (D-16), sign-out spec, delegations forced-error spec
-- [ ] 92-02-PLAN.md — Mount NavUser, one SIGNED_OUT navigation seam, /settings sign-out row (AUTH-01/03/05)
+- [ ] 92-01-PLAN.md — Wave 0: probe script + baseline (D-16), AUTH-01 RED measurement (D-26), sign-out + delegations forced-error specs
+- [ ] 92-02-PLAN.md — Mount NavUser, SIGNED_OUT seam (cache clear + lazy nav), /settings add + relabel (AUTH-01/03/05, D-25/28/29)
 - [ ] 92-03-PLAN.md — /delegations error state distinct from empty (AUTH-04 UI half)
 - [ ] 92-04-PLAN.md — AUTH-02 core: 3 confirmed-broken + my-delegations + \_shared/auth.ts, deployed + probe flip
 - [ ] 92-05-PLAN.md — AUTH-02 sweep slice A (access-review-detail → document-versions, 33 files, code-only)
