@@ -18,7 +18,7 @@
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
+import { createClient } from 'jsr:@supabase/supabase-js@2'
 import { errorResponse, successResponse, log } from '../_shared/utils.ts'
 import { getCorsHeaders } from '../_shared/cors.ts'
 
@@ -379,10 +379,11 @@ async function handleRequest(req: Request, corsHeaders: Record<string, string>) 
     )
 
     // Get current user and verify admin role
+    const token = authHeader.replace('Bearer ', '')
     const {
       data: { user },
       error: userError,
-    } = await supabase.auth.getUser()
+    } = await supabase.auth.getUser(token)
 
     if (userError || !user) {
       return errorResponse('Invalid user session', 401, 'AUTH_REQUIRED')
