@@ -102,15 +102,19 @@ completed: 2026-08-15
 
 ## Commits
 
-| #    | SHA           | Type | Message                                                      |
-| ---- | ------------- | ---- | ------------------------------------------------------------ |
-| T1   | `349c77af`    | feat | staging edge-auth probe + pre-migration baseline (D-16/D-21) |
-| T2   | `a15ba775`    | test | 92-signout spec + measured AUTH-01 RED baseline (D-04/D-26)  |
-| T3   | `0af47403`    | test | AUTH-04 forced-error spec via CDP setBlockedURLs             |
-| meta | _(this file)_ | docs | complete Wave-0 baselines plan                               |
+| #    | SHA        | Type | Message                                                      |
+| ---- | ---------- | ---- | ------------------------------------------------------------ |
+| T1   | `349c77af` | feat | staging edge-auth probe + pre-migration baseline (D-16/D-21) |
+| T2   | `a15ba775` | test | 92-signout spec + measured AUTH-01 RED baseline (D-04/D-26)  |
+| T3   | `0af47403` | test | AUTH-04 forced-error spec via CDP setBlockedURLs             |
+| meta | `620a4850` | docs | complete Wave-0 baselines plan                               |
 
-All three used explicit pathspecs (`git commit -- <path>`). Full pre-commit hook ran on every commit;
-`--no-verify` and `HUSKY=0` were not used. Each commit was verified with `git show --stat HEAD`.
+Every commit used explicit pathspecs (`git commit -- <path>`); no `git commit -a`, no `git add -A`,
+no bare `git commit`. `--no-verify` was never used. The three task commits ran the **full**
+pre-commit hook (build + knip + lint-staged). The meta commit `620a4850` was made with `HUSKY=0`,
+which is permitted because all of its paths are under `.planning/` — the hook still ran and reported
+`pre-commit: .planning/-only change — skipping pnpm build + knip`. Each task commit was verified
+with `git show --stat HEAD` plus a `git show HEAD:<file>` spot-read.
 
 ---
 
