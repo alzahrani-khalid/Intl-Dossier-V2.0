@@ -241,7 +241,7 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
   `authStore`**, which covers deliberate logout (AUTH-01) and forced invalidation (AUTH-03) with the
   same edit. `router` is exported at `router/index.tsx:62`. Touch the three no-ops only to confirm
   they are no-ops; do not refactor them.
-  **D-25 — the navigation must use a LAZY import, or it closes a cycle.** `92-RESEARCH.md`'s
+  **D-25: the navigation must use a LAZY import, or it closes a cycle.** `92-RESEARCH.md`'s
   Pattern 1 shows a module-level `import { router } from '@/router'` inside `authStore`. That is a
   **cycle**: `router/index.tsx:2` imports `routeTree`, `routeTree.gen` imports the routes (203 of
   them), and both `routes/_protected.tsx:4` and `routes/index.tsx:2` import `authStore` — every edge
@@ -260,7 +260,7 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
     codebase pattern-map could have produced it.
   - A disagreement falling outside both their derivations is a **park**, not a coin-toss.
 
-  **D-26 — `tests/e2e/01-login.spec.ts:30` is a LIVE FAILING TEST, not existing coverage.** The
+  **D-26: `tests/e2e/01-login.spec.ts:30` is a LIVE FAILING TEST, not existing coverage.** The
   distinction matters. Verified: the test is **not quarantined** (the `base.skip` at `:11` is a
   credential guard inside the _first_ describe, `:9`; the sign-out test is in a separate describe at
   `:23` with zero skip/fixme/fail in the file); `LoginPage.signOut()` clicks a
@@ -283,7 +283,7 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
      one does not cover — the AUTH-03 bounce, the `/settings` surface, and D-04's assertion that the
      session is genuinely _cleared_.
 
-  **D-27 — the sign-out LABEL is load-bearing for that spec, by luck of the key rather than by
+  **D-27: the sign-out LABEL is load-bearing for that spec, by luck of the key rather than by
   design.** `signOut()` matches on the accessible name `/sign out|logout|تسجيل الخروج|خروج/i`.
   D-24's repoint to `common.logout` yields en `"Logout"` and ar `"تسجيل الخروج"` — **both match**.
   Write this coupling into _both_ the i18n task and the mount task: if anyone later picks "Sign out
