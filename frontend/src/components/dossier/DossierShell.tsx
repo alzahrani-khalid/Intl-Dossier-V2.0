@@ -12,10 +12,10 @@
 import type { ReactElement, ReactNode } from 'react'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from '@tanstack/react-router'
+import { Link, notFound } from '@tanstack/react-router'
 import { useDirection } from '@/hooks/useDirection'
 import { useDossier } from '@/domains/dossiers/hooks/useDossier'
-import type { DossierType } from '@/services/dossier-api'
+import { DossierAPIError, type DossierType } from '@/services/dossier-api'
 import { useDossierPresence } from '@/hooks/useDossierPresence'
 import { useAddToDossierActions } from '@/hooks/useAddToDossierActions'
 import { useAuth } from '@/contexts/auth.context'
@@ -29,6 +29,7 @@ import {
 import { AddToDossierDialogs } from '@/components/dossier/AddToDossierDialogs'
 import { DossierAnalyzeButton } from '@/components/dossier/DossierAnalyzeButton'
 import { ExportDossierDialog } from '@/components/dossier/ExportDossierDialog'
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import { ActiveViewers, ActiveViewersCompact } from '@/components/collaboration'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -81,7 +82,7 @@ export function DossierShell({
   const { user } = useAuth()
 
   // Dossier data — useDossier returns DossierWithExtension directly
-  const { data: dossier, isLoading } = useDossier(dossierId)
+  const { data: dossier, isLoading, isError, error, isRefetching, refetch } = useDossier(dossierId)
 
   // Presence tracking
   const { viewers, isConnected, viewerCount } = useDossierPresence(dossierId, {
@@ -124,6 +125,20 @@ export function DossierShell({
   const displayName = isRTL
     ? (dossier?.name_ar ?? dossier?.name_en ?? '')
     : (dossier?.name_en ?? '')
+
+  // D-05: absence and failure are DIFFERENT states with different renders. A well-formed id that
+  // resolves to no row is not a failed request — it throws into the root notFoundComponent
+  // (routes/__root.tsx:72), which until now had no thrower anywhere in frontend/src. Every other
+  // rejection renders the shared error state. Neither path may fall through to the chrome below,
+  // which would paint a titleless header for a dossier that has no identity to show.
+  if (isError) {
+    if (error instanceof DossierAPIError && error.status === 404) {
+      throw notFound()
+    }
+    return (
+      <QueryErrorState variant="page" onRetry={() => void refetch()} isRetrying={isRefetching} />
+    )
+  }
 
   return (
     <div
