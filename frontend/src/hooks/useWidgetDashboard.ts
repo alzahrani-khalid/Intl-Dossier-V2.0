@@ -695,42 +695,41 @@ async function fetchActivityFeed(maxItems = 15) {
 }
 
 async function fetchStatsSummary() {
-  try {
-    const now = new Date()
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+  const now = new Date()
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
 
-    const [activeDossiers, openWorkItems, completedThisMonth, overdueItems] = await Promise.all([
-      supabase.from('dossiers').select('id', { count: 'exact', head: true }).eq('status', 'active'),
-      supabase
-        .from('unified_work_items')
-        .select('id', { count: 'exact', head: true })
-        .neq('status', 'completed'),
-      supabase
-        .from('unified_work_items')
-        .select('id', { count: 'exact', head: true })
-        .eq('status', 'completed')
-        .gte('updated_at', monthStart.toISOString()),
-      supabase
-        .from('unified_work_items')
-        .select('id', { count: 'exact', head: true })
-        .lt('deadline', now.toISOString())
-        .neq('status', 'completed'),
-    ])
+  const [activeDossiers, openWorkItems, completedThisMonth, overdueItems] = await Promise.all([
+    supabase.from('dossiers').select('id', { count: 'exact', head: true }).eq('status', 'active'),
+    supabase
+      .from('unified_work_items')
+      .select('id', { count: 'exact', head: true })
+      .neq('status', 'completed'),
+    supabase
+      .from('unified_work_items')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'completed')
+      .gte('updated_at', monthStart.toISOString()),
+    supabase
+      .from('unified_work_items')
+      .select('id', { count: 'exact', head: true })
+      .lt('deadline', now.toISOString())
+      .neq('status', 'completed'),
+  ])
 
-    return {
-      activeDossiers: activeDossiers.count || 0,
-      openWorkItems: openWorkItems.count || 0,
-      completedThisMonth: completedThisMonth.count || 0,
-      overdueItems: overdueItems.count || 0,
-    }
-  } catch (error) {
-    console.error('Failed to fetch stats summary:', error)
-    return {
-      activeDossiers: 0,
-      openWorkItems: 0,
-      completedThisMonth: 0,
-      overdueItems: 0,
-    }
+  // Surface the error to the query state instead of swallowing it into zeros.
+  // A PostgREST builder RESOLVES with { data, error, count } — it never rejects — so a denied
+  // count arrives here as count: null and renders a confident 0 unless it is checked first.
+  // Same convention as the siblings above.
+  for (const result of [activeDossiers, openWorkItems, completedThisMonth, overdueItems]) {
+    if (result.error) throw result.error
+  }
+
+  // count is non-null on the success path; ?? 0 only satisfies the type.
+  return {
+    activeDossiers: activeDossiers.count ?? 0,
+    openWorkItems: openWorkItems.count ?? 0,
+    completedThisMonth: completedThisMonth.count ?? 0,
+    overdueItems: overdueItems.count ?? 0,
   }
 }
 
@@ -780,6 +779,12 @@ function fetchWidgetData(widget: WidgetConfig) {
 
 interface UseWidgetDashboardOptions {
   autoSave?: boolean
+}
+
+/** Per-widget query state the data aggregation would otherwise discard. */
+export interface WidgetQueryState {
+  isError: boolean
+  isRefetching: boolean
 }
 
 export function useWidgetDashboard(options: UseWidgetDashboardOptions = {}) {
@@ -862,6 +867,24 @@ export function useWidgetDashboard(options: UseWidgetDashboardOptions = {}) {
     )
   }, [widgets, widgetQueries])
 
+  // Per-widget query state, keyed exactly like widgetData.
+  // The data aggregation above keeps only `data`, so a rejected widget query reaches the page
+  // as `undefined` — indistinguishable from "still loading" and rendered as an empty widget.
+  // Carrying isError alongside is what lets the page render the failure as a failure.
+  const widgetStates = useMemo(() => {
+    return widgets.reduce(
+      (acc, widget, index) => {
+        const query = widgetQueries[index]
+        acc[widget.id as string] = {
+          isError: query?.isError ?? false,
+          isRefetching: query?.isRefetching ?? false,
+        }
+        return acc
+      },
+      {} as Record<string, WidgetQueryState>,
+    )
+  }, [widgets, widgetQueries])
+
   // ============================================================================
   // Actions
   // ============================================================================
@@ -941,6 +964,7 @@ export function useWidgetDashboard(options: UseWidgetDashboardOptions = {}) {
     // State
     widgets,
     widgetData,
+    widgetStates,
     isEditMode,
     selectedWidget,
     isLibraryOpen,
