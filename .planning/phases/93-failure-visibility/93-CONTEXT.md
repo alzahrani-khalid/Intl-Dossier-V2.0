@@ -94,12 +94,35 @@ internal-string leak (`TRUST-04`); and the four defects Phase 92 unmasked and fi
   bug criterion 3 describes ("Check your connection and try again" for a record that simply is not
   there).
 
-- **D-06: Not-found reuses TanStack Router's `notFound()` — the precedent already in the tree.**
-  `routes/__root.tsx` defines the boundary and `routes/_protected/positions/$id.tsx`,
-  `routes/_protected/after-actions/$afterActionId.tsx`,
-  `routes/_protected/engagements/$engagementId/after-action.tsx` already throw it. Criterion 3's three
-  targets (dossier detail, engagement detail, report builder) adopt the same mechanism rather than a
-  fourth invention.
+- **D-06: Not-found uses TanStack Router's `notFound()`. The DECISION stands; its stated premise was
+  WRONG and is corrected here.**
+
+  > **Correction, 2026-08-15, after research — re-verified independently before recording.** This
+  > decision originally read "the precedent already in the tree", citing three routes as already
+  > throwing `notFound()`. **They do not. There are ZERO `notFound()` call sites in
+  > `frontend/src`.** The original claim came from `grep -rl "notFound" routes/`, which matches files
+  > that merely _mention_ the token — a file list is not a call-site list. Re-derived with
+  > `grep -rnE '\bnotFound\s*\(' frontend/src --include='*.ts*'` → no matches; the only occurrence is
+  > `notFoundComponent: NotFoundPage` at `routes/__root.tsx:72`. **So the boundary exists and nothing
+  > throws into it**; the three "precedent" routes render in-component cards instead.
+
+  The mechanism is still correct — TanStack Router supports throwing `notFound()` from a component
+  and the root boundary catches it — but this phase **establishes** the pattern rather than following
+  it, which is more work than the original wording implied and must be planned as such.
+
+  Research pins the seams: one edit in `DossierShell` covers all seven dossier layouts;
+  `WorkspaceShell` covers engagement detail **but only after the TRUST-04 server change** (today
+  `get_engagement_full` collapses a missing extension row into the same 404 as an absent ID, so the
+  server must first return 200 + base-dossier identity for the degraded case — otherwise criterion 3
+  and criterion 4 are indistinguishable at the client and D-05's whole distinction collapses); and
+  **report builder has no fetch at all** — `useReportBuilderState` is a stub that ignores the id, so
+  it needs a loader and a by-id fetch before it can have a not-found state, with the `WRITE-06`
+  `42P17` policy-recursion hazard stated in the task.
+
+- **D-06a: Criterion 3's ordering is therefore a hard dependency, not a preference.** The
+  `get_engagement_full` server change (TRUST-04) is a PRODUCER; engagement detail's not-found
+  (TRUST-03) is its CONSUMER. Planned in that order, in that dependency direction — this is the
+  live-oracle-ordering lesson applied to a server contract rather than to a test.
 
 - **D-07: `TRUST-04`'s degraded state is NAMED, not blank.** An engagement whose extension row is
   missing renders the record's identity plus an explicit "incomplete record" state — never chrome
@@ -279,8 +302,30 @@ contacts, documents, intelligence, mous, relationships, tasks, thematic_areas, w
   **What the pair does not establish:** a grant applied by hand outside the migrations directory is
   invisible to (1), and (2) is point-in-time, not standing. Full reasoning: `PARK-P93-05`.
 
-- **D-24: The four rewritten policies use `public.is_platform_admin(auth.uid())` — pending
-  `PARK-P93-04`.** Measured: `public.users.role` holds **1** admin, `public.user_roles` holds **7**
+- **D-25: Two criterion-2 surfaces are not the defect they were filed as, and one region stays
+  broken on purpose.**
+  - **Tag Analytics is a stub, not a failed query.** `useTagAnalytics` resolves a shape the component
+    cannot read, so `!stats` renders "Failed to load tags" **over a success** — the inverse of this
+    phase's defect and a different repair. The real endpoint `tag-hierarchy/analytics` +
+    `mv_tag_usage_analytics` matches the component's types column-for-column; repoint rather than
+    invent.
+  - **`/admin/field-permissions`' edge function and RLS are FINE** — 19 rows are reachable by an
+    admin. The "0 Permissions" is a `data: x = [] ` mask plus a missing `isError` branch. (Noted in
+    passing by research: its filters are silently never sent — out of scope here, not fixed, said
+    aloud so a later reader does not infer coverage.)
+  - **`/admin/data-retention` will STILL show an error in its legal-holds region after the 4-policy
+    migration**, because `legal_holds` is one of the residual 11 (`RLS-AUTHUSERS-01`, Phase 100). That
+    is BY DESIGN and the plan states it. A criterion-2 close that quietly implied the whole page went
+    green would be this milestone's own failure mode wearing this phase's badge.
+
+- **D-26: `AUDIT-42703`'s replacement aggregate already exists — promote it, do not write it.**
+  The statistics block D-14 calls for is already present as the fallback at
+  `supabase/functions/audit-logs-viewer/index.ts:284-300`. The task promotes that block and deletes
+  the `audit_statistics` query, rather than authoring a new aggregate.
+
+- **D-24: The four rewritten policies use `public.is_platform_admin(auth.uid())` — RULED, `RULING-P93-01
+ADDENDUM 2` (PARK-P93-04 upheld; the ruling's literal `public.users.role` wording superseded, its
+  intent preserved).** Measured: `public.users.role` holds **1** admin, `public.user_roles` holds **7**
   active admin grants, so the ruling's literal inline predicate and the project's own helper admit
   different sets. `is_platform_admin` is `STABLE SECURITY DEFINER` with `search_path` pinned, and its
   first arm **is** `public.users.role` keyed on the uid — it satisfies `RULING-P93-01` order 1's
