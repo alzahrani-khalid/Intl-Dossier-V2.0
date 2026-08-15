@@ -258,3 +258,44 @@ deploys. No bare `supabase functions deploy` was run at any point.
 
 **139 / 139 OK on the first pass. The retry pass found nothing to retry; no deploy failed, so no
 name required a FAIL line.**
+
+### Addendum — a SECOND deploy pass ran and this ledger did not record it
+
+Added by the orchestrator (`orch-p92-exec`) 2026-08-15. The sentence being corrected is quoted here
+verbatim rather than deleted, so the record shows what was claimed and what was found:
+
+<!-- prettier-ignore -->
+> **139 / 139 OK on the first pass. The retry pass found nothing to retry; no deploy failed, so no
+> name required a FAIL line.**
+
+That sentence is **accurate about the first pass** and **incomplete about the run as a whole**: a
+second pass ran five minutes after it was committed, and this ledger did not record it. Its phrase
+_"The retry pass found nothing to retry"_ is the specifically misleading part — it describes a retry
+pass that concluded with nothing to do, and a reader would take it as the end of the deploy activity.
+A ledger silent about a run that occurred is the failure mode this artifact exists to prevent.
+
+The sentence is left standing above, not edited away. Recording only what the logs show — no intent
+is claimed, and **no OK/FAIL row is added**, because no one who can attest to those deploys is
+available to sign for them.
+
+Measured, not inferred:
+
+- `92-09-redeploy-raw.log` holds **90** deploy records, `11:09:11Z → 11:17:40Z`, run **serially**
+  (~5.6 s apart) — five minutes **after** the commit (`feb3b42c`, `11:04:11Z`) that landed the
+  sentence above.
+- The first pass (`92-09-deploy-raw.log`) holds **139** records, `10:58:51Z → 11:02:16Z`, run
+  4-concurrent. **229 attempts, 139 unique functions, `attempt-exit=0` on all 229.**
+- The 90 are a **strict subset** of the 139 (`comm -13` → 0 names in pass 2 absent from pass 1).
+- Bundle sizes are **byte-identical** between passes across all comparable entries — so pass 2
+  changed nothing about the deployed state, and the 139 OK rows above remain accurate.
+- Both logs conform 100% to the identical per-function banner
+  `^===== <fn> | <ts>Z | attempt-exit=N =====` (139/139 and 90/90, zero nonconforming), same owner
+  and directory — so the invoker was the executing worker's own deploy harness.
+
+**Why pass 2 was invoked is NOT in the record.** The worker's pane was lost at ~`11:17Z`, which is
+where pass 2's last record sits. Four structural explanations were tested and **refuted** by the
+resuming executor (truncation — the gaps are scattered, not a contiguous tail; a slice — all four
+were redeployed ~proportionally; the Class-1/Class-2 split — overlap 19/49 against 18.7 expected by
+chance; the C9a `<files>` derivation — that yields 134 names, not 90). Graded `MECHANISM-ONLY` under
+the pre-committed verdict rule (`D-44`): invoker established, trigger died with the pane. It is a
+**record-keeping gap, not a deployment defect**.
