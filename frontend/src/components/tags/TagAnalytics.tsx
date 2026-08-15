@@ -54,12 +54,11 @@ interface TagAnalyticsRow {
   engagement_count: number
   hierarchy_level: number
   // Plus the fields needed to render rows (TagWithUsage shape):
-  id: string
   tag_id: string
   name_en: string
   name_ar: string
   color: string
-  parent_tag_id?: string | null
+  parent_id?: string | null
 }
 
 interface TagAnalyticsResponse {

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { formatDayFirstYear } from '@/lib/format-date'
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import {
   usePositionAttachments,
   useUploadPositionAttachment,
@@ -39,8 +40,16 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
   const [dragActive, setDragActive] = useState(false)
   const [validationError, setValidationError] = useState<string | null>(null)
 
-  // Fetch existing attachments
-  const { data: existingAttachments = [], isLoading } = usePositionAttachments(positionId)
+  // Fetch existing attachments. `data: … = []` is a MASK: on a rejection the default fires and the
+  // section rendered "No attachments yet" for a list it never loaded. isError is destructured so
+  // failure can be told apart from a resolved-empty list (T-93-19).
+  const {
+    data: existingAttachments = [],
+    isLoading,
+    isError,
+    isRefetching,
+    refetch,
+  } = usePositionAttachments(positionId)
   const uploadMutation = useUploadPositionAttachment(positionId)
   const deleteMutation = useDeletePositionAttachment(positionId)
 
@@ -312,6 +321,16 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
         </div>
       )}
 
+      {/* The section owns the attachments query, so its failure is an inline state — not a page
+          takeover: the dropzone above stays usable, since uploading does not depend on the list. */}
+      {!isLoading && isError && (
+        <QueryErrorState
+          variant="inline"
+          onRetry={() => void refetch()}
+          isRetrying={isRefetching}
+        />
+      )}
+
       {!isLoading && allAttachments.length > 0 && (
         <div className="space-y-2">
           <h3 className="text-sm font-medium text-foreground dark:text-muted-foreground">
@@ -487,11 +506,16 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
         </div>
       )}
 
-      {!isLoading && existingAttachments.length === 0 && uploadingFiles.length === 0 && (
-        <p className="text-sm text-muted-foreground dark:text-muted-foreground text-center py-4">
-          {t('positions:attachments_uploader.noAttachments')}
-        </p>
-      )}
+      {/* Empty copy renders on a RESOLVED-empty result only. Gated on !isError so a failed load
+          can never claim the position has no attachments — the list is unknown, not empty. */}
+      {!isLoading &&
+        !isError &&
+        existingAttachments.length === 0 &&
+        uploadingFiles.length === 0 && (
+          <p className="text-sm text-muted-foreground dark:text-muted-foreground text-center py-4">
+            {t('positions:attachments_uploader.noAttachments')}
+          </p>
+        )}
     </div>
   )
 }
