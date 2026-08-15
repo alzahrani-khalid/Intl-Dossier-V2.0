@@ -38,7 +38,7 @@ by exactly one person — the author — against a tree where the work does not 
 red FOR THE RIGHT REASON, until you build the subject.** Running gates against the undone tree
 cannot find this class. Only constructing the done state can. That is why eight accumulated.
 
-## The standard — every gate must satisfy all of C1–C10
+## The standard — every gate must satisfy all of C1–C10 (including C9a and C9b)
 
 ### C1 — BOTH DIRECTIONS, OBSERVED (not reasoned)
 
@@ -155,6 +155,86 @@ Corollary: reformatting such an artifact to the shape its own plan mandates is a
 not a gate edit — it does not trigger the no-gate-edits rule. Preserve the original losslessly, keep
 exactly one table visible to the counter, and re-run the consuming gate with the expected count
 stated **before** the run.
+
+#### C9b — THE CONSUMER SET IS NOT BOUNDED BY THE PHASE
+
+**Added 2026-08-15 during Phase 93 PLANNING (`RULING-P93-01`, `D-57`), before the instance could
+fire.** Caught by inspection rather than by a red gate, which is the only reason it is cheap.
+
+C9a fixed _where_ to look for producers (`<files>` blocks, not only `files_modified`). It did not fix
+_how far_ to look for _consumers_. Its own wording — "every plan that references it" — silently scopes
+the search to the current phase's plan set, because that is the only set a planning-time sweep has in
+hand. **A shipped test from an earlier phase is a consumer too, and it is invisible to that sweep.**
+
+**The Phase 93 instance.** `93-UI-SPEC.md` extracts a shared `QueryErrorState` component. Variant A of
+that markup already exists, unshared, at `frontend/src/pages/delegations/DelegationManagementPage.tsx:215-237`
+— landed by Phase 92-03. `tests/e2e/92-delegations-error.spec.ts` asserts that block's **current DOM
+shape**. So extracting the component turns a **Phase 92** spec red, **for a correct change**. That is
+the most expensive kind of red: it arrives during execution, it looks exactly like a regression, and
+the natural reaction is to revert the correct edit.
+
+**The rule.** A cross-plan artifact sweep must enumerate consumers across **every shipped phase**, not
+only the phase being planned. Concretely: for every file a plan modifies, find the tests already in
+the tree that assert that file's rendered output, DOM, or response shape. Each one found is either
+(a) updated in the SAME task as the modification, with its re-run named as an acceptance criterion, or
+(b) explicitly recorded as a NAMED non-consumer with the reason. Discovering it at execution time is
+neither.
+
+**The derivation.** Identifier-based, run against the phase base tag. **This exact script was
+dry-run against `phase-92-base` before being written down** — the two naive versions that preceded it
+are recorded below, because each failed in a way that would have made the clause useless in practice.
+
+```bash
+set -o pipefail
+test -d tests || { echo "MISSING ROOT: tests"; exit 1; }
+git rev-parse -q --verify refs/tags/phase-NN-base >/dev/null || { echo "MISSING TAG"; exit 1; }
+for f in $(git diff --name-only phase-NN-base -- frontend/src supabase/functions); do
+  b=$(basename "$f" | sed -E 's/\.(tsx?|jsx?)$//')
+  # An edge function's identity is its DIRECTORY, not the basename `index`.
+  if [ "$b" = "index" ]; then id=$(basename "$(dirname "$f")"); else id="$b"; fi
+  case "$id" in auth|utils|types|config|helpers|constants|_shared)
+    echo "AMBIGUOUS (triage by hand): $f"; continue;; esac
+  hits=$(grep -rlE -- "\b${id}\b" tests || true)
+  [ -n "$hits" ] && printf '%s <- %s\n' "$f" "$(echo "$hits" | tr '\n' ' ')"
+done
+```
+
+**Two failure modes this went through, kept because the next author will otherwise repeat them:**
+
+1. **Substring matching floods the output.** `grep -rl "$id"` with `id=auth` matched ~40 test files.
+   Word-boundary matching (`grep -rlE "\b${id}\b"`) plus a stoplist for genuinely generic identifiers
+   is the minimum.
+2. **Basename is the wrong identifier for `<name>/index.ts`.** Every edge function in this repo is
+   `supabase/functions/<name>/index.ts`, so a basename rule collapses all of them to `index` and the
+   stoplist then skips **134 of 139 files** — a clause that skips its own subject. Use the parent
+   directory when the basename is `index`.
+
+Against `phase-92-base` the corrected form reports **18 coupled files and 1 ambiguous**, and it finds
+both live Phase 93 instances: `DelegationManagementPage.tsx` and `my-delegations/index.ts`, each
+consumed by `tests/e2e/92-delegations-error.spec.ts`.
+
+Widen `id` further where coupling is by rendered identity rather than by file: a `data-testid`, an
+exported component name, a route path.
+
+**The output is a CANDIDATE list, not a defect list.** Common nouns (`dossiers`, `events`,
+`countries`) match dozens of tests that merely mention the domain. Triage each candidate to "does
+this test actually assert the output I am changing?" — the derivation narrows the search; it does not
+answer it.
+
+**What this derivation CANNOT see, stated as part of the rule rather than discovered later:** a test
+coupled to a component by **shape alone** — asserting `getByRole('alert')` plus visible text, naming
+neither the file nor any identifier in it — matches no grep and will not appear. The residual defence
+for that class is not a sweep; it is **running the shipped suite before the phase closes** and reading
+the reds rather than assuming they are stale.
+
+**Why this clause exists at all, said plainly.** This is the **third** instance of one class —
+_a correct instrument pointed at a set narrower than the truth_. First: Phase 92's AUTH-02 closing
+grep, correct over `index.ts` and blind to the helpers that carried the pin (`D-43`/`D-48`, which is
+why "every closing derivation states its population definition" became a grading condition). Second:
+C9a itself, correct over `files_modified` and blind to `<files>` blocks. Third: this one, correct over
+the phase's plans and blind to prior phases' tests. **Three instances is past the point where
+alertness is the remedy.** The scope of a search is now part of what the standard specifies, not part
+of what the author is trusted to remember.
 
 ### C10 — THE CRITERION AND THE GATE MUST AGREE
 
