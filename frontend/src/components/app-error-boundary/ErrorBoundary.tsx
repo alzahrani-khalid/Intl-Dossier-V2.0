@@ -8,6 +8,7 @@
  */
 
 import { Component, ErrorInfo, ReactNode } from 'react'
+import { isNotFound } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -50,6 +51,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // A thrown notFound() is router control flow, not a failure: it must reach the router's own
+    // boundary untouched (render() re-throws it below). Reporting it here would file a Sentry
+    // error for every 404 the app renders on purpose.
+    if (isNotFound(error)) {
+      return
+    }
+
     // Log error to console in development
     if (import.meta.env.DEV) {
       console.error('[ErrorBoundary] Caught error:', error)
@@ -97,6 +105,14 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   render() {
+    // TanStack Router signals "no such record" by THROWING notFound(). This boundary is mounted at
+    // routes/__root.tsx:54, INSIDE the router's CatchNotFound, so swallowing the throw here would
+    // render "Something went wrong" for a page that is merely absent. Re-throw so the root
+    // notFoundComponent (routes/__root.tsx:72) receives it. Real errors are unaffected.
+    if (this.state.hasError && isNotFound(this.state.error)) {
+      throw this.state.error
+    }
+
     if (this.state.hasError) {
       // Use custom fallback if provided
       if (this.props.fallback) {
@@ -139,10 +155,8 @@ function ErrorFallback({
 }: ErrorFallbackProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-return (
-    <div
-      className="flex min-h-screen items-center justify-center bg-muted/30 p-4 sm:p-6 lg:p-8"
-    >
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-muted/30 p-4 sm:p-6 lg:p-8">
       <div className="w-full max-w-2xl">
         <Alert variant="destructive" className="mb-6">
           <AlertTriangle className="size-5" />

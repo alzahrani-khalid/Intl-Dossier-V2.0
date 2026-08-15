@@ -12,7 +12,7 @@
 import type { ReactElement, ReactNode } from 'react'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, notFound } from '@tanstack/react-router'
+import { Link, notFound, rootRouteId } from '@tanstack/react-router'
 import { useDirection } from '@/hooks/useDirection'
 import { useDossier } from '@/domains/dossiers/hooks/useDossier'
 import { DossierAPIError, type DossierType } from '@/services/dossier-api'
@@ -133,7 +133,15 @@ export function DossierShell({
   // which would paint a titleless header for a dossier that has no identity to show.
   if (isError) {
     if (error instanceof DossierAPIError && error.status === 404) {
-      throw notFound()
+      // `routeId: rootRouteId` is REQUIRED here, not decoration. This router sets a
+      // `defaultErrorComponent` (router/index.tsx:72), which gives EVERY match a CatchBoundary
+      // whose onCatch stamps `error.routeId ??= <innermost match>` on the way up. An unstamped
+      // notFound() therefore arrives at the root boundary claiming to belong to
+      // `/_protected/dossiers/countries/$id`, which has no notFoundComponent, and the root
+      // rejects it — the page then renders the router's raw "Something went wrong!" instead of
+      // the 404. Pre-stamping the root makes the `??=` a no-op. (This is the documented
+      // targeting option; `notFound({ global: true })` is its deprecated spelling.)
+      throw notFound({ routeId: rootRouteId })
     }
     return (
       <QueryErrorState variant="page" onRetry={() => void refetch()} isRetrying={isRefetching} />

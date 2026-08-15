@@ -1,4 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react'
+import { isNotFound } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { Button } from '../ui/button'
 import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react'
@@ -37,6 +38,13 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // A thrown notFound() is router control flow, not a failure: it must reach the router's own
+    // boundary untouched (render() re-throws it below). Reporting it here would file a Sentry
+    // error for every 404 the app renders on purpose.
+    if (isNotFound(error)) {
+      return
+    }
+
     this.setState({
       error,
       errorInfo,
@@ -110,6 +118,15 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   render() {
+    // TanStack Router signals "no such record" by THROWING notFound(). A React error boundary sits
+    // between every thrower and the router's CatchNotFound, so swallowing it here would render
+    // "Something went wrong" for a page that is merely absent — and would make notFound()
+    // structurally unusable anywhere in this app. Re-throw so the root notFoundComponent
+    // (routes/__root.tsx:72) receives it. Real errors fall through to the fallback unchanged.
+    if (this.state.hasError && isNotFound(this.state.error)) {
+      throw this.state.error
+    }
+
     if (this.state.hasError) {
       if (this.props.fallback) {
         return this.props.fallback
