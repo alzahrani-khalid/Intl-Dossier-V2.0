@@ -244,6 +244,15 @@ verified sound across six lanes).
   - **Population definition:** shipped specs under any of this repo's **four** test roots (`./tests`, `./frontend/tests`, `./backend/tests`, `./e2e/tests`) that are coupled to a file Phase 93 modified, per the corrected `GATE-STANDARD.md` C9b derivation (11 coupled files). **Outside it:** specs coupled by DOM shape alone rather than by identifier — no grep can see those; the residual defence is running the shipped suite. And specs unrelated to Phase 93's 40 changed files were never run, so this is **not** a claim about total suite health.
   - **Owner: Phase 101 — CI Gates Green**, alongside the other CI-green work. Phase 93 deliberately did not fix them: they are outside its criteria, and repairing unrelated red tests mid-phase is how a phase's own evidence stops being interpretable.
 
+### ROOTALIAS — the root vitest project cannot resolve the app it tests
+
+- [ ] **ROOTALIAS-01**: **Root `vitest.config.ts:37` aliases `@` → `<repo-root>/src`, a directory that does not exist.** Filed 2026-08-16 from Phase 93 execution while building the C9b mock-vs-real register (`D-71`). The app's source is `frontend/src`, so any spec under `./tests` that pulls in a `frontend/src` module fails at import-analysis the moment that module uses `@/…` internally.
+  - **Observed:** `pnpm exec vitest run tests/unit/components/ErrorBoundary.test.tsx` → `Failed to resolve import "@/lib/sentry" from "frontend/src/components/error-boundary/ErrorBoundary.tsx"`, `Test Files 1 failed (1) · Tests no tests`. The target `frontend/src/lib/sentry.ts` exists; only the alias is wrong.
+  - **Pre-existing, not Phase 93:** the `@/lib/sentry` import is present at `phase-93-base`, and `git diff --name-only phase-93-base..HEAD` matches no vite/vitest/tsconfig file.
+  - **Population: 15 specs under `./tests` import `frontend/src` by relative path** and are exposed to this. **Outside it:** the other 114 of `./tests`' 129 spec files, which do not reach into the app; and `frontend/tests` (217 specs), which runs under the frontend project's own correct alias.
+  - **Why it matters beyond a red:** it silently converts real oracles into non-oracles. `tests/unit/components/ErrorBoundary.test.tsx` is the only **non-mocking** vitest consumer of any file Phase 93 changed, and it cannot run — so a verdict a reader would take as coverage is simply unavailable.
+  - **Owner: Phase 101 — CI Gates Green.**
+
 ### SEEDFIX — a broken seed row that only became visible once the app stopped hiding it
 
 - [ ] **P52FIXTURE-01**: **Seed the missing `engagement_dossiers` row for `00000000-0000-0052-0000-000000000001`.** Filed 2026-08-16 from Phase 93 execution (plan `93-12`, raised in its BLOCKED section to the orchestrator). That id is an engagement dossier with **no extension row** — a broken seed. Before Phase 93 the app painted a titleless shell over it; `93-12` made the surface render the degraded state instead, which is the correct behaviour and the phase's entire point.
@@ -411,6 +420,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | CLIENTSEC-01 | Phase 100 — Security Posture (database + client) | Pending |
 | E2ECRED-01 | Phase 101 — CI Gates Green | Pending |
 | E2ESTALE-01 | Phase 101 — CI Gates Green | Pending |
+| ROOTALIAS-01 | Phase 101 — CI Gates Green | Pending |
 | CARRY-01 | Phase 92 — Session Integrity & Edge-Function Auth | Pending |
 | CARRY-02 | Phase 101 — CI Gates Green | Pending |
 | CARRY-03 | Phase 101 — CI Gates Green | Pending |
