@@ -14,7 +14,7 @@
  */
 
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 import {
   errorResponse,
   successResponse,
@@ -64,6 +64,8 @@ async function handleRequest(req: Request, corsHeaders: Record<string, string>) 
     return errorResponse('Missing authorization header', 401, 'UNAUTHORIZED');
   }
 
+  const token = authHeader.replace('Bearer ', '');
+
   const supabase = createClient(supabaseUrl, supabaseKey, {
     global: { headers: { Authorization: authHeader } },
   });
@@ -72,7 +74,7 @@ async function handleRequest(req: Request, corsHeaders: Record<string, string>) 
   const {
     data: { user },
     error: authError,
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getUser(token);
   if (authError || !user) {
     logger.warn('Authentication failed', { error: authError?.message });
     return errorResponse('Invalid or expired token', 401, 'UNAUTHORIZED');
