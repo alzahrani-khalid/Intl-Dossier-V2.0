@@ -9,7 +9,7 @@
  * - Governance audit trail
  */
 
-import { createClient, SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
+import { createClient, SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 // Types matching database enums
 export type AIInteractionType =
