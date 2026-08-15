@@ -31,7 +31,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import { MetricsGridSkeleton, ChartSkeleton } from '@/components/ui/content-skeletons'
 import { cn } from '@/lib/utils'
 import {
@@ -145,7 +146,6 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
     workload,
     isLoading,
     isError,
-    error,
     refetch,
   } = useAnalyticsDashboard(timeRange, undefined, activeTab)
 
@@ -265,19 +265,11 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
     )
   }
 
-  // Error state
+  // Error state — the shared component, never the error object (D-08/D-21).
   if (isError) {
     return (
       <div className="space-y-6">
-        <Alert variant="destructive">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>{t('errors.loadFailed')}</AlertTitle>
-          <AlertDescription>{error?.message || t('errors.networkError')}</AlertDescription>
-        </Alert>
-        <Button onClick={() => refetch()} className="mt-4">
-          <RefreshCw className="h-4 w-4 me-2" />
-          {t('refresh.button')}
-        </Button>
+        <QueryErrorState variant="page" onRetry={refetch} />
       </div>
     )
   }
