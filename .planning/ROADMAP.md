@@ -309,7 +309,7 @@ Plans:
 
 **Goal**: No surface renders a confident empty state over a request that failed.
 **Depends on**: Phase 92 (many "empty" surfaces are 401s; they must stop being auth failures before their error states can be judged)
-**Requirements**: TRUST-01, TRUST-02, TRUST-03, TRUST-04, DELEG-01, DR-42501, AUDIT-42703
+**Requirements**: TRUST-01, TRUST-02, TRUST-03, TRUST-04, DELEG-01, DR-42501, AUDIT-42703, PIN-2390-01
 **Success Criteria** (what must be TRUE):
 
 1. A rejected query reaches the caller as a rejection: repositories (e.g. `analytics.repository.ts`) no longer catch-and-return `{ data: null }`, so the `isError` branches already written in the pages stop being dead code.
