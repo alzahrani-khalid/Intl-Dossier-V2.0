@@ -114,6 +114,16 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
   produce**, not an independent defect. `services/auth.ts:637-650` already clears user/session/
   isAuthenticated on `SIGNED_OUT` but performs no navigation — the page keeps rendering with
   `role` gone, which is exactly the ghost state described. Route away, do not merely null the state.
+- **D-18:** **The route guard already works — do not touch it.** The source lane is more precise than
+  its restatement: `sweeper.md` F7 records that after a programmatic `signOut()` on `/dashboard` the
+  open tab stayed put for 3s and decayed, **but a _fresh_ navigation to `/dashboard` correctly bounced
+  to `/login`** — `_protected.tsx`'s `beforeLoad` checks the live session and that half is sound. The
+  missing piece is only the **reactive** path: nothing drives an _already-mounted_ route to re-evaluate
+  and redirect. So the fix is reactive redirect on `SIGNED_OUT`, and `_protected.tsx`'s `beforeLoad` is
+  an explicit **non-goal** — changing it risks regressing a guard that is currently correct.
+  The plan's repro is the lane's: mint an independent session, sit on `/dashboard`, call
+  `supabase.auth.signOut()` out-of-band, and assert the open tab reaches `/login`. Note that with
+  AUTH-01 landed this path also becomes reachable from the UI, which it is not today.
 - **D-12:** **DECIDED by the operator** (`RULING-P92-02`, PARK-2 → option A): a **plain redirect to
   `/login`**. No return path, no `redirectTo` param — a security-hardening phase does not open an
   open-redirect surface. Consequence for the planner: **`/login` stays out of this phase's
