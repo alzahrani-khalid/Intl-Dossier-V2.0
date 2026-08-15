@@ -236,6 +236,14 @@ verified sound across six lanes).
       there. Phase 92's "query cache empty after sign-out" criterion establishes the in-memory cache and
       says nothing about `localStorage`.
 
+### E2ESTALE — shipped specs failing before Phase 93 touched anything
+
+- [ ] **E2ESTALE-01**: **Six shipped e2e assertions were already red before Phase 93, and were isolated (not fixed) during it.** Filed 2026-08-16 from Phase 93 execution (`RULING-P93-04` — "isolation is not a disposition"). Each was measured in BOTH directions — at `phase-93-base` and at the post-change HEAD — so the attribution is evidence, not inference.
+  - **`frontend/tests/e2e/pull-to-refresh.spec.ts` — 5 tests** (`:92` sync status bar, `:140` pull-to-refresh components, `:170` RTL layout, `:193` mobile viewport, `:250` TanStack Query). Identical result at `phase-93-base` and at HEAD: **5 failed / 8 passed both runs**, so plan `93-07` caused none of them. Root cause is a **loose locator**, not a product defect: `expect(locator('h1')).toBeVisible()` raises `strict mode violation: resolved to 44 elements` because the dossiers list renders an `h1` per card. The page loads correctly with real data. Fix is to scope the locator (e.g. `getByRole('heading', { name: 'All Dossiers' })`), not to change the page.
+  - **`frontend/tests/e2e/analytics-dashboard.spec.ts:153`** (`should have refresh button that triggers data reload`) — failed in both the swallow-present and swallow-deleted runs recorded by `93-06`. Distinct from the 3 tests that plan legitimately inverted.
+  - **Population definition:** shipped specs under any of this repo's **four** test roots (`./tests`, `./frontend/tests`, `./backend/tests`, `./e2e/tests`) that are coupled to a file Phase 93 modified, per the corrected `GATE-STANDARD.md` C9b derivation (11 coupled files). **Outside it:** specs coupled by DOM shape alone rather than by identifier — no grep can see those; the residual defence is running the shipped suite. And specs unrelated to Phase 93's 40 changed files were never run, so this is **not** a claim about total suite health.
+  - **Owner: Phase 101 — CI Gates Green**, alongside the other CI-green work. Phase 93 deliberately did not fix them: they are outside its criteria, and repairing unrelated red tests mid-phase is how a phase's own evidence stops being interpretable.
+
 ### CARRY — v9.0 carry-forward (see `.planning/STATE.md` → "v9.0 Carried Forward")
 
 - [ ] **CARRY-01**: P88-02 — credential rotation completed (operator-only act; gates CARRY-02 and CARRY-05).
@@ -393,6 +401,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | RLS-AUTHUSERS-01 | Phase 100 — Security Posture (database + client) | Pending |
 | CLIENTSEC-01 | Phase 100 — Security Posture (database + client) | Pending |
 | E2ECRED-01 | Phase 101 — CI Gates Green | Pending |
+| E2ESTALE-01 | Phase 101 — CI Gates Green | Pending |
 | CARRY-01 | Phase 92 — Session Integrity & Edge-Function Auth | Pending |
 | CARRY-02 | Phase 101 — CI Gates Green | Pending |
 | CARRY-03 | Phase 101 — CI Gates Green | Pending |
