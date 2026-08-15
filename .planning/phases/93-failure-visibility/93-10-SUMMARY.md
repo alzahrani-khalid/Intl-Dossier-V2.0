@@ -272,6 +272,26 @@ None — no external service configuration required.
 
 None.
 
+## Self-Check: PASSED
+
+```
+=== files exist ===
+FOUND: tests/e2e/93-tags-attachments-error.spec.ts
+FOUND: frontend/src/domains/tags/hooks/useTagHierarchy.ts
+FOUND: frontend/src/components/tags/TagAnalytics.tsx
+FOUND: frontend/src/components/positions/AttachmentUploader.tsx
+FOUND: .planning/phases/93-failure-visibility/93-10-SUMMARY.md
+=== commits exist ===
+FOUND: a19ffb6d   FOUND: 3967a310   FOUND: 936fbe14
+=== my files clean at HEAD ===
+(empty)
+```
+
+`.planning/STATE.md` and `.planning/ROADMAP.md` were **not** touched — the orchestrator owns them
+(last commits there are `9609aa2a` / `b6b2de46`, both pre-dating this plan). Every commit used an
+explicit pathspec; three other lanes' entries in the shared index and working tree were left as
+found.
+
 ---
 
 _Phase: 93-failure-visibility_
