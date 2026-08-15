@@ -240,7 +240,18 @@
     "languageLoadFailed": "Failed to load language. Using English.",
     "networkError": "Network error. Please check your connection.",
     "unknownError": "An unknown error occurred. Please try again.",
-    "generic": "Something went wrong. Please try again."
+    "generic": "Something went wrong. Please try again.",
+    "retry": "Try again",
+    "queryFailed": {
+      "title": "Unable to load data",
+      "description": "The request failed. Try again, and contact an administrator if it keeps failing."
+    },
+    "queryFailedInline": "Unable to load this section.",
+    "countUnavailable": "Count unavailable",
+    "incompleteRecord": {
+      "title": "Incomplete record",
+      "description": "This record is missing its linked dossier data. Some sections cannot be shown."
+    }
   },
   "error": {
     "failedToLoadData": "Failed to load data",
