@@ -209,6 +209,22 @@ verified sound across six lanes).
 
 ## Deferred / Not in v1
 
+### Filed from Phase 92 planning, 2026-08-15
+
+- **Session eviction (`scope: 'others'`) does not exist in this product — and a control has been
+  claiming it does.** `DataPrivacySettingsSection.tsx` shipped a button labelled en
+  "Sign Out All Other Sessions" / ar "تسجيل الخروج من جميع الجلسات الأخرى" whose handler
+  (`:164-178`) calls `supabase.auth.signOut({ scope: 'global' })` — which ends **every** session
+  including the caller's. Phase 92 relabels it to match the behaviour (`RULING-P92-11`), which is
+  correct and removes nothing: **the advertised capability never worked.**
+  But the label implies a real user need — _evict a session I believe is compromised while keeping
+  my own_ — and after the relabel the product will have **no** way to do that. Implementing it is
+  **new work**, not a correctness fix, so it is out of scope for v10.0 and is filed here rather than
+  left as a sentence inside a phase decision nobody reads again.
+  Scope if taken up: `supabase.auth.signOut({ scope: 'others' })`, a session list so the user can see
+  what they are evicting, and copy that distinguishes the three scopes (`local` / `others` /
+  `global`). Evidence trail: `.tickmarkr/overseer/PARK-P92-R2.md` → PARK-R2-1 (a).
+
 - Entry-bundle _diagnosis_ beyond the diet (which specific commits added 17.71 kB) — CARRY-07 covers the outcome, not the archaeology.
 - Non-audited surfaces: nothing outside the 190 routes the audit covered is in scope.
 
