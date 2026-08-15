@@ -184,6 +184,18 @@ neither.
 dry-run against `phase-92-base` before being written down** — the two naive versions that preceded it
 are recorded below, because each failed in a way that would have made the clause useless in practice.
 
+> **AMENDED AGAIN, same day, second live defect.** The identifier is interpolated into an ERE, so a
+> filename containing a regex metacharacter produces a degenerate pattern. This repo has **18**
+> TanStack Router param routes named `$param.tsx`; for `$reportId.tsx` the pattern `\b$reportId\b`
+> matched nearly every test file in the tree — a "coupled with everything" result, which reads as
+> alarming rather than as broken and would waste a reviewer's time before anyone suspected the
+> instrument. Strip the `$` router marker, then escape the remainder.
+>
+> **Both amendments were found by USING the clause, not by reading it.** That is the third time on
+> this phase that a derivation looked correct and measured the wrong set. Treat a sweep's first run
+> as an instrument test, not as evidence: if its output is implausibly empty or implausibly total,
+> suspect the pattern before believing the result.
+
 > **AMENDED 2026-08-16, from a live miss — read this before using the script below.** The first
 > version of this derivation searched a single hardcoded root, `tests`. **This repo has FOUR test
 > roots** — `./tests` (124 specs), `./frontend/tests` (217), `./backend/tests` (234), `./e2e/tests`
@@ -208,6 +220,11 @@ for f in $(git diff --name-only phase-NN-base -- frontend/src supabase/functions
   b=$(basename "$f" | sed -E 's/\.(tsx?|jsx?)$//')
   # An edge function's identity is its DIRECTORY, not the basename `index`.
   if [ "$b" = "index" ]; then id=$(basename "$(dirname "$f")"); else id="$b"; fi
+  # A router param file is `$param.tsx`; `$` is a REGEX METACHARACTER. Left in, the pattern
+  # degenerates and matches nearly every file. Strip the marker, then escape what remains.
+  # (18 such route files exist in this repo — see the amendment note.)
+  id=${id#\$}
+  id=$(printf '%s' "$id" | sed -E 's/[][.*+?^${}()|\\]/\\\\&/g')
   case "$id" in auth|utils|types|config|helpers|constants|_shared)
     echo "AMBIGUOUS (triage by hand): $f"; continue;; esac
   hits=$(grep -rlE -- "\b${id}\b" $ROOTS || true)
