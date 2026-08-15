@@ -11,7 +11,7 @@
 
 import type { ReactElement, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, notFound, useMatchRoute } from '@tanstack/react-router'
+import { Link, notFound, rootRouteId, useMatchRoute } from '@tanstack/react-router'
 import { AlertTriangle, Pencil } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
 import { useEngagement } from '@/domains/engagements/hooks/useEngagements'
@@ -118,11 +118,22 @@ export function WorkspaceShell({ engagementId, children }: WorkspaceShellProps):
   // 2. Not-found — a well-formed id that resolves to no row. Thrown into the root
   //    notFoundComponent (routes/__root.tsx:72). `apiGet` rejects with `ApiError`, which carries
   //    `status`, so query-client.ts's 4xx short-circuit means this arrives after ONE round-trip.
+  //
+  //    `routeId: rootRouteId` is LOAD-BEARING, not decoration — measured, not reasoned. A bare
+  //    `notFound()` thrown from a component never reaches the root 404 page in this router
+  //    (v1.170.8): `Match.js:74` builds a `CatchNotFound` only for a route that declares its OWN
+  //    `notFoundComponent` (`defaultNotFoundComponent` is NOT consulted there), so the nearest
+  //    boundary is this route's `CatchBoundary`, whose `onCatch` stamps `error.routeId ??=` with
+  //    THIS route's id and rethrows. The root's `CatchNotFound` then rejects it — its fallback
+  //    throws when `error.routeId !== matchState.routeId` — and the throw lands in the router's
+  //    `defaultErrorComponent`: "Something went wrong" for a record that is merely absent, the
+  //    exact collapse D-05 forbids. Pre-stamping the root's id makes `??=` a no-op and the root
+  //    boundary accept it. Verified live by `tests/e2e/93-degraded-engagement.spec.ts`.
   // 3. Every other rejection is a failure, and renders the shared error state — never the
   //    not-found page, never a confident-empty shell.
   if (isError) {
     if (error instanceof ApiError && error.status === 404) {
-      throw notFound()
+      throw notFound({ routeId: rootRouteId })
     }
     return (
       <QueryErrorState variant="page" onRetry={() => void refetch()} isRetrying={isRefetching} />
