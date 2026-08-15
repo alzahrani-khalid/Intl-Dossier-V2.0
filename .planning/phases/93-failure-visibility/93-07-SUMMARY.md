@@ -300,3 +300,37 @@ _Completed: 2026-08-16_
 - `.planning/STATE.md` and `.planning/ROADMAP.md` untouched — orchestrator-owned.
 - `93-07-PLAN.md` unmodified since `phase-93-base`: no gate text was edited.
 - Both gates re-run green by the shared instrument (`scripts/gate-drill.mjs`), not only by hand.
+
+## ADDENDUM — RULING-P93-04 Decision 2 (the two unexamined C9b consumers)
+
+Recorded by orchestrator `orch-p93-b` on 2026-08-16, at HEAD `8b70c6fc`, tree clean before and after
+(both runs are read-only; no file was modified). This is the **missing half of this plan's
+byte-identical happy-path criterion** — the two `DossierListPage.tsx` consumers the 21% C9b sweep
+never examined. Neither run was reasoned about; both were executed.
+
+<!-- prettier-ignore -->
+| consumer spec | command | result | attribution |
+| --- | --- | --- | --- |
+| `frontend/tests/unit/routes.test.tsx` | `cd frontend && pnpm exec vitest run tests/unit/routes.test.tsx` | **1 file passed · 14/14 tests passed** | green — no follow-up |
+| `frontend/tests/e2e/pull-to-refresh.spec.ts` | `cd frontend && pnpm exec playwright test tests/e2e/pull-to-refresh.spec.ts --no-deps --reporter=line` | **5 failed / 8 passed** (`:92`, `:140`, `:170`, `:193`, `:250`) | **pre-existing — already filed as `E2ESTALE-01`**, owner Phase 101 |
+
+The five reds reproduce `E2ESTALE-01`'s filed measurement **exactly** — same five line numbers, same
+`5 failed / 8 passed` split that requirement records at `phase-93-base` **and** at post-change HEAD.
+Root cause there is a loose locator (`locator('h1')` → `strict mode violation: resolved to 44
+elements`, one `h1` per dossier card), not a product defect and not this plan's change.
+
+**Disposition — and the one place it departs from Decision 2's text.** Decision 2 said "if red, the
+fix executes now, in `93-07`'s author-context". These five were subsequently **registered** under
+`E2ESTALE-01` (filed 2026-08-16 from `RULING-P93-04` Decision 1 condition 3) with owner Phase 101.
+Repairing them now would be an opportunistic fix of registered breakage, which
+`ACCEPTANCE-P93-EXEC.md` condition 3 makes a **REJECT**. They are therefore left red and reported as
+registered, not as regressions and not as fixed. The overseer is notified; this note stands corrected
+by any ruling that says otherwise.
+
+**Population this addendum measured:** the two shipped consumers of `DossierListPage.tsx` named in
+the corrected C9b register (`RULING-P93-04` scope note). **Outside it:** every other consumer of the
+four `93-07` files; consumers coupled by DOM shape rather than by identifier, which no grep can see —
+that residual is `ACCEPTANCE-P93-EXEC.md` condition 4's close-out suite run, not this addendum; and
+the four root-`tests/` C9b specs, which remain unrunnable under `E2ECRED-01` (D-20, unchanged).
+
+This addendum **corrects, does not rewrite,** the `BLOCKED: None` close-out above.
