@@ -478,9 +478,14 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
 - **Fix at the shared seam, not per caller.** Both AUTH-02 and AUTH-03 have a shared-owner shape:
   one helper (`_shared/auth.ts`) and five existing handlers respectively. A guard added at each caller
   is a larger diff than one fix where the callers route through, and it leaves siblings broken.
-- **The two-of-163 outlier is worth a line in the plan.** Exactly 2 bare-`getUser()` functions forward
-  no `Authorization` header at all, and neither is pinned `2.3x` — so they fall outside every candidate
-  scope in PARK-1 while being the only two that provably cannot authenticate. They should not be lost.
+- **CORRECTED 2026-08-15 — the "two-of-163 outlier" does not exist.** This entry previously read
+  "Exactly 2 bare-`getUser()` functions forward no `Authorization` header at all". **That was my
+  measurement error.** The regex used (`global:\s*\{[^}]*headers|headers:\s*\{[^}]*[Aa]uthorization`)
+  matches within a single line and misses multi-line client constructions. Re-measured correctly —
+  "does the file reference `authorization` at all" — the answer is **0 of 163**. Every bare-`getUser()`
+  function references the header. Derivation:
+  `for f in $(grep -rlE 'auth\.getUser\(\s*\)' supabase/functions --include='*.ts'); do grep -qi authorization "$f" || echo "$f"; done`
+  → empty. Any task or acceptance criterion naming "the two" is naming an empty set.
 
 </specifics>
 
