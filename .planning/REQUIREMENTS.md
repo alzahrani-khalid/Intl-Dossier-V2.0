@@ -36,6 +36,20 @@ verified sound across six lanes).
 - [ ] **TRUST-03**: A well-formed but nonexistent record ID renders a page-level not-found state, not "Check your connection and try again" after 24 skeletons — covering dossier detail, engagement detail, and report builder.
 - [ ] **TRUST-04**: An engagement dossier whose extension row is missing renders a named, degraded state instead of a full chrome shell with no title. Server errors never leak internals to users (`/tasks/queue` currently shows the raw supabase-js string).
 
+### UNMASKED — data-layer defects Phase 92 made observable by fixing the 401
+
+> Filed 2026-08-15 during Phase 92 execution (`RULING-P92-46`), each reproduced against staging
+> `zkrcjzdemdmwhearhfgg` by a second seat rather than carried from a worker report. **None was
+> caused by the AUTH-02 migration** — that migration changed only the import specifier and the
+> `getUser` argument, and the header-injected-client count is unchanged from `phase-92-base`. The
+> 401 previously short-circuited every request before the handler ran, so these are pre-existing
+> defects that became visible for the first time. Only `DELEG-01` is the failure-as-emptiness class;
+> the other two fail loudly.
+
+- [ ] **DELEG-01**: **`my-delegations` reads a relation that does not exist, and renders the failure as emptiness.** `supabase/functions/my-delegations/index.ts:129,150` query `.from("delegations")`; `public.delegations` does not exist (`42P01`). The handler swallows the PostgREST error to `console.error` at `:197`/`:233` and falls through to empty arrays, so deployed staging returns a confident `200` with `{"granted":[],"received":[],"total":0}` — the exact anti-pattern this milestone exists to kill, on an AUTH-04 surface. Repointing requires a product decision between `public.permission_delegations` (14 cols: `grantor_id, grantee_id, resource_type, resource_id, permissions, revoked, …`) and `public.position_delegations` (8 cols: `position_id, delegator_id, delegate_id, …`), then a column-by-column rewrite: the handler filters on `is_active` (**neither table has it** — `permission_delegations` has `revoked`) and selects a `source` column that exists on neither. Phase 92 closed AUTH-04's **error** half only and named this open.
+- [ ] **DR-42501**: **`data-retention` is auth-closed but not surface-closed.** Its 401 is gone (migrated + deployed in Phase 92), but `index.ts:112` does `supabase.from('users').select('role')` through the correctly RLS-scoped client, and the `authenticated` role has no grant/policy for that read — Postgres returns `42501 permission denied for table users` before the `data_retention_policies` query at `:233` ever runs, so the function 500s with a well-formed bilingual error body. **The defect is the role-lookup design, not the scoping** — the scoped client is behaving correctly. Refines `TRUST-02`, which already names `/admin/data-retention`: the surface's blocker is now identified rather than assumed. Phase 93 must not inherit "data-retention works".
+- [ ] **AUDIT-42703**: **`audit-logs-viewer` queries a column shape and a relation that do not exist.** Two distinct defects: (a) `index.ts:51,192,209,285` select `table_name, operation, row_id, old_data, new_data, changed_fields, user_email, user_role` from `public.audit_log`, whose real columns are `id, tenant_id, entity_type, entity_id, action, user_id, timestamp, old_values, new_values, ip_address, user_agent, session_id, additional_context` — Postgres `42703`. Note `audit_log` **holds 75 rows**, so this is a live table the surface cannot read; the sibling `public.audit_logs` (16 cols, 0 rows) is closer in spirit but still lacks `table_name`, `row_id`, `changed_fields`, `user_email`. (b) `index.ts:277` queries `public.audit_statistics`, which **does not exist at all**. Fails loudly (500 with a diagnostic body), so it is not the `TRUST` emptiness class — but the surface is non-functional.
+
 ### WRITE — Advertised write paths actually write
 
 - [ ] **WRITE-01**: An after-action record can be created and published from the UI. `AfterActionForm.tsx:131`'s `if (!initialData) return` no longer pins `isDirty` false in create mode, and the engagement route passes `canPublish` + `onPublish`. **[V]**
@@ -177,6 +191,7 @@ verified sound across six lanes).
 
 - [ ] **DATA-01**: `/users` shows real staff — the ~415 fixture accounts (`*@example.com`, `*@gastat.test`) are purged and the E2E suite cleans up after itself.
 - [ ] **DATA-02**: No record visible in the UI names an internal artifact — "Phase 70 staging verification digest", "Phase 52 Kanban Fixture Engagement", "E2E MoU 1783364705954", "UAT round-11 commitment" are removed or replaced with plausible diplomatic data.
+- [ ] **SEED-DELEG-01**: **`/delegations` has no rows to render anywhere this project deploys.** Filed 2026-08-15 (Phase 92 execution, `RULING-P92-46`); measured on staging `zkrcjzdemdmwhearhfgg`: `permission_delegations` = **0 rows**, `position_delegations` = **0 rows**. Even after `DELEG-01` repoints the handler at the correct table, the happy path renders the empty state — so AUTH-04 criterion 4's second half ("renders real delegations when they are not rejected") is not demonstrable by code alone and additionally needs seed data. Phase 92's e2e oracle deliberately accepts either real cards **or** the legitimate empty state, so it does not go red on this; it also does not prove the happy path.
 
 ### DBSEC — Database security posture
 
@@ -353,8 +368,12 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | AR-02 | Phase 99 — Arabic Coverage | Pending |
 | AR-03 | Phase 99 — Arabic Coverage | Pending |
 | AR-04 | Phase 99 — Arabic Coverage | Pending |
+| DELEG-01 | Phase 93 — Failure Visibility | Pending |
+| DR-42501 | Phase 93 — Failure Visibility | Pending |
+| AUDIT-42703 | Phase 93 — Failure Visibility | Pending |
 | DATA-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | DATA-02 | Phase 102 — Staging Data & Debt Tail | Pending |
+| SEED-DELEG-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | DBSEC-01 | Phase 100 — Security Posture (database + client) | Pending |
 | DBSEC-02 | Phase 100 — Security Posture (database + client) | Pending |
 | DBSEC-03 | Phase 100 — Security Posture (database + client) | Pending |

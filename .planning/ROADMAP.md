@@ -309,7 +309,7 @@ Plans:
 
 **Goal**: No surface renders a confident empty state over a request that failed.
 **Depends on**: Phase 92 (many "empty" surfaces are 401s; they must stop being auth failures before their error states can be judged)
-**Requirements**: TRUST-01, TRUST-02, TRUST-03, TRUST-04
+**Requirements**: TRUST-01, TRUST-02, TRUST-03, TRUST-04, DELEG-01, DR-42501, AUDIT-42703
 **Success Criteria** (what must be TRUE):
 
 1. A rejected query reaches the caller as a rejection: repositories (e.g. `analytics.repository.ts`) no longer catch-and-return `{ data: null }`, so the `isError` branches already written in the pages stop being dead code.
@@ -450,7 +450,7 @@ Plans:
 
 **Goal**: Staging reads as a diplomatic system rather than test residue, and the last v9.0 debts are closed.
 **Depends on**: Phase 101 (purge the fixtures after the suites are green, then re-run them — purging first would fight the stabilization)
-**Requirements**: DATA-01, DATA-02, CARRY-06, CARRY-07, CARRY-08
+**Requirements**: DATA-01, DATA-02, SEED-DELEG-01, CARRY-06, CARRY-07, CARRY-08
 **Success Criteria** (what must be TRUE):
 
 1. `/users` lists real staff: the ~415 `*@example.com` / `*@gastat.test` fixture accounts are gone and the E2E suite deletes the accounts it creates.
