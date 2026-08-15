@@ -235,6 +235,37 @@ verified sound across six lanes).
 > **LIVE is gated on an undecided on-prem GPU host.** It blocked v9.0 for 40 days without starting.
 > Plan-phase must confirm a target environment before committing, or the group should be parked.
 
+### E2ECRED — E2E credential provisioning
+
+> Filed separately from CARRY-01/CARRY-05 on purpose: those rotate credentials that EXIST. This is
+> six keys that are **absent**, which is why rotating the two that exist would not fix it.
+
+- [ ] **E2ECRED-01**: **The Playwright `setup` project cannot authenticate, so every dependent E2E
+      project is blocked — not just Phase 92's specs.** `tests/e2e/support/auth.setup.ts:17-22` throws
+      unless all six of `E2E_ADMIN_EMAIL`, `E2E_ADMIN_PASSWORD`, `E2E_ANALYST_EMAIL`,
+      `E2E_ANALYST_PASSWORD`, `E2E_INTAKE_EMAIL`, `E2E_INTAKE_PASSWORD` are set. Verified 2026-08-15
+      (Phase 92 planning): `.env.test` carries **none** of them — it has only
+      `PHASE_52_FIXTURE_ENGAGEMENT_ID`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`,
+      `SUPABASE_URL`, `TEST_USER_EMAIL`, `TEST_USER_PASSWORD` (key names only; no value was read).
+      `playwright.config.ts:36` gives `chromium-en` `dependencies: ['setup']`, and `--grep` does not
+      exempt a dependency project, so **any** non-`--no-deps` run of a `chromium-en` spec fails at
+      setup with `3 failed / N did not run` before reaching its subject.
+      The `--no-deps` escape is also dead: the saved state at
+      `tests/e2e/support/storage/admin.json` holds a token with `expires_at: 1780606280` =
+      **2026-06-04**, 72 days stale. Both routes into an authenticated browser are therefore closed,
+      and the recovery the specs themselves prescribe ("re-run the `setup` project first") is
+      circular.
+      **Suspected contributor to `main` being chronically red on E2E** — the condition has held since
+      at least June, which predates every Phase 92 change.
+      Phase 92 does NOT fix this. It routes around it for one spec only (92-01 T2 authenticates
+      inline from `TEST_USER_EMAIL`/`TEST_USER_PASSWORD`, preserving D-15 so the phase's before/after
+      evidence does not wait on an operator act — `RULING-P92-36`). Routing around it is not fixing
+      it: the other ~40 specs and all three roles remain blocked.
+      Scope if taken up: provision the three staging accounts (admin / analyst / intake), populate
+      the six keys in `.env.test` **and** the GitHub Actions secret store, then regenerate the
+      storage state and confirm a login smoke passes. Evidence trail:
+      `.tickmarkr/overseer/PARK-P92-R3.md`, `.tickmarkr/overseer/P92-PLAN-CHECK-4.md` (F2, F3).
+
 ## Deferred / Not in v1
 
 ### Filed from Phase 92 planning, 2026-08-15
@@ -325,6 +356,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | DBSEC-04 | Phase 100 — Security Posture (database + client) | Pending |
 | DBSEC-05 | Phase 100 — Security Posture (database + client) | Pending |
 | CLIENTSEC-01 | Phase 100 — Security Posture (database + client) | Pending |
+| E2ECRED-01 | Phase 101 — CI Gates Green | Pending |
 | CARRY-01 | Phase 92 — Session Integrity & Edge-Function Auth | Pending |
 | CARRY-02 | Phase 101 — CI Gates Green | Pending |
 | CARRY-03 | Phase 101 — CI Gates Green | Pending |
