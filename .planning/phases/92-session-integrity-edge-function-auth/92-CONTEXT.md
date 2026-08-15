@@ -152,9 +152,11 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
 
 ### Claude's Discretion
 
-- **`frontend/src/components/layout/header/UserMenu.tsx` is a second orphaned logout menu.** The audit
-  named only `NavUser`, but `UserMenu.tsx` is functionally identical (`useAuth().logout()` at line 78,
-  the same `/settings` links) and is imported by zero files. Planner's call: delete it in the same plan
+- **There are THREE orphaned logout components, not one.** `nav-user.tsx` (`useAuth().logout()` :92),
+  `header/UserMenu.tsx` (:78), and `layout/Header.tsx` (`useAuthStore().logout()` :21, `LogOut` item
+  :100) — **none imported by any file**, confirmed repo-wide. The audit's row 1 named two of the three
+  (`nav-user` + `Header`); the orchestrator independently found the third (`header/UserMenu`); the
+  union is three. Exactly **one** gets mounted (D-01: `nav-user.tsx`). Planner's call: delete it in the same plan
   that mounts `NavUser` if it is still unreferenced, or leave it and let the `DEAD` requirement group
   take it. Do not mount both — two logout menus is a worse outcome than one orphan.
 - Whether the AUTH-02 migration is one plan or several, and how the deploy is batched, is a planning
