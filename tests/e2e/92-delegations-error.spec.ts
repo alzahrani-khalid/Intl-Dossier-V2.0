@@ -11,7 +11,8 @@
 // Playwright `setup` project throws without six E2E_* keys that .env.test does not carry
 // (E2ECRED-01, filed against Phase 101), so no storage-state fixture is usable here.
 //
-// EXPECTED RED until plan 92-03 lands (delegations.tsx has no isError branch today).
+// STATUS: 92-03 landed the isError branch, so both tests below assert the error state. The second
+// one was INVERTED by 93-02 and flips back in Phase 102 — its own comment carries the reason.
 import { test, expect, type Locator, type Page } from '@playwright/test'
 import LoginPage from './support/pages/LoginPage'
 
@@ -82,36 +83,48 @@ test.describe('AUTH-04 delegations failure is rendered as failure', () => {
     })
   })
 
-  test('unblocked load renders without the error alert', async ({ page }) => {
-    // The happy half of AUTH-04 criterion 4 ("renders real delegations when they are not
-    // rejected"), which otherwise has no oracle anywhere. No CDP blocking here.
-    //
-    // KNOWN FALSE GREEN UNTIL 92-03 LANDS — measured 2026-08-15, do not read a pass here as
-    // evidence of a working load. The live app currently receives HTTP 401 from
-    // `/functions/v1/my-delegations` (8 requests observed, all 401 — same result as
-    // scripts/probe-edge-auth.sh) and renders: 0 elements with role="alert", the empty-state
-    // heading, and a granted stat of "0". Every assertion below is satisfied by that failure,
-    // because today the failure and the empty state are DOM-indistinguishable — which is
-    // precisely the defect AUTH-04 exists to kill. Once 92-03 adds the isError branch this
-    // test becomes a real oracle: the 401 will then render role="alert" + "—" and this test
-    // will correctly go RED until the AUTH-02 fix is migrated and redeployed.
+  // INVERTED 2026-08-15 by plan 93-02 (DELEG-01, closed as VISIBILITY ONLY). Read this before
+  // "fixing" it back — the red it now guards is the INTENDED product state, not a regression.
+  //
+  // This test previously asserted `unblocked ⇒ no error alert`. That invariant was NEVER true.
+  // `my-delegations` queries `public.delegations`, a relation that does not exist (42P01), and
+  // the handler swallowed the PostgREST error into `200 {"granted":[],"received":[],"total":0}`.
+  // The old green measured the LIE, not a working load: the failure and the empty state were
+  // DOM-indistinguishable, which is the exact defect this milestone exists to kill. 93-02 makes
+  // the handler return a real 500 with a bilingual body, so the natural visit now renders the
+  // same honest error state the CDP-forced test above asserts. Both tests now assert the error
+  // state and differ ONLY in how the failure is induced — CDP block above, the real 42P01 here.
+  //
+  // FLIP THIS BACK IN PHASE 102, where both halves land together:
+  //   DELEG-02      — decide which relation `my-delegations` should read. `permission_delegations`
+  //                   (14 cols) and `position_delegations` (8 cols) model different concepts and
+  //                   neither carries the handler's `is_active` or `source` columns, so the choice
+  //                   is a product call, not a rename.
+  //   SEED-DELEG-01 — seed rows. Both candidate tables hold 0 today, so a repoint alone buys an
+  //                   identical empty screen; the phase that seeds is the phase that decides.
+  // When those land, restore the happy-path assertions: no alert, empty-state-or-rows visible,
+  // and a real integer stat.
+  test('natural visit renders the error state — the 42P01 is honest until Phase 102', async ({
+    page,
+  }) => {
+    // No CDP blocking here: the failure is the real one the deployed function returns.
     await signInInline(page)
     await page.goto('/delegations')
 
-    await expect(page.getByRole('alert')).toHaveCount(0, { timeout: RETRY_BACKOFF_TIMEOUT })
+    // The alert renders on the UNBLOCKED visit now that the function fails loudly.
+    const errorAlert = page.getByRole('alert').filter({ hasText: ERROR_HEADING })
+    await expect(errorAlert).toBeVisible({ timeout: RETRY_BACKOFF_TIMEOUT })
 
-    // Data-dependent on staging: either real delegation cards or the legitimate empty state.
-    // Both are honest non-error renders; the error state is neither.
+    // The empty state must NOT be rendered — the delegation set is unknown, not empty.
     const panel = page.getByRole('tabpanel').first()
     const emptyState = panel.getByRole('heading', {
       name: /you haven['’]t granted any delegations/i,
     })
-    const delegationRows = panel.locator('[data-slot="card"]').first()
-    await expect(emptyState.or(delegationRows)).toBeVisible({ timeout: RETRY_BACKOFF_TIMEOUT })
+    await expect(emptyState).toHaveCount(0, { timeout: RETRY_BACKOFF_TIMEOUT })
 
-    // And the stat reads a real integer (0 for the legitimate empty state, N otherwise) —
-    // never the em-dash that only the error state shows.
-    await expect(statValue(page, /permissions i granted/i)).toHaveText(/^\d+$/, {
+    // And the stat reads the em-dash, exactly as the CDP-forced test asserts above. A real
+    // integer here would assert a fact the app does not have.
+    await expect(statValue(page, /permissions i granted/i)).toHaveText('—', {
       timeout: RETRY_BACKOFF_TIMEOUT,
     })
   })
