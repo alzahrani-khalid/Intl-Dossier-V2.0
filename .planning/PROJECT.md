@@ -58,7 +58,7 @@ Unified intelligence management for diplomatic operations — every relationship
 - **DEAD** — no surface lies: `/search` stops throwing, `/analytics` stops drawing fabricated charts over a backend that does not exist, dead routes are fixed or deleted.
 - **COUNT / NAV** — one source of truth for work counts; nothing built stays unreachable (Elected Officials, the Digests tab, the whole `/settings/*` subtree).
 - **COPY / AR** — no DB enum, i18n key, or seed instruction ships as user copy; one Arabic glossary and localized dates. RTL layout infrastructure is already sound and is explicitly not re-done.
-- **DATA / DBSEC** — staging stops showing test residue as diplomatic records; the 33 RLS-bypassing views are resolved against 207 frontend files that rely on RLS alone.
+- **DATA / DBSEC / CLIENTSEC** — staging stops showing test residue as diplomatic records; the 33 RLS-bypassing views are resolved against 207 frontend files that rely on RLS alone; and signing out stops leaving the previous user's `localStorage` state — including which dossiers they opened and what they searched — on a shared workstation.
 - **CARRY** — v9.0's unfinished items, including the owed ORCH-2 a11y green proof and the entry-bundle diet.
 
 **Requirements:** 54 across 12 groups — see `.planning/REQUIREMENTS.md`.

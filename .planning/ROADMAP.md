@@ -266,7 +266,7 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 - [ ] **Phase 97: Reachability** - Nothing built is unreachable and nothing in the route tree is unowned
 - [ ] **Phase 98: Copy Truth** - No database values, no i18n keys, no seed instructions, one date format, project voice rules obeyed
 - [ ] **Phase 99: Arabic Coverage** - An Arabic session reads as Arabic: one glossary, localized dates, no English leakage
-- [ ] **Phase 100: Database Security Posture** - RLS is a real boundary for the 207 frontend files that depend on it
+- [ ] **Phase 100: Security Posture — Database & Client** - RLS is a real boundary for the 207 frontend files that depend on it, and signing out leaves nothing behind on the machine
 - [ ] **Phase 101: CI Gates Green** - The suites tell the truth about `main`, and the ones that matter block merges
 - [ ] **Phase 102: Staging Data & Debt Tail** - Staging looks like a diplomatic system; the last v9.0 debts are closed
 - [ ] **Phase 103: Audit Re-Sweep** - The 2026-08-15 findings are proven closed by re-running the audit that found them
@@ -415,11 +415,11 @@ Plans:
 **Plans**: TBD
 **UI hint**: yes
 
-### Phase 100: Database Security Posture
+### Phase 100: Security Posture — Database & Client
 
-**Goal**: RLS is a real authorization boundary for the 207 frontend files that rely on it as the only one.
+**Goal**: RLS is a real authorization boundary for the 207 frontend files that rely on it as the only one — **and the browser stops retaining the previous user's data after sign-out.** Two boundaries, one phase: the server-side boundary that decides what a caller may read, and the client-side residue that survives the caller leaving.
 **Depends on**: Phase 94 (the `custom_reports` ↔ `report_shares` recursion is fixed there); otherwise independent — sequenced late so a query regression is attributable to the view change, not the frontend.
-**Requirements**: DBSEC-01, DBSEC-02, DBSEC-03, DBSEC-04, DBSEC-05
+**Requirements**: DBSEC-01, DBSEC-02, DBSEC-03, DBSEC-04, DBSEC-05, CLIENTSEC-01
 **Success Criteria** (what must be TRUE):
 
 1. Every client-reachable `SECURITY DEFINER` view is converted to `security_invoker`, restricted, or justified in writing — including `unified_work_items`, whose 10 frontend consumers still return the caller's correct rows afterwards.
@@ -427,6 +427,7 @@ Plans:
 3. No materialized view is selectable by `anon` or `authenticated`; the 12 are revoked or moved behind a gated RPC.
 4. `intelligence_email_queue` and `events.idempotency_keys` have policies matching intent instead of RLS-enabled-with-no-policies denying everything.
 5. Leaked-password protection is enabled and the 548 mutable-`search_path` functions are pinned; Supabase advisors report clean on these classes.
+6. **Signing out clears client-side residue.** `localStorage` no longer retains the previous user's state — the six persisted zustand stores (`auth-storage`, `entity-history-storage`, `ui-storage`, `pinned-entities-storage`, `dossier-store`, and the duplicate in the dead `services/auth.ts`) and the raw writers (`advanced-search-history`, `quickswitcher_recent_items`) are cleared, so the next user on a shared analyst workstation cannot see which dossiers the previous analyst opened or what they searched for. Phase 92 closed the in-memory query-cache half at the sign-out seam; this is the persisted half it deliberately did not sweep.
 
 **Plans**: TBD
 
@@ -523,7 +524,7 @@ Plans:
 | 97. Reachability | v10.0 | 0/TBD | Not started | — |
 | 98. Copy Truth | v10.0 | 0/TBD | Not started | — |
 | 99. Arabic Coverage | v10.0 | 0/TBD | Not started | — |
-| 100. Database Security Posture | v10.0 | 0/TBD | Not started | — |
+| 100. Security Posture — Database & Client | v10.0 | 0/TBD | Not started | — |
 | 101. CI Gates Green | v10.0 | 0/TBD | Not started | — |
 | 102. Staging Data & Debt Tail | v10.0 | 0/TBD | Not started | — |
 | 103. Audit Re-Sweep | v10.0 | 0/TBD | Not started | — |
