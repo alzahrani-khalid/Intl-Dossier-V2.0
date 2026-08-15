@@ -7,6 +7,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
 import {
   getTagHierarchy as getTagHierarchyApi,
   createTag as createTagApi,
@@ -141,11 +142,37 @@ export function useEntityTagging(): EntityTaggingState {
   }
 }
 
+/** The `tag-hierarchy/analytics` envelope. `data` rows are `mv_tag_usage_analytics` verbatim. */
+export interface TagAnalyticsEnvelope {
+  data: Array<Record<string, unknown>>
+  total: number
+  last_refreshed: string
+}
+
+/**
+ * D-25: this was a refactor stub that resolved a hardcoded zero-object and never touched the
+ * network. It always SUCCEEDED with a shape the component could not read, so the component's
+ * `!stats` branch painted "Failed to load tags" over a success: an error rendered over a
+ * success, the inverse of this phase's defect and the same class of lie.
+ *
+ * `mv_tag_usage_analytics` (read by supabase/functions/tag-hierarchy/index.ts:239-252) already
+ * matches TagAnalytics.tsx's row type column-for-column, so this repoints rather than inventing
+ * a shape. A rejection now reaches `isError` and renders the shared error state.
+ */
 export function useTagAnalytics() {
-  return useQuery({
+  return useQuery<TagAnalyticsEnvelope>({
     queryKey: [...tagKeys.all, 'analytics'] as const,
-    queryFn: () => Promise.resolve({ totalTags: 0, categories: [], usage: [] }),
+    queryFn: async () => {
+      const { data, error } = await supabase.functions.invoke('tag-hierarchy/analytics', {
+        method: 'GET',
+      })
+      if (error) throw error
+      return data as TagAnalyticsEnvelope
+    },
     staleTime: 5 * 60 * 1000,
+    // An invoke rejection carries no numeric status, so query-client.ts's 4xx short-circuit never
+    // fires and the default ladder would run all four attempts. Cap at 2 (UI-SPEC retry policy).
+    retry: 2,
   })
 }
 

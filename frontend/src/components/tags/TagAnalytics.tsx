@@ -31,6 +31,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import { useTagAnalytics, useRefreshTagAnalytics } from '@/hooks/useTagHierarchy'
 import { getTagName, TAG_ENTITY_TYPE_LABELS } from '@/types/tag-hierarchy.types'
 import { useDirection } from '@/hooks/useDirection'
@@ -39,10 +40,9 @@ interface TagAnalyticsProps {
   className?: string
 }
 
-// Local typed shim narrowing the stub useTagAnalytics hook return.
-// The hook is a refactor stub (frontend/src/domains/*/useTagHierarchy.ts) returning
-// UseQueryResult<unknown>; the hook surface is owned by 47-07. Component-side typed
-// shim keeps this consumer type-clean.
+// Local typed shim narrowing the useTagAnalytics envelope's rows.
+// The hook returns `mv_tag_usage_analytics` rows verbatim (via tag-hierarchy/analytics); this
+// interface is the subset this component renders, and it matches that view column-for-column.
 interface TagAnalyticsRow {
   is_active: boolean
   total_assignments: number
@@ -72,12 +72,14 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
   const {
     data: analytics,
     isLoading,
-    error,
+    isError,
+    isRefetching,
     refetch,
   } = useTagAnalytics() as unknown as {
     data: TagAnalyticsResponse | undefined
     isLoading: boolean
-    error: unknown
+    isError: boolean
+    isRefetching: boolean
     refetch: () => Promise<unknown>
   }
   const refreshAnalytics = useRefreshTagAnalytics() as unknown as {
@@ -85,11 +87,11 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
     isPending: boolean
   }
 
-  // Computed stats
+  // Computed stats. Never null: a resolved response with no rows is EMPTINESS, and emptiness
+  // renders the empty vocabulary below (noAssigned / noAvailable), not an error. Failure is the
+  // isError branch and only the isError branch.
   const stats = useMemo(() => {
-    if (!analytics?.data) return null
-
-    const tags = analytics.data
+    const tags: TagAnalyticsRow[] = analytics?.data ?? []
     const totalTags = tags.length
     const activeTags = tags.filter((t) => t.is_active).length
     const totalAssignments = tags.reduce((sum, t) => sum + t.total_assignments, 0)
@@ -163,17 +165,18 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
     )
   }
 
-  // Error state
-  if (error || !stats) {
+  // Error state — keyed on isError ONLY. `!stats` used to sit in this condition, which meant a
+  // SUCCESSFUL query whose shape the component could not read rendered "Failed to load tags"
+  // (D-25). stats is now always computed, so that path is unreachable by construction: this
+  // branch fires on a real rejection and nothing else.
+  if (isError) {
     return (
-      <div className={cn('flex flex-col items-center justify-center py-12 text-center', className)}>
-        <AlertCircle className="size-12 text-destructive mb-4" />
-        <p className="text-muted-foreground">{t('errors.loadFailed')}</p>
-        <Button variant="outline" onClick={() => refetch()} className="mt-4">
-          <RefreshCw className="size-4 me-2" />
-          {t('actions.refresh')}
-        </Button>
-      </div>
+      <QueryErrorState
+        variant="inline"
+        onRetry={() => void refetch()}
+        isRetrying={isRefetching}
+        className={className}
+      />
     )
   }
 
@@ -185,8 +188,9 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
           <h2 className="text-lg sm:text-xl font-semibold">{t('analytics.title')}</h2>
           <p className="text-sm text-muted-foreground">{t('analytics.overview')}</p>
         </div>
-        {/* Stub-backed: useRefreshTagAnalytics resolves a no-op (analytics
-            query is also a fake-empty stub). Disabled for honesty until backed. */}
+        {/* The analytics QUERY is live as of 93-10, but useRefreshTagAnalytics is still a no-op
+            stub — it never calls tag-hierarchy/refresh-analytics, so pressing this would refresh
+            nothing while appearing to. Disabled for honesty until that mutation is backed. */}
         <Button
           variant="outline"
           size="sm"
