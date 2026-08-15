@@ -334,3 +334,22 @@ that residual is `ACCEPTANCE-P93-EXEC.md` condition 4's close-out suite run, not
 the four root-`tests/` C9b specs, which remain unrunnable under `E2ECRED-01` (D-20, unchanged).
 
 This addendum **corrects, does not rewrite,** the `BLOCKED: None` close-out above.
+
+### Correction to the addendum above — what `routes.test.tsx`'s 14/14 green does NOT establish
+
+Added by `orch-p93-b` on 2026-08-16, after `93-11` reported the same property for its own subject.
+
+`frontend/tests/unit/routes.test.tsx` **mocks `@/pages/dossiers/DossierListPage`** (line 127): the
+mock is a hand-written stand-in that reads `useRouterState` search params and renders checkboxes.
+**The real component never renders in that file.** Its 14 assertions are about router search-param
+wiring, and they are structurally incapable of moving when `DossierListPage.tsx` changes — they
+would stay 14/14 with the component's body deleted.
+
+So the row above is accurate as a _measurement_ and near-worthless as _evidence about this plan's
+subject_. The honest statement: `routes.test.tsx` was run, is green, and **did not exercise
+`DossierListPage`**; `pull-to-refresh.spec.ts` is the only one of the two consumers that renders the
+real page, and its five reds are `E2ESTALE-01`'s, unchanged in both directions.
+
+Recorded rather than quietly amended, because a green that rests on an unstated qualifier is exactly
+what `ACCEPTANCE-P93-EXEC.md`'s DOWNGRADE branch is for — and the qualifier was found by reading the
+fields, which is where it says it will be found.
