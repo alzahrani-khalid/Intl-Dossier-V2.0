@@ -56,6 +56,32 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
   last match is exactly `/settings`, and returns a bare `<Outlet/>` for every child route. The
   suppression is predicated on a promise the layout does not keep on children. That is the whole
   mechanism, in one sentence, for whoever plans `NAV-02`.
+- **D-28:** **DECIDED by the operator** (`RULING-P92-11`, resolving `PARK-P92-R2.md` PARK-R2-1):
+  `/settings` gets **both** a new control and a fix to the existing one.
+  `/settings` already has a _working_ full sign-out today — `DataPrivacySettingsSection.tsx`'s
+  `handleSignOutAll` (`:164-178`) runs `supabase.auth.signOut({ scope: 'global' })` → `logout()` →
+  `window.location.href = '/login'` — but it is labelled `dataPrivacy.signOutAll` = en "Sign Out All
+  Other **Sessions**" / ar "…الجلسات **الأخرى**", and `scope: 'global'` ends **this** session too. It
+  works and lies. So AUTH-01's "no logout anywhere" premise was not strictly true.
+  1. **Add** a plain, discoverable "Sign out" in an **account context** — not buried in Data &
+     Privacy. This is criterion 1's `/settings` half.
+  2. **Relabel** the existing control so it stops claiming "other", both locales mirrored. It also
+     currently breaks `CLAUDE.md`'s sentence-case rule for buttons, so one edit fixes copy truth and
+     house style together. **Do not change `scope`** — what the button does to other devices is a
+     separate product decision; relabelling removes the lie.
+  3. **Both controls get a `data-testid`.** `/settings` will then hold 2+ elements matching
+     `/sign out|logout|تسجيل الخروج|خروج/i`, so the Wave-0 `/settings` assertion **must** use testids
+     or scoped locators — **never** the shared regex. Unconditional, and a _safety_ rule: the shared
+     regex could click the destructive global sign-out while intending to test ordinary logout. The
+     collision is already latent today (same string at trigger `:286` and confirm action `:301`).
+  4. **`window.location.href = '/login'` stays — DELIBERATE, not an oversight.** It is not
+     inconsistent with D-25's lazy router import: a full reload guarantees state teardown on sign-out.
+     Recorded so a reviewer does not "fix" it into a router navigation and quietly weaken the
+     teardown.
+     **Interaction the D-22 task must accept explicitly:** `signOut({ scope: 'global' })` emits
+     `SIGNED_OUT`, so once D-22's handler navigates on that event this component navigates reactively
+     _and then_ hard-navigates a second later. With (4) keeping the hard nav, that double-navigation is
+     accepted knowingly — one sentence naming it, rather than leaving it to be discovered.
 - **D-04:** Sign-out lands the user on `/login` with the session cleared (`ROADMAP.md:284`). Clearing
   is asserted, not assumed — the acceptance check must show the session gone, not just the route
   changed.
