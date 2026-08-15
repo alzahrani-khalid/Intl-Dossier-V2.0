@@ -365,5 +365,28 @@ was run at any point. Prettier reformatted the tables in `92-PROBE-FINAL.md` at 
 
 ---
 
+## Self-Check: PASSED
+
+Run after the SUMMARY was written, against the committed tree.
+
+```
+FOUND: 92-PROBE-FINAL.md      IN-HEAD: 92-PROBE-FINAL.md
+FOUND: 92-09-SUMMARY.md       IN-HEAD: 92-09-SUMMARY.md
+FOUND: 92-DEPLOY-LEDGER.md
+FOUND: feb3b42c   FOUND: 9ce5d4a4   FOUND: 03821749
+```
+
+Both gates re-run a final time against the committed tree, after every commit landed:
+
+```
+g1 EXIT=0
+g2 EXIT=0
+```
+
+Working tree clean; no file from another lane appeared in any commit
+(`git show --stat` checked per commit).
+
+---
+
 _Phase: 92-session-integrity-edge-function-auth_
 _Completed: 2026-08-15_
