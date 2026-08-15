@@ -10,16 +10,26 @@
  * GET /audit-logs-viewer/statistics - Get audit statistics
  *
  * Features:
- * - Advanced filtering (table, user, action, date range, IP, search)
+ * - Advanced filtering (entity type, user, action, date range, IP, search)
  * - Pagination with cursor-based option
  * - Export functionality (CSV, JSON)
  * - Statistics and analytics
- * - Tamper-proof verification
+ *
+ * Column contract (Phase 93 / AUDIT-42703, D-14):
+ * `public.audit_log` really has
+ *   id, tenant_id, entity_type, entity_id, action, user_id, timestamp,
+ *   old_values, new_values, ip_address, user_agent, session_id, additional_context
+ * The handler previously queried table_name/operation/row_id/old_data/new_data/
+ * changed_fields/user_email/user_role/request_id — none of which exist — so every
+ * route returned a 42703-driven 500. The DB side is now the real columns; the
+ * WIRE names the frontend already consumes (AuditLogEntry in
+ * frontend/src/types/audit-log.types.ts) are preserved via PostgREST select
+ * aliases so no client change is required.
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'jsr:@supabase/supabase-js@2'
-import { errorResponse, successResponse, log } from '../_shared/utils.ts'
+import { successResponse, log, corsHeaders } from '../_shared/utils.ts'
 import { getCorsHeaders } from '../_shared/cors.ts'
 
 // Types
@@ -40,38 +50,146 @@ interface AuditLogFilters {
   sort_order?: 'asc' | 'desc'
 }
 
-interface ExportOptions {
-  format: 'csv' | 'json'
-  filters: AuditLogFilters
-  include_fields?: string[]
+/**
+ * Client-facing error envelope (D-15).
+ *
+ * Bilingual message + stable code ONLY. The PostgREST/Postgres error object is
+ * never echoed: its `message` names internal columns (this surface used to ship
+ * `column audit_log.table_name does not exist` to the browser) and its `code` is
+ * a raw SQLSTATE. Diagnostics go to the function log instead.
+ *
+ * Shape is the flat house contract read by frontend/src/lib/api-client.ts
+ * (`message` ?? `message_en` ?? `error`).
+ */
+function errorEnvelope(
+  status: number,
+  code: string,
+  messageEn: string,
+  messageAr: string,
+  diagnostic?: unknown,
+): Response {
+  if (diagnostic !== undefined) {
+    log('error', `audit-logs-viewer: ${code}`, { diagnostic })
+  }
+
+  return new Response(
+    JSON.stringify({ error: messageEn, code, message_en: messageEn, message_ar: messageAr }),
+    {
+      status,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    },
+  )
 }
 
-// Helper function to build audit log query
-function buildAuditQuery(supabase: any, filters: AuditLogFilters, includeCount: boolean = true) {
-  let query = supabase.from('audit_log').select(
-    `
+// External (wire) field name -> real audit_log column, aliased in every select so
+// the response shape the frontend reads is unchanged.
+const LOG_SELECT = `
       id,
-      table_name,
-      operation,
-      row_id,
-      old_data,
-      new_data,
-      changed_fields,
+      table_name:entity_type,
+      operation:action,
+      row_id:entity_id,
+      old_data:old_values,
+      new_data:new_values,
       user_id,
-      user_email,
-      user_role,
       ip_address,
       user_agent,
       timestamp,
-      session_id,
-      request_id
-    `,
-    { count: includeCount ? 'exact' : undefined },
+      session_id
+    `
+
+// sort_by is client-supplied. Whitelist it and map to a real column, so a bad
+// value is a clean 400 rather than another 42703 500. `user_email` is deliberately
+// absent: it lives in public.users, not on audit_log, so it cannot be ordered on.
+const SORTABLE_FIELDS: Record<string, string> = {
+  timestamp: 'timestamp',
+  table_name: 'entity_type',
+  operation: 'action',
+  row_id: 'entity_id',
+  user_id: 'user_id',
+  ip_address: 'ip_address',
+}
+
+// Fields exposed by GET /distinct/:field, mapped to real columns.
+const DISTINCT_FIELDS: Record<string, string> = {
+  table_name: 'entity_type',
+  operation: 'action',
+}
+
+// PostgREST `or()` is a comma/paren-delimited grammar — a raw search term
+// containing those characters corrupts the filter string.
+function sanitizeSearchTerm(term: string): string {
+  return term.replace(/[,()*]/g, ' ').trim()
+}
+
+/**
+ * user_email is not a column of audit_log. Resolve the pattern to user ids
+ * against public.users so email filtering/search stays functional instead of
+ * silently matching nothing.
+ *
+ * Returns null when the lookup itself failed (caller surfaces a 500).
+ */
+async function resolveUserIdsByEmail(supabase: any, pattern: string): Promise<string[] | null> {
+  const { data, error } = await supabase
+    .from('users')
+    .select('id')
+    .ilike('email', `%${pattern}%`)
+    .limit(500)
+
+  if (error) {
+    log('error', 'Failed to resolve user ids by email', { error })
+    return null
+  }
+
+  return (data || []).map((u: any) => u.id)
+}
+
+/**
+ * Attach user_email / user_role to audit rows. audit_log has no declared FK to
+ * public.users, so a PostgREST embed is not available — this is a second query
+ * keyed on the page's distinct user_ids.
+ *
+ * Enrichment is best-effort: audit rows are the payload, and a users-table
+ * failure degrades the two derived fields to null (logged) rather than 500-ing
+ * the whole listing.
+ */
+async function attachUsers(supabase: any, rows: any[]): Promise<any[]> {
+  const ids = [...new Set(rows.map((r) => r?.user_id).filter(Boolean))]
+
+  if (ids.length === 0) {
+    return rows.map((r) => ({ ...r, user_email: null, user_role: null }))
+  }
+
+  const { data, error } = await supabase.from('users').select('id, email, role').in('id', ids)
+
+  if (error) {
+    log('error', 'Failed to resolve audit users', { error })
+  }
+
+  const byId = new Map<string, { email: string | null; role: string | null }>(
+    (data || []).map((u: any) => [u.id, u]),
   )
+
+  return rows.map((r) => ({
+    ...r,
+    user_email: byId.get(r?.user_id)?.email ?? null,
+    user_role: byId.get(r?.user_id)?.role ?? null,
+  }))
+}
+
+// Helper function to build audit log query
+function buildAuditQuery(
+  supabase: any,
+  filters: AuditLogFilters,
+  includeCount: boolean = true,
+  emailUserIds?: string[] | null,
+) {
+  let query = supabase
+    .from('audit_log')
+    .select(LOG_SELECT, { count: includeCount ? 'exact' : undefined })
 
   // Apply filters
   if (filters.table_name) {
-    query = query.eq('table_name', filters.table_name)
+    query = query.eq('entity_type', filters.table_name)
   }
 
   if (filters.user_id) {
@@ -79,11 +197,12 @@ function buildAuditQuery(supabase: any, filters: AuditLogFilters, includeCount: 
   }
 
   if (filters.user_email) {
-    query = query.ilike('user_email', `%${filters.user_email}%`)
+    // Empty match list is meaningful: no user matched, so no audit row can.
+    query = query.in('user_id', emailUserIds || [])
   }
 
   if (filters.operation) {
-    query = query.eq('operation', filters.operation)
+    query = query.eq('action', filters.operation)
   }
 
   if (filters.date_from) {
@@ -99,16 +218,21 @@ function buildAuditQuery(supabase: any, filters: AuditLogFilters, includeCount: 
   }
 
   if (filters.row_id) {
-    query = query.eq('row_id', filters.row_id)
+    query = query.eq('entity_id', filters.row_id)
   }
 
   if (filters.search) {
-    // Search in user_email, table_name, and changed_fields
-    query = query.or(`user_email.ilike.%${filters.search}%,table_name.ilike.%${filters.search}%`)
+    // Search across entity_type/action, plus any user whose email matched.
+    const term = sanitizeSearchTerm(filters.search)
+    const clauses = [`entity_type.ilike.%${term}%`, `action.ilike.%${term}%`]
+    if (emailUserIds && emailUserIds.length > 0) {
+      clauses.push(`user_id.in.(${emailUserIds.join(',')})`)
+    }
+    query = query.or(clauses.join(','))
   }
 
-  // Apply sorting
-  const sortBy = filters.sort_by || 'timestamp'
+  // Apply sorting (whitelisted above)
+  const sortBy = SORTABLE_FIELDS[filters.sort_by || 'timestamp']
   const sortOrder = filters.sort_order === 'asc' ? true : false
   query = query.order(sortBy, { ascending: sortOrder })
 
@@ -128,7 +252,6 @@ function toCSV(logs: any[]): string {
     'user_email',
     'user_role',
     'ip_address',
-    'changed_fields',
   ]
 
   const csvRows = [headers.join(',')]
@@ -143,7 +266,6 @@ function toCSV(logs: any[]): string {
       log.user_email || '',
       log.user_role || '',
       log.ip_address || '',
-      (log.changed_fields || []).join(';'),
     ].map((val) => `"${String(val).replace(/"/g, '""')}"`)
 
     csvRows.push(row.join(','))
@@ -152,31 +274,51 @@ function toCSV(logs: any[]): string {
   return csvRows.join('\n')
 }
 
+/**
+ * Resolve the user-id list an email filter/search needs, if any.
+ * Returns `undefined` when no email lookup is required, `null` when it failed.
+ */
+async function resolveEmailFilter(
+  supabase: any,
+  filters: AuditLogFilters,
+): Promise<string[] | null | undefined> {
+  const pattern = filters.user_email || (filters.search ? sanitizeSearchTerm(filters.search) : '')
+  if (!pattern) return undefined
+  return await resolveUserIdsByEmail(supabase, pattern)
+}
+
 // Handler for listing audit logs
 async function handleListAuditLogs(supabase: any, filters: AuditLogFilters): Promise<Response> {
   const limit = Math.min(filters.limit || 50, 100)
   const offset = filters.offset || 0
 
-  let query = buildAuditQuery(supabase, filters, true)
+  const emailUserIds = await resolveEmailFilter(supabase, filters)
+  if (emailUserIds === null) {
+    return errorEnvelope(
+      500,
+      'DB_ERROR',
+      'Failed to fetch audit logs',
+      'فشل في جلب سجلات التدقيق',
+      'user email resolution failed',
+    )
+  }
+
+  let query = buildAuditQuery(supabase, filters, true, emailUserIds)
   query = query.range(offset, offset + limit - 1)
 
   const { data, error, count } = await query
 
   if (error) {
-    log('error', 'Failed to fetch audit logs', { error })
-    return errorResponse('Failed to fetch audit logs', 500, 'DB_ERROR', error)
+    return errorEnvelope(
+      500,
+      'DB_ERROR',
+      'Failed to fetch audit logs',
+      'فشل في جلب سجلات التدقيق',
+      error,
+    )
   }
 
-  // Enrich logs with computed fields
-  const enrichedLogs =
-    data?.map((log: any) => ({
-      ...log,
-      changes_count: log.changed_fields?.length || 0,
-      // Compute diff summary for display
-      diff_summary:
-        log.changed_fields?.slice(0, 3).join(', ') +
-        (log.changed_fields?.length > 3 ? ` +${log.changed_fields.length - 3} more` : ''),
-    })) || []
+  const enrichedLogs = await attachUsers(supabase, data || [])
 
   return successResponse(enrichedLogs, 200, undefined, {
     total: count || 0,
@@ -190,33 +332,41 @@ async function handleListAuditLogs(supabase: any, filters: AuditLogFilters): Pro
 async function handleGetAuditLog(supabase: any, logId: string): Promise<Response> {
   const { data, error } = await supabase
     .from('audit_log')
-    .select(
-      'id, table_name, operation, row_id, old_data, new_data, changed_fields, user_id, user_email, user_role, ip_address, user_agent, timestamp, session_id, request_id',
-    )
+    .select(LOG_SELECT)
     .eq('id', logId)
     .single()
 
   if (error) {
     if (error.code === 'PGRST116') {
-      return errorResponse('Audit log not found', 404, 'NOT_FOUND')
+      return errorEnvelope(404, 'NOT_FOUND', 'Audit log not found', 'سجل التدقيق غير موجود')
     }
-    log('error', 'Failed to fetch audit log', { error })
-    return errorResponse('Failed to fetch audit log', 500, 'DB_ERROR', error)
+    return errorEnvelope(
+      500,
+      'DB_ERROR',
+      'Failed to fetch audit log',
+      'فشل في جلب سجل التدقيق',
+      error,
+    )
   }
 
-  // Also get related logs (same row_id and table_name)
+  // Also get related logs (same entity)
   const { data: relatedLogs } = await supabase
     .from('audit_log')
-    .select('id, timestamp, operation, user_email, changed_fields')
-    .eq('table_name', data.table_name)
-    .eq('row_id', data.row_id)
+    .select('id, timestamp, operation:action, user_id')
+    .eq('entity_type', data.table_name)
+    .eq('entity_id', data.row_id)
     .neq('id', logId)
     .order('timestamp', { ascending: false })
     .limit(10)
 
+  const [enrichedLog, ...enrichedRelated] = await attachUsers(supabase, [
+    data,
+    ...(relatedLogs || []),
+  ])
+
   return successResponse({
-    log: data,
-    related_logs: relatedLogs || [],
+    log: enrichedLog,
+    related_logs: enrichedRelated,
   })
 }
 
@@ -229,18 +379,36 @@ async function handleExportAuditLogs(
   // Limit export to 10000 records
   const exportLimit = 10000
 
-  let query = buildAuditQuery(supabase, filters, false)
+  const emailUserIds = await resolveEmailFilter(supabase, filters)
+  if (emailUserIds === null) {
+    return errorEnvelope(
+      500,
+      'DB_ERROR',
+      'Failed to export audit logs',
+      'فشل في تصدير سجلات التدقيق',
+      'user email resolution failed',
+    )
+  }
+
+  let query = buildAuditQuery(supabase, filters, false, emailUserIds)
   query = query.limit(exportLimit)
 
   const { data, error } = await query
 
   if (error) {
-    log('error', 'Failed to export audit logs', { error })
-    return errorResponse('Failed to export audit logs', 500, 'DB_ERROR', error)
+    return errorEnvelope(
+      500,
+      'DB_ERROR',
+      'Failed to export audit logs',
+      'فشل في تصدير سجلات التدقيق',
+      error,
+    )
   }
 
+  const rows = await attachUsers(supabase, data || [])
+
   if (format === 'csv') {
-    const csv = toCSV(data || [])
+    const csv = toCSV(rows)
     return new Response(csv, {
       status: 200,
       headers: {
@@ -251,7 +419,7 @@ async function handleExportAuditLogs(
   }
 
   // Default to JSON
-  return new Response(JSON.stringify(data || [], null, 2), {
+  return new Response(JSON.stringify(rows, null, 2), {
     status: 200,
     headers: {
       'Content-Type': 'application/json',
@@ -260,7 +428,12 @@ async function handleExportAuditLogs(
   })
 }
 
-// Handler for audit statistics
+/**
+ * Handler for audit statistics.
+ *
+ * D-26: statistics are aggregated in-function from audit_log rows over the date
+ * range. There is no pre-aggregated view backing this route.
+ */
 async function handleAuditStatistics(
   supabase: any,
   dateFrom?: string,
@@ -272,83 +445,72 @@ async function handleAuditStatistics(
   const from = dateFrom || defaultDateFrom
   const to = dateTo || new Date().toISOString()
 
-  // Get operation counts
-  const { data: operationStats, error: opError } = await supabase
-    .from('audit_statistics')
-    .select('table_name, operation, operation_count, unique_users, unique_rows')
-    .gte('audit_date', from.split('T')[0])
-    .lte('audit_date', to.split('T')[0])
+  const { data, error } = await supabase
+    .from('audit_log')
+    .select('entity_type, action')
+    .gte('timestamp', from)
+    .lte('timestamp', to)
 
-  if (opError) {
-    // Fallback to direct query if view doesn't exist
-    const { data: fallbackData, error: fallbackError } = await supabase
-      .from('audit_log')
-      .select('table_name, operation')
-      .gte('timestamp', from)
-      .lte('timestamp', to)
-
-    if (fallbackError) {
-      return errorResponse('Failed to fetch statistics', 500, 'DB_ERROR', fallbackError)
-    }
-
-    // Compute stats manually
-    const stats: Record<string, { operation_count: number; tables: Set<string> }> = {}
-    for (const log of fallbackData || []) {
-      if (!stats[log.operation]) {
-        stats[log.operation] = { operation_count: 0, tables: new Set() }
-      }
-      stats[log.operation].operation_count++
-      stats[log.operation].tables.add(log.table_name)
-    }
-
-    const operationCounts = Object.entries(stats).map(([op, data]) => ({
-      operation: op,
-      count: data.operation_count,
-      tables_affected: data.tables.size,
-    }))
-
-    return successResponse({
-      period: { from, to },
-      by_operation: operationCounts,
-      total_events: fallbackData?.length || 0,
-    })
+  if (error) {
+    return errorEnvelope(
+      500,
+      'DB_ERROR',
+      'Failed to fetch statistics',
+      'فشل في جلب الإحصائيات',
+      error,
+    )
   }
 
-  // Aggregate statistics
-  const byOperation: Record<string, number> = {}
-  const byTable: Record<string, number> = {}
-  let totalEvents = 0
-
-  for (const stat of operationStats || []) {
-    byOperation[stat.operation] = (byOperation[stat.operation] || 0) + stat.operation_count
-    byTable[stat.table_name] = (byTable[stat.table_name] || 0) + stat.operation_count
-    totalEvents += stat.operation_count
+  // Compute stats manually
+  const stats: Record<string, { operation_count: number; tables: Set<string> }> = {}
+  for (const row of data || []) {
+    if (!stats[row.action]) {
+      stats[row.action] = { operation_count: 0, tables: new Set() }
+    }
+    stats[row.action].operation_count++
+    stats[row.action].tables.add(row.entity_type)
   }
+
+  const operationCounts = Object.entries(stats).map(([op, d]) => ({
+    operation: op,
+    count: d.operation_count,
+    tables_affected: d.tables.size,
+  }))
 
   return successResponse({
     period: { from, to },
-    by_operation: Object.entries(byOperation).map(([op, count]) => ({ operation: op, count })),
-    by_table: Object.entries(byTable).map(([table, count]) => ({ table, count })),
-    total_events: totalEvents,
+    by_operation: operationCounts,
+    total_events: data?.length || 0,
   })
 }
 
 // Handler for distinct values (for filter dropdowns)
 async function handleDistinctValues(supabase: any, field: string): Promise<Response> {
-  const allowedFields = ['table_name', 'operation', 'user_role']
+  const column = DISTINCT_FIELDS[field]
 
-  if (!allowedFields.includes(field)) {
-    return errorResponse('Invalid field', 400, 'INVALID_FIELD')
+  if (!column) {
+    return errorEnvelope(
+      400,
+      'INVALID_FIELD',
+      `Unsupported field. Allowed: ${Object.keys(DISTINCT_FIELDS).join(', ')}`,
+      `حقل غير مدعوم. المسموح: ${Object.keys(DISTINCT_FIELDS).join(', ')}`,
+    )
   }
 
-  const { data, error } = await supabase.from('audit_log').select(field).limit(1000)
+  const { data, error } = await supabase.from('audit_log').select(column).limit(1000)
 
   if (error) {
-    return errorResponse('Failed to fetch distinct values', 500, 'DB_ERROR', error)
+    return errorEnvelope(
+      500,
+      'DB_ERROR',
+      'Failed to fetch distinct values',
+      'فشل في جلب القيم المميزة',
+      error,
+    )
   }
 
   // Get unique values
-  const uniqueValues = [...new Set(data?.map((d: any) => d[field]).filter(Boolean))]
+  const uniqueValues = [...new Set(data?.map((d: any) => d[column]).filter(Boolean))]
 
   return successResponse(uniqueValues.sort())
 }
@@ -364,7 +526,12 @@ async function handleRequest(req: Request, corsHeaders: Record<string, string>) 
     // Get auth token
     const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
-      return errorResponse('Missing authorization header', 401, 'AUTH_REQUIRED')
+      return errorEnvelope(
+        401,
+        'AUTH_REQUIRED',
+        'Missing authorization header',
+        'ترويسة التفويض مفقودة',
+      )
     }
 
     // Create Supabase client
@@ -386,7 +553,7 @@ async function handleRequest(req: Request, corsHeaders: Record<string, string>) 
     } = await supabase.auth.getUser(token)
 
     if (userError || !user) {
-      return errorResponse('Invalid user session', 401, 'AUTH_REQUIRED')
+      return errorEnvelope(401, 'AUTH_REQUIRED', 'Invalid user session', 'جلسة المستخدم غير صالحة')
     }
 
     // Check if user has permission to view audit logs. Gated to admin + super_admin to
@@ -400,7 +567,12 @@ async function handleRequest(req: Request, corsHeaders: Record<string, string>) 
       .single()
 
     if (!userData || !['admin', 'super_admin'].includes(userData.role)) {
-      return errorResponse('Insufficient permissions to view audit logs', 403, 'FORBIDDEN')
+      return errorEnvelope(
+        403,
+        'FORBIDDEN',
+        'Insufficient permissions to view audit logs',
+        'صلاحيات غير كافية لعرض سجلات التدقيق',
+      )
     }
 
     // Parse URL and route
@@ -426,6 +598,15 @@ async function handleRequest(req: Request, corsHeaders: Record<string, string>) 
       offset: parseInt(url.searchParams.get('offset') || '0'),
       sort_by: url.searchParams.get('sort_by') || 'timestamp',
       sort_order: (url.searchParams.get('sort_order') as 'asc' | 'desc') || 'desc',
+    }
+
+    if (!SORTABLE_FIELDS[filters.sort_by || 'timestamp']) {
+      return errorEnvelope(
+        400,
+        'INVALID_SORT_FIELD',
+        `Unsupported sort field. Allowed: ${Object.keys(SORTABLE_FIELDS).join(', ')}`,
+        `حقل ترتيب غير مدعوم. المسموح: ${Object.keys(SORTABLE_FIELDS).join(', ')}`,
+      )
     }
 
     // Route handling
@@ -455,10 +636,20 @@ async function handleRequest(req: Request, corsHeaders: Record<string, string>) 
       return handleListAuditLogs(supabase, filters)
     }
 
-    return errorResponse('Method not allowed', 405, 'METHOD_NOT_ALLOWED')
+    return errorEnvelope(
+      405,
+      'METHOD_NOT_ALLOWED',
+      'Method not allowed',
+      'الطريقة غير مسموح بها',
+    )
   } catch (error) {
     log('error', 'Unexpected error in audit-logs-viewer', { error: error.message })
-    return errorResponse('An unexpected error occurred', 500, 'INTERNAL_ERROR')
+    return errorEnvelope(
+      500,
+      'INTERNAL_ERROR',
+      'An unexpected error occurred',
+      'حدث خطأ غير متوقع',
+    )
   }
 }
 
