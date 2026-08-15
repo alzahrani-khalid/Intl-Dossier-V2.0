@@ -289,6 +289,20 @@ None — no external service configuration required.
 
 None.
 
+## Self-Check: PASSED
+
+- **Files exist:** `supabase/functions/_shared/ai-interaction-logger.ts` FOUND,
+  `supabase/functions/dossier-stats/dashboard-aggregations.ts` FOUND, this SUMMARY FOUND.
+- **Commits exist:** `d7a648b7d` FOUND, `7fb48f4e` FOUND.
+- **Scope:** `git diff --stat phase-93-base -- <the two files>` → `2 files changed, 2 insertions(+), 2 deletions(-)`.
+  Anchored to the phase tag, not HEAD (C7). No file outside `files_modified` + this SUMMARY was touched.
+- **Both task `<acceptance_criteria>` re-run at close:** g1 `EXIT=0` (widened population, 0 matches);
+  g2 `EXIT=0` (six lines, zero 401s).
+- **STATE.md / ROADMAP.md / REQUIREMENTS.md deliberately NOT updated** — the orchestrator owns them
+  this phase, and the executor brief scopes this plan to `files_modified` plus its SUMMARY.
+  `requirements-completed: [PIN-2390-01]` is recorded in this SUMMARY's frontmatter for the
+  orchestrator to mark.
+
 ---
 
 _Phase: 93-failure-visibility_
