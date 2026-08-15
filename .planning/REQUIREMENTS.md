@@ -95,16 +95,28 @@ verified sound across six lanes).
 - [ ] **AR-04**: A missing Arabic key cannot silently render English in both languages. **This is two
       independent fixes with separate acceptance — neither implies the other, and they must not be
       collapsed back into one clause.**
-  - [ ] **AR-04a — remove the MASK.** No `t()` call passes an English default as its second argument.
-        The second argument is what makes the gap invisible: when a key is missing,
-        `t('some.key', 'English default')` renders plausible English instead of leaking a raw key, so
-        nothing looks broken in either locale and no one notices. **This is the clause that closes
-        Phase 99's criterion 4.** Acceptance:
+  - [ ] **AR-04a — remove the MASK, without creating a visible regression.** No `t()` call passes an
+        English default as its second argument. The second argument is what makes the gap invisible:
+        when a key is missing, `t('some.key', 'English default')` renders plausible English instead of
+        leaking a raw key, so nothing looks broken in either locale and no one notices. **This is the
+        clause that closes Phase 99's criterion 4.**
+
+        **Acceptance is a CONJUNCTION — both, never the first alone:**
 
         ```bash
+        # (a) no masks remain
         grep -rhoE "t\(\s*'[^']+'\s*,\s*'[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l   # -> 0
-        grep -rlE  "t\(\s*'[^']+'\s*,\s*'[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l   # files touched
+        # (b) AND every referenced key resolves in BOTH locales (en and ar), namespace-aware
+        #     — see the audit script referenced in the note below; must report 0 unresolved
         ```
+
+        **Required ORDER — authoring first, deletion last:**
+        1. Author the missing keys in `en` **and** `ar`.
+        2. Verify every referenced key resolves in both locales.
+        3. **Only then** drop the second arguments.
+
+        > **This clause is a translation-authoring task, not a mechanical sweep.** Scoping Phase 99
+        > as a find-and-replace will under-resource it by the size of the authoring work.
 
   - [ ] **AR-04b — fix namespace RESOLUTION.** Keys resolve through explicit colon namespaces rather
         than dot form, so a key lands in the namespace it names. Acceptance:
@@ -114,6 +126,27 @@ verified sound across six lanes).
         grep -rhoE "t\(\s*'[^']*:[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l   # colon-form
         ```
 
+  > **AR-04a is destructively satisfiable if you only run check (a) — measured, 2026-08-15,
+  > `RULING-P92-08`.** A large fraction of mask sites reference keys that **do not resolve in the EN
+  > locale at all**; they render today _only_ because of the English default. Running
+  > "two-arg grep -> 0" naively converts those sites from plausible-English into **raw key strings in
+  > EN and AR alike** — trading an invisible defect for a visible regression, while passing the
+  > acceptance command. That is why acceptance is a conjunction and why the order is fixed.
+  >
+  > Reproduce with `node scripts/i18n-mask-audit.mjs` (committed for Phase 99). Two independent
+  > derivations, 2026-08-15:
+  >
+  > | derivation                        | total 2-arg sites | unresolved in EN | distinct keys |     share |
+  > | --------------------------------- | ----------------: | ---------------: | ------------: | --------: |
+  > | overseer, namespace-unaware       |              1826 |              472 |           407 |     25.8% |
+  > | orchestrator, **namespace-aware** |              1800 |          **516** |       **444** | **28.7%** |
+  >
+  > The second derivation models what the first flagged as unmodelled — the per-file default
+  > namespace from `useTranslation('ns')` and colon-form explicit namespaces — and the figure went
+  > **up**, not down. (Ignoring namespaces entirely reports 1611 / 89.5%, so the modelling matters a
+  > great deal; it just does not rescue the finding.) Roughly **440+ distinct keys must be authored
+  > in two locales** before a single default is dropped.
+  >
   > **Why the split (Phase 92 planning, 2026-08-15, `RULING-P92-07`).** This requirement previously
   > read "dot-form `t()` keys with English defaults are eliminated in favour of colon namespaces" —
   > one sentence fusing two orthogonal fixes. **Masking and resolution are independent:**
