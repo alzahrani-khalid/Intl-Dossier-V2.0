@@ -20,7 +20,6 @@ import { SettingsSectionCard, SettingsGroup } from '../SettingsSectionCard'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
-import { useAuthStore } from '@/store/authStore'
 
 interface Session {
   id: string
@@ -37,7 +36,6 @@ interface Session {
  */
 export function DataPrivacySettingsSection() {
   const { t } = useTranslation('settings')
-  const { logout } = useAuthStore()
 
   const [isExporting, setIsExporting] = useState(false)
   const [isSigningOutAll, setIsSigningOutAll] = useState(false)
@@ -171,12 +169,9 @@ export function DataPrivacySettingsSection() {
       if (error) throw error
 
       toast.success(t('dataPrivacy.signedOutAll'))
-
-      // Redirect to login after short delay
-      setTimeout(() => {
-        logout()
-        window.location.href = '/login'
-      }, 1000)
+      // navigation + cache teardown owned by authStore's SIGNED_OUT handler (D-29) —
+      // do not restore the reload. signOut({ scope: 'global' }) already emits
+      // SIGNED_OUT; the removed logout() call re-invoked signOut a second time.
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Sign out failed'
       toast.error(message)
@@ -277,7 +272,15 @@ export function DataPrivacySettingsSection() {
           {sessions.filter((s) => !s.isCurrent).length > 0 && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="outline" className="mt-3" disabled={isSigningOutAll}>
+                {/* Testid, not the shared name regex (D-28.3): /settings now holds two
+                    controls matching /sign out|logout|.../i, and a name-based locator
+                    could click this destructive global one by accident. */}
+                <Button
+                  variant="outline"
+                  className="mt-3"
+                  disabled={isSigningOutAll}
+                  data-testid="signout-all-sessions"
+                >
                   {isSigningOutAll ? (
                     <Loader2 className="h-4 w-4 me-2 animate-spin" />
                   ) : (

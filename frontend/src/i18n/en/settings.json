@@ -197,7 +197,7 @@
     "viewSessions": "View Sessions",
     "currentSession": "Current Session",
     "lastActive": "Last active",
-    "signOutAll": "Sign Out All Other Sessions",
+    "signOutAll": "Sign out of all sessions",
     "signOutConfirm": "Are you sure you want to sign out of all other sessions?",
     "deleteAccount": "Delete Account",
     "deleteAccountDesc": "Permanently delete your account and all associated data",
@@ -238,7 +238,10 @@
     "passwordError": "Failed to update password",
     "passwordMismatch": "Passwords do not match",
     "passwordTooShort": "Password must be at least 8 characters",
-    "currentPasswordIncorrect": "Current password is incorrect"
+    "currentPasswordIncorrect": "Current password is incorrect",
+    "session": "Session",
+    "signOut": "Sign out",
+    "signOutDesc": "End your session on this device."
   },
 
   "timezones": {

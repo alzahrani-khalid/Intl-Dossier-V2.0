@@ -197,7 +197,7 @@
     "viewSessions": "عرض الجلسات",
     "currentSession": "الجلسة الحالية",
     "lastActive": "آخر نشاط",
-    "signOutAll": "تسجيل الخروج من جميع الجلسات الأخرى",
+    "signOutAll": "تسجيل الخروج من جميع الجلسات",
     "signOutConfirm": "هل أنت متأكد من تسجيل الخروج من جميع الجلسات الأخرى؟",
     "deleteAccount": "حذف الحساب",
     "deleteAccountDesc": "حذف حسابك وجميع البيانات المرتبطة نهائياً",
@@ -238,7 +238,10 @@
     "passwordError": "فشل تحديث كلمة المرور",
     "passwordMismatch": "كلمات المرور غير متطابقة",
     "passwordTooShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
-    "currentPasswordIncorrect": "كلمة المرور الحالية غير صحيحة"
+    "currentPasswordIncorrect": "كلمة المرور الحالية غير صحيحة",
+    "session": "الجلسة",
+    "signOut": "تسجيل الخروج",
+    "signOutDesc": "إنهاء جلستك على هذا الجهاز."
   },
 
   "timezones": {
