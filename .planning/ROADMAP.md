@@ -258,7 +258,7 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 
 ## Phases
 
-- [ ] **Phase 92: Session Integrity & Edge-Function Auth** - A user can sign out, a valid session is accepted by every edge function, and a dead session bounces the tab
+- [x] **Phase 92: Session Integrity & Edge-Function Auth** - A user can sign out, a valid session is accepted by every edge function, and a dead session bounces the tab
 - [ ] **Phase 93: Failure Visibility** - No surface renders a confident empty state over a request that failed
 - [ ] **Phase 94: Write Paths** - Every advertised write path — after-actions, intake, kanban, settings, reports — actually writes
 - [ ] **Phase 95: Routes That Don't Render** - Every route either renders its page or says why it can't; the route tree has one file per slot
@@ -292,18 +292,40 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 
 Plans:
 
-- [ ] 92-01-PLAN.md — Wave 0: probe script + baseline (D-16), AUTH-01 RED measurement (D-26), sign-out + delegations forced-error specs
-- [ ] 92-02-PLAN.md — Mount NavUser, SIGNED_OUT seam (cache clear + lazy nav), /settings add + relabel (AUTH-01/03/05, D-25/28/29)
-- [ ] 92-03-PLAN.md — /delegations error state distinct from empty (AUTH-04 UI half)
-- [ ] 92-04-PLAN.md — AUTH-02 core: 3 confirmed-broken + my-delegations + \_shared/auth.ts, deployed + probe flip
-- [ ] 92-05-PLAN.md — AUTH-02 sweep slice A (access-review-detail → document-versions, 33 files, code-only)
-- [ ] 92-06-PLAN.md — AUTH-02 sweep slice B (dossier-activity-timeline → inactive-users, 33 files, code-only)
-- [ ] 92-07-PLAN.md — AUTH-02 sweep slice C (intake-audit-logs → push-device-register, 33 files, code-only)
-- [ ] 92-08-PLAN.md — AUTH-02 sweep slice D (push-notification-send → working-groups, 30 files, code-only)
-- [ ] 92-09-PLAN.md — Batch deploy + ledger + two-sided verification (grep → 0 AND live probe)
+- [x] 92-01-PLAN.md — Wave 0: probe script + baseline (D-16), AUTH-01 RED measurement (D-26), sign-out + delegations forced-error specs
+- [x] 92-02-PLAN.md — Mount NavUser, SIGNED_OUT seam (cache clear + lazy nav), /settings add + relabel (AUTH-01/03/05, D-25/28/29)
+- [x] 92-03-PLAN.md — /delegations error state distinct from empty (AUTH-04 UI half)
+- [x] 92-04-PLAN.md — AUTH-02 core: 3 confirmed-broken + my-delegations + \_shared/auth.ts, deployed + probe flip
+- [x] 92-05-PLAN.md — AUTH-02 sweep slice A (access-review-detail → document-versions, 33 files, code-only)
+- [x] 92-06-PLAN.md — AUTH-02 sweep slice B (dossier-activity-timeline → inactive-users, 33 files, code-only)
+- [x] 92-07-PLAN.md — AUTH-02 sweep slice C (intake-audit-logs → push-device-register, 33 files, code-only)
+- [x] 92-08-PLAN.md — AUTH-02 sweep slice D (push-notification-send → working-groups, 30 files, code-only)
+- [x] 92-09-PLAN.md — Batch deploy + ledger + two-sided verification (grep → 0 AND live probe)
 - [ ] 92-10-PLAN.md — CARRY-01 operator credential rotation + login smoke (blocks nothing)
 
 > Criterion 5 is an operator act, not code. It is scheduled here — ten phases ahead of the work it gates — precisely because it held v9.0's Phase 88 open. The other four criteria do not depend on it and must not wait for it.
+
+**EXECUTED 2026-08-15 — accepted by `RULING-P92-49`.** 9 of 10 plans executed; `92-10` remains open
+on the operator. Report: `.tickmarkr/overseer/P92-EXEC-REPORT.md`. Gate drill on the real tree:
+21 gates · 21 parsed · **20 exit 0**, the single red being `92-10_g1` (the park).
+
+Read the checkbox as narrowly as the evidence supports:
+
+- **Criteria 1, 2, 3 CLOSED with behavioural evidence** — Playwright specs executed against a running
+  app with a real session (`92-signout.spec.ts` 3/3), and 139 real staging deploys probed live
+  (0×401 across 11 representatives).
+- **Criterion 2 carries a named bound: `PIN-2390-01`.** Its closing derivation greps `--include='index.ts'`
+  and truthfully returns 0, but two non-`index.ts` helpers still pin `2.39.0` and are imported by six
+  deployed functions. Not an auth regression (service-role client; all six probe non-401).
+- **Criterion 4 is HALF-CLOSED.** Its error half is proven live; its data half is parked — `DELEG-01`
+  (`my-delegations` reads a relation that does not exist) and `SEED-DELEG-01` (both real delegation
+  tables hold 0 rows).
+- **Criterion 5 is PARKED**, blocker `E2ECRED-01`. `PARK-EXEC-01` stays open until the operator rotates.
+- **RLS row-scoping was never verified behaviourally.** The injected-client guard proves the migration
+  did not _remove_ scoping; nothing here proves scoping _works_. 128 of the 139 deployed functions have
+  static evidence only. Nothing was verified against production.
+- **Unmasked by fixing the 401s, filed rather than fixed:** `DELEG-01`, `DR-42501`, `AUDIT-42703`,
+  `PIN-2390-01` (Phase 93); `SEED-DELEG-01` (Phase 102).
 
 ### Phase 93: Failure Visibility
 

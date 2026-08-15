@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v10.0
 milestone_name: Trust & Correctness
 status: in_progress
-last_updated: '2026-08-14T23:53:55.505Z'
+last_updated: '2026-08-15T10:30:00.000Z'
 progress:
   total_phases: 13
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  completed_phases: 1
+  total_plans: 10
+  completed_plans: 9
+  percent: 8
 ---
 
 # Project State
@@ -25,8 +25,30 @@ See: .planning/PROJECT.md (updated 2026-08-15 — v9.0 closed PARTIAL; v10.0 Tru
 ## Current Position
 
 Milestone: **v10.0 — Trust & Correctness** (roadmapped 2026-08-15).
-Phase: 92 (session-integrity-edge-auth) — NOT STARTED. Next command: `/gsd:plan-phase 92`.
-Plan: none yet.
+Phase: 92 (session-integrity-edge-auth) — **EXECUTED 2026-08-15, accepted by `RULING-P92-49`.**
+9 of 10 plans executed (10/10 SUMMARYs on disk; `92-10` is a parked operator act, not work).
+Next command: `/gsd:plan-phase 93`.
+Plan: none yet for 93.
+
+**Phase 92 close-out, stated narrowly — the checkbox is not a claim of more than this:**
+Report `.tickmarkr/overseer/P92-EXEC-REPORT.md`. Gate drill on the real tree: 21 gates · 21 parsed ·
+**20 exit 0**; the single red is `92-10_g1`, the park. Criteria 1/2/3 closed with **behavioural**
+evidence (Playwright 3/3 against a running app; 139 real staging deploys, 0×401 across 11 probe
+representatives — only 4 of which discriminate a migration from none). **Criterion 2 carries a named
+bound, `PIN-2390-01`.** **Criterion 4 is half-closed** — error half proven live, data half parked
+(`DELEG-01`, `SEED-DELEG-01`). **Criterion 5 is parked** on the operator (`E2ECRED-01`,
+`PARK-EXEC-01` — the only thing still outstanding from Phase 92).
+
+**Not established by Phase 92, so no later phase should inherit it as done:** nothing was verified
+against **production** (staging only, droplet untouched); **RLS row-scoping was never verified
+behaviourally** — the injected-client guard proves the migration did not _remove_ scoping, not that
+scoping _works_; **128 of the 139** deployed functions have static evidence only; **Arabic was
+verified as JSON data, never as pixels** (no RTL render, no 1024/1400px check).
+
+**Filed to later phases, unmasked by fixing the 401s rather than caused by it:** `DELEG-01`,
+`DR-42501`, `AUDIT-42703`, `PIN-2390-01` → Phase 93; `SEED-DELEG-01` → Phase 102.
+`GATE-STANDARD.md` gained **C9a** (cross-plan sweeps must read `<files>` blocks, not only
+`files_modified`).
 Roadmap: 13 phases, **92-104**. **All v1 requirements mapped, 0 orphaned, 0 duplicated.**
 The requirement **count is not restated here** — it lives in one place with its derivation command:
 the traceability table at the foot of `.planning/REQUIREMENTS.md` (`RULING-P92-19`).
