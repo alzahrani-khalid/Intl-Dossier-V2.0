@@ -68,6 +68,16 @@ verified sound across six lanes).
 - [ ] **NAV-02**: The `/settings/*` subtree renders navigation. The prefix check that hides the global sidebar and the exact-match check that renders the settings nav no longer disagree.
 - [ ] **NAV-03**: The engagement Digests tab appears in the tab bar; list pages expose a create affordance (7 of 8 currently have none).
 - [ ] **NAV-04**: Every route with no inbound link is resolved — 9 admin routes plus `/monitoring` are each given a nav entry or deleted, with the decision recorded.
+  > **Unreachable _module_ filed here during Phase 92 planning, 2026-08-15** (`RULING-P92-06`), since
+  > this is the requirement that resolves things nothing can reach. `frontend/src/services/auth.ts`
+  > is imported by **zero files** (`grep -rn "services/auth'" frontend/src | grep -v '^frontend/src/services/auth.ts'`).
+  > It is not merely dead: at `:624` it persists a **second zustand store under the same
+  > `'auth-storage'` key** as the live `store/authStore.ts:253`, and it registers its own
+  > module-level `onAuthStateChange` at `:635`. Both are inert only because nothing imports it —
+  > any future import silently gives the app two stores fighting over one persist key. Resolve it
+  > the way this requirement resolves a dead route: delete it, or give it an owner and record why.
+  > **Phase 92 deliberately did not touch it** — it verified the module is dead (which is why
+  > AUTH-03 fixes `authStore` instead) and filed it rather than widening its own scope.
 
 ### COPY — The UI speaks to users, not to developers
 
@@ -83,6 +93,26 @@ verified sound across six lanes).
 - [ ] **AR-02**: Dates and times localize in Arabic — no English weekday/month names inside Arabic sentences. (Latin digits remain the deliberate project policy.)
 - [ ] **AR-03**: No English string renders under `dir="rtl"` on an otherwise-Arabic screen — including the 404 page, the intake queue header and its primary button, the position read-only banner, and search suggestion chips.
 - [ ] **AR-04**: Dot-form `t()` keys with English defaults are eliminated in favour of colon namespaces, so a missing Arabic key cannot silently render English in both languages.
+  > **Population sized during Phase 92 planning, 2026-08-15** (`RULING-P92-06`). The second argument
+  > is the masking mechanism: when a key is missing, `t('some.key', 'English default')` renders
+  > plausible English rather than leaking a raw key, so nothing looks broken and the gap is invisible
+  > in both locales. Derive the population — **do not quote a stale count**, it moves as the codebase
+  > moves, and the figure varies with the regex (two independent derivations gave 1683 and 1716):
+  >
+  > ```bash
+  > # call sites passing an English default
+  > grep -rhoE "t\(\s*'[^']+'\s*,\s*'[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l
+  > # files containing them
+  > grep -rlE "t\(\s*'[^']+'\s*,\s*'[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l
+  > # dot-form vs colon-form key usage (the repo is overwhelmingly dot-form)
+  > grep -rhoE "t\(\s*'[^']*\.[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l
+  > grep -rhoE "t\(\s*'[^']*:[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l
+  > ```
+  >
+  > **Known instance already fixed:** Phase 92 repoints `navigation.logout` → `common.logout` in
+  > `nav-user.tsx:94` (AUTH-01's sign-out label, which rendered English under `dir="rtl"`). That one
+  > fix deliberately uses the **dot** form to match the surrounding code; Phase 99 sweeps it along
+  > with the rest and should not treat it as an exception.
 
 ### DATA — Staging data is plausible, not test residue
 

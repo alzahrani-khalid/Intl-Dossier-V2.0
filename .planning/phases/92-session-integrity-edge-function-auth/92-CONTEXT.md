@@ -157,6 +157,12 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
   `authStore`**, which covers deliberate logout (AUTH-01) and forced invalidation (AUTH-03) with the
   same edit. `router` is exported at `router/index.tsx:62`. Touch the three no-ops only to confirm
   they are no-ops; do not refactor them.
+  **Hard constraints (`RULING-P92-06` amended acceptance condition 5′):** a task that edits
+  `services/auth.ts`'s handler is a **REJECT** — that module is dead, so such a task ships nothing
+  while looking thorough. A task that adds a sixth subscription is a **REJECT**. The five-site
+  classification (live / no-op / dead) must still appear in the plan, because it is the _evidence_
+  for why exactly one site is touched — without it, "we only changed one line" is indistinguishable
+  from an incomplete fix.
 - **D-23:** **Mounting `NavUser` is not a one-line import — it has an unsatisfied provider
   dependency.** `nav-user.tsx:15,27` imports `useSidebar` from `@/components/ui/sidebar` and reads
   `isMobile`, but **`SidebarProvider` is rendered nowhere in the app** (verified repo-wide; the live
@@ -172,6 +178,15 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
   correct path. **Repoint the key rather than adding new ones**; if the spec's "Sign out" wording is
   kept, change the `en` value at `common.logout` and leave `ar` untouched. Adding a parallel key would
   leave two logout strings to drift apart.
+  **Use the DOT form** (`t('common.logout')`), not colon — this codebase is overwhelmingly dot-form,
+  the dead `Header.tsx:101` already used that exact path, and matching the surrounding code is the
+  smaller change. Phase 99 converts the whole codebase and will sweep this line with the rest; it is
+  not an exception to be preserved.
+  **Scope fence (`RULING-P92-06` condition 11):** this is one instance of a **class** — every
+  `t('key', 'English default')` call site, where the second argument masks a missing key by rendering
+  plausible English in both locales instead of leaking a raw key. **Phase 92 repoints this one key
+  and nothing else.** The class is filed into `REQUIREMENTS.md AR-04` with its derivation command
+  (Phase 99, whose criterion 4 is exactly this). Do not sweep it here.
 - **D-18:** **The route guard already works — do not touch it.** The source lane is more precise than
   its restatement: `sweeper.md` F7 records that after a programmatic `signOut()` on `/dashboard` the
   open tab stayed put for 3s and decayed, **but a _fresh_ navigation to `/dashboard` correctly bounced
