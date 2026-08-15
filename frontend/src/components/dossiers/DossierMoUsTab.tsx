@@ -119,9 +119,7 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
         role="alert"
       >
         <p className="text-danger dark:text-danger">{t('mous.error_loading')}</p>
-        <p className="mt-2 text-sm text-danger dark:text-danger">
-          {error instanceof Error ? error.message : t('mous.error_generic')}
-        </p>
+        <p className="mt-2 text-sm text-danger dark:text-danger">{t('mous.error_generic')}</p>
       </div>
     )
   }

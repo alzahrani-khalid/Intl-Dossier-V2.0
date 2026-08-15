@@ -307,7 +307,7 @@ export function ForumsPage() {
             </div>
           ) : error ? (
             <div className="px-5 py-8 text-center text-sm text-destructive">
-              {error.message || 'Error loading forums'}
+              {t('common:errors.queryFailedInline')}
             </div>
           ) : forums && forums.length > 0 ? (
             <AdvancedDataTable

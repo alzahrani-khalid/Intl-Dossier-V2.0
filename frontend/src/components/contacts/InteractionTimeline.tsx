@@ -287,9 +287,7 @@ export function InteractionTimeline({
   if (error) {
     return (
       <div className={cn('p-4 text-center', className)}>
-        <p className="text-sm text-destructive">
-          {t('contactDirectory.interactions.error')}: {error.message}
-        </p>
+        <p className="text-sm text-destructive">{t('contactDirectory.interactions.error')}</p>
       </div>
     )
   }

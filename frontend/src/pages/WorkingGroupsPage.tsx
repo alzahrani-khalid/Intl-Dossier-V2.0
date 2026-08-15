@@ -126,7 +126,7 @@ export default function WorkingGroupsPage() {
   })
 
   // Queries
-  const { data, isLoading, isError, error } = useWorkingGroups({
+  const { data, isLoading, isError } = useWorkingGroups({
     ...filters,
     search: searchTerm || undefined,
   })
@@ -240,7 +240,9 @@ export default function WorkingGroupsPage() {
         <AlertCircle className="size-12 text-destructive" />
         <div className="text-center">
           <h2 className="text-xl font-semibold">{t('errors.loadFailed')}</h2>
-          <p className="text-sm text-muted-foreground">{error?.message}</p>
+          <p className="text-sm text-muted-foreground">
+            {t('common:errors.queryFailed.description')}
+          </p>
         </div>
       </div>
     )

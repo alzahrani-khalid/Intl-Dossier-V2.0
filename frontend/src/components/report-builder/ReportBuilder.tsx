@@ -411,7 +411,7 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
             configuration={configuration}
             previewData={previewMutation.data || null}
             isLoading={previewMutation.isPending}
-            error={previewMutation.error?.message || null}
+            error={previewMutation.isError ? t('common:errors.queryFailed.description') : null}
             onRefresh={handlePreview}
           />
         </TabsContent>

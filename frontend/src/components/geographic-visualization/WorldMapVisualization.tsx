@@ -124,7 +124,6 @@ export function WorldMapVisualization({
           <div className="text-center text-muted-foreground">
             <Globe className="h-12 w-12 mx-auto mb-4 opacity-50" />
             <p>{t('error.loadFailed', 'Failed to load map data')}</p>
-            <p className="text-sm mt-2">{error.message}</p>
           </div>
         </CardContent>
       </Card>

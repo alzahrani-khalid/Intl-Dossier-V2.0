@@ -271,9 +271,7 @@ export function VersionComparison({
       {error && (
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
-          <AlertDescription>
-            {error instanceof Error ? error.message : t('positions:versionComparison.error')}
-          </AlertDescription>
+          <AlertDescription>{t('positions:versionComparison.error')}</AlertDescription>
         </Alert>
       )}
 

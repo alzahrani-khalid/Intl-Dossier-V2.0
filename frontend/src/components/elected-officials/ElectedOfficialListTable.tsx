@@ -144,7 +144,9 @@ export function ElectedOfficialListTable({
         <h3 className="text-base sm:text-lg font-semibold text-destructive mb-2">
           {t('list.error')}
         </h3>
-        <p className="text-sm sm:text-base text-destructive/90">{error.message}</p>
+        <p className="text-sm sm:text-base text-destructive/90">
+          {t('common:errors.queryFailed.description')}
+        </p>
       </div>
     )
   }

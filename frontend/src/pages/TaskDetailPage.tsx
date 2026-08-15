@@ -64,7 +64,7 @@ export function TaskDetailPage() {
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
           <AlertDescription>
-            {error.message || t('failed_to_load_task', 'Failed to load task. Please try again.')}
+            {t('failed_to_load_task', 'Failed to load task. Please try again.')}
           </AlertDescription>
         </Alert>
         <Button variant="outline" onClick={() => navigate({ to: '/tasks' })} className="mt-4">

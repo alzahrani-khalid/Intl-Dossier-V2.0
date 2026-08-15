@@ -76,7 +76,6 @@ function ScenarioSandboxPage() {
     data: scenariosData,
     isLoading,
     isError,
-    error,
     refetch,
   } = useScenarios({
     limit: 50,
@@ -315,7 +314,7 @@ function ScenarioSandboxPage() {
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>{t('errors.loadFailed')}</AlertTitle>
               <AlertDescription>
-                {error?.message || 'Unknown error'}
+                {t('common:errors.queryFailed.description')}
                 <Button variant="outline" size="sm" className="ms-4" onClick={() => refetch()}>
                   <RefreshCw className="h-4 w-4 me-2" />
                   Retry

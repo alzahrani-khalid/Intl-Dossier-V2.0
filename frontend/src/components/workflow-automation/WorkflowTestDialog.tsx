@@ -192,9 +192,7 @@ export function WorkflowTestDialog({ rule, open, onOpenChange }: WorkflowTestDia
           {/* Error */}
           {testMutation.isError && (
             <div className="p-4 bg-destructive/10 rounded-lg">
-              <p className="text-sm text-destructive">
-                {testMutation.error instanceof Error ? testMutation.error.message : 'Test failed'}
-              </p>
+              <p className="text-sm text-destructive">{t('common:errors.queryFailedInline')}</p>
             </div>
           )}
         </div>

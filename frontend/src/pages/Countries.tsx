@@ -28,7 +28,7 @@ export default function Countries() {
   const [statusFilter, setStatusFilter] = useState<string>('all')
 
   // Query countries from unified dossiers table
-  const { data, isLoading, isError, error } = useDossiersByType('country', 1, 1000)
+  const { data, isLoading, isError } = useDossiersByType('country', 1, 1000)
 
   const filteredCountries = useMemo(() => {
     if (!data?.data) return []
@@ -87,8 +87,7 @@ export default function Countries() {
             {t('countries.error.title', 'Failed to load countries')}
           </h2>
           <p className="text-sm text-muted-foreground">
-            {error?.message ||
-              t('countries.error.message', 'An error occurred while fetching data')}
+            {t('common:errors.queryFailed.description')}
           </p>
         </div>
       </div>

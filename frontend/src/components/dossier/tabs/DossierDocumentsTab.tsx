@@ -28,7 +28,7 @@ export function DossierDocumentsTab({
   const { t, i18n } = useTranslation('dossier-overview')
   const isRTL = i18n.language === 'ar'
 
-  const { data, isLoading, isError, error, refetch } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['dossier-tab', 'documents', dossierId],
     queryFn: () => fetchDossierOverview({ dossier_id: dossierId, include_sections: ['documents'] }),
     staleTime: STALE_TIME.NORMAL,
@@ -37,9 +37,7 @@ export function DossierDocumentsTab({
   if (isError) {
     return (
       <div className="p-4 sm:p-6 text-center" dir={isRTL ? 'rtl' : 'ltr'}>
-        <p className="text-muted-foreground mb-4">
-          {error instanceof Error && error.message !== '' ? error.message : t('error.description')}
-        </p>
+        <p className="text-muted-foreground mb-4">{t('error.description')}</p>
         <Button variant="outline" onClick={() => refetch()}>
           {t('actions.retry')}
         </Button>

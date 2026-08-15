@@ -493,7 +493,6 @@ export function EnhancedActivityFeed({
               <p className="text-sm text-muted-foreground mb-4">
                 {isRTL ? 'حدث خطأ أثناء تحميل النشاطات' : 'Failed to load activities'}
               </p>
-              <p className="text-xs text-destructive mb-4">{error.message}</p>
               <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
                 {isRTL ? 'إعادة المحاولة' : 'Try again'}
               </Button>

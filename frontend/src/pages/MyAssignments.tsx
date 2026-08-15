@@ -43,9 +43,7 @@ export function MyAssignmentsPage() {
       <div className="container mx-auto p-6">
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
-          <AlertDescription>
-            {error.message || 'Failed to load assignments. Edge Functions may not be deployed yet.'}
-          </AlertDescription>
+          <AlertDescription>{t('common:errors.queryFailed.title')}</AlertDescription>
         </Alert>
       </div>
     )

@@ -9,6 +9,7 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
+import { ApiError } from '@/lib/api-client'
 import { usePosition } from '../../../hooks/usePosition'
 import { usePositionAnalytics } from '../../../hooks/usePositionAnalytics'
 import { PositionAnalyticsCard } from '../../../components/positions/PositionAnalyticsCard'
@@ -81,7 +82,8 @@ function PositionDetailPage() {
               {t('common:error')}
             </CardTitle>
             <CardDescription>
-              {error instanceof Error && error.message.includes('404')
+              {/* Discriminate on the transport status, not on the rejection text (D-08) */}
+              {error instanceof ApiError && error.status === 404
                 ? t('positions:detail.not_found')
                 : t('positions:detail.error_loading')}
             </CardDescription>

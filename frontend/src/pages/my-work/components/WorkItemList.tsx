@@ -34,7 +34,6 @@ export function WorkItemList({
   items,
   isLoading,
   isError,
-  error,
   hasMore,
   onLoadMore,
   isFetchingMore,
@@ -42,7 +41,7 @@ export function WorkItemList({
 }: WorkItemListProps) {
   const { t } = useTranslation('my-work')
   const { isRTL } = useDirection()
-// Sync info tracking
+  // Sync info tracking
   const { lastSyncTime, itemsSynced, updateSyncInfo } = useLastSyncInfo('my-work-list')
 
   // Pull-to-refresh hook
@@ -105,7 +104,7 @@ export function WorkItemList({
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
         <AlertDescription className="flex items-center justify-between">
-          <span>{error?.message || t('error.loading', 'Failed to load work items')}</span>
+          <span>{t('error.loading', 'Failed to load work items')}</span>
           <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
             <RefreshCcw className="h-4 w-4 me-2" />
             {t('error.retry', 'Retry')}
