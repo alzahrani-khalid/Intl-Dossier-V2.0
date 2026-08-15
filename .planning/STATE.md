@@ -36,8 +36,9 @@ Audit of record: `.planning/audits/live-audit-2026-08-15/INDEX.md` (re-runnable 
 `probe.mjs` + `00-BRIEF.md`) — **Phase 103 re-runs it to prove the findings closed rather than
 assumed.**
 Terminal gate: **Phase 104 (LIVE-01/02/03) is hardware-gated** on an undecided on-prem GPU host
-and depends on no other phase. Recorded recommendation: ship v10.0 at 55/58 and carry LIVE to
-v11.0 if the host is still undecided when Phase 103 closes.
+and depends on no other phase. Recorded recommendation: ship v10.0 with **LIVE-01/02/03 carried to
+v11.0** — every v1 requirement except those three — if the host is still undecided when Phase 103
+closes.
 
 Predecessor: v9.0 closed PARTIAL at 3/6 phases on 2026-08-15, merged via PR #98 (`e990ed84`),
 tagged `v9.0`. Its open items are the CARRY-\* requirements below.
