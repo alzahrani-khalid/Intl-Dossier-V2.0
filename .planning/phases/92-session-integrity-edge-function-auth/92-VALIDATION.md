@@ -3,7 +3,7 @@ phase: 92
 slug: session-integrity-edge-function-auth
 status: filled
 nyquist_compliant: true
-wave_0_complete: true
+wave_0_complete: false
 created: 2026-08-15
 ---
 
