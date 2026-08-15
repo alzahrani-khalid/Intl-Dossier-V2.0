@@ -252,7 +252,7 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 
 **Scope input:** `.planning/audits/live-audit-2026-08-15/INDEX.md` — a six-lane live-app audit (190 route/tab URLs, EN + AR, 370 screenshots, 144 findings, 19 ship-blockers), plus the v9.0 carry-forward table.
 
-**Coverage:** 58/58 v1 requirements mapped (AUTH-01..05, TRUST-01..04, WRITE-01..06, DEAD-01..08, COUNT-01..03, NAV-01..04, COPY-01..05, AR-01..04, DATA-01..02, DBSEC-01..05, CARRY-01..09, LIVE-01..03).
+**Coverage:** every v1 requirement is mapped to exactly one phase — AUTH, TRUST, WRITE, DEAD, COUNT, NAV, COPY, AR, DATA, DBSEC, CLIENTSEC, CARRY, LIVE. **The count is not restated here**; derive it from the traceability table at the foot of `.planning/REQUIREMENTS.md`, which carries the command (`RULING-P92-19`).
 
 **Sequencing rationale:** Phase 92 first because edge-function JWT rejection (AUTH-02) is the root cause behind several surfaces that look empty, and because you cannot verify anything as a second user without a working logout. Phase 93 next because TRUST-01 — repositories no longer swallowing rejections — is the seam every later error state renders through. The operator-only credential rotation (CARRY-01) is pulled forward into Phase 92 rather than sitting in the CI phase it gates, so it has eleven phases of slack instead of blocking the milestone tail the way it blocked v9.0. Copy and Arabic follow the surface work because you cannot fix the wording of a page that does not render. Database security lands after the frontend is correct so a query regression is attributable to the view change. Test suites go green only once the app under test is correct.
 
@@ -490,7 +490,7 @@ Plans:
 
 > **GATE — read before planning this phase.** These three requirements have no code blocker; they are blocked on hardware that does not exist yet. They blocked v9.0's Phase 91 for 40 days without a single plan being written. `/gsd:plan-phase 104` must not run until an operator has named a target GPU host with a date.
 >
-> **Recommendation: do not hold v10.0 for this.** If the host is still undecided when Phase 103 closes, ship v10.0 at 55/58 and carry LIVE-01/02/03 to v11.0. Nothing else in this milestone depends on them, and every prior milestone that waited on this hardware paid for the wait with a partial close.
+> **Recommendation: do not hold v10.0 for this.** If the host is still undecided when Phase 103 closes, ship v10.0 with LIVE-01/02/03 carried to v11.0 — every v1 requirement except those three. Nothing else in this milestone depends on them, and every prior milestone that waited on this hardware paid for the wait with a partial close.
 
 ## Progress
 
@@ -534,4 +534,4 @@ Plans:
 
 ---
 
-_Roadmap last updated: 2026-08-15 — v10.0 Trust & Correctness roadmapped: 13 phases (92-104), 58/58 v1 requirements mapped, scoped from the 2026-08-15 live-app audit (144 findings, 19 ship-blockers) plus the v9.0 carry-forward table._
+_Roadmap last updated: 2026-08-15 — v10.0 Trust & Correctness roadmapped: 13 phases (92-104), all v1 requirements mapped (count derived in `REQUIREMENTS.md`), scoped from the 2026-08-15 live-app audit (144 findings, 19 ship-blockers) plus the v9.0 carry-forward table._

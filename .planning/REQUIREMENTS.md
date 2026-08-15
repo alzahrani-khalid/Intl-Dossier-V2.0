@@ -258,7 +258,22 @@ verified sound across six lanes).
 
 ## Traceability
 
-Every v1 requirement maps to exactly one phase. 58/58 mapped, 0 orphaned, 0 duplicated.
+Every v1 requirement maps to exactly one phase. **This table is the single source of truth for the
+requirement count — derive it, do not restate it elsewhere.**
+
+```bash
+# total v1 requirements (both derivations agree)
+grep -cE '^- \[[ x]\] \*\*[A-Z]+-[0-9]+\*\*' .planning/REQUIREMENTS.md   # requirement bullets
+grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # traceability rows
+```
+
+0 orphaned, 0 duplicated.
+
+> **Why a command and not a number** (`RULING-P92-19`, 2026-08-15): the count was previously written
+> out in three live documents and went stale the moment `CLIENTSEC-01` was added — it read 58 when the
+> file held 59. This is the third instance of that class in one session: `ROADMAP.md:285`'s "133",
+> `AR-04`'s 1683-vs-1716, and this. Copies of a number are the defect; the fix is one place plus a
+> derivation, not three careful edits.
 
 <!-- prettier-ignore -->
 | Requirement | Phase | Status |
@@ -323,4 +338,4 @@ Every v1 requirement maps to exactly one phase. 58/58 mapped, 0 orphaned, 0 dupl
 | LIVE-02 | Phase 104 — v7.0 Live Verification (HARDWARE-GATED) | Pending |
 | LIVE-03 | Phase 104 — v7.0 Live Verification (HARDWARE-GATED) | Pending |
 
-> **LIVE-01/02/03 (Phase 104) are hardware-gated** on an on-prem GPU host that has not been chosen. Phase 104 is terminal and depends on no other phase; the recommendation recorded in the roadmap is to ship v10.0 at 55/58 and carry LIVE to v11.0 if the host is still undecided when Phase 103 closes.
+> **LIVE-01/02/03 (Phase 104) are hardware-gated** on an on-prem GPU host that has not been chosen. Phase 104 is terminal and depends on no other phase; the recommendation recorded in the roadmap is to ship v10.0 with **LIVE-01/02/03 carried to v11.0** — i.e. every v1 requirement except those three — if the host is still undecided when Phase 103 closes.

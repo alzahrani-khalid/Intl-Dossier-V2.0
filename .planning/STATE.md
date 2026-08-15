@@ -27,9 +27,9 @@ See: .planning/PROJECT.md (updated 2026-08-15 — v9.0 closed PARTIAL; v10.0 Tru
 Milestone: **v10.0 — Trust & Correctness** (roadmapped 2026-08-15).
 Phase: 92 (session-integrity-edge-auth) — NOT STARTED. Next command: `/gsd:plan-phase 92`.
 Plan: none yet.
-Roadmap: 13 phases, **92-104**, **58/58 v1 requirements mapped, 0 orphaned, 0 duplicated**
-(the requirements file holds 58 REQ-IDs across 12 groups, not the 54 first counted — CARRY is
-9 and DEAD is 8). Traceability table is at the foot of `.planning/REQUIREMENTS.md`.
+Roadmap: 13 phases, **92-104**. **All v1 requirements mapped, 0 orphaned, 0 duplicated.**
+The requirement **count is not restated here** — it lives in one place with its derivation command:
+the traceability table at the foot of `.planning/REQUIREMENTS.md` (`RULING-P92-19`).
 Scope: the 2026-08-15 live-app audit — 144 findings across 190 routes, 19 ship-blockers —
 plus v9.0's carry-forward.
 Audit of record: `.planning/audits/live-audit-2026-08-15/INDEX.md` (re-runnable via its
