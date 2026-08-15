@@ -676,33 +676,13 @@ export function useDossierCounts(
 ) {
   return useQuery({
     queryKey: dossierCountsKeys.all,
+    // TRUST-01 / D-01: the rejection propagates. `getDossierCountsByType` already throws a
+    // `DossierAPIError` when PostgREST reports one, and every consumer reads this through
+    // TanStack Query, whose `isError` only fires on a REJECTED promise. Catching here and
+    // returning all-zero counts made a failed request indistinguishable from an empty database.
     queryFn: async () => {
-      try {
-        const counts = await getDossierCountsByType()
-        return counts as Record<TypeGuardDossierType, DossierTypeCount>
-      } catch (error) {
-        console.warn('Failed to fetch dossier counts:', error)
-        // Return empty counts on error
-        const types: TypeGuardDossierType[] = [
-          'country',
-          'organization',
-          'person',
-          'engagement',
-          'forum',
-          'working_group',
-        ]
-        const emptyCounts: Record<TypeGuardDossierType, DossierTypeCount> = {} as any
-        types.forEach((type) => {
-          emptyCounts[type] = {
-            type: type as DossierType,
-            total: 0,
-            active: 0,
-            inactive: 0,
-            archived: 0,
-          }
-        })
-        return emptyCounts
-      }
+      const counts = await getDossierCountsByType()
+      return counts as Record<TypeGuardDossierType, DossierTypeCount>
     },
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     ...options,
@@ -731,14 +711,11 @@ export function useDossierCountByType(
 ) {
   return useQuery({
     queryKey: dossierCountsKeys.byType(type),
+    // TRUST-01 / D-01: same rule as `useDossierCounts` above — `getDossiersByType` throws, so
+    // returning 0 on a rejection asserted a fact the app does not have.
     queryFn: async () => {
-      try {
-        const response = await getDossiersByType(type, 1, 1)
-        return response.pagination?.total_count || 0
-      } catch (error) {
-        console.warn(`Failed to fetch count for ${type}:`, error)
-        return 0
-      }
+      const response = await getDossiersByType(type, 1, 1)
+      return response.pagination?.total_count || 0
     },
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     ...options,

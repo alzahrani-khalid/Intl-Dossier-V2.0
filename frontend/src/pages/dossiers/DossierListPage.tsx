@@ -29,6 +29,7 @@ import {
 import { SavedViewsManager } from '@/components/view-preferences/SavedViewsManager'
 import { SampleDataBanner, SampleDataEmptyState } from '@/components/sample-data'
 import { SearchEmptyState } from '@/components/empty-states'
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import { ActiveFiltersBar, type FilterChipConfig } from '@/components/active-filters'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -238,10 +239,19 @@ export function DossierListPage() {
   }, [viewPreferences])
 
   // Fetch dossiers with filters
-  const { data, isLoading, isError, error, refetch } = useDossiers(filters)
+  const { data, isLoading, isError, refetch } = useDossiers(filters)
 
-  // Fetch dossier counts for header cards
-  const { data: counts, isLoading: countsLoading, refetch: refetchCounts } = useDossierCounts()
+  // Fetch dossier counts for header cards.
+  // TRUST-01 / D-21: `isError` is read here on purpose. The counts hook no longer swallows its
+  // rejection into all-zero counts, and without this branch the page would render the identical
+  // lie one layer up — seven confident zero-cards from `typeStatsMap?.[type] ?? { count: 0 }`.
+  const {
+    data: counts,
+    isLoading: countsLoading,
+    isError: countsError,
+    isFetching: countsFetching,
+    refetch: refetchCounts,
+  } = useDossierCounts()
 
   // Sync info tracking for pull-to-refresh
   const { lastSyncTime, itemsSynced, updateSyncInfo } = useLastSyncInfo('dossier-list')
@@ -532,6 +542,40 @@ export function DossierListPage() {
               <DossierTypeStatsCardSkeleton key={n} />
             ))}
           </div>
+        ) : countsError ? (
+          /* TRUST-01: a failed count is UNKNOWN, not zero. Every figure reads an em dash labelled
+             `common:errors.countUnavailable`, and the owning region carries variant B of the
+             shared error state. The stats cards are not rendered at all — a card that can only
+             show a number has no honest render for a request that failed. */
+          <div className="space-y-4">
+            <QueryErrorState
+              variant="inline"
+              onRetry={() => void refetchCounts()}
+              isRetrying={countsFetching}
+            />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-1.5 sm:gap-3 md:gap-4">
+              {DOSSIER_TYPES.map((type) => (
+                <div
+                  key={type}
+                  className={cn(
+                    'flex flex-col items-center justify-center gap-1 p-3',
+                    'rounded-[var(--radius)] border border-line bg-surface',
+                  )}
+                >
+                  <span className="text-center text-[10px] font-medium text-ink-mute sm:text-xs">
+                    {t(`type.${type}`)}
+                  </span>
+                  <span
+                    data-testid="dossier-count-unavailable"
+                    aria-label={t('common:errors.countUnavailable')}
+                    className="text-sm font-bold text-ink-mute sm:text-lg"
+                  >
+                    —
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-1.5 sm:gap-3 md:gap-4">
             {DOSSIER_TYPES.map((type) => {
@@ -813,9 +857,10 @@ export function DossierListPage() {
           >
             <AlertCircle className="h-5 w-5" />
             <AlertTitle className="text-base font-semibold">{t('list.errorTitle')}</AlertTitle>
-            <AlertDescription className="text-sm">
-              {error?.message || t('list.errorMessage')}
-            </AlertDescription>
+            {/* D-08 / criterion 5: the server-originated message operand is GONE — i18n copy only.
+                A transport or PostgREST string (SQL text, error codes, stack shapes) is internal
+                and never reaches a user; diagnostics belong in the console, not the DOM. */}
+            <AlertDescription className="text-sm">{t('list.errorMessage')}</AlertDescription>
           </Alert>
         )}
 
