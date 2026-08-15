@@ -240,3 +240,141 @@ $ git status --porcelain -- <both source files>   (from repo root) → empty
 
 _Phase: 93-failure-visibility_
 _Completed: 2026-08-15_
+
+---
+
+## ADDENDUM — RULING-P93-04 Decision 1
+
+**Scope widened by ruling to `frontend/tests/e2e/analytics-dashboard.spec.ts` only.** The three
+tests that this plan's change correctly invalidated now assert the state the page actually renders.
+Commit **`3d0ddc73`** (`test(93-06): invert the analytics happy-path oracle to the honest error state`).
+
+### BEFORE — stated, then measured
+
+Expected before running: **5 passed, 4 failed**, matching the BLOCKED table above. Command, verbatim
+from the ruling, at the unmodified spec:
+
+```
+$ cd frontend && pnpm exec playwright test tests/e2e/analytics-dashboard.spec.ts --no-deps --reporter=line
+
+  2 failed
+    [chromium] › tests/e2e/analytics-dashboard.spec.ts:86:3 › Analytics Dashboard › should navigate between dashboard tabs
+    [chromium] › tests/e2e/analytics-dashboard.spec.ts:153:3 › Analytics Dashboard › should have refresh button that triggers data reload
+  7 passed (33.0s)
+```
+
+Second run, same tree: `2 failed / 7 passed (32.7s)`. **This is not the number I predicted, so it is
+reported as the finding rather than tuned away.**
+
+### FINDING — two of the three were not red, they were VACUOUS
+
+`:33` and `:56` pass at HEAD. They do not pass because the page is correct; they pass because each
+asserted a **disjunction with the loading skeleton** — `title-visible OR skeleton-visible`, and
+`combobox-visible OR skeleton-visible` — inside a `.toPass` poll. The skeleton alone satisfies both.
+
+Discriminating measurement (throwaway Playwright probe against the same server, sampling the DOM as
+`/analytics` settles):
+
+```
+t=domcontentloaded h1= 0 skeleton= 0  combobox= 0 tablist= 0 errorState= 0
+t=+300             h1= 0 skeleton= 64 combobox= 0 tablist= 0 errorState= 0
+t=+700             h1= 0 skeleton= 0  combobox= 0 tablist= 0 errorState= 1
+t=+1000            h1= 0 skeleton= 0  combobox= 0 tablist= 0 errorState= 1
+t=+3000            h1= 0 skeleton= 0  combobox= 0 tablist= 0 errorState= 1
+t=+8000            h1= 0 skeleton= 0  combobox= 0 tablist= 0 errorState= 1
+```
+
+The settled state carries **zero** h1, combobox and tablist and **one** error state. The skeleton
+exists for a ~300–700ms window. Whether `:33`/`:56` go green is decided by which side of that window
+the first poll lands on — which is why my earlier reading (cold server, fresh port) recorded them red
+and today's (warm server) records them green. Both readings are real; the tests are races.
+
+So the corrected characterisation of what this plan did to the file:
+
+| test                                         | earlier claim | actual state at HEAD                                    |
+| -------------------------------------------- | ------------- | ------------------------------------------------------- |
+| `:33` should display … with summary cards    | red           | **vacuously green** — satisfied by the loading skeleton |
+| `:56` should allow time range selection      | red           | **vacuously green** — same disjunction                  |
+| `:86` should navigate between dashboard tabs | red           | **red** — `[role="tablist"]` never appears; correct     |
+
+Only `:86` was deterministically red. That does not change the disposition: by the ruling's own
+standard an assertion that passes whether or not the page is correct is worse than a red one, so all
+three needed the same inversion, and the skeleton disjunct is gone from all three.
+
+### The three tests changed
+
+Each now waits for the **settled** error state and asserts it **positively**, then asserts its own
+original subject **negatively**. No `.or()`, no removed expectation, no `test.skip`.
+
+1. `should render the shared error state instead of summary cards` (was `should display analytics
+dashboard with summary cards`) — `query-error-state` visible, `role="alert"`, retry button inside
+   the alert region, and `heading level 1` count **0**.
+2. `should not offer time range selection while the query is failing` (was `should allow time range
+selection`) — error state visible, then `[role="combobox"]` count **0**.
+3. `should not render dashboard tabs while the query is failing` (was `should navigate between
+dashboard tabs`) — error state visible, then `[role="tablist"]` count **0**.
+
+Titles were renamed as well as inverted, per the 93-02 precedent: a test titled "should allow time
+range selection" that asserts the selector is absent is the same class of lie this phase exists to
+kill.
+
+A 27-line block comment above the three records **why** they inverted — TRUST-01, plan 93-06, the
+propagating 404, and the vacuity finding above — and names **Phase 96 (DEAD-05)** as the flip-back
+point with the exact assertions to restore. It also points at `tests/e2e/93-analytics-error.spec.ts`
+as the CDP-forced oracle that survives Phase 96.
+
+### AFTER — stated, then measured
+
+Expected after the fix: **8 passed, 1 failed**, the 1 being the refresh test.
+
+```
+$ cd frontend && pnpm exec playwright test tests/e2e/analytics-dashboard.spec.ts --no-deps --reporter=line
+
+  1 failed
+    [chromium] › tests/e2e/analytics-dashboard.spec.ts:151:3 › Analytics Dashboard › should have refresh button that triggers data reload
+  8 passed (32.8s)
+```
+
+Re-run **after** the commit, because the pre-commit hook runs `eslint --fix` + `prettier --write` and
+a green measured before that hook is a green on a different file. Content pinned:
+`git show 3d0ddc73:frontend/tests/e2e/analytics-dashboard.spec.ts | shasum -a 256` ==
+`shasum -a 256` of the worktree file == `1b20c56c91804de1295444d7099121cd8b9b78a7…`; re-run at that
+sha → **`1 failed / 8 passed (32.7s)`**. `pnpm exec eslint tests/e2e/analytics-dashboard.spec.ts` →
+exit 0.
+
+**Determinism check** — given that I had just proved two of these tests were races, "it passed once"
+is not evidence. `--repeat-each=3` (27 tests): **`24 passed (47.0s)`**, and the failure summary lists
+`:151` three times and nothing else. The three inverted tests are 3/3, on the settled state.
+
+### `:153` was left exactly as it is
+
+`should have refresh button that triggers data reload` is **unchanged, byte-identical, and still
+failing.** `git diff -- tests/e2e/analytics-dashboard.spec.ts` filtered for that test's lines returns
+nothing; its line number moved `153 → 151` only because the header comment above it is shorter than
+the block it replaced.
+
+Why it was left: it **failed in both directions** of the original measurement — with the swallow
+present and with it deleted — so it is not caused by this plan and repairing it here would fold an
+unrelated fix into a scoped ruling. It is filed as **`E2ESTALE-01`, owner Phase 101**, with this
+plan's measurement as its evidence. Its failure is unrelated to the error state: it clicks
+`button:has(svg)` `.first()`, which resolves to the AppShell's `aria-label="Open navigation menu"`
+button — hidden at desktop widths (`lg:hidden`) — and times out waiting for it to become visible.
+That is a selector that was always fragile, not an analytics regression.
+
+### Files changed by this addendum's work
+
+- `frontend/tests/e2e/analytics-dashboard.spec.ts` — three tests inverted and renamed, the
+  file-header "Validates" block corrected, an `ERROR_STATE_TIMEOUT` constant with its timing
+  rationale added, and the flip-back comment. Nothing else in the file touched.
+
+No source file was modified. No `<automated>` gate text was edited. `.planning/STATE.md` and
+`ROADMAP.md` were not touched.
+
+## BLOCKED
+
+**None.**
+
+---
+
+_Addendum: RULING-P93-04 Decision 1_
+_Completed: 2026-08-16_
