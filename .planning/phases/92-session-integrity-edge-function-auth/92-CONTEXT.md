@@ -100,6 +100,33 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
 - **D-09:** Migrated functions are **deployed to staging within this phase**. `ROADMAP.md:285` is a
   live claim — "no audited route renders empty because of a 401" cannot be true of an edited-but-
   undeployed function. Editing without deploying does not satisfy the criterion.
+- **D-19:** **The 133 is not one population. Split it 3 + 130.** The source lane confirmed the bare
+  `getUser()` 401 for **exactly three** functions — `audit-logs-viewer`, `data-retention`,
+  `field-permissions` (nine observed 401s plus a direct curl) — and its own fix line reads "move
+  **these** functions to `@supabase/supabase-js@2` and `getUser(token)`, **then sweep the remaining
+  130**." The lane asserted _3 broken and 133 suspect_, never 133 broken.
+  - **The 3 are the must-fix core.** They get their own tasks and their own acceptance criteria, and
+    the nine observed 401s are the evidence they close against.
+  - **The 130 are the sweep** — version hygiene converting _suspect_ to _resolved_. Their acceptance
+    is the D-08 derivation command reaching `0`, **not** a per-function failure proof, because no
+    per-function failure was ever demonstrated for them.
+  - The operator's PARK-1 (A) decision is unchanged: (A) _is_ the sweep the lane asked for.
+- **D-20:** **Fixing the core de-risks Phase 93 and that dependency is named, not left implicit.**
+  Two of the three — `data-retention` and `field-permissions` — are exactly the surfaces Phase 93's
+  criterion 2 turns on (`/admin/field-permissions` showing the 19 rules the DB holds; the same for
+  `/admin/data-retention`). Phase 93 already declares `Depends on: Phase 92`. Phase 93's planner
+  inherits these as a **known-closed precondition** rather than re-deriving them — and, conversely,
+  Phase 93 cannot judge those two surfaces' error states until this phase's auth fix is deployed
+  (D-09). `TRUST-02` names both surfaces explicitly.
+- **D-21:** **The pin retirement fixes a nondeterminism, not only a bug** — evidence the operator did
+  not have when deciding PARK-1, and it strengthens (A). A `2.39.3` "pin" is not a lockfile: it
+  declares `@supabase/gotrue-js: ^2.60.0`, and that caret currently floats to `2.112.3`. In modern
+  gotrue, `getUser()` with no argument returns `AuthSessionMissingError` **without a network call**
+  unless `hasCustomAuthorizationHeader` is set — and that flag is passed only by supabase-js wrappers
+  **≥ 2.43.0**. So an old wrapper bundles a new auth client that it never tells about the header. Two
+  consequences the plan must encode: the 83 pinned-but-token-passing functions work today yet sit on
+  a floating caret, and **a redeploy with no edit can silently flip a function from working to
+  broken**. That is why verification is repo grep **plus** live probe, never grep alone.
 
 ### Session invalidation (AUTH-03)
 
