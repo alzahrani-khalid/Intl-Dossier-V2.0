@@ -159,22 +159,57 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
   they are no-ops; do not refactor them.
   **D-25 — the navigation must use a LAZY import, or it closes a cycle.** `92-RESEARCH.md`'s
   Pattern 1 shows a module-level `import { router } from '@/router'` inside `authStore`. That is a
-  **cycle**: `router/index.tsx:2` imports `routeTree`, `routeTree.gen` imports the routes, and both
-  `routes/_protected.tsx:4` and `routes/index.tsx:2` import `authStore` — verified 2026-08-15. This
-  repo has already shipped a production white-screen from a module cycle (the Vite `react-vendor`
-  `manualChunks` incident), so it is a live hazard, not a theoretical one. Use
-  `void import('@/router').then(({ router }) => router.navigate({ to: '/login' }))`.
-  **Where RESEARCH.md and PATTERNS.md disagree here, PATTERNS.md wins** — and the task must say so,
-  so nobody "simplifies" it back to a static import.
+  **cycle**: `router/index.tsx:2` imports `routeTree`, `routeTree.gen` imports the routes (203 of
+  them), and both `routes/_protected.tsx:4` and `routes/index.tsx:2` import `authStore` — every edge
+  verified independently twice, 2026-08-15. `authStore` does **not** import `router` today, so the
+  cycle would be **newly introduced by this phase**. This repo has already shipped a production
+  white-screen from a module cycle (the Vite `react-vendor` `manualChunks` incident), so it is a live
+  hazard. Use `void import('@/router').then(({ router }) => router.navigate({ to: '/login' }))`, and
+  make the task state _why_, because the next reader's instinct is to simplify it back.
 
-  **D-26 — an e2e sign-out test already exists and already targets this control.**
-  `tests/e2e/01-login.spec.ts:30-41` opens `getByTestId('user-menu')`, falls back to a role-regex
-  button matching `sign out|logout|تسجيل الخروج`, and asserts `toHaveURL(/\/login/)`. Therefore
-  **`data-testid="user-menu"` on the mounted `NavUser` is load-bearing for an existing test**, not
-  decoration, and belongs in the mount task's acceptance criteria. AUTH-01 needs no new spec; the
-  Wave-0 spec narrows to what the existing one does not cover — the AUTH-03 storage-invalidation
-  bounce, the `/settings` second surface, and the assertion that the session is genuinely _cleared_
-  (D-04) rather than merely navigated away from.
+  **Precedence rule when planning artifacts disagree — the artifact DERIVED FROM THE THING IN
+  QUESTION wins.** Not "PATTERNS wins": that is too broad and would discard something true.
+  - Claims about **this repo's** structure — module graph, imports, which components exist and are
+    mounted → **PATTERNS.md**.
+  - Claims about **external** behaviour — library versions, transitive deps, API semantics →
+    **RESEARCH.md**. The gotrue version-skew mechanism (D-21) came from served artifacts and no
+    codebase pattern-map could have produced it.
+  - A disagreement falling outside both their derivations is a **park**, not a coin-toss.
+
+  **D-26 — `tests/e2e/01-login.spec.ts:30` is a LIVE FAILING TEST, not existing coverage.** The
+  distinction matters. Verified: the test is **not quarantined** (the `base.skip` at `:11` is a
+  credential guard inside the _first_ describe, `:9`; the sign-out test is in a separate describe at
+  `:23` with zero skip/fixme/fail in the file); `LoginPage.signOut()` clicks a
+  `getByRole('button', { name: /sign out|logout|تسجيل الخروج|خروج/i })`; AUTH-01's whole premise is
+  that no such button exists on `/`; and `data-testid="user-menu"` does not exist anywhere in
+  `frontend/src`. So it is failing right now, unseen, on a non-required CI check this project already
+  knows is chronically red.
+  **This is worth more than a new spec.** A spec written during this phase is written to pass. This
+  one fails on its own, independently, and the fix must make it pass — a real before/after rather
+  than a self-confirming one. The plan must therefore:
+  1. **Measure the RED before the fix** — run that single spec, record the actual output. **Do not
+     assert it is red.** If it passes, AUTH-01's premise is wrong, and that is a finding.
+  2. **Capture the GREEN after**, with both outputs in the evidence.
+  3. **Re-run rather than reason about the post-fix path.** `if (await userMenu.isVisible())` is
+     false today, so the test currently skips the menu and calls `signOut()` directly. Adding
+     `data-testid="user-menu"` makes that branch true **for the first time**, so the post-fix path is
+     not the pre-fix path with one thing repaired — it is a _different_ path through the test.
+     `data-testid="user-menu"` on the mounted `NavUser` is therefore load-bearing, and belongs in the
+     mount task's acceptance criteria. AUTH-01 needs no new spec; the Wave-0 spec narrows to what this
+     one does not cover — the AUTH-03 bounce, the `/settings` surface, and D-04's assertion that the
+     session is genuinely _cleared_.
+
+  **D-27 — the sign-out LABEL is load-bearing for that spec, by luck of the key rather than by
+  design.** `signOut()` matches on the accessible name `/sign out|logout|تسجيل الخروج|خروج/i`.
+  D-24's repoint to `common.logout` yields en `"Logout"` and ar `"تسجيل الخروج"` — **both match**.
+  Write this coupling into _both_ the i18n task and the mount task: if anyone later picks "Sign out
+  of IntelDossier", "End session", or an Arabic synonym like "خروج من الحساب", this spec breaks and
+  the failure will read as an auth regression rather than a copy change.
+  **Related trap for the Wave-0 `/settings` test:** `DataPrivacySettingsSection` already renders a
+  button labelled `dataPrivacy.signOutAll` that also matches that regex. Once D-02 adds a second
+  sign-out control to `/settings`, a role+name locator pointed at that page matches **two** elements
+  and fails Playwright strict mode. The `/settings` assertion must use a testid or a scoped locator,
+  not the shared regex.
 
   **Hard constraints (`RULING-P92-06` amended acceptance condition 5′):** a task that edits
   `services/auth.ts`'s handler is a **REJECT** — that module is dead, so such a task ships nothing
