@@ -398,7 +398,54 @@ async function getEngagement(supabaseClient: any, id: string, corsHeaders: Recor
   }
 
   if (!data || !data.engagement) {
-    return errorResponse(404, 'NOT_FOUND', 'Engagement not found', 'المشاركة غير موجودة', corsHeaders);
+    // TRUST-04 / D-06a — DEGRADED vs ABSENT.
+    //
+    // `get_engagement_full` JOINs `engagement_dossiers` to `dossiers`, so a base dossier row
+    // whose 1:1 extension row is missing yields exactly the same null engagement as an id that
+    // does not exist at all. Returning 404 for both (the behaviour before this branch) makes the
+    // two states indistinguishable at the client, which collapses D-05's error/not-found/degraded
+    // distinction on this route. ONE follow-up query on the base table tells them apart.
+    //
+    // Same JWT-scoped client, so RLS still applies: a row the caller may not read resolves to no
+    // row and keeps the 404 — fail-closed, and identical to absent from the caller's view.
+    const { data: baseDossier, error: baseError } = await supabaseClient
+      .from('dossiers')
+      .select('id, name_en, name_ar, type, status')
+      .eq('id', id)
+      .eq('type', 'engagement')
+      .maybeSingle();
+
+    if (baseError) {
+      // Bilingual envelope only — never a PostgREST passthrough (T-93-24).
+      console.error('Error resolving base dossier for degraded engagement:', baseError);
+      return errorResponse(
+        500,
+        'INTERNAL_ERROR',
+        'Failed to load engagement',
+        'فشل في تحميل المشاركة',
+        corsHeaders
+      );
+    }
+
+    if (!baseDossier) {
+      // Truly absent id — the criterion-3 seam. Byte-identical to the previous behaviour.
+      return errorResponse(404, 'NOT_FOUND', 'Engagement not found', 'المشاركة غير موجودة', corsHeaders);
+    }
+
+    // Degraded: the record exists, its engagement extension does not. Identity fields only.
+    return new Response(
+      JSON.stringify({
+        engagement: null,
+        dossier: {
+          id: baseDossier.id,
+          name_en: baseDossier.name_en,
+          name_ar: baseDossier.name_ar,
+          type: baseDossier.type,
+          status: baseDossier.status,
+        },
+      }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
   }
 
   return new Response(JSON.stringify(data), {
