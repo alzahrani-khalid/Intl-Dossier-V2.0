@@ -31,7 +31,12 @@ const args = process.argv.slice(2)
 const asJson = args.includes('--json')
 const tIdx = args.indexOf('--timeout')
 const timeoutSec = tIdx !== -1 && args[tIdx + 1] ? Number(args[tIdx + 1]) : 600
-const phaseDir = args.find((a) => !a.startsWith('--') && a !== args[tIdx + 1])
+// `tIdx + 1` is 0 when --timeout is ABSENT, so the old form compared against args[0] — the phase
+// dir itself — and filtered it out. The documented `gate-drill.mjs <dir>` invocation therefore
+// always printed usage; only the accidental `<dir> --json --timeout N` form worked. (Found 2026-08-15
+// during Phase 93 plan grading.)
+const timeoutValueArg = tIdx !== -1 ? args[tIdx + 1] : undefined
+const phaseDir = args.find((a) => !a.startsWith('--') && a !== timeoutValueArg)
 
 if (!phaseDir) {
   console.error('usage: gate-drill.mjs <phase_dir> [--json] [--timeout <seconds>]')
