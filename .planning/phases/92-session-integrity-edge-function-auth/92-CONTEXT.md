@@ -82,6 +82,38 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
      `SIGNED_OUT`, so once D-22's handler navigates on that event this component navigates reactively
      _and then_ hard-navigates a second later. With (4) keeping the hard nav, that double-navigation is
      accepted knowingly — one sentence naming it, rather than leaving it to be discovered.
+- **D-29:** **The hard reload IS load-bearing — and that is an argument for moving its function into
+  the single owner, not for keeping it.** Re-derived on the merits (`RULING-P92-12` withdrew the
+  instruction that had made this an inherited accept; `RULING-P92-13` required a fresh basis).
+
+  **Evidence.** `frontend/src/lib/query-client.ts` exports a **module-level singleton**
+  `queryClient`, mounted once in `App.tsx:30`, with `staleTime: 5 min`, `gcTime: 10 min`,
+  `refetchOnMount: false`, `refetchOnWindowFocus: false`. **Nothing clears it on sign-out** — the only
+  `queryClient.clear()` in the whole frontend is in a test file. `authStore.logout()` (`:105-124`)
+  clears the auth store and Sentry context, not the cache. A client-side navigation to `/login`
+  therefore leaves the previous user's fetched data resident for up to **10 minutes**, and served
+  **without refetch** for **5**. On a shared analyst workstation, the next user to sign in on that tab
+  can be served the previous user's rows before any refetch — in a product whose v7.0 premise is
+  `sensitivity_level <= clearance`. A full page load is currently the **only** mechanism that
+  destroys that cache.
+
+  **The finding that inverts the conclusion:** today exactly one working sign-out exists and it
+  reloads, so the product has **zero** cache-leak paths. This phase adds a sidebar sign-out (AUTH-01),
+  a `/settings` sign-out (D-02/D-28), and a reactive `SIGNED_OUT` redirect (D-22) — **all three
+  soft-navigating**. As planned, Phase 92 would take a product with no leak and give it three.
+
+  **Resolution — single-owner holds, and the leak closes:** D-22's `SIGNED_OUT` seam is the single
+  owner of post-sign-out teardown **and** navigation, and its teardown **must include
+  `queryClient.clear()`** before it navigates. Once it does, the reload's only load-bearing function
+  is covered centrally, so `DataPrivacySettingsSection` drops its `setTimeout` +
+  `window.location.href` and keeps only its toast (per `RULING-P92-12`), and every sign-out path —
+  including the two this phase introduces — is safe by construction rather than by whichever one
+  happened to reload.
+
+  **This supersedes the earlier "explicit accept" of the double-navigation**, which rested on a
+  retracted instruction. There is now no double-navigation to accept: one owner navigates, and the
+  component that used to navigate no longer does.
+
 - **D-04:** Sign-out lands the user on `/login` with the session cleared (`ROADMAP.md:284`). Clearing
   is asserted, not assumed — the acceptance check must show the session gone, not just the route
   changed.
