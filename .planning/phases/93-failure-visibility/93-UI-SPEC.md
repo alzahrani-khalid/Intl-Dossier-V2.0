@@ -210,6 +210,12 @@ Exceptions: `12px` / `20px` / `52px` — the inherited density tokens `--gap` (c
 built on, not new declarations of this phase; any table/list row an error state sits inside keeps
 obeying `var(--row-h)`.
 
+**Stated as a population, per `P93-UI-CHECK-1.md` Dimension 5:** none of the three new states —
+`QueryErrorState` (page-level or inline), the not-found render, or the degraded callout — introduces
+a `12` / `20` / `52` value of its own. Every occurrence belongs to chrome that already surrounds
+them. So the declared scale `{4,8,16,24,32,48,64}` is exhaustive over what this phase authors, and
+the Exceptions line is exhaustive over what this phase inherits.
+
 ---
 
 ## Typography
