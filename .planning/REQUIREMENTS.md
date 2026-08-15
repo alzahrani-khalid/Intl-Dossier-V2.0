@@ -244,6 +244,14 @@ verified sound across six lanes).
   - **Population definition:** shipped specs under any of this repo's **four** test roots (`./tests`, `./frontend/tests`, `./backend/tests`, `./e2e/tests`) that are coupled to a file Phase 93 modified, per the corrected `GATE-STANDARD.md` C9b derivation (11 coupled files). **Outside it:** specs coupled by DOM shape alone rather than by identifier — no grep can see those; the residual defence is running the shipped suite. And specs unrelated to Phase 93's 40 changed files were never run, so this is **not** a claim about total suite health.
   - **Owner: Phase 101 — CI Gates Green**, alongside the other CI-green work. Phase 93 deliberately did not fix them: they are outside its criteria, and repairing unrelated red tests mid-phase is how a phase's own evidence stops being interpretable.
 
+### SEEDFIX — a broken seed row that only became visible once the app stopped hiding it
+
+- [ ] **P52FIXTURE-01**: **Seed the missing `engagement_dossiers` row for `00000000-0000-0052-0000-000000000001`.** Filed 2026-08-16 from Phase 93 execution (plan `93-12`, raised in its BLOCKED section to the orchestrator). That id is an engagement dossier with **no extension row** — a broken seed. Before Phase 93 the app painted a titleless shell over it; `93-12` made the surface render the degraded state instead, which is the correct behaviour and the phase's entire point.
+  - **Consequence, measured in both directions on one command** (`cd frontend && pnpm exec playwright test tests/e2e/_phase52-mid-drag-capture.spec.ts --project=chromium --reporter=list`): **before** `1 passed` (TasksTab mid-drag) `· 1 failed` (EngagementKanbanDialog, already red); **after** `1 failed` — the Tasks tab click times out because the degraded state suppresses that region by contract (UI-SPEC §3). So the flip is attributable and expected, not an unexplained red.
+  - **The fix is DATA, not code.** Repair the seed row. **Do not** weaken the degraded state to keep a screenshot-capture harness green — that spec is self-labelled "NOT a regression spec", and its second test was already red before Phase 93 touched anything.
+  - **Why no grep found it:** the coupling is by **data**, not by filename or symbol — the spec's `FIXTURE_ID` merely defaults to that uuid. `GATE-STANDARD.md` C9b is an identifier sweep and is structurally blind to this class; it surfaced only because `93-12` ran the shipped suite.
+  - **Owner: Phase 102 — Staging Data & Debt Tail**, with the other seed work (`SEED-DELEG-01`).
+
 ### CARRY — v9.0 carry-forward (see `.planning/STATE.md` → "v9.0 Carried Forward")
 
 - [ ] **CARRY-01**: P88-02 — credential rotation completed (operator-only act; gates CARRY-02 and CARRY-05).
@@ -392,6 +400,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | DATA-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | DATA-02 | Phase 102 — Staging Data & Debt Tail | Pending |
 | SEED-DELEG-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| P52FIXTURE-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | DELEG-02 | Phase 102 — Staging Data & Debt Tail | Pending |
 | DBSEC-01 | Phase 100 — Security Posture (database + client) | Pending |
 | DBSEC-02 | Phase 100 — Security Posture (database + client) | Pending |
