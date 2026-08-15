@@ -136,16 +136,23 @@ verified sound across six lanes).
   > Reproduce with `node scripts/i18n-mask-audit.mjs` (committed for Phase 99). Two independent
   > derivations, 2026-08-15:
   >
-  > | derivation                        | total 2-arg sites | unresolved in EN | distinct keys |     share |
-  > | --------------------------------- | ----------------: | ---------------: | ------------: | --------: |
-  > | overseer, namespace-unaware       |              1826 |              472 |           407 |     25.8% |
-  > | orchestrator, **namespace-aware** |              1800 |          **516** |       **444** | **28.7%** |
+  > | derivation                                | total 2-arg sites | unresolved in EN | distinct keys |     share |
+  > | ----------------------------------------- | ----------------: | ---------------: | ------------: | --------: |
+  > | first pass, namespace-unaware (corrected) |              1800 |              472 |           407 |     26.2% |
+  > | **namespace-aware** (operative)           |              1800 |          **516** |       **444** | **28.7%** |
   >
-  > The second derivation models what the first flagged as unmodelled — the per-file default
-  > namespace from `useTranslation('ns')` and colon-form explicit namespaces — and the figure went
-  > **up**, not down. (Ignoring namespaces entirely reports 1611 / 89.5%, so the modelling matters a
-  > great deal; it just does not rescue the finding.) Roughly **440+ distinct keys must be authored
-  > in two locales** before a single default is dropped.
+  > **Two independent instruments agree on the denominator to the site: 1800.** The first pass
+  > initially reported 1826; that +26 was a regex artefact — `t\(` without a word boundary also
+  > matches the tail of any identifier ending in `t`, e.g. `formatDayFirst('2026-04-28T12:00:00')`
+  > in `lib/__tests__/format-date.test.ts`. Corrected, the two totals coincide exactly. Recorded so
+  > it is not rediscovered: **there is no date-string-passed-as-a-translation-key bug** in this
+  > codebase — that finding was the same artefact.
+  >
+  > The namespace-aware derivation models what the first did not — the per-file default namespace
+  > from `useTranslation('ns')` and colon-form explicit namespaces — and the figure went **up**, not
+  > down. (Ignoring namespaces entirely reports 1611 / 89.5%, so the modelling matters a great deal;
+  > it just does not rescue the finding.) Roughly **440+ distinct keys must be authored in two
+  > locales** before a single default is dropped.
   >
   > **Why the split (Phase 92 planning, 2026-08-15, `RULING-P92-07`).** This requirement previously
   > read "dot-form `t()` keys with English defaults are eliminated in favour of colon namespaces" —
