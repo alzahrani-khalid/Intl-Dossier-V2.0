@@ -1,9 +1,9 @@
 ---
 phase: 92
 slug: session-integrity-edge-function-auth
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: filled
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-08-15
 ---
 
@@ -41,15 +41,15 @@ created: 2026-08-15
 
 ## Per-Task Verification Map
 
-| Task ID           | Plan | Wave | Requirement                | Threat Ref | Secure Behavior                                                       | Test Type               | Automated Command                                                                                    | File Exists | Status     |
-| ----------------- | ---- | ---- | -------------------------- | ---------- | --------------------------------------------------------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------- | ----------- | ---------- |
-| _pending planner_ | —    | —    | AUTH-01                    | T-92-01    | Session is cleared, not merely navigated away from                    | e2e                     | `pnpm exec playwright test tests/e2e/92-signout.spec.ts --project=chromium-en --no-deps`             | ❌ W0       | ⬜ pending |
-| _pending planner_ | —    | —    | AUTH-02 (3 confirmed core) | T-92-02    | A valid JWT is accepted; no 401 on a live session                     | probe (staging)         | Pattern-3 probe against **deployed** functions                                                       | ❌ W0       | ⬜ pending |
-| _pending planner_ | —    | —    | AUTH-02 (130 sweep)        | T-92-02    | No deprecated pin remains to float its auth client                    | grep                    | `grep -rlE '@supabase/supabase-js@2\.3[0-9]' supabase/functions --include='index.ts' \| wc -l` → `0` | ✅          | ⬜ pending |
-| _pending planner_ | —    | —    | AUTH-03                    | T-92-03    | An invalidated session cannot continue rendering authenticated chrome | e2e                     | same spec, second test (≥45 s budget for the 30 s tick)                                              | ❌ W0       | ⬜ pending |
-| _pending planner_ | —    | —    | AUTH-04                    | T-92-04    | A rejected query renders as failure, never as emptiness               | e2e forced-error + unit | `pnpm exec playwright test tests/e2e/92-delegations-error.spec.ts --project=chromium-en --no-deps`   | ❌ W0       | ⬜ pending |
-| _pending planner_ | —    | —    | AUTH-05                    | —          | Sign-out reachable from a second, independent surface                 | e2e                     | covered by `92-signout.spec.ts`                                                                      | ❌ W0       | ⬜ pending |
-| _pending planner_ | —    | —    | CARRY-01                   | T-92-05    | Rotated credentials authenticate; old ones do not                     | existing e2e            | `pnpm exec playwright test tests/e2e/01-login.spec.ts --project=chromium-en`                         | ✅          | ⬜ pending |
+| Task ID                   | Plan  | Wave | Requirement                | Threat Ref | Secure Behavior                                                       | Test Type               | Automated Command                                                                                    | File Exists | Status     |
+| ------------------------- | ----- | ---- | -------------------------- | ---------- | --------------------------------------------------------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------- | ----------- | ---------- |
+| 92-02:T1                  | 02    | 2    | AUTH-01                    | T-92-01    | Session is cleared, not merely navigated away from                    | e2e                     | `pnpm exec playwright test tests/e2e/92-signout.spec.ts --project=chromium-en --no-deps`             | ❌ W0       | ⬜ pending |
+| 92-04:T2                  | 04    | 2    | AUTH-02 (3 confirmed core) | T-92-02    | A valid JWT is accepted; no 401 on a live session                     | probe (staging)         | Pattern-3 probe against **deployed** functions                                                       | ❌ W0       | ⬜ pending |
+| 92-05..08:T1-T2, 92-09:T2 | 05-09 | 2-3  | AUTH-02 (130 sweep)        | T-92-02    | No deprecated pin remains to float its auth client                    | grep                    | `grep -rlE '@supabase/supabase-js@2\.3[0-9]' supabase/functions --include='index.ts' \| wc -l` → `0` | ✅          | ⬜ pending |
+| 92-02:T2                  | 02    | 2    | AUTH-03                    | T-92-03    | An invalidated session cannot continue rendering authenticated chrome | e2e                     | same spec, third test (≥45 s budget for the 30 s tick)                                               | ❌ W0       | ⬜ pending |
+| 92-03:T1-T2               | 03    | 2    | AUTH-04                    | T-92-04    | A rejected query renders as failure, never as emptiness               | e2e forced-error + unit | `pnpm exec playwright test tests/e2e/92-delegations-error.spec.ts --project=chromium-en --no-deps`   | ❌ W0       | ⬜ pending |
+| 92-01:T2, 92-02:T3        | 01,02 | 1-2  | AUTH-05                    | —          | Sign-out reachable from a second, independent surface                 | e2e                     | covered by `92-signout.spec.ts`                                                                      | ❌ W0       | ⬜ pending |
+| 92-10:T1-T2               | 10    | 1    | CARRY-01                   | T-92-05    | Rotated credentials authenticate; old ones do not                     | existing e2e            | `pnpm exec playwright test tests/e2e/01-login.spec.ts --project=chromium-en`                         | ✅          | ⬜ pending |
 
 _Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
 
@@ -57,15 +57,15 @@ _Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
 
 ## Wave 0 Requirements
 
-- [ ] `tests/e2e/92-signout.spec.ts` — AUTH-01 / AUTH-03 / AUTH-05 (logout from both surfaces;
+- [x] PLANNED in 92-01:T2 — `tests/e2e/92-signout.spec.ts` — AUTH-03 / AUTH-05 + D-04 (narrowed per D-26;
       storage-invalidation bounce; `/settings` reachability)
-- [ ] `tests/e2e/92-delegations-error.spec.ts` — AUTH-04, forced-error via CDP
+- [x] PLANNED in 92-01:T3 — `tests/e2e/92-delegations-error.spec.ts` — AUTH-04, forced-error via CDP
       `Network.setBlockedURLs` (the project's established forced-error protocol; an RLS/auth denial
       can present as an empty 200, so assert `role="alert"` in the DOM rather than inferring from
       the network)
-- [ ] `scripts/probe-edge-auth.sh` — the Pattern-3 probe, one representative per set (A∩B, B\A, A\B),
+- [x] PLANNED in 92-01:T1 — `scripts/probe-edge-auth.sh` — the Pattern-3 probe, one representative per set (A∩B, B\A, A\B),
       run against **deployed staging** functions and recording actual status codes
-- [ ] No framework installs needed — Vitest and Playwright are both already configured
+- [x] No framework installs needed — Vitest and Playwright are both already configured
 
 ---
 
@@ -80,14 +80,14 @@ _Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 60s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references (92-01: probe script + both specs + AUTH-01 RED baseline)
+- [x] No watch-mode flags
+- [x] Feedback latency < 60s (one exception, deliberate: the delegations forced-error assertion carries a 15s timeout for TanStack retry backoff — checker B-2)
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** back-filled by the Phase 92 planner, 2026-08-15 (checker W-3) — Task IDs map to 92-01..92-10; Wave 0 artifacts are planned in 92-01
 
 ---
 

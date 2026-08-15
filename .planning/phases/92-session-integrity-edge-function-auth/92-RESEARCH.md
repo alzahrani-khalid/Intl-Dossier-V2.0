@@ -574,7 +574,13 @@ MILESTONES.md 2026-08-15; PARK-1 and this research replace it with the pin/shape
 | A4  | Local anon key env var name for the probe script (`VITE_SUPABASE_ANON_KEY` or similar in `.env.test`/`frontend/.env`)                                                          | Pattern 3                 | Probe script needs a one-line rename `[ASSUMED]`                                                                                         |
 | A5  | Break-introducing version ~2.42.5 (community reports; not reproduced from artifacts this session — only the 2.42.0=absent / 2.43.0=present flag boundary is artifact-verified) | State of the Art          | None — no repo pin sits between 2.39.7 and 2.45.0 `[CITED: github.com/supabase/supabase-js/issues/1024]`                                 |
 
-## Open Questions
+## Open Questions (RESOLVED)
+
+> All three resolved after this research shipped — recorded 2026-08-15 during planning:
+> Q1 (PARK-1) → **D-07** via `RULING-P92-02` (population = all 133; sweep planned as 92-04..92-08).
+> Q2 (PARK-2) → **D-12** via `RULING-P92-02` (plain redirect, no return path).
+> Q3 (audited-route mapping) → closed by plan **92-09 Task 2(d)** (adminops F2 route→function
+> cross-check against the deploy ledger). The text below is preserved as written for the record.
 
 1. **PARK-1 — the AUTH-02 population (operator decision; NOT closed here).**
    - What we know now that PARK-1 didn't: the 2.3x pins are nondeterministic (caret → 2.112.3 at
