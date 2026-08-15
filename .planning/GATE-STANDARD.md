@@ -184,17 +184,33 @@ neither.
 dry-run against `phase-92-base` before being written down** — the two naive versions that preceded it
 are recorded below, because each failed in a way that would have made the clause useless in practice.
 
+> **AMENDED 2026-08-16, from a live miss — read this before using the script below.** The first
+> version of this derivation searched a single hardcoded root, `tests`. **This repo has FOUR test
+> roots** — `./tests` (124 specs), `./frontend/tests` (217), `./backend/tests` (234), `./e2e/tests`
+> (16). The clause therefore searched **124 of 591 test files, about 21%**, and reported a clean
+> sweep.
+>
+> It missed `frontend/tests/e2e/analytics-dashboard.spec.ts`, which plan `93-06` then turned red —
+> found by the executor at execution time, exactly the moment this clause exists to pre-empt.
+>
+> **This is the fourth instance of the class C9b was written to kill, committed inside C9b itself:
+> a correct instrument pointed at a set narrower than the truth.** The lesson generalises past this
+> clause — **derive the search roots, never name them.** A hardcoded root is a population definition
+> written in invisible ink.
+
 ```bash
 set -o pipefail
-test -d tests || { echo "MISSING ROOT: tests"; exit 1; }
+# DERIVE the test roots. Never hardcode `tests` — see the amendment note above.
+ROOTS=$(find . -maxdepth 3 -type d -name tests -not -path '*/node_modules/*')
+test -n "$ROOTS" || { echo "MISSING ROOTS: no test directories found"; exit 1; }
 git rev-parse -q --verify refs/tags/phase-NN-base >/dev/null || { echo "MISSING TAG"; exit 1; }
-for f in $(git diff --name-only phase-NN-base -- frontend/src supabase/functions); do
+for f in $(git diff --name-only phase-NN-base -- frontend/src supabase/functions backend/src); do
   b=$(basename "$f" | sed -E 's/\.(tsx?|jsx?)$//')
   # An edge function's identity is its DIRECTORY, not the basename `index`.
   if [ "$b" = "index" ]; then id=$(basename "$(dirname "$f")"); else id="$b"; fi
   case "$id" in auth|utils|types|config|helpers|constants|_shared)
     echo "AMBIGUOUS (triage by hand): $f"; continue;; esac
-  hits=$(grep -rlE -- "\b${id}\b" tests || true)
+  hits=$(grep -rlE -- "\b${id}\b" $ROOTS || true)
   [ -n "$hits" ] && printf '%s <- %s\n' "$f" "$(echo "$hits" | tr '\n' ' ')"
 done
 ```
