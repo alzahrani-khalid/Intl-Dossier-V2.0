@@ -115,6 +115,47 @@ must be repointed in the same edit.** Before declaring such a change done, run a
 the old name across all ten plans and paste the count. A change that is correct in its own plan and
 stale in its consumer is instance 8, and it is invisible to any review scoped to one plan.
 
+#### C9a — THE CROSS-PLAN SWEEP MUST READ `<files>` TASK BLOCKS, NOT ONLY `files_modified`
+
+**Amended 2026-08-15 during Phase 92 EXECUTION (`RULING-P92-47`, `D-43`), from a live instance.**
+
+A cross-plan artifact is one plan's _output_ and a later plan's gate's _input_. Its **format** is a
+contract, and unlike a name it is never grepped for — so it is checked for the first time when the
+consuming gate runs, which is after the producing plan has already closed green.
+
+Phase 92's instance: `92-04` created `92-DEPLOY-LEDGER.md` with a six-column table (`Result` in the
+middle, a `Why deployed` column last). `92-09_g1` counts deploy verdicts with
+`grep -E "\| *OK *\|?[[:space:]]*$"` — a regex that requires the verdict cell to be **last**, which
+is exactly the `name | timestamp | OK/FAIL` shape both plans' action text mandates. The gate was
+sound (confirmed by control: plan-shape rows are counted and their names extracted; six-column rows
+are not). The artifact deviated. `92-04` closed with both its own gates green, because neither of
+its gates reads the ledger — **only a later plan's gate does.**
+
+**Why the existing sweep could not have caught it, which is the durable part.** Deriving cross-plan
+artifacts from `files_modified` frontmatter finds every other instance in this phase and misses this
+one, because `92-04` declares the ledger **only in a `<files>` task block** — its `files_modified`
+lists five `supabase/functions` paths and nothing else. Script-derived over all ten plans, the
+frontmatter-visible set is complete and sound:
+
+| artifact                                 | producer → consuming gate(s)                           | held?                                                                                                       |
+| ---------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `tests/e2e/92-delegations-error.spec.ts` | 92-01 → `92-03_g2` (`2 passed`, exactly 2 tests)       | ✅                                                                                                          |
+| `scripts/probe-edge-auth.sh`             | 92-01 → `92-04_g2`, `92-09_g2` (stdout `fn -> status`) | ✅                                                                                                          |
+| `supabase/functions/_shared/auth.ts`     | 92-04 → `92-05..08_g2` scope guards                    | ✅ — the guards carry `':(exclude)supabase/functions/_shared/auth.ts'`, correctly anticipating 92-04's edit |
+| `92-DEPLOY-LEDGER.md`                    | **92-04 (`<files>` only)** → `92-09_g1`                | ❌ **the instance**                                                                                         |
+
+**The rule:** enumerate cross-plan artifacts from `files_modified` **and** every `<files>` block and
+every `<artifacts>` path in every plan. For each one found, the producing plan must either be gated
+on the consumer's format, or the consuming gate's parse must be **positive-controlled against a
+synthetic row in the mandated shape** before either plan runs. An artifact whose only format check
+lives in a downstream gate is an unverified contract, and a producing plan that closes green while
+holding one has not been measured.
+
+Corollary: reformatting such an artifact to the shape its own plan mandates is an **artifact** edit,
+not a gate edit — it does not trigger the no-gate-edits rule. Preserve the original losslessly, keep
+exactly one table visible to the counter, and re-run the consuming gate with the expected count
+stated **before** the run.
+
 ### C10 — THE CRITERION AND THE GATE MUST AGREE
 
 Every count, set, artifact, or locale the `<acceptance_criteria>` names must be **checked by the
