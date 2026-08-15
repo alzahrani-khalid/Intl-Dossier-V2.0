@@ -50,9 +50,14 @@
 
 -- 1/4 — data_retention_policies (FOR ALL: USING + WITH CHECK)
 --       Matches the handler's own gate (userRecord?.role === 'admin').
+--       TO authenticated is explicit: the replaced policy was scoped to
+--       {authenticated}, and anon holds 7 table grants here, so omitting the
+--       clause would default to TO PUBLIC and silently widen the role list.
+--       (It would still fail closed — is_platform_admin(NULL) is false — but
+--       this migration must not widen what it was asked to unblock.)
 DROP POLICY IF EXISTS "Admin can manage retention policies" ON public.data_retention_policies;
 CREATE POLICY "Admin can manage retention policies"
-  ON public.data_retention_policies FOR ALL
+  ON public.data_retention_policies FOR ALL TO authenticated
   USING (public.is_platform_admin(auth.uid()))
   WITH CHECK (public.is_platform_admin(auth.uid()));
 
