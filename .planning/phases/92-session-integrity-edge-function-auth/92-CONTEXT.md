@@ -98,7 +98,9 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
   destroys that cache.
 
   **The finding that inverts the conclusion:** today exactly one working sign-out exists and it
-  reloads, so the product has **zero** cache-leak paths. This phase adds a sidebar sign-out (AUTH-01),
+  reloads, so the product has **zero _in-memory query-cache_ leak paths.** (That claim is bounded, and
+  the bound matters — see D-30. A reload does **not** clear `localStorage`, so the persisted stores
+  leak today regardless.) This phase adds a sidebar sign-out (AUTH-01),
   a `/settings` sign-out (D-02/D-28), and a reactive `SIGNED_OUT` redirect (D-22) — **all three
   soft-navigating**. As planned, Phase 92 would take a product with no leak and give it three.
 
@@ -110,10 +112,34 @@ AUTH-01` names this component explicitly ("`NavUser` — which already implement
   including the two this phase introduces — is safe by construction rather than by whichever one
   happened to reload.
 
+  **Negative scope of the acceptance criterion — state it in the plan.** "The query cache is empty
+  after sign-out" establishes exactly that: the **in-memory** cache. It says **nothing** about
+  persisted `localStorage` state, which is a separate and pre-existing leak (D-30). A plan that
+  reports this criterion green must not be read as having cleared client-side residue generally.
+
   **This supersedes the earlier "explicit accept" of the double-navigation**, which rested on a
   retracted instruction. There is now no double-navigation to accept: one owner navigates, and the
   component that used to navigate no longer does.
 
+- **D-30:** **A larger, PRE-EXISTING client-residue leak exists — filed, deliberately NOT swept here.**
+  A hard reload clears the in-memory query cache but does **not** clear `localStorage`. Verified
+  2026-08-15, nothing wipes any of it on logout:
+  persisted zustand stores — `auth-storage` (`store/authStore.ts:253`), a **duplicate**
+  `auth-storage` in the dead module (`services/auth.ts:624`, see NAV-04), `entity-history-storage`
+  (`store/entityHistoryStore.ts:114`), `ui-storage` (`store/uiStore.ts:139`),
+  `pinned-entities-storage` (`store/pinnedEntitiesStore.ts:132`), `dossier-store`
+  (`store/dossierStore.ts:501`); plus raw writers `advanced-search-history`
+  (`domains/search/hooks/useAdvancedSearch.ts:67`) and `quickswitcher_recent_items`
+  (`domains/dossiers/hooks/useQuickSwitcherSearch.ts:19`).
+  **Entity history, recent items and search history are _which dossiers the previous analyst opened
+  and what they searched for_** — in an intelligence product that is arguably more sensitive than
+  cached rows, and `entityHistoryStore`'s own docstring states it "persists the last 10 entities
+  viewed". Useful lead for whoever takes this: `utils/storage/preference-storage.ts:15` already
+  defines a `WIPE_GUARD_KEY` (`id.legacy-wipe.v1`, used at `:24`/`:28`), so a wipe mechanism has been
+  considered here before.
+  **Scope boundary, held firmly:** `queryClient.clear()` at the D-22 seam is **in scope** because
+  this phase would otherwise _introduce_ that regression on three new paths. The persisted-storage
+  leak **pre-dates this phase and is not swept here** — it is filed to the backlog with its evidence.
 - **D-04:** Sign-out lands the user on `/login` with the session cleared (`ROADMAP.md:284`). Clearing
   is asserted, not assumed — the acceptance check must show the session gone, not just the route
   changed.
