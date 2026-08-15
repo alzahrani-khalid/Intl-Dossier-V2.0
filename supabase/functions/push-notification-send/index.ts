@@ -1,7 +1,7 @@
 // Push Notification Send - Firebase Cloud Messaging (FCM) and Apple Push Notification Service (APNS)
 // Handles real push notification delivery to mobile devices with priority levels and deep linking
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 // ===================================
