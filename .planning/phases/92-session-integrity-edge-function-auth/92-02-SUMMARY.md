@@ -343,6 +343,42 @@ Confirming re-run (same command, filtered to the verdict lines):
 
 ## BLOCKED — AUTH-05's e2e half (test 2)
 
+> **RESOLVED 2026-08-15 by `RULING-P92-48` — this section is kept, not deleted, because it is the
+> record of a real defect and of the four hours it stayed buried. Everything below it was accurate
+> when written.**
+>
+> **Ruling: candidate 1 — fix the SPEC, not the mount. The implementation stands and `92-02_g3` was
+> NOT reopened.** The control is where this plan put it and where `92-02_g3` pins it; the spec's
+> locator assumed a flat settings page this product does not have. Settled by citation, not product
+> taste: `92-CONTEXT.md:48` (**D-03**) reads AUTH-05 as _"an inbound nav entry plus a sign-out
+> control **on the page**"_ — reachability within `/settings`, not residency on its landing view —
+> and **D-12** records that `/settings` already had a working sign-out inside the sectioned layout.
+>
+> **Fix applied** (`tests/e2e/92-signout.spec.ts`, orchestrator): the spec now clicks the
+> "Access & Security" nav button before locating `settings-signout`. That click is **setup, not an
+> assertion change** — the oracle (click → land `/login` → session cleared) is untouched.
+>
+> **Observed after the fix, run from the repo root, output on disk at
+> `.tickmarkr/overseer/P92-AUTH05-SPEC-RUN.log`:**
+>
+> ```
+> $ pnpm exec playwright test tests/e2e/92-signout.spec.ts --project=chromium-en --no-deps
+>   ✓ 3 … invalidated session bounces the open tab (3.6s)
+>   ✓ 1 … sign-out genuinely clears the session (4.0s)
+>   ✓ 2 … /settings is reachable from navigation and exposes an independent sign-out (5.3s)
+>   3 passed (5.7s)
+> ```
+>
+> **AUTH-05's click-to-`/login` has now been executed for the first time.** All three of this plan's
+> gates were re-run after the spec edit and still exit 0, as did `92-01_g2` (which counts 3 tests
+> and greps this spec) — no gate text was touched.
+>
+> **How this stayed buried, named rather than smoothed:** all three of this plan's gates are
+> **static** — `tsc`, a unit test, greps, a scope guard — and **none of them runs this spec**. So
+> three greens said nothing about the criterion, and the orchestrator read the greens without
+> reading this section. It was caught by **`gsd-verifier`**, whose `gaps_found` / 2-of-5 honesty is
+> the reason it is in the loop at all.
+
 **The control was built exactly where the plan put it, and the spec cannot see it there.**
 
 `/settings` renders one section at a time. `SettingsPage.tsx:138` initialises

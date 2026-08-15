@@ -78,6 +78,18 @@ test.describe('AUTH-01/03/05 session integrity', () => {
       .click()
     await page.waitForURL('**/settings', { timeout: 15_000 })
 
+    // SETUP, not an assertion (RULING-P92-48). /settings renders ONE section at a time:
+    // SettingsPage.tsx:138 defaults activeSection to 'profile', and SettingsLayout.tsx:139-148
+    // returns null for every non-active section — so SecuritySettingsSection, and with it
+    // settings-signout, is not in the DOM until this nav button is clicked. AUTH-05 asks for
+    // "an inbound nav entry plus a sign-out control on the page" (D-03) — reachability within
+    // /settings, not residency on its landing view — so navigating here is what a user does,
+    // and the oracle below (click -> /login -> session cleared) is unchanged.
+    await page
+      .getByRole('navigation', { name: /settings/i })
+      .getByRole('button', { name: /access & security|access and security/i })
+      .click()
+
     // TESTIDS ONLY (D-28.3). The shared name regex /sign out|logout|.../i is FORBIDDEN on this
     // page: it also matches the Data & Privacy "sign out all sessions" control — a strict-mode
     // failure, and worse, it could click the destructive global sign-out.
