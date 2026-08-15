@@ -211,6 +211,30 @@ verified sound across six lanes).
 
 ### Filed from Phase 92 planning, 2026-08-15
 
+- **Client-side residue survives sign-out — `localStorage` is never wiped.** A hard reload clears the
+  in-memory query cache; it does **not** clear `localStorage`. Verified 2026-08-15: **nothing wipes
+  any of the following on logout.**
+  Persisted zustand stores — `auth-storage` (`store/authStore.ts:253`), a **duplicate** `auth-storage`
+  in the dead module (`services/auth.ts:624` — see NAV-04), `entity-history-storage`
+  (`store/entityHistoryStore.ts:114`), `ui-storage` (`store/uiStore.ts:139`),
+  `pinned-entities-storage` (`store/pinnedEntitiesStore.ts:132`), `dossier-store`
+  (`store/dossierStore.ts:501`). Raw writers — `advanced-search-history`
+  (`domains/search/hooks/useAdvancedSearch.ts:67`), `quickswitcher_recent_items`
+  (`domains/dossiers/hooks/useQuickSwitcherSearch.ts:19`).
+  **Why this outranks cached rows in this product:** entity history, recent items and search history
+  are _which dossiers the previous analyst opened and what they searched for_. `entityHistoryStore`'s
+  own docstring says it "persists the last 10 entities viewed". On a shared analyst workstation that
+  is retained across sign-out and visible to the next user, in a system whose access model is
+  `sensitivity_level <= clearance`.
+  **Lead for whoever takes this:** `utils/storage/preference-storage.ts:15` already defines a
+  `WIPE_GUARD_KEY` (`id.legacy-wipe.v1`, used at `:24`/`:28`) — a wipe mechanism has been considered
+  in this codebase before, so check its semantics before writing a new one.
+  **Deliberately not fixed in Phase 92.** That phase adds `queryClient.clear()` at the single
+  sign-out seam because it would otherwise _introduce_ an in-memory regression on three new paths.
+  This leak is **pre-existing** and sweeping it there would have been scope creep. Phase 92's
+  acceptance criterion ("query cache empty after sign-out") establishes the in-memory cache and says
+  **nothing** about persisted storage.
+
 - **Session eviction (`scope: 'others'`) does not exist in this product — and a control has been
   claiming it does.** `DataPrivacySettingsSection.tsx` shipped a button labelled en
   "Sign Out All Other Sessions" / ar "تسجيل الخروج من جميع الجلسات الأخرى" whose handler
