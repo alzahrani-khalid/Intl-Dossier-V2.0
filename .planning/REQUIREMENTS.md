@@ -244,6 +244,15 @@ verified sound across six lanes).
   - **Population definition:** shipped specs under any of this repo's **four** test roots (`./tests`, `./frontend/tests`, `./backend/tests`, `./e2e/tests`) that are coupled to a file Phase 93 modified, per the corrected `GATE-STANDARD.md` C9b derivation (11 coupled files). **Outside it:** specs coupled by DOM shape alone rather than by identifier — no grep can see those; the residual defence is running the shipped suite. And specs unrelated to Phase 93's 40 changed files were never run, so this is **not** a claim about total suite health.
   - **Owner: Phase 101 — CI Gates Green**, alongside the other CI-green work. Phase 93 deliberately did not fix them: they are outside its criteria, and repairing unrelated red tests mid-phase is how a phase's own evidence stops being interpretable.
 
+### GATESTD — a defect in the shipped gate standard itself
+
+- [ ] **GATESTD-01**: **`GATE-STANDARD.md`'s C9b escape step has never executed successfully on this machine.** Filed 2026-08-16 from Phase 93 execution. The line `id=$(printf '%s' "$id" | sed -E 's/[][.*+?^${}()|\\]/\\&/g')` is rejected outright by BSD/macOS sed: `sed: 1: "s/[][.*+?^${}()|\\]/\\&/g": unbalanced brackets ([])`.
+  - **Why it is worse than a broken line:** sed writes the error to **stderr** and exits non-zero, but the command substitution still assigns — so `id` becomes **empty**, the pattern becomes `\b\b`, and **every changed file reports as coupled to every spec**. Observed: 1.8 MB of output claiming ~49 changed files couple to the whole corpus. It fails **open**, in the exact "implausibly total" shape the clause's own amendment note warns about — in prose, with nothing in the code enforcing it.
+  - **Provenance — this is the corrective artifact failing, not the original clause.** The line was introduced by `57aaf1cc` ("C9b — escape regex metachars in the derived identifier"), the fix for C9b defect #2. The fix was never observed to run. That makes this the **third** defect inside C9b's own derivation and the second that makes it measure the wrong set.
+  - **Suggested repair (verified locally, not applied to the standard):** drop the escape entirely and **reject** an unsafe id instead — `case "$id" in *[^A-Za-z0-9_-]*) echo "UNSAFE ID (triage by hand): $f -> '$id'"; continue;; esac`. Fails closed and loud, needs no escaping, and on Phase 93's changed set it surfaced four ids the broken form silently mangled: `QueryErrorState.test`, `analytics.repository`, `common.json` ×2. Phase 93 used this form locally to derive its own C9b register and recorded the deviation rather than editing the standard.
+  - **Population: the one derivation script in `GATE-STANDARD.md` §C9b.** **Outside it:** every other command in that document was not audited for portability — this was found by running C9b, not by a sweep of the standard. A portability pass over the whole file is not claimed.
+  - **Owner: Phase 102 — Staging Data & Debt Tail.** **Note for the ruling seat:** both prior C9b defects (`1f0ac741`, `57aaf1cc`) were repaired by a direct same-day commit to the standard rather than carried forward. Carrying this one to P102 leaves every phase between here and there deriving consumer sets with an instrument that fails open.
+
 ### ROOTALIAS — the root vitest project cannot resolve the app it tests
 
 - [ ] **ROOTALIAS-01**: **Root `vitest.config.ts:37` aliases `@` → `<repo-root>/src`, a directory that does not exist.** Filed 2026-08-16 from Phase 93 execution while building the C9b mock-vs-real register (`D-71`). The app's source is `frontend/src`, so any spec under `./tests` that pulls in a `frontend/src` module fails at import-analysis the moment that module uses `@/…` internally.
@@ -420,6 +429,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | CLIENTSEC-01 | Phase 100 — Security Posture (database + client) | Pending |
 | E2ECRED-01 | Phase 101 — CI Gates Green | Pending |
 | E2ESTALE-01 | Phase 101 — CI Gates Green | Pending |
+| GATESTD-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | ROOTALIAS-01 | Phase 101 — CI Gates Green | Pending |
 | CARRY-01 | Phase 92 — Session Integrity & Edge-Function Auth | Pending |
 | CARRY-02 | Phase 101 — CI Gates Green | Pending |
