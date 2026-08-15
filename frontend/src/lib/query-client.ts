@@ -12,6 +12,7 @@
 
 import { QueryClient, QueryClientConfig } from '@tanstack/react-query'
 import { toast } from 'sonner' // or your preferred toast library
+import i18n from '@/i18n'
 import { STALE_TIME } from './query-tiers'
 
 /**
@@ -56,22 +57,12 @@ const defaultQueryOptions: QueryClientConfig['defaultOptions'] = {
     // Retry mutations once on failure
     retry: 1,
 
-    // Global mutation error handler
+    // Global mutation error handler.
+    // The rejection is internal — it goes to the console, never into the toast (D-08/D-22).
+    // t() comes from the i18n singleton because this module lives outside React context.
     onError: (error) => {
       console.error('Mutation error:', error)
-
-      // Extract error message
-      let errorMessage = 'An unexpected error occurred'
-      if (error && typeof error === 'object') {
-        if ('message' in error && typeof error.message === 'string') {
-          errorMessage = error.message
-        } else if ('error' in error && typeof error.error === 'string') {
-          errorMessage = error.error
-        }
-      }
-
-      // Show error toast
-      toast.error(errorMessage)
+      toast.error(i18n.t('common:errors.queryFailedInline'))
     },
 
     // Global mutation success handler
@@ -189,4 +180,3 @@ export async function fetchApi<T>(url: string, options: RequestInit = {}): Promi
 
   return response.json()
 }
-

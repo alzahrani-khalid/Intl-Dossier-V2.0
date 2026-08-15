@@ -4,6 +4,7 @@ import type { AuthContextValue } from '../contexts/auth.context'
 import { useTranslation } from 'react-i18next'
 import { Home, ArrowLeft } from 'lucide-react'
 import { useDirection } from '@/hooks/useDirection'
+import i18n from '@/i18n'
 
 function NotFoundComponent() {
   const { t } = useTranslation()
@@ -66,24 +67,30 @@ export const router = createRouter({
   context: {
     auth: undefined!,
   },
-  defaultErrorComponent: ({ error, reset }: { error: Error; reset: () => void }) => (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4 sm:p-8">
-      <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-center sm:p-8">
-        <h2 className="text-xl font-semibold text-destructive sm:text-2xl">
-          {error?.name ?? 'Application error'}
-        </h2>
-        <p className="mt-4 text-sm text-muted-foreground sm:text-base">
-          {error?.message ?? 'Something went wrong while loading this page.'}
-        </p>
-        <button
-          type="button"
-          onClick={reset}
-          className="mt-6 rounded-lg bg-primary px-6 py-2 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
-        >
-          Retry
-        </button>
+  // This is the surface ANY loader-thrown non-404 error hits. It renders generic i18n copy
+  // only — the caught error is internal and goes to the console, never to the DOM (D-08/D-22).
+  // t() comes from the i18n singleton because this factory runs outside React context.
+  defaultErrorComponent: ({ error, reset }: { error: Error; reset: () => void }) => {
+    console.error('Route error:', error)
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background p-4 sm:p-8">
+        <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 text-center sm:p-8">
+          <h2 className="text-xl font-semibold text-destructive sm:text-2xl">
+            {i18n.t('common:errors.queryFailed.title')}
+          </h2>
+          <p className="mt-4 text-sm text-muted-foreground sm:text-base">
+            {i18n.t('common:errors.queryFailed.description')}
+          </p>
+          <button
+            type="button"
+            onClick={reset}
+            className="mt-6 rounded-lg bg-primary px-6 py-2 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
+          >
+            {i18n.t('common:errors.retry')}
+          </button>
+        </div>
       </div>
-    </div>
-  ),
+    )
+  },
   defaultNotFoundComponent: NotFoundComponent,
 } as Parameters<typeof createRouter>[0])
