@@ -34,27 +34,27 @@ rules configured" while the DB holds **19 active rules**.
 
 ## Ship-blockers (19)
 
-| #   | Finding                                                                                                                                                                                                                                                                                                            | Source            |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------- |
-| 1   | **No way to log out anywhere in the app.** Sidebar user card is a plain `<div>`; no topbar menu; `/settings` has no sign-out and isn't in the nav. A working dropdown exists at `components/layout/nav-user.tsx` and is imported nowhere. **[V]**                                                                  | sweeper F6        |
-| 2   | **133 of 303 edge functions pin `supabase-js@2.3x`.** ~~and call bare `getUser()`, so they 401 against a valid session~~ — see correction below. Root cause behind several "empty" admin pages. **[V]**                                                                                                            | adminops F2       |
-| 3   | **Every `/settings` tab fails to save, and always has.** `.upsert()` on `users` omits NOT NULL `email` → `23502`. Code comment documents a _previous_ failed fix. **[V]**                                                                                                                                          | adminops F3       |
-| 4   | `/delegations` renders "You haven't granted any delegations" over two 401s                                                                                                                                                                                                                                         | engagements F4    |
-| 5   | **After-action records cannot be created.** `AfterActionForm.tsx:131` `if (!initialData) return` → never dirty → Save permanently disabled; Publish never rendered (route passes neither `canPublish` nor `onPublish`). List 500s on a bad PostgREST embed; detail shows raw key `afterActions.loadError`. **[V]** | engagements F1–F3 |
-| 6   | `/search` throws `Cannot read properties of undefined (reading 'forEach')` on every query                                                                                                                                                                                                                          | worksurfaces F1   |
-| 7   | `/intake/new` can never submit — dossier picker writes to display state, not the form field                                                                                                                                                                                                                        | worksurfaces F2   |
-| 8   | Kanban rejects every commitment drag (400): board writes kanban stage into `aa_commitments`, whose lifecycle is `pending/in_progress/completed/cancelled`                                                                                                                                                          | worksurfaces F4   |
-| 9   | Report generation 400s silently — client sends `template`, function reads `type`                                                                                                                                                                                                                                   | adminops F5       |
-| 10  | **Scheduled reports uncreatable** — `custom_reports`.SELECT sub-queries `report_shares` and vice-versa → `42P17` infinite recursion. **[V]**                                                                                                                                                                       | adminops F6       |
-| 11  | `/analytics` renders fabricated chart art; its backend endpoint does not exist                                                                                                                                                                                                                                     | adminops F4       |
-| 12  | Engagement dossiers render a nameless, dataless shell (404 swallowed)                                                                                                                                                                                                                                              | dossiers F1       |
-| 13  | Nonexistent dossier ID → "Check your connection" instead of not-found                                                                                                                                                                                                                                              | sweeper F2        |
-| 14  | `/tasks/queue` replaced by raw "Edge Function returned a non-2xx status code"                                                                                                                                                                                                                                      | worksurfaces F3   |
-| 15  | `/scenario-sandbox` spins forever on an unsurfaced 500                                                                                                                                                                                                                                                             | sweeper F3        |
-| 16  | `/word-assistant` shows "Connected" while returning canned stubs; `isConnected` hardcoded                                                                                                                                                                                                                          | sweeper F4        |
-| 17  | `/monitoring` serves raw JSON — Vite proxy shadows the SPA route                                                                                                                                                                                                                                                   | adminops F7       |
-| 18  | Session invalidation doesn't bounce; page decays to a "Member/Member" ghost state                                                                                                                                                                                                                                  | sweeper F7        |
-| 19  | `/custom-dashboard` queries `calendar_entries.start_datetime`; column doesn't exist (`event_date`). **[V]**                                                                                                                                                                                                        | sweeper F5        |
+| #   | Finding                                                                                                                                                                                                                                                                                                            | Source                    |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------- |
+| 1   | **No way to log out anywhere in the app.** Sidebar user card is a plain `<div>`; no topbar menu; `/settings` has no sign-out and isn't in the nav. A working dropdown exists at `components/layout/nav-user.tsx` and is imported nowhere. **[V]**                                                                  | sweeper F6                |
+| 2   | **133 of 303 edge functions pin `supabase-js@2.3x`.** ~~and call bare `getUser()`, so they 401 against a valid session~~ — see correction below. Root cause behind several "empty" admin pages. **[V]**                                                                                                            | adminops F2               |
+| 3   | **Every `/settings` tab fails to save, and always has.** `.upsert()` on `users` omits NOT NULL `email` → `23502`. Code comment documents a _previous_ failed fix. **[V]**                                                                                                                                          | adminops F3               |
+| 4   | `/delegations` renders "You haven't granted any delegations" over two 401s                                                                                                                                                                                                                                         | engagements F4            |
+| 5   | **After-action records cannot be created.** `AfterActionForm.tsx:131` `if (!initialData) return` → never dirty → Save permanently disabled; Publish never rendered (route passes neither `canPublish` nor `onPublish`). List 500s on a bad PostgREST embed; detail shows raw key `afterActions.loadError`. **[V]** | engagements F1–F3         |
+| 6   | `/search` throws `Cannot read properties of undefined (reading 'forEach')` on every query                                                                                                                                                                                                                          | worksurfaces F1           |
+| 7   | `/intake/new` can never submit — dossier picker writes to display state, not the form field                                                                                                                                                                                                                        | worksurfaces F2           |
+| 8   | Kanban rejects every commitment drag (400): board writes kanban stage into `aa_commitments`, whose lifecycle is `pending/in_progress/completed/cancelled`                                                                                                                                                          | worksurfaces F4           |
+| 9   | Report generation 400s silently — client sends `template`, function reads `type`                                                                                                                                                                                                                                   | adminops F5               |
+| 10  | **Scheduled reports uncreatable** — `custom_reports`.SELECT sub-queries `report_shares` and vice-versa → `42P17` infinite recursion. **[V]**                                                                                                                                                                       | adminops F6               |
+| 11  | `/analytics` renders fabricated chart art; its backend endpoint does not exist                                                                                                                                                                                                                                     | adminops F4               |
+| 12  | Engagement dossiers **without an `engagement_dossiers` row** render a nameless, dataless shell (404 swallowed) — the lane measured 2 of 5, with a third rendering correctly                                                                                                                                        | dossiers F1               |
+| 13  | Nonexistent dossier ID → "Check your connection" instead of not-found                                                                                                                                                                                                                                              | sweeper F2                |
+| 14  | `/tasks/queue` replaced by raw "Edge Function returned a non-2xx status code"                                                                                                                                                                                                                                      | worksurfaces F3           |
+| 15  | `/scenario-sandbox` spins forever on an unsurfaced 500                                                                                                                                                                                                                                                             | sweeper F3                |
+| 16  | `/word-assistant` shows "Connected" while returning canned stubs; `isConnected` hardcoded. **⚠ LANES DISAGREE ON MECHANISM — UNRESOLVED, see note below the table**                                                                                                                                                | sweeper F4 + adminops F19 |
+| 17  | `/monitoring` serves raw JSON — Vite proxy shadows the SPA route                                                                                                                                                                                                                                                   | adminops F7               |
+| 18  | Session invalidation mid-session doesn't bounce the **already-open tab**; page decays to a "Member/Member" ghost state. (Fresh navigation after sign-out _does_ bounce correctly — `_protected.tsx`'s `beforeLoad` guard works; only the reactive path is missing.) **Lane severity: P1 — promoted, see note**     | sweeper F7                |
+| 19  | `/custom-dashboard` queries `calendar_entries.start_datetime`; column doesn't exist — the real columns are **`event_date` (date) + `event_time` (time)**, both needed. **[V]** **Lane severity: P1 — promoted, see note**                                                                                          | sweeper F5 + adminops F18 |
 
 ### Correction to ship-blocker 2 — logged 2026-08-15, Phase 92 planning
 
@@ -78,6 +78,40 @@ shape — it is a defect on the deprecated pin. Phase 92 carries a runtime probe
 than assuming it; whatever it returns is recorded in that phase's evidence.
 
 The remediation scope was unaffected: the operator chose to migrate all 133.
+
+### Row 16 — UNRESOLVED lane conflict, do not treat as settled
+
+The two lanes that observed `/word-assistant` describe **mutually exclusive mechanisms**, and the
+original consolidated row merged them as if there were nothing to resolve:
+
+- **`sweeper.md` F4:** the mutation **reaches the network** — "the mutation itself succeeds and
+  returns this template as its payload… no console errors, no 4xx/5xx" — i.e. the endpoint is real
+  and its current behaviour is to return a template.
+- **`adminops.md` F19:** **zero network calls are made.** The reply is assembled client-side by
+  `generateLocalAssistantResponse()`; the connectivity check short-circuits to `setIsConnected(true)`
+  without probing anything (`:254-256`), and `isConnected` initialises to `true` (`:57`).
+
+**Only one can be true.** Resolving it needs application source, which this audit deliberately did
+not consult, and `/word-assistant` is not Phase 92's route. Whichever phase owns `DEAD-07` inherits
+this question — not a settlement. Deciding it changes the fix: a real endpoint returning stubs is a
+backend problem; a client-side fabrication is a delete.
+
+### Rows 18 and 19 — promoted from lane-P1
+
+Both entered this ship-blocker table from lane findings marked `[severity: P1]`, while the other 17
+rows trace to lane-`P0` findings. Nothing recorded the escalation until now. The promotions stand —
+the operator has approved both as v10.0 scope — but they are no longer invisible.
+
+Row 18 is **Phase 92's success criterion 3**. The work is real and the lane demonstrated it; the
+provenance is recorded here so it is not discovered at phase close.
+
+### Provenance of the edits in this block
+
+Rows 12, 16, 18 and 19 above were corrected during **Phase 92 planning (2026-08-15)**, on the
+findings of `.tickmarkr/overseer/P92-CONSOLIDATION-AUDIT.md` — a row-by-row re-comparison of all 19
+rows against their source lanes. That audit found **no second fabrication**: 14 of 18 rows checked
+were faithful, every citation resolved, and no row invented a number. Phase 103, which re-runs this
+audit, should treat these five edits as already applied rather than as queued work.
 
 ---
 
