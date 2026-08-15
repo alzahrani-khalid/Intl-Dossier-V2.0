@@ -196,8 +196,24 @@ serve(async (req) => {
     if (type === "granted" || type === "all") {
       const { data, error } = await grantedQuery;
       if (error) {
+        // Diagnostics stay server-side. The caller never receives the PostgREST
+        // object, the relation name, or the SQLSTATE — only a bilingual envelope.
         console.error("Granted delegations query error:", error);
-      } else if (data) {
+        return new Response(
+          JSON.stringify({
+            error: {
+              code: "QUERY_FAILED",
+              message_en: "Failed to load delegations",
+              message_ar: "فشل في تحميل التفويضات",
+            },
+          }),
+          {
+            status: 500,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+      if (data) {
         granted = data.map((d: any) => {
           const validUntil = new Date(d.valid_until);
           const now = new Date();
@@ -229,8 +245,24 @@ serve(async (req) => {
     if (type === "received" || type === "all") {
       const { data, error } = await receivedQuery;
       if (error) {
+        // Diagnostics stay server-side. The caller never receives the PostgREST
+        // object, the relation name, or the SQLSTATE — only a bilingual envelope.
         console.error("Received delegations query error:", error);
-      } else if (data) {
+        return new Response(
+          JSON.stringify({
+            error: {
+              code: "QUERY_FAILED",
+              message_en: "Failed to load delegations",
+              message_ar: "فشل في تحميل التفويضات",
+            },
+          }),
+          {
+            status: 500,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+      if (data) {
         received = data.map((d: any) => {
           const validUntil = new Date(d.valid_until);
           const now = new Date();
