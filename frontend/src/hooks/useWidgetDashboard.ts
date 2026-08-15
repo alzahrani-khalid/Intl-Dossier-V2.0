@@ -871,19 +871,22 @@ export function useWidgetDashboard(options: UseWidgetDashboardOptions = {}) {
   // The data aggregation above keeps only `data`, so a rejected widget query reaches the page
   // as `undefined` — indistinguishable from "still loading" and rendered as an empty widget.
   // Carrying isError alongside is what lets the page render the failure as a failure.
-  const widgetStates = useMemo(() => {
-    return widgets.reduce(
-      (acc, widget, index) => {
-        const query = widgetQueries[index]
-        acc[widget.id as string] = {
-          isError: query?.isError ?? false,
-          isRefetching: query?.isRefetching ?? false,
-        }
-        return acc
-      },
-      {} as Record<string, WidgetQueryState>,
-    )
-  }, [widgets, widgetQueries])
+  //
+  // Deliberately NOT wrapped in useMemo. useQueries results are tracked proxies: a property is
+  // only subscribed to once it has been READ during a render, and a memo that does not re-run
+  // never reads it — so isError would stay false forever while the query sits in error. Reading
+  // it every render is what subscribes to it. The map is over a handful of widgets.
+  const widgetStates = widgets.reduce(
+    (acc, widget, index) => {
+      const query = widgetQueries[index]
+      acc[widget.id as string] = {
+        isError: query?.isError ?? false,
+        isRefetching: query?.isRefetching ?? false,
+      }
+      return acc
+    },
+    {} as Record<string, WidgetQueryState>,
+  )
 
   // ============================================================================
   // Actions
