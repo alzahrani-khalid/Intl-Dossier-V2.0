@@ -335,6 +335,21 @@ None. No gate text was read as wrong, and **zero gate edits were made** — the 
 
 None.
 
+## Self-Check: PASSED
+
+```
+FOUND: frontend/src/pages/WorkBoard/commitment-stage-guard.ts
+FOUND: frontend/src/pages/WorkBoard/__tests__/commitment-stage-guard.test.ts
+FOUND: .planning/phases/94-write-paths/94-03-SUMMARY.md
+FOUND: 1ee7ead9d   FOUND: 2147675e3   FOUND: c5e74eaff   FOUND: 9b5ea0cc5
+```
+
+Plan-level `<verification>` re-run on the committed tree: guard unit test 14/14; board test 15/15;
+i18n key-set equality plus all four bilingual keys asserted (exit 0); `error.message` occurrences in
+the kanban toast path = 0; `git diff --name-only phase-94-base -- frontend/src/lib/query-client.ts`
+empty. `node scripts/check-i18n-namespaces.mjs` → exit 0,
+`1713 file(s) scanned, 802 static namespace literal(s) checked against 128 registered namespaces`.
+
 ---
 
 _Phase: 94-write-paths_
