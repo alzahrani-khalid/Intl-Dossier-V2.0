@@ -858,7 +858,15 @@ by a synchronous real response or the honest unavailable state; nothing keeps th
 | A4  | TanStack 1.170.8 renders parent-without-`<Outlet/>` by silently not rendering the matched child             | DEAD-08      | The mechanism detail could differ (e.g. dev warning) but the observed defect (children unreachable) is register-filed; consolidation is correct regardless |
 | A5  | Storage bucket `private` accepts new object paths for report artifacts (pdf-generate uses it today)         | DEAD-09      | If bucket policy blocks, create a `reports` bucket via MCP — small execution-time adjustment                                                               |
 
-## Open Questions
+## Open Questions (RESOLVED)
+
+> Retitled at checker iteration 1: every question below is OWNED by a plan or explicitly
+> optional — none is open. Pointers: **Q1** -> 95-02 Task 2(3), the Supabase-MCP SQL
+> derivation (staff_profiles role + assignment_queue count, recorded in the 95-02 SUMMARY).
+> **Q2** -> 95-03 Task 1(4), the `to_regclass`/pg_policies derivation. **Q3** -> explicitly
+> OPTIONAL — the 95-05 consolidation removes the question; no plan owns a baseline record.
+> **Q4** -> 95-01 objective, decided: options 1+2 (client adapter + quickswitcher
+> related-work; the stale `validTypes` fix is explicitly deferred as a named omission).
 
 1. **Does the test user have a `staff_profiles` row with supervisor/admin role?** (DEAD-02's
    natural post-deploy render depends on it: no row → 404 profile error state; `staff` → 403.)
