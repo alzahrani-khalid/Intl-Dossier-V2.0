@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v10.0
 milestone_name: Trust & Correctness
 status: in_progress
-last_updated: '2026-08-16T17:05:00.000Z'
+last_updated: '2026-08-16T17:37:40.996Z'
 progress:
   total_phases: 13
   completed_phases: 3
@@ -54,22 +54,28 @@ tables are all bare `NEW.updated_at = now()`); filed as `TRIGSWEEP-01` → Phase
 - **`WRITE-01` is closed FOR PUBLISH SPECIFICALLY.** The parse class is live in at least 7 further
   edge functions and **entirely unassessed in 52 more** (`EDGEPATH-01` → P100). **61 is a scope,
   never a defect count**, and the population is open-ended by construction.
+
 - **A real C9b consumer is RED and its cause is unattributed.** `user-management.spec.ts` was run
   once at HEAD under `RULING-P94-11`, failed on the create leg, and the lane **stopped cold** —
   no control run, no attribution to the known Phase 86 defect. Counted in **no** defence count.
   `94-10` therefore closes **by ruling**, not on an empty `BLOCKED`.
+
 - **`WRITE-04`'s `W4` gap is unpinned.** Releasing a past-due card over the disabled In-progress
   column still retargets, possibly to Done. **No oracle covers it.** Recorded as a gap.
+
 - **`AUDIT-ZERO-01` proves NOT-NULL `user_role`, not role variety** — all six live rows carry the
   same role (`distinct_roles = 1`).
+
 - **`WRITE-05` is Population A only** — five `/settings` child routes are a named exclusion.
 - **The reports mock generate path is `DEAD-09`** (P95), filed not fixed.
 - **Arabic naturalness and pixel RTL remain OPERATOR parks.** The Arabic this phase authored ships
   **as authored** (`RULING-P94-07`): grammatical, on-glossary, key-set-equal, **naturalness
   UNREVIEWED**. No artifact in this phase claims either, including the independent verifier's.
+
 - **`FUNC-GRANT-01`** (P100): 334 `SECURITY DEFINER` functions carry the default `PUBLIC EXECUTE`
   grant — a knowingly-accepted residual, `anon` gets no information, authenticated gets an
   existence oracle on a 122-bit random id.
+
 - **The closing register's green is author honesty, not independent measurement** —
   `94-11_g1` is self-certifying by construction. This is the phase's named weakest point.
 
