@@ -144,7 +144,11 @@ POST-DEPLOY reports: version=13 status=ACTIVE updated_at=2026-08-16T20:03:14.679
 bash scripts/probe-edge-auth.sh reports  ->  reports -> 200
 ```
 
-A second deploy followed (the schema repair found by the probe); the tip deploy is the one the GREEN block above measured, and the working tree is clean for every file in this plan, so deployed == committed.
+A second deploy followed — the schema repair the probe found (`DEPLOY_EXIT=0`, `deno check` exit 0
+before it). The TIP is **version 14, ACTIVE, updated_at 2026-08-16T20:05:53.904Z**, and that is the
+deploy the GREEN block above measured. `supabase/functions/**` is outside every lint-staged glob, so
+the commit hook did not reformat the source after deploy; the working tree is clean for every file
+in this plan, so deployed == committed.
 
 Artifacts really landed (read back from `storage.objects`, service-role query):
 
