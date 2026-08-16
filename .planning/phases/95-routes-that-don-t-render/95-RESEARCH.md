@@ -330,6 +330,18 @@ truthful zero-result response.
 `custom-reports -> 200`, `scenario-sandbox -> 500`, `quickswitcher-search -> 400`,
 `pdf-generate -> 400` in the same run — all deployed.) `[VERIFIED: probe]`
 
+> **SUPERSEDED 2026-08-16, same day (planning-leg gate drill).** "Confirmed NOT deployed" was an
+> over-reading of the 404: `supabase functions list --project-ref zkrcjzdemdmwhearhfgg` shows
+> `assignments-queue` **ACTIVE, version 11, updated 2026-07-13** — deployed but STALE (predates
+> the P92 auth fleet); the 404 is emitted by that stale function, not by the gateway. The probe's
+> `fn -> status` line cannot distinguish gateway-404 from function-404 — the instrument gap that
+> let this reading survive; plan 95-02 ships the `404-kind: gateway|function` disambiguation into
+> the probe script. Everything else in this section stands: the in-tree source audit, the client
+> transport defect, and the fix (redeploy the current source — the oracle is the version
+> increment past v11, never manifest inclusion, which was green all along). The two other
+> "NOT deployed (404)" mentions in this file (behaviour summary ~:189, environment table ~:691)
+> are governed by this correction.
+
 **In-tree source audit (`supabase/functions/assignments-queue/index.ts`):**
 
 - Auth: anon-key client with injected `Authorization` header + bare `getUser()` — the accepted

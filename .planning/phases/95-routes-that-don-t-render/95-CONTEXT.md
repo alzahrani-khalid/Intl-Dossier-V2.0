@@ -63,6 +63,16 @@ Numbering restarts per phase (P94 used `D-01..D-34`). Decisions carried forward 
   `scripts/probe-edge-auth.sh` pattern. P94's intended-broken register FORBADE this repair there;
   **Phase 95 is the owner — repairing it now is the mission, not a violation** (ORCH-BRIEF §3).
 
+  > **CORRECTED 2026-08-16 (planning-leg gate drill; 95-02 premise repair).** "Not deployed" was
+  > an over-reading: the platform manifest lists `assignments-queue` **ACTIVE, version 11,
+  > updated 2026-07-13** — a STALE deployment predating the P92 auth fleet, whose own 404
+  > masqueraded as a gateway not-deployed 404 in the probe line (the line alone cannot
+  > distinguish them). The mission is unchanged — redeploy the current audited-sound source —
+  > but the deployment oracle is the VERSION INCREMENT past the derived v11 baseline, never
+  > manifest inclusion (green before the work, can never go red). Plan 95-02 carries the
+  > corrected premise and ships the gateway|function 404-kind disambiguation into
+  > `scripts/probe-edge-auth.sh` so the next reader of a probe 404 does not repeat the class.
+
 ### DEAD-03 — /scenario-sandbox
 
 - **D-05: The error state reuses the shared query-error component Phase 93 extracted** —
