@@ -411,7 +411,18 @@ Plans:
 4. `/monitoring` resolves to the SPA route rather than raw proxy JSON, or the route is removed from the tree with the decision recorded.
 5. `/positions/:id` and the legislation detail page are reachable: one route file per slot (`$id.tsx` vs `$positionId.tsx` resolved), `legislation.tsx` renders an `<Outlet/>`, and the positions `approvals`/`versions` children drive tab state.
 
-**Plans**: TBD
+**Plans**: 9 plans (planned 2026-08-16; wave 1 = 01-08 file-disjoint, wave 2 = 09 closing)
+
+Plans:
+- [ ] 95-01-PLAN.md — W1: DEAD-01 search envelope adapter + real related-work + page error branch + e2e (criterion 1)
+- [ ] 95-02-PLAN.md — W1: DEAD-02 queue transport fix + assignments-queue deploy with probe evidence + e2e (criterion 2)
+- [ ] 95-03-PLAN.md — W1: DEAD-03 sandbox QueryErrorState retrofit + bounded retry + CDP e2e (criterion 3)
+- [ ] 95-04-PLAN.md — W1: DEAD-04 keep+narrow per RULING-P95-01 — /api/monitoring move, proxy delete, nginx check, e2e (criterion 4)
+- [ ] 95-05-PLAN.md — W1: DEAD-08 slot consolidation ($id survives) + legislation Outlet + URL-driven tabs + e2e (criterion 5)
+- [ ] 95-06-PLAN.md — W1: DEAD-09 real report generation (storage + signed url) + truthful states + deploy probe (filed-finding close)
+- [ ] 95-07-PLAN.md — W1: NOTFOUND-COMPONENT-01 custom ESLint rule + positive/negative controls (filed-finding close)
+- [ ] 95-08-PLAN.md — W1: RETENTION-CAST-01 six validate-or-throw unwraps + asRows reconcile + unit oracle (filed-finding close)
+- [ ] 95-09-PLAN.md — W2: closing derivations with populations, gate drill, DEAD-04 record for P97, register close-outs
 **UI hint**: yes
 
 ### Phase 96: Real Numbers
