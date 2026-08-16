@@ -107,14 +107,14 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
       setTimeout(() => {
         setUploadingFiles((prev) => prev.filter((f) => f.id !== attachmentFile.id))
       }, 2000)
-    } catch (error: any) {
+    } catch {
       setUploadingFiles((prev) =>
         prev.map((f) =>
           f.id === attachmentFile.id
             ? {
                 ...f,
                 status: 'error',
-                error: error.message || t('common:errors.generic'),
+                error: t('common:errors.generic'),
               }
             : f,
         ),
@@ -194,8 +194,8 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
     if (window.confirm(t('positions:attachments_uploader.confirmDelete'))) {
       try {
         await deleteMutation.mutateAsync(attachmentId)
-      } catch (error: any) {
-        alert(error.message || t('common:errors.generic'))
+      } catch {
+        alert(t('common:errors.generic'))
       }
     }
   }
