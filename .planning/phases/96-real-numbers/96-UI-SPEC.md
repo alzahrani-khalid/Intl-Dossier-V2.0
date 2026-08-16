@@ -497,15 +497,36 @@ None blocking. Two notes for the planner, resolved here by default rather than p
 
 ---
 
+## Focal Points (per touched surface)
+
+_Added 2026-08-17 by the orchestrator per the checker's Dimension-2 recommendation (the only
+flag; non-blocking). One anchor per surface — everything else on these screens is inherited
+chrome, unchanged._
+
+- **Kanban board (`/my-work` WorkBoard):** the overdue BADGE on cards is the new focal element;
+  the toolbar overdue chip is its same-clock counterpart, not a competing anchor.
+- **`/analytics` Branch A (real data):** the chart area of the active tab is the anchor; KPI row
+  secondary.
+- **`/analytics` Branch B (honest-disable):** the disabled-state icon + heading block is the
+  anchor — centered, neutral, nothing else competes.
+- **`/custom-dashboard`:** the widget grid is the anchor; the trend row inside a widget is
+  subordinate to that widget's primary metric (and ABSENT unless its comparison completed).
+- **`/calendar` and `/events`:** the month grid is the anchor; the today-marker is the single
+  accent focal point inside it.
+- **`/calendar/new`:** the form's first field group is the anchor, per the shipped form recipe.
+- **`/word-assistant`:** the status badge is a peripheral indicator, deliberately NOT the page
+  anchor; the composer surface remains primary.
+
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: PASS
+- [x] Dimension 2 Visuals: FLAG (non-blocking — focal points; addressed in the section above)
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS
 
-**Approval:** pending
+**Approval:** APPROVED 2026-08-17 (gsd-ui-checker, sonnet) — 5 PASS + 1 non-blocking FLAG,
+recommendation applied above. Verdict recorded verbatim in the orchestrator transcript.
 
 UI-SPEC-END
