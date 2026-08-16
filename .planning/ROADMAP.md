@@ -314,16 +314,20 @@ Read the checkbox as narrowly as the evidence supports:
 - **Criteria 1, 2, 3 CLOSED with behavioural evidence** — Playwright specs executed against a running
   app with a real session (`92-signout.spec.ts` 3/3), and 139 real staging deploys probed live
   (0×401 across 11 representatives).
+
 - **Criterion 2 carries a named bound: `PIN-2390-01`.** Its closing derivation greps `--include='index.ts'`
   and truthfully returns 0, but two non-`index.ts` helpers still pin `2.39.0` and are imported by six
   deployed functions. Not an auth regression (service-role client; all six probe non-401).
+
 - **Criterion 4 is HALF-CLOSED.** Its error half is proven live; its data half is parked — `DELEG-01`
   (`my-delegations` reads a relation that does not exist) and `SEED-DELEG-01` (both real delegation
   tables hold 0 rows).
+
 - **Criterion 5 is PARKED**, blocker `E2ECRED-01`. `PARK-EXEC-01` stays open until the operator rotates.
 - **RLS row-scoping was never verified behaviourally.** The injected-client guard proves the migration
   did not _remove_ scoping; nothing here proves scoping _works_. 128 of the 139 deployed functions have
   static evidence only. Nothing was verified against production.
+
 - **Unmasked by fixing the 401s, filed rather than fixed:** `DELEG-01`, `DR-42501`, `AUDIT-42703`,
   `PIN-2390-01` (Phase 93); `SEED-DELEG-01` (Phase 102).
 
@@ -414,6 +418,8 @@ Plans:
 **Plans**: 9 plans (planned 2026-08-16; wave 1 = 01-08 file-disjoint, wave 2 = 09 closing)
 
 Plans:
+**Wave 1**
+
 - [ ] 95-01-PLAN.md — W1: DEAD-01 search envelope adapter + real related-work + page error branch + e2e (criterion 1)
 - [ ] 95-02-PLAN.md — W1: DEAD-02 queue transport fix + assignments-queue deploy with probe evidence + e2e (criterion 2)
 - [ ] 95-03-PLAN.md — W1: DEAD-03 sandbox QueryErrorState retrofit + bounded retry + CDP e2e (criterion 3)
@@ -422,7 +428,11 @@ Plans:
 - [ ] 95-06-PLAN.md — W1: DEAD-09 real report generation (storage + signed url) + truthful states + deploy probe (filed-finding close)
 - [ ] 95-07-PLAN.md — W1: NOTFOUND-COMPONENT-01 custom ESLint rule + positive/negative controls (filed-finding close)
 - [ ] 95-08-PLAN.md — W1: RETENTION-CAST-01 six validate-or-throw unwraps + asRows reconcile + unit oracle (filed-finding close)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
 - [ ] 95-09-PLAN.md — W2: closing derivations with populations, gate drill, DEAD-04 record for P97, register close-outs
+
 **UI hint**: yes
 
 ### Phase 96: Real Numbers
