@@ -627,6 +627,9 @@
     "saveFailed": "Failed to save draft",
     "publishSuccess": "After action published successfully",
     "publishFailed": "Failed to publish after action",
+    "loadError": "Unable to load this after-action record. Try again, and contact an administrator if it keeps failing.",
+    "notFound": "After-action record not found",
+    "notFoundDescription": "No after-action record exists for this identifier. It may have been deleted, or the link may be incorrect.",
     "form": {
       "title": "After Action Details",
       "basicInfo": "Basic Information",

@@ -56,13 +56,18 @@ function AfterActionDetailPage(): React.ReactNode {
     )
   }
 
+  // D-10 / WRITE-02: the COLON form is the repair. The dot form resolves against the aliased
+  // default namespace, misses, and renders the raw key on screen — which is the defect this
+  // route was filed for. D-11: the route's existing error region is reused rather than replaced
+  // with new markup; `role="alert"` is the P93 error vocabulary and is what a DOM oracle can see
+  // (an RLS denial reads as an empty 200, so "no error shown" is never evidence of a pass).
   if (error) {
     return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" role="alert">
         <Card className="border-destructive">
           <CardHeader>
             <CardTitle className="text-destructive">{t('common.error')}</CardTitle>
-            <CardDescription>{t('afterActions.loadError')}</CardDescription>
+            <CardDescription>{t('common:afterActions.loadError')}</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -74,8 +79,8 @@ function AfterActionDetailPage(): React.ReactNode {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Card>
           <CardHeader>
-            <CardTitle>{t('afterActions.notFound')}</CardTitle>
-            <CardDescription>{t('afterActions.notFoundDescription')}</CardDescription>
+            <CardTitle>{t('common:afterActions.notFound')}</CardTitle>
+            <CardDescription>{t('common:afterActions.notFoundDescription')}</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -106,7 +111,11 @@ function AfterActionDetailPage(): React.ReactNode {
         toast.error(t('afterActions.conflict.warning', 'This record was modified by another user.'))
         return
       }
-      toast.error((err instanceof Error ? err.message : null) ?? t('afterActions.publishFailed'))
+      // D-08: the translated key renders ALONE. The server-originated operand used to win
+      // whenever one existed, which made the fallback key nearly dead and leaked internals into
+      // a toast. Raw failures are diagnostics — they go to the console, never to the screen.
+      console.error('after-action publish failed', err)
+      toast.error(t('common:afterActions.publishFailed'))
     }
   }
 

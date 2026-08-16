@@ -13,5 +13,8 @@
   },
   "error": {
     "list": "Could not load after-action records. Try refreshing the page."
+  },
+  "degraded": {
+    "engagementMissing": "Engagement details unavailable"
   }
 }

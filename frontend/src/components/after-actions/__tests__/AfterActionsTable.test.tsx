@@ -28,10 +28,7 @@ vi.mock('@tanstack/react-router', () => ({
   } & React.AnchorHTMLAttributes<HTMLAnchorElement>): React.ReactNode => {
     const href =
       params != null
-        ? Object.entries(params).reduce(
-            (acc, [k, v]) => acc.replace(`$${k}`, v),
-            to,
-          )
+        ? Object.entries(params).reduce((acc, [k, v]) => acc.replace(`$${k}`, v), to)
         : to
     return (
       <a
@@ -221,6 +218,53 @@ describe('AfterActionsTable', () => {
     const icon = container.querySelector('[data-testid="icon-chevron-right"]')
     expect(icon).toBeTruthy()
     expect(icon?.getAttribute('class') ?? '').toContain('icon-flip')
+  })
+
+  // Phase 94-07 (WRITE-02 / D-13) — the degraded-row oracle.
+  //
+  // `after-actions-list-all` composes the engagement in code and emits `engagement: null` when the
+  // lookup misses. Before the rewrite the function used an inner-join embed, so such a row never
+  // reached this component at all — it was deleted from a list the user is told is complete. These
+  // two tests are the client half of that repair: the row must be PRESENT, navigable, and NAMED.
+  //
+  // The file-level i18n mock returns the key verbatim, so `degraded.engagementMissing` is what a
+  // resolved t() renders here. That is deliberate — this test pins the KEY the cell addresses;
+  // whether the key resolves to real copy is an E2E/bundle question (tests/CLAUDE.md), and the
+  // bilingual value is pinned separately by the key-set-equality gate and by
+  // `frontend/tests/unit/i18n/phase-42-i18n-parity.test.ts`.
+  const degradedRow: AfterActionRecordWithJoins = {
+    ...baseRow,
+    id: 'r-degraded',
+    engagement: null,
+  }
+
+  it('a row whose engagement lookup missed is LISTED and NAMED, never hidden', () => {
+    render(<AfterActionsTable rows={[degradedRow]} isLoading={false} error={null} />)
+
+    // Present — the whole point. A hidden row would fail here, not in the label assertion.
+    const row = screen.getByTestId('after-action-row')
+    expect(row).toBeTruthy()
+    // Named, not blank and not a fake title.
+    expect(screen.getByText('degraded.engagementMissing')).toBeTruthy()
+    expect(screen.queryByText('Quarterly review')).toBeNull()
+    // Still navigable to its detail page — identity comes from the base record.
+    const link = row.querySelector('a[href]')
+    expect(link?.getAttribute('href')).toContain('r-degraded')
+    // Persistent informational state, not an interruption: no alert semantics on a row.
+    expect(row.querySelector('[role="alert"]')).toBeNull()
+  })
+
+  it('degraded label is warn (incomplete), not danger (failed), and the date cell shows an em dash', () => {
+    const { container } = render(
+      <AfterActionsTable rows={[degradedRow]} isLoading={false} error={null} />,
+    )
+    const label = screen.getByText('degraded.engagementMissing')
+    // P93 D-07 discriminator: nothing failed, the record is incomplete.
+    expect(label.getAttribute('class') ?? '').toContain('text-warn')
+    expect(label.getAttribute('class') ?? '').not.toContain('text-danger')
+    // The join-dependent date cell renders the count-placeholder em dash, never a fake value.
+    const dateCell = container.querySelector('td[dir="ltr"]')
+    expect(dateCell?.textContent).toBe('—')
   })
 
   it('empty state heading renders when rows.length === 0', () => {
