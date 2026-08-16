@@ -840,19 +840,76 @@ export class AuthService {
   }
 
   /**
-   * Log security events
+   * Log security events to `public.audit_log` — SINGULAR, the backend's table.
+   * The edge functions write `audit_logs` (plural), a DIFFERENT table with a
+   * different column set; see supabase/functions/_shared/audit.ts.
+   *
+   * Column names below are the live set, re-derived 2026-08-16 against staging
+   * `zkrcjzdemdmwhearhfgg` (D-17). This insert previously named `resource_type`
+   * and `details`, neither of which is a column, so every call failed with
+   * PGRST204 into a catch that only logged — the table has never held a single
+   * security event.
+   *
+   * Grade: LOG-LOUDLY-AND-CONTINUE (D-18). Backend security-event logging is
+   * observability, not a precondition of the auth action, so the caller is not
+   * failed when the write fails. The honest tension is that a dropped audit row
+   * is a real gap — so it is never absorbed silently: every path out of this
+   * function that does not write logs at winston ERROR level with a marker.
    */
   async logSecurityEvent(userId: string, event: string, details?: any): Promise<void> {
     try {
-      await supabaseAdmin.from('audit_log').insert({
-        user_id: userId,
+      // `tenant_id` is NOT NULL with no default, and there is no tenant column
+      // anywhere on the user side, so it is DERIVED from the acting user's own
+      // org columns (RULING-P94-04 A3):
+      //   COALESCE(profiles.organization_id, users.default_organization_id)
+      // `profiles` has NO `id` column — it is keyed by `user_id`. Binding an
+      // outer `id` here yields NULL and matches nothing.
+      const { data: profile } = await supabaseAdmin
+        .from('profiles')
+        .select('organization_id')
+        .eq('user_id', userId)
+        .maybeSingle()
+
+      let tenantId: string | null = profile?.organization_id ?? null
+
+      if (!tenantId) {
+        const { data: user } = await supabaseAdmin
+          .from('users')
+          .select('default_organization_id')
+          .eq('id', userId)
+          .maybeSingle()
+        tenantId = user?.default_organization_id ?? null
+      }
+
+      // NO SENTINEL TENANT (A3). Inventing one would file a security event
+      // against an organization it did not happen in — silently wrong data is
+      // worse than a stated, visible gap.
+      if (!tenantId) {
+        logError(
+          `AUDIT-DROP-01: audit insert SKIPPED — no tenant resolves for user ${userId} (event: ${event})`,
+        )
+        return
+      }
+
+      // `entity_id` is NOT NULL. These events carry one user id, who is both the
+      // actor and the subject, so the subject id is the honest value here.
+      const { error } = await supabaseAdmin.from('audit_log').insert({
+        tenant_id: tenantId,
+        entity_type: 'security',
+        entity_id: userId,
         action: event,
-        resource_type: 'security',
-        details: details || {},
+        user_id: userId,
+        additional_context: details || {},
         timestamp: new Date().toISOString(),
       })
+
+      if (error) {
+        logError(
+          `AUDIT-DROP-01: audit insert FAILED for user ${userId} (event: ${event}) — ${error.message}`,
+        )
+      }
     } catch (error) {
-      logError('Security event logging failed', error as Error)
+      logError('AUDIT-DROP-01: audit insert THREW', error as Error)
     }
   }
 
