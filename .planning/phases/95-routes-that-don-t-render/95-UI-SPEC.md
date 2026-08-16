@@ -1,7 +1,7 @@
 ---
 phase: 95
 slug: routes-that-don-t-render
-status: draft
+status: approved
 shadcn_initialized: true
 preset: none (pre-existing components.json compat layer; no preset automation used, no components pulled this phase)
 created: 2026-08-16
