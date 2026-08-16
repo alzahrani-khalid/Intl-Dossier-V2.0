@@ -27,8 +27,22 @@ See: .planning/PROJECT.md (updated 2026-08-15 — v9.0 closed PARTIAL; v10.0 Tru
 Milestone: **v10.0 — Trust & Correctness** (roadmapped 2026-08-15).
 Phase: 93 (failure-visibility) — **EXECUTED 2026-08-16, accepted by `RULING-P93-07`.**
 15 of 15 plans executed (15/15 SUMMARYs on disk, every `## BLOCKED` section read and empty).
-Next command: `/gsd:plan-phase 94`.
-Plan: none yet for 94.
+Phase 94 (write-paths) — **PLANNING IN PROGRESS 2026-08-16.** Context gathered
+(`94-CONTEXT.md`, `94-DISCUSSION-LOG.md`, commit `b584bcb31`); base tag `phase-94-base` created,
+SSH-signed, verifies, points at `3d63da95f`. Research running. **No plan files yet; nothing
+dispatched.**
+Next command: `/gsd:plan-phase 94` (in flight).
+
+**Phase 94 planning has already corrected three documents and opened four parks.** The register and
+the roadmap disagreed on scope (9 requirements, not 6 — `ba19751c6`). The `aa_commitments` lifecycle
+is **five** values, not the four that `CLAUDE.md`, `REQUIREMENTS.md` and the first park all stated —
+`pending, in_progress, completed, cancelled, overdue`, verified by live catalog query and corrected
+in all three places. `PARK-94-01`/`-02` are ruled (`RULING-P94-01`); `PARK-94-03` is ruled
+(`RULING-P94-02`) with its handling filed as `COUNT-04` → Phase 96; **`PARK-94-04` is OPEN and
+blocks `WRITE-04`'s criterion wording** — a live `BEFORE UPDATE` trigger
+(`check_commitment_overdue`) overwrites the kanban's commitment write, so criterion 4 is false for
+8 of the 10 commitments on staging for a reason no document names. `COPY-06` (global success
+literal) → Phase 98. Both filings are approve-as-placed.
 Prior phase: 92 (session-integrity-edge-auth) — EXECUTED 2026-08-15, accepted by `RULING-P92-49`;
 `92-10` remains a parked operator act (`E2ECRED-01`), not work.
 
