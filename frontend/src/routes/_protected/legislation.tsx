@@ -1,17 +1,19 @@
 /**
- * Legislation Page
- * Main legislation listing page with filtering and search
+ * Legislation LAYOUT
+ *
+ * Phase 95 DEAD-08: this file used to render the list body directly and had no
+ * <Outlet/>, so `legislation/$id.tsx` was registered but never reachable in
+ * render. It is now a layout; the list body lives in `legislation/index.tsx`.
+ *
+ * `validateSearch` stays HERE (on the layout) so `/legislation?type=…` deep
+ * links keep validating for the whole subtree; the index child reads the
+ * validated search via `getRouteApi`.
  */
 
-import { useState, useCallback } from 'react'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
-import { LegislationList } from '@/components/legislation'
-import { LegislationForm } from '@/components/legislation'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 // Search params schema for URL filter synchronization
-interface LegislationSearchParams {
+export interface LegislationSearchParams {
   type?: string // Comma-separated type values
   status?: string // Comma-separated status values
   priority?: string // Comma-separated priority values
@@ -23,7 +25,7 @@ interface LegislationSearchParams {
 }
 
 export const Route = createFileRoute('/_protected/legislation')({
-  component: LegislationPage,
+  component: () => <Outlet />,
   validateSearch: (search: Record<string, unknown>): LegislationSearchParams => {
     return {
       type: search.type as string | undefined,
@@ -39,47 +41,3 @@ export const Route = createFileRoute('/_protected/legislation')({
     }
   },
 })
-
-function LegislationPage() {
-  const { t } = useTranslation('legislation')
-  const navigate = useNavigate({ from: Route.fullPath })
-  const searchParams = Route.useSearch()
-
-  const [isCreateOpen, setIsCreateOpen] = useState(false)
-
-  const handleCreateClick = useCallback(() => {
-    setIsCreateOpen(true)
-  }, [])
-
-  const handleCreateSuccess = useCallback(
-    (id: string) => {
-      setIsCreateOpen(false)
-      navigate({
-        to: '/legislation/$id',
-        params: { id } as any,
-      })
-    },
-    [navigate],
-  )
-
-  return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-      <LegislationList dossierId={searchParams.dossierId} onCreateClick={handleCreateClick} />
-
-      {/* Create Legislation Sheet */}
-      <Sheet open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle className="text-start">{t('form.title.create')}</SheetTitle>
-          </SheetHeader>
-          <div className="mt-6">
-            <LegislationForm
-              onSuccess={handleCreateSuccess}
-              onCancel={() => setIsCreateOpen(false)}
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
-    </div>
-  )
-}

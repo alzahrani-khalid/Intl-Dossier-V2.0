@@ -60,6 +60,7 @@ import { Route as ProtectedTasksIndexRouteImport } from './routes/_protected/tas
 import { Route as ProtectedReportsIndexRouteImport } from './routes/_protected/reports/index'
 import { Route as ProtectedPositionsIndexRouteImport } from './routes/_protected/positions/index'
 import { Route as ProtectedMyWorkIndexRouteImport } from './routes/_protected/my-work/index'
+import { Route as ProtectedLegislationIndexRouteImport } from './routes/_protected/legislation/index'
 import { Route as ProtectedIntakeIndexRouteImport } from './routes/_protected/intake/index'
 import { Route as ProtectedHelpIndexRouteImport } from './routes/_protected/help/index'
 import { Route as ProtectedEngagementsIndexRouteImport } from './routes/_protected/engagements/index'
@@ -471,6 +472,12 @@ const ProtectedMyWorkIndexRoute = ProtectedMyWorkIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ProtectedMyWorkRoute,
 } as any)
+const ProtectedLegislationIndexRoute =
+  ProtectedLegislationIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => ProtectedLegislationRoute,
+  } as any)
 const ProtectedIntakeIndexRoute = ProtectedIntakeIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -1444,6 +1451,7 @@ export interface FileRoutesByFullPath {
   '/engagements/': typeof ProtectedEngagementsIndexRoute
   '/help/': typeof ProtectedHelpIndexRoute
   '/intake/': typeof ProtectedIntakeIndexRoute
+  '/legislation/': typeof ProtectedLegislationIndexRoute
   '/my-work/': typeof ProtectedMyWorkIndexRoute
   '/positions/': typeof ProtectedPositionsIndexRoute
   '/reports/': typeof ProtectedReportsIndexRoute
@@ -1584,7 +1592,6 @@ export interface FileRoutesByTo {
   '/geographic-visualization': typeof ProtectedGeographicVisualizationRoute
   '/intelligence': typeof ProtectedIntelligenceRoute
   '/kanban': typeof ProtectedKanbanRoute
-  '/legislation': typeof ProtectedLegislationRouteWithChildren
   '/monitoring': typeof ProtectedMonitoringRoute
   '/mous': typeof ProtectedMousRoute
   '/notifications': typeof ProtectedNotificationsRoute
@@ -1639,6 +1646,7 @@ export interface FileRoutesByTo {
   '/engagements': typeof ProtectedEngagementsIndexRoute
   '/help': typeof ProtectedHelpIndexRoute
   '/intake': typeof ProtectedIntakeIndexRoute
+  '/legislation': typeof ProtectedLegislationIndexRoute
   '/my-work': typeof ProtectedMyWorkIndexRoute
   '/positions': typeof ProtectedPositionsIndexRoute
   '/reports': typeof ProtectedReportsIndexRoute
@@ -1837,6 +1845,7 @@ export interface FileRoutesById {
   '/_protected/engagements/': typeof ProtectedEngagementsIndexRoute
   '/_protected/help/': typeof ProtectedHelpIndexRoute
   '/_protected/intake/': typeof ProtectedIntakeIndexRoute
+  '/_protected/legislation/': typeof ProtectedLegislationIndexRoute
   '/_protected/my-work/': typeof ProtectedMyWorkIndexRoute
   '/_protected/positions/': typeof ProtectedPositionsIndexRoute
   '/_protected/reports/': typeof ProtectedReportsIndexRoute
@@ -2042,6 +2051,7 @@ export interface FileRouteTypes {
     | '/engagements/'
     | '/help/'
     | '/intake/'
+    | '/legislation/'
     | '/my-work/'
     | '/positions/'
     | '/reports/'
@@ -2182,7 +2192,6 @@ export interface FileRouteTypes {
     | '/geographic-visualization'
     | '/intelligence'
     | '/kanban'
-    | '/legislation'
     | '/monitoring'
     | '/mous'
     | '/notifications'
@@ -2237,6 +2246,7 @@ export interface FileRouteTypes {
     | '/engagements'
     | '/help'
     | '/intake'
+    | '/legislation'
     | '/my-work'
     | '/positions'
     | '/reports'
@@ -2434,6 +2444,7 @@ export interface FileRouteTypes {
     | '/_protected/engagements/'
     | '/_protected/help/'
     | '/_protected/intake/'
+    | '/_protected/legislation/'
     | '/_protected/my-work/'
     | '/_protected/positions/'
     | '/_protected/reports/'
@@ -2918,6 +2929,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/my-work/'
       preLoaderRoute: typeof ProtectedMyWorkIndexRouteImport
       parentRoute: typeof ProtectedMyWorkRoute
+    }
+    '/_protected/legislation/': {
+      id: '/_protected/legislation/'
+      path: '/'
+      fullPath: '/legislation/'
+      preLoaderRoute: typeof ProtectedLegislationIndexRouteImport
+      parentRoute: typeof ProtectedLegislationRoute
     }
     '/_protected/intake/': {
       id: '/_protected/intake/'
@@ -4081,10 +4099,12 @@ const ProtectedIntakeRouteWithChildren = ProtectedIntakeRoute._addFileChildren(
 
 interface ProtectedLegislationRouteChildren {
   ProtectedLegislationIdRoute: typeof ProtectedLegislationIdRoute
+  ProtectedLegislationIndexRoute: typeof ProtectedLegislationIndexRoute
 }
 
 const ProtectedLegislationRouteChildren: ProtectedLegislationRouteChildren = {
   ProtectedLegislationIdRoute: ProtectedLegislationIdRoute,
+  ProtectedLegislationIndexRoute: ProtectedLegislationIndexRoute,
 }
 
 const ProtectedLegislationRouteWithChildren =
