@@ -323,7 +323,22 @@ the DB):
   `critical`) — `critical` is correct here; it is the `urgency_level` enum, NOT
   the work-item `priority` (which uses `urgent`).
 - **Commitments** (`aa_commitments`) use `due_date` and `owner_type` /
-  `owner_user_id` / `owner_contact_id` (not `deadline` / `assignee_id`).
+  `owner_user_id` / `owner_contact_id` (not `deadline` / `assignee_id`). Their
+  `status` lifecycle is **five values**, verified by live catalog query against
+  staging `zkrcjzdemdmwhearhfgg` on 2026-08-16 (`RULING-P94-01` order 2):
+  `aa_commitments_status_check` is
+  `status IN ('pending','in_progress','completed','cancelled','overdue')`.
+  This paragraph previously implied four by omission and `REQUIREMENTS.md`
+  WRITE-04 stated four outright; both were corrected in the same commit. There
+  is **no `review`** — the kanban board has a `review` column and mapping a
+  commitment into it writes a value the constraint rejects. Derive the list
+  before relying on it:
+
+  ```sql
+  SELECT pg_get_constraintdef(oid) FROM pg_constraint
+  WHERE conrelid = 'public.aa_commitments'::regclass AND conname = 'aa_commitments_status_check';
+  ```
+
 - **Tasks** (`tasks`) use `sla_deadline` (not `deadline`) and `workflow_stage`
   (`todo`, `in_progress`, `review`, `done`, `cancelled`).
 
