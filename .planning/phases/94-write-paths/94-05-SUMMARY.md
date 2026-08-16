@@ -274,6 +274,14 @@ reaches `auth.users` only through the GoTrue admin API with the service-role key
 
 None.
 
+## Self-Check: PASSED
+
+- All four files present on disk (`[ -f ]` each): the migration, the probe, the spec, this summary.
+- All three task commits reachable by sha: `71677297f`, `2ffd0e6b2`, `d48be4937`.
+- All three gates re-run verbatim from the committed tree: `g1 exit=0`, `g2 exit=0`, `g3 exit=0`.
+- `.planning/STATE.md` and `.planning/ROADMAP.md` appear in none of this plan's commits.
+- Staging left as found: `custom_reports` / `report_shares` / `report_schedules` all at 0 rows.
+
 ---
 
 _Phase: 94-write-paths_
