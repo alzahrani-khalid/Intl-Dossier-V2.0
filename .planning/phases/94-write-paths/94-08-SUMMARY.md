@@ -82,8 +82,37 @@ its paths are under `.planning/`. Commits 1 and 2 ran the full pre-commit hook.
 | `94-08_g2` (:150) | Verbatim gate on the undone tree → **`EXIT=1`**; subject check `ls -la scripts/probe-commitment-readback.mjs` → `No such file or directory`. Red because the probe did not exist — its subject. | Verbatim gate → **`94-08_g2 EXIT=0`**, `PROBE PASSED — future-due write persisted verbatim (read-back), past-due write observed coerced to \`overdue\`, fixtures cleaned, live rows untouched`. Full run output reproduced below. | Ran live against staging `zkrcjzdemdmwhearhfgg`. Not a credentials-absent exit 2 — credentials were present and every assertion reached its subject. |
 | `94-08_g3` (:173) | Verbatim gate on the undone tree → **`EXIT=1`**; `ls -la .planning/phases/94-write-paths/94-STAGE-PARITY.md` → `No such file or directory`. | Verbatim gate → **`94-08_g3 EXIT=0`**. Clause-by-clause: `grep -q 'PARITY: MATCH'` → `EXIT=0`; `grep -qi 'population'` → `EXIT=0`. Negative control: `grep -q 'PARITY: MISMATCH —'` → `EXIT=1` (correctly absent). | See **GATE CONCERN** below — this gate is sound but **self-certifying**, and I am recording that rather than editing it. |
 
-**Zero gate text was edited.** `git diff phase-94-base -- .planning/phases/94-write-paths/94-08-PLAN.md`
-is empty.
+## Zero gate text was edited — measured, with the instrument corrected
+
+My first instrument for this claim was **wrong and I am recording it rather than quietly swapping
+it**: `git diff phase-94-base -- 94-08-PLAN.md` reports **214 insertions**, because every plan file
+in this phase was authored _after_ the base tag, so all eleven plans read as "added" against it. A
+diff-vs-base cannot answer "was this edited during execution"; it answers "did this exist at the
+tag". Same population-definition class the phase has already paid for four times.
+
+The correct anchor is this session's starting HEAD, `416ade5b0`:
+
+```
+$ git log --oneline 416ade5b0..HEAD -- .planning/phases/94-write-paths/94-08-PLAN.md
+                                                     (empty — no commit touched it)
+$ git diff --stat 416ade5b0..HEAD -- .planning/phases/94-write-paths/94-08-PLAN.md
+                                                     (empty — byte-identical)
+$ git status --short -- .planning/phases/94-write-paths/94-08-PLAN.md
+                                                     (empty — no uncommitted change)
+```
+
+Positive control on the same instrument, so the three empties are not a broken command:
+
+```
+$ git log --oneline 416ade5b0..HEAD -- frontend/src/pages/WorkBoard/BoardColumn.tsx
+9f5a5a194 feat(94-08): commitment drag disables impossible columns, never the home one
+```
+
+Sweeping all eleven plan files against `416ade5b0` returns exactly one changed file — **not mine**:
+`94-01-PLAN.md`, by another lane's commit `9a86db9c0`
+(`docs(94-01): ADDENDUM — PARK-EXEC-01 repair under RULING-P94-09`), which adds a path to
+`files_modified` under an existing ruling and touches no `<automated>` block. Reported for
+completeness, not as a finding against that lane.
 
 ## `94-08_g2` full GREEN output (live staging run)
 
@@ -360,6 +389,21 @@ that is the orchestrator's call once the phase's WRITE-04 plans have all closed.
   on zsh word-splitting plus BSD `sed` bracket handling (re-run under `bash`).
 - `${PIPESTATUS[0]}` is empty in this zsh shell. All gate exit codes in this SUMMARY were captured
   directly with `$?` on an unpiped command, never through a pipe.
+- A third instrument fault, self-caught during the self-check: the first draft of this SUMMARY
+  asserted gate-text immutability with `git diff phase-94-base -- <plan>`, which is the wrong
+  population (all plan files postdate the tag). Corrected above with the session-start anchor and a
+  positive control. The claim itself held; the evidence for it did not, until it was re-measured.
+
+## Self-Check: PASSED
+
+- Files on disk: `scripts/probe-commitment-readback.mjs` FOUND ·
+  `94-STAGE-PARITY.md` FOUND · `94-08-SUMMARY.md` FOUND.
+- Commits resolve (`git cat-file -e <sha>^{commit}`): `9f5a5a19` FOUND · `7f8946ab` FOUND ·
+  `77a7e62a` FOUND · `145418da` FOUND.
+- All three plan gates re-run verbatim on the final tree: `g1 EXIT=0`, `g2 EXIT=0`, `g3 EXIT=0`.
+- Identity: all four commits carry `Khalid Alzahrani <alzahrani.khalid@gmail.com>` as author and
+  committer. No throwaway worktree was created; `git config --local --get user.email` exits 1 (no
+  repo-local override was written by this leg).
 
 # Next Phase Readiness
 
