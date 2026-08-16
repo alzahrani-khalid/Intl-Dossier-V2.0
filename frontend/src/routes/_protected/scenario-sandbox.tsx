@@ -18,8 +18,6 @@ import {
   TrendingUp,
   TrendingDown,
   Loader2,
-  AlertCircle,
-  RefreshCw,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -36,6 +34,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ScenarioCard, ScenarioForm, ScenarioComparison } from '@/components/scenario-sandbox'
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import {
   useScenarios,
   useCreateScenario,
@@ -76,6 +75,7 @@ function ScenarioSandboxPage() {
     data: scenariosData,
     isLoading,
     isError,
+    isFetching,
     refetch,
   } = useScenarios({
     limit: 50,
@@ -310,17 +310,11 @@ function ScenarioSandboxPage() {
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
           ) : isError ? (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>{t('errors.loadFailed')}</AlertTitle>
-              <AlertDescription>
-                {t('common:errors.queryFailed.description')}
-                <Button variant="outline" size="sm" className="ms-4" onClick={() => refetch()}>
-                  <RefreshCw className="h-4 w-4 me-2" />
-                  Retry
-                </Button>
-              </AlertDescription>
-            </Alert>
+            <QueryErrorState
+              variant="page"
+              onRetry={() => void refetch()}
+              isRetrying={isFetching}
+            />
           ) : scenarios.length === 0 ? (
             <Card>
               <CardContent className="py-12">
