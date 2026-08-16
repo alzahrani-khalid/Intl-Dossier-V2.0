@@ -154,7 +154,10 @@ E2ECRED-01), inline auth from `.env.test`, against the running dev server on
 2. **Task 2: reconcile the consumer — delete asRows, keep the region gating** — `488462c35`
    (refactor) — `frontend/src/routes/_protected/admin/data-retention.tsx` (+10 / −36)
 
-Both commits used explicit pathspecs. Task 1's staging needed `git add` on the new (untracked)
+**Plan metadata:** `b96c797cb` (docs: this SUMMARY) + `e2bb5b29f` (docs: prettier-format it — see
+deviation 2) + the record-correction commit that added deviation 2 itself.
+
+Both task commits used explicit pathspecs. Task 1's staging needed `git add` on the new (untracked)
 test file — `git commit -- <path>` cannot stage an untracked file — and hit the shared
 `index.lock` once; it succeeded on retry 2, per the protocol's sleep-and-retry rule.
 
@@ -215,11 +218,38 @@ casts), not as a commit.
 - **Verification:** the oracle's RED was observed and pasted above; the GREEN gate exit is 0
 - **Committed in:** `89020143f`
 
+**2. [Rule 3 - Blocking] `git commit --amend` clobbered a SIBLING LANE's commit — detected and
+reverted within one command**
+
+- **Found during:** SUMMARY close-out
+- **Issue:** The first SUMMARY commit (`b96c797cb`) was made with `--no-verify`, which skipped
+  lint-staged's `prettier --write` on markdown, so the file landed unformatted. I fixed the
+  formatting and ran `git commit --amend`. **On a shared branch `--amend` does not amend YOUR
+  commit — it amends whatever is at HEAD.** In the ~90 s between the two, the 95-05 lane had
+  committed `6551454d0` (`refactor(95-05): make legislation a layout…`), so my amend rewrote
+  THEIR commit into `c1e0bcbf4` — their tree plus my two-line markdown delta, under their message
+  and a new sha. Any sha they had already pinned in their own SUMMARY would have gone dangling.
+- **Fix:** `git reset --soft 6551454d0…` (guarded by an equality check on HEAD first, so a
+  further sibling commit would have aborted the reset instead of dropping it), which restored
+  their commit at its **original sha, byte-identical**, and left my markdown delta staged. I then
+  committed that delta as my own `e2bb5b29f`, hooks enabled.
+- **Files modified:** none of theirs — verified below
+- **Verification:** `git log --oneline -1 6551454d0` resolves;
+  `git merge-base --is-ancestor 6551454d0 HEAD` → true (their sha is on the branch);
+  `git merge-base --is-ancestor c1e0bcbf4 HEAD` → false (the clobber object is off the branch);
+  `git diff 6551454d0 <their-original>` is empty by construction (same object).
+- **Committed in:** `e2bb5b29f` (repair), this entry in the record-correction commit
+- **Rule for the rest of this phase, stated for whoever reads this next:** on a shared branch
+  **never `--amend`, and never `--no-verify`.** The bypass caused the formatting miss; the amend
+  turned a two-line formatting miss into a cross-lane history rewrite. Both are avoidable with a
+  plain follow-up commit.
+
 ---
 
-**Total deviations:** 1 auto-fixed (1 process).
-**Impact on plan:** None on scope or behaviour — the plan's evidence requirement (observe red,
-observe green, paste both) is satisfied in full.
+**Total deviations:** 2 auto-fixed (1 process, 1 blocking).
+**Impact on plan:** None on scope or behaviour. Deviation 2 briefly rewrote a sibling lane's
+commit and was fully reverted — their sha is intact on the branch and no file of theirs changed
+content at any point.
 
 ## Issues Encountered
 
