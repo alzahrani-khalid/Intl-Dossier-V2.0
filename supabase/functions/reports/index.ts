@@ -138,17 +138,22 @@ async function gatherReportData(
     }
   };
 
+  // Every query below is written against the LIVE staging schema, derived 2026-08-16. The
+  // shapes inherited from the GET branch referenced columns that do not exist — `countries.status`,
+  // `countries.name_en`, `mous.primary_party_id`, `events.organizer_id`,
+  // `intelligence_reports.report_number` / `.title_en` — so five of the six types answered 500,
+  // and three more `reduce` keys (`org.type`, `mou.workflow_state`, `event.is_virtual`) silently
+  // bucketed every row under `undefined`. A report cannot be real while its query is fictional.
   if (type === 'countries') {
     const { data, error } = await supabaseClient
       .from('countries')
-      .select('*', { count: 'exact' })
-      .eq('status', 'active');
+      .select('*', { count: 'exact' });
 
     if (error) throw error;
 
     reportData.countries = data;
     reportData.summary = {
-      total_active: data?.length || 0,
+      total: data?.length || 0,
       by_region: data?.reduce((acc: any, country: any) => {
         acc[country.region] = (acc[country.region] || 0) + 1;
         return acc;
@@ -157,26 +162,22 @@ async function gatherReportData(
   } else if (type === 'organizations') {
     const { data, error } = await supabaseClient
       .from('organizations')
-      .select('*, country:countries(name_en)', { count: 'exact' });
+      .select('*', { count: 'exact' });
 
     if (error) throw error;
 
     reportData.organizations = data;
     reportData.summary = {
       total: data?.length || 0,
-      by_type: data?.reduce((acc: any, org: any) => {
-        acc[org.type] = (acc[org.type] || 0) + 1;
-        return acc;
-      }, {}),
-      by_status: data?.reduce((acc: any, org: any) => {
-        acc[org.status] = (acc[org.status] || 0) + 1;
+      by_org_type: data?.reduce((acc: any, org: any) => {
+        acc[org.org_type] = (acc[org.org_type] || 0) + 1;
         return acc;
       }, {})
     };
   } else if (type === 'mous') {
     let query = supabaseClient
       .from('mous')
-      .select('*, primary_party:primary_party_id(name_en), secondary_party:secondary_party_id(name_en)', { count: 'exact' });
+      .select('*', { count: 'exact' });
 
     if (dateFrom) {
       query = query.gte('created_at', dateFrom);
@@ -192,8 +193,8 @@ async function gatherReportData(
     reportData.mous = data;
     reportData.summary = {
       total: data?.length || 0,
-      by_workflow_state: data?.reduce((acc: any, mou: any) => {
-        acc[mou.workflow_state] = (acc[mou.workflow_state] || 0) + 1;
+      by_lifecycle_state: data?.reduce((acc: any, mou: any) => {
+        acc[mou.lifecycle_state] = (acc[mou.lifecycle_state] || 0) + 1;
         return acc;
       }, {}),
       expiring_soon: data?.filter((mou: any) => {
@@ -207,13 +208,13 @@ async function gatherReportData(
   } else if (type === 'events') {
     let query = supabaseClient
       .from('events')
-      .select('*, organizer:organizer_id(name_en)', { count: 'exact' });
+      .select('*', { count: 'exact' });
 
     if (dateFrom) {
-      query = query.gte('start_datetime', dateFrom);
+      query = query.gte('start_time', dateFrom);
     }
     if (dateTo) {
-      query = query.lte('start_datetime', dateTo);
+      query = query.lte('start_time', dateTo);
     }
 
     const { data, error } = await query;
@@ -231,12 +232,12 @@ async function gatherReportData(
         acc[event.status] = (acc[event.status] || 0) + 1;
         return acc;
       }, {}),
-      virtual_events: data?.filter((e: any) => e.is_virtual).length || 0
+      virtual_events: data?.filter((e: any) => e.virtual_link).length || 0
     };
   } else if (type === 'intelligence') {
     const { data, error } = await supabaseClient
       .from('intelligence_reports')
-      .select('id, report_number, title_en, confidence_level, classification, status, created_at', { count: 'exact' })
+      .select('id, title, confidence_level, classification, status, created_at', { count: 'exact' })
       .eq('status', 'published');
 
     if (error) throw error;
