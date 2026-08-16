@@ -513,6 +513,52 @@ describe('AfterActionForm', () => {
     })
   })
 
+  // WRITE-01. In create mode the form receives no `initialData` at all. The Save Draft cases
+  // above pass `initialData={{}}`, which routes through the edit-mode `isDirty` path and so
+  // cannot observe this contract — these cases drive the real component with the prop ABSENT.
+  // The untouched case is the trap: deleting the `if (!initialData) return` guard naively
+  // enables Save on mount, which UI-SPEC §5 forbids.
+  describe('Create Mode Enablement (WRITE-01)', () => {
+    it('create mode: Save draft is disabled on an untouched empty form', () => {
+      render(<AfterActionForm {...defaultProps} />)
+
+      expect(screen.getByRole('button', { name: /save draft/i })).toBeDisabled()
+    })
+
+    it('create mode: Save draft enables once the user enters content', async () => {
+      const user = userEvent.setup()
+      render(<AfterActionForm {...defaultProps} />)
+
+      expect(screen.getByRole('button', { name: /save draft/i })).toBeDisabled()
+
+      await user.type(
+        screen.getByPlaceholderText('Enter attendee names (comma-separated)'),
+        'John Doe',
+      )
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /save draft/i })).not.toBeDisabled()
+      })
+    })
+
+    it('create mode: Publish renders disabled until the form is valid, then enables', async () => {
+      const user = userEvent.setup()
+      render(<AfterActionForm {...defaultProps} canPublish onPublish={mockOnPublish} />)
+
+      expect(screen.getByRole('button', { name: /^publish$/i })).toBeDisabled()
+
+      await user.type(
+        screen.getByPlaceholderText('Enter attendee names (comma-separated)'),
+        'John Doe{Enter}',
+      )
+      await user.click(screen.getByText('Add Decision'))
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /^publish$/i })).not.toBeDisabled()
+      })
+    })
+  })
+
   describe('RTL Support', () => {
     it('relies on the global direction provider instead of a form dir attribute', () => {
       render(<AfterActionForm {...defaultProps} />)
