@@ -127,10 +127,6 @@ export default defineConfig({
         target: backendProxyTarget,
         changeOrigin: true,
       },
-      '/monitoring': {
-        target: backendProxyTarget,
-        changeOrigin: true,
-      },
     },
     // Add cache-busting headers for HTML in dev mode
     headers: {

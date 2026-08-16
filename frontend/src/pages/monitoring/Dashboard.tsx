@@ -1,4 +1,21 @@
+/**
+ * MonitoringDashboard — the SPA page behind /monitoring (DEAD-04, RULING-P95-01).
+ *
+ * The two calls below are the plan's mechanically-enumerated caller population. They used to be
+ * bare relative fetches against the old monitoring prefix with NO Authorization header, answered
+ * in dev only by a Vite proxy entry that also swallowed the browser's document request for that
+ * same prefix. That entry is gone; the API moved under /api/monitoring, which the generic /api
+ * proxy carries in dev and nginx `location /api/` carries in prod — both callers resolve in both.
+ *
+ * `apiGet(..., { baseUrl: 'express' })` attaches the session JWT that /api/monitoring/alerts
+ * requires (requireAuthHeader). Each widget owns its own error state: a rejected query renders
+ * QueryErrorState inline while its sibling still renders data. Before this, the page had NO error
+ * branch at all — a backend-absent response showed "Loading health..." forever.
+ */
 import { useQuery } from '@tanstack/react-query'
+
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
+import { apiGet } from '@/lib/api-client'
 
 type HealthService = {
   status: 'healthy' | 'degraded' | 'unhealthy'
@@ -22,22 +39,26 @@ type Alert = {
   acknowledged?: boolean
 }
 
-async function fetchJSON<T>(url: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(url, init)
-  if (!res.ok) throw new Error(`Failed ${res.status}`)
-  return res.json() as Promise<T>
-}
-
 export default function MonitoringDashboard() {
-  const { data: health } = useQuery<HealthResponse>({
+  const {
+    data: health,
+    isError: healthIsError,
+    isFetching: healthIsFetching,
+    refetch: refetchHealth,
+  } = useQuery<HealthResponse>({
     queryKey: ['monitoring-health'],
-    queryFn: () => fetchJSON<HealthResponse>('/monitoring/health'),
+    queryFn: () => apiGet<HealthResponse>('/api/monitoring/health', { baseUrl: 'express' }),
     refetchInterval: 5000,
   })
 
-  const { data: alerts } = useQuery<Alert[]>({
+  const {
+    data: alerts,
+    isError: alertsIsError,
+    isFetching: alertsIsFetching,
+    refetch: refetchAlerts,
+  } = useQuery<Alert[]>({
     queryKey: ['monitoring-alerts'],
-    queryFn: () => fetchJSON<Alert[]>('/monitoring/alerts'),
+    queryFn: () => apiGet<Alert[]>('/api/monitoring/alerts', { baseUrl: 'express' }),
     refetchInterval: 10000,
   })
 
@@ -46,8 +67,16 @@ export default function MonitoringDashboard() {
       <h1>Monitoring Dashboard</h1>
       <section>
         <h2>Health</h2>
-        {!health && <p>Loading health...</p>}
-        {health && (
+        {healthIsError && (
+          <QueryErrorState
+            variant="inline"
+            testId="monitoring-health-error"
+            onRetry={() => void refetchHealth()}
+            isRetrying={healthIsFetching}
+          />
+        )}
+        {!healthIsError && !health && <p>Loading health...</p>}
+        {!healthIsError && health && (
           <div>
             <p>Overall: {health.status}</p>
             <ul>
@@ -62,9 +91,17 @@ export default function MonitoringDashboard() {
       </section>
       <section>
         <h2>Alerts</h2>
-        {!alerts && <p>Loading alerts...</p>}
-        {alerts && alerts.length === 0 && <p>No alerts configured</p>}
-        {alerts && alerts.length > 0 && (
+        {alertsIsError && (
+          <QueryErrorState
+            variant="inline"
+            testId="monitoring-alerts-error"
+            onRetry={() => void refetchAlerts()}
+            isRetrying={alertsIsFetching}
+          />
+        )}
+        {!alertsIsError && !alerts && <p>Loading alerts...</p>}
+        {!alertsIsError && alerts && alerts.length === 0 && <p>No alerts configured</p>}
+        {!alertsIsError && alerts && alerts.length > 0 && (
           <table>
             <thead>
               <tr>
