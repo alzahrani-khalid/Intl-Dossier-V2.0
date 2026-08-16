@@ -12,6 +12,14 @@
 # D-16 verdict rule (401 = auth rejected; any other status = the request passed the
 # getUser gate) is stated in 92-PROBE-BASELINE.md ABOVE the recorded data.
 #
+# P95 / DEAD-02: a bare "<fn> -> 404" cannot distinguish a NOT-DEPLOYED function
+# (gateway 404) from a DEPLOYED function answering 404 itself — an ambiguity that
+# let "assignments-queue is not deployed" survive research while the platform had
+# it ACTIVE at version 11. On a 404 the probe now prints ONE extra indented line
+#   "    404-kind: gateway|function  body: <first 160 bytes>"
+# classified from the body. The "<fn> -> <status>" line format is UNCHANGED (every
+# consumer greps "-> [0-9]{3}" on it); the kind line is purely additive.
+#
 # HOUSE RULE: this script never echoes the JWT, the password, or any env value.
 # Credentials are passed to curl over stdin (not argv) so they do not appear in `ps`.
 #
@@ -66,10 +74,28 @@ else
   FNS=(audit-logs-viewer data-retention field-permissions my-delegations dossiers-update tasks-get)
 fi
 
+# Classifies a 404 response body. The platform's not-deployed 404 names the
+# function-routing miss ("Requested function was not found"); a house error
+# envelope is the function's own 404. Anything else is NOT classified silently.
+classify_404() {
+  case "$1" in
+    *'Requested function was not found'*) printf 'gateway' ;;
+    *'"error"'* | *'"message_en"'* | *'"message"'*) printf 'function' ;;
+    *) printf 'unknown' ;;
+  esac
+}
+
+BODY_FILE=$(mktemp)
+trap 'rm -f "$BODY_FILE"' EXIT
+
 for fn in "${FNS[@]}"; do
-  printf '%s -> ' "$fn"
   # curl prints 000 and exits non-zero on a connection failure; record it rather than abort.
-  curl -s -o /dev/null -w '%{http_code}\n' "$SUPABASE_URL/functions/v1/$fn" \
+  status=$(curl -s -o "$BODY_FILE" -w '%{http_code}' "$SUPABASE_URL/functions/v1/$fn" \
     -H "Authorization: Bearer $JWT" \
-    -H "apikey: $SUPABASE_ANON_KEY" || printf '\n'
+    -H "apikey: $SUPABASE_ANON_KEY" || printf '000')
+  printf '%s -> %s\n' "$fn" "$status"
+  if [ "$status" = "404" ]; then
+    body=$(head -c 160 "$BODY_FILE" | tr -d '\r\n')
+    printf '    404-kind: %s  body: %s\n' "$(classify_404 "$body")" "$body"
+  fi
 done
