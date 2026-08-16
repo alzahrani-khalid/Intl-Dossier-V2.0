@@ -428,3 +428,188 @@ time downstream.
 
 _Phase: 94-write-paths_
 _Completed: 2026-08-16_
+
+---
+
+## ADDENDUM — PARK-EXEC-04 consumer run under RULING-P94-11
+
+**Verdict: RED at HEAD. Stopped cold per ruling arm 2. The C9b gap is NOT discharged — it is
+converted to a LABELLED state: _real consumer, run-blocked-by-pre-existing-defect_.**
+
+Appended by the bounded consumer-run lane, 2026-08-16, at HEAD `6b3f1378a` on
+`milestone/v10.0-trust`. Nothing above this line was altered. No source file, gate text, plan,
+register, `STATE.md` or `ROADMAP.md` was touched; `git status --short` is byte-identical before and
+after this lane (the same 5 modified + 2 untracked files, all belonging to other lanes). No commit
+of code was made and no repair was attempted.
+
+### What was run, and the test count actually discovered
+
+```
+cd frontend
+E2E_BASE_URL=http://localhost:5173 pnpm exec playwright test tests/e2e/user-management.spec.ts --list
+  → Listing tests:
+      [chromium] › e2e/user-management.spec.ts:29:3 › User Management — D-10 loop ›
+        create → list → detail → role/status, plus IDOR smoke and AR pass
+    Total: 1 test in 1 file
+```
+
+`test -f frontend/tests/e2e/user-management.spec.ts` → `exit=0` **before** the path was passed to
+Playwright (instrument trap 3: a spec path is a filter, not a file). Exactly **one** path was
+passed, so a non-match would have exited 1 rather than silently partial-running.
+
+**Count discrepancy, recorded not corrected:** the dispatch brief and `PARK-EXEC-04` both state the
+spec "carries 2 tests". The config-derived count is **1** — the file contains one `test(` inside one
+`describe`, and `frontend/playwright.config.ts` matches it under a single project (`chromium`);
+`chromium-no-auth` (`/login.*\.spec\.ts$/`), `chromium-dashboard-widgets` and `a11y` (explicit list)
+do not match it. The run below is the whole spec either way.
+
+`E2E_BASE_URL` was set deliberately so the config's `webServer` block is skipped entirely and no
+process other than the one this lane started could be launched or reaped.
+
+### Attempt 1 — an INVALID RED, discarded: the environment, not the consumer
+
+The orchestrator's measurement said the frontend was down. When this lane checked, it was **up** —
+`http://localhost:5173` → `200`, `vite` pid `37099` under `pnpm run dev` pid `37018`, `etime 17:52`,
+i.e. started ~18 minutes before this lane existed and by some other actor. That server **died
+between the check and the run.** The run therefore failed inside `globalSetup`, before any test
+started:
+
+```
+Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5173/login
+   at e2e/global-setup.ts:43
+PLAYWRIGHT_EXIT=1
+```
+
+Confirmed after the fact rather than assumed: `curl http://localhost:5173/` → `000`, listeners on
+5173 → `0`, and **both** pids `37099` and `37018` absent from `ps`.
+
+**This is a C2 invalid red and is NOT the verdict.** The consumer never executed and staging was
+never touched by it. The lane then started its own frontend (`pnpm --dir frontend dev`, new vite pid
+`42945`, waited to `200` via `curl --retry-connrefused`, no `sleep`) and ran the consumer **once**.
+Backend re-verified immediately before that run: `http://localhost:5001/health` → `200`.
+
+### Attempt 2 — the authorized run, verbatim
+
+Exit code captured directly off the command, never through a pipe (instrument trap 2):
+
+```
+E2E_BASE_URL=http://localhost:5173 pnpm exec playwright test tests/e2e/user-management.spec.ts --reporter=list
+PLAYWRIGHT_EXIT=1
+```
+
+```
+Running 1 test using 1 worker
+
+  ✘  1 [chromium] › tests/e2e/user-management.spec.ts:29:3 › User Management — D-10 loop ›
+       create → list → detail → role/status, plus IDOR smoke and AR pass (30.2s)
+
+  1) [chromium] › tests/e2e/user-management.spec.ts:29:3 › User Management — D-10 loop ›
+     create → list → detail → role/status, plus IDOR smoke and AR pass
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForURL: Test timeout of 30000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      49 |
+      50 |     // On success the page navigates back to the list.
+    > 51 |     await page.waitForURL(/\/users\/?$/)
+         |                ^
+      52 |
+      53 |     // Created users are is_active:false; the DEFAULT filter is "all", so the row
+      54 |     // is visible. Search by the unique email (row-1-by-created_at is unreliable —
+
+  1 failed
+```
+
+The test stops at **spec line 51** — the create leg: `Create user` was clicked and the app never
+navigated back to `/users`. Playwright's failure artifacts (screenshot, video, trace,
+`error-context.md`) exist under `frontend/test-results/`, which `.gitignore:105` covers.
+
+**Per `RULING-P94-11` arm 2 this lane STOPPED HERE.** No control run at `phase-94-base`. No bisect.
+No second attempt. No debugging of the failure. The trace was not opened and the cause was not
+investigated.
+
+### Why this is a labelled state — and what it does NOT establish
+
+It does **not** establish that `94-10` broke this consumer, and it must never be read that way.
+Distinguishing "red because of `94-10`" from "already red" requires the before/after control at
+`phase-94-base` that the ruling explicitly refuses. Three things are cited, exactly as ordered:
+
+1. **The Phase 86 finding** — `create-user` POST hangs and 500s from the browser, owner **Phase
+   90/ops**. The observed stall is on that same create leg, at 30s. This lane did not verify that
+   attribution and does not assert it.
+2. **The `94-10` lane's happy-path-preservation derivation** — the success responses are untouched;
+   the only new branch returns 500 when the audit write fails, and that audit write is **measured**
+   to succeed (the deployed fleet landed real rows, § _The AUDIT-ZERO-01 transition_ above).
+3. **`RULING-P94-11`** — a red at HEAD is an authorized, bounded outcome, recorded and parked.
+
+Per `D-28` this consumer is **NOT counted in any defence count** — an un-run-to-green consumer is
+not evidence of anything. It remains a **real** C9b consumer with a named owner, not a named
+non-consumer.
+
+### Order 3 — the staging mutation, and its cleanup, evidenced
+
+The spec's own naming pattern, read off the spec (lines 30–32, `const epoch = Date.now()`):
+
+- email `e2e-${epoch}@example.test` → SQL `email LIKE 'e2e-%@example.test'`
+- username `e2e_${epoch}` → SQL `username LIKE 'e2e\_%'`
+
+**Nothing was created, so nothing was deleted — and no deletion was guessed at.** Measured against
+staging `zkrcjzdemdmwhearhfgg`, before and after:
+
+```
+BEFORE (2026-08-16 16:16:57+00)   auth.users=415  public.users=415
+                                  auth e2e-pattern=0  public e2e-pattern=0  public e2e_username=0
+                                  audit_logs=9
+AFTER  (2026-08-16 16:18:41+00)   auth.users=415  public.users=415
+                                  auth e2e-pattern=0  public e2e-pattern=0  public e2e_username=0
+                                  audit_logs=9
+FINAL  (2026-08-16 16:19:14+00)   auth rows matching spec pattern   = []
+                                  public rows matching spec pattern = []
+                                  auth users created since BEFORE   = 0
+                                  audit_logs=9
+```
+
+The **strongest arm is pattern-independent**: `count(*) FROM auth.users WHERE created_at >
+'<BEFORE>'` is **0**, so the claim does not rest on the email pattern matching. Both instruments
+were positive-controlled in both directions before their zeros were believed:
+
+```
+'e2e-1755360000@example.test' LIKE 'e2e-%@example.test'  -> true
+'kazahrani@stats.gov.sa'      LIKE 'e2e-%@example.test'  -> false
+created_at > '2000-01-01'  -> 415      created_at > '2099-01-01' -> 0
+```
+
+No `DELETE` was issued against staging by this lane. No DDL, no migration, no `GRANT`. No credential
+value was echoed at any point.
+
+### Order 4 — frontend teardown
+
+The frontend this lane started (vite pid `42945`) was stopped after the run. Confirmed down, three
+ways:
+
+```
+curl http://localhost:5173/            -> 000
+lsof -nP -iTCP:5173 -sTCP:LISTEN | wc -l -> 0
+ps -p 42945                            -> not present
+```
+
+The backend was left as found (up, `200`) — this lane did not start it and did not stop it. The
+foreign vite server from attempt 1 was **not** killed by this lane; it died on its own, which is
+evidenced above by both its pids being absent.
+
+### Disposition of `94-10`
+
+`## BLOCKED` item 1 is **not cleared**. It converts to:
+
+> **`frontend/tests/e2e/user-management.spec.ts` — REAL C9b consumer, RUN AT HEAD, RED,
+> run-blocked-by-pre-existing-defect. Owner: Phase 90/ops (the Phase 86 `create-user` finding).**
+> Not counted as a defence. Not attributed to `94-10`; attribution would need the control run that
+> `RULING-P94-11` refuses.
+
+`94-10` closes on this labelled record per arm 2, not on a pass.
+
+ADDENDUM-10A-END
