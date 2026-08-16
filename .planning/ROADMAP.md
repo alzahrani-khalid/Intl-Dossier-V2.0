@@ -382,6 +382,7 @@ Plans:
 5. Every `/settings` tab saves (population stated: the nine SettingsPage sections through the shared Save; child routes are a named exclusion) and the value survives a reload; report reads, custom-report CRUD and scheduled-report creation work without a `42P17`. (Second half scoped to the REAL surfaces per `RULING-P94-04` §PARK-94-06 — the `reports` POST is a mock, filed as `DEAD-09`; the field rename ships only paired with an honest terminal state.)
 
 **Plans**: 11 plans in 5 waves
+**UI hint**: yes
 
 Plans:
 
@@ -396,7 +397,6 @@ Plans:
 - [ ] 94-09-PLAN.md — W3: WRITE-06 generate surface — template→type paired with terminal state + DEAD-09 filing
 - [ ] 94-10-PLAN.md — W4: AUDIT-ZERO fleet — 27 edge writers repaired + redeployed + ledger + register corrections
 - [ ] 94-11-PLAN.md — W5: closing derivations with populations, full oracle run, gate drill, intended-broken register
-      **UI hint**: yes
 
 ### Phase 95: Routes That Don't Render
 
