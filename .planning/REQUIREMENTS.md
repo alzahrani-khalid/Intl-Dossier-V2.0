@@ -87,6 +87,7 @@ verified sound across six lanes).
 - [ ] **DEAD-02**: `/tasks/queue` renders its page; `assignments-queue` is deployed.
 - [ ] **DEAD-03**: `/scenario-sandbox` either loads or shows an error — a backend 500 is never pixel-identical to "still loading".
 - [ ] **DEAD-04**: `/monitoring` renders the SPA route (the Vite proxy no longer claims the whole prefix) or the route is deleted.
+  - **RESOLVED 2026-08-16 (Phase 95): branch (a) KEEP + narrow proxy per `RULING-P95-01-PARK-MONITORING.md`; mechanism and evidence at `.planning/phases/95-routes-that-don-t-render/95-DEAD-04-DECISION.md`.** The API moved to `/api/monitoring` (backend remount inside the surviving dev/test guard), the Vite `/monitoring` proxy entry was deleted, and the Dashboard's two enumerated callers are authenticated via `apiGet` — enumeration 2/2 resolving; prod nginx carries no mirroring claim. **Phase 97 inherits a nav-entry decision** (`navigationData.ts:262` still links `/monitoring`, deliberately untouched here).
 - [ ] **DEAD-05**: `/analytics` shows real data or is honestly disabled — no fabricated sparklines, donuts, or "Insights you'll gain" over a backend endpoint that does not exist.
 - [ ] **DEAD-06**: `/custom-dashboard` queries columns that exist (`calendar_entries.event_date`, not `start_datetime` **[V]**), renders its chart, and computes real trend deltas instead of "0.0%" from aborted requests.
 - [ ] **DEAD-07**: `/calendar` renders a grid (empty or not), `/calendar/new` mounts the create form, `/events` pads the month by the real weekday offset with month navigation, and `/word-assistant`'s status badge reflects a real probe.
@@ -519,15 +520,15 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | AUDIT-ZERO-01 | Phase 94 — Write Paths | Complete |
 | WRITE-05 | Phase 94 — Write Paths | Complete |
 | WRITE-06 | Phase 94 — Write Paths | Complete |
-| DEAD-01 | Phase 95 — Routes That Don't Render | Pending |
-| DEAD-02 | Phase 95 — Routes That Don't Render | Pending |
-| DEAD-03 | Phase 95 — Routes That Don't Render | Pending |
-| DEAD-04 | Phase 95 — Routes That Don't Render | Pending |
+| DEAD-01 | Phase 95 — Routes That Don't Render | Complete |
+| DEAD-02 | Phase 95 — Routes That Don't Render | Complete |
+| DEAD-03 | Phase 95 — Routes That Don't Render | Complete |
+| DEAD-04 | Phase 95 — Routes That Don't Render | Complete |
 | DEAD-05 | Phase 96 — Real Numbers | Pending |
 | DEAD-06 | Phase 96 — Real Numbers | Pending |
 | DEAD-07 | Phase 96 — Real Numbers | Pending |
-| DEAD-08 | Phase 95 — Routes That Don't Render | Pending |
-| DEAD-09 | Phase 95 — Routes That Don't Render | Pending |
+| DEAD-08 | Phase 95 — Routes That Don't Render | Complete |
+| DEAD-09 | Phase 95 — Routes That Don't Render | Complete |
 | COUNT-01 | Phase 96 — Real Numbers | Pending |
 | COUNT-02 | Phase 96 — Real Numbers | Pending |
 | COUNT-03 | Phase 96 — Real Numbers | Pending |
@@ -565,11 +566,11 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | CLIENTSEC-01 | Phase 100 — Security Posture (database + client) | Pending |
 | E2ECRED-01 | Phase 101 — CI Gates Green | Pending |
 | E2ESTALE-01 | Phase 101 — CI Gates Green | Pending |
-| NOTFOUND-COMPONENT-01 | Phase 95 — Routes That Don't Render | Pending |
+| NOTFOUND-COMPONENT-01 | Phase 95 — Routes That Don't Render | Complete |
 | LEAK-ATTACH-01 | Phase 93 — Failure Visibility | **RESOLVED-IN-PHASE** (`283f9eff`) |
 | ARMA-01 | Phase 94 — Write Paths | Complete |
 | ORACLECAP-01 | Phase 101 — CI Gates Green | Pending |
-| RETENTION-CAST-01 | Phase 95 — Routes That Don't Render | Pending |
+| RETENTION-CAST-01 | Phase 95 — Routes That Don't Render | Complete |
 | DR-SUBPATH-01 | Phase 100 — Security Posture (database + client) | Pending |
 | EDGEPATH-01 | Phase 100 — Security Posture (database + client) | Pending |
 | FUNC-GRANT-01 | Phase 100 — Security Posture (database + client) | Pending |
