@@ -82,6 +82,16 @@ verified sound across six lanes).
 - [ ] **COUNT-02**: Type-list queries left-join their extension tables (or the counters use the same join), so a dossier without an extension row is never dropped from the list while the hub still counts it (persons 16 vs 15 **[V]**, engagements 5 vs 3).
 - [ ] **COUNT-03**: Completion is consistent — `status` and `workflow_stage` stay in sync, so completed tasks leave the dashboard's "Overdue" widget and the kanban Done column can fill.
 
+- [ ] **COUNT-04**: **The board holds two notions of "overdue" for one fact, and they can disagree.** Filed 2026-08-16 from Phase 94 planning (`RULING-P94-02` order 1; `PARK-94-03` ruled state-only there, handling filed here). Two signals:
+  - `aa_commitments.status = 'overdue'` — a **stored** status, maintained by the `BEFORE UPDATE` trigger `commitment_overdue_check` (`check_commitment_overdue()`: `IF NEW.due_date < CURRENT_DATE AND NEW.status IN ('pending','in_progress') THEN NEW.status := 'overdue'`).
+  - `it.is_overdue` — a **computed** flag the board counts for its overdue chip at `frontend/src/pages/WorkBoard/WorkBoard.tsx:232-235`.
+
+  They are derived from the same underlying fact by different mechanisms at different times, so they can disagree — and the stored one is stale by construction, because the trigger is `BEFORE UPDATE` **only** and never fires on `INSERT`. **The open question `RULING-P94-02` raised is CLOSED, and it did not shrink the stake:** the value is written by a live trigger, and on staging `zkrcjzdemdmwhearhfgg` (2026-08-16) **8 of 10 commitments already carry `status = 'overdue'`** while the remaining 2 are past-due `pending` rows the trigger has never touched. The disagreement is the dominant state, not a corner case.
+
+  **The behavioural stake, so this phase inherits the mechanism and not just the symptom:** `resolveBoardStage` (`WorkBoard.tsx:92-106`) has no `overdue` branch, so every one of those 8 rows renders in the **Todo** column, indistinguishable from work nobody has started. And a drag of a past-due card to In-progress writes `in_progress`, the trigger rewrites it to `overdue`, and the card **snaps back to Todo after a success toast** — proven by a rolled-back transaction against live staging, recorded in `.tickmarkr/overseer/PARK-P94.md` §`PARK-94-04`. **Whether the trigger or the board is the wrong one is a separate open park (`PARK-94-04`) that blocks Phase 94's `WRITE-04` criterion wording**; this entry owns the _count_ half — one fact, one signal, agreeing across the board chip, the card, and the column it sits in.
+
+  **Owner: Phase 96 — Real Numbers**, whose goal sentence is exactly this: every count and trend comes from real data and agrees with every other surface. Id `COUNT-04` chosen per the register's section-prefix convention; flagged approve-as-placed.
+
 ### NAV — Nothing built is unreachable
 
 - [ ] **NAV-01**: Elected Officials is reachable — sidebar, dossier hub type cards, `/dossiers/create`, and `/compare` expose all 8 declared dossier types, not 7.

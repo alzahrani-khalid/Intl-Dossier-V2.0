@@ -68,6 +68,20 @@ standing law from a fresh call.
   correct), `overdue`→**Todo via the `default` branch**, indistinguishable from never-started.
   Handling `overdue` is **not** Phase 94 work; it is filed as `PARK-94-03` with a recommendation to
   own it in Phase 96. Phase 94 states the population and stops there.
+- **D-03c: A `BEFORE UPDATE` trigger overwrites the kanban's commitment write, and this — not the
+  status mapping — is what actually breaks success criterion 4 today. PARKED as `PARK-94-04`; it
+  BLOCKS the criterion's wording.** `commitment_overdue_check` runs `check_commitment_overdue()`
+  before every update: `IF NEW.due_date < CURRENT_DATE AND NEW.status IN ('pending','in_progress')
+THEN NEW.status := 'overdue'`. On staging, **8 of 10 commitments are already `overdue`** and the
+  other 2 are past-due `pending` (the trigger is UPDATE-only and never fires on INSERT). So for a
+  past-due card: a drag to In-progress writes `in_progress`, the trigger rewrites it to `overdue`,
+  `resolveBoardStage` sends `overdue` to `todo`, and **the card snaps back to Todo after a success
+  toast**. A drag to Todo writes `pending` and is likewise coerced. Only Done persists. Proven by a
+  rolled-back transaction (write `in_progress` → read back `overdue`; census 8/2 unchanged after).
+  **Consequences the planner must not miss:** (i) no `WRITE-04` oracle may assert persistence by
+  asserting "no error" — the write succeeds and is silently overwritten; (ii) an oracle that drags a
+  commitment on staging will, with probability 8/10, be dragging a past-due one; (iii) a round-trip
+  oracle that drags out and back cannot restore the original stored value.
 - **D-04: A commitment dragged to `review` — RULED (b) + (a).** `RULING-P94-01` on `PARK-94-01`:
   `review` is a non-droppable target for commitment cards, **with** the mutation-layer reject as the
   safety net, because a visual guarantee is not a mutation-layer guarantee and criterion 4's own text
