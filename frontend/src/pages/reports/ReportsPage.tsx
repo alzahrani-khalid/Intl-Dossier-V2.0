@@ -7,7 +7,7 @@ import {
   Download,
   Loader2,
   CheckCircle,
-  Clock,
+  AlertTriangle,
   Calendar,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
+import { buildGeneratedReportEntry, type GeneratedReportEntry } from './generate-entry'
 
 interface ReportTemplate {
   id: string
@@ -36,7 +37,7 @@ export function ReportsPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
   const [selectedFormat, setSelectedFormat] = useState<'pdf' | 'excel' | 'word'>('pdf')
   const [parameters, setParameters] = useState<Record<string, any>>({})
-  const [generatedReports, setGeneratedReports] = useState<any[]>([])
+  const [generatedReports, setGeneratedReports] = useState<GeneratedReportEntry[]>([])
   const reportTemplates: ReportTemplate[] = [
     {
       id: 'country-overview',
@@ -183,7 +184,7 @@ export function ReportsPage() {
     mutationFn: async ({ templateId, format, params }: any) => {
       const { data, error } = await supabase.functions.invoke('reports', {
         body: {
-          template: templateId,
+          type: templateId,
           format,
           parameters: params,
         },
@@ -193,15 +194,15 @@ export function ReportsPage() {
       return data
     },
     onSuccess: (data) => {
+      // The mapping is the pairing half of the `template` → `type` rename: absent a
+      // real url the entry can only be unavailable, never a fabricated success.
       setGeneratedReports((prev) => [
-        {
+        buildGeneratedReportEntry(data, {
           id: crypto.randomUUID(),
-          name: reportTemplates.find((t) => t.id === selectedTemplate)?.name,
+          name: reportTemplates.find((t) => t.id === selectedTemplate)?.name ?? '',
           format: selectedFormat,
-          status: 'completed',
-          url: data.url,
           createdAt: new Date(),
-        },
+        }),
         ...prev,
       ])
     },
@@ -421,7 +422,13 @@ export function ReportsPage() {
                             </Button>
                           </>
                         ) : (
-                          <Clock className="h-4 w-4 text-warning animate-pulse" />
+                          <span
+                            role="alert"
+                            className="flex items-center gap-2 text-xs text-warning text-end"
+                          >
+                            <AlertTriangle className="h-4 w-4 shrink-0" />
+                            {t('report-builder:generate.unavailable')}
+                          </span>
                         )}
                       </div>
                     </div>

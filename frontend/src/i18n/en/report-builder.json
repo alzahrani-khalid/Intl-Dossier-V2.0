@@ -278,6 +278,10 @@
     "error": "Failed to export report"
   },
 
+  "generate": {
+    "unavailable": "Report generation is unavailable"
+  },
+
   "actions": {
     "new": "New Report",
     "save": "Save",

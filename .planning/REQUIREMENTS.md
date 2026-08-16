@@ -81,6 +81,8 @@ verified sound across six lanes).
 - [ ] **DEAD-06**: `/custom-dashboard` queries columns that exist (`calendar_entries.event_date`, not `start_datetime` **[V]**), renders its chart, and computes real trend deltas instead of "0.0%" from aborted requests.
 - [ ] **DEAD-07**: `/calendar` renders a grid (empty or not), `/calendar/new` mounts the create form, `/events` pads the month by the real weekday offset with month navigation, and `/word-assistant`'s status badge reflects a real probe.
 - [ ] **DEAD-08**: Route-tree conflicts resolved — `positions/$id.tsx` vs `$positionId.tsx`, and `legislation.tsx` renders an `<Outlet/>` so its detail page is reachable. Positions `approvals`/`versions` child routes drive tab state.
+- [ ] **DEAD-09**: **The `reports` edge function's POST handler is a MOCK — no report is ever generated.** `supabase/functions/reports/index.ts:266-285` mints a `job_id`, schedules a `setTimeout` whose body only `console.log`s `Processing report job ${jobId}`, and answers `202 { job_id, status: 'pending', message, check_status_url }`. **No `url` is ever returned and no work is ever done.** Filed 2026-08-16 from Phase 94 execution (plan `94-09`). Phase 94 renamed the client's body field (`template` → `type`, the name the server's own guard at `:258` requires) **PAIRED with an explicit unavailable terminal state**, per `RULING-P94-04` §`PARK-94-06` — the rename never ships alone, because converting a visible 400 into an invisible fabricated success is the forbidden shape. The surface is therefore now **honest but DEAD**: the client can no longer render a `completed` entry whose url was never returned (`frontend/src/pages/reports/generate-entry.ts`, pinned by `frontend/src/pages/reports/__tests__/generate-entry.test.ts`), and it says so in both locales (`report-builder:generate.unavailable`). What remains is the generation itself — a real execution path. Candidates found during Phase 94 research: the custom-reports function flow, or the Express `/report-builder/generate` path at `backend/src/.../misc.repository.ts:125`. **Owner: Phase 95 — Routes That Don't Render**, whose goal is that every surface either works or says why it can't; this one now says why it can't, and Phase 95 owns making it work. Flagged **approve-as-placed** (the D-73 pattern).
+  - **Scope note, so the filing is not read wider than it is:** `WRITE-06`'s REAL surfaces — custom-reports CRUD and scheduled-report creation — are closed by plan `94-05` (the `42P17` migration and its probe). Only the mock generate path is dead.
 
 ### COUNT — Every surface counts the same work the same way
 
@@ -505,6 +507,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | DEAD-06 | Phase 96 — Real Numbers | Pending |
 | DEAD-07 | Phase 96 — Real Numbers | Pending |
 | DEAD-08 | Phase 95 — Routes That Don't Render | Pending |
+| DEAD-09 | Phase 95 — Routes That Don't Render | Pending |
 | COUNT-01 | Phase 96 — Real Numbers | Pending |
 | COUNT-02 | Phase 96 — Real Numbers | Pending |
 | COUNT-03 | Phase 96 — Real Numbers | Pending |
