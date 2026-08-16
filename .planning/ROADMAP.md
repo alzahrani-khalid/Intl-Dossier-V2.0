@@ -402,7 +402,7 @@ Plans:
 
 **Goal**: Every route either renders its page or says why it can't, and the route tree has one owner per slot.
 **Depends on**: Phase 92, Phase 93
-**Requirements**: DEAD-01, DEAD-02, DEAD-03, DEAD-04, DEAD-08
+**Requirements**: DEAD-01, DEAD-02, DEAD-03, DEAD-04, DEAD-08, DEAD-09, NOTFOUND-COMPONENT-01, RETENTION-CAST-01
 **Success Criteria** (what must be TRUE):
 
 1. `/search` returns results for a typed query and for each of its own suggestion chips, with no `Cannot read properties of undefined (reading 'forEach')`.
