@@ -563,6 +563,8 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | EDGEPATH-01 | Phase 100 — Security Posture (database + client) | Pending |
 | FUNC-GRANT-01 | Phase 100 — Security Posture (database + client) | Pending |
 | GATESTD-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| GATESTD-02 | Phase 102 — Staging Data & Debt Tail | Pending |
+| GATESTD-03 | Phase 102 — Staging Data & Debt Tail | Pending |
 | ROOTALIAS-01 | Phase 101 — CI Gates Green | Pending |
 | CARRY-01 | Phase 92 — Session Integrity & Edge-Function Auth | Pending |
 | CARRY-02 | Phase 101 — CI Gates Green | Pending |
