@@ -108,10 +108,12 @@ vi.mock('@/components/ui/skeleton', () => ({
 // ── Hook mock ─────────────────────────────────────────────────────────────
 const mockUseUnifiedKanban = vi.fn()
 const mutateMock = vi.fn()
+const rejectToastMock = vi.fn()
 vi.mock('@/hooks/useUnifiedKanban', () => ({
   useUnifiedKanban: (params: unknown): unknown => mockUseUnifiedKanban(params),
   useUnifiedKanbanStatusUpdate: () => ({ mutate: mutateMock, mutateAsync: mutateMock }),
   useUnifiedKanbanRealtime: () => undefined,
+  showCommitmentRejectToast: (reason: string): void => rejectToastMock(reason),
 }))
 
 // ── Shared @/components/kanban primitive mock — capture sensors + onDragEnd
@@ -314,7 +316,9 @@ function makeBoardItems(): WI[] {
       source: 'commitment',
       title: 'Confirm visa support',
       status: 'in_progress',
-      workflow_stage: 'review',
+      // Commitments carry NO workflow_stage (work-item.types.ts:70) — the board
+      // derives their column from `status` via resolveBoardStage.
+      workflow_stage: null,
       is_overdue: false,
       days_until_due: 1,
       deadline: '2026-05-10T00:00:00Z',
@@ -409,7 +413,7 @@ function makeBoardItems(): WI[] {
       source: 'commitment',
       title: 'Send protocol note',
       status: 'in_progress',
-      workflow_stage: 'in_progress',
+      workflow_stage: null,
       is_overdue: false,
       days_until_due: 5,
       deadline: '2026-05-30T00:00:00Z',
@@ -426,6 +430,51 @@ function makeBoardItems(): WI[] {
   ]
 }
 
+/**
+ * Phase 94 Plan 03 — commitment drag fixtures.
+ *
+ * Deadlines are relative to now so the past-due predicate is deterministic
+ * whenever the suite runs. Neither commitment carries a `workflow_stage`;
+ * that is the whole point of the no-op guard repair.
+ */
+function makeCommitmentDragItems(): WI[] {
+  const DAY = 86_400_000
+  const iso = (offsetDays: number): string => new Date(Date.now() + offsetDays * DAY).toISOString()
+  const base = {
+    source: 'commitment' as const,
+    workflow_stage: null,
+    days_until_due: null,
+    priority: 'medium' as const,
+    assignee: null,
+    dossier: { id: 'd9', name: 'Kuwait' },
+    tracking_type: 'follow_up',
+    description: null,
+    dossier_id: 'd9',
+    engagement_id: null,
+    created_at: '2026-01-01T00:00:00Z',
+  }
+  return [
+    {
+      ...base,
+      id: 'c1',
+      title: 'On-track commitment',
+      status: 'in_progress',
+      deadline: iso(7),
+      is_overdue: false,
+      column_key: 'in_progress',
+    },
+    {
+      ...base,
+      id: 'c2',
+      title: 'Past-due commitment',
+      status: 'pending',
+      deadline: iso(-5),
+      is_overdue: true,
+      column_key: 'todo',
+    },
+  ]
+}
+
 // ── tests ─────────────────────────────────────────────────────────────────
 beforeEach(() => {
   currentLang = 'en'
@@ -436,6 +485,7 @@ beforeEach(() => {
   openCommitmentMock.mockReset()
   peekRegisterMock.mockReset()
   mutateMock.mockReset()
+  rejectToastMock.mockReset()
   mockUseUnifiedKanban.mockReset()
   lastKanbanProviderProps = {}
 })
@@ -559,6 +609,61 @@ describe('WorkBoard', () => {
     expect(openPaletteMock).toHaveBeenCalledTimes(1)
     expect(openPaletteMock).toHaveBeenCalledWith('task')
     expect(navigateMock).not.toHaveBeenCalled()
+  })
+
+  // ── Phase 94 Plan 03 (WRITE-04) — the drag that must NOT write ───────────
+  //
+  // Each assertion is an ABSENCE of a write. "No error shown" would pass a
+  // board that writes a status the DB then silently rewrites (D-32), so the
+  // oracle asserts that nothing was enqueued at all.
+
+  async function dropCommitment(over: unknown, activeId: string): Promise<void> {
+    mockUseUnifiedKanban.mockReturnValue({ items: makeCommitmentDragItems(), isLoading: false })
+    const { WorkBoard } = await importFresh()
+    render(<WorkBoard />)
+    expect(typeof lastKanbanProviderProps.onDragEnd).toBe('function')
+    lastKanbanProviderProps.onDragEnd!({ active: { id: activeId }, over })
+  }
+
+  it('own-column commitment drop is a no-op — no mutation AND no toast (D-05)', async () => {
+    // c1 sits in In progress because its STATUS is in_progress; its
+    // workflow_stage is null. The old guard compared workflow_stage, so this
+    // drop fired a mutation and a success toast for a gesture that moved
+    // nothing.
+    await dropCommitment(
+      { id: 'col-in_progress', data: { current: { stage: 'in_progress' } } },
+      'c1',
+    )
+    expect(mutateMock).not.toHaveBeenCalled()
+    expect(rejectToastMock).not.toHaveBeenCalled()
+  })
+
+  it('commitment drop resolving Review is refused before any mutation', async () => {
+    await dropCommitment({ id: 'col-review', data: { current: { stage: 'review' } } }, 'c1')
+    expect(mutateMock).not.toHaveBeenCalled()
+    expect(rejectToastMock).toHaveBeenCalledWith('no_review_counterpart')
+  })
+
+  it('past-due commitment dropped on In progress is refused before any mutation', async () => {
+    // The trigger would rewrite `in_progress` to `overdue` after a success
+    // toast, and the card would snap back to Todo.
+    await dropCommitment(
+      { id: 'col-in_progress', data: { current: { stage: 'in_progress' } } },
+      'c2',
+    )
+    expect(mutateMock).not.toHaveBeenCalled()
+    expect(rejectToastMock).toHaveBeenCalledWith('past_due_coercion')
+  })
+
+  it('the same past-due commitment CAN still be dropped on Done — the guard is not a blanket refusal', async () => {
+    await dropCommitment({ id: 'col-done', data: { current: { stage: 'done' } } }, 'c2')
+    expect(rejectToastMock).not.toHaveBeenCalled()
+    expect(mutateMock).toHaveBeenCalledTimes(1)
+    const call = mutateMock.mock.calls[0]?.[0] as { itemId: string; deadline: string | null }
+    expect(call.itemId).toBe('c2')
+    // the due date must reach the mutation layer, or its guard cannot mirror
+    // the trigger
+    expect(typeof call.deadline).toBe('string')
   })
 
   it('renders Skeleton placeholders shape-matching 4 columns × 3 kcards when isLoading', async () => {

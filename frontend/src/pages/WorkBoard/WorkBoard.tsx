@@ -52,7 +52,11 @@ import {
   type ListControlsConfig,
 } from '@/components/list-controls/useListControls'
 import { ListEmptyState } from '@/components/empty-states/ListEmptyState'
-import { useUnifiedKanban, useUnifiedKanbanStatusUpdate } from '@/hooks/useUnifiedKanban'
+import {
+  useUnifiedKanban,
+  useUnifiedKanbanStatusUpdate,
+  showCommitmentRejectToast,
+} from '@/hooks/useUnifiedKanban'
 import { useCommitmentDrawer } from '@/hooks/useCommitmentDrawer'
 import { useWorkCreation } from '@/components/work-creation'
 import { usePeekStore } from '@/store/peekStore'
@@ -61,6 +65,7 @@ import type { KanbanColumnMode, Priority, WorkflowStage, WorkSource } from '@/ty
 
 import { BoardColumn } from './BoardColumn'
 import { BoardToolbar } from './BoardToolbar'
+import { resolveCommitmentDropDecision } from './commitment-stage-guard'
 import type { KCardItem } from './KCard'
 import './board.css'
 
@@ -89,13 +94,19 @@ function isCancelled(item: KCardItem): boolean {
   return item.workflow_stage === 'cancelled' || item.status === 'cancelled'
 }
 
+// Reverse mapping (D-31): where each live commitment status renders.
+//   pending → todo · in_progress → in_progress · completed → done
+//   cancelled → filtered out above (isCancelled), never bucketed
+//   overdue → todo, via the default branch, indistinguishable from
+//             never-started. Undesigned and stated; handling it is Phase 96's
+//             COUNT-04, not this plan's work.
+// There is no `review` branch: the commitment CHECK constraint has five values
+// and `review` is not one of them, so `item.status === 'review'` was dead.
 function resolveBoardStage(item: KCardItem): WorkflowStage {
   if (item.source === 'task') return (item.workflow_stage as WorkflowStage | null) ?? 'todo'
   switch (item.status) {
     case 'in_progress':
       return 'in_progress'
-    case 'review':
-      return 'review'
     case 'completed':
       return 'done'
     case 'cancelled':
@@ -302,16 +313,32 @@ export function WorkBoard(): ReactElement {
           }
         }
       }
-      if (targetStage === undefined || targetStage === item.workflow_stage) return
+      // The no-op guard must compare against the stage that PLACED the card.
+      // `workflow_stage` is null for every commitment, so comparing it made an
+      // own-column drop look like a move — a mutation and a success toast for
+      // a gesture that changed nothing (D-05).
+      if (targetStage === undefined || targetStage === resolveBoardStage(item)) return
+
+      // Gesture-layer enforcement point (D-33). Same module the mutation layer
+      // uses, so the condition cannot drift; refusing here means no mutation is
+      // ever enqueued. 94-08 adds the droppable affordance on top of this.
+      if (item.source === 'commitment') {
+        const decision = resolveCommitmentDropDecision(item, targetStage)
+        if (!decision.ok) {
+          showCommitmentRejectToast(decision.reason, t)
+          return
+        }
+      }
 
       update.mutate({
         itemId: item.id,
         source: item.source,
         newStatus: STAGE_TO_STATUS[targetStage],
         newWorkflowStage: targetStage,
+        deadline: item.deadline,
       })
     },
-    [visibleItems, update],
+    [visibleItems, update, t],
   )
 
   const handleItemClick = useCallback(
