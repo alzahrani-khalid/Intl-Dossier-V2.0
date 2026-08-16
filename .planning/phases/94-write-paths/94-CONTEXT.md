@@ -55,12 +55,35 @@ standing law from a fresh call.
   `REQUIREMENTS.md` WRITE-04 and this phase's own park all repeated the same four-value list; all
   three were corrected. **Re-derive it again before writing the mapping** — do not trust this line
   either. `review` is absent under both readings.
-- **D-03a: The stage→status map is ONE cell, not four, and the plan must say so.** Measured at
+
+  > **RELABEL NOTE, 2026-08-16 — five decisions were renumbered so the coverage gate can see them.**
+  > They were first written as sub-lettered ids `D-03a`–`D-03e`. `scripts/decision-coverage.mjs:43`
+  > extracts decisions with `/\*\*(D-\d{2})[:*]/` — **exactly two digits followed by `:` or `*`** — so
+  > a sub-lettered id never becomes a tracked decision at all. Measured, not inferred: the extractor
+  > reported `total: 29` with `D-03a`–`e` absent from the id list, meaning five decisions (including
+  > the `PARK-94-04` trigger split and the order-4 sweep) could be cited by no plan and coverage would
+  > still read green. Relabelled by **appending** to the end of the sequence, never by renumbering, so
+  > every id already cited elsewhere (`D-08`, `D-22`, `D-24`, `D-26`) stays valid:
+  >
+  > <!-- prettier-ignore -->
+  > | was | now | subject |
+> | --- | --- | --- |
+> | `D-03a` | **`D-30`** | the stage→status map is one cell, not four |
+> | `D-03b` | **`D-31`** | the reverse mapping is part of the population |
+> | `D-03c` | **`D-32`** | the `BEFORE UPDATE` trigger overwrites the kanban write |
+> | `D-03d` | **`D-33`** | `PARK-94-04` ruled (a), SPLIT |
+> | `D-03e` | **`D-34`** | the order-4 trigger sweep, as input |
+  >
+  > The script defect itself is tracked as `GATESTD-03`. Lineage: Phase 93 found the _coverage_ regex
+  > misreads `D-06a` as `D-06`; this is the _extraction_ regex, which drops it entirely — same class,
+  > two instruments.
+
+- **D-30: The stage→status map is ONE cell, not four, and the plan must say so.** Measured at
   `WorkBoard.tsx:67,78-84`: `todo→pending`, `in_progress→in_progress`, `done→completed` are
   **already valid** commitment statuses today. Only `review→review` is rejected by the constraint.
   The filed requirement text reads as four mappings; the defect is one. A four-way remap would
   produce three no-change edits and a gate that cannot distinguish them from work.
-- **D-03b: `WRITE-04`'s population definition states the REVERSE mapping — where each of the five
+- **D-31: `WRITE-04`'s population definition states the REVERSE mapping — where each of the five
   live statuses renders — or excludes one explicitly with what falls outside.** [`RULING-P94-01`
   order 2.] Columns→statuses is the direction everyone asked; statuses→columns is the direction that
   hides cards. Derived: `pending`→Todo, `in_progress`→In-progress, `completed`→Done,
@@ -68,7 +91,7 @@ standing law from a fresh call.
   correct), `overdue`→**Todo via the `default` branch**, indistinguishable from never-started.
   Handling `overdue` is **not** Phase 94 work; it is filed as `PARK-94-03` with a recommendation to
   own it in Phase 96. Phase 94 states the population and stops there.
-- **D-03c: A `BEFORE UPDATE` trigger overwrites the kanban's commitment write, and this — not the
+- **D-32: A `BEFORE UPDATE` trigger overwrites the kanban's commitment write, and this — not the
   status mapping — is what actually breaks success criterion 4 today. PARKED as `PARK-94-04`; it
   BLOCKS the criterion's wording.** `commitment_overdue_check` runs `check_commitment_overdue()`
   before every update: `IF NEW.due_date < CURRENT_DATE AND NEW.status IN ('pending','in_progress')
@@ -82,7 +105,7 @@ THEN NEW.status := 'overdue'`. On staging, **8 of 10 commitments are already `ov
   asserting "no error" — the write succeeds and is silently overwritten; (ii) an oracle that drags a
   commitment on staging will, with probability 8/10, be dragging a past-due one; (iii) a round-trip
   oracle that drags out and back cannot restore the original stored value.
-- **D-03d: `PARK-94-04` RULED (a), SPLIT (`RULING-P94-03`). The trigger is correct and stays.**
+- **D-33: `PARK-94-04` RULED (a), SPLIT (`RULING-P94-03`). The trigger is correct and stays.**
   Phase 94 owns the **criterion wording and the honest interaction**; Phase 96 owns the rendering.
   Candidate (c) — wording only — was REFUSED: it leaves a success toast followed by a visible
   snap-back on the board's most common drag, which is the lie this phase exists to end.
@@ -102,7 +125,7 @@ THEN NEW.status := 'overdue'`. On staging, **8 of 10 commitments are already `ov
     observed refused). The per-column table in `PARK-94-04` is the oracle's row set.
   - **Switch note the plan carries:** whether refusal remains the right interaction once `overdue`
     renders distinctly is Phase 96's to revisit; the ruling does not settle it.
-- **D-03e: The `RULING-P94-03` order-4 trigger sweep is DONE and its findings are inputs, not
+- **D-34: The `RULING-P94-03` order-4 trigger sweep is DONE and its findings are inputs, not
   homework** — `.tickmarkr/overseer/P94-TRIGGER-SWEEP.md`. Swept: every `BEFORE` trigger in schema
   `public` whose body assigns to a `NEW.` column (29 across 25 tables), then intersected with the
   write paths — derived schema-wide, **not** by listing the tables I already suspected. Results:
