@@ -525,4 +525,35 @@ sweep's raw output invites reading eleven defences where six exist. That was cau
 `D-71` order — by adding a column, not by any gate — and no instrument in this repo would have
 caught it otherwise.
 
+---
+
+## 10. ORCHESTRATOR CORRECTION to §9 — the weakest point is right, one sentence in it is not
+
+Appended by `orch-p93-b` on 2026-08-16 at close-out review. §9 stands as the phase's weakest point.
+One load-bearing sentence inside it is overstated, and correcting it makes the finding **stronger**,
+not weaker.
+
+**The sentence:** "The `throw notFound()` at `reports/$reportId.tsx:54` … is **never executed by any
+test in this phase**."
+
+**What actually happened.** `93-13` executed it, once, and recorded it at `93-13-SUMMARY.md:105-116`
+as "Arm A positive control (C1 clause 2 — the constructed done state)". A scratch spec used
+`page.route('**/rest/v1/custom_reports*')` to answer `[]` — which `.maybeSingle()` resolves to
+`{ data: null, error: null }`, the exact read-succeeded-row-absent condition — and drove the **real
+loader in a real browser**: `✓ CONTROL arm A: read succeeds with no row -> root 404, not a builder
+(3.3s) · 1 passed`. So the mechanism has been observed working. It is not untested code in the sense
+the sentence claims.
+
+**The corrected finding, which is worse than the original.** That control spec was **deleted** —
+`93-13` says so explicitly and neither of its commits contains it. So the evidence that this route
+can produce a 404 exists **only as prose in a SUMMARY**. No committed test exercises arm A; the
+permanently-taken failure branch masks it in every shipped run; and the "delete arm (b) once
+`WRITE-06` lands" instruction that would unmask it lives in a spec comment. Three artifacts would all
+have to be read together by a future seat for the gap to be noticed, and nothing fails if none of
+them is.
+
+**Filed rather than left in this paragraph** (the rule the overseer enforced on `GATESTD-01`: a
+finding recorded only in an untracked or narrative place helps this phase and ships the defect):
+**`ARMA-01` → Phase 94**, alongside `WRITE-06`, in `.planning/REQUIREMENTS.md`.
+
 VERIFICATION-END
