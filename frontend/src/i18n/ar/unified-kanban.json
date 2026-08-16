@@ -123,7 +123,11 @@
     "invalidTransition": "لا يمكن النقل إلى {{column}}",
     "invalidTransitionDescription": "هذا النوع من العناصر لا يدعم هذا الانتقال",
     "unauthorized": "ليس لديك صلاحية",
-    "unauthorizedDescription": "غير مصرح لك بتعديل هذا العنصر"
+    "unauthorizedDescription": "غير مصرح لك بتعديل هذا العنصر",
+    "commitmentNoReviewStage": "لا توجد مرحلة مراجعة للالتزامات",
+    "commitmentNoReviewStageDescription": "عمود المراجعة غير موجود في دورة حياة الالتزام. انقل الالتزام إلى للتنفيذ أو قيد التنفيذ أو مكتمل.",
+    "commitmentPastDue": "الالتزام متأخر",
+    "commitmentPastDueDescription": "لا يمكن نقل التزام متأخر إلى للتنفيذ أو قيد التنفيذ. مدّد تاريخ الاستحقاق أو أكمل الالتزام."
   },
   "actions": {
     "retry": "إعادة المحاولة",

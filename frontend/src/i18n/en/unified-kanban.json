@@ -123,7 +123,11 @@
     "invalidTransition": "Cannot move to {{column}}",
     "invalidTransitionDescription": "This item type does not support this status transition",
     "unauthorized": "You don't have permission",
-    "unauthorizedDescription": "You are not authorized to modify this item"
+    "unauthorizedDescription": "You are not authorized to modify this item",
+    "commitmentNoReviewStage": "Commitments have no review stage",
+    "commitmentNoReviewStageDescription": "The Review column does not exist in the commitment lifecycle. Move the commitment to To do, In progress, or Done.",
+    "commitmentPastDue": "Commitment is overdue",
+    "commitmentPastDueDescription": "An overdue commitment cannot move to To do or In progress. Extend the due date, or mark it complete."
   },
   "actions": {
     "retry": "Retry",
