@@ -558,6 +558,8 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | ORACLECAP-01 | Phase 101 — CI Gates Green | Pending |
 | RETENTION-CAST-01 | Phase 95 — Routes That Don't Render | Pending |
 | DR-SUBPATH-01 | Phase 100 — Security Posture (database + client) | Pending |
+| EDGEPATH-01 | Phase 100 — Security Posture (database + client) | Pending |
+| FUNC-GRANT-01 | Phase 100 — Security Posture (database + client) | Pending |
 | GATESTD-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | ROOTALIAS-01 | Phase 101 — CI Gates Green | Pending |
 | CARRY-01 | Phase 92 — Session Integrity & Edge-Function Auth | Pending |
