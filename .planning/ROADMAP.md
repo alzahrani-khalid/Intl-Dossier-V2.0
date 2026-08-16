@@ -261,7 +261,7 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 - [x] **Phase 92: Session Integrity & Edge-Function Auth** - A user can sign out, a valid session is accepted by every edge function, and a dead session bounces the tab
 - [x] **Phase 93: Failure Visibility** - No surface renders a confident empty state over a request that failed
 - [ ] **Phase 94: Write Paths** - Every advertised write path — after-actions, intake, kanban, settings, reports — actually writes
-- [ ] **Phase 95: Routes That Don't Render** - Every route either renders its page or says why it can't; the route tree has one file per slot
+- [x] **Phase 95: Routes That Don't Render** - Every route either renders its page or says why it can't; the route tree has one file per slot
 - [ ] **Phase 96: Real Numbers** - Every count, chart and trend comes from real data and agrees with every other surface
 - [ ] **Phase 97: Reachability** - Nothing built is unreachable and nothing in the route tree is unowned
 - [ ] **Phase 98: Copy Truth** - No database values, no i18n keys, no seed instructions, one date format, project voice rules obeyed
@@ -420,18 +420,18 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 95-01-PLAN.md — W1: DEAD-01 search envelope adapter + real related-work + page error branch + e2e (criterion 1)
-- [ ] 95-02-PLAN.md — W1: DEAD-02 queue transport fix + assignments-queue deploy with probe evidence + e2e (criterion 2)
-- [ ] 95-03-PLAN.md — W1: DEAD-03 sandbox QueryErrorState retrofit + bounded retry + CDP e2e (criterion 3)
-- [ ] 95-04-PLAN.md — W1: DEAD-04 keep+narrow per RULING-P95-01 — /api/monitoring move, proxy delete, nginx check, e2e (criterion 4)
-- [ ] 95-05-PLAN.md — W1: DEAD-08 slot consolidation ($id survives) + legislation Outlet + URL-driven tabs + e2e (criterion 5)
-- [ ] 95-06-PLAN.md — W1: DEAD-09 real report generation (storage + signed url) + truthful states + deploy probe (filed-finding close)
-- [ ] 95-07-PLAN.md — W1: NOTFOUND-COMPONENT-01 custom ESLint rule + positive/negative controls (filed-finding close)
-- [ ] 95-08-PLAN.md — W1: RETENTION-CAST-01 six validate-or-throw unwraps + asRows reconcile + unit oracle (filed-finding close)
+- [x] 95-01-PLAN.md — W1: DEAD-01 search envelope adapter + real related-work + page error branch + e2e (criterion 1)
+- [x] 95-02-PLAN.md — W1: DEAD-02 queue transport fix + assignments-queue deploy with probe evidence + e2e (criterion 2)
+- [x] 95-03-PLAN.md — W1: DEAD-03 sandbox QueryErrorState retrofit + bounded retry + CDP e2e (criterion 3)
+- [x] 95-04-PLAN.md — W1: DEAD-04 keep+narrow per RULING-P95-01 — /api/monitoring move, proxy delete, nginx check, e2e (criterion 4)
+- [x] 95-05-PLAN.md — W1: DEAD-08 slot consolidation ($id survives) + legislation Outlet + URL-driven tabs + e2e (criterion 5)
+- [x] 95-06-PLAN.md — W1: DEAD-09 real report generation (storage + signed url) + truthful states + deploy probe (filed-finding close)
+- [x] 95-07-PLAN.md — W1: NOTFOUND-COMPONENT-01 custom ESLint rule + positive/negative controls (filed-finding close)
+- [x] 95-08-PLAN.md — W1: RETENTION-CAST-01 six validate-or-throw unwraps + asRows reconcile + unit oracle (filed-finding close)
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
-- [ ] 95-09-PLAN.md — W2: closing derivations with populations, gate drill, DEAD-04 record for P97, register close-outs
+- [x] 95-09-PLAN.md — W2: closing derivations with populations, gate drill, DEAD-04 record for P97, register close-outs
 
 **UI hint**: yes
 

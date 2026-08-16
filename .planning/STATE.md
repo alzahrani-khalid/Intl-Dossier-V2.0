@@ -27,6 +27,14 @@ See: .planning/PROJECT.md (updated 2026-08-15 — v9.0 closed PARTIAL; v10.0 Tru
 Milestone: **v10.0 — Trust & Correctness** (roadmapped 2026-08-15).
 Phase: 93 (failure-visibility) — **EXECUTED 2026-08-16, accepted by `RULING-P93-07`.**
 15 of 15 plans executed (15/15 SUMMARYs on disk, every `## BLOCKED` section read and empty).
+Phase 95 (routes-that-don-t-render) — **EXECUTED 2026-08-16/17, accepted by `RULING-P95-04`.**
+9 of 9 plans executed (95-05's BLOCKED ruled accept-as-recorded, `RULING-P95-03`); independent
+verification passed-with-concerns (`1a226ca14`). Base tag `phase-95-base` = `2c8013208`
+(SSH-signed, not moved). Report `.tickmarkr/overseer/P95-EXEC-REPORT.md` (ends `ORCH-EXEC-END`,
+with the RULING-P95-04 addendum). New register rows this phase: `SANDBOX-500-01` (P96) and the
+two ORACLECAP family members (P101), filed `3d94eae8b`.
+Next command: `/gsd:plan-phase 96` (Real Numbers).
+
 Phase 94 (write-paths) — **EXECUTED 2026-08-16, accepted by `RULING-P94-15`.**
 11 of 11 plans executed, plus two authorized addendum lanes (`94-01A` repair, `94-10A` bounded
 consumer run). Base tag `phase-94-base` = `3d63da95f` (SSH-signed, not moved). Report
