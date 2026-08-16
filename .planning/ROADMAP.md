@@ -448,7 +448,22 @@ Plans:
 4. The dashboard KPI, the `/my-work` badge, footer and rendered rows, the `/commitments` tabs and the kanban board report the same number for the same work.
 5. A dossier without an extension row appears in both its type list and the hub count (persons 16/16, engagements 5/5), and a completed task leaves the dashboard's Overdue widget and lands in kanban Done.
 
-**Plans**: TBD
+**Plans**: 11 plans (3 waves)
+
+Plans:
+
+- [ ] 96-01-PLAN.md — SANDBOX-500-01: break the 42P17 RLS recursion (P94 definer precedent), two-sided proof, working sandbox
+- [ ] 96-02-PLAN.md — COUNT-04 DB half: INSERT-gap trigger re-timing + RPC count truth (fulfillment bucket, Done semantics, stored-overdue arm)
+- [ ] 96-03-PLAN.md — DEAD-06: calendar_entries.event_date fix + truthful trend deltas + CDP oracle
+- [ ] 96-04-PLAN.md — DEAD-07 (calendar): calendar layout Outlet, grid-always, /events offset + month nav
+- [ ] 96-05-PLAN.md — DEAD-07 (completes): word-assistant three-state live-probe pill + the 4-test family spec
+- [ ] 96-06-PLAN.md — DEAD-05 Branch A: analytics repoint to the deployed edge fn, fabrication removal, branch-invariant oracle
+- [ ] 96-07-PLAN.md — COUNT-01: dashboard-stats truth migration, /commitments + /my-work reconciliation, same-clock agreement spec
+- [ ] 96-08-PLAN.md — COUNT-03 verify-not-build: three-way parity, writer sweep (STATUS_TO_STAGE), divergent-row repair
+- [ ] 96-09-PLAN.md — COUNT-04 render half: one-signal badge, chip==badges same-clock, phase-close c9b sweep
+- [ ] 96-10-PLAN.md — COUNT-02: type-list path classification + SC5 no-extension-row fixture oracle
+- [ ] 96-11-PLAN.md — TRIGSWEEP-01: behaviour classifier + both-direction control drill artifact
+
 **UI hint**: yes
 
 ### Phase 97: Reachability
