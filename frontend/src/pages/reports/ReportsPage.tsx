@@ -7,6 +7,7 @@ import {
   Download,
   Loader2,
   CheckCircle,
+  AlertCircle,
   AlertTriangle,
   Calendar,
 } from 'lucide-react'
@@ -18,12 +19,19 @@ import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
 import { buildGeneratedReportEntry, type GeneratedReportEntry } from './generate-entry'
 
+/**
+ * The formats the `reports` function really produces. PDF, Excel and Word were offered here
+ * while nothing on the server could build them — an offered format that cannot be delivered
+ * can only end in a fabricated success or a dead download, so they are not offered.
+ */
+type ReportFormat = 'csv' | 'json'
+
 interface ReportTemplate {
   id: string
   name: string
   description: string
   icon: React.ReactNode
-  formats: ('pdf' | 'excel' | 'word')[]
+  formats: ReportFormat[]
   parameters: {
     name: string
     type: 'date' | 'select' | 'multiselect'
@@ -35,7 +43,7 @@ interface ReportTemplate {
 export function ReportsPage() {
   const { t } = useTranslation()
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
-  const [selectedFormat, setSelectedFormat] = useState<'pdf' | 'excel' | 'word'>('pdf')
+  const [selectedFormat, setSelectedFormat] = useState<ReportFormat>('csv')
   const [parameters, setParameters] = useState<Record<string, any>>({})
   const [generatedReports, setGeneratedReports] = useState<GeneratedReportEntry[]>([])
   const reportTemplates: ReportTemplate[] = [
@@ -44,7 +52,7 @@ export function ReportsPage() {
       name: t('reports.templates.countryOverview'),
       description: t('reports.templates.countryOverviewDesc'),
       icon: <FileText className="h-8 w-8" />,
-      formats: ['pdf', 'excel'],
+      formats: ['csv', 'json'],
       parameters: [
         {
           name: 'country',
@@ -69,7 +77,7 @@ export function ReportsPage() {
       name: t('reports.templates.mouStatus'),
       description: t('reports.templates.mouStatusDesc'),
       icon: <FileSpreadsheet className="h-8 w-8" />,
-      formats: ['excel', 'pdf'],
+      formats: ['csv', 'json'],
       parameters: [
         {
           name: 'status',
@@ -97,7 +105,7 @@ export function ReportsPage() {
       name: t('reports.templates.eventSummary'),
       description: t('reports.templates.eventSummaryDesc'),
       icon: <Calendar className="h-8 w-8" />,
-      formats: ['pdf', 'word'],
+      formats: ['csv', 'json'],
       parameters: [
         {
           name: 'period',
@@ -116,7 +124,7 @@ export function ReportsPage() {
       name: t('reports.templates.intelligenceDigest'),
       description: t('reports.templates.intelligenceDigestDesc'),
       icon: <FileText className="h-8 w-8" />,
-      formats: ['pdf'],
+      formats: ['csv', 'json'],
       parameters: [
         {
           name: 'confidenceLevel',
@@ -144,7 +152,7 @@ export function ReportsPage() {
       name: t('reports.templates.organizationProfile'),
       description: t('reports.templates.organizationProfileDesc'),
       icon: <FileSpreadsheet className="h-8 w-8" />,
-      formats: ['pdf', 'excel'],
+      formats: ['csv', 'json'],
       parameters: [
         {
           name: 'organization',
@@ -164,7 +172,7 @@ export function ReportsPage() {
       name: t('reports.templates.executiveDashboard'),
       description: t('reports.templates.executiveDashboardDesc'),
       icon: <FileText className="h-8 w-8" />,
-      formats: ['pdf'],
+      formats: ['csv', 'json'],
       parameters: [
         {
           name: 'period',
@@ -366,6 +374,7 @@ export function ReportsPage() {
                     className="w-full"
                     onClick={handleGenerateReport}
                     disabled={generateReportMutation.isPending}
+                    aria-disabled={generateReportMutation.isPending}
                   >
                     {generateReportMutation.isPending ? (
                       <>
@@ -391,10 +400,27 @@ export function ReportsPage() {
               <CardTitle>{t('reports.recentReports')}</CardTitle>
             </CardHeader>
             <CardContent>
-              {generatedReports.length === 0 ? (
+              {generatedReports.length === 0 &&
+              !generateReportMutation.isPending &&
+              !generateReportMutation.isError ? (
                 <p className="text-sm text-muted-foreground">{t('reports.noRecentReports')}</p>
               ) : (
                 <div className="space-y-3">
+                  {generateReportMutation.isPending && (
+                    <div className="flex items-center gap-2 p-3 border rounded text-sm text-ink-mute">
+                      <Loader2 className="h-4 w-4 shrink-0 animate-spin" />
+                      {t('report-builder:generate.pending')}
+                    </div>
+                  )}
+                  {generateReportMutation.isError && (
+                    <div
+                      role="alert"
+                      className="flex items-center gap-2 p-3 border rounded text-sm text-danger"
+                    >
+                      <AlertCircle className="h-4 w-4 shrink-0" />
+                      {t('report-builder:generate.failed')}
+                    </div>
+                  )}
                   {generatedReports.map((report) => (
                     <div
                       key={report.id}
@@ -417,7 +443,8 @@ export function ReportsPage() {
                             <CheckCircle className="h-4 w-4 text-success" />
                             <Button size="sm" variant="ghost" asChild>
                               <a href={report.url} download>
-                                <Download className="h-4 w-4" />
+                                <Download className="h-4 w-4 me-2" />
+                                {t('report-builder:generate.completed')}
                               </a>
                             </Button>
                           </>

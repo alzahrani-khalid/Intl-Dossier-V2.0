@@ -279,6 +279,9 @@
   },
 
   "generate": {
+    "pending": "Generating report",
+    "completed": "Open report",
+    "failed": "Report generation failed. Try again.",
     "unavailable": "Report generation is unavailable"
   },
 
