@@ -505,7 +505,13 @@ half is proven and `WRITE-01` is **complete on the evidence**. This lane does **
 | sha | message |
 | --- | ------- |
 | `9fa438067` | fix(94-01): read the after-action id from the request body in after-actions-publish |
-| _(the docs commit carrying this addendum + the PLAN scope line — sha recorded in the commit itself)_ | docs(94-01): ADDENDUM — PARK-EXEC-01 repair under RULING-P94-09 |
+| `9a86db9c0` | docs(94-01): ADDENDUM — PARK-EXEC-01 repair under RULING-P94-09 |
+| `<this commit>` | docs(94-01): record the addendum's own commit sha |
+
+A commit cannot contain its own sha, so the third row is self-referential by necessity: it is the
+`HEAD` of this lane, resolvable with `git log --oneline -3` and reported in the lane's completion
+message. `9fa438067` is the only commit in this lane that changed code; the other two are
+`.planning/`-only.
 
 ### GATE CONCERN
 
