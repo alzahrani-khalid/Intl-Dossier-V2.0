@@ -513,6 +513,32 @@ A commit cannot contain its own sha, so the third row is self-referential by nec
 message. `9fa438067` is the only commit in this lane that changed code; the other two are
 `.planning/`-only.
 
+### FINDING FOR THE ORCHESTRATOR — the same parse exists in four siblings. NOT repaired.
+
+The ruling scopes this lane to `after-actions-publish`, so nothing below was touched, invoked, or
+redeployed. Reported because a defect repaired in one of five identical call sites is a defect
+class, and the orchestrator — not this lane — decides whether it gets a ruling.
+
+Sweep (`find supabase/functions -name 'index.ts' | xargs command grep -n "s === 'after-actions'"`),
+instrument-tested both directions first: positive control `pathSegments` → **13** files; negative
+control `zzzNoSuchTokenzzz` → **0**.
+
+<!-- prettier-ignore -->
+| function | line | in-repo `functions.invoke` caller |
+| -------- | ---- | -------------------------------- |
+| `after-actions-request-edit` | `:34` | `frontend/src/hooks/useEditWorkflow.ts:20` |
+| `after-actions-versions` | `:29` | `frontend/src/hooks/useAfterAction.ts:380` |
+| `after-actions-approve-edit` | `:33` | none found in `frontend/src` / `backend/src` |
+| `after-actions-reject-edit` | `:33` | none found in `frontend/src` / `backend/src` |
+
+**STATED LIMIT.** What is measured is that the four carry the byte-identical id-source expression,
+and that two of them have a live caller using the ordinary `functions.invoke` URL — the exact shape
+that made `after-actions-publish` 404. What is **NOT** measured is their runtime behaviour: this
+lane did not invoke them, because doing so mutates staging after-action records and is outside the
+authorization. Treat the first two rows as _strongly suspected_, not proven. The caller sweep used
+`find … | xargs command grep` (never a bare recursive `grep`, which is a `.gitignore`-honouring
+ugrep wrapper here) with a negative control returning 0.
+
 ### GATE CONCERN
 
 None. `94-01_g3` was not edited, and it behaved as a sound oracle in both directions: red for a real
