@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v10.0
 milestone_name: Trust & Correctness
 status: in_progress
-last_updated: '2026-08-15T13:03:47.225Z'
+last_updated: '2026-08-16T08:10:00.000Z'
 progress:
   total_phases: 13
-  completed_phases: 1
-  total_plans: 10
-  completed_plans: 10
-  percent: 8
+  completed_phases: 2
+  total_plans: 25
+  completed_plans: 25
+  percent: 15
 ---
 
 # Project State
@@ -19,16 +19,52 @@ progress:
 See: .planning/PROJECT.md (updated 2026-08-15 — v9.0 closed PARTIAL; v10.0 Trust & Correctness started)
 
 **Core value:** Unified intelligence management for diplomatic operations
-**Current focus:** Phase 92 — Session Integrity & Edge-Function Auth. Root-cause-first: AUTH-02 (133 of 303 edge functions pinning a deprecated `supabase-js@2.3x`; 53 of those also call bare `getUser()` — wording corrected 2026-08-15, see `REQUIREMENTS.md AUTH-02`) and the operator-only P88-02 credential rotation (CARRY-01) both land in Phase 92 so no later phase inherits them.
+**Current focus:** Phase 94 — Write Paths (next to plan). **Prior:** Phase 92 — Session Integrity & Edge-Function Auth. Root-cause-first: AUTH-02 (133 of 303 edge functions pinning a deprecated `supabase-js@2.3x`; 53 of those also call bare `getUser()` — wording corrected 2026-08-15, see `REQUIREMENTS.md AUTH-02`) and the operator-only P88-02 credential rotation (CARRY-01) both land in Phase 92 so no later phase inherits them.
 **Prior focus (v9.0, closed partial):** Phase 89 — CI & Test-Debt Burn-Down (PARTIALLY DELIVERED 2026-08-13; CI-01/04/05 held, CI-02 blocked on D-3, ORCH-2 owed). Phase 88 still IN PROGRESS (P88-02 rotation pending operator — it also gates CI-01/CI-05). **Phase 90 (CORS) — COMPLETE 2026-07-13** (36/36 plans; SC-4 repo-wide grep=0; `OPERATOR VERDICT 90-33/34: signed`; 90-VALIDATION stamped).
 
 ## Current Position
 
 Milestone: **v10.0 — Trust & Correctness** (roadmapped 2026-08-15).
-Phase: 92 (session-integrity-edge-auth) — **EXECUTED 2026-08-15, accepted by `RULING-P92-49`.**
-9 of 10 plans executed (10/10 SUMMARYs on disk; `92-10` is a parked operator act, not work).
-Next command: `/gsd:plan-phase 93`.
-Plan: none yet for 93.
+Phase: 93 (failure-visibility) — **EXECUTED 2026-08-16, accepted by `RULING-P93-07`.**
+15 of 15 plans executed (15/15 SUMMARYs on disk, every `## BLOCKED` section read and empty).
+Next command: `/gsd:plan-phase 94`.
+Plan: none yet for 94.
+Prior phase: 92 (session-integrity-edge-auth) — EXECUTED 2026-08-15, accepted by `RULING-P92-49`;
+`92-10` remains a parked operator act (`E2ECRED-01`), not work.
+
+**Phase 93 close-out, stated narrowly — the checkbox is not a claim of more than this:**
+Report `.tickmarkr/overseer/P93-EXEC-REPORT.md` (ends `ORCH-EXEC-END`). Base tag `phase-93-base` =
+`e185f175`. Gate drill on the real tree at close: **36 gates · 36 parsed · 36 exit 0**, re-derived
+independently by the overseer. The 33-gate green-direction debt was paid **per plan as the work
+landed**, never in a repair round. Two gate edits were authorized by ruling (`RULING-P93-03`,
+`RULING-P93-05`) and each was drilled in both directions as a new gate.
+
+**An independent `gsd-verifier` pass ran after the executors** (`93-VERIFICATION-INDEPENDENT.md`,
+`status: gaps_found`, `score: 4/5`) and found one real gap the phase's own five instruments could
+not: two **mutation-origin renders** of raw `error.message` on a criterion-2 surface
+(`LEAK-ATTACH-01`). **Repaired in-phase** under `RULING-P93-06` (`283f9eff`). The durable lesson:
+**a population partitioned by ORIGIN leaks at the seams, and agreement between instruments that
+share a partition is not evidence.**
+
+**Not established by Phase 93, so no later phase should inherit it as done:** nothing was verified
+against **production** (staging `zkrcjzdemdmwhearhfgg` only, droplet untouched); all behavioural
+evidence is **Chromium, English locale, desktop viewport** — **Arabic was verified as JSON key-sets
+and string inequality, never as pixels**, and the RTL render of the seven new error states is
+**PARKED FOR THE OPERATOR** (`RULING-P93-06` order 2, inherited unresolved from Phase 92); the
+`data: x = []` mask count is a **FLOOR** (26 → 22, with 22 remaining and `= {}` / `= 0` / `?? []`
+shapes never searched); **`TRUST-03`'s report-builder 404 arm has never fired in a natural run** and
+no committed test will notice when it does (`ARMA-01`, the phase's named weakest point); and 4 of
+the 11 C9b couplings are **non-oracles** (2 mocked, 1 name collision, 1 unrunnable), so the defence
+count is 6, not 11.
+
+**Filed to later phases from Phase 93 — 13 requirements, one of them already resolved:**
+`RLS-AUTHUSERS-01` → P100 · `DR-SUBPATH-01` → P100 (the **outer** of two stacked causes on
+legal-holds; fixing the RLS alone will not close that region) · `DELEG-02`, `P52FIXTURE-01`,
+`GATESTD-01` → P102 · `AUDIT-DROP-01`, `AUDIT-ZERO-01`, `ARMA-01` → P94 · `E2ESTALE-01`,
+`ROOTALIAS-01`, `ORACLECAP-01` → P101 · `RETENTION-CAST-01`, `NOTFOUND-COMPONENT-01` → P95 ·
+`LEAK-ATTACH-01` **RESOLVED-IN-PHASE**, kept in the register rather than deleted.
+`GATE-STANDARD.md` gained **C9b** (the consumer set is not bounded by the phase), amended twice
+from live misses, and its own escape step is filed broken as `GATESTD-01`.
 
 **Phase 92 close-out, stated narrowly — the checkbox is not a claim of more than this:**
 Report `.tickmarkr/overseer/P92-EXEC-REPORT.md`. Gate drill on the real tree: 21 gates · 21 parsed ·

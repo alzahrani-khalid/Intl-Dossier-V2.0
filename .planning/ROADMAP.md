@@ -259,7 +259,7 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 ## Phases
 
 - [x] **Phase 92: Session Integrity & Edge-Function Auth** - A user can sign out, a valid session is accepted by every edge function, and a dead session bounces the tab
-- [ ] **Phase 93: Failure Visibility** - No surface renders a confident empty state over a request that failed
+- [x] **Phase 93: Failure Visibility** - No surface renders a confident empty state over a request that failed
 - [ ] **Phase 94: Write Paths** - Every advertised write path — after-actions, intake, kanban, settings, reports — actually writes
 - [ ] **Phase 95: Routes That Don't Render** - Every route either renders its page or says why it can't; the route tree has one file per slot
 - [ ] **Phase 96: Real Numbers** - Every count, chart and trend comes from real data and agrees with every other surface
@@ -345,21 +345,21 @@ Read the checkbox as narrowly as the evidence supports:
 
 Plans:
 
-- [ ] 93-01-PLAN.md — Wave 1: phase-93-base tag + shared QueryErrorState + 7 bilingual keys (D-03/D-04; producer for every surface plan)
-- [ ] 93-02-PLAN.md — Wave 1: my-delegations bilingual error envelope (DELEG-01 visibility-only, D-13) + data-retention `details` strip + 92-spec natural-visit update
-- [ ] 93-03-PLAN.md — Wave 1: PIN-2390-01 — both 2.39.0 helpers bumped, six importers redeployed, derivation widened to `*.ts` (D-16)
-- [ ] 93-04-PLAN.md — Wave 2: DR-42501 4-policy migration onto is_platform_admin (D-09/D-10/D-24) + anti-grant gate (D-12/D-23) + probe 200
-- [ ] 93-05-PLAN.md — Wave 1: AUDIT-42703 — audit-logs-viewer remapped to real audit_log columns, aggregate promoted (D-26), leak fixed (D-15)
-- [ ] 93-06-PLAN.md — Wave 2: TRUST-01 sites 1-3 (analytics repository) + AnalyticsDashboardPage error.message fix, paired per D-21 + spec
-- [ ] 93-07-PLAN.md — Wave 2: TRUST-01 sites 4-5 (useDossier counts) + DossierListPage em-dash/error branch, paired per D-21 + spec
-- [ ] 93-08-PLAN.md — Wave 2: TRUST-01 site 6 (supabase-js .error throws first) + widgetData aggregation isError + CustomDashboardPage + spec
-- [ ] 93-09-PLAN.md — Wave 3: /admin/field-permissions + /admin/data-retention isError wiring; legal-holds residual ASSERTED by design (D-25) + 4-test spec
-- [ ] 93-10-PLAN.md — Wave 2: Tag Analytics stub repointed at tag-hierarchy/analytics (D-25) + AttachmentUploader inline error + spec
-- [ ] 93-11-PLAN.md — Wave 2: DossierShell — first notFound() thrower (D-06) + error state; one edit covers 7 dossier layouts + spec
-- [ ] 93-12-PLAN.md — Wave 2: engagement-dossiers degraded-200 contract (producer) → WorkspaceShell 3-state render (D-06a/D-07) + fixture spec
-- [ ] 93-13-PLAN.md — Wave 2: report builder loader + by-id fetch + notFound + route errorComponent (no analog; WRITE-06 42P17 hazard stated) + spec
-- [ ] 93-14-PLAN.md — Wave 2: criterion-5 three seams (D-22) — bucket-(a) sweep, router defaultErrorComponent, global mutation onError + /tasks/queue spec
-- [ ] 93-15-PLAN.md — Wave 4: closing derivations with populations (D-18), full spec+probe run, gate drill, intended-broken register
+- [x] 93-01-PLAN.md — Wave 1: phase-93-base tag + shared QueryErrorState + 7 bilingual keys (D-03/D-04; producer for every surface plan)
+- [x] 93-02-PLAN.md — Wave 1: my-delegations bilingual error envelope (DELEG-01 visibility-only, D-13) + data-retention `details` strip + 92-spec natural-visit update
+- [x] 93-03-PLAN.md — Wave 1: PIN-2390-01 — both 2.39.0 helpers bumped, six importers redeployed, derivation widened to `*.ts` (D-16)
+- [x] 93-04-PLAN.md — Wave 2: DR-42501 4-policy migration onto is_platform_admin (D-09/D-10/D-24) + anti-grant gate (D-12/D-23) + probe 200
+- [x] 93-05-PLAN.md — Wave 1: AUDIT-42703 — audit-logs-viewer remapped to real audit_log columns, aggregate promoted (D-26), leak fixed (D-15)
+- [x] 93-06-PLAN.md — Wave 2: TRUST-01 sites 1-3 (analytics repository) + AnalyticsDashboardPage error.message fix, paired per D-21 + spec
+- [x] 93-07-PLAN.md — Wave 2: TRUST-01 sites 4-5 (useDossier counts) + DossierListPage em-dash/error branch, paired per D-21 + spec
+- [x] 93-08-PLAN.md — Wave 2: TRUST-01 site 6 (supabase-js .error throws first) + widgetData aggregation isError + CustomDashboardPage + spec
+- [x] 93-09-PLAN.md — Wave 3: /admin/field-permissions + /admin/data-retention isError wiring; legal-holds residual ASSERTED by design (D-25) + 4-test spec
+- [x] 93-10-PLAN.md — Wave 2: Tag Analytics stub repointed at tag-hierarchy/analytics (D-25) + AttachmentUploader inline error + spec
+- [x] 93-11-PLAN.md — Wave 2: DossierShell — first notFound() thrower (D-06) + error state; one edit covers 7 dossier layouts + spec
+- [x] 93-12-PLAN.md — Wave 2: engagement-dossiers degraded-200 contract (producer) → WorkspaceShell 3-state render (D-06a/D-07) + fixture spec
+- [x] 93-13-PLAN.md — Wave 2: report builder loader + by-id fetch + notFound + route errorComponent (no analog; WRITE-06 42P17 hazard stated) + spec
+- [x] 93-14-PLAN.md — Wave 2: criterion-5 three seams (D-22) — bucket-(a) sweep, router defaultErrorComponent, global mutation onError + /tasks/queue spec
+- [x] 93-15-PLAN.md — Wave 4: closing derivations with populations (D-18), full spec+probe run, gate drill, intended-broken register
 
 ### Phase 94: Write Paths
 
