@@ -378,11 +378,25 @@ Plans:
 1. An after-action record can be created, saved and published from the engagement UI — `AfterActionForm.tsx:131`'s `if (!initialData) return` no longer pins `isDirty` false in create mode, and the route passes `canPublish` + `onPublish`.
 2. `/after-actions` lists records and a detail page renders translated copy instead of the raw `afterActions.loadError` key.
 3. `/intake/new` submits: the dossier picker writes to the field the schema reads, so "Linked to: OECD" and "At least one dossier is required" cannot appear together.
-4. A commitment dragged on the kanban board persists against `aa_commitments`' own lifecycle (`pending`/`in_progress`/`completed`/`cancelled`), and a rejected drag shows the real message — never "Operation completed successfully" on a no-op.
-5. Every `/settings` tab saves and the value survives a reload; a report generates and a scheduled report is created without a `42P17`.
+4. A commitment drag persists exactly when the DB's own state machine permits it; a drag the trigger would coerce is refused before the write with the real bilingual reason; the stored value always equals either what was written or what the user was told; never a success signal followed by a snap-back — and never "Operation completed successfully" on a no-op. (Reworded from "persists against the four-value lifecycle" per `RULING-P94-03` order 2 — the live lifecycle is FIVE values incl. `overdue`, and "no error shown" is insufficient to pass; the oracle includes the coercion case.)
+5. Every `/settings` tab saves (population stated: the nine SettingsPage sections through the shared Save; child routes are a named exclusion) and the value survives a reload; report reads, custom-report CRUD and scheduled-report creation work without a `42P17`. (Second half scoped to the REAL surfaces per `RULING-P94-04` §PARK-94-06 — the `reports` POST is a mock, filed as `DEAD-09`; the field rename ships only paired with an honest terminal state.)
 
-**Plans**: TBD
-**UI hint**: yes
+**Plans**: 11 plans in 5 waves
+
+Plans:
+
+- [ ] 94-01-PLAN.md — W1: WRITE-01 after-action create-mode Save + canPublish/onPublish wiring
+- [ ] 94-02-PLAN.md — W1: WRITE-03 intake zod relaxation + shouldValidate + register correction
+- [ ] 94-03-PLAN.md — W1: WRITE-04 core — commitment-stage guard, mutation reject (2 bilingual keys), no-op fix
+- [ ] 94-04-PLAN.md — W1: WRITE-05 settings .update() fix + reload-persistence spec (population stated)
+- [ ] 94-05-PLAN.md — W1: WRITE-06 42P17 migration + D-22 two-sided probe + ARMA-01 arm-(b) deletion
+- [ ] 94-06-PLAN.md — W1: AUDIT helpers (edge \_shared/audit.ts + backend audit_log/mou repairs + backend test)
+- [ ] 94-07-PLAN.md — W2: WRITE-02 list two-query rewrite + deploy + i18n colon-form + degraded row + corrections
+- [ ] 94-08-PLAN.md — W2: WRITE-04 droppable predicate (own-column carve-out) + read-back probe + parity oracle
+- [ ] 94-09-PLAN.md — W3: WRITE-06 generate surface — template→type paired with terminal state + DEAD-09 filing
+- [ ] 94-10-PLAN.md — W4: AUDIT-ZERO fleet — 27 edge writers repaired + redeployed + ledger + register corrections
+- [ ] 94-11-PLAN.md — W5: closing derivations with populations, full oracle run, gate drill, intended-broken register
+      **UI hint**: yes
 
 ### Phase 95: Routes That Don't Render
 
