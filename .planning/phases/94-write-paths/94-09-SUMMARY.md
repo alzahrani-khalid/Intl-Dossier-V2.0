@@ -288,6 +288,27 @@ Instrument traps hit and cleared, each measured rather than assumed:
 - `94-10` owns the next `.planning/REQUIREMENTS.md` edit — this plan's edit is purely additive
   (3 insertions, 0 deletions), so waves 1 and 2 are intact for it.
 
+## Shared-tree observation — NOT mine, no action taken
+
+Surfaced for the orchestrator because acting on it is not my call and `git stash` is prohibited to me.
+A **leftover lint-staged backup stash** sits on the shared stash stack:
+
+```
+stash@{0} 30bcdc15f0a19b78876420d3a3a9c3f8eea691cf 2026-08-16 17:20:10 +0300 lint-staged automatic backup
+  .planning/phases/94-write-paths/94-05-SUMMARY.md   |   2 +-
+  frontend/src/pages/WorkBoard/WorkBoard.tsx         |  37 ++++++-
+  .../pages/WorkBoard/__tests__/WorkBoard.test.tsx   | 106 ++++++++++++++++++++-
+```
+
+It is **not from either of my commits** — mine was `8e209e775` (created 18:17:19 and correctly
+dropped when the hook succeeded); this one predates it by an hour and holds another lane's WorkBoard
+work. All three of its blobs differ from HEAD, though HEAD's `WorkBoard.tsx` came from
+`9f5a5a194 feat(94-08)`, so the likeliest reading is a superseded backup rather than lost work. It is
+recorded rather than resolved: the stash stack is shared across the checkout and every linked
+worktree, and popping or dropping it blind is precisely the failure mode the executor contract
+forbids. **Untouched.** (Also untouched: the untracked `tickmarkr.spec.md` at the repo root, another
+lane's file.)
+
 ## BLOCKED
 
 None.
