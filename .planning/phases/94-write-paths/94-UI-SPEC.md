@@ -195,9 +195,13 @@ A disabled-button-state contract, not new chrome. Buttons keep their exact shipp
   > assumption must sweep the artifacts that encode it. **Full rulings-vs-spec sweep run in this
   > same edit** — population: every ruled decision in `RULING-P94-01..-06` checked against this
   > document. Result: **this was the only contradiction.** `A3` (tenant derivation),
-  > `PARK-94-05` (edge-function query shape), `PARK-94-07` (probe identity) and `PARK-94-08` (audit
-  > precondition subset) have **no rows here and correctly so** — they are not UI concerns, and this
-  > spec's scope is the rendered surface. That absence is the population's boundary, not a gap.
+  > `PARK-94-05` (edge-function query shape) and `PARK-94-07` (probe identity) have **no rows here and
+  > correctly so** — they are not UI concerns. **`PARK-94-08` is DIFFERENT and my first wording was
+  > wrong:** `RULING-P94-04:44` ends "Failure copy bilingual, no internals leaked", which _is_ a UI
+  > concern. It needs no row here because it is **discharged outside this contract** (94-10's
+  > sanitized failure body plus Phase 93's rendering vocabulary), not because it falls outside the
+  > subject. Caught by the round-3 check: my sweep was marker-based, and a marker grep walks straight
+  > past a clause phrased differently — the conclusion held, the stated reason did not.
 
 - Publish from create mode is a two-step (create → publish) behind one button press; while it runs,
   BOTH buttons are disabled and the existing `publishing` label shows. On failure, the translated
@@ -304,7 +308,7 @@ no exclamation marks; column names in copy align with the shipped `columns.*` gl
 | Reject (i) title              | Commitments have no review stage (`unified-kanban:errors.commitmentNoReviewStage`)                                                                                                                                                                                                                             |
 | Reject (i) body               | The Review column does not exist in the commitment lifecycle. Move the commitment to To do, In progress, or Done. (`…commitmentNoReviewStageDescription`)                                                                                                                                                      |
 | Reject (ii) title             | Commitment is overdue (`unified-kanban:errors.commitmentPastDue`)                                                                                                                                                                                                                                              |
-| Reject (ii) body              | The database holds this commitment as overdue, so it cannot move to To do or In progress. Extend the due date, or mark it complete. (`…commitmentPastDueDescription`)                                                                                                                                          |
+| Reject (ii) body              | An overdue commitment cannot move to To do or In progress. Extend the due date, or mark it complete. (`…commitmentPastDueDescription`)                                                                                                                                                                         |
 | Generic drag failure          | existing `unified-kanban:errors.updateFailed` + `updateFailedDescription` — REUSED, replacing the hardcoded title + raw `error.message`                                                                                                                                                                        |
 | Detail load error             | Unable to load this after-action record. Try again, and contact an administrator if it keeps failing. (`common:afterActions.loadError` — NEW)                                                                                                                                                                  |
 | Publish failure               | existing `common:afterActions.publishFailed` — REUSED, rendered alone (raw message removed)                                                                                                                                                                                                                    |
@@ -320,15 +324,15 @@ Arabic strings (executor aligns terminology with the shipped `unified-kanban` `c
 `errors.*` glossary — للتنفيذ / قيد التنفيذ / مكتمل — before committing; these are the contract's
 suggested renderings):
 
-| Key                                                    | ar                                                                                                                            |
-| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
-| `errors.commitmentNoReviewStage`                       | لا توجد مرحلة مراجعة للالتزامات                                                                                               |
-| `errors.commitmentNoReviewStageDescription`            | عمود المراجعة غير موجود في دورة حياة الالتزام. انقل الالتزام إلى للتنفيذ أو قيد التنفيذ أو مكتمل.                             |
-| `errors.commitmentPastDue`                             | الالتزام متأخر                                                                                                                |
-| `errors.commitmentPastDueDescription`                  | تسجّل قاعدة البيانات هذا الالتزام كمتأخر، لذا لا يمكن نقله إلى للتنفيذ أو قيد التنفيذ. مدّد تاريخ الاستحقاق أو أكمل الالتزام. |
-| `report-builder:generate.unavailable`                  | تعذّر إنشاء التقرير                                                                                                           |
-| `afterActions.loadError` (in `common`)                 | تعذر تحميل سجل ما بعد الإجراء. حاول مرة أخرى، وإذا استمرت المشكلة تواصل مع المسؤول.                                           |
-| `degraded.engagementMissing` (in `after-actions-page`) | بيانات المشاركة غير متاحة                                                                                                     |
+| Key                                                    | ar                                                                                                |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| `errors.commitmentNoReviewStage`                       | لا توجد مرحلة مراجعة للالتزامات                                                                   |
+| `errors.commitmentNoReviewStageDescription`            | عمود المراجعة غير موجود في دورة حياة الالتزام. انقل الالتزام إلى للتنفيذ أو قيد التنفيذ أو مكتمل. |
+| `errors.commitmentPastDue`                             | الالتزام متأخر                                                                                    |
+| `errors.commitmentPastDueDescription`                  | لا يمكن نقل التزام متأخر إلى للتنفيذ أو قيد التنفيذ. مدّد تاريخ الاستحقاق أو أكمل الالتزام.       |
+| `report-builder:generate.unavailable`                  | إنشاء التقارير غير متاح                                                                           |
+| `afterActions.loadError` (in `common`)                 | تعذر تحميل سجل ما بعد الإجراء. حاول مرة أخرى، وإذا استمرت المشكلة تواصل مع المسؤول.               |
+| `degraded.engagementMissing` (in `after-actions-page`) | بيانات المشاركة غير متاحة                                                                         |
 
 No dates or times appear in this phase's new copy; if a plan later interpolates the due date into
 reject (ii), it renders day-first (`Tue 28 Apr`) via the shipped locale formatter, never a raw ISO
