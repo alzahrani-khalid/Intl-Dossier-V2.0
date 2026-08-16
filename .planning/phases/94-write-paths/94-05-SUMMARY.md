@@ -61,6 +61,12 @@ and the report-404 spec now asserts the 404 arm alone.**
 2. **Task 2: the D-22 two-sided probe + criterion-5 schedule oracle** — `2ffd0e6b2` (test)
 3. **Task 3: ARMA-01 — delete arm (b), assert 404 alone** — `d48be4937` (test)
 
+**Plan-metadata commits** (this SUMMARY only, all `.planning/`-scoped): `84126923c` (the SUMMARY),
+`bc462aec2` and `8df3d190` (two markdown-formatting follow-ups — a stray staged prettier indent was
+ping-ponging against the worktree, so the bullet was reflowed until both agreed), plus the commit
+carrying this line. Every commit in this plan used an explicit pathspec and touched exactly one
+file; no other lane's staged work was swept in.
+
 Scope diff confirms exactly three paths changed vs the phase tag:
 
 ```
