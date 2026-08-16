@@ -123,22 +123,29 @@ export interface AfterActionRecord {
 }
 
 /**
- * AfterActionRecord enriched with engagement + dossier joins returned by the
+ * AfterActionRecord enriched with engagement + dossier context returned by the
  * `after-actions-list-all` Edge Function (Phase 42-01). The cross-dossier table
  * needs Engagement title + Dossier name without an extra round-trip.
+ *
+ * Phase 94-07 (WRITE-02 / D-13): the function composes both in code from batched
+ * `dossiers` + `engagement_dossiers` lookups — there is no FK to embed through.
+ * Both sides are therefore NULLABLE, and the null is load-bearing: a row whose
+ * lookup missed still ships, and `AfterActionsTable` renders it in a named
+ * degraded state instead of hiding it. `engagement_date` is null on its own when
+ * the dossier row exists but its engagement extension row does not.
  */
 export interface AfterActionRecordWithJoins extends AfterActionRecord {
   engagement?: {
     id: string
     title_en: string
     title_ar: string
-    engagement_date: string
-  }
+    engagement_date: string | null
+  } | null
   dossier?: {
     id: string
     name_en: string
     name_ar: string
-  }
+  } | null
 }
 
 export interface CreateAfterActionRequest {

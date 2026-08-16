@@ -207,6 +207,22 @@ THEN NEW.status := 'overdue'`. On staging, **8 of 10 commitments are already `ov
   `supabase/functions/after-actions-list-all/index.ts:89` embeds
   `engagement:engagements!inner (…)`. Two failure modes, and the plan addresses both explicitly:
   the wrong relation, and `!inner`, which **hides** any after-action whose join misses.
+
+  > **CORRECTED 2026-08-16 — no table holds the FK, so the instruction above is unsatisfiable as
+  > written (`RULING-P94-04` §PARK-94-05).** This decision was written from `REQUIREMENTS.md`'s
+  > WRITE-02 prose, which presumed some table carried the relationship. The live catalog says
+  > otherwise: `pg_constraint` on `public.after_action_records` returns exactly five foreign keys and
+  > every one of them `REFERENCES auth.users(id)` — there is no FK on `engagement_id` and none on
+  > `dossier_id`, so both embeds die at PostgREST relationship resolution (`PGRST200`, reproduced
+  > live) and `public.engagements` lacks the selected columns regardless. `RULING-P94-04`
+  > §PARK-94-05 resolved the gray area to **(a) a two-query rewrite inside the function** — batched
+  > `.in('id', ids)` lookups against `dossiers` and `engagement_dossiers`, composed in code — over
+  > the alternative of adding the FKs by migration, which would have contradicted this document's
+  > own §Integration points ("the `42P17` policy fix is the only schema-level change in the
+  > phase"). The second failure mode above is unaffected and still binding: the rewrite emits
+  > `engagement: null` / `dossier: null` on a miss so the row is listed in the D-13 degraded state
+  > rather than hidden.
+
 - **D-13: An after-action whose engagement row is missing is LISTED in a named degraded state, not
   hidden.** [inherited — P93 `D-07`: an engagement whose extension row is missing renders a named,
   degraded state rather than a titleless shell.] `!inner` silently deletes rows from a list the user

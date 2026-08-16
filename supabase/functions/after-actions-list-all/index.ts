@@ -1,13 +1,41 @@
 // Phase 42-01: Supabase Edge Function for GET /functions/v1/after-actions-list-all
-// Returns RLS-gated published after-action records across every dossier the
-// caller's JWT can read. Mirrors `after-actions-list` minus the dossier_id
-// requirement and adds engagement + dossier joins (RESEARCH Blocker 2 + R-04).
+// Returns RLS-gated after-action records across every dossier the caller's JWT
+// can read. Mirrors `after-actions-list` minus the dossier_id requirement and
+// adds engagement + dossier context.
+//
+// Phase 94-07 (WRITE-02 / D-12 as corrected by RULING-P94-04 §PARK-94-05): that
+// context is composed IN CODE from two batched lookups, not by PostgREST embeds.
+// `after_action_records` carries NO foreign key on `engagement_id` or
+// `dossier_id` — the live catalog returns exactly five FKs, all
+// `REFERENCES auth.users(id)` — so both embeds died at PostgREST relationship
+// resolution (PGRST200) and this function returned 500 to every caller. There is
+// no FK worth adding either: `public.engagements` does not carry
+// `title_en` / `title_ar` / `engagement_date` at all. Titles live on
+// `dossiers.name_en` / `name_ar`; the date lives on `engagement_dossiers.start_date`
+// (the engagement extension table, keyed by the dossier id).
+//
+// D-13: a lookup that misses emits `engagement: null` / `dossier: null` and the
+// row still ships. The old embeds used an inner join, which silently deleted such
+// rows from a list the user is told is complete — the confident-empty class.
+//
+// T-94-12: both lookups run on the SAME JWT-scoped client as the base query, so
+// RLS gates them identically. No service-role widening.
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
 
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
+
+  // D-08: the client never receives a server-originated message. Diagnostics go
+  // to the function log; the caller gets a stable code it can translate.
+  const internalError = (where: string, detail: string): Response => {
+    console.error(`after-actions-list-all: ${where}: ${detail}`);
+    return new Response(
+      JSON.stringify({ error: 'internal_error' }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  };
 
   if (req.method === 'OPTIONS') {
     return handleCorsPreflightRequest(req);
@@ -78,16 +106,17 @@ serve(async (req) => {
       );
     }
 
-    // Build query — RLS gates rows by dossier_acl automatically.
-    // No caller-supplied dossier filter is applied: accepting one would
-    // create a path to escape RLS via crafted IDs (T-42-01-AA-1 / T-42-01-T-1).
+    // --- 1. base query — RLS gates rows automatically. -----------------------
+    // No caller-supplied dossier filter is applied: accepting one would create a
+    // path to escape RLS via crafted IDs (T-42-01-AA-1 / T-42-01-T-1).
+    // The child embeds below DO resolve — `decisions`, `aa_commitments`,
+    // `aa_risks` and `aa_follow_up_actions` each carry
+    // `FOREIGN KEY (after_action_id) REFERENCES after_action_records(id)`.
     let query = supabaseClient
       .from('after_action_records')
       .select(
         `
         *,
-        engagement:engagements!inner (id, title_en, title_ar, engagement_date),
-        dossier:dossiers!inner (id, name_en, name_ar),
         decisions (id),
         commitments:aa_commitments (id),
         risks:aa_risks (id),
@@ -99,21 +128,85 @@ serve(async (req) => {
 
     query = query.range(offset, offset + limit - 1).order('created_at', { ascending: false });
 
-    const { data, error, count } = await query;
+    const { data: records, error, count } = await query;
 
     if (error) {
-      return new Response(
-        JSON.stringify({ error: error.message }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return internalError('base query', error.message);
     }
 
-    // RLS policies enforce access control. If the caller has no access to a
-    // dossier, the inner join filters that record out and the row never ships.
+    const rows = records ?? [];
+
+    // --- 2. batched context lookups -----------------------------------------
+    const engagementIds = [
+      ...new Set(rows.map((r) => r.engagement_id).filter((id) => typeof id === 'string')),
+    ];
+    const dossierIds = [
+      ...new Set(rows.map((r) => r.dossier_id).filter((id) => typeof id === 'string')),
+    ];
+    // One round-trip covers both sets: an engagement IS a dossier row here.
+    const lookupIds = [...new Set([...engagementIds, ...dossierIds])];
+
+    const dossierById = new Map<string, { id: string; name_en: string; name_ar: string }>();
+    const startDateById = new Map<string, string>();
+
+    if (lookupIds.length > 0) {
+      const { data: dossierRows, error: dossierError } = await supabaseClient
+        .from('dossiers')
+        .select('id, name_en, name_ar')
+        .in('id', lookupIds);
+      if (dossierError) {
+        return internalError('dossiers lookup', dossierError.message);
+      }
+      for (const d of dossierRows ?? []) {
+        dossierById.set(d.id, d);
+      }
+    }
+
+    if (engagementIds.length > 0) {
+      const { data: extensionRows, error: extensionError } = await supabaseClient
+        .from('engagement_dossiers')
+        .select('id, start_date')
+        .in('id', engagementIds);
+      if (extensionError) {
+        return internalError('engagement_dossiers lookup', extensionError.message);
+      }
+      for (const e of extensionRows ?? []) {
+        startDateById.set(e.id, e.start_date);
+      }
+    }
+
+    // --- 3. compose ----------------------------------------------------------
+    // A miss on either side is represented, never hidden (D-13). `engagement`
+    // present with a null `engagement_date` is the narrower degraded case: the
+    // dossier row exists but its engagement extension row does not.
+    const data = rows.map((r) => {
+      const engagementDossier = dossierById.get(r.engagement_id) ?? null;
+      const ownerDossier = dossierById.get(r.dossier_id) ?? null;
+      return {
+        ...r,
+        engagement:
+          engagementDossier === null
+            ? null
+            : {
+                id: engagementDossier.id,
+                title_en: engagementDossier.name_en,
+                title_ar: engagementDossier.name_ar,
+                engagement_date: startDateById.get(r.engagement_id) ?? null,
+              },
+        dossier:
+          ownerDossier === null
+            ? null
+            : {
+                id: ownerDossier.id,
+                name_en: ownerDossier.name_en,
+                name_ar: ownerDossier.name_ar,
+              },
+      };
+    });
 
     return new Response(
       JSON.stringify({
-        data: data || [],
+        data,
         total: count || 0,
         limit,
         offset,
@@ -122,10 +215,6 @@ serve(async (req) => {
     );
   } catch (error) {
     // WR-09: catch binding is `unknown` in Deno; narrow before reading .message.
-    const message = error instanceof Error ? error.message : String(error);
-    return new Response(
-      JSON.stringify({ error: message }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return internalError('unhandled', error instanceof Error ? error.message : String(error));
   }
 });
