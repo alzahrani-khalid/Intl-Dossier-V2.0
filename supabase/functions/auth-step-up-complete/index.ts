@@ -24,6 +24,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
+import { writeAuditLog } from '../_shared/audit.ts';
 
 interface StepUpCompleteRequest {
   challenge_id: string;
@@ -103,6 +104,16 @@ serve(async (req) => {
         }
       );
     }
+
+    // Resolve the acting user's real role for the audit rows below. `user_role` is
+    // NOT NULL and was previously hard-coded to the literal 'user', which writes a
+    // false actor role into the security log. Derive it; unresolvable = loud skip.
+    const { data: auditActor } = await supabaseAdmin
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+    const auditUserRole: string | undefined = auditActor?.role;
 
     // Check if user is locked out
     const lockoutKey = `lockout:${user.id}`;
@@ -267,24 +278,38 @@ serve(async (req) => {
         });
       }
 
-      // Record failed attempt in audit log
-      await supabaseAdmin.from('audit_logs').insert({
-        entity_type: 'user',
-        entity_id: user.id,
-        action: 'step_up_failed',
-        user_id: user.id,
-        user_role: 'user',
-        ip_address: req.headers.get('X-Forwarded-For') || 'unknown',
-        user_agent: req.headers.get('User-Agent') || 'unknown',
-        required_mfa: true,
-        mfa_verified: false,
-        metadata: {
-          challenge_id: challenge_id,
-          factor_id: factor_id,
-          attempt_count: newCount,
-          error: verifyError?.message,
-        },
-      });
+      // Record failed attempt in audit log.
+      // Grade: LOG-LOUDLY-AND-CONTINUE (D-18). `ip_address` is NOT passed to the
+      // `inet` column: the previous 'unknown' fallback and a comma-joined
+      // X-Forwarded-For list are both `22P02 invalid input syntax for type inet`,
+      // which kills the whole row — the raw header goes to `new_values` instead.
+      if (!auditUserRole) {
+        console.error(
+          `AUDIT-ZERO-01: audit write SKIPPED — no user_role resolves for ${user.id} (auth-step-up-complete:step_up_failed)`
+        );
+      } else {
+        await writeAuditLog(
+          supabaseAdmin,
+          {
+            entity_type: 'user',
+            entity_id: user.id,
+            action: 'step_up_failed',
+            user_id: user.id,
+            user_role: auditUserRole,
+            user_agent: req.headers.get('User-Agent') || 'unknown',
+            required_mfa: true,
+            mfa_verified: false,
+            new_values: {
+              challenge_id: challenge_id,
+              factor_id: factor_id,
+              attempt_count: newCount,
+              error: verifyError?.message,
+              ip_address: req.headers.get('X-Forwarded-For'),
+            },
+          },
+          'auth-step-up-complete:failed'
+        );
+      }
 
       return new Response(
         JSON.stringify({
@@ -329,26 +354,38 @@ serve(async (req) => {
       })
     );
 
-    // Record successful verification in audit log
-    await supabaseAdmin.from('audit_logs').insert({
-      entity_type: 'user',
-      entity_id: user.id,
-      action: 'step_up_completed',
-      user_id: user.id,
-      user_role: 'user',
-      ip_address: req.headers.get('X-Forwarded-For') || 'unknown',
-      user_agent: req.headers.get('User-Agent') || 'unknown',
-      required_mfa: true,
-      mfa_verified: true,
-      mfa_method: 'totp',
-      metadata: {
-        challenge_id: challenge_id,
-        factor_id: factor_id,
-        action: challenge?.action,
-        resource_id: challenge?.resource_id,
-        valid_until: validUntil.toISOString(),
-      },
-    });
+    // Record successful verification in audit log.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18). See the failed-attempt site above for
+    // why `ip_address` is not passed to the `inet` column.
+    if (!auditUserRole) {
+      console.error(
+        `AUDIT-ZERO-01: audit write SKIPPED — no user_role resolves for ${user.id} (auth-step-up-complete:step_up_completed)`
+      );
+    } else {
+      await writeAuditLog(
+        supabaseAdmin,
+        {
+          entity_type: 'user',
+          entity_id: user.id,
+          action: 'step_up_completed',
+          user_id: user.id,
+          user_role: auditUserRole,
+          user_agent: req.headers.get('User-Agent') || 'unknown',
+          required_mfa: true,
+          mfa_verified: true,
+          mfa_method: 'totp',
+          new_values: {
+            challenge_id: challenge_id,
+            factor_id: factor_id,
+            step_up_action: challenge?.action,
+            resource_id: challenge?.resource_id,
+            valid_until: validUntil.toISOString(),
+            ip_address: req.headers.get('X-Forwarded-For'),
+          },
+        },
+        'auth-step-up-complete:completed'
+      );
+    }
 
     // Return success response
     return new Response(

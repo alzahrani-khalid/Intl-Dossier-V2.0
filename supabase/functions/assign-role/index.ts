@@ -15,6 +15,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 interface AssignRoleRequest {
   user_id: string
@@ -240,26 +241,36 @@ serve(async (req) => {
         )
       }
 
-      // Log to audit trail
-      await supabaseAdmin.from('audit_logs').insert({
-        user_id: requester.id,
-        target_user_id: body.user_id,
-        event_type: 'role_change_requested',
-        resource_type: 'user',
-        resource_id: body.user_id,
-        action: 'role_change_request',
-        changes: {
-          before: { role: targetUser.role },
-          after: { role: body.new_role },
+      // Log to audit trail. Grade: PRECONDITION (PARK-94-08 (a), D-18) — a privileged
+      // role mutation that leaves no audit record is refused. Stated tension: the
+      // request row is already written, so this returns 500 on a partially-succeeded
+      // action. That is the intended trade.
+      const requestAudit = await writeAuditLog(
+        supabaseAdmin,
+        {
+          entity_type: 'user',
+          entity_id: body.user_id,
+          action: 'role_change_requested',
+          user_id: requester.id,
+          user_role: requesterData.role,
+          old_values: { role: targetUser.role },
+          new_values: {
+            requested_role: body.new_role,
+            approval_request_id: approvalRecord.id,
+            requires_approval: true,
+            reason: body.reason || null,
+            ip_address: req.headers.get('x-forwarded-for'),
+          },
+          user_agent: req.headers.get('user-agent') || 'unknown',
         },
-        metadata: {
-          approval_request_id: approvalRecord.id,
-          requires_approval: true,
-          reason: body.reason || null,
-        },
-        ip_address: req.headers.get('x-forwarded-for') || '0.0.0.0',
-        user_agent: req.headers.get('user-agent') || 'unknown',
-      })
+        'assign-role:role-change-requested',
+      )
+      if (!requestAudit.ok) {
+        return new Response(
+          JSON.stringify({ error: 'Failed to record audit entry', code: 'AUDIT_WRITE_FAILED' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+        )
+      }
 
       // Create notification for all admins (except requester)
       const { data: adminUsers, error: adminError } = await supabaseAdmin
@@ -342,26 +353,34 @@ serve(async (req) => {
       }
     }
 
-    // Log to audit trail
-    await supabaseAdmin.from('audit_logs').insert({
-      user_id: requester.id,
-      target_user_id: body.user_id,
-      event_type: 'role_changed',
-      resource_type: 'user',
-      resource_id: body.user_id,
-      action: 'role_change',
-      changes: {
-        before: { role: targetUser.role },
-        after: { role: body.new_role },
+    // Log to audit trail. Grade: PRECONDITION (PARK-94-08 (a), D-18) — the role has
+    // just been granted; a grant with no audit record is refused.
+    const roleChangedAudit = await writeAuditLog(
+      supabaseAdmin,
+      {
+        entity_type: 'user',
+        entity_id: body.user_id,
+        action: 'role_changed',
+        user_id: requester.id,
+        user_role: requesterData.role,
+        old_values: { role: targetUser.role },
+        new_values: {
+          role: body.new_role,
+          sessions_terminated: sessionsTerminated,
+          reason: body.reason || null,
+          immediate_change: true,
+          ip_address: req.headers.get('x-forwarded-for'),
+        },
+        user_agent: req.headers.get('user-agent') || 'unknown',
       },
-      metadata: {
-        sessions_terminated: sessionsTerminated,
-        reason: body.reason || null,
-        immediate_change: true,
-      },
-      ip_address: req.headers.get('x-forwarded-for') || '0.0.0.0',
-      user_agent: req.headers.get('user-agent') || 'unknown',
-    })
+      'assign-role:role-changed',
+    )
+    if (!roleChangedAudit.ok) {
+      return new Response(
+        JSON.stringify({ error: 'Failed to record audit entry', code: 'AUDIT_WRITE_FAILED' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      )
+    }
 
     // Create notification for the user
     await supabaseAdmin.from('notifications').insert({

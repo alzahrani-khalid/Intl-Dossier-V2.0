@@ -3,6 +3,7 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
+import { writeAuditLog } from '../_shared/audit.ts';
 
 // ===================================
 // TYPES
@@ -223,26 +224,40 @@ serve(async (req: Request): Promise<Response> => {
     const tokenId = result?.[0]?.token_id;
     const isNew = result?.[0]?.is_new;
 
-    // Create audit log entry
-    await supabase
-      .from('audit_logs')
-      .insert({
-        user_id: user.id,
-        action: isNew ? 'device_registered' : 'device_updated',
-        entity_type: 'push_device_token',
-        entity_id: tokenId,
-        details: {
-          platform: body.platform,
-          provider,
-          device_id: body.device_id,
-          device_name: body.device_name,
-          app_version: body.app_version,
+    // Create audit log entry.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18) — the device is already registered.
+    // `user_role` is NOT NULL and no role is resolved on this path, so derive it
+    // from `public.users`; unresolvable = loud skip, never a fabricated role.
+    const { data: auditActor } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (!auditActor?.role) {
+      console.error(
+        `AUDIT-ZERO-01: audit write SKIPPED — no user_role resolves for ${user.id} (push-device-register:device_${isNew ? 'registered' : 'updated'})`
+      );
+    } else {
+      await writeAuditLog(
+        supabase,
+        {
+          entity_type: 'push_device_token',
+          entity_id: tokenId,
+          action: isNew ? 'device_registered' : 'device_updated',
+          user_id: user.id,
+          user_role: auditActor.role,
+          new_values: {
+            platform: body.platform,
+            provider,
+            device_id: body.device_id,
+            device_name: body.device_name,
+            app_version: body.app_version,
+          },
         },
-        created_at: new Date().toISOString(),
-      })
-      .catch((err) => {
-        console.warn('[push-device-register] Failed to create audit log:', err);
-      });
+        'push-device-register'
+      );
+    }
 
     const response: RegisterDeviceResponse = {
       success: true,

@@ -15,6 +15,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 interface ApproveRoleRequest {
   approval_request_id: string
@@ -265,26 +266,37 @@ serve(async (req) => {
         )
       }
 
-      // Log to audit trail
-      await supabaseAdmin.from('audit_logs').insert({
-        user_id: approver.id,
-        target_user_id: approvalRequest.user_id,
-        event_type: 'role_change_rejected',
-        resource_type: 'user',
-        resource_id: approvalRequest.user_id,
-        action: 'role_change_rejection',
-        changes: {
-          before: { role: approvalRequest.current_role },
-          after: { role: approvalRequest.requested_role },
+      // Log to audit trail. Grade: PRECONDITION (PARK-94-08 (a), D-18) — a privileged
+      // role decision that leaves no audit record is refused. The honest tension is
+      // stated: the rejection is already persisted, so this returns 500 on an action
+      // that partially succeeded. That is the intended trade — an unaudited role
+      // decision is the worse failure.
+      const rejectAudit = await writeAuditLog(
+        supabaseAdmin,
+        {
+          entity_type: 'user',
+          entity_id: approvalRequest.user_id,
+          action: 'role_change_rejected',
+          user_id: approver.id,
+          user_role: approverData.role,
+          old_values: { role: approvalRequest.current_role },
+          new_values: {
+            requested_role: approvalRequest.requested_role,
+            approval_request_id: body.approval_request_id,
+            rejection_reason: body.rejection_reason,
+            requester_id: approvalRequest.requester_id,
+            ip_address: req.headers.get('x-forwarded-for'),
+          },
+          user_agent: req.headers.get('user-agent') || 'unknown',
         },
-        metadata: {
-          approval_request_id: body.approval_request_id,
-          rejection_reason: body.rejection_reason,
-          requester_id: approvalRequest.requester_id,
-        },
-        ip_address: req.headers.get('x-forwarded-for') || '0.0.0.0',
-        user_agent: req.headers.get('user-agent') || 'unknown',
-      })
+        'approve-role-change:reject',
+      )
+      if (!rejectAudit.ok) {
+        return new Response(
+          JSON.stringify({ error: 'Failed to record audit entry', code: 'AUDIT_WRITE_FAILED' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+        )
+      }
 
       // Notify requester and target user
       await supabaseAdmin.from('notifications').insert([
@@ -354,25 +366,33 @@ serve(async (req) => {
         )
       }
 
-      // Log to audit trail
-      await supabaseAdmin.from('audit_logs').insert({
-        user_id: approver.id,
-        target_user_id: approvalRequest.user_id,
-        event_type: 'role_change_first_approved',
-        resource_type: 'user',
-        resource_id: approvalRequest.user_id,
-        action: 'role_change_first_approval',
-        changes: {
-          before: { role: approvalRequest.current_role },
-          after: { role: approvalRequest.requested_role },
+      // Log to audit trail. Grade: PRECONDITION (PARK-94-08 (a), D-18) — see the
+      // rejection site above for the stated trade.
+      const firstApprovalAudit = await writeAuditLog(
+        supabaseAdmin,
+        {
+          entity_type: 'user',
+          entity_id: approvalRequest.user_id,
+          action: 'role_change_first_approved',
+          user_id: approver.id,
+          user_role: approverData.role,
+          old_values: { role: approvalRequest.current_role },
+          new_values: {
+            requested_role: approvalRequest.requested_role,
+            approval_request_id: body.approval_request_id,
+            requester_id: approvalRequest.requester_id,
+            ip_address: req.headers.get('x-forwarded-for'),
+          },
+          user_agent: req.headers.get('user-agent') || 'unknown',
         },
-        metadata: {
-          approval_request_id: body.approval_request_id,
-          requester_id: approvalRequest.requester_id,
-        },
-        ip_address: req.headers.get('x-forwarded-for') || '0.0.0.0',
-        user_agent: req.headers.get('user-agent') || 'unknown',
-      })
+        'approve-role-change:first-approval',
+      )
+      if (!firstApprovalAudit.ok) {
+        return new Response(
+          JSON.stringify({ error: 'Failed to record audit entry', code: 'AUDIT_WRITE_FAILED' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+        )
+      }
 
       const response: ApproveRoleResponse = {
         success: true,
@@ -459,28 +479,37 @@ serve(async (req) => {
         }
       }
 
-      // Log to audit trail
-      await supabaseAdmin.from('audit_logs').insert({
-        user_id: approver.id,
-        target_user_id: approvalRequest.user_id,
-        event_type: 'role_changed',
-        resource_type: 'user',
-        resource_id: approvalRequest.user_id,
-        action: 'role_change',
-        changes: {
-          before: { role: approvalRequest.current_role },
-          after: { role: approvalRequest.requested_role },
+      // Log to audit trail. Grade: PRECONDITION (PARK-94-08 (a), D-18) — this is the
+      // site the ruling is really about: the role has just been granted, and a grant
+      // with no audit record is refused even though the grant itself succeeded.
+      const roleChangeAudit = await writeAuditLog(
+        supabaseAdmin,
+        {
+          entity_type: 'user',
+          entity_id: approvalRequest.user_id,
+          action: 'role_changed',
+          user_id: approver.id,
+          user_role: approverData.role,
+          old_values: { role: approvalRequest.current_role },
+          new_values: {
+            role: approvalRequest.requested_role,
+            approval_request_id: body.approval_request_id,
+            first_approver_id: approvalRequest.first_approver_id,
+            second_approver_id: approver.id,
+            sessions_terminated: sessionsTerminated,
+            dual_approved: true,
+            ip_address: req.headers.get('x-forwarded-for'),
+          },
+          user_agent: req.headers.get('user-agent') || 'unknown',
         },
-        metadata: {
-          approval_request_id: body.approval_request_id,
-          first_approver_id: approvalRequest.first_approver_id,
-          second_approver_id: approver.id,
-          sessions_terminated: sessionsTerminated,
-          dual_approved: true,
-        },
-        ip_address: req.headers.get('x-forwarded-for') || '0.0.0.0',
-        user_agent: req.headers.get('user-agent') || 'unknown',
-      })
+        'approve-role-change:role-changed',
+      )
+      if (!roleChangeAudit.ok) {
+        return new Response(
+          JSON.stringify({ error: 'Failed to record audit entry', code: 'AUDIT_WRITE_FAILED' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+        )
+      }
 
       // Notify requester, target user, and first approver
       await supabaseAdmin.from('notifications').insert([

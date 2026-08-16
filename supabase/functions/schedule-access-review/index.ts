@@ -14,6 +14,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 interface ScheduleReviewRequest {
   schedule_type: 'automatic_quarterly' | 'manual_override' | 'disable'
@@ -375,28 +376,33 @@ serve(async (req) => {
       nextScheduledReview = null
     }
 
-    // Log to audit_logs
-    await supabaseAdmin.from('audit_logs').insert({
-      user_id: requester.id,
-      event_type: 'access_review_scheduled',
-      resource_type: 'access_review',
-      resource_id: null,
-      action: 'configure',
-      changes: {
-        after: {
+    // Log to audit_logs.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18) — the schedule is already configured.
+    // The former `resource_id: null` has no home: `entity_id` is NOT NULL uuid and
+    // this event configures a global cron schedule, not one review row (the manual
+    // branch's insert above does not `.select()` an id back). The acting admin's id
+    // is used as the honest subject — no sentinel uuid is invented.
+    await writeAuditLog(
+      supabaseAdmin,
+      {
+        entity_type: 'access_review_schedule',
+        entity_id: requester.id,
+        action: 'access_review_scheduled',
+        user_id: requester.id,
+        user_role: requesterData.role,
+        new_values: {
           schedule_type: body.schedule_type,
           review_scope: reviewScope,
           next_scheduled_review: nextScheduledReview,
           auto_assign_reviewer: body.auto_assign_reviewer || null,
+          source: 'access_review',
+          cron_expression: cronExpression || null,
+          ip_address: req.headers.get('x-forwarded-for'),
         },
+        user_agent: req.headers.get('user-agent') || 'unknown',
       },
-      metadata: {
-        source: 'access_review',
-        cron_expression: cronExpression || null,
-      },
-      ip_address: req.headers.get('x-forwarded-for') || '0.0.0.0',
-      user_agent: req.headers.get('user-agent') || 'unknown',
-    })
+      'schedule-access-review',
+    )
 
     const response: ScheduleReviewResponse = {
       success: true,

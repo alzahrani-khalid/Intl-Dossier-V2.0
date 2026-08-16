@@ -15,6 +15,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 interface GenerateReviewRequest {
   review_name: string
@@ -385,28 +386,29 @@ serve(async (req) => {
       )
     }
 
-    // Log to audit_logs
-    await supabaseAdmin.from('audit_logs').insert({
-      user_id: requester.id,
-      event_type: 'access_review_generated',
-      resource_type: 'access_review',
-      resource_id: reviewData.id,
-      action: 'create',
-      changes: {
-        after: {
+    // Log to audit_logs.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18) — the review has already been generated.
+    await writeAuditLog(
+      supabaseAdmin,
+      {
+        entity_type: 'access_review',
+        entity_id: reviewData.id,
+        action: 'access_review_generated',
+        user_id: requester.id,
+        user_role: requesterData.role,
+        new_values: {
           review_name: body.review_name,
           review_scope: body.review_scope,
           users_reviewed: summaryData?.length || 0,
           findings_count: findings.length,
+          source: 'access_review',
+          inactive_threshold_days: inactiveThreshold,
+          ip_address: req.headers.get('x-forwarded-for'),
         },
+        user_agent: req.headers.get('user-agent') || 'unknown',
       },
-      metadata: {
-        source: 'access_review',
-        inactive_threshold_days: inactiveThreshold,
-      },
-      ip_address: req.headers.get('x-forwarded-for') || '0.0.0.0',
-      user_agent: req.headers.get('user-agent') || 'unknown',
-    })
+      'generate-access-review',
+    )
 
     const generationTimeMs = Date.now() - startTime
 

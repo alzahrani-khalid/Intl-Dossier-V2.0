@@ -1,6 +1,7 @@
 // T143 - Biometric setup Edge Function
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
 import { validateJWT, createServiceClient } from '../_shared/auth.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 import {
   errorResponse,
   successResponse,
@@ -124,26 +125,43 @@ async function associateWithAccount(
       })
     }
 
-    // Create audit log entry
-    const { error: auditError } = await supabase
-      .from('audit_logs')
-      .insert({
-        user_id: userId,
-        action: 'biometric_setup',
-        entity_type: 'biometric_credential',
-        entity_id: credentialId,
-        details: {
-          credential_id: credentialId,
-          setup_type: 'initial'
-        },
-        created_at: new Date().toISOString()
-      })
+    // Create audit log entry.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18). `user_role` is NOT NULL and this helper
+    // receives only a userId, so resolve it from `public.users`; unresolvable = loud
+    // skip, never a fabricated role.
+    const { data: auditActor } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', userId)
+      .maybeSingle()
 
-    if (auditError) {
-      log('warn', 'Failed to create audit log', {
-        userId,
-        error: auditError.message
-      })
+    if (!auditActor?.role) {
+      console.error(
+        `AUDIT-ZERO-01: audit write SKIPPED — no user_role resolves for ${userId} (auth-biometric-setup:biometric_setup)`
+      )
+    } else {
+      const auditResult = await writeAuditLog(
+        supabase,
+        {
+          entity_type: 'biometric_credential',
+          entity_id: credentialId,
+          action: 'biometric_setup',
+          user_id: userId,
+          user_role: auditActor.role,
+          new_values: {
+            credential_id: credentialId,
+            setup_type: 'initial'
+          }
+        },
+        'auth-biometric-setup'
+      )
+
+      if (!auditResult.ok) {
+        log('warn', 'Failed to create audit log', {
+          userId,
+          error: auditResult.error
+        })
+      }
     }
 
   } catch (error) {

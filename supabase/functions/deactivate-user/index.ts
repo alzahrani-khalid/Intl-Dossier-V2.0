@@ -2,6 +2,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 import { withRateLimit, ADMIN_RATE_LIMIT } from '../_shared/rate-limiter.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 interface DeactivateUserRequest {
   userId: string
@@ -277,22 +278,37 @@ serve(async (req) => {
       })
     }
 
-    // Log audit trail with deactivation reason
-    await supabaseAdmin.from('audit_logs').insert({
-      user_id: user.id,
-      action: 'user_deactivated',
-      resource_type: 'user',
-      resource_id: userId,
-      changes: {
-        is_active: false,
-        reason: reason || 'No reason provided',
-        sessions_terminated: sessionsTerminated,
-        delegations_revoked: delegationsRevoked,
-        orphaned_items: orphanedItems,
+    // Log audit trail with deactivation reason. Grade: PRECONDITION (PARK-94-08 (a),
+    // D-18) — a privileged account deactivation that leaves no audit record is
+    // refused. Stated tension: the deactivation is already persisted, so the caller
+    // sees a 500 for an action that took effect. That is the intended trade.
+    const deactivationAudit = await writeAuditLog(
+      supabaseAdmin,
+      {
+        entity_type: 'user',
+        entity_id: userId,
+        action: 'user_deactivated',
+        user_id: user.id,
+        user_role: adminUser.role,
+        old_values: { is_active: true },
+        new_values: {
+          is_active: false,
+          reason: reason || 'No reason provided',
+          sessions_terminated: sessionsTerminated,
+          delegations_revoked: delegationsRevoked,
+          orphaned_items: orphanedItems,
+          ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip'),
+        },
+        user_agent: req.headers.get('user-agent') || 'unknown',
       },
-      ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown',
-      user_agent: req.headers.get('user-agent') || 'unknown',
-    })
+      'deactivate-user',
+    )
+    if (!deactivationAudit.ok) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Failed to record audit entry' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      )
+    }
 
     const response: DeactivateUserResponse = {
       success: true,

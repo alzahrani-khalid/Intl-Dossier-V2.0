@@ -14,6 +14,7 @@ import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { Redis } from 'https://esm.sh/@upstash/redis@1'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 // Initialize Supabase client
 const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
@@ -253,7 +254,7 @@ serve(async (req) => {
     // Check if user exists and is in pending status
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('id, email, is_active')
+      .select('id, email, is_active, role')
       .eq('id', userId)
       .single()
 
@@ -322,21 +323,33 @@ serve(async (req) => {
     // Invalidate activation token (one-time use)
     await redis.del(tokenKey)
 
-    // Log audit event
-    await supabase.from('audit_logs').insert({
-      event_type: 'user_activated',
-      user_id: userId,
-      target_user_id: userId,
-      resource_type: 'user',
-      resource_id: userId,
-      action: 'update',
-      metadata: {
-        email,
-        activation_method: 'token',
-      },
-      ip_address: ipAddress,
-      created_at: new Date().toISOString(),
-    })
+    // Log audit event. Grade: LOG-LOUDLY-AND-CONTINUE (D-18) — the activation has
+    // already been written; a failed audit write must not undo it.
+    // `ipAddress` is NOT passed to the `inet` column: it can be the literal
+    // 'unknown' (line ~147) or a comma-joined X-Forwarded-For list, both of which
+    // are `22P02 invalid input syntax for type inet` and would kill the whole row.
+    if (!user.role) {
+      console.error(
+        `AUDIT-ZERO-01: audit write SKIPPED — no user_role resolves for ${userId} (activate-account:user_activated)`,
+      )
+    } else {
+      await writeAuditLog(
+        supabase,
+        {
+          entity_type: 'user',
+          entity_id: userId,
+          action: 'user_activated',
+          user_id: userId,
+          user_role: user.role,
+          new_values: {
+            email,
+            activation_method: 'token',
+            ip_address: ipAddress,
+          },
+        },
+        'activate-account',
+      )
+    }
 
     console.log(`Account activated successfully for user: ${email}`)
 

@@ -14,6 +14,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 interface InactiveUser {
   user_id: string
@@ -236,23 +237,31 @@ serve(async (req) => {
     // Sort by days_since_login (descending - most inactive first)
     enrichedUsers.sort((a, b) => b.days_since_login - a.days_since_login)
 
-    // Log the query to audit_logs
-    await supabaseAdmin.from('audit_logs').insert({
-      user_id: requester.id,
-      event_type: 'inactive_users_query',
-      resource_type: 'user',
-      resource_id: null,
-      action: 'read',
-      changes: null,
-      metadata: {
-        source: 'access_review',
-        inactive_days: inactiveDays,
-        limit: limit,
-        results_count: enrichedUsers.length,
+    // Log the query to audit_logs.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18) — the read has already been served.
+    // The former `resource_id: null` has no home: `entity_id` is NOT NULL uuid and
+    // this event is a fleet-wide query with no single subject row. The acting
+    // admin's id is used as the honest subject — no sentinel uuid is invented — and
+    // the query's real parameters are carried in `new_values`.
+    await writeAuditLog(
+      supabaseAdmin,
+      {
+        entity_type: 'user',
+        entity_id: requester.id,
+        action: 'inactive_users_query',
+        user_id: requester.id,
+        user_role: requesterData.role,
+        new_values: {
+          source: 'access_review',
+          inactive_days: inactiveDays,
+          limit: limit,
+          results_count: enrichedUsers.length,
+          ip_address: req.headers.get('x-forwarded-for'),
+        },
+        user_agent: req.headers.get('user-agent') || 'unknown',
       },
-      ip_address: req.headers.get('x-forwarded-for') || '0.0.0.0',
-      user_agent: req.headers.get('user-agent') || 'unknown',
-    })
+      'inactive-users',
+    )
 
     const response: InactiveUsersResponse = {
       users: enrichedUsers,

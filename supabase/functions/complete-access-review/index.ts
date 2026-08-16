@@ -14,6 +14,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 interface CompleteReviewRequest {
   review_id: string
@@ -253,35 +254,36 @@ serve(async (req) => {
       certStats?.filter((c) => c.certification_status === 'change_requested').length || 0
     const pendingCount = certStats?.filter((c) => c.certification_status === 'pending').length || 0
 
-    // Log to audit_logs
-    await supabaseAdmin.from('audit_logs').insert({
-      user_id: requester.id,
-      event_type: 'access_review_completed',
-      resource_type: 'access_review',
-      resource_id: body.review_id,
-      action: 'complete',
-      changes: {
-        before: {
+    // Log to audit_logs.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18) — the review is already completed.
+    await writeAuditLog(
+      supabaseAdmin,
+      {
+        entity_type: 'access_review',
+        entity_id: body.review_id,
+        action: 'access_review_completed',
+        user_id: requester.id,
+        user_role: requesterData.role,
+        old_values: {
           status: reviewData.status,
           completed_at: reviewData.completed_at,
         },
-        after: {
+        new_values: {
           status: 'completed',
           completed_at: completedAt,
+          source: 'access_review',
+          review_name: reviewData.title,
+          findings_count: reviewData.findings?.length || 0,
+          certified_count: certifiedCount,
+          change_requested_count: changeRequestedCount,
+          pending_count: pendingCount,
+          completion_notes: body.notes || null,
+          ip_address: req.headers.get('x-forwarded-for'),
         },
+        user_agent: req.headers.get('user-agent') || 'unknown',
       },
-      metadata: {
-        source: 'access_review',
-        review_name: reviewData.title,
-        findings_count: reviewData.findings?.length || 0,
-        certified_count: certifiedCount,
-        change_requested_count: changeRequestedCount,
-        pending_count: pendingCount,
-        completion_notes: body.notes || null,
-      },
-      ip_address: req.headers.get('x-forwarded-for') || '0.0.0.0',
-      user_agent: req.headers.get('user-agent') || 'unknown',
-    })
+      'complete-access-review',
+    )
 
     // Create notifications for admins
     const { data: admins } = await supabaseAdmin.from('users').select('id').eq('role', 'admin')

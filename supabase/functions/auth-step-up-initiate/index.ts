@@ -23,6 +23,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts';
+import { writeAuditLog } from '../_shared/audit.ts';
 
 interface StepUpInitiateRequest {
   action: string;
@@ -221,22 +222,44 @@ serve(async (req) => {
       // Continue anyway - challenge can still be verified via MFA
     }
 
-    // Record audit log
-    await supabaseAdmin.from('audit_logs').insert({
-      entity_type: 'user',
-      entity_id: user.id,
-      action: 'step_up_initiated',
-      user_id: user.id,
-      user_role: 'user',
-      ip_address: req.headers.get('X-Forwarded-For') || 'unknown',
-      user_agent: req.headers.get('User-Agent') || 'unknown',
-      metadata: {
-        challenge_id: challengeId,
-        requested_action: action,
-        resource_id: resource_id,
-        factors_count: verifiedFactors.length,
-      },
-    });
+    // Record audit log.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18). `user_role` is NOT NULL and was
+    // previously hard-coded to the literal 'user', writing a false actor role into
+    // the security log — derive it, unresolvable = loud skip. `ip_address` is NOT
+    // passed to the `inet` column: the previous 'unknown' fallback and a
+    // comma-joined X-Forwarded-For list are both `22P02 invalid input syntax for
+    // type inet`, which kills the whole row.
+    const { data: auditActor } = await supabaseAdmin
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (!auditActor?.role) {
+      console.error(
+        `AUDIT-ZERO-01: audit write SKIPPED — no user_role resolves for ${user.id} (auth-step-up-initiate:step_up_initiated)`
+      );
+    } else {
+      await writeAuditLog(
+        supabaseAdmin,
+        {
+          entity_type: 'user',
+          entity_id: user.id,
+          action: 'step_up_initiated',
+          user_id: user.id,
+          user_role: auditActor.role,
+          user_agent: req.headers.get('User-Agent') || 'unknown',
+          new_values: {
+            challenge_id: challengeId,
+            requested_action: action,
+            resource_id: resource_id,
+            factors_count: verifiedFactors.length,
+            ip_address: req.headers.get('X-Forwarded-For'),
+          },
+        },
+        'auth-step-up-initiate'
+      );
+    }
 
     // Return challenge info
     return new Response(

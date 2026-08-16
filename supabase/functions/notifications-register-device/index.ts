@@ -1,6 +1,7 @@
 // T145 - Register device for push notifications
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
 import { validateJWT, createServiceClient } from '../_shared/auth.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 import {
   errorResponse,
   successResponse,
@@ -214,20 +215,37 @@ async function createAuditLog(
   action: 'registered' | 'updated'
 ): Promise<void> {
   try {
-    await supabase
-      .from('audit_logs')
-      .insert({
-        user_id: userId,
-        action: `device_${action}`,
-        entity_type: 'device_token',
-        entity_id: deviceId,
-        details: {
-          platform,
-          action,
-          timestamp: new Date().toISOString()
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18). `user_role` is NOT NULL and this helper
+    // receives only a userId, so resolve it from `public.users`; unresolvable = loud
+    // skip, never a fabricated role.
+    const { data: auditActor } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', userId)
+      .maybeSingle()
+
+    if (!auditActor?.role) {
+      console.error(
+        `AUDIT-ZERO-01: audit write SKIPPED — no user_role resolves for ${userId} (notifications-register-device:device_${action})`
+      )
+    } else {
+      await writeAuditLog(
+        supabase,
+        {
+          entity_type: 'device_token',
+          entity_id: deviceId,
+          action: `device_${action}`,
+          user_id: userId,
+          user_role: auditActor.role,
+          new_values: {
+            platform,
+            device_action: action,
+            timestamp: new Date().toISOString()
+          }
         },
-        created_at: new Date().toISOString()
-      })
+        'notifications-register-device'
+      )
+    }
 
   } catch (error) {
     log('error', 'Failed to create audit log', {

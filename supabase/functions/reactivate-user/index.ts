@@ -2,6 +2,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 import { withRateLimit, ADMIN_RATE_LIMIT } from '../_shared/rate-limiter.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 interface ReactivateUserRequest {
   userId: string
@@ -131,21 +132,30 @@ serve(async (req) => {
       })
     }
 
-    // Log audit trail with reactivation reason
-    await supabaseAdmin.from('audit_logs').insert({
-      user_id: user.id,
-      action: 'user_reactivated',
-      resource_type: 'user',
-      resource_id: userId,
-      changes: {
-        is_active: true,
-        role_restored: targetUser.role,
-        reason: reason || 'No reason provided',
-        security_review_approval: securityReviewApproval || null,
+    // Log audit trail with reactivation reason.
+    // Grade: LOG-LOUDLY-AND-CONTINUE (D-18) — reactivate-user is NOT in the
+    // precondition-grade subset PARK-94-08 (a) enumerates by name; the reactivation
+    // is already persisted and the helper console.errors any failure.
+    await writeAuditLog(
+      supabaseAdmin,
+      {
+        entity_type: 'user',
+        entity_id: userId,
+        action: 'user_reactivated',
+        user_id: user.id,
+        user_role: adminUser.role,
+        old_values: { is_active: false },
+        new_values: {
+          is_active: true,
+          role_restored: targetUser.role,
+          reason: reason || 'No reason provided',
+          security_review_approval: securityReviewApproval || null,
+          ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip'),
+        },
+        user_agent: req.headers.get('user-agent') || 'unknown',
       },
-      ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown',
-      user_agent: req.headers.get('user-agent') || 'unknown',
-    })
+      'reactivate-user',
+    )
 
     const response: ReactivateUserResponse = {
       success: true,

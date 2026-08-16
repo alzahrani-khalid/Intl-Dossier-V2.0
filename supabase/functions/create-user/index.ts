@@ -17,6 +17,7 @@ import { createClient } from 'jsr:@supabase/supabase-js@2'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 import { withRateLimit, ADMIN_RATE_LIMIT } from '../_shared/rate-limiter.ts'
 import { createLogger } from '../_shared/logger.ts'
+import { writeAuditLog } from '../_shared/audit.ts'
 
 interface CreateUserRequest {
   email: string
@@ -427,28 +428,36 @@ serve(async (req) => {
     if (tokenError || !tokenData) {
       console.error('Activation token generation error:', tokenError)
       // User is created but can't be activated - log for manual intervention
-      await supabaseAdmin.from('audit_logs').insert({
-        user_id: requester.id,
-        target_user_id: newUser.user.id,
-        event_type: 'user_created',
-        resource_type: 'user',
-        resource_id: newUser.user.id,
-        action: 'create',
-        changes: {
-          after: {
+      // Grade: PRECONDITION (PARK-94-08 (a), D-18) — an account creation that leaves
+      // no audit record is refused. This path already reports a partial failure; if
+      // the audit write also fails, the sanitized 500 below replaces that response.
+      const creationAudit = await writeAuditLog(
+        supabaseAdmin,
+        {
+          entity_type: 'user',
+          entity_id: newUser.user.id,
+          action: 'user_created',
+          user_id: requester.id,
+          user_role: requesterData.role,
+          new_values: {
             email: body.email,
             username: body.username,
             role: body.role,
             user_type: userType,
+            activation_failed: true,
+            token_error: tokenError?.message,
+            ip_address: req.headers.get('x-forwarded-for'),
           },
+          user_agent: req.headers.get('user-agent') || 'unknown',
         },
-        metadata: {
-          activation_failed: true,
-          token_error: tokenError?.message,
-        },
-        ip_address: req.headers.get('x-forwarded-for') || '0.0.0.0',
-        user_agent: req.headers.get('user-agent') || 'unknown',
-      })
+        'create-user:activation-failed',
+      )
+      if (!creationAudit.ok) {
+        return new Response(
+          JSON.stringify({ error: 'Failed to record audit entry', code: 'AUDIT_WRITE_FAILED' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+        )
+      }
 
       return new Response(
         JSON.stringify({
@@ -470,35 +479,40 @@ serve(async (req) => {
     // Log only a non-sensitive id until the email service is wired up.
     console.log(`Activation email queued for user ${newUser.user.id}`)
 
-    // Log to audit_logs
-    const { error: auditError } = await supabaseAdmin.from('audit_logs').insert({
-      user_id: requester.id,
-      target_user_id: newUser.user.id,
-      event_type: 'user_created',
-      resource_type: 'user',
-      resource_id: newUser.user.id,
-      action: 'create',
-      changes: {
-        after: {
+    // Log to audit_logs. Grade: PRECONDITION (PARK-94-08 (a), D-18) — an account
+    // creation that leaves no audit record is refused. Stated tension: the account
+    // already exists at this point, so the caller sees a 500 for a user that was in
+    // fact created. That is the intended trade — an unaudited account creation is
+    // the worse failure.
+    const auditResult = await writeAuditLog(
+      supabaseAdmin,
+      {
+        entity_type: 'user',
+        entity_id: newUser.user.id,
+        action: 'user_created',
+        user_id: requester.id,
+        user_role: requesterData.role,
+        new_values: {
           email: body.email,
           username: body.username,
           full_name: body.full_name,
           role: body.role,
           user_type: userType,
           status: 'inactive',
+          source: 'user_management',
+          activation_sent: true,
+          ip_address: req.headers.get('x-forwarded-for'),
         },
+        user_agent: req.headers.get('user-agent') || 'unknown',
       },
-      metadata: {
-        source: 'user_management',
-        activation_sent: true,
-      },
-      ip_address: req.headers.get('x-forwarded-for') || '0.0.0.0',
-      user_agent: req.headers.get('user-agent') || 'unknown',
-    })
+      'create-user',
+    )
 
-    if (auditError) {
-      console.error('Audit log error:', auditError)
-      // Non-critical - user was created successfully
+    if (!auditResult.ok) {
+      return new Response(
+        JSON.stringify({ error: 'Failed to record audit entry', code: 'AUDIT_WRITE_FAILED' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      )
     }
 
     // Create notification for the admin who created the user
