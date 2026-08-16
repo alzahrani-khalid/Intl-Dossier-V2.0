@@ -271,13 +271,20 @@ export function WorkBoard(): ReactElement {
     return ids
   }, [byStage])
 
+  // 94-08 (D-33): `homeStage` is the SAME `resolveBoardStage` call as `column`,
+  // snapshotted under a name nothing mutates. BoardColumn's drop-affordance
+  // carve-out must not read `column`, because KanbanProvider.handleDragOver
+  // (`KanbanProvider.tsx:223`) assigns `newData[activeIndex].column = overColumn`
+  // on the shared item object mid-drag — so `column` drifts to whatever the
+  // pointer last hovered. A carve-out keyed on it would move the "home" column
+  // during the gesture and re-disable the real one, which is precisely the
+  // closestCenter-retarget failure the carve-out exists to prevent.
   const kanbanItems = useMemo<WorkBoardKanbanItem[]>(
     () =>
-      filtered.map((it) => ({
-        ...it,
-        name: it.title,
-        column: resolveBoardStage(it) as string,
-      })),
+      filtered.map((it) => {
+        const homeStage = resolveBoardStage(it)
+        return { ...it, name: it.title, column: homeStage as string, homeStage }
+      }),
     [filtered],
   )
 

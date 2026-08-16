@@ -21,13 +21,21 @@
  * XSS mitigation (T-39-02-XSS): React JSX escapes `title`. No raw-HTML APIs.
  */
 
-import { type ReactElement, useId } from 'react'
+import { type ReactElement, useContext, useId } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { KanbanCards, KanbanCard, useDroppable, type KanbanItemProps } from '@/components/kanban'
+import {
+  KanbanCards,
+  KanbanCard,
+  KanbanContext,
+  useDroppable,
+  useDndContext,
+  type KanbanItemProps,
+} from '@/components/kanban'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import type { WorkflowStage } from '@/types/work-item.types'
 
+import { resolveCommitmentDropDecision } from './commitment-stage-guard'
 import { KCard, type KCardItem } from './KCard'
 
 type WorkBoardKanbanItem = KCardItem & KanbanItemProps
@@ -118,6 +126,48 @@ const STAGE_GLYPHS: Record<WorkflowStage, ReactElement> = {
   ),
 }
 
+/**
+ * Phase 94 Plan 08 (WRITE-04 · D-04 · D-33) — the drop affordance.
+ *
+ * While a commitment card is in flight, a column stops being a droppable if
+ * the shared guard would refuse the write. `resolveCommitmentDropDecision` is
+ * the ONLY copy of that condition: the mutation layer (`WorkBoard.handleDragEnd`)
+ * and this predicate call the same function, so the two enforcement points
+ * cannot drift. Refusing here removes the drop signal; refusing there remains
+ * the load-bearing guarantee, because cards inside a disabled column are
+ * droppables of their own and are not disabled by this predicate.
+ *
+ * THE HOME-COLUMN CARVE-OUT IS MANDATORY, not an optimisation. `closestCenter`
+ * RETARGETS a release over a disabled droppable to the nearest ENABLED one. If
+ * the dragged card's own column were disabled, dropping a past-due commitment
+ * straight back where it started would be rerouted — possibly onto Done, which
+ * writes `completed` behind nothing but the global success toast. So the home
+ * column is never disabled, and the home drop is a proven no-op via the D-05
+ * guard in `WorkBoard.handleDragEnd`.
+ *
+ * There is deliberately NO visual treatment: the absence of the drop signal IS
+ * the affordance. A disabled droppable leaves the collision candidate set, so
+ * no `isOver` ring paints — no new CSS, no opacity.
+ *
+ * The carve-out keys on `homeStage`, NOT on the kanban `column` field:
+ * `KanbanProvider.handleDragOver` rewrites `column` on the shared item object
+ * mid-drag, so `column` is whatever the pointer last hovered. `homeStage` is
+ * the same `resolveBoardStage` call, snapshotted by WorkBoard and never
+ * mutated.
+ */
+export type BoardDragItem = KCardItem & { homeStage: WorkflowStage }
+
+export function isColumnDropDisabled(
+  activeItem: BoardDragItem | undefined,
+  stage: WorkflowStage,
+): boolean {
+  if (activeItem === undefined) return false
+  // Tasks and intake cards are never restricted by this predicate.
+  if (activeItem.source !== 'commitment') return false
+  if (activeItem.homeStage === stage) return false
+  return !resolveCommitmentDropDecision(activeItem, stage).ok
+}
+
 export interface BoardColumnProps {
   title: string
   stage: WorkflowStage
@@ -131,11 +181,23 @@ export function BoardColumn(props: BoardColumnProps): ReactElement {
   const { title, stage, items, dndEnabled, onItemClick, onAddItem } = props
   const { t } = useTranslation('unified-kanban')
   const titleId = useId()
+  // 94-08: the card currently in flight, read from the live dnd-kit state. The
+  // item bodies come from the kanban data context because `useSortable` in
+  // KanbanCard registers no `data` payload, so `active` carries only the id.
+  const { active } = useDndContext()
+  const { data } = useContext(KanbanContext)
+  const activeItem =
+    active === null
+      ? undefined
+      : (data.find((item) => item.id === String(active.id)) as BoardDragItem | undefined)
   // D-21: column is the droppable target for cross-column DnD. Plays the same
   // role KanbanBoard does inside the shared primitive — but we keep `<section
   // class="col">` to honor the Phase 39 selector contract (kanban-render /
   // kanban-rtl / kanban-responsive depend on `section.col`).
-  const { setNodeRef } = useDroppable({ id: stage })
+  const { setNodeRef } = useDroppable({
+    id: stage,
+    disabled: isColumnDropDisabled(activeItem, stage),
+  })
 
   return (
     <section
