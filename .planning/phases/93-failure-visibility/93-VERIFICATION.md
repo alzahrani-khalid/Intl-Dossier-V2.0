@@ -95,6 +95,30 @@ FLOOR, not a total. And a deliberately-loose superset grep with the JSX filter r
 **71 lines across 44 files** at 93-14's close: an upper bound on remaining _reads_, emphatically not
 a residual bucket-(a) count.
 
+> **ANNOTATION — this classification sentence was IMPEACHED and is corrected here; no count above
+> changes.** Added by `orch-p93-b` on 2026-08-16 under `RULING-P93-06` order 1, citing
+> `93-VERIFICATION-INDEPENDENT.md` §6 (the independent verifier's one material disagreement).
+>
+> The **counts are right** — the verifier reproduced `71/44` to the byte, and confirmed that none of
+> the 44 is a bucket-(a) enumerated file. **What is wrong is the word _reads_.** Adjudicating the 44
+> against `git diff --name-only phase-93-base..HEAD` finds exactly one file that is **both
+> phase-touched and a criterion surface**: `positions/AttachmentUploader.tsx`, and **both of its two
+> lines are RENDERS, not reads** — `:117` set state painted at `:462-465`, and `:198` an `alert()`.
+> Calling the superset "remaining reads" therefore read as coverage of a set it did not cover, and
+> the pair appeared in no plan population, no exclusion list, and no SUMMARY.
+>
+> **Root cause, stated because it is the durable part:** the criterion-5 population was partitioned
+> by **ORIGIN** — query vs mutation. Both sites are **mutation**-origin, so bucket (a)'s read
+> enumeration never framed them, and **every in-phase instrument inherited the same partition** —
+> which is why five of them agreed and all five were blind in the same place. **A population
+> partitioned by origin leaks at the seams, and agreement between instruments that share a partition
+> is not evidence.**
+>
+> **Disposition: REPAIRED IN-PHASE**, not filed forward — `283f9eff` (both sites, 93-14 Task 2's
+> treatment verbatim), recorded by addendum in `93-10-SUMMARY.md`. The filing `LEAK-ATTACH-01`
+> remains in `REQUIREMENTS.md` marked `RESOLVED-IN-PHASE` rather than deleted: the record of the miss
+> is the valuable part.
+
 ### D3 — PIN-2390-01: the pinned-version sweep, and the narrow population that missed it
 
 ```

@@ -248,12 +248,14 @@ verified sound across six lanes).
 
 ### LEAK — the independent verifier's SC5 gap
 
-- [ ] **LEAK-ATTACH-01**: **`frontend/src/components/positions/AttachmentUploader.tsx` renders raw `error.message` to the user in two places, on a criterion-2 named surface that Phase 93 touched.** Found 2026-08-16 by `gsd-verifier` (`93-VERIFICATION-INDEPENDENT.md`, `status: gaps_found`, SC5 partial) and **reproduced independently by the orchestrator before filing**.
+- [x] **LEAK-ATTACH-01** — **RESOLVED-IN-PHASE (`283f9eff`, `RULING-P93-06` order 1). Kept, not deleted: the record of the miss is the valuable part.**: **`frontend/src/components/positions/AttachmentUploader.tsx` renders raw `error.message` to the user in two places, on a criterion-2 named surface that Phase 93 touched.** Found 2026-08-16 by `gsd-verifier` (`93-VERIFICATION-INDEPENDENT.md`, `status: gaps_found`, SC5 partial) and **reproduced independently by the orchestrator before filing**.
   - **The two sites:** `:117` sets `error: error.message || t('common:errors.generic')` in the upload catch, rendered verbatim at `:462-465` as `{attachmentFile.error}`; `:198` `alert(error.message || t('common:errors.generic'))` in the delete catch. Both are present at `phase-93-base` (`:108`/`:189`) — **pre-existing, not introduced** — but the file **is** in `git diff --name-only phase-93-base..HEAD` (touched by `93-10`) and **is** one of criterion 2's four named surfaces.
   - **The `||` fallback does not save it.** A `FunctionsHttpError` message ("Failed to send a request to the Edge Function" — the exact string `93-14_g3` observed in its own RED snapshot) is non-empty, so the generic fallback never fires and the internal string reaches the user.
   - **Why every Phase 93 instrument missed it:** both sites are **mutation-origin** (upload / delete), so they fell outside `D-22`'s bucket-(a) read enumeration; and the closing register classified the 71-line/44-file superset they live in as "an upper bound on remaining **READS**, emphatically not a residual bucket-(a) count" — a classification that is **wrong for this file**, because both sites are **renders**. They appear in no plan population, no exclusion list, no SUMMARY, and no filed requirement. The gap was reachable only by a seat whose derivations shared no ancestry with the work.
   - **The repair is the one-line treatment `93-14` Task 2 already applied to 22 files:** drop the `error.message` operand and keep the translated message.
-  - **Owner: Phase 94 — Write Paths**, whose goal ("every advertised write path actually writes, and a failed write says so") is exactly this pair's origin — unless the overseer rules the fix into Phase 93 instead.
+  - ~~**Owner: Phase 94 — Write Paths**~~ — **superseded.** `RULING-P93-06` order 1 ruled the repair IN-PHASE: mechanical, already-proven treatment, owned file, no product guess, and condition 7 is one of this acceptance's own pre-committed conditions, so the honest state is TRUE rather than disclosed-false.
+  - **Resolution, verified by the orchestrator in both directions:** the verifier's own filter chain over the file returns **2 at `phase-93-base`** and **0 at HEAD**. `:117` → `error: t('common:errors.generic')`, `:198` → `alert(t('common:errors.generic'))`; both `catch (error: any)` bindings dropped to bare `catch {` (the `TS6133` trap `93-14` paid for six times). `pnpm type-check` clean; `93-10_g1`, `93-10_g2`, `93-14_g2` re-run verbatim and green **as regression guards, not as a manufactured red**. Recorded by addendum in `93-10-SUMMARY.md` (`80feaaa0`).
+  - **The lesson outlives the fix:** a population partitioned by **origin** (query vs mutation) leaks at the seams, and every in-phase instrument inherited that partition — so their agreement was not evidence. Only a seat with no shared ancestry found it.
 
 ### CLOSEOUT — findings the closing plan raised that had no owner
 
@@ -474,7 +476,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | E2ECRED-01 | Phase 101 — CI Gates Green | Pending |
 | E2ESTALE-01 | Phase 101 — CI Gates Green | Pending |
 | NOTFOUND-COMPONENT-01 | Phase 95 — Routes That Don't Render | Pending |
-| LEAK-ATTACH-01 | Phase 94 — Write Paths | Pending |
+| LEAK-ATTACH-01 | Phase 93 — Failure Visibility | **RESOLVED-IN-PHASE** (`283f9eff`) |
 | ARMA-01 | Phase 94 — Write Paths | Pending |
 | ORACLECAP-01 | Phase 101 — CI Gates Green | Pending |
 | RETENTION-CAST-01 | Phase 95 — Routes That Don't Render | Pending |
