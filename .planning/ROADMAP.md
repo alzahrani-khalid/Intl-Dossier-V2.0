@@ -365,7 +365,14 @@ Plans:
 
 **Goal**: Every advertised write path actually writes, and a failed write says so.
 **Depends on**: Phase 92 (JWT), Phase 93 (a failed write must surface as a failure)
-**Requirements**: WRITE-01, WRITE-02, WRITE-03, WRITE-04, WRITE-05, WRITE-06
+**Requirements**: WRITE-01, WRITE-02, WRITE-03, WRITE-04, WRITE-05, WRITE-06, AUDIT-DROP-01, AUDIT-ZERO-01, ARMA-01
+
+> The three trailing ids were filed during Phase 93 and assigned to this phase in `REQUIREMENTS.md`
+> (§AUDIT-DROP-01 / §AUDIT-ZERO-01 under WRITE; `ARMA-01` "Owner: Phase 94 — Write Paths, alongside
+> `WRITE-06`"). They were never carried onto this line; added 2026-08-16 during Phase 94 planning so
+> the roadmap and the requirement register agree. `ARMA-01` rides with `WRITE-06` — its arm-(b)
+> deletion belongs in the same plan, ordered after the `42P17` fix.
+
 **Success Criteria** (what must be TRUE):
 
 1. An after-action record can be created, saved and published from the engagement UI — `AfterActionForm.tsx:131`'s `if (!initialData) return` no longer pins `isDirty` false in create mode, and the route passes `canPublish` + `onPublish`.
