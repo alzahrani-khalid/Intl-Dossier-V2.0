@@ -8,24 +8,17 @@
 // confident lie about a record that may not exist. 93-13 gave the route a loader whose only job
 // is existence.
 //
-// THE HONEST DISJUNCTION — read this before "fixing" a surprising arm. There are TWO honest
-// renders for a well-formed absent id, and which one appears is a property of the DATABASE, not
-// of this route:
+// ONE ARM, SINCE PHASE 94 (ARMA-01). This spec used to accept EITHER a 404 OR the route's
+// read-rejected error render, because `custom_reports` and `report_shares` carried mutually
+// recursive SELECT policies (`42P17 infinite recursion detected in policy`) and the by-id read
+// rejected for EVERY id. Phase 94 / WRITE-06 broke that recursion — see
+// supabase/migrations/20260816500001_p94_report_rls_recursion.sql — so the read now succeeds and
+// returns no row: the loader throws notFound() and the root not-found page renders.
 //
-//   (a) 404  — the `custom_reports` by-id read succeeded and returned no row. The loader throws
-//              notFound() and the root not-found page renders.
-//   (b) query-error-state — the read REJECTED. `custom_reports` and `report_shares` carry
-//              mutually recursive SELECT policies (`42P17 infinite recursion detected in
-//              policy`), so the read may reject for EVERY id until WRITE-06 lands. That is
-//              tracked as Phase 94; the error state is the intended pre-Phase-94 render, not a
-//              regression in this route.
-//
-// So the disjunction is deliberate, and it covers only WHICH honest state renders. The primary
-// assertion — no fresh builder for an absent id — is UNCONDITIONAL. The arm actually taken is
-// printed and annotated on every run so it is never left ambiguous.
-//
-// PHASE 94 TIGHTENS THIS: once the policy recursion is fixed, delete arm (b) and assert the 404
-// arm only. Leaving the disjunction in place after WRITE-06 would let a rejection pass as a pass.
+// The second arm was DELETED in that same phase. Left in place after WRITE-06 it would have
+// converted a rejection into a pass and made this green permanent and false. What remains is a
+// conjunction, and both halves have to hold on every run: the 404 page renders, AND the builder
+// heading — the lie under test — is absent.
 //
 // AUTHENTICATION: inline, from TEST_USER_EMAIL / TEST_USER_PASSWORD, and run with --no-deps. The
 // Playwright `setup` project throws without six E2E_* keys that .env.test does not carry
@@ -36,11 +29,9 @@ import LoginPage from './support/pages/LoginPage'
 const email = process.env.TEST_USER_EMAIL ?? ''
 const password = process.env.TEST_USER_PASSWORD ?? ''
 
-// TIMING. The by-id read rejects with a PostgrestError, which carries no numeric `status`, so
-// query-client.ts's 4xx short-circuit never fires and TanStack Query runs its full retry ladder:
-// 4 attempts at 1s + 2s + 4s backoff. The error arm therefore arrives at ~7s, past Playwright's
-// default 5s expect timeout. This budget is retry backoff, not flakiness — a CORRECT
-// implementation fails the default timeout.
+// TIMING. Kept lenient after the Phase 94 tightening: the budget now covers the loader's by-id
+// round-trip to staging rather than TanStack Query's retry ladder on a rejection. A generous
+// ceiling is harmless for a slow 404 — the assertion still fails if the page never renders.
 const RETRY_BACKOFF_TIMEOUT = 15_000
 
 /** Sign in inline; never echo either credential value. */
@@ -55,9 +46,7 @@ const signInInline = async (page: Page): Promise<void> => {
 }
 
 test.describe('TRUST-03 a well-formed absent report id never cosplays as a report', () => {
-  test('absent report id renders 404 or the error state, never a fresh builder', async ({
-    page,
-  }) => {
+  test('absent report id renders the 404 page, never a fresh builder', async ({ page }) => {
     await signInInline(page)
 
     // Well-formed and (with overwhelming probability) absent. Never a hardcoded id: a seeded row
@@ -69,27 +58,12 @@ test.describe('TRUST-03 a well-formed absent report id never cosplays as a repor
     // presence is exactly the lie under test — an empty builder standing in for a report.
     const builderHeading = page.getByRole('heading', { name: 'Report Builder' })
 
-    // The two honest arms.
+    // The only honest render for a well-formed absent id, asserted alone since Phase 94.
     const notFoundPage = page.getByText(/^404$/)
-    const queryErrorState = page.getByTestId('query-error-state')
 
-    // Wait for EITHER honest state to settle. Neither arm is asserted alone — that is the point.
-    await expect
-      .poll(async () => (await notFoundPage.count()) + (await queryErrorState.count()), {
-        timeout: RETRY_BACKOFF_TIMEOUT,
-        message: 'neither the 404 page nor the query-error state rendered for an absent report id',
-      })
-      .toBeGreaterThan(0)
+    await expect(notFoundPage).toBeVisible({ timeout: RETRY_BACKOFF_TIMEOUT })
 
-    // Record WHICH arm this run took, so the observed live behavior is never inferred later.
-    const arm =
-      (await notFoundPage.count()) > 0
-        ? 'A: root 404 (row absent)'
-        : 'B: query-error-state (read rejected — 42P17/WRITE-06, Phase 94)'
-    console.log(`[93-13] observed arm -> ${arm}`)
-    test.info().annotations.push({ type: '93-13-observed-arm', description: arm })
-
-    // THE UNCONDITIONAL CONJUNCT. Whichever arm rendered, the builder must not be on screen.
+    // THE UNCONDITIONAL CONJUNCT. The 404 rendered; the builder must not be on screen with it.
     await expect(builderHeading).toHaveCount(0)
   })
 })
