@@ -521,6 +521,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | COUNT-01 | Phase 96 — Real Numbers | Pending |
 | COUNT-02 | Phase 96 — Real Numbers | Pending |
 | COUNT-03 | Phase 96 — Real Numbers | Pending |
+| COUNT-04 | Phase 96 — Real Numbers | Pending |
 | NAV-01 | Phase 97 — Reachability | Pending |
 | NAV-02 | Phase 97 — Reachability | Pending |
 | NAV-03 | Phase 97 — Reachability | Pending |
@@ -530,6 +531,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | COPY-03 | Phase 98 — Copy Truth | Pending |
 | COPY-04 | Phase 98 — Copy Truth | Pending |
 | COPY-05 | Phase 98 — Copy Truth | Pending |
+| COPY-06 | Phase 98 — Copy Truth | Pending |
 | AR-01 | Phase 99 — Arabic Coverage | Pending |
 | AR-02 | Phase 99 — Arabic Coverage | Pending |
 | AR-03 | Phase 99 — Arabic Coverage | Pending |
