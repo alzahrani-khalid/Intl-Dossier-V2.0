@@ -6,6 +6,7 @@ import unusedImports from 'eslint-plugin-unused-imports'
 import checkFile from 'eslint-plugin-check-file'
 import rtlFriendly from 'eslint-plugin-rtl-friendly'
 import eslintConfigPrettier from 'eslint-config-prettier'
+import noBareComponentNotFound from './scripts/eslint-rules/no-bare-component-notfound.mjs'
 
 const designTokenSyntaxRestrictions = [
   {
@@ -231,6 +232,25 @@ export default tseslint.config(
     },
   },
 
+  // ── NOTFOUND-COMPONENT-01: component-thrown notFound() needs { routeId } ────
+  // A bare notFound() thrown from a component reaches the router's
+  // defaultErrorComponent ("Something went wrong"), not the root 404 page. The
+  // bare form is correct only inside a route loader/beforeLoad — the rule walks
+  // ancestry to tell them apart (esquery cannot; see the rule module header).
+  {
+    files: ['frontend/src/**/*.{ts,tsx}'],
+    plugins: {
+      local: {
+        rules: {
+          'no-bare-component-notfound': noBareComponentNotFound,
+        },
+      },
+    },
+    rules: {
+      'local/no-bare-component-notfound': 'error',
+    },
+  },
+
   // ── UI library exception: allow any + physical CSS in wrappers ────
   {
     files: ['frontend/**/components/ui/**/*.{ts,tsx}'],
@@ -344,6 +364,21 @@ export default tseslint.config(
           ],
         },
       ],
+    },
+  },
+
+  // ── Bare component-notFound() regression fixture: prove the rule fires ────
+  {
+    files: ['tools/eslint-fixtures/bad-bare-component-notfound.tsx'],
+    plugins: {
+      local: {
+        rules: {
+          'no-bare-component-notfound': noBareComponentNotFound,
+        },
+      },
+    },
+    rules: {
+      'local/no-bare-component-notfound': 'error',
     },
   },
 
