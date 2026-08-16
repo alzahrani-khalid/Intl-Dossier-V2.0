@@ -957,7 +957,7 @@ initial badge state.
 | A3  | `dossier_list_mv` freshness is maintained by some non-cron trigger/queue path (`queue_dossier_list_mv_refresh` exists)                                                       | Derivation 4 | Lists silently stale; COUNT-02 oracle flakes — Pitfall 6 mitigates either way                                                                                                                                                            |
 | A4  | The register's historical "persons 16 vs 15 [V]" dropping surface was either a since-refreshed mv state or an extension-table-based reader                                   | Derivation 4 | None material: today's gaps are re-derived live and the fix rule (D-07) is surface-general                                                                                                                                               |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Does the authenticated test user see any `scenarios` rows post-fix?**
    - What we know: RLS scopes to own/collaborated rows; row count unqueried under user identity
@@ -965,8 +965,10 @@ initial badge state.
    - Recommendation: after the migration, the probe re-runs; an empty-but-200 sandbox is a
      truthful WORKING state (the P95 vocabulary covers empty). If SC demands visible data, a
      namespaced fixture scenario (CHECKs verified first) is the same pattern as SC5's.
+   - **RESOLVED 2026-08-17 — plan revision 1, supersession addendum (original text kept above):** consumed by 96-01 — an empty-but-200 sandbox is a truthful WORKING state (the P95 vocabulary covers empty); 96-01's oracles assert content-or-truthful-empty, never visible data.
 2. **Done-column semantics for SC5's "lands in kanban Done"** (Derivation 3, Pitfall 4).
    - Planner discretion, but it must be DECIDED in the plan text and the oracle written to it.
+   - **RESOLVED 2026-08-17 — plan revision 1, supersession addendum (original text kept above):** DECIDED in 96-02's plan text — the Done column SHOWS completed work (`status <> 'cancelled'`, no recency bound); 96-02/96-07/96-09's oracles are written to that semantics, with the SC4 reconciliation rule stated in 96-02 and measured by 96-07 Test 4.
 3. **[RESOLVED in-session — no longer open]** `get_commitment_fulfillment`'s bucket formula was
    pulled from `pg_proc`: overdue = `status IN ('pending','in_progress') AND due_date < NOW()` —
    blind to stored `overdue` (Derivation 2 row 6, Derivation 6 table). The bucket fix is part of
