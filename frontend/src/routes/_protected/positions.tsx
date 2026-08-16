@@ -303,8 +303,8 @@ export function PositionsLibraryPage() {
             layout="grid"
             onPositionClick={(position) => {
               navigate({
-                to: '/positions/$positionId' as any,
-                params: { positionId: position.id } as any,
+                to: '/positions/$id',
+                params: { id: position.id },
               })
             }}
             emptyMessage={

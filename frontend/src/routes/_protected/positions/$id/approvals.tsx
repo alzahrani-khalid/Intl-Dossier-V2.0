@@ -1,13 +1,16 @@
 /**
- * Route: /positions/:id/approvals
- * Detailed approval tracking page
+ * Route: /positions/:id/approvals — the "approvals" tab PANEL.
+ *
+ * Phase 95 DEAD-08: renders through the $id.tsx layout's <Outlet/>; the page
+ * header and Back link that used to live here belong to the layout now (the
+ * tab strip must not remount the page header).
  */
 
-import { createFileRoute } from '@tanstack/react-router'
+import { useEffect } from 'react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { toFormatLocale } from '@/lib/format-locale'
 import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
   Table,
@@ -19,11 +22,11 @@ import {
 } from '@/components/ui/table'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { ArrowLeft, CheckCircle, XCircle, UserPlus, Users } from 'lucide-react'
-import { Link } from '@tanstack/react-router'
+import { CheckCircle, XCircle, UserPlus, Users } from 'lucide-react'
 import ApprovalChain from '@/components/approval-chain/ApprovalChain'
 import { Skeleton } from '@/components/ui/skeleton'
 import { p } from '@/lib/navigation'
+import { APPROVALS_TAB_STATUSES } from '../$id'
 
 export const Route = createFileRoute('/_protected/positions/$id/approvals')({
   component: ApprovalTrackingPage,
@@ -52,15 +55,26 @@ async function fetchApprovals(positionId: string) {
 function ApprovalTrackingPage() {
   const { id } = Route.useParams()
   const { t, i18n } = useTranslation()
+  const navigate = useNavigate()
 
   const { data: position, isLoading } = useQuery({
     queryKey: ['positions', 'detail', id],
     queryFn: () => fetchApprovals(id),
   })
 
+  // Deep link without a trigger: the layout only offers the approvals tab for
+  // APPROVALS_TAB_STATUSES. Landing here for any other status would select a tab
+  // the strip does not render, so send the URL back to the editor index instead.
+  const status: string | undefined = position?.status
+  useEffect(() => {
+    if (status !== undefined && !APPROVALS_TAB_STATUSES.includes(status)) {
+      void navigate({ to: '/positions/$id', params: p({ id }), replace: true })
+    }
+  }, [status, id, navigate])
+
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4">
+      <div className="space-y-4">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-96" />
       </div>
@@ -83,20 +97,7 @@ function ApprovalTrackingPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link to="/positions/$id" params={p({ id })}>
-          <Button variant="outline" size="sm">
-            <ArrowLeft className="me-2 h-4 w-4" />
-            {t('common.back', 'Back')}
-          </Button>
-        </Link>
-        <h1 className="text-3xl font-bold">
-          {t('positions:approvals.title', 'Approval Tracking')}
-        </h1>
-      </div>
-
+    <div className="space-y-6">
       {/* Approval Chain Visualization */}
       <Card className="p-6">
         <h2 className="text-xl font-semibold mb-4">

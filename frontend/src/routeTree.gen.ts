@@ -80,7 +80,6 @@ import { Route as ProtectedSettingsCalendarSyncRouteImport } from './routes/_pro
 import { Route as ProtectedReportsScheduledRouteImport } from './routes/_protected/reports/scheduled'
 import { Route as ProtectedReportsReportIdRouteImport } from './routes/_protected/reports/$reportId'
 import { Route as ProtectedRelationshipsGraphRouteImport } from './routes/_protected/relationships/graph'
-import { Route as ProtectedPositionsPositionIdRouteImport } from './routes/_protected/positions/$positionId'
 import { Route as ProtectedPositionsIdRouteImport } from './routes/_protected/positions/$id'
 import { Route as ProtectedMyWorkWaitingRouteImport } from './routes/_protected/my-work/waiting'
 import { Route as ProtectedMyWorkIntakeRouteImport } from './routes/_protected/my-work/intake'
@@ -102,6 +101,7 @@ import { Route as ProtectedAdminDataRetentionRouteImport } from './routes/_prote
 import { Route as ProtectedAdminApprovalsRouteImport } from './routes/_protected/admin/approvals'
 import { Route as ProtectedAdminAiUsageRouteImport } from './routes/_protected/admin/ai-usage'
 import { Route as ProtectedAdminAiSettingsRouteImport } from './routes/_protected/admin/ai-settings'
+import { Route as ProtectedPositionsIdIndexRouteImport } from './routes/_protected/positions/$id/index'
 import { Route as ProtectedEngagementsEngagementIdIndexRouteImport } from './routes/_protected/engagements/$engagementId/index'
 import { Route as ProtectedDossiersWorking_groupsIndexRouteImport } from './routes/_protected/dossiers/working_groups/index'
 import { Route as ProtectedDossiersTopicsIndexRouteImport } from './routes/_protected/dossiers/topics/index'
@@ -582,12 +582,6 @@ const ProtectedRelationshipsGraphRoute =
     path: '/relationships/graph',
     getParentRoute: () => ProtectedRoute,
   } as any)
-const ProtectedPositionsPositionIdRoute =
-  ProtectedPositionsPositionIdRouteImport.update({
-    id: '/$positionId',
-    path: '/$positionId',
-    getParentRoute: () => ProtectedPositionsRoute,
-  } as any)
 const ProtectedPositionsIdRoute = ProtectedPositionsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -701,6 +695,12 @@ const ProtectedAdminAiSettingsRoute =
     id: '/admin/ai-settings',
     path: '/admin/ai-settings',
     getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedPositionsIdIndexRoute =
+  ProtectedPositionsIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => ProtectedPositionsIdRoute,
   } as any)
 const ProtectedEngagementsEngagementIdIndexRoute =
   ProtectedEngagementsEngagementIdIndexRouteImport.update({
@@ -1424,7 +1424,6 @@ export interface FileRoutesByFullPath {
   '/my-work/intake': typeof ProtectedMyWorkIntakeRoute
   '/my-work/waiting': typeof ProtectedMyWorkWaitingRoute
   '/positions/$id': typeof ProtectedPositionsIdRouteWithChildren
-  '/positions/$positionId': typeof ProtectedPositionsPositionIdRoute
   '/relationships/graph': typeof ProtectedRelationshipsGraphRoute
   '/reports/$reportId': typeof ProtectedReportsReportIdRoute
   '/reports/scheduled': typeof ProtectedReportsScheduledRoute
@@ -1491,6 +1490,7 @@ export interface FileRoutesByFullPath {
   '/dossiers/topics/': typeof ProtectedDossiersTopicsIndexRoute
   '/dossiers/working_groups/': typeof ProtectedDossiersWorking_groupsIndexRoute
   '/engagements/$engagementId/': typeof ProtectedEngagementsEngagementIdIndexRoute
+  '/positions/$id/': typeof ProtectedPositionsIdIndexRoute
   '/dossiers/countries/$id/audit': typeof ProtectedDossiersCountriesIdAuditRoute
   '/dossiers/countries/$id/digests': typeof ProtectedDossiersCountriesIdDigestsRoute
   '/dossiers/countries/$id/docs': typeof ProtectedDossiersCountriesIdDocsRoute
@@ -1619,8 +1619,6 @@ export interface FileRoutesByTo {
   '/my-work/board': typeof ProtectedMyWorkBoardRoute
   '/my-work/intake': typeof ProtectedMyWorkIntakeRoute
   '/my-work/waiting': typeof ProtectedMyWorkWaitingRoute
-  '/positions/$id': typeof ProtectedPositionsIdRouteWithChildren
-  '/positions/$positionId': typeof ProtectedPositionsPositionIdRoute
   '/relationships/graph': typeof ProtectedRelationshipsGraphRoute
   '/reports/$reportId': typeof ProtectedReportsReportIdRoute
   '/reports/scheduled': typeof ProtectedReportsScheduledRoute
@@ -1680,6 +1678,7 @@ export interface FileRoutesByTo {
   '/dossiers/topics': typeof ProtectedDossiersTopicsIndexRoute
   '/dossiers/working_groups': typeof ProtectedDossiersWorking_groupsIndexRoute
   '/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdIndexRoute
+  '/positions/$id': typeof ProtectedPositionsIdIndexRoute
   '/dossiers/countries/$id/audit': typeof ProtectedDossiersCountriesIdAuditRoute
   '/dossiers/countries/$id/digests': typeof ProtectedDossiersCountriesIdDigestsRoute
   '/dossiers/countries/$id/docs': typeof ProtectedDossiersCountriesIdDocsRoute
@@ -1818,7 +1817,6 @@ export interface FileRoutesById {
   '/_protected/my-work/intake': typeof ProtectedMyWorkIntakeRoute
   '/_protected/my-work/waiting': typeof ProtectedMyWorkWaitingRoute
   '/_protected/positions/$id': typeof ProtectedPositionsIdRouteWithChildren
-  '/_protected/positions/$positionId': typeof ProtectedPositionsPositionIdRoute
   '/_protected/relationships/graph': typeof ProtectedRelationshipsGraphRoute
   '/_protected/reports/$reportId': typeof ProtectedReportsReportIdRoute
   '/_protected/reports/scheduled': typeof ProtectedReportsScheduledRoute
@@ -1885,6 +1883,7 @@ export interface FileRoutesById {
   '/_protected/dossiers/topics/': typeof ProtectedDossiersTopicsIndexRoute
   '/_protected/dossiers/working_groups/': typeof ProtectedDossiersWorking_groupsIndexRoute
   '/_protected/engagements/$engagementId/': typeof ProtectedEngagementsEngagementIdIndexRoute
+  '/_protected/positions/$id/': typeof ProtectedPositionsIdIndexRoute
   '/_protected/dossiers/countries/$id/audit': typeof ProtectedDossiersCountriesIdAuditRoute
   '/_protected/dossiers/countries/$id/digests': typeof ProtectedDossiersCountriesIdDigestsRoute
   '/_protected/dossiers/countries/$id/docs': typeof ProtectedDossiersCountriesIdDocsRoute
@@ -2023,7 +2022,6 @@ export interface FileRouteTypes {
     | '/my-work/intake'
     | '/my-work/waiting'
     | '/positions/$id'
-    | '/positions/$positionId'
     | '/relationships/graph'
     | '/reports/$reportId'
     | '/reports/scheduled'
@@ -2090,6 +2088,7 @@ export interface FileRouteTypes {
     | '/dossiers/topics/'
     | '/dossiers/working_groups/'
     | '/engagements/$engagementId/'
+    | '/positions/$id/'
     | '/dossiers/countries/$id/audit'
     | '/dossiers/countries/$id/digests'
     | '/dossiers/countries/$id/docs'
@@ -2218,8 +2217,6 @@ export interface FileRouteTypes {
     | '/my-work/board'
     | '/my-work/intake'
     | '/my-work/waiting'
-    | '/positions/$id'
-    | '/positions/$positionId'
     | '/relationships/graph'
     | '/reports/$reportId'
     | '/reports/scheduled'
@@ -2279,6 +2276,7 @@ export interface FileRouteTypes {
     | '/dossiers/topics'
     | '/dossiers/working_groups'
     | '/engagements/$engagementId'
+    | '/positions/$id'
     | '/dossiers/countries/$id/audit'
     | '/dossiers/countries/$id/digests'
     | '/dossiers/countries/$id/docs'
@@ -2416,7 +2414,6 @@ export interface FileRouteTypes {
     | '/_protected/my-work/intake'
     | '/_protected/my-work/waiting'
     | '/_protected/positions/$id'
-    | '/_protected/positions/$positionId'
     | '/_protected/relationships/graph'
     | '/_protected/reports/$reportId'
     | '/_protected/reports/scheduled'
@@ -2483,6 +2480,7 @@ export interface FileRouteTypes {
     | '/_protected/dossiers/topics/'
     | '/_protected/dossiers/working_groups/'
     | '/_protected/engagements/$engagementId/'
+    | '/_protected/positions/$id/'
     | '/_protected/dossiers/countries/$id/audit'
     | '/_protected/dossiers/countries/$id/digests'
     | '/_protected/dossiers/countries/$id/docs'
@@ -3061,13 +3059,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedRelationshipsGraphRouteImport
       parentRoute: typeof ProtectedRoute
     }
-    '/_protected/positions/$positionId': {
-      id: '/_protected/positions/$positionId'
-      path: '/$positionId'
-      fullPath: '/positions/$positionId'
-      preLoaderRoute: typeof ProtectedPositionsPositionIdRouteImport
-      parentRoute: typeof ProtectedPositionsRoute
-    }
     '/_protected/positions/$id': {
       id: '/_protected/positions/$id'
       path: '/$id'
@@ -3214,6 +3205,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/ai-settings'
       preLoaderRoute: typeof ProtectedAdminAiSettingsRouteImport
       parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/positions/$id/': {
+      id: '/_protected/positions/$id/'
+      path: '/'
+      fullPath: '/positions/$id/'
+      preLoaderRoute: typeof ProtectedPositionsIdIndexRouteImport
+      parentRoute: typeof ProtectedPositionsIdRoute
     }
     '/_protected/engagements/$engagementId/': {
       id: '/_protected/engagements/$engagementId/'
@@ -4115,11 +4113,13 @@ const ProtectedMyWorkRouteWithChildren = ProtectedMyWorkRoute._addFileChildren(
 interface ProtectedPositionsIdRouteChildren {
   ProtectedPositionsIdApprovalsRoute: typeof ProtectedPositionsIdApprovalsRoute
   ProtectedPositionsIdVersionsRoute: typeof ProtectedPositionsIdVersionsRoute
+  ProtectedPositionsIdIndexRoute: typeof ProtectedPositionsIdIndexRoute
 }
 
 const ProtectedPositionsIdRouteChildren: ProtectedPositionsIdRouteChildren = {
   ProtectedPositionsIdApprovalsRoute: ProtectedPositionsIdApprovalsRoute,
   ProtectedPositionsIdVersionsRoute: ProtectedPositionsIdVersionsRoute,
+  ProtectedPositionsIdIndexRoute: ProtectedPositionsIdIndexRoute,
 }
 
 const ProtectedPositionsIdRouteWithChildren =
@@ -4127,13 +4127,11 @@ const ProtectedPositionsIdRouteWithChildren =
 
 interface ProtectedPositionsRouteChildren {
   ProtectedPositionsIdRoute: typeof ProtectedPositionsIdRouteWithChildren
-  ProtectedPositionsPositionIdRoute: typeof ProtectedPositionsPositionIdRoute
   ProtectedPositionsIndexRoute: typeof ProtectedPositionsIndexRoute
 }
 
 const ProtectedPositionsRouteChildren: ProtectedPositionsRouteChildren = {
   ProtectedPositionsIdRoute: ProtectedPositionsIdRouteWithChildren,
-  ProtectedPositionsPositionIdRoute: ProtectedPositionsPositionIdRoute,
   ProtectedPositionsIndexRoute: ProtectedPositionsIndexRoute,
 }
 
