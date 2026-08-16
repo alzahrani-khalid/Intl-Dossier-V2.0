@@ -82,6 +82,43 @@ THEN NEW.status := 'overdue'`. On staging, **8 of 10 commitments are already `ov
   asserting "no error" — the write succeeds and is silently overwritten; (ii) an oracle that drags a
   commitment on staging will, with probability 8/10, be dragging a past-due one; (iii) a round-trip
   oracle that drags out and back cannot restore the original stored value.
+- **D-03d: `PARK-94-04` RULED (a), SPLIT (`RULING-P94-03`). The trigger is correct and stays.**
+  Phase 94 owns the **criterion wording and the honest interaction**; Phase 96 owns the rendering.
+  Candidate (c) — wording only — was REFUSED: it leaves a success toast followed by a visible
+  snap-back on the board's most common drag, which is the lie this phase exists to end.
+  - **The interaction:** the `PARK-94-01` machinery **extends to drags the trigger would coerce**.
+    The droppable predicate and the mutation-layer guard refuse them **before the write**, with a
+    bilingual `role="alert"` message naming the derived state and the remedy the trigger itself
+    honours (extend the due date, or complete it).
+  - **The predicate mirrors the trigger's own condition** — `due_date < CURRENT_DATE` and the
+    status about to be written is `pending` or `in_progress`. One condition, two enforcement
+    points, **no drift by construction**. Do not paraphrase the condition; mirror it.
+  - **The criterion sentence is authorized to change** from the roadmap's "persists" to this
+    invariant: _a commitment drag persists exactly when the DB's own state machine permits it; a
+    drag the trigger would coerce is refused before the write with the real bilingual reason; the
+    stored value always equals either what was written or what the user was told; never a success
+    signal followed by a snap-back._ **Strength must not drop** — "no error shown" remains
+    insufficient to pass, and the oracle **must include the coercion case** (a forced past-due drag
+    observed refused). The per-column table in `PARK-94-04` is the oracle's row set.
+  - **Switch note the plan carries:** whether refusal remains the right interaction once `overdue`
+    renders distinctly is Phase 96's to revisit; the ruling does not settle it.
+- **D-03e: The `RULING-P94-03` order-4 trigger sweep is DONE and its findings are inputs, not
+  homework** — `.tickmarkr/overseer/P94-TRIGGER-SWEEP.md`. Swept: every `BEFORE` trigger in schema
+  `public` whose body assigns to a `NEW.` column (29 across 25 tables), then intersected with the
+  write paths — derived schema-wide, **not** by listing the tables I already suspected. Results:
+  `tasks.trg_sync_task_status` derives `status` from `workflow_stage`, making `WorkBoard.tsx`'s
+  `STAGE_TO_STATUS` a **second copy of a DB rule that nothing keeps in sync** (they agree today, by
+  authorship not construction) — so no oracle asserts the client's task `status` payload reached
+  the row; `intake_tickets.calculate_ticket_priority` derives `priority` from `urgency`+
+  `sensitivity` and the form never sends `priority` — benign; `report_schedules` derives
+  `next_run_at`, and an inactive schedule legitimately has it **NULL** — a `WRITE-06` oracle
+  asserting non-null would fail a correct row; `commitment_status_history` records the **coerced**
+  status, so it is **not** evidence of user intent. **Clean (no rewriting BEFORE trigger):**
+  `after_action_records`, `custom_reports`, `report_shares`, `users`,
+  `notification_category_preferences`, `audit_log`, `audit_logs`, `engagements`. The sweep's own
+  stated blind spots (AFTER triggers, `INSTEAD OF` on views, non-literal assignment forms, and
+  RLS `WITH CHECK` silent zero-row updates — the closest sibling class) carry forward; its
+  completeness is **asserted, not proven** — no synthetic negative control was run against the regex.
 - **D-04: A commitment dragged to `review` — RULED (b) + (a).** `RULING-P94-01` on `PARK-94-01`:
   `review` is a non-droppable target for commitment cards, **with** the mutation-layer reject as the
   safety net, because a visual guarantee is not a mutation-layer guarantee and criterion 4's own text
@@ -120,6 +157,11 @@ THEN NEW.status := 'overdue'`. On staging, **8 of 10 commitments are already `ov
   `WRITE-04` reject message is a bilingual i18n key rendered with `role="alert"`, EN+AR under the
   key-set-equality gate. Rendering the raw supabase CHECK-violation string would reintroduce the
   `LEAK-ATTACH-01` class this milestone just repaired.
+  **`RULING-P94-03` order 3 — there are now TWO reject causes and they need TWO DISTINCT KEYS,**
+  both locales: (i) the board's `review` stage has no counterpart in the commitment lifecycle;
+  (ii) the drag would be coerced because the commitment is past its due date. **A single generic
+  "cannot move" message is REFUSED** — criterion 4's own text says the REAL message, and one string
+  covering two causes tells the user neither the reason nor the remedy.
   This resolves the apparent tension in `WRITE-04`'s "failures surface the real message": _real_
   means specific and true, not _raw_. Two live violations are already in this phase's own files and
   are in scope because this phase's criteria pass through them:
