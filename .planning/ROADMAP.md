@@ -386,17 +386,17 @@ Plans:
 
 Plans:
 
-- [ ] 94-01-PLAN.md — W1: WRITE-01 after-action create-mode Save + canPublish/onPublish wiring
-- [ ] 94-02-PLAN.md — W1: WRITE-03 intake zod relaxation + shouldValidate + register correction
-- [ ] 94-03-PLAN.md — W1: WRITE-04 core — commitment-stage guard, mutation reject (2 bilingual keys), no-op fix
-- [ ] 94-04-PLAN.md — W1: WRITE-05 settings .update() fix + reload-persistence spec (population stated)
-- [ ] 94-05-PLAN.md — W1: WRITE-06 42P17 migration + D-22 two-sided probe + ARMA-01 arm-(b) deletion
-- [ ] 94-06-PLAN.md — W1: AUDIT helpers (edge \_shared/audit.ts + backend audit_log/mou repairs + backend test)
-- [ ] 94-07-PLAN.md — W2: WRITE-02 list two-query rewrite + deploy + i18n colon-form + degraded row + corrections
-- [ ] 94-08-PLAN.md — W2: WRITE-04 droppable predicate (own-column carve-out) + read-back probe + parity oracle
-- [ ] 94-09-PLAN.md — W3: WRITE-06 generate surface — template→type paired with terminal state + DEAD-09 filing
-- [ ] 94-10-PLAN.md — W4: AUDIT-ZERO fleet — 27 edge writers repaired + redeployed + ledger + register corrections
-- [ ] 94-11-PLAN.md — W5: closing derivations with populations, full oracle run, gate drill, intended-broken register
+- [x] 94-01-PLAN.md — W1: WRITE-01 after-action create-mode Save + canPublish/onPublish wiring
+- [x] 94-02-PLAN.md — W1: WRITE-03 intake zod relaxation + shouldValidate + register correction
+- [x] 94-03-PLAN.md — W1: WRITE-04 core — commitment-stage guard, mutation reject (2 bilingual keys), no-op fix
+- [x] 94-04-PLAN.md — W1: WRITE-05 settings .update() fix + reload-persistence spec (population stated)
+- [x] 94-05-PLAN.md — W1: WRITE-06 42P17 migration + D-22 two-sided probe + ARMA-01 arm-(b) deletion
+- [x] 94-06-PLAN.md — W1: AUDIT helpers (edge \_shared/audit.ts + backend audit_log/mou repairs + backend test)
+- [x] 94-07-PLAN.md — W2: WRITE-02 list two-query rewrite + deploy + i18n colon-form + degraded row + corrections
+- [x] 94-08-PLAN.md — W2: WRITE-04 droppable predicate (own-column carve-out) + read-back probe + parity oracle
+- [x] 94-09-PLAN.md — W3: WRITE-06 generate surface — template→type paired with terminal state + DEAD-09 filing
+- [x] 94-10-PLAN.md — W4: AUDIT-ZERO fleet — 27 edge writers repaired + redeployed + ledger + register corrections
+- [x] 94-11-PLAN.md — W5: closing derivations with populations, full oracle run, gate drill, intended-broken register
 
 ### Phase 95: Routes That Don't Render
 

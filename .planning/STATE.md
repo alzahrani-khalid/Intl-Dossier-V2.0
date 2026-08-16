@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v10.0
 milestone_name: Trust & Correctness
 status: in_progress
-last_updated: '2026-08-16T08:42:07.047Z'
+last_updated: '2026-08-16T17:05:00.000Z'
 progress:
   total_phases: 13
-  completed_phases: 2
-  total_plans: 25
-  completed_plans: 25
-  percent: 15
+  completed_phases: 3
+  total_plans: 36
+  completed_plans: 36
+  percent: 23
 ---
 
 # Project State
@@ -27,22 +27,57 @@ See: .planning/PROJECT.md (updated 2026-08-15 — v9.0 closed PARTIAL; v10.0 Tru
 Milestone: **v10.0 — Trust & Correctness** (roadmapped 2026-08-15).
 Phase: 93 (failure-visibility) — **EXECUTED 2026-08-16, accepted by `RULING-P93-07`.**
 15 of 15 plans executed (15/15 SUMMARYs on disk, every `## BLOCKED` section read and empty).
-Phase 94 (write-paths) — **PLANNING IN PROGRESS 2026-08-16.** Context gathered
-(`94-CONTEXT.md`, `94-DISCUSSION-LOG.md`, commit `b584bcb31`); base tag `phase-94-base` created,
-SSH-signed, verifies, points at `3d63da95f`. Research running. **No plan files yet; nothing
-dispatched.**
-Next command: `/gsd:plan-phase 94` (in flight).
+Phase 94 (write-paths) — **EXECUTED 2026-08-16, accepted by `RULING-P94-15`.**
+11 of 11 plans executed, plus two authorized addendum lanes (`94-01A` repair, `94-10A` bounded
+consumer run). Base tag `phase-94-base` = `3d63da95f` (SSH-signed, not moved). Report
+`.tickmarkr/overseer/P94-EXEC-REPORT.md` (ends `ORCH-EXEC-END`).
+Next command: `/gsd:plan-phase 95` (Routes That Don't Render).
 
-**Phase 94 planning has already corrected three documents and opened four parks.** The register and
-the roadmap disagreed on scope (9 requirements, not 6 — `ba19751c6`). The `aa_commitments` lifecycle
-is **five** values, not the four that `CLAUDE.md`, `REQUIREMENTS.md` and the first park all stated —
-`pending, in_progress, completed, cancelled, overdue`, verified by live catalog query and corrected
-in all three places. `PARK-94-01`/`-02` are ruled (`RULING-P94-01`); `PARK-94-03` is ruled
-(`RULING-P94-02`) with its handling filed as `COUNT-04` → Phase 96; **`PARK-94-04` is OPEN and
-blocks `WRITE-04`'s criterion wording** — a live `BEFORE UPDATE` trigger
-(`check_commitment_overdue`) overwrites the kanban's commitment write, so criterion 4 is false for
-8 of the 10 commitments on staging for a reason no document names. `COPY-06` (global success
-literal) → Phase 98. Both filings are approve-as-placed.
+**Phase 94 close-out, stated narrowly — the nine checkboxes are not a claim of more than this:**
+Gate drill on the real tree at close, re-derived independently by the overseer:
+**31 gates · 31 parsed · 0 parse-fail · 31 exited 0**, from a **0/31** baseline taken before the
+first dispatch. **Zero gate edits** — every `<automated>` block byte-identical to the
+plan-acceptance HEAD `d5c582e0f`, verified by content hash with a synthetic control. The 22-gate
+green-direction debt was paid **per plan as the work landed**, never in a repair round.
+`94-11_g1` — the phase's _cannot-pass-when-done_ gate — was re-run **live** with the independent
+verifier's artifact present: exit 0, the real control where planning had only a synthetic one.
+
+**An independent `gsd-verifier` ran after the executors** (`94-VERIFICATION-INDEPENDENT.md`,
+`verifier_ran_own_derivations: true`, `status: human_needed`, 5/5 criteria as worded, `gaps: []`)
+and found one thing the phase's own instruments had not: **the trigger sweep this phase relied on
+matched only `:=` assignment and saw 15% of its class** — 29/25 by its own rule, 164 further
+`BEFORE` triggers across 157 tables invisible to it. Harmless here (the 8 missed on write-path
+tables are all bare `NEW.updated_at = now()`); filed as `TRIGSWEEP-01` → Phase 96.
+
+**WHAT PHASE 94 DID NOT ESTABLISH — carried verbatim, not summarised:**
+
+- **`WRITE-01` is closed FOR PUBLISH SPECIFICALLY.** The parse class is live in at least 7 further
+  edge functions and **entirely unassessed in 52 more** (`EDGEPATH-01` → P100). **61 is a scope,
+  never a defect count**, and the population is open-ended by construction.
+- **A real C9b consumer is RED and its cause is unattributed.** `user-management.spec.ts` was run
+  once at HEAD under `RULING-P94-11`, failed on the create leg, and the lane **stopped cold** —
+  no control run, no attribution to the known Phase 86 defect. Counted in **no** defence count.
+  `94-10` therefore closes **by ruling**, not on an empty `BLOCKED`.
+- **`WRITE-04`'s `W4` gap is unpinned.** Releasing a past-due card over the disabled In-progress
+  column still retargets, possibly to Done. **No oracle covers it.** Recorded as a gap.
+- **`AUDIT-ZERO-01` proves NOT-NULL `user_role`, not role variety** — all six live rows carry the
+  same role (`distinct_roles = 1`).
+- **`WRITE-05` is Population A only** — five `/settings` child routes are a named exclusion.
+- **The reports mock generate path is `DEAD-09`** (P95), filed not fixed.
+- **Arabic naturalness and pixel RTL remain OPERATOR parks.** The Arabic this phase authored ships
+  **as authored** (`RULING-P94-07`): grammatical, on-glossary, key-set-equal, **naturalness
+  UNREVIEWED**. No artifact in this phase claims either, including the independent verifier's.
+- **`FUNC-GRANT-01`** (P100): 334 `SECURITY DEFINER` functions carry the default `PUBLIC EXECUTE`
+  grant — a knowingly-accepted residual, `anon` gets no information, authenticated gets an
+  existence oracle on a 122-bit random id.
+- **The closing register's green is author honesty, not independent measurement** —
+  `94-11_g1` is self-certifying by construction. This is the phase's named weakest point.
+
+**Register hygiene note, open for a ruling:** Phase 94's nine are the **only** requirements in
+`REQUIREMENTS.md` marked `Complete`. Phase 92's **6** and Phase 93's **8** still read `Pending`
+despite both phases being executed and accepted (`RULING-P92-49`, `RULING-P93-07`) — their ROADMAP
+plan checkboxes were flipped but their register rows were not. **Not touched here**: they are other
+phases' rows and correcting them is a ruling, not an opportunistic fix.
 Prior phase: 92 (session-integrity-edge-auth) — EXECUTED 2026-08-15, accepted by `RULING-P92-49`;
 `92-10` remains a parked operator act (`E2ECRED-01`), not work.
 
