@@ -296,3 +296,120 @@ found.
 
 _Phase: 93-failure-visibility_
 _Completed: 2026-08-16_
+
+---
+
+## ADDENDUM — RULING-P93-06: LEAK-ATTACH-01 repaired in-phase
+
+Appended 2026-08-16 under `RULING-P93-06-LEAK-AND-RTL.md` order 1. The close-out above stands
+**corrected, not replaced**: this plan shipped `AttachmentUploader.tsx`'s query-failure surface and
+signed off, while two **mutation**-origin leak sites in the same file went on rendering raw
+`error.message` to the user. The independent `gsd-verifier` (`93-VERIFICATION-INDEPENDENT.md`,
+`status: gaps_found`) found them; the overseer ruled the repair in-phase.
+
+### The defect
+
+Both sites are **pre-existing** (`:108` / `:189` at `phase-93-base`) — which is not a defence: the
+file is in `git diff --name-only phase-93-base..HEAD` and is a criterion-2 named surface, so
+criterion 5 covers it.
+
+| Site   | Before                                                 | Reaches the user via                                        |
+| ------ | ------------------------------------------------------ | ----------------------------------------------------------- |
+| `:117` | `error: error.message \|\| t('common:errors.generic')` | rendered verbatim at `:462-465` as `{attachmentFile.error}` |
+| `:198` | `alert(error.message \|\| t('common:errors.generic'))` | the `alert()` itself                                        |
+
+**The `||` fallback saved neither.** A `FunctionsHttpError` message — `"Failed to send a request to
+the Edge Function"`, the exact string `93-14_g3` observed in its own RED snapshot — is non-empty, so
+the generic fallback never fires and the internal string reaches the user.
+
+### The treatment (93-14 Task 2's, `5ad3b05c`, applied verbatim)
+
+Drop the `error.message` operand, keep the i18n copy:
+
+- `:117` → `error: t('common:errors.generic')`
+- `:198` → `alert(t('common:errors.generic'))`
+
+The `alert()` was **not** exempted — same pattern, translated message, never the raw string. Both
+`catch (error: any)` bindings were then dropped to bare `catch {`, since `error` is read nowhere
+else in either block; this is the `TS6133: 'error' is declared but its value is never read` trap
+`93-14` paid for six times, and dropping the binding is part of the treatment, not a deviation.
+Four lines changed in one file; nothing else was touched.
+
+### Oracle — red before, green after
+
+The verifier's own reproduction command, scoped to this file:
+
+```bash
+cd frontend && grep -vE '^\s*(//|\*)' src/components/positions/AttachmentUploader.tsx \
+  | grep -vE 'console\.|throw |new Error|toast' \
+  | grep -cE 'error\?\.message|error\.message|err\.message'
+```
+
+```
+RED  (before, at dc43cf91f):  2
+GREEN (after,  at 283f9eff2): 0
+```
+
+`pnpm type-check` after the change — zero diagnostics:
+
+```
+> intake-frontend@1.0.0 type-check
+> tsc --noEmit
+TYPECHECK_EXIT=0     grep -c 'error TS' => 0
+```
+
+### Gate re-runs — regression guards, not a red→green pair
+
+These three gates cover this file and were **green before this change**; they are re-run to prove
+the change broke nothing. There is no manufactured red here, and none is claimed. Each was extracted
+from its `*-PLAN.md` `<automated>` block and run **verbatim**; no gate text was edited (all three
+authorized gate edits this phase are spent).
+
+| Gate       | Source                                                                                                                | Exit  |
+| ---------- | --------------------------------------------------------------------------------------------------------------------- | ----- |
+| `93-10_g1` | `93-10-PLAN.md:98` — tags analytics wiring + `pnpm type-check`                                                        | **0** |
+| `93-10_g2` | `93-10-PLAN.md:123` — `isError`/`QueryErrorState` present + Playwright `93-tags-attachments-error.spec.ts` `2 passed` | **0** |
+| `93-14_g2` | `93-14-PLAN.md:142` — 22-file leak sweep + `pnpm type-check`                                                          | **0** |
+
+`93-10_g2`'s Playwright leg, re-run separately to capture the output the gate consumes silently:
+
+```
+✓ 1 [chromium-en] › 93-tags-attachments-error.spec.ts:66 › blocked tag-hierarchy renders the shared inline error in the analytics panel (6.3s)
+✓ 2 [chromium-en] › 93-tags-attachments-error.spec.ts:101 › blocked attachments renders the shared inline error, never "No attachments yet" (11.1s)
+2 passed (11.4s)
+```
+
+### Why this got past five in-phase instruments
+
+**The criterion-5 population was partitioned by ORIGIN — query vs mutation — and both these sites
+are mutation-origin RENDERS.** Bucket (a) enumerated _read_ paths, so a mutation-origin site was
+never in the frame; the closing register then described that bucket's superset as "remaining
+**reads**", which read as complete coverage of what remained. But `:117` sets state that `:462-465`
+paints on screen, and `:198` is an `alert()` — both are renders by any definition the criterion
+cares about. **A mutation-origin render on a query-criterion surface fell between the buckets**, and
+every in-phase instrument inherited the same partition, so all five were blind in the same place.
+Only a seat with no shared ancestry — the independent verifier — was looking at the file rather than
+at the buckets, and it found this in one pass. That is the argument for the verification step, and
+the durable lesson of this repair: **a population partitioned by origin leaks at the seams**; when
+the partition is inherited by every instrument, agreement between them is not evidence.
+
+### Scope discipline
+
+One source file touched: `frontend/src/components/positions/AttachmentUploader.tsx`. Not swept:
+`TagHierarchyManager.tsx`'s toasts (untouched file, outside criterion 5, filed for downstream). Not
+touched: `.planning/REQUIREMENTS.md`, `93-VERIFICATION.md` (orchestrator annotates both, citing the
+sha below), `.planning/STATE.md`, `ROADMAP.md`. `LEAK-ATTACH-01`'s filing is annotated
+RESOLVED-IN-PHASE, never deleted — the record of the miss is the valuable part.
+
+**Commit:** `283f9eff204441eca7b62332063a1350a5125169` — explicit pathspec, one file, 4 insertions /
+4 deletions, verified with `git show --stat HEAD` and
+`git show HEAD:frontend/src/components/positions/AttachmentUploader.tsx | grep -n 'errors.generic'`
+(`117`, `198`).
+
+### GATE CONCERN
+
+None. No `<automated>` block was read as wrong, and none was edited.
+
+## BLOCKED
+
+None.
