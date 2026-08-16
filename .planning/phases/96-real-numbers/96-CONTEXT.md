@@ -138,6 +138,14 @@ every decision below is either determined by documents (cited) or parked
   ruling for allow-and-reflect is a post-close mutation and must NAME which closed gates'
   subjects it changes (condition 3).
 
+  > **RULED 2026-08-17, same day — (a) KEEP REFUSAL** (`RULING-P96-01-PARK-REFUSAL.md`,
+  > resolving `PARK-96-01`). Three conditions bind the plans: (1) branch (a) exactly as
+  > authored — no mutation-path change; (2) any future revisit toward allow-and-reflect is a
+  > post-close mutation naming which closed gates' subjects it changes; (3) **COUNT-04's close
+  > states which overdue notion wins on which surface** (the unification's own record), so the
+  > kept refusal reads as a decision, not a leftover. Decisive basis: branch (b) destroys the
+  > record of intent — `commitment_status_history` reads `NEW.status` AFTER the overdue rewrite.
+
 ### TRIGSWEEP-01 — the inherited instrument, re-derived from behaviour
 
 - **D-11: The trigger population derives from BEHAVIOUR — every `BEFORE` trigger that writes a
@@ -258,8 +266,9 @@ what the user sees truthfully, so none is parked.
   (contemporaneous-agreement rule) are new this phase
 - `.tickmarkr/overseer/ORCH-BRIEF.md` §3 — pre-baked evidence per requirement; cite, do not
   rediscover
-- `.tickmarkr/overseer/PARK-P96.md` — `PARK-96-01` (COUNT-04 refusal interaction), OPEN; plans
-  authored to the no-change branch
+- `.tickmarkr/overseer/PARK-P96.md` — `PARK-96-01` (COUNT-04 refusal interaction), **RULED**
+- `.tickmarkr/overseer/RULING-P96-01-PARK-REFUSAL.md` — (a) KEEP REFUSAL; the three binding
+  conditions, incl. COUNT-04's close stating which notion wins on which surface
 
 ### The inherited instruments and their provenance
 
