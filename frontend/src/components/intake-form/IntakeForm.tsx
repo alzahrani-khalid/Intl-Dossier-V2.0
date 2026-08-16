@@ -49,8 +49,12 @@ const createIntakeSchema = (t: any, tDossier: any) =>
     urgency: z.enum(['low', 'medium', 'high', 'critical'], {
       error: t('form.urgency.required'),
     }),
-    // US4: dossierId is now required
-    dossierId: z.string().uuid({ message: tDossier('validation.dossier_required') }),
+    // US4: dossierId is required — but NOT RFC-shaped. Zod 4's `.uuid()` enforces the
+    // RFC-9562 version/variant bits, and 35 of 44 staging dossiers are seeded with a
+    // version nibble of 0 (OECD is b0000001-0000-0000-0000-000000000005), so it rejected
+    // real ids and rendered "At least one dossier is required" over a linked dossier.
+    // Requiredness is kept; the RFC check is not. Never re-add `.uuid()` to a dossier id.
+    dossierId: z.string().min(1, { message: tDossier('validation.dossier_required') }),
     typeSpecificFields: z.record(z.string(), z.any()).optional(),
     attachmentIds: z.array(z.string().uuid()).optional(),
   })
@@ -79,10 +83,10 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ initialData, onSuccess }
     setSelectedDossiers(dossiers)
     const firstDossier = dossiers[0]
     if (firstDossier) {
-      setValue('dossierId', firstDossier.id)
+      setValue('dossierId', firstDossier.id, { shouldValidate: true })
       setDossierError('')
     } else {
-      setValue('dossierId', '' as unknown as string)
+      setValue('dossierId', '' as unknown as string, { shouldValidate: true })
     }
   }
 
