@@ -179,9 +179,26 @@ A disabled-button-state contract, not new chrome. Buttons keep their exact shipp
   guard naively does exactly that — the effect fires post-mount). Gate on content-derived dirtiness
   (the `hasContent` expression the file already computes at `:140-151`) or a skip-first-render
   pattern. Edit mode behaviour is unchanged.
-- The engagement route passes `canPublish` + `onPublish`; `canPublish` mirrors the detail page's
-  role predicate (`['supervisor','admin']` — Assumption A2; the plan states the choice). A user
-  without the role sees no Publish button at all — never a permanently disabled one.
+- The engagement route passes `canPublish` + `onPublish`; `canPublish` mirrors **the SERVER's** role
+  set — `['staff','supervisor','admin']`, `supabase/functions/after-actions-publish/index.ts:60-71`.
+  A user without the role sees no Publish button at all — never a permanently disabled one.
+
+  > **CORRECTED 2026-08-16 (`RULING-P94-07`).** This line previously read `['supervisor','admin']`
+  > and cited "Assumption A2" — **the assumption `RULING-P94-04` overturned**, in favour of the
+  > server set, on the grounds that the server is the enforcement boundary and a UI narrower than
+  > the server is a hidden capability, not a policy. The spec was authored before that ruling and
+  > was never re-synced, so this binding artifact contradicted both the ruling and `94-01`, which
+  > implements the ruling correctly. Found by the round-2 plan-check.
+  >
+  > **The class, stated because it is not about this line:** C9 ("repoint every consumer in the same
+  > edit") was applied to code artifacts and never to **rulings**. A ruling that overturns an
+  > assumption must sweep the artifacts that encode it. **Full rulings-vs-spec sweep run in this
+  > same edit** — population: every ruled decision in `RULING-P94-01..-06` checked against this
+  > document. Result: **this was the only contradiction.** `A3` (tenant derivation),
+  > `PARK-94-05` (edge-function query shape), `PARK-94-07` (probe identity) and `PARK-94-08` (audit
+  > precondition subset) have **no rows here and correctly so** — they are not UI concerns, and this
+  > spec's scope is the rendered surface. That absence is the population's boundary, not a gap.
+
 - Publish from create mode is a two-step (create → publish) behind one button press; while it runs,
   BOTH buttons are disabled and the existing `publishing` label shows. On failure, the translated
   failure copy renders (contract 4) — never a raw message, never success-then-nothing.
@@ -275,40 +292,43 @@ phase does not touch the three byte-matched palette copies.
 ## Copywriting Contract
 
 All new strings land in EXISTING registered namespaces (`unified-kanban`, `common`,
-`after-actions-page` — all registered for both locales in `src/i18n/index.ts`; no new-namespace
+`after-actions-page`, `report-builder` — the last registered both locales at
+`src/i18n/index.ts:312` / `:448`, verified — all registered for both locales in `src/i18n/index.ts`; no new-namespace
 registration risk). Address with the COLON form only (D-10). Both language files gain every new key
 in the SAME commit — the key-set-equality gate (`scripts/check-i18n-namespaces.mjs` via
 `pnpm lint`) is the enforcement, not looking (D-09). Sentence case; no emoji; no marketing voice;
 no exclamation marks; column names in copy align with the shipped `columns.*` glossary.
 
-| Element                  | Copy                                                                                                                                                      |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Reject (i) title         | Commitments have no review stage (`unified-kanban:errors.commitmentNoReviewStage`)                                                                        |
-| Reject (i) body          | The Review column does not exist in the commitment lifecycle. Move the commitment to To do, In progress, or Done. (`…commitmentNoReviewStageDescription`) |
-| Reject (ii) title        | Commitment is past its due date (`unified-kanban:errors.commitmentPastDue`)                                                                               |
-| Reject (ii) body         | A past-due commitment cannot move to To do or In progress. Extend the due date, or mark it complete. (`…commitmentPastDueDescription`)                    |
-| Generic drag failure     | existing `unified-kanban:errors.updateFailed` + `updateFailedDescription` — REUSED, replacing the hardcoded title + raw `error.message`                   |
-| Detail load error        | Unable to load this after-action record. Try again, and contact an administrator if it keeps failing. (`common:afterActions.loadError` — NEW)             |
-| Publish failure          | existing `common:afterActions.publishFailed` — REUSED, rendered alone (raw message removed)                                                               |
-| Degraded row label       | Engagement details unavailable (`after-actions-page:degraded.engagementMissing` — NEW)                                                                    |
-| Primary CTA              | existing `Save draft` / `Publish` (`common:afterActions.form.saveDraft` / `.publish`) — REUSED, enablement changes only                                   |
-| Empty states             | unchanged — existing `after-actions-page:empty.heading` and board empty copy already cover genuine emptiness; this phase adds no empty-state copy         |
-| Settings save failure    | existing `settings:saveError` — REUSED, description (raw message) dropped                                                                                 |
-| Intake validation        | existing `dossier-context:validation.dossier_required` — REUSED, made truthful (clears on pick)                                                           |
-| Destructive confirmation | not applicable — this phase has no destructive actions (a reject is a refusal before a write, not a destruction)                                          |
+| Element                       | Copy                                                                                                                                                                                                                                                                                                           |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Reject (i) title              | Commitments have no review stage (`unified-kanban:errors.commitmentNoReviewStage`)                                                                                                                                                                                                                             |
+| Reject (i) body               | The Review column does not exist in the commitment lifecycle. Move the commitment to To do, In progress, or Done. (`…commitmentNoReviewStageDescription`)                                                                                                                                                      |
+| Reject (ii) title             | Commitment is overdue (`unified-kanban:errors.commitmentPastDue`)                                                                                                                                                                                                                                              |
+| Reject (ii) body              | The database holds this commitment as overdue, so it cannot move to To do or In progress. Extend the due date, or mark it complete. (`…commitmentPastDueDescription`)                                                                                                                                          |
+| Generic drag failure          | existing `unified-kanban:errors.updateFailed` + `updateFailedDescription` — REUSED, replacing the hardcoded title + raw `error.message`                                                                                                                                                                        |
+| Detail load error             | Unable to load this after-action record. Try again, and contact an administrator if it keeps failing. (`common:afterActions.loadError` — NEW)                                                                                                                                                                  |
+| Publish failure               | existing `common:afterActions.publishFailed` — REUSED, rendered alone (raw message removed)                                                                                                                                                                                                                    |
+| Degraded row label            | Engagement details unavailable (`after-actions-page:degraded.engagementMissing` — NEW)                                                                                                                                                                                                                         |
+| Report generation unavailable | Report generation is unavailable (`report-builder:generate.unavailable`) — the entry the list renders when the function returns no `url`. NEVER a `completed` entry. Added `RULING-P94-07`: this is the phase's only other authored string and it had no row, so its Arabic would have been executor-invented. |
+| Primary CTA                   | existing `Save draft` / `Publish` (`common:afterActions.form.saveDraft` / `.publish`) — REUSED, enablement changes only                                                                                                                                                                                        |
+| Empty states                  | unchanged — existing `after-actions-page:empty.heading` and board empty copy already cover genuine emptiness; this phase adds no empty-state copy                                                                                                                                                              |
+| Settings save failure         | existing `settings:saveError` — REUSED, description (raw message) dropped                                                                                                                                                                                                                                      |
+| Intake validation             | existing `dossier-context:validation.dossier_required` — REUSED, made truthful (clears on pick)                                                                                                                                                                                                                |
+| Destructive confirmation      | not applicable — this phase has no destructive actions (a reject is a refusal before a write, not a destruction)                                                                                                                                                                                               |
 
 Arabic strings (executor aligns terminology with the shipped `unified-kanban` `columns.*` /
 `errors.*` glossary — للتنفيذ / قيد التنفيذ / مكتمل — before committing; these are the contract's
 suggested renderings):
 
-| Key                                                    | ar                                                                                                     |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| `errors.commitmentNoReviewStage`                       | لا توجد مرحلة مراجعة للالتزامات                                                                        |
-| `errors.commitmentNoReviewStageDescription`            | عمود المراجعة غير موجود في دورة حياة الالتزام. انقل الالتزام إلى للتنفيذ أو قيد التنفيذ أو مكتمل.      |
-| `errors.commitmentPastDue`                             | الالتزام متجاوز تاريخ استحقاقه                                                                         |
-| `errors.commitmentPastDueDescription`                  | لا يمكن نقل التزام متجاوز الاستحقاق إلى للتنفيذ أو قيد التنفيذ. مدّد تاريخ الاستحقاق أو أكمل الالتزام. |
-| `afterActions.loadError` (in `common`)                 | تعذر تحميل سجل ما بعد الإجراء. حاول مرة أخرى، وإذا استمرت المشكلة تواصل مع المسؤول.                    |
-| `degraded.engagementMissing` (in `after-actions-page`) | بيانات المشاركة غير متاحة                                                                              |
+| Key                                                    | ar                                                                                                                            |
+| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| `errors.commitmentNoReviewStage`                       | لا توجد مرحلة مراجعة للالتزامات                                                                                               |
+| `errors.commitmentNoReviewStageDescription`            | عمود المراجعة غير موجود في دورة حياة الالتزام. انقل الالتزام إلى للتنفيذ أو قيد التنفيذ أو مكتمل.                             |
+| `errors.commitmentPastDue`                             | الالتزام متأخر                                                                                                                |
+| `errors.commitmentPastDueDescription`                  | تسجّل قاعدة البيانات هذا الالتزام كمتأخر، لذا لا يمكن نقله إلى للتنفيذ أو قيد التنفيذ. مدّد تاريخ الاستحقاق أو أكمل الالتزام. |
+| `report-builder:generate.unavailable`                  | تعذّر إنشاء التقرير                                                                                                           |
+| `afterActions.loadError` (in `common`)                 | تعذر تحميل سجل ما بعد الإجراء. حاول مرة أخرى، وإذا استمرت المشكلة تواصل مع المسؤول.                                           |
+| `degraded.engagementMissing` (in `after-actions-page`) | بيانات المشاركة غير متاحة                                                                                                     |
 
 No dates or times appear in this phase's new copy; if a plan later interpolates the due date into
 reject (ii), it renders day-first (`Tue 28 Apr`) via the shipped locale formatter, never a raw ISO
