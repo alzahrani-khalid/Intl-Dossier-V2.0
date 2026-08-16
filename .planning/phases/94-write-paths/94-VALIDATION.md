@@ -85,7 +85,7 @@ exist** — this table is the contract those rows must satisfy, not a substitute
 <!-- prettier-ignore -->
 | Requirement | Behaviour to verify | Test type | Automated command | File exists |
 | --- | --- | --- | --- | --- |
-| `WRITE-01` | Create-mode Save enables on content; publish wired end-to-end | component + e2e | `pnpm -C frontend exec vitest run tests/component/AfterActionForm.test.tsx` (extend with create-mode cases) · `pnpm -C frontend exec playwright test tests/e2e/after-action-create.spec.ts` | ✅ component (extend) · e2e exists, **colour unmeasured** |
+| `WRITE-01` | Create-mode Save enables on content; publish wired end-to-end | component + **probe** | `pnpm -C frontend exec vitest run tests/component/AfterActionForm.test.tsx` (extend with create-mode cases) · `node scripts/probe-after-action-publish.mjs` (create → publish → **read back** `publication_status === 'published'`) | ✅ component (extend) · ❌ probe Wave 0 |
 | `WRITE-02` | List renders rows including the degraded join; detail shows translated copy, not a raw key | e2e / probe | new spec or authenticated probe against the **deployed** `after-actions-list-all` (assert 200 + row shape); detail spec forces the query error and asserts no raw key | ❌ Wave 0 |
 | `WRITE-03` | `/intake/new` submits with a **non-RFC-uuid** dossier id | component | `pnpm -C frontend exec vitest run tests/component/IntakeForm.test.tsx` (extend; the existing "zod blocks submit" case must survive) | ✅ (extend) |
 | `WRITE-04` | Drag persists **by read-back**; `review` rejects with a bilingual alert; own-column drop is a no-op; a would-be-coerced drag is refused | unit (mapper) + component (`onDragEnd` capture) + live read-back probe | `pnpm -C frontend exec vitest run src/pages/WorkBoard/__tests__/WorkBoard.test.tsx` (update in-task) · new mapper unit test · staging read-back probe | ✅ WorkBoard.test (update) · ❌ mapper test Wave 0 |
@@ -94,6 +94,15 @@ exist** — this table is the contract those rows must satisfy, not a substitute
 | `AUDIT-DROP-01` | `logSecurityEvent` lands a row; a failed insert is surfaced | backend unit/integration | new test **under `backend/tests/`** (colocated never runs) + staging row-count delta probe | ❌ Wave 0 |
 | `AUDIT-ZERO-01` | Repaired writers insert a valid shape **and are deployed** | probe + derivation | re-run the both-quote-styles key-diff derivation → 0 broken; post-deploy probe exercising a representative, then `select count(*) from audit_logs` > 0 | derivation exists in research · probe ❌ Wave 0 |
 | `ARMA-01` | Spec asserts the 404 arm **alone** and passes | e2e | `pnpm exec playwright test tests/e2e/93-report-notfound.spec.ts --no-deps` (**hardcode `1 passed`**, per `D-26`) | ✅ (edited in-plan, ordered after the migration) |
+
+> **`WRITE-01`'s e2e nomination was WRONG and is corrected above (`RULING-P94-06` B6).** This table
+> originally nominated `frontend/tests/e2e/after-action-create.spec.ts`. That spec navigates to
+> **`/after-action/create`** (`:249`, awaiting a response on the same path at `:181`) — **a route
+> that does not exist**. The tree has `/after-actions/…` (plural: list + detail) and
+> `/engagements/$engagementId/after-action`. Verified independently by listing
+> `frontend/src/routes/**/*after-action*`. A spec pointed at a nonexistent route yields an
+> uninformative red, so it could never have been criterion 1's oracle. Replaced by a read-back
+> probe. Both stale specs are filed to `E2ESTALE-01` (Phase 101) with this fact.
 
 _Status legend for the planner's expansion: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
 
