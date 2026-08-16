@@ -244,6 +244,19 @@ verified sound across six lanes).
   - **Population definition:** shipped specs under any of this repo's **four** test roots (`./tests`, `./frontend/tests`, `./backend/tests`, `./e2e/tests`) that are coupled to a file Phase 93 modified, per the corrected `GATE-STANDARD.md` C9b derivation (11 coupled files). **Outside it:** specs coupled by DOM shape alone rather than by identifier — no grep can see those; the residual defence is running the shipped suite. And specs unrelated to Phase 93's 40 changed files were never run, so this is **not** a claim about total suite health.
   - **Owner: Phase 101 — CI Gates Green**, alongside the other CI-green work. Phase 93 deliberately did not fix them: they are outside its criteria, and repairing unrelated red tests mid-phase is how a phase's own evidence stops being interpretable.
 
+### RETENTION — two defects `93-09` measured but could not repair inside its files
+
+> Both filed 2026-08-16 from Phase 93 execution, plan `93-09`, which raised them in its BLOCKED
+> section for the orchestrator to assign owners. Each was **measured**, not inferred, and each is
+> worked around or asserted rather than left silent — so neither blocked that plan's close.
+
+- [ ] **RETENTION-CAST-01**: **`frontend/src/domains/audit/hooks/useRetentionPolicies.ts` casts a `{data:[...]}` envelope as if it were a bare array — six times.** The route crashes outright on the real payload; `93-09` repaired it at the **consumption point** in `data-retention.tsx` (`asRows`, commit `b71ad62b`) because the hook file was outside its `files_modified`. **The six false casts remain.**
+  - **Do not "fix" it as `Array.isArray(x) ? x : []`.** That fallback renders "No Policies" over rows the server did send — precisely the confident-lie class this milestone exists to kill. `93-09` recorded that as a pattern decision.
+  - **Owner: Phase 95 — Routes That Don't Render.** Placed there because the observed symptom is a route that does not render at all; move it if a later seat reads the class differently.
+- [ ] **DR-SUBPATH-01**: **`supabase/functions/data-retention/index.ts:120-123` derives `resource` from the second-to-last path segment, so every `/data-retention/<sub>` route except `policies` is mis-read.** `legal-holds` is parsed as a POLICY ID and looked up in `data_retention_policies`. Probed against deployed staging 2026-08-16 (`scripts/probe-edge-auth.sh` plus a throwaway body probe; no credential echoed).
+  - **This is the OUTER of two stacked causes on `/admin/data-retention`'s legal-holds region** — the inner is `RLS-AUTHUSERS-01`'s residual `legal_holds` policy (Phase 100). **Fixing the RLS alone will not close that surface**; this parse fires first. Whoever closes `RLS-AUTHUSERS-01` must close this too or the region stays red for a new reason.
+  - **Owner: Phase 100 — Security Posture (database + client)**, alongside `RLS-AUTHUSERS-01`, for that coupling rather than for any security property of its own.
+
 ### GATESTD — a defect in the shipped gate standard itself
 
 - [ ] **GATESTD-01**: **`GATE-STANDARD.md`'s C9b escape step has never executed successfully on this machine.** Filed 2026-08-16 from Phase 93 execution. The line `id=$(printf '%s' "$id" | sed -E 's/[][.*+?^${}()|\\]/\\&/g')` is rejected outright by BSD/macOS sed: `sed: 1: "s/[][.*+?^${}()|\\]/\\&/g": unbalanced brackets ([])`.
@@ -429,6 +442,8 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | CLIENTSEC-01 | Phase 100 — Security Posture (database + client) | Pending |
 | E2ECRED-01 | Phase 101 — CI Gates Green | Pending |
 | E2ESTALE-01 | Phase 101 — CI Gates Green | Pending |
+| RETENTION-CAST-01 | Phase 95 — Routes That Don't Render | Pending |
+| DR-SUBPATH-01 | Phase 100 — Security Posture (database + client) | Pending |
 | GATESTD-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | ROOTALIAS-01 | Phase 101 — CI Gates Green | Pending |
 | CARRY-01 | Phase 92 — Session Integrity & Edge-Function Auth | Pending |
