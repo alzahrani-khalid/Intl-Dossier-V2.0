@@ -80,7 +80,12 @@ import {
 import type {
   RetentionPolicy,
   RetentionPolicyInput,
+  LegalHold,
   LegalHoldInput,
+  RetentionStatistics,
+  PendingRetentionAction,
+  ExpiringEntity,
+  RetentionExecutionLog,
   RetentionEntityType,
   DocumentClass,
   RetentionActionType,
@@ -129,6 +134,34 @@ const RETENTION_ACTIONS: Array<{ value: RetentionActionType; label: string }> = 
   { value: 'anonymize', label: 'Anonymize' },
 ]
 
+/**
+ * Normalise a retention query's payload to rows.
+ *
+ * FOUND AT EXECUTION, NOT FIXED AT ITS ROOT (93-09, out of this plan's files). Every
+ * `/data-retention/*` endpoint answers the project's `{ "data": [...] }` envelope, but
+ * `domains/audit/hooks/useRetentionPolicies.ts` casts that body straight to the row array —
+ * `getRetentionPoliciesApi(searchParams) as Promise<RetentionPolicy[]>` — for all six queries.
+ * The cast is a lie, and `as` silences the compiler that would otherwise have caught it.
+ *
+ * That lie was INVISIBLE until 93-04: while data_retention_policies still answered 42501 the
+ * payload never arrived, `data` stayed undefined, and the `= []` default covered it. The moment
+ * 93-04's is_platform_admin policy made the read succeed, `policies.map` threw
+ * "policies.map is not a function" and the route's error boundary ate the WHOLE page — measured
+ * 2026-08-16. Unwrapping here is a consumption-point repair so this route can render at all; the
+ * six false casts stay in the hook file and are filed in 93-09-SUMMARY.md for the owning phase.
+ *
+ * Deliberately NOT `Array.isArray(x) ? x : []` — that would render "No Policies" over rows the
+ * server did send, which is the exact confident lie this phase exists to kill.
+ */
+function asRows<T>(value: unknown): T[] {
+  if (Array.isArray(value)) return value as T[]
+  if (value !== null && typeof value === 'object') {
+    const inner = (value as { data?: unknown }).data
+    if (Array.isArray(inner)) return inner as T[]
+  }
+  return []
+}
+
 function DataRetentionPage() {
   const { t, i18n } = useTranslation('retention-policies')
   const isRTL = i18n.language === 'ar'
@@ -148,7 +181,7 @@ function DataRetentionPage() {
   // OWN QUERY from here on: a failed region renders the shared inline error state and its
   // siblings render normally. Only the primary (policies) query collapses the whole page.
   const {
-    data: policies = [],
+    data: policiesData,
     isLoading: policiesLoading,
     isError: policiesIsError,
     isFetching: policiesFetching,
@@ -157,14 +190,14 @@ function DataRetentionPage() {
     status: 'active',
   })
   const {
-    data: statistics = [],
+    data: statisticsData,
     isLoading: statsLoading,
     isError: statsIsError,
     isFetching: statsFetching,
     refetch: refetchStats,
   } = useRetentionStatistics()
   const {
-    data: pendingActions = [],
+    data: pendingActionsData,
     isLoading: pendingLoading,
     isError: pendingIsError,
     isFetching: pendingFetching,
@@ -173,7 +206,7 @@ function DataRetentionPage() {
     limit: 10,
   })
   const {
-    data: expiringEntities = [],
+    data: expiringEntitiesData,
     isLoading: expiringLoading,
     isError: expiringIsError,
     isFetching: expiringFetching,
@@ -183,7 +216,7 @@ function DataRetentionPage() {
     limit: 10,
   })
   const {
-    data: executionLog = [],
+    data: executionLogData,
     isLoading: logLoading,
     isError: logIsError,
     isFetching: logFetching,
@@ -211,12 +244,21 @@ function DataRetentionPage() {
   // Widening 93-04's migration to cover this would be a REJECT, not a fix. The correct render
   // here is an honest error, and tests/e2e/93-admin-surfaces-error.spec.ts asserts exactly that.
   const {
-    data: legalHolds = [],
+    data: legalHoldsData,
     isLoading: holdsLoading,
     isError: holdsIsError,
     isFetching: holdsFetching,
     refetch: refetchHolds,
   } = useLegalHolds({ status: 'active' })
+
+  // Unwrap the `{ data: [...] }` envelope every one of these six endpoints returns — see asRows
+  // above for why the hooks' own casts cannot be relied on.
+  const policies = asRows<RetentionPolicy>(policiesData)
+  const statistics = asRows<RetentionStatistics>(statisticsData)
+  const pendingActions = asRows<PendingRetentionAction>(pendingActionsData)
+  const expiringEntities = asRows<ExpiringEntity>(expiringEntitiesData)
+  const executionLog = asRows<RetentionExecutionLog>(executionLogData)
+  const legalHolds = asRows<LegalHold>(legalHoldsData)
 
   // A failed load knows nothing — the count is unknown, not zero. Each summary card reads the
   // error flag of the query that actually backs it, so one broken region never zeroes the rest.
