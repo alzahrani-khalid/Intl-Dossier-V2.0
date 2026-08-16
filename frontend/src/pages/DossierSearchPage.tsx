@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { getDossierDocsPath, getDossierRouteSegment } from '@/lib/dossier-routes'
 import { DossierFirstSearchResults } from '@/components/search/DossierFirstSearchResults'
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import { DossierSearchFilters } from '@/components/search/DossierSearchFilters'
 import { useDossierFirstSearch } from '@/hooks/useDossierFirstSearch'
 import type {
@@ -65,12 +66,15 @@ export function DossierSearchPage() {
     typeCounts,
     isLoading,
     isFetching,
+    isError,
+    error,
     tookMs,
     setQuery,
     updateFilters,
     loadMoreDossiers,
     loadMoreWork,
     clearSearch,
+    refetch,
   } = useDossierFirstSearch(searchParams.q || '', initialFilters)
 
   // Sync URL params with search state
@@ -171,6 +175,18 @@ export function DossierSearchPage() {
   // Has results
   const hasResults = dossiers.length > 0 || relatedWork.length > 0
   const hasQuery = query.trim().length > 0
+
+  // Checked BEFORE anything renders results, so the zero-results state is unreachable while the
+  // query is failing: an empty result set standing in for a rejected response is the lie this
+  // phase closes. Diagnostics stay in the console; the rendered state is i18n copy only (D-08).
+  if (isError) {
+    console.error('dossier search query failed:', error)
+    return (
+      <div className="container mx-auto p-6">
+        <QueryErrorState variant="page" onRetry={() => void refetch()} isRetrying={isFetching} />
+      </div>
+    )
+  }
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
