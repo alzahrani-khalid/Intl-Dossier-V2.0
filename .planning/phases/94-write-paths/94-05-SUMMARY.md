@@ -195,11 +195,11 @@ Roots derived: `./frontend/tests`, `./tests`, `./backend/tests`, `./e2e/tests`.
 
 ## Decisions Made
 
-- **Helper body kept literal.** The planned form `SELECT created_by = auth.uid() FROM
-public.custom_reports WHERE id = p_report_id` returns NULL when the row is absent, where the
-  `EXISTS` clause it replaces returns FALSE. In `USING`, `WITH CHECK` and any boolean qual these are
-  indistinguishable (NULL is not-satisfied), so an `EXISTS` rewrite would have been a style
-  deviation with no behavioural gain. Left as planned.
+- **Helper body kept literal.** The planned body reads one `custom_reports` row by id and returns
+  `created_by = auth.uid()`, so it yields NULL when the row is absent, where the `EXISTS` clause it
+  replaces returns FALSE. In `USING`, `WITH CHECK` and any boolean qual these are indistinguishable
+  (NULL is not-satisfied), so an `EXISTS` rewrite would have been a style deviation with no
+  behavioural gain. Left as planned.
 - **`custom_reports` and `report_executions` policies untouched.** Breaking one direction is
   sufficient and is the minimum change that satisfies D-22 — every remaining path terminates at the
   helper.
