@@ -4,6 +4,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
 
 interface PublishRequest {
+  after_action_id?: string
   mfa_token?: string
 }
 
@@ -38,7 +39,16 @@ serve(async (req) => {
 
     const url = new URL(req.url)
     const pathSegments = url.pathname.split('/').filter(Boolean)
-    const afterActionId = pathSegments[pathSegments.findIndex((s) => s === 'after-actions') + 1]
+    const body: PublishRequest = await req.json().catch(() => ({}))
+
+    // The id arrives in the BODY: invoked as an edge function the pathname is
+    // /functions/v1/after-actions-publish, which carries no `after-actions` segment, so the
+    // path form alone resolved to pathSegments[0] === 'functions' and every publish 404'd.
+    // The path form is kept so the documented POST /after-actions/{id}/publish still resolves.
+    // RULING-P94-09.
+    const pathIndex = pathSegments.indexOf('after-actions')
+    const afterActionId =
+      body.after_action_id ?? (pathIndex >= 0 ? pathSegments[pathIndex + 1] : undefined)
 
     if (!afterActionId) {
       return new Response(JSON.stringify({ error: 'After-action ID required' }), {
@@ -47,7 +57,6 @@ serve(async (req) => {
       })
     }
 
-    const body: PublishRequest = await req.json().catch(() => ({}))
     const { data: user } = await supabaseClient.auth.getUser()
 
     if (!user.user) {
