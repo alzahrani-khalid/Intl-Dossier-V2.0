@@ -224,8 +224,8 @@ observe green, paste both) is satisfied in full.
 ## Issues Encountered
 
 - **A now-dangling citation, deliberately left alone.**
-  `tests/e2e/93-admin-surfaces-error.spec.ts:145` says *"See the envelope note in
-  data-retention.tsx (`asRows`) for the instance that made this necessary."* That note no longer
+  `tests/e2e/93-admin-surfaces-error.spec.ts:145` says _"See the envelope note in
+  data-retention.tsx (`asRows`) for the instance that made this necessary."_ That note no longer
   exists — this plan deleted it. The spec file is **outside this plan's `files_modified`** and is
   the named acceptance oracle for this very task, so editing it here would be both an out-of-set
   write and a self-serving edit to my own grader. Left byte-unchanged and recorded instead. The
