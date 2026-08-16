@@ -69,7 +69,12 @@ and string inequality, never as pixels**, and the RTL render of the seven new er
 shapes never searched); **`TRUST-03`'s report-builder 404 arm has never fired in a natural run** and
 no committed test will notice when it does (`ARMA-01`, the phase's named weakest point); and 4 of
 the 11 C9b couplings are **non-oracles** (2 mocked, 1 name collision, 1 unrunnable), so the defence
-count is 6, not 11.
+count is 6, not 11. **Added 2026-08-16, found during Phase 94 planning:** the configured Nyquist
+validation step never ran — `nyquist_validation: true`, `93-RESEARCH.md` carries the
+`## Validation Architecture` heading the step greps for, and no `93-VALIDATION.md` exists (P92's
+does). The workflow's own "if not created, STOP" did not fire, so the phase closed with a
+config-enabled step silently skipped. Tracked as `GATESTD-02`; **recorded, not absorbed** — the
+gap belongs to Phase 93's record even though Phase 93 is closed.
 
 **Filed to later phases from Phase 93 — 13 requirements, one of them already resolved:**
 `RLS-AUTHUSERS-01` → P100 · `DR-SUBPATH-01` → P100 (the **outer** of two stacked causes on
