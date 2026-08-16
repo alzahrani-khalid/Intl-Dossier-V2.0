@@ -332,3 +332,188 @@ should go green with no change to this plan's code or tests.
 **Consequence for `requirements-completed`.** `WRITE-01` is **NOT** marked complete. Its create and
 save halves are done and proven; its publish half is blocked on the above. The orchestrator owns
 `REQUIREMENTS.md`; this plan does not write it.
+
+## ADDENDUM — PARK-EXEC-01 repair under RULING-P94-09
+
+**The `## BLOCKED` block above is CLEARED.** It is left verbatim as the history of why this
+authorization exists. What cleared it: `supabase/functions/after-actions-publish/index.ts:39-51`'s
+id source now reads the body, deployed to staging `zkrcjzdemdmwhearhfgg` as **version 13, ACTIVE**,
+and `94-01_g3` is **GREEN for the first time in this phase**.
+
+**Authorization:** `RULING-P94-09` (`.tickmarkr/overseer/RULING-P94-09-EXEC-PARKS.md`),
+`PARK-EXEC-01` **ruled IN, scoped**. `PARK-EXEC-02` was ruled OUT and was not touched. No migration,
+no second schema change, no other plan's files, no intended-broken-register entry repaired.
+
+### Condition 1 — the edit is the id-source seam ONLY. The diff, verbatim
+
+```diff
+--- a/supabase/functions/after-actions-publish/index.ts
++++ b/supabase/functions/after-actions-publish/index.ts
+@@ -4,6 +4,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+ import { getCorsHeaders, handleCorsPreflightRequest } from '../_shared/cors.ts'
+
+ interface PublishRequest {
++  after_action_id?: string
+   mfa_token?: string
+ }
+
+@@ -38,7 +39,16 @@ serve(async (req) => {
+
+     const url = new URL(req.url)
+     const pathSegments = url.pathname.split('/').filter(Boolean)
+-    const afterActionId = pathSegments[pathSegments.findIndex((s) => s === 'after-actions') + 1]
++    const body: PublishRequest = await req.json().catch(() => ({}))
++
++    // The id arrives in the BODY: invoked as an edge function the pathname is
++    // /functions/v1/after-actions-publish, which carries no `after-actions` segment, so the
++    // path form alone resolved to pathSegments[0] === 'functions' and every publish 404'd.
++    // The path form is kept so the documented POST /after-actions/{id}/publish still resolves.
++    // RULING-P94-09.
++    const pathIndex = pathSegments.indexOf('after-actions')
++    const afterActionId =
++      body.after_action_id ?? (pathIndex >= 0 ? pathSegments[pathIndex + 1] : undefined)
+
+     if (!afterActionId) {
+       return new Response(JSON.stringify({ error: 'After-action ID required' }), {
+@@ -47,7 +57,6 @@ serve(async (req) => {
+       })
+     }
+
+-    const body: PublishRequest = await req.json().catch(() => ({}))
+     const { data: user } = await supabaseClient.auth.getUser()
+
+     if (!user.user) {
+```
+
+**11 insertions, 2 deletions, one file.** Five of the eleven inserted lines are the citation comment.
+**Untouched:** the `Authorization` header check, `createClient`, the method check, `getUser()`, the
+role set `['staff','supervisor','admin']` and its 403, the status gate, the MFA branch, the update,
+the version snapshot, the notification fan-out, and the catch. The role set is byte-identical before
+and after — verified in the deployed v13 bundle below, not only in source.
+
+**One deviation from the patch proposed in `## BLOCKED`.** The proposal was
+`body.after_action_id ?? (pathSegments.includes('after-actions') ? fromPath : undefined)`, which
+scans the array twice (`findIndex` then `includes`). Shipped is a single `indexOf` with the same
+semantics and the same seam. No behavioural difference: both yield the body id when present, the
+segment after `after-actions` when the path carries it, and `undefined` otherwise (including when
+`after-actions` is the final segment).
+
+### Condition 2 — BOTH directions on the repaired function
+
+**Arm A — the probe green with a NORMALLY-shaped caller URL. This arm had never passed.**
+`scripts/probe-after-action-publish.mjs` invokes `functions.invoke('after-actions-publish', { body:
+{ after_action_id, is_confidential } })` — the ordinary edge-function URL
+`/functions/v1/after-actions-publish`, exactly what `usePublishAfterAction.ts:20-22` sends. The
+pre-repair evidence in the gate table above and re-measured today is `[status=404]`; post-repair it
+creates, publishes, and **reads the row back as `published`**. The 200 previously recorded in
+`## BLOCKED` came from a hand-built _path-shaped_ URL and is NOT this arm.
+
+**Arm B — the `400 After-action ID required` guard OBSERVED TO FIRE. It had never fired in the
+history of this function.** Measured with a throwaway zero-dependency diagnostic (not committed,
+`/tmp/p94-guard-probe.mjs`) that signs in inline from `.env.test` (D-27 / E2ECRED-01: no dependence
+on the Playwright `setup` project; no credential is ever printed) and POSTs
+`/functions/v1/after-actions-publish` with **no id anywhere** — no `after_action_id` in the body, no
+`after-actions` path segment:
+
+<!-- prettier-ignore -->
+| direction | command | actual output |
+| --------- | ------- | ------------- |
+| RED — pre-repair, against deployed **v12** | `node /tmp/p94-guard-probe.mjs` | `missing-id publish status = 404`<br>`missing-id publish body   = {"error":"After-action record not found"}` |
+| GREEN — post-repair, against deployed **v13** | `node /tmp/p94-guard-probe.mjs` | `missing-id publish status = 400`<br>`missing-id publish body   = {"error":"After-action ID required"}` |
+
+The pre-repair 404 is the mechanism proven directly: the truthy `'functions'` sailed past the guard
+and died at the row lookup. A repair that fixed the happy path and left the guard dead would have
+kept printing `404` here.
+
+### Condition 3 — deploy evidence, measured against the DEPLOYED bundle
+
+Deployed with `supabase functions deploy after-actions-publish --project-ref zkrcjzdemdmwhearhfgg`
+(CLI 2.106.0): `Bundling Function` / `Deploying Function: after-actions-publish (script size:
+82.94kB)` / `Deployed Functions on project zkrcjzdemdmwhearhfgg: after-actions-publish`.
+
+<!-- prettier-ignore -->
+| | before | after |
+| --- | ------ | ----- |
+| `version` | **12** | **13** |
+| `status` | ACTIVE | ACTIVE |
+| `ezbr_sha256` | `907851cc131ae1b5eff8ae92a7b9e1802cc73334a1cf0b54290bb5ce74543eed` | `56054c81cae2753619c869b5b0e02826fa2c6557b6626e50e674dcef7736ca69` |
+| `verify_jwt` | true | true |
+
+Both readings are `mcp__supabase__get_edge_function` on `zkrcjzdemdmwhearhfgg`, i.e. the **deployed
+artifact**, not source. The v13 bundle's `functions/after-actions-publish/index.ts` carries the
+repaired seam byte-identically, and carries `!['staff', 'supervisor', 'admin'].includes(userRole)`
+unchanged. Every probe run in this addendum ran **after** the deploy, against v13.
+
+Two honest instrument notes:
+
+- The deploy command was piped to `tail`, and `${PIPESTATUS[0]}` printed **empty** — this shell is
+  zsh, where the array is `$pipestatus` and is 1-indexed. So the deploy's exit status was **not**
+  captured (instrument trap 2, re-earned and reported rather than papered over). The deploy is
+  evidenced instead by the version/sha/content readback above, which is the stronger oracle anyway.
+- v13's bundled `functions/_shared/cors.ts` no longer lists the deprecated `corsHeaders` export that
+  v12's bundle listed. `supabase/functions/_shared/cors.ts` was **not modified** — `git status`
+  shows one modified file this lane — so this is CLI bundling of the reachable graph, not an edit.
+
+### The gate drill — `94-01_g3` (`94-01-PLAN.md:188`), both directions
+
+Gate text **unedited**. This gate had never been observed green.
+
+<!-- prettier-ignore -->
+| gate | RED before (command + actual output) | GREEN after (command + actual output) | notes |
+| ---- | ------------------------------------ | ------------------------------------- | ----- |
+| `94-01_g3` (:188) | Full chain re-run on today's tree before any edit → `GATE_94-01_g3_EXIT=1`. Clauses 1–4 pass (`Test Files 1 passed (1)` / `Tests 3 passed (3)`; `test -f` ok; both greps ok). Clause 5: `created 161e8912-5e57-4a07-ac52-af09f355e102 (publication_status=draft)` then `FAIL — after-actions-publish: Edge Function returned a non-2xx status code [status=404] {"error":"After-action record not found"}`; `fixture_cleaned_up = true`, `ownership_revoked = true`. | Same chain, unchanged → `FINAL_GATE_94-01_g3_EXIT=0`. `Tests 3 passed (3)`; `created 2d1dd62e-4246-4084-ad81-b5939870a1d7 (publication_status=draft)`; `read back publication_status = published`; `PASS — created, published and read back as published`; `fixture_cleaned_up = true`, `ownership_revoked = true`. | Red is for the gate's own subject and was re-observed today, not inherited from the first lane. Not a regression guard, not vacuous: the read-back assertion is what moved, and only the deployed function changed between the two runs — no test, probe or frontend file was touched. |
+
+Verbatim GREEN:
+
+```
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+granted temporary ownership of 00000000-0000-0052-0000-000000000001 (revoked on exit)
+created 2d1dd62e-4246-4084-ad81-b5939870a1d7 (publication_status=draft)
+read back publication_status = published
+PASS — created, published and read back as published
+--- probe subjects ---
+run_id                  = p94-probe-2026-08-16T14-46-15-245Z
+engagement_dossier_id   = 00000000-0000-0052-0000-000000000001
+after_action_id         = 2d1dd62e-4246-4084-ad81-b5939870a1d7
+granted_ownership       = true
+fixture_cleaned_up      = true
+ownership_revoked       = true
+FINAL_GATE_94-01_g3_EXIT=0
+```
+
+Both probe runs in this addendum cleaned up: `fixture_cleaned_up = true` and
+`ownership_revoked = true` on each. The guard diagnostic creates nothing. Staging carries no
+`p94-probe-…` residue from this lane.
+
+### Condition 4 — the scope addition is RECORDED, not smuggled
+
+`94-01-PLAN.md`'s `files_modified` now carries
+`supabase/functions/after-actions-publish/index.ts # RULING-P94-09`, above a two-line comment saying
+it was added post-execution under that ruling and is the id-source seam only. This SUMMARY's own
+frontmatter `key-files` is left exactly as the original lane wrote it — the instruction was to
+append, not to rewrite what that lane recorded.
+
+**`WRITE-01`:** condition 2's both directions are now on disk, above, so the requirement's publish
+half is proven and `WRITE-01` is **complete on the evidence**. This lane does **not** write
+`.planning/REQUIREMENTS.md` — the orchestrator owns that filing, as it owns `STATE.md` and
+`ROADMAP.md`, none of which this lane touched.
+
+### Commits (this addendum's lane)
+
+<!-- prettier-ignore -->
+| sha | message |
+| --- | ------- |
+| `9fa438067` | fix(94-01): read the after-action id from the request body in after-actions-publish |
+| _(the docs commit carrying this addendum + the PLAN scope line — sha recorded in the commit itself)_ | docs(94-01): ADDENDUM — PARK-EXEC-01 repair under RULING-P94-09 |
+
+### GATE CONCERN
+
+None. `94-01_g3` was not edited, and it behaved as a sound oracle in both directions: red for a real
+product defect, green only once that defect was repaired in the deployed artifact.
+
+### BLOCKED
+
+None.
+
+ADDENDUM-01A-END
