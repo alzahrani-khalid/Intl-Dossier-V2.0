@@ -439,7 +439,7 @@ Plans:
 
 **Goal**: Every count, chart and trend on screen comes from real data and agrees with every other surface.
 **Depends on**: Phase 93, Phase 94 (the kanban mutation seam is where `status`/`workflow_stage` diverge), Phase 95
-**Requirements**: DEAD-05, DEAD-06, DEAD-07, COUNT-01, COUNT-02, COUNT-03
+**Requirements**: DEAD-05, DEAD-06, DEAD-07, COUNT-01, COUNT-02, COUNT-03, COUNT-04, TRIGSWEEP-01, SANDBOX-500-01
 **Success Criteria** (what must be TRUE):
 
 1. `/analytics` shows real data or is honestly disabled — no fabricated sparklines, donuts or "Insights you'll gain" over a backend endpoint that does not exist.
