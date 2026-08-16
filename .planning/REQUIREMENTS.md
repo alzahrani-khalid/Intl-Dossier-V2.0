@@ -246,6 +246,15 @@ verified sound across six lanes).
   - **Population definition:** shipped specs under any of this repo's **four** test roots (`./tests`, `./frontend/tests`, `./backend/tests`, `./e2e/tests`) that are coupled to a file Phase 93 modified, per the corrected `GATE-STANDARD.md` C9b derivation (11 coupled files). **Outside it:** specs coupled by DOM shape alone rather than by identifier — no grep can see those; the residual defence is running the shipped suite. And specs unrelated to Phase 93's 40 changed files were never run, so this is **not** a claim about total suite health.
   - **Owner: Phase 101 — CI Gates Green**, alongside the other CI-green work. Phase 93 deliberately did not fix them: they are outside its criteria, and repairing unrelated red tests mid-phase is how a phase's own evidence stops being interpretable.
 
+### LEAK — the independent verifier's SC5 gap
+
+- [ ] **LEAK-ATTACH-01**: **`frontend/src/components/positions/AttachmentUploader.tsx` renders raw `error.message` to the user in two places, on a criterion-2 named surface that Phase 93 touched.** Found 2026-08-16 by `gsd-verifier` (`93-VERIFICATION-INDEPENDENT.md`, `status: gaps_found`, SC5 partial) and **reproduced independently by the orchestrator before filing**.
+  - **The two sites:** `:117` sets `error: error.message || t('common:errors.generic')` in the upload catch, rendered verbatim at `:462-465` as `{attachmentFile.error}`; `:198` `alert(error.message || t('common:errors.generic'))` in the delete catch. Both are present at `phase-93-base` (`:108`/`:189`) — **pre-existing, not introduced** — but the file **is** in `git diff --name-only phase-93-base..HEAD` (touched by `93-10`) and **is** one of criterion 2's four named surfaces.
+  - **The `||` fallback does not save it.** A `FunctionsHttpError` message ("Failed to send a request to the Edge Function" — the exact string `93-14_g3` observed in its own RED snapshot) is non-empty, so the generic fallback never fires and the internal string reaches the user.
+  - **Why every Phase 93 instrument missed it:** both sites are **mutation-origin** (upload / delete), so they fell outside `D-22`'s bucket-(a) read enumeration; and the closing register classified the 71-line/44-file superset they live in as "an upper bound on remaining **READS**, emphatically not a residual bucket-(a) count" — a classification that is **wrong for this file**, because both sites are **renders**. They appear in no plan population, no exclusion list, no SUMMARY, and no filed requirement. The gap was reachable only by a seat whose derivations shared no ancestry with the work.
+  - **The repair is the one-line treatment `93-14` Task 2 already applied to 22 files:** drop the `error.message` operand and keep the translated message.
+  - **Owner: Phase 94 — Write Paths**, whose goal ("every advertised write path actually writes, and a failed write says so") is exactly this pair's origin — unless the overseer rules the fix into Phase 93 instead.
+
 ### CLOSEOUT — findings the closing plan raised that had no owner
 
 > Filed 2026-08-16 by the Phase 93 orchestrator at close-out, from `93-15-SUMMARY.md` §"Findings
@@ -465,6 +474,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | E2ECRED-01 | Phase 101 — CI Gates Green | Pending |
 | E2ESTALE-01 | Phase 101 — CI Gates Green | Pending |
 | NOTFOUND-COMPONENT-01 | Phase 95 — Routes That Don't Render | Pending |
+| LEAK-ATTACH-01 | Phase 94 — Write Paths | Pending |
 | ARMA-01 | Phase 94 — Write Paths | Pending |
 | ORACLECAP-01 | Phase 101 — CI Gates Green | Pending |
 | RETENTION-CAST-01 | Phase 95 — Routes That Don't Render | Pending |
