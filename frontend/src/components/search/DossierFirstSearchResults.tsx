@@ -297,39 +297,42 @@ function DossierCard({ dossier, searchQuery, onClick }: DossierCardProps) {
             <p className="mb-2 line-clamp-2 text-sm text-muted-foreground">{description}</p>
           )}
 
-          {/* Key stats */}
-          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-            {dossier.stats.total_engagements > 0 && (
-              <span className="inline-flex items-center gap-1">
-                <Briefcase className="size-3" />
-                {dossier.stats.total_engagements} {t('stats.engagements')}
-              </span>
-            )}
-            {dossier.stats.total_documents > 0 && (
-              <span className="inline-flex items-center gap-1">
-                <FileText className="size-3" />
-                {dossier.stats.total_documents} {t('stats.documents')}
-              </span>
-            )}
-            {dossier.stats.total_positions > 0 && (
-              <span className="inline-flex items-center gap-1">
-                <FileText className="size-3" />
-                {dossier.stats.total_positions} {t('stats.positions')}
-              </span>
-            )}
-            {dossier.stats.total_work_items > 0 && (
-              <span className="inline-flex items-center gap-1">
-                <ListTodo className="size-3" />
-                {dossier.stats.total_work_items} {t('stats.workItems')}
-              </span>
-            )}
-            {dossier.stats.related_dossiers_count > 0 && (
-              <span className="inline-flex items-center gap-1">
-                <Network className="size-3" />
-                {dossier.stats.related_dossiers_count} {t('stats.related')}
-              </span>
-            )}
-          </div>
+          {/* Key stats — rendered only when the server actually sent counts. A search response
+              carries none, and a zero the server never stated would read as a fact. */}
+          {dossier.stats && (
+            <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+              {dossier.stats.total_engagements > 0 && (
+                <span className="inline-flex items-center gap-1">
+                  <Briefcase className="size-3" />
+                  {dossier.stats.total_engagements} {t('stats.engagements')}
+                </span>
+              )}
+              {dossier.stats.total_documents > 0 && (
+                <span className="inline-flex items-center gap-1">
+                  <FileText className="size-3" />
+                  {dossier.stats.total_documents} {t('stats.documents')}
+                </span>
+              )}
+              {dossier.stats.total_positions > 0 && (
+                <span className="inline-flex items-center gap-1">
+                  <FileText className="size-3" />
+                  {dossier.stats.total_positions} {t('stats.positions')}
+                </span>
+              )}
+              {dossier.stats.total_work_items > 0 && (
+                <span className="inline-flex items-center gap-1">
+                  <ListTodo className="size-3" />
+                  {dossier.stats.total_work_items} {t('stats.workItems')}
+                </span>
+              )}
+              {dossier.stats.related_dossiers_count > 0 && (
+                <span className="inline-flex items-center gap-1">
+                  <Network className="size-3" />
+                  {dossier.stats.related_dossiers_count} {t('stats.related')}
+                </span>
+              )}
+            </div>
+          )}
 
           {/* Tags */}
           {dossier.tags && dossier.tags.length > 0 && (
@@ -362,12 +365,17 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
   const { isRTL } = useDirection()
 
   const workConfig = relatedWorkTypeConfig[item.type]
-  const dossierConfig = dossierTypeConfig[item.dossier_context.type]
   const WorkIcon = workConfig.icon
-  const DossierIcon = dossierConfig.icon
+
+  // A work item need not belong to a dossier — `quickswitcher-search` attaches one only where the
+  // row has one (tasks and commitments routinely do not). No context, no badge; the item itself is
+  // still real and still shown.
+  const context = item.dossier_context
+  const dossierConfig = context ? dossierTypeConfig[context.type] : undefined
+  const DossierIcon = dossierConfig?.icon
 
   const title = isRTL ? item.title_ar : item.title_en
-  const dossierName = isRTL ? item.dossier_context.name_ar : item.dossier_context.name_en
+  const dossierName = context ? (isRTL ? context.name_ar : context.name_en) : undefined
 
   // Highlight search query
   const highlightText = (text: string, query?: string): React.ReactNode => {
@@ -433,14 +441,16 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
               {isRTL ? workConfig.label_ar : workConfig.label_en}
             </Badge>
 
-            {/* Dossier context badge */}
-            <Badge
-              variant="outline"
-              className={cn('inline-flex items-center gap-1 border-border text-xs')}
-            >
-              <DossierIcon className={cn('size-3', dossierConfig.color)} />
-              <span className="max-w-24 truncate">{dossierName}</span>
-            </Badge>
+            {/* Dossier context badge — only when the server sent a context */}
+            {DossierIcon && dossierConfig && (
+              <Badge
+                variant="outline"
+                className={cn('inline-flex items-center gap-1 border-border text-xs')}
+              >
+                <DossierIcon className={cn('size-3', dossierConfig.color)} />
+                <span className="max-w-24 truncate">{dossierName}</span>
+              </Badge>
+            )}
 
             {/* Inheritance indicator */}
             {item.inheritance_source && item.inheritance_source !== 'direct' && (

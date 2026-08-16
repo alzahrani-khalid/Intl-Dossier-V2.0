@@ -137,6 +137,8 @@ export function DossierSearchPage() {
         // /documents/$id is UNMOUNTED — route to the owning dossier's Docs tab (UI-SPEC A-8).
         // Engagement dossiers have no /dossiers/engagements/$id/docs child; their docs
         // tab is mounted in the engagement workspace at /engagements/$id/docs.
+        // No owning dossier means no destination: suppress rather than invent one.
+        if (!item.dossier_context) return
         navigate({
           to: getDossierDocsPath(item.dossier_context.id, item.dossier_context.type),
         })
@@ -158,7 +160,8 @@ export function DossierSearchPage() {
         navigate({ to: '/mous' })
         break
       default:
-        // Navigate to parent dossier context
+        // Navigate to parent dossier context — when the server sent one.
+        if (!item.dossier_context) return
         navigate({
           to: `/dossiers/${getDossierRouteSegment(item.dossier_context.type)}/${item.dossier_context.id}`,
         })
