@@ -44,8 +44,9 @@ These are not trivia — each one has silently produced a wrong result in this r
   rest and exits 0. Assert file existence first; **hardcode** the expected test count; never derive
   it from `--list`. `--list` also includes a dependency project's tests unless `--no-deps` is passed
   (GATE-STANDARD C6).
-- **`backend/src/**/**tests**/`never runs.** Colocated backend tests sit outside every vitest`include`glob —`backend/src/services/**tests**/auth.service.test.ts`is a **non-oracle**. New
-backend tests for`AUDIT-DROP-01`go under`backend/tests/`.
+- **Colocated backend tests never run.** Anything under `backend/src/**/__tests__/` sits outside
+  every vitest `include` glob, so `backend/src/services/__tests__/auth.service.test.ts` is a
+  **non-oracle**. New backend tests for `AUDIT-DROP-01` go under `backend/tests/`.
 - **Root `tests/` vitest cannot resolve `@`→`frontend/src`** (`ROOTALIAS-01`, Phase 101). New unit
   tests for frontend files go under `frontend/`, never root `tests/`.
 - **`timeout` does not exist on this machine.** A `timeout N <cmd>` gate line dies with
