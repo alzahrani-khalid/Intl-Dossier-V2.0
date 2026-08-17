@@ -11,6 +11,15 @@ created: 2026-08-17
 
 > Per-phase validation contract for feedback sampling during execution.
 > Derived from `97-RESEARCH.md` §Validation Architecture (lines 624–659).
+>
+> **CORRECTED 2026-08-17 (`RULING-P97-11`).** Both commands below said `--filter frontend`,
+> which matches **no package** (the workspace is `intake-frontend`) and therefore exited **0 for
+> any input** — a vacuous instruction, in a document whose sentences are _prescriptions someone
+> will follow_, not quotations of an observation. The typecheck form needed a second fix the
+> package rename alone would not have given it: `intake-frontend` has **no `typecheck` script**
+> (it is `type-check`), so the half-corrected command fails
+> `ERR_PNPM_RECURSIVE_RUN_NO_SCRIPT`. Both verified after the fix: `type-check` → RC 0,
+> named vitest spec → RC 0 (3 passed), absent spec → RC 1.
 
 ---
 
@@ -20,7 +29,7 @@ created: 2026-08-17
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Framework**          | Vitest 4 (unit, `frontend/`) + Playwright (`@playwright/test`, root)                                                                                                                 |
 | **Config file**        | `playwright.config.ts` (root; baseURL `http://localhost:5173`; storageState projects blocked by E2ECRED-01 → use `--no-deps`)                                                        |
-| **Quick run command**  | `pnpm --filter frontend exec vitest run src/pages/dossiers/__tests__/CreateDossierHub.test.tsx`                                                                                      |
+| **Quick run command**  | `pnpm --filter intake-frontend exec vitest run src/pages/dossiers/__tests__/CreateDossierHub.test.tsx`                                                                               |
 | **Full suite command** | `pnpm exec playwright test tests/e2e/97-*.spec.ts --project=chromium-en --no-deps` (after Wave 0 specs exist; gate asserts spec-file existence FIRST — Playwright paths are FILTERS) |
 | **Estimated runtime**  | ~120 seconds (e2e family against the running dev stack)                                                                                                                              |
 
@@ -28,7 +37,7 @@ created: 2026-08-17
 
 ## Sampling Rate
 
-- **After every task commit:** Run `pnpm --filter frontend typecheck` + the touched unit spec
+- **After every task commit:** Run `pnpm --filter intake-frontend type-check` + the touched unit spec
 - **After every plan wave:** Run the wave's `97-*` Playwright specs against the running dev stack (`pnpm dev`; frontend `:5173`, backend `PORT=5001`)
 - **Before `/gsd:verify-work`:** Full `97-*` suite green from a drilled-red baseline (both-direction drill per D-11) + full `pnpm lint`
 - **Max feedback latency:** 180 seconds

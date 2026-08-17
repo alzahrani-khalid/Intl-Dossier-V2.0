@@ -623,13 +623,24 @@ decision rows; whether to fix the hardcode is a planner ruling, not a silent dri
 
 ## Validation Architecture
 
+> **CORRECTED 2026-08-17 (`RULING-P97-11`), two occurrences.** Classified per occurrence by the
+> ruling's test — _does this sentence HAND someone a command, or RECORD one that was observed?_
+> **Both are PRESCRIPTIONS**: the "Quick run command" row and the "Per task commit" sampling
+> line each hand a command to a downstream reader (this section is what `97-VALIDATION.md` was
+> derived from, so the wrong literal propagated once already). Neither records an observation,
+> so neither is protected as evidence.
+> Both said `--filter frontend`, which matches **no package** (`intake-frontend`) and exits **0
+> for any input**. The typecheck form took a second fix: `intake-frontend` has **no `typecheck`
+> script** — it is `type-check` — so correcting only the package name would have produced
+> `ERR_PNPM_RECURSIVE_RUN_NO_SCRIPT`.
+
 ### Test Framework
 
 | Property           | Value                                                                                                                                                                |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Framework          | Vitest 4 (unit, `frontend/`) + Playwright (`@playwright/test`, root)                                                                                                 |
 | Config file        | `playwright.config.ts` (root; baseURL `http://localhost:5173`, storageState projects blocked by E2ECRED-01 → use `--no-deps`), frontend Vitest config in `frontend/` |
-| Quick run command  | `pnpm --filter frontend exec vitest run src/pages/dossiers/__tests__/CreateDossierHub.test.tsx` (existing 8-card pin)                                                |
+| Quick run command  | `pnpm --filter intake-frontend exec vitest run src/pages/dossiers/__tests__/CreateDossierHub.test.tsx` (existing 8-card pin)                                         |
 | Full suite command | `pnpm exec playwright test tests/e2e/97-*.spec.ts --project=chromium-en --no-deps` (after specs exist)                                                               |
 
 ### Phase Requirements → Test Map
@@ -646,7 +657,7 @@ baselines committed).
 
 ### Sampling Rate
 
-- **Per task commit:** `pnpm --filter frontend typecheck` + the touched unit spec.
+- **Per task commit:** `pnpm --filter intake-frontend type-check` + the touched unit spec.
 - **Per wave merge:** the wave's 97-\* Playwright specs against the running dev stack (`pnpm dev`, frontend :5173, backend PORT=5001).
 - **Phase gate:** all 97-\* specs green from a drilled-red baseline (both-direction drill per D-11), full `pnpm lint` (i18n namespace check + bootstrap parity run there).
 
