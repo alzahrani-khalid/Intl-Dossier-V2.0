@@ -514,15 +514,15 @@ verified sound across six lanes).
 
 ### PREVIEW-HOLLOW — an admin route nobody can reach, configuring a table nobody reads
 
-- [ ] **PREVIEW-HOLLOW-01**: ** is BOTH unreachable AND hollow — two
-      findings, one route.** Filed 2026-08-17 from Phase 97 execution by , which
-      ASSIGNED this owner because none existed: appears **0 times** in and
-      **0 times** in this register (control: returns 6 and 4 on the same instrument),
+- [ ] **PREVIEW-HOLLOW-01**: **`/admin/preview-layouts` is BOTH unreachable AND hollow — two
+      findings, one route.** Filed 2026-08-17 from Phase 97 execution by `RULING-P97-14`, which
+      ASSIGNED this owner because none existed: `preview` appears **0 times** in `ROADMAP.md` and
+      **0 times** in this register (control: `delegations` returns 6 and 4 on the same instrument),
       and no phase, row or backlog item claimed the route.
   - **Finding 1 — unreachable.** Zero inbound links in the live nav; Phase 97 recorded it
-    in rather than adding a nav entry.
-  - **Finding 2 — hollow.** is read and written **only** by
-    , whose **sole importer is the admin route itself** (verified: one
+    `OWNED-ELSEWHERE-UNTOUCHED` in `97-NAV04-DECISIONS.md` rather than adding a nav entry.
+  - **Finding 2 — hollow.** `entity_preview_layouts` is read and written **only** by
+    `usePreviewLayouts.ts`, whose **sole importer is the admin route itself** (verified: one
     importer). Its declared consumers — hover previews, search results, embedded references —
     never read it. The feature configures nothing.
   - **NOT DELETED IN PHASE 97, and the reason is inherited rather than re-derived:** a route-only
