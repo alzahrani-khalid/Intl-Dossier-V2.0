@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v10.0
 milestone_name: Trust & Correctness
-status: Ready to execute
-last_updated: '2026-08-17T00:15:17.927Z'
+status: Ready to plan
+last_updated: '2026-08-17T04:55:00.000Z'
 progress:
   total_phases: 13
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 56
-  completed_plans: 45
-  percent: 31
+  completed_plans: 56
+  percent: 38
 ---
 
 # Project State
@@ -25,6 +25,20 @@ See: .planning/PROJECT.md (updated 2026-08-15 — v9.0 closed PARTIAL; v10.0 Tru
 ## Current Position
 
 Milestone: **v10.0 — Trust & Correctness** (roadmapped 2026-08-15).
+Phase 96 (real-numbers) — **EXECUTED 2026-08-17, accepted by `RULING-P96-06`.**
+11 of 11 plans + 2 ruled addendum lanes (96-10A sixth migration `RULING-P96-03`; 96-04A
+calendar remedies `RULING-P96-04`); every `## BLOCKED` read (8 empty, 5 ruled). Independent
+verification **passed 5/5 own-derivations** (`96-VERIFICATION-INDEPENDENT.md`, `cedc8b5f1`).
+Close drill 26/26 green from a 26-red baseline; 3 ruled gate edits only (`RULING-P96-05`,
+`6bc619c7c`, byte-diff control-proven). Base tag `phase-96-base` = `b4072302a` (SSH-signed,
+not moved). SIX migrations (five named + ruled sixth), 1:1 repo↔staging by name. Register:
+nine rows Complete (`6995315e8`; COUNT-03 **BOUNDED** — `WRITER-ROUTE-01` + `INSERT-SYNC-01`
+→ P102). Report `.tickmarkr/overseer/P96-EXEC-REPORT.md` (ends `ORCH-EXEC-END`).
+**Operator parks (one sitting, per `RULING-P96-04` + `RESUME-P96-260817.md`):** Arabic
+naturalness; pixel RTL; NEW `/calendar` visual-baseline sign-off (ltr/rtl × 1280/768; no
+baseline committed by ruling).
+Next command: `/gsd:plan-phase 97` (Reachability).
+
 Phase: 93 (failure-visibility) — **EXECUTED 2026-08-16, accepted by `RULING-P93-07`.**
 15 of 15 plans executed (15/15 SUMMARYs on disk, every `## BLOCKED` section read and empty).
 Phase 95 (routes-that-don-t-render) — **EXECUTED 2026-08-16/17, accepted by `RULING-P95-04`.**
