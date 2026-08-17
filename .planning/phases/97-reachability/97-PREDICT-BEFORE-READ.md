@@ -142,6 +142,41 @@ chosen from the parts that are NOT.
 `d561738fa`, `TS2344` — and match case-insensitively when the token could appear in a heading.
 Prose fragments are not identifiers, however distinctive they sound.
 
+### THE STRUCTURAL FIX: make the check SELF-DIAGNOSING — `scripts/verify-tokens.mjs`
+
+Better identifiers reduce the false-alarm RATE. They do not fix the failure mode, because **the
+next transformation will be one nobody enumerated.** And the cost of false alarms is not wasted
+time — it is _credibility_:
+
+> **A check whose FALSE ALARMS outnumber its catches will be ignored by the next reader — and the
+> first time "probably the grep again" is wrong is the corruption the check existed to catch.**
+
+Three consecutive false alarms is already past the point where a human starts waving zeros away.
+
+**So on a zero, the check re-runs the match under every KNOWN transformation and reports WHICH
+variant matched** (literal → case-insensitive → whitespace-joined → joined+case →
+punctuation-normalised). A false alarm resolves itself inside the same command; a **TRUE** alarm
+is the case where every variant still returns zero — a far stronger signal than a bare zero.
+
+```
+node scripts/verify-tokens.mjs <file> <token> [<token> ...]
+```
+
+Drilled in both directions on the real historical cases:
+
+<!-- prettier-ignore -->
+| Case | Result |
+|---|---|
+| `invisible scope limit` (heading case) | `ok(case-insensitive)` — auto-resolved |
+| `bucket private exists` (line wrap) | `ok(whitespace-joined)` — auto-resolved |
+| `CASE-STABLE`, `TS2344` (good tokens) | `ok` literal |
+| `ThisTokenDoesNotExistAnywhere` | **MISSING under every variant**, exit 1 — a real alarm |
+
+**All three of this leg's false alarms become automatic passes with a note, and the alarm now
+means exactly one thing.** Good token choice is the first line of defence; self-diagnosis is what
+keeps the check TRUSTED once a token choice is imperfect — **and the check only has value while
+someone still believes its zeros.**
+
 ## THE MEDIUM A LAW WAS LEARNED ON BECOMES AN INVISIBLE SCOPE LIMIT
 
 **This is why the amendment above was needed at all, and it is the more valuable finding.**
