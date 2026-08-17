@@ -223,45 +223,45 @@ test.describe('NAV-03 all eight dossier list pages expose a create affordance wi
   // Eight declarations, written out one per page rather than generated in a loop: the population is
   // eight visible test names in the report, and a dropped page is a missing name, not a smaller
   // number nobody reads.
-  test('countries create affordance — ordinary authenticated user, desktop 1400', async ({
+  test('countries create affordance — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await assertHeaderCreateAffordance(page, pageFor('countries'))
   })
 
-  test('organizations create affordance — ordinary authenticated user, desktop 1400', async ({
+  test('organizations create affordance — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await assertHeaderCreateAffordance(page, pageFor('organizations'))
   })
 
-  test('persons create affordance — ordinary authenticated user, desktop 1400', async ({
+  test('persons create affordance — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await assertHeaderCreateAffordance(page, pageFor('persons'))
   })
 
-  test('forums create affordance — ordinary authenticated user, desktop 1400', async ({ page }) => {
+  test('forums create affordance — admin user (the only session these specs have), desktop 1400', async ({ page }) => {
     await assertHeaderCreateAffordance(page, pageFor('forums'))
   })
 
-  test('topics create affordance — ordinary authenticated user, desktop 1400', async ({ page }) => {
+  test('topics create affordance — admin user (the only session these specs have), desktop 1400', async ({ page }) => {
     await assertHeaderCreateAffordance(page, pageFor('topics'))
   })
 
-  test('working_groups create affordance — ordinary authenticated user, desktop 1400', async ({
+  test('working_groups create affordance — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await assertHeaderCreateAffordance(page, pageFor('working_groups'))
   })
 
-  test('elected-officials create affordance — ordinary authenticated user, desktop 1400', async ({
+  test('elected-officials create affordance — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await assertHeaderCreateAffordance(page, pageFor('elected-officials'))
   })
 
-  test('engagements create affordance — ordinary authenticated user, desktop 1400', async ({
+  test('engagements create affordance — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await assertHeaderCreateAffordance(page, pageFor('engagements'))
@@ -273,7 +273,7 @@ test.describe('NAV-03 all eight dossier list pages expose a create affordance wi
   // INCLUDING this test, the failure is the harness — auth, the dev stack, the header locator, the
   // fixture — and not the seven pages under test. Reading a total red as "seven pages missing the
   // affordance" without this control is the instrument-untested zero.
-  test('elected-officials is the shipped control — ordinary authenticated user, desktop 1400', async ({
+  test('elected-officials is the shipped control — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await assertHeaderCreateAffordance(page, pageFor('elected-officials'))

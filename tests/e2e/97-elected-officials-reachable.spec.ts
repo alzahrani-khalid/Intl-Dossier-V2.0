@@ -166,7 +166,7 @@ const assertNoInternalLeak = async (page: Page): Promise<void> => {
 test.describe('NAV-01 Elected Officials is reachable on all four exposure surfaces', () => {
   test.use({ viewport: DESKTOP_1400 })
 
-  test('sidebar row — ordinary authenticated user, desktop 1400', async ({ page }) => {
+  test('sidebar row — admin user (the only session these specs have), desktop 1400', async ({ page }) => {
     await signInInline(page)
     await page.goto('/')
 
@@ -197,7 +197,7 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
     await assertNoInternalLeak(page)
   })
 
-  test('hub type card — ordinary authenticated user, desktop 1400', async ({ page }) => {
+  test('hub type card — admin user (the only session these specs have), desktop 1400', async ({ page }) => {
     await signInInline(page)
     await page.goto('/dossiers')
 
@@ -242,7 +242,7 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
     await assertNoInternalLeak(page)
   })
 
-  test('hub type card click destination — ordinary authenticated user, desktop 1400', async ({
+  test('hub type card click destination — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await signInInline(page)
@@ -265,7 +265,7 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
     await assertNoInternalLeak(page)
   })
 
-  test('compare selector — ordinary authenticated user, desktop 1400', async ({ page }) => {
+  test('compare selector — admin user (the only session these specs have), desktop 1400', async ({ page }) => {
     await signInInline(page)
     await page.goto('/compare')
 
@@ -294,7 +294,7 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
     await assertNoInternalLeak(page)
   })
 
-  test('create hub + create submit — ordinary authenticated user, desktop 1400', async ({
+  test('create hub + create submit — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     // Assumption A1's BEHAVIOURAL leg (condition 8): `/dossiers/create` may not expose an entry

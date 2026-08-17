@@ -124,7 +124,7 @@ test.describe('NAV-03 the engagement Digests tab is in the tab bar and reaches D
   // from the root CLAUDE.md, not the 1280 Desktop Chrome default.
   test.use({ viewport: { width: 1400, height: 900 } })
 
-  test('Digests tab follows Signals and mounts DigestsTab — ordinary authenticated user, desktop 1400', async ({
+  test('Digests tab follows Signals and mounts DigestsTab — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await signInInline(page)
@@ -163,7 +163,7 @@ test.describe('NAV-03 the engagement Digests tab is in the tab bar and reaches D
     expect(bodyText).not.toMatch(INTERNAL_STRING)
   })
 
-  test('exactly one tab is selected on the digests route — ordinary authenticated user, desktop 1400', async ({
+  test('exactly one tab is selected on the digests route — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await signInInline(page)

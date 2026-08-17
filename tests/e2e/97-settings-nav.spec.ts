@@ -204,56 +204,56 @@ const assertSectionClickFromChild = async (page: Page): Promise<void> => {
 test.describe('NAV-02 /settings subtree renders navigation — desktop aside width', () => {
   test.use({ viewport: DESKTOP_1400 })
 
-  test('settings child /settings/webhooks — ordinary authenticated user, desktop 1400', async ({
+  test('settings child /settings/webhooks — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await signInInline(page)
     await assertChildRendersNavigation(page, '/settings/webhooks')
   })
 
-  test('settings child /settings/integrations — ordinary authenticated user, desktop 1400', async ({
+  test('settings child /settings/integrations — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await signInInline(page)
     await assertChildRendersNavigation(page, '/settings/integrations')
   })
 
-  test('settings child /settings/notifications — ordinary authenticated user, desktop 1400', async ({
+  test('settings child /settings/notifications — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await signInInline(page)
     await assertChildRendersNavigation(page, '/settings/notifications')
   })
 
-  test('settings child /settings/email-digest — ordinary authenticated user, desktop 1400', async ({
+  test('settings child /settings/email-digest — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await signInInline(page)
     await assertChildRendersNavigation(page, '/settings/email-digest')
   })
 
-  test('settings child /settings/calendar-sync — ordinary authenticated user, desktop 1400', async ({
+  test('settings child /settings/calendar-sync — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await signInInline(page)
     await assertChildRendersNavigation(page, '/settings/calendar-sync')
   })
 
-  test('settings child /settings/calendar/callback — ordinary authenticated user, desktop 1400', async ({
+  test('settings child /settings/calendar/callback — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await signInInline(page)
     await assertChildRendersNavigation(page, '/settings/calendar/callback')
   })
 
-  test('settings index active state — ordinary authenticated user, desktop 1400', async ({
+  test('settings index active state — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await signInInline(page)
     await assertIndexActiveState(page)
   })
 
-  test('section click from a child — ordinary authenticated user, desktop 1400', async ({
+  test('section click from a child — admin user (the only session these specs have), desktop 1400', async ({
     page,
   }) => {
     await signInInline(page)
@@ -264,56 +264,56 @@ test.describe('NAV-02 /settings subtree renders navigation — desktop aside wid
 test.describe('NAV-02 /settings subtree renders navigation — drawer width', () => {
   test.use({ viewport: MOBILE_390 })
 
-  test('settings child /settings/webhooks — ordinary authenticated user, mobile 390 @mobile', async ({
+  test('settings child /settings/webhooks — admin user (the only session these specs have), mobile 390 @mobile', async ({
     page,
   }) => {
     await signInInline(page)
     await assertChildRendersNavigation(page, '/settings/webhooks')
   })
 
-  test('settings child /settings/integrations — ordinary authenticated user, mobile 390 @mobile', async ({
+  test('settings child /settings/integrations — admin user (the only session these specs have), mobile 390 @mobile', async ({
     page,
   }) => {
     await signInInline(page)
     await assertChildRendersNavigation(page, '/settings/integrations')
   })
 
-  test('settings child /settings/notifications — ordinary authenticated user, mobile 390 @mobile', async ({
+  test('settings child /settings/notifications — admin user (the only session these specs have), mobile 390 @mobile', async ({
     page,
   }) => {
     await signInInline(page)
     await assertChildRendersNavigation(page, '/settings/notifications')
   })
 
-  test('settings child /settings/email-digest — ordinary authenticated user, mobile 390 @mobile', async ({
+  test('settings child /settings/email-digest — admin user (the only session these specs have), mobile 390 @mobile', async ({
     page,
   }) => {
     await signInInline(page)
     await assertChildRendersNavigation(page, '/settings/email-digest')
   })
 
-  test('settings child /settings/calendar-sync — ordinary authenticated user, mobile 390 @mobile', async ({
+  test('settings child /settings/calendar-sync — admin user (the only session these specs have), mobile 390 @mobile', async ({
     page,
   }) => {
     await signInInline(page)
     await assertChildRendersNavigation(page, '/settings/calendar-sync')
   })
 
-  test('settings child /settings/calendar/callback — ordinary authenticated user, mobile 390 @mobile', async ({
+  test('settings child /settings/calendar/callback — admin user (the only session these specs have), mobile 390 @mobile', async ({
     page,
   }) => {
     await signInInline(page)
     await assertChildRendersNavigation(page, '/settings/calendar/callback')
   })
 
-  test('settings index active state — ordinary authenticated user, mobile 390 @mobile', async ({
+  test('settings index active state — admin user (the only session these specs have), mobile 390 @mobile', async ({
     page,
   }) => {
     await signInInline(page)
     await assertIndexActiveState(page)
   })
 
-  test('section click from a child — ordinary authenticated user, mobile 390 @mobile', async ({
+  test('section click from a child — admin user (the only session these specs have), mobile 390 @mobile', async ({
     page,
   }) => {
     await signInInline(page)
