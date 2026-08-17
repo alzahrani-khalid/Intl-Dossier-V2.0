@@ -36,6 +36,12 @@
 // accept BOTH truthful outcomes — settled content or the error state — and to fail only on the
 // untruthful one, a spinner still running past the bounded retry budget.
 //
+// 2026-08-17 P96/SANDBOX-500-01: the RLS recursion is fixed; the natural arm now settles to
+// content — both outcomes remain truthful. This is an ANNOTATION, not an assertion change: no
+// line below moved. The forced arm is untouched by the fix because it kills the request at the
+// network layer, which is independent of what the function would have answered; it remains the
+// branch that proves the error state renders.
+//
 // Forced errors are NEVER asserted by emptiness (D-13): an auth/RLS denial presents as an empty
 // 200, and reading that empty state as the error state is the defect class this milestone kills.
 //
