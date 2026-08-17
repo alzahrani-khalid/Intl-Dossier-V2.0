@@ -65,6 +65,7 @@ import { Route as ProtectedIntakeIndexRouteImport } from './routes/_protected/in
 import { Route as ProtectedHelpIndexRouteImport } from './routes/_protected/help/index'
 import { Route as ProtectedEngagementsIndexRouteImport } from './routes/_protected/engagements/index'
 import { Route as ProtectedDossiersIndexRouteImport } from './routes/_protected/dossiers/index'
+import { Route as ProtectedCalendarIndexRouteImport } from './routes/_protected/calendar/index'
 import { Route as ProtectedApprovalsIndexRouteImport } from './routes/_protected/approvals/index'
 import { Route as ProtectedAfterActionsIndexRouteImport } from './routes/_protected/after-actions/index'
 import { Route as ProtectedAdminIndexRouteImport } from './routes/_protected/admin/index'
@@ -498,6 +499,11 @@ const ProtectedDossiersIndexRoute = ProtectedDossiersIndexRouteImport.update({
   id: '/dossiers/',
   path: '/dossiers/',
   getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedCalendarIndexRoute = ProtectedCalendarIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProtectedCalendarRoute,
 } as any)
 const ProtectedApprovalsIndexRoute = ProtectedApprovalsIndexRouteImport.update({
   id: '/approvals/',
@@ -1447,6 +1453,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof ProtectedAdminIndexRoute
   '/after-actions/': typeof ProtectedAfterActionsIndexRoute
   '/approvals/': typeof ProtectedApprovalsIndexRoute
+  '/calendar/': typeof ProtectedCalendarIndexRoute
   '/dossiers/': typeof ProtectedDossiersIndexRoute
   '/engagements/': typeof ProtectedEngagementsIndexRoute
   '/help/': typeof ProtectedHelpIndexRoute
@@ -1578,7 +1585,6 @@ export interface FileRoutesByTo {
   '/analytics': typeof ProtectedAnalyticsRoute
   '/audit-logs': typeof ProtectedAuditLogsRoute
   '/briefs': typeof ProtectedBriefsRoute
-  '/calendar': typeof ProtectedCalendarRouteWithChildren
   '/commitments': typeof ProtectedCommitmentsRoute
   '/compare': typeof ProtectedCompareRoute
   '/contacts': typeof ProtectedContactsRoute
@@ -1642,6 +1648,7 @@ export interface FileRoutesByTo {
   '/admin': typeof ProtectedAdminIndexRoute
   '/after-actions': typeof ProtectedAfterActionsIndexRoute
   '/approvals': typeof ProtectedApprovalsIndexRoute
+  '/calendar': typeof ProtectedCalendarIndexRoute
   '/dossiers': typeof ProtectedDossiersIndexRoute
   '/engagements': typeof ProtectedEngagementsIndexRoute
   '/help': typeof ProtectedHelpIndexRoute
@@ -1841,6 +1848,7 @@ export interface FileRoutesById {
   '/_protected/admin/': typeof ProtectedAdminIndexRoute
   '/_protected/after-actions/': typeof ProtectedAfterActionsIndexRoute
   '/_protected/approvals/': typeof ProtectedApprovalsIndexRoute
+  '/_protected/calendar/': typeof ProtectedCalendarIndexRoute
   '/_protected/dossiers/': typeof ProtectedDossiersIndexRoute
   '/_protected/engagements/': typeof ProtectedEngagementsIndexRoute
   '/_protected/help/': typeof ProtectedHelpIndexRoute
@@ -2047,6 +2055,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/after-actions/'
     | '/approvals/'
+    | '/calendar/'
     | '/dossiers/'
     | '/engagements/'
     | '/help/'
@@ -2178,7 +2187,6 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/audit-logs'
     | '/briefs'
-    | '/calendar'
     | '/commitments'
     | '/compare'
     | '/contacts'
@@ -2242,6 +2250,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/after-actions'
     | '/approvals'
+    | '/calendar'
     | '/dossiers'
     | '/engagements'
     | '/help'
@@ -2440,6 +2449,7 @@ export interface FileRouteTypes {
     | '/_protected/admin/'
     | '/_protected/after-actions/'
     | '/_protected/approvals/'
+    | '/_protected/calendar/'
     | '/_protected/dossiers/'
     | '/_protected/engagements/'
     | '/_protected/help/'
@@ -2964,6 +2974,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dossiers/'
       preLoaderRoute: typeof ProtectedDossiersIndexRouteImport
       parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/calendar/': {
+      id: '/_protected/calendar/'
+      path: '/'
+      fullPath: '/calendar/'
+      preLoaderRoute: typeof ProtectedCalendarIndexRouteImport
+      parentRoute: typeof ProtectedCalendarRoute
     }
     '/_protected/approvals/': {
       id: '/_protected/approvals/'
@@ -3999,10 +4016,12 @@ declare module '@tanstack/react-router' {
 
 interface ProtectedCalendarRouteChildren {
   ProtectedCalendarNewRoute: typeof ProtectedCalendarNewRoute
+  ProtectedCalendarIndexRoute: typeof ProtectedCalendarIndexRoute
 }
 
 const ProtectedCalendarRouteChildren: ProtectedCalendarRouteChildren = {
   ProtectedCalendarNewRoute: ProtectedCalendarNewRoute,
+  ProtectedCalendarIndexRoute: ProtectedCalendarIndexRoute,
 }
 
 const ProtectedCalendarRouteWithChildren =
