@@ -36,7 +36,11 @@
   cursor: pointer;
 }
 
-.cal-cell.other {
+/* RULING-P96-04 (PARK-96-EXEC-02) — the shipped `.cal-cell.other { opacity: 0.4 }`
+ * dimmed the WHOLE cell, compositing `.cal-d` (--ink-mute) down to 3.20:1 against
+ * the grid backdrop — a WCAG AA failure (6 serious axe nodes). The dim now scopes
+ * to the event PILLS only; the day number carries an explicit AA-computed token. */
+.cal-cell.other .cal-ev {
   opacity: 0.4;
 }
 
@@ -44,6 +48,15 @@
   font-size: 14px;
   color: var(--ink-mute);
   font-family: var(--font-mono);
+}
+
+/* --ink-faint is the AA-gated faint tier: 6.42:1 (dark) / 5.51:1 (light) against
+ * --bg, 5.86:1 / 5.09:1 against the actual --surface cell backdrop. --ink-tertiary
+ * is documented "not AA-gated" (3.62:1 / 3.64:1) and is NOT usable here.
+ * Declared BEFORE `.cal-cell.today .cal-d` (equal specificity) so a today-in-an-
+ * adjacent-month cell keeps its shipped --accent-ink treatment. */
+.cal-cell.other .cal-d {
+  color: var(--ink-faint);
 }
 
 .cal-cell.today .cal-d {
