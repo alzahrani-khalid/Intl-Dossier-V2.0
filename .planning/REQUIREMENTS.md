@@ -522,6 +522,16 @@ verified sound across six lanes).
     judgement — `97-NAV04-DECISIONS.md` §6 named the filer, not an owning phase — placed beside the
     other class-residue rows (`GATESTD-*`, `WRITER-ROUTE-01`, `INSERT-SYNC-01`).
 
+### ROUTE-ORPHAN — 14 routes with no inbound link, no decision and no owner
+
+- [ ] **ROUTE-ORPHAN-01**: **Fourteen routes have ZERO inbound links, no decision row anywhere, and no owning phase.** Filed 2026-08-17 from Phase 97 execution (`RULING-P97-20`), after the independent verifier forced the derivation the phase had not run.
+  - **The full population, derived not inherited:** `scripts/inbound-link-classify.mjs` run **UNRESTRICTED** reports **186 routes, 95 with zero inbound links**. Phase 97 had only ever run it with `--paths` pinned to its 9 inherited candidates. The 95 reproduces the independent verifier's own count exactly — two seats, same population, same number.
+  - **76 of the 95 dissolve with a derived reason**, not an assumption: **68** are param routes or their children reached by COMPUTED paths — the instrument's own declared blind spot, verified by mechanism at `DossierShell.tsx:250`, `DossierTabNav.tsx:75`, `ProgressiveEmptyState.tsx:272` (template-literal targets built from `getDossierRouteSegment`); **3** settings children reachable through the callback-driven settings nav (NAV-02's own subjects); **2** deliberately-kept demos; `/admin` index redirect; `/reset-password` (external email entry); `/admin/preview-layouts` (`PREVIEW-HOLLOW-01`).
+  - **5 more already have a disposition elsewhere** — `/events` and `/word-assistant` (`DEAD-07`), `/custom-dashboard` (`DEAD-06`), `/tasks/queue` (`TRUST-04`/`DEAD-02`), and `/dashboard/project-management` (recorded at `REQUIREMENTS.md:16` as **an intentional redirect**, out of scope). Each was checked for a REAL OWNING ROW, not a mention — a mention is not an owner.
+  - **THE 14 THAT REMAIN, every one named:** `/contacts`, `/countries`, `/organizations`, `/persons`, `/working-groups`, `/data-library`, `/geographic-visualization`, `/stakeholder-influence`, `/workflow-automation`, `/tasks/escalations`, `/my-work/waiting`, `/reports/scheduled`, `/help/commitments`, `/intake/queue`.
+  - **NOT decided in Phase 97, deliberately.** Fourteen product decisions about what a route is for are not an orchestrator's to invent, and guessing fourteen dispositions would have been worse than reporting fourteen unknowns. **A zero-inbound route is NOT thereby unreachable** — the instrument's count is a FLOOR for absence, and several of these are plausibly reached by forms it cannot see.
+  - **Owner: Phase 102 — Staging Data & Debt Tail**, on evidence rather than convenience: this is a debt-tail accounting task (classify, then decide or delete), the same shape as the other rows P102 already holds, and it needs no RLS work (P100), no copy work (P98) and no CI work (P101).
+
 ### MONITORING-GUARD — an unguarded route presented as an Administration peer
 
 - [ ] **MONITORING-GUARD-01**: **`/monitoring` sits in the `isAdmin`-gated Administration nav
@@ -735,6 +745,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | SPINNER-A11Y-01 | Phase 99 — Arabic & Accessibility | Pending |
 | PREVIEW-HOLLOW-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | MONITORING-GUARD-01 | Phase 100 — RLS & Residue | Pending |
+| ROUTE-ORPHAN-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | PARALLEL-TRUTH-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | ROOTALIAS-01 | Phase 101 — CI Gates Green | Pending |
 | CARRY-01 | Phase 92 — Session Integrity & Edge-Function Auth | Pending |
