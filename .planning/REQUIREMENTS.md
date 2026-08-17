@@ -155,7 +155,7 @@ verified sound across six lanes).
   - **Filed per `RULING-P94-01` order 3, which suggested the id `TOAST-01`.** Placed as `COPY-06` because every id in this register is section-prefixed and the owner phase is 98 — flagged for approve-as-placed (D-73 pattern). The suggested id is recorded here so the ruling stays traceable.
   - **Why tracked rather than noted:** it was first written down as a CONTEXT "deferred idea", and an audit line is not a queue. Nothing fails if a deferred idea is never read.
 - [ ] **COPY-07**: **The dossier-type stats card ships a hardcoded English label.** `"% of total
-  active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` (line 228 at
+active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` (line 228 at
       `c94d7debe`; the string is the anchor, not the line number) renders untranslated in both
       locales — no `t()`. Named by Phase 97 as a deliberately-not-covered residue with owner
       Phase 98 (`97-CLOSING-DERIVATION.md:227`, `97-05-SUMMARY.md:110-112`); it carried no register
@@ -177,7 +177,9 @@ verified sound across six lanes).
       `RULING-P98A2-01-SCOPE` (F2-b + F3 Reading B). **Owner: Phase 98 — Copy Truth**, roadmap
       criterion 7; closes on the rendered EO popover in both locales. NAV-01 (Phase 97, Complete
       BOUNDED on exactly this handoff) is NOT edited by the plan; its status cell gets a dated note
-      at close-out if criterion 7 goes green.
+      at close-out if criterion 7 goes green. Glyph coherence rides this row per
+      `RULING-P98A2-03`: `getTypeIcon`/`getTypeColors` gain `elected_official` cases (Crown +
+      WR-07 country-fallback colors) in the same atomic change.
 - [ ] **COPY-09**: **The sentence-case long tail: ~4.5k Title Case strings across the EN bundle.**
       Two independently-written instruments measured 4,471 / 4,562 Title-Case candidates among
       16,045 EN i18n string values (129 namespace files) — ~28% of all EN copy. Phase 98's
@@ -204,7 +206,10 @@ verified sound across six lanes).
       copy-truth repair. **Owner: Phase 102 — Staging Data & Debt Tail.** After Phase 98, EO will be
       the only type with a full guide body — that asymmetry is this row's tracked state, not a
       defect. Note: Phase 99's `AR-04a` (remove `t()` English-default masks) will interact with the
-      silent defaults at `:162,165`; whoever executes either row re-checks the other.
+      silent defaults at `:162,165`; whoever executes either row re-checks the other. Also queued
+      here per `RULING-P98A2-03` §4: `DossierTypeGuide.tsx` `getTypeColors` duplicates the
+      canonical `dossierTypeColors` map and already drifts from it (muted default vs WR-07's
+      country fallback) — align it to the canonical map when touching this component.
 
 ### AR — Arabic translation coverage (layout infrastructure is already sound)
 
