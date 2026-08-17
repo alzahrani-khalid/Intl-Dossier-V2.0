@@ -476,6 +476,34 @@ verified sound across six lanes).
     was TRUE and the oracle was sampling load timing while claiming to measure rendering).
   - **Owner: Phase 99 — Arabic & Accessibility** (a11y backlog).
 
+### PARALLEL-TRUTH — copies of a truth that already has a canonical home
+
+> Filed 2026-08-17 by Phase 97's closing plan, as `97-NAV04-DECISIONS.md` §6 routes it ("filed by
+> `97-12`"). Phase 97 collapsed the dossier-type list to ONE literal set plus ONE spread-derived
+> card set behind a compile-time anti-merge guard (`RULING-P97-04` + `-05`). The residue below is
+> what `97-04`'s re-derivation found OUTSIDE its own seven-site table — **so the class was six
+> copies, not nine, and `97-PARALLEL-TRUTH-CLASS.md`'s register of six undercounts by three.**
+
+- [ ] **PARALLEL-TRUTH-01**: **Three same-class copies of the dossier-type list remain, each in a
+      file no Phase 97 plan owned.** Re-point each to the canonical `DOSSIER_TYPES` /
+      `DOSSIER_CARD_TYPES` in `frontend/src/lib/dossier-type-guards.ts`:
+  - `frontend/src/components/dossier/DossierTypeGuide.tsx:380` — `const types: DossierType[] = [ …7… ]`,
+    the DB-7 **in a FOURTH distinct order**.
+  - `frontend/src/components/dossier/wizard/hooks/useDraftMigration.ts:14` —
+    `VALID_TYPES: readonly string[] = [ …7… ]`, the DB-7.
+  - `frontend/src/components/keyboard-shortcuts/CommandPalette.tsx:305` —
+    `DOSSIER_TYPE_ORDER: string[] = [ …8… ]`, the CARD-8; its own comment says "all 8 dossier types".
+    Explicitly NOT folded into `97-10` Task 2, whose action forbids unrelated palette edits.
+  - **Deliberately NOT filed:** `pages/dossiers/DossierListPage.tsx:904`
+    `entityTypes={['dossier', …the 7]}` is a search-entity vocabulary carrying a member the dossier
+    type set does not have — legitimately its own set, not a copy.
+  - **Why they do not disagree today, and why that is not reassurance:** they agree by AUTHORSHIP,
+    not by construction. Nothing prevents the next edit from making them disagree and nothing
+    announces it when they do.
+  - **Owner: Phase 102 — Staging Data & Debt Tail.** The phase assignment is the closing plan's
+    judgement — `97-NAV04-DECISIONS.md` §6 named the filer, not an owning phase — placed beside the
+    other class-residue rows (`GATESTD-*`, `WRITER-ROUTE-01`, `INSERT-SYNC-01`).
+
 ### LIVE — v7.0 live verification (HARDWARE-GATED, unchanged from v9.0)
 
 - [ ] **LIVE-01**: vLLM (Gemma-4-12B) + TEI (BGE-M3) serving with passing health checks, reachable by the agent-runtime (:4100).
@@ -596,10 +624,10 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | COUNT-04 | Phase 96 — Real Numbers | Complete (refusal kept per `RULING-P96-01`; winning-notion table in 96-02) |
 | TRIGSWEEP-01 | Phase 96 — Real Numbers | Complete (behaviour-derived instrument, both-direction controls; count is a FLOOR) |
 | SANDBOX-500-01 | Phase 96 — Real Numbers | Complete (42P17 recursion fixed; sandbox answers 200) |
-| NAV-01 | Phase 97 — Reachability | Pending |
-| NAV-02 | Phase 97 — Reachability | Pending |
-| NAV-03 | Phase 97 — Reachability | Pending |
-| NAV-04 | Phase 97 — Reachability | Pending |
+| NAV-01 | Phase 97 — Reachability | Complete (BOUNDED — EO type-guide popover deliberately WITHHELD pending 5 `dossier:typeDescription`/`typeGuide` keys → P98; `PARALLEL-TRUTH-01` residue 3 sites → P102; `tests/e2e/93-dossier-list-counts-error.spec.ts` left RED at `Expected: 7 / Received: 8` by the authorized CARD-8 widening, UNOWNED at close; observed ADMIN-only. `97-CLOSING-DERIVATION.md` §1, §4 B2/B10, §5) |
+| NAV-02 | Phase 97 — Reachability | Complete (BOUNDED — ONE shared predicate, both viewports observed 8/8; two settings panes still render a text-free spinner for 0.6–1.0 s → `SPINNER-A11Y-01`/P99, `RULING-P97-13` §1; observed ADMIN-only. `97-CLOSING-DERIVATION.md` §4 B7, §5) |
+| NAV-03 | Phase 97 — Reachability | Complete (BOUNDED — create affordance behaviourally proven on 7 of 8 list pages plus its positive control, a 7-of-8 STATED not an 8-of-8 implied; the Digests-tab oracle is UNABLE TO MEASURE on `ENGREAD-01`/P102 and the tab entry is proven only by a supplementary probe, `RULING-P97-13` §2. `97-CLOSING-DERIVATION.md` §4 B1, §4c) |
+| NAV-04 | Phase 97 — Reachability | Complete (BOUNDED — 9 decisions recorded, 3 nav entries added, ZERO routes deleted as both conditional triggers were REFUTED, 2 dead modules deleted with the zero-importer derivation re-run against a live control; `RULING-P97-14` resolved the two parks. Residues: 2 `NOT-CHECKED` render rows, `/admin/` index has no true term in the closed vocabulary, the hidden-from-non-admins negative is UNABLE TO MEASURE → `E2ECRED-01`/P101, `PREVIEW-HOLLOW-01` → P102 UNFILED at close, `ROOTALIAS-01` note → P101 per `RULING-P97-16` §4. `97-CLOSING-DERIVATION.md` §3, §4 B3/B5/B6/B8/B14) |
 | COPY-01 | Phase 98 — Copy Truth | Pending |
 | COPY-02 | Phase 98 — Copy Truth | Pending |
 | COPY-03 | Phase 98 — Copy Truth | Pending |
@@ -644,6 +672,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | GATESTD-04 | Phase 102 — Staging Data & Debt Tail | Pending |
 | ENGREAD-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | SPINNER-A11Y-01 | Phase 99 — Arabic & Accessibility | Pending |
+| PARALLEL-TRUTH-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | ROOTALIAS-01 | Phase 101 — CI Gates Green | Pending |
 | CARRY-01 | Phase 92 — Session Integrity & Edge-Function Auth | Pending |
 | CARRY-02 | Phase 101 — CI Gates Green | Pending |
