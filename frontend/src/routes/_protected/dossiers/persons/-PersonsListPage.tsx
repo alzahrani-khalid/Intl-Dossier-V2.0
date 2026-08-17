@@ -9,6 +9,9 @@
 
 import { useMemo, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from '@tanstack/react-router'
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { ListPageShell, PersonsGrid, ToolbarSearch, type PersonCard } from '@/components/list-page'
 import { DisplayPopover } from '@/components/list-controls/DisplayPopover'
 import { FilterChipsRow } from '@/components/list-controls/FilterChipsRow'
@@ -210,6 +213,14 @@ function PersonsListPage({
       title={t('persons:title')}
       subtitle={t('persons:subtitle')}
       toolbar={toolbar}
+      actions={
+        <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
+          <Link to="/dossiers/persons/create">
+            <Plus className="h-4 w-4 me-2" />
+            {t('empty-states:list.person.cta')}
+          </Link>
+        </Button>
+      }
       isLoading={query.isLoading}
       isEmpty={!query.isLoading && items.length === 0}
       emptyState={

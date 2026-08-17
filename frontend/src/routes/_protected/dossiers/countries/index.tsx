@@ -12,10 +12,12 @@
  * Organizations mirrors this file exactly (country → organization swaps).
  */
 
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useMemo, type ReactElement } from 'react'
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { ListPageShell, DossierTable, ToolbarSearch } from '@/components/list-page'
 import type { DossierTableRow, DossierTableColumn } from '@/components/list-page'
 import {
@@ -247,6 +249,14 @@ function CountriesListRoute(): ReactElement {
         defaultValue: isArabic ? 'كل ملفات الدول' : 'All country dossiers',
       })}
       toolbar={toolbar}
+      actions={
+        <Button asChild className="min-h-11 min-w-11 w-full sm:w-auto">
+          <Link to="/dossiers/countries/create">
+            <Plus className="h-4 w-4 me-2" />
+            {t('empty-states:list.country.cta')}
+          </Link>
+        </Button>
+      }
       isLoading={query.isLoading}
       isEmpty={!query.isLoading && rows.length === 0}
       emptyState={

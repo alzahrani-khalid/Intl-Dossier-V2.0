@@ -4,10 +4,18 @@ import { ListPageShell } from '../ListPageShell'
 
 // Per-file react-i18next mock (project pattern — global mock has afterActions-only map).
 vi.mock('react-i18next', () => ({
-  useTranslation: (): { i18n: { language: string }; t: (k: string, opts?: Record<string, unknown>) => string } => ({
+  useTranslation: (): {
+    i18n: { language: string }
+    t: (k: string, opts?: Record<string, unknown>) => string
+  } => ({
     i18n: { language: 'en' },
     t: (k: string, opts?: Record<string, unknown>): string => {
-      if (opts && typeof opts === 'object' && 'defaultValue' in opts && typeof opts.defaultValue === 'string') {
+      if (
+        opts &&
+        typeof opts === 'object' &&
+        'defaultValue' in opts &&
+        typeof opts.defaultValue === 'string'
+      ) {
         return opts.defaultValue
       }
       return k
@@ -15,7 +23,6 @@ vi.mock('react-i18next', () => ({
   }),
   Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
 }))
-
 
 describe('ListPageShell', () => {
   it('renders the title', () => {
@@ -54,9 +61,21 @@ describe('ListPageShell', () => {
   })
 
   it('renders toolbar when provided', () => {
-    render(
-      <ListPageShell title="Countries" toolbar={<div data-testid="toolbar">Search</div>} />,
-    )
+    render(<ListPageShell title="Countries" toolbar={<div data-testid="toolbar">Search</div>} />)
     expect(screen.getByTestId('toolbar')).toBeTruthy()
+  })
+
+  it('renders actions when provided', () => {
+    const { container } = render(
+      <ListPageShell title="Countries" actions={<div data-testid="actions">Add country</div>} />,
+    )
+    expect(screen.getByTestId('actions')).toBeTruthy()
+    // The wrapper is the header's second child, matching PageHeader.tsx:29.
+    expect(container.querySelector('header.page-head > .dash-hero-actions')).toBeTruthy()
+  })
+
+  it('renders no actions wrapper when omitted', () => {
+    const { container } = render(<ListPageShell title="Countries" />)
+    expect(container.querySelector('.dash-hero-actions')).toBeNull()
   })
 })
