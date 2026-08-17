@@ -351,6 +351,13 @@ three paths>` committed only mine; verified `0` matches for either deletion in m
   `/tmp/p97-10-*`; the repo tree carries exactly three changed files plus this SUMMARY.
 - No credential was read or echoed. `.env.test` was sourced into the shell for the Playwright runs
   and only key NAMES were ever printed.
+- **97-03's lint-staged stale-index quirk DID recur, on this SUMMARY's own commit.** prettier
+  reflowed the markdown tables inside the hook, so afterwards `git status` showed `MM` on the file
+  while `git diff HEAD` on it was **empty** — HEAD and the worktree both held the prettier output and
+  only the index was stale. Nothing was pending; `git add -- <file>` refreshed the index and the tree
+  went clean. Recorded because the `MM` reads like unsaved work and is not. (A `stash@{0}:
+lint-staged automatic backup` also sits in the stash list; its contents are Phase 94's
+  `94-05-SUMMARY.md` + `WorkBoard.tsx`, so it is **pre-existing and not mine** — left untouched.)
 - prettier ran on the spec before commit and the commit hook altered nothing afterwards
   (`git diff HEAD` on all three files is empty). The D/T/EXP counts were re-derived POST-prettier,
   because a reflow that moved a title off its `test(` line would have broken the equality — it did
