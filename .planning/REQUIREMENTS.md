@@ -401,6 +401,14 @@ verified sound across six lanes).
   - **Candidate remedy is NOT adopted here.** A third C1 direction (construct a plausible WRONG state, observe the gate go red; else record `WRONG-STATE NOT CONSTRUCTED: <what and why>`) roughly **doubles per-gate drill cost**, so scoping it — probably to presence-shaped criteria, where the shape concentrates — is P102's decision. `GATESTD-01`'s standing note governs: work around a shipped instrument, do not repair it mid-phase without a ruling.
   - **Owner: Phase 102 — Staging Data & Debt Tail**, with `GATESTD-01`, `-02` and `-03`. Four instrument defects, one seat, one pass. **This one differs in kind from its neighbours** — those three are broken instruments; this is a _sound instrument with an unstated limit_, which is why it was filed rather than fixed.
 
+- [ ] **GATESTD-05**: **`scripts/gate-drill.mjs` can be made to FORK-BOMB by a LEGAL input, because it has no re-entrancy guard.** Filed 2026-08-17 from Phase 97 execution (`RULING-P97-19`), found by the independent verifier.
+  - **Mechanism:** the drill runs every `<automated>` gate it finds in a phase directory. If any gate in that directory invokes the drill **on that same directory** — a completely legal thing for a consolidating gate to want — the drill re-enters itself, unbounded. Measured: **16 nested processes in 17 minutes**, no completion at a 900s bound.
+  - **The caller was also wrong** (Phase 97's `97-12` g1 pointed the drill at its own phase dir; fixed in-phase by scoping the drill to a copy that excludes the calling plan). **But a tool that a legal input can turn into a fork bomb is a defect of the TOOL, not only of the caller.**
+  - **Why it hid:** the per-gate timeout was the only thing containing it. Runs looked like `exit: null` / "slow gate", which reads as _raise the bound_ — **and raising the bound is exactly the wrong move**; both the orchestrator and the overseer had independently planned to do it. There are no stray processes today only because the bound killed them.
+  - **Consequence for the standard:** a self-referential gate **can never be observed green** (C1 clause 2 is unsatisfiable for it), and nothing in the harness says so.
+  - **Suggested fix:** an env-var re-entrancy guard (refuse to run nested, exit with a named code), or refuse a phase dir whose own plans invoke the drill over that dir.
+  - **Owner: Phase 102 — Staging Data & Debt Tail**, with `GATESTD-01`..`-04`. Five instrument defects, one seat, one pass.
+
 ### ROOTALIAS — the root vitest project cannot resolve the app it tests
 
 - [ ] **ROOTALIAS-01**: **Root `vitest.config.ts:37` aliases `@` → `<repo-root>/src`, a directory that does not exist.** Filed 2026-08-16 from Phase 93 execution while building the C9b mock-vs-real register (`D-71`). The app's source is `frontend/src`, so any spec under `./tests` that pulls in a `frontend/src` module fails at import-analysis the moment that module uses `@/…` internally.
@@ -722,6 +730,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | GATESTD-02 | Phase 102 — Staging Data & Debt Tail | Pending |
 | GATESTD-03 | Phase 102 — Staging Data & Debt Tail | Pending |
 | GATESTD-04 | Phase 102 — Staging Data & Debt Tail | Pending |
+| GATESTD-05 | Phase 102 — Staging Data & Debt Tail | Pending |
 | ENGREAD-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | SPINNER-A11Y-01 | Phase 99 — Arabic & Accessibility | Pending |
 | PREVIEW-HOLLOW-01 | Phase 102 — Staging Data & Debt Tail | Pending |
