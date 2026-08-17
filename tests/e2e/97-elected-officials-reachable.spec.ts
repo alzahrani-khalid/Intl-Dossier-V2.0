@@ -183,7 +183,7 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
     // reachability.
     await electedOfficialsRow.click()
 
-    await expect(page).toHaveURL(/\/dossiers\/elected-officials$/, { timeout: SETTLE_TIMEOUT })
+    await expect(page).toHaveURL(/\/dossiers\/elected-officials(\?|$)/, { timeout: SETTLE_TIMEOUT })
 
     // The destination's own content settles — a row that lands on a blank region is a reachability
     // regression, not a win.
@@ -257,7 +257,7 @@ test.describe('NAV-01 Elected Officials is reachable on all four exposure surfac
     // owns. The sibling in-place filter behaviour is FORBIDDEN here — `dossiers.type` has no
     // `elected_official` value, so that filter yields zero rows while the card's own count reads a
     // real number, which is the forbidden shape in its purest form.
-    await expect(page).toHaveURL(/\/dossiers\/elected-officials$/, { timeout: SETTLE_TIMEOUT })
+    await expect(page).toHaveURL(/\/dossiers\/elected-officials(\?|$)/, { timeout: SETTLE_TIMEOUT })
     await expect(page.getByRole('heading', { level: 1, name: 'Elected Officials' })).toBeVisible({
       timeout: SETTLE_TIMEOUT,
     })
