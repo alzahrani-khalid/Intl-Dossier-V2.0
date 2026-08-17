@@ -127,9 +127,23 @@ const assertChildRendersNavigation = async (page: Page, childPath: string): Prom
   // (4) The child's own content rendered. A nav column over a blank pane is a reachability
   // regression wearing the fix's clothes, so the assertion is that `main` carries text BEYOND the
   // nav column's own.
-  const mainText = ((await page.getByRole('main').innerText()) ?? '').trim()
-  const navText = ((await settingsNav.innerText()) ?? '').trim()
-  expect(mainText.replace(navText, '').trim().length).toBeGreaterThan(0)
+  // RULING-P97-13: this was a FIXED-MOMENT sample, which measured LOAD TIMING while claiming to
+  // measure RENDERING. Two panes render a text-free spinner while loading (SPINNER-A11Y-01:
+  // NotificationPreferences.tsx:149-155, EmailDigestSettings.tsx:245), so `innerText` read 0 chars
+  // at ~0 ms though the criterion was TRUE — measured first content at 968 ms / 648 ms, versus a
+  // passing sibling at 344 ms. The fix is a BOUNDED poll on the same condition, never a sleep and
+  // never an unbounded wait (which converts a hang into a pass-after-forever).
+  // BOUND: 5000 ms — 5.2x the slowest measured pane, and still red for a pane that never renders.
+  await expect
+    .poll(
+      async () => {
+        const main = ((await page.getByRole('main').innerText()) ?? '').trim()
+        const nav = ((await settingsNav.innerText()) ?? '').trim()
+        return main.replace(nav, '').trim().length
+      },
+      { timeout: 5000, message: 'child pane rendered no content beyond the settings nav column' },
+    )
+    .toBeGreaterThan(0)
 
   const bodyText = (await page.locator('body').innerText()) ?? ''
   expect(bodyText).not.toMatch(INTERNAL_STRING)
