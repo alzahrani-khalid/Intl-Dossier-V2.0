@@ -278,4 +278,141 @@ What it needs: a human render sign-off on `/calendar` at the four matrix points 
 _Phase: 96-real-numbers_
 _Completed: 2026-08-17_
 
+---
+
+## ADDENDUM 2026-08-17 — lane 96-04A: RULING-P96-04 parks -02 and -03 discharged
+
+Bounded addendum lane. It executes **exactly** the two remedies `RULING-P96-04` decided and
+nothing else. `PARK-96-EXEC-04` (visual baselines) was explicitly NOT this lane's work and
+**no baseline was captured or committed** — verified twice, below.
+
+### REMEDY 1 — PARK-96-EXEC-02: explicit AA colour on `.cal-cell.other .cal-d` (closes BLOCKED-1)
+
+Ruled branch **(a)**: set the day-number colour explicitly from an existing token, AA-computed
+against `--bg`; scope the 0.4 dim to the **pills only**. Commit `40537619f`, one file,
+`frontend/src/components/calendar/calendar.css`.
+
+Before → after:
+
+<!-- prettier-ignore -->
+| | Shipped (before) | This remedy (after) |
+| --- | --- | --- |
+| Cell dim | `.cal-cell.other { opacity: 0.4 }` — dims the WHOLE cell | rule removed |
+| Pill dim | (inherited from the cell dim) | `.cal-cell.other .cal-ev { opacity: 0.4 }` — pills only |
+| Day number | inherits `.cal-d { color: var(--ink-mute) }`, then composited by the cell dim | `.cal-cell.other .cal-d { color: var(--ink-faint) }` |
+
+The new rule is declared **before** `.cal-cell.today .cal-d` (equal specificity `0,3,0`) so a
+today-in-an-adjacent-month cell keeps its shipped `--accent-ink` treatment.
+
+#### Contrast computation (arithmetic, from resolved token values — tokens only, no raw hex in the CSS)
+
+Method: sRGB → WCAG relative luminance (`c/12.92` below 0.03928, else `((c+0.055)/1.055)^2.4`;
+`L = 0.2126R + 0.7152G + 0.0722B`), ratio `(L₁+0.05)/(L₂+0.05)`. Alpha compositing:
+`out = α·fg + (1−α)·backdrop`, per channel. Token values read from
+`frontend/src/design-system/tokens/directions.ts` (`PALETTES.linear`).
+
+**Why the before-state failed.** `.cal-cell.other` sits inside `.cal-grid`, whose background is
+`var(--line)`. `opacity: 0.4` composites the whole cell — its `--surface` background _and_ its
+`--ink-mute` text — against that `--line` backdrop:
+
+- dark bg: `0.4 × #0f1011 + 0.6 × #23252a` = **`#1b1d20`**
+- dark fg: `0.4 × #d0d6e0 + 0.6 × #23252a` = **`#686c73`**
+- ratio: **3.20:1** — below the 4.5:1 AA floor for 14 px normal weight.
+
+Those two composited values reproduce **axe's own reported `fgColor #686c73` / `bgColor #1b1d20` /
+3.2:1 byte-for-byte**, which is what validates the model used for the after-state numbers.
+
+**After-state — `--ink-faint` clears AA in both colour modes, on both `--bg` (the ruled reference)
+and `--surface` (the actual cell backdrop, now undimmed):**
+
+<!-- prettier-ignore -->
+| Mode | Token value | vs `--bg` | vs `--surface` (real backdrop) | AA 4.5:1 |
+| --- | --- | --- | --- | --- |
+| dark | `--ink-faint` `#8a8f98` | `#010102` → **6.42:1** | `#0f1011` → **5.86:1** | PASS |
+| light | `--ink-faint` `#656970` | `#ffffff` → **5.51:1** | `#f5f6f6` → **5.09:1** | PASS |
+
+**`--ink-tertiary` was considered and REJECTED**: `#62666d` → 3.62:1 on `--bg` / 3.30:1 on
+`--surface` (dark) and 3.64:1 / 3.36:1 (light) — it fails AA, consistent with its own source
+comment ("faintest, **not AA-gated**"). `--ink-faint` is the faint tier that _is_ AA-gated
+(its declaration comment records 5.86:1 on surface-1, matching the computation above).
+
+The pills keep the identical 0.4 treatment they already shipped with, so the remedy introduces
+no new dimmed-foreground surface.
+
+#### Gate: `frontend/tests/e2e/calendar-a11y.spec.ts` (en + ar) — RED → GREEN
+
+- **RED (before, as recorded in BLOCKED-1 above):** 6 × `color-contrast` **serious** nodes,
+  `fgColor #686c73` on `bgColor #1b1d20`, **3.2:1** vs a required 4.5:1, at 14 px / normal weight —
+  and no other violation class.
+- **GREEN (after, this lane, measured):**
+  `pnpm exec playwright test tests/e2e/calendar-a11y.spec.ts --project=chromium --no-deps --reporter=list`
+  from `frontend/` → **`EXIT=0`, 2 passed (5.5s)**:
+  `✓ zero serious/critical violations in ar (3.3s)`, `✓ zero serious/critical violations in en (3.4s)`.
+  Exit code captured directly (not through a pipe). The spec asserts the **entire**
+  serious/critical violation array is empty, so this single green simultaneously proves zero
+  violations of the `color-contrast` class **and zero NEW violations of any class**.
+- Discovery asserted before running (D-17 discipline): both spec files asserted PRESENT on disk
+  first, then `--list --no-deps` returned the hardcoded expectation **3 tests in 2 files**
+  (a11y 2 + rtl 1) — every path matched, none silently dropped by Playwright's path-as-filter
+  behaviour.
+
+### REMEDY 2 — PARK-96-EXEC-03: the stale spec is inverted to the ruled policy (closes BLOCKED-2)
+
+Ruled branch **(a)**: the spec is STALE; invert the assertions. Branch (b) (a per-surface policy
+exception) was REFUSED by the ruling. Commit `f450e647c`, one file,
+`frontend/tests/e2e/calendar-rtl.spec.ts`, carrying the ruling citation **and** the naming law's
+changed-gate-subject in its message:
+
+> `test(96): calendar-rtl digit assertions inverted to the ruled Latin-digits policy (RULING-P96-04; changed gate subject: calendar-rtl.spec.ts:75,77, P39 shipped spec)`
+
+<!-- prettier-ignore -->
+| Line (pre-edit) | Was | Now |
+| --- | --- | --- |
+| `:75` | `expect(/[٠-٩]/.test(allDayText)).toBe(true)` | `expect(/[0-9]/.test(allDayText)).toBe(true)` |
+| `:77` | `expect(/[0-9]/.test(allDayText)).toBe(false)` | `expect(/[٠-٩]/.test(allDayText)).toBe(false)` |
+
+Both assertions now state the operator-ruled policy — **Latin digits in both locales** (design
+review 2026-07-04; restated in 96-UI-SPEC) — which is what `CalendarMonthGrid.tsx:98-100` has
+always rendered (`format(day, 'd')`, date-fns with no locale, inside `<LtrIsolate>`). A four-line
+comment above the pair records the ruling inline; the file history carries the why.
+
+#### Gate: `frontend/tests/e2e/calendar-rtl.spec.ts` — RED → GREEN
+
+- **RED (before, measured in this lane against the unedited spec):**
+  `EXIT=1`, `1 failed` — `Phase 39: Calendar RTL — Arabic dow + Indic digits › renders Arabic short
+labels and Arabic-Indic day digits in ar`, failing at
+  `calendar-rtl.spec.ts:75:38 › expect(/[٠-٩]/.test(allDayText)).toBe(true)`.
+- **GREEN (after):** same command → **`EXIT=0`, 1 passed (5.4s)**. Exit codes captured directly.
+
+### PARK-96-EXEC-04 — NO visual baseline was created (verified twice)
+
+`calendar-visual.spec.ts` was **not run** by this lane, and no snapshot was captured, written, or
+committed. Verified twice, before and after both commits:
+
+- `frontend/tests/e2e/calendar-visual.spec.ts-snapshots` — **ABSENT** on disk (both checks).
+- `git ls-files 'frontend/tests/e2e/calendar-visual.spec.ts-snapshots*'` — **zero tracked files**.
+  That zero was instrument-tested against a known-present baseline set: the identical query for
+  `list-pages-visual.spec.ts-snapshots*` returns real PNGs, so the query is not silently blind.
+- `git status --porcelain frontend/tests` matched no `snapshot`/`.png` artifact.
+- `git diff --name-only HEAD~2 HEAD` returns exactly the two remedy files and nothing else.
+
+BLOCKED-3 therefore **stands unchanged** as the named operator park (render sign-off on
+`/calendar` at ltr/rtl × 1280/768), now correctly sequenced _after_ REMEDY 1 — which, as the park
+predicted, moved those pixels again.
+
+### Observation (recorded, deliberately NOT acted on)
+
+`calendar-rtl.spec.ts`'s describe title (`Phase 39: Calendar RTL — Arabic dow + Indic digits`) and
+test name (`renders Arabic short labels and Arabic-Indic day digits in ar`) still say "Indic
+digits" and now misdescribe what the test asserts. Renaming them is outside the two remedies this
+bounded lane is authorised to make, so it was left alone and is filed here instead.
+
+### Deviations
+
+None. Both remedies were executed as ruled; no other file was touched.
+
+### BLOCKED (addendum lane)
+
+Empty — nothing blocked this lane.
+
 SUMMARY-END
