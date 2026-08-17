@@ -50,6 +50,22 @@ const variants = [
   { name: 'joined+case', f: (s) => s.replace(/\s+/g, ' ').toLowerCase() },
   // formatters normalise quotes and dashes; a token carrying them is not literal-stable
   { name: 'punctuation-normalised', f: (s) => s.replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/[–—]/g, '-').replace(/\s+/g, ' ').toLowerCase() },
+  // ADDED after this very script reported a REAL absence that was not one: a phrase wrapped
+  // inside a markdown BLOCKQUOTE gains a `>` continuation marker mid-phrase, so whitespace-joining
+  // yields "... with > evidence" and the match fails. Same for list bullets and emphasis markers.
+  // This is the "next transformation nobody enumerated" — the reason the tool exists rather than
+  // a better token-choice rule. Strip markdown line-furniture, then join and lower.
+  {
+    name: 'markdown-stripped',
+    f: (s) =>
+      s
+        .split('\n')
+        .map((l) => l.replace(/^\s*(?:>+\s?|[-*+]\s+|\d+\.\s+)/, ''))
+        .join(' ')
+        .replace(/[*_`]/g, '')
+        .replace(/\s+/g, ' ')
+        .toLowerCase(),
+  },
 ]
 
 let failed = 0
