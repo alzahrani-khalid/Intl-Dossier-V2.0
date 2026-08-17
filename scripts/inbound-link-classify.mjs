@@ -309,8 +309,17 @@ console.log('')
 
 // ---- (d) PINS — a broken pin is exit 1, never a smaller number quietly reported --------------------
 const controlHits = liveLinksFor('/admin/ai-settings')
-const adminApprovals = liveLinksFor('/admin/approvals').length
-const topApprovals = liveLinksFor('/approvals').length
+// RULING-P97-16: this pin compared COUNTS as a proxy for "the boundary matcher discriminates".
+// P97-10 gave /admin/approvals its own nav entry, so both counts became 1 and the proxy expired —
+// while the PROPERTY it stood for is unchanged and still worth testing. An expired EXAMPLE is not
+// an expired REQUIREMENT, so the pin now asserts the property DIRECTLY: the two paths must resolve
+// to DIFFERENT LOCATION SETS. That is what non-conflation means, it is strictly stronger than the
+// count comparison, and it does not expire when the counts happen to coincide.
+const adminApprovalsHits = liveLinksFor('/admin/approvals')
+const topApprovalsHits = liveLinksFor('/approvals')
+const locSet = (hits) => hits.map((r) => `${r.file}:${r.line}`).sort().join(',')
+const adminApprovals = locSet(adminApprovalsHits)
+const topApprovals = locSet(topApprovalsHits)
 const monitoringDemo = refs.filter(
   (r) =>
     r.route === '/monitoring' &&
@@ -330,14 +339,22 @@ const pins = [
           'run is uninterpretable. Fix the classifier; do not read the zeros.',
   },
   {
-    name: 'boundary /admin/approvals vs /approvals resolve to DIFFERENT counts',
-    ok: adminApprovals !== topApprovals,
+    name: 'boundary /admin/approvals vs /approvals resolve to DIFFERENT location sets',
+    ok:
+      adminApprovals !== topApprovals &&
+      adminApprovalsHits.length > 0 &&
+      topApprovalsHits.length > 0,
     detail:
-      adminApprovals !== topApprovals
-        ? `/admin/approvals=${adminApprovals} vs /approvals=${topApprovals} — the boundary matcher ` +
-          'is doing work'
-        : `both=${adminApprovals}. If these are genuinely equal now, RE-DERIVE this pin against the ` +
-          'current nav config — do NOT loosen the matcher to make it pass.',
+      adminApprovalsHits.length === 0 || topApprovalsHits.length === 0
+        ? `UNABLE TO MEASURE — one side resolved to nothing (/admin/approvals=${adminApprovalsHits.length}, ` +
+          `/approvals=${topApprovalsHits.length}). A pin cannot prove non-conflation when a side is empty; ` +
+          'both sides must be non-empty for the comparison to mean anything.'
+        : adminApprovals !== topApprovals
+          ? `/admin/approvals=[${adminApprovals}] vs /approvals=[${topApprovals}] — DIFFERENT locations, ` +
+            'so the boundary matcher is doing work (counts may coincide; locations must not)'
+          : `both resolve to [${adminApprovals}]. The matcher is CONFLATING the two paths — a substring ` +
+            'match is treating /approvals as if it were /admin/approvals. Fix the matcher; do NOT ' +
+            'loosen this pin to make it pass.',
   },
   {
     name: 'demo     navigationData.ts /monitoring entry is NON-RENDERED (demo-only)',
