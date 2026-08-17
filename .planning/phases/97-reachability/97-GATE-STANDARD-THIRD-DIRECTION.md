@@ -197,6 +197,51 @@ broken instrument is the easiest fabricated proof there is.
 `5000 ms = 5.2× the measured worst case (968 ms)`. A bound carrying its derivation cannot later
 be read as arbitrary, and the next author can tell whether a slower page invalidates it.
 
+### TRANSIENT ASSERTIONS — a gate must assert its OWN plan's deliverable
+
+**A gate must never assert a CONSUMER's state that a LATER plan owns.** In a wave-ordered plan
+set such a cross-plan assertion is **TRANSIENT BY CONSTRUCTION**: it is true when written and
+false the moment the later plan does its job.
+
+Measured instance (`RULING-P97-15`). `97-04` (wave 1) asserted that `DossierListPage.tsx`
+references `DOSSIER_TYPES`. `97-05` (wave 2) then **correctly** migrated that file to
+`DOSSIER_CARD_TYPES` — the 8-member display set the phase exists to deliver. The gate went red
+because the work succeeded.
+
+**The decisive detail: `97-04`'s own plan text PREDICTED the transition** — _"DB-7 today, card-8
+after 97-05"_. The plan documented the change in prose while its gate pinned the pre-transition
+state. That is what makes this a structural defect rather than a judgment call.
+
+**Green-debt-per-plan silently assumes gates are MONOTONIC** — green once green. Wave ordering
+breaks that assumption, and `GATE-STANDARD` never says so.
+
+**Detector (mechanical, the same set-intersection move as the anchored/checked rule):** does the
+gate's SUBJECT FILE appear in **another plan's `files_modified`**? If yes, the assertion is
+cross-plan and transient; re-point it at the gate's own deliverable. A gate's own plan's prose
+predicting a later change is the human-readable version of the same signal.
+
+**The repair must be STRONGER, not merely non-red.** Replacing a stale assertion with a weaker
+one that happens to pass is the failure this creates the opportunity for. Here the replacement
+pinned the spread-derived form AND required exactly **one** declaration tree-wide — the second
+clause guards the RE-DUPLICATION half of the parallel-truth class, not only the
+re-literalisation half.
+
+### WHOLE-SET RE-DRILL AFTER ANY POST-CLOSE MUTATION — it has TWO purposes
+
+Re-drilling only the _moved subject_ is not enough. Run the **whole** set, and record both
+things it establishes, because they are different claims:
+
+1. **REGRESSION DETECTION** — did this edit break a gate somewhere else? (The reason the rule
+   was ordered. It is how the stale `97-04` gate was found at all; without it that gate would
+   have surfaced red at CLOSE and been read as a defect in the _work_ rather than in the _gate_
+   — and the likely response under close-time pressure is to "fix" correct code back to a state
+   the phase deliberately moved past.)
+2. **SURGICAL-SCOPE PROOF** — did this edit affect _only_ what it intended? A colour diff across
+   the full set showing **exactly one gate changed** is positive evidence of containment.
+
+**A byte-diff shows what you CHANGED. A whole-set colour diff shows what you AFFECTED.** Those
+are different claims, and only the second can be false while the first looks clean.
+
 ### Required review pass: CROSS-GATE SWEEPS FOR REPEATED LITERALS
 
 Five gates carried the same wrong package name because a literal was **COPIED rather than
