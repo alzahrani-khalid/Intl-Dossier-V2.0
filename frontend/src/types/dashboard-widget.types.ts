@@ -308,13 +308,22 @@ export interface DashboardLayout {
 // ============================================================================
 
 /**
+ * A trend delta that was actually measured: the comparison request settled successfully and
+ * returned a real prior count. `KpiData.trend` is null when it did not — failed, blocked, or
+ * never run — and the widget omits the trend row rather than rendering a fabricated neutral
+ * delta (DEAD-06: "0.0%" from an aborted comparison is a claim, not a measurement).
+ */
+export interface TrendData {
+  direction: TrendDirection
+  percentage: number
+}
+
+/**
  * KPI data structure
  */
 export interface KpiData {
   value: number
-  previousValue: number
-  trend: TrendDirection
-  trendPercentage: number
+  trend: TrendData | null
   sparklineData?: number[]
   target?: number
   targetProgress?: number

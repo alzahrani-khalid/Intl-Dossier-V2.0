@@ -15,6 +15,7 @@ import type {
   WidgetConfig,
   WidgetType,
   KpiData,
+  TrendData,
   ChartData,
   EventData,
   NotificationData,
@@ -167,6 +168,24 @@ const createDefaultWidgets = (t: (key: string) => string): WidgetConfig[] => [
 // Real Data Fetching Functions
 // ============================================================================
 
+/**
+ * Derive the trend from a comparison that SETTLED. `previousCount` is null whenever the
+ * comparison request failed, was blocked, or never ran for this metric — and a null prior
+ * count yields a null trend, which the widget renders as an absent row. A prior count of 0
+ * is equally unknowable: the percentage change from zero is undefined, not 0%.
+ *
+ * This is the DEAD-06 fix: the old formula defaulted the percentage to 0 and the direction to
+ * 'neutral', so a comparison that never happened rendered as a confident "0.0% from last week".
+ */
+function deriveTrend(value: number, previousCount: number | null): TrendData | null {
+  if (previousCount === null || previousCount <= 0) return null
+  const percentage = ((value - previousCount) / previousCount) * 100
+  return {
+    direction: percentage > 1 ? 'up' : percentage < -1 ? 'down' : 'neutral',
+    percentage: Math.abs(percentage),
+  }
+}
+
 async function fetchKpiData(metric: string): Promise<KpiData> {
   const now = new Date()
   const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
@@ -174,7 +193,10 @@ async function fetchKpiData(metric: string): Promise<KpiData> {
 
   try {
     let value = 0
-    let previousValue = 0
+    // Stays null until a comparison request settles successfully with a real prior count.
+    // The comparison is best-effort by design: its failure costs the trend row, never the
+    // value. The CURRENT count still throws on error — a denied count must not render as 0.
+    let previousCount: number | null = null
 
     switch (metric) {
       case 'active-dossiers': {
@@ -190,9 +212,8 @@ async function fetchKpiData(metric: string): Promise<KpiData> {
             .lt('created_at', weekAgo.toISOString()),
         ])
         if (current.error) throw current.error
-        if (previous.error) throw previous.error
-        value = current.count || 0
-        previousValue = previous.count || value
+        value = current.count ?? 0
+        previousCount = previous.error ? null : previous.count
         break
       }
       case 'pending-tasks': {
@@ -208,9 +229,8 @@ async function fetchKpiData(metric: string): Promise<KpiData> {
             .lt('created_at', weekAgo.toISOString()),
         ])
         if (current.error) throw current.error
-        if (previous.error) throw previous.error
-        value = current.count || 0
-        previousValue = previous.count || value
+        value = current.count ?? 0
+        previousCount = previous.error ? null : previous.count
         break
       }
       case 'overdue-items': {
@@ -220,8 +240,9 @@ async function fetchKpiData(metric: string): Promise<KpiData> {
           .lt('deadline', now.toISOString())
           .neq('status', 'completed')
         if (error) throw error
-        value = count || 0
-        previousValue = value // No historical comparison for overdue
+        value = count ?? 0
+        // No historical comparison exists for overdue — the trend row stays absent rather
+        // than reporting a delta against the current value (which is always 0%).
         break
       }
       case 'completed-this-week': {
@@ -239,9 +260,8 @@ async function fetchKpiData(metric: string): Promise<KpiData> {
             .lt('updated_at', weekAgo.toISOString()),
         ])
         if (current.error) throw current.error
-        if (previous.error) throw previous.error
-        value = current.count || 0
-        previousValue = previous.count || value
+        value = current.count ?? 0
+        previousCount = previous.error ? null : previous.count
         break
       }
       case 'engagement-count': {
@@ -251,8 +271,8 @@ async function fetchKpiData(metric: string): Promise<KpiData> {
           .eq('type', 'engagement')
           .eq('status', 'active')
         if (error) throw error
-        value = count || 0
-        previousValue = value
+        value = count ?? 0
+        // No comparison request is issued for this metric — the trend row stays absent.
         break
       }
       case 'intake-volume': {
@@ -268,23 +288,17 @@ async function fetchKpiData(metric: string): Promise<KpiData> {
             .lt('created_at', weekAgo.toISOString()),
         ])
         if (current.error) throw current.error
-        if (previous.error) throw previous.error
-        value = current.count || 0
-        previousValue = previous.count || value
+        value = current.count ?? 0
+        previousCount = previous.error ? null : previous.count
         break
       }
       default:
         value = 0
-        previousValue = 0
     }
-
-    const trendPercentage = previousValue > 0 ? ((value - previousValue) / previousValue) * 100 : 0
 
     return {
       value,
-      previousValue,
-      trend: trendPercentage > 1 ? 'up' : trendPercentage < -1 ? 'down' : 'neutral',
-      trendPercentage: Math.abs(trendPercentage),
+      trend: deriveTrend(value, previousCount),
       sparklineData: [], // Could add historical data if needed
     }
   } catch (error) {
@@ -586,11 +600,17 @@ async function fetchChartData(dataSource: string): Promise<ChartData> {
 
 async function fetchEvents(maxItems = 5): Promise<EventData[]> {
   const now = new Date()
+  // calendar_entries stores the start as `event_date` (date) + `event_time` (time, null for
+  // all-day). The single start-timestamp column this query used to name does not exist on the
+  // table, so the widget 42703'd on every render.
   const { data, error } = await supabase
     .from('calendar_entries')
-    .select('id, title_en, title_ar, entry_type, start_datetime, description_en, description_ar')
-    .gte('start_datetime', now.toISOString())
-    .order('start_datetime', { ascending: true })
+    .select(
+      'id, title_en, title_ar, entry_type, event_date, event_time, all_day, description_en, description_ar',
+    )
+    .gte('event_date', now.toISOString().slice(0, 10))
+    .order('event_date', { ascending: true })
+    .order('event_time', { ascending: true, nullsFirst: false })
     .limit(maxItems)
 
   // Surface the error to the query state instead of swallowing it into [].
@@ -600,7 +620,11 @@ async function fetchEvents(maxItems = 5): Promise<EventData[]> {
     id: entry.id,
     title: entry.title_en || entry.title_ar || 'Untitled',
     type: entry.entry_type || 'other',
-    startDate: entry.start_datetime,
+    // An all-day (or timeless) entry is date-only; the widget formats it as a date.
+    startDate:
+      entry.all_day || !entry.event_time
+        ? entry.event_date
+        : `${entry.event_date}T${entry.event_time}`,
     description: entry.description_en || entry.description_ar,
   }))
 }
@@ -635,7 +659,11 @@ async function fetchTasks(maxItems = 10, showCompleted = false) {
     priority: item.priority || 'medium',
     status: item.status || 'pending',
     deadline: item.deadline,
-    isOverdue: item.deadline ? new Date(item.deadline) < now && item.status !== 'completed' : false,
+    // The unified computed-overdue notion (96-02 winning-notion record): a past deadline on
+    // work that is neither completed NOR cancelled. A cancelled item is not overdue work.
+    isOverdue: item.deadline
+      ? new Date(item.deadline) < now && item.status !== 'completed' && item.status !== 'cancelled'
+      : false,
   }))
 }
 
