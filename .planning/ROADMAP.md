@@ -263,7 +263,7 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 - [ ] **Phase 94: Write Paths** - Every advertised write path — after-actions, intake, kanban, settings, reports — actually writes
 - [x] **Phase 95: Routes That Don't Render** - Every route either renders its page or says why it can't; the route tree has one file per slot
 - [x] **Phase 96: Real Numbers** - Every count, chart and trend comes from real data and agrees with every other surface (completed 2026-08-17)
-- [ ] **Phase 97: Reachability** - Nothing built is unreachable and nothing in the route tree is unowned
+- [x] **Phase 97: Reachability** - Nothing built is unreachable and nothing in the route tree is unowned
 - [ ] **Phase 98: Copy Truth** - No database values, no i18n keys, no seed instructions, one date format, project voice rules obeyed
 - [ ] **Phase 99: Arabic Coverage** - An Arabic session reads as Arabic: one glossary, localized dates, no English leakage
 - [ ] **Phase 100: Security Posture — Database & Client** - RLS is a real boundary for the 207 frontend files that depend on it, and signing out leaves nothing behind on the machine
@@ -492,30 +492,30 @@ Plans:
 
 **Wave 1** _(no dependencies — observers, instruments and the type foundation, in parallel)_
 
-- [ ] 97-01-PLAN.md — Wave-0 oracles A: the NAV-01 real-count click-through and the NAV-02 viewport matrix
-- [ ] 97-02-PLAN.md — Wave-0 oracles B: the Digests tab and the eight-page create affordance, data-present
-- [ ] 97-03-PLAN.md — the INBOUND-LINK instrument and both population derivations
-- [ ] 97-04-PLAN.md — the canonical dossier-type home: one literal list, one derived card set, a compile-time anti-merge guard
+- [x] 97-01-PLAN.md — Wave-0 oracles A: the NAV-01 real-count click-through and the NAV-02 viewport matrix
+- [x] 97-02-PLAN.md — Wave-0 oracles B: the Digests tab and the eight-page create affordance, data-present
+- [x] 97-03-PLAN.md — the INBOUND-LINK instrument and both population derivations
+- [x] 97-04-PLAN.md — the canonical dossier-type home: one literal list, one derived card set, a compile-time anti-merge guard
 
 **Wave 2** _(blocked on Wave 1 — the four surfaces, disjoint files)_
 
-- [ ] 97-05-PLAN.md — NAV-01 hub: the three fabrication layers, the real EO total, the sidebar row
-- [ ] 97-06-PLAN.md — NAV-01 `/compare`: whitelist, selector, icon lookup and the subtype-filtered fetch arm
-- [ ] 97-07-PLAN.md — NAV-02: one settings predicate, one nav column, closed across the viewport matrix
-- [ ] 97-08-PLAN.md — NAV-03: the Digests tab and one shared actions slot across seven list pages
+- [x] 97-05-PLAN.md — NAV-01 hub: the three fabrication layers, the real EO total, the sidebar row
+- [x] 97-06-PLAN.md — NAV-01 `/compare`: whitelist, selector, icon lookup and the subtype-filtered fetch arm
+- [x] 97-07-PLAN.md — NAV-02: one settings predicate, one nav column, closed across the viewport matrix
+- [x] 97-08-PLAN.md — NAV-03: the Digests tab and one shared actions slot across seven list pages
 
 **Wave 3** _(blocked on the population evidence)_
 
-- [ ] 97-09-PLAN.md — NAV-04: the single-writer per-route decision table
+- [x] 97-09-PLAN.md — NAV-04: the single-writer per-route decision table
 
 **Wave 4** _(blocked on the decision table — entries and deletions, disjoint files)_
 
-- [ ] 97-10-PLAN.md — NAV-04 nav entries, the command-palette admin check, the KEEP-row oracle
-- [ ] 97-11-PLAN.md — NAV-04 authorised deletions and the regenerated route tree
+- [x] 97-10-PLAN.md — NAV-04 nav entries, the command-palette admin check, the KEEP-row oracle
+- [x] 97-11-PLAN.md — NAV-04 authorised deletions and the regenerated route tree
 
 **Wave 5** _(blocked on everything)_
 
-- [ ] 97-12-PLAN.md — closing: coverage re-derived, gate drill consolidated, register updated, weakest point named
+- [x] 97-12-PLAN.md — closing: coverage re-derived, gate drill consolidated, register updated, weakest point named
 
 **UI hint**: yes
 

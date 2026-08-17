@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v10.0
 milestone_name: Trust & Correctness
 status: Ready to plan
-last_updated: '2026-08-17T03:35:35.413Z'
+last_updated: '2026-08-17T14:30:00.000Z'
 progress:
   total_phases: 13
-  completed_phases: 5
-  total_plans: 56
-  completed_plans: 56
-  percent: 38
+  completed_phases: 6
+  total_plans: 68
+  completed_plans: 68
+  percent: 46
 ---
 
 # Project State
@@ -25,6 +25,35 @@ See: .planning/PROJECT.md (updated 2026-08-15 — v9.0 closed PARTIAL; v10.0 Tru
 ## Current Position
 
 Milestone: **v10.0 — Trust & Correctness** (roadmapped 2026-08-15).
+
+Phase 97 (reachability) — **EXECUTED 2026-08-17, accepted by `RULING-P97-21`.**
+12 of 12 plans; every `## BLOCKED` read (**5 empty / 7 substantive**, each traced to a ruling).
+Base tag `phase-97-base` = `4cf27100e` (SSH-signed, `git tag -v` exit 0, never moved). Final drill:
+**29 gates · 29 PARSE-OK · 27 GREEN · 2 RED · 0 TIMEOUTS**; the 2 red are `97-08` g1/g3, **bounded to
+`ENGREAD-01`**. **15 ruled gate edits, ZERO unruled** (overseer byte-diff vs `d561738fa`).
+**ZERO routes deleted** — both conditional triggers REFUTED by evidence, then ruled; **2 dead modules
+deleted** (`services/auth.ts`, `QuickNavigationMenu.tsx`) with zero-importer proofs re-run at
+execution. Criterion 4 closes on **completeness of the accounting: 95 of 95 zero-inbound routes
+dispositioned** (76 dissolved with derived reasons · 5 elsewhere · 14 filed) — NOT a claim that every
+route is now linked.
+**Rows filed:** `ENGREAD-01`, `SPINNER-A11Y-01`, `GATESTD-04`, `GATESTD-05`, `PREVIEW-HOLLOW-01`,
+`MONITORING-GUARD-01`, `ROUTE-ORPHAN-01`, `PARALLEL-TRUTH-01`; dated notes on `ROOTALIAS-01` and
+`ORACLECAP-01`. Reports: `.tickmarkr/overseer/P97-EXEC-REPORT.md` (ends `ORCH-EXEC-END`);
+independent verification at `.planning/phases/97-reachability/97-VERIFICATION-INDEPENDENT.md`.
+**WEAKEST POINT, carried forward:** the entire behavioural evidence base is **ADMIN-ONLY**, at
+viewports 1400/390, in `en` only — every green is scoped `admin · 1400/390 · en`, no criterion is
+behaviourally established for a non-admin, and `MONITORING-GUARD-01` is the concrete cost.
+**Also not established:** `/dossiers/create`'s 8/8 state is covered by NO gate (true by luck of the
+codebase, not by process); the route population was never derived by the phase until the independent
+verifier forced it.
+**Committed method artifacts (they outlive the phase):** `97-GATE-STANDARD-THIRD-DIRECTION.md`,
+`97-PARALLEL-TRUTH-CLASS.md`, `97-PREDICT-BEFORE-READ.md`, `97-MODEL-SEATS.md`, plus
+`scripts/verify-tokens.mjs`.
+**Carried to P98:** when the independent seat cannot be independent, **BUY the independence
+elsewhere** — the sonnet probe found an ABSENCE in both legs, and fable's quota was exhausted for
+the whole of this phase.
+Next command: `/gsd:plan-phase 98` (Copy Truth).
+
 Phase 96 (real-numbers) — **EXECUTED 2026-08-17, accepted by `RULING-P96-06`.**
 11 of 11 plans + 2 ruled addendum lanes (96-10A sixth migration `RULING-P96-03`; 96-04A
 calendar remedies `RULING-P96-04`); every `## BLOCKED` read (8 empty, 5 ruled). Independent
