@@ -162,6 +162,41 @@ anchor-versus-LINT contradiction is the same test against the linted file set; a
 formatter against the formatted set; anchor-versus-test-runner against the files the runner
 imports. **Enumerate the tool's file set, intersect, read only the overlap.**
 
+### A NEGATIVE CONTROL THAT PASSES HAS NOT PROVEN THE SUBJECT IS FINE
+
+**It has proven you mutated something INERT.**
+
+Measured, 2026-08-17, while drilling the corrected settings-nav oracle. The negative direction
+required the assertion to go RED against a route genuinely lacking settings nav. The drill
+mutated `SETTINGS_CHILDREN` — and **passed**. The pass was the tell: a correct negative control
+_must_ fail, so a green one is a finding about the DRILL, never a reassurance about the subject.
+
+Cause: the tests **hardcode their routes at the call site**
+(`assertChildRendersNavigation(page, '/settings/webhooks')`). `SETTINGS_CHILDREN` is a
+**MANIFEST NOTHING READS**. The mutation changed a list with no consumers.
+
+**Two consequences worth writing down.**
+
+1. **This is ANOTHER instance of this phase's own parallel-truth class** — a manifest and a call
+   site holding the same list, with the consumers reading the hardcoded copy. Identical shape to
+   the 7-type list in three arrays and the package name copied into five gates. The manifest
+   looked authoritative precisely because it was the only place the list appeared _as a list_.
+2. **The remedy is the one this phase already earned: PRE-ASSERT THAT THE MUTATION LANDED.**
+   `97-04`'s gate asserts the member count moved 7 → 8 before compiling, so a silently-failed
+   splice cannot be mistaken for a passing drill. Applying that here — verifying the mutated
+   call site actually changed in the drill copy — is the same lesson **transferred by a different
+   seat to a different artifact**, which is the strongest available evidence that a recorded
+   lesson took rather than merely being written down.
+
+**Companion, from the drill's FIRST attempt:** it exited 1 from a **syntax error** in the
+generated file. That was refused as evidence — **UNABLE TO MEASURE, not a red** (C2). An
+instrument that fails to run has said nothing about its subject, and a non-zero exit from a
+broken instrument is the easiest fabricated proof there is.
+
+**Bounds get their derivation attached.** The corrected oracle's wait is stated as
+`5000 ms = 5.2× the measured worst case (968 ms)`. A bound carrying its derivation cannot later
+be read as arbitrary, and the next author can tell whether a slower page invalidates it.
+
 ### Required review pass: CROSS-GATE SWEEPS FOR REPEATED LITERALS
 
 Five gates carried the same wrong package name because a literal was **COPIED rather than
