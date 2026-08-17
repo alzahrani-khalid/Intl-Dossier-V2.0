@@ -9,25 +9,23 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { EntityComparisonPage } from '@/pages/entity-comparison'
 import type { ComparisonViewMode, ComparisonUrlState } from '@/types/entity-comparison.types'
-import type { DossierType } from '@/lib/dossier-type-guards'
+import { DOSSIER_CARD_TYPES, type DossierCardType } from '@/lib/dossier-type-guards'
 
-// Valid dossier types for validation
-const VALID_DOSSIER_TYPES: DossierType[] = [
-  'country',
-  'organization',
-  'person',
-  'engagement',
-  'forum',
-  'working_group',
-  'topic',
-]
+// This surface DISPLAYS dossier kinds, so its whitelist is the CARD set (the DB-7 plus
+// elected_official), derived from @/lib/dossier-type-guards rather than restated here —
+// a restated copy is what left /compare one type short of the other three surfaces.
+// `?type=` is attacker-controllable, so this stays a WHITELIST: membership is tested on
+// the raw value and the guard narrows it, so nothing is cast through the test.
+function isValidCompareType(value: unknown): value is DossierCardType {
+  return typeof value === 'string' && (DOSSIER_CARD_TYPES as readonly string[]).includes(value)
+}
 
 // Valid view modes
 const VALID_VIEW_MODES: ComparisonViewMode[] = ['table', 'side_by_side', 'highlights_only']
 
 // Search params interface
 interface CompareSearchParams {
-  type?: DossierType
+  type?: DossierCardType
   ids?: string
   view?: ComparisonViewMode
   diff?: boolean
@@ -35,13 +33,12 @@ interface CompareSearchParams {
 
 export const Route = createFileRoute('/_protected/compare')({
   validateSearch: (search: Record<string, unknown>): CompareSearchParams => {
-    const type = search.type as string | undefined
     const ids = search.ids as string | undefined
     const view = search.view as string | undefined
     const diff = search.diff
 
     return {
-      type: VALID_DOSSIER_TYPES.includes(type as DossierType) ? (type as DossierType) : undefined,
+      type: isValidCompareType(search.type) ? search.type : undefined,
       ids: typeof ids === 'string' && ids.length > 0 ? ids : undefined,
       view: VALID_VIEW_MODES.includes(view as ComparisonViewMode)
         ? (view as ComparisonViewMode)

@@ -26,7 +26,8 @@
       "engagement": "المشاركات",
       "forum": "المنتديات",
       "working_group": "مجموعات العمل",
-      "topic": "المواضيع"
+      "topic": "المواضيع",
+      "elected_official": "المسؤولون المنتخبون"
     }
   },
 
@@ -166,6 +167,20 @@
     "topic": {
       "topic_category": "الفئة",
       "parent_topic_id": "الموضوع الأم"
+    },
+    "elected_official": {
+      "office_name_en": "المنصب (بالإنجليزية)",
+      "office_name_ar": "المنصب (بالعربية)",
+      "office_type": "نوع المنصب",
+      "district_en": "الدائرة (بالإنجليزية)",
+      "district_ar": "الدائرة (بالعربية)",
+      "party_en": "الحزب (بالإنجليزية)",
+      "party_ar": "الحزب (بالعربية)",
+      "party_abbreviation": "اختصار الحزب",
+      "party_ideology": "توجه الحزب",
+      "term_start": "بداية الولاية",
+      "term_end": "نهاية الولاية",
+      "is_current_term": "الولاية الحالية"
     }
   },
 

@@ -15,6 +15,7 @@ import {
   X,
   ArrowRight,
   Building2,
+  Crown,
   Globe,
   User,
   Users,
@@ -36,9 +37,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useDossiersByType } from '@/hooks/useDossier'
-import type { DossierType } from '@/lib/dossier-type-guards'
-import type { DossierWithExtension } from '@/services/dossier-api'
+import { DOSSIER_CARD_TYPES, type DossierCardType } from '@/lib/dossier-type-guards'
+import { useComparisonCandidates, type ComparisonCandidate } from '@/hooks/useEntityComparison'
 import { MIN_COMPARISON_ENTITIES, MAX_COMPARISON_ENTITIES } from '@/types/entity-comparison.types'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -46,8 +46,8 @@ import { useDirection } from '@/hooks/useDirection'
  * Props for EntityComparisonSelector
  */
 interface EntityComparisonSelectorProps {
-  selectedType: DossierType | null
-  onTypeChange: (type: DossierType | null) => void
+  selectedType: DossierCardType | null
+  onTypeChange: (type: DossierCardType | null) => void
   selectedIds: string[]
   onSelectionChange: (ids: string[]) => void
   searchQuery: string
@@ -59,24 +59,33 @@ interface EntityComparisonSelectorProps {
 }
 
 /**
- * Entity type options with icons
+ * Glyph per entity type. Typed `Record<DossierCardType, …>` on purpose: a ninth card type
+ * added to DOSSIER_CARD_TYPES fails the build here instead of silently falling through to
+ * a generic glyph, which is how `elected_official` stayed off this surface.
  */
-const ENTITY_TYPE_OPTIONS: { value: DossierType; icon: React.ReactNode }[] = [
-  { value: 'country', icon: <Globe className="h-4 w-4" /> },
-  { value: 'organization', icon: <Building2 className="h-4 w-4" /> },
-  { value: 'person', icon: <User className="h-4 w-4" /> },
-  { value: 'engagement', icon: <Calendar className="h-4 w-4" /> },
-  { value: 'forum', icon: <MessageSquare className="h-4 w-4" /> },
-  { value: 'working_group', icon: <Users className="h-4 w-4" /> },
-  { value: 'topic', icon: <Tag className="h-4 w-4" /> },
-]
+const ENTITY_TYPE_ICONS: Record<DossierCardType, React.ReactNode> = {
+  country: <Globe className="h-4 w-4" />,
+  organization: <Building2 className="h-4 w-4" />,
+  forum: <MessageSquare className="h-4 w-4" />,
+  engagement: <Calendar className="h-4 w-4" />,
+  topic: <Tag className="h-4 w-4" />,
+  working_group: <Users className="h-4 w-4" />,
+  person: <User className="h-4 w-4" />,
+  elected_official: <Crown className="h-4 w-4" />,
+}
+
+/**
+ * Entity type options — membership DERIVED from the shared card set, so this list and the
+ * route's search-param whitelist cannot drift apart again.
+ */
+const ENTITY_TYPE_OPTIONS: { value: DossierCardType; icon: React.ReactNode }[] =
+  DOSSIER_CARD_TYPES.map((value) => ({ value, icon: ENTITY_TYPE_ICONS[value] }))
 
 /**
  * Get icon for entity type
  */
-function getEntityTypeIcon(type: DossierType): React.ReactNode {
-  const option = ENTITY_TYPE_OPTIONS.find((o) => o.value === type)
-  return option?.icon ?? <Tag className="h-4 w-4" />
+function getEntityTypeIcon(type: DossierCardType): React.ReactNode {
+  return ENTITY_TYPE_ICONS[type]
 }
 
 /**
@@ -88,7 +97,7 @@ const EntityCard = memo(function EntityCard({
   onToggle,
   isRTL,
 }: {
-  entity: DossierWithExtension
+  entity: ComparisonCandidate
   isSelected: boolean
   onToggle: (id: string) => void
   isRTL: boolean
@@ -178,18 +187,9 @@ export const EntityComparisonSelector = memo(function EntityComparisonSelector({
 }: EntityComparisonSelectorProps) {
   const { t } = useTranslation('entity-comparison')
   const { isRTL } = useDirection()
-  // Fetch entities when type is selected
-  const { data: entitiesData, isLoading } = useDossiersByType(
-    selectedType || 'country',
-    1,
-    50,
-    undefined,
-    {
-      enabled: !!selectedType,
-    },
-  )
-
-  const entities = entitiesData?.data || []
+  // Fetch selectable entities for the chosen type. The hook owns the per-type arms —
+  // including the subtype-filtered elected-official one, which is not a dossiers.type query.
+  const { candidates: entities, isLoading } = useComparisonCandidates(selectedType, 1, 50)
 
   // Filter entities by search query
   const filteredEntities = entities.filter((entity) => {
@@ -220,7 +220,7 @@ export const EntityComparisonSelector = memo(function EntityComparisonSelector({
   // Handle type change (clear selections when type changes)
   const handleTypeChange = useCallback(
     (value: string) => {
-      onTypeChange(value as DossierType)
+      onTypeChange(value as DossierCardType)
       onSelectionChange([])
       onSearchChange('')
     },

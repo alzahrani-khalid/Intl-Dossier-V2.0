@@ -7,7 +7,7 @@
  * side-by-side comparison of dossiers with difference highlighting.
  */
 
-import type { DossierType, Dossier } from '@/lib/dossier-type-guards'
+import type { DossierCardType, Dossier } from '@/lib/dossier-type-guards'
 
 /**
  * Field difference type indicators
@@ -37,7 +37,7 @@ export interface FieldComparison {
  */
 export interface EntityComparisonResult {
   /** Type of entities being compared */
-  entityType: DossierType
+  entityType: DossierCardType
   /** Array of entity IDs being compared */
   entityIds: string[]
   /** Array of dossiers being compared */
@@ -135,7 +135,7 @@ export interface ComparisonExportConfig {
  */
 export interface ComparisonUrlState {
   /** Dossier type being compared */
-  type?: DossierType
+  type?: DossierCardType
   /** Comma-separated list of entity IDs */
   ids?: string
   /** View mode */
@@ -149,7 +149,7 @@ export interface ComparisonUrlState {
  */
 export interface EntitySelectionState {
   /** Currently selected dossier type */
-  selectedType: DossierType | null
+  selectedType: DossierCardType | null
   /** List of selected entity IDs */
   selectedIds: string[]
   /** Maximum number of entities that can be selected */
