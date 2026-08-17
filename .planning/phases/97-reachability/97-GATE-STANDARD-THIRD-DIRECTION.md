@@ -242,6 +242,37 @@ things it establishes, because they are different claims:
 **A byte-diff shows what you CHANGED. A whole-set colour diff shows what you AFFECTED.** Those
 are different claims, and only the second can be false while the first looks clean.
 
+### THE POSITIVE PATTERN — key a gate on the DECISION, not on the resulting STATE
+
+Four negative instances are recorded above. This is the shape that **cannot** go stale, found in
+`97-11` while probing for survivors of the transient class:
+
+```
+if <the decision record says DELETE>; then  ! test -f <module>   # must be GONE
+else                                          test -f <module>   # must be PRESENT
+fi
+```
+
+A gate keyed on the **decision** asserts the correct thing under **either branch**. Exercising
+the decision cannot falsify it, because the decision is its input rather than its assumption.
+That is the structural opposite of the transient-assertion defect, where a gate hard-codes the
+state that happens to hold at authoring time.
+
+**Rule of thumb:** if execution is authorised to change X, a gate must not assert X — it must
+assert _the relationship between X and the record that governs X_.
+
+(Method note: this was found by grepping for surviving `test -f` assertions on the deleted
+modules, getting two hits, and **reading them instead of reporting them**. A count of two looked
+exactly like two more defects.)
+
+### Keying a RULED-EDIT table: gate ID + content, NEVER line number
+
+**Line numbers SHIFT when clauses are deleted.** During this leg the same two gates were referred
+to as `:248`/`:326` and as `g1`/`g2` in different messages, and after a clause deletion the line
+numbers no longer matched either. A ruled-edit record keyed on line number silently points at
+the wrong gate the moment any earlier edit lands. **Key on the gate's stable ID plus a content
+excerpt.**
+
 ### Required review pass: CROSS-GATE SWEEPS FOR REPEATED LITERALS
 
 Five gates carried the same wrong package name because a literal was **COPIED rather than
