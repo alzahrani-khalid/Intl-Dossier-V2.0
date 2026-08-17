@@ -155,7 +155,7 @@ verified sound across six lanes).
   - **Filed per `RULING-P94-01` order 3, which suggested the id `TOAST-01`.** Placed as `COPY-06` because every id in this register is section-prefixed and the owner phase is 98 — flagged for approve-as-placed (D-73 pattern). The suggested id is recorded here so the ruling stays traceable.
   - **Why tracked rather than noted:** it was first written down as a CONTEXT "deferred idea", and an audit line is not a queue. Nothing fails if a deferred idea is never read.
 - [ ] **COPY-07**: **The dossier-type stats card ships a hardcoded English label.** `"% of total
-    active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` (line 228 at
+  active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` (line 228 at
       `c94d7debe`; the string is the anchor, not the line number) renders untranslated in both
       locales — no `t()`. Named by Phase 97 as a deliberately-not-covered residue with owner
       Phase 98 (`97-CLOSING-DERIVATION.md:227`, `97-05-SUMMARY.md:110-112`); it carried no register
@@ -178,6 +178,16 @@ verified sound across six lanes).
       criterion 7; closes on the rendered EO popover in both locales. NAV-01 (Phase 97, Complete
       BOUNDED on exactly this handoff) is NOT edited by the plan; its status cell gets a dated note
       at close-out if criterion 7 goes green.
+- [ ] **COPY-09**: **The sentence-case long tail: ~4.5k Title Case strings across the EN bundle.**
+      Two independently-written instruments measured 4,471 / 4,562 Title-Case candidates among
+      16,045 EN i18n string values (129 namespace files) — ~28% of all EN copy. Phase 98's
+      criterion 4 closes its sentence-case clause BOUNDED (named instance + labels its oracle set
+      captures on visited surfaces, `RULING-P98A2-02` Q1 Reading B); this row is the remainder.
+      **Not mechanical:** CLAUDE.md carves out UPPERCASE classification ribbons, mono labels, and
+      table-column headers, and domain proper-noun-like terms ("Working Group", "Intake Ticket")
+      need per-string judgment. **Owner: Phase 102 — Staging Data & Debt Tail.** Interaction note:
+      Phase 99 mirrors `ar` off settled EN — when this tail lands AFTER Phase 99, the pass MUST
+      re-check `ar` mirroring for every string it edits. Filed 2026-08-18 by `RULING-P98A2-02`.
 
 ### GUIDE-HOLLOW — a popover whose four labelled sections have never had content
 
@@ -748,6 +758,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | COPY-07 | Phase 98 — Copy Truth | Pending |
 | COPY-08 | Phase 98 — Copy Truth | Pending |
 | GUIDE-HOLLOW-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| COPY-09 | Phase 102 — Staging Data & Debt Tail | Pending |
 | AR-01 | Phase 99 — Arabic Coverage | Pending |
 | AR-02 | Phase 99 — Arabic Coverage | Pending |
 | AR-03 | Phase 99 — Arabic Coverage | Pending |
