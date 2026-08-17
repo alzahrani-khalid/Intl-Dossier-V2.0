@@ -284,6 +284,40 @@ manufactures coverage; read as absent it shrinks the denominator without saying 
 **Required: state the bound, and report `timedOut` as its own count beside green and red.** A
 gate whose honest runtime exceeds the default needs a raised bound, not a re-interpretation.
 
+### ATTRACTOR SYMPTOMS — independence does not protect against a shared MISLEADING SIGNAL
+
+`GATESTD-05` (the drill's missing re-entrancy guard) presented as **"this gate is slow"**, because
+the per-gate timeout kept killing the recursion. Two seats — orchestrator and overseer —
+**independently planned the same wrong fix: raise the bound.** Neither conferred. **The timeout was
+the only thing containing the fork bomb**; there were no stray processes precisely because it kept
+killing them, and raising it would have removed the sole guard.
+
+**This qualifies everything else recorded about independence.**
+
+> **Cross-model and cross-seat independence protects against shared BLIND SPOTS. It does NOT
+> protect against a shared MISLEADING SIGNAL.**
+
+We were not both blind. We were both reading the same surface, and **the surface lied identically
+to each of us**. A third independent seat would very likely have said "raise the bound" too —
+independence adds nothing when every observer is handed the same wrong summary of the state.
+
+**Some symptoms are ATTRACTORS: they name their own remedy, and the named remedy is wrong.**
+"Slow" attracts "raise the timeout". "Flaky" attracts "retry". "Empty" attracts "seed data".
+Each is the right move often enough to be reflexive, which is exactly what makes it dangerous.
+
+### THE ESCAPE: when the obvious fix FAILS, that is data about the DIAGNOSIS
+
+What actually broke it: the independent verifier **applied the obvious remedy, watched it fail, and
+then questioned the DIAGNOSIS rather than escalating the remedy.** It raised the bound to 900s,
+saw it still not finish, and asked _why_ instead of trying 1800s.
+
+> **Escalating a remedy that already failed once is how a wrong diagnosis survives contact with
+> evidence.**
+
+The second application of a failed remedy is where the loop closes: each escalation looks like
+diligence, produces a fresh negative result, and never revisits the premise that chose the remedy.
+**A remedy that fails once has told you something about the model that selected it — read it.**
+
 ### Required review pass: CROSS-GATE SWEEPS FOR REPEATED LITERALS
 
 Five gates carried the same wrong package name because a literal was **COPIED rather than
