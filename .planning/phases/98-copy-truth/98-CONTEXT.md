@@ -145,15 +145,41 @@ Five readings that were genuinely ambiguous went up and came back ruled. **Read 
 - **D-22: (criterion 2, Q2 — the `calendar.recurrence` instance is REAL; the repair is ROUTING).**
   `RecurrencePatternEditor.tsx:328` calls `t('calendar.recurrence.title')` against a namespace-less
   `useTranslation()` at `:176`, so lookups resolve into `common`, whose `calendar` subtree holds only
-  weekday abbreviations — **16 dot-form `calendar.recurrence.*` call sites in that one file render
-  their raw keys.** The content already exists under the `calendar` namespace (`calendar.json` →
+  weekday abbreviations — **every dot-form `calendar.recurrence.*` call site in that one file renders
+  its raw key.** The content already exists under the `calendar` namespace (`calendar.json` →
   `recurrence.title`, `recurrence.summaryText.*`), reachable colon-form only. **One file, mechanical,
   no key authoring, and no wider backend/`public/locales` hunt is owed.**
-  **Cautionary note, recorded because it cost a wrong escalation:** the orchestrator reported this
-  instance ABSENT on an uppercase byte-grep for `CALENDAR.RECURRENCE` (0 hits) with a working
-  positive control. The control proved the instrument _ran_; it did not prove the _population_ was
-  defined right. The lowercase family has 43 hits. **A correct command can return a correct number
-  about the wrong set** — always ask what falls outside the set you just searched.
+
+  **CENSUS CORRECTED 2026-08-18 (`RULING-P98A2-02` amendment, `1a30f45e2`). This row carries the
+  DERIVATION, not a number** — the gate re-derives at execution time and lets the count fall out:
+
+  ```
+  S=/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/frontend/src/components/calendar/RecurrencePatternEditor.tsx
+  command grep -c        "calendar\.recurrence"                    "$S"   # occurrences
+  command grep -ohE "calendar\.recurrence\.[A-Za-z0-9_.]+" "$S" | sort -u | wc -l   # distinct paths
+  ```
+
+  At `87b2d040e` that returned **43 occurrences** (41 quoted `t('…` + 2 template-literal at `:458`,
+  `:525`) over **37 distinct paths**. **The ruling and this row previously said 16; that figure was a
+  mis-derivation and no subset of the file reproduces it** — excluding the 13 `summaryText.*`
+  computed-string paths leaves 24 distinct / 26 call sites, and first-segment-only leaves 11. The
+  hypothesis that 16 was a deliberate bound was **tested and refuted**, so nothing here rests on a
+  reading. **The DECISION is unchanged and verified stronger:** all 37 paths resolve in `en` and `ar`
+  `calendar.json`, so routing-not-authoring holds.
+  **Population exclusion, stated (D-05):** a repo-wide sweep also hits
+  `frontend/src/.understand-anything/.trash-1780921257/…`, a git-ignored dashboard extract artifact.
+  Scope to the source file — an unscoped sweep returns 49 and is wrong.
+
+  **Two cautionary notes, recorded because each cost something:**
+  1. The orchestrator reported this instance ABSENT on an uppercase byte-grep for
+     `CALENDAR.RECURRENCE` (0 hits) with a working positive control. The control proved the instrument
+     _ran_; it did not prove the _population_ was defined right. **A correct command can return a
+     correct number about the wrong set** — always ask what falls outside the set you searched.
+  2. **A number stated in a RULING is not exempt from D-04.** Three seats treated "16" as given
+     because a ruling said it — the planner quoted it into a jointly-unsatisfiable gate, this file
+     transcribed it without counting, and only an independent checker ran the derivation.
+     **Authority is not evidence.**
+
 - **D-23: (criterion 2, binding generalization): every named instance is a CLASS, never a string.**
   The plan sweeps dot-form-vs-namespace misses as a derived population, not just the strings the
   criterion happens to name.
