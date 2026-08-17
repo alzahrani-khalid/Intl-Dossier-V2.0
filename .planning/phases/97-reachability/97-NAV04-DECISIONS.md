@@ -132,17 +132,17 @@ is more honest than forcing one; the `delta` sentence in §0 is where the index 
 
 ## §2 — the nine route rows
 
-| #   | route                      | decision              | why (one line)                                                                                        | owner / actor   | inbound-link evidence           |
-| --- | -------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------- | --------------- | ------------------------------- |
-| 1   | `/admin/ai-settings`       | `ALREADY-REACHABLE`   | live sidebar row exists at `navigation-config.ts:185`; adding another would duplicate it              | nobody          | `97-POPULATIONS.md` §2b, 2 LIVE |
-| 2   | `/admin/system`            | `ALREADY-REACHABLE`   | live sidebar row at `:191`                                                                            | nobody          | `97-POPULATIONS.md` §2b, 1 LIVE |
-| 3   | `/admin/field-permissions` | `ALREADY-REACHABLE`   | live sidebar row at `:203`                                                                            | nobody          | `97-POPULATIONS.md` §2b, 1 LIVE |
-| 4   | `/admin/data-retention`    | `ALREADY-REACHABLE`   | live sidebar row at `:215`                                                                            | nobody          | `97-POPULATIONS.md` §2b, 1 LIVE |
-| 5   | `/admin/ai-usage`          | `NAV ENTRY`           | ruled `RULING-P97-01` §1; a working telemetry page with zero inbound links is the P95 KEEP class      | `97-10` adds it | `97-POPULATIONS.md` §2, 0 LIVE  |
-| 6   | `/admin/approvals`         | `PARKED-RE-ESCALATED` | the conditional-delete trigger was **REFUTED** by the execution-time comparison in §3a                | overseer        | `97-POPULATIONS.md` §2, 0 LIVE  |
-| 7   | `/admin/preview-layouts`   | `PARKED-RE-ESCALATED` | the conditional-delete trigger was **REFUTED** by the ownership-claim check in §3b                    | overseer        | `97-POPULATIONS.md` §2, 0 LIVE  |
-| 8   | `/monitoring`              | `NAV ENTRY`           | route KEEP already ruled (`RULING-P95-01`, `95-DEAD-04-DECISION.md`); this row decides only nav       | `97-10` adds it | `97-POPULATIONS.md` §2, 0 LIVE  |
-| 9   | `/admin/` (index)          | see §1 — no token     | redirect-only index; `beforeLoad` throws to `/admin/ai-settings`, which is row 1, `ALREADY-REACHABLE` | nobody          | `97-POPULATIONS.md` §2, 0 LIVE  |
+| #   | route                      | decision                    | why (one line)                                                                                                                                                                                                                                     | owner / actor                       | inbound-link evidence           |
+| --- | -------------------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ------------------------------- |
+| 1   | `/admin/ai-settings`       | `ALREADY-REACHABLE`         | live sidebar row exists at `navigation-config.ts:185`; adding another would duplicate it                                                                                                                                                           | nobody                              | `97-POPULATIONS.md` §2b, 2 LIVE |
+| 2   | `/admin/system`            | `ALREADY-REACHABLE`         | live sidebar row at `:191`                                                                                                                                                                                                                         | nobody                              | `97-POPULATIONS.md` §2b, 1 LIVE |
+| 3   | `/admin/field-permissions` | `ALREADY-REACHABLE`         | live sidebar row at `:203`                                                                                                                                                                                                                         | nobody                              | `97-POPULATIONS.md` §2b, 1 LIVE |
+| 4   | `/admin/data-retention`    | `ALREADY-REACHABLE`         | live sidebar row at `:215`                                                                                                                                                                                                                         | nobody                              | `97-POPULATIONS.md` §2b, 1 LIVE |
+| 5   | `/admin/ai-usage`          | `NAV ENTRY`                 | ruled `RULING-P97-01` §1; a working telemetry page with zero inbound links is the P95 KEEP class                                                                                                                                                   | `97-10` adds it                     | `97-POPULATIONS.md` §2, 0 LIVE  |
+| 6   | `/admin/approvals`         | `NAV ENTRY`                 | trigger REFUTED (§3a) → **RULING-P97-14** rules NAV ENTRY, admin group, adminOnly: it is the SOLE caller of `approvals-reassign`, so leaving it unreachable is what NAV-04 exists to prevent                                                       | 97-10                               | `97-POPULATIONS.md` §2, 0 LIVE  |
+| 7   | `/admin/preview-layouts`   | `OWNED-ELSEWHERE-UNTOUCHED` | trigger REFUTED (§3b); no owner existed, so **RULING-P97-14** ASSIGNS one. Untouched here. NOT deleted: a route-only deletion leaves an ORPHAN TABLE with no code trace of its purpose — worse than today; the finishing migration is out of scope | **Phase 102** (`PREVIEW-HOLLOW-01`) | `97-POPULATIONS.md` §2, 0 LIVE  |
+| 8   | `/monitoring`              | `NAV ENTRY`                 | route KEEP already ruled (`RULING-P95-01`, `95-DEAD-04-DECISION.md`); this row decides only nav                                                                                                                                                    | `97-10` adds it                     | `97-POPULATIONS.md` §2, 0 LIVE  |
+| 9   | `/admin/` (index)          | see §1 — no token           | redirect-only index; `beforeLoad` throws to `/admin/ai-settings`, which is row 1, `ALREADY-REACHABLE`                                                                                                                                              | nobody                              | `97-POPULATIONS.md` §2, 0 LIVE  |
 
 Tokens for rows 1–8:
 
@@ -152,8 +152,8 @@ DECISION /admin/system: ALREADY-REACHABLE
 DECISION /admin/field-permissions: ALREADY-REACHABLE
 DECISION /admin/data-retention: ALREADY-REACHABLE
 DECISION /admin/ai-usage: NAV ENTRY
-DECISION /admin/approvals: PARKED-RE-ESCALATED
-DECISION /admin/preview-layouts: PARKED-RE-ESCALATED
+DECISION /admin/approvals: NAV ENTRY
+DECISION /admin/preview-layouts: OWNED-ELSEWHERE-UNTOUCHED
 DECISION /monitoring: NAV ENTRY
 ```
 
