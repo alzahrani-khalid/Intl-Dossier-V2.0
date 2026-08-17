@@ -127,6 +127,21 @@ Same failure, different medium: **terminal render wrap** there, **prettier reflo
 Good identifiers: a filename, a symbol, a ruling id, a commit sha, a testid.
 Bad identifiers: a sentence, a quoted phrase, anything whose length approaches the wrap column.
 
+### Second amendment, earned the same way: identifiers must be CASE-STABLE too
+
+Immediately after the wrap amendment shipped, the very next integrity check returned **0** again —
+this time because the token was written lower-case in the check and the document renders it as an
+upper-case heading. **Case-sensitive 0, case-insensitive 1. Content intact, again.**
+
+So the failure is not specific to wrapping. **Any transformation between what you WRITE and what
+the medium STORES defeats a literal matcher** — wrap, case, smart quotes, an em dash normalised by
+a formatter, a path rewritten relative. Prose is transformed on the way in; identifiers should be
+chosen from the parts that are NOT.
+
+**Practical rule: pick tokens no formatter will touch** — `ENGREAD-01`, `dossier-api.ts`,
+`d561738fa`, `TS2344` — and match case-insensitively when the token could appear in a heading.
+Prose fragments are not identifiers, however distinctive they sound.
+
 ## THE MEDIUM A LAW WAS LEARNED ON BECOMES AN INVISIBLE SCOPE LIMIT
 
 **This is why the amendment above was needed at all, and it is the more valuable finding.**
