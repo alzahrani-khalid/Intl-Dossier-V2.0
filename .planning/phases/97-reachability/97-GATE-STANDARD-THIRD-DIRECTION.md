@@ -346,6 +346,36 @@ thing preventing it was asking _which site renders the counted testid_.
 > **The pre-assertion is not merely good practice. It is the guard against the one failure mode
 > whose remedy actively makes things worse.**
 
+### NEVER KEY A GATE ON PROSE — key it on what cannot change for NON-SEMANTIC reasons
+
+Three gates (`97-01` g1, `97-02` g1/g2) derived their expected test count by **grepping literal
+title prose** (`command grep -c "ordinary authenticated user"`). Correcting those titles — an
+unambiguously RIGHT change, ruled, fixing a false claim about which role the tests prove — turned
+all three red.
+
+**That is the signature of a coupling guaranteed to break, not merely able to.** Title prose is
+the part of a spec MOST likely to be edited for non-semantic reasons: clarity, honesty, a
+reviewer's wording preference. A gate keyed on it fails on improvement.
+
+**Key gate arithmetic on:** a testid, a tag (`@mobile`), an identifier, a machine-readable
+annotation, a structural form (`^\s*test(`).
+**Never on:** a title, a comment, a description, any sentence a human might improve.
+
+#### The unification — same law as the identifier discipline, one layer up
+
+The integrity-check rule says: **choose identifiers from the parts a formatter does NOT
+transform.** This is that principle applied to gates instead of checks:
+
+> **Key on what does not change for NON-SEMANTIC reasons.**
+> Formatters transform prose. **So do humans improving it — and the second kind is more frequent
+> than the first.**
+
+Same law, two media, and this leg found each half **independently, on different surfaces, without
+connecting them until both were written down.** That is precisely the medium-scope trap recorded
+in `97-PREDICT-BEFORE-READ.md`: a law learned on one surface silently scopes itself to that
+surface. **The trap recurred inside the very phase that documented it** — which is the strongest
+argument for the practice it prescribes: at the moment you record a law, name the other surfaces.
+
 ### Required review pass: CROSS-GATE SWEEPS FOR REPEATED LITERALS
 
 Five gates carried the same wrong package name because a literal was **COPIED rather than
