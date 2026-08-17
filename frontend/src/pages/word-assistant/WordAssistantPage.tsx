@@ -50,11 +50,37 @@ interface MutationContext {
   typingMessageId: string
 }
 
+/**
+ * Phase 96 DEAD-07: the connection pill is three-state and settles ONLY from the live probe.
+ * Chrome per 96-UI-SPEC §3 — the shipped connected/disconnected pills are unchanged; the
+ * in-flight state is new. Rendering connected or disconnected while the truth is unknown is
+ * the confident-lie shape this phase exists to remove.
+ */
+type ConnectionState = 'checking' | 'connected' | 'disconnected'
+
+const CONNECTION_PILL: Record<ConnectionState, { pill: string; dot: string; labelKey: string }> = {
+  checking: {
+    pill: 'bg-surface-raised text-ink-mute',
+    dot: 'bg-ink-faint',
+    labelKey: 'wordAssistant.checking',
+  },
+  connected: {
+    pill: 'bg-success/10 text-success',
+    dot: 'bg-success',
+    labelKey: 'wordAssistant.connected',
+  },
+  disconnected: {
+    pill: 'bg-danger/10 text-danger',
+    dot: 'bg-danger',
+    labelKey: 'wordAssistant.disconnected',
+  },
+}
+
 export function WordAssistantPage() {
   const { t } = useTranslation()
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
-  const [isConnected, setIsConnected] = useState(true)
+  const [connectionState, setConnectionState] = useState<ConnectionState>('checking')
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const messagesRef = useRef<Message[]>([])
 
@@ -184,7 +210,6 @@ export function WordAssistantPage() {
       return { typingMessageId: typingMessage.id }
     },
     onSuccess: (data, _variables, context) => {
-      setIsConnected(true)
       setMessages((prev) => {
         const withoutTyping = context
           ? prev.filter((message) => message.id !== context.typingMessageId)
@@ -203,7 +228,6 @@ export function WordAssistantPage() {
       })
     },
     onError: (error, _variables, context) => {
-      setIsConnected(false)
       setMessages((prev) => {
         const withoutTyping = context
           ? prev.filter((message) => message.id !== context.typingMessageId)
@@ -246,16 +270,14 @@ export function WordAssistantPage() {
     scrollToBottom()
   }, [messages])
 
-  // Lightweight connectivity check on mount
+  // The LIVE probe. It runs on mount whatever `assistantMode` is: the mode decides which
+  // backend the composer talks to, it does not get to decide what the badge claims. Before
+  // Phase 96 the fallback mode skipped this call and forced connected — a status nothing had
+  // measured. The pill state moves here and nowhere else.
   useEffect(() => {
     let isMounted = true
 
-    const checkConnection = async () => {
-      if (assistantMode !== 'supabase') {
-        if (isMounted) setIsConnected(true)
-        return
-      }
-
+    const checkConnection = async (): Promise<void> => {
       try {
         const { error } = await supabase.functions.invoke<WordAssistantResponse>('word-assistant', {
           body: {
@@ -264,22 +286,22 @@ export function WordAssistantPage() {
           },
         })
         if (isMounted) {
-          setIsConnected(!error)
+          setConnectionState(error ? 'disconnected' : 'connected')
         }
       } catch (err) {
         console.warn('Word assistant connectivity check failed:', err)
         if (isMounted) {
-          setIsConnected(false)
+          setConnectionState('disconnected')
         }
       }
     }
 
-    checkConnection()
+    void checkConnection()
 
     return () => {
       isMounted = false
     }
-  }, [assistantMode])
+  }, [])
 
   return (
     <div className="container mx-auto py-6 h-[calc(100vh-8rem)]">
@@ -290,12 +312,11 @@ export function WordAssistantPage() {
         </div>
         <div className="flex items-center gap-2">
           <div
-            className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
-              isConnected ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'
-            }`}
+            data-testid="word-assistant-connection"
+            className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${CONNECTION_PILL[connectionState].pill}`}
           >
-            <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-success' : 'bg-danger'}`} />
-            {isConnected ? t('wordAssistant.connected') : t('wordAssistant.disconnected')}
+            <div className={`w-2 h-2 rounded-full ${CONNECTION_PILL[connectionState].dot}`} />
+            {t(CONNECTION_PILL[connectionState].labelKey)}
           </div>
           <Button variant="outline" size="sm" onClick={() => setMessages([])}>
             <RefreshCw className="h-4 w-4 me-2" />

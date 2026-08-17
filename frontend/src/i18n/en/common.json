@@ -500,6 +500,7 @@
   },
   "wordAssistant": {
     "description": "AI drafting help for briefs, summaries, and translations",
+    "checking": "Checking connection",
     "connected": "Connected",
     "disconnected": "Disconnected",
     "clearChat": "Clear chat",
