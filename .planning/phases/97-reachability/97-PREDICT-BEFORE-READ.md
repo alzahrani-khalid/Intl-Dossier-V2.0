@@ -92,4 +92,39 @@ Exact PIDs make that impossible by construction too.
 Recorded across two seats: this instance was the overseer's, caught by the same control that
 caught the orchestrator's. **The control is seat-independent — which is the point.**
 
+## Verify a filing by IDENTIFIERS-INSIDE — and choose SHORT ones
+
+**A presence count verifies PRESENCE, never INTEGRITY.** `body=1 table=1` reported SUCCESS over
+an entry whose every identifier had been emptied by shell command-substitution — the route, the
+ruling, the table and the hook all gone, the counts both green. So verify a filing by naming the
+identifiers that MUST appear inside it and counting each.
+
+### The amendment: identifiers must be SHORT and DISTINCTIVE, never a phrase
+
+Stated without a length qualifier, that rule fails. Checking one such record, an identifier
+returned **0** — not because the content was missing but because the phrase **WRAPPED across two
+lines**, and a line-based matcher cannot see across a wrap. The content was intact; a
+whitespace-joined check found all three tokens.
+
+**The self-defeating shape, which is why this matters:** a zero produced by a wrap is
+**INDISTINGUISHABLE** from a zero produced by corruption — which is exactly the failure the rule
+was invented to catch. **A badly-chosen identifier makes the integrity check report the very
+defect it exists to detect.**
+
+### The unification — this project already held the same law on a different medium
+
+The overseer skill already requires probing a pane read-back with the **shortest distinctive
+token** — a commit hash, a pid, an id — **never a sentence**, because a long phrase crosses the
+terminal's RENDER WRAP boundary and grep returns zero on a message that arrived intact.
+
+Same failure, different medium: **terminal render wrap** there, **prettier reflow** here, and
+**editor soft-wrap** elsewhere.
+
+> **GENERAL FORM: any line-based matcher fails on a token longer than its medium's wrap width.
+> The media differ; the remedy is identical — choose the SHORTEST DISTINCTIVE token, or join
+> lines before matching.**
+
+Good identifiers: a filename, a symbol, a ruling id, a commit sha, a testid.
+Bad identifiers: a sentence, a quoted phrase, anything whose length approaches the wrap column.
+
 PREDICT-BEFORE-READ-END
