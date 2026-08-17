@@ -11,7 +11,12 @@ test.describe('Phase 39: Calendar mobile week-list', () => {
     await expect(page.locator('.week-list-mobile')).toBeVisible()
     await expect(page.locator('.cal-grid')).not.toBeVisible()
 
-    const today = page.getByRole('button', { name: /Today|اليوم/ })
+    // Phase 96 DEAD-07: with the grid no longer replaced by an empty-month
+    // placeholder, BOTH "Today" affordances render below 640px — the header
+    // control and WeekListMobile's own `.weeklist-today`. The bare locator was
+    // written when neither reached the DOM and now trips strict mode; scope it
+    // to the first match, which is the header control the assertion meant.
+    const today = page.getByRole('button', { name: /Today|اليوم/ }).first()
     await expect(today).toBeVisible()
   })
 

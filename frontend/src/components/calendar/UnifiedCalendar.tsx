@@ -1,5 +1,5 @@
 // T052: UnifiedCalendar component
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCalendarEvents, type CalendarEvent } from '@/hooks/useCalendarEvents'
 import { Card } from '@/components/ui/card'
@@ -15,15 +15,13 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { format, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns'
-import { CalendarEmptyWizard, type EventTemplate } from './CalendarEmptyWizard'
-import { CalendarEntryForm } from './CalendarEntryForm'
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import { CalendarMonthGrid } from './CalendarMonthGrid'
 import { WeekListMobile } from './WeekListMobile'
 import { useDirection } from '@/hooks/useDirection'
 import './calendar.css'
 
 interface UnifiedCalendarProps {
-  linkedItemType?: string
   linkedItemId?: string
   /** Optional: Pass events directly (for backwards compatibility with pages/calendar) */
   events?: CalendarEvent[]
@@ -36,7 +34,6 @@ interface UnifiedCalendarProps {
 }
 
 export function UnifiedCalendar({
-  linkedItemType,
   linkedItemId,
   events: propEvents,
   onEventClick,
@@ -59,9 +56,6 @@ export function UnifiedCalendar({
     return (): void => mql.removeEventListener('change', handler)
   }, [])
   const [entryTypeFilter, setEntryTypeFilter] = useState<string | undefined>(undefined)
-  const [showWizard, setShowWizard] = useState(true)
-  const [showCreateForm, setShowCreateForm] = useState(false)
-  const [selectedTemplate, setSelectedTemplate] = useState<EventTemplate | null>(null)
 
   const monthStart = startOfMonth(currentMonth)
   const monthEnd = endOfMonth(currentMonth)
@@ -70,6 +64,7 @@ export function UnifiedCalendar({
   const {
     events: hookEvents,
     isLoading: hookIsLoading,
+    isRefetching,
     error,
     refetch,
   } = useCalendarEvents({
@@ -95,34 +90,6 @@ export function UnifiedCalendar({
     setCurrentMonth(new Date())
   }
 
-  // Handle template selection from wizard
-  const handleCreateFromTemplate = useCallback((template: EventTemplate) => {
-    setSelectedTemplate(template)
-    setShowCreateForm(true)
-    setShowWizard(false)
-  }, [])
-
-  // Handle form success
-  const handleFormSuccess = useCallback(() => {
-    setShowCreateForm(false)
-    setSelectedTemplate(null)
-    refetch()
-  }, [refetch])
-
-  // Handle form cancel
-  const handleFormCancel = useCallback(() => {
-    setShowCreateForm(false)
-    setSelectedTemplate(null)
-  }, [])
-
-  // Handle wizard dismiss
-  const handleWizardDismiss = useCallback(() => {
-    setShowWizard(false)
-  }, [])
-
-  // Check if calendar is empty (no events at all, not just in current month)
-  const isCalendarEmpty = events.length === 0 && !entryTypeFilter
-
   if (isLoading) {
     return (
       <div className="cal-skeleton" aria-busy="true" aria-live="polite">
@@ -147,48 +114,13 @@ export function UnifiedCalendar({
   }
 
   if (error) {
-    return (
-      <Card className="p-8 text-center">
-        <p className="text-destructive">{t('errors.failed_to_load')}</p>
-      </Card>
-    )
+    return <QueryErrorState variant="page" onRetry={refetch} isRetrying={isRefetching} />
   }
 
-  // Show create form if triggered from wizard
-  if (showCreateForm) {
-    return (
-      <div className="flex flex-col gap-4">
-        <CalendarEntryForm
-          initialData={
-            selectedTemplate
-              ? {
-                  entry_type: selectedTemplate.defaults.entry_type,
-                  all_day: selectedTemplate.defaults.all_day,
-                  reminder_minutes: selectedTemplate.defaults.reminder_minutes,
-                }
-              : undefined
-          }
-          linkedItemType={linkedItemType}
-          linkedItemId={linkedItemId}
-          onSuccess={handleFormSuccess}
-          onCancel={handleFormCancel}
-        />
-      </div>
-    )
-  }
-
-  // Show wizard if calendar is empty and user hasn't dismissed it
-  if (isCalendarEmpty && showWizard) {
-    return (
-      <div className="flex flex-col gap-4">
-        <CalendarEmptyWizard
-          onCreateEvent={handleCreateFromTemplate}
-          onDismiss={handleWizardDismiss}
-        />
-      </div>
-    )
-  }
-
+  // Phase 96 DEAD-07: the grid renders unconditionally. An empty month is a GRID
+  // of day cells with weekday headers — it used to be replaced wholesale by an
+  // empty-state wizard, so today's month (with no rows in it) showed no calendar
+  // at all. The create affordance lives in the page chrome ("/calendar/new").
   return (
     <div className="flex flex-col gap-4">
       {/* Header & Controls */}
@@ -199,6 +131,7 @@ export function UnifiedCalendar({
               variant="outline"
               size="sm"
               onClick={handlePreviousMonth}
+              aria-label={t('navigation.previous')}
               className="icon-flip min-h-11 min-w-11"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -210,6 +143,7 @@ export function UnifiedCalendar({
               variant="outline"
               size="sm"
               onClick={handleNextMonth}
+              aria-label={t('navigation.next')}
               className="icon-flip min-h-11 min-w-11"
             >
               <ChevronRight className="h-4 w-4" />
@@ -225,7 +159,7 @@ export function UnifiedCalendar({
               value={entryTypeFilter}
               onValueChange={(v) => setEntryTypeFilter(v === 'all' ? undefined : v)}
             >
-              <SelectTrigger className="w-full sm:w-48">
+              <SelectTrigger aria-label={t('all_types')} className="w-full sm:w-48">
                 <SelectValue placeholder={t('all_types')} />
               </SelectTrigger>
               <SelectContent>
