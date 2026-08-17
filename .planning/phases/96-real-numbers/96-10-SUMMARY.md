@@ -366,4 +366,193 @@ migration authority, not new credentials.
 _Phase: 96-real-numbers_
 _Completed: 2026-08-17_
 
+---
+
+# ADDENDUM — 2026-08-17: BLOCK-96-10-01 UNBLOCKED, the sixth migration applied
+
+**Authority:** `RULING-P96-03` (`.tickmarkr/overseer/RULING-P96-03-SIXTH-MIGRATION.md`), branch
+(a) — authorize the sixth migration under a bounded addendum lane. This lane did exactly the
+work that ruling names and nothing else (condition 5). Scope: one migration, one gate re-run,
+this record.
+
+**Outcome: `persons` now answers 16 of 16 (was 15 of 16) and `engagements` 5 of 5 (was 3 of 5).
+Task 2's final gate arm is GREEN, re-run verbatim, with no edit to the spec or the gate.
+COUNT-02's behavioural half is closed.**
+
+## 1. Condition-2 sweep — do any ACCEPTED P92–P96 gates pin these three prosrc bodies?
+
+Population: `<automated>` gate blocks extracted from `.planning/phases/9[23456]-*/*-PLAN.md`
+(56 plan files). Extraction is block-based (`awk` from `<automated>` to `</automated>`) because
+exactly one gate block spans multiple lines — a line-only `command grep '<automated>'` extraction
+returns 138 lines and misses its continuation; the block form returns 139.
+
+```
+$ awk '/<automated>/{f=1} f{print} /<\/automated>/{f=0}' .planning/phases/9[23456]-*/*-PLAN.md > /tmp/p96-gate-blocks.txt
+$ wc -l < /tmp/p96-gate-blocks.txt
+139
+
+THE SWEEP:
+$ command grep -nE 'search_persons_advanced|search_engagements_advanced|search_working_groups' /tmp/p96-gate-blocks.txt
+SWEEP exit=1            <-- ZERO hits
+
+CONTROL (known-present token, same instrument, same file):
+$ command grep -cE 'test -f' /tmp/p96-gate-blocks.txt
+60
+control exit=0
+```
+
+The control is **60**, byte-identical to the orchestrator's recorded control — the instrument is
+proven to see the population. The zero is believed only past it (C5).
+
+**Superset sweep**, run additionally because this lane's population differs from the
+orchestrator's line count (139 vs 158): every `*-PLAN.md` anywhere under `.planning`, not just
+P92–P96 — 1923 gate-block lines, control `test -f` = **165**, sweep = **ZERO hits, exit 1**. No
+gate in any phase, accepted or otherwise, pins these three function names. Condition 2 is
+discharged in the permissive direction; the migration proceeds.
+
+**Timestamp check (condition 1), instrument-tested:**
+
+```
+$ ls supabase/migrations/ | command grep -c '20260817500005'   # known-present control
+1   (exit 0)
+$ ls supabase/migrations/ | command grep -c '20260817500006'   # the target slot
+0   (exit 1)  <-- unused
+```
+
+## 2. The prosrc diff — what the migration changes, mechanically
+
+Live `pg_get_functiondef` for all three was pulled via Supabase MCP `execute_sql` **before**
+authoring, written to disk, and the rewrite diffed against it. Line counts are identical on all
+three (55 / 46 / 48 → 55 / 46 / 48). Every hunk falls in one of the four permitted classes:
+
+<!-- prettier-ignore -->
+| function | id source | FROM clause | ORDER BY | correlated subqueries |
+| --- | --- | --- | --- | --- |
+| `search_persons_advanced` | `p.id` → `d.id` | `FROM persons p JOIN dossiers d` → `FROM dossiers d LEFT JOIN persons p ON p.id = d.id` | `p.importance_level DESC` → `… DESC NULLS LAST` | none |
+| `search_engagements_advanced` | `ed.id` → `d.id` | `FROM engagement_dossiers ed JOIN dossiers d` → `FROM dossiers d LEFT JOIN engagement_dossiers ed ON ed.id = d.id` | `ed.start_date DESC` → `… DESC NULLS LAST` | `participant_count`: `ep.engagement_id = ed.id` → `= d.id` |
+| `search_working_groups` | `wg.id` → `d.id` | `FROM working_groups wg JOIN dossiers d` → `FROM dossiers d LEFT JOIN working_groups wg ON wg.id = d.id` | unchanged (`d.updated_at DESC` — dossier-side, never null) | all three re-pointed to `d.id`: `working_group_members`, `working_group_deliverables`, `working_group_meetings` |
+
+**Nothing else moved.** Preserved verbatim and confirmed post-apply against `pg_proc`:
+
+<!-- prettier-ignore -->
+| function | `prosecdef` before → after | `provolatile` before → after | identity args |
+| --- | --- | --- | --- |
+| `search_persons_advanced` | `false` → `false` | `s` (STABLE) → `s` | unchanged, 11 params |
+| `search_engagements_advanced` | `false` → `false` | `s` (STABLE) → `s` | unchanged, 10 params |
+| `search_working_groups` | `true` (SECURITY DEFINER) → `true` | `v` → `v` | unchanged, 7 params |
+
+Every `RETURNS TABLE` column list and every `WHERE` filter is byte-identical to the pre-migration
+body — proved, not asserted: the post-apply `md5(pg_get_functiondef(oid))` equals the local md5
+of the authored statement, for all three.
+
+```
+              local md5 of the authored statement   live md5 post-apply
+persons       2d443da78914b348f4b1dae55b317a6c      2d443da78914b348f4b1dae55b317a6c
+engagements   fc50e9dbdf19dba310e7ee51db965944      fc50e9dbdf19dba310e7ee51db965944
+wg            706f8c552b3dea5b5ff05a115cfd7a40      706f8c552b3dea5b5ff05a115cfd7a40
+```
+
+**Semantics stated deliberately (unchanged from BLOCK-96-10-01):** with a LEFT JOIN, an ACTIVE
+filter on an extension column (`p_organization_id`, `p_engagement_type`, `p_wg_type`, …) still
+excludes extension-less rows. That is correct — a filter on a fact the row does not have cannot
+match it — not a residual drop.
+
+## 3. Apply evidence
+
+- **File:** `supabase/migrations/20260817500006_p96_extension_first_rpcs.sql` — exactly the three
+  `CREATE OR REPLACE FUNCTION` statements plus a header comment citing `RULING-P96-03`. Nothing
+  else rides in it (condition 1).
+- **Applied via** Supabase MCP `apply_migration`, project `zkrcjzdemdmwhearhfgg`, name
+  `p96_extension_first_rpcs` → `{"success": true}`. Zero DDL through `execute_sql`; `execute_sql`
+  was used only for the prosrc read and the recorded-evidence counts below.
+
+## 4. Before / after — the live 15-vs-16 discrepancy
+
+Authenticated as the `.env.test` TEST_USER (password-grant token; no credential echoed or
+committed at any point).
+
+```
+BEFORE (pre-migration, this lane's own measurement — not restated from 96-10):
+  GET /functions/v1/persons?limit=100
+    rows: 15   pagination: {"total": 16, "limit": 100, "offset": 0, "has_more": false}
+
+AFTER (post-migration, same endpoint, same user):
+  GET /functions/v1/persons?limit=100
+    rows: 16   pagination: {"total": 16, "limit": 100, "offset": 0, "has_more": false}
+    rows_eq_total: True     null_ids: 0
+```
+
+RPC-level, one statement each side (recorded-evidence `execute_sql`, read-only):
+
+<!-- prettier-ignore -->
+| relation | RPC rows BEFORE | RPC rows AFTER | dossiers (unarchived) | verdict |
+| --- | --- | --- | --- | --- |
+| `search_persons_advanced` | 15 | **16** | 16 | drop closed |
+| `search_engagements_advanced` | 3 | **5** | 5 | drop closed |
+| `search_working_groups` | 6 | 6 | 6 | latent drop removed; count unchanged (gap was 0) |
+
+`working_groups` moving 6→6 is the expected result and worth stating plainly: it was classified
+drop-capable with a **zero gap** — latent. The fix removes the capability; there was no live
+victim to recover. Also asserted post-migration: `null_person_ids = 0` — the dossier-first form
+never emits a NULL `id` for the extension-less row.
+
+## 5. The 96-10 Task 2 gate, re-run VERBATIM — red → green
+
+Gate text taken byte-identically from `.planning/phases/96-real-numbers/96-10-PLAN.md` Task 2
+`<automated>`. No spec edit, no gate edit.
+
+**RED** — recorded twice, both pre-migration, both this lane's own clock:
+
+- The gate's own final arm, observed by plan 96-10 at the same gate text on the same spec:
+  `Expected: 1  Received: 0` (44 polls) — restated above in §"Per-gate red→green records".
+- This lane re-measured the defect directly immediately before applying, so the red is not
+  inherited on trust: `GET /functions/v1/persons?limit=100` → **15 rows above `total: 16`**, and
+  `search_persons_advanced` → **15** vs 16 unarchived person dossiers. The red condition was
+  live and measured by this lane at 2026-08-17, minutes before the apply.
+
+Ordering note, stated rather than papered over: `RULING-P96-03`'s own step order applies the
+migration (condition 1) before re-running the gate (condition 3), so the gate's _own exit code_
+was not observed red by this lane — its red is 96-10's recorded observation, and this lane's
+independent red is the two live measurements above against the identical defect.
+
+**GREEN** — observed, exit code captured directly (not through a pipe):
+
+```
+$ test -f tests/e2e/96-extension-rows.spec.ts && \
+  test "$(pnpm exec playwright test tests/e2e/96-extension-rows.spec.ts --project=chromium-en --no-deps --list 2>/dev/null | command grep -c '›')" -eq 2 && \
+  pnpm exec playwright test tests/e2e/96-extension-rows.spec.ts --project=chromium-en --no-deps
+
+Running 2 tests using 1 worker
+[96-10] CHECK verified live: type='elected_official' rejected (23514)
+[96-10] fixture dossier inserted: id=38afe693-f687-45bf-9644-bb46a8378d85 name_en="P96 COUNT02 FIXTURE"
+[96-10] with fixture present — hub(dossiers)=17 list(mv)=17
+  ✓  1 [chromium-en] › tests/e2e/96-extension-rows.spec.ts:189:7 › criterion 5 — a dossier with no extension row is listed and counted › the persons list renders the extension-less fixture and agrees with the hub count (3.9s)
+[96-10] fixture cleaned: id=38afe693-f687-45bf-9644-bb46a8378d85
+  ✓  2 [chromium-en] › tests/e2e/96-extension-rows.spec.ts:215:7 › criterion 5 — a dossier with no extension row is listed and counted › the fixture row renders its absent extension fields as absent, never fabricated (3.9s)
+
+  2 passed (9.6s)
+GATE_EXIT=0
+```
+
+Both tests pass, including Test 2's absent-renders-as-absent assertion — the extension-less
+dossier now renders and its empty extension cells carry no fabricated `undefined`/`NaN`/`null`
+literals. The `--list` arm still counts exactly 2, hardcoded, asserted after existence.
+
+**Fixture cleanup verified independently** after the run (Supabase MCP, read-only):
+`SELECT count(*) FROM dossiers WHERE name_en LIKE 'P96 COUNT02%'` → **0**. Staging is exactly as
+it was found; the only persistent change from this lane is the three function bodies.
+
+## 6. Status of BLOCK-96-10-01
+
+**CLOSED.** The SHIP decision recorded in that block was executed where the defect lives — in the
+database tier, one migration over three RPCs — not worked around in a test or patched per call
+site. `tests/e2e/96-extension-rows.spec.ts` stands as the regression: it reds again the day
+someone re-introduces an extension-first list read.
+
+Unchanged and still open beyond this lane (not this lane's scope, restated so it is not lost):
+`organization` (gap 3) and `topic` (gap 1) dossiers have genuinely missing extension rows — a
+data question owned by `DATA-01`, not a join question.
+
+_Addendum completed: 2026-08-17 — RULING-P96-03, bounded addendum lane 96-10A_
+
 SUMMARY-END
