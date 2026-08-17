@@ -12,8 +12,11 @@
  *
  * WHAT PHASE 97 CHANGED HERE, and what it deliberately did NOT. The rows moved
  * from `button` + `onChange` to a TanStack `Link` carrying `?section=`, so the
- * four assertions that queried `button.settings-nav` now query the rendered
- * anchor. The nine `data-testid` values, their order, the `minHeight: 44px` pin
+ * four assertions that selected `.settings-nav` rows by their old element type
+ * now select the rendered anchor. (That old selector string is deliberately not
+ * spelled anywhere in this file: 97-07's gate counts it to zero, and a negative
+ * grep trips on prose just as readily as on code — GATE-STANDARD C8.)
+ * The nine `data-testid` values, their order, the `minHeight: 44px` pin
  * and the `nav.accessAndSecurity` copy pin are preserved verbatim — the element
  * type is the only thing that moved. The active-state assertion changed SHAPE:
  * it used to be a function of the `activeSection` prop, and is now a function of
