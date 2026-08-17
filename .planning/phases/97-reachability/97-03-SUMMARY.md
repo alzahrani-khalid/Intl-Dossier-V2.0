@@ -3,7 +3,7 @@
 **Plan:** `97-03` (Wave 1, `autonomous: true`, `depends_on: []`)
 **Requirement:** NAV-04 · **Serves criterion 4** (evidence only — this plan decides no route)
 **Branch:** `milestone/v10.0-trust` · **Base HEAD at start:** `4cf27100e`
-**Commits:** `fa932230f` (instrument), plus the `.planning/` commit carrying this file
+**Commits:** `fa932230f` (instrument), `d44913a4e` (record + this summary), plus the amendment below
 **Date:** 2026-08-17
 
 ---
@@ -205,6 +205,17 @@ not a measurement, so both of these ran:
   (`frontend/src/lib/dossier-type-guards.ts`, four `tests/e2e/97-*.spec.ts`) appeared in
   `git status` during this plan and were **left alone** — neither staged nor committed here.
 - **No gate text was edited**, and neither gate needed a repair to go green.
+- **prettier re-wrapped both markdown files inside the pre-commit hook.** Both gates were re-run
+  against the committed (post-prettier) content and stayed green — `GATE1-RC=0`, `GATE2-RC=0` — and
+  the machine-readable `NAV-CONFIG ENTRY:` lines survived intact (18 of them, all inside fenced
+  blocks, which prettier does not reformat). Neither file carries frontmatter, so there was none to
+  re-check.
+- **Environment fact worth passing on:** after that hook run, `git status` showed both files `MM`
+  while `git diff HEAD` was **empty**. lint-staged's stash-restore leaves the INDEX holding the
+  pre-prettier blob even though HEAD and the worktree both hold the prettier output. It is a stale
+  index entry, not lost work — cleared with `git reset -q HEAD -- <explicit paths>`, which does not
+  touch the worktree. On a tree shared with parallel workers, leaving it would hand the next commit
+  a stale blob.
 - `timeout` was not used. Exit codes were captured directly, never through a pipe. Absolute paths
   throughout. Scratch work was confined to `/tmp`; the repo tree carries only the two planned files.
 - No credential was read or echoed; the instrument reads source text only and prints route paths and
