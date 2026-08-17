@@ -153,6 +153,19 @@ All three gate texts run **verbatim** from the repo root, byte-identical to plan
 - **GREEN observed:** exit **0** after the edit. `pnpm type-check` half drilled at execution: clean.
 - **Instrument test:** `command grep -c 'eachDayOfInterval' …/EventsPage.tsx` = 2 on the undone tree.
 
+### The `pnpm type-check` half is shared-tree-sensitive — read a red before believing it
+
+All three gates share one whole-workspace `tsc --noEmit`, so a **concurrent lane's uncommitted
+edits red every gate in this plan without any of this plan's files being wrong.** Observed live
+after the summary commit: all three gates returned **exit 2** on three errors, all in
+`src/pages/Dashboard/components/AnalyticsWidget.tsx` (`Property 'data' / 'isLoading' / 'isError'
+does not exist on type 'AnalyticsDashboardQueries'`) — the in-flight reshape of another lane's
+`domains/analytics/hooks/useAnalyticsDashboard.ts`. Filtering the error stream for this plan's
+files (`EventsPage|UnifiedCalendar|useCalendarEvents|_protected/calendar|routeTree`) returned
+**zero** matches, and the three gates were re-run verbatim once that lane settled: **exit 0, 0,
+0**. Every green in this section is a verbatim run; a future red must be attributed by file
+before it is charged to this plan.
+
 ## Must-have truths — behavioural proof
 
 Rendered against the restarted dev server (`:5173`, the only origin that authenticates — D-18), pre-authenticated `storageState`, throwaway probes.
