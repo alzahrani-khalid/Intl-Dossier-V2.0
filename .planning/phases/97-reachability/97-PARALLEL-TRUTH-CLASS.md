@@ -107,6 +107,15 @@ those would be disproportionate and would force casts at every literal usage.
 in both directions per C1 — in a scratch copy add `'elected_official'` to `DOSSIER_TYPES` →
 typecheck RED for the right reason (the assertion, not tooling); restore → GREEN.
 
+**Drill precision (`RULING-P97-05`, refined): `pnpm typecheck` red is a COARSE signal.** Any
+unrelated type error in the scratch copy also exits non-zero, so _"typecheck exited 1"_ does
+not establish that the guard fired. The drill record **pastes the compiler message naming the
+`_EoIsNotADbType` / `AssertNever` line** (file:line and the `TS2344`-class text) as the evidence
+that the merge — not something incidental — produced the red. **Exit code alone is insufficient
+evidence.** This is C2 ("red for the RIGHT reason") applied to an aggregate command, and the
+same rule governs any other coarse gate (`pnpm lint`, a full test run): attribute the red to the
+gate's own subject by captured output, never infer it from a non-zero status.
+
 ## What this phase does NOT close
 
 Residue files as **`PARALLEL-TRUTH-01`** with a named owner, enumerating every copy left
