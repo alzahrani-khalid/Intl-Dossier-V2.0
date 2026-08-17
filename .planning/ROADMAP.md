@@ -486,7 +486,37 @@ Plans:
 3. The engagement Digests tab appears in the tab bar, and every list page exposes a create affordance (currently 7 of 8 have none).
 4. Every route with no inbound link is resolved — the 9 admin routes and `/monitoring` each get a nav entry or are deleted, with the decision recorded per route.
 
-**Plans**: TBD
+**Plans**: 12 plans
+
+Plans:
+
+**Wave 1** _(no dependencies — observers, instruments and the type foundation, in parallel)_
+
+- [ ] 97-01-PLAN.md — Wave-0 oracles A: the NAV-01 real-count click-through and the NAV-02 viewport matrix
+- [ ] 97-02-PLAN.md — Wave-0 oracles B: the Digests tab and the eight-page create affordance, data-present
+- [ ] 97-03-PLAN.md — the INBOUND-LINK instrument and both population derivations
+- [ ] 97-04-PLAN.md — the canonical dossier-type home: one literal list, one derived card set, a compile-time anti-merge guard
+
+**Wave 2** _(blocked on Wave 1 — the four surfaces, disjoint files)_
+
+- [ ] 97-05-PLAN.md — NAV-01 hub: the three fabrication layers, the real EO total, the sidebar row
+- [ ] 97-06-PLAN.md — NAV-01 `/compare`: whitelist, selector, icon lookup and the subtype-filtered fetch arm
+- [ ] 97-07-PLAN.md — NAV-02: one settings predicate, one nav column, closed across the viewport matrix
+- [ ] 97-08-PLAN.md — NAV-03: the Digests tab and one shared actions slot across seven list pages
+
+**Wave 3** _(blocked on the population evidence)_
+
+- [ ] 97-09-PLAN.md — NAV-04: the single-writer per-route decision table
+
+**Wave 4** _(blocked on the decision table — entries and deletions, disjoint files)_
+
+- [ ] 97-10-PLAN.md — NAV-04 nav entries, the command-palette admin check, the KEEP-row oracle
+- [ ] 97-11-PLAN.md — NAV-04 authorised deletions and the regenerated route tree
+
+**Wave 5** _(blocked on everything)_
+
+- [ ] 97-12-PLAN.md — closing: coverage re-derived, gate drill consolidated, register updated, weakest point named
+
 **UI hint**: yes
 
 ### Phase 98: Copy Truth
