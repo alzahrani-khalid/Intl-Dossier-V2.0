@@ -2,8 +2,17 @@
 
 **Committed on purpose**, beside `97-MODEL-SEATS.md`. The overseer chain
 (`.tickmarkr/overseer/`) is **gitignored**; this class outlives Phase 97 and the next phase
-must be able to find it. Ruled by `RULING-P97-04-PARALLEL-TRUTH-CLASS.md` (2026-08-17,
-overseer under standing delegation; the operator did not sign it).
+must be able to find it. Ruled by `RULING-P97-04-PARALLEL-TRUTH-CLASS.md`, **amended the same
+day by `RULING-P97-05-AMENDS-04.md`** (2026-08-17, overseer under standing delegation; the
+operator did not sign either).
+
+> **The amendment is itself an instance of the lesson, recorded rather than tidied away.**
+> `-04`'s intent stands; its _prescription_ was superseded because the order was wrong three
+> ways: it named a canonical that **does not uniquely exist** (the fifth instance below was
+> inside the proposed cure), its literal form was **unbuildable** (a TypeScript union cannot be
+> iterated at runtime), and it **assumed one set where there are two** (widening the API-side
+> list would create a bucket no query can fill — the original defect in a new costume). An
+> order carrying authority is still an unreviewed artifact.
 
 ## The shape
 
@@ -54,6 +63,20 @@ reviewer reads the difference as drift:
   8**, derived once as `[...DOSSIER_TYPES, 'elected_official'] as const`.
 
 **Two single-homed constants, not six hand-maintained copies.**
+
+### The anti-merge clause (`RULING-P97-05`)
+
+The two constants sit near each other, look almost identical, and differ by exactly one
+member — which is precisely the shape a later tidy-up collapses into one "for consistency."
+**Collapsing them re-creates the original defect in a new costume:** widening the API-side
+constant creates a `dossiers.type` bucket that no query can ever fill, which is the fabricated
+`0` again.
+
+So **each declaration states, in the code**, what set it is, why it must not be merged with the
+other, and what merging would cause. The comment is part of the deliverable, not garnish — the
+failure mode is a future author who cannot see why two near-identical lists exist. (Same
+reasoning as the `AppShell.tsx:121-124` comment correction: a stale or missing comment is how a
+fixed bug gets re-learned.)
 
 ## What this phase does NOT close
 
