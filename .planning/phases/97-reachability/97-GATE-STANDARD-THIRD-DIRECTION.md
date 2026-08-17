@@ -318,6 +318,34 @@ The second application of a failed remedy is where the loop closes: each escalat
 diligence, produces a fresh negative result, and never revisits the premise that chose the remedy.
 **A remedy that fails once has told you something about the model that selected it — read it.**
 
+### VERIFY THE MUTATION REACHED THE SUBJECT — and note the asymmetry of getting it wrong
+
+Three instances in this phase, three different instruments, one law:
+
+<!-- prettier-ignore -->
+| Instance | What a passing/failing drill actually meant |
+|---|---|
+| `97-04`'s gate | built the **7 → 8 member-count pre-assertion IN**, so a silently-failed splice cannot pass as a drill |
+| The `SETTINGS_CHILDREN` drill | a **passing** mutation meant the target was **INERT** (a manifest nothing reads) |
+| The 93-spec drill | a **passing** mutation meant the target was the **WRONG** one (first of three `map` sites; the counted grid is a different block) |
+
+Learned on gates; per the medium-scope law it applies equally to **manual drills and spec
+mutations**. State the target, mutate it, and **assert the mutation landed** before reading the
+result.
+
+**THE TWO ERRORS ARE NOT SYMMETRIC IN COST — this is the part that matters.**
+
+- **Missing a vacuous gate** leaves you exactly where you were. No worse.
+- **Misdiagnosing a SOUND assertion as vacuous leads to REPAIRING it** — and "repairing" a guard
+  that was never broken **WEAKENS REAL COVERAGE while producing a commit that looks like
+  diligence.**
+
+In the 93-spec case one banked `exit 0` was all that stood between here and that outcome; the only
+thing preventing it was asking _which site renders the counted testid_.
+
+> **The pre-assertion is not merely good practice. It is the guard against the one failure mode
+> whose remedy actively makes things worse.**
+
 ### Required review pass: CROSS-GATE SWEEPS FOR REPEATED LITERALS
 
 Five gates carried the same wrong package name because a literal was **COPIED rather than
