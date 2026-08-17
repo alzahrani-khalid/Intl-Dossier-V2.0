@@ -179,6 +179,37 @@ Five readings that were genuinely ambiguous went up and came back ruled. **Read 
   derived population turns up. Rationale: one key's deletion buys a provable oracle; the weaker
   reading closes on a claim no instrument can distinguish from the gate never having run.
 
+### Glyph coherence on the criterion-7 surface — `RULING-P98A2-03`, criterion 7 amended at `b5ba2ac37`
+
+- **D-27: the EO popover's icon and colors are IN scope, inside `COPY-08`'s atomic unit.** Deleting
+  the guard makes `DossierTypeGuide.tsx` render for a ninth case whose switches have no arm for it:
+  `getTypeIcon`'s `default:` (`:78`) returns **`<Globe/>` — the country glyph** — and
+  `getTypeColors`'s default (`:136`) is **muted**, while `DossierTypeStatsCard.tsx:95` maps EO to
+  `<Crown/>`. Un-amended, criterion 7 was satisfiable with the wrong glyph. Therefore, in the same
+  change:
+  - `getTypeIcon` gains `case 'elected_official': return <Crown {...iconProps} />` (+ the import).
+  - `getTypeColors` gains `case 'elected_official'` returning the **country/primary** set, with a
+    comment citing **WR-07** — verified on disk: `semantic-colors.ts:84` is
+    `dossierTypeColors[type] ?? dossierTypeColors.country!`, and `elected_official` appears **0
+    times** in that map, so country/primary IS the canonical fallback for EO today. Popover == card
+    == canonical fallback. ~6 lines, one file the phase already edits.
+  - **Grading: a criterion-7 green with a Globe or a muted popover is a FAIL.**
+- **D-28: allocating EO its OWN color family is OUT, explicitly.** The seven semantic families are
+  exhausted by seven types; an eighth is a design-system decision (D-07 collision rules) — a visual
+  call adjacent to the operator's parks, with zero copy content. **No-ship, named, with its
+  condition:** revisit if/when a designer allocates an eighth family.
+- **D-29: no new register row for the glyph fix, and none is to be invented.** Option B was
+  **REFUSED**: a residue row for a ~6-line coherence fix inside a file the phase already edits is
+  queue noise — **the row mechanism is for work that LEAVES the phase, not work that fits inside
+  it.** The plan's shape is unchanged; there is no filing task. Separately, the guide's local color
+  switch duplicating the canonical map is **pre-existing drift** (its muted default vs WR-07's
+  country fallback is the proof) — refactoring it onto `dossierTypeColors` is **NOT this phase's
+  diff**; it is queued as one line on `GUIDE-HOLLOW-01`, which P102 already owns for this component.
+- **D-30: the UI-SPEC's prescribed literals are RATIFIED as written** — toast EN `Changes saved`,
+  CTA `Add elected official`. Final copy is graded against the voice rules, the plan authors the
+  `ar` equivalents, and **the operator's Arabic-naturalness park stands over ALL `ar` copy — it is a
+  review debt, not a blocker.**
+
 ### House rules
 
 - **D-15: Task file-scope caps carry from P88/P89** — roughly ≤10 files and ≤120 lines per task diff
