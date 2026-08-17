@@ -72,8 +72,12 @@ test.describe('Phase 39: Calendar RTL — Arabic dow + Indic digits', () => {
     expect(dayCount).toBeGreaterThanOrEqual(28)
 
     const allDayText = (await dayCells.allTextContents()).join('')
-    expect(/[٠-٩]/.test(allDayText)).toBe(true)
-    // No Western digits should appear in day-number cells in ar locale
-    expect(/[0-9]/.test(allDayText)).toBe(false)
+    // RULING-P96-04 (PARK-96-EXEC-03): these two assertions are STALE. The ruled
+    // policy is Latin digits in BOTH locales (operator design review 2026-07-04,
+    // restated in 96-UI-SPEC); this Phase-39 spec predates it and asserted the
+    // opposite, so it could not pass against the shipped component under any data.
+    expect(/[0-9]/.test(allDayText)).toBe(true)
+    // No Arabic-Indic digits should appear in day-number cells in ANY locale
+    expect(/[٠-٩]/.test(allDayText)).toBe(false)
   })
 })
