@@ -80,7 +80,10 @@ const PRIORITY_RANK: Record<Priority, number> = {
 }
 
 // Map workflow stage → task_status enum value (per useUnifiedKanban DB notes).
-const STAGE_TO_STATUS: Record<WorkflowStage, string> = {
+// Phase 96 Plan 08 (COUNT-03): exported so __tests__/stage-status-parity.test.ts can
+// pin it cell-for-cell against the live `trg_sync_task_status` CASE. This is a client
+// COPY of a DB-enforced mapping, never the source of truth.
+export const STAGE_TO_STATUS: Record<WorkflowStage, string> = {
   todo: 'pending',
   in_progress: 'in_progress',
   review: 'review',
