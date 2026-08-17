@@ -69,9 +69,17 @@ function buildDueText(
   lang: string,
   t: (key: string, opts?: { days?: number }) => string,
 ): string {
-  if (item.is_overdue && typeof item.days_until_due === 'number') {
-    const n = Math.abs(item.days_until_due)
-    return t('card.overdueBy', { days: n })
+  if (item.is_overdue) {
+    // Phase 96 Plan 09 (COUNT-04): the day count is the EXPRESSIVE variant, not the
+    // precondition. Before this, a row the unified signal calls overdue but whose
+    // `days_until_due` is unknown fell through to the deadline branch and rendered a
+    // plain date — or nothing at all when `deadline` was null — so the badge count
+    // could not equal the toolbar chip, which reads `is_overdue` alone.
+    if (typeof item.days_until_due === 'number') {
+      const n = Math.abs(item.days_until_due)
+      return t('card.overdueBy', { days: n })
+    }
+    return t('unified-kanban:card.overdue')
   }
   if (item.deadline == null) return ''
   const date = new Date(item.deadline)
@@ -133,7 +141,17 @@ export function KCard({ item, onItemClick, dndEnabled = false }: KCardProps): Re
           <span>{dossierName}</span>
         </div>
         <LtrIsolate>
-          <span className={cn('font-mono kdue', item.is_overdue && 'is-overdue')}>{dueText}</span>
+          {/* The overdue badge IS this chip in its danger state (UI-SPEC §7: card-level
+              badge, no new column — a column would be a new drag target, the fork
+              RULING-P96-01 closed). The testid is present exactly when `is_overdue` is
+              true — the same field WorkBoard's toolbar chip counts — so chip count ==
+              badged-card count is DOM-derivable in one snapshot. */}
+          <span
+            className={cn('font-mono kdue', item.is_overdue && 'is-overdue')}
+            data-testid={item.is_overdue ? 'kcard-overdue' : undefined}
+          >
+            {dueText}
+          </span>
         </LtrIsolate>
         <div className="kcard-owner" aria-label={ownerLabel}>
           {initials}

@@ -244,6 +244,14 @@ export function WorkBoard(): ReactElement {
     return sortBoardItems(next, search.sort, search.dir)
   }, [visibleItems, searchQuery, search.source, search.priority, search.sort, search.dir])
 
+  // Phase 96 Plan 09 (COUNT-04, D-09): ONE signal. `is_overdue` arrives from
+  // get_unified_work_kanban — the STORED aa_commitments.status='overdue' for commitments,
+  // the per-source computed comparison for tasks/intake (96-02's winning-notion record) —
+  // and KCard's overdue badge reads the SAME field. So the chip below and the badged cards
+  // are the same set counted twice, never two notions.
+  // SEAM: this counts `visibleItems` (cancelled removed) while the columns render
+  // `filtered`. Under default filters the two populations are identical; an active
+  // search/source/priority filter can shrink the rendered set below the chip.
   const overdueCount = useMemo(
     () => visibleItems.filter((it) => it.is_overdue).length,
     [visibleItems],

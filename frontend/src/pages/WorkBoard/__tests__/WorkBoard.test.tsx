@@ -16,6 +16,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import type { ReactElement, ReactNode } from 'react'
 
+import type { KCardItem } from '../KCard'
+
 // ── i18n mock ─────────────────────────────────────────────────────────────
 let currentLang = 'en'
 
@@ -187,41 +189,50 @@ vi.mock('@/components/kanban', () => ({
 // via the KanbanProvider mock above. The mock signature mirrors the real
 // BoardColumn props so the tests' add/click assertions still target the
 // stage attribute correctly.
-vi.mock('../BoardColumn', () => ({
-  BoardColumn: ({
-    title,
-    stage,
-    items,
-    dndEnabled,
-    onAddItem,
-    onItemClick,
-  }: {
-    title: string
-    stage: string
-    items: Array<{ id: string; title: string }>
-    dndEnabled: boolean
-    onAddItem: (s: string) => void
-    onItemClick: (it: { id: string }) => void
-  }): ReactElement => (
-    <section
-      data-testid={`column-${stage}`}
-      data-dnd-enabled={String(dndEnabled)}
-      data-count={items.length}
-    >
-      <header>{title}</header>
-      <button data-testid={`add-${stage}`} onClick={(): void => onAddItem(stage)}>
-        +
-      </button>
-      <ul>
-        {items.map((it) => (
-          <li key={it.id} data-testid={`item-${it.id}`}>
-            <button onClick={(): void => onItemClick(it as never)}>{it.title}</button>
-          </li>
-        ))}
-      </ul>
-    </section>
-  ),
-}))
+// Phase 96 Plan 09 (COUNT-04): the column SHELL is mocked, the CARD is real. The
+// badge==chip assertion below counts `data-testid="kcard-overdue"` nodes, and a badge
+// emitted by a mock would prove nothing about KCard — so the mock renders the real
+// <KCard> for each item beside the pre-existing click target. The `<button>` stays: the
+// routing tests query it, and KCard renders no button of its own.
+vi.mock('../BoardColumn', async () => {
+  const { KCard } = await import('../KCard')
+  return {
+    BoardColumn: ({
+      title,
+      stage,
+      items,
+      dndEnabled,
+      onAddItem,
+      onItemClick,
+    }: {
+      title: string
+      stage: string
+      items: KCardItem[]
+      dndEnabled: boolean
+      onAddItem: (s: string) => void
+      onItemClick: (it: { id: string }) => void
+    }): ReactElement => (
+      <section
+        data-testid={`column-${stage}`}
+        data-dnd-enabled={String(dndEnabled)}
+        data-count={items.length}
+      >
+        <header>{title}</header>
+        <button data-testid={`add-${stage}`} onClick={(): void => onAddItem(stage)}>
+          +
+        </button>
+        <ul>
+          {items.map((it) => (
+            <li key={it.id} data-testid={`item-${it.id}`}>
+              <button onClick={(): void => onItemClick(it as never)}>{it.title}</button>
+              <KCard item={it} onItemClick={onItemClick} dndEnabled={dndEnabled} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    ),
+  }
+})
 
 vi.mock('../BoardToolbar', () => ({
   BoardToolbar: ({
@@ -549,6 +560,62 @@ describe('WorkBoard', () => {
     render(<WorkBoard />)
     // Visible items (cancelled removed) with is_overdue: t2, t7 → 2
     expect(screen.getByTestId('toolbar').getAttribute('data-overdue')).toBe('2')
+  })
+
+  // ── Phase 96 Plan 09 (COUNT-04) — ONE signal, counted twice ───────────────
+  //
+  // The toolbar chip and the card badge must be the same set: WorkBoard derives
+  // `overdueCount` from `it.is_overdue`, and KCard renders `data-testid="kcard-overdue"`
+  // from that same field. Asserted against ONE render of ONE dataset — the unit-layer
+  // form of the same-clock rule (condition 7); the DOM oracle is
+  // tests/e2e/96-overdue-badge.spec.ts.
+  //
+  // The chip counts `visibleItems` and the columns render `filtered`; with no search or
+  // facet filter active those populations are identical, which is the population this
+  // assertion is stated over.
+
+  it('badge count equals the toolbar chip — one signal, one dataset, one render (COUNT-04)', async () => {
+    mockUseUnifiedKanban.mockReturnValue({ items: makeBoardItems(), isLoading: false })
+    const { WorkBoard } = await importFresh()
+    const { container } = render(<WorkBoard />)
+
+    const chip = Number(screen.getByTestId('toolbar').getAttribute('data-overdue'))
+    const badges = container.querySelectorAll('[data-testid="kcard-overdue"]')
+
+    // Not a vacuous 0 == 0: the fixture carries two overdue rows (t2, t7) and six that
+    // are not, so an unconditional badge and an absent one both fail here.
+    expect(chip).toBe(2)
+    expect(badges.length).toBe(chip)
+
+    // Done column is never badged — t4 is completed and its is_overdue is false, so the
+    // unified formulas leave completed work out of the signal entirely.
+    const doneColumn = screen.getByTestId('column-done')
+    expect(doneColumn.querySelectorAll('[data-testid="kcard-overdue"]').length).toBe(0)
+  })
+
+  it('a known-overdue row with no day count still renders its badge (the fallback half)', async () => {
+    // days_until_due null + is_overdue true is the shape the RPC returns for a stored
+    // overdue commitment. Before the fallback this row rendered no overdue text at all,
+    // so the chip counted it and the DOM did not.
+    const items = makeBoardItems()
+    items.push({
+      ...items[2]!,
+      id: 't9',
+      title: 'Stored-overdue commitment, no day count',
+      is_overdue: true,
+      days_until_due: null,
+      deadline: null,
+      status: 'pending',
+    })
+    mockUseUnifiedKanban.mockReturnValue({ items, isLoading: false })
+    const { WorkBoard } = await importFresh()
+    const { container } = render(<WorkBoard />)
+
+    expect(screen.getByTestId('toolbar').getAttribute('data-overdue')).toBe('3')
+    expect(container.querySelectorAll('[data-testid="kcard-overdue"]').length).toBe(3)
+    expect(
+      screen.getByTestId('item-t9').querySelector('[data-testid="kcard-overdue"]'),
+    ).toBeTruthy()
   })
 
   it('passes sensors=undefined (KanbanProvider internal sensors active) when columnMode==="status"', async () => {
