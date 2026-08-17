@@ -103,13 +103,13 @@ to the overseer — a seat that resolves one correctly has still failed.
 
 ### Per-criterion decisions carried by the ruling
 
-- **D-11 (criterion 6, `COPY-06`): the default mutation success toast is produced via `t()` and
+- **D-11: (criterion 6, `COPY-06`): the default mutation success toast is produced via `t()` and
   renders localized in both locales on a real mutation** — the hardcoded
   `toast.success('Operation completed successfully')` at `frontend/src/lib/query-client.ts` is gone.
   **Generic-but-localized is the accepted end state.** Criterion 2 (raw keys) and criterion 4 (voice)
   do NOT cover this — the defect is _unlocalized and unspecific_, which neither names; that is why it
   has its own criterion. Source: `RULING-P98A2-01-SCOPE` F1-b.
-- **D-12 (criterion 7, `COPY-08`): the five EO keys and the render guard land in the SAME change or
+- **D-12: (criterion 7, `COPY-08`): the five EO keys and the render guard land in the SAME change or
   not at all.** Author `dossier:typeDescription.elected_official` +
   `dossier:typeGuide.elected_official.{whenToUse,examples,commonLinks,notFor}` in **both** locales
   AND delete the `type !== 'elected_official' &&` guard in `DossierTypeStatsCard.tsx`. Atomicity is
@@ -118,11 +118,11 @@ to the overseer — a seat that resolves one correctly has still failed.
   keys-without-guard are dead bytes with no rendered surface. Closes on the **rendered popover** —
   header, description, and all four sections resolved, no raw key, no empty section, both locales.
   Source: `RULING-P98A2-01-SCOPE` F3 (Reading B, bounded).
-- **D-13 (criterion 1, `COPY-07`): the hardcoded English `"% of total active dossiers"` in
+- **D-13: (criterion 1, `COPY-07`): the hardcoded English `"% of total active dossiers"` in
   `DossierTypeStatsCard.tsx` is routed through `t()` and closes on the rendered card in both
   locales.** **The string is the anchor, not the line number** — the residue table said `:229`, the
   ruling verified `:228`; the file's comments move. Source: `RULING-P98A2-01-SCOPE` F2-a.
-- **D-14 (criterion 4, named instance): `elected-officials:list.add` = `"Add Elected Official"`** is
+- **D-14: (criterion 4, named instance): `elected-officials:list.add` = `"Add Elected Official"`** is
   Title Case in `en` (`ar` is fine) and sits inside `COPY-04`'s sentence-case population by
   definition. It is named in criterion 4 so it has a line to object to; it gets **no register row of
   its own** — a row per single string is queue noise. Source: `RULING-P98A2-01-SCOPE` F2-c.
@@ -132,7 +132,7 @@ to the overseer — a seat that resolves one correctly has still failed.
 Five readings that were genuinely ambiguous went up and came back ruled. **Read the criteria at HEAD
 `7b9d5348f`** — criteria 2, 4 and 5 were rewritten by that commit; the pre-repair text is stale.
 
-- **D-20 (criterion 4, Q1 — sentence case is BOUNDED).** The clause closes on (a) the named instance
+- **D-20: (criterion 4, Q1 — sentence case is BOUNDED).** The clause closes on (a) the named instance
   `elected-officials:list.add`, and (b) **every label the phase's oracle set captures on the surfaces
   it visits** — buttons, nav labels, page titles, tab labels, section/empty-state headings. **The
   plan's spec set defines "visited"; the oracle's captured set defines "label."** A surface this
@@ -140,9 +140,9 @@ Five readings that were genuinely ambiguous went up and came back ruled. **Read 
   tail is **`COPY-09`, owner Phase 102** (register row 181; status row 761) — filed, not absorbed and
   not dropped. Derived magnitude: 4,471 (researcher) / 4,562 (orchestrator), two independently
   written instruments. **Criterion 4's other three clauses close in FULL**, on derived populations.
-- **D-21 (criterion 4 — the derived exclamation count governs).** **31 EN / 30 AR**, not the audit's 46. Both instruments agree exactly. Grading uses the derived figure (pre-commitment 1). First-person
+- **D-21: (criterion 4 — the derived exclamation count governs).** **31 EN / 30 AR**, not the audit's 46. Both instruments agree exactly. Grading uses the derived figure (pre-commitment 1). First-person
   plural is still to be re-derived — the register's "8" is unverified.
-- **D-22 (criterion 2, Q2 — the `calendar.recurrence` instance is REAL; the repair is ROUTING).**
+- **D-22: (criterion 2, Q2 — the `calendar.recurrence` instance is REAL; the repair is ROUTING).**
   `RecurrencePatternEditor.tsx:328` calls `t('calendar.recurrence.title')` against a namespace-less
   `useTranslation()` at `:176`, so lookups resolve into `common`, whose `calendar` subtree holds only
   weekday abbreviations — **16 dot-form `calendar.recurrence.*` call sites in that one file render
@@ -154,10 +154,10 @@ Five readings that were genuinely ambiguous went up and came back ruled. **Read 
   positive control. The control proved the instrument _ran_; it did not prove the _population_ was
   defined right. The lowercase family has 43 hits. **A correct command can return a correct number
   about the wrong set** — always ask what falls outside the set you just searched.
-- **D-23 (criterion 2, binding generalization): every named instance is a CLASS, never a string.**
+- **D-23: (criterion 2, binding generalization): every named instance is a CLASS, never a string.**
   The plan sweeps dot-form-vs-namespace misses as a derived population, not just the strings the
   criterion happens to name.
-- **D-24 (criterion 2, Q3 — the whole `entityLinks` namespace resolves).** **82 keys across 8 files,
+- **D-24: (criterion 2, Q3 — the whole `entityLinks` namespace resolves).** **82 keys across 8 files,
   zero bundle coverage in either locale** — register the namespace and author all 82, both locales.
   This is **not** the `GUIDE-HOLLOW` class and the distinction is load-bearing: `typeGuide.*` has
   silent defaults and renders nothing, holds domain prose, and is named by no criterion;
@@ -166,13 +166,13 @@ Five readings that were genuinely ambiguous went up and came back ruled. **Read 
   derives which of the 8 files' surfaces can be driven and asserts no raw `entityLinks.*` key renders
   there; the 82/82 census is the instrument **backstop, not the closure**. **Any surface the oracle
   set cannot drive closes on census + a named UNDRIVEN scope line — never silently.**
-- **D-25 (criterion 5, Q4 — population boundings).** Relative time is **SANCTIONED on feed/timeline
+- **D-25: (criterion 5, Q4 — population boundings).** Relative time is **SANCTIONED on feed/timeline
   recency surfaces ONLY**, through **one shared localized helper living in the formatter module**;
   **the plan enumerates the feed surfaces and that enumeration is graded.** Every other
   `formatDistanceToNow` site (21 files, derived) migrates to `formatDayFirst` / `formatTime`, so
   `9 months ago` as a hardcoded English pattern disappears everywhere. **`MMMM yyyy` calendar-grid
   month headers are navigation chrome, OUT of this population** — their Arabic rides `AR-02`/Phase 99.
-- **D-26 (criterion 5, Q5 — the dev-affordance string leaves the BUILD).** "Absent from a production
+- **D-26: (criterion 5, Q5 — the dev-affordance string leaves the BUILD).** "Absent from a production
   build" means the built bundle does not contain it. Delete `intake:fillMock` (`intake.json:86`, both
   locales), inline the label inside the DEV-gated block, and **grep the BUILT bundle with a positive
   control** (a string that must be present). Same treatment for any sibling dev-affordance string the
