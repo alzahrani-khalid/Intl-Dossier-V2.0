@@ -154,6 +154,47 @@ verified sound across six lanes).
 - [ ] **COPY-06**: **The global mutation success toast is a hardcoded English literal that fires for every mutation in the application.** `frontend/src/lib/query-client.ts:71` — `toast.success('Operation completed successfully')`, with no `t()` and no per-mutation specificity, as the TanStack Query `mutations.onSuccess` default. Every successful write in the app announces itself in English with copy that names neither what was saved nor where. Filed 2026-08-16 from Phase 94 planning: `WRITE-04`'s text names this exact string, and `RULING-P94-01` decided the narrow reading — Phase 94 fixes only the no-op that makes it fire spuriously, and does **not** edit an app-wide handler no Phase 94 oracle watches. **Owner: Phase 98 — Copy Truth**, whose criterion 4 (project voice: sentence case, no dev-facing copy) and criterion 2 (no raw key / no untranslated copy) both cover it; its blast radius is every mutation, so it wants a phase whose oracles span the app rather than five write paths.
   - **Filed per `RULING-P94-01` order 3, which suggested the id `TOAST-01`.** Placed as `COPY-06` because every id in this register is section-prefixed and the owner phase is 98 — flagged for approve-as-placed (D-73 pattern). The suggested id is recorded here so the ruling stays traceable.
   - **Why tracked rather than noted:** it was first written down as a CONTEXT "deferred idea", and an audit line is not a queue. Nothing fails if a deferred idea is never read.
+- [ ] **COPY-07**: **The dossier-type stats card ships a hardcoded English label.** `"% of total
+    active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` (line 228 at
+      `c94d7debe`; the string is the anchor, not the line number) renders untranslated in both
+      locales — no `t()`. Named by Phase 97 as a deliberately-not-covered residue with owner
+      Phase 98 (`97-CLOSING-DERIVATION.md:227`, `97-05-SUMMARY.md:110-112`); it carried no register
+      row until now. Filed 2026-08-18 by `RULING-P98A2-01-SCOPE` (F2-a), register-first so the plan
+      neither silently absorbs nor silently drops it. **Owner: Phase 98 — Copy Truth**, roadmap
+      criterion 1's class (English literal where a display label belongs); closes on the rendered
+      card in both locales.
+- [ ] **COPY-08**: **The Elected Officials type-guide popover: five missing `dossier:` keys AND the
+      render guard, atomic.** `typeDescription.elected_official` plus the four
+      `typeGuide.elected_official.{whenToUse,examples,commonLinks,notFor}` entries are absent from
+      BOTH locales (verified `i18n/{en,ar}/dossier.json` at `c94d7debe`), and
+      `DossierTypeStatsCard.tsx` withholds the popover behind a `type !== 'elected_official' &&`
+      guard placed by Phase 97 expressly pending these keys (`97-05-SUMMARY.md:105-108`: "When
+      those five keys land in both locales, deleting the guard is the whole repair").
+      **The keys and the guard deletion land in the SAME change or not at all** — guard-without-keys
+      prints the raw key on screen (observed live 2026-08-17, recorded at
+      `DossierTypeStatsCard.tsx:161-164`; `DossierTypeGuide.tsx:175,208` call `t()` with no
+      default), and keys-without-guard are dead bytes with no rendered surface. Filed 2026-08-18 by
+      `RULING-P98A2-01-SCOPE` (F2-b + F3 Reading B). **Owner: Phase 98 — Copy Truth**, roadmap
+      criterion 7; closes on the rendered EO popover in both locales. NAV-01 (Phase 97, Complete
+      BOUNDED on exactly this handoff) is NOT edited by the plan; its status cell gets a dated note
+      at close-out if criterion 7 goes green.
+
+### GUIDE-HOLLOW — a popover whose four labelled sections have never had content
+
+- [ ] **GUIDE-HOLLOW-01**: **The dossier type-guide body is hollow for ALL EIGHT dossier types, in
+      both locales, and it fails silently.** `DossierTypeGuide.tsx:162-165` looks up
+      `typeGuide.${type}.{whenToUse,examples,commonLinks,notFor}` with silent defaults (`t(key, '')`
+      and `returnObjects` guarded by `Array.isArray`/`length > 0` at `:213,224,241,259`), and NO
+      type has a `typeGuide.{type}` subtree in either locale — `typeGuide` holds only the five flat
+      section LABELS (`whenToUse`, `examples`, `commonLinks`, `notFor`, `createDossier`). Every
+      popover renders header + description only; a raw-key detector returns clean over it because
+      the render guards swallow every miss. Derived 2026-08-18 from the committed tree by
+      `RULING-P98A2-01-SCOPE` (F3 bound). **Not Phase 98's scope:** filling it is net-new domain
+      content authoring (7 remaining types × 4 sections × 2 locales after `COPY-08` lands EO), not
+      copy-truth repair. **Owner: Phase 102 — Staging Data & Debt Tail.** After Phase 98, EO will be
+      the only type with a full guide body — that asymmetry is this row's tracked state, not a
+      defect. Note: Phase 99's `AR-04a` (remove `t()` English-default masks) will interact with the
+      silent defaults at `:162,165`; whoever executes either row re-checks the other.
 
 ### AR — Arabic translation coverage (layout infrastructure is already sound)
 
@@ -704,6 +745,9 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | COPY-04 | Phase 98 — Copy Truth | Pending |
 | COPY-05 | Phase 98 — Copy Truth | Pending |
 | COPY-06 | Phase 98 — Copy Truth | Pending |
+| COPY-07 | Phase 98 — Copy Truth | Pending |
+| COPY-08 | Phase 98 — Copy Truth | Pending |
+| GUIDE-HOLLOW-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | AR-01 | Phase 99 — Arabic Coverage | Pending |
 | AR-02 | Phase 99 — Arabic Coverage | Pending |
 | AR-03 | Phase 99 — Arabic Coverage | Pending |

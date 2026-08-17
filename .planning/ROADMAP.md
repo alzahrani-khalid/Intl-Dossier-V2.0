@@ -523,14 +523,27 @@ Plans:
 
 **Goal**: The UI speaks to users, not to developers — one vocabulary, one date format, the project's own voice.
 **Depends on**: Phase 95, Phase 96, Phase 97 (copy is judged on surfaces that render)
-**Requirements**: COPY-01, COPY-02, COPY-03, COPY-04, COPY-05
+**Requirements**: COPY-01, COPY-02, COPY-03, COPY-04, COPY-05, COPY-06, COPY-07, COPY-08
+
+> **DIGEST REPAIR, 2026-08-18 (`RULING-P98A2-01-SCOPE`).** This entry previously named five
+> requirement ids. The register owns the queue: `COPY-06` (filed 2026-08-16 per `RULING-P94-01`
+> order 3) never reached this digest, and Phase 97 assigned three residues to Phase 98 with no
+> register ids at all (`97-CLOSING-DERIVATION.md:227`) — now `COPY-07`, `COPY-08`, and one
+> named instance inside criterion 4. Criteria 1–5 are unchanged; 6 and 7 are added by the same
+> ruling. A plan scoped from the pre-repair text is incomplete by construction. Every count
+> quoted in these criteria except COPY-03's is an UNVERIFIED audit figure (only `COPY-03`
+> carries `[V]` in the register): plans re-derive each population with a stated definition and
+> let the count fall out — never re-quote.
+
 **Success Criteria** (what must be TRUE):
 
 1. No database value renders as user copy — `in_progress`, `action_item`, `follow_up`, `email`, `human_entered`, `WEEK OF 2026-W27` all resolve through display labels.
 2. No raw i18n key reaches the screen in either locale — `regions.Europe`, `afterActions.loadError`, `CALENDAR.RECURRENCE.TITLE`, `common.loading` and the five `entityLinks.*` keys included.
 3. No seed or test instruction ships as user copy: the 4 `dashboard-widgets.json` strings are rewritten in both locales.
-4. Copy obeys the project's voice rules — sentence case, zero exclamation marks (46 today), zero first-person plural (8 today), no retired terminology such as the `"Deadline / Due Date"` chip.
+4. Copy obeys the project's voice rules — sentence case, zero exclamation marks (46 today), zero first-person plural (8 today), no retired terminology such as the `"Deadline / Due Date"` chip. Named instance: `elected-officials:list.add` `"Add Elected Official"` is Title Case (`RULING-P98A2-01-SCOPE` F2-c — inside this criterion's population, listed so it has a line).
 5. Every date renders `Tue 28 Apr` and every time `14:30 GST` from the one shared formatter — the seven competing formats are gone — and dev affordances like "Fill with Mock Data" are absent from a production build.
+6. The default mutation success toast (`frontend/src/lib/query-client.ts` `mutations.onSuccess`) is produced via `t()` and renders localized in both locales on a real mutation — `toast.success('Operation completed successfully')` is gone. Generic-but-localized is the accepted end state; per-mutation specific copy is explicitly NOT required (`COPY-06`, `RULING-P98A2-01-SCOPE` F1-b).
+7. The Elected Officials type-guide popover renders header, `typeDescription.elected_official`, and all four `typeGuide.elected_official.*` sections resolved in BOTH locales — no raw key, no empty section — with the `type !== 'elected_official' &&` guard deleted in the SAME change that lands the five keys (`COPY-08`, `RULING-P98A2-01-SCOPE` F3 Reading B, bounded: the seven sibling types' hollow guide bodies are `GUIDE-HOLLOW-01` → Phase 102, not this phase).
 
 **Plans**: TBD
 **UI hint**: yes
