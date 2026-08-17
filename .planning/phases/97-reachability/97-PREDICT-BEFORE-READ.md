@@ -127,4 +127,29 @@ Same failure, different medium: **terminal render wrap** there, **prettier reflo
 Good identifiers: a filename, a symbol, a ruling id, a commit sha, a testid.
 Bad identifiers: a sentence, a quoted phrase, anything whose length approaches the wrap column.
 
+## THE MEDIUM A LAW WAS LEARNED ON BECOMES AN INVISIBLE SCOPE LIMIT
+
+**This is why the amendment above was needed at all, and it is the more valuable finding.**
+
+The wrap law already existed in this project — for **pane read-backs**, in the overseer skill.
+It had been learned, paid for, and written down. It was then **re-earned at full price on a
+neighbouring medium** (prettier reflow, in a committed file) by two seats who had both read the
+original.
+
+Nobody ever wrote _"this applies only to panes."_ They did not have to. **The medium a law is
+learned on silently becomes its scope**, because a later reader meets the rule inside a
+pane-shaped context and never asks which other surfaces share the shape — files, JSON payloads,
+log tails, diff output, anything with a wrap or truncation boundary.
+
+> **THE PRACTICE, recorded as a practice and not as an observation: at the moment you record a
+> law, ask what OTHER surfaces have this shape, and NAME them in the entry — or state explicitly
+> that you did not check.**
+
+Stating "not checked" is enough. The failure is not incompleteness; it is **silence that reads
+as completeness**, which leaves the next reader with no signal that the law might be wider than
+the example that produced it.
+
+The cost of skipping it is measured, not hypothetical: **a known law, re-earned at full price,
+by two seats who had both read it.**
+
 PREDICT-BEFORE-READ-END
