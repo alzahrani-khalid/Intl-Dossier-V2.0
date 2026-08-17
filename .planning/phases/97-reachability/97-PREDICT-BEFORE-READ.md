@@ -15,6 +15,27 @@ method, so it ships.
 
 Cost: one sentence. It requires no instrument, no control run, and no extra command.
 
+## The independence requirement — without it this decays into a tautology
+
+**The prediction must come from a source INDEPENDENT of the instrument you are about to run, and
+you must WRITE THAT SOURCE beside it.**
+
+If the prediction is derived by running the same query first, prediction and reading agree **by
+construction** — and the control still _feels_ like verification while establishing nothing. That
+is the same shape as two identical greens from an undrilled instrument counting as one
+observation.
+
+Independent sources are things like: a dispatch record, a plan's declared count, a register row,
+a spec's own enumeration, a number stated in a ruling. Recording the source lets a later reader
+**see** the independence instead of assuming it.
+
+Worked example from this leg: _"I expect 4 workers alive — **source: my dispatch record, four
+`herdr pane run` calls**."_ Independent of `pgrep`, therefore load-bearing. Observed 4 → match →
+**weak evidence**, reported as such. Had the prediction instead been "whatever `pgrep` said last
+time", the match would have proved nothing at all.
+
+**Report a match as WEAK EVIDENCE.** The control's entire value is in the mismatch.
+
 ## Why it catches what instrument-testing misses
 
 Instrument-testing answers _"does my tool work?"_ Predicting answers _"is my tool answering
