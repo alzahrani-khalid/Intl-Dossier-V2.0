@@ -71,4 +71,25 @@ _pattern_ reproduces the bug verbatim, because any new pattern also appears in t
 own command line. Only abandoning pattern-matching — exact PIDs, `kill -0` — makes self-match
 structurally impossible. **Fix the class, not the instance.**
 
+### Exact PIDs earn their keep TWICE — record both reasons
+
+A design defended by one argument gets re-litigated the moment that argument stops applying.
+Exact PIDs remove **two independent** failure modes:
+
+1. **SELF-MATCH** — the watcher cannot count itself (the bug that prompted the change).
+2. **UNRELATED-MATCH** — the watcher cannot count _strangers_.
+
+Reason 2 was demonstrated, not theorised, minutes after the change. At wave-2 dispatch a
+predicted **4** wrappers met an observed **6** on `pgrep -f "caffeinate -i"`. Listing the matches
+resolved it: PIDs `2731/2734/2739/2743` were the four real workers; `350` and `3768` were
+unrelated `caffeinate -i -t 300` processes belonging to other tooling entirely. **The instrument
+was correct and answered about the wrong population.**
+
+**A pattern watcher armed at that moment would have counted two strangers as workers and waited
+for them to exit** — a wave stalled indefinitely by processes that have nothing to do with it.
+Exact PIDs make that impossible by construction too.
+
+Recorded across two seats: this instance was the overseer's, caught by the same control that
+caught the orchestrator's. **The control is seat-independent — which is the point.**
+
 PREDICT-BEFORE-READ-END
