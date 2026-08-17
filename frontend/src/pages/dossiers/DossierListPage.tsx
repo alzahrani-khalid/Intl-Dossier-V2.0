@@ -15,6 +15,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, Link } from '@tanstack/react-router'
 import { useDossiers, useDossierCounts } from '@/hooks/useDossier'
+import { useElectedOfficials } from '@/domains/elected-officials/hooks/useElectedOfficials'
 import { usePrefetchIntelligence } from '@/hooks/useIntelligence'
 import { useViewPreferences } from '@/hooks/useViewPreferences'
 import { useSampleData } from '@/hooks/useSampleData'
@@ -65,10 +66,12 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { DossierType, DossierStatus, DossierFilters } from '@/services/dossier-api'
-// The DB-7, not the card set: this page's type filter and stats cards read counts
-// bucketed by `dossiers.type`. Widening it to DOSSIER_CARD_TYPES belongs with the
-// count fix (plan 97-05) — done alone it renders the 8th card a fabricated 0.
-import { DOSSIER_TYPES } from '@/lib/dossier-type-guards'
+// The CARD SET (8), not the DB set (7): the stats grid displays `elected_official` even though
+// `dossiers.type` has no such value. The count for it comes from its own source below, never
+// from the counts query — which is why widening this list is safe only together with the
+// nullable figures the card now renders.
+import { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'
+import type { DossierCardType } from '@/lib/dossier-type-guards'
 import { getDossierDetailPath, getDossierRouteSegment } from '@/lib/dossier-routes'
 import type { ViewConfig, DossierViewConfig } from '@/types/view-preferences.types'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -77,6 +80,16 @@ import { ExportDialog } from '@/components/export-import/ExportDialog'
 import { ImportDialog } from '@/components/export-import/ImportDialog'
 
 const DOSSIER_STATUSES: DossierStatus[] = ['active', 'inactive', 'archived']
+
+// Every figure is nullable: `null` means NO SOURCE PRODUCED IT, which the stats card renders as
+// the shipped em dash. It is deliberately not `0` — a failed or absent count must stay
+// distinguishable from a genuine zero.
+type DossierCardStats = {
+  count: number | null
+  percentage: number | null
+  activeCount: number | null
+  inactiveCount: number | null
+}
 
 // Default filters
 const DEFAULT_FILTERS: DossierFilters = {
@@ -246,6 +259,19 @@ export function DossierListPage() {
     isFetching: countsFetching,
     refetch: refetchCounts,
   } = useDossierCounts()
+
+  // The eighth card's only honest source. `elected_official` is `persons.person_subtype`, not a
+  // `dossiers.type` value, so the counts query above can never produce a bucket for it — but a
+  // real total does exist, on the Express list endpoint. `limit: 1` because only `.total` is
+  // read; fetching a page of rows to count them would be a second request's worth of work for a
+  // number the response already carries.
+  // `isSuccess` — not `data` — is the gate: pending, failed, and failed-while-holding-stale-data
+  // all collapse to `null`, i.e. an em dash. A number shown while its source is unreachable is the
+  // same lie as a fabricated zero, pointing the other way.
+  const electedOfficialsQuery = useElectedOfficials({ limit: 1 })
+  const electedOfficialTotal = electedOfficialsQuery.isSuccess
+    ? electedOfficialsQuery.data.total
+    : null
 
   // Sync info tracking for pull-to-refresh
   const { lastSyncTime, itemsSynced, updateSyncInfo } = useLastSyncInfo('dossier-list')
@@ -423,7 +449,14 @@ export function DossierListPage() {
   )
 
   const handleTypeCardClick = useCallback(
-    (type: DossierType) => {
+    (type: DossierCardType) => {
+      // The EO card NAVIGATES; it does not filter in place. `dossiers.type` has no
+      // `elected_official` value, so the in-place filter would return zero rows beside a real
+      // non-zero count — the forbidden shape wearing the other face.
+      if (type === 'elected_official') {
+        navigate({ to: '/dossiers/elected-officials' })
+        return
+      }
       // Toggle filter: if already selected, clear it; otherwise set it
       if (filters.type === type) {
         handleFilterChange('type', undefined)
@@ -431,25 +464,40 @@ export function DossierListPage() {
         handleFilterChange('type', type)
       }
     },
-    [filters.type, handleFilterChange],
+    [filters.type, handleFilterChange, navigate],
   )
 
   const totalPages = data
     ? Math.ceil((data.pagination?.total_count ?? 0) / (filters.page_size || 12))
     : 0
 
-  // Memo: useMemo prevents recalculating type stats on every render (only when counts change)
+  // Memo: useMemo prevents recalculating type stats on every render (only when counts change).
+  // A type with no bucket maps to `null`, never to a zeroed object — the card turns a `null`
+  // figure into the shipped em dash, so an absent number cannot be laundered into a confident one.
   const typeStatsMap = useMemo(() => {
     if (!counts) return null
     const totalActive = Object.values(counts).reduce((sum, val) => sum + val.active, 0)
-    const map: Record<
-      string,
-      { count: number; percentage: number; activeCount: number; inactiveCount: number }
-    > = {}
-    for (const type of DOSSIER_TYPES) {
+    const map: Record<string, DossierCardStats | null> = {}
+    for (const type of DOSSIER_CARD_TYPES) {
+      if (type === 'elected_official') {
+        // Composed per figure, honestly. The total is REAL. The active/inactive split and the
+        // share-of-total have no source at any cost — `ElectedOfficialListResponse` carries no
+        // status breakdown and no filter can produce one — so they stay `null` and render em
+        // dashes. Inventing them would trade one confident lie for two.
+        map[type] =
+          electedOfficialTotal === null
+            ? null
+            : {
+                count: electedOfficialTotal,
+                percentage: null,
+                activeCount: null,
+                inactiveCount: null,
+              }
+        continue
+      }
       const typeCount = counts[type]
       if (!typeCount) {
-        map[type] = { count: 0, percentage: 0, activeCount: 0, inactiveCount: 0 }
+        map[type] = null
       } else {
         const percentage = totalActive > 0 ? (typeCount.active / totalActive) * 100 : 0
         map[type] = {
@@ -461,7 +509,7 @@ export function DossierListPage() {
       }
     }
     return map
-  }, [counts])
+  }, [counts, electedOfficialTotal])
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
@@ -532,8 +580,8 @@ export function DossierListPage() {
         </h2>
         {countsLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-1.5 sm:gap-3 md:gap-4">
-            {[0, 1, 2, 3, 4, 5, 6].map((n) => (
-              <DossierTypeStatsCardSkeleton key={n} />
+            {DOSSIER_CARD_TYPES.map((type) => (
+              <DossierTypeStatsCardSkeleton key={type} />
             ))}
           </div>
         ) : countsError ? (
@@ -548,7 +596,7 @@ export function DossierListPage() {
               isRetrying={countsFetching}
             />
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-1.5 sm:gap-3 md:gap-4">
-              {DOSSIER_TYPES.map((type) => (
+              {DOSSIER_CARD_TYPES.map((type) => (
                 <div
                   key={type}
                   className={cn(
@@ -572,21 +620,18 @@ export function DossierListPage() {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-1.5 sm:gap-3 md:gap-4">
-            {DOSSIER_TYPES.map((type) => {
-              const stats = typeStatsMap?.[type] ?? {
-                count: 0,
-                percentage: 0,
-                activeCount: 0,
-                inactiveCount: 0,
-              }
+            {DOSSIER_CARD_TYPES.map((type) => {
+              // No defaulted object here. A type the map has no stats for passes every figure
+              // through as `null`, and the card renders the shipped em dash for each of them.
+              const stats = typeStatsMap ? typeStatsMap[type] : null
               return (
                 <DossierTypeStatsCard
                   key={type}
                   type={type}
-                  totalCount={stats.count}
-                  activeCount={stats.activeCount}
-                  inactiveCount={stats.inactiveCount}
-                  percentage={stats.percentage}
+                  totalCount={stats ? stats.count : null}
+                  activeCount={stats ? stats.activeCount : null}
+                  inactiveCount={stats ? stats.inactiveCount : null}
+                  percentage={stats ? stats.percentage : null}
                   isSelected={filters.type === type}
                   onClick={() => handleTypeCardClick(type)}
                 />

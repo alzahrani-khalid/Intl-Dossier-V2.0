@@ -15,6 +15,7 @@ import {
   Globe,
   Building2,
   Users,
+  Crown,
   MessageSquare,
   Tag,
   UsersRound,
@@ -140,6 +141,12 @@ export const createNavigationGroups = (
           label: 'navigation.persons',
           path: '/dossiers/persons',
           icon: Users,
+        },
+        {
+          id: 'dossier-elected-officials',
+          label: 'navigation.electedOfficials',
+          path: '/dossiers/elected-officials',
+          icon: Crown,
         },
         {
           id: 'dossier-forums',

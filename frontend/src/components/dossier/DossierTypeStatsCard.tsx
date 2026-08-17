@@ -25,6 +25,7 @@ import {
   Target,
   Briefcase,
   User,
+  Crown,
   TrendingUp,
   TrendingDown,
   Minus,
@@ -32,15 +33,22 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DossierTypeGuide } from './DossierTypeGuide'
-import type { DossierType } from '@/services/dossier-api'
+import type { DossierCardType } from '@/lib/dossier-type-guards'
 import { useDirection } from '@/hooks/useDirection'
 
 interface DossierTypeStatsCardProps {
-  type: DossierType
-  totalCount: number
-  activeCount: number
-  inactiveCount: number
-  percentage: number
+  type: DossierCardType
+  /**
+   * The four figures are nullable BY CONSTRUCTION. `null` means "no source produced this
+   * number" — not zero. A type with no counts bucket (today: `elected_official`, which is
+   * `persons.person_subtype` and never a `dossiers.type` value) hands every figure it cannot
+   * source as `null`, and the card renders the shipped em-dash treatment for it. This is why a
+   * fabricated zero cannot reappear one render site at a time.
+   */
+  totalCount: number | null
+  activeCount: number | null
+  inactiveCount: number | null
+  percentage: number | null
   trend?: 'up' | 'down' | 'stable'
   trendValue?: number
   isSelected?: boolean
@@ -49,9 +57,24 @@ interface DossierTypeStatsCardProps {
 }
 
 /**
+ * The unavailable treatment, copied from the shipped counts-error branch at
+ * `pages/dossiers/DossierListPage.tsx` — an em dash carrying `dossier-count-unavailable` and
+ * the `common:errors.countUnavailable` label. Used by all four figures.
+ */
+function CountUnavailable() {
+  const { t } = useTranslation('dossier')
+
+  return (
+    <span data-testid="dossier-count-unavailable" aria-label={t('common:errors.countUnavailable')}>
+      —
+    </span>
+  )
+}
+
+/**
  * Get type-specific icon component
  */
-function getTypeIcon(type: DossierType, className?: string) {
+function getTypeIcon(type: DossierCardType, className?: string) {
   const iconProps = { className: className || 'h-5 w-5' }
 
   switch (type) {
@@ -69,6 +92,8 @@ function getTypeIcon(type: DossierType, className?: string) {
       return <Briefcase {...iconProps} />
     case 'person':
       return <User {...iconProps} />
+    case 'elected_official':
+      return <Crown {...iconProps} />
     default:
       return <Globe {...iconProps} />
   }
@@ -113,6 +138,7 @@ export function DossierTypeStatsCard({
       className="w-full aspect-square sm:aspect-auto"
     >
       <Card
+        data-testid={'dossier-type-card-' + type}
         className={cn(
           'dossier-type-stat-card cursor-pointer h-full flex flex-col overflow-hidden p-0',
           'transition-colors duration-150 hover:border-[var(--ink-faint)]',
@@ -131,28 +157,37 @@ export function DossierTypeStatsCard({
 
             {/* Count and Help Icon */}
             <div className="flex items-center gap-1">
-              {/* Help Icon with DossierTypeGuide */}
-              <DossierTypeGuide
-                type={type}
-                variant="popover"
-                trigger={
-                  <button
-                    onClick={(e) => e.stopPropagation()}
-                    className={cn(
-                      'hidden sm:inline-flex items-center justify-center',
-                      'min-h-5 min-w-5 p-0.5',
-                      'rounded-full',
-                      'bg-[var(--surface)] hover:bg-[var(--accent-soft)]',
-                      'text-[var(--ink-mute)] hover:text-[var(--accent-ink)]',
-                      'transition-colors duration-150',
-                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1',
-                    )}
-                    aria-label={t('typeGuide.learnMore', 'Learn more about this type')}
-                  >
-                    <HelpCircle className="h-3 w-3" />
-                  </button>
-                }
-              />
+              {/* Help Icon with DossierTypeGuide.
+                  HIDDEN for `elected_official`, deliberately. The guide renders
+                  `t('typeDescription.<type>')` with no fallback, and neither locale bundle carries
+                  a `typeDescription.elected_official` entry — OBSERVED live on 2026-08-17, the
+                  popover printed the raw key `typeDescription.elected_official` while the `person`
+                  control printed real copy. Inventing copy is out of this plan's scope and
+                  shipping a raw key is worse than shipping no trigger, so the affordance is
+                  withheld rather than broken. State recorded in 97-05-SUMMARY for 97-09. */}
+              {type !== 'elected_official' && (
+                <DossierTypeGuide
+                  type={type}
+                  variant="popover"
+                  trigger={
+                    <button
+                      onClick={(e) => e.stopPropagation()}
+                      className={cn(
+                        'hidden sm:inline-flex items-center justify-center',
+                        'min-h-5 min-w-5 p-0.5',
+                        'rounded-full',
+                        'bg-[var(--surface)] hover:bg-[var(--accent-soft)]',
+                        'text-[var(--ink-mute)] hover:text-[var(--accent-ink)]',
+                        'transition-colors duration-150',
+                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1',
+                      )}
+                      aria-label={t('typeGuide.learnMore', 'Learn more about this type')}
+                    >
+                      <HelpCircle className="h-3 w-3" />
+                    </button>
+                  }
+                />
+              )}
               {/* Count */}
               <m.div
                 initial={{ scale: 0.9, opacity: 0 }}
@@ -162,7 +197,7 @@ export function DossierTypeStatsCard({
                   'chip chip-accent px-1.5 py-0.5 text-[10px] font-bold leading-none sm:px-2 sm:py-0.5 sm:text-base',
                 )}
               >
-                {totalCount}
+                {totalCount === null ? <CountUnavailable /> : totalCount}
               </m.div>
             </div>
           </div>
@@ -193,7 +228,7 @@ export function DossierTypeStatsCard({
               % of total active dossiers
             </div>
             <div className="text-sm font-bold text-[var(--ink)] sm:text-lg">
-              {Math.round(percentage)}%
+              {percentage === null ? <CountUnavailable /> : `${Math.round(percentage)}%`}
             </div>
           </div>
 
@@ -204,7 +239,7 @@ export function DossierTypeStatsCard({
                 {t('status.active')}
               </span>
               <span className="text-center text-xs font-semibold text-[var(--ok)] sm:text-base">
-                {activeCount}
+                {activeCount === null ? <CountUnavailable /> : activeCount}
               </span>
             </div>
             <div className="flex flex-col gap-0.5 items-center">
@@ -212,7 +247,7 @@ export function DossierTypeStatsCard({
                 {t('status.inactive')}
               </span>
               <span className="text-center text-xs font-semibold text-[var(--warn)] sm:text-base">
-                {inactiveCount}
+                {inactiveCount === null ? <CountUnavailable /> : inactiveCount}
               </span>
             </div>
           </div>
