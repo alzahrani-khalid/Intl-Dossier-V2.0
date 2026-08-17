@@ -1,5 +1,6 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { getRouteApi } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -29,7 +30,16 @@ import {
 } from '@/components/settings'
 import { EmailDigestSettings } from '@/components/email/EmailDigestSettings'
 import { BotIntegrationsSettings } from '@/components/settings/BotIntegrationsSettings'
-import { SettingsSectionId, defaultUserSettings } from '@/types/settings.types'
+import { defaultUserSettings } from '@/types/settings.types'
+
+/**
+ * NAV-02 (Phase 97): the active section is a validated `?section=` search param
+ * on the settings layout route, not local state — that is what lets the nav
+ * column work identically from a child route and makes sections deep-linkable.
+ * Read through `getRouteApi` rather than importing `Route`, which would close
+ * an import cycle (the route module imports this page).
+ */
+const settingsRoute = getRouteApi('/_protected/settings')
 
 /**
  * Settings form schema
@@ -134,8 +144,9 @@ export function SettingsPage() {
   const { setMode: setColorMode } = useMode()
   const queryClient = useQueryClient()
 
-  // Active section state
-  const [activeSection, setActiveSection] = useState<SettingsSectionId>('profile')
+  // Active section — route-derived, so a section click from a child route lands
+  // here with THAT section rendered rather than the default.
+  const { section: activeSection } = settingsRoute.useSearch()
 
   // Fetch current user settings
   const { data: settings, isLoading } = useQuery({
@@ -358,15 +369,9 @@ export function SettingsPage() {
     })()
   }, [form, saveMutation])
 
-  // Handle section change
-  const handleSectionChange = useCallback((section: SettingsSectionId) => {
-    setActiveSection(section)
-  }, [])
-
   return (
     <SettingsLayout
       activeSection={activeSection}
-      onSectionChange={handleSectionChange}
       isLoading={isLoading}
       hasChanges={hasChanges}
       isSaving={saveMutation.isPending}

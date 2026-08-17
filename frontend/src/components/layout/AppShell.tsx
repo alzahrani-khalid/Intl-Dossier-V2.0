@@ -88,6 +88,7 @@ import { useTranslation } from 'react-i18next'
 import { useDirection as useRadixDirection } from '@radix-ui/react-direction'
 
 import { cn } from '@/lib/utils'
+import { isSettingsPath } from '@/lib/settings-route'
 import { FullscreenLoader } from '@/components/signature-visuals'
 import { Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
@@ -118,11 +119,18 @@ export function AppShell({ children }: AppShellProps): ReactElement {
   // without a provider (test-safe).
   const isRTL = useRadixDirection() === 'rtl'
   const pathname = useRouterState({ select: (s) => s.location.pathname })
-  // F18 (D-85-03): on /settings the SettingsLayout renders its own 240px nav
-  // column, so the global Sidebar is suppressed to leave a single nav column.
-  // Both Sidebar mounts (desktop aside + mobile drawer) gate off this flag, and
-  // the empty desktop rail collapses to 0px so content occupies the freed space.
-  const isSettingsRoute = pathname.startsWith('/settings')
+  // F18 (D-85-03) + NAV-02 (Phase 97, D-04): the settings subtree mounts a
+  // single 240px nav column at the ROUTE-LAYOUT level
+  // (`routes/_protected/settings.tsx`) — for the index and for every child
+  // alike — so the global Sidebar is suppressed across the whole subtree to
+  // leave exactly one nav column. Both Sidebar mounts (desktop aside + mobile
+  // drawer) and the collapsed 0px desktop rail gate off this one flag, and the
+  // flag itself is the shared `isSettingsPath` predicate rather than a local
+  // prefix test. This comment previously said SettingsLayout rendered its own
+  // column, which was FALSE for every child route: the sidebar was suppressed
+  // by prefix while the column was mounted only on an exact match, so children
+  // got no navigation at all.
+  const isSettingsRoute = isSettingsPath(pathname)
 
   // Plain React boolean for drawer openness. We bridge it into HeroUI's
   // `UseOverlayStateReturn` shape via `useOverlayState({ isOpen, onOpenChange })`

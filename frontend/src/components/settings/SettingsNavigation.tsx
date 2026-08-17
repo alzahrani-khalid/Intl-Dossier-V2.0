@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Icon, type IconName } from '@/components/signature-visuals'
+import { isSettingsPathExact } from '@/lib/settings-route'
 import type { SettingsSectionId } from '@/types/settings.types'
 
 interface SectionDef {
@@ -58,11 +59,22 @@ const NAV_GROUPS: NavGroup[] = [
   },
 ]
 
-interface SettingsNavigationProps {
-  /** Currently active section */
-  activeSection: SettingsSectionId
-  /** Callback when section changes */
-  onChange: (id: SettingsSectionId) => void
+/** The section the settings index falls back to when `?section=` is absent or unknown. */
+export const DEFAULT_SETTINGS_SECTION: SettingsSectionId = 'profile'
+
+/**
+ * Whitelist an arbitrary `?section=` value against the shipped section list.
+ *
+ * Membership test first, then the matched value — never a cast-through of
+ * attacker-controllable input (T-97-19). The list is `NAV_ITEMS` below, so the
+ * whitelist and the rendered rows cannot drift apart.
+ *
+ * @param value - The raw `section` search-param value, of unknown type
+ * @returns The matching section id, or the default section
+ */
+export function toSettingsSection(value: unknown): SettingsSectionId {
+  const match = NAV_ITEMS.find((section) => section.id === value)
+  return match ? match.id : DEFAULT_SETTINGS_SECTION
 }
 
 /**
@@ -72,19 +84,29 @@ interface SettingsNavigationProps {
  * the global Sidebar is suppressed on /settings, so this is the return path.
  * The chevron points inline-start ("back") and flips in RTL per D-85-07.
  *
+ * NAV-02 (Phase 97): the column is ROUTE-driven, not callback-driven. Each row
+ * is a `Link` to `/settings?section=<id>`, so it works identically from the
+ * index and from a child route (a child has no in-page section state to set),
+ * sections are deep-linkable, and `aria-current` is a function of the route
+ * rather than of a flag a caller must remember to pass: exactly ONE marked row
+ * at the index, ZERO on any child, by construction. The component takes no
+ * props for that reason — there is no way to hand it a wrong active section.
+ *
  * Desktop (≥768px): vertical nav rows with active accent bar via
  * `.settings-nav.active::before` (defined in index.css).
  * Mobile  (≤768px): the `@media (max-width: 768px)` block in index.css
  * flips `.settings-nav-card` into a horizontal scrollable pill row;
  * active marker becomes a `border-block-end` underline.
  */
-export function SettingsNavigation({
-  activeSection,
-  onChange,
-}: SettingsNavigationProps): React.JSX.Element {
+export function SettingsNavigation(): React.JSX.Element {
   const { t, i18n } = useTranslation('settings')
   const isRTL = i18n.language === 'ar'
   const navigate = useNavigate()
+  const location = useRouterState({ select: (s) => s.location })
+  // ZERO on a child, exactly one at the index — derived, never passed in.
+  const activeSection: SettingsSectionId | undefined = isSettingsPathExact(location.pathname)
+    ? toSettingsSection((location.search as { section?: unknown }).section)
+    : undefined
 
   return (
     <nav className="card settings-nav-card" aria-label={t('pageTitle')}>
@@ -105,18 +127,23 @@ export function SettingsNavigation({
             {t(group.labelKey)}
           </div>
           {group.sections.map((s) => (
-            <button
+            <Link
               key={s.id}
-              type="button"
+              to="/settings"
+              search={{ section: s.id }}
+              // `exact` keeps the router's own active detection off every child
+              // route, so it can never force `aria-current` back on where the
+              // contract requires zero. At the index it can only ever agree with
+              // the derivation above, never widen it.
+              activeOptions={{ exact: true }}
               data-testid={`settings-nav-${s.id}`}
               className={cn('settings-nav', activeSection === s.id && 'active')}
               style={{ minHeight: 44 }}
               aria-current={activeSection === s.id ? 'page' : undefined}
-              onClick={() => onChange(s.id)}
             >
               <Icon name={s.icon} size={16} aria-hidden />
               <span className="text-start">{t(`nav.${s.labelKey}`)}</span>
-            </button>
+            </Link>
           ))}
         </div>
       ))}
@@ -129,9 +156,10 @@ export function SettingsNavigation({
  * named exports were consumed by `SettingsLayout` (mobile drawer) and the
  * settings barrel. The mobile pill row is now CSS-driven (Plan 03 added
  * `@media (max-width: 768px)` to index.css), so neither symbol has any
- * runtime consumers after the reskin. We preserve a stub `NAV_ITEMS` for
- * the barrel re-export to avoid breaking `import { NAV_ITEMS } from
- * '@/components/settings'` callsites that may still exist. It flattens the
- * grouped structure back to the canonical R-02 order (W-1).
+ * runtime consumers after the reskin. `NAV_ITEMS` is no longer a stub,
+ * though: Phase 97 made it the whitelist `toSettingsSection` validates the
+ * `?section=` search param against, so the accepted values and the rendered
+ * rows are the same list by construction. It flattens the grouped structure
+ * back to the canonical R-02 order (W-1).
  */
 export const NAV_ITEMS = NAV_GROUPS.flatMap((g) => g.sections)
