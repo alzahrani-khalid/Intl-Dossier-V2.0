@@ -8,6 +8,8 @@
  * - API request/response types
  */
 
+import type { DossierType as CanonicalDossierType } from '@/lib/dossier-type-guards'
+
 // ============================================================================
 // Relationship Types
 // ============================================================================
@@ -41,16 +43,10 @@ export type DossierRelationshipType =
 export type RelationshipStatus = 'active' | 'historical' | 'terminated'
 
 /**
- * Dossier type used in relationship context
+ * Dossier type used in relationship context — aliased from the canonical home
+ * (`@/lib/dossier-type-guards`) so this module carries no second copy of the list.
  */
-export type DossierType =
-  | 'country'
-  | 'organization'
-  | 'forum'
-  | 'person'
-  | 'engagement'
-  | 'working_group'
-  | 'topic'
+export type DossierType = CanonicalDossierType
 
 // ============================================================================
 // Dossier Reference Types

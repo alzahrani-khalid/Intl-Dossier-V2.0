@@ -65,22 +65,16 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { DossierType, DossierStatus, DossierFilters } from '@/services/dossier-api'
+// The DB-7, not the card set: this page's type filter and stats cards read counts
+// bucketed by `dossiers.type`. Widening it to DOSSIER_CARD_TYPES belongs with the
+// count fix (plan 97-05) — done alone it renders the 8th card a fabricated 0.
+import { DOSSIER_TYPES } from '@/lib/dossier-type-guards'
 import { getDossierDetailPath, getDossierRouteSegment } from '@/lib/dossier-routes'
 import type { ViewConfig, DossierViewConfig } from '@/types/view-preferences.types'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { useDirection } from '@/hooks/useDirection'
 import { ExportDialog } from '@/components/export-import/ExportDialog'
 import { ImportDialog } from '@/components/export-import/ImportDialog'
-
-const DOSSIER_TYPES: DossierType[] = [
-  'country',
-  'organization',
-  'forum',
-  'engagement',
-  'topic',
-  'working_group',
-  'person',
-]
 
 const DOSSIER_STATUSES: DossierStatus[] = ['active', 'inactive', 'archived']
 

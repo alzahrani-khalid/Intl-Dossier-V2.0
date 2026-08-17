@@ -33,17 +33,8 @@ import type {
   AlertRule,
   AlertSeverityFilter,
 } from '@/domains/signals/hooks/useAlertRules'
-import type { DossierType } from '@/lib/dossier-type-guards'
-
-const DOSSIER_TYPES = [
-  'country',
-  'organization',
-  'forum',
-  'engagement',
-  'topic',
-  'working_group',
-  'person',
-] as const
+// The z.enum source is the DB-7 — an alert rule targets a real `dossiers` row.
+import { DOSSIER_TYPES, type DossierType } from '@/lib/dossier-type-guards'
 
 const SEVERITIES: AlertSeverityFilter[] = ['high', 'urgent']
 const OPTIONAL_CHANNELS: AlertChannel[] = ['smtp', 'webhook']

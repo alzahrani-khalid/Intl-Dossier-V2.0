@@ -5,11 +5,19 @@
  * All dossier navigation should use these utilities to ensure consistency.
  */
 
+import type { DossierCardType } from '@/lib/dossier-type-guards'
+
 /**
- * Maps dossier types to their URL route segments (plural form).
- * Note: elected_official is now a person_subtype, all persons use /persons route
+ * Maps every displayable dossier kind to its URL route segment (plural form).
+ *
+ * Keyed by `DossierCardType`, so a card type with no segment is a COMPILE error
+ * rather than a runtime `undefined`. That includes `elected_official`: it is a
+ * `person_subtype` in the data, but it has its OWN route (`/dossiers/elected-officials`),
+ * so it gets its own segment here — persons and elected officials do NOT share
+ * `/persons`. This comment previously claimed the opposite while the map below said
+ * otherwise; the map is what the live routes match.
  */
-export const DOSSIER_TYPE_TO_ROUTE: Record<string, string> = {
+export const DOSSIER_TYPE_TO_ROUTE: Record<DossierCardType, string> = {
   country: 'countries',
   organization: 'organizations',
   person: 'persons',
@@ -32,7 +40,10 @@ export function getDossierRouteSegment(type: string | undefined | null): string 
     return 'countries'
   }
   const normalizedType = type.toLowerCase().replace(/\s+/g, '_')
-  return DOSSIER_TYPE_TO_ROUTE[normalizedType] ?? 'countries'
+  // The map's key type is the card set; the argument is an arbitrary string, so the
+  // lookup is widened for the miss case (which falls back to 'countries').
+  const lookup: Record<string, string | undefined> = DOSSIER_TYPE_TO_ROUTE
+  return lookup[normalizedType] ?? 'countries'
 }
 
 /**

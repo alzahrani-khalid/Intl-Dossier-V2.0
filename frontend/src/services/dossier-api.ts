@@ -10,6 +10,7 @@
 import { supabase } from '@/lib/supabase'
 import type { Database } from '../../../backend/src/types/database.types'
 import type { ApiErrorDetails } from '@/types/common.types'
+import { DOSSIER_TYPES, type DossierType as CanonicalDossierType } from '@/lib/dossier-type-guards'
 
 // Get Supabase URL for Edge Functions
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
@@ -21,16 +22,10 @@ if (!supabaseUrl) {
 type Dossier = Database['public']['Tables']['dossiers']['Row']
 
 /**
- * Dossier Types
+ * Dossier Types — re-exported from the canonical home so this module has no
+ * second copy of the list. See `@/lib/dossier-type-guards`.
  */
-export type DossierType =
-  | 'country'
-  | 'organization'
-  | 'forum'
-  | 'engagement'
-  | 'topic'
-  | 'working_group'
-  | 'person'
+export type DossierType = CanonicalDossierType
 
 export type DossierStatus = 'active' | 'inactive' | 'archived' | 'deleted'
 
@@ -698,19 +693,13 @@ export async function getDossierCountsByType(): Promise<Record<DossierType, Doss
     )
   }
 
-  // Initialize counts object
-  const types: DossierType[] = [
-    'country',
-    'organization',
-    'forum',
-    'engagement',
-    'topic',
-    'working_group',
-    'person',
-  ]
+  // Initialize counts object. This is a query over `dossiers.type`, so it takes the
+  // DB-7 and must NEVER be widened to the card set — a bucket for a value the column
+  // cannot hold renders a fabricated 0. `_EoIsNotADbType` in @/lib/dossier-type-guards
+  // makes that widening a build failure.
   const counts = {} as Record<DossierType, DossierTypeCount>
 
-  types.forEach((type) => {
+  DOSSIER_TYPES.forEach((type) => {
     counts[type] = {
       type,
       total: 0,

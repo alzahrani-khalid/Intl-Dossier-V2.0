@@ -6,15 +6,16 @@
  *
  * Implements Phase 31 decisions:
  *   - D-01: 2 / md:3 / lg:4 mobile-first grid
- *   - D-02: 8 cards in DOSSIER_TYPES enum order (country → elected_official)
+ *   - D-02: 8 cards in DOSSIER_CARD_TYPES order (country → elected_official)
  *   - D-03: icon + bilingual type name + one-sentence description
  *   - D-05: stateless URL — no ?type=X preselect
  *   - D-16: replaces DossierCreatePage on the `/dossiers/create` route
  *
- * Hub card type union is local: the canonical `DossierType` (from
- * `@/lib/dossier-type-guards`) excludes `elected_official` (it is a PersonSubtype).
- * The hub surfaces elected_official as its own creation entry per D-02, so we
- * widen locally rather than touching the canonical domain type.
+ * The card set is NOT local. `DOSSIER_CARD_TYPES` / `DossierCardType` in
+ * `@/lib/dossier-type-guards` is the canonical display set — the DB-7 plus
+ * `elected_official` (a PersonSubtype with its own wizard route), derived by spread
+ * from the one literal list. Widening locally is what produced four disagreeing
+ * copies of this set; add a type in the canonical home, never here.
  */
 
 import type { JSX } from 'react'
@@ -33,42 +34,14 @@ import {
 
 import { Card, CardContent } from '@/components/ui/card'
 import { getDossierRouteSegment } from '@/lib/dossier-routes'
-
-/**
- * Hub-local card type. Includes `elected_official` which is not a canonical
- * DossierType (it is a PersonSubtype) but does have its own wizard route.
- */
-type HubCardType =
-  | 'country'
-  | 'organization'
-  | 'forum'
-  | 'engagement'
-  | 'topic'
-  | 'working_group'
-  | 'person'
-  | 'elected_official'
-
-/**
- * All dossier creation entries surfaced by the hub, in the exact order mandated
- * by D-02. Order is stable and must not change without a phase-level decision.
- */
-const DOSSIER_TYPES: HubCardType[] = [
-  'country',
-  'organization',
-  'forum',
-  'engagement',
-  'topic',
-  'working_group',
-  'person',
-  'elected_official',
-]
+import { DOSSIER_CARD_TYPES, type DossierCardType } from '@/lib/dossier-type-guards'
 
 /**
  * Map each hub card type to its Lucide icon. Copied verbatim from
  * `DossierTypeStatsCard.getTypeIcon` (lines 54-75) and extended with an
  * `elected_official` case per 31-PATTERNS §"Per-type icon map".
  */
-function getTypeIcon(type: HubCardType): LucideIcon {
+function getTypeIcon(type: DossierCardType): LucideIcon {
   switch (type) {
     case 'country':
       return Globe
@@ -106,7 +79,7 @@ export function CreateDossierHub(): JSX.Element {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-        {DOSSIER_TYPES.map((type) => {
+        {DOSSIER_CARD_TYPES.map((type) => {
           const Icon = getTypeIcon(type)
           const href = `/dossiers/${getDossierRouteSegment(type)}/create`
           return (
