@@ -73,10 +73,39 @@ constant creates a `dossiers.type` bucket that no query can ever fill, which is 
 `0` again.
 
 So **each declaration states, in the code**, what set it is, why it must not be merged with the
-other, and what merging would cause. The comment is part of the deliverable, not garnish — the
-failure mode is a future author who cannot see why two near-identical lists exist. (Same
-reasoning as the `AppShell.tsx:121-124` comment correction: a stale or missing comment is how a
-fixed bug gets re-learned.)
+other, and what merging would cause. The failure mode is a future author who cannot see why two
+near-identical lists exist.
+
+### But the comment is DOCUMENTARY — the type system is the guarantee
+
+**A gate asserting a comment's PRESENCE cannot assert its TRUTH.** `AppShell.tsx:121-124` was
+present _and false_ — the very precedent invoked for writing the comment. A presence-pin
+protects against deletion, never against rot. **Compile-time guarantee over grep-pin:**
+
+```
+// ONE literal home — the 7 dossiers.type values
+export const DOSSIER_TYPES = ['country', …, 'person'] as const
+export type DossierType = (typeof DOSSIER_TYPES)[number]
+
+// the display set DERIVED from it — 7 + elected_official
+export const DOSSIER_CARD_TYPES = [...DOSSIER_TYPES, 'elected_official'] as const
+export type DossierCardType = (typeof DOSSIER_CARD_TYPES)[number]
+
+// the guard: merging the sets is a TYPE ERROR, not a comment violation
+type AssertNever<T extends never> = T
+type _EoIsNotADbType = AssertNever<Extract<DossierType, 'elected_official'>>
+```
+
+This is already the in-repo idiom (`EngagementsListPage.tsx:50`, `kanban.tsx:22` both use
+`as const satisfies readonly X[]`). The display set **derives** from the DB set, so the shared 7
+cannot drift — agreement by CONSTRUCTION. Six copies collapse to **one literal list plus one
+derived extension**. Adding `elected_official` to the DB set fails the **build**, which is
+obeyed by everyone including whoever never reads the comment. No branding or nominal types —
+those would be disproportionate and would force casts at every literal usage.
+
+**Gate consequence:** the enforcing gate is `pnpm typecheck`, not a comment grep, and it drills
+in both directions per C1 — in a scratch copy add `'elected_official'` to `DOSSIER_TYPES` →
+typecheck RED for the right reason (the assertion, not tooling); restore → GREEN.
 
 ## What this phase does NOT close
 
