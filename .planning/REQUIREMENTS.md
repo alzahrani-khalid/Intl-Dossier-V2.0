@@ -514,6 +514,30 @@ verified sound across six lanes).
     judgement — `97-NAV04-DECISIONS.md` §6 named the filer, not an owning phase — placed beside the
     other class-residue rows (`GATESTD-*`, `WRITER-ROUTE-01`, `INSERT-SYNC-01`).
 
+### MONITORING-GUARD — an unguarded route presented as an Administration peer
+
+- [ ] **MONITORING-GUARD-01**: **`/monitoring` sits in the `isAdmin`-gated Administration nav
+      group beside two siblings that BOTH carry route-level guards, and has none.** Found
+      2026-08-17 by a cross-model probe during Phase 97 execution; filed by `RULING-P97-18`.
+  - **Measured, with a control:** `routes/_protected/admin/approvals.tsx` → `requireAdmin` 2 /
+    `beforeLoad` 1; `routes/_protected/admin/ai-usage.tsx` → 2 / 2;
+    `routes/_protected/monitoring.tsx` → **0 / 0**. Control: **9** route files under
+    `routes/_protected/` do use `requireAdmin`, so the zero is a measurement, not a failed sweep.
+  - **THE FINDING IS NOT THAT PHASE 97 OPENED A DOOR.** The route was unguarded before and
+    reachable by URL. **Phase 97 changed its CONTEXT**: it placed an unguarded route into an
+    admin-gated group, so **group membership now implies a guarantee the route does not honour.**
+  - **Why nobody caught it in-phase:** the decision table exercised that destination **only as an
+    admin** (row 8, "same role as row 5"), so the property whose absence this describes was never
+    tested. Every P97 sweep hunted for things UNREACHABLE; none asked what became MORE reachable.
+  - **RESOLVABLE IN EITHER DIRECTION — both are named so P100 does not inherit the assumption
+    that guarding is the only answer:**
+    1. **Guard the route** (`beforeLoad: requireAdmin`, matching its two siblings), or
+    2. **Stop presenting it as an Administration peer** (move or ungroup the nav entry).
+       Which is correct is a **product question about who `/monitoring` is for**, not a technical one.
+  - **NOT fixed in Phase 97** — outside every plan's `files_modified`, and the choice above is not
+    an orchestrator's to make.
+  - **Owner: Phase 100 — RLS & Residue.**
+
 ### PREVIEW-HOLLOW — an admin route nobody can reach, configuring a table nobody reads
 
 - [ ] **PREVIEW-HOLLOW-01**: **`/admin/preview-layouts` is BOTH unreachable AND hollow — two
@@ -701,6 +725,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | ENGREAD-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | SPINNER-A11Y-01 | Phase 99 — Arabic & Accessibility | Pending |
 | PREVIEW-HOLLOW-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| MONITORING-GUARD-01 | Phase 100 — RLS & Residue | Pending |
 | PARALLEL-TRUTH-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | ROOTALIAS-01 | Phase 101 — CI Gates Green | Pending |
 | CARRY-01 | Phase 92 — Session Integrity & Edge-Function Auth | Pending |

@@ -539,4 +539,25 @@ Likewise, `97-POPULATIONS.md`'s `LIVE` classification is a file-location fact, n
 so no row here is a reachability guarantee. The click-through oracle that turns a `NAV ENTRY` row
 into an observed reachability claim, at a named role and viewport, is `97-10` Task 3.
 
+### The CONCRETE case this general principle was covering (`RULING-P97-18`, added 2026-08-17)
+
+The paragraph above is TRUE and was doing too much work. Stated generally, it silently absorbed a
+**specific, named asymmetry that no row owns** — the audit-is-not-a-queue shape: correct words,
+nobody owning the thing.
+
+**`/monitoring` (row 8) carries NO route guard, while the two other routes this phase gave nav
+entries both do.** Measured: `admin/approvals` `requireAdmin` 2 / `beforeLoad` 1; `admin/ai-usage`
+2 / 2; **`monitoring.tsx` 0 / 0** (control: 9 route files in the tree do use `requireAdmin`).
+
+**Phase 97 did not open that door** — the route was unguarded before and URL-reachable. **It
+changed the route's CONTEXT**, placing an unguarded route inside the `isAdmin`-gated
+Administration group, so **group membership now implies a guarantee the route does not honour.**
+
+**This row's destination was exercised ONLY AS AN ADMIN** ("same role as row 5"), so non-admin
+behaviour at `/monitoring` is **unestablished by this phase**.
+
+Filed as **`MONITORING-GUARD-01`, owner Phase 100**, resolvable in EITHER direction — guard the
+route, or stop presenting it as an Administration peer — because which is right is a product
+question about who `/monitoring` is for. **This document does not choose.**
+
 DECISION-RECORD-END
