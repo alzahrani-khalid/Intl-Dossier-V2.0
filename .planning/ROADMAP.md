@@ -262,7 +262,7 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 - [x] **Phase 93: Failure Visibility** - No surface renders a confident empty state over a request that failed
 - [ ] **Phase 94: Write Paths** - Every advertised write path — after-actions, intake, kanban, settings, reports — actually writes
 - [x] **Phase 95: Routes That Don't Render** - Every route either renders its page or says why it can't; the route tree has one file per slot
-- [ ] **Phase 96: Real Numbers** - Every count, chart and trend comes from real data and agrees with every other surface
+- [x] **Phase 96: Real Numbers** - Every count, chart and trend comes from real data and agrees with every other surface (completed 2026-08-17)
 - [ ] **Phase 97: Reachability** - Nothing built is unreachable and nothing in the route tree is unowned
 - [ ] **Phase 98: Copy Truth** - No database values, no i18n keys, no seed instructions, one date format, project voice rules obeyed
 - [ ] **Phase 99: Arabic Coverage** - An Arabic session reads as Arabic: one glossary, localized dates, no English leakage
@@ -454,23 +454,23 @@ Plans:
 
 **Wave 1**
 
-- [ ] 96-01-PLAN.md — SANDBOX-500-01: break the 42P17 RLS recursion (P94 definer precedent), two-sided proof, working sandbox
-- [ ] 96-02-PLAN.md — COUNT-04 DB half: INSERT-gap trigger re-timing + RPC count truth (fulfillment bucket, Done semantics, stored-overdue arm)
-- [ ] 96-03-PLAN.md — DEAD-06: calendar_entries.event_date fix + truthful trend deltas + CDP oracle
-- [ ] 96-04-PLAN.md — DEAD-07 (calendar): calendar layout Outlet, grid-always, /events offset + month nav
-- [ ] 96-10-PLAN.md — COUNT-02: type-list path classification + SC5 no-extension-row fixture oracle
-- [ ] 96-11-PLAN.md — TRIGSWEEP-01: behaviour classifier + both-direction control drill artifact
+- [x] 96-01-PLAN.md — SANDBOX-500-01: break the 42P17 RLS recursion (P94 definer precedent), two-sided proof, working sandbox
+- [x] 96-02-PLAN.md — COUNT-04 DB half: INSERT-gap trigger re-timing + RPC count truth (fulfillment bucket, Done semantics, stored-overdue arm)
+- [x] 96-03-PLAN.md — DEAD-06: calendar_entries.event_date fix + truthful trend deltas + CDP oracle
+- [x] 96-04-PLAN.md — DEAD-07 (calendar): calendar layout Outlet, grid-always, /events offset + month nav
+- [x] 96-10-PLAN.md — COUNT-02: type-list path classification + SC5 no-extension-row fixture oracle
+- [x] 96-11-PLAN.md — TRIGSWEEP-01: behaviour classifier + both-direction control drill artifact
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
-- [ ] 96-05-PLAN.md — DEAD-07 (completes): word-assistant three-state live-probe pill + the 4-test family spec
-- [ ] 96-06-PLAN.md — DEAD-05 Branch A: analytics repoint to the deployed edge fn, fabrication removal, branch-invariant oracle
-- [ ] 96-07-PLAN.md — COUNT-01: dashboard-stats truth migration, /commitments + /my-work reconciliation, same-clock agreement spec
-- [ ] 96-08-PLAN.md — COUNT-03 verify-not-build: three-way parity, writer sweep (STATUS_TO_STAGE), divergent-row repair
+- [x] 96-05-PLAN.md — DEAD-07 (completes): word-assistant three-state live-probe pill + the 4-test family spec
+- [x] 96-06-PLAN.md — DEAD-05 Branch A: analytics repoint to the deployed edge fn, fabrication removal, branch-invariant oracle
+- [x] 96-07-PLAN.md — COUNT-01: dashboard-stats truth migration, /commitments + /my-work reconciliation, same-clock agreement spec
+- [x] 96-08-PLAN.md — COUNT-03 verify-not-build: three-way parity, writer sweep (STATUS_TO_STAGE), divergent-row repair
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
-- [ ] 96-09-PLAN.md — COUNT-04 render half: one-signal badge, chip==badges same-clock, phase-close c9b sweep
+- [x] 96-09-PLAN.md — COUNT-04 render half: one-signal badge, chip==badges same-clock, phase-close c9b sweep
 
 **UI hint**: yes
 
@@ -625,7 +625,7 @@ Plans:
 | 93. Failure Visibility | v10.0 | 0/TBD | Not started | — |
 | 94. Write Paths | v10.0 | 0/TBD | Not started | — |
 | 95. Routes That Don't Render | v10.0 | 0/TBD | Not started | — |
-| 96. Real Numbers | v10.0 | 0/TBD | Not started | — |
+| 96. Real Numbers | v10.0 | 11/11 | Complete   | 2026-08-17 |
 | 97. Reachability | v10.0 | 0/TBD | Not started | — |
 | 98. Copy Truth | v10.0 | 0/TBD | Not started | — |
 | 99. Arabic Coverage | v10.0 | 0/TBD | Not started | — |

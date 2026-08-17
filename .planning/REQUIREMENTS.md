@@ -529,17 +529,17 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | DEAD-02 | Phase 95 — Routes That Don't Render | Complete |
 | DEAD-03 | Phase 95 — Routes That Don't Render | Complete |
 | DEAD-04 | Phase 95 — Routes That Don't Render | Complete |
-| DEAD-05 | Phase 96 — Real Numbers | Pending |
-| DEAD-06 | Phase 96 — Real Numbers | Pending |
-| DEAD-07 | Phase 96 — Real Numbers | Pending |
+| DEAD-05 | Phase 96 — Real Numbers | Complete |
+| DEAD-06 | Phase 96 — Real Numbers | Complete |
+| DEAD-07 | Phase 96 — Real Numbers | Complete (a11y/digit remedies ruled `RULING-P96-04`; /calendar visual baseline = OPERATOR park) |
 | DEAD-08 | Phase 95 — Routes That Don't Render | Complete |
 | DEAD-09 | Phase 95 — Routes That Don't Render | Complete |
-| COUNT-01 | Phase 96 — Real Numbers | Pending |
-| COUNT-02 | Phase 96 — Real Numbers | Pending |
-| COUNT-03 | Phase 96 — Real Numbers | Pending |
-| COUNT-04 | Phase 96 — Real Numbers | Pending |
-| TRIGSWEEP-01 | Phase 96 — Real Numbers | Pending |
-| SANDBOX-500-01 | Phase 96 — Real Numbers | Pending |
+| COUNT-01 | Phase 96 — Real Numbers | Complete (SC4 measured incl. kanban leg, seams stated) |
+| COUNT-02 | Phase 96 — Real Numbers | Complete (incl. `RULING-P96-03` sixth-migration addendum) |
+| COUNT-03 | Phase 96 — Real Numbers | Complete (BOUNDED — `WRITER-ROUTE-01` + `INSERT-SYNC-01` residues → P102, `RULING-P96-05`) |
+| COUNT-04 | Phase 96 — Real Numbers | Complete (refusal kept per `RULING-P96-01`; winning-notion table in 96-02) |
+| TRIGSWEEP-01 | Phase 96 — Real Numbers | Complete (behaviour-derived instrument, both-direction controls; count is a FLOOR) |
+| SANDBOX-500-01 | Phase 96 — Real Numbers | Complete (42P17 recursion fixed; sandbox answers 200) |
 | NAV-01 | Phase 97 — Reachability | Pending |
 | NAV-02 | Phase 97 — Reachability | Pending |
 | NAV-03 | Phase 97 — Reachability | Pending |
