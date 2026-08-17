@@ -538,14 +538,42 @@ Plans:
 **Success Criteria** (what must be TRUE):
 
 1. No database value renders as user copy — `in_progress`, `action_item`, `follow_up`, `email`, `human_entered`, `WEEK OF 2026-W27` all resolve through display labels.
-2. No raw i18n key reaches the screen in either locale — `regions.Europe`, `afterActions.loadError`, `common.loading`, the `calendar.recurrence.*` dot-form family (16 call sites in `RecurrencePatternEditor.tsx` against a namespace-less `useTranslation()`; the audit's `CALENDAR.RECURRENCE.TITLE` is `:328`'s `t('calendar.recurrence.title')` — content exists under the `calendar` namespace, repair is routing), and the `entityLinks.*` namespace — **82 keys across 8 files with ZERO bundle coverage in either locale, not five** (`RULING-P98A2-02` Q2/Q3: register and author all 82 both locales; oracle closes on driveable rendered surfaces, census 82/82 is the backstop; undriveable surfaces close on census + named UNDRIVEN line). Every named instance is a CLASS — the plan sweeps dot-form-vs-namespace misses as a population.
+2. No raw i18n key reaches the screen in either locale — `regions.Europe`, `afterActions.loadError`, `common.loading`, the `calendar.recurrence.*` dot-form family in `RecurrencePatternEditor.tsx` against a namespace-less `useTranslation()` (**census DERIVED, never quoted** — at `87b2d040e`: 43 occurrences / 37 distinct key paths, all 37 already resolving in both `calendar.json`s, so the repair is colon-form ROUTING; the ruling's original "16" was a subfamily miscount, corrected per `RULING-P98A2-02` CORRECTION + `P98A2-D22-COUNT-CORRECTION.md` — any gate re-derives the population at execution time), and the `entityLinks.*` namespace — **82 keys across 8 files with ZERO bundle coverage in either locale, not five** (`RULING-P98A2-02` Q2/Q3: register and author all 82 both locales; oracle closes on driveable rendered surfaces, census 82/82 is the backstop; undriveable surfaces close on census + named UNDRIVEN line). Every named instance is a CLASS — the plan sweeps dot-form-vs-namespace misses as a population.
 3. No seed or test instruction ships as user copy: the 4 `dashboard-widgets.json` strings are rewritten in both locales.
 4. Copy obeys the project's voice rules — sentence case, zero exclamation marks (derived: 31 EN / 30 AR — the audit's 46 is superseded per pre-commitment 1), zero first-person plural (8 today, to re-derive), no retired terminology such as the `"Deadline / Due Date"` chip. Named instance: `elected-officials:list.add` `"Add Elected Official"` is Title Case (`RULING-P98A2-01-SCOPE` F2-c). **Sentence-case clause BOUNDED (`RULING-P98A2-02` Q1 Reading B):** closes on the named instance plus every label the phase's oracle set captures on visited surfaces; the ~4.5k-string long tail is `COPY-09` → Phase 102, with the CLAUDE.md carve-outs (UPPERCASE ribbons, mono labels, table-column headers). The other three clauses close in FULL on derived populations.
 5. Every date renders `Tue 28 Apr` and every time `14:30 GST` from the one shared formatter (`frontend/src/lib/format-date.ts`, which already exists — this criterion is ROUTING, not building) — the seven competing formats are gone — and dev affordances like "Fill with Mock Data" are absent from a production build **including the bundle string** (`intake:fillMock` deleted, label inlined in the DEV block, oracle greps the BUILT bundle with a positive control — `RULING-P98A2-02` Q5 Reading B). **Population boundings (`RULING-P98A2-02` Q4):** relative time is sanctioned on feed/timeline recency surfaces ONLY, via one shared localized helper in the formatter module (the plan enumerates the feed surfaces; all other `formatDistanceToNow` sites migrate); `MMMM yyyy` calendar-grid month headers are navigation chrome, OUT of this population (their Arabic rides `AR-02`/Phase 99).
 6. The default mutation success toast (`frontend/src/lib/query-client.ts` `mutations.onSuccess`) is produced via `t()` and renders localized in both locales on a real mutation — `toast.success('Operation completed successfully')` is gone. Generic-but-localized is the accepted end state; per-mutation specific copy is explicitly NOT required (`COPY-06`, `RULING-P98A2-01-SCOPE` F1-b).
 7. The Elected Officials type-guide popover renders header, `typeDescription.elected_official`, and all four `typeGuide.elected_official.*` sections resolved in BOTH locales — no raw key, no empty section — with the `type !== 'elected_official' &&` guard deleted in the SAME change that lands the five keys (`COPY-08`, `RULING-P98A2-01-SCOPE` F3 Reading B, bounded: the seven sibling types' hollow guide bodies are `GUIDE-HOLLOW-01` → Phase 102, not this phase). **Glyph coherence (`RULING-P98A2-03`):** the popover header shows `<Crown/>` with the canonical country/primary fallback colors — `DossierTypeGuide.tsx` `getTypeIcon`/`getTypeColors` gain `elected_official` cases matching the stats card and WR-07's fallback; a green with a Globe or muted popover is a FAIL. EO's own color family is explicitly OUT (seven semantic families are exhausted; design-system decision).
 
-**Plans**: TBD
+**Plans**: 9 plans
+
+**Wave 1** _(instruments before repairs)_
+
+- [ ] 98-01-PLAN.md — the eight criterion oracles, each proven RED at HEAD on its own defect
+- [ ] 98-02-PLAN.md — date-guard extension (fixture-drilled, burn-down allowlist) + the one sanctioned relative-time helper
+
+**Wave 2** _(the two contended files, one owner each)_
+
+- [ ] 98-03-PLAN.md — COPY-08+COPY-07 atomic: EO popover keys + guard deletion + Crown/colors, stats-card label, dossier.json Deadline
+- [ ] 98-04-PLAN.md — common.json lane: entityLinks 82-key census both locales, localized default toast, recurrence colon-routing, regions casing, dot-form class sweep
+
+**Wave 3** _(derived populations, disjoint files)_
+
+- [ ] 98-05-PLAN.md — COPY-01: enum display labels (Part A), de-snake sweep (Part B), the localized week header
+- [ ] 98-06-PLAN.md — COPY-03 rewrite + retired terms + named Title Case instance + exclamations/first-person on derived populations
+
+**Wave 4** _(blocked on the guard + the enum lanes)_
+
+- [ ] 98-07-PLAN.md — COPY-05: six graded feed surfaces onto the helper, fifteen migrations, remaining format classes, fillMock out of the BUILT bundle
+
+**Wave 5** _(blocked on all repairs — captures the FINAL surfaces)_
+
+- [ ] 98-08-PLAN.md — the D-20 bounded sentence-case captured-label sweep with verdict record
+
+**Wave 6** _(blocked on everything)_
+
+- [ ] 98-09-PLAN.md — closing: coverage re-derived, gate drill consolidated, register updated, weakest point named
+
 **UI hint**: yes
 
 ### Phase 99: Arabic Coverage
