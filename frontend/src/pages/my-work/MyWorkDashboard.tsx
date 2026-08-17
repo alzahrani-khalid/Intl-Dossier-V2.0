@@ -7,6 +7,7 @@ import { useSearch, useNavigate } from '@tanstack/react-router'
 import { useCallback, useMemo } from 'react'
 import { LayoutGrid, LayoutDashboard } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
+import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import { useMyWorkDashboard, useTeamWorkload } from '@/hooks/useUnifiedWork'
 import { useUnifiedWorkRealtime, useCurrentUserId } from '@/hooks/useUnifiedWorkRealtime'
 import type {
@@ -84,8 +85,9 @@ export default function MyWorkDashboard() {
     return result
   }, [tab, trackingType, filter, search, assignee])
 
-  // Fetch data
-  const { summary, metrics, items } = useMyWorkDashboard(
+  // Fetch data. `activeItems` is the single result set every number on this page reads
+  // (COUNT-01 / D-06) — see useUnifiedWork.ts for the population definition and its seams.
+  const { summary, metrics, items, activeItems } = useMyWorkDashboard(
     filters,
     sortBy as WorkItemSortBy,
     sortOrder as SortOrder,
@@ -157,10 +159,24 @@ export default function MyWorkDashboard() {
     [updateSearch, assignee],
   )
 
-  // Flatten paginated items
-  const workItems = useMemo(() => {
-    return items.data?.pages.flatMap((page) => page.items) || []
-  }, [items.data])
+  // COUNT-01 (D-06): every tab count is derived from `activeItems` — the SAME array the list
+  // renders — so the badge, the footer total and the rows cannot disagree. A source tab's
+  // response contains only that source, so the counts it cannot honestly answer are left
+  // unrendered (WorkItemTabs draws no badge at 0) rather than filled from a second query with a
+  // different population; that second query is precisely what made the badge read 18 while the
+  // footer read 21.
+  const counts = useMemo(() => {
+    const countOf = (source: WorkSource, tabId: string): number =>
+      tab === 'all' || tab === tabId
+        ? activeItems.filter((item) => item.source === source).length
+        : 0
+    return {
+      all: tab === 'all' ? activeItems.length : 0,
+      commitments: countOf('commitment', 'commitments'),
+      tasks: countOf('task', 'tasks'),
+      intake: countOf('intake', 'intake'),
+    }
+  }, [activeItems, tab])
 
   return (
     <div className="space-y-6">
@@ -181,13 +197,22 @@ export default function MyWorkDashboard() {
         }
       />
 
-      {/* Summary Header with Stats */}
-      <WorkSummaryHeader
-        summary={summary.data}
-        isLoading={summary.isLoading}
-        onFilterClick={handleFilterChange}
-        currentFilter={filter}
-      />
+      {/* Summary Header with Stats. A failed summary query renders the error contract — never a
+          strip of zeros over work the server never answered for (the forbidden shape, D-06). */}
+      {summary.isError ? (
+        <QueryErrorState
+          variant="inline"
+          onRetry={() => void summary.refetch()}
+          isRetrying={summary.isFetching}
+        />
+      ) : (
+        <WorkSummaryHeader
+          summary={summary.data}
+          isLoading={summary.isLoading}
+          onFilterClick={handleFilterChange}
+          currentFilter={filter}
+        />
+      )}
 
       {/* Productivity Metrics */}
       <ProductivityMetrics metrics={metrics.data} isLoading={metrics.isLoading} />
@@ -203,16 +228,7 @@ export default function MyWorkDashboard() {
       )}
 
       {/* Tabs for Source Filter */}
-      <WorkItemTabs
-        activeTab={tab}
-        onTabChange={handleTabChange}
-        counts={{
-          all: summary.data?.total_active || 0,
-          commitments: summary.data?.commitment_count || 0,
-          tasks: summary.data?.task_count || 0,
-          intake: summary.data?.intake_count || 0,
-        }}
-      />
+      <WorkItemTabs activeTab={tab} onTabChange={handleTabChange} counts={counts} />
 
       {/* Filter Bar */}
       <WorkItemFiltersBar
@@ -227,7 +243,7 @@ export default function MyWorkDashboard() {
 
       {/* Work Items List */}
       <WorkItemList
-        items={workItems}
+        items={activeItems}
         isLoading={items.isLoading}
         isError={items.isError}
         error={items.error}

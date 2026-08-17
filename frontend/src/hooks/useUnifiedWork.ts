@@ -1,4 +1,5 @@
 // Feature 032: Unified Work Management TanStack Query Hooks
+import { useMemo } from 'react'
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import type {
   WorkItemFilters,
@@ -127,7 +128,36 @@ export function useInvalidateUnifiedWork() {
 }
 
 /**
+ * Phase 96 · COUNT-01 (D-06) — the ACTIVE-WORK population, one definition.
+ *
+ * Verbatim the four-value exclusion `get_dashboard_stats.open_tasks` applies over
+ * `unified_work_items` (see supabase/migrations/20260817500004_p96_dashboard_stats_truth.sql).
+ * The dashboard KPI, the /my-work badge/footer/rows and the kanban board's non-Done columns all
+ * count THIS population, so the surfaces agree by shared derivation rather than by coincidence.
+ *
+ * Why a client-side scope rather than a request filter: `get_unified_work_items` takes an IN list
+ * (`p_statuses`), so filtering server-side would mean enumerating the ACTIVE vocabulary of three
+ * separate lifecycles here — and a status added later would then silently drop out of the list.
+ * A NOT-IN over the fetched page mirrors the DB predicate exactly and cannot under-count that way.
+ *
+ * -- seam (stated): `user_work_summary.total_active`, the number the "Total Active" tile renders,
+ * excludes FIVE values ('completed','cancelled','resolved','closed','done') — +resolved, +done,
+ * −converted. The two agree today (measured 18 = 18) and the tile keeps its own label.
+ * -- seam (stated): with cursor pagination a page contributes only its own active rows, so
+ * `activeItems.length` is "active work loaded so far", exactly like the rows it renders.
+ */
+const INACTIVE_WORK_STATUSES: ReadonlySet<string> = new Set([
+  'completed',
+  'cancelled',
+  'closed',
+  'converted',
+])
+
+/**
  * Combined hook for My Work dashboard - fetches summary and items together
+ *
+ * `activeItems` is the ONE result set the page renders: badge, footer total and rows all read it,
+ * so no two numbers on /my-work can structurally diverge (COUNT-01).
  */
 export function useMyWorkDashboard(
   filters: WorkItemFilters = {},
@@ -138,10 +168,19 @@ export function useMyWorkDashboard(
   const metricsQuery = useUserProductivityMetrics()
   const itemsQuery = useUnifiedWorkItems(filters, sortBy, sortOrder)
 
+  const activeItems = useMemo(
+    () =>
+      (itemsQuery.data?.pages.flatMap((page) => page.items) ?? []).filter(
+        (item) => !INACTIVE_WORK_STATUSES.has(item.status),
+      ),
+    [itemsQuery.data],
+  )
+
   return {
     summary: summaryQuery,
     metrics: metricsQuery,
     items: itemsQuery,
+    activeItems,
     isLoading: summaryQuery.isLoading || itemsQuery.isLoading,
     isError: summaryQuery.isError || itemsQuery.isError,
     error: summaryQuery.error || itemsQuery.error,
