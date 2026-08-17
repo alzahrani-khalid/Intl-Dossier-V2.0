@@ -133,6 +133,35 @@ and it must be watched deliberately rather than celebrated.
 standalone drills during plan revision; both failed the moment they ran inside their real chain
 (G1 against `noUnusedLocals`, G2 against the real package name).
 
+### THE DETECTION RULE — a set-intersection test, not a careful read
+
+**A clause-contradicts-clause defect can only exist where the ANCHORED-FILE-SET intersects the
+CHECKED-FILE-SET.**
+
+- **ANCHORED-FILE-SET** = the files whose _source form_ a clause mandates (every `grep -q "^…"`
+  target in the chain).
+- **CHECKED-FILE-SET** = the files some other clause in the _same chain_ submits to a tool that
+  can reject a form — a compiler, a linter, a formatter, a test runner.
+
+**Empty intersection ⇒ the shape is structurally impossible.** No mandated form can offend a
+tool that never reads the mandated file.
+
+Worked from this phase: `97-04` g1 anchored a form in `dossier-type-guards.ts`, which `tsc`
+compiles — **intersection non-empty**, and that is exactly where the contradiction lived
+(`noUnusedLocals` rejects the unexported form the anchor demanded). `97-10` g1/g2 and `97-11`
+g1/g2 anchor forms in `97-NAV04-DECISIONS.md`, a **markdown** artifact `tsc` never reads —
+**intersection empty**, cleared structurally rather than by inspection.
+
+**Why this matters for P102: it converts an expensive SEMANTIC review into a cheap STRUCTURAL
+filter.** You do not read every gate's meaning. You compute two sets per gate, and only the
+gates whose sets intersect need semantic reading. In this phase that shrank the work from 29
+gates to **5**, and of those 5 only **1** was real.
+
+**The rule generalises to every checker, which also closes the blind spots named below:** an
+anchor-versus-LINT contradiction is the same test against the linted file set; anchor-versus-
+formatter against the formatted set; anchor-versus-test-runner against the files the runner
+imports. **Enumerate the tool's file set, intersect, read only the overlap.**
+
 ### Required review pass: CROSS-GATE SWEEPS FOR REPEATED LITERALS
 
 Five gates carried the same wrong package name because a literal was **COPIED rather than
