@@ -273,6 +273,17 @@ numbers no longer matched either. A ruled-edit record keyed on line number silen
 the wrong gate the moment any earlier edit lands. **Key on the gate's stable ID plus a content
 excerpt.**
 
+### A TIMEOUT IS NOT A RED — count it as its own category, and state the bound
+
+`gate-drill.mjs` timed out on `97-12`'s closing gate (exit recorded as `null`, not a number).
+**A gate that exceeds the harness's default bound is unmeasurable in every routine run**, so it
+silently drops out of the population unless the drill reports timeouts SEPARATELY from reds —
+**a silent cap wearing a timer**. Read as a red it manufactures a defect; read as a green it
+manufactures coverage; read as absent it shrinks the denominator without saying so.
+
+**Required: state the bound, and report `timedOut` as its own count beside green and red.** A
+gate whose honest runtime exceeds the default needs a raised bound, not a re-interpretation.
+
 ### Required review pass: CROSS-GATE SWEEPS FOR REPEATED LITERALS
 
 Five gates carried the same wrong package name because a literal was **COPIED rather than
