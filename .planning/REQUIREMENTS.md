@@ -428,6 +428,54 @@ verified sound across six lanes).
 - [ ] **CARRY-08**: The 3 data-entry quick tasks (`260530-w2/w3/w4`) are completed or formally retired with SUMMARYs.
 - [ ] **CARRY-09**: `main` is green on the currently-red non-required suites — E2E, integration, Accessibility (RTL + WCAG AA), RTL Portal + Component Smokes, RTL + Responsive, Docker Build — or each is honestly quarantined.
 
+### ENGREAD — the top-level /engagements read path fails with rows present
+
+> Filed 2026-08-17 from Phase 97 execution (`RULING-P97-13`), after DISAMBIGUATING the two defects
+> that hide under one "data precondition unmet" label. This is **(b) rows exist but the list does
+> not render them**, NOT (a) an empty fixture — the two have opposite remedies and the wrong one
+> would have seeded data over a real bug.
+
+- [ ] **ENGREAD-01**: **`/engagements` renders the shared query-ERROR state while engagement rows
+      exist.** Derived, not inferred:
+  - **Rows exist.** Live staging (`zkrcjzdemdmwhearhfgg`), 2026-08-17:
+    `dossiers WHERE type='engagement'` = **5**, none deleted; `engagement_dossiers` = **3**.
+    Independently predicted from P96's COUNT-02 measurement (5 vs 3) BEFORE querying — the numbers
+    match exactly.
+  - **The UI shows an ERROR, not an empty state.** The rendered string "Unable to load data" is
+    the shared P93 error title at `frontend/src/i18n/en/common.json:246`, used by
+    `QueryErrorBoundary`/`DossierErrorBoundary` — the empty state is a different component.
+  - **RLS is EXCLUDED as the cause by the project's own discriminator:** an RLS denial returns
+    empty 200s here, which renders the EMPTY state. An error state means the request actually
+    failed.
+  - **Bounded consequence, stated not hidden:** three Phase 97 observations close **UNABLE TO
+    MEASURE with this cause named**, never as passes — both `97-digests-tab.spec.ts` tests
+    (they enter through `openFirstEngagementWorkspace`) and the `engagements` row of
+    `97-list-create-affordances.spec.ts`. **Criterion 3 therefore closes as behaviourally proven
+    on 7 of the 8 list pages plus its positive control** — a 7-of-8 STATED is worth more than an
+    8-of-8 IMPLIED.
+  - **NOT repaired in Phase 97**: the read path is outside every P97 plan's `files_modified`, and
+    repairing an unowned read path requires a further ruling.
+  - **Owner: Phase 102 — Staging Data & Debt Tail.** Placed there rather than with P100's RLS work
+    because the RLS branch is excluded above; if execution finds the cause IS authorization after
+    all, the row moves to P100 and says so.
+
+### SPINNER-A11Y — text-free loading states are invisible to screen readers and to probes
+
+- [ ] **SPINNER-A11Y-01**: **Two settings panes render a spinner with NO accessible text while
+      loading.** `frontend/src/components/settings/NotificationPreferences.tsx:149-155` returns a
+      bare `<Loader2 className="animate-spin"/>` wrapper; `EmailDigestSettings.tsx:245` does the
+      same. `CalendarSyncSettings` renders text-bearing chrome around its spinner and is the
+      contrast case.
+  - **Measured on the live stack** (Phase 97, polling every 50 ms): first non-empty content at
+    `/settings/notifications` **968 ms**, `/settings/email-digest` **648 ms**, versus the passing
+    sibling `/settings/calendar-sync` **344 ms**.
+  - **Why it is a real defect and not just a test nuisance:** a spinner with no accessible text is
+    invisible to a screen reader exactly as it was invisible to the oracle's `innerText` probe.
+    The test failure was the symptom that surfaced it.
+  - **Phase 97 did NOT fix it** — the oracle was corrected instead (`RULING-P97-13`: the criterion
+    was TRUE and the oracle was sampling load timing while claiming to measure rendering).
+  - **Owner: Phase 99 — Arabic & Accessibility** (a11y backlog).
+
 ### LIVE — v7.0 live verification (HARDWARE-GATED, unchanged from v9.0)
 
 - [ ] **LIVE-01**: vLLM (Gemma-4-12B) + TEI (BGE-M3) serving with passing health checks, reachable by the agent-runtime (:4100).
@@ -594,6 +642,8 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | GATESTD-02 | Phase 102 — Staging Data & Debt Tail | Pending |
 | GATESTD-03 | Phase 102 — Staging Data & Debt Tail | Pending |
 | GATESTD-04 | Phase 102 — Staging Data & Debt Tail | Pending |
+| ENGREAD-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| SPINNER-A11Y-01 | Phase 99 — Arabic & Accessibility | Pending |
 | ROOTALIAS-01 | Phase 101 — CI Gates Green | Pending |
 | CARRY-01 | Phase 92 — Session Integrity & Edge-Function Auth | Pending |
 | CARRY-02 | Phase 101 — CI Gates Green | Pending |
