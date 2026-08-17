@@ -51,12 +51,55 @@ this project has pointed at it. Scoped to the three highest-risk plans (`97-04` 
 the work is done WRONG rather than merely undone._ Advisory, not gating; findings required
 file:line citations.
 
-### Result
+### Result — **CONFIRMED, first outing. Three instances.**
 
-**PENDING** — filled in when the spot-check returns. Recorded either way, because **a clean
-result on a first-of-its-kind probe is still information about the standard**: it bounds how
-common the shape is in a plan set authored under heightened attention to it, which is the
-weakest place to look for it and therefore the most favourable reading.
+Ruled `RULING-P97-06-GREEN-ON-WRONG.md` (2026-08-17). The probe found the shape immediately,
+**in a plan set authored under heightened attention to exactly this failure** — the least
+favourable ground for the hypothesis, and therefore the strongest evidence available that two
+directions are insufficient. P102's remedy moves from speculative to evidence-backed.
+
+**The evidence of record is the orchestrator's independent reproduction, not the spot-check
+report.** Run with the repo's own `tsc --strict --noEmit`, exit codes captured directly (never
+through a pipe), three ways:
+
+<!-- prettier-ignore -->
+| Case | Result |
+|---|---|
+| SOUND guard `AssertNever<T extends never>` + merge present | **exit 2** — `TS2344: Type '"elected_official"' does not satisfy the constraint 'never'` |
+| NEUTERED guard `AssertNever<T>` (constraint dropped) + merge present | **exit 0 — compiles CLEAN** ← green on WRONG |
+| CONTROL: sound guard, no merge | exit 0 clean — proves the instrument is not always-red |
+
+`97-04`'s gate greps the **substring** `AssertNever` and runs `pnpm typecheck` on the
+**unmerged** tree. It never performs the merge, so it cannot tell a sound guard from a neutered
+one.
+
+**All three findings are ONE class: a gate asserting TEXT instead of exercising BEHAVIOUR.**
+
+<!-- prettier-ignore -->
+| # | Plan | The gate asserts | What passes it while broken |
+|---|---|---|---|
+| 1 | `97-04:171,213` | the substring `AssertNever` exists; typecheck green on unmerged code | a neutered `AssertNever<T>`; a hand-typed 8-member `DOSSIER_CARD_TYPES` instead of a spread-derived one |
+| 2 | `97-05:200` | `-eq 0` absence over `sed`-scoped ranges, no positive precondition | a hoisted `ZERO_STATS` constant used as `?? ZERO_STATS` — defeats both checks, reproduces the fabricated zero |
+| 3 | `97-07:224`, `97-01:208` | a title-substring grep for `'mobile 390'` + one un-counted Playwright run | six **skipped** mobile tests — `test.skip()` and pass are indistinguishable by exit code. The repo's own `chromium-mobile` project (`playwright.config.ts:49-57`) is invoked by NO gate |
+
+**Uniform remedy (ruled):** perform the wrong-thing mutation and observe the red, or assert the
+positive fact. Never assert that text describing the guarantee exists.
+
+### The lesson that outlives the phase
+
+**The class migrates to wherever nobody is looking.** The sequence, exactly as it happened:
+a comment-presence pin was rejected because a comment can be present _and false_; a
+compile-time guarantee was built to replace it — correctly, and it genuinely works; and then
+**the grep-pin reappeared one layer up, in the gate verifying the compile-time guarantee.**
+Fixing an instance does not retire the class. It relocates it to the layer that was not being
+examined at the moment of the fix.
+
+### Recorded against the standard itself
+
+`ACCEPTANCE` condition 3 has demanded "zero vacuous guards" for three phases while
+`gate-drill.mjs` is **structurally blind to this class** — P95 and P96 established
+red-on-undone and green-on-done, never green-on-wrong. Those phases' vacuous-guard greens were
+bounded by an instrument that could not see this shape. Stated, bounded, on the record.
 
 ## The candidate remedy (for P102, not adopted here)
 
