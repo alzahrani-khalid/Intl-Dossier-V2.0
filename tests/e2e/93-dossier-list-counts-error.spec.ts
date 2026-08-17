@@ -43,9 +43,16 @@ const password = process.env.TEST_USER_PASSWORD ?? ''
 // default timeout.
 const RETRY_BACKOFF_TIMEOUT = 15_000
 
-// The type-overview grid renders one figure per entry of `DOSSIER_TYPES` in
-// `frontend/src/pages/dossiers/DossierListPage.tsx` — seven types.
-const DOSSIER_TYPE_COUNT = 7
+// The type-overview grid renders one figure per entry of the DISPLAY set.
+//
+// RULING-P97-19: this was hardcoded `7` and went RED when Phase 97 widened the display set to 8
+// (`DOSSIER_CARD_TYPES = [...DOSSIER_TYPES, 'elected_official']`). It is DERIVED rather than
+// re-hardcoded to 8 on purpose — re-hardcoding would plant a fresh copy of the parallel-truth
+// class in the phase that removed six of them, and it would go red again at the ninth type.
+// Importing the canonical constant means this count cannot drift from the grid it measures.
+import { DOSSIER_CARD_TYPES } from '../../frontend/src/lib/dossier-type-guards'
+
+const DOSSIER_TYPE_COUNT = DOSSIER_CARD_TYPES.length
 
 /** Sign in inline; never echo either credential value. */
 const signInInline = async (page: Page): Promise<void> => {
