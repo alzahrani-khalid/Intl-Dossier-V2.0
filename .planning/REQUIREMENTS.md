@@ -407,6 +407,14 @@ verified sound across six lanes).
   - **Population: 15 specs under `./tests` import `frontend/src` by relative path** and are exposed to this. **Outside it:** the other 114 of `./tests`' 129 spec files, which do not reach into the app; and `frontend/tests` (217 specs), which runs under the frontend project's own correct alias.
   - **Why it matters beyond a red:** it silently converts real oracles into non-oracles. `tests/unit/components/ErrorBoundary.test.tsx` is the only **non-mocking** vitest consumer of any file Phase 93 changed, and it cannot run — so a verdict a reader would take as coverage is simply unavailable.
   - **Owner: Phase 101 — CI Gates Green.**
+  - **NOTE ADDED 2026-08-17 (Phase 97 execution, `RULING-P97-16` §4) — not a scope change, not a
+    new row.** Phase 97's authorised deletion of `frontend/src/services/auth.ts` added a **second**
+    dangling reference to four already-non-running specs in this population:
+    `tests/unit/components/{Header,MFASetup,MFAVerification,Sidebar}.test.tsx`. They were **already
+    broken before Phase 97** by the alias defect above (measured during P97: 4 files failed, **zero
+    tests ran**) and **no script or CI job invokes them**, so nothing regressed and no verdict was
+    lost. **P101 still owns the fix**; the note exists so that whoever repairs the alias is not
+    surprised by an import that no longer resolves for a second, unrelated reason.
 
 ### SEEDFIX — a broken seed row that only became visible once the app stopped hiding it
 
@@ -503,6 +511,24 @@ verified sound across six lanes).
   - **Owner: Phase 102 — Staging Data & Debt Tail.** The phase assignment is the closing plan's
     judgement — `97-NAV04-DECISIONS.md` §6 named the filer, not an owning phase — placed beside the
     other class-residue rows (`GATESTD-*`, `WRITER-ROUTE-01`, `INSERT-SYNC-01`).
+
+### PREVIEW-HOLLOW — an admin route nobody can reach, configuring a table nobody reads
+
+- [ ] **PREVIEW-HOLLOW-01**: ** is BOTH unreachable AND hollow — two
+      findings, one route.** Filed 2026-08-17 from Phase 97 execution by , which
+      ASSIGNED this owner because none existed: appears **0 times** in and
+      **0 times** in this register (control: returns 6 and 4 on the same instrument),
+      and no phase, row or backlog item claimed the route.
+  - **Finding 1 — unreachable.** Zero inbound links in the live nav; Phase 97 recorded it
+    in rather than adding a nav entry.
+  - **Finding 2 — hollow.** is read and written **only** by
+    , whose **sole importer is the admin route itself** (verified: one
+    importer). Its declared consumers — hover previews, search results, embedded references —
+    never read it. The feature configures nothing.
+  - **NOT DELETED IN PHASE 97, and the reason is inherited rather than re-derived:** a route-only
+    deletion would leave an **ORPHAN TABLE with no code trace of its purpose**, which is strictly
+    worse than today. The finishing migration was out of Phase 97 scope, so the route stands.
+  - **Owner: Phase 102 — Staging Data & Debt Tail**, with the other debt-tail rows.
 
 ### LIVE — v7.0 live verification (HARDWARE-GATED, unchanged from v9.0)
 
@@ -672,6 +698,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | GATESTD-04 | Phase 102 — Staging Data & Debt Tail | Pending |
 | ENGREAD-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | SPINNER-A11Y-01 | Phase 99 — Arabic & Accessibility | Pending |
+| PREVIEW-HOLLOW-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | PARALLEL-TRUTH-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | ROOTALIAS-01 | Phase 101 — CI Gates Green | Pending |
 | CARRY-01 | Phase 92 — Session Integrity & Edge-Function Auth | Pending |
