@@ -101,6 +101,74 @@ examined at the moment of the fix.
 red-on-undone and green-on-done, never green-on-wrong. Those phases' vacuous-guard greens were
 bounded by an instrument that could not see this shape. Stated, bounded, on the record.
 
+## EXECUTION-LEG ADDENDUM — the class found in this phase's own gates
+
+Added 2026-08-17 during execution (`RULING-P97-09`, `-10`, `-11`). The plan-leg entry above was
+diagnostic; these are **measured instances in the accepted gate set**, found only after wave 1
+began landing.
+
+### A gate is only fully observed at the moment it FIRST GOES GREEN — and nobody is looking then
+
+**The strongest evidence this phase produced.** Four gates carried a vacuous clause
+(`pnpm --filter frontend …`, matching **no package** — the workspace is `intake-frontend` — and
+therefore exiting **0 for any input**, verified by control with a spec that cannot exist).
+After the ruled repair, the full drill was re-run and compared against the pre-repair run:
+
+```
+pre-edit  exits: {"0": 8, "1": 21}
+post-edit exits: {"0": 8, "1": 21}     ← ZERO gates changed colour
+```
+
+**Identical.** The four vacuous clauses were **MASKED by earlier failing clauses in their own
+`&&` chains**, so their vacuity could surface only at the moment the work landed — a **FALSE
+GREEN SCHEDULED FOR CLOSE**, the worst possible timing.
+
+**Therefore, at authoring time such a clause is not merely unexamined — it is UNOBSERVABLE.**
+Per-gate review cannot catch this class **by construction**: nothing the reviewer can run will
+reach the clause while an earlier one is red. **This turns green-debt-paid-per-plan from a
+convention into a necessity** — the first green is the only moment the whole chain is exercised,
+and it must be watched deliberately rather than celebrated.
+
+**A clause proven in ISOLATION is not proven in COMPOSITION.** Both G1 and G2 were sound as
+standalone drills during plan revision; both failed the moment they ran inside their real chain
+(G1 against `noUnusedLocals`, G2 against the real package name).
+
+### Required review pass: CROSS-GATE SWEEPS FOR REPEATED LITERALS
+
+Five gates carried the same wrong package name because a literal was **COPIED rather than
+derived** — this phase's own parallel-truth class expressed in shell syntax. **A wrong value
+duplicated N times is INVISIBLE to per-gate review by construction**: each gate looks internally
+consistent, and only a sweep across all gates reveals that one literal is repeated and wrong.
+Sweep every repeated literal (package names, script names, project names, paths, testids) across
+the whole gate set, and **report the count CHECKED, not merely the count found.**
+
+### Required: a repair must VERIFY THE CORRECTED FORM RUNS
+
+Knowing what is broken tells you **nothing** about whether the replacement works. Correcting
+`--filter frontend` → `--filter intake-frontend` alone would have produced
+`pnpm --filter intake-frontend typecheck`, which fails `ERR_PNPM_RECURSIVE_RUN_NO_SCRIPT` —
+the script is `type-check`. **The repair would have shipped a NEW broken command while looking
+like a fix**, converting the class into a different failure. Only checking the package's scripts
+**before** editing catches this; checking after means shipping and hoping.
+
+### Propagation without code: derivation copies the defect
+
+`97-VALIDATION.md` was **derived from** `97-RESEARCH.md`, so the wrong literal had already
+propagated once through _document_ derivation. **The parallel-truth class does not need code to
+spread — only a copy.** When correcting a literal, sweep the documents derived from the one you
+are fixing.
+
+### Quotation vs prescription (`RULING-P97-11`)
+
+A residual wrong literal is classified by **what the sentence does**, not by the string:
+
+- a **QUOTATION** of the defect is **EVIDENCE** — editing it falsifies the record (the worker's
+  SUMMARY keeps its six occurrences, untouched);
+- a **PRESCRIPTION** is an instruction that will be followed — it is corrected, with a line
+  naming what changed and why, so the fix is legible rather than a silent rewrite.
+
+A single file may contain both; classify per occurrence.
+
 ## The candidate remedy (for P102, not adopted here)
 
 A third C1 direction: **GREEN-on-WRONG is a FAILURE.** For gates whose criterion contains a
