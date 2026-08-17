@@ -107,6 +107,7 @@ import { getDossierTypeBadgeClass, getActivityTypeBadgeClass } from '@/lib/seman
 import { useWorkCreation } from '@/components/work-creation'
 import { useMode } from '@/design-system/hooks'
 import { switchLanguage } from '@/i18n'
+import { useAuthStore } from '@/store/authStore'
 
 interface CommandPaletteProps {
   /** Additional class names */
@@ -440,6 +441,14 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
     useKeyboardShortcutContext()
   const { openPalette } = useWorkCreation()
   const { mode, setMode } = useMode()
+  const { user } = useAuthStore()
+
+  // PALETTE-ADMIN-01 (RULING-P97-01 filing order, branch A). This was hardcoded `true`, so every
+  // administration entry became a palette command for every user. Derived exactly as
+  // Sidebar.tsx:54 derives it, off the same store, so the two nav surfaces cannot drift.
+  // This is a VISIBILITY fix, not an authorization one: the admin routes stay URL-reachable and
+  // server-side authorization is separate (route `beforeLoad: requireAdmin` + RLS).
+  const isAdmin = user?.role === 'admin' || user?.role === 'super_admin'
 
   const [searchQuery, setSearchQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
@@ -519,9 +528,9 @@ export function CommandPalette({ className }: CommandPaletteProps): React.ReactE
 
   // Navigation pages from config for "Pages" group
   const allNavPages = useMemo((): NavigationItem[] => {
-    const groups = createNavigationGroups({ tasks: 0, approvals: 0, engagements: 0 }, true)
+    const groups = createNavigationGroups({ tasks: 0, approvals: 0, engagements: 0 }, isAdmin)
     return groups.flatMap((g) => g.items)
-  }, [])
+  }, [isAdmin])
 
   // Filtered pages matching search query
   const filteredPages = useMemo((): NavigationItem[] => {

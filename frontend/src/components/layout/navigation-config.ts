@@ -26,6 +26,9 @@ import {
   Shield,
   History,
   Database,
+  CheckCircle,
+  BarChart3,
+  Gauge,
 } from 'lucide-react'
 
 export interface NavigationItem {
@@ -221,6 +224,36 @@ export const createNavigationGroups = (
           path: '/approvals',
           icon: CheckSquare,
           badgeCount: counts.approvals,
+        },
+        // NAV-04 (97-10) — the three rows `97-NAV04-DECISIONS.md` ruled `NAV ENTRY`. Each was an
+        // orphan route: built, working, and with no live inbound link anywhere in the rendered
+        // tree. The four candidates that row ruled `ALREADY-REACHABLE` get nothing added here —
+        // they are the rows above, and a second entry would render a duplicate.
+        //
+        // `admin-approval-management` is `/admin/approvals`, a DIFFERENT route from the
+        // `/approvals` row directly above it: the admin panel is the only surface in the tree
+        // that can reassign a stuck approval (RULING-P97-14). Do not merge or repoint the two.
+        {
+          id: 'admin-approval-management',
+          label: 'navigation.adminApprovals',
+          path: '/admin/approvals',
+          icon: CheckCircle,
+        },
+        {
+          id: 'admin-ai-usage',
+          label: 'navigation.aiUsage',
+          path: '/admin/ai-usage',
+          icon: BarChart3,
+        },
+        // `/monitoring` is data-degraded in production (its API sits behind the backend's
+        // dev/test guard, so both widgets settle to their inline QueryErrorState). That honesty
+        // lives on the destination page and in the decision row — a nav entry is not a status
+        // surface, so this row carries no badge, tag, disabled style or muted treatment.
+        {
+          id: 'admin-monitoring',
+          label: 'navigation.monitoring',
+          path: '/monitoring',
+          icon: Gauge,
         },
       ],
     })
