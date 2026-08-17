@@ -42,6 +42,26 @@ try {
   process.exit(2)
 }
 
+// ─────────────────────────────────────────────────────────────────────────────────────────────
+// THE TEST FOR ADMITTING A NEW VARIANT — read this before adding one.
+//
+// **Every variant must model a TRANSFORMATION THE MEDIUM ACTUALLY APPLIES. Never an approximate
+// match.** Case-folding, whitespace-joining and markdown-stripping qualify: prettier and the
+// markdown renderer really do those things, so matching under them asks the right question —
+// *"is my token present after the pipeline touched it?"*
+//
+// A substring rule, an edit-distance/fuzzy rule, or "ignore punctuation" would NOT qualify. Those
+// ask *"is something LIKE my token present?"* — a different and much weaker question.
+//
+//   **THE TEST: can you NAME THE TOOL that performs this transformation?**
+//   If you cannot, it is fuzzy matching wearing a variant's clothes.
+//
+// This matters because of the pressure direction: each new false alarm argues for one more
+// allowance, and the quickest allowance that makes an alarm go away is almost always a fuzzy one.
+// Admitting it converts MISSING from a STRONG signal into a RARE one — the check stops failing,
+// and stops meaning anything. The fifth transformation is coming; hold the line at "name the tool".
+// ─────────────────────────────────────────────────────────────────────────────────────────────
+
 // The known write-to-store transformations, in the order a reader should consider them.
 const variants = [
   { name: 'literal', f: (s) => s },
