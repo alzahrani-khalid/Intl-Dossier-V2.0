@@ -391,6 +391,14 @@ verified sound across six lanes).
   - **Workaround adopted, not a fix:** Phase 94 relabelled its five ids by **appending** (`D-30`–`D-34`), never renumbering, so ids already cited elsewhere stayed valid. `GATESTD-01`'s standing note applies — work around the shipped instrument, do not repair it mid-phase without a ruling.
   - **Owner: Phase 102 — Staging Data & Debt Tail**, with `GATESTD-01` and `GATESTD-02`. Three instrument defects, one seat, one pass.
 
+- [ ] **GATESTD-04**: **The two-direction drill cannot distinguish a RIGHT implementation from a WRONG one — only a done one from an undone one.** Filed 2026-08-17 from Phase 97 planning. `GATE-STANDARD-P92.md` C1 requires RED on the undone tree and GREEN on a constructed work-done state. **The work-done state is constructed by the gate's own author**, who builds the implementation they had in mind — so nothing in the procedure ever asks whether the gate would ALSO pass against a _different_, wrong implementation. A gate can be red-on-undone ✓, green-on-done ✓, **and green-on-WRONG** ✗ simultaneously, and the standard has no step that would notice.
+  - **The phase's own canonical instance:** a criterion asserting _"the Elected Officials card appears"_ is **fully satisfied by a card rendering a fabricated `0`** — the exact defect Phase 97 exists to remove. Red before the work (no card), green after (card present), green on the wrong implementation (card present, number fabricated). Passes C1 both directions and still ships the defect.
+  - **Not hypothetical.** Phase 97 fought this shape in three separate places: the fabricated `0`, a desktop-only settings green that would read as closed, and a comment-presence pin that could not assert the comment's truth (`AppShell.tsx:121-124` was present _and false_).
+  - **First probe aimed at it:** a scoped cross-model spot-check over the three highest-risk plans, asking only _"find a gate that stays GREEN if the work is done WRONG rather than merely undone."_ **Its result lands in the file, not in this row** — see below.
+  - **Full statement, candidate remedy, and the probe's outcome:** `.planning/phases/97-reachability/97-GATE-STANDARD-THIRD-DIRECTION.md`. **This row is filed with that file's result slot still PENDING**, deliberately: the spot-check outcome updates the FILE, so this row does not need re-editing when it lands. A clean result is recorded there too — a clean first-of-its-kind probe still bounds how common the shape is, and it was run on a plan set authored under heightened attention to exactly this failure, which is the most favourable possible reading.
+  - **Candidate remedy is NOT adopted here.** A third C1 direction (construct a plausible WRONG state, observe the gate go red; else record `WRONG-STATE NOT CONSTRUCTED: <what and why>`) roughly **doubles per-gate drill cost**, so scoping it — probably to presence-shaped criteria, where the shape concentrates — is P102's decision. `GATESTD-01`'s standing note governs: work around a shipped instrument, do not repair it mid-phase without a ruling.
+  - **Owner: Phase 102 — Staging Data & Debt Tail**, with `GATESTD-01`, `-02` and `-03`. Four instrument defects, one seat, one pass. **This one differs in kind from its neighbours** — those three are broken instruments; this is a _sound instrument with an unstated limit_, which is why it was filed rather than fixed.
+
 ### ROOTALIAS — the root vitest project cannot resolve the app it tests
 
 - [ ] **ROOTALIAS-01**: **Root `vitest.config.ts:37` aliases `@` → `<repo-root>/src`, a directory that does not exist.** Filed 2026-08-16 from Phase 93 execution while building the C9b mock-vs-real register (`D-71`). The app's source is `frontend/src`, so any spec under `./tests` that pulls in a `frontend/src` module fails at import-analysis the moment that module uses `@/…` internally.
@@ -585,6 +593,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | GATESTD-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | GATESTD-02 | Phase 102 — Staging Data & Debt Tail | Pending |
 | GATESTD-03 | Phase 102 — Staging Data & Debt Tail | Pending |
+| GATESTD-04 | Phase 102 — Staging Data & Debt Tail | Pending |
 | ROOTALIAS-01 | Phase 101 — CI Gates Green | Pending |
 | CARRY-01 | Phase 92 — Session Integrity & Edge-Function Auth | Pending |
 | CARRY-02 | Phase 101 — CI Gates Green | Pending |
