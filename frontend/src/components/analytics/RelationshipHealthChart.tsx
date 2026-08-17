@@ -29,7 +29,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
 import type { RelationshipHealthTrends } from '@/types/analytics.types'
 import { HEALTH_LEVEL_COLORS, TREND_COLORS } from '@/types/analytics.types'
-import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import { toFormatLocale } from '@/lib/format-locale'
@@ -79,18 +78,12 @@ interface RelationshipHealthChartProps {
   data?: RelationshipHealthTrends
   isLoading?: boolean
   className?: string
-  /** Show preview overlay when no data */
-  showPreview?: boolean
-  /** Callback when user wants to see sample data */
-  onShowSampleData?: () => void
 }
 
 export function RelationshipHealthChart({
   data,
   isLoading,
   className,
-  showPreview = true,
-  onShowSampleData,
 }: RelationshipHealthChartProps) {
   const { t } = useTranslation('analytics')
   const { isRTL } = useDirection()
@@ -135,15 +128,6 @@ export function RelationshipHealthChart({
   }
 
   if (!data) {
-    if (showPreview) {
-      return (
-        <AnalyticsPreviewOverlay
-          chartType="relationships"
-          onShowSampleData={onShowSampleData}
-          className={className}
-        />
-      )
-    }
     return (
       <Card className={className}>
         <CardHeader>

@@ -4,9 +4,15 @@
  *
  * Main analytics dashboard with high-level metrics, engagement trends,
  * relationship health, commitment fulfillment, and workload distribution.
+ *
+ * P96 DEAD-05 (Branch A — real data): the five regions read the deployed `analytics-dashboard`
+ * edge fn, one query each. A failed region renders the shared inline error next to its succeeded
+ * siblings; only an all-region failure replaces the page. The sample-data mode and the
+ * "Insights you'll gain" preview overlay are gone — fabricated visuals over live chrome are the
+ * forbidden shape this requirement exists to kill.
  */
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, type JSX, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   BarChart3,
@@ -41,69 +47,44 @@ import {
   RelationshipHealthChart,
   CommitmentFulfillmentChart,
   WorkloadDistributionChart,
-  AnalyticsPreviewOverlay,
-  generateSampleEngagementMetrics,
-  generateSampleRelationshipHealthTrends,
-  generateSampleCommitmentFulfillment,
-  generateSampleWorkloadDistribution,
-  generateSampleAnalyticsSummary,
 } from '@/components/analytics'
 import {
   useAnalyticsDashboard as useAnalyticsDashboardQuery,
   useAnalyticsExport as useAnalyticsExportMutation,
 } from '@/hooks/useAnalyticsDashboard'
-import type {
-  TimeRange,
-  AnalyticsUrlState,
-  AnalyticsSummary,
-  EngagementMetrics,
-  RelationshipHealthTrends,
-  CommitmentFulfillment,
-  WorkloadDistribution,
-} from '@/types/analytics.types'
+import type { TimeRange, AnalyticsUrlState } from '@/types/analytics.types'
 import { TIME_RANGE_OPTIONS } from '@/types/analytics.types'
 
-interface AnalyticsDashboardData {
-  summary?: AnalyticsSummary
-  engagements?: EngagementMetrics
-  relationships?: RelationshipHealthTrends
-  commitments?: CommitmentFulfillment
-  workload?: WorkloadDistribution
+/**
+ * The trend rule (D-04): a delta renders only from a COMPLETED comparison.
+ *
+ * `get_analytics_summary` returns 0 for every change it cannot compute — its `ELSE 0` branches
+ * when the previous period holds no rows, and `healthScoreChange`, which is a literal `0::NUMERIC`
+ * in the RPC body — and the edge fn coerces null to 0 before it ships. The payload therefore
+ * cannot distinguish "no prior period" from a genuine 0.0% change, so this fails closed: an exact
+ * zero renders no delta row at all rather than a confident "+0.0% from previous".
+ */
+function settledDelta(change: number | null | undefined): number | undefined {
+  if (change === null || change === undefined || change === 0) return undefined
+  return change
 }
 
-// Page-level adapter: wraps the underlying useQuery into the page's expected
-// `{ summary, engagements, relationships, commitments, workload, ... }` shape.
-function useAnalyticsDashboard(
-  timeRange: TimeRange,
-  entityType: string | undefined,
-  metric: string,
-): {
-  summary?: AnalyticsSummary
-  engagements?: EngagementMetrics
-  relationships?: RelationshipHealthTrends
-  commitments?: CommitmentFulfillment
-  workload?: WorkloadDistribution
-  isLoading: boolean
+/** Renders the shared inline error in place of one region, leaving its siblings alone. */
+function Region({
+  isError,
+  onRetry,
+  className,
+  children,
+}: {
   isError: boolean
-  error: Error | null
-  refetch: () => void
-} {
-  const query = useAnalyticsDashboardQuery({ timeRange, entityType, metric })
-  const data = query.data as AnalyticsDashboardData | undefined
-
-  return {
-    summary: data?.summary,
-    engagements: data?.engagements,
-    relationships: data?.relationships,
-    commitments: data?.commitments,
-    workload: data?.workload,
-    isLoading: query.isLoading,
-    isError: query.isError,
-    error: query.error as Error | null,
-    refetch: () => {
-      void query.refetch()
-    },
+  onRetry: () => void
+  className?: string
+  children: ReactNode
+}): JSX.Element {
+  if (isError) {
+    return <QueryErrorState variant="inline" onRetry={onRetry} className={className} />
   }
+  return <>{children}</>
 }
 
 function useAnalyticsExport(): {
@@ -135,19 +116,23 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
   const [activeTab, setActiveTab] = useState<
     'overview' | 'engagements' | 'relationships' | 'commitments' | 'workload'
   >(initialState?.tab || 'overview')
-  const [showingSampleData, setShowingSampleData] = useState(false)
 
-  // Data fetching
-  const {
-    summary,
-    engagements,
-    relationships,
-    commitments,
-    workload,
-    isLoading,
-    isError,
-    refetch,
-  } = useAnalyticsDashboard(timeRange, undefined, activeTab)
+  // Data fetching — one query per edge-fn endpoint
+  const queries = useAnalyticsDashboardQuery({ timeRange })
+  const { summary: summaryQuery, engagements, relationships, commitments, workload } = queries
+  const summary = summaryQuery.data
+  const regions = [summaryQuery, engagements, relationships, commitments, workload]
+
+  const isLoading = summaryQuery.isLoading
+  const isFetching = regions.some((region) => region.isFetching)
+  // Only a total failure replaces the page; a single failed region renders inline (UI-SPEC).
+  const isError = regions.every((region) => region.isError)
+
+  const refetch = useCallback(() => {
+    for (const region of regions) {
+      void region.refetch()
+    }
+  }, [summaryQuery, engagements, relationships, commitments, workload])
 
   const { exportData } = useAnalyticsExport()
 
@@ -159,41 +144,6 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
   const handleTabChange = useCallback((value: string) => {
     setActiveTab(value as typeof activeTab)
   }, [])
-
-  // Sample data handlers
-  const handleShowSampleData = useCallback(() => {
-    setShowingSampleData(true)
-  }, [])
-
-  const handleHideSampleData = useCallback(() => {
-    setShowingSampleData(false)
-  }, [])
-
-  // Generate sample data when showing sample data mode
-  const sampleData = useMemo(() => {
-    if (!showingSampleData) return null
-    return {
-      summary: generateSampleAnalyticsSummary(),
-      engagements: generateSampleEngagementMetrics(),
-      relationships: generateSampleRelationshipHealthTrends(),
-      commitments: generateSampleCommitmentFulfillment(),
-      workload: generateSampleWorkloadDistribution(),
-    }
-  }, [showingSampleData])
-
-  // Determine which data to display (real data or sample data)
-  const displayData = useMemo(() => {
-    if (showingSampleData && sampleData) {
-      return sampleData
-    }
-    return {
-      summary,
-      engagements,
-      relationships,
-      commitments,
-      workload,
-    }
-  }, [showingSampleData, sampleData, summary, engagements, relationships, commitments, workload])
 
   const handleExport = useCallback(async () => {
     try {
@@ -210,32 +160,32 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
     }
   }, [exportData, timeRange])
 
-  // Alerts to display (don't show alerts for sample data)
+  // Alerts to display
   const alerts = useMemo(() => {
-    if (!displayData.summary || showingSampleData) return []
+    if (!summary) return []
     const items = []
-    if (displayData.summary.criticalAlerts > 0) {
+    if (summary.criticalAlerts > 0) {
       items.push({
         type: 'critical' as const,
-        message: t('alerts.criticalRelationships', { count: displayData.summary.criticalAlerts }),
+        message: t('alerts.criticalRelationships', { count: summary.criticalAlerts }),
       })
     }
-    if (displayData.summary.overdueItems > 0) {
+    if (summary.overdueItems > 0) {
       items.push({
         type: 'warning' as const,
-        message: t('alerts.overdueCommitments', { count: displayData.summary.overdueItems }),
+        message: t('alerts.overdueCommitments', { count: summary.overdueItems }),
       })
     }
-    if (displayData.summary.relationshipsNeedingAttention > 0) {
+    if (summary.relationshipsNeedingAttention > 0) {
       items.push({
         type: 'info' as const,
         message: t('alerts.decliningHealth', {
-          count: displayData.summary.relationshipsNeedingAttention,
+          count: summary.relationshipsNeedingAttention,
         }),
       })
     }
     return items
-  }, [displayData.summary, showingSampleData, t])
+  }, [summary, t])
 
   // Loading skeleton - content-aware skeleton that mirrors analytics dashboard structure
   if (isLoading && !summary) {
@@ -265,7 +215,8 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
     )
   }
 
-  // Error state — the shared component, never the error object (D-08/D-21).
+  // Error state — the shared component, never the error object (D-08/D-21). Page-level only when
+  // every region failed; a partial failure renders inline beside the regions that succeeded.
   if (isError) {
     return (
       <div className="space-y-6">
@@ -298,11 +249,11 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
             <Button
               variant="outline"
               size="icon"
-              onClick={() => refetch()}
-              disabled={isLoading}
+              onClick={refetch}
+              disabled={isFetching}
               className="min-h-11 min-w-11"
             >
-              <RefreshCw className={cn('h-4 w-4', isLoading && 'animate-spin')} />
+              <RefreshCw className={cn('h-4 w-4', isFetching && 'animate-spin')} />
               <span className="sr-only">
                 {t('common:common.actions.refresh', { defaultValue: 'Refresh' })}
               </span>
@@ -328,16 +279,6 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
         }
       />
 
-      {/* Sample Data Banner */}
-      {showingSampleData && (
-        <AnalyticsPreviewOverlay
-          chartType="overview"
-          showingSampleData={true}
-          onHideSampleData={handleHideSampleData}
-          className="mb-6"
-        />
-      )}
-
       {/* Alerts */}
       {alerts.length > 0 && (
         <div className="space-y-2 mb-6">
@@ -357,43 +298,54 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
         </div>
       )}
 
-      {/* Summary Cards — only rendered when real (or sample) summary data exists.
-          Without this gate a failed/empty API response renders misleading zeros. */}
-      {displayData.summary && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <SummaryCard
-            title={t('summary.totalEngagements')}
-            value={displayData.summary.totalEngagements || 0}
-            change={displayData.summary.engagementsChange}
-            changeLabel={t('summary.fromPrevious')}
-            icon={<BarChart3 className="h-5 w-5" />}
-            format="number"
-          />
-          <SummaryCard
-            title={t('summary.avgHealthScore')}
-            value={displayData.summary.avgHealthScore || 0}
-            change={displayData.summary.healthScoreChange}
-            changeLabel={t('summary.fromPrevious')}
-            icon={<TrendingUp className="h-5 w-5" />}
-            format="score"
-          />
-          <SummaryCard
-            title={t('summary.fulfillmentRate')}
-            value={displayData.summary.fulfillmentRate || 0}
-            change={displayData.summary.fulfillmentRateChange}
-            changeLabel={t('summary.fromPrevious')}
-            icon={<ClipboardCheck className="h-5 w-5" />}
-            format="percentage"
-          />
-          <SummaryCard
-            title={t('summary.totalActiveWork')}
-            value={displayData.summary.totalActiveWork || 0}
-            change={displayData.summary.activeWorkChange}
-            changeLabel={t('summary.fromPrevious')}
-            icon={<Users className="h-5 w-5" />}
-            format="number"
-          />
-        </div>
+      {/* Summary Cards — only rendered when real summary data exists.
+          Without this gate a failed/empty API response renders misleading zeros.
+          Deltas follow the trend rule: absent unless the comparison completed. */}
+      {summaryQuery.isError ? (
+        <QueryErrorState
+          variant="inline"
+          onRetry={() => {
+            void summaryQuery.refetch()
+          }}
+          className="mb-6"
+        />
+      ) : (
+        summary && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <SummaryCard
+              title={t('summary.totalEngagements')}
+              value={summary.totalEngagements || 0}
+              change={settledDelta(summary.engagementsChange)}
+              changeLabel={t('summary.fromPrevious')}
+              icon={<BarChart3 className="h-5 w-5" />}
+              format="number"
+            />
+            <SummaryCard
+              title={t('summary.avgHealthScore')}
+              value={summary.avgHealthScore || 0}
+              change={settledDelta(summary.healthScoreChange)}
+              changeLabel={t('summary.fromPrevious')}
+              icon={<TrendingUp className="h-5 w-5" />}
+              format="score"
+            />
+            <SummaryCard
+              title={t('summary.fulfillmentRate')}
+              value={summary.fulfillmentRate || 0}
+              change={settledDelta(summary.fulfillmentRateChange)}
+              changeLabel={t('summary.fromPrevious')}
+              icon={<ClipboardCheck className="h-5 w-5" />}
+              format="percentage"
+            />
+            <SummaryCard
+              title={t('summary.totalActiveWork')}
+              value={summary.totalActiveWork || 0}
+              change={settledDelta(summary.activeWorkChange)}
+              changeLabel={t('summary.fromPrevious')}
+              icon={<Users className="h-5 w-5" />}
+              format="number"
+            />
+          </div>
+        )
       )}
 
       {/* Alert summary cards */}
@@ -464,76 +416,114 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
         {/* Overview Tab */}
         <TabsContent value="overview" className="mt-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <EngagementMetricsChart
-              data={displayData.engagements}
-              isLoading={isLoading}
-              showPreview={!showingSampleData}
-              onShowSampleData={handleShowSampleData}
-            />
-            <RelationshipHealthChart
-              data={displayData.relationships}
-              isLoading={isLoading}
-              showPreview={!showingSampleData}
-              onShowSampleData={handleShowSampleData}
-            />
-            <CommitmentFulfillmentChart
-              data={displayData.commitments}
-              isLoading={isLoading}
-              showPreview={!showingSampleData}
-              onShowSampleData={handleShowSampleData}
-            />
-            <WorkloadDistributionChart
-              data={displayData.workload}
-              isLoading={isLoading}
-              showPreview={!showingSampleData}
-              onShowSampleData={handleShowSampleData}
+            <Region
+              isError={engagements.isError}
+              onRetry={() => {
+                void engagements.refetch()
+              }}
+            >
+              <EngagementMetricsChart data={engagements.data} isLoading={engagements.isLoading} />
+            </Region>
+            <Region
+              isError={relationships.isError}
+              onRetry={() => {
+                void relationships.refetch()
+              }}
+            >
+              <RelationshipHealthChart
+                data={relationships.data}
+                isLoading={relationships.isLoading}
+              />
+            </Region>
+            <Region
+              isError={commitments.isError}
+              onRetry={() => {
+                void commitments.refetch()
+              }}
+            >
+              <CommitmentFulfillmentChart
+                data={commitments.data}
+                isLoading={commitments.isLoading}
+              />
+            </Region>
+            <Region
+              isError={workload.isError}
+              onRetry={() => {
+                void workload.refetch()
+              }}
               className="lg:col-span-2"
-            />
+            >
+              <WorkloadDistributionChart
+                data={workload.data}
+                isLoading={workload.isLoading}
+                className="lg:col-span-2"
+              />
+            </Region>
           </div>
         </TabsContent>
 
         {/* Engagements Tab */}
         <TabsContent value="engagements" className="mt-0">
-          <EngagementMetricsChart
-            data={displayData.engagements}
-            isLoading={isLoading}
-            showPreview={!showingSampleData}
-            onShowSampleData={handleShowSampleData}
-            className="w-full"
-          />
+          <Region
+            isError={engagements.isError}
+            onRetry={() => {
+              void engagements.refetch()
+            }}
+          >
+            <EngagementMetricsChart
+              data={engagements.data}
+              isLoading={engagements.isLoading}
+              className="w-full"
+            />
+          </Region>
         </TabsContent>
 
         {/* Relationships Tab */}
         <TabsContent value="relationships" className="mt-0">
-          <RelationshipHealthChart
-            data={displayData.relationships}
-            isLoading={isLoading}
-            showPreview={!showingSampleData}
-            onShowSampleData={handleShowSampleData}
-            className="w-full"
-          />
+          <Region
+            isError={relationships.isError}
+            onRetry={() => {
+              void relationships.refetch()
+            }}
+          >
+            <RelationshipHealthChart
+              data={relationships.data}
+              isLoading={relationships.isLoading}
+              className="w-full"
+            />
+          </Region>
         </TabsContent>
 
         {/* Commitments Tab */}
         <TabsContent value="commitments" className="mt-0">
-          <CommitmentFulfillmentChart
-            data={displayData.commitments}
-            isLoading={isLoading}
-            showPreview={!showingSampleData}
-            onShowSampleData={handleShowSampleData}
-            className="w-full"
-          />
+          <Region
+            isError={commitments.isError}
+            onRetry={() => {
+              void commitments.refetch()
+            }}
+          >
+            <CommitmentFulfillmentChart
+              data={commitments.data}
+              isLoading={commitments.isLoading}
+              className="w-full"
+            />
+          </Region>
         </TabsContent>
 
         {/* Workload Tab */}
         <TabsContent value="workload" className="mt-0">
-          <WorkloadDistributionChart
-            data={displayData.workload}
-            isLoading={isLoading}
-            showPreview={!showingSampleData}
-            onShowSampleData={handleShowSampleData}
-            className="w-full"
-          />
+          <Region
+            isError={workload.isError}
+            onRetry={() => {
+              void workload.refetch()
+            }}
+          >
+            <WorkloadDistributionChart
+              data={workload.data}
+              isLoading={workload.isLoading}
+              className="w-full"
+            />
+          </Region>
         </TabsContent>
       </Tabs>
     </div>

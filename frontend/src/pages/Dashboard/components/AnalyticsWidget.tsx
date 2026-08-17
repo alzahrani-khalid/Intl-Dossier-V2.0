@@ -28,14 +28,13 @@ interface AnalyticsDashboardData {
 
 export function AnalyticsWidget(): ReactElement {
   const { t } = useTranslation('operations-hub')
-  const { data, isLoading, isError } = useAnalyticsDashboard()
+  // P96 DEAD-05: the hook now returns one query per edge-fn section; this widget reads `summary`.
+  // The four KPIs below are not fields the summary payload carries, so it settles on its own
+  // empty state rather than the 404 error it showed while the repository pointed at Express.
+  const { data, isLoading, isError } = useAnalyticsDashboard().summary
 
   if (isError) {
-    return (
-      <p className="text-sm text-muted-foreground text-start py-4">
-        {t('analytics.error')}
-      </p>
-    )
+    return <p className="text-sm text-muted-foreground text-start py-4">{t('analytics.error')}</p>
   }
 
   const analytics = (data as AnalyticsDashboardData | undefined) ?? {}
@@ -47,11 +46,7 @@ export function AnalyticsWidget(): ReactElement {
     analytics.openWorkItems != null
 
   if (!isLoading && !hasData) {
-    return (
-      <p className="text-sm text-muted-foreground text-start py-4">
-        {t('analytics.empty')}
-      </p>
-    )
+    return <p className="text-sm text-muted-foreground text-start py-4">{t('analytics.empty')}</p>
   }
 
   return (

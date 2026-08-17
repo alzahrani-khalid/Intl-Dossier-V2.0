@@ -28,7 +28,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
 import type { CommitmentFulfillment } from '@/types/analytics.types'
-import { AnalyticsPreviewOverlay } from './AnalyticsPreviewOverlay'
 import { useDirection } from '@/hooks/useDirection'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import { toFormatLocale } from '@/lib/format-locale'
@@ -78,10 +77,6 @@ interface CommitmentFulfillmentChartProps {
   data?: CommitmentFulfillment
   isLoading?: boolean
   className?: string
-  /** Show preview overlay when no data */
-  showPreview?: boolean
-  /** Callback when user wants to see sample data */
-  onShowSampleData?: () => void
 }
 
 const STATUS_COLORS = {
@@ -101,8 +96,6 @@ export function CommitmentFulfillmentChart({
   data,
   isLoading,
   className,
-  showPreview = true,
-  onShowSampleData,
 }: CommitmentFulfillmentChartProps) {
   const { t } = useTranslation('analytics')
   const { isRTL } = useDirection()
@@ -170,15 +163,6 @@ export function CommitmentFulfillmentChart({
   }
 
   if (!data) {
-    if (showPreview) {
-      return (
-        <AnalyticsPreviewOverlay
-          chartType="commitments"
-          onShowSampleData={onShowSampleData}
-          className={className}
-        />
-      )
-    }
     return (
       <Card className={className}>
         <CardHeader>
