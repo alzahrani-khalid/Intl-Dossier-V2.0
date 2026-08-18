@@ -13,6 +13,12 @@
  * swap. `formatDayFirst(d)` and `formatDayFirst(d, 'ar')` return the same string.
  */
 
+import { formatDistanceToNow } from 'date-fns'
+import { ar } from 'date-fns/locale'
+// The i18n singleton (not `useTranslation`) because this module lives outside
+// React context — same idiom as `lib/query-client.ts`.
+import i18n from '@/i18n'
+
 const PLACEHOLDER = '—'
 
 function toDate(value: Date | string | number): Date | null {
@@ -80,4 +86,28 @@ export function formatDayFirstYear(date: Date | string | number, _locale?: strin
 export function formatDateTime(date: Date | string | number, _locale?: string): string {
   const day = formatDayFirst(date)
   return day === PLACEHOLDER ? PLACEHOLDER : `${day} ${formatTime(date)}`
+}
+
+/**
+ * Format a recency phrase (`3 days ago` / `قبل ٣ أيام`-shaped, Latin digits) in the
+ * session language. Returns the em-dash placeholder for nullish / invalid input.
+ *
+ * D-25 SANCTION: relative time is allowed on **feed / timeline recency surfaces
+ * only**, and only through this helper. Every other surface renders `formatDayFirst`
+ * / `formatTime`. This is the single place in `frontend/src` where date-fns
+ * `formatDistanceToNow` may be called — `scripts/check-date-formatting.mjs` fails
+ * the build on any other call site.
+ *
+ * The language is read at CALL time from the i18n singleton so a mid-session
+ * language flip re-renders in the new locale. Digits stay Latin (policy D) because
+ * date-fns interpolates counts with plain `String()`; Arabic goes through the
+ * date-fns `ar` locale OBJECT — never an Indic-producing locale-tag string, which
+ * the guard bans outright.
+ */
+export function formatRelativeTime(value: string | Date | null | undefined): string {
+  if (value === null || value === undefined || value === '') return PLACEHOLDER
+  const d = toDate(value)
+  if (d === null) return PLACEHOLDER
+  const isArabic = i18n.language?.startsWith('ar') === true
+  return formatDistanceToNow(d, { addSuffix: true, locale: isArabic ? ar : undefined })
 }
