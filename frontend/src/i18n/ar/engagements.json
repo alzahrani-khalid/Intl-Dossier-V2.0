@@ -97,6 +97,7 @@
   },
   "statuses": {
     "planned": "مخطط",
+    "scheduled": "مجدول",
     "confirmed": "مؤكد",
     "in_progress": "جاري",
     "completed": "مكتمل",

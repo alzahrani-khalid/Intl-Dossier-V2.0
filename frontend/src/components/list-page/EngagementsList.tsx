@@ -2,8 +2,9 @@ import type { ReactNode } from 'react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GlobeSpinner } from '@/components/signature-visuals'
+import { startOfISOWeek } from 'date-fns'
 import { getISOWeek } from '@/lib/date/getISOWeek'
-import { formatDateTime } from '@/lib/format-date'
+import { formatDateTime, formatDayFirst } from '@/lib/format-date'
 import { FilterPill } from './FilterPill'
 import { ToolbarSearch } from './ToolbarSearch'
 
@@ -72,11 +73,18 @@ export function EngagementsList({
   const groupedByWeek = useMemo(() => {
     const map = new Map<
       string,
-      { key: string; year: number; week: number; rows: EngagementRow[] }
+      { key: string; year: number; week: number; weekStart: Date; rows: EngagementRow[] }
     >()
     for (const e of engagements) {
       const w = getISOWeek(e.starts_at)
-      const bucket = map.get(w.key) ?? { key: w.key, year: w.year, week: w.week, rows: [] }
+      const bucket = map.get(w.key) ?? {
+        key: w.key,
+        year: w.year,
+        week: w.week,
+        // any date inside the ISO week resolves to the same Monday
+        weekStart: startOfISOWeek(new Date(e.starts_at)),
+        rows: [],
+      }
       bucket.rows.push(e)
       map.set(w.key, bucket)
     }
@@ -139,10 +147,10 @@ export function EngagementsList({
           {groupedByWeek.map((group) => (
             <section
               key={group.key}
-              aria-label={t('week.of', { defaultValue: 'Week of' }) + ' ' + group.key}
+              aria-label={t('week.of') + ' ' + formatDayFirst(group.weekStart)}
             >
               <h3 className="px-4 py-2 text-xs font-semibold uppercase text-muted-foreground bg-muted/30">
-                {t('week.of', { defaultValue: 'Week of' })} {group.key}
+                {t('week.of')} {formatDayFirst(group.weekStart)}
               </h3>
               {group.rows.map((row) => {
                 const title = isRTL ? row.title_ar : row.title_en
@@ -165,8 +173,12 @@ export function EngagementsList({
                     <div className="text-sm text-muted-foreground truncate min-w-0">
                       {[
                         formatDateTime(row.starts_at),
-                        visible.has('type') && row.type !== undefined ? row.type : undefined,
-                        visible.has('status') && row.status !== undefined ? row.status : undefined,
+                        visible.has('type') && row.type !== undefined
+                          ? t(`filter.${row.type}`)
+                          : undefined,
+                        visible.has('status') && row.status !== undefined
+                          ? t(`statuses.${row.status}`)
+                          : undefined,
                         visible.has('location') ? row.location : undefined,
                       ]
                         .filter((value): value is string => value !== undefined && value !== '')
