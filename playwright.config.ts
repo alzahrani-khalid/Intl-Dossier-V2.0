@@ -62,7 +62,12 @@ export default defineConfig({
     : {
         command: 'NODE_ENV=development pnpm dev',
         url: baseURL,
-        reuseExistingServer: !process.env.CI,
+        // Reuse is OPT-IN (`PW_REUSE=1`), never implicit. A reused server serves whatever tree it
+        // was started in; a server Playwright starts serves THIS config's directory. When a run
+        // verifies per-worktree changes, an implicitly reused stray dev server renders the wrong
+        // tree and reports a pass — measured 2026-08-18: a 42-hour-old main-checkout server
+        // answered this exact baseURL in 2.7 ms while `CI` was unset (`RULING-P99-17`).
+        reuseExistingServer: process.env.PW_REUSE === '1',
         timeout: 120_000,
       },
 })
