@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "term": "ملف",
+      "keyPathPattern": "^(?:committees:actions\\.viewProfile|common:(?:common|navigation)\\.profile|dossier:overview\\.person\\.title|empty-states:collaboration\\.topContributors\\.viewProfile|persons:sections\\.profile|settings:(?:navigation\\.profile|nav\\.profile|profile\\.(?:title|description|avatar)))$",
+      "sense": "personal-profile",
+      "reason": "D-17 explicitly preserves ملف for the الملف الشخصي profile family."
+    },
+    {
+      "term": "ملف",
+      "keyPathPattern": "^[^:]+:.*(?:[Ff]ile|[Ff]iles|attachment|attachments|upload|dropzone|documents)(?:[._:]|$|[A-Z]).*$",
+      "sense": "computer-file-or-attachment",
+      "reason": "D-17 explicitly preserves ملف for file and attachment copy; the key-path family limits this exception to file/document upload surfaces."
+    },
+    {
+      "term": "إحاطة",
+      "keyPathPattern": "^(?:dashboard-widgets:weekAhead\\.status\\.briefing|dossier:overview\\.engagements\\.stage\\.briefing|lifecycle:stages\\.briefing)$",
+      "sense": "briefing-session-or-stage",
+      "reason": "D-18 reserves إحاطة for briefing sessions or workflow stages, not the brief artifact."
+    },
+    {
+      "term": "منصب",
+      "keyPathPattern": "^(?:agenda:.*|contacts:contactDirectory\\.(?:labels|form)\\.position|dossier:(?:typeGuide\\.elected_official\\.whenToUse|form\\.person\\.titleDescription|create\\.hubDescription\\.elected_official|sections\\.person\\.professionalProfileDescription|overview\\.person\\.role)|elected-official-wizard:.*|elected-officials:.*|empty-states:list\\.elected_official\\.description|entity-comparison:fields\\.(?:person\\.current_position|elected_official\\.office_(?:name_en|name_ar|type))|form-wizard:(?:steps\\.officeTerm(?:Desc)?|review\\.office_term|elected_official\\..*)|legislation:sponsors\\.form\\.title|persons:(?:actions\\.addRole|search\\.placeholder|sections\\.currentRole|create\\.sections\\.basicInfoDescription|form\\.title(?:En|Ar)|messages\\.role(?:Added|AddError|Deleted|DeleteError))|progressive-form:demo\\.fields\\.jobTitleHelp)$",
+      "sense": "office-post-or-job-title",
+      "reason": "D-18 preserves منصب for an elected office, post, role, or job title; stance-document/entity paths remain outside this exception."
+    },
+    {
+      "term": "دوسييه",
+      "keyPathPattern": "^common:shell\\.appName$",
+      "sense": "brand-mark",
+      "reason": "The existing shell application name is an explicitly ruled legacy brand spelling."
+    },
+    {
+      "term": "دوسييه",
+      "keyPathPattern": "^common:shell\\.brand\\.mark$",
+      "sense": "brand-mark",
+      "reason": "The existing shell logo-mark alt is an explicitly ruled legacy brand spelling."
+    }
+  ]
+}
