@@ -2,8 +2,8 @@
 gsd_state_version: 1.0
 milestone: v10.0
 milestone_name: Trust & Correctness
-status: Ready to plan
-last_updated: '2026-08-17T14:30:00.000Z'
+status: Ready to execute
+last_updated: '2026-08-18T02:30:00.000Z'
 progress:
   total_phases: 13
   completed_phases: 6
@@ -25,6 +25,15 @@ See: .planning/PROJECT.md (updated 2026-08-15 — v9.0 closed PARTIAL; v10.0 Tru
 ## Current Position
 
 Milestone: **v10.0 — Trust & Correctness** (roadmapped 2026-08-15).
+
+Phase 98 (copy-truth) — **PLANNED 2026-08-18 (attempt 2, fresh start by operator order), accepted by
+`RULING-P98A2-04`.** 9 plans / 6 waves at `3aab90747`+`7a6ea56d9`; 10 blockers closed across 3
+revision rounds (checker pass A/B overlap 3-of-9 — single-pass verification proven insufficient);
+decision-coverage 30/30 re-run by the overseer. Scope rulings `RULING-P98A2-01/-02/-03` (six→eight
+requirement ids, criteria 6+7 added, sentence case BOUNDED with COPY-09→P102, entityLinks all-82,
+EO Crown atomic); exec contract at `.tickmarkr/overseer/ACCEPTANCE-P98-EXEC.md` — observed-red
+before repair, locale+role on every green. `CLIENTSEC-02` filed (P100). Leg 2 released.
+Next command: `/gsd:execute-phase 98` (Copy Truth).
 
 Phase 97 (reachability) — **EXECUTED 2026-08-17, accepted by `RULING-P97-21`.**
 12 of 12 plans; every `## BLOCKED` read (**5 empty / 7 substantive**, each traced to a ruling).
