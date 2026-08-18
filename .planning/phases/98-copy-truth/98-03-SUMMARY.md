@@ -26,7 +26,7 @@ key-files:
     - frontend/src/components/dossier/DossierTypeStatsCard.tsx
     - frontend/src/components/dossier/DossierTypeGuide.tsx
 decisions:
-  - 'The guide component is retyped DossierType -> DossierCardType rather than casting at the call site: the deleted guard was ALSO the type narrowing, and a cast would leave the two D-27 case arms unreachable-by-type (TS2678 stands), i.e. option B does not compile'
+  - 'RULING-P98A2-08 (Reading A): the guide component is retyped DossierType -> DossierCardType rather than cast at the call site — the deleted guard was ALSO the type narrowing, and a cast leaves the two D-27 case arms unreachable-by-type (TS2678), i.e. Reading B does not compile. This APPLIES the Phase 97 display-vs-query doctrine and amends nothing.'
   - 'DOSSIER_TYPES and the _EoIsNotADbType anti-merge assertion are NOT touched — no dossiers.type count bucket is created, so the fabricated-zero failure mode Phase 97 guarded against cannot reappear'
   - 'COPY-04 is NOT marked complete: this plan lands one of its residents (the dueDate display value); its CTA, exclamation and first-person-plural populations are live and owned elsewhere'
 metrics:
@@ -39,7 +39,7 @@ metrics:
 # Phase 98 Plan 03: COPY-08 + COPY-07 Atomic Summary
 
 The five `dossier:` EO keys in both locales, the Phase-97 render guard's deletion, and the two
-switch arms that keep the newly-rendering ninth case off the country glyph — **one commit,
+switch arms that keep the newly-rendering EO case off the country glyph — **one commit,
 `e354c8c94`, four files** (D-12/D-27). Plus the COPY-07 label routing and the criterion-4
 `dueDate` display value, `8bad8ec73`.
 
@@ -180,7 +180,47 @@ The rationale is written at the interface as a doc comment so the next reader do
 act until `RULING-P98A2-07` came back making the class mechanical. Nothing was committed while the
 question was open.
 
-### 2. No other deviation
+**RULED: `RULING-P98A2-08` — Reading A, released.** "The guide speaks `DossierCardType`… this
+APPLIES Phase 97 doctrine and amends nothing. `dossier-type-guards.ts` stays untouched;
+`_EoIsNotADbType` stays armed. **Reading B refused** — it cannot compile D-27's arms." The ruling
+also required all of it in ONE commit with `type-check` RC 0 inside the same acceptance: satisfied
+by `e354c8c94`, which carries the retype, both `case 'elected_official'` arms, the guard deletion,
+and the five keys × two locales — four files, nothing else.
+
+### 2. METHOD — the escalation was raised over a DIRTY TREE (`RULING-P98A2-08` condition)
+
+**Uncommitted drafts made to MEASURE candidates are instrumentation, not action; "acting" is the
+COMMIT.** That is how the three type errors were found at all: applying the plan's action text
+verbatim and running `tsc` is what exposed the double-duty guard. Stating the method explicitly,
+because a claim measured against a draft is a different claim from one measured against HEAD:
+
+- **The draft existed in four files** when I escalated, not three. The orchestrator's relayed list
+  named `DossierTypeStatsCard.tsx` + both `dossier.json` locales; **`DossierTypeGuide.tsx` was also
+  dirty** — it carried the `Crown` import and both switch arms. Self-evident from the escalation
+  itself: the errors I quoted are at `DossierTypeGuide.tsx(79,10)` and `(142,10)`, line numbers that
+  only exist **with the arms already drafted in**. Corrected here rather than left standing.
+- **Consequence for the verification, stated:** the orchestrator recorded `DossierTypeGuide.tsx` as
+  "clean at HEAD" among its load-bearing checks. It was not — that read was against my draft.
+  **No conclusion changes**: the three errors are reproducible from a clean HEAD by anyone applying
+  the plan's action text, `DossierTypeSelector.tsx` and `dossier-type-guards.ts` genuinely were
+  clean, and Reading B's refusal rests on TS2678, which needs no draft to demonstrate. Recorded so
+  the calibration note rests on the real file list.
+- **Nothing was committed before the ruling.** First commit `e354c8c94` postdates
+  `RULING-P98A2-07`; the retype itself postdates `RULING-P98A2-08`'s reading being the only one that
+  compiles. `git log` is the proof, not this sentence.
+
+### 3. A comment of mine was false — corrected (`245647d60`)
+
+`e354c8c94` shipped `{/* … rendered for all nine cases. */}` at `DossierTypeStatsCard.tsx:160`.
+**CARD-8 is EIGHT** — `DOSSIER_CARD_TYPES` is the DB-7 (derived: 7) plus `elected_official`. The
+"nine" is the `dossier:type` map's key count, which carries a `theme` alias the card never renders;
+a correct number about the wrong population. Corrected in a follow-up commit rather than by amending
+`e354c8c94`, whose hash is already cited in STATE, ROADMAP and this file. The replacement names the
+**set** (`every DossierCardType`), not a count, so it cannot rot when the set next changes.
+Caught by the orchestrator, which named this repo's own exhibit for the class:
+`AppShell.tsx:121-124`, a comment that was present and false for its entire life.
+
+### 4. No other deviation
 
 No auto-fix was needed: no bug, no missing critical functionality, no blocking issue beyond the one
 above. Zero package installs (`T-98-SC` holds).
@@ -272,4 +312,5 @@ be writing the same file concurrently. Cosmetic noise beats clobbering another l
 
 ## Self-Check: PASSED
 
-All 5 claimed files verified present on disk; both commit hashes verified present in `git log`.
+All 5 claimed files verified present on disk; all four commit hashes (`e354c8c94`, `8bad8ec73`,
+`116f0fdfb`, `245647d60`) verified present in `git log`.
