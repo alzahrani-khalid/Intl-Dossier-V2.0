@@ -317,8 +317,18 @@ const EXEMPT = [
 const isExempt = (file, check) =>
   EXEMPT.some((e) => e.file === file && e.checks.includes(check))
 
-/** Rows still excusing a live site are `used`; a row nothing matched is stale. */
-const burndownKey = (f) => `${f.file} ${f.check}`
+/**
+ * Rows still excusing a live site are `used`; a row nothing matched is stale.
+ *
+ * The separator is U+0000 and it is written as the ESCAPE `\u0000`, never as a raw NUL byte.
+ * NUL is the right separator (it cannot occur in a path or a check name, so the composite key
+ * cannot collide) but a raw one makes this whole file BINARY: `file(1)` reports `data` and a
+ * plain `grep` prints "Binary file ... matches" with no lines. That is how this file -- which
+ * carries this phase's negative-scope doctrine and its six named exemptions -- became invisible
+ * to the instrument Phase 98 used most. The escape is byte-identical at runtime (proven by
+ * SHA-256 of the composed key, 98-09). Keep it an escape.
+ */
+const burndownKey = (f) => `${f.file}\u0000${f.check}`
 
 function main() {
   const files = walkSourceFiles(srcRoot)
