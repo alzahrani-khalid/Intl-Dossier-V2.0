@@ -252,6 +252,13 @@ card in both locales.
       eight); the owning phase adopts and commits it. **Owner: Phase 102 — Staging Data & Debt
       Tail** (owns staging state and deploy-adjacent work; P99 is namespace-scoped and owns no
       deploys).
+  - **Amendment, 2026-08-18 (`RULING-P98A2-17` Option C):** the class also covers bilingual
+    NOW-RELATIVE copy shipped from edge functions — `contextual-suggestions/index.ts:605-606`
+    (`was due N days ago` / `متأخر منذ N يوم`) and `:616-617` (`Nd overdue` badge, both
+    locales), and `relationship-health/index.ts:226-227` (`No engagement … for N days` /
+    `منذ N يومًا`). TWO functions, display-copy only — a loose pattern returned five; three
+    were comments read in context. Same closure: repair + deploy + verification on a produced
+    artifact, both locales.
 
 ### AR — Arabic translation coverage (layout infrastructure is already sound)
 
