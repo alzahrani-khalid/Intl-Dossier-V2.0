@@ -274,6 +274,12 @@ const visibleCopy = async (page: Page): Promise<string> =>
 test.describe('criterion 2 — no raw i18n key reaches the screen', () => {
   test.use({ viewport: { width: 1400, height: 900 } })
 
+  // Inline auth plus two locale legs of a data-heavy surface exceeds the 30s default. A timeout
+  // tells nobody whether a key leaked, so the budget is set where only assertions can red.
+  test.beforeEach(() => {
+    test.setTimeout(150_000)
+  })
+
   test('BOTH-POLARITY SELF-TEST: the DOM detector fires on a planted key and passes clean copy', async ({
     page,
   }) => {

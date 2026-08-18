@@ -118,6 +118,11 @@ const signInInline = async (page: Page): Promise<void> => {
 test.describe('criterion 7 — the elected-officials type guide renders', () => {
   test.use({ viewport: { width: 1400, height: 900 } })
 
+  // /dossiers loads 111 rows behind the type-card grid. The 30s default measures the machine.
+  test.beforeEach(() => {
+    test.setTimeout(150_000)
+  })
+
   test('STATIC CENSUS: the five EO keys carry the shapes the component consumes, both locales', async () => {
     for (const locale of ['en', 'ar'] as const) {
       const bundle = BUNDLES[locale]

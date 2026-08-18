@@ -162,6 +162,13 @@ const assertNoRawValues = (scan: RegionScan, where: string): void => {
 test.describe('criterion 1 — database values never render as user copy', () => {
   test.use({ viewport: { width: 1400, height: 900 } })
 
+  // Each test signs in inline, then loads two locale legs of a data-heavy surface. The default
+  // 30s budget is a timing accident, not the criterion: a timeout tells nobody whether copy is
+  // wrong. The generous budget keeps every red attributable to an assertion.
+  test.beforeEach(() => {
+    test.setTimeout(150_000)
+  })
+
   test('INSTRUMENT SELF-TEST: both detectors fire on known-present fixtures (D-06)', async ({
     page,
   }) => {
@@ -210,11 +217,32 @@ test.describe('criterion 1 — database values never render as user copy', () =>
   })
 
   test('engagements week headers carry no ISO-week token', async ({ page }) => {
+    // PRECONDITION, OBSERVED AND NAMED. At the HEAD this spec was authored against, /engagements
+    // renders its error state ("Unable to load data / The request failed.") instead of the
+    // week-grouped list, so `EngagementsList` — the only renderer of the `WEEK OF 2026-W27` group
+    // header — never mounts. That failure belongs to no Phase 98 plan and is NOT repaired here
+    // (SCOPE BOUNDARY: only issues this task's changes caused are auto-fixed). The leg is
+    // therefore recorded NOT CONSTRUCTED in `98-RED-BASELINE.md`, never silently skipped, and the
+    // assertion below fails naming the precondition rather than pretending to measure copy.
     await signInInline(page)
     for (const lng of ['en', 'ar'] as const) {
       await gotoLocale(page, '/engagements', lng)
+      await expect(page.getByRole('main')).toBeVisible({ timeout: SETTLE_TIMEOUT })
+
+      const errorState = await page.getByRole('main').innerText()
+      expect(
+        /Unable to load data|تعذر تحميل البيانات/.test(errorState),
+        `/engagements [${lng}] is in its ERROR state, so EngagementsList never mounts — the ` +
+          'ISO-week leg is NOT CONSTRUCTED (a pre-existing load failure owned by no Phase 98 plan)',
+      ).toBe(false)
+
       const list = page.locator('div[role="list"]')
-      await expect(list.first()).toBeVisible({ timeout: SETTLE_TIMEOUT })
+      await expect(
+        list.first(),
+        `/engagements [${lng}] renders no week-grouped list, so EngagementsList — the only ` +
+          'renderer of the `WEEK OF 2026-W27` header — never mounts. The ISO-week leg is NOT ' +
+          'CONSTRUCTED at this HEAD; the load failure is owned by no Phase 98 plan',
+      ).toBeVisible({ timeout: SETTLE_TIMEOUT })
 
       const scan = await scanRegion(page, 'div[role="list"]')
       expect(scan.count, `engagements list absent under ${lng} — leg not driven`).toBeGreaterThan(0)

@@ -62,6 +62,12 @@ const signInInline = async (page: Page): Promise<void> => {
 test.describe('COPY-07 — the stats-card percentage label is localized', () => {
   test.use({ viewport: { width: 1400, height: 900 } })
 
+  // /dossiers loads 111 rows behind the type-card grid; under the 30s default this test timed
+  // out before the card settled — a red that names the clock, not the copy.
+  test.beforeEach(() => {
+    test.setTimeout(150_000)
+  })
+
   test('the EO card renders the English label under en', async ({ page }) => {
     // NOT a discriminator, and labelled as such: the EN value is unchanged by the repair, so this
     // leg passes before and after. It exists to prove the card and its label region render at all

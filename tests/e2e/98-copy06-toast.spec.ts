@@ -82,6 +82,7 @@ const signInInline = async (page: Page): Promise<void> => {
  * distance → a stepped move → mouse.up. Mirrors `tests/e2e/support/pages/WorkItemKanbanPage.ts`.
  */
 const dragTo = async (page: Page, card: Locator, target: Locator): Promise<void> => {
+  await card.scrollIntoViewIfNeeded()
   const cardBox = await card.boundingBox()
   const targetBox = await target.boundingBox()
   if (cardBox === null || targetBox === null) {
@@ -89,15 +90,30 @@ const dragTo = async (page: Page, card: Locator, target: Locator): Promise<void>
   }
   const startX = cardBox.x + cardBox.width / 2
   const startY = cardBox.y + cardBox.height / 2
+  const endX = targetBox.x + targetBox.width / 2
+  const endY = targetBox.y + Math.min(120, targetBox.height / 2)
+
   await page.mouse.move(startX, startY)
   await page.mouse.down()
   await page.mouse.move(startX + 12, startY + 12, { steps: 5 })
-  await page.mouse.move(targetBox.x + targetBox.width / 2, targetBox.y + 60, { steps: 20 })
+  await page.mouse.move(endX, endY, { steps: 25 })
+  // A second settling move over the target: @dnd-kit resolves the `over` droppable from
+  // pointermove collision detection, and a drop on the first frame at a new position can land
+  // before the collision is computed. Observed as a silent no-op drop.
+  await page.mouse.move(endX, endY + 4, { steps: 5 })
+  await page.waitForTimeout(400)
   await page.mouse.up()
+  await page.waitForTimeout(400)
 }
 
 test.describe('criterion 6 — the default success toast is localized on a real mutation', () => {
   test.use({ viewport: { width: 1400, height: 900 } })
+
+  // Inline auth + board load + two drags with settle pauses. Under the 30s default this test
+  // timed out before the toast could be read — a red that names the clock, not the copy.
+  test.beforeEach(() => {
+    test.setTimeout(180_000)
+  })
 
   for (const lng of ['en', 'ar'] as const) {
     test(`a real task stage move raises the localized toast [${lng}]`, async ({ page }) => {

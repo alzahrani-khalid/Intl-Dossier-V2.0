@@ -98,14 +98,39 @@ const gotoLocale = async (page: Page, path: string, lng: 'en' | 'ar'): Promise<v
   await page.goto(`${path}${separator}lng=${lng}`)
 }
 
-/** The main content region's rendered text. Chrome outside `main` is not asserted. */
+/**
+ * The main content region's rendered text, read AFTER the surface settles. Chrome outside `main`
+ * is not asserted.
+ *
+ * The settle is load-bearing, not defensive padding: `main` becomes visible while the table is
+ * still a skeleton, and reading then produced a run in which /audit-logs' `about 24 hours ago`
+ * rows were invisible to the detector and the absence assertions passed over an empty table. An
+ * instrument that samples before the data arrives returns a correct number about the wrong
+ * instant.
+ */
 const mainText = async (page: Page): Promise<string> => {
-  await expect(page.getByRole('main')).toBeVisible({ timeout: SETTLE_TIMEOUT })
-  return (await page.getByRole('main').innerText()) ?? ''
+  const main = page.getByRole('main')
+  await expect(main).toBeVisible({ timeout: SETTLE_TIMEOUT })
+  await page.waitForLoadState('networkidle', { timeout: SETTLE_TIMEOUT }).catch(() => undefined)
+  // Settle on text stability rather than on a fixed sleep: two identical consecutive reads.
+  let previous = ''
+  for (let attempt = 0; attempt < 12; attempt += 1) {
+    const current = (await main.innerText()) ?? ''
+    if (current === previous && current.trim() !== '') return current
+    previous = current
+    await page.waitForTimeout(1000)
+  }
+  return previous
 }
 
 test.describe('criterion 5 — one date format, and relative time only where sanctioned', () => {
   test.use({ viewport: { width: 1400, height: 900 } })
+
+  // Six surface loads per test with a stability settle on each. The 30s default measures the
+  // machine; this budget keeps every red attributable to an assertion.
+  test.beforeEach(() => {
+    test.setTimeout(300_000)
+  })
 
   test('INSTRUMENT SELF-TEST: every date detector fires on its own defect and passes the fix', async () => {
     // Both polarities for every regex. A detector never shown firing proves nothing (D-06), and a
@@ -177,11 +202,19 @@ test.describe('criterion 5 — one date format, and relative time only where san
     await gotoLocale(page, '/activity', 'ar')
     const text = await mainText(page)
 
-    // Precondition asserted, never assumed: an empty feed cannot prove localization.
+    // Precondition asserted, never assumed: an empty feed cannot prove localization. The feed is
+    // populated at HEAD (rows render), and what it renders is the bare compact token `109d` —
+    // neither the day-first shape nor a localized phrase. That is the defect this assertion
+    // names: D-25's ONE SHARED LOCALIZED HELPER does not exist yet, so no sanctioned feed can
+    // render a localized relative phrase in either locale.
+    expect(
+      text.trim(),
+      '/activity [ar] rendered nothing — the feed is empty and this leg is NOT CONSTRUCTED',
+    ).not.toBe('')
     expect(
       ARABIC_RELATIVE.test(text),
-      '/activity [ar] rendered no Arabic relative-time phrase — either the feed is empty (leg ' +
-        'NOT CONSTRUCTED) or the helper is not localized',
+      '/activity [ar] renders no localized relative-time phrase — the D-25 shared localized ' +
+        'helper is absent and the feed emits a bare compact token instead',
     ).toBe(true)
     expect(text, '/activity [ar] renders the English relative phrase').not.toMatch(RELATIVE_PHRASE)
     expect(text, '/activity [ar] renders Arabic-Indic digits — Policy D keeps digits Latin').not

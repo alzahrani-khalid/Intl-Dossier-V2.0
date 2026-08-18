@@ -95,6 +95,13 @@ const gotoDashboard = async (page: Page, lng: 'en' | 'ar'): Promise<void> => {
 test.describe('criterion 3 — the dashboard never instructs the user to seed data', () => {
   test.use({ viewport: { width: 1400, height: 900 } })
 
+  // The error leg alone waits out three query retries with exponential backoff before the error
+  // state can render, in each of two locales. Under the 30s default the test would time out
+  // before the copy it exists to read ever appeared — a red that names nothing.
+  test.beforeEach(() => {
+    test.setTimeout(180_000)
+  })
+
   test('the digest EMPTY state is forced and speaks truthful copy', async ({ page }) => {
     await signInInline(page)
     for (const lng of ['en', 'ar'] as const) {

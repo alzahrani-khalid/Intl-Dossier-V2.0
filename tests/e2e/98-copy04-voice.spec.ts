@@ -84,8 +84,16 @@ const VISITED_SURFACES: readonly string[] = [
   '/my-work',
 ]
 
-/** The D-20 "label" definition — what the oracle captures on a visited surface. */
-const LABEL_SELECTORS = 'button, [role="tab"], h1, h2, h3, nav a, [data-slot="empty-title"]'
+/**
+ * The D-20 "label" definition — what the oracle captures on a visited surface.
+ *
+ * `a` is captured broadly, not just `nav a`: the elected-officials CTA that D-14 names is an
+ * ANCHOR to `/dossiers/elected-officials/create`, not a `<button>`, and a selector list that
+ * missed it would have made criterion 4's own named instance invisible to criterion 4's oracle.
+ * Data-driven anchor text (entity names, row links) is removed a step later by the reverse-bundle
+ * filter, which is what keeps the population to COPY.
+ */
+const LABEL_SELECTORS = 'button, a, [role="tab"], h1, h2, h3, [data-slot="empty-title"]'
 
 /** Sign in inline; never echo either credential value. */
 const signInInline = async (page: Page): Promise<void> => {
@@ -163,24 +171,31 @@ const captureLabels = async (page: Page, selectors: string): Promise<string[]> =
 test.describe('criterion 4 — copy obeys the project voice', () => {
   test.use({ viewport: { width: 1400, height: 900 } })
 
+  // @case walks eight surfaces in one test; @values walks the same eight for the exclamation leg.
+  // The 30s default would red on wall-clock, which measures the machine, not the copy.
+  test.beforeEach(() => {
+    test.setTimeout(300_000)
+  })
+
   test('@values the elected-officials CTA reads in sentence case in both locales', async ({
     page,
   }) => {
     await signInInline(page)
 
-    await gotoLocale(page, '/dossiers/elected-officials', 'en')
-    const addEn = page.getByRole('button', { name: new RegExp(EO_ADD_EN, 'i') }).first()
-    await expect(addEn, 'EO add control not reachable under en').toBeVisible({
-      timeout: SETTLE_TIMEOUT,
-    })
-    expect((await addEn.innerText()).trim(), 'EO CTA text under en').toBe(EO_ADD_EN)
-
-    await gotoLocale(page, '/dossiers/elected-officials', 'ar')
-    const addAr = page.getByRole('button', { name: EO_ADD_AR }).first()
-    await expect(addAr, 'EO add control not reachable under ar').toBeVisible({
-      timeout: SETTLE_TIMEOUT,
-    })
-    expect((await addAr.innerText()).trim(), 'EO CTA text under ar').toBe(EO_ADD_AR)
+    // The CTA is an ANCHOR to the create route, not a button — located by href so the locator
+    // does not depend on the very text under test (a name-based locator would go MISSING when
+    // the text is wrong, producing a red that names the locator instead of the defect).
+    for (const [lng, expected] of [
+      ['en', EO_ADD_EN],
+      ['ar', EO_ADD_AR],
+    ] as const) {
+      await gotoLocale(page, '/dossiers/elected-officials', lng)
+      const cta = page.locator('a[href="/dossiers/elected-officials/create"]').first()
+      await expect(cta, `EO add control not reachable under ${lng}`).toBeVisible({
+        timeout: SETTLE_TIMEOUT,
+      })
+      expect((await cta.innerText()).trim(), `EO CTA text under ${lng}`).toBe(expected)
+    }
   })
 
   test('@values the glossary term Deadline replaces Due Date on the commitments surface', async ({
