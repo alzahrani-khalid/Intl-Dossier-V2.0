@@ -95,6 +95,13 @@
     "english": "الإنجليزية",
     "arabic": "العربية",
     "clear": "مسح",
+    "clearFilters": "مسح عوامل التصفية",
+    "hide": "إخفاء",
+    "none": "لا شيء",
+    "recommended": "موصى به",
+    "remove": "إزالة",
+    "selectDate": "اختر التاريخ",
+    "show": "عرض",
     "reorder": "إعادة الترتيب",
     "notFound": {
       "title": "الصفحة غير موجودة",

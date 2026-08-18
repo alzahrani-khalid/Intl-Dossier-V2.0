@@ -95,6 +95,13 @@
     "english": "English",
     "arabic": "Arabic",
     "clear": "Clear",
+    "clearFilters": "Clear filters",
+    "hide": "Hide",
+    "none": "None",
+    "recommended": "Recommended",
+    "remove": "Remove",
+    "selectDate": "Select date",
+    "show": "Show",
     "reorder": "Reorder",
     "notFound": {
       "title": "Page Not Found",
