@@ -1121,6 +1121,7 @@
     },
     "statuses": {
       "pending": "معلق",
+      "assigned": "مُسنَد",
       "in_progress": "قيد التنفيذ",
       "completed": "مكتمل",
       "cancelled": "ملغى"

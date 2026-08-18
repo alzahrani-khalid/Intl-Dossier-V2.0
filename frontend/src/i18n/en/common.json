@@ -1121,6 +1121,7 @@
     },
     "statuses": {
       "pending": "Pending",
+      "assigned": "Assigned",
       "in_progress": "In Progress",
       "completed": "Completed",
       "cancelled": "Cancelled"

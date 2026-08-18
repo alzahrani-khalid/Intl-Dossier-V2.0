@@ -551,7 +551,7 @@ function WaitingQueuePageInner() {
                                       {getWorkItemTitle(item)}
                                     </h3>
                                     <Badge variant="outline" className="capitalize">
-                                      {item.priority}
+                                      {t(`waitingQueue.priorities.${item.priority}`)}
                                     </Badge>
                                     {agingStatus.severity === 'critical' && (
                                       <Badge variant="destructive" className="gap-1">
@@ -591,7 +591,9 @@ function WaitingQueuePageInner() {
                                   {/* Waiting Status */}
                                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                     <TypeIcon className="size-4" />
-                                    <span className="capitalize">{item.status}</span>
+                                    <span className="capitalize">
+                                      {t(`waitingQueue.statuses.${item.status}`)}
+                                    </span>
                                     <span>•</span>
                                     <span className={agingStatus.color}>
                                       {t('waiting.waitingFor', 'Waiting for')} {agingStatus.days}{' '}
@@ -608,7 +610,8 @@ function WaitingQueuePageInner() {
                                     </span>
                                     <span>•</span>
                                     <span>
-                                      {t('waiting.status', 'Status')}: {item.status}
+                                      {t('waiting.status', 'Status')}:{' '}
+                                      {t(`waitingQueue.statuses.${item.status}`)}
                                     </span>
                                     <span>•</span>
                                     <span>ID: {item.work_item_id.substring(0, 8)}...</span>
@@ -712,7 +715,7 @@ function WaitingQueuePageInner() {
                                           {getWorkItemTitle(item)}
                                         </h3>
                                         <Badge variant="outline" className="capitalize">
-                                          {item.priority}
+                                          {t(`waitingQueue.priorities.${item.priority}`)}
                                         </Badge>
                                         {agingStatus.severity === 'critical' && (
                                           <Badge variant="destructive" className="gap-1">
@@ -752,7 +755,9 @@ function WaitingQueuePageInner() {
                                       {/* Waiting Status */}
                                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                         <TypeIcon className="size-4" />
-                                        <span className="capitalize">{item.status}</span>
+                                        <span className="capitalize">
+                                          {t(`waitingQueue.statuses.${item.status}`)}
+                                        </span>
                                         <span>•</span>
                                         <span className={agingStatus.color}>
                                           {t('waiting.waitingFor', 'Waiting for')}{' '}
@@ -770,7 +775,8 @@ function WaitingQueuePageInner() {
                                         </span>
                                         <span>•</span>
                                         <span>
-                                          {t('waiting.status', 'Status')}: {item.status}
+                                          {t('waiting.status', 'Status')}:{' '}
+                                          {t(`waitingQueue.statuses.${item.status}`)}
                                         </span>
                                         <span>•</span>
                                         <span>ID: {item.work_item_id.substring(0, 8)}...</span>
