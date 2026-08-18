@@ -49,6 +49,12 @@
     "high": "عالية",
     "urgent": "عاجلة"
   },
+  "sourceType": {
+    "human_entered": "إدخال بشري",
+    "ai_generated": "مُولَّد بالذكاء الاصطناعي",
+    "publication": "منشور",
+    "feed": "خلاصة"
+  },
   "toast": {
     "dismissed": "تم رفض الإشارة.",
     "restoreAction": "تم رفض الإشارة. استعادة؟",

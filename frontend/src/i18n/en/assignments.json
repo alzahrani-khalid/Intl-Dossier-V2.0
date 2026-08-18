@@ -188,6 +188,7 @@
     "urgent": "Urgent",
     "high": "High",
     "normal": "Normal",
+    "medium": "Medium",
     "low": "Low"
   },
   "slaStatus": {

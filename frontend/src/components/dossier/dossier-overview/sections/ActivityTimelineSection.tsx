@@ -218,7 +218,7 @@ function ActivityItem({
 
           {activity.status && activity.status !== 'unknown' && (
             <Badge variant="outline" className="text-xs">
-              {activity.status}
+              {t(`sourceStatus.${activity.status}`)}
             </Badge>
           )}
 

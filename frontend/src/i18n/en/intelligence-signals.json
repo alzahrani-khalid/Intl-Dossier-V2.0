@@ -49,6 +49,12 @@
     "high": "High",
     "urgent": "Urgent"
   },
+  "sourceType": {
+    "human_entered": "Human entered",
+    "ai_generated": "AI generated",
+    "publication": "Publication",
+    "feed": "Feed"
+  },
   "toast": {
     "dismissed": "Signal dismissed.",
     "restoreAction": "Signal dismissed. Restore?",

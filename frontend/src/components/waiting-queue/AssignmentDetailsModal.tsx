@@ -273,7 +273,7 @@ export function AssignmentDetailsModal({
                         <p className="text-sm sm:text-base font-medium text-start">{entityTitle}</p>
                         {entity.status && (
                           <Badge variant="outline" className="text-xs mt-1">
-                            {entity.status}
+                            {t(`waitingQueue.entityStatus.${entity.status}`)}
                           </Badge>
                         )}
                       </div>

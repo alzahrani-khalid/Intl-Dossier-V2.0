@@ -1125,6 +1125,23 @@
       "completed": "مكتمل",
       "cancelled": "ملغى"
     },
+    "entityStatus": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "archived": "مؤرشف",
+      "deleted": "محذوف",
+      "draft": "مسودة",
+      "under_review": "قيد المراجعة",
+      "approved": "معتمد",
+      "published": "منشور",
+      "submitted": "مُقدَّم",
+      "triaged": "مُصنَّف",
+      "assigned": "مُسنَد",
+      "in_progress": "قيد التنفيذ",
+      "converted": "مُحوَّل",
+      "closed": "مغلق",
+      "merged": "مدموج"
+    },
     "sortOptions": {
       "assigned_at_asc": "تم التكليف (الأقدم أولاً)",
       "assigned_at_desc": "تم التكليف (الأحدث أولاً)",

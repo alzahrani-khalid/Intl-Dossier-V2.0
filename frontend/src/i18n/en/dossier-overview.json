@@ -142,6 +142,31 @@
     "overdue": "Overdue"
   },
 
+  "sourceStatus": {
+    "pending": "Pending",
+    "in_progress": "In progress",
+    "review": "In review",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "overdue": "Overdue",
+    "draft": "Draft",
+    "submitted": "Submitted",
+    "triaged": "Triaged",
+    "assigned": "Assigned",
+    "converted": "Converted",
+    "closed": "Closed",
+    "merged": "Merged",
+    "under_review": "Under review",
+    "approved": "Approved",
+    "published": "Published",
+    "planned": "Planned",
+    "ongoing": "Ongoing",
+    "postponed": "Postponed",
+    "active": "Active",
+    "historical": "Historical",
+    "terminated": "Terminated"
+  },
+
   "priority": {
     "low": "Low",
     "medium": "Medium",

@@ -142,6 +142,31 @@
     "overdue": "متأخر"
   },
 
+  "sourceStatus": {
+    "pending": "قيد الانتظار",
+    "in_progress": "قيد التنفيذ",
+    "review": "قيد المراجعة",
+    "completed": "مكتمل",
+    "cancelled": "ملغى",
+    "overdue": "متأخر",
+    "draft": "مسودة",
+    "submitted": "مُقدَّم",
+    "triaged": "مُصنَّف",
+    "assigned": "مُسنَد",
+    "converted": "مُحوَّل",
+    "closed": "مغلق",
+    "merged": "مدموج",
+    "under_review": "قيد المراجعة",
+    "approved": "معتمد",
+    "published": "منشور",
+    "planned": "مخطط",
+    "ongoing": "جارٍ",
+    "postponed": "مؤجل",
+    "active": "نشط",
+    "historical": "سابق",
+    "terminated": "منتهٍ"
+  },
+
   "priority": {
     "low": "منخفض",
     "medium": "متوسط",

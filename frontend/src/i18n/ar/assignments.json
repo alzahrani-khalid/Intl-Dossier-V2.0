@@ -164,6 +164,7 @@
     "urgent": "عاجل",
     "high": "عالي",
     "normal": "عادي",
+    "medium": "متوسط",
     "low": "منخفض"
   },
   "slaStatus": {

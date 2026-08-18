@@ -1125,6 +1125,23 @@
       "completed": "Completed",
       "cancelled": "Cancelled"
     },
+    "entityStatus": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "archived": "Archived",
+      "deleted": "Deleted",
+      "draft": "Draft",
+      "under_review": "Under review",
+      "approved": "Approved",
+      "published": "Published",
+      "submitted": "Submitted",
+      "triaged": "Triaged",
+      "assigned": "Assigned",
+      "in_progress": "In progress",
+      "converted": "Converted",
+      "closed": "Closed",
+      "merged": "Merged"
+    },
     "sortOptions": {
       "assigned_at_asc": "Assigned (Oldest First)",
       "assigned_at_desc": "Assigned (Newest First)",
