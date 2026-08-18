@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v10.0
 milestone_name: Trust & Correctness
 status: Ready to execute
-last_updated: '2026-08-18T00:54:51.259Z'
+last_updated: '2026-08-18T01:12:01.422Z'
 progress:
   total_phases: 13
   completed_phases: 6
   total_plans: 80
-  completed_plans: 69
+  completed_plans: 70
   percent: 46
 ---
 
@@ -46,7 +46,23 @@ intake-ticket entity-link leg (staging holds zero intake tickets), the AI-sugges
 AnythingLLM backend), the `RecurrencePatternEditor` leg (census-closed, D-24), and the
 `Deadline / Due Date` chip (its only renderer `CalendarEmptyWizard.tsx` has zero importers since
 Phase 96 — closed instead on `/commitments`).
-Next command: `/gsd:execute-phase 98` (Copy Truth) — wave 1 plan 98-02 next.
+
+**98-02 EXECUTED 2026-08-18 (wave 1 complete).** `scripts/check-date-formatting.mjs` extended from
+four checks to eight (relative time outside the formatter, date-fns localized skeletons, `h:mm a`,
+date-receiver `.toLocaleString(`), and `formatRelativeTime` landed in `frontend/src/lib/format-date.ts`
+as D-25's one sanctioned home for relative time. **Four polarities observed by hand:** the fixture
+run RED (exit 1, 8 findings, all four new checks named), a clean subtree GREEN with the debt list
+inactive, `frontend/src` GREEN at HEAD, and a planted stale row turning the run RED (T-98-04).
+`cd frontend && pnpm lint` green end-to-end (all four guard scripts). **Nothing was repaired and no
+call site moved** — the guard is green only through **60 named-debt rows excusing 97 derived
+violation sites**, all owned by 98-07, so `COPY-05` is deliberately NOT marked complete.
+Populations re-derived, not quoted: skeleton **41** sites (RESEARCH §C5 said ≈9 — undercounted ~4×),
+relative-time 43, twelve-hour 5, localestring-date 8. **ESCALATED, not acted on:** a FIFTH escaping
+class the plan does not name — **five components declare their own local `formatRelativeTime`** and
+`lib/i18n/relativeTime.ts` exports `formatRelativeTimeShort` (the source of `98-copy05`'s `/activity [ar]`
+`109d` RED). They are hand-rolled, carry no date-fns import, so check 5 cannot see them, and five of
+them shadow the identifier 98-07 must import. Owner: 98-07's enumeration, overseer to rule.
+Next command: `/gsd:execute-phase 98` (Copy Truth) — wave 2 next (98-03, 98-04).
 
 Phase 97 (reachability) — **EXECUTED 2026-08-17, accepted by `RULING-P97-21`.**
 12 of 12 plans; every `## BLOCKED` read (**5 empty / 7 substantive**, each traced to a ruling).
@@ -479,6 +495,7 @@ file. Bookkeeping debt only — no open functional work.
 
 ## Performance Metrics
 
-| Phase | Plan | Duration | Notes                                            |
-| ----- | ---- | -------- | ------------------------------------------------ |
-| 98    | 01   | ~2h      | 3 tasks · 9 files · 8 oracles proven RED at HEAD |
+| Phase | Plan | Duration | Notes                                                                 |
+| ----- | ---- | -------- | --------------------------------------------------------------------- |
+| 98    | 01   | ~2h      | 3 tasks · 9 files · 8 oracles proven RED at HEAD                      |
+| 98    | 02   | ~1h      | 2 tasks · 6 files · 4 new checks drilled RED; 60 debt rows / 97 sites |
