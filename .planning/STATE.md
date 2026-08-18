@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v10.0
 milestone_name: Trust & Correctness
 status: Ready to execute
-last_updated: '2026-08-18T02:30:00.000Z'
+last_updated: '2026-08-18T00:54:51.259Z'
 progress:
   total_phases: 13
   completed_phases: 6
-  total_plans: 68
-  completed_plans: 68
+  total_plans: 80
+  completed_plans: 69
   percent: 46
 ---
 
@@ -33,7 +33,20 @@ decision-coverage 30/30 re-run by the overseer. Scope rulings `RULING-P98A2-01/-
 requirement ids, criteria 6+7 added, sentence case BOUNDED with COPY-09→P102, entityLinks all-82,
 EO Crown atomic); exec contract at `.tickmarkr/overseer/ACCEPTANCE-P98-EXEC.md` — observed-red
 before repair, locale+role on every green. `CLIENTSEC-02` filed (P100). Leg 2 released.
-Next command: `/gsd:execute-phase 98` (Copy Truth).
+
+**98-01 EXECUTED 2026-08-18 (wave 1 of 6).** Eight oracles authored and every one **OBSERVED RED at
+HEAD `4e107b5d3`** on its own defect — recorded in `98-RED-BASELINE.md` (8 rows, closed
+`RED` / `NOT CONSTRUCTED` vocabulary, zero passes recorded). Run of record: 31 tests, 18 failing /
+13 passing, `--workers=1`, `chromium-en`, **role admin**, both locale legs by `?lng=`. The
+designated negative control fired: `98-copy06` observed `Operation completed successfully` under
+`?lng=ar`. **Nothing was repaired**, so `COPY-01..COPY-08` are deliberately NOT marked complete.
+**5 legs NOT CONSTRUCTED, named:** the `/engagements` ISO-week leg (that route renders no
+week-grouped list at HEAD — a load failure owned by no Phase 98 plan, NOT repaired), the
+intake-ticket entity-link leg (staging holds zero intake tickets), the AI-suggestion leg (needs the
+AnythingLLM backend), the `RecurrencePatternEditor` leg (census-closed, D-24), and the
+`Deadline / Due Date` chip (its only renderer `CalendarEmptyWizard.tsx` has zero importers since
+Phase 96 — closed instead on `/commitments`).
+Next command: `/gsd:execute-phase 98` (Copy Truth) — wave 1 plan 98-02 next.
 
 Phase 97 (reachability) — **EXECUTED 2026-08-17, accepted by `RULING-P97-21`.**
 12 of 12 plans; every `## BLOCKED` read (**5 empty / 7 substantive**, each traced to a ruling).
@@ -339,6 +352,8 @@ Note: the droplet **backend** still needs the round-11 auth fix (`backend/src/mi
 - [Phase ?]: 83-06: modern-nav re-skinned onto Linear DS tokens; bespoke shadow/radius/space/hsl ladders + glassmorphism deleted (613->190 lines); demo route kept, restyled flat
 - [Phase ?]: 83-06: bg-panel/text-content-text/bg-badge/text-icon-rail-\* are undefined no-op Tailwind classes (no @theme or config mapping); real var() consumers were the tokens-file recipes + IconButton.tsx only — deletion proven safe
 - [Phase 84]: COPY-01: marketing voice removed from 4 en i18n namespaces (21 '!', 6 Discover/easily, 'Let us show you around'); ar mirrored en (D-84-05); duplicate-detection.json + ar 'اكتشاف التعارضات' left untouched (D-84-09). Values-only, en/ar key parity + label-parity green.
+- [Phase ?]: 98-01: eight named oracles — COPY-07 gets its own spec; 98-VALIDATION's fold-in option is superseded by its own Wave-0 eight-file requirement and D-08
+- [Phase ?]: 98-01: oracles assert rendered === i18n bundle rather than hardcoded prose, so each proves the component reads the key and cannot go stale against a legitimate rewording
 
 ### Open Todos
 
@@ -461,3 +476,9 @@ file. Bookkeeping debt only — no open functional work.
 ## Operator Next Steps
 
 - Start the next milestone with /gsd-new-milestone
+
+## Performance Metrics
+
+| Phase | Plan | Duration | Notes                                            |
+| ----- | ---- | -------- | ------------------------------------------------ |
+| 98    | 01   | ~2h      | 3 tasks · 9 files · 8 oracles proven RED at HEAD |

@@ -549,7 +549,7 @@ Plans:
 
 **Wave 1** _(instruments before repairs)_
 
-- [ ] 98-01-PLAN.md — the eight criterion oracles, each proven RED at HEAD on its own defect
+- [x] 98-01-PLAN.md — the eight criterion oracles, each proven RED at HEAD on its own defect
 - [ ] 98-02-PLAN.md — date-guard extension (fixture-drilled, burn-down allowlist) + the one sanctioned relative-time helper
 
 **Wave 2** _(the two contended files, one owner each)_
@@ -699,7 +699,7 @@ Plans:
 | 95. Routes That Don't Render | v10.0 | 0/TBD | Not started | — |
 | 96. Real Numbers | v10.0 | 11/11 | Complete   | 2026-08-17 |
 | 97. Reachability | v10.0 | 0/TBD | Not started | — |
-| 98. Copy Truth | v10.0 | 0/TBD | Not started | — |
+| 98. Copy Truth | v10.0 | 1/9 | In Progress|  |
 | 99. Arabic Coverage | v10.0 | 0/TBD | Not started | — |
 | 100. Security Posture — Database & Client | v10.0 | 0/TBD | Not started | — |
 | 101. CI Gates Green | v10.0 | 0/TBD | Not started | — |
