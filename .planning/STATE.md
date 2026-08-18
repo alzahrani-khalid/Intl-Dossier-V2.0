@@ -117,9 +117,23 @@ cannot see. Class sweep verdicts: repaired-here **RESOLVED** (0 unresolved `enti
 not guessed at.** `COPY-06` marked complete. **`COPY-02` deliberately NOT marked** — whether it
 closes on its five named instances or on the whole class is an acceptance-semantics question, and
 it went to the overseer with both readings rather than being resolved by a worker. `COPY-04` stays
-open. **Two one-line repairs are HELD, disclosed before any commit that would contain them**
-(`RULING-P98A2-05`): `calendar.months.january` in the same recurrence file, and the 7 `common.*`
-raw keys, one of which renders on the entity-search dialog this plan repaired.
+open. **Two one-line repairs were disclosed before any commit that would contain them**
+(`RULING-P98A2-05`). **`calendar.months.january` was RULED Reading A and RELEASED** —
+`RULING-P98A2-09`, landed as `c5661eeb8`: **D-22's "no wider hunt" bounded the SEARCH SPACE;
+D-23's class-sweep clause defines the POPULATION**, so a member found by the ordered sweep inside
+the owning lane was never a widening (Reading B refused as "`RULING-06` Option C in miniature").
+Four legs recorded, `calendar:months.january` shown resolving `January` / `يناير` **post-fix in
+both locales**, and the `.split(' ')[0]` render-path proof kept — a raw key has no space, so the
+whole key reached the screen. **Stated explicitly: the conservation gate does NOT endorse that
+fix** (it counts `calendar\.recurrence\.` only and moved for neither side; `calendar.months` went
+1→0 outside both counters). The file had **exactly two** dot-form families — `calendar.recurrence`
+43 occurrences (41 single-quoted + 2 template-literal) and `calendar.months` 1 — so it now carries
+**zero dot-form `t()` keys and 44 colon-form: whole, not sampled.** Because that was a SECOND
+commit on the file, conservation was **re-derived against the true pre-fix blob `58109e47b`**
+(PRE 43 == POST 43); the naive parent `c71f42515` yields PRE 0, which trips the gate's own
+`PRE >= 1` control — **it fails closed on a re-base rather than passing vacuously.** The 7
+`common.*` raw keys remain **HELD** (a new class owned by no plan; the sharpest members of the
+un-owned raw-key remainder).
 Next command: `/gsd:execute-phase 98` (Copy Truth) — wave 3.
 
 Phase 97 (reachability) — **EXECUTED 2026-08-17, accepted by `RULING-P97-21`.**

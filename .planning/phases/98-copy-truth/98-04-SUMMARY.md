@@ -8,7 +8,7 @@ requires:
 provides:
   - 'criterion 6 CLOSED: the default mutation success toast renders localized in BOTH locales on a real kanban TASK stage move'
   - 'the whole entityLinks namespace resolves: 80/80 static paths + both dynamic families, 97 leaves, en/ar parity exact'
-  - 'RecurrencePatternEditor.tsx carries zero dot-form calendar.recurrence lookups — 43 sites routed colon-form, conservation proven against the parent blob'
+  - 'RecurrencePatternEditor.tsx carries ZERO dot-form t() keys of any family — 43 calendar.recurrence sites routed with conservation proven against the true pre-fix blob, plus the file second and last dot-form family calendar.months.january (RULING-P98A2-09). The file is whole.'
   - 'scripts/i18n-mask-audit.mjs can see the raw-key class at all: a behaviour-defined matcher, full output, gate-executable polarity controls'
 affects:
   - '98-05 / 98-06: the remaining COPY-04 populations (EO CTA, first-person plural, the exclamation set outside common.json) are untouched here and still theirs'
@@ -18,6 +18,8 @@ tech-stack:
   patterns:
     - 'a population is defined by the BEHAVIOUR (no string fallback => raw key on screen), never by the token that usually implements it — a one-arg-shape matcher is blind to 409 sites with identical behaviour'
     - 'conservation check: a pure dot->colon flip preserves total occurrences; both sides derived in the same run from the parent git blob, no quoted literal'
+    - 'RULING-P98A2-09: a plan clause bounding the SEARCH SPACE ("no wider hunt") does not bound the POPULATION (D-23 class sweep). Where you may look and what counts once you are looking there are two different limits.'
+
 key-files:
   created:
     - .planning/phases/98-copy-truth/98-04-SUMMARY.md
@@ -50,12 +52,13 @@ detect. Four commits, seven files, zero exogenous paths.
 
 ## Commits
 
-| hash        | what                                                                | files                      |
-| ----------- | ------------------------------------------------------------------- | -------------------------- |
-| `6b919c856` | entityLinks core — 61 keys × 2 locales                              | `i18n/{en,ar}/common.json` |
-| `58109e47b` | aiSuggestions (19) + linkTypes (5) + entityTypes (12) × 2 locales   | `i18n/{en,ar}/common.json` |
-| `0d69760bb` | toast + voice values + regions casing + recurrence routing + finder | 7 files (see key-files)    |
-| _(this)_    | SUMMARY + STATE + ROADMAP + REQUIREMENTS                            | planning docs              |
+| hash        | what                                                                           | files                         |
+| ----------- | ------------------------------------------------------------------------------ | ----------------------------- |
+| `6b919c856` | entityLinks core — 61 keys × 2 locales                                         | `i18n/{en,ar}/common.json`    |
+| `58109e47b` | aiSuggestions (19) + linkTypes (5) + entityTypes (12) × 2 locales              | `i18n/{en,ar}/common.json`    |
+| `0d69760bb` | toast + voice values + regions casing + recurrence routing + finder            | 7 files (see key-files)       |
+| `c71f42515` | SUMMARY + STATE + ROADMAP + REQUIREMENTS                                       | planning docs                 |
+| `c5661eeb8` | `calendar:months.january` — the file's 2nd dot-form family (`RULING-P98A2-09`) | `RecurrencePatternEditor.tsx` |
 
 **Both locales landed in the SAME commit every time (D-16).** Verifiable:
 `git show --stat 6b919c856` and `git show --stat 58109e47b` each list `en/common.json` and
@@ -190,12 +193,30 @@ distinct colon paths = 37              (equal to the 37 distinct dot paths)
 **Both polarities on one instrument:** `PRE >= 1` is the negative control — the same token
 instrument shown finding the defect in the pre-fix blob; `POST == PRE` with `dot == 0` is the
 positive. A missed site would leave dot-form non-zero; a stray or dropped site would break the
-equality. **The flip landed in exactly ONE commit for that file**, so `LASTC^` is the true pre-fix
-blob and no re-derivation against a re-based parent is owed.
+equality.
 
 Both template-literal sites are included (`:458` `daysOfWeek.${dayKey}`, `:525`
 `monthly.positions.${pos}`). No key was authored — all 37 paths already exist in `en`/`ar`
 `calendar.json`, which the copy02 recurrence census re-asserts.
+
+### RE-DERIVED after the second commit (the acceptance criterion's re-base clause)
+
+`c5661eeb8` (the `RULING-P98A2-09` repair below) is a **second** commit touching this file, so
+`LASTC^` is no longer the pre-fix blob and the gate as written would read the wrong parent. The
+criterion provides for exactly this, so the conservation check was re-run against the **true**
+pre-fix blob, hash stated:
+
+```
+LASTC now      = c5661eeb8          (naive parent c71f42515 — the DOCS commit, already routed)
+TRUE pre-fix   = 58109e47b          (the parent of the routing commit 0d69760bb)
+PRE  = 43  from git show 58109e47b:<file> | grep -o "calendar\.recurrence\."
+POST = 43  at HEAD                        | grep -o "calendar:recurrence\."
+dot-form at HEAD = 0
+```
+
+**The gate fails CLOSED on the re-base rather than passing vacuously** — verified, not assumed:
+against the naive parent `c71f42515` the derived `PRE` is **0**, which trips the criterion's own
+`test "$PRE" -ge 1` negative control. A stale parent reddens this gate; it cannot silently green it.
 
 ## THE B6 CLAIM, TESTED — and the instrument rebuilt around behaviour
 
@@ -277,6 +298,55 @@ repaired:** `common.clearFilters` at `EntitySearchDialog.tsx:293` — the entity
 `/(entityLinks|regions|typeGuide|typeDescription|calendar\.recurrence)\.[A-Za-z.]+/` and
 `common.` is not in it. **HELD, not repaired** — see Deviations.
 
+## `RULING-P98A2-09` — the file's SECOND dot-form family, released and repaired
+
+Raised as a hold, **ruled Reading A, released**, and landed as `c5661eeb8`. The reasoning is
+worth more than the one-character diff:
+
+> **D-22's "no wider hunt" bounded the SEARCH SPACE. D-23's class-sweep clause defines the
+> POPULATION.** `calendar.months.january` is a member of the population, found by the ordered
+> sweep inside the lane that owns it — not a new hunt into new territory.
+
+Reading B (leave it) was **refused** as "`RULING-06` Option C in miniature" — the same shape as
+shipping a witnessed red because the repair grew slightly. _Where you may look_ and _what counts
+once you are looking there_ are two different bounds; a clause restricting one does not restrict
+the other.
+
+**The four legs, each derived at my head, none taken on authority:**
+
+| leg                                           | evidence                                                                                                                                       |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| the call is dot-form                          | `t('calendar.months.january')` at `RecurrencePatternEditor.tsx:557`                                                                            |
+| the hook takes no namespace                   | `useTranslation()` at `:176` — the identical mechanism as the 43 recurrence sites                                                              |
+| the key is ABSENT where the lookup lands      | `common.json`'s `calendar` subtree = `['fri','mon','sat','sun','thu','tue','wed']` — **7 weekday abbreviations, no `months`**, in BOTH locales |
+| the key is PRESENT where the colon form lands | `calendar.json` has `months.january` in BOTH locales                                                                                           |
+
+**Render-path proof — kept because it is what makes this a leak rather than a latent miss:**
+the component renders `t(...).split(' ')[0]`. A raw key contains **no space**, so `.split(' ')[0]`
+returns the **whole key** — `calendar.months.january` reached the screen inside a `<Label>`. Had
+the key resolved, that expression would return just the month word, which is its actual purpose.
+
+**Post-fix both-locale resolution (CONDITION 2 — not merely "the dot-form is gone"):**
+
+| locale | `calendar.json` `months.january` | what the `<Label>` renders after `.split(' ')[0]` |
+| ------ | -------------------------------- | ------------------------------------------------- |
+| `en`   | `January`                        | `January`                                         |
+| `ar`   | `يناير`                          | `يناير`                                           |
+
+**THE CONSERVATION GATE DOES NOT ENDORSE THIS FIX, and no reader should infer that it does.**
+The gate counts `calendar\.recurrence\.` tokens only. Measured on both sides: `calendar.months`
+occurrences at the pre-fix blob `58109e47b` = **1**, at HEAD = **0** — neither number appears in
+either side of the gate's equality, which moved not at all. **This repair's evidence is its own
+both-locale resolution check above**, plus the render-path proof. Nothing else covers it.
+
+**Why the population is CLOSED rather than sampled — derived independently, not accepted:** the
+file contains exactly **two** dot-form families. Parsing every `t()` key literal (single-quoted
+**and** template-literal) yields 44 keys: `calendar.recurrence` at **43 occurrences (41
+single-quoted + 2 template-literal — the orchestrator's "×41" is the single-quoted subset of my
+derived 43)** and `calendar.months` at **1**. After this repair the file carries **zero** dot-form
+`t()` keys and 44 colon-form. This is not the head of an open-ended tail; it is the only other
+member, and the file is now whole.
+
 ## Gates
 
 | gate                                                 | result                                                                                                                                                                                                                                                                                            |
@@ -301,28 +371,23 @@ additive: the criterion's own assertions — the `ONE_ARG` marker, the red fixtu
 `zz.raw.key`, the clean fixture silent — all pass, and every pre-existing check returns
 byte-identical numbers. Inside `files_modified`, no criterion contradicted.
 
-### 2. HELD, NOT ACTED ON — two in-scope-file repairs awaiting a ruling
+### 2. Two in-scope-file repairs disclosed BEFORE any commit that would contain them — one released, one still held
 
-Both were **disclosed to the orchestrator before any commit that would have contained them**
-(`RULING-P98A2-05`: acting = the commit). Neither is in the tree.
+Both were raised while the tree was clean, with the file list named (`RULING-P98A2-05`: acting =
+the commit). Neither was in the tree when raised.
 
-**(a) `RecurrencePatternEditor.tsx:557` — `t('calendar.months.january')`.** Same file, same
-mechanism, same D-23 class: `calendar.months` is absent from `common.json`'s `calendar` subtree
-(which holds 7 weekday abbreviations) and present in `calendar.json`, so it renders the raw key
-`calendar.months.january` inside a `<Label>`. It is **not** named by the plan's action text
-(which bounds item 4 to "the WHOLE dot-form `calendar.recurrence` family") and **not** covered by
-the conservation gate (which counts only `calendar\.recurrence\.`, so a flip would change neither
-side). My reading is that D-23 requires sweeping the class inside a file I already own; the plan's
-"no wider hunt" may be read as excluding it. **One character. Held.**
+**(a) `RecurrencePatternEditor.tsx:557` — `t('calendar.months.january')`. RELEASED and
+REPAIRED** (`RULING-P98A2-09`, Reading A) as `c5661eeb8`. Full evidence, all four ruling
+conditions, and the two-family closure argument are in the `RULING-P98A2-09` section above. The
+ruling's own framing is the durable part: **D-22 bounded the search space, D-23 defines the
+population**, so this was never a widening.
 
-**(b) `common.clearFilters` and 6 sibling `common.*` raw keys.** 7 distinct keys / 45 sites,
-one of them (`common.clearFilters`) on the entity-search dialog this plan repaired. Authoring
-them is 7 keys × 2 locales in a file I own — but they are a **new population**, named by no
-criterion and by no plan. **Held.**
-
-If both are released, they land in one follow-up commit; the recurrence file would then have a
-second commit and the conservation check would be re-run against the true pre-fix blob
-`0d69760bb^` with its hash stated, exactly as the acceptance criterion provides for.
+**(b) `common.clearFilters` and 6 sibling `common.*` raw keys — STILL HELD.** 7 distinct keys /
+45 sites, one of them (`common.clearFilters`) on the entity-search dialog this plan repaired.
+Authoring them is 7 keys × 2 locales in a file I own — but unlike (a) they are **not a member of
+any population this lane owns**: they are a new class, named by no criterion and no plan, and by
+the same search-space-vs-population distinction that released (a), they fall outside. **Not in
+the tree.** They are the sharpest members of the un-owned raw-key remainder above.
 
 ### 3. Prettier reflowed two files beyond my edit — disclosed because it is in my diff
 
