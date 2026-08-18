@@ -167,7 +167,17 @@ test.describe('criterion 3 — the dashboard never instructs the user to seed da
       // The force was real: at least one request died at the NETWORK layer. A 500 is a completed
       // response and fires `requestfinished`, never `requestfailed`.
       expect(blocked.length, `digest request was never blocked under ${lng}`).toBeGreaterThan(0)
-      expect(blocked[0]).toMatch(/inspector|blocked/i)
+      // RULING-P98A2-13 B2 (98-02 precedent — instrument strengthening, drilled and disclosed).
+      // This asserted `blocked[0]`, i.e. the FIRST captured failure. On a full-file run that entry
+      // can be an in-flight digest request torn down by the PRIOR test's navigation
+      // (`net::ERR_ABORTED`) rather than the CDP-blocked one — an order-dependent flake, ~50% on
+      // the full file and 0% in isolation. It could never be observed at HEAD: the copy assertion
+      // above always failed first, so this line had never once executed against a repaired page.
+      // `.some()` asserts what the leg actually means — at least one captured failure IS the block.
+      expect(
+        blocked.some((errorText) => /inspector|blocked/i.test(errorText)),
+        `no captured digest failure names the CDP block under ${lng} (captured: ${blocked.join(' | ')})`,
+      ).toBe(true)
 
       page.off('requestfailed', onFailed)
       await cdp.send('Network.setBlockedURLs', { urls: [] })
