@@ -37,8 +37,9 @@ than buried: the forced-**error** leg rides a spec whose own force-verification 
 (E-B), and on a failing run its `ar` iteration is never reached. The **copy** assertions pass on
 every run.
 
-**Criterion 4 / `COPY-04` — the three value clauses CLOSE IN FULL over the `frontend/src/i18n/**/\*.json`
-population, and are BOUNDED over the rendered surface\*\*, with the out-of-population class named:
+**Criterion 4 / `COPY-04` — the three value clauses CLOSE IN FULL over the i18n-JSON population
+(both locale trees under `frontend/src/i18n/`), and are BOUNDED over the rendered surface**, with
+the out-of-population class named:
 
 | clause              | closes in full over                                                                                                         | bounded by                                                                                | instrument                                      |
 | ------------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------- |
