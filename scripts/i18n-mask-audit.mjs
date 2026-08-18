@@ -17,6 +17,7 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { defectiveBindingFrom, resolveI18nBinding } from './lib/i18n-binding.mjs'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -29,8 +30,6 @@ const bundles = {}
 for (const f of readdirSync(EN).filter((f) => f.endsWith('.json'))) {
   bundles[f.replace(/\.json$/, '')] = JSON.parse(readFileSync(join(EN, f), 'utf8'))
 }
-const DEFAULT_NS = 'common' // per src/i18n/index.ts
-
 const has = (ns, path) => {
   const b = bundles[ns]
   if (!b) return false
@@ -63,8 +62,6 @@ const ONE_ARG = /\bt\(\s*'([^']+)'\s*\)/g
 // `defaultValue` inside the options object puts a site back in the silent-default class.
 const OPTS_ARG = /\bt\(\s*'([^']+)'\s*,\s*\{/g
 const HAS_DEFAULT_VALUE = /\bdefaultValue\s*:/
-const USE_NS = /useTranslation\(\s*(?:\[\s*)?'([^']+)'/g
-
 /** Text of the balanced `{…}` starting at `open`; '' when unbalanced. */
 const braceBody = (src, open) => {
   let depth = 0
@@ -77,11 +74,11 @@ const braceBody = (src, open) => {
 
 const isNonKey = (key) => /^\d{4}-\d{2}-\d{2}T/.test(key) || /^https?:/.test(key)
 
-/** Splits a key into [namespace, path] using the colon convention; defaultNS when absent. */
-const splitKey = (key) =>
-  key.includes(':')
-    ? [key.slice(0, key.indexOf(':')), key.slice(key.indexOf(':') + 1)]
-    : [DEFAULT_NS, key]
+/** Splits a key into [explicit namespace, path] using the colon convention. */
+const splitKey = (key) => {
+  const colon = key.indexOf(':')
+  return colon === -1 ? [undefined, key] : [key.slice(0, colon), key.slice(colon + 1)]
+}
 
 let total = 0
 let oneArgTotal = 0
@@ -89,10 +86,22 @@ const naiveMissing = []
 const nsAwareMissing = []
 const oneArgMissing = []
 const nonKeys = []
+const bindingFiles = []
 
 for (const file of walk(SRC)) {
   const src = readFileSync(file, 'utf8')
-  const fileNs = [...src.matchAll(USE_NS)].map((m) => m[1])
+  const binding = resolveI18nBinding(src)
+  const defective = defectiveBindingFrom(binding)
+  if (binding.calls.length > 0) {
+    bindingFiles.push({
+      file,
+      shapes: binding.shapes,
+      namespaces: binding.namespaces,
+      defectiveNamespaces: defective.namespaces,
+      arrayNamespacesDropped: defective.arrayNamespacesDropped,
+      bareCallsUnrecognised: defective.bareCallsUnrecognised,
+    })
+  }
   for (const m of src.matchAll(TWO_ARG)) {
     const key = m[1]
     total++
@@ -101,13 +110,14 @@ for (const file of walk(SRC)) {
       continue
     }
 
-    const [ns, path] = splitKey(key)
+    const [explicitNs, path] = splitKey(key)
 
     // naive: defaultNS only (what a check that ignores useTranslation would see)
-    if (!has(ns, path)) naiveMissing.push({ file, key })
+    const naiveNs = explicitNs ?? 'common'
+    if (!has(naiveNs, path)) naiveMissing.push({ file, key })
 
     // namespace-aware: try explicit ns, then every ns the file declares, then defaultNS
-    const candidates = key.includes(':') ? [ns] : [...fileNs, DEFAULT_NS]
+    const candidates = explicitNs ? [explicitNs] : [...new Set([...binding.namespaces, 'common'])]
     if (!candidates.some((c) => has(c, path))) nsAwareMissing.push({ file, key })
   }
 
@@ -120,8 +130,8 @@ for (const file of walk(SRC)) {
   for (const { key, shape } of rawKeySites) {
     oneArgTotal++
     if (isNonKey(key)) continue
-    const [ns, path] = splitKey(key)
-    const candidates = key.includes(':') ? [ns] : [...fileNs, DEFAULT_NS]
+    const [explicitNs, path] = splitKey(key)
+    const candidates = explicitNs ? [explicitNs] : [...new Set([...binding.namespaces, 'common'])]
     if (!candidates.some((c) => has(c, path))) oneArgMissing.push({ file, key, shape })
   }
 }
@@ -136,6 +146,20 @@ console.log(
       total_two_arg_sites: total,
       total_one_arg_sites: oneArgTotal,
       non_key_literals: nonKeys.length,
+      binding_model: {
+        resolver: 'scripts/lib/i18n-binding.mjs',
+        files_with_bindings: bindingFiles.length,
+        array_binding_files: bindingFiles.filter((entry) => entry.shapes.array > 0).length,
+        bare_binding_files: bindingFiles.filter((entry) => entry.shapes.bare > 0).length,
+        array_namespaces_recovered: bindingFiles.reduce(
+          (total, entry) => total + entry.arrayNamespacesDropped,
+          0,
+        ),
+        bare_calls_recovered: bindingFiles.reduce(
+          (total, entry) => total + entry.bareCallsUnrecognised,
+          0,
+        ),
+      },
       naive_defaultNS_only: {
         sites: naiveMissing.length,
         distinct_keys: distinct(naiveMissing),
