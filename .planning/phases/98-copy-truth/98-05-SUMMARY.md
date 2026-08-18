@@ -6,10 +6,10 @@ wave: 3
 seat: p98-exec-05 (herdr pane wK:p7R)
 head_at_dispatch: ca5ade52f
 head_graded: 13d5094ea # re-pinned mid-wave by orchestrator correction; every file claim below cites a sha
-commits: [a0de9a1a7, fe1b7ba00, 34453e809]
-files_committed: 19
+commits: [a0de9a1a7, fe1b7ba00, 34453e809, 99ae3d3be, 750ef16c3]
+files_committed: 21
 requirements: [COPY-01]
-status: 2 of 3 tasks CLOSED; Task 3 source half CLOSED, its spec half BLOCKED and escalated
+status: 3 of 3 tasks CLOSED; B3 ruled widening executed; the ONE remaining red is ENGREAD-01, owned by Phase 102
 ---
 
 # 98-05 — Criterion 1 on rendered surfaces: two derived populations, two named instances
@@ -22,15 +22,20 @@ seat between two of my commits). Derivations are pinned to **`13d5094ea`**, the 
 
 ## 0. What closed, what did not
 
-| Task                             | Outcome                                                        |
-| -------------------------------- | -------------------------------------------------------------- |
-| 1 — Part A derivation + routing  | **CLOSED.** 6 sites routed, 22 handed off, all gates green     |
-| 2 — Part B derivation + verdicts | **CLOSED.** 6 routed, 4 verdicted data-not-copy, 17 handed off |
-| 3 — week header                  | **Source half CLOSED. Spec half BLOCKED** — see §7, escalated  |
+| Task                             | Outcome                                                                           |
+| -------------------------------- | --------------------------------------------------------------------------------- |
+| 1 — Part A derivation + routing  | **CLOSED.** 6 sites routed, 22 handed off, all gates green                        |
+| 2 — Part B derivation + verdicts | **CLOSED.** 6 routed, 4 verdicted data-not-copy, 17 handed off                    |
+| 3 — week header                  | **CLOSED at source + unit.** Its rendered leg is UNDRIVEN — see below             |
+| **B3 — ruled widening** (§11)    | **CLOSED.** 6 `WaitingQueue.tsx` renders routed; **rendered green, both locales** |
 
-**Nothing in this plan closes the RENDERED ISO-week leg.** It is **UNDRIVEN, blocked by
-`ENGREAD-01`, owner Phase 102** (dated note committed `220abf343`). I did not manufacture a
-rendered green I cannot drive. Details in §6.2.
+`98-copy01-labels.spec.ts` went **4 passed / 2 failed → 5 passed / 1 failed** across the wave.
+
+**The one remaining red is not mine to close, and nothing here pretends otherwise.** The
+**RENDERED ISO-week leg is UNDRIVEN, blocked by `ENGREAD-01`, owner Phase 102** (dated note
+committed `220abf343`). `/engagements` renders no week-grouped list, so `EngagementsList` — the
+only renderer of the `WEEK OF 2026-W27` header — never mounts. I did not manufacture a rendered
+green I cannot drive. Details in §6.2.
 
 ---
 
@@ -295,17 +300,18 @@ Harness validated in **three** polarities:
 
 ## 4. Every green, tagged with locale and role
 
-| green                                   | level                                         | locale      | role                                                                                                        |
-| --------------------------------------- | --------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------- |
-| `SignalRow` source-type label           | **RENDERED** (copy01, observed red at wave 0) | **en + ar** | admin                                                                                                       |
-| copy01 instrument self-test             | rendered, both polarities                     | en + ar     | admin                                                                                                       |
-| `KanbanTaskCard` priority               | source + type-check + **resolution**          | en + ar     | — _not rendered-verified_: copy01's kanban leg drives `/kanban`, a different surface, and it passed at HEAD |
-| `ActivityTimelineSection` source status | source + type-check + **resolution**          | en + ar     | — not rendered-verified                                                                                     |
-| `AssignmentDetailsModal` entity status  | source + type-check + **resolution**          | en + ar     | — not rendered-verified; the modal needs a populated `linked_entities`                                      |
-| Part B, all 6 routed sites              | source + type-check + **resolution**          | en + ar     | — not rendered-verified                                                                                     |
-| Week header + row labels                | source + type-check + **resolution**          | en + ar     | — **rendered leg UNDRIVEN**, see §6.2                                                                       |
-| `pnpm type-check` (`intake-frontend`)   | RC=0, captured on its own line                | —           | —                                                                                                           |
-| `prettier --check` on all 19 files      | clean                                         | —           | —                                                                                                           |
+| green                                   | level                                                             | locale      | role                                                                                                        |
+| --------------------------------------- | ----------------------------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------- |
+| `SignalRow` source-type label           | **RENDERED** (copy01, observed red at wave 0)                     | **en + ar** | admin                                                                                                       |
+| `WaitingQueue` status + priority (B3)   | **RENDERED** (copy01, observed red at wave 0 AND by me this wave) | **en + ar** | admin                                                                                                       |
+| copy01 instrument self-test             | rendered, both polarities                                         | en + ar     | admin                                                                                                       |
+| `KanbanTaskCard` priority               | source + type-check + **resolution**                              | en + ar     | — _not rendered-verified_: copy01's kanban leg drives `/kanban`, a different surface, and it passed at HEAD |
+| `ActivityTimelineSection` source status | source + type-check + **resolution**                              | en + ar     | — not rendered-verified                                                                                     |
+| `AssignmentDetailsModal` entity status  | source + type-check + **resolution**                              | en + ar     | — not rendered-verified; the modal needs a populated `linked_entities`                                      |
+| Part B, all 6 routed sites              | source + type-check + **resolution**                              | en + ar     | — not rendered-verified                                                                                     |
+| Week header + row labels                | source + type-check + **resolution**                              | en + ar     | — **rendered leg UNDRIVEN**, see §6.2                                                                       |
+| `pnpm type-check` (`intake-frontend`)   | RC=0, captured on its own line                                    | —           | —                                                                                                           |
+| `prettier --check` on all 19 files      | clean                                                             | —           | —                                                                                                           |
 
 `pnpm --filter frontend` was never used — it matches zero packages and exits 0. `RC=$?` was captured
 on its own line; `${PIPESTATUS[0]}` is empty in zsh. `timeout` and `tac` were never invoked.
@@ -405,11 +411,11 @@ plan, in neither `files_modified` nor the rev-3 closed reservation. **I did not 
 
 The orchestrator re-derived my six line numbers exactly and **extended the finding**:
 `pages/WaitingQueue.tsx` is declared by **no plan in the phase — 0 of 9, with a live control**. So
-criterion 1 has a **routed rendered surface that nobody owns**. My option 2 (amend scope, ~6-line
-diff plus one key pair — `common:waitingQueue.statuses` and `.priorities` already exist and cover
-the `Assignment` domain except `assigned`) is the orchestrator's recommendation and has gone **up**,
-consolidated with `98-06`'s three escalations. **I am holding on it** — scoped, estimated, not
-executed.
+criterion 1 had a **routed rendered surface that nobody owned**.
+
+**RESOLVED by `RULING-P98A2-13` B3 — the file was DECLARED INTO `98-05` by ruling**, and I then
+executed it. See **§11**. The escalation path worked as designed: observed → escalated as a plan
+defect → ruled → executed. **I did not touch this file before the ruling existed.**
 
 ### 6.2 The RENDERED ISO-week leg is **UNDRIVEN**
 
@@ -445,13 +451,15 @@ park**: reviewed for correctness of _meaning and domain_, not signed off for reg
 
 ## 8. Commits — verified, nothing swept in
 
-| sha         | files | scope                                         |
-| ----------- | ----: | --------------------------------------------- |
-| `a0de9a1a7` |    12 | Part A routing + 4 namespace pairs            |
-| `fe1b7ba00` |     4 | Part B routing, no JSON                       |
-| `34453e809` |     3 | week header + row labels + `engagements` pair |
+| sha         | files | scope                                                           |
+| ----------- | ----: | --------------------------------------------------------------- |
+| `a0de9a1a7` |    12 | Part A routing + 4 namespace pairs                              |
+| `fe1b7ba00` |     4 | Part B routing, no JSON                                         |
+| `34453e809` |     3 | week header + row labels + `engagements` pair                   |
+| `99ae3d3be` |     1 | this SUMMARY                                                    |
+| `750ef16c3` |     3 | **B3 ruled widening** — `WaitingQueue.tsx` + both `common.json` |
 
-**19 files total.** Every commit used `git commit -- <every path spelled out>`, with the pathspec
+**21 distinct files across 5 commits.** Every commit used `git commit -- <every path spelled out>`, with the pathspec
 built from **my own edit table**, never from `git status` or `git diff --name-only` — the tree
 carried 72 uncommitted files belonging to `98-06` at the time. `git add -A` and `git commit -a` were
 never used. `git show --stat HEAD` was read after each commit and named exactly my files.
@@ -526,5 +534,45 @@ the repo is a scope decision, not a worker improvisation (`ACCEPTANCE-P98-EXEC` 
 condition that removes this item: an orchestrator ruling naming a path. Until then the instrument is
 **reproducible from this SUMMARY's description but not runnable from the repo**, and that is the
 honest state, not a closed one.
+
+---
+
+## 11. B3 — the ruled widening, executed
+
+`RULING-P98A2-13` **B3** declared `pages/WaitingQueue.tsx` into `98-05`: six criterion-1 renders on
+a routed surface owned by 0 of 9 plans. Committed at **`750ef16c3`** (3 files, 14+/6−).
+
+**Sites (line numbers at `13d5094ea`):** `:554`, `:715` `{item.priority}`; `:594`, `:755`
+`<span className="capitalize">{item.status}</span>`; `:611`, `:773` the `Status: {item.status}`
+pair. All six route onto the **existing** `common:waitingQueue.priorities` / `.statuses` families
+through the file's bare `useTranslation()` at `:87`, which binds to `translation` — aliased to
+`common.json` at `i18n/index.ts:274,410`. Same element, same classes.
+
+**Domain derived, not inherited — and this mattered.** The ruling names "the missing `assigned` key
+pair", an estimate taken from the `Assignment` TS union. `WaitingItem.status` is typed plain
+**`string`**, so the type is _not_ the domain. The rows come from `useFilteredAssignments` →
+`assignments`, whose `status` is pg enum **`assignment_status` = pending / assigned / in_progress /
+completed / cancelled**. The family held 4 of those 5. So the answer is `assigned` and _only_
+`assigned` — the ruling's singular **confirmed by derivation rather than assumed**. Had the domain
+been wider, more members would have been owed and the ruling's estimate would have under-authored
+the family. `WaitingItem.priority` is a genuine 4-value union already covered 4/4.
+
+**Evidence:**
+
+| leg                                        | result                                                                                                                                                                                         |
+| ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| source, corrected BSD-safe ERE instrument  | `{item.priority}` RED **2** → GREEN **0**; `{item.status}` RED **4** → GREEN **0**, against `13d5094ea`                                                                                        |
+| **resolution** through the BOUND namespace | real i18next, both locales, **`fallbackLng` disabled on `ar`** — `statuses` 5/5, `priorities` 4/4; negative control returns the key and is detected as a miss in both locales                  |
+| **RENDERED**                               | `98-copy01` _waiting-queue rows render status and priority as labels_ — **RED at wave 0** (`98-RED-BASELINE`: 8 bare enum values), **RED on my first run this wave**, **GREEN now**, both legs |
+| spec totals                                | 4 passed / 2 failed → **5 passed / 1 failed**                                                                                                                                                  |
+| type-check, prettier                       | RC=0; clean on all three paths                                                                                                                                                                 |
+
+This is the plan's second genuine **observed-red → rendered-green** closure, and the only one where
+I watched the red myself rather than inheriting it from the wave-0 baseline.
+
+**Commit hygiene:** three paths spelled out from my own edit table — `pages/WaitingQueue.tsx` plus
+**both** `common.json` locales, because D-16 puts the key pair in the same commit as the code. I had
+told the orchestrator I would use "a single-path pathspec"; that was wrong and the orchestrator
+caught it before I acted. `git show --stat HEAD` named exactly those three.
 
 SUMMARY-END
