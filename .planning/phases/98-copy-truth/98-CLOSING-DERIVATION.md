@@ -316,7 +316,29 @@ named, not this phase's.**
 **`NAV-01` is byte-untouched.** Verified rather than claimed: no Phase 98 commit alters its row, and
 this plan's register gate asserts it still reads `Complete (BOUNDED…)` in its Phase 97 shape.
 
-### §4c EVERY UNDRIVEN, NOT-CONSTRUCTED AND HANDOFF LINE FROM ALL NINE SUMMARYs — ONE LIST
+### §4c EVERY UNDRIVEN, NOT-CONSTRUCTED AND HANDOFF LINE FROM ALL **TEN** SUMMARY FILES — ONE LIST
+
+**CORRECTED AT CLOSE, and the correction is the phase's own theme once more.** This heading read
+"ALL NINE SUMMARYs" while the list below cites `98-04b` **four times** — an internal contradiction
+in the one document a later reader treats as the phase's account of itself. **The population is TEN
+SUMMARY FILES, not nine.** The discriminator: `98-04b` is a RIDE-ALONG TRIP — it has a SUMMARY and
+no PLAN — so a by-PLAN count returns nine and a by-FILE count returns ten, and `98-04b` is the
+entire difference between them.
+
+**The same discriminator splits a second census, so BOTH counts are written here rather than one
+being picked.** The terminal `SUMMARY-END` marker — the proof that a writer FINISHED, as distinct
+from the content and commits, which were verified at the time:
+
+| population                                  | with marker | without marker                             |
+| ------------------------------------------- | ----------: | ------------------------------------------ |
+| **TEN SUMMARY FILES** (everything on disk)  |       **6** | **4** — `98-01`, `98-02`, `98-03`, `98-04` |
+| **NINE PLAN summaries** (`98-04b` excluded) |       **5** | the same four                              |
+
+The marker is **ABSENT, not misplaced**, in those four; control: `98-09`'s sits at line 442 of 442,
+and `98-04b`/`05`/`06`/`07`/`08` all end correctly. **Cause: the marker requirement was introduced
+in the wave-3 briefs and waves 1–2 were never back-checked.** **The four are NOT retro-fitted — a
+marker added now would fabricate a proof that a writer finished.** Recorded as a gap, owned by the
+overseer's exec report.
 
 | #   | line                                                                                                                                                                                                                                                                                                                                                      | origin SUMMARY       | owner / disposition                            |
 | --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ---------------------------------------------- |
