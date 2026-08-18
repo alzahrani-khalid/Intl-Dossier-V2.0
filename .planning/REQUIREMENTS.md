@@ -199,6 +199,14 @@ card in both locales.
       need per-string judgment. **Owner: Phase 102 — Staging Data & Debt Tail.** Interaction note:
       Phase 99 mirrors `ar` off settled EN — when this tail lands AFTER Phase 99, the pass MUST
       re-check `ar` mirroring for every string it edits. Filed 2026-08-18 by `RULING-P98A2-02`.
+      **Dated note, 2026-08-18 (`RULING-P98A2-13` B4):** this row also carries the residual
+      hardcoded-literal voice-violation sites Phase 98 named, measured and did NOT repair —
+      `HelpPage.tsx:166`, `useBriefingBooks.ts:164-165` (`message_en`/`message_ar`),
+      `PositionTrackerCard.tsx:93` (line numbers at `b5eb84314`; the class definition and full
+      derivation live in `98-06-SUMMARY.md`). Same class as this row's tail: user-readable copy
+      outside the i18n bundles. **⚠ copy04's `@values` acceptance legs gate on
+      `bundleValues.has(text)` and CANNOT see hardcoded literals by construction** — use the
+      bundle-grep / manual-read instruments recorded in the P98 exec report, not copy04's green.
 
 ### GUIDE-HOLLOW — a popover whose four labelled sections have never had content
 
