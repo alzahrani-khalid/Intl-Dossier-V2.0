@@ -285,6 +285,19 @@ card in both locales.
         colon-form (all sites) vs 37 / 27 (misses) — different populations, deliberately
         unreconciled.
 
+        **MASK-CLASS ROUTING, 2026-08-18 (`RULING-P98A2-12`):** the dynamic-prefix raw-value mask
+        class also lands here — `t('prefix.' + value, value)` sites whose keys do not RESOLVE in
+        the bound namespace, so the raw DB value renders behind the mask. 24 unresolved dynamic
+        prefixes / 19 masking a raw value at `13d5094ea` (P98's bundle-resolving instrument;
+        re-derive, never quote). **⚠ INSTRUMENT BLINDNESS, proven by direct test:** AR-04a's
+        two-arg grep matches only LITERAL second arguments and AR-04b's grep only dot-form
+        literals — BOTH are blind to variable-second-arg dynamic-prefix sites BY CONSTRUCTION.
+        P98's bundle-resolving instrument is the instrument of record for this class; consume it.
+        The broken exemplar (TaskCard cited by a P98 plan as the correct idiom; it does not
+        resolve) is recorded in `98-05-SUMMARY.md`. Every NEW routing P98 made was
+        RESOLUTION-checked through the bound namespace, both locales — existence-in-JSON is not
+        resolution, which is exactly what made the exemplar read as correct.
+
   > **AR-04a is destructively satisfiable if you only run check (a) — measured, 2026-08-15,
   > `RULING-P92-08`.** A large fraction of mask sites reference keys that **do not resolve in the EN
   > locale at all**; they render today _only_ because of the English default. Running
