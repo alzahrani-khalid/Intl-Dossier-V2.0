@@ -555,7 +555,7 @@ Plans:
 **Wave 2** _(the two contended files, one owner each)_
 
 - [x] 98-03-PLAN.md — COPY-08+COPY-07 atomic: EO popover keys + guard deletion + Crown/colors, stats-card label, dossier.json Deadline
-- [ ] 98-04-PLAN.md — common.json lane: entityLinks 82-key census both locales, localized default toast, recurrence colon-routing, regions casing, dot-form class sweep
+- [x] 98-04-PLAN.md — common.json lane: entityLinks 82-key census both locales, localized default toast, recurrence colon-routing, regions casing, dot-form class sweep
 
 **Wave 3** _(derived populations, disjoint files)_
 
@@ -699,7 +699,7 @@ Plans:
 | 95. Routes That Don't Render | v10.0 | 0/TBD | Not started | — |
 | 96. Real Numbers | v10.0 | 11/11 | Complete   | 2026-08-17 |
 | 97. Reachability | v10.0 | 0/TBD | Not started | — |
-| 98. Copy Truth | v10.0 | 3/9 | In Progress|  |
+| 98. Copy Truth | v10.0 | 4/9 | In Progress|  |
 | 99. Arabic Coverage | v10.0 | 0/TBD | Not started | — |
 | 100. Security Posture — Database & Client | v10.0 | 0/TBD | Not started | — |
 | 101. CI Gates Green | v10.0 | 0/TBD | Not started | — |

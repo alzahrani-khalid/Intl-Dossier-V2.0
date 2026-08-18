@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v10.0
 milestone_name: Trust & Correctness
 status: Ready to execute
-last_updated: '2026-08-18T01:30:00.072Z'
+last_updated: '2026-08-18T01:58:21.303Z'
 progress:
   total_phases: 13
   completed_phases: 6
   total_plans: 80
-  completed_plans: 71
+  completed_plans: 72
   percent: 46
 ---
 
@@ -85,7 +85,42 @@ deliberately left open** (its CTA/exclamation/first-person populations are live 
 elsewhere — `elected-officials:list.add` still reads `Add Elected Official`). `NAV-01`'s row was
 not touched. Seven sibling guide bodies still hollow — `GUIDE-HOLLOW-01` → P102, the tracked
 asymmetry.
-Next command: `/gsd:execute-phase 98` (Copy Truth) — 98-04 completes wave 2.
+**98-04 EXECUTED 2026-08-18 (wave 2 complete) — the `common.json` lane, the phase's largest single
+item.** Three code commits, seven files, zero exogenous paths. **`entityLinks` is fully authored in
+BOTH locales: 97 leaves** — 80 static paths (`6b919c856` core 61 + `58109e47b` aiSuggestions 19)
+plus both dynamic families, whose domains were **derived from the `LinkType`/`EntityType` unions in
+`backend/src/types/intake-entity-links.types.ts`**, not from the bundle. Delta vs D-24's floor of
+82, stated: the derived STATIC set is **80**; the two "missing" rows are the dynamic family
+prefixes, not leaves — 80 + 2 = the ruled 82, and 80 matches `98-copy02`'s independently written
+hardcoded list exactly. Registration is satisfied **by construction**: the subtree merged into
+`common.json` because all 8 consumers call bare `useTranslation()`, whose defaultNS is the already
+registered `common` namespace (D-10) — **zero component edits**. **Both polarities at run time:**
+RED re-observed at my own heads (`d6a61bf22`: `grep -c entityLinks` = **0** in both bundles;
+`58109e47b`: `98-copy06` **2 failed**, the `ar` leg reading `Operation completed successfully` off
+the toast), then **8 passed / 1 failed at `0d69760bb`**, `chromium-en --workers=1`, role **admin**.
+**Criterion 6 CLOSES on a REAL mutation in BOTH locales** — a kanban TASK stage move raising
+`Changes saved` / `تم حفظ التغييرات`, banned literal absent from toast and page. The single red is
+the **UNDRIVEN** intake leg, named not silent: `/intake/queue` renders `0 items` / `No Pending
+Reviews`, and the failure artifact's page snapshot carries **24 links and zero `intake/tickets`
+hrefs** — instrument-controlled at my head rather than quoted from 98-01. **D-22 population
+RE-DERIVED, never quoted: 43 occurrences / 37 distinct paths** (the ruling said 16; delta +27). All
+43 flipped dot→colon in **one commit**, conservation proven against the true parent blob
+(`PRE 43 == POST 43`, dot-form 0, 37 distinct preserved). **The B6 claim was TESTED:** the stock
+finder over the real repo reports 1778 two-arg sites and 473 misses while `entityLinks.title` and
+`calendar.recurrence` appear **nowhere** in its output. The extension went past the plan's one-arg
+letter on purpose — the population is the **behaviour** ("no string fallback ⇒ raw key"), and
+`t('k', {opts})` without `defaultValue` is **409 sites** of the same behaviour a shape-matcher
+cannot see. Class sweep verdicts: repaired-here **RESOLVED** (0 unresolved `entityLinks`/
+`calendar.recurrence`/`regions`); `common.loading` + `afterActions.loadError` **never broken**
+(controlled — absent from the miss list); silent-default mask **473 sites recorded, not swept**
+(P99 `AR-04a`); **raw-key remainder 306 sites / 280 distinct / 64 files has NO owner and is named,
+not guessed at.** `COPY-06` marked complete. **`COPY-02` deliberately NOT marked** — whether it
+closes on its five named instances or on the whole class is an acceptance-semantics question, and
+it went to the overseer with both readings rather than being resolved by a worker. `COPY-04` stays
+open. **Two one-line repairs are HELD, disclosed before any commit that would contain them**
+(`RULING-P98A2-05`): `calendar.months.january` in the same recurrence file, and the 7 `common.*`
+raw keys, one of which renders on the entity-search dialog this plan repaired.
+Next command: `/gsd:execute-phase 98` (Copy Truth) — wave 3.
 
 Phase 97 (reachability) — **EXECUTED 2026-08-17, accepted by `RULING-P97-21`.**
 12 of 12 plans; every `## BLOCKED` read (**5 empty / 7 substantive**, each traced to a ruling).
@@ -518,8 +553,9 @@ file. Bookkeeping debt only — no open functional work.
 
 ## Performance Metrics
 
-| Phase | Plan | Duration | Notes                                                                              |
-| ----- | ---- | -------- | ---------------------------------------------------------------------------------- |
-| 98    | 01   | ~2h      | 3 tasks · 9 files · 8 oracles proven RED at HEAD                                   |
-| 98    | 02   | ~1h      | 2 tasks · 6 files · 4 new checks drilled RED; 60 debt rows / 97 sites              |
-| 98    | 03   | ~1h      | 2 tasks · 4 files · RED 4/5 → GREEN 5/5 both locales; criterion 7 + COPY-07 closed |
+| Phase | Plan | Duration | Notes                                                                                                |
+| ----- | ---- | -------- | ---------------------------------------------------------------------------------------------------- |
+| 98    | 01   | ~2h      | 3 tasks · 9 files · 8 oracles proven RED at HEAD                                                     |
+| 98    | 02   | ~1h      | 2 tasks · 6 files · 4 new checks drilled RED; 60 debt rows / 97 sites                                |
+| 98    | 03   | ~1h      | 2 tasks · 4 files · RED 4/5 → GREEN 5/5 both locales; criterion 7 + COPY-07 closed                   |
+| 98    | 04   | ~2h      | 3 tasks · 7 files · 97 entityLinks leaves ×2 locales; criterion 6 closed both locales; 43→0 dot-form |
