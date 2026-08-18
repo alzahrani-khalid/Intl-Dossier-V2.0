@@ -260,6 +260,17 @@ card in both locales.
         grep -rhoE "t\(\s*'[^']*:[^']*'" frontend/src --include='*.ts' --include='*.tsx' | wc -l   # colon-form
         ```
 
+        **Dated note, 2026-08-18 (`RULING-P98A2-10` item 3):** Phase 98 derived this row's
+        unresolved-dot-form population at ORDER HUNDREDS — 306 distinct unresolved keys by one
+        instrument, 353 across 42 files by another; the gap is population definition, deliberately
+        unreconciled, and neither number is frozen (re-derive with the commands above plus the
+        phase's `98-copy02` detector). Phase 98's criterion 2 closed BOUNDED: named instances +
+        ruled class populations (entityLinks 82, `calendar.recurrence`, `calendar.months`,
+        `common.*` ×7) + no raw key on oracle-driven surfaces. **The long tail is THIS row's
+        population, and Phase 99 consumes Phase 98's instrument and derivation rather than
+        re-discovering it** — the copy02 DOM detector (extended for the `common.*` shape) and the
+        census tooling are the instruments of record.
+
   > **AR-04a is destructively satisfiable if you only run check (a) — measured, 2026-08-15,
   > `RULING-P92-08`.** A large fraction of mask sites reference keys that **do not resolve in the EN
   > locale at all**; they render today _only_ because of the English default. Running
