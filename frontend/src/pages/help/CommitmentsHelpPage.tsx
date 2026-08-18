@@ -148,7 +148,7 @@ export function CommitmentsHelpPage() {
                   isRTL={isRTL}
                 />
                 <AttributeCard
-                  title={isRTL ? 'تاريخ الاستحقاق' : 'Due Date'}
+                  title={isRTL ? 'الموعد النهائي' : 'Deadline'}
                   description={isRTL ? 'الموعد النهائي للإنجاز' : 'Deadline for completion'}
                   icon={Clock}
                   isRTL={isRTL}
@@ -191,8 +191,8 @@ export function CommitmentsHelpPage() {
                 </div>
                 <p className="text-sm text-muted-foreground mt-4 text-start">
                   {isRTL
-                    ? 'يمكن أيضًا إلغاء الالتزامات أو تصبح متأخرة تلقائيًا عند تجاوز تاريخ الاستحقاق'
-                    : 'Commitments can also be cancelled, or become overdue automatically when past due date'}
+                    ? 'يمكن أيضًا إلغاء الالتزامات أو تصبح متأخرة تلقائيًا عند تجاوز الموعد النهائي'
+                    : 'Commitments can also be cancelled, or become overdue automatically when past the deadline'}
                 </p>
               </div>
 
@@ -285,8 +285,8 @@ export function CommitmentsHelpPage() {
                       </li>
                       <li className="text-start">
                         {isRTL
-                          ? 'املأ النموذج: العنوان، الوصف، تاريخ الاستحقاق، الأولوية، المالك'
-                          : 'Fill in the form: Title, Description, Due Date, Priority, Owner'}
+                          ? 'املأ النموذج: العنوان، الوصف، الموعد النهائي، الأولوية، المالك'
+                          : 'Fill in the form: Title, Description, Deadline, Priority, Owner'}
                       </li>
                       <li className="text-start">
                         {isRTL
@@ -378,7 +378,7 @@ export function CommitmentsHelpPage() {
                         {isRTL ? 'اختر الحالة الجديدة' : 'Select the new status'}
                       </li>
                       <li className="text-start">
-                        {isRTL ? 'سيتم التحديث فورًا!' : 'Update happens immediately!'}
+                        {isRTL ? 'سيتم التحديث فورًا' : 'Update happens immediately'}
                       </li>
                     </ol>
                     <Card className="bg-warning/5 dark:bg-warning/20 border-warning/20 dark:border-warning/70">
@@ -405,8 +405,8 @@ export function CommitmentsHelpPage() {
                   <AccordionContent className="space-y-4">
                     <p className="text-sm sm:text-base text-start">
                       {isRTL
-                        ? 'بدلاً من الحذف، نوصي بإلغاء الالتزامات للحفاظ على السجل:'
-                        : 'Instead of deleting, we recommend cancelling commitments to preserve history:'}
+                        ? 'بدلاً من الحذف، ألغِ الالتزامات للحفاظ على السجل:'
+                        : 'Instead of deleting, cancel commitments to preserve history:'}
                     </p>
                     <ol
                       className={`list-decimal ${isRTL ? 'list-inside' : 'ms-4'} space-y-2 text-sm sm:text-base`}
@@ -494,8 +494,8 @@ export function CommitmentsHelpPage() {
                 </h3>
                 <p className="text-sm sm:text-base text-start mb-4">
                   {isRTL
-                    ? 'المرشحات المطبقة يتم حفظها في عنوان URL. يمكنك نسخ الرابط ومشاركته مع الزملاء!'
-                    : 'Applied filters are saved in the URL. You can copy and share the link with colleagues!'}
+                    ? 'المرشحات المطبقة يتم حفظها في عنوان URL. يمكنك نسخ الرابط ومشاركته مع الزملاء.'
+                    : 'Applied filters are saved in the URL. You can copy and share the link with colleagues.'}
                 </p>
                 <Card className="bg-muted/50">
                   <CardContent className="pt-4">
