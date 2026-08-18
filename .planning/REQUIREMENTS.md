@@ -24,7 +24,9 @@ verified sound across six lanes).
 
 - [x] **AUTH-01**: A user can sign out from the running app. The sidebar user card (or an equivalent shell control) exposes a working logout; `NavUser` — which already implements it and is imported nowhere — is mounted or its `logout()` path is wired to the live shell. **[V]**
 - [x] **AUTH-02**: Edge functions validate the caller's JWT. The 133 `index.ts` files pinning `supabase-js@2.3x` are migrated to `@supabase/supabase-js@2` and pass the caller's token explicitly — `getUser(token)` — so a valid session is not rejected. Verify by re-deriving the population, never by re-quoting the count: `grep -rlE '@supabase/supabase-js@2\.3[0-9]' supabase/functions --include='index.ts' | wc -l` → `0`. **[V]**
+
   > **Wording corrected 2026-08-15** (Phase 92 planning, `RULING-P92-02`). This read "the 133 of 303 functions pinning `supabase-js@2.3x` **with** bare `getUser()`". That conjunction is false: 133 `index.ts` files pin `2.3x`, 163 files call bare `auth.getUser()`, and only **53** are both — no single set satisfied the sentence as written. The 133 came from the audit's own pin-only command (`audits/live-audit-2026-08-15/adminops.md:97`); the `with bare getUser()` clause was introduced when `INDEX.md` consolidated the six lanes. Scope decided by the operator: migrate all 133.
+
 - [x] **AUTH-03**: Session invalidation redirects the open tab. An `onAuthStateChange` subscription at the app root forces `/login` on `SIGNED_OUT`, instead of the page decaying into a "Member/Member" ghost state with the admin nav silently removed.
 - [x] **AUTH-04** _(closed 2026-08-15 **PARTIAL**, `RULING-P92-49`: the error half was proven live; the **data half is deferred** (`DELEG-01`→P93, `SEED-DELEG-01`→P102). `92-VERIFICATION.md` records ⚠️ PARTIAL.)_: `/delegations` reports auth failure as failure. The `my-delegations` calls authenticate, and a rejected query renders an error state rather than "You haven't granted any delegations."
 - [x] **AUTH-05** _(closed 2026-08-15 **PARTIAL**, `RULING-P92-49`: the control exists and is human-reachable, but **the e2e was red and the click never executed**. `92-VERIFICATION.md` records ⚠️ PARTIAL. Not a behavioural proof of the action.)_: `/settings` is reachable from navigation and exposes the sign-out control.
@@ -70,12 +72,16 @@ verified sound across six lanes).
 - [x] **WRITE-06**: Report generation works and scheduled reports can be created — the client/function field-name contract agrees (`type` vs `template`), and the mutually recursive `custom_reports` ↔ `report_shares` SELECT policies no longer raise `42P17`. **[V]**
 - [x] **AUDIT-DROP-01**: **Security audit events are silently discarded by the backend.** Filed 2026-08-15 from Phase 93 planning (`RULING-P93-01` D-54 addendum), found while discharging `AUDIT-42703`'s live-relation condition. `backend/src/services/auth.service.ts:847` (`logSecurityEvent`) does `supabaseAdmin.from('audit_log').insert({ user_id, action, resource_type, details, timestamp })`. **`resource_type` and `details` are not columns of `public.audit_log`** — its real columns are `id, tenant_id, entity_type, entity_id, action, user_id, timestamp, old_values, new_values, ip_address, user_agent, session_id, additional_context` — so every such insert fails, and the call is wrapped in a `try/catch` that only calls `logError`. The failure is therefore invisible to the caller and no security event has ever been recorded through this path. Same class as `TRUST-01` (a failure rendered as success), on a security path, and **not** covered by any Phase 93 criterion — which is why it is filed here rather than folded. Fix: map to the real columns (`entity_type: 'security'`, `additional_context: details`), and stop swallowing the insert error. **[V]** — column list and the code site both re-derived against live staging `zkrcjzdemdmwhearhfgg`, 2026-08-15.
   - **CORRECTED 2026-08-16 (plan 94-10, `RULING-P94-04` cross-cutting order 1): the filed fix above is INCOMPLETE and would still have written zero rows.** Mapping `resource_type→entity_type` and `details→additional_context` leaves the insert failing on **`tenant_id` and `entity_id`**, which are both **NOT NULL with no default**. Derivation, run live against staging `zkrcjzdemdmwhearhfgg` 2026-08-16:
+
     ```sql
     SELECT column_name, is_nullable, column_default FROM information_schema.columns
     WHERE table_schema='public' AND table_name='audit_log' AND is_nullable='NO';
     ```
+
     → `id` (default `gen_random_uuid()`), `timestamp` (default `now()`), and `tenant_id`, `entity_type`, `entity_id`, `action`, `user_id` — the last five with **no default**. The only writers that have ever succeeded against this table are the DB triggers (`audit_trigger_function`, attached to 11 tables), which take `NEW.tenant_id` from the audited row. A security event has no audited row, and there is no tenant column anywhere on the user side: `public.users` has only `default_organization_id` and `public.profiles` only `organization_id`.
+
   - **A3 resolution (`RULING-P94-04`), as implemented by plan 94-06:** tenant is DERIVED, never invented — `COALESCE(profiles.organization_id, users.default_organization_id)`, queried by `profiles.user_id = <uid>` because `profiles` has **no `id` column**. **No sentinel tenant.** If neither resolves, the insert is **SKIPPED** and the skip is logged at ERROR level naming the user — an unwritable audit row is recorded as a loud absence, never as a fabricated one. `entity_id` is honestly the subject user's id (the signature carries one id, who is both actor and subject).
+
 - [x] **AUDIT-ZERO-01**: **20 edge functions write an audit-log shape that `public.audit_logs` has never had, and drop the failures silently.** Filed 2026-08-15 from Phase 93 planning, same ruling. `audit_logs` holds **0 rows** despite 32 files inserting into it. Cause is **column mismatch, not dead code and not RLS**: 20 of the 32 insert an `event_type` / `resource_type` / `changes` / `metadata` / `target_user_id` shape, and **none of those five is a column** of `audit_logs` (real columns: `id, entity_type, entity_id, action, old_values, new_values, user_id, user_role, ip_address, user_agent, required_mfa, mfa_verified, mfa_method, correlation_id, session_id, created_at`). An `INSERT` naming a nonexistent column cannot succeed (`42703` / PostgREST `PGRST204`), and most sites `await` the insert without destructuring `error`, so the drop is silent. Representative: `supabase/functions/assign-role/index.ts:244`. Several of the remaining 12 also carry non-column keys (`actor_id`, `details`, `metadata`); the genuinely schema-correct writers are the `intake-tickets-*` family (6 files) plus `intake-classification`, whose absence of rows is explained by those flows never having been exercised on staging rather than by any defect. **Population definition:** files under `supabase/functions` containing `from('audit_logs').insert`; top-level payload keys compared against `information_schema.columns`. **Outside it:** nested-object keys were not individually validated, `.upsert()` and RPC-mediated writes were not searched, and the backend Express tree was searched separately (see `AUDIT-DROP-01`). Fix: one audit-write helper with the real column set, error surfaced not swallowed. **[V]**
   - **POPULATION CORRECTED 2026-08-16 (plan 94-10, D-20 / `RULING-P94-04` cross-cutting order 1). The filed "20 of 32" is WRONG, and it is wrong because of a live instrument bias, not a miscount: the filed derivation matched only the SINGLE-quote form `from('audit_logs')`.** The corrected population rule matches **both quote styles** — files under `supabase/functions` whose source matches `from('audit_logs')` **OR** `from("audit_logs")`, with an `.insert(` / `.upsert(` chained within 900 characters, top-level object-literal keys diffed against the live column set. Re-derived under that rule: **38 files** match, of which **36 are writers — 27 broken, 9 clean — and 2 are read-only** (`dossier-export-pack` timeline select, `intake-audit-logs`). The 9 clean are `auth-verify-step-up`, `delegate-permissions`, `intake-classification`, `intake-tickets-assign`, `intake-tickets-create`, `intake-tickets-get`, `intake-tickets-triage`, `intake-tickets-update`, `revoke-delegation`. Bad-key classes across the 27: the filed `event_type`/`resource_type`/`resource_id`/`target_user_id`/`metadata`/`changes`/`after` class, plus `details` (5 files), `actor_id` (2), `changed_by`, and `assignee_id`/`override_reason`/`wip_status`/`capacity_warning` (`assignments-manual-override`).
   - **A writer OUTSIDE BOTH filed populations**, found by the 94-RESEARCH sweep and repaired by plan 94-06: **`backend/src/services/mou.service.ts:636`** (`logStateTransition`) writes `audit_logs` (plural) **from the backend**, with the non-column key `changes` and no `user_role` (NOT NULL), awaited without destructuring `error` — the same silent-drop class. It fell between the two entries because `AUDIT-ZERO-01` searched only `supabase/functions` and `AUDIT-DROP-01` searched the backend only for the singular `audit_log`.
@@ -154,16 +160,18 @@ verified sound across six lanes).
 - [ ] **COPY-06**: **The global mutation success toast is a hardcoded English literal that fires for every mutation in the application.** `frontend/src/lib/query-client.ts:71` — `toast.success('Operation completed successfully')`, with no `t()` and no per-mutation specificity, as the TanStack Query `mutations.onSuccess` default. Every successful write in the app announces itself in English with copy that names neither what was saved nor where. Filed 2026-08-16 from Phase 94 planning: `WRITE-04`'s text names this exact string, and `RULING-P94-01` decided the narrow reading — Phase 94 fixes only the no-op that makes it fire spuriously, and does **not** edit an app-wide handler no Phase 94 oracle watches. **Owner: Phase 98 — Copy Truth**, whose criterion 4 (project voice: sentence case, no dev-facing copy) and criterion 2 (no raw key / no untranslated copy) both cover it; its blast radius is every mutation, so it wants a phase whose oracles span the app rather than five write paths.
   - **Filed per `RULING-P94-01` order 3, which suggested the id `TOAST-01`.** Placed as `COPY-06` because every id in this register is section-prefixed and the owner phase is 98 — flagged for approve-as-placed (D-73 pattern). The suggested id is recorded here so the ruling stays traceable.
   - **Why tracked rather than noted:** it was first written down as a CONTEXT "deferred idea", and an audit line is not a queue. Nothing fails if a deferred idea is never read.
-- [ ] **COPY-07**: **The dossier-type stats card ships a hardcoded English label.** `"% of total
-active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` (line 228 at
-      `c94d7debe`; the string is the anchor, not the line number) renders untranslated in both
+- [x] **COPY-07**: **The dossier-type stats card ships a hardcoded English label.** `"% of total
+
+active dossiers"`at`frontend/src/components/dossier/DossierTypeStatsCard.tsx`(line 228 at
+     `c94d7debe`; the string is the anchor, not the line number) renders untranslated in both
       locales — no `t()`. Named by Phase 97 as a deliberately-not-covered residue with owner
       Phase 98 (`97-CLOSING-DERIVATION.md:227`, `97-05-SUMMARY.md:110-112`); it carried no register
       row until now. Filed 2026-08-18 by `RULING-P98A2-01-SCOPE` (F2-a), register-first so the plan
-      neither silently absorbs nor silently drops it. **Owner: Phase 98 — Copy Truth**, roadmap
-      criterion 1's class (English literal where a display label belongs); closes on the rendered
-      card in both locales.
-- [ ] **COPY-08**: **The Elected Officials type-guide popover: five missing `dossier:` keys AND the
+neither silently absorbs nor silently drops it. **Owner: Phase 98 — Copy Truth**, roadmap
+criterion 1's class (English literal where a display label belongs); closes on the rendered
+card in both locales.
+
+- [x] **COPY-08**: **The Elected Officials type-guide popover: five missing `dossier:` keys AND the
       render guard, atomic.** `typeDescription.elected_official` plus the four
       `typeGuide.elected_official.{whenToUse,examples,commonLinks,notFor}` entries are absent from
       BOTH locales (verified `i18n/{en,ar}/dossier.json` at `c94d7debe`), and
@@ -180,6 +188,7 @@ active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` 
       at close-out if criterion 7 goes green. Glyph coherence rides this row per
       `RULING-P98A2-03`: `getTypeIcon`/`getTypeColors` gain `elected_official` cases (Crown +
       WR-07 country-fallback colors) in the same atomic change.
+
 - [ ] **COPY-09**: **The sentence-case long tail: ~4.5k Title Case strings across the EN bundle.**
       Two independently-written instruments measured 4,471 / 4,562 Title-Case candidates among
       16,045 EN i18n string values (129 namespace files) — ~28% of all EN copy. Phase 98's
@@ -235,6 +244,7 @@ active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` 
         ```
 
         **Required ORDER — authoring first, deletion last:**
+
         1. Author the missing keys in `en` **and** `ar`.
         2. Verify every referenced key resolves in both locales.
         3. **Only then** drop the second arguments.
@@ -346,6 +356,7 @@ active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` 
       paths. This requirement is the **pre-existing, persisted** half and was deliberately not swept
       there. Phase 92's "query cache empty after sign-out" criterion establishes the in-memory cache and
       says nothing about `localStorage`.
+
 - [ ] **CLIENTSEC-02**: **Production builds ship verbatim application sources.** `vite.config.ts:141`
       sets `sourcemap: true` for production; at `87b2d040e` the built `dist/assets` holds **305
       `.map` files whose `sourcesContent` embeds source files verbatim** — every component, hook,
@@ -525,23 +536,29 @@ active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` 
     `dossiers WHERE type='engagement'` = **5**, none deleted; `engagement_dossiers` = **3**.
     Independently predicted from P96's COUNT-02 measurement (5 vs 3) BEFORE querying — the numbers
     match exactly.
+
   - **The UI shows an ERROR, not an empty state.** The rendered string "Unable to load data" is
     the shared P93 error title at `frontend/src/i18n/en/common.json:246`, used by
     `QueryErrorBoundary`/`DossierErrorBoundary` — the empty state is a different component.
+
   - **RLS is EXCLUDED as the cause by the project's own discriminator:** an RLS denial returns
     empty 200s here, which renders the EMPTY state. An error state means the request actually
     failed.
+
   - **Bounded consequence, stated not hidden:** three Phase 97 observations close **UNABLE TO
     MEASURE with this cause named**, never as passes — both `97-digests-tab.spec.ts` tests
     (they enter through `openFirstEngagementWorkspace`) and the `engagements` row of
     `97-list-create-affordances.spec.ts`. **Criterion 3 therefore closes as behaviourally proven
     on 7 of the 8 list pages plus its positive control** — a 7-of-8 STATED is worth more than an
     8-of-8 IMPLIED.
+
   - **NOT repaired in Phase 97**: the read path is outside every P97 plan's `files_modified`, and
     repairing an unowned read path requires a further ruling.
+
   - **Owner: Phase 102 — Staging Data & Debt Tail.** Placed there rather than with P100's RLS work
     because the RLS branch is excluded above; if execution finds the cause IS authorization after
     all, the row moves to P100 and says so.
+
   - **Dated note, 2026-08-18 (`RULING-P98A2-05` E2):** Phase 98's criterion-1 ISO-week leg is
     ALSO blocked behind this row — `WEEK OF 2026-W27` has no rendered surface while `/engagements`
     errors. P98 lands the localized week-header REPAIR (98-05, source + unit oracle) and closes
@@ -559,11 +576,14 @@ active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` 
   - **Measured on the live stack** (Phase 97, polling every 50 ms): first non-empty content at
     `/settings/notifications` **968 ms**, `/settings/email-digest` **648 ms**, versus the passing
     sibling `/settings/calendar-sync` **344 ms**.
+
   - **Why it is a real defect and not just a test nuisance:** a spinner with no accessible text is
     invisible to a screen reader exactly as it was invisible to the oracle's `innerText` probe.
     The test failure was the symptom that surfaced it.
+
   - **Phase 97 did NOT fix it** — the oracle was corrected instead (`RULING-P97-13`: the criterion
     was TRUE and the oracle was sampling load timing while claiming to measure rendering).
+
   - **Owner: Phase 99 — Arabic & Accessibility** (a11y backlog).
 
 ### PARALLEL-TRUTH — copies of a truth that already has a canonical home
@@ -579,17 +599,22 @@ active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` 
       `DOSSIER_CARD_TYPES` in `frontend/src/lib/dossier-type-guards.ts`:
   - `frontend/src/components/dossier/DossierTypeGuide.tsx:380` — `const types: DossierType[] = [ …7… ]`,
     the DB-7 **in a FOURTH distinct order**.
+
   - `frontend/src/components/dossier/wizard/hooks/useDraftMigration.ts:14` —
     `VALID_TYPES: readonly string[] = [ …7… ]`, the DB-7.
+
   - `frontend/src/components/keyboard-shortcuts/CommandPalette.tsx:305` —
     `DOSSIER_TYPE_ORDER: string[] = [ …8… ]`, the CARD-8; its own comment says "all 8 dossier types".
     Explicitly NOT folded into `97-10` Task 2, whose action forbids unrelated palette edits.
+
   - **Deliberately NOT filed:** `pages/dossiers/DossierListPage.tsx:904`
     `entityTypes={['dossier', …the 7]}` is a search-entity vocabulary carrying a member the dossier
     type set does not have — legitimately its own set, not a copy.
+
   - **Why they do not disagree today, and why that is not reassurance:** they agree by AUTHORSHIP,
     not by construction. Nothing prevents the next edit from making them disagree and nothing
     announces it when they do.
+
   - **Owner: Phase 102 — Staging Data & Debt Tail.** The phase assignment is the closing plan's
     judgement — `97-NAV04-DECISIONS.md` §6 named the filer, not an owning phase — placed beside the
     other class-residue rows (`GATESTD-*`, `WRITER-ROUTE-01`, `INSERT-SYNC-01`).
@@ -613,19 +638,24 @@ active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` 
     `beforeLoad` 1; `routes/_protected/admin/ai-usage.tsx` → 2 / 2;
     `routes/_protected/monitoring.tsx` → **0 / 0**. Control: **9** route files under
     `routes/_protected/` do use `requireAdmin`, so the zero is a measurement, not a failed sweep.
+
   - **THE FINDING IS NOT THAT PHASE 97 OPENED A DOOR.** The route was unguarded before and
     reachable by URL. **Phase 97 changed its CONTEXT**: it placed an unguarded route into an
     admin-gated group, so **group membership now implies a guarantee the route does not honour.**
+
   - **Why nobody caught it in-phase:** the decision table exercised that destination **only as an
     admin** (row 8, "same role as row 5"), so the property whose absence this describes was never
     tested. Every P97 sweep hunted for things UNREACHABLE; none asked what became MORE reachable.
+
   - **RESOLVABLE IN EITHER DIRECTION — both are named so P100 does not inherit the assumption
     that guarding is the only answer:**
     1. **Guard the route** (`beforeLoad: requireAdmin`, matching its two siblings), or
     2. **Stop presenting it as an Administration peer** (move or ungroup the nav entry).
        Which is correct is a **product question about who `/monitoring` is for**, not a technical one.
+
   - **NOT fixed in Phase 97** — outside every plan's `files_modified`, and the choice above is not
     an orchestrator's to make.
+
   - **Owner: Phase 100 — RLS & Residue.**
 
 ### PREVIEW-HOLLOW — an admin route nobody can reach, configuring a table nobody reads
@@ -637,13 +667,16 @@ active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` 
       and no phase, row or backlog item claimed the route.
   - **Finding 1 — unreachable.** Zero inbound links in the live nav; Phase 97 recorded it
     `OWNED-ELSEWHERE-UNTOUCHED` in `97-NAV04-DECISIONS.md` rather than adding a nav entry.
+
   - **Finding 2 — hollow.** `entity_preview_layouts` is read and written **only** by
     `usePreviewLayouts.ts`, whose **sole importer is the admin route itself** (verified: one
     importer). Its declared consumers — hover previews, search results, embedded references —
     never read it. The feature configures nothing.
+
   - **NOT DELETED IN PHASE 97, and the reason is inherited rather than re-derived:** a route-only
     deletion would leave an **ORPHAN TABLE with no code trace of its purpose**, which is strictly
     worse than today. The finishing migration was out of Phase 97 scope, so the route stands.
+
   - **Owner: Phase 102 — Staging Data & Debt Tail**, with the other debt-tail rows.
 
 ### LIVE — v7.0 live verification (HARDWARE-GATED, unchanged from v9.0)
@@ -718,7 +751,9 @@ Every v1 requirement maps to exactly one phase. **This table is the single sourc
 requirement count — derive it, do not restate it elsewhere.**
 
 ```bash
+
 # total v1 requirements (both derivations agree)
+
 grep -cE '^- \[[ x]\] \*\*[A-Z]+-[0-9]+\*\*' .planning/REQUIREMENTS.md   # requirement bullets
 grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # traceability rows
 ```
@@ -776,8 +811,8 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | COPY-04 | Phase 98 — Copy Truth | Pending |
 | COPY-05 | Phase 98 — Copy Truth | Pending |
 | COPY-06 | Phase 98 — Copy Truth | Pending |
-| COPY-07 | Phase 98 — Copy Truth | Pending |
-| COPY-08 | Phase 98 — Copy Truth | Pending |
+| COPY-07 | Phase 98 — Copy Truth | Complete |
+| COPY-08 | Phase 98 — Copy Truth | Complete |
 | GUIDE-HOLLOW-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | COPY-09 | Phase 102 — Staging Data & Debt Tail | Pending |
 | AR-01 | Phase 99 — Arabic Coverage | Pending |

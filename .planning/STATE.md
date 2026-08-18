@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v10.0
 milestone_name: Trust & Correctness
 status: Ready to execute
-last_updated: '2026-08-18T01:12:01.422Z'
+last_updated: '2026-08-18T01:30:00.072Z'
 progress:
   total_phases: 13
   completed_phases: 6
   total_plans: 80
-  completed_plans: 70
+  completed_plans: 71
   percent: 46
 ---
 
@@ -62,7 +62,30 @@ class the plan does not name — **five components declare their own local `form
 `lib/i18n/relativeTime.ts` exports `formatRelativeTimeShort` (the source of `98-copy05`'s `/activity [ar]`
 `109d` RED). They are hand-rolled, carry no date-fns import, so check 5 cannot see them, and five of
 them shadow the identifier 98-07 must import. Owner: 98-07's enumeration, overseer to rule.
-Next command: `/gsd:execute-phase 98` (Copy Truth) — wave 2 next (98-03, 98-04).
+**98-03 EXECUTED 2026-08-18 (wave 2) — the phase's first REPAIR, and its one atomic unit.** The
+five EO `dossier:` keys in **both** locales, the Phase-97 render-guard deletion, and the two
+`DossierTypeGuide` switch arms landed in **one commit, `e354c8c94`, four files** (D-12/D-27) —
+no intermediate state prints a raw key or wears the country glyph. `8bad8ec73` routed the
+stats-card label through `t()` (EN byte-identical, AR new) and retired the `dueDate` display
+value (`Due Date` → `Deadline`, `تاريخ الاستحقاق` → `الموعد النهائي`; key name and DB columns
+untouched). **Both polarities at run time, same runner and role:** RED **re-observed at my own
+starting HEAD `f5b5d19e1`** (4 failed / 1 passed — 0 help triggers in both locales,
+`typeDescription.elected_official` `undefined` in both bundles, `% of total active dossiers`
+rendering under `?lng=ar`), then **5/5 GREEN at `8bad8ec73`**, `chromium-en`, `--workers=1`,
+**role admin**, viewport 1400×900. **Criterion 7 closes on the rendered popover in BOTH locales**
+with **1 `lucide-crown`, 0 `lucide-globe`, `text-primary`** — no Globe, no muted popover
+(`RULING-P98A2-03`). The copy07 `en` leg passed and is NOT counted (non-discriminator by design).
+**PLAN DEFECT recorded under `RULING-P98A2-07`:** the action's "NO other change to either switch"
+and the criterion's "type-check green" are jointly unsatisfiable — the deleted guard was also the
+type narrowing that let a CARD-8 card feed a DB-7 component (3 errors: TS2678 ×2, TS2322).
+Resolved inside `files_modified` by retyping the guide to `DossierCardType`; **`DOSSIER_TYPES` and
+`_EoIsNotADbType` untouched — the sets are bridged, never merged.** Reported to the orchestrator
+and NOT acted on until the ruling arrived. `COPY-07` + `COPY-08` marked complete; **`COPY-04`
+deliberately left open** (its CTA/exclamation/first-person populations are live and owned
+elsewhere — `elected-officials:list.add` still reads `Add Elected Official`). `NAV-01`'s row was
+not touched. Seven sibling guide bodies still hollow — `GUIDE-HOLLOW-01` → P102, the tracked
+asymmetry.
+Next command: `/gsd:execute-phase 98` (Copy Truth) — 98-04 completes wave 2.
 
 Phase 97 (reachability) — **EXECUTED 2026-08-17, accepted by `RULING-P97-21`.**
 12 of 12 plans; every `## BLOCKED` read (**5 empty / 7 substantive**, each traced to a ruling).
@@ -495,7 +518,8 @@ file. Bookkeeping debt only — no open functional work.
 
 ## Performance Metrics
 
-| Phase | Plan | Duration | Notes                                                                 |
-| ----- | ---- | -------- | --------------------------------------------------------------------- |
-| 98    | 01   | ~2h      | 3 tasks · 9 files · 8 oracles proven RED at HEAD                      |
-| 98    | 02   | ~1h      | 2 tasks · 6 files · 4 new checks drilled RED; 60 debt rows / 97 sites |
+| Phase | Plan | Duration | Notes                                                                              |
+| ----- | ---- | -------- | ---------------------------------------------------------------------------------- |
+| 98    | 01   | ~2h      | 3 tasks · 9 files · 8 oracles proven RED at HEAD                                   |
+| 98    | 02   | ~1h      | 2 tasks · 6 files · 4 new checks drilled RED; 60 debt rows / 97 sites              |
+| 98    | 03   | ~1h      | 2 tasks · 4 files · RED 4/5 → GREEN 5/5 both locales; criterion 7 + COPY-07 closed |
