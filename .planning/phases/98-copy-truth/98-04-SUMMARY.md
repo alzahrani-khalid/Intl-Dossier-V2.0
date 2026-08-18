@@ -293,20 +293,28 @@ namespace each file declares: exactly **3 rows** are false positives (`loading`,
 So the remainder is 306, and the instrument's soft edge is 1%. I did **not** change `USE_NS` —
 that would alter the pre-existing two-arg numbers, which the plan says to keep untouched.
 
-### CORRECTION to my own first bucketing — a correct number about the wrong set
+### The `45` vs `8` discrepancy — RECORDED, DELIBERATELY NOT RECONCILED
 
-My first pass reported the `common` bucket as "45 sites but only 7 distinct keys". **That is
-internally inconsistent and it was my error**: the bucket key was `k.split(':')[0].split('.')[0]`,
-which lumps **two different shapes** under one label. Split properly:
+My first pass reported the `common` bucket as **45 sites / 7 distinct**. That pairing is
+internally inconsistent, so at least one of the two numbers answers a different question than the
+label claims. **Three measurements exist and they are left side by side on purpose** — the
+orchestrator's instruction was to record both and reconcile neither, and forcing a reconciliation
+is exactly how a correct number about the wrong set gets laundered into a fact.
 
-| shape                 | sites | distinct | what it is                                                  |
-| --------------------- | ----- | -------- | ----------------------------------------------------------- |
-| dot-form `common.*`   | **8** | **7**    | the population `RULING-P98A2-10` ruled — repaired, below    |
-| colon-form `common:*` | 37    | 27       | **a different and previously unreported class** — see below |
-| bare `common`         | 0     | 0        | —                                                           |
+| measurement                  | value                                    | whose, and by what definition                                                                                 |
+| ---------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| the original `common` bucket | **45 sites / 7 distinct**                | mine, bucket key `k.split(':')[0].split('.')[0]` over the raw-key-shape unresolved rows                       |
+| `common.`-prefixed sites     | **8 sites / 7 distinct**                 | mine AND a second seat's, independently — this is the ruled `common.*` ×7 population, repaired at `646b67d7e` |
+| what the other 37 are        | **two competing accounts, unreconciled** | mine: colon-form `common:*`, 37 sites / 27 distinct. The second seat's: the bare-shape, no-dot keys.          |
 
-The 7 distinct was right; the 45 sites belonged to a superset. Fixed here rather than left to be
-re-derived by someone else.
+**The unresolved part is only the third row.** The ruled population is not in doubt: both
+instruments independently return **7 distinct `common.`-prefixed keys over 8 sites**, and those 7
+are what `646b67d7e` authored. The disagreement is over how to describe the residue, and it is a
+population-definition gap, not a defect in either count.
+
+**Nothing downstream rests on the residue's label.** The repaired set is the 7; the colon-form
+class is documented below on its own measured evidence (a real-i18next probe, not a bucket count),
+which stands regardless of how the 45 is eventually partitioned.
 
 ### `common.*` ×7 — RULED and REPAIRED (`RULING-P98A2-10`)
 
@@ -333,6 +341,11 @@ measuring against real i18next rather than reasoning about:
 t('common.all')  -> "All"                  dot-form RESOLVES  (defaultNS common, path common.all)
 t('common:all')  -> "all"                  colon-form MISSES  (ns common, path all — not top level)
 ```
+
+The **mechanism** above is proven by direct probe and does not depend on any bucket count. The
+**size** below is my instrument's, and a second seat partitions the same residue differently — see
+the unreconciled table above; the disagreement is about labelling the residue, not about whether
+this shape misses.
 
 **37 sites / 27 distinct keys** are in this shape: `AdvancedDataTable.tsx` alone carries ~13
 (`common:columns`, `common:selectRow`, `common:of`, `common:page`, `common:showing`, …), plus
