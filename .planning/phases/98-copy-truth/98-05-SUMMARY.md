@@ -468,13 +468,22 @@ Guards, both run with controls:
 
 - **Exogenous:** `git diff --name-only 13d5094ea..HEAD` restricted to `CLAUDE.md`, `AGENTS.md`,
   `tickmarkr.spec.md`, `.agents/skills`, `.claude/skills`, `_archive-98-attempt1-260818/` → **empty**.
-- **Sibling disjointness:** my 19 files ∩ `98-06`'s `a9d2414a5` 72 files → **empty**.
-  My **first** attempt at this check was **wrong** — I used a _range_ diff spanning `a9d2414a5`,
-  which reported all 72 of the sibling's files as mine. Re-run against the correct population (the
-  union of my three commits only). Its control also failed silently at first — I appended a planted
-  path to an already-sorted file and `comm` returned nothing; with sort restored the control
-  correctly prints exactly one line. **Both mistakes are recorded because in each case the zero
-  looked exactly like the right answer.**
+- **Sibling disjointness:** my **21** files ∩ the **75** files touched by every not-mine commit in
+  `13d5094ea..HEAD` → **empty**, with a planted-path control printing exactly one line.
+
+  **This check was wrong three times before it was right, and every wrong answer looked correct.**
+  1. _Wrong population:_ I used a **range** diff spanning `a9d2414a5`, which reported all 72 of the
+     sibling's files as mine.
+  2. _Broken control:_ I appended a planted path to an already-sorted file, so `comm` returned
+     nothing — a silent pass that would have blessed any zero.
+  3. _Wrong population again:_ I built "the sibling's commits" with `git log --grep="98-06"`, which
+     matched **my own** `99ae3d3be` because its message _mentions_ `98-06`. That dragged
+     `98-05-SUMMARY.md` into "theirs" and produced a **false overlap**. Fixed by defining the
+     sibling set by **exclusion of my six shas**, not by grepping commit prose.
+
+  Three instruments, three correct commands, three answers about the wrong set — in one paragraph
+  of one seat's own bookkeeping. It is the phase's signature failure reproducing under my hands,
+  and it is why the only trustworthy zero here is one whose control was seen firing.
 
 `.planning/ROADMAP.md` became dirty during this wave. It is **not mine** — unread, unedited, never
 in any pathspec.
