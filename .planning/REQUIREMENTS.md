@@ -271,6 +271,20 @@ card in both locales.
         re-discovering it** — the copy02 DOM detector (extended for the `common.*` shape) and the
         census tooling are the instruments of record.
 
+        **⚠ INVERSION AMENDMENT, 2026-08-18 (`RULING-P98A2-11`) — READ BEFORE ANY CONVERSION
+        RUNS.** `common.json` carries a nested duplicate subtree literally named `common` (38
+        top-level keys, ZERO top-level scalars, both locales) — so FOR THIS NAMESPACE the
+        project-wide rule is INVERTED: dot-form (`t('common.all')`) RESOLVES via the nested
+        duplicate and colon-form (`t('common:all')`) MISSES. **A mechanical dot→colon conversion
+        over `common` breaks currently-working copy; encode this exception FIRST.** The
+        flatten-or-keep structural call is THIS row's decision, and Phase 98's 37 colon-form
+        miss sites (rendering bare undotted tokens) ride it — their correct repair form is
+        undecidable until that call. Also named: a colon-form miss renders a BARE token (`all`,
+        `cancel`) that reads as plausible copy — dotted-token detectors are blind BY MECHANISM;
+        only resolution-checking sees this class. Derivations on record: 185 sites / 94 distinct
+        colon-form (all sites) vs 37 / 27 (misses) — different populations, deliberately
+        unreconciled.
+
   > **AR-04a is destructively satisfiable if you only run check (a) — measured, 2026-08-15,
   > `RULING-P92-08`.** A large fraction of mask sites reference keys that **do not resolve in the EN
   > locale at all**; they render today _only_ because of the English default. Running
