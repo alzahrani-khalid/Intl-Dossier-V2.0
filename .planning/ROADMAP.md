@@ -264,7 +264,7 @@ Full detail: [milestones/v9.0-ROADMAP.md](milestones/v9.0-ROADMAP.md)
 - [x] **Phase 95: Routes That Don't Render** - Every route either renders its page or says why it can't; the route tree has one file per slot
 - [x] **Phase 96: Real Numbers** - Every count, chart and trend comes from real data and agrees with every other surface (completed 2026-08-17)
 - [x] **Phase 97: Reachability** - Nothing built is unreachable and nothing in the route tree is unowned
-- [ ] **Phase 98: Copy Truth** - No database values, no i18n keys, no seed instructions, one date format, project voice rules obeyed
+- [x] **Phase 98: Copy Truth** - No database values, no i18n keys, no seed instructions, one date format, project voice rules obeyed
 - [ ] **Phase 99: Arabic Coverage** - An Arabic session reads as Arabic: one glossary, localized dates, no English leakage
 - [ ] **Phase 100: Security Posture — Database & Client** - RLS is a real boundary for the 207 frontend files that depend on it, and signing out leaves nothing behind on the machine
 - [ ] **Phase 101: CI Gates Green** - The suites tell the truth about `main`, and the ones that matter block merges
@@ -564,20 +564,20 @@ Plans:
 
 **Wave 3** _(derived populations, disjoint files)_
 
-- [ ] 98-05-PLAN.md — COPY-01: enum display labels (Part A), de-snake sweep (Part B), the localized week header
-- [ ] 98-06-PLAN.md — COPY-03 rewrite + retired terms + named Title Case instance + exclamations/first-person on derived populations
+- [x] 98-05-PLAN.md — COPY-01: enum display labels (Part A), de-snake sweep (Part B), the localized week header
+- [x] 98-06-PLAN.md — COPY-03 rewrite + retired terms + named Title Case instance + exclamations/first-person on derived populations
 
 **Wave 4** _(blocked on the guard + the enum lanes)_
 
-- [ ] 98-07-PLAN.md — COPY-05: six graded feed surfaces onto the helper, fifteen migrations, remaining format classes, fillMock out of the BUILT bundle
+- [x] 98-07-PLAN.md — COPY-05: six graded feed surfaces onto the helper, fifteen migrations, remaining format classes, fillMock out of the BUILT bundle
 
 **Wave 5** _(blocked on all repairs — captures the FINAL surfaces)_
 
-- [ ] 98-08-PLAN.md — the D-20 bounded sentence-case captured-label sweep with verdict record
+- [x] 98-08-PLAN.md — the D-20 bounded sentence-case captured-label sweep with verdict record
 
 **Wave 6** _(blocked on everything)_
 
-- [ ] 98-09-PLAN.md — closing: coverage re-derived, gate drill consolidated, register updated, weakest point named
+- [x] 98-09-PLAN.md — closing: coverage re-derived, gate drill consolidated, register updated, weakest point named
 
 **UI hint**: yes
 
@@ -704,7 +704,7 @@ Plans:
 | 95. Routes That Don't Render | v10.0 | 0/TBD | Not started | — |
 | 96. Real Numbers | v10.0 | 11/11 | Complete   | 2026-08-17 |
 | 97. Reachability | v10.0 | 0/TBD | Not started | — |
-| 98. Copy Truth | v10.0 | 4/9 | In Progress|  |
+| 98. Copy Truth | v10.0 | 9/9 | Complete | 2026-08-18 |
 | 99. Arabic Coverage | v10.0 | 0/TBD | Not started | — |
 | 100. Security Posture — Database & Client | v10.0 | 0/TBD | Not started | — |
 | 101. CI Gates Green | v10.0 | 0/TBD | Not started | — |

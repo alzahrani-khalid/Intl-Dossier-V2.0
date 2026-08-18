@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v10.0
 milestone_name: Trust & Correctness
-status: Ready to execute
-last_updated: '2026-08-18T01:58:21.303Z'
+status: Ready to plan
+last_updated: '2026-08-18T12:15:00.000Z'
 progress:
   total_phases: 13
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 80
-  completed_plans: 72
-  percent: 46
+  completed_plans: 80
+  percent: 54
 ---
 
 # Project State
@@ -25,6 +25,26 @@ See: .planning/PROJECT.md (updated 2026-08-15 — v9.0 closed PARTIAL; v10.0 Tru
 ## Current Position
 
 Milestone: **v10.0 — Trust & Correctness** (roadmapped 2026-08-15).
+
+Phase 98 (copy-truth) — **EXECUTED 2026-08-18, accepted by `RULING-P98A2-21`.**
+9 plans / 6 waves, 78 commits from base `98824ca77` to `fca30d102`, ZERO exogenous paths across
+all 78 (single phase-wide measurement, planted control). Criteria 3/6/7 CLOSED in full on rendered
+surfaces; 1/2/4/5 CLOSED BOUNDED with every bound stated in the criterion text and every residue
+on an owned register row (`AR-04b`, `COPY-09`, `EDGECOPY-01`, `ENGREAD-01`, P103's re-sweep for
+the 39 reading-triaged members). Twenty rulings + corrections; the exec report
+(`.tickmarkr/overseer/P98-EXEC-REPORT.md`, ORCH-EXEC-END) carries the phase's transferable output:
+ONE population-definition finding with NINE dimensions (file type, shape, token, casing, search
+space, time, role, completeness, ORIGIN) spanning every layer incl. the ruling layer; five
+instruments blind to their class BY CONSTRUCTION; five false-green instrument mechanisms with two
+standing rules. Instruments of record COMMITTED: `scripts/partA_maskfinder.py`,
+`scripts/resolve-check.mjs` + `neg-taskcard.mjs` (P99 consumes these — see AR-04's dated notes,
+incl. the ⚠ nested-common INVERSION that makes a mechanical dot→colon sweep DESTRUCTIVE).
+WEAKEST POINT, named: the 39 criterion-1 members triaged by READING (owner now P103); runner-up:
+four of ten summary files predate the terminal-marker convention (recorded, not retro-fitted).
+**Executor policy from Phase 99 (OPERATOR ORDER, OPORD98): the milestone returns to the tickmarkr
+ENGINE — `tickmarkr compile` ingests the GSD plan set → `plan` → `run` → `report`; the journal is
+the record; who-ran-what is engine-recorded per task (P98's is at `.tickmarkr/overseer/seats.jsonl`).**
+Next command: `/gsd:plan-phase 99` (Arabic Coverage), then compile through the engine.
 
 Phase 98 (copy-truth) — **PLANNED 2026-08-18 (attempt 2, fresh start by operator order), accepted by
 `RULING-P98A2-04`.** 9 plans / 6 waves at `3aab90747`+`7a6ea56d9`; 10 blockers closed across 3

@@ -136,6 +136,11 @@ verified sound across six lanes).
 ### NAV — Nothing built is unreachable
 
 - [ ] **NAV-01**: Elected Officials is reachable — sidebar, dossier hub type cards, `/dossiers/create`, and `/compare` expose all 8 declared dossier types, not 7.
+  - **Dated note, 2026-08-18 (P98 close-out, `RULING-P98A2-21`):** the BOUNDED withheld-popover
+    handoff is COMPLETE — Phase 98 landed the five `dossier:` keys, deleted the render guard, and
+    criterion 7 closed GREEN on the rendered EO popover in both locales (one atomic commit
+    `e354c8c94`, re-derived by the closing plan from rendered evidence). NAV-01's bound is
+    discharged; the P102 residues named in its status cell are unchanged.
 - [ ] **NAV-02**: The `/settings/*` subtree renders navigation. The prefix check that hides the global sidebar and the exact-match check that renders the settings nav no longer disagree.
 - [ ] **NAV-03**: The engagement Digests tab appears in the tab bar; list pages expose a create affordance (7 of 8 currently have none).
 - [ ] **NAV-04**: Every route with no inbound link is resolved — 9 admin routes plus `/monitoring` are each given a nav entry or deleted, with the decision recorded.
@@ -153,6 +158,11 @@ verified sound across six lanes).
 ### COPY — The UI speaks to users, not to developers
 
 - [ ] **COPY-01**: No database value is shown as user copy — `in_progress`, `action_item`, `follow_up`, `email`, `human_entered`, `WEEK OF 2026-W27` are mapped through display labels.
+  - **Dated note, 2026-08-18 (P98 close-out, `RULING-P98A2-21`):** the 39 text-position members
+    (22 Part A + 17 Part B) triaged by READING with no instrument able to see a prop-receiver
+    render now have an OWNER: **Phase 103's re-sweep**, whose criterion 4 already demands every
+    requirement be verified against a named observation — the 39 are named input to its probe
+    route set, and P98's status cell stops reading "handed off to NO OWNER".
 - [ ] **COPY-02**: No raw i18n key reaches the screen — `regions.Europe`, `afterActions.loadError`, `CALENDAR.RECURRENCE.TITLE`, `common.loading`, and the five `entityLinks.*` keys resolve.
 - [ ] **COPY-03**: No seed or test instruction ships as user copy — the 4 strings in `dashboard-widgets.json` (both locales) that tell users to apply the dashboard seed or check the test data are rewritten. **[V]**
 - [ ] **COPY-04**: Copy obeys the project's own voice rules — sentence case (Title Case is currently de-facto), no exclamation marks (46 strings), no first-person plural (8 strings), no `"Deadline / Due Date"` chip shipping a retired term.
@@ -309,7 +319,12 @@ card in both locales.
         `common.*` ×7) + no raw key on oracle-driven surfaces. **The long tail is THIS row's
         population, and Phase 99 consumes Phase 98's instrument and derivation rather than
         re-discovering it** — the copy02 DOM detector (extended for the `common.*` shape) and the
-        census tooling are the instruments of record.
+        census tooling are the instruments of record — COMMITTED PATHS (P98 close-out,
+        `RULING-P98A2-15` c5): `scripts/partA_maskfinder.py` (the mask/dynamic-prefix census),
+        `scripts/resolve-check.mjs` (real-i18next resolution harness, `fallbackLng` OFF on `ar`),
+        `scripts/neg-taskcard.mjs` (its negative control — run it or the harness is
+        unfalsifiable), plus `frontend/tests/e2e/98-copy02-rawkeys.spec.ts` (the extended DOM
+        detector).
 
         **⚠ INVERSION AMENDMENT, 2026-08-18 (`RULING-P98A2-11`) — READ BEFORE ANY CONVERSION
         RUNS.** `common.json` carries a nested duplicate subtree literally named `common` (38
