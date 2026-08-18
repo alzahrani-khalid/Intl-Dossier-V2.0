@@ -12,7 +12,7 @@ provides:
   - 'scripts/i18n-mask-audit.mjs can see the raw-key class at all: a behaviour-defined matcher, full output, gate-executable polarity controls'
 affects:
   - '98-05 / 98-06: the remaining COPY-04 populations (EO CTA, first-person plural, the exclamation set outside common.json) are untouched here and still theirs'
-  - 'the criterion-2 CLASS remainder — 306 raw-key-shape unresolved sites / 280 distinct keys / 64 files — is DERIVED and NAMED here, owned by nobody. It needs a ruling, not a guess.'
+  - 'Phase 99 / AR-04b: the criterion-2 long tail was DERIVED and NAMED here (306 raw-key-shape unresolved sites by my instrument; RULING-P98A2-10 records it as ORDER HUNDREDS, 306/353 by two instruments, nothing frozen) and routed to AR-04b by that ruling. It also inherits a NEW class this plan found and did not repair: the colon-form common:* inversion, 37 sites / 27 distinct, which renders a bare undotted token and is therefore invisible to every dotted-token detector in this phase.'
 tech-stack:
   added: []
   patterns:
@@ -34,7 +34,7 @@ key-files:
 decisions:
   - 'D-24 mechanism: the entityLinks subtree merged into common.json rather than becoming a new namespace. All 8 consumers call bare useTranslation(), whose defaultNS is common — which IS registered in i18n/index.ts. "Registered" is therefore satisfied by construction, with ZERO component edits; a new namespace would have touched 8 code files for no user-visible gain.'
   - 'i18next plural resolution was MEASURED, not assumed: at i18next 25.10.10 a base key with no _one/_other siblings resolves and interpolates {{count}}. So the five count-bearing keys need no Arabic six-form plural set. Measured before authoring, not after a bug.'
-  - 'COPY-06 marked complete. COPY-02 and COPY-04 deliberately NOT marked — COPY-02 because its class remainder is real and its boundedness is an acceptance-semantics question that belongs to the overseer, COPY-04 because its other populations are live and owned elsewhere (same discipline 98-01/98-02/98-03 applied).'
+  - "COPY-06 marked complete. COPY-02 left open on ONE clause only — RULING-P98A2-10 bounded criterion 2 and all four of its ruled class populations are repaired here, but the ordered detector extension lives in 98-01's spec file, outside this plan's files_modified, so it was escalated rather than improvised. COPY-04 left open because its other populations are live and owned elsewhere (same discipline 98-01/98-02/98-03 applied)."
 metrics:
   duration: ~2h
   completed: 2026-08-18
@@ -49,8 +49,7 @@ localized and **observed rendering in Arabic on a real write**, all 43 dot-form
 `calendar.recurrence` sites routed colon-form with conservation proven, both region lookups
 casing-normalized, the mask-audit finder rebuilt around the behaviour it was supposed to detect,
 and — released by `RULING-P98A2-09` — the recurrence editor's second and last dot-form family, so
-that file now carries zero raw-key lookups of any family. **Five commits, seven files, zero
-exogenous paths.**
+that file now carries zero raw-key lookups of any family. **Six code+doc commits, seven files, zero exogenous paths.**
 
 ## Commits
 
@@ -61,6 +60,7 @@ exogenous paths.**
 | `0d69760bb` | toast + voice values + regions casing + recurrence routing + finder            | 7 files (see key-files)       |
 | `c71f42515` | SUMMARY + STATE + ROADMAP + REQUIREMENTS                                       | planning docs                 |
 | `c5661eeb8` | `calendar:months.january` — the file's 2nd dot-form family (`RULING-P98A2-09`) | `RecurrencePatternEditor.tsx` |
+| `646b67d7e` | the ruled `common.*` ×7 population (`RULING-P98A2-10`)                         | `i18n/{en,ar}/common.json`    |
 
 **Both locales landed in the SAME commit every time (D-16).** Verifiable:
 `git show --stat 6b919c856` and `git show --stat 58109e47b` each list `en/common.json` and
@@ -293,12 +293,63 @@ namespace each file declares: exactly **3 rows** are false positives (`loading`,
 So the remainder is 306, and the instrument's soft edge is 1%. I did **not** change `USE_NS` —
 that would alter the pre-existing two-arg numbers, which the plan says to keep untouched.
 
-**The remainder's sharpest member, called out because it renders on a surface this plan
-repaired:** `common.clearFilters` at `EntitySearchDialog.tsx:293` — the entity-search dialog's
-"clear filters" button renders the raw key `common.clearFilters`. The copy02 DOM detector
-**cannot see it**: its regex is
-`/(entityLinks|regions|typeGuide|typeDescription|calendar\.recurrence)\.[A-Za-z.]+/` and
-`common.` is not in it. **HELD, not repaired** — see Deviations.
+### CORRECTION to my own first bucketing — a correct number about the wrong set
+
+My first pass reported the `common` bucket as "45 sites but only 7 distinct keys". **That is
+internally inconsistent and it was my error**: the bucket key was `k.split(':')[0].split('.')[0]`,
+which lumps **two different shapes** under one label. Split properly:
+
+| shape                 | sites | distinct | what it is                                                  |
+| --------------------- | ----- | -------- | ----------------------------------------------------------- |
+| dot-form `common.*`   | **8** | **7**    | the population `RULING-P98A2-10` ruled — repaired, below    |
+| colon-form `common:*` | 37    | 27       | **a different and previously unreported class** — see below |
+| bare `common`         | 0     | 0        | —                                                           |
+
+The 7 distinct was right; the 45 sites belonged to a superset. Fixed here rather than left to be
+re-derived by someone else.
+
+### `common.*` ×7 — RULED and REPAIRED (`RULING-P98A2-10`)
+
+The hold I raised on these was released by `RULING-P98A2-10`, which names `common.*` ×7 among the
+class populations criterion 2 closes on. Landed as `646b67d7e`: `clearFilters`, `hide`, `none`,
+`recommended`, `remove`, `selectDate`, `show`, both locales, same commit.
+
+They land in `common.json`'s **nested `common` object**, not at top level, because dot-form
+`common.X` resolves defaultNS `common` → path `common.X`. **Verified against real i18next in both
+locales, not by bundle inspection** — all 7 return copy (`Clear filters` / `مسح عوامل التصفية`,
+…), while the same resolver still returns the raw key for `common.zzNope`. The finder reports
+**zero** unresolved dot-form `common.*`.
+
+`common.clearFilters` at `EntitySearchDialog.tsx:293` was the sharpest member — the entity-search
+dialog's "clear filters" button, on a surface this plan repaired.
+
+### NEW FINDING, not repaired, not previously reported: the colon-form `common:*` inversion
+
+`common.json` contains a **nested top-level key also called `common`**. That inverts the usual
+rule for this one namespace, and the consequence is counter-intuitive enough that it was worth
+measuring against real i18next rather than reasoning about:
+
+```
+t('common.all')  -> "All"                  dot-form RESOLVES  (defaultNS common, path common.all)
+t('common:all')  -> "all"                  colon-form MISSES  (ns common, path all — not top level)
+```
+
+**37 sites / 27 distinct keys** are in this shape: `AdvancedDataTable.tsx` alone carries ~13
+(`common:columns`, `common:selectRow`, `common:of`, `common:page`, `common:showing`, …), plus
+`UnifiedFileUpload.tsx`'s `common:forms.*` family, `LegislationList/Detail.tsx`,
+`OnboardingChecklist.tsx`, `ReportBuilder.tsx`, `ArrayFieldManager.tsx`.
+
+**Why this class is nastier than the one criterion 2 names, and why no existing detector catches
+it:** i18next strips the namespace before falling back, so the miss renders the **path alone** —
+`all`, `cancel`, `yes`, `selectRow`. Those contain **no dot**, so every raw-key detector in this
+phase (all of which look for a dotted token) is blind to them, and on screen they read as
+plausible lowercase copy rather than as an obvious leak. `common:forms.add_item` is the only
+sub-shape a dotted-token detector could catch.
+
+**Not repaired: it is outside every ruled population and every plan's file scope** (the fix is
+either 10+ call sites or a bundle restructure, neither of them mine). Named here with its size,
+its mechanism, its measurement, and the reason the instruments miss it — so `AR-04b`/P99, which
+`RULING-P98A2-10` hands the long tail to, inherits a described class rather than a rediscovery.
 
 ## `RULING-P98A2-09` — the file's SECOND dot-form family, released and repaired
 
@@ -384,12 +435,15 @@ conditions, and the two-family closure argument are in the `RULING-P98A2-09` sec
 ruling's own framing is the durable part: **D-22 bounded the search space, D-23 defines the
 population**, so this was never a widening.
 
-**(b) `common.clearFilters` and 6 sibling `common.*` raw keys — STILL HELD.** 7 distinct keys /
-45 sites, one of them (`common.clearFilters`) on the entity-search dialog this plan repaired.
-Authoring them is 7 keys × 2 locales in a file I own — but unlike (a) they are **not a member of
-any population this lane owns**: they are a new class, named by no criterion and no plan, and by
-the same search-space-vs-population distinction that released (a), they fall outside. **Not in
-the tree.** They are the sharpest members of the un-owned raw-key remainder above.
+**(b) `common.clearFilters` and 6 sibling `common.*` raw keys — RELEASED and REPAIRED**
+(`RULING-P98A2-10`, which names `common.*` ×7 among the class populations criterion 2 closes on)
+as `646b67d7e`. Re-derived at HEAD before authoring: **7 distinct keys over 8 sites** — my earlier
+"45 sites" was a bucketing error, corrected in its own section above. Verified against real
+i18next in both locales.
+
+**Neither hold was in the tree when raised, and neither was acted on before its ruling.** `git
+log` is the proof: `c5661eeb8` postdates `RULING-P98A2-09`, `646b67d7e` postdates
+`RULING-P98A2-10`.
 
 ### 3. Prettier reflowed two files beyond my edit — disclosed because it is in my diff
 
@@ -403,31 +457,42 @@ Recorded so nobody has to wonder why a 3-line repair has a 54-line diff.
 
 No bug, no missing critical functionality, no blocking issue. `T-98-SC` holds.
 
-## An acceptance-semantics question, raised not resolved (rule 6)
+## The acceptance-semantics question I raised — RULED (`RULING-P98A2-10`)
 
-**Is `COPY-02` complete when its five NAMED instances are all dispositioned but the derived CLASS
-has 306 unresolved members left?**
+**Raised:** is `COPY-02` complete when its named instances are dispositioned but the derived class
+has hundreds of unresolved members? I gave both readings and **did not pick one**; my default was
+the conservative, reversible choice (leave it open).
 
-- **Reading A (bounded, mirrors D-20):** criterion 2 closes on the named instances plus the
-  surfaces the phase's oracle set visits. `COPY-02` is complete; the 306-member remainder is filed
-  as a new row, the way `COPY-09` was filed for criterion 4's long tail.
-- **Reading B (unbounded):** "no raw i18n key reaches the screen" is a whole-app claim; 306
-  unresolved raw-key sites falsify it, so `COPY-02` stays open with an owner named.
+**Ruled: criterion 2 closes BOUNDED** (`38533bce1`, mid-execution, cost stated). It closes on
+named instances **+ the ruled class populations — `entityLinks` 82, `calendar.recurrence`,
+`calendar.months`, `common.*` ×7 — + no raw key on oracle-driven surfaces (locale+role stamped,
+extended detector) + UNDRIVEN enumerated.** The long tail becomes `AR-04b`'s population (Phase 99),
+recorded with a dated note that says "no raw key ever" is **NOT** established for that tail.
 
-**There is no ruling on this and I did not pick one.** My default is the conservative, reversible
-choice: **`COPY-02` is NOT marked complete.** D-20 bounded criterion **4**; nothing bounds
-criterion 2's remainder, and inventing that bound is not a worker's call. `COPY-09`/P102 owns the
-sentence-case long tail, **not** raw keys — so no existing row covers this, and per D-29 the row
-mechanism is for work that LEAVES the phase, which this does.
+**Note the ruling took my numbers as a range, not a fact**, and was right to: it records the tail
+as "ORDER HUNDREDS — 306/353 by two instruments, gap deliberately unreconciled, nothing frozen."
+My 306 is one instrument's population; a different definition gives 353. Neither is frozen and
+`AR-04b` re-derives.
+
+**All four ruled populations are now repaired and verified in both locales** (`entityLinks` 97
+leaves; `calendar.recurrence` 43 sites; `calendar.months` 1; `common.*` 7). **The one clause I
+cannot close from this seat is the extended detector** — see Requirements.
 
 ## Requirements
 
 - **`COPY-06` — COMPLETE.** The literal is gone, `i18n.t()` fires inside the callback, and the
   toast was **observed rendering in both locales on a real mutation** — the `ar` leg is the
   discriminator and it is green. Its register row is entirely about this one string.
-- **`COPY-02` — deliberately LEFT OPEN.** All five named instances dispositioned (2 repaired, 2
-  never broken and controlled as such, 1 not reproducible with the real instance repaired), and
-  the whole `entityLinks` namespace resolves. Not ticked: see the question above.
+- **`COPY-02` — LEFT OPEN, on ONE remaining clause, and it is not mine to close.** Everything
+  `RULING-P98A2-10` bounds the criterion to is done here: five named instances dispositioned (2
+  repaired, 2 never broken and controlled as such, 1 not reproducible with the real instance
+  repaired) and **all four ruled class populations repaired in both locales**. The outstanding
+  clause is "no raw key on oracle-driven surfaces (locale+role stamped, **extended detector**)":
+  the ruling orders the `98-copy02` DOM detector extended for the `common.*` shape, but that spec
+  is `98-01`'s artifact and is **not in my `files_modified`** — clause 2 makes that a STOP-and-
+  report, not a worker improvisation. **Escalated with an offer to do it immediately on release.**
+  Until the extended detector runs green, ticking `COPY-02` would put a completion in the register
+  ahead of its own oracle.
 - **`COPY-04` — deliberately LEFT OPEN.** This plan lands **two** residents (the `loginSuccess`
   exclamation, the `dueDate` display value in `common.json`). Its CTA, first-person-plural and
   remaining exclamation populations are live and owned by later plans — `98-copy04-voice` is
