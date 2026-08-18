@@ -52,7 +52,10 @@ proven by making its own fixture fail, then fixed and proven again.**
 | `78c5ccefe` | copy02 detector extended for the `common.`-shape (`RULING-P98A2-10`) | `tests/e2e/98-copy02-rawkeys.spec.ts` |
 
 Not mine, landed by another seat during this trip and named here so the record is not silent:
-`c0c32d524` and `df30658bb` (the `common.*` ×7 authoring and its discrepancy note).
+**`646b67d7e`** (the `common.*` ×7 authoring, both locales, in one commit — D-16 satisfied),
+then `c0c32d524` and `df30658bb` (its record and the discrepancy note), then `fa35ebdfe`
+(`RULING-P98A2-11`). Attribution derived with `git log -S'"clearFilters"'` on both bundle files,
+not inferred from commit subjects — my first draft credited the docs commit.
 
 ## THE DISPATCH'S PREMISE WAS STALE — stated first, because it changes what this trip is
 
@@ -149,6 +152,34 @@ clear.
 **What that sets aside, stated rather than implied:** after this commit the detector still cannot
 see ~40 other first segments. Criterion 2's DOM leg is a closer for the ruled populations only.
 The limitation is written into the spec file so the next reader inherits the finding.
+
+### A SECOND BLINDNESS THAT NO ALTERNATION CAN CLOSE (`RULING-P98A2-11`, landed mid-trip)
+
+`RULING-P98A2-11` (`fa35ebdfe`) landed **after** my instrument commit and names a deeper problem
+in the artifact I had just shipped, so it is recorded here rather than left for the next reader to
+collide with.
+
+`common.json` carries a **nested duplicate subtree literally named `common`**, so for that one
+namespace the project-wide rule is **INVERTED**: dot-form (`t('common.all')`) RESOLVES via the
+duplicate, and **colon-form (`t('common:all')`) MISSES**. A colon-form miss renders the **bare
+token** `all` / `cancel` — no dot, and it reads as plausible copy. **A dotted-token matcher is
+blind to that class BY MECHANISM, not by omission.** Widening the alternation to all ~40 first
+segments would not catch a single one of them; only resolution-checking (the census legs, or the
+`i18n-mask-audit` finder) can. 37 such miss sites / 27 distinct are on record under `AR-04b`.
+
+I added this caveat to the spec file in a second commit. The reason is the phase's own failure
+pattern: shipping a fixed instrument while leaving a deeper blindness undocumented **inside that
+instrument** would repeat, one level down, exactly the error item 3 existed to correct — a reader
+would take "the `common.` shape is covered now" as "the detector is complete". **A green from this
+detector is not evidence about bare tokens.**
+
+This also confirms, from an independent direction, the structure I derived while deriving item 2's
+population. Measured at HEAD: the file has **38 top-level keys and ZERO top-level scalars**
+(matching the ruling exactly), and the nested `common` subtree holds **56** keys including
+`loading` — which is why `common.clearFilters` lands there, and why **authoring** rather than
+re-routing was the correct repair shape for the seven. Verified, not reasoned: at HEAD the
+top-level `clearFilters` is `undefined`, so a colon-form re-route to `common:clearFilters` would
+have **MISSED** and shipped the bare token `clearFilters` as copy.
 
 ## ITEM 2 — the population I derived, and a number that was about a different question
 
@@ -293,10 +324,10 @@ I stopped and escalated to the team lead **with the full dirty file list**, as
 work under my name on a shared main tree with no worktree isolation risks a lost update and
 misattributes the authoring. I offered both readings (adopt / cede) and asked for the call.
 
-**The question was answered by events** — that seat committed its own work at `c0c32d524` and
-`df30658bb` while I executed item 3. I verified the committed result independently anyway (the
-both-locale table above), because the ruled evidence requirement is about the repair, not about
-who typed it.
+**The question was answered by events** — that seat committed its own work at `646b67d7e` (both
+locales, one commit) while I executed item 3. I verified the committed result independently anyway
+(the both-locale table above), because the ruled evidence requirement is about the repair, not
+about who typed it.
 
 **No act-then-disclose occurred.** Nothing was in my tree when I raised it; `RULING-P98A2-05` is
 not engaged.
@@ -384,7 +415,11 @@ committed and nothing was lost — verified with `git log` before retrying with 
 
 - `tests/e2e/98-copy02-rawkeys.spec.ts` — present on disk, and present in commit `78c5ccefe`.
 - `.planning/phases/98-copy-truth/98-04b-SUMMARY.md` — this file.
-- `78c5ccefe` verified present in `git log`; `c5661eeb8`, `af3f64b32`, `c0c32d524` and `df30658bb`
-  verified present and correctly attributed to other commits, not to mine.
+- `78c5ccefe` and `ca5ade52f` verified present in `git log` and attributed to me; `c5661eeb8`,
+  `af3f64b32`, `646b67d7e`, `c0c32d524`, `df30658bb` and `fa35ebdfe` verified present and
+  attributed to OTHER seats, not to mine.
+- **One correction made before this file was final:** my first draft credited the `common.*`
+  authoring to `c0c32d524` (a docs commit). `git log -S'"clearFilters"'` on both bundle files
+  names `646b67d7e`. Attribution is now derived, not inferred from a commit subject.
 
 SUMMARY-END

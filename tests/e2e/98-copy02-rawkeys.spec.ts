@@ -88,6 +88,16 @@ const SETTLE_TIMEOUT = 20_000
  *
  * The leading `\b` guards the false positive the `common` alternative introduces: without it,
  * `uncommon.Add` matches on the embedded substring. Both polarities of that guard are asserted.
+ *
+ * A SECOND BLINDNESS REMAINS, AND NO ALTERNATION CAN CLOSE IT (`RULING-P98A2-11`). Adding the
+ * ~40 missing first segments would still not make this detector complete, and nobody should read
+ * the extension above as if it did. `common.json` carries a nested duplicate subtree literally
+ * named `common`, so for THIS namespace the project-wide rule is INVERTED: dot-form resolves and
+ * COLON-form (`t('common:all')`) misses — and a colon-form miss renders the BARE token `all`,
+ * which reads as plausible copy and contains no dot at all. A dotted-token matcher is blind to
+ * that class BY MECHANISM, not by omission; only resolution-checking (the census legs, or the
+ * `i18n-mask-audit` finder) can see it. 37 such miss sites / 27 distinct are on record under
+ * `AR-04b`. Do not treat a green from this detector as evidence about bare tokens.
  */
 const RAW_KEY_TOKEN =
   /\b(entityLinks|regions|typeGuide|typeDescription|calendar\.recurrence|common)\.[A-Za-z.]+/
