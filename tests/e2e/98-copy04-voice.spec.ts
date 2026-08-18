@@ -52,6 +52,41 @@
 // English orthographic rule; Arabic has no case, and Arabic copy quality is Phase 99's judgment
 // (`AR-01..04`), an operator park this spec does not touch. Role is admin (TEST_USER_EMAIL).
 //
+// SETTLE — ADDED UNDER `RULING-P98A2-20` (wave 5, ruled instruction; 98-01 is NOT re-opened).
+// Until that ruling this file held ZERO settle primitives, so every capture read the
+// PRE-HYDRATION SKELETON — the synchronous nav shell — and `@case` returned a DETERMINISTIC false
+// green (3/3 runs, 6.2–6.5 s). Measured with capture mechanics held identical and the settle as
+// the only variable: `/dossiers` 38 raw captures without it vs 98 with; `/intake/queue` 20 (all
+// nav) vs 34, hiding three Title Case empty-state labels that mount only after the data query
+// resolves. SETTLE-SUFFICIENCY EVIDENCE (the ruling's term): a 3 s dwell and an 8 s dwell are
+// BYTE-IDENTICAL across all eight surfaces, +0/−0 unique captures — the settled capture is a
+// converged fixed point, not a longer-is-more artifact. Widening the selector list instead adds
+// 4 raw captures and ZERO new flagged labels: the hidden dimension was TIME, not shape.
+//
+// The `@case` red recorded in `98-RED-BASELINE.md` (`Add Elected Official`) was GENUINE — that CTA
+// happens to sit in the synchronous shell. A genuine red from a blind instrument is the strongest
+// false credential an oracle can earn, so this file's history is not evidence that it could see.
+//
+// NEGATIVE SCOPE (`RULING-P98A2-13` Law 1) — what this oracle CANNOT see, stated:
+//   (a) any surface outside VISITED_SURFACES, and any EN leaf value never rendered there — that is
+//       the ~4.5k long tail, `COPY-09`, owner Phase 102. NOTHING in Phase 98 covers it.
+//   (b) captured labels with only ONE capitalized non-initial word — the predicate's DECLARED
+//       under-inclusiveness (41 such labels at wave 5). Also `COPY-09` / P102.
+//   (c) copy that never mounts for the ADMIN role. `IntakeRoleEmptyState.tsx:81` maps
+//       admin → `reviewer`, so the `requester` / `assignee` / `viewer` variants of the same
+//       component are structurally invisible here. NOTHING in Phase 98 covers them; P102.
+//   (d) copy behind interaction — menus, dialogs, popovers, tabs not initially selected. This
+//       oracle reads the settled first render only. NOTHING covers it.
+//   (e) Arabic case (`@case` is `en`-only by orthographic necessity) and Arabic copy quality —
+//       `AR-01..04`, Phase 99, an operator park.
+//   (f) hardcoded copy that does not exact-match an EN bundle leaf — excluded by the
+//       reverse-bundle filter, which is also what keeps DATA out. At wave 5, zero unmatched
+//       captures satisfied the predicate, so this blind spot was measured empty on these
+//       surfaces; it is not covered in general.
+// Whether the OTHER seven criterion oracles share the no-settle blindness is `98-09`'s Law-1 pass
+// (`RULING-P98A2-20` item 7), NOT this file's claim: a settle primitive PRESENT in a file is not a
+// settle primitive PLACED before the capture — presence is not placement.
+//
 // AUTHENTICATION: inline, --no-deps (E2ECRED-01 → P101). See 96-calendar-family.spec.ts.
 import { readFileSync, readdirSync } from 'node:fs'
 import { join, resolve } from 'node:path'
@@ -150,6 +185,35 @@ const isTitleCase = (value: string): boolean => {
 }
 
 /**
+ * Waits for the surface to HYDRATE before anything is read from it (`RULING-P98A2-20` item 1).
+ * `main` becoming visible only proves the app shell painted; the data-driven regions — empty
+ * states, list bodies, stat cards — mount later, and a capture taken at shell time silently
+ * narrows the population to the nav chrome.
+ *
+ * `networkidle` is best-effort (`.catch`) because a surface holding an open subscription never
+ * reaches it; the fixed dwell is what actually bounds the wait. 3 s is the SUFFICIENT dwell, not a
+ * guess: 3 s and 8 s produce byte-identical captures on all eight surfaces.
+ */
+const settle = async (page: Page): Promise<void> => {
+  await expect(page.getByRole('main')).toBeVisible({ timeout: SETTLE_TIMEOUT })
+  await page.waitForLoadState('networkidle', { timeout: 60_000 }).catch(() => {})
+  await page.waitForTimeout(3_000)
+}
+
+/**
+ * Asserts the locale the capture is actually running in (`RULING-P98A2-20` item 4: the capture's
+ * locale is ASSERTED, never inherited). This is not ceremony — `/intake/queue` 302s to
+ * `/my-work/intake` and the `?lng=` query param does NOT survive the redirect. The requested
+ * locale is consumed and persisted before the redirect resolves, so the landed surface does render
+ * the requested language; but "does" must be checked on every run, because a green whose locale is
+ * a guess is what item 4 refuses.
+ */
+const expectLocale = async (page: Page, lng: 'en' | 'ar', surface: string): Promise<void> => {
+  const lang = await page.evaluate(() => document.documentElement.lang)
+  expect(lang, `${surface} must render under an ASSERTED ${lng}, not an inherited locale`).toBe(lng)
+}
+
+/**
  * Captures the label set on the current page, applying the stated exclusions in the browser
  * (computed style is only readable there).
  */
@@ -190,6 +254,8 @@ test.describe('criterion 4 — copy obeys the project voice', () => {
       ['ar', EO_ADD_AR],
     ] as const) {
       await gotoLocale(page, '/dossiers/elected-officials', lng)
+      await settle(page)
+      await expectLocale(page, lng, '/dossiers/elected-officials')
       const cta = page.locator('a[href="/dossiers/elected-officials/create"]').first()
       await expect(cta, `EO add control not reachable under ${lng}`).toBeVisible({
         timeout: SETTLE_TIMEOUT,
@@ -204,7 +270,8 @@ test.describe('criterion 4 — copy obeys the project voice', () => {
     await signInInline(page)
     for (const lng of ['en', 'ar'] as const) {
       await gotoLocale(page, '/commitments', lng)
-      await expect(page.getByRole('main')).toBeVisible({ timeout: SETTLE_TIMEOUT })
+      await settle(page)
+      await expectLocale(page, lng, '/commitments')
       const body = (await page.locator('body').innerText()) ?? ''
       expect(body, `/commitments renders the retired term under ${lng}`).not.toMatch(
         RETIRED_DUE_DATE,
@@ -219,15 +286,19 @@ test.describe('criterion 4 — copy obeys the project voice', () => {
     const bangValues = Array.from(bundleValues).filter((value) => value.includes('!'))
     // Instrument self-test: the bundle really does hold exclamation copy at HEAD, so a zero
     // below would mean "none rendered", never "the instrument never looked".
-    expect(bangValues.length, 'EN bundle must hold exclamation strings for this leg to be live')
-      .toBeGreaterThan(0)
+    expect(
+      bangValues.length,
+      'EN bundle must hold exclamation strings for this leg to be live',
+    ).toBeGreaterThan(0)
 
     await signInInline(page)
     const offenders: string[] = []
     for (const surface of VISITED_SURFACES) {
       await gotoLocale(page, surface, 'en')
-      await expect(page.getByRole('main')).toBeVisible({ timeout: SETTLE_TIMEOUT })
+      await settle(page)
+      await expectLocale(page, 'en', surface)
       const captured = await captureLabels(page, `${LABEL_SELECTORS}, p, span, div`)
+      expect(captured.length, `capture on ${surface} must be non-empty`).toBeGreaterThan(0)
       for (const text of captured) {
         const stripped = text.replace(/\([^)]*!@#\$[^)]*\)/g, ' ')
         if (stripped.includes('!') && bundleValues.has(text)) offenders.push(`${surface}: ${text}`)
@@ -250,11 +321,50 @@ test.describe('criterion 4 — copy obeys the project voice', () => {
     expect(isTitleCase('SLA VIP GASTAT'), 'predicate must not flag acronyms').toBe(false)
 
     await signInInline(page)
+
+    // NEGATIVE POLARITY, in the region that was blind (`RULING-P98A2-20` item 2). The shell-red
+    // class is already proven by the RED baseline's `Add Elected Official`, so re-planting there
+    // would re-prove the only thing that was never in doubt. This fixture instead mounts a Title
+    // Case label into a LATE region — injected on a timer AFTER navigation, so the pre-hydration
+    // capture this oracle used to take could not have seen it. If the settle is ever removed, or
+    // the capture moves back before hydration, THIS assertion goes red first.
+    //
+    // The planted string is DERIVED from the live bundle rather than hardcoded, so it cannot go
+    // stale as Phase 102 works through COPY-09; it is asserted non-empty, because a fixture that
+    // silently fails to build is a control that cannot fail.
+    const plantable = Array.from(bundleValues).find((value) => isTitleCase(value))
+    expect(
+      plantable,
+      'negative-polarity fixture needs one Title Case EN bundle value to plant; if none remains, COPY-09 is closed and this control must be re-authored',
+    ).toBeTruthy()
+    const planted = plantable as string
+
+    await gotoLocale(page, VISITED_SURFACES[0], 'en')
+    await page.evaluate((text) => {
+      window.setTimeout(() => {
+        const el = document.createElement('button')
+        el.textContent = text
+        el.setAttribute('data-p98-planted', 'true')
+        ;(document.querySelector('main') ?? document.body).appendChild(el)
+      }, 1_500)
+    }, planted)
+    await settle(page)
+    const withPlant = await captureLabels(page, LABEL_SELECTORS)
+    expect(
+      withPlant.filter((text) => bundleValues.has(text) && isTitleCase(text)),
+      `planted post-settle Title Case label "${planted}" must be DETECTED — a capture that misses it is reading the pre-hydration shell`,
+    ).toContain(planted)
+
+    // POSITIVE POLARITY: the real, unplanted surfaces.
     const flagged: string[] = []
     for (const surface of VISITED_SURFACES) {
       await gotoLocale(page, surface, 'en')
-      await expect(page.getByRole('main')).toBeVisible({ timeout: SETTLE_TIMEOUT })
+      await settle(page)
+      await expectLocale(page, 'en', surface)
       const captured = await captureLabels(page, LABEL_SELECTORS)
+      // A surface that captured NOTHING is a broken read, not a clean surface. Without this the
+      // empty `flagged` below would be indistinguishable from a page that never rendered.
+      expect(captured.length, `capture on ${surface} must be non-empty`).toBeGreaterThan(0)
       for (const text of captured) {
         if (!bundleValues.has(text)) continue
         if (isTitleCase(text)) flagged.push(`${surface}: ${text}`)

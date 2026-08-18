@@ -403,7 +403,7 @@
     },
     "reviewer": {
       "badge": "Reviewer",
-      "title": "No Pending Reviews",
+      "title": "No pending reviews",
       "description": "When new requests are submitted, they'll appear here for your review and triage. Use the evaluation criteria below to ensure consistent processing.",
       "criteriaTitle": "Evaluation Criteria",
       "hint": "New requests will be sorted by urgency and submission time. AI suggestions will help speed up your review process.",
@@ -426,9 +426,9 @@
         }
       },
       "actions": {
-        "accessQueue": "Access Review Queue",
+        "accessQueue": "Access review queue",
         "accessQueueDescription": "View all requests pending review",
-        "viewAll": "View All Tickets",
+        "viewAll": "View all tickets",
         "viewAllDescription": "Browse the complete ticket history"
       }
     },
