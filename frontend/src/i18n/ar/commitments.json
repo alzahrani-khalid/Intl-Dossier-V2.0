@@ -113,8 +113,8 @@
     "titleRequired": "العنوان مطلوب",
     "titleMaxLength": "يجب أن يكون العنوان أقل من 200 حرف",
     "descriptionRequired": "الوصف مطلوب",
-    "dueDateRequired": "تاريخ الاستحقاق مطلوب",
-    "dueDateFuture": "يجب أن يكون تاريخ الاستحقاق في المستقبل",
+    "dueDateRequired": "الموعد النهائي مطلوب",
+    "dueDateFuture": "يجب أن يكون الموعد النهائي في المستقبل",
     "ownerRequired": "المسؤول مطلوب"
   },
   "errors": {

@@ -56,7 +56,7 @@
     "descriptionPlaceholder": "Describe the milestone",
     "type": "Type",
     "selectType": "Select type",
-    "dueDate": "Due date",
+    "dueDate": "Deadline",
     "weight": "Weight",
     "weightDescription": "Higher weight = more impact on overall progress (1-10)",
     "notes": "Notes",

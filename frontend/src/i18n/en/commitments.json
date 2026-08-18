@@ -113,8 +113,8 @@
     "titleRequired": "Title is required",
     "titleMaxLength": "Title must be less than 200 characters",
     "descriptionRequired": "Description is required",
-    "dueDateRequired": "Due date is required",
-    "dueDateFuture": "Due date must be in the future",
+    "dueDateRequired": "Deadline is required",
+    "dueDateFuture": "Deadline must be in the future",
     "ownerRequired": "Owner is required"
   },
   "errors": {

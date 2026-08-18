@@ -72,7 +72,7 @@
     "dueTomorrow": "Due tomorrow",
     "dueIn": "Due in {{count}} day",
     "dueIn_plural": "Due in {{count}} days",
-    "noDueDate": "No due date",
+    "noDueDate": "No deadline",
     "assignedTo": "Assigned to",
     "unassigned": "Unassigned"
   },
@@ -127,7 +127,7 @@
     "commitmentNoReviewStage": "Commitments have no review stage",
     "commitmentNoReviewStageDescription": "The Review column does not exist in the commitment lifecycle. Move the commitment to To do, In progress, or Done.",
     "commitmentPastDue": "Commitment is overdue",
-    "commitmentPastDueDescription": "An overdue commitment cannot move to To do or In progress. Extend the due date, or mark it complete."
+    "commitmentPastDueDescription": "An overdue commitment cannot move to To do or In progress. Extend the deadline, or mark it complete."
   },
   "actions": {
     "retry": "Retry",

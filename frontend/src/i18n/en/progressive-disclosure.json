@@ -127,7 +127,7 @@
           "filters": {
             "title": "Filter Your View",
             "content": "Use filters to focus on specific types of work or time periods.",
-            "expanded": "Filter by source (tasks, commitments, intake), status, priority, or due date."
+            "expanded": "Filter by source (tasks, commitments, intake), status, priority, or deadline."
           },
           "deadlines": {
             "title": "Track Deadlines",

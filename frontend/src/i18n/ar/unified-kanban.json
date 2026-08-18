@@ -72,7 +72,7 @@
     "dueTomorrow": "مستحق غداً",
     "dueIn": "مستحق خلال {{count}} يوم",
     "dueIn_plural": "مستحق خلال {{count}} أيام",
-    "noDueDate": "بدون موعد استحقاق",
+    "noDueDate": "بدون موعد نهائي",
     "assignedTo": "مسند إلى",
     "unassigned": "غير مسند"
   },
@@ -100,7 +100,7 @@
   },
   "sorting": {
     "label": "ترتيب حسب",
-    "deadline": "تاريخ الاستحقاق",
+    "deadline": "الموعد النهائي",
     "created_at": "تاريخ الإنشاء",
     "priority": "الأولوية"
   },
@@ -127,7 +127,7 @@
     "commitmentNoReviewStage": "لا توجد مرحلة مراجعة للالتزامات",
     "commitmentNoReviewStageDescription": "عمود المراجعة غير موجود في دورة حياة الالتزام. انقل الالتزام إلى للتنفيذ أو قيد التنفيذ أو مكتمل.",
     "commitmentPastDue": "الالتزام متأخر",
-    "commitmentPastDueDescription": "لا يمكن نقل التزام متأخر إلى للتنفيذ أو قيد التنفيذ. مدّد تاريخ الاستحقاق أو أكمل الالتزام."
+    "commitmentPastDueDescription": "لا يمكن نقل التزام متأخر إلى للتنفيذ أو قيد التنفيذ. مدّد الموعد النهائي أو أكمل الالتزام."
   },
   "actions": {
     "retry": "إعادة المحاولة",
