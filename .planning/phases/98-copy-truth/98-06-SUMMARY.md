@@ -5,11 +5,14 @@ type: execute-summary
 wave: 3
 seat: p98-exec-06 (herdr pane wK:p7S)
 baseline_head: 13d5094ea
-work_commit: a9d2414a5
-head_at_writing: 34453e809
+work_commits:
+  trip1: [a9d2414a5]
+  trip2: [9ea8c1d3f, 0ff7125d8, dc7295558]
+head_at_writing: dc7295558
 requirements: [COPY-03, COPY-04]
-status: WORK COMPLETE — two clause-2 blockers ESCALATED, not closed by me
+status: COMPLETE — trip-1 blockers ANSWERED by RULING-P98A2-13/-14 and executed in trip 2
 escalation: .tickmarkr/overseer/P98A2-EXEC-W3-ESCALATION-98-06.md
+rulings_executed: [RULING-P98A2-05 E1-a, RULING-P98A2-13 B1/B2/B4, RULING-P98A2-14]
 ---
 
 # 98-06 — the voice-value lane: execution record
@@ -41,18 +44,21 @@ every run.
 (both locale trees under `frontend/src/i18n/`), and are BOUNDED over the rendered surface**, with
 the out-of-population class named:
 
-| clause              | closes in full over                                                                                                         | bounded by                                                                                | instrument                                      |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| exclamations        | i18n JSON leaf values, both locales — floor **exactly 1 EN / 1 AR**, the `validation:password.addSpecial` charset carve-out | hardcoded bilingual TSX literals (E-C class 2) + `t()` default masks (E-C class 1, → P99) | drilled walker, both polarities                 |
-| first person        | i18n JSON EN values — **27 repaired / 2 user-speaker OUT / 1 domain term → P99**, zero product-speaker remaining            | same two classes                                                                          | drilled walker + wider-pattern blind-spot probe |
-| retired terminology | i18n JSON EN values — **zero** `Due Date` / chip values survive in any `en/*.json`                                          | 3 hardcoded TSX/TS members on a **routed** page + a CSV header (E-A)                      | bundle-grep oracle, both polarities             |
+| clause              | closes in full over                                                                                                                                                                 | bounded by                                                                                | instrument                                                    |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| exclamations        | i18n JSON leaf values, both locales — floor **exactly 1 EN / 1 AR**, the `validation:password.addSpecial` charset carve-out                                                         | hardcoded bilingual TSX literals (E-C class 2) + `t()` default masks (E-C class 1, → P99) | drilled walker, both polarities                               |
+| first person        | i18n JSON EN values — **27 repaired / 2 user-speaker OUT / 1 domain term → P99**, zero product-speaker remaining                                                                    | same two classes                                                                          | drilled walker + wider-pattern blind-spot probe               |
+| retired terminology | **CORRECTED IN TRIP 2 — see §0A.** i18n JSON values **case-INsensitively**, EN and AR, floor **1** (the ruled `validation.json` carve-out); plus the 3 ruled TSX/TS sites, repaired | 4 named out-of-scope i18n members + 5 edge functions no bundle-grep can see               | bundle-grep oracle + case-insensitive walker, both polarities |
 
 **The named Title Case instance (D-14/D-30) closes IN FULL, unbounded**, on a rendered surface:
 `elected-officials:list.add` = `Add elected official` (EN, re-cased), `إضافة مسؤول منتخب` (AR,
 unchanged), green in **both** locale legs of `98-copy04-voice.spec.ts @values`, role `admin` — the
 one leg of that spec that actually discriminated.
 
-**Held for ruling, closed by me: nothing.** E-A, E-B and E-C are all **HOLD** per the orchestrator.
+**Held for ruling, closed by me: nothing — AT THE TIME THIS WAS WRITTEN.** E-A, E-B and E-C were all
+**HOLD**; all three were subsequently ANSWERED by `RULING-P98A2-13` and executed in trip 2 (§0A).
+The original wording is left standing so the sequence — held first, ruled second, executed third —
+remains legible.
 Criterion 4's _unbounded_ "no user reads the retired term / an exclamation / product-we" reading is
 **NOT closed by this plan** and I do not claim it. `RULING-P98A2-12` (`b5eb84314`), filed for
 criterion 1, is expected to be the template for the criterion-4 answer.
@@ -63,6 +69,84 @@ not derive these two facts myself): a source-level grep returns **10** files for
 ones, and **the bundle-grep is the discriminating instrument a source grep is not.** And
 `CommitmentsHelpPage.tsx` / `useExportData.ts` are declared by **no plan in the phase — 0 of 9, with
 a live control** — so widening has zero contention cost if that is how it is ruled.
+
+---
+
+## 0A. TRIP 2 — what the rulings changed, and a correction to my own trip-1 claim
+
+Appended after `RULING-P98A2-13` (four blockers) and `RULING-P98A2-14` (casing) released me for a
+second trip. Section 0 above stands as written; this extends it.
+
+### The correction, stated as a correction — not folded in quietly
+
+**My trip-1 claim "zero `Due Date` survives in any `en/*.json`", committed in `a9d2414a5`, was
+under-derived. It is TRUE of the exact casing `"Due Date"` and FALSE of the retired TERM.** A
+case-insensitive re-derivation found **9 EN members across 7 files** still carrying it (`Due date`,
+`due date`, `due dates`). I found this myself, on my own not-yet-graded work, and reported it before
+it was graded; the orchestrator reproduced my figures exactly with a discriminating control.
+
+The root cause is the one `RULING-P98A2-13` had just named one level up, which is why I went looking:
+**a population defined by the token that usually implements a behaviour instead of by the behaviour.**
+My retired-term population was "the string `Due Date`"; the criterion's population is "the glossary
+term a user reads".
+
+**The same error, one language over, found by applying the fix to itself:** my AR pattern was a
+single inflection, `تاريخ الاستحقاق`. Re-derived on the **root** `استحقاق`, the AR population is **14
+members across 10 files**, not the 7 across 5 I first reported — the narrow pattern was blind to
+`استحقاقها`, `مواعيد استحقاق` and `بدون موعد استحقاق`.
+
+**Standing law this produced** (`RULING-P98A2-14`, and the overseer corrected its own brief line to
+me): **casing sensitivity is a PER-POPULATION property derived from the population's SEMANTICS, never
+a brief-wide default.** Exclamations and Title Case are case-sensitive by what they ARE; a glossary
+term is case-insensitive by what it IS. Every population statement in §1 below now names its casing
+rule as part of its definition.
+
+### What trip 2 closed
+
+| ruling                | disposition                   | what I did                                                                                                                                                                                  |
+| --------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **13 B1**             | widened by ruling, option (a) | the 3 ruled retired-term sites — `CommitmentsHelpPage.tsx:151`, `:288-289`, `useExportData.ts:341-342`                                                                                      |
+| **13 B1 travel rule** | open-file members travel      | `CommitmentsHelpPage` `:381` (exclamation), `:409` (first person), `:497-498` (exclamation), and `:194` — a **lowercase** member the case-sensitive pattern never saw, travel call ratified |
+| **13 B2**             | option (a); (c) refused       | `98-copy03-dashboard.spec.ts` — assert the block over ALL captured failures, not `blocked[0]`                                                                                               |
+| **13 B4**             | criterion 4 BOUNDED           | section 0 wording, extended here                                                                                                                                                            |
+| **14**                | widened by ruling, option (a) | the case-insensitive members: 15 edits / 12 files / 6 namespaces, both locales                                                                                                              |
+
+**`validation.json` is EXCLUDED BY RULING and its member SURVIVES.** It is an explicit plan carve-out
+(`98-06-PLAN.md:206`) whose own Task-3 gate (`:253`) asserts content survives there; repairing it
+would have manufactured a `RULING-07` collision deliberately. **The carve-out is cited here because
+the ruling made the citation mandatory** — it is what distinguishes a reasoned exclusion from an
+oversight. My gate asserts BOTH `validation.json` carve-outs still stand (the `!` charset member AND
+the retired-term member), so a future over-eager sweep reds instead of passing quietly.
+
+**A consequence I am naming rather than hiding:** `Due date is required` now reads `Deadline is
+required` through `commitments:validation.dueDateRequired` and still reads `Due date is required`
+through `validation:dueDateRequired`. Same sentence, two namespaces, two answers — the price of the
+ruled carve-out, stated so nobody reads it as a miss.
+
+### Rendered closure for the newly-opened sites — the §8 caveat is now retired
+
+§8 named "I have not driven `/help/commitments` in a browser" as my third-weakest claim. It has now
+been driven, **both locales, role admin**, before and after:
+
+|                        | harvested chars     | the 8 defect probes | glossary controls                         |
+| ---------------------- | ------------------- | ------------------- | ----------------------------------------- |
+| **RED**, pre-repair    | en 12390 / ar 11321 | **all 8 PRESENT**   | present                                   |
+| **GREEN**, post-repair | en 12078 / ar 11070 | **all 8 absent**    | `Deadline` / `الموعد النهائي` **present** |
+
+**The probe's own population had to be corrected mid-flight, which is the point.** Its first version
+read only first paint (en 1671 / ar 1305 chars) and saw **1 of the 6 ruled sites** — the other five
+live behind the "Create & Manage" accordions and the "Filtering" tab. A green there would have been a
+correct number about the wrong set, in the same shape as the casing miss, two hours later. The
+corrected probe walks every tab and every accordion item, and asserts a harvest-size floor so that
+"absent" can never mean "never opened".
+
+**Disposition of the probe, decided deliberately rather than left as an orphan:** it was
+instrumentation and is **removed from the repo** — the run records above are the evidence. I did
+**not** commit it as a ninth spec, because the phase's `RED-BASELINE` counts **eight** oracles and
+other seats derive from that figure; silently making it nine is not a seat's call. **It is preserved
+and offered** at
+`…/scratchpad/OFFERED-98-06-helppage-probe.spec.ts` — if 98-09 wants a ninth instrument for the
+surface `copy04` is structurally blind to, it exists and needs no re-derivation.
 
 ---
 
@@ -83,7 +167,8 @@ being harmless.
 ### P1 — seed/test instructions (COPY-03, the phase's one `[V]` item)
 
 - **Definition:** EN leaf values matching `/\bseed(ed)?\b|\bstaging\b|test data|migration/i` across
-  all 129 EN namespaces.
+  all 129 EN namespaces. **CASING RULE: case-INsensitive** — "seed"/"Seed"/"SEEDED" are the same
+  dev-vocabulary member; casing carries no meaning for this population.
 - **Derived: exactly 4**, all in `dashboard-widgets.json`. The RESEARCH claim reproduces exactly.
 - **AR leg, and a population trap I nearly walked into.** The EN regex is **vacuous over Arabic**,
   so the AR leg has its own defect-term pattern `المزروعة|التجريبية|بيانات الاختبار`. It matches
@@ -98,7 +183,13 @@ being harmless.
 
 ### P2 — retired terminology
 
-- **Definition:** values matching `/"Due Date"|Deadline \/ Due/` in `frontend/src/i18n/en/*.json`.
+- **Definition, TRIP 1 — WRONG, and corrected in trip 2:** values matching
+  `/"Due Date"|Deadline \/ Due/` in `frontend/src/i18n/en/*.json`. **CASING RULE: case-SENSITIVE.
+  That rule was the defect** — see §0A. A glossary term is case-insensitive by what it IS.
+- **Definition, CORRECTED (`RULING-P98A2-14`):** EN values matching `/due[ -]date/i`
+  (**case-INsensitive**), and AR values matching the ROOT `استحقاق` rather than the single
+  inflection `تاريخ الاستحقاق`. On the corrected definition the trip-1 population of 5 becomes
+  **9 EN across 7 files** and **14 AR across 10 files**.
 - **Derived: 5 EN** — `calendar.json wizard.templates.deadlineReminder.title`,
   `commitments.json form.dueDate` + `filters.dueDate`, `meeting-minutes.json actionItems.dueDate`,
   `working-groups.json deliverableForm.dueDate`. **AR: 0** for this EN pattern (the AR retired term
@@ -116,7 +207,9 @@ being harmless.
 
 ### P3 — exclamation marks
 
-- **Definition:** leaf string values containing `!`, both locales.
+- **Definition:** leaf string values containing `!`, both locales. **CASING RULE: not applicable —
+  the population is a single punctuation character.** (Stated anyway, per `RULING-P98A2-14`: every
+  population names its casing rule, including when the answer is "no letters are involved".)
 - **Derived at `13d5094ea`: 30 EN / 29 AR — NOT the 31 / 30 that D-21 and the plan state.**
 - **The delta is attributed, not shrugged at.** I re-ran the same walker against the RED-baseline
   sha `4e107b5d3` and got **exactly 31 / 30**, reproducing D-21. The difference is
@@ -131,7 +224,10 @@ being harmless.
 
 ### P4 — first-person plural
 
-- **Definition:** EN leaf values matching `/\b([Ww]e|[Oo]ur|[Ll]et'?s)\b|\bus\b/`.
+- **Definition:** EN leaf values matching `/\b([Ww]e|[Oo]ur|[Ll]et'?s)\b|\bus\b/`. **CASING RULE:
+  case-SENSITIVE, deliberately** — the population is sentence-position pronouns, so `We`/`we` both
+  count while `US` (the country abbreviation) must NOT. Verified rather than assumed: the wider
+  case-insensitive probe below returns 0 additional members, so the rule costs nothing here.
 - **Derived: 30 candidates across 24 files** — matching the plan's "~30 across 24 files" exactly.
 - **Register figure: 8, and it is REFUTED as a count** (D-21 already called it unverified). 30 raw,
   **27 product-speaker after triage** — see §4. RESEARCH predicted triage would "land near the
@@ -381,11 +477,42 @@ namespace `graph`, NOT `relationships`**, which was the one collision I expected
 by reading the source. Intersection with my 17 undeclared first-person files: **empty**. My 72 files
 are unchanged by all three of its commits (`git diff a9d2414a5..HEAD -- <my 72>` = 0).
 
+### Trip-2 commits (three more, same discipline)
+
+| commit      | files | what                                                                                          |
+| ----------- | ----- | --------------------------------------------------------------------------------------------- |
+| `9ea8c1d3f` | 2     | `RULING-13 B1` + the open-file travel members — `CommitmentsHelpPage.tsx`, `useExportData.ts` |
+| `0ff7125d8` | 1     | `RULING-13 B2` — the `98-copy03-dashboard.spec.ts` instrument strengthening                   |
+| `dc7295558` | 12    | `RULING-14` — the case-insensitive members, 6 namespaces × 2 locales                          |
+
+Verified the same way and with the same instrument-test: **zero** exogenous, sibling-owned,
+`validation.json`, `WaitingQueue` or `common.json` paths across all three — and the filter returns
+**non-zero** on a commit that does contain such a path, so the zero is not vacuous.
+
+**A vacuous green I caught in passing, recorded because it nearly shipped as evidence.** My first
+`prettier --check` over the 12 widened files printed _"All matched files use Prettier code style!"_
+while matching **zero files** — zsh does not word-split an unquoted `$(…)`, so the whole list arrived
+as a single argument. Re-run NUL-delimited through `xargs -0`, with a file-count and existence
+control first. **Third time this zsh trap has bitten me in this phase**; it is now a reflex to assert
+the file count before believing any sweep's verdict.
+
+**Also corrected in trip 2:** an importer probe of mine reported "1624 importers" for a component,
+because the shell variable holding the filename was empty and the grep degenerated. The control
+(a known-imported component returning 1) is what exposed it. Both errors were mine, both were caught
+by controls rather than by luck, and neither reached a claim.
+
 ---
 
 ## 7. Plan defects and criteria-vs-prose collisions
 
-### Escalated, awaiting ruling — I closed neither
+### Escalated, then RULED and executed in trip 2 — I closed none of them myself
+
+**Status update (trip 2): all three were answered by `RULING-P98A2-13` and executed — see §0A.**
+E-A → B1 option (a), widened by ruling. E-B → B2 option (a), (c) refused. E-C → B4, criterion 4
+BOUNDED, with the class-2 travel rule splitting open-file members (repaired) from members in files
+no ruling opens (named, measured, unrepaired → COPY-09, Phase 102). A fourth blocker I raised after
+these — the casing miss in my own committed work — became `RULING-P98A2-14`. The text below is the
+original escalation record, left standing.
 
 Full detail: **`.tickmarkr/overseer/P98A2-EXEC-W3-ESCALATION-98-06.md`**.
 
@@ -427,6 +554,31 @@ Full detail: **`.tickmarkr/overseer/P98A2-EXEC-W3-ESCALATION-98-06.md`**.
 ---
 
 ## 8. My own weakest point — the claim I would attack first
+
+### TRIP-2 UPDATE — the trip-1 answer below was right, and it was not the worst one
+
+The weakest claim in trip 1 turned out **not** to be the exclamation floor I named. It was the
+retired-term zero, and it was weak for a reason I did not name: **its casing rule.** I checked
+whether my populations reached the right FILES and never asked whether the pattern matched the right
+STRINGS inside them. §0A records it. I would rather be the one who found it, and I was — but I
+committed it first, and a grader would have been entitled to find it instead.
+
+**So the honest trip-2 answer, and I would attack this first:** every population statement in this
+file is only as good as its _definition_, and I have now been wrong about a definition twice in one
+night in two different dimensions — **scope** (i18n JSON vs the rendered surface, E-A) and **form**
+(case-sensitive vs case-insensitive, RULING-14). Both were caught by an instrument aimed at
+something else. The dimension I have **not** systematically probed is **completeness of the
+enumeration itself**: my leaf-walker reads dicts, lists and strings — if any bundle stores copy in a
+shape it does not walk, every count in §1 is silently short, and nothing in this record would show
+it. I have no evidence of such a shape and no evidence against one.
+
+Second-weakest, unchanged and now sharper: the **5 edge functions** (`data-export`, `data-import`,
+`pdf-generate`, `bot-notification-dispatcher`, `contextual-suggestions`) ship the retired term in
+both locales. `pdf-generate` puts it in a document a user reads. **No bundle-grep can ever see
+them** — they never enter the bundle — so the very instrument that rescued this criterion is blind
+to that class. They are named and unrepaired, and no ruling has assigned them.
+
+### The trip-1 answer, left standing
 
 **It is §3b's headline: "exclamation leaf values total exactly 1 EN / 1 AR."**
 
