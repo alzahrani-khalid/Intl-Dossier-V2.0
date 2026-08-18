@@ -233,6 +233,26 @@ card in both locales.
       canonical `dossierTypeColors` map and already drifts from it (muted default vs WR-07's
       country fallback) — align it to the canonical map when touching this component.
 
+### EDGECOPY — retired terminology shipped from edge functions, outside every frontend instrument
+
+- [ ] **EDGECOPY-01**: **The retired term (`Due Date` / `تاريخ الاستحقاق`) ships from FIVE edge
+      functions in both locales** — including `pdf-generate`, which writes it into a document the
+      user KEEPS. Filed 2026-08-18 by `RULING-P98A2-16` (Phase 98 execution, blocker 6). The
+      5-count is display-copy only: a sixth candidate (`mou-notifications`) was read in context and
+      is JSDoc/console/internal-payload, not display copy. **Why Phase 98 did not repair it, stated
+      so the residue reads as reasoned:** `supabase/functions` is OUTSIDE the search space of every
+      P98 instrument (bundle-grep included) — fourth structural-blindness instance, first in the
+      SEARCH SPACE rather than the matcher; no P98 oracle reads that tree, so a repair would close
+      on source structure alone; and edge functions ship by DEPLOYMENT, not the frontend build, so
+      a repaired line is not repaired product until a deploy this phase does not own. **Closure =
+      repair + DEPLOY + verification on a produced artifact (a generated PDF), both locales.**
+      Candidate instrument: the 98-06 seat's offered probe, preserved at
+      `.tickmarkr/overseer/INSTRUMENTS-P98/` (sha `373743c14020c1c2`) — deliberately NOT adopted
+      as a ninth P98 spec (RED-BASELINE counts eight and Law 1 binds negative-scope lines to the
+      eight); the owning phase adopts and commits it. **Owner: Phase 102 — Staging Data & Debt
+      Tail** (owns staging state and deploy-adjacent work; P99 is namespace-scoped and owns no
+      deploys).
+
 ### AR — Arabic translation coverage (layout infrastructure is already sound)
 
 - [ ] **AR-01**: One Arabic glossary for core objects, applied across all namespaces — dossier is one term (not دوسيه / ملف / دوسييه), and a nav label always matches the title of the page it opens (currently الارتباطات → المشاركات, البلدان → الدول).
@@ -865,6 +885,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | COPY-07 | Phase 98 — Copy Truth | Complete |
 | COPY-08 | Phase 98 — Copy Truth | Complete |
 | GUIDE-HOLLOW-01 | Phase 102 — Staging Data & Debt Tail | Pending |
+| EDGECOPY-01 | Phase 102 — Staging Data & Debt Tail | Pending |
 | COPY-09 | Phase 102 — Staging Data & Debt Tail | Pending |
 | AR-01 | Phase 99 — Arabic Coverage | Pending |
 | AR-02 | Phase 99 — Arabic Coverage | Pending |
