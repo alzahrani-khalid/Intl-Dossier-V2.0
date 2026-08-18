@@ -151,6 +151,8 @@ const auditSources = (sources, bundles) => {
   const assessed = []
   const nonKeys = []
   let twoArgTotal = 0
+  let literalTwoArgTotal = 0
+  let optionsDefaultTotal = 0
   let rawKeyTotal = 0
 
   for (const { file, source } of sources) {
@@ -166,7 +168,7 @@ const auditSources = (sources, bundles) => {
       const looseResolved = resolutionFor(bundles, loose, path)
       const defectiveResolved = resolutionFor(bundles, defectiveCandidates, path)
       assessed.push({
-        class: shape === 'two-arg' ? 'two-arg-mask' : 'raw-key',
+        class: shape === 'two-arg' || shape === 'options-default' ? 'two-arg-mask' : 'raw-key',
         shape,
         file,
         line: lineAt(source, offset),
@@ -180,6 +182,7 @@ const auditSources = (sources, bundles) => {
 
     for (const match of source.matchAll(TWO_ARG)) {
       twoArgTotal++
+      literalTwoArgTotal++
       if (isNonKey(match[1])) {
         nonKeys.push({
           class: 'two-arg-mask',
@@ -199,7 +202,21 @@ const auditSources = (sources, bundles) => {
     }))
     for (const match of source.matchAll(OPTS_ARG)) {
       const open = source.indexOf('{', match.index)
-      if (HAS_DEFAULT_VALUE.test(braceBody(source, open))) continue
+      if (HAS_DEFAULT_VALUE.test(braceBody(source, open))) {
+        twoArgTotal++
+        optionsDefaultTotal++
+        if (isNonKey(match[1])) {
+          nonKeys.push({
+            class: 'two-arg-mask',
+            file,
+            line: lineAt(source, match.index),
+            key: match[1],
+          })
+        } else {
+          record(match[1], 'options-default', match.index)
+        }
+        continue
+      }
       rawSites.push({ key: match[1], shape: 'options-no-default', offset: match.index })
     }
     for (const site of rawSites) {
@@ -217,6 +234,8 @@ const auditSources = (sources, bundles) => {
   const rawKeySites = unresolved.filter((site) => site.class === 'raw-key')
   const assessedTwoArg = assessed.filter((site) => site.class === 'two-arg-mask')
   const assessedRawKey = assessed.filter((site) => site.class === 'raw-key')
+  const literalTwoArgSites = twoArgSites.filter((site) => site.shape === 'two-arg')
+  const optionsDefaultSites = twoArgSites.filter((site) => site.shape === 'options-default')
   const unresolvedIn = (sites, locale) => sites.filter((site) => !site.resolved[locale]).length
   const hiddenByLoose = (sites) =>
     sites.filter((site) =>
@@ -231,9 +250,13 @@ const auditSources = (sources, bundles) => {
 
   return {
     twoArgTotal,
+    literalTwoArgTotal,
+    optionsDefaultTotal,
     rawKeyTotal,
     nonKeyTotal: nonKeys.length,
     twoArgUnresolved: twoArgSites.length,
+    literalTwoArgUnresolved: literalTwoArgSites.length,
+    optionsDefaultUnresolved: optionsDefaultSites.length,
     rawKeyUnresolved: rawKeySites.length,
     twoArgUnresolvedEn: unresolvedIn(twoArgSites, 'en'),
     rawKeyUnresolvedEn: unresolvedIn(rawKeySites, 'en'),
@@ -243,6 +266,7 @@ const auditSources = (sources, bundles) => {
     rawKeyDistinct: new Set(rawKeySites.map((site) => site.key)).size,
     looseModelDelta: {
       twoArgHiddenSites: hiddenByLoose(twoArgSites),
+      literalTwoArgHiddenSites: hiddenByLoose(literalTwoArgSites),
       rawKeyHiddenSites: hiddenByLoose(rawKeySites),
       twoArgRescuedByAlias: rescuedByAlias(assessedTwoArg),
       rawKeyRescuedByAlias: rescuedByAlias(assessedRawKey),
@@ -292,6 +316,7 @@ t('enOnly', 'Default')
 t('arOnly', 'Default')
 t('featureOnly', 'Default')
 t('translation:alias.ok', 'Default')
+t('optionsMask', { defaultValue: 'Default' })
 `,
     },
     {
@@ -363,7 +388,11 @@ t('bareOnly', 'Default')
     translationCommonAlias: LOCALES.every((locale) => aliasSite.resolved[locale]),
     englishLocaleChecked: enOnly.resolved.en && !enOnly.resolved.ar,
     arabicLocaleChecked: !arOnly.resolved.en && arOnly.resolved.ar,
-    everyMaskSiteCounted: audit.twoArgTotal === 8,
+    everyMaskSiteCounted:
+      audit.twoArgTotal === 9 && audit.literalTwoArgTotal === 8 && audit.optionsDefaultTotal === 1,
+    optionsDefaultMaskCounted: audit.assessed.some(
+      (site) => site.key === 'optionsMask' && site.class === 'two-arg-mask',
+    ),
     defectiveModelVisiblyReclassified:
       audit.defectiveBindingDelta.twoArgSitesReclassified === 2 &&
       audit.defectiveBindingDelta.rawKeySitesReclassified === 0,
@@ -387,6 +416,10 @@ t('bareOnly', 'Default')
 const printHuman = (result) => {
   console.log(
     `strict i18n audit: ${result.scannedFiles} file(s); ${result.twoArgUnresolved}/${result.twoArgTotal} two-arg masks unresolved`,
+  )
+  console.log(
+    `mask shapes literal/options-default: ${result.literalTwoArgUnresolved}/${result.literalTwoArgTotal} ` +
+      `and ${result.optionsDefaultUnresolved}/${result.optionsDefaultTotal}`,
   )
   console.log(`${result.rawKeyUnresolved}/${result.rawKeyTotal} raw-key sites unresolved`)
   console.log(`EN/AR two-arg: ${result.twoArgUnresolvedEn}/${result.twoArgUnresolvedAr}`)
