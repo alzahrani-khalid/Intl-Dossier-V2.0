@@ -157,37 +157,28 @@ export function DossierTypeStatsCard({
 
             {/* Count and Help Icon */}
             <div className="flex items-center gap-1">
-              {/* Help Icon with DossierTypeGuide.
-                  HIDDEN for `elected_official`, deliberately. The guide renders
-                  `t('typeDescription.<type>')` with no fallback, and neither locale bundle carries
-                  a `typeDescription.elected_official` entry — OBSERVED live on 2026-08-17, the
-                  popover printed the raw key `typeDescription.elected_official` while the `person`
-                  control printed real copy. Inventing copy is out of this plan's scope and
-                  shipping a raw key is worse than shipping no trigger, so the affordance is
-                  withheld rather than broken. State recorded in 97-05-SUMMARY for 97-09. */}
-              {type !== 'elected_official' && (
-                <DossierTypeGuide
-                  type={type}
-                  variant="popover"
-                  trigger={
-                    <button
-                      onClick={(e) => e.stopPropagation()}
-                      className={cn(
-                        'hidden sm:inline-flex items-center justify-center',
-                        'min-h-5 min-w-5 p-0.5',
-                        'rounded-full',
-                        'bg-[var(--surface)] hover:bg-[var(--accent-soft)]',
-                        'text-[var(--ink-mute)] hover:text-[var(--accent-ink)]',
-                        'transition-colors duration-150',
-                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1',
-                      )}
-                      aria-label={t('typeGuide.learnMore', 'Learn more about this type')}
-                    >
-                      <HelpCircle className="h-3 w-3" />
-                    </button>
-                  }
-                />
-              )}
+              {/* Help Icon with DossierTypeGuide — rendered for all nine cases. */}
+              <DossierTypeGuide
+                type={type}
+                variant="popover"
+                trigger={
+                  <button
+                    onClick={(e) => e.stopPropagation()}
+                    className={cn(
+                      'hidden sm:inline-flex items-center justify-center',
+                      'min-h-5 min-w-5 p-0.5',
+                      'rounded-full',
+                      'bg-[var(--surface)] hover:bg-[var(--accent-soft)]',
+                      'text-[var(--ink-mute)] hover:text-[var(--accent-ink)]',
+                      'transition-colors duration-150',
+                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1',
+                    )}
+                    aria-label={t('typeGuide.learnMore', 'Learn more about this type')}
+                  >
+                    <HelpCircle className="h-3 w-3" />
+                  </button>
+                }
+              />
               {/* Count */}
               <m.div
                 initial={{ scale: 0.9, opacity: 0 }}

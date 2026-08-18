@@ -24,6 +24,7 @@ import {
   Target,
   Briefcase,
   User,
+  Crown,
   HelpCircle,
   Check,
   X,
@@ -38,10 +39,21 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import type { DossierType } from '@/services/dossier-api'
+import type { DossierCardType } from '@/lib/dossier-type-guards'
 import { useDirection } from '@/hooks/useDirection'
 
+/**
+ * This component DISPLAYS dossier kinds, so it speaks the CARD-8
+ * (`DossierCardType`), not the DB-7 (`DossierType`) — `dossier-type-guards.ts:61-72`
+ * assigns display surfaces to the card set and query surfaces to the DB set. The
+ * two sets are NOT merged here: `DOSSIER_TYPES` and its `_EoIsNotADbType`
+ * anti-merge assertion are untouched, so no `dossiers.type` count bucket is created.
+ * Until Phase 98 the `type !== 'elected_official' &&` render guard in
+ * `DossierTypeStatsCard.tsx` was doing this narrowing implicitly; deleting the guard
+ * (D-12) makes the prop's real domain explicit.
+ */
 export interface DossierTypeGuideProps {
-  type: DossierType
+  type: DossierCardType
   /** Render as compact tooltip or full popover */
   variant?: 'tooltip' | 'popover' | 'inline'
   /** Custom trigger element */
@@ -51,13 +63,13 @@ export interface DossierTypeGuideProps {
   /** Whether to show the info icon trigger */
   showTrigger?: boolean
   /** Callback when type is selected (for wizard integration) */
-  onSelect?: (type: DossierType) => void
+  onSelect?: (type: DossierCardType) => void
 }
 
 /**
  * Get type-specific icon component
  */
-function getTypeIcon(type: DossierType, className?: string) {
+function getTypeIcon(type: DossierCardType, className?: string) {
   const iconProps = { className: className || 'h-5 w-5' }
 
   switch (type) {
@@ -75,6 +87,8 @@ function getTypeIcon(type: DossierType, className?: string) {
       return <Briefcase {...iconProps} />
     case 'person':
       return <User {...iconProps} />
+    case 'elected_official':
+      return <Crown {...iconProps} />
     default:
       return <Globe {...iconProps} />
   }
@@ -89,7 +103,7 @@ function getTypeIcon(type: DossierType, className?: string) {
  * destructive, accent, muted) using `/10` bg + `/30` border opacity steps.
  * Token tokens are mode-invariant, so no dark: variants are needed (D-09).
  */
-function getTypeColors(type: DossierType): { bg: string; text: string; border: string } {
+function getTypeColors(type: DossierCardType): { bg: string; text: string; border: string } {
   switch (type) {
     case 'country':
       return {
@@ -133,6 +147,15 @@ function getTypeColors(type: DossierType): { bg: string; text: string; border: s
         text: 'text-muted-foreground',
         border: 'border-muted',
       }
+    // WR-07: `semantic-colors.ts` resolves `dossierTypeColors[type] ?? dossierTypeColors.country`
+    // and holds no `elected_official` entry, so country/primary IS the canonical fallback for EO
+    // today — popover == stats card == canonical fallback. No new colour family (D-28).
+    case 'elected_official':
+      return {
+        bg: 'bg-primary/10',
+        text: 'text-primary',
+        border: 'border-primary/30',
+      }
     default:
       return {
         bg: 'bg-muted',
@@ -150,9 +173,9 @@ function GuideContent({
   variant,
   onSelect,
 }: {
-  type: DossierType
+  type: DossierCardType
   variant: 'tooltip' | 'popover' | 'inline'
-  onSelect?: (type: DossierType) => void
+  onSelect?: (type: DossierCardType) => void
 }) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
