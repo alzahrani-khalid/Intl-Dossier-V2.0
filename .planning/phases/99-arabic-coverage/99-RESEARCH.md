@@ -10,7 +10,13 @@ committed tree at that sha. (`git status --porcelain` printed beside the sha at 
 `engines` floor `>=22.22.0` (`package.json:8`). Verified before any script ran.
 **Scratch scripts:** this report used two scratch instruments, declared per the brief, at
 `/tmp/p99-research/p99-census.mjs` and `/tmp/p99-research/p99-strict.mjs`. Both MIRROR
-`scripts/i18n-mask-audit.mjs`'s regexes and file walk byte-for-byte and extend it (both locales;
+`scripts/i18n-mask-audit.mjs`'s regexes and file walk byte-for-byte and extend it
+**[CAUTION, added 2026-08-18 per RULING-P99-21 §2: this sentence is DESCRIPTIVE — it records what the
+scratch scripts did — and what it records is now a NAMED DEFECT. The mirrored `USE_NS` regex is
+wrong in both directions (array bindings truncated to their first namespace, bare bindings read as
+zero), so every population measured with it is untrusted, and the pattern must NOT be imitated.
+Note that the disclaimer two clauses down did not prevent the propagation: the PLANS carried the
+copy instruction, and a disclaimer does not stop propagation — only the operative channel does.]** (both locales;
 strict namespace model; classification). Their raw outputs sit beside them in `/tmp/p99-research/`.
 They are scratch, not instruments of record; anything a plan relies on must re-derive.
 
@@ -629,7 +635,7 @@ nav shell rendered, nothing more.** What exists now, committed, at HEAD:
   early.
 
 **These live INSIDE individual spec files — there is NO shared settle module.** A Phase 99 spec
-must either import-by-copy (the P98 pattern) or the phase first hoists `settle`/`expectLocale`
+must either import-by-copy (the P98 pattern) **[REVOKED 2026-08-18 by RULING-P99-21 §2 — import-by-copy is a copy-propagation vector of the same family that moved one defective USE_NS regex through three generations of instrument. Instruments that must agree SHARE CODE; do not copy. The phase took the hoisting branch below, which is the correct one.]** or the phase first hoists `settle`/`expectLocale`
 into a shared helper; either way the contract is UI99-C11.
 
 **Locale-project correction (checked at HEAD, and it corrects a P98 close-out sentence):** the

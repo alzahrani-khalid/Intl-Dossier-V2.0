@@ -363,7 +363,20 @@ card in both locales.
   > EN and AR alike** — trading an invisible defect for a visible regression, while passing the
   > acceptance command. That is why acceptance is a conjunction and why the order is fixed.
   >
-  > Reproduce with `node scripts/i18n-mask-audit.mjs` (committed for Phase 99). Two independent
+  > ⚠ **THE NAMED REPRODUCER WAS DEFECTIVE — dated correction 2026-08-18 (`RULING-P99-21`).**
+  > `scripts/i18n-mask-audit.mjs:66`'s `USE_NS` regex captured only the FIRST namespace of an
+  > array binding and could not match a bare `useTranslation()` (whose defaultNS `translation` IS
+  > registered at `i18n/index.ts:274/410`), mis-binding **158 of 666 files** — 47 array, 111 bare.
+  > **Every "unresolved" figure below, and every population descended from this instrument, is a
+  > SUPERSET of the truth** (the defect shrinks declared namespaces, so it can only over-report):
+  > treat them as upper bounds, never as targets, and re-derive under the canonical resolver.
+  > Phase 98's closures that cite them were BOUNDED with their residues routed to Phase 99, which
+  > is where the re-derivation happens; P98 is not reopened. Phase 99 (`P99-04`) repairs this file
+  > and every instrument then imports one shared binding model — copies are what propagated it
+  > through three generations.
+  >
+  > Reproduce with `node scripts/i18n-mask-audit.mjs` (committed for Phase 99; **read the
+  > correction above before quoting any number from it**). Two independent
   > derivations, 2026-08-15:
   >
   > | derivation                                | total 2-arg sites | unresolved in EN | distinct keys |     share |

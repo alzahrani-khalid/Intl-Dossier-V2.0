@@ -145,7 +145,11 @@ unchanged; `tickmarkr compile` ingests this plan set. A plan that does not compi
 - **D-22: The acceptance instrument goes STRICT, and the delta set is its positive control.**
   `scripts/i18n-mask-audit.mjs`'s namespace model is looser than the shipped app (D-10), so
   acceptance check (b) under-reports. The phase repairs it (or ships a strict variant beside it).
-  **REQUIRED CONTROL: the strict instrument must FIND the 9 two-arg + 42 raw-key sites the loose
+  **REQUIRED CONTROL: the strict instrument must FIND the 9 two-arg sites the loose
+  model hides (that half stands) and, under the CORRECTED binding model of RULING-P99-20, a re-derived raw-key delta —
+  **42 is RETRACTED: 39 of it was an artifact of the binding bug and no plan, oracle or summary may
+  quote it.** The concrete control is that Topbar/IntelligencePage/PositionDossierLinker contribute
+  ZERO rawKeyUnresolved. The loose
   model hides. An instrument that cannot see that delta is not strict** and its zero means nothing.
 - **D-23: Direction of travel is preserved.** Every binding this phase TOUCHES — new keys,
   re-binds, repairs — lands in explicit **colon form**. The convention advances through every
