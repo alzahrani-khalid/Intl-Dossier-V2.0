@@ -595,7 +595,7 @@ Plans:
 
 **Goal**: RLS is a real authorization boundary for the 207 frontend files that rely on it as the only one — **and the browser stops retaining the previous user's data after sign-out.** Two boundaries, one phase: the server-side boundary that decides what a caller may read, and the client-side residue that survives the caller leaving.
 **Depends on**: Phase 94 (the `custom_reports` ↔ `report_shares` recursion is fixed there); otherwise independent — sequenced late so a query regression is attributable to the view change, not the frontend.
-**Requirements**: DBSEC-01, DBSEC-02, DBSEC-03, DBSEC-04, DBSEC-05, CLIENTSEC-01
+**Requirements**: DBSEC-01, DBSEC-02, DBSEC-03, DBSEC-04, DBSEC-05, CLIENTSEC-01, CLIENTSEC-02
 **Success Criteria** (what must be TRUE):
 
 1. Every client-reachable `SECURITY DEFINER` view is converted to `security_invoker`, restricted, or justified in writing — including `unified_work_items`, whose 10 frontend consumers still return the caller's correct rows afterwards.
@@ -604,6 +604,7 @@ Plans:
 4. `intelligence_email_queue` and `events.idempotency_keys` have policies matching intent instead of RLS-enabled-with-no-policies denying everything.
 5. Leaked-password protection is enabled and the 548 mutable-`search_path` functions are pinned; Supabase advisors report clean on these classes.
 6. **Signing out clears client-side residue.** `localStorage` no longer retains the previous user's state — the six persisted zustand stores (`auth-storage`, `entity-history-storage`, `ui-storage`, `pinned-entities-storage`, `dossier-store`, and the duplicate in the dead `services/auth.ts`) and the raw writers (`advanced-search-history`, `quickswitcher_recent_items`) are cleared, so the next user on a shared analyst workstation cannot see which dossiers the previous analyst opened or what they searched for. Phase 92 closed the in-memory query-cache half at the sign-out seam; this is the persisted half it deliberately did not sweep.
+7. **Production builds do not ship verbatim sources without a written decision.** `vite.config.ts:141` `sourcemap: true` puts 305 `.map` files with full `sourcesContent` in `dist/assets` (measured at `87b2d040e`) — strip, restrict to non-public delivery, or justify keeping them in writing (`CLIENTSEC-02`, filed 2026-08-18 from Phase 98 plan-checking).
 
 **Plans**: TBD
 

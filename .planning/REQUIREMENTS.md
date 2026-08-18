@@ -346,6 +346,16 @@ active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` 
       paths. This requirement is the **pre-existing, persisted** half and was deliberately not swept
       there. Phase 92's "query cache empty after sign-out" criterion establishes the in-memory cache and
       says nothing about `localStorage`.
+- [ ] **CLIENTSEC-02**: **Production builds ship verbatim application sources.** `vite.config.ts:141`
+      sets `sourcemap: true` for production; at `87b2d040e` the built `dist/assets` holds **305
+      `.map` files whose `sourcesContent` embeds source files verbatim** — every component, hook,
+      guard condition, and inline literal is downloadable by anyone who can fetch the assets.
+      Found 2026-08-18 during Phase 98 plan-checking (the N1 sourcemap blocker's sibling fact:
+      P98's copy oracles legitimately exclude `.map` because `sourcesContent` is outside the render
+      path — but the disclosure itself is a security posture question, not a copy question).
+      **Owner: Phase 100 — Security Posture**, whose subject is exactly this boundary: decide
+      strip / restrict (server-side, non-public) / keep-with-written-justification. Filed per
+      `RULING-P98A2` round-3 direction so the exclusion's sibling fact is queued, not shrugged.
 
 ### E2ESTALE — shipped specs failing before Phase 93 touched anything
 
@@ -786,6 +796,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | DBSEC-05 | Phase 100 — Security Posture (database + client) | Pending |
 | RLS-AUTHUSERS-01 | Phase 100 — Security Posture (database + client) | Pending |
 | CLIENTSEC-01 | Phase 100 — Security Posture (database + client) | Pending |
+| CLIENTSEC-02 | Phase 100 — Security Posture (database + client) | Pending |
 | E2ECRED-01 | Phase 101 — CI Gates Green | Pending |
 | E2ESTALE-01 | Phase 101 — CI Gates Green | Pending |
 | NOTFOUND-COMPONENT-01 | Phase 95 — Routes That Don't Render | Complete |
