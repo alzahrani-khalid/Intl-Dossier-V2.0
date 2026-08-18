@@ -238,4 +238,5 @@ if (options.json) {
     )
   }
 }
-process.exit(result.mismatches === 0 && result.missingKeys === 0 ? 0 : 1)
+// Let piped JSON/human output flush before returning the live RED status.
+process.exitCode = result.mismatches === 0 && result.missingKeys === 0 ? 0 : 1

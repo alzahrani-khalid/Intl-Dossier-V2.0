@@ -321,4 +321,6 @@ if (options.json) {
     )
   }
 }
-process.exit(result.classificationTotals.UNCLASSIFIED > 0 ? 1 : 0)
+// Do not force-exit after the large JSON/site report: stdout is asynchronous when piped, and
+// process.exit() can truncate the population that downstream lanes consume.
+process.exitCode = result.classificationTotals.UNCLASSIFIED > 0 ? 1 : 0
