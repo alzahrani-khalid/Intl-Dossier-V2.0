@@ -542,6 +542,12 @@ active dossiers"` at `frontend/src/components/dossier/DossierTypeStatsCard.tsx` 
   - **Owner: Phase 102 — Staging Data & Debt Tail.** Placed there rather than with P100's RLS work
     because the RLS branch is excluded above; if execution finds the cause IS authorization after
     all, the row moves to P100 and says so.
+  - **Dated note, 2026-08-18 (`RULING-P98A2-05` E2):** Phase 98's criterion-1 ISO-week leg is
+    ALSO blocked behind this row — `WEEK OF 2026-W27` has no rendered surface while `/engagements`
+    errors. P98 lands the localized week-header REPAIR (98-05, source + unit oracle) and closes
+    the rendered leg UNDRIVEN, scoped and stated. **Phase 102 re-verifies the rendered week header
+    when the read path is repaired** — that re-verification is part of this row's closure, not
+    optional.
 
 ### SPINNER-A11Y — text-free loading states are invisible to screen readers and to probes
 
