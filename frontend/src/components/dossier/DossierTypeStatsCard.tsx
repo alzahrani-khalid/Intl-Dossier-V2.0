@@ -216,7 +216,7 @@ export function DossierTypeStatsCard({
           {/* Percentage Display */}
           <div className="mb-2 sm:mb-3 text-center">
             <div className="mb-1 text-[10px] font-medium text-[var(--ink-mute)] sm:text-xs">
-              % of total active dossiers
+              {t('typeStats.percentOfActive')}
             </div>
             <div className="text-sm font-bold text-[var(--ink)] sm:text-lg">
               {percentage === null ? <CountUnavailable /> : `${Math.round(percentage)}%`}

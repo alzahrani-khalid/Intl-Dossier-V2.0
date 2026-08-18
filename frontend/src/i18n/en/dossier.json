@@ -59,6 +59,9 @@
     "person": "VIP individuals including ambassadors, ministers, and key contacts",
     "elected_official": "Track elected officials — their offices, terms, and engagement history with the organization."
   },
+  "typeStats": {
+    "percentOfActive": "% of total active dossiers"
+  },
   "status": {
     "active": "Active",
     "inactive": "Inactive",
@@ -966,7 +969,7 @@
         "high": "High",
         "urgent": "Urgent"
       },
-      "dueDate": "Due Date",
+      "dueDate": "Deadline",
       "ownerType": "Owner Type",
       "ownerTypes": {
         "internal": "Internal",
