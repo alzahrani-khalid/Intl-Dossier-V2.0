@@ -207,6 +207,11 @@ card in both locales.
       outside the i18n bundles. **⚠ copy04's `@values` acceptance legs gate on
       `bundleValues.has(text)` and CANNOT see hardcoded literals by construction** — use the
       bundle-grep / manual-read instruments recorded in the P98 exec report, not copy04's green.
+      **Addendum (`RULING-P98A2-14`):** also carries the retired-term member(s) inside
+      `validation.json` (both locales where present) — EXCLUDED from P98's ruled case-insensitive
+      sweep because that file is `98-06-PLAN.md:206`'s explicit carve-out and the plan's Task-3
+      gate (`:253`) asserts its content SURVIVES; the residue exists by deliberate carve-out, not
+      by miss. Repair rides whichever phase lifts the carve-out.
 
 ### GUIDE-HOLLOW — a popover whose four labelled sections have never had content
 
