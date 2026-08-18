@@ -311,9 +311,11 @@ card in both locales.
         ```
 
         **Dated note, 2026-08-18 (`RULING-P98A2-10` item 3):** Phase 98 derived this row's
-        unresolved-dot-form population at ORDER HUNDREDS — 306 distinct unresolved keys by one
-        instrument, 353 across 42 files by another; the gap is population definition, deliberately
-        unreconciled, and neither number is frozen (re-derive with the commands above plus the
+        unresolved-dot-form population at ORDER HUNDREDS — 306 unresolved SITES by one
+        instrument (309 sites − 3 FPs; 280 distinct keys — units corrected 2026-08-18
+        `RULING-P99-03`, this note previously compared a site-count to a key-count without saying
+        so), 353 distinct keys across 42 files by another; the gap is population definition,
+        deliberately unreconciled, and neither number is frozen (re-derive with the commands above plus the
         phase's `98-copy02` detector). Phase 98's criterion 2 closed BOUNDED: named instances +
         ruled class populations (entityLinks 82, `calendar.recurrence`, `calendar.months`,
         `common.*` ×7) + no raw key on oracle-driven surfaces. **The long tail is THIS row's
@@ -323,8 +325,9 @@ card in both locales.
         `RULING-P98A2-15` c5): `scripts/partA_maskfinder.py` (the mask/dynamic-prefix census),
         `scripts/resolve-check.mjs` (real-i18next resolution harness, `fallbackLng` OFF on `ar`),
         `scripts/neg-taskcard.mjs` (its negative control — run it or the harness is
-        unfalsifiable), plus `frontend/tests/e2e/98-copy02-rawkeys.spec.ts` (the extended DOM
-        detector).
+        unfalsifiable), plus `tests/e2e/98-copy02-rawkeys.spec.ts` (the extended DOM
+        detector; path corrected 2026-08-18 `RULING-P99-01` — was miscited under `frontend/`,
+        the file has always lived at the repo-root test root with all eight `98-copy0N` specs).
 
         **⚠ INVERSION AMENDMENT, 2026-08-18 (`RULING-P98A2-11`) — READ BEFORE ANY CONVERSION
         RUNS.** `common.json` carries a nested duplicate subtree literally named `common` (38

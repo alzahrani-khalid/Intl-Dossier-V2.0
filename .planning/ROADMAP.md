@@ -588,12 +588,12 @@ Plans:
 **Requirements**: AR-01, AR-02, AR-03, AR-04
 **Success Criteria** (what must be TRUE):
 
-1. Each core object has exactly one Arabic term across every namespace — dossier is one word, not دوسيه / ملف / دوسييه — and a nav label matches the title of the page it opens.
+1. Each core object has exactly one Arabic term across every namespace — dossier is one word, not دوسيه / ملف / دوسييه — and a nav label matches the title of the page it opens (agreement = same OBJECT TERM, sense-consistent, per `RULING-P99-05` §3).
 2. Dates and times render in Arabic with no English weekday or month names inside Arabic sentences (Latin digits remain deliberate policy).
 3. No English string renders under `dir="rtl"` on an otherwise-Arabic screen — the 404 page, intake queue header and primary button, position read-only banner and search suggestion chips included.
 4. No `t()` call resolves through a dot-form key with an English default, so a missing Arabic key shows as missing rather than silently rendering English in both languages.
 
-**Plans**: TBD
+**Plans**: 41 plans (planned 2026-08-18, twice revised, then RE-CUT to the engine's task-unit contract per `RULING-P99-09` — 25 plans breached max-6-acceptance/max-8-files and did not compile; the 41-task graph compiles EXIT 0 with content unchanged. Corrected 2026-08-18: this line read "25 plans", frozen at leg-1 acceptance before the re-cut moved it — my own never-freeze-a-moving-number rule, broken by me. Waves and lane map: `99-PLAN-INDEX.md`)
 **UI hint**: yes
 
 ### Phase 100: Security Posture — Database & Client

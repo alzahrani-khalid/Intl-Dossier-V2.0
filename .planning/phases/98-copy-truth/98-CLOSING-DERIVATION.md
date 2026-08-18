@@ -374,7 +374,10 @@ overseer's exec report.
 ### §4d The phase-wide evidence bounds — one list
 
 - **ROLE: admin only.** Every rendered green in this phase. No non-admin role was driven at any point.
-- **LOCALE:** both legs by `?lng=` inside `chromium-en`; **there is no `chromium-ar` project**. The
+- **LOCALE:** both legs by `?lng=` inside `chromium-en`; **no `chromium-ar` project was used by
+  P98's runs** (correction 2026-08-18 `RULING-P99-03`: the original line said "there is no
+  `chromium-ar` project", which is false as a statement about the tree — `playwright.config.ts:40`
+  defines `chromium-ar-smoke`, 3 specs under `ar-smoke/`; the claim is true only of P98's runs). The
   `@case` leg is **`en` only** by orthographic necessity and says so; the `@values` exclamation leg
   is **`en` only**.
 - **VIEWPORT:** 1400×900 throughout. No mobile or 768px leg was driven.
