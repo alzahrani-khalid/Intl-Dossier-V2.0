@@ -620,7 +620,7 @@ function EnhancedGraphVisualizationInner({
           target: edge.target_id,
           type: 'smoothstep',
           animated: isConnectedToFocused,
-          label: showEdgeLabels ? edge.relationship_type.replace(/_/g, ' ') : undefined,
+          label: showEdgeLabels ? t(`relationship.${edge.relationship_type}`) : undefined,
           style: {
             stroke: EDGE_COLORS[edge.relationship_type] || graphDefaultColor,
             strokeWidth: isConnectedToFocused ? 3 : 2,
@@ -639,7 +639,7 @@ function EnhancedGraphVisualizationInner({
           },
         }
       })
-  }, [filteredEdges, filteredNodes, showEdgeLabels, focusedNodeId, collapsedClusters])
+  }, [filteredEdges, filteredNodes, showEdgeLabels, focusedNodeId, collapsedClusters, t])
 
   const [nodes, setNodes] = useState(reactFlowNodes)
   const [edges, setEdges] = useState(reactFlowEdges)
@@ -805,7 +805,7 @@ function EnhancedGraphVisualizationInner({
                     <SelectItem key={type} value={type} className="text-xs">
                       {type === 'all'
                         ? t('allRelationships', 'All Relationships')
-                        : type.replace(/_/g, ' ')}
+                        : t(`relationship.${type}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>

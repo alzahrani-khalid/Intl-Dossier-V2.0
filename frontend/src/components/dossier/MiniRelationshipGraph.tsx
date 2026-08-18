@@ -261,10 +261,7 @@ interface RelationshipListItemProps {
 
 function RelationshipListItem({ node, relationship, isRTL, t }: RelationshipListItemProps) {
   const displayName = isRTL ? node.name_ar || node.name_en : node.name_en
-  const relationshipLabel = t(
-    `relationship.${relationship.relationship_type}`,
-    relationship.relationship_type.replace(/_/g, ' '),
-  )
+  const relationshipLabel = t(`relationship.${relationship.relationship_type}`)
 
   return (
     <Link
@@ -371,7 +368,7 @@ function MiniGraphInner({ centerDossier, nodes, edges, height, isRTL, t }: MiniG
           height: 10,
           color: EDGE_COLORS[edge.relationship_type] || 'var(--ink-faint)',
         },
-        label: edge.relationship_type.replace(/_/g, ' '),
+        label: t(`relationship.${edge.relationship_type}`),
         labelStyle: {
           fontSize: 8,
           fill: 'var(--ink-faint)',
@@ -384,7 +381,7 @@ function MiniGraphInner({ centerDossier, nodes, edges, height, isRTL, t }: MiniG
     })
 
     return { flowNodes, flowEdges }
-  }, [centerDossier, nodes, edges, navigate])
+  }, [centerDossier, nodes, edges, navigate, t])
 
   const [reactFlowNodes] = useNodesState(flowNodes)
   const [reactFlowEdges] = useEdgesState(flowEdges)

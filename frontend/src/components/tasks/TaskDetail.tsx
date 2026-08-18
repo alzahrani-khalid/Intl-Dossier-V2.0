@@ -258,7 +258,7 @@ export function TaskDetail({
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">{t('type', 'Type')}</p>
                     <Badge variant="outline" className="capitalize">
-                      {(task as any).engagement.engagement_type.replace(/_/g, ' ')}
+                      {t(`engagements:types.${(task as any).engagement.engagement_type}`)}
                     </Badge>
                   </div>
                   <div>

@@ -234,7 +234,7 @@ export function AlertRuleForm({
               >
                 {DOSSIER_TYPES.map((type) => (
                   <option key={type} value={type}>
-                    {type.replace('_', ' ')}
+                    {t(`dossier:type.${type}`)}
                   </option>
                 ))}
               </select>
