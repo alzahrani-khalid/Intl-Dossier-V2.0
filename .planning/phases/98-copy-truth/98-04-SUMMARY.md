@@ -47,8 +47,10 @@ metrics:
 The whole `entityLinks` namespace in both locales (97 leaves), the default mutation toast
 localized and **observed rendering in Arabic on a real write**, all 43 dot-form
 `calendar.recurrence` sites routed colon-form with conservation proven, both region lookups
-casing-normalized, and the mask-audit finder rebuilt around the behaviour it was supposed to
-detect. Four commits, seven files, zero exogenous paths.
+casing-normalized, the mask-audit finder rebuilt around the behaviour it was supposed to detect,
+and — released by `RULING-P98A2-09` — the recurrence editor's second and last dot-form family, so
+that file now carries zero raw-key lookups of any family. **Five commits, seven files, zero
+exogenous paths.**
 
 ## Commits
 
