@@ -157,7 +157,7 @@ export function DossierTypeStatsCard({
 
             {/* Count and Help Icon */}
             <div className="flex items-center gap-1">
-              {/* Help Icon with DossierTypeGuide — rendered for all nine cases. */}
+              {/* Help Icon with DossierTypeGuide — rendered for every DossierCardType, EO included. */}
               <DossierTypeGuide
                 type={type}
                 variant="popover"
