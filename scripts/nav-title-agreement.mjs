@@ -8,6 +8,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const scriptRepoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const LOCALES = ['en', 'ar']
 
 const parseArgs = (argv) => {
   let root = scriptRepoRoot
@@ -123,15 +124,32 @@ const rows = [
   },
 ]
 
-const readBundles = (root) => {
-  const directory = join(root, 'frontend/src/i18n/ar')
+const readLiveData = (root) => {
+  const i18nDirectory = join(root, 'frontend/src/i18n')
   const namespaces = [...new Set(['common', ...rows.map((row) => row.titleNamespace)])]
-  return Object.fromEntries(
+  const arabicBundles = Object.fromEntries(
     namespaces.map((namespace) => [
       namespace,
-      JSON.parse(readFileSync(join(directory, `${namespace}.json`), 'utf8')),
+      JSON.parse(readFileSync(join(i18nDirectory, 'ar', `${namespace}.json`), 'utf8')),
     ]),
   )
+  const commonByLocale = Object.fromEntries(
+    LOCALES.map((locale) => [
+      locale,
+      JSON.parse(readFileSync(join(i18nDirectory, locale, 'common.json'), 'utf8')),
+    ]),
+  )
+  const navigationSource = readFileSync(
+    join(root, 'frontend/src/components/modern-nav/navigationData.ts'),
+    'utf8',
+  )
+  const navigationReferences = [
+    ...navigationSource.matchAll(/\b(labelKey|tooltipKey):\s*['"]([^'"]+)['"]/g),
+  ].map((match) => ({ kind: match[1], key: match[2] }))
+  if (navigationReferences.length === 0) {
+    throw new Error('navigationData.ts yielded zero labelKey/tooltipKey declarations')
+  }
+  return { arabicBundles, commonByLocale, navigationReferences }
 }
 
 const valueAt = (bundle, keyPath) => {
@@ -165,11 +183,22 @@ const inspectRows = (candidateRows, bundles) =>
     }
   })
 
-const summarize = (results) => ({
+const missingNavigationKeys = (references, commonByLocale) =>
+  references.flatMap((reference) =>
+    LOCALES.flatMap((locale) =>
+      valueAt(commonByLocale[locale], reference.key) === undefined
+        ? [{ ...reference, locale }]
+        : [],
+    ),
+  )
+
+const summarize = (results, navigationMissing = []) => ({
   population: results.length,
   agreements: results.filter((result) => result.agrees).length,
   mismatches: results.filter((result) => !result.agrees && result.missing.length === 0).length,
-  missingKeys: results.reduce((total, result) => total + result.missing.length, 0),
+  missingAnchorKeys: results.reduce((total, result) => total + result.missing.length, 0),
+  missingNavigationKeys: navigationMissing.length,
+  navigationMissing,
   results,
 })
 
@@ -221,13 +250,24 @@ if (options.control) {
   process.exit(passed ? 0 : 1)
 }
 
-const result = summarize(inspectRows(rows, readBundles(options.root)))
+let liveData
+try {
+  liveData = readLiveData(options.root)
+} catch (error) {
+  console.error(error.message)
+  process.exit(2)
+}
+const result = summarize(
+  inspectRows(rows, liveData.arabicBundles),
+  missingNavigationKeys(liveData.navigationReferences, liveData.commonByLocale),
+)
 if (options.json) {
   console.log(JSON.stringify(result, null, 2))
 } else {
   console.log(
     `nav/title agreement: ${result.agreements}/${result.population} agree; ` +
-      `${result.mismatches} mismatch; ${result.missingKeys} missing key`,
+      `${result.mismatches} mismatch; ${result.missingAnchorKeys} missing anchor key; ` +
+      `${result.missingNavigationKeys} missing navigation locale key`,
   )
   for (const row of result.results.filter((candidate) => !candidate.agrees)) {
     const reason =
@@ -237,6 +277,12 @@ if (options.json) {
         `${row.titleNamespace}:${row.titleKey}=${JSON.stringify(row.title)}\truled=${row.ruledTerm}`,
     )
   }
+  for (const missing of result.navigationMissing) {
+    console.log(`MISSING-NAV\tlocale=${missing.locale}\t${missing.kind}\tcommon:${missing.key}`)
+  }
 }
 // Let piped JSON/human output flush before returning the live RED status.
-process.exitCode = result.mismatches === 0 && result.missingKeys === 0 ? 0 : 1
+process.exitCode =
+  result.mismatches === 0 && result.missingAnchorKeys === 0 && result.missingNavigationKeys === 0
+    ? 0
+    : 1
