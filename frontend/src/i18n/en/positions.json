@@ -327,7 +327,7 @@
     "initiating": "Starting generation...",
     "generating": "Generating briefing pack...",
     "pleaseWait": "This may take a few moments",
-    "completed": "Briefing pack ready!",
+    "completed": "Briefing pack ready",
     "download": "Download PDF",
     "generateAnother": "Generate Another Pack",
     "error": "Failed to generate briefing pack",

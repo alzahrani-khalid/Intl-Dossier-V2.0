@@ -9,7 +9,7 @@
   "fixAll.short": "Fix all",
   "showMore": "Show {{count}} more error(s)",
   "showLess": "Show less",
-  "allFixed": "All errors have been fixed!",
+  "allFixed": "All errors have been fixed.",
   "fix": "Fix",
   "dismiss": "Dismiss",
 
@@ -128,7 +128,7 @@
   },
 
   "toast": {
-    "errorFixed": "Error fixed!",
+    "errorFixed": "Error fixed",
     "allErrorsFixed": "All errors have been fixed",
     "valueCopied": "Value copied to clipboard",
     "actionFailed": "Action failed. Please try again."

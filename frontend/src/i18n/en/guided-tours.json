@@ -34,7 +34,7 @@
       "description": "Learn how everything is organized around Dossiers - your central hub for managing international relations.",
       "welcome": {
         "title": "Welcome to GASTAT Dossier",
-        "description": "Let's take a quick tour to help you understand how everything is organized around Dossiers - your central hub for managing international relations."
+        "description": "Take a quick tour to see how everything is organized around Dossiers - your central hub for managing international relations."
       },
       "replay": "Replay onboarding tour",
       "steps": {
@@ -72,7 +72,7 @@
       "steps": {
         "welcome": {
           "title": "Welcome to Dossiers",
-          "content": "Dossiers are your central hub for organizing information about countries, organizations, forums, and other key entities. Let's walk through creating your first one.",
+          "content": "Dossiers are your central hub for organizing information about countries, organizations, forums, and other key entities. Walk through creating your first one.",
           "hint": "Dossiers can contain documents, relationships, engagements, and intelligence signals."
         },
         "typeSelection": {

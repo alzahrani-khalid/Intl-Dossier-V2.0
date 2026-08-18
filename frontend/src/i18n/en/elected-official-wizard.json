@@ -2,7 +2,7 @@
   "wizard": {
     "steps": {
       "basic": {
-        "guidance": "Tell us who this official is — honorific, name, nationality, and identity details."
+        "guidance": "Identify the official — honorific, name, nationality, and identity details."
       },
       "person-details": {
         "guidance": "Add the official's title, photo, and biography."

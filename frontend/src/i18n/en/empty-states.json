@@ -373,7 +373,7 @@
     "requester": {
       "badge": "Requester",
       "title": "Ready to Submit a Request?",
-      "description": "Submit support requests for engagement support, position development, MoU actions, or foresight analysis. Our team will review and process your request promptly.",
+      "description": "Submit support requests for engagement support, position development, MoU actions, or foresight analysis. Requests are reviewed and processed promptly.",
       "examplesTitle": "Example Requests You Can Submit",
       "hint": "Click on any example above to start with a pre-filled template, or create a new request from scratch.",
       "examples": {

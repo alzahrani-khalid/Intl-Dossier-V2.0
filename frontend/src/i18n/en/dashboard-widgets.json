@@ -54,10 +54,10 @@
     "tag": "Source",
     "refresh": "Refresh digest",
     "empty": {
-      "heading": "Digest is ready for seeded publications.",
-      "body": "Apply the dashboard demo seed, then refresh the digest."
+      "heading": "No publications yet",
+      "body": "New digest publications appear here as they are issued."
     },
-    "error": "Digest could not load. Check the staging seed and try again."
+    "error": "The digest could not load. Try again."
   },
   "sla": {
     "title": "SLA Health",
@@ -69,7 +69,7 @@
     "title": "VIP Visits",
     "empty": {
       "heading": "No VIP visits with country data.",
-      "body": "Add VIP participant data to the dashboard seed, then refresh the widget."
+      "body": "No VIP participants to show yet."
     },
     "error": "VIP visits could not load. Check event data and try again."
   },

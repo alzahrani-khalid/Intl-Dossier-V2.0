@@ -126,7 +126,7 @@
     "description": "الوصف",
     "assignee": "المسؤول",
     "assigneePlaceholder": "اختر أو أدخل المسؤول",
-    "dueDate": "تاريخ الاستحقاق",
+    "dueDate": "الموعد النهائي",
     "priority": "الأولوية",
     "priorities": {
       "low": "منخفضة",

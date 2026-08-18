@@ -8,7 +8,7 @@
   "markAllRead": "Mark All as Read",
   "clearAll": "Clear All",
   "noNotifications": "No Notifications",
-  "noNotificationsDescription": "You're all caught up! Check back later for new updates.",
+  "noNotificationsDescription": "You're all caught up. Check back later for new updates.",
   "loadMore": "Load More",
   "loading": "Loading notifications...",
   "justNow": "Just now",
@@ -124,7 +124,7 @@
   },
 
   "empty": {
-    "title": "All caught up!",
+    "title": "All caught up",
     "description": "You have no new notifications.",
     "assignmentsEmpty": "No assignment notifications",
     "intakeEmpty": "No service request notifications",

@@ -8,7 +8,7 @@
   "retry": "Retry",
   "startOver": "Start over",
   "close": "Close",
-  "success": "Brief generated successfully!",
+  "success": "Brief generated successfully",
   "viewBrief": "Open Brief",
   "generateAnother": "Generate Another",
   "customPrompt": "Custom instructions (optional)",
@@ -79,7 +79,7 @@
     "recommendations": "Recommendations",
     "recommendationsPlaceholder": "Enter your recommendations...",
     "submit": "Submit Brief",
-    "saved": "Brief saved successfully!",
+    "saved": "Brief saved successfully",
     "saveError": "Failed to save the brief. Please try again."
   }
 }

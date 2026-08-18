@@ -180,7 +180,7 @@
       "formatting": "Formatting document...",
       "generating": "Generating {{format}}...",
       "uploading": "Uploading file...",
-      "complete": "Generation complete!",
+      "complete": "Generation complete",
       "error": "Generation failed"
     },
     "processingEntity": "Processing {{entity}}...",

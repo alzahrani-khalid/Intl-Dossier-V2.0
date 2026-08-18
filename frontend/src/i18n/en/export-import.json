@@ -177,7 +177,7 @@
     "importing": "Importing records...",
     "fetching": "Fetching data...",
     "generating": "Generating file...",
-    "complete": "Complete!",
+    "complete": "Complete",
     "error": "An error occurred"
   },
   "errors": {

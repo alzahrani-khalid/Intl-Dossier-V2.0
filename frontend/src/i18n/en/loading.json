@@ -2,7 +2,7 @@
   "loading": {
     "progress": "Loading...",
     "processing": "Processing...",
-    "pleaseWait": "Please wait while we process your request"
+    "pleaseWait": "Processing your request"
   },
   "status": {
     "idle": "Ready",
@@ -55,7 +55,7 @@
   },
   "error": {
     "title": "Something went wrong",
-    "description": "We encountered an error while loading the data",
+    "description": "An error occurred while loading the data",
     "networkError": "Network error. Please check your connection.",
     "timeout": "Request timed out. Please try again.",
     "retry": "Retry"

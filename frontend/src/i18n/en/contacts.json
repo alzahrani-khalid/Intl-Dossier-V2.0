@@ -170,7 +170,7 @@
 
     "duplicates": {
       "dialog_title": "Potential Duplicate Contacts Found",
-      "dialog_description": "We found existing contacts that may be duplicates. Please review before proceeding.",
+      "dialog_description": "Some existing contacts may be duplicates. Please review before proceeding.",
       "match": "match",
       "view_contact": "View Contact",
       "cancel": "Review Form",

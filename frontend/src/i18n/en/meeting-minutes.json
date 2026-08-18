@@ -126,7 +126,7 @@
     "description": "Description",
     "assignee": "Assignee",
     "assigneePlaceholder": "Select or enter assignee",
-    "dueDate": "Due Date",
+    "dueDate": "Deadline",
     "priority": "Priority",
     "priorities": {
       "low": "Low",

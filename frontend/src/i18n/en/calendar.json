@@ -359,10 +359,6 @@
         "title": "Stakeholder Meeting",
         "description": "Coordinate with key stakeholders, partners, or team members. Includes standard meeting duration and reminder."
       },
-      "deadlineReminder": {
-        "title": "Deadline / Due Date",
-        "description": "Track important deadlines, submission dates, or deliverables. All-day event with advance reminder."
-      },
       "forumEvent": {
         "title": "Forum / Conference",
         "description": "International forums, conferences, or multi-day events. Extended duration with day-before reminder."
@@ -385,7 +381,7 @@
       "type": "Type",
       "duration": "Duration",
       "tip": "Pro Tip",
-      "tipDesc": "You can customize all details after creating the event. The template just gives you a head start!",
+      "tipDesc": "You can customize all details after creating the event. The template just gives you a head start.",
       "chooseAnother": "Choose Another",
       "createEvent": "Create Event"
     }

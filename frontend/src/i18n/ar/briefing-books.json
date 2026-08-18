@@ -180,7 +180,7 @@
       "formatting": "جاري تنسيق المستند...",
       "generating": "جاري إنشاء {{format}}...",
       "uploading": "جاري رفع الملف...",
-      "complete": "اكتمل الإنشاء!",
+      "complete": "اكتمل الإنشاء",
       "error": "فشل الإنشاء"
     },
     "processingEntity": "جاري معالجة {{entity}}...",
