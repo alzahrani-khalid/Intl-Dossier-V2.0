@@ -83,6 +83,16 @@
 //       reverse-bundle filter, which is also what keeps DATA out. At wave 5, zero unmatched
 //       captures satisfied the predicate, so this blind spot was measured empty on these
 //       surfaces; it is not covered in general.
+//   (g) A SLOWER HYDRATION THAN THE SHIPPED DWELL — a surface that settles later than 3 s on a
+//       slower machine or behind a slower query would under-capture, and every assertion in this
+//       file would still be green. 98-08 named this and named its own non-zero guard DECORATIVE
+//       for it (blind mode still captured 20 on `/intake/queue`). PARTIALLY COVERED as of 98-09:
+//       `@case` now carries a PER-SURFACE CAPTURE FLOOR derived from 98-08's settled record
+//       (`CASE_CAPTURE_KNOWN_GOOD`), so a shell-capture regression reds. The `@values`
+//       exclamation leg walks the same eight surfaces with a WIDER selector set for which NO
+//       known-good run exists — it has NO FLOOR, NOTHING PREVENTS SHELL-CAPTURE REGRESSION
+//       THERE, and the covering instrument is: NONE. Building one would have meant manufacturing
+//       a baseline today to check today's behaviour against, which is not a control.
 // Whether the OTHER seven criterion oracles share the no-settle blindness is `98-09`'s Law-1 pass
 // (`RULING-P98A2-20` item 7), NOT this file's claim: a settle primitive PRESENT in a file is not a
 // settle primitive PLACED before the capture — presence is not placement.
@@ -118,6 +128,47 @@ const VISITED_SURFACES: readonly string[] = [
   '/engagements',
   '/my-work',
 ]
+
+/**
+ * PER-SURFACE CAPTURE FLOORS — the control that a non-zero guard cannot be.
+ *
+ * 98-08 shipped `expect(captured.length).toBeGreaterThan(0)` and then named it DECORATIVE for the
+ * defect it was meant to catch: in the blind (no-settle) mode `/intake/queue` captured TWENTY
+ * elements — comfortably non-zero. A non-zero guard separates "nothing rendered" from "something
+ * rendered"; it can NEVER separate "shell only" from "hydrated", which is the failure that
+ * actually occurred and produced a deterministic false green.
+ *
+ * `known` is 98-08's SETTLED run of record (`98-CAPTURED-LABELS.md` §2, derived at `742bac2ed`,
+ * 389 raw over these eight surfaces). It is quoted, not re-measured: manufacturing a fresh
+ * "known-good" today would be inventing the baseline this floor exists to check against.
+ *
+ * The floor is `ceil(known * FLOOR_FRACTION)`. 0.8 leaves 20% headroom for legitimate UI churn
+ * while still landing far above the shell: on the two surfaces where a blind-mode count was
+ * actually measured, floor 79 vs shell 38 (`/dossiers`) and floor 28 vs shell 20
+ * (`/intake/queue`). So a regression to shell-capture REDS instead of passing quietly.
+ *
+ * BOUND, stated rather than implied. This floor exists ONLY for `@case`, and only because a
+ * known-good settled run for THIS selector set (`LABEL_SELECTORS`) exists in a committed record.
+ * It says nothing about the six surfaces whose blind-mode counts were never measured — for those
+ * the 0.8 margin is a stated convention, not a measured discriminator. The `@values` exclamation
+ * leg walks the same eight surfaces with a WIDER selector set and therefore has NO known-good
+ * count and NO floor; its non-zero guard is decorative in exactly the way described above, and
+ * that absence is recorded here and in `98-GATE-DRILL.md` rather than papered over with a number
+ * nobody measured.
+ */
+const FLOOR_FRACTION = 0.8
+const CASE_CAPTURE_KNOWN_GOOD: Readonly<Record<string, number>> = {
+  '/dossiers': 98,
+  '/dossiers/elected-officials': 73,
+  '/intake/queue': 34,
+  '/dashboard': 38,
+  '/calendar': 37,
+  '/intelligence': 49,
+  '/engagements': 29,
+  '/my-work': 31,
+}
+const caseCaptureFloor = (surface: string): number =>
+  Math.ceil((CASE_CAPTURE_KNOWN_GOOD[surface] ?? 1) * FLOOR_FRACTION)
 
 /**
  * The D-20 "label" definition — what the oracle captures on a visited surface.
@@ -362,9 +413,15 @@ test.describe('criterion 4 — copy obeys the project voice', () => {
       await settle(page)
       await expectLocale(page, 'en', surface)
       const captured = await captureLabels(page, LABEL_SELECTORS)
-      // A surface that captured NOTHING is a broken read, not a clean surface. Without this the
-      // empty `flagged` below would be indistinguishable from a page that never rendered.
-      expect(captured.length, `capture on ${surface} must be non-empty`).toBeGreaterThan(0)
+      // A surface that captured NOTHING is a broken read, not a clean surface — but non-empty is
+      // NOT enough: the blind mode captured 20 elements on /intake/queue. The FLOOR is what
+      // separates a hydrated capture from a shell one. See CASE_CAPTURE_KNOWN_GOOD.
+      expect(
+        captured.length,
+        `capture on ${surface} fell below its floor — this run read the pre-hydration shell, ` +
+          `not the settled surface (98-08 known-good ${CASE_CAPTURE_KNOWN_GOOD[surface]}, ` +
+          `floor ${caseCaptureFloor(surface)})`,
+      ).toBeGreaterThanOrEqual(caseCaptureFloor(surface))
       for (const text of captured) {
         if (!bundleValues.has(text)) continue
         if (isTitleCase(text)) flagged.push(`${surface}: ${text}`)
