@@ -12,6 +12,9 @@
     "changed": "Theme changed to {{theme}}",
     "colorModeChanged": "Color mode changed to {{mode}}"
   },
+  "toast": {
+    "savedGeneric": "Changes saved"
+  },
   "language": {
     "title": "Language",
     "select": "Select language",
@@ -115,7 +118,7 @@
     "forgotPassword": "Forgot password?",
     "dontHaveAccount": "Don't have an account?",
     "alreadyHaveAccount": "Already have an account?",
-    "loginSuccess": "Login successful!",
+    "loginSuccess": "Login successful",
     "invalidCredentials": "Invalid login credentials",
     "mfaCode": "MFA Code",
     "enterMfaCode": "Enter your 6-digit MFA code",
@@ -814,7 +817,7 @@
       "assignedTo": "Assigned To",
       "assignedToPlaceholder": "Who is responsible?",
       "assignedPlaceholder": "Select who is responsible",
-      "dueDate": "Due Date",
+      "dueDate": "Deadline",
       "dueDatePlaceholder": "When is this due?",
       "priority": "Priority",
       "priorities": {

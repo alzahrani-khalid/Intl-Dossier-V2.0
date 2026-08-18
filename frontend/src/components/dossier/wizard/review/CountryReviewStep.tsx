@@ -31,7 +31,9 @@ export function CountryReviewStep({ form, onEditStep }: CountryReviewStepProps):
   // Translate region value for display
   const regionDisplay =
     values.region !== undefined && values.region !== ''
-      ? t(`form-wizard:regions.${values.region}`)
+      ? // form-wizard:regions.* keys are lowercase; a capitalized data value
+        // (Europe) would miss and leak the raw key.
+        t(`form-wizard:regions.${String(values.region).toLowerCase()}`)
       : undefined
 
   // Truncate description for review display (show EN; AR can be added later)
@@ -45,18 +47,9 @@ export function CountryReviewStep({ form, onEditStep }: CountryReviewStepProps):
   return (
     <FormWizardStep stepId="review" className="space-y-4">
       {/* Basic Info section */}
-      <ReviewSection
-        title={t('form-wizard:review.basic_info')}
-        onEdit={() => onEditStep(0)}
-      >
-        <ReviewField
-          label={t('dossier:form.nameEn', 'Name (English)')}
-          value={values.name_en}
-        />
-        <ReviewField
-          label={t('dossier:form.nameAr', 'Name (Arabic)')}
-          value={values.name_ar}
-        />
+      <ReviewSection title={t('form-wizard:review.basic_info')} onEdit={() => onEditStep(0)}>
+        <ReviewField label={t('dossier:form.nameEn', 'Name (English)')} value={values.name_en} />
+        <ReviewField label={t('dossier:form.nameAr', 'Name (Arabic)')} value={values.name_ar} />
         <ReviewField
           label={t('dossier:form.abbreviation', 'Abbreviation')}
           value={values.abbreviation}
@@ -65,10 +58,7 @@ export function CountryReviewStep({ form, onEditStep }: CountryReviewStepProps):
           label={t('dossier:form.description', 'Description')}
           value={descriptionDisplay}
         />
-        <ReviewField
-          label={t('dossier:form.status', 'Status')}
-          value={values.status}
-        />
+        <ReviewField label={t('dossier:form.status', 'Status')} value={values.status} />
         <ReviewField
           label={t('dossier:form.sensitivityLevel', 'Sensitivity')}
           value={t(`dossier:sensitivityLevel.${values.sensitivity_level}`)}
@@ -76,30 +66,12 @@ export function CountryReviewStep({ form, onEditStep }: CountryReviewStepProps):
       </ReviewSection>
 
       {/* Country Details section */}
-      <ReviewSection
-        title={t('form-wizard:review.country_details')}
-        onEdit={() => onEditStep(1)}
-      >
-        <ReviewField
-          label={t('form-wizard:country.iso_code_2')}
-          value={values.iso_code_2}
-        />
-        <ReviewField
-          label={t('form-wizard:country.iso_code_3')}
-          value={values.iso_code_3}
-        />
-        <ReviewField
-          label={t('form-wizard:country.region')}
-          value={regionDisplay}
-        />
-        <ReviewField
-          label={t('form-wizard:country.capital_en')}
-          value={values.capital_en}
-        />
-        <ReviewField
-          label={t('form-wizard:country.capital_ar')}
-          value={values.capital_ar}
-        />
+      <ReviewSection title={t('form-wizard:review.country_details')} onEdit={() => onEditStep(1)}>
+        <ReviewField label={t('form-wizard:country.iso_code_2')} value={values.iso_code_2} />
+        <ReviewField label={t('form-wizard:country.iso_code_3')} value={values.iso_code_3} />
+        <ReviewField label={t('form-wizard:country.region')} value={regionDisplay} />
+        <ReviewField label={t('form-wizard:country.capital_en')} value={values.capital_en} />
+        <ReviewField label={t('form-wizard:country.capital_ar')} value={values.capital_ar} />
       </ReviewSection>
     </FormWizardStep>
   )

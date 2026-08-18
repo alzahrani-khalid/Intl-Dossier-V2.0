@@ -72,9 +72,9 @@ function generateRecurrenceSummary(
   switch (pattern.frequency) {
     case 'daily':
       if (interval === 1) {
-        shortText = t('calendar.recurrence.summaryText.daily_one')
+        shortText = t('calendar:recurrence.summaryText.daily_one')
       } else {
-        shortText = t('calendar.recurrence.summaryText.daily_other', { interval })
+        shortText = t('calendar:recurrence.summaryText.daily_other', { interval })
       }
       break
 
@@ -84,9 +84,9 @@ function generateRecurrenceSummary(
         .map((d) => dayLabels[d])
         .join(', ')
       if (interval === 1) {
-        shortText = t('calendar.recurrence.summaryText.weekly_one', { days: selectedDays })
+        shortText = t('calendar:recurrence.summaryText.weekly_one', { days: selectedDays })
       } else {
-        shortText = t('calendar.recurrence.summaryText.weekly_other', {
+        shortText = t('calendar:recurrence.summaryText.weekly_other', {
           interval,
           days: selectedDays,
         })
@@ -97,11 +97,11 @@ function generateRecurrenceSummary(
     case 'monthly':
       if (pattern.day_of_month) {
         if (interval === 1) {
-          shortText = t('calendar.recurrence.summaryText.monthly_day_one', {
+          shortText = t('calendar:recurrence.summaryText.monthly_day_one', {
             day: pattern.day_of_month,
           })
         } else {
-          shortText = t('calendar.recurrence.summaryText.monthly_day_other', {
+          shortText = t('calendar:recurrence.summaryText.monthly_day_other', {
             interval,
             day: pattern.day_of_month,
           })
@@ -110,12 +110,12 @@ function generateRecurrenceSummary(
         const position = WEEK_POSITION_LABELS[pattern.week_of_month][lang]
         const weekday = dayLabels[pattern.day_of_week_monthly]
         if (interval === 1) {
-          shortText = t('calendar.recurrence.summaryText.monthly_weekday_one', {
+          shortText = t('calendar:recurrence.summaryText.monthly_weekday_one', {
             position,
             weekday,
           })
         } else {
-          shortText = t('calendar.recurrence.summaryText.monthly_weekday_other', {
+          shortText = t('calendar:recurrence.summaryText.monthly_weekday_other', {
             interval,
             position,
             weekday,
@@ -128,12 +128,12 @@ function generateRecurrenceSummary(
       if (pattern.month_of_year && pattern.day_of_month) {
         const month = monthLabels[pattern.month_of_year - 1]
         if (interval === 1) {
-          shortText = t('calendar.recurrence.summaryText.yearly_one', {
+          shortText = t('calendar:recurrence.summaryText.yearly_one', {
             month,
             day: pattern.day_of_month,
           })
         } else {
-          shortText = t('calendar.recurrence.summaryText.yearly_other', {
+          shortText = t('calendar:recurrence.summaryText.yearly_other', {
             interval,
             month,
             day: pattern.day_of_month,
@@ -148,12 +148,12 @@ function generateRecurrenceSummary(
   // Add end condition
   if (pattern.end_date) {
     const endDate = formatDayFirstYear(pattern.end_date)
-    longText += ` ${t('calendar.recurrence.summaryText.until', { date: endDate })}`
+    longText += ` ${t('calendar:recurrence.summaryText.until', { date: endDate })}`
   } else if (pattern.occurrence_count) {
     if (pattern.occurrence_count === 1) {
-      longText += ` (${t('calendar.recurrence.summaryText.times_one')})`
+      longText += ` (${t('calendar:recurrence.summaryText.times_one')})`
     } else {
-      longText += ` (${t('calendar.recurrence.summaryText.times_other', { count: pattern.occurrence_count })})`
+      longText += ` (${t('calendar:recurrence.summaryText.times_other', { count: pattern.occurrence_count })})`
     }
   }
 
@@ -325,7 +325,7 @@ export function RecurrencePatternEditor({
         <div className="flex items-center gap-2">
           <Repeat className="h-5 w-5 text-muted-foreground" />
           <Label htmlFor="recurrence-toggle" className="text-base font-medium cursor-pointer">
-            {t('calendar.recurrence.title')}
+            {t('calendar:recurrence.title')}
           </Label>
         </div>
         <Switch
@@ -346,7 +346,7 @@ export function RecurrencePatternEditor({
               disabled={disabled}
             >
               <div className="flex flex-col items-start gap-1 text-start">
-                <span className="text-sm font-medium">{t('calendar.recurrence.pattern')}</span>
+                <span className="text-sm font-medium">{t('calendar:recurrence.pattern')}</span>
                 {summary && (
                   <span className="text-xs text-muted-foreground">
                     {lang === 'ar' ? summary.short_ar || summary.short_en : summary.short_en}
@@ -360,7 +360,7 @@ export function RecurrencePatternEditor({
           <CollapsibleContent className="mt-4 space-y-4">
             {/* Preset selection */}
             <div className="space-y-2">
-              <Label>{t('calendar.recurrence.pattern')}</Label>
+              <Label>{t('calendar:recurrence.pattern')}</Label>
               <Select
                 value={selectedPreset}
                 onValueChange={(v) => handlePresetChange(v as RecurrencePreset)}
@@ -370,22 +370,22 @@ export function RecurrencePatternEditor({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="daily">{t('calendar.recurrence.presets.daily')}</SelectItem>
+                  <SelectItem value="daily">{t('calendar:recurrence.presets.daily')}</SelectItem>
                   <SelectItem value="weekdays">
-                    {t('calendar.recurrence.presets.weekdays')}
+                    {t('calendar:recurrence.presets.weekdays')}
                   </SelectItem>
-                  <SelectItem value="weekly">{t('calendar.recurrence.presets.weekly')}</SelectItem>
+                  <SelectItem value="weekly">{t('calendar:recurrence.presets.weekly')}</SelectItem>
                   <SelectItem value="biweekly">
-                    {t('calendar.recurrence.presets.biweekly')}
+                    {t('calendar:recurrence.presets.biweekly')}
                   </SelectItem>
                   <SelectItem value="monthly_same_day">
-                    {t('calendar.recurrence.presets.monthly_same_day')}
+                    {t('calendar:recurrence.presets.monthly_same_day')}
                   </SelectItem>
                   <SelectItem value="monthly_same_weekday">
-                    {t('calendar.recurrence.presets.monthly_same_weekday')}
+                    {t('calendar:recurrence.presets.monthly_same_weekday')}
                   </SelectItem>
-                  <SelectItem value="yearly">{t('calendar.recurrence.presets.yearly')}</SelectItem>
-                  <SelectItem value="custom">{t('calendar.recurrence.presets.custom')}</SelectItem>
+                  <SelectItem value="yearly">{t('calendar:recurrence.presets.yearly')}</SelectItem>
+                  <SelectItem value="custom">{t('calendar:recurrence.presets.custom')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -396,7 +396,7 @@ export function RecurrencePatternEditor({
                 {/* Frequency and interval */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>{t('calendar.recurrence.interval')}</Label>
+                    <Label>{t('calendar:recurrence.interval')}</Label>
                     <div className="flex items-center gap-2">
                       <Input
                         type="number"
@@ -419,16 +419,16 @@ export function RecurrencePatternEditor({
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="daily">
-                            {t('calendar.recurrence.frequencies.daily')}
+                            {t('calendar:recurrence.frequencies.daily')}
                           </SelectItem>
                           <SelectItem value="weekly">
-                            {t('calendar.recurrence.frequencies.weekly')}
+                            {t('calendar:recurrence.frequencies.weekly')}
                           </SelectItem>
                           <SelectItem value="monthly">
-                            {t('calendar.recurrence.frequencies.monthly')}
+                            {t('calendar:recurrence.frequencies.monthly')}
                           </SelectItem>
                           <SelectItem value="yearly">
-                            {t('calendar.recurrence.frequencies.yearly')}
+                            {t('calendar:recurrence.frequencies.yearly')}
                           </SelectItem>
                         </SelectContent>
                       </Select>
@@ -439,7 +439,7 @@ export function RecurrencePatternEditor({
                 {/* Weekly: Days of week selection */}
                 {frequency === 'weekly' && (
                   <div className="space-y-2">
-                    <Label>{t('calendar.recurrence.daysOfWeek.label')}</Label>
+                    <Label>{t('calendar:recurrence.daysOfWeek.label')}</Label>
                     <div className="flex flex-wrap gap-2">
                       {[0, 1, 2, 3, 4, 5, 6].map((day) => {
                         const dayIndex = day as DayOfWeek
@@ -455,7 +455,7 @@ export function RecurrencePatternEditor({
                             onClick={() => toggleDayOfWeek(dayIndex)}
                             disabled={disabled}
                           >
-                            {t(`calendar.recurrence.daysOfWeek.${dayKey}`)}
+                            {t(`calendar:recurrence.daysOfWeek.${dayKey}`)}
                           </Button>
                         )
                       })}
@@ -477,7 +477,7 @@ export function RecurrencePatternEditor({
                           <div className="flex items-center gap-2 flex-wrap">
                             <span>
                               {
-                                t('calendar.recurrence.monthly.dayOfMonth', { day: '' }).split(
+                                t('calendar:recurrence.monthly.dayOfMonth', { day: '' }).split(
                                   '{{day}}',
                                 )[0]
                               }
@@ -522,7 +522,7 @@ export function RecurrencePatternEditor({
                                   ] as MonthWeekPosition[]
                                 ).map((pos) => (
                                   <SelectItem key={pos} value={pos}>
-                                    {t(`calendar.recurrence.monthly.positions.${pos}`)}
+                                    {t(`calendar:recurrence.monthly.positions.${pos}`)}
                                   </SelectItem>
                                 ))}
                               </SelectContent>
@@ -574,9 +574,9 @@ export function RecurrencePatternEditor({
                     </div>
                     <div className="space-y-2">
                       <Label>
-                        {String(t('calendar.recurrence.monthly.dayOfMonth', { day: '' }))
+                        {String(t('calendar:recurrence.monthly.dayOfMonth', { day: '' }))
                           .split('{{day}}')[0]
-                          ?.trim() || t('calendar.recurrence.monthly.dayOfMonth')}
+                          ?.trim() || t('calendar:recurrence.monthly.dayOfMonth')}
                       </Label>
                       <Input
                         type="number"
@@ -596,7 +596,7 @@ export function RecurrencePatternEditor({
 
             {/* End condition */}
             <div className="space-y-4">
-              <Label>{t('calendar.recurrence.ends')}</Label>
+              <Label>{t('calendar:recurrence.ends')}</Label>
               <RadioGroup
                 value={endMode}
                 onValueChange={(v) => setEndMode(v as 'never' | 'on' | 'after')}
@@ -605,14 +605,14 @@ export function RecurrencePatternEditor({
                 <div className="flex items-center gap-2">
                   <RadioGroupItem value="never" id="end-never" />
                   <Label htmlFor="end-never" className="cursor-pointer">
-                    {t('calendar.recurrence.endOptions.never')}
+                    {t('calendar:recurrence.endOptions.never')}
                   </Label>
                 </div>
 
                 <div className="flex items-center gap-2 flex-wrap">
                   <RadioGroupItem value="on" id="end-on" />
                   <Label htmlFor="end-on" className="cursor-pointer">
-                    {t('calendar.recurrence.endOptions.on')}
+                    {t('calendar:recurrence.endOptions.on')}
                   </Label>
                   <Input
                     type="date"
@@ -626,9 +626,9 @@ export function RecurrencePatternEditor({
                 <div className="flex items-center gap-2 flex-wrap">
                   <RadioGroupItem value="after" id="end-after" />
                   <Label htmlFor="end-after" className="cursor-pointer">
-                    {String(t('calendar.recurrence.endOptions.after', { count: occurrenceCount }))
+                    {String(t('calendar:recurrence.endOptions.after', { count: occurrenceCount }))
                       .split(String(occurrenceCount))[0]
-                      ?.trim() || t('calendar.recurrence.endOptions.after')}
+                      ?.trim() || t('calendar:recurrence.endOptions.after')}
                   </Label>
                   <Input
                     type="number"
@@ -641,8 +641,8 @@ export function RecurrencePatternEditor({
                   />
                   <span className="text-sm text-muted-foreground">
                     {occurrenceCount === 1
-                      ? t('calendar.recurrence.summaryText.times_one')
-                      : t('calendar.recurrence.summaryText.times_other', {
+                      ? t('calendar:recurrence.summaryText.times_one')
+                      : t('calendar:recurrence.summaryText.times_other', {
                           count: occurrenceCount,
                         }).replace(String(occurrenceCount), '')}
                   </span>
@@ -656,7 +656,7 @@ export function RecurrencePatternEditor({
                 <div className="flex items-start gap-2">
                   <Info className="h-4 w-4 mt-0.5 text-muted-foreground flex-shrink-0" />
                   <div className="flex flex-col gap-1">
-                    <span className="text-sm font-medium">{t('calendar.recurrence.summary')}</span>
+                    <span className="text-sm font-medium">{t('calendar:recurrence.summary')}</span>
                     <span className="text-sm text-muted-foreground">
                       {lang === 'ar' ? summary.long_ar || summary.long_en : summary.long_en}
                     </span>

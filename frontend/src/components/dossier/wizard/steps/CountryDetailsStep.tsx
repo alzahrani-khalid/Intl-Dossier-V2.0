@@ -3,13 +3,7 @@ import { useTranslation } from 'react-i18next'
 import type { UseFormReturn } from 'react-hook-form'
 
 import { FormWizardStep } from '@/components/ui/form-wizard'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -96,7 +90,9 @@ export function CountryDetailsStep({ form }: CountryDetailsStepProps): ReactElem
               <SelectContent>
                 {REGIONS.map((region) => (
                   <SelectItem key={region} value={region}>
-                    {t(`form-wizard:regions.${region}`)}
+                    {/* form-wizard:regions.* keys are lowercase; a capitalized data value
+                        (Europe) would miss and leak the raw key. */}
+                    {t(`form-wizard:regions.${String(region).toLowerCase()}`)}
                   </SelectItem>
                 ))}
               </SelectContent>

@@ -65,10 +65,13 @@ const defaultQueryOptions: QueryClientConfig['defaultOptions'] = {
       toast.error(i18n.t('common:errors.queryFailedInline'))
     },
 
-    // Global mutation success handler
+    // Global mutation success handler.
+    // Generic-but-localized is the end state (D-11); per-mutation copy is out of scope.
+    // t() is called INSIDE the callback so the string resolves in the language that is
+    // current when the mutation fires, never the one that was current at module import.
     onSuccess: () => {
       // Default success toast (can be overridden per mutation)
-      toast.success('Operation completed successfully')
+      toast.success(i18n.t('common:toast.savedGeneric'))
     },
   },
 }

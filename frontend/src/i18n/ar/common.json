@@ -12,6 +12,9 @@
     "changed": "تم تغيير السمة إلى {{theme}}",
     "colorModeChanged": "تم تغيير وضع الألوان إلى {{mode}}"
   },
+  "toast": {
+    "savedGeneric": "تم حفظ التغييرات"
+  },
   "language": {
     "title": "اللغة",
     "select": "اختر اللغة",
@@ -115,7 +118,7 @@
     "forgotPassword": "نسيت كلمة المرور؟",
     "dontHaveAccount": "ليس لديك حساب؟",
     "alreadyHaveAccount": "لديك حساب بالفعل؟",
-    "loginSuccess": "تم تسجيل الدخول بنجاح!",
+    "loginSuccess": "تم تسجيل الدخول بنجاح",
     "invalidCredentials": "بيانات الدخول غير صحيحة",
     "mfaCode": "رمز المصادقة الثنائية",
     "enterMfaCode": "أدخل رمز المصادقة المكون من 6 أرقام",
@@ -814,7 +817,7 @@
       "assignedTo": "مُكلف لـ",
       "assignedToPlaceholder": "من المسؤول؟",
       "assignedPlaceholder": "اختر من المسؤول",
-      "dueDate": "تاريخ الاستحقاق",
+      "dueDate": "الموعد النهائي",
       "dueDatePlaceholder": "متى يستحق هذا؟",
       "priority": "الأولوية",
       "priorities": {
