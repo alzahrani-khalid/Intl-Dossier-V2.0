@@ -477,7 +477,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({ initialData, onSuccess }
                       setValue('urgency', 'high')
                     }}
                   >
-                    {t('actions.fillMock')}
+                    Fill with mock data
                   </Button>
                 )}
                 <Button type="submit" disabled={isSubmitting}>

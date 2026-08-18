@@ -10,7 +10,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { format, parseISO } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
-import { formatDayFirst } from '@/lib/format-date'
+import { formatDayFirst, formatTime } from '@/lib/format-date'
 import {
   Check,
   X,
@@ -231,8 +231,7 @@ export function AvailabilityPollResults({
                           )}
                         </div>
                         <div className="text-sm text-muted-foreground">
-                          {format(startDate, 'h:mm a', { locale: dateLocale })} -{' '}
-                          {format(endDate, 'h:mm a', { locale: dateLocale })}
+                          {formatTime(startDate)} - {formatTime(endDate)}
                         </div>
                         {(optSlot.venue_suggestion_en || optSlot.venue_suggestion_ar) && (
                           <div className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
@@ -393,7 +392,7 @@ export function AvailabilityPollResults({
                           {format(parseISO(slot.slot_start), 'd MMM', { locale: dateLocale })}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {format(parseISO(slot.slot_start), 'h:mm a', { locale: dateLocale })}
+                          {formatTime(parseISO(slot.slot_start))}
                         </div>
                       </TableHead>
                     ))}

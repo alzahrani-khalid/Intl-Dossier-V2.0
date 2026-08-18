@@ -26,6 +26,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { Icon, type IconName } from '@/components/signature-visuals'
 import { resolveTimelineNavUrl } from '@/lib/timeline-navigation'
+import { formatRelativeTime } from '@/lib/format-date'
 import type { ActivityActionType, ActivityItem } from '@/types/activity-feed.types'
 
 interface ActivityListProps {
@@ -64,27 +65,6 @@ function iconForAction(t: ActivityActionType | string): IconName {
     default:
       return 'dot'
   }
-}
-
-/**
- * Compact relative-time formatter for the .act-t mono column.
- *
- * Returns short suffixed forms (e.g. `5m`, `2h`, `3d`) using EN suffixes;
- * AR locale gets compact Arabic suffixes (`ث`/`د`/`س`/`ي`). Digits are
- * Latin in both locales (policy D §7.4) — the numeric value is emitted
- * directly here.
- */
-function formatRelativeTime(iso: string, locale: 'en' | 'ar'): string {
-  const now = Date.now()
-  const then = new Date(iso).getTime()
-  const diffSec = Math.max(0, Math.floor((now - then) / 1000))
-  if (diffSec < 60) return locale === 'ar' ? `${diffSec}ث` : `${diffSec}s`
-  const diffMin = Math.floor(diffSec / 60)
-  if (diffMin < 60) return locale === 'ar' ? `${diffMin}د` : `${diffMin}m`
-  const diffH = Math.floor(diffMin / 60)
-  if (diffH < 24) return locale === 'ar' ? `${diffH}س` : `${diffH}h`
-  const diffD = Math.floor(diffH / 24)
-  return locale === 'ar' ? `${diffD}ي` : `${diffD}d`
 }
 
 export function ActivityList({ activities }: ActivityListProps): ReactElement {
@@ -145,7 +125,7 @@ export function ActivityList({ activities }: ActivityListProps): ReactElement {
             onKeyDown={onKeyDownHandler}
           >
             <span className="act-t" dir="ltr">
-              {formatRelativeTime(a.created_at, locale)}
+              {formatRelativeTime(a.created_at)}
             </span>
             <Icon name={iconForAction(a.action_type)} size={16} aria-hidden />
             <span>

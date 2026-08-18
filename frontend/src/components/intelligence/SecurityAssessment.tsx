@@ -23,7 +23,7 @@ import { Badge } from '@/components/ui/badge'
 import { RefreshButton } from '@/components/intelligence/RefreshButton'
 import { useRefreshIntelligence } from '@/hooks/useIntelligence'
 import { Shield, ShieldAlert } from 'lucide-react'
-import { formatDistanceToNow } from 'date-fns'
+import { formatDateTime } from '@/lib/format-date'
 import type { IntelligenceReport } from '@/services/intelligence-api'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -145,9 +145,8 @@ export function SecurityAssessment({ reports, dossierId }: SecurityAssessmentPro
           )}
           <span className="text-muted-foreground">
             {t('intelligence.updated', 'Updated')}{' '}
-            {formatDistanceToNow(
-              new Date(latestReport?.last_refreshed_at || latestReport?.created_at || Date.now()),
-              { addSuffix: true },
+            {formatDateTime(
+              latestReport?.last_refreshed_at || latestReport?.created_at || Date.now(),
             )}
           </span>
         </div>

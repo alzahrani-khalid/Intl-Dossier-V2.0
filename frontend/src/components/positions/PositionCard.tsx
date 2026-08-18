@@ -9,11 +9,10 @@ import { Link2, Trash2, Eye, Calendar } from 'lucide-react'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import type { Position } from '@/types/position'
 import type { PositionDossierLinkType } from '@/domains/positions/types'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 export interface PositionCardProps {
   position: Position & { link_type?: PositionDossierLinkType }
@@ -36,7 +35,6 @@ export const PositionCard: React.FC<PositionCardProps> = ({
 }) => {
   const { t } = useTranslation('positions')
   const { isRTL } = useDirection()
-  const locale = isRTL ? ar : enUS
 
   // Get localized title and content - handle both old and new schema
   const title = (position as any).topic || (isRTL ? position.title_ar : position.title_en)
@@ -160,7 +158,7 @@ export const PositionCard: React.FC<PositionCardProps> = ({
         {/* Date - Always above the button */}
         <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
           <Calendar className="h-3 w-3" />
-          <span>{format(new Date(position.created_at), 'PP', { locale })}</span>
+          <span>{formatDayFirstYear(new Date(position.created_at))}</span>
         </div>
       </CardContent>
 

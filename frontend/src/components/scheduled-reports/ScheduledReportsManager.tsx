@@ -18,8 +18,7 @@ import {
   MoreVertical,
   AlertCircle,
 } from 'lucide-react'
-import { format, formatDistanceToNow } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { formatDateTime } from '@/lib/format-date'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -59,7 +58,6 @@ import { useDirection } from '@/hooks/useDirection'
 export function ScheduledReportsManager() {
   const { t } = useTranslation('scheduled-reports')
   const { isRTL } = useDirection()
-  const locale = isRTL ? ar : enUS
   const { toast } = useToast()
 
   const { data: schedules, isLoading, error, fetchStatus } = useScheduledReports()
@@ -319,18 +317,13 @@ export function ScheduledReportsManager() {
                 {schedule.next_run_at && (
                   <div>
                     <span className="text-muted-foreground">{t('schedule.nextRun')}: </span>
-                    <span>
-                      {formatDistanceToNow(new Date(schedule.next_run_at), {
-                        addSuffix: true,
-                        locale,
-                      })}
-                    </span>
+                    <span>{formatDateTime(schedule.next_run_at)}</span>
                   </div>
                 )}
                 {schedule.last_run_at && (
                   <div>
                     <span className="text-muted-foreground">{t('schedule.lastRun')}: </span>
-                    <span>{format(new Date(schedule.last_run_at), 'PPp', { locale })}</span>
+                    <span>{formatDateTime(schedule.last_run_at)}</span>
                   </div>
                 )}
                 {schedule.consecutive_failures > 0 && (

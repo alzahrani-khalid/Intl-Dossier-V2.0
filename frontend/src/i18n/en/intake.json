@@ -82,8 +82,7 @@
     "submitRequest": "Submit request",
     "cancel": "Cancel",
     "saveDraft": "Save as Draft",
-    "reset": "Reset Form",
-    "fillMock": "Fill with Mock Data"
+    "reset": "Reset Form"
   },
   "validation": {
     "requiredField": "This field is required",

@@ -9,7 +9,7 @@
  *     "No emoji in user-visible copy"; UI-SPEC anti-list).
  *   - Engagement count is wrapped in <LtrIsolate> so Indic digits render LTR
  *     inside the surrounding RTL line (Phase 38 pattern).
- *   - Last-touched semantics differ from formatRelativeTimeShort: this strip
+ *   - Last-touched semantics are LABEL-keyed, not phrase-keyed: this strip
  *     uses labelled keys (today / yesterday / N-day relative) per UI-SPEC
  *     Copywriting Contract; raw "HH:mm" is reserved for activity-row times.
  */

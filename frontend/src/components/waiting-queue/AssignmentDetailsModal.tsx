@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
 import { ExternalLink, Calendar, User, Mail, Tag, Clock } from 'lucide-react'
 import { AdaptiveDialog } from '@/components/ui/adaptive-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { AgingIndicator } from './AgingIndicator'
+import { formatDateTime } from '@/lib/format-date'
 
 /**
  * Assignment Details Modal Component
@@ -83,7 +83,7 @@ export function AssignmentDetailsModal({
   // Format dates for display
   const formatDate = (dateString: string) => {
     try {
-      return format(new Date(dateString), 'PPP p') // e.g., "Jan 10, 2024 at 2:30 PM"
+      return formatDateTime(new Date(dateString)) // e.g., "Jan 10, 2024 at 2:30 PM"
     } catch {
       return dateString
     }

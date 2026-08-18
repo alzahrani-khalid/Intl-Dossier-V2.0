@@ -47,6 +47,7 @@ import { DossierContextBadge, DossierSelector, type SelectedDossier } from '@/co
 import type { InheritanceSource, ContextEntityType } from '@/types/dossier-context.types'
 import type { DossierType } from '@/types/relationship.types'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 // Validation schema
 const commitmentQuickFormSchema = z.object({
@@ -329,9 +330,7 @@ export function CommitmentQuickForm({
                       >
                         <CalendarIcon className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                         {field.value ? (
-                          format(field.value, 'PPP', {
-                            locale: isRTL ? ar : enUS,
-                          })
+                          formatDayFirstYear(field.value)
                         ) : (
                           <span>{t('commitments:form.dueDate')}</span>
                         )}

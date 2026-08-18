@@ -4,8 +4,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { formatDistanceToNow } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { formatDateTime } from '@/lib/format-date'
 import { MoreHorizontal, Play, Copy, Trash2, Settings, History, Zap, Clock } from 'lucide-react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -43,7 +42,6 @@ export function WorkflowRuleCard({
 }: WorkflowRuleCardProps) {
   const { t } = useTranslation('workflow-automation')
   const { isRTL } = useDirection()
-  const locale = isRTL ? ar : enUS
 
   const triggerOption = getTriggerTypeOption(rule.trigger_type)
   const entityOption = getEntityTypeOption(rule.entity_type)
@@ -157,11 +155,7 @@ export function WorkflowRuleCard({
             <Clock className="h-3 w-3" />
             {rule.last_triggered_at ? (
               <span>
-                {t('labels.last_triggered')}:{' '}
-                {formatDistanceToNow(new Date(rule.last_triggered_at), {
-                  addSuffix: true,
-                  locale,
-                })}
+                {t('labels.last_triggered')}: {formatDateTime(rule.last_triggered_at)}
               </span>
             ) : (
               <span>{t('messages.noExecutions')}</span>

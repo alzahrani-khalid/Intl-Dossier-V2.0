@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next'
 import { m, AnimatePresence } from 'framer-motion'
 import { RefreshCw, Check, WifiOff, Clock, Package } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { formatDateTime, formatTime as formatGstTime } from '@/lib/format-date'
+import { formatDateTime, formatRelativeTime, formatTime as formatGstTime } from '@/lib/format-date'
 import type { PullToRefreshState } from '@/hooks/usePullToRefresh'
 
 export interface PullToRefreshIndicatorProps {
@@ -55,26 +55,16 @@ export function PullToRefreshIndicator({
   className,
 }: PullToRefreshIndicatorProps) {
   const { t } = useTranslation('common')
-  // Format relative time
+  // D-25 / RULING-P98A2-17: the last-sync recency phrase comes from the ONE
+  // shared localized helper. The former ladder built it from raw-value
+  // defaultValues (`{{count}}m ago`), which render English under `ar` whenever
+  // the key misses — the mask class RULING-P98A2-12 bounded.
   const formatLastSync = (time: string | Date | null | undefined) => {
     if (!time) return null
 
     const date = new Date(time)
-    const now = new Date()
-    const diffMs = now.getTime() - date.getTime()
-    const diffSeconds = Math.floor(diffMs / 1000)
-    const diffMinutes = Math.floor(diffSeconds / 60)
-    const diffHours = Math.floor(diffMinutes / 60)
-
-    if (diffSeconds < 60) {
-      return t('pullToRefresh.justNow', 'Just now')
-    } else if (diffMinutes < 60) {
-      return t('pullToRefresh.minutesAgo', '{{count}}m ago', { count: diffMinutes })
-    } else if (diffHours < 24) {
-      return t('pullToRefresh.hoursAgo', '{{count}}h ago', { count: diffHours })
-    } else {
-      return formatDateTime(date)
-    }
+    const diffHours = Math.floor((Date.now() - date.getTime()) / 3_600_000)
+    return diffHours < 24 ? formatRelativeTime(date) : formatDateTime(date)
   }
 
   // Calculate indicator visibility and position
@@ -248,23 +238,13 @@ export function SyncStatusBar({
 }: SyncStatusBarProps) {
   const { t } = useTranslation('common')
 
-  // Format relative time
+  // Same class as `formatLastSync` above — the ONE shared localized helper.
   const formatTime = (time: string | Date | null | undefined) => {
     if (!time) return t('pullToRefresh.neverSynced', 'Never synced')
 
     const date = new Date(time)
-    const now = new Date()
-    const diffMs = now.getTime() - date.getTime()
-    const diffSeconds = Math.floor(diffMs / 1000)
-    const diffMinutes = Math.floor(diffSeconds / 60)
-
-    if (diffSeconds < 60) {
-      return t('pullToRefresh.justNow', 'Just now')
-    } else if (diffMinutes < 60) {
-      return t('pullToRefresh.minutesAgo', '{{count}}m ago', { count: diffMinutes })
-    } else {
-      return formatGstTime(date)
-    }
+    const diffMinutes = Math.floor((Date.now() - date.getTime()) / 60_000)
+    return diffMinutes < 60 ? formatRelativeTime(date) : formatGstTime(date)
   }
 
   return (

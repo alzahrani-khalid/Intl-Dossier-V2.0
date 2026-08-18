@@ -7,8 +7,7 @@
 
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { format, addMonths } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { addMonths } from 'date-fns'
 import {
   Dialog,
   DialogContent,
@@ -38,6 +37,7 @@ import { useDelegatePermissions, useValidateDelegation } from '@/hooks/useDelega
 import { useToast } from '@/hooks/useToast'
 import type { DelegatePermissionsRequest } from '@/services/user-management-api'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 interface CreateDelegationDialogProps {
   open: boolean
@@ -68,7 +68,6 @@ export function CreateDelegationDialog({
   const { t } = useTranslation('delegation')
   const { toast } = useToast()
   const { isRTL } = useDirection()
-  const dateLocale = isRTL ? ar : enUS
 
   type FormState = {
     selectedGranteeId: string
@@ -248,9 +247,7 @@ export function CreateDelegationDialog({
                   )}
                 >
                   <CalendarIcon className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                  {endDate
-                    ? format(endDate, 'PPP', { locale: dateLocale })
-                    : t('create.form.validUntilPlaceholder')}
+                  {endDate ? formatDayFirstYear(endDate) : t('create.form.validUntilPlaceholder')}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align={isRTL ? 'end' : 'start'}>

@@ -9,9 +9,7 @@ import { TrendingUp, Eye, Link2, FileText, Award } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { usePositionAnalytics } from '@/hooks/usePositionAnalytics'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
-import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 export interface PositionAnalyticsCardProps {
   positionId: string
@@ -23,8 +21,6 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
   className = '',
 }) => {
   const { t } = useTranslation()
-  const { isRTL } = useDirection()
-  const locale = isRTL ? ar : enUS
 
   const { analytics, isLoading, error } = usePositionAnalytics({ positionId })
 
@@ -127,7 +123,7 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
             {last_viewed_at && (
               <p className="text-xs text-muted-foreground">
                 {t('positions:analytics.lastViewed')}:{' '}
-                {format(new Date(last_viewed_at), 'PP', { locale })}
+                {formatDayFirstYear(new Date(last_viewed_at))}
               </p>
             )}
           </div>
@@ -147,7 +143,7 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
             {last_attached_at && (
               <p className="text-xs text-muted-foreground">
                 {t('positions:analytics.lastAttached')}:{' '}
-                {format(new Date(last_attached_at), 'PP', { locale })}
+                {formatDayFirstYear(new Date(last_attached_at))}
               </p>
             )}
           </div>

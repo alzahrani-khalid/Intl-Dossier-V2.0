@@ -22,9 +22,9 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { History, Eye, Loader2, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { format } from 'date-fns'
 import microdiff from 'microdiff'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDateTime } from '@/lib/format-date'
 
 interface Version {
   id: string
@@ -311,7 +311,7 @@ export function VersionHistoryViewer({
                           </p>
                         </div>
                       </TableCell>
-                      <TableCell>{format(new Date(version.changed_at), 'PPp')}</TableCell>
+                      <TableCell>{formatDateTime(new Date(version.changed_at))}</TableCell>
                       <TableCell className="max-w-xs truncate">
                         {version.change_summary || t('afterActions.versions.noSummary')}
                       </TableCell>

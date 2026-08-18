@@ -12,8 +12,7 @@
 
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
-import { formatDayFirstYear } from '@/lib/format-date'
+import { formatDateTime, formatDayFirstYear } from '@/lib/format-date'
 import {
   Plus,
   Search,
@@ -908,7 +907,7 @@ interface WebhookDetailsDialogProps {
 }
 
 function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsDialogProps) {
-  const { t, i18n } = useTranslation('webhooks')
+  const { t } = useTranslation('webhooks')
   const { isRTL } = useDirection()
 
   const [page, setPage] = useState(1)
@@ -1011,9 +1010,7 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
                           {t(`events.${delivery.event_type}`)}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {new Date(delivery.created_at).toLocaleString(
-                            toFormatLocale(i18n.language),
-                          )}
+                          {formatDateTime(delivery.created_at)}
                         </div>
                       </div>
                     </div>

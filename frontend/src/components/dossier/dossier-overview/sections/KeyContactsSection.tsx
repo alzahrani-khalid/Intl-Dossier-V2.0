@@ -24,7 +24,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
-import { formatDayFirstYear } from '@/lib/format-date'
+import { formatDayFirstYear, formatRelativeTime } from '@/lib/format-date'
 import type { KeyContactsSectionProps, DossierKeyContact } from '@/types/dossier-overview.types'
 
 /**
@@ -41,20 +41,15 @@ function getInitials(name: string): string {
 /**
  * Format last interaction date
  */
-function formatLastInteraction(date: string | null, isRTL: boolean): string | null {
+// D-25 / RULING-P98A2-17 B-4: the recency phrase came from a hardcoded bilingual
+// ladder (`${diffDays} days ago` / `${diffDays} أيام`) — copy authored in TSX,
+// invisible to every i18n oracle by construction. It now comes from the ONE
+// shared localized helper; beyond a month the absolute date still wins.
+function formatLastInteraction(date: string | null): string | null {
   if (!date) return null
   const interactionDate = new Date(date)
-  const now = new Date()
-  const diffDays = Math.floor((now.getTime() - interactionDate.getTime()) / (1000 * 60 * 60 * 24))
-
-  if (diffDays === 0) return isRTL ? 'اليوم' : 'Today'
-  if (diffDays === 1) return isRTL ? 'أمس' : 'Yesterday'
-  if (diffDays < 7) return isRTL ? `${diffDays} أيام` : `${diffDays} days ago`
-  if (diffDays < 30) {
-    const weeks = Math.floor(diffDays / 7)
-    return isRTL ? `${weeks} أسابيع` : `${weeks} weeks ago`
-  }
-
+  const diffDays = Math.floor((Date.now() - interactionDate.getTime()) / (1000 * 60 * 60 * 24))
+  if (diffDays < 30) return formatRelativeTime(interactionDate)
   return formatDayFirstYear(interactionDate)
 }
 
@@ -68,7 +63,7 @@ function ContactCard({ contact, isRTL }: { contact: DossierKeyContact; isRTL: bo
   const displayOrg =
     isRTL && contact.organization_ar ? contact.organization_ar : contact.organization_en
 
-  const lastInteraction = formatLastInteraction(contact.last_interaction_date, isRTL)
+  const lastInteraction = formatLastInteraction(contact.last_interaction_date)
 
   const cardContent = (
     <Card className="transition-colors hover:bg-line-soft h-full">

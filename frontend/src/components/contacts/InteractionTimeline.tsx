@@ -8,8 +8,6 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import {
   Calendar,
   Mail,
@@ -38,6 +36,7 @@ import { useInteractionNotes, useDeleteNote, useDownloadAttachment } from '@/hoo
 import type { InteractionNoteResponse } from '@/services/interaction-api'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 interface InteractionTimelineProps {
   contactId: string
@@ -87,7 +86,6 @@ function getTypeColor(type: string): string {
 interface InteractionNoteItemProps {
   note: InteractionNoteResponse
   isRTL: boolean
-  locale: typeof ar | typeof enUS
   onEdit?: (note: InteractionNoteResponse) => void
   onDelete: (id: string, contactId: string) => void
   onDownload: (path: string, filename: string) => void
@@ -96,7 +94,6 @@ interface InteractionNoteItemProps {
 function InteractionNoteItem({
   note,
   isRTL,
-  locale,
   onEdit,
   onDelete,
   onDownload,
@@ -105,7 +102,7 @@ function InteractionNoteItem({
   const [isExpanded, setIsExpanded] = useState(false)
 
   const TypeIcon = getTypeIcon(note.type)
-  const formattedDate = format(new Date(note.date), 'PPP', { locale })
+  const formattedDate = formatDayFirstYear(new Date(note.date))
 
   // Extract filename from attachment path
   const getFilename = (path: string) => {
@@ -255,7 +252,6 @@ export function InteractionTimeline({
 }: InteractionTimelineProps) {
   const { t } = useTranslation('contacts')
   const { isRTL } = useDirection()
-  const locale = isRTL ? ar : enUS
 
   const { data: notes, isLoading, error } = useInteractionNotes(contactId)
   const deleteNoteMutation = useDeleteNote()
@@ -327,7 +323,6 @@ export function InteractionTimeline({
             key={note.id}
             note={note}
             isRTL={isRTL}
-            locale={locale}
             onEdit={onEditNote}
             onDelete={handleDelete}
             onDownload={handleDownload}

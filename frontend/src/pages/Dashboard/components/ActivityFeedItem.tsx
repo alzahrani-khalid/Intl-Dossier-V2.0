@@ -8,8 +8,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
-import { formatDistanceToNow, parseISO } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { formatRelativeTime } from '@/lib/format-date'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import type { ActivityItemData } from '@/domains/operations-hub/types/operations-hub.types'
 
@@ -49,10 +48,7 @@ export function ActivityFeedItem({ item }: ActivityFeedItemProps): React.ReactEl
       ? item.entity_name_ar
       : item.entity_name_en
 
-  const relativeTime = formatDistanceToNow(parseISO(item.created_at), {
-    addSuffix: true,
-    locale: isArabic ? ar : enUS,
-  })
+  const relativeTime = formatRelativeTime(item.created_at)
 
   const handleEntityClick = (): void => {
     void navigate({ to: getEntityRoute(item.entity_type, item.entity_id) })

@@ -9,9 +9,8 @@
 import { useTranslation } from 'react-i18next'
 import { useDossierOverview } from '@/hooks/useDossierOverview'
 import { Skeleton } from '@/components/ui/skeleton'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import { Layers } from 'lucide-react'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 interface ForumSessionsCardProps {
   dossierId: string
@@ -22,7 +21,6 @@ const MAX_SESSIONS = 5
 export function ForumSessionsCard({ dossierId }: ForumSessionsCardProps): React.ReactElement {
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
-  const dateLocale = isRTL ? ar : enUS
 
   const { data, isLoading, isError } = useDossierOverview(dossierId, {
     includeSections: ['related_dossiers', 'calendar_events'],
@@ -104,7 +102,7 @@ export function ForumSessionsCard({ dossierId }: ForumSessionsCardProps): React.
                   {isRTL ? (session.name_ar ?? session.name_en) : session.name_en}
                 </p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  {format(new Date(session.created_at), 'PP', { locale: dateLocale })}
+                  {formatDayFirstYear(new Date(session.created_at))}
                 </p>
               </div>
               <span
@@ -124,7 +122,7 @@ export function ForumSessionsCard({ dossierId }: ForumSessionsCardProps): React.
                   {isRTL ? (event.title_ar ?? event.title_en) : event.title_en}
                 </p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  {format(new Date(event.start_datetime), 'PP', { locale: dateLocale })}
+                  {formatDayFirstYear(new Date(event.start_datetime))}
                 </p>
               </div>
             </div>

@@ -17,6 +17,7 @@
 import { useEffect, useCallback, useState, createContext, useContext, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toFormatLocale } from '@/lib/format-locale'
+import { formatRelativeTime } from '@/lib/format-date'
 import { motion, AnimatePresence } from 'motion/react'
 import { useBlocker } from '@tanstack/react-router'
 import { Save, RotateCcw, X, Clock, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react'
@@ -131,21 +132,9 @@ function DraftBanner<T extends Record<string, unknown>>({
 }: DraftBannerProps<T>) {
   const { t } = useTranslation('common')
 
-  const savedDate = new Date(draft.savedAt)
-  const now = new Date()
-  const diffMs = now.getTime() - savedDate.getTime()
-  const diffMins = Math.floor(diffMs / 60000)
-  const diffHours = Math.floor(diffMins / 60)
-  const diffDays = Math.floor(diffHours / 24)
-
-  let timeAgo: string
-  if (diffDays > 0) {
-    timeAgo = t('forms.time_ago_days', { count: diffDays })
-  } else if (diffHours > 0) {
-    timeAgo = t('forms.time_ago_hours', { count: diffHours })
-  } else {
-    timeAgo = t('forms.time_ago_minutes', { count: diffMins })
-  }
+  // D-25 / RULING-P98A2-17: the draft-age phrase comes from the ONE shared
+  // localized helper instead of a three-branch `forms.time_ago_*` ladder.
+  const timeAgo = formatRelativeTime(draft.savedAt)
 
   return (
     <motion.div

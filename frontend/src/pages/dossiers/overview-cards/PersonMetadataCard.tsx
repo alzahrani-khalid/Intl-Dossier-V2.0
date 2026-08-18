@@ -10,9 +10,8 @@
 import { useTranslation } from 'react-i18next'
 import { useDossierOverview } from '@/hooks/useDossierOverview'
 import { Skeleton } from '@/components/ui/skeleton'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import { User, Building2, Briefcase, CalendarCheck } from 'lucide-react'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 interface PersonMetadataCardProps {
   dossierId: string
@@ -27,7 +26,6 @@ interface MetadataRow {
 export function PersonMetadataCard({ dossierId }: PersonMetadataCardProps): React.ReactElement {
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
-  const dateLocale = isRTL ? ar : enUS
 
   const { data, isLoading, isError } = useDossierOverview(dossierId, {
     includeSections: ['related_dossiers', 'calendar_events'],
@@ -75,7 +73,7 @@ export function PersonMetadataCard({ dossierId }: PersonMetadataCardProps): Reac
       label: t('overview.person.lastEngagement', { defaultValue: 'Last Engagement' }),
       value:
         lastEvent != null
-          ? format(new Date(lastEvent.start_datetime), 'PP', { locale: dateLocale })
+          ? formatDayFirstYear(new Date(lastEvent.start_datetime))
           : t('overview.person.noEngagement', { defaultValue: 'None recorded' }),
     },
   ]

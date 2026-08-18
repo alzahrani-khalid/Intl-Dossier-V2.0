@@ -9,10 +9,9 @@
 import { useTranslation } from 'react-i18next'
 import { useDossierOverview } from '@/hooks/useDossierOverview'
 import { Skeleton } from '@/components/ui/skeleton'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import { Handshake, FileSignature, CalendarCheck } from 'lucide-react'
 import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 interface BilateralSummaryCardProps {
   dossierId: string
@@ -77,9 +76,7 @@ export function BilateralSummaryCard({ dossierId }: BilateralSummaryCardProps): 
       icon: <CalendarCheck className="h-4 w-4 text-muted-foreground flex-shrink-0" />,
       label: t('overview.bilateral.lastMeeting', { defaultValue: 'Last Meeting' }),
       value: lastMeeting
-        ? format(new Date(lastMeeting.start_datetime), 'PP', {
-            locale: isRTL ? ar : enUS,
-          })
+        ? formatDayFirstYear(new Date(lastMeeting.start_datetime))
         : t('overview.bilateral.noMeeting', { defaultValue: 'None recorded' }),
     },
   ]

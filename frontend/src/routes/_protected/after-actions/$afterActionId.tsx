@@ -24,9 +24,7 @@ import {
   Edit,
   History,
 } from 'lucide-react'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
-import { formatDayFirst } from '@/lib/format-date'
+import { formatDateTime, formatDayFirst, formatDayFirstYear } from '@/lib/format-date'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import { useDirection } from '@/hooks/useDirection'
@@ -39,7 +37,6 @@ function AfterActionDetailPage(): React.ReactNode {
   const { afterActionId } = Route.useParams()
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-  const locale = isRTL ? ar : enUS
   const { user } = useAuth()
   const [conflict, setConflict] = useState<ConflictError | null>(null)
 
@@ -275,7 +272,7 @@ function AfterActionDetailPage(): React.ReactNode {
                       <span>
                         {t('afterActions.decisionMaker')}: {decision.decision_maker}
                       </span>
-                      <span>{format(new Date(decision.decision_date), 'PP', { locale })}</span>
+                      <span>{formatDayFirstYear(new Date(decision.decision_date))}</span>
                     </div>
                   </div>
                 </div>
@@ -310,7 +307,7 @@ function AfterActionDetailPage(): React.ReactNode {
                           </span>
                           <span>
                             {t('afterActions.dueDate')}:{' '}
-                            {format(new Date(commitment.due_date), 'PP', { locale })}
+                            {formatDayFirstYear(new Date(commitment.due_date))}
                           </span>
                           <Badge variant="outline">{commitment.priority}</Badge>
                           <Badge>{commitment.status}</Badge>
@@ -396,7 +393,7 @@ function AfterActionDetailPage(): React.ReactNode {
                           <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
                             {action.assigned_to && <span>{action.assigned_to}</span>}
                             {action.target_date && (
-                              <span>{format(new Date(action.target_date), 'PP', { locale })}</span>
+                              <span>{formatDayFirstYear(new Date(action.target_date))}</span>
                             )}
                           </div>
                         ) : null}
@@ -432,18 +429,18 @@ function AfterActionDetailPage(): React.ReactNode {
           <CardContent className="space-y-2 text-sm">
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">{t('afterActions.createdAt')}</span>
-              <span>{format(new Date(afterAction.created_at), 'PPp', { locale })}</span>
+              <span>{formatDateTime(new Date(afterAction.created_at))}</span>
             </div>
             {afterAction.updated_at && (
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">{t('afterActions.updatedAt')}</span>
-                <span>{format(new Date(afterAction.updated_at), 'PPp', { locale })}</span>
+                <span>{formatDateTime(new Date(afterAction.updated_at))}</span>
               </div>
             )}
             {afterAction.published_at && (
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">{t('afterActions.publishedAt')}</span>
-                <span>{format(new Date(afterAction.published_at), 'PPp', { locale })}</span>
+                <span>{formatDateTime(new Date(afterAction.published_at))}</span>
               </div>
             )}
             <div className="flex items-center justify-between">

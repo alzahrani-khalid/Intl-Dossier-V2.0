@@ -8,9 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { CheckCircle, XCircle, Loader2, AlertCircle, Eye } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { format } from 'date-fns'
 import microdiff from 'microdiff'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDateTime } from '@/lib/format-date'
 
 interface EditRequest {
   id: string
@@ -183,7 +183,7 @@ export function EditApprovalFlow({
 
           <div>
             <Label>{t('afterActions.editFlow.requestedAt')}</Label>
-            <p className="mt-1">{format(new Date(editRequest.requested_at), 'PPp')}</p>
+            <p className="mt-1">{formatDateTime(new Date(editRequest.requested_at))}</p>
           </div>
 
           <div>

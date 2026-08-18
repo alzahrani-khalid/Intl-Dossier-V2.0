@@ -1,7 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { formatDistanceToNow } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { formatRelativeTime } from '@/lib/format-date'
 import {
   ClipboardList,
   Inbox,
@@ -75,14 +74,10 @@ export function NotificationItem({
 }: NotificationItemProps) {
   const { t } = useTranslation('notification-center')
   const { isRTL } = useDirection()
-  const locale = isRTL ? ar : enUS
 
   const Icon = categoryIcons[notification.category] || Bell
 
-  const timeAgo = formatDistanceToNow(new Date(notification.created_at), {
-    addSuffix: true,
-    locale,
-  })
+  const timeAgo = formatRelativeTime(notification.created_at)
 
   const handleClick = () => {
     if (onClick) {

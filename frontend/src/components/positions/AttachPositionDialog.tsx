@@ -24,11 +24,10 @@ import { Separator } from '@/components/ui/separator'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { usePositions } from '@/hooks/usePositions'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import type { Position } from '@/types/position'
 import { useDirection } from '@/hooks/useDirection'
 import { toast } from 'sonner'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 export interface AttachPositionDialogProps {
   engagementId: string
@@ -49,7 +48,6 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
 }) => {
   const { t, i18n } = useTranslation()
   const { isRTL } = useDirection()
-  const locale = isRTL ? ar : enUS
 
   // Dialog state
   const [open, setOpen] = useState(false)
@@ -252,7 +250,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
                             {position.thematic_category && (
                               <Badge variant="outline">{position.thematic_category}</Badge>
                             )}
-                            <span>{format(new Date(position.created_at), 'PP', { locale })}</span>
+                            <span>{formatDayFirstYear(new Date(position.created_at))}</span>
                           </div>
                         </div>
 

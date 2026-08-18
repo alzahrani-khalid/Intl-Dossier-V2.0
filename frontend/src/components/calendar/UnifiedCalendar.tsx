@@ -20,6 +20,7 @@ import { CalendarMonthGrid } from './CalendarMonthGrid'
 import { WeekListMobile } from './WeekListMobile'
 import { useDirection } from '@/hooks/useDirection'
 import './calendar.css'
+import { formatDateTime } from '@/lib/format-date'
 
 interface UnifiedCalendarProps {
   linkedItemId?: string
@@ -208,7 +209,7 @@ export function UnifiedCalendar({
                     {isRTL ? event.title_ar || event.title_en : event.title_en || event.title_ar}
                   </h4>
                   <p className="text-xs text-muted-foreground">
-                    {format(new Date(event.start_datetime), 'PPp')}
+                    {formatDateTime(new Date(event.start_datetime))}
                   </p>
                 </div>
                 <Badge variant="outline" className="shrink-0 text-xs">

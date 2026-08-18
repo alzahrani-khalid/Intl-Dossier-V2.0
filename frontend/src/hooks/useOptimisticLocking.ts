@@ -52,6 +52,7 @@ export interface UseOptimisticLockingOptions {
 }
 
 import type { ConflictField, JsonValue } from '@/types/common.types'
+import { formatRelativeTime } from '@/lib/format-date'
 
 /**
  * Get human-readable conflict summary for display
@@ -75,13 +76,15 @@ export function getConflictSummary(conflict: OptimisticLockConflict): {
     }
   })
 
-  const timeDiff =
-    new Date(conflict.server_timestamp).getTime() - new Date(conflict.client_timestamp).getTime()
-  const secondsAgo = Math.floor(timeDiff / 1000)
+  // D-25 / RULING-P98A2-17 B-4: the recency phrase was a hardcoded English
+  // literal built from a server-vs-client timestamp DELTA — English under `ar`,
+  // and it claimed relativeness to NOW while measuring a fixed interval. It now
+  // states the server edit's real recency through the ONE shared localized helper.
+  const modifiedAgo = formatRelativeTime(conflict.server_timestamp)
 
   return {
     title: 'Conflict Detected',
-    description: `This task was modified by another user ${secondsAgo} seconds ago. Choose how to resolve the conflict.`,
+    description: `This task was modified by another user ${modifiedAgo}. Choose how to resolve the conflict.`,
     changes,
   }
 }

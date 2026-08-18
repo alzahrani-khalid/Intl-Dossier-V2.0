@@ -10,7 +10,7 @@
 
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDateTime } from '@/lib/format-date'
 import {
   Dialog,
   DialogContent,
@@ -176,8 +176,8 @@ export function ConflictResolutionDialog({
     const diffMinutes = Math.floor(diffSeconds / 60)
 
     return {
-      client: clientDate.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en')),
-      server: serverDate.toLocaleString(toFormatLocale(isRTL ? 'ar' : 'en')),
+      client: formatDateTime(clientDate),
+      server: formatDateTime(serverDate),
       ago:
         diffMinutes > 0
           ? t('minutesAgo', { count: diffMinutes })

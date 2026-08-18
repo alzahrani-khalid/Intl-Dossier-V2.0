@@ -22,7 +22,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar'
 import { Filter, Plus, X, CalendarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { format } from 'date-fns'
 import type {
   ReportFilter,
   FilterGroup,
@@ -30,6 +29,7 @@ import type {
   ReportField,
 } from '@/types/report-builder.types'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 interface FilterBuilderProps {
   filters: FilterGroup
@@ -144,7 +144,7 @@ function FilterRow({ filter, fields, isRTL, onUpdate, onRemove }: FilterRowProps
                 >
                   <CalendarIcon className="me-2 h-4 w-4" />
                   {filter.value
-                    ? format(new Date(filter.value as string), 'PPP')
+                    ? formatDayFirstYear(new Date(filter.value as string))
                     : t('filters.value')}
                 </Button>
               </PopoverTrigger>

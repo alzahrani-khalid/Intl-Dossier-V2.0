@@ -52,6 +52,7 @@ import { useCreateCommitment, useUpdateCommitment } from '@/hooks/useCommitments
 import { useDirection } from '@/hooks/useDirection'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 // B-19/E-18: owner ids are UUID FKs. Validate before submit so a typed name can
 // never reach the FK / valid_owner constraint as free text.
@@ -274,9 +275,7 @@ export function CommitmentForm({
                     >
                       <CalendarIcon className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                       {field.value ? (
-                        format(field.value, 'PPP', {
-                          locale: isRTL ? ar : enUS,
-                        })
+                        formatDayFirstYear(field.value)
                       ) : (
                         <span>{t('form.dueDate')}</span>
                       )}

@@ -34,6 +34,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirstYear, formatRelativeTime } from '@/lib/format-date'
 
 // ============================================================================
 // Helpers
@@ -49,31 +50,12 @@ function computeDaysInStage(transitions: LifecycleTransition[] | undefined): num
   return Math.floor((Date.now() - new Date(lastTransition.transitioned_at).getTime()) / 86_400_000)
 }
 
-function formatDate(dateStr: string | undefined | null, locale: string): string {
+// D-25: both formatters route through lib/format-date.ts. The former local pair
+// rendered a month-first `Intl.DateTimeFormat` skeleton and a hardcoded bilingual
+// Today/Yesterday ladder — the two shapes criterion 5 removes.
+function formatDate(dateStr: string | undefined | null): string {
   if (dateStr == null || dateStr === '') return '--'
-  try {
-    return new Intl.DateTimeFormat(toFormatLocale(locale), {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    }).format(new Date(dateStr))
-  } catch {
-    return dateStr
-  }
-}
-
-function formatRelativeDate(dateStr: string, locale: string): string {
-  try {
-    const date = new Date(dateStr)
-    const now = new Date()
-    const diffMs = now.getTime() - date.getTime()
-    const diffDays = Math.floor(diffMs / 86_400_000)
-    if (diffDays === 0) return locale === 'ar' ? 'اليوم' : 'Today'
-    if (diffDays === 1) return locale === 'ar' ? 'أمس' : 'Yesterday'
-    return formatDate(dateStr, locale)
-  } catch {
-    return dateStr
-  }
+  return formatDayFirstYear(dateStr)
 }
 
 function getParticipantDisplayName(participant: EngagementParticipant, isRTL: boolean): string {
@@ -239,9 +221,7 @@ export default function OverviewTab(): ReactElement {
               {profileLoading ? (
                 <Skeleton className="mt-1 h-6 w-28" />
               ) : (
-                <p className="text-xl font-semibold truncate">
-                  {formatDate(engagement?.end_date, locale)}
-                </p>
+                <p className="text-xl font-semibold truncate">{formatDate(engagement?.end_date)}</p>
               )}
             </div>
           </CardContent>
@@ -330,7 +310,7 @@ export default function OverviewTab(): ReactElement {
                       <span className="font-medium">{stageLabel}</span>
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {formatRelativeDate(transition.transitioned_at, locale)}
+                      {formatRelativeTime(transition.transitioned_at)}
                     </p>
                     {transition.note != null && transition.note !== '' && (
                       <p className="mt-0.5 text-xs text-muted-foreground italic truncate">

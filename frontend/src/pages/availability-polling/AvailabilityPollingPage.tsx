@@ -8,8 +8,7 @@
 
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { format, parseISO, isAfter } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { parseISO, isAfter } from 'date-fns'
 import { Plus, Calendar, Users, Clock, LayoutGrid, List, ChevronRight, Vote } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -36,6 +35,7 @@ import {
 import type { AvailabilityPoll } from '@/types/availability-polling.types'
 import { POLL_STATUS_COLORS } from '@/types/availability-polling.types'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 type ViewMode = 'grid' | 'list'
 type TabValue = 'my-polls' | 'invited' | 'all'
@@ -43,7 +43,6 @@ type TabValue = 'my-polls' | 'invited' | 'all'
 export function AvailabilityPollingPage() {
   const { t } = useTranslation('availability-polling')
   const { isRTL } = useDirection()
-  const dateLocale = isRTL ? ar : enUS
 
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
@@ -154,7 +153,7 @@ export function AvailabilityPollingPage() {
               </span>
               <span className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
-                {format(parseISO(poll.deadline), 'PP', { locale: dateLocale })}
+                {formatDayFirstYear(parseISO(poll.deadline))}
               </span>
               {poll.slots && (
                 <span className="flex items-center gap-1">

@@ -18,8 +18,7 @@ import {
   ListTodo,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { formatDayFirst } from '@/lib/format-date'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDayFirst, formatRelativeTime } from '@/lib/format-date'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -107,23 +106,20 @@ function getPriorityBadge(priority: TaskItem['priority']) {
 }
 
 /**
- * Format deadline date
+ * Format deadline date.
+ *
+ * D-25 / RULING-P98A2-17 §1(a): the within-a-week countdown semantic is KEPT and
+ * the phrase now comes from the ONE shared localized helper rather than a second
+ * `Intl.RelativeTimeFormat` instance. Beyond a week it stays a day-first date.
  */
-function formatDeadline(deadline: string, locale: string): string {
+function formatDeadline(deadline: string): string {
   const date = new Date(deadline)
   const now = new Date()
   const diffMs = date.getTime() - now.getTime()
   const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
 
-  if (diffDays < 0) {
-    return new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(diffDays, 'day')
-  } else if (diffDays === 0) {
-    return new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(0, 'day')
-  } else if (diffDays <= 7) {
-    return new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(diffDays, 'day')
-  } else {
-    return formatDayFirst(date)
-  }
+  if (diffDays <= 7) return formatRelativeTime(date)
+  return formatDayFirst(date)
 }
 
 /**
@@ -131,11 +127,9 @@ function formatDeadline(deadline: string, locale: string): string {
  */
 function TaskItemComponent({
   task,
-  locale,
   onToggle,
 }: {
   task: TaskItem
-  locale: string
   onToggle?: (completed: boolean) => void
 }) {
   const { t } = useTranslation('dashboard-widgets')
@@ -204,7 +198,7 @@ function TaskItemComponent({
               ) : (
                 <Clock className="h-3 w-3" />
               )}
-              <span>{formatDeadline(task.deadline, locale)}</span>
+              <span>{formatDeadline(task.deadline)}</span>
             </div>
           )}
         </div>
@@ -235,8 +229,7 @@ function GroupHeader({ label, count }: { label: string; count: number }) {
 }
 
 export function TaskListWidget({ config, data, isLoading, onTaskToggle }: TaskListWidgetProps) {
-  const { t, i18n } = useTranslation('dashboard-widgets')
-  const locale = toFormatLocale(i18n.language)
+  const { t } = useTranslation('dashboard-widgets')
 
   const { settings } = config
 
@@ -341,7 +334,6 @@ export function TaskListWidget({ config, data, isLoading, onTaskToggle }: TaskLi
                     <TaskItemComponent
                       key={task.id}
                       task={task}
-                      locale={locale}
                       onToggle={(completed) => onTaskToggle?.(task.id, completed)}
                     />
                   ))}
@@ -353,7 +345,6 @@ export function TaskListWidget({ config, data, isLoading, onTaskToggle }: TaskLi
               <TaskItemComponent
                 key={task.id}
                 task={task}
-                locale={locale}
                 onToggle={(completed) => onTaskToggle?.(task.id, completed)}
               />
             ))}

@@ -18,9 +18,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import type { UnifiedWorkItem, WorkSource, TrackingType } from '@/types/unified-work.types'
 import { cn } from '@/lib/utils'
-import { formatDistanceToNow, format, isToday, isTomorrow, isPast } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
-import { useDirection } from '@/hooks/useDirection'
+import { isToday, isTomorrow, isPast } from 'date-fns'
+import { formatDayFirst } from '@/lib/format-date'
 
 interface WorkItemCardProps {
   item: UnifiedWorkItem
@@ -28,8 +27,6 @@ interface WorkItemCardProps {
 
 export function WorkItemCard({ item }: WorkItemCardProps) {
   const { t } = useTranslation('my-work')
-  const { isRTL } = useDirection()
-  const locale = isRTL ? ar : enUS
 
   // Source icon and color
   const sourceConfig: Record<WorkSource, { icon: LucideIcon; color: string; label: string }> = {
@@ -98,20 +95,20 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
     const isPastDue = isPast(date)
 
     if (isToday(date)) {
-      return { text: t('deadline.today', 'Today'), urgent: true }
+      return { text: t('deadline.today'), urgent: true }
     }
     if (isTomorrow(date)) {
-      return { text: t('deadline.tomorrow', 'Tomorrow'), urgent: true }
+      return { text: t('deadline.tomorrow'), urgent: true }
     }
     if (isPastDue) {
       return {
-        text: formatDistanceToNow(date, { addSuffix: true, locale }),
+        text: formatDayFirst(date),
         urgent: true,
       }
     }
 
     return {
-      text: format(date, 'd MMM', { locale }),
+      text: formatDayFirst(date),
       urgent: false,
     }
   }

@@ -9,7 +9,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -17,6 +16,7 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { VersionComparison } from '@/components/version-comparison/VersionComparison'
 import { Skeleton } from '@/components/ui/skeleton'
+import { formatDateTime } from '@/lib/format-date'
 
 export const Route = createFileRoute('/_protected/positions/$id/versions')({
   component: VersionHistoryPage,
@@ -45,7 +45,7 @@ async function fetchVersions(positionId: string) {
 
 function VersionHistoryPage() {
   const { id } = Route.useParams()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [selectedVersions, setSelectedVersions] = useState<[number | null, number | null]>([
     null,
     null,
@@ -115,7 +115,7 @@ function VersionHistoryPage() {
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {new Date(version.created_at).toLocaleString(toFormatLocale(i18n.language))}
+                        {formatDateTime(version.created_at)}
                       </p>
                     </div>
                   </div>

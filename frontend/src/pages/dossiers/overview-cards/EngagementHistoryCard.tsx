@@ -10,9 +10,8 @@
 import { useTranslation } from 'react-i18next'
 import { useDossierOverview } from '@/hooks/useDossierOverview'
 import { Skeleton } from '@/components/ui/skeleton'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import { History } from 'lucide-react'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 interface EngagementHistoryCardProps {
   dossierId: string
@@ -25,7 +24,6 @@ export function EngagementHistoryCard({
 }: EngagementHistoryCardProps): React.ReactElement {
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
-  const dateLocale = isRTL ? ar : enUS
 
   const { data, isLoading, isError } = useDossierOverview(dossierId, {
     includeSections: ['related_dossiers', 'calendar_events'],
@@ -101,9 +99,7 @@ export function EngagementHistoryCard({
                   <p className="text-sm truncate">{entry.name}</p>
                   <div className="flex items-center gap-2 mt-0.5">
                     <span className="text-xs text-muted-foreground">
-                      {entry.date !== ''
-                        ? format(new Date(entry.date), 'PP', { locale: dateLocale })
-                        : '-'}
+                      {entry.date !== '' ? formatDayFirstYear(new Date(entry.date)) : '-'}
                     </span>
                     {entry.stage != null && entry.stage !== '' && (
                       <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">

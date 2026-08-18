@@ -6,8 +6,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { formatDistanceToNow } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { formatDateTime } from '@/lib/format-date'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -47,7 +46,6 @@ export function DuplicateCandidateCard({
 }: DuplicateCandidateCardProps) {
   const { t } = useTranslation('duplicate-detection')
   const { isRTL } = useDirection()
-  const dateLocale = isRTL ? ar : enUS
 
   const scorePercentage = Math.round(candidate.overall_score * 100)
 
@@ -184,11 +182,7 @@ export function DuplicateCandidateCard({
 
         {/* Detection time */}
         <div className="text-xs text-muted-foreground">
-          {t('detected', 'Detected')}{' '}
-          {formatDistanceToNow(new Date(candidate.detected_at), {
-            addSuffix: true,
-            locale: dateLocale,
-          })}
+          {t('detected', 'Detected')} {formatDateTime(candidate.detected_at)}
         </div>
       </CardContent>
 

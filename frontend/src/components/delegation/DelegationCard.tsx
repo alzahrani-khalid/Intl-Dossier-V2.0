@@ -6,8 +6,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { format, differenceInDays, isPast } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { differenceInDays, isPast } from 'date-fns'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -15,6 +14,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ArrowRight, Calendar, Clock, XCircle, AlertTriangle, User, FileText } from 'lucide-react'
 import type { Delegation } from '@/services/user-management-api'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 interface DelegationCardProps {
   delegation: Delegation
@@ -31,7 +31,6 @@ export function DelegationCard({
 }: DelegationCardProps) {
   const { t } = useTranslation('delegation')
   const { isRTL } = useDirection()
-  const dateLocale = isRTL ? ar : enUS
 
   // Calculate status and expiry info
   const now = new Date()
@@ -116,12 +115,12 @@ export function DelegationCard({
           <div className="flex items-center gap-2 text-sm">
             <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
             <span className="text-muted-foreground">{t('card.validFrom')}:</span>
-            <span className="font-medium">{format(startsAt, 'PP', { locale: dateLocale })}</span>
+            <span className="font-medium">{formatDayFirstYear(startsAt)}</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
             <span className="text-muted-foreground">{t('card.validUntil')}:</span>
-            <span className="font-medium">{format(expiresAt, 'PP', { locale: dateLocale })}</span>
+            <span className="font-medium">{formatDayFirstYear(expiresAt)}</span>
           </div>
         </div>
 
@@ -172,7 +171,7 @@ export function DelegationCard({
               <XCircle className="h-4 w-4 flex-shrink-0" />
               <span>{t('card.revokedAt')}: </span>
               <span className="font-medium">
-                {format(new Date(delegation.revoked_at), 'PP', { locale: dateLocale })}
+                {formatDayFirstYear(new Date(delegation.revoked_at))}
               </span>
             </div>
           </div>

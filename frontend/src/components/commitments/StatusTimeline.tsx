@@ -11,7 +11,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
+import { formatDateTime as sharedFormatDateTime } from '@/lib/format-date'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Clock,
@@ -42,21 +42,13 @@ const statusIcons: Record<CommitmentStatus, React.ReactNode> = {
 }
 
 export function StatusTimeline({ commitmentId, createdAt, createdBy }: StatusTimelineProps) {
-  const { t, i18n } = useTranslation('commitments')
+  const { t } = useTranslation('commitments')
   // Fetch status history
   const { data: history, isLoading, isError } = useCommitmentStatusHistory(commitmentId)
 
-  // Format date/time
-  const formatDateTime = (dateStr: string) => {
-    const date = new Date(dateStr)
-    return date.toLocaleString(toFormatLocale(i18n.language), {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  }
+  // D-25: the one formatter — `Tue 28 Apr 14:30 GST` in both locales. The former
+  // host-locale `.toLocaleString(` rendered a month-first shape under `en`.
+  const formatDateTime = (dateStr: string) => sharedFormatDateTime(dateStr)
 
   // Loading state
   if (isLoading) {

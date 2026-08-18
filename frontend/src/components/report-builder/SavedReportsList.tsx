@@ -48,9 +48,9 @@ import {
   Globe,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { format } from 'date-fns'
 import type { SavedReport, ReportAccessLevel } from '@/types/report-builder.types'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDateTime } from '@/lib/format-date'
 
 interface SavedReportsListProps {
   reports: SavedReport[]
@@ -236,7 +236,7 @@ export function SavedReportsList({
                         </div>
 
                         <p className="text-xs text-muted-foreground mt-2">
-                          {format(new Date(report.updatedAt), 'PPp')}
+                          {formatDateTime(new Date(report.updatedAt))}
                         </p>
                       </div>
 

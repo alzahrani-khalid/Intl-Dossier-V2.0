@@ -9,9 +9,8 @@
 import { useTranslation } from 'react-i18next'
 import { useDossierOverview } from '@/hooks/useDossierOverview'
 import { Skeleton } from '@/components/ui/skeleton'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import { CalendarDays } from 'lucide-react'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 interface MeetingScheduleCardProps {
   dossierId: string
@@ -22,7 +21,6 @@ const MAX_MEETINGS = 3
 export function MeetingScheduleCard({ dossierId }: MeetingScheduleCardProps): React.ReactElement {
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
-  const dateLocale = isRTL ? ar : enUS
 
   const { data, isLoading, isError } = useDossierOverview(dossierId, {
     includeSections: ['calendar_events'],
@@ -70,7 +68,7 @@ export function MeetingScheduleCard({ dossierId }: MeetingScheduleCardProps): Re
               className="flex items-start gap-3 rounded-md p-2 hover:bg-muted/50 transition-colors"
             >
               <span className="text-xs text-muted-foreground whitespace-nowrap mt-0.5">
-                {format(new Date(event.start_datetime), 'PP', { locale: dateLocale })}
+                {formatDayFirstYear(new Date(event.start_datetime))}
               </span>
               <p className="text-sm flex-1 min-w-0 truncate">
                 {(isRTL ? (event.title_ar ?? event.title_en) : event.title_en) ??

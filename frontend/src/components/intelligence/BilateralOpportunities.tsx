@@ -23,7 +23,7 @@ import { Badge } from '@/components/ui/badge'
 import { RefreshButton } from '@/components/intelligence/RefreshButton'
 import { useRefreshIntelligence } from '@/hooks/useIntelligence'
 import { Handshake, Globe, Sparkles } from 'lucide-react'
-import { formatDistanceToNow } from 'date-fns'
+import { formatDateTime } from '@/lib/format-date'
 import type { IntelligenceReport } from '@/services/intelligence-api'
 import { useDirection } from '@/hooks/useDirection'
 
@@ -140,9 +140,8 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
           )}
           <span className="text-muted-foreground">
             {t('intelligence.updated', 'Updated')}{' '}
-            {formatDistanceToNow(
-              new Date(latestReport?.last_refreshed_at || latestReport?.created_at || Date.now()),
-              { addSuffix: true },
+            {formatDateTime(
+              latestReport?.last_refreshed_at || latestReport?.created_at || Date.now(),
             )}
           </span>
         </div>

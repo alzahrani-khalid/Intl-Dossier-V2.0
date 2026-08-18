@@ -82,8 +82,7 @@
     "submitRequest": "تقديم الطلب",
     "cancel": "إلغاء",
     "saveDraft": "حفظ كمسودة",
-    "reset": "إعادة تعيين النموذج",
-    "fillMock": "تعبئة بيانات وهمية"
+    "reset": "إعادة تعيين النموذج"
   },
   "validation": {
     "requiredField": "هذا الحقل مطلوب",

@@ -7,7 +7,9 @@
  *   (NOT action_label).
  *
  * Anatomy: 3-column grid (60px time + 24px dot + 1fr who+what) — handoff app.css#L444-446.
- * Time uses formatRelativeTimeShort: '09:42' / 'yday' / '2d' / '22 Apr' bilingual.
+ * Time uses the ONE shared localized helper (D-25 / RULING-P98A2-06): the
+ * `lib/i18n/relativeTime.ts` short-format module was RETIRED in Phase 98 — a
+ * second parallel relative-time helper fails criterion 5 by construction.
  * D-03: top-4 fixed slice; no infinite scroll.
  *
  * Deviation from plan template: plan imported `Icon` from `@/components/signature-visuals`
@@ -21,20 +23,17 @@ import { useTranslation } from 'react-i18next'
 import { Dot } from 'lucide-react'
 import type { DossierOverviewResponse } from '@/types/dossier-overview.types'
 import type { UnifiedActivity } from '@/types/unified-dossier-activity.types'
-import { formatRelativeTimeShort } from '@/lib/i18n/relativeTime'
+import { formatRelativeTime } from '@/lib/format-date'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 
 export interface RecentActivitySectionProps {
   overview?: DossierOverviewResponse | undefined
 }
 
-export function RecentActivitySection({
-  overview,
-}: RecentActivitySectionProps): React.JSX.Element {
+export function RecentActivitySection({ overview }: RecentActivitySectionProps): React.JSX.Element {
   const { t, i18n } = useTranslation('dossier-drawer')
   const lang = i18n.language
-  const rows: UnifiedActivity[] =
-    overview?.activity_timeline?.recent_activities?.slice(0, 4) ?? []
+  const rows: UnifiedActivity[] = overview?.activity_timeline?.recent_activities?.slice(0, 4) ?? []
 
   return (
     <section className="flex flex-col gap-2" data-testid="dossier-drawer-activity">
@@ -63,7 +62,10 @@ export function RecentActivitySection({
                 ? a.actor.name
                 : '—'
             const title =
-              lang === 'ar' && a.title_ar !== null && a.title_ar !== undefined && a.title_ar.length > 0
+              lang === 'ar' &&
+              a.title_ar !== null &&
+              a.title_ar !== undefined &&
+              a.title_ar.length > 0
                 ? a.title_ar
                 : a.title_en
             return (
@@ -91,7 +93,7 @@ export function RecentActivitySection({
                       color: 'var(--ink-mute)',
                     }}
                   >
-                    {formatRelativeTimeShort(a.timestamp, lang)}
+                    {formatRelativeTime(a.timestamp)}
                   </span>
                 </LtrIsolate>
                 <span

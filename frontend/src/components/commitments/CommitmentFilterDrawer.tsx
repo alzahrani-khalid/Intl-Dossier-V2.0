@@ -21,7 +21,6 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { CalendarIcon, X } from 'lucide-react'
-import { format } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import { cn } from '@/lib/utils'
 import type {
@@ -31,6 +30,7 @@ import type {
   CommitmentFilters,
 } from '@/types/commitment.types'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 export interface CommitmentFilterDrawerProps {
   open: boolean
@@ -225,9 +225,7 @@ export function CommitmentFilterDrawer({
                     >
                       <CalendarIcon className="size-4 me-2" />
                       {localFilters.dueDateFrom ? (
-                        format(new Date(localFilters.dueDateFrom), 'PPP', {
-                          locale: isRTL ? ar : enUS,
-                        })
+                        formatDayFirstYear(new Date(localFilters.dueDateFrom))
                       ) : (
                         <span>{t('filters.dueDateFrom')}</span>
                       )}
@@ -270,9 +268,7 @@ export function CommitmentFilterDrawer({
                     >
                       <CalendarIcon className="size-4 me-2" />
                       {localFilters.dueDateTo ? (
-                        format(new Date(localFilters.dueDateTo), 'PPP', {
-                          locale: isRTL ? ar : enUS,
-                        })
+                        formatDayFirstYear(new Date(localFilters.dueDateTo))
                       ) : (
                         <span>{t('filters.dueDateTo')}</span>
                       )}

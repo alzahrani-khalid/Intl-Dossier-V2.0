@@ -65,7 +65,14 @@ describe('AssignmentDetailsModal', () => {
       <AssignmentDetailsModal assignment={mockAssignment} isOpen onClose={vi.fn()} />,
     )
 
-    expect(screen.getByText(/Jan.*10.*2024/i)).toBeInTheDocument()
+    // Phase 98 (D-25): this assertion used to pin the `'PPP p'` skeleton's month-first
+    // render (`Jan 10, 2024 at 2:30 PM`) — one of the seven competing shapes criterion 5
+    // removes. The modal now renders `formatDateTime`: day-first date + 24-hour GST time.
+    // Scoped to the reminder cell by testid: the modal renders two dates, so a
+    // bare text query is ambiguous and would pass on the wrong one.
+    expect(screen.getByTestId('last-reminder-sent')).toHaveTextContent(
+      /^[A-Z][a-z]{2} \d{2} [A-Z][a-z]{2} \d{2}:\d{2} GST$/,
+    )
 
     rerender(
       <AssignmentDetailsModal

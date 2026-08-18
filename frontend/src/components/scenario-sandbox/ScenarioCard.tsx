@@ -40,8 +40,7 @@ import {
   SCENARIO_TYPE_LABELS,
   SCENARIO_STATUS_LABELS,
 } from '@/types/scenario-sandbox.types'
-import { formatDistanceToNow } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
+import { formatDayFirst } from '@/lib/format-date'
 import { useDirection } from '@/hooks/useDirection'
 
 interface ScenarioCardProps {
@@ -76,7 +75,6 @@ export function ScenarioCard({
 }: ScenarioCardProps) {
   const { t } = useTranslation('scenario-sandbox')
   const { isRTL } = useDirection()
-  const locale = isRTL ? ar : enUS
 
   const title = isRTL ? scenario.title_ar : scenario.title_en
   const description = isRTL ? scenario.description_ar : scenario.description_en
@@ -201,12 +199,7 @@ export function ScenarioCard({
           </Badge>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Calendar className="h-3.5 w-3.5" />
-            <span>
-              {formatDistanceToNow(new Date(scenario.updated_at), {
-                addSuffix: true,
-                locale,
-              })}
-            </span>
+            <span>{formatDayFirst(scenario.updated_at)}</span>
           </div>
         </div>
       </CardContent>

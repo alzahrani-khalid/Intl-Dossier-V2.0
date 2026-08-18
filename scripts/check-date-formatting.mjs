@@ -28,6 +28,35 @@
 //   Check 7 — a 12-hour clock token (`h:mm a`) in a format literal → `14:30 GST`.
 //   Check 8 — `.toLocaleString(` on a DATE-ISH receiver (heuristic name match).
 //
+// PHASE 98 WAVE 4 EXTENSION (RULING-P98A2-06 §3, RULING-P98A2-17 §3,
+// RULING-P98A2-19). Check 5 keys on a date-fns IMPORT TOKEN — the same
+// population-by-implementation defect the phase filed six times. Five components
+// hand-rolled their own `formatRelativeTime`, a sixth module exported a parallel
+// `formatRelativeTimeShort`, and four more used `Intl.RelativeTimeFormat`; check 5
+// was structurally blind to every one of them. Check 9 keys on what it CATCHES —
+// relative-time PRODUCTION, however implemented:
+//
+//   Check 9a — `Intl.RelativeTimeFormat` outside the formatter module. The native
+//              relative formatter is a second formatter by definition.
+//   Check 9b — a local FUNCTION DECLARATION whose name claims relative time
+//              (`formatRelativeTime`, `formatRelativeDate`, `getRelativeTime`, …).
+//              Declaration shapes only: `const relativeTime = formatRelativeTime(x)`
+//              is a CONSUMER of the sanctioned helper, not a competing producer.
+//   Check 9c — the SHORT-FORMAT shape: an interpolated count glued to a bare
+//              time-unit suffix (`${diffD}d`, `${diffMin}د`). This is the second
+//              witnessed escape shape and it carries no import at all.
+//
+// RULING-P98A2-19 states the invariant these three serve: **no hand-rolled
+// relative-string ASSEMBLY.** Two compliant forms exist — (1) the shared localized
+// helper, (2) a verb-bearing interpolated i18n key PAIR, localized in both locales,
+// with no defaultValue mask and only the COUNT computed locally. Form (2) is
+// therefore NOT an offence and check 9 must not fire on it: it does not, because a
+// `t('card.expiresIn', { days })` call assembles nothing in code.
+//
+// The 9-family SKIPS COMMENT LINES. Checks 1-8 do not, and that difference is
+// deliberate: this phase's repairs document the very tokens 9a keys on, and a guard
+// that reds on its own rationale teaches people to delete the rationale.
+//
 // POPULATION, and what falls OUTSIDE it (D-05 — a correct command about the wrong
 // set is still wrong). IN: every non-test `.ts`/`.tsx` under `frontend/src`, i.e.
 // exactly what `walkSourceFiles` returns. OUT, deliberately:
@@ -70,9 +99,56 @@
 //   node scripts/check-date-formatting.mjs <dir>      (scans <dir> — proves a positive
 //                                                       failure against the fixture)
 //
+// NEGATIVE SCOPE (RULING-P98A2-13 Law 1) — what this oracle CANNOT see, and what
+// covers each blind spot. Four instruments in this phase were blind to their own
+// class by construction; this one states its blindness up front.
+//
+//   1. ANY TREE OUTSIDE `frontend/src`. `walkSourceFiles` starts at
+//      `frontend/src` and nothing re-points it. `supabase/functions/`, `backend/`,
+//      `tests/`, `e2e/` are never read. TWO EDGE FUNCTIONS produce bilingual
+//      now-relative user copy today —
+//      `contextual-suggestions/index.ts:605-606,616-617` and
+//      `relationship-health/index.ts:226-227`. COVERED BY: nothing automated.
+//      Filed as `EDGECOPY-01` (owner Phase 102, RULING-P98A2-16/-17).
+//   2. i18n JSON. The walker admits only `.ts`/`.tsx`, so a relative phrase
+//      AUTHORED in `frontend/src/i18n/**/*.json` and rendered through `t()` is
+//      invisible here BY CONSTRUCTION. That is RULING-P98A2-19's compliant form
+//      (2) when the pair is verb-bearing and unmasked — but a MASKED or MISSING
+//      key is a real defect this guard cannot see. COVERED BY: the criterion-2
+//      resolution instruments (`.tickmarkr/overseer/INSTRUMENTS-P98/`), and only
+//      on the surfaces they drive.
+//   3. HARDCODED relative phrases in code (`${diffDays} days ago`, `منذ …`,
+//      `'Yesterday'`). Three were repaired in wave 4
+//      (`KeyContactsSection`, `ActivityTimelineSection`, `useOptimisticLocking`).
+//      9c catches only the SHORT-SUFFIX shape; a full-word phrase escapes it, and
+//      a broad literal check cannot separate a relative render from a date-RANGE
+//      FILTER LABEL (`AuditLogFilters`, `ActivityFeedFilters`, `DateRangeFilter`
+//      all legitimately carry `'Yesterday'`/`'أمس'`). COVERED BY: NOTHING. Said
+//      plainly. Known live residue of this exact shape:
+//      `components/notifications/NotificationList.tsx:125-126` (bilingual
+//      today/yesterday group headers) and
+//      `components/empty-states/NotificationPreviewTimeline.tsx:306`
+//      (`{notification.timeAgo} {t('preview.ago')}` — assembly across a boundary).
+//   4. RUNTIME RESOLUTION. This is a source-text scanner. A syntactically perfect
+//      `t('deadline.today')` proves nothing about whether the bound namespace
+//      resolves it — the mask class RULING-P98A2-12 c3 bounded. COVERED BY:
+//      `INSTRUMENTS-P98/resolve-check.mjs` + its `neg-taskcard.mjs` control.
+//   5. REACHABILITY. Dead code is scanned exactly like live code, so a green here
+//      can be a green over a component nobody renders — which is precisely why
+//      `EnhancedActivityFeed.tsx` needed the exemption below rather than a repair.
+//      COVERED BY: the importer census and the rendered `98-copy05` oracle.
+//   6. date-fns relative APIs check 5 does not name — `formatDistanceToNowStrict`,
+//      `formatDistanceStrict`, `intlFormatDistance`, `formatRelative`. Zero live
+//      today (control: the same instrument returns 46 hits for `formatDistanceToNow`
+//      in the same tree at derivation time), so the gap is LATENT, not live. 9b
+//      narrows it — such a call almost always sits in a relative-named local — but
+//      does not close it.
+//
 // BOTH POLARITIES, runnable on demand:
 //   RED   node scripts/check-date-formatting.mjs scripts/date-format-fixtures
-//         → exit 1, one planted offender per check 5–8.
+//         → exit 1, one planted offender per check 5–9, including BOTH witnessed
+//           relative-time escape shapes: the no-import local and the
+//           importing-but-escaping parallel helper.
 //   GREEN node scripts/check-date-formatting.mjs frontend/src/design-system
 //         → exit 0 over a clean subtree with the named debt INACTIVE, so the green
 //           cannot be coming from the debt list.
@@ -163,75 +239,83 @@ const LOCALESTRING_DATE =
 /** Check 6 — a date-fns LOCALIZED SKELETON literal: P/p tokens only, at least one P. */
 const isSkeleton = (fmt) => /^[Pp\s]+$/.test(fmt) && fmt.includes('P')
 
+// Check 9a — the native relative formatter. Any instance outside the formatter
+// module is a second formatter, whatever the enclosing function is called
+// (`TaskListWidget`'s was called `formatDeadline`, and no name-keyed finder saw it).
+const INTL_RELATIVE = /\bIntl\.RelativeTimeFormat\b/
+// Check 9b — a local FUNCTION DECLARATION claiming relative time. Declaration
+// shapes only: `function fooRelativeBar(` and `const fooRelativeBar = (…) =>` /
+// `= function`. A plain `const relativeTime = formatRelativeTime(x)` is a CONSUMER
+// of the sanctioned helper and must not fire.
+const LOCAL_RELATIVE_DECL =
+  /\bfunction\s+[A-Za-z_$]*[Rr]elative[A-Za-z_$]*\s*[(<]|\b(?:const|let|var)\s+[A-Za-z_$]*[Rr]elative[A-Za-z_$]*\s*(?::[^=]+)?=\s*(?:async\s+)?(?:function\b|\(|<)/
+// Check 9c — the SHORT-FORMAT shape: an interpolated count glued to a bare
+// time-unit suffix, English or Arabic. Both witnessed escapes had it
+// (`ActivityList`'s `${diffD}d` / `${diffD}ي`, `relativeTime.ts`'s `${days}${suffix}`).
+const SHORT_RELATIVE = /`\$\{[^`{}]{1,40}\}(?:s|m|h|d|w|y|ث|د|س|ي|ش)`/
+// A comment line — the 9-family skips these (see header).
+const COMMENT_LINE = /^\s*(?:\/\/|\*|\/\*)/
+
 // The ONE sanctioned home of relative time (D-25) — a path exemption, permanent,
 // deliberately not a burn-down row.
 const RELATIVE_TIME_HOME = path.join(repoRoot, 'frontend', 'src', 'lib', 'format-date.ts')
 
-// Named debt for checks 5–8, one row per (file, check), derived by running this
-// script against frontend/src with the list empty. Emptied by plan 98-07 — the
-// row marker below is that plan's emptiness anchor and appears on rows ONLY.
+// Named debt for checks 5–9, one row per (file, check). EMPTIED by plan 98-07:
+// every row left by REPAIR. The array stays so the mechanism (and its stale-row
+// rule) survives for the next migration — an empty list is the guard running
+// STRICT, which is what 98-07's gate requires.
 const BURNDOWN = [
-  { file: 'frontend/src/components/collaboration/ConflictResolutionDialog.tsx', check: 'localestring-date', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/commitments/StatusTimeline.tsx', check: 'localestring-date', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/pages/MyAssignments.tsx', check: 'localestring-date', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/pages/webhooks/WebhooksPage.tsx', check: 'localestring-date', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/routes/_protected/positions/$id/approvals.tsx', check: 'localestring-date', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/routes/_protected/positions/$id/versions.tsx', check: 'localestring-date', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/activity-feed/EnhancedActivityFeed.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/audit-logs/AuditLogTable.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/briefing-books/BriefingBooksList.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/comments/CommentItem.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/duplicate-detection/DuplicateCandidateCard.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/form-auto-save/AutoSaveIndicator.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/form-auto-save/FormDraftBanner.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/intelligence/BilateralOpportunities.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/intelligence/EconomicDashboard.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/intelligence/PoliticalAnalysis.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/intelligence/SecurityAssessment.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/notifications/NotificationItem.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/scenario-sandbox/ScenarioCard.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/scheduled-reports/ScheduledReportsManager.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/workflow-automation/WorkflowExecutionsList.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/workflow-automation/WorkflowRuleCard.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/pages/Dashboard/components/ActivityFeedItem.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/pages/Dashboard/widgets/RecentDossiers.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/pages/dossiers/overview-cards/SharedRecentActivityCard.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/pages/my-work/components/WorkItemCard.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/routes/_protected/tags.tsx', check: 'relative-time', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/activity-feed/EnhancedActivityFeed.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/audit-logs/AuditLogTable.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/availability-polling/AvailabilityPollVoter.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/calendar/UnifiedCalendar.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/commitments/CommitmentFilterDrawer.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/commitments/CommitmentForm.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/contacts/InteractionNoteForm.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/contacts/InteractionTimeline.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/delegation/CreateDelegationDialog.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/delegation/DelegationCard.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/edit-approval-flow/EditApprovalFlow.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/positions/AttachPositionDialog.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/positions/PositionAnalyticsCard.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/positions/PositionCard.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/report-builder/FilterBuilder.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/report-builder/SavedReportsList.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/scheduled-reports/ExecutionHistoryDialog.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/scheduled-reports/ScheduledReportsManager.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/tasks/TaskEditDialog.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/version-history-viewer/VersionHistoryViewer.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/waiting-queue/AssignmentDetailsModal.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/work-creation/forms/CommitmentQuickForm.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/work-creation/forms/TaskQuickForm.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/pages/availability-polling/AvailabilityPollingPage.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/pages/dossiers/overview-cards/BilateralSummaryCard.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/pages/dossiers/overview-cards/ElectedOfficialOfficeCard.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/pages/dossiers/overview-cards/EngagementHistoryCard.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/pages/dossiers/overview-cards/ForumSessionsCard.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/pages/dossiers/overview-cards/MeetingScheduleCard.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/pages/dossiers/overview-cards/PersonMetadataCard.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/routes/_protected/after-actions/$afterActionId.tsx', check: 'skeleton', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/availability-polling/AvailabilityPollResults.tsx', check: 'twelve-hour', marker: 'P98-BURNDOWN', removedBy: '98-07' },
-  { file: 'frontend/src/components/availability-polling/AvailabilityPollVoter.tsx', check: 'twelve-hour', marker: 'P98-BURNDOWN', removedBy: '98-07' },
 ]
+
+// NAMED PERMANENT EXEMPTIONS — the gate's second permitted exit. A row leaves the
+// burn-down by REPAIR or by a NAMED exemption; never by silent deletion. Each entry
+// states WHY it is not a defect, and a dead-code exemption states its VOID CONDITION
+// so it cannot launder unrendered code into a correctness claim.
+const EXEMPT = [
+  {
+    file: 'frontend/src/components/activity-feed/EnhancedActivityFeed.tsx',
+    checks: ['relative-time', 'skeleton'],
+    why:
+      'EXEMPT per RULING-P98A2-18. The component is DEAD — 0 importers at ' +
+      '19f0ecde6dba624b4b8d320db48101c4798dd2ce, derived by ' +
+      "`command grep -rn 'EnhancedActivityFeed' frontend/src --include='*.ts' --include='*.tsx' " +
+      "| grep -v 'activity-feed/EnhancedActivityFeed.tsx:'` = 0, with the live control " +
+      "`SharedRecentActivityCard` run through the identical command = 25. Its lines 200 and 205 " +
+      'are GENUINE offenders left unrepaired BECAUSE NOTHING RENDERS THEM ' +
+      '(RULING-P98A2-17 §2: dead-code repair is not this phase\'s diff). ' +
+      'VOID CONDITION: if this file gains an importer, this exemption is void and both rows ' +
+      'RETURN to the burn-down. Re-run the derivation command above to check. ' +
+      'This is a DEAD-CODE exemption, NOT a correctness claim.',
+  },
+  {
+    file: 'frontend/src/types/sla.types.ts',
+    checks: ['short-relative'],
+    why: 'SLA / duration display, OUT of criterion 5 per RULING-P98A2-17 §1(b)+(c).',
+  },
+  {
+    file: 'frontend/src/components/engagements/LifecycleStepperBar.tsx',
+    checks: ['short-relative'],
+    why: 'SLA / duration display, OUT of criterion 5 per RULING-P98A2-17 §1(b)+(c).',
+  },
+  {
+    file: 'frontend/src/components/engagements/LifecycleTimeline.tsx',
+    checks: ['short-relative'],
+    why: 'SLA / duration display, OUT of criterion 5 per RULING-P98A2-17 §1(b)+(c).',
+  },
+  {
+    file: 'frontend/src/components/sla-countdown/SLACountdown.tsx',
+    checks: ['short-relative'],
+    why: 'SLA countdown, the T−N/T+N shape CLAUDE.md mandates — OUT per RULING-P98A2-17 §1(b).',
+  },
+  {
+    file: 'frontend/src/pages/Dashboard/widgets/OverdueCommitments.tsx',
+    checks: ['short-relative'],
+    why: 'Labelled overdue COUNTER, OUT of criterion 5 per RULING-P98A2-17 §1(c).',
+  },
+]
+
+const isExempt = (file, check) =>
+  EXEMPT.some((e) => e.file === file && e.checks.includes(check))
 
 /** Rows still excusing a live site are `used`; a row nothing matched is stale. */
 const burndownKey = (f) => `${f.file} ${f.check}`
@@ -330,6 +414,38 @@ function main() {
           why: 'date-receiver .toLocaleString( (use formatDayFirst/formatDateTime)',
         })
       }
+
+      // Checks 9a–9c — relative-time PRODUCTION, keyed on what they catch rather
+      // than on an import token. Comment lines are skipped (see header).
+      if (file !== RELATIVE_TIME_HOME && !COMMENT_LINE.test(code)) {
+        if (INTL_RELATIVE.test(rawLine)) {
+          failures.push({
+            file: relFile,
+            line: lineNo,
+            code,
+            check: 'intl-relative',
+            why: 'Intl.RelativeTimeFormat outside lib/format-date.ts — a second relative formatter (use formatRelativeTime)',
+          })
+        }
+        if (LOCAL_RELATIVE_DECL.test(rawLine)) {
+          failures.push({
+            file: relFile,
+            line: lineNo,
+            code,
+            check: 'local-relative-decl',
+            why: 'local relative-time function declaration — one helper only (RULING-P98A2-06 §2: a surviving parallel helper fails criterion 5 by construction)',
+          })
+        }
+        if (SHORT_RELATIVE.test(rawLine)) {
+          failures.push({
+            file: relFile,
+            line: lineNo,
+            code,
+            check: 'short-relative',
+            why: 'hand-assembled short relative form (interpolated count + bare unit suffix) — RULING-P98A2-19: no hand-rolled relative-string assembly',
+          })
+        }
+      }
     })
   }
 
@@ -339,8 +455,12 @@ function main() {
   const excused = new Set()
   let debtSites = 0
 
+  // Named permanent exemptions apply on EVERY run, fixture runs included — an
+  // exemption states a scope fact, not a debt, so a directory run must honour it.
+  const notExempt = failures.filter((f) => !isExempt(f.file, f.check))
+
   const real = burndownActive
-    ? failures.filter((f) => {
+    ? notExempt.filter((f) => {
         const row = BURNDOWN.find((r) => r.file === f.file && r.check === f.check)
         if (row === undefined) {
           return true
@@ -349,7 +469,7 @@ function main() {
         debtSites += 1
         return false
       })
-    : failures
+    : notExempt
 
   // A row nothing matched has outlived its site: the debt is paid, delete the row.
   const stale = burndownActive ? BURNDOWN.filter((r) => !excused.has(burndownKey(r))) : []
@@ -388,8 +508,11 @@ function main() {
   console.log(
     `date-formatting check OK: ${files.length} non-test file(s) scanned, 0 unexcused ad-hoc date/number ` +
       'formatting sites (raw toLocaleDateString/toLocaleTimeString, month-first date-fns literals, Indic ' +
-      'locale literals, relative time, localized skeletons, 12-hour literals, date-receiver toLocaleString) ' +
-      'outside the 2-file allowlist (lib/format-date.ts, components/ui/calendar.tsx). ' +
+      'locale literals, relative time, localized skeletons, 12-hour literals, date-receiver toLocaleString, ' +
+      'Intl.RelativeTimeFormat, local relative-time declarations, hand-assembled short relative forms) ' +
+      'outside the 2-file allowlist (lib/format-date.ts, components/ui/calendar.tsx) and the ' +
+      `${EXEMPT.length} named permanent exemption(s) (see EXEMPT — each states its reason, and the ` +
+      'dead-code one states its VOID CONDITION). ' +
       (burndownActive
         ? `Named debt: ${BURNDOWN.length} row(s) excusing ${debtSites} site(s), all owned by plan 98-07.`
         : 'Named debt NOT applied (explicit-directory run) — this green is unexcused.'),

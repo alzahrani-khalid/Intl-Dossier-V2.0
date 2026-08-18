@@ -12,8 +12,6 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import { CalendarIcon, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { AdaptiveDialog } from '@/components/ui/adaptive-dialog'
@@ -40,6 +38,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { UserPicker } from '@/components/forms/UserPicker'
 import { useUpdateTask } from '@/hooks/useTasks'
 import type { Database } from '../../../../backend/src/types/database.types'
+import { formatDayFirstYear } from '@/lib/format-date'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 
@@ -292,7 +291,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
                       >
                         <CalendarIcon className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
                         {field.value
-                          ? format(field.value, 'PPP', { locale: isRTL ? ar : enUS })
+                          ? formatDayFirstYear(field.value)
                           : t('tasks-page:form.selectDeadline')}
                       </Button>
                     </FormControl>

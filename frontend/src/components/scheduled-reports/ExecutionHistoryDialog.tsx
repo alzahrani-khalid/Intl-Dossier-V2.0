@@ -6,7 +6,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { format, formatDuration, intervalToDuration } from 'date-fns'
+import { formatDuration, intervalToDuration } from 'date-fns'
 import { ar, enUS } from 'date-fns/locale'
 import { CheckCircle2, XCircle, Clock, SkipForward, AlertCircle } from 'lucide-react'
 
@@ -17,6 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 import { useScheduleExecutions, type ReportExecution } from '@/hooks/useScheduledReports'
 import { useDirection } from '@/hooks/useDirection'
+import { formatDateTime } from '@/lib/format-date'
 
 interface ExecutionHistoryDialogProps {
   open: boolean
@@ -104,7 +105,7 @@ export function ExecutionHistoryDialog({
                       {getStatusIcon(execution.status)}
                       <div>
                         <p className="font-medium">
-                          {format(new Date(execution.created_at), 'PPpp', { locale })}
+                          {formatDateTime(new Date(execution.created_at))}
                         </p>
                         <p className="text-sm text-muted-foreground">
                           {execution.trigger_type === 'manual' ? 'Manual trigger' : 'Scheduled'}

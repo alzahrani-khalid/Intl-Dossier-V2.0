@@ -9,7 +9,6 @@
 import { useEffect } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { toFormatLocale } from '@/lib/format-locale'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -27,6 +26,7 @@ import ApprovalChain from '@/components/approval-chain/ApprovalChain'
 import { Skeleton } from '@/components/ui/skeleton'
 import { p } from '@/lib/navigation'
 import { APPROVALS_TAB_STATUSES } from '../$id'
+import { formatDateTime } from '@/lib/format-date'
 
 export const Route = createFileRoute('/_protected/positions/$id/approvals')({
   component: ApprovalTrackingPage,
@@ -54,7 +54,7 @@ async function fetchApprovals(positionId: string) {
 
 function ApprovalTrackingPage() {
   const { id } = Route.useParams()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const navigate = useNavigate()
 
   const { data: position, isLoading } = useQuery({
@@ -166,7 +166,7 @@ function ApprovalTrackingPage() {
                 </TableCell>
                 <TableCell className="max-w-xs truncate">{approval.comments || '-'}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">
-                  {new Date(approval.created_at).toLocaleString(toFormatLocale(i18n.language))}
+                  {formatDateTime(approval.created_at)}
                 </TableCell>
               </TableRow>
             ))}

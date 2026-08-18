@@ -9,7 +9,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { formatDayFirstYear } from '@/lib/format-date'
+import { formatDayFirstYear, formatRelativeTime } from '@/lib/format-date'
 import { useNavigate } from '@tanstack/react-router'
 import {
   CheckSquare,
@@ -96,26 +96,9 @@ export function ActivityTimelineItem({
     return formatDayFirstYear(dateStr)
   }
 
-  // Format relative time
-  const formatRelativeTime = (dateStr: string) => {
-    const date = new Date(dateStr)
-    const now = new Date()
-    const diffMs = now.getTime() - date.getTime()
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-    const diffMinutes = Math.floor(diffMs / (1000 * 60))
-
-    if (diffMinutes < 60) {
-      return t('timeline.minutesAgo', '{{count}} min ago', { count: diffMinutes })
-    }
-    if (diffHours < 24) {
-      return t('timeline.hoursAgo', '{{count}}h ago', { count: diffHours })
-    }
-    if (diffDays < 7) {
-      return t('timeline.daysAgo', '{{count}}d ago', { count: diffDays })
-    }
-    return formatDate(dateStr)
-  }
+  // D-25 / RULING-P98A2-06: relative time comes from the ONE shared localized
+  // helper. The former local ladder produced en-only phrases from raw-value
+  // defaultValues, which rendered English under `ar` whenever the key missed.
 
   // Navigate to detail
   const handleClick = () => {

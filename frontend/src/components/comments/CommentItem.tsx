@@ -12,9 +12,8 @@
 
 import React, { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { formatDistanceToNow } from 'date-fns'
+import { formatRelativeTime } from '@/lib/format-date'
 import DOMPurify from 'dompurify'
-import { ar, enUS } from 'date-fns/locale'
 import {
   MessageSquare,
   MoreHorizontal,
@@ -73,7 +72,6 @@ export function CommentItem({
 }: CommentItemProps) {
   const { t } = useTranslation('comments')
   const { isRTL } = useDirection()
-  const locale = isRTL ? ar : enUS
 
   const [isReplying, setIsReplying] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
@@ -169,12 +167,7 @@ export function CommentItem({
   }, [comment.content, comment.content_html, comment.mentions])
 
   // Format timestamp
-  const timeAgo = useMemo(() => {
-    return formatDistanceToNow(new Date(comment.created_at), {
-      addSuffix: true,
-      locale,
-    })
-  }, [comment.created_at, locale])
+  const timeAgo = useMemo(() => formatRelativeTime(comment.created_at), [comment.created_at])
 
   const handleDelete = async () => {
     if (!window.confirm(t('confirmDelete', 'Are you sure you want to delete this comment?'))) {
