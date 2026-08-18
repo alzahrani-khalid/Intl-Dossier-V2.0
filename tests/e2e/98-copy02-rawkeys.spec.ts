@@ -70,8 +70,27 @@ const password = process.env.TEST_USER_PASSWORD ?? ''
 
 const SETTLE_TIMEOUT = 20_000
 
-/** A dotted token under a known namespace prefix, rendered where copy belongs. */
-const RAW_KEY_TOKEN = /(entityLinks|regions|typeGuide|typeDescription|calendar\.recurrence)\.[A-Za-z.]+/
+/**
+ * A dotted token under a known namespace prefix, rendered where copy belongs.
+ *
+ * `common` WAS MISSING until `RULING-P98A2-10` ordered it added. That omission is the reason
+ * `common.clearFilters` — a raw key on `EntitySearchDialog.tsx:293`, i.e. a surface plan 98-04 had
+ * just repaired — was invisible to this oracle. **Every green this detector produced before that
+ * fixture fired was produced by an instrument that could not see the shape.** The planted
+ * `common.clearFilters` fixture in the self-test below is what makes the next green mean something.
+ *
+ * DELIBERATELY NARROW, and the reason is not timidity. The blindness is structural — the same
+ * omission holds for `afterActions`, `stepUp`, `forms` and ~40 other first segments. Those were
+ * routed to `AR-04b` (Phase 99) by `RULING-P98A2-10` item 3, so widening the alternation to cover
+ * them here would red the driven legs for a ~300-site repair this phase does not own and cannot
+ * absorb. The extension is scoped to the ruled `common.` shape; the residual blindness is named
+ * rather than left for someone to rediscover.
+ *
+ * The leading `\b` guards the false positive the `common` alternative introduces: without it,
+ * `uncommon.Add` matches on the embedded substring. Both polarities of that guard are asserted.
+ */
+const RAW_KEY_TOKEN =
+  /\b(entityLinks|regions|typeGuide|typeDescription|calendar\.recurrence|common)\.[A-Za-z.]+/
 
 /**
  * The 80 STATIC `entityLinks.*` paths, derived at HEAD by:
@@ -291,15 +310,31 @@ test.describe('criterion 2 — no raw i18n key reaches the screen', () => {
       return {
         firesOnPlanted: detector.test('entityLinks.title'),
         firesOnRegionsMiss: detector.test('regions.Europe'),
+        firesOnCommonMiss: detector.test('common.clearFilters'),
         passesClean: detector.test('Linked entities'),
+        passesCleanCommonCopy: detector.test('Clear filters'),
         passesSentenceWithDot: detector.test('No links yet. Add one to get started.'),
+        passesProseEndingInCommon: detector.test('This pattern is common. Add one to continue.'),
+        passesEmbeddedCommon: detector.test('That spelling is uncommon.Add a note.'),
       }
     }, RAW_KEY_TOKEN.source)
 
     expect(result.firesOnPlanted, 'detector must fire on the planted entityLinks.title').toBe(true)
     expect(result.firesOnRegionsMiss, 'detector must fire on regions.Europe').toBe(true)
+    expect(result.firesOnCommonMiss, 'detector must fire on the planted common.clearFilters').toBe(
+      true,
+    )
     expect(result.passesClean, 'detector must NOT fire on real copy').toBe(false)
+    expect(result.passesCleanCommonCopy, 'detector must NOT fire on the resolved value').toBe(false)
     expect(result.passesSentenceWithDot, 'detector must NOT fire on ordinary prose').toBe(false)
+    expect(
+      result.passesProseEndingInCommon,
+      'detector must NOT fire on prose containing the word "common" before a full stop',
+    ).toBe(false)
+    expect(
+      result.passesEmbeddedCommon,
+      'detector must NOT fire on "common" embedded in a longer word (the \\b guard)',
+    ).toBe(false)
   })
 
   test('BOTH-POLARITY SELF-TEST: the census resolver reports a bogus path and resolves a real one', async () => {
@@ -387,10 +422,7 @@ test.describe('criterion 2 — no raw i18n key reaches the screen', () => {
       const unresolvedLeaves = RECURRENCE_LEAF_PATHS.filter(
         (path) => !isNonEmptyString(resolvePath(bundle as Bundle, path)),
       )
-      expect(
-        unresolvedLeaves,
-        `${locale}/calendar.json: unresolved recurrence leaves`,
-      ).toEqual([])
+      expect(unresolvedLeaves, `${locale}/calendar.json: unresolved recurrence leaves`).toEqual([])
       const unresolvedFamilies = RECURRENCE_FAMILY_PATHS.filter(
         (path) => !isNonEmptyObject(resolvePath(bundle as Bundle, path)),
       )
