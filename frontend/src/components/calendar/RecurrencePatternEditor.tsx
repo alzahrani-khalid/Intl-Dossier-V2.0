@@ -554,7 +554,7 @@ export function RecurrencePatternEditor({
                 {frequency === 'yearly' && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>{t('calendar.months.january').split(' ')[0]}</Label>
+                      <Label>{t('calendar:months.january').split(' ')[0]}</Label>
                       <Select
                         value={monthOfYear.toString()}
                         onValueChange={(v) => setMonthOfYear(parseInt(v))}
