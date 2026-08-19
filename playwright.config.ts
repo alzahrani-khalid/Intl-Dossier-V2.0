@@ -1,8 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
-import dotenv from 'dotenv'
+import { loadTestEnv } from './tests/e2e/support/load-env.mjs'
 
 // Load test-only environment variables (never committed). See .env.test.example.
-dotenv.config({ path: '.env.test' })
+loadTestEnv()
 
 const baseURL = process.env.E2E_BASE_URL ?? 'http://localhost:5173'
 

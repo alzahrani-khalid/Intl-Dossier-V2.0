@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto'
 import { createClient } from '@supabase/supabase-js'
-import dotenv from 'dotenv'
+import { loadTestEnv } from '../support/load-env.mjs'
 import pg from 'pg'
 
-dotenv.config({ path: '.env.test' })
+loadTestEnv()
 
 const { Client } = pg
 
