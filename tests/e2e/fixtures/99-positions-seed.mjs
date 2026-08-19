@@ -7,6 +7,31 @@ dotenv.config({ path: '.env.test' })
 
 const { Client } = pg
 
+/**
+ * REFUSE AT MODULE LOAD when the database URL is absent (RULING-P99-42 order 14).
+ *
+ * WHO HITS THIS DEFECT: anyone who runs this suite without SUPABASE_DB_URL — CI, a laptop, a
+ * contributor — not just one orchestrated run. Measured 2026-08-19: the absent variable made
+ * `catalogDatabaseUrl()` throw inside `beforeAll`, which failed 5 specs, which SATISFIED a
+ * red-asserting acceptance oracle. A missing credential was silently converted into a merged green.
+ *
+ * WHY MODULE LOAD RATHER THAN A HOOK: this throw fires while Playwright is LOADING the spec —
+ * during collection, before any hook or test runs — so it cannot wear a test failure's costume.
+ * It also fails `--list`, which means an oracle's own collection clause catches it at the earliest
+ * possible point instead of reading a hook's casualties as a red.
+ *
+ * WHY HERE RATHER THAN globalSetup: only specs that import this fixture need a database. A
+ * globalSetup check would fail unrelated specs for every developer who does not have the variable.
+ */
+const DB_URL_VARS = ['SUPABASE_DB_URL', 'DATABASE_URL']
+if (!DB_URL_VARS.some((v) => (process.env[v] ?? '') !== '')) {
+  throw new Error(
+    'Cannot verify pg_constraint before seeding: set SUPABASE_DB_URL (or DATABASE_URL) in the E2E ' +
+      'environment. Refused at module load, before any test ran, so this cannot be mistaken for a ' +
+      'test failure or satisfy a red-asserting oracle (RULING-P99-42).',
+  )
+}
+
 export const POSITION_TITLE_PREFIX = 'P99-C7-READ-ONLY'
 export const RULED_POSITION_STATUSES = ['under_review', 'approved', 'published']
 
