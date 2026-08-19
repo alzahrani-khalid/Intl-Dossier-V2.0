@@ -24,7 +24,7 @@
  *   self-check: node scripts/pw-run-reaped.mjs --selftest
  */
 import { spawn } from 'node:child_process'
-import { existsSync, rmSync } from 'node:fs'
+import { existsSync, openSync, rmSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 
 /** TERM the group, then KILL any survivor. Returns what it observed, never throws. */
@@ -101,12 +101,19 @@ if (!isEntry) {
     process.exit(2)
   }
   if (existsSync(jsonOut)) rmSync(jsonOut)
+  // Capture the child's output to `<jsonOut>.log`. `stdio: 'ignore'` discarded the ONLY evidence
+  // that explains an ABSENT report: when Playwright aborts before its reporter finalises — a
+  // webServer that never comes up is the common way — no JSON is written at all, and with the
+  // output thrown away the failure says "report ABSENT" and nothing about why. Measured
+  // 2026-08-19 on P99-02 attempt 0 (RULING-P99-32): the refusal was correct and undiagnosable.
+  const logPath = `${jsonOut}.log`
+  const logFd = openSync(logPath, 'w')
   const child = spawn(
     'pnpm',
     ['exec', 'playwright', 'test', spec, `--project=${project}`, '--no-deps', '--reporter=json'],
     {
       detached: true, // own process group — this is what makes group-reaping possible
-      stdio: 'ignore',
+      stdio: ['ignore', logFd, logFd],
       env: { ...process.env, PLAYWRIGHT_JSON_OUTPUT_NAME: jsonOut },
     },
   )
@@ -114,7 +121,7 @@ if (!isEntry) {
   const finish = (why) => {
     const seen = reapGroup(pgid)
     console.log(
-      `pw-run-reaped: ${why}; group ${pgid} -> ${JSON.stringify(seen)}; report ${existsSync(jsonOut) ? 'written' : 'ABSENT'}`,
+      `pw-run-reaped: ${why}; group ${pgid} -> ${JSON.stringify(seen)}; report ${existsSync(jsonOut) ? 'written' : 'ABSENT'}; child output ${logPath}`,
     )
     process.exit(0) // the verdict is pw-red-assert's, never this script's
   }
