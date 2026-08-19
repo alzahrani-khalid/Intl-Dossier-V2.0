@@ -20,11 +20,45 @@
  *   self-check: node scripts/pw-red-assert.mjs --selftest
  */
 import { existsSync, readFileSync } from 'node:fs'
+import { pathToFileURL } from 'node:url'
 
 const FAIL = (msg) => {
   console.error(`pw-red-assert: ${msg}`)
   process.exit(1)
 }
+
+/**
+ * ORIGIN of a failure (RULING-P99-42). A red is only the application's red if the failure happened
+ * in the SPEC BODY. Measured 2026-08-19 on two MERGED tasks, both greened by failures that never
+ * touched the app:
+ *   P99-03: 5/5 failures at `location.file` = tests/e2e/fixtures/99-positions-seed.mjs:48,
+ *           "Cannot verify pg_constraint before seeding: set SUPABASE_DB_URL" — a fixture throw.
+ *   P99-02: 8/8 failures with message 'Test timeout of 300000ms exceeded while running
+ *           "beforeEach" hook' — location is the SPEC FILE (line 120, the hook itself), so a
+ *           path test alone does NOT catch it. The MESSAGE is what names the hook.
+ * Both signals are therefore required: the hook message AND the out-of-body path.
+ */
+const HOOK_MSG = /while running "(beforeAll|beforeEach|afterAll|afterEach)" hook/
+const OUT_OF_BODY_PATH = /\/(fixtures|helpers|support)\//
+
+export const originOf = (err) => {
+  const msg = String(err?.message ?? '')
+  if (HOOK_MSG.test(msg)) return 'hook'
+  const file = String(err?.location?.file ?? '')
+  if (OUT_OF_BODY_PATH.test(file)) return 'fixture'
+  const stack = String(err?.stack ?? '')
+  if (OUT_OF_BODY_PATH.test(stack.split('\n')[1] ?? '')) return 'fixture'
+  return 'body'
+}
+
+/** First line of an error message, ANSI stripped — the unit we count causes in. */
+export const causeOf = (err) =>
+  String(err?.message ?? '')
+    // eslint-disable-next-line no-control-regex
+    .replace(/\u001b\[[0-9;]*m/g, '')
+    .trim()
+    .split('\n')[0]
+    .slice(0, 120)
 
 /** Flatten Playwright's nested suites/specs/tests into [{title, failed}]. */
 export const collectSpecs = (report) => {
@@ -34,7 +68,13 @@ export const collectSpecs = (report) => {
       const failed = (spec.tests ?? []).some((t) =>
         (t.results ?? []).some((r) => r.status !== 'passed' && r.status !== 'skipped'),
       )
-      out.push({ title: spec.title, failed })
+      const errs = []
+      for (const t of spec.tests ?? [])
+        for (const r of t.results ?? []) {
+          if (r.error) errs.push(r.error)
+          for (const e of r.errors ?? []) if (e !== r.error) errs.push(e)
+        }
+      out.push({ title: spec.title, failed, errors: errs })
     }
     for (const child of suite.suites ?? []) walkSuite(child)
   }
@@ -50,6 +90,36 @@ export const assertRed = (report, expectedTotal, requiredTitles) => {
   const failing = specs.filter((s) => s.failed)
   if (failing.length < 1) {
     return `every test PASSED — the tree is not red. Counted ${specs.length}, failures 0.`
+  }
+  // RULING-P99-42: a report whose failures ALL originate outside the spec body is not the
+  // application's red. It is the environment's, or the harness's, wearing a test failure's costume.
+  const withErrors = failing.filter((s) => (s.errors ?? []).length > 0)
+  if (withErrors.length > 0) {
+    const origins = withErrors.map((s) => ({
+      title: s.title,
+      origins: s.errors.map(originOf),
+    }))
+    const anyBody = origins.some((o) => o.origins.includes('body'))
+    const causes = new Set(withErrors.flatMap((s) => s.errors.map(causeOf)))
+    if (!anyBody) {
+      const kinds = new Set(origins.flatMap((o) => o.origins))
+      return (
+        `failures did NOT originate in the spec body: every one of ${withErrors.length} failing ` +
+        `spec(s) failed in [${[...kinds].join(', ')}] — this is the environment or the harness, ` +
+        `not the application. Distinct cause(s): ${causes.size}` +
+        (causes.size === 1 ? ` (a MONOCULTURE: "${[...causes][0]}")` : '') +
+        `. A red must be earned in the spec body.`
+      )
+    }
+    if (causes.size === 1 && withErrors.length > 1) {
+      // Not a refusal on its own — a single genuine assertion can legitimately fail many specs —
+      // but it is stated so a reader never has to infer it.
+      console.error(
+        `pw-red-assert: NOTE — ${withErrors.length} failing specs share ONE cause ` +
+          `("${[...causes][0]}"), with at least one in-body origin. Accepted, but a monoculture is ` +
+          `worth a human's eye.`,
+      )
+    }
   }
   const failedTitles = failing.map((s) => s.title)
   const missing = requiredTitles.filter((t) => !failedTitles.some((f) => f.includes(t)))
@@ -84,7 +154,13 @@ const selftest = () => {
 }
 
 const argv = process.argv.slice(2)
-if (argv[0] === '--selftest') {
+// Only act when RUN as a program. Imported (for assertRed/originOf, or by a drill), this file must
+// do nothing -- it previously executed its CLI on import and exited 1 with a usage error, which is
+// the same import-safety defect pw-run-reaped.mjs records fixing in itself.
+const isEntry = import.meta.url === pathToFileURL(process.argv[1] ?? '').href
+if (!isEntry) {
+  // imported: expose the exports and stop
+} else if (argv[0] === '--selftest') {
   selftest()
 } else {
   const [path, totalRaw, ...required] = argv
