@@ -631,6 +631,7 @@ card in both locales.
 - [ ] **CARRY-07**: Entry-chunk budget lowered back toward 476 KB (raised to 500 KB at v9.0 close; actual 493.71 kB gzipped). The growth is app code, not vendor.
 - [ ] **CARRY-08**: The 3 data-entry quick tasks (`260530-w2/w3/w4`) are completed or formally retired with SUMMARYs.
 - [ ] **CARRY-09**: `main` is green on the currently-red non-required suites — E2E, integration, Accessibility (RTL + WCAG AA), RTL Portal + Component Smokes, RTL + Responsive, Docker Build — or each is honestly quarantined.
+- [ ] **CARRY-10**: Both Playwright configurations (`playwright.config.ts` and `frontend/playwright.config.ts`) leave zero attributed dev-stack sessions after normal, interrupted, and cleanup-refusal paths. Repeated root and frontend suite probes show no leaked session or descriptor growth; unavailable cleanup instrumentation fails the invoking command rather than reporting an empty success. Phase 99 owns the root-config slice needed by its rendered gates; Phase 101 owns the frontend-config remainder and the cross-config regression proof.
 
 ### ENGREAD — the top-level /engagements read path fails with rows present
 
@@ -979,6 +980,7 @@ grep -cE '^\| [A-Z]+-[0-9]+ \| ' .planning/REQUIREMENTS.md                  # tr
 | CARRY-07 | Phase 102 — Staging Data & Debt Tail | Pending |
 | CARRY-08 | Phase 102 — Staging Data & Debt Tail | Pending |
 | CARRY-09 | Phase 101 — CI Gates Green | Pending |
+| CARRY-10 | Phase 101 — CI Gates Green | Pending |
 | LIVE-01 | Phase 104 — v7.0 Live Verification (HARDWARE-GATED) | Pending |
 | LIVE-02 | Phase 104 — v7.0 Live Verification (HARDWARE-GATED) | Pending |
 | LIVE-03 | Phase 104 — v7.0 Live Verification (HARDWARE-GATED) | Pending |

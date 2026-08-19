@@ -617,7 +617,7 @@ Plans:
 
 **Goal**: The test suites tell the truth about `main`, and the ones that matter block merges.
 **Depends on**: Phase 92 (CARRY-01 rotation gates CARRY-02 and CARRY-05), Phase 100 (the app under test is correct before the suites are made green)
-**Requirements**: CARRY-02, CARRY-03, CARRY-04, CARRY-05, CARRY-09
+**Requirements**: CARRY-02, CARRY-03, CARRY-04, CARRY-05, CARRY-09, CARRY-10
 **Success Criteria** (what must be TRUE):
 
 1. The E2E suite runs green against the deployed app, or each failing spec carries an in-spec quarantine with a tracked reason.
@@ -625,6 +625,7 @@ Plans:
 3. At least one a11y spec is demonstrated PASSING with its run evidence — not skipped, not annotated. No a11y spec has ever been shown green.
 4. `test-rtl-smokes` is a required branch-protection context on `main`, proven by a smoke PR observed `BLOCKED`.
 5. Every currently-red non-required suite on `main` — E2E, integration, Accessibility (RTL + WCAG AA), RTL Portal + Component Smokes, RTL + Responsive, Docker Build — is green or honestly quarantined with a reason.
+6. Both Playwright configurations leave zero attributed dev-stack sessions after normal and interrupted runs; cleanup refusal or unavailable instrumentation makes the invoking command fail. Repeated root and frontend suite probes show no leaked-session or descriptor growth.
 
 **Plans**: TBD
 
