@@ -74,7 +74,12 @@ export const collectSpecs = (report) => {
           if (r.error) errs.push(r.error)
           for (const e of r.errors ?? []) if (e !== r.error) errs.push(e)
         }
-      out.push({ title: spec.title, failed, errors: errs })
+      // EXECUTED means at least one result that is not a skip. A spec Playwright skipped never
+      // ran, so it cannot testify to anything about the application (RULING-P99-42).
+      const executed = (spec.tests ?? []).some((t) =>
+        (t.results ?? []).some((r) => r.status !== 'skipped'),
+      )
+      out.push({ title: spec.title, failed, executed, errors: errs })
     }
     for (const child of suite.suites ?? []) walkSuite(child)
   }
@@ -86,6 +91,18 @@ export const assertRed = (report, expectedTotal, requiredTitles) => {
   const specs = collectSpecs(report)
   if (specs.length !== expectedTotal) {
     return `tests did NOT run: report carries ${specs.length} spec(s), expected ${expectedTotal}. A harness crash reports 0 — this is not a red.`
+  }
+  // A report where nothing executed is an ENVIRONMENT report, exactly like one where every
+  // failure came from a hook. Measured 2026-08-19: P99-03's merged report was 5 failed + 5
+  // SKIPPED — nothing ran — and `ok` is TRUE for a skipped spec, so a naive pass-count read it
+  // as "5 passing" and made the run look healthier than it was.
+  const executed = specs.filter((s) => s.executed)
+  if (executed.length === 0) {
+    return `NOTHING EXECUTED: all ${specs.length} spec(s) were skipped. A skipped spec never ran, so this report says nothing about the application — it is an environment report, not a red.`
+  }
+  if (executed.length !== expectedTotal) {
+    const skipped = specs.length - executed.length
+    return `only ${executed.length} of ${expectedTotal} spec(s) EXECUTED (${skipped} skipped). A red must be earned by tests that ran; a skipped spec is not evidence.`
   }
   const failing = specs.filter((s) => s.failed)
   if (failing.length < 1) {
