@@ -113,6 +113,9 @@ playwright-report/
 .p99-red-*.json
 .p99-red-*.json.log
 
+# pw-run-reaped spawn-time leases (RULING-P99-50): per-worktree, per-run, never source
+.pw-leases/
+
 # Playwright E2E storageState (session tokens for test roles — never commit)
 tests/e2e/support/storage/*.json
 !tests/e2e/support/storage/.gitkeep
