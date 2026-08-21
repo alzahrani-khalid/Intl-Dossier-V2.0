@@ -140,8 +140,8 @@ export function CommitmentEditor({
                     onConfirm={() => removeCommitment(index)}
                     title={t('afterActions.commitments.delete')}
                     description={t('afterActions.commitments.deleteConfirm')}
-                    confirmLabel={t('common.delete')}
-                    cancelLabel={t('common.cancel')}
+                    confirmLabel={t('common:delete')}
+                    cancelLabel={t('common:cancel')}
                   />
                 )}
               </div>
@@ -344,7 +344,7 @@ export function CommitmentEditor({
                       <CalendarIcon className={cn('h-4 w-4 opacity-50', isRTL ? 'ms-2' : 'me-2')} />
                       {commitment.due_date
                         ? formatDayFirst(commitment.due_date, i18n.language)
-                        : t('common.selectDate')}
+                        : t('common:selectDate')}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">

@@ -245,7 +245,7 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
                         variant="ghost"
                         size="icon"
                         onClick={() => moveAction(index, index - 1)}
-                        aria-label={t('common:common.actions.moveUp', { defaultValue: 'Move up' })}
+                        aria-label={t('common:actions.moveUp', { defaultValue: 'Move up' })}
                         className="h-8 w-8"
                       >
                         <GripVertical className="h-4 w-4 rotate-90" />
@@ -255,7 +255,7 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
                       variant="ghost"
                       size="icon"
                       onClick={() => removeAction(index)}
-                      aria-label={t('common:common.actions.remove')}
+                      aria-label={t('common:actions.remove')}
                       className="h-8 w-8 text-destructive hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />

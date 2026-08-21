@@ -439,7 +439,7 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
                   onToggleWatch()
                 }}
                 disabled={isWatching}
-                aria-label={t('common:common.actions.toggleWatch', {
+                aria-label={t('common:actions.toggleWatch', {
                   defaultValue: 'Toggle watch',
                 })}
               >
@@ -456,7 +456,7 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8"
-                  aria-label={t('common:common.view')}
+                  aria-label={t('common:view')}
                 >
                   <ChevronRight className={cn('h-4 w-4', isRTL && 'rotate-180')} />
                 </Button>

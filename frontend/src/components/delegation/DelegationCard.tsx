@@ -190,7 +190,7 @@ export function DelegationCard({
               }`}
             >
               <XCircle className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-              {isRevoking ? t('common:common.loading') : t('actions.revoke')}
+              {isRevoking ? t('common:loading') : t('actions.revoke')}
             </Button>
           </div>
         )}

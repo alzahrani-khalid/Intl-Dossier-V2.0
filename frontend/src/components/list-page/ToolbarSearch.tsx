@@ -41,10 +41,10 @@ export function ToolbarSearch({
       type="search"
       value={local}
       onChange={(e) => setLocal(e.target.value)}
-      placeholder={placeholder ?? t('common.search', { defaultValue: 'Search' })}
+      placeholder={placeholder ?? t('common:search.label', { defaultValue: 'Search' })}
       dir={isRTL ? 'rtl' : 'ltr'}
       className="id-input h-11 w-full min-w-0 text-start"
-      aria-label={placeholder ?? t('common.search', { defaultValue: 'Search' })}
+      aria-label={placeholder ?? t('common:search.label', { defaultValue: 'Search' })}
     />
   )
 }

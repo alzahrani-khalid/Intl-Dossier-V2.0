@@ -85,7 +85,7 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
   if (isLoading) {
     return (
       <Card className="p-8 text-center">
-        <p className="text-muted-foreground">{t('common.loading')}</p>
+        <p className="text-muted-foreground">{t('common:loading')}</p>
       </Card>
     )
   }
@@ -130,7 +130,7 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
                   <SelectContent>
                     {isLoadingDossiers ? (
                       <SelectItem value="loading" disabled>
-                        {t('common.loading')}
+                        {t('common:loading')}
                       </SelectItem>
                     ) : availableDossiers.length > 0 ? (
                       availableDossiers.map((dossier) => (
@@ -198,16 +198,14 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
                 }}
                 className="w-full sm:w-auto"
               >
-                {t('common.cancel')}
+                {t('common:cancel')}
               </Button>
               <Button
                 onClick={handleAddLink}
                 disabled={!selectedDossierId || createLink.isPending}
                 className="w-full sm:w-auto"
               >
-                {createLink.isPending
-                  ? t('common:common.saving')
-                  : t('position_dossier_links.add_link')}
+                {createLink.isPending ? t('common:saving') : t('position_dossier_links.add_link')}
               </Button>
             </div>
           </div>

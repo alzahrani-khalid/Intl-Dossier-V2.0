@@ -156,11 +156,11 @@ function ApprovalTrackingPage() {
                 <TableCell>
                   {approval.step_up_verified ? (
                     <Badge variant="default" className="text-xs">
-                      {t('common.yes', 'Yes')}
+                      {t('common:yes', 'Yes')}
                     </Badge>
                   ) : (
                     <Badge variant="secondary" className="text-xs">
-                      {t('common.no', 'No')}
+                      {t('common:no', 'No')}
                     </Badge>
                   )}
                 </TableCell>

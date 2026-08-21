@@ -75,7 +75,7 @@ function WorkflowIndicator({ state }: { state: string }) {
           variant="ghost"
           className="h-6 px-2"
           disabled
-          title={t('common.notYetAvailable')}
+          title={t('common:notYetAvailable')}
         >
           <ChevronRight className={`h-3 w-3 ${isRTL ? 'rotate-180' : ''}`} />
           {t(`mous.statuses.${stateConfig.next}`)}
@@ -281,12 +281,12 @@ export function MousPage() {
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>{t('common.filter')}</CardTitle>
+          <CardTitle>{t('common:filter')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex gap-4">
             <Input
-              placeholder={t('common.search')}
+              placeholder={t('common:search.label')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="max-w-sm"
@@ -297,7 +297,7 @@ export function MousPage() {
                 size="sm"
                 onClick={() => setFilterState('all')}
               >
-                {t('common.all')}
+                {t('common:all')}
               </Button>
               {workflowStates.map((state) => (
                 <Button
@@ -317,10 +317,10 @@ export function MousPage() {
       <Card>
         <CardContent className="p-0">
           {isLoading ? (
-            <div className="p-8 text-center">{t('common.loading')}</div>
+            <div className="p-8 text-center">{t('common:loading')}</div>
           ) : isError ? (
             <div className="p-8 text-center text-destructive" role="alert">
-              {t('common.error', { defaultValue: 'Failed to load MoUs' })}
+              {t('common:error.label', { defaultValue: 'Failed to load MoUs' })}
             </div>
           ) : mous && mous.length > 0 ? (
             <DataTable
@@ -331,7 +331,7 @@ export function MousPage() {
               }}
             />
           ) : (
-            <div className="p-8 text-center text-muted-foreground">{t('common.noData')}</div>
+            <div className="p-8 text-center text-muted-foreground">{t('common:noData')}</div>
           )}
         </CardContent>
       </Card>

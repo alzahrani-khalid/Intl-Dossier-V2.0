@@ -318,7 +318,7 @@ export function EscalationDashboard() {
             <CardContent>
               {isLoading ? (
                 <div className="h-64 flex items-center justify-center">
-                  <p className="text-muted-foreground">{t('translation:common.loading')}</p>
+                  <p className="text-muted-foreground">{t('common:loading')}</p>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -358,7 +358,7 @@ export function EscalationDashboard() {
             <CardContent>
               <div className="space-y-3">
                 {isLoading ? (
-                  <p className="text-muted-foreground">{t('translation:common.loading')}</p>
+                  <p className="text-muted-foreground">{t('common:loading')}</p>
                 ) : (
                   report?.by_unit.map((unit) => (
                     <div key={unit.unit_id} className="flex items-center gap-4">
@@ -390,7 +390,7 @@ export function EscalationDashboard() {
             <CardContent>
               <div className="space-y-3">
                 {isLoading ? (
-                  <p className="text-muted-foreground">{t('translation:common.loading')}</p>
+                  <p className="text-muted-foreground">{t('common:loading')}</p>
                 ) : (
                   report?.by_assignee.slice(0, 10).map((assignee) => (
                     <div
@@ -435,7 +435,7 @@ export function EscalationDashboard() {
             <CardContent>
               <div className="space-y-3">
                 {isLoading ? (
-                  <p className="text-muted-foreground">{t('translation:common.loading')}</p>
+                  <p className="text-muted-foreground">{t('common:loading')}</p>
                 ) : (
                   report?.by_work_type.map((workType) => (
                     <div key={workType.work_item_type} className="flex items-center gap-4">

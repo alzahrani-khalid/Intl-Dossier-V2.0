@@ -285,7 +285,7 @@ export function ErrorSummary({
             >
               <X className="h-4 w-4" />
               <span className="sr-only">
-                {t('common:common.actions.dismiss', { defaultValue: 'Dismiss' })}
+                {t('common:actions.dismiss', { defaultValue: 'Dismiss' })}
               </span>
             </Button>
           )}

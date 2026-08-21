@@ -260,7 +260,7 @@ export function ImportDialog({
                   variant="ghost"
                   size="icon"
                   onClick={handleReset}
-                  aria-label={t('common:common.actions.remove')}
+                  aria-label={t('common:actions.remove')}
                 >
                   <X className="h-4 w-4" />
                 </Button>

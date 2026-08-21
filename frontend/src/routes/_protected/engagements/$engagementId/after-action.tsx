@@ -75,7 +75,7 @@ function AfterActionFormPage(): React.ReactNode {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Card className="border-destructive">
           <CardHeader>
-            <CardTitle className="text-destructive">{t('common.error')}</CardTitle>
+            <CardTitle className="text-destructive">{t('common:error.label')}</CardTitle>
             <CardDescription>{t('engagements.notFound')}</CardDescription>
           </CardHeader>
         </Card>

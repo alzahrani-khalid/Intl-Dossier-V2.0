@@ -220,7 +220,7 @@ function SLADashboardPage() {
               variant="outline"
               size="icon"
               onClick={handleRefresh}
-              aria-label={t('common:common.actions.refresh', { defaultValue: 'Refresh' })}
+              aria-label={t('common:actions.refresh', { defaultValue: 'Refresh' })}
             >
               <RefreshCw className="h-4 w-4" />
             </Button>

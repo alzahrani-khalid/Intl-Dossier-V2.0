@@ -108,7 +108,7 @@ export function NavUser(): React.ReactElement | null {
             /sign out|logout|تسجيل الخروج|خروج/i (D-27). */}
         <DropdownMenuItem onClick={() => logout()} className="gap-2">
           <LogOut className="size-4" />
-          {t('common.logout')}
+          {t('common:logout')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -171,7 +171,7 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
           <Button variant="outline" size="icon" onClick={() => refetch()} disabled={isFetching}>
             <RefreshCw className={cn('h-4 w-4', isFetching && 'animate-spin')} />
             <span className="sr-only">
-              {t('common:common.actions.refresh', { defaultValue: 'Refresh' })}
+              {t('common:actions.refresh', { defaultValue: 'Refresh' })}
             </span>
           </Button>
         </div>
