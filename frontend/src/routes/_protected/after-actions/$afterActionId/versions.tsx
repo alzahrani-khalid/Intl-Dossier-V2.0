@@ -32,7 +32,7 @@ function VersionHistoryPage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Card className="border-destructive">
           <CardHeader>
-            <CardTitle className="text-destructive">{t('common.error')}</CardTitle>
+            <CardTitle className="text-destructive">{t('common:error.label')}</CardTitle>
             <CardDescription>{t('afterActions.versions.loadError')}</CardDescription>
           </CardHeader>
         </Card>
@@ -46,7 +46,7 @@ function VersionHistoryPage() {
     >
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild aria-label={t('common.back')}>
+        <Button variant="ghost" size="icon" asChild aria-label={t('common:back')}>
           <Link to="/after-actions/$afterActionId" params={{ afterActionId } as any}>
             <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
           </Link>

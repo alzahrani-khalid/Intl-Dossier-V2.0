@@ -100,7 +100,7 @@ export function ExecutionsTabs({ title, className }: ExecutionsTabsProps) {
           <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-content-text-muted" />
           <Input
             type="search"
-            placeholder={t('common.search', 'Search')}
+            placeholder={t('common:search.label', 'Search')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className={cn(

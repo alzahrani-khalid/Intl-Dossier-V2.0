@@ -332,7 +332,7 @@ export function CreateDelegationDialog({
             onClick={() => onOpenChange(false)}
             className="min-h-11"
           >
-            {t('common:common.cancel')}
+            {t('common:cancel')}
           </Button>
           <Button
             type="submit"
@@ -349,7 +349,7 @@ export function CreateDelegationDialog({
             {delegateMutation.isPending ? (
               <>
                 <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
-                {t('common:common.loading')}
+                {t('common:loading')}
               </>
             ) : (
               t('create.buttonText')

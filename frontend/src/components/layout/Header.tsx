@@ -98,7 +98,7 @@ export function Header() {
                     className="w-full px-4 py-2 text-start hover:bg-accent flex items-center gap-2 text-destructive"
                   >
                     <LogOut className="h-4 w-4" />
-                    {t('common.logout')}
+                    {t('common:logout')}
                   </button>
                 </div>
               </div>

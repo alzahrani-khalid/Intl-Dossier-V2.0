@@ -95,7 +95,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const [sorting, setSorting] = useState<SortingState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState('')
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -224,7 +224,7 @@ const [sorting, setSorting] = useState<SortingState>([])
               type="text"
               value={globalFilter ?? ''}
               onChange={(e) => setGlobalFilter(e.target.value)}
-              placeholder={searchPlaceholder || t('common.search', 'Search...')}
+              placeholder={searchPlaceholder || t('common:search.label', 'Search...')}
               className={cn('w-full h-8 text-sm', isRTL ? 'pe-2.5 ps-8' : 'ps-8 pe-2.5')}
             />
           </div>
@@ -262,7 +262,7 @@ const [sorting, setSorting] = useState<SortingState>([])
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
                   <SlidersHorizontal className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">{t('common.columns', 'Columns')}</span>
+                  <span className="hidden sm:inline">{t('common:columns', 'Columns')}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-44">
@@ -398,14 +398,14 @@ const [sorting, setSorting] = useState<SortingState>([])
           {/* Results info & Page size */}
           <div className="flex items-center gap-2">
             <p className="text-xs text-muted-foreground whitespace-nowrap">
-              {t('common.showing', 'Showing')}{' '}
+              {t('common:showing', 'Showing')}{' '}
               {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
               {' - '}
               {Math.min(
                 (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
                 data.length,
               )}{' '}
-              {t('common.of', 'of')} {data.length}
+              {t('common:of', 'of')} {data.length}
             </p>
 
             {/* Page size selector */}
@@ -458,7 +458,7 @@ const [sorting, setSorting] = useState<SortingState>([])
             </Button>
 
             <span className="px-1.5 text-xs text-muted-foreground whitespace-nowrap">
-              {t('common.page', 'Page')} {table.getState().pagination.pageIndex + 1} /{' '}
+              {t('common:page', 'Page')} {table.getState().pagination.pageIndex + 1} /{' '}
               {table.getPageCount() || 1}
             </span>
 

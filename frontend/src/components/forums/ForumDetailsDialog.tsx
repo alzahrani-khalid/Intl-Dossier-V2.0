@@ -174,7 +174,7 @@ export function ForumDetailsDialog({
       return { id: forum.id }
     },
     onSuccess: ({ id }) => {
-      toast.success(t('common:common.success', 'Success'), {
+      toast.success(t('common:success', 'Success'), {
         description: t('editSuccess', 'Forum updated successfully'),
       })
       queryClient.invalidateQueries({ queryKey: ['forums'] })
@@ -183,7 +183,7 @@ export function ForumDetailsDialog({
       setEditOpen(false)
     },
     onError: (error) => {
-      toast.error(t('common:common.error', 'Error'), {
+      toast.error(t('common:error.label', 'Error'), {
         description:
           error instanceof Error ? error.message : t('editFailed', 'Failed to update forum'),
       })
@@ -229,13 +229,13 @@ export function ForumDetailsDialog({
       return data
     },
     onSuccess: () => {
-      toast.success(t('common:common.success', 'Success'), {
+      toast.success(t('common:success', 'Success'), {
         description: 'Forum added to calendar successfully',
       })
       queryClient.invalidateQueries({ queryKey: ['calendar-events'] })
     },
     onError: (error) => {
-      toast.error(t('common:common.error', 'Error'), {
+      toast.error(t('common:error.label', 'Error'), {
         description: error instanceof Error ? error.message : 'Failed to add forum to calendar',
       })
     },
@@ -373,13 +373,13 @@ export function ForumDetailsDialog({
                 {canEdit && (
                   <Button variant="outline" size="sm" onClick={handleEdit} className="shrink-0">
                     <Edit className="h-4 w-4 me-2" />
-                    {t('common:common.edit')}
+                    {t('common:edit')}
                   </Button>
                 )}
               </div>
             </div>
             <DialogDescription className="sr-only">
-              {t('common:common.view')} {title}
+              {t('common:view')} {title}
             </DialogDescription>
           </DialogHeader>
 
@@ -392,15 +392,13 @@ export function ForumDetailsDialog({
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base flex items-center gap-2">
                     <Info className="h-4 w-4" />
-                    {t('common:common.about')}
+                    {t('common:about')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {description && (
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">
-                        {t('common:common.about')}
-                      </p>
+                      <p className="text-sm text-muted-foreground mb-1">{t('common:about')}</p>
                       <p className="text-sm">{description}</p>
                     </div>
                   )}
@@ -627,8 +625,8 @@ export function ForumDetailsDialog({
               }
             >
               {updateForumMutation.isPending
-                ? t('common:common.saving', 'Saving...')
-                : t('common:common.save', 'Save')}
+                ? t('common:saving', 'Saving...')
+                : t('common:save', 'Save')}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -269,7 +269,7 @@ export function AddContributorDialog({
           <div className="flex flex-col gap-2">
             <Label htmlFor="notes" className="text-start">
               {t('tasks.contributorNotes', 'Notes')}{' '}
-              <span className="text-muted-foreground">({t('common.optional', 'Optional')})</span>
+              <span className="text-muted-foreground">({t('common:optional', 'Optional')})</span>
             </Label>
             <Textarea
               id="notes"
@@ -288,7 +288,7 @@ export function AddContributorDialog({
             onClick={handleClose}
             className="h-11 min-w-full sm:min-w-[100px]"
           >
-            {t('common.cancel', 'Cancel')}
+            {t('common:cancel', 'Cancel')}
           </Button>
           <Button
             onClick={handleSubmit}

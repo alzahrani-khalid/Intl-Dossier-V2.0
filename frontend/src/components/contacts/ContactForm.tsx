@@ -317,7 +317,7 @@ export function ContactForm({
                   variant="outline"
                   size="icon"
                   onClick={() => removeEmail(index)}
-                  aria-label={t('common:common.actions.remove', { defaultValue: 'Remove' })}
+                  aria-label={t('common:actions.remove', { defaultValue: 'Remove' })}
                   className=" sm:h-10 sm:w-10"
                 >
                   <X className="h-4 w-4" />
@@ -370,7 +370,7 @@ export function ContactForm({
                   variant="outline"
                   size="icon"
                   onClick={() => removePhone(index)}
-                  aria-label={t('common:common.actions.remove', { defaultValue: 'Remove' })}
+                  aria-label={t('common:actions.remove', { defaultValue: 'Remove' })}
                   className=" sm:h-10 sm:w-10"
                 >
                   <X className="h-4 w-4" />

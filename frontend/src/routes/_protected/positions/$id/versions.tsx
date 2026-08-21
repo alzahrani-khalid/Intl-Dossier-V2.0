@@ -139,7 +139,7 @@ function VersionHistoryPage() {
               <Badge>{selectedVersions[1]}</Badge>
             </div>
             <Button variant="outline" onClick={() => setSelectedVersions([null, null])}>
-              {t('common.clear', 'Clear Selection')}
+              {t('common:clear', 'Clear Selection')}
             </Button>
           </div>
 

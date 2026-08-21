@@ -204,7 +204,7 @@ export function EditApprovalFlow({
             <CardTitle>{t('afterActions.editFlow.proposedChanges')}</CardTitle>
             <Button variant="ghost" size="sm" onClick={() => setShowDiff(!showDiff)}>
               <Eye className="me-2 size-4" />
-              {showDiff ? t('common.hide') : t('common.show')}
+              {showDiff ? t('common:hide') : t('common:show')}
             </Button>
           </div>
         </CardHeader>
@@ -306,7 +306,7 @@ export function EditApprovalFlow({
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="approval-notes">
-                {t('afterActions.editFlow.approvalNotes')} ({t('common.optional')})
+                {t('afterActions.editFlow.approvalNotes')} ({t('common:optional')})
               </Label>
               <Textarea
                 id="approval-notes"
@@ -338,7 +338,7 @@ export function EditApprovalFlow({
                 )}
               </Button>
               <Button variant="outline" onClick={() => setAction(null)} disabled={loading}>
-                {t('common.cancel')}
+                {t('common:cancel')}
               </Button>
             </div>
           </CardContent>
@@ -397,7 +397,7 @@ export function EditApprovalFlow({
                 )}
               </Button>
               <Button variant="outline" onClick={() => setAction(null)} disabled={loading}>
-                {t('common.cancel')}
+                {t('common:cancel')}
               </Button>
             </div>
           </CardContent>

@@ -70,7 +70,7 @@ function CalendarView({ events, currentMonth, setCurrentMonth, isRTL, t }: Calen
           variant="outline"
           size="sm"
           onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-          aria-label={t('common.previous')}
+          aria-label={t('common:previous')}
         >
           <ChevronLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
         </Button>
@@ -79,7 +79,7 @@ function CalendarView({ events, currentMonth, setCurrentMonth, isRTL, t }: Calen
           variant="outline"
           size="sm"
           onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-          aria-label={t('common.next')}
+          aria-label={t('common:next')}
         >
           <ChevronRight className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
         </Button>
@@ -358,12 +358,12 @@ export function EventsPage() {
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>{t('common.filter')}</CardTitle>
+          <CardTitle>{t('common:filter')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4">
             <Input
-              placeholder={t('common.search')}
+              placeholder={t('common:search.label')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="max-w-sm"
@@ -376,7 +376,7 @@ export function EventsPage() {
                   size="sm"
                   onClick={() => setFilterType(type)}
                 >
-                  {type === 'all' ? t('common.all') : t(`events.types.${type}`)}
+                  {type === 'all' ? t('common:all') : t(`events.types.${type}`)}
                 </Button>
               ))}
             </div>
@@ -387,7 +387,7 @@ export function EventsPage() {
       <Card>
         <CardContent className="p-6">
           {isLoading ? (
-            <div className="p-8 text-center">{t('common.loading')}</div>
+            <div className="p-8 text-center">{t('common:loading')}</div>
           ) : viewMode === 'calendar' ? (
             <CalendarView
               events={events}
@@ -400,7 +400,7 @@ export function EventsPage() {
             <ListView events={events} isRTL={isRTL} t={t} />
           )}
           {!isLoading && (!events || events.length === 0) && (
-            <div className="p-8 text-center text-muted-foreground">{t('common.noData')}</div>
+            <div className="p-8 text-center text-muted-foreground">{t('common:noData')}</div>
           )}
         </CardContent>
       </Card>

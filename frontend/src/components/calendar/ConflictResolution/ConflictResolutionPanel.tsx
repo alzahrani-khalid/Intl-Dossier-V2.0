@@ -137,7 +137,7 @@ export function ConflictResolutionPanel({
           {onDismiss && (
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onDismiss}>
               <X className="h-4 w-4" />
-              <span className="sr-only">{t('common:common.close')}</span>
+              <span className="sr-only">{t('common:close')}</span>
             </Button>
           )}
         </div>

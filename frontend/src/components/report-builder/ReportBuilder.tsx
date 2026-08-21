@@ -265,7 +265,7 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
             size="sm"
             onClick={handlePreview}
             disabled
-            title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
+            title={t('common:notYetAvailable', { defaultValue: 'Not yet available' })}
           >
             <Play className="h-4 w-4 me-2" />
             {t('actions.preview')}
@@ -279,7 +279,7 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
             size="sm"
             onClick={() => setIsSaveDialogOpen(true)}
             disabled
-            title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
+            title={t('common:notYetAvailable', { defaultValue: 'Not yet available' })}
           >
             <Save className="h-4 w-4 me-2" />
             {t('actions.save')}
@@ -295,7 +295,7 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
               size="sm"
               onClick={() => setIsScheduleDialogOpen(true)}
               disabled
-              title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
+              title={t('common:notYetAvailable', { defaultValue: 'Not yet available' })}
             >
               <Calendar className="h-4 w-4 me-2" />
               {t('actions.schedule')}

@@ -365,7 +365,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
 
         <DialogFooter className="p-6 pt-0">
           <Button variant="outline" onClick={() => setOpen(false)} disabled={isAttaching}>
-            {t('common.cancel')}
+            {t('common:cancel')}
           </Button>
           <Button onClick={handleAttach} disabled={selectedIds.length === 0 || isAttaching}>
             {isAttaching ? (

@@ -320,7 +320,7 @@ export function ImportValidationResults({
                       size="icon"
                       className="h-8 w-8"
                       onClick={() => toggleRowExpanded(row.row)}
-                      aria-label={t('common:common.actions.toggleSection', {
+                      aria-label={t('common:actions.toggleSection', {
                         defaultValue: 'Toggle details',
                       })}
                     >

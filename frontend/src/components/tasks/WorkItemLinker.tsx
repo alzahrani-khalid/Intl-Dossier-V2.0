@@ -143,7 +143,7 @@ export function WorkItemLinker({
               disabled={disabled}
             >
               <X className="size-3" />
-              <span className="sr-only">{t('common.remove')}</span>
+              <span className="sr-only">{t('common:remove')}</span>
             </Button>
           </div>
         ))}
@@ -236,7 +236,7 @@ export function WorkItemLinker({
             {/* Search results */}
             {isSearching && (
               <p className="text-sm text-muted-foreground text-start">
-                {t('common.loading', 'Loading...')}
+                {t('common:loading', 'Loading...')}
               </p>
             )}
 
@@ -265,7 +265,7 @@ export function WorkItemLinker({
 
           <DialogFooter className="flex-col-reverse gap-2 sm:flex-row">
             <Button variant="outline" onClick={() => setIsOpen(false)} className="w-full sm:w-auto">
-              {t('common.close')}
+              {t('common:close')}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -644,12 +644,12 @@ export function CalendarEntryForm({
               disabled={isPending}
               className="w-full sm:w-auto"
             >
-              {t('common.cancel', { ns: 'translation' })}
+              {t('common:cancel')}
             </Button>
           )}
           <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
             {isPending
-              ? t('common.saving', { ns: 'translation' })
+              ? t('common:saving')
               : isEditing
                 ? t('form.update_event')
                 : t('form.create_event')}

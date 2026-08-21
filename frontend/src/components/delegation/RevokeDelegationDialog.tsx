@@ -51,7 +51,7 @@ export function RevokeDelegationDialog({
   const { t } = useTranslation('delegation')
   const { toast } = useToast()
   const { isRTL } = useDirection()
-const [reason, setReason] = useState('')
+  const [reason, setReason] = useState('')
   const [showConfirm, setShowConfirm] = useState(false)
 
   const revokeMutation = useRevokeDelegation()
@@ -125,7 +125,7 @@ const [reason, setReason] = useState('')
               onClick={() => onOpenChange(false)}
               className="min-h-11"
             >
-              {t('common:common.cancel')}
+              {t('common:cancel')}
             </Button>
             <Button
               type="submit"
@@ -137,7 +137,7 @@ const [reason, setReason] = useState('')
               {revokeMutation.isPending ? (
                 <>
                   <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
-                  {t('common:common.loading')}
+                  {t('common:loading')}
                 </>
               ) : (
                 <>
@@ -161,7 +161,7 @@ const [reason, setReason] = useState('')
             <AlertDialogDescription>{t('revoke.description')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 sm:gap-0">
-            <AlertDialogCancel className="min-h-11">{t('common:common.cancel')}</AlertDialogCancel>
+            <AlertDialogCancel className="min-h-11">{t('common:cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleRevoke}
               className="min-h-11 bg-destructive text-destructive-foreground hover:bg-destructive/90"
@@ -169,7 +169,7 @@ const [reason, setReason] = useState('')
               {revokeMutation.isPending ? (
                 <>
                   <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
-                  {t('common:common.loading')}
+                  {t('common:loading')}
                 </>
               ) : (
                 t('revoke.confirm')

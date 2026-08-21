@@ -63,7 +63,7 @@ function AfterActionDetailPage(): React.ReactNode {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" role="alert">
         <Card className="border-destructive">
           <CardHeader>
-            <CardTitle className="text-destructive">{t('common.error')}</CardTitle>
+            <CardTitle className="text-destructive">{t('common:error.label')}</CardTitle>
             <CardDescription>{t('common:afterActions.loadError')}</CardDescription>
           </CardHeader>
         </Card>
@@ -139,7 +139,7 @@ function AfterActionDetailPage(): React.ReactNode {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild aria-label={t('common.back')}>
+          <Button variant="ghost" size="icon" asChild aria-label={t('common:back')}>
             <Link to={getDossierDetailPath(afterAction.dossier_id, (afterAction as any).type)}>
               <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
             </Link>

@@ -179,7 +179,7 @@ function StakeholderInfluencePage() {
               variant="outline"
               onClick={handleCalculateScores}
               disabled
-              title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
+              title={t('common:notYetAvailable', { defaultValue: 'Not yet available' })}
             >
               {calculateScores.isPending ? (
                 <Loader2 className="h-4 w-4 me-2 animate-spin" />
@@ -265,7 +265,7 @@ function StakeholderInfluencePage() {
                     <Button
                       type="submit"
                       disabled
-                      title={t('common:common.notYetAvailable', {
+                      title={t('common:notYetAvailable', {
                         defaultValue: 'Not yet available',
                       })}
                     >

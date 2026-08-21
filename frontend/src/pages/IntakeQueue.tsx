@@ -466,7 +466,7 @@ export function IntakeQueuePage() {
                     <div className="flex flex-1 items-start gap-3">
                       <input
                         type="checkbox"
-                        aria-label={`${t('common:common.select')} ${displayTitle}`}
+                        aria-label={`${t('common:select')} ${displayTitle}`}
                         checked={selectedTickets.includes(ticket.id)}
                         onChange={(e) => {
                           if (e.target.checked) {
@@ -556,7 +556,7 @@ export function IntakeQueuePage() {
                           navigate({ to: `/intake/tickets/${ticket.id}` })
                         }}
                       >
-                        {t('common.view', 'View')}
+                        {t('common:view', 'View')}
                       </Button>
                     </div>
                   </div>

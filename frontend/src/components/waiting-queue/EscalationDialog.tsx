@@ -339,9 +339,9 @@ export function EscalationDialog({
             onClick={onClose}
             disabled={isLoading}
             className="h-11 min-w-11 ps-4 pe-4 sm:ps-6 sm:pe-6 w-full sm:w-auto"
-            aria-label={t('common.cancel', 'Cancel')}
+            aria-label={t('common:cancel', 'Cancel')}
           >
-            {t('common.cancel', 'Cancel')}
+            {t('common:cancel', 'Cancel')}
           </Button>
           <Button
             type="button"

@@ -229,7 +229,7 @@ export function VersionHistoryViewer({
 
           <div className={cn('flex gap-2', isRTL && 'flex-row-reverse')}>
             <Button variant="outline" onClick={() => setShowDiff(false)} className="flex-1">
-              {t('common.close')}
+              {t('common:close')}
             </Button>
           </div>
         </DialogContent>
@@ -289,7 +289,7 @@ export function VersionHistoryViewer({
                     <TableHead>{t('afterActions.versions.changedBy')}</TableHead>
                     <TableHead>{t('afterActions.versions.changedAt')}</TableHead>
                     <TableHead>{t('afterActions.versions.summary')}</TableHead>
-                    <TableHead className="text-end">{t('common.actions')}</TableHead>
+                    <TableHead className="text-end">{t('common:actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -342,7 +342,7 @@ export function VersionHistoryViewer({
 
         <div className={cn('flex gap-2', isRTL && 'flex-row-reverse')}>
           <Button variant="outline" onClick={() => handleOpenChange(false)} className="flex-1">
-            {t('common.close')}
+            {t('common:close')}
           </Button>
         </div>
       </DialogContent>

@@ -389,7 +389,7 @@ export function ReportPreview({
               size="sm"
               onClick={onRefresh}
               disabled
-              title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
+              title={t('common:notYetAvailable', { defaultValue: 'Not yet available' })}
             >
               <RefreshCw className={cn('h-4 w-4 me-2', isLoading && 'animate-spin')} />
               {t('preview.refresh')}

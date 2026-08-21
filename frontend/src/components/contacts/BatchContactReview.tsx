@@ -370,7 +370,7 @@ export function BatchContactReview({
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => handleRemoveEmail(contact.id, index)}
-                                  aria-label={t('common:common.actions.remove')}
+                                  aria-label={t('common:actions.remove')}
                                   className="flex-shrink-0 min-h-9 min-w-9"
                                 >
                                   <Trash2 className="h-3 w-3" />
@@ -413,7 +413,7 @@ export function BatchContactReview({
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => handleRemovePhone(contact.id, index)}
-                                  aria-label={t('common:common.actions.remove')}
+                                  aria-label={t('common:actions.remove')}
                                   className="flex-shrink-0 min-h-9 min-w-9"
                                 >
                                   <Trash2 className="h-3 w-3" />
@@ -440,7 +440,7 @@ export function BatchContactReview({
                       variant="ghost"
                       size="icon"
                       onClick={() => handleRemoveContact(contact.id)}
-                      aria-label={t('common:common.actions.remove')}
+                      aria-label={t('common:actions.remove')}
                       className="flex-shrink-0 min-h-9 min-w-9"
                     >
                       <Trash2 className="h-4 w-4 text-destructive" />

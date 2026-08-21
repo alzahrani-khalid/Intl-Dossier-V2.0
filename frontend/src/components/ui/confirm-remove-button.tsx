@@ -58,7 +58,7 @@ export function ConfirmRemoveButton({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{cancelLabel || t('common.cancel')}</AlertDialogCancel>
+          <AlertDialogCancel>{cancelLabel || t('common:cancel')}</AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"

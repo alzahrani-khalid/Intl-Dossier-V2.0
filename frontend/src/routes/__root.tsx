@@ -34,13 +34,13 @@ function NotFoundPage() {
           <Button asChild>
             <Link to="/dashboard">
               <Home className="h-4 w-4 me-2" />
-              {t('common.dashboard', 'Dashboard')}
+              {t('common:dashboard.title', 'Dashboard')}
             </Link>
           </Button>
           <Button variant="ghost" asChild>
             <Link to="/search">
               <Search className="h-4 w-4 me-2" />
-              {t('common.search', 'Search')}
+              {t('common:search.label', 'Search')}
             </Link>
           </Button>
         </div>
