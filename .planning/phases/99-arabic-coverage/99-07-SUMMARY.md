@@ -31,7 +31,7 @@ Owed class = the fixed pre-flatten nested-subtree universe x first-defined names
 
 ## Boundary corrections (same commit)
 
-BOUNDARY EXCEPTION: frontend/src/routes/\_\_root.tsx common:dashboard.title preserved because common.dashboard was absent pre-flatten and the dot form rendered English on the Arabic root navigation
+BOUNDARY EXCEPTION: frontend/src/routes/__root.tsx common:dashboard.title preserved because common.dashboard was absent pre-flatten and the dot form rendered English on the Arabic root navigation
 
 - 7 foreign-namespace sites restored byte-identical to base — SLADashboardPage `common.actions` (sla.common.actions = "Actions"; the colon form hit the root OBJECT, rendering `returned an object instead of string`), SLAPolicyForm cancel/saving/save, ImportDialog cancel/back/close. The census's foreign-namespace negative control guards the class.
 - Absent-root keys stay in the common-owner lane: AgingIndicator and AssignmentDetailsModal keep `t('common.days','days')` — `common.days` was absent pre-flatten, root `days` is a weekday OBJECT. The plan's post-flatten regex walk reports `owed=2` here; the controlled census correctly does not.
