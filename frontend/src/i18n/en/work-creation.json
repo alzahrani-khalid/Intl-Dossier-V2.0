@@ -25,6 +25,7 @@
     "clear": "Clear",
     "createNew": "Create \"{{name}}\"",
     "linkedTo": "Linked to",
+    "dossierHint": "Select the dossier this request relates to",
     "creating": "Creating...",
     "createCommitment": "Create Commitment",
     "createTask": "Create Task",

@@ -25,6 +25,7 @@
     "clear": "مسح",
     "createNew": "إنشاء \"{{name}}\"",
     "linkedTo": "مرتبط بـ",
+    "dossierHint": "اختر الدوسيه المرتبط بهذا الطلب",
     "creating": "جاري الإنشاء...",
     "createCommitment": "إنشاء التزام",
     "createTask": "إنشاء مهمة",

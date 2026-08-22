@@ -1,18 +1,42 @@
 {
   "title": "تقديم طلب دعم",
   "subtitle": "إنشاء تذكرة دعم جديدة لطلبك",
+  "description": "مراجعة طلبات الاستقبال الواردة وتصنيفها",
+  "createNew": "طلب استقبال جديد",
+  "filters": {
+    "pendingTriage": "طلبات الاستقبال بانتظار الفرز",
+    "active": "نشط",
+    "completed": "مكتمل",
+    "all": "الكل",
+    "allTickets": "جميع التذاكر",
+    "statusCategory": "الحالة",
+    "clear": "مسح عوامل التصفية"
+  },
+  "classifySelected": "تصنيف",
+  "aiSuggestion": "اقتراح الذكاء الاصطناعي",
+  "classify": "تصنيف",
+  "classifyTicket": "تصنيف التذكرة",
+  "classifyDescription": "راجع اقتراحات الذكاء الاصطناعي أو صنّف هذه التذكرة يدويًا",
+  "common": {
+    "back": "العودة إلى قائمة الاستقبال",
+    "cancel": "إلغاء",
+    "download": "تنزيل",
+    "loading": "جارٍ التحميل...",
+    "select": "اختر..."
+  },
   "form": {
     "requestType": {
       "label": "نوع الطلب",
       "placeholder": "اختر نوع الطلب",
       "options": {
         "engagement": "دعم المشاركة",
-        "position": "تطوير المنصب",
+        "position": "تطوير الموقف",
         "mou_action": "بنود المذكرة/الإجراءات",
         "foresight": "طلب الاستشراف"
       },
       "required": "الرجاء اختيار نوع الطلب"
     },
+    "selectType": "اختر النوع",
     "title": {
       "label": "العنوان",
       "placeholder": "ملخص موجز لطلبك",
@@ -20,6 +44,7 @@
       "minLength": "يجب أن يكون العنوان 3 أحرف على الأقل",
       "maxLength": "يجب ألا يتجاوز العنوان 200 حرف"
     },
+    "titlePlaceholder": "أدخل عنوان الطلب",
     "titleAr": {
       "label": "العنوان (بالعربية)",
       "placeholder": "الموضوع بالعربي"
@@ -35,6 +60,7 @@
       "label": "الوصف (بالعربية)",
       "placeholder": "قدم معلومات مفصلة عن طلبك"
     },
+    "descriptionPlaceholder": "صف طلبك",
     "urgency": {
       "label": "مستوى الأولوية",
       "placeholder": "اختر مستوى الأولوية",
@@ -46,6 +72,7 @@
       },
       "required": "الرجاء اختيار مستوى الأولوية"
     },
+    "selectUrgency": "اختر درجة الاستعجال",
     "dossier": {
       "label": "ربط بالملف",
       "placeholder": "البحث عن ملف موجود",
@@ -68,6 +95,18 @@
       "fileCount_other": "{{count}} ملفات",
       "totalSize": "الإجمالي: {{used}} / {{max}}"
     }
+  },
+  "requestTypes": {
+    "engagement": "مشاركة",
+    "position": "موقف",
+    "mou_action": "إجراء مذكرة تفاهم",
+    "foresight": "استشراف"
+  },
+  "urgency": {
+    "low": "منخفض",
+    "medium": "متوسط",
+    "high": "عالٍ",
+    "critical": "حرج"
   },
   "slaPreview": {
     "title": "أوقات الاستجابة المتوقعة",
@@ -264,6 +303,95 @@
   },
   "triage": {
     "overrideReasonLabel": "سبب التجاوز *",
-    "overrideReasonRequired": "يرجى تقديم سبب للتجاوز"
+    "overrideReasonRequired": "يرجى تقديم سبب للتجاوز",
+    "confidence": {
+      "unknown": "غير معروف",
+      "high": "عالية",
+      "medium": "متوسطة",
+      "low": "منخفضة"
+    },
+    "loadingSuggestions": "جارٍ تحليل التذكرة...",
+    "aiUnavailable": "الفرز بالذكاء الاصطناعي غير متاح مؤقتًا",
+    "aiUnavailableMessage": "اقتراحات الفرز بالذكاء الاصطناعي غير متاحة حاليًا. يرجى إجراء الفرز يدويًا أو المحاولة مرة أخرى لاحقًا.",
+    "manualTriage": "الفرز اليدوي",
+    "sensitivity": "مستوى الحساسية",
+    "sensitivitySummary": "الحساسية",
+    "sensitivityLevels": {
+      "public": "عام",
+      "internal": "داخلي",
+      "confidential": "سري",
+      "secret": "سري للغاية"
+    },
+    "urgency": "درجة الاستعجال",
+    "assignedUnit": "الوحدة المسند إليها",
+    "assignedUnitPlaceholder": "أدخل اسم الوحدة",
+    "reason": "السبب",
+    "reasonPlaceholder": "اشرح قرار الفرز",
+    "applying": "جارٍ التطبيق...",
+    "applyManualTriage": "تطبيق الفرز اليدوي",
+    "aiSuggestions": "اقتراحات مدعومة بالذكاء الاصطناعي",
+    "modelInfo": "النموذج",
+    "requestType": "نوع الطلب",
+    "acceptSuggestions": "قبول اقتراحات الذكاء الاصطناعي",
+    "override": "تجاوز",
+    "overrideTitle": "تجاوز اقتراحات الذكاء الاصطناعي",
+    "overrideReasonPlaceholder": "اشرح سبب تجاوز اقتراحات الذكاء الاصطناعي",
+    "applyOverride": "تطبيق التجاوز"
+  },
+  "duplicates": {
+    "mergeReasonRequired": "يرجى تقديم سبب للدمج",
+    "loading": "جارٍ التحقق من التذاكر المكررة...",
+    "error": "تعذر تحميل التذاكر المكررة المحتملة. يرجى المحاولة مرة أخرى.",
+    "noDuplicates": "لم تُكتشف تذاكر مكررة محتملة",
+    "highConfidenceWarning": "اكتُشفت تذاكر مكررة عالية الثقة",
+    "highConfidenceMessage": "تم العثور على {{count}} تذكرة ذات تشابه مرتفع. يرجى مراجعتها والنظر في دمجها.",
+    "highConfidence": "تذاكر مكررة عالية الثقة",
+    "mediumConfidence": "تذاكر مكررة محتملة",
+    "mergeDialog": {
+      "title": "دمج التذاكر",
+      "primaryTicket": "اختر التذكرة الأساسية",
+      "primaryTicketHelp": "ستبقى التذكرة الأساسية نشطة، وستُعلَّم الأخرى بأنها مدمجة.",
+      "currentTicket": "التذكرة الحالية",
+      "reason": "سبب الدمج",
+      "reasonPlaceholder": "اشرح سبب وجوب دمج هاتين التذكرتين"
+    },
+    "titleSimilarity": "العنوان",
+    "contentSimilarity": "المحتوى",
+    "metadataSimilarity": "البيانات الوصفية",
+    "merge": "دمج التذاكر",
+    "notDuplicate": "ليست مكررة"
+  },
+  "ticketDetail": {
+    "error": "تعذر تحميل التذكرة. يرجى المحاولة مرة أخرى.",
+    "tabsLabel": "أقسام التذكرة",
+    "tabs": {
+      "details": "التفاصيل",
+      "triage": "الفرز",
+      "duplicates": "التكرارات",
+      "history": "السجل",
+      "links": "الروابط"
+    },
+    "requestType": "نوع الطلب",
+    "urgency": "درجة الاستعجال",
+    "sensitivity": "الحساسية",
+    "priority": "الأولوية",
+    "description": "الوصف",
+    "additionalInfo": "معلومات إضافية",
+    "attachments": "المرفقات",
+    "promoteToEngagement": "ترقية إلى مشاركة",
+    "convert": "تحويل إلى مخرج",
+    "convertAction": "تحويل",
+    "close": "إغلاق التذكرة",
+    "convertTitle": "تحويل التذكرة",
+    "convertDescription": "اختر نوع المخرج الذي ستُحوَّل إليه هذه التذكرة",
+    "selectType": "اختر النوع...",
+    "convertOptions": {
+      "engagement": "مشاركة",
+      "position": "موقف"
+    },
+    "closeTitle": "إغلاق التذكرة",
+    "closeDescription": "قدّم ملخصًا للحل لإغلاق هذه التذكرة",
+    "resolutionPlaceholder": "أدخل ملخص الحل...",
+    "historyPlaceholder": "سيُعرض سجل التدقيق هنا"
   }
 }
