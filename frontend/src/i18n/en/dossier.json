@@ -129,6 +129,7 @@
     "abbreviationDescription": "Short code or acronym (max 20 characters)",
     "descriptionEn": "Description (English)",
     "descriptionAr": "Description (Arabic)",
+    "description": "Description",
     "descriptionEnPlaceholder": "Enter description in English",
     "descriptionArPlaceholder": "أدخل الوصف بالعربية",
     "status": "Status",
