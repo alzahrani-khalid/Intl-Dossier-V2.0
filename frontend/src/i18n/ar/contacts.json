@@ -359,5 +359,11 @@
         "start_searching_description": "أدخل كلمات رئيسية أو قم بتطبيق المرشحات للبحث في جميع ملاحظات التفاعل."
       }
     }
+  },
+  "hooks": {
+    "contact_created_success": "تم إنشاء جهة الاتصال: {{name}}",
+    "contact_created_error": "فشل إنشاء جهة الاتصال: {{error}}",
+    "contact_archived_success": "تمت أرشفة جهة الاتصال",
+    "contact_archived_error": "فشل أرشفة جهة الاتصال: {{error}}"
   }
 }

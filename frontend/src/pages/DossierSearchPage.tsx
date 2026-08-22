@@ -39,6 +39,8 @@ interface SearchParams {
   myDossiers?: string
 }
 
+const SUGGESTION_CHIP_KEYS = ['saudi', 'org', 'g20', 'topic'] as const
+
 export function DossierSearchPage() {
   const { t } = useTranslation('dossier-search')
   const navigate = useNavigate()
@@ -308,16 +310,19 @@ export function DossierSearchPage() {
           </p>
           {/* Quick action suggestions */}
           <div className="mt-6 flex flex-wrap justify-center gap-2">
-            {['Saudi Arabia', 'UN', 'G20', 'climate'].map((suggestion) => (
-              <Button
-                key={suggestion}
-                variant="outline"
-                size="sm"
-                onClick={() => setQuery(suggestion)}
-              >
-                {suggestion}
-              </Button>
-            ))}
+            {SUGGESTION_CHIP_KEYS.map((suggestionKey) => {
+              const suggestion = t(`dossier-search:suggestions.${suggestionKey}`)
+              return (
+                <Button
+                  key={suggestionKey}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setQuery(suggestion)}
+                >
+                  {suggestion}
+                </Button>
+              )
+            })}
           </div>
         </div>
       )}

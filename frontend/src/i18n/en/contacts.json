@@ -359,5 +359,11 @@
         "start_searching_description": "Enter keywords or apply filters to search through all interaction notes."
       }
     }
+  },
+  "hooks": {
+    "contact_created_success": "Contact created: {{name}}",
+    "contact_created_error": "Failed to create contact: {{error}}",
+    "contact_archived_success": "Contact archived",
+    "contact_archived_error": "Failed to archive contact: {{error}}"
   }
 }

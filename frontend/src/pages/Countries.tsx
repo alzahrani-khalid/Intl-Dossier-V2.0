@@ -84,7 +84,7 @@ export default function Countries() {
         <ShieldAlert className="size-12 text-destructive" />
         <div className="text-center">
           <h2 className="text-xl font-semibold text-foreground">
-            {t('countries.error.title', 'Failed to load countries')}
+            {t('countries:error.title', 'Failed to load countries')}
           </h2>
           <p className="text-sm text-muted-foreground">
             {t('common:errors.queryFailed.description')}
@@ -100,18 +100,18 @@ export default function Countries() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="font-display text-3xl font-semibold text-foreground">
-              {t('countries.title', 'Countries overview')}
+              {t('countries:title', 'Countries overview')}
             </h1>
             <p className="text-base text-muted-foreground">
               {t(
-                'countries.subtitle',
+                'countries:subtitle',
                 'Monitor bilateral relationships, workflow status, and compliance posture across every partner state.',
               )}
             </p>
           </div>
           <Button size="sm" className="gap-2">
             <Plus className="size-4" />
-            {t('countries.actions.addCountry', 'Add new country')}
+            {t('countries:actions.addCountry', 'Add new country')}
           </Button>
         </div>
       </header>
@@ -120,7 +120,7 @@ export default function Countries() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-semibold text-card-foreground">
-              {t('countries.metrics.totalPartners', 'Active partners')}
+              {t('countries:metrics.totalPartners', 'Active partners')}
             </CardTitle>
             <Globe2 className="size-5 text-primary" />
           </CardHeader>
@@ -128,7 +128,7 @@ export default function Countries() {
             <p className="text-2xl font-bold text-foreground">{activeCount}</p>
             <p className="mt-2 text-sm text-muted-foreground">
               {t(
-                'countries.metrics.totalPartnersHint',
+                'countries:metrics.totalPartnersHint',
                 'Includes strategic and operational partnerships',
               )}
             </p>
@@ -137,7 +137,7 @@ export default function Countries() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-semibold text-card-foreground">
-              {t('countries.metrics.totalAgreements', 'Linked agreements')}
+              {t('countries:metrics.totalAgreements', 'Linked agreements')}
             </CardTitle>
             <FileText className="size-5 text-primary" />
           </CardHeader>
@@ -145,7 +145,7 @@ export default function Countries() {
             <p className="text-2xl font-bold text-foreground">{totalAgreements}</p>
             <p className="mt-2 text-sm text-muted-foreground">
               {t(
-                'countries.metrics.totalAgreementsHint',
+                'countries:metrics.totalAgreementsHint',
                 'Contracts and memoranda currently in force',
               )}
             </p>
@@ -154,7 +154,7 @@ export default function Countries() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-semibold text-card-foreground">
-              {t('countries.metrics.escalations', 'Escalations')}
+              {t('countries:metrics.escalations', 'Escalations')}
             </CardTitle>
             <ShieldAlert className="size-5 text-destructive" />
           </CardHeader>
@@ -162,7 +162,7 @@ export default function Countries() {
             <p className="text-2xl font-bold text-destructive">{suspendedCount}</p>
             <p className="mt-2 text-sm text-muted-foreground">
               {t(
-                'countries.metrics.escalationsHint',
+                'countries:metrics.escalationsHint',
                 'Partners pending compliance or data-sovereignty review',
               )}
             </p>
@@ -172,17 +172,17 @@ export default function Countries() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t('countries.filters.title', 'Filters & search')}</CardTitle>
+          <CardTitle>{t('countries:filters.title', 'Filters & search')}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 lg:flex-row lg:items-end">
           <div className="flex-1">
             <label className="mb-1 block text-sm font-medium text-foreground">
-              {t('countries.filters.search', 'Search by name or ISO code')}
+              {t('countries:filters.search', 'Search by name or ISO code')}
             </label>
             <Input
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder={t('countries.filters.searchPlaceholder', 'e.g. AE, France, نيجيريا')}
+              placeholder={t('countries:filters.searchPlaceholder', 'e.g. AE, France, نيجيريا')}
             />
           </div>
           <div>
@@ -190,16 +190,16 @@ export default function Countries() {
               htmlFor="region-filter"
               className="mb-1 block text-sm font-medium text-foreground"
             >
-              {t('countries.filters.region', 'Region')}
+              {t('countries:filters.region', 'Region')}
             </label>
             <select
               id="region-filter"
               value={regionFilter}
               onChange={(event) => setRegionFilter(event.target.value)}
               className="w-48 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              aria-label={t('countries.filters.region', 'Region')}
+              aria-label={t('countries:filters.region', 'Region')}
             >
-              <option value="all">{t('countries.filters.allRegions', 'All regions')}</option>
+              <option value="all">{t('countries:filters.allRegions', 'All regions')}</option>
               {regions.map((region) => (
                 <option key={region} value={region}>
                   {region}
@@ -212,19 +212,19 @@ export default function Countries() {
               htmlFor="status-filter"
               className="mb-1 block text-sm font-medium text-foreground"
             >
-              {t('countries.filters.status', 'Status')}
+              {t('countries:filters.status', 'Status')}
             </label>
             <select
               id="status-filter"
               value={statusFilter}
               onChange={(event) => setStatusFilter(event.target.value)}
               className="w-44 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              aria-label={t('countries.filters.status', 'Status')}
+              aria-label={t('countries:filters.status', 'Status')}
             >
-              <option value="all">{t('countries.filters.allStatuses', 'All statuses')}</option>
-              <option value="active">{t('countries.status.active', 'Active')}</option>
-              <option value="inactive">{t('countries.status.inactive', 'Inactive')}</option>
-              <option value="suspended">{t('countries.status.suspended', 'Suspended')}</option>
+              <option value="all">{t('countries:filters.allStatuses', 'All statuses')}</option>
+              <option value="active">{t('countries:status.active', 'Active')}</option>
+              <option value="inactive">{t('countries:status.inactive', 'Inactive')}</option>
+              <option value="suspended">{t('countries:status.suspended', 'Suspended')}</option>
             </select>
           </div>
         </CardContent>
@@ -234,15 +234,15 @@ export default function Countries() {
         <table className="min-w-full divide-y divide-border text-sm">
           <thead>
             <tr className="bg-muted/50 text-start text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              <th className="px-5 py-3 text-start">{t('countries.table.country', 'Country')}</th>
-              <th className="px-5 py-3 text-start">{t('countries.table.iso', 'ISO codes')}</th>
-              <th className="px-5 py-3 text-start">{t('countries.table.region', 'Region')}</th>
-              <th className="px-5 py-3 text-start">{t('countries.table.status', 'Status')}</th>
+              <th className="px-5 py-3 text-start">{t('countries:table.country', 'Country')}</th>
+              <th className="px-5 py-3 text-start">{t('countries:table.iso', 'ISO codes')}</th>
+              <th className="px-5 py-3 text-start">{t('countries:table.region', 'Region')}</th>
+              <th className="px-5 py-3 text-start">{t('countries:table.status', 'Status')}</th>
               <th className="px-5 py-3 text-start">
-                {t('countries.table.agreements', 'Agreements')}
+                {t('countries:table.agreements', 'Agreements')}
               </th>
               <th className="px-5 py-3 text-start">
-                {t('countries.table.updated', 'Last updated')}
+                {t('countries:table.updated', 'Last updated')}
               </th>
             </tr>
           </thead>
@@ -272,7 +272,7 @@ export default function Countries() {
                             : 'bg-destructive/10 text-destructive'
                       }`}
                     >
-                      {t(`countries.status.${dossier.status}`, dossier.status)}
+                      {t(`countries:status.${dossier.status}`)}
                     </span>
                   </td>
                   <td className="px-5 py-4 text-foreground">
@@ -287,7 +287,7 @@ export default function Countries() {
             {filteredCountries.length === 0 && (
               <tr>
                 <td colSpan={6} className="px-5 py-8 text-center text-sm text-muted-foreground">
-                  {t('countries.table.empty', 'No countries match the current filters')}
+                  {t('countries:table.empty', 'No countries match the current filters')}
                 </td>
               </tr>
             )}

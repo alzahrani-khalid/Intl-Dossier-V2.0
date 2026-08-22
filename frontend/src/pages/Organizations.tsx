@@ -113,18 +113,18 @@ export default function Organizations() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="font-display text-2xl sm:text-3xl font-semibold text-foreground">
-              {t('organizations.title', 'Organizations & delegations')}
+              {t('organizations:title', 'Organizations & delegations')}
             </h1>
             <p className="text-base text-muted-foreground">
               {t(
-                'organizations.subtitle',
+                'organizations:subtitle',
                 'Track hierarchies, delegation scopes, and project ownership across every partner organization.',
               )}
             </p>
           </div>
           <Button size="sm" className="gap-2">
             <Plus className="size-4" />
-            {t('organizations.actions.addOrganization', 'Add organization')}
+            {t('organizations:actions.addOrganization', 'Add organization')}
           </Button>
         </div>
       </header>
@@ -133,7 +133,7 @@ export default function Organizations() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-semibold text-card-foreground">
-              {t('organizations.metrics.registered', 'Registered entities')}
+              {t('organizations:metrics.registered', 'Registered entities')}
             </CardTitle>
             <Building2 className="size-5 text-primary" />
           </CardHeader>
@@ -141,7 +141,7 @@ export default function Organizations() {
             <p className="text-2xl font-bold text-foreground">{filteredOrganizations.length}</p>
             <p className="mt-2 text-sm text-muted-foreground">
               {t(
-                'organizations.metrics.registeredHint',
+                'organizations:metrics.registeredHint',
                 'Includes headquarters and sub-directorates',
               )}
             </p>
@@ -150,7 +150,7 @@ export default function Organizations() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-semibold text-card-foreground">
-              {t('organizations.metrics.members', 'Delegated members')}
+              {t('organizations:metrics.members', 'Delegated members')}
             </CardTitle>
             <Users className="size-5 text-primary" />
           </CardHeader>
@@ -158,7 +158,7 @@ export default function Organizations() {
             <p className="text-2xl font-bold text-foreground">{totalMembers}</p>
             <p className="mt-2 text-sm text-muted-foreground">
               {t(
-                'organizations.metrics.membersHint',
+                'organizations:metrics.membersHint',
                 'Mapped to Supabase auth roles with MFA enforced',
               )}
             </p>
@@ -167,14 +167,14 @@ export default function Organizations() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-semibold text-card-foreground">
-              {t('organizations.metrics.delegations', 'Active delegations')}
+              {t('organizations:metrics.delegations', 'Active delegations')}
             </CardTitle>
             <ShieldCheck className="size-5 text-primary" />
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-foreground">{organisationsWithDelegations}</p>
             <p className="mt-2 text-sm text-muted-foreground">
-              {t('organizations.metrics.delegationsHint', 'Expiring within 90 days: ')}
+              {t('organizations:metrics.delegationsHint', 'Expiring within 90 days: ')}
               <span className="font-semibold">{hierarchyCount}</span>
             </p>
           </CardContent>
@@ -183,18 +183,18 @@ export default function Organizations() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t('organizations.filters.title', 'Filter organizations')}</CardTitle>
+          <CardTitle>{t('organizations:filters.title', 'Filter organizations')}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 lg:flex-row lg:items-end">
           <div className="flex-1">
             <label className="mb-1 block text-sm font-medium text-foreground">
-              {t('organizations.filters.search', 'Search by name or parent')}
+              {t('organizations:filters.search', 'Search by name or parent')}
             </label>
             <Input
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
               placeholder={t(
-                'organizations.filters.searchPlaceholder',
+                'organizations:filters.searchPlaceholder',
                 'e.g. Ministry, OECD, statistics',
               )}
             />
@@ -204,7 +204,7 @@ export default function Organizations() {
               htmlFor="org-type-filter"
               className="mb-1 block text-sm font-medium text-foreground"
             >
-              {t('organizations.filters.type', 'Type')}
+              {t('organizations:filters.type', 'Type')}
             </label>
             <select
               id="org-type-filter"
@@ -212,10 +212,10 @@ export default function Organizations() {
               onChange={(event) => setTypeFilter(event.target.value as typeof typeFilter)}
               className="w-48 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
             >
-              <option value="all">{t('organizations.filters.allTypes', 'All types')}</option>
+              <option value="all">{t('organizations:filters.allTypes', 'All types')}</option>
               {Object.entries(organizationTypes).map(([value, label]) => (
                 <option key={value} value={value}>
-                  {t(`organizations.types.${value}`, label)}
+                  {t(`organizations:types.${value}`, label)}
                 </option>
               ))}
             </select>
@@ -225,7 +225,7 @@ export default function Organizations() {
               htmlFor="org-status-filter"
               className="mb-1 block text-sm font-medium text-foreground"
             >
-              {t('organizations.filters.status', 'Status')}
+              {t('organizations:filters.status', 'Status')}
             </label>
             <select
               id="org-status-filter"
@@ -233,10 +233,10 @@ export default function Organizations() {
               onChange={(event) => setStatusFilter(event.target.value as typeof statusFilter)}
               className="w-40 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
             >
-              <option value="all">{t('organizations.filters.allStatuses', 'All statuses')}</option>
-              <option value="active">{t('organizations.status.active', 'Active')}</option>
-              <option value="inactive">{t('organizations.status.inactive', 'Inactive')}</option>
-              <option value="suspended">{t('organizations.status.suspended', 'Suspended')}</option>
+              <option value="all">{t('organizations:filters.allStatuses', 'All statuses')}</option>
+              <option value="active">{t('organizations:status.active', 'Active')}</option>
+              <option value="inactive">{t('organizations:status.inactive', 'Inactive')}</option>
+              <option value="suspended">{t('organizations:status.suspended', 'Suspended')}</option>
             </select>
           </div>
         </CardContent>
@@ -247,22 +247,22 @@ export default function Organizations() {
           <thead>
             <tr className="bg-muted/50 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               <th className="px-5 py-3 text-start">
-                {t('organizations.table.organization', 'Organization')}
+                {t('organizations:table.organization', 'Organization')}
               </th>
-              <th className="px-5 py-3 text-start">{t('organizations.table.type', 'Type')}</th>
+              <th className="px-5 py-3 text-start">{t('organizations:table.type', 'Type')}</th>
               <th className="px-5 py-3 text-start">
-                {t('organizations.table.country', 'Country')}
-              </th>
-              <th className="px-5 py-3 text-start">
-                {t('organizations.table.members', 'Members')}
+                {t('organizations:table.country', 'Country')}
               </th>
               <th className="px-5 py-3 text-start">
-                {t('organizations.table.projects', 'Active projects')}
+                {t('organizations:table.members', 'Members')}
               </th>
               <th className="px-5 py-3 text-start">
-                {t('organizations.table.delegation', 'Delegation expires')}
+                {t('organizations:table.projects', 'Active projects')}
               </th>
-              <th className="px-5 py-3 text-start">{t('organizations.table.status', 'Status')}</th>
+              <th className="px-5 py-3 text-start">
+                {t('organizations:table.delegation', 'Delegation expires')}
+              </th>
+              <th className="px-5 py-3 text-start">{t('organizations:table.status', 'Status')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -274,13 +274,13 @@ export default function Organizations() {
                     {org.parent && (
                       <span className="flex items-center gap-1 text-xs text-muted-foreground">
                         <ChevronRight className="size-3" />
-                        {t('organizations.table.parent', 'Parent')}: {org.parent}
+                        {t('organizations:table.parent', 'Parent')}: {org.parent}
                       </span>
                     )}
                   </div>
                 </td>
                 <td className="px-5 py-4 text-muted-foreground">
-                  {t(`organizations.types.${org.type}`, organizationTypes[org.type])}
+                  {t(`organizations:types.${org.type}`, organizationTypes[org.type])}
                 </td>
                 <td className="px-5 py-4 text-muted-foreground">{org.country}</td>
                 <td className="px-5 py-4 text-foreground">{org.members}</td>
@@ -297,7 +297,7 @@ export default function Organizations() {
                     }`}
                   >
                     <Network className="size-3" />
-                    {t(`organizations.status.${org.status}`, org.status)}
+                    {t(`organizations:status.${org.status}`)}
                   </span>
                 </td>
               </tr>
@@ -305,7 +305,7 @@ export default function Organizations() {
             {filteredOrganizations.length === 0 && (
               <tr>
                 <td colSpan={7} className="px-5 py-8 text-center text-sm text-muted-foreground">
-                  {t('organizations.table.empty', 'No organizations match the selected filters')}
+                  {t('organizations:table.empty', 'No organizations match the selected filters')}
                 </td>
               </tr>
             )}

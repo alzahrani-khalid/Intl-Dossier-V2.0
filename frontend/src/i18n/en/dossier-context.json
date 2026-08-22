@@ -137,7 +137,11 @@
     "remove_dossier": "Remove Dossier",
     "set_primary": "Set as Primary",
     "view_dossier": "View Dossier",
-    "edit_links": "Edit Dossier Links"
+    "edit_links": "Edit Dossier Links",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "removing": "Removing...",
+    "remove": "Remove"
   },
   "context": {
     "auto_resolved": "Dossier context automatically resolved",

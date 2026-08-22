@@ -1,11 +1,48 @@
 {
-  "title": "الدول",
-  "subtitle": "جميع ملفات الدول",
+  "title": "نظرة عامة على الدول",
+  "subtitle": "راقب العلاقات الثنائية وحالة سير العمل والامتثال عبر كل دولة شريكة.",
+  "error": {
+    "title": "تعذر تحميل الدول"
+  },
+  "actions": {
+    "addCountry": "إضافة دولة جديدة"
+  },
+  "metrics": {
+    "totalPartners": "الشركاء النشطون",
+    "totalPartnersHint": "تشمل الشراكات الاستراتيجية والتشغيلية",
+    "totalAgreements": "الاتفاقيات المرتبطة",
+    "totalAgreementsHint": "العقود ومذكرات التفاهم السارية حالياً",
+    "escalations": "حالات التصعيد",
+    "escalationsHint": "الشركاء بانتظار مراجعة الامتثال أو سيادة البيانات"
+  },
+  "filters": {
+    "title": "التصفية والبحث",
+    "search": "البحث بالاسم أو رمز ISO",
+    "searchPlaceholder": "مثال: AE، فرنسا، نيجيريا",
+    "region": "المنطقة",
+    "allRegions": "جميع المناطق",
+    "status": "الحالة",
+    "allStatuses": "جميع الحالات"
+  },
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "archived": "مؤرشف",
+    "deleted": "محذوف",
+    "suspended": "موقوف"
+  },
   "table": {
     "name": "الدولة",
-    "engagements": "الارتباطات",
+    "engagements": "المشاركات",
     "lastTouch": "آخر تحديث",
-    "sensitivity": "الحساسية"
+    "sensitivity": "الحساسية",
+    "country": "الدولة",
+    "iso": "رموز ISO",
+    "region": "المنطقة",
+    "status": "الحالة",
+    "agreements": "الاتفاقيات",
+    "updated": "آخر تحديث",
+    "empty": "لا توجد دول تطابق عوامل التصفية الحالية"
   },
   "sensitivity": {
     "public": "عام",

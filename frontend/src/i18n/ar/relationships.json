@@ -105,9 +105,21 @@
     "organization": "منظمة",
     "forum": "منتدى",
     "person": "شخص",
-    "engagement": "ارتباط",
+    "engagement": "مشاركة",
     "working_group": "مجموعة عمل",
     "topic": "موضوع"
+  },
+  "navigator": {
+    "title": "متصفح العلاقات",
+    "description": "تصفح الكيانات المرتبطة وصفها حسب الدرجة والنوع",
+    "search": "ابحث في الكيانات...",
+    "degree": "الدرجة",
+    "allDegrees": "جميع الدرجات",
+    "separation": "فصل",
+    "type": "نوع الكيان",
+    "allTypes": "جميع الأنواع",
+    "results": "تم العثور على {{count}} كيان",
+    "noResults": "لا توجد كيانات تطابق الفلاتر"
   },
   "graph": {
     "controls": {

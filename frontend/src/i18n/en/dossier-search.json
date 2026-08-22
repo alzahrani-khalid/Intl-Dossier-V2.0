@@ -70,6 +70,12 @@
       "description": "Search for countries, organizations, forums, and other dossiers. Results will show matching dossiers and their related work items."
     }
   },
+  "suggestions": {
+    "saudi": "Saudi Arabia",
+    "org": "UN",
+    "g20": "G20",
+    "topic": "climate"
+  },
   "hints": {
     "keyboard": "Press Ctrl+K (⌘K) to focus search from anywhere"
   }

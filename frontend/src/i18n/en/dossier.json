@@ -29,6 +29,7 @@
     "examples": "Examples",
     "commonLinks": "Common Links",
     "notFor": "Not For",
+    "learnMore": "Learn more about this dossier type",
     "createDossier": "Create {{type}} Dossier",
     "elected_official": {
       "whenToUse": "Create one dossier per elected official whose office, term, or relationship you need to track over time.",
