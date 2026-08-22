@@ -109,6 +109,18 @@
     "working_group": "Working Group",
     "topic": "Topic"
   },
+  "navigator": {
+    "title": "Relationship Navigator",
+    "description": "Browse and filter connected entities by degree and type",
+    "search": "Search entities...",
+    "degree": "Degree",
+    "allDegrees": "All Degrees",
+    "separation": "separation",
+    "type": "Entity Type",
+    "allTypes": "All Types",
+    "results": "{{count}} entities found",
+    "noResults": "No entities match your filters"
+  },
   "graph": {
     "controls": {
       "zoom": "Zoom",

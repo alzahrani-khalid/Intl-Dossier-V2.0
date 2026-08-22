@@ -25,6 +25,14 @@
     "error": "Failed to update stage. Try again.",
     "success": "Stage updated to {{stage}}."
   },
+  "messages": {
+    "transitionSuccess": "Stage transition successful",
+    "transitionError": "Failed to transition stage",
+    "promotionSuccess": "Intake promoted to engagement",
+    "promotionError": "Failed to promote intake",
+    "forumSessionCreated": "Forum session created",
+    "forumSessionCreateError": "Failed to create forum session"
+  },
   "promotion": {
     "cta": "Promote to Engagement",
     "title": "Promote to Engagement",

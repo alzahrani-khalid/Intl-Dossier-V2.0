@@ -6,7 +6,7 @@
     "linked_dossiers": "مرتبط بـ:",
     "via_engagement": "عبر المشاركة",
     "via_after_action": "عبر سجل المتابعة",
-    "via_position": "عبر المنصب",
+    "via_position": "عبر الموقف",
     "via_mou": "عبر مذكرة التفاهم",
     "direct": "ربط مباشر",
     "primary": "رئيسي"
@@ -28,7 +28,7 @@
     "country": "دولة",
     "organization": "منظمة",
     "forum": "منتدى",
-    "engagement": "ارتباط",
+    "engagement": "مشاركة",
     "topic": "موضوع",
     "working_group": "فريق عمل",
     "person": "شخص",
@@ -137,7 +137,11 @@
     "remove_dossier": "إزالة الملف",
     "set_primary": "تعيين كرئيسي",
     "view_dossier": "عرض الملف",
-    "edit_links": "تعديل ارتباطات الملف"
+    "edit_links": "تعديل ارتباطات الملف",
+    "retry": "إعادة المحاولة",
+    "cancel": "إلغاء",
+    "removing": "جارٍ الإزالة...",
+    "remove": "إزالة"
   },
   "context": {
     "auto_resolved": "تم حل سياق الملف تلقائياً",

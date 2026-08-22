@@ -44,7 +44,7 @@ export function RelationshipNavigator({
 }: RelationshipNavigatorProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
   const [degreeFilter, setDegreeFilter] = useState<string>('all')
   const [typeFilter, setTypeFilter] = useState<string>('all')
 
@@ -103,11 +103,11 @@ const [searchQuery, setSearchQuery] = useState('')
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Filter className="h-5 w-5" />
-          {t('relationship.navigator.title', 'Relationship Navigator')}
+          {t('relationships:navigator.title', 'Relationship Navigator')}
         </CardTitle>
         <CardDescription>
           {t(
-            'relationship.navigator.description',
+            'relationships:navigator.description',
             'Browse and filter connected entities by degree and type',
           )}
         </CardDescription>
@@ -120,7 +120,7 @@ const [searchQuery, setSearchQuery] = useState('')
               className={`absolute ${isRTL ? 'end-3' : 'start-3'} top-3 h-4 w-4 text-muted-foreground`}
             />
             <Input
-              placeholder={t('relationship.navigator.search', 'Search entities...')}
+              placeholder={t('relationships:navigator.search', 'Search entities...')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={isRTL ? 'pe-9' : 'ps-9'}
@@ -130,7 +130,7 @@ const [searchQuery, setSearchQuery] = useState('')
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-2 block">
-                {t('relationship.navigator.degree', 'Degree')}
+                {t('relationships:navigator.degree', 'Degree')}
               </label>
               <Select value={degreeFilter} onValueChange={setDegreeFilter}>
                 <SelectTrigger>
@@ -138,11 +138,11 @@ const [searchQuery, setSearchQuery] = useState('')
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">
-                    {t('relationship.navigator.allDegrees', 'All Degrees')}
+                    {t('relationships:navigator.allDegrees', 'All Degrees')}
                   </SelectItem>
                   {Array.from({ length: maxDegree }, (_, i) => i + 1).map((degree) => (
                     <SelectItem key={degree} value={degree.toString()}>
-                      {degree}° {t('relationship.navigator.separation', 'separation')}
+                      {degree}° {t('relationships:navigator.separation', 'separation')}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -151,7 +151,7 @@ const [searchQuery, setSearchQuery] = useState('')
 
             <div>
               <label className="text-sm font-medium mb-2 block">
-                {t('relationship.navigator.type', 'Entity Type')}
+                {t('relationships:navigator.type', 'Entity Type')}
               </label>
               <Select value={typeFilter} onValueChange={setTypeFilter}>
                 <SelectTrigger>
@@ -159,11 +159,11 @@ const [searchQuery, setSearchQuery] = useState('')
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">
-                    {t('relationship.navigator.allTypes', 'All Types')}
+                    {t('relationships:navigator.allTypes', 'All Types')}
                   </SelectItem>
                   {nodeTypes.map((type) => (
                     <SelectItem key={type} value={type}>
-                      {t(`dossier.type.${type}`, type)}
+                      {t(`dossier:type.${type}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -174,7 +174,7 @@ const [searchQuery, setSearchQuery] = useState('')
 
         {/* Results Count */}
         <div className="mb-4 text-sm text-muted-foreground">
-          {t('relationship.navigator.results', {
+          {t('relationships:navigator.results', {
             count: filteredNodes.length,
             defaultValue: '{{count}} entities found',
           })}
@@ -188,7 +188,7 @@ const [searchQuery, setSearchQuery] = useState('')
               <div key={degree} className="mb-6">
                 <div className="flex items-center gap-2 mb-3">
                   <Badge variant="outline" className="text-sm font-semibold">
-                    {degree}° {t('relationship.navigator.separation', 'Separation')}
+                    {degree}° {t('relationships:navigator.separation', 'Separation')}
                   </Badge>
                   <Separator className="flex-1" />
                 </div>
@@ -209,13 +209,13 @@ const [searchQuery, setSearchQuery] = useState('')
                             <div className="font-medium mb-1">{name}</div>
                             <div className="flex items-center gap-2 flex-wrap">
                               <Badge variant="secondary" className="text-xs">
-                                {t(`dossier.type.${node.type}`, node.type)}
+                                {t(`dossier:type.${node.type}`)}
                               </Badge>
                               <Badge
                                 variant={node.status === 'active' ? 'default' : 'outline'}
                                 className="text-xs"
                               >
-                                {t(`dossier.status.${node.status}`, node.status)}
+                                {t(`dossier:status.${node.status}`)}
                               </Badge>
                             </div>
                           </div>
@@ -232,7 +232,7 @@ const [searchQuery, setSearchQuery] = useState('')
 
           {filteredNodes.length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
-              {t('relationship.navigator.noResults', 'No entities match your filters')}
+              {t('relationships:navigator.noResults', 'No entities match your filters')}
             </div>
           )}
         </ScrollArea>

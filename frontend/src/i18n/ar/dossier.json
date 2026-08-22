@@ -29,6 +29,7 @@
     "examples": "أمثلة",
     "commonLinks": "روابط شائعة",
     "notFor": "لا تستخدم لـ",
+    "learnMore": "تعرّف على نوع الدوسيه هذا",
     "createDossier": "إنشاء دوسيه {{type}}",
     "elected_official": {
       "whenToUse": "أنشئ ملفاً واحداً لكل مسؤول منتخب تحتاج إلى تتبع منصبه أو فترة ولايته أو علاقته على مدى الزمن.",
@@ -41,7 +42,7 @@
     "country": "دولة",
     "organization": "منظمة",
     "forum": "منتدى",
-    "engagement": "ارتباط",
+    "engagement": "مشاركة",
     "topic": "موضوع",
     "theme": "موضوع",
     "working_group": "فريق عمل",
