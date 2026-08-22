@@ -9,7 +9,7 @@ Implementation committed as `854841067 fix(i18n): remove resolved intake tab fal
   - `ticketDetail.tabs`: `details`, `triage`, `duplicates`, `history`, `links`.
   - `form.requestType.options`: `engagement`, `position`, `mou_action`, `foresight`.
 - `TriagePanel`'s request-type dynamic site had no second argument to remove. No other second argument changed.
-- No `common.*` binding or common locale key was touched. No JSON changed in this task. The authored Arabic values remain sentence case, contain no exclamation or first-person plural, and use the ruled `مشاركة` / `موقف` / `استقبال` terms. Operator naturalness review remains recorded debt, not a blocker.
+- No `common.*` binding or common locale key was touched. The Arabic duplicate warning now uses neutral passive wording; the authored Arabic values remain sentence case, contain no exclamation or first-person plural, and use the ruled `مشاركة` / `موقف` / `استقبال` terms. Operator naturalness review remains recorded debt, not a blocker.
 
 ## Re-derived populations
 
