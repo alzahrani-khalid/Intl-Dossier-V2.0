@@ -186,7 +186,7 @@ export function TicketDetail() {
             >
               {(['details', 'triage', 'duplicates', 'history', 'links'] as const).map((tab) => (
                 <TabsTrigger key={tab} value={tab} className="flex-shrink-0 text-xs sm:text-sm">
-                  {t(`intake:ticketDetail.tabs.${tab}`, tab.charAt(0).toUpperCase() + tab.slice(1))}
+                  {t(`intake:ticketDetail.tabs.${tab}`)}
                 </TabsTrigger>
               ))}
             </TabsList>
