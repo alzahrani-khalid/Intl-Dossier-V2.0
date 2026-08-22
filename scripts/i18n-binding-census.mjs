@@ -572,32 +572,6 @@ function publicCall(call) {
   }
 }
 
-function redirectedStdoutPath() {
-  try {
-    if (!fs.fstatSync(1).isFile()) return null
-  } catch {
-    return null
-  }
-
-  try {
-    const target = fs.readlinkSync('/proc/self/fd/1')
-    if (target.startsWith('/')) return target
-  } catch {
-    // macOS does not expose redirected stdout through /proc.
-  }
-
-  try {
-    const listing = execFileSync('lsof', ['-n', '-p', String(process.pid), '-a', '-d', '1', '-Fn'], {
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore'],
-    })
-    const name = listing.split('\n').find((line) => line.startsWith('n/'))
-    return name ? name.slice(1) : null
-  } catch {
-    return null
-  }
-}
-
 function addControlResources(config) {
   for (const locale of LOCALES) {
     config.resources.get(locale).set('census-object', { common: { close: { blocked: true } } })
@@ -677,20 +651,6 @@ function runSelfCheck(root, universe) {
 
 function writeReport(report, json) {
   const serialized = JSON.stringify(report, null, json ? 0 : 2)
-  if (json) {
-    const stdoutPath = redirectedStdoutPath()
-    if (stdoutPath && path.extname(stdoutPath) !== '.json') {
-      const jsonPath = `${stdoutPath}.json`
-      try {
-        fs.writeFileSync(jsonPath, `${serialized}\n`, 'utf8')
-        fs.unlinkSync(stdoutPath)
-        fs.symlinkSync(jsonPath, stdoutPath)
-        return
-      } catch {
-        // Fall back to ordinary stdout when the redirected path cannot be replaced.
-      }
-    }
-  }
   process.stdout.write(`${serialized}\n`)
 }
 
