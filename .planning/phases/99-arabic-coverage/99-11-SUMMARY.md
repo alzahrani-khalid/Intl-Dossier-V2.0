@@ -354,25 +354,201 @@ Command:
 PATH="/opt/homebrew/bin:$PATH"; pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts --project=chromium-en --grep "UI99-C8 ar search chips" --reporter=list
 ```
 
-The task-owned render oracle therefore mounts `DossierSearchPage` itself in JSDOM at
-`http://localhost/search?lng=ar`, with only routing/data dependencies stubbed. The page still calls
-its own `useTranslation('dossier-search')` hook, and the check waits for the empty-search buttons
-before asserting Arabic script, `G20`, and absence of the three non-allowlisted raw literals.
+The task-owned render oracle mounts `DossierSearchPage` itself in JSDOM at
+`http://localhost/search?lng=ar`, with routing/search-data dependencies stubbed. The page still
+calls its own `useTranslation('dossier-search')` hook, renders through Vite and
+`@testing-library/react`, and the check waits for the empty-search buttons before asserting Arabic
+script, `G20`, and absence of the three non-allowlisted raw literals.
+
+```sh
+PATH="/opt/homebrew/bin:$PATH"; I18NEXT_NO_SUPPORT_NOTICE=1; cd frontend
+node --input-type=module <<'NODE'
+import { JSDOM } from 'jsdom'
+import path from 'node:path'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import React from 'react'
+import { createServer } from 'vite'
+import react from '@vitejs/plugin-react'
+import { render, waitFor } from '@testing-library/react'
+import i18next from 'i18next'
+import { I18nextProvider, initReactI18next } from 'react-i18next'
+
+globalThis.React = React
+const root = process.cwd()
+const stubDir = '/tmp/ui99-c8-stubs'
+mkdirSync(stubDir, { recursive: true })
+writeFileSync(
+  path.join(stubDir, 'router.mjs'),
+  `export const useNavigate = () => () => undefined;\nexport const useSearch = () => ({});\n`,
+)
+writeFileSync(
+  path.join(stubDir, 'results.mjs'),
+  `export const DossierFirstSearchResults = () => null;\n`,
+)
+writeFileSync(
+  path.join(stubDir, 'error-state.mjs'),
+  `export const QueryErrorState = () => null;\n`,
+)
+writeFileSync(
+  path.join(stubDir, 'filters.mjs'),
+  `export const DossierSearchFilters = () => null;\n`,
+)
+writeFileSync(
+  path.join(stubDir, 'search-hook.mjs'),
+  `export const useDossierFirstSearch = () => ({\n  query: '',\n  filters: { types: 'all', status: 'all', myDossiersOnly: false },\n  dossiers: [],\n  relatedWork: [],\n  dossiersTotal: 0,\n  relatedWorkTotal: 0,\n  hasMoreDossiers: false,\n  hasMoreWork: false,\n  typeCounts: {},\n  isLoading: false,\n  isFetching: false,\n  isError: false,\n  error: null,\n  tookMs: undefined,\n  setQuery: () => undefined,\n  updateFilters: () => undefined,\n  loadMoreDossiers: () => undefined,\n  loadMoreWork: () => undefined,\n  clearSearch: () => undefined,\n  refetch: () => undefined,\n});\n`,
+)
+writeFileSync(
+  path.join(stubDir, 'direction.mjs'),
+  `export const useDirection = () => ({ direction: 'rtl', isRTL: true });\n`,
+)
+
+const url = 'http://localhost/search?lng=ar'
+const dom = new JSDOM('<!doctype html><html lang="ar" dir="rtl"><body><div id="root"></div></body></html>', {
+  url,
+  pretendToBeVisual: true,
+})
+
+dom.window.HTMLElement.prototype.attachEvent = function attachEvent() {}
+dom.window.HTMLElement.prototype.detachEvent = function detachEvent() {}
+
+const expose = (name, value) => {
+  Object.defineProperty(globalThis, name, { value, configurable: true, writable: true })
+}
+
+expose('window', dom.window)
+expose('document', dom.window.document)
+expose('navigator', dom.window.navigator)
+expose('HTMLElement', dom.window.HTMLElement)
+expose('HTMLInputElement', dom.window.HTMLInputElement)
+expose('SVGElement', dom.window.SVGElement)
+expose('Element', dom.window.Element)
+expose('Node', dom.window.Node)
+expose('MutationObserver', dom.window.MutationObserver)
+expose('getComputedStyle', dom.window.getComputedStyle.bind(dom.window))
+expose('requestAnimationFrame', (callback) => setTimeout(callback, 0))
+expose('cancelAnimationFrame', (id) => clearTimeout(id))
+expose(
+  'ResizeObserver',
+  class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  },
+)
+expose('matchMedia', (query) => ({
+  matches: false,
+  media: query,
+  onchange: null,
+  addListener() {},
+  removeListener() {},
+  addEventListener() {},
+  removeEventListener() {},
+  dispatchEvent() {
+    return false
+  },
+}))
+
+const loadJson = (file) => JSON.parse(readFileSync(path.join(root, file), 'utf8'))
+const i18n = i18next.createInstance()
+await i18n.use(initReactI18next).init({
+  lng: 'ar',
+  fallbackLng: false,
+  ns: ['dossier-search'],
+  defaultNS: 'dossier-search',
+  resources: {
+    en: { 'dossier-search': loadJson('src/i18n/en/dossier-search.json') },
+    ar: { 'dossier-search': loadJson('src/i18n/ar/dossier-search.json') },
+  },
+  interpolation: { escapeValue: false },
+  react: { useSuspense: false },
+  showSupportNotice: false,
+})
+
+document.documentElement.lang = 'ar'
+document.documentElement.dir = 'rtl'
+
+const server = await createServer({
+  root,
+  configFile: false,
+  cacheDir: '/tmp/ui99-c8-vite-cache',
+  logLevel: 'error',
+  appType: 'custom',
+  server: { middlewareMode: true, hmr: false, ws: false, watch: null },
+  optimizeDeps: { disabled: true, noDiscovery: true, entries: [] },
+  ssr: { optimizeDeps: { disabled: true, noDiscovery: true, include: [] } },
+  plugins: [react()],
+  resolve: {
+    alias: [
+      { find: /^@tanstack\/react-router$/, replacement: path.join(stubDir, 'router.mjs') },
+      {
+        find: /^@\/components\/search\/DossierFirstSearchResults$/,
+        replacement: path.join(stubDir, 'results.mjs'),
+      },
+      {
+        find: /^@\/components\/error-states\/QueryErrorState$/,
+        replacement: path.join(stubDir, 'error-state.mjs'),
+      },
+      {
+        find: /^@\/components\/search\/DossierSearchFilters$/,
+        replacement: path.join(stubDir, 'filters.mjs'),
+      },
+      { find: /^@\/hooks\/useDossierFirstSearch$/, replacement: path.join(stubDir, 'search-hook.mjs') },
+      { find: /^@\/hooks\/useDirection$/, replacement: path.join(stubDir, 'direction.mjs') },
+      { find: '@', replacement: path.join(root, 'src') },
+    ],
+  },
+})
+
+try {
+  const { DossierSearchPage } = await server.ssrLoadModule('/src/pages/DossierSearchPage.tsx')
+  render(
+    React.createElement(
+      I18nextProvider,
+      { i18n },
+      React.createElement('main', null, React.createElement(DossierSearchPage)),
+    ),
+    { container: document.getElementById('root') },
+  )
+
+  let chipTexts = []
+  await waitFor(() => {
+    chipTexts = Array.from(document.querySelectorAll('main div.mt-6 button')).map((button) =>
+      button.textContent.trim(),
+    )
+    if (chipTexts.length < 4) {
+      throw new Error(`expected at least 4 suggestion chips, got ${chipTexts.length}`)
+    }
+  })
+
+  const rendered = chipTexts.slice(0, 4)
+  const arabicScript = /[\u0600-\u06ff]{3,}/
+  if (!arabicScript.test(rendered.join(' '))) {
+    throw new Error(`localized chips did not contain Arabic script: ${JSON.stringify(rendered)}`)
+  }
+  if (!rendered.includes('G20')) {
+    throw new Error(`G20 proper noun chip missing: ${JSON.stringify(rendered)}`)
+  }
+  for (const raw of ['Saudi Arabia', 'UN', 'climate']) {
+    if (rendered.includes(raw)) {
+      throw new Error(`raw English suggestion literal survived: ${raw}`)
+    }
+  }
+
+  console.log(`UI99-C8 mounted URL: ${url}`)
+  console.log(`UI99-C8 rendered chip texts: ${JSON.stringify(rendered)}`)
+  console.log('UI99-C8 ar search chips: PASS')
+} finally {
+  await server.close()
+}
+NODE
+```
+
 Output and exit `0`:
 
 ```text
 UI99-C8 mounted URL: http://localhost/search?lng=ar
 UI99-C8 rendered chip texts: ["السعودية","الأمم المتحدة","G20","المناخ"]
 UI99-C8 ar search chips: PASS
-```
-
-```sh
-cd frontend
-node --input-type=module <<'NODE'
-// The command body created a Vite SSR module runner, aliased route/data-only dependencies to
-// in-memory stubs, initialized a real i18next instance with ar/dossier-search.json, rendered
-// DossierSearchPage through @testing-library/react, and inspected main div.mt-6 button.
-NODE
 ```
 
 ## Locale Parity and Type Safety
