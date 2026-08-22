@@ -1,11 +1,51 @@
 {
-  "title": "Organizations",
-  "subtitle": "International bodies and agencies",
+  "title": "Organizations & delegations",
+  "subtitle": "Track hierarchies, delegation scopes, and project ownership across every partner organization.",
+  "actions": {
+    "addOrganization": "Add organization"
+  },
+  "metrics": {
+    "registered": "Registered entities",
+    "registeredHint": "Includes headquarters and sub-directorates",
+    "members": "Delegated members",
+    "membersHint": "Mapped to Supabase auth roles with MFA enforced",
+    "delegations": "Active delegations",
+    "delegationsHint": "Expiring within 90 days: "
+  },
+  "filters": {
+    "title": "Filter organizations",
+    "search": "Search by name or parent",
+    "searchPlaceholder": "e.g. Ministry, OECD, statistics",
+    "type": "Type",
+    "allTypes": "All types",
+    "status": "Status",
+    "allStatuses": "All statuses"
+  },
+  "types": {
+    "government": "Government",
+    "ngo": "NGO",
+    "international": "International",
+    "private": "Private"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "suspended": "Suspended"
+  },
   "table": {
     "name": "Organization",
     "engagements": "Engagements",
     "lastTouch": "Last updated",
-    "sensitivity": "Sensitivity"
+    "sensitivity": "Sensitivity",
+    "organization": "Organization",
+    "type": "Type",
+    "country": "Country",
+    "members": "Members",
+    "projects": "Active projects",
+    "delegation": "Delegation expires",
+    "status": "Status",
+    "parent": "Parent",
+    "empty": "No organizations match the selected filters"
   },
   "sensitivity": {
     "public": "Public",

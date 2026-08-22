@@ -1,11 +1,51 @@
 {
-  "title": "المنظمات",
-  "subtitle": "الهيئات والوكالات الدولية",
+  "title": "المنظمات والتفويضات",
+  "subtitle": "تتبّع التسلسلات الهرمية ونطاقات التفويض وملكية المشاريع عبر كل منظمة شريكة.",
+  "actions": {
+    "addOrganization": "إضافة منظمة"
+  },
+  "metrics": {
+    "registered": "الكيانات المسجلة",
+    "registeredHint": "تشمل المقرات والإدارات الفرعية",
+    "members": "الأعضاء المفوضون",
+    "membersHint": "مرتبطة بأدوار المصادقة مع فرض المصادقة متعددة العوامل",
+    "delegations": "التفويضات النشطة",
+    "delegationsHint": "تنتهي خلال 90 يوماً: "
+  },
+  "filters": {
+    "title": "تصفية المنظمات",
+    "search": "البحث بالاسم أو المنظمة الأم",
+    "searchPlaceholder": "مثال: وزارة، منظمة، إحصاءات",
+    "type": "النوع",
+    "allTypes": "جميع الأنواع",
+    "status": "الحالة",
+    "allStatuses": "جميع الحالات"
+  },
+  "types": {
+    "government": "حكومية",
+    "ngo": "منظمة غير حكومية",
+    "international": "دولية",
+    "private": "خاصة"
+  },
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "suspended": "موقوف"
+  },
   "table": {
     "name": "المنظمة",
-    "engagements": "الارتباطات",
+    "engagements": "المشاركات",
     "lastTouch": "آخر تحديث",
-    "sensitivity": "الحساسية"
+    "sensitivity": "الحساسية",
+    "organization": "المنظمة",
+    "type": "النوع",
+    "country": "الدولة",
+    "members": "الأعضاء",
+    "projects": "المشاريع النشطة",
+    "delegation": "انتهاء التفويض",
+    "status": "الحالة",
+    "parent": "المنظمة الأم",
+    "empty": "لا توجد منظمات تطابق عوامل التصفية المحددة"
   },
   "sensitivity": {
     "public": "عام",
