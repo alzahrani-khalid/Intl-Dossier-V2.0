@@ -84,7 +84,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
 
   const handleMerge = (primaryId: string) => {
     if (!selectedCandidate || !mergeReason.trim()) {
-      alert(t('duplicates.mergeReasonRequired', 'Please provide a reason for merging'))
+      alert(t('intake:duplicates.mergeReasonRequired', 'Please provide a reason for merging'))
       return
     }
 
@@ -110,7 +110,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
       <div className="py-8 text-center">
         <div className="inline-block size-8 animate-spin rounded-full border-b-2 border-accent"></div>
         <p className="mt-4 text-ink-mute">
-          {t('duplicates.loading', 'Checking for duplicates...')}
+          {t('intake:duplicates.loading', 'Checking for duplicates...')}
         </p>
       </div>
     )
@@ -119,7 +119,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
   if (error) {
     return (
       <div className="rounded-lg border border-danger/30 bg-danger/10 p-4 text-danger">
-        {t('duplicates.error', 'Failed to load duplicate candidates. Please try again.')}
+        {t('intake:duplicates.error', 'Failed to load duplicate candidates. Please try again.')}
       </div>
     )
   }
@@ -129,7 +129,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
       <div className="py-8 text-center">
         <CheckCircle2 className="mx-auto mb-4 h-12 w-12 text-success" aria-hidden="true" />
         <p className="text-lg text-ink-mute">
-          {t('duplicates.noDuplicates', 'No potential duplicates detected')}
+          {t('intake:duplicates.noDuplicates', 'No potential duplicates detected')}
         </p>
       </div>
     )
@@ -149,12 +149,12 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
           <div className="mb-2 flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-danger" aria-hidden="true" />
             <h3 className="font-semibold text-danger">
-              {t('duplicates.highConfidenceWarning', 'High Confidence Duplicates Detected')}
+              {t('intake:duplicates.highConfidenceWarning', 'High Confidence Duplicates Detected')}
             </h3>
           </div>
           <p className="text-sm text-danger">
             {t(
-              'duplicates.highConfidenceMessage',
+              'intake:duplicates.highConfidenceMessage',
               'We found {{count}} ticket(s) with high similarity. Please review and consider merging.',
               { count: highConfidence.length },
             )}
@@ -166,7 +166,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
       {highConfidence.length > 0 && (
         <div>
           <h3 className="mb-4 text-lg font-semibold text-ink">
-            {t('duplicates.highConfidence', 'High Confidence Duplicates')}
+            {t('intake:duplicates.highConfidence', 'High Confidence Duplicates')}
           </h3>
           <div className="space-y-4">
             {highConfidence.map((candidate) => (
@@ -186,7 +186,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
       {mediumConfidence.length > 0 && (
         <div>
           <h3 className="mb-4 text-lg font-semibold text-ink">
-            {t('duplicates.mediumConfidence', 'Possible Duplicates')}
+            {t('intake:duplicates.mediumConfidence', 'Possible Duplicates')}
           </h3>
           <div className="space-y-4">
             {mediumConfidence.map((candidate) => (
@@ -208,17 +208,17 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
           <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-surface">
             <div className="p-6">
               <h2 className="mb-4 text-2xl font-bold text-ink">
-                {t('duplicates.mergDialog.title', 'Merge Tickets')}
+                {t('intake:duplicates.mergeDialog.title', 'Merge Tickets')}
               </h2>
 
               <div className="mb-6 space-y-4">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-ink-mute">
-                    {t('duplicates.mergeDialog.primaryTicket', 'Select Primary Ticket')}
+                    {t('intake:duplicates.mergeDialog.primaryTicket', 'Select Primary Ticket')}
                   </label>
                   <p className="mb-3 text-sm text-ink-mute">
                     {t(
-                      'duplicates.mergeDialog.primaryTicketHelp',
+                      'intake:duplicates.mergeDialog.primaryTicketHelp',
                       'The primary ticket will remain active, and the other will be marked as merged.',
                     )}
                   </p>
@@ -228,7 +228,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                       className="w-full rounded-lg border-2 border-primary bg-primary/10 p-3 text-start hover:bg-primary/20"
                     >
                       <div className="font-medium text-ink">
-                        {t('duplicates.mergeDialog.currentTicket', 'Current Ticket')}
+                        {t('intake:duplicates.mergeDialog.currentTicket', 'Current Ticket')}
                       </div>
                       <div className="text-sm text-ink-mute">{ticketId}</div>
                     </button>
@@ -253,14 +253,14 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                     htmlFor="merge-reason"
                     className="mb-1 block text-sm font-medium text-ink-mute"
                   >
-                    {t('duplicates.mergeDialog.reason', 'Reason for Merge')} *
+                    {t('intake:duplicates.mergeDialog.reason', 'Reason for Merge')} *
                   </label>
                   <textarea
                     id="merge-reason"
                     value={mergeReason}
                     onChange={(e) => setMergeReason(e.target.value)}
                     placeholder={t(
-                      'duplicates.mergeDialog.reasonPlaceholder',
+                      'intake:duplicates.mergeDialog.reasonPlaceholder',
                       'Explain why these tickets should be merged',
                     )}
                     rows={3}
@@ -277,7 +277,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                   }}
                   className="flex-1 rounded-md border border-line px-4 py-2 text-ink-mute hover:bg-muted"
                 >
-                  {t('common.cancel', 'Cancel')}
+                  {t('intake:common.cancel', 'Cancel')}
                 </button>
               </div>
             </div>
@@ -349,7 +349,7 @@ function DuplicateCandidateCard({
       <div className="mb-4 grid grid-cols-3 gap-2">
         <div className="text-center">
           <div className="mb-1 text-xs text-ink-mute">
-            {t('duplicates.titleSimilarity', 'Title')}
+            {t('intake:duplicates.titleSimilarity', 'Title')}
           </div>
           <div className="text-sm font-semibold text-ink">
             {Math.round(candidate.title_similarity * 100)}%
@@ -357,7 +357,7 @@ function DuplicateCandidateCard({
         </div>
         <div className="text-center">
           <div className="mb-1 text-xs text-ink-mute">
-            {t('duplicates.contentSimilarity', 'Content')}
+            {t('intake:duplicates.contentSimilarity', 'Content')}
           </div>
           <div className="text-sm font-semibold text-ink">
             {Math.round(candidate.content_similarity * 100)}%
@@ -365,7 +365,7 @@ function DuplicateCandidateCard({
         </div>
         <div className="text-center">
           <div className="mb-1 text-xs text-ink-mute">
-            {t('duplicates.metadataSimilarity', 'Metadata')}
+            {t('intake:duplicates.metadataSimilarity', 'Metadata')}
           </div>
           <div className="text-sm font-semibold text-ink">
             {Math.round(candidate.metadata_similarity * 100)}%
@@ -378,13 +378,13 @@ function DuplicateCandidateCard({
           onClick={onSelect}
           className="flex-1 rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90"
         >
-          {t('duplicates.merge', 'Merge Tickets')}
+          {t('intake:duplicates.merge', 'Merge Tickets')}
         </button>
         <button
           onClick={onNotDuplicate}
           className="rounded-md border border-line px-4 py-2 text-sm text-ink-mute hover:bg-muted"
         >
-          {t('duplicates.notDuplicate', 'Not a Duplicate')}
+          {t('intake:duplicates.notDuplicate', 'Not a Duplicate')}
         </button>
       </div>
     </div>

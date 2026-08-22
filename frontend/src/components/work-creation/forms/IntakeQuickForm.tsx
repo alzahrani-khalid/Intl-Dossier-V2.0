@@ -217,7 +217,7 @@ export function IntakeQuickForm({
             required
             multiple={false}
             label={t('dossier-context:selector.title')}
-            hint={t('form.dossierHint', 'Select the dossier this request relates to')}
+            hint={t('work-creation:form.dossierHint', 'Select the dossier this request relates to')}
             error={dossierError}
           />
         )}
