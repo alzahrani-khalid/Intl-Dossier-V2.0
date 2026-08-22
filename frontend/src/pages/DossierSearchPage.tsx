@@ -41,6 +41,9 @@ interface SearchParams {
 
 const SUGGESTION_CHIP_KEYS = ['saudi', 'org', 'g20', 'topic'] as const
 
+type SuggestionChipKey = (typeof SUGGESTION_CHIP_KEYS)[number]
+type SuggestionTranslationKey = `dossier-search:suggestions.${SuggestionChipKey}`
+
 export function DossierSearchPage() {
   const { t } = useTranslation('dossier-search')
   const navigate = useNavigate()
@@ -311,7 +314,9 @@ export function DossierSearchPage() {
           {/* Quick action suggestions */}
           <div className="mt-6 flex flex-wrap justify-center gap-2">
             {SUGGESTION_CHIP_KEYS.map((suggestionKey) => {
-              const suggestion = t(`dossier-search:suggestions.${suggestionKey}`)
+              const suggestion = t(
+                `dossier-search:suggestions.${suggestionKey}` satisfies SuggestionTranslationKey,
+              )
               return (
                 <Button
                   key={suggestionKey}

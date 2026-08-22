@@ -129,6 +129,7 @@
     "abbreviationDescription": "رمز أو اختصار قصير (20 حرف كحد أقصى)",
     "descriptionEn": "الوصف (بالإنجليزية)",
     "descriptionAr": "الوصف (بالعربية)",
+    "description": "الوصف",
     "descriptionEnPlaceholder": "أدخل الوصف بالإنجليزية",
     "descriptionArPlaceholder": "أدخل الوصف بالعربية",
     "status": "الحالة",
