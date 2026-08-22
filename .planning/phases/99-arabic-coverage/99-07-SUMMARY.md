@@ -17,15 +17,21 @@ One atomic commit (the one carrying this file — `git log -1`): both locale fla
 
 ## Controlled AST census (scripts/i18n-binding-census.mjs)
 
-Owed class = pre-flatten nested-subtree universe (re-derived from git) x effective namespace (key prefix, `{ ns }`, scoped hook aliases, array bindings with in-order fallback, multiline calls, configured default `translation`). Figures are instrument output.
+PROVENANCE: isolated git worktree at 4cdfdf28725f4c48d00ccb6f7aec2084f032d6cb
 
-- Pre-flatten (committed script vs a pristine `git archive` of 4cdfdf287): exit 1; `unrepointed=213` / 102 files (134 / 52 excluding the `common:common.*` class); `doublePrefixed=105`; `literalKeyCalls=8598 commonNamespaceCalls=1364 nonLiteralKeyCalls=725 dynamicNamespaceCalls=236`.
-- Post-flatten (`--base 4cdfdf287`): exit 0; `unrepointed=[] doublePrefixed=0 literalKeyCalls=8598 commonNamespaceCalls=1366 nonLiteralKeyCalls=725 dynamicNamespaceCalls=234`; blind populations on stderr.
+Owed class = the fixed pre-flatten nested-subtree universe x first-defined namespace resolution over the real en and ar resource bundles. Each locale walks a static namespace list in order; a scalar or object definition stops that locale's walk, object returns are marked, and divergent locale outcomes remain separate. Explicit key prefixes override invisible bindings. Dynamic namespace arrays, non-literal keys, and generic property access remain named blind populations rather than entering the resolved partitions.
+
+- Pre-flatten (`--base 4cdfdf28725f4c48d00ccb6f7aec2084f032d6cb` in the isolated worktree): exit 1; governed/unrepointed `213/102`, partitioned `79/52 commonColonResolved + 5/2 translationColonExplicit + 125/48 dotForm + 4/2 nsOption`; `doublePrefixed=105`; `scannedFiles=1716 literalKeyCalls=8598 nonLiteralKeyCalls=725`.
+- The full `common:common.*` de-prefix class is `100/59`, split into `79/52` resolved and `21/14` outside the governed universe.
+- Pre-flatten blind ledger: dynamic namespace `276/27` (`236/25` literal-key + `40/16` non-literal-key), non-literal key `725/295`, property access `0/0`, union `961/303`.
+- Post-flatten (`--base 4cdfdf28725f4c48d00ccb6f7aec2084f032d6cb`): exit 0; `governed=213/102 scannedFiles=1716 literalKeyCalls=8598 nonLiteralKeyCalls=725 unrepointed=[] doublePrefixed=0`; dynamic namespace `274/27` (`234/25` literal-key + `40/16` non-literal-key), non-literal key `725/295`, property access `0/0`, blind union `959/303`; `localeDivergent` is emitted as a per-locale array.
+- `--self-check --json`: exactly nine positives and an exact seven-row passing control ledger: later-common, scalar-shadow, object-shadow, locale-divergent, dynamic-array, property-access, non-literal.
+- Fail-closed: `--base definitely-not-a-ref` exits nonzero without a report.
 - Retired: the 130/50 regex census and the prior attempt's 139/54 claim are not this instrument's outputs; withdrawn.
-- `--self-check`: `SELF-CHECK-OK: 9/9 planted positives flagged (key prefix, ns options, hook bindings, scoped alias, multiline, array binding, array-order fallback, default namespace, double prefix), 3/3 negatives rejected (repointed colon form, absent-root key, foreign namespace); doublePrefixed=2; universe=70 paths from 750ef16c3a001a0f542982ba879d8f8f18a1cb63`.
-- Fail-closed: `--base definitely-not-a-ref` exits 1 with `CENSUS-FAIL: pre-flatten universe could not be derived …`.
 
 ## Boundary corrections (same commit)
+
+BOUNDARY EXCEPTION: frontend/src/routes/__root.tsx common:dashboard.title preserved because common.dashboard was absent pre-flatten and the dot form rendered English on the Arabic root navigation
 
 - 7 foreign-namespace sites restored byte-identical to base — SLADashboardPage `common.actions` (sla.common.actions = "Actions"; the colon form hit the root OBJECT, rendering `returned an object instead of string`), SLAPolicyForm cancel/saving/save, ImportDialog cancel/back/close. The census's foreign-namespace negative control guards the class.
 - Absent-root keys stay in the common-owner lane: AgingIndicator and AssignmentDetailsModal keep `t('common.days','days')` — `common.days` was absent pre-flatten, root `days` is a weekday OBJECT. The plan's post-flatten regex walk reports `owed=2` here; the controlled census correctly does not.
