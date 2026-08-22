@@ -41,6 +41,42 @@ interface SearchParams {
 
 const SUGGESTION_CHIP_KEYS = ['saudi', 'org', 'g20', 'topic'] as const
 
+type SuggestionChipKey = (typeof SUGGESTION_CHIP_KEYS)[number]
+type SuggestionTranslationKey = `dossier-search:suggestions.${SuggestionChipKey}`
+
+interface DossierSearchSuggestionChipsProps {
+  translate: (key: SuggestionTranslationKey) => string
+  onSelect: (suggestion: string) => void
+}
+
+/**
+ * The rendered empty-search chip surface, kept separate so the lane can execute a typed render
+ * oracle without booting the credentialed application shell. The page still supplies its bound
+ * i18next translator and query setter, so production behavior remains identical.
+ */
+export function DossierSearchSuggestionChips({
+  translate,
+  onSelect,
+}: DossierSearchSuggestionChipsProps) {
+  return (
+    <div className="mt-6 flex flex-wrap justify-center gap-2">
+      {SUGGESTION_CHIP_KEYS.map((suggestionKey) => {
+        const suggestion = translate(`dossier-search:suggestions.${suggestionKey}`)
+        return (
+          <Button
+            key={suggestionKey}
+            variant="outline"
+            size="sm"
+            onClick={() => onSelect(suggestion)}
+          >
+            {suggestion}
+          </Button>
+        )
+      })}
+    </div>
+  )
+}
+
 export function DossierSearchPage() {
   const { t } = useTranslation('dossier-search')
   const navigate = useNavigate()
@@ -309,21 +345,7 @@ export function DossierSearchPage() {
             {t('empty.noQuery.description')}
           </p>
           {/* Quick action suggestions */}
-          <div className="mt-6 flex flex-wrap justify-center gap-2">
-            {SUGGESTION_CHIP_KEYS.map((suggestionKey) => {
-              const suggestion = t(`dossier-search:suggestions.${suggestionKey}`)
-              return (
-                <Button
-                  key={suggestionKey}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setQuery(suggestion)}
-                >
-                  {suggestion}
-                </Button>
-              )
-            })}
-          </div>
+          <DossierSearchSuggestionChips translate={(key) => t(key)} onSelect={setQuery} />
         </div>
       )}
 
