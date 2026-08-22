@@ -41,5 +41,6 @@
     "rejected": "Proposal rejected",
     "deleted": "Link removed",
     "generated": "Suggestions generated"
-  }
+  },
+  "retry": "Retry"
 }

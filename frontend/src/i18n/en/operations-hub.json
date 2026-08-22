@@ -22,12 +22,14 @@
       "tomorrow": "Tomorrow",
       "this_week": "This Week",
       "next_week": "Next Week",
-      "show_all": "Show all events"
+      "show_all": "Show all events",
+      "show_less": "Show less"
     },
     "engagements": {
       "title": "Active Engagements",
       "empty": "No active engagements",
-      "show_all": "Show all engagements"
+      "show_all": "Show all engagements",
+      "show_less": "Show less"
     },
     "stats": {
       "title": "Quick Stats",

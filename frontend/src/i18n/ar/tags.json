@@ -21,7 +21,8 @@
     "expand": "توسيع",
     "collapse": "طي",
     "expandAll": "توسيع الكل",
-    "collapseAll": "طي الكل"
+    "collapseAll": "طي الكل",
+    "tagCount": "{{count}} وسوم"
   },
   "actions": {
     "create": "إنشاء وسم",
@@ -114,7 +115,9 @@
   },
   "search": {
     "placeholder": "البحث في الوسوم...",
-    "noResults": "لم يتم العثور على وسوم",
+    "noResults": {
+      "title": "لم يتم العثور على وسوم"
+    },
     "matchType": {
       "exact": "تطابق تام",
       "prefix": "يبدأ بـ",

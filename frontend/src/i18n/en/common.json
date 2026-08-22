@@ -35,7 +35,9 @@
     "info": "Information"
   },
   "validation": {
-    "required": "Required field"
+    "required": "Required field",
+    "maxLength": "Enter no more than {{max}} characters",
+    "minLength": "Enter at least {{min}} characters"
   },
   "actions": {
     "previous": "Previous",
@@ -46,7 +48,23 @@
     "closeDialog": "Close dialog",
     "toggleSection": "Toggle section",
     "viewMore": "View more",
-    "remove": "Remove"
+    "remove": "Remove",
+    "approve": "Approve",
+    "clearHistory": "Clear history",
+    "complete": "Mark complete",
+    "copy": "Copy URL",
+    "dismiss": "Dismiss",
+    "generate": "Generate",
+    "more": "More",
+    "moreInfo": "More information",
+    "moveUp": "Move up",
+    "refresh": "Refresh",
+    "reject": "Reject",
+    "test": "Test webhook",
+    "thumbsDown": "Not helpful",
+    "thumbsUp": "Helpful",
+    "toggleWatch": "Toggle watch",
+    "viewDetails": "View details"
   },
   "appTitle": "GASTAT International Dossier System",
   "save": "Save",
@@ -220,7 +238,33 @@
     "systemSettings": "System Settings",
     "fieldPermissions": "Field Permissions",
     "auditLogs": "Audit Logs",
-    "dataRetention": "Data Retention"
+    "dataRetention": "Data Retention",
+    "archive": "Archive",
+    "darkMode": "Dark Mode",
+    "dashboardOverview": "Dashboard Overview",
+    "documents": "Documents",
+    "executions": "Executions",
+    "history": "History",
+    "library": "Library",
+    "lightMode": "Light Mode",
+    "logout": "Logout",
+    "mainNav": "Main navigation",
+    "members": "Members",
+    "new": "New",
+    "permissions": "Permissions",
+    "primary": "Primary navigation",
+    "recentlyEdited": "Recently Edited",
+    "sharedProjects": "Shared Projects",
+    "status": "Status",
+    "switchToArabic": "Switch to Arabic",
+    "switchToEnglish": "Switch to English",
+    "taskEscalations": "Task Escalations",
+    "taskQueue": "Task Queue",
+    "teamReview": "Team Review",
+    "updates": "Updates",
+    "userMenu": "User menu",
+    "workflow": "Workflow",
+    "workflows": "Workflows"
   },
   "search": {
     "title": "Search",
@@ -239,7 +283,15 @@
       "label": "Search suggestions",
       "noResults": "No suggestions found"
     },
-    "label": "Search"
+    "label": "Search",
+    "clear": "Clear search",
+    "forCommands": "for commands",
+    "hint": "Press Enter to search or",
+    "openCommandPalette": "Open command palette",
+    "openSearch": "Open search",
+    "quickSearch": "Quick search...",
+    "search": "Search",
+    "searchLabel": "Search dossiers, people, positions..."
   },
   "errors": {
     "preferenceSaveFailed": "Failed to save preferences. Changes are stored locally.",
@@ -263,7 +315,28 @@
   "error": {
     "failedToLoadData": "Failed to load data",
     "unknownError": "An unknown error occurred",
-    "label": "Error"
+    "label": "Error",
+    "boundary": {
+      "description": "An unexpected error occurred. Please try refreshing the page or return to the home page.",
+      "goHome": "Go to Home",
+      "technicalDetails": "Technical Details",
+      "title": "Something went wrong",
+      "tryAgain": "Try Again",
+      "unknownError": "Unknown error"
+    },
+    "query": {
+      "auth": "Authentication Error",
+      "authDescription": "Your session may have expired. Please sign in again.",
+      "generic": "Failed to load data",
+      "genericDescription": "Unable to load the requested data. Please try again.",
+      "network": "Connection Error",
+      "networkDescription": "Unable to connect to the server. Please check your internet connection.",
+      "reload": "Reload Page",
+      "retry": "Retry",
+      "server": "Server Error",
+      "serverDescription": "The server encountered an error. Please try again later.",
+      "signIn": "Sign In"
+    }
   },
   "dashboard": {
     "title": "Dashboard",
@@ -943,7 +1016,23 @@
       "restoreSuccess": "Version restored successfully",
       "restoreFailed": "Failed to restore version",
       "compare": "Compare versions",
-      "viewChanges": "View changes"
+      "viewChanges": "View changes",
+      "added": "Added",
+      "after": "After",
+      "before": "Before",
+      "button": "Version history",
+      "changedAt": "Changed at",
+      "changedBy": "Changed by",
+      "current": "Current",
+      "deleted": "Deleted",
+      "diffDescription": "Compare the changes between these versions.",
+      "diffTitle": "Version changes",
+      "loadFailed": "Failed to load versions",
+      "modified": "Modified",
+      "noChanges": "No changes",
+      "noSummary": "No summary provided",
+      "summary": "Summary",
+      "viewDiff": "View changes"
     },
     "edit": {
       "title": "Edit After Action",
@@ -967,7 +1056,8 @@
     "status": {
       "draft": "Draft",
       "published": "Published",
-      "edit_pending": "Edit Pending"
+      "edit_pending": "Edit Pending",
+      "editRequested": "Edit requested"
     },
     "list": {
       "title": "After Action Records",
@@ -1000,7 +1090,87 @@
       "createdBy": "Created by",
       "publishedBy": "Published by",
       "lastModified": "Last modified"
-    }
+    },
+    "attendees": "Attendees",
+    "commitmentsCount": "{{count}} commitments",
+    "confidence": "Confidence",
+    "confidential": "Confidential",
+    "conflict": {
+      "reviewChanges": "Review Changes",
+      "warning": "This record was modified by another user. Review changes before saving."
+    },
+    "createdAt": "Created at",
+    "decisionMaker": "Decision maker",
+    "decisionsCount": "{{count}} decisions",
+    "dueDate": "Due date",
+    "editFlow": {
+      "added": "Added",
+      "approvalNotes": "Approval notes",
+      "approvalNotesPlaceholder": "Add optional approval notes",
+      "approvalWarning": "This action will apply the proposed changes.",
+      "approve": "Approve",
+      "approveFailed": "Failed to approve edit request",
+      "approveTitle": "Approve edit request",
+      "approving": "Approving...",
+      "arrayChange": "List changed",
+      "confirmApprove": "Confirm approval",
+      "confirmReject": "Confirm rejection",
+      "currentVersion": "Current version",
+      "deleted": "Deleted",
+      "minChars": "Minimum {{count}} characters",
+      "modified": "Modified",
+      "noChanges": "No changes found",
+      "proposedChanges": "Proposed changes",
+      "proposedVersion": "Proposed version",
+      "reason": "Reason",
+      "reject": "Reject",
+      "rejectFailed": "Failed to reject edit request",
+      "rejectTitle": "Reject edit request",
+      "rejecting": "Rejecting...",
+      "rejectionReason": "Rejection reason",
+      "rejectionReasonPlaceholder": "Explain why this request is being rejected",
+      "rejectionReasonTooLong": "Rejection reason is too long",
+      "rejectionReasonTooShort": "Rejection reason is too short",
+      "rejectionWarning": "The requester will be notified of the rejection.",
+      "requestedAt": "Requested at",
+      "requestedBy": "Requested by",
+      "title": "Edit approval request"
+    },
+    "editRequestFeature": "Edit requests",
+    "followUpsCount": "{{count}} follow-ups",
+    "likelihood": "Likelihood",
+    "metadata": "Metadata",
+    "mitigation": "Mitigation",
+    "noAttendees": "No attendees recorded",
+    "notes": "Notes",
+    "owner": "Owner",
+    "pdf": {
+      "arabicOnly": "Arabic only",
+      "both": "English and Arabic",
+      "completed": "PDF ready",
+      "confidentialWarning": "This record is confidential.",
+      "description": "Generate a PDF copy of this after-action record.",
+      "download": "Download PDF",
+      "englishOnly": "English only",
+      "estimatedTime": "Estimated time: {{time}}",
+      "expiresIn": "Expires in {{time}}",
+      "generate": "Generate",
+      "generateButton": "Generate PDF",
+      "generating": "Generating...",
+      "generationFailed": "Failed to generate PDF",
+      "info": "PDF generation information",
+      "selectLanguage": "Select language",
+      "title": "Generate PDF",
+      "verifying": "Verifying..."
+    },
+    "publishedAt": "Published at",
+    "rationale": "Rationale",
+    "requestEdit": "Request edit",
+    "risksCount": "{{count}} risks",
+    "severity": "Severity",
+    "updatedAt": "Updated at",
+    "version": "Version",
+    "versionHistory": "Version history"
   },
   "waitingQueue": {
     "title": "Waiting Queue",
@@ -1237,7 +1407,15 @@
       "deadline": "SLA Deadline",
       "progress": "Progress",
       "timeRemaining": "Time remaining"
-    }
+    },
+    "addWorkItem": "Add work item",
+    "itemType": "Item type",
+    "linkWorkItems": "Link work items",
+    "linkWorkItemsDescription": "Select work items to link to this task.",
+    "linkedItems": "Linked work items",
+    "noResults": "No work items found",
+    "search": "Search",
+    "searchPlaceholder": "Search work items..."
   },
   "dossierLinks": {
     "manager": "Dossier Link Manager",
@@ -1463,5 +1641,129 @@
     "error": {
       "mount": "The workspace couldn't load. Refresh to retry."
     }
-  }
+  },
+  "add": "Add document",
+  "ai": {
+    "errors": {
+      "briefFetchFailed": "Brief was generated but could not be retrieved. Please try again.",
+      "cancelled": "Generation was cancelled.",
+      "contactAdmin": "Contact your administrator to increase the limit",
+      "contentFiltered": "The request was filtered due to content policy. Please revise your input.",
+      "contextTooLong": "The input is too long. Please shorten your request.",
+      "featureDisabled": "This AI feature is currently disabled for your organization.",
+      "generationFailed": "Failed to generate content. Please try again.",
+      "loginAgain": "Please log in again",
+      "modelUnavailable": "The AI model is not available. Please try a different request.",
+      "networkError": "Network error. Please check your connection and try again.",
+      "providerUnavailable": "AI service is temporarily unavailable. Please try again later.",
+      "rateLimitExceeded": "Too many requests. Please wait a moment and try again.",
+      "retryAfter": "Try again in {{seconds}} seconds",
+      "retryNow": "Click to retry",
+      "shortenInput": "Try with a shorter input",
+      "spendCapReached": "AI usage limit reached. Please contact your administrator.",
+      "timeout": "The request timed out. Please try again.",
+      "title": "AI Error",
+      "unauthorized": "You are not authorized to use this feature. Please log in again.",
+      "unknown": "An unexpected error occurred. Please try again."
+    }
+  },
+  "badge": {
+    "aiConfidence": "AI {{n}}%",
+    "aiConfidenceAria": "AI confidence {{n}} percent",
+    "sensitivity": "Sensitivity {{n}}"
+  },
+  "cardView": "Card view",
+  "collapse": "Collapse",
+  "contributors": {
+    "add_failed": "Failed to add contributor",
+    "added": "Contributor added",
+    "added_success": "{{name}} was added as a contributor",
+    "remove_failed": "Failed to remove contributor",
+    "removed": "Contributor removed",
+    "removed_success": "{{name}} was removed as a contributor"
+  },
+  "converting": "Converting...",
+  "dismiss": "Dismiss",
+  "errorBoundary": {
+    "description": "An unexpected error occurred.",
+    "errorDetails": "Error details",
+    "goHome": "Go to home",
+    "refreshPage": "Refresh page",
+    "reportError": "Report error",
+    "reportSubmitted": "Error report submitted",
+    "title": "Something went wrong"
+  },
+  "executions": {
+    "noMembers": "No members found",
+    "noPermissions": "No permissions found",
+    "noWorkflows": "No workflows found",
+    "tryDifferentSearch": "Try a different search term"
+  },
+  "expand": "Expand",
+  "firstPage": "First page",
+  "form": {
+    "searchUsers": "Search users...",
+    "selectUser": "Select user..."
+  },
+  "forms": {
+    "add_item": "Add item",
+    "browse_files": "Browse files",
+    "clear_all": "Clear all",
+    "complete": "complete",
+    "discard_draft": "Discard draft",
+    "draft_found": "Draft found",
+    "drag_drop_or_click": "Drag and drop files or select to browse",
+    "drop_here": "Drop files here",
+    "drop_rejected": "Some files could not be added",
+    "fields": "fields",
+    "file_constraints": "File constraints",
+    "files_selected": "{{count}} files selected",
+    "leave_anyway": "Leave anyway",
+    "min_items": "Add at least {{min}} items",
+    "progress_label": "Form progress",
+    "remove_file": "Remove file",
+    "restore_draft": "Restore draft",
+    "save_error": "Failed to save changes",
+    "saved_at": "Saved at {{time}}",
+    "saved_time_ago": "Saved {{time}}",
+    "saving": "Saving...",
+    "stay": "Stay",
+    "time_remaining": "{{minutes}} minutes remaining",
+    "unsaved_changes": "Unsaved changes",
+    "unsaved_changes_description": "Your unsaved changes will be lost.",
+    "unsaved_changes_title": "Leave with unsaved changes?"
+  },
+  "from": "From",
+  "goBack": "Go back",
+  "graph": {
+    "fetchError": "Failed to load graph data"
+  },
+  "lastPage": "Last page",
+  "loadMore": "Load More",
+  "manage": "Manage",
+  "metrics": {
+    "activeProjects": "Active Projects",
+    "executions": "Executions",
+    "teamMembers": "Team Members"
+  },
+  "more": "More",
+  "nextPage": "Next page",
+  "noResults": "No results found.",
+  "offline": {
+    "description": "Changes will sync when your connection returns.",
+    "queuedActions": "{{count}} actions queued",
+    "retrySync": "Retry sync",
+    "title": "You are offline"
+  },
+  "previousPage": "Previous page",
+  "required": "Required",
+  "seeReport": "See Report",
+  "showLess": "Show less",
+  "showMore": "Show more",
+  "success": "Success",
+  "tableView": "Table view",
+  "to": "To",
+  "toggleColumns": "Toggle columns",
+  "unknown": "Unknown",
+  "viewAll": "View All"
 }

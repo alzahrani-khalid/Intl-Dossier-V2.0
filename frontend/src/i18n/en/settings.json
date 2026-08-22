@@ -8,7 +8,6 @@
   "saving": "Saving...",
   "cancel": "Cancel",
   "reset": "Reset to Default",
-
   "navigation": {
     "profile": "Profile",
     "general": "General",
@@ -20,7 +19,6 @@
     "dataPrivacy": "Data & Privacy",
     "security": "Security"
   },
-
   "nav": {
     "profile": "Profile",
     "general": "General",
@@ -32,19 +30,15 @@
     "emailDigest": "Email Digest",
     "integrations": "Integrations"
   },
-
   "backToApp": "Back to app",
-
   "navGroups": {
     "account": "Account",
     "privacyAccess": "Privacy & access",
     "connected": "Connected"
   },
-
   "errors": {
     "save": "Could not save changes. Review the highlighted fields and try again."
   },
-
   "profile": {
     "title": "Profile Settings",
     "description": "Manage your personal information and profile picture",
@@ -71,7 +65,6 @@
     "avatarUploadError": "Could not upload the image. Please try again.",
     "uploadAvatar": "Upload Photo"
   },
-
   "general": {
     "title": "General Settings",
     "description": "Configure language, timezone, and regional preferences",
@@ -87,7 +80,6 @@
     "monday": "Monday",
     "saturday": "Saturday"
   },
-
   "appearance": {
     "title": "Appearance Settings",
     "description": "Customize the look and feel of the application",
@@ -130,17 +122,14 @@
       "dense": "Dense"
     }
   },
-
   "emailDigest": {
     "title": "Email digest",
     "description": "Configure scheduled email summaries"
   },
-
   "integrations": {
     "title": "Integrations",
     "description": "Connect external bots and services"
   },
-
   "notifications": {
     "title": "Notification Settings",
     "description": "Control how and when you receive notifications",
@@ -161,7 +150,6 @@
     "mentions": "Mentions",
     "mentionsDesc": "When someone mentions you in comments"
   },
-
   "accessibility": {
     "title": "Accessibility Settings",
     "description": "Customize the app to match your accessibility needs",
@@ -184,7 +172,6 @@
     "screenReader": "Screen Reader",
     "screenReaderDesc": "Optimize for screen reader compatibility"
   },
-
   "dataPrivacy": {
     "title": "Data & Privacy",
     "description": "Manage your data and privacy preferences",
@@ -209,9 +196,10 @@
     "exportSuccess": "Data exported successfully",
     "signedOutAll": "Signed out from all sessions",
     "accountDeleted": "Account deleted successfully",
-    "deleting": "Deleting account..."
+    "deleting": "Deleting account...",
+    "deleteContactAdmin": "To delete your account, please contact your administrator.",
+    "exportNoData": "No data available to export."
   },
-
   "security": {
     "title": "Security Settings",
     "description": "Manage your account security and authentication",
@@ -243,7 +231,6 @@
     "signOut": "Sign out",
     "signOutDesc": "End your session on this device."
   },
-
   "timezones": {
     "UTC": "UTC (Coordinated Universal Time)",
     "Asia/Riyadh": "Riyadh (GMT+3)",
@@ -254,7 +241,6 @@
     "America/Los_Angeles": "Los Angeles (GMT-8)",
     "Asia/Tokyo": "Tokyo (GMT+9)"
   },
-
   "dateFormats": {
     "DD/MM/YYYY": "DD/MM/YYYY (31/12/2025)",
     "MM/DD/YYYY": "MM/DD/YYYY (12/31/2025)",

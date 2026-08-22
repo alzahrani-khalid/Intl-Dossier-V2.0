@@ -34,7 +34,9 @@
       "description": "Learn how everything is organized around Dossiers - your central hub for managing international relations.",
       "welcome": {
         "title": "Welcome to GASTAT Dossier",
-        "description": "Take a quick tour to see how everything is organized around Dossiers - your central hub for managing international relations."
+        "description": "Take a quick tour to see how everything is organized around Dossiers - your central hub for managing international relations.",
+        "skipButton": "Skip for now",
+        "startButton": "Start Tour"
       },
       "replay": "Replay onboarding tour",
       "steps": {

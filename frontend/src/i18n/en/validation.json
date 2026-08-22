@@ -12,14 +12,11 @@
   "isoCode3": "Enter a 3-letter ISO code",
   "required": "This field is required",
   "required.suggestion": "Please enter a value to continue",
-
   "minLength": "Must be at least {{min}} characters (currently {{current}})",
   "minLength.suggestion": "Add {{remaining}} more character(s) to meet the minimum",
-
   "maxLength": "Cannot exceed {{max}} characters (currently {{current}})",
   "maxLength.suggestion": "Remove {{excess}} character(s) to meet the limit",
   "maxLength.approaching": "{{remaining}} characters remaining",
-
   "email": {
     "invalid": "Please enter a valid email address",
     "suggestion": "Email should be in the format: name@example.com",
@@ -32,7 +29,6 @@
     "hasSpaces": "Email addresses cannot contain spaces",
     "hasSpaces.suggestion": "Remove any spaces from the email address"
   },
-
   "url": {
     "invalid": "Please enter a valid URL",
     "suggestion": "URL should start with https:// or http://",
@@ -41,7 +37,6 @@
     "missingDomain": "URL is missing a valid domain",
     "missingDomain.suggestion": "Include a domain like example.com"
   },
-
   "phone": {
     "invalid": "Please enter a valid phone number",
     "suggestion": "Use format: +1 (234) 567-8900 or similar",
@@ -50,32 +45,26 @@
     "tooShort": "Phone number is too short (minimum {{minDigits}} digits)",
     "tooShort.suggestion": "Enter your complete phone number including area code"
   },
-
   "alphanumeric": {
     "invalid": "Only letters and numbers are allowed",
     "suggestion": "Remove any special characters"
   },
-
   "arabic": {
     "invalid": "Only Arabic text is allowed in this field",
     "suggestion": "Switch to Arabic keyboard input"
   },
-
   "specialChars": {
     "invalid": "Special characters like < > { } [ ] \\ are not allowed",
     "suggestion": "Remove any special characters from your input"
   },
-
   "dateFormat": {
     "invalid": "Please enter a valid date",
     "suggestion": "Use format: YYYY-MM-DD"
   },
-
   "generic": {
     "invalid": "This value is not valid",
     "suggestion": "Please check your input and try again"
   },
-
   "password": {
     "strength": {
       "weak": "Weak",
@@ -90,17 +79,14 @@
     "addNumber": "Add numbers (0-9)",
     "addSpecial": "Add special characters (!@#$%^&*)"
   },
-
   "suggestions": {
     "apply": "Apply suggestion"
   },
-
   "summary": {
     "title": "Please fix {{count}} error(s) before continuing",
     "title_one": "Please fix 1 error before continuing",
     "title_other": "Please fix {{count}} errors before continuing"
   },
-
   "fields": {
     "email": "Email",
     "password": "Password",
@@ -111,5 +97,16 @@
     "url": "URL",
     "date": "Date",
     "message": "Message"
-  }
+  },
+  "email_invalid": "Please enter a valid email address",
+  "error_count": "{{count}} errors",
+  "file_invalid_type": "This file type is not supported",
+  "file_too_large": "The file is too large",
+  "form_errors": "Form errors",
+  "phone_invalid": "Please enter a valid phone number",
+  "too_many_files": "Too many files selected",
+  "total_size_exceeded": "The total file size exceeds the limit",
+  "upload_failed": "File upload failed",
+  "url_invalid": "Please enter a valid URL",
+  "warning_count": "{{count}} warnings"
 }

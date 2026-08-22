@@ -234,7 +234,8 @@
       "failed": "Failed"
     },
     "pageCount_one": "{{count}} page",
-    "pageCount_other": "{{count}} pages"
+    "pageCount_other": "{{count}} pages",
+    "pageCount": "{{count}} pages"
   },
   "topics": {
     "statistics": "Statistics",

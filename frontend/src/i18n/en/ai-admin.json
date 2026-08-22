@@ -31,7 +31,9 @@
     "avgTokensPerRun": "Avg. Tokens/Run",
     "costBreakdown": "Cost Summary",
     "avgCostPerRun": "Avg. Cost/Run",
-    "projectedMonthly": "Projected Monthly"
+    "projectedMonthly": "Projected Monthly",
+    "successRate": "Success Rate",
+    "totalCost": "Total Cost"
   },
   "settings": {
     "title": "AI Settings",

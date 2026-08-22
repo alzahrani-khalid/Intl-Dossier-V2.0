@@ -214,5 +214,19 @@
         }
       }
     }
+  },
+  "countries": {
+    "create": "Create country dossier",
+    "empty": {
+      "description": "Create the first country dossier to get started.",
+      "title": "No countries yet"
+    }
+  },
+  "dossiers": {
+    "create": "Create dossier",
+    "empty": {
+      "description": "Create your first dossier to get started.",
+      "title": "No dossiers yet"
+    }
   }
 }
