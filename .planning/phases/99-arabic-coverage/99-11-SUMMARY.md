@@ -2,17 +2,20 @@
 
 ## Result
 
-The dossier-family lane is landed through four implementation commits:
+The dossier-family lane is landed through five implementation commits:
 
 - `ae31ae1bb` — country colon routing, both locale payloads, and the country status carrier
 - `bbfd2774d` — organization colon routing, both locale payloads, and the organization status carrier
 - `eb1770eed` — graph/relationship routing, dossier carriers, authoring-only leaves, and localized search chips
 - `e8753c7a7` — the final authoring-only residue, `dossier:form.description`, in both locales
+- `102f6f7e7` — the production chip fragment and its executable typed-render seam
 
 The first three commits arrived through the required P99-10 dependency. P99-11 re-ran the lane
 oracles against that tree, expanded the authoring-only population to include the wizard review
 steps named by the plan, repaired the one remaining leaf without editing its consumers, and
-re-verified the complete lane.
+re-verified the complete lane. The final commit replaces the prior discovery-only evidence with a
+render of the exact production fragment, without changing the page's translation binding, query
+setter, responsive flex layout, RTL-safe styling, or touch-safe button primitive.
 
 The search surface maps four stable chip ids through explicit
 `dossier-search:suggestions.*` bindings. Arabic renders `السعودية`, `الأمم المتحدة`, `G20`, and
@@ -274,30 +277,77 @@ Source absence/presence and authored values:
 
 ```text
 42:const SUGGESTION_CHIP_KEYS = ['saudi', 'org', 'g20', 'topic'] as const
-313:            {SUGGESTION_CHIP_KEYS.map((suggestionKey) => {
-314:              const suggestion = t(`dossier-search:suggestions.${suggestionKey}`)
+57:export function DossierSearchSuggestionChips({
+63:      {SUGGESTION_CHIP_KEYS.map((suggestionKey) => {
+64:        const suggestion = translate(`dossier-search:suggestions.${suggestionKey}`)
+348:          <DossierSearchSuggestionChips translate={(key) => t(key)} onSelect={setQuery} />
 raw suggestion literals absent from DossierSearchPage.tsx
-{"saudi":"Saudi Arabia","org":"UN","g20":"G20","topic":"climate"}
-{"saudi":"السعودية","org":"الأمم المتحدة","g20":"G20","topic":"المناخ"}
+en: {"saudi":"Saudi Arabia","org":"UN","g20":"G20","topic":"climate"}
+ar: {"saudi":"السعودية","org":"الأمم المتحدة","g20":"G20","topic":"المناخ"}
 ```
 
-The task's rendered oracle selects exactly one test:
+The task's typed render oracle executed the exact exported production fragment through Vite's TSX
+loader and ReactDOMServer, then inspected the rendered DOM. It would fail if the fragment did not
+emit exactly four buttons, if Arabic script were absent, if `G20` disappeared, or if any of the
+three non-allowlisted raw English literals rendered. Output and exit `0`:
 
 ```text
-Listing tests:
-  [chromium-en] › 99-ar03-leak.spec.ts:229:5 › UI99-C8 ar search chips
-Total: 1 test in 1 file
+UI99-C8 rendered chip texts: ["السعودية","الأمم المتحدة","G20","المناخ"]
+UI99-C8 ar search chips: PASS
 ```
-
-Command exit: `0`.
 
 ```sh
-test -f tests/e2e/99-ar03-leak.spec.ts && pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts -g "UI99-C8 ar search chips" --project=chromium-en --no-deps --list
+cd frontend
+node --input-type=module -e '
+import path from "node:path"
+import { readFile } from "node:fs/promises"
+import { createElement } from "react"
+import { renderToStaticMarkup } from "react-dom/server"
+import { JSDOM } from "jsdom"
+import { createInstance } from "i18next"
+process.env.VITE_SUPABASE_URL = "http://127.0.0.1"
+process.env.VITE_SUPABASE_ANON_KEY = "typed-render-oracle"
+globalThis.__dirname = process.cwd()
+const { createServer } = await import("vite")
+const { default: config } = await import("./vite.config.ts")
+const server = await createServer({
+  ...config,
+  configFile: false,
+  root: process.cwd(),
+  cacheDir: path.join("/private/tmp", "p99-11-vite-ssr-cache"),
+  server: { middlewareMode: true, hmr: false, ws: false },
+  appType: "custom",
+})
+try {
+  const locale = JSON.parse(await readFile(path.join(process.cwd(), "src/i18n/ar/dossier-search.json"), "utf8"))
+  const i18n = createInstance()
+  await i18n.init({ lng: "ar", fallbackLng: false, resources: { ar: { "dossier-search": locale } }, showSupportNotice: false })
+  const { DossierSearchSuggestionChips } = await server.ssrLoadModule("/src/pages/DossierSearchPage.tsx")
+  const markup = renderToStaticMarkup(createElement(DossierSearchSuggestionChips, {
+    translate: (key) => i18n.t(key),
+    onSelect: () => undefined,
+  }))
+  const document = new JSDOM(markup).window.document
+  const chipTexts = Array.from(document.querySelectorAll("button"), (button) => button.textContent.trim())
+  if (chipTexts.length !== 4) throw new Error("expected exactly four rendered suggestion chips")
+  if (!/[\u0600-\u06ff]{3,}/.test(chipTexts.join(" "))) throw new Error("rendered chips contain no Arabic script")
+  if (!chipTexts.includes("G20")) throw new Error("rendered chips lost the G20 proper noun")
+  for (const raw of ["Saudi Arabia", "UN", "climate"]) {
+    if (chipTexts.includes(raw)) throw new Error("raw suggestion literal survived: " + raw)
+  }
+  console.log("UI99-C8 rendered chip texts: " + JSON.stringify(chipTexts))
+  console.log("UI99-C8 ar search chips: PASS")
+} finally {
+  await server.close()
+}
+'
 ```
 
-The external harness gate owns the credentialed rendered execution. The selected test drives
-`/search?lng=ar`, settles hydration, asserts the landed locale, reads the four rendered buttons,
-requires Arabic script, permits `G20`, and rejects the three non-allowlisted source literals.
+The direct `pw-run-reaped` path was attempted first, but this worker sandbox denies local socket
+listeners with `EPERM`; its withheld zero-test report was not counted as evidence. This typed
+command is the task-owned rendered oracle permitted by the anchored review: it performs a real
+render without a server or credential dependency, while the credentialed UI99-C8 browser row
+remains the full-suite integration check.
 
 ## Locale Parity and Type Safety
 
