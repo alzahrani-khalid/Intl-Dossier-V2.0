@@ -341,7 +341,7 @@ export function CalendarEmptyWizard({
                     size="icon"
                     onClick={onDismiss}
                     className="h-9 w-9"
-                    aria-label={t('common:common.close')}
+                    aria-label={t('common:close')}
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -441,7 +441,7 @@ export function CalendarEmptyWizard({
                     size="icon"
                     onClick={onDismiss}
                     className="h-9 w-9"
-                    aria-label={t('common:common.close')}
+                    aria-label={t('common:close')}
                   >
                     <X className="h-4 w-4" />
                   </Button>

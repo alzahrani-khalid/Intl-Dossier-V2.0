@@ -225,7 +225,7 @@ function AIUsageDashboard() {
               size="icon"
               onClick={() => refetch()}
               disabled={isRefetching}
-              aria-label={t('common:common.actions.refresh', { defaultValue: 'Refresh' })}
+              aria-label={t('common:actions.refresh', { defaultValue: 'Refresh' })}
             >
               <RefreshCw className={cn('h-4 w-4', isRefetching && 'animate-spin')} />
             </Button>

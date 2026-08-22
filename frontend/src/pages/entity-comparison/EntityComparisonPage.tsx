@@ -171,7 +171,7 @@ export const EntityComparisonPage = memo(function EntityComparisonPage({
                 size="icon"
                 onClick={handleBack}
                 className="flex-shrink-0"
-                aria-label={t('common:common.back')}
+                aria-label={t('common:back')}
               >
                 <ArrowLeft className={cn('h-5 w-5', isRTL && 'rotate-180')} />
               </Button>

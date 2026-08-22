@@ -551,7 +551,7 @@ export function IntelligencePage() {
                       size="sm"
                       onClick={() => setFilterConfidence('all')}
                     >
-                      {t('common.all')}
+                      {t('common:all')}
                     </Button>
                     {confidenceLevels.map((level) => (
                       <Button
@@ -573,7 +573,7 @@ export function IntelligencePage() {
                       size="sm"
                       onClick={() => setFilterClassification('all')}
                     >
-                      {t('common.all')}
+                      {t('common:all')}
                     </Button>
                     {classifications.map((cls) => (
                       <Button
@@ -594,7 +594,7 @@ export function IntelligencePage() {
           <Card>
             <CardContent className="p-0">
               {isLoading ? (
-                <div className="p-8 text-center">{t('common.loading')}</div>
+                <div className="p-8 text-center">{t('common:loading')}</div>
               ) : reports && reports.length > 0 ? (
                 <DataTable
                   data={reports}
@@ -604,7 +604,7 @@ export function IntelligencePage() {
                   }}
                 />
               ) : (
-                <div className="p-8 text-center text-muted-foreground">{t('common.noData')}</div>
+                <div className="p-8 text-center text-muted-foreground">{t('common:noData')}</div>
               )}
             </CardContent>
           </Card>

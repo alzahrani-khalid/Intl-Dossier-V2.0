@@ -17,12 +17,12 @@ function NotFoundComponent() {
         </div>
 
         <h1 className="text-xl font-semibold text-foreground sm:text-2xl md:text-3xl">
-          {t('common.notFound.title', 'Page Not Found')}
+          {t('common:notFound.title', 'Page Not Found')}
         </h1>
 
         <p className="mt-3 text-sm text-muted-foreground sm:mt-4 sm:text-base">
           {t(
-            'common.notFound.message',
+            'common:notFound.message',
             'The page you are looking for does not exist or has been moved.',
           )}
         </p>
@@ -33,7 +33,7 @@ function NotFoundComponent() {
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 sm:px-6 sm:py-3"
           >
             <Home className={`size-4 ${isRTL ? 'rotate-0' : ''}`} />
-            {t('common.notFound.goHome', 'Go to Home')}
+            {t('common:notFound.goHome', 'Go to Home')}
           </Link>
 
           <button
@@ -42,7 +42,7 @@ function NotFoundComponent() {
             className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted sm:px-6 sm:py-3"
           >
             <ArrowLeft className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
-            {t('common.notFound.goBack', 'Go Back')}
+            {t('common:notFound.goBack', 'Go Back')}
           </button>
         </div>
       </div>

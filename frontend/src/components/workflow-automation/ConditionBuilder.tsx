@@ -226,7 +226,7 @@ export function ConditionBuilder({
                   size="icon"
                   onClick={() => removeCondition(index)}
                   className="shrink-0 text-destructive hover:text-destructive"
-                  aria-label={t('common:common.actions.remove')}
+                  aria-label={t('common:actions.remove')}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

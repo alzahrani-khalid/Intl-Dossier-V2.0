@@ -278,7 +278,7 @@ function AdminApprovalsPage() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsReassignDialogOpen(false)}>
-              {t('translation:common.cancel', 'Cancel')}
+              {t('common:cancel', 'Cancel')}
             </Button>
             <Button
               onClick={handleReassignSubmit}

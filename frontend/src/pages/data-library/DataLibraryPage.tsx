@@ -295,8 +295,8 @@ export function DataLibraryPage() {
                       <span className="text-sm font-medium">{progress.fileName}</span>
                       <span className="text-sm text-muted-foreground">
                         {progress.status === 'uploading' && t('dataLibrary.uploading')}
-                        {progress.status === 'completed' && t('common.completed')}
-                        {progress.status === 'error' && t('common.error')}
+                        {progress.status === 'completed' && t('common:completed')}
+                        {progress.status === 'error' && t('common:error.label')}
                       </span>
                     </div>
                     {progress.status === 'uploading' ? (
@@ -346,7 +346,7 @@ export function DataLibraryPage() {
       {/* Filters */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>{t('common.filter')}</CardTitle>
+          <CardTitle>{t('common:filter')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -371,7 +371,7 @@ export function DataLibraryPage() {
                   size="sm"
                   onClick={() => setFilterCategory(cat)}
                 >
-                  {cat === 'all' ? t('common.all') : t(`dataLibrary.categories.${cat}`)}
+                  {cat === 'all' ? t('common:all') : t(`dataLibrary.categories.${cat}`)}
                 </Button>
               ))}
             </div>
@@ -404,7 +404,7 @@ export function DataLibraryPage() {
       {/* Files Grid */}
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
         {isLoading ? (
-          <div className="col-span-full text-center py-8">{t('common.loading')}</div>
+          <div className="col-span-full text-center py-8">{t('common:loading')}</div>
         ) : items && items.length > 0 ? (
           items.map((item) => (
             <Card key={item.id} className="hover:border-accent transition-colors">
@@ -455,7 +455,7 @@ export function DataLibraryPage() {
           ))
         ) : (
           <div className="col-span-full text-center py-8 text-muted-foreground">
-            {t('common.noData')}
+            {t('common:noData')}
           </div>
         )}
       </div>

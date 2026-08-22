@@ -139,7 +139,7 @@ export function SLAAtRiskList({
                           variant="ghost"
                           size="icon"
                           className="shrink-0"
-                          aria-label={t('common:common.view')}
+                          aria-label={t('common:view')}
                         >
                           <ExternalLink className="h-4 w-4" />
                         </Button>

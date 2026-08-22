@@ -245,7 +245,7 @@ export function HeroUIModalClose({ children, className }: HeroUIModalCloseProps)
       isIconOnly
       variant="ghost"
       size="sm"
-      aria-label={t('common.actions.closeDialog')}
+      aria-label={t('common:actions.closeDialog')}
       className={cn(
         'absolute end-4 top-4 rounded-sm opacity-70',
         'hover:opacity-100 transition-opacity',
@@ -253,7 +253,7 @@ export function HeroUIModalClose({ children, className }: HeroUIModalCloseProps)
       )}
     >
       <X className="h-4 w-4" />
-      <span className="sr-only">{t('common.actions.closeDialog')}</span>
+      <span className="sr-only">{t('common:actions.closeDialog')}</span>
     </Button>
   )
 }

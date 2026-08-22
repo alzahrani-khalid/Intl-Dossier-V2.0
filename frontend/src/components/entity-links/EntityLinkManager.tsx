@@ -301,7 +301,7 @@ export function EntityLinkManager({
           {/* Loading state */}
           {isLoading && (
             <div className="flex items-center justify-center py-8 sm:py-12">
-              <div className="animate-pulse text-ink-mute">{t('common.loading')}</div>
+              <div className="animate-pulse text-ink-mute">{t('common:loading')}</div>
             </div>
           )}
 
@@ -330,7 +330,7 @@ export function EntityLinkManager({
           {/* Loading state */}
           {isLoading && (
             <div className="flex items-center justify-center py-8 sm:py-12">
-              <div className="animate-pulse text-ink-mute">{t('common.loading')}</div>
+              <div className="animate-pulse text-ink-mute">{t('common:loading')}</div>
             </div>
           )}
 

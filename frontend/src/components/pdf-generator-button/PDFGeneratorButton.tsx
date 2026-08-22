@@ -198,7 +198,7 @@ export function PDFGeneratorButton({
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="both" id="lang-both" />
                   <Label htmlFor="lang-both" className="cursor-pointer font-normal">
-                    {t('afterActions.pdf.both')} {t('common.recommended')}
+                    {t('afterActions.pdf.both')} {t('common:recommended')}
                   </Label>
                 </div>
               </RadioGroup>
@@ -262,7 +262,7 @@ export function PDFGeneratorButton({
                 {t('afterActions.pdf.download')}
               </Button>
               <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
-                {t('common.close')}
+                {t('common:close')}
               </Button>
             </>
           ) : (
@@ -290,7 +290,7 @@ export function PDFGeneratorButton({
                 onClick={() => handleOpenChange(false)}
                 disabled={status === 'generating' || status === 'verifying'}
               >
-                {t('common.cancel')}
+                {t('common:cancel')}
               </Button>
             </>
           )}

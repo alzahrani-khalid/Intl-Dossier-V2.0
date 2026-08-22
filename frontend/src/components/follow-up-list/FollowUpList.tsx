@@ -91,8 +91,8 @@ export function FollowUpList({ followUpActions, onChange, readOnly = false }: Fo
                   onConfirm={() => removeFollowUp(index)}
                   title={t('afterActions.followUps.delete')}
                   description={t('afterActions.followUps.deleteConfirm')}
-                  confirmLabel={t('common.delete')}
-                  cancelLabel={t('common.cancel')}
+                  confirmLabel={t('common:delete')}
+                  cancelLabel={t('common:cancel')}
                 />
               )}
             </div>
@@ -119,7 +119,7 @@ export function FollowUpList({ followUpActions, onChange, readOnly = false }: Fo
               <div>
                 <Label htmlFor={`followup-assigned-${index}`}>
                   {t('afterActions.followUps.assignedTo')}
-                  <span className="ms-1 text-xs text-muted-foreground">{t('common.optional')}</span>
+                  <span className="ms-1 text-xs text-muted-foreground">{t('common:optional')}</span>
                 </Label>
                 <Input
                   id={`followup-assigned-${index}`}
@@ -134,7 +134,7 @@ export function FollowUpList({ followUpActions, onChange, readOnly = false }: Fo
               <div>
                 <Label>
                   {t('afterActions.followUps.targetDate')}
-                  <span className="ms-1 text-xs text-muted-foreground">{t('common.optional')}</span>
+                  <span className="ms-1 text-xs text-muted-foreground">{t('common:optional')}</span>
                 </Label>
                 <Popover>
                   <PopoverTrigger asChild>

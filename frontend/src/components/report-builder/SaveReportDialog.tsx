@@ -274,7 +274,7 @@ export function SaveReportDialog({
               <Button
                 type="submit"
                 disabled
-                title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
+                title={t('common:notYetAvailable', { defaultValue: 'Not yet available' })}
               >
                 {isSaving && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
                 {existingReport ? t('save.updateButton') : t('save.saveButton')}

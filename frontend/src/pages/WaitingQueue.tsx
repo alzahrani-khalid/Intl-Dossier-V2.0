@@ -443,7 +443,7 @@ function WaitingQueuePageInner() {
           {/* Tabs Navigation */}
           <TabsList className="grid h-auto w-full grid-cols-2 gap-1 p-1 sm:grid-cols-5">
             <TabsTrigger value="all" className="min-h-9 text-xs sm:text-sm">
-              {t('common.all', 'All')} ({items?.length || 0})
+              {t('common:all', 'All')} ({items?.length || 0})
             </TabsTrigger>
             <TabsTrigger value="dossier" className="min-h-9 text-xs sm:text-sm">
               {t('waiting.dossiers', 'Dossiers')} ({groupedCounts['dossier'] || 0})

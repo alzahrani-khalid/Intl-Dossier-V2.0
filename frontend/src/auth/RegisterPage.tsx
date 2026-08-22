@@ -78,7 +78,7 @@ export function RegisterPage(): React.JSX.Element {
             <div className="mb-4 inline-flex size-14 items-center justify-center rounded-full bg-accent-soft">
               <Globe className="size-7 text-accent" aria-hidden="true" />
             </div>
-            <h1 className="text-xl font-semibold text-ink">{t('common.appTitle')}</h1>
+            <h1 className="text-xl font-semibold text-ink">{t('common:appTitle')}</h1>
             <p className="mt-1 text-sm text-ink-mute">{t('auth.createAccount')}</p>
           </div>
 
@@ -185,7 +185,7 @@ export function RegisterPage(): React.JSX.Element {
               {isLoading ? (
                 <span className="flex items-center justify-center">
                   <Loader2 className="me-2 size-4 animate-spin" aria-hidden="true" />
-                  {t('common.loading')}
+                  {t('common:loading')}
                 </span>
               ) : (
                 t('auth.signUp')

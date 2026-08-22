@@ -264,7 +264,7 @@ export function EntitySearchDialog({
                     isRTL ? 'start-1' : 'end-1',
                   )}
                   onClick={() => setQuery('')}
-                  aria-label={t('common.clear')}
+                  aria-label={t('common:clear')}
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -290,7 +290,7 @@ export function EntitySearchDialog({
                   className="h-7 px-2 text-xs"
                   onClick={clearFilters}
                 >
-                  {t('common.clearFilters')}
+                  {t('common:clearFilters')}
                 </Button>
               )}
             </div>
@@ -333,7 +333,7 @@ export function EntitySearchDialog({
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="h-8 w-8 animate-spin text-ink-faint" />
                   <span className={cn('text-sm text-ink-mute', isRTL ? 'me-3' : 'ms-3')}>
-                    {t('common.loading')}
+                    {t('common:loading')}
                   </span>
                 </div>
               )}

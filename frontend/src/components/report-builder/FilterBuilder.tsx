@@ -200,7 +200,7 @@ function FilterRow({ filter, fields, isRTL, onUpdate, onRemove }: FilterRowProps
         size="icon"
         className="h-10 w-10 text-destructive hover:text-destructive flex-shrink-0"
         onClick={onRemove}
-        aria-label={t('common:common.actions.remove')}
+        aria-label={t('common:actions.remove')}
       >
         <X className="h-4 w-4" />
       </Button>

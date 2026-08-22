@@ -59,7 +59,7 @@ export function ReportsPage() {
           type: 'select',
           label: t('reports.parameters.country'),
           options: [
-            { value: 'all', label: t('common.all') },
+            { value: 'all', label: t('common:all') },
             { value: 'sa', label: t('reports.parameters.countries.sa') },
             { value: 'ae', label: t('reports.parameters.countries.ae') },
             { value: 'eg', label: t('reports.parameters.countries.eg') },
@@ -94,8 +94,8 @@ export function ReportsPage() {
           type: 'select',
           label: t('reports.parameters.includeExpiring'),
           options: [
-            { value: 'yes', label: t('common.yes') },
-            { value: 'no', label: t('common.no') },
+            { value: 'yes', label: t('common:yes') },
+            { value: 'no', label: t('common:no') },
           ],
         },
       ],
@@ -131,7 +131,7 @@ export function ReportsPage() {
           type: 'select',
           label: t('reports.parameters.confidenceLevel'),
           options: [
-            { value: 'all', label: t('common.all') },
+            { value: 'all', label: t('common:all') },
             { value: 'high', label: t('intelligence.confidenceLevels.high') },
             { value: 'verified', label: t('intelligence.confidenceLevels.verified') },
           ],
@@ -159,7 +159,7 @@ export function ReportsPage() {
           type: 'select',
           label: t('reports.parameters.organization'),
           options: [
-            { value: 'all', label: t('common.all') },
+            { value: 'all', label: t('common:all') },
             { value: 'gov', label: t('organizations.types.government') },
             { value: 'ngo', label: t('organizations.types.ngo') },
             { value: 'private', label: t('organizations.types.private') },
@@ -333,7 +333,7 @@ export function ReportsPage() {
                           }
                           className="mt-2 w-full rounded-md border border-input bg-background px-3 py-2"
                         >
-                          <option value="">{t('common.select')}</option>
+                          <option value="">{t('common:select')}</option>
                           {param.options?.map((opt) => (
                             <option key={opt.value} value={opt.value}>
                               {opt.label}

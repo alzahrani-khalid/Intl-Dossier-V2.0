@@ -121,7 +121,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
         onClick={() => onOpenChange(false)}
         className="min-h-11 w-full sm:w-auto sm:min-w-[100px]"
       >
-        {t('common.cancel', 'Cancel')}
+        {t('common:cancel', 'Cancel')}
       </Button>
       <Button
         type="submit"
@@ -130,7 +130,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
         className="min-h-11 w-full sm:w-auto sm:min-w-[100px]"
       >
         {updateTask.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
-        {t('common.save', 'Save')}
+        {t('common:save', 'Save')}
       </Button>
     </>
   )

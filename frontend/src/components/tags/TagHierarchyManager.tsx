@@ -376,7 +376,7 @@ export function TagHierarchyManager({
               <ChevronRight className={cn('size-4', isRTL && 'rotate-180')} />
             )}
             <span className="sr-only">
-              {t('common:common.actions.toggleSection', { defaultValue: 'Toggle section' })}
+              {t('common:actions.toggleSection', { defaultValue: 'Toggle section' })}
             </span>
           </button>
 
@@ -418,7 +418,7 @@ export function TagHierarchyManager({
                 >
                   <MoreVertical className="size-4" />
                   <span className="sr-only">
-                    {t('common:common.actions.openMenu', { defaultValue: 'Open menu' })}
+                    {t('common:actions.openMenu', { defaultValue: 'Open menu' })}
                   </span>
                 </Button>
               </DropdownMenuTrigger>
@@ -780,7 +780,7 @@ export function TagHierarchyManager({
             <Button
               onClick={handleMergeTags}
               disabled
-              title={t('common:common.notYetAvailable', { defaultValue: 'Not yet available' })}
+              title={t('common:notYetAvailable', { defaultValue: 'Not yet available' })}
             >
               {mergeTags.isPending && <RefreshCw className="size-4 me-2 animate-spin" />}
               {t('merge.confirm')}

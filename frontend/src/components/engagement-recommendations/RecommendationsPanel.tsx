@@ -193,7 +193,7 @@ export function RecommendationsPanel({
               className="h-8 w-8"
               onClick={handleRefresh}
               disabled={isLoading}
-              aria-label={t('common:common.actions.refresh', { defaultValue: 'Refresh' })}
+              aria-label={t('common:actions.refresh', { defaultValue: 'Refresh' })}
             >
               <RefreshCw className={cn('h-4 w-4', isLoading && 'animate-spin')} />
             </Button>
@@ -203,7 +203,7 @@ export function RecommendationsPanel({
               className="h-8 w-8"
               onClick={handleGenerate}
               disabled={generateMutation.isPending}
-              aria-label={t('common:common.actions.generate', { defaultValue: 'Generate' })}
+              aria-label={t('common:actions.generate', { defaultValue: 'Generate' })}
             >
               {generateMutation.isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />

@@ -398,7 +398,7 @@ function ProposalCard({
             className="h-8 w-8 text-success hover:text-success hover:bg-success/10"
             onClick={onApprove}
             disabled={isApproving || isRejecting}
-            aria-label={t('common:common.actions.approve', { defaultValue: 'Approve' })}
+            aria-label={t('common:actions.approve', { defaultValue: 'Approve' })}
           >
             {isApproving ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -412,7 +412,7 @@ function ProposalCard({
             className="h-8 w-8 text-danger hover:text-danger hover:bg-danger/10"
             onClick={onReject}
             disabled={isApproving || isRejecting}
-            aria-label={t('common:common.actions.reject', { defaultValue: 'Reject' })}
+            aria-label={t('common:actions.reject', { defaultValue: 'Reject' })}
           >
             {isRejecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
           </Button>
@@ -477,7 +477,7 @@ function LinkCard({ link, onDelete, onClick, isDeleting }: LinkCardProps) {
           onDelete()
         }}
         disabled={isDeleting}
-        aria-label={t('common:common.delete')}
+        aria-label={t('common:delete')}
       >
         {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
       </Button>
