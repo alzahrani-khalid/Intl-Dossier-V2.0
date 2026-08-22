@@ -112,7 +112,6 @@
   "saveLayout": "Save Layout",
   "layoutSaved": "Layout saved successfully",
   "layoutReset": "Layout reset to default",
-
   "widgetLibrary": {
     "title": "Widget Library",
     "description": "Drag widgets to add them to your dashboard",
@@ -125,7 +124,6 @@
       "other": "Other"
     }
   },
-
   "widgetTypes": {
     "kpi-card": {
       "name": "KPI Card",
@@ -160,7 +158,6 @@
       "description": "Overview of key statistics"
     }
   },
-
   "metrics": {
     "active-dossiers": "Active Dossiers",
     "pending-tasks": "Pending Tasks",
@@ -172,7 +169,6 @@
     "sla-compliance": "SLA Compliance",
     "custom": "Custom Metric"
   },
-
   "chartTypes": {
     "line": "Line Chart",
     "bar": "Bar Chart",
@@ -181,7 +177,6 @@
     "area": "Area Chart",
     "sparkline": "Sparkline"
   },
-
   "dataSources": {
     "work-items-by-status": "Work Items by Status",
     "work-items-by-source": "Work Items by Source",
@@ -192,7 +187,6 @@
     "team-workload": "Team Workload",
     "custom": "Custom Data Source"
   },
-
   "eventTypes": {
     "meeting": "Meeting",
     "deadline": "Deadline",
@@ -201,26 +195,22 @@
     "mou-renewal": "MOU Renewal",
     "all": "All Events"
   },
-
   "settings": {
     "title": "Widget Settings",
     "general": "General",
     "appearance": "Appearance",
     "data": "Data",
     "refresh": "Refresh",
-
     "widgetTitle": "Widget Title",
     "widgetSize": "Widget Size",
     "refreshInterval": "Refresh Interval",
     "autoRefresh": "Auto Refresh",
-
     "sizes": {
       "small": "Small (1x1)",
       "medium": "Medium (2x1)",
       "large": "Large (3x2)",
       "full": "Full Width (4x2)"
     },
-
     "intervals": {
       "never": "Never",
       "30s": "30 seconds",
@@ -229,7 +219,6 @@
       "10m": "10 minutes",
       "30m": "30 minutes"
     },
-
     "kpi": {
       "metric": "Metric",
       "showTrend": "Show Trend",
@@ -237,7 +226,6 @@
       "targetValue": "Target Value",
       "comparisonPeriod": "Comparison Period"
     },
-
     "chart": {
       "chartType": "Chart Type",
       "dataSource": "Data Source",
@@ -245,14 +233,12 @@
       "showGrid": "Show Grid Lines",
       "dateRange": "Date Range"
     },
-
     "events": {
       "maxItems": "Maximum Items",
       "showPastEvents": "Show Past Events",
       "eventTypes": "Event Types",
       "dateRange": "Date Range"
     },
-
     "tasks": {
       "maxItems": "Maximum Items",
       "showCompleted": "Show Completed",
@@ -260,20 +246,17 @@
       "sortBy": "Sort By",
       "filterSource": "Filter by Source"
     },
-
     "notifications": {
       "maxItems": "Maximum Items",
       "showRead": "Show Read",
       "categories": "Categories"
     },
-
     "activity": {
       "maxItems": "Maximum Items",
       "activityTypes": "Activity Types",
       "showTimestamps": "Show Timestamps"
     }
   },
-
   "periods": {
     "day": "Day",
     "week": "Week",
@@ -282,27 +265,23 @@
     "year": "Year",
     "today": "Today"
   },
-
   "groupBy": {
     "none": "None",
     "source": "Source",
     "priority": "Priority",
     "status": "Status"
   },
-
   "sortBy": {
     "deadline": "Deadline",
     "priority": "Priority",
     "created_at": "Created Date"
   },
-
   "sources": {
     "commitment": "Commitment",
     "task": "Task",
     "intake": "Intake",
     "all": "All Sources"
   },
-
   "notificationCategories": {
     "task-assigned": "Task Assigned",
     "deadline-approaching": "Deadline Approaching",
@@ -311,7 +290,6 @@
     "system": "System",
     "all": "All Categories"
   },
-
   "activityTypes": {
     "created": "Created",
     "updated": "Updated",
@@ -321,7 +299,6 @@
     "status-change": "Status Changed",
     "all": "All Activities"
   },
-
   "quickActions": {
     "createDossier": "Create Dossier",
     "createTask": "Create Task",
@@ -330,7 +307,6 @@
     "viewCalendar": "View Calendar",
     "viewReports": "View Reports"
   },
-
   "emptyStates": {
     "noWidgets": "No widgets added yet",
     "addWidgetHint": "Click 'Add Widget' to customize your dashboard",
@@ -340,7 +316,6 @@
     "noNotifications": "No notifications",
     "noActivity": "No recent activity"
   },
-
   "trends": {
     "up": "Up",
     "down": "Down",
@@ -349,34 +324,31 @@
     "decrease": "decrease",
     "fromLastPeriod": "from last {{period}}"
   },
-
   "actions": {
     "viewAll": "View all VIP visits",
     "refresh": "Refresh",
     "expand": "Expand",
     "collapse": "Collapse",
     "duplicate": "Duplicate",
-    "delete": "Delete"
+    "delete": "Delete",
+    "added": "Added",
+    "cancel": "Cancel"
   },
-
   "confirmations": {
     "deleteWidget": "Are you sure you want to remove this widget?",
     "resetLayout": "Are you sure you want to reset to the default layout? All customizations will be lost."
   },
-
   "errors": {
     "loadFailed": "Failed to load widget data",
     "saveFailed": "Failed to save layout",
     "configInvalid": "Invalid widget configuration"
   },
-
   "accessibility": {
     "dragHandle": "Drag to reorder widget",
     "removeButton": "Remove {{widget}} widget",
     "settingsButton": "Open {{widget}} settings",
     "widgetRegion": "{{widget}} widget area"
   },
-
   "benchmarks": {
     "title": "Teams Like Yours",
     "description": "Organizations similar to yours typically track {{dossiers}} dossiers, {{relationships}} relationships, and {{briefs}} active briefs.",

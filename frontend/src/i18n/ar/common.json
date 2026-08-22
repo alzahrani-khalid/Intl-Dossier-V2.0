@@ -35,7 +35,9 @@
     "info": "معلومات"
   },
   "validation": {
-    "required": "حقل مطلوب"
+    "required": "حقل مطلوب",
+    "maxLength": "أدخل {{max}} حرفاً كحد أقصى",
+    "minLength": "أدخل {{min}} أحرف على الأقل"
   },
   "actions": {
     "previous": "السابق",
@@ -46,7 +48,23 @@
     "closeDialog": "إغلاق الحوار",
     "toggleSection": "تبديل القسم",
     "viewMore": "عرض المزيد",
-    "remove": "إزالة"
+    "remove": "إزالة",
+    "approve": "موافقة",
+    "clearHistory": "مسح السجل",
+    "complete": "وضع علامة مكتمل",
+    "copy": "نسخ الرابط",
+    "dismiss": "تجاهل",
+    "generate": "إنشاء",
+    "more": "المزيد",
+    "moreInfo": "مزيد من المعلومات",
+    "moveUp": "تحريك لأعلى",
+    "refresh": "تحديث",
+    "reject": "رفض",
+    "test": "اختبار خطاف الويب",
+    "thumbsDown": "غير مفيد",
+    "thumbsUp": "مفيد",
+    "toggleWatch": "تبديل المتابعة",
+    "viewDetails": "عرض التفاصيل"
   },
   "appTitle": "نظام الدوسيهات الدولية للهيئة العامة للإحصاء",
   "save": "حفظ",
@@ -220,7 +238,33 @@
     "systemSettings": "إعدادات النظام",
     "fieldPermissions": "صلاحيات الحقول",
     "auditLogs": "سجلات التدقيق",
-    "dataRetention": "الاحتفاظ بالبيانات"
+    "dataRetention": "الاحتفاظ بالبيانات",
+    "archive": "الأرشيف",
+    "darkMode": "الوضع الداكن",
+    "dashboardOverview": "نظرة عامة على لوحة الدوسيهات",
+    "documents": "المستندات",
+    "executions": "عمليات التنفيذ",
+    "history": "السجل",
+    "library": "المكتبة",
+    "lightMode": "الوضع الفاتح",
+    "logout": "تسجيل الخروج",
+    "mainNav": "التنقل الرئيسي",
+    "members": "الأعضاء",
+    "new": "جديد",
+    "permissions": "الصلاحيات",
+    "primary": "التنقل الأساسي",
+    "recentlyEdited": "المعدلة مؤخراً",
+    "sharedProjects": "المشاريع المشتركة",
+    "status": "الحالة",
+    "switchToArabic": "التبديل إلى العربية",
+    "switchToEnglish": "التبديل إلى الإنجليزية",
+    "taskEscalations": "تصعيدات المهام",
+    "taskQueue": "قائمة المهام",
+    "teamReview": "مراجعة الفريق",
+    "updates": "التحديثات",
+    "userMenu": "قائمة المستخدم",
+    "workflow": "سير العمل",
+    "workflows": "مسارات العمل"
   },
   "search": {
     "title": "البحث",
@@ -239,7 +283,15 @@
       "label": "اقتراحات البحث",
       "noResults": "لا توجد اقتراحات"
     },
-    "label": "بحث"
+    "label": "بحث",
+    "clear": "مسح البحث",
+    "forCommands": "للأوامر",
+    "hint": "اضغط Enter للبحث أو",
+    "openCommandPalette": "فتح لوحة الأوامر",
+    "openSearch": "فتح البحث",
+    "quickSearch": "بحث سريع...",
+    "search": "بحث",
+    "searchLabel": "البحث في الدوسيهات والأشخاص والمواقف..."
   },
   "errors": {
     "preferenceSaveFailed": "فشل حفظ التفضيلات. التغييرات محفوظة محلياً.",
@@ -263,7 +315,28 @@
   "error": {
     "failedToLoadData": "فشل تحميل البيانات",
     "unknownError": "حدث خطأ غير معروف",
-    "label": "خطأ"
+    "label": "خطأ",
+    "boundary": {
+      "description": "حدث خطأ غير متوقع. حاول تحديث الصفحة أو العودة إلى الصفحة الرئيسية.",
+      "goHome": "الذهاب إلى الصفحة الرئيسية",
+      "technicalDetails": "التفاصيل التقنية",
+      "title": "حدث خطأ ما",
+      "tryAgain": "المحاولة مرة أخرى",
+      "unknownError": "خطأ غير معروف"
+    },
+    "query": {
+      "auth": "خطأ في المصادقة",
+      "authDescription": "قد تكون جلستك انتهت. سجل الدخول مرة أخرى.",
+      "generic": "فشل تحميل البيانات",
+      "genericDescription": "تعذر تحميل البيانات المطلوبة. حاول مرة أخرى.",
+      "network": "خطأ في الاتصال",
+      "networkDescription": "تعذر الاتصال بالخادم. تحقق من اتصالك بالإنترنت.",
+      "reload": "إعادة تحميل الصفحة",
+      "retry": "إعادة المحاولة",
+      "server": "خطأ في الخادم",
+      "serverDescription": "واجه الخادم خطأ. حاول مرة أخرى لاحقاً.",
+      "signIn": "تسجيل الدخول"
+    }
   },
   "dashboard": {
     "title": "لوحة القيادة",
@@ -943,7 +1016,23 @@
       "restoreSuccess": "تمت استعادة الإصدار بنجاح",
       "restoreFailed": "فشل استعادة الإصدار",
       "compare": "مقارنة الإصدارات",
-      "viewChanges": "عرض التغييرات"
+      "viewChanges": "عرض التغييرات",
+      "added": "تمت الإضافة",
+      "after": "بعد",
+      "before": "قبل",
+      "button": "سجل الإصدارات",
+      "changedAt": "تاريخ التعديل",
+      "changedBy": "عدله",
+      "current": "الحالي",
+      "deleted": "تم الحذف",
+      "diffDescription": "قارن التغييرات بين هذين الإصدارين.",
+      "diffTitle": "تغييرات الإصدار",
+      "loadFailed": "تعذر تحميل الإصدارات",
+      "modified": "تم التعديل",
+      "noChanges": "لا توجد تغييرات",
+      "noSummary": "لم يقدم ملخص",
+      "summary": "الملخص",
+      "viewDiff": "عرض التغييرات"
     },
     "edit": {
       "title": "تعديل ما بعد الإجراء",
@@ -967,7 +1056,8 @@
     "status": {
       "draft": "مسودة",
       "published": "منشور",
-      "edit_pending": "تعديل معلق"
+      "edit_pending": "تعديل معلق",
+      "editRequested": "تم طلب التعديل"
     },
     "list": {
       "title": "سجلات ما بعد الإجراء",
@@ -1000,7 +1090,87 @@
       "createdBy": "أنشئ بواسطة",
       "publishedBy": "نشره",
       "lastModified": "آخر تعديل"
-    }
+    },
+    "attendees": "الحضور",
+    "commitmentsCount": "{{count}} التزامات",
+    "confidence": "درجة الثقة",
+    "confidential": "سري",
+    "conflict": {
+      "reviewChanges": "مراجعة التغييرات",
+      "warning": "تم تعديل هذا السجل بواسطة مستخدم آخر. راجع التغييرات قبل الحفظ."
+    },
+    "createdAt": "تاريخ الإنشاء",
+    "decisionMaker": "صاحب القرار",
+    "decisionsCount": "{{count}} قرارات",
+    "dueDate": "تاريخ الاستحقاق",
+    "editFlow": {
+      "added": "تمت الإضافة",
+      "approvalNotes": "ملاحظات الاعتماد",
+      "approvalNotesPlaceholder": "أضف ملاحظات اعتماد اختيارية",
+      "approvalWarning": "سيطبق هذا الإجراء التغييرات المقترحة.",
+      "approve": "اعتماد",
+      "approveFailed": "تعذر اعتماد طلب التعديل",
+      "approveTitle": "اعتماد طلب التعديل",
+      "approving": "جارٍ الاعتماد...",
+      "arrayChange": "تم تغيير القائمة",
+      "confirmApprove": "تأكيد الاعتماد",
+      "confirmReject": "تأكيد الرفض",
+      "currentVersion": "الإصدار الحالي",
+      "deleted": "تم الحذف",
+      "minChars": "الحد الأدنى {{count}} أحرف",
+      "modified": "تم التعديل",
+      "noChanges": "لا توجد تغييرات",
+      "proposedChanges": "التغييرات المقترحة",
+      "proposedVersion": "الإصدار المقترح",
+      "reason": "السبب",
+      "reject": "رفض",
+      "rejectFailed": "تعذر رفض طلب التعديل",
+      "rejectTitle": "رفض طلب التعديل",
+      "rejecting": "جارٍ الرفض...",
+      "rejectionReason": "سبب الرفض",
+      "rejectionReasonPlaceholder": "وضح سبب رفض هذا الطلب",
+      "rejectionReasonTooLong": "سبب الرفض طويل جداً",
+      "rejectionReasonTooShort": "سبب الرفض قصير جداً",
+      "rejectionWarning": "سيتم إشعار مقدم الطلب بالرفض.",
+      "requestedAt": "تاريخ الطلب",
+      "requestedBy": "طلبه",
+      "title": "طلب اعتماد تعديل"
+    },
+    "editRequestFeature": "طلبات التعديل",
+    "followUpsCount": "{{count}} إجراءات متابعة",
+    "likelihood": "الاحتمالية",
+    "metadata": "البيانات الوصفية",
+    "mitigation": "التخفيف",
+    "noAttendees": "لم يسجل حضور",
+    "notes": "ملاحظات",
+    "owner": "المسؤول",
+    "pdf": {
+      "arabicOnly": "العربية فقط",
+      "both": "الإنجليزية والعربية",
+      "completed": "ملف PDF جاهز",
+      "confidentialWarning": "هذا السجل سري.",
+      "description": "أنشئ نسخة PDF من سجل ما بعد الإجراء هذا.",
+      "download": "تنزيل ملف PDF",
+      "englishOnly": "الإنجليزية فقط",
+      "estimatedTime": "الوقت المقدر: {{time}}",
+      "expiresIn": "تنتهي الصلاحية خلال {{time}}",
+      "generate": "إنشاء",
+      "generateButton": "إنشاء ملف PDF",
+      "generating": "جارٍ الإنشاء...",
+      "generationFailed": "تعذر إنشاء ملف PDF",
+      "info": "معلومات إنشاء ملف PDF",
+      "selectLanguage": "اختر اللغة",
+      "title": "إنشاء ملف PDF",
+      "verifying": "جارٍ التحقق..."
+    },
+    "publishedAt": "تاريخ النشر",
+    "rationale": "المبررات",
+    "requestEdit": "طلب تعديل",
+    "risksCount": "{{count}} مخاطر",
+    "severity": "الخطورة",
+    "updatedAt": "تاريخ التحديث",
+    "version": "الإصدار",
+    "versionHistory": "سجل الإصدارات"
   },
   "waitingQueue": {
     "title": "قائمة الانتظار",
@@ -1237,7 +1407,15 @@
       "deadline": "الموعد النهائي لاتفاقية مستوى الخدمة",
       "progress": "التقدم",
       "timeRemaining": "الوقت المتبقي"
-    }
+    },
+    "addWorkItem": "إضافة عنصر عمل",
+    "itemType": "نوع العنصر",
+    "linkWorkItems": "ربط عناصر العمل",
+    "linkWorkItemsDescription": "اختر عناصر العمل لربطها بهذه المهمة.",
+    "linkedItems": "عناصر العمل المرتبطة",
+    "noResults": "لم يتم العثور على عناصر عمل",
+    "search": "بحث",
+    "searchPlaceholder": "البحث في عناصر العمل..."
   },
   "dossierLinks": {
     "manager": "مدير روابط الدوسيهات",
@@ -1477,5 +1655,129 @@
     "error": {
       "mount": "تعذّر تحميل الفضاء. أعد التحميل للمحاولة."
     }
-  }
+  },
+  "add": "إضافة مستند",
+  "ai": {
+    "errors": {
+      "briefFetchFailed": "تم إنشاء الملخص لكن تعذر استرجاعه. حاول مرة أخرى.",
+      "cancelled": "تم إلغاء الإنشاء.",
+      "contactAdmin": "تواصل مع المسؤول لزيادة الحد",
+      "contentFiltered": "تمت تصفية الطلب بسبب سياسة المحتوى. راجع إدخالك.",
+      "contextTooLong": "الإدخال طويل جداً. اختصر طلبك.",
+      "featureDisabled": "ميزة الذكاء الاصطناعي هذه معطلة حالياً لمنظمتك.",
+      "generationFailed": "تعذر إنشاء المحتوى. حاول مرة أخرى.",
+      "loginAgain": "يرجى تسجيل الدخول مرة أخرى",
+      "modelUnavailable": "نموذج الذكاء الاصطناعي غير متاح. جرّب طلباً مختلفاً.",
+      "networkError": "خطأ في الشبكة. تحقق من اتصالك وحاول مرة أخرى.",
+      "providerUnavailable": "خدمة الذكاء الاصطناعي غير متاحة مؤقتاً. حاول مرة أخرى لاحقاً.",
+      "rateLimitExceeded": "طلبات كثيرة جداً. انتظر قليلاً ثم حاول مرة أخرى.",
+      "retryAfter": "حاول مرة أخرى خلال {{seconds}} ثانية",
+      "retryNow": "انقر لإعادة المحاولة",
+      "shortenInput": "جرّب إدخالاً أقصر",
+      "spendCapReached": "تم بلوغ حد استخدام الذكاء الاصطناعي. تواصل مع المسؤول.",
+      "timeout": "انتهت مهلة الطلب. حاول مرة أخرى.",
+      "title": "خطأ في الذكاء الاصطناعي",
+      "unauthorized": "غير مصرح لك باستخدام هذه الميزة. سجل الدخول مرة أخرى.",
+      "unknown": "حدث خطأ غير متوقع. حاول مرة أخرى."
+    }
+  },
+  "badge": {
+    "aiConfidence": "ذكاء اصطناعي {{n}}٪",
+    "aiConfidenceAria": "درجة ثقة الذكاء الاصطناعي {{n}} بالمئة",
+    "sensitivity": "الحساسية {{n}}"
+  },
+  "cardView": "عرض البطاقات",
+  "collapse": "طي",
+  "contributors": {
+    "add_failed": "تعذرت إضافة المساهم",
+    "added": "تمت إضافة المساهم",
+    "added_success": "تمت إضافة {{name}} كمساهم",
+    "remove_failed": "تعذرت إزالة المساهم",
+    "removed": "تمت إزالة المساهم",
+    "removed_success": "تمت إزالة {{name}} من المساهمين"
+  },
+  "converting": "جارٍ التحويل...",
+  "dismiss": "تجاهل",
+  "errorBoundary": {
+    "description": "حدث خطأ غير متوقع.",
+    "errorDetails": "تفاصيل الخطأ",
+    "goHome": "الانتقال إلى الرئيسية",
+    "refreshPage": "تحديث الصفحة",
+    "reportError": "الإبلاغ عن الخطأ",
+    "reportSubmitted": "تم إرسال بلاغ الخطأ",
+    "title": "حدث خطأ ما"
+  },
+  "executions": {
+    "noMembers": "لم يتم العثور على أعضاء",
+    "noPermissions": "لم يتم العثور على صلاحيات",
+    "noWorkflows": "لم يتم العثور على مسارات عمل",
+    "tryDifferentSearch": "جرّب عبارة بحث مختلفة"
+  },
+  "expand": "توسيع",
+  "firstPage": "الصفحة الأولى",
+  "form": {
+    "searchUsers": "البحث عن مستخدمين...",
+    "selectUser": "اختر مستخدماً..."
+  },
+  "forms": {
+    "add_item": "إضافة عنصر",
+    "browse_files": "تصفح الملفات",
+    "clear_all": "مسح الكل",
+    "complete": "مكتمل",
+    "discard_draft": "تجاهل المسودة",
+    "draft_found": "تم العثور على مسودة",
+    "drag_drop_or_click": "اسحب الملفات وأفلتها أو اختر للتصفح",
+    "drop_here": "أفلت الملفات هنا",
+    "drop_rejected": "تعذرت إضافة بعض الملفات",
+    "fields": "حقول",
+    "file_constraints": "قيود الملفات",
+    "files_selected": "تم اختيار {{count}} ملفات",
+    "leave_anyway": "المغادرة على أي حال",
+    "min_items": "أضف {{min}} عناصر على الأقل",
+    "progress_label": "تقدم النموذج",
+    "remove_file": "إزالة الملف",
+    "restore_draft": "استعادة المسودة",
+    "save_error": "تعذر حفظ التغييرات",
+    "saved_at": "تم الحفظ في {{time}}",
+    "saved_time_ago": "تم الحفظ {{time}}",
+    "saving": "جارٍ الحفظ...",
+    "stay": "البقاء",
+    "time_remaining": "متبقٍ {{minutes}} دقيقة",
+    "unsaved_changes": "تغييرات غير محفوظة",
+    "unsaved_changes_description": "ستفقد التغييرات غير المحفوظة.",
+    "unsaved_changes_title": "هل تريد المغادرة مع وجود تغييرات غير محفوظة؟"
+  },
+  "from": "من",
+  "goBack": "رجوع",
+  "graph": {
+    "fetchError": "تعذر تحميل بيانات الرسم البياني"
+  },
+  "lastPage": "الصفحة الأخيرة",
+  "loadMore": "تحميل المزيد",
+  "manage": "إدارة",
+  "metrics": {
+    "activeProjects": "المشاريع النشطة",
+    "executions": "عمليات التنفيذ",
+    "teamMembers": "أعضاء الفريق"
+  },
+  "more": "المزيد",
+  "nextPage": "الصفحة التالية",
+  "noResults": "لم يتم العثور على نتائج.",
+  "offline": {
+    "description": "ستتم مزامنة التغييرات عند عودة الاتصال.",
+    "queuedActions": "{{count}} إجراءات في قائمة الانتظار",
+    "retrySync": "إعادة محاولة المزامنة",
+    "title": "أنت غير متصل"
+  },
+  "previousPage": "الصفحة السابقة",
+  "required": "مطلوب",
+  "seeReport": "عرض التقرير",
+  "showLess": "عرض أقل",
+  "showMore": "عرض المزيد",
+  "success": "نجاح",
+  "tableView": "عرض الجدول",
+  "to": "إلى",
+  "toggleColumns": "إظهار أو إخفاء الأعمدة",
+  "unknown": "غير معروف",
+  "viewAll": "عرض الكل"
 }

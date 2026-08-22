@@ -26,7 +26,13 @@
       "errors": "Errors",
       "viewErrors": "View error details",
       "tip1": "This operation is safe to run multiple times - it will update existing countries.",
-      "tip2": "Run this annually to keep population and area data up to date."
+      "tip2": "Run this annually to keep population and area data up to date.",
+      "countries": "countries",
+      "failed": "Failed",
+      "inProgress": "Operation in progress...",
+      "pending": "Pending",
+      "processed": "Processed",
+      "successful": "Successful"
     }
   },
   "approvals": {

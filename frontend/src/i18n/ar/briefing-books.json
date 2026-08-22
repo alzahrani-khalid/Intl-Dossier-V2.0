@@ -234,7 +234,8 @@
       "failed": "فشل"
     },
     "pageCount_one": "صفحة {{count}}",
-    "pageCount_other": "{{count}} صفحات"
+    "pageCount_other": "{{count}} صفحات",
+    "pageCount": "{{count}} صفحات"
   },
   "topics": {
     "statistics": "الإحصاءات",

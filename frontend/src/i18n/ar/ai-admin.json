@@ -31,7 +31,9 @@
     "avgTokensPerRun": "متوسط الرموز/عملية",
     "costBreakdown": "ملخص التكلفة",
     "avgCostPerRun": "متوسط التكلفة/عملية",
-    "projectedMonthly": "التكلفة الشهرية المتوقعة"
+    "projectedMonthly": "التكلفة الشهرية المتوقعة",
+    "successRate": "معدل النجاح",
+    "totalCost": "إجمالي التكلفة"
   },
   "settings": {
     "title": "إعدادات الذكاء الاصطناعي",

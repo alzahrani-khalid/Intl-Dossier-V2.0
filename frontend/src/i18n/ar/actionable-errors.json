@@ -5,20 +5,19 @@
     "title_other": "يرجى إصلاح {{count}} أخطاء قبل المتابعة",
     "description": "انقر على كل خطأ لإصلاحه أو استخدم أزرار الإصلاح السريع"
   },
-  "fixAll": "إصلاح الكل ({{count}})",
-  "fixAll.short": "إصلاح الكل",
+  "fixAll": {
+    "short": "إصلاح الكل"
+  },
   "showMore": "عرض {{count}} خطأ/أخطاء إضافية",
   "showLess": "عرض أقل",
   "allFixed": "تم إصلاح جميع الأخطاء.",
   "fix": "إصلاح",
   "dismiss": "تجاهل",
-
   "warnings": {
     "count": "تم اكتشاف {{count}} تحذير/تحذيرات",
     "count_one": "تم اكتشاف تحذير واحد",
     "count_other": "تم اكتشاف {{count}} تحذيرات"
   },
-
   "actions": {
     "focusField": "انتقل إلى الحقل",
     "fillRequired": "املأ هذا الحقل",
@@ -35,7 +34,6 @@
     "copySuggestion": "نسخ الاقتراح",
     "learnMore": "تعرف على المزيد"
   },
-
   "fields": {
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
@@ -55,7 +53,6 @@
     "country": "البلد",
     "zipCode": "الرمز البريدي"
   },
-
   "api": {
     "fieldError": "خطأ في التحقق من الحقل",
     "status": {
@@ -73,7 +70,6 @@
       "504": "انتهت مهلة البوابة"
     }
   },
-
   "contextual": {
     "email": {
       "missingAt": {
@@ -126,11 +122,16 @@
       "message": "احذف {{excess}} حرف/أحرف أو استخدم زر الاقتطاع"
     }
   },
-
   "toast": {
     "errorFixed": "تم إصلاح الخطأ",
     "allErrorsFixed": "تم إصلاح جميع الأخطاء",
     "valueCopied": "تم نسخ القيمة إلى الحافظة",
     "actionFailed": "فشل الإجراء. يرجى المحاولة مرة أخرى."
-  }
+  },
+  "fixAll_zero": "إصلاح الكل ({{count}})",
+  "fixAll_one": "إصلاح الكل ({{count}})",
+  "fixAll_two": "إصلاح الكل ({{count}})",
+  "fixAll_few": "إصلاح الكل ({{count}})",
+  "fixAll_many": "إصلاح الكل ({{count}})",
+  "fixAll_other": "إصلاح الكل ({{count}})"
 }

@@ -91,5 +91,8 @@
     "descriptionAr": "Description (Arabic)",
     "save": "Save Forum",
     "cancel": "Cancel"
-  }
+  },
+  "editDescription": "Update forum dossier details.",
+  "editFailed": "Failed to update forum",
+  "editSuccess": "Forum updated successfully"
 }

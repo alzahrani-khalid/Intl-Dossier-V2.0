@@ -5,20 +5,19 @@
     "title_other": "Please fix {{count}} errors before continuing",
     "description": "Click on each error to fix it or use the quick fix buttons"
   },
-  "fixAll": "Fix all ({{count}})",
-  "fixAll.short": "Fix all",
+  "fixAll": {
+    "short": "Fix all"
+  },
   "showMore": "Show {{count}} more error(s)",
   "showLess": "Show less",
   "allFixed": "All errors have been fixed.",
   "fix": "Fix",
   "dismiss": "Dismiss",
-
   "warnings": {
     "count": "{{count}} warning(s) detected",
     "count_one": "1 warning detected",
     "count_other": "{{count}} warnings detected"
   },
-
   "actions": {
     "focusField": "Go to field",
     "fillRequired": "Fill this field",
@@ -35,7 +34,6 @@
     "copySuggestion": "Copy suggestion",
     "learnMore": "Learn more"
   },
-
   "fields": {
     "email": "Email",
     "password": "Password",
@@ -55,7 +53,6 @@
     "country": "Country",
     "zipCode": "Zip code"
   },
-
   "api": {
     "fieldError": "Field validation error",
     "status": {
@@ -73,7 +70,6 @@
       "504": "Gateway timeout"
     }
   },
-
   "contextual": {
     "email": {
       "missingAt": {
@@ -126,11 +122,16 @@
       "message": "Remove {{excess}} character(s) or use the trim button"
     }
   },
-
   "toast": {
     "errorFixed": "Error fixed",
     "allErrorsFixed": "All errors have been fixed",
     "valueCopied": "Value copied to clipboard",
     "actionFailed": "Action failed. Please try again."
-  }
+  },
+  "fixAll_zero": "Fix all ({{count}})",
+  "fixAll_one": "Fix all ({{count}})",
+  "fixAll_two": "Fix all ({{count}})",
+  "fixAll_few": "Fix all ({{count}})",
+  "fixAll_many": "Fix all ({{count}})",
+  "fixAll_other": "Fix all ({{count}})"
 }
