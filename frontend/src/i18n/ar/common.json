@@ -511,7 +511,13 @@
     },
     "analysisType": "نوع التحليل",
     "confidence": "الثقة",
-    "classification": "التصنيف",
+    "classification": {
+      "label": "التصنيف",
+      "public": "عام",
+      "internal": "داخلي",
+      "confidential": "سري",
+      "restricted": "محظور"
+    },
     "keyFindings": "النتائج الرئيسية",
     "findings": "نتائج",
     "status": "الحالة",
@@ -744,8 +750,11 @@
       "related": "ذو صلة",
       "requested": "مطلوب"
     },
+    "lastUsed": "آخر استخدام:",
+    "level": "المستوى:",
     "loadError": "تعذّر تحميل الروابط.",
     "manager": "السجلات المرتبطة",
+    "match": "التطابق:",
     "noDeletedLinks": "لا توجد روابط مُزالة.",
     "noLinks": "لا توجد سجلات مرتبطة بعد.",
     "noResults": "لا توجد سجلات مطابقة لهذا البحث.",
@@ -776,6 +785,20 @@
     "tip2": "التحقق من الإملاء",
     "tip3": "مسح عوامل التصفية للبحث في كل الأنواع",
     "title": "السجلات المرتبطة"
+  },
+  "entityTypes": {
+    "dossier": "دوسيه",
+    "country": "دولة",
+    "organization": "منظمة",
+    "person": "شخص",
+    "engagement": "ارتباط",
+    "position": "موقف",
+    "forum": "منتدى",
+    "working_group": "مجموعة عمل",
+    "topic": "موضوع"
+  },
+  "monitoring": {
+    "overall": "الحالة العامة:"
   },
   "engagements": {
     "title": "دوسيهات الارتباط",

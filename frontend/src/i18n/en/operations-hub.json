@@ -55,6 +55,14 @@
     "stalled": "Stalled",
     "stalled_detail": "{{days}} days in {{stage}}"
   },
+  "stages": {
+    "intake": "Intake",
+    "preparation": "Preparation",
+    "briefing": "Briefing",
+    "execution": "Execution",
+    "follow_up": "Follow-up",
+    "closed": "Closed"
+  },
   "kpi": {
     "totalDossiers": "Total Dossiers",
     "activeEngagements": "Active Engagements",
