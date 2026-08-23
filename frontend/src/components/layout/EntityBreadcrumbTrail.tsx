@@ -122,7 +122,7 @@ function EntityBreadcrumbItem({ entry, isRTL, isActive, onRemove, t }: EntityBre
             <div className="text-sm">
               <p className="font-medium">{displayName}</p>
               <p className="text-xs text-muted-foreground">
-                {t(`entityTypes.${entry.type}`, entry.type)}
+                {t(`common:entityTypes.${entry.type}`)}
                 {entry.subType && ` - ${entry.subType}`}
               </p>
             </div>

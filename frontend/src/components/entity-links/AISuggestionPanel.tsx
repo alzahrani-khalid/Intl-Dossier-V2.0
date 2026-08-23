@@ -303,7 +303,7 @@ export function AISuggestionPanel({
                     {formatConfidence(suggestion.confidence)}
                   </Badge>
                   <span className="text-xs text-muted-foreground">
-                    {t('entityLinks.aiSuggestions.confidence', 'Confidence')}
+                    {t('common:entityLinks.aiSuggestions.confidence')}
                   </span>
                 </div>
 
