@@ -81,7 +81,7 @@ export function NavigationSection({
     return location.pathname === path
   }
 
-  const sectionTitle = titleKey ? t(titleKey, title ?? '') : title
+  const sectionTitle = titleKey ? t(titleKey) : title
 
   return (
     <div className={cn('flex flex-col', className)}>
