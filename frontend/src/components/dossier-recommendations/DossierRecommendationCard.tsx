@@ -162,7 +162,7 @@ function DossierTypeBadge({ type }: { type: DossierType }) {
   return (
     <Badge variant="secondary" className="text-xs gap-1">
       <Icon className="h-3 w-3" />
-      <span>{t(`types.${type}`)}</span>
+      <span>{t(`dossier-recommendations:types.${type}`)}</span>
     </Badge>
   )
 }

@@ -552,7 +552,9 @@ export function EntitySearchDialog({
                               {/* AI confidence score (if available) */}
                               {entity.similarity_score !== undefined && (
                                 <span className="flex items-center gap-1">
-                                  <span className="font-medium">Match:</span>
+                                  <span className="font-medium">
+                                    {t('common:entityLinks.match')}
+                                  </span>
                                   <span
                                     className={cn(
                                       'font-semibold',
@@ -573,7 +575,9 @@ export function EntitySearchDialog({
                               {/* Classification level (if available) */}
                               {entity.classification_level !== undefined && (
                                 <span className="flex items-center gap-1">
-                                  <span className="font-medium">Level:</span>
+                                  <span className="font-medium">
+                                    {t('common:entityLinks.level')}
+                                  </span>
                                   <span>{entity.classification_level}</span>
                                 </span>
                               )}
@@ -581,7 +585,9 @@ export function EntitySearchDialog({
                               {/* Last linked date (if available) */}
                               {entity.last_linked_at && (
                                 <span className="flex items-center gap-1">
-                                  <span className="font-medium">Last used:</span>
+                                  <span className="font-medium">
+                                    {t('common:entityLinks.lastUsed')}
+                                  </span>
                                   <span>{formatDayFirstYear(entity.last_linked_at)}</span>
                                 </span>
                               )}

@@ -122,7 +122,7 @@ function EntityBreadcrumbItem({ entry, isRTL, isActive, onRemove, t }: EntityBre
             <div className="text-sm">
               <p className="font-medium">{displayName}</p>
               <p className="text-xs text-muted-foreground">
-                {t(`entityTypes.${entry.type}`, entry.type)}
+                {t(`common:entityTypes.${entry.type}`)}
                 {entry.subType && ` - ${entry.subType}`}
               </p>
             </div>
@@ -325,7 +325,7 @@ export function EntityBreadcrumbTrail({
                 size="icon"
                 className="h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0 text-muted-foreground hover:text-destructive"
                 onClick={clearHistory}
-                aria-label={t('common.actions.clearHistory', { defaultValue: 'Clear history' })}
+                aria-label={t('common:actions.clearHistory', { defaultValue: 'Clear history' })}
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </Button>

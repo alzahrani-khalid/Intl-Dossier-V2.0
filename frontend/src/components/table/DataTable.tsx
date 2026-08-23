@@ -240,7 +240,7 @@ export function DataTable<TData, TValue>({
                 size="sm"
                 className="h-7 w-7 p-0"
                 onClick={() => setViewMode('card')}
-                aria-label={t('common.cardView', 'Card view')}
+                aria-label={t('common:cardView', 'Card view')}
               >
                 <LayoutGrid className="h-3.5 w-3.5" />
               </Button>
@@ -249,7 +249,7 @@ export function DataTable<TData, TValue>({
                 size="sm"
                 className="h-7 w-7 p-0"
                 onClick={() => setViewMode('table')}
-                aria-label={t('common.tableView', 'Table view')}
+                aria-label={t('common:tableView', 'Table view')}
               >
                 <TableIcon className="h-3.5 w-3.5" />
               </Button>
@@ -267,7 +267,7 @@ export function DataTable<TData, TValue>({
               </DropdownMenuTrigger>
               <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-44">
                 <DropdownMenuLabel className="text-xs">
-                  {t('common.toggleColumns', 'Toggle columns')}
+                  {t('common:toggleColumns', 'Toggle columns')}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {table
@@ -300,7 +300,7 @@ export function DataTable<TData, TValue>({
         ) : (
           <Card>
             <CardContent className="py-12 text-center text-muted-foreground">
-              {emptyMessage || t('common.noResults', 'No results found.')}
+              {emptyMessage || t('common:noResults', 'No results found.')}
             </CardContent>
           </Card>
         )}
@@ -384,7 +384,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-20 text-center text-sm text-muted-foreground"
                 >
-                  {emptyMessage || t('common.noResults', 'No results found.')}
+                  {emptyMessage || t('common:noResults', 'No results found.')}
                 </td>
               </tr>
             )}
@@ -434,7 +434,7 @@ export function DataTable<TData, TValue>({
               className="h-7 w-7"
               onClick={() => table.setPageIndex(0)}
               disabled={!table.getCanPreviousPage()}
-              aria-label={t('common.firstPage', 'First page')}
+              aria-label={t('common:firstPage', 'First page')}
             >
               {isRTL ? (
                 <ChevronsRight className="h-3.5 w-3.5" />
@@ -448,7 +448,7 @@ export function DataTable<TData, TValue>({
               className="h-7 w-7"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
-              aria-label={t('common.previousPage', 'Previous page')}
+              aria-label={t('common:previousPage', 'Previous page')}
             >
               {isRTL ? (
                 <ChevronRight className="h-3.5 w-3.5" />
@@ -468,7 +468,7 @@ export function DataTable<TData, TValue>({
               className="h-7 w-7"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
-              aria-label={t('common.nextPage', 'Next page')}
+              aria-label={t('common:nextPage', 'Next page')}
             >
               {isRTL ? (
                 <ChevronLeft className="h-3.5 w-3.5" />
@@ -482,7 +482,7 @@ export function DataTable<TData, TValue>({
               className="h-7 w-7"
               onClick={() => table.setPageIndex(table.getPageCount() - 1)}
               disabled={!table.getCanNextPage()}
-              aria-label={t('common.lastPage', 'Last page')}
+              aria-label={t('common:lastPage', 'Last page')}
             >
               {isRTL ? (
                 <ChevronsLeft className="h-3.5 w-3.5" />

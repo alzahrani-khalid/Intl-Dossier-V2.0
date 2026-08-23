@@ -55,6 +55,8 @@
     "copy": "Copy URL",
     "dismiss": "Dismiss",
     "generate": "Generate",
+    "gridView": "Grid view",
+    "listView": "List view",
     "more": "More",
     "moreInfo": "More information",
     "moveUp": "Move up",
@@ -742,8 +744,11 @@
       "related": "Related",
       "requested": "Requested"
     },
+    "lastUsed": "Last used:",
+    "level": "Level:",
     "loadError": "The links could not be loaded.",
     "manager": "Linked records",
+    "match": "Match:",
     "noDeletedLinks": "No removed links.",
     "noLinks": "No linked records yet.",
     "noResults": "No records match this search.",
@@ -774,6 +779,20 @@
     "tip2": "Checking the spelling",
     "tip3": "Clearing filters to search all types",
     "title": "Linked records"
+  },
+  "entityTypes": {
+    "dossier": "Dossier",
+    "country": "Country",
+    "organization": "Organization",
+    "person": "Person",
+    "engagement": "Engagement",
+    "position": "Position",
+    "forum": "Forum",
+    "working_group": "Working group",
+    "topic": "Topic"
+  },
+  "monitoring": {
+    "overall": "Overall:"
   },
   "engagements": {
     "title": "Engagement Dossiers",

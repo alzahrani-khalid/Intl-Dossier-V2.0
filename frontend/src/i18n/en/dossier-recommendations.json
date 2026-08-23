@@ -33,6 +33,16 @@
     "strategic_alignment": "Strategic Alignment"
   },
 
+  "types": {
+    "country": "Country",
+    "organization": "Organization",
+    "forum": "Forum",
+    "engagement": "Engagement",
+    "topic": "Topic",
+    "working_group": "Working Group",
+    "person": "Person"
+  },
+
   "status": {
     "pending": "New",
     "viewed": "Viewed",

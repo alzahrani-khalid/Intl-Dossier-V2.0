@@ -33,6 +33,16 @@
     "strategic_alignment": "توافق استراتيجي"
   },
 
+  "types": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "engagement": "ارتباط",
+    "topic": "موضوع",
+    "working_group": "مجموعة عمل",
+    "person": "شخص"
+  },
+
   "status": {
     "pending": "جديد",
     "viewed": "تمت المشاهدة",
