@@ -18,23 +18,18 @@ function NotFoundPage() {
       <div className="text-center space-y-6 max-w-md">
         <div className="text-6xl sm:text-8xl font-bold text-muted-foreground/30">404</div>
         <h1 className="text-xl sm:text-2xl font-semibold text-foreground">
-          {t('errors.pageNotFound', 'Page not found')}
+          {t('common:notFound.title')}
         </h1>
-        <p className="text-muted-foreground text-sm sm:text-base">
-          {t(
-            'errors.pageNotFoundDescription',
-            'The page you are looking for does not exist or has been moved.',
-          )}
-        </p>
+        <p className="text-muted-foreground text-sm sm:text-base">{t('common:notFound.message')}</p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Button variant="outline" size="default" onClick={() => router.history.back()}>
             <ArrowLeft className="h-4 w-4 me-2" />
-            {t('common.goBack', 'Go back')}
+            {t('common:notFound.goBack')}
           </Button>
           <Button asChild>
             <Link to="/dashboard">
               <Home className="h-4 w-4 me-2" />
-              {t('common:dashboard.title', 'Dashboard')}
+              {t('common:notFound.goHome')}
             </Link>
           </Button>
           <Button variant="ghost" asChild>
