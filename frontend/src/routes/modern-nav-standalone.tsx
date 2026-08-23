@@ -95,7 +95,7 @@ function StandaloneDemo() {
                 label={t('metrics.executions', 'Executions')}
                 value={340}
                 trend={{ value: 23, direction: 'up' }}
-                linkText={t('common.seeReport', 'See Report')}
+                linkText={t('common:seeReport', 'See Report')}
                 onLinkClick={() => {
                   /* TODO: Navigate to report */
                 }}
@@ -107,7 +107,7 @@ function StandaloneDemo() {
               label={t('metrics.activeProjects', 'Active Projects')}
               value={12}
               trend={{ value: 8, direction: 'up' }}
-              linkText={t('common.viewAll', 'View All')}
+              linkText={t('common:viewAll', 'View All')}
               onLinkClick={() => {
                 /* TODO: Navigate to projects */
               }}
@@ -117,7 +117,7 @@ function StandaloneDemo() {
               label={t('metrics.teamMembers', 'Team Members')}
               value={24}
               trend={{ value: 2, direction: 'neutral' }}
-              linkText={t('common.manage', 'Manage')}
+              linkText={t('common:manage', 'Manage')}
               onLinkClick={() => {
                 /* TODO: Navigate to team */
               }}

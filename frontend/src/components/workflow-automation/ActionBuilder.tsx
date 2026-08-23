@@ -140,16 +140,16 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="low">
-                    {t('priority.low', { ns: 'unified-kanban', defaultValue: 'Low' })}
+                    {t('unified-kanban:priority.low', { defaultValue: 'Low' })}
                   </SelectItem>
                   <SelectItem value="medium">
-                    {t('priority.medium', { ns: 'unified-kanban', defaultValue: 'Medium' })}
+                    {t('unified-kanban:priority.medium', { defaultValue: 'Medium' })}
                   </SelectItem>
                   <SelectItem value="high">
-                    {t('priority.high', { ns: 'unified-kanban', defaultValue: 'High' })}
+                    {t('unified-kanban:priority.high', { defaultValue: 'High' })}
                   </SelectItem>
                   <SelectItem value="urgent">
-                    {t('priority.urgent', { ns: 'unified-kanban', defaultValue: 'Urgent' })}
+                    {t('unified-kanban:priority.urgent', { defaultValue: 'Urgent' })}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -163,19 +163,19 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="pending">
-                    {t('status.pending', { ns: 'unified-kanban', defaultValue: 'Pending' })}
+                    {t('tasks-page:status.pending', { defaultValue: 'Pending' })}
                   </SelectItem>
                   <SelectItem value="in_progress">
-                    {t('status.in_progress', { ns: 'unified-kanban', defaultValue: 'In Progress' })}
+                    {t('tasks-page:status.in_progress', { defaultValue: 'In Progress' })}
                   </SelectItem>
                   <SelectItem value="review">
-                    {t('status.review', { ns: 'unified-kanban', defaultValue: 'Review' })}
+                    {t('tasks-page:status.review', { defaultValue: 'Review' })}
                   </SelectItem>
                   <SelectItem value="completed">
-                    {t('status.completed', { ns: 'unified-kanban', defaultValue: 'Completed' })}
+                    {t('tasks-page:status.completed', { defaultValue: 'Completed' })}
                   </SelectItem>
                   <SelectItem value="cancelled">
-                    {t('status.cancelled', { ns: 'unified-kanban', defaultValue: 'Cancelled' })}
+                    {t('tasks-page:status.cancelled', { defaultValue: 'Cancelled' })}
                   </SelectItem>
                 </SelectContent>
               </Select>
