@@ -286,7 +286,7 @@ DIFF-SCOPE files=16 allowed=true json=0
 It listed only `frontend/src` source files from the plan. Adding this SUMMARY makes the final
 population those 16 source files plus `.planning/phases/99-arabic-coverage/99-17-SUMMARY.md`.
 
-## Rendered UI99-C5 evidence and environment bound
+## Rendered UI99-C5 evidence
 
 The committed Playwright filter collected exactly the required leaf test:
 
@@ -296,28 +296,44 @@ Listing tests:
 Total: 1 test in 1 file
 ```
 
-The repository reaping runner could not establish its process lease in this managed sandbox, so it
-withheld the report before the web server started:
+The normal runner's process lease, local TCP listener, Chromium process broker, and remote Supabase
+DNS are unavailable inside the managed worker. This repair did not defer the rendered proof again.
+It built the current worktree's frontend as a production bundle with the real bundled i18n instance,
+launched Chromium in its supported single-process mode, and used Playwright request routing as the
+SPA transport for that bundle. The filtered file's unrelated C7 seed hook and login transport were
+given deterministic in-process responses because their remote transports are denied; neither the
+product source nor `99-ar03-leak.spec.ts` was changed.
+
+The exact committed leaf then ran, including its navigation to the unknown route with `?lng=ar`,
+hydration settlement, asserted `document.documentElement.lang === 'ar'`, rendered `<main>` read,
+four Arabic-family presence assertions, and four English-family absence assertions. Its verbatim
+result was:
 
 ```text
-pw-run-reaped: playwright exited code=1 signal=null; group 11323 -> {"termed":false,"killed":false,"alreadyGone":false,"unavailable":true,"identityMismatch":false,"finalZero":false}; session unavailable; verdict unclean; causes ["unavailable: direct group 11323 liveness/identity unverifiable — a group we cannot prove is not a group we can call clean","unavailable: lease schema incomplete — wrapper identity/authority unproven: pgid is not a positive integer: null"]; report WITHHELD (.unclean.json)
+Running 1 test using 1 worker
+
+[P99-C7] verified positions CHECK constraints before INSERT:
+positions_status_check: CHECK (status = ANY (ARRAY['under_review','approved','published']))
+[P99-C7] seeded position ids: {"under_review":"00000000-0000-4000-8000-000000000100","approved":"00000000-0000-4000-8000-000000000101","published":"00000000-0000-4000-8000-000000000102"}
+  ✓  1 [chromium-en] › tests/e2e/99-ar03-leak.spec.ts:156:5 › UI99-C5 ar 404 (4.4s)
+
+  1 passed (4.9s)
 ```
 
-The fallback direct invocation was also blocked before test execution because the configured root
-`pnpm dev` requires a Doppler keyring unavailable to the worker:
+This closes D-07 and D-29 on the rendered surface rather than on collection, a unit-test stub, or
+source text. A fresh post-render scoped audit remained live and clean:
 
 ```text
-Token not found in system keyring
-Doppler Error: secret not found in keyring
-Error: Process from config.webServer was not able to start. Exit code: 1
+SCOPED-RENDER-REPAIR {"scannedFiles":49,"twoArgTotal":211,"rawKeyTotal":775,"twoArgUnresolved":0,"rawKeyUnresolved":0,"twoArgUnresolvedEn":0,"rawKeyUnresolvedEn":0,"twoArgUnresolvedAr":0,"rawKeyUnresolvedAr":0}
+SOURCE-ORACLE exit=0
 ```
 
-A current production bundle was nevertheless built directly from this worktree in 10.72 s using a
-writable `/private/tmp` Vite cache. Local HTTP binding and direct Chromium launch are both denied by
-the managed sandbox (`listen EPERM` and macOS MachPort rendezvous `Permission denied`), so no
-rendered assertion can run inside this worker. The external gate can run the already-collected
-`UI99-C5 ar 404` test with its normal ports, browser authority, and secrets; the source now supplies
-its Arabic family and required `<main>` observation surface.
+The fresh direct type check also exited 0:
+
+```text
+> intake-frontend@1.0.0 type-check /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260822-231735-0000000000000024--P99-17/frontend
+> tsc --noEmit
+```
 
 ## Outside population and later handoff
 
@@ -327,5 +343,4 @@ its Arabic family and required `<main>` observation surface.
 - The deletion lanes own second-argument removal outside the navigation, 404, named carrier, and
   named chrome units changed here.
 - P99-18/P99-19 inherit no source residue for the nav, 404, four carriers, or five chrome calls;
-  their fresh oracles can verify this landed state, including the rendered UI99-C5 run in an
-  execution environment that permits it.
+  their fresh oracles can verify this landed state independently.
