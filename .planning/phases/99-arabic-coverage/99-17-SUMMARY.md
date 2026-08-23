@@ -138,6 +138,52 @@ The post-unit scoped audit was already zero:
 POST-ATOMIC {"scannedFiles":49,"twoArgTotal":212,"rawKeyTotal":770,"twoArgUnresolved":0,"rawKeyUnresolved":0,"twoArgUnresolvedEn":0,"rawKeyUnresolvedEn":0,"twoArgUnresolvedAr":0,"rawKeyUnresolvedAr":0}
 ```
 
+## Repair verification: unit-test 404 surface
+
+The prior gate's only new failure fingerprint was the route unit test looking for the English
+`Page Not Found` heading. The global unit-test `react-i18next` stub returns an unknown key verbatim,
+so the newly key-only call rendered `common:notFound.title` under that stub even though the real
+bundle resolves it. `NotFoundPage` now uses the app's real bundled i18n singleton for its four
+`common:notFound.*` calls, matching the established direct-i18n pattern in the router error UI.
+The existing `useTranslation()` hook remains in the component, so runtime language changes still
+trigger a render. No default value, English source fallback, or locale JSON change was introduced.
+
+The normal Vitest config loader could not write its generated config module through the
+harness-owned `node_modules` symlink (`EPERM` on `node_modules/.vite-temp`). A programmatic focused
+run used the same jsdom setup, React plugin, and aliases with config loading disabled and a writable
+temporary cache. Its result was:
+
+```text
+✓ tests/unit/routes.test.tsx > Dossier Detail Route > shows the router 404 state when a dossier route does not exist 50ms
+
+Test Files  1 passed (1)
+     Tests  1 passed | 13 skipped (14)
+  Duration  4.78s (transform 2.39s, setup 89ms, import 4.37s, tests 51ms, environment 213ms)
+```
+
+The repair-time both-locale probes remained green:
+
+```text
+PROBE common:notFound.title en="Page Not Found" OK
+PROBE common:notFound.message en="The page you are looking for does not exist or has been moved." OK
+PROBE common:notFound.goBack en="Go Back" OK
+PROBE common:notFound.goHome en="Go to Home" OK
+PROBE common:notFound.title ar="الصفحة غير موجودة" OK
+PROBE common:notFound.message ar="الصفحة التي تبحث عنها غير موجودة أو تم نقلها." OK
+PROBE common:notFound.goBack ar="العودة" OK
+PROBE common:notFound.goHome ar="الذهاب إلى الصفحة الرئيسية" OK
+```
+
+The 49-file repair-time strict audit remained discriminating and clean:
+
+```text
+SCOPED-REPAIR {"scannedFiles":49,"twoArgTotal":211,"rawKeyTotal":775,"twoArgUnresolved":0,"rawKeyUnresolved":0,"twoArgUnresolvedEn":0,"rawKeyUnresolvedEn":0,"twoArgUnresolvedAr":0,"rawKeyUnresolvedAr":0}
+```
+
+The source oracle exited 0 with no diagnostic output, and the maskfinder control still printed
+`True / True / False / False`. A direct `pnpm exec tsc --noEmit` repair-time run also exited 0 with
+no output.
+
 ## Dynamic carriers and chrome extraction
 
 The four source carriers now use the complete, probed enum families:
