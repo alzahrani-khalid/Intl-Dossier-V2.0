@@ -511,13 +511,7 @@
     },
     "analysisType": "نوع التحليل",
     "confidence": "الثقة",
-    "classification": {
-      "label": "التصنيف",
-      "public": "عام",
-      "internal": "داخلي",
-      "confidential": "سري",
-      "restricted": "محظور"
-    },
+    "classification": "التصنيف",
     "keyFindings": "النتائج الرئيسية",
     "findings": "نتائج",
     "status": "الحالة",

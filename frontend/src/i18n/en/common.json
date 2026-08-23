@@ -511,13 +511,7 @@
     },
     "analysisType": "Analysis Type",
     "confidence": "Confidence",
-    "classification": {
-      "label": "Classification",
-      "public": "Public",
-      "internal": "Internal",
-      "confidential": "Confidential",
-      "restricted": "Restricted"
-    },
+    "classification": "Classification",
     "keyFindings": "Key Findings",
     "findings": "findings",
     "status": "Status",

@@ -32,14 +32,14 @@ en navigation.taskQueue="Task Queue"
 en navigation.taskEscalations="Task Escalations"
 en navigation.workflow="Workflow"
 en common:entityLinks.aiSuggestions.confidence="Confidence"
-en common:intelligence.classification.label="Classification"
+en common:intelligence.classification="Classification"
 ar INHERITED-OWNER roots=13 nav=4 nonTestRaw=5
 ar navigation.dashboardOverview="نظرة عامة على لوحة الدوسيهات"
 ar navigation.taskQueue="قائمة المهام"
 ar navigation.taskEscalations="تصعيدات المهام"
 ar navigation.workflow="سير العمل"
 ar common:entityLinks.aiSuggestions.confidence="درجة الثقة"
-ar common:intelligence.classification.label="التصنيف"
+ar common:intelligence.classification="التصنيف"
 TEST-POLICY exclude=__tests__,*.test.* from shipped-key authoring queue
 ```
 
@@ -49,19 +49,20 @@ The five non-test raw-key paths checked above are `from`, `to`, `badge.sensitivi
 `firstPage`, `previousPage`, `nextPage`, and `lastPage`.
 
 The remaining task-local population was re-derived from the four consuming types and the live
-chrome literals. It contains 26 carrier-enum leaves and four chrome leaves, with this namespace
-breakdown:
+chrome literals. It contains 26 carrier-enum leaves and four chrome leaves. Twenty-two carrier
+leaves and all four chrome leaves required authoring; the classification carrier's four leaves
+already existed at the collision-safe plural path. The namespace breakdown is:
 
 ```text
-AUTHORING-QUEUE common=17 dossier-recommendations=7 operations-hub=6 totalEnumAndChrome=30 relocationPairs=1
+AUTHORING-QUEUE common=13 dossier-recommendations=7 operations-hub=6 newlyAuthored=26 preExistingCarrierLeaves=4
 CARRIER-CHROME-OK locales=2 carriers=4 chrome=4
 ```
 
-`common=17` is nine `entityTypes`, four `intelligence.classification` members, and four chrome
-leaves. The relocation pair preserves the former scalar `intelligence.classification` at
-`intelligence.classification.label`; it is not counted as a new enum or chrome leaf. Outside this
-population are the tasks/queues/positions family files, test mocks, all source rewrites, value
-sweeps, and fallback deletion.
+`common=13` is nine `entityTypes` and four chrome leaves. The existing scalar
+`intelligence.classification` remains byte-for-byte compatible with its live label callers, while
+the already-present four-member `intelligence.classifications` object is the classification
+carrier. Outside this population are the tasks/queues/positions family files, test mocks, all
+source rewrites, value sweeps, and fallback deletion.
 
 ## Carrier enum sets
 
@@ -71,26 +72,27 @@ required the same complete set in both locales. Its output was:
 ```text
 CARRIER common:entityTypes enumCount=9 [dossier, country, organization, person, engagement, position, forum, working_group, topic]
 CARRIER dossier-recommendations:types enumCount=7 [country, organization, forum, engagement, topic, working_group, person]
-CARRIER common:intelligence.classification enumCount=4 [public, internal, confidential, restricted]
+CARRIER common:intelligence.classifications enumCount=4 [public, internal, confidential, restricted]
 CARRIER operations-hub:stages enumCount=6 [intake, preparation, briefing, execution, follow_up, closed]
 ```
 
-The intelligence carrier collided with the existing singular label. It was therefore converted
-to the collision-safe shape `intelligence.classification.label` plus the four enum leaves, while
-the already-live plural `intelligence.classifications.*` set remains untouched. P99-19 must point
-the dynamic badge at `common:intelligence.classification.${classification}` and repoint the two
-singular label calls to `common:intelligence.classification.label` in the same source change.
+The intelligence carrier collides with the existing singular label, which two live callers read as
+a scalar. The scalar therefore remains at `intelligence.classification`, and the complete existing
+plural `intelligence.classifications.*` set supplies the collision-safe carrier. P99-19 must point
+the dynamic badge at `common:intelligence.classifications.${classification}`; the two singular
+label calls need no change.
 
-Running the instrument of record with its controls first proved that all four common-owner
-carriers now resolve. It fell from 17 to the 13 family-lane carriers deliberately outside this
-task:
+Running the instrument of record with its controls first verified the dynamic-prefix population.
+The three newly authored carrier prefixes resolve; the classification source remains in the
+reported queue until P99-19 repoints it to the collision-safe plural carrier. The other 13 rows
+belong to the family lanes deliberately outside this task:
 
 ```text
 CONTROL resolves(intelligence-signals, "severity") = True (expect True)
 CONTROL resolves(common, "waitingQueue.statuses")  = True (expect True)
 CONTROL resolves(common, "waitingQueue.status")    = False (expect False)
 CONTROL resolves(common, "waitingQueue.priority")  = False (expect False)
-UNRESOLVED dynamic t() key prefixes: 13 total  (12 mask a raw value -> criterion 1; 1 render a RAW KEY -> criterion 2)
+UNRESOLVED dynamic t() key prefixes: 14 total  (12 mask a raw value -> criterion 1; 2 render a RAW KEY -> criterion 2)
 MASKED-RAW-VALUE  frontend/src/components/tasks/AddContributorDialog.tsx:258  prefix='tasks.contributorRole' ns=common
 MASKED-RAW-VALUE  frontend/src/components/tasks/AddContributorDialog.tsx:264  prefix='tasks.roleDescription' ns=common
 MASKED-RAW-VALUE  frontend/src/components/tasks/ContributorsList.tsx:78  prefix='tasks.contributorRole' ns=common
@@ -104,6 +106,7 @@ MASKED-RAW-VALUE  frontend/src/components/waiting-queue/AssignmentDetailsModal.t
 MASKED-RAW-VALUE  frontend/src/components/waiting-queue/AssignmentDetailsModal.tsx:223  prefix='waitingQueue.priority' ns=common
 MASKED-RAW-VALUE  frontend/src/components/waiting-queue/AssignmentDetailsModal.tsx:260  prefix='waitingQueue.entityType' ns=common
 RAW-KEY           frontend/src/components/commitment-editor/CommitmentEditor.tsx:120  prefix='afterActions.commitments.tracking' ns=common
+RAW-KEY           frontend/src/pages/intelligence/IntelligencePage.tsx:65  prefix='intelligence.classification' ns=common|intelligence-signals|intelligence-digests|intelligence-alerts
 ```
 
 ## Chrome keys
@@ -123,7 +126,7 @@ oracle verified the three required English values by walking every namespace, fo
 values at the identical paths, and printed its non-vacuous positive control:
 
 ```text
-CHROME-KEYS-OK leaves=16753
+CHROME-KEYS-OK leaves=16749
 ```
 
 P99-17 through P99-19 own extraction of these literals and colon-prefixing of the carrier calls;
@@ -162,7 +165,7 @@ The full negative-control output was:
 The exact recursive leaf walk used by the lane counted arrays consistently and printed:
 
 ```text
-PARITY-OK checked=16753
+PARITY-OK checked=16749
 ```
 
 All locale JSON parsed:
@@ -192,6 +195,6 @@ No source file changed.
 ## Explicit later-task handoff
 
 - P99-12/P99-13 own the 13 remaining dynamic task/queue/commitment carriers printed above.
-- P99-17/P99-18/P99-19 own the common/chrome source rewrites, including the collision-safe
-  `intelligence.classification.label` repoint.
+- P99-17/P99-18/P99-19 own the common/chrome source rewrites, including repointing the dynamic
+  classification badge to `intelligence.classifications.*` while preserving the singular label.
 - The deletion lanes still own every second-argument removal outside their named atomic units.
