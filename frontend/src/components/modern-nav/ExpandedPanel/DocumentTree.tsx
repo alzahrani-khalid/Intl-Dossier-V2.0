@@ -157,7 +157,7 @@ export function DocumentTree({
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-icon-rail-active-indicator',
                 )}
                 aria-label={
-                  isExpanded ? t('common.collapse', 'Collapse') : t('common.expand', 'Expand')
+                  isExpanded ? t('common:collapse', 'Collapse') : t('common:expand', 'Expand')
                 }
               >
                 <ChevronRight
@@ -214,7 +214,7 @@ export function DocumentTree({
           size="sm"
           className="h-6 w-6 p-0 hover:bg-panel-hover"
           onClick={onAddClick}
-          aria-label={t('common.add', 'Add document')}
+          aria-label={t('common:add', 'Add document')}
         >
           <Plus className="h-4 w-4 text-panel-text-muted" />
         </Button>
@@ -272,7 +272,7 @@ export function DocumentTree({
         )}
       >
         <Plus className="h-4 w-4" />
-        <span>{t('common.more', 'More')}</span>
+        <span>{t('common:more', 'More')}</span>
       </button>
     </div>
   )

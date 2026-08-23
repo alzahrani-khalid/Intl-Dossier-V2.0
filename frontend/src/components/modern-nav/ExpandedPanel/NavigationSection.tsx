@@ -136,7 +136,7 @@ export function NavigationSection({
               </span>
 
               {/* Label */}
-              <span className="flex-1 truncate">{t(item.labelKey, item.label)}</span>
+              <span className="flex-1 truncate">{t(item.labelKey)}</span>
 
               {/* Badge Count */}
               {item.count !== undefined && (

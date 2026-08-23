@@ -13,6 +13,7 @@
  * branch at all — a backend-absent response showed "Loading health..." forever.
  */
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import { apiGet } from '@/lib/api-client'
@@ -40,6 +41,7 @@ type Alert = {
 }
 
 export default function MonitoringDashboard() {
+  const { t } = useTranslation()
   const {
     data: health,
     isError: healthIsError,
@@ -78,7 +80,9 @@ export default function MonitoringDashboard() {
         {!healthIsError && !health && <p>Loading health...</p>}
         {!healthIsError && health && (
           <div>
-            <p>Overall: {health.status}</p>
+            <p>
+              {t('common:monitoring.overall')} {health.status}
+            </p>
             <ul>
               {Object.entries(health.services).map(([name, svc]) => (
                 <li key={name}>
