@@ -14,7 +14,7 @@ function NotFoundPage() {
   const router = useRouter()
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 sm:p-6 lg:p-8">
+    <main className="flex min-h-screen items-center justify-center p-4 sm:p-6 lg:p-8">
       <div className="text-center space-y-6 max-w-md">
         <div className="text-6xl sm:text-8xl font-bold text-muted-foreground/30">404</div>
         <h1 className="text-xl sm:text-2xl font-semibold text-foreground">
@@ -40,7 +40,7 @@ function NotFoundPage() {
           </Button>
         </div>
       </div>
-    </div>
+    </main>
   )
 }
 
