@@ -55,6 +55,14 @@
     "stalled": "متوقف",
     "stalled_detail": "{{days}} يوم في {{stage}}"
   },
+  "stages": {
+    "intake": "الاستقبال",
+    "preparation": "التحضير",
+    "briefing": "الإحاطة",
+    "execution": "التنفيذ",
+    "follow_up": "المتابعة",
+    "closed": "مغلق"
+  },
   "kpi": {
     "totalDossiers": "اجمالي الملفات",
     "activeEngagements": "الارتباطات النشطة",
