@@ -414,5 +414,104 @@
       "cancel": "Cancel",
       "warning": "This action cannot be undone"
     }
+  },
+  "waitingQueue": {
+    "assignmentDetails": {
+      "assignedAt": "Assigned At",
+      "assignee": "Assignee",
+      "daysWaiting": "Days Waiting",
+      "lastReminder": "Last Reminder",
+      "noReminderSent": "No reminder sent",
+      "statusAndPriority": "Status & Priority",
+      "timeline": "Timeline",
+      "title": "Assignment Details",
+      "viewFullDetails": "View Full Details",
+      "workItemNotAvailable": "The work item for this assignment is not available.",
+      "description": "Description",
+      "dialogDescription": "View complete details for assignment {{id}}, assigned to {{assignee}}",
+      "linkedItems": "Linked Items",
+      "taskActions": "Task",
+      "viewTask": "View Task",
+      "viewLinkedItems": "View Linked Items"
+    },
+    "escalation": {
+      "autoResolve": "Auto-resolve from organizational hierarchy",
+      "error": "Failed to escalate assignment",
+      "escalate": "Escalate",
+      "escalateAssignment": "Escalate Assignment",
+      "escalating": "Escalating...",
+      "noEscalationPathMessage": "Could not find a manager for {{user}} in the organizational hierarchy.",
+      "reason": "Reason (Optional)",
+      "reasonPlaceholder": "Why are you escalating this assignment?",
+      "selectRecipient": "Select Recipient",
+      "success": "Assignment escalated successfully",
+      "dialogDescription": "Escalate this assignment to higher management for attention",
+      "immediateManager": "Immediate Manager",
+      "reasonAriaLabel": "Reason",
+      "reasonHint": "Explain why escalation is needed",
+      "reasonRequired": "Please provide a reason for escalation",
+      "successDesc": "The manager has been notified and will review the assignment."
+    },
+    "aging": {
+      "ok": "Recent",
+      "warning": "Needs Attention",
+      "danger": "Overdue"
+    },
+    "days": "days",
+    "relatedTo": "Related to: ",
+    "reminder": {
+      "noAssignee": {
+        "title": "No Assignee",
+        "description": "This assignment has no assignee. Please assign it first."
+      },
+      "cooldown": {
+        "title": "Cooldown Active",
+        "description": "Please wait {{hours}} more hours before sending another reminder."
+      },
+      "success": {
+        "title": "Reminder Sent",
+        "description": "Follow-up reminder has been sent successfully."
+      },
+      "error": {
+        "title": "Failed to Send Reminder",
+        "description": "An error occurred while sending the reminder. Please try again."
+      },
+      "rateLimit": {
+        "title": "Rate Limit Exceeded",
+        "description": "You have sent too many reminders. Please wait a few minutes and try again."
+      },
+      "notFound": {
+        "title": "Assignment Not Found",
+        "description": "The assignment could not be found. It may have been deleted."
+      },
+      "conflict": {
+        "title": "Assignment Changed",
+        "description": "This assignment was modified by another user. Please refresh and try again."
+      },
+      "button": {
+        "label": "Send follow-up reminder",
+        "sending": "Sending...",
+        "sent": "Sent!",
+        "send": "Send Reminder"
+      }
+    },
+    "status": {
+      "pending": "Pending",
+      "assigned": "Assigned",
+      "in_progress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "priority": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "entityType": {
+      "dossier": "Dossier",
+      "ticket": "Ticket",
+      "position": "Position"
+    }
   }
 }
