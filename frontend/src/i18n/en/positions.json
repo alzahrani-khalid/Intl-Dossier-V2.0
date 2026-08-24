@@ -416,5 +416,36 @@
     "under_review": "Position Under Review - Read Only. This position is currently under review and cannot be edited. It must go through the approval chain before any changes can be made.",
     "approved": "Position Approved - Read Only. This position has been approved and is awaiting publication. Contact an administrator to make changes.",
     "published": "Position Published - Read Only. This position has been published. To make changes, you must use the Emergency Correction workflow or create a new version."
+  },
+  "stepUp": {
+    "title": "Additional Verification Required",
+    "description": "Confirm your identity before continuing with this action.",
+    "initiating": "Starting verification...",
+    "codeLabel": "Verification Code",
+    "resending": "Resending...",
+    "resendCode": "Resend code",
+    "cancel": "Cancel",
+    "verifying": "Verifying...",
+    "verify": "Verify",
+    "helpText": "The code expires in 10 minutes. Contact your administrator if you cannot receive it.",
+    "challengeTypes": {
+      "totp": "Authenticator app",
+      "sms": "SMS code",
+      "push": "Push notification"
+    },
+    "placeholders": {
+      "totp": "000000",
+      "sms": "000000",
+      "push": "000000"
+    },
+    "errors": {
+      "expired": "The verification code has expired. Request a new code.",
+      "networkError": "Could not reach the verification service. Check your connection and try again.",
+      "noChallengeActive": "No active verification challenge. Close this dialog and try again.",
+      "invalidFormat": "Enter the 6-digit verification code.",
+      "invalidCode": "That code is not correct. Check it and try again.",
+      "verificationFailed": "Verification failed. Please try again.",
+      "resendFailed": "Could not resend the code. Please try again."
+    }
   }
 }
