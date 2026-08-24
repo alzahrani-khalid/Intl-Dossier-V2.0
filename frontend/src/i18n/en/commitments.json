@@ -53,7 +53,13 @@
     "proofRequiredDescription": "Evidence upload required for completion",
     "trackingMode": "Tracking Mode",
     "manual": "Manual",
-    "automatic": "Automatic"
+    "automatic": "Automatic",
+    "contactEmail": "Contact Email",
+    "emailPlaceholder": "Enter contact email address",
+    "contactName": "Contact Name",
+    "namePlaceholder": "Enter contact name",
+    "organization": "Organization",
+    "orgPlaceholder": "Enter organization name"
   },
   "filters": {
     "title": "Filter Commitments",
@@ -100,7 +106,9 @@
     "dueIn": "Due in {{days}} days",
     "dueToday": "Due today",
     "overdueDays": "{{days}} days overdue",
-    "noTitle": "Untitled Commitment"
+    "noTitle": "Untitled Commitment",
+    "item": "Commitment {{number}}",
+    "aiConfidence": "{{value}}% confidence"
   },
   "list": {
     "empty": "No commitments found",
@@ -144,5 +152,9 @@
     "evidenceUploaded": "Evidence uploaded",
     "updated": "Commitment updated",
     "by": "by {{user}}"
+  },
+  "trackingMode": {
+    "automatic": "Automatic",
+    "manual": "Manual"
   }
 }
