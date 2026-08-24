@@ -34,6 +34,14 @@
  *   cwd unavailable            -> UNDECIDABLE. Record it as such; never infer ownership from ppid,
  *                                 which collapses to 1 the moment the parent exits.
  *
+ * LISTENERS ARE NOT CLIENTS (RULING-P99-184). `lsof -ti tcp:<port>` returns every process with a
+ * socket on that port — including ESTABLISHED CLIENT connections. Playwright's own
+ * chrome-headless-shell processes connect TO the dev server, so a census without
+ * `-sTCP:LISTEN` reports the test runner's own browser as a port holder in a foreign session.
+ * Anything asking "is someone squatting our port" must filter to LISTEN; anything asking "who is
+ * touching this port" must not. Measured: on a live gate the two real listeners were the leased
+ * vite and backend, and six chrome processes were counted as holders by the unfiltered census.
+ *
  * CENSUS SCOPE WARNING: never key a process census on the directory NAME `worktrees.noindex` —
  * more than one repository on this machine uses that name, and such a filter silently matches
  * another fleet's processes. Anchor ownership tests on an ABSOLUTE repo path.
@@ -117,13 +125,15 @@ export const ownership = (rec, { root, leasedSid = null } = {}) => {
   if (!rec.cwd) return { verdict: 'UNDECIDABLE', why: 'cwd unavailable — ownership cannot be established, and ppid must not be used for it' }
   const owned = typeof root === 'string' && root.length > 1 && (rec.cwd === root || rec.cwd.startsWith(root.endsWith('/') ? root : root + '/'))
   if (!owned) return { verdict: 'FOREIGN', why: `cwd ${rec.cwd} is outside ${root} — cross-task or external blame is admissible here` }
-  if (leasedSid !== null && rec.sid === leasedSid)
+  if (leasedSid === null)
+    // CANNOT-COMPARE IS NOT A VERDICT (RULING-P99-184). This returned ESCAPED when no lease was
+    // supplied, which converted "I have nothing to compare against" into a positive finding — and
+    // it did exactly that on its first live run, labelling a CONTAINED dev stack as escaped.
+    return { verdict: 'OWNED-CONTAINMENT-UNKNOWN', why: `own cwd (${rec.cwd}) but no leased sid was supplied — containment is UNMEASURED, not escaped` }
+  if (rec.sid === leasedSid)
     return { verdict: 'CONTAINED', why: `own cwd and sid ${rec.sid} matches the lease — the reaper's session census can see this` }
   return {
     verdict: 'ESCAPED',
-    why:
-      `own cwd (${rec.cwd}) but sid ${rec.sid}` +
-      (leasedSid === null ? ' with no lease to compare' : ` != leased sid ${leasedSid}`) +
-      ' — SESSION-containment defect: ours, and invisible to a session census. NOT cross-task.',
+    why: `own cwd (${rec.cwd}) but sid ${rec.sid} != leased sid ${leasedSid} — invisible to a session census. Ours, NOT cross-task.`,
   }
 }

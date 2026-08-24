@@ -65,7 +65,9 @@ const PORTS =
 /** Holders of one port: array of pids, or NULL when the census itself failed. */
 const holders = (port) => {
   try {
-    return execFileSync('lsof', ['-ti', `tcp:${port}`], C)
+    // `-sTCP:LISTEN` is load-bearing (RULING-P99-184): without it this counts Playwright's own
+    // browser connections as squatters, which is a false positive on every rendered run.
+    return execFileSync('lsof', ['-ti', `tcp:${port}`, '-sTCP:LISTEN'], C)
       .split('\n')
       .map((s) => s.trim())
       .filter(Boolean)
