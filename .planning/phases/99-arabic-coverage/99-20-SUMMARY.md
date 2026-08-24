@@ -1,9 +1,48 @@
 # Phase 99-20: AR-02 formatter and raw-site census
 
-Status: **PARKED FOR THE OVERSEER — acceptance item 1 remains unmet in this worker.** The source,
-strict guard, type-check, and both engagement suites are green, but the mandatory rendered
-`/calendar` command cannot start its web server in this sandbox. No source or unit result below is
-represented as a rendered pass, and this task does not declare completion.
+Status: **READY FOR THE GATE-OWNED RENDERED ORACLE RERUN.** This retry did not rerun Playwright or
+`pw-run-reaped` from the restricted worker seat, per the retry directive. The source, strict guard,
+type-check, and both engagement suites are green from the recorded implementation pass below; the
+current retry rechecked the reaper lease surface and found no stale `.lease` artifact remaining in
+this worktree to poison the process-enabled acceptance seat.
+
+## Attempt 5 retry cleanup — 2026-08-25
+
+The retry instruction identified the prior acceptance failure as a stale malformed lease consumed by
+`scripts/pw-run-reaped.mjs`'s pre-spawn orphan sweep. The reaper source resolves leases under the
+repo root via `leaseDirOf(root) => join(root, '.pw-leases')`; this pass searched that product path
+and all repo-local lease filenames without invoking Playwright or the reaper:
+
+```text
+$ rg --files -g '*.lease' -g '.pw-leases/**' -g 'test-results/**'
+<no output; exit 1>
+
+$ ls -la .pw-leases 2>/dev/null || true
+<no output>
+
+$ find . -path './node_modules' -prune -o -name '*.lease' -print
+<no output>
+
+$ find . -path './node_modules' -prune -o \( -name '*61d5e7de53bb812370b452a1bca17540*' -o -name '*83e30b432e59aea22b19a36245b2e34a*' -o -name '*b545b2ca31757222ff434506146f3d5a*' \) -print
+<no output>
+
+$ test -d .pw-leases && find .pw-leases -maxdepth 1 -type f -print || true
+<no output>
+```
+
+No lease file existed, so there was no holder pid/pgid to prove dead and no file to delete. A live
+process-name sweep was attempted for corroboration, but this managed sandbox cannot read the host
+process list:
+
+```text
+$ pgrep -fl 'pw-run-reaped|playwright|vite|tsx|doppler' || true
+sysmon request failed with error: sysmond service not found
+pgrep: Cannot get process list
+```
+
+No tracked source or test file changed in this cleanup pass. The rendered `/calendar` acceptance
+command is intentionally left to the gate seat, which has the process/network capability and runs
+the oracle after this commit.
 
 ## Attempt 4 park — 2026-08-25
 
