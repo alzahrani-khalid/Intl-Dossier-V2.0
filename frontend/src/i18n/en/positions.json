@@ -411,5 +411,10 @@
     "created": "Created",
     "last_updated": "Last Updated",
     "version": "Version"
+  },
+  "readOnlyBanner": {
+    "under_review": "Position Under Review - Read Only. This position is currently under review and cannot be edited. It must go through the approval chain before any changes can be made.",
+    "approved": "Position Approved - Read Only. This position has been approved and is awaiting publication. Contact an administrator to make changes.",
+    "published": "Position Published - Read Only. This position has been published. To make changes, you must use the Emergency Correction workflow or create a new version."
   }
 }
