@@ -5,6 +5,77 @@ strict guard, type-check, and both engagement suites are green, but the mandator
 `/calendar` command cannot start its web server in this sandbox. No source or unit result below is
 represented as a rendered pass, and this task does not declare completion.
 
+## Attempt 4 park — 2026-08-25
+
+This repair pass found no tracked source delta to make. The exact acceptance command was rerun from
+the current worktree. Its source predicate and strict guard passed; the rendered Playwright leg
+again exited before any test executed because this managed shell cannot prove process-group
+identity for the web-server child:
+
+```text
+date-formatting check OK: 1533 non-test file(s) scanned, 0 unexcused ad-hoc date/number formatting sites (raw toLocaleDateString/toLocaleTimeString, month-first date-fns literals, Indic locale literals, relative time, localized skeletons, 12-hour literals, date-receiver toLocaleString, Intl.RelativeTimeFormat, local relative-time declarations, hand-assembled short relative forms) outside the 2-file allowlist (lib/format-date.ts, components/ui/calendar.tsx) and the 6 named permanent exemption(s) (see EXEMPT — each states its reason, and the dead-code one states its VOID CONDITION). Named debt: 0 row(s) excusing 0 site(s), all owned by plan 98-07.
+pw-run-reaped: playwright exited code=1 signal=null; group 40114 -> {"termed":false,"killed":false,"alreadyGone":false,"unavailable":true,"identityMismatch":false,"finalZero":false}; session unavailable; verdict unclean; causes ["unavailable: direct group 40114 liveness/identity unverifiable — a group we cannot prove is not a group we can call clean","unavailable: lease schema incomplete — wrapper identity/authority unproven: pgid is not a positive integer: null"]; report WITHHELD (.unclean.json); child output /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260824-212547-0000000000000037--P99-20/test-results/pw-reaped-61d5e7de53bb812370b452a1bca17540.json.log
+```
+
+The retained nonce-bound JSON report confirms Playwright never reached the two `/calendar` tests:
+
+```text
+Error: Process from config.webServer was not able to start. Exit code: 1
+expected: 0
+unexpected: 0
+suites: []
+```
+
+Direct Playwright invocation without the reaper exposes the web-server startup stderr in this seat:
+
+```text
+(node:72447) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+◇ injected env (7) from ../../../.env.test // tip: ◈ secrets for agents [www.dotenvx.com]
+[WebServer] pw-run-reaped --lease-exec: PW_LEASE_* env absent — running UNLEASED (ad-hoc invocation)
+[WebServer] (node:72480) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] Token not found in system keyring
+[WebServer] Doppler Error: secret not found in keyring
+Error: Process from config.webServer was not able to start. Exit code: 1
+```
+
+A bare localhost bind probe independently shows that this sandbox cannot host the rendered surface:
+
+```text
+listen EPERM: operation not permitted 127.0.0.1:5173
+```
+
+The required `--list` leg still collects exactly the two acceptance tests:
+
+```text
+Listing tests:
+  [chromium-en] › 99-ar02-dates.spec.ts:125:5 › UI99-C1C2C4 ar /calendar
+  [chromium-en] › 99-ar02-dates.spec.ts:137:5 › UI99-C1 en control /calendar
+Total: 2 tests in 1 file
+```
+
+Focused non-rendered verification from this pass:
+
+```text
+positive fixture: matched
+outside lib/format-date.ts: 0
+formatter positive control: matched
+date-formatting check OK: 1533 non-test file(s) scanned, 0 unexcused ad-hoc date/number formatting sites (raw toLocaleDateString/toLocaleTimeString, month-first date-fns literals, Indic locale literals, relative time, localized skeletons, 12-hour literals, date-receiver toLocaleString, Intl.RelativeTimeFormat, local relative-time declarations, hand-assembled short relative forms) outside the 2-file allowlist (lib/format-date.ts, components/ui/calendar.tsx) and the 6 named permanent exemption(s) (see EXEMPT — each states its reason, and the dead-code one states its VOID CONDITION). Named debt: 0 row(s) excusing 0 site(s), all owned by plan 98-07.
+```
+
+```text
+Test Files  2 passed (2)
+     Tests  18 passed (18)
+  Duration  1.92s
+```
+
+```text
+Test Files  1 passed (1)
+     Tests  19 passed (19)
+  Duration  1.33s
+```
+
+`pnpm --dir frontend exec tsc --noEmit` exited 0 with no output.
+
 ## Attempt 3 park — 2026-08-25
 
 The exact acceptance command was run continuously through its source predicate, strict date guard,
