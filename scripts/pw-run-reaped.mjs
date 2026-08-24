@@ -290,6 +290,80 @@ export const psLstart = (pid, { runner = execFileSync } = {}) => {
 }
 
 /**
+ * Bounded retry for the two `ps`-derived identity lookups (RULING-P99-175).
+ *
+ * WHY THIS EXISTS. A `ps` failure here is not fatal on its own — it is fatal because the value is
+ * then written into a DURABLE lease as `null`, and `validateLeaseSchema` rejects that lease
+ * forever. Measured across phase 99: SEVEN acceptance gates went red on `exit 90` while Playwright
+ * itself had exited 0 — the tests PASSED and a leftover file decided the verdict. In every observed
+ * poisoned lease EVERY ps-derived field was null at once (`pgid`, `lstart`, and the parent's
+ * `PW_LEASE_WRAPPER_START`) while `python3`'s sid lookup in the same function SUCCEEDED, so the
+ * failure is transient and simultaneous, not structural — the same helpers return correct values
+ * when called from a shell in the same worktree seconds later.
+ *
+ * The sleep is `Atomics.wait`, NOT a `sleep` subprocess: whatever prevents a `ps` from starting
+ * would prevent the sleep from starting too, and an instrument must not depend on the resource it
+ * is retrying for.
+ *
+ * This does NOT claim to know why `ps` fails. It does not need to: the retry is correct for any
+ * transient cause, and when it still fails the caller records a REASON instead of a silent null.
+ */
+export const retryPs = (fn, pid, { tries = 3, sleepMs = 150 } = {}) => {
+  let v = null
+  for (let i = 0; i < tries; i++) {
+    v = fn(pid)
+    if (v !== null) return v
+    if (i < tries - 1) Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, sleepMs)
+  }
+  return null
+}
+
+/**
+ * RESIDUE PROOF (RULING-P99-175, constraint 2): distinguish a lease that is unproven because it is
+ * DEAD LITTER from one that is unproven because something might still be ALIVE. Only the second is
+ * a safety failure, and only the second may keep failing the run closed.
+ *
+ * A schema-invalid lease used to be an eternal refusal. That is what turned a transient `ps` blip
+ * into a red gate on a green test run, and — because the file is durable — into a red on the NEXT
+ * attempt too (measured: `61d5e7de….lease` written by P99-20 att-3 reddened att-4).
+ *
+ * Residue is PROVEN, never assumed, and every step fails CLOSED:
+ *   1. the lease must record a usable writer `pid` — with no pid nothing can be proven dead;
+ *   2. that pid must probe `dead` (tri-state — `unavailable` is NOT death, RULING-P99-52 repair B);
+ *   3. the lease must record a usable `sid`, and that session must census EMPTY — a null census is
+ *      an unavailable instrument, not an empty session (repair A: one malformed row invalidates all);
+ *   4. the gate-port census must be AVAILABLE, so we never self-heal while blind.
+ * Anything else returns `ok:false` with a why that says which of the two kinds it is.
+ *
+ * Note what is deliberately NOT relaxed: this runs ONLY when the schema is invalid. A well-formed
+ * lease still goes through the unchanged `probeWrapper` path, so a live wrapper is still skipped
+ * and an unavailable probe still fails.
+ */
+export const proveResidue = (lease, { runner = execFileSync, ports = GATE_PORTS } = {}) => {
+  const pid = lease?.pid
+  const sid = lease?.sid
+  if (!Number.isInteger(pid) || pid <= 1)
+    return { ok: false, live: false, why: `no usable writer pid (${JSON.stringify(pid)}) — nothing can be proven dead` }
+  const w = probeProcess(pid, { runner })
+  if (w.state === 'alive')
+    return { ok: false, live: true, why: `POSSIBLY LIVE: writer pid ${pid} is alive` }
+  if (w.state !== 'dead')
+    return { ok: false, live: false, why: `writer pid ${pid} unprobeable: ${w.why}` }
+  if (!Number.isInteger(sid) || sid <= 1)
+    return { ok: false, live: false, why: `writer pid ${pid} is dead but the lease records no usable sid (${JSON.stringify(sid)})` }
+  const members = sessionMembers(sid, { runner })
+  if (members === null)
+    return { ok: false, live: false, why: `writer pid ${pid} is dead but the session census is UNAVAILABLE` }
+  if (members.length > 0)
+    return { ok: false, live: true, why: `POSSIBLY LIVE: session ${sid} still has ${members.length} member(s)` }
+  for (const port of ports) {
+    if (portHolders(port, { runner }) === null)
+      return { ok: false, live: false, why: `session ${sid} is empty but the port ${port} census is UNAVAILABLE` }
+  }
+  return { ok: true, live: false, why: `writer pid ${pid} DEAD, session ${sid} EMPTY, gate ports censused` }
+}
+
+/**
  * TRI-STATE process probe (repair B, RULING-P99-52): 'alive' | 'dead' | 'unavailable'.
  * `kill(pid,0)` succeeds on a ZOMBIE, so state is the truthful test — but a ps FAILURE is not
  * death. ONLY an empty result (exit 1 with empty stdout = no such process, or exit 0 with empty
@@ -1028,11 +1102,32 @@ export const sweepLeases = (
     const filenameNonce = f.slice(0, -'.lease'.length)
     const schema = validateLeaseSchema(lease, { expectedNonce: filenameNonce, expectedRoot: canonRoot })
     if (!schema.ok) {
+      // RULING-P99-175. A schema-invalid lease is no longer an automatic eternal refusal: prove
+      // whether it is DEAD LITTER or something POSSIBLY ALIVE, and only self-heal the first. The
+      // refusal that remains is LOUD — it names which kind it is — because the failure mode this
+      // replaces was a silent one that poisoned every subsequent run in the same worktree.
+      const residue = proveResidue(lease, { runner })
+      const recorded = lease?.reason ? ` (recorded reason: ${lease.reason})` : ''
+      if (residue.ok) {
+        try {
+          unlinkSync(p)
+        } catch (e) {
+          if (!(e && e.code === 'ENOENT')) {
+            out.failed.push({ lease: f, why: `schema-invalid RESIDUE proven but unlink failed: ${e.message}` })
+            continue
+          }
+        }
+        out.swept.push({
+          lease: f,
+          why: `SELF-HEALED schema-invalid RESIDUE: ${schema.why}; ${residue.why}${recorded}`,
+        })
+        continue
+      }
       out.failed.push({
         lease: f,
         why:
-          `lease schema incomplete — wrapper death unproven: ${schema.why}` +
-          (lease?.reason ? ` (recorded reason: ${lease.reason})` : ''),
+          `lease schema incomplete — ${residue.live ? 'REFUSING, a leftover group may still be LIVE' : 'wrapper death unproven'}` +
+          `: ${schema.why}; ${residue.why}${recorded}`,
       })
       continue
     }
@@ -1579,19 +1674,59 @@ const leaseExecMode = (argv) => {
     } catch (e) {
       reason = `python3 unavailable: ${e.message}`
     }
-    writeLeaseAtomic(dir, nonce, {
+    // RULING-P99-177 (a) — THE ROOT FIX: NEVER PERSIST A LEASE THAT CANNOT BE POPULATED.
+    //
+    // The whole defect is a durable file this program's own validator rejects forever. Measured
+    // cause (`99-10-SUMMARY.md:237`): a restricted worker sandbox denies `ps`
+    // (`ps: operation not permitted` / `spawnSync ps EPERM`), so every ps-derived field is null
+    // AT ONCE and the lease is born invalid. The retry below is right for a genuine transient and
+    // useless against a denial — so the write itself is gated.
+    //
+    // AND THE CLEANUP CANNOT SAVE US, which is why this must be prevented at WRITE. Both unlink
+    // paths are guarded by `verdict === 'clean'` / `outcome reaped|already-empty` — a run whose
+    // lease is schema-invalid can never reach either, so it RETAINS the file by design ("a
+    // retained lease is a sweeper retry, so keep it otherwise"). The cleanup is gated on the very
+    // success the poisoned lease makes unreachable. `99-10-SUMMARY.md` claims "the incomplete
+    // sandbox lease ... was removed before handoff so it cannot poison that external sweep" — that
+    // was a HUMAN `rm`, not a code path, and seven later gates prove no code path did it.
+    //
+    // The gate is `validateLeaseSchema` ITSELF, not a hand-copied field list: the writer refuses to
+    // write exactly what the validator would reject, so the two can never drift apart.
+    const pgid = retryPs(pgidOf, process.pid)
+    const lstart = retryPs(psLstart, process.pid)
+    const candidate = {
       nonce,
       sid,
       reason,
       pid: process.pid,
-      pgid: pgidOf(process.pid),
-      lstart: psLstart(process.pid),
+      pgid,
+      lstart,
       cwd: realpathSync(process.cwd()),
       root,
       wrapperPid: Number(process.env.PW_LEASE_WRAPPER_PID) || null,
       wrapperStart: process.env.PW_LEASE_WRAPPER_START || null,
       writtenAt: new Date().toISOString(),
-    })
+    }
+    let canonRoot = null
+    try {
+      canonRoot = realpathSync(root)
+    } catch {
+      canonRoot = root
+    }
+    const check = validateLeaseSchema(candidate, { expectedNonce: nonce, expectedRoot: canonRoot })
+    if (!check.ok) {
+      // LOUD, and then the command still runs: an instrument must never sabotage the run it
+      // observes. Unleased is the SAME state as `PW_LEASE_*` absent, which this file already
+      // handles — and it leaves NOTHING on disk for a later sweep to trip over.
+      console.error(
+        `pw-run-reaped --lease-exec: REFUSING TO WRITE AN UNPOPULATABLE LEASE (RULING-P99-177): ${check.why}` +
+          (reason ? ` (recorded reason: ${reason})` : '') +
+          ' — running UNLEASED. This run cannot be attributed and will not report clean; that is' +
+          ' honest. A sandbox that denies `ps` is the known cause (99-10-SUMMARY.md:237).',
+      )
+    } else {
+      writeLeaseAtomic(dir, nonce, candidate)
+    }
   }
   const child = spawn(cmd[0], cmd.slice(1), { stdio: 'inherit' })
   child.on('error', (e) => {
@@ -1750,7 +1885,7 @@ export const runMode = (
       PW_LEASE_DIR: leaseDir,
       PW_LEASE_ROOT: root,
       PW_LEASE_WRAPPER_PID: String(process.pid),
-      PW_LEASE_WRAPPER_START: psLstart(process.pid) ?? '',
+      PW_LEASE_WRAPPER_START: retryPs(psLstart, process.pid) ?? '', // RULING-P99-175
     },
   })
   // Repair 4 (RULING-P99-60): record the direct child's own canonical birth identity — PID, PGID
