@@ -252,7 +252,16 @@ export const GATE_PORTS = [5173, 5001]
 export const portHolders = (port, { runner = execFileSync } = {}) => {
   let out
   try {
-    out = runner('lsof', ['-ti', `tcp:${port}`], cOpts({ encoding: 'utf8' }))
+    // `-sTCP:LISTEN` (RULING-P99-185). Without it this returns every process with a socket on the
+    // port, ESTABLISHED CLIENTS INCLUDED — and Playwright's own chrome-headless-shell processes
+    // connect TO the dev server on exactly these ports, in their own sessions. The finish census
+    // then reported the test runner's own browser as a holder outside the leased session and
+    // refused ("not ours to touch"), withholding the report. That fired BY CONSTRUCTION on every
+    // rendered run, not occasionally. Verified on a live gate: six chrome processes counted as
+    // holders beside the two real listeners, which were the leased vite and backend.
+    // The question this function answers is "is something SERVING on our port", never "who is
+    // touching it" — a reaper that cannot tell a client from a squatter cannot judge either.
+    out = runner('lsof', ['-ti', `tcp:${port}`, '-sTCP:LISTEN'], cOpts({ encoding: 'utf8' }))
   } catch (e) {
     if (e && e.status === 1 && String(e.stdout ?? '').trim() === '') return [] // valid empty
     return null // unavailable: exec failure, permission, exit>1, or anything unclassifiable

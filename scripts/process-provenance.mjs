@@ -27,8 +27,16 @@
  *                             ESCAPED, never FOREIGN.
  *
  *   own cwd + leased sid       -> contained; the reaper can see and reap it normally.
- *   own cwd + differing sid    -> ESCAPED. A session-containment defect in the dev stack.
- *                                 Same run, same task, reproducible. NOT cross-task.
+ *   own cwd + differing sid    -> ESCAPED: ours, but outside the session a reaper censuses.
+ *                                 ⚠ NO CONFIRMED INSTANCE (RULING-P99-185). This branch is
+ *                                 logically sound and has NEVER been observed. The one case that
+ *                                 appeared to show it was two blind instruments: an unfiltered
+ *                                 port census counting Playwright's own browser CLIENTS as
+ *                                 holders, and this function emitting ESCAPED when given no lease
+ *                                 to compare. Measured afterwards on a live gate, both real
+ *                                 listeners sat INSIDE the leased session. Do not cite this
+ *                                 branch as evidence that escapes happen; it describes what the
+ *                                 verdict WOULD be, not a phenomenon on record.
  *   foreign cwd                -> genuinely someone else's. ONLY here is cross-task or external
  *                                 blame admissible — it requires a foreign CWD, never a foreign SID.
  *   cwd unavailable            -> UNDECIDABLE. Record it as such; never infer ownership from ppid,
