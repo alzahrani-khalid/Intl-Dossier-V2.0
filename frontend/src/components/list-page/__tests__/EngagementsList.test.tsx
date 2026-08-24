@@ -3,26 +3,33 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { EngagementsList, type EngagementRow } from '../EngagementsList'
 
 // Per-file react-i18next mock (project pattern — global mock has afterActions-only map).
-vi.mock('react-i18next', () => ({
-  useTranslation: (): {
-    i18n: { language: string }
-    t: (k: string, opts?: Record<string, unknown>) => string
-  } => ({
-    i18n: { language: 'en' },
-    t: (k: string, opts?: Record<string, unknown>): string => {
-      if (
-        opts &&
-        typeof opts === 'object' &&
-        'defaultValue' in opts &&
-        typeof opts.defaultValue === 'string'
-      ) {
-        return opts.defaultValue
-      }
-      return k
-    },
-  }),
-  Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
-}))
+vi.mock('react-i18next', () => {
+  const translations: Readonly<Record<string, string>> = {
+    'week.of': 'Week of',
+    loading: 'Loading engagements',
+    empty: 'No engagements found',
+  }
+  const translate = (key: string, opts?: Record<string, unknown>): string => {
+    const defaultValue = typeof opts?.defaultValue === 'string' ? opts.defaultValue : undefined
+    const value = defaultValue ?? translations[key] ?? ''
+    return Object.entries(opts ?? {}).reduce(
+      (rendered, [name, replacement]) => rendered.replaceAll(`{{${name}}}`, String(replacement)),
+      value,
+    )
+  }
+
+  return {
+    initReactI18next: { type: '3rdParty', init: (): void => undefined },
+    useTranslation: (): {
+      i18n: { language: string }
+      t: (k: string, opts?: Record<string, unknown>) => string
+    } => ({
+      i18n: { language: 'en' },
+      t: translate,
+    }),
+    Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
+  }
+})
 
 const sampleEngagement = (overrides: Partial<EngagementRow> = {}): EngagementRow => ({
   id: 'e1',
