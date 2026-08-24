@@ -49,7 +49,7 @@ import {
 import { AdvancedDataTable } from '@/components/table/AdvancedDataTable'
 import { ForumDetailsDialog } from '@/components/forums/ForumDetailsDialog'
 import { useForums, useCreateForum, useDeleteForum } from '@/hooks/useForums'
-import { format } from 'date-fns'
+import { formatDayFirstYear } from '@/lib/format-date'
 import type { Forum, ForumCreateRequest } from '@/types/forum.types'
 import type { DossierStatus } from '@/types/dossier'
 import { useDirection } from '@/hooks/useDirection'
@@ -137,9 +137,7 @@ export function ForumsPage() {
         return (
           <div className="flex items-center gap-1">
             <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">
-              {isValidDate ? format(createdDate, 'dd MMM yyyy') : '-'}
-            </span>
+            <span className="text-sm">{isValidDate ? formatDayFirstYear(createdDate) : '-'}</span>
           </div>
         )
       },

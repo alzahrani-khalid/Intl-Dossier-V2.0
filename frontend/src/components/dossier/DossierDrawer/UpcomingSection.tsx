@@ -10,10 +10,9 @@
  */
 import type * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
 import type { DossierOverviewResponse, DossierCalendarEvent } from '@/types/dossier-overview.types'
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
+import { formatWeekdayDayMonth } from '@/lib/format-date'
 
 export interface UpcomingSectionProps {
   overview?: DossierOverviewResponse | undefined
@@ -22,7 +21,6 @@ export interface UpcomingSectionProps {
 export function UpcomingSection({ overview }: UpcomingSectionProps): React.JSX.Element {
   const { t, i18n } = useTranslation('dossier-drawer')
   const lang = i18n.language
-  const locale = lang === 'ar' ? ar : enUS
   const events = (overview?.calendar_events?.upcoming ?? []).slice(0, 2)
 
   return (
@@ -47,7 +45,7 @@ export function UpcomingSection({ overview }: UpcomingSectionProps): React.JSX.E
       ) : (
         <ul className="week-list" data-testid="dossier-drawer-upcoming-list">
           {events.map((ev) => (
-            <UpcomingRow key={ev.id} event={ev} lang={lang} locale={locale} />
+            <UpcomingRow key={ev.id} event={ev} lang={lang} />
           ))}
         </ul>
       )}
@@ -58,14 +56,12 @@ export function UpcomingSection({ overview }: UpcomingSectionProps): React.JSX.E
 function UpcomingRow({
   event,
   lang,
-  locale,
 }: {
   event: DossierCalendarEvent
   lang: string
-  locale: typeof ar | typeof enUS
 }): React.JSX.Element {
   const start = new Date(event.start_datetime)
-  const dayLine = format(start, 'EEE d MMM', { locale })
+  const dayLine = formatWeekdayDayMonth(start)
   const timeStr = !event.is_all_day
     ? `${String(start.getHours()).padStart(2, '0')}:${String(start.getMinutes()).padStart(2, '0')}`
     : null

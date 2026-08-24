@@ -8,7 +8,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { FileText, Clock, AlertCircle, Calendar } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Card, CardContent } from '@/components/ui/card'
@@ -167,7 +167,7 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
                     <div className="flex items-center gap-1">
                       <FileText className="h-4 w-4" />
                       <span>
-                        {t('mous.signed')}: {format(new Date(mou.dates.signed), 'dd MMM yyyy')}
+                        {t('mous.signed')}: {formatDayFirstYear(new Date(mou.dates.signed))}
                       </span>
                     </div>
                   )}
@@ -178,9 +178,8 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
                       <Clock className="h-4 w-4" />
                       <span>
                         {t('mous.expires')}:{' '}
-                        {format(
+                        {formatDayFirstYear(
                           new Date((mou.expiry_date || mou.dates?.expiry) as string),
-                          'dd MMM yyyy',
                         )}
                       </span>
                     </div>
@@ -192,9 +191,8 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
                       <Calendar className="h-4 w-4" />
                       <span>
                         {t('mous.effective')}:{' '}
-                        {format(
+                        {formatDayFirstYear(
                           new Date((mou.effective_date || mou.dates?.effective) as string),
-                          'dd MMM yyyy',
                         )}
                       </span>
                     </div>
