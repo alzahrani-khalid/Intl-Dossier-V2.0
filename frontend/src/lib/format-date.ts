@@ -14,12 +14,14 @@
  * the active i18n language is read at call time so a mid-session flip re-renders.
  */
 
-import { formatDistanceToNow } from 'date-fns'
+import { format as formatDateFns, formatDistanceToNow } from 'date-fns'
 import { ar } from 'date-fns/locale'
+import i18n from 'i18next'
 import { toFormatLocale } from '@/lib/format-locale'
-// The i18n singleton (not `useTranslation`) because this module lives outside
-// React context — same idiom as `lib/query-client.ts`.
-import i18n from '@/i18n'
+
+// Read the package singleton initialized by `@/i18n` without importing the app
+// bootstrap here. Formatter consumers can then load in isolation (including in
+// tests with suite-local react-i18next mocks) while observing the same language.
 
 const PLACEHOLDER = '—'
 const GST_TIME_ZONE = 'Asia/Dubai'
@@ -127,8 +129,14 @@ export function formatDayMonthYear(date: Date | string | number): string {
 }
 
 /** Format `Tue 28 Apr` with a non-padded day for the compact upcoming lane. */
-export function formatWeekdayDayMonth(date: Date | string | number): string {
-  return formatAbsolute(date, 'EEE d MMM')
+export function formatWeekdayDayMonth(
+  date: Date | string | number,
+  language: string = i18n.language ?? 'en',
+): string {
+  if (date === null || date === undefined || date === '') return PLACEHOLDER
+  const d = toDate(date)
+  if (d === null) return PLACEHOLDER
+  return formatDateFns(d, 'EEE d MMM', { locale: language.startsWith('ar') ? ar : undefined })
 }
 
 /** Format the localized short weekday name. */

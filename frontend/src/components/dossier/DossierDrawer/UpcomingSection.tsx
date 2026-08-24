@@ -61,7 +61,7 @@ function UpcomingRow({
   lang: string
 }): React.JSX.Element {
   const start = new Date(event.start_datetime)
-  const dayLine = formatWeekdayDayMonth(start)
+  const dayLine = formatWeekdayDayMonth(start, lang)
   const timeStr = !event.is_all_day
     ? `${String(start.getHours()).padStart(2, '0')}:${String(start.getMinutes()).padStart(2, '0')}`
     : null
