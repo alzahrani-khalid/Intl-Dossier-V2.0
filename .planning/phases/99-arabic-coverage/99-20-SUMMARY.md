@@ -1,11 +1,66 @@
 # Phase 99-20: AR-02 formatter and raw-site census
 
-Status: implementation complete and committed. The source, formatter drill, strict guard, type,
-build, lint, and both engagement-suite checks are green. The required rendered `/calendar` command
-collected exactly its Arabic leg and English control, but this managed worker shell denied the
-reaper's process census and denied every local server bind, so Playwright could not start the app.
-The run-owned malformed lease was removed; the process/network-enabled harness must rerun the exact
-rendered command. No source or unit result below is represented as a rendered pass.
+Status: **PARKED FOR THE OVERSEER — acceptance item 1 remains unmet in this worker.** The source,
+strict guard, type-check, and both engagement suites are green, but the mandatory rendered
+`/calendar` command cannot start its web server in this sandbox. No source or unit result below is
+represented as a rendered pass, and this task does not declare completion.
+
+## Attempt 3 park — 2026-08-25
+
+The exact acceptance command was run continuously through its source predicate, strict date guard,
+two-test collection check, and reaped Playwright leg. The guard passed, but the reaped leg exited
+`90` before either named test ran:
+
+```text
+date-formatting check OK: 1533 non-test file(s) scanned, 0 unexcused ad-hoc date/number formatting sites (raw toLocaleDateString/toLocaleTimeString, month-first date-fns literals, Indic locale literals, relative time, localized skeletons, 12-hour literals, date-receiver toLocaleString, Intl.RelativeTimeFormat, local relative-time declarations, hand-assembled short relative forms) outside the 2-file allowlist (lib/format-date.ts, components/ui/calendar.tsx) and the 6 named permanent exemption(s) (see EXEMPT — each states its reason, and the dead-code one states its VOID CONDITION). Named debt: 0 row(s) excusing 0 site(s), all owned by plan 98-07.
+pw-run-reaped: playwright exited code=1 signal=null; group 99456 -> {"termed":false,"killed":false,"alreadyGone":false,"unavailable":true,"identityMismatch":false,"finalZero":false}; session unavailable; verdict unclean; causes ["unavailable: direct group 99456 liveness/identity unverifiable — a group we cannot prove is not a group we can call clean","unavailable: lease schema incomplete — wrapper identity/authority unproven: pgid is not a positive integer: null"]; report WITHHELD (.unclean.json)
+```
+
+The withheld Playwright report contained no suites and measured the pre-test startup failure:
+
+```text
+Error: Process from config.webServer was not able to start. Exit code: 1
+expected: 0
+unexpected: 0
+suites: []
+```
+
+Environment probes identified the external constraint rather than a page assertion:
+
+```text
+CODEX_SANDBOX=seatbelt
+CODEX_SANDBOX_NETWORK_DISABLED=1
+ps: operation not permitted
+curl: (7) Failed to connect to localhost port 5173
+```
+
+The run-owned nonce lease referred to a process already proven absent with `kill -0`; that exact
+ignored lease and its nonce-bound withheld report were removed so they cannot poison the next
+process-capable invocation. No tracked path was changed by the cleanup.
+
+The ruling-mandated suites were then run together without changing any test assertion, query,
+matcher, expected value, or name:
+
+```text
+Test Files  2 passed (2)
+     Tests  18 passed (18)
+  Duration  1.99s
+```
+
+The remaining local checks are green:
+
+```text
+raw English-name format sites outside lib/format-date.ts: 0
+formatter English-token positive control: 19 rows
+date guard: 0 unexcused rows
+type-check: exit 0
+```
+
+Required overseer action: rerun the plan's exact `pw-run-reaped` command in a process/network-enabled
+seat and close this task only after both `UI99-C1C2C4 ar /calendar` and
+`UI99-C1 en control /calendar` actually execute on `chromium-en` and pass. This is the explicit
+park required by the anchored review; the task does not substitute `--list`, an esbuild drill, or a
+prior child's exit status for that rendered observation.
 
 ## Acceptance-gate residue repair — 2026-08-25
 
