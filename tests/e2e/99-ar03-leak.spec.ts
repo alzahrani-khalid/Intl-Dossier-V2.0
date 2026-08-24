@@ -21,6 +21,7 @@ const EN_404_STRINGS = [
   'The page you are looking for does not exist or has been moved.',
   'Go back',
   'Dashboard',
+  'Search',
 ] as const
 const AR_404_FAMILY = [
   'الصفحة غير موجودة',
@@ -162,6 +163,9 @@ test('UI99-C5 ar 404', async ({ page }) => {
   for (const expected of AR_404_FAMILY) {
     expect(text, `UI99-C5 Arabic notFound family missing: ${expected}`).toContain(expected)
   }
+  // Word-bounded: the message's تبحث contains the substring بحث, so a bare toContain would be
+  // vacuously true without the standalone search label (RULING-P99-165 polarity discipline).
+  expect(text, 'UI99-C5 Arabic search label missing (word-bounded بحث)').toMatch(/(^|\s)بحث(\s|$)/)
   for (const leaked of EN_404_STRINGS) {
     expect(text, `UI99-C5 leaked English 404 copy: ${leaked}`).not.toContain(leaked)
   }
