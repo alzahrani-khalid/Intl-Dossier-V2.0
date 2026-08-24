@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { DataTable } from '@/components/table/DataTable'
 import { supabase } from '@/lib/supabase'
-import { format } from 'date-fns'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { useDirection } from '@/hooks/useDirection'
 import { CreateMouDialog } from '@/components/mous/CreateMouDialog'
 
@@ -178,13 +178,13 @@ export function MousPage() {
             {row.original.signing_date && (
               <div className="flex items-center gap-1">
                 <FileText className="h-3 w-3" />
-                {format(new Date(row.original.signing_date), 'dd MMM yyyy')}
+                {formatDayFirstYear(new Date(row.original.signing_date))}
               </div>
             )}
             {row.original.expiry_date && (
               <div className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
-                {format(new Date(row.original.expiry_date), 'dd MMM yyyy')}
+                {formatDayFirstYear(new Date(row.original.expiry_date))}
               </div>
             )}
           </div>

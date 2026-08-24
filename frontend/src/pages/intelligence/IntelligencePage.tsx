@@ -17,7 +17,7 @@ import { Input } from '@/components/ui/input'
 import { DataTable } from '@/components/table/DataTable'
 import type { ColumnDef } from '@tanstack/react-table'
 import { supabase } from '@/lib/supabase'
-import { format } from 'date-fns'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { useDirection } from '@/hooks/useDirection'
 import { cn } from '@/lib/utils'
 import { SignalsQueue } from '@/components/signals/SignalsQueue'
@@ -345,7 +345,7 @@ export function IntelligencePage() {
             </span>
             {report.published_at && (
               <div className="text-xs text-muted-foreground">
-                {format(new Date(report.published_at), 'dd MMM yyyy')}
+                {formatDayFirstYear(new Date(report.published_at))}
               </div>
             )}
           </div>

@@ -7,7 +7,7 @@
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
+import { formatDayMonth } from '@/lib/format-date'
 import {
   LineChart,
   Line,
@@ -97,15 +97,15 @@ export function CommitmentFulfillmentChart({
   isLoading,
   className,
 }: CommitmentFulfillmentChartProps) {
-  const { t } = useTranslation('analytics')
+  const { t, i18n } = useTranslation('analytics')
   const { isRTL } = useDirection()
   const trendData = useMemo(() => {
     if (!data?.fulfillmentTrend) return []
     return data.fulfillmentTrend.map((point) => ({
       ...point,
-      dateLabel: format(new Date(point.date), 'd MMM'),
+      dateLabel: formatDayMonth(new Date(point.date)),
     }))
-  }, [data?.fulfillmentTrend])
+  }, [data?.fulfillmentTrend, i18n.language])
 
   const statusData = useMemo(() => {
     if (!data) return []
