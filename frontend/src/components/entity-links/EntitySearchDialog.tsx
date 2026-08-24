@@ -24,7 +24,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { cn } from '@/lib/utils'
-import { useEntitySearchState, formatEntityType } from '@/hooks/useEntitySearch'
+import { useEntitySearchState } from '@/hooks/useEntitySearch'
 import { useEntityLinks } from '@/hooks/useEntityLinks'
 import { dossierTypeColors } from '@/lib/semantic-colors'
 import type {
@@ -314,10 +314,10 @@ export function EntitySearchDialog({
                         isSelected && '',
                       )}
                       onClick={() => toggleEntityType(type)}
-                      aria-label={t(`entityLinks.entityTypes.${type}`)}
+                      aria-label={t(`common:entityLinks.entityTypes.${type}`)}
                       aria-pressed={isSelected}
                     >
-                      {formatEntityType(type)}
+                      {t(`common:entityLinks.entityTypes.${type}`)}
                     </Button>
                   )
                 })}
@@ -513,7 +513,7 @@ export function EntitySearchDialog({
                                   getEntityTypeBadgeClass(entity.entity_type),
                                 )}
                               >
-                                {formatEntityType(entity.entity_type)}
+                                {t(`common:entityLinks.entityTypes.${entity.entity_type}`)}
                               </Badge>
                               {/* Already linked badge */}
                               {isAlreadyLinked && (
