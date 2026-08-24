@@ -11,34 +11,35 @@ import { Button } from '@/components/ui/button'
 import { TooltipProvider } from '@/components/ui/tooltip'
 
 function NotFoundPage() {
-  const { t } = useTranslation()
+  const { i18n: translationInstance } = useTranslation('common')
   const router = useRouter()
+  const commonI18n =
+    typeof translationInstance.getFixedT === 'function' ? translationInstance : i18n
+  const tCommon = commonI18n.getFixedT(null, 'common')
 
   return (
     <main className="flex min-h-screen items-center justify-center p-4 sm:p-6 lg:p-8">
       <div className="text-center space-y-6 max-w-md">
         <div className="text-6xl sm:text-8xl font-bold text-muted-foreground/30">404</div>
         <h1 className="text-xl sm:text-2xl font-semibold text-foreground">
-          {i18n.t('common:notFound.title')}
+          {tCommon('notFound.title')}
         </h1>
-        <p className="text-muted-foreground text-sm sm:text-base">
-          {i18n.t('common:notFound.message')}
-        </p>
+        <p className="text-muted-foreground text-sm sm:text-base">{tCommon('notFound.message')}</p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Button variant="outline" size="default" onClick={() => router.history.back()}>
             <ArrowLeft className="h-4 w-4 me-2" />
-            {i18n.t('common:notFound.goBack')}
+            {tCommon('notFound.goBack')}
           </Button>
           <Button asChild>
             <Link to="/dashboard">
               <Home className="h-4 w-4 me-2" />
-              {i18n.t('common:notFound.goHome')}
+              {tCommon('notFound.goHome')}
             </Link>
           </Button>
           <Button variant="ghost" asChild>
             <Link to="/search">
               <Search className="h-4 w-4 me-2" />
-              {t('common:search.label', 'Search')}
+              {tCommon('search.label')}
             </Link>
           </Button>
         </div>

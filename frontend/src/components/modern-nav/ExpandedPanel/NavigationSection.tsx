@@ -63,7 +63,7 @@ export function NavigationSection({
   className,
   hideHeader = false,
 }: NavigationSectionProps) {
-  const { t } = useTranslation()
+  const { t } = useTranslation('common')
   const navigate = useNavigate()
   const location = useLocation()
 
