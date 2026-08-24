@@ -158,7 +158,8 @@
     "assigned": "تم التعيين",
     "in_progress": "قيد التنفيذ",
     "completed": "مكتمل",
-    "cancelled": "ملغى"
+    "cancelled": "ملغى",
+    "review": "قيد المراجعة"
   },
   "priority": {
     "urgent": "عاجل",
@@ -398,7 +399,13 @@
   "breached": "تجاوز مدة الاتفاقية",
   "error_loading": "فشل تحميل التكليفات. يرجى المحاولة مرة أخرى.",
   "no_assignments": "لا توجد تكليفات",
-  "work_item": "عنصر العمل",
+  "work_item": {
+    "label": "عنصر العمل",
+    "dossier": "دوسيه",
+    "ticket": "تذكرة",
+    "position": "موقف",
+    "task": "مهمة"
+  },
   "type": "النوع",
   "sla_remaining": "المتبقي من مدة الاتفاقية",
   "assigned_at": "تاريخ التكليف",

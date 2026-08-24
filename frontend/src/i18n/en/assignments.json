@@ -8,7 +8,13 @@
   "breached": "SLA Breached",
   "error_loading": "Failed to load assignments. Please try again.",
   "no_assignments": "No assignments found",
-  "work_item": "Work Item",
+  "work_item": {
+    "label": "Work Item",
+    "dossier": "Dossier",
+    "ticket": "Ticket",
+    "position": "Position",
+    "task": "Task"
+  },
   "type": "Type",
   "sla_remaining": "SLA Remaining",
   "assigned_at": "Assigned At",
@@ -182,7 +188,8 @@
     "assigned": "Assigned",
     "in_progress": "In Progress",
     "completed": "Completed",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "review": "Review"
   },
   "priority": {
     "urgent": "Urgent",
