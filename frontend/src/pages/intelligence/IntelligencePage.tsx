@@ -582,7 +582,7 @@ export function IntelligencePage() {
                         size="sm"
                         onClick={() => setFilterClassification(cls)}
                       >
-                        {t(`intelligence.classifications.${cls}`)}
+                        {t(`common:intelligence.classifications.${cls}`)}
                       </Button>
                     ))}
                   </div>

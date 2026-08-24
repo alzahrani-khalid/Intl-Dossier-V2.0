@@ -290,10 +290,7 @@ export function AISuggestionPanel({
                     {suggestion.suggested_entity_id}
                   </h4>
                   <p className="text-xs text-muted-foreground text-start mt-1">
-                    {t(
-                      `entityTypes.${suggestion.suggested_entity_type}`,
-                      suggestion.suggested_entity_type,
-                    )}
+                    {t(`common:entityLinks.entityTypes.${suggestion.suggested_entity_type}`)}
                   </p>
                 </div>
 
