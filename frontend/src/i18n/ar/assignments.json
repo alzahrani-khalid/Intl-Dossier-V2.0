@@ -517,5 +517,22 @@
       "ticket": "تذكرة",
       "position": "موقف"
     }
+  },
+  "waiting": {
+    "description": "عناصر قيد الانتظار أو مكلف بها ولم تبدأ بعد",
+    "dossiers": "الدوسيهات",
+    "tickets": "التذاكر",
+    "positions": "المواقف",
+    "tasks": "المهام",
+    "empty": "لا توجد عناصر في الانتظار",
+    "emptyDescription": "جميع عناصر العمل تسير في مسارها",
+    "emptyCategory": "لا توجد عناصر في الانتظار لهذا السبب",
+    "waitingFor": "في الانتظار منذ",
+    "day": "يوم",
+    "days": "أيام",
+    "assignee": "المكلف",
+    "status": "الحالة",
+    "assignmentUpdated": "تم تحديث التكليف",
+    "assignmentCompletedDesc": "لم يعد تكليف عنصر العمل {{id}} في قائمة الانتظار."
   }
 }

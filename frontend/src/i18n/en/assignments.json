@@ -513,5 +513,22 @@
       "ticket": "Ticket",
       "position": "Position"
     }
+  },
+  "waiting": {
+    "description": "Items pending or assigned but not yet started",
+    "dossiers": "Dossiers",
+    "tickets": "Tickets",
+    "positions": "Positions",
+    "tasks": "Tasks",
+    "empty": "No waiting items",
+    "emptyDescription": "All work items are progressing",
+    "emptyCategory": "No items waiting for this reason",
+    "waitingFor": "Waiting for",
+    "day": "day",
+    "days": "days",
+    "assignee": "Assignee",
+    "status": "Status",
+    "assignmentUpdated": "Assignment Updated",
+    "assignmentCompletedDesc": "Assignment for work item {{id}} is no longer in the waiting queue."
   }
 }
