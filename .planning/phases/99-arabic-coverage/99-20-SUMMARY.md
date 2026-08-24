@@ -7,6 +7,29 @@ reaper's process census and denied every local server bind, so Playwright could 
 The run-owned malformed lease was removed; the process/network-enabled harness must rerun the exact
 rendered command. No source or unit result below is represented as a rendered pass.
 
+## Acceptance-gate residue repair — 2026-08-25
+
+The failed acceptance invocation reached a different result from the restricted worker-shell runs
+below: its Playwright child exited `0`, and the reaper proved the current group gone
+(`alreadyGone: true`, `finalZero: true`). The wrapper returned `90` only because its pre-spawn
+orphan sweep found the ignored run artifact `b545b2ca31757222ff434506146f3d5a.lease` with
+`pgid: null`. That malformed lease was not part of the committed task diff and is absent from this
+fresh repair worktree.
+
+A clean-state replay reconfirmed the source predicate and strict date guard before this managed
+shell again denied process-group identity to its newly started web server. The exact run-owned
+nonce lease from that diagnostic was removed, leaving `.pw-leases` empty for the process-capable
+acceptance rerun. No production or test source change is justified by this stale-artifact finding,
+and `scripts/pw-run-reaped.mjs` is outside this task's fixed file grant.
+
+The two ruling-mandated engagement suites were also rerun together after cleanup:
+
+```text
+Test Files  2 passed (2)
+     Tests  18 passed (18)
+  Duration  1.83s
+```
+
 ## Repair pass — 2026-08-25
 
 Commit `58dacb826` (`fix(i18n): isolate date formatter language state`) resolves the three new
