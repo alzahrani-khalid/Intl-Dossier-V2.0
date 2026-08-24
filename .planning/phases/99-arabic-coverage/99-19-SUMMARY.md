@@ -7,6 +7,44 @@ Playwright ran a test. The product, scope, type, build, strict-audit, and focuse
 are green; the rendered command must be rerun by the harness where process census and the test
 backend are available.
 
+## Repair pass: stale lease removed
+
+The failed acceptance gate reported that Playwright itself exited `0`, but the wrapper returned
+`90` because its pre-spawn orphan sweep found an ignored lease whose `pgid` was `null`. That lease
+was produced by the earlier sandboxed proof attempt, not by the application or the test.
+
+This repair pass verified that the strengthened base oracle already contains the standalone,
+word-bounded `بحث` assertion and the English `Search` leak guard. Its collection remains exactly:
+
+```text
+Listing tests:
+  [chromium-en] › 99-ar03-leak.spec.ts:157:5 › UI99-C5 ar 404
+Total: 1 test in 1 file
+```
+
+The exact reaped command was attempted once in this managed shell. `/bin/ps` is denied here, so the
+lease writer again recorded `pgid:null` and the configured web server exited before collecting a
+test; the wrapper correctly withheld that local report. The run-owned malformed lease was then
+deleted and `.pw-leases` removed. This is the smallest repair for the current gate finding: the
+process-enabled harness can now execute the required command without inheriting a malformed lease
+from this worker.
+
+The repair checks were:
+
+```text
+> intake-frontend@1.0.0 type-check
+> tsc --noEmit
+
+CONTROL resolves(intelligence-signals, "severity") = True (expect True)
+CONTROL resolves(common, "waitingQueue.statuses")  = True (expect True)
+CONTROL resolves(common, "waitingQueue.status")    = False (expect False)
+CONTROL resolves(common, "waitingQueue.priority")  = False (expect False)
+UNRESOLVED dynamic t() key prefixes: 13 total  (12 mask a raw value -> criterion 1; 1 render a RAW KEY -> criterion 2)
+```
+
+All 13 residual rows remain the previously named task, waiting-queue, and commitment tail outside
+this task's allowlist. No product source needed another edit in the repair pass.
+
 ## Product commits and owned transition
 
 - `f757715bf` — `fix(i18n): bind reactive 404 and navigation copy`
