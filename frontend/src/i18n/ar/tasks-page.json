@@ -88,5 +88,62 @@
     "review": "مراجعة",
     "done": "مكتمل",
     "cancelled": "ملغى"
+  },
+  "card": {
+    "created": "تاريخ الإنشاء",
+    "due": "الاستحقاق"
+  },
+  "detail": {
+    "task_details": "تفاصيل المهمة",
+    "description": "الوصف",
+    "assignee": "المكلَّف",
+    "unassigned": "غير مكلَّف",
+    "workflow_stage": "مرحلة سير العمل",
+    "created": "تاريخ الإنشاء",
+    "updated": "آخر تحديث",
+    "engagement": "المشاركة",
+    "type": "النوع",
+    "date": "التاريخ",
+    "location": "الموقع",
+    "related_dossier": "الدوسيه المرتبط",
+    "contributors": "المساهمون",
+    "add_contributor": "إضافة مساهم",
+    "loading_contributors": "جاري تحميل المساهمين...",
+    "linked_work_items": "عناصر العمل المرتبطة",
+    "deleted": "محذوف",
+    "no_linked_items": "لا توجد عناصر عمل مرتبطة بهذه المهمة",
+    "edit_linked_items": "تعديل عناصر العمل المرتبطة (أعد الربط إذا حُذفت)"
+  },
+  "contributors": {
+    "addContributor": "إضافة مساهم",
+    "addContributorDescription": "أضف عضو فريق ساهم في هذه المهمة",
+    "searchUser": "البحث عن مستخدم",
+    "searchUserPlaceholder": "اكتب الاسم أو البريد الإلكتروني...",
+    "roleLabel": "الدور",
+    "contributorNotes": "ملاحظات",
+    "contributorNotesPlaceholder": "اذكر وصفًا لمساهمته...",
+    "add": "إضافة",
+    "noContributors": "لا يوجد مساهمون بعد",
+    "removeContributor": "إزالة المساهم",
+    "role": {
+      "helper": "مساعد",
+      "reviewer": "مراجع",
+      "advisor": "مستشار",
+      "observer": "مراقب",
+      "supervisor": "مشرف"
+    },
+    "roleDescription": {
+      "helper": "ساعد في تنفيذ المهمة",
+      "reviewer": "راجع مخرجات المهمة أو جودتها",
+      "advisor": "قدّم توجيهًا أو استشارة متخصصة",
+      "observer": "تابع التقدم (مثلًا للتدريب أو نقل المعرفة)",
+      "supervisor": "قدّم الإشراف أو الموافقة"
+    }
+  },
+  "page": {
+    "deleted": "تم حذف المهمة",
+    "deletedRedirecting": "تم حذف المهمة. جاري إعادة التوجيه...",
+    "failed_to_load_task": "فشل تحميل المهمة. يرجى المحاولة مرة أخرى.",
+    "back_to_tasks": "العودة إلى المهام"
   }
 }
