@@ -7,10 +7,56 @@ reaper's process census and denied every local server bind, so Playwright could 
 The run-owned malformed lease was removed; the process/network-enabled harness must rerun the exact
 rendered command. No source or unit result below is represented as a rendered pass.
 
+## Repair pass — 2026-08-25
+
+Commit `58dacb826` (`fix(i18n): isolate date formatter language state`) resolves the three new
+failure fingerprints reported against the prior attempt. The measured collection cause was
+`format-date.ts` importing the application i18n bootstrap: suite-local `react-i18next` mocks did not
+export `initReactI18next`, so the bootstrap failed before any test ran. The formatter now imports the
+same `i18next` package singleton directly, retaining call-time language reads without executing app
+initialization in isolated consumers. `UpcomingSection` passes its live render language to the
+shared compact helper, which preserves that already-localized site's established date-fns Arabic
+shape (`ثلاثاء 28 أبريل`) and English bytes.
+
+The two engagement suites plus the three new-fingerprint suites completed together:
+
+```text
+Test Files  5 passed (5)
+     Tests  46 passed (46)
+```
+
+The complete prior-failure cohort then reported 18 passing files / 148 passing tests. Its remaining
+24 failures are the harness's pre-existing baseline: the AppShell/Sidebar tests render `NavUser`
+without a `LanguageProvider`, and the five Phase 87 list-route test factories omit the `Link` export
+their route pages render. Those files are outside this task's fixed allowlist and were not edited.
+The task-attributable three-file fingerprint is green, as are the two ruling-mandated engagement
+suites. Type-check, targeted ESLint/Prettier, the production build, and the strict date guard are
+green after the repair.
+
+The exact command oracle was rerun. Its source predicate and strict guard passed, and its list leg
+again collected exactly the required two tests:
+
+```text
+Listing tests:
+  [chromium-en] › 99-ar02-dates.spec.ts:125:5 › UI99-C1C2C4 ar /calendar
+  [chromium-en] › 99-ar02-dates.spec.ts:137:5 › UI99-C1 en control /calendar
+Total: 2 tests in 1 file
+```
+
+The rendered leg remains unavailable in this managed shell before any Playwright test executes:
+
+```text
+pw-run-reaped: playwright exited code=1 signal=null; group 73489 -> {"termed":false,"killed":false,"alreadyGone":false,"unavailable":true,"identityMismatch":false,"finalZero":false}; session unavailable; verdict unclean; causes ["unavailable: direct group 73489 liveness/identity unverifiable — a group we cannot prove is not a group we can call clean","unavailable: lease schema incomplete — wrapper identity/authority unproven: pgid is not a positive integer: null"]; report WITHHELD (.unclean.json)
+```
+
+No rendered pass is claimed; the process/network-enabled acceptance harness still owns that final
+observation.
+
 ## Commits
 
 - `92514982b` — `feat(i18n): localize shared date formats`
 - `ffbbc6740` — `test(engagements): repair static import mocks`
+- `58dacb826` — `fix(i18n): isolate date formatter language state`
 
 The task started from `6c244b019`. The implementation diff contains exactly the 26 allowed source
 and test files; this summary is the only documentation follow-up.
