@@ -53,7 +53,13 @@
     "proofRequiredDescription": "مطلوب رفع دليل للإكمال",
     "trackingMode": "وضع التتبع",
     "manual": "يدوي",
-    "automatic": "تلقائي"
+    "automatic": "تلقائي",
+    "contactEmail": "البريد الإلكتروني لجهة الاتصال",
+    "emailPlaceholder": "أدخل البريد الإلكتروني لجهة الاتصال",
+    "contactName": "اسم جهة الاتصال",
+    "namePlaceholder": "أدخل اسم جهة الاتصال",
+    "organization": "الجهة",
+    "orgPlaceholder": "أدخل اسم الجهة"
   },
   "filters": {
     "title": "تصفية الالتزامات",
@@ -100,7 +106,9 @@
     "dueIn": "مستحق خلال {{days}} يوم",
     "dueToday": "مستحق اليوم",
     "overdueDays": "متأخر {{days}} يوم",
-    "noTitle": "التزام بدون عنوان"
+    "noTitle": "التزام بدون عنوان",
+    "item": "الالتزام {{number}}",
+    "aiConfidence": "{{value}}٪ درجة ثقة"
   },
   "list": {
     "empty": "لم يتم العثور على التزامات",
@@ -144,5 +152,9 @@
     "evidenceUploaded": "تم رفع الدليل",
     "updated": "تم تحديث الالتزام",
     "by": "بواسطة {{user}}"
+  },
+  "trackingMode": {
+    "automatic": "تلقائي",
+    "manual": "يدوي"
   }
 }

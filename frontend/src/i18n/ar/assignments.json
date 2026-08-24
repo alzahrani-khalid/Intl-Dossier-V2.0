@@ -158,7 +158,8 @@
     "assigned": "تم التعيين",
     "in_progress": "قيد التنفيذ",
     "completed": "مكتمل",
-    "cancelled": "ملغى"
+    "cancelled": "ملغى",
+    "review": "قيد المراجعة"
   },
   "priority": {
     "urgent": "عاجل",
@@ -398,7 +399,13 @@
   "breached": "تجاوز مدة الاتفاقية",
   "error_loading": "فشل تحميل التكليفات. يرجى المحاولة مرة أخرى.",
   "no_assignments": "لا توجد تكليفات",
-  "work_item": "عنصر العمل",
+  "work_item": {
+    "label": "عنصر العمل",
+    "dossier": "دوسيه",
+    "ticket": "تذكرة",
+    "position": "موقف",
+    "task": "مهمة"
+  },
   "type": "النوع",
   "sla_remaining": "المتبقي من مدة الاتفاقية",
   "assigned_at": "تاريخ التكليف",
@@ -411,5 +418,121 @@
     "ticket": "تذكرة",
     "position": "موقف",
     "task": "مهمة"
+  },
+  "waitingQueue": {
+    "assignmentDetails": {
+      "assignedAt": "تاريخ التكليف",
+      "assignee": "المكلف",
+      "daysWaiting": "أيام الانتظار",
+      "lastReminder": "آخر تذكير",
+      "noReminderSent": "لم يتم إرسال تذكير",
+      "statusAndPriority": "الحالة والأولوية",
+      "timeline": "الجدول الزمني",
+      "title": "تفاصيل التكليف",
+      "viewFullDetails": "عرض التفاصيل الكاملة",
+      "workItemNotAvailable": "عنصر العمل لهذا التكليف غير متوفر.",
+      "description": "الوصف",
+      "dialogDescription": "عرض التفاصيل الكاملة للتكليف {{id}}، المكلف به {{assignee}}",
+      "linkedItems": "العناصر المرتبطة",
+      "taskActions": "المهمة",
+      "viewTask": "عرض المهمة",
+      "viewLinkedItems": "عرض العناصر المرتبطة"
+    },
+    "escalation": {
+      "autoResolve": "حل تلقائي من التسلسل الهرمي التنظيمي",
+      "error": "فشل تصعيد التكليف",
+      "escalate": "تصعيد",
+      "escalateAssignment": "تصعيد التكليف",
+      "escalating": "جاري التصعيد...",
+      "noEscalationPathMessage": "تعذر العثور على مدير لـ {{user}} في التسلسل الهرمي التنظيمي.",
+      "reason": "السبب (اختياري)",
+      "reasonPlaceholder": "لماذا تقوم بتصعيد هذا التكليف؟",
+      "selectRecipient": "اختر المستلم",
+      "success": "تم تصعيد التكليف بنجاح",
+      "dialogDescription": "تصعيد هذا التكليف إلى الإدارة الأعلى للاهتمام به",
+      "immediateManager": "المدير المباشر",
+      "reasonAriaLabel": "السبب",
+      "reasonHint": "اشرح سبب الحاجة إلى التصعيد",
+      "reasonRequired": "يرجى إدخال سبب التصعيد",
+      "successDesc": "تم إشعار المدير وسيقوم بمراجعة التكليف."
+    },
+    "aging": {
+      "ok": "حديث",
+      "warning": "يحتاج إلى متابعة",
+      "danger": "متأخر"
+    },
+    "days": "أيام",
+    "relatedTo": "مرتبط بـ: ",
+    "reminder": {
+      "noAssignee": {
+        "title": "لا يوجد مكلف",
+        "description": "هذا التكليف بلا مكلف. يرجى تعيين مكلف له أولاً."
+      },
+      "cooldown": {
+        "title": "فترة الانتظار سارية",
+        "description": "يرجى الانتظار {{hours}} ساعة إضافية قبل إرسال تذكير آخر."
+      },
+      "success": {
+        "title": "تم إرسال التذكير",
+        "description": "تم إرسال تذكير المتابعة بنجاح."
+      },
+      "error": {
+        "title": "فشل إرسال التذكير",
+        "description": "حدث خطأ أثناء إرسال التذكير. يرجى المحاولة مرة أخرى."
+      },
+      "rateLimit": {
+        "title": "تم تجاوز حد الإرسال",
+        "description": "لقد أرسلت عددًا كبيرًا من التذكيرات. يرجى الانتظار بضع دقائق ثم المحاولة مرة أخرى."
+      },
+      "notFound": {
+        "title": "التكليف غير موجود",
+        "description": "تعذر العثور على التكليف. قد يكون قد حُذف."
+      },
+      "conflict": {
+        "title": "تم تعديل التكليف",
+        "description": "عدّل مستخدم آخر هذا التكليف. يرجى تحديث الصفحة والمحاولة مرة أخرى."
+      },
+      "button": {
+        "label": "إرسال تذكير متابعة",
+        "sending": "جاري الإرسال...",
+        "sent": "تم الإرسال!",
+        "send": "إرسال تذكير"
+      }
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "assigned": "تم التكليف",
+      "in_progress": "قيد التنفيذ",
+      "completed": "مكتمل",
+      "cancelled": "ملغى"
+    },
+    "priority": {
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "عالي",
+      "urgent": "عاجل"
+    },
+    "entityType": {
+      "dossier": "دوسيه",
+      "ticket": "تذكرة",
+      "position": "موقف"
+    }
+  },
+  "waiting": {
+    "description": "عناصر قيد الانتظار أو مكلف بها ولم تبدأ بعد",
+    "dossiers": "الدوسيهات",
+    "tickets": "التذاكر",
+    "positions": "المواقف",
+    "tasks": "المهام",
+    "empty": "لا توجد عناصر في الانتظار",
+    "emptyDescription": "جميع عناصر العمل تسير في مسارها",
+    "emptyCategory": "لا توجد عناصر في الانتظار لهذا السبب",
+    "waitingFor": "في الانتظار منذ",
+    "day": "يوم",
+    "days": "أيام",
+    "assignee": "المكلف",
+    "status": "الحالة",
+    "assignmentUpdated": "تم تحديث التكليف",
+    "assignmentCompletedDesc": "لم يعد تكليف عنصر العمل {{id}} في قائمة الانتظار."
   }
 }
