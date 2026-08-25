@@ -267,12 +267,15 @@ Task-owned changed paths are limited to:
 
 ```text
 .planning/phases/99-arabic-coverage/99-23-SUMMARY.md
+frontend/src/i18n/ar/persons.json
 frontend/src/i18n/en/common.json
 scripts/glossary-senses.d/tiebreaks.json
 scripts/nav-title-agreement.mjs
 ```
 
-Every other allowlisted locale/source file already carried its ruled value in the inherited tree and
-was verified without rewriting. Every path outside P99-23's fixed allowlist remains untouched.
+The Arabic persons subtitle was aligned with the ruled `الأشخاص` terminology so it no longer
+retains the forbidden `جهات الاتصال الرئيسية` wording. Every other allowlisted locale/source file
+already carried its ruled value in the inherited tree and was verified without rewriting. Every path
+outside P99-23's fixed allowlist remains untouched.
 The three named product decisions above remain for the OVERSEER; this worker applied no invented
 Arabic information architecture.
