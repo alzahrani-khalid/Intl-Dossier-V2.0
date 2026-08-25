@@ -126,7 +126,9 @@ describe('EscalationDialog', () => {
   it('disables escalation and explains when no escalation path exists', () => {
     render(<EscalationDialog {...defaultProps} escalationPath={[]} />)
 
-    expect(screen.getByText(/No manager configured for Test Assignee/i)).toBeInTheDocument()
+    expect(
+      screen.getByText(/Could not find a manager for Test Assignee/i),
+    ).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /^escalate$/i })).toBeDisabled()
   })
 })

@@ -81,9 +81,9 @@ export function ReminderButton({
     if (!assigneeId) {
       toast({
         variant: 'destructive',
-        title: t('waitingQueue.reminder.noAssignee.title', 'No Assignee'),
+        title: t('assignments:waitingQueue.reminder.noAssignee.title', 'No Assignee'),
         description: t(
-          'waitingQueue.reminder.noAssignee.description',
+          'assignments:waitingQueue.reminder.noAssignee.description',
           'This assignment has no assignee. Please assign it first.',
         ),
       })
@@ -95,9 +95,9 @@ export function ReminderButton({
       const hoursRemaining = getHoursRemaining()
       toast({
         variant: 'destructive',
-        title: t('waitingQueue.reminder.cooldown.title', 'Cooldown Active'),
+        title: t('assignments:waitingQueue.reminder.cooldown.title', 'Cooldown Active'),
         description: t(
-          'waitingQueue.reminder.cooldown.description',
+          'assignments:waitingQueue.reminder.cooldown.description',
           `Please wait {{hours}} more hours before sending another reminder.`,
           { hours: hoursRemaining },
         ),
@@ -112,9 +112,9 @@ export function ReminderButton({
         onSuccess: () => {
           setShowSuccess(true)
           toast({
-            title: t('waitingQueue.reminder.success.title', 'Reminder Sent'),
+            title: t('assignments:waitingQueue.reminder.success.title', 'Reminder Sent'),
             description: t(
-              'waitingQueue.reminder.success.description',
+              'assignments:waitingQueue.reminder.success.description',
               'Follow-up reminder has been sent successfully.',
             ),
             variant: 'default',
@@ -124,9 +124,9 @@ export function ReminderButton({
           setTimeout(() => setShowSuccess(false), 2000)
         },
         onError: (error: any) => {
-          let title = t('waitingQueue.reminder.error.title', 'Failed to Send Reminder')
+          let title = t('assignments:waitingQueue.reminder.error.title', 'Failed to Send Reminder')
           let description = t(
-            'waitingQueue.reminder.error.description',
+            'assignments:waitingQueue.reminder.error.description',
             'An error occurred while sending the reminder. Please try again.',
           )
           const errorCode = error?.error ?? error?.code
@@ -134,34 +134,34 @@ export function ReminderButton({
           // Handle specific error codes
           if (errorCode === 'COOLDOWN_ACTIVE') {
             const hoursRemaining = error?.details?.hours_remaining || 24
-            title = t('waitingQueue.reminder.cooldown.title', 'Cooldown Active')
+            title = t('assignments:waitingQueue.reminder.cooldown.title', 'Cooldown Active')
             description = t(
-              'waitingQueue.reminder.cooldown.description',
+              'assignments:waitingQueue.reminder.cooldown.description',
               `Please wait {{hours}} more hours before sending another reminder.`,
               { hours: hoursRemaining },
             )
           } else if (errorCode === 'RATE_LIMIT_EXCEEDED') {
-            title = t('waitingQueue.reminder.rateLimit.title', 'Rate Limit Exceeded')
+            title = t('assignments:waitingQueue.reminder.rateLimit.title', 'Rate Limit Exceeded')
             description = t(
-              'waitingQueue.reminder.rateLimit.description',
+              'assignments:waitingQueue.reminder.rateLimit.description',
               'You have sent too many reminders. Please wait a few minutes and try again.',
             )
           } else if (errorCode === 'NO_ASSIGNEE') {
-            title = t('waitingQueue.reminder.noAssignee.title', 'No Assignee')
+            title = t('assignments:waitingQueue.reminder.noAssignee.title', 'No Assignee')
             description = t(
-              'waitingQueue.reminder.noAssignee.description',
+              'assignments:waitingQueue.reminder.noAssignee.description',
               'This assignment has no assignee. Please assign it first.',
             )
           } else if (errorCode === 'ASSIGNMENT_NOT_FOUND') {
-            title = t('waitingQueue.reminder.notFound.title', 'Assignment Not Found')
+            title = t('assignments:waitingQueue.reminder.notFound.title', 'Assignment Not Found')
             description = t(
-              'waitingQueue.reminder.notFound.description',
+              'assignments:waitingQueue.reminder.notFound.description',
               'The assignment could not be found. It may have been deleted.',
             )
           } else if (errorCode === 'VERSION_CONFLICT') {
-            title = t('waitingQueue.reminder.conflict.title', 'Assignment Changed')
+            title = t('assignments:waitingQueue.reminder.conflict.title', 'Assignment Changed')
             description = t(
-              'waitingQueue.reminder.conflict.description',
+              'assignments:waitingQueue.reminder.conflict.description',
               'This assignment was modified by another user. Please refresh and try again.',
             )
           }
@@ -187,28 +187,28 @@ export function ReminderButton({
       disabled={isDisabled}
       className={`min-h-11 min-w-11 gap-2 ${className}`}
       data-testid="reminder-button"
-      aria-label={t('waitingQueue.reminder.button.label', 'Send follow-up reminder')}
+      aria-label={t('assignments:waitingQueue.reminder.button.label', 'Send follow-up reminder')}
       aria-busy={isPending ? 'true' : undefined}
     >
       {isPending ? (
         <>
           <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? '' : ''}`} />
           <span className="hidden sm:inline">
-            {t('waitingQueue.reminder.button.sending', 'Sending...')}
+            {t('assignments:waitingQueue.reminder.button.sending', 'Sending...')}
           </span>
         </>
       ) : showSuccess ? (
         <>
           <CheckCircle2 className="h-4 w-4 text-success" />
           <span className="hidden sm:inline text-success">
-            {t('waitingQueue.reminder.button.sent', 'Sent!')}
+            {t('assignments:waitingQueue.reminder.button.sent', 'Sent!')}
           </span>
         </>
       ) : (
         <>
           <Bell className="h-4 w-4" />
           <span className="hidden sm:inline">
-            {t('waitingQueue.reminder.button.send', 'Send Reminder')}
+            {t('assignments:waitingQueue.reminder.button.send', 'Send Reminder')}
           </span>
         </>
       )}

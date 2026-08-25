@@ -299,7 +299,7 @@ describe('Waiting Queue Accessibility Tests (WCAG AA)', () => {
       )
 
       const toolbar = screen.getByRole('toolbar')
-      expect(toolbar).toHaveTextContent('3 items selected')
+      expect(toolbar).toHaveTextContent('3 selected')
     })
 
     it('should support keyboard navigation for all actions', async () => {

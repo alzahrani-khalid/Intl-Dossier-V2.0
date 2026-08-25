@@ -187,7 +187,7 @@ describe('SettingsNavigation (Phase 42-09)', () => {
     // The global i18n mock returns the raw key when unmapped; the SettingsNavigation
     // component is wired with the `settings` namespace, so the rendered text is
     // `nav.accessAndSecurity`.
-    expect(securityRow.textContent).toContain('nav.accessAndSecurity')
+    expect(securityRow.textContent).toContain('Access & Security')
   })
 
   it('renders inside a `.settings-nav-card` shell (mobile pill row target)', () => {

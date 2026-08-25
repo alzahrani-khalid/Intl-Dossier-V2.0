@@ -41,7 +41,7 @@ describe('DecisionList', () => {
     it('shows empty state when no decisions', () => {
       render(<DecisionList decisions={[]} onChange={mockOnChange} />)
 
-      expect(screen.getByText('No decisions yet')).toBeInTheDocument()
+      expect(screen.getByText('No decisions recorded')).toBeInTheDocument()
     })
 
     it('renders all decisions with correct data', () => {
@@ -194,7 +194,7 @@ describe('DecisionList', () => {
       const user = userEvent.setup()
       render(<DecisionList decisions={mockDecisions} onChange={mockOnChange} />)
 
-      const removeButtons = screen.getAllByRole('button', { name: 'Remove decision' })
+      const removeButtons = screen.getAllByRole('button', { name: 'Delete decision' })
       await user.click(removeButtons[0]!)
       await confirmRemoval(user)
 
@@ -215,7 +215,7 @@ describe('DecisionList', () => {
 
       render(<DecisionList decisions={threeDecisions} onChange={mockOnChange} />)
 
-      const removeButtons = screen.getAllByRole('button', { name: 'Remove decision' })
+      const removeButtons = screen.getAllByRole('button', { name: 'Delete decision' })
       await user.click(removeButtons[1]!)
       await confirmRemoval(user)
 
@@ -233,7 +233,7 @@ describe('DecisionList', () => {
     it('hides delete buttons in read-only mode', () => {
       render(<DecisionList decisions={mockDecisions} onChange={mockOnChange} readOnly />)
 
-      const deleteButtons = screen.queryAllByRole('button', { name: 'Remove decision' })
+      const deleteButtons = screen.queryAllByRole('button', { name: 'Delete decision' })
 
       expect(deleteButtons).toHaveLength(0)
     })

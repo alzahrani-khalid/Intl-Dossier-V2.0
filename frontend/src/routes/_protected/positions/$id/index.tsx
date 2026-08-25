@@ -55,12 +55,9 @@ function PositionEditorPanel() {
             <div className="flex items-start gap-2">
               <FileText className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
               <p className="text-xs font-bold text-foreground">
-                {position.status === 'under_review' &&
-                  'Position Under Review - Read Only. This position is currently under review and cannot be edited. It must go through the approval chain before any changes can be made.'}
-                {position.status === 'approved' &&
-                  'Position Approved - Read Only. This position has been approved and is awaiting publication. Contact an administrator to make changes.'}
-                {position.status === 'published' &&
-                  'Position Published - Read Only. This position has been published. To make changes, you must use the Emergency Correction workflow or create a new version.'}
+                {position.status === 'under_review' && t('positions:readOnlyBanner.under_review')}
+                {position.status === 'approved' && t('positions:readOnlyBanner.approved')}
+                {position.status === 'published' && t('positions:readOnlyBanner.published')}
               </p>
             </div>
           </CardContent>

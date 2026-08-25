@@ -64,7 +64,7 @@ describe('CommitmentEditor', () => {
         <CommitmentEditor commitments={[]} onChange={mockOnChange} availableUsers={mockUsers} />,
       )
 
-      expect(screen.getByText('No commitments yet')).toBeInTheDocument()
+      expect(screen.getByText('No commitments recorded')).toBeInTheDocument()
     })
 
     it('renders all commitments with correct data', () => {
@@ -343,7 +343,7 @@ describe('CommitmentEditor', () => {
         />,
       )
 
-      const removeButtons = screen.getAllByRole('button', { name: 'Remove commitment' })
+      const removeButtons = screen.getAllByRole('button', { name: 'Delete commitment' })
       await user.click(removeButtons[0]!)
 
       const dialog = await screen.findByRole('alertdialog')
@@ -378,7 +378,7 @@ describe('CommitmentEditor', () => {
         />,
       )
 
-      const deleteButtons = screen.queryAllByRole('button', { name: 'Remove commitment' })
+      const deleteButtons = screen.queryAllByRole('button', { name: 'Delete commitment' })
 
       expect(deleteButtons).toHaveLength(0)
     })
