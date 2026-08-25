@@ -1,0 +1,216 @@
+{
+  "version": 1,
+  "criterionSemantics": "Agreement means the same sense-consistent object term, not byte equality.",
+  "ruling": "RULING-P99-05 §3",
+  "rows": [
+    {
+      "labelKey": "navigation.countries",
+      "titleAnchor": "countries:title",
+      "objectTerm": "دولة / الدول",
+      "disposition": "requirement-ruled-repair",
+      "before": { "label": "البلدان", "title": "نظرة عامة على الدول" },
+      "after": { "label": "الدول", "title": "نظرة عامة على الدول" }
+    },
+    {
+      "labelKey": "navigation.engagements",
+      "titleAnchor": "engagements:title",
+      "objectTerm": "مشاركة / المشاركات",
+      "disposition": "requirement-ruled-repair",
+      "before": { "label": "الارتباطات", "title": "المشاركات" },
+      "after": { "label": "المشاركات", "title": "المشاركات" }
+    },
+    {
+      "labelKey": "navigation.persons",
+      "titleAnchor": "persons:title",
+      "objectTerm": "الأشخاص",
+      "disposition": "ruled-tiebreak-persons-wins",
+      "before": {
+        "labelAr": "الأشخاص",
+        "titleAr": "جهات الاتصال الرئيسية",
+        "titleEn": "Key Contacts"
+      },
+      "after": { "labelAr": "الأشخاص", "titleAr": "الأشخاص", "titleEn": "Persons" }
+    },
+    {
+      "labelKey": "navigation.positions",
+      "titleAnchor": "positions:library.title",
+      "objectTerm": "موقف / المواقف",
+      "disposition": "ruled-conformant-no-edit",
+      "before": { "label": "المواقف", "title": "مكتبة المواقف" },
+      "after": { "label": "المواقف", "title": "مكتبة المواقف" }
+    },
+    {
+      "labelKey": "navigation.mous",
+      "titleAnchor": "common:mous.pageTitle",
+      "objectTerm": "مذكرات التفاهم",
+      "disposition": "ruled-anchor-repoint",
+      "sourcePath": "frontend/src/pages/MoUs/MousPage.tsx",
+      "before": { "sourceKey": "navigation.mous", "genericValueAr": "العنوان" },
+      "after": {
+        "sourceKey": "common:mous.pageTitle",
+        "valueAr": "مذكرات التفاهم",
+        "valueEn": "MoUs"
+      }
+    },
+    {
+      "labelKey": "navigation.intake",
+      "titleAnchor": "intake:queue.title",
+      "objectTerm": "قائمة الاستقبال",
+      "disposition": "ruled-queue-collision-repair",
+      "before": { "label": "قائمة الاستقبال", "title": "قائمة الانتظار" },
+      "after": { "label": "قائمة الاستقبال", "title": "قائمة الاستقبال" }
+    },
+    {
+      "labelKey": "navigation.dashboardOverview",
+      "titleAnchor": "dashboard:title",
+      "objectTerm": "دوسيه / الدوسيهات",
+      "disposition": "ruled-tiebreak-dashboard",
+      "before": { "label": "نظرة عامة على لوحة الدوسيهات", "title": "لوحة الملفات" },
+      "after": { "label": "لوحة الدوسيهات", "title": "لوحة الدوسيهات" }
+    },
+    {
+      "labelKey": "navigation.organizations",
+      "titleAnchor": "organizations:title",
+      "objectTerm": "المنظمات",
+      "disposition": "agrees-as-is"
+    },
+    {
+      "labelKey": "navigation.forums",
+      "titleAnchor": "forums:pageTitle",
+      "objectTerm": "منتدى / المنتديات",
+      "disposition": "agrees-as-is"
+    },
+    {
+      "labelKey": "navigation.workingGroups",
+      "titleAnchor": "working-groups:title",
+      "objectTerm": "مجموعات العمل",
+      "disposition": "agrees-as-is"
+    },
+    {
+      "labelKey": "navigation.tasks",
+      "titleAnchor": "tasks-page:title",
+      "objectTerm": "مكتبي",
+      "disposition": "agrees-as-is"
+    },
+    {
+      "labelKey": "navigation.calendar",
+      "titleAnchor": "calendar:page.title",
+      "objectTerm": "التقويم",
+      "disposition": "agrees-as-is"
+    },
+    {
+      "labelKey": "navigation.briefs",
+      "titleAnchor": "briefs-page:title",
+      "objectTerm": "ملخص / الملخصات",
+      "disposition": "agrees-as-is"
+    },
+    {
+      "labelKey": "navigation.events",
+      "titleAnchor": "common:navigation.events",
+      "objectTerm": "فعالية / الفعاليات",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/events/EventsPage.tsx"
+    },
+    {
+      "labelKey": "navigation.reports",
+      "titleAnchor": "common:navigation.reports",
+      "objectTerm": "تقرير / التقارير",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/reports/ReportsPage.tsx"
+    },
+    {
+      "labelKey": "navigation.scheduledReports",
+      "titleAnchor": "scheduled-reports:title",
+      "objectTerm": "التقارير المجدولة",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/components/scheduled-reports/ScheduledReportsManager.tsx"
+    },
+    {
+      "labelKey": "navigation.analytics",
+      "titleAnchor": "analytics:title",
+      "objectTerm": "التحليلات",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/analytics/AnalyticsDashboardPage.tsx"
+    },
+    {
+      "labelKey": "navigation.intelligence",
+      "titleAnchor": "common:navigation.intelligence",
+      "objectTerm": "الاستخبارات",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/intelligence/IntelligencePage.tsx"
+    },
+    {
+      "labelKey": "navigation.monitoring",
+      "titleAnchor": "source:frontend/src/pages/monitoring/Dashboard.tsx",
+      "objectTerm": "المراقبة / Monitoring",
+      "disposition": "agrees-bilingual-source-literal",
+      "sourcePath": "frontend/src/pages/monitoring/Dashboard.tsx"
+    },
+    {
+      "labelKey": "navigation.dataLibrary",
+      "titleAnchor": "common:navigation.dataLibrary",
+      "objectTerm": "مكتبة البيانات",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/data-library/DataLibraryPage.tsx"
+    },
+    {
+      "labelKey": "navigation.wordAssistant",
+      "titleAnchor": "common:navigation.wordAssistant",
+      "objectTerm": "مساعد الوثائق",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/word-assistant/WordAssistantPage.tsx"
+    },
+    {
+      "labelKey": "navigation.users",
+      "titleAnchor": "user-management:usersList.title",
+      "objectTerm": "المستخدمون",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/users/UsersListPage.tsx"
+    },
+    {
+      "labelKey": "navigation.settings",
+      "titleAnchor": "settings:pageTitle",
+      "objectTerm": "الإعدادات",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/components/settings/SettingsLayout.tsx"
+    },
+    {
+      "labelKey": "navigation.help",
+      "titleAnchor": "source:frontend/src/pages/help/HelpPage.tsx",
+      "objectTerm": "المساعدة",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/help/HelpPage.tsx"
+    },
+    {
+      "labelKey": "navigation.admin",
+      "titleAnchor": "ai-admin:settings.title",
+      "objectTerm": "الإدارة",
+      "disposition": "escalate-unruled",
+      "sourcePath": "frontend/src/routes/_protected/admin/ai-settings.tsx",
+      "candidates": { "label": "الإدارة", "title": "إعدادات الذكاء الاصطناعي" }
+    },
+    {
+      "labelKey": "navigation.taskQueue",
+      "titleAnchor": "assignments:queue.title",
+      "objectTerm": "قائمة المهام",
+      "disposition": "escalate-unruled",
+      "sourcePath": "frontend/src/pages/AssignmentQueue.tsx",
+      "candidates": { "label": "قائمة المهام", "title": "قائمة انتظار التعيينات" }
+    },
+    {
+      "labelKey": "navigation.taskEscalations",
+      "titleAnchor": "assignments:escalations.title",
+      "objectTerm": "تصعيدات المهام",
+      "disposition": "agrees-as-is",
+      "sourcePath": "frontend/src/pages/Escalations.tsx"
+    },
+    {
+      "labelKey": "navigation.newEvent",
+      "titleAnchor": "calendar:new_event.title",
+      "objectTerm": "فعالية جديدة",
+      "disposition": "escalate-unruled",
+      "sourcePath": "frontend/src/routes/_protected/calendar/new.tsx",
+      "candidates": { "label": "فعالية جديدة", "title": "إدخال تقويم جديد" }
+    }
+  ]
+}
