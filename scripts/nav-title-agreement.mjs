@@ -400,7 +400,7 @@ const commonRepairIssues = (commonByLocale) =>
   })
 
 const readDecisionArtifact = (root) =>
-  JSON.parse(readFileSync(join(root, 'scripts/glossary-senses.d/tiebreaks.json'), 'utf8'))
+  JSON.parse(readFileSync(join(root, 'scripts/glossary-tiebreaks.json'), 'utf8'))
 
 const applyDecisionDispositions = (results, artifact) => {
   const byLabel = new Map(artifact.rows.map((row) => [row.labelKey, row]))
@@ -767,7 +767,7 @@ if (process.env.VITEST === 'true') {
       expect(intake.queue.title).not.toBe('قائمة الانتظار')
     })
 
-    it('Every tie-break and every walked anchor is recorded in scripts/glossary-senses.d/tiebreaks.json as a machine-checkable row, so the decision trail is a committed artifact the closing battery re-reads rather than SUMMARY prose', () => {
+    it('Every tie-break and every walked anchor is recorded in scripts/glossary-tiebreaks.json as a machine-checkable row, so the decision trail is a committed artifact the closing battery re-reads rather than SUMMARY prose', () => {
       const artifact = readDecisionArtifact(scriptRepoRoot)
       const result = buildLiveResult(scriptRepoRoot)
       expect(artifact.rows).toHaveLength(28)
