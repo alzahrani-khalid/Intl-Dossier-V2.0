@@ -472,6 +472,38 @@ if (options.scope.length > 0 && auditFiles.length === 0) {
   process.exit(1)
 }
 
+// FAIL CLOSED ON A SCOPE ENTRY THAT MATCHES NOTHING (RULING-P99-192).
+//
+// The guard above is AGGREGATE: it fires only when EVERY entry misses. A scope listing 28 paths
+// where ONE is wrong still matches 27, so the aggregate stays silent and the wrong path is
+// SILENTLY DROPPED — the audit then reports a clean result for a file it never opened.
+//
+// Measured: P99-35's oracle scoped `frontend/src/pages/MousPage.tsx`; the real file is under
+// `MoUs/`. The task was granted that file and had real work in it (a `defaultValue` mask), and the
+// no-mask-survives arm would have passed VACUOUSLY. Same class as Playwright treating spec paths
+// as FILTERS — a nonexistent path is dropped, never an error. Recurring in a second tool is what
+// makes it a class, and fixing one plan would leave every future plan exposed.
+//
+// Per-entry, so one bad path among many cannot hide behind its neighbours.
+const unmatchedScope = options.scope.filter(
+  (entry) => !auditFiles.some((file) => inScope(file, options.root, sourceRoot, [entry])),
+)
+if (unmatchedScope.length > 0) {
+  console.error(
+    JSON.stringify(
+      {
+        error: 'scope entry matched zero source files — refusing to report on a scope it cannot resolve',
+        unmatched: unmatchedScope,
+        matchedFiles: auditFiles.length,
+        hint: 'a path that does not exist is silently dropped by a filter; check for a wrong or renamed directory',
+      },
+      null,
+      2,
+    ),
+  )
+  process.exit(1)
+}
+
 const sources = auditFiles.map((file) => ({
   file: normalizePath(relative(options.root, file)),
   source: readFileSync(file, 'utf8'),
