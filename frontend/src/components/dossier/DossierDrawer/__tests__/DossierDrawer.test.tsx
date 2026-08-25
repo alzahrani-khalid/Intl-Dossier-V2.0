@@ -105,7 +105,7 @@ describe('DossierDrawer (Wave 0 shell)', () => {
     searchValue = { dossier: 'test-id', dossierType: 'country', other: 'keep' }
     render(<DossierDrawer />)
     // Close button has aria-label === t('cta.close') === 'cta.close' (key-passthrough mock).
-    const closeBtn = screen.getByRole('button', { name: 'cta.close' })
+    const closeBtn = screen.getByRole('button', { name: 'Close dossier' })
     fireEvent.click(closeBtn)
     expect(navigateMock).toHaveBeenCalled()
     const arg = navigateMock.mock.calls[0][0] as {
@@ -207,7 +207,7 @@ describe('DossierDrawer error branch (OVRERR-01 / Pitfall 5)', () => {
     const alert = screen.getByRole('alert')
     expect(alert).toBeTruthy()
     // Key-passthrough i18n mock → the dot-path key is the rendered text.
-    expect(screen.getByText('error.load_failed_heading')).toBeTruthy()
+    expect(screen.getByText('Could not load this dossier')).toBeTruthy()
     // Skeleton MUST be absent in the error state.
     expect(screen.queryByTestId('dossier-drawer-skeleton')).toBeNull()
     // data-loading must be honest (false) — not stuck "true".
@@ -223,7 +223,7 @@ describe('DossierDrawer error branch (OVRERR-01 / Pitfall 5)', () => {
     overviewState.isError = true
     render(<DossierDrawer />)
 
-    const retryBtn = screen.getByRole('button', { name: 'error.retry' })
+    const retryBtn = screen.getByRole('button', { name: 'Retry' })
     fireEvent.click(retryBtn)
     expect(refetchSpy).toHaveBeenCalledTimes(1)
   })
@@ -244,7 +244,7 @@ describe('DossierDrawer error branch (OVRERR-01 / Pitfall 5)', () => {
 
     // Sections render (MiniKpiStrip content) — assert no error alert leaked over real data.
     expect(screen.queryByRole('alert')).toBeNull()
-    expect(screen.queryByText('error.load_failed_heading')).toBeNull()
+    expect(screen.queryByText('Could not load this dossier')).toBeNull()
     expect(screen.queryByTestId('dossier-drawer-skeleton')).toBeNull()
     expect(screen.getByTestId('dossier-drawer-kpi-strip')).toBeTruthy()
   })

@@ -118,7 +118,7 @@ describe('AfterActionForm', () => {
     it('renders form with all sections', () => {
       render(<AfterActionForm {...defaultProps} />)
 
-      expect(screen.getByText('After-Action Record')).toBeInTheDocument()
+      expect(screen.getByText('After Action Details')).toBeInTheDocument()
       expect(screen.getByText('Basic Information')).toBeInTheDocument()
       expect(screen.getByTestId('decision-list')).toBeInTheDocument()
       expect(screen.getByTestId('commitment-list')).toBeInTheDocument()
@@ -163,11 +163,11 @@ describe('AfterActionForm', () => {
       const user = userEvent.setup()
       render(<AfterActionForm {...defaultProps} />)
 
-      const attendeesInput = screen.getByPlaceholderText('Enter attendee names (comma-separated)')
+      const attendeesInput = screen.getByPlaceholderText('Type a name and press Enter')
       // Comma commits each in-progress name; Enter commits the trailing one.
       await user.type(attendeesInput, 'John Doe,Jane Smith,Bob Johnson{Enter}')
 
-      expect(screen.getByText(/Enter names separated by commas/)).toHaveTextContent('(3/100)')
+      expect(screen.getByText(/Add attendees one at a time/)).toHaveTextContent('(3/100)')
       expect(screen.getByText('John Doe')).toBeInTheDocument()
       expect(screen.getByText('Jane Smith')).toBeInTheDocument()
       expect(screen.getByText('Bob Johnson')).toBeInTheDocument()
@@ -177,11 +177,11 @@ describe('AfterActionForm', () => {
       const user = userEvent.setup()
       render(<AfterActionForm {...defaultProps} />)
 
-      const attendeesInput = screen.getByPlaceholderText('Enter attendee names (comma-separated)')
+      const attendeesInput = screen.getByPlaceholderText('Type a name and press Enter')
       await user.type(attendeesInput, '  John Doe  ,  Jane Smith  {Enter}')
 
       // Stored trimmed, as 2 chips
-      expect(screen.getByText(/Enter names separated by commas/)).toHaveTextContent('(2/100)')
+      expect(screen.getByText(/Add attendees one at a time/)).toHaveTextContent('(2/100)')
       expect(screen.getByText('John Doe')).toBeInTheDocument()
       expect(screen.getByText('Jane Smith')).toBeInTheDocument()
     })
@@ -190,11 +190,11 @@ describe('AfterActionForm', () => {
       const user = userEvent.setup()
       render(<AfterActionForm {...defaultProps} />)
 
-      const attendeesInput = screen.getByPlaceholderText('Enter attendee names (comma-separated)')
+      const attendeesInput = screen.getByPlaceholderText('Type a name and press Enter')
       await user.type(attendeesInput, 'John Doe, , Jane Smith,,')
 
       // Should be parsed as 2 attendees (empty strings filtered)
-      expect(screen.getByText(/Enter names separated by commas/)).toHaveTextContent('(2/100)')
+      expect(screen.getByText(/Add attendees one at a time/)).toHaveTextContent('(2/100)')
     })
 
     it('validates attendees on publish', async () => {
@@ -222,7 +222,7 @@ describe('AfterActionForm', () => {
         />,
       )
 
-      expect(screen.getByText(/Enter names separated by commas/)).toHaveTextContent('(101/100)')
+      expect(screen.getByText(/Add attendees one at a time/)).toHaveTextContent('(101/100)')
       expect(screen.getByText('Publish')).toBeDisabled()
       expect(mockOnPublish).not.toHaveBeenCalled()
     })
@@ -236,7 +236,7 @@ describe('AfterActionForm', () => {
       const checkbox = screen.getByRole('checkbox', { name: /mark as confidential/i })
       await user.click(checkbox)
 
-      expect(screen.getByText('This record contains sensitive information')).toBeInTheDocument()
+      expect(screen.getByText('This record is marked as confidential and will have restricted access')).toBeInTheDocument()
     })
 
     it('shows confidential warning when confidential', async () => {
@@ -246,7 +246,7 @@ describe('AfterActionForm', () => {
       const checkbox = screen.getByRole('checkbox', { name: /mark as confidential/i })
       await user.click(checkbox)
 
-      expect(screen.getByText('This record contains sensitive information')).toBeInTheDocument()
+      expect(screen.getByText('This record is marked as confidential and will have restricted access')).toBeInTheDocument()
     })
   })
 
@@ -297,7 +297,7 @@ describe('AfterActionForm', () => {
       render(<AfterActionForm {...defaultProps} canPublish onPublish={mockOnPublish} />)
 
       // Add attendees but no outcomes
-      const attendeesInput = screen.getByPlaceholderText('Enter attendee names (comma-separated)')
+      const attendeesInput = screen.getByPlaceholderText('Type a name and press Enter')
       await user.type(attendeesInput, 'John Doe')
 
       const publishButton = screen.getByText('Publish')
@@ -309,7 +309,7 @@ describe('AfterActionForm', () => {
       render(<AfterActionForm {...defaultProps} canPublish onPublish={mockOnPublish} />)
 
       // Add attendees
-      const attendeesInput = screen.getByPlaceholderText('Enter attendee names (comma-separated)')
+      const attendeesInput = screen.getByPlaceholderText('Type a name and press Enter')
       await user.type(attendeesInput, 'John Doe')
 
       // Add at least one outcome
@@ -326,7 +326,7 @@ describe('AfterActionForm', () => {
 
       expect(
         screen.getByText(
-          'Add at least one attendee and one outcome (decision/commitment/risk/follow-up) to publish',
+          'Add at least one decision, commitment, risk, or follow-up action to publish',
         ),
       ).toBeInTheDocument()
     })
@@ -338,10 +338,10 @@ describe('AfterActionForm', () => {
       render(<AfterActionForm {...defaultProps} initialData={{}} />)
 
       // Add some data
-      const attendeesInput = screen.getByPlaceholderText('Enter attendee names (comma-separated)')
+      const attendeesInput = screen.getByPlaceholderText('Type a name and press Enter')
       await user.type(attendeesInput, 'John Doe')
 
-      const notesInput = screen.getByPlaceholderText('Enter any additional notes')
+      const notesInput = screen.getByPlaceholderText('Add any additional notes or context')
       await user.type(notesInput, 'Test notes')
 
       // Save draft
@@ -375,10 +375,10 @@ describe('AfterActionForm', () => {
       render(<AfterActionForm {...defaultProps} initialData={{}} />)
 
       await user.type(
-        screen.getByPlaceholderText('Enter attendee names (comma-separated)'),
+        screen.getByPlaceholderText('Type a name and press Enter'),
         'John Doe',
       )
-      await user.type(screen.getByPlaceholderText('Enter any additional notes'), 'Draft notes')
+      await user.type(screen.getByPlaceholderText('Add any additional notes or context'), 'Draft notes')
       const saveButton = screen.getByText('Save Draft')
       await waitFor(() => {
         expect(saveButton).not.toBeDisabled()
@@ -399,10 +399,10 @@ describe('AfterActionForm', () => {
       render(<AfterActionForm {...defaultProps} initialData={{}} />)
 
       await user.type(
-        screen.getByPlaceholderText('Enter attendee names (comma-separated)'),
+        screen.getByPlaceholderText('Type a name and press Enter'),
         'John Doe',
       )
-      await user.type(screen.getByPlaceholderText('Enter any additional notes'), 'Draft notes')
+      await user.type(screen.getByPlaceholderText('Add any additional notes or context'), 'Draft notes')
       const saveButton = screen.getByText('Save Draft')
       await waitFor(() => {
         expect(saveButton).not.toBeDisabled()
@@ -421,7 +421,7 @@ describe('AfterActionForm', () => {
       render(<AfterActionForm {...defaultProps} canPublish onPublish={mockOnPublish} />)
 
       // Add valid data
-      const attendeesInput = screen.getByPlaceholderText('Enter attendee names (comma-separated)')
+      const attendeesInput = screen.getByPlaceholderText('Type a name and press Enter')
       await user.type(attendeesInput, 'John Doe')
       await user.click(screen.getByText('Add Decision'))
 
@@ -452,7 +452,7 @@ describe('AfterActionForm', () => {
       render(<AfterActionForm {...defaultProps} canPublish onPublish={mockOnPublish} />)
 
       // Add valid data
-      const attendeesInput = screen.getByPlaceholderText('Enter attendee names (comma-separated)')
+      const attendeesInput = screen.getByPlaceholderText('Type a name and press Enter')
       await user.type(attendeesInput, 'John Doe')
       await user.click(screen.getByText('Add Decision'))
 
@@ -470,10 +470,10 @@ describe('AfterActionForm', () => {
       render(<AfterActionForm {...defaultProps} readOnly />)
 
       const attendeesInput = screen.getByPlaceholderText(
-        'Enter attendee names (comma-separated)',
+        'Type a name and press Enter',
       ) as HTMLInputElement
       const notesInput = screen.getByPlaceholderText(
-        'Enter any additional notes',
+        'Add any additional notes or context',
       ) as HTMLTextAreaElement
       const confidentialCheckbox = screen.getByRole('checkbox') as HTMLInputElement
 
@@ -532,7 +532,7 @@ describe('AfterActionForm', () => {
       expect(screen.getByRole('button', { name: /save draft/i })).toBeDisabled()
 
       await user.type(
-        screen.getByPlaceholderText('Enter attendee names (comma-separated)'),
+        screen.getByPlaceholderText('Type a name and press Enter'),
         'John Doe',
       )
 
@@ -548,7 +548,7 @@ describe('AfterActionForm', () => {
       expect(screen.getByRole('button', { name: /^publish$/i })).toBeDisabled()
 
       await user.type(
-        screen.getByPlaceholderText('Enter attendee names (comma-separated)'),
+        screen.getByPlaceholderText('Type a name and press Enter'),
         'John Doe{Enter}',
       )
       await user.click(screen.getByText('Add Decision'))

@@ -28,7 +28,7 @@ describe('FilterPanel', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument()
     expect(screen.getByText('Priority')).toBeInTheDocument()
     expect(screen.getByText('Aging')).toBeInTheDocument()
-    expect(screen.getByText('Type')).toBeInTheDocument()
+    expect(screen.getByText('Work Item Type')).toBeInTheDocument()
     expect(screen.getByText('Assignee')).toBeInTheDocument()
   })
 
@@ -64,11 +64,11 @@ describe('FilterPanel', () => {
     })
 
     expect(screen.getByRole('button', { name: /open filters/i })).toHaveTextContent(
-      '2 filters applied',
+      '2 filters active',
     )
-    expect(screen.getByRole('status')).toHaveTextContent('2 filters applied')
+    expect(screen.getByRole('status')).toHaveTextContent('2 filters active')
 
-    fireEvent.click(screen.getByRole('button', { name: /clear filters/i }))
+    fireEvent.click(screen.getByRole('button', { name: /clear all/i }))
 
     await waitFor(() => {
       expect(onClearFilters).toHaveBeenCalledTimes(1)

@@ -27,7 +27,7 @@ describe('FormInput', () => {
     render(<FormInput {...defaultProps} required />)
 
     expect(screen.getByText('*')).toBeInTheDocument()
-    expect(screen.getByText('*')).toHaveAttribute('aria-label', 'Required')
+    expect(screen.getByText('*')).toHaveAttribute('aria-label', 'Required field')
   })
 
   it('should not render required indicator when not required', () => {
@@ -202,7 +202,7 @@ describe('FormInput', () => {
 
     render(<FormInput {...defaultProps} error={error} />)
 
-    expect(screen.getByText('Required')).toBeInTheDocument()
+    expect(screen.getByText('Required field')).toBeInTheDocument()
   })
 
   it('should handle missing error message', () => {
@@ -210,6 +210,6 @@ describe('FormInput', () => {
 
     render(<FormInput {...defaultProps} error={error} />)
 
-    expect(screen.getByText('Required')).toBeInTheDocument()
+    expect(screen.getByText('Required field')).toBeInTheDocument()
   })
 })
