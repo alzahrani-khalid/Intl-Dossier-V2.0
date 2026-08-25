@@ -321,7 +321,7 @@ export function TaskDetail({
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <CardTitle className="flex items-center gap-2">
               <Users className="h-5 w-5" />
-              {t('contributors', 'Contributors')}
+              {t('tasks-page:detail.contributors', 'Contributors')}
               {contributors.length > 0 && (
                 <Badge variant="secondary" className="ms-2">
                   {contributors.length}
