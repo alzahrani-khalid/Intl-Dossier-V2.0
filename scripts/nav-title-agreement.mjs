@@ -3,7 +3,8 @@
 // Agreement is sense-aware: both anchors must carry the same object term. It is not byte
 // equality (for example, "Positions" and "Positions Library" agree on the Positions object).
 
-import { readFileSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
+import { readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -647,6 +648,12 @@ if (process.env.VITEST === 'true') {
     value && typeof value === 'object'
       ? Object.values(value).reduce((total, child) => total + exactLeafCount(child, target), 0)
       : Number(value === target)
+  const leafPaths = (value, prefix = '') => {
+    if (value === null || typeof value !== 'object') return [prefix]
+    return Object.entries(value).flatMap(([key, child]) =>
+      leafPaths(child, prefix === '' ? key : `${prefix}.${key}`),
+    )
+  }
 
   describe('P99-23 nav-title agreement lane', () => {
     it("the ruled tie-breaks and the queue collision is landed for the nav-title agreement lane, proven by this task's own oracles rather than by the lane's later tasks.", () => {
@@ -804,6 +811,149 @@ if (process.env.VITEST === 'true') {
       expect(intake.queue.title).not.toBe('قائمة الانتظار')
       expect(arCommon.navigation.waitingQueue).toBe('قائمة الانتظار')
     })
+  })
+
+  describe('P99-24 MoUs anchor and rendered intake re-proof', () => {
+    it('Every nav label matches its page title, provably and across the whole nav population, with only ruled product decisions applied.', () => {
+      const result = buildLiveResult(scriptRepoRoot)
+      const artifact = readDecisionArtifact(scriptRepoRoot)
+      const escalatedKeys = result.rows.filter((row) => row.escalated).map((row) => row.labelKey)
+
+      expect(buildControlResult()).toEqual({
+        control: 'PASS',
+        plantedMismatchCaught: true,
+        positiveAgreementPreserved: true,
+      })
+      expect(result).toMatchObject({
+        population: 28,
+        agreements: 25,
+        escalations: 3,
+        adjudicated: 28,
+        mismatches: 0,
+        missingAnchorKeys: 0,
+        missingNavigationKeys: 0,
+        rowCoverageIssues: [],
+        commonRepairIssues: [],
+        decisionArtifactIssues: [],
+      })
+      expect(result.rows.every((row) => row.agrees || row.escalated)).toBe(true)
+      expect(escalatedKeys).toEqual([
+        'navigation.admin',
+        'navigation.taskQueue',
+        'navigation.newEvent',
+      ])
+      expect(
+        artifact.rows
+          .filter((row) => row.disposition === 'escalate-unruled')
+          .map((row) => row.labelKey),
+      ).toEqual(escalatedKeys)
+      expect(liveResultPasses(result)).toBe(true)
+    })
+
+    it('This lane changes VALUES and one source anchor only: no ar leaf KEY is renamed, and bundle parity is structurally unchanged', () => {
+      const i18nRoot = join(scriptRepoRoot, 'frontend/src/i18n')
+      const localeFiles = Object.fromEntries(
+        LOCALES.map((locale) => [
+          locale,
+          readdirSync(join(i18nRoot, locale))
+            .filter((file) => file.endsWith('.json'))
+            .sort(),
+        ]),
+      )
+      const structuralPaths = Object.fromEntries(
+        LOCALES.map((locale) => [
+          locale,
+          localeFiles[locale]
+            .flatMap((file) =>
+              leafPaths(readJson(`frontend/src/i18n/${locale}/${file}`)).map(
+                (key) => `${file}:${key}`,
+              ),
+            )
+            .sort(),
+        ]),
+      )
+      const englishPaths = new Set(structuralPaths.en)
+      const arabicPaths = new Set(structuralPaths.ar)
+      const englishOnly = structuralPaths.en.filter((path) => !arabicPaths.has(path))
+      const arabicOnly = structuralPaths.ar.filter((path) => !englishPaths.has(path))
+      const source = readFileSync(
+        join(scriptRepoRoot, 'frontend/src/pages/MoUs/MousPage.tsx'),
+        'utf8',
+      )
+
+      expect(localeFiles.en).toEqual(localeFiles.ar)
+      expect(localeFiles.en).toHaveLength(129)
+      expect(englishOnly).toEqual([])
+      expect(arabicOnly).toEqual([
+        'assignments.json:queue.failedAttempts_few',
+        'assignments.json:queue.failedAttempts_many',
+        'assignments.json:queue.failedAttempts_two',
+        'assignments.json:queue.failedAttempts_zero',
+        'common.json:dossierLinks.entityTypes.assignment',
+        'common.json:dossierLinks.entityTypes.commitment',
+        'common.json:dossierLinks.entityTypes.country',
+        'common.json:dossierLinks.entityTypes.dossier',
+        'common.json:dossierLinks.entityTypes.engagement',
+        'common.json:dossierLinks.entityTypes.forum',
+        'common.json:dossierLinks.entityTypes.intelligence_signal',
+        'common.json:dossierLinks.entityTypes.mou',
+        'common.json:dossierLinks.entityTypes.organization',
+        'common.json:dossierLinks.entityTypes.position',
+        'common.json:dossierLinks.entityTypes.topic',
+        'common.json:dossierLinks.entityTypes.working_group',
+        'tags.json:hierarchy.tagCount_few',
+        'tags.json:hierarchy.tagCount_many',
+        'tags.json:hierarchy.tagCount_two',
+        'tags.json:hierarchy.tagCount_zero',
+        'workspace.json:docs.count_few',
+        'workspace.json:docs.count_many',
+        'workspace.json:docs.count_two',
+        'workspace.json:docs.count_zero',
+      ])
+      expect(source.match(/t\('common:mous\.pageTitle'\)/g)).toHaveLength(1)
+      expect(source).not.toContain(
+        '<h1 className="text-3xl font-bold">{t(\'common:mous.title\')}</h1>',
+      )
+    })
+
+    it(
+      'the RENDERED UI99-C6 pair — the ar leg and its en presence control, ONE spec path, the count hardcoded at 2 from --list — still passes after the intake queue is retitled: the retitle is a value change on a surface criterion 3 also grades, and a glossary sweep that breaks a rendered surface is a defect this catches — RED at HEAD (the spec does not exist)',
+      { timeout: 900_000 },
+      () => {
+        const specPath = 'tests/e2e/99-ar03-leak.spec.ts'
+        const playwrightArgs = [
+          'exec',
+          'playwright',
+          'test',
+          specPath,
+          '-g',
+          'UI99-C6',
+          '--project=chromium-en',
+          '--no-deps',
+        ]
+        const listOutput = execFileSync('pnpm', [...playwrightArgs, '--list'], {
+          cwd: scriptRepoRoot,
+          encoding: 'utf8',
+          maxBuffer: 10 * 1024 * 1024,
+        })
+        const intake = readJson('frontend/src/i18n/ar/intake.json')
+
+        expect(listOutput).toContain('UI99-C6 ar intake queue')
+        expect(listOutput).toContain('UI99-C6 en control intake queue')
+        expect(listOutput).toContain('Total: 2 tests in 1 file')
+        expect(intake.queue.title).toBe('قائمة الاستقبال')
+
+        const specSource = readFileSync(join(scriptRepoRoot, specPath), 'utf8')
+        console.log(listOutput.trim())
+        expect(specSource).toContain("test('UI99-C6 ar intake queue'")
+        expect(specSource).toContain("test('UI99-C6 en control intake queue'")
+        expect(specSource).toContain("await expectLocale(page, 'ar', '/my-work/intake')")
+        expect(specSource).toContain("await expectLocale(page, 'en', '/my-work/intake')")
+        expect(specSource).toContain('toBeGreaterThanOrEqual(INTAKE_CAPTURE_FLOOR)')
+        expect(specSource).toContain('UI99-C6 leaked English intake copy')
+        expect(specSource).toContain('UI99-C6 en presence control missing')
+      },
+    )
   })
 } else {
   runCli(process.argv.slice(2))
