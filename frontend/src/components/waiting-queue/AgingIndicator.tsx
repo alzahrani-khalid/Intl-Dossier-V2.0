@@ -33,21 +33,21 @@ export function AgingIndicator({ days, className = '' }: AgingIndicatorProps) {
         level: 'ok',
         variant: 'default' as const,
         color: 'bg-accent/10 text-accent border-accent/20',
-        label: t('waitingQueue.aging.ok', 'Recent'),
+        label: t('assignments:waitingQueue.aging.ok', 'Recent'),
       }
     } else if (days <= 6) {
       return {
         level: 'warning',
         variant: 'secondary' as const,
         color: 'bg-warning/10 text-warning border-warning/20',
-        label: t('waitingQueue.aging.warning', 'Needs Attention'),
+        label: t('assignments:waitingQueue.aging.warning', 'Needs Attention'),
       }
     } else {
       return {
         level: 'danger',
         variant: 'destructive' as const,
         color: 'bg-danger/10 text-danger border-danger/20',
-        label: t('waitingQueue.aging.danger', 'Overdue'),
+        label: t('assignments:waitingQueue.aging.danger', 'Overdue'),
       }
     }
   }
@@ -63,7 +63,7 @@ export function AgingIndicator({ days, className = '' }: AgingIndicatorProps) {
     >
       <Clock className="h-3 w-3 shrink-0" />
       <span className="font-medium">
-        {days} {t('common.days', 'days')}
+        {days} {t('assignments:waitingQueue.days')}
       </span>
       <span className="hidden sm:inline text-xs opacity-75 ms-1">({aging.label})</span>
     </Badge>

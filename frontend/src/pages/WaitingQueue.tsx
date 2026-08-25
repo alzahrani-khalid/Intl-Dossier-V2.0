@@ -243,8 +243,8 @@ function WaitingQueuePageInner() {
 
               // Show toast notification
               toast({
-                title: t('waiting.assignmentUpdated'),
-                description: t('waiting.assignmentCompletedDesc', {
+                title: t('assignments:waiting.assignmentUpdated'),
+                description: t('assignments:waiting.assignmentCompletedDesc', {
                   id: updatedAssignment.work_item_id,
                 }),
               })
@@ -327,7 +327,7 @@ function WaitingQueuePageInner() {
 
     if (entities.length === 0) return null
 
-    return t('waitingQueue.relatedTo', 'Related to: ') + entities.join(', ')
+    return t('assignments:waitingQueue.relatedTo', 'Related to: ') + entities.join(', ')
   }
 
   const filteredItems =
@@ -359,7 +359,10 @@ function WaitingQueuePageInner() {
       <PageHeader
         icon={<Clock className="h-6 w-6" />}
         title={t('navigation.waitingQueue', 'Waiting Queue')}
-        subtitle={t('waiting.description', 'Items pending or assigned but not yet started')}
+        subtitle={t(
+          'assignments:waiting.description',
+          'Items pending or assigned but not yet started',
+        )}
         actions={
           <>
             {/* Sort selector (desktop) */}
@@ -446,16 +449,16 @@ function WaitingQueuePageInner() {
               {t('common:all', 'All')} ({items?.length || 0})
             </TabsTrigger>
             <TabsTrigger value="dossier" className="min-h-9 text-xs sm:text-sm">
-              {t('waiting.dossiers', 'Dossiers')} ({groupedCounts['dossier'] || 0})
+              {t('assignments:waiting.dossiers', 'Dossiers')} ({groupedCounts['dossier'] || 0})
             </TabsTrigger>
             <TabsTrigger value="ticket" className="min-h-9 text-xs sm:text-sm">
-              {t('waiting.tickets', 'Tickets')} ({groupedCounts['ticket'] || 0})
+              {t('assignments:waiting.tickets', 'Tickets')} ({groupedCounts['ticket'] || 0})
             </TabsTrigger>
             <TabsTrigger value="position" className="min-h-9 text-xs sm:text-sm">
-              {t('waiting.positions', 'Positions')} ({groupedCounts['position'] || 0})
+              {t('assignments:waiting.positions', 'Positions')} ({groupedCounts['position'] || 0})
             </TabsTrigger>
             <TabsTrigger value="task" className="min-h-9 text-xs sm:text-sm">
-              {t('waiting.tasks', 'Tasks')} ({groupedCounts['task'] || 0})
+              {t('assignments:waiting.tasks', 'Tasks')} ({groupedCounts['task'] || 0})
             </TabsTrigger>
           </TabsList>
 
@@ -477,14 +480,14 @@ function WaitingQueuePageInner() {
                 <h3 className="mb-2 text-lg font-semibold text-foreground sm:text-xl">
                   {hasFilters
                     ? t('waitingQueue.filters.noResults')
-                    : t('waiting.empty', 'No waiting items')}
+                    : t('assignments:waiting.empty', 'No waiting items')}
                 </h3>
                 <p className="mb-4 text-sm text-muted-foreground">
                   {hasFilters
                     ? t('waitingQueue.filters.noResultsDesc')
                     : activeTab === 'all'
-                      ? t('waiting.emptyDescription', 'All work items are progressing')
-                      : t('waiting.emptyCategory', 'No items waiting for this reason')}
+                      ? t('assignments:waiting.emptyDescription', 'All work items are progressing')
+                      : t('assignments:waiting.emptyCategory', 'No items waiting for this reason')}
                 </p>
                 {hasFilters && (
                   <Button variant="outline" size="sm" onClick={clearFilters} className="min-h-9">
@@ -596,21 +599,23 @@ function WaitingQueuePageInner() {
                                     </span>
                                     <span>•</span>
                                     <span className={agingStatus.color}>
-                                      {t('waiting.waitingFor', 'Waiting for')} {agingStatus.days}{' '}
+                                      {t('assignments:waiting.waitingFor', 'Waiting for')}{' '}
+                                      {agingStatus.days}{' '}
                                       {agingStatus.days === 1
-                                        ? t('waiting.day', 'day')
-                                        : t('waiting.days', 'days')}
+                                        ? t('assignments:waiting.day', 'day')
+                                        : t('assignments:waiting.days', 'days')}
                                     </span>
                                   </div>
 
                                   {/* Metadata */}
                                   <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                                     <span data-testid="row-assignee-name">
-                                      {t('waiting.assignee', 'Assignee')}: {item.assignee_name}
+                                      {t('assignments:waiting.assignee', 'Assignee')}:{' '}
+                                      {item.assignee_name}
                                     </span>
                                     <span>•</span>
                                     <span>
-                                      {t('waiting.status', 'Status')}:{' '}
+                                      {t('assignments:waiting.status', 'Status')}:{' '}
                                       {t(`waitingQueue.statuses.${item.status}`)}
                                     </span>
                                     <span>•</span>
@@ -760,22 +765,23 @@ function WaitingQueuePageInner() {
                                         </span>
                                         <span>•</span>
                                         <span className={agingStatus.color}>
-                                          {t('waiting.waitingFor', 'Waiting for')}{' '}
+                                          {t('assignments:waiting.waitingFor', 'Waiting for')}{' '}
                                           {agingStatus.days}{' '}
                                           {agingStatus.days === 1
-                                            ? t('waiting.day', 'day')
-                                            : t('waiting.days', 'days')}
+                                            ? t('assignments:waiting.day', 'day')
+                                            : t('assignments:waiting.days', 'days')}
                                         </span>
                                       </div>
 
                                       {/* Metadata */}
                                       <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                                         <span data-testid="row-assignee-name">
-                                          {t('waiting.assignee', 'Assignee')}: {item.assignee_name}
+                                          {t('assignments:waiting.assignee', 'Assignee')}:{' '}
+                                          {item.assignee_name}
                                         </span>
                                         <span>•</span>
                                         <span>
-                                          {t('waiting.status', 'Status')}:{' '}
+                                          {t('assignments:waiting.status', 'Status')}:{' '}
                                           {t(`waitingQueue.statuses.${item.status}`)}
                                         </span>
                                         <span>•</span>
