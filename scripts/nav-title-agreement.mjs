@@ -291,6 +291,10 @@ const readLiveData = (root) => {
       JSON.parse(readFileSync(join(i18nDirectory, locale, 'common.json'), 'utf8')),
     ]),
   )
+  const englishPersonsTitle = valueAt(
+    JSON.parse(readFileSync(join(i18nDirectory, 'en', 'persons.json'), 'utf8')),
+    'title',
+  )
   const navigationSource = readFileSync(
     join(root, 'frontend/src/components/modern-nav/navigationData.ts'),
     'utf8',
@@ -307,7 +311,7 @@ const readLiveData = (root) => {
   const titleSources = Object.fromEntries(
     sourcePaths.map((sourcePath) => [sourcePath, readFileSync(join(root, sourcePath), 'utf8')]),
   )
-  return { arabicBundles, commonByLocale, navigationReferences, titleSources }
+  return { arabicBundles, commonByLocale, englishPersonsTitle, navigationReferences, titleSources }
 }
 
 const resolveTitle = (row, bundles, titleSources) => {
@@ -415,14 +419,18 @@ const applyDecisionDispositions = (results, artifact) => {
   })
 }
 
-const artifactIssues = (artifact, candidateRows, results) => {
+const artifactIssues = (artifact, candidateRows, results, englishPersonsTitle) => {
   if (!Array.isArray(artifact.rows)) return ['tiebreaks.json rows is not an array']
   const byLabel = new Map(artifact.rows.map((row) => [row.labelKey, row]))
   const resultsByLabel = new Map(results.map((result) => [result.labelKey, result]))
+  const ruledPersonsTitleEn = byLabel.get('navigation.persons')?.after?.titleEn
   return [
     ...(artifact.rows.length === 28
       ? []
       : [`tiebreaks.json has ${artifact.rows.length} rows, not 28`]),
+    ...(ruledPersonsTitleEn === 'Persons' && englishPersonsTitle === ruledPersonsTitleEn
+      ? []
+      : ['en/persons:title does not carry the ruled Persons-family title']),
     ...candidateRows.flatMap((row) => {
       const artifactRow = byLabel.get(row.labelKey)
       if (!artifactRow) return [`tiebreaks.json missing ${row.labelKey}`]
@@ -526,7 +534,12 @@ try {
     ),
     coverageIssues: rowCoverageIssues(liveData.navigationReferences, rows),
     repairIssues: commonRepairIssues(liveData.commonByLocale),
-    decisionArtifactIssues: artifactIssues(decisionArtifact, rows, decidedRows),
+    decisionArtifactIssues: artifactIssues(
+      decisionArtifact,
+      rows,
+      decidedRows,
+      liveData.englishPersonsTitle,
+    ),
   })
 } catch (error) {
   console.error(error.message)
