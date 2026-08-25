@@ -37,7 +37,8 @@ const rows = [
     titleNamespace: 'countries',
     titleKey: 'title',
     ruledTerm: 'دولة / الدول',
-    termPattern: 'دول',
+    labelTermPattern: '^الدول$',
+    titleTermPattern: '^نظرة عامة على الدول$',
   },
   {
     labelKey: 'navigation.engagements',
@@ -116,7 +117,7 @@ const rows = [
     titleNamespace: 'calendar',
     titleKey: 'page.title',
     ruledTerm: 'التقويم',
-    termPattern: 'تقويم',
+    termPattern: '^التقويم$',
   },
   {
     labelKey: 'navigation.briefs',
@@ -130,7 +131,7 @@ const rows = [
     titleNamespace: 'common',
     titleKey: 'navigation.events',
     ruledTerm: 'فعالية / الفعاليات',
-    termPattern: 'فعالي',
+    termPattern: '^الفعاليات$',
     titleSourcePath: 'frontend/src/pages/events/EventsPage.tsx',
     titleSourceContains: "t('navigation.events')",
   },
@@ -139,7 +140,7 @@ const rows = [
     titleNamespace: 'common',
     titleKey: 'navigation.reports',
     ruledTerm: 'تقرير / التقارير',
-    termPattern: 'تقارير',
+    termPattern: '^التقارير$',
     titleSourcePath: 'frontend/src/pages/reports/ReportsPage.tsx',
     titleSourceContains: "t('navigation.reports')",
   },
@@ -210,7 +211,7 @@ const rows = [
     titleNamespace: 'settings',
     titleKey: 'pageTitle',
     ruledTerm: 'الإعدادات',
-    termPattern: 'إعداد',
+    termPattern: '^الإعدادات$',
     titleSourcePath: 'frontend/src/components/settings/SettingsLayout.tsx',
     titleSourceContains: "t('pageTitle')",
   },
@@ -219,14 +220,15 @@ const rows = [
     titleSourcePath: 'frontend/src/pages/help/HelpPage.tsx',
     titleSourcePattern: "title=\\{isRTL \\? '([^']+)'",
     ruledTerm: 'المساعدة',
-    termPattern: 'مساعد',
+    labelTermPattern: '^المساعدة$',
+    titleTermPattern: '^كيف يمكننا مساعدتك؟$',
   },
   {
     labelKey: 'navigation.admin',
     titleNamespace: 'ai-admin',
     titleKey: 'settings.title',
     ruledTerm: 'الإدارة',
-    termPattern: 'إدار',
+    termPattern: '^الإدارة$',
     titleSourcePath: 'frontend/src/routes/_protected/admin/ai-settings.tsx',
     titleSourceContains: "t('settings.title', 'AI Settings')",
   },
@@ -235,7 +237,7 @@ const rows = [
     titleNamespace: 'assignments',
     titleKey: 'queue.title',
     ruledTerm: 'قائمة المهام',
-    termPattern: 'مهام',
+    termPattern: '^قائمة المهام$',
     titleSourcePath: 'frontend/src/pages/AssignmentQueue.tsx',
     titleSourceContains: "t('queue.title')",
   },
@@ -253,7 +255,7 @@ const rows = [
     titleNamespace: 'calendar',
     titleKey: 'new_event.title',
     ruledTerm: 'فعالية جديدة',
-    termPattern: 'فعالي',
+    termPattern: '^فعالية جديدة$',
     titleSourcePath: 'frontend/src/routes/_protected/calendar/new.tsx',
     titleSourceContains: "t('new_event.title')",
   },
@@ -454,12 +456,38 @@ const artifactIssues = (artifact, candidateRows, results, englishPersonsTitle) =
   ]
 }
 
+const termPatternCollisions = (candidateRows) => {
+  const signatures = candidateRows.map(
+    (row) =>
+      `${row.labelTermPattern ?? row.termPattern}\0${row.titleTermPattern ?? row.termPattern}`,
+  )
+  const duplicatePatterns = [
+    ...new Set(signatures.filter((signature, index) => signatures.indexOf(signature) !== index)),
+  ]
+  const crossMatchingRows = candidateRows.flatMap((row, index) => {
+    const patterns = [
+      ...new Set([
+        row.labelTermPattern ?? row.termPattern,
+        row.titleTermPattern ?? row.termPattern,
+      ]),
+    ].map((pattern) => new RegExp(pattern, 'u'))
+    const matches = candidateRows.flatMap((candidate, candidateIndex) =>
+      candidateIndex !== index && patterns.some((pattern) => pattern.test(candidate.ruledTerm))
+        ? [candidate.labelKey]
+        : [],
+    )
+    return matches.length === 0 ? [] : [{ labelKey: row.labelKey, matches }]
+  })
+  return { duplicatePatterns, crossMatchingRows }
+}
+
 const summarize = ({
   results,
   navigationMissing = [],
   coverageIssues = [],
   repairIssues = [],
   decisionArtifactIssues = [],
+  collisionMeasurement = { duplicatePatterns: [], crossMatchingRows: [] },
 }) => ({
   population: results.length,
   agreements: results.filter((result) => result.agrees).length,
@@ -470,6 +498,9 @@ const summarize = ({
   ).length,
   missingAnchorKeys: results.reduce((total, result) => total + result.missing.length, 0),
   missingNavigationKeys: navigationMissing.length,
+  termPatternDuplicatePatterns: collisionMeasurement.duplicatePatterns.length,
+  termPatternCrossMatchingRows: collisionMeasurement.crossMatchingRows.length,
+  termPatternCollisions: collisionMeasurement,
   rowCoverageIssues: coverageIssues,
   commonRepairIssues: repairIssues,
   decisionArtifactIssues,
@@ -530,6 +561,7 @@ const buildLiveResult = (root) => {
       decidedRows,
       liveData.englishPersonsTitle,
     ),
+    collisionMeasurement: termPatternCollisions(rows),
   })
 }
 
@@ -537,6 +569,8 @@ const liveResultPasses = (result) =>
   result.mismatches === 0 &&
   result.missingAnchorKeys === 0 &&
   result.missingNavigationKeys === 0 &&
+  result.termPatternDuplicatePatterns === 0 &&
+  result.termPatternCrossMatchingRows === 0 &&
   result.rowCoverageIssues.length === 0 &&
   result.commonRepairIssues.length === 0 &&
   result.decisionArtifactIssues.length === 0
@@ -575,6 +609,8 @@ const runCli = (argv) => {
         `${result.agreements} agree; ${result.escalations} escalated; ` +
         `${result.mismatches} unruled mismatch; ${result.missingAnchorKeys} missing anchor; ` +
         `${result.missingNavigationKeys} missing navigation locale key; ` +
+        `${result.termPatternDuplicatePatterns} duplicate term pattern; ` +
+        `${result.termPatternCrossMatchingRows} cross-matching term row; ` +
         `${result.rowCoverageIssues.length} row coverage issue; ` +
         `${result.commonRepairIssues.length} common repair issue; ` +
         `${result.decisionArtifactIssues.length} decision artifact issue`,
@@ -635,7 +671,7 @@ if (process.env.VITEST === 'true') {
       expect(liveResultPasses(result)).toBe(true)
     })
 
-    it('Any FURTHER disagreeing pair found during the 28-row walk that no ruled row decides is ESCALATED to the overseer by name in the SUMMARY and left unrepaired — a worker never applies title-wins or any other invented policy. Escalating leaves this task RED on that row, which is the correct outcome: over-gating is recoverable, an invented Arabic information architecture is not.', () => {
+    it('FURTHER disagreeing pair found during the 28-row walk that no ruled row decides is ESCALATED to the overseer by name in the SUMMARY and left unrepaired — a worker never applies title-wins or any other invented policy. Escalating leaves this task RED on that row, which is the correct outcome: over-gating is recoverable, an invented Arabic information architecture is not. — AND, enforced together with the above as ONE conjunctive item, no half passing while the other fails (RULING-P99-199): the UNFINISHED termPattern SWEEP inherited from P99-22 is completed here. P99-22 fixed essentially one row; MEASURED on its landed branch with control fixtures excluded, 27 real rows still carry 1 duplicate pattern and 6 cross-matching instances, down from 3 and 10 — a moved number, NOT a closed class. Five distinct collisions remain and each is named so the shortfall is visible if it recurs: (a) فعالي matches BOTH فعالية / الفعاليات and فعالية جديدة; (b) مساعد matches BOTH المساعدة and مساعد الوثائق; (c) مهام matches BOTH قائمة المهام and تصعيدات المهام; (d) دول matches التقارير المجدولة as a bare substring of المجدولة, a CROSS-DOMAIN false match; (e) THE HALF-FIX — Scheduled Reports was made distinctive but تقارير for Reports STILL matches التقارير المجدولة, so the same-name-surface defect survives in the very row the reviewer anchored. The remedy is word-boundary or full-object-term discrimination applied to ALL of them, never a per-row widening that reproduces the defect one row later. Re-run the collision measurement and state the result as MEASURED beside this baseline; a fix that moves the number without reaching zero cross-matching rows does NOT satisfy this item.', () => {
       const result = buildLiveResult(scriptRepoRoot)
       const escalations = result.rows.filter((row) => row.escalated)
       expect(escalations.map((row) => row.labelKey)).toEqual([
@@ -644,11 +680,45 @@ if (process.env.VITEST === 'true') {
         'navigation.newEvent',
       ])
       expect(escalations.every((row) => !row.agrees && row.missing.length === 0)).toBe(true)
+      const p99_22Patterns = {
+        'navigation.countries': 'دول',
+        'navigation.events': 'فعالي',
+        'navigation.reports': 'تقارير',
+        'navigation.help': 'مساعد',
+        'navigation.taskQueue': 'مهام',
+        'navigation.newEvent': 'فعالي',
+      }
+      const baseline = termPatternCollisions(
+        rows.map((row) =>
+          p99_22Patterns[row.labelKey]
+            ? {
+                ...row,
+                termPattern: p99_22Patterns[row.labelKey],
+                labelTermPattern: undefined,
+                titleTermPattern: undefined,
+              }
+            : row,
+        ),
+      )
+      expect(baseline.duplicatePatterns).toHaveLength(1)
+      expect(baseline.crossMatchingRows.map((row) => row.labelKey)).toEqual([
+        'navigation.countries',
+        'navigation.events',
+        'navigation.reports',
+        'navigation.help',
+        'navigation.taskQueue',
+        'navigation.newEvent',
+      ])
+      expect(result.termPatternCollisions).toEqual({
+        duplicatePatterns: [],
+        crossMatchingRows: [],
+      })
       const summary = readFileSync(
         join(scriptRepoRoot, '.planning/phases/99-arabic-coverage/99-23-SUMMARY.md'),
         'utf8',
       )
       expect(summary).toContain('OVERSEER')
+      expect(summary).toContain('MEASURED: 1 duplicate pattern and 6 cross-matching rows → 0 and 0')
       for (const name of ['Admin', 'Task Queue', 'New Event']) expect(summary).toContain(name)
       for (const row of escalations) {
         expect(summary).toContain(row.label)
