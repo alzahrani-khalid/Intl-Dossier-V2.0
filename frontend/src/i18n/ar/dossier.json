@@ -294,7 +294,7 @@
     "events": "الفعاليات",
     "upcomingEvents": "الفعاليات القادمة",
     "documents": "المستندات",
-    "engagements": "الارتباطات",
+    "engagements": "المشاركات",
     "mous": "مذكرات التفاهم",
     "activeMous": "مذكرات التفاهم النشطة",
     "dossiersWithPending": "الدوسيهات ذات العمل المعلق",
@@ -333,7 +333,7 @@
       "country": "إنشاء دوسيه دولة — الأعلام والرموز والمنطقة والعاصمة",
       "organization": "إنشاء دوسيه منظمة — النوع والرمز والموقع الإلكتروني",
       "forum": "إنشاء دوسيه منتدى — المؤتمرات والقمم والهيئات متعددة الأطراف",
-      "engagement": "إنشاء دوسيه ارتباط — الاجتماعات والمشاورات والزيارات",
+      "engagement": "إنشاء دوسيه مشاركة — الاجتماعات والمشاورات والزيارات",
       "topic": "إنشاء دوسيه موضوع — مجالات السياسة والمبادرات الاستراتيجية",
       "working_group": "إنشاء دوسيه فريق عمل — اللجان وفرق العمل",
       "person": "إنشاء دوسيه شخص — الشخصيات المهمة وجهات الاتصال الفردية",
@@ -503,14 +503,14 @@
       "organizationAffiliationsEmptyDescription": "ستظهر المنظمات المرتبطة هنا",
       "organizationAffiliationsPlaceholder": "ستملأ علاقات المنظمات هذا القسم",
       "interactionHistory": "تاريخ التفاعلات",
-      "interactionHistoryDescription": "الاجتماعات والارتباطات والاتصالات",
+      "interactionHistoryDescription": "الاجتماعات والمشاركات والاتصالات",
       "interactionHistoryEmpty": "لم يتم العثور على تفاعلات",
       "interactionHistoryEmptyDescription": "ستظهر الاجتماعات والاتصالات هنا",
       "interactionHistoryPlaceholder": "ستملأ بيانات المشاركة والتقويم هذا القسم"
     },
     "engagement": {
       "information": "المعلومات",
-      "informationDescription": "معلومات الارتباط",
+      "informationDescription": "معلومات المشاركة",
       "positions": "المواقف",
       "positionsDescription": "المواقف المرفقة والاقتراحات",
       "date": "التاريخ",
@@ -551,8 +551,8 @@
     "decisionLogs": {
       "title": "سجلات القرارات",
       "empty": "لا توجد سجلات قرارات",
-      "emptyDescription": "ستظهر القرارات الرسمية والقرارات من الارتباطات المرتبطة هنا.",
-      "fromEngagement": "من الارتباط"
+      "emptyDescription": "ستظهر القرارات الرسمية والقرارات من المشاركات المرتبطة هنا.",
+      "fromEngagement": "من المشاركة"
     },
     "workingGroup": {
       "memberOrganizations": "المنظمات الأعضاء",
@@ -570,7 +570,7 @@
       "category": "الفئة",
       "parentTopic": "الموضوع الأصلي",
       "relatedDossiers": "الدوسيهات ذات الصلة",
-      "relatedDossiersDescription": "الدول والمنظمات والارتباطات",
+      "relatedDossiersDescription": "الدول والمنظمات والمشاركات",
       "relatedDossiersPlaceholder": "ستظهر الدوسيهات ذات الصلة هنا عند إنشاء العلاقات",
       "noRelatedDossiers": "لم يتم العثور على دوسيهات ذات صلة",
       "keyDocuments": "الوثائق الرئيسية",
@@ -734,7 +734,7 @@
       "country": "لا توجد أحداث زمنية لهذا البلد",
       "organization": "لا توجد أحداث زمنية لهذه المنظمة",
       "person": "لا توجد أحداث زمنية لهذا الشخص",
-      "engagement": "لا توجد أحداث زمنية لهذا الارتباط",
+      "engagement": "لا توجد أحداث زمنية لهذه المشاركة",
       "forum": "لا توجد أحداث زمنية لهذا المنتدى",
       "working_group": "لا توجد أحداث زمنية لهذا الفريق العامل",
       "topic": "لا توجد أحداث زمنية لهذا الموضوع"
@@ -822,7 +822,7 @@
     "addSession": "إضافة جلسة",
     "createFirst": "إنشاء أول جلسة",
     "empty": "لا توجد جلسات بعد",
-    "emptyDescription": "هذا المنتدى ليس له جلسات أو دورات بعد. أنشئ ملف ارتباط لتمثيل حالة معينة من هذا المنتدى.",
+    "emptyDescription": "هذا المنتدى ليس له جلسات أو دورات بعد. أنشئ ملف مشاركة لتمثيل حالة معينة من هذا المنتدى.",
     "error": "فشل تحميل الجلسات",
     "totalCount": "{{count}} جلسة(ات) إجمالاً",
     "dateNotSet": "التاريخ غير محدد",
@@ -979,7 +979,7 @@
       },
       "requestType": "نوع الطلب",
       "requestTypes": {
-        "engagement": "ارتباط",
+        "engagement": "مشاركة",
         "position": "موقف",
         "mou_action": "إجراء مذكرة تفاهم",
         "foresight": "استشراف"
@@ -1056,7 +1056,7 @@
     "clear": "مسح السياق",
     "clickToView": "انقر لعرض الدوسيه",
     "inheritedFrom": {
-      "engagement": "عبر الارتباط",
+      "engagement": "عبر المشاركة",
       "afterAction": "عبر ما بعد الإجراء",
       "position": "عبر الموقف",
       "mou": "عبر مذكرة التفاهم"
@@ -1128,8 +1128,8 @@
       "more": "+{{count}} جهة اتصال أخرى"
     },
     "engagements": {
-      "title": "الارتباطات حسب المرحلة",
-      "empty": "لا توجد ارتباطات مرتبطة",
+      "title": "المشاركات حسب المرحلة",
+      "empty": "لا توجد مشاركات مرتبطة",
       "stage": {
         "intake": "استقبال",
         "preparation": "تحضير",
@@ -1138,7 +1138,7 @@
         "follow_up": "متابعة",
         "closed": "مغلق"
       },
-      "total": "{{count}} ارتباط إجمالاً"
+      "total": "{{count}} مشاركة إجمالاً"
     },
     "recentActivity": "النشاط الأخير",
     "noRecentActivity": "لا يوجد نشاط حديث",
@@ -1250,7 +1250,7 @@
     }
   },
   "analytics": {
-    "engagementCount": "الارتباطات",
+    "engagementCount": "المشاركات",
     "activeTopics": "المواضيع النشطة",
     "workItemsCount": "عناصر العمل",
     "memberCountries": "الدول الأعضاء",

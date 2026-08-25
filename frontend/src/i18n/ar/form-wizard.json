@@ -51,7 +51,7 @@
     "forumDetailsDesc": "حدد نوع المنتدى والجهة المنظمة",
     "workingGroupDetails": "تفاصيل فريق العمل",
     "workingGroupDetailsDesc": "الحالة والتفويض والجهة الأم",
-    "engagementDetails": "تفاصيل الارتباط",
+    "engagementDetails": "تفاصيل المشاركة",
     "engagementDetailsDesc": "النوع والفئة والموقع والتواريخ",
     "participants": "المشاركون",
     "participantsDesc": "اربط الدول والمنظمات والأشخاص",
@@ -121,7 +121,7 @@
     "headquarters_ar_ph": "مثال: جنيف، سويسرا",
     "founding_date": "تاريخ التأسيس",
     "founding_date_ph": "اختر تاريخ التأسيس",
-    "engagement_profile": "ملف الارتباط",
+    "engagement_profile": "ملف المشاركة",
     "membership_type": "نوع العضوية",
     "membership_type_ph": "اختر نوع العضوية",
     "membership_types": {
@@ -207,10 +207,10 @@
     "parent_body_help": "اختياري — اربط بالمنظمة التي تملك فريق العمل هذا. يمكن ضبطه لاحقاً."
   },
   "engagement": {
-    "page_title": "ملف ارتباط جديد",
-    "back_to_list": "العودة إلى الارتباطات",
-    "create_button": "إنشاء ارتباط",
-    "type_label": "نوع الارتباط",
+    "page_title": "ملف مشاركة جديد",
+    "back_to_list": "العودة إلى المشاركات",
+    "create_button": "إنشاء مشاركة",
+    "type_label": "نوع المشاركة",
     "type_placeholder": "اختر نوعاً",
     "types": {
       "bilateral_meeting": "لقاء ثنائي",
@@ -249,7 +249,7 @@
       "countries_placeholder": "ابحث عن الدول…",
       "organizations_placeholder": "ابحث عن المنظمات…",
       "persons_placeholder": "ابحث عن الأشخاص…",
-      "section_hint": "اختياري — يمكنك الإضافة لاحقاً من صفحة تفاصيل الارتباط."
+      "section_hint": "اختياري — يمكنك الإضافة لاحقاً من صفحة تفاصيل المشاركة."
     }
   },
   "review": {
@@ -261,7 +261,7 @@
     "forum_details": "تفاصيل المنتدى",
     "theme_category": "فئة الموضوع",
     "working_group_details": "تفاصيل فريق العمل",
-    "engagement_details": "تفاصيل الارتباط",
+    "engagement_details": "تفاصيل المشاركة",
     "participants_summary": "المشاركون",
     "office_term": "المنصب والولاية"
   },

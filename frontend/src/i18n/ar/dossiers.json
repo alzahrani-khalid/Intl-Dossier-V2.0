@@ -32,7 +32,7 @@
     "organization": "منظمة",
     "forum": "منتدى",
     "theme": "موضوع",
-    "engagement": "ارتباط",
+    "engagement": "مشاركة",
     "working_group": "فريق عمل",
     "person": "شخص"
   },
@@ -197,7 +197,7 @@
     "relationships": "العلاقات",
     "contacts": "جهات الاتصال الرئيسية",
     "overview": "نظرة عامة",
-    "engagements": "الارتباطات",
+    "engagements": "المشاركات",
     "documents": "الوثائق"
   },
   "relationships": {
@@ -281,7 +281,7 @@
     "organization": "منظمة",
     "forum": "منتدى",
     "theme": "موضوع",
-    "engagement": "ارتباط",
+    "engagement": "مشاركة",
     "working_group": "فريق عمل",
     "person": "شخص"
   },
@@ -390,7 +390,7 @@
     "empty": "لم يتم العثور على وثائق",
     "ownerTypes": {
       "dossier": "دوسيه",
-      "engagement": "ارتباط",
+      "engagement": "مشاركة",
       "position": "موقف",
       "mou": "مذكرة تفاهم",
       "after_action": "ما بعد الإجراء",

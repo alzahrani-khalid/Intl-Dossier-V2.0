@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "decision": "D-18 engagement = مشاركة; every surviving ارتباط occurrence is classified by sense.",
+  "slice": [
+    "frontend/src/i18n/ar/activity-feed.json",
+    "frontend/src/i18n/ar/audit-logs.json",
+    "frontend/src/i18n/ar/bulk-actions.json",
+    "frontend/src/i18n/ar/citations.json",
+    "frontend/src/i18n/ar/common.json",
+    "frontend/src/i18n/ar/contextual-help.json",
+    "frontend/src/i18n/ar/contextual-suggestions.json",
+    "frontend/src/i18n/ar/countries.json",
+    "frontend/src/i18n/ar/dashboard-widgets.json",
+    "frontend/src/i18n/ar/dossier-context.json",
+    "frontend/src/i18n/ar/dossier-drawer.json",
+    "frontend/src/i18n/ar/dossier.json",
+    "frontend/src/i18n/ar/dossiers.json",
+    "frontend/src/i18n/ar/email-digest.json",
+    "frontend/src/i18n/ar/empty-states.json",
+    "frontend/src/i18n/ar/engagement-briefs.json",
+    "frontend/src/i18n/ar/engagements.json",
+    "frontend/src/i18n/ar/export-import.json",
+    "frontend/src/i18n/ar/field-history.json",
+    "frontend/src/i18n/ar/form-wizard.json",
+    "frontend/src/i18n/ar/graph.json",
+    "frontend/src/i18n/ar/guided-tours.json",
+    "frontend/src/i18n/ar/keyboard-shortcuts.json",
+    "frontend/src/i18n/ar/onboarding.json",
+    "frontend/src/i18n/ar/organizations.json",
+    "frontend/src/i18n/ar/quickswitcher.json",
+    "frontend/src/i18n/ar/relationships.json",
+    "frontend/src/i18n/ar/report-builder.json",
+    "frontend/src/i18n/ar/sample-data.json",
+    "frontend/src/i18n/ar/sla.json",
+    "frontend/src/i18n/ar/webhooks.json",
+    "frontend/src/i18n/ar/workspace.json"
+  ],
+  "rows": [
+    {
+      "term": "ارتباط",
+      "file": "contextual-help.json",
+      "keyPath": "relationship.relationshipType.tooltip",
+      "sense": "relationship-or-association",
+      "reason": "The value describes the nature of a relationship between entities, not an engagement object."
+    },
+    {
+      "term": "ارتباط",
+      "file": "contextual-help.json",
+      "keyPath": "relationship.relationshipType.description",
+      "sense": "relationship-or-association",
+      "reason": "The value explains how two entities are related, not an engagement object."
+    },
+    {
+      "term": "ارتباط",
+      "file": "dossier-context.json",
+      "keyPath": "description",
+      "sense": "dossier-link",
+      "reason": "The namespace manages links between dossiers and work items; ارتباطات means links here."
+    },
+    {
+      "term": "ارتباط",
+      "file": "dossier-context.json",
+      "keyPath": "errors.delete_link_failed",
+      "sense": "dossier-link",
+      "reason": "The delete_link key reports removal of a dossier link, not an engagement object."
+    },
+    {
+      "term": "ارتباط",
+      "file": "dossier-context.json",
+      "keyPath": "actions.edit_links",
+      "sense": "dossier-link",
+      "reason": "The edit_links action edits dossier links, not engagement objects."
+    },
+    {
+      "term": "ارتباط",
+      "file": "dossier-context.json",
+      "keyPath": "widget.remove_link",
+      "sense": "dossier-link",
+      "reason": "The remove_link control removes a dossier link."
+    },
+    {
+      "term": "ارتباط",
+      "file": "dossier-context.json",
+      "keyPath": "widget.confirm_remove_title",
+      "sense": "dossier-link",
+      "reason": "The confirmation title names removal of a dossier link."
+    },
+    {
+      "term": "ارتباط",
+      "file": "dossier-context.json",
+      "keyPath": "widget.confirm_remove_description",
+      "sense": "dossier-link",
+      "reason": "The confirmation copy refers to unlinking a dossier."
+    },
+    {
+      "term": "ارتباط",
+      "file": "dossier-context.json",
+      "keyPath": "widget.loading",
+      "sense": "dossier-link",
+      "reason": "The widget is loading dossier links."
+    },
+    {
+      "term": "ارتباط",
+      "file": "dossier-context.json",
+      "keyPath": "widget.error",
+      "sense": "dossier-link",
+      "reason": "The widget error concerns dossier links."
+    },
+    {
+      "term": "ارتباط",
+      "file": "empty-states.json",
+      "keyPath": "video.tutorials.relationship.network.transcript.0",
+      "sense": "relationship-or-association",
+      "reason": "The tutorial explains how entities relate in a relationship network."
+    },
+    {
+      "term": "ارتباط",
+      "file": "graph.json",
+      "keyPath": "analyze.empty.path",
+      "sense": "graph-connection",
+      "reason": "The shortest-path empty state reports that no graph connection exists between two entities."
+    },
+    {
+      "term": "ارتباط",
+      "file": "guided-tours.json",
+      "keyPath": "tours.onboarding.steps.relationshipGraph.hint",
+      "sense": "relationship-or-association",
+      "reason": "The relationship-graph hint describes how entities relate to one another."
+    },
+    {
+      "term": "ارتباط",
+      "file": "guided-tours.json",
+      "keyPath": "tours.relationship.steps.type.content",
+      "sense": "relationship-or-association",
+      "reason": "The relationship tour asks how two entities are related."
+    },
+    {
+      "term": "ارتباط",
+      "file": "onboarding.json",
+      "keyPath": "analyst.addRelationship.description",
+      "sense": "relationship-or-association",
+      "reason": "The analyst action documents how countries and organizations relate."
+    },
+    {
+      "term": "ارتباط",
+      "file": "relationships.json",
+      "keyPath": "guidance.categories.association.label",
+      "sense": "association-category",
+      "reason": "The label names the generic association category in the relationship taxonomy."
+    },
+    {
+      "term": "ارتباط",
+      "file": "relationships.json",
+      "keyPath": "guidance.types.affiliate_of.tip",
+      "sense": "loose-affiliation",
+      "reason": "The affiliate guidance explicitly describes loose affiliations rather than engagement objects."
+    },
+    {
+      "term": "ارتباط",
+      "file": "dossier-recommendations.json",
+      "keyPath": "types.engagement",
+      "sense": "engagement-object-outside-fixed-slice",
+      "reason": "This is an engagement-object label added outside P99-25's frozen bundle slice; it is classified here and remains for its owning bundle lane to rewrite."
+    },
+    {
+      "term": "ارتباط",
+      "file": "operations-hub.json",
+      "keyPath": "kpi.activeEngagements",
+      "sense": "engagement-object-outside-fixed-slice",
+      "reason": "This engagement KPI was added outside P99-25's frozen bundle slice; it is classified here and remains for its owning bundle lane to rewrite."
+    },
+    {
+      "term": "ارتباط",
+      "file": "operations-hub.json",
+      "keyPath": "analytics.empty",
+      "sense": "engagement-object-outside-fixed-slice",
+      "reason": "This engagement-object empty state was added outside P99-25's frozen bundle slice; it is classified here and remains for its owning bundle lane to rewrite."
+    }
+  ]
+}

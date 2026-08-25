@@ -69,7 +69,7 @@
   "suggestions": {
     "upcomingEngagement": {
       "title": "التحضير لـ {{name}}",
-      "description": "الارتباط مجدول في {{date}}{{location}}. راجع الإحاطات وحضّر المواد."
+      "description": "المشاركة مجدولة في {{date}}{{location}}. راجع الإحاطات وحضّر المواد."
     },
     "expiringMou": {
       "title": "مذكرة تفاهم تنتهي: {{name}}",
@@ -91,7 +91,7 @@
       "description": "ابدأ بتتبع علاقة ثنائية من خلال إنشاء ملف دولة."
     },
     "addEngagement": {
-      "title": "تسجيل ارتباط",
+      "title": "تسجيل مشاركة",
       "description": "سجّل اجتماعاً أو وفداً أو زيارة رسمية."
     },
     "reviewCommitments": {
