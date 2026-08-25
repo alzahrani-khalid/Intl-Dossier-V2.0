@@ -216,6 +216,62 @@ NAV-28-OK
 The planted control and live command both exit 0. Escalation is not reported as agreement; it is a
 separate adjudicated state whose exact candidates are validated against the decision artifact.
 
+### Review follow-up: Scheduled Reports oracle specificity
+
+Reviewer finding addressed: the Scheduled Reports checker row no longer accepts generic
+`التقارير`; its object-term pattern is the full ruled `التقارير المجدولة` phrase.
+
+Command:
+
+```text
+node - <<'NODE'
+const fs = require('fs')
+const source = fs.readFileSync('scripts/nav-title-agreement.mjs', 'utf8')
+const row = source.match(/labelKey: 'navigation\.scheduledReports',[\s\S]*?titleSourceContains: "t\('title'\)"/)?.[0]
+const pattern = row?.match(/termPattern: '([^']+)'/)?.[1]
+if (!pattern) throw new Error('scheduledReports termPattern not found')
+const scheduled = new RegExp(pattern, 'u')
+const common = JSON.parse(fs.readFileSync('frontend/src/i18n/ar/common.json', 'utf8'))
+const scheduledReports = JSON.parse(fs.readFileSync('frontend/src/i18n/ar/scheduled-reports.json', 'utf8'))
+const probes = [
+  ['LIVE_LABEL', common.navigation.scheduledReports],
+  ['LIVE_TITLE', scheduledReports.title],
+  ['GENERIC_REPORTS_TITLE', 'التقارير'],
+]
+console.log(`SCHEDULED-REPORTS-PATTERN=${pattern}`)
+for (const [name, value] of probes) console.log(`${name}=${scheduled.test(value)} ${value}`)
+if (!scheduled.test(common.navigation.scheduledReports)) process.exit(1)
+if (!scheduled.test(scheduledReports.title)) process.exit(1)
+if (scheduled.test('التقارير')) process.exit(1)
+console.log('SCHEDULED-REPORTS-SPECIFICITY-OK')
+NODE
+```
+
+Verbatim output:
+
+```text
+SCHEDULED-REPORTS-PATTERN=التقارير المجدولة
+LIVE_LABEL=true التقارير المجدولة
+LIVE_TITLE=true التقارير المجدولة
+GENERIC_REPORTS_TITLE=false التقارير
+SCHEDULED-REPORTS-SPECIFICITY-OK
+```
+
+The full acceptance command was re-run after this oracle tightening:
+
+```text
+{
+  "control": "PASS",
+  "plantedMismatchCaught": true,
+  "positiveAgreementPreserved": true
+}
+nav/title walk: 28/28 adjudicated; 25 agree; 3 escalated; 0 unruled mismatch; 0 missing anchor; 0 missing navigation locale key; 0 row coverage issue; 0 common repair issue; 0 decision artifact issue
+ESCALATED-UNRULED OBJECT-TERM MISMATCH	common:navigation.admin="الإدارة"	ai-admin:settings.title="إعدادات الذكاء الاصطناعي"	ruled=الإدارة
+ESCALATED-UNRULED OBJECT-TERM MISMATCH	common:navigation.taskQueue="قائمة المهام"	assignments:queue.title="قائمة انتظار التعيينات"	ruled=قائمة المهام
+ESCALATED-UNRULED OBJECT-TERM MISMATCH	common:navigation.newEvent="فعالية جديدة"	calendar:new_event.title="إدخال تقويم جديد"	ruled=فعالية جديدة
+NAV-28-OK
+```
+
 ## Rendered UI99-C6 re-proof
 
 The browser proof now executes and is green. The worktree sandbox still denies a localhost

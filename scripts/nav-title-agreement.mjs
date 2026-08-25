@@ -148,7 +148,7 @@ const rows = [
     titleNamespace: 'scheduled-reports',
     titleKey: 'title',
     ruledTerm: 'التقارير المجدولة',
-    termPattern: 'تقارير',
+    termPattern: 'التقارير المجدولة',
     titleSourcePath: 'frontend/src/components/scheduled-reports/ScheduledReportsManager.tsx',
     titleSourceContains: "t('title')",
   },
