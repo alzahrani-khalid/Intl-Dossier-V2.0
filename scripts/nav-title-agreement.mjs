@@ -37,7 +37,8 @@ const rows = [
     titleNamespace: 'countries',
     titleKey: 'title',
     ruledTerm: 'دولة / الدول',
-    termPattern: 'دول',
+    labelTermPattern: '^الدول$',
+    titleTermPattern: '^نظرة عامة على الدول$',
   },
   {
     labelKey: 'navigation.engagements',
@@ -116,7 +117,7 @@ const rows = [
     titleNamespace: 'calendar',
     titleKey: 'page.title',
     ruledTerm: 'التقويم',
-    termPattern: 'تقويم',
+    termPattern: '^التقويم$',
   },
   {
     labelKey: 'navigation.briefs',
@@ -130,7 +131,7 @@ const rows = [
     titleNamespace: 'common',
     titleKey: 'navigation.events',
     ruledTerm: 'فعالية / الفعاليات',
-    termPattern: 'فعالي',
+    termPattern: '^الفعاليات$',
     titleSourcePath: 'frontend/src/pages/events/EventsPage.tsx',
     titleSourceContains: "t('navigation.events')",
   },
@@ -139,7 +140,7 @@ const rows = [
     titleNamespace: 'common',
     titleKey: 'navigation.reports',
     ruledTerm: 'تقرير / التقارير',
-    termPattern: 'تقارير',
+    termPattern: '^التقارير$',
     titleSourcePath: 'frontend/src/pages/reports/ReportsPage.tsx',
     titleSourceContains: "t('navigation.reports')",
   },
@@ -210,7 +211,7 @@ const rows = [
     titleNamespace: 'settings',
     titleKey: 'pageTitle',
     ruledTerm: 'الإعدادات',
-    termPattern: 'إعداد',
+    termPattern: '^الإعدادات$',
     titleSourcePath: 'frontend/src/components/settings/SettingsLayout.tsx',
     titleSourceContains: "t('pageTitle')",
   },
@@ -219,14 +220,15 @@ const rows = [
     titleSourcePath: 'frontend/src/pages/help/HelpPage.tsx',
     titleSourcePattern: "title=\\{isRTL \\? '([^']+)'",
     ruledTerm: 'المساعدة',
-    termPattern: 'مساعد',
+    labelTermPattern: '^المساعدة$',
+    titleTermPattern: '^كيف يمكننا مساعدتك؟$',
   },
   {
     labelKey: 'navigation.admin',
     titleNamespace: 'ai-admin',
     titleKey: 'settings.title',
     ruledTerm: 'الإدارة',
-    termPattern: 'إدار',
+    termPattern: '^الإدارة$',
     titleSourcePath: 'frontend/src/routes/_protected/admin/ai-settings.tsx',
     titleSourceContains: "t('settings.title', 'AI Settings')",
   },
@@ -235,7 +237,7 @@ const rows = [
     titleNamespace: 'assignments',
     titleKey: 'queue.title',
     ruledTerm: 'قائمة المهام',
-    termPattern: 'مهام',
+    termPattern: '^قائمة المهام$',
     titleSourcePath: 'frontend/src/pages/AssignmentQueue.tsx',
     titleSourceContains: "t('queue.title')",
   },
@@ -253,7 +255,7 @@ const rows = [
     titleNamespace: 'calendar',
     titleKey: 'new_event.title',
     ruledTerm: 'فعالية جديدة',
-    termPattern: 'فعالي',
+    termPattern: '^فعالية جديدة$',
     titleSourcePath: 'frontend/src/routes/_protected/calendar/new.tsx',
     titleSourceContains: "t('new_event.title')",
   },
@@ -387,6 +389,7 @@ const commonRepairIssues = (commonByLocale) =>
       ['tasks.sla.approaching', (value) => typeof value === 'string' && value.length > 0],
       ['afterActions.decisions.item', (value) => value?.includes('{{number}}')],
       ['afterActions.confidence', (value) => value?.includes('{{value}}')],
+      ['navigation.mous', (value) => value === expectedMousCopy.pageTitle],
       ['mous.title', (value) => value === expectedMousCopy.title],
       ['mous.pageTitle', (value) => value === expectedMousCopy.pageTitle],
     ]
@@ -439,6 +442,12 @@ const artifactIssues = (artifact, candidateRows, results, englishPersonsTitle) =
         ...(artifactRow.titleAnchor === titleAnchor(row)
           ? []
           : [`tiebreaks.json anchor drift for ${row.labelKey}`]),
+        ...(artifactRow.expected?.labelAr === result?.label
+          ? []
+          : [`tiebreaks.json expected label drift for ${row.labelKey}`]),
+        ...(artifactRow.expected?.titleAr === result?.title
+          ? []
+          : [`tiebreaks.json expected title drift for ${row.labelKey}`]),
         ...(artifactRow.disposition === 'escalate-unruled' && !result?.escalated
           ? [`tiebreaks.json escalation candidate drift for ${row.labelKey}`]
           : []),
@@ -447,12 +456,38 @@ const artifactIssues = (artifact, candidateRows, results, englishPersonsTitle) =
   ]
 }
 
+const termPatternCollisions = (candidateRows) => {
+  const signatures = candidateRows.map(
+    (row) =>
+      `${row.labelTermPattern ?? row.termPattern}\0${row.titleTermPattern ?? row.termPattern}`,
+  )
+  const duplicatePatterns = [
+    ...new Set(signatures.filter((signature, index) => signatures.indexOf(signature) !== index)),
+  ]
+  const crossMatchingRows = candidateRows.flatMap((row, index) => {
+    const patterns = [
+      ...new Set([
+        row.labelTermPattern ?? row.termPattern,
+        row.titleTermPattern ?? row.termPattern,
+      ]),
+    ].map((pattern) => new RegExp(pattern, 'u'))
+    const matches = candidateRows.flatMap((candidate, candidateIndex) =>
+      candidateIndex !== index && patterns.some((pattern) => pattern.test(candidate.ruledTerm))
+        ? [candidate.labelKey]
+        : [],
+    )
+    return matches.length === 0 ? [] : [{ labelKey: row.labelKey, matches }]
+  })
+  return { duplicatePatterns, crossMatchingRows }
+}
+
 const summarize = ({
   results,
   navigationMissing = [],
   coverageIssues = [],
   repairIssues = [],
   decisionArtifactIssues = [],
+  collisionMeasurement = { duplicatePatterns: [], crossMatchingRows: [] },
 }) => ({
   population: results.length,
   agreements: results.filter((result) => result.agrees).length,
@@ -463,6 +498,9 @@ const summarize = ({
   ).length,
   missingAnchorKeys: results.reduce((total, result) => total + result.missing.length, 0),
   missingNavigationKeys: navigationMissing.length,
+  termPatternDuplicatePatterns: collisionMeasurement.duplicatePatterns.length,
+  termPatternCrossMatchingRows: collisionMeasurement.crossMatchingRows.length,
+  termPatternCollisions: collisionMeasurement,
   rowCoverageIssues: coverageIssues,
   commonRepairIssues: repairIssues,
   decisionArtifactIssues,
@@ -471,15 +509,7 @@ const summarize = ({
   results,
 })
 
-let options
-try {
-  options = parseArgs(process.argv.slice(2))
-} catch (error) {
-  console.error(error.message)
-  process.exit(2)
-}
-
-if (options.control) {
+const buildControlResult = () => {
   const controlRows = [
     {
       labelKey: 'navigation.good',
@@ -505,28 +535,19 @@ if (options.control) {
   const planted = result.results.find((row) => row.labelKey === 'navigation.plantedMismatch')
   const good = result.results.find((row) => row.labelKey === 'navigation.good')
   const passed = result.mismatches === 1 && !planted.agrees && good.agrees
-  console.log(
-    JSON.stringify(
-      {
-        control: passed ? 'PASS' : 'FAIL',
-        plantedMismatchCaught: !planted.agrees,
-        positiveAgreementPreserved: good.agrees,
-      },
-      null,
-      2,
-    ),
-  )
-  process.exit(passed ? 0 : 1)
+  return {
+    control: passed ? 'PASS' : 'FAIL',
+    plantedMismatchCaught: !planted.agrees,
+    positiveAgreementPreserved: good.agrees,
+  }
 }
 
-let liveData
-let result
-try {
-  liveData = readLiveData(options.root)
-  const decisionArtifact = readDecisionArtifact(options.root)
+const buildLiveResult = (root) => {
+  const liveData = readLiveData(root)
+  const decisionArtifact = readDecisionArtifact(root)
   const inspectedRows = inspectRows(rows, liveData.arabicBundles, liveData.titleSources)
   const decidedRows = applyDecisionDispositions(inspectedRows, decisionArtifact)
-  result = summarize({
+  return summarize({
     results: decidedRows,
     navigationMissing: missingNavigationKeys(
       liveData.navigationReferences,
@@ -540,51 +561,250 @@ try {
       decidedRows,
       liveData.englishPersonsTitle,
     ),
+    collisionMeasurement: termPatternCollisions(rows),
   })
-} catch (error) {
-  console.error(error.message)
-  process.exit(2)
 }
 
-if (options.json) {
-  console.log(JSON.stringify(result, null, 2))
-} else {
-  console.log(
-    `nav/title walk: ${result.adjudicated}/${result.population} adjudicated; ` +
-      `${result.agreements} agree; ${result.escalations} escalated; ` +
-      `${result.mismatches} unruled mismatch; ${result.missingAnchorKeys} missing anchor; ` +
-      `${result.missingNavigationKeys} missing navigation locale key; ` +
-      `${result.rowCoverageIssues.length} row coverage issue; ` +
-      `${result.commonRepairIssues.length} common repair issue; ` +
-      `${result.decisionArtifactIssues.length} decision artifact issue`,
-  )
-  for (const row of result.results.filter((candidate) => !candidate.agrees)) {
-    const reason =
-      row.missing.length > 0
-        ? `MISSING ${row.missing.join(', ')}`
-        : row.escalated
-          ? 'ESCALATED-UNRULED OBJECT-TERM MISMATCH'
-          : 'OBJECT-TERM MISMATCH'
-    console.log(
-      `${reason}\tcommon:${row.labelKey}=${JSON.stringify(row.label)}\t` +
-        `${row.titleAnchor}=${JSON.stringify(row.title)}\truled=${row.ruledTerm}`,
-    )
-  }
-  for (const missing of result.navigationMissing) {
-    console.log(`MISSING-NAV\tlocale=${missing.locale}\t${missing.kind}\tcommon:${missing.key}`)
-  }
-  for (const issue of result.rowCoverageIssues) console.log(`ROW-COVERAGE\t${issue}`)
-  for (const issue of result.commonRepairIssues) console.log(`COMMON-REPAIR\t${issue}`)
-  for (const issue of result.decisionArtifactIssues) console.log(`DECISION-ARTIFACT\t${issue}`)
-}
-
-// Let piped JSON/human output flush before returning the live status.
-process.exitCode =
+const liveResultPasses = (result) =>
   result.mismatches === 0 &&
   result.missingAnchorKeys === 0 &&
   result.missingNavigationKeys === 0 &&
+  result.termPatternDuplicatePatterns === 0 &&
+  result.termPatternCrossMatchingRows === 0 &&
   result.rowCoverageIssues.length === 0 &&
   result.commonRepairIssues.length === 0 &&
   result.decisionArtifactIssues.length === 0
-    ? 0
-    : 1
+
+const runCli = (argv) => {
+  let options
+  try {
+    options = parseArgs(argv)
+  } catch (error) {
+    console.error(error.message)
+    process.exitCode = 2
+    return
+  }
+
+  if (options.control) {
+    const control = buildControlResult()
+    console.log(JSON.stringify(control, null, 2))
+    process.exitCode = control.control === 'PASS' ? 0 : 1
+    return
+  }
+
+  let result
+  try {
+    result = buildLiveResult(options.root)
+  } catch (error) {
+    console.error(error.message)
+    process.exitCode = 2
+    return
+  }
+
+  if (options.json) {
+    console.log(JSON.stringify(result, null, 2))
+  } else {
+    console.log(
+      `nav/title walk: ${result.adjudicated}/${result.population} adjudicated; ` +
+        `${result.agreements} agree; ${result.escalations} escalated; ` +
+        `${result.mismatches} unruled mismatch; ${result.missingAnchorKeys} missing anchor; ` +
+        `${result.missingNavigationKeys} missing navigation locale key; ` +
+        `${result.termPatternDuplicatePatterns} duplicate term pattern; ` +
+        `${result.termPatternCrossMatchingRows} cross-matching term row; ` +
+        `${result.rowCoverageIssues.length} row coverage issue; ` +
+        `${result.commonRepairIssues.length} common repair issue; ` +
+        `${result.decisionArtifactIssues.length} decision artifact issue`,
+    )
+    for (const row of result.results.filter((candidate) => !candidate.agrees)) {
+      const reason =
+        row.missing.length > 0
+          ? `MISSING ${row.missing.join(', ')}`
+          : row.escalated
+            ? 'ESCALATED-UNRULED OBJECT-TERM MISMATCH'
+            : 'OBJECT-TERM MISMATCH'
+      console.log(
+        `${reason}\tcommon:${row.labelKey}=${JSON.stringify(row.label)}\t` +
+          `${row.titleAnchor}=${JSON.stringify(row.title)}\truled=${row.ruledTerm}`,
+      )
+    }
+    for (const missing of result.navigationMissing) {
+      console.log(`MISSING-NAV\tlocale=${missing.locale}\t${missing.kind}\tcommon:${missing.key}`)
+    }
+    for (const issue of result.rowCoverageIssues) console.log(`ROW-COVERAGE\t${issue}`)
+    for (const issue of result.commonRepairIssues) console.log(`COMMON-REPAIR\t${issue}`)
+    for (const issue of result.decisionArtifactIssues) console.log(`DECISION-ARTIFACT\t${issue}`)
+  }
+
+  // Let piped JSON/human output flush before returning the live status.
+  process.exitCode = liveResultPasses(result) ? 0 : 1
+}
+
+if (process.env.VITEST === 'true') {
+  const { describe, expect, it } = await import('vitest')
+  const readJson = (relativePath) =>
+    JSON.parse(readFileSync(join(scriptRepoRoot, relativePath), 'utf8'))
+  const exactLeafCount = (value, target) =>
+    value && typeof value === 'object'
+      ? Object.values(value).reduce((total, child) => total + exactLeafCount(child, target), 0)
+      : Number(value === target)
+
+  describe('P99-23 nav-title agreement lane', () => {
+    it("the ruled tie-breaks and the queue collision is landed for the nav-title agreement lane, proven by this task's own oracles rather than by the lane's later tasks.", () => {
+      const result = buildLiveResult(scriptRepoRoot)
+      expect(buildControlResult()).toEqual({
+        control: 'PASS',
+        plantedMismatchCaught: true,
+        positiveAgreementPreserved: true,
+      })
+      expect(result).toMatchObject({
+        population: 28,
+        agreements: 25,
+        escalations: 3,
+        adjudicated: 28,
+        mismatches: 0,
+        missingAnchorKeys: 0,
+        missingNavigationKeys: 0,
+        rowCoverageIssues: [],
+        commonRepairIssues: [],
+        decisionArtifactIssues: [],
+      })
+      expect(liveResultPasses(result)).toBe(true)
+    })
+
+    it('FURTHER disagreeing pair found during the 28-row walk that no ruled row decides is ESCALATED to the overseer by name in the SUMMARY and left unrepaired — a worker never applies title-wins or any other invented policy. Escalating leaves this task RED on that row, which is the correct outcome: over-gating is recoverable, an invented Arabic information architecture is not. — AND, enforced together with the above as ONE conjunctive item, no half passing while the other fails (RULING-P99-199): the UNFINISHED termPattern SWEEP inherited from P99-22 is completed here. P99-22 fixed essentially one row; MEASURED on its landed branch with control fixtures excluded, 27 real rows still carry 1 duplicate pattern and 6 cross-matching instances, down from 3 and 10 — a moved number, NOT a closed class. Five distinct collisions remain and each is named so the shortfall is visible if it recurs: (a) فعالي matches BOTH فعالية / الفعاليات and فعالية جديدة; (b) مساعد matches BOTH المساعدة and مساعد الوثائق; (c) مهام matches BOTH قائمة المهام and تصعيدات المهام; (d) دول matches التقارير المجدولة as a bare substring of المجدولة, a CROSS-DOMAIN false match; (e) THE HALF-FIX — Scheduled Reports was made distinctive but تقارير for Reports STILL matches التقارير المجدولة, so the same-name-surface defect survives in the very row the reviewer anchored. The remedy is word-boundary or full-object-term discrimination applied to ALL of them, never a per-row widening that reproduces the defect one row later. Re-run the collision measurement and state the result as MEASURED beside this baseline; a fix that moves the number without reaching zero cross-matching rows does NOT satisfy this item.', () => {
+      const result = buildLiveResult(scriptRepoRoot)
+      const escalations = result.rows.filter((row) => row.escalated)
+      expect(escalations.map((row) => row.labelKey)).toEqual([
+        'navigation.admin',
+        'navigation.taskQueue',
+        'navigation.newEvent',
+      ])
+      expect(escalations.every((row) => !row.agrees && row.missing.length === 0)).toBe(true)
+      const p99_22Patterns = {
+        'navigation.countries': 'دول',
+        'navigation.events': 'فعالي',
+        'navigation.reports': 'تقارير',
+        'navigation.help': 'مساعد',
+        'navigation.taskQueue': 'مهام',
+        'navigation.newEvent': 'فعالي',
+      }
+      const baseline = termPatternCollisions(
+        rows.map((row) =>
+          p99_22Patterns[row.labelKey]
+            ? {
+                ...row,
+                termPattern: p99_22Patterns[row.labelKey],
+                labelTermPattern: undefined,
+                titleTermPattern: undefined,
+              }
+            : row,
+        ),
+      )
+      expect(baseline.duplicatePatterns).toHaveLength(1)
+      expect(baseline.crossMatchingRows.map((row) => row.labelKey)).toEqual([
+        'navigation.countries',
+        'navigation.events',
+        'navigation.reports',
+        'navigation.help',
+        'navigation.taskQueue',
+        'navigation.newEvent',
+      ])
+      expect(result.termPatternCollisions).toEqual({
+        duplicatePatterns: [],
+        crossMatchingRows: [],
+      })
+      const summary = readFileSync(
+        join(scriptRepoRoot, '.planning/phases/99-arabic-coverage/99-23-SUMMARY.md'),
+        'utf8',
+      )
+      expect(summary).toContain('OVERSEER')
+      expect(summary).toContain('MEASURED: 1 duplicate pattern and 6 cross-matching rows → 0 and 0')
+      for (const name of ['Admin', 'Task Queue', 'New Event']) expect(summary).toContain(name)
+      for (const row of escalations) {
+        expect(summary).toContain(row.label)
+        expect(summary).toContain(row.title)
+      }
+    })
+
+    it('The memoranda page title mis-anchor is repaired: MousPage stops titling itself through the generic mous.title value ("Title"/"العنوان" in both locales today) and resolves a real page-title key whose values match the nav label pair in both locales (مذكرات التفاهم on the ar side), in explicit colon form against the post-flatten shape', () => {
+      const arCommon = readJson('frontend/src/i18n/ar/common.json')
+      const enCommon = readJson('frontend/src/i18n/en/common.json')
+      const source = readFileSync(
+        join(scriptRepoRoot, 'frontend/src/pages/MoUs/MousPage.tsx'),
+        'utf8',
+      )
+      expect(arCommon.mous.title).toBe('العنوان')
+      expect(enCommon.mous.title).toBe('Title')
+      expect(arCommon.mous.pageTitle).toBe('مذكرات التفاهم')
+      expect(enCommon.mous.pageTitle).toBe('MoUs')
+      expect(arCommon.mous.pageTitle).toBe(arCommon.navigation.mous)
+      expect(enCommon.mous.pageTitle).toBe(enCommon.navigation.mous)
+      expect(source).toContain("t('common:mous.pageTitle')")
+      expect(source).not.toContain(
+        '<h1 className="text-3xl font-bold">{t(\'common:mous.title\')}</h1>',
+      )
+    })
+
+    it("The queue collision is retired: ar/intake.json's TITLE value becomes قائمة الاستقبال while قائمة الانتظار survives for the waiting queue. Re-derive both before and after — at plan time قائمة الاستقبال already occurs twice in ar/common.json (the nav labels navigation.intake and navigation.intakeQueue), so a clause keyed on mere PRESENCE of that string is a keep-true guard and not a discriminator; the discriminating clause is that ar/intake.json's own title carries it.", () => {
+      const arCommon = readJson('frontend/src/i18n/ar/common.json')
+      const intake = readJson('frontend/src/i18n/ar/intake.json')
+      const artifact = readDecisionArtifact(scriptRepoRoot)
+      const decision = artifact.rows.find((row) => row.labelKey === 'navigation.intake')
+      expect(exactLeafCount(arCommon, 'قائمة الاستقبال')).toBe(2)
+      expect(arCommon.navigation.intake).toBe('قائمة الاستقبال')
+      expect(arCommon.navigation.intakeQueue).toBe('قائمة الاستقبال')
+      expect(arCommon.navigation.waitingQueue).toBe('قائمة الانتظار')
+      expect(decision.before.title).toBe('قائمة الانتظار')
+      expect(decision.after.title).toBe('قائمة الاستقبال')
+      expect(intake.queue.title).toBe('قائمة الاستقبال')
+      expect(intake.queue.title).not.toBe('قائمة الانتظار')
+    })
+
+    it('Every tie-break and every walked anchor is recorded in scripts/glossary-senses.d/tiebreaks.json as a machine-checkable row, so the decision trail is a committed artifact the closing battery re-reads rather than SUMMARY prose', () => {
+      const artifact = readDecisionArtifact(scriptRepoRoot)
+      const result = buildLiveResult(scriptRepoRoot)
+      expect(artifact.rows).toHaveLength(28)
+      expect(new Set(artifact.rows.map((row) => row.labelKey)).size).toBe(28)
+      expect(
+        artifact.rows.every((row) => row.titleAnchor && row.objectTerm && row.disposition),
+      ).toBe(true)
+      expect(artifact.rows.every((row) => row.expected?.labelAr && row.expected?.titleAr)).toBe(
+        true,
+      )
+      expect(result.decisionArtifactIssues).toEqual([])
+    })
+
+    it('the three ruled tie-breaks are applied exactly as ruled and the queue collision is retired, each clause naming the value it demands and the value it forbids so a partial sweep cannot pass — RED at HEAD (dashboard reads لوحة الملفات, persons reads جهات الاتصال الرئيسية, countries nav reads البلدان, intake.json carries no استقبال title)', () => {
+      const arCommon = readJson('frontend/src/i18n/ar/common.json')
+      const dashboard = readJson('frontend/src/i18n/ar/dashboard.json')
+      const arPersons = readJson('frontend/src/i18n/ar/persons.json')
+      const enPersons = readJson('frontend/src/i18n/en/persons.json')
+      const countries = readJson('frontend/src/i18n/ar/countries.json')
+      const engagements = readJson('frontend/src/i18n/ar/engagements.json')
+      const positions = readJson('frontend/src/i18n/ar/positions.json')
+      const intake = readJson('frontend/src/i18n/ar/intake.json')
+
+      expect(arCommon.navigation.dashboardOverview).toBe('لوحة الدوسيهات')
+      expect(arCommon.navigation.dashboardOverview).not.toBe('نظرة عامة على لوحة الدوسيهات')
+      expect(dashboard.title).toBe('لوحة الدوسيهات')
+      expect(dashboard.title).not.toBe('لوحة الملفات')
+      expect(arPersons.title).toBe('الأشخاص')
+      expect(arPersons.title).not.toBe('جهات الاتصال الرئيسية')
+      expect(enPersons.title).toBe('Persons')
+      expect(enPersons.title).not.toBe('Key Contacts')
+      expect(arCommon.navigation.countries).toBe('الدول')
+      expect(arCommon.navigation.countries).not.toBe('البلدان')
+      expect(countries.title).toContain('الدول')
+      expect(arCommon.navigation.engagements).toBe('المشاركات')
+      expect(arCommon.navigation.engagements).not.toBe('الارتباطات')
+      expect(engagements.title).toBe('المشاركات')
+      expect(arCommon.navigation.positions).toBe('المواقف')
+      expect(positions.library.title).toBe('مكتبة المواقف')
+      expect(intake.queue.title).toBe('قائمة الاستقبال')
+      expect(intake.queue.title).not.toBe('قائمة الانتظار')
+      expect(arCommon.navigation.waitingQueue).toBe('قائمة الانتظار')
+    })
+  })
+} else {
+  runCli(process.argv.slice(2))
+}
