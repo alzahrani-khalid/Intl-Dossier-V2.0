@@ -118,7 +118,7 @@ export function TaskDetail({
               defaultValue: task.workflow_stage,
             })}
           </Badge>
-          {task.work_item_type && (
+          {task.work_item_type && task.work_item_type !== 'generic' && (
             <Badge variant="outline">
               <LinkIcon className={`h-3 w-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
               {t(`assignments:work_item.${task.work_item_type}`)}
