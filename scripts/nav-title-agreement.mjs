@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Static Arabic navigation-label/page-title agreement checker for the 13 derived Phase 99 rows.
-// Agreement is sense-aware: both anchors must contain the ruled object term. It is not byte
+// Static navigation-label/page-title agreement checker for all 28 modern-nav entries.
+// Agreement is sense-aware: both anchors must carry the same object term. It is not byte
 // equality (for example, "Positions" and "Positions Library" agree on the Positions object).
 
 import { readFileSync } from 'node:fs'
@@ -28,8 +28,9 @@ const parseArgs = (argv) => {
   return { root, control, json }
 }
 
-// Exactly the 13 rows derived in 99-RESEARCH §4.2. termPattern admits ordinary inflection while
-// ruledTerm records the product wording that both anchors must carry.
+// The first 13 rows are the anchors derived in 99-RESEARCH §4.2. The remaining 15 carry the
+// route walk performed by P99-22. titleSourcePath/titleSourceContains keep each deeper heading
+// anchored to the component that actually renders it; two hardcoded headings are read directly.
 const rows = [
   {
     labelKey: 'navigation.countries',
@@ -122,11 +123,160 @@ const rows = [
     ruledTerm: 'ملخص / الملخصات',
     termPattern: 'ملخص',
   },
+  {
+    labelKey: 'navigation.events',
+    titleNamespace: 'common',
+    titleKey: 'navigation.events',
+    ruledTerm: 'فعالية / الفعاليات',
+    termPattern: 'فعالي',
+    titleSourcePath: 'frontend/src/pages/events/EventsPage.tsx',
+    titleSourceContains: "t('navigation.events')",
+  },
+  {
+    labelKey: 'navigation.reports',
+    titleNamespace: 'common',
+    titleKey: 'navigation.reports',
+    ruledTerm: 'تقرير / التقارير',
+    termPattern: 'تقارير',
+    titleSourcePath: 'frontend/src/pages/reports/ReportsPage.tsx',
+    titleSourceContains: "t('navigation.reports')",
+  },
+  {
+    labelKey: 'navigation.scheduledReports',
+    titleNamespace: 'scheduled-reports',
+    titleKey: 'title',
+    ruledTerm: 'التقارير المجدولة',
+    termPattern: 'تقارير',
+    titleSourcePath: 'frontend/src/components/scheduled-reports/ScheduledReportsManager.tsx',
+    titleSourceContains: "t('title')",
+  },
+  {
+    labelKey: 'navigation.analytics',
+    titleNamespace: 'analytics',
+    titleKey: 'title',
+    ruledTerm: 'التحليلات',
+    termPattern: 'تحليل',
+    titleSourcePath: 'frontend/src/pages/analytics/AnalyticsDashboardPage.tsx',
+    titleSourceContains: "title={t('title')}",
+  },
+  {
+    labelKey: 'navigation.intelligence',
+    titleNamespace: 'common',
+    titleKey: 'navigation.intelligence',
+    ruledTerm: 'الاستخبارات',
+    termPattern: 'استخبارات',
+    titleSourcePath: 'frontend/src/pages/intelligence/IntelligencePage.tsx',
+    titleSourceContains: "t('navigation.intelligence')",
+  },
+  {
+    labelKey: 'navigation.monitoring',
+    titleSourcePath: 'frontend/src/pages/monitoring/Dashboard.tsx',
+    titleSourcePattern: '<h1>(Monitoring Dashboard)</h1>',
+    ruledTerm: 'المراقبة / Monitoring',
+    labelTermPattern: 'مراقب',
+    titleTermPattern: 'Monitoring',
+  },
+  {
+    labelKey: 'navigation.dataLibrary',
+    titleNamespace: 'common',
+    titleKey: 'navigation.dataLibrary',
+    ruledTerm: 'مكتبة البيانات',
+    termPattern: 'مكتبة البيانات',
+    titleSourcePath: 'frontend/src/pages/data-library/DataLibraryPage.tsx',
+    titleSourceContains: "t('navigation.dataLibrary')",
+  },
+  {
+    labelKey: 'navigation.wordAssistant',
+    titleNamespace: 'common',
+    titleKey: 'navigation.wordAssistant',
+    ruledTerm: 'مساعد الوثائق',
+    termPattern: 'مساعد الوثائق',
+    titleSourcePath: 'frontend/src/pages/word-assistant/WordAssistantPage.tsx',
+    titleSourceContains: "t('navigation.wordAssistant')",
+  },
+  {
+    labelKey: 'navigation.users',
+    titleNamespace: 'user-management',
+    titleKey: 'usersList.title',
+    ruledTerm: 'المستخدمون',
+    termPattern: 'مستخدم',
+    titleSourcePath: 'frontend/src/pages/users/UsersListPage.tsx',
+    titleSourceContains: "title={t('usersList.title')}",
+  },
+  {
+    labelKey: 'navigation.settings',
+    titleNamespace: 'settings',
+    titleKey: 'pageTitle',
+    ruledTerm: 'الإعدادات',
+    termPattern: 'إعداد',
+    titleSourcePath: 'frontend/src/components/settings/SettingsLayout.tsx',
+    titleSourceContains: "t('pageTitle')",
+  },
+  {
+    labelKey: 'navigation.help',
+    titleSourcePath: 'frontend/src/pages/help/HelpPage.tsx',
+    titleSourcePattern: "title=\\{isRTL \\? '([^']+)'",
+    ruledTerm: 'المساعدة',
+    termPattern: 'مساعد',
+  },
+  {
+    labelKey: 'navigation.admin',
+    titleNamespace: 'ai-admin',
+    titleKey: 'settings.title',
+    ruledTerm: 'الإدارة',
+    termPattern: 'إدار',
+    titleSourcePath: 'frontend/src/routes/_protected/admin/ai-settings.tsx',
+    titleSourceContains: "t('settings.title', 'AI Settings')",
+  },
+  {
+    labelKey: 'navigation.taskQueue',
+    titleNamespace: 'assignments',
+    titleKey: 'queue.title',
+    ruledTerm: 'قائمة المهام',
+    termPattern: 'مهام',
+    titleSourcePath: 'frontend/src/pages/AssignmentQueue.tsx',
+    titleSourceContains: "t('queue.title')",
+  },
+  {
+    labelKey: 'navigation.taskEscalations',
+    titleNamespace: 'assignments',
+    titleKey: 'escalations.title',
+    ruledTerm: 'تصعيدات المهام',
+    termPattern: 'تصعيد',
+    titleSourcePath: 'frontend/src/pages/Escalations.tsx',
+    titleSourceContains: "t('escalations.title')",
+  },
+  {
+    labelKey: 'navigation.newEvent',
+    titleNamespace: 'calendar',
+    titleKey: 'new_event.title',
+    ruledTerm: 'فعالية جديدة',
+    termPattern: 'فعالي',
+    titleSourcePath: 'frontend/src/routes/_protected/calendar/new.tsx',
+    titleSourceContains: "t('new_event.title')",
+  },
 ]
+
+const valueAt = (bundle, keyPath) => {
+  let current = bundle
+  for (const segment of keyPath.split('.')) {
+    if (current == null || typeof current !== 'object' || !(segment in current)) return undefined
+    current = current[segment]
+  }
+  return typeof current === 'string' ? current : undefined
+}
+
+const titleAnchor = (row) =>
+  row.titleNamespace ? `${row.titleNamespace}:${row.titleKey}` : `source:${row.titleSourcePath}`
 
 const readLiveData = (root) => {
   const i18nDirectory = join(root, 'frontend/src/i18n')
-  const namespaces = [...new Set(['common', ...rows.map((row) => row.titleNamespace)])]
+  const namespaces = [
+    ...new Set([
+      'common',
+      ...rows.flatMap((row) => (row.titleNamespace ? [row.titleNamespace] : [])),
+    ]),
+  ]
   const arabicBundles = Object.fromEntries(
     namespaces.map((namespace) => [
       namespace,
@@ -149,31 +299,43 @@ const readLiveData = (root) => {
   if (navigationReferences.length === 0) {
     throw new Error('navigationData.ts yielded zero labelKey/tooltipKey declarations')
   }
-  return { arabicBundles, commonByLocale, navigationReferences }
+  const sourcePaths = [
+    ...new Set(rows.flatMap((row) => (row.titleSourcePath ? [row.titleSourcePath] : []))),
+  ]
+  const titleSources = Object.fromEntries(
+    sourcePaths.map((sourcePath) => [sourcePath, readFileSync(join(root, sourcePath), 'utf8')]),
+  )
+  return { arabicBundles, commonByLocale, navigationReferences, titleSources }
 }
 
-const valueAt = (bundle, keyPath) => {
-  let current = bundle
-  for (const segment of keyPath.split('.')) {
-    if (current == null || typeof current !== 'object' || !(segment in current)) return undefined
-    current = current[segment]
-  }
-  return typeof current === 'string' ? current : undefined
+const resolveTitle = (row, bundles, titleSources) => {
+  if (row.titleNamespace) return valueAt(bundles[row.titleNamespace], row.titleKey)
+  const source = titleSources[row.titleSourcePath]
+  return source?.match(new RegExp(row.titleSourcePattern, 'u'))?.[1]
 }
 
-const inspectRows = (candidateRows, bundles) =>
+const inspectRows = (candidateRows, bundles, titleSources = {}) =>
   candidateRows.map((row) => {
     const label = valueAt(bundles.common, row.labelKey)
-    const title = valueAt(bundles[row.titleNamespace], row.titleKey)
-    const term = new RegExp(row.termPattern, 'u')
+    const title = resolveTitle(row, bundles, titleSources)
+    const source = row.titleSourcePath ? titleSources[row.titleSourcePath] : undefined
+    const sourceReferenceMissing = Boolean(
+      row.titleSourceContains && !source?.includes(row.titleSourceContains),
+    )
+    const labelTerm = new RegExp(row.labelTermPattern ?? row.termPattern, 'u')
+    const titleTerm = new RegExp(row.titleTermPattern ?? row.termPattern, 'u')
     const missing = [
       ...(!label ? [`common:${row.labelKey}`] : []),
-      ...(!title ? [`${row.titleNamespace}:${row.titleKey}`] : []),
+      ...(!title ? [titleAnchor(row)] : []),
+      ...(sourceReferenceMissing
+        ? [`source:${row.titleSourcePath}#${row.titleSourceContains}`]
+        : []),
     ]
-    const labelCarriesTerm = Boolean(label && term.test(label))
-    const titleCarriesTerm = Boolean(title && term.test(title))
+    const labelCarriesTerm = Boolean(label && labelTerm.test(label))
+    const titleCarriesTerm = Boolean(title && titleTerm.test(title))
     return {
       ...row,
+      titleAnchor: titleAnchor(row),
       label,
       title,
       labelCarriesTerm,
@@ -192,13 +354,71 @@ const missingNavigationKeys = (references, commonByLocale) =>
     ),
   )
 
-const summarize = (results, navigationMissing = []) => ({
+const rowCoverageIssues = (references, candidateRows) => {
+  const navLabelKeys = references
+    .filter((reference) => reference.kind === 'labelKey')
+    .map((reference) => reference.key)
+  const rowKeys = candidateRows.map((row) => row.labelKey)
+  const duplicates = [...new Set(rowKeys.filter((key, index) => rowKeys.indexOf(key) !== index))]
+  return [
+    ...navLabelKeys.filter((key) => !rowKeys.includes(key)).map((key) => `missing row ${key}`),
+    ...rowKeys.filter((key) => !navLabelKeys.includes(key)).map((key) => `non-nav row ${key}`),
+    ...duplicates.map((key) => `duplicate row ${key}`),
+    ...(navLabelKeys.length === 28
+      ? []
+      : [`navigationData.ts has ${navLabelKeys.length} items, not 28`]),
+  ]
+}
+
+const commonRepairIssues = (commonByLocale) =>
+  LOCALES.flatMap((locale) => {
+    const common = commonByLocale[locale]
+    const checks = [
+      ['tasks.sla.approaching', (value) => typeof value === 'string' && value.length > 0],
+      ['afterActions.decisions.item', (value) => value?.includes('{{number}}')],
+      ['afterActions.confidence', (value) => value?.includes('{{value}}')],
+    ]
+    return checks.flatMap(([key, valid]) =>
+      valid(valueAt(common, key)) ? [] : [`${locale}/common:${key}`],
+    )
+  })
+
+const artifactIssues = (root, candidateRows) => {
+  const artifactPath = join(root, 'scripts/glossary-senses.d/tiebreaks.json')
+  const artifact = JSON.parse(readFileSync(artifactPath, 'utf8'))
+  if (!Array.isArray(artifact.rows)) return ['tiebreaks.json rows is not an array']
+  const byLabel = new Map(artifact.rows.map((row) => [row.labelKey, row]))
+  return [
+    ...(artifact.rows.length === 28
+      ? []
+      : [`tiebreaks.json has ${artifact.rows.length} rows, not 28`]),
+    ...candidateRows.flatMap((row) => {
+      const artifactRow = byLabel.get(row.labelKey)
+      if (!artifactRow) return [`tiebreaks.json missing ${row.labelKey}`]
+      return artifactRow.titleAnchor === titleAnchor(row)
+        ? []
+        : [`tiebreaks.json anchor drift for ${row.labelKey}`]
+    }),
+  ]
+}
+
+const summarize = ({
+  results,
+  navigationMissing = [],
+  coverageIssues = [],
+  repairIssues = [],
+  decisionArtifactIssues = [],
+}) => ({
   population: results.length,
   agreements: results.filter((result) => result.agrees).length,
   mismatches: results.filter((result) => !result.agrees && result.missing.length === 0).length,
   missingAnchorKeys: results.reduce((total, result) => total + result.missing.length, 0),
   missingNavigationKeys: navigationMissing.length,
+  rowCoverageIssues: coverageIssues,
+  commonRepairIssues: repairIssues,
+  decisionArtifactIssues,
   navigationMissing,
+  rows: results,
   results,
 })
 
@@ -227,12 +447,12 @@ if (options.control) {
       termPattern: 'دوسيه',
     },
   ]
-  const result = summarize(
-    inspectRows(controlRows, {
+  const result = summarize({
+    results: inspectRows(controlRows, {
       common: { navigation: { good: 'الدوسيهات', plantedMismatch: 'الدوسيهات' } },
       control: { good: 'مكتبة الدوسيهات', plantedMismatch: 'مكتبة الملفات' },
     }),
-  )
+  })
   const planted = result.results.find((row) => row.labelKey === 'navigation.plantedMismatch')
   const good = result.results.find((row) => row.labelKey === 'navigation.good')
   const passed = result.mismatches === 1 && !planted.agrees && good.agrees
@@ -251,38 +471,58 @@ if (options.control) {
 }
 
 let liveData
+let result
 try {
   liveData = readLiveData(options.root)
+  result = summarize({
+    results: inspectRows(rows, liveData.arabicBundles, liveData.titleSources),
+    navigationMissing: missingNavigationKeys(
+      liveData.navigationReferences,
+      liveData.commonByLocale,
+    ),
+    coverageIssues: rowCoverageIssues(liveData.navigationReferences, rows),
+    repairIssues: commonRepairIssues(liveData.commonByLocale),
+    decisionArtifactIssues: artifactIssues(options.root, rows),
+  })
 } catch (error) {
   console.error(error.message)
   process.exit(2)
 }
-const result = summarize(
-  inspectRows(rows, liveData.arabicBundles),
-  missingNavigationKeys(liveData.navigationReferences, liveData.commonByLocale),
-)
+
 if (options.json) {
   console.log(JSON.stringify(result, null, 2))
 } else {
   console.log(
     `nav/title agreement: ${result.agreements}/${result.population} agree; ` +
-      `${result.mismatches} mismatch; ${result.missingAnchorKeys} missing anchor key; ` +
-      `${result.missingNavigationKeys} missing navigation locale key`,
+      `${result.mismatches} mismatch; ${result.missingAnchorKeys} missing anchor; ` +
+      `${result.missingNavigationKeys} missing navigation locale key; ` +
+      `${result.rowCoverageIssues.length} row coverage issue; ` +
+      `${result.commonRepairIssues.length} common repair issue; ` +
+      `${result.decisionArtifactIssues.length} decision artifact issue`,
   )
   for (const row of result.results.filter((candidate) => !candidate.agrees)) {
     const reason =
       row.missing.length > 0 ? `MISSING ${row.missing.join(', ')}` : 'OBJECT-TERM MISMATCH'
     console.log(
       `${reason}\tcommon:${row.labelKey}=${JSON.stringify(row.label)}\t` +
-        `${row.titleNamespace}:${row.titleKey}=${JSON.stringify(row.title)}\truled=${row.ruledTerm}`,
+        `${row.titleAnchor}=${JSON.stringify(row.title)}\truled=${row.ruledTerm}`,
     )
   }
   for (const missing of result.navigationMissing) {
     console.log(`MISSING-NAV\tlocale=${missing.locale}\t${missing.kind}\tcommon:${missing.key}`)
   }
+  for (const issue of result.rowCoverageIssues) console.log(`ROW-COVERAGE\t${issue}`)
+  for (const issue of result.commonRepairIssues) console.log(`COMMON-REPAIR\t${issue}`)
+  for (const issue of result.decisionArtifactIssues) console.log(`DECISION-ARTIFACT\t${issue}`)
 }
-// Let piped JSON/human output flush before returning the live RED status.
+
+// Let piped JSON/human output flush before returning the live status.
 process.exitCode =
-  result.mismatches === 0 && result.missingAnchorKeys === 0 && result.missingNavigationKeys === 0
+  result.mismatches === 0 &&
+  result.missingAnchorKeys === 0 &&
+  result.missingNavigationKeys === 0 &&
+  result.rowCoverageIssues.length === 0 &&
+  result.commonRepairIssues.length === 0 &&
+  result.decisionArtifactIssues.length === 0
     ? 0
     : 1
