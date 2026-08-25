@@ -27,7 +27,7 @@ const ENGLISH_RELATIVE_TOKEN = /\b(?:ago|minutes?|hours?|days?|months?|years?)\b
 
 type AbsoluteDateSurface = '/calendar' | '/dossiers' | '/events'
 
-/** Sign in inline so --no-deps never relies on a setup-project storage artifact. */
+/** Re-authenticate inline; the project storage state still supplies setup's onboarding flags. */
 const signInInline = async (page: Page): Promise<void> => {
   if (email === '' || password === '') {
     throw new Error('TEST_USER_EMAIL / TEST_USER_PASSWORD missing from .env.test')
@@ -41,6 +41,69 @@ const signInInline = async (page: Page): Promise<void> => {
 const gotoLocale = async (page: Page, path: string, lng: 'en' | 'ar'): Promise<void> => {
   const separator = path.includes('?') ? '&' : '?'
   await page.goto(`${path}${separator}lng=${lng}`)
+}
+
+/**
+ * Radix and the onboarding prompt retain their overlay while an exit animation is running. Wait
+ * for that real interaction blocker to leave before clicking the hydrated dossier card. This does
+ * not dismiss the overlay or bypass Playwright actionability; if it remains genuinely open, retain
+ * the failure and report the state required by RULING-P99-189.
+ */
+const waitForDialogOverlayExit = async (
+  page: Page,
+  surface: AbsoluteDateSurface,
+  lng: 'en' | 'ar',
+): Promise<void> => {
+  const overlays = page.locator('.id-dialog-overlay')
+  try {
+    await expect(
+      overlays,
+      `${surface} [${lng}] must finish closing its dialog overlay before the dossier card click`,
+    ).toHaveCount(0)
+  } catch (error) {
+    const evidence = await overlays.evaluateAll((elements) =>
+      elements.map((node) => {
+        const element = node as HTMLElement
+        const style = window.getComputedStyle(element)
+        const dialog =
+          element.querySelector<HTMLElement>('[role="dialog"], .id-dialog-content') ??
+          element.parentElement?.querySelector<HTMLElement>('[role="dialog"], .id-dialog-content')
+        const dialogStyle = dialog === null ? null : window.getComputedStyle(dialog)
+        const overlayState = element.getAttribute('data-state')
+        const dialogState = dialog?.getAttribute('data-state') ?? null
+        const dialogPhase =
+          overlayState === 'closed' || dialogState === 'closed'
+            ? 'mid-exit'
+            : overlayState === 'open' || dialogState === 'open'
+              ? 'open'
+              : style.visibility === 'visible' && style.pointerEvents !== 'none'
+                ? 'open'
+                : 'mid-exit-or-hidden'
+
+        return {
+          element: element.outerHTML.slice(0, 500),
+          pointerEvents: style.pointerEvents,
+          visibility: style.visibility,
+          display: style.display,
+          opacity: style.opacity,
+          overlayState,
+          dialogState,
+          dialogPhase,
+          dialogVisibility: dialogStyle?.visibility ?? null,
+          dialogPointerEvents: dialogStyle?.pointerEvents ?? null,
+        }
+      }),
+    )
+    const reason = error instanceof Error ? error.message : String(error)
+    throw new Error(
+      [
+        `${surface} [${lng}] dialog overlay remained after the synchronization wait.`,
+        'Interaction sequence: inline sign-in -> locale navigation -> settle -> locale assertion -> hydrated first card visible -> overlay-exit wait -> dossier card click.',
+        `Overlay evidence: ${JSON.stringify(evidence)}`,
+        `Original wait failure: ${reason}`,
+      ].join('\n'),
+    )
+  }
 }
 
 /**
@@ -65,6 +128,7 @@ const dateRegionText = async (
       firstCard,
       `${surface} [${lng}] needs a hydrated dossier card to expose its absolute updated date`,
     ).toBeVisible()
+    await waitForDialogOverlayExit(page, surface, lng)
     await firstCard.click()
     const expanded = main.locator('div.fixed.inset-0.grid.place-items-center').last()
     await expect(expanded, `${surface} [${lng}] expanded date region`).toBeVisible()
@@ -112,10 +176,7 @@ const assertEnglishAbsoluteDate = async (
   expect(dateText, `${surface} [en] date region must retain Latin digits`).toMatch(LATIN_DIGIT_RUN)
 }
 
-test.use({
-  viewport: { width: 1400, height: 900 },
-  storageState: { cookies: [], origins: [] },
-})
+test.use({ viewport: { width: 1400, height: 900 } })
 
 test.beforeEach(async ({ page }) => {
   test.setTimeout(300_000)
