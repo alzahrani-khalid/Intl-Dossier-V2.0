@@ -53,7 +53,7 @@ export function TaskCard({
             <Badge className={getStatusBadgeClass(task.status)}>
               {t(`assignments:status.${task.status}`)}
             </Badge>
-            {showWorkItem && task.work_item_type && (
+            {showWorkItem && task.work_item_type && task.work_item_type !== 'generic' && (
               <Badge variant="outline">{t(`assignments:work_item.${task.work_item_type}`)}</Badge>
             )}
           </div>
