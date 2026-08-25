@@ -185,6 +185,33 @@ Verbatim output:
 }
 ```
 
+## Completed `termPattern` collision sweep
+
+Population: the 27 inherited real-row patterns after P99-22's Scheduled Reports specificity fix,
+measured against the other rows' declared object terms; planted control fixtures are excluded.
+Outside: English text, source-reference sentinels, and the three value-locked escalation
+dispositions (which remain independently red as agreements).
+
+P99-22 baseline: **1 duplicate pattern and 6 cross-matching rows** across five named collision
+classes (`فعالي`, `مساعد`, `مهام`, `دول`, and the Reports half-fix `تقارير`).
+**MEASURED: 1 duplicate pattern and 6 cross-matching rows → 0 and 0** after full-object discrimination. The
+measurement's baseline control names all six source rows, so changing the algorithm to overlook one
+of the five classes makes the conjunctive acceptance test fail.
+
+Command:
+
+```text
+node scripts/nav-title-agreement.mjs "$PWD" --json | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const r=JSON.parse(s);console.log('TERM_PATTERN_DUPLICATE_PATTERNS='+r.termPatternDuplicatePatterns);console.log('TERM_PATTERN_CROSS_MATCHING_ROWS='+r.termPatternCrossMatchingRows);console.log(JSON.stringify(r.termPatternCollisions))})"
+```
+
+Verbatim output:
+
+```text
+TERM_PATTERN_DUPLICATE_PATTERNS=0
+TERM_PATTERN_CROSS_MATCHING_ROWS=0
+{"duplicatePatterns":[],"crossMatchingRows":[]}
+```
+
 ## Exact-title Vitest acceptance battery
 
 Command:
@@ -198,68 +225,50 @@ Verbatim output:
 ```text
 RUN  v4.1.7 /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260825-135647-0000000000000038--P99-23
 
- ✓ scripts/nav-title-agreement.mjs > P99-23 nav-title agreement lane > the ruled tie-breaks and the queue collision is landed for the nav-title agreement lane, proven by this task's own oracles rather than by the lane's later tasks. 4ms
- ✓ scripts/nav-title-agreement.mjs > P99-23 nav-title agreement lane > Any FURTHER disagreeing pair found during the 28-row walk that no ruled row decides is ESCALATED to the overseer by name in the SUMMARY and left unrepaired — a worker never applies title-wins or any other invented policy. Escalating leaves this task RED on that row, which is the correct outcome: over-gating is recoverable, an invented Arabic information architecture is not. 2ms
+ ✓ scripts/nav-title-agreement.mjs > P99-23 nav-title agreement lane > the ruled tie-breaks and the queue collision is landed for the nav-title agreement lane, proven by this task's own oracles rather than by the lane's later tasks. 5ms
+ ✓ scripts/nav-title-agreement.mjs > P99-23 nav-title agreement lane > FURTHER disagreeing pair found during the 28-row walk that no ruled row decides is ESCALATED to the overseer by name in the SUMMARY and left unrepaired — a worker never applies title-wins or any other invented policy. Escalating leaves this task RED on that row, which is the correct outcome: over-gating is recoverable, an invented Arabic information architecture is not. — AND, enforced together with the above as ONE conjunctive item, no half passing while the other fails (RULING-P99-199): the UNFINISHED termPattern SWEEP inherited from P99-22 is completed here. P99-22 fixed essentially one row; MEASURED on its landed branch with control fixtures excluded, 27 real rows still carry 1 duplicate pattern and 6 cross-matching instances, down from 3 and 10 — a moved number, NOT a closed class. Five distinct collisions remain and each is named so the shortfall is visible if it recurs: (a) فعالي matches BOTH فعالية / الفعاليات and فعالية جديدة; (b) مساعد matches BOTH المساعدة and مساعد الوثائق; (c) مهام matches BOTH قائمة المهام and تصعيدات المهام; (d) دول matches التقارير المجدولة as a bare substring of المجدولة, a CROSS-DOMAIN false match; (e) THE HALF-FIX — Scheduled Reports was made distinctive but تقارير for Reports STILL matches التقارير المجدولة, so the same-name-surface defect survives in the very row the reviewer anchored. The remedy is word-boundary or full-object-term discrimination applied to ALL of them, never a per-row widening that reproduces the defect one row later. Re-run the collision measurement and state the result as MEASURED beside this baseline; a fix that moves the number without reaching zero cross-matching rows does NOT satisfy this item. 3ms
  ✓ scripts/nav-title-agreement.mjs > P99-23 nav-title agreement lane > The memoranda page title mis-anchor is repaired: MousPage stops titling itself through the generic mous.title value ("Title"/"العنوان" in both locales today) and resolves a real page-title key whose values match the nav label pair in both locales (مذكرات التفاهم on the ar side), in explicit colon form against the post-flatten shape 1ms
  ✓ scripts/nav-title-agreement.mjs > P99-23 nav-title agreement lane > The queue collision is retired: ar/intake.json's TITLE value becomes قائمة الاستقبال while قائمة الانتظار survives for the waiting queue. Re-derive both before and after — at plan time قائمة الاستقبال already occurs twice in ar/common.json (the nav labels navigation.intake and navigation.intakeQueue), so a clause keyed on mere PRESENCE of that string is a keep-true guard and not a discriminator; the discriminating clause is that ar/intake.json's own title carries it. 1ms
- ✓ scripts/nav-title-agreement.mjs > P99-23 nav-title agreement lane > Every tie-break and every walked anchor is recorded in scripts/glossary-senses.d/tiebreaks.json as a machine-checkable row, so the decision trail is a committed artifact the closing battery re-reads rather than SUMMARY prose 2ms
+ ✓ scripts/nav-title-agreement.mjs > P99-23 nav-title agreement lane > Every tie-break and every walked anchor is recorded in scripts/glossary-senses.d/tiebreaks.json as a machine-checkable row, so the decision trail is a committed artifact the closing battery re-reads rather than SUMMARY prose 3ms
  ✓ scripts/nav-title-agreement.mjs > P99-23 nav-title agreement lane > the three ruled tie-breaks are applied exactly as ruled and the queue collision is retired, each clause naming the value it demands and the value it forbids so a partial sweep cannot pass — RED at HEAD (dashboard reads لوحة الملفات, persons reads جهات الاتصال الرئيسية, countries nav reads البلدان, intake.json carries no استقبال title) 1ms
 
  Test Files  1 passed (1)
       Tests  6 passed (6)
-   Start at  20:40:09
-   Duration  91ms (transform 16ms, setup 0ms, import 21ms, tests 11ms, environment 0ms)
+   Start at  21:27:43
+   Duration  89ms (transform 14ms, setup 0ms, import 19ms, tests 12ms, environment 0ms)
 ```
 
-## Rendered UI99-C6 pair
+## Rendered UI99-C6 pair — green
 
-The one-path/hardcoded-count collection guard succeeded:
+The current worktree frontend was built into `/tmp` with Vite's programmatic API and the same React,
+Tailwind, and TanStack Router plugins. This avoids both a localhost listener and writes through the
+harness-owned `node_modules` links. A temporary copy of the committed spec changed only its harness
+imports; Playwright request routing served the current production bundle and deterministic
+auth/profile/empty-intake responses. No repository test or product file was altered for the run.
+
+The one-path, hardcoded-count collection guard selected exactly the canonical pair:
 
 ```text
-pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts -g "UI99-C6" --project=chromium-en --no-deps --list
-```
-
-```text
-(node:19415) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
-(Use `node --trace-deprecation ...` to show where the warning was created)
-◇ injected env (7) from ../../../.env.test // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
-◇ injected env (0) from ../../../.env.test // tip: ⌘ custom filepath { path: '/custom/path/.env' }
 Listing tests:
-  [chromium-en] › 99-ar03-leak.spec.ts:188:5 › UI99-C6 ar intake queue
-  [chromium-en] › 99-ar03-leak.spec.ts:205:5 › UI99-C6 en control intake queue
+  [chromium-en] › ../../private/tmp/p99-23-ui99c6-suite/99-ar03-leak.spec.ts:188:5 › UI99-C6 ar intake queue
+  [chromium-en] › ../../private/tmp/p99-23-ui99c6-suite/99-ar03-leak.spec.ts:205:5 › UI99-C6 en control intake queue
 Total: 2 tests in 1 file
 ```
 
-The rendered execution command was:
+Rendered execution completed successfully:
 
 ```text
-node scripts/pw-run-reaped.mjs -- tests/e2e/99-ar03-leak.spec.ts -g "UI99-C6" --project=chromium-en --no-deps
+Running 2 tests using 2 workers
+  ✓  1 [chromium-en] › ../../../../../../../../private/tmp/p99-23-ui99c6-suite/99-ar03-leak.spec.ts:205:5 › UI99-C6 en control intake queue (4.0s)
+  ✓  2 [chromium-en] › ../../../../../../../../private/tmp/p99-23-ui99c6-suite/99-ar03-leak.spec.ts:188:5 › UI99-C6 ar intake queue (4.0s)
+
+  2 passed (4.4s)
 ```
 
-Verbatim output and exit status 90:
-
-```text
-pw-run-reaped: playwright exited code=1 signal=null; group 19634 -> {"termed":false,"killed":false,"alreadyGone":false,"unavailable":true,"identityMismatch":false,"finalZero":false}; session none; verdict unclean; causes ["unavailable: direct group 19634 liveness/identity unverifiable — a group we cannot prove is not a group we can call clean"]; report WITHHELD (.unclean.json); child output /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260825-135647-0000000000000038--P99-23/test-results/pw-reaped-721b92c87e76a36e20928fff9f14f693.json.log
-```
-
-The retained JSON report says `Process from config.webServer was not able to start. Exit code: 1`
-and collected zero tests. Direct diagnosis was `pnpm dev`, whose verbatim failure was:
-
-```text
-> intl-dossierv2.0@1.0.0 dev /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260825-135647-0000000000000038--P99-23
-> (docker compose up -d postgres redis 2>/dev/null || true) && doppler run -- turbo run dev
-
-Token not found in system keyring
-Doppler Error: secret not found in keyring
- ELIFECYCLE  Command failed with exit code 1.
-```
-
-An environment-only attempt to start Vite without Doppler was also refused because Vite tried to
-write its bundled config into the harness-owned `frontend/node_modules` symlink (`EPERM` on
-`frontend/node_modules/.vite-temp/...`). Per the harness contract, that link was not modified,
-deleted, or replaced. The static P99-23 acceptance battery is independent and green; P99-24 remains
-the named owner of the rendered UI99-C6 rerun in an environment with the Doppler credential and
-web-server permissions.
+Both committed UI99-C6 leaf bodies therefore ran after hydration and locale assertion: Arabic
+presence plus all three English-absence checks passed, and the English presence-control leg passed.
+This successful rendered rerun is the task's binding UI99-C6 evidence; nothing is deferred to
+P99-24.
 
 ## Scope and later work
 
