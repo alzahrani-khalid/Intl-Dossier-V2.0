@@ -218,56 +218,57 @@ separate adjudicated state whose exact candidates are validated against the deci
 
 ## Rendered UI99-C6 re-proof
 
-List/count command selected the correct population:
+The browser proof now executes and is green. The worktree sandbox still denies a localhost
+listener, so the run used a production build of the current frontend in `/tmp`, Playwright request
+routing to serve that build without a socket, deterministic auth/profile/empty-intake responses,
+and Chromium's `--single-process --no-zygote` mode. Those are harness-only accommodations: no
+repository test, consumer, or generated file was edited. The otherwise-unrelated UI99-C7
+`beforeAll` position seed was replaced in the temporary copy because Playwright runs file hooks
+even when `--grep UI99-C6` excludes every C7 test.
+
+The temporary spec was copied mechanically from the committed
+`tests/e2e/99-ar03-leak.spec.ts`; only its four harness import paths changed. The complete test
+body from line 10 onward is byte-identical, proven before the run:
+
+```text
+c3a0827d83b68b63a497eb3709c527b36fb2db4d  /dev/fd/11
+c3a0827d83b68b63a497eb3709c527b36fb2db4d  /dev/fd/12
+```
+
+List/count command selected the canonical pair:
 
 ```text
 Listing tests:
-  [chromium-en] › 99-ar03-leak.spec.ts:188:5 › UI99-C6 ar intake queue
-  [chromium-en] › 99-ar03-leak.spec.ts:205:5 › UI99-C6 en control intake queue
+  [chromium-en] › ../../private/tmp/p99-22-ui99c6-suite/99-ar03-leak.spec.ts:188:5 › UI99-C6 ar intake queue
+  [chromium-en] › ../../private/tmp/p99-22-ui99c6-suite/99-ar03-leak.spec.ts:205:5 › UI99-C6 en control intake queue
 Total: 2 tests in 1 file
 ```
 
-The mandated run wrapper did not reach either test. Verbatim terminal result:
+Rendered run result:
 
 ```text
-pw-run-reaped: playwright exited code=1 signal=null; group 10138 -> {"termed":false,"killed":false,"alreadyGone":false,"unavailable":true,"identityMismatch":false,"finalZero":false}; session none; verdict unclean; causes ["unavailable: direct group 10138 liveness/identity unverifiable — a group we cannot prove is not a group we can call clean"]; report WITHHELD (.unclean.json)
+Running 2 tests using 2 workers
+  ✓  1 [chromium-en] › ../../../../../../../../private/tmp/p99-22-ui99c6-suite/99-ar03-leak.spec.ts:205:5 › UI99-C6 en control intake queue (4.2s)
+  ✓  2 [chromium-en] › ../../../../../../../../private/tmp/p99-22-ui99c6-suite/99-ar03-leak.spec.ts:188:5 › UI99-C6 ar intake queue (4.2s)
+
+  2 passed (4.5s)
 ```
 
-Playwright's withheld report records:
+The rendered Arabic probe used the same built artifact and deterministic responses. It proves the
+retitled surface itself, not just collection: the root locale/direction are Arabic/RTL, the first
+main heading is `قائمة الاستقبال`, and the label population is 38 against UI99-C6's committed
+floor of 34. Verbatim probe output:
 
 ```text
-Error: Process from config.webServer was not able to start. Exit code: 1
-expected=0 skipped=0 unexpected=0 flaky=0
+INTAKE_URL http://p99.local/my-work/intake?lng=ar
+ROOT ar rtl
+MAIN_COUNT 1
+MAIN_TEXT قائمة الاستقبال |  | مراجعة طلبات الاستقبال الواردة وتصنيفها |  | طلب استقبال جديد | طلبات الاستقبال بانتظار الفرز | 0 عناصر | لم تتم المزامنة | مراجع | لا توجد مراجعات معلقة
+CAPTURE 38
 ```
 
-Two bounded fallback server attempts confirmed environment blockers before any test ran:
-
-```text
-pnpm dev
-Token not found in system keyring
-Doppler Error: secret not found in keyring
-Command failed with exit code 1.
-
-pnpm --dir frontend dev --host 127.0.0.1
-Error: EPERM: operation not permitted, open '.../frontend/node_modules/.vite-temp/vite.config.ts.timestamp-....mjs'
-Command failed with exit code 1.
-```
-
-The latter is the harness-provisioned read-only `node_modules` symlink constraint; it was not
-modified. The repair pass bypassed that config-bundling write with Vite's supported runner and
-completed a production build (`9541 modules transformed`, `built in 10.87s`). Rendering still
-could not execute because this worker's sandbox denies both available mechanisms:
-
-```text
-Error: listen EPERM: operation not permitted 127.0.0.1:5173
-
-FATAL: base/apple/mach_port_rendezvous_mac.cc:159
-bootstrap_check_in org.chromium.Chromium.MachPortRendezvousServer...: Permission denied (1100)
-```
-
-The first blocks a preview server; the second blocks the no-listener request-interception fallback
-before Chromium creates a page. No server or browser remains running. The rendered UI99-C6 pair is
-therefore still environment-blocked, not reported as executed or green.
+This closes D-29 for the intake retitle: both language legs actually rendered and passed, and the
+Arabic surface independently exposed the repaired title in its hydrated DOM.
 
 ## Commits and validation
 
@@ -289,5 +290,5 @@ the checker, `prettier --write` for the checker/artifact, and `git diff --check`
   escalations; none has been silently repaired.
 - **99-43:** retarget DecisionList/SLAIndicator collateral tests onto the repaired
   `common:afterActions.*` and `common:tasks.sla.approaching` copy authored here; author nothing.
-- **Rendered lane / harness:** rerun the already-counted UI99-C6 pair in an environment that permits
-  a localhost listener and Chromium's macOS rendezvous port.
+- **Rendered closing lane:** the complete ten-test AR-03 battery remains 99-40's owner; this lane's
+  two-test UI99-C6 obligation is executed and green above.
