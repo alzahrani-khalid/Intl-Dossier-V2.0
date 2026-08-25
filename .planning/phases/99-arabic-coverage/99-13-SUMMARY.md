@@ -1,6 +1,6 @@
 # Phase 99 Plan 13 — tasks/queues/positions banner closure
 
-**Status:** complete at implementation tip `5d3e7dd16`.
+**Status:** complete at implementation tip `d866538a3`.
 
 P99-12 had already authored the four locale pairs and P99-43 had already landed the call-site
 cutover before this task was dispatched, as required by `depends_on`. This task made no second copy
@@ -110,7 +110,10 @@ TaskDetail enum prefixes:
 
 TaskCard and TaskDetail now route all three required dynamic families through `assignments:`.
 The existing priority/status/work-item subtrees were probed first in both locales and reused;
-this task authored no duplicate subtree.
+this task authored no duplicate subtree. The database's `generic` work-item value is the sentinel
+for a standalone task, not a displayable work-item type: both header badges exclude it before the
+translation call, matching TaskDetail's existing linked-item handling, so no
+`assignments:work_item.generic` key is needed or authored.
 
 ## 3. Instrument of record and negative control
 
