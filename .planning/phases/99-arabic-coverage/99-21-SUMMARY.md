@@ -1,12 +1,12 @@
 # Phase 99-21: AR-02 rendered dates proof
 
-Status: **READY FOR THE PROCESS-ENABLED ACCEPTANCE GATE.** P99-20 supplied the formatter and raw-site
-migration. This task retained the eight rendered date assertions and added only a dossier-click
-synchronization wait in the granted Playwright spec. The wait requires every `.id-dialog-overlay`
-to detach before the original hydrated-card click. It does not dismiss a dialog, broaden the card
-selector, force a click, change an expected value, or raise a timeout. If an overlay stays open, the
-test still fails and records its markup, computed pointer events/visibility, open-versus-mid-exit
-state, and the preceding interaction sequence for the RULING-P99-189 escape valve.
+Status: **PARKED TO THE OVERSEER UNDER THE RULING-P99-189 ESCAPE VALVE.** P99-20 supplied the
+formatter and raw-site migration. This task retained the eight rendered date assertions and added
+only a dossier-click synchronization wait in the granted Playwright spec. The wait requires every
+`.id-dialog-overlay` to detach before the original hydrated-card click. It does not dismiss a
+dialog, broaden the card selector, force a click, change an expected value, or raise a timeout.
+The live run proved the overlay is a persistently open tour dialog rather than a synchronization
+gap, so this task does not work around it and does not claim the required all-eight green.
 
 No production source changed in this task. In particular, no browser-storage write or
 automation-detection branch was added, and onboarding is not dismissed a second time.
@@ -37,9 +37,21 @@ If step 6 fails, the helper evaluates the live interceptors and records:
 - dialog computed visibility and pointer events;
 - the full interaction sequence above.
 
-Thus a mid-exit synchronization gap can settle, while a persistently open product dialog cannot be
-worked around or turned green. The previous trace established identical interception in the Arabic
-and English dossier controls, so the issue is not localized-date output.
+The acceptance run reached all eight tests: six passed and both `/dossiers` legs failed. In both
+Arabic and English, one overlay persisted through 14 polls over the unchanged 5-second expect
+timeout. Its `.id-dialog-overlay` markup contained the tour dialog's `إغلاق الجولة` / `Close tour`
+button; computed state was `pointer-events: auto`, `visibility: visible`, `display: flex`, and
+`opacity: 1`. Overlay and dialog `data-state` were null, while the measured dialog and overlay were
+visible with pointer events enabled, yielding `dialogPhase: "open"`, not mid-exit.
+
+The preceding interaction sequence was inline sign-in → locale navigation → settle → locale
+assertion → hydrated first card visible → overlay-exit wait → dossier card click. The spec's
+`test.use` deliberately resets `storageState` to empty and its `beforeEach` signs in inline, so it
+discards the auth setup artifact containing the measured onboarding-seen, onboarding-completed,
+tours-disabled, and dismissed-tour flags. The fully open dialog therefore cannot settle. Identical
+Arabic and English failures prove this is not a localization defect. Per RULING-P99-189, the task
+parks rather than re-dismiss onboarding, write browser storage, sniff automation, evade the
+overlay, or weaken a date assertion.
 
 The repository browser-testing skill was also attempted as an independent live-inspection path:
 
@@ -187,36 +199,37 @@ This is test-runner startup, not a formatter assertion. The pre-commit hook inde
 the repository Turbo build before creating `9c4f3904f`; its known generated-CSS, circular-chunk, and
 chunk-size warnings remained non-fatal.
 
-The exact rendered command was invoked after the synchronization commit:
+The process-enabled acceptance gate ran the exact rendered oracle and exited 1:
 
 ```text
-$ PATH="/opt/homebrew/bin:$PATH" node "$PWD/scripts/pw-run-reaped.mjs" -- tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps
-pw-run-reaped: playwright exited code=1 signal=null; group 77646 -> {"termed":false,"killed":false,"alreadyGone":false,"unavailable":true,"identityMismatch":false,"finalZero":false}; session none; verdict unclean; causes ["unavailable: direct group 77646 liveness/identity unverifiable — a group we cannot prove is not a group we can call clean"]; report WITHHELD (.unclean.json); child output /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260825-135647-0000000000000038--P99-21/test-results/pw-reaped-d5fee121d5f777ad9897cdd3b433a715.json.log
+$ PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; cd "$R" && test -f tests/e2e/99-ar02-dates.spec.ts && pnpm exec playwright test tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps --list 2>&1 | command grep -qE "Total: 8 tests in 1 file" && node "$R/scripts/pw-run-reaped.mjs" -- tests/e2e/99-ar02-dates.spec.ts --project=chromium-en --no-deps
+exit 1
 ```
 
-The nonce-bound withheld report confirms that the managed worker failed before any test or live
-overlay diagnostic executed:
+The archived report is:
+
+```text
+/Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.pw-reports/2026-08-25T19-20-19-841Z-pw-reaped-98fead4ae281e9b2883610663f888cf2.json
+```
+
+Its result is six passed and two failed, both `/dossiers` legs:
 
 ```json
 {
-  "errors": [
-    {
-      "message": "Error: Process from config.webServer was not able to start. Exit code: 1"
-    }
-  ],
   "stats": {
-    "expected": 0,
+    "expected": 6,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 2,
     "flaky": 0
-  },
-  "suiteCount": 0
+  }
 }
 ```
 
-No rendered pass is claimed from this process-restricted seat. The process-enabled gate owns the
-required all-eight observation; if the overlay is persistently open there, the new diagnostic fails
-closed and supplies the exact evidence the overseer ruling requires.
+The Arabic failure recorded `إغلاق الجولة`; the English control recorded `Close tour`. Both
+recorded `pointerEvents: "auto"`, `visibility: "visible"`, `display: "flex"`, `opacity: "1"`,
+`dialogPhase: "open"`, `dialogVisibility: "visible"`, and `dialogPointerEvents: "auto"`, with one
+overlay surviving all 14 polls. This supersedes the earlier worker-local startup-failure account:
+the acceptance oracle did execute all eight tests, and the all-eight rendered proof remains red.
 
 ## Scope
 
