@@ -108,10 +108,10 @@ export function TaskDetail({
         {/* Status Badges */}
         <div className="flex flex-wrap gap-2">
           <Badge className={getPriorityBadgeClass(task.priority)}>
-            {t(`tasks-page:priority.${task.priority}`, { defaultValue: task.priority })}
+            {t(`assignments:priority.${task.priority}`, { defaultValue: task.priority })}
           </Badge>
           <Badge className={getStatusBadgeClass(task.status)}>
-            {t(`tasks-page:status.${task.status}`, { defaultValue: task.status })}
+            {t(`assignments:status.${task.status}`, { defaultValue: task.status })}
           </Badge>
           <Badge variant="outline">
             {t(`tasks-page:workflow_stage.${task.workflow_stage}`, {
