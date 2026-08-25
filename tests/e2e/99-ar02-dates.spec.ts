@@ -27,7 +27,7 @@ const ENGLISH_RELATIVE_TOKEN = /\b(?:ago|minutes?|hours?|days?|months?|years?)\b
 
 type AbsoluteDateSurface = '/calendar' | '/dossiers' | '/events'
 
-/** Sign in inline so --no-deps never relies on a setup-project storage artifact. */
+/** Re-authenticate inline; the project storage state still supplies setup's onboarding flags. */
 const signInInline = async (page: Page): Promise<void> => {
   if (email === '' || password === '') {
     throw new Error('TEST_USER_EMAIL / TEST_USER_PASSWORD missing from .env.test')
@@ -176,10 +176,7 @@ const assertEnglishAbsoluteDate = async (
   expect(dateText, `${surface} [en] date region must retain Latin digits`).toMatch(LATIN_DIGIT_RUN)
 }
 
-test.use({
-  viewport: { width: 1400, height: 900 },
-  storageState: { cookies: [], origins: [] },
-})
+test.use({ viewport: { width: 1400, height: 900 } })
 
 test.beforeEach(async ({ page }) => {
   test.setTimeout(300_000)
