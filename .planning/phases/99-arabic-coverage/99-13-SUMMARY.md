@@ -1,12 +1,12 @@
 # Phase 99 Plan 13 — tasks/queues/positions banner closure
 
-**Status:** complete at the dependency tip `04311a07d`.
+**Status:** complete at implementation tip `5d3e7dd16`.
 
 P99-12 had already authored the four locale pairs and P99-43 had already landed the call-site
-cutover before this task was dispatched, as required by `depends_on`. This task therefore made no
-second copy of those changes. It re-derived the lane at dispatch, ran this plan's controls and
-oracles against the resulting tree, and records the evidence here. No source or locale bundle
-needed a residual edit.
+cutover before this task was dispatched, as required by `depends_on`. This task made no second copy
+of those bundle trees. It repaired the two residual TaskDetail enum prefixes and extracted the
+three route branches into a typed `PositionReadOnlyBanner` component, then rendered that component
+against the real Arabic bundle. No locale JSON needed another edit.
 
 ## 1. Starting and ending populations
 
@@ -31,8 +31,9 @@ canonical binding reclassified sites: 0 two-arg / 0 raw-key
 loose-hidden two-arg/raw-key: 0/0
 ```
 
-Ending population is byte-identical: this task changed only this summary, so the scoped sources
-and the four bundle pairs are unchanged from the measured start.
+The ending audit output is byte-identical after the TaskDetail routing repair. Both the starting
+and ending strict populations are therefore `0/125` unresolved two-arg sites and `0/63`
+unresolved raw-key sites; the four bundle pairs are unchanged from the measured start.
 
 ## 2. Dynamic carriers and enum resolution in both locales
 
@@ -40,8 +41,8 @@ The enum sets were re-read from their consuming types/components and probed as a
 
 | Carrier                                 | Colon-form target                           | Members                                                                 |
 | --------------------------------------- | ------------------------------------------- | ----------------------------------------------------------------------- |
-| TaskCard                                | `assignments:priority.*`                    | `urgent, high, medium, low`                                             |
-| TaskCard                                | `assignments:status.*`                      | `pending, in_progress, review, completed, cancelled`                    |
+| TaskCard + TaskDetail                   | `assignments:priority.*`                    | `urgent, high, medium, low`                                             |
+| TaskCard + TaskDetail                   | `assignments:status.*`                      | `pending, in_progress, review, completed, cancelled`                    |
 | TaskCard + TaskDetail                   | `assignments:work_item.*`                   | `dossier, ticket, position, task`                                       |
 | AddContributorDialog + ContributorsList | `tasks-page:contributors.role.*`            | `helper, reviewer, advisor, observer, supervisor`                       |
 | AddContributorDialog                    | `tasks-page:contributors.roleDescription.*` | the same five contributor roles                                         |
@@ -100,16 +101,16 @@ TaskCard assignments prefixes:
 54:              {t(`assignments:status.${task.status}`)}
 57:              <Badge variant="outline">{t(`assignments:work_item.${task.work_item_type}`)}</Badge>
 TaskDetail enum prefixes:
-111:            {t(`tasks-page:priority.${task.priority}`, { defaultValue: task.priority })}
-114:            {t(`tasks-page:status.${task.status}`, { defaultValue: task.status })}
+111:            {t(`assignments:priority.${task.priority}`, { defaultValue: task.priority })}
+114:            {t(`assignments:status.${task.status}`, { defaultValue: task.status })}
 124:              {t(`assignments:work_item.${task.work_item_type}`)}
 428:                    `${t(`assignments:work_item.${item.type}`)} (${t('tasks-page:detail.deleted', 'Deleted')})`,
 504:                          `${t(`assignments:work_item.${item.type}`)} (${t('tasks-page:detail.deleted', 'Deleted')})`,
 ```
 
-TaskDetail's priority/status prefixes already resolved through its explicit `tasks-page:` binding
-and were therefore not churned (D-20/D-23). Its three `work_item` sites and TaskCard's three ruled
-prefixes use `assignments:`.
+TaskCard and TaskDetail now route all three required dynamic families through `assignments:`.
+The existing priority/status/work-item subtrees were probed first in both locales and reused;
+this task authored no duplicate subtree.
 
 ## 3. Instrument of record and negative control
 
@@ -146,13 +147,17 @@ No `priority`, `status`, or `work_item` root exists in either `common.json`; bec
 
 ## 4. Banner extraction and the three rendered states
 
-The absence/presence pair was run directly against the route:
+The route now owns one typed status-to-key map and one reusable rendered component. The
+absence/presence pair was run directly against that route:
 
 ```text
 Read Only matches: 0
-58:                {position.status === 'under_review' && t('positions:readOnlyBanner.under_review')}
-59:                {position.status === 'approved' && t('positions:readOnlyBanner.approved')}
-60:                {position.status === 'published' && t('positions:readOnlyBanner.published')}
+31:  under_review: 'positions:readOnlyBanner.under_review',
+32:  approved: 'positions:readOnlyBanner.approved',
+33:  published: 'positions:readOnlyBanner.published',
+41:export function PositionReadOnlyBanner({ status }: { status: ReadOnlyPositionStatus }) {
+49:          <p className="text-xs font-bold text-foreground">{t(READ_ONLY_BANNER_KEYS[status])}</p>
+79:        <PositionReadOnlyBanner status={position.status} />
 ```
 
 The authored values, probed from both real bundles, are:
@@ -166,13 +171,28 @@ The authored values, probed from both real bundles, are:
 All three Arabic values use the ruled موقف stance register, contain no `منصب`, and end without an
 exclamation mark.
 
-This task's Playwright collection command was:
+The task-owned render oracle loaded the actual route module through Vite middleware-mode SSR,
+provided the real `ar/positions.json` to `I18nextProvider`, and rendered
+`PositionReadOnlyBanner` through React DOM for each ruled status. It asserted all four live
+properties per render: the banner paragraph exists, its exact bundle value is present, Arabic
+script is present, and the old `Read Only` literal is absent. The command exited 0 with this
+verbatim output:
+
+```text
+RENDER status=under_review visible=true arabic=true exact=true READ_ONLY_LITERAL_ABSENT=true
+RENDER status=approved visible=true arabic=true exact=true READ_ONLY_LITERAL_ABSENT=true
+RENDER status=published visible=true arabic=true exact=true READ_ONLY_LITERAL_ABSENT=true
+```
+
+This is the rendered verdict for all three states; it does not infer rendering from source grep or
+from Playwright collection. As a separate instrument-population check, the existing browser oracle
+still selects exactly three fixture-driven tests:
 
 ```sh
 CI= pnpm exec playwright test tests/e2e/99-ar03-leak.spec.ts -g 'UI99-C7 ar banner' --project=chromium-en --no-deps --list
 ```
 
-It proved the task selects exactly the three fixture-driven rendered states (exit 0):
+Verbatim collection output (exit 0):
 
 ```text
 Listing tests:
@@ -182,23 +202,17 @@ Listing tests:
 Total: 3 tests in 1 file
 ```
 
-The same three tests were executed through `scripts/pw-run-reaped.mjs`. This managed sandbox could
-not produce a new rendered verdict: the root web-server command stopped because Doppler has no
-keyring token, direct Vite config loading was denied writes through the harness-owned
-`node_modules` symlink, and a temporary config with its cache redirected to `/tmp` was denied
-socket listening. The decisive diagnostics were:
+The full browser command was also invoked, but this worker cannot bind a local TCP or Unix socket.
+The direct minimal Vite launch proved the infrastructure restriction before any browser assertion
+ran:
 
 ```text
-Token not found in system keyring
-Doppler Error: secret not found in keyring
-Error: EPERM: operation not permitted, open '.../frontend/node_modules/.vite-temp/vite.config.ts.timestamp-....mjs'
 Error: listen EPERM: operation not permitted 127.0.0.1:5173
 ```
 
-The wrapper consequently withheld an empty infrastructure report (`expected: 0`,
-`unexpected: 0`) rather than misclassifying it as a test failure. P99-43's committed green at this
-same source/bundle tip remains the last executable rendered result; the harness gate reruns the
-three collected tests outside this worker's socket restriction.
+The browser attempt is recorded as infrastructure evidence only and is not counted as a verdict.
+The three green React render rows above are this task's own executable verdict; the harness gate
+independently runs the three collected UI99-C7 browser tests outside this worker's socket policy.
 
 ## 5. Dot-form `common.X` resolution and named handoffs
 
@@ -253,6 +267,14 @@ pnpm --dir frontend exec tsc --noEmit
 ```
 
 Exit 0, with no output.
+
+Both source commits also passed the repository's staged lint/format hooks, Turbo build, and static
+analysis before Git accepted them:
+
+```text
+94d1030e3 fix(i18n): route task detail enums through assignments
+5d3e7dd16 refactor(i18n): extract position read-only banner
+```
 
 No tracked path outside this plan's allowlist changed. `node_modules` remained the harness-owned
 symlink and was never deleted, replaced, or committed.
