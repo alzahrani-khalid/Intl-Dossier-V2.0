@@ -48,15 +48,13 @@ export function TaskCard({
         <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
           <div className="flex flex-wrap gap-2">
             <Badge className={getPriorityBadgeClass(task.priority)}>
-              {t(`priority.${task.priority}`, task.priority)}
+              {t(`assignments:priority.${task.priority}`)}
             </Badge>
             <Badge className={getStatusBadgeClass(task.status)}>
-              {t(`status.${task.status}`, task.status)}
+              {t(`assignments:status.${task.status}`)}
             </Badge>
-            {showWorkItem && task.work_item_type && (
-              <Badge variant="outline">
-                {t(`work_item.${task.work_item_type}`, task.work_item_type)}
-              </Badge>
+            {showWorkItem && task.work_item_type && task.work_item_type !== 'generic' && (
+              <Badge variant="outline">{t(`assignments:work_item.${task.work_item_type}`)}</Badge>
             )}
           </div>
 
@@ -90,11 +88,11 @@ export function TaskCard({
           className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-muted-foreground ${isRTL ? 'text-end' : 'text-start'}`}
         >
           <div>
-            {t('created', 'Created')}: {formatDateTime(task.created_at)}
+            {t('tasks-page:card.created', 'Created')}: {formatDateTime(task.created_at)}
           </div>
           {task.sla_deadline && (
             <div>
-              {t('due', 'Due')}: {formatDateTime(task.sla_deadline)}
+              {t('tasks-page:card.due', 'Due')}: {formatDateTime(task.sla_deadline)}
             </div>
           )}
         </div>

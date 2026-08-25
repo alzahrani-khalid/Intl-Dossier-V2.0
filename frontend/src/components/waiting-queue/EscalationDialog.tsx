@@ -131,7 +131,10 @@ export function EscalationDialog({
     // Validate reason input
     if (!reason.trim()) {
       setLocalError(
-        t('waitingQueue.escalation.reasonRequired', 'Please provide a reason for escalation'),
+        t(
+          'assignments:waitingQueue.escalation.reasonRequired',
+          'Please provide a reason for escalation',
+        ),
       )
       return
     }
@@ -155,9 +158,12 @@ export function EscalationDialog({
       })
 
       toast({
-        title: t('waitingQueue.escalation.success', 'Assignment escalated successfully'),
+        title: t(
+          'assignments:waitingQueue.escalation.success',
+          'Assignment escalated successfully',
+        ),
         description: t(
-          'waitingQueue.escalation.successDesc',
+          'assignments:waitingQueue.escalation.successDesc',
           'The manager has been notified and will review the assignment.',
         ),
       })
@@ -172,7 +178,7 @@ export function EscalationDialog({
 
       toast({
         variant: 'destructive',
-        title: t('waitingQueue.escalation.error', 'Failed to escalate assignment'),
+        title: t('assignments:waitingQueue.escalation.error', 'Failed to escalate assignment'),
         description: errorMessage,
       })
     }
@@ -196,11 +202,11 @@ export function EscalationDialog({
               // D-58-03-EXTRA: orange-600 → text-warning (escalation indicator, not low-confidence — Wave-2 D-58-02-EXTRA-03 semantic-context precedent)
               className={`h-5 w-5 sm:h-6 sm:w-6 text-warning ${isRTL ? 'rotate-180' : ''}`}
             />
-            {t('waitingQueue.escalation.escalateAssignment', 'Escalate Assignment')}
+            {t('assignments:waitingQueue.escalation.escalateAssignment', 'Escalate Assignment')}
           </DialogTitle>
           <DialogDescription className="text-sm text-start">
             {t(
-              'waitingQueue.escalation.dialogDescription',
+              'assignments:waitingQueue.escalation.dialogDescription',
               'Escalate this assignment to higher management for attention',
             )}
           </DialogDescription>
@@ -214,12 +220,13 @@ export function EscalationDialog({
               {daysWaiting >= 7 && (
                 <Badge variant="destructive" className="gap-1">
                   <AlertTriangle className="h-3 w-3" />
-                  {daysWaiting} {t('waitingQueue.agingIndicator.days', { count: daysWaiting })}
+                  {daysWaiting} {t('assignments:waitingQueue.days')}
                 </Badge>
               )}
             </div>
             <div className="text-xs text-muted-foreground text-start">
-              {t('waitingQueue.assignmentDetails.assignee', 'Assignee')}: {resolvedAssigneeName}
+              {t('assignments:waitingQueue.assignmentDetails.assignee', 'Assignee')}:{' '}
+              {resolvedAssigneeName}
             </div>
           </div>
 
@@ -229,7 +236,7 @@ export function EscalationDialog({
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription className="text-start">
                 {t(
-                  'waitingQueue.escalation.noEscalationPathMessage',
+                  'assignments:waitingQueue.escalation.noEscalationPathMessage',
                   'No manager configured for {{user}} in the organizational hierarchy.',
                   { user: resolvedAssigneeName },
                 )}
@@ -241,7 +248,7 @@ export function EscalationDialog({
           {!hasNoEscalationPath && (
             <div className="space-y-2">
               <Label htmlFor="recipient-select" className="text-start block">
-                {t('waitingQueue.escalation.selectRecipient', 'Select Recipient')}
+                {t('assignments:waitingQueue.escalation.selectRecipient', 'Select Recipient')}
               </Label>
               <Select
                 value={effectiveSelectedRecipientId}
@@ -252,7 +259,10 @@ export function EscalationDialog({
                   id="recipient-select"
                   className=" text-start"
                   data-testid="recipient-selector"
-                  aria-label={t('waitingQueue.escalation.selectRecipient', 'Select Recipient')}
+                  aria-label={t(
+                    'assignments:waitingQueue.escalation.selectRecipient',
+                    'Select Recipient',
+                  )}
                 >
                   <SelectValue>
                     {selectedRecipient && (
@@ -279,7 +289,10 @@ export function EscalationDialog({
                           {recipient.department && ` • ${recipient.department}`}
                           {index === 0 && (
                             <Badge variant="secondary" className="ms-2 text-xs">
-                              {t('waitingQueue.escalation.immediateManager', 'Immediate Manager')}
+                              {t(
+                                'assignments:waitingQueue.escalation.immediateManager',
+                                'Immediate Manager',
+                              )}
                             </Badge>
                           )}
                         </span>
@@ -290,7 +303,7 @@ export function EscalationDialog({
               </Select>
               <p className="text-xs text-muted-foreground text-start">
                 {t(
-                  'waitingQueue.escalation.autoResolve',
+                  'assignments:waitingQueue.escalation.autoResolve',
                   'Auto-resolve from organizational hierarchy',
                 )}
               </p>
@@ -300,24 +313,27 @@ export function EscalationDialog({
           {/* Reason Textarea */}
           <div className="space-y-2">
             <Label htmlFor="escalation-reason" className="text-start block">
-              {t('waitingQueue.escalation.reason', 'Reason (Optional)')}
+              {t('assignments:waitingQueue.escalation.reason', 'Reason (Optional)')}
             </Label>
             <Textarea
               id="escalation-reason"
               value={reason}
               onChange={(e) => setReason(e.target.value.slice(0, 500))}
               placeholder={t(
-                'waitingQueue.escalation.reasonPlaceholder',
+                'assignments:waitingQueue.escalation.reasonPlaceholder',
                 'Why are you escalating this assignment?',
               )}
               className="min-h-24 text-start resize-none"
               maxLength={500}
               disabled={isLoading}
-              aria-label={t('waitingQueue.escalation.reason', 'Reason')}
+              aria-label={t('assignments:waitingQueue.escalation.reason', 'Reason')}
             />
             <div className="flex justify-between items-center text-xs text-muted-foreground">
               <span className="text-start">
-                {t('waitingQueue.escalation.reasonHint', 'Explain why escalation is needed')}
+                {t(
+                  'assignments:waitingQueue.escalation.reasonHint',
+                  'Explain why escalation is needed',
+                )}
               </span>
               <span>{reason.length}/500</span>
             </div>
@@ -350,19 +366,19 @@ export function EscalationDialog({
             className="h-11 min-w-11 ps-4 pe-4 sm:ps-6 sm:pe-6 w-full sm:w-auto"
             aria-label={
               isLoading
-                ? t('waitingQueue.escalation.escalating', 'Escalating...')
-                : t('waitingQueue.escalation.escalate', 'Escalate')
+                ? t('assignments:waitingQueue.escalation.escalating', 'Escalating...')
+                : t('assignments:waitingQueue.escalation.escalate', 'Escalate')
             }
           >
             {isLoading ? (
               <>
                 <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
-                {t('waitingQueue.escalation.escalating', 'Escalating...')}
+                {t('assignments:waitingQueue.escalation.escalating', 'Escalating...')}
               </>
             ) : (
               <>
                 <ArrowUp className={`h-4 w-4 ${isRTL ? 'ms-2 rotate-180' : 'me-2'}`} />
-                {t('waitingQueue.escalation.escalate', 'Escalate')}
+                {t('assignments:waitingQueue.escalation.escalate', 'Escalate')}
               </>
             )}
           </Button>

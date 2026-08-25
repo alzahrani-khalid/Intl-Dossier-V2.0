@@ -27,6 +27,32 @@ export const Route = createFileRoute('/_protected/positions/$id/')({
   component: PositionEditorPanel,
 })
 
+const READ_ONLY_BANNER_KEYS = {
+  under_review: 'positions:readOnlyBanner.under_review',
+  approved: 'positions:readOnlyBanner.approved',
+  published: 'positions:readOnlyBanner.published',
+} as const
+
+type ReadOnlyPositionStatus = keyof typeof READ_ONLY_BANNER_KEYS
+
+const isReadOnlyPositionStatus = (status: string): status is ReadOnlyPositionStatus =>
+  status in READ_ONLY_BANNER_KEYS
+
+export function PositionReadOnlyBanner({ status }: { status: ReadOnlyPositionStatus }) {
+  const { t } = useTranslation('positions')
+
+  return (
+    <Card className="bg-muted/50 border-border">
+      <CardContent className="pt-3 pb-3">
+        <div className="flex items-start gap-2">
+          <FileText className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+          <p className="text-xs font-bold text-foreground">{t(READ_ONLY_BANNER_KEYS[status])}</p>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
 function PositionEditorPanel() {
   const { id } = Route.useParams()
   const { t } = useTranslation('positions')
@@ -49,22 +75,8 @@ function PositionEditorPanel() {
   return (
     <>
       {/* Editor Status Banner */}
-      {position.status !== 'draft' && (
-        <Card className="bg-muted/50 border-border">
-          <CardContent className="pt-3 pb-3">
-            <div className="flex items-start gap-2">
-              <FileText className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-              <p className="text-xs font-bold text-foreground">
-                {position.status === 'under_review' &&
-                  'Position Under Review - Read Only. This position is currently under review and cannot be edited. It must go through the approval chain before any changes can be made.'}
-                {position.status === 'approved' &&
-                  'Position Approved - Read Only. This position has been approved and is awaiting publication. Contact an administrator to make changes.'}
-                {position.status === 'published' &&
-                  'Position Published - Read Only. This position has been published. To make changes, you must use the Emergency Correction workflow or create a new version.'}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+      {isReadOnlyPositionStatus(position.status) && (
+        <PositionReadOnlyBanner status={position.status} />
       )}
 
       {position.status === 'draft' && (

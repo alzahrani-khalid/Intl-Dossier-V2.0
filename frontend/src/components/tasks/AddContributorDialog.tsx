@@ -172,10 +172,13 @@ export function AddContributorDialog({
       <DialogContent className="w-full max-w-full sm:max-w-[540px] md:max-w-[640px]">
         <DialogHeader>
           <DialogTitle className="text-start text-xl sm:text-2xl">
-            {t('tasks.addContributor', 'Add Contributor')}
+            {t('tasks-page:contributors.addContributor', 'Add Contributor')}
           </DialogTitle>
           <DialogDescription className="text-start">
-            {t('tasks.addContributorDescription', 'Add a team member who contributed to this task')}
+            {t(
+              'tasks-page:contributors.addContributorDescription',
+              'Add a team member who contributed to this task',
+            )}
           </DialogDescription>
         </DialogHeader>
 
@@ -183,7 +186,7 @@ export function AddContributorDialog({
           {/* User Search */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="user-search" className="text-start">
-              {t('tasks.searchUser', 'Search User')}
+              {t('tasks-page:contributors.searchUser', 'Search User')}
             </Label>
             <div className="relative">
               <Search
@@ -192,7 +195,10 @@ export function AddContributorDialog({
               <Input
                 id="user-search"
                 type="text"
-                placeholder={t('tasks.searchUserPlaceholder', 'Type name or email...')}
+                placeholder={t(
+                  'tasks-page:contributors.searchUserPlaceholder',
+                  'Type name or email...',
+                )}
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 className={`${isRTL ? 'pe-10 ps-3' : 'ps-10 pe-3'} h-11`}
@@ -243,7 +249,7 @@ export function AddContributorDialog({
           {/* Role Selection */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="role-select" className="text-start">
-              {t('tasks.contributorRole', 'Role')}
+              {t('tasks-page:contributors.roleLabel', 'Role')}
             </Label>
             <Select
               value={selectedRole}
@@ -255,25 +261,28 @@ export function AddContributorDialog({
               <SelectContent>
                 {CONTRIBUTOR_ROLES.map((role) => (
                   <SelectItem key={role} value={role} className="text-start">
-                    <span className="capitalize">{t(`tasks.contributorRole.${role}`, role)}</span>
+                    <span className="capitalize">{t(`tasks-page:contributors.role.${role}`)}</span>
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground text-start">
-              {t(`tasks.roleDescription.${selectedRole}`, getRoleDescription(selectedRole))}
+              {t(`tasks-page:contributors.roleDescription.${selectedRole}`)}
             </p>
           </div>
 
           {/* Optional Notes */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="notes" className="text-start">
-              {t('tasks.contributorNotes', 'Notes')}{' '}
+              {t('tasks-page:contributors.contributorNotes', 'Notes')}{' '}
               <span className="text-muted-foreground">({t('common:optional', 'Optional')})</span>
             </Label>
             <Textarea
               id="notes"
-              placeholder={t('tasks.contributorNotesPlaceholder', 'Describe their contribution...')}
+              placeholder={t(
+                'tasks-page:contributors.contributorNotesPlaceholder',
+                'Describe their contribution...',
+              )}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
@@ -296,24 +305,10 @@ export function AddContributorDialog({
             className="h-11 min-w-full sm:min-w-[100px]"
           >
             {addContributor.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
-            {t('tasks.add', 'Add')}
+            {t('tasks-page:contributors.add', 'Add')}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   )
-}
-
-/**
- * Get role description for helper text
- */
-function getRoleDescription(role: ContributorRole): string {
-  const descriptions: Record<ContributorRole, string> = {
-    helper: 'Assisted with task execution',
-    reviewer: 'Reviewed task outputs or quality',
-    advisor: 'Provided expert guidance or consultation',
-    observer: 'Monitored progress (e.g., for training/knowledge transfer)',
-    supervisor: 'Provided oversight or approval',
-  }
-  return descriptions[role]
 }

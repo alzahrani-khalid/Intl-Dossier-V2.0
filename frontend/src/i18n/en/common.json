@@ -388,6 +388,7 @@
     "inProgress": "In Progress",
     "referenceNumber": "Reference Number",
     "title": "Title",
+    "pageTitle": "MoUs",
     "parties": "Parties",
     "workflow": "Workflow",
     "dates": "Dates",
@@ -887,7 +888,7 @@
       "title": "Decisions",
       "add": "Add Decision",
       "empty": "No decisions recorded",
-      "item": "Decision",
+      "item": "Decision {{number}}",
       "description": "Description",
       "descriptionPlaceholder": "What was decided?",
       "decisionMaker": "Decision Maker",
@@ -1112,7 +1113,7 @@
     },
     "attendees": "Attendees",
     "commitmentsCount": "{{count}} commitments",
-    "confidence": "Confidence",
+    "confidence": "{{value}}% confidence",
     "confidential": "Confidential",
     "conflict": {
       "reviewChanges": "Review Changes",
@@ -1419,6 +1420,7 @@
     "noLinkedItems": "No linked items",
     "sla": {
       "safe": "Safe",
+      "approaching": "Approaching",
       "warning": "Warning",
       "breached": "Breached",
       "completed_on_time": "Completed on time",

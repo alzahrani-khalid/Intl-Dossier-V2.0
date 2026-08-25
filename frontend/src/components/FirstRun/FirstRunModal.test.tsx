@@ -119,7 +119,7 @@ describe('FirstRunModal', () => {
     expect(invalidatedKeys).not.toContain('work-items')
 
     // Success toast was called with the success title key
-    expect(toastMock.success.mock.calls[0][0]).toBe('firstRun.successTitle')
+    expect(toastMock.success.mock.calls[0][0]).toBe('Sample data ready')
   })
 
   it('already_seeded: shows info toast and closes modal', async () => {

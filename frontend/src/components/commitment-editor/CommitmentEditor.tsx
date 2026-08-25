@@ -112,12 +112,12 @@ export function CommitmentEditor({
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-base">
-                {t('afterActions.commitments.item', { number: index + 1 })}
+                {t('commitments:card.item', { number: index + 1 })}
               </CardTitle>
               <div className="flex items-center gap-2">
                 {commitment.tracking_mode && (
                   <Badge variant="outline">
-                    {t(`afterActions.commitments.tracking.${commitment.tracking_mode}`)}
+                    {t(`commitments:trackingMode.${commitment.tracking_mode}`)}
                   </Badge>
                 )}
                 {commitment.ai_confidence !== undefined && (
@@ -130,7 +130,7 @@ export function CommitmentEditor({
                           : 'destructive'
                     }
                   >
-                    {t('afterActions.confidence', {
+                    {t('commitments:card.aiConfidence', {
                       value: Math.round(commitment.ai_confidence * 100),
                     })}
                   </Badge>
@@ -232,14 +232,14 @@ export function CommitmentEditor({
               <div className="space-y-4">
                 <div>
                   <Label htmlFor={`contact-email-${index}`}>
-                    {t('afterActions.commitments.contactEmail')} *
+                    {t('commitments:form.contactEmail')} *
                   </Label>
                   <Input
                     id={`contact-email-${index}`}
                     type="email"
                     value={commitment.owner_contact_email || ''}
                     onChange={(e) => updateCommitment(index, 'owner_contact_email', e.target.value)}
-                    placeholder={t('afterActions.commitments.emailPlaceholder')}
+                    placeholder={t('commitments:form.emailPlaceholder')}
                     disabled={readOnly}
                     required
                     aria-required="true"
@@ -247,13 +247,13 @@ export function CommitmentEditor({
                 </div>
                 <div>
                   <Label htmlFor={`contact-name-${index}`}>
-                    {t('afterActions.commitments.contactName')} *
+                    {t('commitments:form.contactName')} *
                   </Label>
                   <Input
                     id={`contact-name-${index}`}
                     value={commitment.owner_contact_name || ''}
                     onChange={(e) => updateCommitment(index, 'owner_contact_name', e.target.value)}
-                    placeholder={t('afterActions.commitments.namePlaceholder')}
+                    placeholder={t('commitments:form.namePlaceholder')}
                     maxLength={200}
                     disabled={readOnly}
                     required
@@ -262,7 +262,7 @@ export function CommitmentEditor({
                 </div>
                 <div>
                   <Label htmlFor={`contact-org-${index}`}>
-                    {t('afterActions.commitments.organization')}
+                    {t('commitments:form.organization')}
                   </Label>
                   <Input
                     id={`contact-org-${index}`}
@@ -270,7 +270,7 @@ export function CommitmentEditor({
                     onChange={(e) =>
                       updateCommitment(index, 'owner_contact_organization', e.target.value)
                     }
-                    placeholder={t('afterActions.commitments.orgPlaceholder')}
+                    placeholder={t('commitments:form.orgPlaceholder')}
                     maxLength={200}
                     disabled={readOnly}
                   />
@@ -294,7 +294,7 @@ export function CommitmentEditor({
                   <SelectContent>
                     {priorities.map((priority) => (
                       <SelectItem key={priority} value={priority}>
-                        {t(`afterActions.commitments.priorities.${priority}`)}
+                        {t(`commitments:priority.${priority}`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -319,7 +319,7 @@ export function CommitmentEditor({
                     <SelectContent>
                       {statuses.map((status) => (
                         <SelectItem key={status} value={status}>
-                          {t(`afterActions.commitments.statuses.${status}`)}
+                          {t(`commitments:status.${status}`)}
                         </SelectItem>
                       ))}
                     </SelectContent>
