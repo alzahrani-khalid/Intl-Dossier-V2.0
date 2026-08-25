@@ -76,6 +76,7 @@
 import { execFileSync, spawn, spawnSync } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
 import {
+  copyFileSync,
   existsSync,
   linkSync,
   mkdirSync,
@@ -1293,6 +1294,41 @@ export const clearStaleReport = (jsonOut, nonce) => {
 }
 
 /**
+ * ARCHIVE A PUBLISHED REPORT OUT OF THE WORKTREE, AT PUBLICATION (RULING-P99-186).
+ *
+ * THE PERVERSITY THIS FIXES: on an UNCLEAN verdict the report is quarantined to a nonce-bound path
+ * and stays put; on a CLEAN verdict it is PUBLISHED into the worktree — which the NEXT attempt's
+ * `worktree-recreation` DELETES. The failing path keeps its evidence and the healthy path loses
+ * it. P99-21 att-1 published a clean report at 23:53:24 and recreation wiped it at 23:53:26, two
+ * seconds later, before anyone read it; the question it would have answered (did it fail on the
+ * SAME TWO SPECS?) is now permanently unanswerable. That is the third evidence destruction in one
+ * night, alongside two dead pids whose lstart went with them.
+ *
+ * Copying at ANALYSIS time cannot work — by then the file is gone. It has to be at publication.
+ *
+ * The destination is derived, not configured: `git rev-parse --git-common-dir` resolves to the
+ * MAIN checkout's .git even from inside a linked worktree, so its parent is a directory that
+ * worktree recreation never touches. No env var to forget to set.
+ *
+ * Best-effort by construction: a failure here is logged and never changes the verdict. An archiver
+ * that can fail a run would be a new way to lose a good result, which is the opposite of the point.
+ */
+const archiveReport = (jsonOut) => {
+  try {
+    const common = execFileSync('git', ['rev-parse', '--git-common-dir'], cOpts({ encoding: 'utf8' })).trim()
+    const mainRoot = dirname(realpathSync(common))
+    const dir = join(mainRoot, '.pw-reports')
+    mkdirSync(dir, { recursive: true })
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-')
+    const dest = join(dir, `${stamp}-${basename(jsonOut)}`)
+    copyFileSync(jsonOut, dest)
+    console.error(`pw-run-reaped: report archived outside the worktree -> ${dest}`)
+  } catch (e) {
+    console.error(`pw-run-reaped: report archive FAILED (${e?.message ?? e}) — the published report is still in the worktree and will be lost on recreation`)
+  }
+}
+
+/**
  * Repair 4 (RULING-P99-54), CORRECTED by RULING-P99-60 item 1 (found independently by both
  * reviewers): the consumer-visible FINAL path is populated ONLY by this atomic, NO-OVERWRITE
  * publish, and ONLY after `verdict === 'clean'` — Playwright is run against the PRIVATE PENDING
@@ -1342,6 +1378,7 @@ export const publishReport = (pendingOut, jsonOut, nonce) => {
     }
   try {
     linkSync(pendingOut, jsonOut) // atomic, no-overwrite: EEXIST if a foreign writer won the race
+    archiveReport(jsonOut) // RULING-P99-186 — get the evidence OUT of the worktree, at publication
     try {
       unlinkSync(pendingOut) // consume the private staging copy now that the public link exists
     } catch {

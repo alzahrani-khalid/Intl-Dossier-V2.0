@@ -189,3 +189,7 @@ data_legacy/
 # tickmarkr / drover local run state (not project source)
 .tickmarkr/
 .drover/
+
+# Archived Playwright gate reports (RULING-P99-186) — copied out of task worktrees at
+# publication so worktree recreation cannot destroy them. Local evidence, never committed.
+.pw-reports/
