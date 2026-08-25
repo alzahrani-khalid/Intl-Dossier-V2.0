@@ -7,7 +7,7 @@
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
+import { formatDayMonth } from '@/lib/format-date'
 import {
   LineChart,
   Line,
@@ -90,15 +90,15 @@ export function EngagementMetricsChart({
   isLoading,
   className,
 }: EngagementMetricsChartProps) {
-  const { t } = useTranslation('analytics')
+  const { t, i18n } = useTranslation('analytics')
   const { isRTL } = useDirection()
   const trendData = useMemo(() => {
     if (!data?.engagementTrend) return []
     return data.engagementTrend.map((point) => ({
       ...point,
-      dateLabel: format(new Date(point.date), 'd MMM'),
+      dateLabel: formatDayMonth(new Date(point.date)),
     }))
-  }, [data?.engagementTrend])
+  }, [data?.engagementTrend, i18n.language])
 
   const typeData = useMemo(() => {
     if (!data?.engagementsByType) return []

@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { supabase } from '@/lib/supabase'
-import { format } from 'date-fns'
+import { formatDayMonthYear } from '@/lib/format-date'
 import { useDirection } from '@/hooks/useDirection'
 
 interface DataLibraryItem {
@@ -431,7 +431,7 @@ export function DataLibraryPage() {
                 <div className="space-y-1 text-xs text-muted-foreground">
                   <div>{formatFileSize(item.file_size_bytes)}</div>
                   <div>{item.uploaded_by.full_name}</div>
-                  <div>{format(new Date(item.created_at), 'd MMM yyyy')}</div>
+                  <div>{formatDayMonthYear(new Date(item.created_at))}</div>
                   {item.download_count > 0 && (
                     <div>
                       {t('dataLibrary.downloads')}: {item.download_count}

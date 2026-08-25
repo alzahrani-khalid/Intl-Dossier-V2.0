@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toFormatLocale } from '@/lib/format-locale'
-import { formatDayFirstYear } from '@/lib/format-date'
+import { formatDayFirstYear, formatDayMonth } from '@/lib/format-date'
 import { supabase } from '@/lib/supabase'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -17,7 +17,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { format } from 'date-fns'
 import { CalendarIcon, TrendingUp, AlertTriangle, Users, FileText } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/hooks/useDirection'
@@ -181,7 +180,7 @@ export function EscalationDashboard() {
                 <CalendarIcon className="me-2 h-4 w-4" />
                 {dateRange.start && dateRange.end ? (
                   <>
-                    {format(dateRange.start, 'd MMM')} - {formatDayFirstYear(dateRange.end)}
+                    {formatDayMonth(dateRange.start)} - {formatDayFirstYear(dateRange.end)}
                   </>
                 ) : (
                   <span>{t('escalation_dashboard.select_date_range')}</span>
@@ -328,7 +327,7 @@ export function EscalationDashboard() {
                       className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors"
                     >
                       <div className="w-24 text-sm font-medium">
-                        {format(new Date(item.date), 'd MMM')}
+                        {formatDayMonth(new Date(item.date))}
                       </div>
                       <div className="flex-1">
                         <div

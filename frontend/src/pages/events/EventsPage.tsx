@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { quotePostgrestValue } from '@/lib/postgrest-escape'
 import { supabase } from '@/lib/supabase'
+import { formatDayMonthYear, formatMonthYear } from '@/lib/format-date'
 import {
   format,
   startOfMonth,
@@ -74,7 +75,7 @@ function CalendarView({ events, currentMonth, setCurrentMonth, isRTL, t }: Calen
         >
           <ChevronLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
         </Button>
-        <h2 className="text-base sm:text-lg font-semibold">{format(currentMonth, 'MMMM yyyy')}</h2>
+        <h2 className="text-base sm:text-lg font-semibold">{formatMonthYear(currentMonth)}</h2>
         <Button
           variant="outline"
           size="sm"
@@ -173,7 +174,7 @@ ${event.type === 'other' ? 'bg-muted text-ink-mute' : ''}
       header: t('events.dateTime'),
       cell: (event: Event) => (
         <div className="text-sm">
-          <div>{format(new Date(event.start_datetime), 'd MMM yyyy')}</div>
+          <div>{formatDayMonthYear(new Date(event.start_datetime))}</div>
           <div className="text-muted-foreground">
             {format(new Date(event.start_datetime), 'HH:mm')} -
             {format(new Date(event.end_datetime), 'HH:mm')}

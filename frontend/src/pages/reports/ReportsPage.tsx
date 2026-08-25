@@ -16,7 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { supabase } from '@/lib/supabase'
-import { format } from 'date-fns'
+import { formatDayMonthTime } from '@/lib/format-date'
 import { buildGeneratedReportEntry, type GeneratedReportEntry } from './generate-entry'
 
 /**
@@ -430,7 +430,7 @@ export function ReportsPage() {
                         <div className="font-medium text-sm">{report.name}</div>
                         <div className="flex items-center gap-2 mt-1">
                           <span className="text-xs text-muted-foreground">
-                            {format(report.createdAt, 'dd MMM HH:mm')}
+                            {formatDayMonthTime(report.createdAt)}
                           </span>
                           <span className="text-xs px-2 py-0.5 bg-muted rounded">
                             {report.format.toUpperCase()}

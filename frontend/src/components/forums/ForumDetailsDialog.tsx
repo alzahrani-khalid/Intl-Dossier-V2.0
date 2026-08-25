@@ -31,7 +31,7 @@ import {
   Edit,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import { format } from 'date-fns'
+import { formatDayFirstYear } from '@/lib/format-date'
 import { useAuth } from '@/contexts/auth.context'
 import { useDirection } from '@/hooks/useDirection'
 import { workItemDossierKeys } from '@/hooks/useCreateWorkItemDossierLinks'
@@ -325,7 +325,7 @@ export function ForumDetailsDialog({
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
-    return !isNaN(date.getTime()) ? format(date, 'dd MMM yyyy') : '-'
+    return !isNaN(date.getTime()) ? formatDayFirstYear(date) : '-'
   }
 
   const getStatusColor = (status: string) => {

@@ -1,0 +1,478 @@
+# Phase 99-20: AR-02 formatter and raw-site census
+
+Status: **READY FOR THE GATE-OWNED RENDERED ORACLE RERUN.** This retry did not rerun Playwright or
+`pw-run-reaped` from the restricted worker seat, per the retry directive. The source, strict guard,
+type-check, and both engagement suites are green from the recorded implementation pass below; the
+current retry rechecked the reaper lease surface and found no stale `.lease` artifact remaining in
+this worktree to poison the process-enabled acceptance seat.
+
+## Attempt 5 retry cleanup — 2026-08-25
+
+The retry instruction identified the prior acceptance failure as a stale malformed lease consumed by
+`scripts/pw-run-reaped.mjs`'s pre-spawn orphan sweep. The reaper source resolves leases under the
+repo root via `leaseDirOf(root) => join(root, '.pw-leases')`; this pass searched that product path
+and all repo-local lease filenames without invoking Playwright or the reaper:
+
+```text
+$ rg --files -g '*.lease' -g '.pw-leases/**' -g 'test-results/**'
+<no output; exit 1>
+
+$ ls -la .pw-leases 2>/dev/null || true
+<no output>
+
+$ find . -path './node_modules' -prune -o -name '*.lease' -print
+<no output>
+
+$ find . -path './node_modules' -prune -o \( -name '*61d5e7de53bb812370b452a1bca17540*' -o -name '*83e30b432e59aea22b19a36245b2e34a*' -o -name '*b545b2ca31757222ff434506146f3d5a*' \) -print
+<no output>
+
+$ test -d .pw-leases && find .pw-leases -maxdepth 1 -type f -print || true
+<no output>
+```
+
+No lease file existed, so there was no holder pid/pgid to prove dead and no file to delete. A live
+process-name sweep was attempted for corroboration, but this managed sandbox cannot read the host
+process list:
+
+```text
+$ pgrep -fl 'pw-run-reaped|playwright|vite|tsx|doppler' || true
+sysmon request failed with error: sysmond service not found
+pgrep: Cannot get process list
+```
+
+No tracked source or test file changed in this cleanup pass. The rendered `/calendar` acceptance
+command is intentionally left to the gate seat, which has the process/network capability and runs
+the oracle after this commit.
+
+## Attempt 4 park — 2026-08-25
+
+This repair pass found no tracked source delta to make. The exact acceptance command was rerun from
+the current worktree. Its source predicate and strict guard passed; the rendered Playwright leg
+again exited before any test executed because this managed shell cannot prove process-group
+identity for the web-server child:
+
+```text
+date-formatting check OK: 1533 non-test file(s) scanned, 0 unexcused ad-hoc date/number formatting sites (raw toLocaleDateString/toLocaleTimeString, month-first date-fns literals, Indic locale literals, relative time, localized skeletons, 12-hour literals, date-receiver toLocaleString, Intl.RelativeTimeFormat, local relative-time declarations, hand-assembled short relative forms) outside the 2-file allowlist (lib/format-date.ts, components/ui/calendar.tsx) and the 6 named permanent exemption(s) (see EXEMPT — each states its reason, and the dead-code one states its VOID CONDITION). Named debt: 0 row(s) excusing 0 site(s), all owned by plan 98-07.
+pw-run-reaped: playwright exited code=1 signal=null; group 40114 -> {"termed":false,"killed":false,"alreadyGone":false,"unavailable":true,"identityMismatch":false,"finalZero":false}; session unavailable; verdict unclean; causes ["unavailable: direct group 40114 liveness/identity unverifiable — a group we cannot prove is not a group we can call clean","unavailable: lease schema incomplete — wrapper identity/authority unproven: pgid is not a positive integer: null"]; report WITHHELD (.unclean.json); child output /Users/khalidalzahrani/Desktop/CodingSpace/Intl-Dossier-V2.0/.tickmarkr/worktrees.noindex/tickmarkr-run-20260824-212547-0000000000000037--P99-20/test-results/pw-reaped-61d5e7de53bb812370b452a1bca17540.json.log
+```
+
+The retained nonce-bound JSON report confirms Playwright never reached the two `/calendar` tests:
+
+```text
+Error: Process from config.webServer was not able to start. Exit code: 1
+expected: 0
+unexpected: 0
+suites: []
+```
+
+Direct Playwright invocation without the reaper exposes the web-server startup stderr in this seat:
+
+```text
+(node:72447) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+◇ injected env (7) from ../../../.env.test // tip: ◈ secrets for agents [www.dotenvx.com]
+[WebServer] pw-run-reaped --lease-exec: PW_LEASE_* env absent — running UNLEASED (ad-hoc invocation)
+[WebServer] (node:72480) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] Token not found in system keyring
+[WebServer] Doppler Error: secret not found in keyring
+Error: Process from config.webServer was not able to start. Exit code: 1
+```
+
+A bare localhost bind probe independently shows that this sandbox cannot host the rendered surface:
+
+```text
+listen EPERM: operation not permitted 127.0.0.1:5173
+```
+
+The required `--list` leg still collects exactly the two acceptance tests:
+
+```text
+Listing tests:
+  [chromium-en] › 99-ar02-dates.spec.ts:125:5 › UI99-C1C2C4 ar /calendar
+  [chromium-en] › 99-ar02-dates.spec.ts:137:5 › UI99-C1 en control /calendar
+Total: 2 tests in 1 file
+```
+
+Focused non-rendered verification from this pass:
+
+```text
+positive fixture: matched
+outside lib/format-date.ts: 0
+formatter positive control: matched
+date-formatting check OK: 1533 non-test file(s) scanned, 0 unexcused ad-hoc date/number formatting sites (raw toLocaleDateString/toLocaleTimeString, month-first date-fns literals, Indic locale literals, relative time, localized skeletons, 12-hour literals, date-receiver toLocaleString, Intl.RelativeTimeFormat, local relative-time declarations, hand-assembled short relative forms) outside the 2-file allowlist (lib/format-date.ts, components/ui/calendar.tsx) and the 6 named permanent exemption(s) (see EXEMPT — each states its reason, and the dead-code one states its VOID CONDITION). Named debt: 0 row(s) excusing 0 site(s), all owned by plan 98-07.
+```
+
+```text
+Test Files  2 passed (2)
+     Tests  18 passed (18)
+  Duration  1.92s
+```
+
+```text
+Test Files  1 passed (1)
+     Tests  19 passed (19)
+  Duration  1.33s
+```
+
+`pnpm --dir frontend exec tsc --noEmit` exited 0 with no output.
+
+## Attempt 3 park — 2026-08-25
+
+The exact acceptance command was run continuously through its source predicate, strict date guard,
+two-test collection check, and reaped Playwright leg. The guard passed, but the reaped leg exited
+`90` before either named test ran:
+
+```text
+date-formatting check OK: 1533 non-test file(s) scanned, 0 unexcused ad-hoc date/number formatting sites (raw toLocaleDateString/toLocaleTimeString, month-first date-fns literals, Indic locale literals, relative time, localized skeletons, 12-hour literals, date-receiver toLocaleString, Intl.RelativeTimeFormat, local relative-time declarations, hand-assembled short relative forms) outside the 2-file allowlist (lib/format-date.ts, components/ui/calendar.tsx) and the 6 named permanent exemption(s) (see EXEMPT — each states its reason, and the dead-code one states its VOID CONDITION). Named debt: 0 row(s) excusing 0 site(s), all owned by plan 98-07.
+pw-run-reaped: playwright exited code=1 signal=null; group 99456 -> {"termed":false,"killed":false,"alreadyGone":false,"unavailable":true,"identityMismatch":false,"finalZero":false}; session unavailable; verdict unclean; causes ["unavailable: direct group 99456 liveness/identity unverifiable — a group we cannot prove is not a group we can call clean","unavailable: lease schema incomplete — wrapper identity/authority unproven: pgid is not a positive integer: null"]; report WITHHELD (.unclean.json)
+```
+
+The withheld Playwright report contained no suites and measured the pre-test startup failure:
+
+```text
+Error: Process from config.webServer was not able to start. Exit code: 1
+expected: 0
+unexpected: 0
+suites: []
+```
+
+Environment probes identified the external constraint rather than a page assertion:
+
+```text
+CODEX_SANDBOX=seatbelt
+CODEX_SANDBOX_NETWORK_DISABLED=1
+ps: operation not permitted
+curl: (7) Failed to connect to localhost port 5173
+```
+
+The run-owned nonce lease referred to a process already proven absent with `kill -0`; that exact
+ignored lease and its nonce-bound withheld report were removed so they cannot poison the next
+process-capable invocation. No tracked path was changed by the cleanup.
+
+The ruling-mandated suites were then run together without changing any test assertion, query,
+matcher, expected value, or name:
+
+```text
+Test Files  2 passed (2)
+     Tests  18 passed (18)
+  Duration  1.99s
+```
+
+The remaining local checks are green:
+
+```text
+raw English-name format sites outside lib/format-date.ts: 0
+formatter English-token positive control: 19 rows
+date guard: 0 unexcused rows
+type-check: exit 0
+```
+
+Required overseer action: rerun the plan's exact `pw-run-reaped` command in a process/network-enabled
+seat and close this task only after both `UI99-C1C2C4 ar /calendar` and
+`UI99-C1 en control /calendar` actually execute on `chromium-en` and pass. This is the explicit
+park required by the anchored review; the task does not substitute `--list`, an esbuild drill, or a
+prior child's exit status for that rendered observation.
+
+## Acceptance-gate residue repair — 2026-08-25
+
+The failed acceptance invocation reached a different result from the restricted worker-shell runs
+below: its Playwright child exited `0`, and the reaper proved the current group gone
+(`alreadyGone: true`, `finalZero: true`). The wrapper returned `90` only because its pre-spawn
+orphan sweep found the ignored run artifact `b545b2ca31757222ff434506146f3d5a.lease` with
+`pgid: null`. That malformed lease was not part of the committed task diff and is absent from this
+fresh repair worktree.
+
+A clean-state replay reconfirmed the source predicate and strict date guard before this managed
+shell again denied process-group identity to its newly started web server. The exact run-owned
+nonce lease from that diagnostic was removed, leaving `.pw-leases` empty for the process-capable
+acceptance rerun. No production or test source change is justified by this stale-artifact finding,
+and `scripts/pw-run-reaped.mjs` is outside this task's fixed file grant.
+
+The two ruling-mandated engagement suites were also rerun together after cleanup:
+
+```text
+Test Files  2 passed (2)
+     Tests  18 passed (18)
+  Duration  1.83s
+```
+
+## Repair pass — 2026-08-25
+
+Commit `58dacb826` (`fix(i18n): isolate date formatter language state`) resolves the three new
+failure fingerprints reported against the prior attempt. The measured collection cause was
+`format-date.ts` importing the application i18n bootstrap: suite-local `react-i18next` mocks did not
+export `initReactI18next`, so the bootstrap failed before any test ran. The formatter now imports the
+same `i18next` package singleton directly, retaining call-time language reads without executing app
+initialization in isolated consumers. `UpcomingSection` passes its live render language to the
+shared compact helper, which preserves that already-localized site's established date-fns Arabic
+shape (`ثلاثاء 28 أبريل`) and English bytes.
+
+The two engagement suites plus the three new-fingerprint suites completed together:
+
+```text
+Test Files  5 passed (5)
+     Tests  46 passed (46)
+```
+
+The complete prior-failure cohort then reported 18 passing files / 148 passing tests. Its remaining
+24 failures are the harness's pre-existing baseline: the AppShell/Sidebar tests render `NavUser`
+without a `LanguageProvider`, and the five Phase 87 list-route test factories omit the `Link` export
+their route pages render. Those files are outside this task's fixed allowlist and were not edited.
+The task-attributable three-file fingerprint is green, as are the two ruling-mandated engagement
+suites. Type-check, targeted ESLint/Prettier, the production build, and the strict date guard are
+green after the repair.
+
+The exact command oracle was rerun. Its source predicate and strict guard passed, and its list leg
+again collected exactly the required two tests:
+
+```text
+Listing tests:
+  [chromium-en] › 99-ar02-dates.spec.ts:125:5 › UI99-C1C2C4 ar /calendar
+  [chromium-en] › 99-ar02-dates.spec.ts:137:5 › UI99-C1 en control /calendar
+Total: 2 tests in 1 file
+```
+
+The rendered leg remains unavailable in this managed shell before any Playwright test executes:
+
+```text
+pw-run-reaped: playwright exited code=1 signal=null; group 73489 -> {"termed":false,"killed":false,"alreadyGone":false,"unavailable":true,"identityMismatch":false,"finalZero":false}; session unavailable; verdict unclean; causes ["unavailable: direct group 73489 liveness/identity unverifiable — a group we cannot prove is not a group we can call clean","unavailable: lease schema incomplete — wrapper identity/authority unproven: pgid is not a positive integer: null"]; report WITHHELD (.unclean.json)
+```
+
+No rendered pass is claimed; the process/network-enabled acceptance harness still owns that final
+observation.
+
+## Commits
+
+- `92514982b` — `feat(i18n): localize shared date formats`
+- `ffbbc6740` — `test(engagements): repair static import mocks`
+- `58dacb826` — `fix(i18n): isolate date formatter language state`
+
+The task started from `6c244b019`. The implementation diff contains exactly the 26 allowed source
+and test files; this summary is the only documentation follow-up.
+
+## Re-derived raw-site census
+
+The recorded single-line source grep was run first. It printed 25 rows in 22 files. That grep cannot
+cross a line boundary, so a TypeScript-AST walk was then used as the drilled population instrument:
+it selected non-test `.ts`/`.tsx` files, required a named `format` import from `date-fns`, and counted
+calls whose literal format argument contains `EEE` or `MMM`.
+
+```text
+frontend/src/components/analytics/CommitmentFulfillmentChart.tsx:106: d MMM
+frontend/src/components/analytics/EngagementMetricsChart.tsx:99: d MMM
+frontend/src/components/analytics/RelationshipHealthChart.tsx:94: d MMM
+frontend/src/components/assignments/EscalationDashboard.tsx:184: d MMM
+frontend/src/components/assignments/EscalationDashboard.tsx:331: d MMM
+frontend/src/components/availability-polling/AvailabilityPollResults.tsx:392: d MMM
+frontend/src/components/calendar/UnifiedCalendar.tsx:141: MMMM yyyy
+frontend/src/components/dossier/DossierDrawer/UpcomingSection.tsx:68: EEE d MMM
+frontend/src/components/dossiers/DossierMoUsTab.tsx:170: dd MMM yyyy
+frontend/src/components/dossiers/DossierMoUsTab.tsx:181: dd MMM yyyy
+frontend/src/components/dossiers/DossierMoUsTab.tsx:195: dd MMM yyyy
+frontend/src/components/engagement-recommendations/RecommendationCard.tsx:167: d MMM
+frontend/src/components/forums/ForumDetailsDialog.tsx:328: dd MMM yyyy
+frontend/src/components/meeting-minutes/ActionItemsList.tsx:221: d MMM
+frontend/src/components/signals/SignalRow.tsx:82: EEE dd MMM
+frontend/src/components/sla-monitoring/SLAComplianceChart.tsx:70: d MMM
+frontend/src/pages/Dashboard/widgets/MyTasks.tsx:71: d MMM
+frontend/src/pages/Dashboard/widgets/WeekAhead.tsx:53: EEE
+frontend/src/pages/MoUs/MousPage.tsx:181: dd MMM yyyy
+frontend/src/pages/MoUs/MousPage.tsx:187: dd MMM yyyy
+frontend/src/pages/WorkBoard/KCard.tsx:90: d MMM
+frontend/src/pages/data-library/DataLibraryPage.tsx:434: d MMM yyyy
+frontend/src/pages/events/EventsPage.tsx:77: MMMM yyyy
+frontend/src/pages/events/EventsPage.tsx:176: d MMM yyyy
+frontend/src/pages/forums/ForumsPage.tsx:141: dd MMM yyyy
+frontend/src/pages/intelligence/IntelligencePage.tsx:348: dd MMM yyyy
+frontend/src/pages/reports/ReportsPage.tsx:433: dd MMM HH:mm
+SITES=27
+FILES=22
+```
+
+This reconciles the stale plan-time `26 sites / 22 files`: the current tree has 27 sites. The
+line-bound grep misses both multiline calls at `DossierMoUsTab.tsx:181` and `:195`; the plan had
+accounted for only one of those two when it recorded 26. The post-change AST population is zero.
+Test files, i18n JSON, machine-only numeric/date-input tokens, and non-frontend trees are outside
+this population.
+
+### Per-site classification and route
+
+`already localized` means the raw baseline site already passed the date-fns Arabic locale object;
+it was still centralized because the acceptance population prohibits raw English-name token
+literals. `formatter-routable` means no locale parameter or special provider was required.
+
+| Baseline site(s)                     | Count | Classification     | Shared route                            |
+| ------------------------------------ | ----: | ------------------ | --------------------------------------- |
+| CommitmentFulfillmentChart `d MMM`   |     1 | formatter-routable | `formatDayMonth`                        |
+| EngagementMetricsChart `d MMM`       |     1 | formatter-routable | `formatDayMonth`                        |
+| RelationshipHealthChart `d MMM`      |     1 | formatter-routable | `formatDayMonth`                        |
+| EscalationDashboard `d MMM`          |     2 | formatter-routable | `formatDayMonth`                        |
+| AvailabilityPollResults `d MMM`      |     1 | already localized  | `formatDayMonth`                        |
+| UnifiedCalendar `MMMM yyyy`          |     1 | formatter-routable | `formatMonthYear`                       |
+| UpcomingSection `EEE d MMM`          |     1 | already localized  | `formatWeekdayDayMonth`                 |
+| DossierMoUsTab `dd MMM yyyy`         |     3 | formatter-routable | `formatDayFirstYear`                    |
+| RecommendationCard `d MMM`           |     1 | formatter-routable | `formatDayMonth`                        |
+| ForumDetailsDialog `dd MMM yyyy`     |     1 | formatter-routable | `formatDayFirstYear`                    |
+| ActionItemsList `d MMM`              |     1 | formatter-routable | `formatDayMonth`                        |
+| SignalRow `EEE dd MMM`               |     1 | formatter-routable | `formatDayFirst`                        |
+| SLAComplianceChart `d MMM`           |     1 | formatter-routable | `formatDayMonth`                        |
+| MyTasks `d MMM`                      |     1 | already localized  | `formatDayMonth`                        |
+| WeekAhead `EEE`                      |     1 | formatter-routable | `formatWeekday`                         |
+| MousPage `dd MMM yyyy`               |     2 | formatter-routable | `formatDayFirstYear`                    |
+| KCard `d MMM`                        |     1 | formatter-routable | `formatDayMonth`                        |
+| DataLibraryPage `d MMM yyyy`         |     1 | formatter-routable | `formatDayMonthYear`                    |
+| EventsPage `MMMM yyyy`, `d MMM yyyy` |     2 | formatter-routable | `formatMonthYear`, `formatDayMonthYear` |
+| ForumsPage `dd MMM yyyy`             |     1 | formatter-routable | `formatDayFirstYear`                    |
+| IntelligencePage `dd MMM yyyy`       |     1 | formatter-routable | `formatDayFirstYear`                    |
+| ReportsPage `dd MMM HH:mm`           |     1 | formatter-routable | `formatDayMonthTime`                    |
+
+Total: 3 already-localized sites centralized, 24 formatter-routable sites centralized, 0 sites
+needing a new locale parameter.
+
+## Formatter design and call-time drill
+
+`format-date.ts` now reads `i18n.language` at each call. Arabic passes through
+`toFormatLocale(language)` and therefore becomes `ar-u-nu-latn`; English remains pinned to `en-GB`.
+The shared Intl options centralize the former `EEE`/`MMM` token shapes and retain `Asia/Dubai`.
+`formatTime` also reads the active locale at call time while retaining Latin digits and the
+allowlisted `GST`. The Policy D comments now state that AR-02 / Phase 99 supersedes its name-token
+half while its Latin-digit half survives.
+
+A write-free esbuild drill bundled the real i18n singleton and changed its language at runtime. Its
+warnings named pre-existing duplicate JSON keys; the formatter output was:
+
+```text
+en ["Tue 28 Apr","14:30 GST","28 Apr 2026","Tue 28 Apr 14:30 GST","April 2026"]
+ar ["الثلاثاء، 28 أبريل","14:30 GST","28 أبريل 2026","الثلاثاء، 28 أبريل 14:30 GST","أبريل 2026"]
+relative-ar منذ 15 دقيقة
+```
+
+This drills the mid-session call-time switch, Arabic names, Latin digits, preserved English bytes,
+preserved GST, and the sanctioned `formatRelativeTime` output without substituting for the rendered
+oracle.
+
+## NotificationPreviewTimeline provenance
+
+The provenance walk found that `PreviewNotification.timeAgo` originated in this file as hardcoded
+English compact units (`2m`, `15m`, `1h` through `4h`) and was assembled with `t('preview.ago')`.
+It did not come from a localized upstream provider. The fixture now stores numeric `ageMinutes`,
+constructs a timestamp, and renders it only through `formatRelativeTime`. No hand-assembled relative
+unit or suffix remains.
+
+## Mock-only engagement-suite repair
+
+Both test-file diffs are confined to their own `vi.mock` factory bodies. The `react-i18next`
+factories now export the required `initReactI18next` plugin, resolve the copy exercised by the
+suites/default values, interpolate values, and return an empty string rather than echoing unknown
+keys. The page router factory now exports the `Link` rendered by the page. No test title, assertion,
+query, matcher, or expected value changed.
+
+The normal Vitest config loader first failed because Vite attempted to write through the
+harness-owned read-only `node_modules` symlink:
+
+```text
+Error: EPERM: operation not permitted, open '.../frontend/node_modules/.vite-temp/vitest.config.ts...mjs'
+```
+
+The supported runner loader was then used with the config's existing `__dirname` supplied through
+`NODE_OPTIONS`. Final focused output:
+
+```text
+Test Files  2 passed (2)
+     Tests  18 passed (18)
+  Duration  1.93s
+```
+
+The unchanged legacy formatter suite remained green under its English active-language control:
+
+```text
+Test Files  1 passed (1)
+     Tests  19 passed (19)
+  Duration  1.45s
+```
+
+## Source oracle and strict date guard
+
+The exact source predicate was rerun with explicit polarity output:
+
+```text
+positive fixture: matched
+outside lib/format-date.ts: 0
+formatter positive control: matched
+date-formatting check OK: 1533 non-test file(s) scanned, 0 unexcused ad-hoc date/number formatting sites (raw toLocaleDateString/toLocaleTimeString, month-first date-fns literals, Indic locale literals, relative time, localized skeletons, 12-hour literals, date-receiver toLocaleString, Intl.RelativeTimeFormat, local relative-time declarations, hand-assembled short relative forms) outside the 2-file allowlist (lib/format-date.ts, components/ui/calendar.tsx) and the 6 named permanent exemption(s) (see EXEMPT — each states its reason, and the dead-code one states its VOID CONDITION). Named debt: 0 row(s) excusing 0 site(s), all owned by plan 98-07.
+```
+
+## Type, lint, format, and build
+
+```text
+> intake-frontend@1.0.0 type-check
+> tsc --noEmit
+```
+
+Targeted ESLint exited 0 with no output. Prettier reported all 26 changed TypeScript files formatted.
+The direct current-worktree Vite build (runner config loader, avoiding the symlink temp directory)
+completed:
+
+```text
+✓ 9541 modules transformed.
+✓ built in 13.01s
+```
+
+The existing generated-CSS, circular-chunk, large-chunk, and duplicate-i18n-key warnings remained
+non-fatal and are outside this task.
+
+## Rendered `/calendar` command
+
+The required exact file/name selection collected the two intended legs:
+
+```text
+Listing tests:
+  [chromium-en] › 99-ar02-dates.spec.ts:125:5 › UI99-C1C2C4 ar /calendar
+  [chromium-en] › 99-ar02-dates.spec.ts:137:5 › UI99-C1 en control /calendar
+Total: 2 tests in 1 file
+```
+
+The exact reaped command was invoked next. The configured web server exited before Playwright ran a
+test because this managed shell cannot read process-group identity:
+
+```text
+pw-run-reaped: playwright exited code=1 signal=null; group 95680 -> {"termed":false,"killed":false,"alreadyGone":false,"unavailable":true,"identityMismatch":false,"finalZero":false}; session unavailable; verdict unclean; causes ["unavailable: direct group 95680 liveness/identity unverifiable — a group we cannot prove is not a group we can call clean","unavailable: lease schema incomplete — wrapper identity/authority unproven: pgid is not a positive integer: null"]; report WITHHELD (.unclean.json); child output .../test-results/pw-reaped-b87b47b01c8121dc706b3194b86ea289.json.log
+```
+
+The withheld JSON confirmed the measured cause, not a product assertion failure:
+
+```text
+Error: Process from config.webServer was not able to start. Exit code: 1
+expected: 0
+unexpected: 0
+suites: []
+```
+
+Diagnostics then separated every available startup path:
+
+```text
+root dev: Doppler Error: secret not found in keyring
+env-loaded turbo dev: Error: listen EPERM .../tsx-501/*.pipe
+frontend Vite bundle loader: EPERM .../frontend/node_modules/.vite-temp/...
+frontend Vite runner loader: EPERM unlink .../frontend/node_modules/.vite/deps/...
+Vite preview over the successfully built current tree: Error: listen EPERM: operation not permitted 127.0.0.1:4173
+```
+
+Thus this shell cannot host a rendered surface. The run-owned malformed lease was deleted so it
+cannot poison the harness retry. The required rendered result remains owned by the exact plan command
+in the process/network-enabled acceptance gate.
+
+## Scope and later-task handoff
+
+`git diff HEAD~2..HEAD --name-only` lists only the 26 allowed production/test paths. Adding this
+summary brings the task to 27 allowed paths. No out-of-scope tracked path changed; `node_modules`
+remained the harness-provisioned symlink.
+
+Per RULING-P99-166, the stale comments/names and Arabic expected values in
+`frontend/src/lib/__tests__/format-date.test.ts` were not edited. That suite currently remains green
+because its calls pass the legacy positional `'ar'` argument while the active singleton language is
+English; the cutover task owning that test file must retarget it to switch the active i18n language
+and assert Arabic names. No other suite was value-retargeted here.
+
+Outside this task remain NotificationList's already-correct bilingual today/yesterday headers,
+i18n JSON/glossary work, test-file date literals, and every source outside the enumerated raw-site
+lane. `GST` remains deliberately allowlisted by D-30.

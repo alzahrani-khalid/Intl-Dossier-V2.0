@@ -17,10 +17,11 @@
 
 import { type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { format, isToday } from 'date-fns'
+import { isToday } from 'date-fns'
 
 import { LtrIsolate } from '@/components/ui/ltr-isolate'
 import { DossierGlyph } from '@/components/signature-visuals'
+import { formatDayMonth } from '@/lib/format-date'
 import { cn } from '@/lib/utils'
 import type { WorkItem } from '@/types/work-item.types'
 
@@ -87,7 +88,7 @@ function buildDueText(
   if (isToday(date)) {
     return lang === 'ar' ? 'اليوم' : 'Today'
   }
-  return format(date, 'd MMM')
+  return formatDayMonth(date)
 }
 
 export function KCard({ item, onItemClick, dndEnabled = false }: KCardProps): ReactElement {

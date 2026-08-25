@@ -8,9 +8,8 @@
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { format, parseISO } from 'date-fns'
-import { ar, enUS } from 'date-fns/locale'
-import { formatDayFirst, formatTime } from '@/lib/format-date'
+import { parseISO } from 'date-fns'
+import { formatDayFirst, formatDayMonth, formatTime } from '@/lib/format-date'
 import {
   Check,
   X,
@@ -55,8 +54,6 @@ export function AvailabilityPollResults({
 }: AvailabilityPollResultsProps) {
   const { t } = useTranslation('availability-polling')
   const { isRTL } = useDirection()
-  const dateLocale = isRTL ? ar : enUS
-
   const { data: pollData, isLoading, error } = usePollDetails(pollId)
   const closePoll = useClosePoll()
   const autoSchedule = useAutoSchedule()
@@ -388,9 +385,7 @@ export function AvailabilityPollResults({
                     </TableHead>
                     {slots.slice(0, 5).map((slot) => (
                       <TableHead key={slot.id} className="text-center min-w-[100px]">
-                        <div className="text-xs">
-                          {format(parseISO(slot.slot_start), 'd MMM', { locale: dateLocale })}
-                        </div>
+                        <div className="text-xs">{formatDayMonth(parseISO(slot.slot_start))}</div>
                         <div className="text-xs text-muted-foreground">
                           {formatTime(parseISO(slot.slot_start))}
                         </div>

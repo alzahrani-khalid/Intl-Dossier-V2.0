@@ -9,7 +9,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
+import { formatDayMonth } from '@/lib/format-date'
 import {
   Plus,
   CheckCircle2,
@@ -218,7 +218,7 @@ export function ActionItemsList({
                             )}
                           >
                             <Calendar className="h-3 w-3" />
-                            {format(new Date(item.due_date), 'd MMM')}
+                            {formatDayMonth(new Date(item.due_date))}
                           </span>
                         )}
 

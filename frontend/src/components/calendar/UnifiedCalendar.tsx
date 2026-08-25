@@ -14,13 +14,13 @@ import {
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { format, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns'
+import { startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns'
 import { QueryErrorState } from '@/components/error-states/QueryErrorState'
 import { CalendarMonthGrid } from './CalendarMonthGrid'
 import { WeekListMobile } from './WeekListMobile'
 import { useDirection } from '@/hooks/useDirection'
 import './calendar.css'
-import { formatDateTime } from '@/lib/format-date'
+import { formatDateTime, formatMonthYear } from '@/lib/format-date'
 
 interface UnifiedCalendarProps {
   linkedItemId?: string
@@ -138,7 +138,7 @@ export function UnifiedCalendar({
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <h2 className="text-base sm:text-lg font-semibold flex-1 text-center">
-              {format(currentMonth, 'MMMM yyyy')}
+              {formatMonthYear(currentMonth)}
             </h2>
             <Button
               variant="outline"
