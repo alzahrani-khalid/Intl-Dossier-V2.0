@@ -41,11 +41,16 @@
     },
     {
       "labelKey": "navigation.mous",
-      "titleAnchor": "common:mous.title",
+      "titleAnchor": "common:mous.pageTitle",
       "objectTerm": "مذكرات التفاهم",
       "disposition": "ruled-anchor-repoint",
+      "sourcePath": "frontend/src/pages/MoUs/MousPage.tsx",
       "before": { "sourceKey": "navigation.mous", "genericValueAr": "العنوان" },
-      "after": { "sourceKey": "common:mous.title", "valueAr": "مذكرات التفاهم", "valueEn": "MoUs" }
+      "after": {
+        "sourceKey": "common:mous.pageTitle",
+        "valueAr": "مذكرات التفاهم",
+        "valueEn": "MoUs"
+      }
     },
     {
       "labelKey": "navigation.intake",

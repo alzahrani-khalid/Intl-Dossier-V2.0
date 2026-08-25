@@ -63,9 +63,11 @@ const rows = [
   {
     labelKey: 'navigation.mous',
     titleNamespace: 'common',
-    titleKey: 'mous.title',
+    titleKey: 'mous.pageTitle',
     ruledTerm: 'مذكرات التفاهم',
     termPattern: 'مذكرات التفاهم',
+    titleSourcePath: 'frontend/src/pages/MoUs/MousPage.tsx',
+    titleSourceContains: "t('common:mous.pageTitle')",
   },
   {
     labelKey: 'navigation.intake',
@@ -373,21 +375,50 @@ const rowCoverageIssues = (references, candidateRows) => {
 const commonRepairIssues = (commonByLocale) =>
   LOCALES.flatMap((locale) => {
     const common = commonByLocale[locale]
+    const expectedMousCopy =
+      locale === 'ar'
+        ? { title: 'العنوان', pageTitle: 'مذكرات التفاهم' }
+        : { title: 'Title', pageTitle: 'MoUs' }
     const checks = [
       ['tasks.sla.approaching', (value) => typeof value === 'string' && value.length > 0],
       ['afterActions.decisions.item', (value) => value?.includes('{{number}}')],
       ['afterActions.confidence', (value) => value?.includes('{{value}}')],
+      ['mous.title', (value) => value === expectedMousCopy.title],
+      ['mous.pageTitle', (value) => value === expectedMousCopy.pageTitle],
     ]
     return checks.flatMap(([key, valid]) =>
       valid(valueAt(common, key)) ? [] : [`${locale}/common:${key}`],
     )
   })
 
-const artifactIssues = (root, candidateRows) => {
-  const artifactPath = join(root, 'scripts/glossary-senses.d/tiebreaks.json')
-  const artifact = JSON.parse(readFileSync(artifactPath, 'utf8'))
+const readDecisionArtifact = (root) =>
+  JSON.parse(readFileSync(join(root, 'scripts/glossary-senses.d/tiebreaks.json'), 'utf8'))
+
+const applyDecisionDispositions = (results, artifact) => {
+  const byLabel = new Map(artifact.rows.map((row) => [row.labelKey, row]))
+  return results.map((result) => {
+    const decision = byLabel.get(result.labelKey)
+    const candidateValuesMatch =
+      decision?.candidates?.label === result.label && decision?.candidates?.title === result.title
+    // RULING-P99-05 §3 makes a newly discovered pair an escalation, not an invented repair.
+    // It remains `agrees: false`; only an exact, value-locked escalation record adjudicates it.
+    // Any later value drift or unrecorded mismatch therefore returns to the failing population.
+    return {
+      ...result,
+      disposition: decision?.disposition,
+      escalated:
+        !result.agrees &&
+        result.missing.length === 0 &&
+        decision?.disposition === 'escalate-unruled' &&
+        candidateValuesMatch,
+    }
+  })
+}
+
+const artifactIssues = (artifact, candidateRows, results) => {
   if (!Array.isArray(artifact.rows)) return ['tiebreaks.json rows is not an array']
   const byLabel = new Map(artifact.rows.map((row) => [row.labelKey, row]))
+  const resultsByLabel = new Map(results.map((result) => [result.labelKey, result]))
   return [
     ...(artifact.rows.length === 28
       ? []
@@ -395,9 +426,15 @@ const artifactIssues = (root, candidateRows) => {
     ...candidateRows.flatMap((row) => {
       const artifactRow = byLabel.get(row.labelKey)
       if (!artifactRow) return [`tiebreaks.json missing ${row.labelKey}`]
-      return artifactRow.titleAnchor === titleAnchor(row)
-        ? []
-        : [`tiebreaks.json anchor drift for ${row.labelKey}`]
+      const result = resultsByLabel.get(row.labelKey)
+      return [
+        ...(artifactRow.titleAnchor === titleAnchor(row)
+          ? []
+          : [`tiebreaks.json anchor drift for ${row.labelKey}`]),
+        ...(artifactRow.disposition === 'escalate-unruled' && !result?.escalated
+          ? [`tiebreaks.json escalation candidate drift for ${row.labelKey}`]
+          : []),
+      ]
     }),
   ]
 }
@@ -411,7 +448,11 @@ const summarize = ({
 }) => ({
   population: results.length,
   agreements: results.filter((result) => result.agrees).length,
-  mismatches: results.filter((result) => !result.agrees && result.missing.length === 0).length,
+  escalations: results.filter((result) => result.escalated).length,
+  adjudicated: results.filter((result) => result.agrees || result.escalated).length,
+  mismatches: results.filter(
+    (result) => !result.agrees && !result.escalated && result.missing.length === 0,
+  ).length,
   missingAnchorKeys: results.reduce((total, result) => total + result.missing.length, 0),
   missingNavigationKeys: navigationMissing.length,
   rowCoverageIssues: coverageIssues,
@@ -474,15 +515,18 @@ let liveData
 let result
 try {
   liveData = readLiveData(options.root)
+  const decisionArtifact = readDecisionArtifact(options.root)
+  const inspectedRows = inspectRows(rows, liveData.arabicBundles, liveData.titleSources)
+  const decidedRows = applyDecisionDispositions(inspectedRows, decisionArtifact)
   result = summarize({
-    results: inspectRows(rows, liveData.arabicBundles, liveData.titleSources),
+    results: decidedRows,
     navigationMissing: missingNavigationKeys(
       liveData.navigationReferences,
       liveData.commonByLocale,
     ),
     coverageIssues: rowCoverageIssues(liveData.navigationReferences, rows),
     repairIssues: commonRepairIssues(liveData.commonByLocale),
-    decisionArtifactIssues: artifactIssues(options.root, rows),
+    decisionArtifactIssues: artifactIssues(decisionArtifact, rows, decidedRows),
   })
 } catch (error) {
   console.error(error.message)
@@ -493,8 +537,9 @@ if (options.json) {
   console.log(JSON.stringify(result, null, 2))
 } else {
   console.log(
-    `nav/title agreement: ${result.agreements}/${result.population} agree; ` +
-      `${result.mismatches} mismatch; ${result.missingAnchorKeys} missing anchor; ` +
+    `nav/title walk: ${result.adjudicated}/${result.population} adjudicated; ` +
+      `${result.agreements} agree; ${result.escalations} escalated; ` +
+      `${result.mismatches} unruled mismatch; ${result.missingAnchorKeys} missing anchor; ` +
       `${result.missingNavigationKeys} missing navigation locale key; ` +
       `${result.rowCoverageIssues.length} row coverage issue; ` +
       `${result.commonRepairIssues.length} common repair issue; ` +
@@ -502,7 +547,11 @@ if (options.json) {
   )
   for (const row of result.results.filter((candidate) => !candidate.agrees)) {
     const reason =
-      row.missing.length > 0 ? `MISSING ${row.missing.join(', ')}` : 'OBJECT-TERM MISMATCH'
+      row.missing.length > 0
+        ? `MISSING ${row.missing.join(', ')}`
+        : row.escalated
+          ? 'ESCALATED-UNRULED OBJECT-TERM MISMATCH'
+          : 'OBJECT-TERM MISMATCH'
     console.log(
       `${reason}\tcommon:${row.labelKey}=${JSON.stringify(row.label)}\t` +
         `${row.titleAnchor}=${JSON.stringify(row.title)}\truled=${row.ruledTerm}`,

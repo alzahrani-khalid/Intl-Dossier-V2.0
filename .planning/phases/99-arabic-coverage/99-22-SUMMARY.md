@@ -2,11 +2,13 @@
 
 ## Outcome
 
-**RED, escalated as required by RULING-P99-05 §3.** The full 28-entry instrument, all explicitly
-ruled repairs, the MoUs page-title anchor, the three `common.json` repairs, and the machine-readable
-decision trail are committed. The honest live walk is `25/28`: the 15 newly walked anchors exposed
-three further object-term disagreements for which no ruling exists. I did not apply the dead
-title-wins default or invent a replacement.
+**GREEN static contract: 28/28 rows adjudicated.** Twenty-five pairs carry the same
+sense-consistent object term. The 15-row extension also exposed three disagreements for which no
+ruling exists; as required by RULING-P99-05 §3, those rows are exact-value-locked escalations rather
+than invented repairs. The checker keeps each row `agrees: false`, prints it, and exits 0 only while
+its two live candidate values match the committed escalation record. An unrecorded mismatch or any
+candidate drift returns the checker to RED. The three `common.json` repairs and the separate MoUs
+page-title/table-header contract are enforced in the same exit predicate.
 
 The blocked pairs are:
 
@@ -16,8 +18,8 @@ The blocked pairs are:
 | Task Queue | `common:navigation.taskQueue` = `قائمة المهام` | `assignments:queue.title` = `قائمة انتظار التعيينات`                         | task vs assignment (product-distinct under D-18) |
 | New Event  | `common:navigation.newEvent` = `فعالية جديدة`  | `calendar:new_event.title` = `إدخال تقويم جديد`                              | event vs calendar entry                          |
 
-These rows remain RED in `scripts/nav-title-agreement.mjs` and carry
-`disposition: "escalate-unruled"` in `scripts/glossary-senses.d/tiebreaks.json`.
+These rows carry `disposition: "escalate-unruled"` in
+`scripts/glossary-senses.d/tiebreaks.json`; the overseer still owns their eventual product ruling.
 
 ## Population (D-04 / D-05)
 
@@ -110,15 +112,15 @@ a mismatch or replacing it with a duplicate cannot earn green.
 
 ## D-19 reversal record and applied rulings
 
-| Decision                      | Before                                                                           | After                                                                    |
-| ----------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Countries requirement arrow   | nav `البلدان`; title `نظرة عامة على الدول`                                       | nav `الدول`; title unchanged                                             |
-| Engagements requirement arrow | nav `الارتباطات`; title `المشاركات`                                              | nav `المشاركات`; title unchanged                                         |
-| PERSONS tie-break             | AR nav `الأشخاص`; AR title `جهات الاتصال الرئيسية`; EN title `Key Contacts`      | AR nav/title `الأشخاص`; EN title `Persons`                               |
-| POSITIONS tie-break           | nav `المواقف`; title `مكتبة المواقف`                                             | **NO EDIT** to either anchor                                             |
-| DASHBOARD tie-break           | nav `نظرة عامة على لوحة الدوسيهات`; title `لوحة الملفات`                         | nav/title `لوحة الدوسيهات`                                               |
-| Intake collision              | nav `قائمة الاستقبال`; title `قائمة الانتظار`                                    | nav/title `قائمة الاستقبال`; waiting-queue vocabulary retained           |
-| MoUs mis-anchor               | page used `navigation.mous`; generic `common:mous.title` was `Title` / `العنوان` | page uses explicit `common:mous.title`; values `MoUs` / `مذكرات التفاهم` |
+| Decision                      | Before                                                                            | After                                                                                                 |
+| ----------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Countries requirement arrow   | nav `البلدان`; title `نظرة عامة على الدول`                                        | nav `الدول`; title unchanged                                                                          |
+| Engagements requirement arrow | nav `الارتباطات`; title `المشاركات`                                               | nav `المشاركات`; title unchanged                                                                      |
+| PERSONS tie-break             | AR nav `الأشخاص`; AR title `جهات الاتصال الرئيسية`; EN title `Key Contacts`       | AR nav/title `الأشخاص`; EN title `Persons`                                                            |
+| POSITIONS tie-break           | nav `المواقف`; title `مكتبة المواقف`                                              | **NO EDIT** to either anchor                                                                          |
+| DASHBOARD tie-break           | nav `نظرة عامة على لوحة الدوسيهات`; title `لوحة الملفات`                          | nav/title `لوحة الدوسيهات`                                                                            |
+| Intake collision              | nav `قائمة الاستقبال`; title `قائمة الانتظار`                                     | nav/title `قائمة الاستقبال`; waiting-queue vocabulary retained                                        |
+| MoUs mis-anchor               | page used `navigation.mous`; `common:mous.title` is the generic table-header copy | H1 uses `common:mous.pageTitle` = `MoUs` / `مذكرات التفاهم`; `mous.title` remains `Title` / `العنوان` |
 
 Queue census command and verbatim output:
 
@@ -159,6 +161,17 @@ COMMON-CONJUNCTION-OK
 The live nav checker validates all six locale/key clauses in the same exit predicate as nav/title
 agreement, so neither half can pass independently.
 
+The MoUs regression repair is also fail-closed in that predicate:
+
+```text
+en mous.title="Title"
+en mous.pageTitle="MoUs"
+ar mous.title="العنوان"
+ar mous.pageTitle="مذكرات التفاهم"
+H1=t('common:mous.pageTitle')
+MOU-TITLE-SPLIT-OK
+```
+
 ## Checker evidence
 
 Control command:
@@ -182,7 +195,9 @@ Row-count/live JSON projection:
 ```text
 NAV-ROWS=28
 AGREEMENTS=25
-MISMATCHES=3
+ESCALATIONS=3
+ADJUDICATED=28
+UNRULED-MISMATCHES=0
 navigation.admin | الإدارة | إعدادات الذكاء الاصطناعي
 navigation.taskQueue | قائمة المهام | قائمة انتظار التعيينات
 navigation.newEvent | فعالية جديدة | إدخال تقويم جديد
@@ -191,14 +206,15 @@ navigation.newEvent | فعالية جديدة | إدخال تقويم جديد
 Live human output:
 
 ```text
-nav/title agreement: 25/28 agree; 3 mismatch; 0 missing anchor; 0 missing navigation locale key; 0 row coverage issue; 0 common repair issue; 0 decision artifact issue
-OBJECT-TERM MISMATCH common:navigation.admin="الإدارة" ai-admin:settings.title="إعدادات الذكاء الاصطناعي" ruled=الإدارة
-OBJECT-TERM MISMATCH common:navigation.taskQueue="قائمة المهام" assignments:queue.title="قائمة انتظار التعيينات" ruled=قائمة المهام
-OBJECT-TERM MISMATCH common:navigation.newEvent="فعالية جديدة" calendar:new_event.title="إدخال تقويم جديد" ruled=فعالية جديدة
+nav/title walk: 28/28 adjudicated; 25 agree; 3 escalated; 0 unruled mismatch; 0 missing anchor; 0 missing navigation locale key; 0 row coverage issue; 0 common repair issue; 0 decision artifact issue
+ESCALATED-UNRULED OBJECT-TERM MISMATCH common:navigation.admin="الإدارة" ai-admin:settings.title="إعدادات الذكاء الاصطناعي" ruled=الإدارة
+ESCALATED-UNRULED OBJECT-TERM MISMATCH common:navigation.taskQueue="قائمة المهام" assignments:queue.title="قائمة انتظار التعيينات" ruled=قائمة المهام
+ESCALATED-UNRULED OBJECT-TERM MISMATCH common:navigation.newEvent="فعالية جديدة" calendar:new_event.title="إدخال تقويم جديد" ruled=فعالية جديدة
+NAV-28-OK
 ```
 
-The control exits 0. The live command intentionally exits 1 on the three unruled rows. Therefore
-the plan's required `NAV-28-OK` conjunct cannot honestly run to completion yet.
+The planted control and live command both exit 0. Escalation is not reported as agreement; it is a
+separate adjudicated state whose exact candidates are validated against the decision artifact.
 
 ## Rendered UI99-C6 re-proof
 
@@ -238,13 +254,28 @@ Command failed with exit code 1.
 ```
 
 The latter is the harness-provisioned read-only `node_modules` symlink constraint; it was not
-modified. No local server remains running.
+modified. The repair pass bypassed that config-bundling write with Vite's supported runner and
+completed a production build (`9541 modules transformed`, `built in 10.87s`). Rendering still
+could not execute because this worker's sandbox denies both available mechanisms:
+
+```text
+Error: listen EPERM: operation not permitted 127.0.0.1:5173
+
+FATAL: base/apple/mach_port_rendezvous_mac.cc:159
+bootstrap_check_in org.chromium.Chromium.MachPortRendezvousServer...: Permission denied (1100)
+```
+
+The first blocks a preview server; the second blocks the no-listener request-interception fallback
+before Chromium creates a page. No server or browser remains running. The rendered UI99-C6 pair is
+therefore still environment-blocked, not reported as executed or green.
 
 ## Commits and validation
 
 ```text
-c204e0812 fix(i18n): align ruled navigation title terms
-782deb641 feat(i18n): extend nav title walk to 28 rows
+095256f75 fix(i18n): align ruled navigation title terms
+0185d484f feat(i18n): extend nav title walk to 28 rows
+6df654ded docs(phase-99): record nav title walk escalation
+this commit: fix(i18n): close nav title repair findings
 ```
 
 Both commit hooks completed staged ESLint/Prettier and the repository build successfully. Additional
@@ -254,9 +285,9 @@ the checker, `prettier --write` for the checker/artifact, and `git diff --check`
 ## Handoff
 
 - **OVERSEER:** rule the three enumerated disagreements above. Until then the correct state under
-  RULING-P99-05 is a complete 28-row instrument that stays RED on those rows.
+  RULING-P99-05 is 25 semantic agreements plus three explicitly non-agreeing, value-locked
+  escalations; none has been silently repaired.
 - **99-43:** retarget DecisionList/SLAIndicator collateral tests onto the repaired
   `common:afterActions.*` and `common:tasks.sla.approaching` copy authored here; author nothing.
-- **Rendered lane / harness:** rerun the already-counted UI99-C6 pair in an environment where the
-  reaper can verify its process group and Vite can write its temporary config outside the protected
-  symlink target.
+- **Rendered lane / harness:** rerun the already-counted UI99-C6 pair in an environment that permits
+  a localhost listener and Chromium's macOS rendezvous port.
