@@ -170,13 +170,13 @@
     "template": {
       "forumMembership": "من يشارك في أي منتدى",
       "sharedCommittees": "اللجان المشتركة",
-      "engagementChain": "سلاسل الارتباطات",
+      "engagementChain": "سلاسل المشاركات",
       "shortestPath": "كيف يرتبط هذان الكيانان"
     },
     "count": {
       "membership": "{{count}} منتدى ومجموعة عمل",
       "intersection": "{{count}} لجنة مشتركة",
-      "chain": "{{count}} ارتباطاً",
+      "chain": "{{count}} مشاركة",
       "path": "مرتبطان عبر {{count}} خطوة"
     },
     "col": {

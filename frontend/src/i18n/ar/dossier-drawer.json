@@ -2,7 +2,7 @@
   "accessible_title": "نظرة سريعة على الملف",
   "cta": {
     "close": "إغلاق الملف",
-    "log_engagement": "تسجيل ارتباط",
+    "log_engagement": "تسجيل مشاركة",
     "brief": "موجز",
     "follow": "متابعة",
     "coming_soon": "قريبًا",
@@ -15,13 +15,13 @@
   "meta": {
     "location_fallback": "عالمي",
     "lead_prefix": "المسؤول",
-    "engagements_suffix": "ارتباطات",
+    "engagements_suffix": "مشاركات",
     "last_touched_today": "آخر تحديث اليوم",
     "last_touched_yesterday": "آخر تحديث أمس",
     "last_touched_relative": "آخر تحديث منذ {{n}} يوم"
   },
   "kpi": {
-    "engagements": "ارتباطات",
+    "engagements": "مشاركات",
     "commitments": "التزامات",
     "overdue": "متأخر",
     "documents": "مستندات"
@@ -34,7 +34,7 @@
   },
   "empty": {
     "summary": "ملف نشط — لا يوجد ملخص مسجل بعد.",
-    "upcoming": "لا توجد ارتباطات قادمة.",
+    "upcoming": "لا توجد مشاركات قادمة.",
     "recent_activity": "لا يوجد نشاط حديث.",
     "open_commitments": "لا توجد التزامات مفتوحة."
   },
