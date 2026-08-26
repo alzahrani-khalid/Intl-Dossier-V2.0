@@ -201,7 +201,7 @@ export function InfluenceReportView({
       <Card className={cn('', className)}>
         <CardContent className="py-12 text-center">
           <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
-          <p className="text-muted-foreground">{t('no_report', 'No report data available')}</p>
+          <p className="text-muted-foreground">{t('no_report')}</p>
         </CardContent>
       </Card>
     )
@@ -241,13 +241,13 @@ export function InfluenceReportView({
           {onPrint && (
             <Button variant="outline" size="sm" onClick={onPrint}>
               <Printer className="h-4 w-4 me-2" />
-              {t('print', 'Print')}
+              {t('print')}
             </Button>
           )}
           {onExport && (
             <Button variant="outline" size="sm" onClick={onExport}>
               <Download className="h-4 w-4 me-2" />
-              {t('export', 'Export')}
+              {t('export')}
             </Button>
           )}
         </div>
@@ -257,29 +257,29 @@ export function InfluenceReportView({
       <section>
         <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
           <BarChart3 className="h-5 w-5" />
-          {t('network_statistics', 'Network Statistics')}
+          {t('network_statistics')}
         </h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <StatCard
-            label={t('total_stakeholders', 'Total Stakeholders')}
+            label={t('total_stakeholders')}
             value={stats.total_stakeholders}
             icon={Users}
             color="var(--chart-1)"
           />
           <StatCard
-            label={t('total_relationships', 'Relationships')}
+            label={t('total_relationships')}
             value={stats.total_relationships}
             icon={GitBranch}
             color="var(--chart-7)"
           />
           <StatCard
-            label={t('key_influencers', 'Key Influencers')}
+            label={t('key_influencers')}
             value={stats.key_influencers}
             icon={TrendingUp}
             color="var(--chart-6)"
           />
           <StatCard
-            label={t('avg_influence', 'Avg Influence')}
+            label={t('avg_influence')}
             value={stats.avg_influence_score.toFixed(1)}
             icon={BarChart3}
             color="var(--ok)"
@@ -292,7 +292,7 @@ export function InfluenceReportView({
         <section>
           <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
             <Lightbulb className="h-5 w-5" />
-            {t('key_findings', 'Key Findings')}
+            {t('key_findings')}
           </h2>
           <div className="space-y-3">
             {report.key_findings.map((finding, index) => (
@@ -311,7 +311,7 @@ export function InfluenceReportView({
         <section>
           <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
             <CheckCircle className="h-5 w-5" />
-            {t('recommendations', 'Recommendations')}
+            {t('recommendations')}
           </h2>
           <div className="space-y-3">
             {report.recommendations.map((rec, index) => (
@@ -327,10 +327,10 @@ export function InfluenceReportView({
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
-              {t('top_influencers', 'Top Influencers')}
+              {t('top_influencers')}
             </CardTitle>
             <CardDescription>
-              {t('top_influencers_desc', 'Stakeholders with highest influence scores')}
+              {t('top_influencers_desc')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -348,7 +348,7 @@ export function InfluenceReportView({
               </div>
             ) : (
               <p className="text-sm text-muted-foreground text-center py-4">
-                {t('no_influencers', 'No influencers identified')}
+                {t('no_influencers')}
               </p>
             )}
           </CardContent>
@@ -359,10 +359,10 @@ export function InfluenceReportView({
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
               <GitBranch className="h-4 w-4" />
-              {t('key_connectors', 'Key Connectors')}
+              {t('key_connectors')}
             </CardTitle>
             <CardDescription>
-              {t('key_connectors_desc', 'Bridge stakeholders connecting different groups')}
+              {t('key_connectors_desc')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -378,7 +378,7 @@ export function InfluenceReportView({
                         {isRTL ? connector.name_ar : connector.name_en}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {connector.groups_connected} {t('groups_connected', 'groups connected')}
+                        {connector.groups_connected} {t('groups_connected')}
                       </p>
                     </div>
                     <Badge variant="outline" className="ms-2 flex-shrink-0">
@@ -389,7 +389,7 @@ export function InfluenceReportView({
               </div>
             ) : (
               <p className="text-sm text-muted-foreground text-center py-4">
-                {t('no_connectors', 'No bridge stakeholders identified')}
+                {t('no_connectors')}
               </p>
             )}
           </CardContent>
@@ -399,7 +399,7 @@ export function InfluenceReportView({
       {/* Report Period */}
       {(report.period_start || report.period_end) && (
         <div className="text-sm text-muted-foreground text-end">
-          {t('analysis_period', 'Analysis Period')}:{' '}
+          {t('analysis_period')}:{' '}
           {report.period_start && formatDayFirst(report.period_start)}
           {report.period_start && report.period_end && ' - '}
           {report.period_end && formatDayFirst(report.period_end)}

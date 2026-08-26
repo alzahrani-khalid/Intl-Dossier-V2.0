@@ -123,7 +123,7 @@ export function DataPrivacySettingsSection() {
       if (preferencesRes.error) throw preferencesRes.error
       if (activityRes.error) throw activityRes.error
       if (!profileRes.data) {
-        throw new Error(t('dataPrivacy.exportNoData', 'No data available to export.'))
+        throw new Error(t('dataPrivacy.exportNoData'))
       }
 
       // Compile export data
@@ -331,7 +331,6 @@ export function DataPrivacySettingsSection() {
                   <p className="text-xs sm:text-sm text-muted-foreground mt-3">
                     {t(
                       'dataPrivacy.deleteContactAdmin',
-                      'To delete your account, please contact your administrator.',
                     )}
                   </p>
 

@@ -59,7 +59,7 @@ export function DeleteTaskDialog({
         </AlertDialogHeader>
         <AlertDialogFooter className="flex flex-col-reverse sm:flex-row gap-2">
           <AlertDialogCancel className="h-11 min-w-full sm:min-w-[100px]">
-            {t('common:cancel', 'Cancel')}
+            {t('common:cancel')}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
@@ -71,7 +71,7 @@ export function DeleteTaskDialog({
             ) : (
               <Trash2 className="me-2 size-4" />
             )}
-            {t('common:delete', 'Delete')}
+            {t('common:delete')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

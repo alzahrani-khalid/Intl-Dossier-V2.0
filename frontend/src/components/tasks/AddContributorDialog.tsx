@@ -172,12 +172,11 @@ export function AddContributorDialog({
       <DialogContent className="w-full max-w-full sm:max-w-[540px] md:max-w-[640px]">
         <DialogHeader>
           <DialogTitle className="text-start text-xl sm:text-2xl">
-            {t('tasks-page:contributors.addContributor', 'Add Contributor')}
+            {t('tasks-page:contributors.addContributor')}
           </DialogTitle>
           <DialogDescription className="text-start">
             {t(
               'tasks-page:contributors.addContributorDescription',
-              'Add a team member who contributed to this task',
             )}
           </DialogDescription>
         </DialogHeader>
@@ -186,7 +185,7 @@ export function AddContributorDialog({
           {/* User Search */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="user-search" className="text-start">
-              {t('tasks-page:contributors.searchUser', 'Search User')}
+              {t('tasks-page:contributors.searchUser')}
             </Label>
             <div className="relative">
               <Search
@@ -197,7 +196,6 @@ export function AddContributorDialog({
                 type="text"
                 placeholder={t(
                   'tasks-page:contributors.searchUserPlaceholder',
-                  'Type name or email...',
                 )}
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
@@ -249,7 +247,7 @@ export function AddContributorDialog({
           {/* Role Selection */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="role-select" className="text-start">
-              {t('tasks-page:contributors.roleLabel', 'Role')}
+              {t('tasks-page:contributors.roleLabel')}
             </Label>
             <Select
               value={selectedRole}
@@ -274,14 +272,13 @@ export function AddContributorDialog({
           {/* Optional Notes */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="notes" className="text-start">
-              {t('tasks-page:contributors.contributorNotes', 'Notes')}{' '}
-              <span className="text-muted-foreground">({t('common:optional', 'Optional')})</span>
+              {t('tasks-page:contributors.contributorNotes')}{' '}
+              <span className="text-muted-foreground">({t('common:optional')})</span>
             </Label>
             <Textarea
               id="notes"
               placeholder={t(
                 'tasks-page:contributors.contributorNotesPlaceholder',
-                'Describe their contribution...',
               )}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
@@ -297,7 +294,7 @@ export function AddContributorDialog({
             onClick={handleClose}
             className="h-11 min-w-full sm:min-w-[100px]"
           >
-            {t('common:cancel', 'Cancel')}
+            {t('common:cancel')}
           </Button>
           <Button
             onClick={handleSubmit}
@@ -305,7 +302,7 @@ export function AddContributorDialog({
             className="h-11 min-w-full sm:min-w-[100px]"
           >
             {addContributor.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
-            {t('tasks-page:contributors.add', 'Add')}
+            {t('tasks-page:contributors.add')}
           </Button>
         </DialogFooter>
       </DialogContent>

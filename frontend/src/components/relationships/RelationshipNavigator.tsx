@@ -103,12 +103,11 @@ export function RelationshipNavigator({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Filter className="h-5 w-5" />
-          {t('relationships:navigator.title', 'Relationship Navigator')}
+          {t('relationships:navigator.title')}
         </CardTitle>
         <CardDescription>
           {t(
             'relationships:navigator.description',
-            'Browse and filter connected entities by degree and type',
           )}
         </CardDescription>
       </CardHeader>
@@ -120,7 +119,7 @@ export function RelationshipNavigator({
               className={`absolute ${isRTL ? 'end-3' : 'start-3'} top-3 h-4 w-4 text-muted-foreground`}
             />
             <Input
-              placeholder={t('relationships:navigator.search', 'Search entities...')}
+              placeholder={t('relationships:navigator.search')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={isRTL ? 'pe-9' : 'ps-9'}
@@ -130,7 +129,7 @@ export function RelationshipNavigator({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-2 block">
-                {t('relationships:navigator.degree', 'Degree')}
+                {t('relationships:navigator.degree')}
               </label>
               <Select value={degreeFilter} onValueChange={setDegreeFilter}>
                 <SelectTrigger>
@@ -138,11 +137,11 @@ export function RelationshipNavigator({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">
-                    {t('relationships:navigator.allDegrees', 'All Degrees')}
+                    {t('relationships:navigator.allDegrees')}
                   </SelectItem>
                   {Array.from({ length: maxDegree }, (_, i) => i + 1).map((degree) => (
                     <SelectItem key={degree} value={degree.toString()}>
-                      {degree}° {t('relationships:navigator.separation', 'separation')}
+                      {degree}° {t('relationships:navigator.separation')}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -151,7 +150,7 @@ export function RelationshipNavigator({
 
             <div>
               <label className="text-sm font-medium mb-2 block">
-                {t('relationships:navigator.type', 'Entity Type')}
+                {t('relationships:navigator.type')}
               </label>
               <Select value={typeFilter} onValueChange={setTypeFilter}>
                 <SelectTrigger>
@@ -159,7 +158,7 @@ export function RelationshipNavigator({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">
-                    {t('relationships:navigator.allTypes', 'All Types')}
+                    {t('relationships:navigator.allTypes')}
                   </SelectItem>
                   {nodeTypes.map((type) => (
                     <SelectItem key={type} value={type}>
@@ -176,7 +175,6 @@ export function RelationshipNavigator({
         <div className="mb-4 text-sm text-muted-foreground">
           {t('relationships:navigator.results', {
             count: filteredNodes.length,
-            defaultValue: '{{count}} entities found',
           })}
         </div>
 
@@ -188,7 +186,7 @@ export function RelationshipNavigator({
               <div key={degree} className="mb-6">
                 <div className="flex items-center gap-2 mb-3">
                   <Badge variant="outline" className="text-sm font-semibold">
-                    {degree}° {t('relationships:navigator.separation', 'Separation')}
+                    {degree}° {t('relationships:navigator.separation')}
                   </Badge>
                   <Separator className="flex-1" />
                 </div>
@@ -232,7 +230,7 @@ export function RelationshipNavigator({
 
           {filteredNodes.length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
-              {t('relationships:navigator.noResults', 'No entities match your filters')}
+              {t('relationships:navigator.noResults')}
             </div>
           )}
         </ScrollArea>

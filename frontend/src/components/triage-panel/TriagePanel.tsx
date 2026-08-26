@@ -89,7 +89,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
 
   const handleApplyOverride = () => {
     if (!overrideReason.trim()) {
-      setReasonError(t('triage.overrideReasonRequired', 'Please provide a reason for the override'))
+      setReasonError(t('triage.overrideReasonRequired'))
       return
     }
     setReasonError('')
@@ -125,10 +125,10 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
   }
 
   const getConfidenceLabel = (score?: number): string => {
-    if (!score) return t('intake:triage.confidence.unknown', 'Unknown')
-    if (score >= 0.8) return t('intake:triage.confidence.high', 'High')
-    if (score >= 0.6) return t('intake:triage.confidence.medium', 'Medium')
-    return t('intake:triage.confidence.low', 'Low')
+    if (!score) return t('intake:triage.confidence.unknown')
+    if (score >= 0.8) return t('intake:triage.confidence.high')
+    if (score >= 0.6) return t('intake:triage.confidence.medium')
+    return t('intake:triage.confidence.low')
   }
 
   if (isLoading) {
@@ -136,7 +136,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
       <div className="py-8 text-center">
         <div className="inline-block size-8 animate-spin rounded-full border-b-2 border-primary"></div>
         <p className="mt-4 text-ink-mute">
-          {t('intake:triage.loadingSuggestions', 'Analyzing ticket...')}
+          {t('intake:triage.loadingSuggestions')}
         </p>
       </div>
     )
@@ -151,13 +151,12 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
               {/* D-58-02-02: ⚠️ emoji replaced with AlertTriangle lucide icon (CLAUDE.md no-emoji rule). */}
               <AlertTriangle className="h-5 w-5 text-warning" aria-hidden="true" />
               <h3 className="font-semibold text-warning">
-                {t('intake:triage.aiUnavailable', 'AI Triage Temporarily Unavailable')}
+                {t('intake:triage.aiUnavailable')}
               </h3>
             </div>
             <p className="text-sm text-warning">
               {t(
                 'intake:triage.aiUnavailableMessage',
-                'AI triage suggestions are currently unavailable. Please perform manual triage or try again later.',
               )}
             </p>
           </div>
@@ -166,13 +165,13 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
         {/* Fallback to manual triage */}
         <div className="rounded-lg bg-muted p-6">
           <h3 className="mb-4 text-lg font-semibold text-ink">
-            {t('intake:triage.manualTriage', 'Manual Triage')}
+            {t('intake:triage.manualTriage')}
           </h3>
 
           <div className="space-y-4">
             <div>
               <label className="mb-1 block text-sm font-medium text-ink">
-                {t('intake:triage.sensitivity', 'Sensitivity Level')}
+                {t('intake:triage.sensitivity')}
               </label>
               <Select
                 value={overrideValues.suggested_sensitivity || undefined}
@@ -181,20 +180,20 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder={t('intake:common.select', 'Select...')} />
+                  <SelectValue placeholder={t('intake:common.select')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="public">
-                    {t('intake:triage.sensitivityLevels.public', 'Public')}
+                    {t('intake:triage.sensitivityLevels.public')}
                   </SelectItem>
                   <SelectItem value="internal">
-                    {t('intake:triage.sensitivityLevels.internal', 'Internal')}
+                    {t('intake:triage.sensitivityLevels.internal')}
                   </SelectItem>
                   <SelectItem value="confidential">
-                    {t('intake:triage.sensitivityLevels.confidential', 'Confidential')}
+                    {t('intake:triage.sensitivityLevels.confidential')}
                   </SelectItem>
                   <SelectItem value="secret">
-                    {t('intake:triage.sensitivityLevels.secret', 'Secret')}
+                    {t('intake:triage.sensitivityLevels.secret')}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -202,7 +201,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
 
             <div>
               <label className="mb-1 block text-sm font-medium text-ink">
-                {t('intake:triage.urgency', 'Urgency')}
+                {t('intake:triage.urgency')}
               </label>
               <Select
                 value={overrideValues.suggested_urgency || undefined}
@@ -211,14 +210,14 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder={t('intake:common.select', 'Select...')} />
+                  <SelectValue placeholder={t('intake:common.select')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="low">{t('queue.urgency.low', 'Low')}</SelectItem>
-                  <SelectItem value="medium">{t('queue.urgency.medium', 'Medium')}</SelectItem>
-                  <SelectItem value="high">{t('queue.urgency.high', 'High')}</SelectItem>
+                  <SelectItem value="low">{t('queue.urgency.low')}</SelectItem>
+                  <SelectItem value="medium">{t('queue.urgency.medium')}</SelectItem>
+                  <SelectItem value="high">{t('queue.urgency.high')}</SelectItem>
                   <SelectItem value="critical">
-                    {t('queue.urgency.critical', 'Critical')}
+                    {t('queue.urgency.critical')}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -226,7 +225,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
 
             <div>
               <label className="mb-1 block text-sm font-medium text-ink">
-                {t('intake:triage.assignedUnit', 'Assigned Unit')}
+                {t('intake:triage.assignedUnit')}
               </label>
               <Input
                 type="text"
@@ -234,13 +233,13 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 onChange={(e) =>
                   setOverrideValues({ ...overrideValues, suggested_unit: e.target.value })
                 }
-                placeholder={t('intake:triage.assignedUnitPlaceholder', 'Enter unit name')}
+                placeholder={t('intake:triage.assignedUnitPlaceholder')}
               />
             </div>
 
             <div>
               <label className="mb-1 block text-sm font-medium text-ink">
-                {t('intake:triage.reason', 'Reason')}
+                {t('intake:triage.reason')}
               </label>
               {reasonError !== '' && (
                 <div
@@ -257,7 +256,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                   setOverrideReason(e.target.value)
                   if (reasonError !== '') setReasonError('')
                 }}
-                placeholder={t('intake:triage.reasonPlaceholder', 'Explain your triage decision')}
+                placeholder={t('intake:triage.reasonPlaceholder')}
                 rows={3}
                 aria-required="true"
                 aria-invalid={reasonError !== ''}
@@ -272,8 +271,8 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
               className="w-full"
             >
               {applyTriageMutation.isPending
-                ? t('intake:triage.applying', 'Applying...')
-                : t('intake:triage.applyManualTriage', 'Apply Manual Triage')}
+                ? t('intake:triage.applying')
+                : t('intake:triage.applyManualTriage')}
             </Button>
           </div>
         </div>
@@ -291,10 +290,10 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
             <Bot className="h-5 w-5 text-info" aria-hidden="true" />
             <div>
               <h3 className="font-semibold text-info">
-                {t('intake:triage.aiSuggestions', 'AI-Powered Suggestions')}
+                {t('intake:triage.aiSuggestions')}
               </h3>
               <p className="text-sm text-info">
-                {t('intake:triage.modelInfo', 'Model')}: {suggestions.modelInfo?.name || 'Unknown'}
+                {t('intake:triage.modelInfo')}: {suggestions.modelInfo?.name || 'Unknown'}
               </p>
             </div>
           </div>
@@ -315,7 +314,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
             {suggestions.requestType && (
               <div className="rounded-lg bg-muted p-4">
                 <label className="mb-1 block text-sm font-medium text-ink">
-                  {t('intake:triage.requestType', 'Request Type')}
+                  {t('intake:triage.requestType')}
                 </label>
                 <p className="font-semibold text-ink">
                   {t(`intake:form.requestType.options.${suggestions.requestType}`)}
@@ -326,7 +325,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
             {suggestions.sensitivity && (
               <div className="rounded-lg bg-muted p-4">
                 <label className="mb-1 block text-sm font-medium text-ink">
-                  {t('intake:triage.sensitivitySummary', 'Sensitivity')}
+                  {t('intake:triage.sensitivitySummary')}
                 </label>
                 <p className="font-semibold capitalize text-ink">{suggestions.sensitivity}</p>
               </div>
@@ -335,7 +334,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
             {suggestions.urgency && (
               <div className="rounded-lg bg-muted p-4">
                 <label className="mb-1 block text-sm font-medium text-ink">
-                  {t('intake:triage.urgency', 'Urgency')}
+                  {t('intake:triage.urgency')}
                 </label>
                 <p className="font-semibold text-ink">
                   {t(`queue.urgency.${suggestions.urgency}`)}
@@ -346,7 +345,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
             {suggestions.suggestedUnit && (
               <div className="rounded-lg bg-muted p-4">
                 <label className="mb-1 block text-sm font-medium text-ink">
-                  {t('intake:triage.assignedUnit', 'Assigned Unit')}
+                  {t('intake:triage.assignedUnit')}
                 </label>
                 <p className="font-semibold text-ink">{suggestions.suggestedUnit}</p>
               </div>
@@ -362,8 +361,8 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
               className="flex-1"
             >
               {applyTriageMutation.isPending
-                ? t('intake:triage.applying', 'Applying...')
-                : t('intake:triage.acceptSuggestions', 'Accept AI Suggestions')}
+                ? t('intake:triage.applying')
+                : t('intake:triage.acceptSuggestions')}
             </Button>
             <Button
               type="button"
@@ -381,20 +380,20 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
               }}
               className="flex-1"
             >
-              {t('intake:triage.override', 'Override')}
+              {t('intake:triage.override')}
             </Button>
           </div>
         </div>
       ) : (
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-ink">
-            {t('intake:triage.overrideTitle', 'Override AI Suggestions')}
+            {t('intake:triage.overrideTitle')}
           </h3>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="mb-1 block text-sm font-medium text-ink">
-                {t('intake:triage.sensitivity', 'Sensitivity Level')}
+                {t('intake:triage.sensitivity')}
               </label>
               <Select
                 value={overrideValues.suggested_sensitivity || undefined}
@@ -403,20 +402,20 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder={t('intake:common.select', 'Select...')} />
+                  <SelectValue placeholder={t('intake:common.select')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="public">
-                    {t('intake:triage.sensitivityLevels.public', 'Public')}
+                    {t('intake:triage.sensitivityLevels.public')}
                   </SelectItem>
                   <SelectItem value="internal">
-                    {t('intake:triage.sensitivityLevels.internal', 'Internal')}
+                    {t('intake:triage.sensitivityLevels.internal')}
                   </SelectItem>
                   <SelectItem value="confidential">
-                    {t('intake:triage.sensitivityLevels.confidential', 'Confidential')}
+                    {t('intake:triage.sensitivityLevels.confidential')}
                   </SelectItem>
                   <SelectItem value="secret">
-                    {t('intake:triage.sensitivityLevels.secret', 'Secret')}
+                    {t('intake:triage.sensitivityLevels.secret')}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -424,7 +423,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
 
             <div>
               <label className="mb-1 block text-sm font-medium text-ink">
-                {t('intake:triage.urgency', 'Urgency')}
+                {t('intake:triage.urgency')}
               </label>
               <Select
                 value={overrideValues.suggested_urgency || undefined}
@@ -433,14 +432,14 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder={t('intake:common.select', 'Select...')} />
+                  <SelectValue placeholder={t('intake:common.select')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="low">{t('queue.urgency.low', 'Low')}</SelectItem>
-                  <SelectItem value="medium">{t('queue.urgency.medium', 'Medium')}</SelectItem>
-                  <SelectItem value="high">{t('queue.urgency.high', 'High')}</SelectItem>
+                  <SelectItem value="low">{t('queue.urgency.low')}</SelectItem>
+                  <SelectItem value="medium">{t('queue.urgency.medium')}</SelectItem>
+                  <SelectItem value="high">{t('queue.urgency.high')}</SelectItem>
                   <SelectItem value="critical">
-                    {t('queue.urgency.critical', 'Critical')}
+                    {t('queue.urgency.critical')}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -448,7 +447,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
 
             <div className="md:col-span-2">
               <label className="mb-1 block text-sm font-medium text-ink">
-                {t('intake:triage.assignedUnit', 'Assigned Unit')}
+                {t('intake:triage.assignedUnit')}
               </label>
               <Input
                 type="text"
@@ -461,7 +460,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
 
             <div className="md:col-span-2">
               <label className="mb-1 block text-sm font-medium text-ink">
-                {t('triage.overrideReasonLabel', 'Reason for Override *')}
+                {t('triage.overrideReasonLabel')}
               </label>
               {reasonError !== '' && (
                 <div
@@ -480,7 +479,6 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 }}
                 placeholder={t(
                   'intake:triage.overrideReasonPlaceholder',
-                  'Explain why you are overriding the AI suggestions',
                 )}
                 rows={3}
                 aria-required="true"
@@ -498,8 +496,8 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
               className="flex-1"
             >
               {applyTriageMutation.isPending
-                ? t('intake:triage.applying', 'Applying...')
-                : t('intake:triage.applyOverride', 'Apply Override')}
+                ? t('intake:triage.applying')
+                : t('intake:triage.applyOverride')}
             </Button>
             <Button
               type="button"
@@ -511,7 +509,7 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                 setReasonError('')
               }}
             >
-              {t('intake:common.cancel', 'Cancel')}
+              {t('intake:common.cancel')}
             </Button>
           </div>
         </div>

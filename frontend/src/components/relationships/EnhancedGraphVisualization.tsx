@@ -249,9 +249,7 @@ const ClusterNode = memo(
           <span className="text-sm font-semibold" style={{ color: data.color }}>
             {data.count}
           </span>
-          <span className="text-xs text-muted-foreground capitalize">
-            {t(data.clusterType, data.clusterType)}
-          </span>
+          <span className="text-xs text-muted-foreground capitalize">{t(data.clusterType)}</span>
           <Button
             variant="ghost"
             size="sm"
@@ -262,7 +260,7 @@ const ClusterNode = memo(
             }}
           >
             <Expand className="h-3 w-3 me-1" />
-            {t('expand', 'Expand')}
+            {t('expand')}
           </Button>
         </div>
       </m.div>
@@ -749,7 +747,7 @@ function EnhancedGraphVisualizationInner({
           <div className="bg-background/95 p-3 rounded-lg border">
             <div className="text-xs font-semibold mb-2 flex items-center gap-2">
               <GitBranch className="h-3.5 w-3.5" />
-              {t('layout.title', 'Layout')}
+              {t('layout.title')}
             </div>
             <Select value={layout} onValueChange={(v) => setLayout(v as LayoutType)}>
               <SelectTrigger className="h-8 w-[140px] text-xs">
@@ -759,19 +757,19 @@ function EnhancedGraphVisualizationInner({
                 <SelectItem value="circular" className="text-xs">
                   <div className="flex items-center gap-2">
                     <Circle className="h-3 w-3" />
-                    {t('layout.circular', 'Circular')}
+                    {t('layout.circular')}
                   </div>
                 </SelectItem>
                 <SelectItem value="clustered" className="text-xs">
                   <div className="flex items-center gap-2">
                     <Layers className="h-3 w-3" />
-                    {t('layout.clustered', 'Clustered')}
+                    {t('layout.clustered')}
                   </div>
                 </SelectItem>
                 <SelectItem value="hierarchical" className="text-xs">
                   <div className="flex items-center gap-2">
                     <Network className="h-3 w-3" />
-                    {t('layout.hierarchical', 'Hierarchical')}
+                    {t('layout.hierarchical')}
                   </div>
                 </SelectItem>
               </SelectContent>
@@ -780,7 +778,7 @@ function EnhancedGraphVisualizationInner({
 
           {/* Filters */}
           <div className="bg-background/95 p-3 rounded-lg border">
-            <div className="text-xs font-semibold mb-2">{t('filters', 'Filters')}</div>
+            <div className="text-xs font-semibold mb-2">{t('filters')}</div>
 
             <div className="space-y-2">
               <Select value={selectedNodeType} onValueChange={setSelectedNodeType}>
@@ -790,7 +788,7 @@ function EnhancedGraphVisualizationInner({
                 <SelectContent>
                   {nodeTypes.map((type) => (
                     <SelectItem key={type} value={type} className="text-xs">
-                      {type === 'all' ? t('allTypes', 'All Types') : t(type, type)}
+                      {type === 'all' ? t('allTypes') : t(type)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -803,9 +801,7 @@ function EnhancedGraphVisualizationInner({
                 <SelectContent>
                   {relationshipTypes.map((type) => (
                     <SelectItem key={type} value={type} className="text-xs">
-                      {type === 'all'
-                        ? t('allRelationships', 'All Relationships')
-                        : t(`relationship.${type}`)}
+                      {type === 'all' ? t('allRelationships') : t(`relationship.${type}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -818,7 +814,7 @@ function EnhancedGraphVisualizationInner({
             <div className="text-xs font-semibold mb-2 flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <Layers className="h-3.5 w-3.5" />
-                {t('clusters', 'Clusters')}
+                {t('clusters')}
               </span>
               <div className="flex gap-1">
                 <TooltipProvider>
@@ -829,14 +825,12 @@ function EnhancedGraphVisualizationInner({
                         size="icon"
                         className="h-6 w-6"
                         onClick={collapseAllClusters}
-                        aria-label={t('collapseAll', 'Collapse All')}
+                        aria-label={t('collapseAll')}
                       >
                         <Shrink className="h-3 w-3" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom">
-                      {t('collapseAll', 'Collapse All')}
-                    </TooltipContent>
+                    <TooltipContent side="bottom">{t('collapseAll')}</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
                 <TooltipProvider>
@@ -847,12 +841,12 @@ function EnhancedGraphVisualizationInner({
                         size="icon"
                         className="h-6 w-6"
                         onClick={expandAllClusters}
-                        aria-label={t('expandAll', 'Expand All')}
+                        aria-label={t('expandAll')}
                       >
                         <Expand className="h-3 w-3" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom">{t('expandAll', 'Expand All')}</TooltipContent>
+                    <TooltipContent side="bottom">{t('expandAll')}</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               </div>
@@ -870,7 +864,7 @@ function EnhancedGraphVisualizationInner({
                       className="h-2.5 w-2.5 rounded-full"
                       style={{ backgroundColor: NODE_COLORS[type] || graphDefaultColor }}
                     />
-                    <span className="capitalize">{t(type, type)}</span>
+                    <span className="capitalize">{t(type)}</span>
                     <Badge variant="secondary" className="text-[10px] h-4 px-1">
                       {cluster.count}
                     </Badge>
@@ -887,8 +881,7 @@ function EnhancedGraphVisualizationInner({
 
           {/* Stats */}
           <div className="bg-background/95 p-3 rounded-lg border text-xs text-muted-foreground">
-            {filteredNodes.length} {t('nodesShown', 'nodes')} · {filteredEdges.length}{' '}
-            {t('edgesShown', 'edges')}
+            {filteredNodes.length} {t('nodesShown')} · {filteredEdges.length} {t('edgesShown')}
           </div>
         </Panel>
 
@@ -900,7 +893,7 @@ function EnhancedGraphVisualizationInner({
               variant="ghost"
               className="h-8 w-8"
               onClick={() => zoomIn()}
-              title={t('zoomIn', 'Zoom In')}
+              title={t('zoomIn')}
             >
               <ZoomIn className="h-4 w-4" />
             </Button>
@@ -909,7 +902,7 @@ function EnhancedGraphVisualizationInner({
               variant="ghost"
               className="h-8 w-8"
               onClick={() => zoomOut()}
-              title={t('zoomOut', 'Zoom Out')}
+              title={t('zoomOut')}
             >
               <ZoomOut className="h-4 w-4" />
             </Button>
@@ -918,7 +911,7 @@ function EnhancedGraphVisualizationInner({
               variant="ghost"
               className="h-8 w-8"
               onClick={() => fitView()}
-              title={t('fitView', 'Fit View')}
+              title={t('fitView')}
             >
               <Maximize2 className="h-4 w-4" />
             </Button>
@@ -931,14 +924,14 @@ function EnhancedGraphVisualizationInner({
                 size="icon"
                 variant="outline"
                 className="h-8 w-8 bg-background/95"
-                aria-label={t('settings.title', 'Display Settings')}
+                aria-label={t('settings.title')}
               >
                 <Settings2 className="h-4 w-4" />
               </Button>
             </PopoverTrigger>
             <PopoverContent side={isRTL ? 'left' : 'right'} className="w-64" align="start">
               <div className="space-y-4">
-                <h4 className="font-medium text-sm">{t('settings.title', 'Display Settings')}</h4>
+                <h4 className="font-medium text-sm">{t('settings.title')}</h4>
 
                 {/* Show Labels */}
                 <div className="flex items-center justify-between">
@@ -948,14 +941,14 @@ function EnhancedGraphVisualizationInner({
                     ) : (
                       <EyeOff className="h-3.5 w-3.5" />
                     )}
-                    {t('settings.showLabels', 'Show Labels')}
+                    {t('settings.showLabels')}
                   </Label>
                   <Switch checked={showLabels} onCheckedChange={setShowLabels} />
                 </div>
 
                 {/* Show Edge Labels */}
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm">{t('settings.showEdgeLabels', 'Edge Labels')}</Label>
+                  <Label className="text-sm">{t('settings.showEdgeLabels')}</Label>
                   <Switch checked={showEdgeLabels} onCheckedChange={setShowEdgeLabels} />
                 </div>
 
@@ -963,7 +956,7 @@ function EnhancedGraphVisualizationInner({
                 <div className="flex items-center justify-between">
                   <Label className="text-sm flex items-center gap-2">
                     <Focus className="h-3.5 w-3.5" />
-                    {t('settings.highlightConnections', 'Focus Mode')}
+                    {t('settings.highlightConnections')}
                   </Label>
                   <Switch
                     checked={highlightConnections}
@@ -973,7 +966,7 @@ function EnhancedGraphVisualizationInner({
 
                 {/* Node Size */}
                 <div className="space-y-2">
-                  <Label className="text-sm">{t('settings.nodeSize', 'Node Size')}</Label>
+                  <Label className="text-sm">{t('settings.nodeSize')}</Label>
                   <Slider
                     value={[nodeSizeMultiplier]}
                     onValueChange={([v]) => setNodeSizeMultiplier(v ?? 1)}
@@ -993,14 +986,14 @@ function EnhancedGraphVisualizationInner({
           position={isRTL ? 'top-right' : 'top-left'}
           className="bg-background/95 p-3 rounded-lg border"
         >
-          <div className="text-xs font-semibold mb-2">{t('legend', 'Legend')}</div>
+          <div className="text-xs font-semibold mb-2">{t('legend')}</div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
             {Object.entries(NODE_COLORS)
               .slice(0, 6)
               .map(([type, color]) => (
                 <div key={type} className="flex items-center gap-2">
                   <div className="h-3 w-3 rounded-full" style={{ backgroundColor: color }} />
-                  <span className="capitalize">{t(type, type)}</span>
+                  <span className="capitalize">{t(type)}</span>
                 </div>
               ))}
           </div>
@@ -1009,7 +1002,7 @@ function EnhancedGraphVisualizationInner({
             <div className="mt-3 pt-2 border-t">
               <div className="text-xs text-muted-foreground flex items-center gap-2">
                 <Focus className="h-3 w-3" />
-                {t('focusedNode', 'Click background to clear focus')}
+                {t('focusedNode')}
               </div>
             </div>
           )}

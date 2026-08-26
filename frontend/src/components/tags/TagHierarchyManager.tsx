@@ -376,7 +376,7 @@ export function TagHierarchyManager({
               <ChevronRight className={cn('size-4', isRTL && 'rotate-180')} />
             )}
             <span className="sr-only">
-              {t('common:actions.toggleSection', { defaultValue: 'Toggle section' })}
+              {t('common:actions.toggleSection')}
             </span>
           </button>
 
@@ -418,7 +418,7 @@ export function TagHierarchyManager({
                 >
                   <MoreVertical className="size-4" />
                   <span className="sr-only">
-                    {t('common:actions.openMenu', { defaultValue: 'Open menu' })}
+                    {t('common:actions.openMenu')}
                   </span>
                 </Button>
               </DropdownMenuTrigger>
@@ -657,7 +657,7 @@ export function TagHierarchyManager({
                 setFormData(defaultFormData)
               }}
             >
-              {t('common:cancel', 'Cancel')}
+              {t('common:cancel')}
             </Button>
             <Button
               onClick={editingTag ? handleUpdateTag : handleCreateTag}
@@ -668,7 +668,7 @@ export function TagHierarchyManager({
               {(createTag.isPending || updateTag.isPending) && (
                 <RefreshCw className="size-4 me-2 animate-spin" />
               )}
-              {editingTag ? t('common:save', 'Save') : t('actions.create')}
+              {editingTag ? t('common:save') : t('actions.create')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -708,7 +708,7 @@ export function TagHierarchyManager({
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
-              {t('common:cancel', 'Cancel')}
+              {t('common:cancel')}
             </Button>
             <Button variant="destructive" onClick={handleDeleteTag} disabled={deleteTag.isPending}>
               {deleteTag.isPending && <RefreshCw className="size-4 me-2 animate-spin" />}
@@ -773,14 +773,14 @@ export function TagHierarchyManager({
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsMergeDialogOpen(false)}>
-              {t('common:cancel', 'Cancel')}
+              {t('common:cancel')}
             </Button>
             {/* Stub-backed: useMergeTags resolves without a real merge.
                 Disabled for honesty until backed; handler kept for re-enable. */}
             <Button
               onClick={handleMergeTags}
               disabled
-              title={t('common:notYetAvailable', { defaultValue: 'Not yet available' })}
+              title={t('common:notYetAvailable')}
             >
               {mergeTags.isPending && <RefreshCw className="size-4 me-2 animate-spin" />}
               {t('merge.confirm')}

@@ -88,11 +88,11 @@ export function TaskCard({
           className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-muted-foreground ${isRTL ? 'text-end' : 'text-start'}`}
         >
           <div>
-            {t('tasks-page:card.created', 'Created')}: {formatDateTime(task.created_at)}
+            {t('tasks-page:card.created')}: {formatDateTime(task.created_at)}
           </div>
           {task.sla_deadline && (
             <div>
-              {t('tasks-page:card.due', 'Due')}: {formatDateTime(task.sla_deadline)}
+              {t('tasks-page:card.due')}: {formatDateTime(task.sla_deadline)}
             </div>
           )}
         </div>

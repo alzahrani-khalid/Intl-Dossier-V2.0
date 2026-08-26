@@ -409,7 +409,7 @@ export function ScheduleReportDialog({
               <Button
                 type="submit"
                 disabled
-                title={t('common:notYetAvailable', { defaultValue: 'Not yet available' })}
+                title={t('common:notYetAvailable')}
               >
                 {isSaving && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
                 {existingSchedule ? t('schedule.updateButton') : t('schedule.createButton')}

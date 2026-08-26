@@ -92,13 +92,13 @@ export function TaskDetail({
               {onEdit && (
                 <Button variant="outline" size="sm" onClick={() => onEdit(task)}>
                   <Edit className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                  {t('edit', 'Edit')}
+                  {t('edit')}
                 </Button>
               )}
               {onDelete && task.status !== 'completed' && (
                 <Button variant="destructive" size="sm" onClick={() => onDelete(task)}>
                   <Trash2 className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                  {t('delete', 'Delete')}
+                  {t('delete')}
                 </Button>
               )}
             </div>
@@ -108,16 +108,12 @@ export function TaskDetail({
         {/* Status Badges */}
         <div className="flex flex-wrap gap-2">
           <Badge className={getPriorityBadgeClass(task.priority)}>
-            {t(`assignments:priority.${task.priority}`, { defaultValue: task.priority })}
+            {t(`assignments:priority.${task.priority}`)}
           </Badge>
           <Badge className={getStatusBadgeClass(task.status)}>
-            {t(`assignments:status.${task.status}`, { defaultValue: task.status })}
+            {t(`assignments:status.${task.status}`)}
           </Badge>
-          <Badge variant="outline">
-            {t(`tasks-page:workflow_stage.${task.workflow_stage}`, {
-              defaultValue: task.workflow_stage,
-            })}
-          </Badge>
+          <Badge variant="outline">{t(`tasks-page:workflow_stage.${task.workflow_stage}`)}</Badge>
           {task.work_item_type && task.work_item_type !== 'generic' && (
             <Badge variant="outline">
               <LinkIcon className={`h-3 w-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
@@ -147,7 +143,7 @@ export function TaskDetail({
       <Card>
         <CardHeader>
           <CardTitle className={isRTL ? 'text-end' : 'text-start'}>
-            {t('tasks-page:detail.task_details', 'Task Details')}
+            {t('tasks-page:detail.task_details')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -156,9 +152,7 @@ export function TaskDetail({
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <FileText className="h-4 w-4 text-muted-foreground" />
-                <p className="text-sm font-medium">
-                  {t('tasks-page:detail.description', 'Description')}
-                </p>
+                <p className="text-sm font-medium">{t('tasks-page:detail.description')}</p>
               </div>
               <p
                 className={`text-sm text-muted-foreground whitespace-pre-wrap ${isRTL ? 'text-end' : 'text-start'}`}
@@ -174,13 +168,13 @@ export function TaskDetail({
           <div>
             <div className="flex items-center gap-2 mb-2">
               <User className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm font-medium">{t('tasks-page:detail.assignee', 'Assignee')}</p>
+              <p className="text-sm font-medium">{t('tasks-page:detail.assignee')}</p>
             </div>
             <div className="ps-6">
               <p className="text-sm text-foreground">
                 {(task as any).assignee_name ||
                   task.assignee_id ||
-                  t('tasks-page:detail.unassigned', 'Unassigned')}
+                  t('tasks-page:detail.unassigned')}
               </p>
               {(task as any).assignee_email && (
                 <a
@@ -199,15 +193,9 @@ export function TaskDetail({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm font-medium">
-                {t('tasks-page:detail.workflow_stage', 'Workflow Stage')}
-              </p>
+              <p className="text-sm font-medium">{t('tasks-page:detail.workflow_stage')}</p>
             </div>
-            <Badge variant="outline">
-              {t(`tasks-page:workflow_stage.${task.workflow_stage}`, {
-                defaultValue: task.workflow_stage,
-              })}
-            </Badge>
+            <Badge variant="outline">{t(`tasks-page:workflow_stage.${task.workflow_stage}`)}</Badge>
           </div>
 
           <Separator />
@@ -217,7 +205,7 @@ export function TaskDetail({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
-                <p className="text-sm font-medium">{t('tasks-page:detail.created', 'Created')}</p>
+                <p className="text-sm font-medium">{t('tasks-page:detail.created')}</p>
               </div>
               <p className="text-sm text-muted-foreground">{formatDateTime(task.created_at)}</p>
             </div>
@@ -225,9 +213,7 @@ export function TaskDetail({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
-                <p className="text-sm font-medium">
-                  {t('tasks-page:detail.updated', 'Last Updated')}
-                </p>
+                <p className="text-sm font-medium">{t('tasks-page:detail.updated')}</p>
               </div>
               <p className="text-sm text-muted-foreground">{formatDateTime(task.updated_at)}</p>
             </div>
@@ -236,7 +222,7 @@ export function TaskDetail({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <p className="text-sm font-medium">{t('completed', 'Completed')}</p>
+                  <p className="text-sm font-medium">{t('completed')}</p>
                 </div>
                 <p className="text-sm text-muted-foreground">{formatDateTime(task.completed_at)}</p>
               </div>
@@ -251,9 +237,7 @@ export function TaskDetail({
                 {/* Section Header */}
                 <div className="flex items-center gap-2">
                   <UserCheck className="h-4 w-4 text-muted-foreground" />
-                  <p className="text-sm font-medium">
-                    {t('tasks-page:detail.engagement', 'Engagement')}
-                  </p>
+                  <p className="text-sm font-medium">{t('tasks-page:detail.engagement')}</p>
                 </div>
 
                 {/* Engagement Title */}
@@ -267,7 +251,7 @@ export function TaskDetail({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ps-6">
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">
-                      {t('tasks-page:detail.type', 'Type')}
+                      {t('tasks-page:detail.type')}
                     </p>
                     <Badge variant="outline" className="capitalize">
                       {t(`engagements:types.${(task as any).engagement.engagement_type}`)}
@@ -275,7 +259,7 @@ export function TaskDetail({
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">
-                      {t('tasks-page:detail.date', 'Date')}
+                      {t('tasks-page:detail.date')}
                     </p>
                     <p className="text-sm">
                       {formatDayFirstYear((task as any).engagement.engagement_date)}
@@ -287,7 +271,7 @@ export function TaskDetail({
                 {(task as any).engagement.location && (
                   <div className="ps-6">
                     <p className="text-xs text-muted-foreground mb-1">
-                      {t('tasks-page:detail.location', 'Location')}
+                      {t('tasks-page:detail.location')}
                     </p>
                     <p className="text-sm text-foreground">{(task as any).engagement.location}</p>
                   </div>
@@ -297,7 +281,7 @@ export function TaskDetail({
                 {(task as any).engagement.dossier && (
                   <div className="ps-6">
                     <p className="text-xs text-muted-foreground mb-1">
-                      {t('tasks-page:detail.related_dossier', 'Related Dossier')}
+                      {t('tasks-page:detail.related_dossier')}
                     </p>
                     <Button asChild variant="outline" size="sm" className="mt-1 h-9">
                       <a href={`/dossiers/${(task as any).engagement.dossier.id}`}>
@@ -321,7 +305,7 @@ export function TaskDetail({
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <CardTitle className="flex items-center gap-2">
               <Users className="h-5 w-5" />
-              {t('tasks-page:detail.contributors', 'Contributors')}
+              {t('tasks-page:detail.contributors')}
               {contributors.length > 0 && (
                 <Badge variant="secondary" className="ms-2">
                   {contributors.length}
@@ -338,7 +322,7 @@ export function TaskDetail({
                 className="h-11"
               >
                 <UserPlus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                {t('tasks-page:detail.add_contributor', 'Add Contributor')}
+                {t('tasks-page:detail.add_contributor')}
               </Button>
             )}
           </div>
@@ -346,7 +330,7 @@ export function TaskDetail({
         <CardContent>
           {isLoadingContributors ? (
             <p className="text-sm text-muted-foreground text-start">
-              {t('tasks-page:detail.loading_contributors', 'Loading contributors...')}
+              {t('tasks-page:detail.loading_contributors')}
             </p>
           ) : (
             <ContributorsList
@@ -366,7 +350,7 @@ export function TaskDetail({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <LinkIcon className="h-5 w-5" />
-            {t('tasks-page:detail.linked_work_items', 'Linked Work Items')}
+            {t('tasks-page:detail.linked_work_items')}
             {(() => {
               // Parse source JSONB to get all linked items
               const source = task.source as any
@@ -425,7 +409,7 @@ export function TaskDetail({
                   id: item.id,
                   title:
                     title ||
-                    `${t(`assignments:work_item.${item.type}`)} (${t('tasks-page:detail.deleted', 'Deleted')})`,
+                    `${t(`assignments:work_item.${item.type}`)} (${t('tasks-page:detail.deleted')})`,
                 })
               })
             }
@@ -441,7 +425,7 @@ export function TaskDetail({
             ) : (
               <div className="rounded-lg border border-dashed p-6 text-center">
                 <p className="text-sm text-muted-foreground">
-                  {t('tasks-page:detail.no_linked_items', 'No work items linked to this task')}
+                  {t('tasks-page:detail.no_linked_items')}
                 </p>
               </div>
             )
@@ -451,10 +435,7 @@ export function TaskDetail({
           {isTaskOwner && !isCompleted && (
             <div className="pt-2 border-t mt-4 pt-4">
               <p className="text-sm text-muted-foreground mb-2">
-                {t(
-                  'tasks-page:detail.edit_linked_items',
-                  'Edit linked work items (re-link if deleted)',
-                )}
+                {t('tasks-page:detail.edit_linked_items')}
               </p>
               <WorkItemLinker
                 selectedItems={(() => {
@@ -501,7 +482,7 @@ export function TaskDetail({
                         id: item.id,
                         title:
                           title ||
-                          `${t(`assignments:work_item.${item.type}`)} (${t('tasks-page:detail.deleted', 'Deleted')})`,
+                          `${t(`assignments:work_item.${item.type}`)} (${t('tasks-page:detail.deleted')})`,
                       })
                     })
                   }

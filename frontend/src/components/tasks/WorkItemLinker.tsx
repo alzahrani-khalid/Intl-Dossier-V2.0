@@ -236,7 +236,7 @@ export function WorkItemLinker({
             {/* Search results */}
             {isSearching && (
               <p className="text-sm text-muted-foreground text-start">
-                {t('common:loading', 'Loading...')}
+                {t('common:loading')}
               </p>
             )}
 

@@ -322,7 +322,7 @@ export function InfluenceNetworkGraph({
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           <p className="text-sm text-muted-foreground">
-            {t('loading_network', 'Loading network...')}
+            {t('loading_network')}
           </p>
         </div>
       </div>
@@ -338,9 +338,9 @@ export function InfluenceNetworkGraph({
       >
         <div className="text-center px-4">
           <Users className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
-          <p className="font-medium mb-1">{t('no_network_data', 'No network data available')}</p>
+          <p className="font-medium mb-1">{t('no_network_data')}</p>
           <p className="text-sm text-muted-foreground">
-            {t('no_network_hint', 'Select a stakeholder to view their influence network')}
+            {t('no_network_hint')}
           </p>
         </div>
       </div>
@@ -388,19 +388,19 @@ export function InfluenceNetworkGraph({
             <Card className="p-3 bg-background/90 backdrop-blur-sm">
               <div className="text-xs space-y-1">
                 <div className="flex justify-between gap-4">
-                  <span className="text-muted-foreground">{t('nodes', 'Nodes')}:</span>
+                  <span className="text-muted-foreground">{t('nodes')}:</span>
                   <span className="font-medium">{data.statistics.total_nodes}</span>
                 </div>
                 <div className="flex justify-between gap-4">
-                  <span className="text-muted-foreground">{t('edges', 'Connections')}:</span>
+                  <span className="text-muted-foreground">{t('edges')}:</span>
                   <span className="font-medium">{data.statistics.total_edges}</span>
                 </div>
                 <div className="flex justify-between gap-4">
-                  <span className="text-muted-foreground">{t('avg_connections', 'Avg Conn')}:</span>
+                  <span className="text-muted-foreground">{t('avg_connections')}:</span>
                   <span className="font-medium">{data.statistics.avg_connections.toFixed(1)}</span>
                 </div>
                 <div className="flex justify-between gap-4">
-                  <span className="text-muted-foreground">{t('density', 'Density')}:</span>
+                  <span className="text-muted-foreground">{t('density')}:</span>
                   <span className="font-medium">{(data.statistics.density * 100).toFixed(1)}%</span>
                 </div>
               </div>
@@ -412,7 +412,7 @@ export function InfluenceNetworkGraph({
         <Panel position="bottom-right" className={isRTL ? 'start-4 end-auto' : ''}>
           <Card className="p-3 bg-background/90 backdrop-blur-sm">
             <div className="text-xs space-y-2">
-              <p className="font-medium mb-2">{t('legend', 'Legend')}</p>
+              <p className="font-medium mb-2">{t('legend')}</p>
               <div className="grid grid-cols-2 gap-2">
                 {(Object.entries(NODE_COLORS) as [InfluenceTier, string][]).map(([tier, color]) => (
                   <div key={tier} className="flex items-center gap-1.5">

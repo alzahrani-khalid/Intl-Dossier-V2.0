@@ -51,7 +51,7 @@ export function ContributorsList({
         data-testid="contributors-list"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        {t('tasks-page:contributors.noContributors', 'No contributors yet')}
+        {t('tasks-page:contributors.noContributors')}
       </div>
     )
   }
@@ -85,7 +85,7 @@ export function ContributorsList({
               size="icon"
               className="size-8 ms-auto"
               onClick={() => onRemove(contributor.id)}
-              aria-label={t('tasks-page:contributors.removeContributor', 'Remove contributor')}
+              aria-label={t('tasks-page:contributors.removeContributor')}
             >
               <X className="size-4" />
             </Button>

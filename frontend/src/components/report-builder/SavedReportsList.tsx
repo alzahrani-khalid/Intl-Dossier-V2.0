@@ -250,7 +250,7 @@ export function SavedReportsList({
                           >
                             <MoreVertical className="h-4 w-4" />
                             <span className="sr-only">
-                              {t('common:actions.openMenu', { defaultValue: 'Open menu' })}
+                              {t('common:actions.openMenu')}
                             </span>
                           </Button>
                         </DropdownMenuTrigger>

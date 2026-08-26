@@ -46,11 +46,11 @@ const DialogContent = React.forwardRef<
       >
         {children}
         <DialogPrimitive.Close
-          aria-label={t('common:close', { defaultValue: 'Close' })}
+          aria-label={t('common:close')}
           className="tb-icon-btn absolute end-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] text-[var(--ink-mute)] transition-colors hover:bg-[var(--line-soft)] hover:text-[var(--ink)] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:pointer-events-none"
         >
           <Cross2Icon className="h-4 w-4" />
-          <span className="sr-only">{t('common:close', { defaultValue: 'Close' })}</span>
+          <span className="sr-only">{t('common:close')}</span>
         </DialogPrimitive.Close>
       </DialogPrimitive.Content>
     </DialogPortal>
