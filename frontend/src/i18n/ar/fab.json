@@ -15,7 +15,7 @@
   "speedDialActions": {
     "newDossier": "ملف جديد",
     "newEngagement": "مشاركة جديدة",
-    "newBrief": "موجز جديد",
+    "newBrief": "ملخص جديد",
     "newEvent": "حدث جديد",
     "newTask": "مهمة جديدة",
     "newCommitment": "التزام جديد",
@@ -45,7 +45,7 @@
     },
     "briefDetail": {
       "primary": "إضافة تعليق",
-      "description": "إضافة تعليق على هذا الموجز"
+      "description": "إضافة تعليق على هذا الملخص"
     },
     "calendar": {
       "primary": "حدث جديد",
