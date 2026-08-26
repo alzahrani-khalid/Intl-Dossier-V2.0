@@ -1,5 +1,9 @@
 # Ruling P99-99 — Dossier-A rerun, classifier truth, and brief carry-forward
 
+> **Topology superseded by RULING-P99-100.** The measured findings and repair laws below remain
+> binding, but the compiler rejected their combined 7x6 task unit. P99-27 now owns the instrument
+> repair and P99-44 owns the dependent Arabic-value/dossier-A sweep.
+
 ## Decision
 
 Do not run `tickmarkr approve` and do not run `tickmarkr approve --uphold` against the saturated run-0042
