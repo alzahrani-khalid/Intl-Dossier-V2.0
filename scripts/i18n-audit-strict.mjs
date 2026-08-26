@@ -53,15 +53,25 @@ const parseArgs = (argv) => {
 
 const normalizePath = (value) => value.split(sep).join('/').replace(/^\.\//, '').replace(/\/$/, '')
 
+const isProductionSourcePath = (value, { isDirectory = false } = {}) => {
+  const segments = normalizePath(value).split('/')
+  const fileName = segments.at(-1) ?? ''
+  return !segments.includes('__tests__') && (isDirectory || !/\.test\./.test(fileName))
+}
+
 const walk = (directory, { excludeI18n = true } = {}, output = []) => {
   for (const entry of readdirSync(directory).sort()) {
     const path = join(directory, entry)
     const stat = statSync(path)
     if (stat.isDirectory()) {
-      if (entry !== 'node_modules' && (!excludeI18n || entry !== 'i18n')) {
+      if (
+        entry !== 'node_modules' &&
+        (!excludeI18n || entry !== 'i18n') &&
+        isProductionSourcePath(path, { isDirectory: true })
+      ) {
         walk(path, { excludeI18n }, output)
       }
-    } else if (/\.tsx?$/.test(entry)) {
+    } else if (/\.tsx?$/.test(entry) && isProductionSourcePath(path)) {
       output.push(path)
     }
   }
@@ -303,6 +313,11 @@ const bindingPopulation = (files) => {
 }
 
 const runSelfCheck = () => {
+  const sourcePolicyFixture = {
+    production: 'self-check/FeaturePanel.tsx',
+    colocatedTest: 'self-check/FeaturePanel.test.tsx',
+    testsDirectory: 'self-check/__tests__/FeaturePanel.tsx',
+  }
   const fixtureSources = [
     {
       file: 'self-check/string-binding.tsx',
@@ -361,6 +376,9 @@ t('bareOnly', 'Default')
   const enOnly = audit.assessed.find((site) => site.key === 'enOnly')
   const arOnly = audit.assessed.find((site) => site.key === 'arOnly')
   const checks = {
+    productionSourceIncluded: isProductionSourcePath(sourcePolicyFixture.production),
+    testFileExcluded: !isProductionSourcePath(sourcePolicyFixture.colocatedTest),
+    testsDirectoryExcluded: !isProductionSourcePath(sourcePolicyFixture.testsDirectory),
     oneLinePositiveControl: kSites.some((site) => site.line === 3),
     wrappedPositiveControl: kSites.some((site) => site.line === 4),
     stringBindingShape:
@@ -404,6 +422,12 @@ t('bareOnly', 'Default')
     fixture: {
       twoArgTotal: audit.twoArgTotal,
       rawKeyTotal: audit.rawKeyTotal,
+      sourcePolicy: Object.fromEntries(
+        Object.entries(sourcePolicyFixture).map(([kind, path]) => [
+          kind,
+          { path, included: isProductionSourcePath(path) },
+        ]),
+      ),
       bindingShapes: Object.fromEntries(
         Object.entries(bindings).map(([file, binding]) => [file, binding.shapes]),
       ),
