@@ -207,7 +207,7 @@ export function SLAPolicyForm({
                     <SelectItem value="all">{t('policies.allTypes')}</SelectItem>
                     {REQUEST_TYPES.map((type) => (
                       <SelectItem key={type} value={type}>
-                        {t(`types.${type}`, type)}
+                        {t(`types.${type}`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -224,7 +224,7 @@ export function SLAPolicyForm({
                     <SelectItem value="all">{t('policies.allSensitivities')}</SelectItem>
                     {SENSITIVITIES.map((s) => (
                       <SelectItem key={s} value={s}>
-                        {t(`sensitivity.${s}`, s)}
+                        {t(`sensitivity.${s}`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -241,7 +241,7 @@ export function SLAPolicyForm({
                     <SelectItem value="all">{t('policies.allUrgencies')}</SelectItem>
                     {URGENCIES.map((u) => (
                       <SelectItem key={u} value={u}>
-                        {t(`urgency.${u}`, u)}
+                        {t(`urgency.${u}`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -258,7 +258,7 @@ export function SLAPolicyForm({
                     <SelectItem value="all">{t('policies.allPriorities')}</SelectItem>
                     {PRIORITIES.map((p) => (
                       <SelectItem key={p} value={p}>
-                        {t(`priority.${p}`, p)}
+                        {t(`priority.${p}`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -406,7 +406,7 @@ export function SLAPolicyForm({
                             <SelectContent>
                               {ESCALATION_ROLES.map((role) => (
                                 <SelectItem key={role} value={role}>
-                                  {t(`roles.${role}`, role)}
+                                  {t(`roles.${role}`)}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -453,7 +453,7 @@ export function SLAPolicyForm({
                   size="sm"
                   onClick={() => toggleNotificationChannel(channel)}
                 >
-                  {t(`channels.${channel}`, channel)}
+                  {t(`channels.${channel}`)}
                 </Button>
               ))}
             </div>

@@ -249,9 +249,7 @@ const ClusterNode = memo(
           <span className="text-sm font-semibold" style={{ color: data.color }}>
             {data.count}
           </span>
-          <span className="text-xs text-muted-foreground capitalize">
-            {t(data.clusterType, data.clusterType)}
-          </span>
+          <span className="text-xs text-muted-foreground capitalize">{t(data.clusterType)}</span>
           <Button
             variant="ghost"
             size="sm"
@@ -790,7 +788,7 @@ function EnhancedGraphVisualizationInner({
                 <SelectContent>
                   {nodeTypes.map((type) => (
                     <SelectItem key={type} value={type} className="text-xs">
-                      {type === 'all' ? t('allTypes') : t(type, type)}
+                      {type === 'all' ? t('allTypes') : t(type)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -803,9 +801,7 @@ function EnhancedGraphVisualizationInner({
                 <SelectContent>
                   {relationshipTypes.map((type) => (
                     <SelectItem key={type} value={type} className="text-xs">
-                      {type === 'all'
-                        ? t('allRelationships')
-                        : t(`relationship.${type}`)}
+                      {type === 'all' ? t('allRelationships') : t(`relationship.${type}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -834,9 +830,7 @@ function EnhancedGraphVisualizationInner({
                         <Shrink className="h-3 w-3" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom">
-                      {t('collapseAll')}
-                    </TooltipContent>
+                    <TooltipContent side="bottom">{t('collapseAll')}</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
                 <TooltipProvider>
@@ -870,7 +864,7 @@ function EnhancedGraphVisualizationInner({
                       className="h-2.5 w-2.5 rounded-full"
                       style={{ backgroundColor: NODE_COLORS[type] || graphDefaultColor }}
                     />
-                    <span className="capitalize">{t(type, type)}</span>
+                    <span className="capitalize">{t(type)}</span>
                     <Badge variant="secondary" className="text-[10px] h-4 px-1">
                       {cluster.count}
                     </Badge>
@@ -887,8 +881,7 @@ function EnhancedGraphVisualizationInner({
 
           {/* Stats */}
           <div className="bg-background/95 p-3 rounded-lg border text-xs text-muted-foreground">
-            {filteredNodes.length} {t('nodesShown')} · {filteredEdges.length}{' '}
-            {t('edgesShown')}
+            {filteredNodes.length} {t('nodesShown')} · {filteredEdges.length} {t('edgesShown')}
           </div>
         </Panel>
 
@@ -1000,7 +993,7 @@ function EnhancedGraphVisualizationInner({
               .map(([type, color]) => (
                 <div key={type} className="flex items-center gap-2">
                   <div className="h-3 w-3 rounded-full" style={{ backgroundColor: color }} />
-                  <span className="capitalize">{t(type, type)}</span>
+                  <span className="capitalize">{t(type)}</span>
                 </div>
               ))}
           </div>

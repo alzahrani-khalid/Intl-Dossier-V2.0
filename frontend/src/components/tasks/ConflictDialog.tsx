@@ -15,6 +15,21 @@ import { useDirection } from '@/hooks/useDirection'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 
+const TASK_CONFLICT_FIELD_KEYS = [
+  'title',
+  'description',
+  'assignee_id',
+  'priority',
+  'workflow_stage',
+  'status',
+  'sla_deadline',
+] as const satisfies readonly (keyof Task)[]
+
+type TaskConflictField = (typeof TASK_CONFLICT_FIELD_KEYS)[number]
+
+const isTaskConflictField = (field: string): field is TaskConflictField =>
+  (TASK_CONFLICT_FIELD_KEYS as readonly string[]).includes(field)
+
 interface ConflictDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -59,7 +74,8 @@ export function ConflictDialog({
   const { isRTL } = useDirection()
   // Get list of conflicting fields
   const conflictingFields = Object.keys(localChanges).filter(
-    (key) => serverData && localChanges[key as keyof Task] !== serverData[key as keyof Task],
+    (key): key is TaskConflictField =>
+      isTaskConflictField(key) && !!serverData && localChanges[key] !== serverData[key],
   )
 
   return (
