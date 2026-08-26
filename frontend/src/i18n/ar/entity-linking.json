@@ -20,7 +20,7 @@
   },
   "entityTypes": {
     "dossier": "ملف",
-    "position": "منصب",
+    "position": "موقف",
     "person": "شخص",
     "engagement": "لقاء",
     "commitment": "التزام"

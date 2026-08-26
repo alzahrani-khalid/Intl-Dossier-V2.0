@@ -103,9 +103,9 @@
   },
 
   "briefFields": {
-    "title": "عنوان الموجز",
+    "title": "عنوان الملخص",
     "summary": "الملخص التنفيذي",
-    "content": "محتوى الموجز"
+    "content": "محتوى الملخص"
   },
 
   "engagementFields": {

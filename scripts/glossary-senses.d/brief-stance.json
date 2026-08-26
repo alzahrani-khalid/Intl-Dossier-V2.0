@@ -1,0 +1,639 @@
+{
+  "schemaVersion": 1,
+  "decision": "D-18 brief artifact = ملخص, briefing session/preparation = إحاطة, and stance = موقف; singular and plural office survivors are classified by sense.",
+  "slice": [
+    "frontend/src/i18n/ar/activity-feed.json",
+    "frontend/src/i18n/ar/admin.json",
+    "frontend/src/i18n/ar/agenda.json",
+    "frontend/src/i18n/ar/ai-admin.json",
+    "frontend/src/i18n/ar/ai-brief.json",
+    "frontend/src/i18n/ar/audit-logs.json",
+    "frontend/src/i18n/ar/calendar-sync.json",
+    "frontend/src/i18n/ar/citations.json",
+    "frontend/src/i18n/ar/common.json",
+    "frontend/src/i18n/ar/contacts.json",
+    "frontend/src/i18n/ar/copilot.json",
+    "frontend/src/i18n/ar/dashboard-widgets.json",
+    "frontend/src/i18n/ar/delegation.json",
+    "frontend/src/i18n/ar/dossier-context.json",
+    "frontend/src/i18n/ar/dossier-drawer.json",
+    "frontend/src/i18n/ar/dossier.json",
+    "frontend/src/i18n/ar/elected-official-wizard.json",
+    "frontend/src/i18n/ar/elected-officials.json",
+    "frontend/src/i18n/ar/empty-states.json",
+    "frontend/src/i18n/ar/engagement-briefs.json",
+    "frontend/src/i18n/ar/engagements.json",
+    "frontend/src/i18n/ar/entity-comparison.json",
+    "frontend/src/i18n/ar/entity-linking.json",
+    "frontend/src/i18n/ar/fab.json",
+    "frontend/src/i18n/ar/field-permissions.json",
+    "frontend/src/i18n/ar/form-wizard.json",
+    "frontend/src/i18n/ar/graph.json",
+    "frontend/src/i18n/ar/guided-tours.json",
+    "frontend/src/i18n/ar/intake.json",
+    "frontend/src/i18n/ar/keyboard-shortcuts.json",
+    "frontend/src/i18n/ar/legislation.json",
+    "frontend/src/i18n/ar/multilingual.json",
+    "frontend/src/i18n/ar/onboarding.json",
+    "frontend/src/i18n/ar/persons.json",
+    "frontend/src/i18n/ar/positions.json",
+    "frontend/src/i18n/ar/preview-layouts.json",
+    "frontend/src/i18n/ar/progressive-disclosure.json",
+    "frontend/src/i18n/ar/progressive-form.json",
+    "frontend/src/i18n/ar/settings.json",
+    "frontend/src/i18n/ar/stakeholder-interactions.json",
+    "frontend/src/i18n/ar/tags.json",
+    "frontend/src/i18n/ar/workflow-automation.json",
+    "frontend/src/i18n/ar/workspace.json"
+  ],
+  "rows": [
+    {
+      "term": "موجز",
+      "file": "ai-brief.json",
+      "keyPath": "fallback.summaryPlaceholder",
+      "sense": "concise-adjective",
+      "reason": "موجز is adjectival here (concise), not the brief artifact noun."
+    },
+    {
+      "term": "موجز",
+      "file": "calendar-sync.json",
+      "keyPath": "sections.icalFeeds",
+      "sense": "calendar-feed",
+      "reason": "The iCal key names a calendar feed, not a brief artifact."
+    },
+    {
+      "term": "موجز",
+      "file": "calendar-sync.json",
+      "keyPath": "ical.add",
+      "sense": "calendar-feed",
+      "reason": "The iCal key names a calendar feed, not a brief artifact."
+    },
+    {
+      "term": "موجز",
+      "file": "calendar-sync.json",
+      "keyPath": "ical.addTitle",
+      "sense": "calendar-feed",
+      "reason": "The iCal key names a calendar feed, not a brief artifact."
+    },
+    {
+      "term": "موجز",
+      "file": "calendar-sync.json",
+      "keyPath": "ical.addDescription",
+      "sense": "calendar-feed",
+      "reason": "The iCal key names a calendar feed, not a brief artifact."
+    },
+    {
+      "term": "موجز",
+      "file": "calendar-sync.json",
+      "keyPath": "ical.feedUrl",
+      "sense": "calendar-feed",
+      "reason": "The iCal key names a calendar feed, not a brief artifact."
+    },
+    {
+      "term": "موجز",
+      "file": "calendar-sync.json",
+      "keyPath": "ical.feedName",
+      "sense": "calendar-feed",
+      "reason": "The iCal key names a calendar feed, not a brief artifact."
+    },
+    {
+      "term": "موجز",
+      "file": "calendar-sync.json",
+      "keyPath": "ical.noFeeds",
+      "sense": "calendar-feed",
+      "reason": "The iCal key names a calendar feed, not a brief artifact."
+    },
+    {
+      "term": "موجز",
+      "file": "calendar-sync.json",
+      "keyPath": "ical.addFirst",
+      "sense": "calendar-feed",
+      "reason": "The iCal key names a calendar feed, not a brief artifact."
+    },
+    {
+      "term": "موجز",
+      "file": "copilot.json",
+      "keyPath": "composer.placeholder",
+      "sense": "digest-publication",
+      "reason": "The key and English value name a digest publication, not a brief artifact."
+    },
+    {
+      "term": "موجز",
+      "file": "copilot.json",
+      "keyPath": "empty.body",
+      "sense": "digest-publication",
+      "reason": "The key and English value name a digest publication, not a brief artifact."
+    },
+    {
+      "term": "موجز",
+      "file": "copilot.json",
+      "keyPath": "confirm.title.publish_digest",
+      "sense": "digest-publication",
+      "reason": "The key and English value name a digest publication, not a brief artifact."
+    },
+    {
+      "term": "موجز",
+      "file": "copilot.json",
+      "keyPath": "confirm.intro.publish_digest",
+      "sense": "digest-publication",
+      "reason": "The key and English value name a digest publication, not a brief artifact."
+    },
+    {
+      "term": "موجز",
+      "file": "dashboard-widgets.json",
+      "keyPath": "digest.refresh",
+      "sense": "digest-publication",
+      "reason": "The key and English value name a digest publication, not a brief artifact."
+    },
+    {
+      "term": "موجز",
+      "file": "dashboard-widgets.json",
+      "keyPath": "digest.empty.body",
+      "sense": "digest-publication",
+      "reason": "The key and English value name a digest publication, not a brief artifact."
+    },
+    {
+      "term": "موجز",
+      "file": "dashboard-widgets.json",
+      "keyPath": "digest.error",
+      "sense": "digest-publication",
+      "reason": "The key and English value name a digest publication, not a brief artifact."
+    },
+    {
+      "term": "موجز",
+      "file": "intake.json",
+      "keyPath": "form.title.placeholder",
+      "sense": "concise-adjective",
+      "reason": "موجز is adjectival here (concise), not the brief artifact noun."
+    },
+    {
+      "term": "موجز",
+      "file": "progressive-disclosure.json",
+      "keyPath": "pages.dossiers.empty.advanced.briefs.content",
+      "sense": "concise-adjective",
+      "reason": "موجز is adjectival here (concise), not the brief artifact noun."
+    },
+    {
+      "term": "موجز",
+      "file": "progressive-form.json",
+      "keyPath": "demo.fields.bioHelp",
+      "sense": "concise-adjective",
+      "reason": "موجز is adjectival here (concise), not the brief artifact noun."
+    },
+    {
+      "term": "موجز",
+      "file": "settings.json",
+      "keyPath": "profile.bioPlaceholder",
+      "sense": "concise-adjective",
+      "reason": "موجز is adjectival here (concise), not the brief artifact noun."
+    },
+    {
+      "term": "موجز",
+      "file": "stakeholder-interactions.json",
+      "keyPath": "dialog.summary_en_placeholder",
+      "sense": "concise-adjective",
+      "reason": "موجز is adjectival here (concise), not the brief artifact noun."
+    },
+    {
+      "term": "موجز",
+      "file": "stakeholder-interactions.json",
+      "keyPath": "dialog.summary_ar_placeholder",
+      "sense": "concise-adjective",
+      "reason": "موجز is adjectival here (concise), not the brief artifact noun."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "title",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "subtitle",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "newBriefingBook",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "myBriefingBooks",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "templates.defaultTemplates.executive.name",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "templates.defaultTemplates.travelBrief.name",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "builder.title",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "builder.discard.description",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "builder.configuration.title",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "builder.configuration.titlePlaceholder",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "builder.configuration.descriptionPlaceholder",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "generation.title",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "list.title",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "list.empty",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "list.emptyDescription",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "list.createFirst",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "list.noFilterMatch",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "actions.generate",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "success.created",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "success.generated",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "success.downloaded",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "success.deleted",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "errors.generationFailed",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "errors.downloadFailed",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "errors.deleteFailed",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "errors.loadFailed",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "confirmDelete.title",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "briefing-books.json",
+      "keyPath": "confirmDelete.message",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "common.json",
+      "keyPath": "navigation.briefingBooks",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "common.json",
+      "keyPath": "wordAssistant.prompts.briefPrompt",
+      "sense": "briefing-note-for-session",
+      "reason": "The prompt requests a briefing note for session preparation, not the product brief artifact."
+    },
+    {
+      "term": "إحاطة",
+      "file": "contextual-suggestions.json",
+      "keyPath": "seasonal.unGeneralAssembly.description",
+      "sense": "briefing-material",
+      "reason": "The value names preparation materials for a diplomatic session, not a brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "dossier-export.json",
+      "keyPath": "title",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "dossier-export.json",
+      "keyPath": "description",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "dossier-export.json",
+      "keyPath": "format.html",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "dossier-export.json",
+      "keyPath": "format.html_info",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "dossier-export.json",
+      "keyPath": "newTab.generating",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "dossier-export.json",
+      "keyPath": "popupBlocked",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "dossier-export.json",
+      "keyPath": "success",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "dossier-overview.json",
+      "keyPath": "documentType.brief",
+      "sense": "briefing-document-type",
+      "reason": "This legacy document-type label names a briefing document, not the governed brief artifact entity."
+    },
+    {
+      "term": "إحاطة",
+      "file": "dossier-shell.json",
+      "keyPath": "header.exportTooltip",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "dossier.json",
+      "keyPath": "action.exportTooltip",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "keyboard-shortcuts.json",
+      "keyPath": "quickActions.briefingBooks",
+      "sense": "briefing-book-or-material",
+      "reason": "The path names a briefing book or its session-preparation materials, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "notification-center.json",
+      "keyPath": "preview.examples.assignment.message",
+      "sense": "briefing-document-for-session",
+      "reason": "The assignment requests a document for an upcoming bilateral meeting, so this is session preparation."
+    },
+    {
+      "term": "إحاطة",
+      "file": "operations-hub.json",
+      "keyPath": "stages.briefing",
+      "sense": "briefing-session-or-stage",
+      "reason": "The operations stage is a briefing session stage, not a brief artifact."
+    },
+    {
+      "term": "إحاطة",
+      "file": "positions.json",
+      "keyPath": "briefing.title",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "positions.json",
+      "keyPath": "briefing.description",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "positions.json",
+      "keyPath": "briefing.generate",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "positions.json",
+      "keyPath": "briefing.generating",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "positions.json",
+      "keyPath": "briefing.completed",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "positions.json",
+      "keyPath": "briefing.error",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "positions.json",
+      "keyPath": "briefing.noPositions",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "positions.json",
+      "keyPath": "analytics.briefingPacks",
+      "sense": "briefing-pack",
+      "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "dossier.json",
+      "keyPath": "addToDossier.form.documentTypes.briefing",
+      "sense": "briefing-document-type",
+      "reason": "The upload form explicitly labels a Briefing document type, not the governed brief artifact entity."
+    },
+    {
+      "term": "مناصب",
+      "file": "contacts.json",
+      "keyPath": "contactDirectory.documentExtraction.info_alert",
+      "sense": "office-post-or-job-title",
+      "reason": "The import extracts people's job positions alongside names and contact details, not policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "contextual-help.json",
+      "keyPath": "dossier.type.types.person",
+      "sense": "office-post-or-job-title",
+      "reason": "A person's position history is an employment and office history, not a set of policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "dossier.json",
+      "keyPath": "typeDescription.elected_official",
+      "sense": "office-post-or-job-title",
+      "reason": "The elected-official description refers to offices held and terms of office, not policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "dossier.json",
+      "keyPath": "sections.person.positionsHeld",
+      "sense": "office-post-or-job-title",
+      "reason": "Positions held in a professional profile are offices or jobs, not policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "dossier.json",
+      "keyPath": "sections.person.positionsHeldEmpty",
+      "sense": "office-post-or-job-title",
+      "reason": "Positions held in a professional profile are offices or jobs, not policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "dossier.json",
+      "keyPath": "sections.person.positionsHeldPlaceholder",
+      "sense": "office-post-or-job-title",
+      "reason": "Positions held in a professional profile are offices or jobs, not policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "duplicate-detection.json",
+      "keyPath": "transfer_roles",
+      "sense": "office-post-or-job-title",
+      "reason": "Transferred roles and job positions are employment records, not policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "elected-officials.json",
+      "keyPath": "filters.allOfficeTypes",
+      "sense": "office-post-or-job-title",
+      "reason": "The form option explicitly refers to elected-office types, not policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "persons.json",
+      "keyPath": "stats.roles",
+      "sense": "office-post-or-job-title",
+      "reason": "The person's roles section lists offices or jobs, not policy stances."
+    }
+  ]
+}
