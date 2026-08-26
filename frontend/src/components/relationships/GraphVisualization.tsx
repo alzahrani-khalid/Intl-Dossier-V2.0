@@ -116,7 +116,7 @@ const ZoomControls = memo(({ isRTL }: { isRTL: boolean }) => {
         variant="outline"
         className="h-8 w-8 p-0"
         onClick={() => zoomIn()}
-        title={t('graph:zoomIn', 'Zoom In')}
+        title={t('graph:zoomIn')}
       >
         <ZoomIn className="h-4 w-4" />
       </Button>
@@ -125,7 +125,7 @@ const ZoomControls = memo(({ isRTL }: { isRTL: boolean }) => {
         variant="outline"
         className="h-8 w-8 p-0"
         onClick={() => zoomOut()}
-        title={t('graph:zoomOut', 'Zoom Out')}
+        title={t('graph:zoomOut')}
       >
         <ZoomOut className="h-4 w-4" />
       </Button>
@@ -134,7 +134,7 @@ const ZoomControls = memo(({ isRTL }: { isRTL: boolean }) => {
         variant="outline"
         className="h-8 w-8 p-0"
         onClick={() => fitView()}
-        title={t('graph:fitView', 'Fit View')}
+        title={t('graph:fitView')}
       >
         <Maximize2 className="h-4 w-4" />
       </Button>
@@ -287,14 +287,12 @@ function GraphVisualizationInner({
           >
             <div className="flex items-center gap-2 text-sm font-semibold">
               <Filter className="h-4 w-4" />
-              <span>{t('graph:filters', 'Filters')}</span>
+              <span>{t('graph:filters')}</span>
             </div>
 
             {enableTypeFilter && (
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs text-muted-foreground">
-                  {t('graph:nodeType', 'Node Type')}
-                </label>
+                <label className="text-xs text-muted-foreground">{t('graph:nodeType')}</label>
                 <Select value={selectedNodeType} onValueChange={setSelectedNodeType}>
                   <SelectTrigger className="h-8 w-[160px] text-xs">
                     <SelectValue />
@@ -302,9 +300,7 @@ function GraphVisualizationInner({
                   <SelectContent>
                     {availableNodeTypes.map((type) => (
                       <SelectItem key={type} value={type} className="text-xs">
-                        {type === 'all'
-                          ? t('graph:allTypes', 'All Types')
-                          : type.replace(/_/g, ' ')}
+                        {type === 'all' ? t('graph:allTypes') : type.replace(/_/g, ' ')}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -315,7 +311,7 @@ function GraphVisualizationInner({
             {enableRelationshipFilter && (
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs text-muted-foreground">
-                  {t('graph:relationshipType', 'Relationship')}
+                  {t('graph:relationshipType')}
                 </label>
                 <Select
                   value={selectedRelationshipType}
@@ -327,9 +323,7 @@ function GraphVisualizationInner({
                   <SelectContent>
                     {relationshipTypes.map((type) => (
                       <SelectItem key={type} value={type} className="text-xs">
-                        {type === 'all'
-                          ? t('graph:allRelationships', 'All Relationships')
-                          : type.replace(/_/g, ' ')}
+                        {type === 'all' ? t('graph:allRelationships') : type.replace(/_/g, ' ')}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -338,8 +332,8 @@ function GraphVisualizationInner({
             )}
 
             <div className="text-xs text-muted-foreground pt-1 border-t">
-              {filteredNodes.length} {t('graph:nodesShown', 'nodes')} · {filteredEdges.length}{' '}
-              {t('graph:edgesShown', 'edges')}
+              {filteredNodes.length} {t('graph:nodesShown')} · {filteredEdges.length}{' '}
+              {t('graph:edgesShown')}
             </div>
           </Panel>
         )}
@@ -349,35 +343,35 @@ function GraphVisualizationInner({
           className="bg-background/95 p-3 rounded-lg border"
         >
           <div className="flex flex-col gap-2">
-            <div className="text-sm font-semibold">{t('graph:legend', 'Legend')}</div>
+            <div className="text-sm font-semibold">{t('graph:legend')}</div>
             <div className="flex flex-col gap-1 text-xs">
               <div className="flex items-center gap-2">
                 <div
                   className="h-3 w-3 rounded-full"
                   style={{ backgroundColor: getNodeColor('country') }}
                 />
-                <span>{t('graph:country', 'Country')}</span>
+                <span>{t('graph:country')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div
                   className="h-3 w-3 rounded-full"
                   style={{ backgroundColor: getNodeColor('organization') }}
                 />
-                <span>{t('graph:organization', 'Organization')}</span>
+                <span>{t('graph:organization')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div
                   className="h-3 w-3 rounded-full"
                   style={{ backgroundColor: getNodeColor('individual') }}
                 />
-                <span>{t('graph:individual', 'Individual')}</span>
+                <span>{t('graph:individual')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div
                   className="h-3 w-3 rounded-full"
                   style={{ backgroundColor: getNodeColor('forum') }}
                 />
-                <span>{t('graph:forum', 'Forum')}</span>
+                <span>{t('graph:forum')}</span>
               </div>
             </div>
           </div>

@@ -81,19 +81,19 @@ export function PullToRefreshIndicator({
     switch (status) {
       case 'pulling':
         return {
-          text: t('pullToRefresh.pullToRefresh', 'Pull to refresh'),
+          text: t('pullToRefresh.pullToRefresh'),
           icon: RefreshCw,
           iconClass: '',
         }
       case 'ready':
         return {
-          text: t('pullToRefresh.releaseToRefresh', 'Release to refresh'),
+          text: t('pullToRefresh.releaseToRefresh'),
           icon: RefreshCw,
           iconClass: 'text-primary',
         }
       case 'refreshing':
         return {
-          text: t('pullToRefresh.refreshing', 'Refreshing...'),
+          text: t('pullToRefresh.refreshing'),
           icon: RefreshCw,
           iconClass: 'animate-spin text-primary',
         }
@@ -101,8 +101,8 @@ export function PullToRefreshIndicator({
         return {
           text:
             itemsSynced !== undefined
-              ? t('pullToRefresh.updatedItems', 'Updated {{count}} items', { count: itemsSynced })
-              : t('pullToRefresh.updated', 'Updated'),
+              ? t('pullToRefresh.updatedItems', { count: itemsSynced })
+              : t('pullToRefresh.updated'),
           icon: Check,
           iconClass: 'text-ok',
         }
@@ -201,7 +201,7 @@ export function PullToRefreshIndicator({
             >
               <WifiOff className="h-3 w-3 text-warn" />
               <span className="text-xs font-medium text-warn">
-                {t('pullToRefresh.offlineQueue', '{{count}} pending sync', {
+                {t('pullToRefresh.offlineQueue', {
                   count: offlineQueueCount,
                 })}
               </span>
@@ -240,7 +240,7 @@ export function SyncStatusBar({
 
   // Same class as `formatLastSync` above — the ONE shared localized helper.
   const formatTime = (time: string | Date | null | undefined) => {
-    if (!time) return t('pullToRefresh.neverSynced', 'Never synced')
+    if (!time) return t('pullToRefresh.neverSynced')
 
     const date = new Date(time)
     const diffMinutes = Math.floor((Date.now() - date.getTime()) / 60_000)
@@ -261,8 +261,8 @@ export function SyncStatusBar({
         <Package className="h-3 w-3" />
         <span>
           {itemCount !== undefined
-            ? t('pullToRefresh.itemCount', '{{count}} items', { count: itemCount })
-            : t('pullToRefresh.loading', 'Loading...')}
+            ? t('pullToRefresh.itemCount', { count: itemCount })
+            : t('pullToRefresh.loading')}
         </span>
       </div>
 
@@ -281,7 +281,7 @@ export function SyncStatusBar({
           {isSyncing ? (
             <>
               <RefreshCw className="h-3 w-3 animate-spin" />
-              <span>{t('pullToRefresh.syncing', 'Syncing...')}</span>
+              <span>{t('pullToRefresh.syncing')}</span>
             </>
           ) : (
             <>

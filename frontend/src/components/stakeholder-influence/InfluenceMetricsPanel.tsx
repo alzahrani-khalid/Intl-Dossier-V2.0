@@ -167,9 +167,7 @@ export function InfluenceMetricsPanel({
       <Card className={cn('', className)}>
         <CardContent className="py-8 text-center">
           <Users className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
-          <p className="text-muted-foreground">
-            {t('no_data', 'Select a stakeholder to view metrics')}
-          </p>
+          <p className="text-muted-foreground">{t('no_data')}</p>
         </CardContent>
       </Card>
     )
@@ -231,7 +229,7 @@ export function InfluenceMetricsPanel({
         <div className="space-y-3">
           <h4 className="font-medium text-sm flex items-center gap-2">
             <Target className="h-4 w-4" />
-            {t('network_position', 'Network Position')}
+            {t('network_position')}
           </h4>
           <div className="space-y-3">
             <MetricBar
@@ -281,7 +279,7 @@ export function InfluenceMetricsPanel({
         <div className="space-y-3">
           <h4 className="font-medium text-sm flex items-center gap-2">
             <Activity className="h-4 w-4" />
-            {t('engagement', 'Engagement')}
+            {t('engagement')}
           </h4>
           <div className={cn('grid gap-3', compact ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2')}>
             <MetricCard
@@ -299,7 +297,7 @@ export function InfluenceMetricsPanel({
               icon={Users}
               label={isRTL ? METRIC_LABELS.engagement_reach.ar : METRIC_LABELS.engagement_reach.en}
               value={data.metrics.engagement_reach}
-              sublabel={`${data.raw_metrics.unique_engagement_partners} ${t('partners', 'partners')}`}
+              sublabel={`${data.raw_metrics.unique_engagement_partners} ${t('partners')}`}
               color="var(--chart-1)"
             />
           </div>
@@ -311,7 +309,7 @@ export function InfluenceMetricsPanel({
         <div className="space-y-3">
           <h4 className="font-medium text-sm flex items-center gap-2">
             <Heart className="h-4 w-4" />
-            {t('relationships', 'Relationships')}
+            {t('relationships')}
           </h4>
           <div className={cn('grid gap-3', compact ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2')}>
             <MetricCard
@@ -357,30 +355,22 @@ export function InfluenceMetricsPanel({
           <>
             <Separator />
             <div className="space-y-3">
-              <h4 className="font-medium text-sm text-muted-foreground">
-                {t('raw_metrics', 'Raw Metrics')}
-              </h4>
+              <h4 className="font-medium text-sm text-muted-foreground">{t('raw_metrics')}</h4>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">
-                    {t('direct_connections', 'Direct Connections')}
-                  </span>
+                  <span className="text-muted-foreground">{t('direct_connections')}</span>
                   <span className="font-medium">{data.raw_metrics.direct_connections}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">{t('two_hop', '2-Hop Reach')}</span>
+                  <span className="text-muted-foreground">{t('two_hop')}</span>
                   <span className="font-medium">{data.raw_metrics.two_hop_connections}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">
-                    {t('total_engagements', 'Total Engagements')}
-                  </span>
+                  <span className="text-muted-foreground">{t('total_engagements')}</span>
                   <span className="font-medium">{data.raw_metrics.total_engagements}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">
-                    {t('unique_partners', 'Unique Partners')}
-                  </span>
+                  <span className="text-muted-foreground">{t('unique_partners')}</span>
                   <span className="font-medium">{data.raw_metrics.unique_engagement_partners}</span>
                 </div>
               </div>
@@ -390,7 +380,7 @@ export function InfluenceMetricsPanel({
 
         {/* Calculated timestamp */}
         <p className="text-xs text-muted-foreground text-end">
-          {t('calculated_at', 'Calculated')}: {formatDayFirst(data.calculated_at)}
+          {t('calculated_at')}: {formatDayFirst(data.calculated_at)}
         </p>
       </CardContent>
     </Card>

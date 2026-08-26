@@ -93,7 +93,7 @@ function SortableColumn({ column, isRTL, onRemove, onUpdate }: SortableColumnPro
           size="icon"
           className="h-8 w-8"
           onClick={() => onUpdate({ visible: !column.visible })}
-          aria-label={t('columns.toggleVisibility', { defaultValue: 'Toggle column visibility' })}
+          aria-label={t('columns.toggleVisibility')}
         >
           {column.visible ? (
             <Eye className="h-4 w-4" />

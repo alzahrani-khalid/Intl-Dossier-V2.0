@@ -33,21 +33,21 @@ export function AgingIndicator({ days, className = '' }: AgingIndicatorProps) {
         level: 'ok',
         variant: 'default' as const,
         color: 'bg-accent/10 text-accent border-accent/20',
-        label: t('assignments:waitingQueue.aging.ok', 'Recent'),
+        label: t('assignments:waitingQueue.aging.ok'),
       }
     } else if (days <= 6) {
       return {
         level: 'warning',
         variant: 'secondary' as const,
         color: 'bg-warning/10 text-warning border-warning/20',
-        label: t('assignments:waitingQueue.aging.warning', 'Needs Attention'),
+        label: t('assignments:waitingQueue.aging.warning'),
       }
     } else {
       return {
         level: 'danger',
         variant: 'destructive' as const,
         color: 'bg-danger/10 text-danger border-danger/20',
-        label: t('assignments:waitingQueue.aging.danger', 'Overdue'),
+        label: t('assignments:waitingQueue.aging.danger'),
       }
     }
   }

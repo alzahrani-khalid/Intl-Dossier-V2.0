@@ -121,7 +121,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
         onClick={() => onOpenChange(false)}
         className="min-h-11 w-full sm:w-auto sm:min-w-[100px]"
       >
-        {t('common:cancel', 'Cancel')}
+        {t('common:cancel')}
       </Button>
       <Button
         type="submit"
@@ -130,7 +130,7 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
         className="min-h-11 w-full sm:w-auto sm:min-w-[100px]"
       >
         {updateTask.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
-        {t('common:save', 'Save')}
+        {t('common:save')}
       </Button>
     </>
   )
@@ -219,16 +219,10 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="low">{t('unified-kanban:priority.low', 'Low')}</SelectItem>
-                      <SelectItem value="medium">
-                        {t('unified-kanban:priority.medium', 'Medium')}
-                      </SelectItem>
-                      <SelectItem value="high">
-                        {t('unified-kanban:priority.high', 'High')}
-                      </SelectItem>
-                      <SelectItem value="urgent">
-                        {t('unified-kanban:priority.urgent', 'Urgent')}
-                      </SelectItem>
+                      <SelectItem value="low">{t('unified-kanban:priority.low')}</SelectItem>
+                      <SelectItem value="medium">{t('unified-kanban:priority.medium')}</SelectItem>
+                      <SelectItem value="high">{t('unified-kanban:priority.high')}</SelectItem>
+                      <SelectItem value="urgent">{t('unified-kanban:priority.urgent')}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -249,20 +243,14 @@ export function TaskEditDialog({ task, open, onOpenChange, onSuccess }: TaskEdit
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="todo">
-                        {t('unified-kanban:columns.todo', 'To Do')}
-                      </SelectItem>
+                      <SelectItem value="todo">{t('unified-kanban:columns.todo')}</SelectItem>
                       <SelectItem value="in_progress">
-                        {t('unified-kanban:columns.in_progress', 'In Progress')}
+                        {t('unified-kanban:columns.in_progress')}
                       </SelectItem>
-                      <SelectItem value="review">
-                        {t('unified-kanban:columns.review', 'Review')}
-                      </SelectItem>
-                      <SelectItem value="done">
-                        {t('unified-kanban:columns.done', 'Done')}
-                      </SelectItem>
+                      <SelectItem value="review">{t('unified-kanban:columns.review')}</SelectItem>
+                      <SelectItem value="done">{t('unified-kanban:columns.done')}</SelectItem>
                       <SelectItem value="cancelled">
-                        {t('unified-kanban:columns.cancelled', 'Cancelled')}
+                        {t('unified-kanban:columns.cancelled')}
                       </SelectItem>
                     </SelectContent>
                   </Select>

@@ -124,17 +124,13 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
               {isPinching && (
                 <>
                   <Fingerprint className="h-4 w-4 animate-pulse" />
-                  <span className="text-sm font-medium">
-                    {t('graph.gestures.pinching', 'Pinch to zoom')}
-                  </span>
+                  <span className="text-sm font-medium">{t('graph.gestures.pinching')}</span>
                 </>
               )}
               {isPanning && !isPinching && (
                 <>
                   <Move className="h-4 w-4 animate-pulse" />
-                  <span className="text-sm font-medium">
-                    {t('graph.gestures.panning', 'Drag to pan')}
-                  </span>
+                  <span className="text-sm font-medium">{t('graph.gestures.panning')}</span>
                 </>
               )}
             </m.div>
@@ -151,9 +147,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
               animate={{ scale: 1 }}
               className="flex items-center gap-1.5"
             >
-              <span className="text-xs text-muted-foreground">
-                {t('graph.controls.zoom', 'Zoom')}
-              </span>
+              <span className="text-xs text-muted-foreground">{t('graph.controls.zoom')}</span>
               <span className="text-lg sm:text-xl font-bold text-foreground min-w-[52px] text-center">
                 {displayPercentage}
               </span>
@@ -189,7 +183,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
               )}
               onClick={onZoomOut}
               disabled={isAtMinZoom}
-              aria-label={t('graph.controls.zoomOut', 'Zoom out')}
+              aria-label={t('graph.controls.zoomOut')}
             >
               <ZoomOut className="h-5 w-5" />
             </Button>
@@ -205,7 +199,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
               )}
               onClick={onZoomIn}
               disabled={isAtMaxZoom}
-              aria-label={t('graph.controls.zoomIn', 'Zoom in')}
+              aria-label={t('graph.controls.zoomIn')}
             >
               <ZoomIn className="h-5 w-5" />
             </Button>
@@ -220,7 +214,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
                 'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
               )}
               onClick={onFitView}
-              aria-label={t('graph.controls.fitView', 'Fit view')}
+              aria-label={t('graph.controls.fitView')}
             >
               <Maximize2 className="h-5 w-5" />
             </Button>
@@ -235,7 +229,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
                 'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
               )}
               onClick={onReset}
-              aria-label={t('graph.controls.reset', 'Reset view')}
+              aria-label={t('graph.controls.reset')}
             >
               <RotateCcw className="h-5 w-5" />
             </Button>
@@ -252,15 +246,15 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
           >
             <div className="flex items-center gap-2 mb-1">
               <Fingerprint className="h-3.5 w-3.5" />
-              <span>{t('graph.hints.pinch', 'Pinch to zoom')}</span>
+              <span>{t('graph.hints.pinch')}</span>
             </div>
             <div className="flex items-center gap-2 mb-1">
               <Move className="h-3.5 w-3.5" />
-              <span>{t('graph.hints.pan', 'Two fingers to pan')}</span>
+              <span>{t('graph.hints.pan')}</span>
             </div>
             <div className="flex items-center gap-2">
               <ChevronUp className="h-3.5 w-3.5" />
-              <span>{t('graph.hints.doubleTap', 'Double-tap to expand')}</span>
+              <span>{t('graph.hints.doubleTap')}</span>
             </div>
           </m.div>
         )}
@@ -345,7 +339,7 @@ export const MobileTouchControls = memo(function MobileTouchControls({
         className="h-10 w-10 rounded-full"
         onClick={onZoomOut}
         disabled={isAtMinZoom}
-        aria-label={t('graph.controls.zoomOut', 'Zoom out')}
+        aria-label={t('graph.controls.zoomOut')}
       >
         <ChevronDown className="h-5 w-5" />
       </Button>
@@ -360,7 +354,7 @@ export const MobileTouchControls = memo(function MobileTouchControls({
         className="h-10 w-10 rounded-full"
         onClick={onZoomIn}
         disabled={isAtMaxZoom}
-        aria-label={t('graph.controls.zoomIn', 'Zoom in')}
+        aria-label={t('graph.controls.zoomIn')}
       >
         <ChevronUp className="h-5 w-5" />
       </Button>
@@ -372,7 +366,7 @@ export const MobileTouchControls = memo(function MobileTouchControls({
         size="icon"
         className="h-10 w-10 rounded-full"
         onClick={onReset}
-        aria-label={t('graph.controls.reset', 'Reset view')}
+        aria-label={t('graph.controls.reset')}
       >
         <RotateCcw className="h-4 w-4" />
       </Button>

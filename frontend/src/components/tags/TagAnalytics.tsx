@@ -195,7 +195,7 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
           size="sm"
           onClick={handleRefresh}
           disabled
-          title={t('common:notYetAvailable', { defaultValue: 'Not yet available' })}
+          title={t('common:notYetAvailable')}
         >
           <RefreshCw className={cn('size-4 me-2', refreshAnalytics.isPending && 'animate-spin')} />
           {t('actions.refresh')}

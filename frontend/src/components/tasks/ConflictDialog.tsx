@@ -164,7 +164,7 @@ export function ConflictDialog({
             className="h-11 w-full sm:w-auto order-3 sm:order-1"
           >
             <X className="me-2 size-4" />
-            {t('common:cancel', 'Cancel')}
+            {t('common:cancel')}
           </Button>
 
           <Button

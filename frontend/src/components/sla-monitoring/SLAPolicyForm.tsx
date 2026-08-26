@@ -418,7 +418,7 @@ export function SLAPolicyForm({
                         variant="ghost"
                         size="icon"
                         onClick={() => handleRemoveEscalationLevel(index)}
-                        aria-label={t('common:actions.remove', { defaultValue: 'Remove' })}
+                        aria-label={t('common:actions.remove')}
                       >
                         <Trash2 className="h-4 w-4 text-danger" />
                       </Button>

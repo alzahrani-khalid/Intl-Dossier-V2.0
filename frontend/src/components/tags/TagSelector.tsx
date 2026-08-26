@@ -225,7 +225,7 @@ export function TagSelector({
         {isLoadingTags ? (
           <div className="flex items-center gap-2 text-muted-foreground">
             <Loader2 className="size-4 animate-spin" />
-            <span className="text-sm">{t('common:loading', 'Loading...')}</span>
+            <span className="text-sm">{t('common:loading')}</span>
           </div>
         ) : assignedTags.length === 0 ? (
           <span className="text-sm text-muted-foreground">{t('assignment.noAssigned')}</span>
