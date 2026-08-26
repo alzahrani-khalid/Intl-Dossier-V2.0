@@ -10,11 +10,13 @@ byte-identical, no lock was created, and no worker ran.
 Do not drop a criterion or hide paths in a broader pattern to make the arithmetic pass. Split the work
 at the real production boundary:
 
-- P99-27 repairs and positively controls the glossary classifier. It owns four patterns and four
-  acceptance items (`4 x 4 = 16`). Its live brief row must expose exactly the five ruled artifact
+- P99-27 repairs and positively controls the glossary classifier. It owns four patterns and five
+  acceptance items (`5 x 4 = 20`): four frontmatter truths plus the task body's `<done>` outcome. Its
+  live brief row must expose exactly the five ruled artifact
   values as an explicit red handoff; it does not edit Arabic bundles or dossier-a.json.
 - P99-44 depends on P99-27 and consumes that classifier. It owns the 37-file Arabic brace group,
-  dossier-a.json, and its own SUMMARY with six acceptance items (`6 x 3 = 18`). It makes the exact five
+  dossier-a.json, and its own SUMMARY with six acceptance items (`6 x 3 = 18`): five frontmatter truths
+  plus the task body's `<done>` outcome. It makes the exact five
   brief values and the dossier slice green without editing the instrument.
 - P99-30 depends on P99-44, P99-28, and P99-29. The new edge makes the instrument repair precede the
   value sweep and makes the complete D1/D2/D3 glossary family precede the repo-wide gatekeeper.
