@@ -321,7 +321,9 @@ export function InfluenceNetworkGraph({
       >
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">{t('loading_network')}</p>
+          <p className="text-sm text-muted-foreground">
+            {t('loading_network')}
+          </p>
         </div>
       </div>
     )
@@ -337,7 +339,9 @@ export function InfluenceNetworkGraph({
         <div className="text-center px-4">
           <Users className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
           <p className="font-medium mb-1">{t('no_network_data')}</p>
-          <p className="text-sm text-muted-foreground">{t('no_network_hint')}</p>
+          <p className="text-sm text-muted-foreground">
+            {t('no_network_hint')}
+          </p>
         </div>
       </div>
     )

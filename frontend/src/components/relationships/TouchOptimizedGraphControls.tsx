@@ -124,13 +124,17 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
               {isPinching && (
                 <>
                   <Fingerprint className="h-4 w-4 animate-pulse" />
-                  <span className="text-sm font-medium">{t('graph.gestures.pinching')}</span>
+                  <span className="text-sm font-medium">
+                    {t('graph.gestures.pinching')}
+                  </span>
                 </>
               )}
               {isPanning && !isPinching && (
                 <>
                   <Move className="h-4 w-4 animate-pulse" />
-                  <span className="text-sm font-medium">{t('graph.gestures.panning')}</span>
+                  <span className="text-sm font-medium">
+                    {t('graph.gestures.panning')}
+                  </span>
                 </>
               )}
             </m.div>
@@ -147,7 +151,9 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
               animate={{ scale: 1 }}
               className="flex items-center gap-1.5"
             >
-              <span className="text-xs text-muted-foreground">{t('graph.controls.zoom')}</span>
+              <span className="text-xs text-muted-foreground">
+                {t('graph.controls.zoom')}
+              </span>
               <span className="text-lg sm:text-xl font-bold text-foreground min-w-[52px] text-center">
                 {displayPercentage}
               </span>

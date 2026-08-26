@@ -275,7 +275,9 @@ export function SavedViewsManager({
           {hasUnsavedChanges && (
             <>
               <div className="px-3 py-2">
-                <p className="text-xs text-muted-foreground mb-2">{t('unsavedChanges')}</p>
+                <p className="text-xs text-muted-foreground mb-2">
+                  {t('unsavedChanges')}
+                </p>
                 <div className="flex gap-2">
                   <Button
                     size="sm"
@@ -308,8 +310,14 @@ export function SavedViewsManager({
           {savedViews.length === 0 ? (
             <div className="px-3 py-4 text-center">
               <BookmarkCheck className="h-8 w-8 mx-auto text-muted-foreground/50 mb-2" />
-              <p className="text-sm text-muted-foreground">{t('noSavedViews')}</p>
-              <p className="text-xs text-muted-foreground/70 mt-1">{t('noSavedViewsHint')}</p>
+              <p className="text-sm text-muted-foreground">
+                {t('noSavedViews')}
+              </p>
+              <p className="text-xs text-muted-foreground/70 mt-1">
+                {t(
+                  'noSavedViewsHint',
+                )}
+              </p>
             </div>
           ) : (
             <div className="max-h-64 overflow-y-auto">
@@ -370,7 +378,11 @@ export function SavedViewsManager({
                         }
                       }}
                       disabled={view.is_default}
-                      title={view.is_default ? t('isDefault') : t('setDefault')}
+                      title={
+                        view.is_default
+                          ? t('isDefault')
+                          : t('setDefault')
+                      }
                     >
                       {view.is_default ? (
                         <Star className="h-3.5 w-3.5 fill-warning text-warning" />
@@ -430,7 +442,11 @@ export function SavedViewsManager({
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t('saveView')}</DialogTitle>
-            <DialogDescription>{t('saveViewDescription')}</DialogDescription>
+            <DialogDescription>
+              {t(
+                'saveViewDescription',
+              )}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
@@ -502,7 +518,9 @@ export function SavedViewsManager({
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t('editView')}</DialogTitle>
-            <DialogDescription>{t('editViewDescription')}</DialogDescription>
+            <DialogDescription>
+              {t('editViewDescription')}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
@@ -573,13 +591,18 @@ export function SavedViewsManager({
           <AlertDialogHeader>
             <AlertDialogTitle>{t('deleteView')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('deleteViewConfirmation', {
-                name: selectedView?.name,
-              })}
+              {t(
+                'deleteViewConfirmation',
+                {
+                  name: selectedView?.name,
+                },
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex-col sm:flex-row gap-2">
-            <AlertDialogCancel className="w-full sm:w-auto">{t('cancel')}</AlertDialogCancel>
+            <AlertDialogCancel className="w-full sm:w-auto">
+              {t('cancel')}
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteView}
               disabled={isSaving}

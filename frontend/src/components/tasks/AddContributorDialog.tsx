@@ -175,7 +175,9 @@ export function AddContributorDialog({
             {t('tasks-page:contributors.addContributor')}
           </DialogTitle>
           <DialogDescription className="text-start">
-            {t('tasks-page:contributors.addContributorDescription')}
+            {t(
+              'tasks-page:contributors.addContributorDescription',
+            )}
           </DialogDescription>
         </DialogHeader>
 
@@ -192,7 +194,9 @@ export function AddContributorDialog({
               <Input
                 id="user-search"
                 type="text"
-                placeholder={t('tasks-page:contributors.searchUserPlaceholder')}
+                placeholder={t(
+                  'tasks-page:contributors.searchUserPlaceholder',
+                )}
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 className={`${isRTL ? 'pe-10 ps-3' : 'ps-10 pe-3'} h-11`}
@@ -273,7 +277,9 @@ export function AddContributorDialog({
             </Label>
             <Textarea
               id="notes"
-              placeholder={t('tasks-page:contributors.contributorNotesPlaceholder')}
+              placeholder={t(
+                'tasks-page:contributors.contributorNotesPlaceholder',
+              )}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}

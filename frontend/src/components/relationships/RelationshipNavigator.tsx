@@ -105,7 +105,11 @@ export function RelationshipNavigator({
           <Filter className="h-5 w-5" />
           {t('relationships:navigator.title')}
         </CardTitle>
-        <CardDescription>{t('relationships:navigator.description')}</CardDescription>
+        <CardDescription>
+          {t(
+            'relationships:navigator.description',
+          )}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         {/* Search and Filters */}
@@ -132,7 +136,9 @@ export function RelationshipNavigator({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('relationships:navigator.allDegrees')}</SelectItem>
+                  <SelectItem value="all">
+                    {t('relationships:navigator.allDegrees')}
+                  </SelectItem>
                   {Array.from({ length: maxDegree }, (_, i) => i + 1).map((degree) => (
                     <SelectItem key={degree} value={degree.toString()}>
                       {degree}° {t('relationships:navigator.separation')}
@@ -151,7 +157,9 @@ export function RelationshipNavigator({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('relationships:navigator.allTypes')}</SelectItem>
+                  <SelectItem value="all">
+                    {t('relationships:navigator.allTypes')}
+                  </SelectItem>
                   {nodeTypes.map((type) => (
                     <SelectItem key={type} value={type}>
                       {t(`dossier:type.${type}`)}

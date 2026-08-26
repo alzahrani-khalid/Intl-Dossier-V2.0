@@ -28,7 +28,8 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
   const renderEngagementFields = () => (
     <div className="space-y-4 rounded-md border border-border bg-muted p-4">
       <h3 className="text-sm font-medium text-foreground">
-        {t('form.requestType.options.engagement')} - {t('typeSpecific.engagement.title')}
+        {t('form.requestType.options.engagement')} -{' '}
+        {t('typeSpecific.engagement.title')}
       </h3>
 
       {/* Partner Name */}
@@ -54,7 +55,9 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
         <label className="mb-2 block text-sm font-medium text-muted-foreground">
           {t('typeSpecific.engagement.collaborationType.label')}
           <span className="ms-1 text-xs font-normal text-muted-foreground">
-            ({t('typeSpecific.engagement.collaborationType.selectMultiple')})
+            (
+            {t('typeSpecific.engagement.collaborationType.selectMultiple')}
+            )
           </span>
         </label>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -126,7 +129,8 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
   const renderPositionFields = () => (
     <div className="space-y-4 rounded-md border border-border bg-muted p-4">
       <h3 className="text-sm font-medium text-foreground">
-        {t('form.requestType.options.position')} - {t('typeSpecific.position.title')}
+        {t('form.requestType.options.position')} -{' '}
+        {t('typeSpecific.position.title')}
       </h3>
 
       {/* Position Title */}
@@ -189,7 +193,8 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
   const renderMouActionFields = () => (
     <div className="space-y-4 rounded-md border border-border bg-muted p-4">
       <h3 className="text-sm font-medium text-foreground">
-        {t('form.requestType.options.mou_action')} - {t('typeSpecific.mou_action.title')}
+        {t('form.requestType.options.mou_action')} -{' '}
+        {t('typeSpecific.mou_action.title')}
       </h3>
 
       {/* MoU Reference */}
@@ -224,7 +229,9 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           onChange={(e) => handleFieldChange('actionType', e.target.value)}
           className="w-full rounded border border-input bg-transparent px-3 py-2 text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
         >
-          <option value="">{t('typeSpecific.mou_action.actionType.placeholder')}</option>
+          <option value="">
+            {t('typeSpecific.mou_action.actionType.placeholder')}
+          </option>
           <option value="review">{t('typeSpecific.mou_action.actionType.options.review')}</option>
           <option value="amendment">
             {t('typeSpecific.mou_action.actionType.options.amendment')}
@@ -259,7 +266,8 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
   const renderForesightFields = () => (
     <div className="space-y-4 rounded-md border border-border bg-muted p-4">
       <h3 className="text-sm font-medium text-foreground">
-        {t('form.requestType.options.foresight')} - {t('typeSpecific.foresight.title')}
+        {t('form.requestType.options.foresight')} -{' '}
+        {t('typeSpecific.foresight.title')}
       </h3>
 
       {/* Topic */}
@@ -291,7 +299,9 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           onChange={(e) => handleFieldChange('timeHorizon', e.target.value)}
           className="w-full rounded border border-input bg-transparent px-3 py-2 text-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:text-sm"
         >
-          <option value="">{t('typeSpecific.foresight.timeHorizon.placeholder')}</option>
+          <option value="">
+            {t('typeSpecific.foresight.timeHorizon.placeholder')}
+          </option>
           <option value="short">{t('typeSpecific.foresight.timeHorizon.options.short')}</option>
           <option value="medium">{t('typeSpecific.foresight.timeHorizon.options.medium')}</option>
           <option value="long">{t('typeSpecific.foresight.timeHorizon.options.long')}</option>

@@ -406,7 +406,11 @@ export function ScheduleReportDialog({
               {/* Stub-backed: onSave calls the fake report-builder useCreateSchedule
                   (resolves {id:''}), NOT the real useScheduledReports path. Disabled
                   for honesty until backed; handler kept wired for re-enable. */}
-              <Button type="submit" disabled title={t('common:notYetAvailable')}>
+              <Button
+                type="submit"
+                disabled
+                title={t('common:notYetAvailable')}
+              >
                 {isSaving && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
                 {existingSchedule ? t('schedule.updateButton') : t('schedule.createButton')}
               </Button>

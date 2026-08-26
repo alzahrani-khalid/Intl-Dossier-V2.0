@@ -329,7 +329,9 @@ export function InfluenceReportView({
               <TrendingUp className="h-4 w-4" />
               {t('top_influencers')}
             </CardTitle>
-            <CardDescription>{t('top_influencers_desc')}</CardDescription>
+            <CardDescription>
+              {t('top_influencers_desc')}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {topInfluencers.length > 0 ? (
@@ -359,7 +361,9 @@ export function InfluenceReportView({
               <GitBranch className="h-4 w-4" />
               {t('key_connectors')}
             </CardTitle>
-            <CardDescription>{t('key_connectors_desc')}</CardDescription>
+            <CardDescription>
+              {t('key_connectors_desc')}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {keyConnectors.length > 0 ? (
@@ -384,7 +388,9 @@ export function InfluenceReportView({
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">{t('no_connectors')}</p>
+              <p className="text-sm text-muted-foreground text-center py-4">
+                {t('no_connectors')}
+              </p>
             )}
           </CardContent>
         </Card>
@@ -393,7 +399,8 @@ export function InfluenceReportView({
       {/* Report Period */}
       {(report.period_start || report.period_end) && (
         <div className="text-sm text-muted-foreground text-end">
-          {t('analysis_period')}: {report.period_start && formatDayFirst(report.period_start)}
+          {t('analysis_period')}:{' '}
+          {report.period_start && formatDayFirst(report.period_start)}
           {report.period_start && report.period_end && ' - '}
           {report.period_end && formatDayFirst(report.period_end)}
         </div>

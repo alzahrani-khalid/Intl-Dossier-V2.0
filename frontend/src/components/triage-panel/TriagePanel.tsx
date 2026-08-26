@@ -135,7 +135,9 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
     return (
       <div className="py-8 text-center">
         <div className="inline-block size-8 animate-spin rounded-full border-b-2 border-primary"></div>
-        <p className="mt-4 text-ink-mute">{t('intake:triage.loadingSuggestions')}</p>
+        <p className="mt-4 text-ink-mute">
+          {t('intake:triage.loadingSuggestions')}
+        </p>
       </div>
     )
   }
@@ -148,15 +150,23 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
             <div className="mb-2 flex items-center gap-2">
               {/* D-58-02-02: ⚠️ emoji replaced with AlertTriangle lucide icon (CLAUDE.md no-emoji rule). */}
               <AlertTriangle className="h-5 w-5 text-warning" aria-hidden="true" />
-              <h3 className="font-semibold text-warning">{t('intake:triage.aiUnavailable')}</h3>
+              <h3 className="font-semibold text-warning">
+                {t('intake:triage.aiUnavailable')}
+              </h3>
             </div>
-            <p className="text-sm text-warning">{t('intake:triage.aiUnavailableMessage')}</p>
+            <p className="text-sm text-warning">
+              {t(
+                'intake:triage.aiUnavailableMessage',
+              )}
+            </p>
           </div>
         )}
 
         {/* Fallback to manual triage */}
         <div className="rounded-lg bg-muted p-6">
-          <h3 className="mb-4 text-lg font-semibold text-ink">{t('intake:triage.manualTriage')}</h3>
+          <h3 className="mb-4 text-lg font-semibold text-ink">
+            {t('intake:triage.manualTriage')}
+          </h3>
 
           <div className="space-y-4">
             <div>
@@ -206,7 +216,9 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                   <SelectItem value="low">{t('queue.urgency.low')}</SelectItem>
                   <SelectItem value="medium">{t('queue.urgency.medium')}</SelectItem>
                   <SelectItem value="high">{t('queue.urgency.high')}</SelectItem>
-                  <SelectItem value="critical">{t('queue.urgency.critical')}</SelectItem>
+                  <SelectItem value="critical">
+                    {t('queue.urgency.critical')}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -277,7 +289,9 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
             {/* CLAUDE.md no-emoji rule: robot emoji replaced with Bot lucide icon. */}
             <Bot className="h-5 w-5 text-info" aria-hidden="true" />
             <div>
-              <h3 className="font-semibold text-info">{t('intake:triage.aiSuggestions')}</h3>
+              <h3 className="font-semibold text-info">
+                {t('intake:triage.aiSuggestions')}
+              </h3>
               <p className="text-sm text-info">
                 {t('intake:triage.modelInfo')}: {suggestions.modelInfo?.name || 'Unknown'}
               </p>
@@ -372,7 +386,9 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
         </div>
       ) : (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-ink">{t('intake:triage.overrideTitle')}</h3>
+          <h3 className="text-lg font-semibold text-ink">
+            {t('intake:triage.overrideTitle')}
+          </h3>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
@@ -422,7 +438,9 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                   <SelectItem value="low">{t('queue.urgency.low')}</SelectItem>
                   <SelectItem value="medium">{t('queue.urgency.medium')}</SelectItem>
                   <SelectItem value="high">{t('queue.urgency.high')}</SelectItem>
-                  <SelectItem value="critical">{t('queue.urgency.critical')}</SelectItem>
+                  <SelectItem value="critical">
+                    {t('queue.urgency.critical')}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -459,7 +477,9 @@ export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
                   setOverrideReason(e.target.value)
                   if (reasonError !== '') setReasonError('')
                 }}
-                placeholder={t('intake:triage.overrideReasonPlaceholder')}
+                placeholder={t(
+                  'intake:triage.overrideReasonPlaceholder',
+                )}
                 rows={3}
                 aria-required="true"
                 aria-invalid={reasonError !== ''}

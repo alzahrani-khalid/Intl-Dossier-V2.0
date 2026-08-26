@@ -803,7 +803,9 @@ function EnhancedGraphVisualizationInner({
                 <SelectContent>
                   {relationshipTypes.map((type) => (
                     <SelectItem key={type} value={type} className="text-xs">
-                      {type === 'all' ? t('allRelationships') : t(`relationship.${type}`)}
+                      {type === 'all'
+                        ? t('allRelationships')
+                        : t(`relationship.${type}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -832,7 +834,9 @@ function EnhancedGraphVisualizationInner({
                         <Shrink className="h-3 w-3" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom">{t('collapseAll')}</TooltipContent>
+                    <TooltipContent side="bottom">
+                      {t('collapseAll')}
+                    </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
                 <TooltipProvider>
@@ -883,7 +887,8 @@ function EnhancedGraphVisualizationInner({
 
           {/* Stats */}
           <div className="bg-background/95 p-3 rounded-lg border text-xs text-muted-foreground">
-            {filteredNodes.length} {t('nodesShown')} · {filteredEdges.length} {t('edgesShown')}
+            {filteredNodes.length} {t('nodesShown')} · {filteredEdges.length}{' '}
+            {t('edgesShown')}
           </div>
         </Panel>
 

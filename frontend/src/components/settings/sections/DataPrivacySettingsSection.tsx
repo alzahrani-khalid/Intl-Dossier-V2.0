@@ -329,7 +329,9 @@ export function DataPrivacySettingsSection() {
                   </p>
 
                   <p className="text-xs sm:text-sm text-muted-foreground mt-3">
-                    {t('dataPrivacy.deleteContactAdmin')}
+                    {t(
+                      'dataPrivacy.deleteContactAdmin',
+                    )}
                   </p>
 
                   <Button variant="destructive" size="sm" className="mt-4 min-h-10" disabled>

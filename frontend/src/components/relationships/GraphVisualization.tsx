@@ -292,7 +292,9 @@ function GraphVisualizationInner({
 
             {enableTypeFilter && (
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs text-muted-foreground">{t('graph:nodeType')}</label>
+                <label className="text-xs text-muted-foreground">
+                  {t('graph:nodeType')}
+                </label>
                 <Select value={selectedNodeType} onValueChange={setSelectedNodeType}>
                   <SelectTrigger className="h-8 w-[160px] text-xs">
                     <SelectValue />
@@ -300,7 +302,9 @@ function GraphVisualizationInner({
                   <SelectContent>
                     {availableNodeTypes.map((type) => (
                       <SelectItem key={type} value={type} className="text-xs">
-                        {type === 'all' ? t('graph:allTypes') : type.replace(/_/g, ' ')}
+                        {type === 'all'
+                          ? t('graph:allTypes')
+                          : type.replace(/_/g, ' ')}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -323,7 +327,9 @@ function GraphVisualizationInner({
                   <SelectContent>
                     {relationshipTypes.map((type) => (
                       <SelectItem key={type} value={type} className="text-xs">
-                        {type === 'all' ? t('graph:allRelationships') : type.replace(/_/g, ' ')}
+                        {type === 'all'
+                          ? t('graph:allRelationships')
+                          : type.replace(/_/g, ' ')}
                       </SelectItem>
                     ))}
                   </SelectContent>

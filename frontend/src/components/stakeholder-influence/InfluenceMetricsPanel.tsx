@@ -167,7 +167,9 @@ export function InfluenceMetricsPanel({
       <Card className={cn('', className)}>
         <CardContent className="py-8 text-center">
           <Users className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
-          <p className="text-muted-foreground">{t('no_data')}</p>
+          <p className="text-muted-foreground">
+            {t('no_data')}
+          </p>
         </CardContent>
       </Card>
     )
@@ -355,10 +357,14 @@ export function InfluenceMetricsPanel({
           <>
             <Separator />
             <div className="space-y-3">
-              <h4 className="font-medium text-sm text-muted-foreground">{t('raw_metrics')}</h4>
+              <h4 className="font-medium text-sm text-muted-foreground">
+                {t('raw_metrics')}
+              </h4>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">{t('direct_connections')}</span>
+                  <span className="text-muted-foreground">
+                    {t('direct_connections')}
+                  </span>
                   <span className="font-medium">{data.raw_metrics.direct_connections}</span>
                 </div>
                 <div className="flex justify-between">
@@ -366,11 +372,15 @@ export function InfluenceMetricsPanel({
                   <span className="font-medium">{data.raw_metrics.two_hop_connections}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">{t('total_engagements')}</span>
+                  <span className="text-muted-foreground">
+                    {t('total_engagements')}
+                  </span>
                   <span className="font-medium">{data.raw_metrics.total_engagements}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">{t('unique_partners')}</span>
+                  <span className="text-muted-foreground">
+                    {t('unique_partners')}
+                  </span>
                   <span className="font-medium">{data.raw_metrics.unique_engagement_partners}</span>
                 </div>
               </div>
