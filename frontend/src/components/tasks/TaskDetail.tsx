@@ -108,16 +108,12 @@ export function TaskDetail({
         {/* Status Badges */}
         <div className="flex flex-wrap gap-2">
           <Badge className={getPriorityBadgeClass(task.priority)}>
-            {t(`assignments:priority.${task.priority}`, { defaultValue: task.priority })}
+            {t(`assignments:priority.${task.priority}`)}
           </Badge>
           <Badge className={getStatusBadgeClass(task.status)}>
-            {t(`assignments:status.${task.status}`, { defaultValue: task.status })}
+            {t(`assignments:status.${task.status}`)}
           </Badge>
-          <Badge variant="outline">
-            {t(`tasks-page:workflow_stage.${task.workflow_stage}`, {
-              defaultValue: task.workflow_stage,
-            })}
-          </Badge>
+          <Badge variant="outline">{t(`tasks-page:workflow_stage.${task.workflow_stage}`)}</Badge>
           {task.work_item_type && task.work_item_type !== 'generic' && (
             <Badge variant="outline">
               <LinkIcon className={`h-3 w-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
@@ -156,9 +152,7 @@ export function TaskDetail({
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <FileText className="h-4 w-4 text-muted-foreground" />
-                <p className="text-sm font-medium">
-                  {t('tasks-page:detail.description')}
-                </p>
+                <p className="text-sm font-medium">{t('tasks-page:detail.description')}</p>
               </div>
               <p
                 className={`text-sm text-muted-foreground whitespace-pre-wrap ${isRTL ? 'text-end' : 'text-start'}`}
@@ -199,15 +193,9 @@ export function TaskDetail({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm font-medium">
-                {t('tasks-page:detail.workflow_stage')}
-              </p>
+              <p className="text-sm font-medium">{t('tasks-page:detail.workflow_stage')}</p>
             </div>
-            <Badge variant="outline">
-              {t(`tasks-page:workflow_stage.${task.workflow_stage}`, {
-                defaultValue: task.workflow_stage,
-              })}
-            </Badge>
+            <Badge variant="outline">{t(`tasks-page:workflow_stage.${task.workflow_stage}`)}</Badge>
           </div>
 
           <Separator />
@@ -225,9 +213,7 @@ export function TaskDetail({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
-                <p className="text-sm font-medium">
-                  {t('tasks-page:detail.updated')}
-                </p>
+                <p className="text-sm font-medium">{t('tasks-page:detail.updated')}</p>
               </div>
               <p className="text-sm text-muted-foreground">{formatDateTime(task.updated_at)}</p>
             </div>
@@ -251,9 +237,7 @@ export function TaskDetail({
                 {/* Section Header */}
                 <div className="flex items-center gap-2">
                   <UserCheck className="h-4 w-4 text-muted-foreground" />
-                  <p className="text-sm font-medium">
-                    {t('tasks-page:detail.engagement')}
-                  </p>
+                  <p className="text-sm font-medium">{t('tasks-page:detail.engagement')}</p>
                 </div>
 
                 {/* Engagement Title */}
@@ -451,9 +435,7 @@ export function TaskDetail({
           {isTaskOwner && !isCompleted && (
             <div className="pt-2 border-t mt-4 pt-4">
               <p className="text-sm text-muted-foreground mb-2">
-                {t(
-                  'tasks-page:detail.edit_linked_items',
-                )}
+                {t('tasks-page:detail.edit_linked_items')}
               </p>
               <WorkItemLinker
                 selectedItems={(() => {

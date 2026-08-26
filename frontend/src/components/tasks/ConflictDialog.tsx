@@ -94,7 +94,7 @@ export function ConflictDialog({
               {conflictingFields.map((field) => (
                 <div key={field} className="flex flex-col gap-1 rounded-md bg-background p-3">
                   <span className="text-xs font-medium text-muted-foreground uppercase text-start">
-                    {t(`tasks-page:field.${field}`, { defaultValue: field })}
+                    {t(`tasks-page:field.${field}`)}
                   </span>
                   <div className="flex flex-col sm:flex-row sm:gap-4">
                     <div className="flex-1">
