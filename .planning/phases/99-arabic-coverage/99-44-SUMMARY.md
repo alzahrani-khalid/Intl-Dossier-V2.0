@@ -5,13 +5,17 @@
 P99-44 consumed the repaired production classifier at dependency tip
 `e11ba20064ba1fa874b84c544153e0b5ef7b6cf1`. It re-derived and judged the declared 37-file Arabic
 slice, rewrote 194 dossier-object occurrences in 193 values from the `ملف` family to the ruled
-`دوسيه` family, preserved 74 sanctioned `ملف` occurrences, and made every survivor classifiable.
-The five exact brief-artifact handoff values now use `ملخص` / `ملخصات`.
+`دوسيه` family, preserved 74 sanctioned `ملف` occurrences, and recorded an exact live judgment for
+every one of the 71 surviving values. The five exact brief-artifact handoff values now use `ملخص` /
+`ملخصات`.
 
-The value/ledger work is committed as:
+The harness-replayed value/ledger work is committed in this lineage as:
 
-- `76eed73e7` — `fix(i18n): classify dossier senses in slice a`
-- `6833cf786` — `fix(i18n): close dossier classifier exceptions`
+- `26a883693` — `fix(i18n): classify dossier senses in slice a`
+- `3ea6ed768` — `fix(i18n): close dossier classifier exceptions`
+
+The review repair adds the 39 exact rows that were absent at repair base `442f6250a`; it does not
+repeat or alter the accepted Arabic-value work.
 
 This covers D-04, D-05, D-17, D-18, D-19, and D-39. The production classifier and base sense
 document were consumed without modification.
@@ -97,11 +101,12 @@ EXIT_STATUS=0
 
 ## Exact judgment ledger
 
-`scripts/glossary-senses.d/dossier-a.json` declares exactly 37 files and contains 32 nonempty exact
-rows. The 25 baseline exception rows were revalidated against live values. Three profile rows from
-the repaired-classifier finding were made live, and four additional exact rows were added after the
-repaired token boundary correctly exposed lower-camel `fileTooLarge` paths and root `common:profile`
-instead of falsely classifying them.
+`scripts/glossary-senses.d/dossier-a.json` declares exactly 37 files and contains 71 nonempty exact
+rows: one row for every surviving `ملف`-bearing live value in the slice. The 32 prior rows were
+retained byte-for-byte, and the review repair adds the other 39 values that production could classify
+through a broader base rule but that this lane had not independently judged. The 71 values contain 74
+occurrences because three values contain the token twice; a single exact key-path judgment covers all
+occurrences in that one value.
 
 Command:
 
@@ -114,37 +119,106 @@ Verbatim output:
 ```json
 {
   "sliceFiles": 37,
-  "exactRows": 32,
+  "exactRows": 71,
   "senses": {
-    "computer-file-upload": 2,
-    "computer-file-size": 4,
-    "computer-file-type": 1,
-    "personal-profile": 1,
+    "computer-file-upload": 3,
+    "computer-file-size": 7,
+    "computer-file-type": 3,
+    "personal-profile": 4,
     "data-library-file": 1,
     "profile-page-or-summary": 3,
     "computer-file-processing": 3,
     "pdf-file": 6,
-    "computer-file-dropzone": 3,
+    "computer-file-dropzone": 5,
     "contact-import-file": 3,
     "exported-computer-file": 3,
     "downloaded-html-file": 1,
-    "attached-computer-file": 1
+    "attached-computer-file": 1,
+    "data-library-file-upload": 1,
+    "data-library-file-browse": 1,
+    "data-library-file-count": 1,
+    "attachment-file-upload": 3,
+    "attachment-file-metadata": 2,
+    "attachment-file-size": 1,
+    "computer-file-browse": 1,
+    "computer-file-constraints": 1,
+    "computer-file-selection": 1,
+    "computer-file-removal": 1,
+    "ocr-image-file-type": 1,
+    "ocr-image-file-size": 1,
+    "contact-import-file-type": 1,
+    "contact-import-file-size": 1,
+    "interaction-attachment-upload": 1,
+    "interaction-attachment-size": 1,
+    "document-file-or-attachment": 1,
+    "document-file-metadata": 4,
+    "document-file-size": 2,
+    "document-file-security": 2
   }
 }
 ```
 
-A separate liveness audit required every exact row's live value to contain its term, required the
-row itself to win first-match selection ahead of every base/earlier-overlay entry, and rejected
-duplicate identities.
+A separate liveness and completeness audit loaded the 37 live bundles, rejected duplicate or dead
+rows, compared the ledger with repair base `442f6250a`, and required every surviving value to have
+an exact file/key-path identity. It also proves the narrow repair did not remove or modify an existing
+judgment.
 
 Verbatim output:
 
 ```text
-LEDGER-LIVE-OK rows=32 liveValues=32 firstMatchSelected=32 duplicateIdentities=0
+EXACT-COVERAGE repairBase=442f6250a sliceFiles=37 priorRows=32 addedRows=39 removedRows=0 modifiedRows=0 liveRows=71 survivingValues=71 survivingOccurrences=74 missingExactValues=0
+```
+
+The 39 newly recorded identities and judgments are:
+
+```text
+NEW-EXACT advanced-search.json:fields.file_type sense=computer-file-type
+NEW-EXACT advanced-search.json:fields.file_size sense=computer-file-size
+NEW-EXACT agenda.json:dropFileHere sense=computer-file-dropzone
+NEW-EXACT agenda.json:maxFileSize sense=computer-file-size
+NEW-EXACT commitments.json:evidence.dropzone sense=computer-file-dropzone
+NEW-EXACT committees.json:actions.viewProfile sense=personal-profile
+NEW-EXACT common.json:navigation.profile sense=personal-profile
+NEW-EXACT common.json:dataLibrary.dragDropFiles sense=data-library-file-upload
+NEW-EXACT common.json:dataLibrary.browseFiles sense=data-library-file-browse
+NEW-EXACT common.json:dataLibrary.maxFileSize sense=computer-file-size
+NEW-EXACT common.json:dataLibrary.totalFiles sense=data-library-file-count
+NEW-EXACT common.json:afterActions.ai.uploadFile sense=computer-file-upload
+NEW-EXACT common.json:afterActions.ai.invalidFileType sense=computer-file-type
+NEW-EXACT common.json:afterActions.attachments.upload sense=attachment-file-upload
+NEW-EXACT common.json:afterActions.attachments.fileName sense=attachment-file-metadata
+NEW-EXACT common.json:afterActions.attachments.fileSize sense=attachment-file-metadata
+NEW-EXACT common.json:afterActions.attachments.uploadSuccess sense=attachment-file-upload
+NEW-EXACT common.json:afterActions.attachments.uploadFailed sense=attachment-file-upload
+NEW-EXACT common.json:afterActions.attachments.maxSize sense=attachment-file-size
+NEW-EXACT common.json:forms.browse_files sense=computer-file-browse
+NEW-EXACT common.json:forms.file_constraints sense=computer-file-constraints
+NEW-EXACT common.json:forms.files_selected sense=computer-file-selection
+NEW-EXACT common.json:forms.remove_file sense=computer-file-removal
+NEW-EXACT contacts.json:contactDirectory.ocr.invalid_file_type sense=ocr-image-file-type
+NEW-EXACT contacts.json:contactDirectory.ocr.file_too_large sense=ocr-image-file-size
+NEW-EXACT contacts.json:contactDirectory.documentExtraction.invalid_file_type sense=contact-import-file-type
+NEW-EXACT contacts.json:contactDirectory.documentExtraction.file_too_large sense=contact-import-file-size
+NEW-EXACT contacts.json:contactDirectory.interactions.form.upload_files sense=interaction-attachment-upload
+NEW-EXACT contacts.json:contactDirectory.interactions.form.attachments_description sense=interaction-attachment-size
+NEW-EXACT dossier.json:sections.shared.documentsDescription sense=document-file-or-attachment
+NEW-EXACT dossier.json:overview.person.title sense=personal-profile
+NEW-EXACT dossiers-feature017.json:documents.fields.fileName sense=document-file-metadata
+NEW-EXACT dossiers-feature017.json:documents.fields.fileSize sense=document-file-metadata
+NEW-EXACT dossiers-feature017.json:documents.errors.fileTooLarge sense=document-file-size
+NEW-EXACT dossiers-feature017.json:documents.errors.infected sense=document-file-security
+NEW-EXACT dossiers.json:documents.fields.fileName sense=document-file-metadata
+NEW-EXACT dossiers.json:documents.fields.fileSize sense=document-file-metadata
+NEW-EXACT dossiers.json:documents.errors.fileTooLarge sense=document-file-size
+NEW-EXACT dossiers.json:documents.errors.infected sense=document-file-security
 ```
 
 Representative exact reasons, copied from the live ledger:
 
+- `advanced-search.json:fields.file_type` — `computer-file-type`: the field filters computer-file
+  types, not dossier types.
+- `common.json:navigation.profile` — `personal-profile`: the navigation label opens the user's
+  personal profile, which D-17 explicitly preserves.
 - `common.json:reports.templates.organizationProfile` — `profile-page-or-summary`: the report
   template is an organization profile, not a dossier object or computer file.
 - `common.json:profile` — `personal-profile`: D-17 explicitly preserves the user's personal
@@ -153,6 +227,8 @@ Representative exact reasons, copied from the live ledger:
   computer file exceeding its limit, not a dossier.
 - `dossier.json:addToDossier.actions.document.description` — `attached-computer-file`: the first
   occurrence is the attached file while the second, dossier-object occurrence was rewritten.
+- `dossiers-feature017.json:documents.errors.infected` — `document-file-security`: validation
+  rejects a malicious uploaded computer file, not a dossier object.
 
 ### Live profile first-match proof
 
@@ -242,7 +318,7 @@ PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node -e "const fs=require(\"fs\"),path
 Verbatim output and status:
 
 ```text
-SWEEP-STRUCT-OK checked=16919 rows=32
+SWEEP-STRUCT-OK checked=16919 rows=71
 EXIT_STATUS=0
 ```
 
