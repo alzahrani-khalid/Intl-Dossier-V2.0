@@ -503,20 +503,6 @@
     },
     {
       "term": "إحاطة",
-      "file": "onboarding.json",
-      "keyPath": "admin.generateBrief.description",
-      "sense": "briefing-session-preparation",
-      "reason": "The onboarding copy describes preparing a briefing from dossier data, not naming the brief artifact list object."
-    },
-    {
-      "term": "إحاطة",
-      "file": "onboarding.json",
-      "keyPath": "analyst.generateBrief.title",
-      "sense": "briefing-session-preparation",
-      "reason": "The onboarding copy describes preparing a briefing from dossier data, not naming the brief artifact list object."
-    },
-    {
-      "term": "إحاطة",
       "file": "operations-hub.json",
       "keyPath": "stages.briefing",
       "sense": "briefing-session-or-stage",

@@ -16,9 +16,9 @@ also requires rewriting these two artifact-sense values from `إحاطة` to `م
 would fail the scope gate; removing its two invalid overlay exceptions without rewriting it would
 make the required repo-wide brief-artifact census red. No out-of-scope path was touched.
 
-The focused census and structural oracle still print green only because the two rejected
-onboarding exceptions remain in the overlay. The scope audit makes that unresolved condition
-explicit:
+The two rejected onboarding exceptions have now been removed from the overlay. The focused
+census correctly refuses green on the two artifact-sense values; the structural oracle remains
+green because bundle parity and the non-empty classification artifact are intact:
 
 ```sh
 PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R" --control && node "$R/scripts/glossary-census.mjs" "$R" --row brief-artifact && node "$R/scripts/glossary-census.mjs" "$R" --row stance
@@ -31,32 +31,38 @@ PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" 
   "ruledTermPreserved": true,
   "allowlistedSensePreserved": true
 }
-UNCLASSIFIED glossary occurrences: 0
-UNCLASSIFIED glossary occurrences: 0
+UNCLASSIFIED glossary occurrences: 2
+UNCLASSIFIED	frontend/src/i18n/ar/onboarding.json:admin.generateBrief.description:استخدم الذكاء الاصطناعي لإنشاء وثائق إحاطة شاملة من بيانات الملف.	term=إحاطة
+UNCLASSIFIED	frontend/src/i18n/ar/onboarding.json:analyst.generateBrief.title:إنشاء إحاطة ذكية	term=إحاطة
 ```
 
+The chained command exits 1 after the brief-artifact row, so it does not run the stance row.
+Running the stance row independently still reports `UNCLASSIFIED glossary occurrences: 0`.
+
 ```text
-BLOCKED\tfrontend/src/i18n/ar/onboarding.json:admin.generateBrief.description\tar=استخدم الذكاء الاصطناعي لإنشاء وثائق إحاطة شاملة من بيانات الملف.\ten=Use AI to create comprehensive briefing documents from your dossier data.\tsense=briefing-session-preparation
-BLOCKED\tfrontend/src/i18n/ar/onboarding.json:analyst.generateBrief.title\tar=إنشاء إحاطة ذكية\ten=Create an AI briefing\tsense=briefing-session-preparation
-SCOPE-BLOCKER onboardingInAuthorizedSlice=false invalidArtifactAllowlistRows=2
-SWEEP-STRUCT-OK checked=16919 rows=86
+BLOCKED\tfrontend/src/i18n/ar/onboarding.json:admin.generateBrief.description\tar=استخدم الذكاء الاصطناعي لإنشاء وثائق إحاطة شاملة من بيانات الملف.\ten=Use AI to create comprehensive briefing documents from your dossier data.\tclassification=UNCLASSIFIED
+BLOCKED\tfrontend/src/i18n/ar/onboarding.json:analyst.generateBrief.title\tar=إنشاء إحاطة ذكية\ten=Create an AI briefing\tclassification=UNCLASSIFIED
+SCOPE-BLOCKER onboardingInAuthorizedSlice=false invalidArtifactAllowlistRows=0 unclassifiedArtifactValues=2
+SWEEP-STRUCT-OK checked=16919 rows=84
 ```
 
 ## Result
 
-The D-18 sweep is complete. The brief-artifact family now uses `ملخص`: 106 `موجز`
-occurrences and nine artifact-sense `إحاطة` occurrences were repaired. Six singular
-stance-entity `منصب` occurrences and five irregular-plural `مناصب` occurrences became the
-`موقف` family. The 22 surviving `موجز` occurrences are calendar-feed, digest-publication, or
-concise-adjective senses. The 58 surviving `إحاطة` occurrences are briefing-session,
-briefing-document, or preparation senses (55 exact overlay rows plus three base exceptions).
-The 44 surviving singular `منصب` occurrences are office/post/job-title senses covered by the
-unchanged base allowlist; all nine repo-wide plural `مناصب` survivors are exact office-sense
-overlay rows.
+The authorized 42-bundle sweep is complete, but repo-wide D-18 acceptance is blocked. The
+brief-artifact family now uses `ملخص` throughout the authorized slice: 106 `موجز` occurrences
+and nine artifact-sense `إحاطة` occurrences were repaired. Six singular stance-entity `منصب`
+occurrences and five irregular-plural `مناصب` occurrences became the `موقف` family. The 22
+surviving `موجز` occurrences are calendar-feed, digest-publication, or concise-adjective senses.
+Of the 58 surviving `إحاطة` occurrences, 56 are classified session, document, or preparation
+senses; the two onboarding artifact occurrences are intentionally UNCLASSIFIED rather than
+laundered through the overlay. The 44 surviving singular `منصب` occurrences are office/post/job-
+title senses covered by the unchanged base allowlist; all nine repo-wide plural `مناصب` survivors
+are exact office-sense overlay rows.
 
-This implements D-04, D-05, D-17, D-18, D-19, and D-39. Only Arabic string values changed;
-the ruled terms remain in i18n leaves. The implementation commit hook completed the repository
-build successfully.
+This partially implements D-04, D-05, D-17, D-18, D-19, and D-39 without crossing the immutable
+write scope. Only Arabic string values changed in the earlier sweep; the ruled terms remain in
+i18n leaves. Completion requires adding `frontend/src/i18n/ar/onboarding.json` to a future task's
+write allowlist and rewriting the two named values to the `ملخص` family.
 
 ## D-04: re-derived populations
 
@@ -104,20 +110,23 @@ stance	ruled=موقف / المواقف	before=50	after=211	unclassified=6
 UNCLASSIFIED	frontend/src/i18n/ar/workflow-automation.json:entities.position:منصب	term=منصب
 ```
 
-The after populations were re-derived from the committed repository root:
+After removing the rejected overlay rows, both populations were re-derived independently so the
+stance result remained visible after the expected brief-artifact failure:
 
 ```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R" --row brief-artifact --census && node "$R/scripts/glossary-census.mjs" "$R" --row stance --census
+PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R" --row brief-artifact --census; node "$R/scripts/glossary-census.mjs" "$R" --row stance --census
 ```
 
 ```text
 glossary census: 16943 Arabic leaf values across 129 file(s)
-brief-artifact	ruled=ملخص / الملخصات	before=80	after=276	unclassified=0
+brief-artifact	ruled=ملخص / الملخصات	before=80	after=276	unclassified=2
   ملخص	ruled-term	occurrences=276	lines=269	values=269	files=54	ruled=276	allowlisted=0	unclassified=0
   موجز	competing-term	occurrences=22	lines=22	values=22	files=9	ruled=0	allowlisted=22	unclassified=0
-  إحاطة	competing-term	occurrences=58	lines=57	values=58	files=14	ruled=0	allowlisted=58	unclassified=0
-classification totals: ruled=276 allowlisted=80 UNCLASSIFIED=0
-UNCLASSIFIED glossary occurrences: 0
+  إحاطة	competing-term	occurrences=58	lines=57	values=58	files=14	ruled=0	allowlisted=56	unclassified=2
+classification totals: ruled=276 allowlisted=78 UNCLASSIFIED=2
+UNCLASSIFIED glossary occurrences: 2
+UNCLASSIFIED	frontend/src/i18n/ar/onboarding.json:admin.generateBrief.description:استخدم الذكاء الاصطناعي لإنشاء وثائق إحاطة شاملة من بيانات الملف.	term=إحاطة
+UNCLASSIFIED	frontend/src/i18n/ar/onboarding.json:analyst.generateBrief.title:إنشاء إحاطة ذكية	term=إحاطة
 glossary census: 16943 Arabic leaf values across 129 file(s)
 stance	ruled=موقف / المواقف	before=44	after=222	unclassified=0
   موقف	ruled-term	occurrences=222	lines=216	values=216	files=39	ruled=222	allowlisted=0	unclassified=0
@@ -150,14 +159,14 @@ UNCLASSIFIED glossary occurrences: 0
 
 ## Classification and structural proof
 
-The overlay contains 86 exact judgments across 12 senses: 22 for `موجز`, 55 for `إحاطة`, and
+The overlay contains 84 exact judgments across 11 senses: 22 for `موجز`, 53 for `إحاطة`, and
 nine for the irregular plural `مناصب`. Representative reasons distinguish an iCal feed, a digest
 publication, the adjective “concise,” a briefing book/material, an uploaded briefing-document
-type, and an office/job history. Exact rows were checked for required fields, duplicates, and a
-matching live Arabic value:
+type, and an office/job history. The two rejected onboarding artifact rows were removed rather
+than misclassified to force a green census:
 
 ```text
-OVERLAY-REVALIDATED slice=42 rows=86 matchedValues=86 senses=12
+OVERLAY-REVALIDATED slice=42 rows=84 matchedValues=84 senses=11
 ```
 
 Because `مناصب` is an irregular plural and does not contain the singular spelling `منصب`, a
@@ -197,7 +206,7 @@ VALUE-ONLY-OK files=129 changedValues=123 structuralDiffs=0 unexpectedValueDiffs
 
 ## Required repository oracles
 
-The drilled census oracle ran verbatim:
+The drilled census oracle ran verbatim and correctly exited 1 on the brief-artifact row:
 
 ```sh
 PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R" --control && node "$R/scripts/glossary-census.mjs" "$R" --row brief-artifact && node "$R/scripts/glossary-census.mjs" "$R" --row stance
@@ -210,8 +219,9 @@ PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" 
   "ruledTermPreserved": true,
   "allowlistedSensePreserved": true
 }
-UNCLASSIFIED glossary occurrences: 0
-UNCLASSIFIED glossary occurrences: 0
+UNCLASSIFIED glossary occurrences: 2
+UNCLASSIFIED	frontend/src/i18n/ar/onboarding.json:admin.generateBrief.description:استخدم الذكاء الاصطناعي لإنشاء وثائق إحاطة شاملة من بيانات الملف.	term=إحاطة
+UNCLASSIFIED	frontend/src/i18n/ar/onboarding.json:analyst.generateBrief.title:إنشاء إحاطة ذكية	term=إحاطة
 ```
 
 The plan's walked-leaf parity and non-empty-overlay oracle ran verbatim and exited zero:
@@ -221,7 +231,7 @@ PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node -e "const fs=require(\"fs\"),path
 ```
 
 ```text
-SWEEP-STRUCT-OK checked=16919 rows=86
+SWEEP-STRUCT-OK checked=16919 rows=84
 ```
 
 `git diff --check` also returned no output.
@@ -236,5 +246,6 @@ the slice.
 
 Outside the write population are the other 87 Arabic bundles, every English value, every Arabic
 key name, every source file, all other glossary families, and Arabic naturalness beyond the ruled
-D-18 rows. This is part 1 of 1: no brief-artifact or stance census cleanup is deferred to a later
-task, while unrelated glossary families and later Phase 99 work remain outside this lane.
+D-18 rows. This is part 1 of 1 under the current plan, but the two onboarding artifact values
+require a newly scoped follow-up task. Unrelated glossary families and later Phase 99 work remain
+outside this lane.
