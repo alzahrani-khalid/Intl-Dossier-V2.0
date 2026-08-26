@@ -93,6 +93,7 @@
       "unavailable": "Attachment upload is not yet available.",
       "uploading": "Uploading…",
       "maxFilesAllowed": "Maximum {{count}} files allowed",
+      "fileCount": "{{count}} files",
       "fileCount_one": "{{count}} file",
       "fileCount_other": "{{count}} files",
       "totalSize": "Total: {{used}} / {{max}}"
@@ -121,6 +122,7 @@
   "actions": {
     "submit": "Submit Request",
     "submitRequest": "Submit request",
+    "submitting": "Submitting…",
     "cancel": "Cancel",
     "saveDraft": "Save as Draft",
     "reset": "Reset Form"
@@ -149,6 +151,11 @@
     "resolution": "Resolution",
     "paused": "(Paused)",
     "target": "Target",
+    "totalPaused": "Total paused",
+    "resume": "Resume",
+    "pause": "Pause",
+    "pauseReason": "Reason for pausing the SLA",
+    "pauseReasonPlaceholder": "Enter a reason for pausing the SLA",
     "breached_by_hours": "Breached by {{hours}}h {{minutes}}m",
     "breached_by_minutes": "Breached by {{minutes}}m",
     "time_remaining_hours": "{{hours}}h {{minutes}}m remaining",

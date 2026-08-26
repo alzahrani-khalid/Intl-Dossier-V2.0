@@ -18,6 +18,7 @@
   },
   "docs": {
     "upload": "رفع مستند",
+    "count": "{{count}} مستند",
     "count_zero": "لا توجد مستندات",
     "count_one": "مستند واحد",
     "count_two": "مستندان",

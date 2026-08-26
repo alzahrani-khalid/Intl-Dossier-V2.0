@@ -249,7 +249,7 @@ export function ConflictResolutionDialog({
 
         <DialogFooter className="flex-col sm:flex-row gap-2">
           <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={isResolving}>
-            {t('cancel', { ns: 'common' })}
+            {t('common:cancel', { ns: 'common' })}
           </Button>
         </DialogFooter>
       </DialogContent>

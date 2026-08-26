@@ -133,6 +133,7 @@
     "clearFilters": "Clear filters",
     "assign": "Assign",
     "assignNotAvailable": "Manual assignment is not available yet",
+    "failedAttempts": "{{count}} failed attempts",
     "failedAttempts_one": "{{count}} failed attempt",
     "failedAttempts_other": "{{count}} failed attempts",
     "types": {

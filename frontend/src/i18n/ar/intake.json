@@ -93,6 +93,7 @@
       "unavailable": "رفع المرفقات غير متاح بعد.",
       "uploading": "جارٍ الرفع…",
       "maxFilesAllowed": "الحد الأقصى {{count}} ملفات مسموح بها",
+      "fileCount": "{{count}} ملفات",
       "fileCount_one": "ملف {{count}}",
       "fileCount_other": "{{count}} ملفات",
       "totalSize": "الإجمالي: {{used}} / {{max}}"
@@ -121,6 +122,7 @@
   "actions": {
     "submit": "تقديم الطلب",
     "submitRequest": "تقديم الطلب",
+    "submitting": "جارٍ التقديم…",
     "cancel": "إلغاء",
     "saveDraft": "حفظ كمسودة",
     "reset": "إعادة تعيين النموذج"
@@ -149,6 +151,11 @@
     "resolution": "الحل",
     "paused": "(متوقف)",
     "target": "الهدف",
+    "totalPaused": "إجمالي مدة الإيقاف المؤقت",
+    "resume": "استئناف",
+    "pause": "إيقاف مؤقت",
+    "pauseReason": "سبب إيقاف اتفاقية مستوى الخدمة مؤقتًا",
+    "pauseReasonPlaceholder": "أدخل سبب إيقاف اتفاقية مستوى الخدمة مؤقتًا",
     "breached_by_hours": "متجاوز بـ {{hours}}س {{minutes}}د",
     "breached_by_minutes": "متجاوز بـ {{minutes}}د",
     "time_remaining_hours": "{{hours}}س {{minutes}}د متبقية",

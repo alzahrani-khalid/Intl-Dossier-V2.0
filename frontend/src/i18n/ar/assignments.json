@@ -99,6 +99,7 @@
     "clearFilters": "مسح الفلاتر",
     "assign": "تعيين",
     "assignNotAvailable": "التعيين اليدوي غير متاح بعد",
+    "failedAttempts": "{{count}} محاولة فاشلة",
     "failedAttempts_zero": "لا توجد محاولات فاشلة",
     "failedAttempts_one": "محاولة فاشلة واحدة",
     "failedAttempts_two": "محاولتان فاشلتان",

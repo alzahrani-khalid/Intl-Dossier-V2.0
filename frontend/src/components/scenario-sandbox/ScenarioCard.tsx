@@ -110,7 +110,7 @@ export function ScenarioCard({
                 className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 <MoreHorizontal className="h-4 w-4" />
-                <span className="sr-only">{t('actions.more', { ns: 'translation' })}</span>
+                <span className="sr-only">{t('common:actions.more', { ns: 'translation' })}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align={isRTL ? 'start' : 'end'}>

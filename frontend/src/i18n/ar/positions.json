@@ -197,7 +197,11 @@
   "type": {
     "policy_brief": "ملخص سياسة",
     "talking_point": "نقطة نقاش",
-    "statement": "بيان"
+    "statement": "بيان",
+    "brief": "ملخص",
+    "talking_points": "نقاط نقاش",
+    "q_and_a": "أسئلة وأجوبة",
+    "guidance": "إرشادات"
   },
   "search": {
     "placeholder": "البحث في المواقف...",

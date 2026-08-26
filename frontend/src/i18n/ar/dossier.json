@@ -372,6 +372,12 @@
     "success": "تم حذف الدوسيه بنجاح",
     "error": "فشل حذف الدوسيه: {{message}}"
   },
+  "document": {
+    "linkSuccess": "تم ربط المستند بنجاح",
+    "linkError": "فشل ربط المستند: {{message}}",
+    "unlinkSuccess": "تم إلغاء ربط المستند بنجاح",
+    "unlinkError": "فشل إلغاء ربط المستند: {{message}}"
+  },
   "dossier": {
     "nav": {
       "dossiers": "الدوسيهات",
