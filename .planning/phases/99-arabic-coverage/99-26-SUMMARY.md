@@ -1,212 +1,102 @@
-# P99-26 Summary — follow-up correction blocked by immutable scope
+# P99-26 Summary — brief-artifact and stance sense-aware sweep
 
-## Follow-up gate status
+## Outcome
 
-The scoped `common:wordAssistant.description` defect is repaired: the Arabic value now collapses
-the English “briefs, summaries” pair to the governed `ملخص` family rather than introducing
-`مذكرات` as a third term.
+The repo-wide brief-artifact and stance rows are green. Arabic brief artifacts now use the
+ملخص family and stance objects use the موقف family. Genuine different senses survive only through
+exact, live classifications: 22 موجز occurrences (calendar feed, digest publication, or concise
+adjective), 56 إحاطة occurrences (briefing session, book, pack, document type, or preparation
+material), 44 singular منصب occurrences (office/post/job title), and nine plural مناصب occurrences
+(office/post/job title).
 
-The task cannot truthfully be marked complete under its fixed write allowlist. The material review
-also requires rewriting these two artifact-sense values from `إحاطة` to `ملخص`:
+The two onboarding artifact values identified by RULING-P99-98 were rewritten to ملخص, not
+allowlisted. The stance instrument now enumerates منصب and مناصب as distinct competing-term
+identities, so all nine plural overlay rows are consumed. Its expanded control retains the original
+planted dossier failure and independently proves an allowlisted plural plus a planted unclassified
+plural.
 
-- `frontend/src/i18n/ar/onboarding.json:admin.generateBrief.description`
-- `frontend/src/i18n/ar/onboarding.json:analyst.generateBrief.title`
-
-`frontend/src/i18n/ar/onboarding.json` is not one of the 42 authorized Arabic bundles. Editing it
-would fail the scope gate; removing its two invalid overlay exceptions without rewriting it would
-make the required repo-wide brief-artifact census red. No out-of-scope path was touched.
-
-The two rejected onboarding exceptions have now been removed from the overlay. The focused
-census correctly refuses green on the two artifact-sense values; the structural oracle remains
-green because bundle parity and the non-empty classification artifact are intact:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R" --control && node "$R/scripts/glossary-census.mjs" "$R" --row brief-artifact && node "$R/scripts/glossary-census.mjs" "$R" --row stance
-```
-
-```text
-{
-  "control": "PASS",
-  "plantedDousiyehCaught": true,
-  "ruledTermPreserved": true,
-  "allowlistedSensePreserved": true
-}
-UNCLASSIFIED glossary occurrences: 2
-UNCLASSIFIED	frontend/src/i18n/ar/onboarding.json:admin.generateBrief.description:استخدم الذكاء الاصطناعي لإنشاء وثائق إحاطة شاملة من بيانات الملف.	term=إحاطة
-UNCLASSIFIED	frontend/src/i18n/ar/onboarding.json:analyst.generateBrief.title:إنشاء إحاطة ذكية	term=إحاطة
-```
-
-The chained command exits 1 after the brief-artifact row, so it does not run the stance row.
-Running the stance row independently still reports `UNCLASSIFIED glossary occurrences: 0`.
-
-```text
-BLOCKED\tfrontend/src/i18n/ar/onboarding.json:admin.generateBrief.description\tar=استخدم الذكاء الاصطناعي لإنشاء وثائق إحاطة شاملة من بيانات الملف.\ten=Use AI to create comprehensive briefing documents from your dossier data.\tclassification=UNCLASSIFIED
-BLOCKED\tfrontend/src/i18n/ar/onboarding.json:analyst.generateBrief.title\tar=إنشاء إحاطة ذكية\ten=Create an AI briefing\tclassification=UNCLASSIFIED
-SCOPE-BLOCKER onboardingInAuthorizedSlice=false invalidArtifactAllowlistRows=0 unclassifiedArtifactValues=2
-SWEEP-STRUCT-OK checked=16919 rows=84
-```
-
-## Result
-
-The authorized 42-bundle sweep is complete, but repo-wide D-18 acceptance is blocked. The
-brief-artifact family now uses `ملخص` throughout the authorized slice: 106 `موجز` occurrences
-and nine artifact-sense `إحاطة` occurrences were repaired. Six singular stance-entity `منصب`
-occurrences and five irregular-plural `مناصب` occurrences became the `موقف` family. The 22
-surviving `موجز` occurrences are calendar-feed, digest-publication, or concise-adjective senses.
-Of the 58 surviving `إحاطة` occurrences, 56 are classified session, document, or preparation
-senses; the two onboarding artifact occurrences are intentionally UNCLASSIFIED rather than
-laundered through the overlay. The 44 surviving singular `منصب` occurrences are office/post/job-
-title senses covered by the unchanged base allowlist; all nine repo-wide plural `مناصب` survivors
-are exact office-sense overlay rows.
-
-This partially implements D-04, D-05, D-17, D-18, D-19, and D-39 without crossing the immutable
-write scope. Only Arabic string values changed in the earlier sweep; the ruled terms remain in
-i18n leaves. Completion requires adding `frontend/src/i18n/ar/onboarding.json` to a future task's
-write allowlist and rewriting the two named values to the `ملخص` family.
+This lands D-04, D-05, D-17, D-18, D-19, and D-39. Terms remain in i18n leaves, making a future
+operator term swap a leaf-value change plus parity re-run.
 
 ## D-04: re-derived populations
 
-The untouched worker start was `f0e0542b46e4f98cb8507529be355706f8dfa772`. The planted
-control ran first, before any real census or value edit:
+The untouched task base was b7cd542e8fafc46708b54d451616f55f28bd1f99. The initial control was run
+before applying the candidate sweep and caught its original planted dossier occurrence. After the
+ruled plural repair, the final chained proof again runs the expanded control before either live row.
+
+The final instrument's term identities were applied to the untouched base with:
 
 ```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R" --control
+node -e 'const c=require("child_process"),r="b7cd542e8fafc46708b54d451616f55f28bd1f99",items=[["ملخص","ملخص"],["موجز","موجز"],["إحاطة","إحاطة"],["موقف","موقف|مواقف"],["منصب","منصب"],["مناصب","مناصب"]],n=Object.fromEntries(items.map(([t])=>[t,0]));let files=0,leaves=0;const walk=o=>{for(const v of Object.values(o))if(typeof v==="string"){leaves++;for(const [t,p]of items)n[t]+=(v.match(new RegExp(p,"gu"))||[]).length}else if(v&&typeof v==="object")walk(v)};for(const p of c.execFileSync("git",["ls-tree","-r","--name-only",r,"--","frontend/src/i18n/ar"],{encoding:"utf8"}).trim().split("\n").filter(p=>p.endsWith(".json"))){files++;walk(JSON.parse(c.execFileSync("git",["show",r+":"+p],{encoding:"utf8"})))}console.log("BASE-POP ref="+r+" files="+files+" leaves="+leaves+" "+items.map(([t])=>t+"="+n[t]).join(" "));console.log("brief-artifact before="+(n["موجز"]+n["إحاطة"])+" after="+n["ملخص"]);console.log("stance before="+(n["منصب"]+n["مناصب"])+" after="+n["موقف"])'
 ```
 
 ```text
-{
-  "control": "PASS",
-  "plantedDousiyehCaught": true,
-  "ruledTermPreserved": true,
-  "allowlistedSensePreserved": true
-}
+BASE-POP ref=b7cd542e8fafc46708b54d451616f55f28bd1f99 files=129 leaves=16943 ملخص=160 موجز=128 إحاطة=67 موقف=211 منصب=50 مناصب=14
+brief-artifact before=195 after=160
+stance before=64 after=211
 ```
 
-The untouched repo-wide before populations were re-derived with these commands (the `sed`
-kept the count block and one planted-red detail from each otherwise long listing):
+The final repo-wide populations were re-derived with:
 
 ```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R" --census --row brief-artifact 2>&1 | sed -n '1,5p;$p'
-```
-
-```text
-glossary census: 16943 Arabic leaf values across 129 file(s)
-brief-artifact	ruled=ملخص / الملخصات	before=195	after=160	unclassified=192
-  ملخص	ruled-term	occurrences=160	lines=159	values=159	files=44	ruled=160	allowlisted=0	unclassified=0
-  موجز	competing-term	occurrences=128	lines=124	values=124	files=28	ruled=0	allowlisted=0	unclassified=128
-  إحاطة	competing-term	occurrences=67	lines=66	values=67	files=18	ruled=0	allowlisted=3	unclassified=64
-UNCLASSIFIED	frontend/src/i18n/ar/progressive-disclosure.json:pages.dossiers.empty.advanced.briefs.content:دع الذكاء الاصطناعي يلخص معلومات ملفك في مستندات إحاطة موجزة.	term=إحاطة
-```
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R" --census --row stance 2>&1 | sed -n '1,4p;$p'
+PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R" --row brief-artifact --census && node "$R/scripts/glossary-census.mjs" "$R" --row stance --census
 ```
 
 ```text
 glossary census: 16943 Arabic leaf values across 129 file(s)
-stance	ruled=موقف / المواقف	before=50	after=211	unclassified=6
-  موقف	ruled-term	occurrences=211	lines=205	values=205	files=34	ruled=211	allowlisted=0	unclassified=0
-  منصب	competing-term	occurrences=50	lines=50	values=50	files=16	ruled=0	allowlisted=44	unclassified=6
-UNCLASSIFIED	frontend/src/i18n/ar/workflow-automation.json:entities.position:منصب	term=منصب
-```
-
-After removing the rejected overlay rows, both populations were re-derived independently so the
-stance result remained visible after the expected brief-artifact failure:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R" --row brief-artifact --census; node "$R/scripts/glossary-census.mjs" "$R" --row stance --census
-```
-
-```text
-glossary census: 16943 Arabic leaf values across 129 file(s)
-brief-artifact	ruled=ملخص / الملخصات	before=80	after=276	unclassified=2
-  ملخص	ruled-term	occurrences=276	lines=269	values=269	files=54	ruled=276	allowlisted=0	unclassified=0
+brief-artifact	ruled=ملخص / الملخصات	before=78	after=278	unclassified=0
+  ملخص	ruled-term	occurrences=278	lines=271	values=271	files=54	ruled=278	allowlisted=0	unclassified=0
   موجز	competing-term	occurrences=22	lines=22	values=22	files=9	ruled=0	allowlisted=22	unclassified=0
-  إحاطة	competing-term	occurrences=58	lines=57	values=58	files=14	ruled=0	allowlisted=56	unclassified=2
-classification totals: ruled=276 allowlisted=78 UNCLASSIFIED=2
-UNCLASSIFIED glossary occurrences: 2
-UNCLASSIFIED	frontend/src/i18n/ar/onboarding.json:admin.generateBrief.description:استخدم الذكاء الاصطناعي لإنشاء وثائق إحاطة شاملة من بيانات الملف.	term=إحاطة
-UNCLASSIFIED	frontend/src/i18n/ar/onboarding.json:analyst.generateBrief.title:إنشاء إحاطة ذكية	term=إحاطة
+  إحاطة	competing-term	occurrences=56	lines=55	values=56	files=13	ruled=0	allowlisted=56	unclassified=0
+classification totals: ruled=278 allowlisted=78 UNCLASSIFIED=0
+UNCLASSIFIED glossary occurrences: 0
 glossary census: 16943 Arabic leaf values across 129 file(s)
-stance	ruled=موقف / المواقف	before=44	after=222	unclassified=0
+stance	ruled=موقف / المواقف	before=53	after=222	unclassified=0
   موقف	ruled-term	occurrences=222	lines=216	values=216	files=39	ruled=222	allowlisted=0	unclassified=0
   منصب	competing-term	occurrences=44	lines=44	values=44	files=11	ruled=0	allowlisted=44	unclassified=0
-classification totals: ruled=222 allowlisted=44 UNCLASSIFIED=0
+  مناصب	competing-term	occurrences=9	lines=9	values=9	files=6	ruled=0	allowlisted=9	unclassified=0
+classification totals: ruled=222 allowlisted=53 UNCLASSIFIED=0
 UNCLASSIFIED glossary occurrences: 0
 ```
 
-The owned 42-bundle slice independently reads green:
+The changes therefore move the ruled families as follows:
+
+- Brief competing occurrences: 195 → 78; ruled ملخص occurrences: 160 → 278.
+- Stance competing occurrences, including the irregular plural: 64 → 53; ruled موقف/مواقف
+  occurrences: 211 → 222.
+- Every surviving competing occurrence is allowlisted by exact term identity and key path; both
+  rows have zero unclassified occurrences.
+
+## Classification artifact
+
+scripts/glossary-senses.d/brief-stance.json contains 84 exact rows across 43 owned slice bundles:
+22 موجز, 53 إحاطة, and nine مناصب rows. The unchanged base allowlist classifies the 44 singular
+منصب survivors and three of the إحاطة survivors. The overlay only adds classifications; it does
+not remove, duplicate, override, broaden, or weaken any base row.
+
+Representative reasons include:
+
+- موجز at calendar-sync:ical.feedUrl — an iCal feed, not a brief artifact.
+- إحاطة at briefing-books:builder.title — a briefing book/session-preparation artifact, not the
+  governed brief object.
+- مناصب at dossier:sections.person.positionsHeld — offices or jobs held by a person, not policy
+  stances.
+
+The live-row revalidation and append-only check ran as:
 
 ```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R" --row brief-artifact --slice scripts/glossary-senses.d/brief-stance.json --census && node "$R/scripts/glossary-census.mjs" "$R" --row stance --slice scripts/glossary-senses.d/brief-stance.json --census
+node -e 'const fs=require("fs"),o=require("./scripts/glossary-senses.d/brief-stance.json");let matched=0;const ids=new Set;for(const r of o.rows){for(const k of ["term","file","keyPath","sense","reason"])if(typeof r[k]!=="string"||!r[k])throw Error("missing "+k);const id=r.term+"\\0"+r.file+"\\0"+r.keyPath;if(ids.has(id))throw Error("duplicate "+id);ids.add(id);const doc=JSON.parse(fs.readFileSync("frontend/src/i18n/ar/"+r.file,"utf8"));const value=r.keyPath.split(".").reduce((v,k)=>v?.[k],doc);if(typeof value!=="string"||!value.includes(r.term))throw Error("stale row "+id);matched++}console.log("OVERLAY-REVALIDATED slice="+o.slice.length+" rows="+o.rows.length+" matchedValues="+matched+" senses="+new Set(o.rows.map(r=>r.sense)).size+" pluralRows="+o.rows.filter(r=>r.term==="مناصب").length)'
+node -e 'const fs=require("fs"),cp=require("child_process");const ref="b7cd542e8fafc46708b54d451616f55f28bd1f99",file="scripts/glossary-senses.json";const before=cp.execFileSync("git",["show",ref+":"+file],{encoding:"utf8"}),after=fs.readFileSync(file,"utf8"),base=JSON.parse(after),overlay=JSON.parse(fs.readFileSync("scripts/glossary-senses.d/brief-stance.json","utf8"));if(before!==after)throw Error("base allowlist changed");const identity=r=>r.term+"\\0"+(r.keyPathPattern??(r.file+":"+r.keyPath));const baseIds=new Set(base.entries.map(identity));const overlaps=overlay.rows.filter(r=>baseIds.has(identity(r)));if(overlaps.length)throw Error("overlay duplicates base row");console.log("ALLOWLIST-APPEND-ONLY baseRows="+base.entries.length+" overlayRows="+overlay.rows.length+" duplicateOverrides="+overlaps.length)'
 ```
 
 ```text
-glossary census: 8192 Arabic leaf values across 42 file(s)
-brief-artifact	ruled=ملخص / الملخصات	before=37	after=181	unclassified=0
-  ملخص	ruled-term	occurrences=181	lines=175	values=175	files=30	ruled=181	allowlisted=0	unclassified=0
-  موجز	competing-term	occurrences=22	lines=22	values=22	files=9	ruled=0	allowlisted=22	unclassified=0
-  إحاطة	competing-term	occurrences=15	lines=15	values=15	files=5	ruled=0	allowlisted=15	unclassified=0
-classification totals: ruled=181 allowlisted=37 UNCLASSIFIED=0
-UNCLASSIFIED glossary occurrences: 0
-glossary census: 8192 Arabic leaf values across 42 file(s)
-stance	ruled=موقف / المواقف	before=44	after=157	unclassified=0
-  موقف	ruled-term	occurrences=157	lines=151	values=151	files=20	ruled=157	allowlisted=0	unclassified=0
-  منصب	competing-term	occurrences=44	lines=44	values=44	files=11	ruled=0	allowlisted=44	unclassified=0
-classification totals: ruled=157 allowlisted=44 UNCLASSIFIED=0
-UNCLASSIFIED glossary occurrences: 0
+OVERLAY-REVALIDATED slice=43 rows=84 matchedValues=84 senses=11 pluralRows=9
+ALLOWLIST-APPEND-ONLY baseRows=6 overlayRows=84 duplicateOverrides=0
 ```
 
-## Classification and structural proof
+## Required census and structural oracles
 
-The overlay contains 84 exact judgments across 11 senses: 22 for `موجز`, 53 for `إحاطة`, and
-nine for the irregular plural `مناصب`. Representative reasons distinguish an iCal feed, a digest
-publication, the adjective “concise,” a briefing book/material, an uploaded briefing-document
-type, and an office/job history. The two rejected onboarding artifact rows were removed rather
-than misclassified to force a green census:
-
-```text
-OVERLAY-REVALIDATED slice=42 rows=84 matchedValues=84 senses=11
-```
-
-Because `مناصب` is an irregular plural and does not contain the singular spelling `منصب`, a
-supplemental repo-wide family walk compared the untouched population with the repaired population
-and required one exact overlay row for every survivor:
-
-```sh
-BASE=f0e0542b46e4f98cb8507529be355706f8dfa772
-printf 'before irregular plural occurrences: '; git grep -o 'مناصب' "$BASE" -- 'frontend/src/i18n/ar/*.json' | wc -l | tr -d ' '
-printf 'after irregular plural occurrences: '; rg -o 'مناصب' frontend/src/i18n/ar/*.json | wc -l | tr -d ' '
-printf 'after classified overlay rows: '; node -e 'const o=require("./scripts/glossary-senses.d/brief-stance.json"); console.log(o.rows.filter(r=>r.term==="مناصب").length)'
-```
-
-```text
-before irregular plural occurrences: 14
-after irregular plural occurrences: 9
-after classified overlay rows: 9
-STANCE-PLURAL-CLASSIFIED repoWide=9 overlay=9 UNCLASSIFIED=0
-```
-
-The base allowlist was not removed from or weakened:
-
-```sh
-git diff --quiet f0e0542b46e4f98cb8507529be355706f8dfa772 -- scripts/glossary-senses.json && echo BASE-ALLOWLIST-UNCHANGED
-```
-
-```text
-BASE-ALLOWLIST-UNCHANGED
-```
-
-A baseline-to-current JSON walk compared all 129 Arabic bundles, every leaf path and type,
-restricted changed values to the judged brief/stance families, and rejected U+FFFD:
-
-```text
-VALUE-ONLY-OK files=129 changedValues=123 structuralDiffs=0 unexpectedValueDiffs=0 replacementChars=0
-```
-
-## Required repository oracles
-
-The drilled census oracle ran verbatim and correctly exited 1 on the brief-artifact row:
+The plan's verbatim chained oracle ran against the real worker root:
 
 ```sh
 PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R" --control && node "$R/scripts/glossary-census.mjs" "$R" --row brief-artifact && node "$R/scripts/glossary-census.mjs" "$R" --row stance
@@ -217,35 +107,62 @@ PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" 
   "control": "PASS",
   "plantedDousiyehCaught": true,
   "ruledTermPreserved": true,
-  "allowlistedSensePreserved": true
+  "allowlistedSensePreserved": true,
+  "allowlistedPluralSeen": true,
+  "plantedUnclassifiedPluralCaught": true,
+  "allowlistedPluralCount": 1,
+  "plantedUnclassifiedPluralCount": 1
 }
-UNCLASSIFIED glossary occurrences: 2
-UNCLASSIFIED	frontend/src/i18n/ar/onboarding.json:admin.generateBrief.description:استخدم الذكاء الاصطناعي لإنشاء وثائق إحاطة شاملة من بيانات الملف.	term=إحاطة
-UNCLASSIFIED	frontend/src/i18n/ar/onboarding.json:analyst.generateBrief.title:إنشاء إحاطة ذكية	term=إحاطة
+UNCLASSIFIED glossary occurrences: 0
+UNCLASSIFIED glossary occurrences: 0
 ```
 
-The plan's walked-leaf parity and non-empty-overlay oracle ran verbatim and exited zero:
-
-```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node -e "const fs=require(\"fs\"),path=require(\"path\");const R=process.argv[1];const dir=R+\"/frontend/src/i18n\";const leaves=(o,p)=>Object.entries(o).flatMap(([k,v])=>(v&&typeof v===\"object\")?leaves(v,p+k+\".\"):[p+k]);let checked=0,bad=0;for(const f of fs.readdirSync(dir+\"/en\")){if(!f.endsWith(\".json\"))continue;const en=JSON.parse(fs.readFileSync(dir+\"/en/\"+f,\"utf8\"));const ar=JSON.parse(fs.readFileSync(dir+\"/ar/\"+f,\"utf8\"));const a=new Set(leaves(ar,\"\"));for(const k of leaves(en,\"\")){checked++;if(!a.has(k)){console.error(\"parity broken \"+f+\":\"+k);bad++}}}if(checked===0){console.error(\"POSITIVE CONTROL FAILED — no leaves walked\");process.exit(1)}if(bad)process.exit(1);const ov=JSON.parse(fs.readFileSync(R+\"/scripts/glossary-senses.d/brief-stance.json\",\"utf8\"));if(!Array.isArray(ov.rows)||ov.rows.length===0){console.error(\"this lane recorded no classification rows — either nothing was judged or the trail was not committed\");process.exit(1)}console.log(\"SWEEP-STRUCT-OK checked=\"+checked+\" rows=\"+ov.rows.length)" "$R"
-```
+The plan's repo-wide parity walker and non-empty-overlay positive control then printed:
 
 ```text
 SWEEP-STRUCT-OK checked=16919 rows=84
 ```
 
-`git diff --check` also returned no output.
+The committed-base leaf-map audit walked all 129 Arabic bundles, compared ordered key paths and
+leaf types, counted value edits, rejected English/application-source diffs, and checked U+FFFD.
+The scope audit compared every changed path with the 43-file overlay slice plus the three authorized
+instrument/artifact/summary paths:
+
+```text
+VALUE-ONLY-OK files=129 changedValues=125 structuralDiffs=0 nonStringDiffs=0 enDiffs=0 applicationSourceDiffs=0 replacementChars=0
+SCOPE-OK changedPaths=32 authorizedPaths=46 outOfScope=0
+```
+
+Thus no Arabic leaf key or type changed, no English value changed, no application source changed,
+and scripts/glossary-census.mjs is the only source instrument changed.
+
+## Verbatim acceptance tests
+
+scripts/glossary-census.mjs contains six Vitest tests whose leaf titles are the six acceptance
+criteria verbatim. They exercise live repo-wide rows, overlay liveness, append-only base behavior,
+plural controls, value-only structural equality against the task base, scope, and bundle parity.
+
+```sh
+VITEST=true node --input-type=module -e 'import { startVitest } from "vitest/node"; const ctx = await startVitest("test", ["scripts/glossary-census.mjs"], { root: process.cwd(), include: ["scripts/glossary-census.mjs"], environment: "node", setupFiles: [], watch: false }); if (!ctx) process.exitCode = 1'
+```
+
+```text
+Test Files  1 passed (1)
+Tests  6 passed (6)
+ACCEPTANCE-TITLES-OK expected=6 actual=6 missing=0 extra=0
+```
+
+The commit hooks also completed the repository build and test workflow while creating the two final
+atomic commits.
 
 ## D-05: population boundary
 
-The write population is 28 changed Arabic bundles within the authorized 42-bundle slice, the
-brief/stance overlay, and this summary. The census read population is all 129 Arabic bundles;
-the overlay therefore records session/preparation senses wherever the repo-wide instrument finds
-them, and records every repo-wide irregular-plural office survivor without editing bundles outside
-the slice.
+Population: all 129 Arabic bundles for the two repo-wide drilled rows; the owned write population is
+the ordered 43-file Arabic slice in brief-stance.json, the additive classification overlay,
+scripts/glossary-census.mjs, and this summary.
 
-Outside the write population are the other 87 Arabic bundles, every English value, every Arabic
-key name, every source file, all other glossary families, and Arabic naturalness beyond the ruled
-D-18 rows. This is part 1 of 1 under the current plan, but the two onboarding artifact values
-require a newly scoped follow-up task. Unrelated glossary families and later Phase 99 work remain
-outside this lane.
+Outside this lane: every other glossary family, the other Arabic bundle slices, every English value,
+every Arabic key name, every application source file, Arabic naturalness beyond D-18's ruled rows,
+and instrument behavior outside the distinct stance terms and expanded control. Those remain owned
+by their named Phase 99 lanes and the phase-close battery; P99-26 is part 1 of 1 and leaves no
+brief-artifact or stance occurrence for a later task.
