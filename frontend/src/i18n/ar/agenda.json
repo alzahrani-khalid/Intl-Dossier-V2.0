@@ -63,7 +63,7 @@
 
   "presenterTypes": {
     "user": "مستخدم النظام",
-    "person_dossier": "ملف شخص",
+    "person_dossier": "دوسيه شخص",
     "external": "جهة اتصال خارجية",
     "organization": "منظمة"
   },
@@ -107,9 +107,9 @@
   "enterPresenterTitleEn": "أدخل منصب المقدم بالإنجليزية",
   "enterPresenterTitleAr": "أدخل منصب المقدم بالعربية",
   "selectPresenterFromSystem": "اختر المقدم من النظام",
-  "linkedDossier": "ملف مرتبط",
+  "linkedDossier": "دوسيه مرتبط",
   "linkedCommitment": "التزام مرتبط",
-  "searchAndLinkDossier": "ابحث واربط ملفاً",
+  "searchAndLinkDossier": "ابحث واربط دوسيهًا",
   "searchAndLinkCommitment": "ابحث واربط التزاماً",
   "cancel": "إلغاء",
   "saveChanges": "حفظ التغييرات",

@@ -1,26 +1,26 @@
 {
-  "title": "ملفات ذات صلة",
-  "foundCount": "تم العثور على {{count}} ملفات مشابهة",
-  "foundCount_one": "تم العثور على ملف مشابه واحد",
-  "relatedDossiers": "ملفات ذات صلة",
+  "title": "دوسيهات ذات صلة",
+  "foundCount": "تم العثور على {{count}} دوسيهات مشابهة",
+  "foundCount_one": "تم العثور على دوسيه مشابه واحد",
+  "relatedDossiers": "دوسيهات ذات صلة",
 
   "noRecommendations": "لا توجد توصيات",
-  "noRecommendationsDescription": "لم يتم العثور على ملفات مشابهة بعد. جرب إنشاء توصيات جديدة.",
+  "noRecommendationsDescription": "لم يتم العثور على دوسيهات مشابهة بعد. جرب إنشاء توصيات جديدة.",
 
-  "loading": "جارٍ البحث عن ملفات مشابهة...",
+  "loading": "جارٍ البحث عن دوسيهات مشابهة...",
   "errorLoading": "فشل تحميل التوصيات",
 
   "similarityTooltip": "درجة تشابه المحتوى بناءً على تحليل الذكاء الاصطناعي",
   "refreshTooltip": "إنشاء توصيات جديدة",
 
-  "viewDossier": "عرض الملف",
+  "viewDossier": "عرض الدوسيه",
   "dismiss": "تجاهل",
   "wasThisHelpful": "هل كان مفيدًا؟",
 
   "whyRecommended": "لماذا تم التوصية؟",
   "contributingFactors": "العوامل المساهمة",
 
-  "generateRecommendations": "البحث عن ملفات مشابهة",
+  "generateRecommendations": "البحث عن دوسيهات مشابهة",
   "viewAllRecommendations": "عرض جميع التوصيات",
 
   "reason": {
@@ -68,7 +68,7 @@
   "accessibility": {
     "similarityScore": "نسبة تشابه المحتوى {{score}}%",
     "priorityLevel": "مستوى الأولوية: {{level}}",
-    "expandDetails": "انقر لمعرفة سبب التوصية بهذا الملف",
+    "expandDetails": "انقر لمعرفة سبب التوصية بهذا الدوسيه",
     "collapseDetails": "إخفاء تفاصيل التوصية"
   }
 }

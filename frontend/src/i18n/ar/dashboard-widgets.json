@@ -83,8 +83,8 @@
     }
   },
   "recent": {
-    "title": "الملفات الأخيرة",
-    "empty": "لا توجد ملفات حديثة"
+    "title": "الدوسيهات الأخيرة",
+    "empty": "لا توجد دوسيهات حديثة"
   },
   "forums": {
     "title": "المنتديات",
@@ -159,7 +159,7 @@
     }
   },
   "metrics": {
-    "active-dossiers": "الملفات النشطة",
+    "active-dossiers": "الدوسيهات النشطة",
     "pending-tasks": "المهام المعلقة",
     "overdue-items": "العناصر المتأخرة",
     "completed-this-week": "المكتملة هذا الأسبوع",
@@ -300,7 +300,7 @@
     "all": "جميع الأنشطة"
   },
   "quickActions": {
-    "createDossier": "إنشاء ملف",
+    "createDossier": "إنشاء دوسيه",
     "createTask": "إنشاء مهمة",
     "createIntake": "إنشاء استقبال",
     "search": "بحث",
@@ -351,13 +351,13 @@
   },
   "benchmarks": {
     "title": "فرق مثل فريقك",
-    "description": "تتتبع المؤسسات المشابهة لمؤسستك عادةً {{dossiers}} ملفًا، و{{relationships}} علاقة، و{{briefs}} ملخصًا نشطًا.",
+    "description": "تتتبع المؤسسات المشابهة لمؤسستك عادةً {{dossiers}} دوسيهًا، و{{relationships}} علاقة، و{{briefs}} ملخصًا نشطًا.",
     "organizations": "مؤسسة",
     "dismiss": "إغلاق المعاينة",
     "customize": "تخصيص لوحة التحكم",
-    "typicalRange": "النطاق النموذجي: {{min}}-{{max}} ملف",
+    "typicalRange": "النطاق النموذجي: {{min}}-{{max}} دوسيه",
     "categories": {
-      "dossiers": "الملفات النشطة",
+      "dossiers": "الدوسيهات النشطة",
       "relationships": "العلاقات",
       "briefs": "الملخصات النشطة",
       "engagements": "المشاركات الشهرية",
@@ -365,7 +365,7 @@
       "mous": "مذكرات التفاهم النشطة"
     },
     "descriptions": {
-      "dossiers": "ملفات الدول والمنظمات والمواضيع",
+      "dossiers": "دوسيهات الدول والمنظمات والمواضيع",
       "relationships": "الروابط المتتبعة بين الكيانات",
       "briefs": "ملخصات الاستخبارات المولدة بالذكاء الاصطناعي",
       "engagements": "الاجتماعات والفعاليات شهريًا",

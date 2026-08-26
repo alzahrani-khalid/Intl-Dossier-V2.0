@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "decision": "D-17 dossier object = دوسيه; ملف survives only for explicitly classified file, attachment, profile, or other non-dossier senses.",
+  "slice": [
+    "frontend/src/i18n/ar/advanced-search.json",
+    "frontend/src/i18n/ar/after-actions-page.json",
+    "frontend/src/i18n/ar/agenda.json",
+    "frontend/src/i18n/ar/ai-brief.json",
+    "frontend/src/i18n/ar/ai-chat.json",
+    "frontend/src/i18n/ar/analytics.json",
+    "frontend/src/i18n/ar/assignments.json",
+    "frontend/src/i18n/ar/availability-polling.json",
+    "frontend/src/i18n/ar/briefing-books.json",
+    "frontend/src/i18n/ar/bulk-actions.json",
+    "frontend/src/i18n/ar/calendar.json",
+    "frontend/src/i18n/ar/citations.json",
+    "frontend/src/i18n/ar/collaboration.json",
+    "frontend/src/i18n/ar/commitments.json",
+    "frontend/src/i18n/ar/committees.json",
+    "frontend/src/i18n/ar/common.json",
+    "frontend/src/i18n/ar/contacts.json",
+    "frontend/src/i18n/ar/contextual-help.json",
+    "frontend/src/i18n/ar/contextual-suggestions.json",
+    "frontend/src/i18n/ar/copilot.json",
+    "frontend/src/i18n/ar/countries.json",
+    "frontend/src/i18n/ar/country-wizard.json",
+    "frontend/src/i18n/ar/dashboard-widgets.json",
+    "frontend/src/i18n/ar/dashboard.json",
+    "frontend/src/i18n/ar/delegation.json",
+    "frontend/src/i18n/ar/dossier-context.json",
+    "frontend/src/i18n/ar/dossier-drawer.json",
+    "frontend/src/i18n/ar/dossier-export.json",
+    "frontend/src/i18n/ar/dossier-overview.json",
+    "frontend/src/i18n/ar/dossier-recommendations.json",
+    "frontend/src/i18n/ar/dossier-search.json",
+    "frontend/src/i18n/ar/dossier-shell.json",
+    "frontend/src/i18n/ar/dossier.json",
+    "frontend/src/i18n/ar/dossiers-feature017.json",
+    "frontend/src/i18n/ar/dossiers.json",
+    "frontend/src/i18n/ar/elected-official-wizard.json",
+    "frontend/src/i18n/ar/email-digest.json"
+  ],
+  "rows": [
+    {
+      "term": "ملف",
+      "file": "briefing-books.json",
+      "keyPath": "generation.stages.uploading",
+      "sense": "computer-file-upload",
+      "reason": "The generation stage uploads an output file, not a dossier object."
+    },
+    {
+      "term": "ملف",
+      "file": "commitments.json",
+      "keyPath": "evidence.maxSize",
+      "sense": "computer-file-size",
+      "reason": "The evidence constraint states a computer-file size limit, not a dossier count or size."
+    },
+    {
+      "term": "ملف",
+      "file": "commitments.json",
+      "keyPath": "evidence.invalidType",
+      "sense": "computer-file-type",
+      "reason": "The evidence validation rejects an uploaded computer-file type, not a dossier type."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "dataLibrary.searchPlaceholder",
+      "sense": "data-library-file",
+      "reason": "The data-library search targets stored computer files, matching the adjacent upload and file-size controls."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.ai.modeAutoDesc",
+      "sense": "computer-file-processing",
+      "reason": "The AI processing mode is selected from uploaded computer-file size."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.ai.modeSyncDesc",
+      "sense": "computer-file-processing",
+      "reason": "The synchronous mode description refers to small uploaded computer files."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.ai.modeAsyncDesc",
+      "sense": "computer-file-processing",
+      "reason": "The asynchronous mode description refers to large uploaded computer files."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.ai.uploading",
+      "sense": "computer-file-upload",
+      "reason": "The after-action AI flow is uploading a computer file for processing."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.pdf.completed",
+      "sense": "pdf-file",
+      "reason": "The completed output is a generated PDF file, not a dossier object."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.pdf.download",
+      "sense": "pdf-file",
+      "reason": "The action downloads a generated PDF file."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.pdf.generateButton",
+      "sense": "pdf-file",
+      "reason": "The action generates a PDF file, not a dossier."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.pdf.generationFailed",
+      "sense": "pdf-file",
+      "reason": "The failure concerns generation of a PDF file."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.pdf.info",
+      "sense": "pdf-file",
+      "reason": "The information label describes PDF-file generation."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.pdf.title",
+      "sense": "pdf-file",
+      "reason": "The dialog title describes generation of a PDF file."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "forms.drag_drop_or_click",
+      "sense": "computer-file-dropzone",
+      "reason": "The form instruction asks the user to drag and drop computer files."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "forms.drop_here",
+      "sense": "computer-file-dropzone",
+      "reason": "The form dropzone accepts computer files."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "forms.drop_rejected",
+      "sense": "computer-file-dropzone",
+      "reason": "The rejection message concerns computer files that could not be added."
+    },
+    {
+      "term": "ملف",
+      "file": "contacts.json",
+      "keyPath": "contactDirectory.documentExtraction.description",
+      "sense": "contact-import-file",
+      "reason": "Both occurrences enumerate computer-file formats accepted by contact extraction."
+    },
+    {
+      "term": "ملف",
+      "file": "contacts.json",
+      "keyPath": "contactDirectory.documentExtraction.no_contacts_found",
+      "sense": "contact-import-file",
+      "reason": "The retry guidance asks for a different computer file after extraction finds no contacts."
+    },
+    {
+      "term": "ملف",
+      "file": "contacts.json",
+      "keyPath": "contactDirectory.documentExtraction.start_over",
+      "sense": "contact-import-file",
+      "reason": "The restart action uploads a different computer file for contact extraction."
+    },
+    {
+      "term": "ملف",
+      "file": "dashboard.json",
+      "keyPath": "export.excel",
+      "sense": "exported-computer-file",
+      "reason": "The dashboard export produces an Excel file, not a dossier."
+    },
+    {
+      "term": "ملف",
+      "file": "dashboard.json",
+      "keyPath": "export.pdf",
+      "sense": "exported-computer-file",
+      "reason": "The dashboard export produces a PDF file, not a dossier."
+    },
+    {
+      "term": "ملف",
+      "file": "dashboard.json",
+      "keyPath": "export.csv",
+      "sense": "exported-computer-file",
+      "reason": "The dashboard export produces a CSV file, not a dossier."
+    },
+    {
+      "term": "ملف",
+      "file": "dossier-export.json",
+      "keyPath": "popupBlocked",
+      "sense": "downloaded-html-file",
+      "reason": "The fallback downloads the briefing pack as an HTML computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "dossier.json",
+      "keyPath": "addToDossier.actions.document.description",
+      "sense": "attached-computer-file",
+      "reason": "The surviving occurrence is the file being attached; the dossier-object occurrence in the same leaf was rewritten to دوسيه."
+    }
+  ]
+}

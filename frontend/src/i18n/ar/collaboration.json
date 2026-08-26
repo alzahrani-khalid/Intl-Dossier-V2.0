@@ -8,8 +8,8 @@
     "idle": "غائب"
   },
 
-  "activeViewersLabel": "{{count}} مستخدم يشاهد هذا الملف",
-  "activeViewersLabel_one": "مستخدم واحد يشاهد هذا الملف",
+  "activeViewersLabel": "{{count}} مستخدم يشاهد هذا الدوسيه",
+  "activeViewersLabel_one": "مستخدم واحد يشاهد هذا الدوسيه",
   "viewersSummary": "{{total}} يشاهد: {{editing}} يعدل، {{viewing}} يعرض",
   "moreViewers": "{{count}} مشاهد آخر",
   "moreViewers_one": "مشاهد آخر",

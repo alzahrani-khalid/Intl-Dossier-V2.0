@@ -106,7 +106,7 @@
     "failedAttempts_many": "{{count}} محاولة فاشلة",
     "failedAttempts_other": "{{count}} محاولة فاشلة",
     "types": {
-      "dossier": "ملف",
+      "dossier": "دوسيه",
       "ticket": "تذكرة",
       "position": "موقف",
       "task": "مهمة"
