@@ -469,13 +469,6 @@
     },
     {
       "term": "إحاطة",
-      "file": "dossier-overview.json",
-      "keyPath": "documentType.brief",
-      "sense": "briefing-document-type",
-      "reason": "This legacy document-type label names a briefing document, not the governed brief artifact entity."
-    },
-    {
-      "term": "إحاطة",
       "file": "dossier-shell.json",
       "keyPath": "header.exportTooltip",
       "sense": "briefing-pack",

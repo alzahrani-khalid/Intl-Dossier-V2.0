@@ -9,7 +9,7 @@
     },
     {
       "term": "ملف",
-      "keyPathPattern": "^[^:]+:.*(?:[Ff]ile|[Ff]iles|attachment|attachments|upload|dropzone|documents)(?:[._:]|$|[A-Z]).*$",
+      "keyPathPattern": "^[^:]+:.*(?:[._:](?:file|files)(?:[._:]|$)|(?:File|Files|attachment|attachments|upload|dropzone|documents)(?:[._:]|$|[A-Z])).*$",
       "sense": "computer-file-or-attachment",
       "reason": "D-17 explicitly preserves ملف for file and attachment copy; the key-path family limits this exception to file/document upload surfaces."
     },
