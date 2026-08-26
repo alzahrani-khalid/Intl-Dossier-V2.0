@@ -64,10 +64,38 @@
     },
     {
       "term": "ملف",
+      "file": "commitments.json",
+      "keyPath": "evidence.fileTooLarge",
+      "sense": "computer-file-size",
+      "reason": "The evidence validation reports that an uploaded computer file exceeds its size limit, not that a dossier is too large."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "profile",
+      "sense": "personal-profile",
+      "reason": "The root common label names the user's personal profile, which D-17 explicitly preserves."
+    },
+    {
+      "term": "ملف",
       "file": "common.json",
       "keyPath": "dataLibrary.searchPlaceholder",
       "sense": "data-library-file",
       "reason": "The data-library search targets stored computer files, matching the adjacent upload and file-size controls."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "dataLibrary.fileTooLarge",
+      "sense": "computer-file-size",
+      "reason": "The data-library validation reports an uploaded computer file exceeding its size limit."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "reports.templates.organizationProfile",
+      "sense": "profile-page-or-summary",
+      "reason": "The report template is an organization profile, not a dossier object or a computer file."
     },
     {
       "term": "ملف",
@@ -89,6 +117,13 @@
       "keyPath": "afterActions.ai.modeAsyncDesc",
       "sense": "computer-file-processing",
       "reason": "The asynchronous mode description refers to large uploaded computer files."
+    },
+    {
+      "term": "ملف",
+      "file": "common.json",
+      "keyPath": "afterActions.ai.fileTooLarge",
+      "sense": "computer-file-size",
+      "reason": "The after-action AI validation reports an uploaded computer file exceeding its size limit."
     },
     {
       "term": "ملف",
@@ -215,6 +250,20 @@
       "keyPath": "addToDossier.actions.document.description",
       "sense": "attached-computer-file",
       "reason": "The surviving occurrence is the file being attached; the dossier-object occurrence in the same leaf was rewritten to دوسيه."
+    },
+    {
+      "term": "ملف",
+      "file": "dossier.json",
+      "keyPath": "sections.organization.institutionalProfile",
+      "sense": "profile-page-or-summary",
+      "reason": "The label names an organization's institutional profile, not a dossier object or a computer file."
+    },
+    {
+      "term": "ملف",
+      "file": "dossier.json",
+      "keyPath": "sections.person.professionalProfile",
+      "sense": "profile-page-or-summary",
+      "reason": "The label names a person's professional profile, not a dossier object or a computer file."
     }
   ]
 }
