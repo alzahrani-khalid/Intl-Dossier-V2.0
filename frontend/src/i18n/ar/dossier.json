@@ -786,7 +786,7 @@
   "tabs": {
     "timeline": "الجدول الزمني",
     "relationships": "العلاقات",
-    "positions": "المناصب",
+    "positions": "المواقف",
     "mous": "مذكرات التفاهم",
     "contacts": "جهات الاتصال",
     "comments": "تعليقات",
@@ -1004,7 +1004,7 @@
       "documentTypes": {
         "report": "تقرير",
         "memo": "مذكرة",
-        "briefing": "ملخص",
+        "briefing": "إحاطة",
         "correspondence": "مراسلة",
         "other": "أخرى"
       },

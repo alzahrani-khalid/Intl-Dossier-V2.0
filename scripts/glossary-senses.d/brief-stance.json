@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "decision": "D-18 brief artifact = ملخص, briefing session/preparation = إحاطة, and stance = موقف; every survivor is classified by sense.",
+  "decision": "D-18 brief artifact = ملخص, briefing session/preparation = إحاطة, and stance = موقف; singular and plural office survivors are classified by sense.",
   "slice": [
     "frontend/src/i18n/ar/activity-feed.json",
     "frontend/src/i18n/ar/admin.json",
@@ -577,6 +577,76 @@
       "keyPath": "analytics.briefingPacks",
       "sense": "briefing-pack",
       "reason": "The path names an exported briefing pack assembled for a session, not the brief artifact object."
+    },
+    {
+      "term": "إحاطة",
+      "file": "dossier.json",
+      "keyPath": "addToDossier.form.documentTypes.briefing",
+      "sense": "briefing-document-type",
+      "reason": "The upload form explicitly labels a Briefing document type, not the governed brief artifact entity."
+    },
+    {
+      "term": "مناصب",
+      "file": "contacts.json",
+      "keyPath": "contactDirectory.documentExtraction.info_alert",
+      "sense": "office-post-or-job-title",
+      "reason": "The import extracts people's job positions alongside names and contact details, not policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "contextual-help.json",
+      "keyPath": "dossier.type.types.person",
+      "sense": "office-post-or-job-title",
+      "reason": "A person's position history is an employment and office history, not a set of policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "dossier.json",
+      "keyPath": "typeDescription.elected_official",
+      "sense": "office-post-or-job-title",
+      "reason": "The elected-official description refers to offices held and terms of office, not policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "dossier.json",
+      "keyPath": "sections.person.positionsHeld",
+      "sense": "office-post-or-job-title",
+      "reason": "Positions held in a professional profile are offices or jobs, not policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "dossier.json",
+      "keyPath": "sections.person.positionsHeldEmpty",
+      "sense": "office-post-or-job-title",
+      "reason": "Positions held in a professional profile are offices or jobs, not policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "dossier.json",
+      "keyPath": "sections.person.positionsHeldPlaceholder",
+      "sense": "office-post-or-job-title",
+      "reason": "Positions held in a professional profile are offices or jobs, not policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "duplicate-detection.json",
+      "keyPath": "transfer_roles",
+      "sense": "office-post-or-job-title",
+      "reason": "Transferred roles and job positions are employment records, not policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "elected-officials.json",
+      "keyPath": "filters.allOfficeTypes",
+      "sense": "office-post-or-job-title",
+      "reason": "The form option explicitly refers to elected-office types, not policy stances."
+    },
+    {
+      "term": "مناصب",
+      "file": "persons.json",
+      "keyPath": "stats.roles",
+      "sense": "office-post-or-job-title",
+      "reason": "The person's roles section lists offices or jobs, not policy stances."
     }
   ]
 }
