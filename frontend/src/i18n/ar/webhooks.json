@@ -75,7 +75,7 @@
   },
 
   "eventCategories": {
-    "dossier": "الملفات",
+    "dossier": "الدوسيهات",
     "engagement": "المشاركات",
     "commitment": "الالتزامات",
     "intake": "تذاكر الاستقبال",
@@ -86,9 +86,9 @@
   },
 
   "events": {
-    "dossier.created": "إنشاء ملف",
-    "dossier.updated": "تحديث ملف",
-    "dossier.deleted": "حذف ملف",
+    "dossier.created": "إنشاء دوسيه",
+    "dossier.updated": "تحديث دوسيه",
+    "dossier.deleted": "حذف دوسيه",
     "engagement.created": "إنشاء مشاركة",
     "engagement.updated": "تحديث مشاركة",
     "engagement.completed": "اكتمال مشاركة",

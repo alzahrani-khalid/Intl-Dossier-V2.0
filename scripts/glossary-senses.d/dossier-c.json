@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "decision": "D-17 dossier object = دوسيه; every surviving ملف occurrence is classified by sense.",
+  "slice": [
+    "frontend/src/i18n/ar/progressive-disclosure.json",
+    "frontend/src/i18n/ar/quickswitcher.json",
+    "frontend/src/i18n/ar/relationships.json",
+    "frontend/src/i18n/ar/report-builder.json",
+    "frontend/src/i18n/ar/sample-data.json",
+    "frontend/src/i18n/ar/scenario-sandbox.json",
+    "frontend/src/i18n/ar/settings.json",
+    "frontend/src/i18n/ar/stakeholder-influence.json",
+    "frontend/src/i18n/ar/tags.json",
+    "frontend/src/i18n/ar/topic-wizard.json",
+    "frontend/src/i18n/ar/topics.json",
+    "frontend/src/i18n/ar/unified-kanban.json",
+    "frontend/src/i18n/ar/user-management.json",
+    "frontend/src/i18n/ar/webhooks.json",
+    "frontend/src/i18n/ar/work-creation.json",
+    "frontend/src/i18n/ar/workflow-automation.json",
+    "frontend/src/i18n/ar/working-group-wizard.json",
+    "frontend/src/i18n/ar/workspace.json"
+  ],
+  "rows": [
+    {
+      "term": "ملف",
+      "file": "progressive-disclosure.json",
+      "keyPath": "pages.dossiers.empty.intermediate.documents.content",
+      "sense": "computer-file-or-attachment",
+      "reason": "The surviving occurrence names relevant computer files; the dossier occurrence in the same value was rewritten to دوسيهاتك."
+    },
+    {
+      "term": "ملف",
+      "file": "progressive-disclosure.json",
+      "keyPath": "pages.documents.empty.basic.upload.content",
+      "sense": "computer-file-or-attachment",
+      "reason": "The value describes storing important computer files in a central location, not dossier objects."
+    },
+    {
+      "term": "ملف",
+      "file": "progressive-disclosure.json",
+      "keyPath": "pages.documents.empty.intermediate.search.expanded",
+      "sense": "computer-file-or-attachment",
+      "reason": "Both occurrences name searchable PDF, Word, or text computer files, not dossier objects."
+    },
+    {
+      "term": "ملف",
+      "file": "settings.json",
+      "keyPath": "navigation.profile",
+      "sense": "personal-profile",
+      "reason": "The settings navigation label names the user's personal profile."
+    },
+    {
+      "term": "ملف",
+      "file": "settings.json",
+      "keyPath": "nav.profile",
+      "sense": "personal-profile",
+      "reason": "The settings navigation label names the user's personal profile."
+    },
+    {
+      "term": "ملف",
+      "file": "settings.json",
+      "keyPath": "profile.title",
+      "sense": "personal-profile",
+      "reason": "The title names personal-profile settings, not a dossier object."
+    },
+    {
+      "term": "ملف",
+      "file": "settings.json",
+      "keyPath": "profile.description",
+      "sense": "personal-profile",
+      "reason": "The description refers to the user's personal information and profile picture."
+    },
+    {
+      "term": "ملف",
+      "file": "settings.json",
+      "keyPath": "profile.avatar",
+      "sense": "personal-profile",
+      "reason": "The value names a personal profile picture."
+    },
+    {
+      "term": "ملف",
+      "file": "settings.json",
+      "keyPath": "profile.invalidFileType",
+      "sense": "computer-file-or-attachment",
+      "reason": "The validation error names an uploaded image file type."
+    },
+    {
+      "term": "ملف",
+      "file": "settings.json",
+      "keyPath": "profile.fileTooLarge",
+      "sense": "computer-file-or-attachment",
+      "reason": "The validation error names the uploaded image file's size."
+    },
+    {
+      "term": "ملف",
+      "file": "stakeholder-influence.json",
+      "keyPath": "report_type.stakeholder_profile",
+      "sense": "personal-profile",
+      "reason": "The report type names a stakeholder profile, not a dossier object."
+    }
+  ]
+}

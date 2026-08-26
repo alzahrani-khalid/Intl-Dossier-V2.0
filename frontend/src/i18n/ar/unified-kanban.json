@@ -33,8 +33,8 @@
     "success": "تم تنفيذ الإجراء الجماعي",
     "partialSuccess": "تم تحديث {{succeeded}} من {{total}} عناصر",
     "failed": "فشل الإجراء الجماعي",
-    "linkToDossier": "ربط بملف",
-    "selectDossier": "اختر ملفاً..."
+    "linkToDossier": "ربط بدوسيه",
+    "selectDossier": "اختر دوسيهًا..."
   },
   "columnModes": {
     "label": "تجميع حسب",
@@ -141,7 +141,7 @@
   },
   "context": {
     "personal": "أعمالي",
-    "dossier": "أعمال الملف",
+    "dossier": "أعمال الدوسيه",
     "engagement": "مهام المشاركة"
   },
   "realtime": {

@@ -122,7 +122,7 @@
     "confirmReactivation": "هل أنت متأكد من إعادة تفعيل هذا المستخدم؟",
     "deactivationReason": "سبب التعطيل",
     "orphanedItems": "العناصر اليتيمة",
-    "orphanedDossiers": "سيتم وضع علامة يتيم على {{count}} ملف",
+    "orphanedDossiers": "سيتم وضع علامة يتيم على {{count}} دوسيه",
     "orphanedAssignments": "سيتم وضع علامة يتيم على {{count}} تكليف",
     "orphanedApprovals": "سيتم وضع علامة يتيم على {{count}} موافقة معلقة",
     "sessionsTerminated": "سيتم إنهاء جميع الجلسات النشطة",
