@@ -2,11 +2,11 @@
 
 ## Outcome
 
-GREEN for this lane after the follow-up `ConflictDialog` repair. The scoped strict audit over the
-35 allowed source files reports `twoArgTotal=0`, `optionsDefaultTotal=0`, and `rawKeyTotal=644` as
-the positive control that the scope matched real `t()` calls. A separate AST scan for the class the
-strict literal matcher does not count also reports zero variable second-argument defaults and zero
-object-form `defaultValue` options.
+GREEN for this lane after the deletion-only `ConflictDialog` repair. The scoped strict audit over
+the 35 allowed source files reports `twoArgTotal=0`, `optionsDefaultTotal=0`, and `rawKeyTotal=644`
+as the positive control that the scope matched real `t()` calls. A separate AST scan for the class
+the strict literal matcher does not count also reports zero variable second-argument defaults and
+zero object-form `defaultValue` options.
 
 The ten dynamic string defaults named by review were deleted:
 
@@ -15,13 +15,11 @@ The ten dynamic string defaults named by review were deleted:
 - `SLAPolicyForm.tsx`: `types`, `sensitivity`, `urgency`, `priority`, `roles`, and `channels`
   template-key calls.
 
-`ConflictDialog.tsx` now restricts `tasks-page:field.${field}` to the seven translated
-`tasks-page.field` members (`title`, `description`, `assignee_id`, `priority`, `workflow_stage`,
-`status`, `sla_deadline`). It separately allows the audit fields `updated_at` and `updated_by` to
-render their changed values, satisfying the component regression without feeding untranslated audit
-ids into the template key or reintroducing a fallback mask.
+`ConflictDialog.tsx` preserves the original all-field comparison and template-key call, deleting
+only `{ defaultValue: field }` from ``t(`tasks-page:field.${field}`, { defaultValue: field })``.
 
-No i18n JSON changed. No translation key string, namespace prefix, hook, or import was rewritten.
+No i18n JSON changed. No translation key string, namespace prefix, hook, import, or conflict-field
+control flow was rewritten.
 
 ## Population
 
@@ -313,11 +311,10 @@ Spot diff sample, object-form fallback option class from the original lane delet
 +            {t(`assignments:priority.${task.priority}`)}
 ```
 
-`ConflictDialog.tsx` was the review-directed domain restriction: it keeps
-`TASK_CONFLICT_FIELD_KEYS` as the translated label population, adds `TASK_CONFLICT_AUDIT_FIELD_KEYS`
-for `updated_at` and `updated_by`, and filters `Object.keys(localChanges)` to that rendered set.
-Only translated members render through `t(\`tasks-page:field.${field}\`)`; audit-field labels render
-as field ids. The template key bytes are unchanged.
+`ConflictDialog.tsx` preserves `Object.keys(localChanges)` and renders every conflicting field
+through the byte-unchanged ``t(`tasks-page:field.${field}`)`` template key. Its diff against the lane
+base is only the deletion of `{ defaultValue: field }` plus the separate `common:cancel` literal
+default deletion.
 
 ## Type Check
 

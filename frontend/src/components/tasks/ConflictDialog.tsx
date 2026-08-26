@@ -15,37 +15,6 @@ import { useDirection } from '@/hooks/useDirection'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 
-const TASK_CONFLICT_FIELD_KEYS = [
-  'title',
-  'description',
-  'assignee_id',
-  'priority',
-  'workflow_stage',
-  'status',
-  'sla_deadline',
-] as const satisfies readonly (keyof Task)[]
-
-const TASK_CONFLICT_AUDIT_FIELD_KEYS = [
-  'updated_at',
-  'updated_by',
-] as const satisfies readonly (keyof Task)[]
-
-const TASK_CONFLICT_RENDERED_FIELD_KEYS = [
-  ...TASK_CONFLICT_FIELD_KEYS,
-  ...TASK_CONFLICT_AUDIT_FIELD_KEYS,
-] as const satisfies readonly (keyof Task)[]
-
-type TaskConflictField = (typeof TASK_CONFLICT_RENDERED_FIELD_KEYS)[number]
-type TranslatedTaskConflictField = (typeof TASK_CONFLICT_FIELD_KEYS)[number]
-
-const isTaskConflictField = (field: string): field is TaskConflictField =>
-  (TASK_CONFLICT_RENDERED_FIELD_KEYS as readonly string[]).includes(field)
-
-const isTranslatedTaskConflictField = (
-  field: TaskConflictField,
-): field is TranslatedTaskConflictField =>
-  (TASK_CONFLICT_FIELD_KEYS as readonly string[]).includes(field)
-
 interface ConflictDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -90,8 +59,7 @@ export function ConflictDialog({
   const { isRTL } = useDirection()
   // Get list of conflicting fields
   const conflictingFields = Object.keys(localChanges).filter(
-    (key): key is TaskConflictField =>
-      isTaskConflictField(key) && !!serverData && localChanges[key] !== serverData[key],
+    (key) => serverData && localChanges[key as keyof Task] !== serverData[key as keyof Task],
   )
 
   return (
@@ -126,7 +94,7 @@ export function ConflictDialog({
               {conflictingFields.map((field) => (
                 <div key={field} className="flex flex-col gap-1 rounded-md bg-background p-3">
                   <span className="text-xs font-medium text-muted-foreground uppercase text-start">
-                    {isTranslatedTaskConflictField(field) ? t(`tasks-page:field.${field}`) : field}
+                    {t(`tasks-page:field.${field}`)}
                   </span>
                   <div className="flex flex-col sm:flex-row sm:gap-4">
                     <div className="flex-1">
