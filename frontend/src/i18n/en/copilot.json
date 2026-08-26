@@ -1,5 +1,6 @@
 {
   "title": "Copilot",
+  "roleYou": "You",
   "cta": {
     "ask": "Ask the copilot",
     "askAboutDossier": "Ask the copilot about this dossier"
@@ -137,6 +138,13 @@
     "tool": {
       "result": "Result from {{tool}}"
     }
+  },
+  "thread": {
+    "untitled": "New conversation",
+    "new": "New conversation"
+  },
+  "archive": {
+    "action": "Archive conversation"
   },
   "delete": {
     "action": "Delete conversation",

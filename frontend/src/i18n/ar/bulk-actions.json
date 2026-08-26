@@ -216,6 +216,8 @@
   },
 
   "accessibility": {
+    "cardView": "عرض البطاقات",
+    "tableView": "عرض الجدول",
     "toolbar": "شريط أدوات الإجراءات الجماعية",
     "selectionCheckbox": "مربع اختيار لـ {{name}}",
     "selectAllCheckbox": "مربع اختيار تحديد جميع العناصر",

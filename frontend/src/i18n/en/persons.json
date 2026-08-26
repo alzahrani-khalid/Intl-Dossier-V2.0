@@ -1,6 +1,9 @@
 {
   "title": "Persons",
   "subtitle": "Manage your network of key contacts and stakeholders",
+  "chip": {
+    "vip": "VIP"
+  },
   "actions": {
     "createPerson": "Add Person",
     "createFirst": "Add First Person",

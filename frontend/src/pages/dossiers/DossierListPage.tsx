@@ -672,7 +672,7 @@ export function DossierListPage() {
               className="text-muted-foreground hover:text-foreground"
             >
               <RotateCcw className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
-              {t('list.resetFilters', 'Reset')}
+              {t('dossier:filter.reset', 'Reset')}
             </Button>
           )}
         </div>

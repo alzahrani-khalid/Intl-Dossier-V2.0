@@ -622,7 +622,7 @@ export function MiniRelationshipGraph({
             <AlertCircle className="size-4 shrink-0" />
             <span>{t('error', 'Failed to load graph data')}</span>
             <Button variant="ghost" size="sm" onClick={() => refetch()} className="ms-auto">
-              {t('retry', 'Retry')}
+              {t('graph:miniGraph.retry', 'Retry')}
             </Button>
           </div>
         </CardContent>

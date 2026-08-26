@@ -153,7 +153,7 @@ function AfterActionFormPage(): React.ReactNode {
     >
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild aria-label={t('common.goBack', 'Go back')}>
+        <Button variant="ghost" size="icon" asChild aria-label={t('common:goBack', 'Go back')}>
           <Link to={'/engagements/$engagementId' as any} params={{ engagementId } as any}>
             <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
           </Link>

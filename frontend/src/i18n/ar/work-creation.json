@@ -10,7 +10,11 @@
     "createIntake": "طلب استقبال جديد",
     "intakeDescription": "تقديم طلب جديد عبر نظام الاستقبال",
     "selectDossier": "اختر الدوسيه",
-    "dossierRequired": "يجب ربط الالتزامات بدوسيه. يرجى اختيار واحد:"
+    "dossierRequired": "يجب ربط الالتزامات بدوسيه. يرجى اختيار واحد:",
+    "dossierRequiredGeneric": "يجب ربط جميع عناصر العمل بدوسيه. يرجى اختيار واحد:"
+  },
+  "chip": {
+    "remove": "إزالة {{name}}"
   },
   "form": {
     "selectDossier": "اختر دوسيهًا",

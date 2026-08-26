@@ -250,7 +250,7 @@ export function DossierShell({
               <Link to={`/dossiers/edit/${getDossierRouteSegment(dossierType)}/${dossierId}`}>
                 <Pencil className="h-4 w-4 sm:me-2" />
                 <span className="hidden sm:inline">
-                  {t('action.edit', { ns: 'dossier', defaultValue: 'Edit' })}
+                  {t('dossier:action.edit', { ns: 'dossier', defaultValue: 'Edit' })}
                 </span>
               </Link>
             </Button>
@@ -272,7 +272,7 @@ export function DossierShell({
                   >
                     <FileDown className="h-4 w-4 sm:me-2" />
                     <span className="hidden sm:inline">
-                      {t('action.export', { ns: 'dossier', defaultValue: 'Export' })}
+                      {t('dossier:action.export', { ns: 'dossier', defaultValue: 'Export' })}
                     </span>
                   </Button>
                 </TooltipTrigger>
