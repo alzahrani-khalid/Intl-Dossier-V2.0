@@ -68,7 +68,16 @@ const rows = [
     terms: [
       { term: 'ملخص', disposition: 'ruled-term' },
       { term: 'موجز', disposition: 'competing-term' },
-      { term: 'إحاطة', disposition: 'competing-term' },
+      {
+        term: 'إحاطة',
+        pattern: '(?<![\\p{L}\\p{M}])(?:ال)?إحاطة(?![\\p{L}\\p{M}])',
+        disposition: 'competing-term',
+      },
+      {
+        term: 'إحاطات',
+        pattern: '(?<![\\p{L}\\p{M}])(?:ال)?إحاطات(?![\\p{L}\\p{M}])',
+        disposition: 'competing-term',
+      },
     ],
   },
   {
@@ -434,16 +443,74 @@ const printUnclassified = (result) => {
   }
 }
 
-const buildControlResult = () => {
+const buildControlResult = (root = scriptRepoRoot) => {
   const dossierRow = rows.find((row) => row.object === 'dossier')
+  const briefRow = rows.find((row) => row.object === 'brief-artifact')
   const stanceRow = rows.find((row) => row.object === 'stance')
+  const productionSenseEntries = loadSenseEntries(root)
+  const dossierClassificationFor = (keyPath, senseEntries) => {
+    const leaf = {
+      file: 'control.json',
+      namespace: 'control',
+      keyPath,
+      value: 'ملف المنظمة',
+    }
+    const classificationResult = classify({
+      candidateRows: [dossierRow],
+      files: ['control.json'],
+      leaves: [leaf],
+      sourceLines: { 'control.json': [`"${keyPath}": "${leaf.value}"`] },
+      senseEntries,
+    })
+    const term = classificationResult.rows[0].terms.find((candidate) => candidate.term === 'ملف')
+    if (term.classifications.UNCLASSIFIED === 1) return 'UNCLASSIFIED'
+    if (term.classifications['allowlisted-sense'] !== 1) return 'NOT-SEEN'
+    const fullPath = `${leaf.namespace}:${leaf.keyPath}`
+    return (
+      senseEntries.find(
+        (entry) => entry.term === 'ملف' && new RegExp(entry.keyPathPattern, 'u').test(fullPath),
+      )?.sense ?? 'UNKNOWN-ALLOWLIST'
+    )
+  }
+  const profileKeyPath = 'cards.organizationProfile.summary'
+  const exactProfileEntry = {
+    term: 'ملف',
+    keyPathPattern: '^control:cards\\.organizationProfile\\.summary$',
+    sense: 'profile-page-or-summary',
+    reason: 'control exact profile sense',
+    source: 'embedded-control',
+  }
+  const realFileClassification = dossierClassificationFor(
+    'records.file.name',
+    productionSenseEntries,
+  )
+  const unlistedProfileClassification = dossierClassificationFor(
+    profileKeyPath,
+    productionSenseEntries,
+  )
+  const exactProfileClassification = dossierClassificationFor(profileKeyPath, [
+    ...productionSenseEntries,
+    exactProfileEntry,
+  ])
   const result = classify({
-    candidateRows: [dossierRow, stanceRow],
+    candidateRows: [dossierRow, briefRow, stanceRow],
     files: ['control.json'],
     leaves: [
       { file: 'control.json', namespace: 'control', keyPath: 'good', value: 'دوسيه' },
       { file: 'control.json', namespace: 'control', keyPath: 'brand', value: 'دوسييه' },
       { file: 'control.json', namespace: 'control', keyPath: 'planted', value: 'دوسييه' },
+      {
+        file: 'control.json',
+        namespace: 'control',
+        keyPath: 'briefPluralAllowed',
+        value: 'إحاطات مجدولة',
+      },
+      {
+        file: 'control.json',
+        namespace: 'control',
+        keyPath: 'briefPluralPlanted',
+        value: 'إحاطات',
+      },
       {
         file: 'control.json',
         namespace: 'control',
@@ -462,11 +529,14 @@ const buildControlResult = () => {
         '"good": "دوسيه"',
         '"brand": "دوسييه"',
         '"planted": "دوسييه"',
+        '"briefPluralAllowed": "إحاطات مجدولة"',
+        '"briefPluralPlanted": "إحاطات"',
         '"pluralOffice": "مناصب رسمية"',
         '"pluralPlanted": "مناصب"',
       ],
     },
     senseEntries: [
+      ...productionSenseEntries,
       {
         term: 'دوسييه',
         keyPathPattern: '^control:brand$',
@@ -481,17 +551,41 @@ const buildControlResult = () => {
         reason: 'control allowlisted plural office sense',
         source: 'embedded-control',
       },
+      {
+        term: 'إحاطات',
+        keyPathPattern: '^control:briefPluralAllowed$',
+        sense: 'briefing-session-or-stage',
+        reason: 'control allowlisted plural briefing-session sense',
+        source: 'embedded-control',
+      },
     ],
   })
-  const planted = result.unclassified.find((occurrence) => occurrence.keyPath === 'planted')
+  const planted = result.unclassified.find(
+    (occurrence) => occurrence.keyPath === 'planted' && occurrence.term === 'دوسييه',
+  )
   const allowlistedPlural = result.rows
     .find((row) => row.object === 'stance')
     .terms.find((term) => term.term === 'مناصب').classifications['allowlisted-sense']
   const plantedPlural = result.unclassified.filter(
     (occurrence) => occurrence.keyPath === 'pluralPlanted' && occurrence.term === 'مناصب',
   ).length
-  const ruledTermPreserved = result.classificationTotals['ruled-term'] === 1
-  const allowlistedSensePreserved = result.classificationTotals['allowlisted-sense'] === 2
+  const allowlistedBriefPlural = result.rows
+    .find((row) => row.object === 'brief-artifact')
+    .terms.find((term) => term.term === 'إحاطات').classifications['allowlisted-sense']
+  const plantedBriefPlural = result.unclassified.filter(
+    (occurrence) => occurrence.keyPath === 'briefPluralPlanted' && occurrence.term === 'إحاطات',
+  ).length
+  const ruledTermPreserved =
+    result.rows.find((row) => row.object === 'dossier').terms.find((term) => term.term === 'دوسيه')
+      .classifications['ruled-term'] === 1
+  const allowlistedSensePreserved =
+    result.rows.find((row) => row.object === 'dossier').terms.find((term) => term.term === 'دوسييه')
+      .classifications['allowlisted-sense'] === 1
+  const realFilePreserved = realFileClassification === 'computer-file-or-attachment'
+  const unlistedProfileRejected = unlistedProfileClassification === 'UNCLASSIFIED'
+  const exactProfileSelected = exactProfileClassification === 'profile-page-or-summary'
+  const briefPluralSeen = allowlistedBriefPlural === 1
+  const plantedUnclassifiedBriefPluralCaught = plantedBriefPlural === 1
   const passed = Boolean(
     planted &&
     planted.term === 'دوسييه' &&
@@ -499,10 +593,26 @@ const buildControlResult = () => {
     allowlistedSensePreserved &&
     allowlistedPlural === 1 &&
     plantedPlural === 1 &&
-    result.classificationTotals.UNCLASSIFIED === 2,
+    realFilePreserved &&
+    unlistedProfileRejected &&
+    exactProfileSelected &&
+    briefPluralSeen &&
+    plantedUnclassifiedBriefPluralCaught,
   )
   return {
     control: passed ? 'PASS' : 'FAIL',
+    realFilePreserved,
+    unlistedProfileRejected,
+    exactProfileSelected,
+    briefPluralSeen,
+    plantedUnclassifiedBriefPluralCaught,
+    realFileClassification,
+    unlistedProfileClassification,
+    exactProfileClassification,
+    briefPluralClassification: briefPluralSeen ? 'briefing-session-or-stage' : 'UNCLASSIFIED',
+    plantedBriefPluralClassification: plantedUnclassifiedBriefPluralCaught
+      ? 'UNCLASSIFIED'
+      : 'NOT-SEEN',
     plantedDousiyehCaught: Boolean(planted),
     ruledTermPreserved,
     allowlistedSensePreserved,
@@ -510,6 +620,8 @@ const buildControlResult = () => {
     plantedUnclassifiedPluralCaught: plantedPlural === 1,
     allowlistedPluralCount: allowlistedPlural,
     plantedUnclassifiedPluralCount: plantedPlural,
+    allowlistedBriefPluralCount: allowlistedBriefPlural,
+    plantedUnclassifiedBriefPluralCount: plantedBriefPlural,
   }
 }
 
@@ -543,7 +655,7 @@ const runCli = (argv) => {
   }
 
   if (options.control) {
-    const control = buildControlResult()
+    const control = buildControlResult(options.root)
     console.log(JSON.stringify(control, null, 2))
     process.exitCode = control.control === 'PASS' ? 0 : 1
     return
@@ -569,16 +681,24 @@ const runCli = (argv) => {
 }
 
 if (process.env.VITEST === 'true') {
-  const { execFileSync } = await import('node:child_process')
+  const { execFileSync, spawnSync } = await import('node:child_process')
   const { describe, expect, it } = await import('vitest')
-  const taskBase = 'b7cd542e8fafc46708b54d451616f55f28bd1f99'
+  const taskBase = '442369ff0468dc0b096c6cc4e74d9966cb1a2ae5'
   const overlayRelativePath = 'scripts/glossary-senses.d/brief-stance.json'
   const overlayPath = join(scriptRepoRoot, overlayRelativePath)
+  const summaryRelativePath = '.planning/phases/99-arabic-coverage/99-27-SUMMARY.md'
+  const expectedBriefHandoff = [
+    'contextual-suggestions.json:suggestions.upcomingEngagement.description:إحاطات',
+    'dossier-overview.json:documentType.brief:إحاطة',
+    'dossier-overview.json:documents.empty.brief:إحاطات',
+    'dossier-overview.json:documents.tabs.briefs:إحاطات',
+    'dossier.json:templates.category.thematic:إحاطات',
+  ].sort()
   const readJson = (relativePath) =>
     JSON.parse(readFileSync(join(scriptRepoRoot, relativePath), 'utf8'))
   const git = (arguments_) =>
     execFileSync('git', arguments_, { cwd: scriptRepoRoot, encoding: 'utf8' })
-  const gitShow = (relativePath) => git(['show', `${taskBase}:${relativePath}`])
+  const gitShowAt = (base, relativePath) => git(['show', `${base}:${relativePath}`])
   const leafMap = (value, prefix = '', result = new Map()) => {
     if (value === null || typeof value !== 'object' || Array.isArray(value)) {
       result.set(prefix, { type: Array.isArray(value) ? 'array' : typeof value, value })
@@ -597,6 +717,10 @@ if (process.env.VITEST === 'true') {
   })
   const termFrom = (result, term) =>
     result.rows.flatMap((row) => row.terms).find((candidate) => candidate.term === term)
+  const briefHandoffFrom = (result) =>
+    result.unclassified
+      .map((occurrence) => `${occurrence.file}:${occurrence.keyPath}:${occurrence.term}`)
+      .sort()
 
   describe('P99-26 brief-artifact and stance sense-aware sweep', () => {
     it(`This slice reads one Arabic term for the brief-artifact and stance object, with every exception judged and recorded rather than assumed.`, () => {
@@ -604,7 +728,7 @@ if (process.env.VITEST === 'true') {
       const overlay = readJson(overlayRelativePath)
       expect(brief.rows[0].ruledTerm).toBe('ملخص / الملخصات')
       expect(stance.rows[0].ruledTerm).toBe('موقف / المواقف')
-      expect(brief.classificationTotals.UNCLASSIFIED).toBe(0)
+      expect(briefHandoffFrom(brief)).toEqual(expectedBriefHandoff)
       expect(stance.classificationTotals.UNCLASSIFIED).toBe(0)
       expect(overlay.rows.length).toBeGreaterThan(0)
     })
@@ -615,7 +739,7 @@ if (process.env.VITEST === 'true') {
       const identities = new Set()
       expect(brief.fileCount).toBe(129)
       expect(stance.fileCount).toBe(129)
-      expect(brief.unclassified).toEqual([])
+      expect(briefHandoffFrom(brief)).toEqual(expectedBriefHandoff)
       expect(stance.unclassified).toEqual([])
       for (const row of overlay.rows) {
         const identity = `${row.term}\0${row.file}\0${row.keyPath}`
@@ -636,7 +760,8 @@ if (process.env.VITEST === 'true') {
       const singularOffice = termFrom(stance, 'منصب')
       const pluralOffice = termFrom(stance, 'مناصب')
       expect(ihata.occurrences).toBeGreaterThan(0)
-      expect(ihata.classifications['allowlisted-sense']).toBe(ihata.occurrences)
+      expect(ihata.classifications['allowlisted-sense']).toBe(ihata.occurrences - 1)
+      expect(ihata.classifications.UNCLASSIFIED).toBe(1)
       expect(singularOffice.classifications['allowlisted-sense']).toBe(singularOffice.occurrences)
       expect(pluralOffice.classifications['allowlisted-sense']).toBe(pluralOffice.occurrences)
 
@@ -648,17 +773,17 @@ if (process.env.VITEST === 'true') {
       expect(
         changedPaths.every(
           (path) =>
-            path.startsWith('frontend/src/i18n/ar/') ||
             path === 'scripts/glossary-census.mjs' ||
+            path === 'scripts/glossary-senses.json' ||
             path === overlayRelativePath ||
-            path === '.planning/phases/99-arabic-coverage/99-26-SUMMARY.md',
+            path === summaryRelativePath,
         ),
       ).toBe(true)
 
       const arabicDirectory = join(scriptRepoRoot, 'frontend/src/i18n/ar')
       for (const file of readdirSync(arabicDirectory).filter((entry) => entry.endsWith('.json'))) {
         const relativePath = `frontend/src/i18n/ar/${file}`
-        const before = leafMap(JSON.parse(gitShow(relativePath)))
+        const before = leafMap(JSON.parse(gitShowAt(taskBase, relativePath)))
         const after = leafMap(readJson(relativePath))
         expect([...after.keys()]).toEqual([...before.keys()])
         expect([...after].map(([key, leaf]) => [key, leaf.type])).toEqual(
@@ -669,16 +794,22 @@ if (process.env.VITEST === 'true') {
 
     it(`This lane's overlay file only ADDS rows to the base allowlist; removing or weakening a base row (the already-ruled sense exceptions) is a red, because that is how a sweep launders an unclassified occurrence into an allowed one || The stance row enumerates منصب and مناصب as DISTINCT competing terms so term-identity allowlist matching can consume the nine plural rows; --control proves both an allowlisted plural and a planted unclassified plural are seen || The re-derived before and after counts for this lane's term row are recorded with their commands (D-04), and what falls outside this lane's slice is named (D-05)`, () => {
       const overlay = readJson(overlayRelativePath)
-      const currentBase = readFileSync(join(scriptRepoRoot, 'scripts/glossary-senses.json'), 'utf8')
+      const currentBase = readJson('scripts/glossary-senses.json')
+      const previousBase = JSON.parse(gitShowAt(taskBase, 'scripts/glossary-senses.json'))
       const stanceRow = rows.find((row) => row.object === 'stance')
-      expect(currentBase).toBe(gitShow('scripts/glossary-senses.json'))
+      expect(currentBase.entries).toHaveLength(previousBase.entries.length)
+      expect(
+        currentBase.entries.filter((entry) => entry.sense !== 'computer-file-or-attachment'),
+      ).toEqual(
+        previousBase.entries.filter((entry) => entry.sense !== 'computer-file-or-attachment'),
+      )
       expect(
         stanceRow.terms
           .filter((term) => term.disposition === 'competing-term')
           .map((term) => term.term),
       ).toEqual(['منصب', 'مناصب'])
       expect(overlay.rows.filter((row) => row.term === 'مناصب')).toHaveLength(9)
-      expect(buildControlResult()).toEqual({
+      expect(buildControlResult()).toMatchObject({
         control: 'PASS',
         plantedDousiyehCaught: true,
         ruledTermPreserved: true,
@@ -705,7 +836,7 @@ if (process.env.VITEST === 'true') {
       expect(control.plantedDousiyehCaught).toBe(true)
       expect(control.allowlistedPluralSeen).toBe(true)
       expect(control.plantedUnclassifiedPluralCaught).toBe(true)
-      expect(brief.classificationTotals.UNCLASSIFIED).toBe(0)
+      expect(briefHandoffFrom(brief)).toEqual(expectedBriefHandoff)
       expect(stance.classificationTotals.UNCLASSIFIED).toBe(0)
     })
 
@@ -728,6 +859,172 @@ if (process.env.VITEST === 'true') {
       expect(missing).toBe(0)
       expect(overlay.slice).toHaveLength(43)
       expect(overlay.rows.length).toBeGreaterThan(0)
+    })
+  })
+
+  describe('P99-27 glossary classifier boundary and exact handoff', () => {
+    it(`The production glossary classifier changes only at the ruled seams: the base computer-file key-path family gains token semantics, the brief-artifact row gains the distinct plural identity إحاطات, and --control gains the discriminating dossier/profile/brief cases; no earlier row, control, or sense exception is removed or weakened || A broader precedence rewrite, a Profile-only blacklist, or a local wrapper that leaves glossary-census.mjs unsound is a red`, () => {
+      const previousBase = JSON.parse(gitShowAt(taskBase, 'scripts/glossary-senses.json'))
+      const currentBase = readJson('scripts/glossary-senses.json')
+      const previousOverlay = JSON.parse(gitShowAt(taskBase, overlayRelativePath))
+      const currentOverlay = readJson(overlayRelativePath)
+      const staleBriefRow = (row) =>
+        row.term === 'إحاطة' &&
+        row.file === 'dossier-overview.json' &&
+        row.keyPath === 'documentType.brief'
+      const previousFileRow = previousBase.entries.find(
+        (entry) => entry.sense === 'computer-file-or-attachment',
+      )
+      const currentFileRow = currentBase.entries.find(
+        (entry) => entry.sense === 'computer-file-or-attachment',
+      )
+
+      expect(previousFileRow.keyPathPattern).toBe(
+        '^[^:]+:.*(?:[Ff]ile|[Ff]iles|attachment|attachments|upload|dropzone|documents)(?:[._:]|$|[A-Z]).*$',
+      )
+      expect(currentFileRow.keyPathPattern).toBe(
+        '^[^:]+:.*(?:[._:](?:file|files)(?:[._:]|$)|(?:File|Files|attachment|attachments|upload|dropzone|documents)(?:[._:]|$|[A-Z])).*$',
+      )
+      expect(currentBase.entries).toHaveLength(previousBase.entries.length)
+      expect(currentBase.entries.filter((entry) => entry !== currentFileRow)).toEqual(
+        previousBase.entries.filter((entry) => entry !== previousFileRow),
+      )
+      expect(previousOverlay.rows.filter(staleBriefRow)).toHaveLength(1)
+      expect(currentOverlay.rows.filter(staleBriefRow)).toHaveLength(0)
+      expect(currentOverlay.rows).toEqual(previousOverlay.rows.filter((row) => !staleBriefRow(row)))
+      expect(currentOverlay.slice).toEqual(previousOverlay.slice)
+
+      const control = buildControlResult()
+      expect(control).toMatchObject({
+        control: 'PASS',
+        plantedDousiyehCaught: true,
+        ruledTermPreserved: true,
+        allowlistedSensePreserved: true,
+        allowlistedPluralSeen: true,
+        plantedUnclassifiedPluralCaught: true,
+        realFilePreserved: true,
+        unlistedProfileRejected: true,
+        exactProfileSelected: true,
+        briefPluralSeen: true,
+        plantedUnclassifiedBriefPluralCaught: true,
+      })
+    })
+
+    it(`At the production classify entry point, a genuine file/attachment path still resolves computer-file-or-attachment, an unlisted organizationProfile-shaped path resolves UNCLASSIFIED, and the same Profile shape with an exact row resolves profile-page-or-summary || Matching lowercase file inside Profile, rejecting real file paths, or merely storing an exact row that first-match classification cannot consume is a red`, () => {
+      expect(buildControlResult()).toMatchObject({
+        realFilePreserved: true,
+        unlistedProfileRejected: true,
+        exactProfileSelected: true,
+        realFileClassification: 'computer-file-or-attachment',
+        unlistedProfileClassification: 'UNCLASSIFIED',
+        exactProfileClassification: 'profile-page-or-summary',
+      })
+    })
+
+    it(`The production brief-artifact row enumerates singular إحاطة and plural إحاطات as distinct, non-overlapping competing terms with Arabic word-boundary patterns, --control proves an allowlisted plural and a planted unclassified plural are both visible, and the stale wrong-sense row in brief-stance.json for the singular exact-five handoff is removed || Double-counting plural text under the singular identity, hiding the plural from the census, or retaining that wrong-sense exception is a red`, () => {
+      const briefRow = rows.find((row) => row.object === 'brief-artifact')
+      const singular = briefRow.terms.find((term) => term.term === 'إحاطة')
+      const plural = briefRow.terms.find((term) => term.term === 'إحاطات')
+      expect(briefRow.terms.filter((term) => term.disposition === 'competing-term')).toEqual([
+        { term: 'موجز', disposition: 'competing-term' },
+        {
+          term: 'إحاطة',
+          pattern: '(?<![\\p{L}\\p{M}])(?:ال)?إحاطة(?![\\p{L}\\p{M}])',
+          disposition: 'competing-term',
+        },
+        {
+          term: 'إحاطات',
+          pattern: '(?<![\\p{L}\\p{M}])(?:ال)?إحاطات(?![\\p{L}\\p{M}])',
+          disposition: 'competing-term',
+        },
+      ])
+      expect(countOccurrences('إحاطة', singular)).toBe(1)
+      expect(countOccurrences('الإحاطة', singular)).toBe(1)
+      expect(countOccurrences('إحاطات', singular)).toBe(0)
+      expect(countOccurrences('الإحاطات', singular)).toBe(0)
+      expect(countOccurrences('إحاطة', plural)).toBe(0)
+      expect(countOccurrences('إحاطات', plural)).toBe(1)
+      expect(countOccurrences('الإحاطات', plural)).toBe(1)
+      expect(countOccurrences('تمهيدإحاطات', plural)).toBe(0)
+
+      const control = buildControlResult()
+      expect(control).toMatchObject({
+        briefPluralSeen: true,
+        plantedUnclassifiedBriefPluralCaught: true,
+        briefPluralClassification: 'briefing-session-or-stage',
+        plantedBriefPluralClassification: 'UNCLASSIFIED',
+        allowlistedBriefPluralCount: 1,
+        plantedUnclassifiedBriefPluralCount: 1,
+      })
+
+      const overlay = readJson(overlayRelativePath)
+      const senseEntries = loadSenseEntries(scriptRepoRoot)
+      expect(
+        overlay.rows.some(
+          (row) =>
+            row.term === 'إحاطة' &&
+            row.file === 'dossier-overview.json' &&
+            row.keyPath === 'documentType.brief',
+        ),
+      ).toBe(false)
+      for (const row of overlay.rows) {
+        const namespace = row.file.replace(/\.json$/, '')
+        const fullPath = `${namespace}:${row.keyPath}`
+        const senseEntry = senseEntries.find(
+          (entry) =>
+            entry.term === row.term && new RegExp(entry.keyPathPattern, 'u').test(fullPath),
+        )
+        const termRule =
+          row.term === 'إحاطة'
+            ? singular
+            : rows
+                .flatMap((candidate) => candidate.terms)
+                .find((candidate) => candidate.term === row.term)
+        const value = valueAt(readJson(`frontend/src/i18n/ar/${row.file}`), row.keyPath)
+        expect(senseEntry).toBeDefined()
+        expect(countOccurrences(value, termRule)).toBeGreaterThan(0)
+      }
+      const { brief, stance } = liveRows()
+      expect(briefHandoffFrom(brief)).toEqual(expectedBriefHandoff)
+      expect(stance.unclassified).toEqual([])
+    })
+
+    it(`the production control ledger proves the genuine-file pass, accidental-Profile fail, exact-profile pass, and both plural-brief cases, then the live repo-wide row fails on exactly the five ruled artifact values handed to P99-44 — a control-only stub, a vacuous zero, or any hidden/additional residue is red`, () => {
+      const cliEnvironment = { ...process.env, VITEST: 'false' }
+      const scriptPath = join(scriptRepoRoot, 'scripts/glossary-census.mjs')
+      const controlRun = spawnSync(process.execPath, [scriptPath, scriptRepoRoot, '--control'], {
+        encoding: 'utf8',
+        env: cliEnvironment,
+      })
+      expect(controlRun.status, controlRun.stderr).toBe(0)
+      expect(JSON.parse(controlRun.stdout)).toMatchObject({
+        control: 'PASS',
+        realFilePreserved: true,
+        unlistedProfileRejected: true,
+        exactProfileSelected: true,
+        briefPluralSeen: true,
+        plantedUnclassifiedBriefPluralCaught: true,
+      })
+
+      const liveRun = spawnSync(
+        process.execPath,
+        [scriptPath, scriptRepoRoot, '--row', 'brief-artifact', '--json'],
+        { encoding: 'utf8', env: cliEnvironment },
+      )
+      expect(liveRun.status, liveRun.stderr).toBe(1)
+      expect(briefHandoffFrom(JSON.parse(liveRun.stdout))).toEqual(expectedBriefHandoff)
+    })
+
+    it(`The production classifier distinguishes genuine files from Profile, sees plural brief artifacts, and exposes exactly the five values the dependent sweep must repair.`, () => {
+      const control = buildControlResult()
+      const liveBrief = buildLiveResult(scriptRepoRoot, 'brief-artifact')
+      expect(control.control).toBe('PASS')
+      expect(control.realFilePreserved).toBe(true)
+      expect(control.unlistedProfileRejected).toBe(true)
+      expect(control.exactProfileSelected).toBe(true)
+      expect(control.briefPluralSeen).toBe(true)
+      expect(control.plantedUnclassifiedBriefPluralCaught).toBe(true)
+      expect(briefHandoffFrom(liveBrief)).toEqual(expectedBriefHandoff)
     })
   })
 } else {
