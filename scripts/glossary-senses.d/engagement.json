@@ -154,27 +154,6 @@
       "keyPath": "guidance.types.affiliate_of.tip",
       "sense": "loose-affiliation",
       "reason": "The affiliate guidance explicitly describes loose affiliations rather than engagement objects."
-    },
-    {
-      "term": "ارتباط",
-      "file": "dossier-recommendations.json",
-      "keyPath": "types.engagement",
-      "sense": "engagement-object-outside-fixed-slice",
-      "reason": "This is an engagement-object label added outside P99-25's frozen bundle slice; it is classified here and remains for its owning bundle lane to rewrite."
-    },
-    {
-      "term": "ارتباط",
-      "file": "operations-hub.json",
-      "keyPath": "kpi.activeEngagements",
-      "sense": "engagement-object-outside-fixed-slice",
-      "reason": "This engagement KPI was added outside P99-25's frozen bundle slice; it is classified here and remains for its owning bundle lane to rewrite."
-    },
-    {
-      "term": "ارتباط",
-      "file": "operations-hub.json",
-      "keyPath": "analytics.empty",
-      "sense": "engagement-object-outside-fixed-slice",
-      "reason": "This engagement-object empty state was added outside P99-25's frozen bundle slice; it is classified here and remains for its owning bundle lane to rewrite."
     }
   ]
 }
