@@ -1,8 +1,8 @@
 {
   "title": "مخطط العلاقات",
   "description": "استكشف الروابط بين الكيانات",
-  "noDossier": "لم يتم تحديد ملف. الرجاء تحديد ملف لعرض مخطط علاقاته.",
-  "browseDossiers": "تصفح الملفات",
+  "noDossier": "لم يتم تحديد دوسيه. الرجاء تحديد دوسيه لعرض مخطط علاقاته.",
+  "browseDossiers": "تصفح الدوسيهات",
   "maxDegrees": "درجات الفصل",
   "degree": "درجة",
   "degrees": "درجات",
@@ -74,7 +74,7 @@
     "connections": "اتصالات",
     "noConnections": "لا توجد علاقات",
     "viewFullGraph": "عرض المخطط الكامل",
-    "clickToNavigate": "انقر لعرض الملف",
+    "clickToNavigate": "انقر لعرض الدوسيه",
     "moreConnections": "+{{count}} أخرى",
     "loading": "جاري تحميل العلاقات...",
     "retry": "إعادة المحاولة"
@@ -158,7 +158,7 @@
     "entity": "الكيان",
     "entityPrimary": "الكيان الأول",
     "entitySecondary": "الكيان الثاني",
-    "entityPlaceholder": "معرّف الملف",
+    "entityPlaceholder": "معرّف الدوسيه",
     "window": "خلال آخر {{count}} يوماً",
     "run": "تشغيل التحليل",
     "resultHeading": "النتيجة",

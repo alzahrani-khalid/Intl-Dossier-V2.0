@@ -10,7 +10,7 @@
   "saveDraft": "حفظ المسودة",
   "saving": "جاري الحفظ...",
   "draftSaved": "تم حفظ المسودة",
-  "postUpdateWarning": "تم تحديث الملف، لكن تعذّر حفظ بعض السجلات المرتبطة (مثل المشاركين).",
+  "postUpdateWarning": "تم تحديث الدوسيه، لكن تعذّر حفظ بعض السجلات المرتبطة (مثل المشاركين).",
   "draftRestored": "تمت استعادة المسودة من جلستك السابقة",
   "clearDraft": "مسح المسودة",
   "discardDraft": "تجاهل المسودة",
@@ -32,9 +32,9 @@
   "classificationTitle": "التصنيف",
   "create_type": "إنشاء {{type}}",
   "empty_heading": "ابدأ {{type}} جديد",
-  "empty_body": "املأ التفاصيل أدناه لإنشاء ملف {{type}} جديد.",
+  "empty_body": "املأ التفاصيل أدناه لإنشاء دوسيه {{type}} جديد.",
   "validation_error": "يرجى تصحيح الأخطاء أعلاه قبل المتابعة.",
-  "submission_error": "تعذر إنشاء الملف. يرجى المحاولة مرة أخرى.",
+  "submission_error": "تعذر إنشاء الدوسيه. يرجى المحاولة مرة أخرى.",
   "discard_draft": "حذف المسودة",
   "discard_confirm": "سيؤدي هذا إلى حذف تقدمك المحفوظ نهائيًا. هل تريد المتابعة؟",
   "draft_restored": "تم استعادة المسودة",
@@ -61,7 +61,7 @@
     "officeTermDesc": "عنوان المنصب والولاية والدائرة والانتماء الحزبي"
   },
   "country": {
-    "page_title": "ملف دولة جديد",
+    "page_title": "دوسيه دولة جديد",
     "back_to_list": "الرجوع للدول",
     "iso_code_2": "رمز الايزو الثنائي",
     "iso_code_2_ph": "SA",
@@ -84,7 +84,7 @@
     "antarctic": "القطب الجنوبي"
   },
   "forum": {
-    "page_title": "ملف منتدى جديد",
+    "page_title": "دوسيه منتدى جديد",
     "back_to_list": "العودة إلى المنتديات",
     "create_button": "إنشاء منتدى",
     "forum_type_label": "نوع المنتدى",
@@ -185,7 +185,7 @@
     "photo_url_ph": "https://example.com/photo.jpg"
   },
   "workingGroup": {
-    "page_title": "ملف فريق عمل جديد",
+    "page_title": "دوسيه فريق عمل جديد",
     "back_to_list": "العودة إلى فرق العمل",
     "create_button": "إنشاء فريق عمل",
     "status_label": "الحالة",
@@ -207,7 +207,7 @@
     "parent_body_help": "اختياري — اربط بالمنظمة التي تملك فريق العمل هذا. يمكن ضبطه لاحقاً."
   },
   "engagement": {
-    "page_title": "ملف مشاركة جديد",
+    "page_title": "دوسيه مشاركة جديد",
     "back_to_list": "العودة إلى المشاركات",
     "create_button": "إنشاء مشاركة",
     "type_label": "نوع المشاركة",

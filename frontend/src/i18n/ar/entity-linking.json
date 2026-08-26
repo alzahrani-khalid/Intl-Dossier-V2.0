@@ -19,7 +19,7 @@
     "retry": "إعادة المحاولة"
   },
   "entityTypes": {
-    "dossier": "ملف",
+    "dossier": "دوسيه",
     "position": "موقف",
     "person": "شخص",
     "engagement": "لقاء",

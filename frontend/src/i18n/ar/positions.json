@@ -361,7 +361,7 @@
     "translate_unavailable": "الترجمة غير متاحة. أدخل النص يدويًا.",
     "toast_success": "تم إنشاء الموقف",
     "toast_open_position": "فتح الموقف",
-    "toast_partial_failure": "تم إنشاء الموقف، لكن تعذّر ربطه بهذا الملف.",
+    "toast_partial_failure": "تم إنشاء الموقف، لكن تعذّر ربطه بهذا الدوسيه.",
     "toast_retry_link": "إعادة محاولة الربط",
     "toast_error": "فشل إنشاء الموقف. حاول مرة أخرى.",
     "lookup_error": "تعذّر تحميل خيارات النموذج. أغلق مربع الحوار وحاول مرة أخرى."
@@ -375,7 +375,7 @@
   },
   "dossier_tab": {
     "title": "المواقف المرفقة",
-    "subtitle": "{{count}} موقف مرفق بهذا الملف",
+    "subtitle": "{{count}} موقف مرفق بهذا الدوسيه",
     "create_position": "إنشاء موقف",
     "attach_existing": "إرفاق موقف موجود",
     "search_placeholder": "البحث في المواقف...",
@@ -388,7 +388,7 @@
     "clear_filters": "مسح الفلاتر",
     "error_loading": "فشل تحميل المواقف",
     "no_results": "لا توجد مواقف تطابق الفلاتر",
-    "no_positions": "لا توجد مواقف مرفقة بهذا الملف بعد"
+    "no_positions": "لا توجد مواقف مرفقة بهذا الدوسيه بعد"
   },
   "detail": {
     "not_found": "الموقف غير موجود",
