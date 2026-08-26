@@ -1,4 +1,46 @@
-# P99-26 Summary — brief and stance sense sweep complete
+# P99-26 Summary — follow-up correction blocked by immutable scope
+
+## Follow-up gate status
+
+The scoped `common:wordAssistant.description` defect is repaired: the Arabic value now collapses
+the English “briefs, summaries” pair to the governed `ملخص` family rather than introducing
+`مذكرات` as a third term.
+
+The task cannot truthfully be marked complete under its fixed write allowlist. The material review
+also requires rewriting these two artifact-sense values from `إحاطة` to `ملخص`:
+
+- `frontend/src/i18n/ar/onboarding.json:admin.generateBrief.description`
+- `frontend/src/i18n/ar/onboarding.json:analyst.generateBrief.title`
+
+`frontend/src/i18n/ar/onboarding.json` is not one of the 42 authorized Arabic bundles. Editing it
+would fail the scope gate; removing its two invalid overlay exceptions without rewriting it would
+make the required repo-wide brief-artifact census red. No out-of-scope path was touched.
+
+The focused census and structural oracle still print green only because the two rejected
+onboarding exceptions remain in the overlay. The scope audit makes that unresolved condition
+explicit:
+
+```sh
+PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/glossary-census.mjs" "$R" --control && node "$R/scripts/glossary-census.mjs" "$R" --row brief-artifact && node "$R/scripts/glossary-census.mjs" "$R" --row stance
+```
+
+```text
+{
+  "control": "PASS",
+  "plantedDousiyehCaught": true,
+  "ruledTermPreserved": true,
+  "allowlistedSensePreserved": true
+}
+UNCLASSIFIED glossary occurrences: 0
+UNCLASSIFIED glossary occurrences: 0
+```
+
+```text
+BLOCKED\tfrontend/src/i18n/ar/onboarding.json:admin.generateBrief.description\tar=استخدم الذكاء الاصطناعي لإنشاء وثائق إحاطة شاملة من بيانات الملف.\ten=Use AI to create comprehensive briefing documents from your dossier data.\tsense=briefing-session-preparation
+BLOCKED\tfrontend/src/i18n/ar/onboarding.json:analyst.generateBrief.title\tar=إنشاء إحاطة ذكية\ten=Create an AI briefing\tsense=briefing-session-preparation
+SCOPE-BLOCKER onboardingInAuthorizedSlice=false invalidArtifactAllowlistRows=2
+SWEEP-STRUCT-OK checked=16919 rows=86
+```
 
 ## Result
 
