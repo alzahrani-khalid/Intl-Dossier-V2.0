@@ -25,9 +25,25 @@ const TASK_CONFLICT_FIELD_KEYS = [
   'sla_deadline',
 ] as const satisfies readonly (keyof Task)[]
 
-type TaskConflictField = (typeof TASK_CONFLICT_FIELD_KEYS)[number]
+const TASK_CONFLICT_AUDIT_FIELD_KEYS = [
+  'updated_at',
+  'updated_by',
+] as const satisfies readonly (keyof Task)[]
+
+const TASK_CONFLICT_RENDERED_FIELD_KEYS = [
+  ...TASK_CONFLICT_FIELD_KEYS,
+  ...TASK_CONFLICT_AUDIT_FIELD_KEYS,
+] as const satisfies readonly (keyof Task)[]
+
+type TaskConflictField = (typeof TASK_CONFLICT_RENDERED_FIELD_KEYS)[number]
+type TranslatedTaskConflictField = (typeof TASK_CONFLICT_FIELD_KEYS)[number]
 
 const isTaskConflictField = (field: string): field is TaskConflictField =>
+  (TASK_CONFLICT_RENDERED_FIELD_KEYS as readonly string[]).includes(field)
+
+const isTranslatedTaskConflictField = (
+  field: TaskConflictField,
+): field is TranslatedTaskConflictField =>
   (TASK_CONFLICT_FIELD_KEYS as readonly string[]).includes(field)
 
 interface ConflictDialogProps {
@@ -110,7 +126,7 @@ export function ConflictDialog({
               {conflictingFields.map((field) => (
                 <div key={field} className="flex flex-col gap-1 rounded-md bg-background p-3">
                   <span className="text-xs font-medium text-muted-foreground uppercase text-start">
-                    {t(`tasks-page:field.${field}`)}
+                    {isTranslatedTaskConflictField(field) ? t(`tasks-page:field.${field}`) : field}
                   </span>
                   <div className="flex flex-col sm:flex-row sm:gap-4">
                     <div className="flex-1">
