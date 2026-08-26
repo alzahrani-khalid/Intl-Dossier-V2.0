@@ -79,7 +79,9 @@
       "linkExisting": "ربط بدوسيه موجود",
       "proposeNew": "اقتراح دوسيه جديد",
       "search": "البحث عن الدوسيهات...",
-      "noResults": "لم يتم العثور على دوسيهات"
+      "noResults": "لم يتم العثور على دوسيهات",
+      "hint": "اختر الدوسيه المرتبط بهذا الطلب",
+      "linkedTo": "مرتبط بـ"
     },
     "attachments": {
       "label": "المرفقات",
@@ -154,6 +156,7 @@
   },
   "typeSpecific": {
     "engagement": {
+      "title": "معلومات إضافية",
       "partnerName": {
         "label": "المنظمة الشريكة",
         "placeholder": "أدخل اسم المنظمة الشريكة"
@@ -174,6 +177,7 @@
       }
     },
     "position": {
+      "title": "معلومات إضافية",
       "positionTitle": {
         "label": "المسمى الوظيفي",
         "placeholder": "أدخل المسمى الوظيفي"
@@ -188,6 +192,7 @@
       }
     },
     "mou_action": {
+      "title": "معلومات إضافية",
       "mouReference": {
         "label": "مرجع المذكرة",
         "placeholder": "أدخل رقم مرجع المذكرة"
@@ -208,6 +213,7 @@
       }
     },
     "foresight": {
+      "title": "معلومات إضافية",
       "topic": {
         "label": "الموضوع",
         "placeholder": "أدخل موضوع الاستشراف"

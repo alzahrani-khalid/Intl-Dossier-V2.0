@@ -341,6 +341,7 @@
     },
     "success": "تم إنشاء الدوسيه بنجاح",
     "error": "فشل إنشاء الدوسيه",
+    "duplicate": "يوجد دوسيه بهذا الاسم بالفعل.",
     "checkingDuplicates": "جارٍ البحث عن دوسيهات مشابهة...",
     "duplicateWarning": {
       "highSimilarity": {

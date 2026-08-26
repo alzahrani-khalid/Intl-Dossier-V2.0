@@ -41,7 +41,8 @@
 
   "error": {
     "title": "Error loading dossier overview",
-    "description": "Failed to load the dossier overview. Please try again."
+    "description": "Failed to load the dossier overview. Please try again.",
+    "invalidId": "Invalid dossier ID"
   },
 
   "dossierType": {

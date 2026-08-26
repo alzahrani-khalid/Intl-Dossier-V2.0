@@ -216,6 +216,8 @@
   },
 
   "accessibility": {
+    "cardView": "Card view",
+    "tableView": "Table view",
     "toolbar": "Bulk actions toolbar",
     "selectionCheckbox": "Selection checkbox for {{name}}",
     "selectAllCheckbox": "Select all items checkbox",

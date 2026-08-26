@@ -38,7 +38,8 @@
     "empty": "Drag fields here to add columns",
     "visible": "Visible",
     "hidden": "Hidden",
-    "reorder": "Drag to reorder"
+    "reorder": "Drag to reorder",
+    "toggleVisibility": "Toggle column visibility"
   },
 
   "filters": {

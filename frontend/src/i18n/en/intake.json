@@ -79,7 +79,9 @@
       "linkExisting": "Link to Existing Dossier",
       "proposeNew": "Propose New Dossier",
       "search": "Search dossiers...",
-      "noResults": "No dossiers found"
+      "noResults": "No dossiers found",
+      "hint": "Select the dossier this request relates to",
+      "linkedTo": "Linked to"
     },
     "attachments": {
       "label": "Attachments",
@@ -154,6 +156,7 @@
   },
   "typeSpecific": {
     "engagement": {
+      "title": "Additional Information",
       "partnerName": {
         "label": "Partner Organization",
         "placeholder": "Enter partner organization name"
@@ -174,6 +177,7 @@
       }
     },
     "position": {
+      "title": "Additional Information",
       "positionTitle": {
         "label": "Position Title",
         "placeholder": "Enter position title"
@@ -188,6 +192,7 @@
       }
     },
     "mou_action": {
+      "title": "Additional Information",
       "mouReference": {
         "label": "MoU Reference",
         "placeholder": "Enter MoU reference number"
@@ -208,6 +213,7 @@
       }
     },
     "foresight": {
+      "title": "Additional Information",
       "topic": {
         "label": "Topic",
         "placeholder": "Enter foresight topic"

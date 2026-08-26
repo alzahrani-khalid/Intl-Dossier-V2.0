@@ -341,6 +341,7 @@
     },
     "success": "Dossier created successfully",
     "error": "Failed to create dossier",
+    "duplicate": "A dossier with this name already exists.",
     "checkingDuplicates": "Checking for similar dossiers...",
     "duplicateWarning": {
       "highSimilarity": {

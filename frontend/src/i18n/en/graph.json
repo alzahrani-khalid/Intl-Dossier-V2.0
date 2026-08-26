@@ -140,6 +140,12 @@
     "speed": "Speed",
     "reset": "Reset"
   },
+  "playback": {
+    "skipToStart": "Skip to start",
+    "pause": "Pause",
+    "play": "Play",
+    "skipToEnd": "Skip to end"
+  },
   "influence": {
     "toggle": "Influence Mapping",
     "title": "Influence Score",
