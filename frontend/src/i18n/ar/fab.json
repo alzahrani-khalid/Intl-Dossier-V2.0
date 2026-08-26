@@ -13,7 +13,7 @@
     "filter": "تصفية"
   },
   "speedDialActions": {
-    "newDossier": "ملف جديد",
+    "newDossier": "دوسيه جديد",
     "newEngagement": "مشاركة جديدة",
     "newBrief": "ملخص جديد",
     "newEvent": "حدث جديد",
@@ -28,12 +28,12 @@
   },
   "contexts": {
     "dossierList": {
-      "primary": "إنشاء ملف",
-      "description": "إنشاء ملف جديد"
+      "primary": "إنشاء دوسيه",
+      "description": "إنشاء دوسيه جديد"
     },
     "dossierDetail": {
-      "primary": "تعديل الملف",
-      "description": "تعديل هذا الملف"
+      "primary": "تعديل الدوسيه",
+      "description": "تعديل هذا الدوسيه"
     },
     "engagementList": {
       "primary": "إنشاء مشاركة",

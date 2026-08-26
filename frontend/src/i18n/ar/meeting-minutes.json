@@ -27,7 +27,7 @@
     "summaryPlaceholder": "أدخل ملخص الاجتماع",
     "linkedEvent": "الفعالية المرتبطة",
     "linkedEngagement": "التواصل المرتبط",
-    "linkedDossier": "الملف المرتبط"
+    "linkedDossier": "الدوسيه المرتبط"
   },
 
   "agenda": {
@@ -106,7 +106,7 @@
     },
     "type": {
       "user": "مستخدم النظام",
-      "person_dossier": "ملف شخص",
+      "person_dossier": "دوسيه شخص",
       "external_contact": "جهة اتصال خارجية",
       "organization": "منظمة"
     },
@@ -202,7 +202,7 @@
     "fromDate": "من",
     "toDate": "إلى",
     "createdBy": "أنشئ بواسطة",
-    "dossier": "الملف",
+    "dossier": "الدوسيه",
     "engagement": "التواصل",
     "clearFilters": "مسح الفلاتر"
   },
@@ -231,7 +231,7 @@
   "validation": {
     "titleRequired": "العنوان مطلوب",
     "dateRequired": "تاريخ الاجتماع مطلوب",
-    "sourceRequired": "يرجى ربط هذا بفعالية أو تواصل أو ملف",
+    "sourceRequired": "يرجى ربط هذا بفعالية أو تواصل أو دوسيه",
     "invalidUrl": "يرجى إدخال رابط صالح"
   },
 

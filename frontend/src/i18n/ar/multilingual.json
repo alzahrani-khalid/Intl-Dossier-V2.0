@@ -97,7 +97,7 @@
   },
 
   "dossierFields": {
-    "name": "اسم الملف",
+    "name": "اسم الدوسيه",
     "description": "الوصف",
     "summary": "الملخص"
   },

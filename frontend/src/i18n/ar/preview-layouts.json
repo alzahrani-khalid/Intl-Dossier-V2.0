@@ -5,7 +5,7 @@
   "pageDescription": "تحديد تخطيطات بطاقة معاينة مخصصة لكل نوع كيان",
 
   "entityTypes": {
-    "dossier": "ملف",
+    "dossier": "دوسيه",
     "organization": "منظمة",
     "country": "دولة",
     "forum": "منتدى",

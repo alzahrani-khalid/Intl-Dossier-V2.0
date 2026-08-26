@@ -74,12 +74,12 @@
     },
     "selectUrgency": "اختر درجة الاستعجال",
     "dossier": {
-      "label": "ربط بالملف",
-      "placeholder": "البحث عن ملف موجود",
-      "linkExisting": "ربط بملف موجود",
-      "proposeNew": "اقتراح ملف جديد",
-      "search": "البحث عن الملفات...",
-      "noResults": "لم يتم العثور على ملفات"
+      "label": "ربط بالدوسيه",
+      "placeholder": "البحث عن دوسيه موجود",
+      "linkExisting": "ربط بدوسيه موجود",
+      "proposeNew": "اقتراح دوسيه جديد",
+      "search": "البحث عن الدوسيهات...",
+      "noResults": "لم يتم العثور على دوسيهات"
     },
     "attachments": {
       "label": "المرفقات",
