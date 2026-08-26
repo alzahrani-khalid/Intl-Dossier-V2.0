@@ -12,6 +12,7 @@
     "emptyEscalated": "No escalated signals.",
     "errorState": "Signals could not be loaded. Refresh to try again.",
     "loading": "Loading signals…",
+    "count": "{{count}} signals",
     "count_one": "{{count}} signal",
     "count_other": "{{count}} signals"
   },

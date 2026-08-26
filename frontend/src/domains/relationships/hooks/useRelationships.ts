@@ -125,10 +125,15 @@ export function useCreateRelationship() {
         queryKey: relationshipKeys.forDossier(data.target_dossier_id),
       })
       queryClient.setQueryData(relationshipKeys.detail(data.id), data)
-      toast.success(t('messages.created', { ns: 'relationships' }))
+      toast.success(t('relationships:messages.created', { ns: 'relationships' }))
     },
     onError: (error: RelationshipAPIError) => {
-      toast.error(t('messages.createError', { ns: 'relationships', message: error.message }))
+      toast.error(
+        t('relationships:messages.createError', {
+          ns: 'relationships',
+          error: error.message,
+        }),
+      )
     },
   })
 }
@@ -166,7 +171,7 @@ export function useUpdateRelationship() {
       queryClient.invalidateQueries({
         queryKey: relationshipKeys.forDossier(data.target_dossier_id),
       })
-      toast.success(t('messages.updated', { ns: 'relationships' }))
+      toast.success(t('relationships:messages.updated', { ns: 'relationships' }))
     },
     onError: (error: RelationshipAPIError, { id }, context) => {
       if (
@@ -177,7 +182,12 @@ export function useUpdateRelationship() {
       ) {
         queryClient.setQueryData(relationshipKeys.detail(id), context.previousRelationship)
       }
-      toast.error(t('messages.updateError', { ns: 'relationships', message: error.message }))
+      toast.error(
+        t('relationships:messages.updateError', {
+          ns: 'relationships',
+          error: error.message,
+        }),
+      )
     },
   })
 }
@@ -213,7 +223,7 @@ export function useDeleteRelationship() {
           queryKey: relationshipKeys.forDossier(prev.target_dossier_id),
         })
       }
-      toast.success(t('messages.deleted', { ns: 'relationships' }))
+      toast.success(t('relationships:messages.deleted', { ns: 'relationships' }))
     },
     onError: (error: RelationshipAPIError, id: string, context) => {
       if (
@@ -224,7 +234,12 @@ export function useDeleteRelationship() {
       ) {
         queryClient.setQueryData(relationshipKeys.detail(id), context.previousRelationship)
       }
-      toast.error(t('messages.deleteError', { ns: 'relationships', message: error.message }))
+      toast.error(
+        t('relationships:messages.deleteError', {
+          ns: 'relationships',
+          error: error.message,
+        }),
+      )
     },
   })
 }

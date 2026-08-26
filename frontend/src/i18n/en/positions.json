@@ -226,7 +226,11 @@
   "type": {
     "policy_brief": "Policy Brief",
     "talking_point": "Talking Point",
-    "statement": "Statement"
+    "statement": "Statement",
+    "brief": "Brief",
+    "talking_points": "Talking Points",
+    "q_and_a": "Q&A",
+    "guidance": "Guidance"
   },
   "search": {
     "placeholder": "Search positions...",

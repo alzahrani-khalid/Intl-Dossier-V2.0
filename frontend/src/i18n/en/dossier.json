@@ -372,6 +372,12 @@
     "success": "Dossier deleted successfully",
     "error": "Failed to delete dossier: {{message}}"
   },
+  "document": {
+    "linkSuccess": "Document linked successfully",
+    "linkError": "Failed to link document: {{message}}",
+    "unlinkSuccess": "Document unlinked successfully",
+    "unlinkError": "Failed to unlink document: {{message}}"
+  },
   "dossier": {
     "nav": {
       "dossiers": "Dossiers",

@@ -305,7 +305,7 @@ export function useUpdateDossier() {
       // so byType(type) never matched a paginated byType list query.
       queryClient.invalidateQueries({ queryKey: [...dossierKeys.all, 'type', data.type] })
 
-      toast.success(t('dossier.update.success', { name: data.name_en }))
+      toast.success(t('dossier:update.success', { name: data.name_en }))
     },
     onError: (error: DossierAPIError, { id }, context) => {
       // Rollback optimistic update on error
@@ -313,7 +313,7 @@ export function useUpdateDossier() {
         queryClient.setQueryData(dossierKeys.detail(id), context.previousDossier)
       }
 
-      toast.error(t('dossier.update.error', { message: error.message }))
+      toast.error(t('dossier:update.error', { message: error.message }))
     },
   })
 }
@@ -360,7 +360,7 @@ export function useDeleteDossier() {
       queryClient.invalidateQueries({ queryKey: dossierKeys.lists() })
       queryClient.invalidateQueries({ queryKey: dossierKeys.all })
 
-      toast.success(t('dossier.delete.success'))
+      toast.success(t('dossier:delete.success'))
     },
     onError: (error: DossierAPIError, id, context) => {
       // Restore the previous value on error
@@ -368,7 +368,7 @@ export function useDeleteDossier() {
         queryClient.setQueryData(dossierKeys.detail(id), context.previousDossier)
       }
 
-      toast.error(t('dossier.delete.error', { message: error.message }))
+      toast.error(t('dossier:delete.error', { message: error.message }))
     },
   })
 }
@@ -506,10 +506,10 @@ export function useLinkDocument() {
       queryClient.invalidateQueries({
         queryKey: documentLinksKeys.forDossier(variables.dossierId),
       })
-      toast.success(t('document.linkSuccess'))
+      toast.success(t('dossier:document.linkSuccess'))
     },
     onError: (error: DossierAPIError) => {
-      toast.error(t('document.linkError', { message: error.message }))
+      toast.error(t('dossier:document.linkError', { message: error.message }))
     },
   })
 }
@@ -552,10 +552,10 @@ export function useUnlinkDocument() {
       queryClient.invalidateQueries({
         queryKey: documentLinksKeys.forDossier(variables.dossierId),
       })
-      toast.success(t('document.unlinkSuccess'))
+      toast.success(t('dossier:document.unlinkSuccess'))
     },
     onError: (error: DossierAPIError) => {
-      toast.error(t('document.unlinkError', { message: error.message }))
+      toast.error(t('dossier:document.unlinkError', { message: error.message }))
     },
   })
 }
