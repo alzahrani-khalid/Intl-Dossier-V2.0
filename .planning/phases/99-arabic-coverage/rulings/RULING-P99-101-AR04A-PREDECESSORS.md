@@ -7,7 +7,7 @@ Run `run-20260826-160417-0000000000000043` ended clean at accepted integration
 accepted. The milestone was human-fast-forwarded to that integration. P99-30 remains **pending**;
 its candidate was not accepted and must not be approved, upheld, or merged as completed work.
 
-The evidence-only `99-30-SUMMARY.md` commit was human-adjudicated separately: review approved it,
+The evidence-only register now preserved as `99-30-RED-HANDOFF.md` was human-adjudicated separately: review approved it,
 scope was exactly its single SUMMARY path, its failing oracle is the source-state finding it
 records, and the overseer re-derived the headline counts at the accepted tip. Landing this reviewed
 RED register does **not** green P99-30. Its next worker must replace the RED outcome with fresh green
@@ -25,7 +25,7 @@ At accepted tip `aefd38324`, using the canonical strict resolver:
   31 mask and 47 raw-key misses, while excluding tests diagnostically leaves exactly the 30/35
   production populations above. The policy repair cannot green the tree by itself.
 
-The authoritative identities and test/production split are in `99-30-SUMMARY.md` sections 2 and 4.
+The authoritative identities and test/production split are in `99-30-RED-HANDOFF.md` sections 2 and 4.
 
 ## Graph ruling
 
@@ -41,7 +41,7 @@ Insert exactly three predecessor tasks before P99-30:
    must not touch source, tests, or locale data and receives no credit for the 30/35 repairs.
 
 P99-30 depends directly on all three and remains verification-only. Its strict zero oracle is not
-weakened, its scope is not expanded, and its RED SUMMARY must be replaced by fresh green evidence.
+weakened, its scope is not expanded, and a fresh canonical SUMMARY must carry the green evidence.
 P99-31 through P99-38 remain behind P99-30; no deletion becomes reachable until P99-30 itself passes
 all seven gates.
 
@@ -53,7 +53,7 @@ required downstream compatibility correction, not a fourth predecessor.
 
 ## Candidate and gate constraints
 
-- The P99-30 candidate branch/commit remains unaccepted. Only its reviewed SUMMARY evidence was
+- The P99-30 candidate branch/commit remains unaccepted. Only its reviewed RED handoff evidence was
   extracted by the human overseer; no source patch was imported.
 - All three predecessors and the rerun declare all seven gates: build, test, lint, evidence, scope,
   acceptance, review.
