@@ -34,6 +34,7 @@
     "frontend/src/i18n/ar/keyboard-shortcuts.json",
     "frontend/src/i18n/ar/legislation.json",
     "frontend/src/i18n/ar/multilingual.json",
+    "frontend/src/i18n/ar/onboarding.json",
     "frontend/src/i18n/ar/persons.json",
     "frontend/src/i18n/ar/positions.json",
     "frontend/src/i18n/ar/preview-layouts.json",
