@@ -7,10 +7,10 @@
     "activities": "الأنشطة"
   },
   "metrics": {
-    "myDossiers": "ملفاتي",
-    "myDossiers_desc": "إجمالي الملفات المسندة",
+    "myDossiers": "دوسيهاتي",
+    "myDossiers_desc": "إجمالي الدوسيهات المسندة",
     "activeDossiers": "نشط هذا الأسبوع",
-    "activeDossiers_desc": "ملفات بنشاط حديث",
+    "activeDossiers_desc": "دوسيهات بنشاط حديث",
     "pendingWork": "أعمال معلقة",
     "pendingWork_desc": "عناصر تنتظر الإجراء",
     "needsAttention": "تحتاج اهتمام",
@@ -28,8 +28,8 @@
     "workItemTrends_desc_short": "ارتفاع بنسبة {{value}}% هذه الفترة",
     "created": "تم إنشاؤها",
     "completed": "مكتملة",
-    "dossierDistribution": "توزيع الملفات",
-    "dossierDistribution_desc": "التوزيع حسب نوع الملف",
+    "dossierDistribution": "توزيع الدوسيهات",
+    "dossierDistribution_desc": "التوزيع حسب نوع الدوسيه",
     "ranges": {
       "7d": "7 أيام",
       "30d": "30 يوم",
@@ -49,7 +49,7 @@
     "days": "أيام"
   },
   "recentTable": {
-    "title": "الملفات الأخيرة",
+    "title": "الدوسيهات الأخيرة",
     "columns": {
       "name": "الاسم",
       "type": "النوع",
@@ -59,8 +59,8 @@
       "progress": "التقدم",
       "actions": "الإجراءات"
     },
-    "viewDossier": "عرض الملف",
-    "empty": "لم يتم العثور على ملفات حديثة"
+    "viewDossier": "عرض الدوسيه",
+    "empty": "لم يتم العثور على دوسيهات حديثة"
   },
   "dateRange": {
     "title": "حدد نطاق التاريخ",
@@ -81,7 +81,7 @@
   },
   "review": {
     "title": "مستحقة للمراجعة",
-    "empty": "لا توجد ملفات مجدولة للمراجعة",
-    "hint": "ستظهر الملفات ذات مواعيد المراجعة هنا"
+    "empty": "لا توجد دوسيهات مجدولة للمراجعة",
+    "hint": "ستظهر الدوسيهات ذات مواعيد المراجعة هنا"
   }
 }

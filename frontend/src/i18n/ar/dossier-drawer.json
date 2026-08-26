@@ -1,15 +1,15 @@
 {
-  "accessible_title": "نظرة سريعة على الملف",
+  "accessible_title": "نظرة سريعة على الدوسيه",
   "cta": {
-    "close": "إغلاق الملف",
+    "close": "إغلاق الدوسيه",
     "log_engagement": "تسجيل مشاركة",
     "brief": "ملخص",
     "follow": "متابعة",
     "coming_soon": "قريبًا",
-    "open_full_dossier": "فتح الملف الكامل"
+    "open_full_dossier": "فتح الدوسيه الكامل"
   },
   "chip": {
-    "dossier": "الملف",
+    "dossier": "الدوسيه",
     "confidential": "سري"
   },
   "meta": {
@@ -33,14 +33,14 @@
     "open_commitments": "الالتزامات المفتوحة"
   },
   "empty": {
-    "summary": "ملف نشط — لا يوجد ملخص مسجل بعد.",
+    "summary": "دوسيه نشط — لا يوجد ملخص مسجل بعد.",
     "upcoming": "لا توجد مشاركات قادمة.",
     "recent_activity": "لا يوجد نشاط حديث.",
     "open_commitments": "لا توجد التزامات مفتوحة."
   },
   "error": {
-    "load_failed_heading": "تعذّر تحميل هذا الملف",
-    "load_failed_body": "حاول تحديث الصفحة أو افتح الملف الكامل.",
+    "load_failed_heading": "تعذّر تحميل هذا الدوسيه",
+    "load_failed_body": "حاول تحديث الصفحة أو افتح الدوسيه الكامل.",
     "retry": "إعادة المحاولة"
   },
   "peek": {

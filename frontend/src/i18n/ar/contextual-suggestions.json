@@ -69,7 +69,7 @@
   "suggestions": {
     "upcomingEngagement": {
       "title": "التحضير لـ {{name}}",
-      "description": "المشاركة مجدولة في {{date}}{{location}}. راجع الإحاطات وحضّر المواد."
+      "description": "المشاركة مجدولة في {{date}}{{location}}. راجع الملخصات وحضّر المواد."
     },
     "expiringMou": {
       "title": "مذكرة تفاهم تنتهي: {{name}}",
@@ -87,8 +87,8 @@
 
   "quickActions": {
     "createDossier": {
-      "title": "إنشاء ملف دولة",
-      "description": "ابدأ بتتبع علاقة ثنائية من خلال إنشاء ملف دولة."
+      "title": "إنشاء دوسيه دولة",
+      "description": "ابدأ بتتبع علاقة ثنائية من خلال إنشاء دوسيه دولة."
     },
     "addEngagement": {
       "title": "تسجيل مشاركة",
@@ -100,7 +100,7 @@
     },
     "uploadDocument": {
       "title": "رفع مستند",
-      "description": "أضف المستندات المهمة إلى ملفاتك لسهولة الوصول."
+      "description": "أضف المستندات المهمة إلى دوسيهاتك لسهولة الوصول."
     },
     "addContact": {
       "title": "إضافة جهة اتصال",

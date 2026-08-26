@@ -76,8 +76,8 @@
     "virtualLinkPlaceholder": "أدخل رابط مؤتمر الفيديو",
     "organizerNotes": "ملاحظات المنظم",
     "organizerNotesPlaceholder": "ملاحظات داخلية (مرئية لك فقط)",
-    "linkToDossier": "ربط بالملف",
-    "selectDossier": "اختر ملفاً (اختياري)"
+    "linkToDossier": "ربط بالدوسيه",
+    "selectDossier": "اختر دوسيهًا (اختياري)"
   },
 
   "slots": {

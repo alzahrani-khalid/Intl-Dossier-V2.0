@@ -271,7 +271,7 @@
   "search": {
     "title": "البحث",
     "description": "البحث في جميع الدوسيهات في النظام",
-    "placeholder": "البحث في الملفات والمستندات والأشخاص...",
+    "placeholder": "البحث في الدوسيهات والمستندات والأشخاص...",
     "searchPlaceholder": "بحث...",
     "noResults": "لا توجد نتائج",
     "searching": "جاري البحث...",
@@ -349,9 +349,9 @@
     "allRegions": "جميع المناطق",
     "allOrgTypes": "جميع أنواع المنظمات",
     "healthScoreLabel": "درجة الصحة",
-    "dossierCount": "{{count}} ملف",
+    "dossierCount": "{{count}} دوسيه",
     "overallHealth": "صحة العلاقة",
-    "dossiers": "ملفات",
+    "dossiers": "دوسيهات",
     "excellent": "ممتاز",
     "good": "جيد",
     "fair": "مقبول",
@@ -1644,7 +1644,7 @@
       "sync": "الإصدار 2.0 · متزامن"
     },
     "search": {
-      "placeholder": "ابحث في الملفات والمهام والأشخاص…",
+      "placeholder": "ابحث في الدوسيهات والمهام والأشخاص…",
       "kbd": "⌘K"
     },
     "theme": {

@@ -1,6 +1,6 @@
 {
-  "title": "سياق الملف",
-  "description": "إدارة ارتباطات الملفات لعناصر العمل",
+  "title": "سياق الدوسيه",
+  "description": "إدارة ارتباطات الدوسيهات لعناصر العمل",
   "badge": {
     "linked_to": "مرتبط بـ {{dossierName}}",
     "linked_dossiers": "مرتبط بـ:",
@@ -12,13 +12,13 @@
     "primary": "رئيسي"
   },
   "selector": {
-    "title": "اختر الملف",
-    "placeholder": "البحث في الملفات...",
-    "no_results": "لم يتم العثور على ملفات",
-    "loading": "جارٍ تحميل الملفات...",
-    "select_at_least_one": "اختر ملفاً واحداً على الأقل",
-    "selected_count": "تم اختيار ملف {{count}}",
-    "selected_count_plural": "تم اختيار {{count}} ملفات",
+    "title": "اختر الدوسيه",
+    "placeholder": "البحث في الدوسيهات...",
+    "no_results": "لم يتم العثور على دوسيهات",
+    "loading": "جارٍ تحميل الدوسيهات...",
+    "select_at_least_one": "اختر دوسيهًا واحدًا على الأقل",
+    "selected_count": "تم اختيار دوسيه {{count}}",
+    "selected_count_plural": "تم اختيار {{count}} دوسيهات",
     "clear_selection": "مسح الاختيار",
     "search_hint": "اكتب للبحث بالاسم",
     "filter_by_type": "تصفية حسب النوع",
@@ -37,7 +37,7 @@
   },
   "timeline": {
     "title": "الجدول الزمني للأنشطة",
-    "empty": "لا توجد أنشطة لهذا الملف",
+    "empty": "لا توجد أنشطة لهذا الدوسيه",
     "loading": "جارٍ تحميل الأنشطة...",
     "loadMore": "تحميل المزيد",
     "showing_count": "عرض {{count}} من {{total}} نشاط",
@@ -118,51 +118,51 @@
     "archived": "مؤرشف"
   },
   "validation": {
-    "dossier_required": "مطلوب ملف واحد على الأقل",
-    "dossier_access_denied": "ليس لديك صلاحية الوصول لهذا الملف",
-    "primary_dossier_required": "يجب اختيار ملف رئيسي",
-    "duplicate_link": "هذا الملف مرتبط بالفعل",
+    "dossier_required": "مطلوب دوسيه واحد على الأقل",
+    "dossier_access_denied": "ليس لديك صلاحية الوصول لهذا الدوسيه",
+    "primary_dossier_required": "يجب اختيار دوسيه رئيسي",
+    "duplicate_link": "هذا الدوسيه مرتبط بالفعل",
     "invalid_inheritance": "تكوين وراثة غير صالح"
   },
   "errors": {
-    "resolve_failed": "فشل في حل سياق الملف",
-    "create_link_failed": "فشل في ربط الملف",
-    "delete_link_failed": "فشل في إزالة ارتباط الملف",
+    "resolve_failed": "فشل في حل سياق الدوسيه",
+    "create_link_failed": "فشل في ربط الدوسيه",
+    "delete_link_failed": "فشل في إزالة ارتباط الدوسيه",
     "load_timeline_failed": "فشل في تحميل الجدول الزمني للأنشطة",
-    "search_failed": "فشل في البحث عن الملفات",
-    "permission_denied": "ليس لديك صلاحية الوصول لهذا الملف"
+    "search_failed": "فشل في البحث عن الدوسيهات",
+    "permission_denied": "ليس لديك صلاحية الوصول لهذا الدوسيه"
   },
   "actions": {
-    "add_dossier": "إضافة ملف",
-    "remove_dossier": "إزالة الملف",
+    "add_dossier": "إضافة دوسيه",
+    "remove_dossier": "إزالة الدوسيه",
     "set_primary": "تعيين كرئيسي",
-    "view_dossier": "عرض الملف",
-    "edit_links": "تعديل ارتباطات الملف",
+    "view_dossier": "عرض الدوسيه",
+    "edit_links": "تعديل ارتباطات الدوسيه",
     "retry": "إعادة المحاولة",
     "cancel": "إلغاء",
     "removing": "جارٍ الإزالة...",
     "remove": "إزالة"
   },
   "context": {
-    "auto_resolved": "تم حل سياق الملف تلقائياً",
-    "manual_selection_required": "الرجاء اختيار ملف",
+    "auto_resolved": "تم حل سياق الدوسيه تلقائياً",
+    "manual_selection_required": "الرجاء اختيار دوسيه",
     "inherited_from": "موروث من {{source}}",
-    "no_context": "لا يتوفر سياق ملف"
+    "no_context": "لا يتوفر سياق دوسيه"
   },
   "hints": {
-    "inheritance": "ترث عناصر العمل سياق الملف من الكيان الأصلي",
-    "multiple_dossiers": "يمكنك ربط عنصر العمل بعدة ملفات",
-    "primary_dossier": "يتم عرض الملف الرئيسي بشكل بارز في القوائم"
+    "inheritance": "ترث عناصر العمل سياق الدوسيه من الكيان الأصلي",
+    "multiple_dossiers": "يمكنك ربط عنصر العمل بعدة دوسيهات",
+    "primary_dossier": "يتم عرض الدوسيه الرئيسي بشكل بارز في القوائم"
   },
   "error": {
     "timeline_title": "خطأ في الجدول الزمني للأنشطة",
     "timeline_description": "تعذر تحميل الجدول الزمني للأنشطة. يرجى المحاولة مرة أخرى.",
-    "selector_title": "خطأ في محدد الملفات",
-    "selector_description": "تعذر تحميل محدد الملفات. يرجى المحاولة مرة أخرى.",
-    "badge_title": "خطأ في شارة الملف",
-    "badge_description": "تعذر عرض معلومات الملف.",
-    "context_title": "خطأ في سياق الملف",
-    "context_description": "تعذر حل سياق الملف. يرجى اختيار ملف يدوياً.",
+    "selector_title": "خطأ في محدد الدوسيهات",
+    "selector_description": "تعذر تحميل محدد الدوسيهات. يرجى المحاولة مرة أخرى.",
+    "badge_title": "خطأ في شارة الدوسيه",
+    "badge_description": "تعذر عرض معلومات الدوسيه.",
+    "context_title": "خطأ في سياق الدوسيه",
+    "context_description": "تعذر حل سياق الدوسيه. يرجى اختيار دوسيه يدويًا.",
     "general_title": "حدث خطأ ما",
     "general_description": "حدث خطأ غير متوقع. يرجى تحديث الصفحة.",
     "technical_details": "التفاصيل التقنية",
@@ -170,19 +170,19 @@
     "refresh_page": "تحديث الصفحة"
   },
   "widget": {
-    "title": "الملفات المرتبطة",
+    "title": "الدوسيهات المرتبطة",
     "primary": "رئيسي",
-    "no_links": "لا توجد ملفات مرتبطة",
-    "add_dossier": "إضافة ملف",
-    "select_dossier": "اختر ملفاً للربط",
-    "view_dossier": "عرض الملف",
+    "no_links": "لا توجد دوسيهات مرتبطة",
+    "add_dossier": "إضافة دوسيه",
+    "select_dossier": "اختر دوسيهًا للربط",
+    "view_dossier": "عرض الدوسيه",
     "remove_link": "إزالة الارتباط",
     "inheritance_path": "مسار الوراثة",
     "show_more": "عرض {{count}} المزيد",
     "show_less": "عرض أقل",
-    "confirm_remove_title": "إزالة ارتباط الملف",
-    "confirm_remove_description": "هل أنت متأكد من إزالة ارتباط هذا الملف؟ لا يمكن التراجع عن هذا الإجراء.",
-    "loading": "جارٍ تحميل ارتباطات الملفات...",
-    "error": "فشل في تحميل ارتباطات الملفات"
+    "confirm_remove_title": "إزالة ارتباط الدوسيه",
+    "confirm_remove_description": "هل أنت متأكد من إزالة ارتباط هذا الدوسيه؟ لا يمكن التراجع عن هذا الإجراء.",
+    "loading": "جارٍ تحميل ارتباطات الدوسيهات...",
+    "error": "فشل في تحميل ارتباطات الدوسيهات"
   }
 }
