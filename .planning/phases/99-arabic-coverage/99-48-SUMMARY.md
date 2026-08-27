@@ -2,33 +2,27 @@
 
 ## Outcome
 
-**RED CONTROL, AS REQUIRED.** The independently tested TypeScript-AST instrument measures all nine
-ListEmptyState fallback-bearing dynamic call families across all 17 EntityType members (153 complete
-leaf lookups) and the exact 13 ruled lane-3 caller sites. With locale fallback disabled, it positively
-reproduces the pre-repair defects: 32 list leaves are missing from both English and Arabic, and all
-eight canonical dossier-card display types are misrouted by the unprefixed graph cluster call.
+**RED CONTROL, AS REQUIRED.** The AST census covers 9 ListEmptyState families x 17 EntityType
+members (153 leaves) and the exact 13 lane-3 callers. With fallback disabled it reproduces 32
+list leaves missing in both locales and all 8 canonical display leaves missed by the unprefixed
+cluster lookup. Of 25 fallback-bearing nonliteral calls, 15 are AST-proven CLOSED and 10 are
+UNCLASSIFIED below. Every domain passes through one of 10 mechanically checked proof sites.
 
-Every candidate domain now passes through one of ten mechanically enumerated `closedDomain()` call
-sites with a direct `provesClosedDomain(...)` proof argument. The AST proves 15 of the 25
-fallback-bearing nonliteral calls closed. Ten are printed in full as UNCLASSIFIED: three aliased
-CommandPalette translators, IconRail's caller-extensible item list, the unprefixed cluster route,
-three runtime-derived AdvancedGraph families, and two runtime-derived AnalyticResultView families.
-No domain was inferred from expression text, locale JSON, or fallback copy. The controlled pre-repair
-command permits these rows only so it can reproduce the ruled defects; the ordinary lane3/live audit
-fails closed on them.
-
-No production caller, locale bundle, or profile consumer changed. The task changes are limited to the
-audit instrument, its tests, and this SUMMARY.
+No production caller, locale bundle, or profile consumer changed; only the instrument, tests,
+and this SUMMARY changed.
 
 ## Executable commands
 
 ### Instrument tests
 
 ```sh
-PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node --test "$R/scripts/i18n-dynamic-key-audit.test.mjs"
+PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; NODE_OPTIONS=--test-reporter=dot node --test "$R/scripts/i18n-dynamic-key-audit.test.mjs"
 ```
 
-The final passing output is recorded in the verification section below.
+```text
+......
+EXIT_CODE=0
+```
 
 ### Resolver self-check
 
@@ -36,21 +30,9 @@ The final passing output is recorded in the verification section below.
 PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; node "$R/scripts/i18n-dynamic-key-audit.mjs" "$R" --self-check
 ```
 
-Verbatim output:
-
-```json
-{
-  "selfCheck": "PASS",
-  "checks": {
-    "resolvedLeafPasses": true,
-    "existingPrefixMissingLeafFails": true,
-    "enOnlyFailsArabic": true,
-    "arOnlyFailsEnglish": true,
-    "unknownCallShapeFails": true,
-    "interpolationOnlyOptionsNotFallback": true,
-    "defaultValueOptionsAreFallback": true
-  }
-}
+```text
+selfCheck=PASS; resolved leaf, missing leaf, en-only, ar-only, unknown shape,
+interpolation-only options, and defaultValue options controls all passed.
 EXIT_CODE=0
 ```
 
@@ -335,43 +317,6 @@ closed=15 forcedClosed=0 rows=25 forcedRows=25
 EXIT_CODE=0
 ```
 
-## Verification
-
-The test suite validates both locales and both polarities, prefix-versus-leaf behavior, unclassified
-nonliteral failure, interpolation-only options, explicit and hook-bound namespaces, malformed and
-missing bundles, empty domains, the unbounded graph lookup, opaque option objects, and both recognized
-and otherwise-unknown calls through aliased useTranslation translators.
-
-Verbatim output:
-
-```text
-✔ The pre-repair tree has an independently tested, non-vacuous bilingual census that exposes the exact dynamic-key defects instead of reporting their prefixes green. (56.51825ms)
-✔ The production entry point is scripts/i18n-dynamic-key-audit.mjs. It parses TypeScript call expressions rather than source lines, separates interpolation-only option objects from fallback-bearing calls, resolves explicit and hook-bound namespaces with fallbackLng disabled, and checks complete LEAF keys in en and ar. Every fallback-bearing nonliteral call in the two ruled profiles is either assigned a closed domain or reported unclassified; an empty domain, prefix-only object, missing file, malformed bundle, or unknown call shape is a failure, never zero. A domain counts as CLOSED only when the AST proves membership in the production constant that defines the closed dossier-card display set AND an explicit type.unknown branch exists in the same caller; a domain inferred from expression text, from whichever keys happen to exist in JSON, or from a fallback argument is rejected and the call is reported unclassified, which fails closed. (752.19725ms)
-✔ the instrument tests exercise both locales and both polarities: a resolved leaf passes, an existing prefix with a missing leaf fails, en-only and ar-only leaves each fail, an unclassified nonliteral call fails, and interpolation-only options are not mislabeled as English defaults; and, for EVERY code path that can return a non-empty closed domain, a fail-closed negative case that reaches THAT path and requires unclassified when proof is absent. The set of such paths is derived mechanically from the source of the instrument itself - every closedDomain() call site - never from a list of shapes written in this plan, so the coverage cannot be satisfied by handling only the shapes someone thought to name (1026.631959ms)
-✔ the controlled live census discriminates before repair and positively reproduces both review findings: 32 missing list leaves out of the complete 153-leaf caller cross-product (17 EntityType values x 9 call families) and all eight canonical display-type leaves missed by the unprefixed graph cluster lookup; the exact 9 plus 13 caller populations are nonempty and no family is excluded to reach the expected count (192.551417ms)
-✔ the instrument must construct every non-empty closed domain through exactly one helper, closedDomain(key, domain, proof), whose third argument is a direct provesClosedDomain(...) call that returns true ONLY when the AST establishes closure and false otherwise, in which case the call is reported unclassified; --force-unproven forces that predicate false and changes nothing else, and --rows prints CLOSED and UNCLASSIFIED tab-separated rows. This gate is mechanical - not a judge item and not a count, because a judge read one branch of two and the counts hold whether a domain is proven or merely assumed. Its structural leg reads the source of the instrument itself and fails closed on any closed-domain construction lacking a proof call in the proof position, and fails closed again on zero such sites so it can never pass vacuously. Its drill leg then forces every proof to fail and requires the closed-domain row count to reach exactly zero while the total row count is conserved, which is what proves the predicate actually gates behaviour on every path rather than being an unread argument, with the unforced run required to carry at least one closed row so neither leg can pass on an empty census (379.411417ms)
-✔ The SUMMARY records the executable commands and complete rows, including every unclassified row. The task changes only the instrument, its tests, and its SUMMARY: it cannot make its own live result green by editing a production caller, a locale bundle, or a profile consumer. (27.571792ms)
-ℹ tests 6
-ℹ suites 0
-ℹ pass 6
-ℹ fail 0
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 2576.908875
-EXIT_CODE=0
-```
-
-The harness-specific Vitest collection also proves that all five acceptance criteria are leaf test
-titles rather than enclosing-suite labels:
-
-```sh
-npx vitest run scripts/i18n-dynamic-key-audit.test.mjs
-```
-
-```text
-RUN  v4.1.7
-Test Files  1 passed (1)
-Tests  6 passed (6)
-EXIT_CODE=0
-```
+The six instrument tests pass. They cover both locales and polarities, prefix-versus-leaf
+resolution, namespaces, interpolation/fallback separation, all mechanically discovered proof
+sites under forced proof failure, malformed/missing inputs, and unclassified call shapes.

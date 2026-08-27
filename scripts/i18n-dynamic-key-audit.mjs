@@ -1,11 +1,5 @@
 #!/usr/bin/env node
-/**
- * AST-backed audit for fallback-bearing dynamic i18n keys.
- *
- * This is intentionally narrow: it grades the two ruled AR-04a dynamic profiles
- * from RULING-P99-105, and fails closed when a fallback-bearing nonliteral call
- * inside those profiles cannot be assigned a closed production domain.
- */
+/** AST audit for the two ruled AR-04a fallback-bearing dynamic-key profiles. */
 
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, relative, resolve, sep } from 'node:path'
@@ -217,11 +211,7 @@ const objectProperty = (node, name) => {
   return null
 }
 
-/**
- * Only a transparent object literal can be proven interpolation-only. Shorthand
- * defaultValue, computed keys, methods, and spreads are deliberately unsafe:
- * each can conceal a fallback that this instrument must not silently exclude.
- */
+// Opaque option syntax can hide a fallback, so only transparent literals are safe.
 const optionShape = (node) => {
   if (node == null || !ts.isObjectLiteralExpression(node)) return 'positional-fallback'
   let hasDefault = false
@@ -983,12 +973,7 @@ const describeDomain = (claim, kind, domainSource, options = {}) => ({
   requiredKeys: options.requiredKeys ?? null,
 })
 
-/**
- * The cluster display domain is special: the canonical values alone do not
- * close an arbitrary runtime string. The same caller must prove membership in
- * the imported DOSSIER_CARD_TYPES constant and route the negative branch to the
- * explicit graph leaf type.unknown.
- */
+// Cluster closure needs canonical membership and an explicit type.unknown branch.
 const provesClosedClusterDomain = (sf, source, call) => {
   const importedCanonicalSet = sf.statements.some(
     (statement) =>
@@ -1083,7 +1068,7 @@ const classifyCall = ({
         }),
       ),
       `list.${leaf}`,
-      'ListEmptyState EntityType union (complete caller cross-product)',
+      'EntityType union cross-product',
     )
   }
 
@@ -1102,7 +1087,7 @@ const classifyCall = ({
         }),
       ),
       'lane3.commandPalette.analyze',
-      'AST-proven CommandPalette analyzeLabelKey record',
+      'CommandPalette typed label record',
     )
   }
 
@@ -1124,7 +1109,7 @@ const classifyCall = ({
         }),
       ),
       'lane3.dossierTable.sensitivity',
-      'AST-proven SENSITIVITY_CHIP lookup plus explicit unknown branch',
+      'SENSITIVITY_CHIP plus unknown',
     )
   }
 
@@ -1143,7 +1128,7 @@ const classifyCall = ({
         }),
       ),
       'lane3.engagementsList.filterPill',
-      'AST-proven EngagementsList FILTERS.map membership',
+      'FILTERS.map membership',
     )
   }
 
@@ -1162,7 +1147,7 @@ const classifyCall = ({
         }),
       ),
       'lane3.iconRail.defaultItems',
-      'IconRail defaultItems candidate; AST must exclude caller-supplied items',
+      'defaultItems membership',
     )
   }
 
@@ -1181,7 +1166,7 @@ const classifyCall = ({
         }),
       ),
       'lane3.analyticQueryPicker.templates',
-      'AST-proven AnalyticQueryPicker TEMPLATES.map membership',
+      'TEMPLATES.map membership',
     )
   }
 
@@ -1200,7 +1185,7 @@ const classifyCall = ({
         }),
       ),
       'lane3.analyticResultView.countLine',
-      'AST-proven closed countLine callers in renderCountLine',
+      'closed renderCountLine callers',
     )
   }
 
@@ -1241,7 +1226,7 @@ const classifyCall = ({
       ),
       unprefixed ? 'lane3.advancedGraph.cluster.unprefixed' : 'lane3.advancedGraph.cluster.routed',
       unprefixed
-        ? 'UNCLASSIFIED diagnostic against DOSSIER_CARD_TYPES; no proven route'
+        ? 'unproven DOSSIER_CARD_TYPES route'
         : 'AST-proven DOSSIER_CARD_TYPES membership plus explicit type.unknown branch',
       unprefixed
         ? {
@@ -1275,8 +1260,8 @@ const classifyCall = ({
       ),
       `lane3.${fileBase.replace(/\.tsx$/, '')}.graphType.${lineAt(source, node.getStart())}`,
       legend == null
-        ? 'UNCLASSIFIED runtime graph node type'
-        : 'AST-proven Object.entries(NODE_COLORS).slice domain',
+        ? 'runtime graph node type'
+        : 'NODE_COLORS entries slice',
     )
   }
 
@@ -1300,7 +1285,7 @@ const classifyCall = ({
         }),
       ),
       `lane3.advancedGraph.relationship.${lineAt(source, node.getStart())}`,
-      'UNCLASSIFIED runtime relationshipTypes set',
+      'runtime relationshipTypes set',
     )
   }
 
@@ -1444,9 +1429,7 @@ const auditProfile = (root, profile = 'ar04-pre-repair', { forceUnproven = false
     }
   }
 
-  // The ruled population remains the 9 + 13 calls with production-derived
-  // domains. Extra fallback-bearing sites are still retained in fallbackSites
-  // and fail closed through unclassified instead of inflating that census.
+  // Keep the ruled 9 + 13 census; extras remain fail-closed fallback sites.
   const listSites = calls.filter((call) => call.file === LIST_FILE)
   const lane3Sites = calls.filter((call) => call.file !== LIST_FILE)
   const listRows = rows.filter((row) => row.profile === 'list')
