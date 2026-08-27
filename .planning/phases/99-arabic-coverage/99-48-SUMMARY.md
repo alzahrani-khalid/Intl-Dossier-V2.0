@@ -8,13 +8,14 @@ leaf lookups) and the exact 13 ruled lane-3 caller sites. With locale fallback d
 reproduces the pre-repair defects: 32 list leaves are missing from both English and Arabic, and all
 eight canonical dossier-card display types are misrouted by the unprefixed graph cluster call.
 
-The exact 13-site population is the ruled set with production-derived domains. The AST walk also finds
-three additional fallback-bearing nonliteral calls through aliased `useTranslation` bindings in
-CommandPalette: one `tQs(groupKey, ...)` call and two `tCommon(page.label, ...)` calls. They are all
-emitted as unclassified instead of being silently skipped. Together with the graph cluster call, which
-does not prove DOSSIER_CARD_TYPES membership or route an explicit type.unknown branch, the control has
-four complete unclassified rows. These expected pre-repair rows are permitted only when the exact
-asserted census command is used; the ordinary lane3/live audit remains fail-closed.
+Every candidate domain now passes through one of ten mechanically enumerated `closedDomain()` call
+sites with a direct `provesClosedDomain(...)` proof argument. The AST proves 15 of the 25
+fallback-bearing nonliteral calls closed. Ten are printed in full as UNCLASSIFIED: three aliased
+CommandPalette translators, IconRail's caller-extensible item list, the unprefixed cluster route,
+three runtime-derived AdvancedGraph families, and two runtime-derived AnalyticResultView families.
+No domain was inferred from expression text, locale JSON, or fallback copy. The controlled pre-repair
+command permits these rows only so it can reproduce the ruled defects; the ordinary lane3/live audit
+fails closed on them.
 
 No production caller, locale bundle, or profile consumer changed. The task changes are limited to the
 audit instrument, its tests, and this SUMMARY.
@@ -63,7 +64,7 @@ Verbatim complete output (all resolved and missing rows, followed by every uncla
 
 ```text
 dynamic i18n audit: profile=ar04-pre-repair listSites=9 listLeaves=153 lane3Sites=13
-rows=244 listMissingBoth=32 clusterMissingBoth=8 unclassified=4
+rows=242 listMissingBoth=32 clusterMissingBoth=8 unclassified=10
 list	list.firstTitle	frontend/src/components/empty-states/ListEmptyState.tsx:194	list.document.firstTitle	EN=ok	AR=ok	ns=empty-states
 list	list.firstTitle	frontend/src/components/empty-states/ListEmptyState.tsx:194	list.dossier.firstTitle	EN=ok	AR=ok	ns=empty-states
 list	list.firstTitle	frontend/src/components/empty-states/ListEmptyState.tsx:194	list.engagement.firstTitle	EN=ok	AR=ok	ns=empty-states
@@ -278,12 +279,10 @@ lane3	lane3.AdvancedGraphVisualization.graphType.1645	frontend/src/components/re
 lane3	lane3.AdvancedGraphVisualization.graphType.1645	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:1645	type.elected_official	EN=ok	AR=ok	ns=graph
 lane3	lane3.AdvancedGraphVisualization.graphType.1853	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:1853	type.country	EN=ok	AR=ok	ns=graph
 lane3	lane3.AdvancedGraphVisualization.graphType.1853	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:1853	type.organization	EN=ok	AR=ok	ns=graph
+lane3	lane3.AdvancedGraphVisualization.graphType.1853	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:1853	type.individual	EN=MISS	AR=MISS	ns=graph
 lane3	lane3.AdvancedGraphVisualization.graphType.1853	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:1853	type.forum	EN=ok	AR=ok	ns=graph
 lane3	lane3.AdvancedGraphVisualization.graphType.1853	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:1853	type.engagement	EN=ok	AR=ok	ns=graph
-lane3	lane3.AdvancedGraphVisualization.graphType.1853	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:1853	type.topic	EN=ok	AR=ok	ns=graph
-lane3	lane3.AdvancedGraphVisualization.graphType.1853	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:1853	type.working_group	EN=ok	AR=ok	ns=graph
-lane3	lane3.AdvancedGraphVisualization.graphType.1853	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:1853	type.person	EN=ok	AR=ok	ns=graph
-lane3	lane3.AdvancedGraphVisualization.graphType.1853	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:1853	type.elected_official	EN=ok	AR=ok	ns=graph
+lane3	lane3.AdvancedGraphVisualization.graphType.1853	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:1853	type.mou	EN=MISS	AR=MISS	ns=graph
 lane3	lane3.analyticQueryPicker.templates	frontend/src/components/relationships/AnalyticQueryPicker.tsx:140	analyze.template.forumMembership	EN=ok	AR=ok	ns=graph
 lane3	lane3.analyticQueryPicker.templates	frontend/src/components/relationships/AnalyticQueryPicker.tsx:140	analyze.template.sharedCommittees	EN=ok	AR=ok	ns=graph
 lane3	lane3.analyticQueryPicker.templates	frontend/src/components/relationships/AnalyticQueryPicker.tsx:140	analyze.template.engagementChain	EN=ok	AR=ok	ns=graph
@@ -311,7 +310,28 @@ lane3	lane3.AnalyticResultView.graphType.300	frontend/src/components/relationshi
 UNCLASSIFIED	unclassified.translator-binding	frontend/src/components/keyboard-shortcuts/CommandPalette.tsx:1397	unsupported useTranslation translator binding: tQs	tQs(groupKey, dossierTypeLabels[group.type]?.en || group.type)	ns=quickswitcher
 UNCLASSIFIED	unclassified.translator-binding	frontend/src/components/keyboard-shortcuts/CommandPalette.tsx:1546	unsupported useTranslation translator binding: tCommon	tCommon(page.label, page.id)	ns=common
 UNCLASSIFIED	unclassified.translator-binding	frontend/src/components/keyboard-shortcuts/CommandPalette.tsx:1554	unsupported useTranslation translator binding: tCommon	tCommon(page.label, page.id)	ns=common
-UNCLASSIFIED	lane3.advancedGraph.cluster.unprefixed	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:413	domain is not closed by canonical-membership proof and an explicit type.unknown branch	t(data.clusterType, data.clusterType)	ns=graph
+UNCLASSIFIED	lane3.iconRail.defaultItems	frontend/src/components/modern-nav/IconRail/IconRail.tsx:187	AST did not prove closed domain at icon-rail-map	t(item.tooltipKey, item.id.charAt(0).toUpperCase() + item.id.slice(1))	ns=common
+UNCLASSIFIED	lane3.advancedGraph.cluster.unprefixed	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:413	AST did not prove closed domain at graph-cluster-route	t(data.clusterType, data.clusterType)	ns=graph
+UNCLASSIFIED	lane3.AdvancedGraphVisualization.graphType.1542	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:1542	AST did not prove closed domain at graph-type-map	t(`type.${type}`, type)	ns=graph
+UNCLASSIFIED	lane3.advancedGraph.relationship.1560	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:1560	AST did not prove closed domain at graph-relationship-map	t(`relationship.${type}`, type.replace(/_/g, ' '))	ns=graph
+UNCLASSIFIED	lane3.AdvancedGraphVisualization.graphType.1645	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:1645	AST did not prove closed domain at graph-type-map	t(`type.${type}`, type)	ns=graph
+UNCLASSIFIED	lane3.AnalyticResultView.graphType.261	frontend/src/components/relationships/AnalyticResultView.tsx:261	AST did not prove closed domain at graph-type-map	t(`type.${node.type}`, node.type)	ns=graph
+UNCLASSIFIED	lane3.AnalyticResultView.graphType.300	frontend/src/components/relationships/AnalyticResultView.tsx:300	AST did not prove closed domain at graph-type-map	t(`type.${node.type}`, node.type)	ns=graph
+EXIT_CODE=0
+```
+
+### Structural proof gate and forced-negative drill
+
+```sh
+( PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; AUD_FILE="$R/scripts/i18n-dynamic-key-audit.mjs" AUD_MK=closedDomain AUD_PROOF=provesClosedDomain node -e "const ts=require(\"typescript\"),fs=require(\"fs\");const F=process.env.AUD_FILE,MK=process.env.AUD_MK,PR=process.env.AUD_PROOF;const sf=ts.createSourceFile(F,fs.readFileSync(F,\"utf8\"),ts.ScriptTarget.Latest,true);let n=0;const bad=[];const walk=y=>{if(ts.isCallExpression(y)&&y.expression.getText(sf)===MK){n++;const a=y.arguments[2];if(!(a&&ts.isCallExpression(a)&&a.expression.getText(sf)===PR))bad.push(ts.getLineAndCharacterOfPosition(sf,y.getStart()).line+1)}ts.forEachChild(y,walk)};walk(sf);console.log(\"closed-domain sites=\"+n+\" unproven=\"+bad.length+(bad.length?\" at line(s) \"+bad.join(\",\"):\"\"));if(n<1){console.error(\"FAIL-VACUOUS: zero \"+MK+\"() sites - the check would prove nothing\");process.exit(2)}if(bad.length){console.error(\"FAIL-UNPROVEN: a closed domain is claimed without a proof call in the proof position\");process.exit(3)}console.log(\"STRUCTURAL OK\")" ) && ( PATH="/opt/homebrew/bin:$PATH"; R="$PWD"; A="$R/scripts/i18n-dynamic-key-audit.mjs"; N=$(node "$A" "$R" --profile ar04-pre-repair --rows | command grep -c "^CLOSED" || true); Z=$(node "$A" "$R" --profile ar04-pre-repair --rows --force-unproven | command grep -c "^CLOSED" || true); T=$(node "$A" "$R" --profile ar04-pre-repair --rows | command grep -cE "^(CLOSED|UNCLASSIFIED)" || true); FT=$(node "$A" "$R" --profile ar04-pre-repair --rows --force-unproven | command grep -cE "^(CLOSED|UNCLASSIFIED)" || true); echo "closed=$N forcedClosed=$Z rows=$T forcedRows=$FT"; test "$N" -ge 1 && test "$T" -ge 1 && test "$Z" -eq 0 && test "$T" -eq "$FT" )
+```
+
+Verbatim output:
+
+```text
+closed-domain sites=10 unproven=0
+STRUCTURAL OK
+closed=15 forcedClosed=0 rows=25 forcedRows=25
 EXIT_CODE=0
 ```
 
@@ -325,19 +345,20 @@ and otherwise-unknown calls through aliased useTranslation translators.
 Verbatim output:
 
 ```text
-✔ The pre-repair tree has an independently tested, non-vacuous bilingual census that exposes the exact dynamic-key defects instead of reporting their prefixes green. (58.016125ms)
-✔ The production entry point is scripts/i18n-dynamic-key-audit.mjs. It parses TypeScript call expressions rather than source lines, separates interpolation-only option objects from fallback-bearing calls, resolves explicit and hook-bound namespaces with fallbackLng disabled, and checks complete LEAF keys in en and ar. Every fallback-bearing nonliteral call in the two ruled profiles is either assigned a closed domain or reported unclassified; an empty domain, prefix-only object, missing file, malformed bundle, or unknown call shape is a failure, never zero. A domain counts as CLOSED only when the AST proves membership in the production constant that defines the closed dossier-card display set AND an explicit type.unknown branch exists in the same caller; a domain inferred from expression text, from whichever keys happen to exist in JSON, or from a fallback argument is rejected and the call is reported unclassified, which fails closed. (762.135291ms)
-✔ the instrument tests exercise both locales and both polarities: a resolved leaf passes, an existing prefix with a missing leaf fails, en-only and ar-only leaves each fail, an unclassified nonliteral call fails, and interpolation-only options are not mislabeled as English defaults; and three fail-closed negative tests each red the instrument: an unbounded cluster lookup with no canonical-membership proof and no type.unknown branch, a defaultValue reachable only through a shorthand, static-computed, or spread option object, and a useTranslation translator bound to an identifier other than t (962.167ms)
-✔ the controlled live census discriminates before repair and positively reproduces both review findings: 32 missing list leaves out of the complete 153-leaf caller cross-product (17 EntityType values x 9 call families) and all eight canonical display-type leaves missed by the unprefixed graph cluster lookup; the exact 9 plus 13 caller populations are nonempty and no family is excluded to reach the expected count (176.28275ms)
-✔ The SUMMARY records the executable commands and complete rows, including every unclassified row. The task changes only the instrument, its tests, and its SUMMARY: it cannot make its own live result green by editing a production caller, a locale bundle, or a profile consumer. (29.343459ms)
-ℹ tests 5
+✔ The pre-repair tree has an independently tested, non-vacuous bilingual census that exposes the exact dynamic-key defects instead of reporting their prefixes green. (56.51825ms)
+✔ The production entry point is scripts/i18n-dynamic-key-audit.mjs. It parses TypeScript call expressions rather than source lines, separates interpolation-only option objects from fallback-bearing calls, resolves explicit and hook-bound namespaces with fallbackLng disabled, and checks complete LEAF keys in en and ar. Every fallback-bearing nonliteral call in the two ruled profiles is either assigned a closed domain or reported unclassified; an empty domain, prefix-only object, missing file, malformed bundle, or unknown call shape is a failure, never zero. A domain counts as CLOSED only when the AST proves membership in the production constant that defines the closed dossier-card display set AND an explicit type.unknown branch exists in the same caller; a domain inferred from expression text, from whichever keys happen to exist in JSON, or from a fallback argument is rejected and the call is reported unclassified, which fails closed. (752.19725ms)
+✔ the instrument tests exercise both locales and both polarities: a resolved leaf passes, an existing prefix with a missing leaf fails, en-only and ar-only leaves each fail, an unclassified nonliteral call fails, and interpolation-only options are not mislabeled as English defaults; and, for EVERY code path that can return a non-empty closed domain, a fail-closed negative case that reaches THAT path and requires unclassified when proof is absent. The set of such paths is derived mechanically from the source of the instrument itself - every closedDomain() call site - never from a list of shapes written in this plan, so the coverage cannot be satisfied by handling only the shapes someone thought to name (1026.631959ms)
+✔ the controlled live census discriminates before repair and positively reproduces both review findings: 32 missing list leaves out of the complete 153-leaf caller cross-product (17 EntityType values x 9 call families) and all eight canonical display-type leaves missed by the unprefixed graph cluster lookup; the exact 9 plus 13 caller populations are nonempty and no family is excluded to reach the expected count (192.551417ms)
+✔ the instrument must construct every non-empty closed domain through exactly one helper, closedDomain(key, domain, proof), whose third argument is a direct provesClosedDomain(...) call that returns true ONLY when the AST establishes closure and false otherwise, in which case the call is reported unclassified; --force-unproven forces that predicate false and changes nothing else, and --rows prints CLOSED and UNCLASSIFIED tab-separated rows. This gate is mechanical - not a judge item and not a count, because a judge read one branch of two and the counts hold whether a domain is proven or merely assumed. Its structural leg reads the source of the instrument itself and fails closed on any closed-domain construction lacking a proof call in the proof position, and fails closed again on zero such sites so it can never pass vacuously. Its drill leg then forces every proof to fail and requires the closed-domain row count to reach exactly zero while the total row count is conserved, which is what proves the predicate actually gates behaviour on every path rather than being an unread argument, with the unforced run required to carry at least one closed row so neither leg can pass on an empty census (379.411417ms)
+✔ The SUMMARY records the executable commands and complete rows, including every unclassified row. The task changes only the instrument, its tests, and its SUMMARY: it cannot make its own live result green by editing a production caller, a locale bundle, or a profile consumer. (27.571792ms)
+ℹ tests 6
 ℹ suites 0
-ℹ pass 5
+ℹ pass 6
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 2134.791334
+ℹ duration_ms 2576.908875
 EXIT_CODE=0
 ```
 
@@ -351,6 +372,6 @@ npx vitest run scripts/i18n-dynamic-key-audit.test.mjs
 ```text
 RUN  v4.1.7
 Test Files  1 passed (1)
-Tests  5 passed (5)
+Tests  6 passed (6)
 EXIT_CODE=0
 ```
