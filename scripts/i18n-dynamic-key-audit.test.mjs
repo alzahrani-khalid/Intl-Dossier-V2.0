@@ -1,11 +1,20 @@
 import nodeTest from 'node:test'
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import {
+  cpSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import ts from 'typescript'
+import YAML from 'yaml'
 import {
   auditProfile,
   collectCalls,
@@ -21,7 +30,20 @@ const test = process.env.VITEST ? (await import('vitest')).test : nodeTest
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const script = resolve(root, 'scripts/i18n-dynamic-key-audit.mjs')
-const summaryPath = resolve(root, '.planning/phases/99-arabic-coverage/99-48-SUMMARY.md')
+const summaryPath = resolve(root, '.planning/phases/99-arabic-coverage/99-51-SUMMARY.md')
+const fixtureCorpus = resolve(root, 'scripts/fixtures/dynamic-key-audit')
+const planSource = readFileSync(
+  resolve(root, '.planning/phases/99-arabic-coverage/99-51-PLAN.md'),
+  'utf8',
+)
+const planFrontmatter = YAML.parse(planSource.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '')
+const acceptanceCriteria = [
+  planSource.match(/<done>([\s\S]*?)<\/done>/)?.[1].trim(),
+  ...planFrontmatter.must_haves.truths.map((truth) =>
+    typeof truth === 'string' ? truth : truth.text,
+  ),
+]
+assert.equal(acceptanceCriteria.length, 6)
 
 const write = (base, path, body) => {
   const full = join(base, path)
@@ -35,6 +57,7 @@ const commandPaletteSource = ({
   call = "t(analyzeLabelKey[analyze.queryType], 'Default')",
   binding = 'const { t }',
 } = {}) => `
+import { useTranslation } from 'react-i18next'
 const analyzeLabelKey = { one: 'analyze.one' } as const
 const analyze = { queryType: 'one' }
 ${binding} = useTranslation('fixture')
@@ -65,6 +88,16 @@ const fixtureRoot = ({ commandSource = commandPaletteSource() } = {}) => {
       analyze: { one: 'واحد' },
       type: { country: 'دولة', unknown: 'غير معروف' },
     }),
+  )
+  write(
+    base,
+    'frontend/src/i18n/en/graph.json',
+    JSON.stringify({ type: { country: 'Country', unknown: 'Unknown' } }),
+  )
+  write(
+    base,
+    'frontend/src/i18n/ar/graph.json',
+    JSON.stringify({ type: { country: 'دولة', unknown: 'غير معروف' } }),
   )
   write(
     base,
@@ -166,6 +199,23 @@ const closedDomainSitesFromInstrument = () => {
   assert.ok(sites.length > 0, 'the mechanically derived closed-domain path set must be nonempty')
   assert.equal(new Set(sites).size, sites.length, 'closedDomain site ids must be unique')
   return sites
+}
+
+const fixtureResult = (name, options) =>
+  auditProfile(resolve(fixtureCorpus, name), 'lane3', options)
+
+const proofCounts = (result) => ({
+  closed: result.proofRows.filter((row) => row.status === 'CLOSED').length,
+  unclassified: result.proofRows.filter((row) => row.status === 'UNCLASSIFIED').length,
+})
+
+const assertFixturePair = (name) => {
+  const negative = proofCounts(fixtureResult(name))
+  const control = proofCounts(fixtureResult(`${name}-control`))
+  assert.equal(negative.closed, 0, `${name} negative must have no closed-domain row`)
+  assert.ok(negative.unclassified >= 1, `${name} negative must be observed and unclassified`)
+  assert.ok(control.closed >= 1, `${name} control must prove a closed domain`)
+  assert.equal(control.unclassified, 0, `${name} control must have no unclassified row`)
 }
 
 test('The pre-repair tree has an independently tested, non-vacuous bilingual census that exposes the exact dynamic-key defects instead of reporting their prefixes green.', () => {
@@ -284,7 +334,8 @@ test('The production entry point is scripts/i18n-dynamic-key-audit.mjs. It parse
       'frontend/src/components/relationships/AdvancedGraphVisualization.tsx',
       `
 import { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'
-const { t } = useTranslation('fixture')
+import { useTranslation } from 'react-i18next'
+const { t } = useTranslation('graph')
 const ClusterNode = ({ data }) => {
   const key = DOSSIER_CARD_TYPES.includes(data.clusterType)
     ? \`type.\${data.clusterType}\`
@@ -412,7 +463,7 @@ test('the instrument tests exercise both locales and both polarities: a resolved
     write(
       unbounded,
       'frontend/src/components/relationships/AdvancedGraphVisualization.tsx',
-      "const { t } = useTranslation('fixture')\nconst ClusterNode = ({ data }) => t(data.clusterType, data.clusterType)\n",
+      "import { useTranslation } from 'react-i18next'\nconst { t } = useTranslation('graph')\nconst ClusterNode = ({ data }) => t(data.clusterType, data.clusterType)\n",
     )
     const collected = collectCalls(unbounded, 'lane3')
     assert.equal(collected.unclassified.length, 1)
@@ -558,4 +609,149 @@ test('The SUMMARY records the executable commands and complete rows, including e
     .filter((line) => line.startsWith('list\t') || line.startsWith('lane3\t'))
   assert.equal(recordedRows.length, result.rows.length)
   assert.match(summary, /No production caller, locale bundle, or profile consumer changed/)
+})
+
+test(acceptanceCriteria[0], () => {
+  const preRepair = auditProfile(root, 'ar04-pre-repair')
+  assert.deepEqual(
+    {
+      listSites: preRepair.callerPopulations.listSites,
+      listLeaves: preRepair.callerPopulations.listLeaves,
+      lane3Sites: preRepair.callerPopulations.lane3Sites,
+      listMissingBoth: preRepair.counts.listMissingBoth,
+      clusterMissingBoth: preRepair.counts.clusterMissingBoth,
+    },
+    {
+      listSites: 9,
+      listLeaves: 153,
+      lane3Sites: 13,
+      listMissingBoth: 32,
+      clusterMissingBoth: 8,
+    },
+  )
+  assert.deepEqual(proofCounts(fixtureResult('generality-membership')), {
+    closed: 1,
+    unclassified: 0,
+  })
+})
+
+test(acceptanceCriteria[1], () => {
+  const result = auditProfile(root, 'ar04-pre-repair')
+  assert.equal(result.evidenceRoot, resolve(fixtureCorpus, 'pre-repair'))
+  assert.ok(result.files.every((file) => readFileSync(join(result.evidenceRoot, file), 'utf8')))
+  assert.equal(result.callerPopulations.listSites, 9)
+  assert.equal(result.callerPopulations.listLeaves, 153)
+  assert.equal(result.callerPopulations.lane3Sites, 13)
+  assert.equal(result.counts.listMissingBoth, 32)
+  assert.equal(result.counts.clusterMissingBoth, 8)
+})
+
+test(acceptanceCriteria[2], { timeout: 30_000 }, () => {
+  const positiveSource = readFileSync(
+    join(fixtureCorpus, 'generality-membership/caller.tsx'),
+    'utf8',
+  )
+  assert.doesNotMatch(positiveSource, /NODE_COLORS|semantic-colors|Object\.entries/)
+  assertFixturePair('receiver-aliased-import')
+  assertFixturePair('reassigned-key')
+  assertFixturePair('namespace-re-export')
+  assertFixturePair('translator-aliased-import')
+  assertFixturePair('translator-direct')
+  assert.doesNotMatch(readFileSync(script, 'utf8'), /@audit-line/)
+})
+
+test(acceptanceCriteria[3], () => {
+  const ordinary = auditProfile(root, 'ar04-pre-repair')
+  const forced = auditProfile(root, 'ar04-pre-repair', { forceUnproven: true })
+  assert.equal(ordinary.callerPopulations.listSites, 9)
+  assert.equal(ordinary.callerPopulations.listLeaves, 153)
+  assert.equal(ordinary.callerPopulations.lane3Sites, 13)
+  assert.equal(ordinary.counts.listMissingBoth, 32)
+  assert.equal(ordinary.counts.clusterMissingBoth, 8)
+  assert.ok(ordinary.proofRows.some((row) => row.status === 'CLOSED'))
+  assert.equal(forced.proofRows.length, ordinary.proofRows.length)
+  assert.ok(forced.proofRows.every((row) => row.status === 'UNCLASSIFIED'))
+})
+
+test(acceptanceCriteria[4], { timeout: 120_000 }, () => {
+  assert.deepEqual(proofCounts(fixtureResult('generality-membership')), {
+    closed: 1,
+    unclassified: 0,
+  })
+  assert.deepEqual(proofCounts(fixtureResult('generality-noproof')), {
+    closed: 0,
+    unclassified: 1,
+  })
+  const matrix = readFileSync(join(fixtureCorpus, 'FORM-MATRIX.tsv'), 'utf8')
+    .trim()
+    .split('\n')
+    .map((line) => line.split('\t'))
+  const identifiers = ['receiver', 'key', 'namespace', 'translator']
+  const forms = [
+    'direct',
+    'aliased-import',
+    're-export',
+    'destructured',
+    'shadowed',
+    'out-of-scope',
+    'reassigned',
+  ]
+  assert.equal(matrix.length, 28)
+  assert.deepEqual(
+    matrix.map(([identifier, form]) => `${identifier}/${form}`).sort(),
+    identifiers.flatMap((identifier) => forms.map((form) => `${identifier}/${form}`)).sort(),
+  )
+  for (const [, , fixture] of matrix) assertFixturePair(fixture)
+
+  const temporary = mkdtempSync(join(tmpdir(), 'i18n-dynamic-marker-'))
+  try {
+    const copiedCorpus = join(temporary, 'fx')
+    cpSync(fixtureCorpus, copiedCorpus, { recursive: true })
+    const rewriteMarkers = (directory) => {
+      for (const entry of readdirSync(directory, { withFileTypes: true })) {
+        const path = join(directory, entry.name)
+        if (entry.isDirectory()) rewriteMarkers(path)
+        else {
+          const source = readFileSync(path, 'utf8')
+          if (source.includes('@audit-line')) {
+            writeFileSync(path, source.replace(/@audit-line\s+\d+/g, '@audit-line 99999'))
+          }
+        }
+      }
+    }
+    rewriteMarkers(copiedCorpus)
+    assert.equal(
+      run(join(fixtureCorpus, 'generality-membership'), '--profile', 'lane3', '--rows'),
+      run(join(copiedCorpus, 'generality-membership'), '--profile', 'lane3', '--rows'),
+    )
+  } finally {
+    removeFixture(temporary)
+  }
+})
+
+test(acceptanceCriteria[5], () => {
+  const summary = readFileSync(summaryPath, 'utf8')
+  const ownOutput = [
+    run(root, '--self-check'),
+    run(join(fixtureCorpus, 'generality-membership'), '--profile', 'lane3', '--rows'),
+  ].join('')
+  for (const line of ownOutput.split('\n').filter(Boolean)) assert.ok(summary.includes(line))
+  assert.match(summary, /No assertion was weakened/)
+  assert.match(summary, /No production caller, locale bundle, or other task plan changed/)
+  const changedPaths = execFileSync('git', ['status', '--short'], {
+    cwd: root,
+    encoding: 'utf8',
+  })
+    .trimEnd()
+    .split('\n')
+    .filter(Boolean)
+    .map((line) => line.slice(3))
+  assert.ok(
+    changedPaths.every(
+      (path) =>
+        path === 'scripts/i18n-dynamic-key-audit.mjs' ||
+        path === 'scripts/i18n-dynamic-key-audit.test.mjs' ||
+        path === '.planning/phases/99-arabic-coverage/99-51-SUMMARY.md',
+    ),
+  )
 })

@@ -7,6 +7,8 @@ import { fileURLToPath } from 'node:url'
 import ts from 'typescript'
 
 const scriptRepoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const FIXTURE_CORPUS_ROOT = join(scriptRepoRoot, 'scripts/fixtures/dynamic-key-audit')
+const PRE_REPAIR_ROOT = join(FIXTURE_CORPUS_ROOT, 'pre-repair')
 const LOCALES = ['en', 'ar']
 const LIST_FILE = 'frontend/src/components/empty-states/ListEmptyState.tsx'
 const LANE3_FILES = [
@@ -67,9 +69,22 @@ const parseArgs = (argv) => {
 const parseSource = (file, source) =>
   ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX)
 
+const inputRoots = (root) => {
+  const shared = join(dirname(root), 'shared')
+  return existsSync(join(root, 'caller.tsx')) && existsSync(shared) ? [root, shared] : [root]
+}
+
+const inputFile = (root, repoPath) => {
+  for (const candidateRoot of inputRoots(root)) {
+    const candidate = join(candidateRoot, repoPath)
+    if (existsSync(candidate)) return candidate
+  }
+  return null
+}
+
 const readSource = (root, repoPath) => {
-  const path = join(root, repoPath)
-  if (!existsSync(path)) throw new Error(`missing profile file: ${repoPath}`)
+  const path = inputFile(root, repoPath)
+  if (path == null) throw new Error(`missing profile file: ${repoPath}`)
   return readFileSync(path, 'utf8')
 }
 
@@ -85,20 +100,24 @@ const parseJsonFile = (path) => {
 const loadBundles = (root) =>
   Object.fromEntries(
     LOCALES.map((locale) => {
-      const localeDirectory = join(root, 'frontend/src/i18n', locale)
-      if (!existsSync(localeDirectory) || !statSync(localeDirectory).isDirectory()) {
-        throw new Error(`missing locale directory: ${localeDirectory}`)
+      const localeDirectories = inputRoots(root)
+        .map((candidateRoot) => join(candidateRoot, 'frontend/src/i18n', locale))
+        .filter((directory) => existsSync(directory) && statSync(directory).isDirectory())
+      if (localeDirectories.length === 0) {
+        throw new Error(`missing locale directory: ${join(root, 'frontend/src/i18n', locale)}`)
       }
       return [
         locale,
         Object.fromEntries(
-          readdirSync(localeDirectory)
-            .filter((entry) => entry.endsWith('.json'))
-            .sort()
-            .map((entry) => [
-              entry.replace(/\.json$/, ''),
-              parseJsonFile(join(localeDirectory, entry)),
-            ]),
+          localeDirectories.toReversed().flatMap((directory) =>
+            readdirSync(directory)
+              .filter((entry) => entry.endsWith('.json'))
+              .sort()
+              .map((entry) => [
+                entry.replace(/\.json$/, ''),
+                parseJsonFile(join(directory, entry)),
+              ]),
+          ),
         ),
       ]
     }),
@@ -154,7 +173,378 @@ const propertyName = (name) => {
   return null
 }
 
-const findUseTranslationBindings = (sf, source) => {
+const moduleSpecifierFor = (node) => {
+  for (let current = node; current != null; current = current.parent) {
+    if (ts.isImportDeclaration(current) || ts.isExportDeclaration(current)) {
+      return stringArg(current.moduleSpecifier)
+    }
+  }
+  return null
+}
+
+const moduleFileFor = (root, containingFile, specifier) => {
+  const stems = specifier.startsWith('@/')
+    ? inputRoots(root).map((candidateRoot) =>
+        join(candidateRoot, 'frontend/src', specifier.slice(2)),
+      )
+    : specifier.startsWith('.')
+      ? [resolve(dirname(containingFile), specifier)]
+      : []
+  for (const stem of stems) {
+    for (const candidate of [
+      stem,
+      `${stem}.ts`,
+      `${stem}.tsx`,
+      `${stem}.mts`,
+      join(stem, 'index.ts'),
+      join(stem, 'index.tsx'),
+    ]) {
+      if (existsSync(candidate)) return candidate
+    }
+  }
+  return null
+}
+
+const bindingContexts = new Map()
+const bindingContextFor = (root, profileFiles) => {
+  const cacheKey = `${root}\0${profileFiles.join('\0')}`
+  if (root === PRE_REPAIR_ROOT && bindingContexts.has(cacheKey)) {
+    return bindingContexts.get(cacheKey)
+  }
+  const ambientFactoryFile =
+    root === PRE_REPAIR_ROOT ? join(root, '__dynamic-audit-globals.d.ts') : null
+  const ambientFactorySource =
+    'declare function useTranslation(namespace?: string | string[]): { t: (key: unknown, fallback?: unknown) => unknown }\n'
+  const rootNames = [...profileFiles, 'frontend/src/lib/dossier-type-guards.ts']
+    .map((repoPath) => inputFile(root, repoPath))
+    .filter((path) => path != null)
+  if (ambientFactoryFile != null) rootNames.push(ambientFactoryFile)
+  const options = {
+    allowJs: false,
+    baseUrl: root,
+    jsx: ts.JsxEmit.Preserve,
+    module: ts.ModuleKind.ESNext,
+    moduleDetection: ts.ModuleDetectionKind.Force,
+    moduleResolution: ts.ModuleResolutionKind.Bundler,
+    noEmit: true,
+    noLib: true,
+    paths: {
+      '@/*': inputRoots(root).map((candidateRoot) => join(candidateRoot, 'frontend/src/*')),
+    },
+    skipLibCheck: true,
+    target: ts.ScriptTarget.Latest,
+    types: [],
+  }
+  const host = ts.createCompilerHost(options)
+  const defaultFileExists = host.fileExists.bind(host)
+  const defaultReadFile = host.readFile.bind(host)
+  const defaultGetSourceFile = host.getSourceFile.bind(host)
+  host.fileExists = (file) => file === ambientFactoryFile || defaultFileExists(file)
+  host.readFile = (file) =>
+    file === ambientFactoryFile ? ambientFactorySource : defaultReadFile(file)
+  host.getSourceFile = (file, languageVersion, onError, shouldCreateNewSourceFile) =>
+    file === ambientFactoryFile
+      ? ts.createSourceFile(file, ambientFactorySource, languageVersion, true, ts.ScriptKind.TS)
+      : defaultGetSourceFile(file, languageVersion, onError, shouldCreateNewSourceFile)
+  host.resolveModuleNames = (moduleNames, containingFile) =>
+    moduleNames.map((moduleName) => {
+      const file = moduleFileFor(root, containingFile, moduleName)
+      if (file == null) return undefined
+      return {
+        extension: file.endsWith('.tsx') ? ts.Extension.Tsx : ts.Extension.Ts,
+        isExternalLibraryImport: false,
+        resolvedFileName: file,
+      }
+    })
+  const program = ts.createProgram({ rootNames, options, host })
+  const context = { root, program, checker: program.getTypeChecker(), ambientFactoryFile }
+  if (root === PRE_REPAIR_ROOT) bindingContexts.set(cacheKey, context)
+  return context
+}
+
+const symbolAt = (checker, node) =>
+  node == null ? null : (checker.getSymbolAtLocation(node) ?? null)
+
+const sameSymbol = (checker, left, right) => {
+  const leftSymbol = symbolAt(checker, left)
+  const rightSymbol = symbolAt(checker, right)
+  return leftSymbol != null && rightSymbol != null && leftSymbol === rightSymbol
+}
+
+const declarationIsConst = (declaration) => {
+  let variable = declaration
+  while (variable != null && !ts.isVariableDeclaration(variable)) variable = variable.parent
+  const list = variable?.parent
+  return (
+    list != null && ts.isVariableDeclarationList(list) && (list.flags & ts.NodeFlags.Const) !== 0
+  )
+}
+
+const isWriteIdentifier = (node) => {
+  const parent = node.parent
+  return (
+    (ts.isBinaryExpression(parent) &&
+      parent.left === node &&
+      parent.operatorToken.kind >= ts.SyntaxKind.FirstAssignment &&
+      parent.operatorToken.kind <= ts.SyntaxKind.LastAssignment) ||
+    ((ts.isPrefixUnaryExpression(parent) || ts.isPostfixUnaryExpression(parent)) &&
+      [ts.SyntaxKind.PlusPlusToken, ts.SyntaxKind.MinusMinusToken].includes(parent.operator))
+  )
+}
+
+const hasInterveningWrite = (context, symbol, declaration, use) => {
+  if (declarationIsConst(declaration)) return false
+  let written = false
+  const visit = (node) => {
+    if (written || node.getEnd() <= declaration.getEnd() || node.getStart() >= use.getStart())
+      return
+    if (
+      ts.isIdentifier(node) &&
+      symbolAt(context.checker, node) === symbol &&
+      isWriteIdentifier(node)
+    ) {
+      written = true
+      return
+    }
+    ts.forEachChild(node, visit)
+  }
+  visit(declaration.getSourceFile())
+  return written
+}
+
+const initializerBinding = (context, identifier, use, seen = new Set()) => {
+  if (!ts.isIdentifier(identifier)) return null
+  const useSymbol = symbolAt(context.checker, identifier)
+  if (useSymbol == null || seen.has(useSymbol)) return null
+  seen.add(useSymbol)
+  let symbol = useSymbol
+  if ((symbol.flags & ts.SymbolFlags.Alias) !== 0) {
+    const target = context.checker.getAliasedSymbol(symbol)
+    if (target != null && target !== symbol) symbol = target
+  }
+  const declaration = symbol.valueDeclaration ?? symbol.declarations?.[0] ?? null
+  if (
+    declaration != null &&
+    ts.isBindingElement(declaration) &&
+    ts.isObjectBindingPattern(declaration.parent)
+  ) {
+    const variable = declaration.parent.parent
+    if (!ts.isVariableDeclaration(variable) || variable.initializer == null) return null
+    const initializer = unwrapNode(variable.initializer)
+    let source = null
+    if (ts.isObjectLiteralExpression(initializer)) {
+      source = { expression: initializer, stable: declarationIsConst(declaration) }
+    } else if (ts.isIdentifier(initializer)) {
+      source = initializerBinding(context, initializer, use, seen)
+    }
+    if (source == null || !ts.isObjectLiteralExpression(source.expression)) return null
+    const key = propertyName(declaration.propertyName ?? declaration.name)
+    const value = key == null ? null : objectProperty(source.expression, key)
+    return value == null
+      ? null
+      : {
+          expression: unwrapNode(value),
+          stable: declarationIsConst(declaration) && source.stable,
+        }
+  }
+  if (
+    declaration == null ||
+    !ts.isVariableDeclaration(declaration) ||
+    declaration.initializer == null ||
+    (declaration.getSourceFile() === use.getSourceFile() && declaration.getEnd() >= use.getStart())
+  ) {
+    return null
+  }
+  const sameFile = declaration.getSourceFile() === use.getSourceFile()
+  return {
+    expression: unwrapNode(declaration.initializer),
+    stable: sameFile
+      ? !hasInterveningWrite(context, useSymbol, declaration, use)
+      : declarationIsConst(declaration),
+  }
+}
+
+const staticString = (context, expression, use, seen = new Set()) => {
+  const value = unwrapNode(expression)
+  const direct = stringArg(value)
+  if (direct != null) return { value: direct, stable: true }
+  if (!ts.isIdentifier(value)) return null
+  const symbol = symbolAt(context.checker, value)
+  if (symbol == null || seen.has(symbol)) return null
+  seen.add(symbol)
+  const binding = initializerBinding(context, value, use)
+  if (binding == null) return null
+  const resolved = staticString(context, binding.expression, use, seen)
+  return resolved == null
+    ? null
+    : { value: resolved.value, stable: binding.stable && resolved.stable }
+}
+
+const staticStringArray = (context, expression, use) => {
+  const value = unwrapNode(expression)
+  if (ts.isArrayLiteralExpression(value)) {
+    const entries = value.elements.map((element) => staticString(context, element, use))
+    return entries.every((entry) => entry?.stable)
+      ? { values: entries.map((entry) => entry.value), stable: true }
+      : null
+  }
+  if (ts.isIdentifier(value)) {
+    const binding = initializerBinding(context, value, use)
+    if (binding == null) return null
+    const resolved = staticStringArray(context, binding.expression, use)
+    return resolved == null
+      ? null
+      : { values: resolved.values, stable: binding.stable && resolved.stable }
+  }
+  const single = staticString(context, value, use)
+  return single == null ? null : { values: [single.value], stable: single.stable }
+}
+
+const exportedOrigin = (context, moduleFile, exportName, expected, seen) => {
+  const visitKey = `${moduleFile}\0${exportName}`
+  if (seen.has(visitKey)) return false
+  seen.add(visitKey)
+  const sf = context.program.getSourceFile(moduleFile)
+  if (sf == null) return false
+  if (
+    expected.file != null &&
+    resolve(sf.fileName) === resolve(expected.file) &&
+    exportName === expected.exportName
+  ) {
+    return true
+  }
+  for (const statement of sf.statements) {
+    if (!ts.isExportDeclaration(statement)) continue
+    const specifier = stringArg(statement.moduleSpecifier)
+    if (statement.exportClause && ts.isNamedExports(statement.exportClause)) {
+      for (const element of statement.exportClause.elements) {
+        if (element.name.text !== exportName) continue
+        const importedName = (element.propertyName ?? element.name).text
+        if (
+          specifier != null &&
+          originFromModule(context, sf, specifier, importedName, expected, seen)
+        ) {
+          return true
+        }
+      }
+    } else if (
+      statement.exportClause == null &&
+      specifier != null &&
+      originFromModule(context, sf, specifier, exportName, expected, seen)
+    ) {
+      return true
+    }
+  }
+  return false
+}
+
+const originFromModule = (
+  context,
+  containingSourceFile,
+  specifier,
+  importedName,
+  expected,
+  seen,
+) => {
+  if (
+    expected.module != null &&
+    specifier === expected.module &&
+    importedName === expected.exportName
+  ) {
+    return true
+  }
+  const file = moduleFileFor(context.root, containingSourceFile.fileName, specifier)
+  return file != null && exportedOrigin(context, file, importedName, expected, seen)
+}
+
+const symbolHasOrigin = (context, symbol, expected, seen = new Set()) => {
+  if (symbol == null) return false
+  for (const declaration of symbol.declarations ?? []) {
+    if (ts.isImportSpecifier(declaration)) {
+      const specifier = moduleSpecifierFor(declaration)
+      const importedName = (declaration.propertyName ?? declaration.name).text
+      if (
+        specifier != null &&
+        originFromModule(
+          context,
+          declaration.getSourceFile(),
+          specifier,
+          importedName,
+          expected,
+          seen,
+        )
+      ) {
+        return true
+      }
+    }
+    if (ts.isBindingElement(declaration) && ts.isObjectBindingPattern(declaration.parent)) {
+      const variable = declaration.parent.parent
+      const initializer = ts.isVariableDeclaration(variable)
+        ? unwrapNode(variable.initializer)
+        : null
+      const member = propertyName(declaration.propertyName ?? declaration.name)
+      if (initializer != null && ts.isIdentifier(initializer) && member != null) {
+        const namespaceSymbol = symbolAt(context.checker, initializer)
+        for (const namespaceDeclaration of namespaceSymbol?.declarations ?? []) {
+          if (!ts.isNamespaceImport(namespaceDeclaration)) continue
+          const specifier = moduleSpecifierFor(namespaceDeclaration)
+          if (
+            specifier != null &&
+            originFromModule(
+              context,
+              namespaceDeclaration.getSourceFile(),
+              specifier,
+              member,
+              expected,
+              seen,
+            )
+          ) {
+            return true
+          }
+        }
+      }
+    }
+    if (
+      expected.file != null &&
+      resolve(declaration.getSourceFile().fileName) === resolve(expected.file) &&
+      declaration.name != null &&
+      ts.isIdentifier(declaration.name) &&
+      declaration.name.text === expected.exportName
+    ) {
+      return true
+    }
+  }
+  return false
+}
+
+const symbolOriginIsStable = (context, symbol, use) =>
+  (symbol?.declarations ?? []).every((declaration) => {
+    if (ts.isImportSpecifier(declaration) || ts.isNamespaceImport(declaration)) return true
+    if (ts.isFunctionDeclaration(declaration)) return true
+    if (declaration.getSourceFile() !== use.getSourceFile()) return declarationIsConst(declaration)
+    if (declarationIsConst(declaration)) return true
+    return !hasInterveningWrite(context, symbol, declaration, use)
+  })
+
+const expressionHasOrigin = (context, expression, expected, use, seen = new Set()) => {
+  const value = unwrapNode(expression)
+  if (ts.isIdentifier(value)) {
+    const symbol = symbolAt(context.checker, value)
+    if (symbol == null || seen.has(symbol)) return false
+    if (symbolHasOrigin(context, symbol, expected)) {
+      return symbolOriginIsStable(context, symbol, use)
+    }
+    seen.add(symbol)
+    const binding = initializerBinding(context, value, use)
+    return (
+      binding?.stable === true &&
+      expressionHasOrigin(context, binding.expression, expected, use, seen)
+    )
+  }
+  return false
+}
+
+const findUseTranslationBindings = (sf, source, context) => {
   const bindings = new Map()
   const visit = (node) => {
     if (
@@ -162,31 +552,52 @@ const findUseTranslationBindings = (sf, source) => {
       ts.isObjectBindingPattern(node.name) &&
       node.initializer &&
       ts.isCallExpression(node.initializer) &&
-      textOf(source, node.initializer.expression) === 'useTranslation'
+      ts.isIdentifier(node.initializer.expression)
     ) {
       const firstArg = node.initializer.arguments[0]
       const secondArg = node.initializer.arguments[1]
-      const stringNamespace = stringArg(firstArg)
-      const arrayNamespace = arrayStringArg(firstArg)
+      const namespace =
+        firstArg == null
+          ? { values: ['translation'], stable: true }
+          : staticStringArray(context, firstArg, node.initializer)
       const nsMode =
         secondArg && ts.isObjectLiteralExpression(secondArg)
-          ? stringArg(objectProperty(secondArg, 'nsMode'))
+          ? (staticString(context, objectProperty(secondArg, 'nsMode'), node.initializer)?.value ??
+            null)
           : null
-      const namespaces = arrayNamespace
+      const namespaces = namespace?.values
         ? nsMode === 'fallback'
-          ? arrayNamespace
-          : [arrayNamespace[0]]
-        : stringNamespace != null
-          ? [stringNamespace]
-          : ['translation']
+          ? namespace.values
+          : [namespace.values[0]]
+        : ['translation']
+      const factorySupported =
+        expressionHasOrigin(
+          context,
+          node.initializer.expression,
+          { module: 'react-i18next', exportName: 'useTranslation' },
+          node.initializer,
+        ) ||
+        (context.ambientFactoryFile != null &&
+          expressionHasOrigin(
+            context,
+            node.initializer.expression,
+            { file: context.ambientFactoryFile, exportName: 'useTranslation' },
+            node.initializer,
+          ))
       for (const element of node.name.elements) {
         const property = element.propertyName
           ? textOf(source, element.propertyName)
           : textOf(source, element.name)
         if (property === 't' && ts.isIdentifier(element.name)) {
-          bindings.set(element.name.text, {
+          const symbol = symbolAt(context.checker, element.name)
+          if (symbol == null) continue
+          bindings.set(symbol, {
             namespaces,
-            supported: element.name.text === 't',
+            supported: element.name.text === 't' && factorySupported && namespace?.stable === true,
+            factorySupported,
+            namespaceSupported: namespace?.stable === true,
+            name: element.name.text,
+            declaration: element,
           })
         }
       }
@@ -194,6 +605,51 @@ const findUseTranslationBindings = (sf, source) => {
     ts.forEachChild(node, visit)
   }
   visit(sf)
+
+  let changed = true
+  while (changed) {
+    changed = false
+    const functions = []
+    containsNode(sf, (node) => {
+      if (ts.isFunctionDeclaration(node) && node.name != null) functions.push(node)
+      return false
+    })
+    for (const fn of functions) {
+      const invocations = []
+      containsNode(sf, (node) => {
+        if (
+          ts.isCallExpression(node) &&
+          ts.isIdentifier(node.expression) &&
+          sameSymbol(context.checker, node.expression, fn.name)
+        ) {
+          invocations.push(node)
+        }
+        return false
+      })
+      for (let index = 0; index < fn.parameters.length; index++) {
+        const parameter = fn.parameters[index]
+        if (!ts.isIdentifier(parameter.name) || invocations.length === 0) continue
+        const infos = invocations.map((call) => {
+          const argument = unwrapNode(call.arguments[index])
+          return argument != null && ts.isIdentifier(argument)
+            ? (bindings.get(symbolAt(context.checker, argument)) ?? null)
+            : null
+        })
+        if (!infos.every((info) => info?.supported)) continue
+        const symbol = symbolAt(context.checker, parameter.name)
+        if (symbol == null || bindings.has(symbol)) continue
+        bindings.set(symbol, {
+          namespaces: [...new Set(infos.flatMap((info) => info.namespaces))],
+          supported: true,
+          factorySupported: true,
+          namespaceSupported: true,
+          name: parameter.name.text,
+          declaration: parameter,
+        })
+        changed = true
+      }
+    }
+  }
   return bindings
 }
 
@@ -238,14 +694,16 @@ const isFallbackBearing = (args) => {
   return optionShape(second) !== 'interpolation-only'
 }
 
-const namespaceOverride = (args, bindingNamespaces) => {
+const namespaceOverride = (args, bindingNamespaces, context, use) => {
   for (const arg of args.slice(1)) {
     if (!ts.isObjectLiteralExpression(arg)) continue
     const ns = objectProperty(arg, 'ns')
-    const value = stringArg(ns)
-    if (value != null) return [value]
+    if (ns == null) continue
+    const value = staticString(context, ns, use)
+    if (value?.stable) return { namespaces: [value.value], supported: true }
+    return { namespaces: bindingNamespaces, supported: false }
   }
-  return bindingNamespaces
+  return { namespaces: bindingNamespaces, supported: true }
 }
 
 const isNonliteral = (node) =>
@@ -928,6 +1386,89 @@ const provesRelationshipDomain = ({ source, node, domain }) => {
   )
 }
 
+const sameBoundExpression = (context, left, right) => {
+  const a = unwrapNode(left)
+  const b = unwrapNode(right)
+  if (ts.isIdentifier(a) && ts.isIdentifier(b)) return sameSymbol(context.checker, a, b)
+  if (ts.isPropertyAccessExpression(a) && ts.isPropertyAccessExpression(b)) {
+    return a.name.text === b.name.text && sameBoundExpression(context, a.expression, b.expression)
+  }
+  if (ts.isElementAccessExpression(a) && ts.isElementAccessExpression(b)) {
+    const aKey = stringArg(unwrapNode(a.argumentExpression))
+    const bKey = stringArg(unwrapNode(b.argumentExpression))
+    return aKey != null && aKey === bKey && sameBoundExpression(context, a.expression, b.expression)
+  }
+  return false
+}
+
+const ruledMembershipRoute = (context, call) => {
+  const first = unwrapNode(call.arguments[0])
+  if (ts.isConditionalExpression(first)) return { route: first, keyStable: true }
+  if (!ts.isIdentifier(first)) return null
+  const binding = initializerBinding(context, first, call)
+  return binding != null && ts.isConditionalExpression(binding.expression)
+    ? { route: binding.expression, keyStable: binding.stable }
+    : null
+}
+
+const provesRuledMembershipDomain = ({
+  root,
+  node,
+  bindingContext,
+  namespaces,
+  namespaceSupported,
+}) => {
+  const candidate = ruledMembershipRoute(bindingContext, node)
+  if (
+    candidate == null ||
+    !candidate.keyStable ||
+    !namespaceSupported ||
+    namespaces.length !== 1 ||
+    namespaces[0] !== 'graph'
+  ) {
+    return false
+  }
+  const { route } = candidate
+  const condition = unwrapNode(route.condition)
+  if (
+    !ts.isCallExpression(condition) ||
+    !ts.isPropertyAccessExpression(condition.expression) ||
+    condition.expression.name.text !== 'includes' ||
+    condition.arguments.length !== 1
+  ) {
+    return false
+  }
+  const canonicalFile = inputFile(root, 'frontend/src/lib/dossier-type-guards.ts')
+  if (
+    canonicalFile == null ||
+    !expressionHasOrigin(
+      bindingContext,
+      condition.expression.expression,
+      { file: canonicalFile, exportName: 'DOSSIER_CARD_TYPES' },
+      condition,
+    )
+  ) {
+    return false
+  }
+  const unknown = staticString(bindingContext, route.whenFalse, node)
+  const canonical = unwrapNode(route.whenTrue)
+  if (
+    unknown?.stable !== true ||
+    unknown.value !== `type.${GRAPH_UNKNOWN_TYPE}` ||
+    !ts.isTemplateExpression(canonical) ||
+    canonical.head.text !== 'type.' ||
+    canonical.templateSpans.length !== 1 ||
+    canonical.templateSpans[0].literal.text !== ''
+  ) {
+    return false
+  }
+  return sameBoundExpression(
+    bindingContext,
+    condition.arguments[0],
+    canonical.templateSpans[0].expression,
+  )
+}
+
 const provesClosedDomain = (proofKind, context) => {
   if (context.forceUnproven) return false
   if (proofKind === 'list-entity-config') return provesListDomain(context)
@@ -938,6 +1479,12 @@ const provesClosedDomain = (proofKind, context) => {
   if (proofKind === 'analytic-template-map') return provesConstMap(context, 'TEMPLATES', 'labelKey')
   if (proofKind === 'analytic-count-switch') return provesCountLineDomain(context)
   if (proofKind === 'graph-cluster-route') {
+    if (
+      context.bindingContext != null &&
+      ruledMembershipRoute(context.bindingContext, context.node) != null
+    ) {
+      return provesRuledMembershipDomain(context)
+    }
     const expected = [
       ...extractConstStringArray(
         context.root,
@@ -1039,6 +1586,8 @@ const classifyCall = ({
   node,
   namespaces,
   domains,
+  bindingContext,
+  namespaceSupported = true,
   forceUnproven = false,
 }) => {
   const first = node.arguments[0]
@@ -1196,21 +1745,28 @@ const classifyCall = ({
   ]
 
   const clusterCaller = enclosingFunction(node)
+  const membershipCandidate =
+    bindingContext != null && ruledMembershipRoute(bindingContext, node) != null
   const clusterCandidate =
-    fileBase === 'AdvancedGraphVisualization.tsx' &&
-    (firstText === 'data.clusterType' ||
-      (clusterCaller != null &&
-        containsNode(
-          clusterCaller,
-          (candidate) =>
-            ts.isPropertyAccessExpression(candidate) &&
-            ts.isIdentifier(candidate.expression) &&
-            candidate.expression.text === 'data' &&
-            candidate.name.text === 'clusterType',
-        )))
+    membershipCandidate ||
+    (fileBase === 'AdvancedGraphVisualization.tsx' &&
+      (firstText === 'data.clusterType' ||
+        (clusterCaller != null &&
+          containsNode(
+            clusterCaller,
+            (candidate) =>
+              ts.isPropertyAccessExpression(candidate) &&
+              ts.isIdentifier(candidate.expression) &&
+              candidate.expression.text === 'data' &&
+              candidate.name.text === 'clusterType',
+          ))))
   if (clusterCandidate) {
     const unprefixed = firstText === 'data.clusterType'
-    const domain = unprefixed ? graphDisplayTypes : graphClusterKeys
+    const domain = membershipCandidate
+      ? graphClusterKeys
+      : unprefixed
+        ? graphDisplayTypes
+        : graphClusterKeys
     return describeDomain(
       closedDomain(
         'graph-cluster-route',
@@ -1221,14 +1777,21 @@ const classifyCall = ({
           source,
           node,
           domain,
+          bindingContext,
+          namespaces,
+          namespaceSupported,
           forceUnproven,
         }),
       ),
-      unprefixed ? 'lane3.advancedGraph.cluster.unprefixed' : 'lane3.advancedGraph.cluster.routed',
-      unprefixed
-        ? 'unproven DOSSIER_CARD_TYPES route'
-        : 'AST-proven DOSSIER_CARD_TYPES membership plus explicit type.unknown branch',
-      unprefixed
+      membershipCandidate
+        ? 'lane3.ruled-membership-route'
+        : unprefixed
+          ? 'lane3.advancedGraph.cluster.unprefixed'
+          : 'lane3.advancedGraph.cluster.routed',
+      membershipCandidate || !unprefixed
+        ? 'AST-proven DOSSIER_CARD_TYPES membership plus explicit type.unknown branch'
+        : 'unproven DOSSIER_CARD_TYPES route',
+      !membershipCandidate && unprefixed
         ? {
             clusterProbe: true,
             requiredKeys: graphDisplayTypes.map((type) => `type.${type}`),
@@ -1259,9 +1822,7 @@ const classifyCall = ({
         }),
       ),
       `lane3.${fileBase.replace(/\.tsx$/, '')}.graphType.${lineAt(source, node.getStart())}`,
-      legend == null
-        ? 'runtime graph node type'
-        : 'NODE_COLORS entries slice',
+      legend == null ? 'runtime graph node type' : 'NODE_COLORS entries slice',
     )
   }
 
@@ -1292,28 +1853,62 @@ const classifyCall = ({
   return null
 }
 
+const profileFilesFor = (root, profile) =>
+  profile === 'lane3' && existsSync(join(root, 'caller.tsx'))
+    ? ['caller.tsx']
+    : PROFILE_FILES[profile]
+
 const collectCalls = (root, profile, { forceUnproven = false } = {}) => {
-  const profileFiles = PROFILE_FILES[profile]
+  const auditRoot = profile === 'ar04-pre-repair' ? PRE_REPAIR_ROOT : root
+  const profileFiles = profileFilesFor(auditRoot, profile)
   if (profileFiles == null) throw new Error(`unknown profile: ${profile}`)
-  const domains = domainsFor(root)
+  const domains =
+    profileFiles.length === 1 && profileFiles[0] === 'caller.tsx'
+      ? {
+          graphDisplayTypes: extractConstStringArray(
+            auditRoot,
+            'frontend/src/lib/dossier-type-guards.ts',
+            'DOSSIER_CARD_TYPES',
+          ),
+        }
+      : domainsFor(auditRoot)
+  const bindingContext = bindingContextFor(auditRoot, profileFiles)
   const calls = []
   const unclassified = []
   const interpolationOnly = []
   const fallbackSites = []
 
   for (const repoPath of profileFiles) {
-    const source = readSource(root, repoPath)
-    const sf = parseSource(repoPath, source)
-    const bindings = findUseTranslationBindings(sf, source)
+    const source = readSource(auditRoot, repoPath)
+    const sourcePath = inputFile(auditRoot, repoPath)
+    const sf =
+      (sourcePath == null ? null : bindingContext.program.getSourceFile(sourcePath)) ??
+      parseSource(repoPath, source)
+    const bindings = findUseTranslationBindings(sf, source, bindingContext)
     const visit = (node) => {
+      const callSymbol =
+        ts.isCallExpression(node) && ts.isIdentifier(node.expression)
+          ? symbolAt(bindingContext.checker, node.expression)
+          : null
       if (
         ts.isCallExpression(node) &&
         ts.isIdentifier(node.expression) &&
-        bindings.has(node.expression.text)
+        callSymbol != null &&
+        bindings.has(callSymbol)
       ) {
         const first = node.arguments[0]
-        const binding = bindings.get(node.expression.text)
-        const namespaces = namespaceOverride([...node.arguments], binding.namespaces)
+        const binding = bindings.get(callSymbol)
+        const namespaceResult = namespaceOverride(
+          [...node.arguments],
+          binding.namespaces,
+          bindingContext,
+          node,
+        )
+        const namespaces = namespaceResult.namespaces
+        const translatorStable =
+          binding.declaration == null ||
+          declarationIsConst(binding.declaration) ||
+          !hasInterveningWrite(bindingContext, callSymbol, binding.declaration, node)
         if (isNonliteral(first)) {
           if (isInterpolationOnlyOptions(node.arguments[1])) {
             interpolationOnly.push({
@@ -1329,11 +1924,17 @@ const collectCalls = (root, profile, { forceUnproven = false } = {}) => {
               namespaces,
             }
             fallbackSites.push(site)
-            if (!binding.supported) {
+            if (!binding.supported || !namespaceResult.supported || !translatorStable) {
               site.family = 'unclassified.translator-binding'
               unclassified.push({
                 ...site,
-                reason: `unsupported useTranslation translator binding: ${node.expression.text}`,
+                reason: !binding.factorySupported
+                  ? `translator factory binding is not react-i18next useTranslation: ${node.expression.text}`
+                  : !binding.namespaceSupported || !namespaceResult.supported
+                    ? `translator namespace binding is not immutable at use: ${node.expression.text}`
+                    : !translatorStable
+                      ? `translator binding is not immutable at use: ${node.expression.text}`
+                      : `unsupported useTranslation translator binding: ${node.expression.text}`,
               })
               ts.forEachChild(node, visit)
               return
@@ -1349,12 +1950,14 @@ const collectCalls = (root, profile, { forceUnproven = false } = {}) => {
               return
             }
             const classified = classifyCall({
-              root,
+              root: auditRoot,
               repoPath,
               source,
               node,
               namespaces,
               domains,
+              bindingContext,
+              namespaceSupported: binding.namespaceSupported && namespaceResult.supported,
               forceUnproven,
             })
             if (classified == null || classified.keys.length === 0) {
@@ -1392,7 +1995,8 @@ const collectCalls = (root, profile, { forceUnproven = false } = {}) => {
 }
 
 const auditProfile = (root, profile = 'ar04-pre-repair', { forceUnproven = false } = {}) => {
-  const bundles = loadBundles(root)
+  const auditRoot = profile === 'ar04-pre-repair' ? PRE_REPAIR_ROOT : root
+  const bundles = loadBundles(auditRoot)
   const { calls, unclassified, interpolationOnly, fallbackSites } = collectCalls(root, profile, {
     forceUnproven,
   })
@@ -1445,13 +2049,14 @@ const auditProfile = (root, profile = 'ar04-pre-repair', { forceUnproven = false
   )
   const result = {
     root,
+    evidenceRoot: auditRoot,
     profile,
     locales: LOCALES,
     productionEntryPoint: 'scripts/i18n-dynamic-key-audit.mjs',
     parser: 'typescript AST CallExpression',
     fallbackLng: false,
     forceUnproven,
-    files: PROFILE_FILES[profile],
+    files: profileFilesFor(auditRoot, profile),
     callerPopulations: {
       fallbackSites: fallbackSites.length,
       listSites: listSites.length,
@@ -1535,13 +2140,12 @@ const runSelfCheck = () => {
     t(\`ok.\${type}\`, { defaultValue: 'Default' })
   `
   const sf = parseSource('fixture.tsx', fixtureSource)
-  const bindings = findUseTranslationBindings(sf, fixtureSource)
   const seen = []
   const visit = (node) => {
     if (
       ts.isCallExpression(node) &&
       ts.isIdentifier(node.expression) &&
-      bindings.has(node.expression.text)
+      node.expression.text === 't'
     ) {
       const first = node.arguments[0]
       if (isNonliteral(first)) {
