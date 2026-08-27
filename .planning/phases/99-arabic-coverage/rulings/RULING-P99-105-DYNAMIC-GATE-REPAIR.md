@@ -1,6 +1,14 @@
 # RULING-P99-105 — REPAIR THE DYNAMIC-LEAF GATE BEFORE THE REMAINING MASK DELETIONS
 
 > **AMENDED 2026-08-27 under RULING-P99-234**, together with `99-48-PLAN.md`, `99-49-PLAN.md`, and
+> **AMENDED AGAIN 2026-08-27 under RULING-P99-238**, `99-48-PLAN.md` only. Repair 2 stands VERBATIM and
+> was not reworded. Repair 3 is REPLACED: naming three example shapes was itself the defect — the
+> implementation satisfied all three literally and left a fourth path unguarded, and a re-measurement
+> found **ten of eleven** closed-domain claims text-inferred. The control is now a PROPERTY over every
+> path, with the path set derived from the source of the instrument itself, plus a mechanical structural
+> acceptance oracle and a drill that proves it is not vacuous. `99-49-PLAN.md` and `99-50-PLAN.md` are
+> NOT reopened.
+>
 > `99-50-PLAN.md` in one pass. Three things changed: the graded list population is corrected from 24
 > to **32** caller-derived leaves out of a complete **153**-leaf cross-product; a cluster domain is
 > closed only on AST proof of canonical membership **plus** an explicit `type.unknown` branch; and
@@ -41,9 +49,14 @@ only. All repairs start from the accepted milestone at `bad498f14` and all seven
    constant that defines it (`DOSSIER_CARD_TYPES` for the graph cluster) **plus** an explicit
    `type.unknown` branch in the same caller; a domain inferred from expression text, from whichever
    keys exist in JSON, or from a fallback argument is rejected and the call is **unclassified**, which
-   fails closed. Three negative tests must each red the instrument: an unbounded cluster lookup; a
-   `defaultValue` reachable only through a shorthand, static-computed, or spread option object; and a
-   `useTranslation` translator bound to an aliased identifier rather than one literally named `t`.
+   fails closed. **Negative coverage is a PROPERTY, not a list of shapes (RULING-P99-238):** for every
+   code path that can return a non-empty closed domain, a fail-closed negative case must reach THAT path
+   and require `unclassified` when proof is absent, and the path set is derived mechanically from the
+   source of the instrument itself rather than from any list written in a plan or a ruling — otherwise
+   the overfit merely moves up one level. A mechanical structural acceptance oracle (not a judge item,
+   not a count) reads that source and fails closed on any closed-domain construction lacking a proof
+   call in its proof position, and on zero such sites so it can never pass vacuously; a drill forcing
+   every proof to fail must zero the closed-domain rows while conserving the total row count.
    Its list oracle asserts the complete **153**-leaf cross-product alongside the **32** missing-both
    count, so no family can be filtered away to reach an expected answer.
 2. **P99-49 owns the graded production/resources only.** It adds the exact **32** caller-derived list
