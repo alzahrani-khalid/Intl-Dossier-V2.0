@@ -137,7 +137,7 @@ test('The pre-repair tree has an independently tested, non-vacuous bilingual cen
   assert.equal(result.callerPopulations.lane3Families, 13)
   assert.equal(result.counts.listMissingBoth, 32)
   assert.equal(result.counts.clusterMissingBoth, 8)
-  assert.equal(result.counts.unclassified, 1)
+  assert.equal(result.counts.unclassified, 4)
 
   const listRows = result.rows.filter((row) => row.profile === 'list')
   const families = new Map()
@@ -177,7 +177,7 @@ test('The pre-repair tree has an independently tested, non-vacuous bilingual cen
       'type.elected_official',
     ],
   )
-  assert.match(result.unclassified[0].reason, /canonical-membership proof/)
+  assert.ok(result.unclassified.some((row) => /canonical-membership proof/.test(row.reason)))
 })
 
 test('The production entry point is scripts/i18n-dynamic-key-audit.mjs. It parses TypeScript call expressions rather than source lines, separates interpolation-only option objects from fallback-bearing calls, resolves explicit and hook-bound namespaces with fallbackLng disabled, and checks complete LEAF keys in en and ar. Every fallback-bearing nonliteral call in the two ruled profiles is either assigned a closed domain or reported unclassified; an empty domain, prefix-only object, missing file, malformed bundle, or unknown call shape is a failure, never zero. A domain counts as CLOSED only when the AST proves membership in the production constant that defines the closed dossier-card display set AND an explicit type.unknown branch exists in the same caller; a domain inferred from expression text, from whichever keys happen to exist in JSON, or from a fallback argument is rejected and the call is reported unclassified, which fails closed.', () => {
@@ -185,7 +185,32 @@ test('The production entry point is scripts/i18n-dynamic-key-audit.mjs. It parse
   assert.equal(result.productionEntryPoint, 'scripts/i18n-dynamic-key-audit.mjs')
   assert.equal(result.parser, 'typescript AST CallExpression')
   assert.equal(result.fallbackLng, false)
-  assert.equal(result.fallbackSites.length, 22)
+  assert.equal(result.fallbackSites.length, 25)
+  assert.equal(
+    result.unclassified.filter((row) => row.family === 'unclassified.translator-binding').length,
+    3,
+  )
+  assert.ok(
+    result.unclassified.some(
+      (row) => row.expression.startsWith('tQs(groupKey,') && row.namespaces[0] === 'quickswitcher',
+    ),
+  )
+  assert.equal(
+    result.unclassified.filter(
+      (row) => row.expression === 'tCommon(page.label, page.id)' && row.namespaces[0] === 'common',
+    ).length,
+    2,
+  )
+  assert.ok(
+    result.fallbackSites.every((site) =>
+      [...result.calls, ...result.unclassified].some(
+        (classified) =>
+          classified.file === site.file &&
+          classified.line === site.line &&
+          classified.expression === site.expression,
+      ),
+    ),
+  )
   assert.equal(result.rows.filter((row) => row.closedDomain === false).length, 8)
   assert.ok(
     result.rows.some(
@@ -371,6 +396,23 @@ test('the instrument tests exercise both locales and both polarities: a resolved
   } finally {
     removeFixture(aliased)
   }
+
+  const aliasedUnknownShape = fixtureRoot({
+    commandSource: commandPaletteSource({
+      binding: 'const { t: tQs }',
+      call: "tQs(groupKey, 'Default')",
+    }),
+  })
+  try {
+    const collected = collectCalls(aliasedUnknownShape, 'lane3')
+    assert.equal(collected.fallbackSites.length, 1)
+    assert.equal(collected.unclassified.length, 1)
+    assert.equal(collected.unclassified[0].expression, "tQs(groupKey, 'Default')")
+    assert.match(collected.unclassified[0].reason, /translator binding: tQs/)
+    fails(aliasedUnknownShape, '--profile', 'lane3')
+  } finally {
+    removeFixture(aliasedUnknownShape)
+  }
 })
 
 test('the controlled live census discriminates before repair and positively reproduces both review findings: 32 missing list leaves out of the complete 153-leaf caller cross-product (17 EntityType values x 9 call families) and all eight canonical display-type leaves missed by the unprefixed graph cluster lookup; the exact 9 plus 13 caller populations are nonempty and no family is excluded to reach the expected count', () => {
@@ -390,11 +432,20 @@ test('the controlled live census discriminates before repair and positively repr
     '8',
   )
   assert.match(output, /listSites=9 listLeaves=153 lane3Sites=13/)
-  assert.match(output, /listMissingBoth=32 clusterMissingBoth=8 unclassified=1/)
+  assert.match(output, /listMissingBoth=32 clusterMissingBoth=8 unclassified=4/)
   assert.match(output, /list\.topic\.firstTitle\tEN=MISS\tAR=MISS/)
   assert.match(output, /list\.work_item\.import\tEN=MISS\tAR=MISS/)
   assert.match(output, /required=type\.country\trequiredEN=ok\trequiredAR=ok\troute=MISS/)
   assert.match(output, /^UNCLASSIFIED\tlane3\.advancedGraph\.cluster\.unprefixed\t/m)
+  assert.match(output, /^UNCLASSIFIED\tunclassified\.translator-binding\t.*\ttQs\(groupKey,/m)
+  assert.equal(
+    (
+      output.match(
+        /^UNCLASSIFIED\tunclassified\.translator-binding\t.*\ttCommon\(page\.label, page\.id\)/gm,
+      ) ?? []
+    ).length,
+    2,
+  )
 })
 
 test('The SUMMARY records the executable commands and complete rows, including every unclassified row. The task changes only the instrument, its tests, and its SUMMARY: it cannot make its own live result green by editing a production caller, a locale bundle, or a profile consumer.', () => {

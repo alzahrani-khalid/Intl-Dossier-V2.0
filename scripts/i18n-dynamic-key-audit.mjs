@@ -760,22 +760,11 @@ const collectCalls = (root, profile) => {
               expression: textOf(source, node),
               namespaces,
             }
-            const aliasClassification = binding.supported
-              ? null
-              : classifyCall({ root, repoPath, source, node, namespaces, domains })
-            // The ruled lane-3 population is the 13 review-named shapes. Other
-            // aliased translators in the same large file remain outside that
-            // controlled profile, but aliasing one of the ruled shapes is a
-            // fail-closed error rather than a silent zero.
-            if (!binding.supported && aliasClassification == null) {
-              ts.forEachChild(node, visit)
-              return
-            }
             fallbackSites.push(site)
             if (!binding.supported) {
+              site.family = 'unclassified.translator-binding'
               unclassified.push({
                 ...site,
-                family: 'unclassified.translator-binding',
                 reason: `unsupported useTranslation translator binding: ${node.expression.text}`,
               })
               ts.forEachChild(node, visit)
@@ -791,9 +780,7 @@ const collectCalls = (root, profile) => {
               ts.forEachChild(node, visit)
               return
             }
-            const classified =
-              aliasClassification ??
-              classifyCall({ root, repoPath, source, node, namespaces, domains })
+            const classified = classifyCall({ root, repoPath, source, node, namespaces, domains })
             if (classified == null || classified.keys.length === 0) {
               unclassified.push({
                 ...site,
@@ -864,8 +851,11 @@ const auditProfile = (root, profile = 'ar04-pre-repair') => {
     }
   }
 
-  const listSites = fallbackSites.filter((call) => call.file === LIST_FILE)
-  const lane3Sites = fallbackSites.filter((call) => call.file !== LIST_FILE)
+  // The ruled population remains the 9 + 13 calls with production-derived
+  // domains. Extra fallback-bearing sites are still retained in fallbackSites
+  // and fail closed through unclassified instead of inflating that census.
+  const listSites = calls.filter((call) => call.file === LIST_FILE)
+  const lane3Sites = calls.filter((call) => call.file !== LIST_FILE)
   const listRows = rows.filter((row) => row.profile === 'list')
   const clusterRows = rows.filter((row) => row.clusterProbe)
   const missingBoth = (row) => row.en === 'MISS' && row.ar === 'MISS'
@@ -887,10 +877,10 @@ const auditProfile = (root, profile = 'ar04-pre-repair') => {
     files: PROFILE_FILES[profile],
     callerPopulations: {
       listSites: listSites.length,
-      listFamilies: new Set(listSites.map((call) => call.family)).size,
+      listFamilies: new Set(listSites.map((call) => call.kind)).size,
       listLeaves: listRows.length,
       lane3Sites: lane3Sites.length,
-      lane3Families: new Set(lane3Sites.map((call) => call.family)).size,
+      lane3Families: new Set(lane3Sites.map((call) => call.kind)).size,
     },
     counts: {
       rows: rows.length,
@@ -904,6 +894,7 @@ const auditProfile = (root, profile = 'ar04-pre-repair') => {
       missingRequiredBundles: missingRequiredBundles.length,
     },
     rows,
+    calls,
     unclassified,
     interpolationOnly,
     fallbackSites,
@@ -938,9 +929,39 @@ const isExpectedPreRepairDefect = (row) =>
   (row.profile === 'list' && EXPECTED_LIST_MISSING.has(row.key)) ||
   (row.family === 'lane3.advancedGraph.cluster.unprefixed' && row.clusterProbe && row.routeMiss)
 
-const isExpectedPreRepairUnclassified = (result) =>
-  result.unclassified.length === 1 &&
-  result.unclassified[0].family === 'lane3.advancedGraph.cluster.unprefixed'
+const isExpectedPreRepairUnclassified = (result) => {
+  const expected = [
+    {
+      family: 'lane3.advancedGraph.cluster.unprefixed',
+      expression: 't(data.clusterType, data.clusterType)',
+      namespaces: ['graph'],
+    },
+    {
+      family: 'unclassified.translator-binding',
+      expression: 'tQs(groupKey, dossierTypeLabels[group.type]?.en || group.type)',
+      namespaces: ['quickswitcher'],
+    },
+    {
+      family: 'unclassified.translator-binding',
+      expression: 'tCommon(page.label, page.id)',
+      namespaces: ['common'],
+    },
+    {
+      family: 'unclassified.translator-binding',
+      expression: 'tCommon(page.label, page.id)',
+      namespaces: ['common'],
+    },
+  ]
+  const signature = (row) =>
+    `${row.family}\t${row.expression.replace(/\s+/g, ' ')}\t${row.namespaces
+      .map(bundleNamespace)
+      .join('|')}`
+  return (
+    result.unclassified.length === expected.length &&
+    result.unclassified.map(signature).sort().join('\n') ===
+      expected.map(signature).sort().join('\n')
+  )
+}
 
 const runSelfCheck = () => {
   const root = scriptRepoRoot
@@ -1052,7 +1073,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       failures.push(`${result.counts.unclassified} unclassified call(s)`)
     }
     if (controlledPreRepair && !isExpectedPreRepairUnclassified(result)) {
-      failures.push('expected exactly the ruled unclassified graph cluster call')
+      failures.push('expected exactly the ruled pre-repair unclassified calls')
     }
     if (result.counts.missingRequiredBundles > 0) {
       failures.push(

@@ -8,10 +8,13 @@ leaf lookups) and the exact 13 ruled lane-3 caller sites. With locale fallback d
 reproduces the pre-repair defects: 32 list leaves are missing from both English and Arabic, and all
 eight canonical dossier-card display types are misrouted by the unprefixed graph cluster call.
 
-The graph cluster call is also emitted as the sole unclassified row because its current caller does not
-prove DOSSIER_CARD_TYPES membership and does not route an explicit type.unknown branch. This expected
-pre-repair control is permitted only when the exact asserted census command is used; the ordinary
-lane3/live audit remains fail-closed.
+The exact 13-site population is the ruled set with production-derived domains. The AST walk also finds
+three additional fallback-bearing nonliteral calls through aliased `useTranslation` bindings in
+CommandPalette: one `tQs(groupKey, ...)` call and two `tCommon(page.label, ...)` calls. They are all
+emitted as unclassified instead of being silently skipped. Together with the graph cluster call, which
+does not prove DOSSIER_CARD_TYPES membership or route an explicit type.unknown branch, the control has
+four complete unclassified rows. These expected pre-repair rows are permitted only when the exact
+asserted census command is used; the ordinary lane3/live audit remains fail-closed.
 
 No production caller, locale bundle, or profile consumer changed. The task changes are limited to the
 audit instrument, its tests, and this SUMMARY.
@@ -60,7 +63,7 @@ Verbatim complete output (all resolved and missing rows, followed by every uncla
 
 ```text
 dynamic i18n audit: profile=ar04-pre-repair listSites=9 listLeaves=153 lane3Sites=13
-rows=244 listMissingBoth=32 clusterMissingBoth=8 unclassified=1
+rows=244 listMissingBoth=32 clusterMissingBoth=8 unclassified=4
 list	list.firstTitle	frontend/src/components/empty-states/ListEmptyState.tsx:194	list.document.firstTitle	EN=ok	AR=ok	ns=empty-states
 list	list.firstTitle	frontend/src/components/empty-states/ListEmptyState.tsx:194	list.dossier.firstTitle	EN=ok	AR=ok	ns=empty-states
 list	list.firstTitle	frontend/src/components/empty-states/ListEmptyState.tsx:194	list.engagement.firstTitle	EN=ok	AR=ok	ns=empty-states
@@ -305,6 +308,9 @@ lane3	lane3.AnalyticResultView.graphType.300	frontend/src/components/relationshi
 lane3	lane3.AnalyticResultView.graphType.300	frontend/src/components/relationships/AnalyticResultView.tsx:300	type.working_group	EN=ok	AR=ok	ns=graph
 lane3	lane3.AnalyticResultView.graphType.300	frontend/src/components/relationships/AnalyticResultView.tsx:300	type.person	EN=ok	AR=ok	ns=graph
 lane3	lane3.AnalyticResultView.graphType.300	frontend/src/components/relationships/AnalyticResultView.tsx:300	type.elected_official	EN=ok	AR=ok	ns=graph
+UNCLASSIFIED	unclassified.translator-binding	frontend/src/components/keyboard-shortcuts/CommandPalette.tsx:1397	unsupported useTranslation translator binding: tQs	tQs(groupKey, dossierTypeLabels[group.type]?.en || group.type)	ns=quickswitcher
+UNCLASSIFIED	unclassified.translator-binding	frontend/src/components/keyboard-shortcuts/CommandPalette.tsx:1546	unsupported useTranslation translator binding: tCommon	tCommon(page.label, page.id)	ns=common
+UNCLASSIFIED	unclassified.translator-binding	frontend/src/components/keyboard-shortcuts/CommandPalette.tsx:1554	unsupported useTranslation translator binding: tCommon	tCommon(page.label, page.id)	ns=common
 UNCLASSIFIED	lane3.advancedGraph.cluster.unprefixed	frontend/src/components/relationships/AdvancedGraphVisualization.tsx:413	domain is not closed by canonical-membership proof and an explicit type.unknown branch	t(data.clusterType, data.clusterType)	ns=graph
 EXIT_CODE=0
 ```
@@ -313,17 +319,17 @@ EXIT_CODE=0
 
 The test suite validates both locales and both polarities, prefix-versus-leaf behavior, unclassified
 nonliteral failure, interpolation-only options, explicit and hook-bound namespaces, malformed and
-missing bundles, empty domains, the unbounded graph lookup, opaque option objects, and aliased
-useTranslation translators.
+missing bundles, empty domains, the unbounded graph lookup, opaque option objects, and both recognized
+and otherwise-unknown calls through aliased useTranslation translators.
 
 Verbatim output:
 
 ```text
-✔ The pre-repair tree has an independently tested, non-vacuous bilingual census that exposes the exact dynamic-key defects instead of reporting their prefixes green. (51.471792ms)
-✔ The production entry point is scripts/i18n-dynamic-key-audit.mjs. It parses TypeScript call expressions rather than source lines, separates interpolation-only option objects from fallback-bearing calls, resolves explicit and hook-bound namespaces with fallbackLng disabled, and checks complete LEAF keys in en and ar. Every fallback-bearing nonliteral call in the two ruled profiles is either assigned a closed domain or reported unclassified; an empty domain, prefix-only object, missing file, malformed bundle, or unknown call shape is a failure, never zero. A domain counts as CLOSED only when the AST proves membership in the production constant that defines the closed dossier-card display set AND an explicit type.unknown branch exists in the same caller; a domain inferred from expression text, from whichever keys happen to exist in JSON, or from a fallback argument is rejected and the call is reported unclassified, which fails closed. (726.60525ms)
-✔ the instrument tests exercise both locales and both polarities: a resolved leaf passes, an existing prefix with a missing leaf fails, en-only and ar-only leaves each fail, an unclassified nonliteral call fails, and interpolation-only options are not mislabeled as English defaults; and three fail-closed negative tests each red the instrument: an unbounded cluster lookup with no canonical-membership proof and no type.unknown branch, a defaultValue reachable only through a shorthand, static-computed, or spread option object, and a useTranslation translator bound to an identifier other than t (818.296458ms)
-✔ the controlled live census discriminates before repair and positively reproduces both review findings: 32 missing list leaves out of the complete 153-leaf caller cross-product (17 EntityType values x 9 call families) and all eight canonical display-type leaves missed by the unprefixed graph cluster lookup; the exact 9 plus 13 caller populations are nonempty and no family is excluded to reach the expected count (174.524ms)
-✔ The SUMMARY records the executable commands and complete rows, including every unclassified row. The task changes only the instrument, its tests, and its SUMMARY: it cannot make its own live result green by editing a production caller, a locale bundle, or a profile consumer. (24.277084ms)
+✔ The pre-repair tree has an independently tested, non-vacuous bilingual census that exposes the exact dynamic-key defects instead of reporting their prefixes green. (58.016125ms)
+✔ The production entry point is scripts/i18n-dynamic-key-audit.mjs. It parses TypeScript call expressions rather than source lines, separates interpolation-only option objects from fallback-bearing calls, resolves explicit and hook-bound namespaces with fallbackLng disabled, and checks complete LEAF keys in en and ar. Every fallback-bearing nonliteral call in the two ruled profiles is either assigned a closed domain or reported unclassified; an empty domain, prefix-only object, missing file, malformed bundle, or unknown call shape is a failure, never zero. A domain counts as CLOSED only when the AST proves membership in the production constant that defines the closed dossier-card display set AND an explicit type.unknown branch exists in the same caller; a domain inferred from expression text, from whichever keys happen to exist in JSON, or from a fallback argument is rejected and the call is reported unclassified, which fails closed. (762.135291ms)
+✔ the instrument tests exercise both locales and both polarities: a resolved leaf passes, an existing prefix with a missing leaf fails, en-only and ar-only leaves each fail, an unclassified nonliteral call fails, and interpolation-only options are not mislabeled as English defaults; and three fail-closed negative tests each red the instrument: an unbounded cluster lookup with no canonical-membership proof and no type.unknown branch, a defaultValue reachable only through a shorthand, static-computed, or spread option object, and a useTranslation translator bound to an identifier other than t (962.167ms)
+✔ the controlled live census discriminates before repair and positively reproduces both review findings: 32 missing list leaves out of the complete 153-leaf caller cross-product (17 EntityType values x 9 call families) and all eight canonical display-type leaves missed by the unprefixed graph cluster lookup; the exact 9 plus 13 caller populations are nonempty and no family is excluded to reach the expected count (176.28275ms)
+✔ The SUMMARY records the executable commands and complete rows, including every unclassified row. The task changes only the instrument, its tests, and its SUMMARY: it cannot make its own live result green by editing a production caller, a locale bundle, or a profile consumer. (29.343459ms)
 ℹ tests 5
 ℹ suites 0
 ℹ pass 5
@@ -331,7 +337,7 @@ Verbatim output:
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 1934.685417
+ℹ duration_ms 2134.791334
 EXIT_CODE=0
 ```
 
