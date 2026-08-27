@@ -1,0 +1,143 @@
+{
+  "list": {
+    "document": {
+      "firstTitle": "x",
+      "title": "x",
+      "firstDescription": "x",
+      "description": "x",
+      "hint": "x",
+      "createFirst": "x",
+      "create": "x",
+      "import": "x"
+    },
+    "dossier": {
+      "firstTitle": "x",
+      "title": "x",
+      "firstDescription": "x",
+      "description": "x",
+      "hint": "x",
+      "createFirst": "x",
+      "create": "x",
+      "import": "x"
+    },
+    "engagement": {
+      "firstTitle": "x",
+      "title": "x",
+      "firstDescription": "x",
+      "description": "x",
+      "hint": "x",
+      "cta": "x",
+      "createFirst": "x",
+      "create": "x",
+      "import": "x"
+    },
+    "commitment": {
+      "firstTitle": "x",
+      "title": "x",
+      "firstDescription": "x",
+      "description": "x",
+      "hint": "x",
+      "createFirst": "x",
+      "create": "x",
+      "import": "x"
+    },
+    "organization": {
+      "firstTitle": "x",
+      "title": "x",
+      "firstDescription": "x",
+      "description": "x",
+      "hint": "x",
+      "cta": "x",
+      "createFirst": "x",
+      "create": "x",
+      "import": "x"
+    },
+    "country": {
+      "firstTitle": "x",
+      "title": "x",
+      "firstDescription": "x",
+      "description": "x",
+      "hint": "x",
+      "cta": "x",
+      "createFirst": "x",
+      "create": "x",
+      "import": "x"
+    },
+    "forum": {
+      "firstTitle": "x",
+      "title": "x",
+      "firstDescription": "x",
+      "description": "x",
+      "hint": "x",
+      "cta": "x",
+      "createFirst": "x",
+      "create": "x",
+      "import": "x"
+    },
+    "event": {
+      "firstTitle": "x",
+      "title": "x",
+      "firstDescription": "x",
+      "description": "x",
+      "hint": "x",
+      "createFirst": "x",
+      "create": "x",
+      "import": "x"
+    },
+    "task": {
+      "firstTitle": "x",
+      "title": "x",
+      "firstDescription": "x",
+      "description": "x",
+      "hint": "x",
+      "createFirst": "x",
+      "create": "x",
+      "import": "x"
+    },
+    "person": {
+      "firstTitle": "x",
+      "title": "x",
+      "firstDescription": "x",
+      "description": "x",
+      "hint": "x",
+      "cta": "x",
+      "createFirst": "x",
+      "create": "x",
+      "import": "x"
+    },
+    "position": {
+      "firstTitle": "x",
+      "title": "x",
+      "firstDescription": "x",
+      "description": "x",
+      "hint": "x",
+      "createFirst": "x",
+      "create": "x",
+      "import": "x"
+    },
+    "mou": {
+      "firstTitle": "x",
+      "title": "x",
+      "firstDescription": "x",
+      "description": "x",
+      "hint": "x",
+      "createFirst": "x",
+      "create": "x",
+      "import": "x"
+    },
+    "topic": { "title": "x", "description": "x", "cta": "x" },
+    "working_group": { "title": "x", "description": "x", "cta": "x" },
+    "elected_official": { "title": "x", "description": "x", "cta": "x" },
+    "work_item": { "title": "x", "description": "x", "cta": "x" },
+    "generic": {
+      "firstTitle": "x",
+      "title": "x",
+      "firstDescription": "x",
+      "description": "x",
+      "hint": "x",
+      "createFirst": "x",
+      "create": "x",
+      "import": "x"
+    }
+  }
+}
