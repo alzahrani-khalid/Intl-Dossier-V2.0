@@ -35,29 +35,22 @@ const normalizePath = (value) => value.split(sep).join('/').replace(/^\.\//, '')
 const lineAt = (source, offset) => source.slice(0, offset).split('\n').length
 const textOf = (source, node) => source.slice(node.getStart(), node.getEnd())
 const GRAPH_UNKNOWN_TYPE = 'unknown'
-const EXPECTED_LIST_MISSING = new Set([
-  ...['commitment', 'document', 'dossier', 'event', 'generic', 'mou', 'position', 'task'].map(
-    (entity) => `list.${entity}.cta`,
-  ),
-  ...['elected_official', 'topic', 'work_item', 'working_group'].flatMap((entity) =>
-    ['hint', 'firstDescription', 'createFirst', 'create', 'firstTitle', 'import'].map(
-      (leaf) => `list.${entity}.${leaf}`,
-    ),
-  ),
-])
-
 const parseArgs = (argv) => {
   let root = scriptRepoRoot
   let rootSeen = false
   let profile = 'ar04-pre-repair'
   let selfCheck = false
   let json = false
+  let rows = false
+  let forceUnproven = false
   const expects = {}
 
   for (let index = 0; index < argv.length; index++) {
     const argument = argv[index]
     if (argument === '--self-check') selfCheck = true
     else if (argument === '--json') json = true
+    else if (argument === '--rows') rows = true
+    else if (argument === '--force-unproven') forceUnproven = true
     else if (argument === '--profile') profile = argv[++index]
     else if (argument.startsWith('--expect-')) {
       const name = argument.slice('--expect-'.length).replaceAll('-', '')
@@ -74,7 +67,7 @@ const parseArgs = (argv) => {
     }
   }
 
-  return { root, profile, selfCheck, json, expects }
+  return { root, profile, selfCheck, json, rows, forceUnproven, expects }
 }
 
 const parseSource = (file, source) =>
@@ -410,6 +403,31 @@ const extractRecordStringValues = (root, repoPath, constName) => {
   return values
 }
 
+const extractObjectKeys = (root, repoPath, constName) => {
+  const source = readSource(root, repoPath)
+  const sf = parseSource(repoPath, source)
+  let values = null
+  const visit = (node) => {
+    if (
+      ts.isVariableDeclaration(node) &&
+      ts.isIdentifier(node.name) &&
+      node.name.text === constName
+    ) {
+      const initializer = unwrapExpression(node.initializer)
+      if (!initializer || !ts.isObjectLiteralExpression(initializer)) return
+      values = initializer.properties.map((property) =>
+        ts.isPropertyAssignment(property) ? propertyName(property.name) : null,
+      )
+    }
+    ts.forEachChild(node, visit)
+  }
+  visit(sf)
+  if (!Array.isArray(values) || values.some((value) => value == null) || values.length === 0) {
+    throw new Error(`empty or unsupported domain: ${repoPath} ${constName} keys`)
+  }
+  return values
+}
+
 const extractCountLineKeys = (root, repoPath) => {
   const source = readSource(root, repoPath)
   const sf = parseSource(repoPath, source)
@@ -449,6 +467,11 @@ const domainsFor = (root) => ({
     'frontend/src/types/relationship.types.ts',
     'DossierRelationshipType',
   ),
+  graphLegendTypes: extractObjectKeys(
+    root,
+    'frontend/src/lib/semantic-colors.ts',
+    'graphNodeColors',
+  ).slice(0, 6),
   sensitivityKeys: [
     ...extractObjectStringValues(
       root,
@@ -522,6 +545,444 @@ const containsNode = (root, predicate) => {
   return found
 }
 
+const variableNamed = (sf, name) => {
+  let declaration = null
+  containsNode(sf, (node) => {
+    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.name.text === name) {
+      declaration = node
+      return true
+    }
+    return false
+  })
+  return declaration
+}
+
+const sameStrings = (left, right) =>
+  Array.isArray(left) &&
+  Array.isArray(right) &&
+  left.length === right.length &&
+  left.every((value, index) => value === right[index])
+
+const enclosingNamedFunction = (node, name) => {
+  const fn = enclosingFunction(node)
+  if (fn == null) return false
+  if ('name' in fn && fn.name != null && ts.isIdentifier(fn.name)) return fn.name.text === name
+  if (ts.isArrowFunction(fn) || ts.isFunctionExpression(fn)) {
+    return (
+      ts.isVariableDeclaration(fn.parent) &&
+      ts.isIdentifier(fn.parent.name) &&
+      fn.parent.name.text === name
+    )
+  }
+  return false
+}
+
+const mappedParameter = (node, receiverName, memberName) => {
+  for (let current = node.parent; current != null; current = current.parent) {
+    if (!ts.isArrowFunction(current) && !ts.isFunctionExpression(current)) continue
+    const mapCall = current.parent
+    if (
+      !ts.isCallExpression(mapCall) ||
+      !ts.isPropertyAccessExpression(mapCall.expression) ||
+      mapCall.expression.name.text !== 'map' ||
+      mapCall.arguments[0] !== current
+    ) {
+      continue
+    }
+    const receiver = unwrapNode(mapCall.expression.expression)
+    if (!ts.isIdentifier(receiver) || receiver.text !== receiverName) return false
+    const parameter = current.parameters[0]?.name
+    const first = unwrapNode(node.arguments[0])
+    return (
+      parameter != null &&
+      ts.isIdentifier(parameter) &&
+      ts.isPropertyAccessExpression(first) &&
+      ts.isIdentifier(first.expression) &&
+      first.expression.text === parameter.text &&
+      first.name.text === memberName
+    )
+  }
+  return false
+}
+
+const provesListDomain = ({ source, node, domain }) => {
+  const sf = node.getSourceFile()
+  const first = templateLeaf(source, node.arguments[0])
+  if (first?.expression !== 'translationKey') return false
+  const entityConfig = variableNamed(sf, 'entityConfig')
+  const config = variableNamed(sf, 'config')
+  const translationKey = variableNamed(sf, 'translationKey')
+  let propsTypeIsClosed = false
+  containsNode(sf, (candidate) => {
+    if (!ts.isInterfaceDeclaration(candidate) || candidate.name.text !== 'ListEmptyStateProps') {
+      return false
+    }
+    propsTypeIsClosed = candidate.members.some(
+      (member) =>
+        ts.isPropertySignature(member) &&
+        propertyName(member.name) === 'entityType' &&
+        member.type != null &&
+        textOf(source, member.type) === 'EntityType',
+    )
+    return propsTypeIsClosed
+  })
+  const caller = enclosingFunction(node)
+  const typedCaller =
+    caller != null &&
+    ts.isFunctionDeclaration(caller) &&
+    caller.name?.text === 'ListEmptyState' &&
+    caller.parameters[0]?.type != null &&
+    textOf(source, caller.parameters[0].type) === 'ListEmptyStateProps' &&
+    ts.isObjectBindingPattern(caller.parameters[0].name) &&
+    caller.parameters[0].name.elements.some(
+      (element) => ts.isIdentifier(element.name) && element.name.text === 'entityType',
+    )
+  if (
+    !propsTypeIsClosed ||
+    !typedCaller ||
+    entityConfig == null ||
+    config == null ||
+    translationKey == null ||
+    entityConfig.type == null ||
+    !ts.isTypeReferenceNode(entityConfig.type) ||
+    textOf(source, entityConfig.type.typeName) !== 'Record' ||
+    entityConfig.type.typeArguments?.[0] == null ||
+    textOf(source, entityConfig.type.typeArguments[0]) !== 'EntityType'
+  ) {
+    return false
+  }
+  const object = unwrapNode(entityConfig.initializer)
+  if (!ts.isObjectLiteralExpression(object)) return false
+  const entries = object.properties.map((property) => {
+    if (!ts.isPropertyAssignment(property)) return null
+    const key = propertyName(property.name)
+    const value = unwrapNode(property.initializer)
+    if (key == null || !ts.isObjectLiteralExpression(value)) return null
+    return [key, stringArg(objectProperty(value, 'translationKey'))]
+  })
+  if (
+    entries.some((entry) => entry == null || entry[0] !== entry[1]) ||
+    !sameStrings(
+      entries.map((entry) => entry[0]),
+      domain,
+    )
+  ) {
+    return false
+  }
+  const configInit = unwrapNode(config.initializer)
+  const keyInit = unwrapNode(translationKey.initializer)
+  return (
+    ts.isElementAccessExpression(configInit) &&
+    ts.isIdentifier(configInit.expression) &&
+    configInit.expression.text === 'entityConfig' &&
+    ts.isIdentifier(unwrapNode(configInit.argumentExpression)) &&
+    unwrapNode(configInit.argumentExpression).text === 'entityType' &&
+    ts.isPropertyAccessExpression(keyInit) &&
+    ts.isIdentifier(keyInit.expression) &&
+    keyInit.expression.text === 'config' &&
+    keyInit.name.text === 'translationKey'
+  )
+}
+
+const provesAnalyzeDomain = ({ root, source, node, domain }) => {
+  const recordName = 'analyzeLabelKey'
+  const first = unwrapNode(node.arguments[0])
+  const declaration = variableNamed(node.getSourceFile(), recordName)
+  if (
+    declaration == null ||
+    declaration.type == null ||
+    !ts.isTypeReferenceNode(declaration.type) ||
+    textOf(source, declaration.type.typeName) !== 'Record' ||
+    declaration.type.typeArguments?.[0] == null ||
+    textOf(source, declaration.type.typeArguments[0]) !== 'AnalyticQueryType' ||
+    !ts.isElementAccessExpression(first) ||
+    !ts.isIdentifier(first.expression) ||
+    first.expression.text !== recordName ||
+    !ts.isPropertyAccessExpression(unwrapNode(first.argumentExpression)) ||
+    unwrapNode(first.argumentExpression).name.text !== 'queryType'
+  ) {
+    return false
+  }
+  const object = unwrapNode(declaration.initializer)
+  if (!ts.isObjectLiteralExpression(object)) return false
+  const values = object.properties.map((property) =>
+    ts.isPropertyAssignment(property) ? stringArg(property.initializer) : null,
+  )
+  const keys = object.properties.map((property) =>
+    ts.isPropertyAssignment(property) ? propertyName(property.name) : null,
+  )
+  const producerPath = 'frontend/src/components/keyboard-shortcuts/analyze-commands.ts'
+  const queryTypes = extractTypeUnion(root, producerPath, 'AnalyticQueryType')
+  let mappedProducer = false
+  for (let current = node.parent; current != null; current = current.parent) {
+    if (!ts.isArrowFunction(current)) continue
+    const map = current.parent
+    const receiver =
+      ts.isCallExpression(map) &&
+      ts.isPropertyAccessExpression(map.expression) &&
+      map.expression.name.text === 'map'
+        ? unwrapNode(map.expression.expression)
+        : null
+    const parameter = current.parameters[0]?.name
+    const index = unwrapNode(first.argumentExpression)
+    if (
+      ts.isCallExpression(receiver) &&
+      ts.isIdentifier(receiver.expression) &&
+      receiver.expression.text === 'getAnalyzeCommandActions' &&
+      ts.isIdentifier(parameter) &&
+      ts.isPropertyAccessExpression(index) &&
+      ts.isIdentifier(index.expression) &&
+      index.expression.text === parameter.text
+    ) {
+      mappedProducer = true
+      break
+    }
+  }
+  return (
+    mappedProducer &&
+    values.every((value) => value != null) &&
+    sameStrings(keys, queryTypes) &&
+    sameStrings(values, domain)
+  )
+}
+
+const provesConstMap = ({ node, domain }, constantName, memberName) => {
+  if (!mappedParameter(node, constantName, memberName)) return false
+  const declaration = variableNamed(node.getSourceFile(), constantName)
+  const value = unwrapNode(declaration?.initializer)
+  if (!ts.isArrayLiteralExpression(value)) return false
+  const values = value.elements.map((element) => {
+    const object = unwrapNode(element)
+    return ts.isObjectLiteralExpression(object)
+      ? stringArg(objectProperty(object, memberName))
+      : null
+  })
+  return values.every((entry) => entry != null) && sameStrings(values, domain)
+}
+
+const provesSensitivityDomain = ({ root, node, domain }) => {
+  const first = unwrapNode(node.arguments[0])
+  if (
+    !ts.isCallExpression(first) ||
+    !ts.isIdentifier(first.expression) ||
+    first.expression.text !== 'sensitivityLabelKey'
+  ) {
+    return false
+  }
+  const repoPath = 'frontend/src/components/list-page/sensitivity.ts'
+  const source = readSource(root, repoPath)
+  const sf = parseSource(repoPath, source)
+  let fn = null
+  containsNode(sf, (candidate) => {
+    if (
+      ts.isVariableDeclaration(candidate) &&
+      ts.isIdentifier(candidate.name) &&
+      candidate.name.text === 'sensitivityLabelKey'
+    ) {
+      fn = unwrapNode(candidate.initializer)
+      return true
+    }
+    return false
+  })
+  if (
+    !ts.isArrowFunction(fn) ||
+    fn.parameters[0]?.type == null ||
+    textOf(source, fn.parameters[0].type) !== 'number'
+  ) {
+    return false
+  }
+  const body = unwrapNode(fn.body)
+  if (
+    !ts.isBinaryExpression(body) ||
+    body.operatorToken.kind !== ts.SyntaxKind.QuestionQuestionToken
+  ) {
+    return false
+  }
+  if (stringArg(unwrapNode(body.right)) !== 'sensitivity.unknown') return false
+  const labelAccess = unwrapNode(body.left)
+  const chipAccess =
+    ts.isPropertyAccessExpression(labelAccess) && labelAccess.name.text === 'labelKey'
+      ? unwrapNode(labelAccess.expression)
+      : null
+  const hasCanonicalLookup =
+    ts.isElementAccessExpression(chipAccess) &&
+    ts.isIdentifier(chipAccess.expression) &&
+    chipAccess.expression.text === 'SENSITIVITY_CHIP'
+  const values = extractObjectStringValues(root, repoPath, 'SENSITIVITY_CHIP', 'labelKey')
+  return hasCanonicalLookup && sameStrings([...values, 'sensitivity.unknown'], domain)
+}
+
+const provesCountLineDomain = ({ source, node, domain }) => {
+  if (!enclosingNamedFunction(node, 'countLine')) return false
+  const values = []
+  let invalid = false
+  containsNode(node.getSourceFile(), (candidate) => {
+    if (
+      ts.isCallExpression(candidate) &&
+      ts.isIdentifier(candidate.expression) &&
+      candidate.expression.text === 'countLine'
+    ) {
+      const value = stringArg(candidate.arguments[1])
+      if (value == null || !enclosingNamedFunction(candidate, 'renderCountLine')) invalid = true
+      else values.push(value)
+    }
+    return false
+  })
+  const first = unwrapNode(node.arguments[0])
+  return !invalid && ts.isIdentifier(first) && first.text === 'key' && sameStrings(values, domain)
+}
+
+const entriesMapFor = (node, constantName) => {
+  for (let current = node.parent; current != null; current = current.parent) {
+    if (!ts.isArrowFunction(current) && !ts.isFunctionExpression(current)) continue
+    const mapCall = current.parent
+    if (
+      !ts.isCallExpression(mapCall) ||
+      !ts.isPropertyAccessExpression(mapCall.expression) ||
+      mapCall.expression.name.text !== 'map'
+    ) {
+      continue
+    }
+    const sliced = unwrapNode(mapCall.expression.expression)
+    if (
+      !ts.isCallExpression(sliced) ||
+      !ts.isPropertyAccessExpression(sliced.expression) ||
+      sliced.expression.name.text !== 'slice'
+    ) {
+      return null
+    }
+    const entries = unwrapNode(sliced.expression.expression)
+    if (
+      !ts.isCallExpression(entries) ||
+      !ts.isPropertyAccessExpression(entries.expression) ||
+      !ts.isIdentifier(entries.expression.expression) ||
+      entries.expression.expression.text !== 'Object' ||
+      entries.expression.name.text !== 'entries' ||
+      !ts.isIdentifier(unwrapNode(entries.arguments[0])) ||
+      unwrapNode(entries.arguments[0]).text !== constantName
+    ) {
+      return null
+    }
+    const start =
+      sliced.arguments[0] == null
+        ? 0
+        : Number(
+            stringArg(sliced.arguments[0]) ??
+              textOf(node.getSourceFile().text, sliced.arguments[0]),
+          )
+    const limit =
+      sliced.arguments[1] == null
+        ? null
+        : Number(
+            stringArg(sliced.arguments[1]) ??
+              textOf(node.getSourceFile().text, sliced.arguments[1]),
+          )
+    return {
+      callback: current,
+      start: Number.isInteger(start) ? start : null,
+      limit: Number.isInteger(limit) ? limit : null,
+    }
+  }
+  return null
+}
+
+const provesGraphLegendDomain = ({ root, source, node, domain }) => {
+  const map = entriesMapFor(node, 'NODE_COLORS')
+  const first = templateLeaf(source, node.arguments[0])
+  if (map == null || first?.head !== 'type.' || first.expression !== 'type') return false
+  const binding = map.callback.parameters[0]?.name
+  if (
+    !ts.isArrayBindingPattern(binding) ||
+    !ts.isIdentifier(binding.elements[0]?.name) ||
+    binding.elements[0].name.text !== 'type'
+  ) {
+    return false
+  }
+  const declaration = variableNamed(node.getSourceFile(), 'NODE_COLORS')
+  const initializer = unwrapNode(declaration?.initializer)
+  const imported = node
+    .getSourceFile()
+    .statements.some(
+      (statement) =>
+        ts.isImportDeclaration(statement) &&
+        stringArg(statement.moduleSpecifier) === '@/lib/semantic-colors' &&
+        statement.importClause?.namedBindings != null &&
+        ts.isNamedImports(statement.importClause.namedBindings) &&
+        statement.importClause.namedBindings.elements.some(
+          (element) =>
+            element.name.text === 'SEMANTIC_NODE_COLORS' &&
+            (element.propertyName?.text ?? element.name.text) === 'graphNodeColors',
+        ),
+    )
+  const expected = extractObjectKeys(
+    root,
+    'frontend/src/lib/semantic-colors.ts',
+    'graphNodeColors',
+  ).slice(map.start, map.limit)
+  return (
+    imported &&
+    ts.isIdentifier(initializer) &&
+    initializer.text === 'SEMANTIC_NODE_COLORS' &&
+    map.start === 0 &&
+    map.limit != null &&
+    sameStrings(domain, expected)
+  )
+}
+
+const provesRelationshipDomain = ({ source, node, domain }) => {
+  const first = templateLeaf(source, node.arguments[0])
+  return (
+    first?.head === 'relationship.' &&
+    first.tail === '' &&
+    provesConstMap({ node, domain }, 'RELATIONSHIP_TYPES', 'value')
+  )
+}
+
+const provesClosedDomain = (proofKind, context) => {
+  if (context.forceUnproven) return false
+  if (proofKind === 'list-entity-config') return provesListDomain(context)
+  if (proofKind === 'command-analyze-record') return provesAnalyzeDomain(context)
+  if (proofKind === 'dossier-sensitivity-helper') return provesSensitivityDomain(context)
+  if (proofKind === 'engagement-filter-map') return provesConstMap(context, 'FILTERS', 'labelKey')
+  if (proofKind === 'icon-rail-map') return provesConstMap(context, 'defaultItems', 'tooltipKey')
+  if (proofKind === 'analytic-template-map') return provesConstMap(context, 'TEMPLATES', 'labelKey')
+  if (proofKind === 'analytic-count-switch') return provesCountLineDomain(context)
+  if (proofKind === 'graph-cluster-route') {
+    const expected = [
+      ...extractConstStringArray(
+        context.root,
+        'frontend/src/lib/dossier-type-guards.ts',
+        'DOSSIER_CARD_TYPES',
+      ).map((type) => `type.${type}`),
+      `type.${GRAPH_UNKNOWN_TYPE}`,
+    ]
+    return (
+      sameStrings(context.domain, expected) &&
+      provesClosedClusterDomain(context.node.getSourceFile(), context.source, context.node)
+    )
+  }
+  if (proofKind === 'graph-type-map') return provesGraphLegendDomain(context)
+  if (proofKind === 'graph-relationship-map') return provesRelationshipDomain(context)
+  return false
+}
+
+const closedDomain = (key, domain, proof) => {
+  if (!Array.isArray(domain) || domain.length === 0) {
+    throw new Error(`empty domain at ${key}`)
+  }
+  return { proofSite: key, keys: domain, closed: proof === true }
+}
+
+const describeDomain = (claim, kind, domainSource, options = {}) => ({
+  ...claim,
+  kind,
+  domainSource,
+  ...(options.namespaces == null ? {} : { namespaces: options.namespaces }),
+  countInListMissing: options.countInListMissing ?? true,
+  clusterProbe: options.clusterProbe ?? false,
+  requiredKeys: options.requiredKeys ?? null,
+})
+
 /**
  * The cluster display domain is special: the canonical values alone do not
  * close an arbitrary runtime string. The same caller must prove membership in
@@ -549,7 +1010,8 @@ const provesClosedClusterDomain = (sf, source, call) => {
       if (
         ts.isVariableDeclaration(node) &&
         ts.isIdentifier(node.name) &&
-        node.name.text === first.text
+        node.name.text === first.text &&
+        node.getStart() < call.getStart()
       ) {
         const initializer = unwrapNode(node.initializer)
         if (initializer != null && ts.isConditionalExpression(initializer)) route = initializer
@@ -559,12 +1021,9 @@ const provesClosedClusterDomain = (sf, source, call) => {
   }
   if (route == null) return false
 
-  const branches = [unwrapNode(route.whenTrue), unwrapNode(route.whenFalse)]
-  const unknownIndex = branches.findIndex(
-    (branch) => stringArg(branch) === `type.${GRAPH_UNKNOWN_TYPE}`,
-  )
-  if (unknownIndex === -1) return false
-  const canonicalBranch = branches[unknownIndex === 0 ? 1 : 0]
+  const canonicalBranch = unwrapNode(route.whenTrue)
+  const unknownBranch = unwrapNode(route.whenFalse)
+  if (stringArg(unknownBranch) !== `type.${GRAPH_UNKNOWN_TYPE}`) return false
   if (
     !ts.isTemplateExpression(canonicalBranch) ||
     canonicalBranch.head.text !== 'type.' ||
@@ -575,40 +1034,32 @@ const provesClosedClusterDomain = (sf, source, call) => {
   }
   const routedValue = unwrapNode(canonicalBranch.templateSpans[0].expression)
 
-  let memberValue = null
-  containsNode(route.condition, (node) => {
-    if (
-      ts.isCallExpression(node) &&
-      ts.isPropertyAccessExpression(node.expression) &&
-      node.expression.name.text === 'includes' &&
-      ts.isIdentifier(unwrapNode(node.expression.expression)) &&
-      unwrapNode(node.expression.expression).text === 'DOSSIER_CARD_TYPES' &&
-      node.arguments.length === 1
-    ) {
-      memberValue = unwrapNode(node.arguments[0])
-      return true
-    }
-    return false
-  })
+  const condition = unwrapNode(route.condition)
+  const memberValue =
+    ts.isCallExpression(condition) &&
+    ts.isPropertyAccessExpression(condition.expression) &&
+    condition.expression.name.text === 'includes' &&
+    ts.isIdentifier(unwrapNode(condition.expression.expression)) &&
+    unwrapNode(condition.expression.expression).text === 'DOSSIER_CARD_TYPES' &&
+    condition.arguments.length === 1
+      ? unwrapNode(condition.arguments[0])
+      : null
   return memberValue != null && textOf(source, memberValue) === textOf(source, routedValue)
 }
 
-const classifyCall = ({ root, repoPath, source, node, namespaces, domains }) => {
+const classifyCall = ({
+  root,
+  repoPath,
+  source,
+  node,
+  namespaces,
+  domains,
+  forceUnproven = false,
+}) => {
   const first = node.arguments[0]
   const firstText = textOf(source, first)
   const fileBase = repoPath.split('/').at(-1)
   const template = templateLeaf(source, first)
-
-  const mk = (kind, keys, domainSource, options = {}) => ({
-    kind,
-    keys,
-    domainSource,
-    namespaces: options.namespaces ?? namespaces,
-    countInListMissing: options.countInListMissing ?? true,
-    clusterProbe: options.clusterProbe ?? false,
-    requiredKeys: options.requiredKeys ?? null,
-    closed: options.closed ?? true,
-  })
 
   if (
     repoPath === LIST_FILE &&
@@ -617,53 +1068,139 @@ const classifyCall = ({ root, repoPath, source, node, namespaces, domains }) => 
   ) {
     const leaf = template.tail.replace(/^\./, '')
     if (leaf.length === 0) return null
-    return mk(
+    const domain = domains.listEntities.map((entity) => `list.${entity}.${leaf}`)
+    return describeDomain(
+      closedDomain(
+        'list-entity-config',
+        domain,
+        provesClosedDomain('list-entity-config', {
+          root,
+          repoPath,
+          source,
+          node,
+          domain: domains.listEntities,
+          forceUnproven,
+        }),
+      ),
       `list.${leaf}`,
-      domains.listEntities.map((entity) => `list.${entity}.${leaf}`),
       'ListEmptyState EntityType union (complete caller cross-product)',
     )
   }
 
   if (fileBase === 'CommandPalette.tsx' && firstText === 'analyzeLabelKey[analyze.queryType]') {
-    return mk('lane3.commandPalette.analyze', domains.analyzeKeys, 'CommandPalette analyzeLabelKey')
+    return describeDomain(
+      closedDomain(
+        'command-analyze-record',
+        domains.analyzeKeys,
+        provesClosedDomain('command-analyze-record', {
+          root,
+          repoPath,
+          source,
+          node,
+          domain: domains.analyzeKeys,
+          forceUnproven,
+        }),
+      ),
+      'lane3.commandPalette.analyze',
+      'AST-proven CommandPalette analyzeLabelKey record',
+    )
   }
 
   if (
     fileBase === 'DossierTable.tsx' &&
     firstText === 'sensitivityLabelKey(row.sensitivity_level)'
   ) {
-    return mk(
+    return describeDomain(
+      closedDomain(
+        'dossier-sensitivity-helper',
+        domains.sensitivityKeys,
+        provesClosedDomain('dossier-sensitivity-helper', {
+          root,
+          repoPath,
+          source,
+          node,
+          domain: domains.sensitivityKeys,
+          forceUnproven,
+        }),
+      ),
       'lane3.dossierTable.sensitivity',
-      domains.sensitivityKeys,
-      'SENSITIVITY_CHIP + unknown',
+      'AST-proven SENSITIVITY_CHIP lookup plus explicit unknown branch',
     )
   }
 
   if (fileBase === 'EngagementsList.tsx' && firstText === 'f.labelKey') {
-    return mk(
+    return describeDomain(
+      closedDomain(
+        'engagement-filter-map',
+        domains.engagementFilterKeys,
+        provesClosedDomain('engagement-filter-map', {
+          root,
+          repoPath,
+          source,
+          node,
+          domain: domains.engagementFilterKeys,
+          forceUnproven,
+        }),
+      ),
       'lane3.engagementsList.filterPill',
-      domains.engagementFilterKeys,
-      'EngagementsList FILTERS',
+      'AST-proven EngagementsList FILTERS.map membership',
     )
   }
 
   if (fileBase === 'IconRail.tsx' && firstText === 'item.tooltipKey') {
-    return mk('lane3.iconRail.defaultItems', domains.iconRailKeys, 'IconRail defaultItems')
+    return describeDomain(
+      closedDomain(
+        'icon-rail-map',
+        domains.iconRailKeys,
+        provesClosedDomain('icon-rail-map', {
+          root,
+          repoPath,
+          source,
+          node,
+          domain: domains.iconRailKeys,
+          forceUnproven,
+        }),
+      ),
+      'lane3.iconRail.defaultItems',
+      'IconRail defaultItems candidate; AST must exclude caller-supplied items',
+    )
   }
 
   if (fileBase === 'AnalyticQueryPicker.tsx' && firstText === 'tpl.labelKey') {
-    return mk(
+    return describeDomain(
+      closedDomain(
+        'analytic-template-map',
+        domains.analyticTemplateKeys,
+        provesClosedDomain('analytic-template-map', {
+          root,
+          repoPath,
+          source,
+          node,
+          domain: domains.analyticTemplateKeys,
+          forceUnproven,
+        }),
+      ),
       'lane3.analyticQueryPicker.templates',
-      domains.analyticTemplateKeys,
-      'AnalyticQueryPicker TEMPLATES',
+      'AST-proven AnalyticQueryPicker TEMPLATES.map membership',
     )
   }
 
   if (fileBase === 'AnalyticResultView.tsx' && firstText === 'key') {
-    return mk(
+    return describeDomain(
+      closedDomain(
+        'analytic-count-switch',
+        domains.analyticCountKeys,
+        provesClosedDomain('analytic-count-switch', {
+          root,
+          repoPath,
+          source,
+          node,
+          domain: domains.analyticCountKeys,
+          forceUnproven,
+        }),
+      ),
       'lane3.analyticResultView.countLine',
-      domains.analyticCountKeys,
-      'AnalyticResultView renderCountLine switch',
+      'AST-proven closed countLine callers in renderCountLine',
     )
   }
 
@@ -673,27 +1210,45 @@ const classifyCall = ({ root, repoPath, source, node, namespaces, domains }) => 
     `type.${GRAPH_UNKNOWN_TYPE}`,
   ]
 
-  if (fileBase === 'AdvancedGraphVisualization.tsx' && firstText === 'data.clusterType') {
-    return mk(
-      'lane3.advancedGraph.cluster.unprefixed',
-      graphDisplayTypes,
-      'UNCLASSIFIED diagnostic against DOSSIER_CARD_TYPES; the caller has no canonical-membership proof and no type.unknown branch',
-      {
-        clusterProbe: true,
-        requiredKeys: graphDisplayTypes.map((type) => `type.${type}`),
-        closed: false,
-      },
-    )
-  }
-
-  if (
+  const clusterCaller = enclosingFunction(node)
+  const clusterCandidate =
     fileBase === 'AdvancedGraphVisualization.tsx' &&
-    provesClosedClusterDomain(node.getSourceFile(), source, node)
-  ) {
-    return mk(
-      'lane3.advancedGraph.cluster.routed',
-      graphClusterKeys,
-      'AST-proven DOSSIER_CARD_TYPES membership plus explicit type.unknown branch',
+    (firstText === 'data.clusterType' ||
+      (clusterCaller != null &&
+        containsNode(
+          clusterCaller,
+          (candidate) =>
+            ts.isPropertyAccessExpression(candidate) &&
+            ts.isIdentifier(candidate.expression) &&
+            candidate.expression.text === 'data' &&
+            candidate.name.text === 'clusterType',
+        )))
+  if (clusterCandidate) {
+    const unprefixed = firstText === 'data.clusterType'
+    const domain = unprefixed ? graphDisplayTypes : graphClusterKeys
+    return describeDomain(
+      closedDomain(
+        'graph-cluster-route',
+        domain,
+        provesClosedDomain('graph-cluster-route', {
+          root,
+          repoPath,
+          source,
+          node,
+          domain,
+          forceUnproven,
+        }),
+      ),
+      unprefixed ? 'lane3.advancedGraph.cluster.unprefixed' : 'lane3.advancedGraph.cluster.routed',
+      unprefixed
+        ? 'UNCLASSIFIED diagnostic against DOSSIER_CARD_TYPES; no proven route'
+        : 'AST-proven DOSSIER_CARD_TYPES membership plus explicit type.unknown branch',
+      unprefixed
+        ? {
+            clusterProbe: true,
+            requiredKeys: graphDisplayTypes.map((type) => `type.${type}`),
+          }
+        : {},
     )
   }
 
@@ -702,10 +1257,26 @@ const classifyCall = ({ root, repoPath, source, node, namespaces, domains }) => 
     template?.head === 'type.' &&
     template.tail === ''
   ) {
-    return mk(
+    const legend = entriesMapFor(node, 'NODE_COLORS')
+    const rawDomain = legend == null ? domains.graphDisplayTypes : domains.graphLegendTypes
+    const domain = rawDomain.map((type) => `type.${type}`)
+    return describeDomain(
+      closedDomain(
+        'graph-type-map',
+        domain,
+        provesClosedDomain('graph-type-map', {
+          root,
+          repoPath,
+          source,
+          node,
+          domain: rawDomain,
+          forceUnproven,
+        }),
+      ),
       `lane3.${fileBase.replace(/\.tsx$/, '')}.graphType.${lineAt(source, node.getStart())}`,
-      domains.graphDisplayTypes.map((type) => `type.${type}`),
-      'DOSSIER_CARD_TYPES display domain',
+      legend == null
+        ? 'UNCLASSIFIED runtime graph node type'
+        : 'AST-proven Object.entries(NODE_COLORS).slice domain',
     )
   }
 
@@ -714,17 +1285,29 @@ const classifyCall = ({ root, repoPath, source, node, namespaces, domains }) => 
     template?.head === 'relationship.' &&
     template.tail === ''
   ) {
-    return mk(
+    const domain = domains.graphRelationshipTypes.map((type) => `relationship.${type}`)
+    return describeDomain(
+      closedDomain(
+        'graph-relationship-map',
+        domain,
+        provesClosedDomain('graph-relationship-map', {
+          root,
+          repoPath,
+          source,
+          node,
+          domain: domains.graphRelationshipTypes,
+          forceUnproven,
+        }),
+      ),
       `lane3.advancedGraph.relationship.${lineAt(source, node.getStart())}`,
-      domains.graphRelationshipTypes.map((type) => `relationship.${type}`),
-      'DossierRelationshipType union',
+      'UNCLASSIFIED runtime relationshipTypes set',
     )
   }
 
   return null
 }
 
-const collectCalls = (root, profile) => {
+const collectCalls = (root, profile, { forceUnproven = false } = {}) => {
   const profileFiles = PROFILE_FILES[profile]
   if (profileFiles == null) throw new Error(`unknown profile: ${profile}`)
   const domains = domainsFor(root)
@@ -771,20 +1354,28 @@ const collectCalls = (root, profile) => {
               return
             }
             if (optionShape(node.arguments[1]) === 'unsafe-options') {
+              site.family = 'unclassified.opaque-options'
               unclassified.push({
                 ...site,
-                family: 'unclassified.opaque-options',
                 reason:
                   'defaultValue may be hidden by shorthand, computed, method, or spread option syntax',
               })
               ts.forEachChild(node, visit)
               return
             }
-            const classified = classifyCall({ root, repoPath, source, node, namespaces, domains })
+            const classified = classifyCall({
+              root,
+              repoPath,
+              source,
+              node,
+              namespaces,
+              domains,
+              forceUnproven,
+            })
             if (classified == null || classified.keys.length === 0) {
+              site.family = 'unclassified.unknown-shape'
               unclassified.push({
                 ...site,
-                family: 'unclassified.unknown-shape',
                 reason: classified == null ? 'unknown call shape' : 'empty domain',
               })
             } else {
@@ -795,12 +1386,12 @@ const collectCalls = (root, profile) => {
               }
               calls.push(call)
               site.family = classified.kind
+              site.proofSite = classified.proofSite
               if (!classified.closed) {
                 unclassified.push({
                   ...site,
                   family: classified.kind,
-                  reason:
-                    'domain is not closed by canonical-membership proof and an explicit type.unknown branch',
+                  reason: `AST did not prove closed domain at ${classified.proofSite}`,
                 })
               }
             }
@@ -815,9 +1406,11 @@ const collectCalls = (root, profile) => {
   return { calls, unclassified, interpolationOnly, fallbackSites, domains }
 }
 
-const auditProfile = (root, profile = 'ar04-pre-repair') => {
+const auditProfile = (root, profile = 'ar04-pre-repair', { forceUnproven = false } = {}) => {
   const bundles = loadBundles(root)
-  const { calls, unclassified, interpolationOnly, fallbackSites } = collectCalls(root, profile)
+  const { calls, unclassified, interpolationOnly, fallbackSites } = collectCalls(root, profile, {
+    forceUnproven,
+  })
   const rows = []
   for (const call of calls) {
     for (const key of call.keys) {
@@ -874,8 +1467,10 @@ const auditProfile = (root, profile = 'ar04-pre-repair') => {
     productionEntryPoint: 'scripts/i18n-dynamic-key-audit.mjs',
     parser: 'typescript AST CallExpression',
     fallbackLng: false,
+    forceUnproven,
     files: PROFILE_FILES[profile],
     callerPopulations: {
+      fallbackSites: fallbackSites.length,
       listSites: listSites.length,
       listFamilies: new Set(listSites.map((call) => call.kind)).size,
       listLeaves: listRows.length,
@@ -898,6 +1493,23 @@ const auditProfile = (root, profile = 'ar04-pre-repair') => {
     unclassified,
     interpolationOnly,
     fallbackSites,
+    proofRows: fallbackSites.map((site) => {
+      const call = calls.find(
+        (candidate) =>
+          candidate.file === site.file &&
+          candidate.line === site.line &&
+          candidate.expression === site.expression,
+      )
+      return {
+        status: call?.closed === true ? 'CLOSED' : 'UNCLASSIFIED',
+        proofSite: call?.proofSite ?? site.proofSite ?? 'none',
+        family: site.family ?? 'unclassified.unknown-shape',
+        file: site.file,
+        line: site.line,
+        expression: site.expression,
+        namespaces: site.namespaces.map(bundleNamespace),
+      }
+    }),
     missingRequiredBundles,
   }
   return result
@@ -921,46 +1533,6 @@ const evaluateExpectations = (result, expects) => {
       failures.push(`${name}: expected ${expected}, got ${checks[name]}`)
   }
   return failures
-}
-
-const rowHasFailure = (row) => row.en === 'MISS' || row.ar === 'MISS' || row.routeMiss
-
-const isExpectedPreRepairDefect = (row) =>
-  (row.profile === 'list' && EXPECTED_LIST_MISSING.has(row.key)) ||
-  (row.family === 'lane3.advancedGraph.cluster.unprefixed' && row.clusterProbe && row.routeMiss)
-
-const isExpectedPreRepairUnclassified = (result) => {
-  const expected = [
-    {
-      family: 'lane3.advancedGraph.cluster.unprefixed',
-      expression: 't(data.clusterType, data.clusterType)',
-      namespaces: ['graph'],
-    },
-    {
-      family: 'unclassified.translator-binding',
-      expression: 'tQs(groupKey, dossierTypeLabels[group.type]?.en || group.type)',
-      namespaces: ['quickswitcher'],
-    },
-    {
-      family: 'unclassified.translator-binding',
-      expression: 'tCommon(page.label, page.id)',
-      namespaces: ['common'],
-    },
-    {
-      family: 'unclassified.translator-binding',
-      expression: 'tCommon(page.label, page.id)',
-      namespaces: ['common'],
-    },
-  ]
-  const signature = (row) =>
-    `${row.family}\t${row.expression.replace(/\s+/g, ' ')}\t${row.namespaces
-      .map(bundleNamespace)
-      .join('|')}`
-  return (
-    result.unclassified.length === expected.length &&
-    result.unclassified.map(signature).sort().join('\n') ===
-      expected.map(signature).sort().join('\n')
-  )
 }
 
 const runSelfCheck = () => {
@@ -1041,6 +1613,14 @@ const printHuman = (result) => {
   }
 }
 
+const printProofRows = (result) => {
+  for (const row of result.proofRows) {
+    console.log(
+      `${row.status}\t${row.proofSite}\t${row.family}\t${row.file}:${row.line}\t${row.expression.replace(/\s+/g, ' ')}\tns=${row.namespaces.join('|')}`,
+    )
+  }
+}
+
 export {
   auditProfile,
   collectCalls,
@@ -1060,20 +1640,32 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       console.log(JSON.stringify(result, null, 2))
       process.exit(result.selfCheck === 'PASS' ? 0 : 1)
     }
-    const result = auditProfile(options.root, options.profile)
+    const result = auditProfile(options.root, options.profile, {
+      forceUnproven: options.forceUnproven,
+    })
     const failures = evaluateExpectations(result, options.expects)
-    if (options.json) console.log(JSON.stringify(result, null, 2))
+    if (options.rows) {
+      printProofRows(result)
+      process.exit(0)
+    } else if (options.json) console.log(JSON.stringify(result, null, 2))
     else printHuman(result)
     const controlledPreRepair =
       options.profile === 'ar04-pre-repair' && Object.keys(options.expects).length > 0
-    if (
-      result.counts.unclassified > 0 &&
-      !(controlledPreRepair && isExpectedPreRepairUnclassified(result))
-    ) {
-      failures.push(`${result.counts.unclassified} unclassified call(s)`)
+    if (controlledPreRepair && result.callerPopulations.fallbackSites !== 25) {
+      failures.push(
+        `controlled fallback population: expected 25, got ${result.callerPopulations.fallbackSites}`,
+      )
     }
-    if (controlledPreRepair && !isExpectedPreRepairUnclassified(result)) {
-      failures.push('expected exactly the ruled pre-repair unclassified calls')
+    if (
+      controlledPreRepair &&
+      result.unclassified.some((row) =>
+        ['unclassified.unknown-shape', 'unclassified.opaque-options'].includes(row.family),
+      )
+    ) {
+      failures.push('controlled population contains an unknown or opaque call shape')
+    }
+    if (result.counts.unclassified > 0 && !controlledPreRepair) {
+      failures.push(`${result.counts.unclassified} unclassified call(s)`)
     }
     if (result.counts.missingRequiredBundles > 0) {
       failures.push(
@@ -1082,13 +1674,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
           .join(', ')}`,
       )
     }
-    if (controlledPreRepair) {
-      const unexpected = result.rows.filter(
-        (row) => rowHasFailure(row) && !isExpectedPreRepairDefect(row),
-      )
-      if (unexpected.length > 0)
-        failures.push(`${unexpected.length} unexpected missing/routing row(s)`)
-    } else {
+    if (!controlledPreRepair) {
       if (result.counts.missingEn > 0)
         failures.push(`${result.counts.missingEn} en missing/routing failure(s)`)
       if (result.counts.missingAr > 0)
