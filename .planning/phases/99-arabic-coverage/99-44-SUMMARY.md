@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # P99-44 Summary — dossier-A sense sweep and brief-artifact closure
 
 ## Outcome

@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # Phase 99-14: common-owner long tail and navigation authoring
 
 Status: complete. Product changes landed in `370795bb3` (`feat(i18n): author common owner long

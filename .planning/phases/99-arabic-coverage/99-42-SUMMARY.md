@@ -1,3 +1,14 @@
+---
+status: complete
+completion_evidence: RULING-P99-306; journal task-done ABSENT, settled by oracle instead
+oracle_tally_at_baseRef: 3 of 5 pass
+oracle_3_verdict: drift proved - PASS at e744e09ad (its own tree), FAIL at f1e2d9162 (blind.union 963/305 vs required 959/303, +4 sites/+2 files across 228 commits)
+oracle_4_verdict: RETIRED as defective - prettier escapes prose and spares code spans, the hook re-escapes every commit, and the asserted line lives in another task's artifact
+open_finding_1: zero task-done and zero merge across 56 journals - drift explains a failing count and explains NOTHING about a missing completion event. UNCLOSED.
+open_finding_2: e744e09ad is on no branch and is not an ancestor of baseRef - the commit carrying this work into the mainline is UNIDENTIFIED. UNCLOSED.
+stamp_does_not_close: this stamp records what it rests on; it does not close either finding above
+---
+
 # P99-42 summary
 
 The binding-census proof instrument now implements first-defined lookup per locale over the resource graph wired by `frontend/src/i18n/index.ts`. Static namespace arrays retain order. For en and ar independently, the first namespace whose real JSON bundle defines the complete key path wins; a scalar or object stops lookup, and object definitions are recorded as object returns. Divergent locale outcomes are emitted with both locale resolutions rather than collapsed.

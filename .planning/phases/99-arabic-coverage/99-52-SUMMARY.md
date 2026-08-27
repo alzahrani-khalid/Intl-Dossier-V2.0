@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # P99-52 Summary — generated, matrix-bounded dynamic-key corpus
 
 ## Result

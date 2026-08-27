@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # 99-43 — the instrument cutover: colon form, banner, real bundles, ledger retargets
 
 **Task:** P99-43 (wave 7, part C — LAST — of the RULING-P99-163 split)

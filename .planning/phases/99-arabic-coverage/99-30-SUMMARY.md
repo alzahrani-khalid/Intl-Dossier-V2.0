@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # P99-30 Summary — AR-04a gatekeeper strict proof
 
 ## Outcome

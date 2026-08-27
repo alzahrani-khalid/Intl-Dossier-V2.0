@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # Phase 99-20: AR-02 formatter and raw-site census
 
 Status: **READY FOR THE GATE-OWNED RENDERED ORACLE RERUN.** This retry did not rerun Playwright or

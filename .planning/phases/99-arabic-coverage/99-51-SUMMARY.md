@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # P99-51 Summary — satisfiable dynamic-key proof instrument
 
 ## Result

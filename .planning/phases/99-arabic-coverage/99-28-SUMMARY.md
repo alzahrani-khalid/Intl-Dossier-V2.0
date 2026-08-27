@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # P99-28 Summary — dossier-object sense split, slice B
 
 ## Outcome

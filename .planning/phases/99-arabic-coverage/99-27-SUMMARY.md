@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # P99-27 Summary — glossary classifier repair and dossier-A handoff
 
 ## Outcome

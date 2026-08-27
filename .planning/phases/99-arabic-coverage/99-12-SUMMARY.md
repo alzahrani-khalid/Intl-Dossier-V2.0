@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # 99-12 — the tasks/queues/positions lane: AUTHORING ONLY (RULING-P99-163 part A)
 
 **Task:** P99-12, wave 3. **Worktree HEAD at start:** `47cdc0e31`.

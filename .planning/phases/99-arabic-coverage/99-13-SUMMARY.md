@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # Phase 99 Plan 13 — tasks/queues/positions banner closure
 
 **Status:** complete at implementation tip `d866538a3`.

@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # Phase 99-18: nav unmask and 404 repoint proof
 
 Status: complete. The dependency merge already carried the item-label unmask, flattened-root 404

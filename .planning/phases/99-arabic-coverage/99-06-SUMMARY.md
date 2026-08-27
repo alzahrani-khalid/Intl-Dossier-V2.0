@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # Phase 99 Plan 06 — drilled glossary census
 
 Status: complete. Evidence was re-derived against unfixed tree `061fdec51`; no source or i18n

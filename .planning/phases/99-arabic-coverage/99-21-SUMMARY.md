@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # Phase 99-21: AR-02 rendered dates proof
 
 Status: **GREEN.** The rendered oracle collects exactly eight tests from one spec and passes all

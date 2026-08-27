@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # P99-23 — ruled nav-title tie-breaks and queue collision
 
 ## Outcome

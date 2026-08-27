@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 **RULING CLOSURE — RULING-P99-48. No worker ran for this record. This file exists so the compiler's sibling-summary pre-mark records the task done; the evidence it points to is journal- and git-recorded, not produced here.**
 
 # Phase 99 Plan 03 — leakage rendered-red record

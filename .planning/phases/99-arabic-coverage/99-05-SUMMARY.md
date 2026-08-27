@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # Phase 99 Plan 05 — nav-title and glossary instruments
 
 Status: complete. Instrument commit: `5da42e5e3`.

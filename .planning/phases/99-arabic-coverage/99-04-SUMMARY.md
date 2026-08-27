@@ -1,3 +1,7 @@
+---
+status: complete
+---
+
 # Phase 99 Plan 04 — strict static instruments
 
 Status: complete. Measured at `654215443`; only allowlisted paths changed.
