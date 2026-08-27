@@ -1,0 +1,14 @@
+{
+  "type": {
+    "country": "x",
+    "organization": "x",
+    "person": "x",
+    "forum": "x",
+    "topic": "x",
+    "working_group": "x",
+    "engagement": "x",
+    "elected_official": "x",
+    "rogue": "x",
+    "unknown": "x"
+  }
+}

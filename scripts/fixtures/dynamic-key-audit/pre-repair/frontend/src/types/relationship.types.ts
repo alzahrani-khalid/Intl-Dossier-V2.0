@@ -1,0 +1,1 @@
+export type DossierRelationshipType = 'member_of' | 'participates_in' | 'cooperates_with' | 'bilateral_relation' | 'partnership' | 'parent_of' | 'subsidiary_of' | 'related_to' | 'represents' | 'hosted_by' | 'sponsored_by' | 'involves' | 'discusses' | 'participant_in' | 'observer_of' | 'affiliate_of' | 'successor_of' | 'predecessor_of'

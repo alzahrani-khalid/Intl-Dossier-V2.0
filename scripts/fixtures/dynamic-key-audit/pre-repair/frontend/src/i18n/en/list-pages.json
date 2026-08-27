@@ -1,0 +1,9 @@
+{
+  "sensitivity": {
+    "public": "x",
+    "internal": "x",
+    "restricted": "x",
+    "confidential": "x",
+    "unknown": "x"
+  }
+}
