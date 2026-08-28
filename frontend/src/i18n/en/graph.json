@@ -82,9 +82,11 @@
   "type": {
     "country": "Country",
     "organization": "Organization",
+    "individual": "Individual",
     "forum": "Forum",
     "person": "Person",
     "engagement": "Engagement",
+    "mou": "MOU",
     "working_group": "Working Group",
     "topic": "Topic",
     "elected_official": "Elected Official",
