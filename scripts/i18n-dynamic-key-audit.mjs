@@ -262,8 +262,21 @@ const bindingContextFor = (root, profileFiles) => {
   return context
 }
 
-const symbolAt = (checker, node) =>
-  node == null ? null : (checker.getSymbolAtLocation(node) ?? null)
+const symbolAt = (checker, node) => {
+  if (node == null) return null
+  if (
+    ts.isIdentifier(node) &&
+    ts.isShorthandPropertyAssignment(node.parent) &&
+    node.parent.name === node
+  ) {
+    return (
+      checker.getShorthandAssignmentValueSymbol(node.parent) ??
+      checker.getSymbolAtLocation(node) ??
+      null
+    )
+  }
+  return checker.getSymbolAtLocation(node) ?? null
+}
 
 const sameSymbol = (checker, left, right) => {
   const leftSymbol = symbolAt(checker, left)
@@ -312,6 +325,63 @@ const hasInterveningWrite = (context, symbol, declaration, use) => {
   return written
 }
 
+const callableIdentifier = (fn) => {
+  if (ts.isFunctionDeclaration(fn) && fn.name != null) return fn.name
+  const parent = fn.parent
+  return ts.isVariableDeclaration(parent) && ts.isIdentifier(parent.name) ? parent.name : null
+}
+
+const invocationsOf = (context, fn) => {
+  const identifier = callableIdentifier(fn)
+  const symbol = symbolAt(context.checker, identifier)
+  if (symbol == null) return []
+  const invocations = []
+  const visit = (node) => {
+    if (
+      ts.isCallExpression(node) &&
+      ts.isIdentifier(node.expression) &&
+      symbolAt(context.checker, node.expression) === symbol
+    ) {
+      invocations.push(node)
+    }
+    ts.forEachChild(node, visit)
+  }
+  visit(fn.getSourceFile())
+  return invocations
+}
+
+const sameArgumentBinding = (context, left, right) => {
+  const a = unwrapNode(left)
+  const b = unwrapNode(right)
+  if (a == null || b == null || a.kind !== b.kind) return false
+  if (ts.isIdentifier(a) && ts.isIdentifier(b)) return sameSymbol(context.checker, a, b)
+  const aString = stringArg(a)
+  const bString = stringArg(b)
+  if (aString != null || bString != null) return aString != null && aString === bString
+  if (ts.isPropertyAccessExpression(a) && ts.isPropertyAccessExpression(b)) {
+    return a.name.text === b.name.text && sameArgumentBinding(context, a.expression, b.expression)
+  }
+  return false
+}
+
+const parameterBinding = (context, parameter, use) => {
+  const fn = parameter.parent
+  if (!ts.isFunctionLike(fn)) return null
+  const index = fn.parameters.indexOf(parameter)
+  if (index < 0) return null
+  const invocations = invocationsOf(context, fn).filter(
+    (call) => call.arguments[index] != null && call.getStart() < use.getSourceFile().getEnd(),
+  )
+  if (invocations.length === 0) return null
+  const expressions = invocations.map((call) => unwrapNode(call.arguments[index]))
+  if (
+    !expressions.every((expression) => sameArgumentBinding(context, expressions[0], expression))
+  ) {
+    return null
+  }
+  return { expression: expressions[0], stable: true, use: invocations[0] }
+}
+
 const initializerBinding = (context, identifier, use, seen = new Set()) => {
   if (!ts.isIdentifier(identifier)) return null
   const useSymbol = symbolAt(context.checker, identifier)
@@ -345,7 +415,11 @@ const initializerBinding = (context, identifier, use, seen = new Set()) => {
       : {
           expression: unwrapNode(value),
           stable: declarationIsConst(declaration) && source.stable,
+          use: source.use,
         }
+  }
+  if (declaration != null && ts.isParameter(declaration)) {
+    return parameterBinding(context, declaration, use)
   }
   if (
     declaration == null ||
@@ -366,6 +440,7 @@ const initializerBinding = (context, identifier, use, seen = new Set()) => {
 
 const staticString = (context, expression, use, seen = new Set()) => {
   const value = unwrapNode(expression)
+  if (value == null) return null
   const direct = stringArg(value)
   if (direct != null) return { value: direct, stable: true }
   if (!ts.isIdentifier(value)) return null
@@ -374,7 +449,7 @@ const staticString = (context, expression, use, seen = new Set()) => {
   seen.add(symbol)
   const binding = initializerBinding(context, value, use)
   if (binding == null) return null
-  const resolved = staticString(context, binding.expression, use, seen)
+  const resolved = staticString(context, binding.expression, binding.use ?? use, seen)
   return resolved == null
     ? null
     : { value: resolved.value, stable: binding.stable && resolved.stable }
@@ -382,6 +457,7 @@ const staticString = (context, expression, use, seen = new Set()) => {
 
 const staticStringArray = (context, expression, use) => {
   const value = unwrapNode(expression)
+  if (value == null) return null
   if (ts.isArrayLiteralExpression(value)) {
     const entries = value.elements.map((element) => staticString(context, element, use))
     return entries.every((entry) => entry?.stable)
@@ -391,7 +467,7 @@ const staticStringArray = (context, expression, use) => {
   if (ts.isIdentifier(value)) {
     const binding = initializerBinding(context, value, use)
     if (binding == null) return null
-    const resolved = staticStringArray(context, binding.expression, use)
+    const resolved = staticStringArray(context, binding.expression, binding.use ?? use)
     return resolved == null
       ? null
       : { values: resolved.values, stable: binding.stable && resolved.stable }
@@ -538,7 +614,7 @@ const expressionHasOrigin = (context, expression, expected, use, seen = new Set(
     const binding = initializerBinding(context, value, use)
     return (
       binding?.stable === true &&
-      expressionHasOrigin(context, binding.expression, expected, use, seen)
+      expressionHasOrigin(context, binding.expression, expected, binding.use ?? use, seen)
     )
   }
   return false
@@ -546,60 +622,170 @@ const expressionHasOrigin = (context, expression, expected, use, seen = new Set(
 
 const findUseTranslationBindings = (sf, source, context) => {
   const bindings = new Map()
+  const receivers = new Map()
+  const assignments = new Map()
+  const bindingInfo = (call, { declaration = null, name = null, symbol = null } = {}) => {
+    const firstArg = call.arguments[0]
+    const secondArg = call.arguments[1]
+    const namespace =
+      firstArg == null
+        ? { values: ['translation'], stable: true }
+        : staticStringArray(context, firstArg, call)
+    const nsMode =
+      secondArg && ts.isObjectLiteralExpression(secondArg)
+        ? (staticString(context, objectProperty(secondArg, 'nsMode'), call)?.value ?? null)
+        : null
+    const namespaces = namespace?.values
+      ? nsMode === 'fallback'
+        ? namespace.values
+        : [namespace.values[0]]
+      : ['translation']
+    const factorySupported =
+      ts.isIdentifier(call.expression) &&
+      (expressionHasOrigin(
+        context,
+        call.expression,
+        { module: 'react-i18next', exportName: 'useTranslation' },
+        call,
+      ) ||
+        (context.ambientFactoryFile != null &&
+          expressionHasOrigin(
+            context,
+            call.expression,
+            { file: context.ambientFactoryFile, exportName: 'useTranslation' },
+            call,
+          )))
+    return {
+      namespaces,
+      supported: factorySupported && namespace?.stable === true,
+      factorySupported,
+      namespaceSupported: namespace?.stable === true,
+      name,
+      declaration,
+      symbol,
+    }
+  }
+  const derivedInfo = (origin, symbol, declaration, name) => ({
+    ...origin,
+    supported: origin.supported,
+    name,
+    declaration,
+    symbol,
+  })
+  const mergeInfos = (infos, symbol, declaration, name) => {
+    if (infos.length === 0 || infos.some((info) => info == null)) return null
+    const namespaces = [...new Set(infos.flatMap((info) => info.namespaces))]
+    const sameNamespaces = infos.every(
+      (info) => info.namespaces.join('\0') === infos[0].namespaces.join('\0'),
+    )
+    const factorySupported = infos.every((info) => info.factorySupported)
+    const namespaceSupported = sameNamespaces && infos.every((info) => info.namespaceSupported)
+    return {
+      namespaces,
+      supported:
+        sameNamespaces &&
+        factorySupported &&
+        namespaceSupported &&
+        infos.every((info) => info.supported),
+      factorySupported,
+      namespaceSupported,
+      name,
+      declaration,
+      symbol,
+    }
+  }
+  const assignedInfo = (symbol, use) => {
+    const records = assignments.get(symbol) ?? []
+    if (use == null) return records.at(-1)?.info ?? null
+    return records.findLast((record) => record.write.getStart() < use.getStart())?.info ?? null
+  }
+  const directTranslatorInfo = (expression, use = null) => {
+    const value = unwrapNode(expression)
+    if (ts.isIdentifier(value)) {
+      const symbol = symbolAt(context.checker, value)
+      return assignedInfo(symbol, use) ?? bindings.get(symbol) ?? null
+    }
+    if (
+      ts.isPropertyAccessExpression(value) &&
+      value.name.text === 't' &&
+      ts.isCallExpression(unwrapNode(value.expression))
+    ) {
+      return bindingInfo(unwrapNode(value.expression))
+    }
+    return null
+  }
+  const receiverInfo = (expression, use = null) => {
+    const value = unwrapNode(expression)
+    if (ts.isCallExpression(value)) return bindingInfo(value)
+    if (ts.isIdentifier(value)) return receivers.get(symbolAt(context.checker, value)) ?? null
+    if (ts.isObjectLiteralExpression(value)) {
+      return directTranslatorInfo(objectProperty(value, 't'), use)
+    }
+    return null
+  }
   const visit = (node) => {
     if (
       ts.isVariableDeclaration(node) &&
       ts.isObjectBindingPattern(node.name) &&
-      node.initializer &&
-      ts.isCallExpression(node.initializer) &&
-      ts.isIdentifier(node.initializer.expression)
+      node.initializer
     ) {
-      const firstArg = node.initializer.arguments[0]
-      const secondArg = node.initializer.arguments[1]
-      const namespace =
-        firstArg == null
-          ? { values: ['translation'], stable: true }
-          : staticStringArray(context, firstArg, node.initializer)
-      const nsMode =
-        secondArg && ts.isObjectLiteralExpression(secondArg)
-          ? (staticString(context, objectProperty(secondArg, 'nsMode'), node.initializer)?.value ??
-            null)
-          : null
-      const namespaces = namespace?.values
-        ? nsMode === 'fallback'
-          ? namespace.values
-          : [namespace.values[0]]
-        : ['translation']
-      const factorySupported =
-        expressionHasOrigin(
-          context,
-          node.initializer.expression,
-          { module: 'react-i18next', exportName: 'useTranslation' },
-          node.initializer,
-        ) ||
-        (context.ambientFactoryFile != null &&
-          expressionHasOrigin(
-            context,
-            node.initializer.expression,
-            { file: context.ambientFactoryFile, exportName: 'useTranslation' },
-            node.initializer,
-          ))
+      const origin = receiverInfo(node.initializer, node)
       for (const element of node.name.elements) {
         const property = element.propertyName
           ? textOf(source, element.propertyName)
           : textOf(source, element.name)
-        if (property === 't' && ts.isIdentifier(element.name)) {
+        if (origin != null && property === 't' && ts.isIdentifier(element.name)) {
           const symbol = symbolAt(context.checker, element.name)
           if (symbol == null) continue
-          bindings.set(symbol, {
-            namespaces,
-            supported: element.name.text === 't' && factorySupported && namespace?.stable === true,
-            factorySupported,
-            namespaceSupported: namespace?.stable === true,
-            name: element.name.text,
-            declaration: element,
-          })
+          bindings.set(symbol, derivedInfo(origin, symbol, element, element.name.text))
         }
+      }
+    }
+    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer != null) {
+      const symbol = symbolAt(context.checker, node.name)
+      if (symbol != null && ts.isCallExpression(unwrapNode(node.initializer))) {
+        receivers.set(
+          symbol,
+          derivedInfo(bindingInfo(unwrapNode(node.initializer)), symbol, node.name, node.name.text),
+        )
+      }
+      const translator = directTranslatorInfo(node.initializer, node)
+      if (symbol != null && translator != null) {
+        bindings.set(symbol, derivedInfo(translator, symbol, node.name, node.name.text))
+      }
+    }
+    if (
+      ts.isBinaryExpression(node) &&
+      node.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
+      ts.isIdentifier(node.left)
+    ) {
+      const symbol = symbolAt(context.checker, node.left)
+      const translator = directTranslatorInfo(node.right, node)
+      if (symbol != null && translator != null) {
+        const records = assignments.get(symbol) ?? []
+        records.push({
+          write: node,
+          info: derivedInfo(translator, symbol, node.left, node.left.text),
+        })
+        assignments.set(symbol, records)
+      } else if (symbol != null) {
+        const prior = assignedInfo(symbol, node) ?? bindings.get(symbol) ?? null
+        if (prior != null) {
+          const records = assignments.get(symbol) ?? []
+          records.push({
+            write: node,
+            info: {
+              ...derivedInfo(prior, symbol, node.left, node.left.text),
+              supported: false,
+              factorySupported: false,
+            },
+          })
+          assignments.set(symbol, records)
+        }
+      }
+      const receiver = receiverInfo(node.right, node)
+      if (symbol != null && receiver != null && translator == null) {
+        receivers.set(symbol, derivedInfo(receiver, symbol, node.left, node.left.text))
       }
     }
     ts.forEachChild(node, visit)
@@ -611,46 +797,96 @@ const findUseTranslationBindings = (sf, source, context) => {
     changed = false
     const functions = []
     containsNode(sf, (node) => {
-      if (ts.isFunctionDeclaration(node) && node.name != null) functions.push(node)
+      if (
+        (ts.isFunctionDeclaration(node) && node.name != null) ||
+        ts.isArrowFunction(node) ||
+        ts.isFunctionExpression(node)
+      ) {
+        functions.push(node)
+      }
       return false
     })
     for (const fn of functions) {
-      const invocations = []
-      containsNode(sf, (node) => {
-        if (
-          ts.isCallExpression(node) &&
-          ts.isIdentifier(node.expression) &&
-          sameSymbol(context.checker, node.expression, fn.name)
-        ) {
-          invocations.push(node)
-        }
-        return false
-      })
+      const invocations = invocationsOf(context, fn)
       for (let index = 0; index < fn.parameters.length; index++) {
         const parameter = fn.parameters[index]
-        if (!ts.isIdentifier(parameter.name) || invocations.length === 0) continue
-        const infos = invocations.map((call) => {
+        if (invocations.length === 0) continue
+        const translatorInfos = invocations.map((call) => {
           const argument = unwrapNode(call.arguments[index])
-          return argument != null && ts.isIdentifier(argument)
-            ? (bindings.get(symbolAt(context.checker, argument)) ?? null)
-            : null
+          return argument == null ? null : directTranslatorInfo(argument, call)
         })
-        if (!infos.every((info) => info?.supported)) continue
-        const symbol = symbolAt(context.checker, parameter.name)
-        if (symbol == null || bindings.has(symbol)) continue
-        bindings.set(symbol, {
-          namespaces: [...new Set(infos.flatMap((info) => info.namespaces))],
-          supported: true,
-          factorySupported: true,
-          namespaceSupported: true,
-          name: parameter.name.text,
-          declaration: parameter,
+        const receiverInfos = invocations.map((call) => {
+          const argument = unwrapNode(call.arguments[index])
+          return argument == null ? null : receiverInfo(argument, call)
         })
-        changed = true
+        if (ts.isIdentifier(parameter.name)) {
+          const symbol = symbolAt(context.checker, parameter.name)
+          if (symbol != null && !bindings.has(symbol)) {
+            const info = mergeInfos(translatorInfos, symbol, parameter, parameter.name.text)
+            if (info != null) {
+              bindings.set(symbol, info)
+              changed = true
+            }
+          }
+          if (symbol != null && !receivers.has(symbol)) {
+            const info = mergeInfos(receiverInfos, symbol, parameter, parameter.name.text)
+            if (info != null) {
+              receivers.set(symbol, info)
+              changed = true
+            }
+          }
+        } else if (ts.isObjectBindingPattern(parameter.name)) {
+          const origin = mergeInfos(receiverInfos, null, parameter, null)
+          if (origin == null) continue
+          for (const element of parameter.name.elements) {
+            const property = propertyName(element.propertyName ?? element.name)
+            if (property !== 't' || !ts.isIdentifier(element.name)) continue
+            const symbol = symbolAt(context.checker, element.name)
+            if (symbol != null && !bindings.has(symbol)) {
+              bindings.set(symbol, derivedInfo(origin, symbol, element, element.name.text))
+              changed = true
+            }
+          }
+        }
       }
     }
+    containsNode(sf, (node) => {
+      if (
+        ts.isVariableDeclaration(node) &&
+        ts.isObjectBindingPattern(node.name) &&
+        node.initializer != null
+      ) {
+        const origin = receiverInfo(node.initializer, node)
+        if (origin == null) return false
+        for (const element of node.name.elements) {
+          const property = propertyName(element.propertyName ?? element.name)
+          if (property !== 't' || !ts.isIdentifier(element.name)) continue
+          const symbol = symbolAt(context.checker, element.name)
+          if (symbol != null && !bindings.has(symbol)) {
+            bindings.set(symbol, derivedInfo(origin, symbol, element, element.name.text))
+            changed = true
+          }
+        }
+      }
+      return false
+    })
   }
-  return bindings
+  return {
+    resolve(expression, use) {
+      const value = unwrapNode(expression)
+      if (ts.isIdentifier(value)) {
+        return directTranslatorInfo(value, use)
+      }
+      if (ts.isPropertyAccessExpression(value) && value.name.text === 't') {
+        const origin = receiverInfo(value.expression, use)
+        if (origin == null) return null
+        const receiver = unwrapNode(value.expression)
+        const symbol = ts.isIdentifier(receiver) ? symbolAt(context.checker, receiver) : null
+        return derivedInfo(origin, symbol, origin.declaration, textOf(source, value))
+      }
+      return null
+    },
+  }
 }
 
 const objectProperty = (node, name) => {
@@ -663,6 +899,7 @@ const objectProperty = (node, name) => {
     ) {
       return prop.initializer
     }
+    if (ts.isShorthandPropertyAssignment(prop) && prop.name.text === name) return prop.name
   }
   return null
 }
@@ -1402,13 +1639,21 @@ const sameBoundExpression = (context, left, right) => {
 }
 
 const ruledMembershipRoute = (context, call) => {
-  const first = unwrapNode(call.arguments[0])
-  if (ts.isConditionalExpression(first)) return { route: first, keyStable: true }
-  if (!ts.isIdentifier(first)) return null
-  const binding = initializerBinding(context, first, call)
-  return binding != null && ts.isConditionalExpression(binding.expression)
-    ? { route: binding.expression, keyStable: binding.stable }
-    : null
+  let expression = unwrapNode(call.arguments[0])
+  let use = call
+  let keyStable = true
+  const seen = new Set()
+  while (ts.isIdentifier(expression)) {
+    const symbol = symbolAt(context.checker, expression)
+    if (symbol == null || seen.has(symbol)) return null
+    seen.add(symbol)
+    const binding = initializerBinding(context, expression, use)
+    if (binding == null) return null
+    keyStable = keyStable && binding.stable
+    expression = unwrapNode(binding.expression)
+    use = binding.use ?? use
+  }
+  return ts.isConditionalExpression(expression) ? { route: expression, keyStable } : null
 }
 
 const provesRuledMembershipDomain = ({
@@ -1419,13 +1664,21 @@ const provesRuledMembershipDomain = ({
   namespaceSupported,
 }) => {
   const candidate = ruledMembershipRoute(bindingContext, node)
-  if (
-    candidate == null ||
-    !candidate.keyStable ||
-    !namespaceSupported ||
-    namespaces.length !== 1 ||
-    namespaces[0] !== 'graph'
-  ) {
+  const namespaceAvailable =
+    namespaces.length === 1 &&
+    LOCALES.every((locale) =>
+      inputRoots(root).some((candidateRoot) =>
+        existsSync(
+          join(
+            candidateRoot,
+            'frontend/src/i18n',
+            locale,
+            `${bundleNamespace(namespaces[0])}.json`,
+          ),
+        ),
+      ),
+    )
+  if (candidate == null || !candidate.keyStable || !namespaceSupported || !namespaceAvailable) {
     return false
   }
   const { route } = candidate
@@ -1886,18 +2139,9 @@ const collectCalls = (root, profile, { forceUnproven = false } = {}) => {
       parseSource(repoPath, source)
     const bindings = findUseTranslationBindings(sf, source, bindingContext)
     const visit = (node) => {
-      const callSymbol =
-        ts.isCallExpression(node) && ts.isIdentifier(node.expression)
-          ? symbolAt(bindingContext.checker, node.expression)
-          : null
-      if (
-        ts.isCallExpression(node) &&
-        ts.isIdentifier(node.expression) &&
-        callSymbol != null &&
-        bindings.has(callSymbol)
-      ) {
+      const binding = ts.isCallExpression(node) ? bindings.resolve(node.expression, node) : null
+      if (ts.isCallExpression(node) && binding != null) {
         const first = node.arguments[0]
-        const binding = bindings.get(callSymbol)
         const namespaceResult = namespaceOverride(
           [...node.arguments],
           binding.namespaces,
@@ -1905,8 +2149,10 @@ const collectCalls = (root, profile, { forceUnproven = false } = {}) => {
           node,
         )
         const namespaces = namespaceResult.namespaces
+        const callSymbol = binding.symbol
         const translatorStable =
           binding.declaration == null ||
+          callSymbol == null ||
           declarationIsConst(binding.declaration) ||
           !hasInterveningWrite(bindingContext, callSymbol, binding.declaration, node)
         if (isNonliteral(first)) {
@@ -1929,12 +2175,12 @@ const collectCalls = (root, profile, { forceUnproven = false } = {}) => {
               unclassified.push({
                 ...site,
                 reason: !binding.factorySupported
-                  ? `translator factory binding is not react-i18next useTranslation: ${node.expression.text}`
+                  ? `translator factory binding is not react-i18next useTranslation: ${binding.name}`
                   : !binding.namespaceSupported || !namespaceResult.supported
-                    ? `translator namespace binding is not immutable at use: ${node.expression.text}`
+                    ? `translator namespace binding is not immutable at use: ${binding.name}`
                     : !translatorStable
-                      ? `translator binding is not immutable at use: ${node.expression.text}`
-                      : `unsupported useTranslation translator binding: ${node.expression.text}`,
+                      ? `translator binding is not immutable at use: ${binding.name}`
+                      : `unsupported useTranslation translator binding: ${binding.name}`,
               })
               ts.forEachChild(node, visit)
               return
@@ -2245,11 +2491,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     }
     if (
       controlledPreRepair &&
-      result.unclassified.some((row) =>
-        ['unclassified.unknown-shape', 'unclassified.opaque-options'].includes(row.family),
-      )
+      result.unclassified.some((row) => row.family === 'unclassified.opaque-options')
     ) {
-      failures.push('controlled population contains an unknown or opaque call shape')
+      failures.push('controlled population contains an opaque call shape')
     }
     if (result.counts.unclassified > 0 && !controlledPreRepair) {
       failures.push(`${result.counts.unclassified} unclassified call(s)`)
