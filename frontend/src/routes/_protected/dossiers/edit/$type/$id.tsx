@@ -41,20 +41,20 @@ function EditDossierPage(): ReactElement {
         className="inline-flex min-h-11 items-center text-sm text-[var(--ink-mute)] transition-colors hover:text-[var(--ink)]"
       >
         <ChevronLeft className={`me-1 h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
-        {t('edit.back', { defaultValue: 'Back to dossier' })}
+        {t('edit.back')}
       </Link>
 
       <h1 className="text-lg font-semibold text-start">
         {isLoading ? (
           <Skeleton className="inline-block h-6 w-64" />
         ) : (
-          t('edit.title', { name: displayName, defaultValue: 'Edit dossier' })
+          t('edit.title', { name: displayName })
         )}
       </h1>
 
       {isError || (!isLoading && dossier == null) ? (
         <p role="alert" className="text-sm text-[var(--danger)]">
-          {t('edit.loadError', { defaultValue: 'Could not load this dossier for editing.' })}
+          {t('edit.loadError')}
         </p>
       ) : isLoading || dossier == null ? (
         <div className="mx-auto w-full max-w-2xl space-y-3 px-4 sm:px-6 lg:px-8">

@@ -37,7 +37,7 @@ function CreateElectedOfficialPage(): ReactElement {
         className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground min-h-11"
       >
         <ChevronLeft className="h-4 w-4 me-1" />
-        {t('elected_official.back_to_list', 'Back to Elected Officials')}
+        {t('elected_official.back_to_list')}
       </Link>
       <h1 className="text-lg font-semibold">{t('elected_official.page_title')}</h1>
       <CreateWizardShell wizard={wizard}>

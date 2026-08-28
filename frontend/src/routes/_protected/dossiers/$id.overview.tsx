@@ -117,7 +117,7 @@ function DossierOverviewRoute() {
 
   // Validate dossier ID
   if (!id) {
-    return <ErrorState message={t('error.invalidId', { defaultValue: 'Invalid dossier ID' })} />
+    return <ErrorState message={t('error.invalidId')} />
   }
 
   return (

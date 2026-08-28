@@ -148,51 +148,40 @@ export function getErrorMessage(error: AIError, t: TFunction): string {
   const messages: Record<AIErrorCode, string> = {
     RATE_LIMIT_EXCEEDED: t(
       'ai.errors.rateLimitExceeded',
-      'Too many requests. Please wait a moment and try again.',
     ),
     SPEND_CAP_REACHED: t(
       'ai.errors.spendCapReached',
-      'AI usage limit reached. Please contact your administrator.',
     ),
     PROVIDER_UNAVAILABLE: t(
       'ai.errors.providerUnavailable',
-      'AI service is temporarily unavailable. Please try again later.',
     ),
     MODEL_UNAVAILABLE: t(
       'ai.errors.modelUnavailable',
-      'The AI model is not available. Please try a different request.',
     ),
     GENERATION_FAILED: t(
       'ai.errors.generationFailed',
-      'Failed to generate content. Please try again.',
     ),
     CONTEXT_TOO_LONG: t(
       'ai.errors.contextTooLong',
-      'The input is too long. Please shorten your request.',
     ),
     CONTENT_FILTERED: t(
       'ai.errors.contentFiltered',
-      'The request was filtered due to content policy. Please revise your input.',
     ),
-    TIMEOUT: t('ai.errors.timeout', 'The request timed out. Please try again.'),
+    TIMEOUT: t('ai.errors.timeout'),
     UNAUTHORIZED: t(
       'ai.errors.unauthorized',
-      'You are not authorized to use this feature. Please log in again.',
     ),
     FEATURE_DISABLED: t(
       'ai.errors.featureDisabled',
-      'This AI feature is currently disabled for your organization.',
     ),
     NETWORK_ERROR: t(
       'ai.errors.networkError',
-      'Network error. Please check your connection and try again.',
     ),
-    CANCELLED: t('ai.errors.cancelled', 'Generation was cancelled.'),
+    CANCELLED: t('ai.errors.cancelled'),
     BRIEF_FETCH_FAILED: t(
       'ai.errors.briefFetchFailed',
-      'Brief was generated but could not be retrieved. Please try again.',
     ),
-    UNKNOWN_ERROR: t('ai.errors.unknown', 'An unexpected error occurred. Please try again.'),
+    UNKNOWN_ERROR: t('ai.errors.unknown'),
   }
 
   return messages[error.code as AIErrorCode] || messages.UNKNOWN_ERROR
@@ -204,23 +193,23 @@ export function getErrorMessage(error: AIError, t: TFunction): string {
 export function getErrorAction(error: AIError, t: TFunction): string | null {
   if (error.retryable) {
     if (error.retryAfter) {
-      return t('ai.errors.retryAfter', 'Try again in {{seconds}} seconds', {
+      return t('ai.errors.retryAfter', {
         seconds: error.retryAfter,
       })
     }
-    return t('ai.errors.retryNow', 'Click to retry')
+    return t('ai.errors.retryNow')
   }
 
   if (error.code === 'SPEND_CAP_REACHED') {
-    return t('ai.errors.contactAdmin', 'Contact your administrator to increase the limit')
+    return t('ai.errors.contactAdmin')
   }
 
   if (error.code === 'UNAUTHORIZED') {
-    return t('ai.errors.loginAgain', 'Please log in again')
+    return t('ai.errors.loginAgain')
   }
 
   if (error.code === 'CONTEXT_TOO_LONG') {
-    return t('ai.errors.shortenInput', 'Try with a shorter input')
+    return t('ai.errors.shortenInput')
   }
 
   return null
@@ -241,7 +230,7 @@ export function formatAIError(
   const parsedError = parseAIError(error)
 
   return {
-    title: t('ai.errors.title', 'AI Error'),
+    title: t('ai.errors.title'),
     message: getErrorMessage(parsedError, t),
     action: getErrorAction(parsedError, t),
     retryable: parsedError.retryable,

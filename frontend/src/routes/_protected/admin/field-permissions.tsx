@@ -388,7 +388,7 @@ function FieldPermissionsPage() {
                     <div className="relative">
                       <Search className="absolute start-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
-                        placeholder={t('filters.search', 'Search...')}
+                        placeholder={t('filters.search')}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="ps-10 w-full sm:w-64"
@@ -893,7 +893,7 @@ function PermissionDialog({
               >
                 <SelectTrigger>
                   <SelectValue
-                    placeholder={t('permissions.selectEntityType', 'Select entity type')}
+                    placeholder={t('permissions.selectEntityType')}
                   />
                 </SelectTrigger>
                 <SelectContent>
@@ -974,7 +974,6 @@ function PermissionDialog({
               <Textarea
                 placeholder={t(
                   'permissions.descriptionPlaceholder',
-                  'Enter description in English',
                 )}
                 value={formData.description_en || ''}
                 onChange={(e) => setFormData({ ...formData, description_en: e.target.value })}
