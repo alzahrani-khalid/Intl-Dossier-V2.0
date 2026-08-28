@@ -179,7 +179,7 @@ export function TaskQuickForm({
       onSuccess?.(data)
     },
     onError: (error: any) => {
-      toast.error(error.message || t('form.taskError', 'Failed to create task'))
+      toast.error(error.message || t('form.taskError'))
     },
   })
 
@@ -219,7 +219,7 @@ export function TaskQuickForm({
         {/* Show badge when dossier is provided from props or context */}
         {selectedDossier && (
           <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
-            <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
+            <span className="text-muted-foreground">{t('form.linkedTo')}:</span>
             <DossierContextBadge
               dossierId={selectedDossier.id}
               dossierType={(selectedDossier.type as any) ?? 'country'}
@@ -236,7 +236,7 @@ export function TaskQuickForm({
         {/* Fallback for dossierId-only case (no full dossier info) */}
         {!selectedDossier && dossierId && (
           <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
-            <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
+            <span className="text-muted-foreground">{t('form.linkedTo')}:</span>
             <Badge variant="outline">{dossierId}</Badge>
           </div>
         )}
@@ -248,14 +248,14 @@ export function TaskQuickForm({
             required
             multiple={false}
             label={t('dossier-context:selector.title')}
-            hint={t('form.dossierHint', 'Select the dossier this task relates to')}
+            hint={t('form.dossierHint')}
             error={dossierError}
           />
         )}
         {/* Show badge for user-selected dossier */}
         {!hasDossierContext && userSelectedDossiers.length > 0 && userSelectedDossiers[0] && (
           <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
-            <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
+            <span className="text-muted-foreground">{t('form.linkedTo')}:</span>
             <DossierContextBadge
               dossierId={userSelectedDossiers[0].id}
               dossierType={(userSelectedDossiers[0].type as DossierType) ?? 'country'}
@@ -276,13 +276,11 @@ export function TaskQuickForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
-                {t('form.taskTitle', 'Task Title')} *
-              </FormLabel>
+              <FormLabel className="text-start block">{t('form.taskTitle')} *</FormLabel>
               <FormControl>
                 <Input
                   {...field}
-                  placeholder={t('form.taskTitlePlaceholder', 'Enter task title')}
+                  placeholder={t('form.taskTitlePlaceholder')}
                   className="min-h-11"
                   autoFocus
                 />
@@ -298,16 +296,11 @@ export function TaskQuickForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
-                {t('form.taskDescription', 'Description')}
-              </FormLabel>
+              <FormLabel className="text-start block">{t('form.taskDescription')}</FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
-                  placeholder={t(
-                    'form.taskDescriptionPlaceholder',
-                    'Enter task details (optional)',
-                  )}
+                  placeholder={t('form.taskDescriptionPlaceholder')}
                   className="min-h-20 resize-none"
                 />
               </FormControl>
@@ -322,12 +315,12 @@ export function TaskQuickForm({
           name="assignee_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">{t('form.assignee', 'Assignee')} *</FormLabel>
+              <FormLabel className="text-start block">{t('form.assignee')} *</FormLabel>
               <FormControl>
                 <UserPicker
                   value={field.value}
                   onChange={(userId) => field.onChange(userId ?? '')}
-                  placeholder={t('form.assigneePlaceholder', 'Select assignee...')}
+                  placeholder={t('form.assigneePlaceholder')}
                   className="min-h-11"
                 />
               </FormControl>
@@ -344,18 +337,18 @@ export function TaskQuickForm({
             name="priority"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-start block">{t('form.priority', 'Priority')}</FormLabel>
+                <FormLabel className="text-start block">{t('form.priority')}</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger className="min-h-11">
-                      <SelectValue placeholder={t('form.selectPriority', 'Select priority')} />
+                      <SelectValue placeholder={t('form.selectPriority')} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="low">{t('priority.low', 'Low')}</SelectItem>
-                    <SelectItem value="medium">{t('priority.medium', 'Medium')}</SelectItem>
-                    <SelectItem value="high">{t('priority.high', 'High')}</SelectItem>
-                    <SelectItem value="urgent">{t('priority.urgent', 'Urgent')}</SelectItem>
+                    <SelectItem value="low">{t('priority.low')}</SelectItem>
+                    <SelectItem value="medium">{t('priority.medium')}</SelectItem>
+                    <SelectItem value="high">{t('priority.high')}</SelectItem>
+                    <SelectItem value="urgent">{t('priority.urgent')}</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -369,9 +362,7 @@ export function TaskQuickForm({
             name="sla_deadline"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel className="text-start">
-                  {t('form.slaDeadline', 'SLA Deadline')}
-                </FormLabel>
+                <FormLabel className="text-start">{t('form.slaDeadline')}</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -386,7 +377,7 @@ export function TaskQuickForm({
                         {field.value ? (
                           formatDayFirstYear(field.value)
                         ) : (
-                          <span>{t('form.selectDate', 'Select date')}</span>
+                          <span>{t('form.selectDate')}</span>
                         )}
                       </Button>
                     </FormControl>
@@ -417,16 +408,16 @@ export function TaskQuickForm({
             disabled={isPending}
             className="min-h-11 w-full sm:w-auto"
           >
-            {t('actions.cancel', 'Cancel')}
+            {t('actions.cancel')}
           </Button>
           <Button type="submit" disabled={isPending} className="min-h-11 w-full sm:flex-1">
             {isPending ? (
               <>
                 <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
-                {t('form.creating', 'Creating...')}
+                {t('form.creating')}
               </>
             ) : (
-              t('form.createTask', 'Create Task')
+              t('form.createTask')
             )}
           </Button>
         </div>

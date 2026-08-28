@@ -34,7 +34,7 @@ export function RoleSwitcher({ role, onChange }: RoleSwitcherProps): React.React
         <Button
           variant="outline"
           className="min-h-11 min-w-11 gap-2"
-          aria-label={t('roles.leadership', 'Role selection')}
+          aria-label={t('roles.leadership')}
           data-testid="role-switcher"
         >
           <span className="text-sm">{t(`roles.${role}`)}</span>

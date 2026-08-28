@@ -168,21 +168,19 @@ export function useRefreshIntelligence(
       }
 
       // Show loading toast
-      const toastId = toast.loading(
-        t('intelligence.refresh.loading', 'Refreshing intelligence data...'),
-      )
+      const toastId = toast.loading(t('intelligence.refresh.loading'))
 
       return { previousData, toastId }
     },
 
-    onSuccess: (data, params, context) => {
+    onSuccess: (_data, params, context) => {
       // Dismiss loading toast
       if (context?.toastId) {
         toast.dismiss(context.toastId)
       }
 
       // Show success toast
-      toast.success(t('intelligence.refresh.success', data.message_en))
+      toast.success(t('intelligence.refresh.success'))
 
       // Add small delay to allow database transaction to fully commit
       // before refetching (prevents race condition with 404 errors)
@@ -222,20 +220,13 @@ export function useRefreshIntelligence(
       // Handle specific error cases
       if (error.status === 409) {
         // Refresh already in progress
-        toast.warning(
-          t('intelligence.refresh.conflict', 'A refresh is already in progress. Please wait.'),
-        )
+        toast.warning(t('intelligence.refresh.conflict'))
       } else if (error.status === 503) {
         // AnythingLLM unavailable
-        toast.error(
-          t(
-            'intelligence.refresh.serviceUnavailable',
-            'Intelligence service is temporarily unavailable. Cached data remains accessible.',
-          ),
-        )
+        toast.error(t('intelligence.refresh.serviceUnavailable'))
       } else {
         // Generic error
-        toast.error(t('intelligence.refresh.error', `Failed to refresh: ${error.message}`))
+        toast.error(t('intelligence.refresh.error'))
       }
     },
 

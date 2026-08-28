@@ -376,7 +376,7 @@ export function useGraphData(
     staleTime: STALE_TIME.NORMAL,
     ...options,
     meta: {
-      errorMessage: t('graph.fetchError', 'Failed to load graph data'),
+      errorMessage: t('graph.fetchError'),
     },
   })
 }

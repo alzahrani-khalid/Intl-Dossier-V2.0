@@ -50,9 +50,9 @@ export function WorkCreationProvider({
   const handleSuccess = useCallback(
     (type: WorkItemType, _item: unknown) => {
       const messages: Record<WorkItemType, string> = {
-        commitment: t('success.commitmentCreated', 'Commitment created successfully'),
-        task: t('success.taskCreated', 'Task created successfully'),
-        intake: t('success.intakeCreated', 'Intake request submitted successfully'),
+        commitment: t('success.commitmentCreated'),
+        task: t('success.taskCreated'),
+        intake: t('success.intakeCreated'),
       }
       toast.success(messages[type])
     },
