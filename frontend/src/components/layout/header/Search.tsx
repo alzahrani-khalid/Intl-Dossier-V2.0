@@ -20,7 +20,7 @@ export function HeaderSearch({ className }: { className?: string }): React.React
         )}
       >
         <SearchIcon className="size-4 shrink-0" />
-        <span className="flex-1 text-start truncate">{t('search.search', 'Search...')}</span>
+        <span className="flex-1 text-start truncate">{t('search.search')}</span>
         <kbd className="pointer-events-none hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
           {isMac ? '\u2318' : 'Ctrl+'}K
         </kbd>
@@ -32,7 +32,7 @@ export function HeaderSearch({ className }: { className?: string }): React.React
         size="icon"
         onClick={openCommandPalette}
         className="lg:hidden min-h-11 min-w-11 size-9"
-        aria-label={t('search.openSearch', 'Open search')}
+        aria-label={t('search.openSearch')}
       >
         <SearchIcon className="size-4" />
       </Button>

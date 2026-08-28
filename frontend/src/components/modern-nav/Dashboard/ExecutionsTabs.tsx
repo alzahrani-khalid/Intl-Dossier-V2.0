@@ -40,7 +40,7 @@ export function ExecutionsTabs({ title, className }: ExecutionsTabsProps) {
     <Card className={cn('overflow-hidden', className)}>
       <CardHeader className="border-b border-content-border pb-0">
         <CardTitle className="text-base font-semibold text-content-text mb-4">
-          {title || t('navigation.executions', 'Executions')}
+          {title || t('navigation.executions')}
         </CardTitle>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -58,7 +58,7 @@ export function ExecutionsTabs({ title, className }: ExecutionsTabsProps) {
                 'pb-3 text-sm font-medium',
               )}
             >
-              {t('navigation.workflows', 'Workflows')}
+              {t('navigation.workflows')}
             </TabsTrigger>
             <TabsTrigger
               value="permissions"
@@ -73,7 +73,7 @@ export function ExecutionsTabs({ title, className }: ExecutionsTabsProps) {
                 'pb-3 text-sm font-medium',
               )}
             >
-              {t('navigation.permissions', 'Permissions')}
+              {t('navigation.permissions')}
             </TabsTrigger>
             <TabsTrigger
               value="members"
@@ -88,7 +88,7 @@ export function ExecutionsTabs({ title, className }: ExecutionsTabsProps) {
                 'pb-3 text-sm font-medium',
               )}
             >
-              {t('navigation.members', 'Members')}
+              {t('navigation.members')}
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -100,7 +100,7 @@ export function ExecutionsTabs({ title, className }: ExecutionsTabsProps) {
           <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-content-text-muted" />
           <Input
             type="search"
-            placeholder={t('common:search.label', 'Search')}
+            placeholder={t('common:search.label')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className={cn(
@@ -116,33 +116,27 @@ export function ExecutionsTabs({ title, className }: ExecutionsTabsProps) {
         <Tabs value={activeTab}>
           <TabsContent value="workflows" className="mt-0">
             <div className="flex flex-col items-center justify-center py-8 text-center">
-              <p className="text-sm text-content-text-muted">
-                {t('executions.noWorkflows', 'No workflows found')}
-              </p>
+              <p className="text-sm text-content-text-muted">{t('executions.noWorkflows')}</p>
               <p className="text-xs text-content-text-muted mt-1">
-                {t('executions.tryDifferentSearch', 'Try a different search term')}
+                {t('executions.tryDifferentSearch')}
               </p>
             </div>
           </TabsContent>
 
           <TabsContent value="permissions" className="mt-0">
             <div className="flex flex-col items-center justify-center py-8 text-center">
-              <p className="text-sm text-content-text-muted">
-                {t('executions.noPermissions', 'No permissions found')}
-              </p>
+              <p className="text-sm text-content-text-muted">{t('executions.noPermissions')}</p>
               <p className="text-xs text-content-text-muted mt-1">
-                {t('executions.tryDifferentSearch', 'Try a different search term')}
+                {t('executions.tryDifferentSearch')}
               </p>
             </div>
           </TabsContent>
 
           <TabsContent value="members" className="mt-0">
             <div className="flex flex-col items-center justify-center py-8 text-center">
-              <p className="text-sm text-content-text-muted">
-                {t('executions.noMembers', 'No members found')}
-              </p>
+              <p className="text-sm text-content-text-muted">{t('executions.noMembers')}</p>
               <p className="text-xs text-content-text-muted mt-1">
-                {t('executions.tryDifferentSearch', 'Try a different search term')}
+                {t('executions.tryDifferentSearch')}
               </p>
             </div>
           </TabsContent>

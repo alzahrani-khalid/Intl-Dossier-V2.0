@@ -60,7 +60,7 @@ export function RefreshButton({
 }: RefreshButtonProps) {
   const { t } = useTranslation('dossier')
   const { isRTL } = useDirection()
-const handleRefreshAll = () => {
+  const handleRefreshAll = () => {
     onRefresh(intelligenceTypes)
   }
 
@@ -77,7 +77,7 @@ const handleRefreshAll = () => {
         variant="outline"
         size="sm"
         className={`min-h-11 min-w-11 gap-2 ${className || ''}`}
-        aria-label={t('intelligence.refreshButtonLabel', 'Refresh intelligence data')}
+        aria-label={t('intelligence.refreshButtonLabel')}
         aria-busy={isLoading}
       >
         <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
@@ -97,7 +97,7 @@ const handleRefreshAll = () => {
         variant="outline"
         size="sm"
         className="min-h-11 gap-2 rounded-e-none border-e-0"
-        aria-label={t('intelligence.refreshAllLabel', 'Refresh all intelligence types')}
+        aria-label={t('intelligence.refreshAllLabel')}
         aria-busy={isLoading}
       >
         <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />

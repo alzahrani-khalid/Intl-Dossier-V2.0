@@ -36,16 +36,6 @@ export type DossierTableProps = {
   visibleColumns?: ReadonlyArray<DossierTableColumn>
 }
 
-const fallbackSensitivityLabel = (level: number, isRTL: boolean): string => {
-  const labels: Record<number, { en: string; ar: string }> = {
-    1: { en: 'Public', ar: 'عام' },
-    2: { en: 'Internal', ar: 'داخلي' },
-    3: { en: 'Restricted', ar: 'مقيّد' },
-    4: { en: 'Confidential', ar: 'سري' },
-  }
-  return labels[level]?.[isRTL ? 'ar' : 'en'] ?? (isRTL ? 'غير معروف' : 'Unknown')
-}
-
 /**
  * Compute the desktop grid template from the visible optional columns. glyph
  * (auto) + name (1fr) are always present; one `auto` track per visible optional
@@ -119,33 +109,17 @@ export function DossierTable({
       {/* Desktop / tablet header (md+) */}
       <div className="dossier-row label hidden md:grid" style={gridStyle}>
         <span aria-hidden="true" />
-        <span>{t('table.name', { defaultValue: isRTL ? 'الاسم' : 'Name' })}</span>
-        {showEngagements ? (
-          <span>
-            {t('table.engagements', { defaultValue: isRTL ? 'المشاركات' : 'Engagements' })}
-          </span>
-        ) : null}
-        {showLastTouch ? (
-          <span>{t('table.lastTouch', { defaultValue: isRTL ? 'آخر تحديث' : 'Last touch' })}</span>
-        ) : null}
-        {showSensitivity ? (
-          <span>
-            {t('table.sensitivity', { defaultValue: isRTL ? 'الحساسية' : 'Sensitivity' })}
-          </span>
-        ) : null}
+        <span>{t('table.name')}</span>
+        {showEngagements ? <span>{t('table.engagements')}</span> : null}
+        {showLastTouch ? <span>{t('table.lastTouch')}</span> : null}
+        {showSensitivity ? <span>{t('table.sensitivity')}</span> : null}
       </div>
 
-      <ul
-        role="list"
-        aria-label={t('table.aria', { defaultValue: isRTL ? 'الدوسيهات' : 'Dossiers' })}
-        className="dossier-row-list"
-      >
+      <ul role="list" aria-label={t('table.aria')} className="dossier-row-list">
         {rows.map((row) => {
           const displayName = isRTL ? row.name_ar : row.name_en
           const chipClass = sensitivityChipClass(row.sensitivity_level)
-          const chipLabel = t(sensitivityLabelKey(row.sensitivity_level), {
-            defaultValue: fallbackSensitivityLabel(row.sensitivity_level, isRTL),
-          })
+          const chipLabel = t(sensitivityLabelKey(row.sensitivity_level))
 
           return (
             <li key={row.id}>

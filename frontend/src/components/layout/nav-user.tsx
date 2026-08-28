@@ -91,13 +91,13 @@ export function NavUser(): React.ReactElement | null {
         <DropdownMenuItem asChild>
           <Link to="/settings" className="gap-2">
             <User className="size-4" />
-            {t('navigation.profile', 'Profile')}
+            {t('navigation.profile')}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link to="/settings" className="gap-2">
             <Settings className="size-4" />
-            {t('navigation.settings', 'Settings')}
+            {t('navigation.settings')}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />

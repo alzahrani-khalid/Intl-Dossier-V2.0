@@ -41,13 +41,13 @@ export function HistoryList({ items, activeId, onHistoryClick, className }: Hist
   const defaultItems: HistoryItem[] = [
     {
       id: 'recently-edited',
-      label: t('navigation.recentlyEdited', 'Recently Edited'),
+      label: t('navigation.recentlyEdited'),
       icon: <Clock className="h-4 w-4" />,
       path: '/history/recent',
     },
     {
       id: 'archive',
-      label: t('navigation.archive', 'Archive'),
+      label: t('navigation.archive'),
       icon: <Archive className="h-4 w-4" />,
       path: '/history/archive',
     },
@@ -64,14 +64,10 @@ export function HistoryList({ items, activeId, onHistoryClick, className }: Hist
   return (
     <div className={cn('flex flex-col', className)}>
       {/* Section Header */}
-      <h3 className="section-header px-4 py-2">{t('navigation.history', 'History')}</h3>
+      <h3 className="section-header px-4 py-2">{t('navigation.history')}</h3>
 
       {/* History Items */}
-      <nav
-        className="flex flex-col px-2"
-        role="navigation"
-        aria-label={t('navigation.history', 'History')}
-      >
+      <nav className="flex flex-col px-2" role="navigation" aria-label={t('navigation.history')}>
         {historyItems.map((history) => {
           const isActive = activeId === history.id
 

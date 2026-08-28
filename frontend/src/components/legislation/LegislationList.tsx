@@ -439,9 +439,7 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
                   onToggleWatch()
                 }}
                 disabled={isWatching}
-                aria-label={t('common:actions.toggleWatch', {
-                  defaultValue: 'Toggle watch',
-                })}
+                aria-label={t('common:actions.toggleWatch')}
               >
                 {isWatching ? (
                   <Loader2 className="h-4 w-4 animate-spin" />

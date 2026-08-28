@@ -250,14 +250,12 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
                 t('positions:attach.attachPartialError', {
                   failed,
                   total: positionIds.length,
-                  defaultValue: 'Failed to attach {{failed}} of {{total}} positions',
                 }),
               )
             } else {
               toast.success(
                 t('positions:attach.attachSuccess', {
                   count: positionIds.length,
-                  defaultValue: 'Attached {{count}} position(s)',
                 }),
               )
             }
