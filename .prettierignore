@@ -50,3 +50,8 @@ vendor/
 # OS
 .DS_Store
 Thumbs.db
+
+# Phase-99 spec files: plan front-matter carries YAML scalars containing executable shell
+# oracles. Reformatting them rewrites gate inputs and invalidates task content digests,
+# which silently discarded a merged completion (RULING-P99-350).
+.planning/
