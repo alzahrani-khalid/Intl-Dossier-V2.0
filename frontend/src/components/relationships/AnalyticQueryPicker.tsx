@@ -30,7 +30,6 @@ function usesWindow(queryType: AnalyticQueryType): boolean {
 interface TemplateDef {
   queryType: AnalyticQueryType
   labelKey: string
-  labelDefault: string
 }
 
 // Labels keyed under the registered `graph` namespace (extend, do not create).
@@ -38,22 +37,18 @@ const TEMPLATES: readonly TemplateDef[] = [
   {
     queryType: 'forum_membership',
     labelKey: 'analyze.template.forumMembership',
-    labelDefault: 'Who sits on which forum',
   },
   {
     queryType: 'shared_committees',
     labelKey: 'analyze.template.sharedCommittees',
-    labelDefault: 'Shared committees',
   },
   {
     queryType: 'engagement_chain',
     labelKey: 'analyze.template.engagementChain',
-    labelDefault: 'Engagement chains',
   },
   {
     queryType: 'shortest_path',
     labelKey: 'analyze.template.shortestPath',
-    labelDefault: 'How are these connected',
   },
 ]
 
@@ -106,13 +101,13 @@ export function AnalyticQueryPicker({
           className="t-card-title text-start"
           style={{ color: 'var(--ink)', marginBottom: 'var(--space-4)' }}
         >
-          {t('analyze.pickerHeading', 'Choose an analysis')}
+          {t('analyze.pickerHeading')}
         </h2>
 
         {/* Template selector — selectable chips (active = accent hairline). */}
         <div
           role="radiogroup"
-          aria-label={t('analyze.pickerHeading', 'Choose an analysis')}
+          aria-label={t('analyze.pickerHeading')}
           className="flex flex-wrap gap-2"
           style={{ marginBottom: 'var(--space-6)' }}
         >
@@ -137,7 +132,7 @@ export function AnalyticQueryPicker({
                   cursor: 'pointer',
                 }}
               >
-                {t(tpl.labelKey, tpl.labelDefault)}
+                {t(tpl.labelKey)}
               </button>
             )
           })}
@@ -147,28 +142,26 @@ export function AnalyticQueryPicker({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="analytic-entity-1" className="mb-2 block text-start">
-              {needsSecondEntity
-                ? t('analyze.entityPrimary', 'First entity')
-                : t('analyze.entity', 'Entity')}
+              {needsSecondEntity ? t('analyze.entityPrimary') : t('analyze.entity')}
             </Label>
             <Input
               id="analytic-entity-1"
               value={entityId}
               onChange={(e) => setEntityId(e.target.value)}
-              placeholder={t('analyze.entityPlaceholder', 'Dossier id')}
+              placeholder={t('analyze.entityPlaceholder')}
             />
           </div>
 
           {needsSecondEntity && (
             <div>
               <Label htmlFor="analytic-entity-2" className="mb-2 block text-start">
-                {t('analyze.entitySecondary', 'Second entity')}
+                {t('analyze.entitySecondary')}
               </Label>
               <Input
                 id="analytic-entity-2"
                 value={entityId2}
                 onChange={(e) => setEntityId2(e.target.value)}
-                placeholder={t('analyze.entityPlaceholder', 'Dossier id')}
+                placeholder={t('analyze.entityPlaceholder')}
               />
             </div>
           )}
@@ -176,7 +169,7 @@ export function AnalyticQueryPicker({
           {showWindow && (
             <div>
               <Label htmlFor="analytic-window" className="mb-2 block text-start">
-                {t('analyze.window', 'Over the last {{count}} days', { count: windowDays })}
+                {t('analyze.window', { count: windowDays })}
               </Label>
               <Input
                 id="analytic-window"
@@ -202,7 +195,7 @@ export function AnalyticQueryPicker({
             onClick={handleRun}
             style={{ opacity: canRun ? 1 : 0.5 }}
           >
-            {t('analyze.run', 'Run analysis')}
+            {t('analyze.run')}
           </button>
         </div>
       </CardContent>

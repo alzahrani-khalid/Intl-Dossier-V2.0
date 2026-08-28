@@ -38,7 +38,7 @@ export function SidebarSearch({
   const { t } = useTranslation('common')
   const navigate = useNavigate()
   const { isRTL } = useDirection()
-const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const [searchValue, setSearchValue] = useState('')
   const [isFocused, setIsFocused] = useState(false)
@@ -90,14 +90,14 @@ const inputRef = useRef<HTMLInputElement>(null)
               size="icon"
               onClick={openCommandPalette}
               className={cn('h-10 w-10 shrink-0', 'hover:bg-sidebar-accent', className)}
-              aria-label={t('search.openSearch', 'Open search')}
+              aria-label={t('search.openSearch')}
             >
               <Search className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side={isRTL ? 'left' : 'right'}>
             <div className="flex items-center gap-2">
-              <span>{t('search.search', 'Search')}</span>
+              <span>{t('search.search')}</span>
               <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">
                 {isMac ? '⌘K' : 'Ctrl+K'}
               </kbd>
@@ -129,7 +129,7 @@ const inputRef = useRef<HTMLInputElement>(null)
           onKeyDown={handleKeyDown}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          placeholder={t('search.quickSearch', 'Quick search...')}
+          placeholder={t('search.quickSearch')}
           className={cn(
             'h-9 w-full',
             'bg-sidebar-accent/50 border-sidebar-border',
@@ -139,7 +139,7 @@ const inputRef = useRef<HTMLInputElement>(null)
             // Padding for icons
             isRTL ? 'pe-8 ps-9' : 'pe-9 ps-8',
           )}
-          aria-label={t('search.searchLabel', 'Search dossiers, people, positions...')}
+          aria-label={t('search.searchLabel')}
         />
 
         {/* Right side actions */}
@@ -156,7 +156,7 @@ const inputRef = useRef<HTMLInputElement>(null)
               size="icon"
               onClick={handleClear}
               className="h-5 w-5 p-0 hover:bg-transparent"
-              aria-label={t('search.clear', 'Clear search')}
+              aria-label={t('search.clear')}
             >
               <X className="h-3.5 w-3.5 text-muted-foreground" />
             </Button>
@@ -172,7 +172,7 @@ const inputRef = useRef<HTMLInputElement>(null)
                 'text-[10px] text-muted-foreground',
                 'transition-colors cursor-pointer',
               )}
-              aria-label={t('search.openCommandPalette', 'Open command palette')}
+              aria-label={t('search.openCommandPalette')}
             >
               <CommandIcon className="h-3 w-3" />
               <span className="font-mono">{isMac ? 'K' : 'K'}</span>
@@ -184,8 +184,7 @@ const inputRef = useRef<HTMLInputElement>(null)
       {/* Search hint text */}
       {isFocused && (
         <p className="text-[10px] text-muted-foreground mt-1 px-1">
-          {t('search.hint', 'Press Enter to search or')} {isMac ? '⌘K' : 'Ctrl+K'}{' '}
-          {t('search.forCommands', 'for commands')}
+          {t('search.hint')} {isMac ? '⌘K' : 'Ctrl+K'} {t('search.forCommands')}
         </p>
       )}
     </div>

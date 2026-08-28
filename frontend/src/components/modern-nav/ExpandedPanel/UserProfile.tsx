@@ -61,7 +61,7 @@ export function UserProfile({
 }: UserProfileProps) {
   const { t } = useTranslation()
   const { isRTL } = useDirection()
-// Generate initials from name
+  // Generate initials from name
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -94,7 +94,7 @@ export function UserProfile({
             // Custom classes
             className,
           )}
-          aria-label={t('navigation.userMenu', 'User menu')}
+          aria-label={t('navigation.userMenu')}
         >
           {/* Avatar */}
           <Avatar className="h-8 w-8 shrink-0">
@@ -134,14 +134,14 @@ export function UserProfile({
         {onProfile && (
           <DropdownMenuItem onClick={onProfile}>
             <User className="me-2 h-4 w-4" />
-            <span>{t('navigation.profile', 'Profile')}</span>
+            <span>{t('navigation.profile')}</span>
           </DropdownMenuItem>
         )}
 
         {onSettings && (
           <DropdownMenuItem onClick={onSettings}>
             <User className="me-2 h-4 w-4" />
-            <span>{t('navigation.settings', 'Settings')}</span>
+            <span>{t('navigation.settings')}</span>
           </DropdownMenuItem>
         )}
 
@@ -150,7 +150,7 @@ export function UserProfile({
         {onLogout && (
           <DropdownMenuItem onClick={onLogout} className="text-destructive focus:text-destructive">
             <User className="me-2 h-4 w-4" />
-            <span>{t('navigation.logout', 'Logout')}</span>
+            <span>{t('navigation.logout')}</span>
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>

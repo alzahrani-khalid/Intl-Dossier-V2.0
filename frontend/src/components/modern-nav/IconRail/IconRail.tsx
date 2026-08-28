@@ -113,12 +113,7 @@ export function IconRail({
   ]
 
   const navigationItems = items || defaultItems
-  const tooltipByKey = new Map(
-    defaultItems.map((item) => [
-      item.tooltipKey,
-      t(item.tooltipKey, item.id.charAt(0).toUpperCase() + item.id.slice(1)),
-    ]),
-  )
+  const tooltipByKey = new Map(defaultItems.map((item) => [item.tooltipKey, t(item.tooltipKey)]))
 
   const handleItemClick = (item: IconRailItem) => {
     // Notify parent of category change for ExpandedPanel sync
@@ -157,7 +152,7 @@ export function IconRail({
         // Custom classes
         className,
       )}
-      aria-label={t('navigation.mainNav', 'Main navigation')}
+      aria-label={t('navigation.mainNav')}
     >
       {/* Top Navigation Items */}
       <nav
@@ -171,7 +166,7 @@ export function IconRail({
           // Top and bottom rounded corners
           'rounded-t-xl rounded-b-xl',
         )}
-        aria-label={t('navigation.primary', 'Primary navigation')}
+        aria-label={t('navigation.primary')}
       >
         {/* GASTAT Logo */}
         <div className="w-full px-3 pt-4 pb-3 flex items-center justify-center">
@@ -190,10 +185,7 @@ export function IconRail({
               key={item.id}
               id={`nav-${item.id}`}
               icon={item.icon}
-              tooltip={
-                tooltipByKey.get(item.tooltipKey) ??
-                t('unknown', item.id.charAt(0).toUpperCase() + item.id.slice(1))
-              }
+              tooltip={tooltipByKey.get(item.tooltipKey) ?? t('unknown')}
               active={isActive(item.path)}
               onClick={() => handleItemClick(item)}
               badge={item.badge}
@@ -243,11 +235,7 @@ export function IconRail({
         <IconButton
           id="nav-language-toggle"
           icon={Languages}
-          tooltip={
-            isRTL
-              ? t('navigation.switchToEnglish', 'Switch to English')
-              : t('navigation.switchToArabic', 'Switch to Arabic')
-          }
+          tooltip={isRTL ? t('navigation.switchToEnglish') : t('navigation.switchToArabic')}
           active={false}
           onClick={toggleLanguage}
         />
@@ -256,11 +244,7 @@ export function IconRail({
         <IconButton
           id="nav-theme-toggle"
           icon={colorMode === 'dark' ? Sun : Moon}
-          tooltip={
-            colorMode === 'dark'
-              ? t('navigation.lightMode', 'Light Mode')
-              : t('navigation.darkMode', 'Dark Mode')
-          }
+          tooltip={colorMode === 'dark' ? t('navigation.lightMode') : t('navigation.darkMode')}
           active={false}
           onClick={() => setColorMode(colorMode === 'dark' ? 'light' : 'dark')}
         />
@@ -269,7 +253,7 @@ export function IconRail({
         <IconButton
           id="nav-settings"
           icon={Settings}
-          tooltip={t('navigation.settings', 'Settings')}
+          tooltip={t('navigation.settings')}
           active={activeCategory === 'system'}
           onClick={() => {
             if (onCategoryChange) {

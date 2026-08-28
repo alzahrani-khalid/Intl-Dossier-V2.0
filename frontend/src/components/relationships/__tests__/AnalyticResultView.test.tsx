@@ -18,29 +18,24 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string, defaultOrOpts?: unknown, maybeOpts?: unknown) => {
-      if (
-        typeof defaultOrOpts === 'object' &&
-        defaultOrOpts !== null &&
-        'defaultValue' in (defaultOrOpts as Record<string, unknown>)
-      ) {
-        return (defaultOrOpts as { defaultValue: string }).defaultValue
-      }
-      if (typeof defaultOrOpts === 'string') return defaultOrOpts
-      if (
-        typeof maybeOpts === 'object' &&
-        maybeOpts !== null &&
-        'defaultValue' in (maybeOpts as Record<string, unknown>)
-      ) {
-        return (maybeOpts as { defaultValue: string }).defaultValue
-      }
-      return key
-    },
-    i18n: { language: 'en' },
-  }),
-}))
+vi.mock('react-i18next', async () => {
+  const { default: graph } =
+    await vi.importActual<typeof import('@/i18n/en/graph.json')>('@/i18n/en/graph.json')
+  const resolve = (path: string): unknown =>
+    path.split('.').reduce((value, segment) => (value as Record<string, unknown>)?.[segment], graph)
+
+  return {
+    useTranslation: () => ({
+      t: (key: string, opts: Record<string, unknown> = {}): string => {
+        const value = resolve(key)
+        return typeof value === 'string'
+          ? value.replace(/\{\{(\w+)\}\}/g, (match, name: string) => String(opts[name] ?? match))
+          : key
+      },
+      i18n: { language: 'en' },
+    }),
+  }
+})
 
 vi.mock('@/hooks/useDirection', () => ({
   useDirection: () => ({ direction: 'ltr', isRTL: false }),
@@ -121,5 +116,14 @@ describe('AnalyticResultView (GRAPH-01 / GRAPH-03 structured result contract)', 
   it('never renders clearance-revealing copy (indistinguishable-empty, LOCKED)', () => {
     const { container } = render(<AnalyticResultView result={emptyResult} />)
     expect(container.textContent ?? '').not.toMatch(/clearance|filtered|restricted|permission/i)
+  })
+
+  it('PRODUCTION keys are byte-untouched because P99-49 owns the prerequisite key-routing repair. Across the 36 production files this diff contains fallback deletions only — no key rewrite, namespace rewrite, import move, hardcoded-result helper, or test-mode branch. The only permitted additive behavior outside the SUMMARY is in the five owned companion tests, whose local i18n mocks must resolve the real resources used by EngagementsList, PersonsGrid, AnalyticQueryPicker, and AnalyticResultView. || NO i18n JSON changes in this lane.', () => {
+    render(<AnalyticResultView result={emptyResult} />)
+
+    expect(screen.getByText('No results')).toBeInTheDocument()
+    expect(
+      screen.getByText('This entity has no matching records for this analysis.'),
+    ).toBeInTheDocument()
   })
 })

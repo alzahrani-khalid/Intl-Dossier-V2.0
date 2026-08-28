@@ -53,21 +53,21 @@ export function StatusList({ items, activeId, onStatusClick, className }: Status
   const defaultItems: StatusItem[] = [
     {
       id: 'new',
-      label: t('navigation.new', 'New'),
+      label: t('navigation.new'),
       icon: <Circle className="h-4 w-4" />,
       count: 3,
       path: '/status/new',
     },
     {
       id: 'updates',
-      label: t('navigation.updates', 'Updates'),
+      label: t('navigation.updates'),
       icon: <Bell className="h-4 w-4" />,
       count: 2,
       path: '/status/updates',
     },
     {
       id: 'team-review',
-      label: t('navigation.teamReview', 'Team Review'),
+      label: t('navigation.teamReview'),
       icon: <Users className="h-4 w-4" />,
       path: '/status/team-review',
     },
@@ -84,10 +84,10 @@ export function StatusList({ items, activeId, onStatusClick, className }: Status
   return (
     <div className={cn('flex flex-col', className)}>
       {/* Section Header */}
-      <h3 className="section-header px-4 py-2">{t('navigation.status', 'Status')}</h3>
+      <h3 className="section-header px-4 py-2">{t('navigation.status')}</h3>
 
       {/* Status Items */}
-      <nav className="flex flex-col px-2" aria-label={t('navigation.status', 'Status')}>
+      <nav className="flex flex-col px-2" aria-label={t('navigation.status')}>
         {statusItems.map((status) => {
           const isActive = activeId === status.id
 

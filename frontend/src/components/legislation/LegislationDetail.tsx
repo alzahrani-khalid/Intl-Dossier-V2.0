@@ -700,9 +700,7 @@ function DeadlinesTab({
                   {!deadline.is_completed && (
                     <Button variant="outline" size="sm" onClick={() => onComplete(deadline.id)}>
                       <CheckCircle2 className="h-4 w-4" />
-                      <span className="sr-only">
-                        {t('common:actions.complete', { defaultValue: 'Mark complete' })}
-                      </span>
+                      <span className="sr-only">{t('common:actions.complete')}</span>
                     </Button>
                   )}
                 </div>

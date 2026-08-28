@@ -415,7 +415,6 @@ const ClusterNode = memo(
               (DOSSIER_CARD_TYPES as readonly string[]).includes(data.clusterType)
                 ? `type.${data.clusterType}`
                 : 'type.unknown',
-              data.clusterType,
             )}
           </span>
           <Button
@@ -428,7 +427,7 @@ const ClusterNode = memo(
             }}
           >
             <Expand className="h-3 w-3 me-1" />
-            {t('expand', 'Expand')}
+            {t('expand')}
           </Button>
         </div>
       </m.div>
@@ -625,11 +624,10 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
         toast.success(
           t('pathFinding.found', {
             count: result.pathLength,
-            defaultValue: 'Path found with {{count}} hop(s)',
           }),
         )
       } else {
-        toast.info(t('pathFinding.notFound', 'No path found between entities'))
+        toast.info(t('pathFinding.notFound'))
       }
       setIsSearching(false)
     }, 100)
@@ -649,18 +647,16 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
       <CardHeader className="pb-3">
         <CardTitle className="text-sm flex items-center gap-2">
           <Route className="h-4 w-4" />
-          {t('pathFinding.title', 'Path Finding')}
+          {t('pathFinding.title')}
         </CardTitle>
-        <CardDescription className="text-xs">
-          {t('pathFinding.description', 'Find how two entities are connected')}
-        </CardDescription>
+        <CardDescription className="text-xs">{t('pathFinding.description')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="space-y-2">
-          <Label className="text-xs">{t('pathFinding.from', 'From')}</Label>
+          <Label className="text-xs">{t('pathFinding.from')}</Label>
           <Select value={sourceId} onValueChange={setSourceId}>
             <SelectTrigger className="h-8 text-xs">
-              <SelectValue placeholder={t('pathFinding.selectEntity', 'Select entity')} />
+              <SelectValue placeholder={t('pathFinding.selectEntity')} />
             </SelectTrigger>
             <SelectContent>
               {nodes.map((node) => (
@@ -685,10 +681,10 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
         </div>
 
         <div className="space-y-2">
-          <Label className="text-xs">{t('pathFinding.to', 'To')}</Label>
+          <Label className="text-xs">{t('pathFinding.to')}</Label>
           <Select value={targetId} onValueChange={setTargetId}>
             <SelectTrigger className="h-8 text-xs">
-              <SelectValue placeholder={t('pathFinding.selectEntity', 'Select entity')} />
+              <SelectValue placeholder={t('pathFinding.selectEntity')} />
             </SelectTrigger>
             <SelectContent>
               {nodes
@@ -718,7 +714,7 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
             disabled={!sourceId || !targetId || isSearching}
           >
             <Search className="h-3 w-3 me-1" />
-            {t('pathFinding.find', 'Find Path')}
+            {t('pathFinding.find')}
           </Button>
           <Button
             size="sm"
@@ -743,13 +739,12 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
                 <Route className="h-3 w-3" />
                 {t('pathFinding.pathLength', {
                   count: pathResult.pathLength,
-                  defaultValue: '{{count}} hop(s)',
                 })}
               </div>
             ) : (
               <div className="flex items-center gap-2">
                 <X className="h-3 w-3" />
-                {t('pathFinding.noPath', 'No connection found')}
+                {t('pathFinding.noPath')}
               </div>
             )}
           </div>
@@ -852,11 +847,9 @@ function TimeAnimationPanel({ edges, onTimeChange }: TimeAnimationPanelProps) {
       <CardHeader className="pb-3">
         <CardTitle className="text-sm flex items-center gap-2">
           <Clock className="h-4 w-4" />
-          {t('timeAnimation.title', 'Timeline')}
+          {t('timeAnimation.title')}
         </CardTitle>
-        <CardDescription className="text-xs">
-          {t('timeAnimation.description', 'View relationships over time')}
-        </CardDescription>
+        <CardDescription className="text-xs">{t('timeAnimation.description')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex items-center justify-between gap-2">
@@ -868,7 +861,7 @@ function TimeAnimationPanel({ edges, onTimeChange }: TimeAnimationPanelProps) {
               setCurrentDate(dateRange.min)
               setIsPlaying(false)
             }}
-            aria-label={t('playback.skipToStart', 'Skip to start')}
+            aria-label={t('playback.skipToStart')}
           >
             <SkipBack className="h-4 w-4" />
           </Button>
@@ -878,7 +871,7 @@ function TimeAnimationPanel({ edges, onTimeChange }: TimeAnimationPanelProps) {
             variant={isPlaying ? 'secondary' : 'default'}
             className="h-8 w-8"
             onClick={() => setIsPlaying(!isPlaying)}
-            aria-label={isPlaying ? t('playback.pause', 'Pause') : t('playback.play', 'Play')}
+            aria-label={isPlaying ? t('playback.pause') : t('playback.play')}
           >
             {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           </Button>
@@ -891,13 +884,13 @@ function TimeAnimationPanel({ edges, onTimeChange }: TimeAnimationPanelProps) {
               setCurrentDate(dateRange.max)
               setIsPlaying(false)
             }}
-            aria-label={t('playback.skipToEnd', 'Skip to end')}
+            aria-label={t('playback.skipToEnd')}
           >
             <SkipForward className="h-4 w-4" />
           </Button>
 
           <Button size="sm" variant="outline" className="h-8" onClick={handleReset}>
-            {t('timeAnimation.reset', 'Reset')}
+            {t('timeAnimation.reset')}
           </Button>
         </div>
 
@@ -918,7 +911,7 @@ function TimeAnimationPanel({ edges, onTimeChange }: TimeAnimationPanelProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Label className="text-xs">{t('timeAnimation.speed', 'Speed')}</Label>
+          <Label className="text-xs">{t('timeAnimation.speed')}</Label>
           <Select
             value={playbackSpeed.toString()}
             onValueChange={(v) => setPlaybackSpeed(parseInt(v))}
@@ -994,12 +987,11 @@ function ExportPanel({ reactFlowRef }: ExportPanelProps) {
         toast.success(
           t('export.success', {
             format: format.toUpperCase(),
-            defaultValue: 'Graph exported as {{format}}',
           }),
         )
       } catch (error) {
         console.error('Export error:', error)
-        toast.error(t('export.error', 'Failed to export graph'))
+        toast.error(t('export.error'))
       } finally {
         setIsExporting(false)
       }
@@ -1018,12 +1010,12 @@ function ExportPanel({ reactFlowRef }: ExportPanelProps) {
               className="h-8 w-8"
               onClick={() => handleExport('png')}
               disabled={isExporting}
-              aria-label={t('export.png', 'Export as PNG')}
+              aria-label={t('export.png')}
             >
               <Image className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>{t('export.png', 'Export as PNG')}</TooltipContent>
+          <TooltipContent>{t('export.png')}</TooltipContent>
         </Tooltip>
       </TooltipProvider>
 
@@ -1036,12 +1028,12 @@ function ExportPanel({ reactFlowRef }: ExportPanelProps) {
               className="h-8 w-8"
               onClick={() => handleExport('svg')}
               disabled={isExporting}
-              aria-label={t('export.svg', 'Export as SVG')}
+              aria-label={t('export.svg')}
             >
               <FileImage className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>{t('export.svg', 'Export as SVG')}</TooltipContent>
+          <TooltipContent>{t('export.svg')}</TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </div>
@@ -1495,7 +1487,7 @@ function AdvancedGraphVisualizationInner({
             <div className="bg-background/95 p-3 rounded-lg border">
               <div className="text-xs font-semibold mb-2 flex items-center gap-2">
                 <GitBranch className="h-3.5 w-3.5" />
-                {t('layout.title', 'Layout')}
+                {t('layout.title')}
               </div>
               <Select value={layout} onValueChange={(v) => setLayout(v as LayoutType)}>
                 <SelectTrigger className="h-8 text-xs">
@@ -1505,25 +1497,25 @@ function AdvancedGraphVisualizationInner({
                   <SelectItem value="circular" className="text-xs">
                     <div className="flex items-center gap-2">
                       <Circle className="h-3 w-3" />
-                      {t('layout.circular', 'Circular')}
+                      {t('layout.circular')}
                     </div>
                   </SelectItem>
                   <SelectItem value="clustered" className="text-xs">
                     <div className="flex items-center gap-2">
                       <Layers className="h-3 w-3" />
-                      {t('layout.clustered', 'Clustered')}
+                      {t('layout.clustered')}
                     </div>
                   </SelectItem>
                   <SelectItem value="hierarchical" className="text-xs">
                     <div className="flex items-center gap-2">
                       <Network className="h-3 w-3" />
-                      {t('layout.hierarchical', 'Hierarchical')}
+                      {t('layout.hierarchical')}
                     </div>
                   </SelectItem>
                   <SelectItem value="radial" className="text-xs">
                     <div className="flex items-center gap-2">
                       <Activity className="h-3 w-3" />
-                      {t('layout.radial', 'Radial')}
+                      {t('layout.radial')}
                     </div>
                   </SelectItem>
                 </SelectContent>
@@ -1534,7 +1526,7 @@ function AdvancedGraphVisualizationInner({
             <div className="bg-background/95 p-3 rounded-lg border">
               <div className="text-xs font-semibold mb-2 flex items-center gap-2">
                 <Filter className="h-3.5 w-3.5" />
-                {t('filters', 'Filters')}
+                {t('filters')}
               </div>
 
               <div className="space-y-2">
@@ -1545,7 +1537,7 @@ function AdvancedGraphVisualizationInner({
                   <SelectContent>
                     {nodeTypes.map((type) => (
                       <SelectItem key={type} value={type} className="text-xs">
-                        {type === 'all' ? t('allTypes', 'All Types') : t(`type.${type}`, type)}
+                        {type === 'all' ? t('allTypes') : t(`type.${type}`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -1561,9 +1553,7 @@ function AdvancedGraphVisualizationInner({
                   <SelectContent>
                     {relationshipTypes.map((type) => (
                       <SelectItem key={type} value={type} className="text-xs">
-                        {type === 'all'
-                          ? t('allRelationships', 'All Relationships')
-                          : t(`relationship.${type}`, type.replace(/_/g, ' '))}
+                        {type === 'all' ? t('allRelationships') : t(`relationship.${type}`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -1572,7 +1562,7 @@ function AdvancedGraphVisualizationInner({
                 {/* N-Degree Filter Slider */}
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <Label className="text-xs">{t('degreeFilter', 'Max Degrees')}</Label>
+                    <Label className="text-xs">{t('degreeFilter')}</Label>
                     <Badge variant="secondary" className="text-[10px] h-5">
                       {maxDegreeFilter}°
                     </Badge>
@@ -1594,7 +1584,7 @@ function AdvancedGraphVisualizationInner({
               <div className="text-xs font-semibold mb-2 flex items-center justify-between">
                 <span className="flex items-center gap-2">
                   <Layers className="h-3.5 w-3.5" />
-                  {t('clusters', 'Clusters')}
+                  {t('clusters')}
                 </span>
                 <div className="flex gap-1">
                   <TooltipProvider>
@@ -1605,14 +1595,12 @@ function AdvancedGraphVisualizationInner({
                           size="icon"
                           className="h-6 w-6"
                           onClick={collapseAllClusters}
-                          aria-label={t('collapseAll', 'Collapse All')}
+                          aria-label={t('collapseAll')}
                         >
                           <Shrink className="h-3 w-3" />
                         </Button>
                       </TooltipTrigger>
-                      <TooltipContent side="bottom">
-                        {t('collapseAll', 'Collapse All')}
-                      </TooltipContent>
+                      <TooltipContent side="bottom">{t('collapseAll')}</TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                   <TooltipProvider>
@@ -1623,12 +1611,12 @@ function AdvancedGraphVisualizationInner({
                           size="icon"
                           className="h-6 w-6"
                           onClick={expandAllClusters}
-                          aria-label={t('expandAll', 'Expand All')}
+                          aria-label={t('expandAll')}
                         >
                           <Expand className="h-3 w-3" />
                         </Button>
                       </TooltipTrigger>
-                      <TooltipContent side="bottom">{t('expandAll', 'Expand All')}</TooltipContent>
+                      <TooltipContent side="bottom">{t('expandAll')}</TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                 </div>
@@ -1648,7 +1636,7 @@ function AdvancedGraphVisualizationInner({
                           backgroundColor: NODE_COLORS[type] || graphDefaultColor,
                         }}
                       />
-                      <span className="capitalize">{t(`type.${type}`, type)}</span>
+                      <span className="capitalize">{t(`type.${type}`)}</span>
                       <Badge variant="secondary" className="text-[10px] h-4 px-1">
                         {cluster.count}
                       </Badge>
@@ -1665,12 +1653,12 @@ function AdvancedGraphVisualizationInner({
 
             {/* Advanced Features Toggle */}
             <div className="bg-background/95 p-3 rounded-lg border space-y-2">
-              <div className="text-xs font-semibold mb-2">{t('advanced.title', 'Advanced')}</div>
+              <div className="text-xs font-semibold mb-2">{t('advanced.title')}</div>
 
               <div className="flex items-center justify-between">
                 <Label className="text-xs flex items-center gap-2">
                   <Route className="h-3 w-3" />
-                  {t('pathFinding.toggle', 'Path Finding')}
+                  {t('pathFinding.toggle')}
                 </Label>
                 <Switch checked={showPathPanel} onCheckedChange={setShowPathPanel} />
               </div>
@@ -1678,7 +1666,7 @@ function AdvancedGraphVisualizationInner({
               <div className="flex items-center justify-between">
                 <Label className="text-xs flex items-center gap-2">
                   <Clock className="h-3 w-3" />
-                  {t('timeAnimation.toggle', 'Timeline')}
+                  {t('timeAnimation.toggle')}
                 </Label>
                 <Switch checked={showTimePanel} onCheckedChange={setShowTimePanel} />
               </div>
@@ -1686,7 +1674,7 @@ function AdvancedGraphVisualizationInner({
               <div className="flex items-center justify-between">
                 <Label className="text-xs flex items-center gap-2">
                   <Star className="h-3 w-3" />
-                  {t('influence.toggle', 'Influence')}
+                  {t('influence.toggle')}
                 </Label>
                 <Switch checked={showInfluence} onCheckedChange={setShowInfluence} />
               </div>
@@ -1694,10 +1682,9 @@ function AdvancedGraphVisualizationInner({
 
             {/* Stats */}
             <div className="bg-background/95 p-3 rounded-lg border text-xs text-muted-foreground">
-              {filteredNodes.length} {t('nodesShown', 'nodes')} · {filteredEdges.length}{' '}
-              {t('edgesShown', 'edges')}
+              {filteredNodes.length} {t('nodesShown')} · {filteredEdges.length} {t('edgesShown')}
               {highlightedPath.length > 0 && (
-                <span className="text-warning ms-2">· {t('pathActive', 'Path highlighted')}</span>
+                <span className="text-warning ms-2">· {t('pathActive')}</span>
               )}
             </div>
           </Panel>
@@ -1748,7 +1735,7 @@ function AdvancedGraphVisualizationInner({
                 variant="ghost"
                 className="h-8 w-8"
                 onClick={() => zoomIn()}
-                title={t('zoomIn', 'Zoom In')}
+                title={t('zoomIn')}
               >
                 <ZoomIn className="h-4 w-4" />
               </Button>
@@ -1757,7 +1744,7 @@ function AdvancedGraphVisualizationInner({
                 variant="ghost"
                 className="h-8 w-8"
                 onClick={() => zoomOut()}
-                title={t('zoomOut', 'Zoom Out')}
+                title={t('zoomOut')}
               >
                 <ZoomOut className="h-4 w-4" />
               </Button>
@@ -1766,7 +1753,7 @@ function AdvancedGraphVisualizationInner({
                 variant="ghost"
                 className="h-8 w-8"
                 onClick={() => fitView()}
-                title={t('fitView', 'Fit View')}
+                title={t('fitView')}
               >
                 <Maximize2 className="h-4 w-4" />
               </Button>
@@ -1784,14 +1771,14 @@ function AdvancedGraphVisualizationInner({
                   size="icon"
                   variant="outline"
                   className="h-8 w-8 bg-background/95"
-                  aria-label={t('settings.title', 'Display Settings')}
+                  aria-label={t('settings.title')}
                 >
                   <Settings2 className="h-4 w-4" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent side={isRTL ? 'left' : 'right'} className="w-64" align="start">
                 <div className="space-y-4">
-                  <h4 className="font-medium text-sm">{t('settings.title', 'Display Settings')}</h4>
+                  <h4 className="font-medium text-sm">{t('settings.title')}</h4>
 
                   {/* Show Labels */}
                   <div className="flex items-center justify-between">
@@ -1801,14 +1788,14 @@ function AdvancedGraphVisualizationInner({
                       ) : (
                         <EyeOff className="h-3.5 w-3.5" />
                       )}
-                      {t('settings.showLabels', 'Show Labels')}
+                      {t('settings.showLabels')}
                     </Label>
                     <Switch checked={showLabels} onCheckedChange={setShowLabels} />
                   </div>
 
                   {/* Show Edge Labels */}
                   <div className="flex items-center justify-between">
-                    <Label className="text-sm">{t('settings.showEdgeLabels', 'Edge Labels')}</Label>
+                    <Label className="text-sm">{t('settings.showEdgeLabels')}</Label>
                     <Switch checked={showEdgeLabels} onCheckedChange={setShowEdgeLabels} />
                   </div>
 
@@ -1816,7 +1803,7 @@ function AdvancedGraphVisualizationInner({
                   <div className="flex items-center justify-between">
                     <Label className="text-sm flex items-center gap-2">
                       <Focus className="h-3.5 w-3.5" />
-                      {t('settings.highlightConnections', 'Focus Mode')}
+                      {t('settings.highlightConnections')}
                     </Label>
                     <Switch
                       checked={highlightConnections}
@@ -1826,7 +1813,7 @@ function AdvancedGraphVisualizationInner({
 
                   {/* Node Size */}
                   <div className="space-y-2">
-                    <Label className="text-sm">{t('settings.nodeSize', 'Node Size')}</Label>
+                    <Label className="text-sm">{t('settings.nodeSize')}</Label>
                     <Slider
                       value={[nodeSizeMultiplier]}
                       onValueChange={([v]) => setNodeSizeMultiplier(v ?? 1)}
@@ -1849,14 +1836,14 @@ function AdvancedGraphVisualizationInner({
               (showPathPanel || showTimePanel) && 'hidden sm:block',
             )}
           >
-            <div className="text-xs font-semibold mb-2">{t('legend', 'Legend')}</div>
+            <div className="text-xs font-semibold mb-2">{t('legend')}</div>
             <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
               {Object.entries(NODE_COLORS)
                 .slice(0, 6)
                 .map(([type, color]) => (
                   <div key={type} className="flex items-center gap-2">
                     <div className="h-3 w-3 rounded-full" style={{ backgroundColor: color }} />
-                    <span className="capitalize">{t(`type.${type}`, type)}</span>
+                    <span className="capitalize">{t(`type.${type}`)}</span>
                   </div>
                 ))}
             </div>
@@ -1865,7 +1852,7 @@ function AdvancedGraphVisualizationInner({
               <div className="mt-3 pt-2 border-t">
                 <div className="flex items-center gap-2 text-xs text-warning">
                   <Route className="h-3 w-3" />
-                  {t('pathHighlighted', 'Path highlighted')}
+                  {t('pathHighlighted')}
                   <Button
                     variant="ghost"
                     size="sm"
@@ -1882,7 +1869,7 @@ function AdvancedGraphVisualizationInner({
               <div className="mt-3 pt-2 border-t">
                 <div className="text-xs text-muted-foreground flex items-center gap-2">
                   <Focus className="h-3 w-3" />
-                  {t('focusedNode', 'Click background to clear focus')}
+                  {t('focusedNode')}
                 </div>
               </div>
             )}

@@ -135,7 +135,7 @@ export function AddMilestoneDialog({
 }: AddMilestoneDialogProps) {
   const { t } = useTranslation('milestone-planning')
   const { isRTL } = useDirection()
-const [formData, setFormData] = useState<FormData>(initialFormData)
+  const [formData, setFormData] = useState<FormData>(initialFormData)
 
   // Reset or populate form when dialog opens or editMilestone changes
   useEffect(() => {
@@ -254,18 +254,14 @@ const [formData, setFormData] = useState<FormData>(initialFormData)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="max-h-[90vh] max-w-lg sm:max-w-xl overflow-y-auto"
-      >
+      <DialogContent className="max-h-[90vh] max-w-lg sm:max-w-xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <TypeIcon className="h-5 w-5" />
             {editMilestone ? t('form.editMilestone') : t('form.addMilestone')}
           </DialogTitle>
           <DialogDescription>
-            {editMilestone
-              ? t('form.editMilestoneDescription', 'Update the milestone details below.')
-              : t('emptyState.hint')}
+            {editMilestone ? t('form.editMilestoneDescription') : t('emptyState.hint')}
           </DialogDescription>
         </DialogHeader>
 
@@ -450,10 +446,7 @@ const [formData, setFormData] = useState<FormData>(initialFormData)
 
             {formData.reminders.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-4">
-                {t(
-                  'reminders.noReminders',
-                  'No reminders set. Add a reminder to get notified before the milestone.',
-                )}
+                {t('reminders.noReminders')}
               </p>
             ) : (
               <div className="space-y-4">
@@ -555,7 +548,7 @@ const [formData, setFormData] = useState<FormData>(initialFormData)
               {t('form.cancel')}
             </Button>
             <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
-              {isSubmitting ? t('common:saving', 'Saving...') : t('form.save')}
+              {isSubmitting ? t('common:saving') : t('form.save')}
             </Button>
           </DialogFooter>
         </form>

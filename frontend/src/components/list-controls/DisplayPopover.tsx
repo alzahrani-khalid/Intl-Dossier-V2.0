@@ -73,14 +73,14 @@ export function DisplayPopover({
       <PopoverTrigger asChild>
         <button type="button" className="btn-ghost inline-flex items-center gap-2">
           <SlidersHorizontal size={14} aria-hidden="true" />
-          <span>{t('display.trigger', { defaultValue: 'Display' })}</span>
+          <span>{t('display.trigger')}</span>
         </button>
       </PopoverTrigger>
       <PopoverContent align="start" className="bg-surface-3 shadow-none w-72">
         <div className="flex flex-col">
           {showGrouping ? (
             <section className="border-t border-[var(--line)] pb-3 pt-3 first:border-t-0 first:pt-0">
-              <SectionTitle>{t('display.grouping', { defaultValue: 'Group by' })}</SectionTitle>
+              <SectionTitle>{t('display.grouping')}</SectionTitle>
               <button
                 type="button"
                 aria-pressed={group === undefined}
@@ -91,7 +91,7 @@ export function DisplayPopover({
                 <span className="flex size-4 items-center justify-center">
                   {group === undefined ? <Check size={14} className="text-accent" /> : null}
                 </span>
-                {t('display.grouping_none', { defaultValue: 'No grouping' })}
+                {t('display.grouping_none')}
               </button>
               {config.grouping?.map((g) => (
                 <button
@@ -113,7 +113,7 @@ export function DisplayPopover({
 
           {showSort ? (
             <section className="border-t border-[var(--line)] pb-3 pt-3 first:border-t-0 first:pt-0">
-              <SectionTitle>{t('display.ordering', { defaultValue: 'Sort by' })}</SectionTitle>
+              <SectionTitle>{t('display.ordering')}</SectionTitle>
               {config.sortFields?.map((f) => (
                 <button
                   key={f.id}
@@ -140,7 +140,7 @@ export function DisplayPopover({
                       : 'border-[var(--line)] text-ink-mute'
                   }`}
                 >
-                  {t('display.asc', { defaultValue: 'Ascending' })}
+                  {t('display.asc')}
                 </button>
                 <button
                   type="button"
@@ -152,7 +152,7 @@ export function DisplayPopover({
                       : 'border-[var(--line)] text-ink-mute'
                   }`}
                 >
-                  {t('display.desc', { defaultValue: 'Descending' })}
+                  {t('display.desc')}
                 </button>
               </div>
             </section>
@@ -160,9 +160,7 @@ export function DisplayPopover({
 
           {showProperties ? (
             <section className="border-t border-[var(--line)] pb-3 pt-3 first:border-t-0 first:pt-0">
-              <SectionTitle>
-                {t('display.properties', { defaultValue: 'Display properties' })}
-              </SectionTitle>
+              <SectionTitle>{t('display.properties')}</SectionTitle>
               <div className="flex flex-wrap gap-2">
                 {config.properties?.map((p) => {
                   const visible = visibleProperties.includes(p.id)
@@ -186,7 +184,7 @@ export function DisplayPopover({
 
           <section className="border-t border-[var(--line)] pt-3 first:border-t-0 first:pt-0">
             <button type="button" className="btn-ghost text-sm" onClick={onReset}>
-              {t('display.reset', { defaultValue: 'Reset to default' })}
+              {t('display.reset')}
             </button>
           </section>
         </div>

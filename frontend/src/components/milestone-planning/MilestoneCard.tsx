@@ -283,12 +283,12 @@ export function MilestoneCard({
                     {isExpanded ? (
                       <>
                         <ChevronUp className="h-3.5 w-3.5 me-1" />
-                        {t('common:showLess', 'Show less')}
+                        {t('common:showLess')}
                       </>
                     ) : (
                       <>
                         <ChevronDown className="h-3.5 w-3.5 me-1" />
-                        {t('common:showMore', 'Show more')}
+                        {t('common:showMore')}
                       </>
                     )}
                   </Button>
@@ -303,7 +303,7 @@ export function MilestoneCard({
                       {notes && (
                         <div className="bg-muted/50 rounded-md p-3">
                           <p className="text-xs font-medium text-muted-foreground mb-1">
-                            {t('form.notesEn', 'Notes')}
+                            {t('form.notesEn')}
                           </p>
                           <p className="text-xs sm:text-sm text-foreground">{notes}</p>
                         </div>
@@ -311,7 +311,7 @@ export function MilestoneCard({
                       {expectedOutcome && (
                         <div className="bg-muted/50 rounded-md p-3">
                           <p className="text-xs font-medium text-muted-foreground mb-1">
-                            {t('form.expectedOutcomeEn', 'Expected Outcome')}
+                            {t('form.expectedOutcomeEn')}
                           </p>
                           <p className="text-xs sm:text-sm text-foreground">{expectedOutcome}</p>
                         </div>

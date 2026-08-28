@@ -97,7 +97,7 @@ export function PersonsGrid({
                 <span className="font-medium truncate">{displayName}</span>
                 {person.is_vip ? (
                   <span className="chip chip-warn shrink-0" data-testid="vip-chip">
-                    {t('chip.vip', { ns: 'persons', defaultValue: 'VIP' })}
+                    {t('chip.vip', { ns: 'persons' })}
                   </span>
                 ) : null}
               </span>
