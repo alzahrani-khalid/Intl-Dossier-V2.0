@@ -120,8 +120,8 @@ export function UserPicker({
       }}
       onSearchChange={handleSearch}
       label={label}
-      placeholder={placeholder || t('form.selectUser', 'Select user...')}
-      searchPlaceholder={t('form.searchUsers', 'Search users...')}
+      placeholder={placeholder || t('form.selectUser')}
+      searchPlaceholder={t('form.searchUsers')}
       error={error}
       required={required}
       disabled={disabled}

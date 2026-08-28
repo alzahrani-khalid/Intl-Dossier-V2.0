@@ -174,8 +174,8 @@ export function ForumDetailsDialog({
       return { id: forum.id }
     },
     onSuccess: ({ id }) => {
-      toast.success(t('common:success', 'Success'), {
-        description: t('editSuccess', 'Forum updated successfully'),
+      toast.success(t('common:success'), {
+        description: t('editSuccess'),
       })
       queryClient.invalidateQueries({ queryKey: ['forums'] })
       queryClient.invalidateQueries({ queryKey: ['forum', id] })
@@ -183,9 +183,9 @@ export function ForumDetailsDialog({
       setEditOpen(false)
     },
     onError: (error) => {
-      toast.error(t('common:error.label', 'Error'), {
+      toast.error(t('common:error.label'), {
         description:
-          error instanceof Error ? error.message : t('editFailed', 'Failed to update forum'),
+          error instanceof Error ? error.message : t('editFailed'),
       })
     },
   })
@@ -229,13 +229,13 @@ export function ForumDetailsDialog({
       return data
     },
     onSuccess: () => {
-      toast.success(t('common:success', 'Success'), {
+      toast.success(t('common:success'), {
         description: 'Forum added to calendar successfully',
       })
       queryClient.invalidateQueries({ queryKey: ['calendar-events'] })
     },
     onError: (error) => {
-      toast.error(t('common:error.label', 'Error'), {
+      toast.error(t('common:error.label'), {
         description: error instanceof Error ? error.message : 'Failed to add forum to calendar',
       })
     },
@@ -468,7 +468,7 @@ export function ForumDetailsDialog({
                     <div className="flex items-start gap-2">
                       <Building2 className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
                       <div>
-                        <p className="text-sm font-medium">{t('organizer', 'Organizer')}</p>
+                        <p className="text-sm font-medium">{t('organizer')}</p>
                         <p className="text-sm text-muted-foreground">{organizerName}</p>
                       </div>
                     </div>
@@ -549,7 +549,7 @@ export function ForumDetailsDialog({
           <DialogHeader>
             <DialogTitle>{t('editForum')}</DialogTitle>
             <DialogDescription>
-              {t('editDescription', 'Update forum dossier details.')}
+              {t('editDescription')}
             </DialogDescription>
           </DialogHeader>
 
@@ -625,8 +625,8 @@ export function ForumDetailsDialog({
               }
             >
               {updateForumMutation.isPending
-                ? t('common:saving', 'Saving...')
-                : t('common:save', 'Save')}
+                ? t('common:saving')
+                : t('common:save')}
             </Button>
           </DialogFooter>
         </DialogContent>

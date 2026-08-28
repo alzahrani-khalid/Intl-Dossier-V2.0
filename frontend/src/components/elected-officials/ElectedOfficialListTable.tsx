@@ -317,7 +317,7 @@ export function ElectedOfficialListTable({
             onClick={onPrevPage}
             className="min-h-11 min-w-11 w-full sm:w-auto"
           >
-            {t('common:previous', { defaultValue: 'Previous' })}
+            {t('common:previous')}
           </Button>
           <span className="text-sm text-muted-foreground">
             {currentPage} / {totalPages}
@@ -328,7 +328,7 @@ export function ElectedOfficialListTable({
             onClick={onNextPage}
             className="min-h-11 min-w-11 w-full sm:w-auto"
           >
-            {t('common:next', { defaultValue: 'Next' })}
+            {t('common:next')}
           </Button>
         </div>
       )}
