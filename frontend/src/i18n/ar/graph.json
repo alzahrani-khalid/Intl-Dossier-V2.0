@@ -82,9 +82,11 @@
   "type": {
     "country": "دولة",
     "organization": "منظمة",
+    "individual": "فرد",
     "forum": "منتدى",
     "person": "شخص",
     "engagement": "مشاركة",
+    "mou": "مذكرة تفاهم",
     "working_group": "مجموعة عمل",
     "topic": "موضوع",
     "elected_official": "مسؤول منتخب",
