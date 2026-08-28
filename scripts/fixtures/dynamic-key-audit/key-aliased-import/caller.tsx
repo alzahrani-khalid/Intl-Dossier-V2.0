@@ -1,9 +1,8 @@
-import { useTranslation } from 'react-i18next'
-import { routeKey as key } from '@/fixture/decoy-key'
+import { useTranslation as useI18n } from 'react-i18next'
+import { DOSSIER_CARD_TYPES } from '@/lib/dossier-type-guards'
 
 export function Fixture({ runtimeType }: { runtimeType: string }) {
-  const { t } = useTranslation('graph')
-
-  // @audit-line 7
+  const { t } = useI18n('graph')
+  const key = `type.${runtimeType}`
   return t(key, runtimeType)
 }
