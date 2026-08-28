@@ -266,6 +266,18 @@ unchanged; `tickmarkr compile` ingests this plan set. A plan that does not compi
   measured 94,803, lane 6 estimated ~43,868 and measured 107,645 — both roughly 2x. An apportioned
   measurement also inherits the pre-split churn, so it OVER-estimates deletion-only work, which is the
   safe direction. A diff-cap trip returns `park:"human"` and is un-retryable after the work is done.
+  **Every part must also be CLOSED UNDER ITS TEST COMPANIONS** (RULING-P99-468): a test that asserts an
+  English literal the part deletes must be in that part's `files[]`, with its WHOLE import closure in the
+  same part. Otherwise the worker reds `test` and cannot repair without a `scope` violation — PRODUCT
+  ENTRY 35, which already cost this phase a park. Companions carry NO masks, so they cost budget without
+  earning apportioned budget: allow **5,100 bytes each**, MEASURED (the one companion repaired in the
+  landed lane 5 cost 5,036 logic-diff bytes), and let that allowance decide the PART COUNT — lane 6 has
+  five companions, which is why it is FOUR parts and lane 1 is three. Verify with
+  `scripts/verify-lane-closure.mjs`, which RESOLVES imports; a basename match reported a trap
+  that does not exist (two different `ErrorBoundary.tsx`), and a `getByText`-only detector MISSED literals
+  asserted via `getByRole({name})`. **Run the closure check over EVERY tracked test file, not just those
+  under the lane's own directory** — two real traps lived in `frontend/tests/` and `tests/`, outside every
+  `frontend/src/**` population that had been used to verify the split.
 
 ### Claude's Discretion
 
