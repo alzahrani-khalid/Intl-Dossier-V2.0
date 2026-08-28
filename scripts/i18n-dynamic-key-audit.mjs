@@ -623,6 +623,7 @@ const expressionHasOrigin = (context, expression, expected, use, seen = new Set(
 const findUseTranslationBindings = (sf, source, context) => {
   const bindings = new Map()
   const receivers = new Map()
+  const assignments = new Map()
   const bindingInfo = (call, { declaration = null, name = null, symbol = null } = {}) => {
     const firstArg = call.arguments[0]
     const secondArg = call.arguments[1]
@@ -693,9 +694,17 @@ const findUseTranslationBindings = (sf, source, context) => {
       symbol,
     }
   }
-  const directTranslatorInfo = (expression) => {
+  const assignedInfo = (symbol, use) => {
+    const records = assignments.get(symbol) ?? []
+    if (use == null) return records.at(-1)?.info ?? null
+    return records.findLast((record) => record.write.getStart() < use.getStart())?.info ?? null
+  }
+  const directTranslatorInfo = (expression, use = null) => {
     const value = unwrapNode(expression)
-    if (ts.isIdentifier(value)) return bindings.get(symbolAt(context.checker, value)) ?? null
+    if (ts.isIdentifier(value)) {
+      const symbol = symbolAt(context.checker, value)
+      return assignedInfo(symbol, use) ?? bindings.get(symbol) ?? null
+    }
     if (
       ts.isPropertyAccessExpression(value) &&
       value.name.text === 't' &&
@@ -705,12 +714,12 @@ const findUseTranslationBindings = (sf, source, context) => {
     }
     return null
   }
-  const receiverInfo = (expression) => {
+  const receiverInfo = (expression, use = null) => {
     const value = unwrapNode(expression)
     if (ts.isCallExpression(value)) return bindingInfo(value)
     if (ts.isIdentifier(value)) return receivers.get(symbolAt(context.checker, value)) ?? null
     if (ts.isObjectLiteralExpression(value)) {
-      return directTranslatorInfo(objectProperty(value, 't'))
+      return directTranslatorInfo(objectProperty(value, 't'), use)
     }
     return null
   }
@@ -720,7 +729,7 @@ const findUseTranslationBindings = (sf, source, context) => {
       ts.isObjectBindingPattern(node.name) &&
       node.initializer
     ) {
-      const origin = receiverInfo(node.initializer)
+      const origin = receiverInfo(node.initializer, node)
       for (const element of node.name.elements) {
         const property = element.propertyName
           ? textOf(source, element.propertyName)
@@ -740,7 +749,7 @@ const findUseTranslationBindings = (sf, source, context) => {
           derivedInfo(bindingInfo(unwrapNode(node.initializer)), symbol, node.name, node.name.text),
         )
       }
-      const translator = directTranslatorInfo(node.initializer)
+      const translator = directTranslatorInfo(node.initializer, node)
       if (symbol != null && translator != null) {
         bindings.set(symbol, derivedInfo(translator, symbol, node.name, node.name.text))
       }
@@ -751,11 +760,30 @@ const findUseTranslationBindings = (sf, source, context) => {
       ts.isIdentifier(node.left)
     ) {
       const symbol = symbolAt(context.checker, node.left)
-      const translator = directTranslatorInfo(node.right)
+      const translator = directTranslatorInfo(node.right, node)
       if (symbol != null && translator != null) {
-        bindings.set(symbol, derivedInfo(translator, symbol, node.left, node.left.text))
+        const records = assignments.get(symbol) ?? []
+        records.push({
+          write: node,
+          info: derivedInfo(translator, symbol, node.left, node.left.text),
+        })
+        assignments.set(symbol, records)
+      } else if (symbol != null) {
+        const prior = assignedInfo(symbol, node) ?? bindings.get(symbol) ?? null
+        if (prior != null) {
+          const records = assignments.get(symbol) ?? []
+          records.push({
+            write: node,
+            info: {
+              ...derivedInfo(prior, symbol, node.left, node.left.text),
+              supported: false,
+              factorySupported: false,
+            },
+          })
+          assignments.set(symbol, records)
+        }
       }
-      const receiver = receiverInfo(node.right)
+      const receiver = receiverInfo(node.right, node)
       if (symbol != null && receiver != null && translator == null) {
         receivers.set(symbol, derivedInfo(receiver, symbol, node.left, node.left.text))
       }
@@ -785,11 +813,11 @@ const findUseTranslationBindings = (sf, source, context) => {
         if (invocations.length === 0) continue
         const translatorInfos = invocations.map((call) => {
           const argument = unwrapNode(call.arguments[index])
-          return argument == null ? null : directTranslatorInfo(argument)
+          return argument == null ? null : directTranslatorInfo(argument, call)
         })
         const receiverInfos = invocations.map((call) => {
           const argument = unwrapNode(call.arguments[index])
-          return argument == null ? null : receiverInfo(argument)
+          return argument == null ? null : receiverInfo(argument, call)
         })
         if (ts.isIdentifier(parameter.name)) {
           const symbol = symbolAt(context.checker, parameter.name)
@@ -828,7 +856,7 @@ const findUseTranslationBindings = (sf, source, context) => {
         ts.isObjectBindingPattern(node.name) &&
         node.initializer != null
       ) {
-        const origin = receiverInfo(node.initializer)
+        const origin = receiverInfo(node.initializer, node)
         if (origin == null) return false
         for (const element of node.name.elements) {
           const property = propertyName(element.propertyName ?? element.name)
@@ -844,13 +872,13 @@ const findUseTranslationBindings = (sf, source, context) => {
     })
   }
   return {
-    resolve(expression) {
+    resolve(expression, use) {
       const value = unwrapNode(expression)
       if (ts.isIdentifier(value)) {
-        return bindings.get(symbolAt(context.checker, value)) ?? null
+        return directTranslatorInfo(value, use)
       }
       if (ts.isPropertyAccessExpression(value) && value.name.text === 't') {
-        const origin = receiverInfo(value.expression)
+        const origin = receiverInfo(value.expression, use)
         if (origin == null) return null
         const receiver = unwrapNode(value.expression)
         const symbol = ts.isIdentifier(receiver) ? symbolAt(context.checker, receiver) : null
@@ -2111,7 +2139,7 @@ const collectCalls = (root, profile, { forceUnproven = false } = {}) => {
       parseSource(repoPath, source)
     const bindings = findUseTranslationBindings(sf, source, bindingContext)
     const visit = (node) => {
-      const binding = ts.isCallExpression(node) ? bindings.resolve(node.expression) : null
+      const binding = ts.isCallExpression(node) ? bindings.resolve(node.expression, node) : null
       if (ts.isCallExpression(node) && binding != null) {
         const first = node.arguments[0]
         const namespaceResult = namespaceOverride(

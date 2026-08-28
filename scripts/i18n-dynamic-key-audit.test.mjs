@@ -904,6 +904,33 @@ test(currentAcceptanceCriteria[4], { timeout: 120_000 }, () => {
     source.indexOf('const objectProperty'),
   )
   assert.doesNotMatch(resolver, /tQs|tCommon|\bctx\b|CommandPalette\.tsx|AnalyticResultView\.tsx/)
+
+  const temporalAssignments = fixtureRoot({
+    commandSource: `
+import { useTranslation } from 'react-i18next'
+const analyzeLabelKey = { one: 'analyze.one' } as const
+const otherLabelKey = { one: 'analyze.one' } as const
+const analyze = { queryType: 'one' }
+const decoy = (_namespace: string) => ({ t: (key: string) => key })
+let translate: (key: string, fallback: string) => string
+translate = useTranslation('fixture').t
+const before = translate(analyzeLabelKey[analyze.queryType], 'Before')
+translate = decoy('fixture').t
+const after = translate(otherLabelKey[analyze.queryType], 'After')
+void before
+void after
+`,
+  })
+  try {
+    const collected = collectCalls(temporalAssignments, 'lane3')
+    assert.equal(collected.fallbackSites.length, 2)
+    const before = collected.unclassified.find((row) => row.expression.includes("'Before'"))
+    const after = collected.unclassified.find((row) => row.expression.includes("'After'"))
+    assert.notEqual(before?.family, 'unclassified.translator-binding')
+    assert.equal(after?.family, 'unclassified.translator-binding')
+  } finally {
+    removeFixture(temporalAssignments)
+  }
 })
 
 test(currentAcceptanceCriteria[5], () => {

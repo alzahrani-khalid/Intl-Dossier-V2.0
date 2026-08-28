@@ -103,5 +103,5 @@ matrix-polarities=32/32
 - Aliased imports and re-exports follow module/export origin; decoy origins remain observable but unsupported.
 - Hook-result receivers carry translator metadata through `.t` property access.
 - Function parameters propagate compatible translator metadata from every invocation; object-literal shorthand properties use the shorthand value symbol, so destructuring from a context object preserves the originating translator.
-- Assignments use the translated value's symbol and the last observed write, while the existing intervening-write guard retains fail-closed behavior.
+- Assignments resolve the latest write preceding each use, while the existing intervening-write guard retains fail-closed behavior; a later reassignment cannot retroactively affect an earlier call.
 - Shadowed bindings remain distinct because all resolution uses TypeScript symbols rather than spelling.
