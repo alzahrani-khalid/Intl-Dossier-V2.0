@@ -247,6 +247,26 @@ unchanged; `tickmarkr compile` ingests this plan set. A plan that does not compi
   task = one full seven-gate battery: neither shatter the phase to look thorough, nor fuse
   unrelated work into a scope the gate will reject.
 
+- **D-40: `kimi:kimi-code/k3` began emitting unparseable review verdicts on 2026-08-28 — treat this as
+  an ONSET, not a background rate.** Zero re-routes in 185 reviews over the preceding ten days, then
+  **3 in 31 on that day alone**. A re-route is not a review failure and does not mean the work is bad;
+  it means the reviewer's own output could not be parsed into a verdict, so the task is re-reviewed
+  elsewhere. Two consequences bind this phase: (a) a re-route burns an attempt without producing a
+  verdict, so a task can approach its review-round cap having been JUDGED fewer times than the counter
+  suggests — read the verdicts, never the counter; (b) `caploop` bounds only CAP-REFUSED outcomes
+  (3 consecutive with no real judging between), so a task whose reviews are genuinely judged is NOT
+  bounded by it. Do not treat caploop as a backstop for a reviewer-onset stall. If re-routes continue
+  at this rate, that is an operator call on the reviewer roster, not a spec repair.
+- **D-41: A lane that trips `gates.diffCap` is DECOMPOSED, never granted a raised cap** (RULING-P99-07,
+  reaffirmed by RULING-P99-465). Decomposition rules, binding on every future split: parts are
+  **file-disjoint and concurrent** — a chained split still lands the same bytes and buys nothing; each
+  part is held **at or under 45,000 bytes, >=25% under the 60,000 cap**; and the per-part budget is the
+  pre-split lane's **ENGINE-MEASURED** diff apportioned by that part's share of the population, **never
+  a fresh plan-time estimate**. The floors are why this rule exists: lane 1 estimated ~44,066 bytes and
+  measured 94,803, lane 6 estimated ~43,868 and measured 107,645 — both roughly 2x. An apportioned
+  measurement also inherits the pre-split churn, so it OVER-estimates deletion-only work, which is the
+  safe direction. A diff-cap trip returns `park:"human"` and is un-retryable after the work is done.
+
 ### Claude's Discretion
 
 - Plan/wave count and lane boundaries, subject to D-39 and the sequencing in D-14.
