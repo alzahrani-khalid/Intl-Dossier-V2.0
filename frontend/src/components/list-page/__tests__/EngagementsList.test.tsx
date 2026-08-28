@@ -2,27 +2,36 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { EngagementsList, type EngagementRow } from '../EngagementsList'
 
-// Production resource subset; fallback arguments are intentionally ignored.
-vi.mock('react-i18next', () => {
-  const translations: Readonly<Record<string, string>> = {
-    'search.placeholder': 'Search engagements...',
-    'filter.aria': 'Filter engagements',
-    'filter.all': 'All',
-    'filter.meeting': 'Meeting',
-    'filter.travel': 'Travel',
-    'week.of': 'Week of',
-    'row.openAria': 'Open engagement: {{title}}',
-    'loadMore.cta': 'Load more',
-    'loadMore.loading': 'Loading…',
-    loading: 'Loading dossiers',
-    empty: 'No dossiers found',
+// Resolve the production resources; fallback arguments are intentionally ignored.
+vi.mock('react-i18next', async () => {
+  const [{ default: engagements }, { default: listPages }] = await Promise.all([
+    vi.importActual<typeof import('@/i18n/en/engagements.json')>('@/i18n/en/engagements.json'),
+    vi.importActual<typeof import('@/i18n/en/list-pages.json')>('@/i18n/en/list-pages.json'),
+  ])
+  const resources: Readonly<Record<string, unknown>> = {
+    engagements,
+    'list-pages': listPages,
   }
+  const resolve = (namespace: string, path: string): unknown =>
+    path
+      .split('.')
+      .reduce(
+        (value, segment) => (value as Record<string, unknown> | undefined)?.[segment],
+        resources[namespace],
+      )
   const translate = (key: string, opts: Record<string, unknown> = {}): string => {
-    const value = translations[key] ?? key
-    return Object.entries(opts).reduce(
-      (rendered, [name, replacement]) => rendered.replaceAll(`{{${name}}}`, String(replacement)),
-      value,
-    )
+    const separator = key.indexOf(':')
+    const namespace =
+      separator >= 0
+        ? key.slice(0, separator)
+        : typeof opts.ns === 'string'
+          ? opts.ns
+          : 'engagements'
+    const path = separator >= 0 ? key.slice(separator + 1) : key
+    const value = resolve(namespace, path)
+    return typeof value === 'string'
+      ? value.replace(/\{\{(\w+)\}\}/g, (match, name: string) => String(opts[name] ?? match))
+      : key
   }
   return {
     initReactI18next: { type: '3rdParty', init: (): void => undefined },

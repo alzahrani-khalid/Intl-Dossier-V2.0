@@ -44,32 +44,40 @@ function Harness(): ReactElement {
   )
 }
 
-// Production resource subset; fallback arguments are intentionally ignored.
+// Resolve the production resources; fallback arguments are intentionally ignored.
 const i18nLanguageRef = { current: 'en' }
-vi.mock('react-i18next', () => {
-  const translations: Readonly<Record<string, string>> = {
-    title: 'Engagement Dossiers',
-    subtitle: 'Manage bilateral meetings, missions, and delegations',
-    'search.placeholder': 'Search engagements...',
-    'filter.aria': 'Filter engagements',
-    'filter.all': 'All',
-    'filter.meeting': 'Meeting',
-    'filter.travel': 'Travel',
-    'filter.event': 'Event',
-    'week.of': 'Week of',
-    'row.openAria': 'Open engagement: {{title}}',
-    'loadMore.cta': 'Load more',
-    'loadMore.loading': 'Loading…',
-    'statuses.scheduled': 'Scheduled',
-    'statuses.completed': 'Completed',
-    'empty-states:list.engagement.cta': 'Log engagement',
+vi.mock('react-i18next', async () => {
+  const [{ default: engagements }, { default: listPages }, { default: emptyStates }] =
+    await Promise.all([
+      vi.importActual<typeof import('@/i18n/en/engagements.json')>('@/i18n/en/engagements.json'),
+      vi.importActual<typeof import('@/i18n/en/list-pages.json')>('@/i18n/en/list-pages.json'),
+      vi.importActual<typeof import('@/i18n/en/empty-states.json')>('@/i18n/en/empty-states.json'),
+    ])
+  const resources: Readonly<Record<string, unknown>> = {
+    engagements,
+    'list-pages': listPages,
+    'empty-states': emptyStates,
   }
+  const resolve = (namespace: string, path: string): unknown =>
+    path
+      .split('.')
+      .reduce(
+        (value, segment) => (value as Record<string, unknown> | undefined)?.[segment],
+        resources[namespace],
+      )
   const translate = (key: string, opts: Record<string, unknown> = {}): string => {
-    const value = translations[key] ?? key
-    return Object.entries(opts).reduce(
-      (rendered, [name, replacement]) => rendered.replaceAll(`{{${name}}}`, String(replacement)),
-      value,
-    )
+    const separator = key.indexOf(':')
+    const namespace =
+      separator >= 0
+        ? key.slice(0, separator)
+        : typeof opts.ns === 'string'
+          ? opts.ns
+          : 'engagements'
+    const path = separator >= 0 ? key.slice(separator + 1) : key
+    const value = resolve(namespace, path)
+    return typeof value === 'string'
+      ? value.replace(/\{\{(\w+)\}\}/g, (match, name: string) => String(opts[name] ?? match))
+      : key
   }
   return {
     initReactI18next: { type: '3rdParty', init: (): void => undefined },
@@ -232,7 +240,7 @@ describe('EngagementsListPage', () => {
     render(<Harness />)
     // GlobeSpinner SVG carries `.globe-spinner` class.
     expect(document.querySelector('.globe-spinner')).not.toBeNull()
-    // Loading… default value used by the primitive (translation key `engagements.loadMore.loading`).
+    // Loading… comes from the primitive's `engagements.loadMore.loading` resource key.
     const loadingText = document.body.textContent ?? ''
     expect(loadingText.includes('Loading')).toBe(true)
   })

@@ -5,24 +5,41 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, cleanup } from '@testing-library/react'
 
-// Production resource subset; fallback arguments are intentionally ignored.
-vi.mock('react-i18next', () => {
+// Resolve the production resources; fallback arguments are intentionally ignored.
+vi.mock('react-i18next', async () => {
+  const [{ default: persons }, { default: listPages }, { default: emptyStates }] =
+    await Promise.all([
+      vi.importActual<typeof import('@/i18n/en/persons.json')>('@/i18n/en/persons.json'),
+      vi.importActual<typeof import('@/i18n/en/list-pages.json')>('@/i18n/en/list-pages.json'),
+      vi.importActual<typeof import('@/i18n/en/empty-states.json')>('@/i18n/en/empty-states.json'),
+    ])
+  const resources: Readonly<Record<string, unknown>> = {
+    persons,
+    'list-pages': listPages,
+    'empty-states': emptyStates,
+  }
+  const resolve = (namespace: string, path: string): unknown =>
+    path
+      .split('.')
+      .reduce(
+        (value, segment) => (value as Record<string, unknown> | undefined)?.[segment],
+        resources[namespace],
+      )
   return {
     useTranslation: () => ({
-      t: (key: string): string => {
-        const translations: Readonly<Record<string, string>> = {
-          'persons:title': 'Persons',
-          'persons:subtitle': 'Manage your network of key contacts and stakeholders',
-          'persons:empty.title': 'No persons yet',
-          'persons:empty.description':
-            'Start building your contact network by adding key stakeholders',
-          'list-pages:search.placeholder': 'Search dossiers...',
-          'persons:chip.vip': 'VIP',
-          title: 'Persons',
-          subtitle: 'Manage your network of key contacts and stakeholders',
-          'chip.vip': 'VIP',
-        }
-        return translations[key] ?? key
+      t: (key: string, opts: Record<string, unknown> = {}): string => {
+        const separator = key.indexOf(':')
+        const namespace =
+          separator >= 0
+            ? key.slice(0, separator)
+            : typeof opts.ns === 'string'
+              ? opts.ns
+              : 'persons'
+        const path = separator >= 0 ? key.slice(separator + 1) : key
+        const value = resolve(namespace, path)
+        return typeof value === 'string'
+          ? value.replace(/\{\{(\w+)\}\}/g, (match, name: string) => String(opts[name] ?? match))
+          : key
       },
       i18n: { language: 'en' },
     }),
