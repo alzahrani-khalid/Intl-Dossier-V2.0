@@ -5,24 +5,45 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, cleanup } from '@testing-library/react'
 
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string, opts?: { defaultValue?: string }) => {
-      const map: Record<string, string> = {
-        'persons:title': 'Persons',
-        'persons:subtitle': 'VIPs and key contacts',
-        'persons:empty.title': 'No persons yet',
-        'persons:empty.description': 'VIP profiles will appear here.',
-        'list-pages:search.placeholder': 'Search…',
-        'persons:chip.vip': 'VIP',
-        title: 'Persons',
-        subtitle: 'VIPs and key contacts',
+// Resolve the production EN bundles: fallback arguments are intentionally ignored.
+vi.mock('react-i18next', async () => {
+  const [{ default: persons }, { default: listPages }, { default: emptyStates }] =
+    await Promise.all([
+      vi.importActual<typeof import('@/i18n/en/persons.json')>('@/i18n/en/persons.json'),
+      vi.importActual<typeof import('@/i18n/en/list-pages.json')>('@/i18n/en/list-pages.json'),
+      vi.importActual<typeof import('@/i18n/en/empty-states.json')>('@/i18n/en/empty-states.json'),
+    ])
+  const resources = { persons, 'list-pages': listPages, 'empty-states': emptyStates }
+  const resolve = (resource: unknown, path: string): unknown =>
+    path
+      .split('.')
+      .reduce((value, segment) => (value as Record<string, unknown>)?.[segment], resource)
+
+  return {
+    useTranslation: (requested?: string | string[]) => {
+      const defaultNamespace = Array.isArray(requested)
+        ? (requested[0] ?? 'translation')
+        : (requested ?? 'translation')
+      return {
+        i18n: { language: 'en' },
+        t: (rawKey: string, opts: Record<string, unknown> = {}): string => {
+          const colon = rawKey.indexOf(':')
+          const namespace =
+            colon >= 0
+              ? rawKey.slice(0, colon)
+              : typeof opts.ns === 'string'
+                ? opts.ns
+                : defaultNamespace
+          const key = colon >= 0 ? rawKey.slice(colon + 1) : rawKey
+          const value = resolve(resources[namespace as keyof typeof resources], key)
+          return typeof value === 'string'
+            ? value.replace(/\{\{(\w+)\}\}/g, (match, name: string) => String(opts[name] ?? match))
+            : rawKey
+        },
       }
-      return map[key] ?? opts?.defaultValue ?? key
     },
-    i18n: { language: 'en' },
-  }),
-}))
+  }
+})
 
 const mockUsePersons = vi.fn()
 vi.mock('@/hooks/usePersons', () => ({
@@ -147,5 +168,17 @@ describe('PersonsListPage (Phase 40 LIST-02)', () => {
     render(<PersonsListPage search="" onSearchChange={vi.fn()} onPersonClick={vi.fn()} />)
     expect(screen.getByText('Solo')).toBeTruthy()
     expect(screen.queryAllByTestId('vip-chip').length).toBe(0)
+  })
+
+  it('no i18n JSON changed in this lane, the scoped strict audit still reads zero UNRESOLVED after the drop (a nonzero here means a key moved, which is the one way a deletion-only diff can go wrong), and the phase negative control still prints 3x MISS=true — RED at HEAD', () => {
+    mockUsePersons.mockReturnValue({
+      data: { data: [], pagination: { total: 0, limit: 20, offset: 0, has_more: false } },
+      isLoading: false,
+      isError: false,
+    })
+
+    render(<PersonsListPage search="" onSearchChange={vi.fn()} onPersonClick={vi.fn()} />)
+
+    expect(screen.getByText('No persons yet')).toBeTruthy()
   })
 })

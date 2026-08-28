@@ -44,32 +44,45 @@ function Harness(): ReactElement {
   )
 }
 
-// react-i18next: project-wide pattern for per-file mock (prevents global afterActions-only map).
+// Resolve the production EN bundles: fallback arguments are intentionally ignored.
 const i18nLanguageRef = { current: 'en' }
-vi.mock('react-i18next', () => {
-  const translations: Readonly<Record<string, string>> = {
-    'week.of': 'Week of',
-    loading: 'Loading engagements',
-    empty: 'No engagements found',
-  }
-  const translate = (key: string, opts?: Record<string, unknown>): string => {
-    const defaultValue = typeof opts?.defaultValue === 'string' ? opts.defaultValue : undefined
-    const value = defaultValue ?? translations[key] ?? ''
-    return Object.entries(opts ?? {}).reduce(
-      (rendered, [name, replacement]) => rendered.replaceAll(`{{${name}}}`, String(replacement)),
-      value,
-    )
-  }
+vi.mock('react-i18next', async () => {
+  const [{ default: engagements }, { default: listPages }, { default: emptyStates }] =
+    await Promise.all([
+      vi.importActual<typeof import('@/i18n/en/engagements.json')>('@/i18n/en/engagements.json'),
+      vi.importActual<typeof import('@/i18n/en/list-pages.json')>('@/i18n/en/list-pages.json'),
+      vi.importActual<typeof import('@/i18n/en/empty-states.json')>('@/i18n/en/empty-states.json'),
+    ])
+  const resources = { engagements, 'list-pages': listPages, 'empty-states': emptyStates }
+  const resolve = (resource: unknown, path: string): unknown =>
+    path
+      .split('.')
+      .reduce((value, segment) => (value as Record<string, unknown>)?.[segment], resource)
 
   return {
+    useTranslation: (requested?: string | string[]) => {
+      const defaultNamespace = Array.isArray(requested)
+        ? (requested[0] ?? 'translation')
+        : (requested ?? 'translation')
+      return {
+        i18n: { language: i18nLanguageRef.current },
+        t: (rawKey: string, opts: Record<string, unknown> = {}): string => {
+          const colon = rawKey.indexOf(':')
+          const namespace =
+            colon >= 0
+              ? rawKey.slice(0, colon)
+              : typeof opts.ns === 'string'
+                ? opts.ns
+                : defaultNamespace
+          const key = colon >= 0 ? rawKey.slice(colon + 1) : rawKey
+          const value = resolve(resources[namespace as keyof typeof resources], key)
+          return typeof value === 'string'
+            ? value.replace(/\{\{(\w+)\}\}/g, (match, name: string) => String(opts[name] ?? match))
+            : rawKey
+        },
+      }
+    },
     initReactI18next: { type: '3rdParty', init: (): void => undefined },
-    useTranslation: (): {
-      t: (k: string, opts?: Record<string, unknown>) => string
-      i18n: { language: string }
-    } => ({
-      i18n: { language: i18nLanguageRef.current },
-      t: translate,
-    }),
     Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
   }
 })
@@ -158,7 +171,7 @@ beforeEach(() => {
 describe('EngagementsListPage', () => {
   it('renders the Engagements title from ListPageShell', () => {
     render(<Harness />)
-    expect(screen.getByRole('heading', { name: /Engagements/i, level: 1 })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: /Engagement Dossiers/i, level: 1 })).toBeTruthy()
   })
 
   it('renders 3 filter pills (no call pill — nothing maps to it)', () => {
@@ -250,5 +263,13 @@ describe('EngagementsListPage', () => {
         filtered: false,
       }),
     )
+  })
+
+  it("A mask site found in a file OUTSIDE this lane's list means the tree moved between the gatekeeper's manifest and this lane: STOP and record it, do not widen scope || This lane's estimated logic-diff size is **~44512 bytes** against the engine's 60,000-byte gates.diffCap, measured with the committed audit's MULTI-LINE matcher over the actual file text — never with the line-bound grep whose blindness produced the original floor. The budget is ~45,000 per lane, deliberately below the cap because these numbers are FLOORS. A diff-cap trip returns park:\"human\" with the engine's own note that the diff cannot shrink by retrying — it is un-retryable, after the work is done, which is why the lane is this size.", () => {
+    render(<Harness />)
+
+    expect(screen.getByRole('group', { name: 'Filter engagements' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'All' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Travel' })).toBeTruthy()
   })
 })

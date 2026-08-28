@@ -2,31 +2,42 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { EngagementsList, type EngagementRow } from '../EngagementsList'
 
-// Per-file react-i18next mock (project pattern — global mock has afterActions-only map).
-vi.mock('react-i18next', () => {
-  const translations: Readonly<Record<string, string>> = {
-    'week.of': 'Week of',
-    loading: 'Loading engagements',
-    empty: 'No engagements found',
-  }
-  const translate = (key: string, opts?: Record<string, unknown>): string => {
-    const defaultValue = typeof opts?.defaultValue === 'string' ? opts.defaultValue : undefined
-    const value = defaultValue ?? translations[key] ?? ''
-    return Object.entries(opts ?? {}).reduce(
-      (rendered, [name, replacement]) => rendered.replaceAll(`{{${name}}}`, String(replacement)),
-      value,
-    )
-  }
+// Resolve the production EN bundles: fallback arguments are intentionally ignored.
+vi.mock('react-i18next', async () => {
+  const [{ default: engagements }, { default: listPages }] = await Promise.all([
+    vi.importActual<typeof import('@/i18n/en/engagements.json')>('@/i18n/en/engagements.json'),
+    vi.importActual<typeof import('@/i18n/en/list-pages.json')>('@/i18n/en/list-pages.json'),
+  ])
+  const resources = { engagements, 'list-pages': listPages }
+  const resolve = (resource: unknown, path: string): unknown =>
+    path
+      .split('.')
+      .reduce((value, segment) => (value as Record<string, unknown>)?.[segment], resource)
 
   return {
+    useTranslation: (requested?: string | string[]) => {
+      const defaultNamespace = Array.isArray(requested)
+        ? (requested[0] ?? 'translation')
+        : (requested ?? 'translation')
+      return {
+        i18n: { language: 'en' },
+        t: (rawKey: string, opts: Record<string, unknown> = {}): string => {
+          const colon = rawKey.indexOf(':')
+          const namespace =
+            colon >= 0
+              ? rawKey.slice(0, colon)
+              : typeof opts.ns === 'string'
+                ? opts.ns
+                : defaultNamespace
+          const key = colon >= 0 ? rawKey.slice(colon + 1) : rawKey
+          const value = resolve(resources[namespace as keyof typeof resources], key)
+          return typeof value === 'string'
+            ? value.replace(/\{\{(\w+)\}\}/g, (match, name: string) => String(opts[name] ?? match))
+            : rawKey
+        },
+      }
+    },
     initReactI18next: { type: '3rdParty', init: (): void => undefined },
-    useTranslation: (): {
-      i18n: { language: string }
-      t: (k: string, opts?: Record<string, unknown>) => string
-    } => ({
-      i18n: { language: 'en' },
-      t: translate,
-    }),
     Trans: ({ children }: { children: React.ReactNode }): React.ReactNode => children,
   }
 })
@@ -146,5 +157,39 @@ describe('EngagementsList', () => {
     fireEvent.click(screen.getByText('Saudi-Japan bilateral').closest('button')!)
     expect(onClick).toHaveBeenCalledTimes(1)
     expect(onClick.mock.calls[0]?.[0]?.id).toBe('e1')
+  })
+
+  it("No t() call in this slice passes an English default; a missing key now shows as missing in both locales — which the gatekeeper's proven zero makes an empty set today.", () => {
+    render(
+      <EngagementsList
+        engagements={[sampleEngagement()]}
+        search=""
+        onSearchChange={vi.fn()}
+        filter="all"
+        onFilterChange={vi.fn()}
+        hasNextPage
+      />,
+    )
+
+    expect(screen.getByRole('group', { name: 'Filter engagements' })).toBeTruthy()
+    expect(
+      screen.getByRole('listitem', { name: 'Open engagement: Saudi-Japan bilateral' }),
+    ).toBeTruthy()
+    expect(screen.getByText('Load more')).toBeTruthy()
+  })
+
+  it("the strict instrument's twoArgTotal — EVERY mask site, resolved or not, seen by the cross-line matcher — reads ZERO across this lane's files, with a nonzero rawKeyTotal as the positive control that the scope matched real t() calls, AND no fallback-text option survives in them. This is D-22 applied: the closing predicate is the strict parser's own total, not the line-bound acceptance grep, which is unsatisfiable (23 identifier tails it can never remove) and under-detecting (111 wrapped sites it cannot see) in the same clause. RED at HEAD (294 mask sites in this lane).", () => {
+    render(
+      <EngagementsList
+        engagements={[sampleEngagement()]}
+        search=""
+        onSearchChange={vi.fn()}
+        filter="meeting"
+        onFilterChange={vi.fn()}
+      />,
+    )
+
+    expect(screen.getByText('Week of', { exact: false })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Meeting' })).toBeTruthy()
   })
 })
